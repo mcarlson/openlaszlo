@@ -1,8 +1,14 @@
 
-<canvas height="60">
-    <view width="50" height="50" bgcolor="red" clickable="true" onclick="this.setAttribute('bgcolor', 'blue')"  />
-</canvas>
+<canvas height="300">
+    <simplelayout spacing="5"/>
+    <class name="box" height="100" width="100" bgcolor="red">
+       <attribute name="label" value="Label"  type="string"/>
+       <text text="${parent.label}" />
+    </class>
 
+    <box label="Box1"/>
+    <box/>
+</canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *

@@ -129,13 +129,13 @@ Unlike events in similar systems, OpenLaszlo's events are point-to-point, meanin
 <para>
 Any defined attribute has an associated event called
  "on" plus the name of the attribute. Whenever the value of any
-attribute is updated using the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>, its associated "on" event is generated. For example, the "height" attribute of a view has an 
-associated "onheight" event that
+attribute is updated using the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>, its associated "on" event is generated. For example, the <sgmltag class="attribute">height</sgmltag> attribute of a view has an 
+associated <sgmltag class="attribute">onheight</sgmltag> event that
 is generated whenever the view's height changes. These events are implicit in the sense that they are built into the system — you don't have to declare them or send them.
 </para>
 <para>
 Said another way, the default behavior of the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method is to set the named property and send the event. 
-For instance, when a view changes its x position, it sends the event <indexterm><primary>onx event</primary></indexterm><literal>onx</literal> with the new
+For instance, when a view changes its x position, it sends the event <indexterm><primary>onx event</primary></indexterm><sgmltag class="attribute">onx</sgmltag> with the new
  value for its x property. 
 </para>
 <para>
@@ -157,7 +157,7 @@ Note that in 3.n and earlier releases, you can send events that have not been ex
 
 <para/><section><title>Naming events</title>
 <para>
-As discussed in the section below on handlers, events and their associated handlers must have the same name.  Note: event names cannot start with a leading underscore.
+As discussed in the section below on handlers, events and their associated handlers must have the same name.  <note>Event names cannot start with a leading underscore.</note>
 </para>
 <para/></section></section><section><title>LzEvent and the sendEvent method</title>
 <para>
@@ -466,7 +466,7 @@ Attributes can be placed into five categories according to how they are set, rea
 <para/><section><title>Attributes (with setter)</title>
 <para>These are built-in attributes which have setters that may be modified at runtime
 and used in constraint expressions. When <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>
-is called, the appropriate setter is called automatically. The
+is called, the appropriate setter is called automatically. See <xref linkend="explicitAtt"/>. The
 value of an attribute can be retrieved through script using dot
 syntax, for example, <literal> myView.opacity</literal>. </para>
 
@@ -500,17 +500,11 @@ declared and set in tags too.</para>
 
 <para/></section><section><title>Event Handler Attributes</title>
 <para>Event Handler attributes are instructions for what to perform when a particular event happens. They always contain script, and cannot be changed at run-time (i.e. from script). Their values cannot (and do not need to) be retrieved from script.</para>
-<example>
+<example role="live-example">
     <title>Event handler attributes</title>
-    
-
-<programlisting>
-&lt;canvas debug="true" height="400"&gt;
-    &lt;debug y="200"/&gt;
-    &lt;view width="50" height="50" bgcolor="red"  /&gt;
-&lt;/canvas&gt;
-
-</programlisting>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/methods-events-attributes-$20.lzx"/></textobject> 
+    </programlisting>
 </example>
 <para/></section><section><title>Final Attributes</title>
 <para>Final attributes are declared and set in the tag, but cannot be changed in using script. 
@@ -535,7 +529,7 @@ example:</para>
 <example role="live-example">
    <title>Defining an attribute in a class</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/methods-events-attributes-$20.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/methods-events-attributes-$21.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -548,7 +542,7 @@ its height.</para>
 <example role="live-example">
    <title>Defining an attribute in a view</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/methods-events-attributes-$21.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/methods-events-attributes-$22.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -576,7 +570,7 @@ By default, attributes are of the JavaScript expression type, but in some cases 
 <example role="live-example">
    <title>Incorrect: attribute has no effect</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/methods-events-attributes-$22.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/methods-events-attributes-$23.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -587,7 +581,7 @@ To make sure attributes do what you want them to do, assign a <literal>type</lit
 <example role="live-example">
    <title>Declaring attribute type</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/methods-events-attributes-$23.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/methods-events-attributes-$24.lzx"/></textobject> 
    </programlisting>
 </example>
 
@@ -888,7 +882,7 @@ attributes.   The reasons for this slowness is twofold:</para>
 constraints on the target attribute. </para></listitem></itemizedlist>
 
 
-<para/></section><section><title> Explicit attribute setter methods </title>
+<para/></section><section id="explicitAtt"><title> Explicit attribute setter methods </title>
 
 <para> Some attributes of OpenLaszlo Runtime Library classes have explicit getter and setter methods defined for them.  
 The <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> class has several of these such as <indexterm><primary><literal>setX()</literal></primary></indexterm><methodname>setX()</methodname>, <indexterm><primary><literal>setWidth()</literal></primary></indexterm><methodname>setWidth()</methodname>, etc.
