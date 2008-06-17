@@ -80,7 +80,7 @@
           <literal>swfEmbed()</literal>
                     </primary>
                 </indexterm>
-                <methodname>swfEmbed()</methodname>for embedding SWF OL
+                <methodname>swfEmbed()</methodname> for embedding SWF OL
       applications into the HTML page; this generates an HTML
       &lt;embed&gt; tag. Similarly, there is an 
       <indexterm>
@@ -88,7 +88,7 @@
           <literal>dhtmlEmbed()</literal>
                     </primary>
                 </indexterm>
-                <methodname>dhtmlEmbed()</methodname>for placing an OL
+                <methodname>dhtmlEmbed()</methodname> for placing an OL
       application compiled to DHTML within a web page. In this case
       there is no &lt;embed&gt; generated or required, but the
       methods have similar names because they perform analogous
@@ -102,7 +102,7 @@
       <indexterm>
         <primary>LzBrowser</primary>
                 </indexterm>
-                <classname>LzBrowser</classname>service in order to "escape"
+                <classname>LzBrowser</classname> service in order to "escape"
       to the browser's JavaScript environment.</para>
             <para>Any attributes that are declared on the canvas are
       visible to the browser JavaScript. To go "the other way",
@@ -112,15 +112,15 @@
           <literal>setCanvasAttribute()</literal>
                     </primary>
                 </indexterm>
-                <methodname>setCanvasAttribute()</methodname>and 
+                <methodname>setCanvasAttribute()</methodname> and 
       <indexterm>
         <primary>
           <literal>setCanvasAttribute()</literal>
                     </primary>
                 </indexterm>
-                <methodname>setCanvasAttribute()</methodname>methods are
+                <methodname>setCanvasAttribute()</methodname> methods are
       used.</para>
-            <para>This are discussed below.</para>
+            <para>These are discussed below.</para>
             <para>Although OpenLaszlo applications deployed on the Flash
       runtime are not dependent on the browser or operating system
       for their look or behavior, there are some important
@@ -149,17 +149,17 @@
         <indexterm>
           <primary>LzBrowser</primary>
                     </indexterm>
-                    <classname>LzBrowser</classname>service provides access to
+                    <classname>LzBrowser</classname> service provides access to
         the browser and player environment. It includes methods to
         load URLs in the browser and check the version of the
         player. Furthermore, by using the 
-        <literal>LzBrowser</literal>service together with other
+        <literal>LzBrowser</literal> service together with other
         OpenLaszlo functions described below, you can build
         applications that pass information and control between the
         OpenLaszlo application and the JavaScript of the
         browser.</para>
                 <para>The 
-        <literal>LzBrowser</literal>is always running.</para>
+        <literal>LzBrowser</literal> is always running.</para>
                 <para />
             </section>
         </section>
@@ -193,7 +193,7 @@
           <literal>setCanvasAttribute()</literal>
                     </primary>
                 </indexterm>
-                <methodname>setCanvasAttribute()</methodname>ore 
+                <methodname>setCanvasAttribute()</methodname> or 
       <indexterm>
         <primary>
           <literal>setCanvasAttribute()</literal>
@@ -204,7 +204,7 @@
       <indexterm>
         <primary>LzBrowser</primary>
                 </indexterm>
-                <classname>LzBrowser</classname>service.</para>
+                <classname>LzBrowser</classname> service.</para>
             <para />
             <section>
                 <title condition="dhtml">Embedding the LFC for DHTML
@@ -235,20 +235,20 @@
     <indexterm>
       <primary>Lz</primary>
             </indexterm>
-            <classname>Lz</classname>is designed to be incorporated into
+            <classname>Lz</classname> is designed to be incorporated into
     the HTML page in which your LZX application runs. That is to
     say, your LZX application is designed to be executed in the
     &lt;body&gt; section of the page, but the 
     <indexterm>
       <primary>Lz</primary>
             </indexterm>
-            <classname>Lz</classname>must be include in the &lt;lt;head&gt;
+            <classname>Lz</classname> must be include in the &lt;head&gt;
     section of the page.</para>
         <para>The 
     <indexterm>
       <primary>Lz</primary>
             </indexterm>
-            <classname>Lz</classname>class is defined in</para>
+            <classname>Lz</classname> class is defined in</para>
         <programlisting>
     lps/includes/source/embednew.js</programlisting>
         <para>The source for 
@@ -261,7 +261,7 @@
     <indexterm>
       <primary>Lz</primary>
             </indexterm>
-            <classname>Lz</classname>class, your application must include a
+            <classname>Lz</classname> class, your application must include a
     line like</para>
         <programlisting>&lt;script type="text/javascript"
     src="/legals/lps/includes/embed-compressed.js"&gt;&lt;/script&gt;</programlisting>
@@ -274,7 +274,7 @@
     <indexterm>
       <primary>Lz</primary>
             </indexterm>
-            <classname>Lz</classname>class. It "just works" and you don't
+            <classname>Lz</classname> class. It "just works" and you don't
     have to do anything special. If you craft your HTML pages "by
     hand", of course, you will need to make sure that you
     incorporate the Lz class.</para>
@@ -288,7 +288,7 @@
     browser that the embedded OpenLaszlo application is actually a
     SWF file, and so forth.</para>
         <para>In the 
-    <literal role="code">&lt;html&gt;&lt;head&gt;</literal>of an
+    <literal role="code">&lt;html&gt;&lt;head&gt;</literal> of an
     HTML document that embeds an OpenLaszlo application compiled to
     SWF, add this line:</para>
         <example role="live-example">
@@ -332,24 +332,24 @@
       <indexterm>
         <primary>appenddivid</primary>
                 </indexterm>
-                <sgmltag class="attribute">appenddivid</sgmltag>property can
+                <sgmltag class="attribute">appenddivid</sgmltag> property can
       be passed in to 
       <indexterm>
         <primary>
           <literal>swfEmbed()</literal>
                     </primary>
                 </indexterm>
-                <methodname>swfEmbed()</methodname>or 
+                <methodname>swfEmbed()</methodname> or 
       <indexterm>
         <primary>
           <literal>dhtmlEmbed()</literal>
                     </primary>
                 </indexterm>
-                <methodname>dhtmlEmbed()</methodname>method to specify the id
+                <methodname>dhtmlEmbed()</methodname> method to specify the id
       of a div whose contents should be replaced with the LZX
       application. If a div with that ID doesn't exist, one will be
       written into the document where 
-      <literal>swf/dhtmlEmbed()</literal>is called. If appenddivid
+      <literal>swf/dhtmlEmbed()</literal> is called. If appenddivid
       is not specified, the div written will be based on the id
       property + 'Container'.</para>
             <para>Alternatively, you can generate wrappers by using the
@@ -369,7 +369,7 @@
                 <listitem>
                     <para>In the head of the HTML file, you will see the
           script tag that includes 
-          <literal>embed-compressed.js</literal>Adjust the path if
+          <literal>embed-compressed.js</literal> Adjust the path if
           necessary for deployment.</para>
                 </listitem>
                 <listitem>
@@ -582,7 +582,7 @@
           <literal>LzBrowser.LoadURL()</literal>
                     </primary>
                 </indexterm>
-                <methodname>LzBrowser.LoadURL()</methodname>to load pages in
+                <methodname>LzBrowser.LoadURL()</methodname> to load pages in
       the target frame.</para>
             <example role="live-example">
                 <title>target in loadURL</title>
@@ -680,15 +680,15 @@
             </example>
   
             <para>The above application is requested without a 
-      <literal>globalVar</literal>query parameter. The debugger
+      <literal>globalVar</literal> query parameter. The debugger
       therefore displays the default value 
       <literal>bar</literal>. If this application is requested with
       the 
-      <literal>globalVar=foo</literal>query parameter, it will
+      <literal>globalVar=foo</literal> query parameter, it will
       display the default value 'bar'. Click 
       <ulink type="onclick"
                         url="javascript:window.open('programs/browser-integration.setting-defaults.lzx?lzt=swf&amp;globalVar=foo','example','resizable=0,width=200,height=200,menubar=0,location=0,status=0,scrollbars=0,toolbar=0,address=0')">
-      here</ulink>to see the application in a popup window with the
+      here</ulink> to see the application in a popup window with the
       query parameter applied.</para>
             <para />
         </section>
@@ -712,7 +712,7 @@
             <para>Click 
       <ulink type="onclick"
                         url="javascript:window.open('programs/browser-integration.restoring-state.lzx?lzt=swf&amp;tab=two','example','resizable=0,width=200,height=250,menubar=0,location=0,status=0,scrollbars=0,toolbar=0,address=0')">
-      here</ulink>to see this application in a popup with a
+      here</ulink> to see this application in a popup with a
       different initial state applied. This is useful when creating
       links from outside the application, or for creating a
       bookmark for an application. Another thing to do is read
@@ -730,7 +730,7 @@
     application to coexist using the same codebase.</para>
         <para>Begin by creating your application in a library file
     instead of a canvas, but use 
-    <literal>$once{}</literal>constraints to size the visual
+    <literal>$once{}</literal> constraints to size the visual
     elements relative to the canvas.</para>
         <example role="live-example">
             <title>Multi-canvas application library</title>
@@ -773,7 +773,7 @@
         <!-- para is not a legal child of programlisting -->
       <!-- <para role="fixme"> -->
                 <remark role="fixme">
-                    <emphasis role="para-label">FIXME:</emphasis>this is
+                    <emphasis role="para-label">FIXME:</emphasis> this is
         broken</remark>
       <!-- </para> -->
       &lt;script type="text/javascript"&gt; var screenW =
@@ -790,7 +790,7 @@
         <!-- <title>Example: building a URL</title> -->
         <para>The 
     <methodname role="LzBrowser.prototype.loadURL">
-    loadURL()</methodname>method is used to create a URL based on
+    loadURL()</methodname> method is used to create a URL based on
     user input. This URL is then communicated to browser, where a
     JavaScript function is used to unpack it and fill in a form.
     The wrapper page is shown immediately below.</para>
@@ -834,7 +834,7 @@
     <indexterm>
       <primary>LzHistory</primary>
             </indexterm>
-            <classname>LzHistory</classname>service allows you to preserve
+            <classname>LzHistory</classname> service allows you to preserve
     the state of your application, and then use the "back" button
     of the browser to move among such states.</para>
         <para>The default wrapper page enables the back button and
@@ -847,7 +847,7 @@
     <indexterm>
       <primary>LzHistory</primary>
             </indexterm>
-            <classname>LzHistory</classname>service works to move among
+            <classname>LzHistory</classname> service works to move among
     states. To see the program in action, copy this code to your
     applications directory.</para>
         <example role="live-example">
@@ -879,7 +879,7 @@
       s4.select(false); &lt;/method&gt; &lt;method
       name="selectBlob" args="blob"&gt; 
       <emphasis role="em">// save the old state
-      LzHistory.next();</emphasis>setAttribute('mystate',
+      LzHistory.next();</emphasis> setAttribute('mystate',
       blob.title); unselectAll(); blob.select(true);
       recordState(blob.title); &lt;/method&gt; &lt;handler
       name="oninit"&gt; unselectAll(); recordState("START");
@@ -889,7 +889,7 @@
       &lt;method name="recordState" args="newstate"&gt;
       this.mystate = newstate; 
       <emphasis role="em">LzHistory.save(this,'mystate',
-      this.mystate);</emphasis>Debug.write("recordState", newstate)
+      this.mystate);</emphasis> Debug.write("recordState", newstate)
       &lt;/method&gt; &lt;method name="gotoState" args="ns"&gt;
       unselectAll(); if (ns == "START") { s1.select(true); } else
       if (ns == "STATE_2") { s2.select(true); } else if (ns ==
@@ -935,12 +935,12 @@
 
         <para role="fixme">
             <remark role="fixme">
-                <emphasis role="para-label">FIXME:</emphasis>Safari caching
+                <emphasis role="para-label">FIXME:</emphasis> Safari caching
       info goes here</remark>
         </para>
         <para role="fixme">
             <remark role="fixme">
-                <emphasis role="para-label">FIXME:</emphasis>not all browsers
+                <emphasis role="para-label">FIXME:</emphasis> not all browsers
       support transparency of Flash over html. In those cases
       changing the background color has no effect. canvas
       transparent by default -- so bgcolor should be respected by

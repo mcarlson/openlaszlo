@@ -3,7 +3,7 @@
   <dataset name="phonebook" src="resources/phonebook.xml"/>
   <simplelayout axis="x" spacing="20"/>
   
-  <view name="contacts" height="150" width="100">
+  <view name="contacts" height="150" width="120">
     <view bgcolor="0xe0e0e0" datapath="phonebook:/phonebook/contact"
           onmouseover="setAttribute('bgcolor', 0xc0c0c0)" onmouseout="setAttribute('bgcolor', 0xe0e0e0)"
           onclick="details.datapath.setAttribute('p', this.datapath.p)">
@@ -24,6 +24,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

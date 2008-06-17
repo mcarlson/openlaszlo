@@ -1,5 +1,5 @@
 
-<canvas height="125"> 
+<canvas height="150"> 
     <dataset name="people">
         <people> 
             <person name="John"/> 
@@ -42,6 +42,6 @@
     <simplelayout axis="y"/> 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** --> 

@@ -31,7 +31,7 @@ you use the <indexterm><primary>extends</primary></indexterm><sgmltag class="att
 &lt;/class&gt;
 </programlisting>
 
-<para>Any class that is that you create without using the
+<para>Any class that you create without using the
 <indexterm><primary>extends</primary></indexterm><sgmltag class="attribute">extends</sgmltag> attribute is assumed to be a subclass
 of <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag>. All methods and properties from
 <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> are inherited by the subclass. These two
@@ -570,7 +570,7 @@ child is actually placed at runtime. Its value will be the same as
 
 <para/></section><section><title>Obtaining a reference to the defaultPlacement node</title>
 
-<para>There may be instances a class needs a reference to the default placement
+<para>There may be instances where a class needs a reference to the default placement
 node. A good trick is to search the subnodes of the class until it's found.</para>
 
 <example role="live-example">
@@ -675,7 +675,7 @@ properties:</para>
   exist.</para></listitem></varlistentry></variablelist>
 
 <example role="live-example">
-   <title>creatChildren()</title>
+   <title>createChildren()</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/class-inheritance-$31.lzx"/></textobject> 
    </programlisting>

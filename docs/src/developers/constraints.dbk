@@ -66,14 +66,14 @@ runtime. You'll see that the <literal>setAttribute()</literal> method has the sa
 
 
 <example role="live-example">
-   <title>Runtime constraintes with applyConstraintMethod</title>
+   <title>Runtime constraints with applyConstraintMethod</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/constraints-$1.lzx"/></textobject> 
    </programlisting>
 </example>
 
 
-<para><literal>f</literal> is a callback function that is required for the <indexterm><primary><literal>applyConstraintMethod()</literal></primary></indexterm><methodname>applyConstraintMethod()</methodname> method. <varname>d</varname> 
+<para><literal>myConstraintMethod</literal> is a callback function that is required for the <indexterm><primary><literal>applyConstraintMethod()</literal></primary></indexterm><methodname>applyConstraintMethod()</methodname> method. <varname>d</varname> 
 is an array consisting of a pointer to a reference node, and the attribute to bind to.</para>
 <para/></section><section><title>Delegates and constraints</title> 
 <para>OpenLaszlo applications can use something called a <glossterm>delegate</glossterm> in script to associate a 

@@ -192,11 +192,12 @@ The actual method that does any computation. Called from various circumstances.<
 Utility method for checking if a decimal point is shown on the display (to prevent one from being entered twice.</para>
 <para>
 <emphasis role="b">addDecimalPoint()</emphasis>
+Concatenates a decimal point to the end of the display</para>
+
 <!-- fix broken docbook IORIO 6 nov 2007 -->
 <!-- add definition for negative() IORIO 6 nov 2007 -->
-
-<emphasis role="b">negative()</emphasis> Toggles the sign of a number.
-Concatenates a decimal point to the end of the display</para>
+<para>
+<emphasis role="b">negative()</emphasis> Toggles the sign of a number.</para>
 
 </section><section><title>Properties</title>
 <para>

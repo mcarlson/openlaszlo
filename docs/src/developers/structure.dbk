@@ -342,7 +342,7 @@ The pathname is resolved relative to the pathname of the file that contains the 
 The &lt;import&gt; tag has these attributes:
 </para>
 <table><title>Attributes for &lt;import&gt;</title><tgroup cols="4"><thead><row><entry>name</entry><entry>type</entry><entry>default</entry><entry>description</entry></row></thead><tbody><row><entry><literal>href</literal></entry><entry>URI</entry><entry>required</entry><entry> The URI of a file that defines the library. In the case where stage is "late", this has the same meaning as it does 
-in an &lt;include&gt; tag. If stage="deferred", the URI is resolved relative to the location of the location of the file that contains 
+in an &lt;include&gt; tag. If stage="defer", the URI is resolved relative to the location of the location of the file that contains 
 the &lt;import&gt; element,
  and a request for this URI is sent to the server to request a library file that is downloaded into the running application.
     </entry></row><row><entry><literal>stage</literal></entry><entry>  "late" | "defer"</entry><entry>compile</entry><entry> If stage is "late", the library is imported once the main application file has finished loading. If it is "defer", the library is imported during the execution of the application by an API call, as described below.</entry></row><row><entry><literal>name</literal></entry><entry>JavaScript Identifier</entry><entry>global</entry><entry> If this is not empty, it is the name of an ECMAScript object whose properties are the global ECMAScript names 
