@@ -403,8 +403,11 @@ function __LZsetCloneAttrs () :void {}
 override function constructWithArgs ( args ){
     this.__LZHandleMultiNodes( this.initialnodes );
     this.initialnodes = null;
+    // TODO [hqm 2008-06-17] why do we need to handle this case
+    // explicitly?  When is this.visible going to be false at
+    // construct time on a replication manager?
     if ( this.visible == false ){
-        this.setVisible( false );
+        this.$lzc$set_visible( false );
     }
 }
 
@@ -784,8 +787,15 @@ override function toString () :String {
   * setter rather than being handled specially by construcWithArgs,
   * but I didn't want to mess with that now.  In any case, there is no
   * reason for this to be a public method.
+  * @deprecated Use setAttribute('visible', ...) instead.
   */
-function setVisible ( vis:Boolean ) :void {
+function setVisible(v) { 
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_visible(v)
+}
+
+/** @access private */
+function $lzc$set_visible( vis:Boolean ) :void {
     this.visible = vis;
     var cls:Array = this.clones;
     var len:int = cls.length; 
