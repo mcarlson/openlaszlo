@@ -1463,21 +1463,18 @@ solution =
             (name == null ?
              CompilerUtils.attributeLocationDirective(element, "handler") :
              CompilerUtils.attributeLocationDirective(element, "name"));
-        String adjectives = "";
-        // Closures do not get override or final
-        if (canHaveMethods) {
-            if (override) { adjectives += " override"; }
-            if (isfinal) { adjectives += " final"; }
-        }
         Function fndef;
         String pragmas = "\n#beginContent\n" +
             "\n#pragma 'methodName=" + name + "'\n" +
             "\n#pragma 'withThis'\n";
         body = body + "\n#endContent";
         if (canHaveMethods) {
+            String adjectives = "";
+            if (override) { adjectives += " override"; }
+            if (isfinal) { adjectives += " final"; }
             fndef = new Method(name, args, pragmas, body, name_loc, adjectives);
         } else {
-            fndef = new Function(name, args, pragmas, body, name_loc, adjectives);
+            fndef = new Function(name, args, pragmas, body, name_loc);
         }
         addProperty(name, fndef, allocation, element);
     }
@@ -1980,7 +1977,15 @@ solution =
             String key = (String) entry.getKey();
             Object value = entry.getValue();
             if (value instanceof Method) {
+                // NOTE [2008-06-16 ptw] (LPP-6017) For now, we only do
+                // this for swf9, which requires it, because it expands
+                // the code
+              if ("swf9".equals(env.getRuntime())) {
                 hasMethods = true;
+              } else {
+                inits.put(key, ((Method)value).asFunction());
+                attrs.put(key, null);
+              }
             } else if (! (value instanceof NodeModel.BindingExpr)) {
                 inits.put(key, value);
                 attrs.put(key, null);

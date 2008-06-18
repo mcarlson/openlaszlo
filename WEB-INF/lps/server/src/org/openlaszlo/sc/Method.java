@@ -8,6 +8,7 @@
 package org.openlaszlo.sc;
 
 public class Method extends Function {
+  private final String adjectives;
 
   public Method(String body) {
     this("", body);
@@ -29,9 +30,18 @@ public class Method extends Function {
   }
 
   public Method(String name, String args, String preface, String body, String loc, String adjectives) {
-    super(name, args, preface, body, loc, adjectives);
+    super(name, args, preface, body, loc);
+    this.adjectives = adjectives;
   }
 
+  public String toString() {
+    return  (adjectives != null?(adjectives + " "):"") +
+      super.toString();
+  }
+
+  public Function asFunction() {
+    return new Function(name, args, preface, body, sourceLocation);
+  }
 }
 
 /**
