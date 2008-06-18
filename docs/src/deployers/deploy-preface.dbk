@@ -12,7 +12,7 @@ Guide explains how to make those applications available to users on the Web. The
 
 
 <para>
-  As explained in <xref linkend="deployers.architecture" />, there are two distinct ways to deploy applications:</para>
+  As explained in <xref linkend="architecture" />, there are two distinct ways to deploy applications:</para>
 <itemizedlist spacing="compact"><listitem><para>Using the OpenLaszlo Server (formerly called LPS) to mediate the connection between the client browser and any back-end services on the web.
 In this model you make available files having an .lzx or .lzo extension, which the server compiles to swf as necessary.</para></listitem><listitem><para>SOLO files, <emphasis role="i">unproxied</emphasis>. In this model the developer simply precomiles LZX files, and deployment is trivial.</para></listitem></itemizedlist>
 <para>
@@ -55,6 +55,7 @@ making changes to the application source code.</para>
 <para>In addition to this <emphasis role="em">OpenLaszlo System Administrator's Guide</emphasis>, please see also</para>
 <itemizedlist spacing="compact"><listitem>
 <!-- change title per LPP-4804, IORIO 16 oct 2007 -->
+  <para>The OpenLazslo architecture combines the power and usability of client/server design with the administrative advantages and cost effectiveness of web applications. See <xref linkend="architecture"></xref> for a complete description</para>
 <para>The <ulink url="../developers"><emphasis role="em">OpenLaszlo Application Developer's Guide</emphasis></ulink>, the comprehensive 
   explanation of how to write and test OpenLaszlo programs.</para></listitem><listitem><para>The <ulink url="../reference/"><emphasis role="em">LZX Reference
   Manual</emphasis></ulink>. This online, hyperlinked, comprehensive reference
