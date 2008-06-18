@@ -198,9 +198,9 @@
                             ondblclick="cart.addItem(parent.parent.datapath)">
                             <attribute name="source" value="${this.data}"/>
                             <method name="itemDropped" args="dpath">
-                                if (dragger.droppedInView(cart.parent)) {
+                                if (dragger.droppedInView(cart.parent.parent)) {
                                     cart.addItem(dpath);
-                                } else if (dragger.droppedInView(wish.parent)) {
+                                } else if (dragger.droppedInView(wish.parent.parent)) {
                                     wish.addItem(dpath);
                                 }
                             </method>
@@ -250,7 +250,7 @@
                                         <![CDATA[
                                         var discs = this.datapath.xpathQuery('Disc')
                                         if (! discs) return;
-                                        if (! discs.length) discs = [ discs ];
+                                        if (! discs['length']) discs = [ discs ];
                                         var tracks = 0;
                                         for (i in discs) {
                                             var n = discs[i];
@@ -364,10 +364,10 @@
                         <shoppinglist id="cart" datapath="dsCart:/"
                                       panel_to_nudge="$once{parent.parent}">
                             <method name="itemDropped" args="dpath">
-                                if (dragsmall.droppedInView(wish.parent)) {
+                                if (dragsmall.droppedInView(wish.parent.parent)) {
                                     wish.addItem(dpath);
                                     this.removeItem(dpath);
-                                } else if (!dragsmall.droppedInView(cart.parent)) {
+                                } else if (!dragsmall.droppedInView(cart.parent.parent)) {
                                     this.removeItem(dpath);
                                 } else if (dragsmall.droppedInTrash(cart.trashCan) ){
                                     this.removeItem(dpath);
@@ -386,13 +386,13 @@
                         <shoppinglist id="wish" datapath="dsWish:/"
                                       panel_to_nudge="$once{parent.parent}">
                             <method name="itemDropped" args="dpath">
-                                if (dragsmall.droppedInView(cart.parent)) {
+                                if (dragsmall.droppedInView(cart.parent.parent)) {
                                     cart.addItem(dpath);
                                     this.removeItem(dpath);
                                 } else if (dragsmall.droppedInTrash(wish.trashCan) ){
                                     this.removeItem(dpath);
                                     return
-                                } else if (!dragsmall.droppedInView(wish.parent)) {
+                                } else if (!dragsmall.droppedInView(wish.parent.parent)) {
                                     this.removeItem(dpath);
                                 }
                             </method>
