@@ -98,6 +98,7 @@ use attributes to define a class.</p>
 </ul>
 
 <para role="postprocess-html-hr"/>
+<anchor id="setter"/>
 <a name="setter"></a>
 <simplesect>
   <h2><literal>read/write</literal> attributes</h2>
@@ -131,6 +132,7 @@ declared and set in tags too.</p>
 </simplesect>
 
 <para role="postprocess-html-hr"/>
+<anchor id="eventhandler"/>
 <a name="eventhandler"></a>
 <simplesect>
   <h2><literal>event-handler</literal> attributes</h2>
@@ -146,6 +148,7 @@ declared and set in tags too.</p>
 </simplesect>
 
 <para role="postprocess-html-hr"/>
+<anchor id="final"/>
 <a name="final"></a>
 <simplesect>
   <h2><literal>initialize-only</literal> attributes</h2>
@@ -159,6 +162,7 @@ declared and set in tags too.</p>
 </simplesect>
 
 <para role="postprocess-html-hr"/>
+<anchor id="readonly"/>
 <a name="readonly"></a>
 <simplesect>
   <h2><literal>read-only</literal> attributes</h2>
