@@ -152,15 +152,12 @@ See <xref linkend="proxied"/> for discussion of how to make your application ava
 
 <para>The canonical "Hello, World" program can be written in LZX:</para>
 
-<example role="live-example"><title>Hello, world</title><programlisting role="lzx-embednew"><filename>program-development-$1.lzx</filename><parameter/><code>
-&lt;canvas height="40"&gt; 
-  &lt;text&gt;Hello, World!&lt;/text&gt; 
-&lt;/canvas&gt; 
-</code></programlisting><programlisting>
-&lt;canvas height="40"&gt; 
-  &lt;text&gt;Hello, World!&lt;/text&gt; 
-&lt;/canvas&gt; 
-</programlisting><?lzx-edit programs/program-development-$1.lzx?></example>
+  <example role="live-example">
+    <title>Hello world</title>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/program-development-$1.lzx"/></textobject> 
+    </programlisting>
+  </example>
 
 <para>This program illustrates three essential features of all Laszlo
 applications:</para>
@@ -194,19 +191,19 @@ LZX application.  The canvas is the logical container of all other
 nodes in the program; visually it is a rectangle that is displayed in
 the content area of a web browser. You can explicitly set the height
 and width of the canvas, in pixels, by assigning values to attributes
-in the opening tag:</para>
+in the opening tag.</para>
 
-<example role="live-example"><title>invisible canvas</title><programlisting>
+  <programlisting>
 &lt;canvas height="20" width="30"&gt; 
 &lt;/canvas&gt;
-</programlisting></example>
+</programlisting>
 
 <para>
 If you do not set the height and width, the canvas — like other views — sizes itself to the size of the views it contains. Unlike other views, the canvas, by default, has a nonzero width  and height: it sizes itself to the HTML page that contains it. Therefore the null LZX application</para>
 
-<example role="live-example"><title>null program</title><programlisting>
+<programlisting>
 &lt;canvas/&gt;
-</programlisting></example>
+</programlisting>
 
 <para>defines an invisible object that is the size of the page.</para>
 
@@ -225,18 +222,17 @@ functions by nesting them in <indexterm><primary>script</primary></indexterm><sg
 constructs. This is helpful for defining (global) functions that will
 be used by different classes. The <indexterm><primary>script</primary></indexterm><sgmltag class="element">&lt;script&gt;</sgmltag> tag must
 be a child of <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">&lt;canvas&gt;</sgmltag>.  That is to say,</para>
-
-<example role="live-example"><title>&lt;script&gt; tag at canvas level</title><programlisting>
+<programlisting>
 &lt;canvas&gt;
   &lt;script&gt;
     var Constant = 1;
   &lt;/script&gt; 
 &lt;/canvas&gt;
-</programlisting></example>
+</programlisting>
 
 <para>is an allowed structure while</para>
 
-<example role="live-example"><title>&lt;script&gt; tag not allowed inside &lt;view&gt;</title><programlisting>
+<programlisting>
 &lt;canvas&gt; 
   &lt;view&gt; 
     &lt;script&gt; <co id="N1019F"/>
@@ -244,9 +240,9 @@ be a child of <indexterm><primary>canvas</primary></indexterm><sgmltag class="el
     &lt;/script&gt; 
   &lt;/view&gt; 
 &lt;/canvas&gt;
-</programlisting></example><calloutlist><callout arearefs="N1019F"><para>
+</programlisting><calloutlist><callout arearefs="N1019F"><para>
         Wrong! The <indexterm><primary>script</primary></indexterm><sgmltag class="element">&lt;script&gt;</sgmltag> tag is not allowed inside a view!</para></callout></calloutlist>
-<para>is illegal.  </para> 
+
  
 
 <para/></section><section><title><indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> vs. <indexterm><primary>id</primary></indexterm><sgmltag class="attribute">id</sgmltag></title>
@@ -258,12 +254,12 @@ like any other, which can only be referenced by its path (except in
 the case of named children of the canvas, as noted
 below). Consider</para>
 
-<example role="live-example"><title>names and IDs</title><programlisting>
+<programlisting>
 &lt;canvas&gt; 
   &lt;view id="v1" name="outer_view"&gt; 
     &lt;view id="v2" name="inner_view" bgcolor="blue"/&gt; 
   &lt;/view&gt; 
-&lt;/canvas&gt;</programlisting></example>
+&lt;/canvas&gt;</programlisting>
 
 <para>The value of the outer view's background color can be referenced as
 <literal>v1.bgcolor</literal> or <literal>outer_view.bgcolor</literal>. The
@@ -277,11 +273,11 @@ specify <literal>outer_view.inner_view.bgcolor</literal>.</para>
 <para>
 Objects that are named children of the canvas can be simply addressed. For example, consider</para>
 
-<example role="live-example"><title>addressing named children of the canvas</title><programlisting>
+<programlisting>
 &lt;canvas&gt;
   &lt;view name="artichoke"&gt;
   &lt;!-- more program code --&gt;
-&lt;/canvas&gt;</programlisting></example>
+&lt;/canvas&gt;</programlisting>
 
 <para>The view <varname>artichoke</varname> can be referenced from
 anywhere within the application simply as <literal>artichoke</literal>. That
@@ -298,31 +294,17 @@ object that is an instance of a class that extends view).</para>
 
 <para>A view is only visible if it has color, or text, or an image
 assigned to it, and if the height and width of the view are greater
-than zero. For example, the following code would display only two
-images even though three views are defined.  The second and third views
-exist but they are completely invisible. The second has no color
+than zero. For example, the following code would display only one
+view even though three views are defined.  The second and third views
+exist but they are invisible. The second has no color
 assigned to it and the third has zero height. They still, however,
 affect the arrangement of the other two views.</para>
-
-<example role="live-example"><title>nested views</title><programlisting role="lzx-embednew"><filename>program-development-$8.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt; 
-  &lt;!-- shows a red square: --&gt; 
-  &lt;view width="50" height="50" bgcolor="red"/&gt;
-  &lt;!-- nothing is displayed, but view still exists: --&gt; 
-  &lt;view width="50" height="50"/&gt;
-  &lt;!-- nothing is displayed, but view still exists: --&gt; 
-  &lt;view width="0" height="50" bgcolor="blue"/&gt;
-  &lt;simplelayout axis='x' spacing="5"/&gt; 
-&lt;/canvas&gt; </code></programlisting><programlisting>
-&lt;canvas height="100"&gt; 
-  &lt;!-- shows a red square: --&gt; 
-  &lt;view width="50" height="50" bgcolor="red"/&gt;
-  &lt;!-- nothing is displayed, but view still exists: --&gt; 
-  &lt;view width="50" height="50"/&gt;
-  &lt;!-- nothing is displayed, but view still exists: --&gt; 
-  &lt;view width="0" height="50" bgcolor="blue"/&gt;
-  &lt;simplelayout axis='x' spacing="5"/&gt; 
-&lt;/canvas&gt; </programlisting><?lzx-edit programs/program-development-$8.lzx?></example>
+  <example role="live-example">
+    <title>Nested views</title>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/program-development-$8.lzx"/></textobject> 
+    </programlisting>
+  </example>
 
 <para/></section><section><title>Views as containers of other views</title>
 
@@ -352,17 +334,13 @@ you. Layout types built into the system include
 
 <para>Consider the following application:</para>
 
-<example role="live-example"><title>Parent and children dimensions</title><programlisting role="lzx-embednew"><filename>program-development-$9.lzx</filename><parameter/><code>
-&lt;canvas height="200"&gt; 
-  &lt;view bgcolor="red" x="50" y="50" width="100" height="100"&gt; 
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"/&gt; 
-  &lt;/view&gt; 
-&lt;/canvas&gt; </code></programlisting><programlisting>
-&lt;canvas height="200"&gt; 
-  &lt;view bgcolor="red" x="50" y="50" width="100" height="100"&gt; 
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"/&gt; 
-  &lt;/view&gt; 
-&lt;/canvas&gt; </programlisting><?lzx-edit programs/program-development-$9.lzx?></example>
+  <example role="live-example">
+    <title>Parent and children dimensions</title>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/program-development-$9.lzx"/></textobject> 
+    </programlisting>
+  </example>
+
 
 <para>Running the example above also shows that the width and height of a view can be different than the dimensions of the bounding box of its child views. No clipping occurred on the "yellow" view even though it lies outside the boundary of its parent.</para>
 
@@ -370,18 +348,12 @@ you. Layout types built into the system include
 If no width and height are actually defined for a view, then it will adopt the width and height of the bounding box not its subviews. If clipping is desired, however, then the attribute <literal>clip="true"</literal>
 can be added to the parent, which would look like the following.</para>
 
-<example role="live-example"><title>clipping</title><programlisting role="lzx-embednew"><filename>program-development-$10.lzx</filename><parameter/><code>
-&lt;canvas height="200"&gt;
-  &lt;view bgcolor="red" x="50" y="50" width="100" height="100" clip="true"&gt; 
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"/&gt; 
-  &lt;/view&gt; 
-&lt;/canvas&gt; </code></programlisting><programlisting>
-&lt;canvas height="200"&gt;
-  &lt;view bgcolor="red" x="50" y="50" width="100" height="100" <emphasis role="em">clip="true"</emphasis>&gt; 
-    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"/&gt; 
-  &lt;/view&gt; 
-&lt;/canvas&gt; </programlisting><?lzx-edit programs/program-development-$10.lzx?></example>
-
+  <example role="live-example">
+    <title>Clipping</title>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/program-development-$10.lzx"/></textobject> 
+    </programlisting>
+  </example>
 <para/></section><section><title>Images and other resources</title>
 
 <para>
@@ -398,29 +370,12 @@ The concept of data binding implies more than the use of views to display XML da
 
 <para>Consider the following program:</para>
 
-<example role="live-example"><title>simple databinding</title><programlisting role="lzx-embednew"><filename>program-development-$11.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt; 
-  &lt;dataset name="ds"&gt; 
-    &lt;record x="10" y="20" name="first" color="332136432"/&gt; 
-    &lt;record x="5" y="5" name="second" color="56521236432"/&gt; 
-    &lt;record x="20" y="2" name="third" color="1565336432"/&gt; 
-  &lt;/dataset&gt; 
-  &lt;simplelayout axis="y"/&gt;
-  &lt;view datapath="ds:/record"&gt; 
-    &lt;text datapath="@name" bgcolor="$path{'@color'}" x="$path{'@x'}"/&gt; 
-  &lt;/view&gt; 
-&lt;/canvas&gt; </code></programlisting><programlisting>
-&lt;canvas height="100"&gt; 
-  &lt;dataset name="ds"&gt; 
-    &lt;record x="10" y="20" name="first" color="332136432"/&gt; 
-    &lt;record x="5" y="5" name="second" color="56521236432"/&gt; 
-    &lt;record x="20" y="2" name="third" color="1565336432"/&gt; 
-  &lt;/dataset&gt; 
-  &lt;simplelayout axis="y"/&gt;
-  <emphasis role="em">&lt;view datapath="ds:/record"&gt;</emphasis> 
-    &lt;text datapath="@name" bgcolor="$path{'@color'}" x="$path{'@x'}"/&gt; 
-  &lt;/view&gt; 
-&lt;/canvas&gt; </programlisting><?lzx-edit programs/program-development-$11.lzx?></example>
+  <example role="live-example">
+    <title>Simple databinding</title>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/program-development-$11.lzx"/></textobject> 
+    </programlisting>
+  </example>
 
 <para>
 In the above example, the one line</para>
@@ -464,21 +419,21 @@ libraries, but a library is included in an application only once, no
 matter how many <indexterm><primary>include</primary></indexterm><sgmltag class="element">&lt;include&gt;</sgmltag> statements reference
 it. For example,</para>
 
-<example role="live-example"><title>app.lzx</title><programlisting>
+<programlisting>
 &lt;canvas&gt; 
   &lt;include href="library.lzx"/&gt; 
   &lt;mywindow/&gt; 
 &lt;/canvas&gt; 
-</programlisting></example>
+</programlisting>
 
-<example role="live-example"><title>library.lzx</title><programlisting>
+<programlisting>
 &lt;library&gt; 
   &lt;class name="mywindow" extends"window" 
          title="My Title"&gt; 
     &lt;button&gt; Click me! &lt;/button&gt; 
   &lt;/class&gt; 
 &lt;/library&gt; 
-</programlisting></example>
+</programlisting>
 <para>
 The semantics for including views and text are analogous but slightly different.  Unlike including a library file, a non text or view file is inserted once each time it's included. 
 </para>
@@ -504,36 +459,22 @@ Often when debugging you find yourself commenting out sections of code. Because 
 
 <para>So, to comment out the blue and green views below,</para>
 
-<example role="live-example"><title>Commenting out code</title><programlisting role="lzx-embednew"><filename>program-development-$14.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-  &lt;simplelayout/&gt; 
-  &lt;!-- This is a red view --&gt; 
-  &lt;view bgcolor="red" width="100" height="20"/&gt; 
-  &lt;?ignore 
-  &lt;!-- This is a blue view --&gt; 
-  &lt;view bgcolor="blue" width="100" height="20"/&gt; 
-  &lt;!-- This is a green view --&gt; 
-  &lt;view bgcolor="green" width="100" height="20"/&gt; 
-  ?&gt;       
-  &lt;!-- This is a yellow view --&gt; 
-  &lt;view bgcolor="yellow" width="100" height="20"/&gt; 
-&lt;/canvas&gt;  
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-  &lt;simplelayout/&gt; 
-  &lt;!-- This is a red view --&gt; 
-  &lt;view bgcolor="red" width="100" height="20"/&gt; 
-  &lt;?ignore <co id="N102A3"/>
-  &lt;!-- This is a blue view --&gt; 
-  &lt;view bgcolor="blue" width="100" height="20"/&gt; 
-  &lt;!-- This is a green view --&gt; 
-  &lt;view bgcolor="green" width="100" height="20"/&gt; 
-  ?&gt;       <co id="N102AD"/>
-  &lt;!-- This is a yellow view --&gt; 
-  &lt;view bgcolor="yellow" width="100" height="20"/&gt; 
-&lt;/canvas&gt;  
-</programlisting><?lzx-edit programs/program-development-$14.lzx?></example><calloutlist><callout arearefs="N102A3"><para>Lines between <literal>&lt;?ignore</literal> and <literal>?&gt;</literal> are ignored</para></callout><callout arearefs="N102AD"><para>End of the <wordasword>ignore</wordasword> section</para></callout></calloutlist>
-
+<programlisting>
+    &lt;canvas height="100"&gt;
+    &lt;simplelayout/&gt; 
+    &lt;!-- This is a red view --&gt; 
+    &lt;view bgcolor="red" width="100" height="20"/&gt; 
+    &lt;?ignore <co id="N102A3"/>
+    &lt;!-- This is a blue view --&gt; 
+    &lt;view bgcolor="blue" width="100" height="20"/&gt; 
+    &lt;!-- This is a green view --&gt; 
+    &lt;view bgcolor="green" width="100" height="20"/&gt; 
+    ?&gt;       <co id="N102AD"/>
+    &lt;!-- This is a yellow view --&gt; 
+    &lt;view bgcolor="yellow" width="100" height="20"/&gt; 
+    &lt;/canvas&gt;  
+</programlisting>
+  <calloutlist><callout arearefs="N102A3"><para>Lines between <literal>&lt;?ignore</literal> and <literal>?&gt;</literal> are ignored</para></callout><callout arearefs="N102AD"><para>End of the <wordasword>ignore</wordasword> section</para></callout></calloutlist>
 
 <para/></section><section><title>Script comments</title>
 
@@ -562,19 +503,12 @@ In script, block comments are of the form</para>
 to cause messages to be displayed in the debugger pane. For
 example,</para>
 
-<example role="live-example"><title>using the debugger to write messages</title><programlisting role="lzx-embednew"><filename>program-development-$15.lzx</filename><parameter/><code>
-&lt;canvas height="200" debug="true"&gt; 
-  &lt;script&gt; 
-    Debug.write("Well now how about that!") 
-  &lt;/script&gt; 
-&lt;/canvas&gt; 
-</code></programlisting><programlisting>
-&lt;canvas height="200" debug="true"&gt; 
-  &lt;script&gt; 
-    Debug.write("Well now how about that!") 
-  &lt;/script&gt; 
-&lt;/canvas&gt; 
-</programlisting><?lzx-edit programs/program-development-$15.lzx?></example>
+  <example role="live-example">
+    <title>Using the debugger to write messages</title>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/program-development-$15.lzx"/></textobject> 
+    </programlisting>
+  </example>
 
 <para>
 To invoke the debugger, set the attribute <literal>debug="true"</literal>
@@ -584,17 +518,12 @@ in the <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">
 <para>
 To use the debugger interactively to inspect a value, you type an expression in to the evaluation pane. For example,</para>
 
-<example role="live-example"><title>setting attributes with the debugger</title><programlisting role="lzx-embednew"><filename>program-development-$16.lzx</filename><parameter/><code>
-&lt;canvas height="200" bgcolor="red" debug="true"&gt; 
-  &lt;debug y="60"/&gt; 
-  &lt;view name="sam" bgcolor="blue" height="50" width="50"/&gt; 
-&lt;/canvas&gt; 
-</code></programlisting><programlisting>
-&lt;canvas height="200" bgcolor="red" debug="true"&gt; 
-  &lt;debug y="60"/&gt; 
-  &lt;view name="sam" bgcolor="blue" height="50" width="50"/&gt; 
-&lt;/canvas&gt; 
-</programlisting><?lzx-edit programs/program-development-$16.lzx?></example>
+  <example role="live-example">
+    <title>Nested views</title>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/program-development-$16.lzx"/></textobject> 
+    </programlisting>
+  </example>
 <para>
 In the evaluation pane, type,</para>
 
