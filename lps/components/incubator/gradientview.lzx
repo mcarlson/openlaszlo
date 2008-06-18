@@ -58,14 +58,10 @@
       this.draw();
       ]]>
     </handler>
-
-    <method name="construct" args="parent,args">
-      super.construct(parent, args);
-    </method>
     
     <handler name="oncontext" method="draw"/>
 
-    <method name="draw" args="ignore">
+    <method name="draw" args="ignore=null">
       <![CDATA[
         if (! this.context) return;
         this.clear();
