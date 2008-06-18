@@ -665,14 +665,7 @@ public class Compiler {
         }
         try {
             ElementCompiler compiler = getElementCompiler(element, env);
-            mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="compiling element with " + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                Compiler.class.getName(),"051018-526", new Object[] {compiler.getClass().toString()})
-);
+            mLogger.debug("compiling element "+element.getName() + " with compiler "+compiler.getClass().toString());
             compiler.compile(element);
         } catch (CompilationError e) {
             // todo: wrap instead

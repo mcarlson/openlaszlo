@@ -450,6 +450,8 @@ public class NodeModel implements Cloneable {
         Element elt, ViewSchema schema, 
         boolean includeChildren, CompilationEnvironment env)
     {
+        checkTagDeclared(elt, schema);
+
         NodeModel model = new NodeModel(elt, schema, env);
         LinkedHashMap attrs = model.attrs;
         Map delegates = model.delegates;
@@ -489,6 +491,13 @@ public class NodeModel implements Cloneable {
         ((ElementWithLocationInfo) elt).model = model;
         return model;
     }
+
+  static void checkTagDeclared(Element element, ViewSchema schema) {
+    ClassModel classinfo =  schema.getClassModel(element.getName());
+    if (classinfo == null || classinfo.definition == null) {
+      throw new CompilationError("Unknown tag: "+element.getName(), element);
+    }
+  }
 
     // Calculate how many nodes this object will put on the
     // instantiation queue.
