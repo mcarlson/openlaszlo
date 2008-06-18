@@ -81,6 +81,10 @@ def process ( fname, outname )
             outf.write('<hr/>')
             line.gsub!(/<p class="postprocess-method-end([^>]*)>/, '')
             line.gsub!(/<\/p>/, '')
+          elsif (pptagname =~ /^xlink-/)
+            # Create an external link to an anchor
+            line.gsub!(/<p class="postprocess-xlink-/, '<a href="')
+            line.gsub!(/<\/p>/, '</a>')
           else
             foundthis = false
           end

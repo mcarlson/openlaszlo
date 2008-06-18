@@ -1523,11 +1523,24 @@
            [bshine 2007.11.04]
       -->
       <entry role="attrcat">
+        <!-- Want the equivalent of:
+             <a href="${reference}info-attributes.html#readonly">readonly</a>
+             but this is not recognized (need to run xref.xsl templates?)
+             Nor do xlink or olink solve this, so we'll postprocess it.
+          -->
         <xsl:choose>
-          <xsl:when test="&final; and ($isinstancevar or $isinitarg)">initialize-only</xsl:when>
-          <xsl:when test="&readonly;">readonly</xsl:when>
-          <xsl:when test="not(&unwritable;) and $isinstancevar">read/write</xsl:when>
-          <xsl:when test="not(&unwritable;) and &virtual;">read/write (virtual)</xsl:when>
+          <xsl:when test="&final; and ($isinstancevar or $isinitarg)">
+            <para role="postprocess-xlink-info-attributes.html#final">initialize-only</para>
+          </xsl:when>
+          <xsl:when test="&readonly;">
+            <para role="postprocess-xlink-info-attributes.html#readonly">readonly</para>
+          </xsl:when>
+          <xsl:when test="not(&unwritable;) and $isinstancevar">
+            <para role="postprocess-xlink-info-attributes.html#setter">read/write</para>
+          </xsl:when>
+          <xsl:when test="not(&unwritable;) and &virtual;">
+            <para role="postprocess-xlink-info-attributes.html#setter">read/write (virtual)</para>
+          </xsl:when>
           <xsl:when test="not(&unwritable;) and not($isinstancevar) and not($issetter)">
             <!-- happens when an old style class is encountered -->
             <xsl:message>
@@ -1546,8 +1559,12 @@
             <xsl:message>
               Unknown attribute category (otherwise) for <xsl:value-of select="ancestor-or-self::property//@id" /> : <xsl:value-of select="@name" />
             </xsl:message>
-            <xsl:if test="&final;">final</xsl:if>
-            <xsl:if test="&readonly;">readonly</xsl:if>
+            <xsl:if test="&final;">
+              <para role="postprocess-xlink-info-attributes.html#readonly">final</para>
+            </xsl:if>
+            <xsl:if test="&readonly;">
+              <para role="postprocess-xlink-info-attributes.html#readonly">readonly</para>
+            </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="&isevent;">
