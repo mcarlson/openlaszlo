@@ -320,14 +320,14 @@ have a large number of views updating based on the same information, it is bette
 <!--unknown tag: layout-->
 
 instead of writing a complex constraint system. 
-There are quite a few layouts available in the Openlaszlo platform, and furthermore you can write your own if none of these meet your needs. See <xref linkend="layout-and-design"/> for more 
+There are quite a few layouts available in the OpenLaszlo platform, and furthermore you can write your own if none of these meet your needs. See <xref linkend="layout-and-design"/> for more 
 on this subject.
 </para>
 
 <para/></section><section><title>When to use events and methods instead of constraints</title> 
 
 <para>Generally, if you have a lot of different things that need to be updated based on a single dependency, it
-is optimal to write a setter for the dependent attribute and in that setter take appropriate actions.</para>
+is optimal to write a setter for the dependent attribute and in that setter take appropriate actions. See <xref linkend="methods-events-attributes"/> for more on this subject.</para>
 
 
 
@@ -401,7 +401,7 @@ No ECMAScript  functions have dependency functions, so none of them will work  p
 </para>
 <para>
 More precisely, ECMAScript functions will work properly if they are  stateless
-(they depend only on the values of their arguments), so, for example,<literal>
+(they depend only on the values of their arguments), so, for example, <literal>
 value="Math.max(parent.width, parent.height)"</literal> will do the right thing.   (Any
 stateless function works.)  However, many apparently simple functions do not work within constrains.
 </para>
@@ -414,18 +414,18 @@ in which the value of a parameter is constrained to that returned by a serializi
 Upon inspection, we see that the dependencies of </para>
 
 <programlisting>
-     value="escape(canvas.options.serialize())"
+     value="${escape(canvas.options.serialize())}"
 </programlisting>
 <para>
  will be calculated as:</para>
 
- <itemizedlist spacing="compact"><listitem><para>the dependencies of <literal>escape</literal> (which includes the value of 
-<literal>canvas.options.serialize())</literal></para></listitem><listitem><para>the dependencies of serialize</para></listitem></itemizedlist>
-<para>In  this case, <literal>value</literal> gets evaluated too early (i.e. before the dataset has any data) 
-and that's why you don't see any data. Instead, you would use <indexterm><primary><literal>getValue()</literal></primary></indexterm><methodname>getValue()</methodname>which acts as 
-a getter for &lt;param&gt;, instead of using a constraint.</para>
+ <itemizedlist spacing="compact"><listitem><para>the dependencies of <methodname>escape()</methodname> (which includes the value of 
+<methodname>canvas.options.serialize()</methodname>)</para></listitem><listitem><para>the dependencies of <methodname>serialize()</methodname></para></listitem></itemizedlist>
+<para>In this case, <literal>value</literal> gets evaluated too early (i.e. before the dataset has any data) 
+and that's why you don't see any data. Instead, you would use <indexterm><primary><literal>getValue()</literal></primary></indexterm><methodname>getValue()</methodname> which acts as 
+a getter for <sgmltag class="element">&lt;param&gt;</sgmltag>, instead of using a constraint.</para>
 <para>
-In evaluating dependencies in constraints, the OpenLaszlo compiler only look at the 'tail' of a chain, so if you  have
+In evaluating dependencies in constraints, the OpenLaszlo compiler only looks at the 'tail' of a chain, so if you  have
 an expression a.b.c, only c will be depended on.  For a function,  the function
 itself computes its dependencies, based on its  arguments.  In the case of
 <literal>escape</literal>, it doesn't have a dependency  function, nor does <literal>serialize</literal>, so in this
@@ -435,7 +435,7 @@ particular example, there  will be no dependencies at all.
 EXCEPT that the constraint mechanism only looks at a tail, so for example NEITHER 
 <literal>value="parent.selected.width"</literal> NOR <literal>value="Math.max(parent.width, 
 parent.selected.width"</literal> will work if <literal>parent.selected</literal> changes value (it's  fine if
-<literal>parent.selected </literal>stays the same but <literal>parent.selected.width </literal> changes).  </para>
+<literal>parent.selected</literal> stays the same but <literal>parent.selected.width</literal> changes).  </para>
 <para>
 The bottom line is that the constraint calculator is not really designed to be used in functions. It
 works for many situations, but not for anything complex.</para>
