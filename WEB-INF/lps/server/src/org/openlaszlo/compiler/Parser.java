@@ -445,6 +445,14 @@ public class Parser {
     */
     protected List evaluateSwitchStatement(Element elt, CompilationEnvironment env) {
         Element selected = null;
+        for (Iterator iter = elt.getChildren().iterator();
+             iter.hasNext(); ) {
+            Element child = (Element) iter.next();
+            if (! (child.getName().equals("when")  ||
+                   child.getName().equals("otherwise"))) {
+                throw new CompilationError("unknown clause for a switch statement: "+child.getName(), child);
+            }
+        }
         for (Iterator iter = elt.getChildren(WHEN, elt.getNamespace()).iterator();
              iter.hasNext(); ) {
             Element when = (Element) iter.next();
