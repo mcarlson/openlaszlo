@@ -206,8 +206,8 @@ The server is invoked during the edit-compile-debug cycle, as explained in <xref
  That means that the server is here to stay as a developer tool. 
 </para>
 <para>
-There are two ways to specify whether an application is compiled for proxied operation: the <literal>'lzproxied' </literal>query parameter, 
-and the <indexterm><primary>proxied</primary></indexterm><sgmltag class="attribute">proxied</sgmltag> attribute of the &lt;canvas&gt; document root element.  Either of these can specify that the application is proxied,
+There are two ways to specify whether an application is compiled for proxied operation: the <literal>'lzproxied'</literal> query parameter, 
+and the <indexterm><primary>proxied</primary></indexterm><sgmltag class="attribute">proxied</sgmltag> attribute of the <literal>&lt;canvas&gt;</literal> document root element.  Either of these can specify that the application is proxied,
  that it is SOLO (unproxied), or that whether it is proxied is determined by another source.  If both of these mechanisms are used, they 
 must agree, otherwise it is a compiler error (for example, a <literal>?proxied=true</literal> request for an application that contains 
 <literal>&lt;canvas proxied="false"&gt;</literal>).  If neither is used, the application is proxied.</para>
