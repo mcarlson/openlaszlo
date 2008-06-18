@@ -63,13 +63,12 @@
       super.construct(parent, args);
     </method>
     
-    <method name="init">
-      super.init();
-      this.draw();
-    </method>
+    <handler name="oncontext" method="draw"/>
 
-    <method name="draw">
+    <method name="draw" args="ignore">
       <![CDATA[
+        if (! this.context) return;
+        this.clear();
           
         if (this.stretchHeight == null) {
           this.stretchHeight = this.height;

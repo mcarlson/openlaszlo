@@ -901,7 +901,7 @@
             }
 
             // Add bitmap data drawing layer
-            function rebuildBitmap (v) {
+            function rebuildBitmap (ignore) {
                 if (this['__bitmapmc']) {
                     this.__bitmapmc.removeMovieClip();
                 }
@@ -913,10 +913,11 @@
                 } else {
                     this.__bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
                 }
-                this.__bitmapmc.attachBitmap(this.__bitmapdata, 2, "auto", true);
+                // negative dimensions cause this to be null
+                if (this['__bitmapdata']) this.__bitmapmc.attachBitmap(this.__bitmapdata, 2, "auto", true);
             }
     
-            function _oninit(v) {
+            function _oninit(ignore) {
                 var context = this.sprite.getContext();
                 if ($swf8) {
                     this.rebuildBitmap();
@@ -1259,7 +1260,7 @@
                 if ($swf9) {
                 } else {
                     var rect = new flash.geom.Rectangle(0, 0, this.width, this.height);
-                    this.__bitmapdata.fillRect(rect, 0x000000ff);
+                    if (this['__bitmapdata']) this.__bitmapdata.fillRect(rect, 0x000000ff);
                 }
             }
     
