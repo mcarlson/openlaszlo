@@ -92,7 +92,7 @@ in the browser.</para>
 
 <para/></section><section><title>Using the standalone compiler lzc</title>
 <para>
-The standalone compiler is called <literal>lzc</literal>. Its location depends on how you have installed OpenLaszlo. Developers who build OpenLaszlo from the source will find lzc in <literal>$LPS_HOME/WEB-INF/lps/server/bin/</literal>. Developers who install OpenLaszlo with a binary installer will find it in the directory <literal>OpenLaszlo Server 3.x.x/bin</literal>.</para>
+The standalone compiler is called <literal>lzc</literal>. Its location depends on how you have installed OpenLaszlo. Developers who build OpenLaszlo from the source will find lzc in <literal>$LPS_HOME/WEB-INF/lps/server/bin/</literal>. Developers who install OpenLaszlo with a binary installer will find it in the directory <literal>OpenLaszlo Server @VERSIONID@/bin</literal>.</para>
 <para>Developers with more than one version of the OpenLaszlo server in play should define an alias: <literal>alias lzc='$LPS_HOME/WEB-INF/lps/server/bin/lzc'</literal>. By defining an alias based on $LPS_HOME, one can have multiple shells -- each with a different $LPS_HOME -- and the alias will map to the correct compiler for each shell</para>
 <para/></section><section id="program-development.IE_spurious_warning"><title condition="swf">Spurious Internet Explorer Content Block Warning</title>
 <para>

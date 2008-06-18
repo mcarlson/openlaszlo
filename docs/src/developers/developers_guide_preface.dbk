@@ -121,8 +121,8 @@ covers the entire subject of animation, and so forth.</para>
 
 
 <para/></section></section><section><title>Typographic Conventions</title>
-<para>Code is displayed thus: <literal>var a = f(2)</literal>.  Longer sections of code and other verbatim information is displayed in a separate paragraph:</para>
-
+<para>Code is displayed thus: <literal>var a = f(2)</literal>. Tags are displayed thus: <sgmltag class="element">&lt;canvas&gt;</sgmltag> and their attributes are displayed like this: 
+<sgmltag class="attribute">height</sgmltag>. Function names are displayed like this: <methodname>getAttribute()</methodname>.  Longer sections of code and other verbatim information is displayed in a separate paragraph:</para>
 <programlisting>
 An example file
 that spans several
@@ -138,11 +138,11 @@ lines
 application is shown first, followed by the application source code,
 followed by an Edit button that allows you to try out the effect of
 making changes to the application source code.</para>
-<informalexample role="live-example"><programlisting role="lzx-embednew"><filename>developers_guide_preface-$2.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;text&gt;Hello World!&lt;/text&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;text&gt;Hello World!&lt;/text&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/developers_guide_preface-$2.lzx?></informalexample>
+<informalexample role="live-example">
+  <programlisting language="lzx">
+    <textobject><textdata fileref="programs/developers_guide_preface-$2.lzx"/></textobject>
+  </programlisting>
+</informalexample>
 
 <para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>Material marked thus is only shown in the beta distributions of
 the documentation, and must be eliminated before the product is

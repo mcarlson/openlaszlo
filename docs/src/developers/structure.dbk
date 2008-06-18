@@ -369,18 +369,18 @@ and instantiate it dynamically. (The following discussion assumes an understandi
 </para>
 <para>
  To do position code where we want it in the importing application, we would make a delegate that directly listens for the
-<indexterm><primary>onload event</primary></indexterm><literal>onload</literal> event from the &lt;import&gt; and instantiates the class (or calls a method to do so).  Something like:</para>
+<indexterm><primary>onload event</primary></indexterm><sgmltag class="attribute">onload</sgmltag> event from the <sgmltag class="element">&lt;import&gt;</sgmltag> and instantiates the class (or calls a method to do so).  Something like:</para>
 <programlisting>
    &lt;handler name="onload" reference="blueview"&gt;
       this.makeChild({name: 'blueview', ...});
    &lt;/handler&gt;
 </programlisting>
 <para>
-We could define an <indexterm><primary><literal>onload()</literal></primary></indexterm><methodname>onload()</methodname> on &lt;import&gt; to call a method to set a global variable "loaded" to true. 
+We could define an <indexterm><primary><literal>onload()</literal></primary></indexterm><methodname>onload()</methodname> on <sgmltag class="element">&lt;import&gt;</sgmltag> to call a method to set a global variable <literal>loaded</literal> to true. 
 </para>
 <para>
 Then, at the place where we want blueview to appear, we could load the library and then set up a delegate and timer which calls a method to see if the variable
-"loaded" is true, and if not reset the timer.  If it is true--that is, if the class has been loaded-- the view is created.
+<literal>loaded</literal> is true, and if not reset the timer.  If it is true--that is, if the class has been loaded-- the view is created.
 </para>
 <para/></section></section><section><title>Deleting Imported Libraries</title>
 <para>
