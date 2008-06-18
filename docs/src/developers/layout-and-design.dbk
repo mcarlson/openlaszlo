@@ -362,11 +362,7 @@ Taking this a step further, if our list of images were replicated against a data
 </example>
 
 <para>
-See the Reference for an explanation of the <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> call.
-</para>
-
-<para>
-The floater must have an empty datapath assigned in advance. Notice how since only a pointer to the <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> element is passed to the floating view, the floater can access attributes of the data that were not referenced in the <literal>imageRow</literal> class (for example,the <literal>src</literal> attribute). This can become particularly useful when you want to "drop" the floater somewhere. The drop target may need to access other data properties (or even delete the XML node in the dataset), and passing a pointer to it saves retracing it.</para>
+The floater must have an empty datapath assigned in advance. Notice how since only a <sgmltag class="element" role="LzDatapointer">&lt;datapointer&gt;</sgmltag> element is passed to the floating view, the floater can access attributes of the data that were not referenced in the <literal>imageRow</literal> class (for example,the <literal>src</literal> attribute). This can become particularly useful when you want to "drop" the floater somewhere. The drop target may need to access other data properties (or even delete the XML node in the dataset), and passing a pointer to it saves retracing it.</para>
 <para>
 
 A floating view is not only for draggable objects. If you wanted to frame a specified view, regardless of where it was in the view hierarchy, you might also find a floating view to be the best option. See the <link linkend="layout-and-design.stableborderlayout">StableBorderLayout</link> section for more.
