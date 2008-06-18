@@ -441,13 +441,13 @@
     <indexterm>
       <primary>LzText</primary>
     </indexterm>
-    <classname>LzText</classname>view. The text content can be
+    <classname>LzText</classname> view. The text content can be
     specified at compile time using either of the two methods
     below; as the content of the 
     <indexterm>
       <primary>text</primary>
     </indexterm>
-    <sgmltag class="element">&lt;text&gt;</sgmltag>tag, or as the 
+    <sgmltag class="element">&lt;text&gt;</sgmltag> tag, or as the 
     <indexterm>
       <primary>text</primary>
     </indexterm>
