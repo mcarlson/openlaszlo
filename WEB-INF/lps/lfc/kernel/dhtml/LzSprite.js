@@ -89,6 +89,9 @@ var LzSprite = function(owner, isroot) {
                 var el = e.relatedTarget;
             }
             if (el && el.owner && el.className.indexOf('lz') == 0) {
+                if (LzSprite.prototype.quirks.fix_ie_clickable) {
+                    LzInputTextSprite.prototype.__setglobalclickable(true);
+                }
                 this.focus();
                 LzKeyboardKernel.setKeyboardControl(true);
                 LzMouseKernel.__resetMouse();
