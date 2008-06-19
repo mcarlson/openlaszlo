@@ -1,6 +1,4 @@
 /**
-  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
-  *            Use is subject to license terms.
   * from r34 of http://excanvas.svn.sourceforge.net/svnroot/excanvas/excanvas.js
   */
 // Copyright 2006 Google Inc.
