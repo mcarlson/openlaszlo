@@ -133,8 +133,8 @@ public class ViewSchema extends Schema {
         }
     }
 
-    public AttributeSpec findSimilarAttribute (String className, String attributeName) {
-        ClassModel info = getClassModel(className);
+    public AttributeSpec findSimilarAttribute (String tagName, String attributeName) {
+        ClassModel info = getClassModel(tagName);
 
         if (info != null) {
             return info.findSimilarAttribute(attributeName);
@@ -256,33 +256,33 @@ public class ViewSchema extends Schema {
         }
     }
 
-    public String getSuperclassName(String className) {
-        ClassModel model = getClassModel(className);
+    public String getSuperTagName(String tagName) {
+        ClassModel model = getClassModel(tagName);
         if (model == null)
             return null;
-        return model.getSuperclassName();
+        return model.getSuperTagName();
     }
     
     /**
      * @return the base class of a user defined class
      */
-    public String getBaseClassname(String className) {
-        String ancestor = getSuperclassName(className);
+    public String getBaseClassname(String tagName) {
+        String ancestor = getSuperTagName(tagName);
         String superclass = ancestor;
 
         while (ancestor != null) {
-            if (ancestor.equals(className)) {
+            if (ancestor.equals(tagName)) {
                 throw new CompilationError(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="recursive class definition on " + p[0]
  */
             org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ViewSchema.class.getName(),"051018-235", new Object[] {className})
+                ViewSchema.class.getName(),"051018-235", new Object[] {tagName})
 );
             }
             superclass = ancestor;
-            ancestor = getSuperclassName(ancestor);
+            ancestor = getSuperTagName(ancestor);
         }
         return superclass;
     }
@@ -307,14 +307,14 @@ public class ViewSchema extends Schema {
      * Add a new element to the attribute type map.
      *
      * @param elt the element to add to the map
-     * @param superclassName an element to inherit attribute to type info from. May be null.
+     * @param superTagName an element to inherit attribute to type info from. May be null.
      * @param attributeDefs list of attribute name/type defs
      */
-    public void addElement (Element elt, String className,
-                            String superclassName, List attributeDefs, 
+    public void addElement (Element elt, String tagName,
+                            String superTagName, List attributeDefs, 
                             CompilationEnvironment env)
     {
-        ClassModel superclass = getClassModel(superclassName);
+        ClassModel superclass = getClassModel(superTagName);
 
         if (superclass == null) {
             throw new CompilationError(
@@ -323,14 +323,14 @@ public class ViewSchema extends Schema {
  * @org-mes="undefined superclass " + p[0] + " for class " + p[1]
  */
             org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ViewSchema.class.getName(),"051018-417", new Object[] {superclassName, className})
+                ViewSchema.class.getName(),"051018-417", new Object[] {superTagName, tagName})
 );
         }
 
-        if (mClassMap.get(className) != null) {
+        if (mClassMap.get(tagName) != null) {
             String builtin = "builtin ";
             String also = "";
-            Element other = getClassModel(className).definition;
+            Element other = getClassModel(tagName).definition;
             if (other != null) {
                 builtin = "";
                 also = "; also defined at " + Parser.getSourceMessagePathname(other) + ":" + Parser.getSourceLocation(other, Parser.LINENO);
@@ -341,13 +341,13 @@ public class ViewSchema extends Schema {
  * @org-mes="duplicate class definitions for " + p[0] + p[1] + p[2]
  */
             org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ViewSchema.class.getName(),"051018-435", new Object[] {builtin, className, also})
+                ViewSchema.class.getName(),"051018-435", new Object[] {builtin, tagName, also})
 , elt);
         }
-        ClassModel info = new ClassModel(className, superclass, this, elt);
-        mClassMap.put(className, info);
+        ClassModel info = new ClassModel(tagName, superclass, this, elt, env);
+        mClassMap.put(tagName, info);
 
-        if (sInputTextElements.contains(superclassName)) {
+        if (sInputTextElements.contains(superTagName)) {
             info.isInputText = true;
             info.hasInputText = true;
         } else {
@@ -391,7 +391,7 @@ public class ViewSchema extends Schema {
         }
 
         // Add in the attribute declarations
-        addAttributeDefs(elt, className, attributeDefs, env);
+        addAttributeDefs(elt, tagName, attributeDefs, env);
     }
 
     /**
@@ -457,8 +457,8 @@ public class ViewSchema extends Schema {
     }
 
     /** Adds a ClassModel entry into the class table for CLASSNAME. */
-    private void makeNewStaticClass (String classname) {
-        ClassModel info = new ClassModel(classname, null, this, null);
+  private void makeNewStaticClass (String classname, CompilationEnvironment env) {
+      ClassModel info = new ClassModel(classname, null, this, null, env);
         if (sInputTextElements.contains(classname)) {
             info.isInputText = true;
             info.hasInputText = true;
@@ -637,7 +637,7 @@ public class ViewSchema extends Schema {
 
         // This is the base class from which all classes derive unless otherwise
         // specified. It has no attributes.
-        makeNewStaticClass("Object");
+        makeNewStaticClass("Object", env);
 
         schemaDOM = (Document) sCachedSchemaDOM.clone();
         Element docroot = schemaDOM.getRootElement();
@@ -690,14 +690,14 @@ public class ViewSchema extends Schema {
         // TODO [hqm 2007-09]: CHECK FOR NULL HERE         
 
         while (childclass != null) {
-            String superclassname = childclass.getSuperclassName();
+            String superclassname = childclass.getSuperTagName();
             if (tagset.contains(superclassname)) {
                 return true;
             }
             childclass = childclass.getSuperclassModel();
         }
 
-        String parentSuperclassname = parent.getSuperclassName();
+        String parentSuperclassname = parent.getSuperTagName();
         if (parentSuperclassname != null) {
             return canContainElement(parentSuperclassname, childTag);
         }

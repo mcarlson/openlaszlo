@@ -56,17 +56,19 @@ class DataCompiler extends ElementCompiler {
         return false;
     }
     
-    public void compile(Element element) {
-        try {
-            String dsetname = XMLUtils.requireAttributeValue(element, "name");
-        boolean trimwhitespace = "true".equals(element.getAttributeValue("trimwhitespace"));
-        String content = NodeModel.getDatasetContent(element, mEnv, trimwhitespace);
-        mEnv.compileScript("var "+dsetname+";");
-        mEnv.compileScript(dsetname + "= "+LOCAL_DATA_FNAME+"("+ScriptCompiler.quote(dsetname) + ", " +content+
-                           "," + trimwhitespace+");\n");
-        } catch (org.openlaszlo.xml.internal.MissingAttributeException err) {
-            throw new CompilationError(element, err);
-        }
+  public void compile(Element element) {
+    try {
+      String dsetname = XMLUtils.requireAttributeValue(element, "name");
+      boolean trimwhitespace = "true".equals(element.getAttributeValue("trimwhitespace"));
+      String content = NodeModel.getDatasetContent(element, mEnv, trimwhitespace);
+      // Initialize the global declaration
+      mEnv.compileScript(dsetname+" = "+
+                         LOCAL_DATA_FNAME+"("+ScriptCompiler.quote(dsetname) +
+                         ", " +content+
+                         "," + trimwhitespace+");\n");
+    } catch (org.openlaszlo.xml.internal.MissingAttributeException err) {
+      throw new CompilationError(element, err);
     }
+  }
 
 }

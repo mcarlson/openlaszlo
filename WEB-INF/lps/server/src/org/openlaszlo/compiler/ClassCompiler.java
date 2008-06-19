@@ -91,6 +91,7 @@ class ClassCompiler extends ViewCompiler  {
      * attributes of type "script".
      */
     void updateSchema(Element element, ViewSchema schema, Set visited) {
+        super.updateSchema(element, schema, visited);
         Element elt = element;
         // Get meta attributes
         String classname = elt.getAttributeValue("name");

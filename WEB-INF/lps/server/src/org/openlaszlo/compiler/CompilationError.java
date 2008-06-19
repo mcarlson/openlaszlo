@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -48,6 +48,9 @@ public class CompilationError extends RuntimeException {
      */
     public CompilationError(String message) {
         super(message);
+        if (ThrowCompilationErrors) {
+            this.printStackTrace();
+        }
     }
 
     /** Constructs an instance.
@@ -55,7 +58,7 @@ public class CompilationError extends RuntimeException {
      * @param element the element within which the error occurred
      */
     public CompilationError(String message, Element element) {
-        super(message);
+        this(message);
         initElement(element, null);
     }
 
@@ -64,13 +67,13 @@ public class CompilationError extends RuntimeException {
      * @param cause the chained cause of the error
      */
     public CompilationError(Element element, Throwable cause) {
-        super(getCauseMessage(cause));
+        this(getCauseMessage(cause));
         initElement(element, cause);
     }
 
     public CompilationError(Element element, String attribute,
                             Throwable cause) {
-        super(getCauseMessage(cause));
+        this(getCauseMessage(cause));
         initElement(element, attribute, cause);
     }
 

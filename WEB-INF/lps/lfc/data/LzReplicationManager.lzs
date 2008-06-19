@@ -270,7 +270,7 @@ override function construct ( odp , args ){
     this.cloneAttrs = new LzInheritedHash(view._instanceAttrs);
 
     this.cloneAttrs.datapath = LzNode._ignoreAttribute;
-    this.cloneAttrs.$datapath = { name  : 'datapath' };
+    this.cloneAttrs.$datapath = { 'class'  : lz.datapath };
     this.cloneAttrs.$datapath.attrs = { datacontrolsvisibility: odp.datacontrolsvisibility, 
                                         __LZmanager : this }
 

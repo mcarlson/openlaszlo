@@ -368,8 +368,6 @@ public abstract class CommonGenerator implements ASTVisitor {
 
     ASTIdentifier classortrait = (ASTIdentifier)children[0];
     ASTIdentifier classname = (ASTIdentifier)children[1];
-    // The classname, with possibly prefix of "_level0.", for SWF8 runtime loadable libraries
-    ASTIdentifier globalclassname = new ASTIdentifier(globalprefix + classname.getName());
     String classnameString = classname.getName();
     SimpleNode superclass = children[2];
     SimpleNode traits = children[3];
@@ -415,14 +413,19 @@ public abstract class CommonGenerator implements ASTVisitor {
     map.put("_2", traitsandsuper);
     map.put("_3", instanceProperties);
     map.put("_4", classProperties);
-    SimpleNode newNode = (new Compiler.Parser()).substitute(xtor + ".make(" +
-                                                            ScriptCompiler.quote(classnameString) +
-                                                            ", _2, _3, _4);",
-                                                            map);
-    SimpleNode varNode = new ASTVariableDeclaration(0);
-    varNode.set(0, globalclassname);
-    varNode.set(1, newNode);
-    SimpleNode replNode = varNode;
+    SimpleNode replNode = (new Compiler.Parser()).substitute(xtor + ".make(" +
+                                                             ScriptCompiler.quote(classnameString) +
+                                                             ", _2, _3, _4);",
+                                                             map);
+    if (! "".equals(globalprefix)) {
+      // The classname, with possibly prefix of "_level0.", for SWF8
+      // runtime loadable libraries
+      ASTIdentifier globalclassname = new ASTIdentifier(globalprefix + classnameString);
+      SimpleNode varNode = new ASTVariableDeclaration(0);
+      varNode.set(0, globalclassname);
+      varNode.set(1, replNode);
+      replNode = varNode;
+    }
 
     if (! stmts.isEmpty()) {
       SimpleNode statements = new ASTStatementList(0);
@@ -431,9 +434,10 @@ public abstract class CommonGenerator implements ASTVisitor {
       SimpleNode stmtNode = (new Compiler.Parser()).substitute("(function () { with("+globalprefix+"_1"+")"+
                                                                "with("+globalprefix+"_1.prototype) { _5 }})()",
                                                                map);
-      replNode = new ASTStatementList(0);
-      replNode.set(0, varNode);
-      replNode.set(1, stmtNode);
+      SimpleNode listNode = new ASTStatementList(0);
+      listNode.set(0, replNode);
+      listNode.set(1, stmtNode);
+      replNode = listNode;
     }
     return visitStatement(replNode);
   }
@@ -480,40 +484,48 @@ public abstract class CommonGenerator implements ASTVisitor {
     ASTIdentifier curid = null;
     List stmts = new ArrayList();
     List newargs = new ArrayList();
+    Map map = new HashMap();
     
     // The argument list is a list of ASTIdentifiers and ASTFormalInitializer.
     // When a ASTFormalInitializer appears, it contains an initialization expression
     // that applies to the previous argument.  An ASTIdentifier can be marked
     // with an ellipsis, the grammar should enforce it is the last one.
     int argno = 0;
+    String optional = null;
+    String rest = null;
+    // TODO: [2008-05-30 ptw] Does the parser ensure that args are
+    // only permitted in required*, optional*, rest+ pattern?
     for (int i=0; i<args.length; i++) {
       if (args[i] instanceof ASTIdentifier) {
         curid = (ASTIdentifier)args[i];
         if (curid.getEllipsis()) {
-          Map map = new HashMap();
-          String indexvar = "$lzsc$" + UUID().toString();
-          map.put("_1", new ASTIdentifier(curid.getName()));
-          map.put("_2", new ASTIdentifier(indexvar));
-          String pattern =
-            "var _1=new Array;" +
-            " for (var _2=" + argno + ";_2<arguments.length;_2++) {" +
-            "_1.push(arguments[_2]); }";
-          SimpleNode[] newNodes = (new Compiler.Parser()).substituteStmts(pattern, map);
-          stmts.addAll(flatten(newNodes));
+          // Unfortunately, arguments is not an Array in some JS
+          // runtimes, so we have to apply slice to it...
+          rest = "var "+ curid.getName() +" = Array.prototype.slice.call(arguments, "+argno+");\n";
         }
         else {
+          assert ((optional == null ||
+                   (i+1 < args.length && args[i+1] instanceof ASTFormalInitializer))) :
+            "Required argument after optional: " + (new ParseTreePrinter()).text(n);
+          assert (rest == null) :
+            "Required argument after rest: " + (new ParseTreePrinter()).text(n);
           newargs.add(args[i]);
         }
         argno++;
       }
+      // TODO: [2008-05-30 ptw] This is a little bogus:  the parser
+      // should be attaching the initializer as a property of the
+      // parameter, not inserting it into the parameter list, IMO
       else if (args[i] instanceof ASTFormalInitializer) {
         assert curid != null : "ASTFormalInitializer appears first in list";
+        assert rest == null : "Optional argument after rest: " +
+          (new ParseTreePrinter()).text(n);
         SimpleNode initialValue = args[i].get(0);
-        Map map = new HashMap();
-        map.put("_1", curid);
-        map.put("_2", initialValue);
-        String pattern = "if (arguments.length<" + argno + "){_1=(_2); }";
-        stmts.addAll(flatten((new Compiler.Parser()).substituteStmts(pattern, map)));
+        map.put("_" + argno, initialValue);
+        if (optional == null) {
+          optional = "switch (arguments.length) {\n";
+        }
+        optional += "  case " + (argno - 1) + ": " + curid.getName() + " = _" + argno +";\n";
       }
       else {
         throw new IllegalArgumentException("Unexpected item in argument list: " + args[i]);
@@ -521,10 +533,20 @@ public abstract class CommonGenerator implements ASTVisitor {
     }
 
     // any alterations needed?
-    if (stmts.size() > 0) {
+    if (optional != null || rest != null) {
+      String defaults = "";
+      if (optional != null) {
+        optional += "}\n";
+        defaults += optional;
+      }
+      if (rest != null) {
+        defaults += rest;
+      }
+      SimpleNode[] newNodes = (new Compiler.Parser()).substituteStmts(defaults, map);
+      stmts.addAll(flatten(newNodes));
       // newargs contains arguments without initializers
       children[formalPos].setChildren((SimpleNode[])newargs.toArray(new SimpleNode[0]));
-      
+
       // Build a new statement list, consisting of new stmts for formal
       // initializations, followed by original statements.  Have to
       // keep original statments at the same level, in case there are

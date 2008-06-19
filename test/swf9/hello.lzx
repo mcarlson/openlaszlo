@@ -35,7 +35,7 @@
     canvas.somey += 20;
   </method>
 
-  <view x="200" y="150" resource="http://www.beartronics.com/swf9/logo.swf" 
+  <view x="200" y="150" resource="http:../resources/swf/logo.swf" 
         onclick="this.animate('rotation', 45, 1000, true)">
     <handler name="onerror" args="arg">
       Debug.write("resource onerror event", arg);

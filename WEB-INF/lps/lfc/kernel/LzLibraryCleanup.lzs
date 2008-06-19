@@ -16,7 +16,6 @@ class LzLibraryCleanup extends LzNode {
 /** @access private
   * @modifiers override 
   */
-    static var tagname = '__libraryloadercomplete';
 /** @access private */
     static var attributes = new LzInheritedHash(LzNode.attributes);
 

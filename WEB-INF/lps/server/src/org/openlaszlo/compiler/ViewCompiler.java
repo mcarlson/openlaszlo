@@ -578,7 +578,7 @@ public class ViewCompiler extends ElementCompiler {
                     // Avoid recursively traversing class definitions.
                     // Mark this class as having been traversed, to
                     // avoid loops.
-                    classList.add(classinfo.className.intern());
+                    classList.add(classinfo.tagName.intern());
                     mapTextMetricsCompilation(e, env, fontInfo, classList);
                 }
             }

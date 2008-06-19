@@ -64,7 +64,7 @@ class ScriptElementCompiler extends ElementCompiler {
                     // Provide file info for anonymous function name
                     CompilerUtils.sourceLocationDirective(element, true) +
                     VIEW_INSTANTIATION_FNAME +
-                    "({name: 'script', attrs: " +
+                    "({'class': lz.script, attrs: " +
                     "{script: function () {\n" +
                     "#beginContent\n" +
                     "#pragma 'scriptElement'\n" +

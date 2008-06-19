@@ -161,4 +161,30 @@ public class CompilerUtils  {
             || (ToplevelCompiler.isElement(parent) &&
                 isAtToplevel(parent));
     }
+
+    /** Is this element a direct child of the canvas?
+     *
+     * TODO: [2008-06-17 ptw] Reconcile this with the above.  Why do
+     * we have two different algorithms?
+     */
+    static boolean topLevelDeclaration(Element elt) {
+        Element parent = elt.getParentElement();
+        if (parent == null) {
+            return false;
+        }
+        String pname = parent.getName();
+
+        if ("canvas".equals(pname) || "library".equals(pname)) {
+            return true;
+        }
+
+        // Pass up through any <switch> clauses
+        if ("switch".equals(pname) ||
+            "when".equals(pname) ||
+            "otherwise".equals(pname)) {
+            return topLevelDeclaration(parent);
+        } else {
+            return false;
+        }
+    }
 }

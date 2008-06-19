@@ -14,7 +14,10 @@ import org.openlaszlo.sc.ScriptClass;
 public class ClassModel implements Comparable {
     protected final ViewSchema schema;
     /** This is really the LZX tag name */
+    public final String tagName;
+    /** And this is the actual class name */
     public final String className;
+    final CompilationEnvironment env;
     protected boolean builtin = false;
     // This is null for the root class
     protected ClassModel superclass;
@@ -31,7 +34,7 @@ public class ClassModel implements Comparable {
     protected Set mForbiddenTags = new HashSet();
 
     /* If superclass is a predefined system class, just store its name. */
-    protected String superclassName = null;
+    protected String superTagName = null;
     protected boolean hasInputText = false;
     protected boolean isInputText = false;
         
@@ -47,18 +50,24 @@ public class ClassModel implements Comparable {
     protected String sortkey = null;
 
     public String toString() {
-        return "ClassModel: className="+className + ", " + 
+        return "ClassModel: tagName="+tagName + ", " + 
             "superclass=" + superclass + ", " + 
-            "superclassName=" + superclassName + ", " + 
+            "superTagName=" + superTagName + ", " + 
             "hasInputText=" + hasInputText + ", " + 
             "isInputText=" + isInputText + ", " + 
             "definition=" + definition;
     }
 
     // Construct a user-defined class
-    public ClassModel(String className, ClassModel superclass,
-               ViewSchema schema, Element definition) {
-        this.className = className;
+    public ClassModel(String tagName, ClassModel superclass,
+                      ViewSchema schema, Element definition, CompilationEnvironment env) {
+        this.tagName = tagName;
+        this.env = env;
+        if (tagName != null) {
+          this.className = LZXTag2JSClass(tagName);
+        } else {
+          this.className = LZXTag2JSClass(env.methodNameGenerator.next());
+        }
         this.superclass = superclass;
         this.definition = definition;
         if (definition != null) {
@@ -66,15 +75,15 @@ public class ClassModel implements Comparable {
           this.kind = definition.getName();
         }
         this.schema = schema;
-        this.sortkey = className;
+        this.sortkey = tagName != null ? tagName : className;
         if (superclass != null) {
           this.sortkey = superclass.sortkey + "." + this.sortkey;
         }
     }
 
   // Construct a builtin class
-  public ClassModel(String className, ViewSchema schema) {
-    this(className, null, schema, null);
+  public ClassModel(String tagName, ViewSchema schema, CompilationEnvironment env) {
+    this(tagName, null, schema, null, env);
   }
 
   public int compareTo(Object other) throws ClassCastException {
@@ -88,8 +97,8 @@ public class ClassModel implements Comparable {
   }
 
   public String toLZX(String indent) {
-    String lzx = indent + "<interface name='" + className + "'" +
-      ((superclass != null)?(" extends='" + superclass.className +"'"):"") + ">";
+    String lzx = indent + "<interface name='" + tagName + "'" +
+      ((superclass != null)?(" extends='" + superclass.tagName +"'"):"") + ">";
     for (Iterator i = attributeSpecs.values().iterator(); i.hasNext(); ) {
       AttributeSpec spec = (AttributeSpec)i.next();
       String specLZX = spec.toLZX(indent + "  ", superclass);
@@ -143,42 +152,53 @@ public class ClassModel implements Comparable {
    * instance has methods, either explicit or implicit).
    */
   void emitClassDeclaration(CompilationEnvironment env) {
-    String tagName = getClassName();
-    String className = LZXTag2JSClass(tagName);
     // className will be a global
     env.addId(className, definition);
     // Should the package prefix be in the model?  Should the
     // model store class and tagname separately?
     ClassModel superclassModel = getSuperclassModel();
-    String superTagName = superclassModel.getClassName();
     // Allow forward references
     if (! superclassModel.isCompiled()) {
       superclassModel.compile(env);
     }
-    String superclassName = LZXTag2JSClass(superTagName);
+    String superClassName = superclassModel.className;
 
-    // Build the constructor
-    String body = "";
-    body += "super($lzc$parent, $lzc$attrs, $lzc$children, $lzc$async);\n";
-    nodeModel.setAttribute(
-      className,
-      new Method(
+    // TODO: [2008-06-02 ptw] This should be moved to the JS2 back-end
+    // Build the constructor trampoline
+    if ("swf9".equals(env.getRuntime())) {
+      String body = "";
+      body += "super($lzc$parent, $lzc$attrs, $lzc$children, $lzc$async);\n";
+      nodeModel.setAttribute(
         className,
-        // All nodes get these args when constructed
-        // Apparently AS3 does not allow defaulting of
-        // primitive args
-        "$lzc$parent:LzNode? = null, $lzc$attrs:Object? = null, $lzc$children:Array? = null, $lzc$async:Boolean = false",
-        body));
+        new Method(
+          className,
+          // All nodes get these args when constructed
+          // Apparently AS3 does not allow defaulting of
+          // primitive args
+          "$lzc$parent:LzNode? = null, $lzc$attrs:Object? = null, $lzc$children:Array? = null, $lzc$async:Boolean = false",
+          body));
+    }
 
     // Build the class body
     String classBody = "";
-    // Set the tag name
-    nodeModel.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
+    if (tagName != null) {
+      // Set the tag name
+      nodeModel.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
+    }
 
-    // --- This should only be for subclasses of Node
-    String children = ScriptCompiler.objectAsJavascript(nodeModel.childrenMaps());
-    // class#classChildren now class.children
-    nodeModel.setClassAttribute("children", "LzNode.mergeChildren(" + children + ", " + superclassName + "['children'])");
+    // TODO: [2008-06-02 ptw] This should only be done for LZX classes that are
+    // subclasses of LzNode
+    //
+    // Before you output this, see if it is necessary:  will this node
+    // end up with children at all?
+    if (getMergedChildren().size() > 0) {
+      // TODO: [2008-05-30 ptw] We don't output the merged children,
+      // on the belief that is is more efficient to build the merged
+      // list at runtime, but this should be measured.
+      String children = ScriptCompiler.objectAsJavascript(nodeModel.childrenMaps());
+      // class#classChildren now class.children
+      nodeModel.setClassAttribute("children", "LzNode.mergeChildren(" + children + ", " + superClassName + "['children'])");
+    }
 
     // Declare all instance vars and methods, save initialization
     // in <class>.attributes
@@ -245,21 +265,29 @@ public class ClassModel implements Comparable {
       }
     }
     // Create inits list, merged with superclass inits
-    nodeModel.setClassAttribute("attributes", "new LzInheritedHash(" + superclassName + ".attributes)");
-    classBody += "LzNode.mergeAttributes(" +
-      ScriptCompiler.objectAsJavascript(inits) +
-      ", "+env.getGlobalPrefix() + className + ".attributes);\n";
-
+    //
+    // NOTE: [2008-06-02 ptw] As an optimization, we don't do this if
+    // this class has no inits of its own.  Unlike LFC classes, an LZX
+    // class should not be manipulating its attributes directly, so
+    // this should be a safe optimization.
+    // NOTE: [2008-06-06 ptw] This optimization does not work.  Why?
+//     if (! inits.isEmpty()) {
+      nodeModel.setClassAttribute("attributes", "new LzInheritedHash(" + superClassName + ".attributes)");
+      classBody += "LzNode.mergeAttributes(" +
+        ScriptCompiler.objectAsJavascript(inits) +
+        ", "+env.getGlobalPrefix() + className + ".attributes);\n";
+//     }
     // Emit the class decl
     ScriptClass scriptClass =
       new ScriptClass(className,
-                      superclassName,
+                      superClassName,
                       decls,
                       nodeModel.getClassAttrs(),
                       classBody);
     env.compileScript(scriptClass.toString(), definition);
-    // Install in constructor map
-    env.compileScript("lz[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");
+    if (tagName != null) {
+      env.addTag(tagName, className);
+    }
   }
 
   /**
@@ -313,12 +341,22 @@ public class ClassModel implements Comparable {
       return superclass;
   }
 
+  private List mergedChildren;
+
+  List getMergedChildren() {
+    if (mergedChildren != null) { return mergedChildren; }
+    if (nodeModel == null) { return mergedChildren = new Vector(); }
+    List merged = mergedChildren = new Vector(superclass.getMergedChildren());
+    merged.addAll(nodeModel.getChildren());
+    return merged;
+  }
+
   private Map mergedAttributes;
 
   Map getMergedAttributes() {
     if (mergedAttributes != null) { return mergedAttributes; }
     if (nodeModel == null) { return mergedAttributes = new LinkedHashMap(); }
-    Map merged = mergedAttributes = superclass.getMergedAttributes();
+    Map merged = mergedAttributes = new LinkedHashMap(superclass.getMergedAttributes());
     // Merge in the our attributes, omitting methods
     for (Iterator i = nodeModel.getAttrs().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
@@ -351,9 +389,12 @@ public class ClassModel implements Comparable {
     return merged;
   }
 
+  private Map mergedSetters;
+
   Map getMergedSetters() {
-    if (nodeModel == null) { return new LinkedHashMap(); }
-    Map merged = superclass.getMergedSetters();
+    if (mergedSetters != null) { return mergedSetters; }
+    if (nodeModel == null) { return mergedSetters = new LinkedHashMap(); }
+    Map merged = mergedSetters = new LinkedHashMap(superclass.getMergedSetters());
     // Merge in the our setters
     for (Iterator i = nodeModel.getSetters().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
@@ -366,22 +407,22 @@ public class ClassModel implements Comparable {
 
     /** This is really the LZX tag name */
     public String getClassName () {
-     return this.className;
+     return this.tagName;
     }
     
     /** This is really the LZX tag name */
-    public String getSuperclassName() {
-        if (superclassName != null) {
-            return superclassName; 
+    public String getSuperTagName() {
+        if (superTagName != null) {
+            return superTagName; 
         } else if (superclass == null) {
             return null;
         }  else {
-            return superclass.className;
+            return superclass.tagName;
         }
     }
     
-    public void setSuperclassName(String name) {
-        this.superclassName = name;
+    public void setSuperTagName(String name) {
+        this.superTagName = name;
     }
     
     void setSuperclassModel(ClassModel superclass) {
@@ -485,10 +526,10 @@ public class ClassModel implements Comparable {
     public static class InlineClassError extends CompilationError {
         public InlineClassError(ClassModel cm, NodeModel im, String message) {
             super(
-                "The class " + cm.className + " has been declared " +
+                "The class " + cm.tagName + " has been declared " +
                 "inline-only but cannot be inlined.  " + message + ". " +
-                "Remove " + cm.className + " from the <?lzc class=\"" +
-                cm.className + "\"> or " + "<?lzc classes=\"" + cm.className
+                "Remove " + cm.tagName + " from the <?lzc class=\"" +
+                cm.tagName + "\"> or " + "<?lzc classes=\"" + cm.tagName
                 + "\"> processing instruction to remove this error.",
                 im.element);
         }
@@ -510,7 +551,7 @@ public class ClassModel implements Comparable {
     NodeModel applyClass(NodeModel instance) {
         final String DEFAULTPLACEMENT_ATTR_NAME = "defaultPlacement";
         final String PLACEMENT_ATTR_NAME = "placement";
-        if (nodeModel == null) throw new RuntimeException("no nodeModel for " + className);
+        if (nodeModel == null) throw new RuntimeException("no nodeModel for " + tagName);
         if (nodeModel.hasAttribute(DEFAULTPLACEMENT_ATTR_NAME))
             throw new InlineClassError(this, instance, 
 /* (non-Javadoc)
@@ -546,7 +587,7 @@ public class ClassModel implements Comparable {
             // instance that it's applied to)
             setChildrenClassRootDepth(model, 1);
             model.updateMembers(instance);
-            model.setClassName(getSuperclassName());
+            model.setClassName(getSuperTagName());
             return model;
         } catch (CompilationError e) {
             throw new InlineClassError(this, instance, e.getMessage());

@@ -244,7 +244,7 @@ public dynamic class LzNode extends LzEventable {
               // classes and then you should never be
               // adding methods at instantiation
               // time).
-              if (val is Function && val != attrs[key]) {
+              if (val is Function && (!attrs || val != attrs[key])) {
                 Debug.debug("Dynamic method? %s[%#w] = %s", this, key, val);
               }
             }
@@ -1159,7 +1159,8 @@ public dynamic class LzNode extends LzEventable {
    *
    * @param e: A hash with the following elements:
    * <ul>
-   * <li>name : [the name of the constructor to use for child]</li>
+   * <li>name : [the name of the tag to use for child] (deprecated)</li>
+   * <li>class : [the name of the class to use for child]</li>
    * <li>attrs: [a hash of named attributes to pass to the constructor for the
    * new object</li>
    * <li>children: [an array of child objects (to the same specification) for the
@@ -1186,18 +1187,24 @@ public dynamic class LzNode extends LzEventable {
         }
       }
     }
-    var x = lz[ e.name ];
+    var x;
+    if (e.name && lz[e.name]) {
+      Debug.deprecated(arguments.callee, 'name', 'class');
+      x = lz[ e.name ];
+    } else {
+      x = e['class'];
+    }
     // TODO: [2005-03-24 ptw] Remove this if we ever enable
     // warnings in the LFC as this will be redundant
     if ($swf9) {
       // TODO [hqm 2008-01] enable this warning unconditionally for now for swf9 debugging
       //    if ($debug) {
       if ((! x) || (! (x is Class))) {
-        Debug.error('Class for tag ', e.name, ' has not been defined yet', x);
+        Debug.error('Class', e['class'], 'has not been defined yet');
       }
-    } else {
-      if ($debug) {
-        if ((! x) || (! (x instanceof Function))) { Debug.error('Class for tag %s has not been defined yet', e.name); }
+    } else if ($debug) {
+      if ((! x) || (! (x instanceof Function))) {
+        Debug.error('Class %s has not been defined yet', e['class']);
       }
     }
     // TODO: [2005-04-20 ptw] Don't know what this means, preserved
@@ -2125,18 +2132,16 @@ lz[LzNode.tagname] = LzNode;
 
 /**
  * @access private
+ *
  * @todo [2006-09-28 ptw] This is a wart, needed for backward
- * compatibility with the current implementation of
- * defaultplacement.  There is no such tag as &lt;__LZUserClassPlacementObject&gt;!
+ * compatibility with the current implementation of defaultplacement.
+ * See the comment in the tag compiler at NodeModel#childrenMaps
  */
-
-public class LzUserClassPlacement {
-  public function LzUserClassPlacement ( parent:LzNode? = null,
-                                         placement:Object? = null,
-                                         ignore = null,
-                                         ignoremetoo = null){
+public class $lzc$class_userClassPlacement {
+  public function $lzc$class_userClassPlacement ( parent:LzNode? = null,
+                                                  placement:Object? = null,
+                                                  ignore = null,
+                                                  ignoremetoo = null){
     parent.defaultplacement = placement;
   };
 }
-
-lz["__LZUserClassPlacementObject"] = LzUserClassPlacement;

@@ -438,6 +438,7 @@ public class Compiler {
             mLogger.debug("new env..." + env.getProperties().toString());
             
             processCompilerInstructions(root, env);
+
             compileElement(root, env);
             if (linking) {
               ViewCompiler.checkUnresolvedResourceReferences (env);

@@ -104,11 +104,11 @@ public class ViewSchema_Test extends TestCase {
 
         assertEquals(" superclass",
                      "view",
-                     schema.getSuperclassName("mynewclass"));
+                     schema.getSuperTagName("mynewclass"));
 
         assertEquals(" superclass",
                      "mynewclass",
-                     schema.getSuperclassName("mynewsubclass"));
+                     schema.getSuperTagName("mynewsubclass"));
 
         assertEquals("mynewclass superclass",
                      "Object",

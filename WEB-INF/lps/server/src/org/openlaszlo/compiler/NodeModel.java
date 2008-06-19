@@ -51,7 +51,7 @@ public class NodeModel implements Cloneable {
 
     final ViewSchema schema;
     final Element element;
-    String className;
+    String tagName;
     String id = null;
     String globalName = null;
     LinkedHashMap attrs = new LinkedHashMap();
@@ -72,6 +72,7 @@ public class NodeModel implements Cloneable {
     final CompilationEnvironment env;
     // Used to freeze the definition for generation
     protected boolean frozen = false;
+    final boolean debug;
     // Datapaths and States don't have methods because they "donate"
     // their methods to other instances.  Where we would normally make
     // a method, we make a closure instead
@@ -100,16 +101,16 @@ public class NodeModel implements Cloneable {
         this.element = element;
         this.schema = schema;
         this.env = env;
+        this.debug = env.getBooleanProperty(env.DEBUG_PROPERTY);
 
-        this.className = element.getName();
+        this.tagName = element.getName();
         // Cache ClassModel for parent
         this.parentClassModel = this.getParentClassModel();
         if (parentClassModel.isSubclassOf(schema.getClassModel("state")) ||
             parentClassModel.isSubclassOf(schema.getClassModel("datapath"))) {
             this.canHaveMethods = false;
         }
-        this.initstage =
-            this.element.getAttributeValue("initstage");
+        this.initstage = this.element.getAttributeValue("initstage");
         if (this.initstage != null) {
             this.initstage = this.initstage.intern();
         }
@@ -137,6 +138,13 @@ public class NodeModel implements Cloneable {
                     }
                 }
             }
+        }
+        // Get ID
+        this.id = element.getAttributeValue("id");
+        // Get global name, if applicable
+        if (CompilerUtils.topLevelDeclaration(element) &&
+            (! ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName)))) {
+          this.globalName = element.getAttributeValue("name");
         }
     }
 
@@ -230,12 +238,21 @@ public class NodeModel implements Cloneable {
       if (parent_name == null) {
           parent_name = CompilerUtils.attributeUniqueName(source, "binder");
       }
-      String unique = "$" + parent_name + "_"  + env.methodNameGenerator.next();
-      if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+      if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
+        String unique = "$" + parent_name + "_"  + env.methodNameGenerator.next();
+        if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
           this.bindername = "$lzc$bind_" + name + unique;
-      }
-      if (when.equals(WHEN_ALWAYS)) {
+        }
+        if (when.equals(WHEN_ALWAYS)) {
           this.dependenciesname = "$lzc$dependencies_" + name + unique;
+        }
+      } else {
+        if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+          this.bindername =  env.methodNameGenerator.next();
+        }
+        if (when.equals(WHEN_ALWAYS)) {
+          this.dependenciesname =  env.methodNameGenerator.next();
+        }
       }
     }
 
@@ -339,7 +356,7 @@ public class NodeModel implements Cloneable {
 
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("{NodeModel class=" + className);
+        buffer.append("{NodeModel class=" + tagName);
         if (!attrs.isEmpty())
             buffer.append(" attrs=" + attrs.keySet());
         if (!delegates.isEmpty())
@@ -507,7 +524,7 @@ public class NodeModel implements Cloneable {
         // FIXME [2004-06-3 ows]: This won't work for subclasses
         // of state.
         if (ClassCompiler.isElement(element) ||
-            className.equals("state")) {
+            "state".equals(tagName)) {
             return 1;
         }
         // initstage late, defer delay subnodes
@@ -528,14 +545,14 @@ public class NodeModel implements Cloneable {
     }
 
     ClassModel getClassModel() {
-        return schema.getClassModel(this.className);
+        return schema.getClassModel(this.tagName);
     }
 
     /** Gets the ClassModel for this element's parent class.  If this
      * element is a <class> definition, the superclass; otherwise the
      * class of the tag of this element. */
     ClassModel getParentClassModel() {
-        String parentName = this.className;
+        String parentName = this.tagName;
         return
             ("class".equals(parentName) || "interface".equals(parentName) || "mixin".equals(parentName)) ?
             schema.getClassModel(element.getAttributeValue("extends", ClassCompiler.DEFAULT_SUPERCLASS_NAME)) :
@@ -547,7 +564,7 @@ public class NodeModel implements Cloneable {
     ClassModel[] mixinModels;
 
     ClassModel[] getMixinModels() {
-        String parentName = this.className;
+        String parentName = this.tagName;
         if (! "class".equals(parentName)) { return null; }
         if (mixinModels != null) { return mixinModels; }
         String mixinSpec = element.getAttributeValue("with");
@@ -569,7 +586,7 @@ public class NodeModel implements Cloneable {
     }
 
     void setClassName(String name) {
-        this.className = name;
+        this.tagName = name;
         this.parentClassModel = getParentClassModel();
     }
 
@@ -662,30 +679,6 @@ public class NodeModel implements Cloneable {
       return getAttributeValueDefault(attribute, ALLOCATION_INSTANCE, name, defaultValue);
     }
 
-    /** Is this element a direct child of the canvas? */
-    boolean topLevelDeclaration(Element elt) {
-        Element parent = elt.getParentElement();
-        if (parent == null) {
-            return false;
-        }
-        String pname = parent.getName();
-
-        if ("canvas".equals(pname) || "library".equals(pname)) {
-            return true;
-        }
-
-        // Pass up through any <switch> clauses
-        if ("switch".equals(pname) ||
-            "when".equals(pname) ||
-            "otherwise".equals(pname)) {
-            return topLevelDeclaration(parent);
-        } else {
-            return false;
-        }
-    }
-
-
-
     // Not used at present
 //     private static String buildNameBinderBody (String symbol) {
 //         return
@@ -742,7 +735,7 @@ public class NodeModel implements Cloneable {
         }
 
         // Add file/line information if debugging
-        if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
+        if (debug) {
           // File/line stored separately for string sharing
           String name = "_dbg_filename";
           String filename = Parser.getSourceMessagePathname(element);
@@ -757,7 +750,7 @@ public class NodeModel implements Cloneable {
 
         ClassModel classModel = getClassModel();
         if (classModel == null) {
-          throw new CompilationError("Could not find class definition for tag `" + className + "`", element);
+          throw new CompilationError("Could not find class definition for tag `" + tagName + "`", element);
         }
         // Encode the attributes
         for (Iterator iter = element.getAttributes().iterator(); iter.hasNext(); ) {
@@ -792,7 +785,7 @@ public class NodeModel implements Cloneable {
             // attributes are really 'meta' attributes, not
             // attributes of the class -- they will be processed by
             // the ClassModel or ClassCompiler
-            if ("class".equals(className) || "interface".equals(className) || "mixin".equals(className)) {
+            if ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName)) {
                 // TODO: [2008-03-22 ptw] This should somehow be
                 // derived from the schema, but this does not work, so
                 // we hard-code the meta-attributes here
@@ -820,44 +813,6 @@ public class NodeModel implements Cloneable {
                     ,element);
             }
 
-            // Catch duplicated id/name attributes which may shadow
-            // each other or overwrite each other.  An id/name will be
-            // global there is "id='foo'" or if "name='foo'" at the
-            // top level (immediate child of the canvas).
-            //
-            if ((name.equals("id")) ||
-                (name.equals("name") &&
-                 topLevelDeclaration(element) &&
-                 (! ("class".equals(className) || "interface".equals(className) || "mixin".equals(className))))) {
-                if ("name".equals(name)) {
-                    this.globalName = value;
-                }
-                ElementWithLocationInfo dup =
-                    (ElementWithLocationInfo) env.getId(value);
-                // we don't want to give a warning in the case
-                // where the id and name are on the same element,
-                // i.e., <view id="foo" name="foo"/>
-                if (dup != null && dup != element) {
-                    String locstring =
-                        CompilerUtils.sourceLocationPrettyString(dup);
-                    env.warn(
-                        /* (non-Javadoc)
-                         * @i18n.test
-                         * @org-mes="Duplicate id attribute \"" + p[0] + "\" at " + p[1]
-                         */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                            NodeModel.class.getName(),"051018-576", new Object[] {value, locstring})
-                        ,
-                        element);
-                } else {
-                    // TODO: [07-18-03 hqm] We will canonicalize
-                    // all id's to lowercase, because actionscript
-                    // is not case sensitive.  but in the future,
-                    // we should preserve case.
-                    env.addId(value, element);
-                }
-            }
-
             // Check that the view name is a valid javascript identifier
             if ((name.equals("name") || name.equals("id")) &&
                 (value == null || !ScriptCompiler.isIdentifier(value))) {
@@ -868,12 +823,12 @@ public class NodeModel implements Cloneable {
 
             Schema.Type type;
             try {
-                if ("class".equals(className) || "interface".equals(className) || "mixin".equals(className)) {
+                if ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName)) {
                     // Special case, if we are compiling a "class"
                     // tag, then get the type of attributes from the
                     // superclass.
                     type = getAttributeTypeInfoFromSuperclass(element, name);
-                } else if (className.equals("state")) {
+                } else if ("state".equals(tagName)) {
                     // Special case for "state", it can have any attribute
                     // which belongs to the parent. 
                     try {
@@ -893,7 +848,7 @@ public class NodeModel implements Cloneable {
 
             } catch (UnknownAttributeException e) {
                 String solution;
-                AttributeSpec alt = schema.findSimilarAttribute(className, name);
+                AttributeSpec alt = schema.findSimilarAttribute(tagName, name);
                 if (alt != null) {
                     String classmessage = "";
                     if (alt.source != null) {
@@ -943,7 +898,7 @@ solution =
                         addProperty("$lzc$bind_id", idbinder, ALLOCATION_INSTANCE);
                     }
                     // Ditto for top-level name "name"
-                    if (topLevelDeclaration(element) && "name".equals(name)) {
+                    if (CompilerUtils.topLevelDeclaration(element) && "name".equals(name)) {
                         String symbol = value;
                         // A top-level name is also an ID, for
                         // hysterical reasons
@@ -1327,7 +1282,9 @@ solution =
             // TODO [2008-05-20 ptw] Replace the $debug code with actual
             // type declarations if/when they are enforced in all run
             // times
-            referencename = "$lzc$" + "handle_" + event + "_reference" + unique;
+            referencename = debug ?
+              ("$lzc$" + "handle_" + event + "_reference" + unique) :
+              env.methodNameGenerator.next();
             String pragmas = "\n#pragma 'withThis'\n";
             String refbody = "var $lzc$reference = (" +
                 "#beginAttribute\n" +
@@ -1350,7 +1307,9 @@ solution =
 
         if (body != null) {
             if (method == null) {
-                method = "$lzc$" + "handle_" + event + unique;
+                method = debug ?
+                  ("$lzc$" + "handle_" + event + unique) :
+                  env.methodNameGenerator.next();
             }
             String pragmas = "\n#beginContent\n" +
                 "\n#pragma 'methodName=" + method + "'\n" +
@@ -1454,8 +1413,8 @@ solution =
             // Just check method declarations on regular node.
             // Method declarations inside of class definitions will be already checked elsewhere,
             // in the call from ClassCompiler.updateSchema to schema.addElement
-            if ("class".equals(className) || "interface".equals(className) || "mixin".equals(className)) {
-                schema.checkInstanceMethodDeclaration(element, className, name, env);
+            if ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName)) {
+                schema.checkInstanceMethodDeclaration(element, tagName, name, env);
             }
         }
 
@@ -1732,7 +1691,7 @@ solution =
         }
 
         try {
-            if ("class".equals(className) || "interface".equals(className)) {
+            if ("class".equals(tagName) || "interface".equals(tagName)) {
               if (allocation.equals(ALLOCATION_INSTANCE)) {
                 parenttype = getAttributeTypeInfoFromSuperclass(parent, name, allocation);
               }
@@ -1960,8 +1919,8 @@ solution =
         }
         updateAttrs();
         assert classAttrs.isEmpty();
+        ClassModel classModel = schema.getClassModel(tagName);
         Map map = new LinkedHashMap();
-        String tagName = className;
         Map inits = new LinkedHashMap();
         boolean hasMethods = false;
         // Whether we make a class to hold the methods or not,
@@ -1996,13 +1955,18 @@ solution =
         }
         if (hasMethods) {
             // If there are methods, make a class
-            String name = id;
-            if (name == null) {
+            if (debug) {
+              String name = id;
+              if (name == null) {
                 name = CompilerUtils.attributeUniqueName(element, "class");
+              }
+              // Update tagname to our custom class
+              tagName = tagName + "_" + name;
+            } else {
+              // Don't create a tag for anonymous classes
+              tagName = null;
             }
-            // Update tagname to our custom class
-            tagName = className + "_" + name;
-            ClassModel classModel = new ClassModel(tagName, parentClassModel, schema, element);
+            classModel = new ClassModel(tagName, parentClassModel, schema, element, env);
             classModel.setNodeModel(this);
             classModel.emitClassDeclaration(env);
         } else {
@@ -2016,28 +1980,12 @@ solution =
         if (!inits.isEmpty()) {
             map.put("attrs", inits);
         }
-        // The tag to instantiate
-        // TODO: [2008-04-01 ptw] we could have a flag day and put the
-        // class here, eliminating having to go through the
-        // constructor map...
-        map.put("name", ScriptCompiler.quote(tagName));
-        // TODO: [2008-04-16 ptw] The '= null' is to silence the swf8 debugger
-        if (id != null) {
-            // Declare node id (if any) as a global
-            // property so that references to it from methods
-            // can be resolved at compile time
-          //          env.compileScript("var " + env.getGlobalPrefix() + id + " = null;", element);
-          if (!("".equals(env.getGlobalPrefix()))) {
-            // For SWF7,SWF8, we need to set a binding for the instance's ID in the main app's namespace
-            env.compileScript(env.getGlobalPrefix()+id + " = null;", element);
-          } else {
-            env.compileScript("var " +id + " = null;", element);
-          }
+        // Allow forward references
+        if (! classModel.isCompiled()) {
+          classModel.compile(env);
         }
-        if (globalName != null) {
-            // Ditto for a named top-level element
-            env.compileScript("var " + globalName + " = null;", element);
-        }
+        // The class to instantiate
+        map.put("class", classModel.className);
 
         return map;
     }
@@ -2057,17 +2005,16 @@ solution =
         for (Iterator iter = children.iterator(); iter.hasNext(); )
             childMaps.add(((NodeModel) iter.next()).asMap());
 
-        // TODO: [2006-09-28 ptw] There must be a better way.  See
-        // comment in LFC where __LZUserClassPlacementObject is
-        // inserted in lz regarding the wart this is.  You
-        // need some way to not set defaultplacement until the
-        // class-defined children are instantiated, only the
-        // instance-defined children should get default placement.
-        // For now this is done by inserting this sentinel in the
-        // child nodes...
-        if (className.equals("class") && hasAttribute("defaultplacement")) {
+        // TODO: [2006-09-28 ptw] There must be a better way. See
+        // comment in LzNode where $lzc$class_userClassPlacement is
+        // inserted in lz regarding the wart this is. You need some
+        // way to not set defaultplacement until the class-defined
+        // children are instantiated, only the instance-defined
+        // children should get default placement. For now this is done
+        // by inserting this sentinel in the child nodes...
+        if ("class".equals(tagName) && hasAttribute("defaultplacement")) {
             LinkedHashMap dummy = new LinkedHashMap();
-            dummy.put("name", ScriptCompiler.quote("__LZUserClassPlacementObject"));
+            dummy.put("class", "$lzc$class_userClassPlacement");
             dummy.put("attrs", attrs.get("defaultplacement"));
             removeAttribute("defaultplacement");
             childMaps.add(dummy);
@@ -2088,10 +2035,10 @@ solution =
     NodeModel expandClassDefinitions() {
         NodeModel model = this;
         while (true) {
-            ClassModel classModel = schema.getClassModel(model.className);
+            ClassModel classModel = schema.getClassModel(model.tagName);
             if (classModel == null)
                 break;
-            if (classModel.getSuperclassName() == null)
+            if (classModel.getSuperTagName() == null)
                 break;
             if (!classModel.getInline())
                 break;

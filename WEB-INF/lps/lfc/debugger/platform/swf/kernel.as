@@ -25,7 +25,7 @@ Debug.makeDebugWindow = function () {
     // Open the remote debugger socket 
     __LzDebug.startupConsoleRemote();
   } else {
-    LzInstantiateView({attrs: {}, name: "LzDebugWindow"});
+    LzInstantiateView({attrs: {}, "class": lz.LzDebugWindow});
   }
 }
 

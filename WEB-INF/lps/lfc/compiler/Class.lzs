@@ -383,7 +383,7 @@ var Class = {
         constructor.initialize.call(nc, prototype);
       }
     })(prototype, nc);
-    this.allClasses[classname] = nc;
+    global[classname] = this.allClasses[classname] = nc;
     return nc;
   }
 };
@@ -523,7 +523,7 @@ var Trait = {
     if (nt.hasOwnProperty('initialize')) {
       nt.initialize(nt.prototype);
     }
-    this.allTraits[classname] = nt;
+    global[classname] = this.allTraits[classname] = nt;
     return nt;
   }
 };

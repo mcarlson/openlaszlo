@@ -111,6 +111,9 @@ public class CompilationEnvironment {
     /** Keep a list of assigned global id's, so we can warn when one
      * is redefined */
     private final Map idTable = new LinkedHashMap();
+    /** Keep a list of tag to class maps so we can generate the
+     * entries in a batch */
+    private final Map tagTable = new LinkedHashMap();
 
     /** Holds a set of unresolved references to resources, so we can
         check for undefined (possibly forward) references after all
@@ -361,16 +364,44 @@ public class CompilationEnvironment {
         }
     }
 
-    public void addId(String name, Element e) {
-        idTable.put(name, e);
-    }
-
-    public Element getId(String name) {
-        return (Element) idTable.get(name);
+    public void addId(String name, Element element) {
+      // Check that it is a valid identifier
+      if (!org.openlaszlo.sc.ScriptCompiler.isIdentifier(name)) {
+        throw(new CompilationError("\"" + name + "\" is not a valid javascript identifier " , element));
+      }
+      // Catch duplicated id/name attributes which may shadow each
+      // other or overwrite each other. An id/name will be global
+      // there is "id='foo'" or if "name='foo'" at the top level
+      // (immediate child of the canvas).
+      ElementWithLocationInfo dup = (ElementWithLocationInfo) idTable.get(name);
+      // we don't want to give a warning in the case
+      // where the id and name are on the same element,
+      // i.e., <view id="foo" name="foo"/>
+      if (dup != null && dup != element) {
+        String locstring = CompilerUtils.sourceLocationPrettyString(dup);
+        warn(
+          /* (non-Javadoc)
+           * @i18n.test
+           * @org-mes="Duplicate id attribute \"" + p[0] + "\" at " + p[1]
+           */
+          org.openlaszlo.i18n.LaszloMessages.getMessage(
+            NodeModel.class.getName(),"051018-576", new Object[] {name, locstring}),
+          element);
+      } else {
+        idTable.put(name, element);
+      }
     }
 
     public Map getIds () {
         return idTable;
+    }
+
+    public void addTag(String tagName, String className) {
+        tagTable.put(tagName, className);
+    }
+
+    public Map getTags () {
+        return tagTable;
     }
 
     public void addResourceReference(String name, Element elt) {
