@@ -14,7 +14,7 @@ Depending on your platform, you may find useful links and scripts
 in this directory as well.
 
 For detailed installation instructions, please see 
-http://www.laszlosystems.com/developers/learn/documentation/
+http://wiki.openlaszlo.org/SubversionBuildInstructions
 
 The developer edition requires JDK 1.4 or later.  Please download
 a copy from http://java.sun.com and set your JAVA_HOME environment variable.
@@ -22,6 +22,6 @@ a copy from http://java.sun.com and set your JAVA_HOME environment variable.
 --
 
 * T_LZ_COPYRIGHT_BEGIN ******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.            *
 * Use is subject to license terms.                                          *
 * T_LZ_COPYRIGHT_END ********************************************************
