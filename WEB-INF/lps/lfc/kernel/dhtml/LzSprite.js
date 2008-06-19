@@ -13,6 +13,9 @@
 
 var LzSprite = function(owner, isroot) {
     if (owner == null) return;
+    this.owner = owner;
+    this.uid = LzSprite.prototype.uid++;
+
     if (isroot) {
         this.isroot = true;
         LzSprite.__rootSprite = this;
@@ -73,36 +76,38 @@ var LzSprite = function(owner, isroot) {
             this.__LZclickdiv = cdiv;
         }
 
-        // Mouse detection for activiation/deactivation of keyboard events
-        div.mouseisover = false;
-        div.onmouseover = function(e) {
-            div.focus();
-            LzKeyboardKernel.setKeyboardControl(true);
-            this.mouseisover = true;
-            //console.log('onmouseover', e, this.mouseisover);
-        }
-        div.onmouseout = function(e) {
-            if (! e) {
-                e = window.event;
-                var el = e.fromElement;
-            } else {
-                var el = e.relatedTarget;
-            }
-            if (el && el.owner && el.className.indexOf('lz') == 0) {
-                if (LzSprite.prototype.quirks.fix_ie_clickable) {
-                    LzInputTextSprite.prototype.__setglobalclickable(true);
-                }
-                this.focus();
-                LzKeyboardKernel.setKeyboardControl(true);
-                LzMouseKernel.__resetMouse();
+        if (this.quirks.activate_on_mouseover) {
+            // Mouse detection for activiation/deactivation of keyboard events
+            div.mouseisover = false;
+            div.onmouseover = function(e) {
+                div.focus();
+                if (LzInputTextSprite.prototype.__focusedSprite == null) LzKeyboardKernel.setKeyboardControl(true);
                 this.mouseisover = true;
-            } else {
-                this.blur();
-                this.mouseisover = false;
-                LzKeyboardKernel.setKeyboardControl(false);
+                //console.log('onmouseover', e, this.mouseisover);
             }
-            //Debug.write('onmouseout', this.mouseisover, e);
-        }
+            div.onmouseout = function(e) {
+                if (! e) {
+                    e = window.event;
+                    var el = e.fromElement;
+                } else {
+                    var el = e.relatedTarget;
+                }
+                if (el && el.owner && el.className.indexOf('lz') == 0) {
+                    if (LzSprite.prototype.quirks.fix_ie_clickable) {
+                        LzInputTextSprite.prototype.__setglobalclickable(true);
+                    }
+                    if (LzInputTextSprite.prototype.__lastshown == null) this.focus();
+                    LzKeyboardKernel.setKeyboardControl(true);
+                    LzMouseKernel.__resetMouse();
+                    this.mouseisover = true;
+                } else {
+                    if (LzInputTextSprite.prototype.__lastshown == null) this.blur();
+                    this.mouseisover = false;
+                    LzKeyboardKernel.setKeyboardControl(false);
+                }
+                //Debug.write('onmouseout', this.mouseisover, el.className, e);
+            }
+
     } else {
         this.__LZdiv = document.createElement('div');
         this.__LZdiv.className = 'lzdiv';
@@ -111,13 +116,17 @@ var LzSprite = function(owner, isroot) {
             this.__LZclickdiv.className = 'lzdiv';
         }
     }
+
+    if ($debug) {
+        // annotate divs with sprite IDs
+        this.__LZdiv.id = 'sprite_' + this.uid;
+        this.__LZclickdiv.id = 'click_' + this.__LZdiv.id;
+    }
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
         this.__LZclickdiv.owner = this;
     }
 
-    this.owner = owner;
-    this.uid = LzSprite.prototype.uid++;
     if (this.quirks.ie_leak_prevention) {
         this.__sprites[this.uid] = this;
     }
@@ -285,6 +294,8 @@ LzSprite.prototype.quirks = {
     ,keyboardlistentotop: false
     ,document_size_compute_correct_height: false
     ,ie_mouse_events: false
+    ,fix_inputtext_with_parent_resource: false
+    ,activate_on_mouseover: true
 }
 
 LzSprite.prototype.capabilities = {
@@ -367,6 +378,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['text_event_charcode'] = false;
             // IE requires special handling of mouse events see LPP-6027, LPP-6141
             quirks['ie_mouse_events'] = true; 
+            // workaround for IE not supporting clickable resources in views containing inputtext - see LPP-5435
+            quirks['fix_inputtext_with_parent_resource'] = true;
         } else if (lz.embed.browser.isSafari) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             // TODO: Tucker claims this is fixed in the latest version of webkit
@@ -789,6 +802,8 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
             this.__mouseEvent('onmouseup', true);
             this.__mouseEvent('onclick', true);
             return;
+        } else if (eventname == 'ondrag') {
+            // TODO: handle these?
         }
     }
 
@@ -1436,12 +1451,23 @@ LzSprite.prototype.destroy = function() {
         this.__discardElement(this.__LzInputDiv);
     }
     if (this.__LZdiv) {
+        if (this.isroot) {
+            if (this.quirks.activate_on_mouseover) {
+                this.__LZdiv.onmouseover = null;
+                this.__LZdiv.onmouseout = null;
+            }
+        }
         this.__LZdiv.onselectstart = null;
         this.__setClickable(false, this.__LZdiv);
         this.__discardElement(this.__LZdiv);
     }
     if (this.__LZinputclickdiv) {
-        this.__LZinputclickdiv.onmousedown = null;
+        // keep LzInputTextSprite.__createInputText() in sync to prevent leaks
+        if (this.quirks.ie_mouse_events) {
+            this.__LZinputclickdiv.onmouseenter = null; 
+        } else {
+            this.__LZinputclickdiv.onmouseover = null; 
+        }
         this.__discardElement(this.__LZinputclickdiv);
     }
     if (this.__LZclickdiv) {

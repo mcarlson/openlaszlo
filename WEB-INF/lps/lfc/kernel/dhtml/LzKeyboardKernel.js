@@ -96,7 +96,7 @@ var LzKeyboardKernel = {
         }
         if ( LzInputTextSprite.prototype.__focusedSprite ) {
             // hide any focused inputtexts
-            LzInputTextSprite.prototype.__focusedSprite.__hide();
+            LzInputTextSprite.prototype.__focusedSprite.__hideIfNotFocused();
         }
         // can't use lz.embed.attachEventHandler because we need to cancel events selectively
         if (LzSprite.prototype.quirks.keyboardlistentotop) {

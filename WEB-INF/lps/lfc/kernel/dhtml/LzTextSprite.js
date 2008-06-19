@@ -11,6 +11,9 @@
 
 var LzTextSprite = function(owner) {
     if (owner == null) return;
+    this.owner = owner;
+    this.uid = LzSprite.prototype.uid++;
+
     this.__LZdiv = document.createElement('div');
     this.__LZdiv.className = 'lzdiv';
     this.__LZtextdiv = document.createElement('div');
@@ -27,8 +30,11 @@ var LzTextSprite = function(owner) {
         this.__LZclickdiv.className = 'lzdiv';
         this.__LZclickdiv.owner = this;
     }    
-    this.owner = owner;
-    this.uid = LzSprite.prototype.uid++;
+    if ($debug) {
+        // annotate divs with sprite IDs
+        this.__LZdiv.id = 'textsprite_' + this.uid;
+        this.__LZclickdiv.id = 'click_' + this.__LZdiv.id;
+    }
     if (this.quirks.ie_leak_prevention) {
         this.__sprites[this.uid] = this;
     }

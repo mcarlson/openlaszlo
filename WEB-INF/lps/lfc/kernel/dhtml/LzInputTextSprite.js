@@ -11,6 +11,8 @@
 
 var LzInputTextSprite = function(owner) {
     if (owner == null) return;
+    this.owner = owner;
+    this.uid = LzSprite.prototype.uid++;
     this.__LZdiv = document.createElement('div');
     this.__LZdiv.className = 'lzdiv';
     this.__LZdiv.owner = this;
@@ -19,8 +21,11 @@ var LzInputTextSprite = function(owner) {
         this.__LZclickdiv.className = 'lzdiv';
         this.__LZclickdiv.owner = this;
     }    
-    this.owner = owner;
-    this.uid = LzSprite.prototype.uid++;
+    if ($debug) {
+        // annotate divs with sprite IDs
+        this.__LZdiv.id = 'inputtextsprite_' + this.uid;
+        this.__LZclickdiv.id = 'click_' + this.__LZdiv.id;
+    }
     if (this.quirks.ie_leak_prevention) {
         this.__sprites[this.uid] = this;
     }
@@ -76,16 +81,66 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
         }
         this.__LZinputclickdiv.className = 'lzclickdiv';
         this.__LZinputclickdiv.owner = this;
-        this.__LZinputclickdiv.onmouseover = function () {
-            if (this.owner.selectable != true) return;
-            LzInputTextSprite.prototype.__setglobalclickable(false);
-            this.owner.__show();
+        // keep LzSprite.destroy() in sync to prevent leaks
+        if (this.quirks.ie_mouse_events) {
+            this.__LZinputclickdiv.onmouseenter = this.__handlemouse; 
+            //can't get this to work - see LPP-5435. 
+            // this.__LZinputclickdiv.onmousedown = this.__handlemouse; 
+        } else {
+            this.__LZinputclickdiv.onmouseover = this.__handlemouse; 
         }
         this.__LZclickdiv.appendChild(this.__LZinputclickdiv);
     }    
     this.__LZdiv.appendChild(this.__LzInputDiv);
     //Debug.write(this.__LzInputDiv.style);
     this.__setTextEvents(true);
+}
+
+// called from the scope of __LZinputclickdiv
+LzInputTextSprite.prototype.__handlemouse = function(e) {
+    if (this.owner.selectable != true) return;
+    LzInputTextSprite.prototype.__setglobalclickable(false);
+    if (this.owner.__fix_inputtext_with_parent_resource) {
+        //if (!e) e = window.event;
+        //Debug.warn(e.type);
+        if (! this.__shown) {
+            this.owner.setClickable(true);
+            //this.owner.__show();
+            this.owner.select();
+        }
+    } else {
+        this.owner.__show();
+    }
+}
+
+LzInputTextSprite.prototype.init = function(v) {
+    this.setVisible(v);
+    if (this.quirks['fix_inputtext_with_parent_resource']) {
+        var sprites = this.__findParents('clickable');
+        var l = sprites.length;
+        if (l) {
+            for (var n = 0; n < l; n++) {
+                var v = sprites[n];
+                if (v.resource != null) {
+                    /*
+                    if ($debug) {
+                        Debug.warn('inputtext %w can not have a clickable parent with a resource %w', this.owner, v.owner);
+                    }
+                    */
+                    this.setClickable(true);
+                    // set flag for use later
+                    this.__fix_inputtext_with_parent_resource = true;
+                    /* focusing to this doesn't help :(
+                    this.__dummyinputtext = document.createElement('input');
+                    this.__dummyinputtext.className = 'lzswfinputtext';
+                    lz.embed.__setAttr(this.__dummyinputtext, 'type', 'text');
+                    this.__LZdiv.appendChild(this.__dummyinputtext);
+                    this.__dummyinputtext.style.display = 'none';
+                    */
+                }
+            }
+        }
+    }
 }
 
 LzInputTextSprite.prototype.__show = function() {
@@ -119,7 +174,7 @@ LzInputTextSprite.prototype.__show = function() {
     } else {
         this.__LZinputclickdiv.appendChild(this.__LzInputDiv);
     }
-    //Debug.write('show');
+    //Debug.warn('__show', this.owner);
     // turn on text selection in IE
     // can't use lz.embed.attachEventHandler because we need to cancel events selectively
     document.onselectstart = null;
@@ -127,22 +182,23 @@ LzInputTextSprite.prototype.__show = function() {
 
 LzInputTextSprite.prototype.__hideIfNotFocused = function(eventname, target) {
     if (LzInputTextSprite.prototype.__lastshown == null) return;
-    if (LzSprite.prototype.quirks.fix_ie_clickable && eventname == 'onmousemove') {
-        // track mouse position for inputtext when global clickable is false
-        if (LzInputTextSprite.prototype.__globalclickable == false && LzInputTextSprite.prototype.__focusedSprite && target) {
-            if (target.owner != LzInputTextSprite.prototype.__focusedSprite) {
-                LzInputTextSprite.prototype.__setglobalclickable(true);
-            } else {
-                LzInputTextSprite.prototype.__setglobalclickable(false);
+    if (LzSprite.prototype.quirks.fix_ie_clickable) {
+        if (eventname == 'onmousemove') {
+            // track mouse position for inputtext when global clickable is false
+            if (LzInputTextSprite.prototype.__globalclickable == false && LzInputTextSprite.prototype.__focusedSprite && target) {
+                if (target.owner != LzInputTextSprite.prototype.__focusedSprite) {
+                    LzInputTextSprite.prototype.__setglobalclickable(true);
+                } else {
+                    LzInputTextSprite.prototype.__setglobalclickable(false);
+                }
             }
-        }
-    } else {
-        if (eventname != null && LzInputTextSprite.prototype.__globalclickable == true) {
+            return;
+        } else if (eventname != null && LzInputTextSprite.prototype.__globalclickable == true) {
             LzInputTextSprite.prototype.__setglobalclickable(false);
         }
-        if (LzInputTextSprite.prototype.__focusedSprite != LzInputTextSprite.prototype.__lastshown) {
-            LzInputTextSprite.prototype.__lastshown.__hide();
-        }
+    }
+    if (LzInputTextSprite.prototype.__focusedSprite != LzInputTextSprite.prototype.__lastshown) {
+        LzInputTextSprite.prototype.__lastshown.__hide();
     }
 
 }
@@ -182,7 +238,24 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
         this.__LzInputDiv = this.__LZinputclickdiv.removeChild(this.__LzInputDiv);
     }
     this.__LZdiv.appendChild(this.__LzInputDiv);
-    //Debug.write('hide');
+    //Debug.warn('__hide', this.owner);
+    if (this.__fix_inputtext_with_parent_resource) {
+        //Debug.write('forcing blur', this.__LzInputDiv);
+        // important to allow mouseenter event in __handlemouse
+        this.setClickable(false);
+        //good.sprite.gotFocus();
+        /* none of these seem to allow mousedown events, so we show onmouseenter
+        this.__setglobalclickable(false);
+        this.__setglobalclickable(true);
+        this.__dummyinputtext.style.display = '';
+        this.__dummyinputtext.focus();
+        this.__dummyinputtext.blur();
+        this.__dummyinputtext.style.display = 'none';
+        LzInputTextSprite.prototype.__focusedSprite == null;
+        LzInputTextSprite.prototype.__lastshown == null;
+        this.__shown = false;
+        */
+    }
     // turn off text selection in IE
     // can't use lz.embed.attachEventHandler because we need to cancel events selectively
     document.onselectstart = LzTextSprite.prototype.__cancelhandler;
@@ -209,33 +282,24 @@ LzInputTextSprite.prototype.setText = function(t) {
 
 LzInputTextSprite.prototype.__setTextEvents = function(c) {
     //Debug.info('__setTextEvents', c);
-    if (c) {
-        this.__LzInputDiv.onblur = this.__textEvent;
-        this.__LzInputDiv.onmousedown = this.__textEvent;
-        this.__LzInputDiv.onmouseout = this.__textEvent;
-        this.__LzInputDiv.onfocus = this.__textEvent;
-        this.__LzInputDiv.onclick = this.__textEvent;
-        this.__LzInputDiv.onkeyup = this.__textEvent;
-        this.__LzInputDiv.onkeydown = this.__textEvent;
-        this.__LzInputDiv.onkeypress = this.__textEvent;
-        this.__LzInputDiv.onselect = this.__textEvent;
-        this.__LzInputDiv.onchange = this.__textEvent;
-        if (this.quirks.ie_paste_event || this.quirks.safari_paste_event) {
-            this.__LzInputDiv.onpaste = function (e) { this.owner.__pasteHandlerEx(e) }
-        }
+    var div = this.__LzInputDiv;
+    var f = c ? this.__textEvent : null;
+    div.onblur = f;
+    div.onmousedown = f;
+    if (this.quirks.ie_mouse_events) {
+        div.onmouseleave = f;
     } else {
-        this.__LzInputDiv.onblur = null;
-        this.__LzInputDiv.onmousedown = null;
-        this.__LzInputDiv.onfocus = null;
-        this.__LzInputDiv.onclick = null;
-        this.__LzInputDiv.onkeyup = null;
-        this.__LzInputDiv.onkeydown = null;
-        this.__LzInputDiv.onkeypress = null;
-        this.__LzInputDiv.onselect = null;
-        this.__LzInputDiv.onchange = null;
-        if (this.quirks.ie_paste_event || this.quirks.safari_paste_event) {
-            this.__LzInputDiv.onpaste = null;
-        }
+        div.onmouseout = f;
+    }
+    div.onfocus = f;
+    div.onclick = f;
+    div.onkeyup = f;
+    div.onkeydown = f;
+    div.onkeypress = f;
+    div.onselect = f;
+    div.onchange = f;
+    if (this.quirks.ie_paste_event || this.quirks.safari_paste_event) {
+        div.onpaste = c ? function (e) { this.owner.__pasteHandlerEx(e) } : null;
     }
 }
 
@@ -341,6 +405,9 @@ LzInputTextSprite.prototype.__textEvent = function ( e ){
         return;
     }
     var eventname = 'on' + e.type;
+    if (this.owner.quirks.ie_mouse_events && eventname == 'onmouseleave') {
+        eventname = 'onmouseout';
+    }
     if (this.owner.__shown != true) {
         // this only happens when tabbing in from outside the app
         if (eventname == 'onfocus') {
@@ -372,6 +439,11 @@ LzInputTextSprite.prototype.__textEvent = function ( e ){
         if (LzInputTextSprite.prototype.__focusedSprite == this.owner) {
             LzInputTextSprite.prototype.__focusedSprite = null;         
         }    
+        if (this.owner.__fix_inputtext_with_parent_resource && this.owner.__isMouseOver()) {
+            //Debug.write('undo blur')
+            this.owner.select();
+            return;
+        }
         this.owner.__hide();
         if (this.owner._cancelblur) {
             this.owner._cancelblur = false;

@@ -20,15 +20,19 @@ var LzMouseKernel = {
     ,__defaultcontextmenu: null
     // handles global mousedown, move events
     ,__mouseEvent: function(e) {
-        if (!e) e = window.event;
+        if (!e) {
+            e = window.event;
+            var targ = e.target; 
+        } else {
+            var targ = e.srcElement; 
+        }
         var eventname = 'on' + e.type;
-        var targ = e.srcElement ? e.srcElement : e.target; 
         if (window['LzKeyboardKernel'] && LzKeyboardKernel['__keyboardEvent']) LzKeyboardKernel.__keyboardEvent(e);
-        if (window['LzInputTextSprite']) {
+        if (window['LzInputTextSprite'] && LzInputTextSprite.prototype.__lastshown != null) {
             if (LzSprite.prototype.quirks.fix_ie_clickable) {
-                LzInputTextSprite.prototype.__hideIfNotFocused(eventname, targ);
-            } else if (eventname != 'onmousemove' && LzInputTextSprite.prototype.__lastshown != null) {
-                LzInputTextSprite.prototype.__hideIfNotFocused();
+                LzInputTextSprite.prototype.__lastshown.__hideIfNotFocused(eventname, targ);
+            } else if (eventname != 'onmousemove') {
+                LzInputTextSprite.prototype.__lastshown.__hideIfNotFocused();
             }
         }
         if (eventname == 'onmousemove') {
