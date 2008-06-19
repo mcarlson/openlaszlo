@@ -107,6 +107,7 @@ var LzSprite = function(owner, isroot) {
                 }
                 //Debug.write('onmouseout', this.mouseisover, el.className, e);
             }
+        }
 
     } else {
         this.__LZdiv = document.createElement('div');
