@@ -113,7 +113,7 @@
           return null if subview is firts and dir == -1
        -->
        <method name="getNextSubview" args="s, dir"> <![CDATA[
-            var clonelist = immediateparent.subviews[0].cloneManager.clones;
+            var clonelist = immediateparent.subviews[0].cloneManager['clones'];
             if (s == null) {
                 var index = ((dir == -1) && (parent.shownitems != -1)) ?
                     (parent.shownitems - 1)  : 0;
