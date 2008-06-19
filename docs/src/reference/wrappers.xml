@@ -102,8 +102,8 @@ text containers such as <tagname>text</tagname>.</p>
 <tag name="lzxname"><text>&lt;b&gt;</text></tag>
 <text>
 <p>HTML bold character markup.  This tag can only occur inside XHTML
-text containers such as <tagname>text</tagname> and
-<tagname>button</tagname>.</p>
+text containers such as <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag> and
+<sgmltag class="element" role="lz.button">&lt;button&gt;</sgmltag>.</p>
 
 
 <example>

@@ -1,7 +1,6 @@
 <library>
     <include href="base/basecomponent.lzx"/>
 
-    <!--- Abstract class for making buttons with up-over-down states. -->
     <class name="basebutton" extends="basecomponent" styleable="false">
 
         <!--- Since basebutton is frequently used as part of another component,
@@ -211,7 +210,7 @@
         </method>
 
         <!--- This function is called whenever the button's visible state should
-              appear to be hilited to indicate that it can be clicked. 
+              appear to be highlighted to indicate that it can be clicked. 
               @param Boolean sd: unused. -->
         <method name="showOver" args="sd=null">
             this.setResourceNumber( this.overResourceNumber );
@@ -246,9 +245,9 @@
             
             <p>First, the images that will be used are shown below:</p>
             
-            <img src="images/basebutton/button-up.png" width="118" height="118" />
-            <img src="images/basebutton/button-over.png" width="118" height="118" />
-            <img src="images/basebutton/button-down.png" width="118" height="118" />
+            <inlinemediaobject><imageobject><imagedata fileref="images/basebutton/button-up.png" width="118" /></imageobject></inlinemediaobject>
+            <inlinemediaobject><imageobject><imagedata fileref="images/basebutton/button-over.png" width="118"/></imageobject></inlinemediaobject>
+            <inlinemediaobject><imageobject><imagedata fileref="images/basebutton/button-down.png" width="118"/></imageobject></inlinemediaobject>
             
             <example class="program">
             &lt;canvas height="150"&gt;
