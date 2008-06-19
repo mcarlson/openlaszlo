@@ -146,13 +146,14 @@
     <xi:include href="editing-lzx.dbk"/>
     <xi:include href="debugging.dbk"/>
     <xi:include href="lzunit.dbk"/>
-    <xi:include href="source-build.dbk">
-      <xi:fallback><para>Missing: Building from Source</para></xi:fallback>
-    </xi:include>    
+
   </part>  
   
   <part id="developers.doctools">
-    <title>Documentation Tools and Guidelines</title>
+    <title>Contributor's Guide</title>
+    <xi:include href="source-build.dbk">
+      <xi:fallback><para>Missing: Building from Source</para></xi:fallback>
+    </xi:include>    
     
     <xi:include href="doc-toolchain.dbk">
       <xi:fallback><para>Missing: Doc Tool Chain</para></xi:fallback>
