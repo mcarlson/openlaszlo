@@ -36,7 +36,7 @@
                   fgcolor="#666699">
                 <simplelayout axis="x" spacing="4"/>
                 <text>Our Price:</text>
-                <text datapath="ItemAttributes/ListPrice/FormattedPrice/text()" width="50"/>
+                <text datapath="Offers/Offer[1]/OfferListing/Price/FormattedPrice/text()" width="50"/>
             </view>
         </view>
         <view y="${classroot.cover.height + 8}" 
