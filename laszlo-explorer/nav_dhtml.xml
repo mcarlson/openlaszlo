@@ -225,18 +225,18 @@
             <subitem title="Learn by doing" name="Source" action="source" src="/examples/music/music.lzx" />
         </item>
         <item title="Component Sampler" name="Component Sampler" text="A sampler of OpenLaszlo widgets" 
-              src="/examples/components/style_example.html">
+              src="/examples/components/component_sampler.html">
             <subitem title="View in DHTML" name="View in DHTML" 
-                     src="/examples/components/style_example.html" runtime="dhtml" />
+                     src="/examples/components/component_sampler.html" runtime="dhtml" />
             <subitem title="View in Flash" name="View in Flash" 
-                     src="/examples/components/style_example.html" runtime="swf8" />
-             <subitem src="/examples/components/style_example.lzx" name="Source" action="source" />
+                     src="/examples/components/component_sampler.html" runtime="swf8" />
+             <subitem src="/examples/components/component_sampler.lzx" name="Source" action="source" />
         </item>
     </section>
     
     <section name="Components" src="/laszlo-explorer/coverpages/components_cover.html"  title="Examples" text="Small applications that show key OpenLaszlo capabilities.">
-     <topic name="Sampler" src="/examples/components/style_example.lzx" >
-         <subitem src="/examples/components/style_example.lzx" name="Source" action="source" />
+     <topic name="Sampler" src="/examples/components/component_sampler.lzx" >
+         <subitem src="/examples/components/component_sampler.lzx" name="Source" action="source" />
      </topic>
     <topic title="OpenLaszlo Form Components" name="Form Components"
       src="/laszlo-explorer/coverpages/form_cover.html" 

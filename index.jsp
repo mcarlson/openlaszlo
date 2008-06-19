@@ -50,7 +50,7 @@
                 <li>music (<a href="examples/music/music.lzx?lzr=swf8">flash</a>) (<a href="examples/music/music.lzx?lzr=dhtml">dhtml</a>)</li>
                 <li><a href="examples/components">Components</a>
                     <ul>
-                    <li>Component Sampler (<a href="examples/components/style_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/style_example.lzx?lzr=dhtml">dhtml</a>)</li>
+                    <li>Component Sampler (<a href="examples/components/component_sampler.lzx?lzr=swf8">flash</a>) (<a href="examples/components/component_sampler.lzx?lzr=dhtml">dhtml</a>)</li>
                     <li>Form Components
                         <ul>
                         <li>button (<a href="examples/components/button_example.lzx?lzr=swf8">flash</a>) (<a href="examples/components/button_example.lzx?lzr=dhtml">dhtml</a>)</li>
