@@ -1,7 +1,7 @@
 <library>
     <include href="base/basevaluecomponent.lzx" />
 
-    <!--- An abstract class for components which might submit data to a form.
+    <!-- An abstract class for components which might submit data to a form.
           Baseformitem supports listening for a changed value. A value
           is changed if the current value was modified at any point.-->
     <class name="baseformitem" extends="basevaluecomponent">
@@ -195,10 +195,16 @@
             <p>This abstract class works with <classname>form</classname> or
             <classname>baseform</classname>.  All form components subclass this.</p>
             
-            <seealso>
-            <tags>form submit</tags>
-            <tags label="Form components">checkbox radiogroup combobox button edittext list</tags>
-            </seealso>
+              <p><b>See Also:</b></p>
+              
+              <ul>
+                  <li>
+                      <a href="../reference/lz-form.html">&lt;form&gt;</a> and <a href="../reference/submit.html">&lt;submit&gt;</a>
+                  </li>
+                  <li>Form components:
+                      <a href="../reference/lz-checkbox.html">&lt;checkbox&gt;</a>, <a href="../reference/lz-radiogroup.html">&lt;radiogroup&gt;</a>, <a href="../reference/lz-combobox.html">&lt;combobox&gt;</a>, <a href="../reference/lz-button.html">&lt;button&gt;</a>, <a href="../reference/lz-edittext.html">&lt;edittext&gt;</a>, and <a href="../reference/lz-list.html">&lt;list&gt;</a>
+                  </li>
+              </ul>
           </text>
         </doc>
     </class>
