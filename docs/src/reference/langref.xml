@@ -405,7 +405,7 @@ For example, the following program positions an image on the canvas during the "
 </programlisting>
 <!--</example>-->
 <p>
-You can position more than one image by specifying its coordinates. The <attribute>persistent</attribute> attribute  on <tagname>splash</tagname> tag causes the "splash" views contained within the spash element to remain on the canvas once the
+You can position more than one image by specifying its coordinates. The <attribute>persistent</attribute> attribute  on <tagname>splash</tagname> tag causes the "splash" views contained within the splash element to remain on the canvas once the
 load process is complete.</p>
 <example title="persisting splash views">
 &lt;canvas height="100"&gt;
