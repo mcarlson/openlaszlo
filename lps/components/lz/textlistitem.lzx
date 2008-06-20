@@ -10,7 +10,7 @@
 
         <!--- the y position of the text label. default: centered -->
         <attribute name="text_y"
-            value="${this.height/2 - this._title.height/2}" />
+            value="${this.height/2 - this['_title'] ? this['_title'].height/2 : 0}" />
 
 
         <text name="_title"
@@ -24,17 +24,19 @@
             if (this['style'] != null) {
                 super._applystyle(s);
                 // set text color
-                if (_enabled) {
-                     if (hilited) {
-                         this._title.setAttribute('fgcolor', style.texthilitecolor);
-                     }
-                     else if (selected) {
-                         this._title.setAttribute('fgcolor', style.textselectedcolor);
-                     } else {
-                         this._title.setAttribute('fgcolor', style.textcolor);
-                     }
-                } else {
-                    this._title.setAttribute( "fgcolor", style.textdisabledcolor );
+                if(this['_title'] != null){
+                    if (_enabled) {
+                         if (hilited) {
+                             this._title.setAttribute('fgcolor', style.texthilitecolor);
+                         }
+                         else if (selected) {
+                             this._title.setAttribute('fgcolor', style.textselectedcolor);
+                         } else {
+                             this._title.setAttribute('fgcolor', style.textcolor);
+                         }
+                    } else {
+                        this._title.setAttribute( "fgcolor", style.textdisabledcolor );
+                    }
                 }
             }
         </method>
