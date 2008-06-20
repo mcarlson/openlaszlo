@@ -73,7 +73,7 @@
                     a[ k ] = v._instanceAttrs[ k ];
                 }
 
-                var o = { name:  v.constructor.tagname, attrs: a };
+                var o = { 'class':  v.constructor, attrs: a };
 
                 if ( typeof( v._instanceChildren ) != "undefined" ){
                     o.children = v._instanceChildren;
@@ -104,7 +104,7 @@
             }
 
             //else, there's more than one subview, so we need to pack them up
-            return { name:     'view',
+            return { 'class':     lz.view,
                      attrs:    { ownerColumn : this },
                      children: _contentsPackage };
         </method>

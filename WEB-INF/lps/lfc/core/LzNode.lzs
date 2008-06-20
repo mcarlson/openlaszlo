@@ -1189,7 +1189,9 @@ public dynamic class LzNode extends LzEventable {
     }
     var x;
     if (e.name && lz[e.name]) {
-      Debug.deprecated(arguments.callee, 'name', 'class');
+      if ($debug) {
+        Debug.deprecated(arguments.callee, 'name', 'class');
+      }
       x = lz[ e.name ];
     } else {
       x = e['class'];

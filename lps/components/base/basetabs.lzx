@@ -348,7 +348,9 @@
                 istage = this.initstage;
             }
             this.initstage = null;
-            myChildren.push( { name: "basetabpanecontent", 
+            // NOTE [2008-06-20 ptw] This seems fraught with danger.
+            // Components shouldn't be mucking at this level
+            myChildren.push( { 'class': lz.basetabpanecontent, 
                                attrs: { name: 'content', parent: this, 
                                         initstage: istage },
                                children: c } );
