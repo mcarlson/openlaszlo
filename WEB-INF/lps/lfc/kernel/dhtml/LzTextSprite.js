@@ -182,13 +182,7 @@ LzTextSprite.prototype.getTextWidth = function () {
 }
 
 LzTextSprite.prototype.getTextHeight = function () {
-    // [TODO: calculate true height of text]
-  //Debug.write('LzTextSprite.getTextHeight', this.text, this.__LZdiv, this.getHeight());
-    if (this.__LZdiv) {
-        return this.getHeight();
-    } else {
-        return 0
-    }    
+  return this.getTextSize('Yq_gy', true).height;
 }
 
 LzTextSprite.prototype.getTextfieldHeight = function () {

@@ -87,7 +87,7 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
 
     this.text = args.text;
 
-    textclip.htmlText = this.format + this.text + this.closeformat;
+    textclip.htmlText = this.text;
     textclip.background = false;
 
     // To compute our width:
@@ -122,11 +122,11 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
         this.sizeToHeight = true;
         // set autoSize to get text measured
         textclip.autoSize = true;
-        textclip.htmlText = this.format + "__ypgSAMPLE__" + this.closeformat;
+        textclip.htmlText = "__ypgSAMPLE__";
 
         this.height = textclip._height;
 
-        textclip.htmlText = this.format + this.text + this.closeformat;
+        textclip.htmlText = this.text;
         if (!this.multiline) {
             // But turn off autosizing for single line text, now that
             // we got a correct line height from flash.
@@ -309,15 +309,9 @@ LzInputTextSprite.prototype.setText = function ( t ){
         t = t.toString();
     }
 
-    this.text =  t;// this.format + t if proper measurement were working
+    this.text =  t;
     var mc = this.__LZtextclip;
-
-    // these must be done in this order, to get Flash to take the HTML styling
-    // but not to ignore CR linebreak chars that might be in the string.
-    if (mc.html) {
-        mc.htmlText = this.format;
-    }
-    mc.text = t;
+    mc.htmlText = t;
         
     /*
     if (this.resize && (this.multiline == false)) {
@@ -335,7 +329,8 @@ LzInputTextSprite.prototype.setText = function ( t ){
         lz.Idle.callOnIdle(scrolldel);
     }
 
-    // Fix for lpp-5449
+    // Fix for lpp-5449 (reset the selection if the new text is not
+    // within it)
     var l = t.length;
     if (this._selectionstart > l || this._selectionend > l) {
         this.setSelection(l);
@@ -348,8 +343,10 @@ LzInputTextSprite.prototype.getTextfieldHeight = function ( ){
     return this.__LZtextclip._height
 }
 
+// This is the text without any formatting
 LzInputTextSprite.prototype.getText = function ( ){
-    return this.__LZtextclip.text;
+  // We normalize swf's \r to \n
+  return this.__LZtextclip.text.split('\r').join('\n');
 }
 
 /**

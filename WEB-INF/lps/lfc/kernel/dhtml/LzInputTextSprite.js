@@ -934,14 +934,6 @@ LzInputTextSprite.prototype.getTextfieldHeight = function () {
     return h;
 }
 
-LzInputTextSprite.prototype.getTextHeight = function () {
-    var h = this.getTextfieldHeight();
-    if (this.quirks.emulate_flash_font_metrics) {
-        h -= 4;
-    }    
-    return h;
-}
-
 /**
  * If a mouse event occurs in an input text field, find the focused view
  */

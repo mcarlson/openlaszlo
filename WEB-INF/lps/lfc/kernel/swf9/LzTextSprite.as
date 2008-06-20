@@ -38,7 +38,6 @@ public class LzTextSprite extends LzSprite {
         public var resize:Boolean = true;
         public var multiline:Boolean = false;
         public var underline:Boolean = false;
-        public var closeformat:String;
 
         public var sizeToHeight:Boolean = false;
         public var password:Boolean = false;

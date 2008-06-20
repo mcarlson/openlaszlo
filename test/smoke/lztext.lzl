@@ -1,6 +1,6 @@
 <library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
   <include href="lzunit" />
@@ -19,20 +19,13 @@
     </method>
 
     <method name="testInputText">
-    // must be multiline for multiline getText() to work in DHTML
-    var inp = new LzInputText(canvas, {x: 100, y: 100, width: 200, multiline: true});
-    inp.setText("foo\n\nbar");
-    // test getText() not eating newlines
-    if ($dhtml) {
-        assertEquals("foo\n\nbar", inp.getText());
-        inp.setText(inp.getText() + "\nbaz\nfoo    whitespace\nbar.");
-        assertEquals("foo\n\nbar\nbaz\nfoo    whitespace\nbar.", inp.getText());
-    } else {
-        // SWF returns \r instead of \n...
-        assertEquals("foo\r\rbar", inp.getText());
-        inp.setText(inp.getText() + "\nbaz\nfoo    whitespace\nbar.");
-        assertEquals("foo\r\rbar\rbaz\rfoo    whitespace\rbar.", inp.getText());
-    }
+      // must be multiline for multiline getText() to work in DHTML
+      var inp = new LzInputText(canvas, {x: 100, y: 100, width: 200, multiline: true});
+      inp.setText("foo\n\nbar");
+      // test getText() not eating newlines
+      assertEquals("foo\n\nbar", inp.getText());
+      inp.setText(inp.getText() + "\nbaz\nfoo    whitespace\nbar.");
+      assertEquals("foo\n\nbar\nbaz\nfoo    whitespace\nbar.", inp.getText());
     </method>
 
     <text id="textFormatTest">

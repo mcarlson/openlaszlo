@@ -59,7 +59,7 @@ var LzTextSprite = function(newowner, args) {
 
 LzTextSprite.prototype = new LzSprite(null);
 
-LzTextSprite.prototype.colorstring = "#000000"; // black
+LzTextSprite.prototype.textcolor = 0x0; // black
 
 LzTextSprite.prototype.__initTextProperties = function (args) {
     this.password = args.password  ? true : false;
@@ -79,8 +79,7 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
     this.fontsize = args.fontsize;
     this.fontstyle = args.fontstyle;
     this.__setFormat();
-
-    textclip.htmlText = this.format + this.text + this.closeformat;
+    textclip.htmlText = this.text;
     textclip.background = false;
 
     // To compute our width:
@@ -104,11 +103,11 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
         this.sizeToHeight = true;
         // set autoSize to get text measured
         textclip.autoSize = true;
-        textclip.htmlText = this.format + "__ypgSAMPLE__" + this.closeformat;
+        textclip.htmlText = "__ypgSAMPLE__";
 
         this.height = textclip._height;
 
-        textclip.htmlText = this.format + this.text + this.closeformat;
+        textclip.htmlText = this.text;
         if (!this.multiline) {
             // But turn off autosizing for single line text, now that
             // we got a correct line height from flash.
@@ -252,13 +251,19 @@ LzTextSprite.prototype.getTextWidth = function ( ){
 /**
   * Calculates the current height of the text held by the text field.
   */
-LzTextSprite.prototype.getTextHeight = function ( ){
-    return this.__LZtextclip.textHeight;
+LzTextSprite.prototype.getTextfieldHeight = function ( ){
+    return this.__LZtextclip._height;
 }
 
-LzTextSprite.prototype.getTextfieldHeight = function ( ){
-    if (this.multiline) {
-        return this.__LZtextclip._height
+/**
+ * This is the height of a single line of text in the current format
+ * NOTE: this is not the clip textHeight, which "when autoSize is true
+ * is always 4 pixels less than _height" (which might explain the need
+ * for emulate_flash_font_metrics in DHTML?).
+ */
+LzTextSprite.prototype.getTextHeight = function ( ){
+    if (! this.multiline) {
+        return this.__LZtextclip._height;
     } else {
         var textclip = this.__LZtextclip;
 
@@ -269,7 +274,9 @@ LzTextSprite.prototype.getTextfieldHeight = function ( ){
         var tct = textclip.htmlText;
 
         textclip.autoSize = true;
-        textclip.htmlText = this.format + "__ypgSAMPLE__" + this.closeformat;
+        // Make sure the test text does not wrap!
+        textclip._width = 500;
+        textclip.htmlText = "__ypgSAMPLE__";
         var h = textclip._height;
 
         textclip.autoSize = tca;
@@ -484,11 +491,11 @@ LzTextSprite.prototype.setText = function ( t ){
         t = this.annotateAAimg(t);
     }
 
-    this.text =  t;// this.format + t + this.closeformat if proper measurement were working
+    this.text =  t;
     var mc = this.__LZtextclip;
     //Debug.write('LzTextSprite.setText', this, t, mc);
 
-    mc.htmlText = this.format + t + this.closeformat;
+    mc.htmlText = t;
         
     if (this.resize && (this.multiline == false)) {
         // single line resizable fields adjust their width to match the text
@@ -568,10 +575,11 @@ LzTextSprite.prototype.__setFormat = function (){
         //Debug.write("caching fontname", this.fontname, cfontname);
     }
 
-    this.format ="<FONT FACE=\"" + (this.font == null ? cfontname : this.font.name) +
-        "\" SIZE=\"" + this.fontsize + "\" " +
-        "COLOR=\"" + this.colorstring + "\" >";
-    this.closeformat = "</FONT>";
+    var tf:TextFormat = this.__LZtextclip.getTextFormat();
+    if (!tf) { tf = new TextFormat(); }
+    tf.size = this.fontsize;
+    tf.font = (this.font == null ? cfontname : this.font.name);
+    tf.color = this.textcolor;
 
     // If there is no font found, assume a device font
     if (this.font == null) {
@@ -580,19 +588,14 @@ LzTextSprite.prototype.__setFormat = function (){
         this.setEmbedFonts(true);
     }
 
-    if (this.fontstyle == "bold" || this.fontstyle =="bolditalic"){
-        this.format += "<B>";
-        this.closeformat = "</B>" + this.closeformat;
-    }
+    // Adjust style
+    tf.bold = (this.fontstyle == "bold" || this.fontstyle =="bolditalic");
+    tf.italic = (this.fontstyle == "italic" || this.fontstyle =="bolditalic");
+    tf.underline = !!this['underline'];
 
-    if (this.fontstyle == "italic" || this.fontstyle =="bolditalic"){
-        this.format += "<I>";
-        this.closeformat = "</I>" + this.closeformat;
-    }
-    if (this.underline){
-        this.format += "<U>";
-        this.closeformat = "</U>" + this.closeformat;
-    }
+    // We want to adjust the current contents, _and_ any new contents.
+    this.__LZtextclip.setNewTextFormat(tf);
+    this.__LZtextclip.setTextFormat(tf);
 }
 
 LzTextSprite.prototype.setFontInfo = function () {
@@ -610,8 +613,9 @@ LzTextSprite.prototype.setFontInfo = function () {
 LzTextSprite.prototype.setFontName = function ( fname ){
     this.fontname = fname;
     this.__setFormat();
-    // force recompute of height if needed
-    this.setText( this.getText() );
+    // recompute dimensions: must use clip html here -- inputtext may
+    // have modified the contents
+    this.setText( this.__LZtextclip.htmlText );
 }
 
 /**
@@ -620,8 +624,9 @@ LzTextSprite.prototype.setFontName = function ( fname ){
 LzTextSprite.prototype.setFontSize = function ( fsize ){
     this.fontsize = fsize;
     this.__setFormat();
-    // force recompute of height if needed
-    this.setText( this.getText() );
+    // recompute dimensions: must use clip html here -- inputtext may
+    // have modified the contents
+    this.setText( this.__LZtextclip.htmlText );
 
 }
 
@@ -631,8 +636,9 @@ LzTextSprite.prototype.setFontSize = function ( fsize ){
 LzTextSprite.prototype.setFontStyle = function ( fstyle ){
     this.fontstyle = fstyle;
     this.__setFormat();
-    // force recompute of height if needed
-    this.setText( this.getText() );
+    // recompute dimensions: must use clip html here -- inputtext may
+    // have modified the contents
+    this.setText( this.__LZtextclip.htmlText );
 }
 
 /**
@@ -640,9 +646,11 @@ LzTextSprite.prototype.setFontStyle = function ( fstyle ){
   * @param Number c: The color for the text -- from 0x0 (black) to 0xFFFFFF (white)
   */
 LzTextSprite.prototype.setColor = function ( c ){
-    this.colorstring = "#" + c.toString( 16 );
+    this.textcolor = c;
     this.__setFormat();
-    this.setText( this.getText() );
+    // recompute dimensions: must use clip html here -- inputtext may
+    // have modified the contents
+    this.setText( this.__LZtextclip.htmlText );
 }
 
 /**
