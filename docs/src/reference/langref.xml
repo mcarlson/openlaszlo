@@ -70,13 +70,12 @@ defines an attribute that can be set in instances of the class.</p>
 </li>
 </ol>
 
-<p>See the <a href="${dguide}methods-events-attributes.html">Developer's Guide</a> for
+<p>See the <link linkend="methods-events-attributes.attribute-tag">Developer's Guide</link> for
 a complete discussion.
 </p>
 
 <p>
-    Also see the documentation for <tagname
-    link="true">class</tagname> and the general description of LZX <a
+    Also see the documentation for <sgmltag class="element" role="tag.class">&lt;class&gt;</sgmltag> and the general description of LZX <a
     href="info-attributes.html">attributes</a>.  The <a
     href="${tutorials}classes-tutorial.html">Classes</a> tutorial describes how
     to use attributes to define a class.
@@ -105,31 +104,31 @@ a complete discussion.
             <text> When the initial value expression is to be
               evaluated.  One of:
               <dl>
-                <dt>@c{immediately}</dt>
+                <dt><literal>immediately</literal></dt>
                 <dd>evaluate when the enclosing element is defined
                   (must be a constant)</dd>
-                <dt>@c{once}</dt>
+                <dt><literal>once</literal></dt>
                 <dd>evaluate when the enclosing element is
                   initialized</dd>
-                <dt>@c{always}</dt>
+                <dt><literal>always</literal></dt>
                 <dd>update whenever the value of the expression
                   changes</dd>
               </dl>
-              The default is @c{when="immediately"}.
+              The default is <literal>when="immediately"</literal>.
 
-              The setting for @c{when} can be overridden
+              The setting for <literal>when</literal> can be overridden
               when assigning a value to an attribute by using the
               syntax <code><var>attribute
                 name</var>=$<var>when
                   value</var>{<var>expression</var>}</code>.  The
               default for
-              <var>when value</var> is @c{always}, for
+              <var>when value</var> is <literal>always</literal>, for
               example: <code>&lt;view
                 title="$once{computeTitle()}" /&gt;</code> sets the
               title of the view to a computed value and
               <code>&lt;view title="${parent.subtitle}" \&gt;</code>
               will cause the title of the view to
-              track @c{parent.subtitle}.
+              track <literal>parent.subtitle</literal>.
             </text>
           </doc>
         </property>

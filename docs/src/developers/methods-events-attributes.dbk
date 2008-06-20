@@ -355,7 +355,7 @@ or like this:
 If you use the <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag> and <indexterm><primary>handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag> syntax, you  do not have to worry about such tests. (The delegates are handled for you by the runtime.)
 </para>
 
-<para/></section></section><section><title>Attributes</title>
+<para/></section></section><section id="methods-events-attributes.attribute-tag"><title>Attributes</title>
 <para>
 Attributes define properties of instances of classes.  For example, consider the <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: view-->
