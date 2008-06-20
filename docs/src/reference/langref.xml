@@ -174,7 +174,7 @@ a complete discussion.
         <p>The <tagname>import</tagname> tag is used to import, at run time, source code
           contained in another (library) file.  See the <a
             href="${dguide}program-structure.html#program-structure.include-tag">Guide</a> for a complete
-          discussion.  Also see the <tagname link="true">library</tagname>
+          discussion.  Also see the <sgmltag class="element" role="tag.library">&lt;library&gt;</sgmltag>
           tag.</p>
       </text>
     </doc>
@@ -204,7 +204,7 @@ a complete discussion.
         </property>
         <property name="proxied">
           <doc>
-            <tag name="lzxtype"><text>booleanLiteral | "inherit"</text></tag>
+            <tag name="lzxtype"><text>boolean | "inherit"</text></tag>
             <tag name="lzxdefault"><text>"inherit"</text></tag>
           </doc>
         </property>
@@ -226,7 +226,7 @@ a complete discussion.
       <p>The <tagname>include</tagname> tag is used to include source code
         contained in another file.  See the <a
           href="${dguide}program-structure.html#program-structure.include-tag">Guide</a> for a complete
-        discussion.  Also see the <tagname link="true">library</tagname>
+        discussion.  Also see the <sgmltag class="element" role="tag.library">&lt;library&gt;</sgmltag>
         tag.</p>
     </text>
   </doc>
@@ -245,7 +245,7 @@ a complete discussion.
           <doc>
             <tag name="lzxtype"><text>"text" | "xml"</text></tag>
             <tag name="lzxdefault"><text>"xml"</text></tag>
-            <text>If this attribute has the value @c{text}, the content of the
+            <text>If this attribute has the value <literal>text</literal>, the content of the
               target file is included as text.  Otherwise, it is read as XML.
             </text>
           </doc>
@@ -261,12 +261,11 @@ a complete discussion.
     <tag name="lzxname"><text>library</text></tag>
     <text>
 <p>The <tagname>library</tagname> tag defines the root element of a
-library file.  An application can use the <tagname>include</tagname>
+library file.  An application can use the <sgmltag class="element" role="tag.include">&lt;include&gt;</sgmltag>
 tag to include the code in a library file.</p>
 
 <p>See the <a href="${dguide}program-structure.html#program-structure.library-tag">Guide</a> for
-a complete discussion.  Also see the <tagname
-link="true">include</tagname> tag.</p>
+a complete discussion.  Also see the <sgmltag class="element" role="tag.include">&lt;include&gt;</sgmltag> tag.</p>
     </text>
   </doc>
   <class>
@@ -282,14 +281,15 @@ link="true">include</tagname> tag.</p>
         </property>
         <property name="proxied" id="library.__ivars__.proxied" access="public">
           <doc>
-            <tag name="lzxtype"><text>booleanLiteral | "inherit"</text></tag>
+            <tag name="lzxtype"><text>boolean | "inherit"</text></tag>
             <tag name="lzxdefault"><text>"inherit"</text></tag>
           </doc>
         </property>
         <property name="validate" id="library.__ivars__.validate" access="public">
           <doc>
-            <tag name="lzxtype"><text>booleanLiteral</text></tag>
+            <tag name="lzxtype"><text>boolean</text></tag>
             <tag name="lzxdefault"><text>"true"</text></tag>
+	    <text>If false, disables validation against the schema during compilation.</text>
           </doc>
         </property>
       </object>
