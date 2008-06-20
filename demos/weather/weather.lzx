@@ -213,11 +213,8 @@
                     <view name="shadow" x="23" y="23" width="200"
                           height="135" bgcolor="#000000" opacity=".33"/>
                     <image name="radarscan" x="20" y="20" 
-                           width="200" height="135" stretches="both">
-                        <handler name="oninit">
-                            this.setSource("http://weather.yahoo.com/images/ussat_440x297.jpg");
-                        </handler>
-                    </image>
+                           source="http://weather.yahoo.com/images/us_radar_medium_usen.jpg"
+                           width="200" height="135" stretches="both"/>
                 </view>
             </weathertab>
             <weathertab name="tab3" label="Forecast">

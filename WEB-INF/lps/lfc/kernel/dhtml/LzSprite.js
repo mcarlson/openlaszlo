@@ -1411,6 +1411,10 @@ LzSprite.prototype.__updateStretches = function() {
     if ( this.loading ) return;
     if (this.quirks.ie_alpha_image_loader) return;
     if (this.__LZimg) {
+        // LPP-6009. Setting width/height doesn't always stick in IE7/dhtml 
+        // I found that changing the display first fixes this.
+        var dsp = this.__LZimg.style.display;
+        this.__LZimg.style.display = 'none';
         if (this.stretches == 'both') {
             this.__LZimg.width = this.width;
             this.__LZimg.height = this.height;
@@ -1424,7 +1428,10 @@ LzSprite.prototype.__updateStretches = function() {
             this.__LZimg.width = this.resourceWidth;
             this.__LZimg.height = this.resourceHeight;
         }
+
+        this.__LZimg.style.display = dsp;
     }
+
 }
 
 LzSprite.prototype.predestroy = function() {
