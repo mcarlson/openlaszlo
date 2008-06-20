@@ -47,11 +47,11 @@ lz.embed = {
      * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600', id: 'lzapp', accessible: 'true'}
      *
      * @param minimumVersion:Number the version the flash player should 
-     * upgrade to if necessary.  Defaults to 7.
+     * upgrade to if necessary.  Defaults to 8.
      */
     ,swf: function (properties, minimumVersion) {
         // don't upgrade flash unless asked
-        if (minimumVersion == null) minimumVersion = 7;
+        if (minimumVersion == null) minimumVersion = 8;
 
 
         var url = properties.url;
@@ -72,6 +72,7 @@ lz.embed = {
 
         // Check flash comm version
         if (lz.embed.dojo.info.commVersion > requestVersion) {
+            // This should no longer be needed in a world without swf7
             url = url.substring(0, i) + lz.embed.dojo.info.commVersion + url.substring(i + 1, url.length);
             //alert('updated version ' + url);
             minimumVersion = lz.embed.dojo.info.commVersion;

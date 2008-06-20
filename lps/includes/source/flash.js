@@ -450,13 +450,13 @@ lz.embed.dojo = {
         var installer = new lz.embed.dojo.Install(properties.id);
         lz.embed.dojo.installer = installer;
 
+        var embed = new lz.embed.dojo.Embed(properties);
+        lz.embed.dojo.obj[properties.id] = embed;
         if(installer.needed() == true){        
             installer.install();
         }else{
             //alert("Writing object out");
             // write the flash object into the page
-            var embed = new lz.embed.dojo.Embed(properties);
-            lz.embed.dojo.obj[properties.id] = embed;
             embed.write(lz.embed.dojo.info.commVersion);
             
             // initialize the way we do Flash/JavaScript communication
@@ -667,6 +667,11 @@ lz.embed.dojo.Embed = function(properties){
     // summary: A class that is used to write out the Flash object into the page.
     
     this.properties = properties;
+
+    if (! this.properties.width) this.properties.width = '100%';
+    if (! this.properties.height) this.properties.height = '100%';
+    if (! this.properties.bgcolor) this.properties.bgcolor = '#ffffff';
+    if (! this.properties.visible) this.properties.visible = true;
 };
 
 lz.embed.dojo.Embed.prototype = {
@@ -1266,25 +1271,27 @@ lz.embed.dojo.Install.prototype = {
         lz.embed.dojo.info.installing = true;
         lz.embed.dojo.installing();
         
+        // upgrade URL to flash 8...
+        var p = lz.embed.dojo.obj[this._id].properties;
+        var url = p.flash8;
+        var i = url.indexOf('swf7')
+        if (i != -1) {
+            lz.embed.dojo._tempurl = url;
+            url = url.substring(0, i + 3) + '8' + url.substring(i + 4, url.length);
+                p.flash8 = url;
+        }
+
         lz.embed.dojo.ready = false;
         if(lz.embed.dojo.info.capable == false){ // we have no Flash at all
             lz.embed.dojo._isinstaller = true;
             // write out a simple Flash object to force the browser to prompt
             // the user to install things
 
-            // upgrade URL to flash 8...
-            var url = lz.embed.dojo.obj[this._id].properties.flash8;
-            var i = url.indexOf('swf7')
-            if (i != -1) {
-                lz.embed.dojo._tempurl = url;
-                url = url.substring(0, i + 3) + '8' + url.substring(i + 4, url.length);
-                 lz.embed.dojo.obj[this._id].properties.flash8 = url;
-            }
-            var installObj = new lz.embed.dojo.Embed({visible: true, width: '100%', height: '100%'});
+            var installObj = new lz.embed.dojo.Embed(p);
             installObj.write(8); // write out HTML for Flash 8 version+
         }else if(lz.embed.dojo.info.isVersionOrAbove(6, 0, 65)){ // Express Install
             //dojo.debug("Express install");
-            var installObj = new lz.embed.dojo.Embed({visible: false, width: '100%', height: '100%'});
+            var installObj = new lz.embed.dojo.Embed(p);
             installObj.write(8, true); // write out HTML for Flash 8 version+
             installObj.setVisible(true);
             installObj.center();
