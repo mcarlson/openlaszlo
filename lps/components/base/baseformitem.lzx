@@ -199,10 +199,12 @@
               
               <ul>
                   <li>
-                      <a href="../reference/lz-form.html">&lt;form&gt;</a> and <a href="../reference/submit.html">&lt;submit&gt;</a>
+                      <sgmltag class="element" role="lz.form">&lt;form&gt;</sgmltag> and <sgmltag class="element" role="lz.submit">&lt;submit&gt;</sgmltag>
                   </li>
                   <li>Form components:
-                      <a href="../reference/lz-checkbox.html">&lt;checkbox&gt;</a>, <a href="../reference/lz-radiogroup.html">&lt;radiogroup&gt;</a>, <a href="../reference/lz-combobox.html">&lt;combobox&gt;</a>, <a href="../reference/lz-button.html">&lt;button&gt;</a>, <a href="../reference/lz-edittext.html">&lt;edittext&gt;</a>, and <a href="../reference/lz-list.html">&lt;list&gt;</a>
+                      <sgmltag class="element" role="lz.checkbox">&lt;checkbox&gt;</sgmltag>, <sgmltag class="element" role="lz.radiogroup">&lt;radiogroup&gt;</sgmltag>, 
+                      <sgmltag class="element" role="lz.combobox">&lt;combobox&gt;</sgmltag>, <sgmltag class="element" role="lz.button">&lt;button&gt;</sgmltag>, 
+                      <sgmltag class="element" role="lz.edittext">&lt;edittext&gt;</sgmltag>, and <sgmltag class="element" role="lz.list">&lt;list&gt;</sgmltag>
                   </li>
               </ul>
           </text>
