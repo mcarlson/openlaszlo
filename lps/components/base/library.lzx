@@ -15,6 +15,7 @@
     <include href="basedatepicker.lzx"/>
     <include href="basedatepickerday.lzx"/>
     <include href="basedatepickerweek.lzx"/>
+    <include href="basegridcolumn.lzx"/>
     <include href="basevaluecomponent.lzx"/>
     <include href="baseformitem.lzx"/>
     <include href="baselist.lzx"/>
