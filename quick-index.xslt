@@ -25,7 +25,7 @@
         <p><a href="docs/release-notes.html">Release Notes</a></p>
         <p>If this is the first time you've run OpenLaszlo
             or you are looking for an introduction, please try 
-            Laszlo Explorer (<a href="laszlo-explorer/index.jsp?lzr=swf7">Flash</a>) (<a href="laszlo-explorer/index.jsp?lzr=dhtml">DHTML</a>).
+            Laszlo Explorer (<a href="laszlo-explorer/index.jsp?lzr=swf8">Flash</a>) (<a href="laszlo-explorer/index.jsp?lzr=dhtml">DHTML</a>).
         </p>
         <ul>
             <xsl:apply-templates select="*[not(@name='Laszlo in 10 Minutes')]"/> 
