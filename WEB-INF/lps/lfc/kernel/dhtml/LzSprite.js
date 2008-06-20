@@ -280,7 +280,6 @@ LzSprite.prototype.quirks = {
     ,absolute_position_accounts_for_offset: false
     ,canvas_div_cannot_be_clipped: false
     ,inputtext_parents_cannot_contain_clip: false
-    ,minimize_opacity_changes: false
     ,set_height_for_multiline_inputtext: false
     ,ie_opacity: false
     ,text_measurement_use_insertadjacenthtml: false
@@ -313,6 +312,7 @@ LzSprite.prototype.capabilities = {
     ,bitmapcaching: false
     ,persistence: false
     ,clickmasking: false
+    ,minimize_opacity_changes: false
 }
 
 LzSprite.prototype.__updateQuirks = function () {
@@ -359,7 +359,7 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['inputtext_parents_cannot_contain_clip'] = true;
 
             // flag for components (basefocusview for now) to minimize opacity changes
-            quirks['minimize_opacity_changes'] = true;
+            this.capabilities['minimize_opacity_changes'] = true;
 
             // multiline inputtext height must be set directly - height: 100% does not work.  See LPP-4119
             quirks['set_height_for_multiline_inputtext'] = true;
@@ -993,10 +993,15 @@ LzSprite.prototype.setBGColor = function ( c ){
 
 LzSprite.prototype.setOpacity = function ( o ){
     if (this.opacity == o || o < 0) return;
-    //Debug.info('setOpacity', o);
     this.opacity = o;
-    o = parseInt(o * 100) / 100;
+    // factor used to compute percentage
+    var factor = 100;
+    if (this.capabilities.minimize_opacity_changes) {
+        factor = 10;
+    }
+    o = parseInt(o * factor) / factor;
     if (o != this._opacity) { 
+        //Debug.info('setOpacity', o);
         this._opacity = o;
         if (o == 0) {
             this.__LZdiv.style.display = 'none';
@@ -1366,7 +1371,7 @@ LzSprite.prototype.setClip = function(c) {
   * @access private
   */
 LzSprite.prototype.__updateClip = function() {
-    if (this.isroot && this.capabilities.canvas_div_cannot_be_clipped) return;
+    if (this.isroot && this.quirks.canvas_div_cannot_be_clipped) return;
     if (this.clip && this.width != null && this.width >= 0 && this.height != null && this.height >= 0) {
         var s = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
         this.__LZdiv.style.clip = s

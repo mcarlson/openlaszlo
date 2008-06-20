@@ -95,7 +95,7 @@
                 this.animate( 'height',nh , duration);
                 
                 // fade in the brackets to balance out the fade out
-                if (this.sprite && this.sprite['quirks'] && this.sprite.quirks['minimize_opacity_changes']) {
+                if (this.capabilities['minimize_opacity_changes']) {
                     this.setVisibility( 'visible' );
                 } else {
                     this.animate('opacity', 1, 500);
@@ -153,7 +153,7 @@
               @keywords private -->
         <method name="fadeout" >
             if (_dofadeout) {
-                if (this.sprite &amp;&amp; this.sprite['quirks'] &amp;&amp; this.sprite.quirks['minimize_opacity_changes']) {
+                if (this.capabilities['minimize_opacity_changes']) {
                     this.setVisibility( 'hidden' );
                 } else {
                     this.animate( 'opacity' ,0 , 500);
