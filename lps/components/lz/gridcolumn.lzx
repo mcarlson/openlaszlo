@@ -74,8 +74,8 @@
                 <state name="widthConstraint" placement="header">
                     <attribute name="width" 
                                value="${ classroot.width - 
-                                         ( parent.resizable ? 
-                                           parent.resizer.width : 0 ) }"/>
+                                         ( parent.resizable &amp;&amp; parent['resizer'] ? 
+                                           parent['resizer'].width : 0 ) }"/>
                 </state>
             </button>
 

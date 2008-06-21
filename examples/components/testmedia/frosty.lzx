@@ -1,4 +1,5 @@
-<view name="frosty">
+<library>
+<class name="frosty">
     <handler name="oninit">
         //Debug.write("Frosty's parent: " + this.parent);
     </handler>  
@@ -32,7 +33,8 @@ For Frosty, the Snowman, had to hurry on his way,
 But he waved goodbye, sayin' "Don't cry, I'll be back again some day." 
 </pre>
 </text>
-</view>
+</class>
+</library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *

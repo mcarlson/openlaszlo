@@ -1,5 +1,6 @@
 <canvas width="800" height="450" >
     <include href="lz/tree.lzx"/>
+    <include href="testmedia/frosty.lzx" />
 
     <debug x="450" y="200" height="200"/>
     <dataset name="weatherdata" request="true"
@@ -78,7 +79,6 @@
             resizable="true"
             id="fw" title="Frosty the Snowman"
             >
-<!-- [jgrandy 2006-09-29 no menubar in Legals yet
             <menubar name="mbar" placement="menubar">
                  <menu name="file" id="mfile" width="80">File
                      <menuitem text="item 1" />
@@ -101,8 +101,7 @@
                      <menuitem  text="option 6" />
                  </menu>
             </menubar>
--->
-            <include href="testmedia/frosty.lzx" />
+            <frosty/>
             <scrollbar/>
         </window>
 

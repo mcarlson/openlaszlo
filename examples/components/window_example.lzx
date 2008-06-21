@@ -1,5 +1,6 @@
 <canvas bgcolor="0xEAEAEA" height="600" width="800"
     oninit="closeme.setAttribute('haswindowfocus', true)">
+    <include href="testmedia/frosty.lzx" />
     <silverstyle isdefault="true" canvascolor="null"/>
     <bluestyle name="bluecolors" canvascolor="null"/>
     <goldstyle name="goldcolors" canvascolor="null"/>
@@ -23,7 +24,7 @@
     <window width="200" height="200" x="300" y="40"
         resizable="true" closeable="true"
         id="fw" title="Frosty">
-        <include href="testmedia/frosty.lzx" />
+        <frosty/>
         <scrollbar/>
         <scrollbar axis="x"/>
     </window>
@@ -76,7 +77,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
