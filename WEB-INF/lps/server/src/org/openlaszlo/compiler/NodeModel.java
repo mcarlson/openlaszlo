@@ -1936,15 +1936,7 @@ solution =
             String key = (String) entry.getKey();
             Object value = entry.getValue();
             if (value instanceof Method) {
-                // NOTE [2008-06-16 ptw] (LPP-6017) For now, we only do
-                // this for swf9, which requires it, because it expands
-                // the code
-              if ("swf9".equals(env.getRuntime())) {
-                hasMethods = true;
-              } else {
-                inits.put(key, ((Method)value).asFunction());
-                attrs.put(key, null);
-              }
+              hasMethods = true;
             } else if (! (value instanceof NodeModel.BindingExpr)) {
                 inits.put(key, value);
                 attrs.put(key, null);
