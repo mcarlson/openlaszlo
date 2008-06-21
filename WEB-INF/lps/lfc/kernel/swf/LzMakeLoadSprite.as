@@ -188,8 +188,7 @@ LzMakeLoadSprite.updateAfterLoad = function (ignore){
     var tfchg = this.totalframes != mc._totalframes;
     if ( tfchg ){
         this.totalframes = mc._totalframes;
-        this.owner.totalframes = mc._totalframes;
-        if (this.owner.ontotalframes && this.owner.ontotalframes.ready) this.owner.ontotalframes.sendEvent( this.totalframes );
+        this.owner.resourceevent('totalframes', this.totalframes);
     }
 
     if ( this.totalframes > 1 ){

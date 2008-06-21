@@ -15,7 +15,7 @@ class LzMediaLoader extends LzLoader {
     function LzMediaLoader ( owner , args ) {
         super(owner, args);
 
-        this.owner.owner.loadperc = 0;
+        this.owner.loadperc = 0;
 
         this.loadChecker = new LzDelegate( this , "testLoad" );
 
@@ -201,8 +201,8 @@ function request( req , cache , headers, filetype ) {
 
     if ( headers != null ) o.headers = headers;
     super.request( o );
-    this.owner.owner.setAttribute( "framesloadratio" , 0 );
-    this.owner.owner.setAttribute( "loadratio" , 0 ); 
+    this.owner.owner.resourceevent('loadratio', 0);
+    this.owner.owner.resourceevent('framesloadratio', 0);
 }
 
 /**
@@ -227,8 +227,8 @@ function testLoad (ignore){
 
     if ( this.checkonce ){
         var lr = this.mc.lmc.getBytesLoaded() / this.mc.lmc.getBytesTotal();
-        if (lr != this.owner.owner["loadratio"] && !isNaN(lr)) {
-            this.owner.owner.setAttribute("loadratio" , lr);
+        if (!isNaN(lr)) {
+            this.owner.owner.resourceevent('loadratio', lr);
             //reset timeout for media which is streaming
             this.mc.loadtime = getTimer();
         }
@@ -248,7 +248,7 @@ function testLoad (ignore){
              var nlp = this.mc.lmc._framesloaded / 
              this.mc.lmc._totalframes;
 
-             if ( nlp >= this.owner.owner.loadperc ){
+             if ( nlp >= this.owner.loadperc ){
                  //reset timeout for media which is streaming
                  //Debug.write( "here" , this.mc.lmc._framesloaded , 
                  //this.mc.lmc._totalframes );
@@ -257,15 +257,17 @@ function testLoad (ignore){
                      var nlp = this.mc.lmc._framesloaded / 
                          this.mc.lmc._totalframes;
 
-                     if ( nlp > this.owner.owner.loadperc ){
+                     if ( nlp > this.owner.loadperc ){
                          //reset timeout for media which is streaming
                          this.mc.loadtime = getTimer();
                      }
 
-                     this.owner.owner.loadperc = nlp;
-                     if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( this.owner.owner.loadperc );
-                     this.owner.owner.setAttribute( "framesloadratio" , nlp );
-                     this.owner.owner.setAttribute( "loadratio" , nlp );
+                     this.owner.loadperc = nlp;
+                     // deprecated in view
+                     //if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( this.owner.loadperc );
+                     this.owner.owner.resourceevent('framesloadratio', nlp);
+                     // Sent above already...
+                     // this.owner.owner.resourceevent('loadratio', nlp);
 
                      if ( this.mc.lmc._totalframes == this.mc.lmc._framesloaded && this.mc.lmc._currentframe > 0){
                          if (!this.mc.loaded && this.onloaddone.ready) this.onloaddone.sendEvent( this );
@@ -293,14 +295,14 @@ function testLoad (ignore){
                  var nlp = this.mc.lmc._framesloaded / 
                  this.mc.lmc._totalframes;
 
-                 if ( nlp > this.owner.owner.loadperc ){
+                 if ( nlp > this.owner.loadperc ){
                      //reset timeout for media which is streaming
                      this.mc.loadtime = getTimer();
                  }
 
-                 this.owner.owner.loadperc = nlp;
-                 if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( this.owner.owner.loadperc );
-                 this.owner.owner.setAttribute( "framesloadratio" , nlp );
+                // deprecated in view
+                //if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( this.owner.loadperc );
+                this.owner.owner.resourceevent('framesloadratio', nlp);
              }
 
              if ( this.mc.lmc.getBytesTotal() == this.mc.lmc.getBytesLoaded() ){
@@ -325,12 +327,12 @@ function testLoad (ignore){
   */
 function unload ( loadobj ){
     super.unload( loadobj );
-    if ( this.owner.owner.loadratio != 0 ){
-        this.owner.owner.loadperc = 0;
-        if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( 0 );
-        this.owner.owner.setAttribute( "loadratio" , 0 );
-        this.owner.owner.setAttribute( "framesloadratio" , 0 );
-    }
+
+    this.owner.loadperc = 0;
+    // deprecated in view
+    //if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( 0 );
+    this.owner.owner.resourceevent('loadratio', 0);
+    this.owner.owner.resourceevent('framesloadratio', 0);
 
     this.removeLoadChecker();
 }

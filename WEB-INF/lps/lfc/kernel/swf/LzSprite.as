@@ -210,7 +210,7 @@ LzSprite.prototype.resourcewidth = 0;
 LzSprite.prototype.totalframes =   0;
 LzSprite.prototype.frame =   0;
 
-//deprecated
+// Used by loaders to track load state
 LzSprite.prototype.loadperc =   0;
 //@field Number framesloadratio: For views whose resource is loaded at runtime,
 //the ratio of the loaded frames to the total frames. This is a number between
@@ -376,7 +376,7 @@ LzSprite.prototype.setMovieClip = function ( mc , mcID) {
     var tfchg = this.totalframes != mc._totalframes;
     if ( tfchg ){
         this.totalframes = mc._totalframes;
-        this.owner.setTotalFrames (this.totalframes);
+        this.owner.resourceevent('totalframes', this.totalframes);
     }
 
     if ( this.totalframes > 1 ){
@@ -439,7 +439,8 @@ LzSprite.prototype.attachResourceToChildView = function ( resourceName,
 
 
     //@event onaddsubresource: Sent when a child view adds a resource
-    if (this.owner.onaddsubresource && this.owner.onaddsubresource.ready) this.owner.onaddsubresource.sendEvent( childsprite.owner );
+    // not found in view
+    // if (this.owner.onaddsubresource && this.owner.onaddsubresource.ready) this.owner.onaddsubresource.sendEvent( childsprite.owner );
 
     return newmc;
 }
@@ -1390,7 +1391,7 @@ LzSprite.prototype.trackPlay = function() {
     //Debug.write('trackPlay', this);
     this.playing = true;
     this.owner.playing = true;
-    if ( this.getOption("donttrackplay") || this.__LZtracking ) return;
+    if ( this.owner.getOption("donttrackplay") || this.__LZtracking ) return;
 
     if (null == this.updatePlayDel) {
         this.updatePlayDel = new LzDelegate( this, "updatePlayStatus");
@@ -1425,16 +1426,14 @@ LzSprite.prototype.updatePlayStatus = function (ignore){
 
     if ( this.frame != c && c != null ){
         this.frame = c;
-        this.owner.frame = this.frame;
-        //@event onframe: Sent onidle while view is playing its resource
-        if (this.owner.onframe.ready) this.owner.onframe.sendEvent(this.frame);
+        this.owner.resourceevent('frame', this.frame);
     }
 
     var tf = this.getMCRef()._totalframes;
     if (  this.totalframes != tf ){
         if (tf != undefined) {
             this.totalframes = tf;
-            this.owner.setTotalFrames (this.totalframes);
+            this.owner.resourceevent('totalframes', this.totalframes);
         }
     }
 
@@ -1443,7 +1442,7 @@ LzSprite.prototype.updatePlayStatus = function (ignore){
         //@event onlastframe: Sent when the view sets its frame (resource
         //number) to the last frame. This can be used to find out when a
         //streaming media clip is done playing.
-        if (this.owner.onlastframe.ready) this.owner.onlastframe.sendEvent(this.owner);
+        this.owner.resourceevent('lastframe', null, true);
         this.checkPlayStatus();
     }
 }
@@ -1523,7 +1522,7 @@ LzSprite.prototype.play = function (f, rel){
 
     this.trackPlay();
     //@event onplay: Sent when a view begins playing its resource
-    if (this.owner.onplay.ready) this.owner.onplay.sendEvent(this);
+    this.owner.resourceevent('play', null, true);
 }
 
 /**
@@ -1550,7 +1549,7 @@ LzSprite.prototype.stop = function (f, rel){
     //@event onstop: Sent when a view's resource that is capable of playing is
     //stopped. This is only called if stop is called directly; when a resource
     //hits its last frame, the LzView event onlastframe is called.
-    if ( this.playing && this.owner.onstop.ready ) this.owner.onstop.sendEvent(this);
+    if ( this.playing ) this.owner.resourceevent('stop', null, true);
     this.stopTrackPlay();
 }
 

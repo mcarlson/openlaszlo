@@ -595,6 +595,7 @@ LzSprite.prototype.setSource = function (url, usecache){
         // called by a user
         this.skiponload = false;
         this.resource = url;
+        this.__updateLoadStatus(0);
     }
     if (usecache == 'memorycache') {
         // use the memory cache - explictly turned on by the user
@@ -1172,6 +1173,10 @@ LzSprite.prototype.__imgonload = function(i, cacheHit) {
     }
     
     this.owner.resourceload({width: this.resourceWidth, height: this.resourceHeight, resource: this.resource, skiponload: this.skiponload});
+    if (this.skiponload != true){
+        // for user-loaded media
+        this.__updateLoadStatus(1);
+    }
 }
 
 /**
@@ -1203,6 +1208,10 @@ LzSprite.prototype.__imgonerror = function(i, cacheHit) {
     }
     
     this.owner.resourceloaderror({resource: this.resource});
+    if (this.skiponload != true){
+        // for user-loaded media
+        this.__updateLoadStatus(1);
+    }
 }
 
 /**
@@ -1231,6 +1240,18 @@ LzSprite.prototype.__imgontimeout = function(i, cacheHit) {
     }
     
     this.owner.resourceloadtimeout({resource: this.resource});
+    if (this.skiponload != true){
+        // for user-loaded media
+        this.__updateLoadStatus(1);
+    }
+}
+
+/**
+  * @access private
+  */
+LzSprite.prototype.__updateLoadStatus = function(val) {
+    this.owner.resourceevent('loadratio', val);
+    this.owner.resourceevent('framesloadratio', val);
 }
 
 /*
@@ -1810,6 +1831,7 @@ LzSprite.prototype.unload = function () {
         this.__destroyImage(null, this.__LZimg);
         this.__LZimg = null;
     }
+    this.__updateLoadStatus(0);
 }
 
 /**

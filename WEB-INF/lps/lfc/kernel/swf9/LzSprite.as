@@ -167,7 +167,7 @@ dynamic public class LzSprite extends Sprite {
 
           this.resourcewidth = res.width;
           this.resourceheight = res.height;
-          this.owner.setTotalFrames (res.frames.length);
+          this.owner.resourceevent('totalframes', res.frames.length, false, false);
 
           // instantiate resource at frame 1
           this.stop(1);

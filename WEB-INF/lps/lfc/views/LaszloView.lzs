@@ -105,8 +105,6 @@ static var tagname = 'view';
     /** @access private */
     var __mousecache = null;
 
-    /** @access private */
-    var __lzcheckframe;
     /** If true, this view is currently playing.
       * @type Boolean
       * @lzxtype boolean
@@ -189,11 +187,24 @@ var onlastframe = LzDeclaredEvent;
   */
 var onload = LzDeclaredEvent;
 
-/** Sends a percentage (0-1) reflecting the amount of a media file that's been downloaded.
-* @lzxtype event
+/** Sends a percentage (0-1) reflecting the amount of a media file that's been downloaded.  Deprecated - see onframesloadratio.
+  * @lzxtype event
+  * @keywords deprecated 
   * @access public
   */
 var onloadperc = LzDeclaredEvent;
+
+/** Sends a percentage (0-1) reflecting the number of frames downloaded.
+  * @lzxtype event
+  * @access public
+  */
+var onframesloadratio = LzDeclaredEvent;
+
+/** Sends a percentage (0-1) reflecting the amount of a media file that's been downloaded.
+  * @lzxtype event
+  * @access public
+  */
+var onloadratio = LzDeclaredEvent;
 
 /** Sent when there is an error loading the view's resource.
   * The argument sent with the event is the error string sent by the server.
@@ -905,22 +916,22 @@ var _yscale =   1;
   * @type Number
   * @keywords readonly
   */
-var totalframes =   0;
+var totalframes =   1;
 /** If this view has a multi-frame resource, this allows setting which
   * resource frame is displayed.  Defaults to the first frame (1).
   * @type Number
   * @lzxtype numberExpression
-  * @lzxdefault "0"
+  * @lzxdefault "1"
   * @devnote See also the <attribute>resource</attribute>
   * attribute.  Setting this attribute will change the frame that is
   * being displayed by the resource associated with this view. The
-  * first frame of the resource is frame 0.  Setting a view's
+  * first frame of the resource is frame 1.  Setting a view's
   * 'donttrackplay' option to true will allow the view's resource to
   * play without updating the value of the view's frame property. This
   * can save CPU usage in cases where the application doesn't need to
   * know what frame the resource is showing while it is playing.
   */
-var frame =   0;
+var frame = 1;
 /** @access private */
 function $lzc$set_frame(v) { this.setResourceNumber(v); }
 
@@ -1288,23 +1299,13 @@ function resourceloadtimeout() {
   * @access private
   * Called by the sprite when the resource playback events occur
   */
-function resourceevent(name, value, eventonly) {
+function resourceevent(name, value, eventonly, force) {
+    // send the event if force is true or eventonly is true or the value changed
+    var sendevent = force == true || eventonly == true || this[name] != value;
     if (eventonly != true) this[name] = value;
-    var ev = this['on'+ name];
-    if (ev.ready) ev.sendEvent(value);
-}
-
-/**
-  * This method is called to set the number of total frames in the resource.
-  * The ontotalframes event is generated
-  * 
-  * @param Number n: The total number of frames in the resource
-  * @access private
-  */
-function setTotalFrames (n) {
-    if ((n != null) && (this.totalframes != n)) {
-        this.totalframes = n;
-        if (this.ontotalframes.ready) this.ontotalframes.sendEvent( this.totalframes );
+    if (sendevent) {
+        var ev = this['on'+ name];
+        if (ev.ready) ev.sendEvent(value);
     }
 }
 
@@ -2472,7 +2473,6 @@ function setResourceNumber( n ) {
     //Debug.write('setResourceNumber', n, this, this.playing)
 
     // prevent play status tracking from running if the frame was set oninit, like in windowframe class
-    this.__lzcheckframe = n;
     this.frame = n;
     this.stop( n );
     if (this.onframe.ready) this.onframe.sendEvent(n);
