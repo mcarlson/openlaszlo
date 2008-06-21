@@ -24,10 +24,6 @@
         <handler name="onlastframe">
             this.stop();
         </handler>
-        <handler name="onvisible">
-            this.setVisible(true);
-        </handler>
-
         <simplelayout/>
         <text text="${classroot.label}"/> 
         <eventtester eventname="onframe" verbose="false"/>
