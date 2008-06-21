@@ -549,12 +549,14 @@ LzSprite.prototype.setResource = function ( r ){
 
     var urls = this.getResourceUrls(r);
 
-    this.owner.setTotalFrames(urls.length);
+    this.owner.resourceevent('totalframes', urls.length);
     this.frames = urls;
     this.__preloadFrames();
 
     this.skiponload = true;
     this.setSource(urls[0], true);
+    // multiframe resources should play until told otherwise
+    if (urls.length > 1) this.play();
 }
 
 LzSprite.prototype.getResourceUrls = function (resourcename) {
@@ -1028,27 +1030,27 @@ LzSprite.prototype.setOpacity = function ( o ){
 }
 
 LzSprite.prototype.play = function(f) {
-    if (isNaN(f * 1) == false) {
+    if (! this.frames || this.frames.length < 2) return;
+    f = parseInt(f);
+    if (! isNaN(f)) {
         //Debug.info('play ' + f + ', ' + this.frame);
         this.__setFrame(f);
     }
     if (this.playing == true) return;
-
-    if (this.frames && this.frames.length > 1) {
-        this.playing = true;
-        this.owner.resourceevent('play', null, true);
-        LzIdleKernel.addCallback(this, '__incrementFrame');
-    }
+    this.playing = true;
+    this.owner.resourceevent('play', null, true);
+    LzIdleKernel.addCallback(this, '__incrementFrame');
 }
 
 LzSprite.prototype.stop = function(f) {
+    if (! this.frames || this.frames.length < 2) return;
     if (this.playing == true) {
         this.playing = false;
         this.owner.resourceevent('stop', null, true);
         LzIdleKernel.removeCallback(this, '__incrementFrame');
     }
-
-    if (isNaN(f * 1) == false) {
+    f = parseInt(f);
+    if (! isNaN(f)) {
         //Debug.info('stop ' + f + ', ' + this.frame);
         this.__setFrame(f);
     }
@@ -1058,26 +1060,9 @@ LzSprite.prototype.stop = function(f) {
   * @access private
   */
 LzSprite.prototype.__incrementFrame = function() {
-    this.frame++;
-    if (this.frames && this.frame > this.frames.length) {
-        //Debug.info(this.frame + ', ' + this.resource.length);
-        this.frame = 1;
-    }
-    this.__updateFrame();
-}
-
-/**
-  * @access private
-  */
-LzSprite.prototype.__updateFrame = function(force) {
-    if (this.playing || force) {
-        var url = this.frames[this.frame - 1];
-        //Debug.info('__updateFrame', this.frame, url, this.owner);
-        this.setSource(url, true);
-    }
-    this.owner.resourceevent('frame', this.frame);
-    if (this.frames.length == this.frame)
-        this.owner.resourceevent('lastframe', null, true);
+    // Wrap around to the first frame
+    var newframe = this.frame + 1 > this.frames.length ? 1 : this.frame + 1;
+    this.__setFrame(newframe);
 }
 
 if (LzSprite.prototype.quirks.preload_images_only_once) {
@@ -1756,15 +1741,20 @@ LzSprite.prototype.sendInFrontOf = function ( frontSprite ){
   * @access private
   */
 LzSprite.prototype.__setFrame = function (f){
-    if (! this.frames || this.frame == f) return;
     if (f < 1) {
         f = 1;
     } else if (f > this.frames.length) {
         f = this.frames.length;
     }
+    if (f == this.frame) return;
     //Debug.info('LzSprite.__setFrame', f);
     this.frame = f;
-    this.__updateFrame(true);
+    // from __updateFrame()    
+    var url = this.frames[this.frame - 1];
+    this.setSource(url, true);
+    this.owner.resourceevent('frame', this.frame);
+    if (this.frames.length == this.frame)
+        this.owner.resourceevent('lastframe', null, true);
 }
 
 /**
