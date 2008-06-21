@@ -131,8 +131,6 @@
         <item title="datapointer (LzDatapointer)" href="LzDatapointer.html" />
         <item title="dataselectionmanager (LzDataSelectionManager)" href="LzDataSelectionManager.html" />
         <item title="dataset (LzDataset)" href="LzDataset.html" />
-        <item title="defaultdataprovider" href="defaultdataprovider.html" />        
-        <item title="httpdataprovider" href="httpdataprovider.html" />
         <item title="LzDataElement" href="LzDataElement.html" />
         <item title="LzDataProvider" href="LzDataProvider.html" />
         <item title="LzDataRequest" href="LzDataRequest.html" />
