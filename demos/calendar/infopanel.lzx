@@ -103,17 +103,21 @@
                     </textbox>
                     <basebutton x="149" width="14" resource="info_larrow">
                         <handler name="onclick">
+                            <![CDATA[
                             calgrid.keepinfoopen = true;
                             var thiscell = calgrid.open_day.id;
                             thiscell = Number(thiscell.substr(4));
+                            
+                            var prevcell = 'cell' + Number(thiscell - 1);
+                            if(thiscell > 1){
+                                calgrid.daySelectionMgr.select(global[prevcell]);
+                                calgrid.open_day = global[prevcell];
+                            }
+                            eventDataMgr.changeDay(-1);
                             if(thiscell == 1){
                                 calgrid.prevMonth();
                                 calgrid.keepinfoopen = false;
                             }
-                            var prevcell = 'cell' + Number(thiscell - 1);
-                            calgrid.daySelectionMgr.select(global[prevcell]);
-                            calgrid.open_day = global[prevcell];
-                            eventDataMgr.changeDay(-1);
                             if(cal_interior.viewstyle == "day"){
                                 calgrid.showdayview();
                             }
@@ -121,13 +125,22 @@
                                 calgrid.showweekview();
                             }
                             calgrid.keepinfoopen = false;
+                            ]]>
                         </handler>
                     </basebutton>
                     <basebutton x="163" width="14" resource="info_rarrow">
                         <handler name="onclick">
+                            <![CDATA[
                             calgrid.keepinfoopen = true;
                             var thiscell = calgrid.open_day.id;
                             thiscell = Number(thiscell.substr(4));
+                            
+                            var nextcell = 'cell' + Number(thiscell + 1);
+                            if(thiscell < 42){
+                                calgrid.daySelectionMgr.select(global[nextcell]);
+                                calgrid.open_day = global[nextcell];
+                            }
+                            eventDataMgr.changeDay(+1);
                             if(thiscell == 42){
                                 calgrid.nextMonth();
                                 calgrid.keepinfoopen = false;
@@ -138,10 +151,6 @@
                                     calgrid.keepinfoopen = false;
                                 }
                             }
-                            var nextcell = 'cell' + Number(thiscell + 1);
-                            calgrid.daySelectionMgr.select(global[nextcell]);
-                            calgrid.open_day = global[nextcell];
-                            eventDataMgr.changeDay(+1);
                             if(cal_interior.viewstyle == "day"){
                                 calgrid.showdayview();
                             }
@@ -149,6 +158,7 @@
                                 calgrid.showweekview();
                             }
                             calgrid.keepinfoopen = false;
+                            ]]>
                         </handler>
                     </basebutton>
                             
