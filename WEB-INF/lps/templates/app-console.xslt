@@ -268,6 +268,8 @@ If you edit this file, please validate your work using http://validator.w3.org/
                 href="{$url}?lzt=info{$query_args}">Size profile</a>
         </xsl:otherwise>
       </xsl:choose>
+      <br/>
+      <a href="{$url}?lzt=html{$query_args}">Show application only</a>
     </div>
   </xsl:template>
 
