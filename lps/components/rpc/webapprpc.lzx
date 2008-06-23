@@ -244,16 +244,16 @@
                 <p><b>See Also:</b></p>
                     <ul>
                         <li>
-                            <a href="lz.rpc.html"><code class="classname">rpc</code></a>
+                            <sgmltag class="element" role="lz.rpc">&lt;rpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="lz.javarpc.html"><code class="classname">javarpc</code></a>
+                            <sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="lz.sessionrpc.html"><code class="classname">sessionrpc</code></a>
+                            <sgmltag class="element" role="lz.sessionrpc">&lt;sessionrpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="lz.remotecall.html"><code class="classname">remotecall</code></a>
+                            <sgmltag class="element" role="lz.remotecall">&lt;remotecall&gt;</sgmltag>
                         </li>
                         <li>
                             <a href="../developers/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a>

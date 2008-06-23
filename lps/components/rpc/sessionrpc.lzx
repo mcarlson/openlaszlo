@@ -102,7 +102,7 @@
         javax.servlet.http.HttpSession</a> in the <a href="http://java.sun.com/products/servlet/2.3/javadoc/" shape="rect">Java Servlet API</a>
         documentation for details.</p>
         <example>
-    &lt;canvas width="800" height="450" debug="true"&gt;
+    &lt;canvas width="800" height="475" debug="true"&gt;
     
         &lt;debug x="300" y="20" width="500" height="400" /&gt;
         
@@ -225,16 +225,16 @@
         <br />
             <ul>
                 <li>
-                    <a href="../reference/rpc.html"><code class="classname">rpc</code></a>
+                    <sgmltag class="element" role="lz.rpc">&lt;rpc&gt;</sgmltag>
                 </li>
                 <li>
-                    <a href="../reference/javarpc.html"><code class="classname">javarpc</code></a>
+                    <sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag>
                 </li>
                 <li>
-                    <a href="../reference/webapprpc.html"><code class="classname">webapprpc</code></a>
+                    <sgmltag class="element" role="lz.webapprpc">&lt;webapprpc&gt;</sgmltag>
                 </li>
                 <li>
-                    <a href="../reference/remotecall.html"><code class="classname">remotecall</code></a>
+                    <sgmltag class="element" role="lz.remotecall">&lt;remotecall&gt;</sgmltag>
                 </li>
                 <li>
                     <a href="../developers/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a>

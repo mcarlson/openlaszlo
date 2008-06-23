@@ -2,6 +2,9 @@
 
     <class name="XMLHttpRequest" extends="node">
 
+        <!---  Object status integer: 0 Uninitialised The initial value. 1 Open The open() method has been successfully called. 
+              2 Sent The send() method has been successfully called, but no data has yet been received. 3 Receiving Data is being received, 
+              but the data transfer is not yet complete. 4 Loaded The data transfer has been completed. -->
         <attribute name="readyState" value="0" type="number"/>
 
         <!-- Event handler for an event that fires at every state change

@@ -120,7 +120,7 @@
     &lt;/canvas&gt;
                 </example>
                     <p>Document style operations use XML (i.e. documents) as paramaters. Document
-                    style operations return an array of <a href="../reference/lzdataelement.html"><code class="classname">LzDataElement</code></a>s, 
+                    style operations return an array of <sgmltag class="element" role="LzDataElement">LzDataElement</sgmltag>s, 
                     though often only a single
                     <code class="classname">LzDataElement</code> will exist in the array. The XML string (document) parameter
                     passed into the operation must match the XML schema as defined in the WSDL.</p>
@@ -337,23 +337,23 @@
                 <p>The example demonstrates how a result value, which is actually a JavaScript
                     object, can be data bound through the dataobject attribute in remotecall. For
                     more details, see the remotecall section in the <a href="../developers/rpc-soap.html" target="laszlo-dguide" shape="rect">RPC chapter</a> of the <a href="../developers/" target="laszlo-dguide" shape="rect">Developer's Guide</a>. To read about passing complex type
-                    parameters, read the <a href="../developers/rcp-soap.html" target="laszlo-dguide" shape="rect">SOAP chapter</a>.</p>
+                    parameters, read the <a href="../developers/rpc-soap.html" target="laszlo-dguide" shape="rect">SOAP chapter</a>.</p>
                 
                 
                 <p><b>See Also:</b></p>
 
                     <ul>
                         <li>
-                            <a href="../reference/rpc.html"><code class="classname">rpc</code></a>
+                            <sgmltag class="element" role="lz.rpc">&lt;rpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/javarpc.html"><code class="classname">javarpc</code></a>
+                            <sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/xmlrpc.html"><code class="classname">xmlrpc</code></a>
+                            <sgmltag class="element" role="lz.xmlrpc">&lt;xmlrpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/remotecall.html"><code class="classname">remotecall</code></a>
+                            <sgmltag class="element" role="lz.remotecall">&lt;remotecall&gt;</sgmltag>
                         </li>
                         <li>
                             <a href="../developers/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC</a>

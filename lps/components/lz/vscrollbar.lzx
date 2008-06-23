@@ -4,9 +4,6 @@
     <include href="utils/layouts/stableborderlayout.lzx"/>
     <include href="scrollbar_yresources.lzx"/>
 
-<!--- The vertical scrollbar manipulates the y position of a target view that is
-      clipped by its parent, creating a scrolling effect when the user
-      clicks up/down arrows, clicks on the scroll track or drags the thumb. -->
 <class name="vscrollbar" extends="basescrollbar"
     bgcolor="0x595959"
     axis="y">
@@ -119,17 +116,15 @@
           slightly smaller, than if you were to use <code>&lt;scrollbar
             axis="y"&gt;</code>.</note>
         
-        <example title="Simple scrollbar">
+        <example role="live-example" title="Simple scrollbar">
           &lt;canvas height="160" bgcolor="silver"&gt;
-          &lt;view name="main" x="20" y="20" bgcolor="white"
-          width="100" height="80" clip="true"&gt;
-          &lt;view name="contents"&gt;
-          &lt;text multiline="true"&gt;
-          1&lt;br/&gt;2&lt;br/&gt;3&lt;br/&gt;4&lt;br/&gt;5&lt;br/&gt;6&lt;br/&gt;7&lt;br/&gt;8&lt;br/&gt;9&lt;br/&gt;10
-          &lt;/text&gt;
-          &lt;/view&gt;
-          &lt;vscrollbar/&gt;
-          &lt;/view&gt;
+               &lt;view name="main" x="20" y="20" bgcolor="white"
+                        width="100" height="80" clip="true"&gt;
+                  &lt;text multiline="true"&gt;
+                      1&lt;br/&gt;2&lt;br/&gt;3&lt;br/&gt;4&lt;br/&gt;5&lt;br/&gt;6&lt;br/&gt;7&lt;br/&gt;8&lt;br/&gt;9&lt;br/&gt;10
+                  &lt;/text&gt;
+                  &lt;vscrollbar/&gt;
+               &lt;/view&gt;
           &lt;/canvas&gt;
         </example>
 

@@ -529,7 +529,7 @@
                     <p>Any events not handled by remotecall can be handled by a remotecall's parent. A remotecall element can be 
                         declared anywhere in the view hierarchy. However, if it's not within an RPC object 
                         (like &lt;soap&gt;, &lt;javarpc, &lt;xmlrpc&gt;), the remotecontext attribute must be set. The remotecontext tells the 
-                        remotemethod which RPC object t&gt;o refer to when invoking the remote method.</p>
+                        remotemethod which RPC object to refer to when invoking the remote method.</p>
 
                 <example>
     &lt;canvas debug="true" height="280"&gt;
@@ -615,7 +615,7 @@
 </ol>
 <p>To databind to a successful return value, you can set the dataobject
     attribute to a dataset. For more information on databinding with RPC, see the 
-    <a href="../guide/rpc.html" target="laszlo-dguide" shape="rect">RPC chapter</a></p>
+    <link linkend="rpc">RPC chapter</link></p>
 <example>
     &lt;canvas debug="true" height="300" width="680"&gt;
     
@@ -671,22 +671,22 @@
      
                     <ul>
                         <li>
-                            <a href="../reference/param.html"><code class="classname">param</code></a>
+                            <sgmltag class="element" role="lz.param">&lt;param&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/rpc.html"><code class="classname">rpc</code></a>
+                            <sgmltag class="element" role="lz.rpc">&lt;rpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/javarpc.html"><code class="classname">javarpc</code></a>
+                            <sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/soap.html"><code class="classname">soap</code></a>
+                            <sgmltag class="element" role="lz.soap">&lt;soap&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/xmlrpc.html"><code class="classname">xmlrpc</code></a>
+                            <sgmltag class="element" role="lz.xmlrpc">&lt;xmlrpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../guide/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a>
+                            <link linkend="rpc">Developer's Guide: RPC chapter</link>
                         </li>
                     </ul>
             </text>

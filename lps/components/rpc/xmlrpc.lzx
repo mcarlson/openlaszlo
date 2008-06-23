@@ -66,8 +66,8 @@
             </tag>
             <text>
                 <p>XML-RPC is simple spec that describes how to invoke a remote operation using
-                    XML over HTTP. Laszlo XML-RPC is part of <a href="../developers/rpc.html" target="laszlo-dguide" shape="rect">Laszlo
-                        RPC</a> and shares many of the same APIs and concept. Laszlo RPC includes <a href="../developers/rpc-soap.html" target="laszlo-dguide" shape="rect">SOAP</a> and <a href="../guide/rpc-javarpc.html" target="laszlo-dguide" shape="rect">JavaRPC</a>. For more information on XML-RPC,
+                    XML over HTTP. Laszlo XML-RPC is part of <link linkend="rpc">Laszlo RPC</link> and shares many of the same APIs and concepts. 
+                  Laszlo RPC includes <link linkend="rpc-soap">SOAP</link> and <link linkend="rpc-javarpc">JavaRPC</link>. For more information on XML-RPC,
                     go to <a href="http://www.xmlrpc.com/" shape="rect">XML-RPC.com</a>
                 </p>
                 
@@ -77,7 +77,7 @@
                     or on a service description (using a WSDL in SOAP). Remotecall declarations
                     refer to these function stubs and any remotecalls not pointing to a function
                     stub that doesn't exist will generate an error/warning. In &lt;xmlrpc&gt;,
-                    function stubs are create based on remotecall declarations. Note that XML-RPC
+                    function stubs are created based on remotecall declarations. Note that XML-RPC
                     use dot notation for their operation names. Because that will conflict with the
                     view system's notation, it's suggested that remotecalls are explictly named.</p>
                 <example>
@@ -118,22 +118,22 @@
                 <p><b>See Also:</b></p>
                     <ul>
                         <li>
-                            <a href="../reference/rpc.html"><code class="classname">rpc</code></a>
+                            <sgmltag class="element" role="lz.rpc">&lt;rpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/javarpc.html"><code class="classname">javarpc</code></a>
+                            <sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/soap.html"><code class="classname">soap</code></a>
+                            <sgmltag class="element" role="lz.soap">&lt;soap&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/remotecall.html"><code class="classname">remotecall</code></a>
+                            <sgmltag class="element" role="lz.remotecall">&lt;remotecall&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../guide/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a>
+                            <link linkend="rpc">Developer's Guide: RPC chapter</link>
                         </li>
                         <li>
-                            <a href="../guide/rpc-xmlrpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: XMLRPC chapter</a>
+                            <link linkend="rpc-xmlrpc">Developer's Guide: XMLRPC chapter</link>
                         </li>
                     </ul>
             </text>

@@ -11,7 +11,7 @@
 /**
   * <p>The <classname>LzResizeReplicationManager</classname> extends
   * the capabilities of the
-  * <classname>LzLazyReplicationManager</classname> so that the
+  * <sgmltag class="element" role="LzLazyReplicationManager">LzLazyReplicationManager</sgmltag> so that the
   * elements in the replication can be resized in their axis. All of
   * the restrictions on the use of the
   * <classname>LzLazyReplicationManager</classname> apply to the

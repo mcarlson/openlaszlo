@@ -13,13 +13,12 @@
   * to <code>lazy</code>, then a match to multiple nodes will create an
   * <classname>LzLazyReplicationManager</classname> instead of an
   *
-  * <classname>LzReplicationManager</classname>. The lazy replication
+  * <sgmltag class="element" role="LzReplicationManager">LzReplicationManager</sgmltag>. The lazy replication
   * manager creates only enough replicated views in order to display the
   * data, so there is not a view for each data node. This enables the
   * display of very large datasets.</p>
   *
-  * <p>See <a href="${dguide}databinding.html#databinding.lazy-replication">Lazy
-  * Replication</a> in the Guide for examples of how to use lazy
+  * <p>See <link linkend="databinding.lazy-replication">Lazy Replication</link> in the Guide for examples of how to use lazy
   * replication, and restrictions on its use.</p>
   *
   * <p>Also see the <a href="${examples}paging.lzx">paging.lzx example</a>

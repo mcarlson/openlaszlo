@@ -606,8 +606,8 @@ of the system is present.</p>
 
       <p><b>See Also:</b></p>
       <ul>
-        <li><a href="../reference/lz.rpc.html"><code class="classname">rpc</code></a></li>
-        <li><a href="../reference/lz.javarpc.html"><code class="classname">javarpc</code></a></li>
+        <li><sgmltag class="element" role="lz.rpc">&lt;rpc&gt;</sgmltag></li>
+        <li><sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag></li>
         <li><a href="${dguide}/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a></li>
         <li><a href="${dguide}/rpc-javarpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: JavaRPC chapter</a></li>
       </ul>
