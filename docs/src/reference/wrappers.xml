@@ -368,7 +368,7 @@ See the <a href="LzFont.html" target="_self">font</a> element for details.
 <property id="tag-resource" topic="LZX" subtopic="Media" access="public">
 <doc>
 <tag name="shortdesc"><text>A tag that defines a media object that can be associated with a view.</text></tag>
-<tag name="lzxname"><text>&lt;resource&gt;</text></tag>
+<tag name="lzxname"><text>resource</text></tag>
 <text>
 
 <p>This tag defines a media object, that can be presented within a
