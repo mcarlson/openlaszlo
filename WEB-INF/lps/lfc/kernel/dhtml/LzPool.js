@@ -23,8 +23,8 @@ LzPool.prototype.cache = null;
 
 // Retrieves an item from the cache
 LzPool.prototype.get = function(id, skipcache, ...args) {
-    var itm;
-    if (skipcache || (itm = this.cache[id]) == null) {
+    var itm = this.cache[id];
+    if (skipcache || itm == null) {
         args.unshift(id);
         itm = this.getter.apply(this, args);
         if (!skipcache) this.cache[id] = itm;
@@ -38,7 +38,7 @@ LzPool.prototype.get = function(id, skipcache, ...args) {
 // Flushes an item from the cache
 LzPool.prototype.flush = function(id) {
     if (this.destroyer) this.destroyer(id, this.cache[id]);
-    this.cache[id] = null;
+    delete this.cache[id];
 }
 
 // Destroys the pool and all objects contained in it

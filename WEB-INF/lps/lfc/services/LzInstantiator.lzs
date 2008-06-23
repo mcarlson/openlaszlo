@@ -216,7 +216,7 @@ dynamic public class LzInstantiatorService extends LzEventable {
       var par = cq[l-2];
       var parDone = false;
       // Don't bother with children of deleted parents
-      if (par['__LZdeleted']) {
+      if (par['__LZdeleted'] || (larr[0] && larr[0]['__LZdeleted'])) {
         cq.length -= 2;
         continue;
       }

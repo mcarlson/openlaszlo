@@ -556,7 +556,7 @@ LzSprite.prototype.setResource = function ( r ){
     this.skiponload = true;
     this.setSource(urls[0], true);
     // multiframe resources should play until told otherwise
-    if (urls.length > 1) this.play();
+    //if (urls.length > 1) this.play();
 }
 
 LzSprite.prototype.getResourceUrls = function (resourcename) {
@@ -591,6 +591,10 @@ LzSprite.prototype.CSSDimension = function (value, units) {
 
 LzSprite.prototype.loading = false;
 LzSprite.prototype.setSource = function (url, usecache){
+    if (url == null || url == 'null') {
+        this.unload();
+        return;
+    }
     if (usecache != true){
         // called by a user
         this.skiponload = false;
@@ -619,7 +623,8 @@ LzSprite.prototype.setSource = function (url, usecache){
     }
     var im = this.__ImgPool.get(url, usecache != true);
 
-    if (this.__LZimg) {
+    if (this.__LZimg && this.__LZimg.owner) {
+        //Debug.write('replaceChild', im.owner, this.__LZimg.owner);
         this.__LZdiv.replaceChild(im, this.__LZimg);
         this.__LZimg = im;
     } else {
@@ -1177,6 +1182,11 @@ LzSprite.prototype.__imgonload = function(i, cacheHit) {
         // for user-loaded media
         this.__updateLoadStatus(1);
     }
+    if (this.quirks.ie_alpha_image_loader) {
+        this.__clearImageEvents(this.__LZimg);
+    } else {
+        this.__clearImageEvents(i);
+    }
 }
 
 /**
@@ -1212,6 +1222,11 @@ LzSprite.prototype.__imgonerror = function(i, cacheHit) {
         // for user-loaded media
         this.__updateLoadStatus(1);
     }
+    if (this.quirks.ie_alpha_image_loader) {
+        this.__clearImageEvents(this.__LZimg);
+    } else {
+        this.__clearImageEvents(i);
+    }
 }
 
 /**
@@ -1244,6 +1259,11 @@ LzSprite.prototype.__imgontimeout = function(i, cacheHit) {
         // for user-loaded media
         this.__updateLoadStatus(1);
     }
+    if (this.quirks.ie_alpha_image_loader) {
+        this.__clearImageEvents(this.__LZimg);
+    } else {
+        this.__clearImageEvents(i);
+    }
 }
 
 /**
@@ -1274,25 +1294,39 @@ LzSprite.prototype.__destroyImage = function (url, img) {
             //@devnote: remember, this will remove all callback-functions for this sprite!
             lz.BrowserUtils.removecallback(owner);
         }
-        if (LzSprite.prototype.quirks.ie_alpha_image_loader && img.sizer) {
-            var sizer = img.sizer;
+        LzSprite.prototype.__clearImageEvents(img);
+        LzSprite.prototype.__discardElement(img);
+    }
+    if (LzSprite.prototype.quirks.preload_images_only_once) {
+        LzSprite.prototype.__preloadurls[url] = null;
+    }
+}
+
+/**
+  * @access private
+  * Clears events registered on an image
+  */
+LzSprite.prototype.__clearImageEvents = function (img) {
+    if (! img || img.__cleared) return;
+    if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
+        var sizer = img.sizer;
+        if (sizer) {
+            //Debug.write('__clearImageEvents'+ sizer.src);
             if (sizer.tId) clearTimeout(sizer.tId);
             sizer.onerror = null;
             sizer.onload = null;
             sizer.onloadforeal = null;
             sizer._parent = null;
-            img.sizer = null;
+            // create dummy object with image properties
+            var dummyimg = {width: sizer.width, height: sizer.height, src: sizer.src}
             LzSprite.prototype.__discardElement(sizer);
-            LzSprite.prototype.__discardElement(img);
-        } else {
-            img.onerror = null;
-            img.onload = null
-            LzSprite.prototype.__discardElement(img);
+            img.sizer = dummyimg;
         }
+    } else {
+        img.onerror = null;
+        img.onload = null
     }
-    if (LzSprite.prototype.quirks.preload_images_only_once) {
-        LzSprite.prototype.__preloadurls[url] = null;
-    }
+    img.__cleared = true;
 }
 
 /**
@@ -1502,6 +1536,9 @@ LzSprite.prototype.destroy = function() {
 
     if (this.quirks.ie_leak_prevention) {
         delete this.__sprites[this.uid];
+    }
+    if (this.isroot) {
+        lz.BrowserUtils.scopes = null;
     }
 }
 
@@ -1784,7 +1821,8 @@ LzSprite.prototype.__setFrame = function (f){
 LzSprite.prototype.__discardElement = function (element) {
     if (LzSprite.prototype.quirks.ie_leak_prevention) {
         // Used instead of node.removeChild to eliminate 'pseudo-leaks' in IE - see http://outofhanwell.com/ieleak/index.php?title=Fixing_Leaks
-        //alert('__discardElement' + element);
+        //alert('__discardElement' + element.nodeType);
+        if (! element || ! element.nodeType) return;
         if( ( element.nodeType >= 1 ) && ( element.nodeType < 13 ) )  {
             // ensures element is valid node 
             if (element.owner) element.owner = null;

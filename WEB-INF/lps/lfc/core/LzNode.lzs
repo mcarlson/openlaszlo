@@ -1013,6 +1013,8 @@ public dynamic class LzNode extends LzEventable {
     if (hasearly) {
       for (var i = 1, l = hasearly.length; i < l; i++) {
         if (i in hasearly) {
+          // bail if deleted, e.g. by setDatapath causing replication
+          if (this.__LZdeleted) return;
           var a = hasearly[i];
           var setr = '$lzc$set_' + a;
           this[setr]( args[a] );
@@ -1022,6 +1024,8 @@ public dynamic class LzNode extends LzEventable {
 
     if (hasset) {
       for (var i = hasset.length - 1; i >= 0; i--) {
+        // bail if deleted, e.g. by setDatapath causing replication
+        if (this.__LZdeleted) return;
         var a = hasset[i];
         var setr = '$lzc$set_' + a;
         this[setr]( args[a] );
