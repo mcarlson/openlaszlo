@@ -15,13 +15,12 @@
 
         <!--- Shared flag defined in mediadevice.prototype that 
               tracks whether the user has allowed device access. 
-              Default: false.
               True after user has accepted security dialog,
               false if the user denies access with security dialog.
               Note: allowed is not defined in objects, but in the prototype. 
               Initialized in the script at the end of the file.
               @keywords readonly -->
-        <attribute name="allowed"/>
+        <attribute name="allowed"  value="false"/>
 
         <!--- Shared flag defined in mediadevice.prototype that 
               tracks whether we've figured out if we're allowed or not. 
