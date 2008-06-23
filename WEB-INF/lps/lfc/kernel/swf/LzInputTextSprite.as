@@ -118,7 +118,7 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight 
     // 
-    if (args.height == null || args.height instanceof LzInitExpr) {
+    if (args.height == null) {
         this.sizeToHeight = true;
         // set autoSize to get text measured
         textclip.autoSize = true;
@@ -132,7 +132,7 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
             // we got a correct line height from flash.
             textclip.autoSize = false;
         }
-    }  else {
+    }  else if (! args.height instanceof LzValueExpr) {
         textclip._height = args.height;
         //this.setHeight(args.height);
     }

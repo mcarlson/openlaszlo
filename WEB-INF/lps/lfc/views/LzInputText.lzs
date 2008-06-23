@@ -109,7 +109,7 @@ var _modemanagerDel = null;
   * @access private
   */
 override function construct ( parent , args ){
-    this.password = ('password' in args && args.password)  ? true : false;
+    this.password = ('password' in args && (! args.password is LzValueExpr)) ? (!! args.password) : false;
     this.focusable = true;
     super.construct.apply(this, arguments);
     this._onfocusDel = new LzDelegate( this , "_gotFocusEvent" , this,
