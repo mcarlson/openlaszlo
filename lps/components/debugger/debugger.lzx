@@ -127,6 +127,7 @@
 
     <attribute name="initstage" value="immediate" />
 
+    <attribute name="persist" value="null" />
     <attribute name="commandhistory" value="[]" />
     <attribute name="commandhistory_ptr" value="0" />
 
@@ -157,6 +158,16 @@
       // about redefining it from setName
       global.Debug = this;
       global.__LzDebug = this;
+
+      // restore persisted data
+      this.persist = LzBrowserKernel.getPersistedObject('__lzdebugger');
+      for (var i in this.persist.data) {
+        if (this[i] != null) {
+            this[i] = this.persist.data[i];
+            //Debug.write('restored', i, this[i]);
+        }
+      }
+      this.commandhistory_ptr = this.commandhistory.length;
     </method>
 
     <method name="setWidth" args="w" > 
@@ -307,6 +318,7 @@
        var expr = this.bottom.center.input.getText();
        this.commandhistory[this.commandhistory.length] = expr;
        this.commandhistory_ptr = this.commandhistory.length;
+       this.persist.data.commandhistory = this.commandhistory;
        // Echo input to output
        this.freshPrompt();
        this.addHTMLText('<font color="#00CC00">'+String(expr).toHTML()+"</font>\n");
@@ -421,6 +433,7 @@
             (expr = this.bottom.center.input.getText())) {
           this.commandhistory[this.commandhistory.length] = expr;
           this.commandhistory_ptr = this.commandhistory.length;
+          this.persist.data.commandhistory = this.commandhistory;
         }
         ptr += offset;
         ptr = Math.max(0, Math.min(this.commandhistory.length-1, ptr));
