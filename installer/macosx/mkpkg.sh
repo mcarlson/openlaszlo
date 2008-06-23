@@ -1,6 +1,6 @@
 #!/bin/sh
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
@@ -13,6 +13,11 @@ TOMCAT=$3            # developer or deployer
 BASE="openlaszlo-$VERSION-osx-dev-install"
 PKG="$BASE.pkg"
 NAME="OpenLaszlo Server $VERSION"
+
+# Make flex utils and LPS utils executable
+# because ant won't do it for us.
+/bin/chmod a+x "$LPS_HOME/lps-$VERSION/Server/lps-$VERSION/WEB-INF/bin/"*
+/bin/chmod a+x "$LPS_HOME/lps-$VERSION/Server/lps-$VERSION/WEB-INF/lps/server/bin/"*
 
 /bin/rm -rf /tmp/$PKG
 /bin/mkdir /tmp/$PKG
