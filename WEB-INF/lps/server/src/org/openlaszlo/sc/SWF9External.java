@@ -455,7 +455,9 @@ public class SWF9External {
     buildsh += prettycmd + "\n";
     Compiler.emitFile(workDirectoryName("build.sh"), buildsh);
 
-    Process proc = Runtime.getRuntime().exec(cmdstr, null, null);
+    String flexhome_env[] = {"FLEX_HOME="+FLEX_HOME()};
+
+    Process proc = Runtime.getRuntime().exec(cmdstr, flexhome_env, null);
     try {
       OutputStream os = proc.getOutputStream();
       OutputCollector outcollect = new OutputCollector(proc.getInputStream());
@@ -546,17 +548,16 @@ public class SWF9External {
     }
   }
 
+  public static String FLEX_HOME () {
+    return LPS.HOME()+"/WEB-INF";
+  }
+
   /**
    * Return a pathname given by a property in the LPS properties.
    * If the path not absolute, it is relative to the LFC directory.
    */
   public static String getFlexPathname(String subpath) {
-    // System.getenv is deprecated in java 1.4, but undeprecated again in 1.5.
-    String flexhome = System.getenv("FLEX_HOME");
-    if (flexhome == null) {
-      throw new CompilerError("The FLEX_HOME environment variable must be set");
-    }
-    return flexhome + File.separator + subpath;
+    return FLEX_HOME() + File.separator + subpath;
   }
 
   /**
