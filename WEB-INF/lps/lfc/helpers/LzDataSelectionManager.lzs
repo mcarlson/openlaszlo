@@ -11,12 +11,13 @@
 
 /**
   * <p>If a datapath's <classname>datapath.replication</classname> attribute is set to "lazy", then a match to 
-  * multiple nodes will create an <classname>LzLazyReplicationManager</classname> instead of an <classname>LzReplicationManager</classname>. 
+  * multiple nodes will create an <sgmltag class="element" role="LzLazyReplicationManager">LzLazyReplicationManager</sgmltag> 
+    instead of an <sgmltag class="element" role="LzReplicationManager">LzReplicationManager</sgmltag>. 
   * The lazy replication manager creates only enough replicated views in order to display the data, 
   * so there is not a view for each data node. This enables the display of very large datasets. 
   * </p>
   * <p>
-  * With lazy replication you must use a <classname>LzDataSelectionManager </classname>instead of a <classname>LzSelectionManager</classname>. 
+  * With lazy replication you must use a <classname>LzDataSelectionManager </classname>instead of a <sgmltag class="element" role="LzSelectionManager">LzSelectionManager</sgmltag>. 
   * The <classname>LzDataSelectionManager</classname> will operate on the data itself, instead of on the views (which 
   * may not be present if the data has scrolled out of view). For each dataset you are controlling, 
   * you can have only one <classname>LzDataSelectionManager</classname> operating on it. 
@@ -36,7 +37,7 @@
   *       &lt;item&gt;rollerblades&lt;/item&gt;
   *       &lt;item&gt;iceskates&lt;/item&gt;
   *       &lt;item&gt;minivan&lt;/item&gt;
-  *       &lt;item&gt;sailbaot&lt;/item&gt;
+  *       &lt;item&gt;sailboat&lt;/item&gt;
   *       &lt;item&gt;motorboat&lt;/item&gt;
   *     &lt;/list&gt;
   *   &lt;/dataset&gt;

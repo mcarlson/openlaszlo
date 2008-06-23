@@ -390,7 +390,7 @@ example:</p>
 <p>The <tagname link="true">splash</tagname> element may contain
 <a href="tag.splash-view.html">"splash view"</a> elements to define the position and
 behavior of resources that are displayed during the load process. However,
-these <a href="tag.splash-view.html">"splash view"</a> elements, although they are declared with a "view" tag, have a limited feature set. That is to say, when you place a <a href="tag.splash-view.html">view</a> tag inside a <tagname link="true">splash</tagname> element, you are not getting the same object that you do when you place a <tagname link="true">view</tagname> tag elsewhere on the canvas.
+these <a href="tag.splash-view.html">"splash view"</a> elements, although they are declared with a "view" tag, have a limited feature set. That is to say, when you place a <a href="tag.splash-view.html">view</a> tag inside a <tagname link="true">splash</tagname> element, you are not getting the same object that you do when you place a <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag> tag elsewhere on the canvas.
 </p>
 <p>
 For example, the following program positions an image on the canvas during the "splash" loading portion of the program's execution and removes it once the application has loaded. The example below executes too quickly to be demonsrate the splash view; try it in a larger application to see how it works.</p>

@@ -23,14 +23,6 @@
   * <p>See the <a
   * href="${dguide}program-structure.html#program-structure.canvas-tag">Guide</a>
   * for a complete discussion of the <tagname>canvas</tagname> tag.</p>
-  *  
-  * In addition to any events documented in the section below, these events are also available:
-  *
-  * <event>oninit</event> This event is sent right before a node becomes active
-  * -- e.g. before a view displays, or before a layout affects its
-  * subviews.
-  *
-  * <event>onafterinit</event> This event is sent after oninit
   *
   * @see LzView
   * @lzxname canvas
@@ -470,6 +462,7 @@ var datasets;
 
 /**
   * Compares two version strings.
+  * @access private
   * @param ver: A version string
   * @param over: Another version string. If omitted, defaults to the version of
   * of the app.
@@ -729,7 +722,6 @@ override function setY ( v, force = null){
 }
 
 /**
-  * LzView.setDefaultContextMenu
   * Install default menu items for the right-mouse-button 
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */

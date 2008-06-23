@@ -11,7 +11,7 @@
 
 /**
   * <p>This class is used for non-editable text fields (as opposed to
-  * <tagname>inputtext</tagname>).  A text field can be initalized
+  * <sgmltag class="element" role="LzInputText">&lt;inputtext&gt;</sgmltag>).  A text field can be initalized
   * with text content at compile time.</p>
   * 
   * <example>
@@ -51,9 +51,11 @@
   * platform fonts, etc). See the Developer's Guide for details.
   * </p>
   * <p><emphasis role="bold">See Also:</emphasis></p>
-  * <p>The <a href="${dguide}text.html">Text Views</a> chapter of the <a href="${dguide}">Developer's Guide</a> 
-  * for a discussion of how to include and manipulate text</p>
-  * <p>The <attribute>canvas.maxtextheight</attribute> and <attribute>canvas.maxtextwidth</attribute> attributes</p>
+  * <itemizedlist>
+  * <listitem>The <a href="${dguide}text.html">Text Views</a> chapter of the <a href="${dguide}">Developer's Guide</a> 
+  * for a discussion of how to include and manipulate text</listitem>
+  * <listitem>The <attribute>canvas.maxtextheight</attribute> and <attribute>canvas.maxtextwidth</attribute> attributes</listitem>
+  * </itemizedlist>
   *
   * @shortdesc The basic text display element.
   * @devnote This is for regular and input text. 
@@ -99,13 +101,13 @@ dynamic class LzText extends LzView with LzFormatter {
 /** The number of lines that will fit in the current height
   * @lzxtype Number
   * @type Number
-  * @modifiers read-only
+  * @keywords read-only
   */
     var maxlines = 1;
 /** If true, the text is selectable
   * @lzxtype booleanLiteral
   * @type Boolean
-  * @modifiers read-only
+  * @keywords read-only
   */
     var selectable = false;
 // these 4 are only available in swf8 and higher
@@ -139,7 +141,7 @@ dynamic class LzText extends LzView with LzFormatter {
   * The y scroll position of the textfield.
   * @lzxtype Number
   * @type Number
-  * @modifiers read-only
+  * @keywords read-only
   */
     var yscroll;
 
@@ -147,7 +149,7 @@ dynamic class LzText extends LzView with LzFormatter {
   * The x scroll position of the textfield.
   * @lzxtype Number
   * @type Number
-  * @modifiers read-only
+  * @keywords read-only
   */
     var xscroll;
 
@@ -246,7 +248,7 @@ var multiline;
   *
   * @lzxtype booleanLiteral
   * @type Boolean
-  * @modifiers read-only
+  * @keywords read-only
   */
 var resize = true;
 
@@ -441,18 +443,21 @@ function $lzc$set_selectable(v) { this.setSelectable(v); }
 LzText.attributes.selectable = false;
 
 /**
+  * Maximum number of characters allowed in this field
   * @lzxtype numberExpression
   * @type Number
-  * @modifiers read-only
+  * @keywords read-only
   */
 var maxlength; 
 /** @access private */ 
 function $lzc$set_maxlength(v) { this.setMaxLength(v); }
 
 /**
+  * regexp describing set of characters allowed in this field Restrict the characters that can be entered to a pattern specified by a regular expression. 
+  * Currently only the expression [ ]* enclosing a set of characters or character ranges, preceded by an optional "^", is supported. examples: [0-9]* , [a-zA-Z0-9]*, [^0-9]*
   * @lzxtype string
   * @type String
-  * @modifiers read-only
+  * @keywords read-only
   */
 var pattern; 
 /** @access private */  
@@ -841,7 +846,7 @@ function updateMaxLines (){
 
 /**
   * Returns the string represented in the text field
-  * @return: The string in the text field
+  * @return String: The string in the text field
   */
 function getText ( ){
     return this.text;
