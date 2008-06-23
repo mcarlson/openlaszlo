@@ -610,7 +610,7 @@
 
     <include href="views/tools.lzx" />
  
-    <spinner name="spnr" x="375" y="250" />
+    <spinner name="spnr" align="center" valign="middle"/>
     
     <view id="scrn" bgcolor="0x000000" visible="false" clickable="true"
           width="${parent.width}"  
