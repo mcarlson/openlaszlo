@@ -132,13 +132,17 @@
         <item title="dataselectionmanager (LzDataSelectionManager)" href="LzDataSelectionManager.html" />
         <item title="dataset (LzDataset)" href="LzDataset.html" />
         <item title="LzDataElement" href="LzDataElement.html" />
+        <item title="LzDataNode" href="LzDataNode.html" />
+        <item title="LzDataNodeMixin" href="LzDataNodeMixin.html" />
         <item title="LzDataProvider" href="LzDataProvider.html" />
         <item title="LzDataRequest" href="LzDataRequest.html" />
         <item title="LzDataText" href="LzDataText.html" />
         <item title="LzHTTPDataProvider" href="LzHTTPDataProvider.html" />
         <item title="LzHTTPDataRequest" href="LzHTTPDataRequest.html" />
         <item title="LzLazyReplicationManager" href="LzLazyReplicationManager.html" />
+        <item title="LzParams" href="LzParams.html" />
         <item title="LzReplicationManager" href="LzReplicationManager.html" />
+        <item title="LzResizeReplicationManager" href="LzResizeReplicationManager.html" />
     </category>
     
     <category title="Scripting">
