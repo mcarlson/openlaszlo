@@ -34,19 +34,19 @@ text : "Wilson";
 
 <button text="Dynamically create Mookie">
 <handler name="onclick">
-canvas.mookieView=new mookie(canvas, {});
+canvas.mookieView=new lz.mookie(canvas, {});
 </handler>
 </button>
 
 <button text="Dynamically create Blaylock" y="50">
 <handler name="onclick">
-canvas.blaylockWindow=new blaylock(canvas, {});
+canvas.blaylockWindow=new lz.blaylock(canvas, {});
 </handler>
 </button>
 
 <button text="Dynamically create Wilson" y="100">
 <handler name="onclick">
-canvas.wilsonText=new wilson(canvas, {});
+canvas.wilsonText=new lz.wilson(canvas, {});
 </handler>
 </button>
 
