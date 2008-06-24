@@ -292,7 +292,7 @@
                else set _bgcolor for "interior" view
                @keywords private -->
          <method name="setBGColor" args="c">
-             if (this._setborderbg) {
+             if (this._setbordercolor) {
                 super.setBGColor(c);
              } else {
                  // don't actually set the bgcolor,  'interior' view
