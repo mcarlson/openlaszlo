@@ -6,7 +6,7 @@
          use of the layout attribute below -->
     <include href="utils/layouts/simplelayout.lzx" />   
 
-    <!--- A row-based data display and editing component.-->
+    <!-- A row-based data display and editing component.-->
     <class name="grid" extends="basegrid">
 
         <!--- If false, the grid will never show a horizontal scrollbar,

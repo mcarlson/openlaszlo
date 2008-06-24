@@ -1,7 +1,7 @@
 <library>
     <include href="../base/baseform.lzx"/>
 
-    <!--- Extends the component grouping features of baseform to also provide
+    <!-- Extends the component grouping features of baseform to also provide
           standard layout for from controls. Buttons will be placed in a view at
           the bottom right of the form (placement 'buttonplace'). A form is
           typicaly a collection of UI elements where each represents data from

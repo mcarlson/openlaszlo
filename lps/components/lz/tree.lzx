@@ -25,7 +25,7 @@
         <frame src="resources/tree/document.swf"/>
     </resource>
 
-    <!--- A tree controller component. A tree's node is comprised of an expander
+    <!-- A tree controller component. A tree's node is comprised of an expander
           resource, an icon resource, and a label. The default layout of a
           tree's child views is "class: simplelayout; axis: y; spacing: 5". -->
     <class name="tree" extends="basetree" xindent="27" yindent="25" 

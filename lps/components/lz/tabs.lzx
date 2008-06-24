@@ -114,6 +114,33 @@
             tabview.labeltext.setAttribute('fgcolor',
                 dohilite ? style.texthilitecolor : style.textcolor);
         </method>
+
+        <doc>
+            <tag name="shortdesc"><text>
+                The lz tab is used by tabs.
+            </text></tag>
+            <text>
+                A tab is an LZ tab within basetabsbar or any object that extends this (such as tabsbar).
+            
+                <example>
+<![CDATA[<canvas width="150" height="100">
+  <include href="lz" />
+
+  <basetabs x="10" y="10" tabclass="tab">
+    <basetabpane text="one">
+      <text>one</text>
+    </basetabpane>
+    <basetabpane text="two">
+      <text>two</text>
+    </basetabpane>
+  </basetabs>
+</canvas>]]>
+                </example>
+            </text>
+            <seealso>
+                <classes>tabsbar tabpane tabs basetab</classes>
+            </seealso>
+        </doc>
     </class> <!-- class tab -->
 
     <!-- ============== -->
@@ -324,7 +351,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

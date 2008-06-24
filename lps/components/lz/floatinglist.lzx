@@ -82,7 +82,7 @@
         </method>   
     </class>
     
-    <!--- A list which floats above other components on the canvas.  The
+    <!-- A list which floats above other components on the canvas.  The
           floatinglist may be attached to a view, in which case the
           attachlocation attribute may be used to specify where the attachment
           occurs. -->

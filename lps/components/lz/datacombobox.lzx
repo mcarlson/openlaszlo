@@ -22,7 +22,7 @@
     </resource>
 
 
-    <!--- A dropdown list of selectable items. -->
+    <!-- A dropdown list of selectable items. -->
     <class name="datacombobox" extends="basedatacombobox" width="100">
 
         <!-- The name of the class for the floating list.
@@ -141,7 +141,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

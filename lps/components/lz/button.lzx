@@ -23,7 +23,7 @@
         <frame src="resources/default_outline.swf"/>
     </resource>
 
-<!---
+<!--
  This is a simple rectangular button with a text label.
  If no height is given, the default height is used and a special
  resource configuration is employed which prevents the

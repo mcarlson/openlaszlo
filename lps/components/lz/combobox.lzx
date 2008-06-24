@@ -25,7 +25,7 @@
     </resource>
 
 
-    <!--- A dropdown list of selectable items. Can either be editable or
+    <!-- A dropdown list of selectable items. Can either be editable or
           not. -->
     <class name="combobox" extends="basecombobox">
             <view name="lft" resource="lzcombobox_lft_rsc" placement="bkgnd"/>
@@ -92,7 +92,7 @@
             <p><br/></p>
             <p>
               A combobox can also be populated by assigning a
-              <attribute>datapath</attribute> to a <tagname>textlistitem</tagname>'.
+              <attribute>datapath</attribute> to a <tagname>textlistitem</tagname>.
               Also the number of items shown can be set with the
               <attribute>shownitems</attribute> attribute.
             </p>

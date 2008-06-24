@@ -12,7 +12,7 @@
         <frame src="resources/checkbox/checkbox_disable_on.swf" />
     </resource>
 
-    <!--- A checkbox component representing a boolean -->
+    <!-- A checkbox component representing a boolean -->
     <class name="checkbox" extends="baseformitem" pixellock="true">
 
         <!-- FIXME: [hqm 2006-09] LPP-2244 This used to be y="$once{classroot.text_y}"
@@ -68,7 +68,7 @@
         
         <!--- setter for 'value' attribute.  The checkbox value is
             always true or false.
-            @param val : can be any Javascript type and is evaluated as its
+            @param val: can be any Javascript type and is evaluated as its
             boolean equivalent, strings "true" and "false"
             are treated specially to represent true and false respectively
             @param Boolean isinitvalue: if true, the rollbackvalue is set. -->
@@ -79,7 +79,7 @@
             super.setValue(val, isinitvalue);
         </method>
         <doc>
-          <tag name="shortdesc"><text>shortdesc</text></tag>
+          <tag name="shortdesc"><text>The checkbox tag provides a simple toggle button.</text></tag>
           <text>
             <p>
               The <classname>checkbox</classname> tag provides a simple toggle
