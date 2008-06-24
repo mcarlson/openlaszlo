@@ -157,7 +157,7 @@ public class ClassModel implements Comparable {
     // Should the package prefix be in the model?  Should the
     // model store class and tagname separately?
     ClassModel superclassModel = getSuperclassModel();
-    // Allow forward references
+    // Allow forward references.
     if (! superclassModel.isCompiled()) {
       superclassModel.compile(env);
     }
@@ -295,7 +295,13 @@ public class ClassModel implements Comparable {
    * compiled out of order, so that forward references to classes work
    */
   public void compile(CompilationEnvironment env) {
-    if (! isBuiltin()) {
+    this.compile(env, false);
+  }
+
+  public void compile(CompilationEnvironment env, boolean force) {
+    if (force ||
+        ((! isCompiled()) &&
+         (! "false".equals(env.getProperty(env.LINK_PROPERTY))))) {
       // We compile a class declaration just like a view, and then
       // add attribute declarations and perhaps some other stuff that
       // the runtime wants.

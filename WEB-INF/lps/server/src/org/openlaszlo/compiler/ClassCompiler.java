@@ -265,7 +265,7 @@ class ClassCompiler extends ViewCompiler  {
       ClassModel classModel = mEnv.getSchema().getClassModel(tagName);
       // May have already been compiled by a forward reference
       if (! classModel.isCompiled()) {
-        classModel.compile(mEnv);
+        classModel.compile(mEnv, true);
       }
     }
 }

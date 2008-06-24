@@ -696,15 +696,15 @@ public class NodeModel implements Cloneable {
 //             "}\n";
 //     }
 
-    private static String buildIdBinderBody (String symbol, boolean setId) {
+    private static String buildIdBinderBody (String symbol, boolean setId, boolean debug) {
         return
             "if ($lzc$bind) {\n" +
-            "  if ($debug) {\n" +
-            "    if (" + symbol + " && (" + symbol + " !== $lzc$node)) {\n" +
-            "      Debug.warn('Redefining #" + symbol + " from %w to %w', \n" +
-            "        " + symbol + ", $lzc$node);\n" +
-            "    }\n" +
-            "  }\n" +
+            (debug ?
+             "    if (" + symbol + " && (" + symbol + " !== $lzc$node)) {\n" +
+             "      Debug.warn('Redefining #" + symbol + " from %w to %w', \n" +
+             "        " + symbol + ", $lzc$node);\n" +
+             "    }\n" :
+             "") +
             (setId ? ("  $lzc$node.id = " + ScriptCompiler.quote(symbol) + ";\n") : "") +
             "  " + symbol + " = $lzc$node;\n" +
             "} else if (" + symbol + " === $lzc$node) {\n" +
@@ -894,7 +894,7 @@ solution =
                         String symbol = value;
                         Function idbinder = new Function(
                             "$lzc$node:LzNode, $lzc$bind:Boolean=true",
-                            buildIdBinderBody(symbol, true));
+                            buildIdBinderBody(symbol, true, debug));
                         addProperty("$lzc$bind_id", idbinder, ALLOCATION_INSTANCE);
                     }
                     // Ditto for top-level name "name"
@@ -908,7 +908,7 @@ solution =
                         // done with it.
                         Function namebinder = new Function (
                             "$lzc$node:LzNode, $lzc$bind:Boolean=true",
-                            buildIdBinderBody(symbol, false));
+                            buildIdBinderBody(symbol, false, debug));
                         addProperty("$lzc$bind_name", namebinder, ALLOCATION_INSTANCE);
                     }
 
@@ -1289,11 +1289,15 @@ solution =
             String refbody = "var $lzc$reference = (" +
                 "#beginAttribute\n" +
                 reference + "\n#endAttribute\n);\n" +
-                "if ($lzc$reference is LzEventable) {\n" +
+                (debug ?
+                 "if ($lzc$reference is LzEventable) {\n" :
+                 "") +
                 "  return $lzc$reference;\n" +
-                "} else if ($debug) {\n" +
-                "  Debug.error('Invalid event sender: " + reference + " => %w (for event " + event + ")', $lzc$reference);\n" +
-                "}";
+                (debug ?
+                 "} else {\n" +
+                 "  Debug.error('Invalid event sender: " + reference + " => %w (for event " + event + ")', $lzc$reference);\n" +
+                 "}" :
+                 "");
             Function referencefn;
             if (canHaveMethods) {
                 referencefn = new Method(referencename, "", pragmas, refbody, srcloc);
