@@ -148,7 +148,10 @@
             if ( !selectable ) return;
 
             parent.classroot._setHiliteview( this , true );
-            this.setAttribute( 'focusable' , false );
+
+            // See LPP-6516. Don't disable focus because extra mouseover
+            // events occur in FF2/dhtml. Enable the next line when fixed
+            //    this.setAttribute( 'focusable' , false );
         </method>
 
         <handler name="onmouseout" >
