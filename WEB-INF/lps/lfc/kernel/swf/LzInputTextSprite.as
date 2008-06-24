@@ -29,7 +29,10 @@ var LzInputTextSprite = function(newowner, args) {
     this.yscroll = 0;
     this.xscroll = 0;
 
-    this.resize = false;
+    //@field Boolean resize:  text width automatically resizes when text is set.
+    // default: false
+    // 
+    this.resize = (args.resize == true);
 
     ////////////////////////////////////////////////////////////////
 
@@ -98,27 +101,16 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     //        if empty text content was supplied, use DEFAULT_WIDTH
 
 
-    //(args.width == null || args.width instanceof LzInitExpr)
-    // NOTE: [2008-02-13 ptw] No one will fess up to understanding why
-    // we treat the presence of a constraint on width differently than
-    // height.
-    if (args.width == null) {
-        // if there's text content, measure it's width
-        if (this.text != null && this.text.length > 0) {
-            args.width = this.getTextWidth();
-        } else {
-            // Empty string would result in a zero width view, which confuses
-            // developers, so use something reasonable instead.
-            args.width = this.DEFAULT_WIDTH;
-        }
-    }
+    //(args.width == null && typeof(args.$refs.width) != "function")
+
+
     // To compute our height:
     // + If height is supplied, use it.
     // + if no height supplied:
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight 
     // 
-    if (args.height == null) {
+    if (args['height'] == null) {
         this.sizeToHeight = true;
         // set autoSize to get text measured
         textclip.autoSize = true;
@@ -132,7 +124,7 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
             // we got a correct line height from flash.
             textclip.autoSize = false;
         }
-    }  else if (! args.height instanceof LzValueExpr) {
+    }  else if (! (args.height is LzValueExpr)) {
         textclip._height = args.height;
         //this.setHeight(args.height);
     }
@@ -296,49 +288,6 @@ LzInputTextSprite.prototype.setHTML = function (htmlp) {
     this.__LZtextclip.html = htmlp;
 }
 
-/**
-  * setText sets the text of the field to display
-  * @param String t: the string to which to set the text
-  */
-LzInputTextSprite.prototype.setText = function ( t ){
-    // Keep in sync with LzTextSprite.setText()
-    //Debug.write('LzInputTextSprite.setText', this, t);
-    if (typeof(t) == 'undefined' || t == null) {
-        t = "";
-    } else if (typeof(t) != "string") {
-        t = t.toString();
-    }
-
-    this.text =  t;
-    var mc = this.__LZtextclip;
-    mc.htmlText = t;
-        
-    /*
-    if (this.resize && (this.multiline == false)) {
-        // single line resizable fields adjust their width to match the text
-        this.setWidth(this.getTextWidth());
-    }*/
-
-    //multiline resizable fields adjust their height
-    if (this.multiline && this.sizeToHeight) {
-        this.setHeight(mc._height);
-    }
-
-    if (this.multiline && this.scroll == 0 ) {
-        var scrolldel = new LzDelegate(this, "__LZforceScrollAttrs");
-        lz.Idle.callOnIdle(scrolldel);
-    }
-
-    // Fix for lpp-5449 (reset the selection if the new text is not
-    // within it)
-    var l = t.length;
-    if (this._selectionstart > l || this._selectionend > l) {
-        this.setSelection(l);
-    }
-
-    //@event ontext: Sent whenever the text in the field changes.
-    //this.owner.ontext.sendEvent(t);
-}
 LzInputTextSprite.prototype.getTextfieldHeight = function ( ){
     return this.__LZtextclip._height
 }

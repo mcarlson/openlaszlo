@@ -493,20 +493,19 @@ LzTextSprite.prototype.setText = function ( t ){
 
     this.text =  t;
     var mc = this.__LZtextclip;
-    //Debug.write('LzTextSprite.setText', this, t, mc);
-
     mc.htmlText = t;
-        
+
+    // single line resizable fields adjust their width to match the text
     if (this.resize && (this.multiline == false)) {
-        // single line resizable fields adjust their width to match the text
         var w = this.getTextWidth();
         // only set width if it changed
         if (w != this.width) this.setWidth(w);
     }
 
-    //multiline resizable fields adjust their height
-    if (this.sizeToHeight) {
-        this.setHeight(mc._height);
+    // multiline resizable fields adjust their height
+    if (this.multiline && this.sizeToHeight) {
+      var h = mc._height;
+      if (h != this.height) this.setHeight(mc._height);
     }
 
     if (this.multiline && this.scroll == 0 ) {
@@ -514,14 +513,12 @@ LzTextSprite.prototype.setText = function ( t ){
         lz.Idle.callOnIdle(scrolldel);
     }
 
-    // Fix for lpp-5449
+    // Fix for lpp-5449 (reset the selection if the new text is not
+    // within it)
     var l = t.length;
     if (this._selectionstart > l || this._selectionend > l) {
         this.setSelection(l);
     }
-
-    //@event ontext: Sent whenever the text in the field changes.
-    //this.ontext.sendEvent( );
 }
 
 // @field Number height: The height of the text field. If unspecified,

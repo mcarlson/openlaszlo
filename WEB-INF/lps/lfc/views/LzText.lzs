@@ -788,7 +788,7 @@ function setText ( t, force = null){
     // force to a string
     t = '' + t;
     if (force != true && t == this.text) return;
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     if (this.visible) tsprite.setVisible(this.visible);
     if (this.maxlength != null && t.length > this.maxlength){
         t = t.substring(0, this.maxlength);
