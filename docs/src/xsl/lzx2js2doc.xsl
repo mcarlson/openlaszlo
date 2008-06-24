@@ -236,7 +236,17 @@
           <tag name="lzxname"><text><xsl:value-of select="@name"/></text></tag>
         </xsl:if>
         <xsl:if test="@value">
-          <tag name="lzxdefault"><text><xsl:value-of select="@value"/></text></tag>
+          <xsl:choose>
+            <!-- translate e.g. value="$immediately{null}" to value="null" when="immediately" -->
+            <xsl:when test="substring(@value, 1, 1) = '$' and contains(@value, '{') and contains(@value, '}')">
+              <tag name="lzxdefault"><text><xsl:value-of select="substring-after(substring-before(@value, '}'), '{')"/></text></tag>
+              <!-- TODO [dda 2008-06-23] 'when' is not handled - maybe this should modify the 'category' shown in attributes? -->
+              <tag name="lzxwhen"><text><xsl:value-of select="substring-before(substring(@value, 2), '{')"/></text></tag>
+            </xsl:when>
+            <xsl:otherwise>
+              <tag name="lzxdefault"><text><xsl:value-of select="@value"/></text></tag>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:if>
         <xsl:choose>
           <xsl:when test="@type">
