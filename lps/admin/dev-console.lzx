@@ -146,13 +146,23 @@
                 <view x="1" y="1" width="498" height="30" bgcolor="#7a7a8c"/>
             </view>
             <view x="125" name="compilecontrols">
-                <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:8" x="6" y="8.75">
+              <switch>
+                <when runtime="swf8">
+                  <view name="sign" resource="neon_sign_small.png" opacity="0" x="150" y="4"
+                        onclick="this.animate('opacity', 0, 1000)"/>
+                  <view x="155" y="0" width="20" height="10"
+                        onclick="parent.sign.animate('opacity', 1, 1000)"/>
+                </when>
+              </switch>
+              <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:8" x="6" y="8.75">
                     <radiobutton id="rb8" value="'swf8'"
                                  selected="${app_runtime == 'swf8'}">swf8</radiobutton >
                     <radiobutton id="rbdhtml" value="'dhtml'"
                                  selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
+                    <!--
                     <radiobutton id="rb9" value="'swf9'"
                                  selected="${app_runtime == 'swf9'}">swf9 (preliminary)</radiobutton >
+                    -->
                     <!--
                     <radiobutton id="rb10" value="'swf10'" 
                                  enabled="false"
