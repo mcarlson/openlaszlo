@@ -19,6 +19,40 @@
         } 
         ]]>
     </method>
+    <doc>
+        <tag name="shortdesc"><text>Arranges a set of views to a constant 'x' or 'y' value.</text></tag>
+        <text>
+            <p>
+                <literal>constantlayout</literal> extends
+                <a href="../reference/layout.html"><literal>LzLayout</literal></a>, and therefore it is responsible for
+                arranging all of the subviews for the view that it is attached to. The
+                attributes of a view that <literal>constantlayout</literal>
+                effects are the <literal>x</literal> and <literal>y</literal>
+                values, and as its name implies <literal>constantlayout</literal>
+                sets all of the subviews to the same value.</p>
+            <example title="Using constantlayout">
+    &lt;canvas height=&quot;100&quot;&gt;
+        &lt;view bgcolor=&quot;red&quot; &gt;
+            &lt;view width=&quot;80&quot; height=&quot;80&quot; bgcolor=&quot;teal&quot;/&gt;       
+            &lt;view width=&quot;60&quot; height=&quot;60&quot; bgcolor=&quot;silver&quot;/&gt; 
+            &lt;view width=&quot;40&quot; height=&quot;40&quot; bgcolor=&quot;green&quot;/&gt;           
+            &lt;constantlayout axis=&quot;x&quot; value=&quot;10&quot;/&gt;
+        &lt;/view &gt;
+    &lt;/canvas&gt;
+            </example>
+            <p>In this example the teal, silver and green views are aligned on the horizontal (x) axis; the layout element's value attribute (10) causes the subviews to be shifted ten pixels to the right.</p>
+   <example title="Aligning on the horizontal axis.">
+        &lt;canvas height=&quot;100&quot; &gt;
+            &lt;view bgcolor=&quot;red&quot; &gt;
+                &lt;view width=&quot;80&quot; height=&quot;80&quot; bgcolor=&quot;teal&quot;/&gt;       
+                &lt;view width=&quot;60&quot; height=&quot;60&quot; bgcolor=&quot;silver&quot;/&gt; 
+                &lt;view width=&quot;40&quot; height=&quot;40&quot; bgcolor=&quot;green&quot;/&gt;           
+                &lt;constantlayout axis=&quot;y&quot; value=&quot;10&quot;/&gt;
+            &lt;/view &gt;
+        &lt;/canvas&gt;
+            </example>
+        </text>
+    </doc>
 </class>
 </library>
 <!-- This file will be obsoleted, isnteal use: /utrils/layouts/library,lzx -->
