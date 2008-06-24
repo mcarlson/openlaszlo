@@ -1031,14 +1031,14 @@ var resource:String = null;
   * @type Number
   * @lzxtype number
   */
-var resourcewidth = null;
+var resourcewidth:Number = 0;
 /**
   * The height of the resource that this view attached
   * @keywords readonly
   * @type Number
   * @lzxtype number
   */
-var resourceheight = null;
+var resourceheight:Number = 0;
 
 /** @access private */ var __LZbgColorO = null;
 /** @access private */ var __LZbgRef = null;
@@ -1969,7 +1969,11 @@ function getHeight (){
 //__LZcheckwidth = true;
 //__LZcheckheight = true;
 
-/** @access private */
+/**
+ * @devnote measureSize must agree with this
+ *
+ * @access private 
+ */
 function __LZcheckSize ( sview, axis , xory ){
 
         if ( sview.addedToParent ) {
@@ -2027,26 +2031,45 @@ function __LZcheckheightFunction ( sview )
 
 
 /**
-  * to do: add dependencies so this can be used as a constraint
-  * @access private
-  */
-function measureSize ( axis )
-{
-        var w = this[ "resource" + axis ];
+ * Mimic __LZcheckSize to determine the dimension a view would have if
+ * it did _not_ have an explicit dimension, i.e., the "natural"
+ * dimension of the view.
+ *
+ * TODO: [unknown] add dependencies so this can be used as a
+ * constraint
+ *
+ * NOTE: [2008-06-22 ptw] Which would mean accumulating getBounds
+ * dependencies for each subview, visibility of each subview, and
+ * whether or not the view has a resource!
+ *
+ * @access private
+ */
+function measureSize ( axis ) {
+  var w = this[ "resource" + axis];
 
-        for ( var i= this.subviews.length-1; i >= 0; i-- ){
-            var sv = this.subviews[ i ];
-            var svs = sv[ axis == "width" ? "x" : "y" ] + sv[ axis ];
-            if ( sv.visible && svs > w ){
-                w = svs;
-            }
-        }
-        return w;
+  for ( var i= this.subviews.length-1; i >= 0; i-- ){
+    var sview = this.subviews[ i ];
+    if (sview.visible) {
+      if ( sview.__LZhasoffset || sview.rotation != 0 ){
+        var bobj = sview.getBounds();
+      } else {
+        var bobj = sview;
+      }
+      var svs = bobj[ axis == "width" ? "x" : "y" ] + bobj[ axis ];
+      if ( svs > w ){
+        w = svs;
+      }
+    }
+  }
+  return w;
 }
 
 /**
-  * reports the width of the contents of the view
-  * (not supported in a constraint expression)
+  * Reports the "natural" width of the contents of the view. That is,
+  * the width the view would have if it did not have an explicit
+  * width.
+  *
+  * (Note: this method is not supported in a constraint expression.)
   */
 function measureWidth ()
 {
@@ -2054,8 +2077,11 @@ function measureWidth ()
 }
 
 /**
-  * reports the height of the contents of the view
-  * (not supported in a constraint expression)
+  * Reports the "natural" height of the contents of the view. That is,
+  * the height the view would have if it did not have an explicit
+  * height.
+  *
+  * (Note: this method is not supported in a constraint expression.)
   */
 function measureHeight ()
 {
