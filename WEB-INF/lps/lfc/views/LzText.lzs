@@ -320,10 +320,10 @@ override function construct ( parent, args ) {
     this.yscroll = 0;
     this.xscroll = 0;
 
-    this.resize = ('resize' in args && (!args.resize is LzValueExpr)) ? (!! args.resize) : this.resize;
+    this.resize = ('resize' in args && (! (args.resize is LzValueExpr))) ? (!! args.resize) : this.resize;
     this.setResize(this.resize);
     
-    if ('maxlength' in args && (!args.maxlength is LzValueExpr) && args.maxlength != null) {
+    if ('maxlength' in args && (! (args.maxlength is LzValueExpr)) && args.maxlength != null) {
         this.setMaxLength(args.maxlength);
     }
 
@@ -367,13 +367,13 @@ override function construct ( parent, args ) {
     // 
     if (!this.hassetheight) {
         this.sizeToHeight = true;
-    } else if (! args.height is LzValueExpr) {
+    } else if (! (args.height is LzValueExpr)) {
         this.setHeight(args.height);
     }
     // Default the scrollheight to the visible height.
     this.scrollheight = this.height;
 
-    if ('pattern' in args && (! args.pattern is LzValueExpr) && args.pattern != null) {
+    if ('pattern' in args && (! (args.pattern is LzValueExpr)) && args.pattern != null) {
         this.setPattern(args.pattern);
     }
 

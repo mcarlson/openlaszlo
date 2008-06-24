@@ -113,7 +113,7 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
             // we got a correct line height from flash.
             textclip.autoSize = false;
         }
-    }  else if (! args.height is LzValueExpr) {
+    }  else if (! (args.height is LzValueExpr)) {
         textclip._height = args.height;
         //this.setHeight(args.height);
     }

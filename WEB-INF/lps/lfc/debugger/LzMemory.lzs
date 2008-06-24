@@ -95,7 +95,7 @@ Debug.mark = function (o) {
   */
 Debug.isMarked = function (o) {
   // We can't trace things that don't support hasOwnProperty
-  if ((! o instanceof Object) ||
+  if ((! (o instanceof Object)) ||
       (! ('hasOwnProperty' in o)) ||
       (! (o.hasOwnProperty instanceof Function))) {
     if (this.debugTrace) {

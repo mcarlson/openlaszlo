@@ -132,7 +132,7 @@ public class LzTextSprite extends LzSprite {
             // 
             if (args['height'] == null) {
                 this.sizeToHeight = true;
-            } else if (! args.height is LzValueExpr) {
+            } else if (! (args.height is LzValueExpr)) {
                 // Does setting height of the text object do the right thing in swf9?
                 textclip.height = args.height;
             }
