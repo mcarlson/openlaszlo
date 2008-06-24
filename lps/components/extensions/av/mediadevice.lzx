@@ -427,7 +427,7 @@
                 <text>The base class for media devices.</text>
             </tag>
             <text>
-                <p>As of OpenLaszlo release 4.0, subclasses of this class are <class>&lt;microphone&gt;</class> and <class>&lt;camera&gt;</class>.</p>
+                <p>As of OpenLaszlo release 4.0, subclasses of this class are <sgmltag class="element" role="lz.microphone">&lt;microphone&gt;</sgmltag> and <sgmltag class="element" role="lz.camera">&lt;camera&gt;</sgmltag>.</p>
             </text>
             </doc>
 

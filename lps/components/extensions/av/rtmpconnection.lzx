@@ -219,7 +219,7 @@
 
 
         <!--- Make a remote call to the rtmp server.
-              TODO: We probably don't want to expost the Flash callback object. -->
+              TODO: We probably don't want to expose the Flash callback object. -->
         <method name="call" args="func, obj, params"><![CDATA[
             if (this.debug) {
                 Debug.write("call: func, obj, params", func, obj, params);
@@ -238,7 +238,7 @@
                 <text>A connection to an RTMP server.</text>
             </tag>
             <text>
-                <p>An <class>rtmpconnection</class> represents a connection to an RTMP server, such as the Flash Media Server or Red5, enabling two-way streaming audio/video. This allows you to broadcast and receive live audio and/or video, as well as recording video from a webcam or audio from a microphone to files on the server. Recorded files may be played back over http (using <class>stream</class> and <class>&lt;videoview&gt;</class> classes) or with RTMP to allow seeking within and playback of long files that are impractical to load into memory.</p>
+                <p>An <class>rtmpconnection</class> represents a connection to an RTMP server, such as the Flash Media Server or Red5, enabling two-way streaming audio/video. This allows you to broadcast and receive live audio and/or video, as well as recording video from a webcam or audio from a microphone to files on the server. Recorded files may be played back over http (using <class>stream</class> and <sgmltag class="element" role="lz.videoview">&lt;videoview&gt;</sgmltag> classes) or with RTMP to allow seeking within and playback of long files that are impractical to load into memory.</p>
                 <p>The following example shows a simple RTMP connection.</p>
                 
 <programlisting>
