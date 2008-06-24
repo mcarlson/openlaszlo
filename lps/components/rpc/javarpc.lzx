@@ -3,7 +3,6 @@
     <include href="rpc/rpc.lzx" />
     <include href="rpc/library/javarpc.js" />
 
-    <!--- A class to get and use a remote object to invoke remote methods. -->
     <class name="javarpc" extends="rpc">
 
         <!--- One of 'session', 'webapp', or 'none' to set the scope of the
@@ -183,7 +182,7 @@
         <doc>
             <tag name="shortdesc"><text>java remote procedure call</text></tag>
             <text>
-                <p>javaRPC is a feature that allows server-side Java objects and methods 
+                <p>JavaRPC is a feature that allows server-side Java objects and methods 
                     to be accessed from a client application. JavaRPC is part of the Laszlo 
                     RPC family and shares similar APIs with SOAP and XML-RPC. See the
                     <a href="../developers/rpc.html">RPC</a> and <a href="../developers/rpc-xmlrpc.html"> 
@@ -390,6 +389,20 @@
                     var mydouble = new LzRPC.DoubleWrapper(1.0);
                     myrpc.proxy.myMethod([ mydouble ], new LzDelegate(...));
                 </programlisting>
+                <para>
+                See Also:
+                <itemizedlist>
+                <listitem><sgmltag class="element" role="lz.rpc">&lt;rpc&gt;</sgmltag></listitem>
+                <listitem><sgmltag class="element" role="lz.sessionrpc">&lt;sessionrpc&gt;</sgmltag></listitem>
+                <listitem><sgmltag class="element" role="lz.webapprpc">&lt;webapprpc&gt;</sgmltag></listitem>
+                <listitem><sgmltag class="element" role="lz.soap">&lt;soap&gt;</sgmltag></listitem>
+                <listitem><sgmltag class="element" role="lz.xmlrpc">&lt;xmlrpc&gt;</sgmltag></listitem>
+                <listitem><sgmltag class="element" role="lz.remotecall">&lt;remotecall&gt;</sgmltag></listitem>
+                <listitem><sgmltag class="element" role="tag.security">&lt;security&gt;</sgmltag></listitem>
+                <listitem><link linkend="rpc">Developer's Guide: RPC chapter</link></listitem>
+                <listitem><link linkend="rpc-javarpc">Developer's Guide: JavaRPC chapter</link></listitem>
+                </itemizedlist>
+                </para>
                 
             </text>
         </doc>

@@ -21,7 +21,6 @@
   * <p>Sample applications that use the <tagname>command</tagname> tag:</p>
   * <ul>
   *     <li> <a href="${demos}weather/weather.lzx">Weather</a></li>
-  *     <li> <a href="${demos}contacts/contacts.lzx">Contacts</a></li>
   * 
   * </ul>
   * Also, see <xref linkend="LzKeys"/>.
@@ -49,9 +48,10 @@ var active = true;
 /** array of keys (strings) that, when pressed together,
   * cause the onselect event of the command to be sent. For example:
   * setAttribute('key', ['a', 'shift']) or setKeys(['j', 'control'])
-  * @type [String]?
+  * @type [String]
   */
 var keys = null;
+/** @access private */
 function $lzc$set_key(v) { this.setKeys(v); }
 
 /**
@@ -88,6 +88,8 @@ function execute ( d ){
 
 /**
  * Mapping from key names to display strings used by keysToString
+ * @type Dictionary
+ * @keywords read-only
  */
 static var DisplayKeys = {control:"Ctrl", shift:"Shift", alt:"Alt"};
 

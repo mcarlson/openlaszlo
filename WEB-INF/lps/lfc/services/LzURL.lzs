@@ -10,8 +10,39 @@
   */
 
 /**
-  * Parses the protocol, host, port, path, file and query properties for 
-  * the specified URL.
+  * <para>Parses the protocol, host, port, path, file and query properties for 
+  * the specified URL.</para>
+  * <example><![CDATA[
+  *     <canvas height="220" debug="true">
+  *     <debug x="0" y="0" height="200" width="450"/>
+  *     <script>
+  *         var urlstring = 'http://localhost:8080/lps/lzurl_example.lzx?lzt=swf';
+  *         var url = new LzURL(urlstring);
+  *
+  *         // list each part of this url
+  *         Debug.write("protocol: " + url.protocol);
+  *         Debug.write("host: " + url.host);
+  *         Debug.write("port: " + url.port);
+  *         Debug.write("path: " + url.path);
+  *         Debug.write("file: " + url.file);
+  *         Debug.write("query: " + url.query);
+  *         
+  *         // list the url
+  *         Debug.write("Complete URL: " + url);
+  *        
+  *         // Make it secure
+  *         url.protocol = 'https';
+  *         url.port = 8443;
+  *         Debug.write("Secure URL: " + url);
+  *         
+  *         // Change the query string
+  *         url.query = 'lzt=source';
+  *         Debug.write("New path: " + url);
+  *     </script>
+  * </canvas>
+  * ]]></example>
+  *
+  *
   * @param String url: URL to parse
   *
   * http://www.ietf.org/rfc/rfc2396.txt specifies the syntax for a URI

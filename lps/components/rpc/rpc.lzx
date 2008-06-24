@@ -1,6 +1,5 @@
 <library>
 
-    <!--- An abstract class to create remote objects. -->
     <class name="rpc" extends="node">
 
         <!--- Load remote object during init. If false, create remote object by
@@ -178,8 +177,8 @@
                     that invoke a remote function (or procedure) over the network. It's 
                     up to the caller of the stub function to know what parameters need to 
                     be passed in by looking at what the backend remote function expects. 
-                    If calling a JavaRemoting (&lt;javarpc&gt;) function, looking at the associated 
-                    Java API will be necessary. If calling a SOAP (&lt;soap&gt;) function, the 
+                    If calling a JavaRemoting (<sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag>) function, looking at the associated 
+                    Java API will be necessary. If calling a SOAP (<sgmltag class="element" role="lz.soap">&lt;soap&gt;</sgmltag>) function, the 
                     developer will need to look at the corresponding operation in a WSDL file.</p>
                 <p>The implementation of this class can be found in lps/components/rpc/rpc.lzx. For details, see the 
                     <a href="../developers/rpc.html">RPC</a> chapter of the Developer's Guide.</p>
@@ -224,7 +223,7 @@
     &lt;/canvas&gt;
                 </example>
                 <p>Alternatively, you can use remotecall for a more declarative approach to invoking functions. 
-                    See the remotecall reference or the RPC chapter of the Developer's Guide for more information.</p>
+                    See the <sgmltag class="element" role="lz.remotecall">&lt;remotecall&gt;</sgmltag> reference or the <link linkend="rpc">RPC chapter</link> of the Developer's Guide for more information.</p>
                 <example title="Invoking remote function using remotecall">
     &lt;canvas debug="true" height="280"&gt;
     
@@ -273,28 +272,28 @@
                 <p><b>See Also:</b></p>
                     <ul>
                         <li>
-                            <a href="../reference/javarpc.html"><code class="classname">javarpc</code></a>
+                            <sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/soap.html"><code class="classname">soap</code></a>
+                            <sgmltag class="element" role="lz.soap">&lt;soap&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/xmlrpc.html"><code class="classname">xmlrpc</code></a>
+                            <sgmltag class="element" role="lz.xmlrpc">&lt;xmlrpc&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../reference/remotecall.html"><code class="classname">remotecall</code></a>
+                            <sgmltag class="element" role="lz.remotecall">&lt;remotecall&gt;</sgmltag>
                         </li>
                         <li>
-                            <a href="../guide/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a>
+                            <link linkend="rpc">Developer's Guide: RPC chapter</link>
                         </li>
                         <li>
-                            <a href="../guide/rpc-javarpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: JavaRPC chapter</a>
+                            <link linkend="rpc-javarpc">Developer's Guide: JavaRPC chapter</link>
                         </li>
                         <li>
-                            <a href="../guide/rpc-soap.html" target="laszlo-dguide" shape="rect">Developer's Guide: SOAP chapter</a>
+                            <link linkend="rpc-soap">Developer's Guide: SOAP chapter</link>
                         </li>
                         <li>
-                            <a href="../guide/rpc-xmlrpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: XML-RPC chapter</a>
+                            <link linkend="rpc-xmlrpc">Developer's Guide: XML-RPC chapter</link>
                         </li>
                     </ul>
                     
@@ -705,7 +704,7 @@
         <doc>
             <tag name="shortdesc"><text>param tag for remotecall</text></tag>
             <text>
-                <p>Tag to declaratively set parameter values for &lt;remotecall&gt;. If a 
+                <p>Tag to declaratively set parameter values for <sgmltag class="element" role="lz.remotecall">&lt;remotecall&gt;</sgmltag>. If a 
                     getValue method is declared in the body of remotecall, use its return as 
                     value for paramter. If both getValue method and value attribute are set in 
                     param, getValue wins.</p>
