@@ -182,7 +182,11 @@ LzTextSprite.prototype.getTextWidth = function () {
 }
 
 LzTextSprite.prototype.getTextHeight = function () {
-  return this.getTextSize('Yq_gy', true).height;
+  var h = this.getTextSize('Yq_gy', true).height;
+  if (h > 0 && (! this.multiline) && this.quirks.emulate_flash_font_metrics) {
+    h -= this.__hpadding;
+  }
+  return h;
 }
 
 LzTextSprite.prototype.getTextfieldHeight = function () {
@@ -192,7 +196,7 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
 //       Debug.debug('getTextfieldHeight: 0');
         return this.fieldHeight;
     }
-    
+
     if (this.multiline) {
         var oldheight = false;
         if (this.height) {
@@ -204,12 +208,12 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
             h = this.getTextSize(this.text).height;
             if (h > 0 && this.quirks.emulate_flash_font_metrics) {
                 h += this.__hpadding;
-            }    
+            }
         } else {
             if (h == 2) h = this.getTextSize(this.text).height;
             if (h > 0 && this.quirks.emulate_flash_font_metrics) {
                 h += this.__hpadding;
-            }    
+            }
             this.fieldHeight = h;
         }
         //Debug.info('LzTextSprite.getTextfieldHeight', h, this.height, this.owner);

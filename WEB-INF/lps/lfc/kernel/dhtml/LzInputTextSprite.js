@@ -893,24 +893,31 @@ LzInputTextSprite.prototype.getText = function () {
 }
 
 LzInputTextSprite.prototype.getTextfieldHeight = function () {
-    if (this.fieldHeight != null) return this.fieldHeight
+    if (this._styledirty != true && this.fieldHeight != null) return this.fieldHeight
     if (this.text == null || this.text == '') {
-        // measure test string
-        var testheight = true;
-        this.text="YgjyZT;:";
+        this.fieldHeight = this.getTextSize('Yq_gy').height;
+//       Debug.debug('getTextfieldHeight: 0');
+        return this.fieldHeight;
     }
-    
+
     if (this.multiline) {
         var oldheight = false;
         if (this.height) {
             oldheight = this.__LzInputDiv.style.height;
             this.__LzInputDiv.style.height = 'auto';
         }
-        var h = this.__LzInputDiv.scrollHeight;
+        var h = this.__LzInputDiv.clientHeight;
         if (h == 0 || h == null) {
             h = this.getTextSize(this.text).height;
+            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
+                h += this.__hpadding;
+            }
         } else {
             if (this.quirks['safari_textarea_subtract_scrollbar_height']) h += 24;
+            if (h == 2) h = this.getTextSize(this.text).height;
+            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
+                h += this.__hpadding;
+            }
             this.fieldHeight = h;
         }
         //Debug.info('LzInputTextSprite.getTextfieldHeight', h, this.height, this.owner, this.__LzInputDiv);
@@ -918,7 +925,7 @@ LzInputTextSprite.prototype.getTextfieldHeight = function () {
             this.__LzInputDiv.style.height = oldheight;
         }
     } else {
-        var h = this.getTextSize(this.text).height;
+        var h = this.getTextSize('Yq_gy').height;
         if (h != 0) {
             this.fieldHeight = h;
         }
@@ -927,10 +934,6 @@ LzInputTextSprite.prototype.getTextfieldHeight = function () {
     // multi-line text for some reason -- I suspect because we ask for
     // the height too early...
 //     Debug.debug('getTextfieldHeight: %s', h);
-    if (this.quirks.emulate_flash_font_metrics) {
-        h += 4;
-    }    
-    if (testheight) this.text = '';
     return h;
 }
 
