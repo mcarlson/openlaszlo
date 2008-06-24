@@ -146,23 +146,16 @@
                 <view x="1" y="1" width="498" height="30" bgcolor="#7a7a8c"/>
             </view>
             <view x="125" name="compilecontrols">
-              <switch>
-                <when runtime="swf8">
-                  <view name="sign" resource="neon_sign_small.png" opacity="0" x="170" y="4"
-                        onclick="this.animate('opacity', 0, 1000)"/>
-                  <view x="155" y="0" width="20" height="10"
-                        onclick="parent.sign.animate('opacity', 1, 1000)"/>
-                </when>
-              </switch>
+              <view name="sign" resource="neon_sign_small.png" opacity="0" x="206" y="4"
+                    onclick="this.animate('opacity', 0, 1000)"/>
               <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:16" x="20" y="8.75">
                     <radiobutton id="rb8" value="'swf8'"
                                  selected="${app_runtime == 'swf8'}">swf8</radiobutton >
                     <radiobutton id="rbdhtml" value="'dhtml'"
                                  selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
-                    <!--
-                    <radiobutton id="rb9" value="'swf9'"
-                                 selected="${app_runtime == 'swf9'}">swf9 (preliminary)</radiobutton >
-                    -->
+
+                    <radiobutton id="rb9" value="'swf9'" opacity="${app_runtime == 'swf9' ? 1 : 0}"
+                                 selected="${app_runtime == 'swf9'}">swf9</radiobutton >
                     <!--
                     <radiobutton id="rb10" value="'swf10'" 
                                  enabled="false"
@@ -170,7 +163,8 @@
                     -->
 
                 </radiogroup>
-                <view height="14" width="1" bgcolor="black" x="260" y="9.5"/>
+                <view height="14" width="1" bgcolor="black" x="260" y="9.5"
+                      onclick="parent.sign.animate('opacity', 1, 1000), rb9.animate('opacity', 1, 1000)"/>
                 <checkbox id="cb_debug" value="${app_debug == 'true'}"
                           x="270" y="8.25">Debug</checkbox>
                 <checkbox id="cb_backtrace" 
@@ -230,7 +224,7 @@
     <when runtime="dhtml">
     </when>
     <otherwise>
-        <state name="consoledebugstate" apply="${app_console_debug}">
+        <state name="consoledebugstate" applied="${app_console_debug}">
             <view y="90" layout="axis:x;spacing:4">
 
             <!-- enter expression to be sent to app under debug -->
