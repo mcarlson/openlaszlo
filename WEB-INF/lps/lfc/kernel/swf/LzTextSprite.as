@@ -249,21 +249,28 @@ LzTextSprite.prototype.getTextWidth = function ( ){
 
 
 /**
-  * Calculates the current height of the text held by the text field.
-  */
+ * Calculates the current height of the text held by the text field.
+ *
+ * @devnote NOTE: [2008-06-24 ptw] this is _not_ the clip textHeight, which
+ * "when autoSize is true is always 4 pixels less than _height" (which
+ * is why we have to add 4 pixels for emulate_flash_font_metrics
+ * in the DHTML version of this method).
+ */
 LzTextSprite.prototype.getTextfieldHeight = function ( ){
     return this.__LZtextclip._height;
 }
 
 /**
  * This is the height of a single line of text in the current format
- * NOTE: this is not the clip textHeight, which "when autoSize is true
- * is always 4 pixels less than _height" (which might explain the need
- * for emulate_flash_font_metrics in DHTML?).
+ *
+ * @devnote NOTE: [2008-06-24 ptw] tip 'o the pin to
+ * a.bargull@intensis.de for finding this illustration, which shows
+ * the relationship of textHeight and textfieldHeight:
+ * http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/images/text-metrics.jpg
  */
 LzTextSprite.prototype.getTextHeight = function ( ){
     if (! this.multiline) {
-        return this.__LZtextclip._height;
+        return this.__LZtextclip.textHeight;
     } else {
         var textclip = this.__LZtextclip;
 
@@ -277,7 +284,7 @@ LzTextSprite.prototype.getTextHeight = function ( ){
         // Make sure the test text does not wrap!
         textclip._width = 500;
         textclip.htmlText = "__ypgSAMPLE__";
-        var h = textclip._height;
+        var h = textclip.textHeight;
 
         textclip.autoSize = tca;
         textclip.htmlText = tct;
