@@ -22,6 +22,10 @@ var LzSprite = function(owner, isroot) {
         var div = document.createElement('div');
         div.className = 'lzcanvasdiv';
 
+        if (this.quirks.ie6_improve_memory_performance) {
+            try { document.execCommand("BackgroundImageCache", false, true); } catch(err) {}
+        }
+
         // grab values stored by lz.embed.dhtml()
         var p = lz.embed.__propcache;
         var root = p.appenddiv;
@@ -296,6 +300,7 @@ LzSprite.prototype.quirks = {
     ,ie_mouse_events: false
     ,fix_inputtext_with_parent_resource: false
     ,activate_on_mouseover: true
+    ,ie6_improve_memory_performance: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -333,6 +338,8 @@ LzSprite.prototype.__updateQuirks = function () {
                 quirks['ie_alpha_image_loader'] = true;
                 // IE 6 reports incorrect clientHeight for embedded iframes with scrollbars
                 quirks['document_size_compute_correct_height'] = true;
+                // prevent duplicate image loads - see http://support.microsoft.com/?scid=kb;en-us;823727&spid=2073&sid=global and http://misterpixel.blogspot.com/2006/09/forensic-analysis-of-ie6.html
+                quirks['ie6_improve_memory_performance'] = true;
             } else {
                 quirks['invisible_parent_image_sizing_fix'] = true;
             }
