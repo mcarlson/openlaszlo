@@ -175,7 +175,8 @@ LzSprite.prototype.__defaultStyles = {
         whiteSpace: 'normal',
         position: 'absolute',
         paddingTop: '2px',
-        paddingLeft: '2px'
+        paddingLeft: '2px',
+        lineHeight: '120%'
     },
     lzinputtext: {
         fontFamily: 'Verdana,Vera,sans-serif',
@@ -301,6 +302,7 @@ LzSprite.prototype.quirks = {
     ,fix_inputtext_with_parent_resource: false
     ,activate_on_mouseover: true
     ,ie6_improve_memory_performance: false
+    ,text_height_includes_margins: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -323,6 +325,7 @@ LzSprite.prototype.capabilities = {
 LzSprite.prototype.__updateQuirks = function () {
     if (window['lz'] && lz.embed && lz.embed.browser) {
         var quirks = this.quirks;
+        var browser = lz.embed.browser;
 
         if (quirks['inner_html_strips_newlines'] == true) {
             LzSprite.prototype.inner_html_strips_newlines_re = RegExp('$', 'mg');
@@ -332,8 +335,8 @@ LzSprite.prototype.__updateQuirks = function () {
         // that's not a parent. See LPP-2680.
         // off for now
         //quirks['fix_clickable'] = true;
-        if (lz.embed.browser.isIE) {
-            if (lz.embed.browser.version < 7) {
+        if (browser.isIE) {
+            if (browser.version < 7) {
                 // Provide IE PNG/opacity support
                 quirks['ie_alpha_image_loader'] = true;
                 // IE 6 reports incorrect clientHeight for embedded iframes with scrollbars
@@ -388,7 +391,7 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['ie_mouse_events'] = true; 
             // workaround for IE not supporting clickable resources in views containing inputtext - see LPP-5435
             quirks['fix_inputtext_with_parent_resource'] = true;
-        } else if (lz.embed.browser.isSafari) {
+        } else if (browser.isSafari) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             // TODO: Tucker claims this is fixed in the latest version of webkit
             quirks['invisible_parent_image_sizing_fix'] = true;
@@ -406,7 +409,7 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['absolute_position_accounts_for_offset'] = true;
             quirks['canvas_div_cannot_be_clipped'] = true;
             quirks['document_size_use_offsetheight'] = true;
-            if (lz.embed.browser.version > 523.10) {
+            if (browser.version > 523.10) {
                 this.capabilities['rotation'] = true;
             }
             
@@ -416,7 +419,7 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['keypress_function_keys'] = false;
             // Safari 3.x does not send global key events to apps embedded in an iframe
             quirks['keyboardlistentotop'] = true;
-        } else if (lz.embed.browser.isOpera) {
+        } else if (browser.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
             quirks['no_cursor_colresize'] = true;
@@ -425,9 +428,19 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['document_size_use_offsetheight'] = true;
             // Opera does not use charCode for onkeypress
             quirks['text_event_charcode'] = false;
-        } else if (lz.embed.browser.isFirefox && lz.embed.browser.version < 2) {
-            // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
-            quirks['firefox_autocomplete_bug'] = true;
+        } else if (browser.isFirefox) {
+            if (browser.version < 2) {
+                // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
+                quirks['firefox_autocomplete_bug'] = true;
+            } else if (browser.version < 3) {
+                // Firefox 2.0.14 doesn't work with the correct line height of 120%
+                LzSprite.prototype.__defaultStyles.lzswftext.lineHeight = '119%';
+            } else if (browser.version < 4) {
+                // Firefox 3.0 doesn't work with the correct line height of 120%
+                LzSprite.prototype.__defaultStyles.lzswftext.lineHeight = '118%';
+                // Firefox 3.0 does not need padding added onto field height measurements
+                quirks['text_height_includes_margins'] = true;
+            }
         }
 
         if (quirks['safari_avoid_clip_position_input_text']) {

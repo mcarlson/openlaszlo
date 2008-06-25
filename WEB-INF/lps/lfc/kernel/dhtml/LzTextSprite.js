@@ -39,6 +39,9 @@ var LzTextSprite = function(owner) {
         this.__sprites[this.uid] = this;
     }
     //Debug.debug('new LzTextSprite', this.__LZdiv, this.owner);
+    if (this.quirks['text_height_includes_margins']) {
+        this.__hpadding = 2;
+    }
 }
 
 LzTextSprite.prototype = new LzSprite(null);
@@ -129,12 +132,6 @@ LzTextSprite.prototype.setText = function(t, force) {
         if (this.quirks['inner_html_strips_newlines']) {
             t = t.replace(this.inner_html_strips_newlines_re, '<br />');
         }
-    } else {
-        if (this._whiteSpace != 'normal') {
-            this._whiteSpace = 'normal';
-            this.__LZdiv.style.whiteSpace = 'normal';
-            this._styledirty = true;
-        }    
     }
     if (t && this.quirks['inner_html_no_entity_apos']) {
       t = t.replace(RegExp('&apos;', 'mg'), '&#39;');
@@ -206,12 +203,12 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
         var h = this.__LZdiv.clientHeight;
         if (h == 0 || h == null) {
             h = this.getTextSize(this.text).height;
-            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
+            if (h > 0 && this.quirks.emulate_flash_font_metrics && this.quirks.text_height_includes_margins != true) {
                 h += this.__hpadding;
             }
         } else {
             if (h == 2) h = this.getTextSize(this.text).height;
-            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
+            if (h > 0 && this.quirks.emulate_flash_font_metrics && this.quirks.text_height_includes_margins != true) {
                 h += this.__hpadding;
             }
             this.fieldHeight = h;
