@@ -197,7 +197,11 @@
         <item title="basetree" href="lz.basetree.html" />
         <item title="basevalidator" href="lz.basevalidator.html" />
         <item title="basevaluecomponent" href="lz.basevaluecomponent.html" />
-        <item title="basewindow" href="lz.basewindow.html" />
+        <item title="basewindow" href="lz.basewindow.html" />        
+        <item title="multistatebutton" href="lz.multistatebutton.html" />
+        <item title="style" href="lz.style.html" />
+        <item title="submit" href="lz.submit.html" />
+        <item title="swatchview" href="lz.swatchview.html" />
     </category>
     
     <category title="Menus and Commands">
