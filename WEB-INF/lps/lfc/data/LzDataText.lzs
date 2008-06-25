@@ -9,7 +9,7 @@
   */
 
 /**
-  * An LzDataText represents a text node a in a hierarchical dataset. An LzDataText can only contain text data. It can be a child a of an <classname>LzDataElement</classname>. See the example on <classname>LzDataNodeMixin</classname>. 
+  * An LzDataText represents a text node a in a hierarchical dataset. An LzDataText can only contain text data. It can be a child a of an <sgmltag class="element" role="LzDataElement">LzDataElement</sgmltag>. See the example on <sgmltag class="element" role="LzDataNodeMixin">LzDataNodeMixin</sgmltag>. 
   *
   * @shortdesc Represents a text node in a set of data.
   * @see lzdatanodemixin, lzdataelement, datapointer
@@ -49,9 +49,8 @@ var ondata = LzDeclaredEvent;
 //var nodeType = LzDataElement.TEXT_NODE;
 
 /** The name of this node.
- * According to W3C-specs, nodeName for LzDataText should return
- * "#text", see
- * "http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-1841493061"
+ * According to <a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-1841493061">W3C-specs</a>, nodeName for LzDataText should return
+ * "#text".
   * @type String
   */
 var nodeName        = '#text';
@@ -62,8 +61,9 @@ var data = "";
 /** @access private */
 function $lzc$set_data(v) { this.setData(v); }
 
-/** read-only property
-  * @type Number */
+/** @type Number
+  * @keywords read-only 
+  */
 var length = 0;
 
 /**

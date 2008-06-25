@@ -563,7 +563,7 @@ function __LZdoUnlock ( locker ){
 
 /**
   * <p>
-  * An LzDataElement represents a node a in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or <classname>LzDataText</classname>, which represents a text node. See the example on <classname>LzDataNodeMixin</classname>. 
+  * An LzDataElement represents a node a in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or <sgmltag class="element" role="LzDataText">LzDataText</sgmltag>, which represents a text node. See the example on <sgmltag class="element" role="LzDataNodeMixin">LzDataNodeMixin</sgmltag>. 
   * </p>
   *
   * @shortdesc A node of hierarchical data.
@@ -662,11 +662,23 @@ static function __LZv2E ( o ) {
 
 
 
-/** constant for LZX DOM data element node type */
+/** constant for LZX DOM data element node type 
+  * @type Number
+  * @lzxdefault "1"
+  * @keywords read-only
+  */
 static  var ELEMENT_NODE = 1;
-/** constant for LZX DOM data text node type*/
+/** constant for LZX DOM data text node type 
+  * @type Number
+  * @lzxdefault "3"
+  * @keywords read-only
+  */
 static  var TEXT_NODE = 3;
-/** constant for LZX DOM document root node type */
+/** constant for LZX DOM document root node type  
+  * @type Number
+  * @lzxdefault "9"
+  * @keywords read-only
+  */
 static  var DOCUMENT_NODE = 9;
 
 /** this is similar to the escape routine in LzText, but that one's shorter
@@ -728,6 +740,8 @@ static function stringToLzData( str, trimwhitespace=false, nsprefix=false ) {
     }
 }
 
+/** @type Dictionary 
+  * @keywords read-only */
 static var whitespaceChars = {' ': true, '\r': true, '\n': true, '\t': true};
 
 

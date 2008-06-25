@@ -612,29 +612,53 @@
               the look in a subclass. Also, a basedatacombobox_text must be declared in
               the subclass. 
               
-              <example class="fragment">
-              &lt;class name="simplecombobox" extends="basedatacombobox" width="100"&gt;
-                  &lt;attribute name="_cbtext" value="$once{this._text}"/&gt;
-                  &lt;view width="100%" height="20" focusable="false" bgcolor="#CCCCCC"&gt;
-                      &lt;handler name="onclick"&gt;
-                          LzFocus.setFocus(this,false); 
-                          classroot.toggle()
-                      &lt;/handler&gt;
-                      &lt;handler name="onmouseout"&gt;
-                          this.setBGColor(0xCCCCCC);
-                      &lt;/handler&gt;
-                      &lt;handler name="onmouseup"&gt;
-                          this.setBGColor(0xCCCCCC);
-                      &lt;/handler&gt;
-                      &lt;handler name="onmouseover"&gt;
-                          this.setBGColor(0xEEEEEE);
-                      &lt;/handler&gt;
-                      &lt;handler name="onmousedown"&gt;
-                          this.setBGColor(0xAAAAAA);
-                      &lt;/handler&gt;
-                  &lt;/view&gt;
-                  &lt;text name="_text" width="${ parent.width - 19 }" x="7" /&gt;
-              &lt;/class&gt;
+              <example><![CDATA[
+<canvas height="150">
+     <include href="lz/floatinglist.lzx" />
+     
+     <dataset name="items">
+          <item value="item0">item 0</item>
+          <item value="item1">item 1</item>
+          <item value="item2">item 2</item>
+          <item value="item3">item 3</item>
+          <item value="item4">item 4</item>
+          <item value="item5">item 5</item>
+          <item value="item6">item 6</item>
+          <item value="item7">item 7</item>
+          <item value="item8">item 8</item>
+          <item value="item9">item 9</item>
+          <item value="item10">item 10</item>
+          <item value="item11">item 11</item>
+     </dataset>
+     
+     <class name="simplecombobox" extends="basedatacombobox" width="100">
+          <attribute name="_cbtext" value="$once{this._text}"/>
+          <attribute name="menuclassname" value="floatinglist" type="string"/>
+          <view width="100%" height="20" focusable="false" bgcolor="#CCCCCC">
+               <handler name="onclick">
+                    LzFocus.setFocus(this,false); 
+                    classroot.toggle()
+               </handler>
+               <handler name="onmouseout">
+                    this.setBGColor(0xCCCCCC);
+               </handler>
+               <handler name="onmouseup">
+                    this.setBGColor(0xCCCCCC);
+               </handler>
+               <handler name="onmouseover">
+                    this.setBGColor(0xEEEEEE);
+               </handler>
+               <handler name="onmousedown">
+                    this.setBGColor(0xAAAAAA);
+               </handler>
+          </view>
+          <text name="_text" width="${ parent.width - 19 }" x="7" />
+     </class>
+
+     <simplecombobox id="cbox1" width="130" shownitems="6" defaulttext="Choose One..." itemdatapath="items:/item"/>
+</canvas>
+]]>
+              
               </example>
     
                ** Caveat: Combobox items will not update if the attributes

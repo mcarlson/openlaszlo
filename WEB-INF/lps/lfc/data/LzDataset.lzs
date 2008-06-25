@@ -32,7 +32,7 @@
   * </ul>
   * 
   * <p>All data in an OpenLazlo application is contained within one or more datasets. A given dataset usually represents a single conceptual set that may or may not be modified or reloaded during the execution of the application. 
-  * The data within a dataset is accessed using a <tagname link="true">datapointer</tagname> or a instance of one of its subclasses. 
+  * The data within a dataset is accessed using a <sgmltag class="element" role="LzDatapointer">datapointer</sgmltag> or a instance of one of its subclasses. 
   * Datasets can represent</p>
   * 
   * <ul>
@@ -41,7 +41,7 @@
   * </ul>
   * 
   * <p>
-  * If a dataset is not explictly contained within in a <xref linkend="LzDatasource"/>, it will make an instance of datasource and be contained inside that. A dataset can be populated or re-poplulated at runtime by calling <code>doRequest</code> on the dataset. The result of the request is then returned to the application and the dataset's <xref linkend="LzDataset.prototype.ondata"/> event is run. Any <xref linkend="LzDatapointer"/> that is bound to the dataset will also run its <link linkend="LzDatapointer.prototype.ondata">ondata</link> event at this time as well.
+  * If a dataset is not explictly contained within in a <sgmltag class="element" role="LzDataProvider">LzDataProvider</sgmltag>, it will make an instance of datasource and be contained inside that. A dataset can be populated or re-poplulated at runtime by calling <code>doRequest</code> on the dataset. The result of the request is then returned to the application and the dataset's <link linkend="LzDataset.__ivars__.ondata"><literal>ondata</literal></link> event is run. Any <xref linkend="LzDatapointer"/> that is bound to the dataset will also run its <link linkend="LzDatapointer.__ivars__.ondata"><literal>ondata</literal></link> event at this time as well.
   * </p>
   * <p>See the <a href="${dguide}data-structures.html">Developers's Guide</a> for more discussion of data and datasets. </p>
   * <p>
@@ -78,10 +78,6 @@
   *   &lt;/view&gt;
   * &lt;/canvas&gt;</programlisting></example>
   *
-  * <p>In addition to any fields documented in the section below, these fields are also available:
-  *
-  * String <attribute>querystring</attribute>: A string to be appended to the request that
-  * the <class>dataset</class> makes. </p>
   *
   * @shortdesc An in-memory xml-style data hierarchy.
   * @lzxname dataset
@@ -110,8 +106,9 @@ static var slashPat = "/";
  */
 var dataprovider;
 
-/**  Create a new data request object for each request. Defaults to false.
+/**  Create a new data request object for each request.
  * @type Boolean
+ * @lzxdefault false
  */
 var multirequest = false;
 /** @access private */
@@ -126,6 +123,8 @@ var errorstring;
 var reqOnInitDel;
 /** TCP port number to use for secure (HTTPS) requests
  * @type Number
+ * @lzxtype integer
+ * @lzxdefault 443
 */
 var secureport;
 
@@ -144,6 +143,7 @@ var ontimeout = LzDeclaredEvent;
 
 /** The numer of milliseconds to wait before the request times out, and an ontimeout event is sent.
  * @lzxtype Number
+ * @type Number
  */
 var timeout = 60000;
 
@@ -157,7 +157,9 @@ var postbody = null;
   * Encoded responses require more work for the LPS (encoding the 
   * response) and client (decoding the response) in trade for lower 
   * network bandwidth usage.
+  * @lzxtype boolean
   * @type Boolean
+  * @keywords read-only
   */
 var acceptencodings = false;
 
@@ -169,6 +171,9 @@ var params = null;
 /** When true, the server will preserve namespace prefixes
   * on data node names and attribute names
   * @type Boolean
+  * @lzxtype boolean
+  * @keywords read-only
+  * @lzxdefault false
   */
 var nsprefix = false;
 
@@ -177,6 +182,8 @@ var nsprefix = false;
   * Due to a lack of a native API to get this information, SOLO SWF applications
   * will always return an empty set. 
   * @type Boolean
+  * @lzxtype boolean
+  * @keywords read-only
   */
 var getresponseheaders = false;
 
@@ -187,6 +194,7 @@ var getresponseheaders = false;
 
 /**  HTTP request method. Value must be one of "GET" or "POST".
  * @type String
+ * @lzxtype get|post|GET|POST
  */
 var querytype = "GET";
 /** @access private */
@@ -195,6 +203,7 @@ function $lzc$set_querytype (v) { this.setQueryType(v); }
 /** When true, the server will trim 
   * whitespace in the XML data (defaults to false).  
   * @type Boolean
+  * @lzxtype boolean
   * @keywords final
   */
 var trimwhitespace = false;
@@ -206,6 +215,9 @@ var trimwhitespace = false;
   * when this field is true.  When this field is true, you will usually
   * want the getresponseheaders field to be false.
   * @type Boolean
+  * @lzxtype boolean
+  * @keywords read-only
+  * @lzxdefault false
   */
 var cacheable = false;
 
@@ -218,6 +230,8 @@ var clientcacheable = true;
 /** A string to be appended to the request that
   * the dataset makes. 
   * @type String
+  * @lzxtype string
+  * @keywords read-only
   */
 var querystring = null;
 
@@ -236,7 +250,7 @@ function $lzc$set_src(v) { this.setSrc(v); }
 
 /** If autorequest is true, a new request will be issued automatically when the source or query params are modified.
  * @type Boolean
- * @lzxdefault "false"
+ * @lzxdefault false
 */
 var autorequest = false;
 
@@ -246,6 +260,7 @@ function $lzc$set_autorequest(v) { this.setAutorequest(v); }
 /** If true, the datset will make a request when it
   * inits. The default for this is false.
   * @type Boolean
+  * @lzxtype boolean
   */
 var request = false;
 /** @access private */
@@ -254,7 +269,9 @@ function $lzc$set_request(v) { this.setRequest(v); }
 /** @access private */
 var headers = null;
 /** Proxy data requests via the proxy server. Inherits value from canvas.proxied flag.
- @type Boolean or null*/
+  * @type Boolean or null
+  * @lzxdefault null
+  */
 var proxied = null;
 /** @access private */
 var responseheaders = null;
@@ -389,7 +406,7 @@ function getQueryString (){
 }
 
 /**
-  * Returns an LzParams object holding any set request parameters for the 
+  * Returns an LzParam object holding any set request parameters for the 
   * dataset.
   * @return LzParam: The request parameters for the dataset.
   */
@@ -864,7 +881,7 @@ function abort( ) {
   * Returns all response headers as an object of name/value pairs, or false
   * if there were none.
   * 
-  * @return Object A hash table object containing the response headers.
+  * @return Object: A hash table object containing the response headers.
   */
 function getAllResponseHeaders() {
     return this.responseheaders;

@@ -121,15 +121,15 @@
           <text>
             <p>The <tagname>baseform</tagname> tag allows you to create a web
             form.  The data represented by components that are enclosed in the
-            form tag can be sent to the server using the <tagname>submit</tagname>
-            tag.  Each form component, such as <tagname>checkbox</tagname>,
-            <tagname>combobox</tagname> or <tagname>radiogroup</tagname> must have
+            form tag can be sent to the server using the <sgmltag class="element" role="lz.submit">&lt;submit&gt;</sgmltag>
+            tag.  Each form component, such as <sgmltag class="element" role="lz.checkbox">&lt;checkbox&gt;</sgmltag>,
+            <sgmltag class="element" role="lz.combobox">&lt;combobox&gt;</sgmltag> or <sgmltag class="element" role="lz.radiogroup">&lt;radiogroup&gt;</sgmltag> must have
             a name.  The data is submitted as name-value pairs, using the name and
             value of the component.</p>
             
             <p><classname>baseform</classname> provides no layout for its
             contents.  If you want a simple automatic form layout use the
-            <tagname>form</tagname> tag.</p>
+            <sgmltag class="element" role="lz.form">&lt;form&gt;</sgmltag> tag.</p>
             
               <p><b>See Also:</b></p>
  
