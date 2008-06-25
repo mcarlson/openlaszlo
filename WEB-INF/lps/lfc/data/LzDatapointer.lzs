@@ -884,6 +884,30 @@ function selectNextParent () :Boolean {
 }
 
 /**
+  * Returns the number of the node that the datapointer is pointing to.
+  * Note that XPath indices are 1-based.
+  * @return Number: The offset of the node
+  * @deprecated Use <code>position()</code> xpath operator or LzDatapointer.getXPathIndex() instead.
+  */
+function getNodeOffset (){ 
+    if ( $debug ) {
+      Debug.info("%w.%s is deprecated.  Use XPath `position()` operator or LzDatapointer.getXPathIndex() instead.",
+                 this, arguments.callee);
+    }
+    return this.getXPathIndex();
+}
+
+/**
+  * Returns the number of the node that the datapointer is pointing to.
+  * Note that XPath indices are 1-based.
+  * @return Number: The offset of the node
+  */
+function getXPathIndex ():Number { 
+    this.p.parentNode.__LZupdateCO();
+    return this.p.__LZo + 1;
+}
+
+/**
   * Gets the nodeType of the node that the datapointer is pointing to.
   * @return Integer: one of LzDataElement.ELEMENT_NODE, LzDataElement.TEXT_NODE, 
   * LzDataElement.DOCUMENT_NODE or <code>undefined</code> if this datapointer 

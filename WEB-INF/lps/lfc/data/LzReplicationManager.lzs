@@ -423,23 +423,6 @@ override function setDataContext (p, implicit:Boolean = false) :void {
 }
 
 /**
-  * TODO: [20080428 anba] no reference to this function in the LFC, remove it?
-  * 
-  * @access private
-  */
-function getNodeOffset ( p ) :Number? {
-    var nds:Array = this.nodes;
-    if (nds != null) {
-        var len:int = nds.length; 
-        for ( var i:int = 0; i < len; i++ ){
-            if ( p == nds[ i ] ){
-                return i;
-            }
-        }
-    }
-}
-    
-/**
   * Retuns a pointer to the nth clone controlled by the replication manager
   * @param Number n: The zero-based offset of the clone to retrieve
   * @return LzView: A pointer to the nth clone
