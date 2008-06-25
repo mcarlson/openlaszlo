@@ -192,8 +192,8 @@
         <doc>
           <tag name="shortdesc"><text>an abstract class for components which are used in a form</text></tag>
           <text>
-            <p>This abstract class works with <classname>form</classname> or
-            <classname>baseform</classname>.  All form components subclass this.</p>
+            <p>This abstract class works with <sgmltag class="element" role="lz.form">&lt;form&gt;</sgmltag> or
+            <sgmltag class="element" role="lz.baseform">&lt;baseform&gt;</sgmltag>.  All form components subclass this.</p>
             
               <p><b>See Also:</b></p>
               

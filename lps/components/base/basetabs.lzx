@@ -6,10 +6,6 @@
     <!--  BASETAB CLASS  -->
     <!-- =============== -->
 
-    <!--- The base tab class. This class is to be used only in conjunction with
-          basetabs and basetabapane classes. You can pass the name of this class
-          in the 'tabclass' attribute of basetabpane, tabpane, basetabs, and
-          tabs classes. Basetabs uses this class as its default 'tabclass'. -->
     <class name="basetab" extends="baselistitem" clickable="true" 
         focusable="true">
 
@@ -104,6 +100,44 @@
             super.setSelected(s);
         ]]>
         </method>
+       
+       <doc>
+             <tag name="shortdesc"><text>The base tab class.</text></tag>
+             <text>
+             <para>This class is to be used only in conjunction with
+              basetabs and basetabapane classes. You can pass the name of this class
+              in the 'tabclass' attribute of basetabpane, tabpane, basetabs, and
+              tabs classes. Basetabs uses this class as its default 'tabclass'.</para>
+             <example><![CDATA[
+<canvas width="150" height="75">
+  <include href="base"/>
+
+  <class name="aquatab" extends="basetab" 
+         width="40" height="20" bgcolor="aqua">
+    <text>tab</text>
+  </class>
+  <class name="greentab" extends="basetab" 
+         width="40" height="20" bgcolor="green">
+    <text>tab</text>
+  </class>
+
+  <basetabs x="10" y="10" tabclass="aquatab">
+    <basetabpane>
+      <text>one</text>
+    </basetabpane>
+    <basetabpane tabclass="greentab">
+      <text>two</text>
+    </basetabpane>
+    <basetabpane >
+      <text>three</text>
+    </basetabpane>
+  </basetabs>
+</canvas>
+]]>
+             </example>
+             </text>
+             
+       </doc>
 
     </class> <!-- class basetab -->
 

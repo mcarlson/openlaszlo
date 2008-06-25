@@ -14,7 +14,7 @@
   *   For example, LzParam objects can be used to manage a name/value pairs for an 
   *   HTTP request.</p>
   * 
-  * <example class="fragment" extract="false">
+  * <programlisting>
   *     &lt;method name=&quot;sendData&quot; args=&quot;action&quot;&gt;
   *         var d=canvas.datasets.dsSendData;
   *         var p=new LzParam();
@@ -26,8 +26,7 @@
   *         d.setQueryString( p );
   *         d.doRequest();
   *     &lt;/method&gt;
-  * 
-  * </example>
+  * </programlisting>
   * 
   * @shortdesc A utility class for manipulating name-value pairs  
   * @devnote LzParam objects hold onto parameters (name/value pairs) and provide methods 
@@ -202,7 +201,7 @@ function addValue(name, val, enc=false) {
 /**
   * Get a value by name
   * @param String name: The name to look up - must evaluate to a string
-  * @return String : The value for the specified name
+  * @return String: The value for the specified name
   */
 function getValue(name) {
     var i = this.findKey(name);
