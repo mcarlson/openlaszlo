@@ -342,12 +342,12 @@ class LzHTTPDataRequest extends LzDataRequest {
     var multirequest:Boolean = false;
     var queuerequests:Boolean = false;
 
-    /** An LzParams object which holds query key-value pairs.
+    /** An LzParam object which holds query key-value pairs.
         @type LzParam
     */
     var queryparams = null; // : LzParam object
 
-    /** An LzParams object which holds HTTP request headers as key-value pairs.
+    /** An LzParam object which holds HTTP request headers as key-value pairs.
         @type LzParam
     */
     var requestheaders = null; // : LzParam object
@@ -356,7 +356,7 @@ class LzHTTPDataRequest extends LzDataRequest {
         @type Boolean
     */
     var getresponsheaders = false;
-    /** An LzParams object which holds HTTP response headers
+    /** An LzParam object which holds HTTP response headers
         @type LzParam
     */
     var responseheaders = null; 
