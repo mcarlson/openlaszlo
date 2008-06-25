@@ -107,6 +107,17 @@
             <!-- Our application container with a minimum and maximum size -->
             <DynamicApplicationSizer id="app" align="center" y="40"
                bgcolor="$once{COLORS.APPLICATION_BG}" visible="false">
+               <handler name="onvisible">
+                   if(this.visible == true){
+                       // Reminds the app that the size of the interior content just changed, since
+                       // the scrollbars will normally only update themselves when the canvas size changes.
+                       // NOTE: This should work by sending canvas.onwidth.sendEvent() and canvas.onheight.sendEvent(),
+                       // which would be more concise, but for reasons I can't quite seem to discern,
+                       // that will inconsistently result in the vertical scrollbar being shortened.
+                       cvscroll.setAttribute('scrollheight', (chscroll.visible ? canvas.height - 15 : canvas.height+1));
+                       chscroll.setAttribute('scrollwidth', (cvscroll.visible ? canvas.width - 15 : canvas.width+1));
+                   }
+               </handler>
 
 
         <!-- Application header with flags, last login info, etc. -->
@@ -500,7 +511,7 @@
 
 
         <!-- APP SCROLLBARS -->
-        <vscrollbar name="vscroll" x="${canvas.width-this.width}" height="${this.scrollheight}"
+        <vscrollbar name="vscroll" id="cvscroll" x="${canvas.width-this.width}" height="${this.scrollheight}"
             scrolltarget="${scrollContent}" visible="${scrollContent.height-15>=canvas.height}">
             <attribute name="scrollheight" value="0"/>
             <handler name="onheight" reference="canvas">
@@ -512,7 +523,7 @@
                 this.setAttribute('scrollheight', h);
             </handler>
         </vscrollbar>
-        <hscrollbar name="hscroll" y="${canvas.height-this.height}" width="${this.scrollwidth}"
+        <hscrollbar name="hscroll" id="chscroll" y="${canvas.height-this.height}" width="${this.scrollwidth}"
             scrolltarget="${scrollContent}" visible="${scrollContent.width-20>=canvas.width}"
       options="ignorelayout" initstage="late">
             <attribute name="scrollwidth" value="0"/>

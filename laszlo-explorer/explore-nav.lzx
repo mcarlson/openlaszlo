@@ -77,7 +77,7 @@
             }
             this.doneDel.register( lastclone , "oninit" );
         </handler>
-        <method name="replicationDone">
+        <method name="replicationDone" args="v">
             var mb = this.parent;
             mb.dataBound();
         </method>
@@ -247,11 +247,15 @@
               if (action=='popup'){
                 var popup = dp.xpathQuery("@popup");
                 var target = dp.xpathQuery("@target");
+                var popwidth = dp.xpathQuery("@width");
+                var popheight = dp.xpathQuery("@height");
+                if(typeof popwidth == 'undefined') popwidth = 860;
+                if(typeof popheight == 'undefined') popheight = 600;
                 if (target == null) target = escape(popup + runtime);
                 if ($runtime == 'dhtml') {
-                    LzBrowser.loadURL("loading.jsp?src=" + popup + "&lzr=" + runtime + "&lzt=html", target, "scrollbars=yes,width=860,height=600");
+                    LzBrowser.loadURL("loading.jsp?src=" + popup + "&lzr=" + runtime + "&lzt=html", target, "scrollbars=yes,width=" + popwidth + ",height=" + popheight);
                 } else {
-                    LzBrowser.loadJS('window.open("loading.jsp?src=' + popup + '&lzr=' + runtime + '&lzt=html", "' + target + '", "scrollbars=yes,width=860,height=600")');
+                    LzBrowser.loadJS('window.open("loading.jsp?src=' + popup + '&lzr=' + runtime + '&lzt=html", "' + target + '", "scrollbars=yes,width=' + popwidth + ',height=' + popheight + '")');
                 }
                 if (src != null){
                   LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
@@ -260,7 +264,7 @@
               } else if (action =='popupexternal') {
                 var jsOpenStr = "window.open('" + src + "'," 
                     + "'" + target + "'," + 
-                    "'scrollbars=yes,resizable=yes,toolbar=yes,location=yes,menubar=yes,width=860,height=600')";
+                    "'scrollbars=yes,resizable=yes,toolbar=yes,location=yes,menubar=yes,width=" + popwidth + ",height=" + popheight + "')";
                 LzBrowser.loadJS(jsOpenStr); 
                 
               } else {
