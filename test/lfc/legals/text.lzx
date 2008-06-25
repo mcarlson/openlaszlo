@@ -15,12 +15,12 @@
         <text name="txt">Hey</text>
         <text name="txtclik" onclick="Debug.warn(this);">Clickable</text>
         <text name="txtclikresize" resize="true" onclick="this.setText('Something really, really, really, really, really long.'); Debug.warn(this.getText());">Clickable, resize=true</text>
-        <text multiline="true"> 
+        <text multiline="true" bgcolor="blue"> 
             <handler name="oninit">
                 this.setText('line 1\nline2');
             </handler>
         </text>
-        <text multiline="true" width="40">Some long text that should be forced to wrap</text>
+        <text multiline="true" width="40" bgcolor="green">Some long text that should be forced to wrap</text>
         <!--text multiline="true" text="line 1\nline2"/--> 
     </view>
     <view bgcolor="red">
