@@ -158,15 +158,6 @@
       // about redefining it from setName
       global.Debug = this;
       global.__LzDebug = this;
-
-      // restore persisted data
-      this.persist = LzBrowserKernel.getPersistedObject('__lzdebugger');
-      for (var i in this.persist.data) {
-        if (this[i] != null) {
-            this[i] = this.persist.data[i];
-            //Debug.write('restored', i, this[i]);
-        }
-      }
       this.commandhistory_ptr = this.commandhistory.length;
     </method>
 
@@ -201,7 +192,8 @@
        this.inspectDel = new LzDelegate(this, "inspectObject");
        this.inspectDel.register(LzGlobalMouse, "onmousedown");
        this.moveCaretDel = new LzDelegate(this, 'sendCaretToEOL');
-      ]]>
+       this.restoreDebuggerState()
+     ]]>
     </method>
 
     <method name="handleFocus">
@@ -655,8 +647,41 @@
         this.top.controls.exp.setAttribute('visible', this.minimized);
     </method>
 
-    <dragstate name="drag" />
-    <resizestate name="resize" />
+    <dragstate name="drag"/>
+    <resizestate name="resize"/>
+
+    <handler name="onapplied" reference="drag" method="saveDebuggerState"/>
+    <handler name="onapplied" reference="resize" method="saveDebuggerState"/>
+            
+    <method name="saveDebuggerState" args="d">
+        this.persist.data['_pdbgwidth'] = this.width;
+        this.persist.data['_pdbgheight'] = this.height;
+        this.persist.data['_pdbgx'] = this.x;
+        this.persist.data['_pdbgy'] = this.y;
+    </method>
+
+    <method name="restoreDebuggerState" >
+       // restore persisted data
+       this.persist = LzBrowserKernel.getPersistedObject('__lzdebugger');
+       for (var i in this.persist.data) {
+           if (this[i] != null) {
+               this[i] = this.persist.data[i];
+               //Debug.write('restored', i, this[i]);
+           }
+       }
+       if (this.persist.data['_pdbgwidth'] != null) {
+           this.setAttribute('width', this.persist.data._pdbgwidth);
+       }
+       if (this.persist.data['_pdbgheight'] != null) {
+           this.setAttribute('height', this.persist.data._pdbgheight);
+       }
+       if (this.persist.data['_pdbgx'] != null) {
+           this.setAttribute('x', this.persist.data._pdbgx);
+       }
+       if (this.persist.data['_pdbgy'] != null) {
+           this.setAttribute('y', this.persist.data._pdbgy);
+       }
+    </method>
 
     <!-- Start Views -->
     <resizelayout axis="y" />
