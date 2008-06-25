@@ -211,7 +211,7 @@
                             <text y="20" datapath="ItemAttributes/Artist[1]/text()" width="${parent.width}" fontstyle="bold" fontsize="12" fgcolor="#666699"/>
                             <text y="40" fgcolor="#666699">Label:</text><text x="90" y="40" datapath="ItemAttributes/Manufacturer/text()" width="${parent.width}" fgcolor="#666699"/>
                             <text y="55" fgcolor="#666699">Release Date:</text><text x="90" y="55" datapath="ItemAttributes/ReleaseDate/text()" width="${parent.width}" fgcolor="#666699"/>
-                            <text y="70" fgcolor="#666699">Availability:</text><text x="90" y="70" datapath="Availability/text()" width="${parent.width}" fgcolor="#666699"/>
+                            <text y="70" fgcolor="#666699">Availability:</text><text x="90" y="70" datapath="Offers/Offer[1]/OfferListing/Availability/text()" width="${parent.width}" fgcolor="#666699"/>
                             <text y="87" fgcolor="#666699" fontsize="14">List Price:</text><text x="90" y="87" datapath="ItemAttributes/ListPrice/FormattedPrice/text()" width="${parent.width}" fontsize="14" fgcolor="#666699"/>
                             <text y="105" fgcolor="#666699" fontstyle="bold" fontsize="16">Our Price:</text><text x="90" y="105" datapath="Offers/Offer[1]/OfferListing/Price/FormattedPrice/text()" width="${parent.width}" fontstyle="bold" fontsize="16" fgcolor="#666699"/>
                             <mouseview resource="cart_butt" x="214" y="105" width="54" height="18"
