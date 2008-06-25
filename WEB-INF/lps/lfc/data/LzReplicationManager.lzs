@@ -12,7 +12,7 @@
   * <p>
   * When a view's datapath matches more than one data node, one instance
   * of the view is created for each match. The replicated views are
-  * referred to as <glossterm>clones</glossterm>' When this happens, a
+  * referred to as <glossterm>clones</glossterm>. When this happens, a
   * <glossterm>replication manager</glossterm> (or a subclass of
   * <classname>LzReplicationManager</classname>) is created to manage the
   * clones. Replication managers are never directly instantiated &#x2014;
@@ -36,7 +36,7 @@
   * 
   * <p>causes the creation of five views (because there were five elements
   * in the dataset that matched the selection criteria). These "cloned"
-  * views are numbered successively, starting with zero. The highlited
+  * views are numbered successively, starting with zero. The highlighted
   * section of the code below shows how to use the
   * <method>getCloneNumber</method> method to access each replicated
   * view.</p>
