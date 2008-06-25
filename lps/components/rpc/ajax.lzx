@@ -97,7 +97,7 @@
           ]]>
         </method>
 
-        <method name="ondataHandler">
+        <method name="ondataHandler" args="d">
            // Currently raw text response is only available for serverless requests
            if (this.dataset['rawtext']) {
                 this.responseText = this.dataset['rawtext'];
@@ -112,7 +112,7 @@
         </method>
 
 
-        <method name="onerrorHandler">
+        <method name="onerrorHandler" args="d">
             <![CDATA[
            // Currently raw text response is only available for serverless requests
             this.responseText = "";

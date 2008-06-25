@@ -29,7 +29,7 @@
     
     function loadXMLDoc(url) {
         // branch for native XMLHttpRequest object
-        req = new XMLHttpRequest();
+        req = new lz.XMLHttpRequest();
         req.onreadystatechange = processReqChange;
         req.open("GET", url, true);
         req.setRequestHeader('X-Test', 'one');
@@ -42,14 +42,14 @@
     ]]>
   </script>
     <simplelayout spacing="4"/>
-    <edittext id="in1">echo.jsp</edittext>
+    <edittext id="in1">example.xml</edittext>
     <button onclick="loadXMLDoc(in1.getText())">Load Data</button>
 
     <button onclick="loadXMLDoc('badurl')">Test Error Handling, this should fail</button>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
