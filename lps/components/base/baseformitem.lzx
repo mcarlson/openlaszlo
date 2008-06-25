@@ -74,7 +74,7 @@
               setting their initial value. 
               @param Boolean changed: true if changed, else false.
               @param Boolean skipform: true to skip notifying parent form
-              @keywords protected -->
+              @keywords public -->
         <method name="setChanged" args="changed,skipform=null"><![CDATA[
 
             // Rollbackvalue will be value if init is not completed.

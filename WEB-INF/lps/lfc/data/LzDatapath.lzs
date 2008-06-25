@@ -14,7 +14,7 @@
   * <p>
   * Datapaths are used to merge data hierarchies with the hierarchy of an
   * OpenLaszlo application. This is done using the the XPath syntax supported
-  * by <classname>LzDatapointer</classname>.  When a node is given a
+  * by <sgmltag class="element" role="LzDatapointer">LzDatapointer</sgmltag>.  When a node is given a
   * <attribute link="true">datapath</attribute> attribute, a datapath with
   * the given value as its XPath is created. If the datapath retrieves a
   * node (<i>i.e.</i> it doesn't terminate in an attribute getter or a
@@ -130,8 +130,7 @@ var __LZisclone :Boolean = false;
  * the data nodes they are bound to disappear, and created when new
  * data nodes match the datapath.
  *
- * See the section on <a
- * href="${dguide}databinding.html#databinding.pooling">Pooling</a> in
+ * See the section on <link linkend="databinding.pooling">Pooling</link> in
  * the Guide for information about the use of this attribute.
  *
  * @type Boolean
@@ -145,8 +144,7 @@ var pooling :Boolean = false;
  * Determines whether to use normal or lazy replication, if the
  * datapath matches more than one node.
  *
- * See the section on <a
- * href="${dguide}databinding.html#databinding.replication">Replication</a>
+ * See the section on <link linkend="datareplication">Replication</link>
  * in the Guide for information about the use of this attribute.
  *
  * @type String
@@ -520,7 +518,7 @@ override function destroy(){
   * In short, to make datamapping work both ways for a given UI
   * control, define a <method>updateData</method> method that returns
   * the value for the data mapped to the node.  This is already done
-  * for the base <classname>LzInputText</classname> class, but not
+  * for the base <sgmltag class="element" role="LzInputText">LzInputText</sgmltag> class, but not
   * for any other LFC classes.
   *
   * @devnote Although this is an override, it is overriding the empty

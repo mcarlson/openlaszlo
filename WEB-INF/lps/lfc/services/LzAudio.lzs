@@ -9,6 +9,14 @@
   */
 
 /**
+  * <example><![CDATA[
+<canvas height="150">
+  <audio src="resources/poof.mp3" name="poof"/>
+  <button text="Poof"
+          onclick="LzAudio.playSound('poof');"/>
+</canvas>]]></example>
+  *
+  *
   * @shortdesc This service manages audio resource playback.  Check canvas.capabilities.audio to ensure your runtime supports audio.
   * @access public
   * 

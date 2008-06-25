@@ -231,13 +231,24 @@ class LzDataNode extends  LzEventable {
 
 
 /** @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead
- */
+  * @type Number
+  * @lzxdefault "1"
+  * @keywords read-only
+  */
 static var ELEMENT_NODE = 1;
+
 /** @deprecated Use <code>LzDataElement.TEXT_NODE</code> instead
- */
+  * @type Number
+  * @lzxdefault "3"
+  * @keywords read-only
+  */
 static var TEXT_NODE = 3;
+
 /** @deprecated Use <code>LzDataElement.DOCUMENT_NODE</code> instead
- */
+  * @type Number
+  * @lzxdefault "9"
+  * @keywords read-only
+  */
 static var DOCUMENT_NODE = 9;
 
 

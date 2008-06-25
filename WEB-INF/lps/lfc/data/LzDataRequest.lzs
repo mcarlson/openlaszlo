@@ -29,21 +29,25 @@ class LzDataRequest extends LzNode {
     /**
     * @type String
     * @lzxdefault "success"
+    * @keywords read-only
     */
     static var SUCCESS = 'success';
     /**
     * @type String
     * @lzxdefault "timeout"
+    * @keywords read-only
     */
     static var TIMEOUT = 'timeout';
     /**
     * @type String
     * @lzxdefault "error"
+    * @keywords read-only
     */
     static var ERROR   = 'error';
     /**
     * @type String
     * @lzxdefault "ready"
+    * @keywords read-only
     */
     static var READY   = 'ready';
 

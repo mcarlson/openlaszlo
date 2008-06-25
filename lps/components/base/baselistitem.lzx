@@ -95,7 +95,7 @@
               responsible for calling setSelected
               If you want to set whether this view is selected, use
               setAttribute('selected', true)
-              @keywords protected -->
+              @keywords private -->
         <method name="_setSelected" args="s">
             <![CDATA[
                 if (s) {

@@ -54,27 +54,27 @@
                                                31 ]"/> 
 
         <!--- The datepickerday which has been selected. 
-              @keywords protected  
+              @keywords public  
            --> 
         <attribute name="selecteddatepickerday" value="null"/> 
 
         <!--- The weekclass to use for this basedatepicker 
-              @keywords protected 
+              @keywords public 
         --> 
         <attribute name="weekclass" when="once"/> 
 
         <!--- The dayclass to use for this basedatepicker 
-              @keywords protected 
+              @keywords public 
         --> 
         <attribute name="dayclass" when="once"/> 
 
         <!--- The number if pixels from this.x to show the datepicker days 
-              @keywords protected 
+              @keywords public 
         --> 
         <attribute name="xinset" type="number" value="null"/>
 
         <!--- The number if pixels from this.y to show the datepicker days 
-              @keywords protected 
+              @keywords public 
         --> 
         <attribute name="yinset" type="number" value="null"/> 
 
@@ -85,12 +85,12 @@
         <attribute name="_focusDay" value="null"/>
 
         <!--- The month that is currently showing in the datepicker.
-              @keywords protected
+              @keywords public
         -->
         <attribute name="showingmonth" type="number" value="null"/>
 
         <!--- The year that is currently showing in the datepicker.
-              @keywords protected
+              @keywords public
         --> 
         <attribute name="showingyear" type="number" value="null"/> 
 
@@ -164,7 +164,7 @@
         <!--- Sets the currently selected basedatepickerday.  If a previous
               basedatepickerday was selected, it is unselected, and told to 
               become unselected
-              @keywords protected -->
+              @keywords public -->
         <method name="setSelecteddatepickerday" args="d">
         <![CDATA[ 
             if( this.selecteddatepickerday != null &&
@@ -196,7 +196,7 @@
               ok.
               @param max: The max number of day to show.  This is the number 
                           of days in the current month.  
-              @keywords protected
+              @keywords public
         -->
         <method name="setStartingDay" args="d,max">
             <![CDATA[ 
@@ -255,7 +255,7 @@
         <!--- Set the month to show in the basedatepicker.  
               @param newMonth: The month of the year to show
               @param newYear: The year of the month to show 
-              @keywords protected --> 
+              @keywords public --> 
         <method name="setMonthToShow" args="newMonth,newYear"> 
         <![CDATA[ 
             // if we are trying to show the same month again OR
@@ -288,7 +288,7 @@
                             for.
               @param year: The year of the month that you want to get the number
                            of days for.
-              @keywords protected -->
+              @keywords public -->
         <method name="getNumberOfDaysInMonth" args="month,year"> 
             <![CDATA[ 
             var returnValue;
@@ -344,7 +344,7 @@
         </method> 
 
         <!--- Notify the first day of the month that it has recieved focus. 
-              @keywords protected -->
+              @keywords public -->
         <method name="focusOnFirstDayInMonth">
             var focusDay =  content.subviews[0].getFirstDayInMonth(); 
             this.focusOnDay( 0, focusDay );
@@ -353,7 +353,7 @@
         </method>
 
         <!--- Notify the last day of the month that it has recieved focus. 
-              @keywords protected --> 
+              @keywords public --> 
         <method name="focusOnLastDayInMonth">
             var ld = this.getLastDayInMonth();        
 
@@ -361,7 +361,7 @@
         </method> 
 
         <!--- Select the day that has focus
-              @keywords protected -->
+              @keywords public -->
         <method name="selectFocusDay">
             this.content.subviews[ 
                        this._focusDay[0] ].subviews[ this._focusDay[1]
@@ -374,7 +374,7 @@
               @param day: The day in the given week to check.  Valid values are
                           0-6
               @return boolean: true if the given day is disabled, else false 
-              @keywords protected --> 
+              @keywords public --> 
         <method name="isDayDisabled" args="week,day">
             return this.content.subviews[week].subviews[day].disabled;
         </method>
@@ -387,7 +387,7 @@
                            values are 0-5 
               @param day: The day in the given week to set foocus to.  
                           Valid values are 0-6
-              @keywords protected --> 
+              @keywords public --> 
         <method name="focusOnDay" args="week,day"> 
 
             if( this._focusDay != null ) {
@@ -406,7 +406,7 @@
                            Valid values are 0-5 
               @param day: The day in the given week to remove foocus from.  
                           Valid values are 0-6
-              @keywords protected --> 
+              @keywords public --> 
         <method name="removeFocusFromDay" args="week,day"> 
             this.content.subviews[ week ].removeFocusFromDay(day);
         </method>
@@ -505,7 +505,7 @@
 
         <!--- Determines if the given week is the last week in the month 
               @param w: The week to check 
-              @keywords protected --> 
+              @keywords public --> 
         <method name="isLastWeekInMonth" args="w">
             var returnValue;
 

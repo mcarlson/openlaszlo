@@ -272,7 +272,7 @@
         <!--- Set the month to show in the basedatepicker.  
               @param month: The month of the year to show
               @param year: The year of the month to show 
-              @keywords protected --> 
+              @keywords public --> 
         <method name="setMonthToShow" args="month, year"> 
             super.setMonthToShow( month, year );    
             this.main.toolbar_view.monthcombo.selectItem( month );                

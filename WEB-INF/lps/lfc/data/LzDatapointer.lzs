@@ -11,7 +11,7 @@
 /**
   * <p>
   * A datapointer is an object that represents a pointer to a node in a
-  * <classname>LzDataset</classname>. The datapointer can be repositioned
+  * <sgmltag class="element" role="LzDataset">LzDataset</sgmltag>. The datapointer can be repositioned
   * using either cursor movements calls such as 
   * <xref linkend="LzDatapointer.prototype.selectNext"/>, or by running an XPath 
   * request via <xref linkend="LzDatapointer.prototype.setXPath"/>.
@@ -121,15 +121,16 @@ var p /*:LzDataNodeMixin*/ = null;//TODO: uncomment after LPP-5840
 // var data = null;
 
 /** The reference to a clonemanager from a clone.
-    @modifiers readonly */ 
+    @keywords read-only */ 
 var context :* = null;
 
 /** @access private */
 var __LZtracking :Array = null;
 /** @access private */
 var __LZtrackDel :LzDelegate = null;
-
-/** @access private */
+/** @type String
+  * @lzxtype string
+  */
 var xpath :String = null;
 /** @access private */
 var parsedPath :LzParsedPath = null;
@@ -218,8 +219,8 @@ function gotTimeout ( ds:LzDataset ) :void {
   * <dt><code>null</code></dt><dd>if the
   * query is invalid or matches nothing</dd>
   * <dt>a <code>String</code></dt><dd>the result of an operator such as <code>name</code> or <code>attribute</code></dd>
-  * <dt>an <classname>LzDataElement</classname></dt><dd>if the query resolves to a single node</dd>
-  * <dt>an array of <classname>LzDataElement</classname></dt><dd>if the query resolves to multiple nodes</dd>
+  * <dt>an <sgmltag class="element" role="LzDataElement">LzDataElement</sgmltag></dt><dd>if the query resolves to a single node</dd>
+  * <dt>an array of <sgmltag class="element" role="LzDataElement">LzDataElement</sgmltag></dt><dd>if the query resolves to multiple nodes</dd>
   * </dl>
   */
 function xpathQuery ( p:Object ) :* { 
@@ -800,8 +801,8 @@ function $lzc$set_rerunxpath (rrx:Boolean) :void {
 
 /**
   * Return a new datapointer that points to the same node, has a
-  * <code>null</code> <attribute>xpath</attribute> and a
-  * <code>false</code> <attribute>rerunxpath</attribute> attribute.
+  * null <literal>xpath</literal> and a
+  * false <literal>rerunxpath</literal> attribute.
   * @return LzDatapointer: A new datapointer that points to the same spot as this
   * one, but 
   */

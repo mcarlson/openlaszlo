@@ -1,12 +1,11 @@
 <library>
 
     <include href="base/basedatepickerday.lzx"/>
-
-    <!--- Abstract class representing weeks for the basedatepicker.  --> 
+ 
     <class name="basedatepickerweek">
 
         <!--- Name of the day class instance to use.  
-              @keywords protected -->
+              @keywords public -->
         <attribute name="dayclass" value="$once{classroot.dayclass}"/>
 
         
@@ -24,7 +23,7 @@
         <!--- Set the focus on a day.
               @param d : The day of the week to focus on. 0 for Sunday, 6 for
                          Saturday. 
-              @keywords protected -->
+              @keywords public -->
         <method name="focusOnDay" args="d"> 
             this.subviews[d].gotFocus();
         </method>
@@ -33,7 +32,7 @@
         <!--- Remove the focus from a day.  
               @param d : The day of the week to focus on. 0 for Sunday, 6 for
                          Saturday. 
-              @keywords protected --> 
+              @keywords public --> 
         <method name="removeFocusFromDay" args="d">
             this.subviews[d].removeFocus();
         </method>
@@ -41,7 +40,7 @@
         <!--- Answers the question: Is this the first week of the month?
               @return boolean: True if this is the first week of the month,
                                otherwise false.
-              @keywords protected -->     
+              @keywords public -->     
         <method name="isFirstWeek">
         <![CDATA[
             var returnValue; 
@@ -58,7 +57,7 @@
         <!--- Answers the question: Is this the last week of the month?
               @return boolean: True if this is the last week of the month,
                                otherwise false.
-              @keywords protected -->     
+              @keywords public -->     
         <method name="isLastWeek">
             var returnValue;
             if( subviews[6].disabled || subviews[6].daynum ==
@@ -76,7 +75,7 @@
                         day of the month. 0 is Sunday, 6 is Saturday.
               @return boolean: True if the given day is the first day of the
                                month, otherwise false.
-              @keywords protected                    
+              @keywords public                    
         -->
         <method name="isFirstDayInMonth" args="d">
         <![CDATA[ 
@@ -95,7 +94,7 @@
               @return number: The day of the week that is the last day of the
               month.  If the last day of the month is not in this week, -1 is
               returned.  0 for Sunday, 6 for Saturday.  
-              @keywords protected                    
+              @keywords public                    
               -->
         <method name="getLastDayInMonth">
             var returnValue = -1;
@@ -115,7 +114,7 @@
                         of the month.  0 for Sunday, 6 for Saturday.
               @return boolean: true if the given day is the last day of the 
                                month, otherwise false. 
-              @keywords protected;                           
+              @keywords public;                           
          -->
         <method name="isLastDayInMonth" args="d">
         <![CDATA[
@@ -137,7 +136,7 @@
               @return number: The day of the week that is the first day of the
               month.  If the first day of the month is not in this week, -1 is
               returned.  0 for Sunday, 6 for Saturday.  
-              @keywords protected                    
+              @keywords public                    
               --> 
         <method name="getFirstDayInMonth">
         <![CDATA[    
@@ -164,7 +163,7 @@
                                 selected.   
               @param latedate: The latest day of the month that can be 
                                selected.   
-              @keywords protected --> 
+              @keywords public --> 
         <method name="setStartingDay" args="d,max,earlydate,latedate">
         <![CDATA[ 
             var cd =  d; 
@@ -203,7 +202,7 @@
     </class> 
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
