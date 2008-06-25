@@ -1,18 +1,19 @@
-
 <canvas height="120">
+  <include href="lz/slider.lzx"/>
   <view name="redview" bgcolor="red"
-        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
-        width="40" height="40" y="${blueview.y}">
-    <dragstate name="gragger"/>
+        width="40" height="40" x="${blueview.x - 300}">
   </view>
   <view name="blueview" bgcolor="blue"
-        onmousedown="gragger.apply()" onmouseup="gragger.remove()"
-        width="40" height="40" y="${redview.y}">
-    <dragstate name="gragger"/>
+        width="40" height="40" x="${redview.x + 300}">
   </view>
-  <simplelayout spacing="40" axis="x"/>
+
+  <slider x="10" y="50" value="50" onvalue="redview.setAttribute('x', this.value)"
+          showvalue="false" showrange="false"/>
+  <slider x="310" y="50" value="50" onvalue="blueview.setAttribute('x', this.value + 300)"
+          showvalue="false" showrange="false"/>
+
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
