@@ -2,7 +2,7 @@
 <canvas debug="true">
   <class name="base" extends="button">
     <handler name="onclick" method="handleonclick" />
-    <method name="handleonclick">
+    <method name="handleonclick" args="v">
       Debug.write("base click");
     </method>
   </class>
@@ -14,7 +14,7 @@
   </class>
 
   <class name="suboverride" extends="base">
-    <method name="handleonclick">
+    <method name="handleonclick" args="v">
       Debug.write("suboverride click");
     </method>
   </class>
@@ -24,6 +24,6 @@
   <simplelayout />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

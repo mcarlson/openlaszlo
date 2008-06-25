@@ -6,12 +6,12 @@
  <button>
    Make red the blue box!
   <handler name="onclick" method="redify"/>
-  <method name="redify">
+  <method name="redify" args="v">
      parent.myview.setAttribute("bgcolor", red)
   </method>
   </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
