@@ -11,20 +11,16 @@
              onreadystatechange -->
         <event name="onreadystatechange" />
 
-        <!--- responseText
-              String version of data returned from server process -->
+        <!--- String version of data returned from server process -->
         <attribute name="responseText" value="" type="string"/>
 
-        <!--- responseXML
-              DOM-compatible document object of data returned from server process -->
+        <!--- DOM-compatible document object of data returned from server process -->
         <attribute name="responseXML" />
 
-        <!--- status
-              Numeric code returned by server, such as 404 for "Not Found" or 200 for "OK" -->
+        <!--- Numeric code returned by server, such as 404 for "Not Found" or 200 for "OK" -->
         <attribute name="status" />
 
-        <!--- statusText
-             String message accompanying the status code -->
+        <!--- String message accompanying the status code -->
         <attribute name="statusText" />
 
 
@@ -50,29 +46,25 @@
         <!-- public methods                                                  -->
         <!--=================================================================-->
 
-        <!--- abort() 
-             Stops the current request -->
+        <!--- Stops the current request -->
         <method name="abort">
             req.dataset.abort();
         </method>
 
 
-        <!--- getAllResponseHeaders() 
-             Returns complete set of headers (labels and values) as an LzParam -->
+        <!--- Returns complete set of headers (labels and values) as an LzParam -->
         <method name="getAllResponseHeaders">
             return this.dataset.getAllResponseHeaders()
         </method>
 
 
-        <!--- getResponseHeader("headerLabel")    
-             Returns the string value of a single header label -->
+        <!--- Returns the string value of a single header label -->
         <method name="getAllResponseHeader" args="hname">
             return this.dataset.getResponseHeader(hname);
         </method>
 
 
-        <!--- open("method", "URL"[, asyncFlag[, "userName"[, "password"]]])  
-             Assigns destination URL, method, and other optional attributes of a pending request -->
+        <!--- Assigns destination URL, method, and other optional attributes of a pending request -->
         <method name="open" args="method,url,async,uname,password">
           <![CDATA[
                  this.responseText = "";
@@ -151,12 +143,11 @@
         </method>
 
 
-        <!--- send(content)   
-             Transmits the request, optionally with postable string or DOM object data
+        <!--- Transmits the request, optionally with postable string or DOM object data
 
-         + In serverless mode, there''s no Flash API to post a raw data string in the POST body.
+         <p>In serverless mode, there's no Flash API to post a raw data string in the POST body.</p>
 
-         + doesn''t support "content" arg yet for serverless operation
+         <p>Doesn't support "content" arg yet for serverless operation</p>
 
          -->
         <method name="send" args="content">
