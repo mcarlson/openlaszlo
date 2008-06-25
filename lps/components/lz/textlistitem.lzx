@@ -2,7 +2,7 @@
 
     <include href="lz/listitem.lzx" />
     
-    <!--- Textlistitem is a baselist item with a text field. -->
+    <!-- Textlistitem is a baselist item with a text field. -->
     <class name="textlistitem" extends="listitem">
 
         <!--- The x position of the displayed text. -->

@@ -78,12 +78,63 @@
                 }
             }
         </method>
-
+        <doc>
+            <tag name="shortdesc"><text>
+                A Container that animates and coordinates the sliding of Tabelements.
+            </text></tag>
+            <text>
+                <p>
+                    A <classname>tabslider</classname> coordinates the opening and 
+                    closing of its <xref linkend="lz.tabelement"/> contained within
+                    its scope. Only the <classname>tabelement</classname> can be 
+                    opened at one time. The height of the opened <classname>tabelement</classname>
+                    is determined by the height of the <classname>tabslider</classname> 
+                    minus the total height of all the tabelements when they are closed.
+                </p>
+                <example>
+                    <![CDATA[
+<canvas width="200" height="250">
+  <tabslider width="150" x="10" y="10"
+             height="200"
+             spacing="2" slideduration="300">
+    <tabelement text="Tabelement One"/>
+    <tabelement text="Tabelement Two"/>
+    <tabelement text="Tabelement Three"/>
+  </tabslider>
+</canvas>
+                    ]]>
+                </example>
+                <p>
+                    The height of a <classname>tabelement</classname> (when it is closed) is defined in 
+                    the tabelement's <attribute>minheight</attribute> attribute with a default value of 
+                    22. This can also be specified on the tabslider itself using 
+                    the attribute i<attribute>mintabheight</attribute>, which will be applied to all of 
+                    its tabelements.
+                </p>
+                <example>
+                    <![CDATA[
+<canvas width="200" height="250">
+  <tabslider width="150" x="10" y="10"
+             height="200" mintabheight="40"
+             spacing="2" slideduration="300">
+    <tabelement text="Tabelement One" minheight="20"/>
+    <tabelement text="Tabelement Two"/>
+    <tabelement text="Tabelement Three"/>
+  </tabslider>
+</canvas>
+                    ]]>
+                </example>
+                <seealso>
+                    <classes>tabelement</classes>
+                    <component-design id="tabslider" title="Tab Slider"/>
+                </seealso>
+            </text>
+        </doc>
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -36,7 +36,7 @@
     <!--  TABS  -->
     <!-- ====== -->
 
-    <!--- The default tab used by tabsbar. This class isn't meant to be used
+    <!-- The default tab used by tabsbar. This class isn't meant to be used
           standalone. You can pass the name of this class in the 'tabclass'
           attribute of basetabpane, tabpane, basetabs, and tabs classes. Tabs
           uses this class as its default 'tabclass'. -->
@@ -120,10 +120,13 @@
                 The lz tab is used by tabs.
             </text></tag>
             <text>
-                A tab is an LZ tab within basetabsbar or any object that extends this (such as tabsbar).
-            
+                <p>
+                    A <classname>tab</classname> is an LZ tab within <tagname>basetabsbar</tagname>
+                    or any object that extends this (such as <classname>tabsbar</classname>).
+                </p>
                 <example>
-<![CDATA[<canvas width="150" height="100">
+                    <![CDATA[
+<canvas width="150" height="100">
   <include href="lz" />
 
   <basetabs x="10" y="10" tabclass="tab">
@@ -134,12 +137,13 @@
       <text>two</text>
     </basetabpane>
   </basetabs>
-</canvas>]]>
+</canvas>
+                    ]]>
                 </example>
+                <seealso>
+                    <classes>tabsbar tabpane tabs basetab</classes>
+                </seealso>
             </text>
-            <seealso>
-                <classes>tabsbar tabpane tabs basetab</classes>
-            </seealso>
         </doc>
     </class> <!-- class tab -->
 
@@ -188,7 +192,7 @@
     <!--  TABPANE  -->
     <!-- ========= -->
 
-    <!--- Tabpanes are children of the tabs component. Each tabpane has a
+    <!-- Tabpanes are children of the tabs component. Each tabpane has a
           corresponding tab. If width and height are not set, all tabpanes will
           resize themselves to largest tabpane or the width of the tabsbar,
           whichever is larger. The content of the tabpane is initstage late. You
@@ -226,7 +230,59 @@
                 setTint(background, s.basecolor);
             }
         ]]></method>
+        <doc>
+            <tag name="shortdesc"><text>
+                A tabpane houses content to be shown within a tabs component when its 
+                correlated tab is selected.
+            </text></tag>
+            <text>
+                <p>
+                    <classname>tabpane</classname> is the visual container for content in 
+                    <xref linkend="lz.basetabs"/>. The difference between this class and 
+                    <xref linkend="lz.basetabpane"/> is that <classname>tabpane</classname>
+                    has a background <xref linkend="lz.swatchview"/> that is set by whatever
+                    the default style is.
+                </p>
+                <p>
+                    Note that the content of tabpane is <code>initstage="late"</code>.
+                    You can override this by explicitly setting your <attribute>initstage</attribute>
+                    preference on tabpane.
+                </p>
+                <programlisting>
+<![CDATA[<tabpane initstage="normal">
+  <!-- ...content... -->
+  </tabpane>
+</tabpane>]]>
+                </programlisting>
+                <p>
+                    For every <tagname>tabpane</tagname> declared, a corresponding 
+                    <xref linkend="lz.tab"/> is created.
+                </p>
+                <example>
+                    <![CDATA[
+<canvas width="250" height="150" >
+  <include href="base"/>
 
+  <simplelayout axis="y" spacing="5"/>
+  <text x="10" multiline="true" width="200">
+      First two are tabpanes, the last one is a basetabpane
+  </text>
+  <basetabs x="10" tabclass="tab" bgcolor="green">
+    <tabpane>
+      <text>one</text>
+    </tabpane>
+    <tabpane>
+      <text>two</text>
+    </tabpane>
+    <basetabpane>
+      <text>three</text>
+    </basetabpane>
+  </basetabs>
+</canvas>
+                    ]]>
+                </example>
+            </text>
+        </doc>
     </class> <!-- class tabpane -->
 
 
@@ -253,7 +309,7 @@
     <!-- ====== -->
     <!--  TABS  -->
     <!-- ====== -->
-    <!--- Tabs is a component which takes one or more tabpanes and provides a
+    <!-- Tabs is a component which takes one or more tabpanes and provides a
           tab for each one to switch between them. -->
     <class name="tabs" extends="basetabs" clip="true">
 

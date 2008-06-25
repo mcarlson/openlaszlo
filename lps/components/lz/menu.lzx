@@ -104,6 +104,48 @@
             }
         </method>
 
+        <doc>
+            <tag name="shortdesc">
+                <text>A menubar that contains menus.</text>
+            </tag>
+            <text>
+                <p>
+                    The <tagname>menubar</tagname> tag creates a menubar that can be
+                    placed within any view, but is most commonly found within a window.
+                    By default, a menubar adjusts to the width of its parent unless
+                    otherwise directed. Within a window a menubar has its own
+                    <code>placement="menubar"</code> so that it lives above the contents
+                    of the window.
+                </p>
+                <example>
+                    <![CDATA[
+<canvas debug="true" height="250">
+  <debug y="120"/>
+  <menubar width="200" >
+    <menu text="Menu 1" width="100">
+      <menuitem text="Item 1" onselect="canvas.whichOne(this);"/>
+      <menuitem text="Item 2" onselect="canvas.whichOne(this);"/>
+      <menuitem text="Item 3" onselect="canvas.whichOne(this);"/>
+      <menuseparator/>           
+      <menuitem text="Item 4" onselect="canvas.whichOne(this);"/>   
+    </menu> 
+    <menu text="Menu 2" width="100">
+      <menuitem text="More items..." onselect="canvas.whichOne(this);"/>  
+    </menu>
+  </menubar>
+  
+  <method name="whichOne" args="vThis">
+    Debug.write(vThis.parent.owner.text + " - "+ vThis.text);
+  </method>
+</canvas>
+                    ]]>
+                </example>
+                <seealso>
+                    <tags>command menu menuitem menuseparator</tags>
+                </seealso>
+            </text>
+        </doc>
+
     </class> <!-- end menubar -->
 
     <!-- An instance of this class automatically created when a menuitem has a submenu.-->

@@ -152,7 +152,44 @@
         <method name="doSpaceUp">
             this.top.bkgnd.doSpaceUp();
         </method>
+        <doc>
+            <tag name="shortdesc"><text>
+                A tab element view that is opened and closed in conjunction with a tabslider.
+            </text></tag>
+            <text>
+                <p>
+                    <classname>tabelement</classname> is a non-visual view contained within a 
+                    <xref linkend="lz.tabslider"/> that opens and closes when directed by a tabslider.
+                    In practice, the <classname>tabelement</classname> class can be extended to 
+                    create whatever look and feel is desired. The following example demonstrates how 
+                    that is done.
+                </p>
+                <example>
+                    <![CDATA[
+<canvas height="200">
+  <include href="lz/tabslider.lzx" />
 
+  <!-- Custom tabelement -->
+  <class name="mytabelement" extends="tabelement" bgcolor="blue">
+    <!-- classroot.parent = reference to tabslider -->
+    <view placement="header" bgcolor="red" height="100%" width="100%">
+      <text name="title" x="2" y="1" text="${classroot.text}"/>
+    </view>
+  </class>
+
+  <!-- Use custom tabelement -->
+  <tabslider bgcolor="yellow" width="100" height="200" spacing="2">
+    <mytabelement text="Tab 1">
+      <view bgcolor="white" width="30" height="30"/>
+    </mytabelement>
+    <mytabelement text="Tab 2"/>
+    <mytabelement text="Tab 3"/>
+  </tabslider>
+</canvas>
+                    ]]>
+                </example>
+            </text>
+        </doc>
     </class>
 
 </library>
