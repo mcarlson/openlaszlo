@@ -1,5 +1,4 @@
-
-<canvas height="200">
+<canvas height="700" debug='true'>
   <dataset name="stack">
     <root/>
   </dataset>
@@ -24,22 +23,22 @@
     <edittext name="input">
       <handler name="onkeyup" args="k">
         if ( k == 13 ) {
-          parent.bAdd.handler();
+          parent.bAdd.handleclick();
         }
       </handler>
     </edittext>
-    <button name="bAdd" text="Push">
-      <handler name="onclick" >
-        var n = parent.input.getAttribute('text') 
-        if (!top.p['childNodes'])
-          top.addNode(n)
-        else 
-        {    
+    <button name="bAdd" id="ba"  text="Push">
+      <handler name="onclick" method="handleclick"/>
+      <method name="handleclick" args="ignore">
+        var n = parent.input.getText(); 
+        if (top.p.childNodes.length == 0) {
+            top.addNode(n)
+        } else {    
           var ne = new LzDataElement(n)
           top.p.insertBefore(ne, top.p.getFirstChild())
         }
         parent.input.clearText()
-      </handler>
+      </method>
     </button>
     <button name="bPop" text="Pop">
       <handler name="onclick">
@@ -64,6 +63,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
