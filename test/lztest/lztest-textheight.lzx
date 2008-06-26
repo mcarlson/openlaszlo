@@ -1,4 +1,4 @@
-<canvas height="400">
+<canvas>
 <!--
   covers-tags : lztext
 
@@ -33,7 +33,9 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
         <text fontsize="36" id="t3" >C</text>
         <text multiline="true" width="100" id="t4" oninit="setText('oneline\ntwolines');"/>
         <text text="Username:" id="t5"/>
-        <text multiline="true" id="t6">Oneline<br/>Two lines<br/>Three</text>
+        <view>
+            <text multiline="true" id="t6">Oneline<br/>Two lines<br/>Three</text>
+        </view>
         <text multiline="true" id="t7" width="350">The text that appears in the combobox may be different from the
             value represented by the list item.  In the examples below the value is
             displayed using a constraint tied to the value attribute of the combobox</text>
@@ -70,7 +72,9 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
         <inputtext  width="200" fontsize="28" fgcolor="red" id="it2">B</inputtext>
         <inputtext  width="200" fontsize="36" fgcolor="red" id="it3" >C</inputtext>
         <inputtext  fontsize="28" resize="false" fgcolor="red" id="it4">D</inputtext>
-        <inputtext  fontsize="20" fgcolor="red" id="it5" multiline="true">E<br/>F</inputtext>
+        <view>
+            <inputtext  fontsize="20" fgcolor="red" id="it5" multiline="true">E<br/>F</inputtext>
+        </view>
         <inputtext  fontsize="28" fgcolor="red" id="it6">D</inputtext>
         <inputtext multiline="true" id="it7" width="350"/>
 
@@ -109,15 +113,15 @@ textSizeSuite.testTextHeight = function () {
     LzTestManager.assertEquals(16, t9.height, "text9 height");
     LzTestManager.assertEquals(16, t10.height, "text10 height");
     LzTestManager.assertEquals(56, t11.height, "multiline11 text height");
-    //LzTestManager.assertEquals(277, t12.height, "text12 height");
+    LzTestManager.assertEquals(225, t12.height, "EXPECTED: see LPP-6545. text12 height");
 
-    LzTestManager.assertEquals(40, a.sprite.getTextfieldHeight(), "text a getTextfieldHeight()");
+    LzTestManager.assertEquals(40, a.sprite.getTextfieldHeight(), "EXPECTED: see LPP-6543. text a getTextfieldHeight()");
     LzTestManager.assertEquals(40, a.height, "text a getTextfieldHeight()");
     LzTestManager.assertEquals(13, a.sprite.getTextHeight(), "text a getTextHeight()");
     LzTestManager.assertEquals(82, b.sprite.getTextfieldHeight(), "text b getTextfieldHeight()");
     LzTestManager.assertEquals(13, b.sprite.getTextHeight(), "text b getTextHeight()");
     LzTestManager.assertEquals(82, b.height, "text b getTextfieldHeight()");
-    LzTestManager.assertEquals(40, e.sprite.getTextfieldHeight(), "text e getTextfieldHeight()");
+    LzTestManager.assertEquals(40, e.sprite.getTextfieldHeight(), "EXPECTED: see LPP-6543. text e getTextfieldHeight()");
     LzTestManager.assertEquals(13, e.sprite.getTextHeight(), "text e getTextHeight()");
     LzTestManager.assertEquals(40, e.height, "text e getTextfieldHeight()");
     LzTestManager.assertEquals(17, f.sprite.getTextfieldHeight(), "text f getTextfieldHeight()");
