@@ -151,7 +151,7 @@
     <!--  TABSBAR CLASS -->
     <!-- ============== -->
 
-    <!--- The default tab bar created by tabpane. This class is dependent on
+    <!-- The default tab bar created by tabpane. This class is dependent on
           tabs (or any subclass of basetabs) and shouldn't be used by
           itself. The default layout for its subviews is "class: simplelayout;
           axis: x; spacing: -15". You can pass the name of this class in the
@@ -184,7 +184,72 @@
             }
         ]]>
         </method>
+        <doc>
+            <tag name="shortdesc"><text>
+                The lz tabsbar class for laying out tab items.
+            </text></tag>
+            <text>
+                <p>
+                    A <classname>tabsbar</classname> is a container that uses 
+                    a default x-axis <xref linkend="lz.simplelayout"/> with a 
+                    spacing of -15 to lay out its tab children (which have 
+                    extra spacing on each side) so they overlap.
+                </p>
+                <p>
+                    This it the default tab bar created by tabpane. This class 
+                    is dependent on tabs (or any subclass of basetabs) and 
+                    shouldn't be used by itself. The default layout for its 
+                    subviews is "class: simplelayout; axis: x; spacing: -15". 
+                    You can pass the name of this class in the 'barclass' 
+                    attribute of tabpane, basetabpane, basetabs, and tabs. 
+                    Tabs uses this class as its default 'barclass'. 
+                </p>
+                <example>
+                    <![CDATA[
+<canvas width="400" height="100">
+  <include href="lz"/>
 
+  <simplelayout axis="x" spacing="10"/>
+
+  <view layout="class: simplelayout; axis: y; spacing: 5"
+        bgcolor="red">
+    <text>basetabs barclass=basetabsbar</text>
+    <basetabs y="10" tabclass="tab" barclass="basetabsbar">
+      <basetabpane text="one">
+        <text>one</text>
+      </basetabpane>
+      <basetabpane text="two">
+        <text>two</text>
+      </basetabpane>
+      <basetabpane text="three">
+        <text>three</text>
+      </basetabpane>
+    </basetabs>
+  </view>
+
+  <view layout="class: simplelayout; axis: y; spacing: 5"
+        bgcolor="yellow">
+    <text>basetabs barclass=tabsbar</text>
+    <basetabs y="10" tabclass="tab" barclass="tabsbar">
+      <basetabpane text="one">
+        <text>one</text>
+      </basetabpane>
+      <basetabpane text="two">
+        <text>two</text>
+      </basetabpane>
+      <basetabpane text="three">
+        <text>three</text>
+      </basetabpane>
+    </basetabs>
+  </view>
+</canvas>
+                    ]]>
+                </example>
+                <seealso>
+                    <classes>tab tabs basetabsbar</classes>
+                </seealso>
+            </text>
+        </doc>
     </class> <!-- class tabsbar -->
 
 
@@ -290,7 +355,7 @@
     <!--  TABSCONTENT  -->
     <!-- ============= -->
 
-    <!--- This is the class used by tabs to place tabpanes. Visually, it
+    <!-- This is the class used by tabs to place tabpanes. Visually, it
           contains a border. The size of the border is constrained by its
           parent's (tabs) bordersize attribute value. You can pass the name of
           this class in the 'contentclass' attribute of basetabs and tabs. Tabs
@@ -304,6 +369,74 @@
             width="${parent.width-(2*parent.parent.bordersize)}"
             height="${parent.height-(2*parent.parent.bordersize)}"
             clip="true" />
+        <doc>
+            <tag name="shortdesc"><text>
+                The tabs content container for tabpanes.
+            </text></tag>
+            <text>
+                <p>
+                    <classname>tabscontent</classname> houses a stack of 
+                    <xref linkend="lz.tabpane"/>s for <xref linkend="lz.tabs"/>, 
+                    which has a visual border and uses the default style's 
+                    background color. When a <classname>tabspane</classname> 
+                    is added to a <classname>tabs</classname>, its content 
+                    are actually placed in <classname>tabscontent</classname>.
+                </p>
+                <p>
+                    Said another way, <classname>tabscontent</classname> is the 
+                    class used by tabs to place tabpanes. Visually, it contains 
+                    a border. The size of the border is constrained by its parent's 
+                    (tabs) bordersize attribute value. You can pass the name of 
+                    this class in the 'contentclass' attribute of basetabs and 
+                    tabs. Tabs uses this class as its default 'contentclass'. 
+                </p>
+                <example>
+                    <![CDATA[
+<canvas width="450" height="100">
+  <include href="lz"/>
+  <simplelayout axis="x" spacing="10"/>
+  
+  <view layout="class: simplelayout; axis: y; spacing: 5"
+        bgcolor="red">
+    <text>contentclass=basetabscontent</text>
+    <basetabs y="10" bordersize="5"
+              tabclass="tab" contentclass="basetabscontent">
+      <basetabpane text="one" bgcolor="teal">
+        <text>one</text>
+      </basetabpane>
+      <basetabpane text="two" bgcolor="green">
+        <text>two</text>
+      </basetabpane>
+      <basetabpane text="three" bgcolor="blue">
+        <text>three</text>
+      </basetabpane>
+    </basetabs>
+  </view>
+
+  <view layout="class: simplelayout; axis: y; spacing: 5"
+        bgcolor="yellow">
+    <text>contentclass=tabscontent</text>
+    <basetabs y="10" bordersize="5"
+              tabclass="tab" contentclass="tabscontent">
+      <basetabpane text="one" bgcolor="teal">
+        <text>one</text>
+      </basetabpane>
+      <basetabpane text="two" bgcolor="green">
+        <text>two</text>
+      </basetabpane>
+      <basetabpane text="three" bgcolor="blue">
+        <text>three</text>
+      </basetabpane>
+    </basetabs>
+  </view>
+</canvas>
+                    ]]>
+                </example>
+                <seealso>
+                    <classes>tabs tabpane basetabscontent</classes>
+                </seealso>
+            </text>
+        </doc>
     </class> <!-- class tabscontent -->
 
     <!-- ====== -->

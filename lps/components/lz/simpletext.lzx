@@ -1,6 +1,6 @@
 <library>
     
-    <!--- Note: Simpleinputtext is deprecated. Please use edittext instead.
+    <!-- Note: Simpleinputtext is deprecated. Please use edittext instead.
           @keywords deprecated -->
     <class name="simpleinputtext">
     
@@ -93,11 +93,22 @@
             return this.input.getText();
         </method>
         
+        <doc>
+            <tag name="shortdesc"><text>
+                A simple input text field with basic borders.
+            </text></tag>
+            <text>
+                <note>
+                    Note: Simpleinputtext is deprecated. Please use <xref linkend="lz.edittext"/> instead. 
+                </note>
+            </text>
+        </doc>
+
     </class>
         
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

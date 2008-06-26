@@ -5,7 +5,31 @@
 
     <!--- A simple text class that provide default font attributes for
           Laszlo components. -->
-    <class name="statictext" extends="text"/>
+    <class name="statictext" extends="text">
+        <doc>
+            <tag name="shortdesc"><text>
+                Text component that uses the default component font and fontsize.
+            </text></tag>
+            <text>
+                <p>
+                    The <classname>statictext</classname> tag provides a text 
+                    field which has a look and feel to match the lz component 
+                    set, even when the canvas font has been changed. It can 
+                    accept any text attribute. 
+                </p>
+                <example>
+                    <![CDATA[
+<canvas height="100" font="conga" layout="axis: y">
+  <font name="conga" src="congab.ttf"/>
+  <include href="base/basecomponent.lzx" />
+  <text>text in app default font (Conga)</text>
+  <statictext>text in component default font</statictext>
+</canvas>
+                    ]]>
+                </example>
+            </text>
+        </doc>
+    </class>
 
      <!--- an abstract class which all components subclass -->
     <class name="basecomponent">
