@@ -13,12 +13,12 @@
   * <p>The lz.History service manages interaction with the browser history and back button.  Save state as often as you like, and advance the
   *  history when a new 'page' of values is required.</p>
   * 
-  * <example extract="false"><programlisting>
+  * <programlisting>
   * &lt;form&gt;
   *     &lt;input type="button" value="0" onclick="lzSetCanvasAttribute('foo', 0)"/&gt; 
   *     &lt;input type="button" value="1" onclick="lzSetCanvasAttribute('foo', 1)"/&gt; 
   * &lt;/form&gt;
-  * </programlisting></example>
+  * </programlisting>
   *
   * @shortdesc Manages interaction with the browser history and back button.
   */
@@ -270,12 +270,12 @@ function __start() {
 }
 
 /**
-  * lz.History is a shortcut for <a href="LzHistoryService.html">LzHistoryService</a>.
+  * lz.History is a shortcut for <xref linkend="LzHistoryService" />.
   */
 lz.History = new LzHistoryService();
 
 /**
-  * @shortdesc LzHistory is a shortcut for <a href="LzHistoryService.html">LzHistoryService</a>. Use lz.History instead.
+  * @shortdesc LzHistory is a shortcut for <xref linkend="LzHistoryService" />. Use lz.History instead.
   * @keywords deprecated
   */
 var LzHistory = lz.History;

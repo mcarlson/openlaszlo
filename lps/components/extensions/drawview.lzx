@@ -159,7 +159,7 @@
     <method name="quadraticCurveTo" args="cpx, cpy, x, y"/>
     
     <!---
-      bezierCurveTo() adds the given coordinate (x, y) to the list of points of 
+      Adds the given coordinate (x, y) to the list of points of 
       the subpath, and connects the two points with a bezier curve with control 
       points (cp1x, cp1y) and (cp2x, cp2y). It then sets the current position to 
       the given coordinate (x, y).

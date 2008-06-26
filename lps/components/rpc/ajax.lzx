@@ -174,8 +174,7 @@
                  ]]>
         </method>
 
-        <!--- setRequestHeader("label", "value")  
-             Assigns a label/value pair to the header to be sent with a request -->
+        <!--- Assigns a label/value pair to the header to be sent with a request -->
         <method name="setRequestHeader" args="key,val">
           this.dataset.setHeader(key,val);
         </method>

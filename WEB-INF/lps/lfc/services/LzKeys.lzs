@@ -536,7 +536,7 @@ public class LzKeysService extends LzNode {
 lz.Keys = new LzKeysService();
 
 /**
-* @shortdesc LzKeys is a shortcut for <a href="LzKeysService.html">LzKeysService</a>. Use lz.Keys instead.
+* @shortdesc LzKeys is a shortcut for <xref linkend="LzKeysService" />. Use lz.Keys instead.
   * @keywords deprecated
   */
 var LzKeys = lz.Keys;

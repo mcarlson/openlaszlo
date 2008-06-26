@@ -16,7 +16,7 @@
 <text>
 <p/>
 <p>HTML hypertext link.  This tag can only occur inside XHTML
-text containers such as <tagname>text</tagname>.</p>
+text containers such as <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag>.</p>
 
 <example>
 &lt;canvas height="30"&gt;
@@ -24,7 +24,8 @@ text containers such as <tagname>text</tagname>.</p>
 &lt;/canvas&gt;
 </example>
 
-<p>Unlike HTML, the text in the link is not automatically styled.  To style the text, use the <tagname>u</tagname> and <tagname>font</tagname> tags:</p>
+<p>Unlike HTML, the text in the link is not automatically styled.  To style the text, use the 
+<sgmltag class="element" role="tag-u">&lt;u&gt;</sgmltag> and <sgmltag class="element" role="LzFont">font</sgmltag> tags:</p>
 
 <example>
 &lt;canvas height="30"&gt;
@@ -147,8 +148,8 @@ a start and an end tag: <code>&lt;br/&gt;</code> or
 <p/>
 <text>
 <p>HTML italic character markup.  This tag can only occur inside
-XHTML text containers such as <tagname>text</tagname> and
-<tagname>button</tagname>.</p>
+XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag> and
+<sgmltag class="element" role="lz.button">&lt;button&gt;</sgmltag>.</p>
 
 <example>
 &lt;canvas height="30"&gt;
@@ -225,7 +226,7 @@ XHTML text containers such as <tagname>text</tagname> and
 <text>
 
 <p>An HTML paragraph.  This tag only occurs inside XHTML text such as
-<tagname>text</tagname>.</p>
+<sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag>.</p>
 
 <example>
 &lt;canvas height="100"&gt;

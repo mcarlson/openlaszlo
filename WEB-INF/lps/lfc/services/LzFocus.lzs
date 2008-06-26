@@ -144,7 +144,7 @@ dynamic class LzFocusService extends LzEventable {
      * or onblur event, only one of the calls will be executed.
      *
      * The state of the view may be unknown during the blur/focus process. When
-     * a view loses focus, it's blurring variable is set to true during the
+     * a view loses focus, its blurring variable is set to true during the
      * process.
      * 
      * @param LzView newsel: The view to focus or null to clear focus

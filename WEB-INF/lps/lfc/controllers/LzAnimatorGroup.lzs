@@ -10,7 +10,7 @@
 
 /**
   * <p>An <classname>LzAnimatorGroup</classname> wraps several
-  * <classname>LzAnimator</classname>s, and runs them in sequence or
+  * <sgmltag class="element" role="LzAnimator">&lt;animator&gt;</sgmltag>s, and runs them in sequence or
   * simultaneously . As an example, the code below animates a view first
   * along the x-axis and then the y.</p>
   *   
@@ -25,7 +25,7 @@
   * &lt;/canvas&gt;
   * </programlisting></example>
   * 
-  * <p>Any attribute that is legal in <tagname>animator</tagname> is legal
+  * <p>Any attribute that is legal in <sgmltag class="element" role="LzAnimator">&lt;animator&gt;</sgmltag> is legal
   * in <tagname>animatorgroup</tagname>. These attributes are then
   * cascaded to the animators contained within.</p>
   * 
@@ -66,6 +66,7 @@ dynamic class LzAnimatorGroup extends LzNode {
     var updateDel;
     var crepeat;
     var startTime;
+/** @access private */
     var __LZpauseTime;
     var actAnim;
 
