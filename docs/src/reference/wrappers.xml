@@ -141,10 +141,49 @@ a start and an end tag: <code>&lt;br/&gt;</code> or
 </doc>
 </property>
 
+<property id="tag-font" topic="LZX" subtopic="HTML Markup" access="public">
+<doc>
+<tag name="shortdesc"><text>Inline font markup.</text></tag>
+<tag name="lzxname"><text>font</text></tag>
+<text>
+<para>A <sgmltag class="element">&lt;font&gt;</sgmltag> tag controls the font face, size, and color for its textual content.</para>
+<note>The XHMTL <sgmltag class="element">&lt;font&gt;</sgmltag> tag, which controls the appearance of its content, is different 
+from the top-level <sgmltag class="element" role="LzFont">&lt;font&gt;</sgmltag> which defines a font and imports it into the application.</note>
+<example><![CDATA[
+<canvas height="75">
+  <font name="Arioso" src="ariosor.ttf">
+    <face src="ariosob.ttf" style="bold"/>
+  </font>
+
+  <text height="75">
+    Some <font color="#ff0000">red</font> text, and text
+    in <font face="Arioso" size="24">Arioso</font>
+    and <font face="Arioso" size="24"><b>Arioso bold</b></font>.
+  </text>
+</canvas>]]></example>
+</text>
+</doc>
+<class>
+  <property name="__ivars__">
+  <object>
+    <property name="color" modifiers="final">
+      <tag name="lzxtype"><text>color</text></tag>
+    </property>
+    <property name="face" modifiers="final">
+      <tag name="lzxtype"><text>string</text></tag>
+    </property>
+    <property name="size" modifiers="final">
+      <tag name="lzxtype"><text>Number</text></tag>
+    </property>
+  </object>
+  </property>
+</class>
+</property>
+
 <property id="tag-i" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
 <tag name="shortdesc"><text>Italic text.</text></tag>
-<tag name="lzxname"><text>&lt;i&gt;</text></tag>
+<tag name="lzxname"><text>i</text></tag>
 <p/>
 <text>
 <p>HTML italic character markup.  This tag can only occur inside

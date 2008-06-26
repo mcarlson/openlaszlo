@@ -506,6 +506,68 @@ of the system is present.</p>
   </class>
 </property>
 
+<property id="tag.handler" topic="LFC" subtopic="Events" access="public">
+    <doc>
+         <tag name="shortdesc"><text>Attaches an event handler to an object or class.</text></tag>
+         <tag name="lzxname"><text>handler</text></tag>
+	 <text>
+	      <para>Attaches a handler method for the named event to the object that contains this element. 
+	      The handler method must have a <sgmltag class="attribute">name</sgmltag>.</para>
+	      <para>The <sgmltag class="attribute">name</sgmltag> attribute gives the event for which this handler should be invoked.</para>
+	      <para>Events can be declared via the <sgmltag class="attribute" role="LzEvent">&lt;event&gt;</sgmltag> tag. 
+	      Events are also generated whenever the value of an attribute is changed using the <method>setAttribute()</method> method.</para>
+	      <para>For example, if a handler is defined via:
+	      <programlisting><![CDATA[
+<view id="obj">
+  <handler name="onmyevent" args="a">
+    this.setBGColor(0xff0000);
+    Debug.write(this,'got onblah event, arg is',a);
+  </handler>
+</view>]]></programlisting>
+              then script code <literal>obj.onmyevent.sendEvent(259)</literal> will invoke this handler method.</para>
+	      <para>The argument passed to an event handler is whatever value was used in the call to <method>sendEvent()</method> which generated the event. 
+	      In the case where an attribute value is set using <method>setAttribute()</method>, the new value is sent as the argument to <method>sendEvent()</method>, 
+	      and that will be the argument value received to any user-defined handler for that event.</para>
+	 </text>
+    </doc>
+    <class>
+      <property name="__ivars__" access="public">
+      <object>
+         <property name="args" modifiers="final">
+	       <doc>
+	           <tag name="lzxtype"><text>string</text></tag>
+		   <text>The parameter names of this handler. The value of this attribute is a comma-separated list of JavaScript identifiers.</text>
+	       </doc>
+	 </property>
+	 <property name="method" modifiers="final">
+	       <doc>
+	           <tag name="lzxtype"><text>string</text></tag>
+		   <text>A method to call when this handler is invoked.</text>
+	       </doc>
+	 </property>
+	 <property name="name" modifiers="final">
+	       <doc>
+	           <tag name="lzxtype"><text>token</text></tag>
+		   <text>The name of a variable that will be set to this object when the application is started. 
+		   If this element is directly within a <sgmltag class="element" role="LzCanvas">&lt;canvas&gt;</sgmltag> 
+		   or <sgmltag class="element" role="tag.library">&lt;library&gt;</sgmltag> element, the global variable 
+		   and the canvas property with this name will be set to this object. If this element is within another object, 
+		   that object's property with this name will be set to this object.</text>
+	       </doc>
+	 </property>
+	 <property name="reference" modifiers="final">
+	       <doc>
+	           <tag name="lzxtype"><text>reference</text></tag>
+		   <text>If this attribute is present, it is a JavaScript expression that evaluates to an object. 
+		   The code in this method executes when this object sends the event named by the <sgmltag class="attribute">event</sgmltag> attribute. 
+		   This attribute may be present only if the <sgmltag class="attribute">event</sgmltag> attribute is present too.</text>
+	       </doc>
+	 </property>
+      </object>
+      </property>
+    </class>
+</property>
+
 <property id="tag.security" topic="LZX" subtopic="Basics" access="public">
   <doc>
     <tag name="shortdesc"><text>Canvas element used to control RPC security</text></tag>

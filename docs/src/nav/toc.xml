@@ -105,7 +105,7 @@
         <item title="a" href="tag-a.html"/>
         <item title="b" href="tag-b.html"/>
         <item title="br" href="tag-br.html"/>
-        <!-- TODO: [2008-01-28 dda] <item title="font" href="tag-font.html"/> -->
+        <item title="font" href="tag-font.html"/>
         <item title="i" href="tag-i.html"/>
         <item title="img" href="tag-img.html"/>
         <item title="p" href="tag-p.html"/>
@@ -146,7 +146,7 @@
     </category>
     
     <category title="Scripting">
-        <item title="handler (LzDelegate)" href="LzDelegate.html" />
+        <item title="handler" href="tag.handler.html" />
         <item title="event (LzEvent)" href="LzEvent.html" />
         <item title="method" href="tag.method.html" />
         <item title="node (LzNode)" href="LzNode.html" />

@@ -13,7 +13,7 @@
 /**
   * <p>
   * <class>LzDataprovider</class> is an abstract class that can be extended to create new kinds 
-  * of dataproviders, such as <sgmltag class="element" role="LzHTTPDataProvider">&lt;HTTPDataProvider&gt;</class>. These dataproviders 
+  * of dataproviders, such as <sgmltag class="element" role="LzHTTPDataProvider">&lt;HTTPDataProvider&gt;</sgmltag>. These dataproviders 
   * are the client's representation of a backend entity. There is no tag that 
   * corresponds to this class.
   * </p>
@@ -26,7 +26,6 @@
   *
   * A Dataprovider updates the <sgmltag class="element" role="LzDataRequest">&lt;datarequest&gt;</sgmltag> with loading and status information via the <event>onstatus</event> event of the <sgmltag class="element" role="LzDataRequest">&lt;datarequest&gt;</sgmltag>.
   * </p>
-  * <p>
   *
   * @shortdesc An abstract class to represent backend data sources.
   * @lzxname dataprovider

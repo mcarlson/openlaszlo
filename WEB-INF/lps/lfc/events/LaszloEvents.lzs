@@ -174,19 +174,19 @@ public function execute (eventValue){
 /**
   * Registers the delegate for the named event in the given
   * context.
+  * <para>An event is initially declared to contain the sentinel
+  * value LzDeclaredEvent which is of the correct type, but does not
+  * actually support registering for and sending events.  When a
+  * delegate attempts to register on this sentinel, the sentinel will
+  * automatically be replaced with a functional LzEvent.</para>
+  *
+  * <para>The valid event logic is duplicated in
+  * NodeModel#addHandlerInternal (to give better location information
+  * for handler references).</para>
   *
   * @param LzEventable eventSender: The object which publishes the event.
   * @param String eventName: The name of the event to register for.
   *
-  * @devnote An event is initially declared to contain the sentinel
-  * value LzDeclaredEvent which is of the correct type, but does not
-  * actually support registering for and sending events.  When a
-  * delegate attempts to register on this sentinel, the sentinel will
-  * automatically be replaced with a functional LzEvent.
-  *
-  * @devnote The valid event logic is duplicated in
-  * NodeModel#addHandlerInternal (to give better location information
-  * for handler references).
   */
   public function register ( eventSender:LzEventable , eventName:String) {
     if ($swf9) {

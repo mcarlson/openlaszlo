@@ -297,7 +297,7 @@ function setSeparator(s) {
 
 /**
   * Returns a string representation using the current separator and delimiter 
-  * @return String : All names and values for this object
+  * @return String: All names and values for this object
   */
 override function toString() {
     return this.serialize();
