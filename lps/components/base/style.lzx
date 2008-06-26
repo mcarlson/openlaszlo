@@ -138,6 +138,9 @@
     <doc>
       <tag name="shortdesc"><text>specifies colors used by components</text></tag>
       <text>
+          <para condition="dhtml">
+              SWF only: The features described in this section only work in applications compiled to SWF. They do not work in applications compiled to other runtimes. 
+          </para>
         <p>Styles may be defined to establish a consistent "look" for a group
         of components.  There are a number of pre-defined styles.  If you
         don't declare a default style, the OpenLaszlo components will use
