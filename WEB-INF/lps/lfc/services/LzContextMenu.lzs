@@ -27,6 +27,9 @@ function LzContextMenu (del=null) {
 }
 
 //var onselect = LzDeclaredEvent;
+/**
+  * @lzxtype event
+  */
 var onmenuopen = LzDeclaredEvent;
 
 var kernel:LzContextMenuKernel = null;
@@ -34,7 +37,6 @@ var items:Array = null;
 
 
 /**
-  * LzContextMenu.setDelegate
   * Sets the delegate which will be called when the menu is opened
   * @param LzDelegate delegate: delegate which is executed when item is selected. An
   * onmenuopen event is also sent.
@@ -46,7 +48,6 @@ function setDelegate (delegate) {
 }
 
 /**
-  * LzContextMenu.addItem
   * Adds a menu items into a menu
   * @param LzContextMenuItem item: LzContextMenuItem to install on this menu
   * @access public
@@ -57,7 +58,7 @@ function addItem (item) {
 }
 
 /**
-  * LzContextMenu.hideBuiltInItems
+  * Removes Flash-installed default menu items
   * @access public
   */
 function hideBuiltInItems () {
@@ -65,7 +66,6 @@ function hideBuiltInItems () {
 }
 
 /**
-  * LzContextMenu.clearItems
   * Remove all custom items from a menu
   * @access public
   */
@@ -74,7 +74,6 @@ function clearItems () {
 }
 
 /**
-  * LzContextMenu.getItems
   * Return list of custom items
   * @access public
   */
@@ -83,7 +82,6 @@ function getItems () {
 }
 
 /**
-  * LzContextMenu.makeMenuItem
   * create a new menu item for a LzContextMenu
   * @param String title: menu item name
   * @param function callback:  delegate to execute when item is selected

@@ -147,7 +147,63 @@
 
         ]]>
     </method>
+    
+    <doc>
+        <tag name="shortdesc"><text>A layout with fixed and stretchable views.</text></tag>
+        <text>
+              <classname>resizelayout</classname> extends <sgmltag class="element" role="LzLayout">&lt;layout&gt;</sgmltag>, and therefore is responsible 
+              for arranging a set of views. Like simplelayout, <classname>resizelayout</classname> positions a set of views vertically or horizontally 
+              depending on the axis specified. The difference is that <classname>resizelayout</classname> can also stretch views.
+              <example>
+<![CDATA[<canvas height="100">
+  <view bgcolor="yellow" width="200">
+    <view bgcolor="blue" height="30" width="50"/>
+    <view bgcolor="red" height="30" width="50"/>
+    <view bgcolor="blue" height="30" width="50"/>
+    <simplelayout axis="x" spacing="10"/>
+  </view>
+  
+  <view y="40" bgcolor="yellow" width="200">
+    <view bgcolor="blue" height="30" width="50"/>
+    <view bgcolor="red" height="30" options="releasetolayout"/>
+    <view bgcolor="blue" height="30" width="50"/>
+    <resizelayout axis="x"/>
+  </view>
+</canvas>]]>
+                     </example>
+              <para>This example is similar to the one used in <sgmltag class="element" role="lz.stableborderlayout">&lt;stableborderlayout&gt;</sgmltag>, and is in 
+              fact visually equivalent. This is because <sgmltag class="element" role="lz.stableborderlayout">&lt;stableborderlayout&gt;</sgmltag> is a special case 
+              of <classname>resizelayout</classname> that is optimized for the common occurrence of having two fixed views with one stretchable view between them.</para>
 
+              <para>Unlike <sgmltag class="element" role="lz.stableborderlayout">&lt;stableborderlayout&gt;</sgmltag>, <classname>resizelayout</classname> works 
+              with any number of views. All the views that are controlled by a <classname>resizelayout</classname> are assumed to be fixed size until defined differently. 
+              A view is defined as stretchable using the attribute <literal>options="releasetolayout"</literal>. These views will stretch to fill in the space that is not 
+              taken by the fixed views. The <classname>resizelayout</classname> uses the width (or height) of its view to determine the total amount of space to fill, and 
+              then those subviews are placed and stretched to fill that space. If there is more than one subview that is stretchable, then the available space is split 
+              evenly between those subviews.</para>
+                                                      
+              <para>Then next example demonstrates what happens when two views are stretchable. The difference between the top and bottom views is only the spacing attribute.</para>
+              <example>
+<![CDATA[<canvas height="100">
+  <view bgcolor="yellow" width="300">
+    <view bgcolor="blue" height="30" width="50"/>
+    <view bgcolor="red" height="30" options="releasetolayout"/>
+    <view bgcolor="blue" height="30" width="50"/>
+    <view bgcolor="red" height="30" options="releasetolayout"/>
+    <resizelayout axis="x"/>
+  </view >
+
+  <view y="40" bgcolor="yellow" width="300">
+    <view bgcolor="blue" height="30" width="50"/>
+    <view bgcolor="red" height="30" options="releasetolayout"/>
+    <view bgcolor="blue" height="30" width="50"/>
+    <view bgcolor="red" height="30" options="releasetolayout"/>
+    <resizelayout axis="x" spacing="5"/>
+  </view>
+</canvas>]]>
+            </example>
+        </text>
+    </doc>
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

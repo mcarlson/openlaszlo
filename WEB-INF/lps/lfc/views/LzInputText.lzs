@@ -14,7 +14,7 @@
   * edit text.  It is equivalent to the HTML <code>&lt;input
   * type="text"&gt;</code>, <code>&lt;input type="password"&gt;</code>,
   * and <code>textarea</code> tags.</p>
-  * <p>See the documentation for the <tagname link="true">text</tagname>
+  * <p>See the documentation for the <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag>
   * tag for a description of the <attribute>width</attribute> and <attribute>height</attribute> attributes,
   * and of scrolling.</p>
   * <h2>Single-line input text</h2>

@@ -188,17 +188,17 @@ a complete discussion.
         </property>
         <property name="onload">
           <doc>
-            <tag name="lzxtype"><text>script</text></tag>
+            <tag name="lzxtype"><text>event</text></tag>
           </doc>
         </property>
         <property name="onerror">
           <doc>
-            <tag name="lzxtype"><text>script</text></tag>
+            <tag name="lzxtype"><text>event</text></tag>
           </doc>
         </property>
         <property name="ontimeout">
           <doc>
-            <tag name="lzxtype"><text>script</text></tag>
+            <tag name="lzxtype"><text>event</text></tag>
           </doc>
         </property>
         <property name="proxied">
@@ -288,7 +288,7 @@ a complete discussion.  Also see the <sgmltag class="element" role="tag.include"
           <doc>
             <tag name="lzxtype"><text>boolean</text></tag>
             <tag name="lzxdefault"><text>"true"</text></tag>
-	    <text>If false, disables validation against the schema during compilation.</text>
+            <text>If false, disables validation against the schema during compilation.</text>
           </doc>
         </property>
       </object>

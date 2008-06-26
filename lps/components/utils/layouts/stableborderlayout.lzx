@@ -54,6 +54,40 @@
         if (this.updateDelegate) this.updateDelegate.register( this.immediateparent, 
                                       "on" + this.sizeAxis ); 
     </method>
+    
+    <doc>
+        <tag name="shortdesc"><text>Keeps the width of two outer sibling views constant, while stretching the innermost one.</text></tag>
+        <text>
+              <para><classname>stableborderlayout</classname> extends <sgmltag class="element" role="LzLayout">&lt;layout&gt;</sgmltag>, and is therefore 
+              responsible for arranging a set of views. Unlike like most layouts, <classname>stableborderlayout</classname> only manipulates the first three 
+              subviews. All of the other subviews are ignored. <classname>stableborderlayout</classname> is very similar to 
+              <sgmltag class="element" role="lz.simplelayout">&lt;simplelayout&gt;</sgmltag> in that it arranges views vertically or horizontally depending 
+              on the axis specified. The difference is that <classname>stableborderlayout</classname> stretches the second view so that the total combined width 
+              (or height) of these three subviews matches the width (or height) of their parent.</para>
+              <para>The following example demonstrates the differences between <classname>simplelayout</classname> and <classname>stableborderlayout.</classname></para>
+              <example title="simplelayout vs. stableborderlayout">
+<![CDATA[<canvas height="100">
+  <view bgcolor="yellow" width="200">
+    <view bgcolor="blue" height="30" width="50"/>
+    <view bgcolor="red" height="30" width="50"/>
+    <view bgcolor="blue" height="30" width="50"/>
+    <simplelayout axis="x" spacing="10"/>
+  </view>
+  
+  <view y="40" bgcolor="yellow" width="200">
+    <view bgcolor="blue" height="30" width="50"/>
+    <view bgcolor="red" height="30"/>
+    <view bgcolor="blue" height="30" width="50"/>
+    <stableborderlayout axis="x"/>
+  </view>
+</canvas>]]>
+              </example>
+              <para>Note that there is no spacing parameter allowed in <classname>stableborderlayout</classname>. Also, notice that each parent 
+              view has a width of 200. In the top view this information is ignored, which is why yellow can be seen extending past the last subview. 
+              In the bottom view no yellow can be seen because it is covered up by the blue and red views. Finally, take note that the second red 
+              view has no width assigned to it, because <classname>stableborderlayout</classname> controls that value directly.</para>
+        </text>
+    </doc>
 
 </class>
 </library>

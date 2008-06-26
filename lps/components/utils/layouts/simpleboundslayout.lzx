@@ -53,6 +53,32 @@
             
             ]]>
         </method>
+        <doc>
+        <tag name="shortdesc"><text>Arranges a set of views along an 'x' or 'y' axis with respect to the bounding rect of the views</text></tag>
+        <text>
+              <para>Views have a bounding rectangle that can be different than the rectangle that is defined by their position, width and height. 
+              <classname>simpleboundslayout</classname> uses that bounding rectangle to lay out a set of views along an x or y axis, similar to 
+              <sgmltag class="element" role="lz.simplelayout">&lt;simplelayout&gt;</sgmltag> that uses a views position and its width or height. 
+              The example below shows the difference when using <classname>simpleboundslayout</classname> vs. a <classname>simplelayout</classname> 
+              for a set of three views.</para>
+              <example title="Example of reverselayout">
+<![CDATA[<canvas height="100">
+  <include href="utils/layouts/simpleboundslayout.lzx"/>
+  <view bgcolor="0x8A8A8A" x="10" y="10">
+    <view width="60" height="60" bgcolor="teal"/>       
+    <view width="60" height="60" bgcolor="blue" rotation="45"/> 
+    <view width="60" height="60" bgcolor="teal"/>           
+    <simpleboundslayout axis="x"/> 
+  </view >
+  <view bgcolor="0x8A8A8A" x="250" y="10">
+    <view width="60" height="60" bgcolor="teal"/>       
+    <view width="60" height="60" bgcolor="blue" rotation="45"/> 
+    <view width="60" height="60" bgcolor="teal"/>           
+    <simplelayout axis="x"/> 
+  </view >
+</canvas>]]></example>
+        </text>
+    </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

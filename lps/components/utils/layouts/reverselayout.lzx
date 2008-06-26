@@ -87,6 +87,35 @@
                }
             }
         ]]></method>
+        
+        <doc>
+        <tag name="shortdesc"><text>A layout for arranging siblings vertically or horizontally in reverse order.</text></tag>
+        <text>
+              <para><classname>reverselayout</classname> is just like <sgmltag class="element" role="lz.simplelayout">&lt;simplelayout&gt;</sgmltag>, 
+              except that the order of the views it keeps is reversed (bottom to top, or right to left).</para>
+              <para><classname>reverselayout</classname> extends <sgmltag class="element" role="LzLayout">&lt;layout&gt;</sgmltag>, and therefore it is responsible 
+              for arranging all of the subviews for the view that it is attached to. The attributes of a view that <classname>reverselayout</classname> 
+              effects are the <literal>x</literal> and <literal>y</literal> values.</para>
+              <example title="Example of reverselayout">
+<![CDATA[<canvas height="60" bgcolor="yellow" >
+  <include href="utils/layouts/reverselayout.lzx"/>
+  <reverselayout axis="x" spacing="10"/>
+  <text text="one"/>
+  <text text="two"/>
+  <text text="three"/>
+</canvas>]]>
+                     </example>
+              <example title="Example of reverselayout with end='false'">
+<![CDATA[<canvas height="60" bgcolor="yellow" >
+  <include href="utils/layouts/reverselayout.lzx"/>
+  <reverselayout axis="x" end="false" spacing="10"/>
+  <text text="one"/>
+  <text text="two"/>
+  <text text="three"/>
+</canvas>]]>
+              </example>
+        </text>
+    </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

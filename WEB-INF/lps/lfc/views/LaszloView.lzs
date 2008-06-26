@@ -15,7 +15,7 @@
   * OpenLaszlo application. Anything that is displayed on the canvas is a view
   * or extends the view class. A view is a rectangle, which can be visible or invisible, and which can contain other views or display "resources" such as images,
   * .swf files, or other supported media. One view controls one
-  * displayable resource. The view system is strictly hierarchical; that is, each <code>view </code> has
+  * displayable resource. The view system is strictly hierarchical; that is, each <code>view</code> has
   *  a single parent but can have multiple children.
   * 
   * </p>
@@ -29,7 +29,7 @@
   *   &lt;/view&gt; 
   * &lt;/canvas&gt;</example>
   * 
-  * <p><classname>LzView</classname> extends <classname>LzNode</classname>,
+  * <p><classname>LzView</classname> extends <sgmltag class="element" role="LzNode">&lt;node&gt;</sgmltag>,
   * which is the fundamental abstract class of LZX.</p>
   * 
   * <p>For an introduction to views see the <a
@@ -462,7 +462,7 @@ function __makeSprite(args) {
 
 /**
   * Called right before the view is shown. See <method
-  * classname="LzNode">init</method> for more.
+  * ><link linkend="LzNode.prototype.init">LzNode.init()</link></method> for more.
   * 
   * @access public
   */
@@ -629,7 +629,7 @@ function $lzc$set_bgcolor(v) { this.setBGColor(v) }
   * @access private
   */
 function $lzc$set_clickable(v) { this.setClickable(v); }
-/** Setting to a vector-based resource changes the clickable hotspot for the mouse.  Check capabilities.clickregion befure using to avoid debugger warnings.
+/** Setting to a vector-based resource changes the clickable hotspot for the mouse.  Check capabilities.clickregion before using to avoid debugger warnings.
   * @access public
   * @type String
   * @lzxtype string
@@ -661,7 +661,7 @@ function $lzc$set_cursor(v) { this.setCursor(v); }
 var fgcolor;   
 /** @access private */
 function $lzc$set_fgcolor(v) { this.setColor(v); }
-/** The font to use for any @c{&lt;text>} or @c{&lt;inputtext>} elements that
+/** The font to use for any <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag> or <sgmltag class="element" role="LzInputText">&lt;inputtext&gt;</sgmltag> elements that
   * appear inside this view. Like all the font properties
   * (<code>fontstyle</code> and <code>fontsize</code> too) these
   * properties cascade down the view hierarchy until a new value is
@@ -804,7 +804,7 @@ var __LZvizO = true;
 var __LZvizLoad= true;
 
 /** 
-  * The opacity of the view's contents. @c{1.0} is opaque; @c{0.0} is
+  * The opacity of the view's contents. <literal>1.0</literal> is opaque; <literal>0.0</literal> is
   * totally transparent (invisible).
   * @type Number
   * @lzxtype Number
@@ -876,6 +876,7 @@ var unstretchedwidth =   0;
 var unstretchedheight =   0;
 /** An array of the subviews that are children of this
   * view. This is initialized to an empty array for views that have no subviews.
+  * @type [LzView]
   * @keywords readonly
   */
 var subviews =   [];
@@ -919,10 +920,7 @@ var _yscale =   1;
 var totalframes =   1;
 /** If this view has a multi-frame resource, this allows setting which
   * resource frame is displayed.  Defaults to the first frame (1).
-  * @type Number
-  * @lzxtype numberExpression
-  * @lzxdefault "1"
-  * @devnote See also the <attribute>resource</attribute>
+  * See also the <attribute>resource</attribute>
   * attribute.  Setting this attribute will change the frame that is
   * being displayed by the resource associated with this view. The
   * first frame of the resource is frame 1.  Setting a view's
@@ -930,6 +928,9 @@ var totalframes =   1;
   * play without updating the value of the view's frame property. This
   * can save CPU usage in cases where the application doesn't need to
   * know what frame the resource is showing while it is playing.
+  * @type Number
+  * @lzxtype numberExpression
+  * @lzxdefault "1"
   */
 var frame = 1;
 /** @access private */
@@ -2377,7 +2378,7 @@ function mouseevent(eventname) {
 
 /**
   * This method returns the position of the mouse relative to this view.
-  * @param xory: a string ("x" | "y") specifying which axis to return
+  * @param String xory: a string ("x" | "y") specifying which axis to return
   * @return Number: The position of the mouse relative to this view.
   */
 function getMouse( xory ) {
@@ -2423,7 +2424,7 @@ function bringToFront ( ){
     this.sprite.bringToFront();
 }
 
-/*
+/**
   * Returns an array of subviews in depth order
   * @return [LzView]: An array of this view's subviews in depth order
   */
@@ -2869,7 +2870,7 @@ function setAAName ( s ){
 
 /**
   * Set accessibility description
-  * @param string s: Sets the accessibility name for this view
+  * @param string s: Sets the accessibility description for this view
   */
 function setAADescription ( s ){
     if (this.capabilities.accessibility) {
@@ -3024,7 +3025,7 @@ function $lzc$set_proxyurl( f ){
  * proxyurl can be null, a URL string, or a function.
  *
  * <ul>
- * <li> If the value is a string, treat it a URL to the proxy server. </li>
+ * <li> If the value is a string, treat it as a URL to the proxy server. </li>
  * <li> If the value is  a function, it should return the URL of the proxy server. </li>
  * </ul>
  * The default proxy policy references the proxyurl of the canvas.
@@ -3041,7 +3042,6 @@ var proxyurl = function (url:String) {
 };
 
 /**
-  * LzView.setContextMenu
   * Install menu items for the right-mouse-button 
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
@@ -3051,7 +3051,6 @@ function setContextMenu ( cmenu ){
 
 
 /**
-  * LzView.getContextMenu
   * Returns the current context menu object
   * @access public
   */

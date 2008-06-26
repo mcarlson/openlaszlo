@@ -15,7 +15,7 @@
     <doc>
       <tag name="shortdesc"><text>Adds procedural drawing APIs to view.</text></tag>
       <text>
-        <p><tagname>drawview</tagname> adds procedural drawing APIs to <tagname>view</tagname></p> 
+        <p><tagname>drawview</tagname> adds procedural drawing APIs to <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag></p> 
         
         <p><tagname>drawview</tagname> implements a subset of the WHATWG drawing APIs, which can be found at:
         <a href="http://www.whatwg.org/specs/web-apps/current-work/#graphics">http://www.whatwg.org/specs/web-apps/current-work/#graphics</a>
@@ -69,7 +69,7 @@
         &lt;/canvas&gt;
         </programlisting></example>
                 
-        <p><classname>drawview</classname> extends <classname>LzView</classname>,
+        <p><classname>drawview</classname> extends <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag>,
         which is the fundamental visual class of LZX.</p>
       </text>
     </doc>
@@ -78,7 +78,7 @@
           before they are composited onto the canvas. The valid range of
           values is from 0.0 (fully transparent) to 1.0 (no additional
           transparency). If the attribute is set to values outside this range,
-          they are ignored. When the context is created, the globalAlpha
+          it is ignored. When the context is created, the globalAlpha
           attribute initially has the value 1.0.
           @type Number
           @access public

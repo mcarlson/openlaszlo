@@ -11,11 +11,11 @@
         <item title="LzContextMenu" href="LzContextMenu.html" /> 
         <item title="LzContextMenuItem" href="LzContextMenuItem.html" />
         <item title="splash" href="tag.splash+as2.html" />
-        <item title="view" href="LzView.html" />
+        <item title="view" href="tag.splash-view.html" />
     </category>
     <category title="View Basics">
         <item title="drawview (LzDrawView)" href="lz.drawview.html"/>
-        <item title="inputtext" href="LzInputText.html" />
+        <item title="inputtext (LzInputText)" href="LzInputText.html" />
 <!-- TODO [dda 3.29.2008] is this defined in includes/source/excanvas.js?      <item title="LzCanvasGradient" href="LzCanvasGradient.html" />         -->
         <item title="text (LzText)" href="LzText.html" />
         <item title="view (LzView)" href="LzView.html"/>              
