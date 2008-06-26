@@ -1715,19 +1715,30 @@ public dynamic class LzNode extends LzEventable {
 
 
   /**
-   * A list of CSS property names and values that configure the
-   * behavior of objects, such as data binding and view layouts, that
-   * operate on this view.
+   * A list of CSS property names and values that modify the
+   * interaction of this node with controllers such as replicators and
+   * layouts.
+   *
+   * For example, setting <code>options="ignorelayout: true"</code> on
+   * a view will cause the view to not be controlled by any layout.
+   *
+   * <note>The options that affect particular controllers and replicators
+   * are documented with each controller and replicator.</note>
+   *
+   * <note><code>options</code> should not be accessed directly.
+   * You must use <code>getOption</code> and <code>setOption</code> to
+   * get or set the value of an option.</note>
    *
    * @devnote The initial value for this object is a type-correct sentinel
    * that allows getting options by node.options['name'], but options
    * _must_ be set using the setter, or the sentinel will be smashed.
    *
+   * @type Object
    * @lzxtype css
    * @keywords final
-   * @access private
+   * @access public
    */
-  prototype.options = {};
+  var options = {};
 
   /**
    * Setter to install options on a class or instance
@@ -1748,22 +1759,34 @@ public dynamic class LzNode extends LzEventable {
 
 
   /**
-   * Returns the value for an option (set with the options= attribute) for nodes
-   * created from LZX, or from the dictionary passed as the options attribute
-   * to the node constructor from script
+   * Returns the value for an option.
+   *
+   * Options are initialized by the <code>options</code> attribute for
+   * nodes created from LZX, or from the dictionary passed as the
+   * <code>options</code> attribute to the node constructor from
+   * script.  Individual options may also be added or updated at
+   * runtime using <code>setOption</code>.
+   *
    * @param String key: The option to retrieve
-   * @return any: The value for that option (or undefined, if the option
-   * has not been set)
+   *
+   * @return any: The value for that option (or undefined, if the
+   * option has not been set)
    */
   public function getOption ( key ){
     return this.options[ key ];
   }
 
   /**
-   * Sets the value for an option (also set with the options= attribute for nodes
-   * created from LZX, or from the dictionary passed as the options attribute
-   * to the node constructor from script)
+   * Sets the value for an option.
+   *
+   * <note>Options are used primarily for modifying the interaction of
+   * this node with controllers and replicators. Whether or not
+   * changing an option at runtime will affect a particular controller
+   * or replicator interaction is documented with each controller or
+   * replicator.</note>
+   *
    * @param String key: The option to set
+   *
    * @param any val: The value for the option.
    */
   public function setOption ( key , val ){
