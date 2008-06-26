@@ -57,11 +57,11 @@
            <text>
 
              <p>A <classname>textlistitem</classname> is a
-               <classname>listitem</classname> which displays text.  This is the most
-               common form of a <classname>listitem</classname>, and is the default
-               listitem for <classname>combobox</classname>s,
-               <classname>menu</classname>s, <classname>list</classname>s, and
-               <classname>floatinglist</classname>s.
+               <sgmltag class="element" role="lz.listitem">&lt;listitem&gt;</sgmltag> which displays text.  This is the most
+               common form of a <sgmltag class="element" role="lz.listitem">&lt;listitem&gt;</sgmltag>, and is the default
+               listitem for <sgmltag class="element" role="lz.combobox">&lt;combobox&gt;</sgmltag>s,
+               <sgmltag class="element" role="lz.menu">&lt;menu&gt;</sgmltag>s, <sgmltag class="element" role="lz.list">&lt;list&gt;</sgmltag>s, and
+               <sgmltag class="element" role="lz.floatinglist">&lt;floatinglist&gt;</sgmltag>s.
              </p> 
 
              <example>
