@@ -86,6 +86,7 @@ var LzSprite = function(owner, isroot) {
             div.onmouseover = function(e) {
                 div.focus();
                 if (LzInputTextSprite.prototype.__focusedSprite == null) LzKeyboardKernel.setKeyboardControl(true);
+                LzMouseKernel.setMouseControl(true);
                 this.mouseisover = true;
                 //console.log('onmouseover', e, this.mouseisover);
             }
@@ -102,12 +103,14 @@ var LzSprite = function(owner, isroot) {
                     }
                     if (LzInputTextSprite.prototype.__lastshown == null) this.focus();
                     LzKeyboardKernel.setKeyboardControl(true);
+                    LzMouseKernel.setMouseControl(true);
                     LzMouseKernel.__resetMouse();
                     this.mouseisover = true;
                 } else {
                     if (LzInputTextSprite.prototype.__lastshown == null) this.blur();
-                    this.mouseisover = false;
                     LzKeyboardKernel.setKeyboardControl(false);
+                    LzMouseKernel.setMouseControl(false);
+                    this.mouseisover = false;
                 }
                 //Debug.write('onmouseout', this.mouseisover, el.className, e);
             }
@@ -407,7 +410,10 @@ LzSprite.prototype.__updateQuirks = function () {
             // Safari won't show canvas tags whose parent is display: none
             quirks['safari_visibility_instead_of_display'] = true;
             quirks['absolute_position_accounts_for_offset'] = true;
-            quirks['canvas_div_cannot_be_clipped'] = true;
+            if (browser.version < 525.18) {
+                //Seems to work fine in Safari 3.1.1 
+                quirks['canvas_div_cannot_be_clipped'] = true;
+            }
             quirks['document_size_use_offsetheight'] = true;
             if (browser.version > 523.10) {
                 this.capabilities['rotation'] = true;

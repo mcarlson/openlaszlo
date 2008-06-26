@@ -80,12 +80,24 @@ var LzMouseKernel = {
     ,setCallback: function (scope, funcname) {
         this.__scope = scope;
         this.__callback = funcname;
-
-        lz.embed.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
-        lz.embed.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
-        lz.embed.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+    }
+    ,__mousecontrol: false
+    // Called to register/unregister global mouse events.
+    ,setMouseControl: function (ison) {
+        if (ison == LzMouseKernel.__mousecontrol) return;
+        //Debug.write('mousecontrol', ison);
+        LzMouseKernel.__mousecontrol = ison;
+        if (ison) {
+            lz.embed.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
+            lz.embed.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
+            lz.embed.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+        } else {
+            lz.embed.removeEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
+            lz.embed.removeEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
+            lz.embed.removeEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+        }
         // Prevent context menus in Firefox 1.5 - see LPP-2678
-        document.oncontextmenu = LzMouseKernel.__mouseEvent;
+        document.oncontextmenu = ison ? LzMouseKernel.__mouseEvent : null;
     }    
     ,__showhand: 'pointer'
 

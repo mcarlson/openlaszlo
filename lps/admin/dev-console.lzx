@@ -142,13 +142,13 @@
       <view name="controls" x="70">
         <view name="firstrow" y="4">
             <text fontsize="11" x="8" y="7"><b>Compile Options:</b></text>
-            <view x="125" width="500" height="32" bgcolor="black">
-                <view x="1" y="1" width="498" height="30" bgcolor="#7a7a8c"/>
+            <view x="125" width="${parent.compilecontrols.width + 5}" height="32" bgcolor="black">
+                <view x="1" y="1" width="${parent.width - 2}" height="30" bgcolor="#7a7a8c"/>
             </view>
             <view x="125" name="compilecontrols">
-              <view name="sign" resource="neon_sign_small.png" opacity="0" x="206" y="4"
+              <view name="sign" resource="neon_sign_small.png" opacity="0" x="20" y="4"
                     onclick="this.animate('opacity', 0, 1000)"/>
-              <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:16" x="20" y="8.75">
+              <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:12" x="10" y="9">
                     <radiobutton id="rb8" value="'swf8'"
                                  selected="${app_runtime == 'swf8'}">swf8</radiobutton >
                     <radiobutton id="rbdhtml" value="'dhtml'"
@@ -163,26 +163,29 @@
                     -->
 
                 </radiogroup>
-                <view height="14" width="1" bgcolor="black" x="260" y="9.5"
-                      onclick="parent.sign.animate('opacity', 1, 1000), rb9.animate('opacity', 1, 1000)"/>
-                <checkbox id="cb_debug" value="${app_debug == 'true'}"
-                          x="270" y="8.25">Debug</checkbox>
-                <checkbox id="cb_backtrace" 
-                          value="${app_backtrace == 'true'}" x="336" y="8.25">Backtrace</checkbox>
-                <button onclick="canvas.gotoApp()" x="422" y="3">Compile</button>
-                <handler name="onvalue" reference="cb_backtrace">
-                  if (cb_backtrace.value) {
-                     cb_debug.setAttribute('value', true);
-                  }
-                </handler>
-                <handler name="onvalue" reference="cb_debug">
-                  if (cb_debug.value == false) {
-                     cb_backtrace.setAttribute('value', false);
-                  }
-                </handler>
+                <view x="142">
+                    <view height="14" width="1" bgcolor="black" y="9"
+                        onclick="parent.parent.sign.animate('opacity', 1, 1000), rb9.animate('opacity', 1, 1000); parent.animate('x', 200, 1000);"/>
+                    <checkbox id="cb_debug" value="${app_debug == 'true'}"
+                            x="16" y="8">Debug</checkbox>
+                    <checkbox id="cb_backtrace" 
+                            value="${app_backtrace == 'true'}" x="82" y="8">Backtrace</checkbox>
+                    <button onclick="canvas.gotoApp()" x="168" y="3">Compile</button>
+                    <handler name="onvalue" reference="cb_backtrace">
+                    if (cb_backtrace.value) {
+                        cb_debug.setAttribute('value', true);
+                    }
+                    </handler>
+                    <handler name="onvalue" reference="cb_debug">
+                    if (cb_debug.value == false) {
+                        cb_backtrace.setAttribute('value', false);
+                    }
+                    </handler>
+                </view>
             </view>
-            <view width="22" x="450"/>
-            <button onclick="canvas.viewSource()" x="635" y="3">View Source</button>
+            <view x="${parent.compilecontrols.width + parent.compilecontrols.x + 32}">
+                <button onclick="canvas.viewSource()" y="3">View Source</button>
+            </view>
         </view>
 
         <view bgcolor="black" width="${canvas.width - 70}" height="1" y="39"/>
@@ -322,13 +325,18 @@
         qitems['lzt'] = app_lzt;
     }
 
-    if (qitems.lzr == 'dhtml') {
-        if (qitems.debug + '' == 'false') {
-            delete qitems['debug'];
-        } else {
-            qitems.debug = 'true';
-        }
+    if (qitems.debug + '' == 'false') {
+        delete qitems['debug'];
+    } else {
+        qitems.debug = 'true';
     }
+
+    if (qitems.lzbacktrace + '' == 'false') {
+        delete qitems['lzbacktrace'];
+    } else {
+        qitems.lzbacktrace = 'true';
+    }
+
     //Debug.write( 'qitems', qitems);
     // Copy values to LzParam object
     var seen = {};
