@@ -272,7 +272,7 @@ override function __LZadjustVisibleClones (lastnodes:Array, newnodes:Boolean) :v
 
     LzInstantiator.enableDataReplicationQueuing( );
     var oldclones:Array = this.clones;
-    this.clones = new Array(newlength);
+    this.clones = [];
 
     for ( var i:int = 0; i < newlength; i++ ){
         //before the new beginning

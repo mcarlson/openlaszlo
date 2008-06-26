@@ -314,7 +314,9 @@ override function construct ( odp , args ){
         // a constraint on the clone via the normal mechanism?
         // but, we want the constraint to apply to this object instead
         if ($swf9) {
-            //FIXME: cannot copy a method in swf9, because 'this' is bound!
+            //FIXME: cannot copy a method in swf9, because 'this' is bound (LPP-6066)
+            // if a datapath-attribute was compiled as a datapath-node, this wouldn't 
+            // be a problem anymore (LPP-4386, LPP-6171)
             this.__LZxpathconstr = function (ignore) {};
             this.__LZxpathdepend = function () {return [];};
         } else {
@@ -340,14 +342,10 @@ override function construct ( odp , args ){
         // like "xpath='${this.immediateparent.parent.anyproperty}'" 
         // work for a replication-manager 
         var refObj:LzRefNode = new LzRefNode(this);
-        if ($swf9) {
-            //FIXME: cannot copy a method in swf9, because 'this' is bound!
-            refObj.__LZxpathconstr = function (ignore) {};
-            refObj.__LZxpathdepend = function () {return [];};
-        } else {
-            refObj.__LZxpathconstr = odp[oa.xpath.methodName];
-            refObj.__LZxpathdepend = odp[oa.xpath.dependenciesName];
-        }
+        // the constraint-method isn't actually a method for LzDatapath, 
+        // but a function, which is available through the odp's _instanceAttrs
+        refObj.__LZxpathconstr = oa[oa.xpath.methodName];
+        refObj.__LZxpathdepend = oa[oa.xpath.dependenciesName];
         // NOTE: [2008-02-07 ptw] The method had better be available
         // on the clone (which means the compiler really has to move
         // it from the datapath subnode to the clone class).
