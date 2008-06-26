@@ -190,8 +190,19 @@
         </xsl:choose>
         <xsl:for-each select="function/parameter">
           <methodparam>
-            <parameter><xsl:value-of select="@name"/></parameter>
-            <xsl:if test="@type"><type role="javascript"><xsl:value-of select="@type"/></type></xsl:if>
+            <!-- The 'type' may end with ... for optional args.  For the
+                 synopsis, we want to prefix the name to match JS syntax -->
+            <xsl:choose>
+              <xsl:when test="contains(@type, '...')">
+                <parameter><xsl:value-of select="concat('...', @name)"/></parameter>
+                <xsl:variable name="printable-type" select="substring-before(@type, '...')"/>
+                <xsl:if test="$printable-type"><type role="javascript"><xsl:value-of select="$printable-type"/></type></xsl:if>
+              </xsl:when>
+              <xsl:otherwise>
+                <parameter><xsl:value-of select="@name"/></parameter>
+                <xsl:if test="@type"><type role="javascript"><xsl:value-of select="@type"/></type></xsl:if>
+              </xsl:otherwise>
+            </xsl:choose>
           </methodparam>
         </xsl:for-each>        
       </methodsynopsis>

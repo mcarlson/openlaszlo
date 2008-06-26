@@ -185,7 +185,7 @@ public class ReprocessComments {
     
         // TODO [jgrandy 12/14/2006] use Java5's Scanner instead of regexp here
         
-        static private final Pattern paramPattern  = Pattern.compile("^\\s*(?:([\\w\\[\\]\\|\\*]+)\\s+)?([.\\w]*)(?::(.*))?$", Pattern.DOTALL);
+        static private final Pattern paramPattern  = Pattern.compile("^\\s*(?:([\\w\\[\\]\\|\\*]+)\\s+)?(?:(\\.\\.\\.))?(\\w*)(?::(.*))?$", Pattern.DOTALL);
         static private final Pattern returnPattern = Pattern.compile("^\\s*([\\w\\[\\]\\|\\*]+)(?::(.*))?$", Pattern.DOTALL);
     
         public ParamFieldFilter(CommentFieldFilter nextFilter) {
@@ -200,9 +200,16 @@ public class ReprocessComments {
                 boolean found = valueMatcher.find();
                 if (found) {
                     String paramType = valueMatcher.group(1),
-                           paramName = valueMatcher.group(2),
-                           paramDesc = valueMatcher.group(3);
-                    
+                           paramDots = valueMatcher.group(2),
+                           paramName = valueMatcher.group(3),
+                           paramDesc = valueMatcher.group(4);
+
+                    // Indicate optional args in the type string
+                    if ("...".equals(paramDots)) {
+                        paramType = (paramType == null) ? "" : paramType;
+                        paramType += "...";
+                    }
+
                     // now find the appropriate parameter node in the DOM node
                     String tagName = node.getTagName();
                     org.w3c.dom.Element functionNode = 
