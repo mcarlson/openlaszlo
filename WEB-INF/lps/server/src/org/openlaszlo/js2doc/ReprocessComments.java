@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -185,8 +185,8 @@ public class ReprocessComments {
     
         // TODO [jgrandy 12/14/2006] use Java5's Scanner instead of regexp here
         
-        static private final Pattern paramPattern  = Pattern.compile("^\\s*(?:(\\w+)\\s+)?(\\w*)(?::(.*))?$", Pattern.DOTALL);
-        static private final Pattern returnPattern = Pattern.compile("^\\s*(\\w+)(?::(.*))?$", Pattern.DOTALL);
+        static private final Pattern paramPattern  = Pattern.compile("^\\s*(?:([\\w\\[\\]\\|\\*]+)\\s+)?([.\\w]*)(?::(.*))?$", Pattern.DOTALL);
+        static private final Pattern returnPattern = Pattern.compile("^\\s*([\\w\\[\\]\\|\\*]+)(?::(.*))?$", Pattern.DOTALL);
     
         public ParamFieldFilter(CommentFieldFilter nextFilter) {
             super(nextFilter);
