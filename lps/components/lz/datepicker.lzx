@@ -186,7 +186,7 @@
     </class>
 
 
-    <!--- This is the Laszlo implementation datepicker class. -->
+    <!-- This is the Laszlo implementation datepicker class. -->
     <class name="datepicker" 
            doesenter="${this.startAsIcon}"
            extends="basedatepicker"

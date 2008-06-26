@@ -6,7 +6,7 @@
     <include href="scrollbar_yresources.lzx"/>
 
 
-    <!--- A scrollbar manipulates the x or y position of a target view that is
+    <!-- A scrollbar manipulates the x or y position of a target view that is
           clipped by its parent, creating a scrolling effect when the user
           clicks up/down arrows, clicks on the scroll track or drags the
           thumb. -->
@@ -185,11 +185,9 @@
         <example title="Simple scrollbar">
           &lt;canvas height="100"&gt;
           &lt;view name="main" width="100" height="80" clip="true"&gt;
-          &lt;view name="contents"&gt;
           &lt;text multiline="true"&gt;
           1&lt;br/&gt;2&lt;br/&gt;3&lt;br/&gt;4&lt;br/&gt;5&lt;br/&gt;6&lt;br/&gt;7&lt;br/&gt;8&lt;br/&gt;9&lt;br/&gt;10
           &lt;/text&gt;
-          &lt;/view&gt;
           &lt;scrollbar/&gt;
           &lt;/view&gt;
           &lt;/canvas&gt;

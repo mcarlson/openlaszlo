@@ -4,7 +4,7 @@
     <include href="utils/layouts/simplelayout.lzx"/>
     <include href="utils/layouts/resizelayout.lzx"/>
 
-   <!--- A modal dialog window. -->
+   <!-- A modal dialog window. -->
     <class name="modaldialog" extends="windowpanel"
         x="${(immediateparent.width - this.width)/2}"
         y="${(immediateparent.height - this.height)/3}"
@@ -66,6 +66,45 @@
         <method name="passModeEvent" args="event_name, view">
             return false;
         </method>
+
+        <doc>
+            <tag name="shortdesc"><text>
+                A modal dialog
+            </text></tag>
+            <text>
+                <p>
+                    The <tagname>modaldialog</tagname> tag creates a moveable 
+                    floating view. When opened, the user cannot interact with 
+                    any other part of the application until the dialog is 
+                    closed. A modal dialog is typically declared on the canvas. 
+                    It is automatically centered horizontally and appears 
+                    vertically at the top third of the screen. The position can 
+                    be altered by setting an explicit x and y position in the tag.
+                </p>
+                <example>
+                    <![CDATA[
+<canvas height="300">
+  <modaldialog name="mydialog" width="300" height="200">
+    <text>Are you really sure you want to do something?</text>
+    <view align="right" layout="axis:x; spacing:20">
+      <button onclick="parent.parent.close()">Cancel</button>
+      <button onclick="parent.parent.close()" isdefault="true">OK</button>
+    </view>
+    <simplelayout spacing="5"/>
+  </modaldialog>
+
+  <button onclick="canvas.mydialog.open()">Open Dialog</button>
+</canvas>
+                    ]]>
+                </example>
+                <seealso>
+                    <classes>
+                        modaldialog alert
+                    </classes>
+                </seealso>
+            </text>
+        </doc>
+
    </class>
 
    

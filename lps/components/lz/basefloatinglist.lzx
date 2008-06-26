@@ -365,6 +365,23 @@
         ]]>
         </handler>
         
+        <doc>
+            <tag name="shortdesc"><text>
+                base class for floatinglist
+            </text></tag>
+            <text>
+                <p>
+                   This is a base component with no visible elements that implements 
+                   the functionality of a floating list. See <xref linkend="lz.floatinglist"/>
+                   and <xref linkend="lz.plainfloatinglist"/> for concrete extensions of this
+                   base class.
+                </p>
+                <seealso>
+                    <component-design id="floatinglist" title="Floating List"/>
+                </seealso>
+            </text>
+        </doc>
+
     </class>
 
 </library>
