@@ -707,16 +707,6 @@ LzSprite.prototype.setOpacity = function ( v ){
     // set the bgcolor alpha if not set by the context menu and overridden by the context menu
     if (this.__LZbgRef && (this._bgcolorhidden != true && this._bgcolorshown != true))
          this.__LZbgRef._alpha = 100*v;
-
-    //@event onopacity: Sent when a view changes its opacity
-
-    var coviz = this.__LZvizO;
-    var newoviz = v != 0;
-    if ( coviz != newoviz ){
-        this.__LZvizO = newoviz;
-        this.__LZupdateShown();
-    }
-
 }
 
 /**

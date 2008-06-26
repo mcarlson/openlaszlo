@@ -237,11 +237,6 @@ override function construct ( v , args ) :void {
 
     super.construct.apply(this, arguments);
 
-    // construct this to prevent undefined property error
-    if ( ! ('data' in this.immediateparent) ){
-        this.immediateparent.data = null;
-    }
-
     if ( args.datacontrolsvisibility != null ){
         this.datacontrolsvisibility = args.datacontrolsvisibility;
     }
@@ -286,35 +281,24 @@ override function construct ( v , args ) :void {
 override function __LZHandleMultiNodes ( nodes:Array ) :LzReplicationManager {
     //uhoh! this should be a clone
 
-    //Because we're about to start making siblings to this view,
-    //(i.e. out of lexical order)
-    //make sure that the replicated view has been added to the parent's
-    //subview list
-
-    //ok to call if already added
-
-    //FIXME: type? Function or Class?
-    var clonetype;
-    switch ( this.replication ){
-        case "lazy":
-            clonetype = LzLazyReplicationManager;
-            break;
-        case "resize":
-            clonetype = LzResizeReplicationManager;
-            break;
-        default:
-            clonetype = LzReplicationManager;
-            break;
+    var clonetype:Class;
+    if (this.replication == "lazy") {
+        clonetype = LzLazyReplicationManager;
+    } else if (this.replication == "resize") {
+        clonetype = LzResizeReplicationManager;
+    } else {
+        clonetype = LzReplicationManager;
     }
 
     //TODO: [20080327 anba] "storednodes" should be passed directly 
     // to the ReplicationManager, instead of doing this kludge 
+    //TODO: [20080626 anba] _instanceAttrs gets modified by LzReplicationManager, 
+    // should we make a copy?
     this.storednodes = nodes;
     var rman:LzReplicationManager = new clonetype( this, this._instanceAttrs);
     this.storednodes = null;
 
     return rman;
-
 }
 
 /**
@@ -329,10 +313,6 @@ override function __LZHandleMultiNodes ( nodes:Array ) :LzReplicationManager {
   * @param Array nodes: A list of LzDataElements to replicate over.
   */
 function setNodes ( nodes:Array ) :void {
-    //Debug.write( "before context" ,this.context );
-    //this.setDataContext( nodes , false );
-    //Debug.write( "context" ,this.context );
-
     var rman:LzDatapath = this.__LZHandleMultiNodes( nodes );
 
     //__LZHandleMultiNodes will return the replication manager if "this" is a
@@ -387,13 +367,12 @@ function __LZApplyDataOnInit( ) :void {
 function __LZApplyData( force:Boolean = false) :void {
     var ip:LzNode = this.immediateparent;
 
-    if ( this.datacontrolsvisibility ){
-        ip.__LZvizDat = this.p != null; 
-          // [2008-03-12 pbr] Removed because swf9 doesn't like it. It can
-          // also be a LZMiniNode but it's a null def.
-          if (ip is LzView)
-//        if ('__LZupdateShown' in ip)
-            ip.__LZupdateShown();
+    if (this.datacontrolsvisibility) {
+        if (ip is LzView) {
+            var ipview = (ip cast LzView);
+            ipview.__LZvizDat = this.p != null;
+            ipview.__LZupdateShown();
+        }
     }
 
     var cdat:Boolean = force ||
@@ -538,7 +517,7 @@ function __LZupdateData (recursive:Boolean = false) :void {
 
     var ppdo:String = this.parsedPath ? this.parsedPath.operator : null;
     if (ppdo != null) {
-        var dat = (this.immediateparent cast LzNode).updateData();
+        var dat = this.immediateparent.updateData();
         if (dat !== void(0)) {
             if (ppdo == "nodeName") {
                 this.setNodeName( dat );
@@ -669,7 +648,7 @@ function setClonePointer( p /*:LzDataNodeMixin*/ ) :void {
 
         if ( p && this.sel != p.sel ){
             this.sel = p.sel || false;
-            (this.immediateparent cast LzNode).setSelected( this.sel );
+            this.immediateparent.setSelected( this.sel );
         }
 
         this.__LZpchanged = true;
@@ -684,7 +663,7 @@ override function setSelected (torf) :void {
     this.p.sel = torf;
     this.sel = torf;
 
-    (this.immediateparent cast LzNode).setSelected( torf );
+    this.immediateparent.setSelected( torf );
 }
 
 /**

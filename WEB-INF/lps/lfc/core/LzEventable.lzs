@@ -133,7 +133,4 @@ class LzEventable {
     }
   }
 
-   /** @access private */
-  function __LZupdateShown( ) {}
-
 } // End of LzEventable

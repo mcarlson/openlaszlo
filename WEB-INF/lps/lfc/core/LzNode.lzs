@@ -54,8 +54,6 @@ public dynamic class LzNode extends LzEventable {
   /** @access private */
   var classChildren:Array = null;
   /** @access private */
-  var __LZvizDat:Boolean = true;
-  /** @access private */
   var animators:Array = null;
 
   if ($swf9) {
