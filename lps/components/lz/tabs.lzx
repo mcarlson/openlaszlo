@@ -505,11 +505,11 @@
           <text>
             <p>The <classname>tabs</classname> component contains a row of
               <classname>tabs</classname> that control the visibility of a stack of
-              <classname>tabpane</classname>s. When a <classname>tabpane</classname>
+              <sgmltag class="element" role="lz.tabpane">&lt;tabpane&gt;</sgmltag>s. When a <sgmltag class="element" role="lz.tabpane">&lt;tabpane&gt;</sgmltag>
               is added to a <classname>tabs</classname> component, a corresponding
-              tab is created for that tabpane. The text which shows up in the tab is
+              tab is created for that <sgmltag class="element" role="lz.tabpane">&lt;tabpane&gt;</sgmltag>. The text which shows up in the tab is
               derived from the <attribute>text</attribute> attribute of the
-              tabpane.</p>
+              <sgmltag class="element" role="lz.tabpane">&lt;tabpane&gt;</sgmltag>.</p>
 
             <p>The <classname>tabs</classname> component will be sized
               automatically to the largest <classname>tabpane</classname>, unless an
