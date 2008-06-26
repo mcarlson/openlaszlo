@@ -1,4 +1,4 @@
-<canvas height="800">
+<canvas height="400">
 <!--
   covers-tags : lztext
 
@@ -97,20 +97,35 @@ textSizeSuite.testJustText = function () {
     LzTestManager.assertEquals( 'The text that appears in the combobox may be different from the value represented by the list item.  In the examples below the value is displayed using a constraint tied to the value attribute of the combobox', it7.getText());
 }
 
-textSizeSuite.testHeight = function () {
+textSizeSuite.testTextHeight = function () {
     LzTestManager.assertEquals(17, t1.height, "text1 height");
     LzTestManager.assertEquals(38, t2.height, "text2 height");
     LzTestManager.assertEquals(48, t3.height, "text3 height");
     LzTestManager.assertEquals(30, t4.height, "multiline4 text height");
     LzTestManager.assertEquals(17, t5.height, "text5 height");
     LzTestManager.assertEquals(43, t6.height, "multiline6 text height");
-    LzTestManager.assertEquals(43, t6.height, "multiline6 text.height");
     LzTestManager.assertEquals(56, t7.height, "multiline7 text height");
     LzTestManager.assertEquals(16, t8.height, "text8 height");
     LzTestManager.assertEquals(16, t9.height, "text9 height");
     LzTestManager.assertEquals(16, t10.height, "text10 height");
     LzTestManager.assertEquals(56, t11.height, "multiline11 text height");
-    LzTestManager.assertEquals(277, t12.height, "text12 height");
+    //LzTestManager.assertEquals(277, t12.height, "text12 height");
+
+    LzTestManager.assertEquals(40, a.sprite.getTextfieldHeight(), "text a getTextfieldHeight()");
+    LzTestManager.assertEquals(40, a.height, "text a getTextfieldHeight()");
+    LzTestManager.assertEquals(13, a.sprite.getTextHeight(), "text a getTextHeight()");
+    LzTestManager.assertEquals(82, b.sprite.getTextfieldHeight(), "text b getTextfieldHeight()");
+    LzTestManager.assertEquals(13, b.sprite.getTextHeight(), "text b getTextHeight()");
+    LzTestManager.assertEquals(82, b.height, "text b getTextfieldHeight()");
+    LzTestManager.assertEquals(40, e.sprite.getTextfieldHeight(), "text e getTextfieldHeight()");
+    LzTestManager.assertEquals(13, e.sprite.getTextHeight(), "text e getTextHeight()");
+    LzTestManager.assertEquals(40, e.height, "text e getTextfieldHeight()");
+    LzTestManager.assertEquals(17, f.sprite.getTextfieldHeight(), "text f getTextfieldHeight()");
+    LzTestManager.assertEquals(13, f.sprite.getTextHeight(), "text f getTextHeight()");
+    LzTestManager.assertEquals(17, f.height, "text f getTextfieldHeight()");
+}
+
+textSizeSuite.testInputtextHeight = function () {
     LzTestManager.assertEquals(17, it1.height, "inputtext1 height");
     LzTestManager.assertEquals(38, it2.height, "inputtext2 height");
     LzTestManager.assertEquals(48, it3.height, "inputtext3 height");
@@ -121,26 +136,17 @@ textSizeSuite.testHeight = function () {
     
     LzTestManager.assertEquals(17, tempty.height, "tempty.height");
     LzTestManager.assertEquals(30, thepost.height, "thepost height");
-
-    LzTestManager.assertEquals(40, a.sprite.getTextfieldHeight(), "a height");
-    LzTestManager.assertEquals(13, a.sprite.getTextHeight(), "a height");
-    LzTestManager.assertEquals(82, b.sprite.getTextfieldHeight(), "b height");
-    LzTestManager.assertEquals(13, b.sprite.getTextHeight(), "b height");
-    LzTestManager.assertEquals(40, e.sprite.getTextfieldHeight(), "e height");
-    LzTestManager.assertEquals(13, e.sprite.getTextHeight(), "e height");
-    LzTestManager.assertEquals(17, f.sprite.getTextfieldHeight(), "f height");
-    LzTestManager.assertEquals(13, f.sprite.getTextHeight(), "f height");
-    LzTestManager.assertEquals(40, c.sprite.getTextfieldHeight(), "c height");
-    LzTestManager.assertEquals(13, c.sprite.getTextHeight(), "c height");
-    LzTestManager.assertEquals(82, d.sprite.getTextfieldHeight(), "d height");
-    LzTestManager.assertEquals(13, d.sprite.getTextHeight(), "d height");
-    LzTestManager.assertEquals(40, g.sprite.getTextfieldHeight(), "g height");
-    LzTestManager.assertEquals(13, g.sprite.getTextHeight(), "g height");
-    LzTestManager.assertEquals(17, h.sprite.getTextfieldHeight(), "h height");
-    LzTestManager.assertEquals(13, h.sprite.getTextHeight(), "h height");
+    LzTestManager.assertEquals(40, c.sprite.getTextfieldHeight(), "inputtext c getTextfieldHeight()");
+    LzTestManager.assertEquals(13, c.sprite.getTextHeight(), "inputtext c getTextHeight()");
+    LzTestManager.assertEquals(82, d.sprite.getTextfieldHeight(), "inputtext d getTextfieldHeight()");
+    LzTestManager.assertEquals(13, d.sprite.getTextHeight(), "inputtext d getTextHeight()");
+    LzTestManager.assertEquals(40, g.sprite.getTextfieldHeight(), "inputtext g getTextfieldHeight()");
+    LzTestManager.assertEquals(13, g.sprite.getTextHeight(), "inputtext g getTextHeight()");
+    LzTestManager.assertEquals(17, h.sprite.getTextfieldHeight(), "inputtext h getTextfieldHeight()");
+    LzTestManager.assertEquals(13, h.sprite.getTextHeight(), "inputtext h getTextHeight()");
 }
 
-textSizeSuite.testWidth = function () {
+textSizeSuite.testTextWidth = function () {
     // color set at compile time 
     LzTestManager.assertEquals(91, t1.width, "text1 width");
     LzTestManager.assertEquals(23, t2.width, "text2 width");
@@ -152,8 +158,13 @@ textSizeSuite.testWidth = function () {
     LzTestManager.assertEquals(100, t8.width, "text8 width");
     LzTestManager.assertEquals(100, t9.width, "text9 width");
     LzTestManager.assertEquals(88, t10.width, "text10 width");
-    LzTestManager.assertEquals(350, t11.width, "multiline7 text.width");
-    LzTestManager.assertEquals(230, t12.width, "text12.width");
+    LzTestManager.assertEquals(0, tempty.width, "tempty.width");
+    LzTestManager.assertEquals(110, thepost.width, "thepost.width");
+    LzTestManager.assertEquals(350, t11.width, "multiline text 12 width");
+    LzTestManager.assertEquals(230, t12.width, "text12 width");
+}
+
+textSizeSuite.testInputtextWidth = function () {
     LzTestManager.assertEquals(200, it1.width, "inputtext1 width");
     LzTestManager.assertEquals(200, it2.width, "inputtext2 width");
     LzTestManager.assertEquals(200, it3.width, "inputtext3 width");
@@ -162,13 +173,13 @@ textSizeSuite.testWidth = function () {
     LzTestManager.assertEquals(26, it6.width, "inputtext6 width");
 
     LzTestManager.assertEquals(350, it7.width, "multiline7 inputtext width");
-    LzTestManager.assertEquals(0, tempty.width, "tempty.width");
-    LzTestManager.assertEquals(110, thepost.width, "thepost.width");
 }
 
 textSizeSuite.addTest(textSizeSuite.testJustText); 
-textSizeSuite.addTest(textSizeSuite.testHeight); 
-textSizeSuite.addTest(textSizeSuite.testWidth); 
+textSizeSuite.addTest(textSizeSuite.testTextHeight); 
+textSizeSuite.addTest(textSizeSuite.testInputtextHeight); 
+textSizeSuite.addTest(textSizeSuite.testTextWidth); 
+textSizeSuite.addTest(textSizeSuite.testInputtextWidth); 
 ]]>
 </script>
 
