@@ -711,8 +711,8 @@ function $lzc$set_showhandcursor(v) { this.setShowHandCursor(v); }
   * this view. If there is a class property, it names the class of the
   * layout; otherwise <tagname>simplelayout</tagname> is used.
   * Examples: 
-  * <code>axis: x</code>, <code>class: constantlayout</code>; 
-  * <code>axis: y</code>; <code>axis: x; spacing: 5</code>.
+  * <code>layout="axis: x"</code>, <code>layout="class: constantlayout"</code>,
+  * <code>layout="axis: y"</code>, <code>layout="axis: x; spacing: 5"</code>.
   * @type Object
   * @lzxtype css
   * @access public
@@ -1174,24 +1174,19 @@ function searchimmediateparents ( prop ){
     return this.searchParents( prop );
 }
 
-/** A CSS sequence of layout parameters in 'property: value' form.
-  * These values are used to create a layout that is attached to this view.
-  * If there
-  * is a class property, it names the class of the layout; otherwise
-  * <tagname>simplelayout</tagname> is used.  If the value of this attribute is a single
-  * id, it is used as the axis attribute of a simplelayout.
-  * Examples: <code>axis: x</code>, <code>class: constantlayout</code>; 
-  * <code>axis: y</code>; <code>axis: x; spacing: 5</code>.
-  * @type Object
-  * @lzxtype css
-  * @access public
-  */
+/**
+ * The layouts that are controlling the layout of this view.
+ * @type [LzLayout]
+ * @access private
+ */
 var layouts = null;
-
 
 /**
   * Releases all the layouts applied to this view. <method>releaseLayouts()</method> has been deprecated.
   * @keywords deprecated
+  * @devnote NOTE [2008-06-26 ptw] This is deprecated and tells you to
+  * use setAttribute instead, but there is no setter for layouts.
+  * What was really meant?
   */
 function releaseLayouts( ) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
@@ -2377,11 +2372,16 @@ function mouseevent(eventname) {
 }    
 
 /**
-  * This method returns the position of the mouse relative to this view.
-  * @param String xory: a string ("x" | "y") specifying which axis to return
-  * @return Number: The position of the mouse relative to this view.
+  * The position of the mouse relative to this view.
+  *
+  * @param String xory: Which axis ("x" | "y") to return. If null returns
+  * both axes.
+  *
+  * @return Number: The position of the mouse relative to this
+  * view along the specified axis. If both axes are requsted returns
+  * <code>{x: Number, y: Number}</code>.
   */
-function getMouse( xory ) {
+function getMouse( xory : String ) {
     if (this.__movecounter != lz.GlobalMouse.__movecounter || this.__mousecache == null) {
         this.__movecounter = lz.GlobalMouse.__movecounter;
         this.__mousecache = this.sprite.getMouse(xory);
