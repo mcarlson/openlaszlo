@@ -292,7 +292,7 @@
     <!-- =================== -->
     <!--  BASETABPANE CLASS  -->
     <!-- =================== -->
-    <!--- The basetabpane for basetabs. If width and height are not set, all
+    <!-- The basetabpane for basetabs. If width and height are not set, all
           basetabpanes will resize themselves to largest basetabpane or the
           width of the basetabsbar, whichever is larger. The content of the
           basetabpane is initstage late. You can override this value by setting
@@ -420,12 +420,12 @@
             declaring an <attribute>initstage</attribute> on a specific subclass
             or instance of <classname>basetabpane</classname>.</p>
             
-            <example executable="false" extract="false">
+            <programlisting>
             &lt;basetabpane initstage="normal"&gt;
               &lt;!-- ..content... --&gt;
             &lt;/basetabpane&gt;
-            </example>
-            
+            </programlisting>
+
             <note>The parent of a <tagname>basetabpane</tagname> is
             <tagname>basetabs</tagname>, but its <em>immediate parent</em> is the
             default placement of the

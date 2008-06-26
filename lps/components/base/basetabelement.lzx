@@ -2,7 +2,7 @@
     <include href="base/baselistitem.lzx" />
 
     <!-- CLASS: basetabelement -->
-    <!--- Basetabelements are children of basetabslider. -->
+    <!-- Basetabelements are children of basetabslider. -->
     <class name="basetabelement"
            width="100%"
            focusable="true" styleable="false"
@@ -39,7 +39,7 @@
         <event name="onopenstop" />
         <!--- Sent at the start of the close animation. -->
         <event name="onclosestart" />
-        <!--- Sent at the start of the close animation. -->
+        <!--- Sent at the end of the close animation. -->
         <event name="onclosestop" />
         <!--- Can be use in subclasses if the height in the tag is needed.
               @keywords private -->

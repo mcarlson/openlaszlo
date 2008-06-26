@@ -1,7 +1,7 @@
 <library>
     <include href="base/basevaluecomponent.lzx" />
 
-    <!--- A group of items that typically is used within a baselist. -->
+    <!-- A group of items that typically is used within a baselist. -->
         <class name="baselistitem" extends="basevaluecomponent" clickable="true" focusable="false">
 
         <!--- Whether this item is selected. Our containing list will adopt the value

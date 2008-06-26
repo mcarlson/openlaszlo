@@ -589,7 +589,7 @@
         </doc>
     </class> <!-- basescrollthumb -->
 
-    <!--- Provides non-visual aspects of scrollbar's arrow. -->
+    <!-- Provides non-visual aspects of scrollbar's arrow. -->
     <class name="basescrollarrow" extends="basebuttonrepeater">
             <!--- The direction in which the scroll should move. Use -1 to go
                   back. Default: 1. -->
@@ -616,7 +616,7 @@
         </doc>
     </class>
 
-    <!--- Provides non-visual aspects of a scrollbar track. -->
+    <!-- Provides non-visual aspects of a scrollbar track. -->
     <class name="basescrolltrack" extends="basebuttonrepeater">
         <!--- The direction in which the scroll should move. Set to -1 for back,
              1 for forward, default: 1. -->
