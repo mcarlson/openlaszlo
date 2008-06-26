@@ -163,6 +163,18 @@ var postbody = null;
   */
 var acceptencodings = false;
 
+/**
+ * When set to "http" or "soap", the dataset
+ * interprets it's src attribute as a URL to be loaded at runtime.
+ * If the "src" attribute is set to a URL (e.g., starts with "http:") then
+ * the type attribute implicitly becomes "http".
+ * @type String
+ * @lzxtype http|soap
+ * @keywords read-only
+ * @devnote This is really a 'pseudo' attribute , it is handled by the tag processor phase
+ */
+var type = null;
+
 /** An LzParams object which holds query key-value pairs.
     @type LzParam
  */
@@ -240,7 +252,9 @@ var querystring = null;
   */
 function $lzc$set_data(v) { this.setData(v); }
 
-/** The source for requests made by this dataset.
+/** The source for requests made by this dataset. The value can be a pathname or an absolute or relative URL.
+  * If the value is a URL (starts with "http:"), the dataset will be configured to load its data at runtime.
+  * Otherwise, the data is included inline into the application at compile time.
   * @type String
   */
 var src = null;
