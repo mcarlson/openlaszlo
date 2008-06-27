@@ -140,14 +140,18 @@ textSizeSuite.testInputtextHeight = function () {
     
     LzTestManager.assertEquals(17, tempty.height, "tempty.height");
     LzTestManager.assertEquals(30, thepost.height, "thepost height");
-    LzTestManager.assertEquals(40, c.sprite.getTextfieldHeight(), "inputtext c getTextfieldHeight()");
+    LzTestManager.assertEquals(40, c.sprite.getTextfieldHeight(), "EXPECTED: see LPP-6543. inputtext c getTextfieldHeight()");
     LzTestManager.assertEquals(13, c.sprite.getTextHeight(), "inputtext c getTextHeight()");
+    LzTestManager.assertEquals(40, c.height, "inputtext c height");
     LzTestManager.assertEquals(82, d.sprite.getTextfieldHeight(), "inputtext d getTextfieldHeight()");
     LzTestManager.assertEquals(13, d.sprite.getTextHeight(), "inputtext d getTextHeight()");
-    LzTestManager.assertEquals(40, g.sprite.getTextfieldHeight(), "inputtext g getTextfieldHeight()");
+    LzTestManager.assertEquals(82, d.height, "inputtext d height");
+    LzTestManager.assertEquals(40, g.sprite.getTextfieldHeight(), "EXPECTED: see LPP-6543. inputtext g getTextfieldHeight()");
     LzTestManager.assertEquals(13, g.sprite.getTextHeight(), "inputtext g getTextHeight()");
+    LzTestManager.assertEquals(40, g.height, "inputtext g height");
     LzTestManager.assertEquals(17, h.sprite.getTextfieldHeight(), "inputtext h getTextfieldHeight()");
     LzTestManager.assertEquals(13, h.sprite.getTextHeight(), "inputtext h getTextHeight()");
+    LzTestManager.assertEquals(17, h.height, "inputtext h height");
 }
 
 textSizeSuite.testTextWidth = function () {
