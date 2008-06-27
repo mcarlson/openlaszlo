@@ -264,6 +264,18 @@
 
             if (ehour < 0) ehour += 24;
             ehour = ehour % 24;
+            var mincheck = 0;
+            var smincheck = 0;
+            if(evlenmin != 0){
+                mincheck = ((60 / evlenmin) * .25);
+                if(smin != 0){
+                    smincheck = ((60 / smin) * .25);
+                }
+            }
+            if (shour < 24 && shour + evlenhour + mincheck + smincheck >= 24){
+                ehour = 23;
+                emin = 45;
+            }
             tempDP.setNodeAttribute('hour', ehour);
             tempDP.setNodeAttribute('minute', emin);
         ]]></method>
@@ -417,10 +429,12 @@
                     }
                     if (eHour < 0) eHour += 24;
                     eHour = eHour % 24;
-                    tempDP.setFromPointer( currenteventDP );
-                    tempDP.setXPath('end[1]');
-                    tempDP.setNodeAttribute( 'hour' , eHour );
-                    tempDP.setNodeAttribute( 'minute' , eMinute );
+                    if(eHour != 0){
+                        tempDP.setFromPointer( currenteventDP );
+                        tempDP.setXPath('end[1]');
+                        tempDP.setNodeAttribute( 'hour' , eHour );
+                        tempDP.setNodeAttribute( 'minute' , eMinute );
+                    }
                 }
             }
             ]]>

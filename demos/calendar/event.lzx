@@ -121,7 +121,7 @@
             <attribute name="x"
                        value="24"/>
             <attribute name="y"
-                       value="${this.startTime * this.pixelPerMin}"/>
+                       value="${this.startTime * this.pixelPerMin + (pixelPerMin * 30)}"/>
             <attribute name="height"
                        value="${Math.max( 22, ( this.endTime - this.startTime )
                                               * this.pixelPerMin )}" />
