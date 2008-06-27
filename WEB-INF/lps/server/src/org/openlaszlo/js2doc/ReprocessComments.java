@@ -20,6 +20,9 @@ public class ReprocessComments {
 
     static private Logger logger = Logger.getLogger("org.openlaszlo.js2doc");
     
+    static private Set runtimeOptions = null;
+    static private List runtimeAliases = null;
+
     static void appendToAttribute(org.w3c.dom.Element node, String attr, String value)
     {
         String oldvalue = node.getAttribute(attr);
@@ -29,6 +32,53 @@ public class ReprocessComments {
             node.setAttribute(attr, oldvalue + " " + value.trim());
     }
     
+    // TODO [dda 6/27/08] this is a minimal implementation,
+    // it does not handle odd cases like "as2 swf8".
+    // It really should just be integrated into describeConditionalState().
+    // 
+    static private String translateRuntime(String runtime) {
+        boolean except = runtime.startsWith("except ");
+        if (except) {
+            runtime = runtime.substring("except ".length());
+        }
+        String newruntime = "";
+        
+        StringTokenizer tokenizer = new StringTokenizer(runtime);
+        while (tokenizer.hasMoreTokens()) {
+            String rt = tokenizer.nextToken();
+
+            for (Iterator iter = runtimeAliases.iterator(); iter.hasNext(); ) {
+                String[] aliases = (String[])iter.next();
+                if (aliases[0].equals(rt)) {
+                    rt = "";
+                    for (int i=1; i<aliases.length; i++) {
+                        if (rt.length() > 0) {
+                            rt += " ";
+                        }
+                        rt += aliases[i];
+                    }
+                    break;
+                }
+            }
+            if (newruntime.length() > 0) {
+                newruntime += " ";
+            }
+            newruntime += rt;
+        }
+        return ((except ? "except " : "") + newruntime);
+    }
+
+    static public void testTranslateRuntime() {
+        String[] testStrings = { "swf8", "js1", "foo", "except swf8",
+                                 "as2", "except as2",
+                                 "swf8 js1 dhtml", "except swf8 js1 dhtml" };
+        
+        for (int i=0; i<testStrings.length; i++) {
+            String s = testStrings[i];
+            System.out.println("Test runtime translate: [" + s + "] => [" + translateRuntime(s) + "]");
+        }
+    }
+
     static private abstract class CommentFieldFilter {
         CommentFieldFilter nextFilter;
         
@@ -115,7 +165,7 @@ public class ReprocessComments {
                     logger.warning("Invalid @access keyword: '" + keyword + "'");
                 }
             } else if (fieldName.equals("runtimes")) {
-              node.setAttribute("runtimes", fieldValue);
+              node.setAttribute("runtimes", translateRuntime(fieldValue));
               return true;
             }
             return false;
@@ -523,6 +573,11 @@ public class ReprocessComments {
             if (child != null)
                 reprocessChildElements(child, false);
         }
+    }
+
+    static public void setOptions(Set runtimeOptionsArg, List runtimeAliasesArg) {
+        runtimeOptions = runtimeOptionsArg;
+        runtimeAliases = runtimeAliasesArg;
     }
 
     static public Document reprocess(String contents) {

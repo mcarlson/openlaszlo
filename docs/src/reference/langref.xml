@@ -351,7 +351,7 @@ numbers.</p>
   </class>
 </property>
 
-<property id="tag.splash+as2" topic="LZX" subtopic="Basics" access="public" runtimes="as2">
+<property id="tag.splash+as2" topic="LZX" subtopic="Basics" access="public" runtimes="swf8">
   <doc>
     <tag name="shortdesc"><text>Controls the presentation while the application is loading.</text></tag>
     <tag name="lzxname"><text>splash</text></tag>
@@ -439,7 +439,7 @@ load process is complete.</p>
   </class>
 </property>
 
-<property id="tag.splash-view" topic="LZX" subtopic="Basics" access="public" runtimes="as2">
+<property id="tag.splash-view" topic="LZX" subtopic="Basics" access="public" runtimes="swf8">
   <doc>
     <tag name="shortdesc"><text>A view element within the splash element positions a resource on the canvas while the application is loading.</text></tag>
     <tag name="lzxname"><text>splash view</text></tag>

@@ -55,14 +55,21 @@ public class Main {
         js2doc(args, null, null, null);
     }
 
-    static final String[] runtimeOptionStrings = { "swf7", "swf8", "swf9", "dhtml" };
+    static final String[] runtimeOptionStrings = { "swf8", "swf9", "dhtml" };
     static final Set runtimeOptions = new HashSet(Arrays.asList(runtimeOptionStrings));
     // first element is the alias, subsequent elements are valid runtimes
     // e.g. js1 === dhtml
-    static final String[][] runtimeAliasStrings = { { "as2", "swf7", "swf8", "swf9" },
+    static final String[][] runtimeAliasStrings = { { "as2", "swf8" },
                                                     { "as3", "swf9" },
                                                     { "js1", "dhtml" } };
-    static final List runtimeAliases = Arrays.asList(runtimeAliasStrings);                                                 
+    static final List runtimeAliases = Arrays.asList(runtimeAliasStrings);
+
+    static {
+        // TODO [dda 2008/06/26] redo these ugly static dependencies
+        ReprocessComments.setOptions(runtimeOptions, runtimeAliases);
+        //ReprocessComments.testTranslateRuntime();
+    }
+                                    
     static final String[] buildOptionStrings = { "debug", "profile" };
     static final List buildOptions = Arrays.asList(buildOptionStrings);
     
