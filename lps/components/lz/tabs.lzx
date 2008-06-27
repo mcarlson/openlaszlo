@@ -121,8 +121,8 @@
             </text></tag>
             <text>
                 <p>
-                    A <classname>tab</classname> is an LZ tab within <tagname>basetabsbar</tagname>
-                    or any object that extends this (such as <classname>tabsbar</classname>).
+                    A <classname>tab</classname> is an LZ tab within <sgmltag class="element" role="lz.basetabsbar">&lt;basetabsbar&gt;</sgmltag>
+                    or any object that extends this (such as <sgmltag class="element" role="lz.tabsbar">&lt;tabsbar&gt;</sgmltag>).
                 </p>
                 <example>
                     <![CDATA[
@@ -529,10 +529,19 @@
               &lt;/canvas&gt;
             </example>
 
-            <seealso>
-              <classes>tab tabsbar tabpane tabscontent basetabs</classes>
-              <component-design id="tabs" title="Tabs"/>
-            </seealso>
+              
+            <p><b>See Also:</b></p>
+
+              <ul>
+                  <li>
+                      <sgmltag class="element" role="lz.tab">&lt;tab&gt;</sgmltag>, <sgmltag class="element" role="lz.tabsbar">&lt;tabsbar&gt;</sgmltag>,
+                      <sgmltag class="element" role="lz.tabpane">&lt;tabpane&gt;</sgmltag>, <sgmltag class="element" role="lz.tabscontent">&lt;tabscontent&gt;</sgmltag>, and 
+                      <sgmltag class="element" role="lz.basetabs">&lt;basetabs&gt;</sgmltag>
+                  </li>
+                  <li>
+                      For details on how this component is constructed, see the <a href="${component-design}/tabs.html">Tabs</a> section of the <a href="${component-design}/index.html" target="_blank">Component Design Guide</a>
+                  </li>
+              </ul>
           </text>
         </doc>
 
