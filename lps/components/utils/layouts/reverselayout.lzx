@@ -97,21 +97,25 @@
               for arranging all of the subviews for the view that it is attached to. The attributes of a view that <classname>reverselayout</classname> 
               effects are the <literal>x</literal> and <literal>y</literal> values.</para>
               <example title="Example of reverselayout">
-<![CDATA[<canvas height="60" bgcolor="yellow" >
+<![CDATA[<canvas height="60" >
   <include href="utils/layouts/reverselayout.lzx"/>
-  <reverselayout axis="x" spacing="10"/>
-  <text text="one"/>
-  <text text="two"/>
-  <text text="three"/>
+  <view bgcolor="yellow">
+    <reverselayout axis="x" spacing="10"/>
+    <text text="one"/>
+    <text text="two"/>
+    <text text="three"/>
+  </view>
 </canvas>]]>
                      </example>
               <example title="Example of reverselayout with end='false'">
-<![CDATA[<canvas height="60" bgcolor="yellow" >
+<![CDATA[<canvas height="60">
   <include href="utils/layouts/reverselayout.lzx"/>
-  <reverselayout axis="x" end="false" spacing="10"/>
-  <text text="one"/>
-  <text text="two"/>
-  <text text="three"/>
+  <view bgcolor="yellow">
+    <reverselayout axis="x" end="false" spacing="10"/>
+    <text text="one"/>
+    <text text="two"/>
+    <text text="three"/>
+  </view>
 </canvas>]]>
               </example>
         </text>

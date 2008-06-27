@@ -11,12 +11,12 @@
   */
   
 /**
-  * <p>This layout class is the base class that all other layouts &#x2014;
-  * such as, for example <tagname>simplelayout</tagname> and
-  * <tagname>resizelayout</tagname> &#x2014; extend.</p>
+  * <p>This layout class is the base class that all other layouts 
+  * such as, for example <xref linkend="lz.simplelayout"/> and
+  * <xref linkend="lz.resizelayout"/> extend.</p>
   * 
   * <p>A layout arranges the views within the element that it is attached
-  * to.  <classname>simplelayout</classname> is one example of a basic
+  * to.  <xref linkend="lz.simplelayout"/> is one example of a basic
   * extension of this layout object, and the code sample below illustrates
   * its use.</p> 
   * 

@@ -201,10 +201,10 @@
           <tag name="shortdesc"><text>A non-visual container for basetab components.</text></tag>
           <text>
             <p>A <classname>basetabsbar</classname> is a non-visual container
-            class that uses a default x-axis <classname>simplelayout</classname>
-            to lay out its <classname>basetab</classname>
-            children. <classname>basetabsbar</classname> is contained in a
-            <classname>basetabs</classname> component.</p>
+            class that uses a default x-axis <sgmltag class="element" role="lz.simplelayout">&lt;simplelayout&gt;</sgmltag> 
+            to lay out its <sgmltag class="element" role="lz.basetab">&lt;basetab&gt;</sgmltag> 
+            children. <sgmltag class="element" role="lz.basetabsbar">&lt;basetabsbar&gt;</sgmltag> is contained in a 
+            <sgmltag class="element" role="lz.basetabs">&lt;basetabs&gt;</sgmltag> component.</p>
             
             <example title="custom basetabsbar">
             &lt;canvas width="150" height="75"&gt;
@@ -235,8 +235,8 @@
               <p><b>See Also:</b></p>
               <ul>
                   <li>
-                      <a href="#lz.basetab">&lt;basetab&gt;</a>, 
-                      and <a href="#lz.basetabs">&lt;basetabs&gt;</a>
+                      <sgmltag class="element" role="lz.basetab">&lt;basetab&gt;</sgmltag>, 
+                      and <sgmltag class="element" role="lz.basetabs">&lt;basetabs&gt;</sgmltag>
                   </li>
               </ul>                       
           </text>
