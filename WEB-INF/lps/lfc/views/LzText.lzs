@@ -787,7 +787,7 @@ function parseImgAttributes(attrs, str) {
 function setText ( t, force = null){
     // force to a string
     t = '' + t;
-    if (force != true && t == this.text) return;
+    if (force != true && t == this.getText()) return;
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     if (this.visible) tsprite.setVisible(this.visible);
     if (this.maxlength != null && t.length > this.maxlength){
