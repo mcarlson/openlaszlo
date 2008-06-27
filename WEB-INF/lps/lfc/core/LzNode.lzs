@@ -1580,7 +1580,7 @@ public dynamic class LzNode extends LzEventable {
 
   /**
    * Sets the name of the node.
-   * @access protected
+   * @access private
    * @param String name: A string to use for the name of this node.
    */
   function $lzc$set_name ( name ){
@@ -1684,28 +1684,29 @@ public dynamic class LzNode extends LzEventable {
    */
   function applyData ( data ){
   }
-
-  /**
-   * see <method>LzDatapointer#updateData()</method>
+  
+  /*
    * FIXME: [20080419 anba] doc: LPP-4259
    * FIXME: [20080419 anba] return type: LPP-4077
+   */
+
+  /**
+   * See <link linkend="LzDatapath.prototype.updateData"><method>LzDatapath.updateData()</method></link>
    *
-   * @access protected
+   * @access public
    */
   function updateData () /* :String */ {
     return void(0);
   }
 
+  /*
+   * If you use LzSelectionManager, you can decide the selection method,
+   * see "sel" property on <xref linkend="LzSelectionManager"/>.
+   * <xref linkend="LzDataSelectionManager"/> forces you to override <method>setSelected()</method>,
+   * see <link linkend="LzDatapath.prototype.setSelected"><method>LzDatapath.setSelected(Boolean)</method></link>
+   */
   /**
-   * FIXME: [20080419 anba] document me!
-   * There is definitely a lack of documentation about selection
-   * i) if you use LzSelectionManager, you can decide the selection method,
-   * see "sel" property on LzSelectionManager
-   * ii) but LzDataSelectionManager forces you to override "setSelected",
-   * see LzDatapath#setSelected(Boolean)
-   * -> that's way too confusing!
-   *
-   * @access protected
+   * @access public
    * @param boolean sel: true when this node was selected, false when it lost selection
    */
   function setSelected (sel) /* :void */ {

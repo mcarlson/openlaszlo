@@ -78,7 +78,6 @@ class LzHTTPDataProvider extends LzDataProvider {
 
     /**
      * Interrupts any load in progress for the given dataset.
-     * @access protected
      * @param LzDataRequest dreq: The data request for which to interrupt the load.
      * @access public
      */

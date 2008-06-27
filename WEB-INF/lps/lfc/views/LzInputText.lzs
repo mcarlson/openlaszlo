@@ -201,8 +201,8 @@ function inputtextevent (eventname, value = null) {
 
 /**
   * Retrieves the contents of the text field for use by a datapath. See
-  * <code>LzDatapath.updateData</code> for more on this.
-  * @access protected
+  * <link linkend="LzDatapath.prototype.updateData"><method>LzDatapath.updateData()</method></link> for more on this.
+  * @access public
   */
 override function updateData () {
     var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    

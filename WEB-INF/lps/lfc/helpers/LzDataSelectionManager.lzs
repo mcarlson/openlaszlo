@@ -93,7 +93,7 @@ var singleClone;
 
 /**
   * Makes the given view selected
-  * @access protected
+  * @access public
   * @param LzView o: The view to be selected
   */
 override function makeSelected ( o ){

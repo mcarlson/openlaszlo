@@ -45,10 +45,10 @@
 
         <!--- The class to use to construct columns, if the
               columns are inferred by the basegrid. 
-              @access protected -->
+              @access private -->
         <attribute name="_columnclass" value="lz.basegridcolumn" when="once"/>
         <!--- The class to use to construct rows.
-              @access protected -->
+              @access private -->
         <attribute name="_rowclass" value="lz.basegridrow" when="once"/>
 
         <!--- A boolean. If true, the grid will keep its width set to the size
