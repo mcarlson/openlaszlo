@@ -162,11 +162,20 @@
     <xsl:apply-templates mode="html2dbk"/>
   </xsl:template>
   
-  <!-- internal link -->
+  <!-- internal link, e.g. href="#lz.basetab" or href="#name" -->
   <xsl:template match="a[starts-with(@href, '#') and not(@onclick)]" mode="html2dbk">
-    <link linkend="{$docid}.{substring-after(@href, '#')}">
-      <xsl:apply-templates mode="html2dbk"/>
-    </link>
+    <xsl:choose>
+      <xsl:when test="contains(@href, '.')">
+        <link linkend="{substring-after(@href, '#')}">
+          <xsl:apply-templates mode="html2dbk"/>
+        </link>
+      </xsl:when>
+      <xsl:otherwise>
+        <link linkend="{$docid}.{substring-after(@href, '#')}">
+          <xsl:apply-templates mode="html2dbk"/>
+        </link>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
   
   <!-- external link -->
