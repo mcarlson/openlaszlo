@@ -30,6 +30,10 @@
   * node that matches, and a <xref linkend="LzReplicationManager"/> takes over 
   * the view's spot in its parent.
   * </p>
+  * <p>
+  * When a node is replicated, an LzReplicationManager takes it's place,
+  * and an <event>onclones</event> will be sent when the node's clones are updated.
+  * </p>
   * 
   * <p>
   * A node can only have one datapath, and datapaths always have the name
@@ -63,6 +67,7 @@
   *   &lt;datapath xpath="<em>xpath</em>" sortorder="ascending"/&gt;
   * &lt;/view&gt;</programlisting>
   * <programlisting>&lt;view datapath="<em>xpath</em>" /&gt;</programlisting>
+  *
   *
   * @devnote This class is dynamic because it will acquire methods and
   * attributes at runtime.  Not really optimal, since most likely
