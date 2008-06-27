@@ -169,12 +169,12 @@
       <!-- Exclude images, because we don't want to replace VERSIONID inside images. --> 
       <exclude name="**/*.png" />      
       <exclude name="**/*.gif" />
-      <exclude name="**/*.swf" />
       <exclude name="**/*.jpg" />
       <exclude name="**/*.jpeg" />
       <exclude name="**/*.ico" />
       <exclude name="**/*.pdf" />
       <exclude name="**/*.zip" />
+      <exclude name="**/*.swf" />
 
 
       <include name="guide_fr/**" />
@@ -235,6 +235,30 @@
       <include name="contribref/**/*.jpeg" />
       <include name="guide_fr/**/*.jpeg" />
       <include name="installation/**/*.jpeg" />
+
+      <include name="includes/**/*.swf" />
+      <include name="developers/**/*.swf" />
+      <include name="deployers/**/*.swf" />
+      <include name="component-design/**/*.swf" />
+      <include name="component-browser/**/*.swf" />      
+      <include name="reference/**/*.swf" />
+      <include name="contributors/**/*.swf" />
+      <include name="contribref/**/*.swf" />
+      <include name="guide_fr/**/*.swf" />
+      <include name="installation/**/*.swf" />
+
+      <include name="includes/**/*.ico" />
+      <include name="developers/**/*.ico" />
+      <include name="deployers/**/*.ico" />
+      <include name="component-design/**/*.ico" />
+      <include name="component-browser/**/*.ico" />      
+      <include name="reference/**/*.ico" />
+      <include name="contributors/**/*.ico" />
+      <include name="contribref/**/*.ico" />
+      <include name="guide_fr/**/*.ico" />
+      <include name="installation/**/*.ico" />
+
+
 
       
   </patternset> 
