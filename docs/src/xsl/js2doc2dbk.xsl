@@ -521,7 +521,7 @@
     <xsl:variable name="visible-members" select="$members[contains($visibility.filter,@access)]"/>
     <xsl:if test="count($visible-members) > 0 or $hasinherited">
       <variablelist>
-        <title><xsl:value-of select="$title"/></title>
+        <title><link linkend="info-attributes"><xsl:value-of select="$title"/></link></title>
         <xsl:if test="count($visible-members) > 0">
           <informaltable frame="none" pgwide="1">
             <tgroup cols="5" colsep="0" rowsep="0">
@@ -1481,7 +1481,12 @@
 
     <!-- don't generate a term if this is an event -->
     <xsl:if test="not(&isevent;)">
-      <term id="{@id}" xreflabel="{$xref}">
+        <!-- TODO [dda 2008-06-27] This no longer generates
+             an anchor, needed to find attributes on the page.
+             <anchor/> added below, and renamed this @id.term to
+             avoid multiple ID warnings.  Not sure this term
+             is needed or helpful any longer.  -->
+      <term id="{concat(@id,'.term')}" xreflabel="{$xref}">
         <!-- how to get the indexterm to use a different name than xreflabel? -->
         <indexterm zone="{@id}">
           <primary>
@@ -1496,6 +1501,7 @@
     </xsl:if>
     <row>
       <entry role="attrname">
+        <anchor id="{@id}"/>
         <literal>
           <xsl:value-of select="@name"/>
         </literal>
