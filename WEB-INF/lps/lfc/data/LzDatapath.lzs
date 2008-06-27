@@ -147,6 +147,14 @@ var pooling :Boolean = false;
  * See the section on <link linkend="datareplication">Replication</link>
  * in the Guide for information about the use of this attribute.
  *
+ * <note>The choice of replication style implies a choice of
+ * replication manager.  Each replication manager may have additional
+ * attributes which are specified as attributes of the datapath.  For
+ * example, <xref linkend="LzLazyReplicationManager" /> takes
+ * <code>axis</code> and <code>spacing</code> attributes.  See the
+ * documentaion for the corresponding replication manager for detailed
+ * information on these additional attributes.</note>
+ *
  * @type String
  * @lzxtype 'normal' | 'lazy' | 'resize'
  * @lzxdefault 'normal'
