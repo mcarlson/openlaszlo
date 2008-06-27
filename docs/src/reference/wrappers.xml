@@ -430,10 +430,10 @@ sample rates: 11.025 khz, 22.5 khz, and 44.1 khz, and encoded at no
 more than 160kbps.</p>
 
 <p>The <a href="${examples}image-loading/dataimage.lzx">dataimage</a> example
-further demonstrates the use of the <a class="code">resource</a> tag.</p>
+further demonstrates the use of the <literal>resource</literal> tag.</p>
 
 <p>
-For details on multi-frame resources, see <a href="frame.html">frame</a>.
+For details on multi-frame resources, see <a href="tag-frame.html">frame</a>.
 </p>
 </text>
 </doc>
