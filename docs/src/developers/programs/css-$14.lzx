@@ -5,34 +5,34 @@
 <stylesheet>
 
 view {
-    height: "50";
-    width: "50";
-    bgcolor: "0xFF0000";
+    height: 50;
+    width: 50;
+    bgcolor: #FF0000;
     }
     
 [name='blue'] {
-    height: "50";
-    width: "50";
-    bgcolor: "0x0000FF";
+    height: 40;
+    width: 40;
+    bgcolor: "blue";
     }
 
 #green {
-    height: "50";
-    width: "50";
-    bgcolor: "0x006600";
+    height: 30;
+    width: 30;
+    bgcolor: rgb(0,102,0);
     }
 
 </stylesheet>
 
-<simplelayout axis="x" spacing="25"/>
-
+<view layout="axis: x; spacing: 25">
     <view id="red" name="red" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/>
     <view id="blue" name="blue" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" />
-    <view id="green" name="green" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" />
+    <view id="green" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" />
+</view>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
