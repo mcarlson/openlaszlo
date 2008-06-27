@@ -171,7 +171,7 @@
         ]]> </method>
 
         <!--- @keywords private -->
-        <handler name="onmousedown" >
+        <handler name="onmousedown" >separator
             // a menu button only exists within a menubar so
             // toggle menubar's clickcounter between 0 and 1
             this.parent._clickcounter += 1; // this.parent is a menubar
@@ -271,9 +271,15 @@
                 <p>
                     For an example, see <xref linkend="lz.menu"/>.
                 </p>
-                <seealso>
-                    <classes>menubar menu menuitem</classes>
-                </seealso>
+            <p><b>See Also:</b></p>
+
+              <ul>
+                  <li>
+                     <sgmltag class="element" role="lz.menubar">&lt;menubar&gt;</sgmltag>, <sgmltag class="element" role="lz.menu">&lt;menu&gt;</sgmltag>
+                     and <sgmltag class="element" role="lz.menuitem">&lt;menuitem&gt;</sgmltag>
+                  </li>
+              </ul>
+
             </text>
         </doc>
 

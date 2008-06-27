@@ -199,9 +199,13 @@
           specified as the <attribute>scrollattr</attribute>, overriding the
           default value of <code>x</code> or <code>y</code>.</p>
 
-        <seealso>
-          <component-design id="scrollbar" title="Scrollbar"/>
-        </seealso>
+            <p><b>See Also:</b></p>
+
+              <ul>
+                  <li>
+                      For details on how this component is constructed, see the<a href="${component-design}/scrollbar.html">Scrollbar</a> section of the <a href="${component-design}/index.html" target="_blank">Component Design Guide</a>
+                  </li>
+              </ul>
           </text>
         </doc>
 

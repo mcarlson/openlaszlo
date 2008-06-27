@@ -97,11 +97,13 @@
 </canvas>
                     ]]>
                 </example>
-                <seealso>
-                    <classes>
-                        modaldialog alert
-                    </classes>
-                </seealso>
+            <p><b>See Also:</b></p>
+
+              <ul>
+                  <li>
+                     <literal>modaldialog</literal> and <sgmltag class="element" role="lz.alert">&lt;alert&gt;</sgmltag>
+                  </li>
+              </ul>
             </text>
         </doc>
 

@@ -6,6 +6,8 @@
     <!--  BASETAB CLASS  -->
     <!-- =============== -->
 
+
+
     <class name="basetab" extends="baselistitem" clickable="true" 
         focusable="true">
 
@@ -203,7 +205,7 @@
             <p>A <classname>basetabsbar</classname> is a non-visual container
             class that uses a default x-axis <sgmltag class="element" role="lz.simplelayout">&lt;simplelayout&gt;</sgmltag> 
             to lay out its <sgmltag class="element" role="lz.basetab">&lt;basetab&gt;</sgmltag> 
-            children. <sgmltag class="element" role="lz.basetabsbar">&lt;basetabsbar&gt;</sgmltag> is contained in a 
+            children. <literal>basetabsbar </literal> is contained in a 
             <sgmltag class="element" role="lz.basetabs">&lt;basetabs&gt;</sgmltag> component.</p>
             
             <example title="custom basetabsbar">
