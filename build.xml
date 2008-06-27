@@ -168,9 +168,14 @@
 
       <!-- Exclude images, because we don't want to replace VERSIONID inside images. --> 
       <exclude name="**/*.png" />      
-      <exclude name="**/*.gif" />                          
+      <exclude name="**/*.gif" />
+      <exclude name="**/*.swf" />
       <exclude name="**/*.jpg" />
       <exclude name="**/*.jpeg" />
+      <exclude name="**/*.ico" />
+      <exclude name="**/*.pdf" />
+      <exclude name="**/*.zip" />
+
 
       <include name="guide_fr/**" />
 
