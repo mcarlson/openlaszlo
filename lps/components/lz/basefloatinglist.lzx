@@ -376,9 +376,13 @@
                    and <xref linkend="lz.plainfloatinglist"/> for concrete extensions of this
                    base class.
                 </p>
-                <seealso>
-                    <component-design id="floatinglist" title="Floating List"/>
-                </seealso>
+            <p><b>See Also:</b></p>
+
+              <ul>
+                  <li>
+                      For details on how this component is constructed, see the<a href="${component-design}/floatinglist.html">Floating List</a> section of the <a href="${component-design}/index.html" target="_blank">Component Design Guide</a>
+                  </li>
+              </ul>
             </text>
         </doc>
 

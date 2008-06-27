@@ -24,7 +24,7 @@
         <text>
             <p>
                 <literal>constantlayout</literal> extends
-                <a href="../reference/layout.html"><literal>LzLayout</literal></a>, and therefore it is responsible for
+                <sgmltag class="element" role="LzLayout">&lt;LzLayout&gt;</sgmltag>, and therefore it is responsible for
                 arranging all of the subviews for the view that it is attached to. The
                 attributes of a view that <literal>constantlayout</literal>
                 effects are the <literal>x</literal> and <literal>y</literal>
