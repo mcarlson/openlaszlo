@@ -140,9 +140,14 @@
 </canvas>
                     ]]>
                 </example>
-                <seealso>
-                    <tags>command menu menuitem menuseparator</tags>
-                </seealso>
+            <p><b>See Also:</b></p>
+
+              <ul>
+                  <li>
+                      <sgmltag class="element" role="lzCommand">&lt;command&gt;</sgmltag>, <sgmltag class="element" role="lz.menu">&lt;menu&gt;</sgmltag>, 
+                      <sgmltag class="element" role="lz.menuitem">&lt;menuitem&gt;</sgmltag> and <sgmltag class="element" role="lz.simplelayout">&lt;menuseparator&gt;</sgmltag>
+                  </li>
+              </ul>
             </text>
         </doc>
 

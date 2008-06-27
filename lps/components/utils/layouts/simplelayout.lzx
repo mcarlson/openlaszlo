@@ -77,7 +77,7 @@
     <doc>
         <tag name="shortdesc"><text>A quick layout for arranging siblings vertically or horizontally.</text></tag>
 <text>        <p>
-            <literal>simplelayout</literal> extends <a href="../reference/layout.html"><literal>LzLayout</literal></a>. <literal>simplelayout</literal> arranges sibling views along the <literal>x</literal> and <literal>y</literal> axis, or both. <literal>simplelayout</literal> places each sibling view based on the width
+            <literal>simplelayout</literal> extends <sgmltag class="element" role="LzLayout">&lt;LzLayout&gt;</sgmltag>. <literal>simplelayout</literal> arranges sibling views along the <literal>x</literal> and <literal>y</literal> axis, or both. <literal>simplelayout</literal> places each sibling view based on the width
             (or height) of the previous subview, depending on whether the x-axis or the y-axis was specified.</p>
         
         
