@@ -146,8 +146,6 @@
                 <view x="1" y="1" width="${parent.width - 2}" height="30" bgcolor="#7a7a8c"/>
             </view>
             <view x="125" name="compilecontrols">
-              <view name="sign" resource="neon_sign_small.png" opacity="0" x="20" y="4"
-                    onclick="this.animate('opacity', 0, 1000)"/>
               <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:12" x="10" y="9">
                     <radiobutton id="rb8" value="'swf8'"
                                  selected="${app_runtime == 'swf8'}">swf8</radiobutton >
@@ -163,9 +161,10 @@
                     -->
 
                 </radiogroup>
-                <view x="142">
+                <view x="$once{rg_runtime.x + rg_runtime.width + 8}">
                     <view height="14" width="1" bgcolor="black" y="9"
-                        onclick="parent.parent.sign.animate('opacity', 1, 1000), rb9.animate('opacity', 1, 1000); parent.animate('x', 200, 1000);"/>
+                        onclick="rb9.animate('opacity', 1, 1500);
+                                 parent.animate('x', 200, 1000);"/>
                     <checkbox id="cb_debug" value="${app_debug == 'true'}"
                             x="16" y="8">Debug</checkbox>
                     <checkbox id="cb_backtrace" 

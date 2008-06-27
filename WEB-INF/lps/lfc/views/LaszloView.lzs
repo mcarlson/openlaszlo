@@ -2995,7 +2995,9 @@ static function removeProxyPolicy ( f ){
 /**
   * Sets a proxy policy function on a per-view basis.
   * 
-  * @param Function f: The function to use for this view's proxy policy 
+  * @param Function f: A function that takes a URL as a string and returns
+  * true or false, meaning that the request should be
+  * proxied by the LPS server or made directly to the URL.
   */
 function setProxyPolicy ( f ){
     this.__proxypolicy = f;
