@@ -1,58 +1,58 @@
 
 
-<canvas debug="true">
+<canvas height="150">
 
-<stylesheet>
-mookie {
-height : 25;
-width : 25;
-bgcolor : #0000FF;
-}
+  <stylesheet>
+    mookie {
+      height : 25;
+      width : 25;
+      bgcolor : #0000FF;
+    }
 
-blaylock {
-title : "Blaylock";
-bgcolor : #FF0000;
-}
+    blaylock {
+      title : "Blaylock";
+      bgcolor : #FF0000;
+    }
 
-wilson {
-height : 25;
-width : 200;
-fgcolor : #FF00FF;
-text : "Wilson";
-}
-</stylesheet>
+    wilson {
+      height : 25;
+      width : 200;
+      fgcolor : #FF00FF;
+      text : "Wilson";
+    }
+  </stylesheet>
 
-<class name="mookie" x="200" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/>
+  <class name="mookie" x="200" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/>
 
-<class name="blaylock">
-<window title="$style{'title'}" x="250" height="100" width="150" bgcolor="$style{'bgcolor'}"/>
-</class>
+  <class name="blaylock">
+    <window title="$style{'title'}" x="250" height="100" width="150" bgcolor="$style{'bgcolor'}"/>
+  </class>
 
-<class name="wilson" >
-<text text="$style{'text'}" x="400" height="$style{'height'}" width="$style{'width'}" fgcolor="$style{'fgcolor'}"/>
-</class>
+  <class name="wilson" >
+    <text text="$style{'text'}" x="400" height="$style{'height'}" width="$style{'width'}" fgcolor="$style{'fgcolor'}"/>
+  </class>
 
-<button text="Dynamically create Mookie">
-<handler name="onclick">
-canvas.mookieView=new lz.mookie(canvas, {});
-</handler>
-</button>
+  <button text="Dynamically create Mookie">
+    <handler name="onclick">
+      canvas.mookieView=new lz.mookie(canvas, {});
+    </handler>
+  </button>
 
-<button text="Dynamically create Blaylock" y="50">
-<handler name="onclick">
-canvas.blaylockWindow=new lz.blaylock(canvas, {});
-</handler>
-</button>
+  <button text="Dynamically create Blaylock" y="50">
+    <handler name="onclick">
+      canvas.blaylockWindow=new lz.blaylock(canvas, {});
+    </handler>
+  </button>
 
-<button text="Dynamically create Wilson" y="100">
-<handler name="onclick">
-canvas.wilsonText=new lz.wilson(canvas, {});
-</handler>
-</button>
+  <button text="Dynamically create Wilson" y="100">
+    <handler name="onclick">
+      canvas.wilsonText=new lz.wilson(canvas, {});
+    </handler>
+  </button>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
+     * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+     * Use is subject to license terms.                                            *
+     * X_LZ_COPYRIGHT_END ****************************************************** -->
 

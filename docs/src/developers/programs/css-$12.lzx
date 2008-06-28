@@ -1,41 +1,38 @@
+<canvas height="220">
 
+  <stylesheet>
 
-<canvas height="350" width="700">
+    #sun {
+      bgcolor: #16355E;
+      face: "resources/smiley.gif";
+    }
 
-<stylesheet>
+    #monarchs {
+      bgcolor: #B2B9CB;
+      face: "resources/sourface.png";
+    }
 
-        #sun {
-          bgcolor: "0x16355E"; 
-          face: "resources/smiley.gif";
-        }
-        
-        #monarchs {
-            bgcolor: "0xB2B9CB";
-            face: "resources/sourface.png";
-        }
- 
-</stylesheet>
+  </stylesheet>
 
-<simplelayout axis="x" spacing="10"/>
+  <simplelayout axis="x" spacing="10"/>
 
-<class name="bouncebox">
-        <view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}">
-            <view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-100}" height="${immediateparent.height-100}" />
-            <view name="gBounce" source="$style{'face'}" x="50" y="50">
-                <animatorgroup name="myAnimatorGroup" start="true" process="sequential" >
-                <animator attribute="y" from="50" to="150" duration="1000" motion="linear"/>
-                <animator attribute="y" from="50" to="100" duration="1000" repeat="Infinity" motion="easeout"/>
-                </animatorgroup>
-            </view>
-        </view>
-</class>
+  <class name="bouncebox">
+    <view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}">
+      <view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-100}" height="${immediateparent.height-100}" />
+      <view name="gBounce" source="$style{'face'}" x="50" y="50">
+        <animatorgroup name="myAnimatorGroup" start="true" process="sequential" >
+          <animator attribute="y" from="50" to="150" duration="1000" motion="linear"/>
+          <animator attribute="y" from="50" to="100" duration="1000" repeat="Infinity" motion="easeout"/>
+        </animatorgroup>
+      </view>
+    </view>
+  </class>
 
-<bouncebox id="monarchs" />
-<bouncebox id="sun" />
+  <bouncebox id="monarchs" />
+  <bouncebox id="sun" />
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-
+     * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+     * Use is subject to license terms.                                            *
+     * X_LZ_COPYRIGHT_END ****************************************************** -->

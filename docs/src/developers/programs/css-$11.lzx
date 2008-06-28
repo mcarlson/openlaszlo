@@ -1,49 +1,46 @@
 
 
-<canvas width="400" height="400">
+<canvas height="320">
 
-<stylesheet>
+  <stylesheet>
 
     styledbox {
-        stylebgcolor: "0xCCCCCC";
-        styleinnercolor: "0xFF0000";
+      stylebgcolor: #CCCCCC;
+      styleinnercolor: "red";
     }
 
     styledbox styledbox2 {
-        stylebgcolor: "0x999999";
-        styleinnercolor: "0x0000FF";
+      stylebgcolor: #999999;
+      styleinnercolor: "blue";
     }
 
     styledbox styledbox2 styledbox3 {
-        stylebgcolor: "0x666666";
-        styleinnercolor: "0x00FF00";
+      stylebgcolor: #666666;
+      styleinnercolor: "green";
     }
 
-</stylesheet>
+  </stylesheet>
 
-<class name="styledbox" height="100" width="100" bgcolor="$style{'stylebgcolor'}">
+  <class name="styledbox" height="100" width="100" bgcolor="$style{'stylebgcolor'}">
     <view name="snow" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/>
-</class>
+  </class>
 
-<class name="styledbox2" height="100" width="100" bgcolor="$style{'stylebgcolor'}">
+  <class name="styledbox2" height="100" width="100" bgcolor="$style{'stylebgcolor'}">
     <view name="braxton" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/>
-</class>
+  </class>
 
-<class name="styledbox3" height="100" width="100" bgcolor="$style{'stylebgcolor'}">
+  <class name="styledbox3" height="100" width="100" bgcolor="$style{'stylebgcolor'}">
     <view name="jackson" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/>
-</class>
+  </class>
 
-<styledbox id="comet" x="200" y="0">
-            <styledbox2 id="shock" x="-100" y="100">
-                    <styledbox3 id="storm" x="-100" y="100"/>
-            </styledbox2>
-</styledbox>
-
-<styledbox2/>
-<styledbox3/>
+  <styledbox id="comet" x="200" y="0">
+    <styledbox2 id="shock" x="-100" y="100">
+      <styledbox3 id="storm" x="-100" y="100"/>
+    </styledbox2>
+  </styledbox>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
+     * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+     * Use is subject to license terms.                                            *
+     * X_LZ_COPYRIGHT_END ****************************************************** -->

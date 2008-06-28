@@ -1,20 +1,20 @@
 
 
-<canvas>
+<canvas height="120">
 
-<stylesheet>
+  <stylesheet>
     #gView {
-        height: "100";
-        width: "100";
-        bgcolor: "0x663399";
+      height: 100;
+      width: 100;
+      bgcolor: #663399;
     }
-</stylesheet>
+  </stylesheet>
 
-<view id="gView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/>
+  <view id="gView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
+     * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+     * Use is subject to license terms.                                            *
+     * X_LZ_COPYRIGHT_END ****************************************************** -->
 

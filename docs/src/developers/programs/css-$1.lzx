@@ -1,8 +1,10 @@
 
-  <canvas>
-      <view height="100" width="100" bgcolor="0x663399"/>
-  </canvas>
+
+<canvas height="120">
+  <view height="100" width="100" bgcolor="#663399"/>
+</canvas>
+
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
+     * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+     * Use is subject to license terms.                                            *
+     * X_LZ_COPYRIGHT_END ****************************************************** -->

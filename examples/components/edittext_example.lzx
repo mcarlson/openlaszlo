@@ -1,4 +1,10 @@
 <canvas bgcolor="0xeaeaea" height="500">
+  <script when="immediate">
+    Debug.trace(LzText.prototype, 'getTextHeight');
+    Debug.trace(LzTextSprite.prototype, 'getTextfieldHeight');
+    Debug.trace(LzText.prototype, 'getTextWidth');
+    Debug.trace(LzTextSprite.prototype, 'getTextfieldWidth');
+  </script>
     <include href="lz/library.lzx" />
     <dataset name="ds">
         <item>first item from dataset</item>
@@ -34,7 +40,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

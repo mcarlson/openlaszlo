@@ -19,8 +19,8 @@ applications. </para>
 <para/><section><title>Overview</title>
 
 <para>If an OpenLaszlo application is to be deployed
-more than once -- but with different colors, sizes, or resources in each
-deployment, for instance -- the designer can alter those attributes within a
+more than once &#x2014; but with different colors, sizes, or resources in each
+deployment, for instance &#x2014; the designer can alter those attributes within a
 stylesheet.</para>
 
 <para/></section><section><title>Simple Views</title>
@@ -55,7 +55,7 @@ Each rule applies to one aspect of the document, and consists of two
 parts: selector and declaration.</para>
 
 <example role="live-example"><title>Selector</title><programlisting>
-#myView { bgcolor: "0x0000FF"; }
+#myView { bgcolor: #0000FF; }
 </programlisting></example>
 
 <para>The selector comes before the curly brace, the declaration after. In the
@@ -93,12 +93,12 @@ applied. The class <literal>myWiderView</literal> contains a view whose <literal
 <para/></section><section><title>Element selectors</title>
 
 <example role="live-example"><title>Element example</title><programlisting>
-        LzNode {
+        node {
             property: "foo";
         }
 </programlisting></example>
 
-<para>The element selector applies when it matches the name of the node itself:</para>
+<para>The element selector applies when it matches the tag that creates the node. In the example below, the element selector <code>view</code> matches the <code>&lt;view&gt;</code> tag:</para>
 
 <example role="live-example">
    <title>Element selector</title>
@@ -110,7 +110,7 @@ applied. The class <literal>myWiderView</literal> contains a view whose <literal
 <para/></section><section><title>ID selectors</title>
 
 <example role="live-example"><title>ID example</title><programlisting>
-        #LzNode {
+        #id {
             property: "foo";
         }
 </programlisting></example>
@@ -129,23 +129,23 @@ when it matches a node's ID:</para>
 <para/></section><section><title>Descendant selectors </title>
 
 <example role="live-example"><title>Descendant example</title><programlisting>
-	fee fi {
-        property: "car";
-    }
+fee fi {
+    property: "car";
+}
 
-	fee fi foo {
-        property: "cart";
-    }
-    
-    fee fi foo fum {
-        property: "cartman";
-    }
+fee fi foo {
+    property: "cart";
+}
+
+fee fi foo fum {
+    property: "cartman";
+}
 </programlisting></example>
 
 <para>A selector in an ancestor/descendant hierarchy applies when its
 ancestors do. In the snippet above, the "fee" selector depends on no
-ancestors, so it would always fire on an LzNode identified by "fee". The
-"fum" selector, on the other hand, would only fire if the LzNode had
+ancestors, so it would always fire on an node identified by "fee". The
+"fum" selector, on the other hand, would only fire if the node had
 three ancestors "fee", "fi", and "foo".</para>
 
 <example role="live-example">
@@ -168,7 +168,7 @@ and no stylesheet information for <literal>styledbox3</literal> unless it descen
 
 <para/></section></section><section><title>A Nested View</title>
 <para>The advantage of using stylesheets shows in a
-slightly more difficult OpenLaszlo application. If a designer wanted to reuse a template, no knowledge of OpenLaszlo's LZX language is necessary -- in this
+slightly more difficult OpenLaszlo application. If a designer wanted to reuse a template, no knowledge of OpenLaszlo's LZX language is necessary &#x2014; in this
 example, s/he just has to change the color hexcode(s) and the name(s) of
 the resource(s) in the stylesheet:</para>
 
@@ -194,7 +194,7 @@ the resource(s) in the stylesheet:</para>
 
 <para/></section><section><title>Specificity</title>
 
-<para>An instance of an LzNode -- most likely a view, or some other OpenLaszlo
+<para>An instance of a node -- most likely a view, or some other OpenLaszlo
 element -- can trigger more than one selector in the stylesheet. In such
 cases, CSS gives precedence according to <ulink url="http://www.w3.org/TR/CSS21/cascade.html#specificity">rules of
 specificity</ulink>. In general, the more specific the selector, the higher
@@ -260,7 +260,7 @@ invoked. The selector closest to the bottom of the stylesheet prevails.</para>
 #gPhilip {
     width: 300;
     height: 200;
-    bgcolor: "0x8F008F";
+    bgcolor: #8F008F;
 }
 
 &lt;!--end--&gt;
