@@ -11,49 +11,55 @@
   */
   
 /**
-  * <p>This layout class is the base class that all other layouts 
-  * such as, for example <xref linkend="lz.simplelayout"/> and
-  * <xref linkend="lz.resizelayout"/> extend.</p>
+  * <p>A layout is used to automatically distribute, align, or
+  * otherwise arrange the subviews of the view that contains it (it
+  * arranges the views that are it's siblings). Using a layout
+  * obviates the need to precisely position the views of an
+  * application and allows an application to resize or reconfigure
+  * gracefully according to the constraints of its container.</p>
+  *
+  * <p>The layout class is a null layout &#x2014; it does not arrange
+  * it's siblings. It is the base class that other layouts extend.
+  * <classname>simplelayout</classname> is a basic extension of the
+  * layout class. The example below illustrates using a simple
+  * layout to distribute views along the y axis.</p>
+  *
+  * <example title="Using a simple layout to arrange views"><programlisting><![CDATA[
+  *  <canvas height="60">
+  *    <view bgcolor="#DDFFFF">
+  *      <text>Without a layout, it can be difficult</text>
+  *      <text x="2" y="5">to manually position your views</text>
+  *    </view>
+  *    <view y="25" bgcolor="#FFDDFF">
+  *      <simplelayout axis="y" />
+  *      <text>A layout makes</text>
+  *      <text>positioning simple and automatic</text>
+  *    </view>
+  *  </canvas>
+  * ]]></programlisting></example>
+  *
+  * <p>Layouts are so important, there is a shorthand for specifying them
+  * using the <xref linkend="LzView.__ivars__.layout" /> attribute
+  * of <xref linkend="LzView" />.  The previous example could be more
+  * compactly specified:</p>
+  *
+  * <example title="Using the layout attribute to specify a layout"><programlisting><![CDATA[
+  * <canvas height="35">
+  *   <view layout="class: simplelayout; axis: y">
+  *     <text>A layout makes</text>
+  *     <text>positioning simple and automatic</text>
+  *   </view>
+  * </canvas>
+  * ]]></programlisting></example>
+  *
+  * <p>Because <xref linkend="lz.simplelayout" /> is the default
+  * layout, the above example could also have used just <code>layout="axis:
+  * y"</code>.</p>
   * 
-  * <p>A layout arranges the views within the element that it is attached
-  * to.  <xref linkend="lz.simplelayout"/> is one example of a basic
-  * extension of this layout object, and the code sample below illustrates
-  * its use.</p> 
-  * 
-  * <p>For example, the layout in:</p>
-  * 
-  * <example><programlisting>
-  * &lt;canvas height="30"&gt;
-  *   &lt;view&gt;
-  *     &lt;text&gt;A&lt;/text&gt;
-  *     &lt;text&gt;B&lt;/text&gt;
-  *     &lt;simplelayout axis="y"/&gt;
-  *   &lt;/view&gt;
-  * &lt;/canvas&gt;
-  * </programlisting></example>
-  * 
-  * <p>is necessary to keep the A and B text views from being positioned
-  * on top of each other.  As an alternative to the
-  * <tagname>layout</tagname> element, a view may specify a
-  * <attribute>layout</attribute> attribute.  For example, the previous
-  * example is equivalent to:</p>
-  * 
-  * <example><programlisting class="program" id="layout-2">
-  * &lt;canvas height="30"&gt;
-  *   &lt;view layout="axis: y"&gt;
-  *     &lt;text&gt;A&lt;/text&gt;
-  *     &lt;text&gt;B&lt;/text&gt;
-  *   &lt;/view&gt;
-  * &lt;/canvas&gt;
-  * </programlisting></example>
-  * 
-  * <p>You do not use <tagname>layout</tagname> to explicitly position
-  * views.  Rather, you may extend this class to create new types of
-  * layouts.</p>
-  * 
-  * <p>
-  * Layouts, like constraints and animators, affect specific attributes of a view. Views can have more than one layout, as long as each set of attributes
-  * associated with a layout does not overlap with any of the other sets.</p>
+  * <p>Layouts, like constraints and animators, affect specific
+  * attributes of a view. Views can have more than one layout, as long
+  * as each set of attributes associated with a layout does not
+  * overlap with any of the other sets.</p>
   * 
   * @shortdesc Abstract layout base class.
   * @lzxname layout
@@ -67,6 +73,7 @@ dynamic class LzLayout extends LzNode {
  */
     var vip:LzView = null;
 
+  /** @access private */
   function LzLayout ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
       super(parent,attrs,children,instcall);
   }  
@@ -82,10 +89,14 @@ dynamic class LzLayout extends LzNode {
   var initDelegate;
 
   /**
-    * Set to true if layout is locked from updates.
-    * @type Boolean
-    */
-  //locked is set to 2 in the prototype of the layout. This is a special signal that the layout is locked temporarily until it resolves its references
+   * Set to true if layout is locked from updates.
+   *
+   * @devnote locked is set to 2 in the prototype of the layout. This
+   * is a special signal that the layout is locked temporarily until
+   * it resolves its references
+   *
+   * @type Boolean
+   */
   var locked = 2;
   /**
    * Setter for locked
@@ -103,11 +114,14 @@ dynamic class LzLayout extends LzNode {
   }
 
 
-  /** Array holding the views under this layout's control.
-    *
-    * @type Array
-    * @access public
-    */
+  /**
+   * Array of the views this layout controls. Used by subclasses of
+   * <code>layout</code> to implement their arrangement algorithm by
+   * adjusting the appropriate attribute of each view.
+   *
+   * @type [LzView]
+   * @access public
+   */
   var subviews = null;
 
   /** A delegate used to update the layout.
@@ -214,7 +228,8 @@ function reset( e = null ) {
   * Called whenever a new subview is added to the layout. This is called both
   * in the layout constructor and when a new subview is called after layout
   * has been created. This is only called if the view's "ignorelayout" option is
-  * not set.
+  * not set.  Subclasses may override this method to decide whether or
+  * not to add a particular view to the <code>subviews</code> array.
   *
   * @access public
   * @param LzView sd: The subview to add.
@@ -291,6 +306,8 @@ function lock ( ) {
 /**
   * Unlock the layout once update is done.
   *
+  * @param Any e: Ignored. <code>unlock</code> accepts an argument as
+  * a convenience so that it can be used as an event handler method.
   */
 function unlock (e=null ) {
     this.locked = false;
@@ -406,17 +423,21 @@ function __LZinsertAfter ( newsub , oldsub ){
 }
 
 /**
-  * Update is called whenever the layout needs to be updated. By default, it
-  * is called by <b> reset</b>. This is an abstract function in the class,
-  * but this is the main routine where the layout does its work.
+  * <p>Update is called whenever the layout needs to be updated.</p>
   *
-  * The beginning of this routine should always check for the locked property
-  * and return immediately if it is true for best performace.
+  * <p>In the <code>layout</code> class, update does nothing.
+  * Subclasses of layout override this method to implement their
+  * layout algorithm.  For best performance, any update method should
+  * check first to see if the layout is <code>locked</code> and return
+  * immediately if so.  This will avoid redundant updates when a
+  * layout is in transition.</p>
+  *
+  * @param Any e: The event data that caused this update.  Typically
+  * unused since various events may cause an update.
   *
   * @access public
   */
-
-function update(v=null) {
+function update(e=null) {
 }
 
 
