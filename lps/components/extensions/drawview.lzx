@@ -882,6 +882,8 @@
             var __bitmapdata = null;
             var __drawing = null;
             var __matrix = null;
+            var __measurewidth = true;
+            var __measureheight = true;
             
             var oncontext = LzDeclaredEvent;
     
@@ -902,6 +904,9 @@
 
             // Add bitmap data drawing layer
             function rebuildBitmap (ignore) {
+                if ($swf9) {
+                    return;
+                }
                 if (this['__bitmapmc']) {
                     this.__bitmapmc.removeMovieClip();
                 }
@@ -1009,31 +1014,28 @@
                 }
             }
 
-            if ($swf9) {
-            } else {
-                function drawImage(image, x, y, w, h, r) {
-                    if ($swf7) {
-                        if ($debug) Debug.warn('Drawview.drawImage() is supported in swf7.');
-                    } else {
-                        if (typeof image == 'string') {
-                            image = this.getImage(image);
-                        }
-                        if (! image) return;
-
-                        var m = this.getIdentityMatrix();
-
-                        var tw = w ? w / image.width : 1;
-                        var th = h ? h / image.height : 1;
-                        m.scale(tw, th);
-
-                        if (r != null) m.rotate(r);
-
-                        var tx = x ? x : 0;
-                        var ty = y ? y : 0;
-                        m.translate(tx, ty);
-
-                        this.copyBitmap(image, this.width, this.height, this.__bitmapdata, m);
+            function drawImage(image, x, y, w, h, r) {
+                if ($swf9) {
+                    if ($debug) Debug.warn('Drawview.drawImage() is not yet supported in swf9.');
+                } else {
+                    if (typeof image == 'string') {
+                        image = this.getImage(image);
                     }
+                    if (! image) return;
+
+                    var m = this.getIdentityMatrix();
+
+                    var tw = w ? w / image.width : 1;
+                    var th = h ? h / image.height : 1;
+                    m.scale(tw, th);
+
+                    if (r != null) m.rotate(r);
+
+                    var tx = x ? x : 0;
+                    var ty = y ? y : 0;
+                    m.translate(tx, ty);
+
+                    this.copyBitmap(image, this.width, this.height, this.__bitmapdata, m);
                 }
             }
     
@@ -1172,7 +1174,7 @@
                 this.closePath();
                 this.__playPath(this.context);
                 this.context.endFill();
-                this.sprite.updateResourceSize();
+                this.__updateSize();
             }
     
             function __playPath(m) {
@@ -1197,47 +1199,47 @@
             }
     
             if ($swf9) {    
-            function clipPath() {
-                if ($debug) {
-                    Debug.warn('Drawview.clipPath() is not currently supported in swf9.');
+                function clipPath() {
+                    if ($debug) {
+                        Debug.warn('Drawview.clipPath() is not currently supported in swf9.');
+                    }
                 }
-            }
 
-            function clipButton() {
-                if ($debug) {
-                    Debug.warn('Drawview.clipButton() is not currently supported in swf9.');
+                function clipButton() {
+                    if ($debug) {
+                        Debug.warn('Drawview.clipButton() is not currently supported in swf9.');
+                    }
                 }
-            }
             } else {
-            function clip() {
-                if ($debug) Debug.warn('drawview.clip() is deprecated.  Use clipPath() instead.');
-                this.clipPath();
-            }
-            function clipPath() {
-                this.sprite.applyMask(true);
-                var __clipmc = this.sprite.__LZmaskClip;
-                this.closePath();
-                __clipmc.clear();
-                __clipmc.beginFill(0xffffff, 100);
-                this.__playPath(__clipmc);
-                __clipmc.endFill();
-                this.updateResourceSize();
-            }
-            function clipButton() {
-                var mc = this.getMCRef();
-                //Debug.write('clip', this, mc, this.sprite.__LZbuttonRef);
-                if (! this['__clipmc']) {
-                    this.__clipmc = this.sprite.__LZmovieClipRef.createEmptyMovieClip("$lzclipmc", 6);
-                    this.sprite.__LZbuttonRef.setMask(this.__clipmc);
+                function clip() {
+                    if ($debug) Debug.warn('drawview.clip() is deprecated.  Use clipPath() instead.');
+                    this.clipPath();
                 }
-                this.closePath();
+                function clipPath() {
+                    this.sprite.applyMask(true);
+                    var __clipmc = this.sprite.__LZmaskClip;
+                    this.closePath();
+                    __clipmc.clear();
+                    __clipmc.beginFill(0xffffff, 100);
+                    this.__playPath(__clipmc);
+                    __clipmc.endFill();
+                    this.updateResourceSize();
+                }
+                function clipButton() {
+                    var mc = this.getMCRef();
+                    //Debug.write('clip', this, mc, this.sprite.__LZbuttonRef);
+                    if (! this['__clipmc']) {
+                        this.__clipmc = this.sprite.__LZmovieClipRef.createEmptyMovieClip("$lzclipmc", 6);
+                        this.sprite.__LZbuttonRef.setMask(this.__clipmc);
+                    }
+                    this.closePath();
 
-                this.__clipmc.clear();
-                this.__clipmc.beginFill(0xffffff, 100);
-                this.__playPath(this.__clipmc);
-                this.__clipmc.endFill();
-                this.updateResourceSize();
-            }
+                    this.__clipmc.clear();
+                    this.__clipmc.beginFill(0xffffff, 100);
+                    this.__playPath(this.__clipmc);
+                    this.__clipmc.endFill();
+                    this.updateResourceSize();
+                }
             }
     
             function stroke() {
@@ -1252,7 +1254,27 @@
                 this.context.lineStyle(this.lineWidth, color.c, alpha * 100);
                 this.__playPath(this.context);
                 this.context.lineStyle(undefined);
-                this.sprite.updateResourceSize();
+                this.__updateSize();
+            }
+
+            if ($swf8) {
+                function setWidth(w, ...internal) {
+                    if (internal.length == 0) this.__measurewidth = w == null;
+                    super.setWidth(w);
+                }
+
+                function setHeight(h, ...internal) {
+                    if (internal.length == 0) this.__measureheight = h == null;
+                    super.setHeight(h);
+                }
+            }
+
+            function __updateSize() {
+                if ($swf8) {
+                    var mc = this.sprite.getContext();
+                    if (this.__measurewidth) this.setWidth(mc._width, true);
+                    if (this.__measureheight) this.setHeight(mc._height, true);
+                }
             }
     
             function clear() {
