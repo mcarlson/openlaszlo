@@ -39,9 +39,6 @@ var LzTextSprite = function(owner) {
         this.__sprites[this.uid] = this;
     }
     //Debug.debug('new LzTextSprite', this.__LZdiv, this.owner);
-    if (this.quirks['text_height_includes_margins']) {
-        this.__hpadding = 2;
-    }
 }
 
 LzTextSprite.prototype = new LzSprite(null);
@@ -62,6 +59,7 @@ LzTextSprite.prototype.__wpadding = 4;
 LzTextSprite.prototype.__hpadding = 4;
 LzTextSprite.prototype.__sizecacheupperbound = 1000;
 LzTextSprite.prototype.selectable = true;
+LzTextSprite.prototype.resize = true;
 
 LzTextSprite.prototype.setFontSize = function (fsize) {
     if (fsize == null || fsize < 0) return;
@@ -125,12 +123,12 @@ LzTextSprite.prototype.setText = function(t, force) {
     // like to use pre-line, but that appears not to work for any
     // browser.  As a compromise, if the content contains newlines, we
     // use 'pre'  The alternative would be `t.replace(RegExp('$',
-    // 'mg'), '<br />')`.
+    // 'mg'), '<br/>')`.
     // TODO: [2006-10-02 ptw] Use 'pre-line' when supported.
     // [max 1-23-2007] Actually, t.replace(...) gives the desired behavior...
     if (this.multiline && t && (t.indexOf("\n") >= 0)) {
         if (this.quirks['inner_html_strips_newlines']) {
-            t = t.replace(this.inner_html_strips_newlines_re, '<br />');
+            t = t.replace(this.inner_html_strips_newlines_re, '<br/>');
         }
     }
     if (t && this.quirks['inner_html_no_entity_apos']) {
@@ -161,6 +159,9 @@ LzTextSprite.prototype.setMultiline = function(m) {
         }
         this.__LZdiv.style.overflow = 'hidden';
     }
+    if (this.quirks['text_height_includes_margins']) {
+        this.__hpadding = m ? 3 : 4;
+    }
     // To update height
     this.setText(this.text, true);
 }
@@ -179,9 +180,11 @@ LzTextSprite.prototype.getTextWidth = function () {
 }
 
 LzTextSprite.prototype.getTextHeight = function () {
-  var h = this.getTextSize('Yq_gy', true).height;
-  if (h > 0 && (! this.multiline) && this.quirks.emulate_flash_font_metrics) {
-    h -= this.__hpadding;
+  var h = this.getTextSize(null, true).height;
+  if (h > 0 && this.quirks.emulate_flash_font_metrics) {
+    if (! this.multiline) { 
+        h -= this.__hpadding;
+    }
   }
   return h;
 }
@@ -189,8 +192,8 @@ LzTextSprite.prototype.getTextHeight = function () {
 LzTextSprite.prototype.getTextfieldHeight = function () {
     if (this._styledirty != true && this.fieldHeight != null) return this.fieldHeight
     if (this.text == null || this.text == '') {
-        this.fieldHeight = this.getTextSize('Yq_gy').height;
-//       Debug.debug('getTextfieldHeight: 0');
+        this.fieldHeight = this.getTextSize(null).height;
+        //Debug.debug('getTextfieldHeight: 0', this.fieldHeight);
         return this.fieldHeight;
     }
 
@@ -203,12 +206,12 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
         var h = this.__LZdiv.clientHeight;
         if (h == 0 || h == null) {
             h = this.getTextSize(this.text).height;
-            if (h > 0 && this.quirks.emulate_flash_font_metrics && this.quirks.text_height_includes_margins != true) {
+            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
                 h += this.__hpadding;
             }
         } else {
             if (h == 2) h = this.getTextSize(this.text).height;
-            if (h > 0 && this.quirks.emulate_flash_font_metrics && this.quirks.text_height_includes_margins != true) {
+            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
                 h += this.__hpadding;
             }
             this.fieldHeight = h;
@@ -218,7 +221,7 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
             this.__LZdiv.style.height = oldheight;
         }
     } else {
-        var h = this.getTextSize('Yq_gy').height;
+        var h = this.getTextSize(null).height;
         if (h != 0) {
             this.fieldHeight = h;
         }
@@ -236,6 +239,8 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
 }
 LzTextSprite.prototype._styledirty = true;
 LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
+    // Measure a single line
+    if (string == null || string == '') string = 'Yq_gy"9;';
     if (this._styledirty != true) {
         var style = this._stylecache;
     } else {
@@ -245,27 +250,21 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
         style += ';font-style: ' + this._fontStyle;
         style += ';font-weight: ' + this._fontWeight;
         style += ';font-family: ' + this._fontFamily;
+        style += ';line-height: ' + LzSprite.prototype.__defaultStyles.lzswftext.lineHeight;
+        if (this.quirks['text_height_includes_margins']) {
+            style += ';letter-spacing: .2px';
+        }
 
         if (this.multiline && ignorewidth != true) {
             if (this.width) style += ';width: ' + this.width + 'px';
         }
-        if (this.quirks['text_measurement_use_insertadjacenthtml']) {
-            if (this.__LzInputDiv != null) {
-                style += ';white-space: pre';
-            } else {
-                style += ';white-space: ' + this._whiteSpace;
-            }
-        } else {
-            if (this.__LzInputDiv != null) {
-                style += ';white-space: pre';
-            } else {
-                style += ';white-space: ' + this._whiteSpace;
-            }
-        }
+        style += ';white-space: ' + this._whiteSpace;
 
         this._stylecache = style;
         this._styledirty = false;
     }
+
+    //Debug.write('getTextSize', this._stylecache, this.dirty);
 
     var root = document.getElementById('lzTextSizeCache');
 
@@ -298,7 +297,7 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
 
         if (this.quirks['text_measurement_use_insertadjacenthtml']) {
             if (this.multiline && string && this.quirks['inner_html_strips_newlines']) {
-                string = string.replace(this.inner_html_strips_newlines_re, '<br />');
+                string = string.replace(this.inner_html_strips_newlines_re, '<br/>');
             }
             var tagname = 'span';
             var mdiv = _textsizecache['lzdiv~~~' + tagname];
@@ -315,7 +314,7 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
         } else {
             if (this.__LzInputDiv == null) {
                 if (this.multiline && string && this.quirks['inner_html_strips_newlines']) {
-                    string = string.replace(this.inner_html_strips_newlines_re, '<br />');
+                    string = string.replace(this.inner_html_strips_newlines_re, '<br/>');
                 }
             }
             var tagname = this.multiline ? 'div' : 'span';

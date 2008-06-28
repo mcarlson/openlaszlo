@@ -200,8 +200,9 @@ LzSprite.prototype.__defaultStyles = {
         height: '100%',
         borderWidth: 0,
         backgroundColor: 'transparent',
-        marginTop: '1px',
-        marginLeft: '2px'
+        paddingTop: '1px',
+        paddingLeft: '1px',
+        lineHeight: '120%'
     },
     lzswfinputtextmultiline: {
         fontFamily: 'Verdana,Vera,sans-serif',
@@ -212,8 +213,9 @@ LzSprite.prototype.__defaultStyles = {
         height: '100%',
         borderWidth: 0,
         backgroundColor: 'transparent',
-        marginTop: '2px',
-        marginLeft: '2px'
+        paddingTop: '2px',
+        paddingLeft: '1px',
+        lineHeight: '120%'
     },
     writeCSS: function() {
         var css = '';
@@ -306,6 +308,7 @@ LzSprite.prototype.quirks = {
     ,activate_on_mouseover: true
     ,ie6_improve_memory_performance: false
     ,text_height_includes_margins: false
+    ,inputtext_size_includes_margin: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -334,6 +337,7 @@ LzSprite.prototype.__updateQuirks = function () {
             LzSprite.prototype.inner_html_strips_newlines_re = RegExp('$', 'mg');
         }
 
+        LzSprite.prototype.br_to_newline_re = RegExp('<br/>', 'mg');
         // Divs intercept clicks if physically placed on top of an element
         // that's not a parent. See LPP-2680.
         // off for now
@@ -394,16 +398,11 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['ie_mouse_events'] = true; 
             // workaround for IE not supporting clickable resources in views containing inputtext - see LPP-5435
             quirks['fix_inputtext_with_parent_resource'] = true;
+            // IE already includes margins for inputtexts
+            quirks['inputtext_size_includes_margin'] = true;
         } else if (browser.isSafari) {
-            // Fix bug in where if any parent of an image is hidden the size is 0
-            // TODO: Tucker claims this is fixed in the latest version of webkit
-            quirks['invisible_parent_image_sizing_fix'] = true;
-
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;
-
-            // Safari scrollHeight needs to subtract scrollbar height
-            quirks['safari_textarea_subtract_scrollbar_height'] = true;
 
             // Safari doesn't like clipped or placed input text fields.
             quirks['safari_avoid_clip_position_input_text'] = true;
@@ -413,6 +412,10 @@ LzSprite.prototype.__updateQuirks = function () {
             if (browser.version < 525.18) {
                 //Seems to work fine in Safari 3.1.1 
                 quirks['canvas_div_cannot_be_clipped'] = true;
+                // Fix bug in where if any parent of an image is hidden the size is 0
+                quirks['invisible_parent_image_sizing_fix'] = true;
+                // Safari scrollHeight needs to subtract scrollbar height
+                quirks['safari_textarea_subtract_scrollbar_height'] = true;
             }
             quirks['document_size_use_offsetheight'] = true;
             if (browser.version > 523.10) {
@@ -441,19 +444,32 @@ LzSprite.prototype.__updateQuirks = function () {
             } else if (browser.version < 3) {
                 // Firefox 2.0.14 doesn't work with the correct line height of 120%
                 LzSprite.prototype.__defaultStyles.lzswftext.lineHeight = '119%';
+                LzSprite.prototype.__defaultStyles.lzswfinputtext.lineHeight = '119%';
+                LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.lineHeight = '119%';
             } else if (browser.version < 4) {
-                // Firefox 3.0 doesn't work with the correct line height of 120%
-                LzSprite.prototype.__defaultStyles.lzswftext.lineHeight = '118%';
                 // Firefox 3.0 does not need padding added onto field height measurements
                 quirks['text_height_includes_margins'] = true;
             }
         }
 
         if (quirks['safari_avoid_clip_position_input_text']) {
-            LzSprite.prototype.__defaultStyles.lzswfinputtext.marginTop = '-2px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtext.marginLeft = '-2px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.marginTop = '-2px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.marginLeft = '-2px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '-1px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingLeft = '-1px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '2px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingLeft = '0px';
+        }
+        if (this.quirks['text_height_includes_margins']) {
+            LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '0px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtext.letterSpacing = '.2px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '0px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.letterSpacing = '.2px';
+            LzSprite.prototype.__defaultStyles.lzswftext.letterSpacing = '.2px';
+        }
+
+        if (quirks['inputtext_size_includes_margin']) {
+            LzSprite.prototype.__defaultStyles.lzswftext.paddingTop = '0px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '0px';
+            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '0px';
         }
 
         if (quirks['css_hide_canvas_during_init']) {

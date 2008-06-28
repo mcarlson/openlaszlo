@@ -38,7 +38,7 @@ LzInputTextSprite.prototype = new LzTextSprite(null);
 
 // Should reflect CSS defaults in LzSprite.js
 LzInputTextSprite.prototype.____hpadding = 2;
-LzInputTextSprite.prototype.____wpadding = 2;
+LzInputTextSprite.prototype.____wpadding = 4;
 LzInputTextSprite.prototype.____crregexp = new RegExp('\\r\\n', 'g');
 
 LzInputTextSprite.prototype.__createInputText = function(t) {
@@ -92,6 +92,11 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
         this.__LZclickdiv.appendChild(this.__LZinputclickdiv);
     }    
     this.__LZdiv.appendChild(this.__LzInputDiv);
+
+    if (this.quirks['inputtext_size_includes_margin']) {
+        this.____hpadding = 0;
+    }
+
     //Debug.write(this.__LzInputDiv.style);
     this.__setTextEvents(true);
 }
@@ -275,9 +280,14 @@ LzInputTextSprite.prototype.gotFocus = function() {
 
 LzInputTextSprite.prototype.setText = function(t) {
     if (t == null) return;
+    if (t.indexOf('<br/>') != -1) {
+        t = t.replace(this.br_to_newline_re, '\r') 
+        //Debug.write('new text %w', t)
+    }
     this.text = t;
     this.__createInputText(t);
     this.__LzInputDiv.value = t;
+    this.fieldHeight = null;
 }
 
 LzInputTextSprite.prototype.__setTextEvents = function(c) {
@@ -895,7 +905,7 @@ LzInputTextSprite.prototype.getText = function () {
 LzInputTextSprite.prototype.getTextfieldHeight = function () {
     if (this._styledirty != true && this.fieldHeight != null) return this.fieldHeight
     if (this.text == null || this.text == '') {
-        this.fieldHeight = this.getTextSize('Yq_gy').height;
+        this.fieldHeight = this.getTextSize(null).height;
 //       Debug.debug('getTextfieldHeight: 0');
         return this.fieldHeight;
     }
@@ -906,7 +916,7 @@ LzInputTextSprite.prototype.getTextfieldHeight = function () {
             oldheight = this.__LzInputDiv.style.height;
             this.__LzInputDiv.style.height = 'auto';
         }
-        var h = this.__LzInputDiv.clientHeight;
+        var h = this.__LzInputDiv.scrollHeight;
         if (h == 0 || h == null) {
             h = this.getTextSize(this.text).height;
             if (h > 0 && this.quirks.emulate_flash_font_metrics) {
@@ -925,7 +935,7 @@ LzInputTextSprite.prototype.getTextfieldHeight = function () {
             this.__LzInputDiv.style.height = oldheight;
         }
     } else {
-        var h = this.getTextSize('Yq_gy').height;
+        var h = this.getTextSize(null).height;
         if (h != 0) {
             this.fieldHeight = h;
         }
