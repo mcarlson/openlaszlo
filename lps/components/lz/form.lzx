@@ -148,7 +148,7 @@
 
             <example>
               &lt;canvas height="200"&gt;
-              &lt;dataset name="echoer" src="http:../../examples/components/echo.jsp" /&gt;
+              &lt;dataset name="echoer" type="http" src="/@WEBAPP@/examples/components/echo.jsp" /&gt;
               &lt;window id="win" &gt;
               &lt;form&gt;
               &lt;submit name="survey" data="${echoer}"/&gt;
