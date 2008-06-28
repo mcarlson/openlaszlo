@@ -245,7 +245,7 @@
           <xsl:if test="$query-parameters">&amp;<xsl:value-of select="$query-parameters[1]/text()"></xsl:value-of></xsl:if>
         </xsl:variable>
         <xsl:variable name="canvas-id" select="generate-id(.)"/>
-        <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', history: false <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
+        <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', history: false, cancelmousewheel: true <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
         <xsl:variable name="dhtml-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=html&amp;lzr=dhtml', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'DHTML')"/>', cancelkeyboardcontrol: true, <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
         <!-- To test examples in DHTML, uncomment the second script block below
              and the call to lz.embed.lfc() above.

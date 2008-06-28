@@ -138,9 +138,10 @@ lz.embed = {
         // for callbacks onload
         lz.embed.dojo.addLoadedListener(lz.embed._loaded, app);
         lz.embed.dojo.setSwf(swfargs, minimumVersion);
-        if (lz.embed.browser.OS == 'Mac' || 
+        if (properties.cancelmousewheel != true && 
+            (lz.embed.browser.OS == 'Mac' || 
             // fix for LPP-5393
-            ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && lz.embed.browser.OS == 'Windows' && (lz.embed.browser.isOpera || lz.embed.browser.isFirefox))) {
+            ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && lz.embed.browser.OS == 'Windows' && (lz.embed.browser.isOpera || lz.embed.browser.isFirefox)))) {
             if (lz.embed['mousewheel']) {
                 lz.embed.mousewheel.setCallback(app, '_sendMouseWheel');
             }
