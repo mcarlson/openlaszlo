@@ -53,7 +53,7 @@
                 </button>
                 <button height="20">Get Value
                     <handler name="onclick">
-                        var val = a3.getValue();
+                        var val = a3.getValue().join(', ');
                         a1val.setText(val);
                     </handler>
                 </button>
