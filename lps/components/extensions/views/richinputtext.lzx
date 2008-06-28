@@ -2,6 +2,19 @@
 
 <include href="LzTextFormat.lzx" />
 
+<switch>
+  <when runtime="dhtml">
+    <class name="richinputtext" extends="inputtext">
+      <handler name="oninit">
+        this.setText("The dhtml runtime does not support richinputtext.");
+        if ($debug) {
+            Debug.warn("The dhtml runtime does not support richinputtext");
+        }
+      </handler>
+    </class>
+  </when>
+  <otherwise>
+
 <!-- This component deals with displaying, editing, and formatting rich text.
     It is a subclass of inputtext, and supports the inputtext API, plus
     several methods for setting and getting the format of the text. Formats
@@ -83,7 +96,7 @@ class $lzc$class_richinputtext extends LzInputText {
     }
 
     if (this.multiline && this.scroll == 0 ) {
-      var scrolldel = new LzDelegate(this, "__LZforceScrollAttrs");
+      var scrolldel = new LzDelegate(this.sprite, "__LZforceScrollAttrs");
       _root.LzIdle.callOnIdle(scrolldel);
     }
 
@@ -318,7 +331,11 @@ class $lzc$class_richinputtext extends LzInputText {
   }
 }
 ]]>
+
 </script>
+
+  </otherwise>    
+</switch>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
