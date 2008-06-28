@@ -253,6 +253,28 @@ var onmousetrackup = LzDeclaredEvent;
   */
 var onmouseup = LzDeclaredEvent;
 
+/** The onmousedragin event is sent when the pointing device button has moved 
+  * off the element and back on again while the button is down.
+  * @lzxtype event
+  * @access public
+  */
+var onmousedragin = LzDeclaredEvent;
+
+/** The onmousedragout event is sent when the pointing device is moved off 
+  * the element while the button is down.
+  * down. 
+  * @lzxtype event
+  * @access public
+  */
+var onmousedragout = LzDeclaredEvent;
+
+/** The onmouseup event is sent when the pointing device button is released 
+  * outside the element it went down on.
+  * @lzxtype event
+  * @access public
+  */
+var onmouseupoutside = LzDeclaredEvent;
+
 /** 
   * Sent when a view changes its opacity 
   * @lzxtype event
