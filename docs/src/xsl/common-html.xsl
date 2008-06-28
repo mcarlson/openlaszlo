@@ -283,7 +283,7 @@
       </xsl:variable>
       <xsl:text>&#x0a;</xsl:text>
       <div class="edit-button">
-        <a href="{$edit-href}" target="lzview">
+        <a href="{$edit-href}" target="_blank">
           <img src="{$editbuttonimg}" border="0" alt="edit" />           
         </a>
       </div>
