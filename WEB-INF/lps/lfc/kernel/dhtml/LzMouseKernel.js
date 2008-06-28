@@ -91,10 +91,12 @@ var LzMouseKernel = {
             lz.embed.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
             lz.embed.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
             lz.embed.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+            if (window.top != window) lz.embed.attachEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
         } else {
             lz.embed.removeEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
             lz.embed.removeEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
             lz.embed.removeEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+            if (window.top != window) lz.embed.removeEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
         }
         // Prevent context menus in Firefox 1.5 - see LPP-2678
         document.oncontextmenu = ison ? LzMouseKernel.__mouseEvent : null;
