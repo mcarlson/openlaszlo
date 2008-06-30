@@ -18,63 +18,63 @@
   </head>
 
   <body class="release-notes">
-      <table border="0" width="95%">
-          <tr><td><h1>Release Notes for OpenLaszlo 4.1</h1></td>
-          <td><img align="right" class="logo" src="../lps/includes/logo_web_sm.gif" alt="OpenLaszlo logo" /></td></tr>
-      </table>
-      
-    
+    <table border="0" width="95%">
+      <tr>
+        <td>
+          <h1>Release Notes for OpenLaszlo 4.1</h1>
+        </td>
+        <td>
+          <img align="right" class="logo" src="../lps/includes/logo_web_sm.gif"
+            alt="OpenLaszlo logo" />
+        </td>
+      </tr>
+    </table>
+
+
     <p>OpenLaszlo 4.1 is the recommended release for DHTML and SWF development. This is a major
       release with over 800 bug fixes in the source code and many underlying architectural changes,
       in part paving the way for SWF9 support. OpenLaszlo 4.1 has been fully-qualified across the
       following browser/platform combinations: Safari3/OSX, Firefox2/OSX, Internet Explorer 7/WinXP,
-      Firefox 2/WinXP, and Firefox 2 Linux. We have tested the full suite of demos, samplers, and
+      Firefox 2/WinXP, and Firefox 2/Linux. We have tested the full suite of demos, samplers, and
       example applications with the requirement that, when possible, DHTML applications behave the
       same as their SWF counterparts. Keep in mind that DHTML does not support audio and video. To
       include that in your application, you can embed a SWF application within your DHTML
-      application, as in this <a href="http://www.openlaszlo.org/lps4.1/examples/musicdhtml/" target="_blank"
-        >example</a>.</p>
+      application, as in this <a href="http://www.openlaszlo.org/lps4.1/examples/musicdhtml/"
+        target="_blank">example</a>.</p>
     <p>OpenLaszlo 4.1 also debuts the new and significantly improved documentation. There have been
-      over 300 bug fixes made to the Reference Manual, and over 225 bug fixes in the Developer's
-      Guide. The Reference Manual and Developer's Guide are also being built using the new doctool
+      over 300 bug fixes made to the Reference Guide, and over 225 bug fixes in the Developer's
+      Guide. The Reference Guide and Developer's Guide are also being built using the new doctool
       chain, which is described in the Developer's Guide, for contributors interested in adding to
       the documentation.</p>
-    <p>Support for swf9, remains at a preliminary level. As such, we removed the swf9 button from
-      the dev console for this release. You can still compile swf9 applications by appending
-      <code>lzr=swf9</code> to the url. Or, if you are building the LPS from source, you can uncomment the
-      <code>swf9</code> radiobutton in <code>lps/admin/dev-console.lzx</code>, and then rebuild the dev-console by running
-      the new console-rebuilding ant task there:<code> cd lps/admin</code>
+    <p>Preliminary support for SWF9 is included in this release. As such, we removed the swf9
+      button from the dev console for this release. You can compile applications for
+      SWF9 by appending <code>lzr=swf9</code> to the compilation URL. Or, if you are building the LPS from source, you
+      can uncomment the <code>swf9</code> radiobutton in <code>lps/admin/dev-console.lzx</code>, and
+      then rebuild the dev-console by running the new console-rebuilding ant task there:<code> cd
+        lps/admin</code>
       <code>ant</code></p>
     <p>Remember to clear your browser cache before reloading to see the rebuilt dev-console, as it
-      is loaded as a SOLO application. We're planning to put the swf9 button back after the release
-      and continue development in the trunk branch.</p>
+      is loaded as a SOLO application. We will add the SWF9 button to the developer console when
+      support for this runtime is more complete.</p>
     <p>For every release, we rely on the OpenLaszlo community to help ensure the quality of the
       platform release and to determine its future direction. To propose or participate in
-      discussion of new features, see the <a href="http://wiki.openlaszlo.org/Enhancement_Proposals" target="_blank">
-        Wiki.</a>We encourage you to report any problems, and to make suggestions for enhancements,
-      through our <a href="http://www.openlaszlo.org/jira/browse/LPP" target="_blank">JIRA bug tracking system.</a>
-      We'd also like to hear from you on the <a href="http://www.openlaszlo.org/lists" target="_blank">mailing
-        lists</a> and in the <a href="http://forum.openlaszlo.org/" target="_blank">forums</a>.</p>
+      discussion of new features, see the <a href="http://wiki.openlaszlo.org/Enhancement_Proposals"
+        target="_blank"> Wiki.</a>We encourage you to report any problems, and to make suggestions
+      for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP"
+        target="_blank">JIRA bug tracking system.</a> We'd also like to hear from you on the <a
+        href="http://www.openlaszlo.org/lists" target="_blank">mailing lists</a> and in the <a
+        href="http://forum.openlaszlo.org/" target="_blank">forums</a>.</p>
     <h1>Known Issues and Workarounds in 4.1</h1>
     <p>This section describes some known issues and workarounds for using OpenLaszlo 4.1. For
       various reasons, these issues are being deferred to a subsequent release. The bug number has
       been provided so that you can read tthe full description. A summary is provided below.</p>
-    <h3>Installing OpenLaszlo 4.1 after the trunk-nightly builds</h3>
-    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-6513" target="_blank">LPP-6513</a>: To roll back to an
-        earlier version</b>, you need to delete <code>/Library/Receipts/openlaszlo*</code> For those
-      of you who have downloaded nightly trunk builds recently, you may have noticed that we changed
-      the numbering to 4.1 from 4.2.x. As a result, if you wish to install OpenLaszlo 4.1, you need
-      to delete your existing <code>/Library/Receipts/openlaszlo*</code> files first and then run
-      the installer.</p>
-    <h3>Rich Text is not currently supported in DHTM</h3>
-    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-6110" target="_blank">LPP-6110</a>: Text messages for controls that don't work in DHTML.</b> The Rich Text Editor component in the incubator (<code>lps/components/incubator/rich-text/richtexteditor.lzx</code>) does not run in DHTML. Similarly, <code>richinputtext</code> is also not supported in DHTML. Both components work properly in SWF runtimes.
-    </p>
+
     <h3>Windows Vista Installation Notes</h3>
     <p>
-      <b><a href="http://www.openlaszlo.org/jira/browse/LPP-3875" target="_blank">LPP-3875</a>: Default installation
-        location for Windows Vista.</b> The 4.1 Windows installer saves the OpenLaszlo files to
-        <code>c:\Program Files</code> by default. If you use the default value, you need to adjust
-      the file permissions after installation as follows: </p>
+      <b><a href="http://www.openlaszlo.org/jira/browse/LPP-3875" target="_blank">LPP-3875</a>:
+        Default installation location for Windows Vista.</b> The 4.1 Windows installer saves the
+      OpenLaszlo files to <code>c:\Program Files</code> by default. If you use the default value,
+      you need to adjust the file permissions after installation as follows: </p>
     <ol>
       <li>From Windows explorer, right-click on <code>c:\Program Files\OpenLaszlo Server 4.1</code>.</li>
 
@@ -90,12 +90,27 @@
     </ol>
     <p>All the files under <code>c:\Program Files\OpenLaszlo Server 4.1</code> should now be
       accessible by users.</p>
+    <h3>Installing OpenLaszlo 4.1 after the trunk-nightly builds</h3>
+    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-6513" target="_blank">LPP-6513</a>: To
+        roll back to an earlier version</b>, you need to delete
+      <code>/Library/Receipts/openlaszlo*</code> For those of you who have downloaded nightly trunk
+      builds recently, you may have noticed that we changed the numbering to 4.1 from 4.2.x. As a
+      result, if you wish to install OpenLaszlo 4.1, you need to delete your existing
+        <code>/Library/Receipts/openlaszlo*</code> files first and then run the installer.</p>
+    <h3>Rich Text is not currently supported in DHTML</h3>
+    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-6110" target="_blank">LPP-6110</a>:
+        Text messages for controls that don't work in DHTML.</b> The Rich Text Editor component in
+      the incubator (<code>lps/components/incubator/rich-text/richtexteditor.lzx</code>) does not
+      run in DHTML. Similarly, <code>richinputtext</code> is also not supported in DHTML. Both
+      components work properly in SWF runtimes. </p>
+
     <h3>Ctrl-A key combination Issues</h3>
-    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5675" target="_blank">LPP-5675</a>: Ctrl-A key combo
-        doesn't work in Windows IE (or any Mac browser).</b> On Windows XP and Vista with IE7,
-      Ctrl-A works the first time you press it and then doesn't work at all. On Mac browsers (Safari
-      and Firefox), Ctrl-A doesn't work at all. This is a swf8 issue that is being caused by a bug
-      in the Flash player. See: <a href="http://bugs.adobe.com/jira/browse/FP-118" target="_blank">
+    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5675" target="_blank">LPP-5675</a>:
+        Ctrl-A key combo doesn't work in Windows IE (or any Mac browser).</b> On Windows XP and
+      Vista with IE7, Ctrl-A works the first time you press it and then doesn't work at all. On Mac
+      browsers (Safari and Firefox), Ctrl-A doesn't work at all. This is a swf8 issue that is being
+      caused by a bug in the Flash player. See: <a href="http://bugs.adobe.com/jira/browse/FP-118"
+        target="_blank">
         <code>http://bugs.adobe.com/jira/browse/FP-118</code>
       </a> and <a href="http://bugs.adobe.com/jira/browse/FP-106E" target="_blank">
         <code>http://bugs.adobe.com/jira/browse/FP-106</code>
@@ -103,10 +118,10 @@
     <p>One possible workaround is to write the application to use <code>onkeyup</code> and not
         <code>onkeydown</code>.</p>
     <h3>DHTML, Windows Internet Explorer: Opacity Issues</h3>
-    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5382" target="_blank">LPP-5382</a>:DHTML - IE:
-        overflow="visible" don't work with opacity.</b> If you use the IE alpha-filter to set the
-      opacity, the overflow will always be changed to hidden. The example below provides a
-      workaround for this issue: </p>
+    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5382" target="_blank"
+        >LPP-5382</a>:DHTML - IE: overflow="visible" don't work with opacity.</b> If you use the IE
+      alpha-filter to set the opacity, the overflow will always be changed to hidden. The example
+      below provides a workaround for this issue: </p>
     <pre>
     &lt;canvas &gt;
         &lt;!-- the image will be clipped in IE DHTML due to nested opacity --&gt; 
@@ -119,11 +134,11 @@
         &lt;view y="200" opacity=".6" width="${canvas.width}" height="60" resource="http:Unbenannt.png" stretches="both"/&gt; 
     &lt;/canvas&gt; 
 </pre>
-    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5370" target="_blank">LPP-5370</a>: IE7 DHTML Doesn't
-        honor view opacity for stacked (overlayed) views</b>. If you have a shadow view that uses a
-      partial opacity setting underneath another view to create a shadow effect, the topmost view
-      overlaying the shadow disappears in Windows IE7, using DHTML. The following example shows the
-      problem:</p>
+    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5370" target="_blank">LPP-5370</a>: IE7
+        DHTML Doesn't honor view opacity for stacked (overlayed) views</b>. If you have a shadow
+      view that uses a partial opacity setting underneath another view to create a shadow effect,
+      the topmost view overlaying the shadow disappears in Windows IE7, using DHTML. The following
+      example shows the problem:</p>
     <pre>
     &lt;canvas width="100%" height="100%" validate="false" debug="true" proxied="false" bgcolor="0x00aaaa"&gt; 
       &lt;view width="300" height="100"&gt; 
@@ -156,21 +171,21 @@
     &lt;/canvas&gt;
       </pre>
     <h3>Firefox 2.0, Copy/Paste Problems using Keyboard Shortcuts</h3>
-    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5246" target="_blank">LPP-5246</a>: inputtext copy,
-        paste not working in Firefox 2.0.</b> There are reports that Firefox 2.0 has occasional
-      issues with copy/paste failing when using keyboard shortcuts. If the copy (Ctrl-C) does not
-      occur, when you paste (Ctrl-V) information into the browser, the previous contents of the
-      clipboard are pasted instead.</p>
+    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5246" target="_blank">LPP-5246</a>:
+        inputtext copy, paste not working in Firefox 2.0.</b> There are reports that Firefox 2.0 has
+      occasional issues with copy/paste failing when using keyboard shortcuts. If the copy (Ctrl-C)
+      does not occur, when you paste (Ctrl-V) information into the browser, the previous contents of
+      the clipboard are pasted instead.</p>
     <h3>DHTML: inputtext and clickable issues</h3>
-    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5447" target="_blank">LPP-5447</a>: inputtext and
-        clickable</b>. Input texts have to be placed in one of the clickable elements, which are in
-      their own tree of divs, to become active. Refer to the bug report in JIRA to read more details
-      in specific browsers. </p>
+    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-5447" target="_blank">LPP-5447</a>:
+        inputtext and clickable</b>. Input texts have to be placed in one of the clickable elements,
+      which are in their own tree of divs, to become active. Refer to the bug report in JIRA to read
+      more details in specific browsers. </p>
     <h3>DHTML: onmouseupoutside events not being triggered outside of canvas</h3>
-    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-6125" target="_blank">LPP-6125</a>: onmouseupoutside events
-      not triggered outside of canvas in DHTML, work fine in SWF.</b> Basically if you drag and release
-      outside the canvas, the <code>onmouseupoutside</code> event never gets triggered. The following
-      simple example demonstrates the problem:</p>
+    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-6125" target="_blank">LPP-6125</a>:
+        onmouseupoutside events not triggered outside of canvas in DHTML, work fine in SWF.</b>
+      Basically if you drag and release outside the canvas, the <code>onmouseupoutside</code> event
+      never gets triggered. The following simple example demonstrates the problem:</p>
     <pre>
   &lt;canvas width="300" height="300" bgcolor="0x00FF00"&gt; &lt;view
       width="100" height="100" x="20" bgcolor="0xFF0000"&gt; &lt;handler
@@ -181,30 +196,40 @@
   &lt;/canvas&gt;
     </pre>
     <p>If you click inside the red square and drag out into the green area (the canvas area) and
-      release, you'll see the <code>onmouseupoutside</code> event firing. However, if you drag and release
-      outside the canvas, the <code>onmouseupoutside</code> event never gets triggered. </p>
+      release, you'll see the <code>onmouseupoutside</code> event firing. However, if you drag and
+      release outside the canvas, the <code>onmouseupoutside</code> event never gets triggered. </p>
     <h3>SWF9: MacOS pathnames cause Flex compiler integration failure</h3>
-    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-6309" target="_blank">LPP-6309</a>: MacOS pathnames
-        cause Flex compiler integration failure.</b> OpenLaszlo 4.1 includes the flex compiler in
-      its installer for swf9 applications. To compile swf9 applications on the Mac, the OpenLaszlo
-      server must be installed in a directory that has no spaces in any of the pathname components.</p>
+    <p><b><a href="http://www.openlaszlo.org/jira/browse/LPP-6309" target="_blank">LPP-6309</a>:
+        MacOS pathnames cause Flex compiler integration failure.</b> OpenLaszlo 4.1 includes the
+      flex compiler in its installer for swf9 applications. To compile swf9 applications on the Mac,
+      the OpenLaszlo server must be installed in a directory that has no spaces in any of the
+      pathname components.</p>
     <p>The default installation is into a directory named <code>OpenLaszlo Server 4.2</code>, which
       must be renamed to something with no spaces, such as <code>OpenlaszloServer4.1</code>.</p>
     <h1>Bugs Fixed in OpenLaszlo 4.1</h1>
-    <p>Because of the very large number of bug fixes, we have provided links to our JIRA bug tracking system where you can view the details:</p>
+    <p>Because of the very large number of bug fixes, we have provided links to our JIRA bug
+      tracking system where you can view the details:</p>
     <ul>
       <li>
-          <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=10741" target="_blank">Fixed software bugs</a>
+        <a
+          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=10741"
+          target="_blank">Fixed software bugs</a>
       </li>
       <li>
-        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=10742" target="_blank">Fixed Developer's Guide bugs</a>
+        <a
+          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=10742"
+          target="_blank">Fixed Developer's Guide bugs</a>
       </li>
       <li>
-        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=10743" target="_blank">Fixed Reference Guide bugs</a>
+        <a
+          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=10743"
+          target="_blank">Fixed Reference Guide bugs</a>
       </li>
     </ul>
-<hr />
-      <p>Copyright &copy; 2002-2008 Laszlo Systems, Inc.  All Rights Reserved. Unauthorized use, duplication or distribution is strictly prohibited. This is the proprietary information of Laszlo Systems, Inc. Use is subject to license terms. </p>
-      <hr />
+    <hr />
+    <p>Copyright &copy; 2002-2008 Laszlo Systems, Inc. All Rights Reserved. Unauthorized use,
+      duplication or distribution is strictly prohibited. This is the proprietary information of
+      Laszlo Systems, Inc. Use is subject to license terms. </p>
+    <hr />
   </body>
 </html>
