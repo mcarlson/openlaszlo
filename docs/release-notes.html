@@ -56,10 +56,23 @@
         target="_blank">JIRA bug tracking system.</a> We'd also like to hear from you on the <a
         href="http://www.openlaszlo.org/lists" target="_blank">mailing lists</a> and in the <a
         href="http://forum.openlaszlo.org/" target="_blank">forums</a>.</p>
+    <h1>Upgrading to OpenLaszlo 4.1</h1>
+    <p>OpenLaszlo 4.1 has two major changes that may require your attention. A summary is provided below.  Complete details and additional information on the differences between the SWF and DHTML runtimes can be found on the OpenLaszlo Wiki: <a href="http://wiki.openlaszlo.org/Runtime_Differences">http://wiki.openlaszlo.org/Runtime_Differences</a>.</p>
+    <p>In OpenLaszlo 4.1, user classes are no longer defined as part of the global namespace. 
+      This gives OpenLaszlo better interoperability with other frameworks. In your application, 
+      user classes defined as:</p>
+    <pre>    &lt;class name=&quot;Foo&quot; .../&gt;
+    &lt;new foo(...)</pre>
+     <p>will need to be changed to:</p>  
+        <pre>    new lz.foo (...)</pre>
+    <p>A script has been posted by Sebastian Wagner to help convert user classes. It can be found here: <a href="http://code.google.com/p/laszlo4converter/">http://code.google.com/p/laszlo4converter/</a>.</p>
+    <p>In addition, warnings may now appear if you are using deprecated syntax in your application. OpenLaszlo 4.1 includes a perl conversion script (<a href="http://svn.openlaszlo.org/openlaszlo/trunk/WEB-INF/lps/server/bin/convert_laszlo.pl">convert_laszlo.pl</a>) to help mitigate these warnings.</p>
+ 
+
     <h1>Known Issues and Workarounds in 4.1</h1>
     <p>This section describes some known issues and workarounds for using OpenLaszlo 4.1. For
       various reasons, these issues are being deferred to a subsequent release. The bug number has
-      been provided so that you can read tthe full description. A summary is provided below.</p>
+      been provided so that you can read the full description. A summary is provided below.</p>
 
     <h3>Windows Vista Installation Notes</h3>
     <p>
