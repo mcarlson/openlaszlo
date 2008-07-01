@@ -9,7 +9,7 @@
     <class name="TestDatanode" extends="TestCase">
         <method name="test1">
             <![CDATA[
-            this.zdat = new LzDataElement( "foo" , { x : 33 , y : "plop" } ,
+            var zdat = new LzDataElement( "foo" , { x : 33 , y : "plop" } ,
                                                 [ new LzDataElement ("a" ) , 
                                                 new LzDataText( "some text" ) ,
                                                 new LzDataElement( "b" ) ] );
@@ -31,7 +31,7 @@
             zdat.appendChild ( new LzDataText( "more text" ) );
 
             assertTrue( zdat.hasChildNodes () );
-            assertFalse( (new LzDataElement()).hasChildNodes());
+            assertFalse( (new LzDataElement('bar')).hasChildNodes());
 
             assertTrue(xmlstringequals(zdat.serialize(),
                                        '<foo x="33" y="plop"><aa/>some text<bb/>more text</foo>' ));
@@ -110,6 +110,6 @@
         Debug.write( LzText.prototype.escapeText( zdat.serialize() ) );
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

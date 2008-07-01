@@ -114,63 +114,9 @@
     }
     
     
-    // TODO: [2002-11-09 ptw] (ActionScript condition incompatible JavaScript)
-    // ActionScript does not obey Javascript semantics for testing whether
-    // an expression is true in a conditional
-    function jsTrue(condition) {
-        var t = typeof(condition);
-        if (t == "string") {
-            return condition.length > 0;
-        } else if (t == "object") {
-            return true;
-        // Safe test for undefined
-        } else if (t == "undefined") {
-            return false;
-        } else {
-            return !!condition;
-        }
-    }
-    
-    
-    // compare two XML objects for lisp-style EQUAL 
 
-    // this takes two string
-    function xmlstringequals (str1, str2) {
-        var xml1 = LzDataElement.stringToLzData(str1)
-        var xml2 = LzDataElement.stringToLzData(str2)
-        return xmlequals(xml1, xml2);
-    }
     
-    function xmlequals(x1, x2) {
-        if (x1.nodeType != x2.nodeType) return false;
-        // text node
-        if (x1.nodeType == 3) {
-            if (x1.data != x2.data) return false;
-        } else if (x1.nodeType ==  1){
-            // shouldn't ever happen, childNodes should always be non-null
-            if ( ((x1.childNodes == null) && (x2.childNodes != null)) ||
-                 ((x1.childNodes != null) && (x2.childNodes == null))) return false;
-    
-            if (x1.childNodes.length != x2.childNodes.length) return false;
-    
-            // compare attributes
-            for (var attr in x1.attributes) {
-                var v1 = x1.attributes[attr];
-                var v2 = x2.attributes[attr];
-                if (v1 != v2) return false;
-            }
-            // recurse
-            var val = false;
-            for (var i = 0; i < x1.childNodes.length; i++) {
-                if (!xmlequals(x1.childNodes[i], x2.childNodes[i])) {
-                    return false;
-                }
-            }
-        } else {
-            return false;
-        }
-        return true;
-    }
+
 ]]></script>
 
 <script><![CDATA[
@@ -207,6 +153,65 @@
     <!--- @keywords required -->
     <method name="_dbg_typename">
         return "DebugObject";
+    </method>
+
+        
+    // compare two XML objects for lisp-style EQUAL 
+    // this takes two string
+    <method name="xmlstringequals" args="str1, str2">
+        var xml1 = LzDataElement.stringToLzData(str1)
+        var xml2 = LzDataElement.stringToLzData(str2)
+        return xmlequals(xml1, xml2);
+    </method>
+    
+    <method name="xmlequals" args="x1, x2">
+        <![CDATA[
+        if (x1.nodeType != x2.nodeType) return false;
+        // text node
+        if (x1.nodeType == 3) {
+            if (x1.data != x2.data) return false;
+        } else if (x1.nodeType ==  1){
+            // shouldn't ever happen, childNodes should always be non-null
+            if ( ((x1.childNodes == null) && (x2.childNodes != null)) ||
+                 ((x1.childNodes != null) && (x2.childNodes == null))) return false;
+    
+            if (x1.childNodes.length != x2.childNodes.length) return false;
+    
+            // compare attributes
+            for (var attr in x1.attributes) {
+                var v1 = x1.attributes[attr];
+                var v2 = x2.attributes[attr];
+                if (v1 != v2) return false;
+            }
+            // recurse
+            var val = false;
+            for (var i = 0; i < x1.childNodes.length; i++) {
+                if (!xmlequals(x1.childNodes[i], x2.childNodes[i])) {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+        ]]>
+    </method>
+
+    // TODO: [2002-11-09 ptw] (ActionScript condition incompatible JavaScript)
+    // ActionScript does not obey Javascript semantics for testing whether
+    // an expression is true in a conditional
+    <method name="jsTrue" args="condition">
+        var t = typeof(condition);
+        if (t == "string") {
+            return condition.length > 0;
+        } else if (t == "object") {
+            return true;
+        // Safe test for undefined
+        } else if (t == "undefined") {
+            return false;
+        } else {
+            return !!condition;
+        }
     </method>
 
     <!---
@@ -251,12 +256,12 @@
 
       @keywords private
     -->
-    <method name="dw">
+    <method name="dw" args="...args">
         <![CDATA[
         if (debugWrite) {
             var s = "";
-            for (var i = 0; i < arguments.length; i++) {
-                var e = arguments[i];
+            for (var i = 0; i < args.length; i++) {
+                var e = args[i];
                 if (typeof(e) == "string") {
                     s += e;
                 }
@@ -406,7 +411,8 @@
 
       @param message: the reason for the error
     -->
-    <method name="error" args="message">
+    <method name="error" args="...args">
+        var message = args[0];
         var suite = this.parent;
         suite.ontestfail.sendEvent(message);
         if (this.result) {
@@ -432,7 +438,7 @@
       @param actual: the actual value
       @return String: the formatted failure message
     -->
-    <method name="format" args="message, expected, actual">
+    <method name="tformat" args="message, expected, actual">
         return this.formatToString(
             '%s expected %#w got %#w',
             (jsTrue(message) ? message + ": " : ""), expected, actual);
@@ -469,9 +475,10 @@
       @param condition: the condition to be tested
       @param assertion: (optional) the assertion the condition represents
     -->
-    <method name="assertTrue" args="condition, assertion">
+    <method name="assertTrue" args="condition, ...assertion">
+        if (assertion) assertion = assertion[0];
         if (! semanticsTrue(condition)) {
-            this.fail(format(jsTrue(assertion) ? assertion : "True", true, condition));
+            this.fail(tformat(jsTrue(assertion) ? assertion : "True", true, condition));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)
     </method>
@@ -488,9 +495,10 @@
       @param condition: the condition to be tested
       @param assertion: (optional) the assertion the condition represents
     -->
-    <method name="assertFalse" args="condition, assertion">
+    <method name="assertFalse" args="condition, ...assertion">
+        if (assertion) assertion = assertion[0];
         if (!! semanticsTrue(condition)) {
-            this.fail(format(jsTrue(assertion) ? assertion :  "False", false, condition));
+            this.fail(tformat(jsTrue(assertion) ? assertion :  "False", false, condition));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
     </method>
@@ -502,10 +510,11 @@
       @param actual: the actual value
       @param message: (optional) the failure message
     -->
-    <method name="assertEquals" args="expected, actual, message">
+    <method name="assertEquals" args="expected, actual, ...message">
+        if (message) message = message[0];
         <!-- note NaN compares are always false -->
         if (! (expected == actual)) {
-            this.fail(format(jsTrue(message) ? message :  "Equals", expected, actual));
+            this.fail(tformat(jsTrue(message) ? message :  "Equals", expected, actual));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)
     </method>
@@ -518,15 +527,16 @@
       @param delta: the tolerance
       @param message: (optional) the failure message
     -->
-    <method name="assertWithin" args="expected, actual, delta, message">
+    <method name="assertWithin" args="expected, actual, delta, ...message">
         <![CDATA[
+            if (message) message = message[0];
             // handle infinite expected
             if (expected == actual) return;
 
             var error = (actual <= expected) ? (expected - actual) : (actual - expected);
             // note NaN compares are always false
             if (! (error <= delta)) {
-                this.fail(format(jsTrue(message) ? message : "Within", "" + expected + "\u00B1" +
+                this.fail(tformat(jsTrue(message) ? message : "Within", "" + expected + "\u00B1" +
                      delta , actual));
             }
             canvas.setAttribute('runTests', canvas.runTests + 1)            
@@ -539,9 +549,10 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertNull" args="object, message">
+    <method name="assertNull" args="object, ...message">
+        if (message) message = message[0];
         if (object !== null) {
-           this.fail(format(jsTrue(message) ? message : "Null",
+           this.fail(tformat(jsTrue(message) ? message : "Null",
                        null, object));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
@@ -553,9 +564,10 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertNotNull" args="object, message">
+    <method name="assertNotNull" args="object, ...message">
+        if (message) message = message[0];
         if (object === null) {
-           this.fail(format(jsTrue(message) ? message : "NotNull",
+           this.fail(tformat(jsTrue(message) ? message : "NotNull",
                        "non-null value", object));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
@@ -567,9 +579,10 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertUndefined" args="object, message">
+    <method name="assertUndefined" args="object, ...message">
+        if (message) message = message[0];
         if (typeof(object) != "undefined") {
-           this.fail(format(jsTrue(message) ? message : "Undefined",
+           this.fail(tformat(jsTrue(message) ? message : "Undefined",
                        "undefined value", object));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
@@ -581,9 +594,10 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertNotUndefined" args="object, message">
+    <method name="assertNotUndefined" args="object, ...message">
+        if (message) message = message[0];
         if (typeof(object) == "undefined") {
-           this.fail(format(jsTrue(message) ? message : "NotUndefined",
+           this.fail(tformat(jsTrue(message) ? message : "NotUndefined",
                        "defined value", object));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
@@ -597,18 +611,19 @@
       @param actual: the actual value
       @param message: (optional) the failure message
     -->
-    <method name="assertSame" args="expected, actual, message">
+    <method name="assertSame" args="expected, actual, ...message">
     <![CDATA[
-             // Use typeof to compare undefined without warnings
-             if (typeof(expected) == "undefined" &&
-                 typeof(actual) == "undefined") {
-                   return;
-             }
-             if (expected !== actual) {
-               this.fail(format(jsTrue(message) ? message : "Same",
-                           expected, actual));
-             }
-            canvas.setAttribute('runTests', canvas.runTests + 1)             
+        if (message) message = message[0];
+        // Use typeof to compare undefined without warnings
+        if (typeof(expected) == "undefined" &&
+            typeof(actual) == "undefined") {
+            return;
+        }
+        if (expected !== actual) {
+        this.fail(tformat(jsTrue(message) ? message : "Same",
+                    expected, actual));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)             
     ]]>
     </method>
 
@@ -620,17 +635,17 @@
       @param actual: the actual value
       @param message: (optional) the failure message
     -->
-    <method name="assertNotSame" args="expected, actual, message">
-            if (expected === actual) {
-                // In-line Test.format so we can invert the sense
-                var msg = LzFormatter.prototype.formatToString(
-                    '%s expected anything but %#w got %#w',
-                    (jsTrue(message) ? message + ": " : "NotSame: "), expected, actual);
-                this.fail(msg);
-            }
-            canvas.setAttribute('runTests', canvas.runTests + 1)                            
+    <method name="assertNotSame" args="expected, actual, ...message">
+        if (message) message = message[0];
+        if (expected === actual) {
+            // In-line Test.tformat so we can invert the sense
+            var msg = LzFormatter.prototype.formatToString(
+                '%s expected anything but %#w got %#w',
+                (jsTrue(message) ? message + ": " : "NotSame: "), expected, actual);
+            this.fail(msg);
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)
     </method>
-
 </class>
 
 <!---
@@ -766,6 +781,8 @@
      @keywords readonly
     -->
     <attribute name="current_method" value="${cur_meth.xpathQuery('@name')}"/>
+
+    <attribute name="del"/>
     
     <!---
      Override this method with your specific test logic 
@@ -881,6 +898,7 @@
     <attribute name="failures" />
     <!--- @keywords private -->
     <attribute name="errors" />
+    <attribute name="messages"/>
 
     <!---
       @keywords constructor
@@ -1096,7 +1114,7 @@
         var query = "logfile="+escape(logfile)+"&msg="+escape(msg);
         var reqstr =  LzBrowser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
         //Debug.debug("sendServerLogCommand", reqobj, reqstr);
-        var tloader = new LzHTTPLoader(this, false, null);
+        var tloader = new LzHTTPLoader(this, false);
         tloader.open ("GET" , reqstr, /* username */ null, /* password */ null);
         tloader.send (/* content */ null)        
       ]]>
@@ -1164,7 +1182,7 @@
     </method>
 
    <!--- @keywords private -->
-   <method name="initSuite">
+   <method name="initSuite" args="...ignore">
         if (this.nextCase == subviews.length)
         {
             this.nextCase = 0
@@ -1240,7 +1258,7 @@
 
       @keywords private
     -->
-    <method name="runNextTest">
+    <method name="runNextTest" args="...ignore">
       <![CDATA[
         dw("In run next test, nextCase: ", this.nextCase, " nextTest: ", this.nextTest);
         var v = this.nextCase;

@@ -203,7 +203,7 @@ function failAssertion ( msg ) {
 
 function assertTrue (condition, assertion) {
     if (!condition)  {
-        var errmsg = "FAIL: assertTrue('" + condition + "') failed"
+        var errmsg = "assertTrue('" + condition + "') failed"
                     + (assertion ? ': ' + assertion : '');
         LzTestManager.failAssertion(errmsg);
     }
@@ -212,7 +212,7 @@ function assertTrue (condition, assertion) {
 
 function assertFalse (condition, assertion) {
     if (condition)  {
-        var errmsg = "FAIL: assertFalse('" + condition + "') failed"
+        var errmsg = "assertFalse('" + condition + "') failed"
                     + (assertion ? ': ' + assertion : '');
         this.failAssertion(errmsg);
     }
@@ -220,7 +220,7 @@ function assertFalse (condition, assertion) {
 
 function assertEquals (expected, actual, message="") {
     if (! (expected == actual)) {
-        var errmsg = "FAIL: " + message + "Equals expected " + expected + ", got " + actual;
+        var errmsg = message + " Equals expected " + expected + ", got " + actual;
         LzTestManager.failAssertion(errmsg);
     }
 }

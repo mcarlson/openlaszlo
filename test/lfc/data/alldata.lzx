@@ -1,4 +1,4 @@
-<canvas width="900" height="90%" debug="true">
+<canvas width="900" height="90%">
     <debug x="300" width="300" height="400"/>
 <!--
   covers-tags: lzdata smoketest

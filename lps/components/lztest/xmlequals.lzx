@@ -6,11 +6,11 @@
 
 // this takes two string
 function xmlstringequals (str1, str2) {
-    var nxml1 = LzXMLParser.parseXML(str1);
-    var xml1 = LzXMLTranslator.copyXML(nxml1);
+    var nxml1 = LzXMLParser.parseXML(str1, null, null);
+    var xml1 = LzXMLTranslator.copyXML(nxml1, null, null);
 
-    var nxml2 = LzXMLParser.parseXML(str2);
-    var xml2 = LzXMLTranslator.copyXML(nxml2);
+    var nxml2 = LzXMLParser.parseXML(str2, null, null);
+    var xml2 = LzXMLTranslator.copyXML(nxml2, null, null);
     return xmlequals(xml1, xml2);
 }
 
@@ -52,7 +52,7 @@ function xmlequals(x1, x2) {
     </script>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </library>

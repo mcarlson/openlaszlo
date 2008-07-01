@@ -27,15 +27,15 @@
         <!--
         <view datapath="dptest1:/">
         </view>
-        <attribute name="collector" value="false"/>
         -->
+        <attribute name="collector"/>
 
-        <method name="collect" args="from , is , type">
+        <method name="collect" args="from , isrc , type">
             if ( 'undefined' == typeof( this.collector ) ){
                 this.clearCollected();
             }
 
-            this.collector[ type ].push( from , is );
+            this.collector[ type ].push( from , isrc );
         </method>
 
         <method name="clearCollected">
