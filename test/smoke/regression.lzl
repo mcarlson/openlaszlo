@@ -279,7 +279,7 @@
     <dataset name="bug577" src="../resources/xml/http.xml"/>
     <class name="bug_577" extends="TestCase">
         <method name="testLocalDS">
-            assertUndefined(canvas.datasets.bug577['type'])
+            assertNull(canvas.datasets.bug577['type'])
         </method>
     </class>
 
