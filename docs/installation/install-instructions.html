@@ -1,0 +1,175 @@
+<html>
+<head>
+    <title>LPS Installation Instructions</title>
+<script>
+<!--
+var urlPrefix = './';
+// -->
+</script>
+<script src="../includes/docs.js" type="text/javascript"></script>
+<link rel="stylesheet" href="../../lps/includes/explore.css" type="text/css" />
+</head>
+
+<body>
+<!-- lz_content_start -->
+
+
+
+
+<!-- this is the page subtitle... -->
+<h2>Installing OpenLaszlo Server</h2>
+
+
+<p>This page steps you through installing the OpenLaszlo server (formerly called Laszlo Presentation Server (LPS))
+and verifying that it is installed properly by running a Laszlo application.</p>
+
+<h2>Java</h2>
+<p>To run the LPS you <em>must</em> have the Java SDK (sometimes called the JDK, J2SDK, or J2SE SDK), not just the JRE, 1.4 or greater.
+	It's available at:<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://java.sun.com/j2se/1.4/">http://java.sun.com/j2se/1.4/</a><br>
+<br/>
+<b>Note</b>: Mac OS X users do not have to install the SDK, as it is installed with OS X by default.</p>
+
+<p>
+<a href="#windows">Windows</a><br>
+<a href="#unix">Unix/Linux</a><br>
+<a href="#mac">Mac OS X</a>
+</p>
+
+
+<a name="windows"></a>
+<h2>Windows</h2>
+
+<p>To install the OpenLaszlo Server:</p>
+
+<ul>
+	<li>If you already have a copy of Tomcat (or any other service that is running on port 8080), please make
+	sure that it is stopped.</li>
+	<li><a href="http://www.laszlosystems.com/developers/download/">Download</a> the OpenLaszlo Server for Windows.</li>
+	<li>Run the installer executable, which will be called something like: lps-@VERSIONID@-windows.exe.</li>
+	<li>Now <a href="run.html">test your installation</a>.</li>
+</ul>
+
+
+
+
+<a name="unix"></a>
+<h2>Unix/Linux</h2>
+<ul>
+	<li><a href="../../download/">Download</a> the OpenLaszlo Server for Unix/Linux.</li>
+    <li>Use tar zxvf to unzip and untar the distribution from /usr/local (or wherever you want it to go; you can even use your home directory for safety). </li>
+	<li>DON'T just copy the Tomcat folder into /usr/local. Keep the whole distribution together. So if you put it in /usr/local, it would look something like this:</li>
+	<li>/usr/local/lps-@VERSIONID@/
+	&nbsp;&nbsp;&nbsp;&nbsp;...with Server/tomcat-5.0.24 as a subdirectory of lps-@VERSIONID@</li>
+	
+	<li>Make sure that JAVA_HOME is set correctly. If the instructions below don't work, see the instructions that come with the Java SDK.</li>
+	
+	<li>You can check which version of java you have by typing:<br>
+	&nbsp;&nbsp;$ echo $JAVA_HOME<br>
+&nbsp;&nbsp;and you should see something like:<br>
+&nbsp;&nbsp;/usr/java/j2sdk1.4.0<br>
+&nbsp;&nbsp;if not, type:<br>
+&nbsp;&nbsp;which java to find Java on your machine. If no value is returned check installation of Java.<br>
+&nbsp;&nbsp;Export JAVA_HOME by typing:<br>
+&nbsp;&nbsp;export JAVA_HOME=(location of Java on your machine) </li>
+	
+	<li>and you should see something like:<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;/usr/java/j2sdk1.4.0</li>
+
+    <li>Make sure that you have the version 5 or greater of the Macromedia <a href="http://www.macromedia.com/shockwave/download/download.cgi">Flash</a>
+    browser plugin installed.</li>
+	
+	<li>Finally run the <br>
+&nbsp;&nbsp;&nbsp;&nbsp;/lps-3.3/Server/tomcat-5.0.24/bin/startup.sh<br>
+&nbsp;&nbsp;script, and you're ready to go. This script will set the following environment variables:<br>
+&nbsp;&nbsp;CATALINA_BASE<br>
+&nbsp;&nbsp;CATALINA_HOME<br>
+&nbsp;&nbsp;CATALINA_TMDIR<br>
+&nbsp;&nbsp;JAVA_HOME - note that JAVA_HOME must be set before running the script</li>
+
+	<li>Now <a href="run.html">test your installation</a>.</li>
+	
+<li><a href="http://www.laszlosystems.com/lps-3.3/docs/installation/run.html">http://www.laszlosystems.com/lps-3.3/docs/installation/run.html</a></li>
+<li>Link to hello.lzx brings you to <a href="http://localhost:8080/lps-3.3/examples/hello.lzx">http://localhost:8080/lps-3.3/examples/hello.lzx</a> </li>
+
+</ul>
+
+<h3>Linux Notes</h3>
+<p>On some installations of RedHat 7.2 Linux, you may need the XFree86-libs RPM from<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://updates.redhat.com/7.2/en/os/i386/"
+    >http://updates.redhat.com/7.2/en/os/i386/</a>.</p>
+<p>In order to access JSP pages, you may need to copy $JAVA_HOME/jre/lib/tools.jar to
+lps-@VERSIONID@/Server/tomcat-5.0.24/common/lib.</p>
+
+
+<a name="mac"></a>
+<h2>Mac OS X</h2>
+<h4>Package installation</h4>
+<ul>
+    <li>Download the lps-@VERSIONID@-macosx.dmg file. You can save it to your
+        desktop.</li>
+    <li>Double-click the lps-@VERSIONID@-macosx file to install it.</li>
+	<li>Now <a href="run.html">test your installation</a>.</li>
+</ul>
+
+<p>If this fails, you should install the file manually: </p>
+
+<h4>Manual installation:</h4>
+
+<ul>
+	<li>Log in as yourself.</li>
+	<li>Download the tar.gz file for Unix.</li>
+	
+	<li>If stuffit tries to open the file, hit cancel<br>
+	The file we'll be working with is the lps-@VERSIONID@-unix.tar.gz<br>
+	Stuffit might have created another folder on your desktop (lps-@VERSIONID@-macosx). If it has, delete it.</li>
+	
+	<li>Open up a terminal shell. This should put you in your home directory.<br>
+	Next move the file to the the this directory:<br>
+	&nbsp;mv Desktop/lps-@VERSIONID@-unix.tar.gz ~</li>
+	
+	<li>Now extract the file:<br>
+	&nbsp;gunzip lps-@VERSIONID@-unix.tar.gz </li>
+	
+	<li>And untar it:<br>
+	&nbsp;gnutar -xvf lps-@VERSIONID@-macosx.tar </li>
+	
+	<li>This will create a folder called lps-@VERSIONID@.</li>
+	
+	<li>To run the Tomcat Servlet container, type:<br>
+    lps-@VERSIONID@/Server/tomcat-5.0.24/bin/startup.sh </li>
+	
+	<li>** Note that JAVA_HOME must be set. To find out if it's set:<br>
+	&nbsp;echo $JAVA_HOME<br>
+	&nbsp;&nbsp;&nbsp;should output something like:<br>
+	&nbsp;/Library/Java/Home/</li>
+	
+	<li>If it's not set, (using tsch, the default OSX shell):<br>
+	&nbsp;setenv JAVA_HOME /Library/Java/Home/<br>
+	&nbsp;&nbsp;&nbsp;or
+	&nbsp;export JAVA_HOME /Library/Java/Home/<br>
+	&nbsp;&nbsp;&nbsp;if you use the bash shell.</li>
+	
+	<li>Note that you will have to do this every time you start the Tomcat server. You can add this to your startup script to have it done automatically.</li>
+	
+	<li>To get to the lps folder via the GUI, double-click the hard disk on your desktop.
+	Then click the Home button in the dialog box.<br>
+	Double-click the lps-@VERSIONID@ folder</li>
+	
+	<li>Now <a href="run.html">test your installation</a>.</li>
+</ul>
+
+
+
+
+
+<!-- lz_content_end -->
+<!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
+<p class="copyright">Copyright 2006-2008 Laszlo Systems, Inc.</a>
+All Rights Reserved. Unauthorized use, duplication or
+distribution is strictly prohibited. This is the proprietary
+information of Laszlo Systems, Inc. Use is subject to license terms.</p>
+<!-- * H_LZ_COPYRIGHT_END ************************************************* -->
+</body>
+
+</html>

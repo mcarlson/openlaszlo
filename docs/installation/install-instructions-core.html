@@ -1,0 +1,117 @@
+<html>
+<head>
+<title>LPS Core Install Instructions</title>
+<script>
+<!-- 
+var urlPrefix = './';
+// -->
+</script>
+<script src="../includes/docs.js" type="text/javascript"></script>
+<link rel="stylesheet" href="../../lps/includes/explore.css" type="text/css" />
+</head>
+
+<body>
+<!-- lz_content_start -->
+    <h2>Installing Laszlo Presentation Server Core</h2>
+
+<ul>
+	<li>Download and unpack the Core distribution.
+	Here's what you'll find:<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;LICENSE            - The End User License Agreement for the LPS<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;README             - This file.<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;credits            - Credits for 3rd party contributions to the LPS<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;lps-@VERSIONID@          - Expanded directory containing the LPS Root app.<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;release-notes.html - Release notes</li>
+	<li>Simply deploy the lps-@VERSIONID@ web application (war or directory) and <a href="run-core.html">test your installation</a>.</li>
+</ul>
+
+
+
+
+
+<a name="issues"></a>
+<h2>Installation Issues with @VERSIONID@ Core</h2>
+
+<h3>General</h3>
+
+<ul>
+	<li>The LPS may not operate correctly if you have a copy of jython.jar installed in $JAVA_HOME/jre/lib/ext (%JAVA_HOME%\jre\lib\ext on Windows).</li>
+</ul>
+
+
+
+<h3>WebSphere Installation Issues</h3>
+
+<ul class="regular">
+	<li>Some documents in the lps-@VERSIONID@ web application may be reported 'Not Found' because WebSphere doesn't properly redirect URLs that end in directory names. If you run into this problem, you can use the  Laszlo web-site documentation at http://www.laszlosystems.com/developers/.</li>
+</ul>
+
+
+<h3>WebLogic Installation Issues</h3>
+
+<ul>
+	<li>As of this writing, WebLogic comes bundled with a version of Apache's Xerces (a XML Parser) that is not compatible with LPS. Though a working version exists in the WEB-INF/lib directory,   WebLogic doesn't look in there first by default. To ensure that the WEB-INF/lib/xerces.jar file is picked up:
+        <ul>
+        	<li>If you have WebLogic Server 7.0.0.1 or lower on your computer, be sure you DO NOT ENABLE the  PreferWebInfClasses flag for your Web application</li>
+        	<li>If you have WebLogic 7.0 Service Pack 1, be sure you DO ENABLE the PreferWebInfClasses flag for your Web application The PreferWebInfClasses flag may be enabled by opening up your "WebLogic Server Console" and under the LPS web application deployment page, click on the "Configuration" tab and then click on the "Other" tab where you'll find the "Prefer Web Inf Classes" checkbox. Make sure you apply your changes and restart the server. You may also choose to directly modify your config.xml file and set PreferWebInfClasses="true|false" or modify your start script's CLASSPATH to pic up the correct xerces.jar file.</li>
+        </ul>
+    </li>
+</ul>
+
+<p>For more information on WebLogic and Xerces, consult:
+<a target="_blank" href="javascript:popup('http://edocs.bea.com/wls/docs70/faq/xml.html#740643', 'all');">http://edocs.bea.com/wls/docs70/faq/xml.html#740643</a></p>
+
+
+<h3>Tomcat Installation Issues</h3>
+<p>If you are using your own installation of Tomcat and you have
+modified the set of jars, you need to make sure that the commons-logging.jar
+is not in the java endorsed list of jars.</p>
+<p>If you are using your own installation of Tomcat 4.0 you will need to
+you will need to copy $LPS_HOME/WEB-INF/lib/jing.jar to $TOMCAT_HOME/common/lib </p>
+
+<h3>Linux Notes</h3>
+<p>On some installations of RedHat 7.2 Linux, you may need the XFree86-libs RPM from<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://updates.redhat.com/7.2/en/os/i386/"
+    >http://updates.redhat.com/7.2/en/os/i386/</a>.</p>
+
+<h3>Caucho Resin Installation Issues</h3>
+<p>
+Under Resin 2.1.x, you will need to set the resin configuration
+parameter, <code>servlet-classloader-hack</code>, to true in $RESIN_HOME/conf/resin.conf.</p>
+<pre>
+
+     &lt;servlet-classloader-hack&gt;true&lt;/servlet-classloader-hack&ht;
+
+</pre>
+<p>
+Under Resin 3.0.x, the syntax in the <code>resin.conf</code> changed to:
+</p>
+<pre>
+     &lt;class-loader&gt;
+        ...
+       &lt;simple-loader .../&gt;
+       &lt;servlet-hack/&gt;
+        ...
+     &lt;/class-loader&gt;
+</pre>
+<p>
+The Java servlet specification and the Java specification disagree on classloader behavior.  The servlet container specification 
+makes more sense in the context of servlet containers.  Setting this to true, is, in general, required for an Laszlo-enabled webapp.
+</p>
+
+
+<!-- lz_content_end -->
+<!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
+<p class="copyright">Copyright &copy; 2002-2008 <a target="_top"
+href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+All Rights Reserved. Unauthorized use, duplication or
+distribution is strictly prohibited. This is the proprietary
+information of Laszlo Systems, Inc. Use is subject to license terms.</p>
+<!-- * H_LZ_COPYRIGHT_END ************************************************* -->
+</body>
+
+</html>
+
+
+
+

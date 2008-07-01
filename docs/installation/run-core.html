@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>Running Laszlo Applications with LPS Core</title>
+<script>
+<!-- 
+var urlPrefix = './';
+// -->
+</script>
+<script src="../includes/docs.js" type="text/javascript"></script>
+<link rel="stylesheet" href="../../lps/includes/explore.css" type="text/css" />
+</head>
+
+<body>
+<!-- lz_content_start -->
+
+
+
+<!-- this is the page subtitle... -->
+<h2>Running Laszlo applications using Laszlo Presentation Server Core</h2>
+<p><b>Note:</b> These instructions are for the LPS @VERSIONID@ Core only.
+<br><a href="run.html">Click here</a> if you installed the
+the standard distribution.</p>
+<p>To run your first Laszlo application after installing:</p>
+<ol>
+    <li><a href="#verify">Verify</a> the install </li>
+    <li>Create and <a href="#running">run your own applications</a>.</li>
+</ol>
+<h3><a name="verify">Running Laszlo applications</a></h3>
+<p>To run a Laszlo application once you have successfully installed the Laszlo Presentation Server:</p>
+
+<ol class="regular">
+    <li>Consult your servlet container documentation for information about how to deploy Web applications.&nbsp;
+      Then deploy the lps-@VERSIONID@ web application (directory or war file).
+    
+    </li>
+    <li>Browse to Laszlo's <a target="_top" href="http://localhost:8080/lps-@VERSIONID@/examples/hello.lzx">hello.lzx</a> application to verify 
+    that LPS is installed correctly and that Tomcat has started correctly. (The first application 
+    may take 30 seconds or so to start.) </li>
+    <li>Your browser should display something like:
+    <p><img src="img/d_inst_win.gif"></p></li>
+    <li>If your browser does not display the <b>Hello, Laszlo!</b> greeting, 
+    please see the <a href="install-instructions-core.html">installation instructions</a>. </li>
+    <li>Now, check out the <a href="http://localhost:8080/lps-@VERSIONID@/index.html">Start Here Page</a> for links to documentation, tutorials, examples, samples and more.&nbsp;
+      (<b>Note</b>: the URL for this page may be slightly different than the one
+      in this page if you run your serlvet container on something other than
+      port 8080, or you deployed the lps-@VERSIONID@ web application under a name other
+      than lps-@VERSIONID@.) </li>
+    <li><a href="#running">Click here</a> for information about running your own Laszlo applications.</li>
+
+</ol>
+
+
+<a name="running"><h3>Running your own Laszlo applications</h3></a>
+
+
+<p>To run a Laszlo application that you have created or modified, you
+should create your own Laszlo-enabled Web application inside your servlet
+container:
+<ol>
+    <li>Create a new directory for your application</li>
+    <li>In this new directory, create a subdirectory called <b>WEB-INF</b>.    </li>
+    <li>Copy the <b><code>lib</code></b> and <b><code>lps</code></b> directories
+          and <b><code>web.xml</code></b> file from the LPS web
+          application directory into your web application.  These files can be found at
+          <pre>yourInstallationDir\lps-@VERSIONID@\WEB-INF     (Windows)
+yourInstallationDir/lps/lps-@VERSIONID@/WEB-INF (Linux, OS-X)</pre> 
+Copy them into your application's <b>WEB-INF</b> directory.&nbsp; If your
+  application already has a web.xml file, you will need to merge the contents of
+  the lps-@VERSIONID@ web.xml with your web.xml.
+        <p><b>WARNING:</b>
+        Make sure you duplicate the precise directory structure of the WEB-INF 
+        directory when you place these files and directories into 
+        your newly-created directory.
+        </p>
+    </li>
+    <li>Put the .lzx files and art assets that make up your application inside the new directory you 
+created, or put them into a subdirectory you create inside of it. 
+    </li>
+    <li>Consult your servlet container documentation for information about how to deploy this Web application into the container. 
+      For Tomcat, you can simply copy this directory into <pre>      tomcatInstallationDirectory\webapps\your-application-dir (Windows)
+      tomcatInstallationDirectory/webapps/your-application-dir (Linux, OS-X)</pre>
+    </li>
+</ol>
+
+<!-- lz_content_end -->
+<!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
+<p class="copyright">Copyright &copy; 2002-2008 <a target="_top"
+href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+All Rights Reserved. Unauthorized use, duplication or
+distribution is strictly prohibited. This is the proprietary
+information of Laszlo Systems, Inc. Use is subject to license terms.</p>
+<!-- * H_LZ_COPYRIGHT_END ************************************************* -->
+</body>
+
+</html>
+
+		
+
+
+

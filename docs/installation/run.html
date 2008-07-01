@@ -1,0 +1,197 @@
+<html>
+<head>
+<title>Deployer's guide</title>
+<script>
+<!-- 
+var urlPrefix = './';
+// -->
+</script>
+<script src="../includes/docs.js" type="text/javascript"></script>
+<link rel="stylesheet" href="../../lps/includes/explore.css" type="text/css" />
+</head>
+
+<body>
+<!-- lz_content_start -->
+
+
+
+<!-- this is the page subtitle... -->
+<h2>Running Laszlo applications using Laszlo Presentation Server</h2>
+<p><b>Note:</b> These instructions are for the Standard @VERSIONID@ release.
+<br><a href="run-core.html">Click here</a> if you installed the Core distribution. If you are upgrading from a previous version of the LPS, please see the <a href="./upgrade-instructions.html">upgrade instructions</a>.</p>
+<p>To run your first Laszlo application after installing:</p>
+<ol>
+    <li>Verify the install:  
+        <ul>
+            <li><a href="#windows">Windows</a></li>
+            <li><a href="#linux">Linux</a></li>
+            <li><a href="#osx">Max OS X</a></li>
+        </ul>
+    </li>
+    <li>Create and <a href="#running">run your own applications</a>.</li>
+</ol>
+<h3><a name="windows">Running Laszlo applications on Windows</a></h3>
+<p>To run a Laszlo application once you have successfully installed the Laszlo Presentation Server:</p>
+
+<ol class="regular">
+    <li>Start Tomcat:  
+    <br>When you installed Laszlo for Windows, it created a program group in your Start menu called 
+    <b>Laszlo Presentation Server</b>.  From the <b>Start</b> menu, under <b>Programs</b>, under 
+    <b>Laszlo Presentation Server</b>, click on <b>Start Tomcat for LPS</b>.
+    <p><img src="img/d_t_lpsmenu.jpg"></p>
+    The Tomcat log window should remain on your display.  If it closes, then Tomcat is no longer
+    running.  If this happens, make sure there are no other services (including other copies of
+    Tomcat) running on port 8080.  You can diagnose Tomcat startup failures by getting to a DOS
+    prompt and running the startup script by hand as
+    <pre>            yourInstallationDir\Server\tomcat-5.0.24\bin\catalina.bat run
+    </pre>
+    
+    </li>
+    <li>Run Laszlo's <a target="_top" href="http://localhost:8080/lps-@VERSIONID@/examples/hello.lzx">hello.lzx</a> application to verify 
+    that LPS is installed correctly and that Tomcat has started correctly. (The first application 
+    may take 30 seconds or so to start.) </li>
+    <li>Your browser should display something like:
+    <p><img src="img/d_inst_win.gif"></p></li>
+    <li>If your browser does not display the <b>Hello, Laszlo!</b> greeting, 
+    please see the <a href="./">installation instructions</a>. </li>
+    <li><a href="#running">Click here</a> for information about running your own Laszlo applications.</li>
+
+</ol>
+
+<a name="linux"><h3>Running Laszlo applications on Linux</h3></a>
+
+<p>To run a Laszlo application once you have successfully installed the Laszlo Presentation Server</p>
+
+<ol class="regular">
+    <li>
+        Start Tomcat:  <br>
+        Assuming you have set JAVA_HOME to point to the directory 
+        in which Java is installed, enter:<br>
+        lps-@VERSIONID@/Server/tomcat-5.0.24/bin/startup.sh<br>
+        If there is a problem, the error is reported in the console.<br>
+        If this happens, make sure there are no other processes (including other copies of
+        Tomcat) running on port 8080.
+    </li>
+    <li>
+        Run Laszlo's <a target="_top" href="http://localhost:8080/lps-@VERSIONID@/examples/hello.lzx">hello.lzx</a> 
+        application to verify that LPS is installed correctly and that Tomcat has 
+        started correctly. (The first application 
+        may take 30 seconds or so to start.)
+    </li>
+    <li>
+        Your browser should display something like:<br>
+        <img src="img/d_inst_linux.gif">
+    </li>
+    <li>
+        If your browser does not display the <b>Hello, Laszlo!</b> greeting, 
+    please see the <a href="./">installation instructions</a>.
+    </li>
+    <li>
+        <a href="#running">Click here</a> for information about running 
+        your own Laszlo applications.
+    </li>
+</ol>
+
+
+<a name="osx"><h3>Running Laszlo applications on Mac OS X</h3></a>
+<p>To run a Laszlo application once you have successfully installed the Laszlo Presentation Server:</p>
+
+<ol class="regular">
+    <li>Start Tomcat:  
+    <br>When you installed Laszlo, it placed an icon on your desktop: 
+    <ul>
+        <li>LPS Start Tomcat.term</li>
+    </ul>
+    <p><img src="img/d_t_screen_m.jpg"></p>
+    <p>To start Tomcat, double-click the LPS Start Tomcat.term icon.
+    <br>Note:  If you move the Tomcat directory, this icon will no longer start Tomcat.</p>
+    </li>
+    <li>Run Laszlo's <a target="_top" href="http://localhost:8080/lps-@VERSIONID@/examples/hello.lzx">hello.lzx</a> application to verify 
+    that LPS is installed correctly and that Tomcat has started correctly. (The first application 
+    may take 30 seconds or so to start.) </li>
+    <li>Your browser should display something like:
+    <p><img src="img/d_inst_mac.gif"></p></li>
+    <li>If your browser does not display the <b>Hello, Laszlo!</b> greeting, 
+    please see the <a href="./">installation instructions</a>. </li>
+    <li><a href="#running">Click here</a> for information about running your own Laszlo applications.</li>
+</ol>
+
+
+<a name="running"><h3>Running your own Laszlo applications</h3></a>
+
+
+<p>To run a Laszlo application that you have created or modified, you must either:</p>
+
+<ul>
+<li>Put your .lzx files and art assets inside the my-apps  folder or a subdirectory within the my-apps folder 
+inside the lps-@VERSIONID@ Web application. 
+<br>For example, if you installed LPS using the Windows installer, the my-apps directory is at:
+    <pre>    yourInstallationDir\Server\lps-@VERSIONID@\my-apps</pre>
+      For Linux and OS X, the my-apps directory is at:
+      <pre>    yourInstallationDir/Server/lps-@VERSIONID@/my-apps</pre>
+    <p>
+    To display the application in your browser, browse to:</p>
+    <pre>    http://localhost:8080/lps-@VERSIONID@/<i>my-apps</i>/<i>yourApplicationName</i>.lzx</pre>
+    <b>Note:</b> If your modifications do not show, click the browser's <b>reload</b> button.<br>
+
+<p>or, you can</p>
+</li><li>Create your own Laszlo-enabled Web application inside your servlet container. 
+<br>To create a Laszlo-enabled Web application:
+<ol>
+    <li>Create a new directory for your application (on Linux/MacOSX/Unix)
+        <pre>mkdir myappdir
+mkdir myappdir/WEB-INF</pre> (on Windows) <pre>mkdir myappdir
+mkdir myappdir\WEB-INF</pre>
+    </li>
+    <li>Copy the <code>lps</code> sub-directory.  (on Linux/MacOSX/Unix):
+    <pre>cp -r yourInstallationDir/Server/lps-@VERSIONID@/lps myappdir</pre>
+    (on Windows)
+    <pre>copy yourInstallationDir\Server\lps-@VERSIONID@\lps myappdir\lps</pre>
+</li>
+<li>Copy the <b><code>lib</code></b> and <b><code>lps</code></b> directories
+          and <b><code>web.xml</code></b> file from the LPS web
+          application into your web application.  For @VERSIONID@ release you can find these
+          directories at<pre>yourInstallationDir\Server\lps-@VERSIONID@\WEB-INF (Windows)
+yourInstallationDir/Server/lps-@VERSIONID@/WEB-INF (Linux) </pre> 
+          For LPS Core, you can find these direectories at
+          <pre>yourInstallationDir\lps-@VERSIONID@\WEB-INF     (Windows Core)
+yourInstallationDir/lps/lps-@VERSIONID@/WEB-INF (Linux, OS-X Core)  </pre> 
+Copy them into your applications WEB-INF directory.
+          <p><b>WARNING:</b>
+Make sure you duplicate the precise directory structure of the WEB-INF directory when you place these files and 
+directorie into your newly-created directory.
+
+</p></li><li>Put the .lzx files and art assets that make up your application inside the new directory you 
+created, or put them into a subdirectory you create inside of it. 
+</li><li>Consult your servlet container documentation for a information about how to deploy this Web application into the container. 
+      For Tomcat, you can copy this directory into <pre>      tomcatInstallationDirectory\webapps\your-application-dir (Windows)
+      tomcatInstallationDirectory/webapps/your-application-dir (Linux, OS-X)
+      </pre>
+       </li>
+      </ol>
+</li></ul>
+
+
+
+<h3>Congratulations!  You have successfully installed Laszlo Presentation Server and run your first Laszlo application.</h3>
+<p>Now, check out the <a target="_top" href="http://localhost:8080/lps-@VERSIONID@/laszlo-explorer/">Laszlo Explorer</a> for links to documentation, tutorials, examples, samples and more.</p>
+
+
+
+<!-- lz_content_end -->
+<!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
+<p class="copyright">Copyright &copy; 2002-2008 <a target="_top"
+href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+All Rights Reserved. Unauthorized use, duplication or
+distribution is strictly prohibited. This is the proprietary
+information of Laszlo Systems, Inc. Use is subject to license terms.</p>
+<!-- * H_LZ_COPYRIGHT_END ************************************************* -->
+</body>
+
+</html>
+
+		
+
+
+
+
