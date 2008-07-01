@@ -13,11 +13,11 @@
 <project name="lps" default="build" basedir=".">
 
     <description>
-        This is the top-level LPS project build file.  All subdirectory build files 
-        must have the following required targets: clean, build, test, and all. 
+        This is the top-level LPS project build file.  All subdirectory build files
+        must have the following required targets: clean, build, test, and all.
 
-        This build requires ant 1.6.5 and Java 1.4 or Java 1.5. Parts of it also 
-        require Rhino 1.5R3 and Apache BSF 2.3.0. 
+        This build requires ant 1.6.5 and Java 1.4 or Java 1.5. Parts of it also
+        require Rhino 1.5R3 and Apache BSF 2.3.0.
 
         The simple thing:
         ant start (starts tomcat and the webapp)
@@ -26,11 +26,11 @@
         Targets in this file are split up into several categories. Most developers
         will care about the tomcat.* tasks, which control the tomcat server itself,
         the webapp.* tasks, which control the LPS servlet, and various build and clean
-        targets. 
-        
+        targets.
+
         Sometimes you want nothing to do with tomcat; you just want to make a distribution.
         In that case, add -Dno.tocmat=true to the ant command line. No tasks that assume that
-        tomcat is present will be run, nor will they fail. Or, add "disable-tomcat" as the 
+        tomcat is present will be run, nor will they fail. Or, add "disable-tomcat" as the
         first task listed on the command line or in the depends list for the task you invoke.
 
         Tomcat tasks:
@@ -39,8 +39,8 @@
         ant tomcat.stop -- this will stop the tomcat server completely.
 
         Webapp tasks:
-        ant webapp.install or ant webapp.deploy -- deploy the LPS webapp, without 
-        restarting tomcat. 
+        ant webapp.install or ant webapp.deploy -- deploy the LPS webapp, without
+        restarting tomcat.
         ant webapp.undeploy or ant webapp.uninstall -- undeploy the LPS webapp,
         without restarting tomcat.
         ant webapp.start -- start the LPS webapp, without restarting tomcat
@@ -61,7 +61,7 @@
     <!-- Absolute location of lps specific config files (empty means use relative) -->
     <property name="lps.config.dir.abs" value="" />
 
-    <!-- Read definitions of tomcat tasks. 
+    <!-- Read definitions of tomcat tasks.
     These tasks are for Tomcat 5 and ant 1.6 [bshine 4.29.06] -->
     <property file="build-tools/tomcattasks.properties" />
 
@@ -74,14 +74,14 @@
 
     <path id="3rd.party.classpath" >
         <dirset dir="${webapp-lps-home}/server/build" />
-        <fileset dir="WEB-INF/lib"> 
+        <fileset dir="WEB-INF/lib">
             <exclude name="${lps.jar}" />
         </fileset>
         <fileset dir="3rd-party/jars/dev" />
         <fileset
                 dir="${LZ_VENDOR_ROOT}" includes="*.jar" />
     </path>
-    
+
     <!-- Properties describing which OS as binary flags -->
     <condition property="os.isunix">
         <equals arg1="${build.platform}" arg2="unix"/>
@@ -112,12 +112,12 @@
 
       <include name="tools/**" />
       <include name="my-apps/**" />
-      
+
       <include name="WEB-INF/web.xml"/>
       <include name="WEB-INF/taglibs-i18n.tld"/>
       <include name="WEB-INF/classes/**"/>
       <include name="${webapp-lps-home}/schema/lzx.rng" />
-      <include name="${webapp-lps-home}/schema/lfc.lzx" />      
+      <include name="${webapp-lps-home}/schema/lfc.lzx" />
       <include name="${webapp-lps-home}/schema/preprocess.xsl" />
       <include name="${webapp-lps-home}/templates/**" />
       <include name="${webapp-lps-home}/misc/**" />
@@ -153,6 +153,7 @@
       <!-- they are specified separately because we filter VERSIONID within them -->
 
       <include name="*.html" />
+      <include name="*.css" />
       <include name="*.dbk" />
       <include name="logo.gif" />
 
@@ -161,13 +162,13 @@
       <include name="developers/**" />
       <include name="deployers/**" />
       <include name="component-design/**" />
-      <include name="component-browser/**" />      
+      <include name="component-browser/**" />
       <include name="reference/**" />
       <include name="contributors/**" />
       <include name="contribref/**" />
 
-      <!-- Exclude images, because we don't want to replace VERSIONID inside images. --> 
-      <exclude name="**/*.png" />      
+      <!-- Exclude images, because we don't want to replace VERSIONID inside images. -->
+      <exclude name="**/*.png" />
       <exclude name="**/*.gif" />
       <exclude name="**/*.jpg" />
       <exclude name="**/*.jpeg" />
@@ -184,19 +185,19 @@
       <exclude name="installation/build/**" />
 
   </patternset>
-  
+
   <patternset id="manifest.webapp.docs.images">
       <!-- these are relative to the docs subdirectory, but only contain images -->
       <include name="images/*.png" />
       <include name="images/*.gif" />
       <include name="images/*.jpg" />
       <include name="images/*.jpeg" />
-      
+
       <include name="includes/**/*.png" />
       <include name="developers/**/*.png" />
       <include name="deployers/**/*.png" />
       <include name="component-design/**/*.png" />
-      <include name="component-browser/**/*.png" />      
+      <include name="component-browser/**/*.png" />
       <include name="reference/**/*.png" />
       <include name="contributors/**/*.png" />
       <include name="contribref/**/*.png" />
@@ -207,7 +208,7 @@
       <include name="developers/**/*.gif" />
       <include name="deployers/**/*.gif" />
       <include name="component-design/**/*.gif" />
-      <include name="component-browser/**/*.gif" />      
+      <include name="component-browser/**/*.gif" />
       <include name="reference/**/*.gif" />
       <include name="contributors/**/*.gif" />
       <include name="contribref/**/*.gif" />
@@ -218,7 +219,7 @@
       <include name="developers/**/*.jpg" />
       <include name="deployers/**/*.jpg" />
       <include name="component-design/**/*.jpg" />
-      <include name="component-browser/**/*.jpg" />      
+      <include name="component-browser/**/*.jpg" />
       <include name="reference/**/*.jpg" />
       <include name="contributors/**/*.jpg" />
       <include name="contribref/**/*.jpg" />
@@ -229,7 +230,7 @@
       <include name="developers/**/*.jpeg" />
       <include name="deployers/**/*.jpeg" />
       <include name="component-design/**/*.jpeg" />
-      <include name="component-browser/**/*.jpeg" />      
+      <include name="component-browser/**/*.jpeg" />
       <include name="reference/**/*.jpeg" />
       <include name="contributors/**/*.jpeg" />
       <include name="contribref/**/*.jpeg" />
@@ -240,7 +241,7 @@
       <include name="developers/**/*.swf" />
       <include name="deployers/**/*.swf" />
       <include name="component-design/**/*.swf" />
-      <include name="component-browser/**/*.swf" />      
+      <include name="component-browser/**/*.swf" />
       <include name="reference/**/*.swf" />
       <include name="contributors/**/*.swf" />
       <include name="contribref/**/*.swf" />
@@ -251,7 +252,7 @@
       <include name="developers/**/*.ico" />
       <include name="deployers/**/*.ico" />
       <include name="component-design/**/*.ico" />
-      <include name="component-browser/**/*.ico" />      
+      <include name="component-browser/**/*.ico" />
       <include name="reference/**/*.ico" />
       <include name="contributors/**/*.ico" />
       <include name="contribref/**/*.ico" />
@@ -260,9 +261,9 @@
 
 
 
-      
-  </patternset> 
-  
+
+  </patternset>
+
   <patternset id="manifest.test" >
       <include name="test/**" />
       <include name="**/test-golden-files/**" />
@@ -274,21 +275,21 @@
   </patternset>
 
   <property name="jetty" value="jetty-4.2.7" />
-  
+
   <!--============== Convenience Target [all]==================-->
   <target name="all" depends="init,clean,build-source-distro,make,doc,test"
       description="build source distro, clean, build, install webapp, doc, and test." >
   </target>
 
-  <!--============== Convenience Target [make] ==================-->  
+  <!--============== Convenience Target [make] ==================-->
   <target name="make" depends="init,build,webapp.reload"
       description="Build and reload into tomcat5." >
   </target>
-  
+
   <!--============== Convenience Targets [simple] ==================-->
-  <target name="simple" depends="disable-tomcat,build" 
+  <target name="simple" depends="disable-tomcat,build"
    description="Just do a simple build, without tomcat or doc." />
-  
+
    <!--============== Convenience Targets [nightly] ==================-->
    <target name="nightly" depends="disable-tomcat"
     description="Build and then run megatest, without tomcat. If the test is successful, build the distros.">
@@ -304,12 +305,12 @@
         <ant target="test"/>
     </target>
 
-  
+
   <!--================= Target [disable-tomcat] ==========-->
-  <target name="disable-tomcat" 
+  <target name="disable-tomcat"
       description="Call this before init to ensure no tomcat will be run">
       <property name="no.tomcat" value="true" />
-  </target>      
+  </target>
 
   <target name="disable-nsi"
       description="Call this before init to ensure that the nsi windows installer will not be run."
@@ -318,17 +319,17 @@
   </target>
 
   <!--===============  Target [init]  ===================-->
-  <target name="init" description="Target for initialization" 
+  <target name="init" description="Target for initialization"
           depends="build-opt"
           unless="done.init" >
     <tstamp/>
-    
+
     <fail message="LPS_HOME (${LPS_HOME}) is wrong! It should be ${basedir}">
         <condition>
             <not> <equals arg1="${LPS_HOME}" arg2="${basedir}"/> </not>
         </condition>
     </fail>
-    
+
     <property file="${LPS_HOME}/build.properties"/>
 
     <property name="builddir"         value="lps-${version.id}-core" />
@@ -336,7 +337,7 @@
     <property name="builddir-dev" value="lps-${version.id}" />
     <property name="builddir-dev-server"  value="${builddir-dev}/Server" />
     <property name="builddir-dev-bin"  value="${builddir-dev}/bin" />
-    <property name="builddir-dev-server-lps"  
+    <property name="builddir-dev-server-lps"
         value="${builddir-dev-server}/lps-${version.id}/WEB-INF/lps" />
     <property name="builddir-work"  value="${builddir-dev-server-lps}/work" />
     <property name="builddir-dev-credits" value="${builddir-dev}/3rdPartyCredits" />
@@ -362,15 +363,15 @@
     <echo message="    Skipping prefetch is ${skip.prefetch}" />
     <echo message="    Skipping wrappertest is ${skip.wrappertest}" />
     <echo message="    Skipping doc is ${skip.doc}" />
-    
+
     <!-- We only support Java 1.4 and Java 1.5. This condition is a bit loose
         in that it only makes sure the java version _contains_ 1.4 or 1.5, not
-        _starts with_ 1.4 or 1.5. This is because the ant core conditionals 
+        _starts with_ 1.4 or 1.5. This is because the ant core conditionals
         don't support startsWith. Many other things will likely blow up if you
         use some other version of Java, so this condition's looseness is okay
         with me. [bshine 5.8.2006]
     -->
-    <fail 
+    <fail
         message="Java version must be 1.4.* or 1.5.*, but current java version is ${ant.java.version}">
         <condition>
             <not>
@@ -381,8 +382,8 @@
             </not>
         </condition>
     </fail>
-    
-    
+
+
     <!-- Set target to use for starting/stopping tomcat -->
     <condition property="tom.stop" value="tom.winsvc.stop" >
         <os family="windows" />
@@ -399,7 +400,7 @@
 
     <!-- location of 3rd party files different for builder -->
     <condition property="3rd-party" value="../../build/3rd-party" >
-        <equals arg1="${user.name}" arg2="builder" /> 
+        <equals arg1="${user.name}" arg2="builder" />
     </condition>
     <condition property="3rd-party" value="../build/3rd-party" >
         <not> <equals arg1="${user.name}" arg2="builder" /> </not>
@@ -409,23 +410,23 @@
 
     <condition property="tomcat.debug.opts" value="-Xdebug -Xint -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999" else="">
         <isset property="env.DEBUG_TOMCAT"/>
-    </condition> 
+    </condition>
 
     <condition property="tomcat.profile.opts" value="-agentlib:yjpagent" else="">
         <isset property="env.PROFILE_TOMCAT"/>
-    </condition> 
-    
+    </condition>
+
     <property name="java.opts" value="" />
-    <property name="tomcat.java.opts" 
+    <property name="tomcat.java.opts"
         value="${java.opts} ${tomcat.debug.opts} ${tomcat.profile.opts} -Xms128m -Xmx512m -Dlps.config.dir=${lps.config.dir} -Dlps.config.dir.abs=${lps.config.dir.abs} -Dcom.apple.backgroundOnly=true -Djava.awt.headless=true -Djavax.net.ssl.trustStore=${LPS_HOME}/build-tools/lzcacerts -Djavax.net.ssl.trustStorePassword=changeit -Dfile.encoding=UTF-8" />
 
     <property name="dev-war-file"  value="openlaszlo-${version.id}.war" />
     <property name="servlet-war-file"  value="openlaszlo-${version.id}-servlet.war" />
-    <property name="dev-gzfile" 
+    <property name="dev-gzfile"
         value="openlaszlo-${version.id}-${build.platform}.tar.gz" />
 
     <property name="source-distro-gzfile" value="openlaszlo-${version.id}-src.tar.gz" />
-    
+
     <property name="done.init" value="true" />
 
   </target>
@@ -489,8 +490,8 @@
        </fileset>
     </delete>
   </target>
-  
-  
+
+
 
   <!--================  Target [clean-cache] ==============-->
   <target name="clean-cache" depends="init" unless="no-clean-cache"
@@ -502,12 +503,12 @@
           </delete>
   </target>
 
-    <target name="clean-webapp" depends="init" 
-        description="Undeploy the webapp if it exists." 
+    <target name="clean-webapp" depends="init"
+        description="Undeploy the webapp if it exists."
         unless="no.tomcat">
         <ant target="webapp.undeploy" />
     </target>
-    
+
   <!--================  Target [build-source-distro] ==============-->
   <target name="build-source-distro"
       description="Build source distribution"
@@ -539,10 +540,10 @@
       <property name="done.build-source-distro" value="true" />
   </target>
 
-  <target name="package-source-distro" 
+  <target name="package-source-distro"
       description="Turn source dirs into packages"  depends="disable-tomcat,init">
       <echo message="packaging source distro into ${source-distro-gzfile}" />
-      
+
       <!-- Create tar gz -->
       <tar tarfile="${source-distro-gzfile}" longfile="gnu" compression="gzip" >
           <tarfileset dir="${source-distro}" prefix="${source-distro}">
@@ -586,7 +587,7 @@
       <!-- Also uses server script compiler -->
       <ant dir="lps/includes/source"    target="build" />
       <ant dir="lps/components"         target="build" />
-      
+
       <property name="build.done" value="true" />
   </target>
 
@@ -594,12 +595,12 @@
   <target name="build-classes"
       description="Build WEB-INF/classes. Called after building server."
       depends="init">
-      
+
       <mkdir dir="WEB-INF/classes" />
       <javac classpathref="3rd.party.classpath"
           srcdir="WEB-INF/classes"
           destdir="WEB-INF/classes" />
-      
+
       <mkdir dir="WEB-INF/classes/org/openlaszlo/i18n" />
       <copy todir="WEB-INF/classes/">
         <fileset dir="${webapp-lps-home}/server/src">
@@ -608,26 +609,26 @@
     </copy>
 
   </target>
-  
+
   <!--================  Target [build-tests] ==============-->
   <target name="build-tests" description="Build classes designated for testing only"
     depends="init">
-    
+
     <copy todir="WEB-INF/classes">
         <fileset dir="${webapp-lps-home}/server/src">
             <include name="org/openlaszlo/test/**/*.java"/>
         </fileset>
     </copy>
-    
+
     <ant target="build-classes"/>
     <ant target="reload"/>
-    
+
   </target>
 
   <!--================  Target [clean-classes] ==============-->
   <target name="clean-classes" description="Clean WEB-INF/classes/*.class."
       depends="init">
-      
+
       <delete>
           <fileset dir="." includes="WEB-INF/**/*.class,3rd-party/**/*.class,WEB-INF/classes/org/openlaszlo/i18n/*.properties" />
       </delete>
@@ -636,57 +637,57 @@
 
 
   <!--================  Target [doc] ==============-->
-  <target name="doc" 
+  <target name="doc"
       description="Build documentation">
-      
+
       <echo message="------- in main build.xml, about to run the script to build doc if appropriate, based on architecture and skip.doc and doc.build.done properties ----- "/>
     <script language="javascript"><![CDATA[
         // [bshine 2007.11.26] Fix for LPP-3720: Refguide is being built twice on build machines.
         // Don't build the doc if we're on windows
         // Don't build the doc if skip.doc is set
         // Don't build the doc if we've already built the doc
-        
+
         var docBuildAlreadyDone = lps.getProperty("doc.build.done");
-        var shouldSkipDoc = lps.getProperty("skip.doc"); 
-        var buildPlatform = lps.getProperty("build.platform"); 
-        
-        var msgTask = lps.createTask("echo"); 
-        
+        var shouldSkipDoc = lps.getProperty("skip.doc");
+        var buildPlatform = lps.getProperty("build.platform");
+
+        var msgTask = lps.createTask("echo");
+
         if (docBuildAlreadyDone) {
             msgTask.setMessage("------- doc build already done; not going to do it again ------- ");
-            msgTask.execute(); 
+            msgTask.execute();
         } else if (shouldSkipDoc) {
-            msgTask.setMessage("------- skip.doc flag was set; skipping doc build ------- ");        
-            msgTask.execute();             
+            msgTask.setMessage("------- skip.doc flag was set; skipping doc build ------- ");
+            msgTask.execute();
         } else if (buildPlatform == "windows") {
             msgTask.setMessage("------- skipping doc build because the doc doesn't build well on windows ------- ");
-            msgTask.execute();             
+            msgTask.execute();
         } else {
-            var docSourceDir = new java.io.File(lps.getProperty("basedir") + "/docs/src"); 
+            var docSourceDir = new java.io.File(lps.getProperty("basedir") + "/docs/src");
             var docSourcePath = docSourceDir.getAbsolutePath();
             msgTask.setMessage("-------  main build.xml is going to call build in " + docSourcePath + "-----" );
-            msgTask.execute(); 
-            
+            msgTask.execute();
+
             // We passed all of the guard tests. Let's really build the doc!
-            var doctask = lps.createTask("ant"); 
+            var doctask = lps.createTask("ant");
             doctask.setDir( docSourceDir );
             doctask.setTarget( "build" );
             doctask.setOutput( "docbuild-out.log" );
-            doctask.execute();       
-            
+            doctask.execute();
+
             var doneMsgTask = lps.createTask("echo");
             doneMsgTask.setMessage( "------------ done building doc in main build.xml -----------" );
             doneMsgTask.execute();
         }
-        
+
       ]]> </script>
-      
-      <property name="doc.build.done" value="true" />        
-      <echo message="--------main build.xml just set the property doc.build.done to ${doc.build.done} ----------" />     
-  </target> 
+
+      <property name="doc.build.done" value="true" />
+      <echo message="--------main build.xml just set the property doc.build.done to ${doc.build.done} ----------" />
+  </target>
 
   <!--================  Target [test] ==============-->
-  <target name="test" 
+  <target name="test"
       description="Run all tests"
       depends="init,build">
 
@@ -700,7 +701,7 @@
   </target>
 
   <!--================  Target [smoke] ==============-->
-  <target name="smoke" 
+  <target name="smoke"
       description="Build, load into tomcat, and run smoke tests"
       depends="init,make">
       <ant dir="test"       target="smoke" />
@@ -725,12 +726,12 @@
 
   </target>
   <!--================  Target [clean-dist] ==============-->
-  <target name="clean-dist" 
+  <target name="clean-dist"
       description="Delete all distribution files and directories"
       depends="disable-tomcat,init" >
       <!-- this one file is, if there, a symlink on unix only -->
       <!-- TODO: See what happens to this file on all 3 os's [bshine 5.14.06] -->
-      <delete file="${builddir-dev-server}/lps-${version.id}/test" />      
+      <delete file="${builddir-dev-server}/lps-${version.id}/test" />
       <delete dir="${builddir}" />
       <delete dir="${builddir-dev}" />
       <delete dir="${source-distro}" />
@@ -738,21 +739,21 @@
       <delete file="${servlet-war-file}"      />
       <delete file="${dev-gzfile}"    />
       <delete file="${source-distro-gzfile}" />
-      
+
   </target>
 
   <!--================  Target [cleandoc] ==============-->
-  <target name="cleandoc" 
+  <target name="cleandoc"
       description="Delete generated documentation"
       depends="disable-tomcat,init">
       <ant dir="docs/src"    target="clean" />
   </target>
 
   <!--================  Target [build-dist-dir-dev] ==============-->
-  <target name="build-dist-dir-dev" 
-      description="Prepares dev copy of dist directory" 
+  <target name="build-dist-dir-dev"
+      description="Prepares dev copy of dist directory"
       depends="disable-tomcat,init" unless="done.build-dist-dir-dev" >
-      
+
       <copy todir="${builddir-dev}" >
           <fileset dir="${builddir}">
               <patternset refid="manifest.top" />
@@ -763,7 +764,11 @@
       </copy>
 
       <tstamp><format property="BUILDDATE" pattern="hh:mm aa dd-MMM-yyyy" locale="en"/></tstamp>
-      <copy todir="${builddir-dev}" file="docs/release-notes.html">
+      <copy todir="${builddir-dev}">
+          <!-- need the html and the css -->
+          <fileset dir="docs">
+            <include name="release-notes.*" />
+          </fileset>
           <filterset>
               <filter token="VERSIONID" value="${version.id}"/>
               <filter token="BUILDID" value="${build.id}"/>
@@ -772,7 +777,7 @@
           </filterset>
       </copy>
 
-      <copy tofile="${builddir-dev}/README.txt" 
+      <copy tofile="${builddir-dev}/README.txt"
             file="README.txt" overwrite="true">
           <filterset>
               <filter token="VERSIONID" value="${version.id}"/>
@@ -802,15 +807,15 @@
       <copy todir="${builddir-dev-server}">
           <fileset dir="${builddir}" >
               <include name="lps-${version.id}/**" />
-          </fileset> 
+          </fileset>
       </copy>
       <mkdir dir="${builddir-dev-server}/${tomcat}"/>
       <copy todir="${builddir-dev-server}/${tomcat}">
           <fileset dir="${server}" >
               <exclude name="conf/LPS/localhost/lps.xml" />
-          </fileset> 
-      </copy>      
-      
+          </fileset>
+      </copy>
+
       <copy tofile="${builddir-dev-server}/${tomcat}/conf/LPS/localhost/lps.xml"
             file="${server}/conf/LPS/localhost/lps.xml" >
           <filterset>
@@ -825,10 +830,10 @@
       <mkdir dir="${builddir-dev-server}/${tomcat}/work" />
 
       <!-- Copy in the crossdomain.xml file to the ROOT web app -->
-      <copy todir="${builddir-dev-server}/${tomcat}/webapps/ROOT" 
+      <copy todir="${builddir-dev-server}/${tomcat}/webapps/ROOT"
             file="${webapp-lps-home}/config/crossdomain.xml"/>
       <!-- Copy in the manager webapp and supporting documents -->
-      <!-- the tomcat-users file, which must be edited 
+      <!-- the tomcat-users file, which must be edited
            to enable access to the manager webapp -->
       <copy todir="${builddir-dev-server}/${tomcat}/conf"
             file="server/conf/tomcat-users.xml" />
@@ -845,10 +850,10 @@
   </target>
 
   <!--================  Target [dist-one] ==============-->
-  <target name="dist-one" 
+  <target name="dist-one"
       description="*** Build all distributions for a single platform, including doc."
       depends="init,build-source-distro,build,doc,build-core,dist-dev,dist-core" >
-  </target>     
+  </target>
 
   <!--================  Target [dist-dev] ==============-->
   <target name="dist-dev" depends="disable-tomcat,init,build-core" unless="done.dist.dev"
@@ -857,9 +862,9 @@
       <ant target="build-dist-dir-dev" inheritrefs="true" />
 
       <ant target="prefetch" inheritrefs="true" />
-      
+
       <script language="javascript"><![CDATA[
-        var pkgtask = lps.createTask("ant"); 
+        var pkgtask = lps.createTask("ant");
         if (lps.getProperty("build.platform") == "unix") {
             pkgtask.setTarget("pkg-gzfile");
         } else if (lps.getProperty("build.platform") == "macosx") {
@@ -870,16 +875,16 @@
             var f = lps.createTask("fail");
             f.setMessage("Unknown OS. Failing.");
             f.execute();
-        } 
-        pkgtask.execute(); 
+        }
+        pkgtask.execute();
       ]]> </script>
-      
-      <property name="done.dist.dev" value="true" />      
+
+      <property name="done.dist.dev" value="true" />
    </target>
-   
+
     <target name="pkg-gzfile">
         <delete file="${dev-gzfile}" />
-        
+
         <tar tarfile="${dev-gzfile}" longfile="gnu" compression="gzip">
             <tarfileset dir="${builddir-dev}" mode="755" prefix="${builddir-dev}">
                 <include name="Server/${tomcat}/bin/*"/>
@@ -896,9 +901,9 @@
                 <exclude name="bin/lzdc"/>
                 <exclude name="bin/lzmc"/>
             </tarfileset>
-          </tar>    
+          </tar>
     </target>
-      
+
 
     <target name="wrappertest" unless="skip.wrappertest" depends="init">
         <exec executable="bash" failonerror="true">
@@ -907,9 +912,9 @@
         </exec>
     </target>
 
-  <target name="nsi-dev" 
+  <target name="nsi-dev"
       unless="skip.nsi-dev"
-      depends="init" 
+      depends="init"
       description="Test target for building windows installer" >
           <echo message="Making NullSoft Installer" />
           <copy todir="lps-${version.id}/Server/misc">
@@ -953,60 +958,60 @@
        <exec executable="bash">
            <arg line="-c 'installer/macosx/mkpkg.sh ${version.id} ${version.id.upper} Server/${tomcat}'" />
        </exec>
-  </target>   
+  </target>
 
   <!--================  Target [runlzunit] ==============-->
   <target name="runlzunit" depends="init" description="Run lzunit test apps" unless="skip.runlzunit">
-    <ant target="lztest" />  
+    <ant target="lztest" />
     <ant target="runbrowserlzunit-swf8" />
     <ant target="runbrowserlztest-swf8" />
     <ant target="runbrowserlzunit-dhtml" />
     <ant target="runbrowserlztest-dhtml" />
   </target>
 
-  <target name="runbrowserlzunit-swf8" depends="init" description="Run lzunit test apps in swf8 runtime" 
-          unless="headless">   
+  <target name="runbrowserlzunit-swf8" depends="init" description="Run lzunit test apps in swf8 runtime"
+          unless="headless">
     <exec executable="bash" failonerror="true">
       <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt swf8 smoketest'" />
     </exec>
   </target>
 
   <target name="runbrowserlzunit-dhtml"
-          depends="init" description="Run lzunit test apps in dhtml runtime"  
-          unless="headless">   
+          depends="init" description="Run lzunit test apps in dhtml runtime"
+          unless="headless">
     <exec executable="bash" failonerror="true">
       <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt dhtml smoketest'" />
     </exec>
   </target>
 
 
-  <target name="runbrowserlztest-swf8"   
-          depends="init" description="Run lztest test apps in swf8 runtime" 
-          unless="headless" >   
+  <target name="runbrowserlztest-swf8"
+          depends="init" description="Run lztest test apps in swf8 runtime"
+          unless="headless" >
     <exec executable="bash" failonerror="true">
       <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/rhino.txt swf8 smoketest'" />
     </exec>
   </target>
 
-<target name="runbrowserlztest-dhtml" 
-          depends="init" description="Run lztest test apps in dhtml runtime" 
-          unless="headless" >   
+<target name="runbrowserlztest-dhtml"
+          depends="init" description="Run lztest test apps in dhtml runtime"
+          unless="headless" >
     <exec executable="bash" failonerror="true">
       <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/rhino.txt dhtml smoketest'" />
     </exec>
   </target>
 
-   <target name="lztest" depends="init,lztest.clean" description="Run the non-component lzunit test apps with rhino runtime" >   
+   <target name="lztest" depends="init,lztest.clean" description="Run the non-component lzunit test apps with rhino runtime" >
         <exec executable="bash" failonerror="true">
             <arg line="-c 'build-tools/runlztest.sh test/lztest/rhino.txt smoketest'" />
         </exec>
     </target>
-    
-   <target name="findlztests" depends="init,lztest.clean" 
-           description="Use svn status to get list of modified files, find corresponding tests, and run them" >   
+
+   <target name="findlztests" depends="init,lztest.clean"
+           description="Use svn status to get list of modified files, find corresponding tests, and run them" >
         <exec executable="bash" failonerror="true">
             <arg line="-c 'build-tools/findtests.sh test/lztest/rhino.txt'" />
-            <!-- 
+            <!--
                  The smoketest tag can be passed to force run of all smoketest tests plus ones
                  for modified files
                <arg line="-c 'build-tools/findtests.sh test/lztest/rhino.txt smoketest'" />
@@ -1014,15 +1019,15 @@
         </exec>
     </target>
 
-   <target name="findlztestsbrowser-swf8" depends="init,lztest.clean" 
-           description="Use svn status to get list of modified files, find corresponding tests, and run them in browser" >   
+   <target name="findlztestsbrowser-swf8" depends="init,lztest.clean"
+           description="Use svn status to get list of modified files, find corresponding tests, and run them in browser" >
         <exec executable="bash" failonerror="true">
             <arg line="-c 'build-tools/findtestsbrowser.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/browser.txt swf8'" />
         </exec>
     </target>
 
-   <target name="findlztestsbrowser-dhtml" depends="init,lztest.clean" 
-           description="Use svn status to get list of modified files, find corresponding tests, and run them in browser" >   
+   <target name="findlztestsbrowser-dhtml" depends="init,lztest.clean"
+           description="Use svn status to get list of modified files, find corresponding tests, and run them in browser" >
         <exec executable="bash" failonerror="true">
             <arg line="-c 'build-tools/findtestsbrowser.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/browser.txt dhtml'" />
         </exec>
@@ -1041,7 +1046,7 @@
   <!--================  Target [prefetch] ==============-->
     <!-- FIXME [bshine 10.26.06] Turn failonerror to true when prefetch
     succeeds. -->
-  <target name="prefetch" depends="init" description="Prefetch shipping lzx apps" unless="skip.prefetch" >   
+  <target name="prefetch" depends="init" description="Prefetch shipping lzx apps" unless="skip.prefetch" >
       <exec executable="bash" failonerror="false">
           <arg line="-c 'build-tools/prefetch.sh lps-${version.id} Server/${tomcat}'" />
       </exec>
@@ -1050,12 +1055,12 @@
           <fileset dir="${builddir-dev-server}/${tomcat}/logs" includes="*" />
           <fileset dir="${builddir-dev-server}/${tomcat}/temp" includes="*" />
       </delete>
-  </target>   
+  </target>
 
   <!--================  Target [build-dist-dir-core] ==============-->
-  <target name="build-dist-dir-core" 
+  <target name="build-dist-dir-core"
       description="Build lps core distribution directory for tgz (w/out precache)"
-      depends="disable-tomcat,init,build,doc" 
+      depends="disable-tomcat,init,build,doc"
       unless="build-dist-dir-core.done">
 
       <property name="webapp"    value="${builddir}/lps-${version.id}" />
@@ -1087,7 +1092,11 @@
           </fileset>
       </copy>
 
-      <copy todir="${builddir}" file="docs/release-notes.html">
+      <copy todir="${builddir}">
+          <!-- need the html and the css -->
+          <fileset dir="docs">
+            <include name="release-notes.*" />
+          </fileset>
           <filterset>
               <filter token="VERSIONID" value="${version.id}"/>
           </filterset>
@@ -1131,15 +1140,15 @@
               <filter token="VERSIONID" value="${version.id}"/>
           </filterset>
       </copy>
-      
-      <!-- Copy the images for the docs in, without doing VERSIONID substitution. 
-        Fixes LPP-4960 [bshine 24 oct 2007 --> 
-      <copy todir="${webapp}/docs">          
+
+      <!-- Copy the images for the docs in, without doing VERSIONID substitution.
+        Fixes LPP-4960 [bshine 24 oct 2007 -->
+      <copy todir="${webapp}/docs">
           <fileset dir="./docs">
               <patternset refid="manifest.webapp.docs.images" />
           </fileset>
       </copy>
-      
+
 
       <copy tofile="${webapp}/index.html" file="quick-index.html" >
           <filterset>
@@ -1164,14 +1173,14 @@
       <exec executable="python" failonerror="true" dir="${builddir}">
           <arg value="${LPS_HOME}/build-tools/checkfortabs.py" />
       </exec>
-      
+
       <property name="build-dist-dir-core.done" value="true" />
 
   </target>
 
   <!--================  Target [build-core] ==============-->
   <target name="build-core"
-          description="Build 'core' directory w/out precache (clean all dists)" 
+          description="Build 'core' directory w/out precache (clean all dists)"
           depends="disable-tomcat,init" unless="done.build.core" >
 
       <ant target="build-dist-dir-core" />
@@ -1179,7 +1188,7 @@
   </target>
 
   <target name="dist-core"
-          description="Build 'core' distributions including prefetch" 
+          description="Build 'core' distributions including prefetch"
           depends="disable-tomcat,init,dist-dev" unless="done.dist.core" >
 
       <!-- Copy work dir bits -->
@@ -1187,7 +1196,7 @@
           <fileset dir="${builddir-dev-server-lps}" includes="work/**" />
       </copy>
 
-      
+
       <war destfile="${dev-war-file}"
            webxml="${builddir}/lps-${version.id}/WEB-INF/web.xml"
            basedir="${builddir}/lps-${version.id}" compress="true">
@@ -1216,23 +1225,23 @@
 
 
     <!--================  Target [tomcat tasks for tomcat 5 / ant 1.6] ========-->
-    <!-- The tomcattasks.properties files creates the association between a 
-        task name and a class name. The classpath declared in this taskdef 
-        points to the jar file which has the implementation of the ant tomcat 
+    <!-- The tomcattasks.properties files creates the association between a
+        task name and a class name. The classpath declared in this taskdef
+        points to the jar file which has the implementation of the ant tomcat
         manager tasks. [bshine 4.29.06] -->
     <taskdef
             file="build-tools/tomcattasks.properties"
             classpath="server/server/lib/catalina-ant.jar"
-            />  
+            />
 
     <!-- These tasks set things up to run tomcat from ant on windows, where things
         work differently than windows and linux. -->
-   
-     <!-- Start the tomcat server. I'm told this hangs under windows, must 
-         investigate. [bshine 5.10.06] 
+
+     <!-- Start the tomcat server. I'm told this hangs under windows, must
+         investigate. [bshine 5.10.06]
      -->
      <target name="tomcat.start" unless="no.tomcat" depends="init"
-         description="Start the tomcat server (not just a webapp, the server 
+         description="Start the tomcat server (not just a webapp, the server
              itself) with the tomcat startup scripts">
          <exec executable="${server.home}/bin/startup.sh">
             <env key="JAVA_OPTS" value="${tomcat.java.opts}" />
@@ -1240,23 +1249,23 @@
      </target>
 
      <target name="tomcat.stop"  unless="no.tomcat" depends="init"
-         description="Stop the tomcat server (not just a webapp, the server 
+         description="Stop the tomcat server (not just a webapp, the server
              itself) with the tomcat shutdown scripts">
          <exec executable="${server.home}/bin/shutdown.sh" failonerror="false">
             <env key="JAVA_OPTS" value="${tomcat.java.opts}" />
          </exec>
      </target>
- 
+
      <target name="tomcat.list" description="List Tomcat webapps" unless="no.tomcat"
          depends="init">
          <list url="${tom.url}"
              username="${tom.username}"
              password="${tom.password}" />
-     </target> 
-     
+     </target>
+
      <!-- Set target to use for starting/stopping tomcat. On windows, use
-         the services tasks. On non-windows, use the tomcat ant tasks. 
-         [bshine 5.10.06] -->        
+         the services tasks. On non-windows, use the tomcat ant tasks.
+         [bshine 5.10.06] -->
      <condition property="tomcat.stop" value="tomcat.winsvc.stop" >
          <os family="windows" />
      </condition>
@@ -1269,7 +1278,7 @@
      <condition property="tomcat.start" value="tomcat.start" >
          <not> <os family="windows" /> </not>
      </condition>
-     
+
      <target name="tomcat.winsvc.start" unless="no.tomcat" depends="init"
         description="Install and start Windows LPS service (tomcat5)" >
         <exec dir="build-tools" executable="bash">
@@ -1278,32 +1287,32 @@
         </exec>
         <exec executable="net"> <arg line="start LPS" /> </exec>
      </target>
-  
+
      <target name="tomcat.winsvc.stop"  depends="init" unless="no.tomcat"
          description="Stop windows LPS service (tomcat5)" >
          <exec executable="net"> <arg line="stop LPS" /> </exec>
      </target>
-     
+
     <!--=========  Target [webapp.deploy, webapp.undeploy, webapp.install, webapp.uninstall] === -->
-    <!-- These targets affect the LPS webapp. The tomcat server must be started for these 
+    <!-- These targets affect the LPS webapp. The tomcat server must be started for these
         to be meaningful -->
     <target name="webapp.deploy" depends="init"  unless="no.tomcat"
         description="Deploy lps webapp into tomcat5." >
-         <!-- Note that there must be a space after the  close-curly-brace 
+         <!-- Note that there must be a space after the  close-curly-brace
              in the localWar attribute. I don't know why, but it doesn't work
-             without that space. [bshine 4.29.06] --> 
+             without that space. [bshine 4.29.06] -->
          <deploy url="${tom.url}"
              username="${tom.username}"
              password="${tom.password}"
              path="/${build.branch}"
-             localWar="file://${LPS_HOME} " /> 
-     </target>    
-     
+             localWar="file://${LPS_HOME} " />
+     </target>
+
     <target name="webapp.undeploy" description="Undeploy LPS from tomcat" unless="no.tomcat"
         depends="init">
         <script language="javascript">
          // We use javascript here because that's the only way to get to the
-         // setFailOnError field. 
+         // setFailOnError field.
          var undeployTask = lps.createTask("undeploy");
          undeployTask.setUrl( lps.getProperty("tom.url"));
          undeployTask.setUsername( lps.getProperty("tom.username"));
@@ -1313,17 +1322,17 @@
          undeployTask.execute();
         </script>
     </target>
- 
+
      <target name="webapp.install" unless="no.tomcat"
          description="Synonym for 'webapp.deploy'; deploys application into tomcat.">
          <antcall target="webapp.deploy" />
-     </target>    
-     
+     </target>
+
      <target name="webapp.uninstall" unless="no.tomcat"
          description="Synonym for 'undeploy'; removes application from tomcat.">
          <antcall target="webapp.undeploy" />
-     </target>    
-  
+     </target>
+
      <!-- "install" is a deprecated term for Tomcat. "Deploy" is preferred now. -->
      <target name="install" depends="init" unless="no.tomcat"
          description="Install lps (convenience alias for webapp.deploy). Note that 'install' is a deprecated tomcat term. 'deploy' is preferred." >
@@ -1336,9 +1345,9 @@
      </target>
 
 
-    <!-- ============= Target [start,stop] =======================-->  
+    <!-- ============= Target [start,stop] =======================-->
     <!-- These tasks affect the tomcat server as a whole. Their names begin with "tomcat." -->
- 
+
      <target name="webapp.start" description="Start LPS webapp" unless="no.tomcat"
          depends="init,webapp.deploy">
          <start url="${tom.url}"
@@ -1346,7 +1355,7 @@
              password="${tom.password}"
              path="/${build.branch}" />
      </target>
- 
+
      <target name="webapp.stop" description="Stop LPS webapp" unless="no.tomcat"
          depends="init">
          <stop url="${tom.url}"
@@ -1354,20 +1363,20 @@
              password="${tom.password}"
              path="/${build.branch}" />
      </target>
-  
+
      <target name="start" depends="init" unless="no.tomcat"
          description="Start tomcat but not lps (convenience alias for tomcat.start)" >
          <antcall target="tomcat.start" />
      </target>
-     
+
      <target name="stop"  depends="init" unless="no.tomcat"
          description="Stop tomcat (convenience alias for tomcat.stop)" >
          <antcall target="tomcat.stop" />
      </target>
- 
-     <!-- ============= Target [all] ===================== --> 
 
-     <!-- ============= Target [make] ===================== -->      
+     <!-- ============= Target [all] ===================== -->
+
+     <!-- ============= Target [make] ===================== -->
      <target name="webapp.reload"  depends="init,clean-cache" unless="no.tomcat"
          description="Reload lps development tree as webapp into tomcat5">
          <antcall target="webapp.undeploy" />
