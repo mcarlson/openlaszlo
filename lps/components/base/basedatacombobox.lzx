@@ -133,7 +133,7 @@
               data.
               @keywords private -->
         <method name="_updateSelectionOnData" ><![CDATA[
-            var dp = new LzDatapointer(this);
+            var dp = new lz.datapointer(this);
             
             var arr = dp.xpathQuery(this.itemdatapath);
             if (arr != null) {
@@ -203,7 +203,7 @@
               @keywords private -->
         <method name="_updateSelectionByIndex" 
                 args="index,dontSetValue,isinitvalue"><![CDATA[
-            var dp = new LzDatapointer(this);
+            var dp = new lz.datapointer(this);
 
             var nodes = dp.xpathQuery(this.itemdatapath);
             if (! (nodes instanceof Array)) nodes = [nodes];
@@ -290,7 +290,7 @@
                 // add in a white view to reduce the visual effect of the
                 // list items appearing as they are created
                 var tmp = new lz[icn](cblist, { name:'item' });
-                new LzDatapath(tmp, { pooling: true });
+                new lz.datapath(tmp, { pooling: true });
 
                 this._cblist = cblist;
 
@@ -354,28 +354,28 @@
                 if (open) { // open combox
                     if (this.isopen) return; // tends to get called more than once
                 
-                    LzModeManager.makeModal( this );
+                    lz.ModeManager.makeModal( this );
                 
                     this._setupcblist();
                 
                     this._cblist.bringToFront();
                     this._cblist.setAttribute('visible', true);
                 
-                    LzFocus.setFocus( this._cblist, false );
+                    lz.Focus.setFocus( this._cblist, false );
                 
                     this.isopen = true;
                     if (this['onisopen']) this.onisopen.sendEvent(true);
                 } else { // close combox
                     if (!this.isopen) return;
-                    LzModeManager.release( this );
+                    lz.ModeManager.release( this );
                     if (!this['isopen']) return;
                     
                     this._cblist.setAttribute("visible", false);
                     this.isopen = false;
                     if (this['onisopen']) this.onisopen.sendEvent(false);
-                    if ( LzFocus.getFocus() === this._cblist ) {
+                    if ( lz.Focus.getFocus() === this._cblist ) {
                         if ( this.focusable ) {
-                            LzFocus.setFocus( this, false );
+                            lz.Focus.setFocus( this, false );
                         } 
                     }
                 }
@@ -489,7 +489,7 @@
               @param Object value: the value of the item to select. -->
         <method name="getItemIndex" args="value"><![CDATA[
             var index = -1;
-            var dp = new LzDatapointer(this);
+            var dp = new lz.datapointer(this);
             var nodes = dp.xpathQuery(this.itemdatapath);
             if (nodes != null) {
                 if (! (nodes instanceof Array)) nodes = [nodes];
@@ -557,7 +557,7 @@
             // we can change the focus. (focus is normally not allowed to escape from
             // a modal view).
             this.setAttribute("isopen", false);
-            return LzFocus.getNext(this);
+            return lz.Focus.getNext(this);
         ]]></method>
 
         <!--- since we are not focusable, this provides an api for asking what child to send focus
@@ -582,11 +582,11 @@
         
         <!--- @keywords private -->
         <handler name="onfocus"><![CDATA[
-            // LzFocus.lastfocus is the blurred view
-            if ( LzFocus.lastfocus !== this._cblist || 
+            // lz.Focus.lastfocus is the blurred view
+            if ( lz.Focus.lastfocus !== this._cblist || 
                  (this._cblist != null && this._cblist.attachtarget !== this) ) {
                 if (this.oncombofocus) {
-                    this.oncombofocus.sendEvent(LzFocus.lastfocus);
+                    this.oncombofocus.sendEvent(lz.Focus.lastfocus);
                 }
             }
         ]]></handler>
@@ -599,7 +599,7 @@
                 }
                 // destroy floating list when we lose focus
                 if (this._cblist != null && 
-                    LzFocus.lastfocus !== this) {
+                    lz.Focus.lastfocus !== this) {
                     this._teardowncblist();
                 }
             }
@@ -636,7 +636,7 @@
           <attribute name="menuclassname" value="floatinglist" type="string"/>
           <view width="100%" height="20" focusable="false" bgcolor="#CCCCCC">
                <handler name="onclick">
-                    LzFocus.setFocus(this,false); 
+                    lz.Focus.setFocus(this,false); 
                     classroot.toggle()
                </handler>
                <handler name="onmouseout">

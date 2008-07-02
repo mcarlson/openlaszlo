@@ -58,13 +58,13 @@
         <attribute name="_lastkeydown" value="0"/>
         <!--- @keywords private -->
         <attribute name="upkeydel" value="null"/>
-        <handler name="onkeydown" reference="LzKeys" method="dispatchKeyDown" />
+        <handler name="onkeydown" reference="lz.Keys" method="dispatchKeyDown" />
         <method name="dispatchKeyDown" args="key">
             <![CDATA[
             var callupdel = false;
             if ( key == 32 ){
                 this.lastsdown = null;
-                var foc = LzFocus.getFocus();
+                var foc = lz.Focus.getFocus();
                 if ( foc instanceof lz.basecomponent ){
                     foc.doSpaceDown();
                     this.lastsdown = foc;
@@ -78,7 +78,7 @@
             if (callupdel) {
                 if (!this.upkeydel) this.upkeydel = new LzDelegate(this, 'dispatchKeyTimer');
                 this._lastkeydown = key;
-                LzTimer.addTimer( this.upkeydel, 50 );
+                lz.Timer.addTimer( this.upkeydel, 50 );
             }
             ]]>
         </method>
@@ -105,7 +105,7 @@
 
             var buts = this.defaults;
             who = who || canvas;
-            var mode = LzModeManager.getModalView();
+            var mode = lz.ModeManager.getModalView();
             for ( var i = 0 ; i < buts.length ; i++ ){
                 var tbut = buts[ i ];
 
@@ -147,7 +147,7 @@
             <![CDATA[  
             if ( !this.defaults ) this.defaults = [];
             this.defaults.push( who );
-            this.checkDefault( LzFocus.getFocus() );
+            this.checkDefault( lz.Focus.getFocus() );
             ]]>
         </method>
 
@@ -157,21 +157,21 @@
             for ( var i = 0; i < this.defaults.length; i++ ){
                 if ( this.defaults[ i ] == who ) {
                     this.defaults.splice( i , 1 );
-                    this.checkDefault( LzFocus.getFocus() );
+                    this.checkDefault( lz.Focus.getFocus() );
                     return;
                 }
             }
             ]]>
         </method>
 
-        <handler name="onfocus" method="checkDefault" reference="LzFocus"/>
+        <handler name="onfocus" method="checkDefault" reference="lz.Focus"/>
         <method name="checkDefault" args="who">
             <![CDATA[ 
 
             if ( ! ( who instanceof lz.basecomponent ) ||
                  ! who.doesenter ){
 
-                if ( ( who instanceof LzInputText )  &&
+                if ( ( who instanceof lz.inputtext )  &&
                        who.multiline ){
                     who = null;
                 } else {
@@ -193,12 +193,12 @@
             ]]>
         </method>
 
-        <handler name="onmode" args="who=null" reference="LzModeManager">
+        <handler name="onmode" args="who=null" reference="lz.ModeManager">
             //if the mode changes, and the focussed view is in the mode
             //it'll clear it (and change the focus) 
-            //however, if the focussed view was already null, the LzFocus
+            //however, if the focussed view was already null, the lz.Focus
             //will not notify us of a focus change (because it hasn't)
-            if ( LzFocus.getFocus() == null ){
+            if ( lz.Focus.getFocus() == null ){
                 this.checkDefault( null );
             }
         </handler>

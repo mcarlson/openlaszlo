@@ -86,7 +86,7 @@
             else this.showUp();
         ]]> </method>
 
-        <handler args="m" name="onmode" reference="LzModeManager">
+        <handler args="m" name="onmode" reference="lz.ModeManager">
             <![CDATA[ 
             if ( m && ( this._msdown || this._msin ) &&
                  !this.childOf( m ) ){

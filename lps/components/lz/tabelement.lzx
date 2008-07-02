@@ -81,7 +81,7 @@
                </handler>
                <handler name="onclick">
                    classroot.parent.openTab(classroot,true);
-                   LzFocus.setFocus( this.classroot , false );
+                   lz.Focus.setFocus( this.classroot , false );
                </handler>
             </basebutton>
             <view name="header" width="100%" height="100%" >

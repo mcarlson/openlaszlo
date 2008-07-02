@@ -22,7 +22,7 @@
                     next = 50;
                     this.onmousestilldown.sendEvent();
                 }
-                LzTimer.resetTimer( this.stillDownDelegate, next );
+                lz.Timer.resetTimer( this.stillDownDelegate, next );
             }
        </method>
 
@@ -34,12 +34,12 @@
             if (!this.stillDownDelegate) {
                this.stillDownDelegate = new LzDelegate( this, "stillDownEventGenerator");
            }
-            LzTimer.addTimer( this.stillDownDelegate, 500 );
+            lz.Timer.addTimer( this.stillDownDelegate, 500 );
         </handler>
         <!--- @keywords private -->
         <handler name= "onmouseup">
             this.isMouseDown=false;
-            LzTimer.removeTimer( this.stillDownDelegate );
+            lz.Timer.removeTimer( this.stillDownDelegate );
         </handler>
         
         <doc>
@@ -57,7 +57,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

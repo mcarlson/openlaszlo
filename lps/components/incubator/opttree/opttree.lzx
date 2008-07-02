@@ -241,7 +241,7 @@
 
             <method name="drag" args="on">
                 if ( on ){
-                    movedel.register( LzIdle, "onidle" );
+                    movedel.register( lz.Idle, "onidle" );
                 } else {
                     movedel.unregisterAll();
                     this.setAttribute('visible',  false );
@@ -311,7 +311,7 @@
             dragged.datapath.setPointer( dragdata );
             dragged.bringToFront();
 
-            dragupdel.register( LzIdle, "onidle" );
+            dragupdel.register( lz.Idle, "onidle" );
             _clicker.drag( true );
 
         </method>

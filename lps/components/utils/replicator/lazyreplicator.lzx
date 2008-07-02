@@ -116,7 +116,7 @@
             //no change
             if ( offset == 0 && newlength == oldlength ) return;
     
-            //_root.LzInstantiator.enableDataReplicationQueuing( );
+            //_root.lz.Instantiator.enableDataReplicationQueuing( );
             var oldclones = this.clones;
             //TODO: instead of allocating a new array, use two arrays and
             //ping-pong
@@ -170,7 +170,7 @@
             while ( oldclones.length ) oldclones.pop();
             this.__emptyArray = oldclones;
     
-            //_root.LzInstantiator.clearDataReplicationQueue( );
+            //_root.lz.Instantiator.clearDataReplicationQueue( );
             ]]>
         </method>
         

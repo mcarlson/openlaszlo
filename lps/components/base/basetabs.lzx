@@ -361,7 +361,7 @@
                 if (this.visibility != "collapse") {
                     data_args.datacontrolsvisibility = (this.visibility == "collapse");
                 }
-                new LzDatapath ( this, data_args );
+                new lz.datapath ( this, data_args );
             }
         </method>
 

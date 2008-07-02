@@ -82,13 +82,13 @@
       var timerDelegate = new LzDelegate( this, "showTooltip",component,"name");
       this.setAttribute("__timerDelegate",timerDelegate);
       this.setAttribute("__currentComponent",component);
-      LzTimer.addTimer( timerDelegate, this.delay );
+      lz.Timer.addTimer( timerDelegate, this.delay );
     </method>
     
     <method name="doMouseout" args="component">
       this.setAttribute("__currentComponent",[]);
       var timerDelegate = this.__timerDelegate;
-      LzTimer.removeTimer(timerDelegate);
+      lz.Timer.removeTimer(timerDelegate);
       this.setAttribute("__timerDelegate",[]);
       this.destroyTooltip(component);
     </method>

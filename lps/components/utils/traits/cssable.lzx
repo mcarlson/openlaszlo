@@ -1,4 +1,4 @@
-<!-- Copyright 2007 Laszlo Systems --> 
+<!-- Copyright 2007-2008 Laszlo Systems --> 
 <library>
 <!-- [todo: max 2-13-2007] moved to bottom of LzNode until <mixin/> is available-->
 <script when="immediate">
@@ -36,7 +36,7 @@ function _applyCSS () {
                     // 
                     // Special case font color. See LPP-436, LPP-553. 
                     //         
-                    if (this instanceof LzText) {
+                    if (this instanceof lz.text) {
                         var n = Number(v);
                         this.setColor(n); // must be a color
                     }

@@ -4,7 +4,7 @@
     <class name="inittimer" bgcolor="white" visible="true" options="ignorelayout">
         <handler name="oninit" reference="canvas">
             var d = new LzDelegate( mytext , "tellTime" );
-            LzIdle.callOnIdle( d );
+            lz.Idle.callOnIdle( d );
             this.bringToFront();
         </handler>
         <text id="mytext" resize="true">

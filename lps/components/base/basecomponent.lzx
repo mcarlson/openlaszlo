@@ -206,7 +206,7 @@
         <!--- @access private -->
         <method name="_setDoesEnter" args="doe">
             this.doesenter = doe;
-            if ( LzFocus.getFocus()  == this ){
+            if ( lz.Focus.getFocus()  == this ){
                 lz._componentmanager.service.checkDefault( this );
             }
         </method>
@@ -214,7 +214,7 @@
         <!--- this method can be called to force the default 
               button to update -->
         <method name="updateDefault">
-            lz._componentmanager.service.checkDefault( LzFocus.getFocus() );
+            lz._componentmanager.service.checkDefault( lz.Focus.getFocus() );
         </method>
 
         <!---  if null, the style is set to the inherited style from the parent

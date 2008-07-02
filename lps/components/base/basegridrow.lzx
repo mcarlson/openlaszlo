@@ -73,8 +73,8 @@
             //this forces the next row to be in view, if possible
             //it's called only for its for side effect
             parent.classroot.getItemAt( n + 1 );
-            var dir = LzKeys.isKeyDown( 'shift' ) ? -1 : 1;
-            if ( LzFocus.lastfocus && LzFocus.lastfocus.childOf( this ) ){
+            var dir = lz.Keys.isKeyDown( 'shift' ) ? -1 : 1;
+            if ( lz.Focus.lastfocus && lz.Focus.lastfocus.childOf( this ) ){
                 //because we can't tell if this is getting the focus as a
                 //result of tab or shift-tab, we need to check the key ourselves
                 //don't get confused by shift key!
@@ -84,13 +84,13 @@
                 var nextsel = dir == 1? this.getNextSelection() :
                                         this.getPrevSelection();
             }
-            LzFocus.setFocus( nextsel );
+            lz.Focus.setFocus( nextsel );
             ]]>
         </handler>
 
         <method name="getPrevSelection">
             <![CDATA[
-            var n = LzFocus.getPrev( this );
+            var n = lz.Focus.getPrev( this );
             if ( n && n.childOf(this ) ) return n;
             else {
                 return getAdjacentRow( 1 ) || n;
@@ -99,7 +99,7 @@
         </method>
         <method name="getNextSelection">
             <![CDATA[
-            var n = LzFocus.getNext( this );
+            var n = lz.Focus.getNext( this );
             if ( n && n.childOf(this ) ) return n;
             else {
                 return getAdjacentRow( 1 ) || n;
@@ -137,7 +137,7 @@
         </method>
 
         <handler name="onclick">
-            LzFocus.setFocus( ownerGrid );
+            lz.Focus.setFocus( ownerGrid );
             this.select();
         </handler>
 

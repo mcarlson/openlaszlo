@@ -1025,7 +1025,7 @@
                 readout.setAttribute("bgcolor", red);
             }
             // TODO: [2002-11-10 ptw] setAttribute("text", ...) does not work?
-            readout.setAttribute("text", LzBrowser.xmlEscape(this.toString()));
+            readout.setAttribute("text", lz.Browser.xmlEscape(this.toString()));
         ]]>
     </method>
 
@@ -1106,13 +1106,13 @@
     <method name="sendLogData" args="logfile,msg">
       <![CDATA[
       // compute the base directory of the current app
-        var url = LzBrowser.getLoadURL();
+        var url = lz.Browser.getLoadURL();
         var p1 = url.indexOf("/", 8);
         var p2 = url.indexOf("/", p1+1);
         var base = url.substring(0,p2);
 
         var query = "logfile="+escape(logfile)+"&msg="+escape(msg);
-        var reqstr =  LzBrowser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
+        var reqstr =  lz.Browser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
         //Debug.debug("sendServerLogCommand", reqobj, reqstr);
         var tloader = new LzHTTPLoader(this, false);
         tloader.open ("GET" , reqstr, /* username */ null, /* password */ null);
@@ -1171,7 +1171,7 @@
             super.init();
             this.tests = [];
             initSuite()
-            var lzurl = LzBrowser.getLoadURLAsLzURL();
+            var lzurl = lz.Browser.getLoadURLAsLzURL();
             // strip the deployment name from the path
             this.testpath = lzurl.path.substring(lzurl.path.substring(1).indexOf("/")+2) + lzurl.file; 
 
@@ -1210,7 +1210,7 @@
             }
             this.nextCase++
             var del = new LzDelegate(this, "initSuite")
-            LzIdle.callOnIdle(del)
+            lz.Idle.callOnIdle(del)
         }
 
     </method>
@@ -1278,7 +1278,7 @@
             this.ontestfinish.sendEvent([tc[i],this.result.numFailures() > 0 ? 'fail' : 'pass']);
         }
         var c = new LzDelegate( this , "runNextTest" )
-        LzIdle.callOnIdle(c);
+        lz.Idle.callOnIdle(c);
             // This fix papers over a difference between swf and dhtml, and I'm not sure
             // why this fixes it. In dhtml, without this change, the control panel 
             // becomes invisible when the tests fail, but in swf, we don't see that problem.

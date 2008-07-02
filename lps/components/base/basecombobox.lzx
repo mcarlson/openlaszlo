@@ -97,9 +97,9 @@
             // a modal view).
             this.setOpen(false);
             if (!editable) {
-                return LzFocus.getNext(bkgnd);
+                return lz.Focus.getNext(bkgnd);
             } else {
-                return LzFocus.getNext(interior.cbtext);
+                return lz.Focus.getNext(interior.cbtext);
             }
         </method>
 
@@ -246,7 +246,7 @@
                     </handler>
 
                     <method name="getPrevSelection">
-                        return LzFocus.getPrev(parent);
+                        return lz.Focus.getPrev(parent);
                     </method>
 
                     <method name="getFocusRect"  >
@@ -389,7 +389,7 @@
 
         <!--- @keywords private -->
         <handler name="onblur" >
-           if ( LzFocus.getFocus() != this.interior.cbtext )
+           if ( lz.Focus.getFocus() != this.interior.cbtext )
                 this.setOpen(false);
         </handler>
 
@@ -425,10 +425,10 @@
             // anItem has been selected so update the input text field
             this.selected = v;
             if (v) this.setText(v.text);
-            if (this.editable && LzFocus.getFocus() == this.interior.cbtext) {
+            if (this.editable && lz.Focus.getFocus() == this.interior.cbtext) {
                 _fixseldel.start = 0;
                 _fixseldel.end = v.text.length;
-                LzIdle.callOnIdle( _fixseldel );
+                lz.Idle.callOnIdle( _fixseldel );
 
             }
 
@@ -509,11 +509,11 @@
             }
             if (open) { // open combox
                 if (this.isopen) return; // tends to get called more than once, esp when
-                LzModeManager.makeModal( this );
+                lz.ModeManager.makeModal( this );
 
                 this.cblist.bringToFront();
                 this.cblist.setAttribute('visible', true);
-                LzFocus.setFocus(this.cblist, withkey);
+                lz.Focus.setFocus(this.cblist, withkey);
 
                 this.isopen = true;
                 if (this['onisopen']) this.onisopen.sendEvent(true);
@@ -521,14 +521,14 @@
                 if (!this['isopen']) return;
                 this.isopen = false;
 
-                LzModeManager.release( this );
+                lz.ModeManager.release( this );
                 this.cblist.setAttribute('visible', false);
                 if (this['onisopen']) this.onisopen.sendEvent(false);
-                if ( LzFocus.getFocus() == this.cblist ) {
+                if ( lz.Focus.getFocus() == this.cblist ) {
                     if (!editable) {
-                        LzFocus.setFocus(bkgnd, withkey);
+                        lz.Focus.setFocus(bkgnd, withkey);
                     } else {
-                        LzFocus.setFocus(interior.cbtext, withkey);
+                        lz.Focus.setFocus(interior.cbtext, withkey);
                     }
                 }
             }
@@ -655,7 +655,7 @@
            interior.cbtext.setAttribute('visible', this._enabled);
             if (!this._enabled) {
                 if (interior._dsblfield == null) {
-                    var t = new LzText(interior,
+                    var t = new lz.text(interior,
                         { name: '_dsblfield', x: 2, y: 1,
                           width:interior.width, height:interior.height,
                             fgcolor:this['style'] ? this.style.textdisabledcolor : null});

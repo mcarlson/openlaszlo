@@ -22,14 +22,14 @@
         </example>
 
         The object that you want to accept a drop action, needs to register with
-        LzTrack using the same group as is declared in the dragimage.
+        lz.Track using the same group as is declared in the dragimage.
 
         <example executable="false">
         &lt;class name="droptarget"&gt;
             ...
             &lt;method name="init"&gt;
                 super.init();
-                LzTrack.register(this, 'target');
+                lz.Track.register(this, 'target');
             &lt;/method&gt;
 
             &lt;handler name="onmousetrackover"&gt;
@@ -128,7 +128,7 @@
       if (this.xdoffset == null) this.xdoffset = xoffset;
       if (this.ydoffset == null) this.ydoffset = yoffset;
       ds.setAttribute('applied', true);
-      LzTrack.activate(this.dropgroup);
+      lz.Track.activate(this.dropgroup);
     </method>
     
     <!--- called to stop the drag action, called by checkdrag.  If this is
@@ -144,7 +144,7 @@
         this._onstopdel.register( anm, 'onstop' );
       }
       ds.setAttribute('applied', false);
-      LzTrack.deactivate(this.dropgroup);
+      lz.Track.deactivate(this.dropgroup);
     </method>
     <!--- @keywords private -->
     <method name="hideme">

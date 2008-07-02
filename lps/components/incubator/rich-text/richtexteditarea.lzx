@@ -192,7 +192,7 @@
                 // _caretmove() because caret focus hasn't been set in 
                 // richinput area yet.
                 //------------------------------------------------------------
-                LzIdle.callOnIdle(this._caretMoveDel);
+                lz.Idle.callOnIdle(this._caretMoveDel);
                 
                 if ((! this.isHTML) && this._field.getSelectionSize() == -1)
                 {
@@ -208,7 +208,7 @@
             indicates that the selection has changed.
             @param view who: the element being moused down on
         -->
-        <handler name="onmousedown" reference="LzGlobalMouse" args="who"><![CDATA[
+        <handler name="onmousedown" reference="lz.GlobalMouse" args="who"><![CDATA[
             if ((who != null) && (this._containsView(who))) {
                 // the mouse went down on a child of me
                 // Debug.info("mousedown on child of me, this is %w, who is %#w", this, who); 
@@ -232,7 +232,7 @@
             is there a mousedown/mouseup pair in progress? 
             @param view who: the current mousedown element (ben shine)
         -->
-       <handler name="onmouseup" reference="LzGlobalMouse" args="who"><![CDATA[
+       <handler name="onmouseup" reference="lz.GlobalMouse" args="who"><![CDATA[
             if (this._fieldhasfocus) {
                 // Debug.write("onmouseup, field has focus, who is ", who); 
 
@@ -273,7 +273,7 @@
         
         <!--- Save selected region. -->
         <method name="saveSelectionRegion"><![CDATA[  
-            if (LzFocus.getFocus() == this._field) {                
+            if (lz.Focus.getFocus() == this._field) {                
                 var selpos  = this._field.getSelectionPosition();
                 var selsize = this._field.getSelectionSize();
                 if( selpos >= 0 && selsize >= 0){  
@@ -368,7 +368,7 @@
             }            
             // After the formatting has been completed, need to wait a frame to
             // restore the selection.
-            LzIdle.callOnIdle(this._selectiondel);       
+            lz.Idle.callOnIdle(this._selectiondel);       
         </method>
         
         <!--- Initialize the selection region on focus event -->
@@ -377,7 +377,7 @@
             if (! this['_focusseldel']) {
                 this._focusseldel = new LzDelegate(this, '_focussel');
             }
-            LzIdle.callOnIdle(this._focusseldel);  
+            lz.Idle.callOnIdle(this._focusseldel);  
         </method>
         
         <method name="setSelection" args="ns,ne">
@@ -474,7 +474,7 @@
             @access private -->
         <method name="_focussel">
             // We really should have focus now! 
-            var havelzfocus =  (LzFocus.getFocus() == this._field); 
+            var havelzfocus =  (lz.Focus.getFocus() == this._field); 
             if (havelzfocus) {
                 var len = this.getText().length;
                 // move the insertion point to the beginning of the text

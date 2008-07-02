@@ -152,38 +152,38 @@
             super.init();
             
             if (showleftedge) {
-                new LzView(this, {name: "left", resource: this.leftresource, pixellock: true}); 
+                new lz.view(this, {name: "left", resource: this.leftresource, pixellock: true}); 
                 this.setTint(this.left, this.tint);
                 this.left.sendToBack();
             } 
             
             if (showrightedge) {
-                new LzView(this, {name: "right", resource: this.rightresource, pixellock: true}); 
+                new lz.view(this, {name: "right", resource: this.rightresource, pixellock: true}); 
                 this.setTint(this.right, this.tint);
                 this.right.sendToBack(); 
             } 
             
             if (iconname) { 
-                new LzView(this, {name: "icon", resource: iconname + "_icon_rsc", pixellock: true});
+                new lz.view(this, {name: "icon", resource: iconname + "_icon_rsc", pixellock: true});
             }                        
 
             // We always have a middle. 
             middle.setAttribute('resource', middleresource);
                         
             if (showleftborder) {
-                new LzView(this,    {name: "leftborder", bgcolor: white, 
+                new lz.view(this,    {name: "leftborder", bgcolor: white, 
                                      width: 1, y : 1, height: this.height-2, 
                                     pixellock: true});                 
             }
 
             if (showrightborder) {
-                new LzView(this,    {name: "rightborder", bgcolor: black, 
+                new lz.view(this,    {name: "rightborder", bgcolor: black, 
                                     width: 1, y : 0, height: this.height-2,
                                     pixellock: true})
             }
 
             if (text != "") {
-                new LzText(this, {name: "txt", text: text, fgcolor: fontcolor, resize: true, fontsize: fontsize});
+                new lz.text(this, {name: "txt", text: text, fgcolor: fontcolor, resize: true, fontsize: fontsize});
             }
 
             this.setTint(this.middle, this.tint); 

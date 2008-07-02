@@ -416,7 +416,7 @@
             if (ftRoot.focusselect) {
                 useFocusOverlay = false;
             }
-            LzFocus.setFocus(focusedTree.item, useFocusOverlay);
+            lz.Focus.setFocus(focusedTree.item, useFocusOverlay);
             ftRoot.setAttribute("_lastfocused", focusedTree);
             if (ftRoot.focusselect) focusedTree.setAttribute("selected", true);
             if (ftRoot.autoscroll) focusedTree.doAutoScroll(ftRoot);

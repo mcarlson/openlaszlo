@@ -35,7 +35,7 @@
                 } else if (this._parentcomponent.dataoption == "pooling") {
                    data_args.pooling = true;
                 }
-                new LzDatapath ( this, data_args );
+                new lz.datapath ( this, data_args );
             }
         </method>
 
@@ -74,7 +74,7 @@
             super._doMousedown(ignore);
             if (!this.focusable && this._parentcomponent &&
                  this._parentcomponent.focusable) {
-               LzFocus.setFocus(this._parentcomponent, false); // false => focus from mouse
+               lz.Focus.setFocus(this._parentcomponent, false); // false => focus from mouse
             }
         ]]> </method>
 

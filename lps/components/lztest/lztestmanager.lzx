@@ -76,11 +76,11 @@ function addSuite( s ) {
 }
 
 function setupServerLogging() {
-    // TODO: enable this once LzBrowser is working in swf9
+    // TODO: enable this once lz.Browser is working in swf9
     if ($swf9) {
         return;
     }
-    var lzurl = LzBrowser.getLoadURLAsLzURL();
+    var lzurl = lz.Browser.getLoadURLAsLzURL();
     // strip initial "/legals/" from path, to make it relative to LPS servlet base
     if (lzurl.path) {
         this.testpath = lzurl.path.substring(lzurl.path.substring(1).indexOf("/")+2) + lzurl.file;
@@ -97,13 +97,13 @@ function sendLogData(logfile, msg) {
         return;
     }
     // compute the base directory of the current app
-    var url = LzBrowser.getLoadURL();
+    var url = lz.Browser.getLoadURL();
     var p1 = url.indexOf("/", 8);
     var p2 = url.indexOf("/", p1+1);
     var base = url.substring(0,p2);
 
     var query = "logfile="+escape(logfile)+"&msg="+escape(msg);
-    var reqstr =  LzBrowser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
+    var reqstr =  lz.Browser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
     //Debug.write("sendServerLogCommand", reqobj, reqstr);
     var tloader = new LzHTTPLoader(this, false);
     tloader.open ("GET" , reqstr, /* username */ null, /* password */ null);

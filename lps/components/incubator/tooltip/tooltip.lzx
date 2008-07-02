@@ -62,7 +62,7 @@
             this._lastmousey = canvas.getMouse('y');
             this.lasttime = new Date();
 
-            LzIdle.callOnIdle(this._checkdel);
+            lz.Idle.callOnIdle(this._checkdel);
         }
         ]]>
     </method>
@@ -83,7 +83,7 @@
         if (timediff > 500) {
             this.showTip();
         } else {
-            LzIdle.callOnIdle(this._checkdel);
+            lz.Idle.callOnIdle(this._checkdel);
         }
     </method>
 

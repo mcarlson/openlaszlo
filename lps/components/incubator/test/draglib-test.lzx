@@ -16,7 +16,7 @@
         <text text="${parent.text}"/>
         <method name="init">
             super.init();
-            LzTrack.register(this, 'target');
+            lz.Track.register(this, 'target');
        </method>
 
        <handler name="onmousetrackover">

@@ -190,7 +190,7 @@
        this.lineheight = text.getTextHeight()+4;
        this.setAttribute("smallInputAreaHeight", this.lineheight + 16);
        this.inspectDel = new LzDelegate(this, "inspectObject");
-       this.inspectDel.register(LzGlobalMouse, "onmousedown");
+       this.inspectDel.register(lz.GlobalMouse, "onmousedown");
        this.moveCaretDel = new LzDelegate(this, 'sendCaretToEOL');
        this.restoreDebuggerState()
      ]]>
@@ -287,7 +287,7 @@
       <![CDATA[
         var loadobj = new LoadVars();
         loadobj.onData = this.checkServerResponseHandler;
-        var reqstr =  LzBrowser.toAbsoluteURL( "__dbgprobe.lzx?lzt=stat", false );
+        var reqstr =  lz.Browser.toAbsoluteURL( "__dbgprobe.lzx?lzt=stat", false );
         loadobj.sendAndLoad(reqstr , loadobj, "POST" );
       ]]>
     </method>
@@ -403,14 +403,14 @@
 
     <method name="stuffInput" args="str">
         var infield = this.bottom.center.input;
-        LzFocus.setFocus(infield);
+        lz.Focus.setFocus(infield);
         infield.setText(str);
-        LzTimer.addTimer(this.moveCaretDel, 1);
+        lz.Timer.addTimer(this.moveCaretDel, 1);
     </method>
 
     <method name="sendCaretToEOL">
         var infield = this.bottom.center.input;
-        LzFocus.setFocus(infield);
+        lz.Focus.setFocus(infield);
         var content = infield.getText();
         infield.setSelection(content.length, content.length);
     </method>
@@ -611,7 +611,7 @@
     </method>
 
    <method name="inspectObject" args="obj">
-    if (LzKeys.isKeyDown('capslock')) {
+    if (lz.Keys.isKeyDown('capslock')) {
       // force and ID, so the object can be inspected
       var id = this.IDForObject(obj, true);
       this.displayResult(obj);
@@ -729,7 +729,7 @@
  
        <method name="appname">
          <![CDATA[
-         var url = LzBrowser.getBaseURL();
+         var url = lz.Browser.getBaseURL();
          var i = url.lastIndexOf("/");
          url = url.substring(i+1);
          return url;

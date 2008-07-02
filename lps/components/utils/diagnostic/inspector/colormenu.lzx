@@ -43,11 +43,11 @@
          this.setY(newy - 5);
          this.bringToFront();
          this.setAttribute('visible', true);
-         LzTrack.activate('mymenu');
+         lz.Track.activate('mymenu');
     </method>
     <method name="close">
          this.setAttribute('visible', false);
-         LzTrack.deactivate('mymenu');
+         lz.Track.deactivate('mymenu');
     </method>
     <simplelayout axis="x"/>
     <colorspot mycolor="0x0000ff"/>

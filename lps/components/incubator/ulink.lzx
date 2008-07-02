@@ -31,7 +31,7 @@
     <attribute name="text" type="html"/>
     <!--- The URL target. -->
     <attribute name="href" type="string"/>
-    <!--- Where the target opens.  See LzBrowser.loadURL for
+    <!--- Where the target opens.  See lz.Browser.loadURL for
     a list of values. -->
     <attribute name="target" type="string" value="_new"/>
 
@@ -46,7 +46,7 @@
     </handler>
 
     <handler name="onclick">
-      LzBrowser.loadURL(this.href, this.target)
+      lz.Browser.loadURL(this.href, this.target)
     </handler>
 
     <method name="makeTags" args="tags"><![CDATA[

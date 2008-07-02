@@ -814,7 +814,7 @@
             }
 
             this._timedel.unregisterAll();
-            this._timedel.register(LzIdle, "onidle");
+            this._timedel.register(lz.Idle, "onidle");
           ]]>
         </method>
 
@@ -833,7 +833,7 @@
         <!--- Update the time, progress and fps attributes. 
               @keywords private -->
         <method name="_updateTime" args="v"><![CDATA[
-            // don't update if new mediastream about to start
+            // don't update if new lz.mediastream about to start
             if (this._pendingstreamname != "") {
                 return;
             }

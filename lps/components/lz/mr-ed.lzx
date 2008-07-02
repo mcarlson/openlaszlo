@@ -8,7 +8,7 @@
             if (this.running == 1) {
                 this.setSource( urls[ urlnum ] );
                 this.urlnum = ( this.urlnum + 1 ) % this.urls.length;
-                LzTimer.resetTimer( this.timedel, 6000 );
+                lz.Timer.resetTimer( this.timedel, 6000 );
              }
         </method>
 
@@ -20,12 +20,12 @@
             if ( this.visible ){
                 this.running = 1;
                 this.advance();
-                LzTimer.addTimer( this.timedel, 6000 );
+                lz.Timer.addTimer( this.timedel, 6000 );
                 this.audio.play();
             } else {
                 this.running = 0;
                 this.setAttribute('visible', false);
-                LzTimer.removeTimer( this.timedel );
+                lz.Timer.removeTimer( this.timedel );
                 this.stop();
                 this.audio.stop();
             }

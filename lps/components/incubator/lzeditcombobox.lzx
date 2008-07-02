@@ -36,7 +36,7 @@
 
         if (this.isinited) {
             this.editbkgnd.textfield.setText(v);
-           // LzFocus.setFocus(this.editbkgnd.textfield);
+           // lz.Focus.setFocus(this.editbkgnd.textfield);
            var index = this.editbkgnd.textfield.text.length;
            this.editbkgnd.textfield.setSelection(index,index);
         }

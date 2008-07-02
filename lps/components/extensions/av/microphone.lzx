@@ -121,7 +121,7 @@
             //Debug.write("microphone onactive", this, "onlevel", this.onlevel, "active", this.active);
             if (this.onlevel) {
                 if (this.active && this.capturing) {
-                    this._leveldel.register(LzIdle, "onidle");
+                    this._leveldel.register(lz.Idle, "onidle");
                 } else {
                     this._leveldel.unregisterAll();
                     this.setAttribute("level", 0);

@@ -29,7 +29,7 @@
 
         <handler name="oninit">
             if (this.dataset == null) {
-                 this.dataset = new LzDataset(this);
+                 this.dataset = new lz.dataset(this);
             }
 
             this.dataset.getresponseheaders = true;
@@ -207,7 +207,7 @@
                 <programlisting>
     &lt;script&gt;
         function loadXMLDoc(url) {
-            var req = new XMLHttpRequest();
+            var req = new lz.XMLHttpRequest();
             req.onreadystatechange = processReqChange;
             req.open("GET", url, true);
             req.setRequestHeader('X-Test', 'one');

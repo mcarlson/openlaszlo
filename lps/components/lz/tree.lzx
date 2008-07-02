@@ -71,8 +71,8 @@
             this.changeFocus();
             this.setAttribute('selected', true);
             if (! this.isleaf) {
-                if (! LzKeys.isKeyDown("control") &&
-                    ! LzKeys.isKeyDown("shift")) {
+                if (! lz.Keys.isKeyDown("control") &&
+                    ! lz.Keys.isKeyDown("shift")) {
                         this.setAttribute("open", ! this.open);
                 }
             }

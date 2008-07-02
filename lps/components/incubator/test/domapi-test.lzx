@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -77,7 +77,7 @@
         // NOTE: parent=null seems to default to parent=canvas, so
         // there's no way to test this but maybe no way to create
         // the situation anyway.
-        //new LzView(null, {id: 'testGlobal3'});
+        //new lz.view(null, {id: 'testGlobal3'});
         //assertEquals(null, document.getElementById('testGlobal3'));
         
         // verify that created elements with a global binding but

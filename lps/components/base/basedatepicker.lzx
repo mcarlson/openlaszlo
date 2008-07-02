@@ -544,13 +544,13 @@
             this.showingdate.setYear( this.showingyear );
         </handler> 
  
-        <handler name="onkeydown" reference="LzKeys" args="k">
+        <handler name="onkeydown" reference="lz.Keys" args="k">
             if ( content.hasfocus ) {
                 this.handleKeyDown(k);
             }
         </handler>
 
-        <handler name="onkeyup" reference="LzKeys" args="k">
+        <handler name="onkeyup" reference="lz.Keys" args="k">
             if ( content.hasfocus ) {
                 this.handleKeyUp(k);
             }

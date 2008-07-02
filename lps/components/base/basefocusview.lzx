@@ -143,7 +143,7 @@
                 this._dofadeout = true;
                 if ( !this._delayfadeoutDL )
                     this._delayfadeoutDL = new LzDelegate(this,'fadeout');
-                LzTimer.addTimer( this._delayfadeoutDL, 1000 );
+                lz.Timer.addTimer( this._delayfadeoutDL, 1000 );
                 this.setTarget( _nexttarget );
                 this._onstopdel.unregisterAll();
             }
@@ -240,8 +240,8 @@
         </method>
 
         <!--- @keywords private -->
-        <handler args="v" name="onfocus" reference="LzFocus">
-            this.setActive( LzFocus.focuswithkey );
+        <handler args="v" name="onfocus" reference="lz.Focus">
+            this.setActive( lz.Focus.focuswithkey );
             if ( v ) {
                 this.doFocus( v );
             } else {

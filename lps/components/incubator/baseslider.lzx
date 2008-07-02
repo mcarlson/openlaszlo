@@ -184,7 +184,7 @@
                                            * Math.pow(10,parent.parent.precision) ) / Math.pow(10,parent.parent.precision) ;
             
             //only adjust value if user is dragging or left or right key is pressed
-            if (thedragstate.applied || LzKeys.isKeyDown("leftarrow") || LzKeys.isKeyDown("rightarrow") ) {
+            if (thedragstate.applied || lz.Keys.isKeyDown("leftarrow") || lz.Keys.isKeyDown("rightarrow") ) {
                 parent.parent.setValue(val);
             }
         </method>

@@ -92,7 +92,7 @@
                 // Store a link to the enclosing rich text edit area deep in this
                 // swf sprite, so that we can do a clever fix for LPP-4396, 
                 // "clicking bold moves insertion point." 
-                // See the LzModeManager.rawMouseEvent handler defined in 
+                // See the lz.ModeManager.rawMouseEvent handler defined in 
                 // richtexteditarea.lzx to see how we use this breadcrumb. 
                 this.sprite.__LZtextclip.__LZrte = this.parent;
             </method>

@@ -80,7 +80,7 @@
                 this.selectionDel = new LzDelegate(this, 'adjustSize');
             }
             this.selectionDel.unregisterAll();
-            this.selectionDel.register(LzIdle, 'onidle');
+            this.selectionDel.register(lz.Idle, 'onidle');
             this.setAttribute("selecting", true);
         ]]>
         </method>
@@ -88,7 +88,7 @@
         <!--- @private keyword
             start finish selection 
         -->
-        <handler name="onmouseup" reference="LzGlobalMouse" args="who">
+        <handler name="onmouseup" reference="lz.GlobalMouse" args="who">
         <![CDATA[
             if(!this.selecting) return;
             

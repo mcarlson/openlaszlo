@@ -303,7 +303,7 @@
                 if (!this.mousedel) {
                     this.mousedel = new LzDelegate(this, '_checkmouse');
                 }
-                this.mousedel.register(LzGlobalMouse, 'onmousedown');
+                this.mousedel.register(lz.GlobalMouse, 'onmousedown');
             } else {
                 if (this.mousedel) this.mousedel.unregisterAll();
                 setAttribute('state', 2);
@@ -337,7 +337,7 @@
             if (v == null || v == this) return;
 
             // check if a modal dialog is frontmost
-            if (LzModeManager.hasMode( this )) return;
+            if (lz.ModeManager.hasMode( this )) return;
 
             var foundwindow = v.searchParents('haswindowfocus');
             if (foundwindow != null) {

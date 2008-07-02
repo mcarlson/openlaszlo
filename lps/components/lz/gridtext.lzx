@@ -61,7 +61,7 @@
             <method name="startEditing" args="ignore" >
                 immediateparent.select();
                 this.setAttribute( 'editing' , true );
-                LzFocus.setFocus( editbox );
+                lz.Focus.setFocus( editbox );
             </method>
 
             <text visible="${!parent.editing}" width="${parent.width}" 
@@ -119,7 +119,7 @@
                         }
                     </method>
                     <handler name="onfocus">
-                        this.globalMouseDel.register( LzGlobalMouse, 
+                        this.globalMouseDel.register( lz.GlobalMouse, 
                                                       "onmousedown" );
                     </handler>
                     <handler name="onblur">
@@ -134,7 +134,7 @@
                     <handler name="onkeyup" args="k">
                         if ( k == 13 ){
                             parent.setAttribute( "editing" , false );
-                            LzFocus.setFocus(parent.immediateparent.ownerGrid);
+                            lz.Focus.setFocus(parent.immediateparent.ownerGrid);
                         }
                     </handler>
                 </edittext>

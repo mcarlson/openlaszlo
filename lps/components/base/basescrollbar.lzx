@@ -129,7 +129,7 @@
                 var subcount = immediateparent.subviews.length;
                 for (var i = 0; i < subcount; i++) {
                    var s = immediateparent.subviews[i];
-                   if (s instanceof LzView) {
+                   if (s instanceof lz.view) {
                       if (! (s instanceof lz.basescrollbar )){
                         // first non-scrollbar view is the scrolltarget
                         if (!this.scrolltarget) this.scrolltarget = s;
@@ -163,9 +163,9 @@
                 this._mwDeactivateDel = new LzDelegate( this , "deactivateMouseWheel",
                     this.focusview, this.mousewheelevent_off);
 
-                if (this.usemousewheel && LzKeys["mousewheeldelta"] != null) {
+                if (this.usemousewheel && lz.Keys["mousewheeldelta"] != null) {
                     this._mwUpdateDel = new LzDelegate( this , "mousewheelUpdate",
-                        LzKeys, "onmousewheeldelta");
+                        lz.Keys, "onmousewheeldelta");
                 }
                }
 

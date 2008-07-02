@@ -15,28 +15,28 @@ lz.embed  = {}
 lz.embed.iframemanager = {
     owners: {}
     ,create: function(owner, name, scrollbars) {
-        LzBrowser.callJS('lz.embed.iframemanager.create', function (id) { 
+        lz.Browser.callJS('lz.embed.iframemanager.create', function (id) { 
                 lz.embed.iframemanager.owners[id] = owner;
                 owner.setiframeid(id); 
             }, canvas.id, name, scrollbars);
     }
     ,setPosition: function(id, x, y, width, height, v, z) {
-        LzBrowser.callJS('lz.embed.iframemanager.setPosition', null, id, x, y, width, height, v, z);
+        lz.Browser.callJS('lz.embed.iframemanager.setPosition', null, id, x, y, width, height, v, z);
     }
     ,setSrc: function(id, src, history) {
-        LzBrowser.callJS('lz.embed.iframemanager.setSrc', null, id, src, history);
+        lz.Browser.callJS('lz.embed.iframemanager.setSrc', null, id, src, history);
     }
     ,setVisible: function(id, v) {
-        LzBrowser.callJS('lz.embed.iframemanager.setVisible', null, id, v);
+        lz.Browser.callJS('lz.embed.iframemanager.setVisible', null, id, v);
     }
     ,bringToFront: function(id) {
-        LzBrowser.callJS('lz.embed.iframemanager.bringToFront', null, id);
+        lz.Browser.callJS('lz.embed.iframemanager.bringToFront', null, id);
     }
     ,sendToBack: function(id) {
-        LzBrowser.callJS('lz.embed.iframemanager.sendToBack', null, id);
+        lz.Browser.callJS('lz.embed.iframemanager.sendToBack', null, id);
     }
     ,scrollBy: function(id, x, y) {
-        LzBrowser.callJS('lz.embed.iframemanager.scrollBy', null, id, x, y);
+        lz.Browser.callJS('lz.embed.iframemanager.scrollBy', null, id, x, y);
     }
     ,__gotload: function(id) {
         if (lz.embed.iframemanager.owners[id]) lz.embed.iframemanager.owners[id].__gotload();
@@ -173,7 +173,7 @@ lz.embed.iframemanager = {
     <switch>
         <when runtime="dhtml">
         <attribute name="_mouseisdown" value="false"/>
-        <handler name="onmouseover" reference="LzGlobalMouse" args="e">
+        <handler name="onmouseover" reference="lz.GlobalMouse" args="e">
             <![CDATA[
             if (! this['iframeid']) return;
             if (e == this && this._mouseisdown == false) {
@@ -181,10 +181,10 @@ lz.embed.iframemanager = {
             }
             ]]>
         </handler>
-        <handler name="onmousedown" reference="LzGlobalMouse" args="e">
+        <handler name="onmousedown" reference="lz.GlobalMouse" args="e">
             if (e == this) this._mouseisdown = true;
         </handler>
-        <handler name="onmouseup" reference="LzGlobalMouse" args="e">
+        <handler name="onmouseup" reference="lz.GlobalMouse" args="e">
             if (e == this) this._mouseisdown = false;
         </handler>
         </when>

@@ -166,7 +166,7 @@
         <!--- Start checking to see what wedge we're over.
             (I borrowed this from Ming's TROWE code, with some modifications.) -->
         <handler name="onmouseover">
-            this.checkwedgeoverdel.register(LzIdle, "onidle");
+            this.checkwedgeoverdel.register(lz.Idle, "onidle");
         </handler>
 
         <!--- End checking to see what wedge we're over -->

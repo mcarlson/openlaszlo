@@ -84,7 +84,7 @@ class $lzc$class_richinputtext extends LzInputText {
 
     if (this.multiline && this.scroll == 0 ) {
       var scrolldel = new LzDelegate(this.sprite, "__LZforceScrollAttrs");
-      _root.LzIdle.callOnIdle(scrolldel);
+      _root.lz.Idle.callOnIdle(scrolldel);
     }
 
     // @event ontext: Sent whenever the text in the field changes.

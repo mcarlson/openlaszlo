@@ -249,7 +249,7 @@
                 this.expandFromIcon(); 
                 //workaround for setFocus bug
                 this._ignoreKeyUp = true;
-                LzFocus.setFocus( this.content ); 
+                lz.Focus.setFocus( this.content ); 
             }
         </method> 
 
@@ -482,11 +482,11 @@
                     </method>
                     <method name="doEnterUp">
                         this.buttonpush();
-                        LzFocus.next(); 
+                        lz.Focus.next(); 
                     </method>
                     <method name="doSpaceUp"> 
                         super.doSpaceUp();
-                        LzFocus.next();  
+                        lz.Focus.next();  
                     </method>
 
                     <handler name="onclick">

@@ -420,11 +420,11 @@
             if ( doopen ) {
                 this._doshowsubmenu = true;
                 if (!this.showsubmenu_del) this.showsubmenu_del = new LzDelegate(this,'showSubmenu');
-                LzTimer.addTimer( this.showsubmenu_del, delaytime );
+                lz.Timer.addTimer( this.showsubmenu_del, delaytime );
             } else  {
                 this._doshowsubmenu = false;
                 if (!this.hidesubmenu_del) this.hidesubmenu_del = new LzDelegate(this,'hideSubmenu');
-                LzTimer.addTimer( this.hidesubmenu_del, delaytime );
+                lz.Timer.addTimer( this.hidesubmenu_del, delaytime );
             }
         </method>
                         
@@ -761,7 +761,7 @@
                 if ( this.opened == isopened ) return;
                 this.opened = isopened;
                 if ( isopened ){
-                    LzModeManager.makeModal( this );
+                    lz.ModeManager.makeModal( this );
                                 
                     this.flist.bringToFront();
                     this.flist.setHilite(null);
@@ -769,7 +769,7 @@
                     this.flist._updateifsubmenu = true;
                     this.flist.setAttribute('visible', true);
                 } else {
-                    LzModeManager.release( this );
+                    lz.ModeManager.release( this );
                     this.flist.setHilite(null);
                     this.flist.setAttribute('tracking',false);
                     this.flist.setAttribute('visible', false);

@@ -317,11 +317,11 @@
             var ds = canvas["legendds"];
             if(!canvas["legendds"])
             {
-                ds = new LzDataset(canvas, { name: "legendds"});
+                ds = new lz.dataset(canvas, { name: "legendds"});
                 canvas["legendds"] = ds;     
             } else {
                 dscounter++;
-                ds = new LzDataset(canvas, { name: "legendds"+dscounter});
+                ds = new lz.dataset(canvas, { name: "legendds"+dscounter});
                 canvas["legendds"+dscounter] = ds;
             }
  

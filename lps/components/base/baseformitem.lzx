@@ -187,7 +187,7 @@
                     Debug.format("WARNING: submitname not given for object %w (baseformitem.toXML)\n", this);
                 }
             }
-            return (LzBrowser.xmlEscape(this.submitname) + "=\"" + LzBrowser.xmlEscape(val) + '"'); 
+            return (lz.Browser.xmlEscape(this.submitname) + "=\"" + lz.Browser.xmlEscape(val) + '"'); 
         </method>
         <doc>
           <tag name="shortdesc"><text>an abstract class for components which are used in a form</text></tag>

@@ -60,7 +60,7 @@
         <!--- @keywords private -->
         <handler name="ontrackgroup" reference="immediateparent.classroot" args="tg"  >
             // TODO: check to see if this is working?
-            LzTrack.register(this,tg);
+            lz.Track.register(this,tg);
         </handler>
 
          <!--- @keywords private -->

@@ -113,9 +113,9 @@
             if (this.onstylechanged) this.onstylechanged.sendEvent(this);
     ]]> </method>
 
-    <!--- returns a new style object which is based on this one
+    <!--- returns a new lz.style object which is based on this one
         with only specified attributes modified
-        <br/>param dictionary args: the attributes for the new style
+        <br/>param dictionary args: the attributes for the new lz.style
     -->
     <method name="extend" args="args">
         var temp = {};
@@ -160,7 +160,7 @@
         (<varname>whitestyle</varname>, <varname>silverstyle</varname>,
         <varname>bluestyle</varname>, <varname>greenstyle</varname>,
         <varname>goldstyle</varname>, and <varname>purplestyle</varname>).
-        You may create an instance of one of these, create a new style, or
+        You may create an instance of one of these, create a new lz.style, or
         create an instance with one or more modified attributes.</p>
         
         <p>Different styles may be used in different parts of an application,

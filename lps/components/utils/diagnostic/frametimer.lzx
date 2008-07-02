@@ -17,7 +17,7 @@
         <attribute name="lasttime" value="0"/>
 
         <handler name="oninit">
-            var d = new LzDelegate( this , "tellTime", LzIdle, "onidle" );
+            var d = new LzDelegate( this , "tellTime", lz.Idle, "onidle" );
             this.bringToFront();
         </handler>
         <method name="tellTime" args="t">

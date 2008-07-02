@@ -30,7 +30,7 @@
             if ( !this.startdragdel ){
                 this.startdragdel = new LzDelegate( this, 'startDrag' );
             }
-            LzTimer.resetTimer( startdragdel, startdragdelay);
+            lz.Timer.resetTimer( startdragdel, startdragdelay);
             this._ix = this.getMouse( 'x' );
             this._iy = this.getMouse( 'y' );
         </handler>
@@ -43,7 +43,7 @@
         </method>
 
         <handler name="onmouseup">
-            LzTimer.removeTimer( startdragdel );
+            lz.Timer.removeTimer( startdragdel );
             if ( dragging ){
                 parent.endDrag( this );
                 this.setAttribute( "dragging", false );

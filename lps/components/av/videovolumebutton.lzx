@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -127,11 +127,11 @@
                         this.trackingDelegate = 
                             new LzDelegate(this, "_handleIdle");
                     }
-                    LzIdle.onidle.addDelegate(this.trackingDelegate);
+                    lz.Idle.onidle.addDelegate(this.trackingDelegate);
                     this._handleIdle();
                 } else {
                     if (this.trackingDelegate != null) {
-                        LzIdle.onidle.removeDelegate(this.trackingDelegate);
+                        lz.Idle.onidle.removeDelegate(this.trackingDelegate);
                         this.trackingDelegate.unregisterAll();
                     }
                 }

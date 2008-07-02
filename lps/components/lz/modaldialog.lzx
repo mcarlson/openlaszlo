@@ -51,15 +51,15 @@
             //need to show this before taking the mode, so that any default
             //buttons contained by the this window will get hasdefault=true
             this.setAttribute('visible',  true );
-            LzModeManager.makeModal( this );
+            lz.ModeManager.makeModal( this );
             this.bringToFront();
         </method>
 
         <!--- Closes the dialog. -->
         <method name="close">
             this.setAttribute('visible',  false );
-            LzFocus.clearFocus();
-            LzModeManager.release( this );
+            lz.Focus.clearFocus();
+            lz.ModeManager.release( this );
         </method>
 
         <!--- @keywords private -->

@@ -240,10 +240,10 @@
                 var s = sel[0];
                 next = this._selector.getNextSubview(s, dir);
             }
-            var current_focus = LzFocus.getFocus();
+            var current_focus = lz.Focus.getFocus();
             select(next);
             if (s && current_focus && current_focus.childOf(s)) {
-                LzFocus.setFocus(next);
+                lz.Focus.setFocus(next);
             }          ]]>
         </method>
 

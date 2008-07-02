@@ -412,7 +412,7 @@
                                             this.bgcolor1 != null;
 
             var r = new _rowclass ( content.rowparent , initArgs, cells , true );
-            new LzDatapath( r , { replication : "lazy" , 
+            new lz.datapath( r , { replication : "lazy" , 
                                   xpath : this.contentdatapath ,
                                   spacing : this.spacing } );
 

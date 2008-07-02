@@ -78,15 +78,15 @@
         <method name="init" >
             super.init.apply(this, arguments);
             
-            LzTrack.register( this.boundsref, this._boundstrackgroup );
+            lz.Track.register( this.boundsref, this._boundstrackgroup );
         </method>
         
         <!--- @keywords private -->
         <method name="destroy" ><![CDATA[
             this.setTracking(false);
 
-            //LzTrack.unregisterAll(this._trackgroup);//LPP-4429: we would call this if it was implemented
-            LzTrack.unregister(this.boundsref, this._boundstrackgroup);
+            //lz.Track.unregisterAll(this._trackgroup);//LPP-4429: we would call this if it was implemented
+            lz.Track.unregister(this.boundsref, this._boundstrackgroup);
             
             if (this._destroyDL) {
                 this._destroyDL.unregisterAll();
@@ -127,13 +127,13 @@
             this.tracking = istracking;
             if ( this.isinited ) {
                 if ( istracking ) {
-                    // have global LzTrack service activate this group
-                    LzTrack.activate(this._trackgroup)
-                    LzTrack.activate(this._boundstrackgroup)
+                    // have global lz.Track service activate this group
+                    lz.Track.activate(this._trackgroup)
+                    lz.Track.activate(this._boundstrackgroup)
                 } else {
-                    // have global LzTrack service deactivate this group
-                    LzTrack.deactivate(this._trackgroup)
-                    LzTrack.deactivate(this._boundstrackgroup)
+                    // have global lz.Track service deactivate this group
+                    lz.Track.deactivate(this._trackgroup)
+                    lz.Track.deactivate(this._boundstrackgroup)
                 }
             }
             if ( this.ontracking ) this.ontracking.sendEvent( istracking );
@@ -161,7 +161,7 @@
 
         <!--- @keywords private -->
         <handler name="onaddsubview" args="v"><![CDATA[
-            LzTrack.register( v, this._trackgroup );
+            lz.Track.register( v, this._trackgroup );
             if (this.activateevents) {
                 var actDel = this._activateDL;
                 var actEvt = this.activateevents;
@@ -180,7 +180,7 @@
 
         <!--- @keywords private -->
         <handler name="onremovesubview" args="v"><![CDATA[
-            LzTrack.unregister( v, this._trackgroup );
+            lz.Track.unregister( v, this._trackgroup );
             if (this.activateevents) {
                 var actDel = this._activateDL;
                 var actEvt = this.activateevents;
@@ -207,7 +207,7 @@
             // the mouse has just exiting the bounding rect defined by
             // the bounds ref. Report these events to the bounds ref.
             if ( this.tracking ) {
-                LzTimer.addTimer( this._repeattrackDL,this.trackingrate );
+                lz.Timer.addTimer( this._repeattrackDL,this.trackingrate );
             }
             var mx = this.boundsref.getMouse('x');
             var my = this.boundsref.getMouse('y');
