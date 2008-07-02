@@ -1,0 +1,45 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas>
+    <include href="eventtester.lzx"/>
+
+    <simplelayout axis="x"/>
+    <view>
+        <simplelayout/>
+        <text name="mousetester" clickable="true" text="Test me for mouse events"/>
+        <eventtester eventname="onmousedown" reference="parent.mousetester"/>
+        <eventtester eventname="onmouseup" reference="parent.mousetester"/>
+        <eventtester eventname="onmouseover" reference="parent.mousetester"/>
+        <eventtester eventname="onmouseout" reference="parent.mousetester"/>
+        <eventtester eventname="onclick" reference="parent.mousetester"/>
+        <eventtester eventname="ondblclick" reference="parent.mousetester"/>
+        <eventtester eventname="onmousedragin" reference="parent.mousetester"/>
+        <eventtester eventname="onmousedragout" reference="parent.mousetester"/>
+        <eventtester eventname="onmouseupoutside" reference="parent.mousetester"/>
+        <eventtester eventname="ontext" reference="parent.mousetester"/>
+
+        <button onclick="parent.mousetester.setAttribute('text', 'clicked')">Click to change text</button>
+    </view>
+    <view>
+        <simplelayout/>
+        <!-- can't set clickable to true - see LPP-6565 -->
+        <inputtext name="mousetester" text="Test me for mouse events"/>
+        <eventtester eventname="onmousedown" reference="parent.mousetester"/>
+        <eventtester eventname="onmouseup" reference="parent.mousetester"/>
+        <eventtester eventname="onmouseover" reference="parent.mousetester"/>
+        <eventtester eventname="onmouseout" reference="parent.mousetester"/>
+        <eventtester eventname="onclick" reference="parent.mousetester"/>
+        <eventtester eventname="ondblclick" reference="parent.mousetester"/>
+        <eventtester eventname="onmousedragin" reference="parent.mousetester"/>
+        <eventtester eventname="onmousedragout" reference="parent.mousetester"/>
+        <eventtester eventname="onmouseupoutside" reference="parent.mousetester"/>
+        <eventtester eventname="ontext" reference="parent.mousetester"/>
+
+        <eventtester eventname="onfocus" reference="parent.mousetester"/>
+        <eventtester eventname="onblur" reference="parent.mousetester"/>
+    </view>
+</canvas>
