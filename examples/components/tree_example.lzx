@@ -74,11 +74,11 @@
                     </handler>
                     <method name="viewInWindow" args="url">
                         if ($runtime == 'dhtml') {
-                            LzBrowser.loadURL(url,"Info","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");
+                            lz.Browser.loadURL(url,"Info","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");
                         } else {
-                            LzBrowser.loadJS('window.open("' + url + '","Info","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");');
+                            lz.Browser.loadJS('window.open("' + url + '","Info","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");');
                         }
-                        //LzBrowser.loadURL('javascript: var wptr = window.open("' + url + '","test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
+                        //lz.Browser.loadURL('javascript: var wptr = window.open("' + url + '","test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
                     </method>
                 </tree>
             </tree>

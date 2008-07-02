@@ -23,11 +23,11 @@
              get's is not stored in internal variables causing two animations to occur. -->
         <handler name="oninit" reference="canvas">
            this.del = new LzDelegate ( this, "tick" );
-           LzTimer.addTimer( this.del, 1000 );
+           lz.Timer.addTimer( this.del, 1000 );
          </handler>
         <method name="tick" >
            this.onsecond.sendEvent();
-           LzTimer.addTimer( this.del, 1000 );
+           lz.Timer.addTimer( this.del, 1000 );
         </method>
     </node>
 

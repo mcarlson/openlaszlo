@@ -16,15 +16,15 @@
         <simplelayout axis="y" spacing="2" />
 
         <button text="Poof" width="100" height="30" 
-           onclick="LzAudio.playSound('poof');" />
+           onclick="lz.Audio.playSound('poof');" />
         <button text="Beep" width="100" height="30" 
-           onclick="LzAudio.playSound('beep');" />
+           onclick="lz.Audio.playSound('beep');" />
         <button text="Troll" width="100" height="30" 
-           onclick="LzAudio.playSound('troll');" />
+           onclick="lz.Audio.playSound('troll');" />
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

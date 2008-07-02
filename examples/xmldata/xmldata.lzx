@@ -172,7 +172,7 @@
                 ds.secure = true;
                 ds.secureport = secure.p.port.getText();
 
-                var url = new LzURL(LzBrowser.getLoadURL());
+                var url = new LzURL(lz.Browser.getLoadURL());
                 url.file = 'echo.jsp';
                 url.query = null;
                 url.protocol = 'https';

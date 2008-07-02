@@ -14,22 +14,22 @@
         </method>
         <handler name="onlastframe">
             //Debug.write("Got lastframe");
-            LzBrowser.callJS('setCanAttr', null, 'lastframe'); 
+            lz.Browser.callJS('setCanAttr', null, 'lastframe'); 
         </handler>
         <handler name="onstop">
             //Debug.write("Got stop");
         </handler>
         <handler name="onloadperc" args="l">
             //Debug.write("Got loadperc", l);
-            LzBrowser.callJS('setCanAttr', null, 'loadperc', l); 
+            lz.Browser.callJS('setCanAttr', null, 'loadperc', l); 
         </handler>
         <handler name="onframe" args="f">
             //Debug.write("Got frame", f);
-            LzBrowser.callJS('setCanAttr', null, 'frame', f); 
+            lz.Browser.callJS('setCanAttr', null, 'frame', f); 
         </handler>
         <handler name="ontotalframes" args="t">
             //Debug.write("Got totalframes", t);
-            LzBrowser.callJS('setCanAttr', null, 'totalframes', t); 
+            lz.Browser.callJS('setCanAttr', null, 'totalframes', t); 
         </handler>
     </view>
 </canvas>    

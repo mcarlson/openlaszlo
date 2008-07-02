@@ -47,13 +47,13 @@
                     return true;
                 </method>
                 <method name="open">
-                    LzModeManager.makeModal( this );
+                    lz.ModeManager.makeModal( this );
                     this.bringToFront();
                     parent.bringToFront();
                     this.setAttribute('visible', true);
                 </method>
                 <method name="close">
-                    LzModeManager.release( this );
+                    lz.ModeManager.release( this );
                     setAttribute('visible', false);
                 </method>
 
@@ -98,20 +98,20 @@
                     if (!this.isopen) {
                         this.isopen=true;
                         tip.setAttribute('visible', true);
-                        LzModeManager.makeModal( this );
+                        lz.ModeManager.makeModal( this );
                         if (typeof(this.tabDel) == "undefined") {
                             this.tabDel = new LzDelegate( this , "releaseMode" );
                             this.clickDel = new LzDelegate( this , "checkForClick" );
                         }
-                        this.tabDel.register(LzKeys, "onkeydown");
-                        this.clickDel.register(LzGlobalMouse, "onmouseup");
+                        this.tabDel.register(lz.Keys, "onkeydown");
+                        this.clickDel.register(lz.GlobalMouse, "onmouseup");
                     }
                 </method>
                 <method name="close">
                     if (this.isopen) {
                         this.isopen = false;
                         tip.setAttribute('visible', false);
-                        LzModeManager.release( this );
+                        lz.ModeManager.release( this );
                         this.tabDel.unregisterAll();
                     }
                 </method>
@@ -194,18 +194,18 @@
                 <text width="240" bgcolor="white"
                         oninit="createDelegates();" >
                     <method name="createDelegates" >
-                        new LzDelegate( this , "globalMouseUp" , LzGlobalMouse ,
+                        new LzDelegate( this , "globalMouseUp" , lz.GlobalMouse ,
                                         "onmouseup" );
-                        new LzDelegate( this , "globalMouseDown" , LzGlobalMouse,
+                        new LzDelegate( this , "globalMouseDown" , lz.GlobalMouse,
                                         "onmousedown" );
-                        new LzDelegate( this , "globalMouseRollover" , LzGlobalMouse ,
+                        new LzDelegate( this , "globalMouseRollover" , lz.GlobalMouse ,
                                         "onmouseover" );
                         this.cleard = new LzDelegate( this , "cleartext" )
                     </method>
 
                     <method name="globalMouseUp" args="vc">
                         this.setText( "mouseup from " + vc );
-                        LzTimer.resetTimer( this.cleard , 3000 );
+                        lz.Timer.resetTimer( this.cleard , 3000 );
                     </method>
                     <method name="globalMouseDown" args="vc">
                         this.setText( "mousedown from " + vc );
@@ -213,7 +213,7 @@
 
                     <method name="globalMouseRollover" args="vc">
                         this.setText( "mouse over " + vc );
-                        LzTimer.resetTimer( this.cleard , 3000 );
+                        lz.Timer.resetTimer( this.cleard , 3000 );
                     </method>
 
                     <method name="cleartext" >
@@ -223,7 +223,7 @@
 
                 </text>
                 <text width="${parent.width-5}" multiline="true">
-                    note: the LzGlobalMouse service continues to send events
+                    note: the lz.GlobalMouse service continues to send events
                     even when someone has the mode, but only the view which
                     has the mode receives view events</text>
             </view>
@@ -249,16 +249,16 @@
             </view>
         </view>
         <method name="open">
-            LzModeManager.makeModal( this );
+            lz.ModeManager.makeModal( this );
             this.setAttribute('visible',  true );
             this.bringToFront();
-            LzFocus.setFocus(this);
+            lz.Focus.setFocus(this);
         </method>
 
         <method name="close">
             this.setAttribute('visible',  false );
-            LzFocus.setFocus(null);
-            LzModeManager.release( this );
+            lz.Focus.setFocus(null);
+            lz.ModeManager.release( this );
         </method>
 
         <method name="passModeEvent" args="event_name, view">
