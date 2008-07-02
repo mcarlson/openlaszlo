@@ -541,7 +541,7 @@ function __LZadjustVisibleClones( lastnodes:Array , newnodes:Boolean) :void {
 
     //this makes sure that children created as a result of data replication
     //init in order
-    LzInstantiator.enableDataReplicationQueuing( );
+    lz.Instantiator.enableDataReplicationQueuing( );
 
     while ( this.nodes && this.nodes.length > this.clones.length ){
         var cl:LzNode = this.getNewClone();
@@ -550,7 +550,7 @@ function __LZadjustVisibleClones( lastnodes:Array , newnodes:Boolean) :void {
         this.clones.push( cl );
     }
 
-    LzInstantiator.clearDataReplicationQueue( );
+    lz.Instantiator.clearDataReplicationQueue( );
 
 
     while ( this.nodes && this.nodes.length < this.clones.length ){

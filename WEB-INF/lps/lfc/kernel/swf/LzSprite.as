@@ -1389,7 +1389,7 @@ LzSprite.prototype.trackPlay = function() {
     this.__LZtracking = true;
      if (this.updatePlayDel)
          this.updatePlayDel.unregisterAll();
-    this.updatePlayDel.register( LzIdle, "onidle" );
+    this.updatePlayDel.register( lz.Idle, "onidle" );
 }
 
 
@@ -1456,7 +1456,7 @@ LzSprite.prototype.checkPlayStatus = function (){
      if (('isaudio' in this.getMCRef()) && (this.getMCRef().isaudio == true)) this.__lzskipplaychecklimit = LzSprite.prototype.__lzskipplaychecklimitmax;
     
     //Debug.warn('checkPlayStatus %w %w %w %w', this.__lzcheckframe, this.frame, this.totalframes, this.__lzskipplaychecklimit);
-    this.checkPlayStatusDel.register( LzIdle, "onidle" );
+    this.checkPlayStatusDel.register( lz.Idle, "onidle" );
 }
 
 /**

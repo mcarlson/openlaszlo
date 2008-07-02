@@ -38,7 +38,7 @@ SoundMC.prototype.play = function() {
     this._sound.start(t)
     //Debug.write('play mp3', t);
     this._playdel.unregisterAll();
-    this._playdel.register( LzIdle, "onidle" );
+    this._playdel.register( lz.Idle, "onidle" );
 }
 
 /**
@@ -77,7 +77,7 @@ SoundMC.prototype.loadMovie = function( reqstr ) {
     this._sound.loadSound(reqstr, true);
     this.loadstate = 1;
     //this._playdel.unregisterAll();
-    //this._playdel.register( LzIdle, "onidle" );
+    //this._playdel.register( lz.Idle, "onidle" );
 }
 
 
@@ -165,7 +165,7 @@ SoundMC.prototype.loadDone = function(success) {
         //Debug.write('done loading');
         this.loadstate = 2;
         this._playdel.unregisterAll();
-        this._playdel.register( LzIdle, "onidle" );
+        this._playdel.register( lz.Idle, "onidle" );
     }
 }
 

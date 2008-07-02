@@ -114,7 +114,7 @@ function attachLoadMovie ( resc ){
   */
 function startingLoad ( loadmc ){
     this.checkonce = false;
-    this.loadChecker.register( LzIdle, "onidle" );
+    this.loadChecker.register( lz.Idle, "onidle" );
     this.removeLoadCheckerDel.register( this, "onloaddone" );
 }
 

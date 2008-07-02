@@ -329,9 +329,9 @@ dynamic class LzCanvas extends LzView {
         this.parent = this;
         this.makeMasked();
 
-        this.__LZmouseupDel = new LzDelegate( this , "__LZmouseup", LzGlobalMouse, 'onmouseup');// called on global mouseup
-        this.__LZmousedownDel = new LzDelegate( this , "__LZmousedown", LzGlobalMouse, 'onmousedown');// called on global mousedown
-        this.__LZmousemoveDel = new LzDelegate( this , "__LZmousemove", LzGlobalMouse, 'onmousemove');// called on global mousemove
+        this.__LZmouseupDel = new LzDelegate( this , "__LZmouseup", lz.GlobalMouse, 'onmouseup');// called on global mouseup
+        this.__LZmousedownDel = new LzDelegate( this , "__LZmousedown", lz.GlobalMouse, 'onmousedown');// called on global mousedown
+        this.__LZmousemoveDel = new LzDelegate( this , "__LZmousemove", lz.GlobalMouse, 'onmousemove');// called on global mousemove
 
         // Create the default dataprovider
         this.defaultdataprovider = this.httpdataprovider = new LzHTTPDataProvider();
@@ -552,7 +552,7 @@ function initDone (){
 
     //this.isinited = false;
     //Debug.write('LzCanvas.initDone');
-    LzInstantiator.requestInstantiation(  this, sva );
+    lz.Instantiator.requestInstantiation(  this, sva );
 }
 
 
@@ -589,8 +589,8 @@ override function __LZinstantiationDone (){
 
     this.percentcreated = 1;
     this.updatePercentCreatedEnabled = false;
-    if (this.onpercentcreated.ready) this.onpercentcreated.sendEvent( this.percentcreated );
-    LzInstantiator.resume();
+    if (this.onpercentcreated.ready) this.onpercentcreated.sendEvent( this.percentcreated ); 
+   lz.Instantiator.resume();
     this.__LZcallInit();
 }
 

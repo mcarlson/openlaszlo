@@ -110,7 +110,7 @@ function __show () {
     s.style.top = LzMouseKernel.__y + 'px';
     s.style.display = 'block';
 
-    this.__LZmousedowndel.register(LzGlobalMouse, 'onmousedown');
+    this.__LZmousedowndel.register(lz.GlobalMouse, 'onmousedown');
 
     if (this._delegate != null) this._delegate.execute(this);
 }

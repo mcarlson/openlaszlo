@@ -327,7 +327,7 @@ public dynamic class LzNode extends LzEventable {
         this._profile_instantiator_name = nm;
       }
       // Set _profile_instantiator_name to constructor._dbg_name for
-      // annotation in LzInstantiator.makeSomeViews
+      // annotation in lz.Instantiator.makeSomeViews
       else {
         this._profile_instantiator_name = this['constructor']._dbg_name;
       }
@@ -813,7 +813,7 @@ public dynamic class LzNode extends LzEventable {
   function __LZinstantiationDone (){
     if ( !this.immediateparent ||  this.immediateparent.isinited ||
          ( this.initstage == "early" ) ||
-         ( this.__LZisnew && LzInstantiator.syncNew ) ){
+         ( this.__LZisnew && lz.Instantiator.syncNew ) ){
       //we need to init this and its subnodes
       this.__LZcallInit( );
     }
@@ -914,9 +914,9 @@ public dynamic class LzNode extends LzEventable {
       //aren't done initing
       this.initstage = 'early';
       if ( myis == "defer" ){
-        LzInstantiator.createImmediate( this ,this.__LZdeferredcarr );
+        lz.Instantiator.createImmediate( this ,this.__LZdeferredcarr );
       } else {
-        LzInstantiator.completeTrickle( this );
+        lz.Instantiator.completeTrickle( this );
       }
     }
   }
@@ -1063,12 +1063,12 @@ public dynamic class LzNode extends LzEventable {
       this.__LZdeferredcarr = carr;
     } else if ( "late" == this.initstage ){
       this.__LZlateinit = true;
-      LzInstantiator.trickleInstantiate( this , carr );
-    } else if ( ( this.__LZisnew && LzInstantiator.syncNew ) ||
+      lz.Instantiator.trickleInstantiate( this , carr );
+    } else if ( ( this.__LZisnew && lz.Instantiator.syncNew ) ||
                 "immediate" == this.initstage ){
-      LzInstantiator.createImmediate( this , carr );
+      lz.Instantiator.createImmediate( this , carr );
     } else {
-      LzInstantiator.requestInstantiation( this , carr );
+      lz.Instantiator.requestInstantiation( this , carr );
     }
   }
   /**

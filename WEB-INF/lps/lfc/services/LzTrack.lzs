@@ -136,7 +136,7 @@ function LzTrackService (){
     super();
 
     this.__LZtrackDel = new LzDelegate( this, "__LZtrack" );// called on idle
-    this.__LZmouseupDel = new LzDelegate( this, "__LZmouseup", LzGlobalMouse, 'onmouseup');// called on global mouseup
+    this.__LZmouseupDel = new LzDelegate( this, "__LZmouseup", lz.GlobalMouse, 'onmouseup');// called on global mouseup
     this.__LZactivegroups = [];
 }
 

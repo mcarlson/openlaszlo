@@ -2413,7 +2413,7 @@ function getMouse( xory : String ) {
 
 /** @access private */
 function $lzc$getMouse_dependencies(...ignore ) {
-    return [ LzIdle, "idle" ];
+    return [ lz.Idle, "idle" ];
 }
 
 

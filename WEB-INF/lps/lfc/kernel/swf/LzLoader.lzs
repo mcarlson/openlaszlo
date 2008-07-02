@@ -61,7 +61,7 @@ function destroy () {
   */
 function startCopyTask ( ){
     //    Debug.write("starting copy idle task ");
-    this.copyTaskDel.register( LzIdle, "onidle" );
+    this.copyTaskDel.register( lz.Idle, "onidle" );
 }
 
 /**
