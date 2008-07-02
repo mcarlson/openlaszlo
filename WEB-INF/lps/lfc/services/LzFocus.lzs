@@ -386,11 +386,3 @@ dynamic class LzFocusService extends LzEventable {
   */
 lz.Focus= new LzFocusService();
 lz.Focus.initialize();
-
-/**
-  *
-  *
-  * @keywords deprecated
-  * @shortdesc LzFocus is a shortcut for <link linkend="LzFocusService">LzFocusService.LzFocus</link>. Use lz.Focus instead.
-  */
-var LzFocus = lz.Focus;

@@ -402,14 +402,6 @@ class LzBrowserService {
  */
 lz.Browser = LzBrowserService.LzBrowser;
 
-/**
- * @keywords deprecated
- * @access public
- * @type LzBrowserService
- * @shortdesc  LzBrowser is a shortcut for <link linkend="LzBrowserService">LzBrowserService.LzBrowser</link>
- */
-var LzBrowser:LzBrowserService = lz.Browser
-
 if ($as2){
   // proxy object for browser Lz
   lz.embed = {

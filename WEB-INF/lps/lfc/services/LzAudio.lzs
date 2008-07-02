@@ -125,9 +125,3 @@ function __warnCapability(msg) {
   * lz.Audio is a shortcut for <a href="LzAudioService.html">LzAudioService</a>.
   */
 lz.Audio = new LzAudioService();
-
-/**
-  * @shortdesc LzAudio is a shortcut for <a href="LzAudioService.html">LzAudioService</a>. Use lz.Audio instead.
-  * @keywords deprecated
-  */
-var LzAudio = lz.Audio

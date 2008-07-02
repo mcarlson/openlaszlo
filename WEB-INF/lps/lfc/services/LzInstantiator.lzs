@@ -366,10 +366,3 @@ dynamic public class LzInstantiatorService extends LzEventable {
  * @shortdesc Alias for <link linkend="LzInstantiatorService">LzInstantiatorService.LzInstantiator</link>
  */
 lz.Instantiator = LzInstantiatorService.LzInstantiator;
-
-/**
- * @deprecated
- * @shortdesc Alias for <link linkend="LzInstantiatorService">LzInstantiatorService.LzInstantiator</link>
- * Use lz.Instantiator instead.
- */
-var LzInstantiator:LzInstantiatorService = lz.Instantiator;

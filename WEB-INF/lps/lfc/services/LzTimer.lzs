@@ -239,12 +239,3 @@ class LzTimerService {
  * @shortdesc Alias for <link linkend="LzTimerService">LzTimerService.LzTimer</link>
  */
 lz.Timer = LzTimerService.LzTimer;
-
-/**
- * @keywords deprecated
- * @shortdesc LzTimer is a shortcut for <link linkend="LzTimerService">LzTimerService.LzTimer</link>
- * Use lz.Timer instead.
- */
-var LzTimer:LzTimerService = lz.Timer;
-
-

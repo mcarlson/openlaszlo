@@ -121,10 +121,3 @@ class LzIdleService extends LzEventable {
  * @shortdesc Alias for <link linkend="LzIdleService">LzIdleService.LzIdle</link>
  */
 lz.Idle = LzIdleService.LzIdle;
-
-/**
- * @keywords deprecated
- * @shortdesc LzIdle is a shortcut for <link linkend="LzIdleService">LzIdleService.LzIdle</link>
- * Use lz.Idle instead.
- */
-var LzIdle:LzIdleService = lz.Idle;

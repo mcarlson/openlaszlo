@@ -535,12 +535,6 @@ public class LzKeysService extends LzNode {
   */
 lz.Keys = new LzKeysService();
 
-/**
-* @shortdesc LzKeys is a shortcut for <xref linkend="LzKeysService" />. Use lz.Keys instead.
-  * @keywords deprecated
-  */
-var LzKeys = lz.Keys;
-
 if ($dhtml) {
     // Need to explicitly register this.  Make sure lz.embed.mousewheel is there for 
     // lztest

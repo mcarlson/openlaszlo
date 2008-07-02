@@ -252,12 +252,6 @@ public class LzModeManagerService extends LzNode {
   */
 lz.ModeManager = new LzModeManagerService();
 
-/**
-  * @shortdesc LzModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService</a>. Use lz.ModeManager instead.
-  * @keywords deprecated
-  */
-var LzModeManager = lz.ModeManager;
-
 if ($swf9) {
 } else {
     LzMouseKernel.setCallback(lz.ModeManager, 'rawMouseEvent');

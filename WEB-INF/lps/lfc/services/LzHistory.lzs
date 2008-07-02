@@ -273,9 +273,3 @@ function __start() {
   * lz.History is a shortcut for <xref linkend="LzHistoryService" />.
   */
 lz.History = new LzHistoryService();
-
-/**
-  * @shortdesc LzHistory is a shortcut for <xref linkend="LzHistoryService" />. Use lz.History instead.
-  * @keywords deprecated
-  */
-var LzHistory = lz.History;

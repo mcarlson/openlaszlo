@@ -138,14 +138,3 @@ public class LzCursorService {
  * @shortdesc  lz.Cursor is a shortcut for <link linkend="LzCursorService">LzCursorService.LzCursor</link>
  */
 lz.Cursor = new LzCursorService(); 
-
-/**
- *
- *
- * @type LzCursorService
- * @keywords deprecated
- * @shortdesc LzCursor is a shortcut for <link linkend="LzCursorService">LzCursorService.LzCursor</link>. Use lz.Cursor instead.
- */
-var LzCursor = lz.Cursor;
-
-LzCursorService.LzCursor = lz.Cursor;
