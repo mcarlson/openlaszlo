@@ -40,8 +40,8 @@
 
 
   <handler name="ondata" reference="ping">
-      Debug.write('SUCCESS: LzBrowser.loadURL(',succ_url,');');
-      LzBrowser.loadURL(succ_url);
+      Debug.write('SUCCESS: lz.Browser.loadURL(',succ_url,');');
+      lz.Browser.loadURL(succ_url);
   </handler>
 
   <handler name="ontimeout" reference="ping">
@@ -53,10 +53,10 @@
     <![CDATA[
       Debug.write('ping.onerror, elapsed ', (getTimer() - appstart));
       if ( (getTimer() - appstart)  > ping_timeout) {
-          Debug.write('FAIL: LzBrowser.loadURL(',fail_url,');');
-          LzBrowser.loadURL(fail_url);
+          Debug.write('FAIL: lz.Browser.loadURL(',fail_url,');');
+          lz.Browser.loadURL(fail_url);
       } else {
-          LzTimer.addTimer(global.pdel, ping_interval);
+          lz.Timer.addTimer(global.pdel, ping_interval);
       }
     ]]>
   </handler>
@@ -66,8 +66,8 @@
     <![CDATA[
       Debug.write('checkloaded, elapsed ', (getTimer() - appstart));
       if ( (getTimer() - appstart)  > ping_timeout) {
-          Debug.write('FAIL: LzBrowser.loadURL(',sparams.fail_url,');');
-          LzBrowser.loadURL(sparams.fail_url);
+          Debug.write('FAIL: lz.Browser.loadURL(',sparams.fail_url,');');
+          lz.Browser.loadURL(sparams.fail_url);
       } else {
           ping.doRequest();
       }
