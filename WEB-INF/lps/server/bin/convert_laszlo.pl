@@ -42,6 +42,10 @@ Options:
    -d debuglevel
            get debugging info for development
 
+   -g graphical-difftool
+           for each file changed, invoke the graphical difftool,
+           and prompt the user to keep or not keep the changes
+
    -t
            create output for simple tests in /tmp/convtest
 
@@ -404,7 +408,7 @@ sub convert_file {
 ##
 my $file;
 my %options;
-$ok = getopts("d:tx:v", \%options);
+$ok = getopts("d:tx:vg:", \%options);
 if (!$ok) {
     print STDERR "$USAGE";
     exit(1);
@@ -434,6 +438,13 @@ if ($options{t}) {
     exit(0);
 }
 
+my $diffTool = "";
+my $confirm = 0;
+if ($options{g}) {
+    $diffTool = $options{g};
+    $confirm = 1;
+}
+
 if ($#ARGV < 0) {
     print STDERR "$USAGE";
     exit(1);
@@ -451,5 +462,23 @@ foreach $file (@ARGV) {
     }
     else {
         convert_file($file);
+        if($confirm) {
+            my $isDiff = system("diff -q $file.bak $file");
+            if($isDiff != 0) {
+                system("$diffTool $file.bak $file");
+                print STDOUT "Would you like to: [u]se new, [k]eep old, [e]dit new: ";
+                $| = 1;
+                my $todo = <STDIN>;
+                chomp $todo;
+                if($todo eq 'k'){
+                    system("rm", $file);
+                    system("mv", "$file.bak", "$file");
+                } elsif($todo eq 'e'){
+                    system("\$EDITOR $file");
+                }
+            } else {
+                print STDOUT "Files are the same... Continuing\n";
+            }
+        }
     }
 }
