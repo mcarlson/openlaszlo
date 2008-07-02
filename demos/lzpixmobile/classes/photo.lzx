@@ -203,7 +203,7 @@
         <method name="startDragCheck">
             //info('startDragCheck');
             _mdtime = new Date();
-            this.ddcdel.register( LzIdle, "onidle" );
+            this.ddcdel.register( lz.Idle, "onidle" );
             this._ddcxp = this.getMouse( "x" );
             this._ddcyp = this.getMouse( "y" );
         </method>

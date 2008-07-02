@@ -363,7 +363,7 @@
             gameOverScreen.setAttribute('visible',  true );
 
             // Prevent the user from clicking anything else
-            LzModeManager.makeModal( this );
+            lz.ModeManager.makeModal( this );
             this.message.setText( message );
         </method>
         <method name="playAgain">
@@ -372,7 +372,7 @@
 
             // Allow the user to click other things (i.e. aside from the 
             // dialog box
-            LzModeManager.release(this); 
+            lz.ModeManager.release(this); 
 
             this.setAttribute('visible',  false );
             gameOverScreen.setAttribute('visible',  false );

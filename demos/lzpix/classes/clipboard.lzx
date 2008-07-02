@@ -53,7 +53,7 @@
         <attribute name="raisedel" 
                    value="$once{ new LzDelegate( this, 'setRaise' ) }"/>
         <method name="dragStarted">
-            LzTimer.addTimer( raisedel, 250 );
+            lz.Timer.addTimer( raisedel, 250 );
         </method>
 
         <method name="dragFinished" args="sel">

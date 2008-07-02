@@ -1,7 +1,7 @@
 <photocollection name="interior" bgcolor="0xf0f0f0" clip="true"
                  photoclass="lz.clipboardphoto" clickable="true">
     <handler name="oninit">
-        LzTrack.register( this , 'photos' );
+        lz.Track.register( this , 'photos' );
     </handler>
 
     <attribute name="amtrackedover" value="false"/>

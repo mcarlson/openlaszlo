@@ -61,7 +61,7 @@
         x="5" stretches="both" width="${resourcewidth / 2}" 
         height="${resourceheight / 2}">
         <handler name="onclick">
-            LzBrowser.loadURL('http://www.laszlosystems.com', '_blank');
+            lz.Browser.loadURL('http://www.laszlosystems.com', '_blank');
         </handler>
         </view>
 
@@ -225,7 +225,7 @@
     <view resource="assets/poweredby.swf" x="${(parent.width - this.width) / 2}"
     y="${canvas.height - this.height - 5}">
     <handler name="onclick">
-        LzBrowser.loadURL('http://www.blogbox.com', '_blank');
+        lz.Browser.loadURL('http://www.blogbox.com', '_blank');
     </handler>
     </view>
 

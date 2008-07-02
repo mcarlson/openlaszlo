@@ -30,7 +30,7 @@
                 r = photopool.pop();
             } else {
                 r = new photoclass( this , { visible : false } );
-                new LzDatapath( r );
+                new lz.datapath( r );
                 r.txt.setAttribute('visible',  false )
             }
             showdel.register( r, "onloaded" );

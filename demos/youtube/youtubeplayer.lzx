@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -420,7 +420,7 @@
                     this.idleDelegate = del;
                 }
 
-                LzIdle.onidle.addDelegate(del);
+                lz.Idle.onidle.addDelegate(del);
 
                 this.setAttribute("downy", canvas.getMouse("y"));
                 this.setAttribute("downheight", parent.vlibrarypanel.height);
@@ -435,7 +435,7 @@
                     this.idleDelegate;
                 
                 if (del != null) {
-                    LzIdle.onidle.removeDelegate(del);
+                    lz.Idle.onidle.removeDelegate(del);
                 }
 
                 this.setAttribute("down", false);

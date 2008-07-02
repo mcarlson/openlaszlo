@@ -280,7 +280,7 @@
     ]]> </handler>
 
     <handler name="onclick" >
-        this.ocd.register(LzIdle,"onidle");
+        this.ocd.register(lz.Idle,"onidle");
     </handler>
 
 

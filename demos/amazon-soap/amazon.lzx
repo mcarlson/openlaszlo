@@ -95,7 +95,7 @@
                 onmouseover="setResourceNumber(2)"
                 onmouseout="setResourceNumber(1)">
                 <handler name="onclick">
-                    LzBrowser.loadURL("http://laszlosystems.com", "_blank");
+                    lz.Browser.loadURL("http://laszlosystems.com", "_blank");
                 </handler>
             </view>
         </view>

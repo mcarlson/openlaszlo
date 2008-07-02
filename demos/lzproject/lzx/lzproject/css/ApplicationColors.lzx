@@ -8,7 +8,7 @@
          @START_CODE
         <script>
         <![CDATA[
-            var COLORS = new ApplicationColors();
+            var COLORS = new lz.ApplicationColors();
         ]]>
         </script>
          @END

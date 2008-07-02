@@ -221,7 +221,7 @@
         <method name="startDragCheck">
             //info('startDragCheck');
             this._mdtime = LzTimeKernel.getTimer();
-            this.ddcdel.register( LzIdle, "onidle" );
+            this.ddcdel.register( lz.Idle, "onidle" );
             this._ddcxp = this.getMouse( "x" );
             this._ddcyp = this.getMouse( "y" );
         </method>

@@ -154,7 +154,7 @@
 
             // TODO: possibly put up some UI here to note that out-of-app authentication will occur
             // then call doAuth() function again
-            LzBrowser.loadURL(url, "_blank");
+            lz.Browser.loadURL(url, "_blank");
         ]]></method>
         <method name="_handleToken"><![CDATA[
             if (global['debugdata']) Debug.write("_handleToken", tokends);

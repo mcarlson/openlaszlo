@@ -135,7 +135,7 @@
         } else {
           this.clearMessageDel.unregisterAll();
         }
-        LzTimer.addTimer( this.clearMessageDel, this.clearDelay);
+        lz.Timer.addTimer( this.clearMessageDel, this.clearDelay);
       }
     </method>
 

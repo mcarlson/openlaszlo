@@ -246,12 +246,12 @@
             this.xoff = bar.getMouse( 'x' );
             this.yoff = bar.getMouse( 'y' );
 
-            LzTimer.resetTimer( this.startDragDel , 150 );
+            lz.Timer.resetTimer( this.startDragDel , 150 );
             ]]>
         </method>
 
         <method name="startDrag" args="v">   <![CDATA[
-            this.mdel.register( LzIdle, "onidle" );
+            this.mdel.register( lz.Idle, "onidle" );
             bar.followstate.remove();
             this.setAttribute('freedragging', !followview.classroot.opened );
             this.setAttribute('dragging',true);
@@ -268,7 +268,7 @@
                 bar.followstate.apply();
                 this.setAttribute('freedragging', !followview.classroot.opened );
             } else {
-                LzTimer.removeTimer( this.startDragDel );
+                lz.Timer.removeTimer( this.startDragDel );
             } ]]>
         </method>
 

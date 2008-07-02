@@ -1,4 +1,4 @@
-<!-- Copyright 2006 Laszlo Systems -->
+<!-- Copyright 2006-2008 Laszlo Systems -->
 <canvas title="test-data" width="100%" height="100%" bgcolor="0x7A8AB3">
     <simplelayout axis="y" spacing="5" />
     

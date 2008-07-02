@@ -115,7 +115,7 @@
        <method name="updateOnIdle" args="ison" >
             if ( ison ){
                 this.updateDelegate.unregisterAll();
-                coidel.register( LzIdle, "onidle" );
+                coidel.register( lz.Idle, "onidle" );
             } else {
                 this.regUpdateDelegate();
                 coidel.unregisterAll();

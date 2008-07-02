@@ -12,7 +12,7 @@
         resource="transparent_rsc"
         width="${parent.width}" height="${parent.height}" >
         <handler name="onclick">
-            LzBrowser.loadURL( parent.url, parent.targetframe, parent.windowopts);
+            lz.Browser.loadURL( parent.url, parent.targetframe, parent.windowopts);
         </handler>
     </mybutton>
 </class>

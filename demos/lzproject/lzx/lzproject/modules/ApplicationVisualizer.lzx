@@ -45,10 +45,10 @@
           searchSubnodes("name", "lastMessage").setText(selectedService._lastMessage);
           searchSubnodes("name", "xmlSerialized").setText(selectedService._xmlSerialized);
           // Now get the URL for this REST web service
-          var host = LzBrowser.getLoadURLAsLzURL().host;
-          var path = LzBrowser.getLoadURLAsLzURL().path;
-          var port = LzBrowser.getLoadURLAsLzURL().port;
-          var base = LzBrowser.getLoadURLAsLzURL();
+          var host = lz.Browser.getLoadURLAsLzURL().host;
+          var path = lz.Browser.getLoadURLAsLzURL().path;
+          var port = lz.Browser.getLoadURLAsLzURL().port;
+          var base = lz.Browser.getLoadURLAsLzURL();
           var datasetSrc = selectedService._dsRef.src;
           searchSubnodes("name", "serviceUrl").setText(datasetSrc);
           // Check if we have a connector and a form for the service

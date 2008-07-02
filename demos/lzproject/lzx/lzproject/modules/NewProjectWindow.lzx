@@ -31,20 +31,20 @@
     <!-- HANDLER & EVENTS -->
     <handler name="onvisible">
       if (this.visible) {
-        LzModeManager.makeModal(this);
-        LzFocus.setFocus(this.searchSubnodes("name", "projectTitle"));
+        lz.ModeManager.makeModal(this);
+        lz.Focus.setFocus(this.searchSubnodes("name", "projectTitle"));
       } else {
-        LzFocus.setFocus(null);
-              LzModeManager.release( this )
+        lz.Focus.setFocus(null);
+              lz.ModeManager.release( this )
       }
     </handler>
 
     <handler name="onmouseout">
-      LzCursor.showHandCursor(true);
+      lz.Cursor.showHandCursor(true);
     </handler>
 
     <handler name="onmouseover">
-      LzCursor.showHandCursor(false);
+      lz.Cursor.showHandCursor(false);
     </handler>
 
     <!-- METHOD SECTION -->

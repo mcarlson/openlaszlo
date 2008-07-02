@@ -14,7 +14,7 @@
     <mybutton x="260" y="32">
         <text x="8" valign="middle">ok</text>
         <handler name="onclick">
-            LzBrowser.loadURL( "javascript:window.location.href=window.location.href" );
+            lz.Browser.loadURL( "javascript:window.location.href=window.location.href" );
         </handler>
     </mybutton>
 

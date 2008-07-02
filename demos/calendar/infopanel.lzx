@@ -289,7 +289,7 @@
         <animator start="false" name="slideopen1old" attribute="width" to="204"
             duration="500" relative="false"/>
         <animator start="false" name="slideopen1" attribute="x" to="602" from="830"
-            duration="500" onstop="LzFocus.setFocus(parent.summary.content.title);"/>
+            duration="500" onstop="lz.Focus.setFocus(parent.summary.content.title);"/>
         <animator start="false" name="slideopen2" attribute="opacity" to="1" from="0"
             duration="500" relative="false"/>
             
@@ -314,11 +314,11 @@
             
             if ( this['awaitingClose'] ){
                 this.awaitingClose = false;
-                LzTimer.removeTimer( this.closeDel );
+                lz.Timer.removeTimer( this.closeDel );
             }
 
             if (this.opened) {
-                LzFocus.setFocus(summary.content.title);
+                lz.Focus.setFocus(summary.content.title);
                 return;
             }
 
@@ -349,7 +349,7 @@
         <method name="unselectEvent" >
             if ( !this.opened ){ return; }
             this.awaitingClose = true;
-            LzTimer.resetTimer( this.closeDel , 500 );
+            lz.Timer.resetTimer( this.closeDel , 500 );
         </method>
 
     </class>

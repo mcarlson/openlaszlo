@@ -46,46 +46,46 @@
     <!-- This method is called when the context menu item "About OpenLaszlo" is
          selected -->
   <method name="gotoOpenLaszlo"><![CDATA[
-        LzBrowser.loadURL('http://www.openlaszlo.org', 'blank');
+        lz.Browser.loadURL('http://www.openlaszlo.org', 'blank');
     ]]></method>
 
     <!-- This method is called when the context menu item "About OpenLaszlo" is
          selected -->
   <method name="getWhitePaper"><![CDATA[
-        LzBrowser.loadURL('../whitepaper/LZProject-OpenLaszlo4-Blueprint-Application.pdf', 'blank');
+        lz.Browser.loadURL('../whitepaper/LZProject-OpenLaszlo4-Blueprint-Application.pdf', 'blank');
     ]]></method>
 
     <!-- This method is called when the context menu item "Try Laszlo Webtop" is
          selected -->
   <method name="tryLaszloWebtop"><![CDATA[
-        LzBrowser.loadURL('http://www.laszlosystems.com/software/webtop', 'blank');
+        lz.Browser.loadURL('http://www.laszlosystems.com/software/webtop', 'blank');
     ]]></method>
 
     <!-- This method is called when the context menu item "About OpenLaszlo" is
          selected -->
   <method name="downloadOpenLaszlo"><![CDATA[
-        LzBrowser.loadURL('http://www.openlaszlo.org/download', 'blank');
+        lz.Browser.loadURL('http://www.openlaszlo.org/download', 'blank');
     ]]></method>
 
     <!-- This method is called when the context menu item "Show LZXDocs" is
          selected -->
   <method name="showLzxDocs"><![CDATA[
-        LzBrowser.loadURL('lzxdocs/index.html', 'blank');
+        lz.Browser.loadURL('lzxdocs/index.html', 'blank');
     ]]></method>
 
     <!-- This method is called when the context menu item "Show Javadocs" is
          selected -->
   <method name="showJavaDocs"><![CDATA[
-        LzBrowser.loadURL('javadocs/index.html', 'blank');
+        lz.Browser.loadURL('javadocs/index.html', 'blank');
     ]]></method>
 
     <!-- This method is called when the context menu item "Switch runtime" is
          selected -->
   <method name="switchRuntime"><![CDATA[
        if (canvas.runtime == "dhtml") {
-           LzBrowser.loadURL("./LZProject.lzx?lzt=html&lzr=swf8");
+           lz.Browser.loadURL("./LZProject.lzx?lzt=html&lzr=swf8");
        } else {
-           LzBrowser.loadURL("./LZProject.lzx?lzt=html&lzr=dhtml");
+           lz.Browser.loadURL("./LZProject.lzx?lzt=html&lzr=dhtml");
        }
     ]]></method>
 
@@ -545,10 +545,10 @@
     <view align="right" valign="bottom" bgcolor="$once{canvas.bgcolor}" clickable="false" width="15" height="15"
             visible="${parent.hscroll.visible &amp;&amp; parent.vscroll.visible}">
             <handler name="onmouseover">
-                LzCursor.showHandCursor(false);
+                lz.Cursor.showHandCursor(false);
             </handler>
             <handler name="onmouseout">
-                LzCursor.showHandCursor(true);
+                lz.Cursor.showHandCursor(true);
             </handler>
         </view>
 

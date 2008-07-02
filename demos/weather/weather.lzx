@@ -85,7 +85,7 @@
             //only animate if weatherContent is visible
             super.open(h, d, weatherContent.visible);
             this.setAttribute("focusable", true);
-            LzFocus.setFocus(this);
+            lz.Focus.setFocus(this);
         </method>
 
         <!-- HANDLERS -->
@@ -271,7 +271,7 @@
                 <edittext id="zipcode" fontstyle="bold" font="Tahoma,Geneva,sans-serif"
                     width="80" x="120" y="5" height="20" text="94403" doesenter="true" >
                     <handler name="oninit">
-                        LzFocus.setFocus(this.field);
+                        lz.Focus.setFocus(this.field);
                     </handler>
                     <method name="doEnterDown" >
                         weatherApp.loadWeather();
@@ -298,13 +298,13 @@
         </view>
         
         <node name="navmanager">
-            <handler name="onkeyup" reference="LzKeys" args="k">
+            <handler name="onkeyup" reference="lz.Keys" args="k">
                 <![CDATA[
                 if(k == 40){
-                    LzFocus.next();
+                    lz.Focus.next();
                 } else if(k == 38){
-                    LzFocus.prev();
-                } else if(k == 13 && LzFocus.getFocus() === weatherApp.topBar){
+                    lz.Focus.prev();
+                } else if(k == 13 && lz.Focus.getFocus() === weatherApp.topBar){
                     weatherApp.hideWeather();
                 }
                 ]]>
@@ -323,7 +323,7 @@
 
         <method name="showWeather">
             topBar.comein.doStart();
-            LzFocus.setFocus(weatherContent.tab1);
+            lz.Focus.setFocus(weatherContent.tab1);
             weatherContent.setAttribute('visible', true);
             weathersplash.setAttribute('visible', false);
         </method>
@@ -334,7 +334,7 @@
             zipBtn.animate('x',0,333,false);
             topBar.goout.doStart();
             zipcode.setText('');
-            LzFocus.setFocus(zipcode.field);
+            lz.Focus.setFocus(zipcode.field);
         </method>
     </view> <!-- END WeatherApp -->
 </canvas>

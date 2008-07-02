@@ -14,7 +14,7 @@
 
             ds.setAttribute('applied', true);
 
-            LzTrack.activate( "photos" );
+            lz.Track.activate( "photos" );
 
             gClipboard.dragStarted();
         </method>
@@ -22,7 +22,7 @@
         <method name="stopDrag">
             ds.setAttribute('applied', false);
             this.poolAll();
-            LzTrack.deactivate( "photos" );
+            lz.Track.deactivate( "photos" );
             gClipboard.dragFinished( sellist );
         </method>
 

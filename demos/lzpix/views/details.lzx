@@ -235,7 +235,7 @@
             <view datapath="infods:/rsp/photo"> 
                 <handler name="onclick">
                     var s = this.datapath.xpathQuery("urls/url/text()"); 
-                    LzBrowser.loadURL( s, "_blank", "toolbar=yes"); 
+                    lz.Browser.loadURL( s, "_blank", "toolbar=yes"); 
                 </handler>
                 <text fgcolor="#324FDB">view on flickr</text>
             </view>

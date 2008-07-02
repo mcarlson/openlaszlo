@@ -31,19 +31,19 @@
 
     <handler name="oninit"><![CDATA[
         var url =
-          LzBrowser.getLoadURLAsLzURL()
+          lz.Browser.getLoadURLAsLzURL()
 
         var param;
-        if ((param = LzBrowser.getInitArg('empty')) &&
+        if ((param = lz.Browser.getInitArg('empty')) &&
             (param != "")) {
             // Start up empty.
-        } else if ((param = LzBrowser.getInitArg('featured')) &&
+        } else if ((param = lz.Browser.getInitArg('featured')) &&
             (param != "")) {
             canvas.videosListFeatured();
-        } else if ((param = LzBrowser.getInitArg('tag')) &&
+        } else if ((param = lz.Browser.getInitArg('tag')) &&
             (param != "")) {
             canvas.videosListByTag(param);
-        } else if ((param = LzBrowser.getInitArg('user')) &&
+        } else if ((param = lz.Browser.getInitArg('user')) &&
             (param != "")) {
             canvas.videosListByUser(param);
         } else {

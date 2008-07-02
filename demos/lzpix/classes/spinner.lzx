@@ -8,7 +8,7 @@
    
    <class name="spinner" resource="spinner_rsc" onclick="this.play()" visible="false" >
         <attribute name="counter" value="1" />
-        <handler name="onidle" reference="LzIdle" >
+        <handler name="onidle" reference="lz.Idle" >
             if (! this.visible ) return;
             this.setAttribute('counter', ( this.counter + 1)%6);
             if ( this.counter == 0 ) {

@@ -294,7 +294,7 @@
 
             <selectionmanager name="selman" toggle="false">
                 <method name="isMultiSelect" args="s" >
-                    return LzKeys.isKeyDown( "control" ) || LzKeys.isKeyDown( "shift" ) ||
+                    return lz.Keys.isKeyDown( "control" ) || lz.Keys.isKeyDown( "shift" ) ||
                            parent.isRectangleSelecting;
                 </method>
             </selectionmanager>
@@ -406,7 +406,7 @@
                     this.setAttribute('visible',  true );
                     this._sx = parent.getMouse( "x" );
                     this._sy = parent.getMouse( "y" );
-                    this.updel.register( LzIdle, "onidle" );
+                    this.updel.register( lz.Idle, "onidle" );
                     this.bringToFront();
                     this.update();
                 </method>

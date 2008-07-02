@@ -76,7 +76,7 @@
             if (this.focused) this.setAttribute('focused', this.focused);
         </method>
         
-        <handler name="onkeyup" reference="LzKeys" args="k">
+        <handler name="onkeyup" reference="lz.Keys" args="k">
             <![CDATA[
             if (this.focused && this.focused['handlekeyup']) {
                 var skip = this.focused.handlekeyup(k);
@@ -85,7 +85,7 @@
             ]]>
         </handler>
         
-        <handler name="onkeydown" reference="LzKeys" args="k">
+        <handler name="onkeydown" reference="lz.Keys" args="k">
             <![CDATA[
             var skip;
             
