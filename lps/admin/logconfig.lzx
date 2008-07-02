@@ -162,7 +162,7 @@
 
             <button>View Log
                 <handler name="onclick" >
-                    LzBrowser.loadURL('javascript: var wptr = window.open("console.lzx?lzt=log&amp;pwd=' + escape(escape(pwd.getText())) + '", "test", "resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);')
+                    lz.Browser.loadURL('javascript: var wptr = window.open("console.lzx?lzt=log&amp;pwd=' + escape(escape(pwd.getText())) + '", "test", "resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);')
                 </handler>
             </button>
 

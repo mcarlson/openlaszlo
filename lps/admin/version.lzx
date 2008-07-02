@@ -16,7 +16,7 @@
             msg.setText("LPS Version:  " + canvas.lpsversion + "\n" +
                         "LPS Release:  " + canvas.lpsrelease + "\n" +
                         "LPS Build:    " + canvas.build + "\n" +
-                        "Flash Player: " + LzBrowser.getVersion());
+                        "Flash Player: " + lz.Browser.getVersion());
         </handler>
 
         <text id="msg" width="300" font="monob" fontsize="10" 

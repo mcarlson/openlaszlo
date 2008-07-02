@@ -132,7 +132,7 @@
    </method>
 
    <method name="loadURL" args="url">
-     LzBrowser.loadURL(url, '_top');
+     lz.Browser.loadURL(url, '_top');
    </method>
    
   <resource name="footer_logo" src="../assets/logo_laszlo_footer.gif"/>
