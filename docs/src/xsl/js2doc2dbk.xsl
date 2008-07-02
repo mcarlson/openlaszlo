@@ -222,9 +222,6 @@
     <xsl:template match="*" mode="refentry">
     </xsl:template>
 
-
-
-
     <!-- DESCRIPTION -->
 
     <xsl:template name="declaration-description">
@@ -238,6 +235,7 @@
           <xsl:apply-templates select="doc/text" mode="doc2dbk"/>
         </refsect1>
       </xsl:if>
+      <xsl:call-template name="deprecated-item"><xsl:with-param name="kind" select="'class'"/></xsl:call-template>
       <xsl:if test="$show.devnotes and doc/tag[@name='devnote']">
         <refsect1><title>Development Note</title>
           <xsl:apply-templates select="doc/tag[@name='devnote']/text" mode="doc2dbk"/>
@@ -600,7 +598,7 @@
                       </literal>
                     </entry>
                     <!-- Important this appears on one line see: http://www.docbook.org/tdg/en/html/entry.html -->
-                    <entry><xsl:apply-templates select="doc/text" mode="doc2dbk"/></entry>
+                    <entry><xsl:call-template name="deprecated-item"><xsl:with-param name="kind" select="'event'"/></xsl:call-template><xsl:apply-templates select="doc/text" mode="doc2dbk"/></entry>
                   </row>
                 </xsl:for-each>
               </tbody>
@@ -665,6 +663,7 @@
                 <xsl:with-param name="language" select="'javascript'" />
               </xsl:apply-templates>
             </refsect3>
+            <xsl:call-template name="deprecated-item"><xsl:with-param name="kind" select="'method'"/></xsl:call-template>
           <xsl:if test="doc/text">
             <refsect3>
               <xsl:apply-templates select="doc/text" mode="doc2dbk"/>
@@ -841,43 +840,6 @@
 
     <!-- REFENTRY HELPERS -->
 
-    <!-- This template is unused. [bshine 2007.11.16] -->
-    <xsl:template name="describe-parameters">
-      <segmentedlist>
-        <title>Parameters</title>
-        <xsl:processing-instruction name="dbhtml">list-presentation="table"</xsl:processing-instruction>
-        <segtitle>Name</segtitle>
-        <segtitle>Type</segtitle>
-        <segtitle>Desc</segtitle>
-        <xsl:for-each select="parameter">
-          <seglistitem>
-              <seg>
-                <xsl:value-of select="@name"/>
-              </seg>
-              <seg>
-                <xsl:if test="@type"><type role="javascript"><xsl:value-of select="@type"/></type></xsl:if>
-              </seg>
-              <seg>
-              <xsl:if test="doc/text">
-                <xsl:apply-templates select="doc/text" mode="doc2dbk"/>
-              </xsl:if>
-              </seg>
-          </seglistitem>
-        </xsl:for-each>
-        <xsl:if test="returns">
-          <seglistitem>
-            <seg><emphasis>Returns</emphasis></seg>
-            <seg><type role="javascript"><xsl:value-of select="@type"/></type></seg>
-            <seg>
-            <xsl:if test="returns/doc/text">
-              <xsl:apply-templates select="returns/doc/text" mode="doc2dbk"/>
-            </xsl:if>
-            </seg>
-          </seglistitem>
-        </xsl:if>
-      </segmentedlist>
-    </xsl:template>
-
     <xsl:template name="describe-superclass-chain">
       <xsl:param name="class"/>
       <xsl:call-template name="describe-superclass-chain-inner">
@@ -950,6 +912,15 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="deprecated-item">
+      <xsl:param name="kind"/>
+      <xsl:if test="doc/tag[@name='deprecated']">
+        <caution role="deprecated"><title><xsl:value-of select="concat('This ', $kind, ' is deprecated')"/></title>
+          <xsl:apply-templates select="doc/tag[@name='deprecated']/text" mode="doc2dbk"/>
+        </caution>
+      </xsl:if>
     </xsl:template>
 
     <!-- ACCESS -->
@@ -1582,7 +1553,7 @@
     <row rowsep="1">
       <entry role="attrdesc">&nbsp;</entry>
       <!-- Important this appears on one line see: http://www.docbook.org/tdg/en/html/entry.html -->
-      <entry role="attrdesc" namest="TypeTag" nameend="Category"><xsl:if test="doc/text"><xsl:apply-templates select="doc/text" mode="doc2dbk"/></xsl:if></entry>
+      <entry role="attrdesc" namest="TypeTag" nameend="Category"><xsl:call-template name="deprecated-item"><xsl:with-param name="kind" select="'attribute'"/></xsl:call-template><xsl:if test="doc/text"><xsl:apply-templates select="doc/text" mode="doc2dbk"/></xsl:if></entry>
     </row>
   </xsl:template>
 

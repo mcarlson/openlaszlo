@@ -245,7 +245,7 @@ body.doc-index {
     font-weight: bold;
 }
 
-.note, .warning, .todo, .fixme {
+.note, .warning, .todo, .fixme, .caution {
     border-top: 1px solid;
     border-bottom: 1px solid;
     margin-left: 0.5in; 
@@ -253,6 +253,15 @@ body.doc-index {
     margin-top: 0.2in;
     margin-bottom: 0.2in;
     min-height: 54px;
+}
+
+.caution, .caution table tbody tr th {
+    background-color: pink;
+}
+
+.caution table tbody tr th {
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .todo, .fixme {

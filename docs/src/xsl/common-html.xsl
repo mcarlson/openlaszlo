@@ -307,6 +307,12 @@
     </div>
   </xsl:template>
   
+  <xsl:template match="important[@role='deprecated']">
+    <div class="deprecated">
+      <xsl:apply-imports/>
+    </div>
+  </xsl:template>
+  
   <xsl:template name="get-canvas-attribute">
     <xsl:param name="text"/>
     <xsl:param name="attribute"/>
