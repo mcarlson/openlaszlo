@@ -926,7 +926,7 @@
                 var context = this.sprite.getContext();
                 if ($swf8) {
                     this.rebuildBitmap();
-                    this.drawcontainer = context.createEmptyMovieClip("drawcontainer",context.getNextHighestDepth());
+                    this.drawcontainer = context.createEmptyMovieClip("drawcontainer",1);
                     this.__drawing = this.drawcontainer.createEmptyMovieClip("drawing",this.drawcontainer.getNextHighestDepth());
 
                     context = this.drawcontainer;
