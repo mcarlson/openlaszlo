@@ -24,15 +24,15 @@
                 var anode = testdat.getFirstChild();
                 anode.appendChild( new LzDataElement( 'r' ) );
                 assertEquals( 4, par.subviews.length );
-                Debug.write ( (new LzDatapointer()).xpathQuery( 
+                Debug.write ( (new lz.datapointer()).xpathQuery( 
                                "testdat:/a[1]/*/../../a/name()" ).length );
                 testdat.appendChild( new LzDataElement( 'r' ) );
-                Debug.write ( (new LzDatapointer()).xpathQuery( 
+                Debug.write ( (new lz.datapointer()).xpathQuery( 
                                "testdat:/a[1]/*/../../a/name()" ).length );
                 assertEquals( 4, par.subviews.length );
                 var nde = new LzDataElement( 'a' );
                 testdat.appendChild( nde );
-                Debug.write ( (new LzDatapointer()).xpathQuery( 
+                Debug.write ( (new lz.datapointer()).xpathQuery( 
                                "testdat:/a[1]/*/../../a/name()" ).length );
                 assertEquals( 8, par.subviews.length );
             </method>
@@ -40,6 +40,6 @@
     </TestSuite>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

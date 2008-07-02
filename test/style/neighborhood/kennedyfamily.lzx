@@ -1,6 +1,6 @@
 <!-- Test data. This represents the Kennedy dynasty, or at least, some of it. 
     This tree is mostly for testing parent/child/descendant/ancestor selectors. -->
-<!-- Copyright 2006 Laszlo Systems --> 
+<!-- Copyright 2006-2008 Laszlo Systems --> 
 <street id="gEasyStreet">
 <house id="gKennedyHouse">
     <simplelayout axis="y" spacing="10" />

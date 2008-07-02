@@ -30,32 +30,32 @@
 <simplelayout/>
   <button>100 Lines
     <handler name="onclick">
-      new drawLines( canvas,{ it : 100, x:100 });      
+      new lz.drawLines( canvas,{ it : 100, x:100 });      
     </handler>
   </button>
   <button>1000 Lines
     <handler name="onclick">
-      new drawLines( canvas,{ it : 1000, x:100, y:200});      
+      new lz.drawLines( canvas,{ it : 1000, x:100, y:200});      
     </handler>
   </button>
   <button>10000 Lines
     <handler name="onclick">
-      new drawLines( canvas,{ it : 10000, x:100, y:400 });      
+      new lz.drawLines( canvas,{ it : 10000, x:100, y:400 });      
     </handler>
   </button>
   <button>100 Rand
     <handler name="onclick">
-      new randOnly( canvas,{ it : 100, x:300 });      
+      new lz.randOnly( canvas,{ it : 100, x:300 });      
     </handler>
   </button>
   <button>1000 Rand
     <handler name="onclick">
-      new randOnly( canvas,{ it : 1000, x:300, y:200});      
+      new lz.randOnly( canvas,{ it : 1000, x:300, y:200});      
     </handler>
   </button>
   <button>10000 Rand
     <handler name="onclick">
-      new randOnly( canvas,{ it : 10000, x:300, y:400 });      
+      new lz.randOnly( canvas,{ it : 10000, x:300, y:400 });      
     </handler>
   </button>
 </view>

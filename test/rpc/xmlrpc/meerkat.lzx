@@ -121,7 +121,7 @@
                     <!-- And finally, list of articles in the channel. -->
                     <datatree name="articles" datapath="element/item" bkg="white">
                         <statictext placement="item" x="25" y="25" width="300" multiline="true"
-                            onclick="LzBrowser.loadURL(this.datapath.xpathQuery('../link/text()'), '_blank')"
+                            onclick="lz.Browser.loadURL(this.datapath.xpathQuery('../link/text()'), '_blank')"
                             onmouseover="setAttribute('fgcolor', blue)"
                             onmouseout="setAttribute('fgcolor', black)"
                             datapath="description/text()" />
@@ -136,9 +136,9 @@
           height="$once{canvas.height}" bgcolor="white" opacity=".2">
         <method name="setVisible" args="visible">
             if (visible) {
-                LzModeManager.makeModal(this);
+                lz.ModeManager.makeModal(this);
             } else {
-                LzModeManager.release(this);
+                lz.ModeManager.release(this);
             }
             super.setVisible(visible);
         </method>
@@ -149,7 +149,7 @@
     </view>
 
     <view resource="meerkat-powered.jpg" y="405" 
-        onclick="LzBrowser.loadURL('http://meerkat.oreillynet.com', '_blank')"/>
+        onclick="lz.Browser.loadURL('http://meerkat.oreillynet.com', '_blank')"/>
 
 <!--
     <button name="browse" text="Browse" x="100" y="405">

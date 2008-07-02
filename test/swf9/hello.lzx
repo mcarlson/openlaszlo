@@ -16,7 +16,7 @@
 
   <handler name="oninit" >
     var d = new LzDelegate( canvas.mytimer , "tellTime" );
-    LzIdle.callOnIdle( d );
+    lz.Idle.callOnIdle( d );
   </handler>
 -->
 
@@ -31,7 +31,7 @@
   <attribute name="somey" value="500"/>
 
   <method name="showText" args="msg">
-    new LzText(canvas, {x: 200, y: canvas.somey, text: msg});
+    new lz.text(canvas, {x: 200, y: canvas.somey, text: msg});
     canvas.somey += 20;
   </method>
 

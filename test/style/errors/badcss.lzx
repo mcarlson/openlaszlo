@@ -1,4 +1,4 @@
-<!-- Copyright 2006 Laszlo Systems --> 
+<!-- Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <canvas>
 <text text="rrr this file tests what happens when we have an error in a styleddddddddsheet." />
     <stylesheet>

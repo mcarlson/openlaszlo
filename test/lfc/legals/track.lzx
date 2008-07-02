@@ -13,7 +13,7 @@
         x="2" y="2" width="18" height="18"/>
     <handler name="oninit">
         //info('colorspot.init', this.trackgroup);
-        LzTrack.register(this, this.trackgroup);
+        lz.Track.register(this, this.trackgroup);
     </handler>
     <handler name="onmousetrackover">
         //info('colorspot.onmousetrackover', this.trackgroup);
@@ -29,7 +29,7 @@
   </class>
 
   <view bgcolor="0x0000ff" width="20" height="20"
-      onmousedown="this.colorpicker.setVisible(true); LzTrack.activate('mymenu');"
+      onmousedown="this.colorpicker.setVisible(true); lz.Track.activate('mymenu');"
       onmouseup="this.colorpicker.setVisible(false); ">
     <view name="colorpicker" visible="false" x="10" y="10">
       <attribute name="trackgroup" value="mymenu" type="string"/>

@@ -1,4 +1,4 @@
-<!-- Copyright 2006 Laszlo Systems --> 
+<!-- Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <canvas >
     <stylesheet src="idontexist.css" />
 <text text="this file tests what happens when we reference a css file that doesn't exist" />

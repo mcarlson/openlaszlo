@@ -10,7 +10,7 @@
 
     function instanceOf() {
         for (var i = 0; i < iterations; i++) {
-            txt instanceof LzText;
+            txt instanceof lz.text;
         }
     }
 
@@ -22,7 +22,7 @@
 
     function typeOfInstanceOf() {
         for (var i = 0; i < iterations; i++) {
-            typeof txt == 'object' && txt instanceof LzText;
+            typeof txt == 'object' && txt instanceof lz.text;
         }
     }
 
@@ -35,12 +35,12 @@
     bar = '';
     function instanceOfFail() {
         for (var i = 0; i < iterations; i++) {
-            bar instanceof LzText;
+            bar instanceof lz.text;
         }
     }
     function typeOfInstanceOfFail() {
         for (var i = 0; i < iterations; i++) {
-            typeof bar == 'object' && bar instanceof LzText;
+            typeof bar == 'object' && bar instanceof lz.text;
         }
     }
 

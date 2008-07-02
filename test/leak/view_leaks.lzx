@@ -1,12 +1,12 @@
 <canvas width="800" height="600">
 <view>
     <attribute name="i" value="0"/>
-<handler name="onidle" reference="LzIdle">
+<handler name="onidle" reference="lz.Idle">
       var myx=800*Math.random();
       var myy=20 + 580*Math.random();
       this.setAttribute("i", ++i);
       parent.goo.setText("I:"+i);
-      var blah=new LzView( null,{ width : (800 - myx)*Math.random(),
+      var blah=new lz.view( null,{ width : (800 - myx)*Math.random(),
                          height : (580 - myy) * Math.random() ,
                          bgcolor : parseInt(0xffffff)*Math.random(),
                          //opacity : Math.random(),
@@ -17,7 +17,7 @@
                          x:myx
                        });      
 del = new LzDelegate ( blah, "destroy");
-   LzTimer.addTimer(del, 1000 ); 
+   lz.Timer.addTimer(del, 1000 ); 
 </handler>
 </view>
 <text name="goo"/>
@@ -44,7 +44,7 @@ del = new LzDelegate ( blah, "destroy");
       parent.goo.setText("I:"+i);
       var myx=800*math.random();
       var myy=20 + 580*math.random();
-      blah=new LzView( null,{ width : (800 - myx)*math.random(),
+      blah=new lz.view( null,{ width : (800 - myx)*math.random(),
                          height : (580 - myy) * math.random() ,
                          bgcolor : parseInt(0xffffff)*math.random(),
                          //opacity : math.random(),
@@ -53,17 +53,17 @@ del = new LzDelegate ( blah, "destroy");
                          x:myx
                        });
       //blah.deleteNode();
-      LzTimer.addTimer( del, 0 ); 
-      LzTimer.addTimer( del2, 10 ); 
+      lz.Timer.addTimer( del, 0 ); 
+      lz.Timer.addTimer( del2, 10 ); 
     </method>
 
-    <handler name="onidle" reference="LzIdle" method="OI"/>
+    <handler name="onidle" reference="lz.Idle" method="OI"/>
     <method name="OI">
       var myx=800*math.random();
       var myy=20 + 580*math.random();
       this.setAttribute("i", ++i);
       parent.goo.setText("I:"+i);
-      var blah=new LzView( null,{ width : (800 - myx)*math.random(),
+      var blah=new lz.view( null,{ width : (800 - myx)*math.random(),
                          height : (580 - myy) * math.random() ,
                          bgcolor : parseInt(0xffffff)*math.random(),
                          //opacity : math.random(),
@@ -74,7 +74,7 @@ del = new LzDelegate ( blah, "destroy");
                          x:myx
                        });
      var goo=new LzDelegate ( this, blah.setAttribute("height",10));
-     LzTimer.addTimer( goo , 100 ); 
+     lz.Timer.addTimer( goo , 100 ); 
     </method>
 </view>-->
 

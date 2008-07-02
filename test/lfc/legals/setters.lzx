@@ -64,7 +64,7 @@
 
 
 <!--
-canvas = new LzCanvas({__LZproxied: "true", bgcolor: 16777215, build: "INTERNAL", embedfonts: true, fontname: "Verdana,Vera,sans-serif", fontsize: 11, fontstyle: "plain", height: "80%", lpsrelease: "Alpha", lpsversion: "3.2", runtime: "swf7", width: "100%"});
+canvas = new lz.canvas({__LZproxied: "true", bgcolor: 16777215, build: "INTERNAL", embedfonts: true, fontname: "Verdana,Vera,sans-serif", fontsize: 11, fontstyle: "plain", height: "80%", lpsrelease: "Alpha", lpsversion: "3.2", runtime: "swf7", width: "100%"});
 
 LzInstantiateView({name: 'userclass', 
                           attrs: {parent: "view",
@@ -87,3 +87,9 @@ canvas.initDone()
 
 -->
 </canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

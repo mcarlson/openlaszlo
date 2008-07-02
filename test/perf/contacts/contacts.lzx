@@ -55,12 +55,12 @@
             var offset = Math.floor( this.getMouse( 'x' ) ) - 0.5;
             this.dragc = new LzMouseConstraint( this , 
                              { prop : 'x', offset:-offset } );
-            LzCursor.lock();
+            lz.Cursor.lock();
         </method>
 
         <method name="stopDrag">
             this.dragc.release();
-            LzCursor.unlock();
+            lz.Cursor.unlock();
         </method>
     </class>
 

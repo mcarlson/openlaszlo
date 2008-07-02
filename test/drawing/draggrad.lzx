@@ -7,7 +7,7 @@
     <attribute name="x1" type="number" value="75"/>
     <attribute name="y1" type="number" value="75"/>
     <attribute name="isRadial" type="boolean" value="true"/>
-    <handler name="onidle" reference="LzIdle">
+    <handler name="onidle" reference="lz.Idle">
         this.clear();
             this.beginPath();
             this.lineTo(this.width, 0);

@@ -27,4 +27,4 @@
     <text id="gRonny" width="200" height="100" text="$style{'miscdata'}"/>
     <text id="gLinkToMothership" width="200" text="$style{'mothershiplink'}" />
 </canvas>
-<!-- Copyright 2007 Laszlo Systems --> 
+<!-- Copyright 2007-2008 Laszlo Systems --> 

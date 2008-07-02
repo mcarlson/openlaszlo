@@ -4,7 +4,7 @@
 
     <simplelayout axis="y"/>
     <edittext name="ed" >
-      <handler name="onkeydown" reference="LzKeys" args="keycode">
+      <handler name="onkeydown" reference="lz.Keys" args="keycode">
         <![CDATA[
             var han = "0123456789-";
             var zen = "０１２３４５６７８９ー";

@@ -22,12 +22,12 @@
 <view onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()" bgcolor="green" width="${parent.width}" height="${parent.height}">
         <dragstate name="dragger"/>
     <attribute name="i" init="0"/>
-<handler name="onidle" reference="LzIdle">
+<handler name="onidle" reference="lz.Idle">
       var myx=800*math.random();
       var myy=20 + 580*math.random();
       this.setAttribute("i", ++i);
       parent.goo.setText("I:"+i);
-      var blah=new drawme( this,{ width : (800 - myx)*math.random(),
+      var blah=new lz.drawme( this,{ width : (800 - myx)*math.random(),
                          height : (580 - myy) * math.random() ,
                          //bgcolor : parseInt(0xffffff)*math.random(),
                          //opacity : math.random(),

@@ -110,7 +110,7 @@
                assertTrue(false, "Unknown $runtime " + $runtime);
              }
              // Verify runtime matches requested
-             var url = LzBrowser.getLoadURLAsLzURL();
+             var url = lz.Browser.getLoadURLAsLzURL();
              if (url.query != null) {
                var query = LzParam.parseQueryString(url.query);
              }

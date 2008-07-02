@@ -235,7 +235,7 @@ tautologiesSuite.testTrickiness = function () {
     this.nullvar = null;
 
     // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
-      var flashVersion = LzBrowser.getVersion();
+      var flashVersion = lz.Browser.getVersion();
       if ((! flashVersion) || flashVersion < 8 || flashVersion > 10) {
           LzTestManager.assertNotSame(NaN, NaN, "NaN !== NaN");
       }
@@ -272,7 +272,7 @@ tautologiesSuite.testInstanceOf = function() {
         {instance: true, constructor: null},
         {instance: 0, constructor: null},
         {instance: "test", constructor: null},
-        {instance: new LzNode(), constructor: LzNode}
+        {instance: new lz.node(), constructor: LzNode}
     ];
     var types = [Array, Boolean, Date, Number, String];
     
@@ -336,7 +336,7 @@ tautologiesSuite.addTest(tautologiesSuite.testProblematicComparisons);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

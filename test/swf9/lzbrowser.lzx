@@ -2,7 +2,7 @@
 
   <button y="0">Alert
     <handler name="onclick">
-    LzBrowser.loadJS("alert('hello');", "_self");
+    lz.Browser.loadJS("alert('hello');", "_self");
     </handler>
   </button>
 
@@ -12,10 +12,10 @@
     </method>
 
   <handler name="oninit">
-    status.append("LzBrowser.getVersion = " + LzBrowser.getVersion());
-    status.append("LzBrowser.getLoadURL = " + LzBrowser.getLoadURL());
-    status.append("LzBrowser.getInitArg('lzr') = " + LzBrowser.getInitArg('lzr'));
-    status.append("LzBrowser.getLoadURLAsLzURL = " + LzBrowser.getLoadURLAsLzURL().toString());
+    status.append("lz.Browser.getVersion = " + lz.Browser.getVersion());
+    status.append("lz.Browser.getLoadURL = " + lz.Browser.getLoadURL());
+    status.append("lz.Browser.getInitArg('lzr') = " + lz.Browser.getInitArg('lzr'));
+    status.append("lz.Browser.getLoadURLAsLzURL = " + lz.Browser.getLoadURLAsLzURL().toString());
   </handler>
 
   </text>

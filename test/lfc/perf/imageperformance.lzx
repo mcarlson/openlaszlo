@@ -13,11 +13,11 @@
   <![CDATA[
     
     function loadImages() {
-        var iv = new LzView( canvas, { y : 200 });        
+        var iv = new lz.view( canvas, { y : 200 });        
         iv.setSource('http:resources/marooned.png');
         canvas.addSubview(iv);    
         
-        var cat = new LzView( canvas, { y : 150 });
+        var cat = new lz.view( canvas, { y : 150 });
         cat.setSource("http:resources/sunnycat.jpg");
         var w = cat.getWidth();
         var h = cat.getHeight();
@@ -25,9 +25,9 @@
     }
     
     function scaleImages() {
-        var v = new LzView( canvas, { y : 300, resource: "cave" });
+        var v = new lz.view( canvas, { y : 300, resource: "cave" });
         canvas.addSubview(v);
-        var bigView = new LzView( canvas, { 
+        var bigView = new lz.view( canvas, { 
             y : 150, x : -300, y : 250,
             resource: "cave", 
             width : 1211, height : 123, stretches : "both" });
@@ -35,8 +35,8 @@
     }
     
     function opaqueness() {
-        var maroonPngView = new LzView( canvas, { resource : "maroonPng", y : 250, opacity : 0.3 });
-        var maroonJpgView = new LzView( canvas, { resource : "maroonJpg", x: 270, y : 275, opacity : 0.3 });        
+        var maroonPngView = new lz.view( canvas, { resource : "maroonPng", y : 250, opacity : 0.3 });
+        var maroonJpgView = new lz.view( canvas, { resource : "maroonJpg", x: 270, y : 275, opacity : 0.3 });        
         canvas.addSubview(maroonPngView);
         canvas.addSubview(maroonJpgView);
     }
@@ -55,6 +55,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

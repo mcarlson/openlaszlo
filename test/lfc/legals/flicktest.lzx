@@ -27,7 +27,7 @@
         var xpad = 12;
         var ypad = 30;
         if (dset.lastloaded) dset.lastloaded.animate('opacity', 0, 500);
-            dset.lastloaded = new LzView(canvas, {y: 20, width: 1000, height: 1000});
+            dset.lastloaded = new lz.view(canvas, {y: 20, width: 1000, height: 1000});
         for (var j = 0; j < 5; j++) {
             for (var i = 0;  i < 4; i++) {
                 var photo = photos.childNodes[(j * rows) + i];
@@ -40,8 +40,8 @@
                     var id =  photo.getAttr('id');
                     var url = this.getPhoto(server, id, secret, 't');
                     // the only switch for swf or dhtml runtime I could think of at the moment
-                    new imgfader( dset.lastloaded, { width: dim, height: dim, resource: url, y: y, x: x});
-                    //new  LzText(canvas, { width: dim, height: dim, text: title, y: y+100, x: x});
+                    new lz.imgfader( dset.lastloaded, { width: dim, height: dim, resource: url, y: y, x: x});
+                    //new  lz.text(canvas, { width: dim, height: dim, text: title, y: y+100, x: x});
                 } 
             }
         }

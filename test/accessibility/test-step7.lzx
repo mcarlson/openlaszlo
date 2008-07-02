@@ -3,15 +3,15 @@
     <include href="test-step7-screen2.lzx"/>
     
     <handler name="oninit">
-        var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
-        LzTimer.addTimer(upddel, 500);
+        var upddel = new LzDelegate(lz.Browser, 'updateAccessibility');
+        lz.Timer.addTimer(upddel, 500);
     </handler>
     <method name="nextscreen">
         text2_1.setText(itext1_1.getText());
         text2_4.setText(itext1_3.getText());
         s2.setAttribute("visible", true);
         s1.setAttribute("visible", false);
-        LzBrowser.updateAccessibility();
+        lz.Browser.updateAccessibility();
     </method>
     
     <screen1 name="s1" visible="true"/>
@@ -19,7 +19,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

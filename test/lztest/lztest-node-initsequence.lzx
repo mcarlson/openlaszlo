@@ -295,7 +295,7 @@
        suite.addTest(mytest); 
   }
 
-       LzTimer.addTimer(LzTestManager.startTestsDelegate, 2500);
+       lz.Timer.addTimer(LzTestManager.startTestsDelegate, 2500);
 
 ]]>
 </handler>

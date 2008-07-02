@@ -1,18 +1,18 @@
 <canvas>
     <simplelayout/>
-    <text text="${LzHistory.offset}"/>
+    <text text="${lz.History.offset}"/>
     <attribute name="foo" value="null"/>
     <attribute name="bar" value="null"/>
     <handler name="onfoo" args="f">
         Debug.write('external call', f); 
     </handler>
     <handler name="oninit">
-        LzHistory.setPersist(true);
+        lz.History.setPersist(true);
     </handler>
 
     <class name="histinputtext" extends="inputtext">
         <handler name="onblur">
-            LzHistory.save(this.id, 'text', this.getText())
+            lz.History.save(this.id, 'text', this.getText())
         </handler>
     </class>
     <histinputtext id="hist1">A value</histinputtext>
@@ -21,13 +21,13 @@
     <text text="${canvas.bar}"/>
     
     <view layout="axis: x">
-        <button onclick="LzHistory.prev()">Prev</button>
-        <button onclick="LzHistory.next()">Next</button>
-        <button onclick="LzHistory.commit()">Save</button>
-        <button onclick="LzHistory.clear()">Clear all</button>
+        <button onclick="lz.History.prev()">Prev</button>
+        <button onclick="lz.History.next()">Next</button>
+        <button onclick="lz.History.commit()">Save</button>
+        <button onclick="lz.History.clear()">Clear all</button>
     </view>
 
-    <button onclick="LzBrowser.loadJS('alert(\'hi folks!\');')">Call javaScript alert in browser</button>
+    <button onclick="lz.Browser.loadJS('alert(\'hi folks!\');')">Call javaScript alert in browser</button>
 
     <!--view id="history">
         <attribute name="persist" value="false"/>
@@ -40,12 +40,12 @@
                 if (! this._persistso) {
                     var lu = LZBrowser.getLoadUrlAsLzUrl();
                     lu.query = null;
-                    this._persistso = LzBrowser.getPersist('historystate');
+                    this._persistso = lz.Browser.getPersist('historystate');
                 }
                 //this.__lzhistq = this._persistso.data;
             }
         </handler>
-        <handler name="onhistory" args="o" reference="LzBrowser">
+        <handler name="onhistory" args="o" reference="lz.Browser">
             //Debug.write('onhistory ', o); 
             o *= 1;
             if (! o) o = 0;
@@ -77,7 +77,7 @@
                 if (! this._persistso) {
                     var lu = LZBrowser.getLoadUrlAsLzUrl();
                     lu.query = null;
-                    this._persistso = LzBrowser.getPersist('historystate');
+                    this._persistso = lz.Browser.getPersist('historystate');
                 }
                 //Debug.write('_persistso: ', this._persistso); 
                 //this._persistso.data = this.__lzhistq;
@@ -92,7 +92,7 @@
             var o = this.offset + by;
             if (0 >= o) o = 0;
             //Debug.write('Move to: ', o); 
-            if (this.__lzhistq.length >= o) LzBrowser.setHistory(o);
+            if (this.__lzhistq.length >= o) lz.Browser.setHistory(o);
         </method>
         <method name="next">
             this.move(1);

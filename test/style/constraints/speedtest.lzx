@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <library>    
     <include href="lzunit" />
     <stylesheet>
@@ -86,7 +86,7 @@
 
         <method name="makeSomeNodes">
             for ( var i = iter; i > 0; i-- ){
-                new LzNode( subsubID );
+                new lz.node( subsubID );
 
             }
             assertEquals( iter, subsubID.subnodes.length );

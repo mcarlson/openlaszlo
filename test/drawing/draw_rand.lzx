@@ -48,12 +48,12 @@
     <attribute name="iter" init="0"/>
 
 
-<handler name="onidle" reference="LzIdle">
+<handler name="onidle" reference="lz.Idle">
       var myx=800*Math.random();
       var myy=20 + 580*Math.random();
       this.setAttribute("iter", ++this.iter);
       parent.goo.setText("I:"+this.iter);
-      var blah=new randView( null,{ width : (800 - myx)*Math.random(),
+      var blah=new lz.randView( null,{ width : (800 - myx)*Math.random(),
                          height : (580 - myy) * Math.random() ,
                          bgcolor : parseInt(0xffffff)*Math.random(),
                          //opacity : math.random(),
@@ -64,7 +64,7 @@
                          x:myx
                        });      
 del = new LzDelegate ( blah, "deleteNode");
-   LzTimer.addTimer(del, 1000 ); 
+   lz.Timer.addTimer(del, 1000 ); 
 </handler>
 </view>
 <text name="goo"/>

@@ -240,7 +240,7 @@
             parent.img.loadImg( "matrix",
             "http:../../../sample-apps/dashboard/media/video/matrix.swf");
             var d = new LzDelegate( parent.img , "unload" );
-            LzTimer.addTimer( d , 1000 );
+            lz.Timer.addTimer( d , 1000 );
           </handler>
         </button>
         <checkbox name="ccheck">cache in client</checkbox>

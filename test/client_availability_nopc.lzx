@@ -269,7 +269,7 @@ parent.parent.setAttribute('width','250');
 
     </view> <!-- viewChat -->
 
-    <handler name="onkeyup" reference="LzKeys" args="k">
+    <handler name="onkeyup" reference="lz.Keys" args="k">
         if ( k == 13 ) {
             bSend.handler();
         }
@@ -325,7 +325,7 @@ parent.parent.setAttribute('width','250');
       this.parent.shs.animate('rotation',6,800,true);
       
       // Checks the time every second
-      LzTimer.addTimer( del, 1000 ); 
+      lz.Timer.addTimer( del, 1000 ); 
     </method>
     
   </view>

@@ -38,7 +38,7 @@
           if ( this.waitcnt++ > 100 ){
               fail( "testsetheaders: Didn't get async data" );
           } else {
-              LzIdle.callOnIdle( this.t2del );
+              lz.Idle.callOnIdle( this.t2del );
           }
 
           return;

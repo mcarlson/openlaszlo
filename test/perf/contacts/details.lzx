@@ -338,7 +338,7 @@
                             name="webpage" datapath="@home_webpage"/>
                 <button name="Go" x="432" y="243" width="27" 
                         label="Go" 
-                        onclick="LzBrowser.loadURL( this.parent.webpage.getText() , 'browsewin' )" />
+                        onclick="lz.Browser.loadURL( this.parent.webpage.getText() , 'browsewin' )" />
             </view>
         </tabview>
 
@@ -406,7 +406,7 @@
                             datapath="@work_webpage"/>
                 <button name="Go" x="432" y="243" width="27" 
                         label="Go" 
-                        onclick="LzBrowser.loadURL( this.parent.webpage.getText() , 'browsewin' )" />
+                        onclick="lz.Browser.loadURL( this.parent.webpage.getText() , 'browsewin' )" />
             </view>
         </tabview>
 

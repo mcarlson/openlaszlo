@@ -1,4 +1,4 @@
-<!-- Copyright 2006 Laszlo Systems --> 
+<!-- Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <canvas cssfile="thisisbad.css">
 <text text="this file tests what happens when we use a cssfile attribute on the canvas." />
 </canvas>

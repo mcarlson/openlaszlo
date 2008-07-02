@@ -1,5 +1,5 @@
 <canvas debug="true" height="500" width="500" >
-    <class name="randv" oninit="LzTrack.register( this )">
+    <class name="randv" oninit="lz.Track.register( this )">
         <attribute name="maxsize" value="100"/>
         <attribute name="bgcolor" value="Math.random() * 0xFFFFFF" when="once"/>
         <attribute name="x" value="Math.random()*(canvas.width-this.maxsize)" when="once"/>
@@ -9,8 +9,8 @@
     </class>
     <view>
         <simplelayout/>
-        <button onclick="LzTrack.activate()">Activate</button>
-        <button onclick="LzTrack.deactivate()">Deactivate</button>
+        <button onclick="lz.Track.activate()">Activate</button>
+        <button onclick="lz.Track.deactivate()">Deactivate</button>
     </view>
     <randv/>
     <randv/>
@@ -22,9 +22,9 @@
     <randv/>
     <randv/>
     <randv/>
-    <view name="redone" oninit="LzTrack.register( this )" bgcolor="red" width="40" height="40" x="110" y="10" />
+    <view name="redone" oninit="lz.Track.register( this )" bgcolor="red" width="40" height="40" x="110" y="10" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

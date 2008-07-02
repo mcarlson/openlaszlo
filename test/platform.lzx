@@ -16,7 +16,7 @@
     <attribute name="fpver" type="string"/>
     <attribute name="testCount" type="number" value="0"/>
     <handler name="oninit">
-      this.setAttribute('fpver','fp'+parseInt(LzBrowser.getVersion()));
+      this.setAttribute('fpver','fp'+parseInt(lz.Browser.getVersion()));
     </handler>
   </node>
 
@@ -52,7 +52,7 @@
       </state>
       <method name="showText">
         this.fadeDelegate = new LzDelegate( this, "autoSurf" );
-        LzTimer.addTimer( this.surfDelegate, 1000 );
+        lz.Timer.addTimer( this.surfDelegate, 1000 );
       </method>   
       <method name="autoSurf">
         this.myText.animate( "opacity", 0.0, 1000 );

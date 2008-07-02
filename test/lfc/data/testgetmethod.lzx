@@ -36,7 +36,7 @@
           if ( this.waitcnt++ > 1000 ){
               fail( "testgetmethod: Didn't get async data" );
           } else {
-              LzIdle.callOnIdle( this.t2del );
+              lz.Idle.callOnIdle( this.t2del );
           }
 
           return;

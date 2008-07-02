@@ -7,7 +7,7 @@
 
 <canvas>
     <text>
-        <handler name="onidle" reference="LzIdle">
+        <handler name="onidle" reference="lz.Idle">
             this.setText(new Date());
         </handler>
     </text>

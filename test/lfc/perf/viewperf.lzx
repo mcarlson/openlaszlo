@@ -37,7 +37,7 @@
   <![CDATA[
   
     function newView() {
-        var v = new LzView( canvas, { width: 100, height: 100, y: 200} );        
+        var v = new lz.view( canvas, { width: 100, height: 100, y: 200} );        
     }
     
     function newBusyView() {
@@ -45,7 +45,7 @@
     }
     
     function addViewsToCanvas() {
-        var v = new LzView( canvas, { width: 100, height: 100, y: 200 } );        
+        var v = new lz.view( canvas, { width: 100, height: 100, y: 200 } );        
         canvas.addSubview(v);
     }
     

@@ -31,11 +31,11 @@
   </method>
 
   <method name="makeview" args="rname">
-    var v = new LzView(canvas, {resource: rname});
+    var v = new lz.view(canvas, {resource: rname});
   </method>
 
   <method name="maketext" args="fname">
-    var k = new LzText(canvas, {font: fname, fontsize: "26",  text: "This is some Kentucky Text" });
+    var k = new lz.text(canvas, {font: fname, fontsize: "26",  text: "This is some Kentucky Text" });
   </method>
 
 <!-- 
@@ -50,6 +50,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

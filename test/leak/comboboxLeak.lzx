@@ -18,7 +18,7 @@
   <button>make 'em all
     <handler name="onclick">
       for ( var i=0; i!=30;++i){
-        new foo( canvas,{ width : 200,
+        new lz.foo( canvas,{ width : 200,
                           height : 200 ,
                           y: i*10,
                           x: i*10,

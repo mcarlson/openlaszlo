@@ -4,17 +4,17 @@
       -->
     <simplelayout spacing="4"/>
     <handler name="oninit">
-        var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
-        LzTimer.addTimer(upddel, 500);
+        var upddel = new LzDelegate(lz.Browser, 'updateAccessibility');
+        lz.Timer.addTimer(upddel, 500);
     </handler>
     <method name="changeText">
         text1.setText("Changed " + text1.getText());
         text2.setText("Modified " + text2.getText());
         text4.setText("Updated " + text4.getText());
-        LzBrowser.updateAccessibility(); // trigger re-read
+        lz.Browser.updateAccessibility(); // trigger re-read
     </method>
     <vbox spacing="6" inset="12">
-        <text id="text1" aatabindex="2" width="200" bgcolor="0xdeadbf" oninit="this.setText(this.getText() + ' ' + LzBrowser.isAAActive())">
+        <text id="text1" aatabindex="2" width="200" bgcolor="0xdeadbf" oninit="this.setText(this.getText() + ' ' + lz.Browser.isAAActive())">
             Accessibility on 
         </text>
         <hbox spacing="6">
@@ -36,7 +36,7 @@
     </vbox>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

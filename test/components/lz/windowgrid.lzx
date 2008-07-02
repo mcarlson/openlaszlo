@@ -153,7 +153,7 @@
             
         <handler name="oninit">
             del = new LzDelegate(this, "deleteSel" );
-            LzKeys.callOnKeyCombo(del, ["delete"]);
+            lz.Keys.callOnKeyCombo(del, ["delete"]);
         </handler>
         
         <method name="deleteSel">

@@ -18,7 +18,7 @@ debug.setheight(300);
         <handler name="onclick">
             names =[ "a" , "b" , "c" , "d" , "e" ];
             for ( var i =0; i &lt; names.length; i++ ){
-                new slowinit( canvas , { name : names[ i ] } );
+                new lz.slowinit( canvas , { name : names[ i ] } );
             }
         </handler>
     </button>

@@ -4,13 +4,13 @@
         <text width="100" align="center" valign="middle"
             multiline="true">show hand cursor onclick</text>
         <handler name="onclick">
-            LzCursor.showHandCursor(true);
+            lz.Cursor.showHandCursor(true);
         </handler>
     </view>
     <view width="100" height="100" bgcolor="red">
         <text width="100" align="center" valign="middle">hide hand cursor onclick</text>
         <handler name="onclick">
-            LzCursor.showHandCursor(false);
+            lz.Cursor.showHandCursor(false);
         </handler>
     </view>
     <view width="100" height="100" bgcolor="yellow">

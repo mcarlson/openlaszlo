@@ -14,7 +14,7 @@
             this.numtimes = 0;
             this.itemclassname = whichclass;
         </method>
-        <handler name="onidle" reference="LzIdle">  <![CDATA[
+        <handler name="onidle" reference="lz.Idle">  <![CDATA[
             if (start && (this.numtimes < this.limit || this.numitems>0)) {
                 if (this.numitems == 0) {
                     for (var i=0; i < 10; i ++) {

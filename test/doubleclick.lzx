@@ -13,7 +13,7 @@
         doClick();      
       }
       this.clicks++;
-      LzTimer.addTimer(this.dblDel, 300);
+      lz.Timer.addTimer(this.dblDel, 300);
     </handler>
     <method name="clearClicks">
       this.clicks=0;

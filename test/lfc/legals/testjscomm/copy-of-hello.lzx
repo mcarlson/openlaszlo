@@ -13,12 +13,12 @@
     <attribute name="farb" value="" type="text"/>
     <handler name="oninit">
         // Test handling of early calls
-        LzBrowser.callJS('getUserAgent', function (ua) { canvas.setAttribute('browser', ua) })
+        lz.Browser.callJS('getUserAgent', function (ua) { canvas.setAttribute('browser', ua) })
     </handler>
     <button>Test callJS queuing
         <handler name="onclick">
-            LzBrowser.callJS('getFoo', function (a) { if (a != 'foo') LzBrowser.loadJS('alert(\'warning: did not get foo: ' + a + '\')') });
-            LzBrowser.callJS('getBar', function (a) { if (a != 'bar') LzBrowser.loadJS('alert(\'warning: did not get bar: ' + a + '\')') });
+            lz.Browser.callJS('getFoo', function (a) { if (a != 'foo') lz.Browser.loadJS('alert(\'warning: did not get foo: ' + a + '\')') });
+            lz.Browser.callJS('getBar', function (a) { if (a != 'bar') lz.Browser.loadJS('alert(\'warning: did not get bar: ' + a + '\')') });
         </handler>
     </button>
     <simplelayout/>
@@ -27,7 +27,7 @@
     <text text="${parent.foo}" width="100"/>
     <text text="${parent.farb}" width="100"/>
     <text name="stat" multiline="true" width="1000"/>
-    <text oninit="this.setText('Flash player version: ' + LzBrowser.getVersion())" width="1000"/>
+    <text oninit="this.setText('Flash player version: ' + lz.Browser.getVersion())" width="1000"/>
 
     <view name="aview" y="80" bgcolor="red" width="20" height="30">
         <method name="testMethod" args="str, bool1, bool2, num1, num2, prop1, prop2">

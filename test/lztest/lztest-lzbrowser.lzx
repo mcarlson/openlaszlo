@@ -3,11 +3,11 @@
 
 <script><![CDATA[
 
-var suiteLzBrowser = new LzTestSuite("LzBrowser suite"); 
+var suiteLzBrowser = new LzTestSuite("lz.Browser suite"); 
 
 suiteLzBrowser.testVersion = function () {
-    var theVersion = LzBrowser.getVersion();
-    LzTestManager.assertNotNull(theVersion, "LzBrowser.getVersion");
+    var theVersion = lz.Browser.getVersion();
+    LzTestManager.assertNotNull(theVersion, "lz.Browser.getVersion");
 }
 
 suiteLzBrowser.addTest(suiteLzBrowser.testVersion); 
@@ -19,7 +19,7 @@ suiteLzBrowser.addTest(suiteLzBrowser.testVersion);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

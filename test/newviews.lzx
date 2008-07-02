@@ -7,7 +7,7 @@ one is completed before starting the next.
   <script>
     views = new Array();
     for (var i=0;i!=16;i++){
-      views.push(new LzView(canvas,{width:10,height:10,x:i,y:i,bgcolor:i*16}));
+      views.push(new lz.view(canvas,{width:10,height:10,x:i,y:i,bgcolor:i*16}));
       views[i].animateProps(1000);
       views[i].setBGColor(0);
       views[i].setWidth(0);
@@ -20,7 +20,7 @@ one is completed before starting the next.
       views[i].setAttribute("x",i*16);
     }
     for (var i=0;i!=16;i++){
-      views.push(new LzView());
+      views.push(new lz.view());
 
       views[i+16].animateProps(2000)
       views[i+16].setBGColor(0);
@@ -49,7 +49,7 @@ one is completed before starting the next.
 
   </script>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

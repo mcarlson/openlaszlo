@@ -20,7 +20,7 @@
 
     <method name="testInputText">
       // must be multiline for multiline getText() to work in DHTML
-      var inp = new LzInputText(canvas, {x: 100, y: 100, width: 200, multiline: true});
+      var inp = new lz.inputtext(canvas, {x: 100, y: 100, width: 200, multiline: true});
       inp.setText("foo\n\nbar");
       // test getText() not eating newlines
       assertEquals("foo\n\nbar", inp.getText());

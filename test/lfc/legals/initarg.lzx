@@ -8,7 +8,7 @@
     <text width="400" multiline="true" height="40">Add a variable named qs to the browser url and its value should appear below</text>
     <text name="foo"/>
     <handler name="oninit">
-        foo.setText( LzBrowser.getInitArg( "qs" ) );
+        foo.setText( lz.Browser.getInitArg( "qs" ) );
     </handler>
     <simplelayout/>
 </canvas>

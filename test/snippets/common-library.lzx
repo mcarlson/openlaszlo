@@ -2,8 +2,13 @@
   <script>
     mynumber ++;
     Debug.write("new common-library mynumber = ", mynumber);
-    new LzText (canvas, {text: "new common-library.lzx "+mynumber});
+    new lz.text (canvas, {text: "new common-library.lzx "+mynumber});
   </script>
 
 
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

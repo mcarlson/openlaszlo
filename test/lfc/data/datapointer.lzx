@@ -36,7 +36,7 @@
                 if ( this.waitcnt++ > 2000 ){
                     fail( "datapointer: Didn't get async data" );
                 } else {
-                    LzIdle.callOnIdle( this.t2del );
+                    lz.Idle.callOnIdle( this.t2del );
                 }
                 return;
             }

@@ -78,7 +78,7 @@
 
             <method name="makeWindow"><![CDATA[
                 var win =
-                    new camerawindow(
+                    new lz.camerawindow(
                         this, {
                             name: "w" + global.wnum, 
                             x: 10 + global.wnum * 200, 

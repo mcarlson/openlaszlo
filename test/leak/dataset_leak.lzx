@@ -36,7 +36,7 @@
 
         <handler name="onrunning">
             if ( this.running ){
-                this.idel.register( LzIdle, 'onidle' );
+                this.idel.register( lz.Idle, 'onidle' );
             } else {
                 this.idel.unregisterAll();
             }
@@ -56,7 +56,7 @@
                 //give everything a name
                 newattrs.name = "t" + i;
                 this.n.push(  
-                    new global[ this.newclass ]( this.content, this.newattrs ));
+                    new lz[ this.newclass ]( this.content, this.newattrs ));
             }]]>
         </method>
         <method name="deleteIt"><![CDATA[
@@ -413,12 +413,12 @@
             var offset = Math.floor( this.getMouse( 'x' ) ) - 0.5;
             this.dragc = new LzMouseConstraint( this ,
                              { prop : 'x', offset:-offset } );
-            LzCursor.lock();
+            lz.Cursor.lock();
         </method>
 
         <method name="stopDrag">
             this.dragc.release();
-            LzCursor.unlock();
+            lz.Cursor.unlock();
         </method>
     </class>
     <view height="100">

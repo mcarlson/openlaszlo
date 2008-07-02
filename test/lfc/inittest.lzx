@@ -2,7 +2,7 @@
     <simplelayout/>
     <handler name="oninit" reference="canvas">
         var d = new LzDelegate( timef , "tellTime" );
-        LzIdle.callOnIdle( d );
+        lz.Idle.callOnIdle( d );
         this.bringToFront();
         //created nodes doesn't account for nodes created from script,
         //so it isn't good for apps that make vnnodes from script

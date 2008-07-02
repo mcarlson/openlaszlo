@@ -27,7 +27,7 @@
         </button>
         <button> Poke replicated data
             <handler name="onclick">
-                var dp = new LzDatapointer( );
+                var dp = new lz.datapointer( );
                 dp.setPointer( parent.replParent.subviews[ 1 ].datapath.p );
                 dp.setNodeText( dp.getNodeText() + "+" );
                 dp.setPointer( parent.replParent.subviews[ 3 ].datapath.p );
@@ -58,7 +58,7 @@
         </button>
         <button> Poke replicated data
             <handler name="onclick">
-                var dp = new LzDatapointer( );
+                var dp = new lz.datapointer( );
                 dp.setPointer( parent.replParent.subviews[ 0 ].datapath.p );
                 dp.setNodeText( dp.getNodeText() + "+" );
                 dp.setPointer( parent.replParent.subviews[ 1 ].datapath.p );
@@ -101,7 +101,7 @@
         </button>
         <button> Poke replicated data
             <handler name="onclick">
-                var dp = new LzDatapointer( );
+                var dp = new lz.datapointer( );
                 dp.setPointer( parent.replParent.subviews[ 0 ].datapath.p );
                 dp.setNodeText( dp.getNodeText() + "+" );
                 dp.setPointer( parent.replParent.subviews[ 1 ].datapath.p );

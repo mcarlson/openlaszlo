@@ -9,22 +9,22 @@
         <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
         <attribute name="mycolor" value="0x000099"/>
         <handler name="oninit">
-             Debug.write("LzTrack.register(" + this, this.trackgroup + ")");
-             LzTrack.register(this, this.trackgroup);
+             Debug.write("lz.Track.register(" + this, this.trackgroup + ")");
+             lz.Track.register(this, this.trackgroup);
         </handler>
         <handler name="onmousedown">
             if (canvas.myglobals.unregister) {
-                Debug.write("LzTrack.unregister(" + this.trackgroup, this + ")");
+                Debug.write("lz.Track.unregister(" + this.trackgroup, this + ")");
                  this.setAttribute('mycolor', 0xaa0000);
-                 LzTrack.unregister(this, this.trackgroup);
+                 lz.Track.unregister(this, this.trackgroup);
             } else {
-                Debug.write("LzTrack.activate(" + this.trackgroup + ")");
-                LzTrack.activate(this.trackgroup);
+                Debug.write("lz.Track.activate(" + this.trackgroup + ")");
+                lz.Track.activate(this.trackgroup);
             }
         </handler>
         <handler name="onmouseup">
-            Debug.write("LzTrack.deactivate(" + this.trackgroup + ")");
-            LzTrack.deactivate(this.trackgroup);
+            Debug.write("lz.Track.deactivate(" + this.trackgroup + ")");
+            lz.Track.deactivate(this.trackgroup);
         </handler>
         <handler name="onmousetrackover">
             setAttribute('bgcolor', 0x00dd00);

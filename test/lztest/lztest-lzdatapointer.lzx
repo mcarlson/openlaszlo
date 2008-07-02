@@ -12,7 +12,7 @@
 function test_lzdatapointer_1() {
 
    // Test behavior on undefined object
-   var dp = new LzDatapointer();
+   var dp = new lz.datapointer();
 
    LzTestManager.assertUndefined(dp.getNodeName(), 'getNodeName');
    LzTestManager.assertUndefined(dp.getNodeAttributes(), 'getNodeAttributes');
@@ -27,7 +27,7 @@ function test_lzdatapointer_1() {
 function test_lzdatapointer_2() {
    // Visual test. In debug mode each call should generate a warning. 
    // Removed tests run by test_lzdatapointer_1
-   var dp = new LzDatapointer();
+   var dp = new lz.datapointer();
    dp.setNodeName(null);
    dp.setNodeAttribute(null, null);
    dp.deleteNodeAttribute(null);

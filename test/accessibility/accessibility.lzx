@@ -2,12 +2,12 @@
     <include href="base/basebutton.lzx"/>
     <simplelayout spacing="4"/>
     <handler name="oninit">
-        //LzBrowser.setClipboard('foo!');
-        var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
-        LzTimer.addTimer(upddel, 500);
+        //lz.Browser.setClipboard('foo!');
+        var upddel = new LzDelegate(lz.Browser, 'updateAccessibility');
+        lz.Timer.addTimer(upddel, 500);
     </handler>
     <text>This page tests tab ordering and labeling of buttons</text>
-    <text width="200" aasilent="true" oninit="this.setText('accessibility on: ' + LzBrowser.isAAActive())"/>
+    <text width="200" aasilent="true" oninit="this.setText('accessibility on: ' + lz.Browser.isAAActive())"/>
     <text name="lastsel" width="200" aasilent="true"/>
     <!-- this is the correct method -->
     <view width="100" height="20" bgcolor="blue" aaname="aaaa" focusable="true" onclick="parent.lastsel.setText('aaaa')"/>

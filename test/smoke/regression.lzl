@@ -396,8 +396,8 @@
 
         <method name="testNode">
             assertTrue(myinstance instanceof lz.mynode);
-            assertTrue(myinstance instanceof LzNode);
-            assertFalse(myinstance instanceof LzView);
+            assertTrue(myinstance instanceof lz.node);
+            assertFalse(myinstance instanceof lz.view);
         </method>
     </class>
 
@@ -433,11 +433,11 @@
             return true;
         </method>
         <method name="testNode">
-            LzFocus.setFocus(view1)
-            LzFocus.setFocus(view2)
-            LzFocus.setFocus(view2)
-            LzFocus.setFocus(view2)
-            LzFocus.setFocus(view1)
+            lz.Focus.setFocus(view1)
+            lz.Focus.setFocus(view2)
+            lz.Focus.setFocus(view2)
+            lz.Focus.setFocus(view2)
+            lz.Focus.setFocus(view1)
             assertArrayEquals(['onfocus', 'onblur'], view2.trace)
         </method>
     </class>
@@ -539,14 +539,14 @@
 
         <class name="bug_1383" extends="TestCase">
                 <method name="testNode">
-                  var node = new LzNode();
-                  assertTrue(node instanceof LzNode);
-                  assertFalse(node instanceof LzView);
+                  var node = new lz.node();
+                  assertTrue(node instanceof lz.node);
+                  assertFalse(node instanceof lz.view);
                 </method>
                 <method name="testView">
-                  var view = new LzView();
-                  assertTrue(view instanceof LzNode);
-                  assertTrue(view instanceof LzView);
+                  var view = new lz.view();
+                  assertTrue(view instanceof lz.node);
+                  assertTrue(view instanceof lz.view);
                 </method>
         </class>
     
@@ -581,7 +581,7 @@
         <method name="test1">
             assertEquals( 3 , ppar.pokeme.data );
             var tnode = bug1485.childNodes[0].childNodes[2];
-            var dp = new LzDatapointer( this , { p : tnode } );
+            var dp = new lz.datapointer( this , { p : tnode } );
             ppar.datapath.setFromPointer( dp );
             assertEquals( 6 , ppar.pokeme.data );
         </method>
@@ -627,7 +627,7 @@
                   for (var i in this.subviews) 
                   {
                         var child = this.subviews[i];
-                        assertTrue(child instanceof LzView);
+                        assertTrue(child instanceof lz.view);
                   }
         </method>
     </class>
@@ -766,7 +766,7 @@
                 <![CDATA[
                         var d = "A!@#$%^&*() c"; 
                         
-                        assertEquals(d, LzBrowser.urlUnescape(LzBrowser.urlEscape(d)))
+                        assertEquals(d, lz.Browser.urlUnescape(lz.Browser.urlEscape(d)))
                 ]]>
                 </method>
         </class>

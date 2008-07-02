@@ -1,4 +1,4 @@
-<!-- Copyright 2006-2007 Laszlo Systems -->
+<!-- Copyright 2006-2008 Laszlo Systems -->
 <!-- This file is to demonstrate the feature whereby a cssfile can
         be specified as a http parameter. Run with ?cssfile=carla.css
         to test this feature. cf LPP-2703.

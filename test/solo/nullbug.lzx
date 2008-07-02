@@ -8,7 +8,7 @@
             <!--- @keywords private -->
             <method name="init"> <![CDATA[
                 super.init();
-                var ds = new LzDataset(
+                var ds = new lz.dataset(
                     null,
                     { name    : 'config_ds',
                       src     : src,

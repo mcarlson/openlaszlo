@@ -1,9 +1,9 @@
 <canvas debug="true">
-<!--    <handler name="onkeydown" reference="LzKeys" args="k">-->
-<!--        Debug.write("LzKeys onkeydown " + k  );-->
+<!--    <handler name="onkeydown" reference="lz.Keys" args="k">-->
+<!--        Debug.write("lz.Keys onkeydown " + k  );-->
 <!--    </handler>-->
-<!--    <handler name="onkeyup" reference="LzKeys" args="k">-->
-<!--        Debug.write("LzKeys onkeyup " + k  );-->
+<!--    <handler name="onkeyup" reference="lz.Keys" args="k">-->
+<!--        Debug.write("lz.Keys onkeyup " + k  );-->
 <!--    </handler>-->
     <debug y="70"/>
     <class name="myinput" extends="inputtext">
@@ -16,7 +16,7 @@
           Debug.write('onkeyup '+ k  + " " +  this.name);
         </handler>
         <handler name="onkeydown" args="k">
-           // shiftDown = LzKeys.isKeyDown("shift");
+           // shiftDown = lz.Keys.isKeyDown("shift");
             Debug.write('onkeydown '+ k + " " +  this.name);
             //_root.debug.write("...shiftDown="+shiftDown);
         </handler>

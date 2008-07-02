@@ -5,22 +5,22 @@
     <attribute name="externalsig" value="null"/>
     <handler name="onexternalsig">
         canvas.changeText();
-        var ctDel = new LzDelegate(LzBrowser, 'updateAccessibility');
-        LzTimer.addTimer(ctDel, 1000);
+        var ctDel = new LzDelegate(lz.Browser, 'updateAccessibility');
+        lz.Timer.addTimer(ctDel, 1000);
     </handler>
     <simplelayout spacing="4"/>
     <handler name="oninit">
-        var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
-        LzTimer.addTimer(upddel, 500);
+        var upddel = new LzDelegate(lz.Browser, 'updateAccessibility');
+        lz.Timer.addTimer(upddel, 500);
     </handler>
     <method name="changeText">
         text1.setText("Changed " + text1.getText());
         text2.setText("Modified " + text2.getText());
         text4.setText("Updated " + text4.getText());
-        LzBrowser.updateAccessibility(); // trigger re-read
+        lz.Browser.updateAccessibility(); // trigger re-read
     </method>
     <vbox spacing="6" inset="12">
-        <text aatabindex="1" id="text1" width="200" bgcolor="0xdeadbf" oninit="this.setText(this.getText() + ' ' + LzBrowser.isAAActive())">
+        <text aatabindex="1" id="text1" width="200" bgcolor="0xdeadbf" oninit="this.setText(this.getText() + ' ' + lz.Browser.isAAActive())">
             Accessibility on 
         </text>
         <hbox spacing="6">
@@ -34,7 +34,7 @@
                 <button id="button1" aatabindex="5" focusable="true">
                     Button
                     <handler name="onclick">
-                        LzBrowser.loadJS('lzSetCanvasAttribute("externalsig", true)');
+                        lz.Browser.loadJS('lzSetCanvasAttribute("externalsig", true)');
                     </handler>
                 </button>
             </vbox>

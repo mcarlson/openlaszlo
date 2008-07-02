@@ -1,7 +1,7 @@
 <canvas debug="true">
     <handler name="oninit">
-    LzTrack.register( testarea, "test" );
-    LzTrack.activate( "test" );
+    lz.Track.register( testarea, "test" );
+    lz.Track.activate( "test" );
     </handler>
     <view name="testarea" width="100" height="100">
     <handler name="onmousetrackover">

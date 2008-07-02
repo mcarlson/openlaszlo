@@ -19,7 +19,7 @@
             this.layout.lock();
             for(var i = 0; i < this.numticks; i++)
             {
-                new tick(this);
+                new lz.tick(this);
             }    
             this.layout.unlock();            
         ]]>    

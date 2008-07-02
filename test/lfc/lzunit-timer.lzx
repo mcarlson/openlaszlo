@@ -27,11 +27,11 @@
         <timertester name="tt1"/>
         
         <method name="testAddRemove">
-            assertEquals(0, LzTimer.countTimers(tt1.del1), "before add");
-            var t1 = LzTimer.addTimer(tt1.del1, 10000);
-            assertEquals(1, LzTimer.countTimers(tt1.del1), "after add");
-            var td1 = LzTimer.removeTimer(tt1.del1);
-            assertEquals(0, LzTimer.countTimers(tt1.del1), "after remove");
+            assertEquals(0, lz.Timer.countTimers(tt1.del1), "before add");
+            var t1 = lz.Timer.addTimer(tt1.del1, 10000);
+            assertEquals(1, lz.Timer.countTimers(tt1.del1), "after add");
+            var td1 = lz.Timer.removeTimer(tt1.del1);
+            assertEquals(0, lz.Timer.countTimers(tt1.del1), "after remove");
             assertEquals(t1, td1, "same timer");
         </method>
         
@@ -45,21 +45,21 @@
             // test whether we get confused between delegates. Remove in
             // opposite order to avoid false positive due to FIFI policy.
             
-            assertEquals(0, LzTimer.countTimers(tt2.del1), "before add 1");
-            assertEquals(0, LzTimer.countTimers(tt2.del2), "before add 2");
-            var t1 = LzTimer.addTimer(tt2.del1, 10000);
-            assertEquals(1, LzTimer.countTimers(tt2.del1), "after add 1,1");
-            assertEquals(0, LzTimer.countTimers(tt2.del2), "after add 1,2");
-            var t2 = LzTimer.addTimer(tt2.del2, 10000);
-            assertEquals(1, LzTimer.countTimers(tt2.del1), "after add 2,1");
-            assertEquals(1, LzTimer.countTimers(tt2.del2), "after add 2,2");
-            var td2 = LzTimer.removeTimer(tt2.del2);
-            assertEquals(1, LzTimer.countTimers(tt2.del1), "after remove 2,1");
-            assertEquals(0, LzTimer.countTimers(tt2.del2), "after remove 2,2");
+            assertEquals(0, lz.Timer.countTimers(tt2.del1), "before add 1");
+            assertEquals(0, lz.Timer.countTimers(tt2.del2), "before add 2");
+            var t1 = lz.Timer.addTimer(tt2.del1, 10000);
+            assertEquals(1, lz.Timer.countTimers(tt2.del1), "after add 1,1");
+            assertEquals(0, lz.Timer.countTimers(tt2.del2), "after add 1,2");
+            var t2 = lz.Timer.addTimer(tt2.del2, 10000);
+            assertEquals(1, lz.Timer.countTimers(tt2.del1), "after add 2,1");
+            assertEquals(1, lz.Timer.countTimers(tt2.del2), "after add 2,2");
+            var td2 = lz.Timer.removeTimer(tt2.del2);
+            assertEquals(1, lz.Timer.countTimers(tt2.del1), "after remove 2,1");
+            assertEquals(0, lz.Timer.countTimers(tt2.del2), "after remove 2,2");
             assertEquals(t2, td2, "same timer 2");
-            var td1 = LzTimer.removeTimer(tt2.del1);
-            assertEquals(0, LzTimer.countTimers(tt2.del1), "after remove 1,1");
-            assertEquals(0, LzTimer.countTimers(tt2.del2), "after remove 1,2");
+            var td1 = lz.Timer.removeTimer(tt2.del1);
+            assertEquals(0, lz.Timer.countTimers(tt2.del1), "after remove 1,1");
+            assertEquals(0, lz.Timer.countTimers(tt2.del2), "after remove 1,2");
             assertEquals(t1, td1, "same timer 1");
         </method>
         
@@ -70,13 +70,13 @@
         <timertester name="tt3"/>
         
         <method name="testAddReset">
-            assertEquals(0, LzTimer.countTimers(tt3.del1), "before add");
-            var t1 = LzTimer.addTimer(tt3.del1, 10000);
-            assertEquals(1, LzTimer.countTimers(tt3.del1), "after add");
-            var t2 = LzTimer.resetTimer(tt3.del1, 10000);
-            assertEquals(1, LzTimer.countTimers(tt3.del1), "after reset");
-            var td1 = LzTimer.removeTimer(tt3.del1);
-            assertEquals(0, LzTimer.countTimers(tt3.del1), "after remove");
+            assertEquals(0, lz.Timer.countTimers(tt3.del1), "before add");
+            var t1 = lz.Timer.addTimer(tt3.del1, 10000);
+            assertEquals(1, lz.Timer.countTimers(tt3.del1), "after add");
+            var t2 = lz.Timer.resetTimer(tt3.del1, 10000);
+            assertEquals(1, lz.Timer.countTimers(tt3.del1), "after reset");
+            var td1 = lz.Timer.removeTimer(tt3.del1);
+            assertEquals(0, lz.Timer.countTimers(tt3.del1), "after remove");
             assertEquals(t2, td1, "same timer");
         </method>
         
@@ -88,16 +88,16 @@
         
         <method name="testMultiAddRemove2">
             // test order of removal.
-            assertEquals(0, LzTimer.countTimers(tt4.del1), "before add");
-            var t1 = LzTimer.addTimer(tt4.del1, 10000);
-            assertEquals(1, LzTimer.countTimers(tt4.del1), "after add 1");
-            var t2 = LzTimer.addTimer(tt4.del1, 10000);
-            assertEquals(2, LzTimer.countTimers(tt4.del1), "after add 2");
-            var td1 = LzTimer.removeTimer(tt4.del1);
-            assertEquals(1, LzTimer.countTimers(tt4.del1), "after remove 1");
+            assertEquals(0, lz.Timer.countTimers(tt4.del1), "before add");
+            var t1 = lz.Timer.addTimer(tt4.del1, 10000);
+            assertEquals(1, lz.Timer.countTimers(tt4.del1), "after add 1");
+            var t2 = lz.Timer.addTimer(tt4.del1, 10000);
+            assertEquals(2, lz.Timer.countTimers(tt4.del1), "after add 2");
+            var td1 = lz.Timer.removeTimer(tt4.del1);
+            assertEquals(1, lz.Timer.countTimers(tt4.del1), "after remove 1");
             assertEquals(t1, td1, "same timer 1");
-            var td2 = LzTimer.removeTimer(tt4.del1);
-            assertEquals(0, LzTimer.countTimers(tt4.del1), "after remove 2");
+            var td2 = lz.Timer.removeTimer(tt4.del1);
+            assertEquals(0, lz.Timer.countTimers(tt4.del1), "after remove 2");
             assertEquals(t2, td2, "same timer 2");
         </method>
         
@@ -109,21 +109,21 @@
         
         <method name="testMultiAddRemove3">
             // test order of removal.
-            assertEquals(0, LzTimer.countTimers(tt4.del1), "before add");
-            var t1 = LzTimer.addTimer(tt4.del1, 10000);
-            assertEquals(1, LzTimer.countTimers(tt4.del1), "after add 1");
-            var t2 = LzTimer.addTimer(tt4.del1, 10000);
-            assertEquals(2, LzTimer.countTimers(tt4.del1), "after add 2");
-            var t3 = LzTimer.addTimer(tt4.del1, 10000);
-            assertEquals(3, LzTimer.countTimers(tt4.del1), "after add 3");
-            var td1 = LzTimer.removeTimer(tt4.del1);
-            assertEquals(2, LzTimer.countTimers(tt4.del1), "after remove 1");
+            assertEquals(0, lz.Timer.countTimers(tt4.del1), "before add");
+            var t1 = lz.Timer.addTimer(tt4.del1, 10000);
+            assertEquals(1, lz.Timer.countTimers(tt4.del1), "after add 1");
+            var t2 = lz.Timer.addTimer(tt4.del1, 10000);
+            assertEquals(2, lz.Timer.countTimers(tt4.del1), "after add 2");
+            var t3 = lz.Timer.addTimer(tt4.del1, 10000);
+            assertEquals(3, lz.Timer.countTimers(tt4.del1), "after add 3");
+            var td1 = lz.Timer.removeTimer(tt4.del1);
+            assertEquals(2, lz.Timer.countTimers(tt4.del1), "after remove 1");
             assertEquals(t1, td1, "same timer 1");
-            var td2 = LzTimer.removeTimer(tt4.del1);
-            assertEquals(1, LzTimer.countTimers(tt4.del1), "after remove 2");
+            var td2 = lz.Timer.removeTimer(tt4.del1);
+            assertEquals(1, lz.Timer.countTimers(tt4.del1), "after remove 2");
             assertEquals(t2, td2, "same timer 2");
-            var td3 = LzTimer.removeTimer(tt4.del1);
-            assertEquals(0, LzTimer.countTimers(tt4.del1), "after remove 3");
+            var td3 = lz.Timer.removeTimer(tt4.del1);
+            assertEquals(0, lz.Timer.countTimers(tt4.del1), "after remove 3");
             assertEquals(t3, td3, "same timer 3");
         </method>
         
@@ -133,6 +133,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

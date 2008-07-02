@@ -27,7 +27,7 @@
         </box>
 
         <box y="50" >
-            <handler name="onidle" reference="LzIdle" >
+            <handler name="onidle" reference="lz.Idle" >
                 this.setAttributeRelative( "x" , trackbox );
             </handler>
         </box>

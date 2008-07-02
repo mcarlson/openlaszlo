@@ -134,7 +134,7 @@
         testCollection.$title = title;
         testCollection.$curtest = 0;
         testCollection.$del = new LzDelegate( testCollection, '$doNext' ,
-                                              LzIdle , "onidle" );
+                                              lz.Idle , "onidle" );
 
     }
     testCollection.$doNext = function (){
@@ -197,6 +197,6 @@
     </script>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

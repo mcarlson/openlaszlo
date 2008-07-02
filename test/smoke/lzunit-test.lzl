@@ -243,7 +243,7 @@
       assertSame(true, true, "true === true");
 
       // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
-      var flashVersion = LzBrowser.getVersion();
+      var flashVersion = lz.Browser.getVersion();
       if ((! flashVersion) || flashVersion < 8 || flashVersion > 10) {
           assertNotSame(NaN, NaN, "NaN !== NaN");
       }
@@ -278,7 +278,7 @@
         {test: 'boolean Literal', instance: true, constructor: null},
         {test: 'number Literal', instance: 0, constructor: null},
         {test: 'string Literal', instance: "test", constructor: null},
-        {test: 'new LzNode', instance: new LzNode(), constructor: LzNode}
+        {test: 'new lz.node', instance: new lz.node(), constructor: LzNode}
       ];
       var types = [Array, Boolean, Date, Number, String];
 
@@ -446,7 +446,7 @@
       expectedFailure = ef;
 
       // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
-      var flashVersion = LzBrowser.getVersion();
+      var flashVersion = lz.Browser.getVersion();
       var nexp = 27;
 
 

@@ -43,7 +43,7 @@
                 var cname = a[i];
                 Debug.write("Camera device index", i, "name", cname);
                 var c = 
-                    new camlistitem(
+                    new lz.camlistitem(
                         this, 
                         {text:cname, index:i});
                 Debug.write(c);

@@ -5,7 +5,12 @@
        Debug.write('foo!');
     }
 
-    new LzView(canvas, {width: 50, height: 50, bgcolor: blah});
-    new LzView(canvas, {width: 50, height: 50, bgcolor: canvas.greencolor});
+    new lz.view(canvas, {width: 50, height: 50, bgcolor: blah});
+    new lz.view(canvas, {width: 50, height: 50, bgcolor: canvas.greencolor});
   </script>
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

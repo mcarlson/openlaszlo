@@ -2,9 +2,9 @@
     <view bgcolor="teal" height="80" width="${canvas.width}">
         <simplelayout axis="x" spacing="20"/>
         <button onclick="textBelow.setVisible( true ) ">Click me</button>
-        <button onclick="LzBrowser.loadURL('javascript:positionHTMLArea(100, 100)')" 
+        <button onclick="lz.Browser.loadURL('javascript:positionHTMLArea(100, 100)')" 
             text="Reposition HTML"/>
-        <button onclick="LzBrowser.loadURL('javascript:setClippingRegion( 10, 250, 300, 80)')" 
+        <button onclick="lz.Browser.loadURL('javascript:setClippingRegion( 10, 250, 300, 80)')" 
             text="Clip HTML"/>
 
     </view>
@@ -13,6 +13,6 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

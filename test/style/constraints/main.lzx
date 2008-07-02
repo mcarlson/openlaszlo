@@ -1,4 +1,4 @@
-<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<!-- Copyright 2007-2008 Laszlo Systems -->
 <canvas debug="true"  bgcolor="#AAAAAA">
     <include href="lzunit"/>
     <script>

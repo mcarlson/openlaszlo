@@ -25,25 +25,25 @@
     <view>
         <simplelayout/>
         <text text="global mouse events turn green"/> 
-        <eventtester eventname="onmousedown" reference="LzGlobalMouse"/>
-        <eventtester eventname="onmouseup" reference="LzGlobalMouse"/>
-        <eventtester eventname="onmouseover" reference="LzGlobalMouse"/>
-        <eventtester eventname="onmouseout" reference="LzGlobalMouse"/>
-        <eventtester eventname="onclick" reference="LzGlobalMouse"/>
-        <eventtester eventname="ondblclick" reference="LzGlobalMouse"/>
-        <eventtester eventname="onmousedragin" reference="LzGlobalMouse"/>
-        <eventtester eventname="onmousedragout" reference="LzGlobalMouse"/>
-        <eventtester eventname="onmouseupoutside" reference="LzGlobalMouse"/>
-        <eventtester eventname="onmousemove" reference="LzGlobalMouse" verbose="false"/>
+        <eventtester eventname="onmousedown" reference="lz.GlobalMouse"/>
+        <eventtester eventname="onmouseup" reference="lz.GlobalMouse"/>
+        <eventtester eventname="onmouseover" reference="lz.GlobalMouse"/>
+        <eventtester eventname="onmouseout" reference="lz.GlobalMouse"/>
+        <eventtester eventname="onclick" reference="lz.GlobalMouse"/>
+        <eventtester eventname="ondblclick" reference="lz.GlobalMouse"/>
+        <eventtester eventname="onmousedragin" reference="lz.GlobalMouse"/>
+        <eventtester eventname="onmousedragout" reference="lz.GlobalMouse"/>
+        <eventtester eventname="onmouseupoutside" reference="lz.GlobalMouse"/>
+        <eventtester eventname="onmousemove" reference="lz.GlobalMouse" verbose="false"/>
     </view>
     <view>
         <simplelayout/>
         <text text="keyboard events turn green"/> 
-        <eventtester eventname="onkeydown" reference="LzKeys"/>
-        <eventtester eventname="onkeyup" reference="LzKeys"/>
-        <eventtester eventname="onkeydown" reference="LzKeys" label="Shift key down" test="function (k) { if (k == 16) return true; }"/>
-        <eventtester eventname="onkeydown" reference="LzKeys" label="Control key down" test="function (k) { if (k == 17) return true; }"/>
-        <eventtester eventname="onmousewheeldelta" reference="LzKeys">
+        <eventtester eventname="onkeydown" reference="lz.Keys"/>
+        <eventtester eventname="onkeyup" reference="lz.Keys"/>
+        <eventtester eventname="onkeydown" reference="lz.Keys" label="Shift key down" test="function (k) { if (k == 16) return true; }"/>
+        <eventtester eventname="onkeydown" reference="lz.Keys" label="Control key down" test="function (k) { if (k == 17) return true; }"/>
+        <eventtester eventname="onmousewheeldelta" reference="lz.Keys">
             <handler name="onvalue" args="v">
                 if (v == null) return;
                 this.setX(this.x + v);

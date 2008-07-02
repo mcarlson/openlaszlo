@@ -1,4 +1,4 @@
-<!-- Copyright 2007 Laszlo Systems Inc. --> 
+<!-- Copyright 2007-2008 Laszlo Systems -->
 <library>
     
     <class name="mtext" extends="text" resize="false">

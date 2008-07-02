@@ -25,7 +25,7 @@
                 if ( this.waitcnt++ > 2000 ){
                     fail( "namespace-solo: Didn't get async data" );
                 } else {
-                    LzIdle.callOnIdle( this.t2del );
+                    lz.Idle.callOnIdle( this.t2del );
                 }
                 return;
             }
@@ -66,6 +66,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -10,20 +10,20 @@
   <![CDATA[
     
     function wrapText() {
-        var tv = new LzText( canvas, { width: 300, height: 300, x: 300, multiline: true} );        
+        var tv = new lz.text( canvas, { width: 300, height: 300, x: 300, multiline: true} );        
         tv.setAttribute("text", "All I want is a bit of regular expression support and math! That sort of thinking leads directly to perl. Perl has superpowers and was designed for just this sort of task, but I'm not a perl programmer, and I don't want to be. Sorry. Does that make me a bad person? Lazy, maybe: I'd rather spend my time learning and working with a language that I like. I'm not talking fundamental goodness here; I'm talking personal preference. I don't like the idioms of global variables with names like $_.");
         canvas.addSubview(tv);    
     }
     
     function bigText() {
-        var bigtv = new LzText( canvas, { width: 300, height: 300, x: 300, y: 100} );        
+        var bigtv = new lz.text( canvas, { width: 300, height: 300, x: 300, y: 100} );        
         bigtv.setAttribute("fontsize", 36);
         bigtv.setAttribute("text", "anderson");
         canvas.addSubview(bigtv);    
     }
     
     function changeText() {
-        var changingText = new LzText( canvas, { width: 300, height: 300, x: 300, y: 200} );
+        var changingText = new lz.text( canvas, { width: 300, height: 300, x: 300, y: 200} );
         canvas.addSubview(changingText);
         changingText.setText("Forget object serialization. Forget XSLT. Forget trend graphs of benchmarks over time. Just use plain old text files, and get the job done.");
         changingText.setText("I'm trying to dynamicly generate textures based on a simulation of fluid flow, to make a cutting plane with a painterly representation. I want an imaging library... and I want to be able to develop on windows and linux. Nothing else will do. Meanwhile, I'm also trying to get GLSL going on my tablet. This is apparently a bit tricky. I'm kind of going in two directions at once: I could work on getting GLSL going on my tablet, and go straight to writing a shader to generate a texture dynamicly, or I could first generate the texture traditionally -- on the CPU, not the GPU. I imagine debugging will be much easier if I develop on the CPU first.");
@@ -95,6 +95,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

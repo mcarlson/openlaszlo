@@ -22,7 +22,7 @@
         <frame src="resources/swf/logo.swf" />
     </resource>
 
-    <class name="link" extends="text" fgcolor="blue" clickable="true" onmouseup="LzBrowser.loadURL(getText(), '_new')"/>
+    <class name="link" extends="text" fgcolor="blue" clickable="true" onmouseup="lz.Browser.loadURL(getText(), '_new')"/>
 
     <class name="searchresult" extends="view"  height="40" bgcolor="#ffffff" oninit="setColor()">
         <text y="8" height="14" name="snippet" width="640" datapath="snippet/text()"/>

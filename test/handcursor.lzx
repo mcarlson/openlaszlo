@@ -1,7 +1,7 @@
 <canvas debug="true" layout="axis:y; spacing: 5">
     <checkbox value="true">Global hand cursor
         <handler name="onvalue" args="v">
-            LzCursor.showHandCursor(v);
+            lz.Cursor.showHandCursor(v);
         </handler>
     </checkbox>
     <button showhandcursor="false">Toggle hand cursor

@@ -21,7 +21,7 @@
 
 <handler name="oninit"><![CDATA[
   for (var i=0; i != 360 ; i+=10){
-    new doLine(canvas, {length: 100, startx: 100, starty:100, slope: i}); 
+    new lz.doLine(canvas, {length: 100, startx: 100, starty:100, slope: i}); 
   }
 ]]>
 </handler>

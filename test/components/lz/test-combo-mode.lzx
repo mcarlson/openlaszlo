@@ -52,7 +52,7 @@ text="$path{'text()'}" value="$path{'@value'}"/>
         <!-- CANCEL BUTTON -->
         <button x="65" y="80">Cancel
             <handler name="onclick">
-                LzModeManager.release( this.parent );
+                lz.ModeManager.release( this.parent );
                 this.parent.setBGColor(null);
             </handler>
         </button>
@@ -60,7 +60,7 @@ text="$path{'text()'}" value="$path{'@value'}"/>
         <!-- Save -->
         <button name="Save" x="145" y="80">Make Modal
             <handler name="onclick">
-                LzModeManager.makeModal( this.parent );
+                lz.ModeManager.makeModal( this.parent );
                 this.parent.setBGColor(yellow);
             </handler>
         </button>

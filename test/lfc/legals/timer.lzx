@@ -14,7 +14,7 @@
             var t = new Date();
             info('update', t);
             this.setText(t);
-            LzTimer.addTimer(this.updateDel, 500);
+            lz.Timer.addTimer(this.updateDel, 500);
         </method>
     </text>
 </canvas>

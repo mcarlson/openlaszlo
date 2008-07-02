@@ -32,7 +32,7 @@
       };
       Debug.write("Expected '[object a],b,[object c],d,f.dependencies,12,14'");
       Debug.write("got: ", test.dependencies());
-      Debug.write("Expected 'LzIdle,onidle'");
+      Debug.write("Expected 'lz.Idle,onidle'");
       Debug.write("got: ", LzView.prototype.getMouse.dependencies());
   </script>
 </canvas>

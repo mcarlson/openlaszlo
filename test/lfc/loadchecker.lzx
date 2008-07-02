@@ -2,9 +2,9 @@
     <class name="loadcheckcheckbox" extends="checkbox">
         <attribute name="checkFor" when="once"/>
 
-        <handler name="onidle" reference="LzIdle">
+        <handler name="onidle" reference="lz.Idle">
             <![CDATA[
-            var lzod = LzIdle.onidle.delegateList;
+            var lzod = lz.Idle.onidle.delegateList;
             var sel = false;
             for ( var i = 0;i < lzod.length; i++ ){
                 if( lzod[ i ] == checkFor.loader.loadChecker ){
@@ -24,14 +24,14 @@
     <button text="load img" onclick="v2.setSource('t.jpg')"/>
 
     <loadcheckcheckbox checkFor="v1"> 
-        v1.loader.loadChecker registered with LzIdle
+        v1.loader.loadChecker registered with lz.Idle
     </loadcheckcheckbox>
 
     <loadcheckcheckbox checkFor="v2">
-        v2.loader.loadChecker registered with LzIdle
+        v2.loader.loadChecker registered with lz.Idle
     </loadcheckcheckbox>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

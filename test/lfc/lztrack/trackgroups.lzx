@@ -8,8 +8,8 @@
         <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
         <attribute name="mycolor" value="0x000099"/>
         <handler name="oninit">
-             Debug.write("LzTrack.register(" + this, this.trackgroup + ")");
-             LzTrack.register(this, this.trackgroup);
+             Debug.write("lz.Track.register(" + this, this.trackgroup + ")");
+             lz.Track.register(this, this.trackgroup);
         </handler>
         <handler name="onmousetrackover">
             setAttribute('bgcolor', 0x00dd00);
@@ -41,10 +41,10 @@
             <handler name="onvalue" args="v">
                 if (v) {
                     Debug.write('activate: '+parent.trackgroup);
-                    LzTrack.activate(parent.trackgroup);
+                    lz.Track.activate(parent.trackgroup);
                 } else {
                     Debug.write('deactivate: '+parent.trackgroup);
-                    LzTrack.deactivate(parent.trackgroup);
+                    lz.Track.deactivate(parent.trackgroup);
                 }
             </handler>
         </checkbox>
@@ -62,20 +62,20 @@
             <handler name="onvalue" args="v">
                 if (v) {
                     Debug.write('activate: twoA and twoB');
-                    LzTrack.activate("twoA");
-                    LzTrack.activate("twoB");
+                    lz.Track.activate("twoA");
+                    lz.Track.activate("twoB");
                 } else {
                     Debug.write('deactivate: twoA and twoB');
-                    LzTrack.deactivate("twoA");
-                    LzTrack.deactivate("twoB");
+                    lz.Track.deactivate("twoA");
+                    lz.Track.deactivate("twoB");
                 }
             </handler>
         </checkbox>
         <view bgcolor="0xddddff" name="container" width="84">
             <attribute name="trackgroup" value="twoA" type="string"/>
             <handler name="oninit">
-                 Debug.write("LzTrack.register(" + this, this.trackgroup + ")");
-                 LzTrack.register(this, this.trackgroup);
+                 Debug.write("lz.Track.register(" + this, this.trackgroup + ")");
+                 lz.Track.register(this, this.trackgroup);
             </handler>
             <handler name="onmousetrackover">
                 setAttribute('bgcolor', 0xdddd00);

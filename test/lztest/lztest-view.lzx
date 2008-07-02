@@ -83,7 +83,7 @@
     </handler>
 
     <!-- Idle handler that will setup the next resource to load -->
-    <handler name="onidle" reference="LzIdle">
+    <handler name="onidle" reference="lz.Idle">
       if (view10changed) {
         view10changed = false;
         view10.setSource (view10resources[view10index][2]);        
@@ -195,7 +195,7 @@ function waitfordel()
 function waitfor(condition)
 {
   var del = new LzDelegate (null,  condition, 'waitfordel');
-  LzTimer.addTimer (del, 100);  
+  lz.Timer.addTimer (del, 100);  
 }
 
 
