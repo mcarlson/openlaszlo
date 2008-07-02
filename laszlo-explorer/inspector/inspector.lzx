@@ -36,7 +36,7 @@
         <attribute name="editing" value="false"/>
         <handler name="onclick">
             setAttribute('editing', true);
-            LzFocus.setFocus(editbox);
+            lz.Focus.setFocus(editbox);
         </handler>
         <text visible="${!parent.editing}" resize="true" name="t"
               y="$once{ parent.height /2 - this.height/2}"
@@ -52,7 +52,7 @@
                     super.init();
                 </method>
                 <handler name="onfocus">
-                    this.globalMouseDel.register( LzGlobalMouse,
+                    this.globalMouseDel.register( lz.GlobalMouse,
                                                   "onmousedown" );
                 </handler>
                 <handler name="onblur">
@@ -101,7 +101,7 @@
                 onclick="classroot.toggle()"
                 onmouseover="parent.setBGColor(0xddddff)"
                 onmouseout="parent.setBGColor(null)"/>
-            <state applied="${classroot.reference instanceof LzView}">
+            <state applied="${classroot.reference instanceof lz.view}">
                 <colorbox y="1" obj="classroot.reference"/>
                 <propedit text="${classroot.reference.x}" obj="classroot.reference" prop="x"/>
                 <propedit text="${classroot.reference.y}" obj="classroot.reference" prop="y"/>
@@ -133,7 +133,7 @@
                             show = false;
                        }
                     }
-                    if (show) new item(this.children, {reference: nodes[i], root:this.root});
+                    if (show) new lz.item(this.children, {reference: nodes[i], root:this.root});
                 }
                 setAttribute('open', true);
             } else {

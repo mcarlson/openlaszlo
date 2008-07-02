@@ -1,7 +1,7 @@
 <!--=======================================================================-->
 <!-- welcome.lzx                                                           -->
 <!--                                                                       -->
-<!-- Copyright 2002-2007 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Copyright 2002-2008 Laszlo Systems, Inc.  All Rights Reserved.        -->
 <!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
 <!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
 <!-- Use is subject to license terms.                                      -->
@@ -48,11 +48,11 @@
                  get's is not stored in internal variables causing two animations to occur. -->
             <handler name="oninit" reference="canvas">
                this.del = new LzDelegate ( this, "tick" );
-               LzTimer.addTimer( this.del, 1000 );
+               lz.Timer.addTimer( this.del, 1000 );
              </handler>
             <method name="tick" >
                this.onsecond.sendEvent();
-               LzTimer.addTimer( this.del, 1000 );
+               lz.Timer.addTimer( this.del, 1000 );
             </method>
         </node>
 

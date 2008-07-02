@@ -253,25 +253,25 @@
                 if(typeof popheight == 'undefined') popheight = 600;
                 if (target == null) target = escape(popup + runtime);
                 if ($runtime == 'dhtml') {
-                    LzBrowser.loadURL("loading.jsp?src=" + popup + "&lzr=" + runtime + "&lzt=html", target, "scrollbars=yes,width=" + popwidth + ",height=" + popheight);
+                    lz.Browser.loadURL("loading.jsp?src=" + popup + "&lzr=" + runtime + "&lzt=html", target, "scrollbars=yes,width=" + popwidth + ",height=" + popheight);
                 } else {
-                    LzBrowser.loadJS('window.open("loading.jsp?src=' + popup + '&lzr=' + runtime + '&lzt=html", "' + target + '", "scrollbars=yes,width=' + popwidth + ',height=' + popheight + '")');
+                    lz.Browser.loadJS('window.open("loading.jsp?src=' + popup + '&lzr=' + runtime + '&lzt=html", "' + target + '", "scrollbars=yes,width=' + popwidth + ',height=' + popheight + '")');
                 }
                 if (src != null){
-                  LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
+                  lz.Browser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
                                     '&title=' + title + '&lzr=' + runtime, 'content');
                 }
               } else if (action =='popupexternal') {
                 var jsOpenStr = "window.open('" + src + "'," 
                     + "'" + target + "'," + 
                     "'scrollbars=yes,resizable=yes,toolbar=yes,location=yes,menubar=yes,width=" + popwidth + ",height=" + popheight + "')";
-                LzBrowser.loadJS(jsOpenStr); 
+                lz.Browser.loadJS(jsOpenStr); 
                 
               } else {
                 if (title ==null){
                    title = classroot.title;
                 }
-                LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
+                lz.Browser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
                                   '&title=' + title + '&action=' + action + '&lzr=' + runtime, 
                                   (action=='source') ? 'source' : 'content');
            }
@@ -324,7 +324,7 @@
   <view width="200" height="$once{canvas.height}" > 
     <view x="-15" resource="navbg"/>
     <basebutton resource="logobtn" x="2" y="6"
-        onclick="LzBrowser.loadURL('http://www.openlaszlo.org', '_blank')"/>
+        onclick="lz.Browser.loadURL('http://www.openlaszlo.org', '_blank')"/>
     <view x="10" y="570" layout="axis:y">
       <text resize="true" fgcolor="white" font="smallfont,verdana,sans-serif" fontsize="8" text="${'Version: ' + canvas.version + ' (' + canvas.runtime + ')'}" />
       <view>
