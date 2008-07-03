@@ -10,6 +10,9 @@
   */
 
 /**
+  * <p><code>lz.Keys</code> is the single instance of the class
+  * <code>LzKeysService</code>.</p>
+  *
   * lz.Keys is a service that provides key handling messages. Objects can also
   * register callbacks to be sent when specific key combinitions are down.
   * 

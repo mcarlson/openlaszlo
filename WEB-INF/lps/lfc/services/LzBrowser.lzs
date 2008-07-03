@@ -9,18 +9,21 @@
  */
  
 /**
+ * <p><code>lz.Browser</code> is the single instance of the class
+ * <code>LzBrowserService</code>.</p>
+ *
  * <p>Interface to the browser via the runtime kernel</p>
- * <p>The <classname>LzBrowser</classname> service provides access to the browser and player environment. 
+ * <p>The <classname>lz.Browser</classname> service provides access to the browser and player environment. 
  * It includes methods to load URLs in the browser, and check the version of the player. For example:</p>
- * <example title="Using LzBrowser to launch another browser">
+ * <example title="Using lz.Browser to launch another browser">
  * <![CDATA[<canvas height="140" debug="true">
  *   <!-- Load the Laszlo site in a new window -->
- *   <button onclick="LzBrowser.loadURL('http://www.laszlosystems.com/', '_blank')">
+ *   <button onclick="lz.Browser.loadURL('http://www.laszlosystems.com/', '_blank')">
  *     Click me
  *   </button>
  *   <script>
  *     // List the player version
- *     Debug.write('Player version: ' + LzBrowser.getVersion());
+ *     Debug.write('Player version: ' + lz.Browser.getVersion());
  *   </script>
  * </canvas>]]>
  * </example>
@@ -29,7 +32,7 @@
  */
 class LzBrowserService {
   /** The browser service.  Also available as the global
-   * <code>LzBrowser</code>.
+   * <code>lz.Browser</code>.
    *
    * @type LzBrowserService
    * @keywords readonly
@@ -215,7 +218,7 @@ class LzBrowserService {
     //Debug.write('load url', u.toString());
     //for LzURL: protocol,host, port, path, file, query
 
-    /* Description: LzBrowser.toAbsoluteURL('http:/zot/foo.bar') =>
+    /* Description: lz.Browser.toAbsoluteURL('http:/zot/foo.bar') =>
        http://127.0.0.1:8080/lps-dev-bug/examples//zot/foo.bar
        I would have hoped for:
        http://127.0.0.1:8080/zot/foo.bar

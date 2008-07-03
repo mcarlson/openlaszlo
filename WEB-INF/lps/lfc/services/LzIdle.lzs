@@ -10,6 +10,9 @@
  */
 
 /**
+ * <p><code>lz.Idle</code> is the single instance of the class
+ * <code>LzIdleService</code>.</p>
+ *
  * <p>The OpenLaszlo runtime generates idle events at a fixed,
  * unspecified frequency.  Here is a simple example that shows how to
  * receive the <event>onidle</event> event:</p>

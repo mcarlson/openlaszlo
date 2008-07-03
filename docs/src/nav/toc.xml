@@ -91,13 +91,13 @@
         <item title="handler (LzDelegate)" href="LzDelegate.html" />
         <item title="event (LzEvent)" href="LzEvent.html" />
         <item title="LzEventable" href="LzEventable.html" />
-        <item title="LzGlobalMouse" href="LzGlobalMouse.html" />
-        <item title="LzIdle" href="LzIdle.html" />
-        <item title="LzKeys" href="LzKeys.html" />
-        <item title="LzModeManager" href="LzModeManager.html" />
-        <item title="LzTimer" href="LzTimer.html" />
-        <item title="LzTrack" href="LzTrack.html" />
-        <item title="LzHistory" href="LzHistory.html" />
+        <item title="LzGlobalMouse" href="LzGlobalMouseService.html" />
+        <item title="LzIdle" href="LzIdleService.html" />
+        <item title="LzKeys" href="LzKeysService.html" />
+        <item title="LzModeManager" href="LzModeManagerService.html" />
+        <item title="LzTimer" href="LzTimerService.html" />
+        <item title="LzTrack" href="LzTrackService.html" />
+        <item title="LzHistory" href="LzHistoryService.html" />
     </category>
     
     
@@ -116,12 +116,11 @@
     
     <category title="Media" >
         <item title="audio" href="tag-audio.html"/>
-        <item title="LzAudio" href="LzAudio.html" />
+        <item title="LzAudio" href="LzAudioService.html" />
         <item title="font" href="LzFont.html" />
         <item title="face" href="tag-face.html"/>
         <item title="frame" href="tag-frame.html"/>
         <item title="image" href="lz.image.html"/>
-        <!-- TODO: [2008-01-28 dda] <item title="LzAudio" href="lz.LzAudio.html" /> -->
         <item title="resource" href="tag-resource.html"/>
         <!-- LzFontManager ???  -->
     </category>
@@ -222,10 +221,10 @@
     </category>
     
     <category title="Services">
-        <item title="LzBrowser" href="LzBrowser.html" />
-        <item title="LzCursor" href="LzCursor.html" />
-        <item title="LzFocus" href="LzFocus.html" />    
-        <item title="LzTrack" href="LzTrack.html" />
+        <item title="LzBrowser" href="LzBrowserService.html" />
+        <item title="LzCursor" href="LzCursorService.html" />
+        <item title="LzFocus" href="LzFocusService.html" />    
+        <item title="LzTrack" href="LzTrackService.html" />
         <item title="LzURL" href="LzURL.html" />
     </category>
     

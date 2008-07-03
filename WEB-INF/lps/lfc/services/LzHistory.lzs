@@ -10,6 +10,9 @@
   */
 
 /**
+  * <p><code>lz.History</code> is the single instance of the class
+  * <code>LzHistoryService</code>.</p>
+  *
   * <p>The lz.History service manages interaction with the browser history and back button.  Save state as often as you like, and advance the
   *  history when a new 'page' of values is required.</p>
   * 

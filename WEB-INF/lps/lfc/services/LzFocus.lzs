@@ -10,6 +10,9 @@
   */
 
 /**
+  * <p><code>lz.Focus</code> is the single instance of the class
+  * <code>LzFocusService</code>.</p>
+  *
   * <p>This service manages the keyboard focus.  At any time, at most one view
   * has the keyboard focus.  This is the view that receives key events
   * when a key is pressed.</p>

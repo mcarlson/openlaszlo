@@ -10,9 +10,12 @@
  */
 
 /**
- * <p>The <code>LzGlobalMouse</code> service sends events any time the
+ * <p><code>lz.GlobalMouse</code> is the single instance of the class
+ * <code>LzGlobalMouseService</code>.</p>
+ *
+ * <p>The <code>lz.GlobalMouse</code> service sends events any time the
  * mouse button state changes, even if mouse events are locked using
- * the <classname>lz.ModeManager</classname> API. The LzGlobalMouse is
+ * the <classname>lz.ModeManager</classname> API. The lz.GlobalMouse is
  * also useful for detecting when the mouse button goes up or down on
  * a non-clickable view.</p>
  *
@@ -27,9 +30,9 @@
  *       }
  *     </handler>
  *
- *     <handler name="onclick" reference="LzGlobalMouse" args="who">
- *       //need to use LzGlobalMouse, since we don't get clicks if we're
- *       //checked. Note: LzGlobalMouse sends its events before the view
+ *     <handler name="onclick" reference="lz.GlobalMouse" args="who">
+ *       //need to use lz.GlobalMouse, since we don't get clicks if we're
+ *       //checked. Note: lz.GlobalMouse sends its events before the view
  *       //receives the events, so we can just unlock it here, and the
  *       //checkbox can do its normal onclick handling.
  *       if (this.value &amp;&amp; who == this){
@@ -45,28 +48,28 @@
  *       this.format("%s: %w", what, who);
  *     </method>
  *
- *     <handler name="onmouseover" reference="<em>LzGlobalMouse</em>" args="who">
+ *     <handler name="onmouseover" reference="lz.GlobalMouse" args="who">
  *       this.showEvent("mouseover" , who);
  *     </handler>
- *     <handler name="onmouseout" reference="<em>LzGlobalMouse</em>" args="who">
+ *     <handler name="onmouseout" reference="lz.GlobalMouse" args="who">
  *       this.showEvent("mouseout" , who);
  *     </handler>
  *
- *     <handler name="onmousedown" reference="<em>LzGlobalMouse</em>" args="who">
+ *     <handler name="onmousedown" reference="lz.GlobalMouse" args="who">
  *       this.showEvent("mousedown" , who);
  *     </handler>
- *     <handler name="onmouseup" reference="<em>LzGlobalMouse</em>" args="who">
+ *     <handler name="onmouseup" reference="lz.GlobalMouse" args="who">
  *       this.showEvent("mouseup" , who);
  *     </handler>
  *
- *     <handler name="onclick" reference="<em>LzGlobalMouse</em>" args="who">
+ *     <handler name="onclick" reference="lz.GlobalMouse" args="who">
  *       this.showEvent("mouseclick" , who);
  *     </handler>
  *   </text>
  * </canvas>
  * ]]></programlisting></example>
  *
- * <p>Use the LzGlobalMouse service in conjunction with <classname>lz.ModeManager</classname>'s event lock.</p>
+ * <p>Use the lz.GlobalMouse service in conjunction with <classname>lz.ModeManager</classname>'s event lock.</p>
  *
  * @shortdesc Application-wide control of and information about the mouse.
  * @see mode example
@@ -78,7 +81,7 @@
 public class LzGlobalMouseService extends LzEventable {
   /**
    * The global mouse service.  Also available as the global
-   * <code>LzGlobalMouse</code>.
+   * <code>lz.GlobalMouse</code>.
    *
    * @type LzGlobalMouseService
    * @keywords readonly

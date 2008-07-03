@@ -9,6 +9,9 @@
  */
 
 /**
+ * <p><code>lz.Instantiator</code> is the single instance of the class
+ * <code>LzInstantiatorService</code>.</p>
+ *
  * <p>The instantiator is responsible for timing the creation and
  * initialization of Laszlo applications. Because of Laszlo's
  * declarative style, applications must be instantiated in two passes
@@ -35,7 +38,7 @@ dynamic public class LzInstantiatorService extends LzEventable {
 
   /**
    * The instantiator service.  Also available as the global
-   * <code>LzInstantiator</code>.
+   * <code>lz.Instantiator</code>.
    *
    * @type LzInstantiatorService
    * @keywords readonly

@@ -10,6 +10,9 @@
   */
 
 /**
+  * <p><code>lz.ModeManager</code> is the single instance of the class
+  * <code>LzModeManagerService</code>.</p>
+  *
   * <p>
   * The mode manager controls the dispatch of mouse events to the rest 
   * of the system. The mode manager keeps a stack of modal views. When a 

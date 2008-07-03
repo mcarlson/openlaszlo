@@ -10,10 +10,13 @@
  */
 
 /**
-* <p>This example shows how the cursor can be set on a view so that
+ * <p><code>lz.Cursor</code> is the single instance of the class
+ * <code>LzCursorService</code>.</p>
+ *
+ * <p>This example shows how the cursor can be set on a view so that
  * it will change when the mouse is over that view:</p>
-*
-* <example title="Setting the cursor for a view">
+ *
+ * <example title="Setting the cursor for a view">
  * &lt;canvas height="30"&gt;
  *   &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
  *   &lt;view bgcolor="yellow" cursor="waitcursor"&gt;
@@ -25,13 +28,13 @@
 * <p>This example changes the cursor for 1/2 second when the button is
  * clicked:</p>
 *
-* <example title="Changing the cursor with LzCursor">
+* <example title="Changing the cursor with lz.Cursor">
  * &lt;canvas height="30"&gt;
  *   &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
  *   &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
  *     &lt;method name="setCursor"&gt;
  *       lz.Cursor.setCursorGlobal('waitcursor');
- *       var del= new LzDelegate(LzCursor, 'unlock');
+ *       var del= new LzDelegate(lz.Cursor, 'unlock');
  *       lz.Timer.addTimer(del, 500);
  *     &lt;/method&gt;
  *   &lt;/button&gt;

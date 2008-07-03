@@ -10,6 +10,9 @@
   */
 
 /**
+  * <p><code>lz.Track</code> is the single instance of the class
+  * <code>LzTrackService</code>.</p>
+  *
   * <p>This service helps tracking the mouse over a number of views, as in
   * common when implementing menus and drag-and-drop behaviors.  When the
   * mouse is down, standard view events such as <event>onmousedragin</event>
