@@ -586,7 +586,7 @@ lz.embed = {
     }
     ,/** @access private */
     _sendMouseWheel: function(d) {
-        if (d != null) this.callMethod("LzKeys.__mousewheelEvent(" + d + ")"); 
+        if (d != null) this.callMethod("lz.Keys.__mousewheelEvent(" + d + ")"); 
     }
 
     ,/**
