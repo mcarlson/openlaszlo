@@ -11,13 +11,16 @@
   <class name="link" extends="text" resize="true"
          onmouseover="setAttribute('fgcolor', blue)"
          onmouseout="setAttribute('fgcolor', black)"
-         onclick="LzBrowser.loadURL(this.datapath.xpathQuery('@href'), target)"/>
+         onclick="lz.Browser.loadURL(this.datapath.xpathQuery('@href'), target)"/>
+  <class name="wheelscrollbar" extends="scrollbar">
+    <handler name="onmousewheeldelta" reference="lz.Keys" method="mousewheelUpdate"/>
+  </class>
 
   <!-- Create linktree so we can keyboard navigate. -->
   <class name="linktree" extends="basetree" isleaf="true" recurse="false" >
       <method name="keySelect">
           super.keySelect();
-          LzBrowser.loadURL(this.datapath.xpathQuery('@href'), target);
+          lz.Browser.loadURL(this.datapath.xpathQuery('@href'), target);
       </method>
       <text text="${parent.text}" placement="item" name="t" resize="true" 
             onmouseover="setAttribute('fgcolor', classroot.style['texthilitecolor'])"
@@ -31,7 +34,7 @@
                                                ? classroot.style['texthilitecolor']
                                                : classroot.style['textcolor'] ) }">
           <handler name="onclick">
-              LzBrowser.loadURL(classroot.datapath.xpathQuery('@href'), target);
+              lz.Browser.loadURL(classroot.datapath.xpathQuery('@href'), target);
               classroot.setAttribute('selected', true);
               classroot.changeFocus(classroot);
           </handler>
@@ -57,7 +60,7 @@
         </method>
       </view>
       <link text="Welcome"
-            onclick="LzBrowser.loadURL('ref.preface.html', target)"/>
+            onclick="lz.Browser.loadURL('ref.preface.html', target)"/>
       <view name="treeparent" clip="true" width="${parent.width - 20}"
             height="${Math.max(0,parent.parent.height - parent.search.height - 80)}">
         <attribute name="cgroup" value="0"/>
@@ -110,12 +113,12 @@
                 <linktree datapath="item" text="$path{'@title'}" />
             </tree>
         </tree>
-        <scrollbar/>
+        <wheelscrollbar/>
       </view>
       <simplelayout spacing="8"/>
       
-      <button onclick="LzBrowser.loadURL('javascript:lzSetShowInlineExamples(true)')">Show Examples</button>
-      <button onclick="LzBrowser.loadURL('javascript:lzSetShowInlineExamples(false)')">Hide Examples</button>
+      <button onclick="lz.Browser.loadURL('javascript:lzSetShowInlineExamples(true)')">Show Examples</button>
+      <button onclick="lz.Browser.loadURL('javascript:lzSetShowInlineExamples(false)')">Hide Examples</button>
 
     </tabpane>
     <tabpane width="${parent.width}">
@@ -125,7 +128,7 @@
           <view layout="y" width="${parent.width - 20}">
             <link datapath="classesdata:/index/item" text="$path{'@title'}" />
           </view>
-          <scrollbar />
+          <wheelscrollbar/>
       </view>
     </tabpane>
     <tabpane width="${parent.width}">
@@ -135,7 +138,7 @@
           <view layout="y" width="${parent.width - 20}">
             <link datapath="tagsdata:/index/item" text="$path{'@title'}" />
           </view>
-          <scrollbar />
+          <wheelscrollbar/>
       </view>
     </tabpane>
   </tabs>
