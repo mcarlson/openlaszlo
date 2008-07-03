@@ -900,10 +900,18 @@ function getNodeOffset (){
 
 /**
   * Returns the number of the node that the datapointer is pointing to.
+  * If the datapointer does not point to a valid node, 0 is returned.
   * Note that XPath indices are 1-based.
-  * @return Number: The offset of the node
+  * @return Number: The offset of the node or 0
   */
 function getXPathIndex ():Number { 
+    if ( ! this.p ) {
+        if ( $debug ) {
+            Debug.info("%s: p is null in %s", arguments.callee, this);
+        }
+        return 0;
+    }
+    
     return this.p.getOffset() + 1;
 }
 
