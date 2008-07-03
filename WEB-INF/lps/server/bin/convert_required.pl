@@ -302,13 +302,14 @@ sub emit_content {
     my $save = $_;
     my $FH = $_[0];
     $_ = $_[1];
+    my $hadnewline = ($_ =~ "\n");
 
     &convert_class_name_changes();
     &convert_new_instanceof();
 
     # After matching, the newline may be lost.
     # Add it again here so everything comes out even.
-    if ($_ !~ "\n") {
+    if ($_ !~ "\n" && "$hadnewline" == 1) {
         $_ .= "\n";
     }
 
