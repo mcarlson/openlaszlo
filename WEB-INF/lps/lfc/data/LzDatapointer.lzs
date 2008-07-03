@@ -547,7 +547,7 @@ function isValid () :Boolean {
 
 /** @access private */
 function __LZsimpleOperatorUpdate () :void { 
-    var ndat:* = this.__LZprocessOperator( this.p , this.parsedPath );
+    var ndat:* = this.p != null ? this.__LZprocessOperator( this.p, this.parsedPath ) : void(0);
     //second clause is necessary to process updates for @*
     var dchanged:Boolean = false;
     if ( this.data != ndat || this.parsedPath.operator == "attributes" ){
@@ -904,8 +904,7 @@ function getNodeOffset (){
   * @return Number: The offset of the node
   */
 function getXPathIndex ():Number { 
-    this.p.parentNode.__LZupdateCO();
-    return this.p.__LZo + 1;
+    return this.p.getOffset() + 1;
 }
 
 /**
@@ -1214,32 +1213,18 @@ function __LZprocessOperator (p, pp, depends = null) :* {
         return p[ pp.operator ] ( pp.operatorArgs );
     }
 
-    // LzParsedPath.initialize() created pp.operator. If 'attributes',
-    // don't use split(".") to separate the string because '.' is
-    // a valid XML character.
-    var parts:Array;
+    // LzParsedPath.initialize() created pp.operator
     if (pp.operator.indexOf("attributes.") == 0) {
         //operator: "attributes.xxx"
-        parts = ['attributes', pp.operator.substr(11)]
+        if (p['attributes']) {
+            return p.attributes[pp.operator.substr(11)];
+        }
+        // TODO: [2007-3-16 hqm] I'll do what Ben did, return undefined
+        return;
     } else {
         //operator: "attributes", "nodeName"
-        parts = [pp.operator];
+        return p[pp.operator];
     }
-
-    var val:* = p;
-    // TODO: [2008-3-12 pbr] Verify this works for all cases
-    //  I found that val can be an LzDataElement or a hash (from LzDataElement)
-    for (var i:int = 0; i < parts.length; i++) {
-        var pathElt:String = parts[i];
-//        if (val == null || !(pathElt in val)) {
-        if (val == null || (!(val is LzDataElement) && !(pathElt in val))) {
-            // TODO: [2007-3-16 hqm] I'll do what Ben did, return undefined
-            return;
-        } else {
-            val = val[pathElt];
-        }
-    }
-    return val;
 }
 
 ////////////////////////////////////////////////////////////////
