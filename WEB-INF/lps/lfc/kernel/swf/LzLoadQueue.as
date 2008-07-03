@@ -418,8 +418,6 @@ LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
 }
 
 
-
-
 /**
   * @access private
   */
@@ -493,7 +491,6 @@ LzLoadQueue.loadXML = function (loadobj) {
             lvar[key] = pdata[key];
         }
 
-
         lvar.sendAndLoad(reqstr , loadobj, "POST" );
     } else {
         // SOLO request:
@@ -507,7 +504,13 @@ LzLoadQueue.loadXML = function (loadobj) {
                 lvar.addRequestHeader(header, headers[header]);
             }
             var lzpostbody = loadobj.rawpostbody;
-            if (lzpostbody != null) {
+            var hasquerydata = loadobj.hasquerydata; // boolean
+            if (lzpostbody != null && !hasquerydata) {
+                // This is supposed to be a "raw" data post. The best
+                // we can do is to use XML.sendAndLoad, with a Flash
+                // XML Text node as the data. This will still
+                // XML-escape it, but it's as close as we can get to POSTing
+                // raw data.
                 var xmlraw = new XML();
                 var tnode = xmlraw.createTextNode(lzpostbody);
                 xmlraw.appendChild(tnode);
@@ -516,6 +519,12 @@ LzLoadQueue.loadXML = function (loadobj) {
                 }
                 xmlraw.sendAndLoad(reqstr, loadobj);
             } else {
+                var content = loadobj.rawpostbody;
+                // Copy the postbody data onto the LoadVars, it will be POST'ed
+                var pdata = LzParam.parseQueryString(content);
+                for ( var key in pdata) {
+                    lvar[key] = pdata[key];
+                }
                 lvar.sendAndLoad(reqstr , loadobj , "POST");
             }
         } else {

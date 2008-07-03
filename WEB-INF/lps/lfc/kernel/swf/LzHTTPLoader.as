@@ -132,6 +132,7 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
     var xmlrequestobj = new XML();
     
     xmlrequestobj.cache = this.options.cacheable;
+    xmlrequestobj.hasquerydata = this.options.hasquerydata;
 
     if (typeof(lzloader.timeout) != 'undefined') {
         xmlrequestobj.timeout = lzloader.timeout;

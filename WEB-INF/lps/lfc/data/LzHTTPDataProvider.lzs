@@ -148,6 +148,10 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         var cachebreak = "__lzbc__="+(new Date()).getTime();
 
+        // Default assume we are posting query data (key-value pairs)
+        var hasquerydata = true;
+
+
         var postbody = dreq.postbody;
         if (postbody == null && qparams != null) {
             var names = qparams.getNames();
@@ -158,7 +162,13 @@ class LzHTTPDataProvider extends LzDataProvider {
             }
 
             postbody = q;
+        } else {
+            //We are asking the swf8 runtime to treat this as raw data, as best it can
+            hasquerydata = false;
         }
+
+        tloader.setOption('hasquerydata', hasquerydata);
+
 
         var lzurl = new LzURL(dreq.src);
 
@@ -337,7 +347,6 @@ class LzHTTPDataRequest extends LzDataRequest {
     var postbody:String;
     var proxied:Boolean;
     var proxyurl:String;  
-
     var multirequest:Boolean = false;
     var queuerequests:Boolean = false;
 

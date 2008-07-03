@@ -20,11 +20,12 @@
 
     <method name="sendit">
       Debug.write("testsetheaders.lzx sending edata_solo");
+      edata_solo.setQueryParam("flash", "has some bugs");
+      edata_solo.setQueryType("POST");
+
       edata_solo.setHeader("content-type", "pink-elephants/xml");
       edata_solo.setHeader("my-personal-header", "vanilla/with-chocolate-syrup");
       edata_solo.setHeader("my-other-personal-header", "milk chocolate with almonds");
-      edata_solo.setQueryParam("flash", "has some bugs");
-      edata_solo.setQueryType("POST");
       edata_solo.doRequest();
     </method>
 

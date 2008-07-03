@@ -328,7 +328,11 @@ function request ( o ){
     }
 
     lmv.lzt = o.lzt;
-    o.proxyurl = canvas.getProxyURL(o.url);
+    if (o.proxied) {
+        o.proxyurl = canvas.getProxyURL(o.url);
+    } else {
+        o.proxyurl = null;
+    }
 
     if (typeof(o.proxied) != undefined && o.proxied != null) {
         lmv.proxied = o.proxied;
@@ -357,6 +361,7 @@ function requestDirectXML ( o ){
         LzLoader.debugLoadObj(o);
     }
     this.initializeRequestObj(o);
+
     LzLoadQueue.enqueueRequest( o );
     // We should probably be passing something other than the obj itself to
     // the onrequest event

@@ -742,8 +742,9 @@ function doRequest(ignore=null) {
     // the DataRequest.postbody field to the lzpostbody value.
     // 
     if (this.querytype.toUpperCase() == "POST") {
-        var lzpostbody = null;
+        var lzpostbody = this.postbody;
         if (dreq.queryparams) {
+            // a "lzpostbody" arg overrides postbody, for back compatibility
             lzpostbody = dreq.queryparams.getValue('lzpostbody');
         }
         // If there is a lzpostbody query arg, we are going to remove
@@ -757,7 +758,9 @@ function doRequest(ignore=null) {
         // 
         if (lzpostbody != null) { 
             dreq.postbody = lzpostbody;
-            dreq.queryparams.remove('lzpostbody');
+            if (dreq.queryparams && dreq.queryparams['lzpostbody']) {
+                dreq.queryparams.remove('lzpostbody');
+            }
         }
     }
 

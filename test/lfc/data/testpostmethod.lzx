@@ -1,7 +1,7 @@
 <library>
   <include href="lzunit/lzunit.lzx" />
 
-  <dataset name="dsget_post_prox" src="http:echo.jsp" 
+  <dataset name="dsget_post_prox" src="http:echobody.jsp" 
            getresponseheaders="true"  proxied="false"
            timeout="120000"/>
 
@@ -21,7 +21,7 @@
     <method name="sendit">
       dsget_post_prox.setQueryParam("address", "67 Clyde Street");
       dsget_post_prox.setQueryParam("phone", "617-987-1234");
-      dsget_post_prox.setQueryType("GET");
+      dsget_post_prox.setQueryType("POST");
       dsget_post_prox.doRequest();
     </method>
 
@@ -47,9 +47,13 @@
 
         <method name="doIt" args="dp">
             <![CDATA[
-                     var resp = dp.xpathQuery( '/echo/data/text()');
-                     assertTrue( resp.indexOf("617-987-1234") > 0);
-                     assertTrue( resp.indexOf("67 Clyde Street") > 0);
+                     var phone = dp.xpathQuery( '/echo/phone/text()');
+                     assertEquals( "617-987-1234", phone );
+                     var addr = dp.xpathQuery( '/echo/address/text()');
+                     assertEquals( "67 Clyde Street", addr);
+
+                     var method = dp.xpathQuery( '/echo/method/@type');
+                     assertEquals( "POST", method);
             ]]>
         </method>
     </class>

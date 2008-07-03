@@ -1,7 +1,7 @@
 <library>
   <include href="lzunit/lzunit.lzx" />
 
-  <dataset name="dsgetsolo_" src="http:echo.jsp" 
+  <dataset name="dsgetsolo_" src="http:echobody.jsp" 
            getresponseheaders="true"  proxied="false"
            timeout="120000"/>
 
@@ -47,9 +47,13 @@
 
         <method name="doIt" args="dp">
             <![CDATA[
-                     var resp = dp.xpathQuery( '/echo/data/text()');
-                     assertTrue( resp.indexOf("617-987-1234") > 0);
-                     assertTrue( resp.indexOf("67 Clyde Street") > 0);
+                     var phone = dp.xpathQuery( '/echo/phone/text()');
+                     assertEquals( "617-987-1234", phone );
+                     var addr = dp.xpathQuery( '/echo/address/text()');
+                     assertEquals( "67 Clyde Street", addr);
+                     var method = dp.xpathQuery( '/echo/method/@type');
+                     assertEquals( "GET", method);
+
             ]]>
         </method>
     </class>
