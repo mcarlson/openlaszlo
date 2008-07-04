@@ -16,16 +16,16 @@
             <handler name="ondata">
                 var nn = this.getNodeName();
                 if (nn == "stat") {
-                    parent.mt.setVisible(false);
-                    parent.servertab.setVisible(true);
+                    parent.mt.setAttribute('visible', false);
+                    parent.servertab.setAttribute('visible', true);
                     this.handleData();
                 } else if (nn == "lps-error") {
-                    parent.mt.setVisible(true);
-                    parent.servertab.setVisible(false);
+                    parent.mt.setAttribute('visible', true);
+                    parent.servertab.setAttribute('visible', false);
                     this.handleError();
                 } else {
-                    parent.mt.setVisible(true);
-                    parent.servertab.setVisible(false);
+                    parent.mt.setAttribute('visible', true);
+                    parent.servertab.setAttribute('visible', false);
                     parent.mt.setText('error: server info request node is ' + nn);
                 }
             </handler>
@@ -44,20 +44,20 @@
                 }
             </method>
             <handler name="onerror" args="ds">
-                parent.mt.setVisible(true);
-                parent.servertab.setVisible(false);
+                parent.mt.setAttribute('visible', true);
+                parent.servertab.setAttribute('visible', false);
                 parent.mt.setText(ds.getErrorString());
             </handler>
             <handler name="ontimeout" >
-                parent.mt.setVisible(true);
-                parent.servertab.setVisible(false);
+                parent.mt.setAttribute('visible', true);
+                parent.servertab.setAttribute('visible', false);
                 parent.mt.setText("Server info request timed out.");
             </handler>
         </datapointer>
 
         <method name="request">
-            this.mt.setVisible(true);
-            this.servertab.setVisible(false);
+            this.mt.setAttribute('visible', true);
+            this.servertab.setAttribute('visible', false);
             this.mt.setText('Requesting...');
             stds.setQueryParams( { lzt: "stat", pwd: pwd.getText() } );
             stds.doRequest();

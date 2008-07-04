@@ -85,7 +85,6 @@ var LzKeyboardKernel = {
     ,setCallback: function (scope, keyboardcallback) {
         this.__scope = scope;
         this.__callback = keyboardcallback;
-        this.setKeyboardControl(true);
     }    
     ,setKeyboardControl: function (dhtmlKeyboardControl) {
         var handler = null;

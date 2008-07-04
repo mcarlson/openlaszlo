@@ -126,16 +126,16 @@
             <handler name="ondata">
                 var nn = this.getNodeName();
                 if (nn == "lps-cacheinfo") {
-                    parent.mt.setVisible(false);
-                    parent.info.setVisible(true);
+                    parent.mt.setAttribute('visible', false);
+                    parent.info.setAttribute('visible', true);
                     this.handleData();
                 } else if (nn == "lps-error") {
-                    parent.mt.setVisible(true);
-                    parent.info.setVisible(false);
+                    parent.mt.setAttribute('visible', true);
+                    parent.info.setAttribute('visible', false);
                     this.handleError();
                 } else {
-                    parent.mt.setVisible(true);
-                    parent.info.setVisible(false);
+                    parent.mt.setAttribute('visible', true);
+                    parent.info.setAttribute('visible', false);
                     parent.mt.setText('error: cache info request node is ' + nn);
                 }
             </handler>
@@ -215,16 +215,16 @@
             <handler name="ondata">
                 var nn = this.getNodeName();
                 if (nn == "lps") {
-                    parent.mt.setVisible(false);
-                    parent.info.setVisible(true);
+                    parent.mt.setAttribute('visible', false);
+                    parent.info.setAttribute('visible', true);
                     this.handleData();
                 } else if (nn == "lps-error") {
-                    parent.mt.setVisible(true);
-                    parent.info.setVisible(false);
+                    parent.mt.setAttribute('visible', true);
+                    parent.info.setAttribute('visible', false);
                     this.handleError();
                 } else {
-                    parent.mt.setVisible(true);
-                    parent.info.setVisible(false);
+                    parent.mt.setAttribute('visible', true);
+                    parent.info.setAttribute('visible', false);
                     parent.mt.setText('error: clear cache request node is ' + nn);
                 }
             </handler>
@@ -260,8 +260,8 @@
         </datapointer>
 
         <method name="request">
-            this.mt.setVisible(true);
-            this.info.setVisible(false);
+            this.mt.setAttribute('visible', true);
+            this.info.setAttribute('visible', false);
             this.mt.setText('Requesting...');            
             cids.setQueryParams( { lzt: "cacheinfo", /* details: 1, */
                                    pwd: pwd.getText() } );
@@ -279,8 +279,8 @@
             </button>
             <button>Clear Cache
                 <handler name="onclick" >
-                    classroot.mt.setVisible(true);
-                    classroot.info.setVisible(false);
+                    classroot.mt.setAttribute('visible', true);
+                    classroot.info.setAttribute('visible', false);
                     this.mt.setText('Clearing...');            
                     ccds.setQueryParams( { lzt: "clearcache", pwd: pwd.getText() } );
                     ccds.doRequest();
