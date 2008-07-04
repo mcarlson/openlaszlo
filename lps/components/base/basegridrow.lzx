@@ -185,14 +185,8 @@
               its column owner.-->
         <handler name="onaddsubview" args="sv">
             if ( !sv [ "ownerColumn"] ) return;
-            sv._updateIt = this._updateIt;
-            var d = new LzDelegate( sv , "_updateIt", sv.ownerColumn,"onx");
-            d.register( sv.ownerColumn,"oncolwidth" );
-            sv._updateIt();
+            sv.applyConstraintMethod("_updateCellBounds", [sv.ownerColumn, "x", sv.ownerColumn, "colwidth"]);
         </handler>
-        <attribute name="_updateIt" 
-                   value="function(ignore){this.setX( this.ownerColumn.x );
-                                this.setWidth( this.ownerColumn.colwidth)}"/>
         <doc>
           <tag name="shortdesc"><text></text></tag>
           <text>

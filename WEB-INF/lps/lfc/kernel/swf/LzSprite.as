@@ -1348,7 +1348,7 @@ LzSprite.prototype.setCursor = function( cursor ){
         if (! this._moDel) {
             this._moDel = new LzDelegate( this , '_cursorGotMouseover',
                                                 this.owner , 'onmouseover');
-            this._muDel = new LzDelegate( LzMouseKernel , 'restoreCursor',
+            this._muDel = new LzDelegate( this , '_cursorGotMouseout',
                                                 this.owner , 'onmouseout');
         }
         
@@ -1371,6 +1371,11 @@ LzSprite.prototype.setCursor = function( cursor ){
 /** @access private */
 LzSprite.prototype._cursorGotMouseover = function(ignore) {
     LzMouseKernel.setCursorGlobal(this._cures);
+}
+
+/** @access private */
+LzSprite.prototype._cursorGotMouseout = function(ignore) {
+    LzMouseKernel.restoreCursor();
 }
 
 /**

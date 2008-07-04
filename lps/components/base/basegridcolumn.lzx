@@ -89,24 +89,32 @@
                 return parent.content;
             } else {
                 return super.determinePlacement.apply(this, arguments);
-//                return super.determinePlacement( v , p , args );
             }
         </method>
 
         <!--- @keywords private -->
         <method name="_getCellForColumn">
-            if ( !_contentsPackage ) return null;
-
-            if ( _contentsPackage.length == 1 ) {
-                var o = _contentsPackage[ 0 ];
-                o.attrs.ownerColumn = this;
+            if ( !this._contentsPackage ) return null;
+            
+            var fupdCellBounds = function(ignore=null) {
+                //'this' points to the grid cell
+                this.setX( this.ownerColumn.x );
+                this.setWidth( this.ownerColumn.colwidth );
+            };
+            
+            var contentspkg = this._contentsPackage;
+            if ( contentspkg.length == 1 ) {
+                var o = contentspkg[ 0 ];
+                var cellargs = o.attrs;
+                cellargs.ownerColumn = this;
+                cellargs._updateCellBounds = fupdCellBounds;
                 return o;
+            } else {
+                //there's more than one subview, so we need to pack them up
+                return { 'class':  lz.view,
+                         attrs:    {ownerColumn: this, _updateCellBounds: fupdCellBounds},
+                         children: contentspkg };
             }
-
-            //else, there's more than one subview, so we need to pack them up
-            return { 'class':     lz.view,
-                     attrs:    { ownerColumn : this },
-                     children: _contentsPackage };
         </method>
 
         <!--- @keywords private -->
