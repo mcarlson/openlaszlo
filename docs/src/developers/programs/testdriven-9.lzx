@@ -11,7 +11,7 @@
 <handler name="onclick">
     if (goButton.go==true) {
         if (goButton.counter&lt;Number.MAX_VALUE) {
-            foo = new LzDelegate(this, "count", LzIdle, "onidle");
+            foo = new LzDelegate(this, "count", lz.Idle, "onidle");
             this.setAttribute('text', 'Stop');
             this.setAttribute('go', false);
         }

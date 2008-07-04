@@ -24,12 +24,12 @@
       this.setAttribute("width", itemwidth);
       this.datapath.setAttribute("p", dataNode);
       this.setAttribute("visible", true)
-      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+      this.gm = new LzDelegate(this, "cancelFloater", lz.GlobalMouse, "onmouseup");
       this.setAttribute("visible", true);
       this.dragger.apply();
     </method>
     
-    <method name="cancelFloater">
+    <method name="cancelFloater" args="v">
       this.dragger.remove();
       this.setAttribute("visible", false);
     </method>
@@ -73,6 +73,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

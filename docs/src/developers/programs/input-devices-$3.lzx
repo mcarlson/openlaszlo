@@ -3,14 +3,14 @@
   <resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/>
   <button onclick="setCursor()" text="Click me to change the cursor for 1/2 second">
     <method name="setCursor">
-      LzCursor.setCursorGlobal('waitcursor');
-      // call LzCursor.restoreCursor() after 1/2 second
-      var del= new LzDelegate(LzCursor, 'restoreCursor');
-      LzTimer.addTimer(del, 500);
+      lz.Cursor.setCursorGlobal('waitcursor');
+      // call lz.Cursor.restoreCursor() after 1/2 second
+      var del= new LzDelegate(lz.Cursor, 'restoreCursor');
+      lz.Timer.addTimer(del, 500);
     </method>
   </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

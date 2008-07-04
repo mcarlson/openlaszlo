@@ -5,7 +5,7 @@
     <attribute name="text" type="text"/>
     <text name="txt" text="${parent.text}" resize="true"/>
     <handler name="onmousedown">
-      this.f = new LzView(canvas, {width: this.width,
+      this.f = new lz.view(canvas, {width: this.width,
                                    height: this.height,
                                    bgcolor: this.bgcolor,
                                    x: this.getAttributeRelative("x", canvas),
@@ -19,16 +19,16 @@
     </handler>
     
     <method name="startDraggingFloater">
-      this.d = new LzDelegate(this, "adjustFloaterPosition", LzIdle, "onidle");
-      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+      this.d = new LzDelegate(this, "adjustFloaterPosition", lz.Idle, "onidle");
+      this.gm = new LzDelegate(this, "cancelFloater", lz.GlobalMouse, "onmouseup");
     </method>
     
-    <method name="adjustFloaterPosition">
+    <method name="adjustFloaterPosition" args="v">
       this.f.setAttribute("x", canvas.getMouse("x")-this.x_offset);
       this.f.setAttribute("y", canvas.getMouse("y")-this.y_offset);
     </method>
     
-    <method name="cancelFloater">
+    <method name="cancelFloater" args="v">
       this.gm.unregisterAll();
       this.d.unregisterAll();
       this.f.destroy();
@@ -57,6 +57,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

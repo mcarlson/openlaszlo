@@ -1,6 +1,6 @@
 <canvas height="75">
   <script>
-    var foo = new LzView(canvas, {width: 50, height: 50, 
+    var foo = new lz.view(canvas, {width: 50, height: 50, 
                                   x: 150, y: 0,
                                   bgcolor: 0,
                                   name: "myview"});

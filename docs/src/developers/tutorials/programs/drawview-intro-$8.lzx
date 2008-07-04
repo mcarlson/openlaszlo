@@ -1,7 +1,7 @@
   
 <canvas height="200" proxied="false">
       <drawview height="150" width="300"  bgcolor="blue">
-        <handler name="oninit">
+        <handler name="oncontext">
          this.moveTo(100,100);
          this.lineTo(200,100);
          this.quadraticCurveTo(120, 200, 300, 100)
@@ -17,6 +17,6 @@
       </drawview>
     </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

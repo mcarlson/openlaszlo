@@ -3,11 +3,15 @@
 <include href="lzunit"/>
 <simplelayout axis="y" spacing="10"/>
 
-    <method name="wake" event="oninit">
-        foo = new LzDelegate(this, "sleep", LzIdle, "onidle");
+    <handler name="oninit">
+        this.wake();
+    </handler>
+
+    <method name="wake">
+        foo = new LzDelegate(this, "sleep", lz.Idle, "onidle");
     </method>
     
-    <method name="sleep">
+    <method name="sleep" args="v">
         Debug.write("Sleeping");
     </method>
 
@@ -20,4 +24,4 @@
 </TestSuite>
 
 </canvas>
-<!-- Copyright 2001-2007 Laszlo Systems, Inc. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc. -->

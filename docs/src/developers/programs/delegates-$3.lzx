@@ -9,14 +9,14 @@
 
             if( typeof this.del == "undefined" ) { 
                 this.del = new LzDelegate( this, "updateTimer" );
-                LzTimer.addTimer( this.del, 1000 );
+                lz.Timer.addTimer( this.del, 1000 );
             } else {
-                LzTimer.resetTimer( this.del, 1000 );
+                lz.Timer.resetTimer( this.del, 1000 );
             }
         </method>
     </text> 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

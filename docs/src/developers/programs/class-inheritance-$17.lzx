@@ -6,10 +6,10 @@
   
   <view name="redbox" bgcolor="red" width="100" height="100"/>
   
-  <!-- Create new mybox with cyan bgcolor and place it in canvas.redbox. -->
+  <!-- Create new lz.mybox with cyan bgcolor and place it in canvas.redbox. -->
   <button x="110" text="add cyan"
             onclick="if (canvas.redbox['cyan'] == null) 
-                       new mybox(canvas.redbox, { name: 'cyan', bgcolor: 0x00ffff })"/>
+                       new lz.mybox(canvas.redbox, { name: 'cyan', bgcolor: 0x00ffff })"/>
 
   <!-- Remove cyan view from redbox. -->
   <button x="110" y="30" text="remove cyan"
@@ -17,6 +17,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

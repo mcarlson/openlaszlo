@@ -19,7 +19,7 @@
 
         <button>Get LzDataElement via datapointer
             <handler name="onclick">
-                var dp = new LzDatapointer();
+                var dp = new lz.datapointer();
                 dp.setAttribute("xpath","ds:/addressbook/contacts");
                 Debug.write(dp.p);
             </handler>
@@ -42,6 +42,6 @@
     
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

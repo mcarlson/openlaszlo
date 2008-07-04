@@ -57,18 +57,18 @@
 
       <method name="startResize">
         // set distances from right and bottom edges
-        this.resizeOffsetX = this.getAttribute('width') 
+        this.resizeOffsetX = this.width 
                              - this.getMouse('x');
-        this.resizeOffsetY = this.getAttribute('height') 
+        this.resizeOffsetY = this.height 
                              - this.getMouse('y');
 
-        if (!this.getAttribute('sizerDel')) {
+        if (!this['sizerDel']) {
           this.sizerDel = new LzDelegate(this, 'adjustSize', 
-                                         LzIdle, 'onidle');
+                                         lz.Idle, 'onidle');
         }
       </method>
 
-      <method name="adjustSize">
+      <method name="adjustSize" args="v">
       <![CDATA[
         var newWidth = this.getMouse('x') + this.resizeOffsetX;
         var newHeight = this.getMouse('y') + this.resizeOffsetY;
@@ -107,6 +107,6 @@
   </mediaWindow>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

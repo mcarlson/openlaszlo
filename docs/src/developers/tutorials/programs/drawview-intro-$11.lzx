@@ -3,7 +3,7 @@
     <class name="circle" extends="drawview" >
         <attribute name="circlecolor" value="white"/>
         <attribute name="r" value="100"/>
-        <handler name="oninit">
+        <handler name="oncontext">
           this.redraw();
         </handler>
         <handler name="onr">
@@ -49,6 +49,6 @@
      
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
