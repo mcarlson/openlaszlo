@@ -138,12 +138,17 @@ debug(1, "debug level is set to " + $debuglevel.to_s)
 # on Windows vs. Unix/Linux.
 
 generate_index("{[Ll]z,tag}*.html", $outdir + "/tags.xml", "index") { | file,fullname |
-    tagname_for(fullname);
+    name = tagname_for(fullname);
+    if (name) then
+        name = "&amp;lt;" + name + "&amp;gt;";
+    end
+    name
  }
 generate_index("Lz*.html", $outdir + "/classes.xml", "index") { | file,fullname | 
    name = nontagname_for(fullname);
    if (!name) then
       name = file.sub(/\.html/, '').sub(/([^+]*)\+(.*)/, '\1 (\2)').gsub(/\+/, ' ');
    end
+   name = name.sub(/^Lz/, 'lz.');
    name
 }
