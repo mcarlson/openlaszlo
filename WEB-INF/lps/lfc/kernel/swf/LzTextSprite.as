@@ -257,7 +257,25 @@ LzTextSprite.prototype.getTextWidth = function ( ){
  * in the DHTML version of this method).
  */
 LzTextSprite.prototype.getTextfieldHeight = function ( ){
-    return this.__LZtextclip._height;
+    var textclip = this.__LZtextclip;
+
+    // turn on autoSize temporarily
+    var tca = textclip.autoSize;
+    textclip.autoSize = true;
+    // measure height and reset to the original values
+    var h = textclip._height;
+
+    // Measure test string if the field is empty
+    if (h == 4) {
+        var tct = textclip.htmlText;
+        textclip.htmlText = "__ypgSAMPLE__";
+        var h = textclip._height;
+        textclip.htmlText = tct;
+    }
+        
+    textclip.autoSize = tca;
+
+    return h;
 }
 
 /**
