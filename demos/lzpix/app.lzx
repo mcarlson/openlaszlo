@@ -402,7 +402,7 @@
                 <attribute name="_sy" value="0" />
 
                 <attribute name="updel" value="$once{ new LzDelegate( this , 'update' ) }"/>
-                <method name="start">
+                <method name="starter">
                     this.setAttribute('visible',  true );
                     this._sx = parent.getMouse( "x" );
                     this._sy = parent.getMouse( "y" );
@@ -432,7 +432,7 @@
                     ]]>
                 </method>
 
-                <method name="stop" args="f = null, rel = null">
+                <method name="stopper" args="f = null, rel = null">
                     this.setAttribute('visible',  false );
                     this.updel.unregisterAll();
                     this.parent.selectInRectangle( this._sx , this._sy , 
@@ -443,10 +443,10 @@
 
             <attribute name="showhandcursor" value="false"/>
             <handler name="onmousedown">
-                if ( lyt.isgrid ) rubberband.start();
+                if ( lyt.isgrid ) rubberband.starter();
             </handler>
             <handler name="onmouseup">
-                rubberband.stop();
+                rubberband.stopper();
             </handler>
 
         </view> <!-- end photos -->
