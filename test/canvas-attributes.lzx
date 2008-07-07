@@ -12,6 +12,9 @@
         assertEquals('library_attr', canvas.library_attr);
         assertEquals('library_method', canvas.library_method());
     </method>
+    <method name="addTests"> 
+        this.addTest("testAttrs");
+    </method> 
   </class>
 
   <TestSuite>

@@ -32,6 +32,9 @@
 
             ]]>
         </method>
+      <method name="addTests"> 
+          this.addTest("test1");
+      </method> 
     </class>
 
     <!-- declare handler with no body; check for no debugger warning -->
@@ -55,6 +58,9 @@
 
             ]]>
         </method>
+      <method name="addTests"> 
+          this.addTest("test1");
+      </method> 
     </class>
 
 
@@ -85,6 +91,9 @@
 
             ]]>
         </method>
+      <method name="addTests"> 
+          this.addTest("test1");
+      </method> 
     </class>
 
 
@@ -133,6 +142,9 @@
 
             ]]>
         </method>
+      <method name="addTests"> 
+          this.addTest("test1");
+      </method> 
     </class>
 
 

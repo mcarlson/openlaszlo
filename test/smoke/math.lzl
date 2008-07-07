@@ -74,5 +74,9 @@
       assertWithin(0.648360827459087, Math.tan(10), 1e-10, "tan");
       assertTrue(randTest(100), "random numbers");
     </method>
+    <method name="addTests"> 
+        this.addTest("testConstants");
+        this.addTest("testFunctions");
+    </method> 
   </class>
 </library>

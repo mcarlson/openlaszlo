@@ -110,6 +110,9 @@
             assertEquals( ndp.serialize(), dp.serialize() );
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test2");
+        </method> 
     </class>
 
 </library>

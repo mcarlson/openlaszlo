@@ -48,6 +48,9 @@
             assertEquals( "This is posted data." ,  dp.xpathQuery( '/response/echo/text()' ) );
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 </library>

@@ -23,6 +23,9 @@
                 assertEquals ( "changed" , rman.clones[ 0 ].getText() );
                 assertEquals ( "zero" , rman.clones[ 0 ].val );
             </method>
+            <method name="addTests"> 
+                this.addTest("test1");
+            </method> 
         </TestCase>
     </TestSuite>
    

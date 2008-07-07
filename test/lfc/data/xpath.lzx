@@ -143,6 +143,9 @@
                 assertTrue( dp.setXPath( 'last()' ) );
                 assertEquals( 1 , dp.data );
             </method>
+            <method name="addTests"> 
+                this.addTest("test1");
+            </method> 
         </TestCase>
     </TestSuite>
 </canvas>

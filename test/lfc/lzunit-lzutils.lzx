@@ -38,6 +38,10 @@
             assertEquals(0x800080, LzUtils.fromrgb('purple'), "Convert from RGB");
             assertEquals(0xff00ff, LzUtils.fromrgb('rgb(255,0,255)'), "Convert from RGB");
         </method>
+        <method name="addTests"> 
+            this.addTest("testdectohex");
+            this.addTest("testcolorconversion");
+        </method> 
     </TestCase>
 
   </TestSuite>

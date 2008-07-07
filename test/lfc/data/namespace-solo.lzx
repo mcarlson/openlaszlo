@@ -62,6 +62,9 @@
             ]]>
             
         </method>
+        <method name="addTests"> 
+            this.addTest("test2");
+        </method> 
     </class>
 
 </library>

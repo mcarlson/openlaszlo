@@ -20,11 +20,23 @@
                 gDataMan.doFlickrRequest(canvas.infods, argobj);                                    
                 Debug.write("did request."); 
             </method>
+            <method name="addTests"> 
+              this.addTest("testLoadPhotoInfo");
+            </method> 
+            <method name="addTests"> 
+                this.addTest("testLoadPhotoInfo");
+            </method> 
         </TestCase>
         <TestCase>
             <method name="testLoadDetailsMethod">
                 gDetails.loadDetails("97894314");
             </method>
+            <method name="addTests"> 
+              this.addTest("testLoadDetailsMethod");
+            </method> 
+            <method name="addTests"> 
+                this.addTest("testLoadDetailsMethod");
+            </method> 
         </TestCase>
     </TestSuite>
      
@@ -32,6 +44,6 @@
 </canvas>
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.               *
+* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.               *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

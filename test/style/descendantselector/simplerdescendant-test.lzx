@@ -41,5 +41,8 @@
             assertEquals(  '0x88FF00', delaney.inner.bgcolor);                         
             assertEquals(  '0x88FF00', loden.inner.bgcolor);                                     
         </method>
+        <method name="addTests"> 
+            this.addTest("testSimpleDescendant");
+        </method> 
     </class>    
 </library>

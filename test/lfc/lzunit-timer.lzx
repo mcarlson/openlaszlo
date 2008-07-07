@@ -35,6 +35,9 @@
             assertEquals(t1, td1, "same timer");
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testAddRemove");
+        </method> 
     </TestCase>
 
     <TestCase>
@@ -63,6 +66,9 @@
             assertEquals(t1, td1, "same timer 1");
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testAddRemoveTwoDelegates");
+        </method> 
     </TestCase>
 
     <TestCase>
@@ -80,6 +86,9 @@
             assertEquals(t2, td1, "same timer");
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testAddReset");
+        </method> 
     </TestCase>
 
     <TestCase>
@@ -101,6 +110,9 @@
             assertEquals(t2, td2, "same timer 2");
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testMultiAddRemove2");
+        </method> 
     </TestCase>
 
     <TestCase>
@@ -127,6 +139,9 @@
             assertEquals(t3, td3, "same timer 3");
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testMultiAddRemove3");
+        </method> 
     </TestCase>
 
   </TestSuite>

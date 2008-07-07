@@ -1,5 +1,5 @@
 <library>
-<script>
+<script when="immediate">
 <![CDATA[
 
 // compare two XML objects for lisp-style EQUAL 

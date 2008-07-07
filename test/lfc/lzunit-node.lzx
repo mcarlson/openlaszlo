@@ -55,6 +55,14 @@
         assertEquals(n1.nodeLevel + 1, sn[1].nodeLevel);
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testBasicAttributes");
+          this.addTest("testSubNodes");
+          this.addTest("testParent");
+          this.addTest("testChildOf");
+          this.addTest("testImmediateParent");
+          this.addTest("testNodeLevel");
+      </method> 
     </TestCase>
     
     <TestCase name="testClassRoot">
@@ -65,6 +73,9 @@
         assertEquals(sn1, sn1.subnode1.classroot);
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testCR");
+      </method> 
     </TestCase>
     
   </TestSuite>

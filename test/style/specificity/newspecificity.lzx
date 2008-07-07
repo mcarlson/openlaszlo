@@ -145,5 +145,8 @@
             assertEquals( 10, n.value10 );
             assertEquals( 11, n.value11 );
         </method>
+        <method name="addTests"> 
+            this.addTest("testRuleOrder");
+        </method> 
     </class>
 </library>

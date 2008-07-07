@@ -40,6 +40,9 @@
                 assertEquals( ds.getFirstChild() , testme.aselect1 );
                 assertEquals( null , testme.aselect2 );
             </method>
+            <method name="addTests"> 
+                this.addTest("test1");
+            </method> 
         </TestCase>
     </TestSuite>
         

@@ -92,5 +92,10 @@ compiler output for these rules.
             this.assertEquals( 0xAA00AA, gRobertJr.getAttribute("favoritecolor"));            
             this.assertEquals( 0x441a0a, gIndio.getAttribute("favoritecolor"));               
         </method>
+        <method name="addTests"> 
+            this.addTest("testLessThan");
+            this.addTest("testSpecificityPeople");
+            this.addTest("testLittleBoys");
+        </method> 
     </class>    
 </library>

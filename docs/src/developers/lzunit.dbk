@@ -25,7 +25,7 @@ LzUnit test cases contain one or more logical tests that are represented by corr
 <indexterm><primary>TestCase</primary></indexterm><sgmltag class="element">&lt;TestCase&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: TestCase-->
 . In order for a test to be recognized by and added to the enclosing 
-<indexterm><primary>TestSuite</primary></indexterm><sgmltag class="element">&lt;TestSuite&gt;</sgmltag>, its name must start with "<literal>test</literal>". Within each test, you use the standard 
+<indexterm><primary>TestSuite</primary></indexterm><sgmltag class="element">&lt;TestSuite&gt;</sgmltag>, the test method must be registered to the test case via a call to <methodname>addTest</methodname>. You must place all the calls to <methodname>addTest</methodname> in a method named <methodname>addTests</methodname>. The <methodname>addTests</methodname> method is called by the <classname>TestSuite</classname> when it runs the TestCase. Within each test, you use the standard 
 <literal>assert<replaceable>XXX</replaceable>()</literal> methods of the xUnit API to define the checkpoints that will form the basis of your test.
 Below is an example of typical usage of the LzUnit framework that shows a success, a failure, and a runtime error.</para>
 
@@ -202,6 +202,10 @@ Of course, running both animators simultaneously will superimpose the effect of 
         &lt;method name="test"&gt;
         
         &lt;/method&gt;
+        &lt;method name="addTests"&gt;
+            this.addTest("test");
+        &lt;/method&gt;
+
     &lt;/TestCase&gt;   
 &lt;/TestSuite&gt;
 

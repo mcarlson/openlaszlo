@@ -117,6 +117,9 @@
           assertEquals(35, t0.maxvalue);
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testzerorange");
+        </method> 
     </TestCase>
 
     <TestCase>
@@ -129,6 +132,9 @@
           assertEquals(50, t2.maxvalue);
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testoutofbounds");
+        </method> 
     </TestCase>
 
     <TestCase>
@@ -141,6 +147,9 @@
           assertEquals(50, t3.maxvalue);
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testinvertedbounds");
+        </method> 
     </TestCase>
 
     <MyTestCase>

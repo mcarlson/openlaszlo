@@ -34,6 +34,10 @@
             assertEquals( '0xd19063', gPaul.getAttribute("bgcolor") );
             <!--this.finishedTest("testPaul");-->
         </method>
+        <method name="addTests"> 
+            this.addTest("testCarla");
+            this.addTest("testPaul");
+        </method> 
 </TestCase>
 </TestSuite>
 

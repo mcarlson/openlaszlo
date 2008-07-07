@@ -28,6 +28,11 @@
             str = xcb.toXML();
             assertTrue(str.indexOf("carabiner") >= 0); 
         ]]></method>        
+        <method name="addTests"> 
+            this.addTest("testNamedCheckboxToXML");
+            this.addTest("testSubmitNamedCheckboxToXML");
+            this.addTest("testRenameSubmit");
+        </method> 
     </TestCase>
  </TestSuite>
         

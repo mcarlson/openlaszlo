@@ -14,6 +14,9 @@
         assertEquals("Slashes text", mydata.getPointer().xpathQuery("mydata:/record[@uri='http://www.google.com']/text()"));
         assertEquals("Quoted text", mydata.getPointer().xpathQuery("mydata:/record[@uri='\'quoted\'']/text()"));
       </method>
+      <method name="addTests"> 
+          this.addTest("testsuccess");
+      </method> 
     </TestCase>
   </TestSuite>
   

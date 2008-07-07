@@ -20,5 +20,8 @@
         default               : return 1;
       }
     </method>
+    <method name="addTests"> 
+        this.addTest("testCaseSwitch");
+    </method> 
   </class>
 </library>

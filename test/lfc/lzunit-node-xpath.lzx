@@ -31,6 +31,11 @@
         assertEquals("a1", de);
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testPath");
+          this.addTest("testText");
+          this.addTest("testAttr");
+      </method> 
     </TestCase>
     
     <TestCase name="XPathMulti">
@@ -93,6 +98,15 @@
         assertEquals("a2", de.getAttr('name'));
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testMulti");
+          this.addTest("testIndexSelect");
+          this.addTest("testRangeSelect");
+          this.addTest("testRangeSelectOpenEnd");
+          this.addTest("testRangeSelectOpenStart");
+          this.addTest("testAttrSelect");
+          this.addTest("testAttrValueSelect");
+      </method> 
     </TestCase>
     
     <TestCase>
@@ -124,6 +138,10 @@
         assertEquals(2, de);
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testWildcardSelect");
+          this.addTest("testLastAttr");
+      </method> 
     </TestCase>
     
   </TestSuite>

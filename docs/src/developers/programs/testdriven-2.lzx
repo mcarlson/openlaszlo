@@ -14,6 +14,9 @@
         <method name="testGoButtonTrue">
             assertTrue(goButton.go);
         </method>
+        <method name="addTests"> 
+            this.addTest("testGoButtonTrue");
+        </method> 
     </TestCase>   
 </TestSuite>
 

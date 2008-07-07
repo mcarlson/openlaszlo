@@ -55,6 +55,9 @@
               assertTrue(prdataput.serialize().indexOf('<method type="PUT"/>')  > 0);
             ]]>
         </method>
+<method name="addTests"> 
+    this.addTest("test1");
+</method> 
     </class>
 
 </library>

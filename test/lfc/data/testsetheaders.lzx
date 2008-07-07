@@ -52,6 +52,9 @@
                      assertTrue(  dp.xpathQuery( '/echo/headers/text()' ).indexOf('pink-elephants/xml') > 0 , "looking for pink-elephants/xml header ");
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 </library>

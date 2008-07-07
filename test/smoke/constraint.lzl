@@ -50,5 +50,10 @@
             assertEquals( kellog.brand, '1' );
         </method>
 
+        <method name="addTests"> 
+            this.addTest("testConstraintReference1");
+            this.addTest("testConstraintReference2");
+            this.addTest("testConstraintReference3");
+        </method> 
     </class>
 </library>

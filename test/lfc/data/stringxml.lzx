@@ -30,6 +30,9 @@
                 //assertNull( lznotb );
                 ]]>
             </method>
+            <method name="addTests"> 
+                this.addTest("test");
+            </method> 
         </TestCase>
     </TestSuite>
 </canvas>

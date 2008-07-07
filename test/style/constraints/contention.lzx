@@ -29,6 +29,10 @@
         <method name="testConstantOverridesConstraint">
             assertEquals(27, dyson.getAttribute("x")); 
         </method>
+        <method name="addTests"> 
+            this.addTest("testCantThinkOfAName");
+            this.addTest("testConstantOverridesConstraint");
+        </method> 
     </class>
     
     

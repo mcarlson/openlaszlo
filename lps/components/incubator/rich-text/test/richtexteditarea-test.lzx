@@ -71,6 +71,10 @@
             assertEquals(fmt.size, 24); 
             assertEquals(fmt.color, 0xAA00FF); 
         </method>
+        <method name="addTests"> 
+            this.addTest("testTextIsPresent");
+            this.addTest("testGetFormat");
+        </method> 
     </TestCase>
 
     <TestCase>
@@ -87,6 +91,10 @@
             grte.setFormatAttribute("bold", true); 
             assertTrue(grte.isHTML); 
         </method>
+        <method name="addTests"> 
+            this.addTest("testReset");
+            this.addTest("testMakeHTML");
+        </method> 
     </TestCase>
 
 <!-- We expect these values for paragraph format, or null: 
@@ -126,6 +134,13 @@
             var fmt = grte.getTextFormat(5,10);
             assertTrue( (fmt.bullet == null) || (fmt.bullet == false));
         ]]></method>        
+        <method name="addTests"> 
+            this.addTest("testNoLeading");
+            this.addTest("testNoIndent");
+            this.addTest("testNoBlockIndent");
+            this.addTest("testNoAlign");
+            this.addTest("testNoBullet");
+        </method> 
     </TestCase>
     
     <TestCase>
@@ -149,6 +164,10 @@
             fmt = grte.getTextFormat(12,18);
             assertTrue( fmt.italic ); 
         </method>
+        <method name="addTests"> 
+            this.addTest("testApplyBold");
+            this.addTest("testApplyItalic");
+        </method> 
     </TestCase>         
 
     

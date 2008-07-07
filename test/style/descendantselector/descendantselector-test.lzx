@@ -34,6 +34,13 @@
             assertEquals("plainoldcat", gKittycat.getAttribute("misc"));        
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testSimpleDescendant");
+            this.addTest("testOverridenDescendant");
+            this.addTest("testGrandchildren");
+            this.addTest("testCatAncestor");
+            this.addTest("testSpecificity");
+        </method> 
     </class>
 
 </library>        

@@ -35,6 +35,8 @@ dynamic class LzDebugService {
         args.unshift('Monitor: ');
         write.apply(Debug, args);
     }
+
+    public function __String (thing, pretty=null, limit=null, unique=null):String { return new String( thing ); }
 }
 
 var Debug = new LzDebugService();

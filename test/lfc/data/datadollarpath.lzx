@@ -72,6 +72,9 @@
 
 
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 </library >
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

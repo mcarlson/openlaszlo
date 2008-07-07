@@ -27,6 +27,9 @@
             assertEquals(1, goButton.counter);
             assertTrue(goButton.go);
         </method>
+        <method name="addTests"> 
+            this.addTest("testGoButtonTrue");
+        </method> 
     </TestCase>   
 </TestSuite>
 

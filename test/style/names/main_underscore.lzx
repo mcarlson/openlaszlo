@@ -26,6 +26,9 @@
                 assertEquals('0x00FF00', brown.bgcolor);
                 assertEquals("now is the time...", brown.text.text)
         </method>
+        <method name="addTests"> 
+            this.addTest("testnamesuite");
+        </method> 
     </TestCase> 
 </TestSuite>
 

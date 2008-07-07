@@ -120,5 +120,11 @@
         <method name="testRuleOrder">
             assertEquals( 100, multimatch.cprop );
         </method>
+        <method name="addTests"> 
+            this.addTest("testClasses");
+            this.addTest("testCompound");
+            this.addTest("testComplexFunky");
+            this.addTest("testRuleOrder");
+        </method> 
     </class>
 </library>

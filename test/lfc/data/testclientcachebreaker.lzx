@@ -53,6 +53,9 @@
                             Number(dp.xpathQuery("ds4:/response/text()")) );
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 </library>

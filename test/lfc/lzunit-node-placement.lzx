@@ -53,6 +53,10 @@
         assertEquals(nci2.n2, nci2.n1.searchImmediateSubnodes("name", "n2"));
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testPlacement");
+          this.addTest("testPlacementWithOverride");
+      </method> 
     </TestCase>
     
     <TestCase name="testBasicDefaultPlacement">
@@ -74,6 +78,10 @@
       <method name="testPlacementWithOverride">
         assertEquals(nci2.n2, nci2.n1.searchImmediateSubnodes("name", "n2"));
       </method>
+      <method name="addTests"> 
+          this.addTest("testPlacement");
+          this.addTest("testPlacementWithOverride");
+      </method> 
     </TestCase>
     
     <TestCase name="testBasicDefaultPlacementWithOverride">
@@ -100,6 +108,10 @@
         assertEquals(nci2.n2, nci2.searchImmediateSubnodes("name", "n2"));
       </method>
 
+      <method name="addTests"> 
+          this.addTest("testPlacement");
+          this.addTest("testPlacementWithOverride");
+      </method> 
     </TestCase>
     
     <TestCase name="testIgnorePlacement">
@@ -124,6 +136,10 @@
           assertEquals(null, nci2.n1.searchImmediateSubnodes("name", "n2"));
       </method>
 
+      <method name="addTests"> 
+          this.addTest("testIgnorePlacement");
+          this.addTest("testIgnorePlacementWithOverride");
+      </method> 
     </TestCase>
     
     <TestCase name="testDoubleDefaultPlacement">
@@ -146,6 +162,10 @@
       <method name="testPlacementWithOverride">
         assertEquals(nci2.n3, nci2.n2.n1.searchImmediateSubnodes("name", "n3"));
       </method>
+      <method name="addTests"> 
+          this.addTest("testPlacement");
+          this.addTest("testPlacementWithOverride");
+      </method> 
     </TestCase>
     
     <TestCase name="testOverrideDeterminePlacement">
@@ -162,6 +182,9 @@
       <method name="testOverride">
         assertTrue(nci1.hadDP);
       </method>
+      <method name="addTests"> 
+          this.addTest("testOverride");
+      </method> 
     </TestCase>
     
     <TestCase name="TestOverrideDefaultPlacement">
@@ -174,6 +197,9 @@
         assertEquals(null, nci1.n1.searchImmediateSubnodes("name", "n3"));
         assertEquals(nci1.n3, nci1.n2.searchImmediateSubnodes("name", "n3"));
       </method>
+      <method name="addTests"> 
+          this.addTest("testOverride");
+      </method> 
     </TestCase>
     
     <TestCase name="TestErrantPlacement">
@@ -190,6 +216,9 @@
         // I'm capturing this in a unit test to streamline response to bug reports.
         assertEquals(nci6.n4, nci6.n2.searchImmediateSubnodes("name", "n4"));
       </method>
+      <method name="addTests"> 
+          this.addTest("testErrantPlacement");
+      </method> 
     </TestCase>
     
   </TestSuite>

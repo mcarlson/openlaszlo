@@ -85,5 +85,10 @@
              this.assertEquals(testing.width/2, sb6.width, "LPP-4451-inverse");
              ]]>
          </method>
+         <method name="addTests"> 
+             this.addTest("testClassConstraint");
+             this.addTest("testInstanceOverrideConstraint");
+             this.addTest("testSubclassOverrideConstraint");
+         </method> 
      </class>
 </library>

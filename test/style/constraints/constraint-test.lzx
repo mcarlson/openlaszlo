@@ -113,6 +113,11 @@
             assertEquals(  0x963A1E, gOtter.bgcolor );       //  9,845,278
             assertEquals(  0x6B7347, gOdd.bgcolor );         //  7,041,863           
         </method>
+        <method name="addTests"> 
+            this.addTest("testSimpleConstraint");
+            this.addTest("testClassConstraint");
+            this.addTest("testClassAttrValSelector");
+        </method> 
 </class>
 </library>
 <!-- Copyright 2007-2008 Laszlo Systems -->

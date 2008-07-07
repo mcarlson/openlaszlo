@@ -26,6 +26,10 @@
          var value = acceptEncoding.getText();
          assertEquals("null", value);
       </method>
+      <method name="addTests"> 
+          this.addTest("testAccept");
+          this.addTest("testAcceptEncoding");
+      </method> 
     </TestCase>
   </TestSuite>
 

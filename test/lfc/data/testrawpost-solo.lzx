@@ -54,6 +54,9 @@
             assertEquals( "This is posted SOLO data." ,  dp.xpathQuery( 'echo/text()' ) );
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 </library>

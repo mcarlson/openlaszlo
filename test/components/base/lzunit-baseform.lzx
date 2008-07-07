@@ -44,6 +44,11 @@
             assertEquals(true, bf1.cb1.hassubmitname);
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testFormParent");
+            this.addTest("testSubmitName");
+            this.addTest("testEarlySubmitName");
+        </method> 
     </TestCase>
     
     <TestCase>
@@ -62,6 +67,9 @@
             str = bf1.cb1.toXML();
             assertTrue(str.indexOf("carabiner") >= 0);
         </method>
+        <method name="addTests"> 
+            this.addTest("testToXML");
+        </method> 
      </TestCase>
 
    <TestCase>
@@ -102,6 +110,9 @@
             assertEquals(false, bf2.changed);
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testSetValue");
+        </method> 
     </TestCase>
     
   </TestSuite>

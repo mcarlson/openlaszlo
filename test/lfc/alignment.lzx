@@ -51,6 +51,14 @@
         v1.setAttribute('valign', 'bottom');
         assertEquals(100, v1.y);
       </method>
+      <method name="addTests"> 
+          this.addTest("testAlignLeft");
+          this.addTest("testAlignCenter");
+          this.addTest("testAlignRight");
+          this.addTest("testAlignTop");
+          this.addTest("testAlignMiddle");
+          this.addTest("testAlignBottom");
+      </method> 
     </TestCase>
   </TestSuite>
 </canvas>

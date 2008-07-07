@@ -17,6 +17,11 @@
       <method name="testerror">
         callFoo()
       </method>
+      <method name="addTests"> 
+          this.addTest("testsuccess");
+          this.addTest("testfailure");
+          this.addTest("testerror");
+      </method> 
     </TestCase>
   </TestSuite>
 </canvas>

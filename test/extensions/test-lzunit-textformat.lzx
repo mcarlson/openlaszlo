@@ -44,6 +44,12 @@
             var f = new textformat(this, {color:0x0000FF});
             assertSame(0x0000FF, f.color);
         </method>
+        <method name="addTests"> 
+            this.addTest("testCreation");
+            this.addTest("testCreationWithArg");
+            this.addTest("testCreationWithArgs");
+            this.addTest("testCreationWithColor");
+        </method> 
     </class>        
 
     <class name="FormatToHTML" extends="TestCase">
@@ -62,6 +68,10 @@
             assertTrue(html.length &gt;= 9); 
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testSimple");
+            this.addTest("testFont");
+        </method> 
     </class>
 
     <TestSuite>

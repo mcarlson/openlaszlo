@@ -15,6 +15,9 @@
         <method name="testWidthOnObject">
             assertEquals(10, {width: 10}.width);
         </method>
+        <method name="addTests"> 
+            this.addTest("testWidthOnObject");
+        </method> 
     </class>
 
     <class name="SetterTest" extends="TestCase">
@@ -23,6 +26,9 @@
             foo.height = 42;
             assertEquals(42, foo.height);
         </method>
+        <method name="addTests"> 
+            this.addTest("testHeightOnObject");
+        </method> 
     </class>
 
     <class name="GSViewTest" extends="TestCase">
@@ -48,6 +54,10 @@
             assertEquals(tester["width"], tester.width);    
             assertEquals(tester["height"], tester.height);    
         </method>
+        <method name="addTests"> 
+            this.addTest("testGettersOnView");
+            this.addTest("testSettersOnView");
+        </method> 
     </class>
 
 </library>

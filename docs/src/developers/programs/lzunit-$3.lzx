@@ -15,6 +15,9 @@
             <method name="checkStatus">
                 assertEquals(-400, redbox.y)
             </method>
+            <method name="addTests"> 
+                this.addTest("testanim");
+            </method> 
         </TestCase>
     </TestSuite>
 </canvas>

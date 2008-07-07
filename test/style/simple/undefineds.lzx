@@ -31,6 +31,10 @@
             <method name="testUnspecifiedIsUndefined">
                 assertUndefined(fazzleblarb.getAttribute("undef"));
             </method>
+            <method name="addTests"> 
+                this.addTest("testUndefinedIsUndefined");
+                this.addTest("testUnspecifiedIsUndefined");
+            </method> 
     </class>
     
     <script>

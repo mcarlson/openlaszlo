@@ -1005,6 +1005,38 @@ dezignerview {
 <!--end typography tests-->
 
 
+       <method name="addTests"> 
+           this.addTest("testPhilip");
+           this.addTest("testGeorge");
+           this.addTest("testNonNameAttrs");
+           this.addTest("testthename");
+           this.addTest("testNamedAncestor");
+           this.addTest("testNameVsElement");
+           this.addTest("testSimpleConstraint");
+           this.addTest("testClassConstraint");
+           this.addTest("testClassAttrValSelector");
+           this.addTest("testClassConstraint");
+           this.addTest("testInstanceOverrideConstraint");
+           this.addTest("testSubclassOverrideConstraint");
+           this.addTest("testRobby");
+           this.addTest("testPatrick");
+           this.addTest("testSimpleDescendant");
+           this.addTest("testTopLevel");
+           this.addTest("testTwoLevel");
+           this.addTest("testThreeLevel");
+           this.addTest("testColors");
+           this.addTest("testPhilip");
+           this.addTest("testGeorge");
+           this.addTest("testnamesuite");
+           this.addTest("testFoundStyledResource");
+           this.addTest("testClasses");
+           this.addTest("testCompound");
+           this.addTest("testComplexFunky");
+           this.addTest("testRuleOrder");
+           this.addTest("testRuleOrder");
+           this.addTest("testLittleBoys");
+           this.addTest("testSimpleText");
+       </method> 
     </TestCase>
 </TestSuite>
 

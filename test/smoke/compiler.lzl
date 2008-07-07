@@ -126,5 +126,9 @@
              }
       ]]>
     </method>
+    <method name="addTests"> 
+        this.addTest("testOptionalArguments");
+        this.addTest("testConditionalCompilation");
+    </method> 
   </class>
 </library>

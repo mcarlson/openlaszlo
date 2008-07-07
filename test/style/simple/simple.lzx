@@ -45,5 +45,9 @@
         <method name="testColors">
             assertEquals(0x6ab5e6, gTravis.innercolor);
         </method>
+        <method name="addTests"> 
+            this.addTest("testBasics");
+            this.addTest("testColors");
+        </method> 
     </class>
 </library>

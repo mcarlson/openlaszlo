@@ -20,5 +20,8 @@
             assertEquals( -1 >>> 4 , 0x0fffffff); // Shift Right with Zero Fill
         ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("testBitwiseOperators");
+        </method> 
     </class>
 </library>

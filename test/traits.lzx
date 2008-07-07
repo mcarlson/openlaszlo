@@ -124,6 +124,13 @@
                 assertEquals( "B", itC4.subnodes[0].name);
                 assertEquals( "A", itC4.subnodes[1].name);
             </method>
+             <method name="addTests"> 
+                 this.addTest("test0");
+                 this.addTest("test1");
+                 this.addTest("test2");
+                 this.addTest("test3");
+                 this.addTest("test4");
+             </method> 
         </TestCase>
     </TestSuite>
 ?>

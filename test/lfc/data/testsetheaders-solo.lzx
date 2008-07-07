@@ -55,6 +55,9 @@
                      assertTrue(  dp.xpathQuery( '/echo/headers/text()' ).indexOf('vanilla/with-chocolate-syrup') > 0 , "looking for vanilla/with-chocolate-syrup header ");
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 </library>

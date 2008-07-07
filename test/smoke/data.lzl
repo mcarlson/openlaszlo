@@ -27,5 +27,9 @@
       Debug.info("expect:  couldn't find dataset for http2:/root/child (error will print at beginning of debugger output)");
       assertEquals(0,0,0);
     </method>
+    <method name="addTests"> 
+        this.addTest("testEmpty");
+        this.addTest("testEmpty2");
+    </method> 
   </class>
 </library>

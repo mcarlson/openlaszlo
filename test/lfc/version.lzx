@@ -17,6 +17,9 @@
                 //this will break if/when lps major version exceeds 100
                 assertEquals( 1 , canvas.compareVersion( "100.0.5" ) );
             </method>
+            <method name="addTests"> 
+                this.addTest("test1");
+            </method> 
         </TestCase>
     </TestSuite>
 </canvas>

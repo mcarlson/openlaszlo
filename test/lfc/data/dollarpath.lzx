@@ -136,6 +136,9 @@
                 assertEquals( 6, rpar.repcnt );
 
             </method>
+            <method name="addTests"> 
+                this.addTest("test1");
+            </method> 
         </TestCase>
     </TestSuite>
 </canvas>

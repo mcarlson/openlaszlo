@@ -82,6 +82,12 @@
             assertTrue(ldlg.height > 0); 
         ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("testTextIsPresent");
+            this.addTest("testGetFormat");
+            this.addTest("testMakeLink");
+            this.addTest("testShowingLinkDialog");
+        </method> 
     </TestCase>
     <TestCase>
         <method name="testLinkCompleteWord">
@@ -99,6 +105,9 @@
             var shouldBeSpace = grte.getText().substr(12, 1); 
             assertEquals(" ", shouldBeSpace); 
         </method>
+        <method name="addTests"> 
+            this.addTest("testLinkCompleteWord");
+        </method> 
     </TestCase>
     <TestCase>
         <method name="testLinkMiddleOfAWord">
@@ -113,6 +122,9 @@
             ldlg.makelink();  
             assertEquals("d", grte.getText().substr(10, 1));
         </method>
+        <method name="addTests"> 
+            this.addTest("testLinkMiddleOfAWord");
+        </method> 
     </TestCase>
 
 </TestSuite>

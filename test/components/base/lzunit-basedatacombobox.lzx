@@ -69,6 +69,12 @@
         </method>
         
     
+        <method name="addTests"> 
+            this.addTest("testSimpleSetGet");
+            this.addTest("testBadSelectionIndex");
+            this.addTest("testSelectItemAt");
+            this.addTest("testBadSelectItemAt");
+        </method> 
     </TestCase>
     
   </TestSuite>

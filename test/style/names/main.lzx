@@ -23,6 +23,9 @@
         <method name="testnamesuite">
                 assertEquals('0x00FF00', gMax.bgcolor);
         </method>
+        <method name="addTests"> 
+            this.addTest("testnamesuite");
+        </method> 
     </TestCase> 
 </TestSuite>
 

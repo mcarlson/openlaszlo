@@ -20,6 +20,9 @@
             i = "second"
             assertEquals("second", i)
         </method>
+        <method name="addTests"> 
+            this.addTest("testScope");
+        </method> 
     </class>
 
     <class name="bug_179" extends="TestCase">
@@ -32,6 +35,9 @@
             } 
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("testLoop");
+        </method> 
     </class>
     
     <class name="bug_320" extends="TestCase">
@@ -42,6 +48,9 @@
       <method name="testFontStyle">
         assertEquals("bold", txtview.txt.fontstyle)
       </method>
+      <method name="addTests"> 
+          this.addTest("testFontStyle");
+      </method> 
     </class>
     
     <class name="bug_332" extends="TestCase">
@@ -49,6 +58,9 @@
         <method name="testJStyleColor">
             assertEquals(0, col_view.bgcolor)
         </method>
+        <method name="addTests"> 
+            this.addTest("testJStyleColor");
+        </method> 
     </class>
     
     <class name="InnerRow">
@@ -77,6 +89,9 @@
         <method name="testHeight">
             assertEquals(200, mediaWindow.height)
         </method>
+        <method name="addTests"> 
+            this.addTest("testHeight");
+        </method> 
     </class>
     
     <class name="bug_368" extends="TestCase">
@@ -118,6 +133,9 @@
             this.abs_x += 100
             assertEquals(abs_x, Math.round(redbox.x))
         </method>
+        <method name="addTests"> 
+            this.addTest("testAnimate");
+        </method> 
     </class>
     
     <class name="bug_440" extends="TestCase">
@@ -127,6 +145,9 @@
             sizeme.setText("Longer text than was there before")
             assertTrue(sizeme.width &gt; oldwidth)
         </method>
+        <method name="addTests"> 
+            this.addTest("testResize");
+        </method> 
     </class>
 
     
@@ -153,6 +174,9 @@
         <method name="tearDown">
             assertEquals(this.resArray.join(), this.names.join())
         </method>
+        <method name="addTests"> 
+            this.addTest("testInitOrder");
+        </method> 
     </class>
 
     <script>
@@ -238,6 +262,15 @@
             ]]>
                 }
         </method>
+        <method name="addTests"> 
+            this.addTest("testClassFunction");
+            this.addTest("testToplevelFunction");
+            this.addTest("testToplevelObject");
+            this.addTest("testFunMeth");
+            this.addTest("testArrMeth");
+            this.addTest("testFunFun");
+            this.addTest("testObjMeth");
+        </method> 
     </class>
 
 
@@ -258,6 +291,9 @@
             assertFalse(dataview.st.width == 0)
             assertFalse(dataview.c.width == 0)
         </method>
+        <method name="addTests"> 
+            this.addTest("testTxtWidth");
+        </method> 
     </class>
     <class name="bug_557" extends="TestCase">
         <view name="testview">
@@ -274,6 +310,9 @@
             assertNotUndefined(testview.namedlayout.spacing)
             assertNotUndefined(testview.namedlayout.foo)
         </method>
+        <method name="addTests"> 
+            this.addTest("testLayoutAttr");
+        </method> 
     </class>
     
     <dataset name="bug577" src="../resources/xml/http.xml"/>
@@ -281,6 +320,9 @@
         <method name="testLocalDS">
             assertNull(canvas.datasets.bug577['type'])
         </method>
+        <method name="addTests"> 
+            this.addTest("testLocalDS");
+        </method> 
     </class>
 
 
@@ -309,6 +351,9 @@
       assertSame(unique, obj.getBar());
       assertUndefined(global['bar']);
     </method>
+    <method name="addTests"> 
+        this.addTest("testSetGet");
+    </method> 
   </class>
 
 
@@ -328,12 +373,18 @@
         <method name="verifyOrder">
             assertEquals(this.order, '12')
         </method>
+        <method name="addTests"> 
+            this.addTest("testAnimOrder");
+        </method> 
     </class>
 
     <class name="bug_733" extends="TestCase">
         <method name="testEvalOrder">
             assertEquals(-200, -(new Date(2000, 1, 1)).getFullYear()/10, "GEKKO!")
         </method>
+        <method name="addTests"> 
+            this.addTest("testEvalOrder");
+        </method> 
     </class>
 
     <dataset name="bug739" type="http" querystring="sleep=0" queuerequests="true" cacheable="false"
@@ -356,6 +407,9 @@
             }
         ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("testStart");
+        </method> 
     </class>
 
     <class name="bug_748" extends="TestCase">
@@ -370,6 +424,9 @@
         <method name="testPlacement">
             assertSame(popup.items, popup.tricky.immediateparent)
         </method>
+        <method name="addTests"> 
+            this.addTest("testPlacement");
+        </method> 
     </class>
 
     <class name="bug_950" extends="TestCase">
@@ -380,6 +437,9 @@
           tv.setAttribute('height', 200);
           assertEquals(200, tv.width);
         </method>
+        <method name="addTests"> 
+            this.addTest("testConstraint");
+        </method> 
     </class>
     
     <class name="bug_967" extends="TestCase">
@@ -388,6 +448,9 @@
             assertFalse(rsv.width == rsv.resourcewidth)
             assertFalse(rsv.height == rsv.resourceheight)
         </method>
+        <method name="addTests"> 
+            this.addTest("testAssetSize");
+        </method> 
     </class>
     
     <class name="mynode" extends="node"/>
@@ -399,12 +462,18 @@
             assertTrue(myinstance instanceof lz.node);
             assertFalse(myinstance instanceof lz.view);
         </method>
+        <method name="addTests"> 
+            this.addTest("testNode");
+        </method> 
     </class>
 
     <class name="bug_1032" extends="TestCase">
         <method name="testCanvasBgColor">
             assertEquals(canvas.bgcolor, 0xffffff);
         </method>
+        <method name="addTests"> 
+            this.addTest("testCanvasBgColor");
+        </method> 
     </class>
     
     <dataset name="bug1046" src="http:foo.lzx?lzt=serverinfo" request="false"/>
@@ -416,6 +485,9 @@
         <method name="checkHeaders" args="ignore">
                 assertEquals('', canvas.datasets.bug1046.getAllResponseHeaders().toString())
         </method>
+        <method name="addTests"> 
+            this.addTest("testStart");
+        </method> 
     </class>
     
     <class name="bug_1062" extends="TestCase">
@@ -440,6 +512,9 @@
             lz.Focus.setFocus(view1)
             assertArrayEquals(['onfocus', 'onblur'], view2.trace)
         </method>
+        <method name="addTests"> 
+            this.addTest("testNode");
+        </method> 
     </class>
     
     <class name="bug_1134" extends="TestCase">
@@ -449,6 +524,9 @@
         <method name="testAttr">
                         assertSame((typeof(myattr) != "undefined"), setterCalled)
         </method>
+        <method name="addTests"> 
+            this.addTest("testAttr");
+        </method> 
     </class>
 
     <dataset name="bug1254">
@@ -462,6 +540,9 @@
             tempDP.setNodeAttribute('num', 50)
             assertEquals(foo, 50)
         </method>
+        <method name="addTests"> 
+            this.addTest("testDPConstraint");
+        </method> 
     </class>
     
     <dataset name="bug1267">
@@ -483,6 +564,9 @@
                         dp.setXPath('bug1267:/ item  [2] /  @name')
                         assertEquals('second', dp.data)
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testDPSeparators");
+                </method> 
         </class>
         
     <class name="classWithText">
@@ -502,6 +586,9 @@
         <method name="testTextWidth">
             assertEquals(bo0.me.width, goo.me.width, "Width");
         </method> 
+        <method name="addTests"> 
+            this.addTest("testTextWidth");
+        </method> 
     </class>
     
     <dataset name="bug1314" nsprefix='false'>
@@ -514,6 +601,9 @@
             dv.updateData();
             assertEquals(41 , bug1314.getPointer().serialize().length);
         </method>
+        <method name="addTests"> 
+            this.addTest("testDMap");
+        </method> 
     </class>
     
     <dataset name="bug1315" src="../resources/xml/http.xml" type="http" request="true" getresponseheaders="false"/>
@@ -521,6 +611,9 @@
         <method name="testRespHeaders">
             assertEquals('', canvas.datasets.bug1315.getAllResponseHeaders().toString())
         </method>
+        <method name="addTests"> 
+            this.addTest("testRespHeaders");
+        </method> 
     </class>
 
     <dataset name="bug1374">
@@ -535,6 +628,9 @@
             assertTrue(tempDP.setXPath('top/@enabled'))
             assertFalse(tempDP.setXPath('top/item[3]'))
         </method>
+        <method name="addTests"> 
+            this.addTest("testRetValue");
+        </method> 
     </class>
 
         <class name="bug_1383" extends="TestCase">
@@ -548,6 +644,10 @@
                   assertTrue(view instanceof lz.node);
                   assertTrue(view instanceof lz.view);
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testNode");
+                    this.addTest("testView");
+                </method> 
         </class>
     
     <dataset name="bug1484">
@@ -565,6 +665,9 @@
                 while (dp.selectParent()) {}
                 assertEquals('bug1484', dp.getNodeName())
                 </method>
+        <method name="addTests"> 
+            this.addTest("testSelectParent");
+        </method> 
         </class>
 
     <dataset name="bug1485">
@@ -585,6 +688,9 @@
             ppar.datapath.setFromPointer( dp );
             assertEquals( 6 , ppar.pokeme.data );
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
         <dataset name="bug1553">
@@ -600,6 +706,9 @@
                 this.setAttribute('index', 2)
                 assertEquals('two', txt.text)
                 </method>
+        <method name="addTests"> 
+            this.addTest("testDatapathConstr");
+        </method> 
         </class>
         
         <dataset name="bug1653" src="http:foo.lzx" request="false"/>
@@ -607,6 +716,9 @@
                 <method name="testGetSrc">
                         assertEquals(bug1653.getSrc(), "http:foo.lzx")
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testGetSrc");
+                </method> 
         </class>
         
     <class name="bug_1660" extends="TestCase">
@@ -630,6 +742,9 @@
                         assertTrue(child instanceof lz.view);
                   }
         </method>
+        <method name="addTests"> 
+            this.addTest("testSubviews");
+        </method> 
     </class>
         
     <dataset name="bug1664">
@@ -661,6 +776,10 @@
             assertEquals('stuff', appliedTermData)
             assertEquals('stuff', eventTermData, 'data sent with event is incompatible type')
         </method>
+        <method name="addTests"> 
+            this.addTest("testFoo");
+            this.addTest("testStuff");
+        </method> 
     </class>
 
         <dataset name="bug1666">
@@ -673,6 +792,9 @@
                 <method name="testDCV">
                         assertTrue(_v.visible)
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testDCV");
+                </method> 
         </class>
         
         <class name="bug_1672" extends="TestCase">
@@ -681,6 +803,9 @@
                         assertTrue(false)
                         debug.write('you should not see this line')
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testEmptyReturn");
+                </method> 
         </class>
 
         <class name="bug_1702" extends="TestCase">
@@ -690,6 +815,9 @@
                         anim = foo.animate('rotation', 180, 0)
                         assertNull(anim, 'Animator with duration of 0 was created!')
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testZeroDuration");
+                </method> 
         </class>
                 
     <dataset name="bug1718">
@@ -704,6 +832,9 @@
                 <method name="testXPath">
                         assertEquals('bug1718:/foo', replGuy.xpath)
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testXPath");
+                </method> 
         </class>
         
         <dataset name="bug1723">
@@ -724,6 +855,9 @@
                         t.datapath.selectPrev()
                         assertEquals('B', t.datapath.getNodeText())
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testDP");
+                </method> 
         </class>
 
         <class name="bug_1767" extends="TestCase">
@@ -733,6 +867,9 @@
                 <method name="testClickable">
                         assertTrue(this.clickable)
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testClickable");
+                </method> 
         </class>
         
         <dataset name="bug1809">
@@ -743,6 +880,9 @@
                 <method name="testBadDP">
                         assertUndefined(bad.serialize())
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testBadDP");
+                </method> 
         </class>
 
     <class name="bug_1843" extends="TestCase">
@@ -750,6 +890,9 @@
         <method name="testClickability">
             assertTrue(cv["clickable"])
         </method>
+        <method name="addTests"> 
+            this.addTest("testClickability");
+        </method> 
     </class>
     
     <class name="bug_1897" extends="TestCase">
@@ -759,6 +902,9 @@
                 dp.setNodeAttribute("foo", "bar")
                 assertEquals(dp.getNodeCount(), 0)
         </method>
+        <method name="addTests"> 
+            this.addTest("testEmptyXPath");
+        </method> 
     </class>
 
         <class name="bug_1899" extends="TestCase">
@@ -769,6 +915,9 @@
                         assertEquals(d, lz.Browser.urlUnescape(lz.Browser.urlEscape(d)))
                 ]]>
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testUrlEscape");
+                </method> 
         </class>
 
         <class name="toggle"
@@ -824,6 +973,9 @@
                         lview.unload()
                         assertEquals(0, lview.loadratio)
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testUnload");
+                </method> 
         </class>
 
         <class name="bug_2125" extends="TestCase">
@@ -837,6 +989,9 @@
                 <method name="testSrc">
                     lview.setSource('http:../resources/gif/logo.gif')
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testSrc");
+                </method> 
         </class>
         
     <class name="bug_2131"  extends="TestCase">
@@ -852,6 +1007,9 @@
             <attribute name="bgcolor" value="0xBB8825" />
             <attribute name="fxindent" value="10" />
         </state>
+        <method name="addTests"> 
+            this.addTest("testStateAttr");
+        </method> 
     </class>
         
 
@@ -865,6 +1023,9 @@
                         theview.theanim.destroy()
                         assertNull(theview['theanim'])
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testAnimDelete");
+                </method> 
         </class>
         
         <class name="bug_2225" extends="TestCase">
@@ -880,6 +1041,10 @@
                         inp_field.setText(5671)
                         assertNotNull(inp_field.getText())
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testText");
+                    this.addTest("testInputText");
+                </method> 
         </class>
         
     <dataset name="bug2239">
@@ -895,6 +1060,9 @@
         <method name="testWidth">
                 assertEquals(200, tbox.getCloneNumber(0)['width'])
         </method>
+        <method name="addTests"> 
+            this.addTest("testWidth");
+        </method> 
     </class>
     
         <dataset name="bug2263">
@@ -907,6 +1075,9 @@
                 assertTrue(xmlstringequals('<bug2263><record a="fl&apos;ll" b="dkd&quot;kddk"/></bug2263>', bug2263.serialize()));
                 ]]>
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testSerialize");
+                </method> 
         </class>
         
         <class name="bug_3005" extends="TestCase">
@@ -920,6 +1091,9 @@
                         for (var i = 1; i &lt;= n; ++i)
                                 assertEquals(i, dp.xpathQuery('line[' + i + ']/text()'))
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testOrder");
+                </method> 
         </class>
                         
         <dataset name="bug3036">
@@ -961,6 +1135,9 @@
                         for (var i = 0; i &lt; n; ++i)
                                 assertEquals(i + 1, frame.outer.entry.clones[i].pos)
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testLazyRepl");
+                </method> 
         </class>
         
         <dataset name="bug3069">
@@ -979,6 +1156,9 @@
                         assertEquals(v0.clones.length, this.subviews[0].datapath.xpathQuery('last()'))
                         assertEquals(v0.clones.length, this.subviews[0].num)
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testXpathQuery");
+                </method> 
         </class>
         
         <class name="bug_3071" extends="TestCase">
@@ -991,6 +1171,9 @@
                 <handler name="onwidth" reference="inside">
                   // Just to create a delegate to look for
                 </handler>
+                <method name="addTests"> 
+                    this.addTest("testMethodContext");
+                </method> 
         </class>
 
         <dataset name="bug3285">
@@ -1070,6 +1253,9 @@
 
 
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
     <dataset name="bug3435">
@@ -1099,6 +1285,9 @@
                         assertEquals(dpNewNode.p.serialize(), dpCheck.serialize())
                         assertEquals('two', dpNewNode.xpathQuery('@value'))
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testAddNode");
+                </method> 
         </class>
 
         <class name="bug_3452" extends="TestCase">
@@ -1108,6 +1297,9 @@
                         assertNotUndefined(repl.clones[ 0 ].datapath);
                         assertEquals ( repl.datapath.xpath, repl.clones[ 0 ].datapath.xpath );
                 </method>
+                <method name="addTests"> 
+                    this.addTest("testCloneDatapath");
+                </method> 
         </class>
 
     <dataset name="bug3474">
@@ -1139,6 +1331,9 @@
             <view name="pos" datapath="position()" />
             <view name="len" datapath="last()"/>
         </view>
+        <method name="addTests"> 
+            this.addTest("testIt");
+        </method> 
     </class>
         
 </library>

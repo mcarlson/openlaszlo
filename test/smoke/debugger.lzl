@@ -207,6 +207,9 @@
                assertEquals('1% 2% 3%\n', Debug.formatToString('1%', '2%', '3%'));
       ]]>
     </method>
+    <method name="addTests"> 
+        this.addTest("testFormat");
+    </method> 
   </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

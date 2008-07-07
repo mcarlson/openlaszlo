@@ -101,6 +101,11 @@
             assertEquals(1, instb.foooverrides);
         </method>
         
+        <method name="addTests"> 
+            this.addTest("testSub");
+            this.addTest("testClassNodeSub");
+            this.addTest("testUserClass");
+        </method> 
     </TestCase>
     
   </TestSuite>

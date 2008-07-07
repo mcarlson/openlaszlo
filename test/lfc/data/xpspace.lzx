@@ -29,6 +29,9 @@
             assertEquals(  "fourth", 
                dp.xpathQuery( "nps:/*/*[  @goo  ]/../* [ @foo   ]/ .. / text () " ) );
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 </library>

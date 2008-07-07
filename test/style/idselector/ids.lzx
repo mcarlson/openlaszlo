@@ -34,5 +34,10 @@
         <method name="testTagTypeAndId">
             assertEquals( "find me please", gFindMe.getAttribute("miscdata"));            
         </method>
+        <method name="addTests"> 
+            this.addTest("testPhilipAndrew");
+            this.addTest("testGeorgeRobin");
+            this.addTest("testTagTypeAndId");
+        </method> 
     </class>
 </library>

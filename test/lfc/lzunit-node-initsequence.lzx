@@ -97,6 +97,13 @@
         assertTrue(compareCase('sequence'));
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testConstruct");
+          this.addTest("testOnConstruct");
+          this.addTest("testInit");
+          this.addTest("testOnInit");
+          this.addTest("testInitializationSequence");
+      </method> 
   </class>
   
   <TestSuite>
@@ -371,6 +378,13 @@
         assertEquals(",onconstruct,init,oninit", n2.sequenceorder);
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testConstructProto");
+          this.addTest("testOnConstructProto");
+          this.addTest("testInitProto");
+          this.addTest("testOnInitProto");
+          this.addTest("testInitializationSequenceProto");
+      </method> 
     </TestCase>
     
     <TestCase name="testCompleteInstantiation">

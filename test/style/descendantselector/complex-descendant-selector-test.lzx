@@ -32,6 +32,11 @@
             assertEquals( 0xAA00AA, gRobertJr.getAttribute("favoritecolor"));
             assertEquals( 0x441a0a, gIndio.getAttribute("favoritecolor"));
         </method>
+        <method name="addTests"> 
+            this.addTest("testTopLevel");
+            this.addTest("testTwoLevel");
+            this.addTest("testThreeLevel");
+        </method> 
     </class>
 
 </library>

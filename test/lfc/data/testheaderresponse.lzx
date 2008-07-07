@@ -53,6 +53,9 @@
                    assertTrue(dateheader != null, "Date Header non null");
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 </library>

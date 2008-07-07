@@ -420,7 +420,7 @@ mixin LzFormatter {
           // TODO: [2006-06-01 ptw] Generalize this to write 'pretty'
           // values for all
           var str;
-          if (value instanceof Function) {
+          if (value is Function) {
             if ($debug) {
               str = this.functionName(value);
             }

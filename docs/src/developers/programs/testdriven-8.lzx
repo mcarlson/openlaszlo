@@ -20,6 +20,9 @@
         <method name="testIdle">
             assertTrue(this.idle);
         </method>
+        <method name="addTests"> 
+            this.addTest("testIdle");
+        </method> 
     </TestCase>   
 </TestSuite>
 

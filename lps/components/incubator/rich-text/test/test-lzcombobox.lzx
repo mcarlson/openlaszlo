@@ -154,6 +154,13 @@
             <method name="testLateData">
                 assertEquals(1, beijing.getValue());  // [bshine 08.09.2007] This fails, demonstrating LPP-4469
             </method>
+            <method name="addTests"> 
+                this.addTest("testSettingIt");
+                this.addTest("testDisplayUpdates");
+                this.addTest("testGetItemIndex");
+                this.addTest("testStates");
+                this.addTest("testLateData");
+            </method> 
         </TestCase>
     </TestSuite>
 </canvas>

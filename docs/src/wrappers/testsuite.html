@@ -29,7 +29,8 @@
   Each of the xUnit components is implemented as an LZX tag with the
   corresponding name.  Tests can be written by defining a subclass of
   <code>TestCase</code> and defining <code>test<i>...</i></code>
-  methods.  A test suite can be created by enclosing any number of
+  methods, and then registering them with the test case using the <code>addTests</code> method.
+  A test suite can be created by enclosing any number of
   <code>TestCases</code> in a <code>TestSuite</code>.
 </p>
 
@@ -75,6 +76,10 @@ errors.</note>
       assertUndefined(undefined);
       assertNotUndefined(null);
     &lt;/method&gt;
+    &lt;method name="addTests"&gt;
+      this.addTest("testSuccess");
+    &lt;/method&gt;
+
   &lt;/class&gt;
   
   &lt;class name="IntentionalBugs" extends="TestCase"&gt;
@@ -85,6 +90,11 @@ errors.</note>
     &lt;method name="testError"&gt;
       error("This is an intentional error");
     &lt;/method&gt;
+    &lt;method name="addTests"&gt;
+      this.addTest("testFailure");
+      this.addTest("testError");
+    &lt;/method&gt;
+
   &lt;/class&gt;
   
   &lt;TestSuite&gt;
@@ -99,6 +109,6 @@ errors.</note>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

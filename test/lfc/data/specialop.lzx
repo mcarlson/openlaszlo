@@ -46,6 +46,9 @@
             assertEquals( 33, v.star.datapath.getNodeAttribute( 'a' ) );
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 </library>

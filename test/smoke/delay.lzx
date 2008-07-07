@@ -22,6 +22,9 @@
             }
         ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("testStart");
+        </method> 
     </class>
   <TestSuite>
 

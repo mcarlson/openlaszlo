@@ -16,6 +16,9 @@
         assertEquals(list1.getItemAt(1), list1.getSelection());
       </method>
 
+      <method name="addTests"> 
+          this.addTest("testSelectedFromPath");
+      </method> 
     </TestCase>
 
     <TestCase name="selectedFromPath"> <!-- originated in LPP-114 -->
@@ -40,6 +43,9 @@
         assertEquals(list2.getItemAt(1), list2.getSelection());
       </method>
 
+      <method name="addTests"> 
+          this.addTest("testSelectedFromPath");
+      </method> 
     </TestCase>
 
   </TestSuite>

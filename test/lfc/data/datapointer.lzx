@@ -141,6 +141,11 @@
             assertEquals( 'a.bvalue', dp3.xpathQuery( '/data[1]/@a.b'));
         </method>
 
+        <method name="addTests"> 
+            this.addTest("test");
+            this.addTest("test2");
+            this.addTest("test3");
+        </method> 
     </class>
 
 </library>

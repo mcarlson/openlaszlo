@@ -120,6 +120,15 @@
         assertEquivalent([], v4.getChildNodes());
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testEquivalent");
+          this.addTest("testDocument");
+          this.addTest("testGetElementById");
+          this.addTest("testDollars");
+          this.addTest("testCreateElement");
+          this.addTest("testGetChildNodes");
+          this.addTest("testRemoveChild");
+      </method> 
     </TestCase>
   </TestSuite>
 </canvas>

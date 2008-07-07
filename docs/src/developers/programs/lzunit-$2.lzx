@@ -20,6 +20,11 @@
     <method name="testthird">
       assertEquals(3, counter++)
     </method>
+    <method name="addTests"> 
+        this.addTest("testfirst");
+        this.addTest("testsecond");
+        this.addTest("testthird");
+    </method> 
   </class>
 
   <TestSuite>

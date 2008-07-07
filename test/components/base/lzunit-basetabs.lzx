@@ -43,6 +43,11 @@
         assertEquals('ptab', tabs2.bar.subviews[0].constructor.tagname);
       </method>
         
+      <method name="addTests"> 
+          this.addTest("testTabClassImplicit");
+          this.addTest("testTabClassDirect");
+          this.addTest("testTabClassInherited");
+      </method> 
     </TestCase>
 
     <TestCase name="selectedExplicit">
@@ -69,6 +74,9 @@
         assertEquals(tabs3a.bar.subviews[1], tabs3a.bar.getSelection());
         assertEquals(tabs3b.bar.subviews[1], tabs3b.bar.getSelection());
       </method>
+      <method name="addTests"> 
+          this.addTest("testSelectedFromPath");
+      </method> 
     </TestCase>
     
     <TestCase name="selectedFromPath"> <!-- originated in LPP-114 -->
@@ -90,6 +98,9 @@
       <method name="testSelectedFromPath">
         assertEquals(tabs4.bar.subviews[1], tabs4.bar.getSelection());
       </method>
+      <method name="addTests"> 
+          this.addTest("testSelectedFromPath");
+      </method> 
     </TestCase>
 
   </TestSuite>

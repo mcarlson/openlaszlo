@@ -33,6 +33,9 @@
         <!--<method name="testName">
             this.finishedTest("testName");
         </method>-->
+<method name="addTests"> 
+    this.addTest("testName");
+</method> 
     </TestCase>
 </TestSuite>    
 </canvas>

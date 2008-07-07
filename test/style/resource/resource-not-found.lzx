@@ -68,6 +68,10 @@
             assertEquals( 206, gBonk.getAttribute("resourcewidth") );             
         </method>
 
+        <method name="addTests"> 
+            this.addTest("testFoundResource");
+            this.addTest("testFoundStyledResource");
+        </method> 
     </class>
 
 </library>

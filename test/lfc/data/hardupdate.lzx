@@ -36,6 +36,9 @@
                                "testdat:/a[1]/*/../../a/name()" ).length );
                 assertEquals( 8, par.subviews.length );
             </method>
+            <method name="addTests"> 
+                this.addTest("test1");
+            </method> 
         </TestCase>
     </TestSuite>
 </canvas>

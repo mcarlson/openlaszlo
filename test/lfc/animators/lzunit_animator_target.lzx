@@ -73,6 +73,9 @@
                         break;
                 }
             </method>
+            <method name="addTests"> 
+                this.addTest("testSimpleTargetAnim");
+            </method> 
         </TestCase>
     </TestSuite>
 </canvas>

@@ -55,6 +55,9 @@
                      assertEquals( "POST", method);
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 

@@ -91,5 +91,8 @@
             }
             assertEquals( iter, subsubID.subnodes.length );
         </method>
+        <method name="addTests"> 
+            this.addTest("testLookupTimes");
+        </method> 
     </class>
 </library>

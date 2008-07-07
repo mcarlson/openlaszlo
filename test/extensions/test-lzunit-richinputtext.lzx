@@ -96,6 +96,9 @@
             assertNotNull(rich.defaultformat); 
             assertEquals("GreenPeas", rich.defaultformat.font); 
         </method>
+        <method name="addTests"> 
+            this.addTest("testDefault");
+        </method> 
     </class>   
 
     <class name="AppendingToPlain" extends="RichTextTestBase">

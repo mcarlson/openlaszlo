@@ -19,6 +19,10 @@
             assertEquals( 279, gPatrickElement.getWidth() );
             assertEquals( "uc berkeley", gPatrickElement.getAttribute("miscdata"));
         </method>
+        <method name="addTests"> 
+            this.addTest("testRobby");
+            this.addTest("testPatrick");
+        </method> 
     </class>    
     
 </library>

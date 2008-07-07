@@ -92,6 +92,9 @@
         </method>
 
 
+        <method name="addTests"> 
+            this.addTest("testSimpleText");
+        </method> 
 </TestCase>
     </TestSuite>
 

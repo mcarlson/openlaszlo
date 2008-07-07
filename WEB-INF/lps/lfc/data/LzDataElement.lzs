@@ -175,7 +175,7 @@ function hasChildNodes (){
   * new node
   * @return LzDataNodeMixin: A copy of this node.
   */
-function cloneNode ( deep ){
+function cloneNode ( deep=false ){
     var n = new LzDataElement(this.nodeName);
     n.setAttrs( this.attributes );
     if ( deep ){

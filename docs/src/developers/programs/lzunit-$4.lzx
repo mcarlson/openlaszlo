@@ -54,6 +54,10 @@
         assertTrue(nav.selectParent())
         assertEquals(1, nav.getNodeCount())
       </method>
+      <method name="addTests"> 
+          this.addTest("testsettext");
+          this.addTest("testBumpChild");
+      </method> 
     </TestCase>
   </TestSuite>
 </canvas>

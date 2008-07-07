@@ -758,7 +758,7 @@ function doRequest(ignore=null) {
         // 
         if (lzpostbody != null) { 
             dreq.postbody = lzpostbody;
-            if (dreq.queryparams && dreq.queryparams['lzpostbody']) {
+            if (dreq.queryparams && dreq.queryparams.getValue('lzpostbody')) {
                 dreq.queryparams.remove('lzpostbody');
             }
         }

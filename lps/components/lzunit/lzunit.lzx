@@ -664,6 +664,21 @@
     <!--- The name of the TestCase -->
     <attribute name="name" />
 
+    <attribute name="testnames" value="null"/>
+
+    <!-- subclass should override this with a method which calls addTest for each test method -->
+    <method name="addTests">
+       Debug.warn("You should override the TestCase.addTests method of",this, "to add your tests to the test case.", this);
+    </method>
+
+    <method name="addTest" args="testname">
+      if (this.testnames == null) {
+          this.testnames = [];
+      }
+      this.testnames.push(testname);
+    </method>
+
+
     <method name="debugFields">
         var f = super.debugFields();
         return f.concat([ "name" ]);
@@ -679,6 +694,11 @@
 
         dw("TestCase.construct(", args, ")");
     </method>
+
+
+    <handler name="oninit">
+      this.addTests();
+    </handler>
 
     <!---
       Run the setUp, execute the named test case, run tearDown
@@ -852,7 +872,7 @@
             <p>SyncTester is an extension of TestCase that is useful for testing objects whose method are to be called sequentially, in effect synchronizing methods with potentially asynchronous behavior.</p>
                 <p>To take advantage of this helper class, you must declare a dataset named "&lt;instance name&gt;_methods", with a root node whose children are the method names to be called synchronously. The method nodes must be named "call", and have at least the "name" attribute defined. If the method needs to be called with arguments, specify them as value of the optional "args" attribute (only one argument is currently supported).</p>
                     
-                    <p>Your specific tests will only run once a method returns. It is possible to provide an inspector method for each of the asynchronous methods declared; you reference it with the "tester" attribute of a node in the dataset. These inspector methods must be defined on the SyncTester object. If you don't specify a tester for a method, the default handler named <attribute>inspect</attribute> will be called with the result of the method call as an argument. You should override this method if you want to have a generic inspector for most or all of your methods.</p>
+                    <p>Your specific tests will only run once a method returns. It is possible to provide an inspector method for each of the asynchronous methods declared; you reference it with the "tester" attribute of a node in the dataset. These inspector methods must be defined on the SyncTester object. If you dont specify a tester for a method, the default handler named <attribute>inspect</attribute> will be called with the result of the method call as an argument. You should override this method if you want to have a generic inspector for most or all of your methods.</p>
                     
                     <p>Generally speaking, you would expect that an event is sent when a method is done. This framework allows you to specify what event indicates the end of method execution by declaring the "event" attribute. It is assumed that the sender of the event is the object referenced by the <class>tested_object</class> attribute, or that the following method accepts a delegate to call on completion, as the last argument. If neither of these assumptions is correct, the flow of method execution will break.</p>
                     
@@ -1183,6 +1203,7 @@
 
    <!--- @keywords private -->
    <method name="initSuite" args="...ignore">
+     <![CDATA[
         if (this.nextCase == subviews.length)
         {
             this.nextCase = 0
@@ -1193,26 +1214,25 @@
         {
             var sv = subviews[this.nextCase];
             dw("TestSuite.initSuite: subviews[", this.nextCase, "] = ", sv);
-            if (sv instanceof lz.TestCase)
-            {
-                for (var n in sv) {
-                    var t = sv[n];
-                    if (typeof(t) == "function") {
-                        //--- /^test/.test(n)
-                        if (n.indexOf("test") == 0) {
-                            if (typeof(tests[this.nextCase]) == "undefined")
-                                tests[this.nextCase] = [];
-                            dw("tests[", this.nextCase, "].push(", n, ");");
-                            tests[this.nextCase].push(n);
-                         }
+            if (sv instanceof lz.TestCase && sv.testnames != null) {
+                    for (var n = 0; n < sv.testnames.length; n++) {
+                        var t = sv.testnames[n];
+                        if (typeof(sv[t]) == "function") {
+                            //--- /^test/.test(n)
+                            if (t.indexOf("test") == 0) {
+                                if (typeof(tests[this.nextCase]) == "undefined")
+                                    tests[this.nextCase] = [];
+                                dw("tests[", this.nextCase, "].push(", t, ");");
+                                tests[this.nextCase].push(t);
+                            }
+                        }
                     }
-                }
             }
             this.nextCase++
             var del = new LzDelegate(this, "initSuite")
             lz.Idle.callOnIdle(del)
         }
-
+      ]]>
     </method>
 
     <!---

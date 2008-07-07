@@ -25,6 +25,9 @@
        assertEquals(200, bluebox.x);
        Debug.write('--- test complete ---');
      </method>
+     <method name="addTests"> 
+         this.addTest("testSimpleXAnim");
+     </method> 
    </TestCase>
   </TestSuite>
 </canvas>

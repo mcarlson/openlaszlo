@@ -45,6 +45,9 @@
         }        
       ]]></method>
       
+      <method name="addTests"> 
+          this.addTest("testVerifyReplication");
+      </method> 
     </TestCase>
     
   </TestSuite>

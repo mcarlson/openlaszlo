@@ -34,6 +34,9 @@
                 bluebox.setX(0);
                 displayMessage('--- test complete ---');
             </method>
+            <method name="addTests"> 
+                this.addTest("testSimpleXAnim");
+            </method> 
         </TestCase>
     </TestSuite>
 </canvas>

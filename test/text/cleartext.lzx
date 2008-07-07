@@ -44,6 +44,12 @@
             assertTrue( selpos == -1 || selpos == 0)
             assertTrue( selsize == -1 || selsize == 0);            
         ]]></method>
+        <method name="addTests"> 
+            this.addTest("testSelectable");
+            this.addTest("testSelectionRange");
+            this.addTest("testClearText");
+            this.addTest("testClearSelectableText");
+        </method> 
     </class>
     
     <TestSuite>

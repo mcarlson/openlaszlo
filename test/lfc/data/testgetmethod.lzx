@@ -53,6 +53,9 @@
                      assertEquals( "67 Clyde Street", addr);
             ]]>
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
     </class>
 
 

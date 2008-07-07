@@ -174,6 +174,9 @@
       assertNotUndefined(nullvar, "variable initialized to null is not undefined");
       ]]>
     </method>
+    <method name="addTests"> 
+        this.addTest("testJavaScriptSemantics");
+    </method> 
   </class>
 
   <!--
@@ -321,6 +324,9 @@
      ]]>
     </method>
 
+    <method name="addTests"> 
+        this.addTest("testSuccess");
+    </method> 
   </class>
 
   <!--
@@ -502,6 +508,10 @@
     ]]>
     </method>
 
+    <method name="addTests"> 
+        this.addTest("testFailure");
+        this.addTest("testFailures");
+    </method> 
   </class>
 
   <!--
@@ -619,6 +629,10 @@
       }
       ]]>
     </method>
+    <method name="addTests"> 
+        this.addTest("testError");
+        this.addTest("testUndefinedErrors");
+    </method> 
   </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

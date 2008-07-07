@@ -30,6 +30,9 @@
       assertEquals('&lt;img src=baz&gt;<img src =  "foo" alt =  "a nice pretty picture">[image a nice pretty picture] foo baz', t2.getText());
       ]]>
     </method>
+    <method name="addTests"> 
+        this.addTest("testImgTag");
+    </method> 
   </class>
 
   <TestSuite>

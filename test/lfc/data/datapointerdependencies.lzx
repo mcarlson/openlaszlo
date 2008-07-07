@@ -112,6 +112,10 @@
 
             assertEquals( oser , mydp.serialize() );
         </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+            this.addTest("test2");
+        </method> 
     </class>
 
 
