@@ -24,6 +24,8 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
         <text>Lorem ipsum dolor sit amet</text>
     </dataset>
 
+    <attribute name="gfontSize" value="20" type="number"/>
+
     <simplelayout axis="x" spacing="2" />
     <view name="texts">
         <simplelayout axis="y" spacing="2" />
@@ -64,6 +66,12 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
         <text id="b" datapath="dstext:/text[1]/text()" multiline="true" resize="true" width="120" bgcolor="#eaeaea" />
         <text id="e" datapath="dstext:/text[2]/text()" multiline="false" resize="false" width="120" height="40" bgcolor="#eaeaea" />
         <text id="f" datapath="dstext:/text[2]/text()" multiline="false" resize="true" bgcolor="#eaeaea" />
+
+        <!-- from LPP-6619 -->
+        <text fontsize="${canvas.gfontSize}" id="t13" text="Click Me 1"/>
+        <text fontsize="20" text="Click Me 2" id="t14"/>
+        <text fontsize="${canvas.gfontSize}" id="t15" text="Click Me 1" resize="true"/>
+        <text fontsize="20" resize="true" id="t16" text="Click Me 2"/>
     </view>
 
     <view name="inputtexts">
@@ -127,6 +135,19 @@ textSizeSuite.testTextHeight = function () {
     LzTestManager.assertEquals(17, f.sprite.getTextfieldHeight(), "text f getTextfieldHeight()");
     LzTestManager.assertEquals(13, f.sprite.getTextHeight(), "text f getTextHeight()");
     LzTestManager.assertEquals(17, f.height, "text f getTextfieldHeight()");
+
+    LzTestManager.assertEquals(28, t13.height, "text13 height");
+    t13.setAttribute('fontsize',50);
+    LzTestManager.assertEquals(64, t13.height, "text13 height");
+    LzTestManager.assertEquals(28, t14.height, "text14 height");
+    t14.setAttribute('fontsize',50);
+    LzTestManager.assertEquals(64, t14.height, "text14 height");
+    LzTestManager.assertEquals(28, t15.height, "text15 height");
+    t15.setAttribute('fontsize',50);
+    LzTestManager.assertEquals(64, t15.height, "text15 height");
+    LzTestManager.assertEquals(28, t16.height, "text16 height");
+    t16.setAttribute('fontsize',50);
+    LzTestManager.assertEquals(64, t16.height, "text16 height");
 }
 
 textSizeSuite.testInputtextHeight = function () {
