@@ -57,6 +57,7 @@ Options:
                 widthheight   - getWidth(),getHeight() to width,height
                 tagname       - constructor.classname to constructor.tagname
                 states        - apply=" -> applied=", state.apply()/remove() -> setAttribute('applied', true|false)
+                proxymethods  - Lz.setCanvasAttribute()/callMethod() -> lz.embed.* 
 
    -v
            show version number and exit
@@ -86,6 +87,7 @@ $xform{setattribute}=1; # transform calls like setVisible into setAttribute(...
 $xform{widthheight}=1;  # transform getWidth(),getHeight() to width,height
 $xform{tagname}=1;      # transform constructor.classname to constructor.tagname
 $xform{states}=1;       # transform apply=" -> applied=", state.apply()/remove() -> setAttribute('applied', true|false)
+$xform{proxymethods}=1; # transform Lz.setCanvasAttribute()/callMethod() -> lz.embed.* 
 
 ##
 # Other global variables
@@ -325,6 +327,13 @@ sub emit_content {
         s/\.remove\(\w*?\)/.setAttribute('applied', false)/g;
     }
 
+    #### transform proxymethods
+    #
+    # Lz.setCanvasAttribute()/callMethod() -> lz.embed.* 
+
+    if ($xform{proxymethods}) {
+        s/Lz.(setCanvasAttribute|callMethod)/lz.embed.$1/g;
+    }
 
     debugln(3, "   EMIT CONTENT: " . $_);
     print $FH $_;
