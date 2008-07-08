@@ -735,7 +735,7 @@ public class NodeModel implements Cloneable {
         }
 
         // Add file/line information if debugging
-        if (debug) {
+        if (debug && !("swf9".equals(env.getRuntime()))) {
           // File/line stored separately for string sharing
           String name = "_dbg_filename";
           String filename = Parser.getSourceMessagePathname(element);

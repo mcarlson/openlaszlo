@@ -472,5 +472,5 @@ mixin LzFormatter {
   }
 
 };
-lz.Formatter = LzFormatter;  // publish
+
 

@@ -7,6 +7,9 @@
     <when runtime="dhtml">
       <!-- no debug window in DHTML, it is in its own iframe -->
     </when>
+    <when runtime="swf9">
+      <!-- swf9 debugger uses fdb for now -->
+    </when>
     <otherwise>
       <include href="debugger.lzx"/>
     </otherwise>
@@ -14,6 +17,6 @@
 </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

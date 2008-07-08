@@ -77,7 +77,6 @@ public class LzDeclaredEventClass {
     return "LzDeclaredEvent";
   }
 }
-lz.DeclaredEventClass = LzDeclaredEventClass;  // publish
 
 /**
  * The initial value for an event.  Automatically replaced with an
@@ -256,3 +255,5 @@ var lz;
     }
   })());
 
+lz.DeclaredEventClass = LzDeclaredEventClass;  // publish
+lz.Formatter = LzFormatter;  // publish

@@ -263,6 +263,11 @@ public class Compiler {
   // Set internal flags that depend on external flags
   public void defaultOptions() {
 
+    // Disable debug compilation for swf9
+    if ("swf9".equals((String)options.get(RUNTIME))) {
+      options.putBoolean(DEBUG, false);
+    }
+
     // TODO: [2008-05-18 dda] It may be possible to clean this up
     // a little now that we know this is only called once.
 
