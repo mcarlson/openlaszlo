@@ -2,7 +2,7 @@
 # Run several tests in the rhino runtime.
 # usage 
 # runlztest.sh [file-with-list-of-tests]
-# Copyright 2007 Laszlo Systems
+# Copyright 2007, 2008 Laszlo Systems
 
 # Use a default value for the tests file if its not specified on the command line
 tests=${1:-"test/lztest/smoketest.txt"}
@@ -75,7 +75,7 @@ for i in $paths; do
     # make the file with all the tests load in that compiled file
     echo "load(\"${i%lzx}js\");" >> $outfile
     
-    echo "for (var k = 0; k < 100; k++) LzIdle.onidle.sendEvent();" >> $outfile
+    echo "for (var k = 0; k < 100; k++) lz.Idle.onidle.sendEvent();" >> $outfile
 
     echo "if (LzTestManager.failedsuites > 0) quit(3);" >> $outfile
 
