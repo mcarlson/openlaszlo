@@ -642,12 +642,12 @@ return
 };var $2=this.parent;while(--$1>0){
 $2=$2.parent
 };this.classroot=$2
-},"dataBindAttribute",function($1,$2,$3){
+},"dataBindAttribute",function($1,$2){
 if(!this.datapath){
 this.setDatapath(".")
 };if(!this.__LZdelegates){
 this.__LZdelegates=[]
-};this.__LZdelegates.push(new LzDataAttrBind(this.datapath,$1,$2,$3))
+};this.__LZdelegates.push(new LzDataAttrBind(this.datapath,$1,$2))
 },"__LZdelayedSetters",void 0,"earlySetters",void 0,"$lzc$set_$delegates",function($1){
 var $2=[];var $3=$1.length;for(var $4=0;$4<$3;$4+=3){
 if($1[$4+2]){
@@ -860,14 +860,6 @@ return
 if(!($1 instanceof Object)){
 
 }};this.makeChild($1,true)
-},"acceptAttribute",function($1,$2,$3){
-if(typeof $2!="object"){
-var $2=LzNode.prototype.presentationtypes[$2]
-};this.setAttribute($1,$2.accept($3))
-},"presentAttribute",function($1,$2){
-if(typeof $2!="object"){
-var $2=LzNode.prototype.presentationtypes[$2]
-};return $2.present(this.getAttribute($1))
 }],["tagname","node","attributes",new LzInheritedHash(),"mergeAttributes",function($1,$2){
 for(var $3 in $1){
 var $4=$1[$3];if($4===LzNode._ignoreAttribute){
@@ -897,7 +889,7 @@ if(lz[$2]!==this){
 lz[$2]=this
 }}}},"_ignoreAttribute",{toString:function(){
 return "_ignoreAttribute"
-}},"__LZdelayedSetters",new LzInheritedHash({$refs:"$lzc$set_$refs"}),"earlySetters",new LzInheritedHash({name:1,$events:2,$delegates:3,$classrootdepth:4,$datapath:5}),"__UIDs",0,"presentationtypes",{number:NumberPresentationType,boolean:BooleanPresentationType,date:DatePresentationType}]);(function(){
+}},"__LZdelayedSetters",new LzInheritedHash({$refs:"$lzc$set_$refs"}),"earlySetters",new LzInheritedHash({name:1,$events:2,$delegates:3,$classrootdepth:4,$datapath:5}),"__UIDs",0]);(function(){
 with(LzNode){
 with(LzNode.prototype){
 
@@ -917,21 +909,7 @@ $4=null;
 with($lzc$class_userClassPlacement){
 with($lzc$class_userClassPlacement.prototype){
 
-}}})();Class.make("PresentationType",null,["accept",function($1){
-return $1
-},"present",function($1){
-return ""+$1
-}],null);Class.make("BooleanPresentationType",PresentationType,["accept",function($1){
-switch($1.toLowerCase()){
-case "0":
-case "false":
-return false;
-default:
-return true;
-
-}}],null);Class.make("NumberPresentationType",PresentationType,["accept",function($1){
-return Number($1)
-}],null);Class.make("LzDelegate",null,["__delegateID",0,"$lzsc$initialize",function($1,$2,$3,$4){
+}}})();Class.make("LzDelegate",null,["__delegateID",0,"$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 2:
 $3=null;
@@ -5866,7 +5844,7 @@ case 2:
 $3=0;
 
 };if($2==null){
-return false
+return null
 };if($1.selectors!=null){
 var $4=$1.selectors.length;for(var $5=$3;$5<$4;$5++){
 var $6=$1.selectors[$5];var $7=LzDatapointer.pathSymbols[$6]||0;var $8=$1.selectors[$5+1];if($8&&!(String["$lzsc$isa"]?String.$lzsc$isa($8):$8 instanceof String)&&$8["pred"]=="range"){
@@ -8285,7 +8263,7 @@ receivingLC.send("lc_appdebug"+app_uid,"evalExpr",$1)
 with($lzc$class_$m1){
 with($lzc$class_$m1.prototype){
 LzNode.mergeAttributes({},$lzc$class_$m1.attributes)
-}}})();canvas=new $lzc$class_$m1(null,{__LZproxied:"true",bgcolor:8750489,embedfonts:true,fontname:"Verdana,Vera,sans-serif",fontsize:11,fontstyle:"plain",height:370,lpsbuild:"10246 /Users/maxcarlson/openlaszlo/trunk-clean",lpsbuilddate:"2008-07-08T01:35:53-0700",lpsrelease:"Latest",lpsversion:"4.1.x",proxied:false,runtime:"dhtml",width:"100%"});var offwhite=15921906;var gray10=1710618;var gray20=3355443;var gray30=5066061;var gray40=6710886;var gray50=8355711;var gray60=10066329;var gray70=11776947;var gray80=13421772;var gray90=15066597;var iceblue1=3298963;var iceblue2=5472718;var iceblue3=12240085;var iceblue4=14017779;var iceblue5=15659509;var palegreen1=4290113;var palegreen2=11785139;var palegreen3=12637341;var palegreen4=13888170;var palegreen5=15725032;var gold1=9331721;var gold2=13349195;var gold3=15126388;var gold4=16311446;var sand1=13944481;var sand2=14276546;var sand3=15920859;var sand4=15986401;var ltpurple1=6575768;var ltpurple2=12038353;var ltpurple3=13353453;var ltpurple4=15329264;var grayblue=12501704;var graygreen=12635328;var graypurple=10460593;var ltblue=14540287;var ltgreen=14548957;Class.make("$lzc$class_basefocusview",LzView,["active",void 0,"$lzc$set_active",function($1){
+}}})();canvas=new $lzc$class_$m1(null,{__LZproxied:"true",bgcolor:8750489,embedfonts:true,fontname:"Verdana,Vera,sans-serif",fontsize:11,fontstyle:"plain",height:370,lpsbuild:"10256 /Users/maxcarlson/openlaszlo/trunk-clean",lpsbuilddate:"2008-07-08T10:45:00-0700",lpsrelease:"Latest",lpsversion:"4.1.x",proxied:false,runtime:"dhtml",width:"100%"});var offwhite=15921906;var gray10=1710618;var gray20=3355443;var gray30=5066061;var gray40=6710886;var gray50=8355711;var gray60=10066329;var gray70=11776947;var gray80=13421772;var gray90=15066597;var iceblue1=3298963;var iceblue2=5472718;var iceblue3=12240085;var iceblue4=14017779;var iceblue5=15659509;var palegreen1=4290113;var palegreen2=11785139;var palegreen3=12637341;var palegreen4=13888170;var palegreen5=15725032;var gold1=9331721;var gold2=13349195;var gold3=15126388;var gold4=16311446;var sand1=13944481;var sand2=14276546;var sand3=15920859;var sand4=15986401;var ltpurple1=6575768;var ltpurple2=12038353;var ltpurple3=13353453;var ltpurple4=15329264;var grayblue=12501704;var graygreen=12635328;var graypurple=10460593;var ltblue=14540287;var ltgreen=14548957;Class.make("$lzc$class_basefocusview",LzView,["active",void 0,"$lzc$set_active",function($1){
 with(this){
 setActive($1)
 }},"target",void 0,"$lzc$set_target",function($1){
