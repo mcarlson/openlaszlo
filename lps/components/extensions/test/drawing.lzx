@@ -65,21 +65,6 @@
         </handler>
     </drawview>
 
-<!-- test new bezierCurveTo method  - from http://developer.mozilla.org/samples/canvas-tutorial/2_6_canvas_beziercurveto.html -->
-    <drawview width="200" height="200">
-        <handler name="oncontext">
-            this.beginPath();
-            this.moveTo(75,40);
-            this.bezierCurveTo(75,37,70,25,50,25);
-            this.bezierCurveTo(20,25,20,62.5,20,62.5);
-            this.bezierCurveTo(20,80,40,102,75,120);
-            this.bezierCurveTo(110,102,130,80,130,62.5);
-            this.bezierCurveTo(130,62.5,130,25,100,25);
-            this.bezierCurveTo(85,25,75,37,75,40);
-            this.fill();
-        </handler>
-    </drawview>
-
 <!-- from http://forum.openlaszlo.org/showthread.php?t=9478 -->
     <class name="curve" extends="drawview">
         <handler name="oncontext">
