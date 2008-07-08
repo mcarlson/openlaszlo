@@ -13,8 +13,6 @@
   *
   * @shortdesc Represents a text node in a set of data.
   * @see lzdatanodemixin, lzdataelement, datapointer
-  * @fixme [2006-07-26] (LPP-2412) The Instance reference is required for lzpix
-  *                                to run.
   */
 class LzDataText extends LzDataNode with LzDataNodeMixin {
 
@@ -22,27 +20,14 @@ class LzDataText extends LzDataNode with LzDataNodeMixin {
  * This object represents a text node in a set of data.
  * @param String text: The text that this node holds.
  */
-function LzDataText ( text ){
+function LzDataText ( text:String ){
     super();
     this.nodeType = LzDataElement.TEXT_NODE;
     this.data = text;
 }
 
 /** @lzxtype event */
-var onDocumentChange = LzDeclaredEvent;
-/** @lzxtype event */
-var onparentNode = LzDeclaredEvent;
-/** @lzxtype event */
-var onchildNode = LzDeclaredEvent;
-/** @lzxtype event */
-var onchildNodes = LzDeclaredEvent;
-/** @lzxtype event */
-var onattributes = LzDeclaredEvent;
-/** @lzxtype event */
-var onnodeName = LzDeclaredEvent;
-
-/** @lzxtype event */
-var ondata = LzDeclaredEvent;
+var ondata :LzDeclaredEventClass = LzDeclaredEvent;
 
 /** This property is of type String, can raise a DOMException object on setting
   * and can raise a DOMException object on retrieval. */
@@ -53,40 +38,38 @@ var ondata = LzDeclaredEvent;
  * "#text".
   * @type String
   */
-var nodeName        = '#text';
+var nodeName :String = '#text';
 
 /** The data held by this node.
   * @type String */
-var data = "";
+var data :String = "";
+
 /** @access private */
-function $lzc$set_data(v) { this.setData(v); }
+function $lzc$set_data(v:String) :void { this.setData(v); }
 
 /** @type Number
   * @keywords read-only 
   */
-var length = 0;
+var length :Number = 0;
 
 /**
   * Sets the string that this node holds.
   * @param String newdata: The new string for this node.
   */
-function setData ( newdata ) {
+public function setData ( newdata:String ) {
     this.data = newdata;
     if (this.ondata && this.ondata.ready) {
         this.ondata.sendEvent( newdata );
     }
     if (this.ownerDocument) {
-        this.ownerDocument.handleDocumentChange( "data" , this , 1 );
+        this.ownerDocument.handleDocumentChange( "data", this, 1 );
     }
 }
 
 /**
-  * Returns a copy of this node.
-  * @param ignore: This parameter is necessary because LzDataElementMixin
-  *                defines cloneNode() with an argument.
   * @access private
   */
-function cloneNode (ignore=null){
+override public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
     var n = new LzDataText(this.data);
     return n;
 }
@@ -94,14 +77,14 @@ function cloneNode (ignore=null){
 /**
   * @access private
   */
-function serialize (len=null){
+override public function serialize (len:Number = Infinity) :String {
     return LzDataElement.__LZXMLescape( this.data );
 }
 
 /**
   * @access private
   */
-override function toString (){
+override function toString () :String {
     //return this.serialize();
     return this.data;
 }

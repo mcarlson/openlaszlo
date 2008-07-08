@@ -68,63 +68,75 @@
 mixin LzDataNodeMixin
 {
 /** @lzxtype event */
-var onownerDocument = LzDeclaredEvent;
-
+var onownerDocument :LzDeclaredEventClass = LzDeclaredEvent;
+/** @lzxtype event */
+var onDocumentChange :LzDeclaredEventClass = LzDeclaredEvent;
+/** @lzxtype event */
+var onparentNode :LzDeclaredEventClass = LzDeclaredEvent;
+/** @lzxtype event */
+var onchildNode :LzDeclaredEventClass = LzDeclaredEvent;
+/** @lzxtype event */
+var onchildNodes :LzDeclaredEventClass = LzDeclaredEvent;
+/** @lzxtype event */
+var onattributes :LzDeclaredEventClass = LzDeclaredEvent;
+/** @lzxtype event */
+var onnodeName :LzDeclaredEventClass = LzDeclaredEvent;
 
 /** The type of this node -- ELEMENT_NODE or TEXT_NODE
-  * @type Number
+  * @type int
   * @keywords abstract
   */
-var nodeType:*; // This is undefined. Set elsewhere
+var nodeType :int; // This is undefined. Set elsewhere
 
-var parentNode:* = null;
+var parentNode :* = null;
 
-var ownerDocument:*;
+var ownerDocument :LzDataElementMixin;
+
 /** @access private */
-var __LZo:* = -1;
+var __LZo :int = -1;
 /** @access private */
-var sel:Boolean = false;
+var sel :Boolean = false;
 
 /** An array of children of this node
   * @type LzDataNodeMixin
   */
-var childNodes:* = null;
+var childNodes :Array = null;
 
 /** @access private */
-var __LZcoDirty = true;
+var __LZcoDirty :Boolean = true;
 
-
-/**
-  * Returns the sibling before this one this node's parentNodes List of children
-  * @return LzDataNodeMixin: The node preceeding this one in this node's childNodes
-  */
-function getPreviousSibling (){
-    if (!this.parentNode) return null;
-    if ( this.parentNode.__LZcoDirty ) this.parentNode.__LZupdateCO();
-    return this.parentNode.childNodes[ this.__LZo - 1 ];
-}
 
 /**
  * Returns the parent of this node
  * @return LzDataNodeMixin: the parent of this node
  */
-function getParent () {
+public function getParent () {
   return this.parentNode;
 }
 
 /**
   * gets offset of node in parent's childNodes array
-  * @return number
+  * @return int
   */
-function getOffset (){
+public function getOffset () :int {
     if (!this.parentNode) return 0;
     if (this.parentNode.__LZcoDirty) this.parentNode.__LZupdateCO();
 
     return this.__LZo;
 }
 
+/**
+  * Returns the sibling before this one this node's parentNodes List of children
+  * @return LzDataNodeMixin: The node preceeding this one in this node's childNodes
+  */
+public function getPreviousSibling (){
+    if (!this.parentNode) return null;
+    if ( this.parentNode.__LZcoDirty ) this.parentNode.__LZupdateCO();
+    return this.parentNode.childNodes[ this.__LZo - 1 ];
+}
+
 /** @access private */
-function $lzc$getPreviousSibling_dependencies( who, self ){
+function $lzc$getPreviousSibling_dependencies( who, self ) :Array {
     return [ this.parentNode , "childNodes" , this , "parentNode" ];
 }
 
@@ -132,14 +144,14 @@ function $lzc$getPreviousSibling_dependencies( who, self ){
   * Returns the sibling after this one this node's parentNodes List of children
   * @return LzDataNodeMixin: The node succeeding this one in this node's childNodes
   */
-function getNextSibling (){
+public function getNextSibling (){
     if (!this.parentNode) return null;
     if ( this.parentNode.__LZcoDirty ) this.parentNode.__LZupdateCO();
     return this.parentNode.childNodes[ this.__LZo + 1 ];
 }
 
 /** @access private */
-function $lzc$getNextSibling_dependencies( who, self ){
+function $lzc$getNextSibling_dependencies( who, self ) :Array {
     return [ this.parentNode , "childNodes" , this , "parentNode" ];
 }
 
@@ -149,7 +161,7 @@ function $lzc$getNextSibling_dependencies( who, self ){
   * Renamed from childOf to avoid conflict with LzNode.childOf.
   * childOf still exists because it is part of the public API.
   */
-function childOfNode ( el , allowself=false ) {
+function childOfNode ( el, allowself:Boolean = false ) :Boolean {
     var p = allowself ? this : this.parentNode
     while ( p ){
         if ( p == el ) return true;
@@ -169,17 +181,16 @@ override function childOf ( el , allowself=false ) {
   return this.childOfNode (el, allowself);
 }
 
-
 /**
   * Sets the LzDataNodeMixin which is the ownerDocument for this node.
   * @param LzDataNodeMixin ownerDoc: The LzDataNodeMixin to act as the ownerDocument for
   * this node.
   */
-function setOwnerDocument ( ownerDoc ){
+public function setOwnerDocument ( ownerDoc ){
     this.ownerDocument = ownerDoc;
     if (this.childNodes) {
-        for ( var i = 0; i < this.childNodes.length; i++ ){
-            this.childNodes[ i ] .setOwnerDocument( ownerDoc );
+        for ( var i:int = 0; i < this.childNodes.length; i++ ){
+            this.childNodes[ i ].setOwnerDocument( ownerDoc );
         }
     }
 
@@ -189,24 +200,40 @@ function setOwnerDocument ( ownerDoc ){
 }
 
 /**
+  * Returns a copy of this node.
+  * @param Boolean deep: If true, the children of this node will be part of the
+  * new node
+  * @return LzDataNodeMixin: A copy of this node.
+  */
+public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
+    /* not implemented here */
+}
+
+/**
+  * Returns this node as a string of xml.
+  * @return String: The string serialization of this node.
+  */
+public function serialize (len:Number = Infinity) :String {
+    /* not implemented here */
+}
+
+/**
   * @access private
   */
-function __LZlockFromUpdate ( locker ){
+function __LZlockFromUpdate ( locker:LzDatapath ){
     this.ownerDocument.__LZdoLock( locker );
 }
 
 /**
   * @access private
   */
-function __LZunlockFromUpdate ( locker ){
+function __LZunlockFromUpdate ( locker:LzDatapath ){
     this.ownerDocument.__LZdoUnlock( locker );
 }
 
 } // End of LzDataNodeMixin
 lz.DataNodeMixin = LzDataNodeMixin;  // publish
 
-
-// Only static methods and variables remain here
 
 /**
  * @topic LFC
@@ -220,37 +247,35 @@ lz.DataNodeMixin = LzDataNodeMixin;  // publish
  * @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead. The methods and constants in this class are deprecated
  *
  */
-class LzDataNode extends  LzEventable {
+class LzDataNode extends LzEventable {
 
-    
 /**
   * @access private
   */
-    function LzDataNode ( attributes = null, children = null) {
+    function LzDataNode () {
         super();
     }
 
-
 /** @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead
-  * @type Number
+  * @type int
   * @lzxdefault "1"
   * @keywords read-only
   */
-static var ELEMENT_NODE = 1;
+static const ELEMENT_NODE :int = 1;
 
 /** @deprecated Use <code>LzDataElement.TEXT_NODE</code> instead
-  * @type Number
+  * @type int
   * @lzxdefault "3"
   * @keywords read-only
   */
-static var TEXT_NODE = 3;
+static const TEXT_NODE :int = 3;
 
 /** @deprecated Use <code>LzDataElement.DOCUMENT_NODE</code> instead
-  * @type Number
+  * @type int
   * @lzxdefault "9"
   * @keywords read-only
   */
-static var DOCUMENT_NODE = 9;
+static const DOCUMENT_NODE :int = 9;
 
 
 /**
@@ -265,7 +290,7 @@ static var DOCUMENT_NODE = 9;
   * generated from the string
   * @deprecated Use <code>LzDataElement.stringToLzData</code> 
   */
-static function stringToLzData( str, trimwhitespace=false, nsprefix=false ) {
+static function stringToLzData( str:String, trimwhitespace:Boolean = false, nsprefix:Boolean = false ) :LzDataElement {
     if ( $debug ){
       Debug.info("%s.%w is deprecated.  Use `LzDataElement.stringToLzData` instead.",
                  this, arguments.callee);
@@ -274,14 +299,14 @@ static function stringToLzData( str, trimwhitespace=false, nsprefix=false ) {
 
 }
 
-  /**
-   * Needed because LzDataElementMixin wants to override this, and it is
-   * mixed in to both this and LzNode which defines toString, so _we_
-   * have to define it too.
-   * @access private
-   */
-  function toString ()
-    { return "LzDataNode";}
-
+/**
+ * Needed because LzDataElementMixin wants to override this, and it is
+ * mixed in to both this and LzNode which defines toString, so _we_
+ * have to define it too.
+ * @access private
+ */
+function toString () :String { 
+    return "LzDataNode";
+}
 
 } // End of LzDataNode
