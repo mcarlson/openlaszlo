@@ -628,7 +628,7 @@ function __LZgetNodes (pathobj:LzParsedPath, p:*, startpoint:int = 0) :* {
       if ( $debug ) {
           Debug.info("%s: p is null in %s", arguments.callee, this);
       }
-      return false;
+      return null;
   }
 
   if (pathobj.selectors != null) {
