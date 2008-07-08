@@ -345,6 +345,7 @@ function _dbg_name (){
 }
 
 } // End of LzDelegate
+lz.Delegate = LzDelegate;  // publish
 
 
 /**
@@ -603,3 +604,4 @@ override function _dbg_name (){
 }
 
 } // End of LzEvent
+lz.Event = LzEvent;  // publish

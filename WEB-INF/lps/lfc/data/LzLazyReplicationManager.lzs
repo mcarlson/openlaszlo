@@ -359,3 +359,4 @@ override function getCloneNumber ( n:int ) :LzNode {
 }
 
 }; // End of LzLazyReplicationManager
+lz.LazyReplicationManager = LzLazyReplicationManager;  // publish

@@ -311,5 +311,4 @@ override function setSelectable(value) {
 } // End of LzInputText
 
 lz[LzInputText.tagname] = LzInputText;
-
-
+lz.InputText = LzInputText;  // publish

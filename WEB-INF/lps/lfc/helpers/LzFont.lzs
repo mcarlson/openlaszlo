@@ -390,3 +390,4 @@ function toString (){
 }
 
 } // End of LzFont
+lz.Font = LzFont;  // publish

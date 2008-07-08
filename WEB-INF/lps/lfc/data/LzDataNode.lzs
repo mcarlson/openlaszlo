@@ -203,6 +203,7 @@ function __LZunlockFromUpdate ( locker ){
 }
 
 } // End of LzDataNodeMixin
+lz.DataNodeMixin = LzDataNodeMixin;  // publish
 
 
 // Only static methods and variables remain here

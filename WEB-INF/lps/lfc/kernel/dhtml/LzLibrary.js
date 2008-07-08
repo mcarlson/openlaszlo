@@ -158,3 +158,4 @@ static function __LZsnippetLoaded (url){
 }; // End of LzLibrary
 
 lz[LzLibrary.tagname] = LzLibrary;
+lz.Library = LzLibrary;  // publish

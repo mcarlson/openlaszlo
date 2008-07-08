@@ -104,3 +104,4 @@ function insertRule (rule, index) {
 }
 
 } // End of LzCSSStyleSheet
+lz.CSSStyleSheet = LzCSSStyleSheet;  // publish

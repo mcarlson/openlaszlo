@@ -123,3 +123,4 @@ if ($debug) {
 }
 
 } // End of LzDataAttrBind
+lz.DataAttrBind = LzDataAttrBind;  // publish

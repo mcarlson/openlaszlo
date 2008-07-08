@@ -325,6 +325,7 @@ class LzHTTPDataProvider extends LzDataProvider {
 
     }
 }
+lz.HTTPDataProvider = LzHTTPDataProvider;  // publish
 
 
 /**
@@ -406,3 +407,4 @@ class LzHTTPDataRequest extends LzDataRequest {
     var loader = null;
 
 }
+lz.HTTPDataRequest = LzHTTPDataRequest;  // publish

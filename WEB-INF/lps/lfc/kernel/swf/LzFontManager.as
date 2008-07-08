@@ -1,7 +1,7 @@
 /**
   * LzFontManager.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -213,3 +213,4 @@ LzFontManager.__fontExists = function (str) {
             this.__genericClientFontFamilyNames[str] != null ||
             this.__fontFamilyMap[str] != null);
 }
+lz.FontManager = LzFontManager;  // publish

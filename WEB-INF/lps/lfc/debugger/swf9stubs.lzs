@@ -40,3 +40,4 @@ dynamic class LzDebugService {
 }
 
 var Debug = new LzDebugService();
+lz.DebugService = LzDebugService;  // publish

@@ -7,17 +7,20 @@
 public class LzParsedPath {
     public static function trim(rp:String):String { return rp; }
 }
+lz.ParsedPath = LzParsedPath;  // publish
 
 public class LzDataset {
     function LzDataset(...rest) { } 
     public static var slashPat = "/";
 }
+lz.Dataset = LzDataset;  // publish
 
 
 public class LzDataNode {
     static public function trim (...rest) {}
     
 }
+lz.DataNode = LzDataNode;  // publish
 
 
 
@@ -26,10 +29,12 @@ public class LzDataNode {
 public class LzDataAttrBind {
     public function LzDataAttrBind(a:*,b:*,c:*) { }
 }
+lz.DataAttrBind = LzDataAttrBind;  // publish
 
 public class LzDatapath {
     public function LzDatapath (...rest) { }
 }
+lz.Datapath = LzDatapath;  // publish
 
 class LzDataElement  extends LzDataNode {
     public var children = [];
@@ -42,6 +47,7 @@ class LzDataElement  extends LzDataNode {
     }
 
 }
+lz.DataElement = LzDataElement;  // publish
 
 
 
@@ -51,3 +57,4 @@ class LzDataText  extends LzDataNode {
     }
 
 }
+lz.DataText = LzDataText;  // publish

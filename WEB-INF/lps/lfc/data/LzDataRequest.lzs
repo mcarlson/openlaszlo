@@ -95,3 +95,4 @@ class LzDataRequest extends LzNode {
 }
 
 lz[LzDataRequest.tagname] = LzDataRequest;
+lz.DataRequest = LzDataRequest;  // publish

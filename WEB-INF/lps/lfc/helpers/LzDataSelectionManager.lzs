@@ -255,3 +255,4 @@ function __LZsetSelected ( p, val ){
 }
 
 } // End of LzDataselectionmanager
+lz.DataSelectionManager = LzDataSelectionManager;  // publish

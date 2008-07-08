@@ -453,3 +453,4 @@ override function toString (){
 
 
 lz[LzLayout.tagname] = LzLayout;
+lz.Layout = LzLayout;  // publish

@@ -337,3 +337,4 @@ function serialize( sep = null, delim = null, uriencode = null ){
 // Fixes LPP-3030 toString() in IE 6+ - the function declaration doesn't work...
 // FIXME: [2008-03-31 pbr] Is this needed?
 LzParam.prototype.toString = LzParam.prototype.serialize;
+lz.Param = LzParam;  // publish

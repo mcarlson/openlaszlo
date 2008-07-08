@@ -125,3 +125,4 @@ static function copyFlashXML (node:XML, trimwhitespace:Boolean, nsprefix:Boolean
 
 } // End of LzXMLTranslator
       
+lz.XMLTranslator = LzXMLTranslator;  // publish

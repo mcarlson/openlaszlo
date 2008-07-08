@@ -286,3 +286,4 @@ public class  LzURL {
         return m;
     }
 }
+lz.URL = LzURL;  // publish

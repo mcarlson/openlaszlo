@@ -767,6 +767,7 @@ function __windowResize(size) {
 
 } // End of LzCanvas
 lz[LzCanvas.tagname] = LzCanvas;
+lz.Canvas = LzCanvas;  // publish
 
 
 

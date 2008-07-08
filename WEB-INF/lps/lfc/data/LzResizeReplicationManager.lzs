@@ -323,3 +323,4 @@ override function toString (){
 */
 
 }; // End of LzResizeReplicationManager
+lz.ResizeReplicationManager = LzResizeReplicationManager;  // publish

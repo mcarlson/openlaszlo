@@ -93,6 +93,7 @@ function makeMenuItem (title, callback) {
 }
 
 }; // End of LzContextMenu
+lz.ContextMenu = LzContextMenu;  // publish
 
 
 
@@ -177,3 +178,4 @@ function setVisible (val) {
 }
 
 }; // End of LzContextMenuItem
+lz.ContextMenuItem = LzContextMenuItem;  // publish

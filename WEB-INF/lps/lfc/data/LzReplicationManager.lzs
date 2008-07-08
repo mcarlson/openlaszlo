@@ -902,6 +902,7 @@ override function __LZupdateData (recursive:Boolean = false) :void {
 }
 
 } // End of LzReplicationManager
+lz.ReplicationManager = LzReplicationManager;  // publish
 
 /** @access private */
 class LzRefNode extends LzNode {

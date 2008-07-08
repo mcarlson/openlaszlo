@@ -425,3 +425,4 @@ override function toString(){
 
 
 lz[LzAnimator.tagname] = LzAnimator;
+lz.Animator = LzAnimator;  // publish

@@ -134,3 +134,4 @@ class LzEventable {
   }
 
 } // End of LzEventable
+lz.Eventable = LzEventable;  // publish

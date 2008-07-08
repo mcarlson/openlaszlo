@@ -82,6 +82,7 @@ function _getSimpleSelectorSpecificity ( selarr, k ) {
 }
 
 } // End of LzCSSStyleRule
+lz.CSSStyleRule = LzCSSStyleRule;  // publish
 
 
 
@@ -627,6 +628,7 @@ function _normalizeClassname ( cn ){
 } // End of LzCSSStyleClass
 
 var LzCSSStyle = new LzCSSStyleClass ();
+lz.CSSStyle = LzCSSStyleClass;  // publish
 
 
 /** These objects implement
@@ -649,3 +651,4 @@ function setNode ( node ){
 }
 
 } // End of LzCSSStyleDeclaration
+lz.CSSStyleDeclaration = LzCSSStyleDeclaration;  // publish
