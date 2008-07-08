@@ -166,26 +166,30 @@
             <methodname><link linkend="{$id}"><xsl:value-of select="@name"/></link></methodname>
           </xsl:when>
           <xsl:otherwise>
-              <xsl:choose>
+            <xsl:choose>
               <xsl:when test="$static">
                 <!-- For static methods, show the class name --> 
-                <methodstaticclass><xsl:value-of select="../../@name"/>.</methodstaticclass><methodname><xsl:value-of select="@name"/></methodname>
+                <methodstaticclass><xsl:call-template name="lztype-rename">
+                    <xsl:with-param name="type" select="../../@name"/>
+                  </xsl:call-template>.</methodstaticclass>
               </xsl:when>
               <xsl:when test="ancestor::property/doc/tag[@name='lzxname']/text">
                 <!-- For instance methods, show name of tag if there is one --> 
-                <methodclass><xsl:value-of select="ancestor::property/doc/tag[@name='lzxname']/text"/>.</methodclass><methodname><xsl:value-of select="@name"/></methodname>
+                <methodclass><xsl:value-of select="ancestor::property/doc/tag[@name='lzxname']/text"/>.</methodclass>
               </xsl:when>
               <xsl:when test="ancestor::property/@name">
                 <!-- Or for instance methods, show the name of the class --> 
-                <methodclass><xsl:value-of select="ancestor::property/@name"/>.</methodclass><methodname><xsl:value-of select="@name"/></methodname>
+                <methodclass><xsl:call-template name="lztype-rename">
+                    <xsl:with-param name="type" select="ancestor::property/@name"/>
+                  </xsl:call-template>.</methodclass>
               </xsl:when>
                <xsl:otherwise>        
                  <xsl:if test="$warn.classname.not.found">
                    <xsl:message>No class name found for function synopsis: <xsl:value-of select="@id"/></xsl:message>
                  </xsl:if>                   
-                 <methodname><xsl:value-of select="@name"/></methodname>
                </xsl:otherwise>
-              </xsl:choose>                
+            </xsl:choose>                
+            <methodname><xsl:value-of select="@name"/></methodname>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:for-each select="function/parameter">
@@ -196,11 +200,23 @@
               <xsl:when test="contains(@type, '...')">
                 <parameter><xsl:value-of select="concat('...', @name)"/></parameter>
                 <xsl:variable name="printable-type" select="substring-before(@type, '...')"/>
-                <xsl:if test="$printable-type"><type role="javascript"><xsl:value-of select="$printable-type"/></type></xsl:if>
+                <xsl:if test="$printable-type">
+                  <type role="javascript">
+                    <xsl:call-template name="lztype-rename">
+                      <xsl:with-param name="type" select="$printable-type"/>
+                    </xsl:call-template>
+                  </type>
+                </xsl:if>
               </xsl:when>
               <xsl:otherwise>
                 <parameter><xsl:value-of select="@name"/></parameter>
-                <xsl:if test="@type"><type role="javascript"><xsl:value-of select="@type"/></type></xsl:if>
+                <xsl:if test="@type">
+                  <type role="javascript">
+                    <xsl:call-template name="lztype-rename">
+                      <xsl:with-param name="type" select="@type"/>
+                    </xsl:call-template>
+                  </type>
+                </xsl:if>
               </xsl:otherwise>
             </xsl:choose>
           </methodparam>

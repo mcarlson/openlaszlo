@@ -90,6 +90,18 @@
       </xsl:choose>
     </xsl:template>
     
+    <xsl:template name="lztype-rename">
+      <xsl:param name="type"/>
+      <xsl:choose>
+        <xsl:when test="substring($type,1,2)='Lz'">
+          <xsl:value-of select="concat('lz.', substring-after($type, 'Lz'))"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$type"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:template>
+
     <xsl:template name="lzxtype2jstype">
       <xsl:param name="lzxtype"/>
       <xsl:choose>

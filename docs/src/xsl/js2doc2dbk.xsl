@@ -691,7 +691,7 @@
                             <xsl:value-of select="@name"/>
                           </emphasis>
                         </entry>
-                        <entry><xsl:value-of select="@type"/></entry>
+                        <entry><xsl:call-template name="lztype-rename"><xsl:with-param name="type" select="@type"/></xsl:call-template></entry>
                         <!-- Important this appears on one line see: http://www.docbook.org/tdg/en/html/entry.html -->
                         <entry><xsl:apply-templates select="doc/text" mode="doc2dbk"/></entry>
                       </row>
@@ -719,7 +719,7 @@
                     <row>
                       <!-- There is no 'name' for a return type -->
                       <entry>&nbsp;</entry>
-                      <entry><xsl:value-of select="function/returns/@type"/></entry>
+                        <entry><xsl:call-template name="lztype-rename"><xsl:with-param name="type" select="function/returns/@type"/></xsl:call-template></entry>
                       <!-- Important this appears on one line see: http://www.docbook.org/tdg/en/html/entry.html -->
                       <entry><xsl:apply-templates select="function/returns/doc/text" mode="doc2dbk"/></entry>
                     </row>
@@ -1025,7 +1025,9 @@
 
       <xsl:if test="@name">
         <refsect1>
-          <xsl:text>JavaScript: </xsl:text><xsl:value-of select="@name"/>
+          <xsl:text>JavaScript: </xsl:text><xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="@name"/>
+          </xsl:call-template>
         </refsect1>
       </xsl:if>
 
@@ -1072,7 +1074,9 @@
           <xsl:text>&gt;</xsl:text>
         </xsl:when>
         <xsl:when test="@name">
-          <xsl:value-of select="@name"/>
+          <xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="@name"/>
+          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
           <xsl:message><xsl:text>class without name or id: </xsl:text><xsl:value-of select="@id"/></xsl:message>
@@ -1094,7 +1098,9 @@
               <xsl:text>&gt;</xsl:text>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="$superclass/@name"/>
+              <xsl:call-template name="lztype-rename">
+                <xsl:with-param name="type" select="$superclass/@name"/>
+              </xsl:call-template>
             </xsl:otherwise>
           </xsl:choose>
         </link>
@@ -1481,8 +1487,12 @@
         <xsl:value-of select="&lzxtype;" />
       </entry>
       <entry role="attrjstype">
-        <xsl:call-template name="jstype">
-          <xsl:with-param name="tag" select="'type'"/>
+        <xsl:call-template name="lztype-rename">
+          <xsl:with-param name="type">
+            <xsl:call-template name="jstype">
+              <xsl:with-param name="tag" select="'type'"/>
+            </xsl:call-template>
+          </xsl:with-param>
         </xsl:call-template>
       </entry>
       <entry role="attrdefault">
