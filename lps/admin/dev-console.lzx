@@ -97,7 +97,7 @@
         var url = app_lps_root + "/lps/admin/solo-deploy.jsp?appurl="+path;
      }
 
-     this.loadURL(url);
+     this.loadURL(url, '_blank');
   </method>
 
 
@@ -131,8 +131,8 @@
      this.loadURL(url);
    </method>
 
-   <method name="loadURL" args="url">
-     lz.Browser.loadURL(url, '_top');
+   <method name="loadURL" args="url, target='_top'">
+     lz.Browser.loadURL(url, target);
    </method>
    
   <resource name="footer_logo" src="../assets/logo_laszlo_footer.gif"/>
@@ -161,7 +161,7 @@
                     -->
 
                 </radiogroup>
-                <view x="$once{rg_runtime.x + rg_runtime.width + 8}">
+                <view x="$once{rg_runtime.x + rg_runtime.width + 14}">
                     <view height="14" width="1" bgcolor="black" y="9"
                         onclick="rb9.animate('opacity', 1, 1500);
                                  parent.animate('x', 200, 1000);"/>

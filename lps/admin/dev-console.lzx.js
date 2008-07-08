@@ -294,7 +294,7 @@ $20=String.fromCharCode($20);
 case "w":
 
 case "s":
-var $27;if($20 instanceof Function){
+var $27;if(Function["$lzsc$isa"]?Function.$lzsc$isa($20):$20 instanceof Function){
 if(!$27){
 $27="function () {...}"
 }}else{
@@ -322,7 +322,7 @@ $1.append($5.substring($8,$10));break;
 $1.appendInternal(" ");for(;$6<al;$6++){
 var $3=$7($6);var $4=$6==al-1?"\n":" ";$1.append($3);$1.appendInternal($4)
 }};return $1
-}],null);Debug={};Debug.write=function($1){
+}],null);lz.Formatter=LzFormatter;Debug={};Debug.write=function($1){
 
 };Debug.trace=function($1){
 
@@ -360,7 +360,7 @@ return "LzDeclaredEvent"
 with(LzDeclaredEventClass){
 with(LzDeclaredEventClass.prototype){
 
-}}})();var LzDeclaredEvent=new LzDeclaredEventClass();Class.make("LzValueExpr",null,null,null);Class.make("LzInitExpr",LzValueExpr,null,null);Class.make("LzOnceExpr",LzInitExpr,["methodName",void 0,"$lzsc$initialize",function($1){
+}}})();lz.DeclaredEventClass=LzDeclaredEventClass;var LzDeclaredEvent=new LzDeclaredEventClass();Class.make("LzValueExpr",null,null,null);Class.make("LzInitExpr",LzValueExpr,null,null);Class.make("LzOnceExpr",LzInitExpr,["methodName",void 0,"$lzsc$initialize",function($1){
 this.methodName=$1
 }],null);Class.make("LzConstraintExpr",LzOnceExpr,["$lzsc$initialize",function($1){
 (arguments.callee.superclass?arguments.callee.superclass.prototype["$lzsc$initialize"]:this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$1)
@@ -425,7 +425,7 @@ this[$4]($2)
 this[$1]=$2;var $5="on"+$1;if(LzEvent["$lzsc$isa"]?LzEvent.$lzsc$isa(this[$5]):this[$5] instanceof LzEvent){
 if(this[$5].ready){
 this[$5].sendEvent($2)
-}}}}],null);Class.make("LzNode",LzEventable,["__LZisnew",false,"__LZstyleConstraints",null,"__LZdeferredcarr",null,"data",null,"classChildren",null,"animators",null,"_instanceAttrs",null,"_instanceChildren",null,"$lzsc$initialize",function($1,$2,$3,$4){
+}}}}],null);lz.Eventable=LzEventable;Class.make("LzNode",LzEventable,["__LZisnew",false,"__LZstyleConstraints",null,"__LZdeferredcarr",null,"data",null,"classChildren",null,"animators",null,"_instanceAttrs",null,"_instanceChildren",null,"$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -642,12 +642,12 @@ return
 };var $2=this.parent;while(--$1>0){
 $2=$2.parent
 };this.classroot=$2
-},"dataBindAttribute",function($1,$2){
+},"dataBindAttribute",function($1,$2,$3){
 if(!this.datapath){
 this.setDatapath(".")
 };if(!this.__LZdelegates){
 this.__LZdelegates=[]
-};this.__LZdelegates.push(new LzDataAttrBind(this.datapath,$1,$2))
+};this.__LZdelegates.push(new LzDataAttrBind(this.datapath,$1,$2,$3))
 },"__LZdelayedSetters",void 0,"earlySetters",void 0,"$lzc$set_$delegates",function($1){
 var $2=[];var $3=$1.length;for(var $4=0;$4<$3;$4+=3){
 if($1[$4+2]){
@@ -860,6 +860,14 @@ return
 if(!($1 instanceof Object)){
 
 }};this.makeChild($1,true)
+},"acceptAttribute",function($1,$2,$3){
+if(typeof $2!="object"){
+var $2=LzNode.prototype.presentationtypes[$2]
+};this.setAttribute($1,$2.accept($3))
+},"presentAttribute",function($1,$2){
+if(typeof $2!="object"){
+var $2=LzNode.prototype.presentationtypes[$2]
+};return $2.present(this.getAttribute($1))
 }],["tagname","node","attributes",new LzInheritedHash(),"mergeAttributes",function($1,$2){
 for(var $3 in $1){
 var $4=$1[$3];if($4===LzNode._ignoreAttribute){
@@ -889,11 +897,11 @@ if(lz[$2]!==this){
 lz[$2]=this
 }}}},"_ignoreAttribute",{toString:function(){
 return "_ignoreAttribute"
-}},"__LZdelayedSetters",new LzInheritedHash({$refs:"$lzc$set_$refs"}),"earlySetters",new LzInheritedHash({name:1,$events:2,$delegates:3,$classrootdepth:4,$datapath:5}),"__UIDs",0]);(function(){
+}},"__LZdelayedSetters",new LzInheritedHash({$refs:"$lzc$set_$refs"}),"earlySetters",new LzInheritedHash({name:1,$events:2,$delegates:3,$classrootdepth:4,$datapath:5}),"__UIDs",0,"presentationtypes",{number:NumberPresentationType,boolean:BooleanPresentationType,date:DatePresentationType}]);(function(){
 with(LzNode){
 with(LzNode.prototype){
 
-}}})();lz[LzNode.tagname]=LzNode;Class.make("$lzc$class_userClassPlacement",null,["$lzsc$initialize",function($1,$2,$3,$4){
+}}})();lz[LzNode.tagname]=LzNode;lz.Node=LzNode;Class.make("$lzc$class_userClassPlacement",null,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -909,7 +917,21 @@ $4=null;
 with($lzc$class_userClassPlacement){
 with($lzc$class_userClassPlacement.prototype){
 
-}}})();Class.make("LzDelegate",null,["__delegateID",0,"$lzsc$initialize",function($1,$2,$3,$4){
+}}})();Class.make("PresentationType",null,["accept",function($1){
+return $1
+},"present",function($1){
+return ""+$1
+}],null);Class.make("BooleanPresentationType",PresentationType,["accept",function($1){
+switch($1.toLowerCase()){
+case "0":
+case "false":
+return false;
+default:
+return true;
+
+}}],null);Class.make("NumberPresentationType",PresentationType,["accept",function($1){
+return Number($1)
+}],null);Class.make("LzDelegate",null,["__delegateID",0,"$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 2:
 $3=null;
@@ -981,7 +1003,7 @@ $8.event_called=false
 };while($7=$6.pop()){
 $7.locked=false
 }};$2.length=$1
-}]);Class.make("LzEvent",LzDeclaredEventClass,["delegateList",null,"$lzsc$initialize",function($1,$2,$3){
+}]);lz.Delegate=LzDelegate;Class.make("LzEvent",LzDeclaredEventClass,["delegateList",null,"$lzsc$initialize",function($1,$2,$3){
 switch(arguments.length){
 case 2:
 $3=null;
@@ -1034,7 +1056,7 @@ this.delegateList[0].unregisterFrom(this)
 return this.delegateList.length
 },"toString",function(){
 return "LzEvent"
-}],null);var LzIdleKernel={__callbacks:[],addCallback:function($1,$2){
+}],null);lz.Event=LzEvent;var LzIdleKernel={__callbacks:[],addCallback:function($1,$2){
 LzIdleKernel.__callbacks.push([$1,$2])
 },removeCallback:function($1,$2){
 for(var $3=LzIdleKernel.__callbacks.length-1;$3>=0;$3--){
@@ -2044,7 +2066,7 @@ $2=$3[$4];break
 Debug.error("could not find library with href",$1)
 }else{
 $2.loaded=true;LzInstantiateView({attrs:{libname:$2.name},"class":LzLibraryCleanup},1);canvas.initDone()
-}}]);lz[LzLibrary.tagname]=LzLibrary;var LzTextSprite=function($1){
+}}]);lz[LzLibrary.tagname]=LzLibrary;lz.Library=LzLibrary;var LzTextSprite=function($1){
 if($1==null){
 return
 };this.owner=$1;this.uid=LzSprite.prototype.uid++;this.__LZdiv=document.createElement("div");this.__LZdiv.className="lzdiv";this.__LZtextdiv=document.createElement("div");this.__LZtextdiv.className="lzdiv";this.__LZdiv.appendChild(this.__LZtextdiv);if(this.quirks.emulate_flash_font_metrics){
@@ -3980,7 +4002,7 @@ var $1=this.sprite;return $1.getSelectionSize()
 with(LzText){
 with(LzText.prototype){
 LzText.attributes.pixellock=true;LzText.attributes.selectable=false;LzText.attributes.clip=true
-}}})();lz[LzText.tagname]=LzText;Class.make("LzInputText",LzText,["$lzsc$initialize",function($1,$2,$3,$4){
+}}})();lz[LzText.tagname]=LzText;lz.Text=LzText;Class.make("LzInputText",LzText,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -4074,7 +4096,7 @@ this._selectable=$1;(arguments.callee.superclass?arguments.callee.superclass.pro
 with(LzInputText){
 with(LzInputText.prototype){
 LzNode.mergeAttributes({selectable:true,enabled:true},LzInputText.attributes)
-}}})();lz[LzInputText.tagname]=LzInputText;Class.make("LzViewLinkage",null,["scale",1,"offset",0,"uplinkArray",null,"downlinkArray",null,"$lzsc$initialize",function($1,$2){
+}}})();lz[LzInputText.tagname]=LzInputText;lz.InputText=LzInputText;Class.make("LzViewLinkage",null,["scale",1,"offset",0,"uplinkArray",null,"downlinkArray",null,"$lzsc$initialize",function($1,$2){
 this.scale=new Object();this.offset=new Object();if($1==$2){
 return
 };this.uplinkArray=[];var $3=$1;do{
@@ -4253,7 +4275,7 @@ return "URL: "+lz.Browser.getLoadURL()+"\n"+"Version: "+canvas.lpsversion+"\n"+"
 with(LzCanvas){
 with(LzCanvas.prototype){
 prototype.__LZcheckwidth=null;prototype.__LZcheckheight=null;prototype.hassetwidth=true;prototype.hassetheight=true
-}}})();lz[LzCanvas.tagname]=LzCanvas;Class.make("LzPlatformService",LzEventable,["initCanvas",function($1){
+}}})();lz[LzCanvas.tagname]=LzCanvas;lz.Canvas=LzCanvas;Class.make("LzPlatformService",LzEventable,["initCanvas",function($1){
 LzPlatform.buildDefaultMenu($1)
 },"__LZdefaultMenuItemHandler",function($1,$2){
 lz.Browser.loadURL("http://www.openlaszlo.org","lz_about")
@@ -4268,7 +4290,7 @@ $1.__LZDefaultCanvasMenu=new LzContextMenu();$1.__LZdefaultMenuItem=new LzContex
 $1.__LZDefaultCanvasMenu.addItem($1.__LZviewSourceMenuItem)
 };if($1.__LZDefaultCanvasMenu){
 $1.setDefaultContextMenu($1.__LZDefaultCanvasMenu)
-}}],null);var LzPlatform=new LzPlatformService();Class.make("LzScript",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
+}}],null);var LzPlatform=new LzPlatformService();lz.PlatformService=LzPlatformService;Class.make("LzScript",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -4280,7 +4302,7 @@ case 3:
 $4=false;
 
 };(arguments.callee.superclass?arguments.callee.superclass.prototype["$lzsc$initialize"]:this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$1,$2,$3,$4);$2.script()
-}],["tagname","script","attributes",new LzInheritedHash(LzNode.attributes)]);lz[LzScript.tagname]=LzScript;Class.make("LzAnimatorGroup",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
+}],["tagname","script","attributes",new LzInheritedHash(LzNode.attributes)]);lz[LzScript.tagname]=LzScript;lz.Script=LzScript;Class.make("LzAnimatorGroup",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 2:
 $3=null;
@@ -4428,7 +4450,7 @@ return "Group of "+this.animators.length
 with(LzAnimatorGroup){
 with(LzAnimatorGroup.prototype){
 LzAnimatorGroup.attributes.start=true;LzAnimatorGroup.attributes.ignoreplacement=true
-}}})();lz[LzAnimatorGroup.tagname]=LzAnimatorGroup;Class.make("LzAnimator",LzAnimatorGroup,["$lzsc$initialize",function($1,$2,$3,$4){
+}}})();lz[LzAnimatorGroup.tagname]=LzAnimatorGroup;lz.AnimatorGroup=LzAnimatorGroup;Class.make("LzAnimator",LzAnimatorGroup,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 2:
 $3=null;
@@ -4524,7 +4546,7 @@ this.target.setAttribute(this.attribute,this.target[this.attribute]+$2)
 };this.currentValue=$1
 },"toString",function(){
 return "Animator for "+this.target+" attribute:"+this.attribute+" to:"+this.to
-}],["tagname","animator","attributes",new LzInheritedHash(LzAnimatorGroup.attributes)]);lz[LzAnimator.tagname]=LzAnimator;Class.make("LzLayout",LzNode,["vip",null,"$lzsc$initialize",function($1,$2,$3,$4){
+}],["tagname","animator","attributes",new LzInheritedHash(LzAnimatorGroup.attributes)]);lz[LzAnimator.tagname]=LzAnimator;lz.Animator=LzAnimator;Class.make("LzLayout",LzNode,["vip",null,"$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 2:
 $3=null;
@@ -4638,7 +4660,7 @@ $1=null;
 
 }},"toString",function(){
 return "LzLayout for view "+this.immediateparent
-}],["tagname","layout","attributes",new LzInheritedHash(LzNode.attributes)]);lz[LzLayout.tagname]=LzLayout;Class.make("LzFont",null,["style",void 0,"name",void 0,"height",void 0,"ascent",void 0,"descent",void 0,"advancetable",void 0,"lsbtable",void 0,"rsbtable",void 0,"fontobject",void 0,"$lzsc$initialize",function($1,$2,$3){
+}],["tagname","layout","attributes",new LzInheritedHash(LzNode.attributes)]);lz[LzLayout.tagname]=LzLayout;lz.Layout=LzLayout;Class.make("LzFont",null,["style",void 0,"name",void 0,"height",void 0,"ascent",void 0,"descent",void 0,"advancetable",void 0,"lsbtable",void 0,"rsbtable",void 0,"fontobject",void 0,"$lzsc$initialize",function($1,$2,$3){
 (arguments.callee.superclass?arguments.callee.superclass.prototype["$lzsc$initialize"]:this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this);this.name=$1.name;this.style=$3;this.fontobject=$1;$1[$3]=this;for(var $4 in $2){
 if($4=="leading"){
 continue
@@ -4646,7 +4668,7 @@ continue
 };this.height=this.ascent+this.descent;this.advancetable[13]=this.advancetable[32];this.advancetable[160]=0
 },"leading",2,"toString",function(){
 return "Font style "+this.style+" of name "+this.name
-}],null);Class.make("LzSelectionManager",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
+}],null);lz.Font=LzFont;Class.make("LzSelectionManager",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -4704,7 +4726,7 @@ return lz.Keys.isKeyDown("control")
 return lz.Keys.isKeyDown("shift")
 },"toString",function(){
 return "LzSelectionManager"
-}],["tagname","selectionmanager","attributes",new LzInheritedHash(LzNode.attributes)]);Class.make("LzDataSelectionManager",LzSelectionManager,["$lzsc$initialize",function($1,$2,$3,$4){
+}],["tagname","selectionmanager","attributes",new LzInheritedHash(LzNode.attributes)]);lz.SelectionManager=LzSelectionManager;Class.make("LzDataSelectionManager",LzSelectionManager,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -4768,7 +4790,7 @@ if(!$2){
 if(this.singleClone!=null&&this.singleClone.datapath.p==$1){
 this.singleClone.datapath[this.sel](false);this.singleClone=null;return
 }};$1.sel=$2
-}}],["tagname","dataselectionmanager","attributes",new LzInheritedHash(LzSelectionManager.attributes)]);Class.make("LzCommand",LzNode,["active",true,"keys",null,"$lzc$set_key",function($1){
+}}],["tagname","dataselectionmanager","attributes",new LzInheritedHash(LzSelectionManager.attributes)]);lz.DataSelectionManager=LzDataSelectionManager;Class.make("LzCommand",LzNode,["active",true,"keys",null,"$lzc$set_key",function($1){
 this.setKeys($1)
 },"onselect",LzDeclaredEvent,"$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
@@ -4798,7 +4820,7 @@ $4=$3[$4]
 $4=$3[$4]
 };$1=$1+$4
 };return $1
-}],["tagname","command","attributes",new LzInheritedHash(LzNode.attributes),"DisplayKeys",{control:"Ctrl",shift:"Shift",alt:"Alt"}]);lz[LzCommand.tagname]=LzCommand;Class.make("LzState",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
+}],["tagname","command","attributes",new LzInheritedHash(LzNode.attributes),"DisplayKeys",{control:"Ctrl",shift:"Shift",alt:"Alt"}]);lz[LzCommand.tagname]=LzCommand;lz.Command=LzCommand;Class.make("LzState",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 2:
 $3=null;
@@ -4945,7 +4967,7 @@ $1.setAttribute("visible",true);return $1
 with(LzState){
 with(LzState.prototype){
 prototype.$isstate=true
-}}})();lz[LzState.tagname]=LzState;Trait.make("LzDataNodeMixin",null,["onownerDocument",LzDeclaredEvent,"nodeType",void 0,"parentNode",null,"ownerDocument",void 0,"__LZo",-1,"sel",false,"childNodes",null,"__LZcoDirty",true,"getPreviousSibling",function(){
+}}})();lz[LzState.tagname]=LzState;lz.State=LzState;Trait.make("LzDataNodeMixin",null,["onownerDocument",LzDeclaredEvent,"nodeType",void 0,"parentNode",null,"ownerDocument",void 0,"__LZo",-1,"sel",false,"childNodes",null,"__LZcoDirty",true,"getPreviousSibling",function(){
 if(!this.parentNode){
 return null
 };if(this.parentNode.__LZcoDirty){
@@ -4995,7 +5017,7 @@ this.onownerDocument.sendEvent($1)
 this.ownerDocument.__LZdoLock($1)
 },"__LZunlockFromUpdate",function($1){
 this.ownerDocument.__LZdoUnlock($1)
-}],null);Class.make("LzDataNode",LzEventable,["$lzsc$initialize",function($1,$2){
+}],null);lz.DataNodeMixin=LzDataNodeMixin;Class.make("LzDataNode",LzEventable,["$lzsc$initialize",function($1,$2){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -5059,7 +5081,11 @@ this.onchildNodes.sendEvent($1)
 },"hasChildNodes",function(){
 return this.childNodes.length>0
 },"cloneNode",function($1){
-var $2=new LzDataElement(this.nodeName);$2.setAttrs(this.attributes);if($1){
+switch(arguments.length){
+case 0:
+$1=false;
+
+};var $2=new LzDataElement(this.nodeName);$2.setAttrs(this.attributes);if($1){
 for(var $3=0;$3<this.childNodes.length;$3++){
 $2.appendChild(this.childNodes[$3].cloneNode(true))
 }};return $2
@@ -5183,7 +5209,7 @@ var $7=$2[$6];if($5.who==$7.who&&$5.what==$7.what&&$5.type==$7.type){
 $4=false;break
 }};if($4){
 this.handleDocumentChange($5.what,$5.who,$5.type)
-}}}}],null);Class.make("LzDataElement",[LzDataElementMixin,LzDataNodeMixin,LzDataNode],["$lzsc$initialize",function($1,$2,$3){
+}}}}],null);lz.DataElementMixin=LzDataElementMixin;Class.make("LzDataElement",[LzDataElementMixin,LzDataNodeMixin,LzDataNode],["$lzsc$initialize",function($1,$2,$3){
 switch(arguments.length){
 case 1:
 $2=null;
@@ -5255,7 +5281,7 @@ $6=$1.charAt($5);if($2[$6]!=true){
 break
 };$5--
 };return $1.slice($4,$5+1)
-}]);Class.make("LzDataText",[LzDataNodeMixin,LzDataNode],["$lzsc$initialize",function($1){
+}]);lz.DataElement=LzDataElement;Class.make("LzDataText",[LzDataNodeMixin,LzDataNode],["$lzsc$initialize",function($1){
 (arguments.callee.superclass?arguments.callee.superclass.prototype["$lzsc$initialize"]:this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this);this.nodeType=LzDataElement.TEXT_NODE;this.data=$1
 },"onDocumentChange",LzDeclaredEvent,"onparentNode",LzDeclaredEvent,"onchildNode",LzDeclaredEvent,"onchildNodes",LzDeclaredEvent,"onattributes",LzDeclaredEvent,"onnodeName",LzDeclaredEvent,"ondata",LzDeclaredEvent,"nodeName","#text","data","","$lzc$set_data",function($1){
 this.setData($1)
@@ -5284,7 +5310,7 @@ case 0:
 $1=null;
 
 };(arguments.callee.superclass?arguments.callee.superclass.prototype["$lzsc$initialize"]:this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$1);this.requestor=$1
-}],["tagname","datarequest","attributes",new LzInheritedHash(LzNode.attributes),"SUCCESS","success","TIMEOUT","timeout","ERROR","error","READY","ready"]);lz[LzDataRequest.tagname]=LzDataRequest;Class.make("LzDataProvider",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
+}],["tagname","datarequest","attributes",new LzInheritedHash(LzNode.attributes),"SUCCESS","success","TIMEOUT","timeout","ERROR","error","READY","ready"]);lz[LzDataRequest.tagname]=LzDataRequest;lz.DataRequest=LzDataRequest;Class.make("LzDataProvider",LzNode,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -5298,7 +5324,7 @@ $4=null;
 };(arguments.callee.superclass?arguments.callee.superclass.prototype["$lzsc$initialize"]:this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$1,$2,$3,$4)
 },"doRequest",function($1){
 
-}],["tagname","dataprovider","attributes",new LzInheritedHash(LzNode.attributes)]);lz[LzDataProvider.tagname]=LzDataProvider;Class.make("LzHTTPDataProvider",LzDataProvider,["$lzsc$initialize",function($1,$2,$3,$4){
+}],["tagname","dataprovider","attributes",new LzInheritedHash(LzNode.attributes)]);lz[LzDataProvider.tagname]=LzDataProvider;lz.DataProvider=LzDataProvider;Class.make("LzHTTPDataProvider",LzDataProvider,["$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -5383,13 +5409,13 @@ $4=$2.childNodes[0].childNodes[0]
 }}else{
 $4=$2
 };$1.xmldata=$4;$1.responseheaders=$3;$1.rawdata=$1.loader.getResponse();$1.onstatus.sendEvent($1)
-}],null);Class.make("LzHTTPDataRequest",LzDataRequest,["$lzsc$initialize",function($1){
+}],null);lz.HTTPDataProvider=LzHTTPDataProvider;Class.make("LzHTTPDataRequest",LzDataRequest,["$lzsc$initialize",function($1){
 switch(arguments.length){
 case 0:
 $1=null;
 
 };(arguments.callee.superclass?arguments.callee.superclass.prototype["$lzsc$initialize"]:this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$1)
-},"method","GET","postbody",void 0,"proxied",void 0,"proxyurl",void 0,"multirequest",false,"queuerequests",false,"queryparams",null,"requestheaders",null,"getresponsheaders",false,"responseheaders",null,"getresponseheaders",null,"cacheable",false,"clientcacheable",null,"trimwhitespace",false,"nsprefix",false,"xmldata",null,"loadtime",0,"loadstarttime",void 0,"secure",false,"secureport",void 0,"loader",null],null);Class.make("LzDataset",[LzDataElementMixin,LzDataNodeMixin,LzNode],["dataprovider",void 0,"multirequest",false,"dataRequest",null,"dataRequestClass",LzHTTPDataRequest,"dsloadDel",null,"errorstring",void 0,"reqOnInitDel",void 0,"secureport",void 0,"proxyurl",null,"onerror",LzDeclaredEvent,"ontimeout",LzDeclaredEvent,"timeout",60000,"postbody",null,"acceptencodings",false,"type",null,"params",null,"nsprefix",false,"getresponseheaders",false,"$lzsc$initialize",function($1,$2,$3,$4){
+},"method","GET","postbody",void 0,"proxied",void 0,"proxyurl",void 0,"multirequest",false,"queuerequests",false,"queryparams",null,"requestheaders",null,"getresponsheaders",false,"responseheaders",null,"getresponseheaders",null,"cacheable",false,"clientcacheable",null,"trimwhitespace",false,"nsprefix",false,"xmldata",null,"loadtime",0,"loadstarttime",void 0,"secure",false,"secureport",void 0,"loader",null],null);lz.HTTPDataRequest=LzHTTPDataRequest;Class.make("LzDataset",[LzDataElementMixin,LzDataNodeMixin,LzNode],["dataprovider",void 0,"multirequest",false,"dataRequest",null,"dataRequestClass",LzHTTPDataRequest,"dsloadDel",null,"errorstring",void 0,"reqOnInitDel",void 0,"secureport",void 0,"proxyurl",null,"onerror",LzDeclaredEvent,"ontimeout",LzDeclaredEvent,"timeout",60000,"postbody",null,"acceptencodings",false,"type",null,"params",null,"nsprefix",false,"getresponseheaders",false,"$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 0:
 $1=null;
@@ -5555,7 +5581,7 @@ $2.queryparams=this.params
 var $3=this.postbody;if($2.queryparams){
 $3=$2.queryparams.getValue("lzpostbody")
 };if($3!=null){
-$2.postbody=$3;if($2.queryparams&&$2.queryparams["lzpostbody"]){
+$2.postbody=$3;if($2.queryparams&&$2.queryparams.getValue("lzpostbody")){
 $2.queryparams.remove("lzpostbody")
 }}};$2.proxied=this.isProxied();$2.proxyurl=this.proxyurl;$2.queuerequests=this.queuerequests;$2.requestheaders=this.headers;$2.getresponseheaders=this.getresponseheaders;$2.secureport=this.secureport;$2.cacheable=this.cacheable;$2.clientcacheable=this.clientcacheable;$2.trimwhitespace=this.trimwhitespace;$2.nsprefix=this.nsprefix;if(this.dsloadDel==null){
 this.dsloadDel=new LzDelegate(this,"handleDataResponse",$2,"onstatus")
@@ -6265,7 +6291,7 @@ var $5=$2[$4];var $6="";var $7=$5.indexOf("=");if($7>0){
 $6=unescape($5.substring($7+1));$5=$5.substring(0,$7)
 };$3[$5]=$6
 };return $3
-}]);LzParam.prototype.toString=LzParam.prototype.serialize;Class.make("LzParsedPath",null,["path",null,"selectors",null,"context",null,"dsetname",null,"dsrcname",null,"islocaldata",null,"operator",null,"aggOperator",null,"operatorArgs",null,"hasAttrOper",false,"hasOpSelector",false,"hasDotDot",false,"getContext",function($1){
+}]);LzParam.prototype.toString=LzParam.prototype.serialize;lz.Param=LzParam;Class.make("LzParsedPath",null,["path",null,"selectors",null,"context",null,"dsetname",null,"dsrcname",null,"islocaldata",null,"operator",null,"aggOperator",null,"operatorArgs",null,"hasAttrOper",false,"hasOpSelector",false,"hasDotDot",false,"getContext",function($1){
 if(this.context!=null){
 return this.context
 }else{
@@ -6839,7 +6865,7 @@ $1=false;
 
 };var $2=this.clones;var $3=$2.length;for(var $4=0;$4<$3;$4++){
 $2[$4].datapath.updateData()
-}}],null);Class.make("LzRefNode",LzNode,["__LZxpathconstr",null,"__LZxpathdepend",null,"$lzsc$initialize",function($1,$2,$3,$4){
+}}],null);lz.ReplicationManager=LzReplicationManager;Class.make("LzRefNode",LzNode,["__LZxpathconstr",null,"__LZxpathdepend",null,"$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 1:
 $2=null;
@@ -6899,7 +6925,7 @@ this.p.setAttrs($3)
 this.setNodeAttribute($2.substring(11),$3)
 }}}}}},"toString",function(){
 return "binder "+this.xpath
-}],null);Class.make("LzLazyReplicationManager",LzReplicationManager,["axis","y","sizeAxis",void 0,"cloneimmediateparent",void 0,"updateDel",void 0,"__LZoldnodelen",void 0,"spacing",0,"viewsize",0,"totalsize",0,"mask",null,"$lzsc$initialize",function($1,$2,$3,$4){
+}],null);lz.DataAttrBind=LzDataAttrBind;Class.make("LzLazyReplicationManager",LzReplicationManager,["axis","y","sizeAxis",void 0,"cloneimmediateparent",void 0,"updateDel",void 0,"__LZoldnodelen",void 0,"spacing",0,"viewsize",0,"totalsize",0,"mask",null,"$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 2:
 $3=null;
@@ -6987,7 +7013,7 @@ $3=this.getNewClone();$3.datapath.setClonePointer($1);this.detachClone($3);this.
 };return $3
 },"getCloneNumber",function($1){
 return this.getCloneForNode(this.nodes[$1])
-}],null);Class.make("LzResizeReplicationManager",LzLazyReplicationManager,["datasizevar",void 0,"__LZresizeupdating",void 0,"$lzsc$initialize",function($1,$2,$3,$4){
+}],null);lz.LazyReplicationManager=LzLazyReplicationManager;Class.make("LzResizeReplicationManager",LzLazyReplicationManager,["datasizevar",void 0,"__LZresizeupdating",void 0,"$lzsc$initialize",function($1,$2,$3,$4){
 switch(arguments.length){
 case 2:
 $3=null;
@@ -7057,7 +7083,7 @@ $23.onclonenumber.sendEvent($15+$6)
 $23.setAttribute(this.sizeAxis,$18,true)
 };$24+=$18+this.spacing
 };this.__LZdataoffset=$6;this.cloneimmediateparent.setAttribute(this.sizeAxis,$10);this.__LZresizeupdating=false
-}],null);Class.make("ColorUtilsClass",null,["hextoint",function($1){
+}],null);lz.ResizeReplicationManager=LzResizeReplicationManager;Class.make("ColorUtilsClass",null,["hextoint",function($1){
 Debug.info("LzUtils.color.hextoint is deprecated, use lz.Utils.hextoint");return lz.Utils.hextoint($1)
 },"inttohex",function($1){
 Debug.info("LzUtils.color.inttohex is deprecated, use lz.Utils.inttohex");return lz.Utils.inttohex($1)
@@ -7336,7 +7362,7 @@ this.items=[]
 return this.items
 },"makeMenuItem",function($1,$2){
 var $3=new LzContextMenuItem($1,$2);return $3
-}],null);Class.make("LzContextMenuItem",LzNode,["$lzsc$initialize",function($1,$2){
+}],null);lz.ContextMenu=LzContextMenu;Class.make("LzContextMenuItem",LzNode,["$lzsc$initialize",function($1,$2){
 this.kernel=new LzContextMenuItemKernel(this,$1,$2)
 },"onselect",LzDeclaredEvent,"kernel",null,"setDelegate",function($1){
 this.kernel.setDelegate($1)
@@ -7354,7 +7380,7 @@ this.kernel.setVisible($1)
 with(LzContextMenuItem){
 with(LzContextMenuItem.prototype){
 
-}}})();Class.make("LzModeManagerService",LzNode,["onmode",LzDeclaredEvent,"__LZlastclick",null,"__LZlastClickTime",0,"willCall",false,"eventsLocked",false,"modeArray",new Array(),"makeModal",function($1){
+}}})();lz.ContextMenuItem=LzContextMenuItem;Class.make("LzModeManagerService",LzNode,["onmode",LzDeclaredEvent,"__LZlastclick",null,"__LZlastClickTime",0,"willCall",false,"eventsLocked",false,"modeArray",new Array(),"makeModal",function($1){
 if(this.modeArray.length==0||!this.hasMode($1)){
 this.modeArray.push($1);if(this.onmode.ready){
 this.onmode.sendEvent($1)
@@ -7495,7 +7521,7 @@ $3.query=$2.query
 };if($1.fragment==null){
 $3.fragment=$2.fragment
 };return $3
-}]);Class.make("LzKeysService",LzNode,["$lzsc$initialize",function(){
+}]);lz.URL=LzURL;Class.make("LzKeysService",LzNode,["$lzsc$initialize",function(){
 (arguments.callee.superclass?arguments.callee.superclass.prototype["$lzsc$initialize"]:this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this);LzKeyboardKernel.setCallback(this,"__keyEvent");this.keyCodes["add"]=107;this.keyCodes["delete"]=46;this.keyCodes["0"]=48;this.keyCodes["1"]=49;this.keyCodes["2"]=50;this.keyCodes["3"]=51;this.keyCodes["4"]=52;this.keyCodes["5"]=53;this.keyCodes["6"]=54;this.keyCodes["7"]=55;this.keyCodes["8"]=56;this.keyCodes["9"]=57;this.keyCodes[")"]=48;this.keyCodes["!"]=49;this.keyCodes["@"]=50;this.keyCodes["#"]=51;this.keyCodes["$"]=52;this.keyCodes["%"]=53;this.keyCodes["^"]=54;this.keyCodes["&"]=55;this.keyCodes["*"]=56;this.keyCodes["("]=57;this.keyCodes[";"]=186;this.keyCodes[":"]=186;this.keyCodes["="]=187;this.keyCodes["+"]=187;this.keyCodes["<"]=188;this.keyCodes[","]=188;this.keyCodes["-"]=189;this.keyCodes["_"]=189;this.keyCodes[">"]=190;this.keyCodes["."]=190;this.keyCodes["/"]=191;this.keyCodes["?"]=191;this.keyCodes["`"]=192;this.keyCodes["~"]=192;this.keyCodes["["]=219;this.keyCodes["{"]=219;this.keyCodes["\\"]=220;this.keyCodes["|"]=220;this.keyCodes["]"]=221;this.keyCodes["}"]=221;this.keyCodes['"']=222;this.keyCodes["'"]=222;this.keyCodes["IME"]=229
 },"downKeysHash",{},"downKeysArray",[],"keycombos",{},"onkeydown",LzDeclaredEvent,"onkeyup",LzDeclaredEvent,"onmousewheeldelta",LzDeclaredEvent,"codemap",{shift:16,control:17,alt:18},"__keyEvent",function($1,$2,$3){
 for(var $4 in $1){
@@ -7800,7 +7826,7 @@ return 100
 };if($3.indexOf("[")>=0){
 return 10
 };return 1
-}],null);Class.make("LzCSSStyleClass",null,["$lzsc$initialize",function(){
+}],null);lz.CSSStyleRule=LzCSSStyleRule;Class.make("LzCSSStyleClass",null,["$lzsc$initialize",function(){
 
 },"getComputedStyle",function($1){
 var $2=new LzCSSStyleDeclaration();$2.setNode($1);return $2
@@ -8002,7 +8028,7 @@ return "LzText";
 default:
 return $1;
 
-}}],null);var LzCSSStyle=new LzCSSStyleClass();Class.make("LzCSSStyleDeclaration",null,["$lzsc$initialize",function(){
+}}],null);var LzCSSStyle=new LzCSSStyleClass();lz.CSSStyle=LzCSSStyleClass;Class.make("LzCSSStyleDeclaration",null,["$lzsc$initialize",function(){
 
 },"_node",null,"getPropertyValue",function($1){
 return LzCSSStyle.getPropertyValueFor(this._node,$1)
@@ -8012,7 +8038,7 @@ this._node=$1
 with(LzCSSStyleDeclaration){
 with(LzCSSStyleDeclaration.prototype){
 
-}}})();Class.make("LzStyleSheet",null,["$lzsc$initialize",function($1,$2,$3,$4){
+}}})();lz.CSSStyleDeclaration=LzCSSStyleDeclaration;Class.make("LzStyleSheet",null,["$lzsc$initialize",function($1,$2,$3,$4){
 this.type=$4;this.disabled=false;this.ownerNode=null;this.parentStyleSheet=null;this.href=$2;this.title=$1;this.media=$3
 },"type",null,"disabled",null,"ownerNode",null,"parentStyleSheet",null,"href",null,"title",null,"media",null],null);Class.make("LzCSSStyleSheet",LzStyleSheet,["$lzsc$initialize",function($1,$2,$3,$4,$5,$6){
 (arguments.callee.superclass?arguments.callee.superclass.prototype["$lzsc$initialize"]:this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$1,$2,$3,$4);this.ownerRule=$5;this.cssRules=$6
@@ -8026,7 +8052,7 @@ this.cssRules.splice($2,0,$1);return $2
 };if($2==this.cssRules.length){
 return this.cssRules.push($1)-1
 };return null
-}],null);Class.make("LzFocusService",LzEventable,["onfocus",LzDeclaredEvent,"onescapefocus",LzDeclaredEvent,"lastfocus",null,"csel",null,"cseldest",null,"$lzsc$initialize",function(){
+}],null);lz.CSSStyleSheet=LzCSSStyleSheet;Class.make("LzFocusService",LzEventable,["onfocus",LzDeclaredEvent,"onescapefocus",LzDeclaredEvent,"lastfocus",null,"csel",null,"cseldest",null,"$lzsc$initialize",function(){
 
 },"initialize",function(){
 this.upDel=new LzDelegate(lz.Focus,"gotKeyUp",lz.Keys,"onkeyup");this.downDel=new LzDelegate(lz.Focus,"gotKeyDown",lz.Keys,"onkeydown");this.lastfocusDel=new LzDelegate(lz.Keys,"gotLastFocus",lz.Focus,"onescapefocus")
@@ -8188,7 +8214,7 @@ var $1=escape(app_fullpath.substring(app_lps_root.length));if(app_runtime=="dhtm
 var $2=app_lps_root+"/lps/admin/solo-dhtml-deploy.jsp?appurl="+$1
 }else{
 var $2=app_lps_root+"/lps/admin/solo-deploy.jsp?appurl="+$1
-};this.loadURL($2)
+};this.loadURL($2,"_blank")
 }},"debugApp",function(){
 with(this){
 cb_debug.setValue(true);canvas.reloadApp()
@@ -8205,9 +8231,13 @@ var $1=app_lps_root+"/docs/index.html";this.loadURL($1)
 var $1="http://www.laszlosystems.com/developers";this.loadURL($1)
 },"viewForums",function(){
 var $1="http://www.laszlosystems.com/developers/community/forums/";this.loadURL($1)
-},"loadURL",function($1){
+},"loadURL",function($1,$2){
 with(this){
-lz.Browser.loadURL($1,"_top")
+switch(arguments.length){
+case 1:
+$2="_top";
+
+};lz.Browser.loadURL($1,$2)
 }},"gotoApp",function(){
 with(this){
 var $1=app_fullpath.substring(0,app_fullpath.length-4)+".lzx";app_fullpath=$1;this.reloadApp()
@@ -8255,7 +8285,7 @@ receivingLC.send("lc_appdebug"+app_uid,"evalExpr",$1)
 with($lzc$class_$m1){
 with($lzc$class_$m1.prototype){
 LzNode.mergeAttributes({},$lzc$class_$m1.attributes)
-}}})();canvas=new $lzc$class_$m1(null,{__LZproxied:"true",bgcolor:8750489,embedfonts:true,fontname:"Verdana,Vera,sans-serif",fontsize:11,fontstyle:"plain",height:370,lpsbuild:"10215 /Users/maxcarlson/openlaszlo/trunk-clean",lpsbuilddate:"2008-07-03T17:46:41-0700",lpsrelease:"Latest",lpsversion:"4.1.x",proxied:false,runtime:"dhtml",width:"100%"});var offwhite=15921906;var gray10=1710618;var gray20=3355443;var gray30=5066061;var gray40=6710886;var gray50=8355711;var gray60=10066329;var gray70=11776947;var gray80=13421772;var gray90=15066597;var iceblue1=3298963;var iceblue2=5472718;var iceblue3=12240085;var iceblue4=14017779;var iceblue5=15659509;var palegreen1=4290113;var palegreen2=11785139;var palegreen3=12637341;var palegreen4=13888170;var palegreen5=15725032;var gold1=9331721;var gold2=13349195;var gold3=15126388;var gold4=16311446;var sand1=13944481;var sand2=14276546;var sand3=15920859;var sand4=15986401;var ltpurple1=6575768;var ltpurple2=12038353;var ltpurple3=13353453;var ltpurple4=15329264;var grayblue=12501704;var graygreen=12635328;var graypurple=10460593;var ltblue=14540287;var ltgreen=14548957;Class.make("$lzc$class_basefocusview",LzView,["active",void 0,"$lzc$set_active",function($1){
+}}})();canvas=new $lzc$class_$m1(null,{__LZproxied:"true",bgcolor:8750489,embedfonts:true,fontname:"Verdana,Vera,sans-serif",fontsize:11,fontstyle:"plain",height:370,lpsbuild:"10246 /Users/maxcarlson/openlaszlo/trunk-clean",lpsbuilddate:"2008-07-08T01:35:53-0700",lpsrelease:"Latest",lpsversion:"4.1.x",proxied:false,runtime:"dhtml",width:"100%"});var offwhite=15921906;var gray10=1710618;var gray20=3355443;var gray30=5066061;var gray40=6710886;var gray50=8355711;var gray60=10066329;var gray70=11776947;var gray80=13421772;var gray90=15066597;var iceblue1=3298963;var iceblue2=5472718;var iceblue3=12240085;var iceblue4=14017779;var iceblue5=15659509;var palegreen1=4290113;var palegreen2=11785139;var palegreen3=12637341;var palegreen4=13888170;var palegreen5=15725032;var gold1=9331721;var gold2=13349195;var gold3=15126388;var gold4=16311446;var sand1=13944481;var sand2=14276546;var sand3=15920859;var sand4=15986401;var ltpurple1=6575768;var ltpurple2=12038353;var ltpurple3=13353453;var ltpurple4=15329264;var grayblue=12501704;var graygreen=12635328;var graypurple=10460593;var ltblue=14540287;var ltgreen=14548957;Class.make("$lzc$class_basefocusview",LzView,["active",void 0,"$lzc$set_active",function($1){
 with(this){
 setActive($1)
 }},"target",void 0,"$lzc$set_target",function($1){
@@ -10019,7 +10049,7 @@ with($lzc$class_$m216.prototype){
 LzNode.mergeAttributes({},$lzc$class_$m216.attributes)
 }}})();Class.make("$lzc$class_$m212",LzView,["$m168",function(){
 with(this){
-this.setAttribute("x",rg_runtime.x+rg_runtime.width+8)
+this.setAttribute("x",rg_runtime.x+rg_runtime.width+14)
 }},"$m178",function(){
 with(this){
 var $1=cb_backtrace;return $1
