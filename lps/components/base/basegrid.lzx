@@ -111,8 +111,8 @@
         <!--- 
              Get the selection for the list.
              @return Object: <code>null</code> if no selection, an
-             <class>LzDatapointer</class> if single select (default), or
-             an array of <class>LzDatapointer</class>s if multiselect.
+             <class>LzDatapointer</class> if single select, or
+             an array of <class>LzDatapointer</class>s if multiselect (default).
         -->
         <method name="getSelection">
             if (this._initcomplete) {
