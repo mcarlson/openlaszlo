@@ -178,6 +178,11 @@ sub create_test {
     print OUT
         "<method name=\"m7\">M7 - should be left as a METHOD</method>\n\n";
 
+    print OUT
+        "<method name=\'m8\' \nargs=\'bar\'>M8</method>\n\n";
+    print OUT
+        "<method name=\'m9\' \nargs=\'bar\'/>\n\n";
+
     close OUT;
     print STDOUT "Testing $file\n";
 }
@@ -363,7 +368,11 @@ sub convert_file {
             my ($before, $tag, $after) = split_around_tag($_, "method", IN);
             ($ignore, $event) = &extract_attr($tag, "event");
             debugln(2, " event=\"$event\"");
-            last if ($event eq "");
+            if ($event eq "") {
+                # Make sure we don't throw away stuff after the \n
+                $_ = $tag . $after;
+                last;
+            }
             debugln(2, " before=$before");
             debugln(2, " tag=$tag");
             debugln(2, " after=$after");
