@@ -266,6 +266,7 @@ public class Compiler {
     // Disable debug compilation for swf9
     if ("swf9".equals((String)options.get(RUNTIME))) {
       options.putBoolean(DEBUG, false);
+      options.putBoolean(DEBUG_BACKTRACE, false);
     }
 
     // TODO: [2008-05-18 dda] It may be possible to clean this up
