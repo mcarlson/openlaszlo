@@ -42,14 +42,18 @@ var node :LzNode;
   * @access private
   */
 override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boolean { 
-    var pchg = this.__LZpchanged;
     if ( super.__LZsendUpdate(upd, upp) ) {
         var data:* = this.data;
         var node:LzNode = this.node;
         var attr:String = this.setAttr;
-        if (pchg || node[ attr ] != data || this.parsedPath.operator == "attributes") {
-                //this test is necessary or properties get set to undefined
-                node.setAttribute( attr, data == null ? null : data );
+        if (this.__LZpchanged || node[ attr ] != data || this.parsedPath.operator == "attributes") {
+            //this test is necessary or properties get set to undefined
+            node.setAttribute( attr, data == null ? null : data );
+            // reset visibility a la datapaths for views
+            if (node['__LZvizDat'] != null) {
+                node.__LZvizDat = node[attr] != null;
+                node.__LZupdateShown();
+            }
         }
     }
 }
