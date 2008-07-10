@@ -1,0 +1,101 @@
+/**
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @topic LZX
+  */
+
+/**
+  * A presentation type is a specification of how to map a Javascript type to 
+  * and from a String representation.
+  * If an inherited class does not implement present(), 
+  * PresentationType.present() will be used.
+  * @access private
+  */
+class PresentationType {
+  static function accept(value) {
+    return value; 
+  }
+  static function present(value) { 
+    return "" + value; 
+  }
+}
+
+/**
+  * Attempts to translate the type to a global class (number -> Number) 
+  * and return a new instance of that class.
+  * @access private
+  */
+class GenericPresentationType extends PresentationType {
+  static function accept(value, type) {
+    // Look for class as-is
+    var obj = lz.Utils.__findClass(type);
+    if (! obj) {
+        // Convert to upper case
+        var uppertype = type.substring(0, 1).toUpperCase() + type.substring(1);
+        obj = lz.Utils.__findClass(uppertype);
+        if (! obj) return value;
+    }
+    return new obj(value);
+  }
+}
+
+//---
+// Boolean presentation type
+//---
+class BooleanPresentationType extends PresentationType {
+  static function accept(value) {
+    switch (value.toLowerCase()) {
+      case "0": case "false":
+        return false;
+      default:
+        return true;
+    }
+  }
+}
+
+//---
+// Number presentation type
+//---
+class NumberPresentationType extends PresentationType {
+  static function accept(value) {
+    return value |= 0;      
+  }
+}
+
+//---
+// Color presentation type
+//---
+class ColorPresentationType extends PresentationType {
+  static function accept(value) {
+    return lz.Utils.hextoint(value);
+  }
+  static function present(value) { 
+    return lz.Utils.inttohex(value);
+  }
+}
+
+//---
+// Expression presentation type
+//---
+class ExpressionPresentationType extends PresentationType {
+  static function accept(value) {
+    // Create an instance if the value begins with 'new '
+    if (typeof value == 'string' && value.indexOf('new ') != -1) return lz.Utils.safeNew(value);
+    return value;
+  }
+  static function present(value) {
+    return value;
+  }
+}
+
+//---
+// Size presentation type
+//---
+class SizePresentationType extends PresentationType {
+  static function accept(value) {
+    // TODO: handle percentage values?
+    return parseFloat(value);
+  }
+}

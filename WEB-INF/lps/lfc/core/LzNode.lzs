@@ -651,7 +651,7 @@ public dynamic class LzNode extends LzEventable {
     // They really should be using #...
     if ((typeof styleValue == 'string') && (styleValue.length > 2) && (styleValue.indexOf('0x') == 0) && (! isNaN(styleValue))) {
       if ($debug) {
-        Debug.warn("Invalid CSS value for %w.%s: `%#w`.  Use: `#%06x`.", this, k, styleValue, Number(styleValue));
+        Debug.warn("Invalid CSS value for %w.%s: `%#w`.  Use: `#%06x`.", this, prop, styleValue, Number(styleValue));
       }
       styleValue = Number(styleValue);
     }
@@ -1271,8 +1271,9 @@ public dynamic class LzNode extends LzEventable {
    * @param String attr: The name of the attribute to bind to the given path.
    * @param String path: The xpath (relative to this node's datapath) to which to
    * bind the attribute.
+   * @param String type: The type of the attribute
    */
-  function dataBindAttribute ( attr , path  ) {
+  function dataBindAttribute ( attr , path, type ) {
     if ( $debug ){
       if ( path == null ){
         Debug.warn( 'No value for %w.%s="$path{%w}"', this, attr, path );
@@ -1287,7 +1288,7 @@ public dynamic class LzNode extends LzEventable {
       this.__LZdelegates = [];
     }
 
-    this.__LZdelegates.push ( new LzDataAttrBind( this.datapath, attr , path ));
+    this.__LZdelegates.push ( new LzDataAttrBind( this.datapath, attr, path, type ));
   }
 
   /** @access private */
@@ -1370,7 +1371,7 @@ public dynamic class LzNode extends LzEventable {
       if (inits != null) {
         for (var i = 0, l = inits.length; i < l; i++) {
           // invoke the init method
-          this[inits[i].methodName]();
+          this[inits[i].methodName](null);
         }
       }
       // Install constraints
@@ -1695,8 +1696,8 @@ public dynamic class LzNode extends LzEventable {
    *
    * @access public
    */
-  function updateData () /* :String */ {
-    return void(0);
+  function updateData () {
+    if (this.datapath) this.datapath.updateData();
   }
 
   /*
@@ -2150,6 +2151,57 @@ public dynamic class LzNode extends LzEventable {
     }
     this.makeChild( dpobj , true);
   }
+
+ static var presentationtypes = {number: NumberPresentationType, numberExpression: NumberPresentationType, color: ColorPresentationType, inheritableBoolean: BooleanPresentationType, expression: ExpressionPresentationType, size: SizePresentationType}
+ // setting boolean: above freaks out rhino
+ presentationtypes['boolean'] = BooleanPresentationType;
+ // TODO?: add css: CSSPresentationType, token: TokenPresentationType, script: ScriptPresentationType
+
+  /**
+   * @access private
+   * @param name:String the name of the attribute
+   * @param type:String the attribute type
+   * @param value:String the string representation of the desired value
+   *
+   * Sets the named attribute to the result of converting the value using the
+   * presentationtype's accept method
+   */
+ function acceptAttribute(name, type, value) {
+   var presentationtype = LzNode.presentationtypes[type];
+   if (presentationtype == null) {
+     value = GenericPresentationType.accept(value, type);
+   } else {
+     value = presentationtype.accept(value);
+   }
+   if (this[name] != value) {
+    //Debug.write('acceptAttribute', name, type, value, typeof value, presentationtype);
+    this.setAttribute(name, value);
+   }
+ }
+ 
+ /**
+   * @access private
+   * presentAttribute
+   * @param name:String the name of the attribute
+ * @param type:String the attribute type
+   * @returns value:String
+   * 
+   * Returns the value of the named attribute converted to a string by the
+   * presentationtype's present method
+   */
+ function presentAttribute(name, type) {
+   var value = this[name];
+   var presentationtype = LzNode.presentationtypes[type];
+   if (presentationtype != null && presentationtype['present']) {
+     value = presentationtype.present(value);
+   } else {
+     // default because static methods aren't inherited...
+     value = PresentationType.present(value);
+   }
+   //Debug.write('presentAttribute', name, type, value, typeof value, presentationtype);
+   return value;
+ }
+
 
 } // End of LzNode
 

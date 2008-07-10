@@ -31,6 +31,9 @@ var specificity = 0;
 /** @access private */
 var parsed = null;
 
+/** @access private */
+var _lexorder
+
 // this is inlined in __compareSpecificity() - keep in sync
 function getSpecificity () {
     

@@ -175,6 +175,135 @@ class LzUtilsClass {
         ,fuchsia: 0xFF00FF
         ,aqua: 0x00FFFF
     }
+
+    // Unpack a javascript list from a string, giving each item the appropriate type 
+    function __unpackList(argstr, scope) {
+        if (scope == null) scope = canvas;
+        var args = argstr.split(',');
+        // cast arguments to type
+        for (var i = 0; i < args.length; i++) {
+            var a = args[i];
+
+            // strip whitespace
+            while (a.charAt(0) == ' ') {
+                a = a.substring(1, a.length);
+            }
+
+            var n = parseFloat(a);
+            if (! isNaN(n)) {
+                //number
+                args[i] = n;
+                //Debug.write('found number', args[i], a);
+            } else if (a.indexOf("'") != -1) {
+                // TODO - handle "
+                var s = a.indexOf("'") + 1;
+                var e = a.lastIndexOf("'");
+                args[i] = a.substring(s, e);
+                //Debug.write('found string', args[i], a);
+            } else if (a == 'true' || a == 'false'){
+                args[i] = a == 'true';
+                //Debug.write('found boolean', args[i], a);
+            } else if (scope[a]) {
+                args[i] = scope[a];
+                //Debug.write('found property', args[i], a);
+            }
+        }
+        return args;
+    }
+
+    // 'eval' a method from a javascript string.  Starts looking for references in the canvas.
+    function safeEval(js, arglist = null) {
+        var scope = canvas;
+        //Debug.write('callMethod', js);
+        var s = js.indexOf('(')
+        if (s != -1) {
+            var e = js.indexOf(')')
+            var args = (js.substring(s + 1, e))
+            js = js.substring(0, s);
+        }
+
+        var path = js.split('.');
+        for (var i = 0; i < path.length; i++) {
+            var n = path[i];
+            if (i == 0 && ! scope[n]) {
+                // look in global scope if canvas lookup fails
+                scope = global;
+            }
+            var lastscope = scope;
+            scope = scope[n];
+            //Debug.write('found', n, 'in scope', scope);  
+        }
+
+        var args = arglist == null ? lz.Utils.__unpackList(args) : arglist;
+
+        //Debug.write('found scope', scope, 'args', args, 'for path', path);  
+        return scope.apply(lastscope, args);
+    }
+
+    // Flash needs help referencing global classes :(
+    var __as2globalclasses = {Number: Number, String: String, Boolean: Boolean, Date: Date, Array: Array, Object: Object, Function: Function};
+
+    function __findClass(classname) {
+        // short-circuting || would be much better - see LPP- 
+        var obj = lz.Utils.__as2globalclasses[classname];
+        if (obj) return obj;
+        obj = global[classname];
+        if (obj) return obj;
+        obj = canvas[classname];
+        if (obj) return obj;
+        obj = lz[classname];
+        if (obj) return obj;
+    }
+
+    // 'new' an object from a javascript string.  Must begin with 'new '.
+    function safeNew(js, arglist = null) {
+        var orig = js;
+
+        // strip 'new '
+        var newpos = js.indexOf('new ');
+        if (newpos == -1) return js;
+        js = js.substring(newpos + 4);
+
+        var s = js.indexOf('(')
+        if (s != -1) {
+            var e = js.indexOf(')')
+            var args = (js.substring(s + 1, e));
+            js = js.substring(0, s);
+        }
+
+        var obj = lz.Utils.__findClass(js);
+        if (! obj) return;
+
+        var args = arglist == null ? lz.Utils.__unpackList(args) : arglist;
+        // nasty... but at least it goes to 11!
+        var size = args.length;
+        if (size == 0) {
+            return new obj();
+        } else if (size == 1) {
+            return new obj(args[0]);
+        } else if (size == 2) {
+            return new obj(args[0], args[1]);
+        } else if (size == 3) {
+            return new obj(args[0], args[1], args[2]);
+        } else if (size == 4) {
+            return new obj(args[0], args[1], args[2], args[3]);
+        } else if (size == 5) {
+            return new obj(args[0], args[1], args[2], args[3], args[4]);
+        } else if (size == 6) {
+            return new obj(args[0], args[1], args[2], args[3], args[4], args[5]);
+        } else if (size == 7) {
+            return new obj(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+        } else if (size == 8) {
+            return new obj(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+        } else if (size == 9) {
+            return new obj(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
+        } else if (size == 10) {
+            return new obj(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
+        } else if (size == 11) {
+            return new obj(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]);
+        }
+    }
+
 }
 
 /**

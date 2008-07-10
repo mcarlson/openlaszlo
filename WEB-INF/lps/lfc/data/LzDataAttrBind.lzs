@@ -11,19 +11,20 @@
 /** @access private */
 class LzDataAttrBind extends LzDatapointer {
 
-function LzDataAttrBind ( ndpath:LzDatapath, attr:String, path:String ){
-                            super (ndpath);
-                            this.setAttr = attr;
-                            this.pathparent = ndpath;
-                            this.node = ndpath.immediateparent;
-                            this.setXPath( path );
+function LzDataAttrBind ( ndpath:LzDatapath, attr:String, path:String, type:String ){
+    super (ndpath);
+    this.type = type;
+    this.setAttr = attr;
+    this.pathparent = ndpath;
+    this.node = ndpath.immediateparent;
+    this.setXPath( path );
 
-                            this.rerunxpath = true; // From LzDatapointer
-                            if ( ndpath.__LZdepChildren == null ){
-                                ndpath.__LZdepChildren = [ this ];
-                            } else {
-                                ndpath.__LZdepChildren.push( this );
-                            }
+    this.rerunxpath = true; // From LzDatapointer
+    if ( ndpath.__LZdepChildren == null ){
+        ndpath.__LZdepChildren = [ this ];
+    } else {
+        ndpath.__LZdepChildren.push( this );
+    }
 }
 
 
@@ -37,6 +38,8 @@ var setAttr :String;
 var pathparent :LzDatapath;
 /** @access private */
 var node :LzNode;
+/** @access private */
+var type :String;
 
 /**
   * @access private
@@ -48,7 +51,7 @@ override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boo
         var attr:String = this.setAttr;
         if (this.__LZpchanged || node[ attr ] != data || this.parsedPath.operator == "attributes") {
             //this test is necessary or properties get set to undefined
-            node.setAttribute( attr, data == null ? null : data );
+            node.acceptAttribute(attr, this.type, data == null ? null : data);
             // reset visibility a la datapaths for views
             if (node['__LZvizDat'] != null) {
                 node.__LZvizDat = node[attr] != null;
@@ -100,7 +103,8 @@ function __LZupdateData (recursive:Boolean = false) :void {
     //this code is largely copied from LzDatapath, but it's slightly different
     var ppdo = this.parsedPath.operator;
     if (ppdo != null) {
-        var dat = this.node[ this.setAttr ];
+        var dat = this.node.presentAttribute(this.setAttr, this.type)
+        //Debug.write('__LZupdateData', this.node, this.setAttr, this.type, dat, this.data);
         if (this.data != dat) {
             if (ppdo == "nodeName") {
                 this.setNodeName( dat );

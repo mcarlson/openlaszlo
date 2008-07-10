@@ -261,17 +261,19 @@ public class NodeModel implements Cloneable {
         return null;
       }
       String installer = "setAttribute";
-      String body = "\n#beginAttribute\n" + srcloc + value + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n)";
+      String body = "\n#beginAttribute\n" + srcloc + value + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n";
       String pragmas =
         "\n#pragma 'withThis'\n";
-      String args = "";
+
+      // All constraint methods need ignore args for swf9
+      String args="$lzc$ignore";
       if (when.equals(WHEN_ONCE)) {
         // default
       } else if (when.equals(WHEN_ALWAYS)) {
         // will be called from sendEvent, so needs to take one arg
-        args="$lzc$ignore";
       } else if (when.equals(WHEN_PATH)) {
         installer = "dataBindAttribute";
+        body = body + ",'" + type + "'";
       } else if (when.equals(WHEN_STYLE)) {
         // Styles are processed at the same time as constraints.
         // Whether a style actually results in a constraint or not
@@ -281,7 +283,7 @@ public class NodeModel implements Cloneable {
       }
       body = "this." + installer + "(" +
           ScriptCompiler.quote(name) + "," +
-          body;
+          body + ")";
       Function binder;
       // Binders are called by LzDelegate.execute, which passes the
       // value sent by sendEvent, so we have to accept it, but we

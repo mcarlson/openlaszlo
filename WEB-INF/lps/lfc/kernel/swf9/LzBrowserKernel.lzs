@@ -74,58 +74,7 @@ static function getPersistedObject(n) {
   * @access private
   */
 static function callMethod(js) { 
-    var scope = canvas;
-    //Debug.write('callMethod', js);
-    var s = js.indexOf('(')
-    if (s != -1) {
-        var e = js.indexOf(')')
-        var args = (js.substring(s + 1, e)).split(',');
-        js = js.substring(0, s);
-    }
-
-    var path = js.split('.');
-    for (var i = 0; i < path.length; i++) {
-        var n = path[i];
-        if (i == 0 && ! scope[n]) {
-            // look in global scope if canvas lookup fails
-            scope = global;
-        }
-        var lastscope = scope;
-        scope = scope[n];
-        //Debug.write('found', n, 'in scope', scope);  
-    }
-
-    // cast arguments to type
-    for (var i = 0; i < args.length; i++) {
-        var a = args[i];
-
-        // strip whitespace
-        while (a.charAt(0) == ' ') {
-            a = a.substring(1, a.length);
-        }
-
-        var n = parseFloat(a);
-        if (! isNaN(n)) {
-            //number
-            args[i] = n;
-            //Debug.write('found number', args[i], a);
-        } else if (a.indexOf("'") != -1) {
-            // TODO - handle "
-            var s = a.indexOf("'") + 1;
-            var e = a.lastIndexOf("'");
-            args[i] = a.substring(s, e);
-            //Debug.write('found string', args[i], a);
-        } else if (a == 'true' || a == 'false'){
-            args[i] = a == 'true';
-            //Debug.write('found boolean', args[i], a);
-        } else if (lastscope[a]) {
-            args[i] = lastscope[a];
-            //Debug.write('found property', args[i], a);
-        }
-    }
-
-    //Debug.write('found scope', scope, 'args', args, 'for path', path);  
-    return scope.apply(lastscope, args);
+    return lz.Utils.safeEval(js);
 }
 
 static var _os = null;
