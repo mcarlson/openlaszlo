@@ -22,9 +22,9 @@ var LzMouseKernel = {
     ,__mouseEvent: function(e) {
         if (!e) {
             e = window.event;
-            var targ = e.target; 
-        } else {
             var targ = e.srcElement; 
+        } else {
+            var targ = e.target; 
         }
         var eventname = 'on' + e.type;
         if (window['LzKeyboardKernel'] && LzKeyboardKernel['__keyboardEvent']) LzKeyboardKernel.__keyboardEvent(e);
