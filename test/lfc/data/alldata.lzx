@@ -23,8 +23,9 @@
     <include href="testsetheaders.lzx"/>
     <include href="testsetheaders-solo.lzx"/>
     <include href="testrawpost.lzx"/>
+    <include href="testsetpostbody.lzx"/>
     <include href="testput.lzx"/>
-<!--     <include href="testrawpost-solo.lzx"/> -->
+    <include href="testrawpost-solo.lzx"/> 
     <include href="testheaderresponse.lzx"/>
     <include href="sendheaders.lzx"/>
     <include href="testclientcachebreaker.lzx"/>
@@ -44,6 +45,7 @@
         <TestSendHeaders/>
         <TestGetMethod/>
         <TestPOSTMethod/>
+
         <TestGetMethodSOLO/>
         <TestPOSTMethodSOLO/>
         <TestSetHeaders/>
@@ -51,9 +53,10 @@
         <TestRawPost/>
         <TestPut/>
 <!--
-    This just can't work in Flash 7/8 - the text will always be XML escaped
-        <TestRawPostSOLO/>
+    In Flash 7/8 - the text will always be XML escaped
 -->
+        <TestRawPostSOLO/>
+        <TestSetPostBody/>
         <TestResponseHeaders/>
 
         <TestClientCacheBreaker/>
