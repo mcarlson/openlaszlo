@@ -122,8 +122,6 @@
 <interface name="node" extends="Instance">
   <attribute name="id" type="ID"/>
   <attribute name="$lzc$bind_id" type="expression" />
-  <!-- The path of a file that contains the source for this object. -->
-  <attribute name="src" type="string"/>
   <!-- The name of a variable that will be set to this object when the
        application is started.  If this element is directly within a @e{canvas}
        or @e{library} element, the global variable and the canvas
