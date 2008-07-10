@@ -73,6 +73,7 @@
     <class name="info_Panel" extends="basepanel" clip="true">
 
         <attribute name="opened" value="false"/>
+        <attribute name="dataapply" value="false"/>
 
         <!-- VIEWS -->
         <view name="summary" width="198" height="83" bgcolor="0xEEF0EB">
@@ -278,6 +279,7 @@
                     eventDataMgr.changeNotes(classroot.tabs.notes.txt.getText());
                     eventDataMgr.changeLocation(classroot.tabs.location.txt.getText());
                     eventDataMgr.changeAttendees(classroot.tabs.attendees.txt.getText());
+                    classroot.setAttribute('dataapply', true);
                 </handler>
             </calButton>
                 
@@ -311,6 +313,9 @@
         
         <method name="open">
             this.completeInstantiation();
+            if(sitbox.text != "New Event"){
+                this.setAttribute('dataapply', true);
+            }
             
             if ( this['awaitingClose'] ){
                 this.awaitingClose = false;
@@ -333,11 +338,17 @@
         </method>
 
         <method name="close">
+            <![CDATA[
+            if(!this.dataapply){
+                eventDataMgr.deleteEvent()
+            }
             if (! this.opened) { return; }
             this.awaitingClose = false;
             slideclose1.doStart();
             slideclose2.doStart(); //remove
             this.opened = false;
+            this.setAttribute('dataapply', false);
+            ]]>
         </method>
 
         <method name="close_done" >

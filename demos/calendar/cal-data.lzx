@@ -225,8 +225,9 @@
             // Deletes the current node
             currenteventDP.deleteNode();
             //currenteventDP.setXPath('blankEvent:/event[1]');
-            eventselector.hide();
+            
             currenteventDP.setPointer( noEvent.getFirstChild() );
+            eventselector.hide();
         </method>
 
         <method name="changeEventTime" args="shour, smin"> <![CDATA[
