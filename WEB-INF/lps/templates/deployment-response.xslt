@@ -165,7 +165,7 @@ The thing that's different is the alteration to <code>main.lzx.lzr=swf7.swf? </c
 
       Next, you'll need to load a copy of the LFC inside the <code>&lt;head&gt;</code> section of the HTML document that embeds the application.  <code>lz.embed.lfc()</code> writes a  &lt;script/> tag into the document to load the LFC.  It expects two arguments: the URL for the LFC to be loaded, and the base URL to load resources from.  This only needs to be done once per page.  Note that these URLs may change for applications deployed using SOLO deployment.  For this application, you can use aa call like this: 
       <pre>&lt;script type="text/javascript"&gt;
-    lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>');
+    lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>/');
 &lt;/script></pre>
       
       <p>Finally, place the following element within the <code>&lt;body></code>

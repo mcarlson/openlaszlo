@@ -156,13 +156,13 @@ lz.embed = {
      * @param resourceroot:String Base URL to load resources from. 
      */
     lfc: function (url, resourceroot) {
-        if (! resourceroot || typeof resourceroot != 'string') {
-            alert('WARNING: lfc requires resourceroot to be specified.'); 
+        if (! resourceroot || typeof resourceroot != 'string' || resourceroot == '') {
+            alert('WARNING: lz.embed.lfc() requires a valid resourceroot to be specified.'); 
             return;
         }
         lz.embed.options.resourceroot = resourceroot;
         if (lz.embed.browser.isIE) {
-            var scripturl = resourceroot + '/lps/includes/excanvas.js';
+            var scripturl = resourceroot + 'lps/includes/excanvas.js';
             this.__dhtmlLoadScript(scripturl)
         }
         if ((lz.embed.browser.isIE && lz.embed.browser.version < 7) || (lz.embed.browser.isSafari && lz.embed.browser.version <= 419.3)) {

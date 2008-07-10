@@ -511,7 +511,7 @@ LzSprite.prototype.playing = false;
 LzSprite.prototype.clickable = false;
 LzSprite.prototype.frame = 1;
 LzSprite.prototype.frames = null;
-LzSprite.prototype.blankimage = '/lps/includes/blank.gif';
+LzSprite.prototype.blankimage = 'lps/includes/blank.gif';
 LzSprite.prototype.resource = null;
 LzSprite.prototype.source = null;
 LzSprite.prototype.visible = null;
@@ -619,7 +619,7 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
     var urls = []; 
     var baseurl = '';
     if (res.ptype && res.ptype == 'sr') {
-        baseurl = lz.embed.options.resourceroot + '/';
+        baseurl = lz.embed.options.resourceroot;
     }
     for (var i = 0; i < res.frames.length; i++) {
         urls[i] = baseurl + res.frames[i];
