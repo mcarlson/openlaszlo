@@ -109,13 +109,13 @@
         <text name="day"  x="42" fgcolor="#FFFFFF" width="140"
               fontstyle="bold" datapath="@day">Tonight</text>
         <text name="desc" x="42" y="14" fgcolor="#FFFFFF"
-              width="140" datapath="@text">T-storms possible</text>
-        <text name="temphi" x="168" width="60" fgcolor="#FFFFFF"
+              width="120" datapath="@text" resize="false" multiline="true" fontsize="11">T-storms possible</text>
+        <text name="temphi" x="188" width="60" fgcolor="#FFFFFF"
               fontstyle="bold" datapath="@high">Hi 80 F</text>
-        <text name="templo" x="168" y="14" width="60" fgcolor="#FFFFFF"
+        <text name="templo" x="188" y="14" width="60" fgcolor="#FFFFFF"
               fontstyle="bold" datapath="@low">Lo 80 F</text>
-        <text x="145" fgcolor="#FFFFFF" fontstyle="bold" pixellock="true">Hi:</text>
-        <text x="145" y="14" fgcolor="#FFFFFF" fontstyle="bold" pixellock="true">Lo:</text>
+        <text x="165" fgcolor="#FFFFFF" fontstyle="bold" pixellock="true">Hi:</text>
+        <text x="165" y="14" fgcolor="#FFFFFF" fontstyle="bold" pixellock="true">Lo:</text>
     </class>
 
 
