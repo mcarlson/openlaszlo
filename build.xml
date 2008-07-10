@@ -131,6 +131,8 @@
       <include name="${webapp-lps-home}/server/bin/lzmc.bat" />
       <include name="${webapp-lps-home}/server/bin/lzdc" />
       <include name="${webapp-lps-home}/server/bin/lzdc.bat" />
+      <include name="${webapp-lps-home}/server/bin/convert_laszlo.pl" />
+      <include name="${webapp-lps-home}/server/bin/convert_required.pl" />
       <include name="3rd-party/jars/dev/servlet-2.3.jar" />
       <exclude name="building-lps.html" />
       <exclude name="**/build.xml" />
@@ -794,6 +796,12 @@
       <copy todir="${builddir-dev-bin}"
           file="${webapp-lps-home}/server/bin/lzmc" />
       <chmod file="${builddir-dev-bin}/lzmc" perm="755" />
+      <copy todir="${builddir-dev-bin}"
+          file="${webapp-lps-home}/server/bin/convert_laszlo.pl" />
+      <chmod file="${builddir-dev-bin}/convert_laszlo.pl" perm="755" />
+      <copy todir="${builddir-dev-bin}"
+          file="${webapp-lps-home}/server/bin/convert_required.pl" />
+      <chmod file="${builddir-dev-bin}/convert_required.pl" perm="755" />
       <copy todir="${builddir-dev-bin}">
           <fileset dir="${webapp-lps-home}/server/bin" includes="*.bat.proto" />
           <mapper type="glob" from="*.proto" to="*" />
@@ -892,6 +900,8 @@
                 <include name="bin/lzc"/>
                 <include name="bin/lzdc"/>
                 <include name="bin/lzmc"/>
+                <include name="bin/convert_laszlo.pl"/>
+                <include name="bin/convert_required.pl"/>
             </tarfileset>
             <tarfileset dir="${builddir-dev}" prefix="${builddir-dev}/">
                 <include name="*/**"/>
@@ -900,6 +910,8 @@
                 <exclude name="bin/lzc"/>
                 <exclude name="bin/lzdc"/>
                 <exclude name="bin/lzmc"/>
+                <exclude name="bin/convert_laszlo.pl"/>
+                <exclude name="bin/convert_required.pl"/>
             </tarfileset>
           </tar>
     </target>
