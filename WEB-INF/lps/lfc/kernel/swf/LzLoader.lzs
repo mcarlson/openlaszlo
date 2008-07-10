@@ -79,6 +79,7 @@ var onerror = LzDeclaredEvent;
 var ondata = LzDeclaredEvent;
 var onrequest = LzDeclaredEvent;
 var ontimeout = LzDeclaredEvent;
+var onerror = LzDeclaredEvent;
 
 var requestheaders = {};
 var timeout = 30000;
@@ -412,6 +413,18 @@ function doTimeOut ( loadobj ){
     if (loadobj) {
         this.unload(loadobj);
         if (this.ontimeout.ready) this.ontimeout.sendEvent();
+    }
+}
+
+/**
+  * @access private
+  * @param MovieClip loadobj: the LoadMovie that had an error
+  */
+function doError ( loadobj ){
+    if (loadobj) {
+        this.returnData(loadobj);
+        this.unload(loadobj);
+        if (this.onerror.ready) this.onerror.sendEvent();
     }
 }
 

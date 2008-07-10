@@ -18,6 +18,8 @@ class LzMediaLoader extends LzLoader {
         this.owner.loadperc = 0;
 
         this.loadChecker = new LzDelegate( this , "testLoad" );
+        this.errorChecker = new LzDelegate( this , "testError" );
+        this.errortimeout = 2000;
 
         this.removeLoadCheckerDel = 
             new LzDelegate( this, 
@@ -50,6 +52,7 @@ var LOADERDEPTH = 9;
 function removeLoadChecker(ignore) {
     // Remove loadChecker delegate
     this.loadChecker.unregisterAll();
+    this.errorChecker.unregisterAll();
     this.removeLoadCheckerDel.unregisterAll();
 }
 
@@ -115,6 +118,8 @@ function attachLoadMovie ( resc ){
 function startingLoad ( loadmc ){
     this.checkonce = false;
     this.loadChecker.register( lz.Idle, "onidle" );
+    this.errorChecker.unregisterAll();
+    lz.Timer.addTimer( this.errorChecker, this.errortimeout );
     this.removeLoadCheckerDel.register( this, "onloaddone" );
 }
 
@@ -208,25 +213,42 @@ function request( req , cache , headers, filetype ) {
 /**
   * @access private
   */
+function testError (ignore) {
+    var lmc = this.mc.lmc;
+
+                  // not from another domain    
+    var iserror = this.checkonce && lmc.getBytesTotal != void 0 && 
+                  lmc.getBytesTotal() <= 0 && lmc.getBytesLoaded() >= lmc.getBytesTotal();
+    if (iserror) {              
+        //Debug.error(iserror, lmc.getBytesLoaded(), lmc.getBytesTotal())
+        this.doError(this.mc);
+    }
+}
+
+/**
+  * @access private
+  */
 function testLoad (ignore){
     //skip first check because this can get called before load starts, in 
     //which case load info is wrong
     //getBytesTotal is wrong before the header of the movie has loaded
 
+    var lmc = this.mc.lmc;
+
     /*
-    Debug.write('%w %w %w %w %w %w %w %w %w', this.mc.lmc, typeof(this.mc.lmc.getBytesTotal),
-                      this.mc.lmc.getBytesLoaded(), typeof(this.mc.lmc.getBytesLoaded()),
-                      this.mc.lmc.getBytesTotal(), typeof(this.mc.lmc.getBytesTotal()),
-                      this.mc.lmc._currentframe, this.mc.lmc._framesloaded, this.mc.lmc._totalframes);
+    Debug.write('%w %w %w %w %w %w %w %w %w', lmc, typeof(lmc.getBytesTotal),
+                      lmc.getBytesLoaded(), typeof(lmc.getBytesLoaded()),
+                      lmc.getBytesTotal(), typeof(lmc.getBytesTotal()),
+                      lmc._currentframe, lmc._framesloaded, lmc._totalframes);
     */
-       
-    if ( this.isjpeg && this.mc.lmc._height <= 0) {
+
+    if ( this.isjpeg && lmc._height <= 0) {
         //Debug.error('skipping 0 height jpeg');
         return;
     }    
 
     if ( this.checkonce ){
-        var lr = this.mc.lmc.getBytesLoaded() / this.mc.lmc.getBytesTotal();
+        var lr = lmc.getBytesLoaded() / lmc.getBytesTotal();
         if (!isNaN(lr)) {
             this.owner.owner.resourceevent('loadratio', lr);
             //reset timeout for media which is streaming
@@ -234,52 +256,52 @@ function testLoad (ignore){
         }
     }
 
-    if ( this.checkonce && this.mc.lmc.getBytesTotal == void 0 
-         && this.mc.lmc._totalframes > 0  ) {
-             //a swf loaded from another domain will be sandboxed. no load
-             //information is available;
-             if ( !this.sentLoadStart ){
-                 this.sentLoadStart = true;
-                 if ( ! this.mc.loaded ) {
-                     if (this.onstreamstart.ready) this.onstreamstart.sendEvent( this );
-                 }
-             }
+    if ( this.checkonce && lmc.getBytesTotal == void 0 
+         && lmc._totalframes > 0  ) {
+            //a swf loaded from another domain will be sandboxed. no load
+            //information is available;
+            if ( !this.sentLoadStart ){
+                this.sentLoadStart = true;
+                if ( ! this.mc.loaded ) {
+                    if (this.onstreamstart.ready) this.onstreamstart.sendEvent( this );
+                }
+            }
 
-             var nlp = this.mc.lmc._framesloaded / 
-             this.mc.lmc._totalframes;
+            var nlp = lmc._framesloaded / 
+            lmc._totalframes;
 
-             if ( nlp >= this.owner.loadperc ){
-                 //reset timeout for media which is streaming
-                 //Debug.write( "here" , this.mc.lmc._framesloaded , 
-                 //this.mc.lmc._totalframes );
+            if ( nlp >= this.owner.loadperc ){
+                //reset timeout for media which is streaming
+                //Debug.write( "here" , lmc._framesloaded , 
+                //lmc._totalframes );
 
-                 if (this.mc.lmc._totalframes > 0) {
-                     var nlp = this.mc.lmc._framesloaded / 
-                         this.mc.lmc._totalframes;
+                if (lmc._totalframes > 0) {
+                    var nlp = lmc._framesloaded / 
+                        lmc._totalframes;
 
-                     if ( nlp > this.owner.loadperc ){
-                         //reset timeout for media which is streaming
-                         this.mc.loadtime = getTimer();
-                     }
+                    if ( nlp > this.owner.loadperc ){
+                        //reset timeout for media which is streaming
+                        this.mc.loadtime = getTimer();
+                    }
 
-                     this.owner.loadperc = nlp;
-                     // deprecated in view
-                     //if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( this.owner.loadperc );
-                     this.owner.owner.resourceevent('framesloadratio', nlp);
-                     // Sent above already...
-                     // this.owner.owner.resourceevent('loadratio', nlp);
+                    this.owner.loadperc = nlp;
+                    // deprecated in view
+                    //if (this.owner.owner.onloadperc.ready) this.owner.owner.onloadperc.sendEvent( this.owner.loadperc );
+                    this.owner.owner.resourceevent('framesloadratio', nlp);
+                    // Sent above already...
+                    // this.owner.owner.resourceevent('loadratio', nlp);
 
-                     if ( this.mc.lmc._totalframes == this.mc.lmc._framesloaded && this.mc.lmc._currentframe > 0){
-                         if (!this.mc.loaded && this.onloaddone.ready) this.onloaddone.sendEvent( this );
-                         this.returnData( this.mc );
-                     }
-                 }
-             }
-         }
+                    if ( lmc._totalframes == lmc._framesloaded && lmc._currentframe > 0){
+                        if (!this.mc.loaded && this.onloaddone.ready) this.onloaddone.sendEvent( this );
+                        this.returnData( this.mc );
+                }
+            }
+        }
+    }
 
-    if ( this.checkonce && this.mc.lmc._currentframe > 0 
-         && typeof(this.mc.lmc.getBytesTotal) != "undefined"
-         && this.mc.lmc.getBytesTotal() > this.minHeader ) {
+    if ( this.checkonce && lmc._currentframe > 0 
+         && typeof(lmc.getBytesTotal) != "undefined"
+         && lmc.getBytesTotal() > this.minHeader ) {
         
              if ( !this.sentLoadStart ){
                  this.sentLoadStart = true;
@@ -291,9 +313,9 @@ function testLoad (ignore){
                  }
              }
 
-             if (this.mc.lmc._totalframes > 0) {
-                 var nlp = this.mc.lmc._framesloaded / 
-                 this.mc.lmc._totalframes;
+             if (lmc._totalframes > 0) {
+                 var nlp = lmc._framesloaded / 
+                 lmc._totalframes;
 
                  if ( nlp > this.owner.loadperc ){
                      //reset timeout for media which is streaming
@@ -305,7 +327,7 @@ function testLoad (ignore){
                 this.owner.owner.resourceevent('framesloadratio', nlp);
              }
 
-             if ( this.mc.lmc.getBytesTotal() == this.mc.lmc.getBytesLoaded() ){
+             if ( lmc.getBytesTotal() == lmc.getBytesLoaded() ){
                  //load is done
 
                  if (!this.mc.loaded && this.onloaddone.ready) this.onloaddone.sendEvent( this );

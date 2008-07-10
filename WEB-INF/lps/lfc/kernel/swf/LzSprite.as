@@ -929,7 +929,8 @@ LzSprite.prototype._setButtonSize = function ( axis , bsize ){
   */
 LzSprite.prototype.setSource = function ( source, cache, headers, filetype){
     //@event onerror: Sent when there is an error loading the view's resource.
-    //The argument sent with the event is the error string sent by the server.
+    //For proxied loads, the argument sent with the event is the error string
+    //sent by the server.
     //@event ontimeout: Sent when the request to load media for the view times
     //out
     LzMakeLoadSprite.transform( this, source, cache, headers, filetype);
