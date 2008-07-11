@@ -50,7 +50,8 @@
             // If this is the first instance, define a default NetConnection
             // for the class (used by other real-time objects, like videoview).
             if (this["_default"] == undefined) {
-                rtmpconnection.prototype._default = this;
+                rtmpconnection = new lz.node();
+                rtmpconnection._default = this;
             }
 
             if (this.debug) {
@@ -291,8 +292,6 @@
 
         <attribute name="dataobject" value="null" />
         
-        <handler name="ondata" args="value" />
-
         <!--- Call the remote method, passing the array of params. -->
         <method name="call" args="params"><![CDATA[
             if (this.funcname == null) {

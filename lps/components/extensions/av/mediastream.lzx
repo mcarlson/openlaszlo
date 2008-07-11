@@ -324,7 +324,7 @@
                     //Debug.write("_findnc type rtmp, rtmpconnection", this.rtmpconnection, "_nc", lz.rtmpconnection.prototype._default._nc);
                     this._nc = 
                         this.rtmp ||
-                        lz.rtmpconnection.prototype._default._nc;
+                        rtmpconnection._default._nc;
                     break;
                 }
 
