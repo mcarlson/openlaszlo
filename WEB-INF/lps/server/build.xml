@@ -125,7 +125,7 @@ javac (1.4);
   <target name="setup-build-id" depends="get-svn-info" unless="build.id"
     description="Load repository information into properties">
       <xmlproperty file="repository-info.xml"/>
-      <property name="build.id" value="${info.entry(revision)} ${info.entry(path)}" />
+      <property name="build.id" value="${info.entry.commit(revision)} ${info.entry(path)}" />
       <echo message="build.id is ${build.id}" />
   </target>
 
