@@ -12,7 +12,7 @@
          onmouseover="setAttribute('fgcolor', blue)"
          onmouseout="setAttribute('fgcolor', black)"
          onclick="lz.Browser.loadURL(this.datapath.xpathQuery('@href'), target)"/>
-  <class name="wheelscrollbar" extends="scrollbar">
+  <class name="wheelscrollbar" extends="scrollbar" mousewheelactive="true">
     <handler name="onmousewheeldelta" reference="lz.Keys" method="mousewheelUpdate"/>
   </class>
 
