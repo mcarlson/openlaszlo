@@ -58,9 +58,9 @@ public class LzHTTPLoader {
     }
 
     // Default callback handlers
-    public var loadSuccess:Function;
-    public var loadError:Function;
-    public var loadTimeout:Function;
+    public var loadSuccess:Function = function (...data) { trace('loadSuccess callback not defined on', this); }
+    public var loadError:Function   = function (...data) { trace('loadError callback not defined on', this); };
+    public var loadTimeout:Function = function (...data) { trace('loadTimeout callback not defined on', this); };
 
     /* Returns the response as a string  */
     public function getResponse () :String {

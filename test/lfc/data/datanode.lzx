@@ -69,7 +69,6 @@
             zdat.removeChild( zdat.getLastChild() );
             assertTrue(xmlstringequals( '<foo z="77" x="33"><aa/>some text<bb/>more text</foo>' , zdat.serialize() ));
 
-
             zdat.getFirstChild().setChildNodes( [ new LzDataElement( 'first' ),
                                                 new LzDataText( 'second' ) ] );
             assertTrue(xmlstringequals( '<foo z="77" x="33"><aa><first/>second</aa>some text<bb/>more text</foo>' , zdat.serialize() ));
@@ -86,7 +85,9 @@
             var arr = zdat.getElementsByTagName ( 'aa' ) ;
 
             assertEquals(  "<aa><first/>second</aa>" , arr[ 0 ].serialize());
-            assertEquals(  '<aa r="22" p="&#xa;&#xd;&#x9;"/>', arr[ 1 ].serialize());
+            assertTrue(xmlstringequals('<aa r="22" p="&#xa;&#xd;&#x9;"/>', arr[ 1 ].serialize()));
+
+           
 
             //zdat.setAttrNS (namespaceURI, qualifiedName, ;
             //zdat.getAttrNS ( "local" , "foo") ;

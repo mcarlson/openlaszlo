@@ -1,0 +1,56 @@
+/**
+ * support for debug messages
+ *
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ */
+
+
+/**
+ * This will be replaced by a more complete definition if the debugger
+ * is included
+ *
+ * @access private
+ */
+class LzMessage {
+  var message = '';
+  var length = 0;
+
+  function LzMessage (message = null) {
+    if (message != null) {
+      this.appendInternal('' + message, message);
+    }
+  }
+
+  function appendInternal (str, obj = null) {
+    this.message += str;
+    this.length = this.message.length;
+  }
+
+  function append (str) {
+    var len = arguments.length;
+    for (var i = 0; i < len; i++) {
+      this.appendInternal(String(arguments[i]));
+    }
+  }
+
+  // TODO: [2005-05-08 ptw] (LPP-5394) When toString is declared
+  // public, remove the swf9 special-case
+  if ($swf9) {
+    prototype.toString = function () { return this.message; }
+  } else {
+    function toString () {
+      return this.message;
+    }
+  }
+
+  function toHTML () {
+    // TODO: [2005-05-08 ptw] (LPP-5394) When toString is declared
+    // public, remove the swf9 special-case
+    if ($swf9) {
+      return this['toString']();
+    } else {
+      return this.toString();
+    }
+  }
+}

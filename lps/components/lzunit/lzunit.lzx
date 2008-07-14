@@ -264,8 +264,7 @@
                 var e = args[i];
                 if (typeof(e) == "string") {
                     s += e;
-                }
-                else {
+                } else {
                     s += Debug.__String(e);
                 }
             }
@@ -383,15 +382,15 @@
 
       @param message: the reason for the failure
      -->
-    <method name="fail" args="message">
+    <method name="fail" args="message"> <![CDATA[
         var suite = this.parent;
         suite.ontestfail.sendEvent(message);
         if (this.result) {
-          this.result.addFailure(message);
+          this.result.addFailure(message.toString());
         } else {
           Debug.debug('result is null on fail call: "' + message + '"');
         }
-        if ($debug) {
+        if ($debug && !$swf9) {
           var file = null, line = null;
           // Find the failing test, which is four frames up
           var bt = Debug.backtrace(4);
@@ -404,6 +403,7 @@
           // create an error, which will include a backtrace, if applicable
           Debug.__write(new LzError(file, line, message));
         }
+        ]]>
     </method>
 
     <!---
@@ -411,7 +411,7 @@
 
       @param message: the reason for the error
     -->
-    <method name="error" args="...args">
+    <method name="error" args="...args"> <![CDATA[
         var message = args[0];
         var suite = this.parent;
         suite.ontestfail.sendEvent(message);
@@ -420,11 +420,12 @@
         } else {
           Debug.debug('result is null on error call: "' + message + '"');
         }
-        if ($debug) {
+        if ($debug && !$swf9) {
           Debug.freshLine();
           // create an error, which will include a backtrace, if applicable
           Debug.__write(new LzError(null, null, message));
         }
+        ]]>
     </method>
     
     <!---
@@ -452,16 +453,17 @@
       @param ...:* Any number of parameters will be formatted using
       LzFormatter.formatToString and output to the display
     -->
-    <method name="displayMessage">
-        var message = this.formatToString.apply(this, arguments);
+    <method name="displayMessage" args="...args"> <![CDATA[
+        var message = this.formatToString.apply(this, args);
         if (this.result) {
           this.result.addMessage(message);
         }
-        if ($debug ) {
+        if ($debug && !$swf9) {
           Debug.freshLine();
           // create an error, which will include a backtrace, if applicable
           Debug.__write(new LzInfo(null, null, message));
         }
+        ]]>
     </method>
 
     <!---
@@ -475,8 +477,9 @@
       @param condition: the condition to be tested
       @param assertion: (optional) the assertion the condition represents
     -->
-    <method name="assertTrue" args="condition, ...assertion">
-        if (assertion) assertion = assertion[0];
+    <method name="assertTrue" args="condition, ...assertions">
+        var assertion;
+        if (assertions) assertion = assertions[0];
         if (! semanticsTrue(condition)) {
             this.fail(tformat(jsTrue(assertion) ? assertion : "True", true, condition));
         }
@@ -495,8 +498,9 @@
       @param condition: the condition to be tested
       @param assertion: (optional) the assertion the condition represents
     -->
-    <method name="assertFalse" args="condition, ...assertion">
-        if (assertion) assertion = assertion[0];
+    <method name="assertFalse" args="condition, ...assertions">
+        var assertion;
+        if (assertions) assertion = assertions[0];
         if (!! semanticsTrue(condition)) {
             this.fail(tformat(jsTrue(assertion) ? assertion :  "False", false, condition));
         }
@@ -510,8 +514,9 @@
       @param actual: the actual value
       @param message: (optional) the failure message
     -->
-    <method name="assertEquals" args="expected, actual, ...message">
-        if (message) message = message[0];
+    <method name="assertEquals" args="expected, actual, ...messages">
+        var message;
+        if (messages) message = messages[0];
         <!-- note NaN compares are always false -->
         if (! (expected == actual)) {
             this.fail(tformat(jsTrue(message) ? message :  "Equals", expected, actual));
@@ -527,9 +532,10 @@
       @param delta: the tolerance
       @param message: (optional) the failure message
     -->
-    <method name="assertWithin" args="expected, actual, delta, ...message">
+    <method name="assertWithin" args="expected, actual, delta, ...messages">
         <![CDATA[
-            if (message) message = message[0];
+            var message;
+            if (messages) message = messages[0];
             // handle infinite expected
             if (expected == actual) return;
 
@@ -549,8 +555,9 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertNull" args="object, ...message">
-        if (message) message = message[0];
+    <method name="assertNull" args="object, ...messages">
+        var message;
+        if (messages) message = messages[0];
         if (object !== null) {
            this.fail(tformat(jsTrue(message) ? message : "Null",
                        null, object));
@@ -564,8 +571,9 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertNotNull" args="object, ...message">
-        if (message) message = message[0];
+    <method name="assertNotNull" args="object, ...messages">
+        var message;
+        if (messages) message = messages[0];
         if (object === null) {
            this.fail(tformat(jsTrue(message) ? message : "NotNull",
                        "non-null value", object));
@@ -579,8 +587,9 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertUndefined" args="object, ...message">
-        if (message) message = message[0];
+    <method name="assertUndefined" args="object, ...messages">
+        var message;
+        if (messages) message = messages[0];
         if (typeof(object) != "undefined") {
            this.fail(tformat(jsTrue(message) ? message : "Undefined",
                        "undefined value", object));
@@ -594,8 +603,9 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertNotUndefined" args="object, ...message">
-        if (message) message = message[0];
+    <method name="assertNotUndefined" args="object, ...messages">
+        var message;
+        if (messages) message = messages[0];
         if (typeof(object) == "undefined") {
            this.fail(tformat(jsTrue(message) ? message : "NotUndefined",
                        "defined value", object));
@@ -611,9 +621,10 @@
       @param actual: the actual value
       @param message: (optional) the failure message
     -->
-    <method name="assertSame" args="expected, actual, ...message">
+    <method name="assertSame" args="expected, actual, ...messages">
     <![CDATA[
-        if (message) message = message[0];
+        var message;
+        if (messages) message = messages[0];
         // Use typeof to compare undefined without warnings
         if (typeof(expected) == "undefined" &&
             typeof(actual) == "undefined") {
@@ -635,8 +646,9 @@
       @param actual: the actual value
       @param message: (optional) the failure message
     -->
-    <method name="assertNotSame" args="expected, actual, ...message">
-        if (message) message = message[0];
+    <method name="assertNotSame" args="expected, actual, ...messages">
+        var message;
+        if (messages) message = messages[0];
         if (expected === actual) {
             // In-line Test.tformat so we can invert the sense
             var msg = LzFormatter.prototype.formatToString(
@@ -706,16 +718,16 @@
       @param theTestName: (optional) the test to run, if not supplied
       the test with the name of the TestCase is run
     -->
-    <method name="run" args="theTestResult, theTestName">
+    <method name="run" args="theTestResult, theTestName">  <![CDATA[
         dw("TestCase.run(", theTestName, ")");
         setResult(theTestResult);
         var dn = this._dbg_name instanceof Function ? this._dbg_name() : this._dbg_name;
-        var tn = this._dbg_typename instanceof Function ? this._dbg_typename() : this._dbg_typename;
+         var tn = this._dbg_typename instanceof Function ? this._dbg_typename() : this._dbg_typename;
         var prefix = (dn != tn) ? dn + ' >>> ' : ''
         this.result.startTest(prefix + theTestName);
         setUp();
-        <!-- capture source warnings as errors around test -->
-        <!-- TODO: [2002-11-16 ptw] try/finally -->
+        //<!-- capture source warnings as errors around test -->
+        //<!-- TODO: [2002-11-16 ptw] try/finally -->
         var wrapper = function (fn, ln, msg) {
             with(arguments.callee.env) {
                 if (! inrsw) {
@@ -727,8 +739,8 @@
                 }
             }
         }
-        <!-- hand-crafted closure -->
-        if ($debug) {
+        //<!-- hand-crafted closure -->
+        if ($debug && !$swf9) {
           wrapper.env = {inrsw: false, rsw: $reportSourceWarning, testcase: this};
           var savedrsw = $reportSourceWarning;
           if (catchErrors) {
@@ -736,14 +748,15 @@
           }
         }
         runTest(theTestName);
-        if ($debug) {
+        if ($debug && !$swf9) {
           if (catchErrors) {
               $reportSourceWarning = savedrsw;
           }
         }
-        <!-- end capture source warnings -->
+        //<!-- end capture source warnings -->
         tearDown();
         return this.result;
+        ]]>
     </method>
 
     <!---
@@ -995,12 +1008,12 @@
       @keywords private
       @param ...:* format args
     -->
-    <method name="addMessage">
-        messages.push(readout.formatToString.apply(readout, arguments));
+    <method name="addMessage" args="...args">
+        messages.push(readout.formatToString.apply(readout, args));
         update();
     </method>
 
-    <method name="myToString">
+    <method name="toString">
         var s = "Tests: " + this.totalTests +
                  " Failures: " + failedTests +
                  " Errors: " + erroredTests;
@@ -1074,12 +1087,6 @@
     </view>
 
 </class>
-
-
-<script>
-  // TODO [2004-08-10 ptw] Workaround for SWF6 toString default bug
-  lz.TestResult.prototype.toString = lz.TestResult.prototype.myToString;
-</script>
 
 <!--
   A TestSuite is a view with any number of children.  The children

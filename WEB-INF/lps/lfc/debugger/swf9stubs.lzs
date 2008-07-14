@@ -36,8 +36,86 @@ dynamic class LzDebugService {
         write.apply(Debug, args);
     }
 
-    public function __String (thing, pretty=null, limit=null, unique=null):String { return new String( thing ); }
+    public function __String (thing, pretty=null, limit=null, unique=null):String { return ""+ thing ; }
 }
 
 var Debug = new LzDebugService();
 lz.DebugService = LzDebugService;  // publish
+
+
+class LzMessage {
+    var message = "";
+    function LzMessage (...args) {
+        if (typeof (args[0]) == "string")  {
+            this.message = args[0];
+        }
+    }
+
+    function append (...args) {
+        this.message += args[0];
+    }
+
+    function appendInternal (...args) {
+        this.message += args[0];
+    }
+
+    function toString () {
+        return message;
+    }
+
+}
+
+class LzSourceMessage extends LzMessage {
+    var file;
+    var line
+        
+function LzSourceMessage (file:String=null, line:Number=0, message:String='') {
+  // Append a backtrace if there is one -- skip back to the
+  // $reportSourceWarning or warnInternal frames.
+  this.file = file;
+  this.line = line;
+  if (message instanceof LzMessage) {
+    this.message = message;
+  } else {
+    this.message = new LzMessage(message);
+  }
+}
+
+}
+
+/**
+  * A Warning is a sourceMessage with the tag 'WARN'
+  * @access private
+  */
+class LzWarning extends LzSourceMessage {
+    function LzWarning (file, line, message) {
+        super(file, line, message);
+    }
+}
+
+
+class LzError extends LzSourceMessage {
+    function LzError (file, line, message) {
+        super(file, line, message);
+    }
+}
+
+class LzDebug extends LzSourceMessage {
+    function LzDebug (file, line, message) {
+        super(file, line, message);
+    }
+}
+
+class LzInfo extends LzSourceMessage {
+    function LzInfo (file, line, message) {
+        super(file, line, message);
+    }
+}
+
+
+var  $reportSourceWarning = function (...ignore) { };
+var  $reportUndefinedObjectProperty = function (...ignore) { };
+var  $reportUndefinedProperty = function (...ignore) { };
+var  $reportUndefinedVariable = function (...ignore) { };
+var  $reportNotFunction = function (...ignore) { };
+var  $reportUndefinedMethod = function (...ignore) { };
