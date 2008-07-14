@@ -53,7 +53,7 @@
     </handler>
 
     <!--- @keywords private -->
-    <method name="startCheck">
+    <method name="startCheck" args="v">
         <![CDATA[
         if (this.text != null && this.text != "") {
             this._mousein = true;
@@ -131,7 +131,7 @@
     ]]></method>
 
     <!--- @keywords private -->
-    <method name="hideTip">
+    <method name="hideTip" args="v">
         this._mousein = false;
         canvas.tooltipview.setAttribute('visible',  false );
     </method>
