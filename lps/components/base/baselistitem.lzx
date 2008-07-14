@@ -44,13 +44,13 @@
         <!--- @keywords private -->
         <attribute name="_textdatapath" value="null"/>
         <!--- @keywords private -->
-        <method name="dataBindAttribute" args="attr, path">
+        <method name="dataBindAttribute" args="attr, path, type">
             if (this._parentcomponent.dataoption == "lazy" ||
                 this._parentcomponent.dataoption == "resize") {
                 if (attr == 'text') this._textdatapath = path;
                 else if (attr == 'value') this._valuedatapath = path;
             }
-            super.dataBindAttribute(attr, path);
+            super.dataBindAttribute(attr, path, type);
         </method>
 
         <!--- @keywords private -->

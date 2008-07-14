@@ -29,7 +29,7 @@
                  <handler name="onclick">
                      if (classroot.height == classroot.minheight) {
                         classroot.open.setAttribute('visible',true);
-                        newheight = classroot.maxheight;
+                        var newheight = classroot.maxheight;
                      } else {
                         classroot.open.setAttribute('visible',false);
                         newheight = classroot.minheight;
