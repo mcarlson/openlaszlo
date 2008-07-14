@@ -95,16 +95,27 @@
         <!--- returns the number of items in the list. When
             data has not yet been set, will return zero -->
         <method name="getNumItems">
-           if (!this.cloneManager) {
+            <![CDATA[
+            if (!this.cloneManager) {
                 var svs = immediateparent.subviews;
                 if (svs == null || svs.length == 0) {
-                     return 0;
+                    return 0;
                 } else {
-                     this.cloneManager = svs[0].cloneManager
+                    this.cloneManager = svs[0].cloneManager
                 }
-           }
-          if (!this.cloneManager['nodes']) return 0;
-          return this.cloneManager.nodes.length;
+            }
+            if(this.cloneManager != null){
+                if (!this.cloneManager['nodes']){
+                    return 0;
+                } else {
+                    return this.cloneManager.nodes.length;
+                }
+            } else if(svs[0].data) {
+                return 1;
+            } else {
+                return 0;
+            }
+            ]]>
         </method>
 
        <!--- @keywords private

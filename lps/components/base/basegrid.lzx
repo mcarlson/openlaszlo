@@ -133,6 +133,16 @@
                 return this._initialselection;
             }
         </method>
+        
+        <method name="setContentdatapath" args="cdp" >
+            if (this.isinited) {
+                this._getReplicator().setDatapath( cdp );
+            }
+            this.contentdatapath = cdp;
+            if (this["oncontentdatapath"]) {
+                this.oncontentdatapath.sendEvent( cdp );
+            }
+        </method>
 
         <!--- Move the selection to the next view. -->
         <method name="selectNext">
@@ -431,7 +441,7 @@
             }
 
             if ( ! this.hassetheight ){
-                this.setAttribute( "shownitems" , 8 );
+                this.setAttribute( "shownitems", (this.shownitems != -1 ? this.shownitems : 8) );//take the value of "shownitems" if provided
             }
 
             this.header.bringToFront();

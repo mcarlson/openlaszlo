@@ -12,6 +12,9 @@
         <!--- If false, the grid will never show a horizontal scrollbar,
               even if the rows are wider than the grid.-->
         <attribute name="showhscroll" value="true"/>
+        <!--- If false, the grid will never show a vertical scrollbar,
+            even if the rows are wider than the grid.-->
+        <attribute name="showvscroll" value="true"/>
         <!--- @keywords private -->
         <attribute name="needshscroll" 
                    value="${ header.width &lt; header.hcontent.width }"/>
@@ -27,9 +30,9 @@
 
         <!--- @keywords private -->
         <attribute name="_columnclass" value="lz.gridtext" />
-
+        
         <!--- @keywords private -->
-        <scrollbar placement="content" name="_scrx"/>
+        <scrollbar placement="content" name="_scrx" visible="${parent.showvscroll}"/>
 
         <!--- @keywords private -->
         <scrollbar axis="x" scrolltarget="classroot.header.hcontent"
@@ -42,8 +45,9 @@
             <button clickable="false" 
                     placement="header"
                     x="${ immediateparent.hcontent.width }"
-                    width="${Math.max( classroot._scrx.width , 
-                                        parent.width - this.x )}"
+                    width="${classroot['_scrx'] ?
+                        Math.max(classroot['_scrx'].width, parent.width - this.x) :
+                        parent.width - this.x}"
                     focusable="false" />
         </state>
 
