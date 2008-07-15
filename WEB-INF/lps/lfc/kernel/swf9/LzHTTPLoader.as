@@ -338,6 +338,10 @@ public class LzHTTPLoader {
     // parseXML flag : if true, translate native XML tree into LzDataNode tree,
     //                 if false, don't attempt to translate the XML (if it exists)
     public function loadXMLDoc (method:String, url:String, headers:Object, postbody:String, ignorewhite:Boolean) :void {
+
+        var secure:Boolean = (url.indexOf("https:") == 0);
+        url = lz.Browser.toAbsoluteURL( url, secure );
+
         if (this.loader == null) {
             // TODO [hqm 2008-01] wonder if we should be throwing an
             // exception or returning some indication that the send
