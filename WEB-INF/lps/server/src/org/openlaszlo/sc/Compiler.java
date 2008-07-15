@@ -265,6 +265,7 @@ public class Compiler {
 
     // Disable debug compilation for swf9
     if ("swf9".equals((String)options.get(RUNTIME))) {
+      options.putBoolean(DEBUG_SWF9, options.getBoolean(DEBUG));
       options.putBoolean(DEBUG, false);
       options.putBoolean(DEBUG_BACKTRACE, false);
     }
@@ -454,6 +455,7 @@ public class Compiler {
   public static String CONSTRAINT_FUNCTION = "constraintFunction";
   public static String DEBUG = "debug";
   public static String DEBUG_BACKTRACE = "debugBacktrace";
+  public static String DEBUG_SWF9 = "debugSWF9";
   public static String DEBUG_SIMPLE = "debugSimple";
   public static String DEBUG_EVAL = "debugEval";
   public static String DUMP_AST_INPUT = "dumpASTInput";

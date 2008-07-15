@@ -35,12 +35,6 @@ public class SWF9External {
   /** Number of errors shown before truncating */
   static public final int MAX_ERRORS_SHOWN = 50;
 
-  // TODO: [2007-12-12 dda] make USE_COMPILER_DEBUG_FLAG a compiler option.
-  /**
-   * When set, use the debug flag for the compiler
-   */
-  public static final boolean USE_COMPILER_DEBUG_FLAG = true;
-
   /**
    * A directory we create under the Java runtime's temp dir,
    * that contains our compilation work directories, one for each compilation.
@@ -609,9 +603,9 @@ public class SWF9External {
     if (!swf9Warnings) {
       cmd.add("-compiler.show-actionscript-warnings=false");
     }
-    
+
     cmd.add("-compiler.source-path+=" + workdir.getPath());
-    if (USE_COMPILER_DEBUG_FLAG) {
+    if (options.getBoolean(Compiler.DEBUG_SWF9)) {
       cmd.add("-debug=true");
     }
     cmd.add("-output");
