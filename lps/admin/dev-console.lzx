@@ -152,7 +152,7 @@
                     <radiobutton id="rbdhtml" value="'dhtml'"
                                  selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
 
-                    <radiobutton id="rb9" value="'swf9'" opacity="${app_runtime == 'swf9' ? 1 : 0}"
+                    <radiobutton id="rb9" value="'swf9'" 
                                  selected="${app_runtime == 'swf9'}">swf9</radiobutton >
                     <!--
                     <radiobutton id="rb10" value="'swf10'" 
@@ -162,9 +162,7 @@
 
                 </radiogroup>
                 <view x="$once{rg_runtime.x + rg_runtime.width + 14}">
-                    <view height="14" width="1" bgcolor="black" y="9"
-                        onclick="rb9.animate('opacity', 1, 1500);
-                                 parent.animate('x', 200, 1000);"/>
+                    <view height="14" width="1" bgcolor="black" y="9" />
                     <checkbox id="cb_debug" value="${app_debug == 'true'}"
                             x="16" y="8">Debug</checkbox>
                     <checkbox id="cb_backtrace" 
