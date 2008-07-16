@@ -1696,9 +1696,10 @@ public dynamic class LzNode extends LzEventable {
    *
    * @access public
    */
-  function updateData () {
-    if (this.datapath) this.datapath.updateData();
-  }
+
+  function updateData () /*:String*/ { 
+    return void(0); 
+  } 
 
   /*
    * If you use LzSelectionManager, you can decide the selection method,
