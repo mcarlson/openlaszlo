@@ -155,6 +155,12 @@ public class LzGlobalMouseService extends LzEventable {
    */
   var onclick = LzDeclaredEvent;
 
+  /** Sent whenever the mouse button is double-clicked
+   * @access public
+   * @lzxtype event
+   */
+  var ondblclick = LzDeclaredEvent;
+
   /** @access private */
   var __movecounter = 0;
 

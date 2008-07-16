@@ -17,6 +17,7 @@ dynamic public class LzSprite extends Sprite {
   import flash.events.*;
   import flash.ui.*;
   import flash.geom.*;
+  import flash.utils.*;
   import mx.controls.Button;
   import flash.net.URLRequest;  
 }#
@@ -155,6 +156,7 @@ dynamic public class LzSprite extends Sprite {
           // frames: ["lps/components/lz/resources/focus/focus_bot_rt_shdw.png"], width: 9, height: 9};
 
 
+          //Debug.write('setting resource', r);  
           this.resource = r;
 
           var res = LzResourceLibrary[r];
@@ -168,6 +170,9 @@ dynamic public class LzSprite extends Sprite {
           this.resourcewidth = res.width;
           this.resourceheight = res.height;
           this.owner.resourceevent('totalframes', res.frames.length, false, false);
+          if (this.resourceObj == null) {
+              this.createResourceBitmap()  
+          }
 
           // instantiate resource at frame 1
           this.stop(1);
@@ -190,7 +195,7 @@ dynamic public class LzSprite extends Sprite {
           var info:LoaderInfo = imgLoader.contentLoaderInfo;
           info.addEventListener(Event.INIT,       loaderInitHandler);
           info.addEventListener(IOErrorEvent.IO_ERROR,       loaderEventHandler);
-          Debug.write('sprite setsource load ', url);
+          //Debug.write('sprite setsource load ', url);
           imgLoader.load(new URLRequest(url));
       }
 
@@ -209,8 +214,6 @@ dynamic public class LzSprite extends Sprite {
 
           // trace(event);
       }
-
-
 
       public function loaderEventHandler(event:Event):void {
       var loader:Loader = Loader(event.target.loader);
@@ -353,6 +356,30 @@ dynamic public class LzSprite extends Sprite {
           }
       }
 
+      /** 
+        * @field DisplayObject from: Asset to copy from
+        * @field Number w: Width of the resource to copy, in pixels
+        * @field Number h: Height of the resource to copy, in pixels
+        * @field BitmapData to: Where to copy the bitmap.  If unspecified, a new BitmapData instance containing data from 'from' is returned.
+        * @field Matrix m: Optional transformation matrix
+        */
+      function copyBitmap(from, w, h, to = null, m = null) {
+        if (w == 0 || h == 0) return from;
+        if (w < 1) w = 1;
+        if (h < 1) h = 1;
+        var tmp = new BitmapData(w, h, true, 0x000000ff);
+
+        tmp.draw(from);
+
+        // If to wasn't supplied, return the bitmap as-is.
+        if (! to) {
+            return tmp;
+        }
+        //Debug.write('copying', from, w, h, to, m);
+        to.draw(tmp, m, null, null, null, true);
+        tmp.dispose();
+      }
+
       public function debugClick(event:Event):void {
           trace("debugClick "+event + " " +event.target);
       }
@@ -493,13 +520,13 @@ dynamic public class LzSprite extends Sprite {
       */
       public function stop( fn:*, rel:* = null ):void {
           // So frames are one based, not zero based? 
+          this.frame = fn;
           var framenumber = fn - 1;
           if (this.resource == null) {
               return;
           }
           var resinfo = LzResourceLibrary[this.resource];
           var frames = resinfo.frames;
-          var prev_resource  = this.resourceObj;
           var assetclass;
 
           // single frame resources get an entry in LzResourceLibrary which has
@@ -515,18 +542,48 @@ dynamic public class LzSprite extends Sprite {
           }
           var asset:DisplayObject = this.resourceCache[framenumber];
           if (asset == null) {
-              //trace('CACHE MISS, new ',assetclass);
+              //Debug.write('CACHE MISS, new ',assetclass);
               asset = new assetclass();
               asset.scaleX = 1.0
               asset.scaleY = 1.0;
               this.resourceCache[framenumber] = asset;
           }
-          this.resourceObj = asset;
-          addChild(asset);
-          if (prev_resource != null && prev_resource != asset) {
-              removeChild(prev_resource);
+
+          var oRect:Rectangle = asset.getBounds( asset );
+          if (oRect.width == 0 || oRect.height == 0) {
+            // it can take a while for new resources to show up.  Call back until we have a valid size.
+            setTimeout(this.__resetframe, 5);
+            return;
           }
+
+          var res = this.resourceObj; 
+          var rect = new Rectangle(0, 0, this.resourcewidth, this.resourceheight);
+          res.bitmapData.fillRect(rect, 0x00000000);
+          copyBitmap(asset, this.resourcewidth, this.resourceheight, res.bitmapData);
+          //Debug.write('set resource to', asset, oRect); 
+
           this.applyStretchResource();
+      }
+
+      public function __resetframe():void {
+          this.stop(this.frame);
+      }
+
+      // Create a bitmap to hold resources
+      public function createResourceBitmap():void {
+          var w = this.resourcewidth;
+          var h = this.resourceheight;
+          if (w <= 0 || h <= 0) return;
+          if (w < 1) w = 1;
+          if (h < 1) h = 1;
+          if (w == this.lastreswidth && h == this.lastresheight) return;
+          this.lastreswidth = w;
+          this.lastresheight = h;
+          //Debug.write('creating', w, h);  
+          this.__bitmap = new BitmapData( w, h, true, 0x00000000 );
+          if (this.resourceObj) removeChild(resourceObj);
+          this.resourceObj = new Bitmap(this.__bitmap, 'auto', true);
+          addChild(this.resourceObj)
       }
 
 
@@ -591,7 +648,7 @@ dynamic public class LzSprite extends Sprite {
 
           if ( xory == null || xory == "y"|| xory=="height" || xory=="both" ){
               this._setrescheight = true;
-                    }          
+          }          
           this.applyStretchResource();
       }
 
@@ -600,15 +657,19 @@ dynamic public class LzSprite extends Sprite {
           // Don't try to do anything while an image is loading
           if ( (res == null) || (res is Loader && !this.resourceLoaded)) { return; }
 
-          res.scaleX = 1.0;
-          if (this._setrescwidth) {
-              res.scaleX =  this.lzwidth / this.resourcewidth;
+          var scaleX = 1.0;
+          if (this.lzwidth && this._setrescwidth) {
+              var scaleX =  this.lzwidth / this.resourcewidth;
           } 
 
-          res.scaleY = 1.0;
-          if (this._setrescheight) {
-              res.scaleY =  this.lzheight / this.resourceheight;
+          var scaleY = 1.0;
+          if (this.lzheight && this._setrescheight) {
+              var scaleY =  this.lzheight / this.resourceheight;
           } 
+
+          res.scaleX = scaleX;
+          res.scaleY = scaleY;
+          //Debug.write(res, scaleX, scaleY, res.width, res.height);
       }
 
 
