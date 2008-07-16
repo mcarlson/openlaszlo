@@ -29,7 +29,7 @@
             this.doIt( dp1 , 'localme');
         </method>
 
-        <method name="test2">
+        <method name="test2" args="...ignore">
             if ( ! this.dp2ready ){
                 if ( ! this.t2del ){
                     Debug.write( "test isn't done until async test runs" );
