@@ -589,7 +589,7 @@ override public function getDelegateCount ( ){
 }
 
 /** @access private */
-public override function toString (){
+override public function toString (){
     return ( "LzEvent");
 }
 
@@ -598,7 +598,7 @@ if ($debug) {
   * If debugging, add an informative name
   * @access private
   */
-override function _dbg_name (){
+function _dbg_name (){
     return Debug.formatToString("%0.48w.%s", this._dbg_eventSender, this._dbg_eventName);
 }
 }

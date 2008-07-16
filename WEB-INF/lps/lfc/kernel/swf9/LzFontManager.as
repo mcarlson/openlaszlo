@@ -140,6 +140,8 @@ public class LzFontManager {
 
     static public var __fontnameCacheMap = {};
 
+    static var __debugWarnedFonts = {};
+
     /**
      * Convert an LZX font name to one that the Flash runtime can render.
      * This involves removing whitespace, and changing CSS generic font family

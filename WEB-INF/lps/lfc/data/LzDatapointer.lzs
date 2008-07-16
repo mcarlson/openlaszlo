@@ -1301,7 +1301,7 @@ function serialize () :String {
 
 if ($debug) {
 /** @access private */
-function _dbg_name () :String {
+override function _dbg_name () :String {
     if (this.p) {
         return this.p._dbg_name();
     }

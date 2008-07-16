@@ -125,7 +125,7 @@ override function toString () :String {
 }
 
 if ($debug) {
-    function _dbg_name () {
+    override function _dbg_name () {
         return Debug.formatToString("%w.%s=\"$path{%w}\"", this.node, this.setAttr, this.xpath);
     }
 }

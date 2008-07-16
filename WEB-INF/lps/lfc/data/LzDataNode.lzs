@@ -292,8 +292,7 @@ static const DOCUMENT_NODE :int = 9;
   */
 static function stringToLzData( str:String, trimwhitespace:Boolean = false, nsprefix:Boolean = false ) :LzDataElement {
     if ( $debug ){
-      Debug.info("%s.%w is deprecated.  Use `LzDataElement.stringToLzData` instead.",
-                 this, arguments.callee);
+        Debug.info("LzDataNode.stringToLzData is deprecated.  Use `LzDataElement.stringToLzData` instead.");
     }
     return LzDataElement.stringToLzData(str, trimwhitespace, nsprefix);
 

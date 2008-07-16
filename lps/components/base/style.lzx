@@ -118,11 +118,27 @@
         <br/>param dictionary args: the attributes for the new lz.style
     -->
     <method name="extend" args="args">
-        var temp = {};
+        var temp = new lz.style();
+
+        temp.canvascolor = this.canvascolor;
+        temp.textcolor = this.textcolor;
+        temp.textfieldcolor = this.textfieldcolor;
+        temp.texthilitecolor = this.texthilitecolor;
+        temp.textselectedcolor = this.textselectedcolor;
+        temp.textdisabledcolor = this.textdisabledcolor;
+        temp.basecolor = this.basecolor;
+        temp.bgcolor = this.bgcolor;
+        temp.hilitecolor = this.hilitecolor;
+        temp.selectedcolor = this.selectedcolor;
+        temp.disabledcolor = this.disabledcolor;
+        temp.bordercolor = this.bordercolor;
+        temp.bordersize = this.bordersize;
+        temp.menuitembgcolor = this.menuitembgcolor;
+        temp.isdefault = this.isdefault;
+
         for (var p in args) {
             temp[p] = args[p];
         }
-        temp.__proto__ = this;
 
         new LzDelegate(temp, '_forwardstylechanged', this, 'onstylechanged');
         return temp;

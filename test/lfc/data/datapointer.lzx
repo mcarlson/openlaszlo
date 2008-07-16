@@ -1,10 +1,13 @@
 <library>
     <include href="lzunit/lzunit.lzx" />
 
-    <dataset name="localme" src="testdata.xml"/>
+    <dataset name="localme" src="testdata.xml" trimwhitespace="false"/>
 
     <dataset name="loadme" type="http" src="http:testdata.xml" request="true" trimwhitespace="false">
     </dataset>
+
+    <datapointer xpath="loadme:/data" name="mp" />
+
 
     <dataset name="syntax">
         <data a="avalue" b="bvalue" a.b="a.bvalue"/>
@@ -53,7 +56,6 @@
             assertEquals( ' some Text ' , dp.xpathQuery( '*[3]/text()' ) );
             assertEquals( " some Text  some Text " ,
                           dp.xpathQuery( '*/text()' ).join("") );
-
 
             dp.setPointer  ( global[ dsname ].getFirstChild() ) ;
             assertEquals( 'data' , dp.getNodeName() );

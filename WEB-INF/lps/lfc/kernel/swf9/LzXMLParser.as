@@ -24,7 +24,7 @@ public class LzXMLParser {
   * @return nativeXMLObject: An XML DOM object native to the runtime platform
   */
 public static function parseXML( str, trimwhitespace, nsprefix ){
-    XML.ignoreWhitespace = true;
+    XML.ignoreWhitespace = trimwhitespace;
     var xmlobj:XML = XML(str);
     xmlobj.normalize();
     return xmlobj;

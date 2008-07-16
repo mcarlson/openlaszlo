@@ -755,7 +755,15 @@
   <event name="onerror" />
   <!-- The ontimeout event is recevied when a request times out -->
   <event name="ontimeout" />
- 
+
+  <event name="onownerDocument" />
+  <event name="onDocumentChange"/>
+  <event name="onparentNode" />
+  <event name="onchildNode" />
+  <event name="onchildNodes" />
+  <event name="onattributes" />
+  <event name="onnodeName" />
+
   <!-- An instance of LzDataprovider, which handles data requests -->
   <attribute name="dataprovider" type="expression"/>
 

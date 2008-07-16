@@ -121,7 +121,7 @@
             assertEquals( 0 , this.collector.ondata.length );
             assertEquals( 0 , this.collector.applyData.length );
             p1.setAttr( 'foo' , true );
-            assertEquals ( true , et1.data );
+            assertEquals ( true , et1.data );  // 
             assertEquals( 2 , this.collector.ondata.length );
             assertEquals( 2 , this.collector.applyData.length );
             this.clearCollected();
