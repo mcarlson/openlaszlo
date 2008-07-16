@@ -13,7 +13,7 @@
 
         <datapointer xpath="ds_head:/data" name="dp2" ondata="parent.dp2ready = true"/>
 
-        <method name="test2">
+        <method name="test2" args="...ignore">
             if ( ! this.dp2ready ){
                 if ( ! this.t2del ){
                     Debug.write( "test isn't done until async test runs" );

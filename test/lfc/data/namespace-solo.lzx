@@ -15,14 +15,15 @@
 
         <datapointer xpath="solons:/persons" name="dp2" ondata="parent.dp2ready = true"/>
 
-        <method name="test2">
+        <method name="test2" args="ea=null">
+          Debug.write('namespace-solo: test2 called', this.waitcnt, ea);
             if ( ! this.dp2ready ){
                 if ( ! this.t2del ){
                     Debug.write( "test isn't done until async test runs" );
                     this.t2del = new LzDelegate( this , 'test2' );
                 }
 
-                if ( this.waitcnt++ > 2000 ){
+                if ( this.waitcnt++ > 30 ){
                     fail( "namespace-solo: Didn't get async data" );
                 } else {
                     lz.Idle.callOnIdle( this.t2del );

@@ -26,7 +26,7 @@
       edata.doRequest();
     </method>
 
-    <method name="test1">
+    <method name="test1" args="...ignore">
           Debug.write("this.dpready = ",this.dpready);
       if ( ! this.dpready ){
           if ( ! this.t2del ){
@@ -49,7 +49,11 @@
         <method name="doIt" args="dp">
             <![CDATA[
                      Debug.write("/echo/headers/text()=",dp.xpathQuery( '/echo/headers/text()' ));
-                     assertTrue(  dp.xpathQuery( '/echo/headers/text()' ).indexOf('pink-elephants/xml') > 0 , "looking for pink-elephants/xml header ");
+                     var headers =   dp.xpathQuery( '/echo/headers/text()' );
+                     assertTrue(headers != null);
+                     if (headers != null) {
+                        assertTrue(headers.indexOf('pink-elephants/xml') > 0 , "looking for pink-elephants/xml header ");
+                     }
             ]]>
         </method>
         <method name="addTests"> 

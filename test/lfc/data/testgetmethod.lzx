@@ -25,7 +25,7 @@
       dsget.doRequest();
     </method>
 
-    <method name="test1">
+    <method name="test1" args="...ignore">
           Debug.write("this.dpready = ",this.dpready);
       if ( ! this.dpready ){
           if ( ! this.t2del ){

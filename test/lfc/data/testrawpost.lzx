@@ -24,7 +24,7 @@
       prdata.doRequest();
     </method>
 
-    <method name="test1">
+    <method name="test1" args="...ignore">
       if ( ! this.dpready ){
           if ( ! this.t2del ){
               Debug.write( "test isn't done until async test runs" );

@@ -27,7 +27,7 @@
         <datapointer xpath="solows_notrim:/persons" name="dp4" ondata="parent.dp4ready = true"/>
         <datapointer xpath="proxyws_notrim:/persons" name="dp5" ondata="parent.dp5ready = true"/>
 
-        <method name="test2">
+        <method name="test2" args="...ignore">
           <![CDATA[
             if ( ! (this.dp2ready && this.dp3ready && this.dp4ready && this.dp5ready) ){
                 if ( ! this.t2del ){

@@ -7,7 +7,8 @@
     <dataset name="lds" src="http:namespace.xml"   nsprefix="false" request="true" type="http" />
 
     <!-- nsprefix = true -->
-    <dataset name="ldsns" src="http:namespace.xml" nsprefix="true"  request="true" type="http" />
+    <dataset name="ldsns" src="http:namespace.xml" nsprefix="true"  request="true" type="http" 
+             ondata="Debug.write('ldsns got ondata',this)"/>
 
     <!-- top level dataset, inline compile-time inclusion -->
     <dataset name="topds" src="namespace.xml" nsprefix="false" />
@@ -45,14 +46,15 @@
         <dataset name="localdsns" src="namespace.xml" nsprefix="true"/>
 
 
-        <method name="test2">
+        <method name="test2" args="ea=null">
+          Debug.write('namespace: test2 called', this.waitcnt, ea);
             if ( ! this.dp2ready ){
                 if ( ! this.t2del ){
                     Debug.write( "test isn't done until async test runs" );
                     this.t2del = new LzDelegate( this , 'test2' );
                 }
 
-                if ( this.waitcnt++ > 2000 ){
+                if ( this.waitcnt++ > 30 ){
                     fail( "namespace: Didn't get async data" );
                 } else {
                     lz.Idle.callOnIdle( this.t2del );
@@ -116,6 +118,7 @@
             ]]>
             
         </method>
+
         <method name="addTests"> 
             this.addTest("test2");
         </method> 
