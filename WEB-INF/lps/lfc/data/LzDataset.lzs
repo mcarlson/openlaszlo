@@ -348,10 +348,6 @@ override function $lzc$set_name(name) {
         //for compatibility with dataNode API
         this.nodeName = name;
         
-        if (!('datasets' in canvas) || null == canvas.datasets ) {
-            canvas.datasets = {};
-        }
-        
         if ( this.oncanvas ){
             canvas[ name ] = this;
         } else {
@@ -462,7 +458,7 @@ override function setData( data , headers = null ) {
                 
     this.data = data;
 
-    if ('responseheaders' in this && this.responseheaders != null) {
+    if (this.responseheaders != null) {
         this.responseheaders.destroy();
     }
     this.responseheaders = headers;

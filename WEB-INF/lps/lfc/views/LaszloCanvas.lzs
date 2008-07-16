@@ -162,6 +162,7 @@ dynamic class LzCanvas extends LzView {
       */
     function LzCanvas ( parent = null, args = null, children = null, async = null) {
       super(parent, args, children, async);
+      this.datasets = {};
     }
 
     /**
@@ -457,8 +458,7 @@ var percentcreated;
 /** Dictionary of all named datasets.
   * @type Object
   */
-var datasets;
-
+var datasets = null;
 
 /**
   * Compares two version strings.

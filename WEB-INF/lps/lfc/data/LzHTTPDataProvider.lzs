@@ -304,7 +304,7 @@ class LzHTTPDataProvider extends LzDataProvider {
             // For proxied requests, we get back an XML wrapper
             // <resulset><body>DATA</body><headers>HEADERS</headers></resultset>
             // extract the headers and body below:
-            var hos = ('childNodes' in data.childNodes[1]) ? data.childNodes[1].childNodes : null;
+            var hos = (data.childNodes[1].childNodes) ? data.childNodes[1].childNodes : null;
             // get proxy metadata (header, etc) info if any
             if (hos != null) {
                 for ( var i = 0; i < hos.length; i++ ){
