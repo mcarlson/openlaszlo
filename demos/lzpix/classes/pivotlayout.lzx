@@ -177,17 +177,23 @@
             for(var i=0; i < l; i++) {
                 // get the i-th subview
                 var s = this.subviews[i]; s.index = i;
-                //if (s.visible == false) continue;
+                if (!s.intparent) continue;
+
+
                 //if ( i == pivotindex ) s.setBGColor(0x00FF00)
                 //else s.setBGColor(0xFF0000);
                               
-                if ( i != pivotindex ) s.intparent.setOpacity( dimmer );
+                if ( i != pivotindex) {
+                     s.intparent.setOpacity( dimmer );
+                }
 
                 
                 // set the position of that subview
                 s.setX( xpos );
                 s.setY( ypos );
-                s.txt.setAttribute('visible',  this.textvisible );
+                if (s.txt) {
+                   s.txt.setAttribute('visible',  this.textvisible );
+                }
                 
                 // set width and height of that subview
                 s.setWidth( itemwidth );
