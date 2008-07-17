@@ -1281,7 +1281,7 @@ public dynamic class LzNode extends LzEventable {
     }
 
     if ( !this.datapath ){
-      this.setDatapath( "." );
+      this.setAttribute('datapath', ".");
     }
 
     if ( ! this.__LZdelegates ){
@@ -1644,6 +1644,7 @@ public dynamic class LzNode extends LzEventable {
    * Sets the datacontext for the node to the xpath given as an argument
    * @access public
    * @param String dp: The string to use as the datapath.
+   * @deprecated Use setAttribute('datapath', ...) instead.
    */
   function setDatapath ( dp ) {
     if (null != this.datapath && dp != LzNode._ignoreAttribute) {

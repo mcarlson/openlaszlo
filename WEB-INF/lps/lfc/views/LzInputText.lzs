@@ -220,6 +220,7 @@ override function updateData () {
 /**
   * Sets whether user can modify input text field
   * @param Boolean enabled: true if the text field can be edited
+  * @deprecated Use setAttribute('enabled', ...) instead.
   */
 function setEnabled (enabled){
     this.setAttribute('focusable', enabled);

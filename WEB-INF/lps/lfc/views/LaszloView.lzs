@@ -1086,9 +1086,10 @@ var resourceheight:Number = 0;
   * To remove the previously set layout, use <code>{'class': 'none'}</code>
   * (Note that you must use <code>'class'</code> as the key, because
   * <code>class</code> is a keyword reserved for future use.)
+  * @deprecated Use setAttribute('layout', ...) instead.
   */
 function setLayout ( layoutobj ){
-
+    this.layout = layoutobj;
     if (!this.isinited) {
         this.__LZstoreAttr( layoutobj , "layout" );
         return;
@@ -1130,8 +1131,10 @@ function setLayout ( layoutobj ){
   * fontstyle) will cascade down the runtime view hierarchy.
   * @access private
   * @param String val: The value for the new font name
+  * @deprecated Use setAttribute('font', ...) instead.
   */
 function setFontName ( val ,prop = null){
+    this.font = val;
     this.fontname = val ;
     // Canvas has no sprite
     if (! this.sprite) {
@@ -1439,7 +1442,7 @@ function $lzc$set_visible( amVisible ) {
   * a datapath and there are no matching data nodes in its dataset.
   *
   * @param String amVisible: visibility of view
-  * @access private
+  * @deprecated Use setAttribute('visibility', ...) instead.
   */
 function setVisibility( amVisible ) {
     if (this.visibility == amVisible) return;
@@ -1489,6 +1492,7 @@ function __LZupdateShown( ) {
   * the new width, then the width is unset, and the width of the view will be
   * the size of its contents.
   * @param Number v: The new value for the width
+  * @deprecated Use setAttribute('width', ...) instead.
   */
 function setWidth ( v ){
     if (this._width != v) {
@@ -1538,6 +1542,7 @@ function setWidth ( v ){
     * 'null' is given for the new height, then the height is unset, and the height
     * of the view will be the size measured of its contents.
   * @param Number v: The new value for the height
+  * @deprecated Use setAttribute('height', ...) instead.
   */
 function setHeight ( v ){
     if (this._height != v) {
@@ -1584,6 +1589,7 @@ function setHeight ( v ){
   * Sets the opacity for the view.  The opacity is a number between 0.0
   * (transparent) and 1.0 (opaque).
   * @param Number v: The new value for the opacity
+  * @deprecated Use setAttribute('opacity', ...) instead.
   */
 function setOpacity ( v ){
     if (this.capabilities.opacity) {
@@ -1661,6 +1667,7 @@ function setY ( v, force = null){
 /**
   * Sets the <attribute>rotation</attribute> for the view to the given value.
   * @param Number v: The new value for <attribute>rotation</attribute>.
+  * @deprecated Use setAttribute('rotation', ...) instead.
   */
 function setRotation ( v ){
     if (this.capabilities.rotation) {
@@ -1693,6 +1700,7 @@ function setRotation ( v ){
   *
   * @param String align: The <attribute>alignment</attribute> for the
   * view. This is one of "left", "center", and "right"
+  * @deprecated Use setAttribute('align', ...) instead.
   *
   * @devnote TODO: [2008-02-07 ptw] Apparently we never supported
   * 'onalign', should we?
@@ -1742,6 +1750,7 @@ function __LZalignRight (e=null) {
 /**
   * Sets the x offset  
   * @param Integer o: The x offset
+  * @deprecated Use setAttribute('xoffset', ...) instead.
   */
 function setXOffset ( o ){
     this.__LZhasoffset = o != 0;
@@ -1754,6 +1763,7 @@ function setXOffset ( o ){
 /**
   * Sets the Y offset  
   * @param Integer o: The y offset
+  * @deprecated Use setAttribute('yoffset', ...) instead.
   */
 function setYOffset ( o ){
     this.__LZhasoffset = o != 0;
@@ -1845,6 +1855,7 @@ function $lzc$getBounds_dependencies ( who , self ){
   *
   * @param String valign: The vertical alignment for the view. This is
   * one of "top", "middle", and "bottom"
+  * @deprecated Use setAttribute('valign', ...) instead.
   *
   * @devnote TODO: [2008-02-07 ptw] Apparently we never supported
   * 'onvalign', should we?
@@ -1896,6 +1907,7 @@ function __LZvalignBottom (e=null) {
   * view or subview resources. Use the view method
   * <method>setColorTransform</method> to tint a view.
   * @param Integer c: A color in rgb format; for example, 0xff0000 is red.
+  * @deprecated Use setAttribute('fgcolor', ...) instead.
   */
 function setColor ( c ){
     this.sprite.setColor(c);
@@ -2516,6 +2528,7 @@ function sendToBack ( ){
   * movieclip frames.
   * 
   * @param Integer n: the number of the resource to show
+  * @deprecated Use setAttribute('frame', ...) instead.
   */
 function setResourceNumber( n ) {
     //Debug.write('setResourceNumber', n, this, this.playing)
@@ -2574,6 +2587,7 @@ function $lzc$set_stretches( stretch ){
 /**
   * Gives the view a bgcolor that is the same size as the view.
   * @param Integer bgc: The 0-FFFFFF number to be used for the new background color.
+  * @deprecated Use setAttribute('bgcolor', ...) instead.
   */
 function setBGColor ( bgc ) {
     bgc = lz.Utils.hextoint(bgc);
@@ -2631,6 +2645,7 @@ function removeMask () {
 /**
   * Makes a view clickable or not clickable.
   * @param Boolean amclickable: Boolean indicating the view's clickability
+  * @deprecated Use setAttribute('clickable', ...) instead.
   */
 function setClickable ( amclickable ){
     this.sprite.setClickable(amclickable);
@@ -2644,6 +2659,7 @@ function setClickable ( amclickable ){
   * Sets the cursor to the given resource when the mouse is over this view
   * @param String cursor: The name of the resource to use as a cursor when it is over
   * this view. Or '' for default cursor.
+  * @deprecated Use setAttribute('cursor', ...) instead.
   */
 function setCursor ( cursor ){
     this.sprite.setCursor(cursor);
@@ -2653,6 +2669,7 @@ function setCursor ( cursor ){
 /**
   * Start or stop playing the attached resource.
   * @param Boolean b: If true, starts playing, otherwise stops
+  * @deprecated Use setAttribute('play', ...) instead.
   */
 function setPlay (b){
     if ( b ) {
@@ -2848,8 +2865,10 @@ function $lzc$getPlayPerc_dependencies ( who , self ){
   * Shows or hides the hand cursor for this view.
   * @param Boolean s: true shows the hand cursor for this view, false hides 
   * it
+  * @deprecated Use setAttribute('showhandcursor', ...) instead.
   */
 function setShowHandCursor ( s ){
+    this.showhandcursor = s;
     this.sprite.setShowHandCursor(s);
 }
 
@@ -2867,9 +2886,11 @@ function setAccessible (accessible) {
 /**
   * Activate/inactivate children for accessibility
   * @param Boolean s: If true, activate the current view and all of its children
+  * @deprecated Use setAttribute('aaactive', ...) instead.
   */
 function setAAActive ( s ){
     if (this.capabilities.accessibility) {
+        this.aaactive = s;
         this.sprite.setAAActive(s);
     } else if ($debug) {
         this.__warnCapability('view.setAAActive()'); 
@@ -2880,9 +2901,11 @@ function setAAActive ( s ){
 /**
   * Set accessibility name
   * @param string s: Sets the accessibility name for this view
+  * @deprecated Use setAttribute('aaname', ...) instead.
   */
 function setAAName ( s ){
     if (this.capabilities.accessibility) {
+        this.aaname = s;
         this.sprite.setAAName(s);
     } else if ($debug) {
         this.__warnCapability('view.setAAName()'); 
@@ -2892,9 +2915,11 @@ function setAAName ( s ){
 /**
   * Set accessibility description
   * @param string s: Sets the accessibility description for this view
+  * @deprecated Use setAttribute('aadescription', ...) instead.
   */
 function setAADescription ( s ){
     if (this.capabilities.accessibility) {
+        this.aadescription = s;
         this.sprite.setAADescription(s);
     } else if ($debug) {
         this.__warnCapability('view.setAADescription()'); 
@@ -2904,9 +2929,11 @@ function setAADescription ( s ){
 /**
   * Set accessibility tab order
   * @param number s: The tab order index for this view.  Must be a unique number.
+  * @deprecated Use setAttribute('aatabindex', ...) instead.
   */
 function setAATabIndex ( s ){
     if (this.capabilities.accessibility) {
+        this.aatabindex = s;
         this.sprite.setAATabIndex(s);
     } else if ($debug) {
         this.__warnCapability('view.setAATabIndex()'); 
@@ -2917,9 +2944,11 @@ function setAATabIndex ( s ){
   * Set accessibility silencing/unsilencing
   * @param string s: If true, this view is made silent to the screen reader.  
   * If false, it is active to the screen reader.
+  * @deprecated Use setAttribute('aasilent', ...) instead.
   */
 function setAASilent ( s ){
     if (this.capabilities.accessibility) {
+        this.aasilent = s;
         this.sprite.setAASilent(s);
     } else if ($debug) {
         this.__warnCapability('view.setAASilent()'); 
@@ -3032,6 +3061,7 @@ var __proxypolicy = null;
   * Sets a proxy policy function on a per-view basis.
   * 
   * @param Object f: If a string, use as a URL to the proxy server. If a function, it should take a URL of a resource, and return the URL of the proxy server to use to load that resource.
+  * @deprecated Use setAttribute('proxyurl', ...) instead.
   */
 function setProxyURL ( f ){
     this.proxyurl = f;

@@ -257,6 +257,7 @@ dynamic class LzState extends LzNode {
 
   /**
    * @access private
+   * @deprecated Use setAttribute('applied', ...) instead.
    */
   function setApply ( doapply ){
     if ($debug) {

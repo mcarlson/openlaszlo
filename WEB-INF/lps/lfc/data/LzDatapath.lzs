@@ -187,6 +187,7 @@ function $lzc$set_sortpath (xpath:String) :void {
   * @param String xpath: An XPath giving the value to use for comparison.
   * @param Function|String comparator: See the <param>comparator</param>
   * parameter of <method>setComparator</method> for details.
+  * @deprecated Use setAttribute('order', ...) instead.
   *
   * @access private
   */

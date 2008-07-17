@@ -89,6 +89,7 @@ function $lzc$set_motion ( eparam ){
 }
 /**
  * @deprecated in 4.1
+ * @deprecated Use setAttribute('motion', ...) instead.
  * @access private
  */
 function setMotion (eparam) {
@@ -109,6 +110,7 @@ function $lzc$set_to ( eparam ) {
 }
 /**
  * @deprecated in 4.1
+ * @deprecated Use setAttribute('to', ...) instead.
  * @access private
  */
 function setTo (eparam) {

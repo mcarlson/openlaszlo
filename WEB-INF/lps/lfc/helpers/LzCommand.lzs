@@ -47,12 +47,12 @@ var active = true;
 
 /** array of keys (strings) that, when pressed together,
   * cause the onselect event of the command to be sent. For example:
-  * setAttribute('key', ['a', 'shift']) or setKeys(['j', 'control'])
+  * setAttribute('keys', ['a', 'shift']) or setKeys(['j', 'control'])
   * @type [String]
   */
 var keys = null;
 /** @access private */
-function $lzc$set_key(v) { this.setKeys(v); }
+function $lzc$set_keys(v) { this.setKeys(v); }
 
 /**
   * If the command is active, this event is sent
@@ -70,6 +70,7 @@ function LzCommand ( parent:LzNode? = null, attrs:Object? = null, children:Array
   * This registers the given key array so that the command is executed when the
   * key array is pressed.
   * @param [String] k: An array of keys, given as strings. 
+  * @deprecated Use setAttribute('keys', ...) instead.
   */
 function setKeys ( k ){
     this.keys = k;

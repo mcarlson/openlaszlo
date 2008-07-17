@@ -55,6 +55,7 @@ var length :Number = 0;
 /**
   * Sets the string that this node holds.
   * @param String newdata: The new string for this node.
+  * @deprecated Use setAttribute('data', ...) instead.
   */
 public function setData ( newdata:String ) {
     this.data = newdata;

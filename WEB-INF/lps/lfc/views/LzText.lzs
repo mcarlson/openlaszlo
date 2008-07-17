@@ -525,6 +525,7 @@ function clearText ( ){
 /**
   * @access private
   * Set the maximum number of chars a textfield can contain
+  * @deprecated Use setAttribute('maxlength', ...) instead.
   */
 function setMaxLength ( val ){
     if (val == null || val == '') return;
@@ -542,6 +543,7 @@ function setMaxLength ( val ){
 /**
   * @access private
   * Set the pattern of chars a textfield can contain
+  * @deprecated Use setAttribute('pattern', ...) instead.
   */
 function setPattern ( val ){
     if (val == null || val == '') return;
@@ -655,6 +657,7 @@ function getBottomScroll ( ){
   * @param Number n: set the left edge of the textfield to offset
   * n pixels 
   * (n is always &lt; 0)
+  * @deprecated Use setAttribute('xscroll', ...) instead.
   */
 function setXScroll ( n ){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
@@ -667,6 +670,7 @@ function setXScroll ( n ){
   * Set the y scroll position of the textfield.
   * @param Number n: set the top line of the textfield to offset n pixels
   * vertically (n is always &lt; 0)
+  * @deprecated Use setAttribute('yscroll', ...) instead.
   */
 function setYScroll ( n ){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
@@ -783,6 +787,7 @@ function parseImgAttributes(attrs, str) {
 /**
   * Sets the text of the field to display
   * @param String t: the string to which to set the text
+  * @deprecated Use setAttribute('text', ...) instead.
   */
 function setText ( t, force = null){
     // force to a string
@@ -887,6 +892,7 @@ function escapeText( ts ){
 /**
   * Sets the selectability (with Ibeam cursor) of the text field
   * @param Boolean isSel: true if the text may be selected by the user
+  * @deprecated Use setAttribute('selectable', ...) instead.
   */
 function setSelectable ( isSel ){
     this.selectable = isSel;
@@ -907,6 +913,7 @@ override function setFontName ( fname ,prop = null){
 
 /**
   * @access private
+  * @deprecated Use setAttribute('fontsize', ...) instead.
   */
 function setFontSize ( fsize ){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
@@ -918,6 +925,7 @@ function setFontSize ( fsize ){
 
 /**
   * @access private
+  * @deprecated Use setAttribute('fontstyle', ...) instead.
   */
 function setFontStyle ( fstyle ){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
@@ -970,6 +978,7 @@ function setEmbedFonts ( onroff ){
  * Sets what type of antialiasing the text field should use. Only works in swf8
  * and higher. 
  * @param String aliasType: "normal" or "advanced"
+ * @deprecated Use setAttribute('antiAliasType', ...) instead.
  */
 function setAntiAliasType( aliasType ){
     if (this.capabilities.advancedfonts) {    
@@ -1001,6 +1010,7 @@ function getAntiAliasType() {
  * Sets what type of grid fitting the text field should use. 
  * Only works in swf8 and higher. 
  * @param String gridFit: "none", "pixel", or "subpixel"
+ * @deprecated Use setAttribute('gridFit', ...) instead.
  */
 function setGridFit( gridFit ){
     if (this.capabilities.advancedfonts) {    
@@ -1033,6 +1043,7 @@ function getGridFit() {
  * Sets the sharpness for the text rendering 
  * Only works in swf8 and higher. 
  * @param Number sharpness: -400 to 400
+ * @deprecated Use setAttribute('sharpness', ...) instead.
  */
 function setSharpness( sharpness ){
     if (this.capabilities.advancedfonts) {
@@ -1065,6 +1076,7 @@ function getSharpness() {
  * Sets the thickness for the text rendering 
  * Only works in swf8 and higher. 
  * @param Number thickness: -200 to 200
+ * @deprecated Use setAttribute('thickness', ...) instead.
  */
 function setThickness( thickness ){
     if (this.capabilities.advancedfonts) {

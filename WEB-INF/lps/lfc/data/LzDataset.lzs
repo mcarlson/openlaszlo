@@ -446,6 +446,7 @@ function getStatusCode (){
   * Sets the data for the dataset
   * @param data a LzDataElement or list of Elements
   * @param headers optional HTTP response headers
+  * @deprecated Use setAttribute('data', ...) instead.
   * @access private
   */
 override function setData( data , headers = null ) {
@@ -543,6 +544,7 @@ function setQueryString( s ) {
 
 /**
   * Sets the src attribute of the data request.
+  * @deprecated Use setAttribute('src', ...) instead.
   * @param String src: A new src URL for data request.
 
   Need to handle these cases
@@ -584,6 +586,7 @@ function setProxyRequests( val ) {
   * Sets whether or not the dataset makes its request upon initialization
   * @param Boolean b: If true, the dataset will make its request when it is 
   * initialized
+  * @deprecated Use setAttribute('request', ...) instead.
   */
 function setRequest( b ) {
     this.request = b;
@@ -814,6 +817,7 @@ function handleDataResponse (datareq) {
   * 
   * @access private
   * @param b: A boolean value - true to turn on autorequest, false to turn off
+  * @deprecated Use setAttribute('autorequest', ...) instead.
   */
 function setAutorequest(b) {
     this.autorequest = b;

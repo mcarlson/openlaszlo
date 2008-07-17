@@ -702,6 +702,7 @@ function destroyClone (v:LzNode) :void {
   * over the slot that a named replicated view occupied in the parent. (See
   * comment on the class as a whole, above.)
   * @param String xp: An xpath.
+  * @deprecated Use setAttribute('datapath', ...) instead.
   * @access private
   */
 override function setDatapath ( xp ){
