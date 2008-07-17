@@ -13,6 +13,12 @@ public class ASTOperator extends SimpleNode {
     
     private int operatorCode = -1;//todo: EOF;
   
+  public SimpleNode deepCopy() {
+      ASTOperator result = (ASTOperator)super.deepCopy();
+      result.operatorCode = this.operatorCode;
+      return result;
+  }
+
   public ASTOperator(int id) {
     super(id);
   }

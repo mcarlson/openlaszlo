@@ -26,6 +26,13 @@ public class ASTPassthroughDirective extends SimpleNode {
         super(p, id);
     }
 
+    public SimpleNode deepCopy() {
+        ASTPassthroughDirective result = (ASTPassthroughDirective)super.deepCopy();
+        result.text = this.text;
+        result.options = this.options;
+        return result;
+    }
+
     public static Node jjtCreate(int id) {
         return new ASTPassthroughDirective(id);
     }

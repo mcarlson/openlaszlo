@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -28,4 +28,9 @@ public class ASTFormalParameterList extends SimpleNode {
         this.returnType = type;
     }
 
+    public SimpleNode deepCopy() {
+        ASTFormalParameterList result = (ASTFormalParameterList)super.deepCopy();
+        result.returnType = this.returnType;
+        return result;
+    }
 }

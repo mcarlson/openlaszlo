@@ -162,6 +162,33 @@ public abstract class SimpleNode implements Node, Serializable {
         return this.comment;
     }
 
+    public SimpleNode deepCopy() {
+        SimpleNode result;
+        try {
+            result = (SimpleNode)getClass().getConstructor(new Class[]{int.class}).
+                newInstance(new Object[]{new Integer(id)});
+        }
+        catch (Exception e) {
+            // could be thrown if a subclass does not have a constructor(id)
+            // all javacc generated classes have it.
+            throw new RuntimeException(e);
+        }
+        result.copyFields(this);
+        return result;
+    }
+
+    public void copyFields(SimpleNode that) {
+        this.id = that.id;
+        this.parser = that.parser;
+        this.filename = that.filename;
+        this.beginLine = that.beginLine;
+        this.beginColumn = that.beginColumn;
+        this.comment = that.comment;
+        for (int i=0; i<that.children.length; i++) {
+            this.set(i, that.children[i].deepCopy());
+        }
+    }
+
     /** Accept the visitor */
     public Object jjtAccept(ParserVisitor visitor, Object data) {
         return visitor.visit(this, data);

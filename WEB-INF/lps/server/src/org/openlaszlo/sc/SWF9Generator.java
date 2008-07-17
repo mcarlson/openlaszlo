@@ -118,15 +118,6 @@ public class SWF9Generator extends JavascriptGenerator {
    */
   private Map mixinRef = new HashMap();
 
-  // override superclass version - we don't want to remap names
-  // of class variables
-
-  public boolean remapLocals() {
-    // TODO: [2007-12-11 dda] maybe remap selectively - anything that is
-    // private may be remapped.
-    return false;
-  }
-
   // override superclass version - we do not want the
   // generator to replace optional function parameters
   // or variable arguments (e.g. function f(a1, a2=0, a3=0, ...rest)),
@@ -220,11 +211,8 @@ public class SWF9Generator extends JavascriptGenerator {
       // emitted.
       //
       if (!isClass) {
-        // before visiting, create a shallow copy of the mixin for the interface
-        mixinInterface = new ASTClassDefinition(0);
-        for (int i=0; i<children.length; i++) {
-          mixinInterface.set(i, children[i]);
-        }
+        // before visiting, create a copy of the mixin for the interface
+        mixinInterface = node.deepCopy();
       }
       translateClassDefinition(node, classnameString, TranslateHow.AS_CLASS);
 
@@ -260,7 +248,6 @@ public class SWF9Generator extends JavascriptGenerator {
       newch[i++] = visitStatement(n);
     }
     node.setChildren(newch);
-    visitChildren(node);
   }
 
   /**
@@ -468,8 +455,9 @@ public class SWF9Generator extends JavascriptGenerator {
       // actual arguments for the super(arg1, arg2, ...) call
       List actuals = new ArrayList();
       for (int i=0; i<origparams.length; i++) {
-        if (origparams[i] instanceof ASTIdentifier) {
-          ASTIdentifier id = (ASTIdentifier)origparams[i];
+        SimpleNode origparam = passThrough(origparams[i]);
+        if (origparam instanceof ASTIdentifier) {
+          ASTIdentifier id = (ASTIdentifier)origparam;
 
           if (id.getEllipsis()) {
             // Somewhat difficult to handle this case, and unknown

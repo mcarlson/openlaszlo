@@ -16,6 +16,17 @@ public class ASTIdentifier extends SimpleNode {
     private boolean ellipsis = false;
     private boolean isconstructor = false;
 
+    public SimpleNode deepCopy() {
+        ASTIdentifier result = (ASTIdentifier)super.deepCopy();
+        result.name = this.name;
+        result.type = this.type;
+        result.hash = this.hash;
+        result.ellipsis = this.ellipsis;
+        result.isconstructor = this.isconstructor;
+        return result;
+    }
+
+    // Note: this is an immutable class once configured, instances may be shared
     public static class Type {
         public String typeName = null;
         public boolean nullable = false; // has "?"

@@ -842,8 +842,20 @@ public class Compiler {
   public static class PassThroughNode extends SimpleNode {
     public SimpleNode realNode;
 
+    private PassThroughNode() { }
+
     public PassThroughNode (SimpleNode realNode) {
       this.realNode = realNode;
+    }
+
+    public SimpleNode deepCopy() {
+      PassThroughNode result = new PassThroughNode();
+      result.copyFields(this);
+      return result;
+    }
+
+    public void copyFields(SimpleNode that) {
+      this.realNode = ((PassThroughNode)that).realNode.deepCopy();
     }
   }
 

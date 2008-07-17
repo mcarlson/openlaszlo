@@ -1629,6 +1629,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       if (registers != null && registers.containsKey(name)) {
         String register = (String)registers.get(name);
         ASTIdentifier newNode = new ASTIdentifier(0);
+        if (node instanceof ASTIdentifier) {
+          ASTIdentifier oldid = (ASTIdentifier)node;
+          newNode.setEllipsis(oldid.getEllipsis());
+          newNode.setType(oldid.getType());
+        }
         newNode.setName(register);
         this.node = new Compiler.PassThroughNode(newNode);
         return;

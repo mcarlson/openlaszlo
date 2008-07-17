@@ -22,6 +22,18 @@ public class ASTModifiedDefinition extends SimpleNode {
 
     private Token t;
 
+    public SimpleNode deepCopy() {
+        ASTModifiedDefinition result = (ASTModifiedDefinition)super.deepCopy();
+        result.access = this.access;
+        result.isStatic = this.isStatic;
+        result.isFinal = this.isFinal;
+        result.isDynamic = this.isDynamic;
+        result.isOverride = this.isOverride;
+        result.namespace = this.namespace;
+        result.t = this.t;
+        return result;
+    }
+
     public ASTModifiedDefinition(int id) {
         super(id);
     }

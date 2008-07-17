@@ -8,6 +8,12 @@ public class ASTLiteral extends SimpleNode {
 
     private Object mValue = null;
 
+    public SimpleNode deepCopy() {
+        ASTLiteral result = (ASTLiteral)super.deepCopy();
+        result.mValue = this.mValue; // we expect that mValue is immutable once configured
+        return result;
+    }
+
     public ASTLiteral(int id) {
         super(id);
     }
