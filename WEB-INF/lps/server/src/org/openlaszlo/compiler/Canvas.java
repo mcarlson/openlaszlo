@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -422,8 +422,7 @@ public class Canvas implements java.io.Serializable {
             "height='" + getHeightXML() + "' " +
             "proxied='" + isProxied() + "' " +
             "runtime='" + getRuntime() +"' " +
-            "lfc='" + LPS.getProperty("compiler.runtime.dir") +
-            "/" + LPS.getLFCname(getRuntime(), mDebug, mProfile, mBacktrace) + "' " +
+            "lfc='" + LPS.getLFCname(getRuntime(), mDebug, mProfile, mBacktrace) + "' " +
             "debug='" + mDebug + "' " +
             "id='" + XMLUtils.escapeXml(getID()) +"' " +
             "accessible='" + XMLUtils.escapeXml(getAccessible() + "") +"' " +

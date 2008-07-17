@@ -96,7 +96,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
         <xsl:choose>
           <xsl:when test="/canvas/@runtime = 'dhtml'">
             <script type="text/javascript">
-              lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>/');
+              lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/lfc/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>/');
             </script>  
           </xsl:when>
         </xsl:choose>
