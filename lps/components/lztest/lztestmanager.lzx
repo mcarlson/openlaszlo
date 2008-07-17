@@ -201,7 +201,7 @@ function failAssertion ( msg ) {
     }
 }
 
-function assertTrue (condition, assertion) {
+function assertTrue (condition, assertion = null) {
     if (!condition)  {
         var errmsg = "assertTrue('" + condition + "') failed"
                     + (assertion ? ': ' + assertion : '');
@@ -210,7 +210,7 @@ function assertTrue (condition, assertion) {
 }
 
 
-function assertFalse (condition, assertion) {
+function assertFalse (condition, assertion = null) {
     if (condition)  {
         var errmsg = "assertFalse('" + condition + "') failed"
                     + (assertion ? ': ' + assertion : '');
