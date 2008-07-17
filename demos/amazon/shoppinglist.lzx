@@ -16,7 +16,7 @@
                     onmouseover="dragsmall.display(this, this.datapath.getNodeText());"
                     onmouseout="dragsmall.hide();"
                     onmousedown="dragsmall.start();"
-                    onmouseup="dragsmall.stop(); parent.parent.parent.itemDropped(parent.datapath);">
+                    onmouseup="dragsmall.stopdrag(); parent.parent.parent.itemDropped(parent.datapath);">
                     <attribute name="source" value="${this.data}"/>
                 </view>
 

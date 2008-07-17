@@ -194,7 +194,7 @@
                         <!-- Display CD cover: Image is draggable into either the shopping cart or the wish list -->
                         <view id="cover" datapath="SmallImage/URL/text()"
                             onmousedown="dragger.start(parent.parent.datapath.xpathQuery('SmallImage/URL/text()'))"
-                            onmouseup="dragger.stop(); itemDropped(parent.parent.datapath);"
+                            onmouseup="dragger.stopdrag(); itemDropped(parent.parent.datapath);"
                             ondblclick="cart.addItem(parent.parent.datapath)">
                             <attribute name="source" value="${this.data}"/>
                             <method name="itemDropped" args="dpath">
@@ -250,9 +250,10 @@
                                         <![CDATA[
                                         var discs = this.datapath.xpathQuery('Disc')
                                         if (! discs) return;
-                                        if (! discs['length']) discs = [ discs ];
+
+                                        if (!(discs instanceof Array)) discs = [ discs ];
                                         var tracks = 0;
-                                        for (i in discs) {
+                                        for (var i in discs) {
                                             var n = discs[i];
                                             if (n && n.childNodes) tracks += n.childNodes.length;
                                         }
@@ -496,7 +497,7 @@
             this.setAttribute("visible", true);
         </method>
 
-        <method name="stop">
+        <method name="stopdrag">
             dragging.setAttribute('applied', false);
             this.setAttribute("visible", false);
         </method>
@@ -534,7 +535,7 @@
             if (dragging!=true) this.setAttribute("visible", false);
         </method>
 
-        <method name="stop">
+        <method name="stopdrag">
             this.dragging=false;
             drag.setAttribute('applied', false);
             this.setAttribute("visible", false);

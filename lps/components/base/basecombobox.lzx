@@ -502,7 +502,7 @@
                     indicators will be turned off;
                     if parameter is ommitted no change in focus indicator
           -->
-        <method name="setOpen" args="open, withkey" >
+        <method name="setOpen" args="open, withkey=null" >
             if (!this.isinited) {
                 this.isopen = open;
                 return;
