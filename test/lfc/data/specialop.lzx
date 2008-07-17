@@ -31,19 +31,19 @@
             assertEquals( 6, v.dotdot.datapath.getNodeAttribute( 'a' ) );
             assertEquals( 3, v.star.datapath.getNodeAttribute( 'a' ) );
 
-            v.datapath.p.setAttr( 'a' , 22 );
-            assertEquals( 22, v.datapath.getNodeAttribute( 'a' ) );
+            v.datapath.p.setAttr( 'a' , '22' );
+            assertEquals( '22', v.datapath.getNodeAttribute( 'a' ) );
 
-            v.dot.datapath.p.setAttr( 'a' , 33 );
-            assertEquals( 33, v.dot.datapath.getNodeAttribute( 'a' ) );
+            v.dot.datapath.p.setAttr( 'a' , '33' );
+            assertEquals( '33', v.dot.datapath.getNodeAttribute( 'a' ) );
 
-            v.slash.datapath.p.setAttr( 'a' , 55 );
-            assertEquals( 55, v.slash.datapath.getNodeAttribute( 'a' ) );
+            v.slash.datapath.p.setAttr( 'a' , '55' );
+            assertEquals( '55', v.slash.datapath.getNodeAttribute( 'a' ) );
 
-            v.dotdot.datapath.p.setAttr( 'a' , 66 );
-            assertEquals( 66, v.dotdot.datapath.getNodeAttribute( 'a' ) );
+            v.dotdot.datapath.p.setAttr( 'a' , '66' );
+            assertEquals( '66', v.dotdot.datapath.getNodeAttribute( 'a' ) );
 
-            assertEquals( 33, v.star.datapath.getNodeAttribute( 'a' ) );
+            assertEquals( '33', v.star.datapath.getNodeAttribute( 'a' ) );
             ]]>
         </method>
         <method name="addTests"> 
@@ -53,6 +53,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

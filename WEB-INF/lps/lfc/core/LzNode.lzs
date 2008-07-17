@@ -2169,10 +2169,13 @@ public dynamic class LzNode extends LzEventable {
    */
  function acceptAttribute(name, type, value) {
    var presentationtype = LzNode.presentationtypes[type];
-   if (presentationtype == null) {
-     value = GenericPresentationType.accept(value, type);
-   } else {
-     value = presentationtype.accept(value);
+   // don't coerce null values
+   if (value != null) {
+     if (presentationtype == null) {
+       value = GenericPresentationType.accept(value, type);
+     } else {
+       value = presentationtype.accept(value);
+     }
    }
    if (this[name] != value) {
     //Debug.write('acceptAttribute', name, type, value, typeof value, presentationtype);

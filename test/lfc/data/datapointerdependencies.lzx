@@ -39,11 +39,11 @@
             //moving the datapointer with select trumps set xpath 
             mydp.setAttribute( 'xpath' , "@n" );
             assertEquals( 0 , mydp.data , "expecting @n == 0" );
-            mydp.setNodeAttribute( 'n', 44 );
-            assertEquals( 44 , mydp.data );
+            mydp.setNodeAttribute( 'n', '44' );
+            assertEquals( '44' , mydp.data );
 
             mydp.setAttribute( 'xpath' , "@*" );
-            assertEquals( 44 , mydp.data.n );
+            assertEquals( '44' , mydp.data.n );
             mydp.setNodeAttribute( 'bar' , 'fox' );
             assertEquals( 'fox' , mydp.data.bar );
 
@@ -122,6 +122,6 @@
 </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

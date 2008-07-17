@@ -67,9 +67,9 @@
             assertTrue( dp.setXPath  ( "match2[2]"  ) );
             //assertEquals( 5 , dp.getNodeOffset() );
             assertEquals( 'match2' , dp.getNodeName  () );
-            dp.setNodeAttribute  ('x', 22) ;
+            dp.setNodeAttribute  ('x', '22') ;
             assertEquals( dp.p.attributes , dp.getNodeAttributes() );
-            assertEquals( 22 , dp.getNodeAttribute( 'x' ) );
+            assertEquals( '22' , dp.getNodeAttribute( 'x' ) );
 
             assertEquals( global[ dsname ], dp.getDataset( ) );
             dp.setNodeName ("bunny");
@@ -106,7 +106,7 @@
             dp.deleteNodeAttribute  ('a') ;
             assertEquals( "<foo> some Text </foo>" , dp.serialize() );
             assertEquals( " some Text " , dp.getNodeText  () );
-            dp.addNode  ( 'a' , 'insidetext' , { x :22 } );
+            dp.addNode  ( 'a' , 'insidetext' , { x :'22' } );
 
 
 

@@ -58,7 +58,7 @@
                           this.collector.ondata[5] );
 
             this.clearCollected();
-            etcRoot.etc1.datapath.setNodeAttribute( 'foo' , 55 );
+            etcRoot.etc1.datapath.setNodeAttribute( 'foo' , '55' );
             assertEquals( 0 , this.collector.applyData.length );
             assertEquals( 0 , this.collector.ondata.length );
 
@@ -101,8 +101,8 @@
                                                             getNextSibling();
             this.clearCollected();
 
-            r2.setAttr( 'a' , 77 );
-            assertEquals ( 77 , et2.data );
+            r2.setAttr( 'a' , '77' );
+            assertEquals ( '77' , et2.data );
             assertEquals( 2 , this.collector.ondata.length );
             assertEquals( 2 , this.collector.applyData.length );
             this.clearCollected();
@@ -111,17 +111,17 @@
 
             Debug.write( p1 );
             et1.setDatapath( 'data/@foo' );
-            assertEquals ( 55 , et1.data );
+            assertEquals ( '55' , et1.data );
             assertEquals( 2 , this.collector.ondata.length );
             assertEquals( 2 , this.collector.applyData.length );
             this.clearCollected();
 
             var p1 = r2.parentNode;
-            p1.setAttr( 'calm' , true );
+            p1.setAttr( 'calm' , 'true' );
             assertEquals( 0 , this.collector.ondata.length );
             assertEquals( 0 , this.collector.applyData.length );
-            p1.setAttr( 'foo' , true );
-            assertEquals ( true , et1.data );  // 
+            p1.setAttr( 'foo' , 'true' );
+            assertEquals ( 'true' , et1.data );  // 
             assertEquals( 2 , this.collector.ondata.length );
             assertEquals( 2 , this.collector.applyData.length );
             this.clearCollected();

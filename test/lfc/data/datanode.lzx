@@ -39,12 +39,12 @@
             zdat.appendChild( zdat.cloneNode ( ) );
             zdat.appendChild( zdat.cloneNode ( true ) );
 
-            zdat.setAttr ( 'z' , 77 );
+            zdat.setAttr ( 'z' , '77' );
 
             assertTrue(xmlstringequals(zdat.serialize() , 
                         '<foo z="77" x="33" y="plop"><aa/>some text<bb/>more text<foo y="plop" x="33"/><foo y="plop" x="33"><aa/>some text<bb/>more text<foo x="33" y="plop"/></foo></foo>' ));
 
-            assertEquals( 77,  zdat.getAttr( 'z' ) );
+            assertEquals( '77',  zdat.getAttr( 'z' ) );
             zdat.removeAttr( "y" );
             assertTrue( zdat.hasAttr( 'z' ) );
             assertFalse( zdat.hasAttr( 'y' ) );

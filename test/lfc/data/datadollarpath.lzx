@@ -26,16 +26,16 @@
             assertEquals( 'bar' , a.b.m.dattr );
             assertEquals( 'slop' , a.b.n.dattr );
 
-            dolpatbind.getFirstChild().setAttr( 'foo' , 11 );
+            dolpatbind.getFirstChild().setAttr( 'foo' , '11' );
             dolpatbind.getFirstChild().getFirstChild().setData( 'newdata' );
 
-            assertEquals( 11 , a.b.m.dattr );
+            assertEquals( '11' , a.b.m.dattr );
             assertEquals( 'newdata' , a.b.n.dattr );
 
             a.b.m.setAttribute( 'dattr' , 'back' );
             a.b.n.setAttribute( 'dattr' , 'back2' );
 
-            assertEquals( 11 , dolpatbind.getFirstChild().getAttr( 'foo' ));
+            assertEquals( '11' , dolpatbind.getFirstChild().getAttr( 'foo' ));
             assertEquals( 'newdata' , 
                           dolpatbind.getFirstChild().getFirstChild().data );
 
@@ -78,6 +78,6 @@
     </class>
 </library >
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
