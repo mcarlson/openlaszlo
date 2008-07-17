@@ -36,9 +36,9 @@
               src="/laszlo-explorer/coverpages/lzpix_cover.html"
               text="A demonstration of OpenLaszlo's multiple runtime capabilities." >
             <subitem title="Launch in DHTML" name="View in DHTML" action="popup" target="_blank"
-                     popup="/demos/lzpix/app.lzx" runtime="dhtml" />
+                     popup="/demos/lzpix/app.lzx" runtime="dhtml" width="780"/>
             <subitem title="Launch in Flash" name="View in Flash" action="popup" target="_blank"
-                     popup="/demos/lzpix/app.lzx" runtime="swf8" />
+                     popup="/demos/lzpix/app.lzx" runtime="swf8" width="780"/>
             <subitem title="Source Code Explorer"
                 src="/demos/lzpix/app.lzx" name="Source" action="source" />
         </item>
