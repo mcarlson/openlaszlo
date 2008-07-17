@@ -892,8 +892,12 @@
             }
 
             override function construct(parent,args) {
-                // default to bitmap caching on    
+                // default to bitmap caching on, unless clip = true    
                 if (args['cachebitmap'] == null) args['cachebitmap'] = true;
+                if (args['cachebitmap'] && args['clip'] == true) {
+                    if ($debug) Debug.warn('Clipping automatically disables bitmap caching');
+                    args['cachebitmap'] = false;
+                }
                 super.construct(parent, args);
                 this.__contexts = [];
 
