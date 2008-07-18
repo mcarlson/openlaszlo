@@ -116,13 +116,14 @@ class LzEventable {
 
     // Must agree with NodeModel in tag compiler
     var s = ('$lzc$set_' + prop);
+    // Cannot optimize away this[] in JS1
     if (this[s] is Function) {
       this[s](val);
     } else {
       this[ prop ] = val;
-      var evt = ("on" + prop);
-      if (this[evt] is LzEvent) {
-        if (this[evt].ready) this[ evt ].sendEvent( val );
+      var evt = this["on" + prop];
+      if (evt is LzEvent) {
+        if (evt.ready) evt.sendEvent( val );
       }
     }
   }
