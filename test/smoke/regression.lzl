@@ -537,8 +537,8 @@
         <attribute name="foo" value="$path{'bug1254:/two[1]/@num'}"/>
         <method name="testDPConstraint">
             tempDP.setXPath('two[1]')
-            tempDP.setNodeAttribute('num', 50)
-            assertEquals(foo, 50)
+            tempDP.setNodeAttribute('num', "50")
+            assertEquals(foo, "50")
         </method>
         <method name="addTests"> 
             this.addTest("testDPConstraint");
@@ -947,6 +947,9 @@
                 <simplelayout/>
                 <attribute name="msg" value="''" when="once"/>
                 <attribute name="fdel"/>
+                <method name="addTests">
+                // this is just here to get rid of warnings, there are no test methods in this case
+                </method>
                 <method name="fail" args="message">
                         
                         // All this fuss is to make the failures of this case added to the test progress display
@@ -1121,7 +1124,7 @@
         </dataset>
         
         <class name="bug_3036" extends="TestCase">
-                <view name="frame" clip="true" height="100">
+                <view name="myframe" clip="true" height="100">
                         <view name="outer" datapath="bug3036:/" height="200">
                                 <view name="entry" height="20" width="100">
                                         <attribute name="pos" value="$path{'position()'}"/>
@@ -1131,9 +1134,9 @@
                 </view>
                 
                 <method name="testLazyRepl">
-                        var n = frame.outer.entry.clones.length
+                        var n = myframe.outer.entry.clones.length
                         for (var i = 0; i &lt; n; ++i)
-                                assertEquals(i + 1, frame.outer.entry.clones[i].pos)
+                                assertEquals(i + 1, myframe.outer.entry.clones[i].pos)
                 </method>
                 <method name="addTests"> 
                     this.addTest("testLazyRepl");
@@ -1180,7 +1183,7 @@
         <datanode dataone="1" datatwo="2"/>
     </dataset>
 
-    <class name="bug_3285" extends="TestCase">
+<class name="bug_3285" extends="TestCase">
         <attribute name="someval" value="9"/>
         <node name="dmap" datapath="bug3285:/datanode">
             <attribute name="attroneplusone" value="${ Number(attrone) + 1 }"/>
@@ -1200,57 +1203,56 @@
         </node>
         <method name="test1">
             assertTrue( true );
-            assertEquals( dmap.attrone , 9 );
-            assertEquals( dmap.attrtwo , 2 );
-            assertEquals( dmap.attroneplusone , 10 );
+            assertSame(  9, dmap.attrone );
+            assertSame(  '2', dmap.attrtwo );
+            assertSame(  10, dmap.attroneplusone );
 
             //change the data
-            bug3285.getFirstChild().setAttr( 'dataone', 11 );
-            bug3285.getFirstChild().setAttr( 'datatwo', 22 );
+            bug3285.getFirstChild().setAttr( 'dataone', '11' );
+            bug3285.getFirstChild().setAttr( 'datatwo', '22' );
 
-            assertEquals( dmap.attrone , 9 );
-            assertEquals( dmap.attrtwo , 22 );
-            assertEquals( dmap.attroneplusone , 10 );
+            assertSame(  9, dmap.attrone );
+            assertSame(  '22', dmap.attrtwo );
+            assertSame(  10, dmap.attroneplusone );
 
             this.setAttribute( 'someval', 99 );
-            assertEquals( dmap.attrone , 99 );
-            assertEquals( dmap.attrtwo , 22 );
-            assertEquals( dmap.attroneplusone , 100 );
+            assertSame(  99, dmap.attrone );
+            assertSame(  '22', dmap.attrtwo );
+            assertSame(  100, dmap.attroneplusone );
 
             //change the state
             dmap.setAttribute( 'datamapped' , true );
 
-            assertEquals( dmap.attrone , 11 );
-            assertEquals( dmap.attrtwo , 22 );
-            assertEquals( dmap.attroneplusone , 12 );
+            assertSame(  '11', dmap.attrone );
+            assertSame(  '22', dmap.attrtwo );
+            assertSame(  12, dmap.attroneplusone );
 
             //change the data
-            bug3285.getFirstChild().setAttr( 'dataone', 1 );
-            bug3285.getFirstChild().setAttr( 'datatwo', 2 );
+            bug3285.getFirstChild().setAttr( 'dataone', '1' );
+            bug3285.getFirstChild().setAttr( 'datatwo', '2' );
 
-            assertEquals( dmap.attrone , 1 );
-            assertEquals( dmap.attrtwo , 2 );
-            assertEquals( dmap.attroneplusone , 2 );
+            assertSame(  '1', dmap.attrone );
+            assertSame(  '2', dmap.attrtwo );
+            assertSame(  2, dmap.attroneplusone );
 
             this.setAttribute( 'someval', 9 );
-            assertEquals( dmap.attrone , 1 );
-            assertEquals( dmap.attrtwo , 2 );
-            assertEquals( dmap.attroneplusone , 2 );
+            assertSame(  '1', dmap.attrone );
+            assertSame(  '2', dmap.attrtwo );
+            assertSame(  2, dmap.attroneplusone );
 
             dmap.setAttribute( 'datamapped' , false );
 
-            assertEquals( dmap.attrone , 9 );
-            assertEquals( dmap.attrtwo , 2 );
-            assertEquals( dmap.attroneplusone , 10 );
+            assertSame(  9, dmap.attrone );
+            assertSame(  '2', dmap.attrtwo );
+            assertSame(  10, dmap.attroneplusone );
 
             //change the data
-            bug3285.getFirstChild().setAttr( 'dataone', 11 );
-            bug3285.getFirstChild().setAttr( 'datatwo', 22 );
+            bug3285.getFirstChild().setAttr( 'dataone', '11' );
+            bug3285.getFirstChild().setAttr( 'datatwo', '22' );
 
-            assertEquals( dmap.attrone , 9 );
-            assertEquals( dmap.attrtwo , 22 );
-            assertEquals( dmap.attroneplusone , 10 );
-
+            assertSame(  9, dmap.attrone );
+            assertSame(  '22', dmap.attrtwo );
+            assertSame(  10, dmap.attroneplusone );
 
         </method>
         <method name="addTests"> 
