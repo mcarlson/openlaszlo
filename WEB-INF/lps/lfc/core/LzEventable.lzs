@@ -112,12 +112,6 @@ class LzEventable {
    * must be updated if you change this function
    */
   function setAttribute(prop, val, ifchanged = null) {
-    if ($debug) {
-      if (val is LzValueExpr) {
-        Debug.error("Trying to set %s.%s to %w", this, prop, val);
-      }
-    }
-
     if (this.__LZdeleted || (ifchanged && (this[prop] == val))) return;
 
     // Must agree with NodeModel in tag compiler

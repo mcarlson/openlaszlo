@@ -1408,7 +1408,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       String name = ((ASTIdentifier)fnchildren[1]).getName();
       // We can't expand this if an expression value is expected,
       // since we don't have 'let'
-      if (false && name.equals("setAttribute") && (! isReferenced)) {
+      if (name.equals("setAttribute") && (! isReferenced)) {
         SimpleNode scope = fnchildren[0];
         SimpleNode property = args[0];
         SimpleNode value = args[1];
@@ -1430,7 +1430,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           propvar = ptp.text(property);
           if (property instanceof ASTLiteral) {
             assert propvar.startsWith("\"") || propvar.startsWith("'");
-            evtvar = propvar.substring(0,1) + "on" + propvar.substring(1);
+            svar = propvar.substring(0,1) + "$lzc$set_" + propvar.substring(1);
           }
         } else {
           decls += "var " + propvar + " = " + ptp.text(property) + ";";
@@ -1449,24 +1449,25 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           }
         }
         newBody.add(parseFragment(decls));
-        String fragment = "if (! (" + thisvar + ".__LZdeleted " +
-            ((arglen > 2) ? ("|| (" + changedvar + " && (" + thisvar + "[" + propvar + "] == " + valvar + "))") : "") +
-            ")) {" +
-            "var " + svar + " = " + thisvar + ".setters;" +
-            "if (" + svar + " && (" + propvar + " in " + svar + ")) {" +
-            "    " + thisvar + "[" + svar + "[" + propvar + "]](" + valvar + ");" +
+        String fragment =
+          "if (! (" + thisvar + ".__LZdeleted " +
+              ((arglen > 2) ? ("|| (" + changedvar + " && (" + thisvar + "[" + propvar + "] == " + valvar + "))") : "") +
+              ")) {" +
+            ((property instanceof ASTLiteral) ? "" : ("var " + svar + " = \"$lzc$set_\" + " + propvar + ";")) +
+            "if (" + thisvar + "[" + svar + "] is Function) {" +
+            "  " + thisvar + "[" + svar + "](" + valvar + ");" +
             "} else {" +
-            "    if ($debug) {" +
-            "        if (" + svar + " == null) {" +
-            "            Debug.warn('null setters on', " + thisvar + ", " + propvar + ", " + valvar + ");" +
-            "        }" +
-            "    }" +
-            "    " + thisvar + "[ " + propvar + " ] = " + valvar + ";" +
-          ((property instanceof ASTLiteral) ? "" : ("    var " + evtvar + " = (\"on\" + " + propvar + ");")) +
-            "    if (" + evtvar + " in " + thisvar + ") {" +
-            "        if (" + thisvar + "[" + evtvar + "].ready) {" + thisvar + "[ " + evtvar + " ].sendEvent( " + valvar + " ); }" +
-            "    }" +
-          "}}";
+            "  " + thisvar + "[ " + propvar + " ] = " + valvar + ";" +
+            "    var " + evtvar + " = " + thisvar + "[" +
+             ((property instanceof ASTLiteral) ?
+              (propvar.substring(0,1) + "on" + propvar.substring(1)) :
+              ("\"on\" + " + propvar)) +
+             "];" +
+            "  if (" + evtvar + " is LzEvent) {" +
+            "    if (" + evtvar + ".ready) {" + evtvar + ".sendEvent( " + valvar + " ); }" +
+            "  }" +
+            "}" +
+          "}";
         newBody.add(parseFragment(fragment));
         SimpleNode newStmts = new ASTStatementList(0);
         newStmts.setChildren((SimpleNode[])newBody.toArray(new SimpleNode[0]));

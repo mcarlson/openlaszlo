@@ -126,7 +126,7 @@ javac (1.4);
     description="Load repository information into properties">
       <xmlproperty file="repository-info.xml"/>
       <property name="build.id" value="${info.entry.commit(revision)} ${info.entry(path)}" />
-      <echo message="build.id is ${build.id}" />
+      <echo message="build.id is '${build.id}'" />
   </target>
 
   <!--===============  Target [copyjgen]  ==================-->
