@@ -1,0 +1,130 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+  <include href="/rpc/library/xmlrpcdecoder.lzx"/>
+  <include href="lztest/lztestmanager.lzx" /> 
+
+<script><![CDATA[
+    
+var xmlrpcsuite = new LzTestSuite("test xmlrpc support library"); 
+
+function test_date_parser() {   
+    var d1 = LzXMLRPCDecoder.decodeISO8601("2008-07-18T18:20:00");
+    LzTestManager.assertEquals( 2008, d1.getFullYear(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 6,    d1.getMonth(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 18,   d1.getDate(), "parse date 2008-07-18T18:20:00" );
+
+    LzTestManager.assertEquals( 18,   d1.getHours(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 20,   d1.getMinutes(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 0,    d1.getSeconds(), "parse date 2008-07-18T18:20:00" );
+
+    d1 = LzXMLRPCDecoder.decodeISO8601("20080718T182000");
+    LzTestManager.assertEquals( 2008, d1.getFullYear(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 6,    d1.getMonth(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 18,   d1.getDate(), "parse date 2008-07-18T18:20:00" );
+
+    LzTestManager.assertEquals( 18,   d1.getHours(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 20,   d1.getMinutes(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 0,    d1.getSeconds(), "parse date 2008-07-18T18:20:00" );
+
+
+    d1 = LzXMLRPCDecoder.decodeISO8601("20080718");
+    LzTestManager.assertEquals( 2008, d1.getFullYear(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 6,    d1.getMonth(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 18,   d1.getDate(), "parse date 2008-07-18T18:20:00" );
+
+    LzTestManager.assertEquals( 0,   d1.getHours(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 0,   d1.getMinutes(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 0,    d1.getSeconds(), "parse date 2008-07-18T18:20:00" );
+}
+
+
+/*
+*/
+function test_struct_parser () {
+    var str ="      <struct>" + 
+      "<member> " + 
+        "<name>lowerBound</name> " + 
+        "<value><i4>18</i4></value> " + 
+      "</member> " + 
+      "<member> " + 
+         "<name>upperBound</name> " + 
+         "<value><i4>139</i4></value> " + 
+       "</member> " + 
+    "</struct>"; 
+    
+    var obj = LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData(str));
+    LzTestManager.assertTrue( obj instanceof Object);
+    LzTestManager.assertEquals( 18, obj['lowerBound'], "struct member lowerBound");
+    LzTestManager.assertEquals( 139, obj['upperBound'], "struct member upperBound");
+}
+    
+function test_array_parser () {
+    var str = "<array>"+
+    "<data>" + 
+    "<value><i4>12</i4></value>"+
+    "<value><string>Egypt</string></value>" + 
+    "<value><boolean>0</boolean></value>"+
+    "<value><i4>-31</i4></value>" + 
+    "</data>"+
+    "</array>"; 
+
+    var obj = LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData(str));
+    LzTestManager.assertTrue( obj instanceof Array);
+    LzTestManager.assertEquals( 12, obj[0], "array member 0");
+    LzTestManager.assertEquals( "Egypt", obj[1], "array member 1");
+    LzTestManager.assertEquals( false, obj[2], "array member 2");
+    LzTestManager.assertEquals( -31, obj[3], "array member 3");
+
+}
+
+function test_scalars () {
+
+    /*      <i4> or <int> four-byte signed integer    -12
+      <boolean> 0 (false) or 1 (true)   1
+      <string>  string  hello world
+      <double>  double-precision signed floating point number   -12.214
+      <dateTime.iso8601>    date/time   19980717T14:08:55
+      <base64>  base64-encoded binary   eW91IGNhbid0IHJlYWQgdGhpcyE=
+    */
+
+    var obj = LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData("<i4>259</i4>"));
+    LzTestManager.assertEquals(259, obj);
+    obj = LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData("<int>259</int>"));
+    LzTestManager.assertEquals(259, obj);
+    LzTestManager.assertFalse(LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData("<boolean>0</boolean>")));
+    LzTestManager.assertTrue(LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData("<boolean>1</boolean>")));
+    obj = LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData("<double>259</double>"));
+    LzTestManager.assertEquals(259, obj);
+    obj = LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData("<dateTime.iso8601>1997-07-16T19:20:30</dateTime.iso8601>"));
+    LzTestManager.assertEquals( 1997, obj.getFullYear(), "parse date 2008-07-18T18:20:00" );
+    LzTestManager.assertEquals( 6,    obj.getMonth(), "parse date 1997-07-16T19:20:30" );
+    LzTestManager.assertEquals( 16,   obj.getDate(), "parse date 1997-07-16T19:20:30" );
+
+    LzTestManager.assertEquals( 19,   obj.getHours(), "parse date 1997-07-16T19:20:30" );
+    LzTestManager.assertEquals( 20,   obj.getMinutes(), "parse date 1997-07-16T19:20:30" );
+    LzTestManager.assertEquals( 30,    obj.getSeconds(), "parse date 1997-07-16T19:20:30" );
+
+
+    
+
+
+}
+
+
+xmlrpcsuite.addTest( test_date_parser );
+xmlrpcsuite.addTest( test_struct_parser );
+xmlrpcsuite.addTest( test_array_parser );
+xmlrpcsuite.addTest( test_scalars );
+
+
+]]>
+</script>
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

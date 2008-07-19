@@ -512,8 +512,7 @@ LzLoadQueue.loadXML = function (loadobj) {
                 // XML-escape it, but it's as close as we can get to POSTing
                 // raw data.
                 var xmlraw = new XML();
-                var tnode = xmlraw.createTextNode(lzpostbody);
-                xmlraw.appendChild(tnode);
+                xmlraw.parseXML(lzpostbody);
                 for ( header in headers) {
                     xmlraw.addRequestHeader(header, headers[header]);
                 }

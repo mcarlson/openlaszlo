@@ -24,6 +24,7 @@
     <include href="testsetheaders-solo.lzx"/>
     <include href="testrawpost.lzx"/>
     <include href="testsetpostbody.lzx"/>
+    <include href="testsetpostbody-solo.lzx"/>
     <include href="testput.lzx"/>
     <include href="testrawpost-solo.lzx"/> 
     <include href="testheaderresponse.lzx"/>
@@ -57,6 +58,7 @@
 -->
         <TestRawPostSOLO/>
         <TestSetPostBody/>
+        <TestSetPostBodySOLO/>
         <TestResponseHeaders/>
 
         <TestClientCacheBreaker/>

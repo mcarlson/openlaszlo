@@ -1,29 +1,29 @@
 <library>
   <include href="lzunit/lzunit.lzx" />
 
-  <dataset   proxied="false" name="prdatapb" src="http:echoraw.jsp" request="false" />
+  <dataset   proxied="false" name="prdatapb_solo" src="http:echoraw.jsp" request="false" />
 
   <!-- The post''ed data comes back from echoraw.jsp encapsulated in XML as
       <response><echo>input stream here</echo> </response>
   -->
 
-  <class name="TestSetPostBody" extends="TestCase">
+  <class name="TestSetPostBodySOLO" extends="TestCase">
     <attribute name="dpready" value="false"/>
     <attribute name="t2del" value="false"/>
     <attribute name="waitcnt" value="0"/>
     <attribute name="xmldat" value="null" />
 
-    <datapointer xpath="prdatapb:/response" name="dp" 
+    <datapointer xpath="prdatapb_solo:/response" name="dp" 
                  oninit="parent.sendit()"
-                 onerror='Debug.write("Got data fetch error with dataset prdatapb", prdatapb.errorstring)'
+                 onerror='Debug.write("Got data fetch error with dataset prdatapb_solo", prdatapb_solo.errorstring)'
                  ondata="parent.dpready = true"/>
 
     <method name="sendit"><![CDATA[
       this.xmldat = "<top>This is posted data. <sub>With M&amp;M&apos;s chocolate candies</sub><node>3 &lt; 2 and &gt; 1 </node></top>";
-      prdatapb.setHeader("content-type", "application/xml");
-      prdatapb.setQueryType("POST");
-      prdatapb.setPostBody(this.xmldat);
-      prdatapb.doRequest();
+      prdatapb_solo.setHeader("content-type", "application/xml");
+      prdatapb_solo.setQueryType("POST");
+      prdatapb_solo.setPostBody(this.xmldat);
+      prdatapb_solo.doRequest();
       ]]>
     </method>
 
@@ -48,8 +48,8 @@
 
         <method name="doIt" args="dp">
             <![CDATA[
-              canvas.xmldat = this.xmldat;
-              assertTrue(xmlstringequals( this.xmldat ,  dp.xpathQuery( '/response/echo/top' ).serialize() ));
+                     
+              assertTrue(xmlstringequals( this.xmldat ,  dp.xpathQuery( '/response/echo/top' ).serialize()));
             ]]>
         </method>
         <method name="addTests"> 
