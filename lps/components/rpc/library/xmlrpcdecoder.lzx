@@ -43,14 +43,17 @@ class LzXMLRPCDecoder {
       <base64>  base64-encoded binary   eW91IGNhbid0IHJlYWQgdGhpcyE=
     */
 
-    public static function xmlrpc2jsobj (elt:LzDataElement):* {
-        if (!elt.hasChildNodes()) {
-            return (void 0);
-        } 
-        if ( elt.nodeType == LzDataElement.TEXT_NODE ){
+    public static function xmlrpc2jsobj (node:LzDataNodeMixin):* {
+        if ( node['nodeType'] == LzDataElement.TEXT_NODE ){
             // <value>foobar<value> is a String value
-            return ((elt cast LzDataText).data);
+            return ((node cast LzDataText).data);
         } else {
+            var elt = (node cast LzDataElement);
+            if (! elt.hasChildNodes()) {
+                Debug.error('xmlrpc2jsobj got element with no child nodes', elt);
+                return (void 0);
+            } 
+
             var datatype = elt.nodeName;
             // first child is a data type
             switch (datatype) {

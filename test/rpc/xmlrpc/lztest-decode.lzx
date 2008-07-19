@@ -103,19 +103,69 @@ function test_scalars () {
     LzTestManager.assertEquals( 19,   obj.getHours(), "parse date 1997-07-16T19:20:30" );
     LzTestManager.assertEquals( 20,   obj.getMinutes(), "parse date 1997-07-16T19:20:30" );
     LzTestManager.assertEquals( 30,    obj.getSeconds(), "parse date 1997-07-16T19:20:30" );
+}
 
 
+function test_complex () {
+    var str ="      <struct>" + 
+      "<member> " + 
+        "<name>myarray</name> " + 
+        "<value> <array>"+
+            "<data>" + 
+            "<value><i4>259</i4></value>"+
+            "<value><string>Boston MA</string></value>" + 
+            "<value><boolean>1</boolean></value>"+
+            "<value><boolean>0</boolean></value>"+
+            "<value><i4>3.14159</i4></value>" + 
+            "</data>"+
+            "</array></value> " + 
+      "</member> " + 
+      "<member> " + 
+         "<name>mystruct</name> " + 
+         "<value>" + 
+                "<struct>" + 
+                  "<member> " + 
+                    "<name>lowerBound</name> " + 
+                    "<value><i4>18</i4></value> " + 
+                  "</member> " + 
+                  "<member> " + 
+                     "<name>upperBound</name> " + 
+                     "<value><i4>139</i4></value> " + 
+                   "</member> " +
+                   "<member> " + 
+                     "<name>color</name> " + 
+                     "<value>RED</value> " + 
+                   "</member> " + 
+                "</struct>"+ 
+         "</value> " + 
+       "</member> " + 
+    "</struct>"; 
     
+    var obj = LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData(str));
+    LzTestManager.assertTrue( obj instanceof Object);
+    var s1 = obj['myarray'];
+    var s2 = obj['mystruct'];
+    LzTestManager.assertEquals( 259, s1[0]);
+    LzTestManager.assertEquals( "Boston MA", s1[1]);
+    LzTestManager.assertEquals( true, s1[2]);
+    LzTestManager.assertEquals( false, s1[3]);
+    LzTestManager.assertWithin( 3.14159, s1[4], 1e-14);
+
+
+    LzTestManager.assertEquals( 18, s2['lowerBound'], "struct member lowerBound");
+    LzTestManager.assertEquals( 139, s2['upperBound'], "struct member upperBound");
+    LzTestManager.assertEquals( "RED", s2['color'], "struct member color");
 
 
 }
+
 
 
 xmlrpcsuite.addTest( test_date_parser );
 xmlrpcsuite.addTest( test_struct_parser );
 xmlrpcsuite.addTest( test_array_parser );
 xmlrpcsuite.addTest( test_scalars );
-
+xmlrpcsuite.addTest( test_complex );
 
 ]]>
 </script>
