@@ -262,8 +262,7 @@ public class NodeModel implements Cloneable {
       }
       String installer = "setAttribute";
       String body = "\n#beginAttribute\n" + srcloc + value + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n";
-      String pragmas =
-        "\n#pragma 'withThis'\n";
+      String pragmas = "";
 
       // All constraint methods need ignore args for swf9
       String args="$lzc$ignore";
@@ -289,8 +288,14 @@ public class NodeModel implements Cloneable {
       // value sent by sendEvent, so we have to accept it, but we
       // ignore it
       if (canHaveMethods) {
+          // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
+          // in the script-compiler back-end
+          if (! ("swf9".equals(env.getRuntime()))) {
+            pragmas += "\n#pragma 'withThis'\n";
+          }
           binder = new Method(bindername, args, pragmas, body, srcloc);
       } else {
+          pragmas += "\n#pragma 'withThis'\n";
           binder = new Function(bindername, args, pragmas, body, srcloc);
       }
       return binder;
@@ -300,13 +305,19 @@ public class NodeModel implements Cloneable {
       if (! when.equals(WHEN_ALWAYS)) {
         return null;
       }
-      String preface = "\n#pragma 'withThis'\n";
+      String pragmas = "";
       String body = "return (" + getCompiler().dependenciesForExpression(value) + ")";
       Function dependencies;
       if (canHaveMethods) {
-          dependencies = new Method(dependenciesname, "", preface, body, srcloc);
+          // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
+          // in the script-compiler back-end
+          if (! ("swf9".equals(env.getRuntime()))) {
+            pragmas += "\n#pragma 'withThis'\n";
+          }
+          dependencies = new Method(dependenciesname, "", pragmas, body, srcloc);
       } else {
-          dependencies = new Function(dependenciesname, "", preface, body, srcloc);
+          pragmas += "\n#pragma 'withThis'\n";
+          dependencies = new Function(dependenciesname, "", pragmas, body, srcloc);
       }
       return dependencies;
     }
@@ -1287,7 +1298,7 @@ solution =
             referencename = debug ?
               ("$lzc$" + "handle_" + event + "_reference" + unique) :
               env.methodNameGenerator.next();
-            String pragmas = "\n#pragma 'withThis'\n";
+            String pragmas = "";
             String refbody = "var $lzc$reference = (" +
                 "#beginAttribute\n" +
                 reference + "\n#endAttribute\n);\n" +
@@ -1302,8 +1313,14 @@ solution =
                  "");
             Function referencefn;
             if (canHaveMethods) {
+                // TODO: [2008-07-21 ptw] (LPP-5813) This should really
+                // be in the script-compiler back-end
+                if (! ("swf9".equals(env.getRuntime()))) {
+                  pragmas += "\n#pragma 'withThis'\n";
+                }
                 referencefn = new Method(referencename, "", pragmas, refbody, srcloc);
             } else {
+                pragmas += "\n#pragma 'withThis'\n";
                 referencefn = new Function(referencename, "", pragmas, refbody, srcloc);
             }
             // Add reference computation as a method (so it can have
@@ -1318,13 +1335,18 @@ solution =
                   env.methodNameGenerator.next();
             }
             String pragmas = "\n#beginContent\n" +
-                "\n#pragma 'methodName=" + method + "'\n" +
-                "\n#pragma 'withThis'\n";
+                "\n#pragma 'methodName=" + method + "'\n";
             body = body + "\n#endContent";
             Function fndef;
             if (canHaveMethods) {
+                // TODO: [2008-07-21 ptw] (LPP-5813) This should really
+                // be in the script-compiler back-end
+                if (! ("swf9".equals(env.getRuntime()))) {
+                  pragmas += "\n#pragma 'withThis'\n";
+                }
                 fndef = new Method(method, args, pragmas, body, srcloc);
             } else {
+                pragmas += "\n#pragma 'withThis'\n";
                 fndef = new Function(method, args, pragmas, body, srcloc);
             }
             // Add handler as a method
@@ -1404,15 +1426,15 @@ solution =
         ClassModel superclassModel = getParentClassModel();
         // Override will be required if there is an inherited method
         // of the same name
-        boolean override = 
-            // This gets methods from the schema, in particular, the
-            // LFC interface
+        boolean override =
+          // This gets methods from the schema, in particular, the
+          // LFC interface
           superclassModel.getAttribute(name, allocation) != null ||
-            // This gets methods the compiler has added, in
-            // particular, setter methods
-            superclassModel.getMergedMethods().containsKey(name) ||
-            // And the user may know better than any of us
-            "true".equals(element.getAttributeValue("override"));
+          // This gets methods the compiler has added, in
+          // particular, setter methods
+          superclassModel.getMergedMethods().containsKey(name) ||
+          // And the user may know better than any of us
+          "true".equals(element.getAttributeValue("override"));
         boolean isfinal = "true".equals(element.getAttributeValue("final"));
 
         if (!override) {
@@ -1430,15 +1452,20 @@ solution =
              CompilerUtils.attributeLocationDirective(element, "name"));
         Function fndef;
         String pragmas = "\n#beginContent\n" +
-            "\n#pragma 'methodName=" + name + "'\n" +
-            "\n#pragma 'withThis'\n";
+                "\n#pragma 'methodName=" + name + "'\n";
         body = body + "\n#endContent";
         if (canHaveMethods) {
             String adjectives = "";
             if (override) { adjectives += " override"; }
             if (isfinal) { adjectives += " final"; }
+            // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
+            // in the script-compiler back-end
+            if (! ("swf9".equals(env.getRuntime()))) {
+              pragmas += "\n#pragma 'withThis'\n";
+            }
             fndef = new Method(name, args, pragmas, body, name_loc, adjectives);
         } else {
+            pragmas += "\n#pragma 'withThis'\n";
             fndef = new Function(name, args, pragmas, body, name_loc);
         }
         addProperty(name, fndef, allocation, element);
