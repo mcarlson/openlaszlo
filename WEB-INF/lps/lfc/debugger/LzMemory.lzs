@@ -626,7 +626,7 @@ class __LzLeaks /* extends Array */ {
     }
   }
 
-  function _dbg_name () {
+  override function _dbg_name () {
     var leakage = 0;
     var n = this.length;
     for (var i = n - 1; i >=0; i--) {

@@ -568,8 +568,9 @@ public class SWF9External {
   /**
    * Get the file name of the LFC shared library for SWF9.
    */
-  public static String getLFCLibrary() {
-    return LPS.getLFCDirectory() + File.separator + "LFC9.swc";
+  public static String getLFCLibrary(boolean useDebug) {
+    String dbgext = useDebug ? "-debug" : "";
+    return LPS.getLFCDirectory() + File.separator + "LFC9" + dbgext + ".swc";
   }
 
   public static boolean isWindows() {
@@ -615,7 +616,7 @@ public class SWF9External {
       cmd.add("-default-size");
       cmd.add(options.get(Compiler.CANVAS_WIDTH, "800"));
       cmd.add(options.get(Compiler.CANVAS_HEIGHT, "600"));
-      cmd.add("-library-path+=" + getLFCLibrary());
+      cmd.add("-library-path+=" + getLFCLibrary(options.getBoolean(Compiler.DEBUG_SWF9)));
     }
     else {
       // must be last before list of classes to follow.

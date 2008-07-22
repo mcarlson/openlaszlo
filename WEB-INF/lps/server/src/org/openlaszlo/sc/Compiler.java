@@ -314,6 +314,10 @@ public class Compiler {
     }
     options.putBoolean(GENERATE_FUNCTION_2, true);
     options.putBoolean(GENERATE_FUNCTION_2_FOR_LZX, true);
+
+    if (options.getBoolean(DEBUG_SWF9)) {
+      options.putBoolean(NAME_FUNCTIONS, true);
+    }
   }
 
   public byte[] compile(String source) {

@@ -374,7 +374,7 @@ mixin LzFormatter {
           var str;
           if (value is Function) {
             if ($debug) {
-              str = this.functionName(value);
+              str = Debug.functionName(value, false);
             }
             if (! str) {
               str =  'function () {...}';

@@ -430,6 +430,13 @@ lz.Delegate = LzDelegate;  // publish
 public final class LzEvent extends LzDeclaredEventClass {
     /** @access private */
     var delegateList:Array = null;
+    if ($debug) {
+      var _dbg_eventSender:*;
+      var _dbg_eventName:String;
+    }
+    if ($profile) {
+      var _dbg_profileName:String;
+    }
 
   /**
    * @param LzEventable eventSender: The owner of this event

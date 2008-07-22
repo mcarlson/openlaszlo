@@ -233,18 +233,19 @@
         if (!(new File(plain)).exists()) {
           dobuild(plain, "swf" + v, shlibopt);
         }
-        // TODO: [2008-01-11 dda] when ready, add extra builds for SWF9
-        if (buildDebug && v != 9) {
+        if (buildDebug) {
           var dest = LFCdir + "LFC" + v + "-debug" + ext;
+          var platformopt = ((v == 9) ? "--option debug=true " : "");
           if (!(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply --debug
             dobuild(dest,
                     "swf" + v,
+                    platformopt +
                     shlibopt + "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
           }
           var dest = LFCdir + "LFC" + v + "-backtrace" + ext;
-          if (!(new File(dest)).exists()) {
+          if (v != 9 && !(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply -g3
             dobuild(dest,

@@ -579,10 +579,14 @@ function serializeInternal (len:Number = Infinity) :String {
 
 if ($debug) {
 /**
-  * For debugging.  Same as serialize, but will abbreviate at printLength.
+  * For debugging, useful to override _dbg_name().
+  * _dbg_name should not be defined here, unless it
+  * can be consistently overridden or not (some runtimes
+  * need an 'override' keyword).
+  * Same as serialize, but will abbreviate at printLength.
   * @access private
   */
-function _dbg_name () :String {
+function dataElementMixin_dbg_name () :String {
     return this.serializeInternal(Debug.printLength);
 }
 }
