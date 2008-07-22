@@ -163,6 +163,12 @@ dynamic class LzCanvas extends LzView {
     function LzCanvas ( parent = null, args = null, children = null, async = null) {
       super(parent, args, children, async);
       this.datasets = {};
+      // Canvas can't change size
+      // Override values defined in LzView
+      this.__LZcheckwidth = null;
+      this.__LZcheckheight = null;
+      this.hassetwidth  = true;
+      this.hassetheight = true;
     }
 
     /**
@@ -513,16 +519,6 @@ override function setResource (v ) {
 override function toString (){
     return "This is the canvas";
 }
-
-/*
-  * Canvas can't change size
-  */
-// Override values defined in LzView
-/** @access private */ prototype.__LZcheckwidth = null;
-/** @access private */ prototype.__LZcheckheight = null;
-/** @access private */ prototype.hassetwidth  = true;
-/** @access private */ prototype.hassetheight = true;
-
 
 /**
   * @access private
