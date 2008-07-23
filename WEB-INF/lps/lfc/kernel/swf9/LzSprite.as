@@ -55,7 +55,6 @@ dynamic public class LzSprite extends Sprite {
       var resourceCache:Array = null;
 
       public var resourceLoaded:Boolean = false;
-      public var resourceURL:String = null;
 
       //@field Boolean _setrescwidth: If true, the view does not set its
       //resource to the width given in a call to
@@ -142,7 +141,6 @@ dynamic public class LzSprite extends Sprite {
           if ( r.indexOf('http:') == 0 || r.indexOf('https:') == 0){
               this.skiponload = false;
               this.setSource( r );
-              this.resource = r;
               return;
           }
           // LzResourceLibrary.lzcheckbox_rsrc =
@@ -169,14 +167,15 @@ dynamic public class LzSprite extends Sprite {
 
           this.resourcewidth = res.width;
           this.resourceheight = res.height;
-          this.owner.resourceevent('totalframes', res.frames.length, false, false);
+          this.owner.resourceevent('totalframes', res.frames.length);
           if (this.resourceObj == null) {
               this.createResourceBitmap()  
           }
 
           // instantiate resource at frame 1
           this.stop(1);
-          updateResourceSize();
+          // send events, but skip onload
+          sendResourceLoad(true);
       }
 
 
@@ -192,13 +191,19 @@ dynamic public class LzSprite extends Sprite {
              return;
          }
 
-          this.resourceURL = url;
-          imgLoader = new Loader();
-          this.resourceObj = imgLoader;
-          this.addChildAt(imgLoader, IMGDEPTH);
-          var info:LoaderInfo = imgLoader.contentLoaderInfo;
-          info.addEventListener(Event.INIT,       loaderInitHandler);
-          info.addEventListener(IOErrorEvent.IO_ERROR,       loaderEventHandler);
+          this.resource = url;
+          if (! imgLoader) {
+            imgLoader = new Loader();
+            this.resourceObj = imgLoader;
+            this.addChildAt(imgLoader, IMGDEPTH);
+            var info:LoaderInfo = imgLoader.contentLoaderInfo;
+            info.addEventListener(Event.INIT, loaderInitHandler);
+            info.addEventListener(IOErrorEvent.IO_ERROR, loaderEventHandler);
+          }
+          var res = this.resourceObj;
+          if (res) {
+            res.scaleX = res.scaleY = 1;
+          }
           //Debug.write('sprite setsource load ', url);
           imgLoader.load(new URLRequest(url));
       }
@@ -209,42 +214,45 @@ dynamic public class LzSprite extends Sprite {
           // has been received. You get an error if you try to add them before this.
           var loader:Loader = Loader(event.target.loader);
           var info:LoaderInfo = LoaderInfo(loader.contentLoaderInfo);
-          info.addEventListener(ProgressEvent.PROGRESS,      loaderEventHandler);
-          info.addEventListener(Event.OPEN,                  loaderEventHandler);
-          info.addEventListener(Event.UNLOAD,                loaderEventHandler); 
-          info.addEventListener(Event.COMPLETE,              loaderEventHandler);
+          info.addEventListener(ProgressEvent.PROGRESS, loaderEventHandler);
+          info.addEventListener(Event.OPEN, loaderEventHandler);
+          info.addEventListener(Event.UNLOAD, loaderEventHandler); 
+          info.addEventListener(Event.COMPLETE, loaderEventHandler);
           info.addEventListener(HTTPStatusEvent.HTTP_STATUS, loaderEventHandler);
-
-
           // trace(event);
       }
 
       public function loaderEventHandler(event:Event):void {
-      var loader:Loader = Loader(event.target.loader);
-      var info:LoaderInfo = LoaderInfo(loader.contentLoaderInfo);
-          if (event.type == Event.COMPLETE) {
-              this.resourceLoaded = true;
+          var loader:Loader = Loader(event.target.loader);
+          this.resourcewidth = 0;
+          this.resourceheight = 0;
+          try {
               this.resourcewidth = loader.width;
               this.resourceheight = loader.height;
+          } catch (e) {
+          }
+          if (event.type == Event.COMPLETE) {
+              this.resourceLoaded = true;
               // Apply stretch if needed, now that we know the asset dimensions.
               this.applyStretchResource();
-              if (this.owner != null) {
-                  this.owner.resourceload({
-                      width:  loader.width,
-                              height: loader.height,
-                              sprite: this,
-                              resource: this.resourceURL,
-                              // When would we want skiponload to be true??
-                              skiponload: false});
-              }
+              // send events, including onload
+              sendResourceLoad();
           } else if (event.type == IOErrorEvent.IO_ERROR) {
               // TODO [hqm 2007-12] is this the right event type? Should we be looking
               // at HTTP_STATUS event error codes also?
-                  this.resourcewidth = 0;
-                  this.resourceheight = 0;
-                  if (this.owner != null) {
-                      this.owner.resourceloaderror( event );
+              if (this.owner != null) {
+                  this.owner.resourceloaderror( event );
+              }
+          } else if (event.type == ProgressEvent.PROGRESS) {
+              var ev = event;
+              if (ev) {
+                  var lr = ev.bytesLoaded / ev.bytesTotal;
+                  if (!isNaN(lr)) {
+                      this.owner.resourceevent('loadratio', lr);
                   }
+              }
+          } else if (event.type == Event.OPEN) {
+              this.owner.resourceevent('loadratio', 0);
           }
       }
       
@@ -659,15 +667,15 @@ dynamic public class LzSprite extends Sprite {
       public function applyStretchResource():void {
           var res = this.resourceObj;
           // Don't try to do anything while an image is loading
-          if ( (res == null) || (res is Loader && !this.resourceLoaded)) { return; }
+          if (res == null) return;
 
           var scaleX = 1.0;
-          if (this.lzwidth && this._setrescwidth) {
+          if (this.lzwidth && this._setrescwidth && this.resourcewidth) {
               var scaleX =  this.lzwidth / this.resourcewidth;
           } 
 
           var scaleY = 1.0;
-          if (this.lzheight && this._setrescheight) {
+          if (this.lzheight && this._setrescheight && this.resourceheight) {
               var scaleY =  this.lzheight / this.resourceheight;
           } 
 
@@ -837,8 +845,9 @@ dynamic public class LzSprite extends Sprite {
       }
 
 
-      function updateResourceSize () {
-          this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
+      function sendResourceLoad(skiponload = false) {
+          // skiponload is true for resources/setResource() calls
+          this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: skiponload});
       }
 
       function setCursor ( c ){

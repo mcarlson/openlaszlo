@@ -1319,7 +1319,7 @@ function resourceloadtimeout() {
   * @access private
   * Called by the sprite when the resource playback events occur
   */
-function resourceevent(name, value, eventonly, force) {
+function resourceevent(name, value, eventonly = false, force = false) {
     // send the event if force is true or eventonly is true or the value changed
     var sendevent = force == true || eventonly == true || this[name] != value;
     if (eventonly != true) this[name] = value;
