@@ -223,36 +223,40 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function loaderEventHandler(event:Event):void {
-          var loader:Loader = Loader(event.target.loader);
-          this.resourcewidth = 0;
-          this.resourceheight = 0;
           try {
-              this.resourcewidth = loader.width;
-              this.resourceheight = loader.height;
-          } catch (e) {
-          }
-          if (event.type == Event.COMPLETE) {
-              this.resourceLoaded = true;
-              // Apply stretch if needed, now that we know the asset dimensions.
-              this.applyStretchResource();
-              // send events, including onload
-              sendResourceLoad();
-          } else if (event.type == IOErrorEvent.IO_ERROR) {
-              // TODO [hqm 2007-12] is this the right event type? Should we be looking
-              // at HTTP_STATUS event error codes also?
-              if (this.owner != null) {
-                  this.owner.resourceloaderror( event );
+              var loader:Loader = Loader(event.target.loader);
+              this.resourcewidth = 0;
+              this.resourceheight = 0;
+              try {
+                  this.resourcewidth = loader.width;
+                  this.resourceheight = loader.height;
+              } catch (e) {
               }
-          } else if (event.type == ProgressEvent.PROGRESS) {
-              var ev = event;
-              if (ev) {
-                  var lr = ev.bytesLoaded / ev.bytesTotal;
-                  if (!isNaN(lr)) {
-                      this.owner.resourceevent('loadratio', lr);
+              if (event.type == Event.COMPLETE) {
+                  this.resourceLoaded = true;
+                  // Apply stretch if needed, now that we know the asset dimensions.
+                  this.applyStretchResource();
+                  // send events, including onload
+                  sendResourceLoad();
+              } else if (event.type == IOErrorEvent.IO_ERROR) {
+                  // TODO [hqm 2007-12] is this the right event type? Should we be looking
+                  // at HTTP_STATUS event error codes also?
+                  if (this.owner != null) {
+                      this.owner.resourceloaderror( event );
                   }
+              } else if (event.type == ProgressEvent.PROGRESS) {
+                  var ev = event;
+                  if (ev) {
+                      var lr = ev.bytesLoaded / ev.bytesTotal;
+                      if (!isNaN(lr)) {
+                          this.owner.resourceevent('loadratio', lr);
+                      }
+                  }
+              } else if (event.type == Event.OPEN) {
+                  this.owner.resourceevent('loadratio', 0);
               }
-          } else if (event.type == Event.OPEN) {
-              this.owner.resourceevent('loadratio', 0);
+          } catch (error:Error) {
+              trace(error);
           }
       }
       
