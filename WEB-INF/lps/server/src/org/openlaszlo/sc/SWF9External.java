@@ -591,11 +591,11 @@ public class SWF9External {
     
     if (buildSharedLibrary) {
       outfilebase = "app.swc";
-      cmd.add(getFlexPathname("bin/compc" + exeSuffix));
+      cmd.add(getFlexPathname("bin" + File.separator + "compc" + exeSuffix));
     }
     else {
       outfilebase = "app.swf";
-      cmd.add(getFlexPathname("bin/mxmlc" + exeSuffix));
+      cmd.add(getFlexPathname("bin" + File.separator + "mxmlc" + exeSuffix));
     }
 
     String outfilename = workdir.getPath() + File.separator + outfilebase;
