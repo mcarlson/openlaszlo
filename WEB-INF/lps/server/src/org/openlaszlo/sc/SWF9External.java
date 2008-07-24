@@ -543,7 +543,7 @@ public class SWF9External {
   }
 
   public static String FLEX_HOME () {
-    return LPS.HOME()+"/WEB-INF";
+    return LPS.HOME()+File.separator+"WEB-INF";
   }
 
   /**
