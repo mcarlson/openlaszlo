@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -287,17 +287,6 @@ public abstract class ResponderCache extends Responder
                 mLogger.warn("can't load soap datasource", e);
             }
 
-                        try {
-                mDataSourceMap.put("soap-swf",   new org.openlaszlo.data.swf.SOAPDataSource());
-            } catch (Throwable e) {
-                mLogger.warn("can't load soap datasource", e);
-            }
-
-            try {
-                mDataSourceMap.put("xmlrpc", new XMLRPCDataSource());
-            } catch (Throwable e) {
-                mLogger.warn("can't load xmlrpc datasource", e);
-            }
 
             mIsInitialized = true;
         }

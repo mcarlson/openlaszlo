@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -305,15 +305,20 @@ public class JavaDataSource extends DataSource
 );
         }
 
-        XmlRpcRequest xr = new LZXmlRpcRequestProcessor()
+        /*        XmlRpcRequest xr = new LZXmlRpcRequestProcessor()
             .processRequest(new ByteArrayInputStream(postbody.getBytes()));
+        */
+
+        // TODO [hqm -- ] fill in these manually
+        String methodname = "";
+        Vector parameters = new Vector();
 
         long t0, t1;
         t0 = System.currentTimeMillis();
         mJavaRPCLoad.increment();
         try {
             return execute(req, res, targetClass, scope, objectReturnType,
-                           swfversion, xr.getMethodName(), xr.getParameters());
+                           swfversion, methodname, parameters);
         } catch (IOException e) {
             return compileFault(
 /* (non-Javadoc)
@@ -321,7 +326,7 @@ public class JavaDataSource extends DataSource
  * @org-mes="exception executing " + p[0]
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-322", new Object[] {xr.getMethodName()})
+                                JavaDataSource.class.getName(),"051018-322", new Object[] {methodname})
 , e,
                                 runtime, swfversion);
         } finally {
@@ -632,15 +637,8 @@ String errmsg =
                 return new EncoderData((DataEncoder)returnValue);
             }
 
-            if ("dhtml".equals(runtime)) {
-                return new ObjectData
-                    (org.openlaszlo.remote.json.LZReturnObject.createObject(returnValue, objectReturnType));
-            } else {
-                return new ObjectData
-                    (org.openlaszlo.remote.swf.LZReturnObject.createObject(returnValue, objectReturnType, 
-                                                 swfversion));
-            }
-
+            return new ObjectData
+                (org.openlaszlo.remote.json.LZReturnObject.createObject(returnValue, objectReturnType));
 
         } catch (IOException e) {
             mLogger.error("IOException", e);
@@ -840,15 +838,8 @@ String errmsg =
 
                 ////                if ("dhtml".equals(runtime)) { }
                 byte[] b;
-                if ("dhtml".equals(runtime)) { 
-                
-                    b = org.openlaszlo.remote.json.LZClientObject.createObject(cname, getScopeName(scope),
+                b = org.openlaszlo.remote.json.LZClientObject.createObject(cname, getScopeName(scope),
                                                        swfversion);
-                } else {
-                    b = org.openlaszlo.remote.swf.LZClientObject.createObject(cname, getScopeName(scope),
-                                                       swfversion);
-
-                }
                 data = new ObjectData(b);
                 if (scope == SCOPE_NONE) {
                     mStaticPrototypes.put(runtime, cname, data);
