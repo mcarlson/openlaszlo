@@ -42,29 +42,6 @@ dynamic class LzDebugService {
 var Debug = new LzDebugService();
 lz.DebugService = LzDebugService;  // publish
 
-
-class LzMessage {
-    var message = "";
-    function LzMessage (...args) {
-        if (typeof (args[0]) == "string")  {
-            this.message = args[0];
-        }
-    }
-
-    function append (...args) {
-        this.message += args[0];
-    }
-
-    function appendInternal (...args) {
-        this.message += args[0];
-    }
-
-    function toString () {
-        return message;
-    }
-
-}
-
 class LzSourceMessage extends LzMessage {
     var file;
     var line

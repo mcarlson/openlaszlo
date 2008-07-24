@@ -34,7 +34,7 @@ class LzMessage {
     }
   }
 
-  // TODO: [2005-05-08 ptw] (LPP-5394) When toString is declared
+  // TODO: [2005-05-08 ptw] (LPP-5934) When toString is declared
   // public, remove the swf9 special-case
   if ($swf9) {
     prototype.toString = function () { return this.message; }
@@ -45,7 +45,7 @@ class LzMessage {
   }
 
   function toHTML () {
-    // TODO: [2005-05-08 ptw] (LPP-5394) When toString is declared
+    // TODO: [2005-05-08 ptw] (LPP-5934) When toString is declared
     // public, remove the swf9 special-case
     if ($swf9) {
       return this['toString']();

@@ -23,9 +23,7 @@ if ($swf9) {
 #include "compiler/Class.lzs"
 }
 
-// Debugger requires this, so must be loaded very early
-if ($swf9) {
-} else {
-  #include "compiler/LzMessage.lzs"
-}
+// Debugger (and LzFormatter) requires this, so must be loaded very early
+#include "compiler/LzMessage.lzs"
+
 #include "compiler/LzFormatter.lzs"
