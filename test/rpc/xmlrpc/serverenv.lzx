@@ -1,4 +1,4 @@
-<canvas debug="true" width="800" >
+<canvas debug="true" width="100%" >
 
     <!-- NOTE: You need to run serverenv.sh to run this example -->
 

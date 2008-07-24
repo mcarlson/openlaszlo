@@ -101,23 +101,18 @@ LzLoadQueue.XMLOnDataHandler = function (src) {
         }
         // cancel the timeout handler
         LzLoadQueue.unloadRequest(this);
-  } else {
+    } else {
         // If we timed out, and this response came in late, ignore it.
         if (this.timedout) {
             return;
         }
 
-      // Create a queue containing one root node, myself, and convert it and all children to
-      // LzDataNodes.
+        // Create a queue containing one root node, myself, and convert it and all children to
+        // LzDataNodes.
 
-      // Stash the raw text on the xml object, in case someone wants it (XMLHTTPRequest, for example)
-      this.loader.rawtext = src;
-      this.parseXML(src);
-      this.onload(true);
-      // Free up the network connection, so it can be reused, while we do the copy task in background.
-      // Copy the Flash XML tree into  tree of LFC LzData classes
-      this.loader.queuedCopyFlashXML(this);
-  }
+        this.onload(true);
+        this.loader.gotRawData(src, this);
+    }
 }
 
 /**

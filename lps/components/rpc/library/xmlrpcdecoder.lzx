@@ -44,7 +44,7 @@ class LzXMLRPCDecoder {
     */
 
     public static function xmlrpc2jsobj (node:LzDataNodeMixin):* {
-        if ( node['nodeType'] == LzDataElement.TEXT_NODE ){
+        if ( node instanceof LzDataText ){
             // <value>foobar<value> is a String value
             return ((node cast LzDataText).data);
         } else {
@@ -108,12 +108,17 @@ class LzXMLRPCDecoder {
     public static function decodeStruct(elt:LzDataElement) {
         var members:Array = elt.childNodes;
         var result = {};
+        var val:*;
         for (var i:int = 0; i < members.length; i++) {
             var member:LzDataElement = elt.childNodes[i];
             var nameElt:LzDataElement = member.childNodes[0];
             var name:String = (nameElt.childNodes[0] cast LzDataText).data;
             var valElt:LzDataElement = member.childNodes[1];
-            var val:* = LzXMLRPCDecoder.xmlrpc2jsobj(valElt.childNodes[0]);
+            if (valElt.hasChildNodes()) {
+                val = LzXMLRPCDecoder.xmlrpc2jsobj(valElt.childNodes[0]);
+            } else {
+                val = "";
+            }
             result[name] = val;
         }
         return result;
@@ -158,14 +163,14 @@ class LzXMLRPCDecoder {
         var b64s='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
         var d=[];
         var i=0;
-        s=replace(s,"\n","");
-        s=replace(s,"\r",""); 
-        s=replace(s,"=","");
+        s=LzXMLRPCDecoder.replace(s,"\n","");
+        s=LzXMLRPCDecoder.replace(s,"\r",""); 
+        s=LzXMLRPCDecoder.replace(s,"=","");
 
         while (i<s.length) {            
-            d[d.length] = String.fromCharCode((b64s.indexof(s.charAt(i)) << 2) | (b64s.indexof(s.charAt(i+1)) >> 4));
-            d[d.length] = String.fromCharCode(((b64s.indexof(s.charAt(i+1)) & 15) << 4) | (b64s.indexof(s.charAt(i+2)) >> 2));
-            d[d.length] = String.fromCharCode(((b64s.indexof(s.charAt(i+2)) & 3) << 6) | b64s.indexof(s.charAt(i+3)));
+            d[d.length] = String.fromCharCode((b64s.indexOf(s.charAt(i)) << 2) | (b64s.indexOf(s.charAt(i+1)) >> 4));
+            d[d.length] = String.fromCharCode(((b64s.indexOf(s.charAt(i+1)) & 15) << 4) | (b64s.indexOf(s.charAt(i+2)) >> 2));
+            d[d.length] = String.fromCharCode(((b64s.indexOf(s.charAt(i+2)) & 3) << 6) | b64s.indexOf(s.charAt(i+3)));
             i+=4;
         }
 

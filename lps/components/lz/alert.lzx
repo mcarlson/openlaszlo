@@ -41,8 +41,9 @@
                     - content_inset_left - content_inset_right}"/>
 
         <text name="alerttext" x="${parent.text_x}" y="${parent.text_y}"
-            resize="true" text="${parent.text}" multiline="true">
-            <method name="setText" args="t">
+            resize="true" multiline="true">
+            <attribute name="text" type="text" value="${parent.text}" setter="this.mySetText(text)"/>
+            <method name="mySetText" args="t">
                 super.setText(t);
                 if (!parent._usecontentwidth) {
                     this.setWidth(parent.width
@@ -73,8 +74,9 @@
               button(s). If button1 is clicked, close is passed a true value. If
               button2 is clicked, close is passed a false value.
               @param Boolean res: a boolean result value. -->
-        <method name="close" args="res">
-            this.result = res;
+        <method name="close" args="...args">
+            var res = args[0];
+            this.result = res
             if ( this.onresult ){
                 this.onresult.sendEvent( res);
             }

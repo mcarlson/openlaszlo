@@ -77,6 +77,7 @@ function removeCopyTask() {
 
 var onerror = LzDeclaredEvent;
 var ondata = LzDeclaredEvent;
+var oncontent = LzDeclaredEvent;
 var onrequest = LzDeclaredEvent;
 var ontimeout = LzDeclaredEvent;
 var onerror = LzDeclaredEvent;
@@ -489,6 +490,28 @@ function copyFlashXML (node, trimwhitespace, nsprefix) {
 // }
 //
 var copyQueue = null;
+
+var rawtext = null;
+// native XML request/loader object
+var xmlloadobj = null;
+
+/**
+ * @access private
+ * called by loader when raw data was arrived, but not yet been parsed 
+ */
+function gotRawData(content:String, loadobj:XML) {
+    this.rawtext = content;
+    this.xmlloadobj = loadobj;
+    if (this.oncontent.ready) this.oncontent.sendEvent(content);
+}
+
+
+function translateXML (content) {
+    this.xmlloadobj.parseXML(content);
+    // Copy the Flash XML tree into  tree of LFC LzData classes
+    this.queuedCopyFlashXML(this.xmlloadobj);
+}
+
 
 // Task that is called periodically from Idle loop.
 // This does the work of copying the Flash XML tree into a LzDataElement tree.

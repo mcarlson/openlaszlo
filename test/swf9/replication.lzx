@@ -1,0 +1,37 @@
+<canvas> 
+     
+    <dataset name="ds" > 
+        <entries> 
+            <entry>one</entry> 
+            <entry>two</entry> 
+            <entry>three</entry> 
+            <hidden>hidden entry</hidden> 
+        </entries> 
+    </dataset> 
+     
+    <simplelayout axis="x" spacing="5" /> 
+     
+    <button text="set to *" > 
+        <handler name="onmouseup" > 
+            foo.setXPath("*"); 
+        </handler> 
+    </button> 
+     
+    <button text="set to entry" > 
+        <handler name="onmouseup" > 
+            foo.setXPath("entry"); 
+        </handler> 
+    </button> 
+     
+    <view datapath="ds:/entries"> 
+        <simplelayout axis="y" spacing="5" /> 
+        <view id="foo" datapath="entry" > 
+            <text text="$path{'text()'}" /> 
+        </view> 
+    </view> 
+     
+</canvas> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

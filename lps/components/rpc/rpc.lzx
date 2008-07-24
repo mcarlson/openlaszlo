@@ -347,7 +347,7 @@
               a dataset or a LzDataElement object.
               @return Number: the unique sequence request number associated with
               this call, or -1 if there was a problem invoking this method. -->
-        <method name="invoke" args="params, delegate">
+        <method name="invoke" args="params = null, delegate = null">
         <![CDATA[
             if (typeof(this._funcref) != 'function') {
                 Debug.error(this.name, "could not invoke; is remote service loaded?");
@@ -412,7 +412,7 @@
             Debug.write("rpc.lzx _handler", o);
             // responseheaders are SOAP specific
             if (o.opinfo['responseheaders'] != null) {
-                var r = new _root.LzDataElement("root", { }, o.opinfo.responseheaders);
+                var r = new LzDataElement("root", { }, o.opinfo.responseheaders);
                 if ( this.remotecontext != null && this.remotecontext.responseheaders != null) {
                     this.remotecontext.responseheaders.setData( r );
                 } else if ( parent.responseheaders != null ) {

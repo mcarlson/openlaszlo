@@ -26,7 +26,7 @@
     </method>
 
     <method name="test1" args="...ignore">
-          Debug.write("this.dpready = ",this.dpready);
+//          Debug.write("this.dpready = ",this.dpready);
       if ( ! this.dpready ){
           if ( ! this.t2del ){
               Debug.write( "test isn't done until async test runs" );

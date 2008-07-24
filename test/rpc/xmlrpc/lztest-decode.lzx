@@ -103,6 +103,12 @@ function test_scalars () {
     LzTestManager.assertEquals( 19,   obj.getHours(), "parse date 1997-07-16T19:20:30" );
     LzTestManager.assertEquals( 20,   obj.getMinutes(), "parse date 1997-07-16T19:20:30" );
     LzTestManager.assertEquals( 30,    obj.getSeconds(), "parse date 1997-07-16T19:20:30" );
+
+    obj = LzXMLRPCDecoder.xmlrpc2jsobj(LzDataElement.stringToLzData('<base64>eW91IGNhbid0IHJlYWQgdGhpcyE=</base64>'));
+    LzTestManager.assertEquals( "you can't read this!", obj, "parse base64" );
+
+
+
 }
 
 

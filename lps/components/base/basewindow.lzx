@@ -347,7 +347,7 @@
         </method>
 
         <!--- Hides the window, same as setAttribute('visible', false). -->
-        <method name="close">
+        <method name="close" args="...ignore">
             this.setAttribute('visible', false);
         </method>
 

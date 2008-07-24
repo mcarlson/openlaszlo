@@ -16,7 +16,7 @@
   * @shortdesc An abstract class to represent data requests.
   * @lzxname datarequest
   */
-class LzDataRequest extends LzNode {
+class LzDataRequest extends LzEventable {
 
     /** @access private
      * @modifiers override 
@@ -87,12 +87,10 @@ class LzDataRequest extends LzNode {
     * @param Object requestor: The object using the DataRequest to pass into the dataprovider's doRequest method.
     */
     function LzDataRequest (requestor = null) { 
-        super(requestor);
         this.requestor = requestor; 
     } 
 
 
 }
 
-lz[LzDataRequest.tagname] = LzDataRequest;
-lz.DataRequest = LzDataRequest;  // publish
+

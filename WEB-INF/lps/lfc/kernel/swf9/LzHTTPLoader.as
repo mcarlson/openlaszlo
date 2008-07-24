@@ -110,6 +110,10 @@ public class LzHTTPLoader {
         this.options[key] = val;
     }
 
+    /* @public */
+    public function getOption (key:String) :* {
+        return this.options[key];
+    }
 
     /* @public */
     public function setProxied (proxied:Boolean) :void {
@@ -278,32 +282,36 @@ public class LzHTTPLoader {
             //            trace("completeHandler: " , this, loader);
             //trace("completeHandler: bytesLoaded" , loader.bytesLoaded, 'bytesTotal', loader.bytesTotal);
             //trace('typeof data:', typeof(loader.data), loader.data.length, 'parsexml=', options.parsexml);
-            responseText = loader.data;
+            this.responseText = loader.data;
 
-            var lzxdata:LzDataElementMixin = null;
-            removeTimeout(this);
+            if (this.options['parsexml']) {
+                var lzxdata:LzDataElementMixin = null;
+                removeTimeout(this);
 
-            // Parse data into flash native XML and then convert to LFC LzDataElement tree
-            try {
-                if (responseText != null && options.parsexml) {
-                    // This is almost identical to LzXMLParser.parseXML()
-                    // except ignoreWhitespace comes from options
-                    XML.ignoreWhitespace = options.trimwhitespace;
-                    this.responseXML = XML(responseText);
-                    this.responseXML.normalize();
-                    lzxdata = LzXMLTranslator.copyXML(this.responseXML,
-                                                      options.trimwhitespace,
-                                                      options.nsprefix);
+                // Parse data into flash native XML and then convert to LFC LzDataElement tree
+                try {
+                    if (responseText != null && options.parsexml) {
+                        // This is almost identical to LzXMLParser.parseXML()
+                        // except ignoreWhitespace comes from options
+                        XML.ignoreWhitespace = options.trimwhitespace;
+                        this.responseXML = XML(responseText);
+                        this.responseXML.normalize();
+                        lzxdata = LzXMLTranslator.copyXML(this.responseXML,
+                                                          options.trimwhitespace,
+                                                          options.nsprefix);
+                    }
+                } catch (err) {
+                    trace("caught error parsing xml", err);
+                    loader = null;
+                    loadError(this, null);
+                    return;
                 }
-            } catch (err) {
-                trace("caught error parsing xml", err);
-                loader = null;
-                loadError(this, null);
-                return;
-            }
 
-            loader = null;
-            loadSuccess(this, lzxdata);
+                loader = null;
+                loadSuccess(this, lzxdata);
+            } else {
+                loadSuccess(this, this.responseText);
+            }
         }
     }
 

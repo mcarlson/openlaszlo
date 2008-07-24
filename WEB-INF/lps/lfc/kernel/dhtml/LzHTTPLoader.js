@@ -19,9 +19,39 @@ var LzHTTPLoader = function (owner, proxied) {
 }
 
 // Default callback handlers
+LzHTTPLoader.prototype.loadContent = function (self, content) {
+    if (this.options['parsexml']) {
+        this.translateXML(content);
+    } else {
+        this.loadSuccess(this, content);
+    }
+}
+
 LzHTTPLoader.prototype.loadSuccess = function (loader, data) {}
 LzHTTPLoader.prototype.loadError   = function (loader, data) {}
 LzHTTPLoader.prototype.loadTimeout = function (loader, data) {}
+
+/* Parse response into XML data. */ 
+LzHTTPLoader.prototype.translateXML = function (content) {
+    var lzxdata = null;
+    if (this.responseXML != null) {
+        var nodes = this.responseXML.childNodes;
+        // find first content (type == 1) child node
+        for (var i = 0; i < nodes.length; i++) {
+            var child = nodes.item(i);
+            if (child.nodeType == 1) {
+                elt = child;
+                break;
+            }
+        }
+        lzxdata = LzXMLTranslator.copyXML(elt,
+                                          this.options.trimwhitespace,
+                                          this.options.nsprefix);
+    }
+
+    this.loadSuccess(this, lzxdata);
+}
+
 
 /* Returns the response as a string  */
 LzHTTPLoader.prototype.getResponse = function () {
@@ -73,6 +103,11 @@ LzHTTPLoader.prototype.abort = function () {
 /* @public */
 LzHTTPLoader.prototype.setOption = function (key, val) {
     this.options[key] = val;
+}
+
+/* @public */
+LzHTTPLoader.prototype.getOption = function (key:String) :* {
+    return this.options[key];
 }
 
 
@@ -160,8 +195,7 @@ LzHTTPLoader.prototype.send = function (content) {
                     /* url */ this.requesturl,
                     /* headers */ this.requestheaders,
                     /* postbody */ content,
-                    /* ignorewhite */ true,
-                    /* parseXML */ true);
+                    /* ignorewhite */ true);
 }
 
 // holds list of outstanding data requests, to handle timeouts
@@ -254,22 +288,22 @@ LzHTTPLoader.prototype.__setRequestHeaders = function (xhr, headers) {
 // parsexml flag : if true, translate native XML tree into LzDataNode tree,
 //                 if false, don't attempt to translate the XML (if it exists)
 
-LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ignorewhite, parsexml) {
+LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ignorewhite) {
     if(this.req) {
         // we can't close over "this", so use another variable name. 
-        var __pthis__ = this;
+        var self = this;
         this.req.onreadystatechange = function () {
-            if (__pthis__.req == null) { return; }
-            //Debug.write("readyState=%d", __pthis__.req.readyState);
-            if (__pthis__.req.readyState == 4) {
-                if (__pthis__.__timeout) {
-                    //Debug.write("timeout for id=%s, xhr=%w", __pthis__.__loaderid, __pthis__.req);
-                } else if (__pthis__.__abort) {
-                    //Debug.write("abort for id=%s, xhr=%w", __pthis__.__loaderid, __pthis__.req);
+            if (self.req == null) { return; }
+            //Debug.write("readyState=%d", self.req.readyState);
+            if (self.req.readyState == 4) {
+                if (self.__timeout) {
+                    //Debug.write("timeout for id=%s, xhr=%w", self.__loaderid, self.req);
+                } else if (self.__abort) {
+                    //Debug.write("abort for id=%s, xhr=%w", self.__loaderid, self.req);
                 } else {
                     var status = -1;
                     try {
-                        status = __pthis__.req.status;
+                        status = self.req.status;
                     } catch (e) {
                         //if you abort a request, readyState will be set to 4, 
                         //but reading status will result in an exception (at least in Firefox).
@@ -280,27 +314,10 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
                     //Debug.write("status=%d", status);
                     if (status == 200 || status == 304) {
                         var elt = null;
-                        var xml = __pthis__.req.responseXML;
-                        __pthis__.responseXML = xml;
-                        __pthis__.responseText = __pthis__.req.responseText;
-                        var lzxdata = null;
-                        if (xml != null && parsexml) {
-                            var nodes = __pthis__.req.responseXML.childNodes;
-                            // find first content (type == 1) child node
-                            for (var i = 0; i < nodes.length; i++) {
-                                var child = nodes.item(i);
-                                if (child.nodeType == 1) {
-                                    elt = child;
-                                    break;
-                                }
-                            }
-                            lzxdata = LzXMLTranslator.copyXML(elt,
-                                                        __pthis__.options.trimwhitespace,
-                                                        __pthis__.options.nsprefix);
-                        }
-                        __pthis__.removeTimeout(__pthis__);
-                    
-                    
+                        var xml = self.req.responseXML;
+                        self.responseXML = xml;
+                        self.responseText = self.req.responseText;
+                        self.removeTimeout(self);
                     
                         /**** DEBUGGING 
                         var xmlSerializer = new XMLSerializer();
@@ -308,12 +325,13 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
                         Debug.write("loadXMLDoc", elt, markup, d.serialize());
                          *** /DEBUGGING
                          */
-                        __pthis__.req = null;
-                        __pthis__.loadSuccess(__pthis__, lzxdata);
+                        self.req = null;
+                        // Callback with raw text string
+                        self.loadContent(self, self.responseText);
                     } else {
-                        __pthis__.removeTimeout(__pthis__);
-                        __pthis__.req = null;
-                        __pthis__.loadError(__pthis__, null);
+                        self.removeTimeout(self);
+                        self.req = null;
+                        self.loadError(self, null);
                     }
                 }
             }

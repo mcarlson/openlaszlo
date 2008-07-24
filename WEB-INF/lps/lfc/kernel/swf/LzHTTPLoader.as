@@ -20,12 +20,18 @@ var LzHTTPLoader = function (owner, proxied) {
         // enable server (proxy) caching
         cacheable: false,
         // enable client caching
-        ccache: false};
+        ccache: false,
+        // parse and translate incoming data to LzDatset DOM elements
+        parsexml:  true
+    };
     this.requestheaders = {};
     this.requestmethod = LzHTTPLoader.GET_METHOD;
 
     this.dsloadDel = new LzDelegate( this , "_loadSuccessHandler" ,
                                      this.lzloader , "ondata" );
+    // Handler for raw string content, before parsing
+    this.dsloadDel = new LzDelegate( this , "loadContent" ,
+                                     this.lzloader , "oncontent" );
     this.dserrorDel = new LzDelegate( this , "_loadErrorHandler" ,
                                       this.lzloader , "onerror" );
     this.dstimeoutDel = new LzDelegate( this , "_loadTimeoutHandler" ,
@@ -45,6 +51,16 @@ LzHTTPLoader.DELETE_METHOD = "DELETE";
 
 LzHTTPLoader.prototype.lzloader = null;
 
+/* Default handler for raw content */
+LzHTTPLoader.prototype.loadContent = function (content) {
+    if (this.options.parsexml) {
+        // Parse and translate XML to LZX format
+        this.lzloader.translateXML(content);
+    } else {
+        // Otherwise, return the raw content string
+        this._loadSuccessHandler(content);
+    }
+};
 
 /* Returns the response as a string  */
 LzHTTPLoader.prototype.getResponse = function () {
@@ -81,6 +97,11 @@ LzHTTPLoader.prototype.abort = function () {
 LzHTTPLoader.prototype.setOption = function (key, val) {
     this.options[key] = val;
 }
+
+LzHTTPLoader.prototype.getOption = function (key) {
+    return this.options[key];
+}
+
 
 /* @public */
 LzHTTPLoader.prototype.setProxied = function (proxied) {

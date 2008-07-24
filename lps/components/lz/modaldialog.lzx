@@ -56,7 +56,7 @@
         </method>
 
         <!--- Closes the dialog. -->
-        <method name="close">
+        <method name="close" args="...ignore">
             this.setAttribute('visible',  false );
             lz.Focus.clearFocus();
             lz.ModeManager.release( this );
