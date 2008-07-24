@@ -313,17 +313,23 @@ dynamic public class LzSprite extends Sprite {
             }
 
             //Debug.write('__mouseEvent', eventname, this.owner);
-            if (skipevent == false && this.owner.mouseevent) {
-                LzMouseKernel.__sendEvent(this.owner, eventname);
+            if (skipevent == true || ! this.owner.mouseevent) return;
 
-                if (this.__mousedown) {
-                    if (eventname == 'onmouseover') {
-                        LzMouseKernel.__sendEvent(this.owner, 'onmousedragin');
-                    } else if (eventname == 'onmouseout') {
-                        LzMouseKernel.__sendEvent(this.owner, 'onmousedragout');
+            // send dragin/out events if the mouse is currently down
+            if (LzMouseKernel.__lastMouseDown) {
+                if (eventname == 'onmouseover' || eventname == 'onmouseout') {
+                    // only send mouseover/out if the mouse went down on this sprite
+                    if (LzMouseKernel.__lastMouseDown == this) {
+                        LzMouseKernel.__sendEvent(this.owner, eventname);
                     }
+
+                    var dragname = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
+                    LzMouseKernel.__sendEvent(this.owner, dragname);
+                    return;
                 }
             }
+
+            LzMouseKernel.__sendEvent(this.owner, eventname);
       }
 
       /** setClickable( Boolean:clickable )
