@@ -101,11 +101,8 @@ var cloneChildren :Array;
 var hasdata :Boolean;
 /** @access private */
 var orderpath :String;
-
 /** @access private */
-var comp_orderf :Function;  // Was this.orderf.comp
-/** @access private */
-var op_orderf :String;    // Was this.orderf.op
+var comparator :Function;
 
 /** Slot for constraint-method, see LzReplicationManager#construct(..)
   * @access private 
@@ -170,9 +167,6 @@ var onvisible :LzDeclaredEventClass = LzDeclaredEvent;
   * @access private
   */
 function LzReplicationManager ( odp , args, children:* = null, instcall:* = null ){
-    this.pooling = this.getDefaultPooling(); // Defined in LzDatapath
-    this.__LZtakeDPSlot = false; // Defined in LzDatapath
-    this.datacontrolsvisibility = false; // Defined in LzDatapath
     //the real parent for this is datapaths view's (immediateparent) parent
     super(odp, args, children, instcall);
 }
@@ -184,6 +178,10 @@ protected function getDefaultPooling () :Boolean {
 
 /** @access private */
 override function construct ( odp , args ){
+    this.pooling = this.getDefaultPooling(); // Defined in LzDatapath
+    this.__LZtakeDPSlot = false; // Defined in LzDatapath
+    this.datacontrolsvisibility = false; // Defined in LzDatapath
+    
     //odp: original datapath
     var view:LzNode = odp.immediateparent;
     if (view === canvas) {
@@ -455,39 +453,6 @@ override function __LZHandleSingleNode ( n/*:LzDataNodeMixin*/ ) :void {
 /**
   * @access private
   */
-function mergesort ( arr:Array, lo:int, hi:int ) :Array {
-    if ( lo < hi ) {
-        var mid:int = lo + Math.floor ( (hi - lo) / 2 );
-        var a:Array = this.mergesort( arr, lo, mid );
-        var b:Array = this.mergesort( arr, mid + 1, hi );
-    } else if( arr.length == 0 ) {
-        return [];
-    } else {
-        return [ arr[ lo ] ];
-    }
-
-    //now merge
-    var r:Array = [];
-    var ia:int = 0;
-    var ib:int = 0;
-    var al:int = a.length;
-    var bl:int = b.length;
-    while ( ia < al && ib < bl ){
-        if ( this.orderf( b[ ib ] , a[ ia ] ) == 1 ){
-            r.push( b[ ib++ ] );
-        } else {
-            r.push( a[ ia++ ] );
-        }
-    }
-    while ( ia < al ) r.push( a[ ia++ ] );
-    while ( ib < bl ) r.push( b[ ib++ ] );
-
-    return r;
-}
-
-/**
-  * @access private
-  */
 override function __LZHandleMultiNodes ( n:Array ) :LzReplicationManager {
     var layouts:Array = this.parent && this.parent.layouts ? this.parent.layouts : [];
     for (var i:int = 0; i < layouts.length; ++i) {
@@ -560,12 +525,49 @@ function __LZadjustVisibleClones( lastnodes:Array , newnodes:Boolean) :void {
 }
 
 /**
+  * @devnote: We are using merge-sort instead of Array#sort(..), because we 
+  * want to have a stable sorting algorithm. 
+  * 
+  * @param [LzDataNodeMixin] arr: Array of LzDataNodeMixin to sort, within range [<code>lo</code>..<code>hi</code>]
+  * @param int lo: lower bound in <code>arr</code> (inclusive)
+  * @param int hi: upper bound in <code>arr</code> (inclusive)
   * @access private
   */
-//PBR TODO
-function orderf ( a , b ) :int {
-    //a and b are dataset nodes
-    var op:String = this.op_orderf;
+function mergesort ( arr:Array, lo:int, hi:int ) :Array {
+    if ( lo < hi ) {
+        var mid:int = lo + Math.floor ( (hi - lo) / 2 );
+        var a:Array = this.mergesort( arr, lo, mid );
+        var b:Array = this.mergesort( arr, mid + 1, hi );
+    } else if( arr.length == 0 ) {
+        return [];
+    } else {
+        return [ arr[ lo ] ];
+    }
+
+    //now merge
+    var r:Array = [];
+    var ia:int = 0;
+    var ib:int = 0;
+    var al:int = a.length;
+    var bl:int = b.length;
+    while ( ia < al && ib < bl ){
+        if ( this.orderf( b[ ib ] , a[ ia ] ) == 1 ){
+            r.push( b[ ib++ ] );
+        } else {
+            r.push( a[ ia++ ] );
+        }
+    }
+    while ( ia < al ) r.push( a[ ia++ ] );
+    while ( ib < bl ) r.push( b[ ib++ ] );
+
+    return r;
+}
+
+/**
+  * @access private
+  */
+function orderf ( a /*:LzDataNodeMixin*/, b /*:LzDataNodeMixin*/ ) :int {
+    var op:String = this.orderpath;
 
     this.p = a;
     var aa:* = this.xpathQuery( op );
@@ -578,7 +580,7 @@ function orderf ( a , b ) :int {
     if ( aa == null || aa == "" ) aa ="\n";
     if ( bb == null || bb == "" ) bb ="\n";
 
-    return this.comp_orderf( aa , bb )
+    return this.comparator( aa , bb )
 }
 
 
@@ -616,6 +618,7 @@ function descDict ( a:String, b:String ) :int {
   * of <code>setComparator</code> for details.
   */
 override function setOrder( xpath:String, comparator:* = null ) :void {
+    //setting orderpath to null, so setComparator() won't run __LZHandleMultiNodes()
     this.orderpath = null;
 
     if ( comparator != null ){
@@ -623,8 +626,6 @@ override function setOrder( xpath:String, comparator:* = null ) :void {
     }
 
     this.orderpath = xpath;
-
-    this.op_orderf = this.orderpath;
 
     if ( this.nodes.length ){
         //reset nodes in order now
@@ -643,21 +644,21 @@ override function setOrder( xpath:String, comparator:* = null ) :void {
   * arguments are equivalent
   */
 override function setComparator( comparator:* ) :void {
-  if ( comparator == "descending" ){
-    comparator = this.descDict;
-  } else if ( comparator == "ascending" ){
-    comparator = this.ascDict;
-  } else if ( comparator is Function ) {
-    // Just use it
-  } else if ($debug) {
-    Debug.error("Invalid comparator: %s", comparator);
-  }
-
-  this.comp_orderf = comparator;
-  if ( this.orderpath != null && this.nodes.length ){
-    //reset nodes in order now
-    this.__LZHandleMultiNodes( this.nodes );
-  }
+    if ( comparator == "descending" ){
+        comparator = this.descDict;
+    } else if ( comparator == "ascending" ){
+        comparator = this.ascDict;
+    } else if ( comparator is Function ) {
+        // Just use it
+    } else if ($debug) {
+        Debug.error("Invalid comparator: %s", comparator);
+    }
+    
+    this.comparator = comparator;
+    if ( this.orderpath != null && this.nodes.length ){
+        //reset nodes in order now
+        this.__LZHandleMultiNodes( this.nodes );
+    }
 }
 
 /**
@@ -744,7 +745,7 @@ function handleDeletedNode ( c:int ) :void {
   * @param LzDataElement p: The data node for which to return the clone.
   * @return LzView: A clone mapped to the given data.
   */
-function getCloneForNode ( p, dontmake:Boolean = false ) :LzNode {
+function getCloneForNode ( p:LzDataElement, dontmake:Boolean = false ) :LzNode {
     var cls:Array = this.clones;
     var len:int = cls.length; 
     for ( var i:int = 0; i < len; i++ ){
@@ -771,9 +772,9 @@ override function toString () :String {
   * reason for this to be a public method.
   * @deprecated Use setAttribute('visible', ...) instead.
   */
-function setVisible(v) { 
+function setVisible(v:Boolean) :void { 
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
-    this.$lzc$set_visible(v)
+    this.$lzc$set_visible(v);
 }
 
 /** @access private */

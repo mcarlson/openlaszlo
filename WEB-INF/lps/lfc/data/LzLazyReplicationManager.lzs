@@ -140,10 +140,11 @@ override function construct ( odp , args ){
     this.cloneAttrs.options = cloneopt;
 
     var v:LzView = this.getNewClone( true );
-    //datamap the new view, to make sure that any members which are datamapped
-    //are shown
     this.cloneimmediateparent = v.immediateparent;
+    
     if (this.initialnodes) {
+        //datamap the new view, to make sure that any members which are datamapped
+        //are shown
         v.datapath.setClonePointer( this.initialnodes[ 1 ] );
     }
 
@@ -336,7 +337,7 @@ override function toString () :String {
 /**
  * @access private
  */
-override function getCloneForNode ( p , dontmake:Boolean = false ) :LzNode {
+override function getCloneForNode ( p:LzDataElement, dontmake:Boolean = false ) :LzNode {
     var cl:LzView = (super.getCloneForNode( p ) cast LzView) || null;
     if ( !cl && !dontmake ){
         //even though we're going to return this to the pool immediately,
