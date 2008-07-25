@@ -126,9 +126,9 @@ var LzSprite = function(owner, isroot) {
     }
 
     if ($debug) {
-        // annotate divs with sprite IDs
-        this.__LZdiv.id = 'sprite_' + this.uid;
-        this.__LZclickdiv.id = 'click_' + this.__LZdiv.id;
+        // annotate divs with sprite IDs, but don't override existing IDs!
+        if (!this.__LZdiv.id) this.__LZdiv.id = 'sprite_' + this.uid;
+        if (!this.__LZclickdiv.id) this.__LZclickdiv.id = 'click_' + this.__LZdiv.id;
     }
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
