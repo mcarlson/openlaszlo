@@ -426,6 +426,16 @@ public class SWF9External {
   }
 
   /**
+   * Copy an environment variable from the current system environment.
+   */
+  public static void copyEnvVar(List envvars, String varname) {
+    String val = System.getenv(varname);
+    if (val != null) {
+      envvars.add(varname + "=" + val);
+    }
+  }
+
+  /**
    * Run the compiler using the command/arguments in cmd.
    * Collect and report any errors, and check for the existence
    * of the output file.
@@ -449,9 +459,11 @@ public class SWF9External {
     buildsh += prettycmd + "\n";
     Compiler.emitFile(workDirectoryName("build.sh"), buildsh);
 
-    String flexhome_env[] = {"FLEX_HOME="+FLEX_HOME()};
-
-    Process proc = Runtime.getRuntime().exec(cmdstr, flexhome_env, null);
+    List newenv = new ArrayList();
+    newenv.add("FLEX_HOME="+FLEX_HOME());
+    copyEnvVar(newenv, "HOME");
+    copyEnvVar(newenv, "PATH");
+    Process proc = Runtime.getRuntime().exec(cmdstr, (String[])newenv.toArray(new String[0]), null);
     try {
       OutputStream os = proc.getOutputStream();
       OutputCollector outcollect = new OutputCollector(proc.getInputStream());
