@@ -1941,21 +1941,14 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // for now, ensure that super has a value
     known.remove("super");
     Set knownSet = new LinkedHashSet(known);
-    Set lowerKnownSet = new LinkedHashSet();
-    for (Iterator i = knownSet.iterator(); i.hasNext(); ) {
-      lowerKnownSet.add(((String)i.next()).toLowerCase());
-    }
     context.setProperty(TranslationContext.VARIABLES, knownSet);
-    context.setProperty(TranslationContext.LOWERVARIABLES, lowerKnownSet);
 
     boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
     Map registerMap = new HashMap();
-    Map lowerRegisterMap = new HashMap();
     // Always set register map.  Inner functions should not see
     // parent registers (which they would if the setting of the
     // registermap were conditional on function vs. function2)
     context.setProperty(TranslationContext.REGISTERS, registerMap);
-    context.setProperty(TranslationContext.LOWERREGISTERS, lowerRegisterMap);
     // TODO: [2004-03-24] Analyze register usage in $flasm and
     // account for it (or rename $flasm regs?)
     // NB: Only Flash Player 6r65 or better understands function2
@@ -2028,7 +2021,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           Instructions.Register r = (Instructions.Register)i.next();
           r.regno = regno;
           registerMap.put(r.name, r);
-          lowerRegisterMap.put(r.name.toLowerCase(), r);
         }
         // It appears you have to always allocate r:0, hence
         // regno, not len(registers)
@@ -2457,28 +2449,12 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       Map registers = (Map)context.get(TranslationContext.REGISTERS);
       if (registers != null) {
         this.register = (Instructions.Register)registers.get(name);
-        if ("swf6".equals(Instructions.getRuntime())) {
-          Map lowerRegisters = (Map)context.get(TranslationContext.LOWERREGISTERS);
-          if (register != null && (! lowerRegisters.containsKey(name.toLowerCase()))) {
-            System.err.println("Warning: Different case used for " + name +
-                               " in " + node.filename +
-                               " (" + node.beginLine + ")");
-          }
-        }
       } else {
         this.register = null;
       }
       Set variables = (Set)context.get(TranslationContext.VARIABLES);
       if (variables != null) {
         this.known = variables.contains(name);
-        if ("swf6".equals(Instructions.getRuntime())) {
-          Set lowerVariables = (Set)context.get(TranslationContext.LOWERVARIABLES);
-          if (known && (! lowerVariables.contains(name.toLowerCase()))) {
-            System.err.println("Warning: Different case used for " + name +
-                               " in " + node.filename +
-                               " (" + node.beginLine + ")");
-          }
-        }
         // TODO: [2005-12-22 ptw] Not true ECMAscript
         // Ensure undefined is "defined"
         known |= "undefined".equals(name);
