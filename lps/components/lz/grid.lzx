@@ -35,7 +35,7 @@
         <scrollbar placement="content" name="_scrx" visible="${parent.showvscroll}"/>
 
         <!--- @keywords private -->
-        <scrollbar axis="x" scrolltarget="classroot.header.hcontent"
+        <scrollbar name="_scry" axis="x" scrolltarget="classroot.header.hcontent"
             visible="${ parent.showhscroll &amp;&amp;
             parent.needshscroll &amp;&amp;
             parent.sizetoheader == false}"/>
