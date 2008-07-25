@@ -23,7 +23,7 @@
  */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -35,9 +35,7 @@ import org.openlaszlo.sc.parser.*;
 public class TranslationContext extends HashMap {
   public static String FLASM = "flasm";
   public static String VARIABLES = "variables";
-  public static String LOWERVARIABLES = "lowerVariables";
   public static String REGISTERS = "registers";
-  public static String LOWERREGISTERS = "lowerRegisters";
 
   public Object type;                  // Class or String
   public TranslationContext parent;
