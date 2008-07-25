@@ -23,7 +23,11 @@ class LzBrowserKernel {
   */
 static function loadURL ( url, target=null, features=null ){
     if (target != null) {
-        window.open(url, target, features);
+        if (features != null) {
+            window.open(url, target, features);
+        } else {
+            window.open(url, target);
+        }
     } else {
         window.location = url;
     }
