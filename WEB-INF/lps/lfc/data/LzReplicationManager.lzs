@@ -247,7 +247,6 @@ override function construct ( odp , args ){
         }
         odp.__LZspecialDotDot = false;
     }
-        
 
     //the real parent for this is datapaths view's (immediateparent) parent
     super.construct( view.parent, args);
@@ -265,21 +264,24 @@ override function construct ( odp , args ){
     this.cloneParent = view.parent;
 
     //add clone transformer to original instance attributes
-    this.cloneAttrs = new LzInheritedHash(view._instanceAttrs);
+    {
+      var cloneAttrs = new LzInheritedHash(view._instanceAttrs);
 
-    this.cloneAttrs.datapath = LzNode._ignoreAttribute;
-    this.cloneAttrs.$datapath = { 'class'  : lz.datapath };
-    this.cloneAttrs.$datapath.attrs = { datacontrolsvisibility: odp.datacontrolsvisibility, 
-                                        __LZmanager : this }
+      delete cloneAttrs.datapath;
+      cloneAttrs.$datapath = { 'class'  : lz.datapath };
+      cloneAttrs.$datapath.attrs = { datacontrolsvisibility: odp.datacontrolsvisibility,
+                                     __LZmanager : this }
 
-    this.cloneAttrs.id = null;
-    this.cloneAttrs.name = null;
-    this.cloneAttrs.$lzc$bind_id = null;
-    this.cloneAttrs.$lzc$bind_name = null;
-    if ($profile) {
-      if (view._profile_name) {
-        this.cloneAttrs._profile_name = 'clone of ' + view._profile_name;
+      delete cloneAttrs.id;
+      delete cloneAttrs.name;
+      delete cloneAttrs.$lzc$bind_id;
+      delete cloneAttrs.$lzc$bind_name;
+      if ($profile) {
+        if (view._profile_name) {
+          cloneAttrs._profile_name = 'clone of ' + view._profile_name;
+        }
       }
+      this.cloneAttrs = cloneAttrs;
     }
 
     //set visible-property
@@ -311,16 +313,8 @@ override function construct ( odp , args ){
         // NOTE: [2008-02-07 ptw] Why?  Why can't this just execute as
         // a constraint on the clone via the normal mechanism?
         // but, we want the constraint to apply to this object instead
-        if ($swf9) {
-            //FIXME: cannot copy a method in swf9, because 'this' is bound (LPP-6066)
-            // if a datapath-attribute was compiled as a datapath-node, this wouldn't 
-            // be a problem anymore (LPP-4386, LPP-6171)
-            this.__LZxpathconstr = function (ignore) {};
-            this.__LZxpathdepend = function () {return [];};
-        } else {
-            this.__LZxpathconstr = view[ia.datapath.methodName];
-            this.__LZxpathdepend = view[ia.datapath.dependenciesName];
-        }
+        this.__LZxpathconstr = view[ia.datapath.methodName];
+        this.__LZxpathdepend = view[ia.datapath.dependenciesName];
         // NOTE: [2008-02-07 ptw] The method had better be available
         // on the clone (which means we really want a clone class here
         // to instantiate, rather than an instance to clone).

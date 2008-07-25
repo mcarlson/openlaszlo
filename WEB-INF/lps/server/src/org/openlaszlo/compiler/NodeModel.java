@@ -983,11 +983,14 @@ solution =
     if (value instanceof CompiledAttribute) {
       // Special handling for attribute with binders
       CompiledAttribute cattr = (CompiledAttribute)value;
+      // The methods of a datapath constraint are moved to the
+      // replicator, so must be compiled as closures
+      boolean chm = "datapath".equals(name) ? false : canHaveMethods;
       if (cattr.bindername != null) {
-        attrs.put(cattr.bindername, cattr.getBinderMethod(canHaveMethods));
+        attrs.put(cattr.bindername, cattr.getBinderMethod(chm));
       }
       if (cattr.dependenciesname != null) {
-        attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(canHaveMethods));
+        attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(chm));
       }
       attrs.put(name, cattr.getInitialValue());
     } else {
