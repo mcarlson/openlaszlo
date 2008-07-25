@@ -270,10 +270,6 @@ public dynamic class LzNode extends LzEventable {
       LzNode.mergeAttributes(attrs, iargs);
     }
 
-    // TODO: [2006-05-22 ptw] What is the purpose of this copy?
-    // construct or constructWithArgs destructively modify args?
-    var maskedargs = new LzInheritedHash(iargs);
-
     //Flag if this was newed by the instantiator
     this.__LZisnew = !instcall;
 
@@ -283,11 +279,11 @@ public dynamic class LzNode extends LzEventable {
     }
 
     // If a 'datapath' init arg was passed, we must override any existing $datapath
-    if (maskedargs['datapath'] != null) {
-      delete maskedargs["$datapath"];
+    if (iargs['datapath'] != null) {
+      delete iargs["$datapath"];
     }
 
-    this.construct(  parent , maskedargs );
+    this.construct(  parent , iargs );
 
     // Construct may, through many tangled webs of replication and
     // placement, actually end up deleting us!  Bail out.
@@ -295,7 +291,7 @@ public dynamic class LzNode extends LzEventable {
 
     //        this.setClassEvents( this.constructor );
 
-    this.__LZapplyArgs( maskedargs , true );
+    this.__LZapplyArgs( iargs , true );
 
     // If a replicator was made, we're deleted, if pooling is off.
     if (this.__LZdeleted) { return; }
@@ -304,7 +300,7 @@ public dynamic class LzNode extends LzEventable {
      * @todo 2006-05-24 ptw Adam says this is a hack that we should get
      * rid of.
      */
-    this.constructWithArgs( maskedargs );
+    this.constructWithArgs( iargs );
 
     this.__LZdeferDelegates = null;
     if (qpos != LzDelegate.__LZdelegatesQueue.length) {
