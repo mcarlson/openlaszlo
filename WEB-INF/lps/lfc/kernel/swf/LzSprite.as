@@ -619,6 +619,7 @@ LzSprite.prototype.setWidth = function ( v ){
         // <scale as fraction> = ( <desired dim in px> / <resource dim
         // in px> ) Note the empty resource is a 100x100px clip
         var xscale = ((this.resourcewidth == 0) ? (v/100) : (v/this.resourcewidth));
+        if (xscale == 0) xscale = 1;
         this._xscale = xscale;
         // clip scale is in percent
         this.__LZmovieClipRef._xscale = xscale * 100;
@@ -672,6 +673,7 @@ LzSprite.prototype.setHeight = function ( v ){
         // <scale as fraction> = ( <desired dim in px> / <resource dim
         // in px> ) Note the empty resource is a 100x100px clip
         var yscale = ((this.resourceheight == 0) ? (v/100) : (v/this.resourceheight));
+        if (yscale == 0) yscale = 1;
         this._yscale = yscale;
         // clip scale is in percent
         this.__LZmovieClipRef._yscale = yscale * 100;
