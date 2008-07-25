@@ -151,7 +151,7 @@
 
         <!--- automatically called to fade out the focusview after one second of focus inactivity 
               @keywords private -->
-        <method name="fadeout" >
+        <method name="fadeout" args="ignore" >
             if (_dofadeout) {
                 if (this.capabilities['minimize_opacity_changes']) {
                     this.setVisibility( 'hidden' );
