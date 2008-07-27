@@ -22,7 +22,9 @@ var LzHTTPLoader = function (owner, proxied) {
         // enable client caching
         ccache: false,
         // parse and translate incoming data to LzDatset DOM elements
-        parsexml:  true
+        parsexml:  true,
+        // Additional protocol-specific args to the LPS proxy protocol
+        serverproxyargs: null
     };
     this.requestheaders = {};
     this.requestmethod = LzHTTPLoader.GET_METHOD;
@@ -193,6 +195,7 @@ LzHTTPLoader.prototype.send = function (content) {
 //   @param String postbody: optional, post body content
 LzHTTPLoader.prototype.makeProxiedURL = function ( proxyurl, url,  httpmethod, lzt, headers, postbody) {
         var params = {
+        serverproxyargs: this.options.serverproxyargs,
         sendheaders: this.options.sendheaders,
         trimwhitespace: this.options.trimwhitespace,
         nsprefix: this.options.nsprefix,

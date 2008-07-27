@@ -11,7 +11,7 @@
 
 var LzHTTPLoader = function (owner, proxied) {
     this.owner = owner;
-    this.options = {parsexml: true};
+    this.options = {parsexml: true, serverproxyargs: null};
     this.requestheaders = {};
     this.requestmethod = LzHTTPLoader.GET_METHOD;
     
@@ -173,6 +173,7 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
 //   @param Object headers: hash table of HTTP request headers
 LzHTTPLoader.prototype.makeProxiedURL = function ( proxyurl, url,  httpmethod, lzt, headers, postbody) {
         var params = {
+        serverproxyargs: this.options.serverproxyargs,
         sendheaders: this.options.sendheaders,
         trimwhitespace: this.options.trimwhitespace,
         nsprefix: this.options.nsprefix,

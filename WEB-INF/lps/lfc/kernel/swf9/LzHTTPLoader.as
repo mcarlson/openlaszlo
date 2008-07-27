@@ -51,7 +51,7 @@ public class LzHTTPLoader {
 
     public function LzHTTPLoader (owner:*, proxied:Boolean) {
         this.owner = owner;
-        this.options = {parsexml: true};
+        this.options = {parsexml: true, serverproxyargs: null};
         this.requestheaders = {};
         this.requestmethod = LzHTTPLoader.GET_METHOD;
         this.__loaderid = LzHTTPLoader.loaderIDCounter++;
@@ -174,6 +174,7 @@ public class LzHTTPLoader {
                                     headers:Object,
                                     postbody:String):String {
         var params:Object = {
+        serverproxyargs: this.options.serverproxyargs,
         sendheaders: this.options.sendheaders,
         trimwhitespace: this.options.trimwhitespace,
         nsprefix: this.options.nsprefix,

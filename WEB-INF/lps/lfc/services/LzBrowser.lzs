@@ -349,6 +349,14 @@ class LzBrowserService {
             ccache: params.ccache
         };
 
+        // Copy any developer-supplied protocol-specific query args in to qargs
+        var extra_args = params.serverproxyargs;
+        if (extra_args) {
+            for (var opt in extra_args) {
+                qargs[opt] = extra_args[opt];
+            }
+        }
+
         //If a postbody string is supplied, pass it to the proxy server as 'lzpostbody' arg.
         if (postbody != null) {
             qargs.lzpostbody = postbody;

@@ -41,6 +41,9 @@ class LzXMLRPCDecoder {
       <double>  double-precision signed floating point number   -12.214
       <dateTime.iso8601>    date/time   19980717T14:08:55
       <base64>  base64-encoded binary   eW91IGNhbid0IHJlYWQgdGhpcyE=
+
+      custom extension to XML RPC protocol:
+      <null/> ==> javascript null
     */
 
     public static function xmlrpc2jsobj (node:LzDataNodeMixin):* {
@@ -80,6 +83,9 @@ class LzXMLRPCDecoder {
                 break;
               case 'array':
                 return LzXMLRPCDecoder.decodeArray(elt.childNodes[0]);
+                break;
+              case 'null':
+                return null;
                 break;
               default:
                 Debug.error("unknown xml rpc data type", datatype);
