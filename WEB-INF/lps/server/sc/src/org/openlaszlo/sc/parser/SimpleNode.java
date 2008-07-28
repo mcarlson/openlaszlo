@@ -61,7 +61,27 @@ public abstract class SimpleNode implements Node, Serializable {
        toString(String), otherwise overriding toString() is probably all
        you need to do. */
 
-    public String toString(String prefix) { return prefix + toString(); }
+    public String toString(String prefix) {
+        String filename = getFilename();
+        int line = getLineNumber();
+        int col = getColumnNumber();
+     
+        String fileloc = "";
+        if (filename != null || line != 0) {
+            fileloc = " [";
+            if (filename != null) {
+                fileloc += filename;
+            }
+            if (line != 0) {
+                fileloc += ":" + line;
+            }
+            if (col != 0) {
+                fileloc += "#" + col;
+            }
+            fileloc += "]";
+        }
+        return prefix + toString() + fileloc;
+    }
 
     /* Override this method if you want to customize how the node dumps
        out its children. */
@@ -154,6 +174,16 @@ public abstract class SimpleNode implements Node, Serializable {
         this.beginColumn = column;
     }
 
+    /**
+     * Set only the location fields from another node.
+     * @param that node to copy from
+     */
+    public void setLocation(SimpleNode that) {
+        this.filename = that.filename;
+        this.beginLine = that.beginLine;
+        this.beginColumn = that.beginColumn;
+    }
+
     public void setComment(String comment) {
         this.comment = comment;
     }
@@ -162,6 +192,11 @@ public abstract class SimpleNode implements Node, Serializable {
         return this.comment;
     }
 
+    /**
+     * Create a deep copy (clone) of a SimpleNode.  deepCopy or
+     * copyFields Must be overridden if a subclass has data fields
+     * that must be copied.
+     */
     public SimpleNode deepCopy() {
         SimpleNode result;
         try {
@@ -177,7 +212,12 @@ public abstract class SimpleNode implements Node, Serializable {
         return result;
     }
 
-    public void copyFields(SimpleNode that) {
+    /**
+     * Copy fields and children, but not parent.
+     * @param that node to copy from
+     * @return this for convenience.
+     */
+    public SimpleNode copyFields(SimpleNode that) {
         this.id = that.id;
         this.parser = that.parser;
         this.filename = that.filename;
@@ -187,6 +227,7 @@ public abstract class SimpleNode implements Node, Serializable {
         for (int i=0; i<that.children.length; i++) {
             this.set(i, that.children[i].deepCopy());
         }
+        return this;
     }
 
     /** Accept the visitor */

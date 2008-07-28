@@ -382,7 +382,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       if (false && ASTProgram.class.equals(context.type)) {
         Map map = new HashMap();
         map.put("_1", new Compiler.Splice(ast));
-        SimpleNode newNode = (new Compiler.Parser()).substitute("with (_root) { _1 }", map);
+        SimpleNode newNode = (new Compiler.Parser()).substitute(node, "with (_root) { _1 }", map);
         return visitStatement(newNode);
       } else {
         return translateFunction(node, true, ast);
@@ -781,7 +781,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 //       if (ASTProgram.class.equals(context.type)) {
 //         Map map = new HashMap();
 //         map.put("_1", new Compiler.Splice(children));
-//         SimpleNode newNode = (new Compiler.Parser()).substitute("with (_root) { _1 }", map);
+//         SimpleNode newNode = (new Compiler.Parser()).substitute(node, "with (_root) { _1 }", map);
 //         visitStatement(newNode);
 //       } else {
         return translateFunction(node, false, children);
@@ -825,6 +825,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       Map map = new HashMap();
       map.put("_1", node);
       return new Compiler.PassThroughNode((new Compiler.Parser()).substitute(
+        node,
         "(Debug.evalCarefully(" + file + ", " + line + ", function () { return _1; }, this))", map));
     }
     return node;
@@ -960,7 +961,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       Map map = new HashMap();
       map.put("_1", ref);
       String pattern = "(function () { var $lzsc$tmp = _1; return _1 = $lzsc$tmp " + XfixInstrs.get(op) + " 1; })()";
-      SimpleNode n = (new Compiler.Parser()).substitute(pattern, map);
+      SimpleNode n = (new Compiler.Parser()).substitute(node, pattern, map);
       return visitExpression(n);
     }
     children[1] = translateReference(ref, 2).get();
@@ -976,7 +977,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       Map map = new HashMap();
       map.put("_1", ref);
       String pattern = "(function () { var $lzsc$tmp = _1; _1 = $lzsc$tmp " + XfixInstrs.get(op) + " 1; return $lzsc$tmp; })()";
-      SimpleNode n = (new Compiler.Parser()).substitute(pattern, map);
+      SimpleNode n = (new Compiler.Parser()).substitute(node, pattern, map);
       return visitExpression(n);
     }
     children[0] = translateReference(ref, 2).get();
@@ -1030,7 +1031,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       } else {
         pattern = "((function (a, b) {return b['$lzsc$isa'] ? b.$lzsc$isa(a) : (a instanceof b)})(_1, _2))";
       }
-      SimpleNode n = (new Compiler.Parser()).substitute(pattern, map);
+      SimpleNode n = (new Compiler.Parser()).substitute(node, pattern, map);
       return visitExpression(n);
     }
     children[0] = visitExpression(a);
@@ -1068,7 +1069,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       map.put("_2", rhs);
       map.put("_3", lhs.set());
       String pattern = "(function () { var $lzsc$tmp = _1; return _3 = $lzsc$tmp " + AssignOpTable.get(op) + " _2; })()";
-      SimpleNode n = (new Compiler.Parser()).substitute(pattern, map);
+      SimpleNode n = (new Compiler.Parser()).substitute(node, pattern, map);
       return visitExpression(n);
     }
     children[2] = rhs;
@@ -1100,7 +1101,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       Map map = new HashMap();
       map.put("_1", node);
       map.put("_2", translateFunction(dependencies, false, dependencies.getChildren()));
-      SimpleNode newNode = (new Compiler.Parser()).substitute(
+      SimpleNode newNode = (new Compiler.Parser()).substitute(node,
         "(function () {var $lzsc$f = _1; $lzsc$f.dependencies = _2; return $lzsc$f })();", map);
       return newNode;
     }
@@ -1414,7 +1415,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         Map map = new HashMap();
         map.put("_1", funexpr);
         // Do I need a new one of these each time?
-        newBody.add((new Compiler.Parser()).substitute(name + " = _1;", map));
+        newBody.add((new Compiler.Parser()).substitute(fundecl, name + " = _1;", map));
       }
     }
     // If the locals are not remapped, we assume we are in a runtime
@@ -1484,6 +1485,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         Map map = new HashMap();
         map.put("_1", node);
         SimpleNode newNode = new Compiler.PassThroughNode((new Compiler.Parser()).substitute(
+          node,
           "(function () {" +
           "   var $lzsc$temp = _1;" +
           "   $lzsc$temp._dbg_name = " + ScriptCompiler.quote(userFunctionName) + ";" +
@@ -1630,6 +1632,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       if (registers != null && registers.containsKey(name)) {
         String register = (String)registers.get(name);
         ASTIdentifier newNode = new ASTIdentifier(0);
+        newNode.setLocation(node);
         if (node instanceof ASTIdentifier) {
           ASTIdentifier oldid = (ASTIdentifier)node;
           newNode.setEllipsis(oldid.getEllipsis());

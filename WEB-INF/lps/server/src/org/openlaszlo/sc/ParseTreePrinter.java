@@ -764,7 +764,9 @@ public class ParseTreePrinter {
       // This is an interface - no body needed
       txt += SEMI;
     }
-    return txt;
+    // When functions go out of scope we should tell
+    // any readers to forget the current line number info.
+    return txt + forceBlankLnum();
   }
 
   public String visitClassDefinition(SimpleNode node, String[] children) {
@@ -880,6 +882,10 @@ public class ParseTreePrinter {
     return makeTranslationUnits(visit(node));
   }
 
+  public static String unparse(SimpleNode node) {
+    return (new ParseTreePrinter()).text(node);
+  }
+  
   public String text(SimpleNode node) {
     return unannotate(visit(node));
   }
@@ -983,6 +989,18 @@ public class ParseTreePrinter {
       result = annotateNode(node, result);
 
     return result;
+  }
+
+  /**
+   * Return an annotation that forces a blank line number
+   * at this point.
+   */
+  public String forceBlankLnum() {
+    if (!trackLines) {
+      return "";
+    } else {
+      return NEWLINE + annotateFileLineNumber("", true);
+    }
   }
 
   public String annotateClass(String classnm, String str) {

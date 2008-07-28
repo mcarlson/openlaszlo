@@ -755,11 +755,21 @@ public class Compiler {
       return node;
     }
 
+    private String fileLineInputString(SimpleNode n) {
+      if (n == null || n.getFilename() == null) {
+        return "#file [Compiler.substitute]\n#line 0\n";
+      }
+      else {
+        return "#file " + n.getFilename() + "\n#line " + n.getLineNumber() + "\n";
+      }
+    }
 
     // Parse an expression and replace any identifier with the same
     // name as a keyword argument to this function, with the value of
     // that key.  If the value has type Splice, it's spliced into
     // place instead of substituting at the same level.
+    // If the 'nearnode' argument is non-null, its file/line info
+    // is used.
     //
     // >>> s = Parser().substitute
     // >>> s("[0,1,2]")
@@ -772,22 +782,22 @@ public class Compiler {
     // (ASTArrayLiteral, ASTArrayLiteral, ASTIdentifier(a), ASTIdentifier(b), ASTIdentifier(c), Literal(1), Literal(2))
     //
     // N.B., there is no attempt to enforce macro hygiene
-    public SimpleNode substitute(String str, Map keys) {
+    public SimpleNode substitute(SimpleNode nearnode, String str, Map keys) {
       // Since the parser can't parse an Expression, turn the source
       // into a Program, and extract the Expression from the parse tree.
-      SimpleNode node = parse("x = \n#file [Compiler.substitute]\n#line 0\n" + str).get(0).get(0).get(2);
+      SimpleNode node = parse("x = \n" + fileLineInputString(nearnode) + str).get(0).get(0).get(2);
       return visit(node, keys);
     }
 
     // Input is one or more statements, returns the nodes
     // that correspond to those statements
-    public SimpleNode[] substituteStmts(String str, Map keys) {
-      SimpleNode fexpr = substitute("(function () {" + str + "})()", keys);
+    public SimpleNode[] substituteStmts(SimpleNode nearnode, String str, Map keys) {
+      SimpleNode fexpr = substitute(nearnode, "(function () {" + str + "})()", keys);
       return fexpr.get(0).get(1).getChildren();
     }
 
-    public SimpleNode substituteStmt(String str, Map keys) {
-      SimpleNode node = parse("#file [Compiler.substitute]\n#line 0\n" + str).get(0);
+    public SimpleNode substituteStmt(SimpleNode nearnode, String str, Map keys) {
+      SimpleNode node = parse(fileLineInputString(nearnode) + str).get(0);
       return visit(node, keys);
     }
 
@@ -858,8 +868,17 @@ public class Compiler {
       return result;
     }
 
-    public void copyFields(SimpleNode that) {
+    public SimpleNode copyFields(SimpleNode that) {
+      super.copyFields(that);
       this.realNode = ((PassThroughNode)that).realNode.deepCopy();
+      return this;
+    }
+
+    public void dump(String prefix) {
+      super.dump(prefix);
+      if (realNode != null) {
+        realNode.dump(prefix + " ");
+      }
     }
   }
 

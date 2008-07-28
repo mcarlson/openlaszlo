@@ -406,6 +406,8 @@ public abstract class CommonGenerator implements ASTVisitor {
       classProperties = new ASTArrayLiteral(0);
       classProperties.setChildren((SimpleNode[])(classProps.toArray(new SimpleNode[0])));
     }
+    instanceProperties.setLocation(node);
+    classProperties.setLocation(node);
 
     Map map = new HashMap();
     String xtor = "class".equals(classortrait.getName())?"Class":"Trait";
@@ -413,7 +415,8 @@ public abstract class CommonGenerator implements ASTVisitor {
     map.put("_2", traitsandsuper);
     map.put("_3", instanceProperties);
     map.put("_4", classProperties);
-    SimpleNode replNode = (new Compiler.Parser()).substitute(xtor + ".make(" +
+    SimpleNode replNode = (new Compiler.Parser()).substitute(node,
+                                                             xtor + ".make(" +
                                                              ScriptCompiler.quote(classnameString) +
                                                              ", _2, _3, _4);",
                                                              map);
@@ -431,7 +434,8 @@ public abstract class CommonGenerator implements ASTVisitor {
       SimpleNode statements = new ASTStatementList(0);
       statements.setChildren((SimpleNode[])(stmts.toArray(new SimpleNode[0])));
       map.put("_5", statements);
-      SimpleNode stmtNode = (new Compiler.Parser()).substitute("(function () { with("+globalprefix+"_1"+")"+
+      SimpleNode stmtNode = (new Compiler.Parser()).substitute(node,
+                                                               "(function () { with("+globalprefix+"_1"+")"+
                                                                "with("+globalprefix+"_1.prototype) { _5 }})()",
                                                                map);
       SimpleNode listNode = new ASTStatementList(0);
@@ -542,7 +546,7 @@ public abstract class CommonGenerator implements ASTVisitor {
       if (rest != null) {
         defaults += rest;
       }
-      SimpleNode[] newNodes = (new Compiler.Parser()).substituteStmts(defaults, map);
+      SimpleNode[] newNodes = (new Compiler.Parser()).substituteStmts(children[formalPos], defaults, map);
       stmts.addAll(flatten(newNodes));
       // newargs contains arguments without initializers
       children[formalPos].setChildren((SimpleNode[])newargs.toArray(new SimpleNode[0]));
@@ -1008,7 +1012,7 @@ public abstract class CommonGenerator implements ASTVisitor {
     } else {
       assert false: "Unhandled super call " + ca;
     }
-    SimpleNode n = (new Compiler.Parser()).substitute(pattern, map);
+    SimpleNode n = (new Compiler.Parser()).substitute(node, pattern, map);
     return n;
   }
 

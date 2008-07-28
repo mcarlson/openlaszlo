@@ -89,7 +89,7 @@ public class ReferenceCollector {
     map.put("_1", fn);
     map.put("_2", callee);
     map.put("_3", new Compiler.Splice(node.get(1).getChildren()));
-    return parser.substitute("_1.hasOwnProperty('dependencies') ? _1.dependencies(this, _2, _3) : []", map);
+    return parser.substitute(node, "_1.hasOwnProperty('dependencies') ? _1.dependencies(this, _2, _3) : []", map);
   }
 
   // callee.fn(args...) ->
@@ -117,7 +117,7 @@ public class ReferenceCollector {
     map.put("_1", callee);
     map.put("_2", new Compiler.Splice(node.get(1).getChildren()));
 
-    return parser.substitute("_1['" + depnm + "'] ? _1['" + depnm + "'](this, _1, _2) : []", map);
+    return parser.substitute(fn, "_1['" + depnm + "'] ? _1['" + depnm + "'](this, _1, _2) : []", map);
   }
 
   // TODO: [2006-02-22 dda] Remove this 'subfunction' version soon.
@@ -141,7 +141,7 @@ public class ReferenceCollector {
 
         map.put("_1", a);
         map.put("_2", b);
-        a = parser.substitute("_1.concat(_2)", map);
+        a = parser.substitute(n, "_1.concat(_2)", map);
       }
     }
     return a;
@@ -164,7 +164,7 @@ public class ReferenceCollector {
 
         map.put("_1", a);
         map.put("_2", b);
-        a = parser.substitute("_1.concat(_2)", map);
+        a = parser.substitute(n, "_1.concat(_2)", map);
       }
     }
     return a;
@@ -202,7 +202,7 @@ public class ReferenceCollector {
       Map map = new HashMap();
       map.put("_1", d);
       map.put("_2", md);
-      return parser.substitute(
+      return parser.substitute(d,
         // TODO: [2003-06-19 ptw] (krank) Have to use sanitized
         // name here, so that substitute does not try to name
         // the function "x"
@@ -215,7 +215,7 @@ public class ReferenceCollector {
     } else {
       Map map = new HashMap();
       map.put("_1", d);
-      return parser.substitute(
+      return parser.substitute(d,
         // TODO: [2003-06-19 ptw] (krank) Have to use sanitized
         // name here, so that substitute does not try to name
         // the function "x"
