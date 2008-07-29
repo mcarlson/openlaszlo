@@ -68,6 +68,16 @@ information of Laszlo Systems, Inc. Use is subject to license terms.</p>
                        </xsl:when>
                        <xsl:when test="@action = 'popupexternal'">
                            <xsl:value-of select="@src"/>
+                       </xsl:when>
+                       <!-- If there is a sibling 'source' item, use it to run programs -->
+                       <xsl:when test="@runtime and parent::*/child::subitem[@action='source']">
+                           <xsl:text>.</xsl:text>
+                           <xsl:value-of select="parent::*/child::subitem[@action='source']/@src"/>
+                           <xsl:text>?debug=true</xsl:text>
+                           <xsl:if test="@runtime != ''">
+                               <xsl:text>&amp;lzr=</xsl:text>
+                               <xsl:value-of select="@runtime"/>
+                           </xsl:if>
                        </xsl:when>                       
                        <xsl:otherwise>
                             <xsl:text>.</xsl:text>
