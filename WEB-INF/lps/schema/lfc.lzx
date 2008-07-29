@@ -99,6 +99,7 @@
     <element>attribute</element>
     <element>event</element>
     <element>method</element>
+    <element>setter</element>
     <element>handler</element>
     <element>doc</element>
     <element>node</element>
@@ -152,6 +153,7 @@
     <element>attribute</element>
     <element>event</element>
     <element>method</element>
+    <element>setter</element>
     <element>handler</element>
     <element>doc</element>
     <element>node</element>

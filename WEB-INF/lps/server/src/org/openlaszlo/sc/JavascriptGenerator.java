@@ -941,7 +941,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   public SimpleNode visitSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode n = translateSuperCallExpression(node, isReferenced, children);
-    return visitExpression(n, isReferenced);
+    children = n.getChildren();
+    for (int i = 0, len = children.length ; i < len; i++) {
+      children[i] = visitExpression(children[i], isReferenced);
+    }
+    return n;
   }
 
   public SimpleNode visitNewExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
@@ -1464,7 +1468,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     newStmts = visitStatement(newStmts);
     // Finally replace the function body with that whole enchilada
     children[stmtsIndex] = newStmts;
-    if ( options.getBoolean(Compiler.NAME_FUNCTIONS)) {
+    if ( options.getBoolean(Compiler.NAME_FUNCTIONS) && (! options.getBoolean(Compiler.DEBUG_SWF9))) {
       // TODO: [2007-09-04 ptw] Come up with a better way to
       // distinguish LFC from user stack frames.  See
       // lfc/debugger/LzBactrace

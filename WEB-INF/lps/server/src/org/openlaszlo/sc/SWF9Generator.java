@@ -254,11 +254,36 @@ public class SWF9Generator extends JavascriptGenerator {
    * Intercept JavascriptGenerator version.
    * SWF9 does super calls 'normally' just by keeping the super keyword.
    * Other runtimes transform super into a runtime calculation of the
-   * proper class to use.
+   * proper class to use; except for the special translation of
+   * `super.setAttribute`
    */
-  public SimpleNode visitSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    for (int i = 0, len = children.length ; i < len; i++) {
-      children[i] = visitStatement(children[i]);
+  public SimpleNode translateSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
+    SimpleNode fname = children[0];
+    if (fname instanceof ASTIdentifier) {
+      String name = ((ASTIdentifier)fname).getName();
+      // Transform `super.setAttribute` to a setter method call
+      if ("setAttribute".equals(name)) {
+        assert children.length == 3;
+        SimpleNode callapply = children[1];
+        assert callapply instanceof ASTEmptyExpression;
+        SimpleNode args = children[2];
+        Map map = new HashMap();
+        SimpleNode sargs[] = args.getChildren();
+        assert sargs.length == 2;
+        SimpleNode property = sargs[0];
+        SimpleNode value = sargs[1];
+        String pattern;
+        if (property instanceof ASTLiteral) {
+          name = "$lzc$set_" + (String)((ASTLiteral)property).getValue();
+          pattern = "super._1(_2)";
+          map.put("_1", new ASTIdentifier(name));
+        } else {
+          pattern = "super['$lzc$set_' + _1](_2)";
+          map.put("_1", property);
+        }
+        map.put("_2", value);
+        return (new Compiler.Parser()).substitute(node, pattern, map);
+      }
     }
     return node;
   }

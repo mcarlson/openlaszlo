@@ -974,7 +974,6 @@ public abstract class CommonGenerator implements ASTVisitor {
   }
 
   public SimpleNode translateSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-
     assert children.length == 3;
     SimpleNode fname = children[0];
     SimpleNode callapply = children[1];
@@ -990,6 +989,27 @@ public abstract class CommonGenerator implements ASTVisitor {
     } else {
       name = ((ASTIdentifier)fname).getName();
     }
+    Map map = new HashMap();
+
+    // Transform `super.setAttribute` to a setter method call
+    if ("setAttribute".equals(name)) {
+      SimpleNode sargs[] = args.getChildren();
+      assert sargs.length == 2;
+      SimpleNode property = sargs[0];
+      SimpleNode value = sargs[1];
+      if (property instanceof ASTLiteral) {
+        name = "$lzc$set_" + (String)((ASTLiteral)property).getValue();
+        map.put("_1", new ASTLiteral(name));
+      } else {
+        pattern = "this.nextMethod(arguments.callee, '$lzc$set_' + _1).call(this, _2)";
+        map.put("_1", property);
+      }
+      map.put("_2", value);
+    } else {
+      map.put("_1", new ASTLiteral(name));
+      map.put("_2", new Compiler.Splice(args.getChildren()));
+    }
+
     if (callapply instanceof ASTIdentifier) {
       ca = ((ASTIdentifier)callapply).getName();
     }
@@ -1000,9 +1020,6 @@ public abstract class CommonGenerator implements ASTVisitor {
     // should use swf7's real super call, but that will mean we
     // have to solve the __proto__ vs. super in constructor
     // problem.]
-    Map map = new HashMap();
-    map.put("_1", new ASTLiteral(name));
-    map.put("_2", new Compiler.Splice(args.getChildren()));
     if (ca == null) {
       ;
     } else if ("call".equals(ca)) {

@@ -392,9 +392,9 @@ public class NodeModel implements Cloneable {
 
     public static boolean isPropertyElement(Element elt) {
         String name = elt.getName();
-        return name.equals("attribute") || name.equals("method")
-            || name.equals("handler")
-            || name.equals("event");
+        return "attribute".equals(name) || "method".equals(name)
+          || "handler".equals(name) || "setter".equals(name)
+          || "event".equals(name);
     }
 
     /** Returns a name that is used to report this element in warning
@@ -496,7 +496,7 @@ public class NodeModel implements Cloneable {
             String src = elt.getAttributeValue("src");
             String type = elt.getAttributeValue("type");
 
-            if ((type != null && (type.equals("soap") || type.equals("http")))
+            if ((type != null && ("soap".equals(type) || "http".equals(type)))
                 || (src != null && XMLUtils.isURL(src))
                 || "true".equals(datafromchild)) {
                 contentIsLiteralXMLData = false;
@@ -810,7 +810,7 @@ public class NodeModel implements Cloneable {
 
             // Warn for redefine of a flash builtin
             // TODO: [2006-01-23 ptw] What about colliding with DHTML globals?
-            if ((name.equals("id") || name.equals("name")) &&
+            if (("id".equals(name) || "name".equals(name)) &&
                  (value != null &&
                   (env.getRuntime().indexOf("swf") == 0) &&
                   ("swf6".equals(env.getRuntime()) ?
@@ -827,7 +827,7 @@ public class NodeModel implements Cloneable {
             }
 
             // Check that the view name is a valid javascript identifier
-            if ((name.equals("name") || name.equals("id")) &&
+            if (("name".equals(name) || "id".equals(name)) &&
                 (value == null || !ScriptCompiler.isIdentifier(value))) {
                 CompilationError cerr = new CompilationError(
                     "The "+name+" attribute of this node,  "+ "\"" + value + "\", is not a valid javascript identifier " , element);
@@ -927,7 +927,7 @@ solution =
 
                     // Check if we are aliasing another 'name'
                     // attribute of a sibling
-                    if (name.equals("name")) {
+                    if ("name".equals(name)) {
                         Element parent = element.getParentElement();
                         if (parent != null) {
                             for (Iterator iter2 = parent.getChildren().iterator(); iter2.hasNext(); ) {
@@ -1203,14 +1203,16 @@ solution =
     void addPropertyElement(Element element) {
       warnIfHasChildren(element);
       String tagName = element.getName();
-      if (tagName.equals("method")) {
+      if ("method".equals(tagName)) {
         addMethodElement(element);
-      } else if (tagName.equals("handler")) {
+      } else if ("handler".equals(tagName)) {
         addHandlerElement(element);
-      } else if (tagName.equals("event")) {
+      } else if ("event".equals(tagName)) {
         addEventElement(element);
-      } else if (tagName.equals("attribute")) {
+      } else if ("attribute".equals(tagName)) {
         addAttributeElement(element);
+      } else if ("setter".equals(tagName)) {
+        addSetterElement(element);
       }
     }
 
@@ -1599,9 +1601,9 @@ solution =
                         double scale = new Float(numstr).floatValue() / 100.0;
                         warnOnDeprecatedConstraints = false;
                         String referenceAttribute = name;
-                        if (name.equals("x")) {
+                        if ("x".equals(name)) {
                             referenceAttribute = "width";
-                        } else if (name.equals("y")) {
+                        } else if ("y".equals(name)) {
                             referenceAttribute = "height";
                         }
                         value = "immediateparent." + referenceAttribute;
@@ -1812,36 +1814,78 @@ solution =
         // Add entry for attribute setter function
         String setter = element.getAttributeValue("setter");
         if (setter != null) {
-            // By convention 'anonymous' setters are put in the 'lzc'
-            // namespace with the name set_<property name>
-            // NOTE: LzNode#applyArgs and #setAttribute depend on this
-            // convention to find setters
-            String settername = "$lzc$" + "set_" + name;
-            addMethodInternal(
-                settername,
-                // the lone argument to a setter is named after the
-                // attribute
-                name,
-                // The body of the setter method
-                setter,
-                element,
-                allocation);
-
-            // This is just for nice error messages
-            if (setters.get(name) != null) {
-                env.warn(
-                    "a setter for attribute named '"+name+
-                    "' is already defined on "+getMessageName(),
-                    element);
-            }
-            setters.put(name, ScriptCompiler.quote(settername));
+          addSetterFromAttribute(element, name, setter, allocation);
         }
+    }
+
+    /** Defines a setter
+     *
+     * <setter name="attr-name" [args="attr-name"]>
+     *   [function body]
+     * </handler>
+     *
+     * This defines a setter for the attribute named `attr-name` that
+     * will be invoked by setAttribute.
+     *
+     * TODO [2008-07-25 ptw] Reconcile how this works with storing the
+     * state in an attribute of the same name vs. having real
+     * setter/getter pairs.
+     */
+    void addSetterElement(Element element) {
+        String attribute = element.getAttributeValue("name");
+        if ((attribute == null || !ScriptCompiler.isIdentifier(attribute))) {
+            env.warn("setter needs a non-null name attribute");
+            return;
+        }
+        String args = CompilerUtils.attributeLocationDirective(element, "args") +
+            // Setters get called with one argument.  The default is
+            // for the argument to have the same name as the attribute
+            // this is the setter for
+            XMLUtils.getAttributeValue(element, "args", attribute);
+        String allocation = XMLUtils.getAttributeValue(element, "allocation", ALLOCATION_INSTANCE);
+        String body = element.getText();
+        if (body.trim().length() == 0) { body = null; }
+        if (body != null) {
+          body = CompilerUtils.attributeLocationDirective(element, "text") + body;
+        }
+        addSetterInternal(element, attribute, args, body, allocation);
+    }
+
+    /**
+     * A setter defined in the open tag
+     */
+    void addSetterFromAttribute(Element element, String attribute, String body, String allocation) {
+      // By default the argument to the setter method is the same name
+      // as the attribute it is the setter for
+      addSetterInternal(element, attribute, attribute, body, allocation);
+    }
+
+    /**
+     * Adds a setter method for `attribute` with body `body`.
+     */
+    void addSetterInternal(Element element, String attribute, String args, String body, String allocation) {
+      if (body == null) {
+        env.warn("Refusing to compile an empty setter", element);
+        return;
+      }
+      // By convention setters are put in the 'lzc' namespace with
+      // the name set_<property name> NOTE: LzNode#applyArgs and
+      // #setAttribute depend on this convention to find setters
+      String settername = "$lzc$" + "set_" + attribute;
+      addMethodInternal(settername, args, body, element, allocation);
+      // This is just for nice error messages
+      if (setters.get(attribute) != null) {
+        env.warn(
+          "a setter for attribute named '"+attribute+
+          "' is already defined on "+getMessageName(),
+          element);
+      }
+      setters.put(attribute, ScriptCompiler.quote(settername));
     }
 
     /* Handle a <data> tag.
      * If there is more than one immediate child data node at the top level, signal a warning.
      */
-
     void addLiteralDataElement(Element element) {
         String name = element.getAttributeValue("name");
 

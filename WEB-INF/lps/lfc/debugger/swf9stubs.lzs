@@ -10,53 +10,54 @@
 // This file implements the debugger stubs, so that DHTML apps can make refernces to
 // Debug.write, etc, when the full debugger is not compiled/linked in.
 
-dynamic class LzDebugService {
+dynamic class LzDebugService with LzFormatter {
     public function write(...args):void {
-        trace.apply(Debug, args);
-        LFCApplication.write.apply(LFCApplication, args);
+      var str = this.formatToString.apply(this, args);
+      trace(str);
+      LFCApplication.write(str);
     }
     public function info(...args):void {
-        args.unshift('Info: ');
-        write.apply(Debug, args);
+      this.write('INFO: ' + this.formatToString.apply(this, args));
     }
     public function warn(...args):void {
-        args.unshift('Warn: ');
-        write.apply(Debug, args);
+      this.write('WARN: ' + this.formatToString.apply(this, args));
     }
     public function error(...args):void {
-        args.unshift('Error: ');
-        write.apply(Debug, args);
+      this.write('ERROR: ' + this.formatToString.apply(this, args));
     }
     public function debug(...args):void {
-        args.unshift('Debug: ');
-        write.apply(Debug, args);
+      this.write('DEBUG: ' + this.formatToString.apply(this, args));
     }
     public function monitor(...args):void {
-        args.unshift('Monitor: ');
-        write.apply(Debug, args);
+      this.write('MONITOR: ' + this.formatToString.apply(this, args));
     }
-
-    public function __String (thing, pretty=null, limit=null, unique=null):String { return ""+ thing ; }
+    // This prevents write from calling trace
+//     public function trace(...args):void {
+//       this.write('TRACE: ' + this.formatToString.apply(this, args));
+//     }
+    public function __typeof (thing) { return typeof thing; }
+    public function functionName (fn, isGlobal=false) { return String(fn); }
+    public function __String (thing, pretty=null, limit=null, unique=null) { return String(thing); }
 }
 
 var Debug = new LzDebugService();
 lz.DebugService = LzDebugService;  // publish
 
 class LzSourceMessage extends LzMessage {
-    var file;
-    var line
-        
-function LzSourceMessage (file:String=null, line:Number=0, message:String='') {
-  // Append a backtrace if there is one -- skip back to the
-  // $reportSourceWarning or warnInternal frames.
-  this.file = file;
-  this.line = line;
-  if (message instanceof LzMessage) {
-    this.message = message;
-  } else {
-    this.message = new LzMessage(message);
+  var file;
+  var line;
+
+  function LzSourceMessage (file:String=null, line:Number=0, message:String='') {
+    // Append a backtrace if there is one -- skip back to the
+    // $reportSourceWarning or warnInternal frames.
+    this.file = file;
+    this.line = line;
+    if (message instanceof LzMessage) {
+      this.message = message;
+    } else {
+      this.message = new LzMessage(message);
+    }
   }
-}
 
 }
 
