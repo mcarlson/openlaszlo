@@ -281,9 +281,6 @@ as soon as the app loads if the dataset's <indexterm><primary>request</primary><
 
 <para>The <literal>type="http"</literal> attribute gets implied when the <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute contains "<literal>http://</literal>".</para>
 
-<note><para>You do not have to worry about speed of the Flash Player's XML parser when using the OpenLaszlo Server.</para></note>
-
-
 <para/></section><section><title>Dataset Scope</title>
 <para>
 If specified on the canvas, datasets are visible to and accessible by the entire application. Datasets can also be local to a class.
