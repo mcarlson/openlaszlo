@@ -76,7 +76,7 @@ def tagname_for(filename)
   open(filename) {|f|
       f.each_line { |line|
           line.chomp!
-          if (line =~ /<title>.*<\/title>/) then
+          if (!tag && line =~ /<title>.*<\/title>/) then
               if (line =~ /<title>&lt;.*&gt;.*<\/title>/) then
                   tag = line.sub(/.*<title>&lt;/, '').sub(/&gt;/, '').sub(/<\/title>.*/, '')
               end
@@ -96,7 +96,7 @@ def nontagname_for(filename)
   open(filename) {|f|
       f.each_line { |line|
           line.chomp!
-          if (line =~ /<title>.*<\/title>/) then
+          if (!name && line =~ /<title>.*<\/title>/) then
               if (line =~ /<title>.*<\/title>/ &&
                   line !~ /<title>&lt;.*&gt;.*<\/title>/) then
                   name = line.sub(/.*<title>/, '').sub(/<\/title>.*/, '')
@@ -142,18 +142,20 @@ generate_index("{[Ll]z,tag}*.html", $outdir + "/tags.xml", "index") { | file,ful
   if (name) then
     name = "&amp;lt;" + name + "&amp;gt;";
   end
+
   name
  }
-generate_index("Lz*.html", $outdir + "/classes.xml", "index") { | file,fullname | 
+generate_index("{Lz*,Debug*}.html", $outdir + "/classes.xml", "index") { | file,fullname | 
   name = tagname_for(fullname);
   if (name) then
     name = 'lz.' + name;
   else
     name = nontagname_for(fullname);
-    if (!name) then
+    if (name) then
+      name = name.sub(/\$lzc\$class_/, 'lz.');
+    else
       name = file.sub(/\.html/, '').sub(/([^+]*)\+(.*)/, '\1 (\2)').gsub(/\+/, ' ');
     end
-    name = name.sub(/^Lz/, 'lz.').tr('A-Z','a-z');
   end
   name
 }

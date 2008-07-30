@@ -89,10 +89,74 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>
-    
+
+    <!-- lztype-rename
+         rename a type, allowing for []*| syntax complexities
+         e.g. [LzView]|[LzNode]  =>  [lz.view]|[lz.node]
+      -->
     <xsl:template name="lztype-rename">
       <xsl:param name="type"/>
+      <xsl:variable name="length" select="string-length($type)"/>
+      <xsl:variable name="first" select="substring($type,1,1)"/>
+      <xsl:variable name="last" select="substring($type,$length,1)"/>
       <xsl:choose>
+        <xsl:when test="contains($type, '[')">
+          <xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="substring-before($type,'[')"/>
+          </xsl:call-template>
+          <xsl:value-of select="'['"/>
+          <xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="substring-after($type,'[')"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="contains($type, ']')">
+          <xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="substring-before($type,']')"/>
+          </xsl:call-template>
+          <xsl:value-of select="']'"/>
+          <xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="substring-after($type,']')"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="contains($type, '*')">
+          <xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="substring-before($type,'*')"/>
+          </xsl:call-template>
+          <xsl:value-of select="'*'"/>
+          <xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="substring-after($type,'*')"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="contains($type, '|')">
+          <xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="substring-before($type,'|')"/>
+          </xsl:call-template>
+          <xsl:value-of select="'|'"/>
+          <xsl:call-template name="lztype-rename">
+            <xsl:with-param name="type" select="substring-after($type,'|')"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="lztype-rename-inner">
+            <xsl:with-param name="type" select="$type"/>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="lztype-rename-inner">
+      <xsl:param name="type"/>
+      <xsl:variable name="lzxname" select="/js2doc/property[@name=$type]/doc/tag[@name='lzxname']/text"/>
+      <xsl:choose>
+        <xsl:when test="$type=''">
+          <xsl:value-of select="''"/>
+        </xsl:when>
+        <xsl:when test="substring($type,1,3)='lz.'">
+          <xsl:value-of select="$type"/>
+        </xsl:when>
+        <xsl:when test='$lzxname'>
+          <xsl:value-of select="concat('lz.', $lzxname)"/>
+        </xsl:when>
         <xsl:when test="substring($type,1,2)='Lz'">
           <xsl:value-of select="concat('lz.', substring-after($type, 'Lz'))"/>
         </xsl:when>

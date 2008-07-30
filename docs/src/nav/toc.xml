@@ -149,7 +149,7 @@
         <item title="&amp;lt;method&amp;gt;" href="tag.method.html" />
         <item title="&amp;lt;node&amp;gt;" href="LzNode.html" />
         <item title="&amp;lt;script&amp;gt;" href="LzScript.html" />
-        <item title="Lz.CSSStyleSheet" href="LzCSSStyleSheet.html" />
+        <item title="lz.CSSStyleSheet" href="LzCSSStyleSheet.html" />
     </category>
     <category title="States">
         <item title="&amp;lt;dragstate&amp;gt;" href="lz.dragstate.html" />

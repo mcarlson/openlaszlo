@@ -28,7 +28,31 @@ def for_line(filename)
   }
 end
 
-def check_link(fromname, refname)
+def check_title(href, title, reffile)
+  found = false;
+  for_line($indir + reffile) { | refline |
+    if (refline.index("href=\"" + href + "\"")) then
+      found = true;
+      wanttitle = refline.sub(/^.*title="([^"]*)".*/, '\1')
+
+      # class LzFooService is always refered to as LzFoo in the toc
+      wanttitle = wanttitle.sub(/Service$/,'');
+
+      # remove any platform specific naming, like LzFoo (swf8) -> LzFoo
+      wanttitle = wanttitle.sub(/ \(.*\)/, '');
+
+      if (wanttitle != title) then
+        $stderr.puts('Warning: toc.xml has title "' + title + '" and ' + reffile + ' has "' + wanttitle + '"')
+      end
+      break
+    end
+  }
+  if (!found) then
+    $stderr.puts('Warning: toc.xml has title "' + title + '" and ' + reffile + ' does not list it')
+  end
+end
+
+def check_link(fromname, refname, title)
   result = true
   if (!File.exist?($indir + refname)) then
     $stderr.puts("Error: broken link in doc navigation: " + refname + " referenced from " + fromname + " does not exist")
@@ -38,6 +62,11 @@ def check_link(fromname, refname)
       $stderr.puts('    maybe use ' + altname + '?')
       result = false
     }
+  end
+  if (title =~ /&amp;lt/) then
+    check_title(refname, title, "tags.xml")
+  else
+    check_title(refname, title, "classes.xml")
   end
   return result
 end
@@ -72,7 +101,8 @@ for_line($indir + 'toc.xml') { | line |
    end
    if (line =~ /<item.*href=/) then
       filename = line.sub(/^.*href="([^"]*)".*$/, '\1')
-      if (!check_link('toc.xml', filename))
+      title = line.sub(/^.*title="([^"]*)".*/, '\1')
+      if (!check_link('toc.xml', filename, title))
          ecode = false
       end
    end
