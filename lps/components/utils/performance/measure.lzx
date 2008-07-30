@@ -28,16 +28,11 @@
   // set.
   //
   // @param String name: the name of the meter
+  // @param String units: the units of the meter
   //---
-  function Meter (name, units) {
-    this.name = "";
-    this.units = "";
-    switch (arguments.length) {
-      case 2:
-        this.units = units;
-      case 1:
-        this.name = name;
-    }
+  function Meter (name:String="", units:String="") {
+    this.name = name;
+    this.units = units;
     this.count = 0;
     this.total = 0.0;
     this.meanSquared = 0.0;
@@ -91,25 +86,9 @@
   // @param Integer len: the desired width, if negative pad on the left
   // @param Integer dec: ensure dec characters to the right of '.', padding with 0.
   //---
-  Meter.prototype.pad = function (str, len, dec, pad, sign, radix, force) {
+  Meter.prototype.pad = function (str='', len=null, dec=null, pad=' ', sign='-', radix=10, force=false) {
     <![CDATA[
     // TODO: [2006-03-01 ptw] Stolen from LzFormat, share when that is ported.
-    switch (arguments.length) {
-      case 0:
-        str = '';
-      case 1:
-        len = null;
-      case 2:
-        dec = null;
-      case 3:
-        pad = ' ';
-      case 4:
-        sign = '-';
-      case 5:
-        radix = 10;
-      case 6:
-        force = false;
-    }
     var num = typeof(str) == 'number';
     // coerce to be string
     if (num) {
@@ -228,23 +207,7 @@
   // the idle loop (to avoid "Player running slowly").  Default
   // Measurement.defaultRunInBackground.
   //--
-  function Measurement (targets, iterations, trials, background) {
-    // Default arguments
-    this.targets = targets;
-    this.iterations = Measurement.defaultIterations;
-    this.trials = Measurement.defaultTrials;
-    this.runInBackground = Measurement.defaultRunInBackground;
-    switch (arguments.length) {
-      case 0:
-        Debug.write("No measurement targets");
-        return;
-      case 4:
-        this.runInBackground  = background;
-      case 3:
-        this.trials = trials;
-      case 2:
-        this.iterations = iterations;
-    }
+  function Measurement (targets, iterations=Measurement.defaultIterations, trials=Measurement.defaultTrials, background=Measurement.defaultRunInBackground) {
     measurements.write("iterations = "+this.iterations);
 
     // Measure each target trials times

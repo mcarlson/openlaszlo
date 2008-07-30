@@ -98,10 +98,7 @@ __LzStackFrame.prototype._dbg_typename = "StackFrame";
   *
   * @access private
   */
-var LzBacktrace = function (skip) {
-  if (arguments.length < 1) {
-      skip = 0;
-  }
+var LzBacktrace = function (skip=0) {
   var bs = Debug.backtraceStack;
   var l = bs.length - skip;
   this.length = l;
@@ -159,13 +156,7 @@ LzBacktrace.prototype.map = function(fn, limit) {
   * 
   * @access private
   */
-LzBacktrace.prototype.toStringInternal = function(printer, length) {
-  switch (arguments.length) {
-    case 0:
-      printer = function (o) { return Debug.__String(o['function']); };
-    case 1:
-      length = Debug.printLength;
-  }
+LzBacktrace.prototype.toStringInternal = function(printer=function (o) { return Debug.__String(o['function']); }, length=Debug.printLength) {
   var backtrace = "";
   var sep = " <- ";
   for (var i = this.length - 1; (i >= 0) && (backtrace.length < length); i--) {
@@ -210,10 +201,7 @@ LzBacktrace.prototype._dbg_typename = "Backtrace";
   * backtrace.  Defaults to 1.
   * @access private
   */
-Debug.backtrace = function (skip) {
-  if (arguments.length < 1) {
-      skip = 1;
-  }
+Debug.backtrace = function (skip=1) {
   if (Debug.backtraceStack.length > skip) {
 #pragma "passThrough=true"
     return new LzBacktrace(skip);

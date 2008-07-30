@@ -80,7 +80,7 @@
                     parent.header.setY(0);
                </handler>
                <handler name="onclick">
-                   classroot.parent.select(classroot,true);
+                   classroot.parent.select(classroot);
                    lz.Focus.setFocus( this.classroot , false );
                </handler>
             </basebutton>

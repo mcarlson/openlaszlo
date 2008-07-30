@@ -117,16 +117,8 @@ Debug.functionName = function (fn, mustBeUnique) {
 /**
  * @access private
  */
-Debug.__String = function (thing, pretty, limit, unique) {
+Debug.__String = function (thing, pretty=Debug.printPretty, limit=Debug.printLength, unique=(! pretty)) {
   try {
-    switch (arguments.length) {
-      case 1:
-      pretty = this.printPretty;
-      case 2:
-      limit = this.printLength;
-      case 3:
-      unique = !pretty;
-    }
     // Evade infinite recursion
     if (limit <= 0) return '';
     // Return primitive types early, so you don't stumble on them in
@@ -407,16 +399,9 @@ Debug.__String = function (thing, pretty, limit, unique) {
 /**
  * @access private
  */
-Debug.makeObjectLink = function (rep, id, attrs) {
+Debug.makeObjectLink = function (rep, id=Debug.IDForObject(rep), attrs=null) {
   var type = 'INSPECT';
-  switch (arguments.length) {
-    case 1:
-      id = this.IDForObject(rep);
-    case 2:
-      break;
-    case 3:
-      if (attrs.type) { type = attrs.type };
-  }
+  if (attrs && attrs.type) { type = attrs.type };
   if (id != null) {
     var obj = this.ObjectForID(id);
     var tip = Debug.formatToString("Inspect %0.32#w", obj);
@@ -430,8 +415,8 @@ Debug.makeObjectLink = function (rep, id, attrs) {
 /**
  * @access private
  */
-Debug.inspectInternal = function (obj, showInternalProperties) {
-  var si = (typeof(showInternalProperties) != 'undefined')?showInternalProperties: this.showInternalProperties;
+Debug.inspectInternal = function (obj, showInternalProperties=Debug.showInternalProperties) {
+  var si = showInternalProperties;
   var hasProto = obj && obj.hasOwnProperty;
   var opl = this.printLength;
   try {
@@ -588,6 +573,6 @@ Debug.computeSlotDescription = function (obj, key, val, wid) {
 };
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************

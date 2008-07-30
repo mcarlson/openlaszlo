@@ -258,7 +258,7 @@
         <attribute name="defaultplacement" value="_null_" type="string"/>
 
         <!--- @keywords private -->
-        <method name="determinePlacement" args="v , p ">
+        <method name="determinePlacement" args="v , p, a">
             v.parent = this.parent;
             return this;
         </method>
@@ -503,7 +503,7 @@
         <!--- Change the default placement of basetabs to defaultplacement of 
               tabscontent and create associated tabs.
               @keywords private -->
-        <method name="determinePlacement" args="v,p">
+        <method name="determinePlacement" args="v,p,a">
         <![CDATA[
 
             if (v instanceof lz.basetabpane) {
@@ -511,7 +511,7 @@
                 v.parent = this.parent;
                 p = this.defaultplacement;
             }
-            return super.determinePlacement( v , p );
+            return super.determinePlacement( v , p, a );
         ]]>
         </method>
 
@@ -702,10 +702,10 @@
                     Debug.error("%s.tabclass invalid: %s", this, tc);
                 }
 
-                return this.content.determinePlacement(v, p);
+                return this.content.determinePlacement(v, p, args);
             }
 
-            return super.determinePlacement(v,p);
+            return super.determinePlacement(v,p,args);
         ]]>
         </method>
 

@@ -63,7 +63,7 @@
         <!-- set the selection for border input.
             @param Number ns: start of selection range.
             @param Number ne: end of selection range. -->
-        <method name="setSelection" args="ns,ne">
+        <method name="setSelection" args="ns,ne=null">
             this.txt.setSelection(ns,ne);
         </method>
 
@@ -97,7 +97,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2007, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

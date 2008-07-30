@@ -91,7 +91,7 @@
         <!--- @keywords private
            get the next subview starting at the view "s"
         -->
-        <method name="getNextSubview" args="s, dir">
+        <method name="getNextSubview" args="s, dir=1">
             <![CDATA[
             // only works for toggle
             if (typeof(dir) == "undefined") dir = 1;
@@ -175,7 +175,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

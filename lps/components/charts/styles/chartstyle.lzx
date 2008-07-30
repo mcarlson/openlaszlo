@@ -349,7 +349,7 @@
 
    
     <!--- @keyword private -->
-    <method name="determinePlacement" args="" >
+    <method name="determinePlacement" args="v,p,a" >
         <!--
         this method makes sure that all nodes of type "datastyle" go in to the <datastyles/> node shown above.
         -->

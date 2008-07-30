@@ -59,7 +59,7 @@
       var restcomma = rest.length > 0 ? ',' : '';
       return 'opt_f5(' + w + ',' + x + ',' + y + ',' + z + restcomma + this.restToString(rest) + ')';
     </method>
-    <method name="opt_f6" args="x=1,y=2">
+    <method name="opt_f6" args="x=1,y=2,...ignore">
       return x+y;
     </method>
 
@@ -102,6 +102,9 @@
              } else
              if ($swf8) {
                assertEquals('swf8', $runtime, "Compile-time constant");
+             } else
+             if ($swf9) {
+               assertEquals('swf9', $runtime, "Compile-time constant");
              } else
              if ($dhtml) {
                assertEquals('dhtml', $runtime, "Compile-time constant");

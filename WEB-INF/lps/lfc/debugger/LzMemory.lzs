@@ -155,14 +155,12 @@ Debug.obstack = [];
   * (rather than __proto__ smashing).
   * 
   * @access private
+  *
+  * @devnote Limit background processing so player doesn't abort us.
+  * The loop limit no longer seems to be necessary. The setInterval is
+  * 1300ms (because we know scriptRunningSlowly defaults to 1500
   */
-Debug.traceStep = function (steps, milliseconds) {
-  // Limit background processing so player doesn't abort us.  The loop
-  // limit no longer seems to be necessary
-  if (arguments.length < 1) { steps = Infinity; }
-  // The setInterval is 1400ms (because we know scriptRunningSlowly
-  // defaults to 1500
-  if (arguments.length < 2) { milliseconds = 1300; }
+Debug.traceStep = function (steps=Infinity, milliseconds=1300) {
   var loopStart = (new Date).getTime();
   var loopCount = 0;
   var loopElapsed = 0;
@@ -396,13 +394,7 @@ Debug.traceStep = function (steps, milliseconds) {
   * false
   * @access private
   */
-Debug.initTrace = function (findLeaks, noteWhy) {
-  switch (arguments.length) {
-    case 0:
-      findLeaks = false;
-    case 1:
-      noteWhy = false;
-  }
+Debug.initTrace = function (findLeaks=false, noteWhy=false) {
   // Start a new generation
   this.markGeneration++;
   this.loops = this.loopCount = this.loopElapsed = 0;
@@ -645,14 +637,10 @@ class __LzLeaks /* extends Array */ {
   * @param top Number: How many leaks to detail, default is 10
   * @access private
   */
-Debug.whyAlive = function (top) {
+Debug.whyAlive = function (top=10) {
   if ($as2) {
   } else {
     Debug.warn("Memory tracing is for experimental use only in this runtime.")
-  }
-  switch (arguments.length) {
-    case 0:
-      top = 10;
   }
   if (this['leaks']) {
     var l = new __LzLeaks();

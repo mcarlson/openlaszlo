@@ -68,7 +68,7 @@
               not being multiselected. -->
         <method name="toggleOpenAndFocus">
         <![CDATA[
-            this.changeFocus();
+            this.changeFocus(null);
             this.setAttribute('selected', true);
             if (! this.isleaf) {
                 if (! lz.Keys.isKeyDown("control") &&

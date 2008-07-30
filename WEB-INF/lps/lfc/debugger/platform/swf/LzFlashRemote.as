@@ -122,16 +122,9 @@ Debug.startupConsoleRemote = function () {
         this.addHTMLText(this.inspectInternal(obj));
     };
     // @keywords private -- appease doc tool doc tool
-    Debug.makeObjectLink = function (rep, id, attrs) {
+    Debug.makeObjectLink = function (rep, id=Debug.IDForObject(rep), attrs=null) {
       var color = '#0000ff';
-      switch (arguments.length) {
-        case 1:
-          id = this.IDForObject(rep);
-        case 2:
-          break;
-        case 3:
-          if (attrs.color) { color = attrs.color };
-      }
+      if (attrs && attrs.color) { color = attrs.color };
       if (id != null) {
         return '<a href="asfunction:_root.canvas.displayObjectByID,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
       }

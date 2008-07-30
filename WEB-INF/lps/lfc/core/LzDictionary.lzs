@@ -16,11 +16,11 @@
   class LzDictionary extends Instance {
     // If object is supplied, the elements of object will be added to
     // the dictionary
-    function LzDictionary (object) {
+    function LzDictionary (object=null) {
       // have to hold entries in an object not self or our methods
       // appear as keys
       this.entries = new Object;
-      if (arguments.length > 0) {
+      if (object) {
         this.putAll(object);
       }
     }

@@ -292,7 +292,7 @@
               @param Number end: (optional) The end of the text selection. If
               not given, then the text cursor is positioned at the start point,
               but no text is selected. -->
-        <method name="setSelection" args="start,end">
+        <method name="setSelection" args="start,end=null">
             this._field.setSelection(start, end);
         </method>
 

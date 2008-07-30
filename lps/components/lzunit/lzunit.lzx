@@ -390,18 +390,22 @@
         } else {
           Debug.debug('result is null on fail call: "' + message + '"');
         }
-        if ($debug && !$swf9) {
-          var file = null, line = null;
-          // Find the failing test, which is four frames up
-          var bt = Debug.backtrace(4);
-          if (bt != null) {
-            var sf = bt[bt.length - 1];
-            file = sf.filename();
-            line = sf.lineno();
-          }
-          Debug.freshLine();
-          // create an error, which will include a backtrace, if applicable
-          Debug.__write(new LzError(file, line, message));
+        if ($debug) {
+          if ($swf9) {
+            Debug.write(message);
+          } else {
+            var file = null, line = null;
+            // Find the failing test, which is four frames up
+            var bt = Debug.backtrace(4);
+            if (bt != null) {
+              var sf = bt[bt.length - 1];
+              file = sf.filename();
+              line = sf.lineno();
+            }
+            Debug.freshLine();
+            // create an error, which will include a backtrace, if applicable
+            Debug.__write(new LzError(file, line, message));
+        }
         }
         ]]>
     </method>
@@ -411,8 +415,7 @@
 
       @param message: the reason for the error
     -->
-    <method name="error" args="...args"> <![CDATA[
-        var message = args[0];
+    <method name="error" args="message=''"> <![CDATA[
         var suite = this.parent;
         suite.ontestfail.sendEvent(message);
         if (this.result) {
@@ -420,10 +423,14 @@
         } else {
           Debug.debug('result is null on error call: "' + message + '"');
         }
-        if ($debug && !$swf9) {
-          Debug.freshLine();
-          // create an error, which will include a backtrace, if applicable
-          Debug.__write(new LzError(null, null, message));
+        if ($debug) {
+          if ($swf9) {
+            Debug.write(message);
+          } else {
+            Debug.freshLine();
+            // create an error, which will include a backtrace, if applicable
+            Debug.__write(new LzError(null, null, message));
+          }
         }
         ]]>
     </method>
@@ -458,10 +465,14 @@
         if (this.result) {
           this.result.addMessage(message);
         }
-        if ($debug && !$swf9) {
-          Debug.freshLine();
-          // create an error, which will include a backtrace, if applicable
-          Debug.__write(new LzInfo(null, null, message));
+        if ($debug) {
+          if ($swf9) {
+            Debug.write(message);
+          } else {
+            Debug.freshLine();
+            // create an error, which will include a backtrace, if applicable
+            Debug.__write(new LzInfo(null, null, message));
+          }
         }
         ]]>
     </method>
@@ -477,11 +488,9 @@
       @param condition: the condition to be tested
       @param assertion: (optional) the assertion the condition represents
     -->
-    <method name="assertTrue" args="condition, ...assertions">
-        var assertion;
-        if (assertions) assertion = assertions[0];
+    <method name="assertTrue" args="condition, assertion='True'">
         if (! semanticsTrue(condition)) {
-            this.fail(tformat(jsTrue(assertion) ? assertion : "True", true, condition));
+            this.fail(tformat(assertion, true, condition));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)
     </method>
@@ -498,11 +507,9 @@
       @param condition: the condition to be tested
       @param assertion: (optional) the assertion the condition represents
     -->
-    <method name="assertFalse" args="condition, ...assertions">
-        var assertion;
-        if (assertions) assertion = assertions[0];
+    <method name="assertFalse" args="condition, assertion='False'">
         if (!! semanticsTrue(condition)) {
-            this.fail(tformat(jsTrue(assertion) ? assertion :  "False", false, condition));
+            this.fail(tformat(assertion, false, condition));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
     </method>
@@ -514,12 +521,10 @@
       @param actual: the actual value
       @param message: (optional) the failure message
     -->
-    <method name="assertEquals" args="expected, actual, ...messages">
-        var message;
-        if (messages) message = messages[0];
+    <method name="assertEquals" args="expected, actual, message='Equals'">
         <!-- note NaN compares are always false -->
         if (! (expected == actual)) {
-            this.fail(tformat(jsTrue(message) ? message :  "Equals", expected, actual));
+            this.fail(tformat(message, expected, actual));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)
     </method>
@@ -532,18 +537,15 @@
       @param delta: the tolerance
       @param message: (optional) the failure message
     -->
-    <method name="assertWithin" args="expected, actual, delta, ...messages">
+    <method name="assertWithin" args="expected, actual, delta, message='Within'">
         <![CDATA[
-            var message;
-            if (messages) message = messages[0];
             // handle infinite expected
             if (expected == actual) return;
 
             var error = (actual <= expected) ? (expected - actual) : (actual - expected);
             // note NaN compares are always false
             if (! (error <= delta)) {
-                this.fail(tformat(jsTrue(message) ? message : "Within", "" + expected + "\u00B1" +
-                     delta , actual));
+                this.fail(tformat(message, "" + expected + "\u00B1" + delta , actual));
             }
             canvas.setAttribute('runTests', canvas.runTests + 1)            
         ]]>
@@ -555,12 +557,9 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertNull" args="object, ...messages">
-        var message;
-        if (messages) message = messages[0];
+    <method name="assertNull" args="object, message='Null'">
         if (object !== null) {
-           this.fail(tformat(jsTrue(message) ? message : "Null",
-                       null, object));
+           this.fail(tformat(message, null, object));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
     </method>
@@ -571,12 +570,9 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertNotNull" args="object, ...messages">
-        var message;
-        if (messages) message = messages[0];
+    <method name="assertNotNull" args="object, message='NotNull'">
         if (object === null) {
-           this.fail(tformat(jsTrue(message) ? message : "NotNull",
-                       "non-null value", object));
+           this.fail(tformat(message, "non-null value", object));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
     </method>
@@ -587,12 +583,9 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertUndefined" args="object, ...messages">
-        var message;
-        if (messages) message = messages[0];
+    <method name="assertUndefined" args="object, message='Undefined'">
         if (typeof(object) != "undefined") {
-           this.fail(tformat(jsTrue(message) ? message : "Undefined",
-                       "undefined value", object));
+           this.fail(tformat(message, "undefined value", object));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
     </method>
@@ -603,12 +596,9 @@
       @param object: the value to be tested
       @param message: (optional) the failure message
     -->
-    <method name="assertNotUndefined" args="object, ...messages">
-        var message;
-        if (messages) message = messages[0];
+    <method name="assertNotUndefined" args="object, message='NotUndefined'">
         if (typeof(object) == "undefined") {
-           this.fail(tformat(jsTrue(message) ? message : "NotUndefined",
-                       "defined value", object));
+           this.fail(tformat(message, "defined value", object));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)        
     </method>
@@ -621,18 +611,15 @@
       @param actual: the actual value
       @param message: (optional) the failure message
     -->
-    <method name="assertSame" args="expected, actual, ...messages">
+    <method name="assertSame" args="expected, actual, message='Same'">
     <![CDATA[
-        var message;
-        if (messages) message = messages[0];
         // Use typeof to compare undefined without warnings
         if (typeof(expected) == "undefined" &&
             typeof(actual) == "undefined") {
             return;
         }
         if (expected !== actual) {
-        this.fail(tformat(jsTrue(message) ? message : "Same",
-                    expected, actual));
+        this.fail(tformat(message, expected, actual));
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)             
     ]]>
@@ -646,14 +633,12 @@
       @param actual: the actual value
       @param message: (optional) the failure message
     -->
-    <method name="assertNotSame" args="expected, actual, ...messages">
-        var message;
-        if (messages) message = messages[0];
+    <method name="assertNotSame" args="expected, actual, message='NotSame'">
         if (expected === actual) {
             // In-line Test.tformat so we can invert the sense
-            var msg = LzFormatter.prototype.formatToString(
+            var msg = this.formatToString(
                 '%s expected anything but %#w got %#w',
-                (jsTrue(message) ? message + ": " : "NotSame: "), expected, actual);
+                message + ": ", expected, actual);
             this.fail(msg);
         }
         canvas.setAttribute('runTests', canvas.runTests + 1)
@@ -722,7 +707,7 @@
         dw("TestCase.run(", theTestName, ")");
         setResult(theTestResult);
         var dn = this._dbg_name instanceof Function ? this._dbg_name() : this._dbg_name;
-         var tn = this._dbg_typename instanceof Function ? this._dbg_typename() : this._dbg_typename;
+        var tn = this._dbg_typename instanceof Function ? this._dbg_typename() : this._dbg_typename;
         var prefix = (dn != tn) ? dn + ' >>> ' : ''
         this.result.startTest(prefix + theTestName);
         setUp();
@@ -782,7 +767,7 @@
         // Invoke the test method
         var m = this[theTestName];
         if (typeof(m) != "function") {
-            error("method '" + theTestName + "' not found", false);
+            error("method '" + theTestName + "' not found");
         }
         else {
             m.call(this);

@@ -106,11 +106,10 @@
   * @devnote [2006-06-24 ptw] This code is inlined by the compiler method
   * `meterFunctionEvent` and must be kept in sync with that.
   */
-    event: function (description, buffer) {
+    event: function (description, buffer='events') {
       #pragma 'warnUndefinedReferences=false'
       var $lzsc$lzp = $lzprofiler;
       if ($lzsc$lzp) {
-        if (arguments.length < 2) { buffer = 'events'; }
         var $lzsc$tick = $lzsc$lzp.tick;
         var $lzsc$now = (new Date).getTime();
         if ($lzsc$tick >= $lzsc$now) {
@@ -315,10 +314,10 @@
   * @param String type: The element type
   * @param String attributes: The tag attributes
   */
-    empty: function (type, attributes) {
+    empty: function (type, ...attributes) {
       this.write('<' + type + ' ');
-      for (var i = 1; i < arguments.length; i += 2) {
-        this.write(arguments[i] + '="' + arguments[i+1] + '" ');
+      for (var i = 0; i < attributes.length; i += 2) {
+        this.write(attributes[i] + '="' + attributes[i+1] + '" ');
       }
       this.write('/>\n');
     },
@@ -328,10 +327,10 @@
   * @access private
   * @param String tag: tag name
   */
-    openTag: function (tag) {
+    openTag: function (tag, ...attributes) {
       this.write('<' + tag);
-      for (var i = 1; i < arguments.length; i += 2) {
-        this.write(' ' + arguments[i] + '="' + arguments[i+1] + '"');
+      for (var i = 0; i < attributes.length; i += 2) {
+        this.write(' ' + attributes[i] + '="' + attributes[i+1] + '"');
       }
       this.write('>');
     },
@@ -472,18 +471,8 @@
   * are called back to back).
   *  
   */
-    dump: function (ignoreme, loops, ms) {
-
-        // defaults
-        if (typeof(loops) == 'undefined' || loops == null) {
-            loops = 1000;
-        }
+    dump: function (ignoreme, loops=1000, ms=3000) {
         var loopsMax = 0;
-
-        if (typeof(ms) == 'undefined' || ms == null) {
-            ms = 3000;
-        }
-
 
         if (! this.socket) {
             if (! this.connect()) {

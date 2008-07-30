@@ -284,10 +284,7 @@ Debug.singleEscapeCharacters = {
   * 
   * @access private
   */
-Debug.abbreviate = function(s, l) {
-  if (arguments.length < 2) {
-      l = this.printLength;
-  }
+Debug.abbreviate = function(s, l=Debug.printLength) {
   var ellipsis = '...'; // '\u2026' doesn't work, wah.
   if (s.length > (l - ellipsis.length)) {
     s = s.substring(0, l - ellipsis.length) + ellipsis;
@@ -409,17 +406,13 @@ Debug.ObjectForID = function (id) {
  * each frame, as opposed to just the `this` argument), invoke as
  * `Debug.bugReport(_, true)`.
  */
-Debug.bugReport = function (error, verbose) {
-  // Default values
-  switch (arguments.length) {
-    case 0:
+Debug.bugReport = function (error=null, verbose=Debug.showInternalProperties) {
+  if (error == null) {
     with (global) {
-      with (this.environment) {
+      with (Debug.environment) {
         error = _;
       }
     }
-    case 1:
-    verbose = this.showInternalProperties;
   }
   if (typeof(error) == 'number') {
     error = this.ObjectForID(error);

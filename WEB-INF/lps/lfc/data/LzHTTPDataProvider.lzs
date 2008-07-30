@@ -260,7 +260,7 @@ class LzHTTPDataProvider extends LzDataProvider {
      */
     function loadTimeout( loader, data ) { 
         var dreq = loader.dataRequest;
-        dreq.loadtime = (new Date()).getTime() - dreq.loadstart;
+        dreq.loadtime = (new Date()).getTime() - dreq.loadstarttime;
         dreq.status = LzDataRequest.TIMEOUT;
         dreq.onstatus.sendEvent( dreq );
     }

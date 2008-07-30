@@ -380,7 +380,7 @@
             lz.Idle.callOnIdle(this._focusseldel);  
         </method>
         
-        <method name="setSelection" args="ns,ne">
+        <method name="setSelection" args="ns,ne=null">
             this._ssel = ns;
             this._esel = ne;
             super.setSelection(ns,ne);

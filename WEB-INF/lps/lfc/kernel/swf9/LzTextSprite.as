@@ -399,7 +399,7 @@ function getThickness() {}
 function setMaxLength ( val ){}
 function setPattern ( val ){}
 
-function setSelection ( start , end ){ }
+function setSelection ( start , end=null ){ }
 
 function setResize ( val ){
     this.resize = val;

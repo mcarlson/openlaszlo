@@ -252,15 +252,7 @@ Debug.functionName = function (fn, mustBeUnique) {
 /**
   * @access private
   */
-Debug.__String = function (thing, pretty, limit, unique) {
-  switch (arguments.length) {
-    case 1:
-      pretty = this.printPretty;
-    case 2:
-      limit = this.printLength;
-    case 3:
-      unique = !pretty;
-  }
+Debug.__String = function (thing, pretty=Debug.printPretty, limit=Debug.printLength, unique=(! pretty)) {
   // Evade infinite recursion
   if (limit <= 0) return '';
   var t = typeof(thing);
@@ -478,16 +470,9 @@ Debug.__String = function (thing, pretty, limit, unique) {
 /**
   * @access private
   */
-Debug.makeObjectLink = function (rep, id, attrs) {
+Debug.makeObjectLink = function (rep, id=Debug.IDForObject(rep), attrs=null) {
   var color = '#0000ff';
-  switch (arguments.length) {
-    case 1:
-      id = this.IDForObject(rep);
-    case 2:
-      break;
-    case 3:
-      if (attrs.color) { color = attrs.color };
-  }
+  if (attrs && attrs.color) { color = attrs.color };
   if (id != null) {
     return '<a href="asfunction:_root.$modules.lz.Debug.displayObj,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
   }
@@ -497,8 +482,8 @@ Debug.makeObjectLink = function (rep, id, attrs) {
 /**
   * @access private
   */
-Debug.inspectInternal = function (obj, showInternalProperties) {
-  var si = (typeof(showInternalProperties) != 'undefined')?showInternalProperties: this.showInternalProperties;
+Debug.inspectInternal = function (obj, showInternalProperties=Debug.showInternalProperties) {
+  var si = showInternalProperties;
   var hasProto = (obj['__proto__']);
   var opl = this.printLength;
 

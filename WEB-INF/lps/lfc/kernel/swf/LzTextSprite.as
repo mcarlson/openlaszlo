@@ -837,7 +837,8 @@ LzTextSprite.prototype.setHScroll = function (s){
   * then the text cursor is positioned at the start point, but no text is 
   * selected.
   */
-LzTextSprite.prototype.setSelection = function ( start , end ){
+LzTextSprite.prototype.setSelection = function ( start , end=null ){
+    if (end == null) { end = start; }
     var sf = targetPath( this.__LZtextclip);
     if( Selection.getFocus() != sf ) {
         Selection.setFocus( sf );

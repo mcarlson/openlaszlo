@@ -1135,17 +1135,14 @@ function setHScroll (s){
   * then the text cursor is positioned at the start point, but no text is 
   * selected.
   */
-function setSelection ( start , end ){
+function setSelection ( start , end=null ){
+    if (end == null) { end = start; }
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
      tsprite.setSelection(start, end);
     /*
     var sf = targetPath( this.__LZtextclip);
     if( Selection.getFocus() != sf ) {
         Selection.setFocus( sf );
-    }
-
-    if ( typeof( end ) == 'undefined' ){
-        end = start;
     }
 
     Selection.setSelection( start , end );

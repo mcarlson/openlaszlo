@@ -11,23 +11,23 @@
 
         <!--- Check if a range is selected.
               @return Boolean: true if range is being selected, else false. -->
-        <method name="isRangeSelect">
+        <method name="isRangeSelect" args="item">
             var allowselect = false;
-            if (multiselect) allowselect = super.isRangeSelect();
+            if (multiselect) allowselect = super.isRangeSelect(item);
             return allowselect;
         </method>
 
         <!--- Check if selection is multiselect.
               @return Boolean: true if multiselect is true, else false. -->
-        <method name="isMultiSelect">
+        <method name="isMultiSelect" args="item">
             var allowselect = false;
-            if (multiselect) allowselect = super.isMultiSelect();
+            if (multiselect) allowselect = super.isMultiSelect(item);
             return allowselect;
         </method>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

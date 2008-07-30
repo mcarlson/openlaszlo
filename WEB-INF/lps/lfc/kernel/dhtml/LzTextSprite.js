@@ -376,7 +376,8 @@ LzTextSprite.prototype.setResize = function (r){
     this.resize = r == true;
 }
 
-LzTextSprite.prototype.setSelection = function ( start , end ){
+LzTextSprite.prototype.setSelection = function ( start , end=null){
+    if (end == null) { end = start; }
 // TODO: not implemented
     if ($debug) {
         Debug.warn('LzTextSprite.setSelection is not implemented yet.');

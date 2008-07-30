@@ -115,7 +115,7 @@
           field.setPattern(r);
         </method>
 
-        <method name="setSelection" args="start,end">
+        <method name="setSelection" args="start,end=null">
             field.setSelection(start, end);
         </method>
 

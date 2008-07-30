@@ -58,18 +58,27 @@
                     <simplelayout spacing="10"/>
                 </tabpane>
                 <tabpane text="Bogart, GA">
-                  <grid datapath="weatherdata:/weather" contentdatapath="forecast/day" shownitems="3" 
-                        height="${this.immediateparent.height}">
-                    <gridcolumn width="80" resizable="false">Day
-                      <text datapath="@label"/>
-                    </gridcolumn>
-                    <gridcolumn width="100" resizable="false">Forecast
-                      <text datapath="@desc"/>
-                    </gridcolumn>
-                    <gridcolumn width="60" resizable="false">Temp
-                      <text datapath="@temp"/>
-                    </gridcolumn>
-                  </grid>
+                  <switch>
+                    <when runtime="swf9">
+                      <text>
+                        <![CDATA[<grid> is not yet supported in swf9]]>
+                      </text>
+                    </when>
+                    <otherwise>
+                      <grid datapath="weatherdata:/weather" contentdatapath="forecast/day" shownitems="3"
+                            height="${this.immediateparent.height}">
+                        <gridcolumn width="80" resizable="false">Day
+                        <text datapath="@label"/>
+                        </gridcolumn>
+                        <gridcolumn width="100" resizable="false">Forecast
+                        <text datapath="@desc"/>
+                        </gridcolumn>
+                        <gridcolumn width="60" resizable="false">Temp
+                        <text datapath="@temp"/>
+                        </gridcolumn>
+                      </grid>
+                    </otherwise>
+                  </switch>
                 </tabpane>
             </tabs>
         </view>

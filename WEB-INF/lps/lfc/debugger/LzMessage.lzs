@@ -23,7 +23,7 @@
   *
   * @devnote TODO: [2007-09-05 ptw] Convert to class declaration
   */
-var LzMessage = function LzMessage (message) {
+var LzMessage = function LzMessage (message='') {
   // A Message would like to be a subclass of string, but mutable
   // TODO: [2006-04-11 ptw] Make this a real class
   this.constructor = arguments.callee;
@@ -100,11 +100,11 @@ LzMessage.prototype.valueOf = function () { return this.message.valueOf(); }
   * Implements String interface
   * @access private
   */
-LzMessage.prototype.concat = function () { 
-  var msg = new LzMessage(this.message.concat.apply(this, arguments));
+LzMessage.prototype.concat = function (...args) { 
+  var msg = new LzMessage(this.message.concat.apply(this, args));
   var offset = this.message.length;
-  for (var i = 0; i < arguments.length; i++) {
-    var arg = arguments[i];
+  for (var i = 0; i < args.length; i++) {
+    var arg = args[i];
     if (arg instanceof LzMessage) {
       var ao = arg.objects;
       for (var j = 0; j < ao.length; j++) {
@@ -121,25 +121,25 @@ LzMessage.prototype.concat = function () {
   * @access private
   */
 // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-LzMessage.prototype.slice = function () { return this.message.slice.apply(this, arguments); }
+LzMessage.prototype.slice = function (...args) { return this.message.slice.apply(this, args); }
 /**
   * Implements String interface
   * @access private
   */
 // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-LzMessage.prototype.split = function () { return this.message.split.apply(this, arguments); }
+LzMessage.prototype.split = function (...args) { return this.message.split.apply(this, args); }
 /**
   * Implements String interface
   * @access private
   */
 // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-LzMessage.prototype.substr = function () { return this.message.substr.apply(this, arguments); }
+LzMessage.prototype.substr = function (...args) { return this.message.substr.apply(this, args); }
 /**
   * Implements String interface
   * @access private
   */
 // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-LzMessage.prototype.substring = function () { return this.message.substring.apply(this, arguments); }
+LzMessage.prototype.substring = function (...args) { return this.message.substring.apply(this, args); }
 
 /**
   * Appends str to the message.  If obj is passed, it is recorded as an
@@ -151,11 +151,11 @@ LzMessage.prototype.substring = function () { return this.message.substring.appl
   * @param String str: the representation of an object
   * @param Object obj: the object represented, or null
   */
-LzMessage.prototype.appendInternal = function (str, obj) {
-  if (arguments.length < 2) {
-    var id = null;
-  } else {
+LzMessage.prototype.appendInternal = function (str, obj=null) {
+  if (obj) {
     var id = Debug.IDForObject(obj);
+  } else {
+    var id = null;
   }
   if (id == null) {
     this.message += str;
@@ -219,12 +219,7 @@ String.prototype.toHTML = function () {
  *
  * @access private
  */
-LzMessage.prototype.toArray = function (linkMaker) {
-  switch (arguments.length) {
-    case 0:
-    linkMaker = function (rep, id) {return Debug.ObjectForID(id);};
-    break;
-  }
+LzMessage.prototype.toArray = function (linkMaker=function (rep, id) {return Debug.ObjectForID(id);}) {
   var msg = this.message;
   var base = 0;
   var limit = msg.length;

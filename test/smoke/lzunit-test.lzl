@@ -15,15 +15,8 @@
     Test cases that depend on JavaScript semantics
   -->
   <class name="JavaScriptSemantics" extends="TestCase" semantics="'javascript'">
-    <method name="setUp">
-      this.foo = {zot: "qux"};
-      this.nullvar = null;
-    </method>
-
-    <method name="tearDown">
-      delete this.foo;
-      delete this.nullvar;
-    </method>
+    <attribute name="foo" value="{zot: 'qux'}" />
+    <attribute name="nullvar" value="null" />
 
     <method name="testJavaScriptSemantics">
       <![CDATA[
@@ -184,16 +177,8 @@
     or JavaScript
   -->
   <class name="Tautologies" extends="TestCase">
-
-    <method name="setUp">
-      this.foo = {zot: "qux"};
-      this.nullvar = null;
-    </method>
-
-    <method name="tearDown">
-      delete this.foo;
-      delete this.nullvar;
-    </method>
+    <attribute name="foo" value="{zot: 'qux'}" />
+    <attribute name="nullvar" value="null" />
 
     <method name="testSuccess">
     <![CDATA[
@@ -208,7 +193,7 @@
           "Infinity - Infinity isNaN");
       assertSame(true, isNaN(Infinity / Infinity),
           "Infinity / Infinity isNaN");
-      assertSame(true, isNaN('random string'), "'random string' isNaN");
+      assertSame(true, isNaN(Number('random string')), "Number('random string') isNaN");
 
       assertFalse(false, "false is false");
       assertFalse(null, "null is false");
@@ -270,7 +255,7 @@
       assertNotUndefined([], "[] is not undefined");
       assertNotUndefined({}, "{} is not undefined");
 
-      /* instanceof */
+      /* is */
       var cases = [
         {test: 'Array Literal', instance: [], constructor: Array},
         {test: 'new Boolean', instance: new Boolean(false), constructor: Boolean},
@@ -278,9 +263,9 @@
         {test: 'new Number', instance: new Number(1), constructor: Number},
         {test: 'Object Literal', instance: {}, constructor: Object},
         {test: 'new String', instance: new String(""), constructor: String},
-        {test: 'boolean Literal', instance: true, constructor: null},
-        {test: 'number Literal', instance: 0, constructor: null},
-        {test: 'string Literal', instance: "test", constructor: null},
+        {test: 'boolean Literal', instance: true, constructor: $swf9?Boolean:null },
+        {test: 'number Literal', instance: 0, constructor: $swf9?Number:null},
+        {test: 'string Literal', instance: "test", constructor: $swf9?String:null},
         {test: 'new lz.node', instance: new lz.node(), constructor: LzNode}
       ];
       var types = [Array, Boolean, Date, Number, String];
@@ -291,14 +276,14 @@
         var c = cases[k].constructor;
         for (var t = 0; t < types.length; t++) {
           if (c) {
-            // All objects are instanceof Object
-            assertSame(true, i instanceof Object, n + ': ' + Debug.__String(i) + ' instanceof ' + Debug.__String(Object));
+            // All objects are is Object
+            assertSame(true, i is Object, n + ': ' + Debug.__String(i) + ' is ' + Debug.__String(Object));
           }
           // Check constructor
           if (c && types[t].prototype == c.prototype) {
-            assertSame(true, i instanceof types[t], n + ': ' + Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
+            assertSame(true, i is types[t], n + ': ' + Debug.__String(i) + ' is ' + Debug.__String(types[t]));
           } else {
-            assertSame(false, i instanceof types[t], n + ': ' + Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
+            assertSame(false, i is types[t], n + ': ' + Debug.__String(i) + ' is ' + Debug.__String(types[t]));
           }
         }
       }
@@ -338,6 +323,7 @@
   -->
   <class name="IntentionalFailures" extends="TestCase">
 
+    <attribute name="foo" value="{zot: 'qux'}" />
     <attribute name="expectedFailure" />
     <attribute name="expectedFailures" />
 
@@ -355,7 +341,7 @@
       <![CDATA[
         if (typeof(expectedFailure) == "null") {
             return super.fail(message);
-        } else if (typeof(expectedFailure) == "function") {
+        } else if (expectedFailure is Function) {
             if (expectedFailure(message)) {
                 expectedFailures++;
                 return;
@@ -364,19 +350,17 @@
             expectedFailures++;
             return;
         }
-        super.fail(format("Wrong failure", expectedFailure,
+        super.fail(tformat("Wrong failure", expectedFailure,
                    message));
       ]]>
     </method>
 
     <method name="setUp">
-      this.foo = {zot: "qux"};
       expectedFailure = null;
       expectedFailures = 0;
     </method>
 
     <method name="tearDown">
-      delete this.foo;
       expectedFailure = null;
     </method>
 
@@ -529,7 +513,7 @@
     </method>
 
     <!-- Override error for testing purposes -->
-    <method name="error" args="message">
+    <method name="error" args="message=''">
       <![CDATA[
         if (typeof(expectedError) == "null") {
             return super.error(message);
@@ -544,21 +528,19 @@
             Debug.info("Testing error system: '%0.24s' (above) is expected as part of this test", message);
             return;
         }
-        super.error(format("Wrong error", expectedError,
-            message));
-
+        super.error(format("Wrong error", expectedError, message));
       ]]>
     </method>
+
+    <attribute name="nonFunction" value="{ nonMethod: 3 }" />
 
     <method name="setUp">
       expectedError = null
       expectedErrors = 0;
-      this.nonFunction = { nonMethod: 3 };
     </method>
 
     <method name="tearDown">
       expectedError = null;
-      delete this.nonFunction;
     </method>
 
     <method name="testError">
@@ -583,49 +565,55 @@
       error(msg);
       assertEquals(1, expectedErrors, "Total number of expected errors");
 
-      expectedError.expectedMatch = "This is a";
-      $reportSourceWarning(0, 0, "This is a test", true);
-      assertEquals(2, expectedErrors, "Total number of expected errors");
+      if ($swf9) {
+        // not yet
+      } else {
+        expectedError.expectedMatch = "This is a";
+        $reportSourceWarning(0, 0, "This is a test", true);
+        assertEquals(2, expectedErrors, "Total number of expected errors");
+      }
 
       // Only test errors that are caught by the debug compiler for each runtime
       if ($dhtml) {
         // There are none for the dhtml compiler at present
+      } else if ($swf9) {
+        // There are none for the swf9 compiler
       } else {
-        expectedError.expectedMatch = "flooglesnort";
-        // TODO: [2002-11-16 ptw] below currently signals two errors
-        undefined.flooglesnort;
-        assertEquals(4, expectedErrors, "Total number of expected errors");
+          expectedError.expectedMatch = "flooglesnort";
+          // TODO: [2002-11-16 ptw] below currently signals two errors
+          undefined.flooglesnort;
+          assertEquals(4, expectedErrors, "Total number of expected errors");
 
-        nonFunction.flooglesnort;
-        assertEquals(5, expectedErrors, "Total number of expected errors");
+          nonFunction.flooglesnort;
+          assertEquals(5, expectedErrors, "Total number of expected errors");
 
-        expectedError.expectedMatch = "call to undefined function";
-        flooglesnort();
-        assertEquals(6, expectedErrors, "Total number of expected errors");
+          expectedError.expectedMatch = "call to undefined function";
+          flooglesnort();
+          assertEquals(6, expectedErrors, "Total number of expected errors");
 
-        expectedError.expectedMatch = "call to non-function";
-        nonFunction();
-        assertEquals(7, expectedErrors, "Total number of expected errors");
+          expectedError.expectedMatch = "call to non-function";
+          nonFunction();
+          assertEquals(7, expectedErrors, "Total number of expected errors");
 
-        expectedError.expectedMatch = "call to undefined method";
-        nonFunction.flooglesnort();
-        assertEquals(8, expectedErrors, "Total number of expected errors");
+          expectedError.expectedMatch = "call to undefined method";
+          nonFunction.flooglesnort();
+          assertEquals(8, expectedErrors, "Total number of expected errors");
 
-        expectedError.expectedMatch = "call to non-method";
-        nonFunction.nonMethod();
-        assertEquals(9, expectedErrors, "Total number of expected errors");
+          expectedError.expectedMatch = "call to non-method";
+          nonFunction.nonMethod();
+          assertEquals(9, expectedErrors, "Total number of expected errors");
 
-        expectedError.expectedMatch = "undefined variable";
-        this.devnull = flooglesnort;
-        assertEquals(10, expectedErrors, "Total number of expected errors");
+          expectedError.expectedMatch = "undefined variable";
+          this.devnull = flooglesnort;
+          assertEquals(10, expectedErrors, "Total number of expected errors");
 
-        expectedError.expectedMatch = "undefined object";
-        undefined['flooglesnort'];
-        assertEquals(11, expectedErrors, "Total number of expected errors");
+          expectedError.expectedMatch = "undefined object";
+          undefined['flooglesnort'];
+          assertEquals(11, expectedErrors, "Total number of expected errors");
 
-        expectedError.expectedMatch = "undefined property";
-        nonFunction[undefined] = 'this is an error';
-        assertEquals(12, expectedErrors, "Total number of expected errors");
+          expectedError.expectedMatch = "undefined property";
+          nonFunction[undefined] = 'this is an error';
+          assertEquals(12, expectedErrors, "Total number of expected errors");
       }
       ]]>
     </method>

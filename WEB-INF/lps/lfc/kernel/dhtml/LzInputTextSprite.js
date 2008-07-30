@@ -567,10 +567,8 @@ LzInputTextSprite.prototype.select = function (){
     //Debug.write('select', this.uid, LzKeyboardKernel.__cancelKeys);
 }
 
-LzInputTextSprite.prototype.setSelection = function (start, end){
-    if (end == null) {
-        end = start;
-    }
+LzInputTextSprite.prototype.setSelection = function (start, end=null){
+    if (end == null) { end = start; }
     this._cancelblur = true;
     this.__show();
     LzInputTextSprite.__lastfocus = this;

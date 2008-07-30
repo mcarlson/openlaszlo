@@ -574,7 +574,7 @@ dynamic public class LzSprite extends Sprite {
           var oRect:Rectangle = asset.getBounds( asset );
           if (oRect.width == 0 || oRect.height == 0) {
             // it can take a while for new resources to show up.  Call back until we have a valid size.
-            setTimeout(this.__resetframe, 5);
+            setTimeout(this.__resetframe, 50);
             return;
           }
 

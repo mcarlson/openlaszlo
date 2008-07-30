@@ -411,7 +411,7 @@
         <!--- @keywords private -->
         <attribute name="_fixseldel" value="$once{new LzDelegate(this, 'fixSelection')}"/>
         <!--- @keywords private -->
-        <method name="fixSelection">
+        <method name="fixSelection" args="ignore">
             this.interior.cbtext.setSelection(_fixseldel.start, _fixseldel.end);
         </method>
 
@@ -489,7 +489,7 @@
                   indicators will be turned off;
                   if parameter is ommitted no change in focus indicator
         -->
-        <method name="toggle" args="withkey">
+        <method name="toggle" args="withkey=null">
             this.setOpen(!this.isopen, withkey)
         </method>
 
