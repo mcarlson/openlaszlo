@@ -530,7 +530,7 @@ dynamic public class LzSprite extends Sprite {
           o Plays a multiframe resource starting at the specified framenumber
           o Plays from the current frame if framenumber is null 
       */
-      public function play( framenumber:*, rel=null ):void {
+      public function play( framenumber:Number = 1,  rel:Boolean = false ):void {
           // TODO [hqm 2008-04] what to do about playing movies? 
           stop(framenumber);
       }
@@ -540,17 +540,21 @@ dynamic public class LzSprite extends Sprite {
           o Stops a multiframe resource at the specified framenumber
           o Stops at the current frame if framenumber is null 
       */
-      public function stop( fn:*, rel:* = null ):void {
-          // So frames are one based, not zero based? 
-          this.frame = fn;
-          var framenumber = fn - 1;
+      public function stop( fn:Number = 1, rel:Boolean = false ):void {
           if (this.resource == null) {
               return;
           }
           var resinfo = LzResourceLibrary[this.resource];
-          var frames = resinfo.frames;
-          var assetclass;
 
+          // Frames are one based not zero based
+          var frames = resinfo.frames;
+          if (fn > frames.length) {
+            fn = frames.length
+          }
+          this.frame = fn;
+          var framenumber = fn - 1;
+
+          var assetclass;
           // single frame resources get an entry in LzResourceLibrary which has
           // 'assetclass' pointing to the resource Class object.
           if (resinfo.assetclass is Class) {
@@ -559,6 +563,8 @@ dynamic public class LzSprite extends Sprite {
               // Multiframe resources have an array of Class objects in frames[]
               assetclass = frames[framenumber];
           }
+
+          if (! assetclass) return;
           if (this.resourceCache == null) {
               this.resourceCache = [];
           }
