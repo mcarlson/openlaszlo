@@ -564,11 +564,11 @@ See the <xref linkend="constraints"/> for details.
 <!-- add id to section so the reference can xref here. IORIO 22 0ct 2007 -->
 <section id="attribute-types"><title>Attribute types</title>
 <para>
-By default, attributes are of the JavaScript expression type, but in some cases the default declaration doesn't give enough instruction to achieve the desired result. In this example, no labels are displayed in the boxes:
+By default, attributes are of the JavaScript expression type, but in some cases the default declaration doesn't give enough instruction to achieve the desired result. In this example, the labels are undefined, so <literal>undefined</literal> is displayed in the boxes:
 </para>
 
 <example role="live-example">
-   <title>Incorrect: attribute has no effect</title>
+   <title>Incorrect attribute has no effect</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/methods-events-attributes-$23.lzx"/></textobject> 
    </programlisting>
