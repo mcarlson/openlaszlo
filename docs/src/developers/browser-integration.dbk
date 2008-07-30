@@ -221,34 +221,33 @@
         </section>
     </section>
     <section>
-        <title>The Lz Class</title>
+        <title>The lz Class</title>
         <para>For both applications compiled to SWF and applications
     compiled to DHTML, the methods used for bidirectional
     communication with the browser are in the class 
     <indexterm>
-      <primary>Lz</primary>
+      <primary>lz</primary>
             </indexterm>
-            <classname>Lz</classname>. Note that the letter "L" in this
-    class is upper case. This is not a typo!.</para>
+            <classname>lz</classname>.</para>
         <para>Unlike other OpenLaszlo classes which you use to build
     LZX applications, the 
     <indexterm>
-      <primary>Lz</primary>
+      <primary>lz</primary>
             </indexterm>
-            <classname>Lz</classname> is designed to be incorporated into
+            <classname>lz</classname> is designed to be incorporated into
     the HTML page in which your LZX application runs. That is to
     say, your LZX application is designed to be executed in the
     &lt;body&gt; section of the page, but the 
     <indexterm>
-      <primary>Lz</primary>
+      <primary>lz</primary>
             </indexterm>
-            <classname>Lz</classname> must be include in the &lt;head&gt;
+            <classname>lz</classname> must be include in the &lt;head&gt;
     section of the page.</para>
         <para>The 
     <indexterm>
-      <primary>Lz</primary>
+      <primary>lz</primary>
             </indexterm>
-            <classname>Lz</classname> class is defined in</para>
+            <classname>lz</classname> class is defined in</para>
         <programlisting>
     lps/includes/source/embednew.js</programlisting>
         <para>The source for 
@@ -259,9 +258,9 @@
     the class is documented in the Reference Manual.</para>
         <para>To have access to the 
     <indexterm>
-      <primary>Lz</primary>
+      <primary>lz</primary>
             </indexterm>
-            <classname>Lz</classname> class, your application must include a
+            <classname>lz</classname> class, your application must include a
     line like</para>
         <programlisting>&lt;script type="text/javascript"
     src="/legals/lps/includes/embed-compressed.js"&gt;&lt;/script&gt;</programlisting>
@@ -272,12 +271,12 @@
     Developer's Console, the wrapper pages generated include the
     proper calls to the 
     <indexterm>
-      <primary>Lz</primary>
+      <primary>lz</primary>
             </indexterm>
-            <classname>Lz</classname> class. It "just works" and you don't
+            <classname>lz</classname> class. It "just works" and you don't
     have to do anything special. If you craft your HTML pages "by
     hand", of course, you will need to make sure that you
-    incorporate the Lz class.</para>
+    incorporate the lz class.</para>
         <para />
     </section>
     <section>
@@ -292,7 +291,7 @@
     HTML document that embeds an OpenLaszlo application compiled to
     SWF, add this line:</para>
         <example role="live-example">
-            <title>The Lz Class</title>
+            <title>The lz Class</title>
             <programlisting>&lt;script src="/embed-compressed.js"
       language="JavaScript"
       type="text/javascript"/&gt;</programlisting>
@@ -304,7 +303,7 @@
             <title>Placing the LZX (SWF) application within an HTML
       page</title>
             <programlisting>&lt;script language="JavaScript"
-      type="text/javascript"&gt; Lz.swfEmbed({url: '?lzt=swf',
+      type="text/javascript"&gt; lz.swfEmbed({url: '?lzt=swf',
       bgcolor: '#000000', width: '', height: ''});
       &lt;/script&gt;</programlisting>
         </example>
@@ -318,7 +317,7 @@
             <title>Placing the LZX (DHTML) application within an HTML
       page</title>
             <programlisting>&lt;script language="JavaScript"
-      type="text/javascript"&gt; Lz.dhtmlEmbed({url: '?lzt=swf',
+      type="text/javascript"&gt; lz.dhtmlEmbed({url: '?lzt=swf',
       bgcolor: '#000000', width: '', height: ''});
       &lt;/script&gt;</programlisting>
         </example>
@@ -453,7 +452,7 @@
                   
                   img { border: 0 none; }
               &lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;script type="text/javascript"&gt;
-                    Lz.swfEmbed({url: 'grace.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzapp', accessible: 'false'});
+                    lz.swfEmbed({url: 'grace.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzapp', accessible: 'false'});
                   &lt;/script&gt;&lt;noscript&gt;
                   Please enable JavaScript in order to use this application.
               &lt;/noscript&gt;&lt;/body&gt;&lt;/html&gt;
