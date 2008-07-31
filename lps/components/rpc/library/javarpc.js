@@ -40,37 +40,48 @@ function loadObject (delegate, opts, secure, secureport) {
     var params = opts['params'];
     if (params) {
         for (var i=0; i < params.length; i++) {
-            mesg.addParameter(lz.Browser.xmlEscape(params[i]));
+            mesg.addParameter(params[i]);
         }
     }
 
-    var o = this.__LZgetBasicLoadParams('POST');
+    var dreq = new LzRPCDataRequest(this);
+    // We want treat response as JSON, not XML
+    dreq.parsexml = false;
+
+
+    dreq.method = "POST";
+    var params:* = {};
+    // Add in LPS Server proxy javarpc-protocol-specific query args
+    dreq.serverproxyargs = params;
+    params.oname  = opts['oname'];
+    params.scope  = opts['scope'];
+    params.handler = classname;
 
     // op=get: just load an object if it exists, else server returns error
     // op=create: create an object if it doesn't exist, else load it. If
     // op=create&clobber=1, then always create an object.
     var lo = opts['loadoption'];
     if ( lo == 'create' ) {
-        o['op'] = 'create';
-        o['clobber'] = 1;
+        params.op = 'create';
+        params.clobber = 1;
     } else if ( lo == 'loadonly' ) {
-        o['op'] = 'get';
+        params.op = 'get';
     } else if ( lo == 'loadcreate' ) {
-        o['op'] = 'create';
+        params.op = 'create';
     } else {
         Debug.write('LzJavaRPC.loadObject ERROR: no such op ', lo);
         return;
     }
 
-    o['url'] = 'java://' + classname;
-    o['handler'] = classname;
-    o['oname'] = opts['oname'];
-    o['scope'] = opts['scope'];
-    o['lzpostbody'] = mesg.xml();
+    dreq.proxied = true;
+    dreq.src = 'java://' + classname;
+    dreq.postbody = mesg.xml();
 
-    o.opinfo = {};
+    dreq.opinfo = {};
 
-    return this.request( o, delegate, secure, secureport );
+    dreq.protocol = LzRPC.JAVARPC_PROTOCOL;
+
+    return this.request( dreq, delegate, secure, secureport );
 }
 
 
@@ -90,20 +101,37 @@ function loadObject (delegate, opts, secure, secureport) {
 //------------------------------------------------------------------------------
 function unloadObject (delegate, opts, secure, secureport) {
 
+    // TODO [hqm 2008-07] update this to use datarequest loader protocol
     var classname = opts['classname'];
-    var oname = opts['oname'];
-    var scope = opts['scope'];
 
     var mesg = new XMLRPCMessage(classname + ".__LZunload");
-    var o = this.__LZgetBasicLoadParams('POST');
-    o['op'] = "destroy";
-    o['url'] = 'java://' + opts['classname'];
-    o['handler'] = classname;
-    o['oname'] = oname;
-    o['scope'] = scope;
-    o['lzpostbody'] = mesg.xml();
 
-    return this.request( o, delegate, secure, secureport );
+    var dreq = new LzRPCDataRequest(this);
+    // We want treat response as JSON, not XML
+    dreq.parsexml = false;
+
+
+    dreq.method = "POST";
+    var params:* = {};
+    // Add in LPS Server proxy javarpc-protocol-specific query args
+    dreq.serverproxyargs = params;
+
+    dreq.proxied = true;
+    dreq.src = 'java://' + opts['classname'];
+    dreq.postbody = mesg.xml();
+
+    dreq.opinfo = {};
+
+    dreq.protocol = LzRPC.JAVARPC_PROTOCOL;
+
+    // Add options for remote java object
+    for (var k in opts) {
+        params[k] = opts[k];
+        dreq.opinfo[k] = opts[k];
+    }
+
+    return this.request( dreq, delegate, secure, secureport );
+
 }
 
 
@@ -143,25 +171,38 @@ function invoke (delegate, args, opts, secure, secureport){
     var methodname = opts['methodname'];
     var mesg = new XMLRPCMessage(methodname);
     for (var i=0; i < args.length; i++) {
-        mesg.addParameter(lz.Browser.xmlEscape(args[i]));
+        mesg.addParameter(args[i]);
     }
 
-    var o = this.__LZgetBasicLoadParams('POST');
-    o['url'] = "java://" + opts['classname'];
-    o['lzpostbody'] = mesg.xml();
-    o['objectreturntype'] = opts['objectreturntype'];
-    o.opinfo = {};
+    var dreq = new LzRPCDataRequest(this);
+
+    // We want treat response as JSON, not XML
+    dreq.parsexml = false;
+
+    dreq.method = "POST";
+    var params:* = {};
+    // Add in LPS Server proxy javarpc-protocol-specific query args
+    dreq.serverproxyargs = params;
+
+    dreq.proxied = true;
+    dreq.src = 'java://' + opts['classname'];
+    dreq.postbody = mesg.xml();
+
+    dreq.opinfo = {};
+
+    dreq.protocol = LzRPC.JAVARPC_PROTOCOL;
 
     // Add options for remote java object
     for (var k in opts) {
-        o[k] = opts[k];
-        o.opinfo[k] = opts[k];
+        params[k] = opts[k];
+        dreq.opinfo[k] = opts[k];
     }
 
-    return this.request( o, delegate, secure, secureport );
-}
+    return this.request( dreq, delegate, secure, secureport );
+
 }
 
+}
 
 // global JavaRPC service
 var LzJavaRPCService = new LzJavaRPC();

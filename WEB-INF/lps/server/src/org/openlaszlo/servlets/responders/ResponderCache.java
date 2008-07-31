@@ -282,7 +282,7 @@ public abstract class ResponderCache extends Responder
             }
 
             try {
-                mDataSourceMap.put("soap-json",   new org.openlaszlo.data.json.SOAPDataSource());
+                mDataSourceMap.put("soap",   new org.openlaszlo.data.json.SOAPDataSource());
             } catch (Throwable e) {
                 mLogger.warn("can't load soap datasource", e);
             }
@@ -530,19 +530,6 @@ public abstract class ResponderCache extends Responder
         if (ds == null) {
             source = mHTTPDataSource;
         } else {
-            if ("soap".equals(ds)) {
-                // SOAP: dispatch on runtime ('lzr' query arg ) to figure out what
-                // kind of datatype the client wants (SWF or JSON).
-                // lzr == "dhtml" ? JSON : SWF
-
-                String runtime = req.getParameter("lzr");
-                if ("dhtml".equals(runtime)) {
-                    ds = "soap-json";
-                } else {
-                    ds = "soap-swf";
-                }
-            }
-
             source = (DataSource) mDataSourceMap.get(ds);
             if (source == null) 
                 respondWithErrorSWF(res, 

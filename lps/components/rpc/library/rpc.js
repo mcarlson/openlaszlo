@@ -1,5 +1,6 @@
 <library>
 <include href="xmlrpcdecoder.lzx"/>
+<script src="json.js"/>
 <script when="immediate">
 <![CDATA[
 
@@ -74,6 +75,138 @@ static var __LZseqnum = 0;
      */
 
 
+/* 
+   Dispatch on the protocl found in dreq.opinfo
+
+   If it's XMLRPC , use the XMLRPC decoder
+
+   otherwise, assume it's JSON
+
+   */
+function handleResponse (dreq:LzRPCDataRequest) {
+    if (dreq.protocol == LzRPC.XMLRPC_PROTOCOL) {
+        this.handleXMLRPCresponse(dreq);
+    } else if (dreq.protocol == LzRPC.JAVARPC_PROTOCOL) {
+        this.handleJSONRPCresponse(dreq);
+    } else if (dreq.protocol == LzRPC.SOAP_PROTOCOL) {
+        this.handleJSONRPCresponse(dreq);
+    } else {
+        Debug.error('LzRPC.handleResponse unknown protocol ', dreq.protocol);
+    }
+}
+
+
+function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
+    var data = JSON.parse(dreq.rawdata);
+    var delegate = null;
+    var opinfo   =  {};
+    var seqnum   =  -1;
+
+    var rpcinfo = dreq.rpcinfo;
+
+    if (rpcinfo) {
+        delegate = rpcinfo.delegate;
+        opinfo   = (typeof rpcinfo['opinfo'] != "undefined" ) ? rpcinfo['opinfo'] : opinfo;
+        seqnum   = rpcinfo.seqnum;
+    } else {
+        Debug.error('handleXMLRPCresponse, no rpcinfo', dreq);
+    }
+
+ 
+    // responseheaders is specific to SOAP -pk
+    // opinfo.responseheaders = (responseheaders!=null ? responseheaders : null);
+
+
+    // TODO [hqm 2007-03-15] we need to pass these in if they in fact come from server
+    opinfo.responseheaders = null;
+
+    if (data && typeof(data) == 'object' && data['__LZstubload'] ) {
+        // check to see if the data is the stub 
+        var stub = data.stub;
+        var stubinfo = data.stubinfo;
+        
+        this.__LZloadHook(stubinfo);
+
+        delegate.execute( { status: 'ok', message: 'ok', 
+                    stub: stub, stubinfo: stubinfo,
+                    seqnum: seqnum } );
+
+    } else if (data && (data instanceof LzDataElement) && data.childNodes[0].nodeName == 'error') {
+
+        var error = data.childNodes[0].attributes['msg'];
+
+        // check if whitelist/blacklist is in effect
+        {
+            var check = 'Forbidden url: ';
+            var index = error.indexOf(check);
+            if (index != -1 && index == 0) {
+                error = 'Forbidden: ' + error.substring(check.length);
+            }
+        }
+
+        delegate.execute({ status: 'error', errortype: 'servererror',
+                           message: error, opinfo: opinfo,
+                           seqnum: seqnum });
+
+    } else if (typeof(data) == 'object' && data['faultCode'] != null) {
+
+        // JavaRPC or XMLRPC error style
+        // TODO: come up with a single way of returning RPC errors from server
+        if (data.faultCode == 0 && data.faultString == 'void') {
+
+            delegate.execute({ status: 'ok', message: 'void', 
+                               data: LzRPC.t_void, opinfo: opinfo,
+                               seqnum: seqnum });
+
+        } else {
+
+            delegate.execute({ status: 'error', 
+                               errortype: 'fault',
+                               message: data.faultString,
+                               opinfo: opinfo,
+                               error: data,
+                               seqnum: seqnum });
+        }
+
+    } else if (typeof(data) == 'object' && data['errortype'] != null) {
+
+        // SOAP error style
+        // TODO: come up with a single way of returning RPC errors from server
+        delegate.execute({ status: 'error', errortype: data.errortype,
+                           message: data.faultstring, error: data,
+                           opinfo: opinfo,
+                           seqnum: seqnum });
+
+    } else if (typeof(data) == "undefined") {
+
+        delegate.execute({ status: 'error', errortype: 'timeout',
+                           message: 'timed out', opinfo: opinfo,
+                           seqnum: seqnum });
+
+    } else {
+
+        if (delegate['dataobject'] != null) {
+            if ( delegate.dataobject instanceof LzDataset ) {
+                var element = LzDataElement.valueToElement(data);
+                // the child nodes of element will be placed in datasets childNodes
+                delegate.dataobject.setData( element.childNodes );
+            } else if ( delegate.dataobject instanceof LzDataElement ) {
+                var element = LzDataElement.valueToElement(data);
+                // xpath: element/value
+                delegate.dataobject.appendChild( element );
+            } else {
+                Debug.warn('dataobject is not LzDataset or LzDataElement:', 
+                           delegate.dataobject);
+            }
+        }
+
+        delegate.execute({ status: 'ok', message: 'ok', data: data, opinfo: opinfo,
+                           seqnum: seqnum });
+    }
+
+}
+
+
 //------------------------------------------------------------------------------
 // This function is a callback handler which is passed to an
 // LzHTTPLoader. It is called not as a method, but as an ordinary
@@ -146,7 +279,7 @@ static var __LZseqnum = 0;
                     rpcerror = LzXMLRPCDecoder.xmlrpc2jsobj(valuenode);
                 }
             }
-            if (data && typeof(data) == 'object' && data['__LZstubload'] ) {
+            if (typeof(data) == 'object' && data['__LZstubload'] ) {
                 // check to see if the data is the stub 
                 var stub = data.stub;
                 var stubinfo = data.stubinfo;
@@ -235,7 +368,7 @@ function __LZloadHook (stubinfo:*) { }
         // TODO [hqm 2008-07-24] We may wish to pick a handler based
         // on the protocol (e.g., native SOAP).  Right now XMLRPC is
         // the default protocol.
-        this.dsloadDel = new LzDelegate( this , "handleXMLRPCresponse" , dreq, "onstatus");
+        this.dsloadDel = new LzDelegate( this , "handleResponse" , dreq, "onstatus");
     } else {
         this.dsloadDel.register(dreq, "onstatus");
     }

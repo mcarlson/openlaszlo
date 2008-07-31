@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -357,7 +357,7 @@ public class XMLRPCJSONCompiler
      *
      * @return json input stream
      */
-    public byte[] getSWF(Element element, String runtime)
+    public byte[] getSWF(Element element)
         throws IOException {
         mLogger.debug("getSWF");
         int i = 0;
@@ -377,9 +377,9 @@ public class XMLRPCJSONCompiler
     /**
      * @see compile(Reader, int)
      */
-    public static byte[] compile(String xmlrpc, String runtime)
+    public static byte[] compile(String xmlrpc)
         throws IOException {
-        return compile(new StringReader(xmlrpc), runtime);
+        return compile(new StringReader(xmlrpc));
     }
 
     /**
@@ -387,19 +387,19 @@ public class XMLRPCJSONCompiler
      *
      * @return JSON expression for data.
      */
-    public static byte[] compile(Reader reader, String runtime)
+    public static byte[] compile(Reader reader)
         throws IOException {
-        mLogger.debug("compile(reader,runtime)");
+        mLogger.debug("compile(reader)");
         try {
             // TODO: [2004-02-20 pkang] do we worry about character encoding?
             DocumentBuilder builder = getDocumentBuilderFactory().newDocumentBuilder();
             Document document = builder.parse(new InputSource(reader));
-            return new XMLRPCJSONCompiler().getSWF(document.getDocumentElement(), runtime);
+            return new XMLRPCJSONCompiler().getSWF(document.getDocumentElement());
         } catch (Exception e) {
             mLogger.error("Caught exception at compile: " + e);
             StringWriter trace = new StringWriter();
             e.printStackTrace(new PrintWriter(trace));
-            return compileFault(trace.toString(), runtime);
+            return compileFault(trace.toString());
         }
     }
 
@@ -427,14 +427,14 @@ public class XMLRPCJSONCompiler
             .toString();
     }
 
-    public static byte[] compileResponse(int code, String message, String runtime)
+    public static byte[] compileResponse(int code, String message)
         throws IOException {
         String fault = xmlFaultResponse(code, message);
         try {
             DocumentBuilder builder = getDocumentBuilderFactory().newDocumentBuilder();
             Document document = builder.parse
                 (new InputSource(new StringReader(fault)));
-            return new XMLRPCJSONCompiler().getSWF(document.getDocumentElement(), runtime);
+            return new XMLRPCJSONCompiler().getSWF(document.getDocumentElement());
         } catch (Exception e) {
             mLogger.error("Caught exception at compileFault: " + message, e);
             throw new IOException(e.getMessage());
@@ -444,8 +444,8 @@ public class XMLRPCJSONCompiler
     /**
      * Used by compiler to send back exception messages.
      */
-    public static byte[] compileFault(String message, String runtime) throws IOException {
-        return compileResponse(-1, message, runtime);
+    public static byte[] compileFault(String message) throws IOException {
+        return compileResponse(-1, message);
     }
 
 
@@ -460,7 +460,7 @@ public class XMLRPCJSONCompiler
         }
         try {
             File file = new File(args[0]);
-            InputStream in = new ByteArrayInputStream(compile(new FileReader(file), "dhtml"));
+            InputStream in = new ByteArrayInputStream(compile(new FileReader(file)));
             OutputStream out = new FileOutputStream("xmlrpc.swf");
             FileUtils.send(in, out, 4096);
         } catch (Exception e) {

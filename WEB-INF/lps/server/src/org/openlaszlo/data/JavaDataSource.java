@@ -104,11 +104,11 @@ public class JavaDataSource extends DataSource
     static long mLastCleared = -1; 
 
     // Map of SWF prototypes for session objects.
-    public static VersionMap mSessionPrototypes = new VersionMap();
+    public static Map mSessionPrototypes = new HashMap();
     // Map of SWF prototypes for webapp objects.
-    public static VersionMap mWebAppPrototypes  = new VersionMap();
+    public static Map mWebAppPrototypes  = new HashMap();
     // Map of SWF prototypes for static objects.
-    public static VersionMap mStaticPrototypes  = new VersionMap();
+    public static Map mStaticPrototypes  = new HashMap();
 
     // Count of sessions. Also used by SessionBindingMap.
     public static ThreadSafeCounter mSessionCounter
@@ -143,15 +143,13 @@ public class JavaDataSource extends DataSource
     static final int SCOPE_WEBAPP  = 1;
     static final int SCOPE_NONE  = 2;
 
-    HashMap mVoidMap = null;
     ObjectData DEFAULT_VOID;
 
     public JavaDataSource() {
         clearLoadInfo();
         try {
             DEFAULT_VOID = new ObjectData
-                (XMLRPCCompiler.compileResponse(0, "void", 
-                                                LPS.mSWFVersionNumDefault));
+                (XMLRPCJSONCompiler.compileResponse(0, "void"));
         } catch (IOException e) {
             mLogger.error(
 /* (non-Javadoc)
@@ -191,9 +189,6 @@ public class JavaDataSource extends DataSource
                                 JavaDataSource.class.getName(),"051018-190")
 );
 
-        int swfversion = LPS.getSWFVersionNum(req);
-        String runtime = req.getParameter("lzr");
-
         if (! req.getMethod().equals("POST"))
             return compileFault(
 /* (non-Javadoc)
@@ -202,7 +197,7 @@ public class JavaDataSource extends DataSource
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-202")
-                        , runtime, swfversion);
+                        );
 
         String url;
         try {
@@ -215,7 +210,7 @@ public class JavaDataSource extends DataSource
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-215")
-                        , e, runtime, swfversion);
+                        , e);
         }
 
         String cname = getClassName(url);
@@ -227,7 +222,7 @@ public class JavaDataSource extends DataSource
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-227", new Object[] {url})
-                        , runtime, swfversion);
+                        );
 
         if (! isClassOk(cname, req.getServletPath())) 
             return compileFault(
@@ -237,7 +232,7 @@ public class JavaDataSource extends DataSource
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-237", new Object[] {cname})
-                        , runtime, swfversion);
+                        );
 
         Class targetClass = getClass(cname);
         if (targetClass == null)
@@ -248,7 +243,7 @@ public class JavaDataSource extends DataSource
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-248", new Object[] {cname})
-, runtime, swfversion);
+);
 
         int scope = getScope(req);
         if (scope == SCOPE_UNKNOWN)
@@ -259,7 +254,7 @@ public class JavaDataSource extends DataSource
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-259")
-, runtime, swfversion);
+);
 
         String postbody = req.getParameter("lzpostbody");
         if (postbody == null || postbody.equals(""))
@@ -270,7 +265,7 @@ public class JavaDataSource extends DataSource
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-270")
-, runtime, swfversion);
+);
 
         // one of 'pojo' or 'javabean'
         String objectReturnType = req.getParameter("objectreturntype");
@@ -309,16 +304,15 @@ public class JavaDataSource extends DataSource
             .processRequest(new ByteArrayInputStream(postbody.getBytes()));
         */
 
-        // TODO [hqm -- ] fill in these manually
-        String methodname = "";
-        Vector parameters = new Vector();
+        XmlRpcRequest xr = new LZXmlRpcRequestProcessor()
+            .processRequest(new ByteArrayInputStream(postbody.getBytes()));
 
         long t0, t1;
         t0 = System.currentTimeMillis();
         mJavaRPCLoad.increment();
         try {
             return execute(req, res, targetClass, scope, objectReturnType,
-                           swfversion, methodname, parameters);
+                           xr.getMethodName(), xr.getParameters());
         } catch (IOException e) {
             return compileFault(
 /* (non-Javadoc)
@@ -326,9 +320,8 @@ public class JavaDataSource extends DataSource
  * @org-mes="exception executing " + p[0]
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-322", new Object[] {methodname})
-, e,
-                                runtime, swfversion);
+                                JavaDataSource.class.getName(),"051018-322", new Object[] {xr.getMethodName()})
+, e);
         } finally {
             t1 = System.currentTimeMillis();
             mJavaRPCLoad.decrement((int)(t1-t0));
@@ -348,10 +341,8 @@ public class JavaDataSource extends DataSource
      */
     public Data execute(HttpServletRequest req, HttpServletResponse res, 
                         Class targetClass, int scope, String objectReturnType, 
-                        int swfversion, String methodName, 
+                        String methodName, 
                         Vector params) throws IOException {
-
-        String runtime = req.getParameter("lzr");
 
         if (mLogger.isDebugEnabled()) {
             StringBuffer p = new StringBuffer(" ");
@@ -453,14 +444,14 @@ public class JavaDataSource extends DataSource
             String oname = req.getParameter("oname");
             if (scope == SCOPE_NONE) oname= NONE;
             if (oname == null || "".equals(oname))
-                return compileFault("no oname parameter", runtime, swfversion);
+                return compileFault("no oname parameter");
 
             if (scope == SCOPE_NONE) {
                 if ("get".equals(op) || "create".equals(op)) {
                     t0 = System.currentTimeMillis();
                     mStaticProtoGetLoad.increment();
                     try {
-                        return getStaticPrototype(cname, runtime, swfversion);
+                        return getStaticPrototype(cname);
                     } finally {
                         t1 = System.currentTimeMillis();
                         mStaticProtoGetLoad.decrement((int)(t1-t0));
@@ -474,8 +465,7 @@ public class JavaDataSource extends DataSource
                     t0 = System.currentTimeMillis();
                     mInstanceProtoGetLoad.increment();
                     try {
-                        return getInstancePrototype(cname, oname, scope, req, 
-                                                    swfversion);
+                        return getInstancePrototype(cname, oname, scope, req);
                     } finally {
                         t1 = System.currentTimeMillis();
                         mInstanceProtoGetLoad.decrement((int)(t1-t0));
@@ -487,8 +477,7 @@ public class JavaDataSource extends DataSource
                     mInstanceProtoCreateLoad.increment();
                     try {
                         return createInstancePrototype(cname, oname, scope, 
-                                                       argClasses, argValues, req, 
-                                                       swfversion);
+                                                       argClasses, argValues, req);
                     } finally {
                         t1 = System.currentTimeMillis();
                         mInstanceProtoCreateLoad.decrement((int)(t1-t0));
@@ -499,7 +488,7 @@ public class JavaDataSource extends DataSource
                     t0 = System.currentTimeMillis();
                     mInstanceProtoDestroyLoad.increment();
                     try {
-                        return destroyInstance(oname, scope, req, swfversion);
+                        return destroyInstance(oname, scope, req);
                     } finally {
                         t1 = System.currentTimeMillis();
                         mInstanceProtoDestroyLoad.decrement((int)(t1-t0));
@@ -524,7 +513,7 @@ String errmsg =
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-516", new Object[] {getScopeName(scope), oname});
                         mLogger.error(errmsg);
-                        return compileFault(errmsg, runtime, swfversion);
+                        return compileFault(errmsg);
                     }
                 }
             }
@@ -575,7 +564,7 @@ String errmsg =
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-565")
 , e);
-                return compileFault(e.getMessage(), e, runtime, swfversion);
+                return compileFault(e.getMessage(), e);
             } catch(SecurityException e) {
                 mLogger.error(
 /* (non-Javadoc)
@@ -585,7 +574,7 @@ String errmsg =
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-575")
 , e);
-                return compileFault(e.getMessage(), e, runtime, swfversion);
+                return compileFault(e.getMessage(), e);
             }
 
             // Make all public methods callable except those defined in
@@ -597,8 +586,7 @@ String errmsg =
  * @org-mes="Can't call methods in java.lang.Object"
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-589")
-, runtime, swfversion);
+                                JavaDataSource.class.getName(),"051018-589"));
             }
 
             // invoke
@@ -606,21 +594,21 @@ String errmsg =
                 returnValue = method.invoke(invokeTarget, argValues);
             } catch (IllegalAccessException e) {
                 mLogger.error("IllegalAccessException", e);
-                return compileFault(e.getMessage(), e, runtime, swfversion);
+                return compileFault(e.getMessage(), e);
             } catch (IllegalArgumentException e) {
                 mLogger.error("IllegalArgumentException", e);
-                return compileFault(e.getMessage(), e, runtime, swfversion);
+                return compileFault(e.getMessage(), e);
             } catch (InvocationTargetException e) {
                 mLogger.error("InvocationTargetException", e);
                 Throwable cause = e.getCause();
-                if (cause != null) return compileFault(cause, runtime, swfversion);
-                return compileFault(e.getMessage(), e, runtime, swfversion);
+                if (cause != null) return compileFault(cause);
+                return compileFault(e.getMessage(), e);
             } catch (Exception e) {
                 mLogger.error("Exception", e);
-                return compileFault(e.getMessage(), e, runtime, swfversion);
+                return compileFault(e.getMessage(), e);
             } catch (Error e) {
                 mLogger.error("Error", e);
-                return compileFault(e.getMessage(), e, runtime, swfversion);
+                return compileFault(e.getMessage(), e);
             }
         } finally {
             t1 = System.currentTimeMillis();
@@ -632,7 +620,7 @@ String errmsg =
         try {
             Class returnType = method.getReturnType();
             if (returnType == Void.TYPE) {
-                return getVoid(runtime);
+                return getVoid();
             } else if (returnType == DataEncoder.class && returnValue != null) {
                 return new EncoderData((DataEncoder)returnValue);
             }
@@ -642,7 +630,7 @@ String errmsg =
 
         } catch (IOException e) {
             mLogger.error("IOException", e);
-            return compileFault(e.getMessage(), e, runtime, swfversion);
+            return compileFault(e.getMessage(), e);
         } finally {
             t1 = System.currentTimeMillis();
             mReturnObjectEncodeLoad.decrement((int)(t1-t0));
@@ -650,46 +638,14 @@ String errmsg =
     }
 
 
-    synchronized ObjectData getVoid(String runtime) {
-        if (mVoidMap == null) {
-            mVoidMap = new HashMap();
-        }
-        ObjectData voidobj;
-        try {
-            voidobj = (ObjectData)mVoidMap.get(runtime);
-            if (voidobj == null) {
-                mLogger.debug("creating void for runtime " + runtime);
-                if ("swf7".equals(runtime)  || "swf8".equals(runtime)) {
-                    int swfversion = "swf7".equals(runtime) ? 7 : 8;
-                    voidobj = new ObjectData
-                        (XMLRPCCompiler.compileResponse(0, "void", swfversion));
-                } else if ("dhtml".equals(runtime)) {
-                    voidobj = new ObjectData
-                        (XMLRPCJSONCompiler.compileResponse(0, "void", runtime));
-                } else {
-                    voidobj = DEFAULT_VOID;
-                }
-                
-                mVoidMap.put(runtime, voidobj);
-            }
-        } catch (Exception e) {
-            mLogger.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="using default void"
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-663")
-, e);
-            voidobj = DEFAULT_VOID;
-        }
-        return voidobj;
+    synchronized ObjectData getVoid() {
+        return DEFAULT_VOID;
     }
 
     /**
      * for scope == SCOPE_NONE (static objects).
      */
-    Data getStaticPrototype(String cname, String runtime, int swfversion) {
+    Data getStaticPrototype(String cname) {
         if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
@@ -700,7 +656,7 @@ String errmsg =
                                 JavaDataSource.class.getName(),"051018-681", new Object[] {cname})
 );
         }
-        return getPrototype(cname, SCOPE_NONE, runtime, swfversion);
+        return getPrototype(cname, SCOPE_NONE);
     }
 
 
@@ -709,9 +665,7 @@ String errmsg =
      * previously created.
      */
     Data getInstancePrototype(String cname, String oname, int scope, 
-                              HttpServletRequest req, int swfversion) {
-
-        String runtime = req.getParameter("lzr");
+                              HttpServletRequest req) {
 
         if (mLogger.isDebugEnabled()) {
             mLogger.debug(
@@ -724,12 +678,11 @@ String errmsg =
 );
         }
 
-        Integer swfv = new Integer(swfversion);
         if (getJavaObject(req.getSession(false), scope, oname) != null) {
             if (scope == SCOPE_WEBAPP) {
-                return (Data)mWebAppPrototypes.get(swfv, cname);
+                return (Data)mWebAppPrototypes.get(cname);
             } else if (scope == SCOPE_SESSION) {
-                return (Data)mSessionPrototypes.get(swfv, cname);
+                return (Data)mSessionPrototypes.get(cname);
             }
         }
 
@@ -742,7 +695,7 @@ String errmsg =
                                 JavaDataSource.class.getName(),"051018-721", new Object[] {getScopeName(scope), oname})
 ;
         mLogger.error(errmsg);
-        return compileFault(errmsg, runtime, swfversion);
+        return compileFault(errmsg);
     }
 
 
@@ -751,10 +704,8 @@ String errmsg =
      */
     Data createInstancePrototype(String cname, String oname, int scope, 
                                  Class[] argClasses, Object[] argValues,
-                                 HttpServletRequest req, int swfversion) {
+                                 HttpServletRequest req) {
 
-
-        String runtime = req.getParameter("lzr");
 
         if (mLogger.isDebugEnabled()) {
             mLogger.debug(
@@ -787,7 +738,7 @@ String errmsg =
                                 JavaDataSource.class.getName(),"051018-763", new Object[] {getScopeName(scope), oname })
                                 );
                 }
-                return getPrototype(cname, scope, runtime, swfversion);
+                return getPrototype(cname, scope);
             }
         }
 
@@ -803,26 +754,25 @@ String errmsg =
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-780", new Object[] {cname})
-                        , e, runtime, swfversion);
+                        , e);
         }
 
-        return getPrototype(cname, scope, runtime, swfversion);
+        return getPrototype(cname, scope);
     }
 
 
     /**
      * Get client prototype.
      */
-    synchronized Data getPrototype(String cname, int scope, String runtime, int swfversion) {
+    synchronized Data getPrototype(String cname, int scope) {
         try {
             Data data;
-            // need to dispatch on runtime
             if (scope == SCOPE_NONE) {
-                data = (Data)mStaticPrototypes.get(runtime, cname);
+                data = (Data)mStaticPrototypes.get(cname);
             } else if (scope == SCOPE_WEBAPP) {
-                data = (Data)mWebAppPrototypes.get(runtime, cname);
+                data = (Data)mWebAppPrototypes.get(cname);
             } else {
-                data = (Data)mSessionPrototypes.get(runtime, cname);
+                data = (Data)mSessionPrototypes.get(cname);
             }
 
             if (data == null) {
@@ -836,17 +786,15 @@ String errmsg =
 );
 
 
-                ////                if ("dhtml".equals(runtime)) { }
                 byte[] b;
-                b = org.openlaszlo.remote.json.LZClientObject.createObject(cname, getScopeName(scope),
-                                                       swfversion);
+                b = org.openlaszlo.remote.json.LZClientObject.createObject(cname, getScopeName(scope));
                 data = new ObjectData(b);
                 if (scope == SCOPE_NONE) {
-                    mStaticPrototypes.put(runtime, cname, data);
+                    mStaticPrototypes.put(cname, data);
                 } else if (scope == SCOPE_WEBAPP) {
-                    mWebAppPrototypes.put(runtime, cname, data);
+                    mWebAppPrototypes.put(cname, data);
                 } else {
-                    mSessionPrototypes.put(runtime, cname, data);
+                    mSessionPrototypes.put(cname, data);
                 }
             }
 
@@ -859,24 +807,19 @@ String errmsg =
  */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-831", new Object[] {cname, getScopeName(scope)})
-                        , e, 
-                        runtime, swfversion);
+                        , e);
         }
     }
 
 
 
     /**
-     * removes client swf object from session attribute or webapp attribute.
-     * Note: swfversion not used but may be if we have different versions of
-     * object cached.
      */
     //--------------------------------------------------------------------
     // TODO [2005-02-16 pkang]: think about what happens if swf version
     // requested is different from the instance prototype we have cached.
     //--------------------------------------------------------------------
-    Data destroyInstance(String oname, int scope, HttpServletRequest req, 
-                         int swfversion) {
+    Data destroyInstance(String oname, int scope, HttpServletRequest req) {
 
         if (mLogger.isDebugEnabled()) {
             mLogger.debug(
@@ -889,8 +832,7 @@ String errmsg =
 );
         }
         removeJavaObject(req.getSession(false), scope, oname);
-        String runtime = req.getParameter("lzr");
-        return getVoid(runtime);
+        return getVoid();
     }
 
     /*
@@ -1173,19 +1115,19 @@ String errmsg =
     /**
      * Compile fault exception message.
      */
-    Data compileFault(Throwable e, String runtime, int swfversion) {
+    Data compileFault(Throwable e) {
         mLogger.error("compileFault", e);
-        return compileFault(e.getMessage(), runtime, swfversion);
+        return compileFault(e.getMessage());
     }
 
-    Data compileFault(String mesg, String runtime, int swfversion) {
-        return compileFault(mesg, null, runtime, swfversion);
+    Data compileFault(String mesg) {
+        return compileFault(mesg, null);
     }
 
     /**
      * Compile fault response.
      */
-    Data compileFault(String mesg, Throwable e, String runtime, int swfversion) {
+    Data compileFault(String mesg, Throwable e) {
         if (e == null) {
             mLogger.error(
 /* (non-Javadoc)
@@ -1207,21 +1149,8 @@ String errmsg =
         }
         try {
 
-            /*
-              return new ObjectData
-                ( XMLRPCCompiler.compileFault(XMLUtils.escapeXml(mesg), 
-                swfversion) );
-            */
-
-            if ("dhtml".equals(runtime)) {
-                byte[] d = XMLRPCJSONCompiler.compileFault(XMLUtils.escapeXml(mesg), 
-                                                       runtime);
-                return new ObjectData(d);
-            } else {
-                byte[] d = XMLRPCCompiler.compileFault(XMLUtils.escapeXml(mesg), 
-                                                       swfversion);
-                return new ObjectData(d);
-            }
+            byte[] d = XMLRPCJSONCompiler.compileFault(XMLUtils.escapeXml(mesg));
+            return new ObjectData(d);
 
         } catch (Exception ex) {
             mLogger.error("Exception", ex);
@@ -1235,7 +1164,7 @@ String errmsg =
      * Helper function for toXML().
      */
     static void toXML(StringBuffer sb, String nodeName, 
-                      VersionMap m, ThreadSafeCounter objects, 
+                      Map m, ThreadSafeCounter objects, 
                       ThreadSafeCounter sessions){
         sb.append("<").append(nodeName);
         if (objects != null) {
@@ -1246,19 +1175,6 @@ String errmsg =
         }
         sb.append(">");
 
-        Iterator iter = m.keySet().iterator();
-        while (iter.hasNext()) {
-            String k = (String)iter.next();
-            Map versions = (Map)m.getVersions(k);
-            Iterator viter = versions.keySet().iterator(); 
-            sb.append("<prototype class=\"").append(k).append("\"")
-                .append(" versions=\"");
-            while (viter.hasNext()) {
-                Integer swfv = (Integer)viter.next();
-                sb.append(swfv).append(",");
-            }
-            sb.deleteCharAt(sb.length()-1).append("\"/>");
-        }
         sb.append("</").append(nodeName).append(">");
     }
 

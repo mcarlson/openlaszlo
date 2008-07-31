@@ -337,24 +337,34 @@ class LzBrowserService {
         var postbody:String = params.postbody;
         var proxyurl:String = params.proxyurl;
         var secure:Boolean = params.secure;
-        var qargs = {
-            lzt: params.service,
-            reqtype: params.httpmethod.toUpperCase(),
-            sendheaders: params.sendheaders,
-            trimwhitespace: params.trimwhitespace,
-            nsprefix: params.trimwhitespace,
-            url: this.toAbsoluteURL(params.url, params.secure),
-            timeout: params.timeout,
-            cache: params.cacheable,
-            ccache: params.ccache
-        };
 
-        // Copy any developer-supplied protocol-specific query args in to qargs
-        var extra_args = params.serverproxyargs;
-        if (extra_args) {
-            for (var opt in extra_args) {
-                qargs[opt] = extra_args[opt];
+        var custom_args = params.serverproxyargs;
+
+        var qargs = null; // the query args which accompany the proxy request
+
+        // If developer supplied their own custom proxy args, use them
+        if (custom_args) {
+            qargs = {
+            url: this.toAbsoluteURL(params.url, params.secure),                
+                lzt: params.service,
+                reqtype: params.httpmethod.toUpperCase()
+            };
+            for (var opt in custom_args) {
+                qargs[opt] = custom_args[opt];
             }
+        } else {
+            // Standard LPS proxy server control args
+            qargs = {
+                lzt: params.service,
+                reqtype: params.httpmethod.toUpperCase(),
+                sendheaders: params.sendheaders,
+                trimwhitespace: params.trimwhitespace,
+                nsprefix: params.trimwhitespace,
+                url: this.toAbsoluteURL(params.url, params.secure),
+                timeout: params.timeout,
+                cache: params.cacheable,
+                ccache: params.ccache
+            };
         }
 
         //If a postbody string is supplied, pass it to the proxy server as 'lzpostbody' arg.

@@ -24,6 +24,9 @@
               @keywords readonly -->
         <attribute name="proxy" value="null" type="expression" />
 
+        <!-- holds meta data from server, about proxy functions -->
+        <attribute name="proxyinfo" value="null" type="expression" />
+
         <!--- Make connection secure between client and the LPS secure
              (HTTPS). Default is false. -->
         <attribute name="secure" value="false" type="boolean" />
@@ -116,6 +119,7 @@
                 return false;
             }
             this.proxy = null;
+            this.proxyinfo = null;
             if (this.onunload) this.onunload.sendEvent();
         ]]>
         </method>
@@ -139,13 +143,19 @@
         -->
         <method name="_setup" args="o">
         <![CDATA[
-            this.proxy = o.stub;
+            this.proxyinfo = o.stub;
+
+            if (this.proxy == null) {
+                this.proxy = {};
+            }
 
             // register proxy functions for remotecall objects using
             // remotecontext reference.
             for (var i=0; i < this._registered.length; i++) {
                 var item = this._registered[i];
-                item.c['_funcref'] = this.proxy[item.f];
+                var fname = item.f;
+                this.proxy[fname] = this.makeProxyStubFunction(fname);
+                item.c['_funcref'] = this.proxy[fname];
             }
 
             for (var k in this.subnodes) {
@@ -154,9 +164,15 @@
 
                 // funcname is required
                 var fn = c['funcname'];
+
+
                 if (fn == null) continue;
 
                 if (c['name'] == null) c['name'] = fn;
+
+                if (!this.proxy[fn]) {
+                    this.proxy[fn] = this.makeProxyStubFunction(fn);
+                }
 
                 if (this._verifywithproxy && typeof(this.proxy[fn]) != 'function') {
                     Debug.write(this.name, "warning: function", fn, "not defined");
@@ -168,6 +184,37 @@
             return true;
         ]]>
         </method>
+
+       <method name="makeProxyStubFunction" args="fn">
+        <![CDATA[                                                
+                var stubinfo = this.proxyinfo[fn];
+                //classname: 'org.openlaszlo.test.xmlrpc.SystemProp' 
+                //methodname: 'org.openlaszlo.test.xmlrpc.SystemProp.getProperties' 
+                //op: 'invoke'
+
+                var CLASSNAME = stubinfo['classname'];
+                var METHODNAME = stubinfo['methodname'];
+
+                var DOREQ = stubinfo['doreq'] ? stubinfo['doreq'] : false;
+                var DORES = stubinfo['dores'] ? stubinfo['dores'] : false;
+                var stubfunc = function (){
+                   var args = arguments.callee.args;
+                   return LzJavaRPCService.invoke(
+                       arguments[1], 
+                       arguments[0],
+                        {op: 'invoke', 
+                                objectreturntype: args.objectreturntype,
+                                oname: args.attributename, 
+                                scope: args.scope ,
+                                classname: CLASSNAME,
+                                methodname: METHODNAME,
+                                doreq: DOREQ,
+                                dores: DORES}, args.secure, args.secureport);
+                 }
+
+                return stubfunc;
+       ]]>                                                
+       </method>
         <doc>
             <tag name="shortdesc"><text>remote procedure call</text></tag>
             <text>
@@ -409,7 +456,6 @@
         <!--- @keywords private -->
         <method name="_handler" args="o">
         <![CDATA[
-            Debug.write("rpc.lzx _handler", o);
             // responseheaders are SOAP specific
             if (o.opinfo['responseheaders'] != null) {
                 var r = new LzDataElement("root", { }, o.opinfo.responseheaders);
@@ -449,7 +495,6 @@
                 : o.data;
 
             if (this['ondata'] && this.ondata != LzDeclaredEvent) {
-                Debug.write('sending ondata from remotecall _handler',this,retval);
                 this.ondata.sendEvent(retval);
             } else if (parent['ondata'] && parent.ondata != LzDeclaredEvent) {
                 parent.ondata.sendEvent(retval);

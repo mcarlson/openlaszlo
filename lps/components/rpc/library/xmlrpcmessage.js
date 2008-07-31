@@ -61,6 +61,7 @@ class XMLRPCMessage {
         // do individual parameters
         for (var i = 0; i < this.params.length; i++){
             var data = this.params[i];
+
             xml += "<param>\n";
 
             xml += "<value>" + XMLRPCMessage.getParamXML(XMLRPCMessage.dataTypeOf(data),data) + "</value>\n";
@@ -85,10 +86,9 @@ class XMLRPCMessage {
             break;
           case "object":
             // Number and Date have the same prototype
-            if ( o instanceof  LzRPC.DoubleWrapper ) {
-                type = "doublewrapper"
-                    } else if ( o instanceof Date &&
-                                o.getMilliseconds != null ) {
+            if ( o is  LzRPCDoubleWrapper ) {
+                type = "doublewrapper";
+            } else if ( o instanceof Date && o.getMilliseconds != null ) {
                 type = "date";
             } else if ( o instanceof Number ) {
                 if (Math.round(o) == o) type = "i4";
@@ -106,7 +106,7 @@ class XMLRPCMessage {
 
 
     static function doValueXML(type,data){
-        var xml = "<" + type + ">" + data + "</" + type + ">";
+        var xml = "<" + type + ">" + ((data is String) ? lz.Browser.xmlEscape(data) : data )+ "</" + type + ">";
         return xml;
     }
 

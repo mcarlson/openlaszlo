@@ -267,7 +267,7 @@
         &lt;remotecall name="pd3" funcname="passDouble"&gt;
             &lt;param&gt; 
                 &lt;method name="getValue"&gt;
-                    return new LzRPC.DoubleWrapper(42.0);
+                    return new LzRPCDoubleWrapper(42.0);
                 &lt;/method&gt;
             &lt;/param&gt;
         &lt;/remotecall&gt;
@@ -286,7 +286,7 @@
         &lt;button text="pass double (will fail)"
         onclick="types_example_rpc.pd2.invoke()" /&gt;
         
-        &lt;button text="pass double w/LzRPC.DoubleWrapper" 
+        &lt;button text="pass double w/LzRPCDoubleWrapper" 
         onclick="types_example_rpc.pd3.invoke()" /&gt;
         
         &lt;button text="pass boolean" onclick="this.passBoolean.invoke()"&gt;
@@ -364,7 +364,7 @@
                     </tr>
                     
                     <tr>
-                        <td rowspan="1" colspan="1">LzRPC.DoubleWrapper</td><td rowspan="1" colspan="1">double</td>
+                        <td rowspan="1" colspan="1">LzRPCDoubleWrapper</td><td rowspan="1" colspan="1">double</td>
                     </tr>
                     
                     <tr>
@@ -381,12 +381,12 @@
                     
                 </table>
                 <p>* Any floating point number with a zero decimal value is considered to be an
-                    integer, i.e., 1.0 is really 1. Use LzRPC.DoubleWrapper to ensure a number is
+                    integer, i.e., 1.0 is really 1. Use LzRPCDoubleWrapper to ensure a number is
                     considered a double. For example:</p>
                 <programlisting>
                     // assume myrpc is a javarpc object and myrpc.proxy.myMethod is a function
                     // that expects a single double as a parameter
-                    var mydouble = new LzRPC.DoubleWrapper(1.0);
+                    var mydouble = new LzRPCDoubleWrapper(1.0);
                     myrpc.proxy.myMethod([ mydouble ], new LzDelegate(...));
                 </programlisting>
                 <para>

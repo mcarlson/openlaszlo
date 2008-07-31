@@ -181,6 +181,7 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
 }
 
 LzHTTPLoader.prototype.send = function (content) {
+    //Debug.info("LzHTTPLoader.send parsexml", this.options.parsexml, content);
     this.xmlrequestobj.rawpostbody = content;
     this.lzloader.setHeaders(this.requestheaders);
     this.lzloader.requestDirectXML( this.xmlrequestobj );

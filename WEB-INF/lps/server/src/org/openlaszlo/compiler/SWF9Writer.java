@@ -382,7 +382,6 @@ class SWF9Writer extends ObjectWriter {
             scriptWriter.close();
             byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
             InputStream input = new ByteArrayInputStream(objcode);
-            mLogger.debug("compiled SWF9 code is "+new String(objcode));
             FileUtils.send(input, mStream);
         } catch (org.openlaszlo.sc.CompilerException e) {
             throw new CompilationError(e);

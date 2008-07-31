@@ -50,8 +50,18 @@ class LzXMLRPCDecoder {
         if ( node instanceof LzDataText ){
             // <value>foobar<value> is a String value
             return ((node cast LzDataText).data);
-        } else {
-            var elt = (node cast LzDataElement);
+        } else if (node instanceof LzDataElement) {
+            var elt:LzDataElement = (node cast LzDataElement);
+            if (elt.nodeName == "string") {
+                if ((elt.childNodes == null || elt.childNodes.length == 0)) {
+                    // covers the <value><string/></value> case
+                    return "";
+                } else {
+                    // covers the <value><string>stringdata</string></value> case
+                    return ((elt.childNodes[0] cast LzDataText).data);
+                }
+            }
+
             if (! elt.hasChildNodes()) {
                 Debug.error('xmlrpc2jsobj got element with no child nodes', elt);
                 return (void 0);
@@ -68,9 +78,6 @@ class LzXMLRPCDecoder {
               case 'boolean':
                 var val = (elt.childNodes[0] cast LzDataText).data;
                 return val == 0 ? false : true;
-                break;
-              case 'string':
-                return ((elt.childNodes[0] cast LzDataText).data);
                 break;
               case 'dateTime.iso8601':
                 return LzXMLRPCDecoder.decodeISO8601(((elt.childNodes[0] cast LzDataText).data));

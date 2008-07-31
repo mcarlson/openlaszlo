@@ -115,6 +115,7 @@ class LzHTTPDataProvider extends LzDataProvider {
         tloader.setOption('trimwhitespace', dreq.trimwhitespace == true);
         tloader.setOption('nsprefix',       dreq.nsprefix == true);
         tloader.setOption('sendheaders',    dreq.getresponseheaders == true);
+        tloader.setOption('parsexml',       dreq.parsexml);
 
         if ( dreq.clientcacheable != null ){
             tloader.setOption('ccache',     dreq.clientcacheable);
@@ -295,7 +296,19 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         var proxied = dreq.proxied;
 
-        if (proxied && data.childNodes[0].nodeName == "error") {
+        if (!dreq.parsexml) {
+            // TODO [hqm 2008-07] Currently, if parsexml == false, we just return the raw
+            // data, we do not attempt to parse out the headers (i.e.,
+            // do not assume the response is wrapped in
+            // <resultset><body>...</body></resultset>)
+            //
+            // We might change this at some point and make the server
+            // return all proxied responses wrapped up in that format,
+            // but it is not being done now for RPC and other raw data users.
+            dreq.rawdata = dreq.loader.getResponse();
+            dreq.onstatus.sendEvent(dreq);
+            return;
+        } else if (proxied && data.childNodes[0].nodeName == "error") {
             this.setRequestError(dreq, data.childNodes[0].attributes['msg']);
             dreq.onstatus.sendEvent( dreq );
             return;
@@ -405,6 +418,9 @@ class LzHTTPDataRequest extends LzDataRequest {
     var secure = false;
     var secureport;
 
+
+    /** Flag which says if the loader should attempt to parse the response as XML */
+    var parsexml:Boolean = true;
 
     // private, pointer to our lzhttploader
     /** @access private */

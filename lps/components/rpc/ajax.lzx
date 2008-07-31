@@ -99,9 +99,7 @@
 
         <method name="ondataHandler" args="d">
            // Currently raw text response is only available for serverless requests
-           if (this.dataset['rawtext']) {
-                this.responseText = this.dataset['rawtext'];
-           }
+           this.responseText = this.dataset.dataRequest['rawdata'];
            this.responseXML = this.dataset;
            this.status = 200; // maybe we need something a little more Laszlo-specific?
            this.statusText = "OK";
