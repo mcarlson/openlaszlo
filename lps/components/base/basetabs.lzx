@@ -137,6 +137,14 @@
 </canvas>
 ]]>
              </example>
+                 <p><b>See Also:</b></p>
+                 <ul>
+                     <li>
+                         <sgmltag class="element" role="lz.basetabsbar">&lt;basetabsbar&gt;</sgmltag>, 
+                         <sgmltag class="element" role="lz.basetabs">&lt;basetabs&gt;</sgmltag>,
+                          and <sgmltag class="element" role="lz.basetabpane">&lt;basetabpane&gt;</sgmltag>
+                     </li>
+                 </ul>            
              </text>
              
        </doc>
@@ -480,9 +488,9 @@
               <p><b>See Also:</b></p>
               <ul>
                   <li>
-                      <a href="lz.basetab.html" target="_self">&lt;basetab&gt;</a>, 
-                      <a href="lz.basetabs.html" target="_self">&lt;basetabs&gt;</a>, 
-                      and <a href="lz.basetabscontent.html" target="_self">&lt;basetabscontent&gt;</a>
+                      <sgmltag class="element" role="lz.basetab">&lt;basetab&gt;</sgmltag>, 
+                      <sgmltag class="element" role="lz.basetabs">&lt;basetabs&gt;</sgmltag>, 
+                      and <sgmltag class="element" role="lz.basetabscontent">&lt;basetabscontent&gt;</sgmltag>
                   </li>
               </ul>                       
           </text>
@@ -572,8 +580,8 @@
               <p><b>See Also:</b></p>
               <ul>
                   <li>
-                      <a href="../reference/lz.basetabpane.html" target="_self">&lt;basetabpane&gt;</a>
-                      and <a href="lz.basetabs.html" target="_self">&lt;basetabs&gt;</a>
+                      <sgmltag class="element" role="../reference/lz.basetabpane">&lt;basetabpane&gt;</sgmltag>
+                      and <sgmltag class="element" role="lz.basetabs">&lt;basetabs&gt;</sgmltag>
                   </li>
               </ul>
           </text>
@@ -859,10 +867,10 @@
               <p><b>See Also:</b></p>
               <ul>
                   <li>
-                      <a href="lz.basetab.html" target="_self">&lt;basetab&gt;</a>, 
-                      <a href="lz.basetabsbar.html" target="_self">&lt;basetabsbar&gt;</a>, 
-                      <a href="lz.basetabpane.html" target="_self">&lt;basetabpane&gt;</a>, 
-                      and <a href="lz.basetabscontent.html" target="_self">&lt;basetabscontent&gt;</a>
+                      <sgmltag class="element" role="lz.basetab">&lt;basetab&gt;</sgmltag>, 
+                      <sgmltag class="element" role="lz.basetabsbar">&lt;basetabsbar&gt;</sgmltag>, 
+                      <sgmltag class="element" role="lz.basetabpane">&lt;basetabpane&gt;</sgmltag>, 
+                      and <sgmltag class="element" role="lz.basetabscontent">&lt;basetabscontent&gt;</sgmltag>
                   </li>
               </ul>            
           </text>
