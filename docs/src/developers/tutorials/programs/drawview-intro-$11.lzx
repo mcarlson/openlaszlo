@@ -1,6 +1,6 @@
 
-<canvas width="300" height="300" debug="false" >
-    <class name="circle" extends="drawview" >
+<canvas width="300" height="300" debug="false">
+    <class name="circle" extends="drawview" width="200" height="200">
         <attribute name="circlecolor" value="white"/>
         <attribute name="r" value="100"/>
         <handler name="oncontext">
@@ -10,6 +10,7 @@
           this.redraw();
         </handler>
         <method name="redraw" ><![CDATA[
+            if (! this.context) return;
             this.clear();
             this.beginPath();
             this.moveTo(x+r, y);
@@ -25,7 +26,7 @@
                 this.quadraticCurveTo(cx+x, cy+y, endx+x, endy+y);
             }
           
-            var g = this.createLinearGradient(0, 0, 8, x+r, y+r, 0)
+            var g = this.createLinearGradient(0, 0, x+r, y+r)
             this.globalAlpha = 1;
             g.addColorStop(0, 0xffffff);
             this.globalAlpha = 0;
