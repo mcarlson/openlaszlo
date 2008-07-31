@@ -40,6 +40,9 @@ lz.embed.iframemanager = {
     ,__gotload: function(id) {
         if (lz.embed.iframemanager.owners[id]) lz.embed.iframemanager.owners[id].__gotload();
     }
+    ,__destroy: function(id) {
+        lz.Browser.callJS('lz.embed.iframemanager.__destroy', null, id);
+    }
 }
 </script>
 </otherwise>
@@ -168,6 +171,15 @@ lz.embed.iframemanager = {
     </method>
     <method name="scrollBy" args="x, y">
         if (this['iframeid']) lz.embed.iframemanager.scrollBy(this.iframeid, x, y);
+    </method>
+    <!--- @keywords private -->
+    <method name="destroy">
+        if (this['iframeid']) lz.embed.iframemanager.__destroy(this.iframeid);
+        <!-- TODO: remove when cleanup is automatic -->
+        if (this._posdel) {
+            this._posdel.unregisterAll();
+        }
+        super.destroy.apply(this, arguments);
     </method>
     <switch>
         <when runtime="dhtml">

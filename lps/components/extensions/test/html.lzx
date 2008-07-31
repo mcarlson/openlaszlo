@@ -21,6 +21,11 @@
                     classroot.main.setSrc(''); 
                 </handler>
             </button> 
+            <button>Destroy
+                <handler name="onclick">
+                    classroot.main.destroy();
+                </handler>
+            </button> 
             <text name="status" y="3" fontstyle="bold" visible="${classroot.main.loading}">Loading...</text>
         </hbox>    
         <html name="main" history="false" width="100%" height="${classroot.height - this.y - 44}">

@@ -162,4 +162,12 @@ lz.embed.iframemanager = {
         //console.log('scrollBy', x, y, iframe); 
         iframe.scrollBy(x, y);
     }
+    ,__destroy: function(id) { 
+        var iframe = lz.embed.iframemanager.__frames[id];
+        if (iframe) {
+            LzSprite.prototype.__discardElement(iframe);
+            delete lz.embed.iframemanager.__frames[id];
+            delete lz.embed.iframemanager.__namebyid[id];
+        }
+    }
 }
