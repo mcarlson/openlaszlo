@@ -205,10 +205,10 @@ public class LzTextSprite extends LzSprite {
 
         function setFontInfo () {
             this.font = LzFontManager.getFont( this.fontname , this.fontstyle );
-            //trace('setFontInfo this.font = ', this.font, 'this.fontname = ', this.fontname, this.fontstyle);
+            //Debug.write('setFontInfo this.font = ', this.font, 'this.fontname = ', this.fontname, this.fontstyle);
 
             if (this.font != null) {
-                //trace('font.leading', this.font.leading, 'font.height = ',this.font.height, 'fontsize =',this.fontsize);
+                //Debug.write('font.leading', this.font.leading, 'font.height = ',this.font.height, 'fontsize =',this.fontsize);
                 this.lineheight = Number(this.font.leading) + ( Number(this.font.height) *
                                                         Number(this.fontsize) / DEFAULT_SIZE );
             }
@@ -262,7 +262,7 @@ public class LzTextSprite extends LzSprite {
             if (this.resize && (this.multiline == false)) {
                 // single line resizable fields adjust their width to match the text
                 var w:Number = this.getTextWidth();
-                //trace('lztextsprite resize setwidth ', w, this.lzheight );
+                //Debug.write('lztextsprite resize setwidth ', w, this.lzheight );
                 if (w != this.lzwidth) {
                     this.setWidth(w);
                 }
@@ -300,7 +300,7 @@ public class LzTextSprite extends LzSprite {
                 LzFontManager.__fontnameCacheMap[this.fontname] = cfontname;
                 //Debug.write("caching fontname", this.fontname, cfontname);
             }
-            //            trace("__setFormat this.font=", this.font, 'this.fontname = ',this.fontname,
+            //            Debug.write("__setFormat this.font=", this.font, 'this.fontname = ',this.fontname,
             //'cfontname=', cfontname);
 
             var tf:TextFormat = new TextFormat();
@@ -377,7 +377,9 @@ public class LzTextSprite extends LzSprite {
 
 
 
-function setHScroll (s){}
+function setHScroll(s:Number) {
+    this.textfield.scrollH = s;
+}
 
 function setAntiAliasType( aliasType ){}
 
@@ -396,47 +398,52 @@ function setThickness( thickness ){}
 
 function getThickness() {}
 
-function setMaxLength ( val ){}
+function setMaxLength(val:Number) {
+    this.textfield.maxChars = val;
+}
+
 function setPattern ( val ){}
 
-function setSelection ( start , end=null ){ }
+function setSelection(start:Number, end:Number) { 
+    this.textfield.setSelection(start, end);
+}
 
-function setResize ( val ){
+function setResize ( val:Boolean ) {
     this.resize = val;
 }
 
-function setScroll ( h ){
-    trace("LzTextSprite.setScroll not yet implemented");
+function setScroll ( h:Number ) {
+    this.textfield.scrollV = h;
 }
-function getScroll (  ){
-    trace("LzTextSprite.getScroll not yet implemented");
-}
-
-function getMaxScroll (  ){
-    trace("LzTextSprite.getMaxScroll not yet implemented");
+function getScroll() {
+    return this.textfield.scrollV;
 }
 
-function getBottomScroll (  ){
-    trace("LzTextSprite.getBottomScroll not yet implemented");
+function getMaxScroll() {
+    return this.textfield.maxScrollV;
+}
+
+function getBottomScroll() {
+    return this.textfield.bottomScrollV;
 }
 
 function setXScroll ( n ){
-    trace("LzTextSprite.setXScroll not yet implemented");
+    Debug.write("LzTextSprite.setXScroll not yet implemented");
 }
 
 function setYScroll ( n ){
-    trace("LzTextSprite.setYScroll not yet implemented");
+    Debug.write("LzTextSprite.setYScroll not yet implemented");
 }
 
 function setWordWrap ( wrap ){
-    trace("LzTextSprite.setWordWrap not yet implemented");
+    Debug.write("LzTextSprite.setWordWrap not yet implemented");
 }
 
-function getSelectionPosition ( ){
-    trace("LzTextSprite.getSelectionPosition not yet implemented");
+function getSelectionPosition() {
+    return this.textfield.selectionBeginIndex;
 }    
-function getSelectionSize ( ){
-    trace("LzTextSprite.getSelectionSize not yet implemented");
+function getSelectionSize() {
+    return this.textfield.selectionEndIndex - this.textfield.selectionBeginIndex;
 }    
 
     }#

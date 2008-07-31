@@ -80,9 +80,9 @@ dynamic public class LzSprite extends Sprite {
       ,opacity: true
       ,colortransform: true
       ,audio: true
-      ,accessibility: true
+      ,accessibility: false
       ,htmlinputtext: true
-      ,advancedfonts: true
+      ,advancedfonts: false
       ,bitmapcaching: true
       ,persistence: true
       ,clickmasking: false

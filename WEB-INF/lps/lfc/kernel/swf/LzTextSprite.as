@@ -844,10 +844,6 @@ LzTextSprite.prototype.setSelection = function ( start , end=null ){
         Selection.setFocus( sf );
     }
 
-    if ( typeof( end ) == 'undefined' ){
-        end = start;
-    }
-
     // Fix for lpp-5449
     this._selectionstart = start;
     this._selectionend = end;
