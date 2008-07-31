@@ -14,16 +14,20 @@
   <body class="release-notes">
 
     <h1>Release Notes for OpenLaszlo 4.2 Alpha</h1>
-    
-    <p>OpenLaszlo 4.2 Alpha follows OpenLaszlo 4.1.1 as the next build from the trunk development branch. The primary goal of this release is to provide alpha-level support for SWF9 features as indicated below.</p>
+
+    <p>OpenLaszlo 4.2 Alpha follows OpenLaszlo 4.1.1 as the next build from the trunk development
+      branch. The primary goal of this release is to provide alpha-level support for SWF9 features
+      as indicated below.</p>
     <ul>
-      <li>The sample applications LZPIX, Weather, and Component Sampler work with SWF9
-        <br />To compile these applications to SWF9, navigate to the OpenLaszlo Quick Index, click on the link for the desired application, click the SWF9 radio button, and compile.</li>
-      <li>SWF9 installation packaged w/flex compiler
-        <br />Installing OpenLaszlo with the flex compiler is one step.</li>
+      <li>The sample applications LZPIX, Weather, and Component Sampler work with SWF9 <br />To
+        compile these applications to SWF9, navigate to the OpenLaszlo Quick Index, click on the
+        link for the desired application, click the SWF9 radio button, and compile.</li>
+      <li>SWF9 installation packaged w/flex compiler <br />Installing OpenLaszlo with the flex
+        compiler is one step.</li>
       <li>databinding and basic replication</li>
 
-      <li>"implicit this" support<br />Note that there is a compiler limitation that "super" cannot be used in methods in <code>&lt;state&gt;</code>s.</li>
+      <li>"implicit this" support<br />Note that there is a compiler limitation that "super" cannot
+        be used in methods in <code>&lt;state&gt;</code>s.</li>
 
       <li>Text, fonts, scrolling, and selection APIs</li>
 
@@ -38,10 +42,19 @@
 
       <li>XML-RPC support</li>
     </ul>
-    <p>OpenLaszlo 4.2 Alpha is not a fully-qualified release. It has had limited testing for specific features. This release is intended as a platform for initial porting and testing of SWF9 applications.</p>
+    <p>OpenLaszlo 4.2 Alpha is not a fully-qualified release. It has had limited testing for
+      specific features. This release is intended as a platform for initial porting and testing of
+      SWF9 applications.</p>
+    <h2>Installation Notes</h2>
+    <ul>
+      <li>For SWF9 development on Unix, you will need to manually <code>chmod 755</code> all the
+        binaries in <code>WEB-INF/server/bin/</code> before you can compile. This is true for both
+        the <code>.war</code> and <code>.gz</code> distributions.</li>
+      <li>The installation works best with JDK 1.6, although any version 1.5 or higher is acceptable.</li>
+    </ul>
     <h2>Bugs Fixed in OpenLaszlo 4.2 Alpha</h2>
-    <p>A number of bugs have been fixed; we have provided a link to our JIRA bug
-      tracking system where you can view the details:</p>
+    <p>A number of bugs have been fixed; we have provided a link to our JIRA bug tracking system
+      where you can view the details:</p>
     <ul>
       <li>
         <a
