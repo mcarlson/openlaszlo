@@ -49,6 +49,8 @@
             <attribute name="focusable" value="${!editing &amp;&amp; 
                                                   parent.editable}"/>
 
+            <attribute name="editbox" value="null"/>
+
             <method name="init">
                 if ( parent.editable ){
                     this.editDel = new LzDelegate( this, 'startEditing' );

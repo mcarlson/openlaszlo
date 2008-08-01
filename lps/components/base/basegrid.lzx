@@ -12,6 +12,8 @@
               the datacontext of the grid. -->
         <attribute name="contentdatapath" value="*" type="string"/>
 
+        <attribute name="_selector" value="null"/>
+
         <!--- Optional height for the rows contained by the grid. If no
               value is given for this attribute, it will be set to the
               calculated height of rows. -->
@@ -269,7 +271,7 @@
                 }
             }
 
-            if ( onselect ) this.onselect.sendEvent(item);
+            if ( this.onselect ) this.onselect.sendEvent(item);
             ]]>
         </method>
 

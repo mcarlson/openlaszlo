@@ -34,7 +34,7 @@
                         <attribute name="datasel"
                                     value="${ workdef == '1' ? 2 : 1 }"/>
 
-                        <method name="checkDataSel" args="v">
+                        <method name="checkDataSel" args="v=null">
                             if ( !this._initcomplete ) return;
                             this.selectItem(  datasel );
                         </method>

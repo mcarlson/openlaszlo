@@ -12,6 +12,8 @@
         <attribute name="focusable" value="true"/>
         <attribute name="focustrap" value="true"/>
 
+        <attribute name="ownerGrid" value="null"/>
+
         <attribute name="highlighted" value="false"/>
         <attribute name="highlightColor" type="color" value="black"/>
         <attribute name="selectedColor" type="color" value="black"/>
@@ -27,7 +29,7 @@
         <attribute name="bgcolor" 
                    value="${this.getBGColor( this.highlighted, this.selected )}"/>
 
-        <method name="getBGColor" args="hi, sel">
+        <method name="getBGColor" args="hi=null, sel=null">
             if ( this.selected ) return this.selectedColor;
             if ( this.highlighted ) return this.highlightColor;
             return this.regularColor;

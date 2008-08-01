@@ -12,6 +12,9 @@
         <!--- If set to false, the column cannot be resized. -->
         <attribute name="resizable" value="true" type="boolean"/>
 
+        <attribute name="mybutton" value="null"/>
+        <attribute name="resizer" value="null"/>
+
         <!--- If true, the column header is clickable and will initiate a 
               sort -->
         <attribute name="sortable" type="boolean" value="true"/>
