@@ -164,7 +164,7 @@ mixin LzFormatter {
     var al = args.length;
     // 'write compatibility mode': control is not a string or # of
     // arguments is incompatible with control directives.
-    if ((! (typeof control == 'string' || control instanceof String)) ||
+    if ((! (typeof control == 'string' || control is String)) ||
         ((al > 0) != (control.indexOf('%') >= 0))) {
       // Process each value to individually so they can be
       // 'presented' as objects if applicable

@@ -64,7 +64,9 @@ class XMLRPCMessage {
 
             xml += "<param>\n";
 
-            xml += "<value>" + XMLRPCMessage.getParamXML(XMLRPCMessage.dataTypeOf(data),data) + "</value>\n";
+            var dtype = XMLRPCMessage.dataTypeOf(data);
+
+            xml += "<value>" + XMLRPCMessage.getParamXML(dtype,data) + "</value>\n";
     
             xml += "</param>\n";
         }
@@ -77,6 +79,9 @@ class XMLRPCMessage {
 
     static function dataTypeOf (o){
         // identifies the data type
+        if ( o == null) {
+            return "string";
+        }
         var type = typeof(o);
         type = type.toLowerCase();
         switch(type){
@@ -88,12 +93,12 @@ class XMLRPCMessage {
             // Number and Date have the same prototype
             if ( o is  LzRPCDoubleWrapper ) {
                 type = "doublewrapper";
-            } else if ( o instanceof Date && o.getMilliseconds != null ) {
+            } else if ( o is Date && o.getMilliseconds != null ) {
                 type = "date";
-            } else if ( o instanceof Number ) {
+            } else if ( o is Number ) {
                 if (Math.round(o) == o) type = "i4";
                 else type = "double";
-            } else if ( o instanceof Array ) {
+            } else if ( o is Array ) {
                 type = "array";
             } else {
                 type = "struct";

@@ -408,11 +408,7 @@
                         // if getValue method is declared in param, call that
                         // instead to get value.
                         var tsi = this.subnodes[i];
-                        if (tsi['getValue'] != null && tsi.getValue['prototype'] != null) {
-                            params[i] = tsi.getValue();
-                        } else {
-                            params[i] = tsi.value;
-                        }
+                        params[i] = tsi.getValue();
                     }
                 }
             } else if (! (params instanceof Array)) {
@@ -739,13 +735,16 @@
     </class>
 
 
-    <!-- Element to use inside remotecall. -->
+    <!-- 'Element to use inside remotecall. -->
     <class name="param" extends="node">
         <!--- Value to use for paramter. A getValue() method can be declared
               inside param to use its return as the parameter value. If both
               value attribute and getValue method are declared, param will use
               getValue(). -->
         <attribute name="value" value="null" type="expression" />
+        <method name="getValue">
+          return this.value;
+        </method>
         <doc>
             <tag name="shortdesc"><text>param tag for remotecall</text></tag>
             <text>

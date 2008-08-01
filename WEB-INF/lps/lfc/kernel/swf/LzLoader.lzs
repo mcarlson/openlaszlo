@@ -185,8 +185,6 @@ function returnData ( loadobj , data ){
         return;
     }
 
-    LzLoadQueue.loadFinished( loadobj );
-
     this.lastloadtime = getTimer() - loadobj.loadtime;
 
     var err;

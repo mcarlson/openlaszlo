@@ -111,6 +111,7 @@ LzLoadQueue.XMLOnDataHandler = function (src) {
         // LzDataNodes.
 
         this.onload(true);
+        LzLoadQueue.loadFinished( this );
         this.loader.gotRawData(src, this);
     }
 }
