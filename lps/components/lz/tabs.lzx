@@ -291,7 +291,7 @@
 
         <!--- @keywords private -->
         <method name="_applystyle" args="s"><![CDATA[
-            if (this.style != null && ('background' in this)) {
+            if (this.style != null) {
                 setTint(background, s.basecolor);
             }
         ]]></method>

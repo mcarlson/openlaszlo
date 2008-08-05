@@ -92,6 +92,21 @@
         <!--- @keywords private -->
         <attribute name="thumb" value="null" />
 
+        <!--- @keywords private -->
+        <attribute name="_mwActivateDel" value="null" />
+        <!--- @keywords private -->
+        <attribute name="_mwDeactivateDel" value="null" />
+        <!--- @keywords private -->
+        <attribute name="_mwUpdateDel" value="null" />
+        <!--- @keywords private -->
+        <attribute name="clipSizeDel" value="null" />
+        <!--- @keywords private -->
+        <attribute name="targetHeightDel" value="null" />
+        <!--- @keywords private -->
+        <attribute name="targetPosDel" value="null" />
+        <!--- @keywords private -->
+        <attribute name="heightDel" value="null" />
+
         <!-- if the scrollbar is vertical and the developer has not set a height
              then the scrollbar should be its parent's height, see oninit -->
         <state name="heightConstraint">
@@ -222,39 +237,39 @@
 
         <!--- @keywords private -->
         <method name="destroy" ><![CDATA[
-            if ('_mwActivateDel' in this) {
+            if (this._mwActivateDel) {
                 this._mwActivateDel.unregisterAll();
-                delete this._mwActivateDel;
+                this._mwActivateDel = null;
             }
 
-            if ('_mwDeactivateDel' in this) {
+            if (this._mwDeactivateDel) {
                 this._mwDeactivateDel.unregisterAll();
-                delete this._mwDeactivateDel;
+                this._mwDeactivateDel = null;
             }
 
-            if ('_mwUpdateDel' in this) {
+            if (this._mwUpdateDel) {
                 this._mwUpdateDel.unregisterAll();
-                delete this._mwUpdateDel;
+                this._mwUpdateDel = null;
             }
 
-            if ('clipSizeDel' in this) {
+            if (this.clipSizeDel) {
                 this.clipSizeDel.unregisterAll();
-                delete this.clipSizeDel;
+                this.clipSizeDel = null;
             }
 
-            if ('targetHeightDel' in this) {
+            if (this.targetHeightDel) {
                 this.targetHeightDel.unregisterAll();
-                delete this.targetHeightDel;
+                this.targetHeightDel = null;
             }
 
-            if ('targetPosDel' in this) {
+            if (this.targetPosDel) {
                 this.targetPosDel.unregisterAll();
-                delete this.targetPosDel;
+                this.targetPosDel = null;
             }
 
-            if ('heightDel' in this) {
+            if (this.heightDel) {
                 this.heightDel.unregisterAll();
-                delete this.heightDel;
+                this.heightDel = null;
             }
 
             delete this.scrolltarget;

@@ -324,7 +324,7 @@ dynamic class LzCanvas extends LzView {
         this.__LZdelayedSetters = LzView.__LZdelayedSetters;
         this.earlySetters = LzView.earlySetters;
 
-        if (!('version' in this && this.version)){
+        if (!this.version){
             this.version = this.lpsversion;
         }
 
@@ -429,7 +429,7 @@ var lpsrelease;
   * @lzxdefault "1.1"
   * @modifiers deprecated final
   */
-var version;
+var version = null;
 
 /** @access private */
 var __LZlfcversion = "0";

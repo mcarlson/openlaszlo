@@ -48,7 +48,7 @@
 
          
 
-         <attribute name="editor" />
+         <attribute name="editor" value="null"/>
 
          <attribute name="toolbar" value="$once{this.parent}" />
 
@@ -97,7 +97,7 @@
                 //------------------------------------------------------------
 
                 if (this.changed && this.toolbar._passthruchanges) {                   
-                    if ("editor" in this) {
+                    if (this.editor) {
                         this.editor.setFormatAttribute("size", this.getValue()); 
                         this.editor.delegateRestoreSelection(); 
                     }

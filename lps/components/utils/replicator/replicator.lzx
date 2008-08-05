@@ -139,14 +139,12 @@
             this.setData( v , n );
             this.update( v , n );
             // Cooperate with dataselectionmanager, but take care
-            if ('setSelected' in v) {
-              var datanode = this.nodes[n];
-              var datapath = v.datapath;
-              var isSelected = (datanode && datanode['sel']) || false;
-              var wasSelected = (datapath && datapath['sel']) || false;
-              if (isSelected != wasSelected) {
-                v.setSelected(datapath['sel'] = isSelected);
-              }
+            var datanode = this.nodes[n];
+            var datapath = v.datapath;
+            var isSelected = (datanode && datanode['sel']) || false;
+            var wasSelected = (datapath && datapath['sel']) || false;
+            if (isSelected != wasSelected) {
+              v.setSelected(datapath['sel'] = isSelected);
             }
             if ( this._cloneprops[ n ] ) {
                 var p = this._cloneprops[ n ];

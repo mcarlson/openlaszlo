@@ -17,12 +17,12 @@
         <!--- Reference to the toolbar associated with this editor. 
             For the toolbar to show the correct format when the insertion
             point moves, this attribute must be set by users. -->
-        <attribute name="toolbar"  />
+        <attribute name="toolbar" value="null"/>
         
         <!--- Reference to the hyperlink creation dialog.
             This attribute should be set by users, if there is 
             an associated link panel --> 
-        <attribute name="linkpanel"/>
+        <attribute name="linkpanel" value="null"/>
         
         <!-- The defaultfontsize, defaultfontname, and defaultfontcolor
              determine the initial configuration of the toolbar, and thus, the
@@ -108,8 +108,8 @@
             this.inp.setDefaultFormat(this.currentformat);
             this.rollback();
             
-            if ("linkpanel" in this && this.linkpanel) this.linkpanel.hide();
-            if ("toolbar" in this && this.toolbar) this.toolbar.reset();
+            if (this.linkpanel) this.linkpanel.hide();
+            if (this.toolbar) this.toolbar.reset();
             
             this.isHTML = false;
             this._shouldresettoolbar = true;

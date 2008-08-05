@@ -55,7 +55,8 @@ class LzHTTPDataProvider extends LzDataProvider {
          * I need to undersatnd what is the behavior of "secureport"
          */
         /*************/
-        var secure = ('secure' in dreq) ? dreq.secure : null;
+        // TODO [pbr 2008-08-04] dreq.secure will never be null
+        var secure = dreq.secure;
         if (secure == null) {
             if (dreq.src.substring(0, 5) == "https") {
                 secure = true;

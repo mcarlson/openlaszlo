@@ -1370,11 +1370,7 @@ override function destroy( ){
             vip.__LZoutlieheight=null;
         }
 
-        if ('onremovesubview' in vip) {
-            if (vip.onremovesubview.ready) {
-                vip.onremovesubview.sendEvent( this );
-            }
-        }
+        if (vip.onremovesubview.ready) vip.onremovesubview.sendEvent( this );
     }
 }
 

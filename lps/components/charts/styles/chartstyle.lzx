@@ -131,7 +131,7 @@
 <!--- style for a region
       @access public
       -->
-<class name="regionstyle" extends="basestyle"  stretches="both">
+<class name="regionstyle" extends="basestyle">
     <doc>
       <text>
         <warning>This component is of Beta quality and is subject to change.</warning>
@@ -145,6 +145,9 @@
     <attribute name="gradient" type="string" value="none" /> 
     <!--- image path -->
     <attribute name="image" type="string" value="${null}"/>
+    <!-- stretches -->
+    <attribute name="stretches" type="string" value="both"/>
+
 
 </class>
 

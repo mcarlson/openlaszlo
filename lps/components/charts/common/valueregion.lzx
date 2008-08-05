@@ -129,7 +129,7 @@
 
                    if( this.style.region.image != null ) {
                        this.setSource( this.style.region.image );
-                       if ('stretches' in this.style.region)
+                       if (this.style.region.stretches)
                            this.setAttribute( "stretches", this.style.region.stretches );
                    }
                }
