@@ -660,17 +660,12 @@ function setQueryParams( o ) {
   * @return boolean
   */
 function isProxied ( ) {
-    var proxied_p = canvas.proxied;
-    // check if this datasource has a "proxied" attribute which overrides canvas switch
-    if (this.proxied != null && this.proxied != "inherit") {
-        proxied_p = (this.proxied == true); // coerce to boolean
-    }
-
     // Check if the dataset has a "proxied" attribute which overrides dataset's value
     if (this.proxied != null && this.proxied != "inherit") {
-        proxied_p = (this.proxied == true);
+        return (this.proxied == true); // coerce to boolean
+    } else {
+        return canvas.proxied;
     }
-    return proxied_p;
 }
 
 /**
