@@ -9,7 +9,7 @@
 
         <!-- Event handler for an event that fires at every state change
              onreadystatechange -->
-        <event name="onreadystatechange" />
+        <attribute name="onreadystatechange" value="null" />
 
         <!--- String version of data returned from server process -->
         <attribute name="responseText" value="" type="string"/>
@@ -48,7 +48,7 @@
 
         <!--- Stops the current request -->
         <method name="abort">
-            req.dataset.abort();
+            this.dataset.abort();
         </method>
 
 
@@ -117,9 +117,9 @@
             this.responseXML = null;
             // If the load was proxied, we can actually dig in the headers and get the
             // real response.
-            if (this.dataset.parent.isProxied() && this.dataset.errorstring != null) {
+            if (this.dataset.isProxied() && this.dataset.errorstring != null) {
                 //data source error for http://localhost:8080/lps-dev/test/ajax/echo.jsps: HTTP Status code: 404:Not Found
-                var err = req.dataset.errorstring;
+                var err = this.dataset.errorstring;
                 var marker = 'HTTP Status code: ';
                 var ind = err.indexOf(marker);
                 if (ind >= 0) {
@@ -156,7 +156,7 @@
 
                      // Try to handle content arg, as best we can
                      // given the extremely lame Flash 6/7 HTTP APIs.
-                     if (content != null && this.dataset.parent.isProxied()) {
+                     if (content != null && this.dataset.isProxied()) {
                          // Raw POST mechanism is only supported in proxied mode
                          if (typeof(content) == 'string') {
                              this.dataset.setQueryParam('lzpostbody', content);
