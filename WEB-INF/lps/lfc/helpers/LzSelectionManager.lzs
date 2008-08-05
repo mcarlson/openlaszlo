@@ -294,4 +294,4 @@ override function toString (){
 }
 
 } // End of LzSelectionManager
-lz.SelectionManager = LzSelectionManager;  // publish
+lz[LzSelectionManager.tagname] = LzSelectionManager;  // publish
