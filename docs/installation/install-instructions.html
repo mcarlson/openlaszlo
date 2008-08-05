@@ -58,6 +58,7 @@ and verifying that it is installed properly by running a Laszlo application.</p>
 <ul>
 	<li><a href="../../download/">Download</a> the OpenLaszlo Server for Unix/Linux.</li>
     <li>Use tar zxvf to unzip and untar the distribution from /usr/local (or wherever you want it to go; you can even use your home directory for safety). </li>
+    <li>For SWF9 development on Unix, you will need to manually <code>chmod 755</code> all the binaries in <code>WEB-INF/server/bin/</code> before you can compile. This is true for both the .war and .gz distributions. </li>
 	<li>DON'T just copy the Tomcat folder into /usr/local. Keep the whole distribution together. So if you put it in /usr/local, it would look something like this:</li>
 	<li>/usr/local/lps-@VERSIONID@/
 	&nbsp;&nbsp;&nbsp;&nbsp;...with Server/tomcat-5.0.24 as a subdirectory of lps-@VERSIONID@</li>
