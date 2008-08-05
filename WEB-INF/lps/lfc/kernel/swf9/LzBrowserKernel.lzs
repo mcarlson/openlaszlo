@@ -77,20 +77,27 @@ static function callMethod(js) {
     return lz.Utils.safeEval(js);
 }
 
-static var _os = null;
-static var _ver = null;
+static var _os :String = null;
+static var _ver :String = null;
 
 /**
   * Returns version information about the browser
   */
-static function getVersion () {
+static function getVersion () :String {
     if (!LzBrowserKernel._ver) {
-        var o = Capabilities.version.split(' ');
+        var o:Array = Capabilities.version.split(' ');
         LzBrowserKernel._os = o[0]; 
         o = o[1].split(',');
         LzBrowserKernel._ver = String(Number(o[0] + '.' + o[2]));
     }
     return LzBrowserKernel._ver;
+}
+
+/**
+  * Returns information about the operating system
+  */
+static function getOS () :String {
+    return Capabilities.os;
 }
 
 /**

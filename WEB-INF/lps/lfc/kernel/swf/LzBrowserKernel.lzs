@@ -146,12 +146,19 @@ static var _ver = null;
   */
 static function getVersion () {
     if (!LzBrowserKernel._ver) {
-        var o = getVersion().split(' ');
+        var o = System.capabilities.version.split(' ');
         LzBrowserKernel._os = o[0]; 
         o = o[1].split(',');
         LzBrowserKernel._ver = (o[0] + '.' + o[2]) * 1;
     }
     return LzBrowserKernel._ver;
+}
+
+/**
+  * Returns information about the operating system
+  */
+static function getOS () {
+    return System.capabilities.os;
 }
 
 /**

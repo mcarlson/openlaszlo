@@ -730,7 +730,7 @@ function setDefaultContextMenu ( cmenu ){
   * Compute version info as a string
   * @access public
   */
-static function versionInfoString () {
+static function versionInfoString () :String {
   return (
     'URL: ' + lz.Browser.getLoadURL() + '\n' +
     'Version: ' + canvas.lpsversion + '\n' +
@@ -738,7 +738,8 @@ static function versionInfoString () {
     'Build: ' + canvas.lpsbuild + '\n' +
     'Date: ' + canvas.lpsbuilddate + '\n' +
     'Target: ' + canvas.runtime + '\n' +
-    'Runtime: ' + lz.Browser.getVersion() + '\n');
+    'Runtime: ' + lz.Browser.getVersion() + '\n' +
+    'OS: ' + lz.Browser.getOS() + '\n');
 }
 
 /**

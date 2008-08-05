@@ -88,9 +88,15 @@ class LzBrowserService {
   /**
    * Returns version information about the browser
    */
-  function getVersion ()
+  function getVersion () :String
     { return LzBrowserKernel.getVersion ();}
-
+    
+  /**
+   * Returns information about the operating system
+   */
+  function getOS () :String
+    { return LzBrowserKernel.getOS ();}
+    
   /**
    * Returns the URL from which the application was loaded.
    * @return String: the URL the swf was loaded from

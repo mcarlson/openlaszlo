@@ -92,6 +92,13 @@ static function getVersion () {
 }
 
 /**
+   * Returns information about the operating system
+   */
+static function getOS () {
+    return navigator.platform;
+}
+
+/**
   * Returns the URL from which the application was loaded.
   * @return String : the URL the swf was loaded from
   * 
