@@ -124,7 +124,7 @@ class SWFFile extends FlashFile {
             but.addButtonRecord(new ButtonRecord(states, rectShape, 1, at, new CXForm()));
             // '18' is the key code for "tab", not sure why.
             but.addActionCondition(
-                new ActionCondition(KEYCODE_TAB<<9, program("_root.LzKeys.gotKeyDown(9, 'extra');"))
+                new ActionCondition(KEYCODE_TAB<<9, program("_root.lz.Keys.gotKeyDown(9, 'extra');"))
                 );
             offScreen.scale(.1, .1);
             offScreen.translate(-200*TWIP, -200*TWIP);

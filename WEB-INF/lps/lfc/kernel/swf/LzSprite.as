@@ -66,6 +66,7 @@ LzSprite.prototype.capabilities = {
     ,bitmapcaching: true
     ,persistence: true
     ,clickmasking: true
+    ,clickregion: true
 }
 
 /**

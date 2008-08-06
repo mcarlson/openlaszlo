@@ -757,23 +757,23 @@ class SWFWriter extends ObjectWriter {
             // TODO: [2004-06029 bloch] When we merge into lps-intl2, there should
             // be some code sharing between this and SWFFile
             but.addActionCondition(ActionCondition.onPress(program(
-                "_root.LzModeManager.handleMouseButton( myView, 'onmousedown')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmousedown')")));
             but.addActionCondition(ActionCondition.onRelease(program(
-                "_root.LzModeManager.handleMouseButton( myView, 'onmouseup');" + 
-                "_root.LzModeManager.handleMouseEvent( myView, 'onclick')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseup');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onclick')")));
             but.addActionCondition(ActionCondition.onReleaseOutside(program(
-                "_root.LzModeManager.handleMouseButton( myView, 'onmouseup');" + 
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseupoutside')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseup');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseupoutside')")));
             but.addActionCondition(ActionCondition.onRollOver(program(
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseover')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseover')")));
             but.addActionCondition(ActionCondition.onRollOut(program(
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseout')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseout')")));
             but.addActionCondition(ActionCondition.onDragOut(program(
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseout');" + 
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmousedragout')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseout');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmousedragout')")));
             but.addActionCondition(ActionCondition.onDragOver(program(
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmouseover');" + 
-                "_root.LzModeManager.handleMouseEvent( myView, 'onmousedragin')")));
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseover');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmousedragin')")));
             
             name = createName();
 
