@@ -463,6 +463,7 @@ public class SWF9External {
     newenv.add("FLEX_HOME="+FLEX_HOME());
     copyEnvVar(newenv, "HOME");
     copyEnvVar(newenv, "PATH");
+    copyEnvVar(newenv, "JAVA_HOME");
     Process proc = Runtime.getRuntime().exec(cmdstr, (String[])newenv.toArray(new String[0]), null);
     try {
       OutputStream os = proc.getOutputStream();
