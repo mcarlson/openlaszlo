@@ -37,7 +37,7 @@
   *
   * @shortdesc Keyboard input service.
   */
-public class LzKeysService extends LzNode {
+public class LzKeysService extends LzEventable {
     /** @access private */
     function LzKeysService() {
         super();

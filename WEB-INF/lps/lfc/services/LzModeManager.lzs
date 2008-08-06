@@ -50,7 +50,7 @@
   * @devnote Manages the modal states of views and also notifies views ( that have
   * registered with it ) when their focus has changed.
   */
-public class LzModeManagerService extends LzNode {
+public class LzModeManagerService extends LzEventable {
     /** Sent when the mode changes.
     * @lzxtype event
     * @access public

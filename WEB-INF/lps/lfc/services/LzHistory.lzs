@@ -26,7 +26,7 @@
   * @shortdesc Manages interaction with the browser history and back button.
   */
 
-public class LzHistoryService extends LzNode {
+public class LzHistoryService extends LzEventable {
 /**
   * true if history system is ready to receive events (for 3.x compatibility).  Use the lz.History.onready event instead.
   * @keywords deprecated  
