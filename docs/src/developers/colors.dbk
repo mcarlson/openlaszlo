@@ -87,7 +87,6 @@ To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes
    </programlisting>
 </example>
 
-
 <para/></section><section><title>Opacity</title>
 <para>
 In OpenLaszlo, a view has a color and an opacity which are handled separately. The <literal>opacity</literal> attribute ranges from 0 (transparent) to 1 (opaque).
@@ -102,7 +101,53 @@ In OpenLaszlo, a view has a color and an opacity which are handled separately. T
 
 
 <para>When a view's <literal>opacity</literal> is set to 0, the <literal>visible</literal> attribute of that view turns to false.</para>
-
+</section>
+   <section><title>DHTML with Windows Internet Explorer: Opacity Issues</title>
+      <section><title>Internet Explorer: <literal>overflow="visible"</literal> Doesn't Work with <literal>opacity</literal></title>
+         <para>If you use the IE alpha-filter to set the opacity, the overflow will always be changed to <literal>hidden</literal>. The example below provides a workaround for this issue:</para>
+         <programlisting>
+   &lt;canvas &gt;
+      &lt;!-- the image will be clipped in IE DHTML due to nested opacity --&gt; 
+      &lt;view opacity=&quot;.6&quot; width=&quot;150&quot; height=&quot;60&quot; bgcolor=&quot;red&quot;&gt; 
+         &lt;view width=&quot;${canvas.width}&quot; height=&quot;60&quot; resource=&quot;http:Unbenannt.png&quot; stretches=&quot;both&quot;/&gt; 
+      &lt;/view&gt; 
+      
+      &lt;!-- Moving the image to be a sibling fixes the issue--&gt; 
+      &lt;view y=&quot;200&quot; opacity=&quot;.6&quot; width=&quot;150&quot; height=&quot;60&quot; bgcolor=&quot;red&quot;/&gt; 
+      &lt;view y=&quot;200&quot; opacity=&quot;.6&quot; width=&quot;${canvas.width}&quot; height=&quot;60&quot; resource=&quot;http:Unbenannt.png&quot; stretches=&quot;both&quot;/&gt; 
+   &lt;/canvas&gt;</programlisting>
+      </section>
+      
+      <section><title>Internet Explorer 7 DHTML Doesn't honor view opacity for stacked (overlayed) views</title>
+         <para>If you have a shadow view that uses a partial opacity setting underneath another view to create a shadow effect, the topmost view overlaying the shadow disappears in Windows Internet Explorer 7, using DHTML. The following example shows the problem:</para>
+         <programlisting>
+   &lt;canvas width=&quot;100%&quot; height=&quot;100%&quot; validate=&quot;false&quot; debug=&quot;true&quot; proxied=&quot;false&quot; bgcolor=&quot;0x00aaaa&quot;&gt; 
+      &lt;view width=&quot;300&quot; height=&quot;100&quot;&gt; 
+         &lt;view width=&quot;300&quot; height=&quot;100&quot; bgcolor=&quot;black&quot; opacity=&quot;0.3&quot;/&gt; 
+         &lt;view width=&quot;150&quot; height=&quot;50&quot; bgcolor=&quot;red&quot;/&gt; 
+      &lt;/view&gt; 
+      &lt;button text=&quot;Click me&quot; onclick=&quot;canvas.setAttribute(&apos;opacity&apos;, 0.50)&quot;/&gt; 
+   &lt;/canvas&gt;</programlisting>
+         <para>In this test, the red view and the button disappear when the button is clicked, instead of receiving 50% opacity. You can work around this issue in Internet Explorer 7 DHTML to get the same effect, as follows:</para><programlisting>
+   &lt;canvas width=&quot;100%&quot; height=&quot;100%&quot; validate=&quot;false&quot; debug=&quot;true&quot; proxied=&quot;false&quot; bgcolor=&quot;0x00aaaa&quot;&gt;
+      &lt;simplelayout/&gt;
+      &lt;!-- This example hides the red box when the button is clicked in IE DHTML --&gt;
+      &lt;view width=&quot;300&quot; height=&quot;100&quot; name=&quot;root&quot;&gt;
+         &lt;view width=&quot;300&quot; height=&quot;100&quot; bgcolor=&quot;black&quot; opacity=&quot;0.3&quot;/&gt;
+         &lt;view width=&quot;150&quot; height=&quot;50&quot; bgcolor=&quot;red&quot;/&gt;
+      &lt;/view&gt;
+      &lt;button text=&quot;Click me&quot; onclick=&quot;root.setAttribute(&apos;opacity&apos;, 0.50)&quot;/&gt;
+      &lt;!-- By avoiding nesting views with opacity, we can get the same effect and it works in IE DHTML--&gt;
+      &lt;view width=&quot;300&quot; height=&quot;100&quot; name=&quot;container&quot;&gt;
+         &lt;view width=&quot;300&quot; height=&quot;100&quot; bgcolor=&quot;black&quot; opacity=&quot;0.3&quot;/&gt;
+         &lt;view width=&quot;300&quot; height=&quot;100&quot; name=&quot;root&quot;&gt;
+            &lt;view width=&quot;150&quot; height=&quot;50&quot; bgcolor=&quot;red&quot;/&gt;
+         &lt;/view&gt;
+      &lt;/view&gt;
+      &lt;button text=&quot;Click me&quot; onclick=&quot;container.root.setAttribute(&apos;opacity&apos;, 0.50)&quot;/&gt;
+   &lt;/canvas&gt;</programlisting>
+      </section>
+      
 <para/></section></section><section><title>When Red Isn't Red</title>
 
 <para>
