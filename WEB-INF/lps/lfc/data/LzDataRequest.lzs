@@ -86,4 +86,4 @@ class LzDataRequest extends LzEventable {
 
 }
 
-
+lz.DataRequest = LzDataRequest;  //publish

@@ -309,3 +309,4 @@ function toString () :String {
 }
 
 } // End of LzDataNode
+lz.DataNode = LzDataNode;  // publish

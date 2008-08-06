@@ -532,6 +532,7 @@ public class LzKeysService extends LzEventable {
         LzKeyboardKernel.gotLastFocus();
     }
 }
+lz.KeysService = LzKeysService;  // publish
 
 /**
   * lz.Keys is a shortcut for <a href="LzKeysService.html">LzKeysService</a>.

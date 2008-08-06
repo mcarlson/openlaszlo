@@ -377,6 +377,7 @@ function __LZmouseup(ignore)
 }
 
 } // End of LzTrackService
+lz.TrackService = LzTrackService;  // publish
 
 
 /**

@@ -103,6 +103,7 @@ public class LzCursorService {
   }
 
 }
+lz.CursorService = LzCursorService;  // publish
 
 /**
  *

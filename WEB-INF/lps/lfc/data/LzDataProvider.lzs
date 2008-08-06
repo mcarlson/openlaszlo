@@ -54,5 +54,4 @@ class LzDataProvider extends LzNode {
     }
 }
 
-lz[LzDataProvider.tagname] = LzDataProvider;
-lz.DataProvider = LzDataProvider;  // publish
+lz[LzDataProvider.tagname] = LzDataProvider;  // publish

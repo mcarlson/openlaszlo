@@ -213,4 +213,3 @@ LzFontManager.__fontExists = function (str) {
             this.__genericClientFontFamilyNames[str] != null ||
             this.__fontFamilyMap[str] != null);
 }
-lz.FontManager = LzFontManager;  // publish

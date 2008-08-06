@@ -3147,4 +3147,4 @@ function $lzc$set_cachebitmap( cache ) {
 }
 } // End of LzView
 
-lz[LzView.tagname] = LzView;
+lz[LzView.tagname] = LzView;  //publish

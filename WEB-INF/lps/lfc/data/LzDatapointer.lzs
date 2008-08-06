@@ -1485,4 +1485,4 @@ function __LZsetTracking (who, force:Boolean = false, needscheck:Boolean = false
 
 } // End of LzDatapointer
 
-lz[LzDatapointer.tagname] = LzDatapointer;
+lz[LzDatapointer.tagname] = LzDatapointer;  // publish

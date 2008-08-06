@@ -237,6 +237,7 @@ class LzTimerService {
   }
 
 } // End of LzTimerService
+lz.TimerService = LzTimerService;  // publish
 
 /**
  * @shortdesc Alias for <link linkend="LzTimerService">LzTimerService.LzTimer</link>

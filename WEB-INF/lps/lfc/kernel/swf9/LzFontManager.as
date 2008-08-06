@@ -211,4 +211,3 @@ public class LzFontManager {
                 LzFontManager.__fontFamilyMap[str] != null);
     }
 }
-lz.FontManager = LzFontManager;  // publish

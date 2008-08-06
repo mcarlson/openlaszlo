@@ -31,4 +31,3 @@ public static function parseXML( str, trimwhitespace, nsprefix ){
 }
 
 } // End of LzXMLParser
-lz.XMLParser = LzXMLParser;  // publish

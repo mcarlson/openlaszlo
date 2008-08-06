@@ -934,7 +934,7 @@ override function toString () {
 
 } // End of LzDataset
 
-lz[LzDataset.tagname] = LzDataset;
+lz[LzDataset.tagname] = LzDataset;  // publish
 
 
 

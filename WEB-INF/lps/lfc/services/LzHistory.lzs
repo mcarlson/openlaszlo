@@ -271,6 +271,7 @@ function __start() {
     this.setAttribute('ready', true);
 }
 }
+lz.HistoryService = LzHistoryService;  // publish
 
 /**
   * lz.History is a shortcut for <xref linkend="LzHistoryService" />.

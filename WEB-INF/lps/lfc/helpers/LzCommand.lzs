@@ -121,5 +121,4 @@ function keysToString ( ) {
 }
 
 }; // End of LzCommand
-lz[LzCommand.tagname] = LzCommand;
-lz.Command = LzCommand;  // publish
+lz[LzCommand.tagname] = LzCommand;  // publish

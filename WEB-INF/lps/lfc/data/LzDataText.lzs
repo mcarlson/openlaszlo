@@ -91,3 +91,4 @@ override function toString () :String {
 }
 
 } // End of LzDataText
+lz.DataText = LzDataText;  //publish

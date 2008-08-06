@@ -76,5 +76,4 @@ dynamic class LzScript extends LzNode {
   }
 }; // End of LzScript
 
-lz[LzScript.tagname] = LzScript;
-lz.Script = LzScript;  // publish
+lz[LzScript.tagname] = LzScript;  // publish

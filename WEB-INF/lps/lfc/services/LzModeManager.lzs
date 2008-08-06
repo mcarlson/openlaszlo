@@ -249,6 +249,7 @@ public class LzModeManagerService extends LzEventable {
         }
     }
 }
+lz.ModeManagerService = LzModeManagerService;  // publish
 
 /**
   * lz.ModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService</a>.

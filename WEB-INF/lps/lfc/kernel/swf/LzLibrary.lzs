@@ -210,5 +210,4 @@ function destroy () {
 }
 
 }; // End of LzLibrary
-
-lz[LzLibrary.tagname] = LzLibrary;
+lz[LzLibrary.tagname] = LzLibrary;  //publish

@@ -10,7 +10,7 @@
 
 /**
   * @shortdesc This service manages audio resource playback.
-  * @access public
+  * @access private
   * 
   */
 var LzAudioKernel = new Object;

@@ -417,7 +417,7 @@ class LzBrowserService {
 
 
 } // End of LzBrowserService
-
+lz.BrowserService = LzBrowserService;  // publish
 
 /**
  * <p>The <code>lz.Browser</code> service provides methods for

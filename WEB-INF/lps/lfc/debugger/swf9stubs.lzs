@@ -41,7 +41,6 @@ dynamic class LzDebugService with LzFormatter {
 }
 
 var Debug = new LzDebugService();
-lz.DebugService = LzDebugService;  // publish
 
 class LzSourceMessage extends LzMessage {
   var file;

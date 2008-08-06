@@ -602,5 +602,4 @@ dynamic class LzState extends LzNode {
 
 } // End of LzState
 
-lz[LzState.tagname] = LzState;
-lz.State = LzState;  // publish
+lz[LzState.tagname] = LzState;  // publish

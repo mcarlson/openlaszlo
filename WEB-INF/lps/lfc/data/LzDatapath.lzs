@@ -714,4 +714,4 @@ override function __LZgetPosition() :int {
 
 } // End of LzDatapth
 
-lz[LzDatapath.tagname] = LzDatapath;
+lz[LzDatapath.tagname] = LzDatapath;  // publish

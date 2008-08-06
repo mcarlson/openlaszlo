@@ -217,4 +217,3 @@ function __fontExists (str) {
 } // End of LzFontManager
 
 var LzFontManager = new LzFontManagerClass ();
-lz.FontManagerClass = LzFontManagerClass;  // publish

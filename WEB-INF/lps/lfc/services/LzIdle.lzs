@@ -119,6 +119,7 @@ class LzIdleService extends LzEventable {
     }
   }
 }
+lz.IdleService = LzIdleService;  // publish
 
 /**
  * @shortdesc Alias for <link linkend="LzIdleService">LzIdleService.LzIdle</link>

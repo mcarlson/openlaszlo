@@ -71,7 +71,5 @@ public class LzPlatformService extends LzEventable {
 }
 
 var LzPlatform:LzPlatformService = new LzPlatformService();
-lz.PlatformService = LzPlatformService;  // publish
-
 
 

@@ -562,5 +562,4 @@ override function toString(  ) {
 
 } // End of LzAnimatorGroup
 
-lz[LzAnimatorGroup.tagname] = LzAnimatorGroup;
-lz.AnimatorGroup = LzAnimatorGroup;  // publish
+lz[LzAnimatorGroup.tagname] = LzAnimatorGroup;  // publish

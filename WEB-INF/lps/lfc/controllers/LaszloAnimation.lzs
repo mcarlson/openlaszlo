@@ -425,6 +425,4 @@ override function toString(){
 
 } // End of LzAnimator
 
-
-lz[LzAnimator.tagname] = LzAnimator;
-lz.Animator = LzAnimator;  // publish
+lz[LzAnimator.tagname] = LzAnimator;  // publish
