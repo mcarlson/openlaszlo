@@ -17,13 +17,6 @@
   * @lzxname datarequest
   */
 class LzDataRequest extends LzEventable {
-
-    /** @access private
-     * @modifiers override 
-     */
-    static var tagname = 'datarequest';
-    /** @access private */
-    static var attributes = new LzInheritedHash(LzNode.attributes);
     
     /* Status value constants */
     /**
@@ -31,25 +24,25 @@ class LzDataRequest extends LzEventable {
     * @lzxdefault "success"
     * @keywords read-only
     */
-    static var SUCCESS = 'success';
+    static const SUCCESS :String = 'success';
     /**
     * @type String
     * @lzxdefault "timeout"
     * @keywords read-only
     */
-    static var TIMEOUT = 'timeout';
+    static const TIMEOUT :String = 'timeout';
     /**
     * @type String
     * @lzxdefault "error"
     * @keywords read-only
     */
-    static var ERROR   = 'error';
+    static const ERROR :String = 'error';
     /**
     * @type String
     * @lzxdefault "ready"
     * @keywords read-only
     */
-    static var READY   = 'ready';
+    static const READY :String = 'ready';
 
     /** An optional property that's the object using the DataRequest to pass into the dataprovider's doRequest method.
     * @type Object
