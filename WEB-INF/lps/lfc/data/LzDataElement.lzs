@@ -457,11 +457,10 @@ public function setNodeName ( name:String ) :void {
 /**
   * @access private
   */
-// dummyarg needed for calls from LzDatapointer.__LZprocessOperator
-function __LZgetText ( dummyarg:* = null ) :String {
+function __LZgetText () :String {
     var s:String = "";
     for ( var i:int = 0; i < this.childNodes.length; i++ ){
-        var c = this.childNodes[ i ]
+        var c = this.childNodes[ i ];
         if ( c.nodeType == LzDataElement.TEXT_NODE ){
             s += c.data;
         }

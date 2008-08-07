@@ -1208,7 +1208,7 @@ function setFromPointer ( dp:LzDatapointer ) :void {
 
 
 /** @access private */
-function __LZprocessOperator (p, pp, depends = null) :* {
+function __LZprocessOperator (p /*:LzDataNodeMixin*/, pp:LzParsedPath) :* {
     if (p == null) {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
@@ -1216,22 +1216,34 @@ function __LZprocessOperator (p, pp, depends = null) :* {
         return;
     }
 
-    if (pp.operatorArgs != null) {
-        //"text()" [__LZgetText()] or "serialize()" 
-        return p[ pp.operator ] ( pp.operatorArgs );
-    }
-
-    // LzParsedPath.initialize() created pp.operator
-    if (pp.operator.indexOf("attributes.") == 0) {
-        //operator: "attributes.xxx"
-        if (p['attributes']) {
-            return p.attributes[pp.operator.substr(11)];
-        }
-        // TODO: [2007-3-16 hqm] I'll do what Ben did, return undefined
-        return;
-    } else {
-        //operator: "attributes", "nodeName"
-        return p[pp.operator];
+    var op:String = pp.operator;
+    switch (op) {
+        case "serialize": 
+            //operator: "serialize()"
+            return p.serialize();
+        case "__LZgetText": 
+            //operator: "text()" [__LZgetText()]
+            return p.nodeType != LzDataElement.TEXT_NODE ? p.__LZgetText() : void(0);
+        case "nodeName":
+            //operator: "name()" [nodeName]
+            return p.nodeName;
+        default:
+            if (pp.hasAttrOper) {
+                //operator: "attributes" or "attributes.xxx"
+                if (p.nodeType != LzDataElement.TEXT_NODE && p['attributes']) {
+                    if (op == "attributes") {
+                        return p.attributes;
+                    } else {
+                        //@dev-note: 11 == length of 'attributes.'
+                        return p.attributes[op.substr(11)];
+                    }
+                } else {
+                    // TODO: [2007-3-16 hqm] I'll do what Ben did, return undefined
+                    return;
+                }
+            } else if ($debug) {
+                Debug.error ("Unknown operator '%s' in '%s'", op, arguments.callee);
+            }
     }
 }
 

@@ -75,13 +75,6 @@ class LzParsedPath {
   var aggOperator:String = null;
   
   /** 
-    * null or 0
-    * 
-    * @access private
-    */
-  var operatorArgs:* = null;
-  
-  /** 
     * true if terminal operator is a attribute-selector, otherwise false
     * 
     * @access private
@@ -234,10 +227,8 @@ function LzParsedPath (pa:String, node:*) {
                         this.operator = "nodeName";
                     } else if ( cnode.indexOf( "text" ) > -1 ){
                         this.operator = "__LZgetText";
-                        this.operatorArgs = 0;
                     } else if ( cnode.indexOf( "serialize" ) > -1 ){
                         this.operator = "serialize";
-                        this.operatorArgs = 0;
                     } else if ($debug) {
                         Debug.warn( "Unknown operator: '%s'", cnode);
                     }
@@ -361,7 +352,7 @@ function debugWrite (  ){
 /**
   * @access private
   */
-class AnonDatasetGenerator {
+class AnonDatasetGenerator extends LzEventable {
 
     /**
       * @access private
