@@ -144,6 +144,8 @@ function getLoadMovie ( ){
   * @access private
   */
 function returnData ( loadobj , data ){
+    LzLoadQueue.unloadRequest(loadobj);
+
     // Check if returnData has already been called on this
     // object. This can happen if a serverless data load timed out in
     // the LFC, but eventually returned something via the

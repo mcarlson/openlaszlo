@@ -89,6 +89,9 @@ LzLoadQueue.enqueueRequest = function( loadmc ){
   * LzLoadQueue!
   */
 LzLoadQueue.XMLOnDataHandler = function (src) {
+    // cancel the timeout handler
+    LzLoadQueue.unloadRequest(this);
+
     if (src == undefined) {
         if (!this.proxied) {
             Debug.warn("LzLoadQueue.XMLOnDataHandler load failed from URL %w, no data received.", this.url);
@@ -99,8 +102,6 @@ LzLoadQueue.XMLOnDataHandler = function (src) {
         if (this.loader.onerror.ready) {
             this.loader.onerror.sendEvent(null);
         }
-        // cancel the timeout handler
-        LzLoadQueue.unloadRequest(this);
     } else {
         // If we timed out, and this response came in late, ignore it.
         if (this.timedout) {
@@ -111,7 +112,6 @@ LzLoadQueue.XMLOnDataHandler = function (src) {
         // LzDataNodes.
 
         this.onload(true);
-        LzLoadQueue.loadFinished( this );
         this.loader.gotRawData(src, this);
     }
 }
@@ -165,8 +165,6 @@ LzLoadQueue.timeoutDel = new LzDelegate( LzLoadQueue , "checkTimeout" );
   */
 LzLoadQueue.loadFinished = function( loadmc ){
     this.openConx--;
-    //Debug.write('LzLoadQueue.loadFinished', this.openConx);
-
     // Many subclasses of LzLoader seem to only call
     // LzLoadQueue.loadFinished, rather than LzLoader.returnData
     loadmc.loaded = true;
