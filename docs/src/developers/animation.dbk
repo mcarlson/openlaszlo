@@ -412,4 +412,18 @@ is <b>true</b> then the value generated is added to the binding property,
 and if it is <b>false</b> the value replaces the binding property with a
 new value.
 ?>
-<para/></section></chapter>
+
+</section>
+<section><title>Multiframe Resources</title>
+<para>You can animate a group of images by specifying the directory from which to load the images. All the
+files in that directory will be used for the animation.</para>
+  <para>The following example uses the eight <literal>png</literal> files in <literal>resources/spinner/</literal> 
+  for the animation.</para>
+  <example role="live-example">
+    <title>Multiframe animation</title>
+      <programlisting language="lzx">
+        <textobject><textdata fileref="programs/spinner.lzx"/></textobject>
+      </programlisting>
+  </example>
+</section>
+</chapter>
