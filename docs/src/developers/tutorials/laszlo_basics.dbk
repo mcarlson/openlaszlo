@@ -49,10 +49,10 @@ to the canvas. </para>
 </example>
 
 <?example role="live-example"><title>Empty Canvas</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$1.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="150" bgcolor="green"&gt;
+&lt;canvas width="500" height="100" bgcolor="green"&gt;
 &lt;/canvas&gt;
 </code></programlisting><programlisting>
-&lt;canvas width="500" height="150" bgcolor="green"&gt;
+&lt;canvas width="500" height="100" bgcolor="green"&gt;
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/laszlo_basics-$1.lzx></example?>
 
@@ -70,11 +70,11 @@ put a window on a white canvas.
 </example>
 
 <?example role="live-example"><title>Simple window</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$2.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="150"&gt;
+&lt;canvas width="500" height="100"&gt;
   &lt;window/&gt;
 &lt;/canvas&gt;
 </code></programlisting><programlisting>
-&lt;canvas width="500" height="150"&gt;
+&lt;canvas width="500" height="100"&gt;
   &lt;window/&gt;
 &lt;/canvas&gt;
 </programlisting><?lzx-edit programs/laszlo_basics-$2.lzx></example?>

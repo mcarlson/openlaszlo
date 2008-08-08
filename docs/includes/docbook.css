@@ -122,7 +122,7 @@ code.fieldsynopsis {
 
 /* This is used in the ECMAScript chapter to mark unsupported APIs */
 .strikeout {
-    font-variant: italic;
+    font-style: italic;
     color: red;
 }
 
@@ -234,7 +234,7 @@ tr.segtitle > th {
 /* Synopsis */
 
 .methodclass, .methodstaticclass, .methodname {
-    font-size: 1.08em
+    font-size: 1.08em;
     color: #333333;
 }
 

@@ -126,7 +126,9 @@
     <link rel="stylesheet" href="{$rootpath}includes/lzx-pretty-print.css" type="text/css"/>
     <script type="text/javascript" language="JavaScript" src="{$rootpath}{$root.relative.lps.includes}embed-compressed.js"/>
     <script type="text/javascript" language="JavaScript" src="{$rootpath}includes/docs.js"/>
-    <script type="text/javascript"><xsl:text>//lz.embed.lfc('</xsl:text><xsl:value-of select="$rootpath"/><xsl:value-of select="$root.relative.lps.includes"/><xsl:text>lfc/LFCdhtml.js', '</xsl:text><xsl:value-of select="$rootpath"/><xsl:text>../');</xsl:text></script>
+<?ignore
+    <script type="text/javascript" language="JavaScript"><xsl:text>lz.embed.lfc('</xsl:text><xsl:value-of select="$rootpath"/><xsl:value-of select="$root.relative.lps.includes"/><xsl:text>lfc/LFCdhtml.js', '</xsl:text><xsl:value-of select="$rootpath"/><xsl:text>../');</xsl:text></script>
+?>
   </xsl:template>
   
   <xsl:template name="body.attributes">
@@ -210,12 +212,42 @@
     <xsl:apply-templates select="programlisting"/>
   </xsl:template>
   
+  <!-- make sure parameters are quoted strings -->
+  <xsl:template name="quote-canvas-parameter">
+    <xsl:param name="text"/>
+    <xsl:variable name="single-quote">'</xsl:variable>
+    <xsl:choose>
+      <xsl:when test="contains($text, $single-quote)">
+        <xsl:value-of select="$text"/>
+      </xsl:when>
+      <xsl:when test="contains($text, ',')">
+        <xsl:call-template name="quote-canvas-parameter">
+          <xsl:with-param name="text" select="substring-before($text,',')"/>
+        </xsl:call-template>,
+        <xsl:call-template name="quote-canvas-parameter">
+          <xsl:with-param name="text" select="substring-after($text,',')"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="contains($text, ': ')">
+        <xsl:value-of select="substring-before($text,': ')"/>
+        : '<xsl:value-of select="substring-after($text,': ')"/>'
+      </xsl:when>
+      <xsl:when test="contains($text, ':')">
+        <xsl:value-of select="substring-before($text,':')"/>
+        :'<xsl:value-of select="substring-after($text,':')"/>'
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message><xsl:value-of select="concat('Unknown parameter syntax in quote-canvas-paramter: ', $text)"/></xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
     <xsl:template match="programlisting[@language='lzx' and textobject/textdata/@fileref]">
     
     <!-- extract necessary information from context -->
     <xsl:variable name="fname" select="textobject/textdata/@fileref"/>
     <xsl:variable name="query-parameters" select="parameter[@role='query']"/>
-    
+
     <!--If no canvas parameters are specified, set height to 400px and width to 500.
       This fixes     LPP-5207 change height of example code window from 200 to 400 pixels
       [bshine 12.16.2007]
@@ -232,7 +264,10 @@
         canvas widths. 
         The solution! Iterate over the result node set! -->
       <xsl:for-each select="parameter[@role='canvas']">
-        , <xsl:value-of select="."/> <!-- do a leading comma so that we don't have a stray comma at the end -->
+        <!-- leading comma for each param -->
+        , <xsl:call-template name="quote-canvas-parameter">
+          <xsl:with-param name="text" select="."/>
+          </xsl:call-template>
       </xsl:for-each>
      </xsl:variable>
       
@@ -246,7 +281,7 @@
         </xsl:variable>
         <xsl:variable name="canvas-id" select="generate-id(.)"/>
         <xsl:variable name="swf-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=swf', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'SWF')"/>', history: false, cancelmousewheel: true <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
-        <xsl:variable name="dhtml-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=html&amp;lzr=dhtml', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'DHTML')"/>', cancelkeyboardcontrol: true, <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
+        <xsl:variable name="dhtml-embed-params">{url: '<xsl:value-of select="concat($fname, '?lzt=html&amp;lzr=dhtml', $query-param)"/>', id: '<xsl:value-of select="concat($canvas-id,'DHTML')"/>', cancelkeyboardcontrol: true <xsl:value-of select="$canvas-parameters"/>}</xsl:variable>
         <!-- To test examples in DHTML, uncomment the second script block below
              and the call to lz.embed.lfc() above.
              If you don't want to see the SWF version as well, comment out the 
@@ -398,7 +433,6 @@
         Lz.dhtmlEmbed(<xsl:value-of select="$dhtml-embed-params"/>);
       </script>
 ?>
-
     </div>
   </xsl:template>
   
