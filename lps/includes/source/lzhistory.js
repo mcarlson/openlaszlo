@@ -7,7 +7,8 @@
   */
 
 lz.embed.history = {
-    _currentstate: null 
+    active: true 
+    ,_currentstate: null 
     ,_apps: []
     ,_intervalID: null
     ,init: function(app) {
@@ -112,6 +113,7 @@ lz.embed.history = {
     }
     ,/** */
     set: function(s) {
+        if (lz.embed.history.active != true) return;
         if (s == null) s = '';
         if (lz.embed.history._currentstate == s) return;
         lz.embed.history._currentstate = s;

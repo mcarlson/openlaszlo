@@ -132,7 +132,9 @@ lz.embed = {
             ,_setCanvasAttributeDequeue: lz.embed._setCanvasAttributeDequeue
         }
         // listen for history unless properties.history == false
-        if (properties.history != false) {
+        if (properties.history == false) {
+            lz.embed.history.active = false;
+        } else {
             app._onload.push(lz.embed.history.init);
         }
         // for callbacks onload
