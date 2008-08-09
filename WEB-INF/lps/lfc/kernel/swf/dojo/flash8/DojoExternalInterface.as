@@ -22,6 +22,7 @@ class DojoExternalInterfaceClass {
 	var numArgs = null;
 	var argData = null;
 	var resultData = null;
+	var installing = false;
 	var _id;
 	
 	function DojoExternalInterfaceClass(id){
@@ -32,6 +33,7 @@ class DojoExternalInterfaceClass {
 		var install = new ExpressInstall();
 		if(install.needsUpdate){
 			install.init();
+			this.installing = true;
 		}
 
 		// not loaded from the wrapper JS...
@@ -93,6 +95,7 @@ class DojoExternalInterfaceClass {
 			interact with the Flash file.
 	*/
 	function loaded(){
+		if (this.installing) return;
 		DojoExternalInterface.call("lz.embed.dojo.loaded", null, this._id);
 		LzBrowserKernel.__jsready();
 	}

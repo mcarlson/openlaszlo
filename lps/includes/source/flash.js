@@ -293,7 +293,7 @@ lz.embed.dojo = {
         bgcolor: '#ffffff',
         wmode: 'window',
         flashvars: '',
-        minimumVersion: 7,
+        minimumVersion: 8,
         id: 'flashObject',
         appenddiv: null
     },
@@ -1254,8 +1254,8 @@ lz.embed.dojo.Install.prototype = {
             return true;
         }        
 
-        // other platforms need at least Flash 6 or above
-        if(!lz.embed.dojo.info.isVersionOrAbove(6, 0, 0)){
+        // other platforms need at least Flash 8 or above
+        if(!lz.embed.dojo.info.isVersionOrAbove(8, 0, 0)){
             return true;
         }
 
@@ -1281,6 +1281,14 @@ lz.embed.dojo.Install.prototype = {
                 p.flash8 = url;
         }
 
+        // downgrade URL to flash8 so expressinstall can run...
+        var i = url.indexOf('swf9')
+        if (i != -1) {
+            lz.embed.dojo._tempurl = url;
+            url = url.substring(0, i + 3) + '8' + url.substring(i + 4, url.length);
+                p.flash8 = url;
+        }
+
         lz.embed.dojo.ready = false;
         if(lz.embed.dojo.info.capable == false){ // we have no Flash at all
             lz.embed.dojo._isinstaller = true;
@@ -1288,11 +1296,11 @@ lz.embed.dojo.Install.prototype = {
             // the user to install things
 
             var installObj = new lz.embed.dojo.Embed(p);
-            installObj.write(8); // write out HTML for Flash 8 version+
+            installObj.write(lz.embed.dojo.minimumVersion); // write out HTML for Flash 8 version+
         }else if(lz.embed.dojo.info.isVersionOrAbove(6, 0, 65)){ // Express Install
             //dojo.debug("Express install");
             var installObj = new lz.embed.dojo.Embed(p);
-            installObj.write(8, true); // write out HTML for Flash 8 version+
+            installObj.write(lz.embed.dojo.minimumVersion, true); // write out HTML for Flash 8 version+
             installObj.setVisible(true);
             installObj.center();
         }else{ // older Flash install than version 6r65
@@ -1317,6 +1325,7 @@ lz.embed.dojo.Install.prototype = {
             alert("There was an error downloading the Flash Player update. "
                         + "Please try again later, or visit macromedia.com to download "
                         + "the latest version of the Flash plugin.");
+            window.location = "http://www.macromedia.com/go/getflashplayer";
         }    
     }
 };
@@ -1328,5 +1337,3 @@ lz.embed.dojo.info = new lz.embed.dojo.Info();
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
-
-// vim:ts=4:noet:tw=0:

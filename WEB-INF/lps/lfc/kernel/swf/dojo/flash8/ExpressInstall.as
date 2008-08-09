@@ -23,9 +23,26 @@ class ExpressInstall {
 	var updater = null
 	var hold = null
 	
+    var time = 0;
+    var timeOut = 10;    // expressed in seconds
+    var delay = 10;   // expressed in milliseconds
+
     function ExpressInstall(){
 		// does the user need to update?
 		this.needsUpdate = (_root.MMplayerType == undefined) ? false : true;	
+    }
+
+    function checkLoaded(mc){
+        if (mc.startUpdate.toString() == "[type Function]"){
+            // updater has loaded successfully
+            this.initUpdater();
+            this.updater.onEnterFrame = null;
+        } else if(this.time > this.timeOut){
+            // updater did not load in time, abort load and force alternative content
+            this.updater.unloadMovie();
+            this.callBack();
+        }
+        this.time += 1/30;
     }
 
 	function init(){
@@ -46,10 +63,7 @@ class ExpressInstall {
 
 		// can't use movieClipLoader because it has to work in 6.0.65
 		this.updater.onEnterFrame = function(){
-			if(typeof this.hold.startUpdate == 'function'){
-				_self.initUpdater();
-				this.onEnterFrame = null;
-			}
+            _self.checkLoaded(this.hold);
 		}
 
 		var cacheBuster= Math.random();
@@ -65,11 +79,16 @@ class ExpressInstall {
 		this.hold.startUpdate();
 	}
 
+	function callBack(msg = 'Download.Failed'){
+        //Debug.write('callBack', "javascript:lz.embed.dojo.installer._onInstallStatus('"+msg+"')");
+        _root.getURL("javascript:lz.embed.dojo.installer._onInstallStatus('"+msg+"')");
+    }
+
 	function onInstallStatus(msg){
         if (msg == 'Download.Complete') {
-            getURL(_root.MMredirectURL);
+            _root.getURL(_root.MMredirectURL);
         } else {
-            getURL("javascript:dojo.flash.installer._onInstallStatus('"+msg+"')");
+            this.callBack(msg);
         }
 	}
 }
