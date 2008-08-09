@@ -53,10 +53,20 @@ public class SWF9External {
   private File workdir = createCompilationWorkDir();
   private Compiler.OptionMap options;
 
-  /**
-   * The key is the 'tolower' name, the value is the actual name.
+  /*
+   * Used by getFileNameForClassName to prevent filename conflicts.
+   * The key is the 'tolower' name, the value is an ArrayList of
+   * UniqueGlobalName objects.
    */
   private HashMap uniqueFileNames = new HashMap();
+
+  public class UniqueGlobalName {
+    String globalName;
+    boolean isClass;
+    int subdirnum;    // subdirector number, 0 means top level
+  }
+
+  private int maxSubdirnum = 0;
 
   public SWF9External(Compiler.OptionMap options) {
     this.options = options;
@@ -619,6 +629,9 @@ public class SWF9External {
     }
 
     cmd.add("-compiler.source-path+=" + workdir.getPath());
+    for (int i=1; i<=maxSubdirnum; i++) {
+      cmd.add("-compiler.source-path+=" + workdir.getPath() + File.separator + i);
+    }
     if (options.getBoolean(Compiler.DEBUG_SWF9)) {
       cmd.add("-debug=true");
     }
@@ -656,23 +669,69 @@ public class SWF9External {
   }
 
   /**
-   * Checks for unique file names for files written.
-   * We do not allow files to match, or even to be differing
-   * only by case.  The latter will cause problems on
-   * file systems that merge upper/lower case names.
-   * @throw CompilerError for file name conflicts
+   * Get a unique file name for the class or global variable.  Flex
+   * requires that classes and global variables must be defined
+   * within matching file names.  For example 'var FooBar' must be in
+   * FooBar.as, and 'class foobar' must be in foobar.as.  But some
+   * file systems (like FAT32 and AFS+) do not allow file names in the
+   * same directory that only differ by case.  In order to allow
+   * names that differ by case, we use subdirectories on an as needed
+   * basis.  For example, if we see names in the order:
+   * "foo" "fOO" "BAR" "Foo" "bar"
+   * the file/directory names will be used:
+   * <pre>
+   *  "./foo.as"
+   *  "./1/fOO.as"
+   *  "./bar.as"
+   *  "./2/Foo.as"
+   *  "./1/bar.as"
+   * </pre>
+   * This system guarantees usable file names on all systems,
+   * normally keeping all files in the top level directory, and
+   * minimizes the number of subdirectories.  Each subdirectory
+   * requires an additional '-compiler.source-path+=...' argument
+   * to flex, and we'd rather not test whether there is a limit.
+   *
+   * This method also checks for class/global var names that have been
+   * used before and throws an error.
+   *
+   * A side effect of this method is to set the maxSubdirnum to the
+   * maximum of the subdirectory numbers used.
+   *
+   * @throw CompilerError for class/var names used previously.
    */
-  void checkFileNameForClassName(String name) {
+  private String getFileNameForClassName(String name, boolean isClass) {
     String lower = name.toLowerCase();
-    String existing;
-    if ((existing = (String)uniqueFileNames.get(lower)) != null) {
-      if (existing.equals(name)) {
-        throw new CompilerError("cannot declare class name more than once: \"" + name + "\"");
-      } else {
-        throw new CompilerError("class names only differ by upper/lower case: \"" + existing + "\" versus \"" + name + "\"");
+    List list = (List)uniqueFileNames.get(lower);
+
+    if (list == null) {
+      list = new ArrayList();
+      uniqueFileNames.put(lower, list);
+    } else {
+      for (Iterator iter = list.iterator(); iter.hasNext(); ) {
+        UniqueGlobalName unique = (UniqueGlobalName)iter.next();
+        if (name.equals(unique.globalName) && isClass == unique.isClass) {
+          String what = isClass ? "class" : "global var";
+          throw new CompilerError("cannot declare " + what +
+                                  " name more than once: \"" + name + "\"");
+        }
       }
     }
-    uniqueFileNames.put(lower, name);
+    int dirnum = list.size();
+    UniqueGlobalName unique = new UniqueGlobalName();
+    unique.globalName = name;
+    unique.isClass = isClass;
+    unique.subdirnum = dirnum;
+    list.add(unique);
+    String subdirname = workdir.getPath();
+    if (dirnum > 0) {
+      subdirname += File.separator + dirnum;
+    }
+    if (dirnum > maxSubdirnum) {
+      (new File(subdirname)).mkdirs();
+      maxSubdirnum = dirnum;
+    }
+    return subdirname + File.separator + name + ".as";
   }
 
   /**
@@ -695,8 +754,7 @@ public class SWF9External {
   public void writeFile(TranslationUnit tunit, String pre, String post) {
     String name = tunit.getName();
     String body = tunit.getContents();
-    checkFileNameForClassName(name);
-    String infilename = workdir.getPath() + File.separator + name + ".as";
+    String infilename = getFileNameForClassName(name, tunit.isClass());
     tunit.setSourceFileName(infilename);
     tunit.setLineOffset(countLines(pre));
 

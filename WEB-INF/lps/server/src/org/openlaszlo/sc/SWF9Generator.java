@@ -699,6 +699,7 @@ public class SWF9Generator extends JavascriptGenerator {
 
       TranslationUnit tunit = new TranslationUnit();
       tunit.setName(varname);
+      tunit.setIsClass(false);
       String decl = "public var " + varname;
       if (glovar.type != null)
         decl += ":" + glovar.type;

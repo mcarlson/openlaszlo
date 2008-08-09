@@ -1333,6 +1333,7 @@ public class ParseTreePrinter {
           case ANNOTATE_OP_CLASSNAME:
             curtu = new TranslationUnit();
             curtu.setName(operand);
+            curtu.setIsClass(true);
             tunits.add(curtu);
             return "";
           case ANNOTATE_OP_INSERTSTREAM:

@@ -28,6 +28,7 @@ public class TranslationUnit
   private boolean isMain = false;    // designated classes, like LFCApplication
   private Map streams = new HashMap(); // alternate streams, indexed by number
   private int maxInserts = 0;          // bound the number of stream insert replacements
+  private boolean isClass = true;
 
   // When these appear in the contents they will be replaced
   // by the indicated stream whenever contents is retrieved.
@@ -86,6 +87,14 @@ public class TranslationUnit
 
   public void setMainTranslationUnit(boolean value) {
     isMain = value;
+  }
+
+  public boolean isClass() {
+    return isClass;
+  }
+
+  public void setIsClass(boolean isClass) {
+    this.isClass = isClass;
   }
 
   public void addText(String s) {
