@@ -522,6 +522,7 @@ To use the debugger interactively to inspect a value, you type an expression in 
     <title>Nested views</title>
     <programlisting language="lzx">
       <textobject><textdata fileref="programs/program-development-$16.lzx"/></textobject> 
+      <parameter role="canvas">bgcolor: 'red'</parameter>
     </programlisting>
   </example>
 <para>

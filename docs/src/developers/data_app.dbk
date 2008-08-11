@@ -22,6 +22,7 @@
    <title>Defining a dataset</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/data_app-$1.lzx"/></textobject> 
+     <parameter role="canvas">bgcolor: '#D4D0C8'</parameter>
    </programlisting>
 </example>
 
@@ -55,6 +56,7 @@
    <title>Binding data to views</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/data_app-$3.lzx"/></textobject> 
+     <parameter role="canvas">bgcolor: '#D4D0C8'</parameter>
    </programlisting>
 </example>
 
@@ -88,6 +90,7 @@
    <title>Using an external dataset</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/data_app-$4.lzx"/></textobject> 
+     <parameter role="canvas">bgcolor: '#D4D0C8'</parameter>
    </programlisting>
 </example>
 
@@ -100,9 +103,10 @@
 
 
 <example role="live-example">
-   <title>using onclick handler to update data</title>
+   <title>Using onclick handler to update data</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/data_app-$5.lzx"/></textobject> 
+     <parameter role="canvas">bgcolor: '#D4D0C8'</parameter>
    </programlisting>
 </example>
 
@@ -127,6 +131,7 @@
    <title>UI for adding new contact</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/data_app-$1.lzx"/></textobject> 
+     <parameter role="canvas">bgcolor: '#D4D0C8'</parameter>
    </programlisting>
 </example>
 
@@ -156,6 +161,7 @@
    <title>Using onclick handler to add new contact</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/data_app-$8.lzx"/></textobject> 
+     <parameter role="canvas">bgcolor: '#D4D0C8'</parameter>
    </programlisting>
 </example>
 	
@@ -184,6 +190,7 @@
    <title>Using "contactview" class</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/data_app-$9.lzx"/></textobject> 
+     <parameter role="canvas">bgcolor: '#D4D0C8'</parameter>
    </programlisting>
 </example>
 

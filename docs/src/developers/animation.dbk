@@ -133,6 +133,7 @@ named attribute, or press "test" to see them all at once.</para>
   <programlistingco>
     <programlisting language="lzx">
       <textobject><textdata fileref="programs/animation-$7.lzx"/></textobject>
+      <parameter role="canvas">bgcolor: '#E5E1B0'</parameter>
     </programlisting>
     <areaspec>
       <area units="other" otherunits="/canvas[1]/view[1]/view[2]/view[2]/box[1]"/>
@@ -161,7 +162,9 @@ difference.</para>
   <programlistingco>
     <programlisting language="lzx">
       <textobject><textdata fileref="programs/animation-$8.lzx"/></textobject>
+      <parameter role="canvas">bgcolor: '#E5E1B0'</parameter>
     </programlisting>
+    <parameter role="canvas">bgcolor: '#E5E1B0'</parameter>
     <areaspec>
       <area units="other" otherunits="/canvas[1]/view[1]/view[2]/view[1]/view[1]/box[1]"/>
       <area units="other" otherunits="/canvas[1]/view[1]/view[2]/view[1]/view[2]/box[1]"/>
@@ -190,6 +193,7 @@ calculated relative to its value at the start of the animation.</para>
   <programlistingco>
     <programlisting language="lzx">
       <textobject><textdata fileref="programs/animation-$9.lzx"/></textobject>
+      <parameter role="canvas">bgcolor: '#E5E1B0'</parameter>
     </programlisting>
     <areaspec>
       <area units="other" otherunits="/canvas[1]/view[1]/view[2]/view[1]"/>
@@ -210,6 +214,7 @@ constant rate (linear).</para>
   <programlistingco>
     <programlisting language="lzx">
       <textobject><textdata fileref="programs/animation-$10.lzx"/></textobject>
+      <parameter role="canvas">bgcolor: '#E5E1B0'</parameter>
     </programlisting>
     <areaspec>
       <area units="other" otherunits="/canvas[1]/view[1]/view[2]/view[1]"/>
@@ -231,6 +236,7 @@ you can use the <indexterm><primary><literal>LzNode.animate()</literal></primary
   <programlistingco>
     <programlisting language="lzx">
       <textobject><textdata fileref="programs/animation-$11.lzx"/></textobject>
+      <parameter role="canvas">bgcolor: '#E5E1B0'</parameter>
     </programlisting>
     <areaspec>
       <area units="other" otherunits="/canvas[1]/view[1]/view[2]/box[1]"/>
@@ -264,6 +270,7 @@ effect.</para>
   <programlistingco>
     <programlisting language="lzx">
       <textobject><textdata fileref="programs/animation-$12.lzx"/></textobject>
+      <parameter role="canvas">bgcolor: '#E5E1B0'</parameter>
     </programlisting>
     <areaspec>
       <area units="other" otherunits="/canvas[1]/view[1]/view[2]/box[1]"/>
@@ -305,6 +312,7 @@ below by specifying <literal>process="sequential"</literal>.</para>
   <programlistingco>
     <programlisting language="lzx">
       <textobject><textdata fileref="programs/animation-$13.lzx"/></textobject>
+      <parameter role="canvas">bgcolor: '#E5E1B0'</parameter>
     </programlisting>
     <areaspec>
       <area units="other" otherunits="/canvas[1]/view[1]/view[2]/view[1]/box[1]"/>
@@ -353,6 +361,7 @@ initial state — there is no "reset" button.</para>
   <programlistingco>
     <programlisting language="lzx">
       <textobject><textdata fileref="programs/animation-$15.lzx"/></textobject>
+      <parameter role="canvas">bgcolor: '#E5E1B0'</parameter>
     </programlisting>
     <areaspec>
       <area units="other" otherunits="/canvas[1]/view[1]/view[2]/view[1]/simplelayout[1]"/>

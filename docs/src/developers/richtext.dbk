@@ -37,6 +37,7 @@ You can specify the html formatting directly in the <indexterm><primary>richinpu
    <title>Inline markup of rich text</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/richtext-$1.lzx"/></textobject> 
+      <parameter role="canvas">bgcolor: '#EAEAEA'</parameter>
    </programlisting>
 </example>
 
@@ -55,6 +56,7 @@ The example below demonstrates several ways that the richinputtext class can be 
    <title>Rich text manipulation</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/richtext-$2.lzx"/></textobject> 
+      <parameter role="canvas">bgcolor: '#EAEAEA'</parameter>
    </programlisting>
 </example>
 
