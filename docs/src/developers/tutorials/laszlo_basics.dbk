@@ -48,14 +48,6 @@ to the canvas. </para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Empty Canvas</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$1.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="100" bgcolor="green"&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="100" bgcolor="green"&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/laszlo_basics-$1.lzx></example?>
-
 <para>For this simple example we have set the background color to green, just to show that it's there.  If you don't set a background color for the
 canvas, it will be rendered white.  (Throughout the rest of this tutorial no background color will be specified for the canvas.) Now let's
 put a window on a white canvas. 
@@ -68,16 +60,6 @@ put a window on a white canvas.
      <parameter role="canvas">height: 100, width: 500</parameter>
    </programlisting>
 </example>
-
-<?example role="live-example"><title>Simple window</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$2.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="100"&gt;
-  &lt;window/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="100"&gt;
-  &lt;window/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/laszlo_basics-$2.lzx></example?>
 
 <para>Note the XML 
 empty tag format we're using: <indexterm><primary>window</primary></indexterm><sgmltag class="element">&lt;window&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -94,16 +76,6 @@ LZX tags can have attributes:</para>
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Specifying window size</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$3.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="300"&gt;
-  &lt;window x="20" y="20" width="200" height="250"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="300"&gt;
-  &lt;window x="20" y="20" width="200" height="250"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/laszlo_basics-$3.lzx></example?>
-
 <para>In these simple examples, all measurements are in <emphasis role="i">pixels</emphasis>. (A later <xref linkend="views"/> explains how units
 of measurement may vary in more complicated situations.)
 </para>
@@ -116,17 +88,6 @@ positioned relative to the top-left corner of the canvas.</para>
    <textobject><textdata fileref="programs/laszlo_basics-$4.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Window Title</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$4.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="350"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true" /&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="350"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true" /&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/laszlo_basics-$4.lzx></example?>
 
 <para>Now we've got a window, which both has a title, and can be resized.</para>
 <para>Notice how we're breaking the code up across lines to keep it neat. </para>
@@ -137,21 +98,6 @@ positioned relative to the top-left corner of the canvas.</para>
    <textobject><textdata fileref="programs/laszlo_basics-$5.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Window Text</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$5.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="350"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="350"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/laszlo_basics-$5.lzx></example?>
 
 <para>We've given the <indexterm><primary>window</primary></indexterm><sgmltag class="element">&lt;window&gt;</sgmltag> element a child (<literal>text</literal>), which contains the text we want written out. 
 </para>
@@ -164,23 +110,6 @@ positioned relative to the top-left corner of the canvas.</para>
    <textobject><textdata fileref="programs/laszlo_basics-$6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Overlapping text fields</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$6.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="350"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="350"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/laszlo_basics-$6.lzx></example?>
 
 <para>Eugh! The two text fields are sitting on top of each other. That's because the default place to put content
 is in the top-left hand corner. To correct this, we could position both text elements <emphasis role="i">absolutely</emphasis>, as we did 
@@ -200,23 +129,6 @@ with the window:</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Manually positioning text</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$7.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="250"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;text x="10" y="10"&gt;Here is some text.&lt;/text&gt;
-    &lt;text x="10" y="50"&gt;I could ramble for hours.&lt;/text&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="250"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;text <emphasis role="em">x="10" y="10"</emphasis>&gt;Here is some text.&lt;/text&gt;
-    &lt;text <emphasis role="em">x="10" y="50"</emphasis>&gt;I could ramble for hours.&lt;/text&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/laszlo_basics-$7.lzx></example?>
 
 <para>Notice how the text is now positioned <emphasis role="i">relative to its parent element</emphasis>, the <indexterm><primary>window</primary></indexterm><sgmltag class="element">&lt;window&gt;</sgmltag>.</para>
 <para>This worked great, and is extremely useful for positioning elements all over the place. 
@@ -234,25 +146,6 @@ But it's not very elegant when you think about the way elements flow relative to
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Simplelayout</title><programlisting role="lzx-embednew"><filename>laszlo_basics-$8.lzx</filename><parameter/><code>
-&lt;canvas width="500" height="350"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10" /&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="500" height="350"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    <emphasis role="em">&lt;simplelayout axis="y" spacing="10" /&gt;</emphasis>
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/laszlo_basics-$8.lzx></example?>
 
 <para>Now the first text field is positioned relative to the second. The <indexterm><primary>simplelayout</primary></indexterm><sgmltag class="element">&lt;simplelayout&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: simplelayout-->

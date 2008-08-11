@@ -51,219 +51,6 @@ The <ulink url="../../reference/">LZX Reference</ulink> documents all the tags, 
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Components miscellany</title><programlisting role="lzx-embednew"><filename>comp-intro-$1.lzx</filename><parameter/><code>
-&lt;canvas width="800" height="500"&gt;
-    &lt;silverstyle name="silvercolors"/&gt;
-    &lt;greenstyle name="greencolors"/&gt;
-    &lt;bluestyle name="bluecolors"/&gt;
-    &lt;view id="s1" x="20" y="20"&gt;
-        &lt;view layout="spacing:20"&gt;
-            &lt;text&gt;Choose a style to change colors...&lt;/text&gt;
-
-            &lt;view name="stylechooser" layout="axis:x; spacing:4"&gt;
-                &lt;text&gt;Style:&lt;/text&gt;
-                &lt;combobox width="120" editable="false"&gt;
-                    &lt;handler name="onselect"&gt;
-                        var colorchoice = this.getText();
-                        canvas[colorchoice+'colors'].setAttribute("isdefault", true);
-                    &lt;/handler&gt;
-
-                    &lt;textlistitem text="silver"/&gt;
-                    &lt;textlistitem text="green"/&gt;
-                    &lt;textlistitem text="blue" selected="true"/&gt;
-                &lt;/combobox&gt;
-
-            &lt;/view&gt;
-            &lt;tabslider width="250" height="200"&gt;
-                &lt;tabelement text="holiday cheer" selected="true"&gt;
-                    &lt;radiogroup&gt;
-                        &lt;radiobutton text="peace on earth"/&gt;
-                        &lt;radiobutton text="joy to the world"/&gt;
-                        &lt;radiobutton text="happy new year"/&gt;
-                    &lt;/radiogroup&gt;
-                &lt;/tabelement&gt;
-                &lt;tabelement text="housewares"&gt;
-                    &lt;simplelayout axis="y" spacing="10"/&gt;
-                    &lt;checkbox text="stainless steel"/&gt;
-                    &lt;checkbox text="glassware"/&gt;
-                &lt;/tabelement&gt;
-                &lt;tabelement text="isotope"&gt;
-                    &lt;text multiline="true" width="${immediateparent.width}"&gt;
-                        Atoms that have the same number of protons but a different number of neutrons. They are atoms of the same element that have different masses. The isotope number is the number of protons plus the number of neutrons.
-                    &lt;/text&gt;
-                &lt;/tabelement&gt;
-            &lt;/tabslider&gt;
-
-            &lt;tabs&gt;
-                &lt;tabpane&gt;Insecticides
-                    &lt;simplelayout spacing="10" inset="10"/&gt;
-                    &lt;radiogroup&gt;
-                        &lt;radiobutton&gt;Yes, I want to know more&lt;/radiobutton&gt;
-                        &lt;radiobutton&gt;No, I prefer to remain blissfully unaware&lt;/radiobutton&gt;
-                        &lt;radiobutton&gt;Please tell my neighbor, who may tell me&lt;/radiobutton&gt;
-                    &lt;/radiogroup&gt;
-                &lt;/tabpane&gt;
-                &lt;tabpane text="Subliminal"&gt;
-                    &lt;button height="22"&gt;Submit&lt;/button&gt;
-                &lt;/tabpane&gt;
-            &lt;/tabs&gt;
-        &lt;/view&gt;
-
-        &lt;window text="test window" width="250" height="250" x="410" y="180" resizable="true" id="fw" title="A Simple Window"&gt;
-            &lt;menubar name="mbar" placement="menubar"&gt;
-                 &lt;menu name="file" id="mfile" width="80"&gt;File
-                     &lt;menuitem text="item 1"/&gt;
-                     &lt;menuseparator/&gt;
-                     &lt;menuitem id="MWS" text="item 3"&gt;
-                         &lt;menu name="subedit"&gt;subedit
-                             &lt;menuitem text="subitem 1"/&gt;
-                             &lt;menuitem text="subitem 2"/&gt;
-                         &lt;/menu&gt;
-                     &lt;/menuitem&gt;
-                 &lt;/menu&gt;
-                 &lt;menu name="Options"&gt;Document
-                     &lt;menuitem text="option 1"/&gt;
-                     &lt;menuitem text="option 2"/&gt;
-                 &lt;/menu&gt;
-            &lt;/menubar&gt;
-            &lt;scrollbar/&gt;
-        &lt;/window&gt;
-
-        &lt;view layout="spacing:14"&gt;
-            &lt;button height="22"&gt;Submit&lt;/button&gt;
-            &lt;button height="22" enabled="false"&gt;disabled&lt;/button&gt;
-
-            &lt;combobox width="100"&gt;
-                &lt;textlistitem text="pistachio" selected="true"/&gt;
-                &lt;textlistitem text="chocolate chip"/&gt;
-            &lt;/combobox&gt;
-
-            &lt;radiogroup&gt;
-                &lt;radiobutton text="tension"/&gt;
-                &lt;radiobutton text="distance"/&gt;
-            &lt;/radiogroup&gt;
-        &lt;/view&gt;
-
-        &lt;view layout="spacing:20"&gt;
-            &lt;view layout="spacing:10"&gt;
-                &lt;checkbox text="I want to take a weekend flight"/&gt;
-                &lt;checkbox text="Also search airports within 70 miles"/&gt;
-            &lt;/view&gt;
-            &lt;view layout="spacing:5"&gt;
-                &lt;edittext width="200" text="text entry here"/&gt;
-                &lt;edittext width="200" text="disabled" enabled="false"/&gt;
-            &lt;/view&gt;
-        &lt;/view&gt;
-        &lt;simplelayout axis="x" spacing="20"/&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="800" height="500"&gt;
-    &lt;silverstyle name="silvercolors"/&gt;
-    &lt;greenstyle name="greencolors"/&gt;
-    &lt;bluestyle name="bluecolors"/&gt;
-    &lt;view id="s1" x="20" y="20"&gt;
-        &lt;view layout="spacing:20"&gt;
-            &lt;text&gt;Choose a style to change colors...&lt;/text&gt;
-
-            &lt;view name="stylechooser" layout="axis:x; spacing:4"&gt;
-                &lt;text&gt;Style:&lt;/text&gt;
-                &lt;combobox width="120" editable="false"&gt;
-                    &lt;handler name="onselect"&gt;
-                        var colorchoice = this.getText();
-                        canvas[colorchoice+'colors'].setAttribute("isdefault", true);
-                    &lt;/handler&gt;
-
-                    &lt;textlistitem text="silver"/&gt;
-                    &lt;textlistitem text="green"/&gt;
-                    &lt;textlistitem text="blue" selected="true"/&gt;
-                &lt;/combobox&gt;
-
-            &lt;/view&gt;
-            &lt;tabslider width="250" height="200"&gt;
-                &lt;tabelement text="holiday cheer" selected="true"&gt;
-                    &lt;radiogroup&gt;
-                        &lt;radiobutton text="peace on earth"/&gt;
-                        &lt;radiobutton text="joy to the world"/&gt;
-                        &lt;radiobutton text="happy new year"/&gt;
-                    &lt;/radiogroup&gt;
-                &lt;/tabelement&gt;
-                &lt;tabelement text="housewares"&gt;
-                    &lt;simplelayout axis="y" spacing="10"/&gt;
-                    &lt;checkbox text="stainless steel"/&gt;
-                    &lt;checkbox text="glassware"/&gt;
-                &lt;/tabelement&gt;
-                &lt;tabelement text="isotope"&gt;
-                    &lt;text multiline="true" width="${immediateparent.width}"&gt;
-                        Atoms that have the same number of protons but a different number of neutrons. They are atoms of the same element that have different masses. The isotope number is the number of protons plus the number of neutrons.
-                    &lt;/text&gt;
-                &lt;/tabelement&gt;
-            &lt;/tabslider&gt;
-
-            &lt;tabs&gt;
-                &lt;tabpane&gt;Insecticides
-                    &lt;simplelayout spacing="10" inset="10"/&gt;
-                    &lt;radiogroup&gt;
-                        &lt;radiobutton&gt;Yes, I want to know more&lt;/radiobutton&gt;
-                        &lt;radiobutton&gt;No, I prefer to remain blissfully unaware&lt;/radiobutton&gt;
-                        &lt;radiobutton&gt;Please tell my neighbor, who may tell me&lt;/radiobutton&gt;
-                    &lt;/radiogroup&gt;
-                &lt;/tabpane&gt;
-                &lt;tabpane text="Subliminal"&gt;
-                    &lt;button height="22"&gt;Submit&lt;/button&gt;
-                &lt;/tabpane&gt;
-            &lt;/tabs&gt;
-        &lt;/view&gt;
-
-        &lt;window text="test window" width="250" height="250" x="410" y="180" resizable="true" id="fw" title="A Simple Window"&gt;
-            &lt;menubar name="mbar" placement="menubar"&gt;
-                 &lt;menu name="file" id="mfile" width="80"&gt;File
-                     &lt;menuitem text="item 1"/&gt;
-                     &lt;menuseparator/&gt;
-                     &lt;menuitem id="MWS" text="item 3"&gt;
-                         &lt;menu name="subedit"&gt;subedit
-                             &lt;menuitem text="subitem 1"/&gt;
-                             &lt;menuitem text="subitem 2"/&gt;
-                         &lt;/menu&gt;
-                     &lt;/menuitem&gt;
-                 &lt;/menu&gt;
-                 &lt;menu name="Options"&gt;Document
-                     &lt;menuitem text="option 1"/&gt;
-                     &lt;menuitem text="option 2"/&gt;
-                 &lt;/menu&gt;
-            &lt;/menubar&gt;
-            &lt;scrollbar/&gt;
-        &lt;/window&gt;
-
-        &lt;view layout="spacing:14"&gt;
-            &lt;button height="22"&gt;Submit&lt;/button&gt;
-            &lt;button height="22" enabled="false"&gt;disabled&lt;/button&gt;
-
-            &lt;combobox width="100"&gt;
-                &lt;textlistitem text="pistachio" selected="true"/&gt;
-                &lt;textlistitem text="chocolate chip"/&gt;
-            &lt;/combobox&gt;
-
-            &lt;radiogroup&gt;
-                &lt;radiobutton text="tension"/&gt;
-                &lt;radiobutton text="distance"/&gt;
-            &lt;/radiogroup&gt;
-        &lt;/view&gt;
-
-        &lt;view layout="spacing:20"&gt;
-            &lt;view layout="spacing:10"&gt;
-                &lt;checkbox text="I want to take a weekend flight"/&gt;
-                &lt;checkbox text="Also search airports within 70 miles"/&gt;
-            &lt;/view&gt;
-            &lt;view layout="spacing:5"&gt;
-                &lt;edittext width="200" text="text entry here"/&gt;
-                &lt;edittext width="200" text="disabled" enabled="false"/&gt;
-            &lt;/view&gt;
-        &lt;/view&gt;
-        &lt;simplelayout axis="x" spacing="20"/&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/comp-intro-$1.lzx></example?>
 <para/>
 <para/></section><section><title>Form components and "general" components</title>
 <para>
@@ -308,43 +95,7 @@ what this looks like.
        <parameter role="canvas">height: 100</parameter>       
    </programlisting>
 </example>
-<?example role="live-example"><title>Components example-tags only</title><programlisting role="lzx-embednew"><filename>comp-intro-$2.lzx</filename><parameter/><code>
-&lt;canvas height="100"&gt;
-    &lt;simplelayout axis="x" spacing="10" inset="10"/&gt;
-    &lt;list shownitems="4"&gt;
-        &lt;textlistitem&gt;judy&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;ann&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;betsy&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;sarah&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;carol&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;danah&lt;/textlistitem&gt;
-    &lt;/list&gt;
 
-    &lt;radiogroup&gt;
-        &lt;radiobutton text="apple"/&gt;
-        &lt;radiobutton text="cherry"/&gt;
-        &lt;radiobutton text="key lime"/&gt;
-    &lt;/radiogroup&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="100"&gt;
-    &lt;simplelayout axis="x" spacing="10" inset="10"/&gt;
-    &lt;list shownitems="4"&gt;
-        &lt;textlistitem&gt;judy&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;ann&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;betsy&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;sarah&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;carol&lt;/textlistitem&gt;
-        &lt;textlistitem&gt;danah&lt;/textlistitem&gt;
-    &lt;/list&gt;
-
-    &lt;radiogroup&gt;
-        &lt;radiobutton text="apple"/&gt;
-        &lt;radiobutton text="cherry"/&gt;
-        &lt;radiobutton text="key lime"/&gt;
-    &lt;/radiogroup&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/comp-intro-$2.lzx></example?>
 <para>
 As a practical matter, you will usually need to use some script, whether in a method, or, less
 frequently, to create a component within a <indexterm><primary>script</primary></indexterm><sgmltag class="element">&lt;script&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -366,35 +117,7 @@ The following example shows how you can create buttons using tags and script.
        <parameter role="canvas">height: 150</parameter>
    </programlisting>
 </example>
-<?example role="live-example"><title>Creating components from script</title><programlisting role="lzx-embednew"><filename>comp-intro-$3.lzx</filename><parameter/><code>
-&lt;canvas height="150"&gt;
-  &lt;simplelayout/&gt;
-  &lt;!--Here is a button created with a tag --&gt;
-  &lt;button name="framitz" width="50"&gt;
-   hello
-  &lt;/button&gt;
-  &lt;script&gt;
-  //And here is a button created with using script 
-   var b = new button();
-   b.setAttribute("width", 50);
-    b.setAttribute("height", 50);
-   &lt;/script&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="150"&gt;
-  &lt;simplelayout/&gt;
-  &lt;!--Here is a button created with a tag --&gt;
-  &lt;button name="framitz" width="50"&gt;
-   hello
-  &lt;/button&gt;
-  &lt;script&gt;
-  //And here is a button created with using script 
-   var b = new button();
-   b.setAttribute("width", 50);
-    b.setAttribute("height", 50);
-   &lt;/script&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/comp-intro-$3.lzx></example?>
+
 
 
 <para>
@@ -410,39 +133,7 @@ the <literal>onclick</literal> method procedurally adds an item to the <indexter
        <parameter role="canvas">height: 150</parameter>       
    </programlisting>
 </example>
-<?example role="live-example"><title>Component APIs</title><programlisting role="lzx-embednew"><filename>comp-intro-$4.lzx</filename><parameter/><code>
-&lt;canvas height="150"&gt;
-    &lt;simplelayout spacing="10"/&gt;
-    &lt;list id="mylist" height="82"&gt;     
-        &lt;textlistitem text="something"/&gt;
-    &lt;/list&gt;
 
-    &lt;view layout="axis:x;spacing:4" &gt;
-        &lt;edittext id="item" text="new item"/&gt;
-        &lt;button text="Add" isdefault="true"&gt;
-            &lt;handler name="onclick"&gt;
-               mylist.addItem(item.getText());
-            &lt;/handler&gt;
-        &lt;/button&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="150"&gt;
-    &lt;simplelayout spacing="10"/&gt;
-    &lt;list id="mylist" height="82"&gt;     
-        &lt;textlistitem text="something"/&gt;
-    &lt;/list&gt;
-
-    &lt;view layout="axis:x;spacing:4" &gt;
-        &lt;edittext id="item" text="new item"/&gt;
-        &lt;button text="Add" isdefault="true"&gt;
-         <emphasis role="em">   &lt;handler name="onclick"&gt;
-               mylist.addItem(item.getText());
-            &lt;/handler&gt;</emphasis>
-        &lt;/button&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/comp-intro-$4.lzx></example?>
 
 <para/></section><section><title>Data-Driven Components</title>
 <para>
@@ -457,34 +148,6 @@ for each matching node in the "mydata" dataset.
        <parameter role="canvas">height: 200, width:800</parameter>       
    </programlisting>
 </example>
-<?example role="live-example"><title>Data-Driven Components</title><programlisting role="lzx-embednew"><filename>comp-intro-$5.lzx</filename><parameter/><code>
-&lt;canvas height="200"&gt;
-    &lt;dataset name="mydata" src="../contacts.xml" request="true"/&gt;
-    &lt;simplelayout axis="x" spacing="10" inset="10"/&gt;
-    &lt;list id="a"&gt;
-        &lt;textlistitem datapath="mydata:/contacts/person"
-                      text="$path{'@firstname'}"/&gt;
-    &lt;/list&gt;
 
-    &lt;list id="b" shownitems="4"&gt;
-        &lt;textlistitem datapath="mydata:/contacts/person"
-                      text="$path{'@firstname'}"/&gt;
-    &lt;/list&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="200"&gt;
-    &lt;dataset name="mydata" src="../contacts.xml" request="true"/&gt;
-    &lt;simplelayout axis="x" spacing="10" inset="10"/&gt;
-    &lt;list id="a"&gt;
-        &lt;textlistitem datapath="mydata:/contacts/person"
-                      text="$path{'@firstname'}"/&gt;
-    &lt;/list&gt;
-
-    &lt;list id="b" shownitems="4"&gt;
-        &lt;textlistitem datapath="mydata:/contacts/person"
-                      text="$path{'@firstname'}"/&gt;
-    &lt;/list&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/comp-intro-$5.lzx></example?>
 
 <para/></section></section></chapter>

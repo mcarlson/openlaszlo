@@ -17,27 +17,6 @@ In this tutorial you'll learn how to do more complex and powerful interactions a
    <textobject><textdata fileref="programs/views-tutorial-$1.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Simple window</title><programlisting role="lzx-embednew"><filename>views-tutorial-$1.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-    &lt;window x="20" y="20" width="200" height="250" 
-            title="Simple Window" resizable="true"&gt;
-        &lt;simplelayout axis="y" spacing="10"/&gt;
-        &lt;text&gt;Here is some text.&lt;/text&gt;
-        &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-        &lt;button&gt;My Button&lt;/button&gt;
-    &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-    &lt;window x="20" y="20" width="200" height="250" 
-            title="Simple Window" resizable="true"&gt;
-        &lt;simplelayout axis="y" spacing="10"/&gt;
-        &lt;text&gt;Here is some text.&lt;/text&gt;
-        &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-        &lt;button&gt;My Button&lt;/button&gt;
-    &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$1.lzx></example?>
 
 <para>We've added a button (My Button) just to remind us of how the <indexterm><primary>simplelayout</primary></indexterm><sgmltag class="element">&lt;simplelayout&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: simplelayout-->
@@ -66,31 +45,7 @@ which will help you build more complex views.</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Constraining button position relative to window</title><programlisting role="lzx-embednew"><filename>views-tutorial-$2.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${immediateparent.width / 2}" &gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button <emphasis role="em">x="${immediateparent.width / 2}" </emphasis>&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$2.lzx></example?>
+
 
 <para>What we've said here is "constrain the x position of the button to half the width of its parent". 
 Actually we said "<literal>immediateparent</literal>". What's that about?</para>
@@ -124,31 +79,7 @@ by half of that.  </para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Centering the button</title><programlisting role="lzx-embednew"><filename>views-tutorial-$3.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-        title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button width="160" x="${immediateparent.width / 2 - 80}"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-        title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button <emphasis role="em">width="160"</emphasis> x="${immediateparent.width / 2 - 80}"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$3.lzx></example?>
+
 
 <para>That works but it's not a general solution. We want the button to always be in the middle of the window even if it changes width. 
 Here's how we do that:</para>
@@ -164,33 +95,6 @@ Here's how we do that:</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>A button that stays centered</title><programlisting role="lzx-embednew"><filename>views-tutorial-$4.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) 
-                       - (this.width / 2)}"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="<emphasis role="em">${(immediateparent.width / 2) 
-                       - (this.width / 2)}</emphasis>"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$4.lzx></example?>
 
 <para>This will center the button regardless of its size. Parenthesis have been added to clarify the execution order of the code.
 To prove that the button will remain centered, we'll add an onclick script to the button that will resize it.</para>
@@ -209,35 +113,6 @@ We'll revisit this topic in the "Scripting" tutorial.</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Growing button</title><programlisting role="lzx-embednew"><filename>views-tutorial-$5.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-            title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) 
-                         - (this.width / 2)}"
-      onclick="this.setAttribute('width', this.getAttribute('width') + 10);" &gt;
-        My Button
-      &lt;/button&gt;
-   &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-            title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) 
-                         - (this.width / 2)}"
-      <emphasis role="em">onclick="this.setAttribute('width', this.getAttribute('width') + 10);" </emphasis>&gt;
-        My Button
-      &lt;/button&gt;
-   &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$5.lzx></example?>
 
 <para>Notice that as the button grows, it still stays centered.</para>
 <para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>
@@ -267,41 +142,7 @@ We can try adding a few buttons at the top:</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Vertically aligned buttons</title><programlisting role="lzx-embednew"><filename>views-tutorial-$6.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;button&gt;1&lt;/button&gt;
-    &lt;button&gt;2&lt;/button&gt;
-    &lt;button&gt;3&lt;/button&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) 
-                       - (this.width / 2)}"
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    <emphasis role="em">&lt;button&gt;1&lt;/button&gt;
-    &lt;button&gt;2&lt;/button&gt;
-    &lt;button&gt;3&lt;/button&gt;</emphasis>
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) 
-                       - (this.width / 2)}"
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$6.lzx></example?>
+
 
 <para>We can't change the <indexterm><primary>simplelayout</primary></indexterm><sgmltag class="element">&lt;simplelayout&gt;</sgmltag> tag, because that would
 make a mess of the other elements in the window. Instead we can put all three buttons in 
@@ -319,47 +160,7 @@ their <emphasis role="i">own</emphasis> view, and that view will then become a s
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Grouping buttons in a &lt;view&gt;</title><programlisting role="lzx-embednew"><filename>views-tutorial-$7.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;view bgcolor="#ff0000"&gt;
-      &lt;simplelayout axis="x" spacing="5"/&gt;
-      &lt;button&gt;1&lt;/button&gt;
-      &lt;button&gt;2&lt;/button&gt;
-      &lt;button&gt;3&lt;/button&gt;
-    &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2)
-                       - (this.width / 2)}"
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-      <emphasis role="em">&lt;view bgcolor="#ff0000"&gt;
-      &lt;simplelayout axis="x" spacing="5"/&gt;</emphasis>
-      &lt;button&gt;1&lt;/button&gt;
-      &lt;button&gt;2&lt;/button&gt;
-      &lt;button&gt;3&lt;/button&gt;
-    <emphasis role="em">&lt;/view&gt;</emphasis>
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2)
-                       - (this.width / 2)}"
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$7.lzx></example?>
+
 <para role="todo"><remark role="todo"><emphasis role="para-label">TODO: </emphasis>
 mention property that we're illustrating here--views grow to accommodate
 </remark></para>
@@ -384,47 +185,7 @@ color, that stretches from end to end?</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Constraining a width to parent's width</title><programlisting role="lzx-embednew"><filename>views-tutorial-$8.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-            title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;view bgcolor="#ff0000"
-          width="${parent.width}"&gt;
-      &lt;simplelayout axis="x" spacing="5"/&gt;
-      &lt;button&gt;1&lt;/button&gt;
-      &lt;button&gt;2&lt;/button&gt;
-      &lt;button&gt;3&lt;/button&gt;
-    &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}"
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-            title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;view bgcolor="#ff0000"
-          <emphasis role="em">width="${parent.width}"</emphasis>&gt;
-      &lt;simplelayout axis="x" spacing="5"/&gt;
-      &lt;button&gt;1&lt;/button&gt;
-      &lt;button&gt;2&lt;/button&gt;
-      &lt;button&gt;3&lt;/button&gt;
-    &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}"
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$8.lzx></example?>
+
 
 <para>Now the view stretches across, but if you look at the toolbars you'll notice that they are a little bit taller than the buttons they contain. To make our buttons look the same, we could set an absolute height, but let's make it dependent on one of the buttons:</para>
 
@@ -440,49 +201,7 @@ color, that stretches from end to end?</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Constraining view to child's height</title><programlisting role="lzx-embednew"><filename>views-tutorial-$9.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-            title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;view bgcolor="#ff0000"
-                  width="${parent.width}"
-                  height="${this.refButton.height + 8}"&gt;
-      &lt;simplelayout axis="x" spacing="5"/&gt;
-      &lt;button name="refButton"&gt;1&lt;/button&gt;
-      &lt;button&gt;2&lt;/button&gt;
-      &lt;button&gt;3&lt;/button&gt;
-    &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button 
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-            title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;view bgcolor="#ff0000"
-                  width="${parent.width}"
-                  <emphasis role="em">height="${this.refButton.height + 8}"</emphasis>&gt;
-      &lt;simplelayout axis="x" spacing="5"/&gt;
-      &lt;button <emphasis role="em">name="refButton"</emphasis>&gt;1&lt;/button&gt;
-      &lt;button&gt;2&lt;/button&gt;
-      &lt;button&gt;3&lt;/button&gt;
-    &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button 
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$9.lzx></example?>
+
 
 <para>In order to be able to reference a particular button, we had to give it a <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> attribute.</para>
 
@@ -499,53 +218,7 @@ color, that stretches from end to end?</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Using the 'valign' attribute</title><programlisting role="lzx-embednew"><filename>views-tutorial-$10.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;view bgcolor="#ff0000"
-            width="${parent.width}"
-            height="${this.refButton.height + 8}"&gt;
-        &lt;simplelayout axis="x" spacing="5"/&gt;
-        &lt;button name="refButton" valign="middle"&gt;
-          1
-        &lt;/button&gt;
-        &lt;button&gt;2&lt;/button&gt;
-        &lt;button&gt;3&lt;/button&gt;
-      &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button 
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;view bgcolor="#ff0000"
-            width="${parent.width}"
-            height="${this.refButton.height + 8}"&gt;
-        &lt;simplelayout axis="x" spacing="5"/&gt;
-        &lt;button name="refButton" <emphasis role="em">valign="middle"</emphasis>&gt;
-          1
-        &lt;/button&gt;
-        &lt;button&gt;2&lt;/button&gt;
-        &lt;button&gt;3&lt;/button&gt;
-      &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button 
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$10.lzx></example?>
+
 
 <para>The <indexterm><primary>valign</primary></indexterm><sgmltag class="attribute">valign</sgmltag> attribute aligns the view to the middle of its parent's height. It can take a value of <literal>top</literal>, <literal>middle</literal> or <literal>bottom</literal>. There is an <indexterm><primary>align</primary></indexterm><sgmltag class="attribute">align</sgmltag> attribute that aligns views to the x-axis. The only problem with using that here is that we'd have to give each button an <indexterm><primary>align</primary></indexterm><sgmltag class="attribute">align</sgmltag> attribute.</para>
 
@@ -563,53 +236,6 @@ color, that stretches from end to end?</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Applying 'valign' to container view</title><programlisting role="lzx-embednew"><filename>views-tutorial-$11.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;view bgcolor="#ff0000"
-          width="${parent.width}"
-          height="${this.buttons.refButton.height + 8}"&gt;
-      &lt;simplelayout axis="x" spacing="5"/&gt;
-      &lt;view name="buttons" valign="middle"&gt;
-        &lt;button name="refButton"&gt;1&lt;/button&gt;
-        &lt;button&gt;2&lt;/button&gt;
-        &lt;button&gt;3&lt;/button&gt;
-      &lt;/view&gt;
-    &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button 
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-    &lt;view bgcolor="#ff0000"
-          width="${parent.width}"
-          height="<emphasis role="em">${this.buttons.refButton.height</emphasis> + 8}"&gt;
-      &lt;simplelayout axis="x" spacing="5"/&gt;
-      <emphasis role="em">&lt;view name="buttons" valign="middle"&gt;</emphasis>
-        &lt;button name="refButton"&gt;1&lt;/button&gt;
-        &lt;button&gt;2&lt;/button&gt;
-        &lt;button&gt;3&lt;/button&gt;
-      <emphasis role="em">&lt;/view&gt;</emphasis>
-    &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button 
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$11.lzx></example?>
 
 <para>OK, we seem to have lost buttons one and two, but let's come back
 to that. You'll notice that we gave the new view a name: "buttons". We
@@ -634,53 +260,7 @@ which is inside the red view.</para>
      </programlisting>
    </programlistingco>
 </example>
-<?example role="live-example"><title>Using &lt;simplelayout&gt; to align buttons</title><programlisting role="lzx-embednew"><filename>views-tutorial-$12.lzx</filename><parameter/><code>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;view bgcolor="#bdbdbd"
-            width="${parent.width}"
-            height="${this.buttons.refButton.height + 8}"&gt;
-        &lt;view name="buttons" valign="middle"&gt;
-          &lt;simplelayout axis="x" spacing="5"/&gt;
-          &lt;button name="refButton"&gt;1&lt;/button&gt;
-          &lt;button&gt;2&lt;/button&gt;
-          &lt;button&gt;3&lt;/button&gt;
-        &lt;/view&gt;
-      &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button 
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="300" width="500"&gt;
-  &lt;window x="20" y="20" width="200" height="250" 
-          title="Simple Window" resizable="true"&gt;
-    &lt;simplelayout axis="y" spacing="10"/&gt;
-      &lt;view <emphasis role="em">bgcolor="#bdbdbd"</emphasis>
-            width="${parent.width}"
-            height="${this.buttons.refButton.height + 8}"&gt;
-        &lt;view name="buttons" valign="middle"&gt;
-          <emphasis role="em">&lt;simplelayout axis="x" spacing="5"/&gt;</emphasis>
-          &lt;button name="refButton"&gt;1&lt;/button&gt;
-          &lt;button&gt;2&lt;/button&gt;
-          &lt;button&gt;3&lt;/button&gt;
-        &lt;/view&gt;
-      &lt;/view&gt;
-    &lt;text&gt;Here is some text.&lt;/text&gt;
-    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
-    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
-            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
-      My Button 
-    &lt;/button&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/views-tutorial-$12.lzx></example?>
+
 
 <para>We changed the color of the view to make it look better. 
 </para>

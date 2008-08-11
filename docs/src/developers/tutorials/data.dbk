@@ -21,50 +21,6 @@
    </programlisting>
 </example>
 
-<?example role="live-example"><title>Datasets</title><programlisting role="lzx-embednew"><filename>data-tutorial-$1.lzx</filename><parameter/><code>
-&lt;canvas height="80" width="500" &gt;
-  &lt;dataset name="myData"&gt;
-    &lt;myXML&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Homer&lt;/firstName&gt;
-        &lt;lastName&gt;Simpson&lt;/lastName&gt;
-      &lt;/person&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Marge&lt;/firstName&gt;
-        &lt;lastName&gt;Simpson&lt;/lastName&gt;
-      &lt;/person&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
-        &lt;lastName&gt;Burns&lt;/lastName&gt;
-      &lt;/person&gt;
-    &lt;/myXML&gt;
-  &lt;/dataset&gt;
-  
-  &lt;text datapath="myData:/myXML[1]/person[1]/firstName[1]/text()"/&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="80" width="500" &gt;
-  &lt;dataset name="myData"&gt;
-    &lt;myXML&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Homer&lt;/firstName&gt;
-        &lt;lastName&gt;Simpson&lt;/lastName&gt;
-      &lt;/person&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Marge&lt;/firstName&gt;
-        &lt;lastName&gt;Simpson&lt;/lastName&gt;
-      &lt;/person&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
-        &lt;lastName&gt;Burns&lt;/lastName&gt;
-      &lt;/person&gt;
-    &lt;/myXML&gt;
-  &lt;/dataset&gt;
-  
-  &lt;text datapath="myData:/myXML[1]/person[1]/firstName[1]/text()"/&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/data-tutorial-$1.lzx></example?>
-
 <para>In the above example, the single root element is myXML. The <indexterm><primary>datapath</primary></indexterm><sgmltag class="attribute">datapath</sgmltag> attribute of the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: text-->
  tag binds it to the data.</para>
@@ -99,59 +55,7 @@
    <textobject><textdata fileref="programs/data-tutorial-$2.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Assigning a datapath to a view</title><programlisting role="lzx-embednew"><filename>data-tutorial-$2.lzx</filename><parameter/><code>
-&lt;canvas height="80" width="500"&gt;
-  &lt;dataset name="myData"&gt;
-    &lt;myXML&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Homer&lt;/firstName&gt;
-        &lt;lastName&gt;Simpson&lt;/lastName&gt;
-      &lt;/person&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Marge&lt;/firstName&gt;
-        &lt;lastName&gt;Simpson&lt;/lastName&gt;
-      &lt;/person&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
-        &lt;lastName&gt;Burns&lt;/lastName&gt;
-      &lt;/person&gt;
-    &lt;/myXML&gt;
-  &lt;/dataset&gt;
 
-  &lt;view name="rowOfData" datapath="myData:/myXML[1]/person[1]"&gt;
-    &lt;simplelayout axis="x" /&gt;
-    &lt;text datapath="firstName/text()" /&gt; 
-    &lt;text datapath="lastName/text()" /&gt; 
-    &lt;text datapath="@show" /&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="80" width="500"&gt;
-  &lt;dataset name="myData"&gt;
-    &lt;myXML&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Homer&lt;/firstName&gt;
-        &lt;lastName&gt;Simpson&lt;/lastName&gt;
-      &lt;/person&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Marge&lt;/firstName&gt;
-        &lt;lastName&gt;Simpson&lt;/lastName&gt;
-      &lt;/person&gt;
-      &lt;person show="simpsons"&gt;
-        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
-        &lt;lastName&gt;Burns&lt;/lastName&gt;
-      &lt;/person&gt;
-    &lt;/myXML&gt;
-  &lt;/dataset&gt;
-
-  &lt;view name="rowOfData" <emphasis role="em">datapath="myData:/myXML[1]/person[1]"</emphasis>&gt;
-    &lt;simplelayout axis="x" /&gt;
-    &lt;text <emphasis role="em">datapath="firstName/text()"</emphasis> /&gt; 
-    &lt;text <emphasis role="em">datapath="lastName/text()"</emphasis> /&gt; 
-    &lt;text <emphasis role="em">datapath="@show"</emphasis> /&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/data-tutorial-$2.lzx></example?>
 
 <para>The datapath of the entire <varname>rowOfData</varname> view has now become Homer's <varname>person</varname> node. The child elements of <varname>rowOfData</varname> inherit this, so their datapaths can be referenced relatively.</para>
 
@@ -165,65 +69,7 @@
    <textobject><textdata fileref="programs/data-tutorial-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Range of nodes</title><programlisting role="lzx-embednew"><filename>data-tutorial-$3.lzx</filename><parameter/><code>
-&lt;canvas height="80" width="500" &gt;
-  &lt;dataset name="myData"&gt;
-    &lt;myXML&gt;
-        &lt;person show="simpsons"&gt;
-          &lt;firstName&gt;Homer&lt;/firstName&gt;
-          &lt;lastName&gt;Simpson&lt;/lastName&gt;
-        &lt;/person&gt;
-        &lt;person show="simpsons"&gt;
-          &lt;firstName&gt;Marge&lt;/firstName&gt;
-          &lt;lastName&gt;Simpson&lt;/lastName&gt;
-        &lt;/person&gt;
-        &lt;person show="simpsons"&gt;
-          &lt;firstName&gt;Montgomery&lt;/firstName&gt;
-          &lt;lastName&gt;Burns&lt;/lastName&gt;
-        &lt;/person&gt;
-      &lt;/myXML&gt;
-  &lt;/dataset&gt;
 
-  &lt;view name="myTable"&gt;
-    &lt;simplelayout axis="y" /&gt;
-    &lt;view name="rowOfData" datapath="myData:/myXML[1]/person"&gt;
-      &lt;simplelayout axis="x" /&gt;
-      &lt;text datapath="firstName/text()" /&gt; 
-      &lt;text datapath="lastName/text()" /&gt; 
-      &lt;text datapath="@show" /&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="80" width="500" &gt;
-  &lt;dataset name="myData"&gt;
-    &lt;myXML&gt;
-        &lt;person show="simpsons"&gt;
-          &lt;firstName&gt;Homer&lt;/firstName&gt;
-          &lt;lastName&gt;Simpson&lt;/lastName&gt;
-        &lt;/person&gt;
-        &lt;person show="simpsons"&gt;
-          &lt;firstName&gt;Marge&lt;/firstName&gt;
-          &lt;lastName&gt;Simpson&lt;/lastName&gt;
-        &lt;/person&gt;
-        &lt;person show="simpsons"&gt;
-          &lt;firstName&gt;Montgomery&lt;/firstName&gt;
-          &lt;lastName&gt;Burns&lt;/lastName&gt;
-        &lt;/person&gt;
-      &lt;/myXML&gt;
-  &lt;/dataset&gt;
-
-  &lt;view name="myTable"&gt;
-    &lt;simplelayout axis="y" /&gt;
-    &lt;view name="rowOfData" datapath="myData:/myXML[1]/person"&gt;
-      &lt;simplelayout axis="x" /&gt;
-      &lt;text datapath="firstName/text()" /&gt; 
-      &lt;text datapath="lastName/text()" /&gt; 
-      &lt;text datapath="@show" /&gt;
-    &lt;/view&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/data-tutorial-$3.lzx></example?>
 
 <para>Whichever tag contains the <indexterm><primary>datapath</primary></indexterm><sgmltag class="attribute">datapath</sgmltag> attribute will get repeated as often as is necessary.</para>
 
@@ -299,37 +145,7 @@
    <textobject><textdata fileref="programs/data-tutorial-$6.lzx"/></textobject> 
    </programlisting>
 </example>
-<?example role="live-example"><title>Manipulating datapointers</title><programlisting role="lzx-embednew"><filename>data-tutorial-$6.lzx</filename><parameter/><code>
-&lt;canvas height="180" width="500" debug="true"&gt;
-  &lt;dataset name="myData" src="../myShowData.xml" /&gt;
-  
-  &lt;datapointer xpath="myData:/" ondata="processData()"&gt;
-    &lt;method name="processData"&gt;
-      this.selectChild(2); 
-      do {
-        if (this.xpathQuery( '@show' ) == 'south park') {
-            Debug.write(this.xpathQuery('firstName/text()'));
-        }
-      } while (this.selectNext()); 
-    &lt;/method&gt;
-  &lt;/datapointer&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas height="180" width="500" debug="true"&gt;
-  &lt;dataset name="myData" src="../myShowData.xml" /&gt;
-  
-  &lt;datapointer xpath="myData:/" ondata="processData()"&gt;
-    &lt;method name="processData"&gt;
-      this.selectChild(2); 
-      do {
-        if (this.xpathQuery( '@show' ) == 'south park') {
-            Debug.write(this.xpathQuery('firstName/text()'));
-        }
-      } while (this.selectNext()); 
-    &lt;/method&gt;
-  &lt;/datapointer&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/data-tutorial-$6.lzx></example?>
+
 
   <para>For brevity's sake, we are writing to the debugger, and we are including the data from a local file. You can download that XML file <ulink url="http://labs.openlaszlo.org/trunk-nightly/docs/developers/programs/resources/myShowData.xml">here</ulink>, and here's what it looks like:</para>
   <programlisting>
