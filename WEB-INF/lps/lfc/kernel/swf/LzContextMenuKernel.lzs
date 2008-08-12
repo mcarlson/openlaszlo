@@ -14,11 +14,9 @@
   */
 class LzContextMenuKernel {
 
-function LzContextMenuKernel (newowner:LzContextMenu)
-{
+function LzContextMenuKernel (newowner:LzContextMenu) {
     this.owner = newowner;
 
-    // set callback for Flash "onSelect" event
     this.cm = new ContextMenu();
     this.cm.hideBuiltInItems();
 }
@@ -37,13 +35,12 @@ var cm:ContextMenu = null;
   */
 function setDelegate (delegate) {
     var __litem__ = this.owner;
-    var callback =  function (mc,cmitem) {
+    var callback = function (mc, cmitem) {
         if (delegate != null) delegate.execute(__litem__);
         if (__litem__.onmenuopen.ready) __litem__.onmenuopen.sendEvent(__litem__);
     };
     this.cm.onSelect = callback;
 }
-
 
 /**
   * LzContextMenu.addItem
@@ -61,6 +58,18 @@ function addItem (item) {
   */
 function hideBuiltInItems () {
     this.cm.hideBuiltInItems();
+}
+
+/**
+  * LzContextMenu.showBuiltInItems
+  * @access private
+  */
+function showBuiltInItems () :void {
+    var builtins:Object = this.cm.builtInItems;
+    // display only 'useful' items in respect of a RIA!
+    builtins.print = true;
+    builtins.quality = true;
+    builtins.zoom = true;
 }
 
 /**
@@ -90,11 +99,10 @@ function __LZcontextMenu () {
   */
 class LzContextMenuItemKernel {
 
-function LzContextMenuItemKernel (newowner:LzContextMenuItem, title, del)
-{
+function LzContextMenuItemKernel (newowner:LzContextMenuItem, title, del) {
     this.owner = newowner;
     this.cmenuitem = new ContextMenuItem(title);
-    this.setDelegate (del);
+    this.setDelegate(del);
 }
 
 var owner:LzContextMenuItem = null;
@@ -111,14 +119,14 @@ var cmenuitem:ContextMenuItem = null;
   */
 function setDelegate (delegate) {
   var __litem__ = this.owner;
-  var callback =  function (mc,cmitem) {
+  var callback = function (mc, cmitem) {
       if (delegate != null) {
           if (typeof(delegate) == 'function') {
               delegate();
           } else if (delegate instanceof LzDelegate) {
               delegate.execute(__litem__);
-          } else {
-              Debug.error("LzContextMenuItem.setDelegate must be passed a delegate or function", this, delegate);
+          } else if ($debug) {
+              Debug.error("LzContextMenuItem.setDelegate must be passed a delegate or function", __litem__, delegate);
           }
       }
       if (__litem__.onselect.ready) __litem__.onselect.sendEvent(__litem__);

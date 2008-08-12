@@ -14,12 +14,10 @@
   */
 class LzContextMenuKernel {
 
-function LzContextMenuKernel (newowner:LzContextMenu)
-{
+function LzContextMenuKernel (newowner:LzContextMenu) {
     this.owner = newowner;
 
-    // set callback for "oncontextmenu" event
-    this.__LZmousedowndel = new LzDelegate( this , "__hide");
+    this.__LZmousedowndel = new LzDelegate(this, "__hide");
 }
 
 var owner:LzContextMenu = null;
@@ -40,7 +38,6 @@ function setDelegate (delegate) {
     this._delegate = delegate;
 }
 
-
 /**
   * LzContextMenu.addItem
   * Adds a menu items into a menu
@@ -48,6 +45,10 @@ function setDelegate (delegate) {
   * @access private
   */
 function addItem (item) {
+    if (LzMouseKernel.__showncontextmenu === this) {
+        this.__hide();
+        this.__show(false);
+    }
 }
 
 /**
@@ -59,15 +60,27 @@ function hideBuiltInItems () {
 }
 
 /**
+  * LzContextMenu.showBuiltInItems
+  * @access private
+  */
+function showBuiltInItems () {
+    this.showbuiltins = true;
+}
+
+/**
   * LzContextMenu.clearItems
   * Remove all custom items from a menu
   * @access private
   */
 function clearItems () {
+    if (LzMouseKernel.__showncontextmenu === this) {
+        this.__hide();
+        this.__show(false);
+    }
 }
 
 /** @access private */
-function __show () {
+function __show (send=true) {
     var s = document.getElementById('lzcontextmenu')
     if (! s) {
         s = document.createElement('div');
@@ -75,61 +88,68 @@ function __show () {
         lz.embed.__setAttr(s, 'style', 'display: none');
         document.body.appendChild(s);
     }
-    if (this.owner.onmenuopen.ready) this.owner.onmenuopen.sendEvent(this.owner);
+    var owner = this.owner;
+    if (send && owner.onmenuopen.ready) owner.onmenuopen.sendEvent(owner);
 
     var o = '';
-    var items = this.owner.getItems();
+    var shownItems = 0;
+    var items = owner.getItems();
+    var _items = {};
     for (var i = 0; i < items.length; i++) {
         var cm = items[i].kernel;
         var v = cm.cmenuitem;
         if (v.visible != true) continue; 
         if (v.separatorBefore) o += '<br/>';
 
+        var caption = v.caption;
         // Don't display the same item twice (matches swf behavior)
-        var duplicate = false;
-        for (var j=0; j<i; j++) {
-            if (cm._equals(items[j].kernel)) {
-              duplicate = true;
-              break;
-            }
-        }
-        if (duplicate)
-            continue;
+        if (caption in _items) continue;
+        // Mark as displayed
+        _items[caption] = true;
+        shownItems += 1;
 
         if (v.enabled) {
-            o += '<a onmousedown="javascript:LzMouseKernel.__showncontextmenu.__select(' + i + ');return false;"'
-            o +='>' + v.caption + '</a>';
+            o += '<a href="" onmousedown="javascript:LzMouseKernel.__showncontextmenu.__select(' + i + ');return false;">'
+                    + caption + '</a>';
         } else {
-            o += v.caption;
+            o += caption;
         }
     }
+    
     LzMouseKernel.__showncontextmenu = this;
 
     s.innerHTML = o;
-    s.style.left = LzMouseKernel.__x + 'px';
-    s.style.top = LzMouseKernel.__y + 'px';
-    s.style.display = 'block';
+    if (send) {
+        s.style.left = LzMouseKernel.__x + 'px';
+        s.style.top = LzMouseKernel.__y + 'px';
+    }
+    
+    // Only show menu if there are any visible items
+    if (shownItems) {
+        s.style.display = 'block';
+    }
 
     this.__LZmousedowndel.register(lz.GlobalMouse, 'onmousedown');
 
-    if (this._delegate != null) this._delegate.execute(this);
+    var del = this._delegate;
+    if (send && del != null) del.execute(owner);
 }
 
 /** @access private */
-function __hide(ignore) {
+function __hide (ignore) {
     var s = document.getElementById('lzcontextmenu')
     if (! s) return;
     s.style.display = 'none';
     this.__LZmousedowndel.unregisterAll();
+    LzMouseKernel.__showncontextmenu = null;
 }
 
 /** @access private */
-function __select(i) {
+function __select (i) {
     this.__hide();
     var items = this.owner.getItems();
     if (items[i]) items[i].kernel.__select();
 }
-
 
 }; // End of LzContextMenuKernel
 
@@ -140,11 +160,10 @@ function __select(i) {
   */
 class LzContextMenuItemKernel {
 
-function LzContextMenuItemKernel (newowner:LzContextMenuItem, title, del)
-{
+function LzContextMenuItemKernel (newowner:LzContextMenuItem, title, del) {
     this.owner = newowner;
     this.cmenuitem = {visible: true, enabled: true, separatorBefore: false, caption: title};
-    this.setDelegate (del);
+    this.setDelegate(del);
 }
 
 var owner:LzContextMenuItem = null;
@@ -214,26 +233,19 @@ function setVisible (val) {
 }
 
 /** @access private */
-function __select() {
-    if (this.owner.onselect.ready) this.owner.onselect.sendEvent(this.owner);
-    if (this._delegate != null) {
-        if (this._delegate instanceof LzDelegate) {
-            this._delegate.execute(this);
-        } else if (typeof this._delegate == 'function') {
-            this._delegate(this);
-        } else {
-            if ($debug) {
-                Debug.error("LzContextMenuItem.setDelegate must be passed a delegate", this, this._delegate);
-            }
+function __select () {
+    var owner = this.owner;
+    var delegate = this._delegate;
+    if (delegate != null) {
+        if (delegate instanceof LzDelegate) {
+            delegate.execute(owner);
+        } else if (typeof delegate == 'function') {
+            delegate();
+        } else if ($debug) {
+            Debug.error("LzContextMenuItem.setDelegate must be passed a delegate", owner, delegate);
         }
     }
+    if (owner.onselect.ready) owner.onselect.sendEvent(owner);
 }
-
-/** @access private */
-// Must match the behavior of swf (only the caption is matched)
-function _equals (cm) {
-  return (cm != null) && (this.cmenuitem.caption == cm.cmenuitem.caption);
-}
-
 
 }; // End of LzContextMenuItemKernel

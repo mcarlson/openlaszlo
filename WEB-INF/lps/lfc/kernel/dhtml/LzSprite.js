@@ -246,7 +246,8 @@ LzSprite.prototype.__defaultStyles = {
 LzSprite.prototype.__defaultStyles['#lzcontextmenu a'] = {
    color: '#000',
    display: 'block',
-   textDecoration: 'none'
+   textDecoration: 'none',
+   cursor: 'default'
 };
 LzSprite.prototype.__defaultStyles['#lzcontextmenu a:hover'] = {
    color: '#FFF',

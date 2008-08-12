@@ -23,11 +23,9 @@ class LzContextMenuKernel {
     import flash.ui.*;
     }#
 
-function LzContextMenuKernel (newowner:LzContextMenu)
-{
+function LzContextMenuKernel (newowner:LzContextMenu) {
     this.owner = newowner;
 
-    // set callback for Flash "onSelect" event
     this.cm = new ContextMenu();
     this.cm.hideBuiltInItems();
 }
@@ -44,15 +42,14 @@ var cm:ContextMenu = null;
   * 
   * @access private
   */
-function setDelegate (delegate) {
+function setDelegate (delegate) :void {
   var __litem__ = this.owner;
-  var callback =  function (mc,cmitem) {
+  var callback = function (mc, cmitem) {
       if (delegate != null) delegate.execute(__litem__);
       if (__litem__.onmenuopen.ready) __litem__.onmenuopen.sendEvent(__litem__);
   };
-  this.cm.addEventListener(ContextMenuEvent.MENU_SELECT , callback);
+  this.cm.addEventListener(ContextMenuEvent.MENU_SELECT, callback);
 }
-
 
 /**
   * LzContextMenu.addItem
@@ -60,7 +57,7 @@ function setDelegate (delegate) {
   * @param LzContextMenuItem item: LzContextMenuItem to install on this menu
   * @access private
   */
-function addItem (item) {
+function addItem (item) :void {
     this.cm.customItems.push(item.kernel.cmenuitem);
 }
 
@@ -68,8 +65,20 @@ function addItem (item) {
   * LzContextMenu.hideBuiltInItems
   * @access private
   */
-function hideBuiltInItems () {
+function hideBuiltInItems () :void {
     this.cm.hideBuiltInItems();
+}
+
+/**
+  * LzContextMenu.showBuiltInItems
+  * @access private
+  */
+function showBuiltInItems () :void {
+    var builtins:ContextMenuBuiltInItems = this.cm.builtInItems;
+    // display only 'useful' items in respect of a RIA!
+    builtins.print = true;
+    builtins.quality = true;
+    builtins.zoom = true;
 }
 
 /**
@@ -77,7 +86,7 @@ function hideBuiltInItems () {
   * Remove all custom items from a menu
   * @access private
   */
-function clearItems () {
+function clearItems () :void {
     this.cm.customItems = [];
 }
 
@@ -87,7 +96,7 @@ function clearItems () {
   * Returns Flash ContextMenu object
   * @access private
   */
-function __LZcontextMenu () {
+function __LZcontextMenu () :ContextMenu {
    return this.cm;
 }
 
@@ -109,11 +118,10 @@ class LzContextMenuItemKernel {
     import flash.ui.*;
     }#
 
-function LzContextMenuItemKernel (newowner:LzContextMenuItem, title, del)
-{
+function LzContextMenuItemKernel (newowner:LzContextMenuItem, title, del) {
     this.owner = newowner;
     this.cmenuitem = new ContextMenuItem(title);
-    this.setDelegate (del);
+    this.setDelegate(del);
 }
 
 var owner:LzContextMenuItem = null;
@@ -128,21 +136,22 @@ var cmenuitem:ContextMenuItem = null;
   * 
   * @access private
   */
-function setDelegate (delegate) {
+function setDelegate (delegate:*) :void {
   var __litem__ = this.owner;
-  var callback =  function (mc,cmitem) {
+  var callback = function (mc, cmitem) {
       if (delegate != null) {
-          if (typeof(delegate) == 'function') {
+          if (delegate is Function) {
               delegate();
-          } else if (delegate instanceof LzDelegate) {
+          } else if (delegate is LzDelegate) {
               delegate.execute(__litem__);
-          } else {
-              Debug.error("LzContextMenuItem.setDelegate must be passed a delegate or function", this, delegate);
+          } else if ($debug) {
+              Debug.error("LzContextMenuItem.setDelegate must be passed a delegate or function", __litem__, delegate);
           }
       }
       if (__litem__.onselect.ready) __litem__.onselect.sendEvent(__litem__);
   };
-  this.cmenuitem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT , callback);}
+  this.cmenuitem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, callback);
+}
 
 /**
   * LzContextMenuItem.setCaption
@@ -150,7 +159,7 @@ function setDelegate (delegate) {
   * @param String caption: text string to display
   * @access public
   */
-function setCaption (caption) {
+function setCaption (caption:String) :void {
     this.cmenuitem.caption = caption;
 }
 
@@ -159,17 +168,16 @@ function setCaption (caption) {
   * Gets the text string which is displayed for the menu item
   * @access public
   */
-function getCaption () {
+function getCaption () :String {
     return this.cmenuitem.caption;
 }
-
 
 /**
   * LzContextMenuItem.setEnabled
   * @param boolean val: if false, menu item is grayed out and will not respond to clicks
   * @access public
   */
-function setEnabled (val) {
+function setEnabled (val:Boolean) :void {
     this.cmenuitem.enabled = val;
 }
 
@@ -180,7 +188,7 @@ function setEnabled (val) {
   * @access public
   */
 
-function setSeparatorBefore (val) {
+function setSeparatorBefore (val:Boolean) :void {
     this.cmenuitem.separatorBefore = val;
 }
 
@@ -190,7 +198,7 @@ function setSeparatorBefore (val) {
   * @param boolean val: sets visibility
   * @access public
   */
-function setVisible (val) {
+function setVisible (val:Boolean) :void {
     this.cmenuitem.visible = val;
 }
 
