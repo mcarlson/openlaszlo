@@ -188,9 +188,9 @@
                     <a href="../developers/rpc.html">RPC</a> and <a href="../developers/rpc-xmlrpc.html"> 
                         XML RPC</a> chapters of the Developer's Guide 
                     for more information.</p>
-                <p>This tag causes the creation of a JavaRPC object. The classname attribute 
+                <p>This tag causes the creation of a JavaRPC object. The <literal>remoteclassname</literal> attribute 
                     specifies what class javarpc represents. To use a class, place it in 
-                    WEB-INF/classes or, if it exists in a jar, in WEB-INF lib. This will ensure 
+                    <literal>WEB-INF/classes</literal> or, if it exists in a jar, in <literal>WEB-INF lib</literal>. This will ensure 
                     that the class is accessible to the OpenLaszlo Server.</p>
                 <p>Java classes used in an application must be declared in a security element. 
                     Classes not defined in a security element are not allowed to be accessed or 
