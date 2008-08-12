@@ -337,11 +337,11 @@ Debug.__String = function (thing, pretty=Debug.printPretty, limit=Debug.printLen
       if (s == null) { s = ''; }
     }
   } else if ((t == 'object') || (thing instanceof Object)) {
-    var op = thing.__proto__;
+    var op = thing['__proto__'];
     // No pretty if object.__constructor__ is not
     // object.__proto__.constructor, as this indicates some sort of
     // bizarre object
-    if (this.constructorOf(thing) !== op.constructor) {
+    if (!op || this.constructorOf(thing) !== op.constructor) {
       pretty = (! unique);
     }
     // Catch wrappers (but not subtypes of wrappers)
