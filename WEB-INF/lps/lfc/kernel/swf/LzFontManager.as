@@ -176,7 +176,7 @@ LzFontManager.__findMatchingFont = function (str) {
     if (this.__clientFontNames == null) {
         this.__clientFontNames = {};
         var fonts = TextField.getFontList()
-        for (var i in fonts) {
+        for (var i = 0; i < fonts.length; ++i) {
             this.__clientFontNames[fonts[i]] = true;
         }
     }

@@ -425,7 +425,7 @@ Debug.bugReport = function (error=null, verbose=Debug.showInternalProperties) {
     Debug.error("Backtraces must be on to report a bug.  Please enable backtracing and try again.");
     return;
   }
-  var inspected = [];
+  var inspected = {};
   function inspect (obj, verbose) {
     var id = verbose && Debug.IDForObject(obj);
     if (id && (! (id in inspected))) {
@@ -447,13 +447,14 @@ Debug.bugReport = function (error=null, verbose=Debug.showInternalProperties) {
         Debug.format("\n  arg %2d: %#w", i, inspect(args[i], verbose));
       }
     });
-  if (inspected.length > 0) {
+  var keys = [];
+  // Present the object's in ID-order so they are easier to find.
+  for (var id in inspected) {
+    keys.push(id);
+  }
+  if (keys.length > 0) {
     Debug.format("\n\nOBJECT DETAILS:");
-    var keys = [];
-    // Present the object's in ID-order so they are easier to find.
-    for (var id in inspected) {
-      keys.push(id);
-    }
+    
     keys.sort(function (a, b) {
         var al = parseInt(a);
         var bl = parseInt(b);

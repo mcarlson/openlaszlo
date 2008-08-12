@@ -207,19 +207,22 @@ function __LZdestroyitem (v){
   * simultaneously. This is useful for tracking mechanisms like menus.
   * @param String group: the name of the track group to activate
   */
-function activate ( group ){
-    if (this.__LZactivegroups.length == 0) {
+function activate ( group:String ){
+    var agroups:Array = this.__LZactivegroups;
+    if (agroups.length == 0) {
         // don't want to re-register, in case we are just switching active groups
         this.__LZtrackDel.register( lz.Idle, "onidle" );
     }
     // see if group is already active
-    var found = false;
-    for (var i in this.__LZactivegroups) {
-        if (this.__LZactivegroups[i] == this.__LZreg[group]) found = true;
+    var reg:Object = this.__LZreg;
+    for (var i:int = 0; i < agroups.length; ++i) {
+        if (agroups[i] == reg[group]) {
+            // nothing to do, group is already active
+            return;
+        }
     }
-    if (!found) { //group was not active so put it onto activegroups array
-        this.__LZactivegroups.push(this.__LZreg[group]);
-    }
+    // group was not active so put it onto activegroups array
+    agroups.push(reg[group]);
 }
 
 /**
@@ -227,16 +230,18 @@ function activate ( group ){
   * @param String group: the name of the track group to deactivate
   */
 function deactivate ( group ) {
-    for (var i in this.__LZactivegroups) {
-        if (this.__LZactivegroups[i] == this.__LZreg[group]) {
-            this.__LZactivegroups.splice(i, 1);
+    var agroups:Array = this.__LZactivegroups;
+    var reg:Object = this.__LZreg;
+    for (var i:int = 0; i < agroups.length; ++i) {
+        if (agroups[i] == reg[group]) {
+            agroups.splice(i, 1);
          }
     }
-    if ( this.__LZactivegroups.length == 0) {
+    if (agroups.length == 0) {
       this.__LZtrackDel.unregisterAll();
     }
-    if (typeof(this.__LZreg[group]) != "undefined") {
-        this.__LZreg[group].__LZlasthit = null;   // should send ontrackmouseout ?
+    if (typeof(reg[group]) != "undefined") {
+        reg[group].__LZlasthit = null;   // should send ontrackmouseout ?
     }
 }
 
@@ -311,10 +316,9 @@ function __LZtrackgroup (group,hitlist) {
   * called on idle when the mouse is down, sends events to topmost view
   * NOTE: it would be good to have bounding rectangles on these groups
   */
-function __LZtrack (ignore)
-{
+function __LZtrack (ignore) {
     var foundviews = [];
-    for ( var i in this.__LZactivegroups ) {
+    for (var i:int = 0; i < this.__LZactivegroups.length; ++i) {
         var hitlist =[];
         //would love to check to see if the mouse is within a group's 
         //bounding rect. this would significantly speed up menu tracking.
@@ -343,9 +347,9 @@ function __LZtrack (ignore)
             }
         }
     } 
-    var l = foundviews.length;
-    if ( l ) {
-        for (var i=0; i < l; i++) {
+    var len = foundviews.length;
+    if ( len ) {
+        for (var i=0; i < len; i++) {
             var v = foundviews[i]
             if (v.onmousetrackover.ready) v.onmousetrackover.sendEvent( v );
         }
@@ -356,10 +360,9 @@ function __LZtrack (ignore)
   * @access private
   * called before mouseup event is sent
   */
-function __LZmouseup(ignore)
-{
+function __LZmouseup(ignore) {
     //Debug.info('lz.Track.__LZmouseup');
-    for (var i in this.__LZactivegroups) {
+    for (var i:int = 0; i < this.__LZactivegroups.length; ++i) {
         var thisgroup = this.__LZactivegroups[i];
         //Debug.info('i', i, thisgroup, thisgroup.__LZlasthit, thisgroup.__LZlasthit.onmousetrackup);
         if (thisgroup && thisgroup.__LZlasthit) {

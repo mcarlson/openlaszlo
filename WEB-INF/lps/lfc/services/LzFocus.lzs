@@ -357,15 +357,14 @@ dynamic class LzFocusService extends LzEventable {
                && root != root.immediateparent)
             root = root.immediateparent;
         // collect selectable children into focusgroup
-        var focusgroup = [];
+        var focusgroup:Array = [];
         this.accumulateSubviews(focusgroup, root, v, true);
 
         // set index to the index of v within the current focus group.
-        var index = -1;
-        for (var i in focusgroup)
+        var index:int = -1;
+        for (var i:int = 0; i < focusgroup.length; ++i)
             if (focusgroup[i] == v) {
-                // for..in returns strings
-                index = Number(i);
+                index = i;
                 break;
             }
 

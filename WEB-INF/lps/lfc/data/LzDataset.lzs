@@ -672,24 +672,23 @@ function isProxied ( ) {
    Produce a hash table of key-value pairs.
    In the case of a duplicated key, creates an array of values.
 */
-static function queryStringToTable ( query ) {
-  var queries = {};
-  var parameters = query.split('&');
-  for (var i in parameters) {
-    var key = parameters[i];
-    var value = '';
-    var n = key.indexOf('=');
+static function queryStringToTable ( query:String ) :Object {
+  var queries:Object = {};
+  var parameters:Array = query.split('&');
+  for (var i = 0; i < parameters.length; ++i) {
+    var key:String = parameters[i];
+    var value:String = '';
+    var n:int = key.indexOf('=');
     if (n > 0) {
       value = unescape(key.substring(n+1));
       key = key.substring(0, n);
     }
     if (key in queries) {
-        var prev = queries[key];
+        var prev:* = queries[key];
         if (prev instanceof Array) {
             prev.push(value);
         } else {
-            value = [prev, value];
-            queries[key] = value;
+            queries[key] = [prev, value];
         }
     } else {
         queries[key] = value;

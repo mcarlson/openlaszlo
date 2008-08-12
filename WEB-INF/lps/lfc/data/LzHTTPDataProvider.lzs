@@ -25,10 +25,6 @@
   * @lzxname httpdataprovider
   *
   */
-
-
-
-
 class LzHTTPDataProvider extends LzDataProvider {
 
     function LzHTTPDataProvider ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null) {
@@ -38,7 +34,6 @@ class LzHTTPDataProvider extends LzDataProvider {
     /** @access private
      * @param LzHTTPDataRequest dreq: The data request
      */
-
     function makeLoader ( dreq ) {
         var proxied = dreq.proxied;
         // If there is no loader, or if the loader changed it's proxied
@@ -157,9 +152,9 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         var postbody = dreq.postbody;
         if (postbody == null && qparams != null) {
-            var names = qparams.getNames();
-            for ( var i in names ){
-                var name = names[i];
+            var names:Array = qparams.getNames();
+            for ( var i:int = 0; i < names.length; ++i ){
+                var name:String = names[i];
                 q += sep + name + '=' + encodeURIComponent(qparams.getValue(name));
                 sep = '&';
             }
