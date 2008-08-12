@@ -3,7 +3,7 @@
 /**
   * Runtime support for Debug
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -169,7 +169,7 @@ Debug.displayResult = function (result) {
   this.freshLine();
   // Output any result from the evalloader
   if (typeof(result) != 'undefined') {
-    this.format("%w", result);
+    this.format("%#w", result);
   }
   this.freshPrompt();
 }
@@ -199,11 +199,11 @@ Debug.doEval = function(expr) {
   this.freshPrompt();
   this.addHTMLText('<span class="DEBUG">'+String(expr).toHTML()+"</span>\n");
   try {
-    with (global) {
+    //with (global) {
       with (this.environment) {
-        var value = eval(expr);
+        var value = window.eval(expr);
       }
-    }
+    //}
     this.displayResult(value);
   }
   catch (e) {

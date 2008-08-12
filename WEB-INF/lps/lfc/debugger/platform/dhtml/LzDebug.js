@@ -214,13 +214,15 @@ Debug.__String = function (thing, pretty=Debug.printPretty, limit=Debug.printLen
         s = this.functionName(thing, false);
         if (s == null) { s = ''; }
       }
-    } else if ((thing instanceof HTMLElement) &&
+    } else if ((!!window.HTMLElement ? thing instanceof HTMLElement : t == 'object' && !thing.constructor) &&
                (! isNaN(Number(thing['nodeType'])))) {
+      // test for HTMLElement if avaliable, second expression helps to filter IE-HTMLElements
+      
       // tip o' the pin to osteele.com for the notation format
       function nodeToString(node) {
         var tn = node.nodeName || '';
         var path = tn.toLowerCase();
-        if (node.nodeType == Node.ELEMENT_NODE) {
+        if (node.nodeType == 1) {//Node.ELEMENT_NODE
           var id = node.id;
           var cn = node.className;
           if (id) {
@@ -257,7 +259,8 @@ Debug.__String = function (thing, pretty=Debug.printPretty, limit=Debug.printLen
       // No pretty if object.constructor.prototype is not
       // object's prototype, as this indicates some sort of
       // bizarre object
-      if ((! thing.constructor.prototype.isPrototypeOf) ||
+      if ((! thing['constructor']) ||
+          (! thing.constructor.prototype.isPrototypeOf) ||
           (! (thing.constructor.prototype.isPrototypeOf instanceof Function)) ||
           (! thing.constructor.prototype.isPrototypeOf(thing))) {
         pretty = (! unique);
