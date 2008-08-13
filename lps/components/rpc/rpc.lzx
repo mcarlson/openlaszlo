@@ -185,36 +185,14 @@
         ]]>
         </method>
 
+
        <method name="makeProxyStubFunction" args="fn">
         <![CDATA[                                                
-                var stubinfo = this.proxyinfo[fn];
-                //classname: 'org.openlaszlo.test.xmlrpc.SystemProp' 
-                //methodname: 'org.openlaszlo.test.xmlrpc.SystemProp.getProperties' 
-                //op: 'invoke'
-
-                var CLASSNAME = stubinfo['classname'];
-                var METHODNAME = stubinfo['methodname'];
-
-                var DOREQ = stubinfo['doreq'] ? stubinfo['doreq'] : false;
-                var DORES = stubinfo['dores'] ? stubinfo['dores'] : false;
-                var stubfunc = function (){
-                   var args = arguments.callee.args;
-                   return LzJavaRPCService.invoke(
-                       arguments[1], 
-                       arguments[0],
-                        {op: 'invoke', 
-                                objectreturntype: args.objectreturntype,
-                                oname: args.attributename, 
-                                scope: args.scope ,
-                                classname: CLASSNAME,
-                                methodname: METHODNAME,
-                                doreq: DOREQ,
-                                dores: DORES}, args.secure, args.secureport);
-                 }
-
-                return stubfunc;
+                 return function(...ignore) { Debug.write('base rpc does not automatically define proxy stubs'); };
        ]]>                                                
        </method>
+
+
         <doc>
             <tag name="shortdesc"><text>remote procedure call</text></tag>
             <text>
