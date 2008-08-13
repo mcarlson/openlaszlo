@@ -137,9 +137,9 @@ function getPropertyValueFor ( initialnode , pname ){
 
                         if ( t == this._sel_star ||
                             (t == this._sel_id && nrp.id == curnode.id) ||
-                            (t == this._sel_tag && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
+                            (t == this._sel_tag && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
                             (t == this._sel_attribute && curnode[ nrp.attrname ] == nrp.attrvalue) ||
-                            (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
+                            (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
                             (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode ))){
                             if ( sindex-- == 0 ){
                                 result = true;
@@ -159,9 +159,9 @@ function getPropertyValueFor ( initialnode , pname ){
                     if (result) rules.push(r); 
                 } else if ( rp.type == this._sel_star ||
                     (rp.type == this._sel_id && rp.id == node.id) ||
-                    (rp.type == this._sel_tag && (((rp.classname in lz) && (node instanceof lz[ rp.classname ])) || ( (rp.classname in global) && (node instanceof global[ rp.classname ])))) ||
+                    (rp.type == this._sel_tag && (((rp.tagname in lz) && (node is lz[ rp.tagname ])))) ||
                     (rp.type == this._sel_attribute && node[ rp.attrname ] == rp.attrvalue) ||
-                    (rp.type == this._sel_tagAndAttr && node[ rp.attrname ] == rp.attrvalue && (((rp.classname in lz) && (node instanceof lz[ rp.classname ])) || ( (rp.classname in global) && (node instanceof global[ rp.classname ]))))) {
+                    (rp.type == this._sel_tagAndAttr && node[ rp.attrname ] == rp.attrvalue && (((rp.tagname in lz) && (node is lz[ rp.tagname ]))))) {
                     rules.push(r); 
                 }
             }
@@ -192,9 +192,9 @@ function getPropertyValueFor ( initialnode , pname ){
 
                             if ( t == this._sel_star ||
                                 (t == this._sel_id && nrp.id == curnode.id) ||
-                                (t == this._sel_tag && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
+                                (t == this._sel_tag && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
                                 (t == this._sel_attribute && curnode[ nrp.attrname ] == nrp.attrvalue) ||
-                                (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
+                                (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
                                 (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode ))){
                                 if ( sindex-- == 0 ){
                                     result = true;
@@ -214,9 +214,9 @@ function getPropertyValueFor ( initialnode , pname ){
                         if (result) rules.push(r); 
                     } else if ( rp.type == this._sel_star ||
                         (rp.type == this._sel_id && rp.id == node.id) ||
-                        (rp.type == this._sel_tag && (((rp.classname in lz) && (node instanceof lz[ rp.classname ])) || ( (rp.classname in global) && (node instanceof global[ rp.classname ])))) ||
+                        (rp.type == this._sel_tag && (((rp.tagname in lz) && (node is lz[ rp.tagname ])))) ||
                         (rp.type == this._sel_attribute && node[ rp.attrname ] == rp.attrvalue) ||
-                        (rp.type == this._sel_tagAndAttr && node[ rp.attrname ] == rp.attrvalue && (((rp.classname in lz) && (node instanceof lz[ rp.classname ])) || ( (rp.classname in global) && (node instanceof global[ rp.classname ]))))) {
+                        (rp.type == this._sel_tagAndAttr && node[ rp.attrname ] == rp.attrvalue && (((rp.tagname in lz) && (node is lz[ rp.tagname ]))))) {
                         rules.push(r); 
                     }
                 }
@@ -232,20 +232,18 @@ function getPropertyValueFor ( initialnode , pname ){
             node.__LZRuleCache = rules;
         }
 
-        //Debug.write("About to print rule array.") 
-        //LzCSSStyle._printRuleArray( rules );
-    
+//         Debug.write("About to print rule array.")
+//         LzCSSStyle._printRuleArray( rules );
+
         var l = rules.length;
-        var i = 0; 
+        var i = 0;
         while ( i < l ) {
-            var props = rules[i++].properties;
-            if (pname in props) { 
-                val = props[pname];
+            val = rules[i++].properties[pname];
+            if (val != null) {
                 node.__LZPropertyCache[pname] = val;
-                break;
+                return val;
             }
         }
-        if (val != null) return val;
 
         node = node.immediateparent;
         ////this.time1 += getTimer() - t;
@@ -427,31 +425,31 @@ function __compareSpecificity (rA, rB) {
                 //specificity but different numbers of descendants
                 if ( !rA.parsed[ i ] || !rB.parsed[ i ] ) break;
 
-                //if one or neither selector has a classname, this test doesn't
-                //apply OR the classnames are the same
-                if ( !rA.parsed[ i ].classname || !rB.parsed[ i ].classname ||
-                      rA.parsed[ i ].classname ==  rB.parsed[ i ].classname ){
+                //if one or neither selector has a tagname, this test doesn't
+                //apply OR the tagnames are the same
+                if ( !rA.parsed[ i ].tagname || !rB.parsed[ i ].tagname ||
+                      rA.parsed[ i ].tagname ==  rB.parsed[ i ].tagname ){
                     continue;
                 }
 
-                var rac = lz[ rA.parsed[ i ].classname ];
-                var rbc = lz[ rB.parsed[ i ].classname ];
+                var rac = lz[ rA.parsed[ i ].tagname ];
+                var rbc = lz[ rB.parsed[ i ].tagname ];
                 
                 
-                return (((rac && rbc) && ('prototype' in rac) && (rac.prototype instanceof rbc)) ? -1 : 1);
+                return (((rac && rbc) && ('prototype' in rac) && (rac.prototype is rbc)) ? -1 : 1);
                 
 
             }
         } 
 
-        if ( ( rA.parsed.classname && rB.parsed.classname ) &&
-             ( rA.parsed.classname != rB.parsed.classname ) ){
-                var rac = lz[ rA.parsed.classname ];
-                var rbc = lz[ rB.parsed.classname ];
+        if ( ( rA.parsed.tagname && rB.parsed.tagname ) &&
+             ( rA.parsed.tagname != rB.parsed.tagname ) ){
+                var rac = lz[ rA.parsed.tagname ];
+                var rbc = lz[ rB.parsed.tagname ];
                 
                 return (((rac && rbc)
                         && ('prototype' in rac) && 
-                        (rac.prototype instanceof rbc)) 
+                        (rac.prototype is rbc)) 
                     ? -1 : 1);
 
         } else return (rA._lexorder < rB._lexorder ) ? 1 : -1;
@@ -484,9 +482,9 @@ function _compoundSelectorApplies (rp , node){
 
         if ( t == this._sel_star ||
             (t == this._sel_id && nrp.id == curnode.id) ||
-            (t == this._sel_tag && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
+            (t == this._sel_tag && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
             (t == this._sel_attribute && curnode[ nrp.attrname ] == nrp.attrvalue) ||
-            (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.classname in lz) && (curnode instanceof lz[ nrp.classname ])) || ( (nrp.classname in global) && (curnode instanceof global[ nrp.classname ])))) ||
+            (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
             (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode ))){
             if ( sindex-- == 0 ){
                 result = true;
@@ -539,7 +537,7 @@ function _addRule ( r ){
     var sel = r.selector;
     r.parsed = null;
     var lastsel;
-    if ( sel instanceof Array ){
+    if ( sel is Array ){
         r.parsed = [];
         r.parsed.type = this._sel_compound;
         for ( var i = 0; i < sel.length; i++ ){
@@ -571,7 +569,7 @@ function _parseSelector ( sel ){
         case "object":
             if (sel.simpleselector) {
                 sel.type = this._sel_tagAndAttr;
-                sel.classname = this._normalizeClassname( sel.simpleselector );
+                sel.tagname = sel.simpleselector;
             } else     
                 sel.type = this._sel_attribute;
             return sel;
@@ -595,37 +593,12 @@ function _parseStringSelector ( sel ){
             parsed.type =  this._sel_id;
         } else {
             parsed.type =  this._sel_tag;
-            parsed.classname = this._normalizeClassname( sel );
+            parsed.tagname = sel;
         }
 
     }
 
     return parsed;
-}
-
-
-/** The tag name of some nodes doesn't match the associated class name, ie, 
-  * nodes declared with tag &lt;view&gt; are instances of LzView, not instances of view.
-  * This function normalizes tag names into class names. The complete tag to classname
-  * mapping is listed in LaszloInitiator.as. For speed and size, I am only actually 
-  * mapping the class names which it seems sane to style. I am excluding data-related
-  * classes, because they will have undefined behavior when used together with CSS.
-  * @access private
- */ 
-function _normalizeClassname ( cn ){
-    switch (cn) {
-        case "view":        return "LzView";
-        case "animator":    return "LzAnimator";
-        case "animatorgroup": return "LzAnimatorGroup";
-        case "canvas":      return  "LzCanvas";
-        case "drawview":    return "LzDrawView";
-        case "inputtext":   return "LzInputText";
-        case "layout":      return "LzLayout";
-        case "node":        return "LzNode";
-        case "state":       return "LzState";
-        case "text":        return "LzText";
-        default: return cn;
-    }
 }
 
 } // End of LzCSSStyleClass
