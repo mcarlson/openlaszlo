@@ -23,7 +23,7 @@
   * a notation similar to the UNIX file-system to refer to nodes within a
   * dataset. Once a datapointer is bound to a node in a dataset it will
   * keep pointing to that node until it is moved. If the dataset is edited,
-  * the behavior of the datapointer will be controlled by its <xref linkend="LzDatapointer.__ivars__.rerunxpath"/> attribute. If this attribute is
+  * the behavior of the datapointer will be controlled by its <link linkend="LzDatapointer.__ivars__.rerunxpath">rerunxpath</link> attribute. If this attribute is
   * true, it will continue pointing to its current
   * node as long as it is valid.</p>
   * 

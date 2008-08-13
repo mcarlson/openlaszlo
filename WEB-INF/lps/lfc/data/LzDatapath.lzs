@@ -38,8 +38,8 @@
   * <p>
   * A node can only have one datapath, and datapaths always have the name
   * <code>datapath</code>.  Additional options available on datapath such
-  * as <xref linkend="LzDatapath.__ivars__.pooling"/> and 
-  * <xref linkend="LzDatapath.__ivars__.replication"/> are specified 
+  * as <link linkend="LzDatapath.__ivars__.pooling">pooling</link> and 
+  * <link linkend="LzDatapath.__ivars__.replication">replication</link> are specified 
   * by writing the <tagname>datapath</tagname> tag as a separate node.
   * </p>
   * 
