@@ -394,7 +394,7 @@ String exampleURL = (request.getContextPath()+"/" + appUrl + "?lzr=dhtml&lzproxi
      try {
          // Create the ZIP file
          SimpleDateFormat format = 
-             new SimpleDateFormat("EEE_MMM_dd_yyyy_HH_mm_ss");
+             new SimpleDateFormat("MMM_dd_yyyy_HH_mm_ss");
          String outFilename = "solo_deploy_" + format.format(new Date()) + ".zip";
          zipfilename = outFilename;
          ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tmpdir+"/"+outFilename));
