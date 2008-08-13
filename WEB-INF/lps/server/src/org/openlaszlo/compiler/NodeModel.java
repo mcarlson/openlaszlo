@@ -511,6 +511,13 @@ public class NodeModel implements Cloneable {
 
         if (includeChildren) {
             model.addChildren(env);
+
+            // If any children are subclasses of <state>, recursively
+            // hoist named children up in order to declare them so
+            // they can be referenced as vars without a 'this.---" prefix.
+            if (!isState(model, schema)) {
+              model.addStateChildren(env);
+            }
             model.addText();
             if (!attrs.containsKey("clickable")
                 && computeDefaultClickable(schema, attrs, delegates)) {
@@ -1191,6 +1198,72 @@ solution =
             }
         }
     }
+
+  void addStateChildren(CompilationEnvironment env ) {
+    // Check for each child, if it is a subclass of <state>.
+    // If so, we need to declare any named children as attributes,
+    // so the swf9 compiler won't complain about references to them.
+    for (Iterator iter = children.iterator(); iter.hasNext(); ) {
+      NodeModel childModel = (NodeModel)iter.next();
+      if (isState(childModel, schema)) {
+        declareNamedChildren(childModel);
+      }
+    }
+  }
+
+  /** Is this NodeModel a <state> or subclass of <state> ? */
+  static boolean isState(NodeModel model, ViewSchema schema) {
+    ClassModel classModel = model.getClassModel();
+    boolean isstate = classModel.isSubclassOf(schema.getClassModel("state"));
+    return isstate;
+  }
+
+  /** Hoist named children declarations from a state into the parent.
+     
+   Take all named children of this NodeModel (including named children
+   in the classmodel) and declare them as attributes, so the swf9
+   compiler will permit references to them at compile time.
+  */
+  void declareNamedChildren(NodeModel model) {
+    List childnames = collectNamedChildren(model);
+    for (Iterator i = childnames.iterator(); i.hasNext(); ) {
+      String childname = (String)i.next();
+      if (!attrs.containsKey(childname)) {
+        addProperty(childname, null, ALLOCATION_INSTANCE);
+      }
+    }
+  }
+
+  // Returns a list of names of all named children of this instance and
+  // those of its superclasses
+  List collectNamedChildren(NodeModel model) {
+    List names = new ArrayList();
+    // iterate over children, getting named ones. If a child is a <state>, recurse into it to
+    // hoist any named children up.
+    for (Iterator iter = model.children.iterator(); iter.hasNext(); ) {
+      NodeModel child = (NodeModel) iter.next();
+      if (isState(child,schema)) {
+         List childnames = collectNamedChildren(child);
+         // merge in returned list with names
+         names.addAll(childnames);
+      } else {
+        String childNameAttr = child.element.getAttributeValue("name");
+        if (childNameAttr != null) {
+          names.add(childNameAttr);
+        }
+      }
+    }
+    // Then recurse over superclasses, up to <state>
+    ClassModel classModel = model.getClassModel();
+     if (classModel.hasNodeModel()) {
+         List supernames = collectNamedChildren(classModel.nodeModel);
+         // merge in returned list with names
+         names.addAll(supernames);
+       }
+     return names;
+  }
+
+
 
    void warnIfHasChildren(Element element) {
      if (element.getChildren().size() > 0) {
