@@ -135,11 +135,9 @@ public class LFCApplication {
 
     }
 
-    var debugloader:Loader;
-
     // Debugger loader completion handler 
     function debugEvalListener (e:Event):void {
-        debugloader.unload();
+        e.target.loader.unload();
         //DebugExec(e.target.content).doit();
     }
 
@@ -150,7 +148,7 @@ public class LFCApplication {
             write(expr);
             consoleinputtext.text = "";
 
-            debugloader = new Loader();
+            var debugloader:Loader = new Loader();
             debugloader.contentLoaderInfo.addEventListener(Event.INIT, debugEvalListener);
 
             // Send EVAL request to LPS server
