@@ -37,6 +37,9 @@ public class SWF9Generator extends JavascriptGenerator {
   /** The user 'main' class, which extends LFCApplication */
   public final static String MAIN_APP_CLASSNAME = "LzApplication";
 
+  /** The top level class executed first, it creates a LzApplication object */
+  public final static String EXEC_APP_CLASSNAME = "LzSpriteApplication";
+
   /** The LFC 'main' class, which extends nothing */
   public final static String MAIN_LIB_CLASSNAME = "LFCApplication";
 
@@ -575,6 +578,10 @@ public class SWF9Generator extends JavascriptGenerator {
       } else {
         source += "public class " + SWF9Generator.MAIN_APP_CLASSNAME +
         " extends " +  SWF9Generator.MAIN_LIB_CLASSNAME + " {\n " + imports + "}\n";
+        source += "public class " + SWF9Generator.EXEC_APP_CLASSNAME +
+        " extends Sprite {\n " + imports + "var app:LzApplication;\n" +
+        " function " + SWF9Generator.EXEC_APP_CLASSNAME + "() {" +
+        " app = new LzApplication(this);}}\n";
       }
     }
     return source;

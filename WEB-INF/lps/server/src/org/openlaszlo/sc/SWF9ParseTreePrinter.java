@@ -244,7 +244,8 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     sb.append("{\n");
     sb.append(annotateInsertStream(CLASS_LEVEL_STREAM));
     if (classnm.equals(mainClassName) && !islib) {
-      sb.append("public function " + mainClassName + "() {\n");
+      sb.append("public function " + mainClassName + "(sprite:Sprite) {\n");
+      sb.append("super(sprite);\n");
       sb.append(annotateInsertStream(MAIN_CONSTRUCTOR_STREAM));
       sb.append("}\n");
     }

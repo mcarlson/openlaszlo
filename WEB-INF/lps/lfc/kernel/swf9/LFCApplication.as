@@ -9,7 +9,7 @@
   * @author Henry Minsky &lt;hminsky@laszlosystems.com&gt;
   */
 
-public class LFCApplication extends Sprite {
+public class LFCApplication {
 
     // This serves as the superclass of DefaultApplication, currently that is where
     // the compiler puts top level code to run.
@@ -25,6 +25,12 @@ public class LFCApplication extends Sprite {
     import flash.text.Font;
     }#
 
+    // The application sprite
+    public var _sprite:Sprite;
+
+    public function addChild(child:DisplayObject):DisplayObject {
+       _sprite.addChild(child);
+    }
 
     // Allow anyone access to the stage object (see ctor below)
     public static var stage:Stage = null;
@@ -32,10 +38,12 @@ public class LFCApplication extends Sprite {
     // Allow anyone access to write to the debugger
     public static var write:Function;
 
-    public function LFCApplication () {
+    public function LFCApplication (sprite:Sprite) {
+
+       _sprite = sprite;
 
         // Allow anyone to access the stage object
-        LFCApplication.stage = this.stage;
+        LFCApplication.stage = _sprite.stage;
         LFCApplication.write = this.write;
 
         // trace("LFCApplication.stage = " + LFCApplication.stage);

@@ -649,19 +649,16 @@ public class SWF9External {
       cmd.add("-include-classes");
     }
     
-    for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
-      TranslationUnit tunit = (TranslationUnit)iter.next();
-      
-      // For the application, we just list the main .as file
+    if (buildSharedLibrary) {
       // For a library, we list all the classes.
-      if (!buildSharedLibrary) {
-        if (tunit.isMainTranslationUnit()) {
-          cmd.add(workdir.getPath() + File.separator + tunit.getName()+".as");
-        }
-      }
-      else {
+      for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
+        TranslationUnit tunit = (TranslationUnit)iter.next();
         cmd.add(tunit.getName());
       }
+    }
+    else {
+      // For the application, we just list one .as file
+      cmd.add(workdir.getPath() + File.separator + SWF9Generator.EXEC_APP_CLASSNAME + ".as");
     }
     
     execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
