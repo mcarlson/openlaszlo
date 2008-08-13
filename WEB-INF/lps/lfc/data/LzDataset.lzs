@@ -148,6 +148,9 @@ var ontimeout = LzDeclaredEvent;
 var timeout = 60000;
 
 /** @access private */
+function $lzc$set_timeout (t:Number) :void { this.timeout = t; }
+
+/** @access private */
 var postbody = null;
 
 // var src = null;
@@ -523,7 +526,7 @@ function getPointer (){
 function setQueryString( s ) {
     this.params = null;
     if ( typeof( s ) == "object" ){
-        if (s instanceof  LzParam){
+        if (s instanceof LzParam){
             this.querystring = s.toString();
         } else {
             var p = new LzParam ();
@@ -776,7 +779,6 @@ function doRequest(ignore=null) {
         this.dsloadDel.register(dreq, "onstatus");
     }
     this.dataprovider.doRequest( dreq );
-
 }
 
 /**
@@ -784,7 +786,6 @@ function doRequest(ignore=null) {
   * Called when  data request status changes.
   * If status is 'success', call setData
   */
-
 function handleDataResponse (datareq) {
     if (this.dsloadDel != null) {
         this.dsloadDel.unregisterFrom(datareq.onstatus);
@@ -797,7 +798,6 @@ function handleDataResponse (datareq) {
     } else if (datareq.status == LzDataRequest.TIMEOUT) {
         this.gotTimeout();
     }
-
 }
 
 /**
@@ -874,7 +874,7 @@ function setQueryType( reqtype ) {
  * This replaces the old "lzpostbody" convention for passing raw POST data.
  * @param String str: The string to use as the raw POST body content
  */
-function  setPostBody (str) {
+function setPostBody (str) {
     this.postbody = str;
 }
 
@@ -918,7 +918,6 @@ function setInitialData ( d ){
 }
 
 
-
 /**
   * Get string representation
   * @access private
@@ -940,26 +939,23 @@ lz[LzDataset.tagname] = LzDataset;  // publish
   */
 class __LzHttpDatasetPoolClass {
 
-var _uid = 0;
+var _uid :uint = 0;
 
-var _p = [];
+var _p :Array = [];
 
 /**
   * Gets a new dataset from the pool
   * @param dataDel: Delegate for the ondata event
   * @param errorDel: Delegate for the onerror event
   * @param timeoutDel: Delegate for the ontimeout event
-  * @param acceptenc: Whether to accept encodings or not - defaults to true
+  * @param acceptenc: Whether to accept encodings or not - defaults to false
   */
-function get(dataDel,errorDel,timeoutDel,acceptenc) {
-    var d;
+function get (dataDel:LzDelegate = null, errorDel:LzDelegate = null, timeoutDel:LzDelegate = null, acceptenc:Boolean = false) :LzDataset {
+    var d:LzDataset;
     if (this._p.length > 0) {
-        d = this._p[this._p.length - 1];
-        this._p.length = this._p.length - 1;
-        //Debug.write('reusing', d.name); 
+        d = this._p.pop();
     } else {
-        d = new LzDataset(null, {name: 'LzHttpDatasetPool' + this._uid, type:'http', acceptencodings: acceptenc ? acceptenc : false});
-        //Debug.write('creating', d.name); 
+        d = new LzDataset(null, {name: 'LzHttpDatasetPool' + this._uid, type: 'http', acceptencodings: acceptenc});
         this._uid++;
     }
     if (dataDel    != null) { dataDel.register(d, 'ondata'); }
@@ -972,13 +968,19 @@ function get(dataDel,errorDel,timeoutDel,acceptenc) {
   * Recyles a dataset back into the pool for reuse
   * @param d: The dataset to be recycled
   */
-function recycle(d) {
-    //Debug.write('recycling', d); 
+function recycle (d:LzDataset) :void {
+    // clear any request-parameter stuff
     d.setQueryParams(null);
-    if (d['ondata'])    d.ondata.clearDelegates();
-    if (d['ontimeout']) d.ontimeout.clearDelegates();
-    if (d['onerror'])   d.onerror.clearDelegates();
-    this._p[this._p.length] = d;
+    d.setPostBody(null);
+    d.clearRequestHeaderParams();
+    // clear events
+    d.ondata.clearDelegates();
+    d.ontimeout.clearDelegates();
+    d.onerror.clearDelegates();
+    // clear any data
+    d.setData([]);
+    
+    this._p.push( d );
 }
 
 } // End of __LzHttpDataSetPoolClass
@@ -986,4 +988,4 @@ function recycle(d) {
 /** The single instance of this class
   * @access private
   */
-var LzHttpDatasetPool = new __LzHttpDatasetPoolClass;
+var LzHttpDatasetPool :__LzHttpDatasetPoolClass = new __LzHttpDatasetPoolClass();
