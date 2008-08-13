@@ -35,32 +35,22 @@
   * 
   * @lzxname params
   */
-class LzParam extends LzNode {
-
-/** @access private
-  * @modifiers override 
-  */
-static var tagname = 'params';
-/** @access private */
-  static var attributes = new LzInheritedHash(LzNode.attributes);
-
-  // FIXME: [2008-03-12 ptw] WTF is this supposed to be doing?
-//undefine all setters but name and id
-//setters.$hasdefaultattrs = -1;
+class LzParam extends LzEventable {
 
 /** @access private */
-var d:Object = null;
+var d :Object = null;
 
+// default separator and delimiter
+/** @access private */
+var delimiter :String = "&";
+/** @access private */
+var separator :String = "=";
 
 /**
   * @access private
   */
-    function LzParam ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null) {
-        super(parent,attrs,children,instcall);
-    }  
-
-override function construct ( parent , args ){
-    super.construct.apply(this, arguments);
+function LzParam () {
+    super();
     this.d = {};
 }
 
@@ -68,7 +58,7 @@ override function construct ( parent , args ){
   * Parse a URL query string, returns an object with key-value pairs
   * @return Object
   */
-static function parseQueryString ( query:String ) :Object {
+static function parseQueryString (query:String) :Object {
   var parameters:Array = query.split('&');
   var queries:Object = {};
   for (var i:int = 0; i < parameters.length; ++i) {
@@ -76,7 +66,7 @@ static function parseQueryString ( query:String ) :Object {
     var value:String = '';
     var n:int = key.indexOf('=');
     if (n > 0) {
-      value = unescape(key.substring(n+1));
+      value = unescape(key.substring(n + 1));
       key = key.substring(0, n);
     }
     queries[key] = value;
@@ -89,33 +79,19 @@ static function parseQueryString ( query:String ) :Object {
   * @return Object
   * @deprecated: Use LzParam.parseQueryString() instead
   */
-function parseQueryString ( query ) {
+function parseQueryString (query:String) :Object {
     if ($debug) {
-        Debug.info (this, ".parseQueryString is deprecated. Use LzParam.parseQueryString instead");
+        Debug.info(this, ".parseQueryString is deprecated. Use LzParam.parseQueryString instead");
     }
-    return LzParam.parseQueryString (query);
+    return LzParam.parseQueryString(query);
 }
-
-
-/**
-  * @access private
-  */
-override function createChildren ( children ){
-    //Debug.write( "got children: " + children );
-}
-
-// default separator and delimiter
-/** @access private */
-var dlm = "&";
-/** @access private */
-var sep = "=";
 
 /**
   * Adds a series of name/value pairs from an object
   * @param Object o: An object containing name/value pairs to add
   */
-function addObject(o) {
-    for ( var n in o ) {
+function addObject (o:Object) :void {
+    for (var n:String in o) {
         this.setValue( n, o[n] );
     }
 }
@@ -125,12 +101,12 @@ function addObject(o) {
   * @keywords deprecated: Argument is deprecated
   * @return LzParam
   */
-function clone(arg=null) {
-    if (arg && $debug) {
-        Debug.info("%w.%s is deprecated. Do not pass as argument to clone()", this, arguments.callee);
+function clone (arg=null) :LzParam {
+    if ($debug) {
+        if (arg) Debug.info("%w.%s is deprecated. Do not pass as argument to clone()", this, arguments.callee);
     }
-    var o = new LzParam();
-    for ( var n in this.d ) {
+    var o:LzParam = new LzParam();
+    for (var n:String in this.d) {
         o.d[ n ] = this.d[ n ].concat();
     }
     return o;
@@ -142,13 +118,19 @@ function clone(arg=null) {
   * @param String name: The name of the value to remove.  If null, removes 
   * all values
   */
-function remove( name = null) {
-    if ( null == name ) {
+function remove (name:String? = null) :void {
+    if (name == null) {
         this.d = {};
-    } else if ( null != this.d[ name ] ) {
-        var i = this.findKey( name );
-        if ( i != null ) {
-            this.d[ name ].splice ( i , 2 );
+    } else {
+        var a:Array = this.d[ name ];
+        if (a != null) {
+            // bwcomp: remove only first entry
+            // TODO: [20080813 anba] is this what we expect?
+            a.shift();
+            if (! a.length) {
+                // remove empty arrays
+                delete this.d[ name ];
+            }
         }
     }
 }
@@ -160,22 +142,10 @@ function remove( name = null) {
   * @param String val: The value to set
   * @param Boolean enc: If true, URI-encodes the value
   */
-function setValue(name, val, enc = null) {
+function setValue (name:String, val:String, enc:Boolean = false) :void {
     if (enc) val = encodeURIComponent(val);
-    var a = this.d[ name ];
-    if ( a == null ) {
-        // add first pair
-        this.d[ name ] = [name, val];
-    } else {
-        var i = this.findKey( name );
-        if (null != i) {
-            // replace existing value
-            a[i + 1] = val;
-        } else {
-            // add new value
-            a.push(name, val);
-        }
-    }
+    // replace existing value
+    this.d[ name ] = [ val ];
 }
 
 
@@ -185,15 +155,15 @@ function setValue(name, val, enc = null) {
   * @param String val: The value to set
   * @param Boolean enc: If true, URI-encodes the value
   */
-function addValue(name, val, enc=false) {
-    if ( enc ) val = encodeURIComponent( val );
-    var a = this.d[ name ];
-    if ( a == null ) {
-        // add first pair
-        this.d[ name ] = [ name, val ];
+function addValue (name:String, val:String, enc:Boolean = false) :void {
+    if (enc) val = encodeURIComponent( val );
+    var a:Array = this.d[ name ];
+    if (a == null) {
+        // add first 
+        this.d[ name ] = [ val ];
     } else {
         // add new value
-        a.push( name, val );
+        a.push( val );
     }
 }
 
@@ -203,10 +173,10 @@ function addValue(name, val, enc=false) {
   * @param String name: The name to look up - must evaluate to a string
   * @return String: The value for the specified name
   */
-function getValue(name) {
-    var i = this.findKey(name);
-    if (null != i) {
-        return this.d[name][i + 1];
+function getValue (name:String) :String? {
+    var a:Array = this.d[name];
+    if (a != null) {
+        return a[ 0 ];
     }
 }
 
@@ -215,18 +185,18 @@ function getValue(name) {
   * Get a value by name irrespective of case.
   * @param String name: The name to look up - must evaluate to a string
   * @return [String]: An array of values that case-insensitively match name
+  * @keywords deprecated
   */
-function getValueNoCase(name) {
-    var a = this.d[name];
-    if ( a.length ){
-        if ( a.length == 2 ) {
-            return a[ 1 ];
-        }else {
-            var r =[];
-            for ( var i = 1; i < a.length; i +=2 ){
-                r.push( a[ i ] );
-            }
-            return r;
+function getValueNoCase (name:String) :* {
+    if ($debug) {
+        Debug.info("%w.%s is deprecated.", this, arguments.callee);
+    }
+    var a:Array = this.d[ name ];
+    if (a != null) {
+        if (a.length == 1) {
+            return a[ 0 ];
+        } else {
+            return a.concat();
         }
     }
 }
@@ -236,37 +206,21 @@ function getValueNoCase(name) {
   * Get a list of all names, not necessarily in order
   * @return [String]: A list of keys
   */
-function getNames() {
-    var o = [];
-    for (var n in this.d) {
-        var a = this.d[n];
-        for (var i = 0; i < a.length; i += 2) {
-            if (null != a[i]) {
-                o.push(a[i]);
-            }
-        }
+function getNames () :Array {
+    var o:Array = [];
+    for (var n:String in this.d) {
+        o.push(n);
     }
     return o;
 }
 
 
-//----------------------------------------------------------------------------- // Get offset for specified name in the hash value.
-//
 /** @access private */
-// @param name: The name to set - must evaluate to a string
-// @return i: The offset found
-//-----------------------------------------------------------------------------
-function findKey( name ) {
-    var a = this.d[name];
-    if (a != null) {
-        for (var i = 0; i < a.length; i += 2) {
-            if (name == a[ i ]) {
-                return i;
-            }   
-        }
-    }
-}
+function $lzc$set_delimiter(d:String) :void { this.setDelimiter(d); }
 
+
+/** @access private */
+function $lzc$set_separator(s:String) :void { this.setSeparator(s); }
 
 
 /**
@@ -274,9 +228,9 @@ function findKey( name ) {
   * @param String d: String to use as delimiter
   * @return String: Old delimiter
   */
-function setDelimiter(d) {
-    var o = this.dlm;
-    this.dlm = d;
+function setDelimiter (d:String) :String {
+    var o:String = this.delimiter;
+    this.delimiter = d;
     return o;
 }
 
@@ -288,9 +242,9 @@ function setDelimiter(d) {
   * @param String s: String to use as separator
   * @return String : Old separator
   */
-function setSeparator(s) {
-    var o = this.sep;
-    this.sep = s;
+function setSeparator (s:String) :String {
+    var o:String = this.separator;
+    this.separator = s;
     return o;
 }
 
@@ -299,7 +253,7 @@ function setSeparator(s) {
   * Returns a string representation using the current separator and delimiter 
   * @return String: All names and values for this object
   */
-override function toString() {
+function toString () :String {
     return this.serialize();
 }
 
@@ -310,20 +264,19 @@ override function toString() {
   * @param Boolean uriencode: If true, uri-encode values
   * @return: String representation of parameters
   */
-function serialize( sep = null, delim = null, uriencode = null ){
-    var sep = sep == null ? this.sep : sep;
-    var dlm = delim == null ? this.dlm : delim;
+function serialize (sep:String? = null, delim:String? = null, uriencode:Boolean = false) :String {
+    var sep:String = sep == null ? this.separator : sep;
+    var dlm:String = delim == null ? this.delimiter : delim;
 
-    var o = "";
+    var o:String = "";
 
-    var c = false;
-    for ( var mk in this.d ){
-        var n = this.d[ mk ];
+    var c:Boolean = false;
+    for (var mk:String in this.d) {
+        var n:Array = this.d[ mk ];
         if (n != null) {
-            for ( var i = 0; i < n.length; i+=2 ) {
+            for (var i:int = 0; i < n.length; ++i) {
                 if ( c ) o += dlm;
-                o += n[ i ] + sep ;
-                o += uriencode? encodeURIComponent( n[ i + 1 ] ) : n[ i + 1 ];
+                o += mk + sep + (uriencode ? encodeURIComponent( n[i] ) : n[i]);
                 c = true;
             }
         }
@@ -334,4 +287,4 @@ function serialize( sep = null, delim = null, uriencode = null ){
 
 } // End of LzParam
 
-lz[LzParam.tagname] = LzParam;  // publish
+lz.Param = LzParam;  // publish

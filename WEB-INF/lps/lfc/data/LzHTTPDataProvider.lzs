@@ -27,8 +27,8 @@
   */
 class LzHTTPDataProvider extends LzDataProvider {
 
-    function LzHTTPDataProvider ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null) {
-        super(parent,attrs,children,instcall);
+    function LzHTTPDataProvider () {
+        super();
     }  
 
     /** @access private
@@ -332,7 +332,6 @@ class LzHTTPDataProvider extends LzDataProvider {
         dreq.responseheaders = headers;
         dreq.rawdata = dreq.loader.getResponse();
         dreq.onstatus.sendEvent( dreq );
-
     }
 }
 lz.HTTPDataProvider = LzHTTPDataProvider;  // publish

@@ -178,7 +178,7 @@ var type = null;
 /** An LzParams object which holds query key-value pairs.
     @type LzParam
  */
-var params = null;
+var params :LzParam = null;
 
 /** When true, the server will preserve namespace prefixes
   * on data node names and attribute names
@@ -420,9 +420,9 @@ function getQueryString (){
   * dataset.
   * @return LzParam: The request parameters for the dataset.
   */
-function getParams (){
+function getParams () :LzParam {
     if (this.params == null) {
-        new LzParam ( this , { name : "params" } );
+        this.params = new LzParam();
     }
 
     return this.params;
@@ -526,7 +526,7 @@ function setQueryString( s ) {
         if (s instanceof  LzParam){
             this.querystring = s.toString();
         } else {
-            var p = new LzParam ( this );
+            var p = new LzParam ();
             for ( var n in s ) {
                 p.setValue( n, s[n], true );
             }
@@ -615,7 +615,7 @@ function getLoadTime( ) {
 function setQueryParam( key , val ) {
     this.querystring = null;
     if ( ! this.params ){
-        new LzParam ( this , { name : "params" } );
+        this.params = new LzParam();
     }
     this.params.setValue( key, val );
 
@@ -636,10 +636,7 @@ function setQueryParam( key , val ) {
 function setQueryParams( o ) {
     this.querystring = null;
     if ( ! this.params ){
-        //new LzParam ( this , { name : "params" } );
-        // [todo 2006-06 hqm] this.params does not seem to be getting set
-        // in IE -- temporary patch here to work around 
-        this.params = new LzParam ( this , { name : "params" } );
+        this.params = new LzParam();
     }
 
     if ( o ) {
@@ -724,7 +721,7 @@ function doRequest(ignore=null) {
     // values. Note, this is independent of the query portion of the
     // this.src URL. 
     if (this.querystring) {
-        dreq.queryparams = new LzParam(this);
+        dreq.queryparams = new LzParam();
         dreq.queryparams.addObject(LzParam.parseQueryString(this.querystring));
     } else {
         // otherwise, use the this.params value
@@ -905,7 +902,7 @@ function getAllResponseHeaders() {
   */
 function setHeader ( k , val ){ 
     if ( !this.headers ) {
-        this.headers = new LzParam( this );
+        this.headers = new LzParam();
     }
 
     this.headers.setValue( k , val );

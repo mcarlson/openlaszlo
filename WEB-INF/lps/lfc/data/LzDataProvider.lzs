@@ -31,18 +31,11 @@
   * @lzxname dataprovider
   */
 
-class LzDataProvider extends LzNode {
+class LzDataProvider extends LzEventable {
 
-    function LzDataProvider ( parent:* = null, attrs:* = null, children:* = null, instcall:*  = null) {
-        super(parent,attrs,children,instcall);
-    }  
-
-    /** @access private
-     * @modifiers override 
-     */
-    static var tagname = 'dataprovider';
-/** @access private */
-    static var attributes = new LzInheritedHash(LzNode.attributes);
+    function LzDataProvider () {
+        super();
+    }
 
     /**
      * Executes the given DataRequest
@@ -54,4 +47,4 @@ class LzDataProvider extends LzNode {
     }
 }
 
-lz[LzDataProvider.tagname] = LzDataProvider;  // publish
+lz.DataProvider = LzDataProvider;  // publish
