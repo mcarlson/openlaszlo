@@ -213,7 +213,7 @@
   <method name="searchImmediateSubnodes"/>
   <method name="searchParents"/>
   <method name="searchSubnodes"/>
-  <method name="setAttribute"/>
+  <method name="setAttribute" final="true"/>
   <method name="setData"/>
   <method name="setDatapath"/>
   <method name="setExpectedAttribute"/>

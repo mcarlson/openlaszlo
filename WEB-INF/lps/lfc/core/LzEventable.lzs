@@ -34,7 +34,7 @@
 class LzEventable {
 
   /** @access private */
-  function LzEventable ( parent:* = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
+  function LzEventable () {
   }
 
   /**
@@ -111,7 +111,7 @@ class LzEventable {
    * @devnote Note: this is inlined by the script compiler, so that
    * must be updated if you change this function
    */
-  function setAttribute(prop, val, ifchanged = null) {
+  final function setAttribute(prop, val, ifchanged = null) {
     if (this.__LZdeleted || (ifchanged && (this[prop] == val))) return;
 
     // Must agree with NodeModel in tag compiler
