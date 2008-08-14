@@ -19,6 +19,9 @@ dynamic class LzDebugService with LzFormatter {
     public function inspect(...args):void {
       this.write('INSPECT: ' + this.formatToString.apply(this, args));
     }
+    public function deprecated(...args):void {
+      this.write('DEPRECATED: ' + this.formatToString.apply(this, args));
+    }
     public function info(...args):void {
       this.write('INFO: ' + this.formatToString.apply(this, args));
     }
