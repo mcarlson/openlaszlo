@@ -7,7 +7,7 @@
             onmouseover="dragsmall.display(this, this.datapath.xpathQuery('text()'))"
             onmouseout="dragsmall.hide()"
             onmousedown="dragsmall.start()"
-            onmouseup="dragsmall.stop(); this.itemDropped(parent.datapath);"
+            onmouseup="dragsmall.stopdrag(); this.itemDropped(parent.datapath);"
             ondblclick="this.parent.getInfo()">
             <attribute name="source" value="${this.data}"/>
             <method name="itemDropped" args="dpath">
