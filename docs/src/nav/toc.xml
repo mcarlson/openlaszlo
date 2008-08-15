@@ -134,7 +134,7 @@
         <item title="&amp;lt;dataset&amp;gt;" href="LzDataset.html" />
         <item title="&amp;lt;httpdataprovider&amp;gt;" href="LzHTTPDataProvider.html" />
         <item title="&amp;lt;httpdatarequest&amp;gt;" href="LzHTTPDataRequest.html" />
-        <item title="&amp;lt;params&amp;gt;" href="LzParam.html" />
+        <item title="lz.Param" href="LzParam.html" />
         <item title="lz.DataElement" href="LzDataElement.html" />
         <item title="lz.DataNode" href="LzDataNode.html" />
         <item title="lz.DataNodeMixin" href="LzDataNodeMixin.html" />
@@ -209,7 +209,7 @@
     </category>
     <category title="RPC">
         <item title="&amp;lt;javarpc&amp;gt;" href="lz.javarpc.html" />
-        <item title="&amp;lt;param&amp;gt;" href="lz.param.html" />        
+<!--        <item title="&amp;lt;param&amp;gt;" href="lz.param.html" /> -->
         <item title="&amp;lt;rpc&amp;gt;" href="lz.rpc.html" />
         <item title="&amp;lt;remotecall&amp;gt;" href="lz.remotecall.html" />
         <item title="&amp;lt;soap&amp;gt;" href="lz.soap.html" />

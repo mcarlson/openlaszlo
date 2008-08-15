@@ -1,6 +1,7 @@
 
 <canvas width="100%" height="200" >
   <debug fontsize="12"/>
+  <include href="lztest/xmlequals.lzx"/>
 
    <view layout="axis: y">
     <dataset name="ds" src="http://..."/>
@@ -62,7 +63,7 @@
     <handler reference="lds" name="oninit">
       <![CDATA[
       Debug.write("filedata test data loaded", this);
-      if (this.lds.serialize() != '<lds><persons><person id="1"><firstName>Dan</firstName><lastName>McGowan</lastName><modifyDate>3/25/05</modifyDate><address code="ML" id="1"><line1>2210 North 184th Street</line1><line2/><city>Shoreline</city></address></person><person id="2"><firstName>Barry</firstName><lastName>Bonds</lastName><modifyDate>3/25/05</modifyDate></person><person id="3"><firstName>Jeff</firstName><lastName>Beck</lastName><modifyDate>3/25/05</modifyDate></person></persons></lds>') {
+      if (! xmlstringequals(this.lds.serialize(), '<lds><persons><person id="1"><firstName>Dan</firstName><lastName>McGowan</lastName><modifyDate>3/25/05</modifyDate><address code="ML" id="1"><line1>2210 North 184th Street</line1><line2/><city>Shoreline</city></address></person><person id="2"><firstName>Barry</firstName><lastName>Bonds</lastName><modifyDate>3/25/05</modifyDate></person><person id="3"><firstName>Jeff</firstName><lastName>Beck</lastName><modifyDate>3/25/05</modifyDate></person></persons></lds>')) {
       Debug.error("filedata serialized data does not match expected value");
       }
       ]]>
@@ -79,7 +80,7 @@
     <handler reference="lds" name="ondata">
       <![CDATA[
       Debug.write("remotedata test data loaded", this);
-      if (this.lds.serialize() != '<lds><persons><person id="1"><firstName>Dan</firstName><lastName>McGowan</lastName><modifyDate>3/25/05</modifyDate><address id="1" code="ML"><line1>2210 North 184th Street</line1><line2/><city>Shoreline</city></address></person><person id="2"><firstName>Barry</firstName><lastName>Bonds</lastName><modifyDate>3/25/05</modifyDate></person><person id="3"><firstName>Jeff</firstName><lastName>Beck</lastName><modifyDate>3/25/05</modifyDate></person></persons></lds>') {
+      if (! xmlstringequals(this.lds.serialize(), '<lds><persons><person id="1"><firstName>Dan</firstName><lastName>McGowan</lastName><modifyDate>3/25/05</modifyDate><address id="1" code="ML"><line1>2210 North 184th Street</line1><line2/><city>Shoreline</city></address></person><person id="2"><firstName>Barry</firstName><lastName>Bonds</lastName><modifyDate>3/25/05</modifyDate></person><person id="3"><firstName>Jeff</firstName><lastName>Beck</lastName><modifyDate>3/25/05</modifyDate></person></persons></lds>')) {
       Debug.error("remotedata serialized data does not match expected value");
       }
       ]]>
@@ -116,6 +117,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
