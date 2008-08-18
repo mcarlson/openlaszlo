@@ -43,7 +43,12 @@ Depending on whether your compile to SWF (the default) or DHTML, a slightly diff
   
 <para/></section></section><section><title>The Command Line Compiler</title>
 <para>
-In OpenLaszlo, 'the compiler' consists (currently) of two phases: 1) 'the view compiler', which compiles LZX to JavaScript, and 2) 'the script compiler', which compiles JavaScript to the target runtime  (SWF7, SWF8 and DHTML). `lzc` invokes both those phases (although you can ask for the intermediate output).
+In OpenLaszlo, 'the compiler' consists (currently) of two phases: 
+<itemizedlist>
+<listitem><emphasis>the view compiler</emphasis>, which compiles LZX to JavaScript</listitem>
+<listitem><emphasis>the script compiler</emphasis>, which compiles JavaScript to the target runtime  (SWF8, SWF9 and DHTML). <literal>lzc
+</literal> invokes both those phases (although you can ask for the intermediate output).</listitem>
+</itemizedlist>
 </para>
 <para>
 The Debugger needs an OL server to be able to evaluate forms (it calls the server to compile the form and then loads and runs the result). It will try to talk to OL server (using the url the application was loaded from), so it should 'just work', so long as you are running a server, even if you don't use the server for compiling your application. 
@@ -161,9 +166,9 @@ Running LZC from other than LPS_HOME will result in a file not found error.
       </para>
       <variablelist>
         <varlistentry>
-          <term>--runtime=[swf7|swf8|dhtml]</term>
+          <term>--runtime=[swf8|swf9|dhtml]</term>
           <listitem>
-            <para> Compile to swf7, swf8, or dhtml.</para>
+            <para> Compile to swf8, swf9, or dhtml.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -266,7 +271,7 @@ For example: </para>
       As part of the architectural overhaul, we have created a new version of the client runtime (LFC plus kernel). To invoke an application compiled for DHMTML, use the <literal>?lzr=dhtml</literal> query.
     </para>
     <para>
-      The <literal>?lzr</literal> parameter selects the runtime.  Your choices are swf7, swf8, dhtml.  The default is specified in lps/config/lps.properties as compiler.runtime.default.  The default runtime selector is swf7.
+      The <literal>?lzr</literal> parameter selects the runtime.  Your choices are swf8, swf9, and dhtml.  The default is specified in <literal>lps/config/lps.properties</literal> as <literal>compiler.runtime.default</literal>.  The default runtime selector is swf8.
     </para>
     <para>
       The <literal>?lzt</literal> parameter is the 'request type', in general what kind of 'wrapper' page will be generated around your application.  Your choices are: app_console or html.  app_console is the developer console, html is your app in an html page.  The latter can be used as a model for embedding your app in a custom page, or you can simply embed using an iframe:
@@ -286,8 +291,8 @@ For example: </para>
 </para>
 <para> To specify that the application run in the Developer's Console, use the <literal>lzt</literal> flag:
       <literal>lzt=app_console</literal> loads the application with the Developer's Console.
-      <literal>lzr=swf7</literal> and <literal>lzr=swf8</literal> loads the application compiled for the SWF7 or SWF8 runtime, with the Developer's Console.
-      Several lzr values have been added for future use, but are not currently supported: <literal>swf9, j2me, svg</literal>
+      <literal>lzr=swf8</literal> and <literal>lzr=swf9</literal> loads the application compiled for the SWF8 or SWF9 runtime, with the Developer's Console.
+      Two lzr values have been added for future use, but are not currently supported: <literal>j2me, and svg</literal>
     </para>
 
 

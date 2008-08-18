@@ -8,7 +8,7 @@ The OpenLaszlo system architecture combines the power and usability of client/se
 administrative advantages and cost effectiveness of web applications.
 </para>
 <para>
-OpenLaszlo applications are written in the XML language LZX, which compiles to any of several runtime targets, including, as of OpenLaszlo 4.0, sw7, sw8, and native browser JavaScript, also sometimes called DHTML or Ajax. Applications compiled to SWF7 or SWF8 run in the Flash 9 player.</para>
+OpenLaszlo applications are written in the XML language LZX, which compiles to any of several runtime targets, including, as of OpenLaszlo 4.0, sw7, sw8, and native browser JavaScript, also sometimes called DHTML or Ajax. Applications compiled to SWF8 or SWF9 run in the Flash 9 player.</para>
 <para/><section><title>Deployment Modes</title>
 <para>
 OpenLaszlo applications can be made available on the web, or <emphasis role="i">deployed</emphasis> in either of two ways:

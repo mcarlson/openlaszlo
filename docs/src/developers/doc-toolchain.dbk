@@ -301,8 +301,8 @@
               <entry>The <literal>+&lt;runtime&gt;</literal> suffix indicates runtime-specific behavior.</entry>
             </row>
             <row>
-              <entry><literal>id="LzBrowser+swf7+swf8+swf9"</literal></entry>
-              <entry>the <literal>LzBrowswer</literal> class, as it exists in the swf7, swf8, and swf9 runtimes.</entry>
+              <entry><literal>id="LzBrowser+swf8+swf9"</literal></entry>
+              <entry>the <literal>LzBrowswer</literal> class, as it exists in the swf8, and swf9 runtimes.</entry>
               <entry>Several runtimes can be appended to a class name to indicate that this behavior applies to all of the specified runtimes..</entry>
             </row>            
             <row>

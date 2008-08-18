@@ -70,15 +70,15 @@ var isdone = false,
 
   <para>The js2doc tool tracks the use of top-level conditional expressions and automatically annotates its output with information about those conditionals. Two types of constants are tracked: <emphasis>runtime designators</emphasis>, and <emphasis>build types</emphasis>.</para>
   
-  <para>In the following example, the js2doc output will annotate the <literal>foo</literal> variable as if it had an associated comment with the field <literal>@runtimes $swf7</literal>.</para>
+  <para>In the following example, the js2doc output will annotate the <literal>foo</literal> variable as if it had an associated comment with the field <literal>@runtimes $swf8</literal>.</para>
   
-  <informalexample><programlisting>if ($swf7) {
+  <informalexample><programlisting>if ($swf8) {
   var foo = 10;
 }</programlisting></informalexample>
 
-  <para>Only boolean literals (<literal>true</literal> or <literal>false</literal>) or predefined constants are tracked, but complex boolean expressions combining those elements are supported. In the following example, with a set of three known runtime constants (<literal>$swf7</literal>, <literal>$swf8</literal>, and <literal>$dhtml</literal>) <literal>foo</literal> is annotated as if by <literal>@runtimes $swf7 $swf8</literal>, and <literal>bar</literal> is annotated as if by <literal>@runtimes $dhtml</literal>.</para>
+  <para>Only boolean literals (<literal>true</literal> or <literal>false</literal>) or predefined constants are tracked, but complex boolean expressions combining those elements are supported. In the following example, with a set of three known runtime constants (<literal>$swf8</literal>, <literal>$swf8</literal>, and <literal>$dhtml</literal>) <literal>foo</literal> is annotated as if by <literal>@runtimes $swf8 $swf9</literal>, and <literal>bar</literal> is annotated as if by <literal>@runtimes $dhtml</literal>.</para>
   
-  <informalexample><programlisting>if ($swf7 || $swf8) {
+  <informalexample><programlisting>if ($swf8 || $swf9) {
   var foo = 10;
 } else {
   var bar = 20;
