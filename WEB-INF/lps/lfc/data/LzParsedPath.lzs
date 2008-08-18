@@ -359,6 +359,22 @@ class AnonDatasetGenerator extends LzEventable {
       */
     var pp:LzParsedPath = null;
     
+
+    /**
+      * @access private
+      */
+    var onDocumentChange :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /**
+     * @access private
+     */
+    var onerror :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /**
+     * @access private
+     */
+    var ontimeout :LzDeclaredEventClass = LzDeclaredEvent;
+
     /**
       * TODO: [20080321-anba] Where is this property used? Can it be removed?
       * 

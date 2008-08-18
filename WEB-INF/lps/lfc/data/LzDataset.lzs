@@ -134,12 +134,12 @@ var proxyurl:String = null;
 /** Sent when the dataset's request results in an error. 
  * @lzxtype event
  */
-var onerror = LzDeclaredEvent;
+var onerror:LzDeclaredEventClass = LzDeclaredEvent;
 
 /** Sent when the request made by the dataset times out. 
   * @lzxtype event
   */
-var ontimeout = LzDeclaredEvent;
+var ontimeout:LzDeclaredEventClass = LzDeclaredEvent;
 
 /** The numer of milliseconds to wait before the request times out, and an ontimeout event is sent.
  * @lzxtype Number
