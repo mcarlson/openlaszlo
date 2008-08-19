@@ -35,6 +35,14 @@ public class TranslationUnit
   public static final String INSERT_STREAM_MARK = "#insertStream(";
   public static final String INSERT_END_MARK = ")";
 
+  public class SourceFileLine {
+    SourceFile sourcefile;
+    int line;
+    public String toString() {
+      return sourcefile.toString() + ": " + line;
+    }
+  }
+
   public String getName() {
     return name;
   }
@@ -129,12 +137,21 @@ public class TranslationUnit
     return cur;
   }
 
-  public void setInputLineNumber(int inputLinenum) {
+  public void setInputLineNumber(int inputLinenum, SourceFile srcf) {
     Integer key = new Integer(linenum);
-    // we want the least value in the mapping
-    Integer cur = (Integer)lnums.get(key);
-    if (cur == null || inputLinenum < cur.intValue())
-      lnums.put(key, new Integer(inputLinenum));
+    SourceFileLine cur = (SourceFileLine)lnums.get(key);
+    if (cur == null) {
+      cur = new SourceFileLine();
+      cur.sourcefile = srcf;
+      cur.line = inputLinenum;
+      lnums.put(key, cur);
+    }
+    // if the source file changed, we'll just use the first one.
+    // otherwise, we want the smallest input line in the mapping.
+    else if (cur.sourcefile.equals(srcf) && inputLinenum < cur.line) {
+      cur.line = inputLinenum;
+      lnums.put(key, cur);
+    }
   }
 
   public static int countOccurence(String s, char c) {
@@ -168,15 +185,15 @@ public class TranslationUnit
     }
   }
 
-  public int originalLineNumber(int num) {
+  public SourceFileLine originalLineNumber(int num) {
     num -= lineOffset;
     SortedMap nextLineNumber = lnums.tailMap(new Integer(num));
     if (nextLineNumber.size() == 0)
-      return -1;
+      return null;
     Object key = nextLineNumber.firstKey();
     if (key == null)
-      return -1;
-    return ((Integer)lnums.get(key)).intValue();
+      return null;
+    return (SourceFileLine)lnums.get(key);
   }
 }
 

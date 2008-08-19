@@ -506,7 +506,7 @@ public class SWF9External {
           ExternalCompilerError err = (ExternalCompilerError)iter.next();
           TranslationUnit tunit = err.getTranslationUnit();
           String srcLineStr;
-          int srcLine;
+          TranslationUnit.SourceFileLine srcFileLine;
 
           // actualSrcLine is the name/linenumber of the actual files
           // used in compilation, not the original sources.
@@ -522,12 +522,14 @@ public class SWF9External {
 
           String actualSrcLine = "[" + actualSrcFile + ": " + err.getLineNumber() + "] ";
 
-          if (tunit == null ||
-              ((srcLine = tunit.originalLineNumber(err.getLineNumber())) <= 0)) {
+          if (tunit == null) {
+            srcLineStr = "tunit/line unknown: ";
+          }
+          else if ((srcFileLine = tunit.originalLineNumber(err.getLineNumber())) == null) {
             srcLineStr = "line unknown: ";
           }
           else {
-            srcLineStr = "line " + String.valueOf(srcLine) + ": ";
+            srcLineStr = srcFileLine.sourcefile.name + ": " + srcFileLine.line + ": ";
           }
           System.err.println(actualSrcLine + srcLineStr + err.getErrorString());
 

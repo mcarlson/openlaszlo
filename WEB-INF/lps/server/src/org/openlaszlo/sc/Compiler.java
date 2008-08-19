@@ -347,15 +347,15 @@ public class Compiler {
 
       String astInputFile = (String)options.get(DUMP_AST_INPUT);
       if (astInputFile != null) {
-        emitFile(astInputFile, program);
-        System.err.println("Created " + astInputFile);
+        String newname = emitFile(astInputFile, program);
+        System.err.println("Created " + newname);
       }
       profiler.phase("generate");
       SimpleNode translated = cg.translate(program);
       String astOutputFile = (String)options.get(DUMP_AST_OUTPUT);
       if (astOutputFile != null) {
-        emitFile(astOutputFile, translated);
-        System.err.println("Created " + astOutputFile);
+        String newname = emitFile(astOutputFile, translated);
+        System.err.println("Created " + newname);
       }
 
       if (isScript) {
@@ -464,6 +464,7 @@ public class Compiler {
   public static String DEBUG_EVAL = "debugEval";
   public static String DUMP_AST_INPUT = "dumpASTInput";
   public static String DUMP_AST_OUTPUT = "dumpASTOutput";
+  public static String DUMP_LINE_ANNOTATIONS = "dumpLineAnnotations";
   public static String DISABLE_CONSTANT_POOL = "disableConstantPool";
   public static String DISABLE_TRACK_LINES = "disableTrackLines";
   public static String ELIMINATE_DEAD_EXPRESSIONS = "eliminateDeadExpressions";
@@ -976,9 +977,22 @@ public class Compiler {
 
   /**
    * Emit a file using the TextEmitter as a source for the file text.
+   * The filenamePattern argument can include '*', for this a number
+   * is substituted such that the given filename does not yet exist.
+   * The filename used is returned.
    */
-  public static void emitFile(String filename, TextEmitter tw) {
+  public static String emitFile(String filenamePattern, TextEmitter tw) {
     FileWriter writer = null;
+    String filename;
+    if (filenamePattern.indexOf("*") >= 0) {
+      int index = 1;
+      while ((new File((filename = filenamePattern.replaceAll("\\*", String.valueOf(index))))).exists()) {
+        index++;
+      }
+    }
+    else {
+      filename = filenamePattern;
+    }
     try {
       File f = new File(filename);
       f.delete();
@@ -998,13 +1012,14 @@ public class Compiler {
         }
       }
     }
+    return filename;
   }
 
   /**
    * emit a file with the given String text
    */
-  public static void emitFile(String filename, final String txt) {
-    emitFile(filename, new TextEmitter() {
+  public static String emitFile(String filename, final String txt) {
+    return emitFile(filename, new TextEmitter() {
         public void emit(Writer writer)
           throws IOException {
           writer.write(txt);
@@ -1015,8 +1030,8 @@ public class Compiler {
   /**
    * emit a file with the given node (to be dumped) as the text.
    */
-  public static void emitFile(String filename, final SimpleNode node) {
-    emitFile(filename, new TextEmitter() {
+  public static String emitFile(String filename, final SimpleNode node) {
+    return emitFile(filename, new TextEmitter() {
         public void emit(Writer writer)
           throws IOException {
           nodeFileDump(writer, "", node);

@@ -88,6 +88,7 @@ public abstract class CommonGenerator implements ASTVisitor {
   TranslationContext context = null;
   boolean debugVisit = false;
   InstructionCollector collector = null;
+  SourceFileMap sources = new SourceFileMap();
 
   // Used for swf8 loadable libraries, to put stuff into _level0 namespace
   String globalprefix = "";

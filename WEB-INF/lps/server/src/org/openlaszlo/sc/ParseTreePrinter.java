@@ -49,6 +49,7 @@ public class ParseTreePrinter {
 
   boolean compress;
   boolean trackLines;
+  String dumpLineAnnotationsFile;
   String SPACE;
   String NEWLINE;
   String COMMA;
@@ -74,14 +75,15 @@ public class ParseTreePrinter {
   }
 
   public ParseTreePrinter(boolean compress, boolean obfuscate) {
-    this(compress, obfuscate, false);
+    this(compress, obfuscate, false, null);
   }
 
   // TODO: [2007-11-21 dda] if compress/obfuscate are on, probably
   // can turn off generation of annotations.
-  public ParseTreePrinter(boolean compress, boolean obfuscate, boolean trackLines) {
+  public ParseTreePrinter(boolean compress, boolean obfuscate, boolean trackLines, String dumpLineAnnotationsFile) {
     this.compress = compress;
     this.trackLines = trackLines;
+    this.dumpLineAnnotationsFile = dumpLineAnnotationsFile;
     // Set whitespace
     this.SPACE = compress ? "" : " ";
     this.NEWLINE = obfuscate ? "" : "\n";
@@ -878,8 +880,8 @@ public class ParseTreePrinter {
     return "throw" + delimit(children[0]);
   }
   
-  public List makeTranslationUnits(SimpleNode node) {
-    return makeTranslationUnits(visit(node));
+  public List makeTranslationUnits(SimpleNode node, SourceFileMap sources) {
+    return makeTranslationUnits(visit(node), sources);
   }
 
   public static String unparse(SimpleNode node) {
@@ -1197,20 +1199,34 @@ public class ParseTreePrinter {
     return lnstate;
   }
 
-  public List makeTranslationUnits(String annotated) {
+  public List makeTranslationUnits(String annotated, final SourceFileMap sources) {
+    if (dumpLineAnnotationsFile != null) {
+      Compiler.emitFile(dumpLineAnnotationsFile, printableAnnotations(annotated));
+      System.err.println("Created " + dumpLineAnnotationsFile);
+    }
+    if (DEBUG_NODE_OUTPUT) {
+      System.out.println("ANNOTATED OUTPUT:\n" + printableAnnotations(annotated));
+    }
+
     final ArrayList tunits = new ArrayList();
     final TranslationUnit defaulttu = new TranslationUnit(true);
 
     tunits.add(defaulttu);
-
-    if (DEBUG_NODE_OUTPUT)
-      System.out.println("ANNOTATED OUTPUT:\n" + printableAnnotations(annotated));
 
     AnnotationProcessor ap = new AnnotationProcessor() {
         TranslationUnit curtu = defaulttu;
         boolean atBol = true;
         LineNumberState curLstate = new LineNumberState();
 
+        /** source locations are recorded to show error messages.
+         * We want to err on the side of recording more, not less.
+         */
+        public boolean shouldRecordSourceLocation(LineNumberState state) {
+          return (state.hasfile && state.linenum != Integer.MIN_VALUE);
+        }
+
+        /** source locations that are shown are used by the debugger.
+         */
         public boolean shouldShowSourceLocation(LineNumberState os,
                                                 LineNumberState ns,
                                                 char op,
@@ -1312,6 +1328,9 @@ public class ParseTreePrinter {
           case ANNOTATE_OP_FILE_LINENUM:
             LineNumberState newLstate = getLineNumberState(curtu, operand);
 
+            if (shouldRecordSourceLocation(newLstate)) {
+              curtu.setInputLineNumber(newLstate.linenum, sources.byName(newLstate.filename));
+            }
             if (shouldShowSourceLocation(curLstate, newLstate, op, atBol)) {
               String srcloc = atBol ? "" : "\n";
               if (op == ANNOTATE_OP_FILE_LINENUM_FORCE) {
@@ -1325,7 +1344,6 @@ public class ParseTreePrinter {
                 srcloc += "/* -*- file: " + operand + " -*- */\n";
               }
               curtu.addText(srcloc);
-              curtu.setInputLineNumber(curLstate.linenum);
               newLstate.linediff++; // compensate for line just added
               curLstate = newLstate;
             }

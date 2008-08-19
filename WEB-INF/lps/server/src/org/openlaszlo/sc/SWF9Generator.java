@@ -673,9 +673,11 @@ public class SWF9Generator extends JavascriptGenerator {
       mainClass = SWF9Generator.MAIN_LIB_CLASSNAME;
     } else {
       mainClass = debugEval ? SWF9Generator.DEBUG_EVAL_CLASSNAME : SWF9Generator.MAIN_APP_CLASSNAME;
+      trackLines = true;        // needed to get error messages that relate to original source
     }
 
-    return (new SWF9ParseTreePrinter(compress, obfuscate, mainClass, buildSharedLibrary, trackLines)).makeTranslationUnits(translatedNode);
+    String dumpann = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
+    return (new SWF9ParseTreePrinter(compress, obfuscate, mainClass, buildSharedLibrary, trackLines, dumpann)).makeTranslationUnits(translatedNode, sources);
   }
 
   /** Implements CodeGenerator.

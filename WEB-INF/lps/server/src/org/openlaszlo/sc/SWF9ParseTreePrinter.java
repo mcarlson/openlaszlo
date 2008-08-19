@@ -66,20 +66,20 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
   }
   
   public SWF9ParseTreePrinter() {
-    this(false, false, null, false, false);
+    this(false, false, null, false, false, null);
   }
   
   public SWF9ParseTreePrinter(boolean compress) {
-    this(compress, false, null, false, false);
+    this(compress, false, null, false, false, null);
   }
   
   public SWF9ParseTreePrinter(boolean compress, boolean obfuscate) {
-    this(compress, obfuscate, null, false, false);
+    this(compress, obfuscate, null, false, false, null);
   }
 
-  public SWF9ParseTreePrinter(boolean compress, boolean obfuscate, String mainClassName, boolean sharedLibrary, boolean trackLines) {
+  public SWF9ParseTreePrinter(boolean compress, boolean obfuscate, String mainClassName, boolean sharedLibrary, boolean trackLines, String dumpAnnotationsFile) {
     // never compress or obfuscate
-    super(false, false, trackLines);
+    super(false, false, trackLines, dumpAnnotationsFile);
     this.mainClassName = mainClassName;
     this.islib = sharedLibrary;
   }
@@ -111,8 +111,8 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
   // application or the LFC, we have a 'main' class that must
   // be present to accept these statements.
   //
-  public List makeTranslationUnits(String annotated) {
-    List result = super.makeTranslationUnits(annotated);
+  public List makeTranslationUnits(String annotated, SourceFileMap sources) {
+    List result = super.makeTranslationUnits(annotated, sources);
     TranslationUnit defaultTunit = null;
     TranslationUnit mainTunit = null;
     for (Iterator iter = result.iterator(); iter.hasNext(); ) {
