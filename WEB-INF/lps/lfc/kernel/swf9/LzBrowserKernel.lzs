@@ -51,9 +51,14 @@ static function loadJS ( js, target ){
   * 
   * @param String js: Browser javascript to execute
   */
-static function callJS (js, callback, args) {
-//TODO Not Implemented
-  throw new Error("callJS not implemented");
+static function callJS (...args) {
+    DojoExternalInterface.call.apply(null, args);
+}
+
+// called from DojoExternalInterface
+/** @access private */ 
+static function __jsready () { 
+    //Debug.write('jsready');
 }
 
 /**

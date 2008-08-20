@@ -100,6 +100,17 @@ dynamic public class LzSprite extends Sprite {
 
       public function init (v:Boolean = true):void {
           this.setVisible(v);
+
+          if (this.isroot) {
+            // Expose your methods
+            DojoExternalInterface.addCallback("getCanvasAttribute", lz.History, lz.History.getCanvasAttribute);
+            DojoExternalInterface.addCallback("setCanvasAttribute", lz.History, lz.History.setCanvasAttribute);
+            DojoExternalInterface.addCallback("callMethod", lz.History, lz.History.callMethod);
+            DojoExternalInterface.addCallback("receiveHistory", lz.History, lz.History.receiveHistory);
+
+            // Tell JavaScript that you are ready to have method calls
+            DojoExternalInterface.loaded();
+          }
       }
 
       /**  addChildSprite(Sprite:sprite)

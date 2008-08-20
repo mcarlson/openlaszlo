@@ -345,7 +345,8 @@ lz.embed.dojo = {
         this._initialize(properties);
     },
     
-    useFlash6: function(id){ /* Boolean */
+    /*
+    useFlash6: function(id){
         // summary: Returns whether we are using Flash 6 for communication on this platform.
         
         var app = lz.embed.dojo.obj[id].properties;
@@ -361,7 +362,7 @@ lz.embed.dojo = {
         }
     },
     
-    useFlash8: function(id){ /* Boolean */
+    useFlash8: function(id){
         // summary: Returns whether we are using Flash 8 for communication on this platform.
         
         var app = lz.embed.dojo.obj[id].properties;
@@ -375,6 +376,7 @@ lz.embed.dojo = {
             return false;
         }
     },
+    */
     
     addLoadedListener: function(/* Function */ listener, scope){
         // summary:
@@ -409,16 +411,17 @@ lz.embed.dojo = {
         //    
         //    dojo.event.connect(dojo.flash, "loaded", myInstance, "myCallback");
         
+        var dojo = lz.embed.dojo;
         // reload the page if installing for the first time
-        if (lz.embed.dojo._isinstaller) {
+        if (dojo._isinstaller) {
             top.location = top.location + '';
         }
-        lz.embed.dojo.info.installing = false;
+        dojo.info.installing = false;
         //dojo.debug("lz.embed.dojo.loaded");
-        lz.embed.dojo.ready = true;
-        if(lz.embed.dojo._loadedListeners.length > 0){
-            for(var i = 0;i < lz.embed.dojo._loadedListeners.length; i++){
-                var scope = lz.embed.dojo._loadedListenerScopes[i];
+        dojo.ready = true;
+        if(dojo._loadedListeners.length > 0){
+            for(var i = 0;i < dojo._loadedListeners.length; i++){
+                var scope = dojo._loadedListenerScopes[i];
                 if (id != scope._id) continue;
                 lz.embed.dojo._loadedListeners[i].apply(scope, [scope._id]);
             }
@@ -426,6 +429,7 @@ lz.embed.dojo = {
     },
     
     installing: function(){
+        var dojo = lz.embed.dojo;
         // summary: Called if Flash is being installed.
         // description:
         //    A callback to know if Flash is currently being installed or
@@ -435,32 +439,33 @@ lz.embed.dojo = {
         //    dojo.event.connect(dojo.flash, "installing", myInstance, "myCallback");
          
         //dojo.debug("installing");
-        if(lz.embed.dojo._installingListeners.length > 0){
-            for(var i = 0; i < lz.embed.dojo._installingListeners.length; i++){
-                var scope = lz.embed.dojo._installingListenerScopes[i];
-                lz.embed.dojo._installingListeners[i].apply(scope, [scope._id]);
+        if(dojo._installingListeners.length > 0){
+            for(var i = 0; i < dojo._installingListeners.length; i++){
+                var scope = dojo._installingListenerScopes[i];
+                dojo._installingListeners[i].apply(scope, [scope._id]);
             }
         }
     },
     
     // Initializes dojo.flash.
     _initialize: function(properties){
+        var dojo = lz.embed.dojo;
         //dojo.debug("dojo.flash._initialize");
         // see if we need to rev or install Flash on this platform
-        var installer = new lz.embed.dojo.Install(properties.id);
-        lz.embed.dojo.installer = installer;
+        var installer = new dojo.Install(properties.id);
+        dojo.installer = installer;
 
-        var embed = new lz.embed.dojo.Embed(properties);
-        lz.embed.dojo.obj[properties.id] = embed;
+        var embed = new dojo.Embed(properties);
+        dojo.obj[properties.id] = embed;
         if(installer.needed() == true){        
             installer.install();
         }else{
             //alert("Writing object out");
             // write the flash object into the page
-            embed.write(lz.embed.dojo.info.commVersion);
+            embed.write(dojo.info.commVersion);
             
             // initialize the way we do Flash/JavaScript communication
-            lz.embed.dojo.comm[properties.id] = new lz.embed.dojo.Communicator(properties.id);
+            dojo.comm[properties.id] = new dojo.Communicator(properties.id);
         }
     }
 };
@@ -724,6 +729,7 @@ lz.embed.dojo.Embed.prototype = {
         var swfloc;
         //var dojoPath = lz.embed.options.baseRelativePath;
         // Flash 6
+        /*
         if(flashVer == 6){
             swfloc = this.properties.flash6;
             objectHTML = 
@@ -741,6 +747,7 @@ lz.embed.dojo.Embed.prototype = {
                         + this.protocol()
                         + '://www.macromedia.com/go/getflashplayer">';
         }else{ // Flash 8
+        */
             if (flashVer > lz.embed.dojo.version) doExpressInstall = true;
             swfloc = this.properties.flash8;
             var swflocObjectVars = this.properties.flashvars;
@@ -793,7 +800,7 @@ lz.embed.dojo.Embed.prototype = {
                     + this.protocol()
                     +'://www.macromedia.com/go/getflashplayer" />'
             }
-        }
+        //}
 
         var divid = this.properties.id + 'Container';
         var div = this.properties.appenddiv;
@@ -876,14 +883,18 @@ lz.embed.dojo.Communicator = function(id){
     //    Flash version.
 
     this._id = id;
+    /*
     if(lz.embed.dojo.useFlash6(id)){
         this._writeFlash6();
     }else if (lz.embed.dojo.useFlash8(id)){
+        // noop    
         this._writeFlash8();
     }
+    */
 };
 
 lz.embed.dojo.Communicator.prototype = {
+    /*
     _writeFlash6: function(){
         var id = lz.embed.dojo.obj[this._id].properties.id;
         //console.log('_writeFlash6', id);
@@ -1038,13 +1049,14 @@ lz.embed.dojo.Communicator.prototype = {
         //console.log('_call', functionName, args, id, results)
         
         return results;
-    },
+    },*/
     
     // Flash 8 communication.
     
     // Registers the existence of a Flash method that we can call with
     // JavaScript, using Flash 8's ExternalInterface. 
     _addExternalInterfaceCallback: function(methodName, id){
+        var dojo = lz.embed.dojo;
         var wrapperCall = function(){
             // some browsers don't like us changing values in the 'arguments' array, so
             // make a fresh copy of it
@@ -1054,11 +1066,11 @@ lz.embed.dojo.Communicator.prototype = {
             }
             methodArgs.length = arguments.length;
             //alert('_addExternalInterfaceCallback '  + methodName  + ', ' + methodArgs);
-            return lz.embed.dojo.comm[id]._execFlash(methodName, methodArgs, id);
+            return dojo.comm[id]._execFlash(methodName, methodArgs, id);
         };
         
-        lz.embed.dojo.comm[id][methodName] = wrapperCall;
-        //console.log('creating', id, methodName, lz.embed.dojo.comm)
+        dojo.comm[id][methodName] = wrapperCall;
+        //console.log('creating', id, methodName, dojo.comm)
     },
     
     // Encodes our data to get around ExternalInterface bugs.
@@ -1233,29 +1245,30 @@ lz.embed.dojo.Install = function(id){
 
 lz.embed.dojo.Install.prototype = {
     needed: function(){ /* Boolean */
+        var dojo = lz.embed.dojo;
         // summary:
         //    Determines if installation or revving of the current plugin is 
         //    needed. 
     
         // do we even have flash?
-        if(lz.embed.dojo.info.capable == false){
+        if(dojo.info.capable == false){
             return true;
         }
 
         // are we on the Mac? Safari needs Flash version 8 to do Flash 8
         // communication, while Firefox/Mac needs Flash 8 to fix bugs it has
         // with Flash 6 communication
-        if(lz.embed.browser.isSafari == true && !lz.embed.dojo.info.isVersionOrAbove(8, 0, 0)){
+        if(lz.embed.browser.isSafari == true && !dojo.info.isVersionOrAbove(8, 0, 0)){
             return true;
         }
 
         // pay attention to the minimum requirements  
-        if (lz.embed.dojo.minimumVersion > lz.embed.dojo.info.versionMajor) {
+        if (dojo.minimumVersion > dojo.info.versionMajor) {
             return true;
         }        
 
         // other platforms need at least Flash 8 or above
-        if(!lz.embed.dojo.info.isVersionOrAbove(8, 0, 0)){
+        if(!dojo.info.isVersionOrAbove(8, 0, 0)){
             return true;
         }
 
@@ -1264,19 +1277,20 @@ lz.embed.dojo.Install.prototype = {
     },
 
     install: function(){
+        var dojo = lz.embed.dojo;
         // summary: Performs installation or revving of the Flash plugin.
         
         //dojo.debug("install");
         // indicate that we are installing
-        lz.embed.dojo.info.installing = true;
-        lz.embed.dojo.installing();
+        dojo.info.installing = true;
+        dojo.installing();
         
         // upgrade URL to flash 8...
-        var p = lz.embed.dojo.obj[this._id].properties;
+        var p = dojo.obj[this._id].properties;
         var url = p.flash8;
         var i = url.indexOf('swf7')
         if (i != -1) {
-            lz.embed.dojo._tempurl = url;
+            dojo._tempurl = url;
             url = url.substring(0, i + 3) + '8' + url.substring(i + 4, url.length);
                 p.flash8 = url;
         }
@@ -1284,23 +1298,23 @@ lz.embed.dojo.Install.prototype = {
         // downgrade URL to flash8 so expressinstall can run...
         var i = url.indexOf('swf9')
         if (i != -1) {
-            lz.embed.dojo._tempurl = url;
+            dojo._tempurl = url;
             url = url.substring(0, i + 3) + '8' + url.substring(i + 4, url.length);
                 p.flash8 = url;
         }
 
-        lz.embed.dojo.ready = false;
-        if(lz.embed.dojo.info.capable == false){ // we have no Flash at all
-            lz.embed.dojo._isinstaller = true;
+        dojo.ready = false;
+        if(dojo.info.capable == false){ // we have no Flash at all
+            dojo._isinstaller = true;
             // write out a simple Flash object to force the browser to prompt
             // the user to install things
 
-            var installObj = new lz.embed.dojo.Embed(p);
-            installObj.write(lz.embed.dojo.minimumVersion); // write out HTML for Flash 8 version+
-        }else if(lz.embed.dojo.info.isVersionOrAbove(6, 0, 65)){ // Express Install
+            var installObj = new dojo.Embed(p);
+            installObj.write(dojo.minimumVersion); // write out HTML for Flash 8 version+
+        }else if(dojo.info.isVersionOrAbove(6, 0, 65)){ // Express Install
             //dojo.debug("Express install");
-            var installObj = new lz.embed.dojo.Embed(p);
-            installObj.write(lz.embed.dojo.minimumVersion, true); // write out HTML for Flash 8 version+
+            var installObj = new dojo.Embed(p);
+            installObj.write(dojo.minimumVersion, true); // write out HTML for Flash 8 version+
             installObj.setVisible(true);
             installObj.center();
         }else{ // older Flash install than version 6r65

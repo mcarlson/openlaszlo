@@ -196,9 +196,9 @@ lz.embed.history = {
             //history id
                 if (app.runtime == 'swf') {
                     _this.__setFlash(h, app._id);
-                } else if (window['LzHistory'] && LzHistory['isReady'] && LzHistory['receiveHistory']) {
+                } else if (window['Lz'] && lz['History'] && lz.History['isReady'] && lz.History['receiveHistory']) {
                     //console.log('dhtml ' + h);
-                    LzHistory.receiveHistory(h);
+                    lz.History.receiveHistory(h);
                 }
             }
         }
@@ -227,7 +227,7 @@ lz.embed.history = {
                 //console.log('__setFlash', h, app, id, p);
                 var cid = p.GetVariable("_callbackID") + '';
                 if (cid == 'null') {
-                    lz.embed[id]._lasthash = app.callMethod("LzHistory.receiveHistory(" + h + ")");
+                    lz.embed[id]._lasthash = app.callMethod("lz.History.receiveHistory(" + h + ")");
                 } else {
                     setTimeout('lz.embed.history.__setFlash(' + h + ',"' + id + '")', 10);
                 //alert('busy');

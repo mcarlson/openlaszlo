@@ -229,14 +229,18 @@ class LzUtilsClass {
                 // look in global scope if canvas lookup fails
                 scope = global;
             }
-            var lastscope = scope;
             scope = scope[n];
+            if (i == 0 && n == 'lz') {
+                // for AS3 - no global scope lookup
+                scope = lz;
+            }
+            var lastscope = scope;
             //Debug.write('found', n, 'in scope', scope);  
         }
 
-        var args = arglist == null ? lz.Utils.__unpackList(args) : arglist;
+        var args = arglist == null ? lz.Utils.__unpackList(args, null) : arglist;
 
-        //Debug.write('found scope', scope, 'args', args, 'for path', path);  
+        //Debug.write('found scope', scope, 'args', args, 'for path', path, arglist);  
         return scope.apply(lastscope, args);
     }
 

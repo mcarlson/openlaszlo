@@ -58,6 +58,8 @@ if ($debug) {
 if ($swf9) {
   //Debugger placeholder
 #include "debugger/swf9stubs.lzs"
+    // Initialize the DojoExternalInterface class
+    var DojoExternalInterface = new DojoExternalInterfaceClass( LzBrowserKernel.getInitArg('id') );
 
 } else {
   if ($as2) {

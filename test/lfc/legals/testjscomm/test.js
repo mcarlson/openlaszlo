@@ -4,14 +4,20 @@ var str = '';
 
 function simulateTyping() {
     var app = lz.embed.lzappa;
-    str += String.fromCharCode((Math.random() * 26) + 32 )
+    var chr = String.fromCharCode((Math.random() * 26) + 32 )
+    // swf9 sends back '&amp;' for '&'.  Skip amperstands for this test.
+    while (chr == '&') {
+        chr = String.fromCharCode((Math.random() * 26) + 32 )
+    }
+    str += chr;
+
     if (counter < limit) {
         app.setCanvasAttribute('mytext', str);
         setTimeout(simulateTyping, Math.random() * 30); 
     } else {
         app.setCanvasAttribute('mytext', str);
         var result = app.getCanvasAttribute('mytext', str);
-        if (result != str) alert('warning: simulateTyping() failed');
+        if (result != str) alert('warning: simulateTyping() failed: "' + result + '" != "' + str + '"');
     }
     counter++;
 }
