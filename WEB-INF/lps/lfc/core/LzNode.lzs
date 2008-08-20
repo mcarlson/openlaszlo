@@ -1856,14 +1856,14 @@ public dynamic class LzNode extends LzEventable {
   }
 
   /**
-   * Searches subnodes for the given value of the given property. Note that in
-   * this release, searchSubnodes actually searches only subviews (and thus is
-   * identical to LzView.searchSubiews). This bug will be fixed in a future
-   * release.
-   * @param String prop: The attribute name to search for
-   * @param any val: The value of the attribute.
-   * @return LzNode: The a pointer to subnode with the given property
-   */
+  * Searches subnodes for the given value of the given property. For now, returns when it finds the
+  * first one. This is a width first search.
+  * 
+  * @param String prop: The attribute name to search for
+  * @param any val: The value of the attribute.
+  * @return LzNode: A pointer to the first subnode with the given property 
+  * or null if none is found
+  */
   function searchSubnodes ( prop , val) {
     var nextS = (this.subnodes) ? this.subnodes.concat() : [];
 
