@@ -363,6 +363,11 @@ class AnonDatasetGenerator extends LzEventable {
     /**
       * @access private
       */
+    var __LZdepChildren :Array = null;
+
+    /**
+      * @access private
+      */
     var onDocumentChange :LzDeclaredEventClass = LzDeclaredEvent;
 
     /**
