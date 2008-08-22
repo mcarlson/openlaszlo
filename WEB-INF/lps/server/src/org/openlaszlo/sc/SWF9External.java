@@ -355,7 +355,7 @@ public class SWF9External {
 
       // Expect errors to look like File.as(48): col: 1 Error: some message
 
-      String pat = "([^\\/]+)\\.as\\(([0-9]+)\\): *col: *([0-9]*) *(.*)";
+      String pat = "([^\\\\/]+)\\.as\\(([0-9]+)\\): *col: *([0-9]*) *(.*)";
       errPattern = Pattern.compile(pat);
       //System.out.println("Using error pattern: " + pat);
     }
@@ -405,8 +405,7 @@ public class SWF9External {
    * True if UNIX quoting rules are in effect.
    */
   public static boolean useUnixQuoting() {
-    String osname = System.getProperty("os.name");
-    return !osname.startsWith("Windows");
+    return !isWindows();
   }
 
   /**
@@ -426,9 +425,9 @@ public class SWF9External {
       
         // goodness, both $ and \ are special characters for regex.
         arg = arg.replaceAll("[$]", "\\\\\\$");
-        if (arg.indexOf(' ') >= 0) {
-          arg = "\"" + arg + "\"";
-        }
+      }
+      if (arg.indexOf(' ') >= 0) {
+        arg = "\"" + arg + "\"";
       }
       cmdstr += arg;
     }
@@ -464,10 +463,11 @@ public class SWF9External {
 
     // Generate a small script (unix style) to document how
     // to build this batch of files.
-    String buildsh = "#!/bin/sh\n";
-    buildsh += "cd " + dir + "\n";
+    String buildsh = isWindows() ? "rem build script\n" : "#!/bin/sh\n";
+    buildsh += "cd \"" + dir + "\"\n";
     buildsh += prettycmd + "\n";
-    Compiler.emitFile(workDirectoryName("build.sh"), buildsh);
+    String buildfn = isWindows() ? "build.bat" : "build.sh";
+    Compiler.emitFile(workDirectoryName(buildfn), buildsh);
 
     List newenv = new ArrayList();
     newenv.add("FLEX_HOME="+FLEX_HOME());
