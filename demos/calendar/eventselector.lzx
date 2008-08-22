@@ -19,10 +19,14 @@
         <attribute name="dragging" value="false"/>
         <attribute name="freedragging" value="false"/>
         <attribute name="clipping" value="false"/>
+        <attribute name="xoff" type="number" value="0"/>
+        <attribute name="yoff" type="number" value="0"/>
+        <attribute name="origx" type="number" value="0"/>
+        <attribute name="obarx" type="number" value="0"/>
 
         <view name="bar" pixellock="false" bgcolor="white" visible="false"
               onmousedown="parent.domousedown()"
-              onmouseup="parent.domouseup()">
+              onmouseup="parent.domouseup(null)">
 
             <text name="timeArea" fgcolor="#4B5D6C"
                   datapath="start[1]" y="5" x="2" resize="true">
@@ -30,7 +34,7 @@
                 <handler name="onhour">
                     <![CDATA[
                     if ( this.hour == null ) return;
-                    h = Number( this.hour );
+                    var h = Number( this.hour );
                     var ap = h < 12 ? 'a' : 'p';
                     if ( h > 12) h-=12;
                     else if ( h==0 ) h='12';
@@ -62,16 +66,16 @@
 
             <state name="followstate">
                 <attribute name="x"
-                        value="${classroot.followview.getAttributeRelative( 'x',
+                        value="${classroot['followview'].getAttributeRelative( 'x',
                                                                     this )}"/>
                 <attribute name="y"
-                        value="${classroot.followview.getAttributeRelative( 'y',
+                        value="${classroot['followview'].getAttributeRelative( 'y',
                                                                     this)}"/>
                 <attribute name="width"
-                   value="${classroot.followview.classroot.eventwidth}"/>
+                   value="${classroot['followview'].classroot.eventwidth}"/>
 
                 <attribute name="height"
-                        value="${classroot.followview.height}"/>
+                        value="${classroot['followview'].height}"/>
 
             </state>
 
@@ -80,11 +84,11 @@
         <state name="clipSizing" >
 
             <attribute name="y"
-              value="${followview.classroot.details.bgrect.getAttributeRelative(
+              value="${this['followview'].classroot.details.bgrect.getAttributeRelative(
                                                 'y' , this)}"/>
 
             <attribute name="height"
-                       value="${followview.classroot.details.bgrect.height}"/>
+                       value="${this['followview'].classroot.details.bgrect.height}"/>
 
 
         </state>
@@ -126,7 +130,7 @@
 
         <method name="setSelectedEvent" args="e , sdrag "><![CDATA[
             //Debug.write( 'setSelectedEvent ' , e );
-            if ( e == this.followview ){
+            if ( e == this['followview'] ){
                 if ( sdrag && !this.dragging ){
                     this.domousedown();
                 }
@@ -150,10 +154,10 @@
             this.followview = e;
 
             this.clipdel.unregisterAll();
-            this.clipdel.register( followview.classroot, "onopened" );
+            this.clipdel.register( this['followview'].classroot, "onopened" );
 
             this.hidedel.unregisterAll();
-            this.hidedel.register( followview.classroot, "onvisible" );
+            this.hidedel.register( this['followview'].classroot, "onvisible" );
 
             // change selected day
             calgrid.daySelectionMgr.select(e.classroot);
@@ -165,7 +169,7 @@
             bar.followstate.apply();
 
 
-            var nfd = !followview.classroot.opened;
+            var nfd = !this['followview'].classroot.opened;
             if ( this.freedragging != nfd){
                 this.setAttribute('freedragging', nfd );
             } else {
@@ -220,13 +224,13 @@
         </handler>
 
         <method name="checkClip" args="v"><![CDATA[
-            if ( followview.classroot.opened && this.freedragging ){
+            if ( this['followview'].classroot.opened && this.freedragging ){
                 this.setAttribute( "freedragging" , false );
             }]]>
         </method>
 
         <method name="checkHide" args="v"><![CDATA[
-            if ( !followview.classroot.visible ){
+            if ( !this['followview'].classroot.visible ){
                 this.hide();
             }]]>
         </method>
@@ -237,8 +241,13 @@
             // OLD  cal_interior.showInfo(smallevent.event);
         </handler>
 
-        <handler name="onmousedown" method="domousedown"/>
-        <method name="domousedown" args="v"><![CDATA[
+        <handler name="onmousedown">
+            this.domousedowndel(null);
+        </handler>
+        <method name="domousedowndel" args="v">
+            this.domousedown();
+        </method>
+        <method name="domousedown"><![CDATA[
             //wait 150ms before starting drag; prevents moving the 
             //event selector on a click -- 150ms is empirical
             this.origx = bar.x;
@@ -253,7 +262,7 @@
         <method name="startDrag" args="v">   <![CDATA[
             this.mdel.register( lz.Idle, "onidle" );
             bar.followstate.remove();
-            this.setAttribute('freedragging', !followview.classroot.opened );
+            this.setAttribute('freedragging', !this['followview'].classroot.opened );
             this.setAttribute('dragging',true);
             calgrid.gridlayout.startTrack(); ]]>
         </method>
@@ -266,7 +275,7 @@
                 calgrid.gridlayout.stopTrack();
                 //this may be already applied, but it can't hurt
                 bar.followstate.apply();
-                this.setAttribute('freedragging', !followview.classroot.opened );
+                this.setAttribute('freedragging', !this['followview'].classroot.opened );
             } else {
                 lz.Timer.removeTimer( this.startDragDel );
             } ]]>
@@ -302,14 +311,14 @@
             //may not be free dragging anymore
             var needset = true;
 
-            if ( followview.classroot.opened ){
+            if ( this['followview'].classroot.opened ){
                 //this is the amount the bar would move in x if it
                 //updated to mouse
                 var xedge = this.x + ( this.getMouse( 'x' ) - xoff ) - obarx;
                 if ( xedge < snapEdge && xedge > -snapEdge ) {
 
                     var ybar = bar.getAttributeRelative( 'y' ,
-                                        followview.parent ) +
+                                        this['followview'].parent ) +
                                     ( this.getMouse('y') - yoff - bar.y );
 
                     //Debug.write( ybar  + " d " +
@@ -317,7 +326,7 @@
 
                     //Debug.write( this.getMouse('y') + " m " + bar.y + " o " + yoff );
 
-                    var h = followview.classroot.details.bgrect.height -
+                    var h = this['followview'].classroot.details.bgrect.height -
                             bar.height;
                     if ( ybar > -snapEdge && ybar < h+snapEdge ){
                         //we're within tolerance
@@ -330,19 +339,19 @@
                             //need to reset y in new coordinate system
                         }
                         if ( ybar <= 0 ){
-                            if (followview.classroot.details.bgrect.scrollview.sb) followview.classroot.details.bgrect.scrollview.sb.step(-1);
+                            if (this['followview'].classroot.details.bgrect.scrollview['sb']) this['followview'].classroot.details.bgrect.scrollview.sb.step(-1);
                             bar.setY( 0 );
                         } else if ( ybar > h ){
-                            if (followview.classroot.details.bgrect.scrollview.sb) followview.classroot.details.bgrect.scrollview.sb.step(1);
+                            if (this['followview'].classroot.details.bgrect.scrollview['sb']) this['followview'].classroot.details.bgrect.scrollview.sb.step(1);
                             bar.setY( h );
                         } else {
                             bar.setY( this.getMouse( 'y' ) - yoff );
                         }
 
                         var newStartHour = Math.floor (
-                             followview.classroot.calcHourFromY(
+                             this['followview'].classroot.calcHourFromY(
                                 bar.getAttributeRelative( 'y' ,
-                                                     followview.classroot)) );
+                                                     this['followview'].classroot)) );
 
                         // Format output
                         var ap='a';

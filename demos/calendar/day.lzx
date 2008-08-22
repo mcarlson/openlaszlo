@@ -127,7 +127,13 @@
                 // selection managers always call unselect first
                 dayselectorlook.hide();
             }
-         </method>
+        </method>
+        <attribute name="year" type="number" value="0"/>
+        <attribute name="month" type="number" value="0"/>
+        <attribute name="dayOfMonth" type="number" value="0"/>
+        <attribute name="newYear" type="number" value="0"/>
+        <attribute name="newMonth" type="number" value="0"/>
+        <attribute name="newDay" type="number" value="0"/>
 
         <method name="setDate" args="d,dend" > <![CDATA[
             //Debug.write("CALLED setDate for " +
@@ -181,7 +187,7 @@
                 eventselector.updateEventTime( this );
             }
 
-            if ( !eventselector.followview.childOf( this ) ) {
+            if ( !eventselector['followview'].childOf( this ) ) {
                 // This must be a new calendar day
                 // Get the new day
                 newYear=this.startdate.getFullYear();

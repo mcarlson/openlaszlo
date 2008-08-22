@@ -14,7 +14,7 @@
     </method>
 
     <method name="changeDataset" args="DP,path">
-       var tempDP = dupePointer.DP;
+       var tempDP = DP.dupePointer();
     </method>
 </class>
 

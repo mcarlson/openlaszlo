@@ -47,11 +47,18 @@
     <attribute name="addedOpenWidth"  value="150"/>
     <attribute name="addedOpenHeight" value="170" />
 
+    <attribute name="cw" type="number" value="0"/>
+    <attribute name="ch" type="number" value="0"/>
+    <attribute name="cellwidth" type="number" value="0"/>
+    <attribute name="cellheight" type="number" value="0"/>
+    
+    <attribute name="lastsel" value="${null}"/>
 
     <handler name="oninit" > <![CDATA[
         // Create delegates used by the update method.
-        this.updateDelegate.register( immediateparent,  "onwidth");
-        this.updateDelegate.register( immediateparent,  "onheight");
+        this.doupdateDelegate = new LzDelegate(this, "doupdate");
+        this.doupdateDelegate.register( immediateparent,  "onwidth");
+        this.doupdateDelegate.register( immediateparent,  "onheight");
         this.resetvisDL = new LzDelegate(this,'resetVisibility');
     ]]> </handler>
 
@@ -70,7 +77,7 @@
     <method name="set_rows" args="r"> <![CDATA[
         if (this['rows'] != r) {
             this.rows = r;
-            this.update();
+            this.doupdate(null);
         }
     ]]> </method>
 
@@ -82,7 +89,7 @@
     <method name="set_open" args="row, col"> <![CDATA[
         this.openrow = row;
         this.opencol = col;
-        this.update();
+        this.doupdate(null);
     ]]> </method>
     -->
 
@@ -126,21 +133,21 @@
             }
         this.locked = false;
         if (this.displaymode == 'grid') doanimation = false;
-        if (withupdate) this.update();
+        if (withupdate) this.doupdate(null);
     ]]> </method>
 
     <method name="setopenrow" args="row"> <![CDATA[
         // using brackets avoids the undefined warning in the Debugger
         if (this['openrow'] == row) { return; }
         this.openrow = row;
-        this.update();
+        this.doupdate(null);
     ]]> </method>
 
     <method name="setopencol" args="col"> <![CDATA[
         // using brackets avoids the undefined warning in the Debugger
         if (this['opencol'] == col) { return; }
         this.opencol = col;
-        this.update();
+        this.doupdate(null);
     ]]> </method>
 
 
@@ -160,7 +167,7 @@
         this.locked = false;
         this.displaymode = 'cell';
         this.doanimation  = true;
-        this.update();
+        this.doupdate(null);
     ]]> </method>
 
     <!-- METHOD: showrow -->
@@ -196,7 +203,7 @@
         }
         this.doanimation  = true;
         this.locked = false;
-        this.update();
+        this.doupdate(null);
         this.displaymode = 'row';
     ]]> </method>
 
@@ -221,14 +228,14 @@
             if (this.opencol <  0) this.openrow = -1;
         }
         if(noanimation) this.doanimation = false;
-        this.update();
+        this.doupdate(null);
         this.displaymode = "grid";
     ]]> </method>
 
 
     <event name="onupdatestart" />
     <!-- METHOD: update -->
-    <method name="update" args="v">
+    <method name="doupdate" args="v">
         <![CDATA[
         if ( this['locked'] ) { return }
         if (this.onupdatestart) {
@@ -289,7 +296,7 @@
             // set its appropriate width
             for (var coli = 0; coli < ncols; coli++) {
 
-                s = this.subviews[i];
+                var s = this.subviews[i];
 
                 if (opencol_only) {
                     if (coli == fc)  w = immediateparent.width - this.spacing;
@@ -367,7 +374,7 @@
          // correct the visibility of all of the calendar cells.
          // We can do this right way if there wasn't any animation...
          if (!didAnimation) 
-            this.resetVisibility();
+            this.resetVisibility(null);
         else { // if we started some animation, wait until it finishes
             // to reset the visibility. 
             // We know that the animations are set to 500 ms,
@@ -377,6 +384,7 @@
             // here, we could put an onstop delegate on an animator, but
             // this way is simpler. Less flexibile, but simpler. 
             lz.Timer.addTimer(this.resetvisDL,600);        }
+        super.update();
          ]]>
     </method>
 
@@ -416,7 +424,7 @@
     <method name="stopTrack" >
         this.positiondel.unregisterAll( );
         if ( lastsel != null ){
-            lastsel.hilite(false);
+            lastsel.hilite(false, false);
             lastsel.acceptDrop();
         } else {
             //cancel drop
@@ -482,13 +490,13 @@
 
         if( s != this['lastsel'] ){
             if (this['lastsel'] != null ){
-                lastsel.hilite(false);
+                lastsel.hilite(false, false);
             }
 
             this.lastsel = s;
             // update the hilite
             if (lastsel != null){
-                lastsel.hilite(true);
+                lastsel.hilite(true, false);
             }
         }
         ]]>

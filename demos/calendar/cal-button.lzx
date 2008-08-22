@@ -147,6 +147,7 @@
 
             <view name="iconv" x="${parent.leftinset}" oninit="this.placeicon()" >
                 <attribute name="resource" value="parent.icon" when="always"/>
+                <attribute name="defaultY" type="number" value="0"/>
                 <method name="placeicon">
                     this.defaultY = Math.floor((this.parent.height - this.height)/2.0);
                     this.setY(defaultY);

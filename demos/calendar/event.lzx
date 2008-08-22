@@ -74,7 +74,7 @@
               visible="$once{!this.classroot.classroot.opened}">
 
             <attribute name="text" 
-                        value="${ classroot.startHour }"/>
+                        value="${ classroot.startHour }" type="text" setter="this.mySetText(text)"/>/>
 
             <datapath xpath="start[1]">
                 <!-- Usually data bound views are 'automagically' displayed
@@ -84,7 +84,7 @@
                     interference from the data binding -->
                 <attribute name="datacontrolsvisibility" value="false"/>
             </datapath>
-            <method name="setText" args="h">
+            <method name="mySetText" args="h">
                 <![CDATA[
                 h = Number( h );
                 var ap = h < 12 ? 'a' : 'p';
@@ -110,7 +110,7 @@
                 this.smalltitletext.setX( 25 );
                 this.setX( 0 );
                 this.setHeight(22);
-                this.parent.closedlayout.update(true);
+                this.parent.closedlayout.doupdate(true);
             }
         </method>
 
@@ -150,7 +150,7 @@
 
         <handler name="onmouseup">
             this.mouseIsDown = false;
-            eventselector.domouseup();
+            eventselector.domouseup(null);
         </handler>
 
     </class>

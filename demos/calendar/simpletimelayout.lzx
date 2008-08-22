@@ -12,22 +12,18 @@
         this.enabled=e;
         if ( this.enabled ) {
             this.updateDelegate.enable();
-            this.update(true);
+            this.doupdate(true);
        } else this.updateDelegate.disable();
     </method>
 
     <method name="addSubview" args="newsub"> <![CDATA[
         this.updateDelegate.register( newsub,  "onstartTime" );
         super.addSubview( newsub );
-        if (this.enabled) this.update( true );
+        if (this.enabled) this.doupdate( true );
         ]]>
     </method>
 
-    <method name="reset">
-        this.update( true );
-    </method>
-
-    <method name="update" args="force">
+    <method name="doupdate" args="force">
         <![CDATA[
         var sv = this.subviews;
         if ( this.locked || this.enabled!=true ) return;
@@ -65,7 +61,7 @@
         }
 
         this.locked = false;
-
+        super.update();
         ]]>
     </method>
 
@@ -73,7 +69,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

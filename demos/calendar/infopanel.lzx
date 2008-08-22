@@ -337,7 +337,7 @@
 
         </method>
 
-        <method name="close">
+        <method name="close" args="v">
             <![CDATA[
             if(!this.dataapply){
                 eventDataMgr.deleteEvent()

@@ -318,10 +318,10 @@
                   nxtmonth = 0;
                   nxtyear += 1;
               }
-              var t = getTimer();
+              var t = LzTimeKernel.getTimer();
               this.setMonthAndYear(nxtmonth,nxtyear);
               if (global['mytext'] != null){
-                  mytext.setText( getTimer() -t );
+                  global['mytext'].setText( LzTimeKernel.getTimer() -t );
               }
               cal_interior.viewstyle = "month";
           </method>
@@ -351,7 +351,7 @@
           ]]> </method>
 
           <method name="showmonthview" args="withanimation" > <![CDATA[
-              gridlayout.showgrid();
+              gridlayout.showgrid(false);
               cal_interior.setAttribute("viewstyle", "month");
           ]]> </method>
 
@@ -413,13 +413,13 @@
               for (k=0;k< this.subviews.length && k <= lastVisibleDay; k++) {
                   // to get start of next day, add 26 hours, then
                   //  zero hours/mins/secs/msecs
-                  dtend = new Date(dtstart.getTime() + 26 * 3600000);
+                  var dtend = new Date(dtstart.getTime() + 26 * 3600000);
                   dtend.setHours(0);
                   dtend.setMinutes(0);
                   dtend.setSeconds(0);
                   dtend.setMilliseconds(0);
 
-                  dayview = this.subviews[k];
+                  var dayview = this.subviews[k];
                   dayview.setDate(dtstart, dtend);
 
                   //Debug.write("dtstart:  "+dtstart.getDate());

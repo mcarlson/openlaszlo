@@ -5,9 +5,6 @@
 
     <!-- loads one month of data at a time; source is set by dataloader 
          below-->
-     <script>
-       var dataloader = null;
-     </script>         
     <dataset name="serverdata" type="http"/>
 
     <!-- controls loading of server data; once data has loaded calls 
@@ -87,9 +84,9 @@
                 ptr.selectChild()
             }
 
-            var t = getTimer();
+            var t = LzTimeKernel.getTimer();
             this.addNodeFromPointer( ptr );
-            //Debug.write( "time to addNode: " + ( getTimer() - t ) );
+            //Debug.write( "time to addNode: " + ( LzTimeKernel.getTimer() - t ) );
         </method>
     </datapointer>
 

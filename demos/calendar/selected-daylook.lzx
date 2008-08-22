@@ -14,7 +14,7 @@
                     x="${parent.m.x + parent.m.width - 1}" y="-1">
                     <handler name="onclick">
                         if (this.statenum ==0){
-                            calgrid.openday(classroot.dayview,true)
+                            calgrid.openday(classroot.dayview)
                         }else{
                             if (calgrid.gridlayout.displaymode=='cell'){
                                 calgrid.locked=true;
