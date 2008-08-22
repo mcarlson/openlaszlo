@@ -65,21 +65,21 @@
     
     
     <method name="bigAndSans">
-        var tf = new textformat();
+        var tf = new lz.textformat();
         tf.font = "Futura";
         tf.size = 32;
         rich.setTextFormat(tf, 0, 300);  
     </method> 
     
     <method name="redAndSmall">
-        var tf = new textformat();
+        var tf = new lz.textformat();
         tf.color = red; 
         tf.size = 18;
         rich.setTextFormat(tf, 0, 300);
     </method>    
     
     <method name="blueAndItalic">
-        var tf = new textformat();
+        var tf = new lz.textformat();
         tf.color = blue; 
         tf.italic = true;
         tf.font = 'Times'; 
@@ -152,7 +152,7 @@
 
     
     <method name="redAndBig">
-        var tf = new textformat();
+        var tf = new lz.textformat();
         tf.color = red; 
         tf.size = 18;
         rich.setDefaultFormat(tf); 
@@ -169,7 +169,7 @@
     </method>    
     
     <method name="blueAndItalic">
-        var tf = new textformat();
+        var tf = new lz.textformat();
         tf.color = blue; 
         tf.italic = true;
         tf.font = 'Times'; 
@@ -203,6 +203,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
