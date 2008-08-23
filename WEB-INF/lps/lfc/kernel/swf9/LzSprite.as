@@ -46,6 +46,11 @@ dynamic public class LzSprite extends Sprite {
       public var resourceheight:Number = 0;
       public var isroot:Boolean = false;
 
+      // If null, the handcursor visibility is set to the value of LzMouseKernel.showhandcursor
+      // whenevent a mouseover event happens.
+      public var showhandcursor:* = null;
+      public var cursorSprite:Sprite = null;
+
       public var fontsize:String = "11";
       public var fontstyle:String = "plain";
       public var fontname:String = "Verdana";
@@ -101,7 +106,7 @@ dynamic public class LzSprite extends Sprite {
       public function init (v:Boolean = true):void {
           this.setVisible(v);
 
-          if (this.isroot) {
+          if (this.isroot && DojoExternalInterface.available) {
             // Expose your methods
             DojoExternalInterface.addCallback("getCanvasAttribute", lz.History, lz.History.getCanvasAttribute);
             DojoExternalInterface.addCallback("setCanvasAttribute", lz.History, lz.History.setCanvasAttribute);
@@ -178,7 +183,9 @@ dynamic public class LzSprite extends Sprite {
 
           this.resourcewidth = res.width;
           this.resourceheight = res.height;
-          this.owner.resourceevent('totalframes', res.frames.length);
+          if (this.owner != null) {
+              this.owner.resourceevent('totalframes', res.frames.length);
+          }
           if (this.resourceObj == null) {
               this.createResourceBitmap()  
           }
@@ -306,6 +313,7 @@ dynamic public class LzSprite extends Sprite {
       public function __mouseEvent( e:MouseEvent ){
             var skipevent = false;
             var eventname = 'on' + e.type.toLowerCase();
+
             if (eventname == 'onmousedown') {
                 // cancel mousedown event bubbling...
                 e.stopPropagation();
@@ -327,8 +335,8 @@ dynamic public class LzSprite extends Sprite {
             if (skipevent == true || ! this.owner.mouseevent) return;
 
             // send dragin/out events if the mouse is currently down
-            if (LzMouseKernel.__lastMouseDown) {
-                if (eventname == 'onmouseover' || eventname == 'onmouseout') {
+            if (LzMouseKernel.__lastMouseDown &&
+                (eventname == 'onmouseover' || eventname == 'onmouseout')) {
                     // only send mouseover/out if the mouse went down on this sprite
                     if (LzMouseKernel.__lastMouseDown == this) {
                         LzMouseKernel.__sendEvent(this.owner, eventname);
@@ -336,11 +344,17 @@ dynamic public class LzSprite extends Sprite {
 
                     var dragname = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
                     LzMouseKernel.__sendEvent(this.owner, dragname);
-                    return;
-                }
+            } else {
+                LzMouseKernel.__sendEvent(this.owner, eventname);
             }
 
-            LzMouseKernel.__sendEvent(this.owner, eventname);
+            // If this.showhandcursor is null, inherit value from LzMouseKernel.showhandcursor
+            if (this.clickable) {
+                this.clickbutton.useHandCursor = (showhandcursor == null) ? LzMouseKernel.showhandcursor : showhandcursor;
+            }
+
+
+
       }
 
       /** setClickable( Boolean:clickable )
@@ -364,7 +378,7 @@ dynamic public class LzSprite extends Sprite {
                   this.clickbutton = cb = new SimpleButton();
                   addChild(cb);
               }
-              cb.useHandCursor = true;
+              cb.useHandCursor = (showhandcursor == null) ? LzMouseKernel.showhandcursor : showhandcursor;
               cb.tabEnabled = false;
               var cr = new Shape();
               this.clickregion = cr;
@@ -510,7 +524,7 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function setColorTransform(o=null) {
-          trace('LzSrpite.setColorTransform not yet implemented');
+          trace('LzSprite.setColorTransform not yet implemented');
       }
 
       public function setFontName ( fname:String, prop=null ):void{
@@ -874,12 +888,41 @@ dynamic public class LzSprite extends Sprite {
 
       function sendResourceLoad(skiponload = false) {
           // skiponload is true for resources/setResource() calls
-          this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: skiponload});
+          if (this.owner != null) {
+              this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: skiponload});
+          }
       }
 
-      function setCursor ( c ){
-          trace('setCursor not currently implemented in swf9.');
+      var cursorResource:String = null;
+
+      /**
+       * CURSOR is a string naming the resource to be used as the mouse pointer
+       */
+      function setCursor ( cursor:String ){
+          if (cursor == null) return;
+          if (cursor != '') {
+              this.cursorResource = cursor;
+              addEventListener(MouseEvent.MOUSE_OVER, cursorGotMouseover, true);
+              addEventListener(MouseEvent.MOUSE_OUT, cursorGotMouseout, true);
+              this.mouseEnabled = true;
+          } else {
+              LzMouseKernel.restoreCursorLocal();
+              removeEventListener(MouseEvent.MOUSE_OVER, cursorGotMouseover, true);
+              removeEventListener(MouseEvent.MOUSE_OUT, cursorGotMouseout, true);
+              this.cursorResource = null;
+          }
       }
+
+      /** @access private */
+      function cursorGotMouseover (event:MouseEvent) {
+          LzMouseKernel.setCursorLocal(this.cursorResource);
+      }
+
+      /** @access private */
+      function cursorGotMouseout (event:MouseEvent) {
+          LzMouseKernel.restoreCursorLocal();
+      }
+
 
       function setVolume (v) {
           trace('setVolume not currently implemented in swf9.');
@@ -897,8 +940,11 @@ dynamic public class LzSprite extends Sprite {
           trace('getPan not currently implemented in swf9.');
       }
 
-      function setShowHandCursor ( s ){
-          trace('setShowHandCursor not currently implemented in swf9.');
+      /**
+         
+       */
+      function setShowHandCursor ( s:* ){
+          this.showhandcursor = s;
       }
 
       function setAAActive(s) {

@@ -28,13 +28,19 @@ class LzMouseKernel  {
     static var __lastMouseDown = null;
     static var __listeneradded:Boolean = false ;
 
+    /**
+     * Shows or hides the hand cursor for all clickable views.
+     */
+    static var showhandcursor:Boolean = true;
+
     static function setCallback (scope, funcname) {
         LzMouseKernel.__scope = scope;
         LzMouseKernel.__callback = funcname;
         if (LzMouseKernel.__listeneradded == false) {
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_MOVE, __mouseHandler);
-            LFCApplication.stage.addEventListener(MouseEvent.MOUSE_UP, __mouseHandler);
+            LFCApplication.stage.addEventListener(MouseEvent.MOUSE_UP,   __mouseHandler);
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseHandler);
+            LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE,     __mouseLeavesHandler);
             LzMouseKernel.__listeneradded = true;
         }
     }    
@@ -53,22 +59,50 @@ class LzMouseKernel  {
         }
     }
 
+    // handles MOUSE_LEAVES event
+    static function __mouseLeavesHandler(event:Event):void {
+        var eventname = 'on' + event.type.toLowerCase();
+        LzMouseKernel.__sendEvent(null, eventname);
+    }
+
+
     /**
     * Shows or hides the hand cursor for all clickable views.
     * @param Boolean show: true shows the hand cursor for buttons, false hides it
     */
     static function showHandCursor (show) {
-        Debug.info("LzMouseKernel.showHandCursor not yet implemented.")
+        LzMouseKernel.showhandcursor = show;
     }
 
     static var __amLocked:Boolean = false;
+
+    static var cursorSprite:LzSprite = null;
+    static var globalCursorResource:String = null;
+
     /**
     * Sets the cursor to a resource
     * @param String what: The resource to use as the cursor. 
     */
-    static function setCursorGlobal ( what ){
+    static function setCursorGlobal ( what:String ){
+        globalCursorResource = what;
+        setCursorLocal(what);
+    }
+
+    static function setCursorLocal ( what:String ) {
         if ( LzMouseKernel.__amLocked ) { return; }
-        Debug.info("LzMouseKernel.setCursorGlobal not yet implemented.")
+        if (cursorSprite != null) {
+            cursorSprite.stopDrag();
+            LFCApplication.removeChild(cursorSprite);
+            cursorSprite = null;
+        }
+        cursorSprite = new LzSprite();
+        cursorSprite.setResource(what);
+        // Add the cursor DisplayObject to the root sprite
+        LFCApplication.addChild(cursorSprite);
+        cursorSprite.x = cursorSprite.mouseX;
+        cursorSprite.y = cursorSprite.mouseY;
+        cursorSprite.startDrag(true);
+        Mouse.hide();
     }
 
     /**
@@ -79,7 +113,26 @@ class LzMouseKernel  {
     */
     static function restoreCursor ( ){
         if ( LzMouseKernel.__amLocked ) { return; }
-        Debug.info("LzMouseKernel.restoreCursor not yet implemented.")
+        if (cursorSprite != null) {
+            cursorSprite.stopDrag();
+            LFCApplication.removeChild(cursorSprite);
+            cursorSprite = null;
+            globalCursorResource = null;
+        }
+        Mouse.show();
+    }
+
+    /** Called by LzSprite to restore cursor to global value.
+     */
+    static function restoreCursorLocal ( ){
+        if ( LzMouseKernel.__amLocked ) { return; }
+        if (globalCursorResource == null) {
+            // Restore to system default pointer
+            restoreCursor();
+        } else {
+            // Restore to the last value set by setCursorGlobal
+            setCursorLocal(globalCursorResource);
+        }
     }
 
     /**

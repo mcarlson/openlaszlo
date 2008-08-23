@@ -149,6 +149,12 @@ public class LzGlobalMouseService extends LzEventable {
    */
   var onmousedragout = LzDeclaredEvent;
 
+  /** Sent whenever the mouse is dragged out of the application window
+   * @access public
+   * @lzxtype event
+   */
+  var onmouseleave = LzDeclaredEvent;
+
   /** Sent whenever the mouse button is clicked
    * @access public
    * @lzxtype event
@@ -166,6 +172,7 @@ public class LzGlobalMouseService extends LzEventable {
 
   /** @access private */
   function __mouseEvent (eventname, view) {
+    if (eventname == 'onmouseleave') { canvas.onmouseleave.sendEvent(); }
     if (eventname == 'onmousemove') { this.__movecounter++; }
     var ev = this[eventname];
     if (ev) {

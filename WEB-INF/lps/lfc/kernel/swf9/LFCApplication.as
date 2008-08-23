@@ -26,10 +26,14 @@ public class LFCApplication {
     }#
 
     // The application sprite
-    public var _sprite:Sprite;
+    static public var _sprite:Sprite;
 
-    public function addChild(child:DisplayObject):DisplayObject {
+    public static function addChild(child:DisplayObject):DisplayObject {
        _sprite.addChild(child);
+    }
+
+    public static function removeChild(child:DisplayObject):DisplayObject {
+       _sprite.removeChild(child);
     }
 
     // Allow anyone access to the stage object (see ctor below)
@@ -37,13 +41,13 @@ public class LFCApplication {
 
     // Allow anyone access to write to the debugger
     public static var write:Function;
-
+    
     public function LFCApplication (sprite:Sprite) {
 
-       _sprite = sprite;
+       LFCApplication._sprite = sprite;
 
         // Allow anyone to access the stage object
-        LFCApplication.stage = _sprite.stage;
+        LFCApplication.stage = LFCApplication._sprite.stage;
         LFCApplication.write = this.write;
 
         // trace("LFCApplication.stage = " + LFCApplication.stage);
@@ -79,8 +83,15 @@ public class LFCApplication {
 
         LzKeyboardKernel.setCallback(lz.Keys, '__keyEvent');
 
-        ////////////////////////////////////////////////////////////////
         // cheapo debug console
+        makeDebuggerFields();
+
+        
+
+    }
+
+    // A simple debugger output and input field
+    function makeDebuggerFields () {
         lzconsole = this;
         var tfield:TextField = new TextField();
         tfield.visible = false;
@@ -110,29 +121,11 @@ public class LFCApplication {
         ci.type = TextFieldType.INPUT;
         ci.addEventListener(KeyboardEvent.KEY_DOWN, consoleInputHandler);
 
-
-        /*        var allFonts:Array = Font.enumerateFonts(true);
-        allFonts.sortOn("fontName", Array.CASEINSENSITIVE);
-
-        var embeddedFonts:Array = Font.enumerateFonts(false);
-        embeddedFonts.sortOn("fontName", Array.CASEINSENSITIVE);
-
-        */
-
-
         var newFormat:TextFormat = new TextFormat();
         newFormat.size = 11;
         newFormat.font = "Verdana";
         ci.defaultTextFormat = newFormat;
         consoletext.defaultTextFormat = newFormat;
-
-        ////////////////////////////////////////////////////////////////
-
-
-        ////////////////////////////////////////////////////////////////
-        // Testing runtime code loading
-        ////////////////////////////////////////////////////////////////
-
     }
 
     // Debugger loader completion handler 

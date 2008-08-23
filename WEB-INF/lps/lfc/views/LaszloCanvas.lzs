@@ -395,6 +395,8 @@ override function __makeSprite(args) {
     }
 }
 
+var onmouseleave = LzDeclaredEvent;
+
 /** Sent whenever the number of created nodes changes 
   * @lzxtype event
   */
