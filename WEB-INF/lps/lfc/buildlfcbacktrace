@@ -22,6 +22,11 @@ done
 if [ "$runtime" == "dhtml" ]; then
     suffix="js"
 fi
+if [ "$runtime" == "swf9" ]; then
+    options="${options} --option buildSharedLibrary=true"
+    suffix="swc"
+fi
+
 ant -Dlfc.output=${output:-LFC${runtime#swf}-backtrace.${suffix:-"lzl"}} -Dlfc.runtime=${runtime} -Dlfc.source=LaszloLibrary.lzs \
     -Dlfc.options="--option debugBacktrace  --option nameFunctions --option warnGlobalAssignments \"-D\\\$debug=true\" ${options}" lfc
 
