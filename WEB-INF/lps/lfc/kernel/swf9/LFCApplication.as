@@ -36,6 +36,11 @@ public class LFCApplication {
        _sprite.removeChild(child);
     }
 
+    public static function setChildIndex(child:DisplayObject, index:int):void {
+        _sprite.setChildIndex(child, index);
+    }
+
+
     // Allow anyone access to the stage object (see ctor below)
     public static var stage:Stage = null;
 
@@ -72,6 +77,7 @@ public class LFCApplication {
 
         // Register for callbacks from the kernel
         LzMouseKernel.setCallback(lz.ModeManager, 'rawMouseEvent');
+        LzMouseKernel.initCursor();
 
         
         /* TODO [hqm 2008-01] Do we want to do anything with other

@@ -49,7 +49,6 @@ dynamic public class LzSprite extends Sprite {
       // If null, the handcursor visibility is set to the value of LzMouseKernel.showhandcursor
       // whenevent a mouseover event happens.
       public var showhandcursor:* = null;
-      public var cursorSprite:Sprite = null;
 
       public var fontsize:String = "11";
       public var fontstyle:String = "plain";
@@ -902,9 +901,10 @@ dynamic public class LzSprite extends Sprite {
           if (cursor == null) return;
           if (cursor != '') {
               this.cursorResource = cursor;
-              addEventListener(MouseEvent.MOUSE_OVER, cursorGotMouseover, true);
+              // Disable mouseout handler until it's safe from spurious events due
+              // to addChild of a swf resource
               addEventListener(MouseEvent.MOUSE_OUT, cursorGotMouseout, true);
-              this.mouseEnabled = true;
+              addEventListener(MouseEvent.MOUSE_OVER, cursorGotMouseover, true);
           } else {
               LzMouseKernel.restoreCursorLocal();
               removeEventListener(MouseEvent.MOUSE_OVER, cursorGotMouseover, true);
@@ -918,11 +918,15 @@ dynamic public class LzSprite extends Sprite {
           LzMouseKernel.setCursorLocal(this.cursorResource);
       }
 
+
       /** @access private */
       function cursorGotMouseout (event:MouseEvent) {
+          // If we get a mouseout event, but the cursor is still on
+          // top of this sprite, then that assume a "ghost event", due
+          // to the addChild() call when cursor resource is being set.
+          var str:String = event.target.name;
           LzMouseKernel.restoreCursorLocal();
       }
-
 
       function setVolume (v) {
           trace('setVolume not currently implemented in swf9.');

@@ -45,7 +45,7 @@ class LzMouseKernel  {
         }
     }    
 
-    // handles global mouse events
+    // Handles global mouse events
     static function __mouseHandler(event:MouseEvent):void {
         var eventname = 'on' + event.type.toLowerCase();
         //Debug.write('__mouseHandler', eventname);
@@ -75,9 +75,9 @@ class LzMouseKernel  {
     }
 
     static var __amLocked:Boolean = false;
-
-    static var cursorSprite:LzSprite = null;
+    static var cursorSprite:Sprite = null;
     static var globalCursorResource:String = null;
+    static var lastCursorResource:String = null;
 
     /**
     * Sets the cursor to a resource
@@ -90,19 +90,51 @@ class LzMouseKernel  {
 
     static function setCursorLocal ( what:String ) {
         if ( LzMouseKernel.__amLocked ) { return; }
-        if (cursorSprite != null) {
-            cursorSprite.stopDrag();
-            LFCApplication.removeChild(cursorSprite);
-            cursorSprite = null;
-        }
-        cursorSprite = new LzSprite();
-        cursorSprite.setResource(what);
-        // Add the cursor DisplayObject to the root sprite
-        LFCApplication.addChild(cursorSprite);
-        cursorSprite.x = cursorSprite.mouseX;
-        cursorSprite.y = cursorSprite.mouseY;
-        cursorSprite.startDrag(true);
         Mouse.hide();
+        cursorSprite.x = LFCApplication.stage.mouseX ;
+        cursorSprite.y = LFCApplication.stage.mouseY ;
+        LFCApplication.setChildIndex(cursorSprite, LFCApplication._sprite.numChildren-1);
+        if (lastCursorResource != what) {
+            if (cursorSprite.numChildren > 0) {
+                cursorSprite.removeChildAt(0);
+            }
+            var resourceSprite = getCursorResource(what);
+            resourceSprite.y = 1;
+            cursorSprite.addChild( resourceSprite );
+            lastCursorResource = what;
+        }
+        // respond to mouse move events
+        cursorSprite.startDrag();
+        LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
+        cursorSprite.visible = true;
+    }
+
+ 
+    static function mouseLeaveHandler(evt:Event):void {
+        cursorSprite.visible = false;
+    }
+
+
+    static function getCursorResource (resource:String):Sprite {
+          var resinfo = LzResourceLibrary[resource];
+          var assetclass;
+          var frames = resinfo.frames;
+          var asset:DisplayObject;
+          // single frame resources get an entry in LzResourceLibrary which has
+          // 'assetclass' pointing to the resource Class object.
+          if (resinfo.assetclass is Class) {
+              assetclass = resinfo.assetclass;
+          } else {
+              // Multiframe resources have an array of Class objects in frames[]
+              assetclass = frames[0];
+          }
+
+          if (! assetclass) return;
+          asset = new assetclass();
+          asset.scaleX = 1.0;
+          asset.scaleY = 1.0;
+          //Debug.write('cursor asset', asset);
+          return asset;
     }
 
     /**
@@ -113,12 +145,9 @@ class LzMouseKernel  {
     */
     static function restoreCursor ( ){
         if ( LzMouseKernel.__amLocked ) { return; }
-        if (cursorSprite != null) {
-            cursorSprite.stopDrag();
-            LFCApplication.removeChild(cursorSprite);
-            cursorSprite = null;
-            globalCursorResource = null;
-        }
+        cursorSprite.stopDrag();
+        cursorSprite.visible = false;
+        globalCursorResource = null;
         Mouse.show();
     }
 
@@ -150,5 +179,14 @@ class LzMouseKernel  {
     static function unlock (){
         LzMouseKernel.__amLocked = false;
         LzMouseKernel.restoreCursor(); 
+    }
+
+    static function initCursor () {
+        cursorSprite = new Sprite();
+        cursorSprite.mouseEnabled = false;
+        // Add the cursor DisplayObject to the root sprite
+        LFCApplication.addChild(cursorSprite);
+        cursorSprite.x = -10000;
+        cursorSprite.y = -10000;
     }
 }

@@ -23,7 +23,7 @@ public class DebugExec extends Sprite {
     import flash.display.*;
     }#
 
-    public function DebugExec () {
+    public function DebugExec (...ignore) {
     }
 
     public function write(...args):void {
