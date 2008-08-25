@@ -278,12 +278,12 @@ of a loop.
 <para>If you will have more items in your list than will appear to the user,
 you should use <literal>dataoption="lazy"</literal>.  In this case the
 listitem will use lazy replication  and the list will
-use a <indexterm><primary>LzDataSelectionManager</primary></indexterm><classname>LzDataSelectionManager</classname>, instead of a
-<indexterm><primary>LzSelectionManager</primary></indexterm><classname>LzSelectionManager</classname>.  Some of the APIs for adding
+use a <indexterm><primary>lz.dataselectionmanager</primary></indexterm><classname>lz.dataselectionmanager</classname>, instead of a
+<indexterm><primary>lz.selectionmanager</primary></indexterm><classname>lz.selectionmanager</classname>.  Some of the APIs for adding
 and removing items will not be available, but startup time will be
 significantly faster.  In general, you can modify data through the
 data APIs instead of using list methods.  If you
-have created your own <indexterm><primary>listitem</primary></indexterm><classname>listitem</classname> class you can use the <indexterm><primary>LzDatapath</primary></indexterm><classname>LzDatapath</classname>
+have created your own <indexterm><primary>listitem</primary></indexterm><classname>listitem</classname> class you can use the <indexterm><primary>lz.datapath</primary></indexterm><classname>lz.datapath</classname>
 <indexterm><primary>replication</primary></indexterm><sgmltag class="attribute">replication</sgmltag>
 attribute.</para>
 

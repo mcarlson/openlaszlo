@@ -471,7 +471,7 @@ OpenLaszlo provides partial support for the <ulink url="http://msdn.microsoft.co
 <para>
 Accessibility is implemented using five attributes on <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: view-->
- and two methods on <indexterm><primary>LzBrowser</primary></indexterm><classname>LzBrowser</classname>. 
+ and two methods on <indexterm><primary>lz.Browser</primary></indexterm><classname>lz.Browser</classname>. 
 </para>
 <para>
 In LZX, the most basic visible object is a view. Since almost every visible object inherits from view, almost all visible objects will inherit accessibility support including image, text, button, checkbox, and radio button. (The one exception, images embedded within editable text views, is covered at the end of this section.) The following methods and attributes will be added to view:
@@ -482,17 +482,17 @@ These are the attributes on view. They are described briefly below. </para>
 <variablelist><varlistentry><term>aaactive="boolean"</term><listitem><para>activate/deactivate children for accessibility</para></listitem></varlistentry><varlistentry><term>aaname="string"</term><listitem><para>accessibility name</para></listitem></varlistentry><varlistentry><term>aadescription="string"</term><listitem><para>accessibility description</para></listitem></varlistentry><varlistentry><term>aatabindex="number"</term><listitem><para>accessibility tab ordering </para></listitem></varlistentry><varlistentry><term>aasilent="boolean"</term><listitem><para>accessibility silencing/unsilencing</para></listitem></varlistentry></variablelist>
 
 <para>
-These are the methods on <indexterm><primary>LzBrowser</primary></indexterm><classname>LzBrowser</classname>.
+These are the methods on <indexterm><primary>lz.Browser</primary></indexterm><classname>lz.Browser</classname>.
 </para>
-<variablelist><varlistentry><term>LzBrowser.isAAActive()</term><listitem><para>returns true if a screen reader is active and the Flash player is focused.</para></listitem></varlistentry><varlistentry><term>LzBrowser.setClipboard(string)</term><listitem><para> sets system clipboard</para></listitem></varlistentry></variablelist>
+<variablelist><varlistentry><term>lz.Browser.isAAActive()</term><listitem><para>returns true if a screen reader is active and the Flash player is focused.</para></listitem></varlistentry><varlistentry><term>lz.Browser.setClipboard(string)</term><listitem><para> sets system clipboard</para></listitem></varlistentry></variablelist>
 <para>
-By default, all text contained in an OpenLaszlo application will be read by supported screen readers. Therefore, the activation feature allows you to specify which views should be read by the screen reader. Activation applies to the current view and all of its children. Accessibility name and description provide the overview and detailed text for the screen reader. Accessibility tab ordering, specifies the reading order for accessible objects. Silencing/unsilencing specifies whether an individual item is accessible or not. Finally, LzBrowser provides the isAAActive() method to determine if a screen reader is active and the Flash player is currently focused.
+By default, all text contained in an OpenLaszlo application will be read by supported screen readers. Therefore, the activation feature allows you to specify which views should be read by the screen reader. Activation applies to the current view and all of its children. Accessibility name and description provide the overview and detailed text for the screen reader. Accessibility tab ordering, specifies the reading order for accessible objects. Silencing/unsilencing specifies whether an individual item is accessible or not. Finally, lz.Browser provides the isAAActive() method to determine if a screen reader is active and the Flash player is currently focused.
 </para>
 <para>
 <indexterm><primary>aadescription</primary></indexterm><sgmltag class="attribute">aadescription</sgmltag> is treated separately from the contents. If it's specified, <indexterm><primary>aadescription</primary></indexterm><sgmltag class="attribute">aadescription</sgmltag> will be read in addition to the <indexterm><primary>aaname</primary></indexterm><sgmltag class="attribute">aaname</sgmltag>. By default, <indexterm><primary>aaname</primary></indexterm><sgmltag class="attribute">aaname</sgmltag> is equal to the contents of the text field. <indexterm><primary>aaname</primary></indexterm><sgmltag class="attribute">aaname</sgmltag> can also be specified or overridden.
 </para>
 <para>
-For non-MSAA compliant screen readers such as R&amp;W Gold, OpenLaszlo supports the ability to place text on the clipboard from within an OpenLaszlo application using the <indexterm><primary><literal>LzBrowser.setClipboard()</literal></primary></indexterm><methodname>LzBrowser.setClipboard()</methodname>.
+For non-MSAA compliant screen readers such as R&amp;W Gold, OpenLaszlo supports the ability to place text on the clipboard from within an OpenLaszlo application using the <indexterm><primary><literal>lz.Browser.setClipboard()</literal></primary></indexterm><methodname>lz.Browser.setClipboard()</methodname>.
 </para>
 <para>
 In this example, there are two views that provide accessibility information. When the first view is clicked, it uses the scripting API to unsilence the button.

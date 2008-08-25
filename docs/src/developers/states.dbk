@@ -70,7 +70,7 @@ hierarchy. You can see this in the fact that the <literal>parent</literal> in th
 <para>
 This example highlights the metaphysical nature of states: they modify the meta-object protocol enough so that
  their contents can be stored and applied elsewhere. (This could conceivably be a feature of the system as a whole 
- as in, for example, <literal>an LzNode.setParent(otherLzNode)</literal>, but it's not). 
+ as in, for example, <literal>an lz.node.setParent(otherlz.node)</literal>, but it's not). 
 </para>
 <para/>
 <section><title>Attributes of states</title>
@@ -128,8 +128,8 @@ In states, the "this" keyword refers to the view or node that state is nested in
 </section>
 <section><title>Performance Considerations</title>
 <para>All states are instantiated. Therefore your application "pays the instantiation cost" of a regular node 
-of hierarchy for a state, whether or not it is applied. This is because the state is itself an <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname>,
- which must be processed by the <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> constructor.</para> 
+of hierarchy for a state, whether or not it is applied. This is because the state is itself an <indexterm><primary>lz.node</primary></indexterm><classname>lz.node</classname>,
+ which must be processed by the <indexterm><primary>lz.node</primary></indexterm><classname>lz.node</classname> constructor.</para> 
 <para>
 The advantage of limiting the ways in which a developer can modify a 
 state itself is that then a given state can have a limited number of attributes, which are controlled by the runtime. 

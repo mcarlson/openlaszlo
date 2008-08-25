@@ -60,7 +60,7 @@ s.</para>
 
 <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis> note the lousy explanation below </remark></para>
 
-<para>The following example uses the <indexterm><primary><literal>applyConstraintMethod()</literal></primary></indexterm><methodname>applyConstraintMethod()</methodname> method inherited from <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> in order to create a constraint at
+<para>The following example uses the <indexterm><primary><literal>applyConstraintMethod()</literal></primary></indexterm><methodname>applyConstraintMethod()</methodname> method inherited from <indexterm><primary>lz.node</primary></indexterm><classname>lz.node</classname> in order to create a constraint at
 runtime. You'll see that the <literal>setAttribute()</literal> method has the same effect as the simple expression <literal>y=${m.y}</literal>
 </para>
 

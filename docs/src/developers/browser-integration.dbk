@@ -100,9 +100,9 @@
             <para condition="swf">Applications compiled to SWF are
       executed by the Flash player and must make use of the 
       <indexterm>
-        <primary>LzBrowser</primary>
+        <primary>lz.Browser</primary>
                 </indexterm>
-                <classname>LzBrowser</classname> service in order to "escape"
+                <classname>lz.Browser</classname> service in order to "escape"
       to the browser's JavaScript environment.</para>
             <para>Any attributes that are declared on the canvas are
       visible to the browser JavaScript. To go "the other way",
@@ -144,22 +144,22 @@
             </itemizedlist>
             <para />
             <section>
-                <title condition="swf">The LzBrowser service</title>
+                <title condition="swf">The lz.Browser service</title>
                 <para>The 
         <indexterm>
-          <primary>LzBrowser</primary>
+          <primary>lz.Browser</primary>
                     </indexterm>
-                    <classname>LzBrowser</classname> service provides access to
+                    <classname>lz.Browser</classname> service provides access to
         the browser and player environment. It includes methods to
         load URLs in the browser and check the version of the
         player. Furthermore, by using the 
-        <literal>LzBrowser</literal> service together with other
+        <literal>lz.Browser</literal> service together with other
         OpenLaszlo functions described below, you can build
         applications that pass information and control between the
         OpenLaszlo application and the JavaScript of the
         browser.</para>
                 <para>The 
-        <literal>LzBrowser</literal> is always running.</para>
+        <literal>lz.Browser</literal> is always running.</para>
                 <para />
             </section>
         </section>
@@ -202,9 +202,9 @@
                 <methodname>setCanvasAttribute()</methodname>, nor do you
       need to use the 
       <indexterm>
-        <primary>LzBrowser</primary>
+        <primary>lz.Browser</primary>
                 </indexterm>
-                <classname>LzBrowser</classname> service.</para>
+                <classname>lz.Browser</classname> service.</para>
             <para />
             <section>
                 <title condition="dhtml">Embedding the LFC for DHTML
@@ -578,15 +578,15 @@
             <para>Inside your application use the target parameter of 
       <indexterm>
         <primary>
-          <literal>LzBrowser.LoadURL()</literal>
+          <literal>lz.Browser.LoadURL()</literal>
                     </primary>
                 </indexterm>
-                <methodname>LzBrowser.LoadURL()</methodname> to load pages in
+                <methodname>lz.Browser.LoadURL()</methodname> to load pages in
       the target frame.</para>
             <example role="live-example">
                 <title>target in loadURL</title>
                 <programlisting>
-        LzBrowser.loadURL('http://www.laszlosystems.com','contentArea');</programlisting>
+        lz.Browser.loadURL('http://www.laszlosystems.com','contentArea');</programlisting>
             </example>
             <para />
         </section>
@@ -788,7 +788,7 @@
         <!-- move title to the next example. title is hot valid here -->
         <!-- <title>Example: building a URL</title> -->
         <para>The 
-    <methodname role="LzBrowser.prototype.loadURL">
+    <methodname role="lz.Browser.prototype.loadURL">
     loadURL()</methodname> method is used to create a URL based on
     user input. This URL is then communicated to browser, where a
     JavaScript function is used to unpack it and fill in a form.
@@ -820,7 +820,7 @@
       &lt;edittext name="pass" /&gt; &lt;button&gt;Create Account
       &lt;handler name="onclick"&gt; var s =
       "javascript:fillFormValues('" + parent.uname.getText() + "',
-      '" + parent.pass.getText() + "')"; LzBrowser.loadURL(s);
+      '" + parent.pass.getText() + "')"; lz.Browser.loadURL(s);
       parent.hide.doStart(); &lt;/handler&gt; &lt;/button&gt;
       &lt;/state&gt; &lt;/window&gt;
       &lt;/canvas&gt;</programlisting>
@@ -831,9 +831,9 @@
         <title>Using the browser's "back" button</title>
         <para>The 
     <indexterm>
-      <primary>LzHistory</primary>
+      <primary>lz.History</primary>
             </indexterm>
-            <classname>LzHistory</classname> service allows you to preserve
+            <classname>lz.History</classname> service allows you to preserve
     the state of your application, and then use the "back" button
     of the browser to move among such states.</para>
         <para>The default wrapper page enables the back button and
@@ -844,9 +844,9 @@
         <para>to set a canvas attribute and send an event. The
     following example shows the way the 
     <indexterm>
-      <primary>LzHistory</primary>
+      <primary>lz.History</primary>
             </indexterm>
-            <classname>LzHistory</classname> service works to move among
+            <classname>lz.History</classname> service works to move among
     states. To see the program in action, copy this code to your
     applications directory.</para>
         <example role="live-example">
@@ -878,7 +878,7 @@
       s4.select(false); &lt;/method&gt; &lt;method
       name="selectBlob" args="blob"&gt; 
       <emphasis role="em">// save the old state
-      LzHistory.next();</emphasis> setAttribute('mystate',
+      lz.History.next();</emphasis> setAttribute('mystate',
       blob.title); unselectAll(); blob.select(true);
       recordState(blob.title); &lt;/method&gt; &lt;handler
       name="oninit"&gt; unselectAll(); recordState("START");
@@ -887,7 +887,7 @@
       this.mystate); gotoState(this.mystate); &lt;/handler&gt;
       &lt;method name="recordState" args="newstate"&gt;
       this.mystate = newstate; 
-      <emphasis role="em">LzHistory.save(this,'mystate',
+      <emphasis role="em">lz.History.save(this,'mystate',
       this.mystate);</emphasis> Debug.write("recordState", newstate)
       &lt;/method&gt; &lt;method name="gotoState" args="ns"&gt;
       unselectAll(); if (ns == "START") { s1.select(true); } else

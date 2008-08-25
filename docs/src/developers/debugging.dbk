@@ -63,7 +63,7 @@ about request types.</para></listitem></varlistentry></variablelist>
 <para>A program that is compiled with runtime error checking will contain code that checks for the following conditions:</para>
 
 <table><title>Runtime error checks</title><tgroup cols="3"><thead><row><entry>Condition</entry><entry>Example</entry><entry>Notes</entry></row></thead><tbody><row><entry>Reference to undefined variable</entry><entry><literal>var w = canvs.width</literal></entry><entry><varname>canvs</varname> is not defined.  (There is a global
-  variable named <literal>canvas</literal>, instead.)</entry></row><row><entry>Reference to undefined property</entry><entry><literal>var w = canvas.widt</literal><footnote id="footnote.no-check-for-brackets"><para>The debugger does not warn about undefined references if the subscript notation is used: <literal>canvas['widt']</literal>, which is otherwise equivalent to <literal>canvas.widt</literal>, does not generate a warning.  This can be used as a workaround for the lack of the ECMASCript <literal>in</literal> relational operator in OpenLaszlo ECMASCript, to test whether an attribute exists.</para></footnote></entry><entry><varname>canvas</varname> does not have a <literal>widt</literal> property.  (The name of the property is <literal>canvas.width</literal>.)</entry></row><row><entry>Call to undefined method</entry><entry><literal>LzBrowser.getVerson()</literal></entry><entry><literal>LzBrowser.getVerson</literal> (with no "i") is not defined.</entry></row><row><entry>Call to undefined function</entry><entry><literal>var n = parseInteger("123")</literal></entry><entry><literal>parseInteger</literal> is not defined.  (There is a JavaScript function <literal>parseInt</literal>.)</entry></row><row><entry>Call to non-function</entry><entry><literal>var w = canvas.width()</literal></entry><entry><literal>canvas.width</literal> is a <indexterm><primary>Number</primary></indexterm><classname>Number</classname>,
+  variable named <literal>canvas</literal>, instead.)</entry></row><row><entry>Reference to undefined property</entry><entry><literal>var w = canvas.widt</literal><footnote id="footnote.no-check-for-brackets"><para>The debugger does not warn about undefined references if the subscript notation is used: <literal>canvas['widt']</literal>, which is otherwise equivalent to <literal>canvas.widt</literal>, does not generate a warning.  This can be used as a workaround for the lack of the ECMASCript <literal>in</literal> relational operator in OpenLaszlo ECMASCript, to test whether an attribute exists.</para></footnote></entry><entry><varname>canvas</varname> does not have a <literal>widt</literal> property.  (The name of the property is <literal>canvas.width</literal>.)</entry></row><row><entry>Call to undefined method</entry><entry><literal>lz.Browser.getVerson()</literal></entry><entry><literal>lz.Browser.getVerson</literal> (with no "i") is not defined.</entry></row><row><entry>Call to undefined function</entry><entry><literal>var n = parseInteger("123")</literal></entry><entry><literal>parseInteger</literal> is not defined.  (There is a JavaScript function <literal>parseInt</literal>.)</entry></row><row><entry>Call to non-function</entry><entry><literal>var w = canvas.width()</literal></entry><entry><literal>canvas.width</literal> is a <indexterm><primary>Number</primary></indexterm><classname>Number</classname>,
   not a <indexterm><primary>Function</primary></indexterm><classname>Function</classname>.</entry></row></tbody></tgroup></table>
 
 <para>Each runtime exception warning is printed once per line per program run, not once each time the exception is encountered.  The following program will print one warning, not ten.</para>
@@ -138,7 +138,7 @@ expression, it is executed for effect.</para>
 
 <para>Examples of expressions are <literal>canvas.x</literal>,
 <literal>1+2</literal>, and
-<literal>LzBrowser.LoadURL('http://www.laszlosystems.com/',
+<literal>lz.Browser.LoadURL('http://www.laszlosystems.com/',
 '_blank')</literal>.  (The last expression returns the value
 <literal>undefined</literal>, so the debugger does not print the expression
 value in the debugger log.)  An example of a non-expression statements
@@ -224,7 +224,7 @@ inspectable objects, so that they can be clicked on as well.</para>
 <para>An object's <indexterm significance="preferred"><primary>private properties</primary></indexterm><glossterm>private properties</glossterm> are those whose names begin with <literal>$</literal> or <literal>___</literal> (three underscore characters). These names are used by the compiler and by the OpenLaszlo Runtime Library implementation, respectively, and are not part of the documented API for the object.</para> 
 
 <para>An <indexterm significance="preferred"><primary>inspectable object</primary></indexterm><glossterm>inspectable object</glossterm> can be an OpenLaszlo Runtime Library object such as a
-window or <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>, or a built-in JavaScript
+window or <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname>, or a built-in JavaScript
 object: for example, an array such as <literal>[1, 2, 3]</literal>, or a
 <indexterm><primary>Object</primary></indexterm><classname>Object</classname> such as <literal>{a: 1, b: 2}</literal>.</para>
 

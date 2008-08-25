@@ -4,7 +4,7 @@
   
   <datapointer name="numptr">
     <handler name="ondata" args="d">
-      // d is LzDataElement object 
+      // d is lz.DataElement object 
       result.update(d.nodeName)
     </handler>
   </datapointer>

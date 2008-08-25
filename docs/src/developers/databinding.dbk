@@ -13,13 +13,13 @@ For a gentle introduction to databinding and manipulation in OpenLaszlo applicat
 <para>By "databinding" we mean the automatic association of a value in an XML data structure with an element in the LZX view hierarchy of the application. This chapter explores various aspects of databinding and manipulation in OpenLaszlo applications. Before going into specific details, we'll start with a conceptual overview of how data is represented in LZX applications, and the APIs for manipulating it.</para>
 <para/><section><title>Types of data objects</title>
 <para>
-A dataset (<indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>) is two things:</para>
+A dataset (<indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname>) is two things:</para>
 <itemizedlist spacing="compact"><listitem><para>Firstly, it is the client side store for XML data. It's where a single XML document lives in an OpenLaszlo application. </para></listitem><listitem><para>Secondly, it's the mechanism by which OpenLaszlo applications make HTTP GET or POST requests.</para></listitem></itemizedlist>
-<para>An <indexterm><primary>LzDataElement</primary></indexterm><classname>LzDataElement</classname> is the LZX class that represents a single XML data tag in OpenLaszlo applications. LzDataElements are usually kept in a dataset, although data-bound views can get pointers to them even if they are not in a dataset. Inside of a dataset, LzDataElements are linked in a tree-like structure, but that doesn't mean to say that an LzDataElement <emphasis role="i">must</emphasis> go inside of a dataset. </para>
+<para>An <indexterm><primary>lz.DataElement</primary></indexterm><classname>lz.DataElement</classname> is the LZX class that represents a single XML data tag in OpenLaszlo applications. lz.DataElements are usually kept in a dataset, although data-bound views can get pointers to them even if they are not in a dataset. Inside of a dataset, lz.DataElements are linked in a tree-like structure, but that doesn't mean to say that an lz.DataElement <emphasis role="i">must</emphasis> go inside of a dataset. </para>
 <para>
-LzDataElement is a subclass of <indexterm><primary>LzDataNode</primary></indexterm><classname>LzDataNode</classname>, as is <indexterm><primary>LzDataText.</primary></indexterm><classname>LzDataText.</classname>.
+lz.DataElement is a subclass of <indexterm><primary>lz.DataNode</primary></indexterm><classname>lz.DataNode</classname>, as is <indexterm><primary>lz.DataText.</primary></indexterm><classname>lz.DataText.</classname>.
 </para>
-<para>Finally, note that a dataset is a subclass of LzDataElement, which means that all of the methods which work on LzDataElements also work on LzDataSets, although the usual method of manipulating datasets is with datapaths and datapointers, as explained below.</para>
+<para>Finally, note that a dataset is a subclass of lz.DataElement, which means that all of the methods which work on lz.DataElements also work on lz.datasets, although the usual method of manipulating datasets is with datapaths and datapointers, as explained below.</para>
 <para/></section><section><title>Two ways to interact with data</title>
 <para>
 As we have said, all data in OpenLaszlo applications is in XML format. 
@@ -27,16 +27,16 @@ There are two related but distinct ways of using and manipulating that data in O
 <itemizedlist spacing="compact"><listitem><para>The DOM model—in which the APIs allow you to directly manipulate elements of a Document Object Model using DOM conventions.</para></listitem><listitem><para>The DataPointer model—in which the APIs allow you to position a logical cursor within the dataset using XPATH syntax</para></listitem></itemizedlist>
 <para>
 These two categories of APIs have similar functionality with large areas of overlap. However, there are some things that can only be done (or can best be done) using one specific approach (and not the other).  This means that in many situations there are two logically distinct ways to achieve the same result. Learning to master data manipulation in LZX is a matter of becoming fluent in both approaches and knowing when to use each.</para>
-<para/><section><title>LzDataNodes and the DOM APIs</title>
+<para/><section><title>lz.DataNodes and the DOM APIs</title>
 <para>
-The <ulink url="http://www.w3.org/DOM/">Document Object Model</ulink> is, according to the W3C specification, "a platform-  and language-neutral interface that will allow programs and  scripts to dynamically access and update the content, structure  and style of documents." In the LZX context, the "document" is that LzDatanode.
+The <ulink url="http://www.w3.org/DOM/">Document Object Model</ulink> is, according to the W3C specification, "a platform-  and language-neutral interface that will allow programs and  scripts to dynamically access and update the content, structure  and style of documents." In the LZX context, the "document" is that lz.DataNode.
 </para>
-<para><indexterm><primary>LzDataNode</primary></indexterm><classname>LzDataNode</classname> is the base class for the classes that represent LZX's hierarchical data format. An LzDataNode
-comprises <indexterm><primary>LzDataElement</primary></indexterm><classname>LzDataElement</classname>s.
-An LzDataElement represents a node in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or 
-<indexterm><primary>LzDataText</primary></indexterm><classname>LzDataText</classname>, which represents a text node.
+<para><indexterm><primary>lz.DataNode</primary></indexterm><classname>lz.DataNode</classname> is the base class for the classes that represent LZX's hierarchical data format. An lz.DataNode
+comprises <indexterm><primary>lz.DataElement</primary></indexterm><classname>lz.DataElement</classname>s.
+An lz.DataElement represents a node in a hierarchical dataset. An lz.DataElement can contain other lz.DataElements, or 
+<indexterm><primary>lz.DataText</primary></indexterm><classname>lz.DataText</classname>, which represents a text node.
  More 
-advanced data manipulation in OpenLaszlo applications employ the various methods on the LzDataElement class, such as 
+advanced data manipulation in OpenLaszlo applications employ the various methods on the lz.DataElement class, such as 
 <indexterm><primary><literal>appendChild()</literal></primary></indexterm><methodname>appendChild()</methodname>, <indexterm><primary><literal>getNextSibling()</literal></primary></indexterm><methodname>getNextSibling()</methodname>, and so forth. These classes can only be created in script, not by tags. For tag-based data manipulation, use <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: dataset-->
  and the related concepts of datapointers and datapaths.
@@ -44,7 +44,7 @@ advanced data manipulation in OpenLaszlo applications employ the various methods
 
 <para/></section><section><title>Datapointers and Datapaths</title>
 <para>
-In addition to LzDataNodes, which can only be manipulated in script, LZX includes the notions of
+In addition to lz.DataNodes, which can only be manipulated in script, LZX includes the notions of
  <indexterm><primary>datapath</primary></indexterm><sgmltag class="element">&lt;datapath&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: datapath-->
  and <indexterm><primary>datapointer</primary></indexterm><sgmltag class="element">&lt;datapointer&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -54,7 +54,7 @@ mechanism for typical data manipulation. By using datapointers to move through t
 </para>
 <para/></section></section></section><section id="databinding.datasets"><title>OpenLaszlo datasets and data nodes</title>
 <para>
-Data in OpenLaszlo applications can be declared with a tag, or built up using procedural (script) APIs. The script APIs operate on <indexterm><primary>LzDataNode</primary></indexterm><classname>LzDataNode</classname>s.
+Data in OpenLaszlo applications can be declared with a tag, or built up using procedural (script) APIs. The script APIs operate on <indexterm><primary>lz.DataNode</primary></indexterm><classname>lz.DataNode</classname>s.
 </para>
 <para>All declaratively-declared data in OpenLaszlo applications is contained within one or more datasets. The content of a dataset is an XML fragment with a single root node, but without the XML declaration. A given dataset usually represents a single conceptual set that may or may not be modified or reloaded during the execution of the application.</para> 
  
@@ -153,7 +153,7 @@ The data within a dataset is accessed using a <indexterm><primary>datapointer</p
 <!--unknown tag: datapointer-->
  or a instance of one of its subclasses. 
 </para>
-<para>A dataset is an instantiation of the <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname> class. An <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>
+<para>A dataset is an instantiation of the <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname> class. An <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname>
 is a JavaScript object that provides a <glossterm>Document Object
 Model</glossterm> (DOM) API for accessing, manipulating, and creating
 XML elements and attributes in memory.  These APIs are discussed in
@@ -299,7 +299,7 @@ Here is a simple program that illustrates use of local datasets (the file tests/
 
 <para/></section><section><title><indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal>, <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal> and <indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal> event</title>
 
-<para>When the application's <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname> receives the data, the
+<para>When the application's <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname> receives the data, the
 <indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal> event is sent.  In the case that an error occured
 in communicating with the back-end (which may be proxied by the OpenLaszlo Server in proxied applications, or direct, in SOLO applications), an <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal> event is
 sent instead.  And, if there is a timeout (currently hard-coded at 30
@@ -313,7 +313,7 @@ exactly one of <indexterm><primary>ondata event</primary></indexterm><literal>on
 <para/></section><section><title>POST support</title>
 <para>Datasets support both HTTP GET and POST methods for communicating
 with the OpenLaszlo Server and back-end servers.  The default is GET but this can be
-changed with the <literal>LzDataset.setQueryType()</literal> API.  In
+changed with the <literal>lz.dataset.setQueryType()</literal> API.  In
 general, requests with large query parameters should be sent via
 POST.</para>
 
@@ -356,7 +356,7 @@ secure port is on the datasource.</para>
 <indexterm><primary>XMLHTTPRequest</primary></indexterm><sgmltag class="element">&lt;XMLHTTPRequest&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: XMLHTTPRequest-->
  implements XMLHttpRequest as <ulink url="http://developer.apple.com/internet/webcontent/xmlhttpreq.html"> specified</ulink> by the <ulink url="http://www.whatwg.org/specs/web-apps/current-work/#scripted-http">what-wg
-</ulink> consortium. Basically, this class allows you to fetch XML data from a URL, and so it is essentially equivalent to the <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname> API (or the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+</ulink> consortium. Basically, this class allows you to fetch XML data from a URL, and so it is essentially equivalent to the <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname> API (or the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: dataset-->
  tag.)  It is provided as a convenience to developers who are familiar with its syntax from its use in AJAX applications.  
 </para>
@@ -449,8 +449,8 @@ simply by its name (it is globally visible):</para>
 
 
 <para/></section><section><title>Datasets created at runtime</title>
-<para>Datasets can also be created at runtime in script by calling the constructor for the <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>:
-<literal>var dset = new LzDataset(null, {name: 'mydset'})</literal>. The first argument to the constructor is 
+<para>Datasets can also be created at runtime in script by calling the constructor for the <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname>:
+<literal>var dset = new lz.dataset(null, {name: 'mydset'})</literal>. The first argument to the constructor is 
 the dataset's parent node, which is the <indexterm><primary>datasource</primary></indexterm><sgmltag class="element">&lt;datasource&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: datasource-->
  that encloses this dataset; this
@@ -541,7 +541,7 @@ For convenience, a datamapped node gets its data property set to that of the dat
 below, the color view changes its properties as the data field to which they are constrained follows the "order" 
 attribute of the nodes in the dataset. Note that the data is a string value of the attribute; this is the case when 
 the XPath matches an operator. The datapath of the enclosing view, however, refers to entire node in the dataset,
-and its data property contains an instance of <indexterm><primary>LzDataNode</primary></indexterm><classname>LzDataNode</classname> that the XPath references. This is
+and its data property contains an instance of <indexterm><primary>lz.DataNode</primary></indexterm><classname>lz.DataNode</classname> that the XPath references. This is
 evident from the debugger output.</para>
 <example role="live-example">
    <title>Using the data property</title>
@@ -579,7 +579,7 @@ document.</para>
 
 <para/></section></section><section><title>Manipulating datapointers</title>
 <para>
-Recall that datapointer is an object that represents a pointer to a node in a <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname>. The datapointer can be repositioned using either cursor movements calls such as <indexterm><primary><literal>selectNext()</literal></primary></indexterm><methodname>selectNext()</methodname>, or by running an XPath request via <indexterm><primary><literal>setXPath()</literal></primary></indexterm><methodname>setXPath()</methodname>.
+Recall that datapointer is an object that represents a pointer to a node in a <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname>. The datapointer can be repositioned using either cursor movements calls such as <indexterm><primary><literal>selectNext()</literal></primary></indexterm><methodname>selectNext()</methodname>, or by running an XPath request via <indexterm><primary><literal>setXPath()</literal></primary></indexterm><methodname>setXPath()</methodname>.
 </para>
 <para>
 Datapointers support a subset of the XPath specification, which uses a notation similar to the UNIX file-system to refer to nodes within a dataset. Once a datapointer is bound to a node in a dataset it will keep pointing to that node until it is moved. If the dataset is edited, the behavior of the datapointer will be controlled by its rerunxpath attribute. If this attribute is true (the default value), it will continue pointing to its current node as long as it is valid.
@@ -657,12 +657,12 @@ have finished initializing. This result of this approach is that the call succee
 <para>On the other hand, dynamic datasets have to fetch data externally, so they may not deliver it before the visual 
 elements that depend on it are in a stable state. This is why the logic in the code should only attempt to
 use these datamapped elements in response to the ondata event or by overriding the applyData method (see above).
-Note that the <indexterm><primary>LzDataset</primary></indexterm><classname>LzDataset</classname> object itself sends an ondata event whenever it receives new data; this is a convenient 
+Note that the <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname> object itself sends an ondata event whenever it receives new data; this is a convenient 
 way of synchronizing UI operations with arrival of data it is tied to. As stated above, static datasets cause ondata 
 to be sent as soon as they are instantiated.</para>
 
 <para/></section><section><title>Iterator methods</title>
-<para>Often, the <indexterm><primary>LzDatapointer</primary></indexterm><classname>LzDatapointer</classname> API provides the most convenient way to traverse the hierarchy of nodes in a dataset. Below
+<para>Often, the <indexterm><primary>lz.datapointer</primary></indexterm><classname>lz.datapointer</classname> API provides the most convenient way to traverse the hierarchy of nodes in a dataset. Below
 is an example that recursively walks a dataset mapped to a tree by calling iterator methods on a datapointer initially 
 set to the top of the dataset, and adds a new node at each level.</para>
 <example role="live-example">
@@ -689,7 +689,7 @@ dataset.</para>
 
 <para/></section><section><title>Controlling a datapath</title>
 
-<para><indexterm><primary>LzDatapath</primary></indexterm><classname>LzDatapath</classname> is a subclass of <indexterm><primary>LzDatapointer</primary></indexterm><classname>LzDatapointer</classname>, and therefore can be used in much the same way to iterate over data.
+<para><indexterm><primary>lz.datapath</primary></indexterm><classname>lz.datapath</classname> is a subclass of <indexterm><primary>lz.datapointer</primary></indexterm><classname>lz.datapointer</classname>, and therefore can be used in much the same way to iterate over data.
 The example below treats the datapath of each of the replicated view as a pointer to the dataset that backs it.
 The datapath of the enclosing view in this context is simply a pointer to the root of the dataset, and thus it
 could be used to manipulate and add children nodes.</para>

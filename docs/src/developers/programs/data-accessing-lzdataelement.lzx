@@ -14,10 +14,10 @@
         <constantlayout axis="x" value="10" />
         
         <text fontstyle="bold">
-            Following LzDataElement refers to the "contacts" node
+            Following lz.DataElement refers to the "contacts" node
         </text>
 
-        <button>Get LzDataElement via datapointer
+        <button>Get lz.DataElement via datapointer
             <handler name="onclick">
                 var dp = new lz.datapointer();
                 dp.setAttribute("xpath","ds:/addressbook/contacts");
@@ -25,15 +25,15 @@
             </handler>
         </button>
 
-        <button>Get LzDataElement via datapath
+        <button>Get lz.DataElement via datapath
             <handler name="onclick">
                 Debug.write(mylist.datapath.p);
             </handler>
         </button>
 
-        <button>Create a new LzDataElement in JavaScript
+        <button>Create a new lz.DataElement in JavaScript
             <handler name="onclick">
-                var newNode = new LzDataElement('contacts', null, null);
+                var newNode = new lz.DataElement('contacts', null, null);
                 Debug.write(newNode);
             </handler>
         </button>

@@ -232,21 +232,21 @@ return type.</para>
 <para/><section><title>Type mapping of parameters from JavaScript to Java</title>
 
 <para>
-<informaltable><tgroup cols="2"><thead><row><entry>JavaScript data type</entry><entry>Parameter types expected by java method</entry></row></thead><tbody><row><entry>Number (int)</entry><entry>int</entry></row><row><entry>Number (double)*</entry><entry>double</entry></row><row><entry>LzRPC.DoubleWrapper</entry><entry>double</entry></row><row><entry>Boolean</entry><entry>boolean</entry></row><row><entry>Array</entry><entry>Vector</entry></row><row><entry>Object</entry><entry>Hashtable</entry></row></tbody></tgroup></informaltable>
+<informaltable><tgroup cols="2"><thead><row><entry>JavaScript data type</entry><entry>Parameter types expected by java method</entry></row></thead><tbody><row><entry>Number (int)</entry><entry>int</entry></row><row><entry>Number (double)*</entry><entry>double</entry></row><row><entry>lz.rpc.DoubleWrapper</entry><entry>double</entry></row><row><entry>Boolean</entry><entry>boolean</entry></row><row><entry>Array</entry><entry>Vector</entry></row><row><entry>Object</entry><entry>Hashtable</entry></row></tbody></tgroup></informaltable>
 </para>
 
 <para>* Any floating point number with a zero decimal value is considered to be an
-integer, i.e., 1.0 is really 1. Use LzRPC.DoubleWrapper to ensure a number is
+integer, i.e., 1.0 is really 1. Use lz.rpc.DoubleWrapper to ensure a number is
 considered a double. For example:</para>
 
 <informalexample role="live-example"><programlisting>
     // assume myrpc is a javarpc object and myrpc.proxy.myMethod is a function
     // that expects a single double as a parameter
-    var mydouble = new LzRPC.DoubleWrapper(1.0);
+    var mydouble = new lz.rpc.DoubleWrapper(1.0);
     myrpc.proxy.myMethod([ mydouble ], new LzDelegate(...));
 </programlisting></informalexample>
 
-<para>LzRPC can be found in <literal>$LPS_HOME/lps/components/rpc/library/LzRPC.js</literal>.</para>
+<para>lz.rpc can be found in <literal>$LPS_HOME/lps/components/rpc/library/lz.rpc.js</literal>.</para>
 
 <example role="live-example">
    <title>Passing different parameter types</title>

@@ -77,9 +77,9 @@
       </indexterm>
       <glossterm>clones</glossterm>, you should use the 
       <indexterm>
-        <primary>LzReplicationManager</primary>
+        <primary>lz.ReplicationManager</primary>
       </indexterm>
-      <classname>LzReplicationManager</classname>API.</para>
+      <classname>lz.ReplicationManager</classname>API.</para>
       <para />
       <section>
         <title>The 
@@ -97,14 +97,14 @@
         <literal>normal</literal>(the default), then the
         replication manager will be a direct instance of 
         <indexterm>
-          <primary>LzReplicationManager</primary>
+          <primary>lz.ReplicationManager</primary>
         </indexterm>
-        <classname>LzReplicationManager</classname>. If it is 
+        <classname>lz.ReplicationManager</classname>. If it is 
         <literal>lazy</literal>, it will instead create a 
         <indexterm>
-          <primary>LzLazyReplicationManager</primary>
+          <primary>lz.LazyReplicationManager</primary>
         </indexterm>
-        <classname>LzLazyReplicationManager</classname>.</para>
+        <classname>lz.LazyReplicationManager</classname>.</para>
         <para />
       </section>
       <section>
@@ -123,13 +123,13 @@
         <sgmltag class="attribute">clones</sgmltag>property, which
         is an array of views. Note that 
         <indexterm>
-          <primary>LzReplicationManager</primary>
+          <primary>lz.ReplicationManager</primary>
         </indexterm>
-        <classname>LzReplicationManager</classname>extends 
+        <classname>lz.ReplicationManager</classname>extends 
         <indexterm>
-          <primary>LzDatapath</primary>
+          <primary>lz.datapath</primary>
         </indexterm>
-        <classname>LzDatapath</classname>, and a cloned view along
+        <classname>lz.datapath</classname>, and a cloned view along
         with its datapath is replaced with the replication manager
         object. Armed with this knowledge, we have a technique for
         determining when a view is cloned. The example below
@@ -212,9 +212,9 @@
         </indexterm>
         <sgmltag class="attribute">clones</sgmltag>property, 
         <indexterm>
-          <primary>LzReplicationManager</primary>
+          <primary>lz.ReplicationManager</primary>
         </indexterm>
-        <classname>LzReplicationManager</classname>maintains a list
+        <classname>lz.ReplicationManager</classname>maintains a list
         of matched data nodes in the 
         <indexterm>
           <primary>nodes</primary>
@@ -222,9 +222,9 @@
         <sgmltag class="attribute">nodes</sgmltag>property. It is
         an array of 
         <indexterm>
-          <primary>LzDataElement</primary>
+          <primary>lz.DataElement</primary>
         </indexterm>
-        <classname>LzDataElement</classname>objects that are mapped
+        <classname>lz.DataElement</classname>objects that are mapped
         to the replicated views, and is available before any clones
         are created. And as with the 
         <indexterm>
@@ -344,13 +344,13 @@
       <literal>lazy</literal>, then a match to multiple nodes will
       create an 
       <indexterm>
-        <primary>LzLazyReplicationManager</primary>
+        <primary>lz.LazyReplicationManager</primary>
       </indexterm>
-      <classname>LzLazyReplicationManager</classname>instead of an 
+      <classname>lz.LazyReplicationManager</classname>instead of an 
       <indexterm>
-        <primary>LzReplicationManager</primary>
+        <primary>lz.ReplicationManager</primary>
       </indexterm>
-      <classname>LzReplicationManager</classname>. This kind of
+      <classname>lz.ReplicationManager</classname>. This kind of
       replication manager is called "lazy" because it doesn't do
       the work of creating a view until it has to, and it does the
       bare minimum of work. The lazy replication manager creates
@@ -359,9 +359,9 @@
       display of very large datasets.</para>
       <para>Because the 
       <indexterm>
-        <primary>LzLazyReplicationManager</primary>
+        <primary>lz.LazyReplicationManager</primary>
       </indexterm>
-      <classname>LzLazyReplicationManager</classname>is relatively
+      <classname>lz.LazyReplicationManager</classname>is relatively
       specialized, there are several restrictions on its
       use:</para>
       <itemizedlist spacing="compact">
@@ -397,9 +397,9 @@
           <para>Selection within the replicated views should be
           controlled by a 
           <indexterm>
-            <primary>LzDataSelectionManager</primary>
+            <primary>lz.dataselectionmanager</primary>
           </indexterm>
-          <classname>LzDataSelectionManager</classname>.</para>
+          <classname>lz.dataselectionmanager</classname>.</para>
         </listitem>
       </itemizedlist>
       <para>This example shows use of the lazy replication manager
@@ -518,10 +518,10 @@
           <li><classname link="true">LzDataNode</classname></li>
           <li><classname link="true">LzDataText</classname></li>
           <li><classname link="true">LzDatapointer</classname></li>
-          <li><classname link="true">LzDatapath</classname></li>
+          <li><classname link="true">lz.datapath</classname></li>
           <li><classname link="true">LzReplicationManager</classname></li>
           <li><classname link="true">LzLazyReplicationManager</classname></li>
-          <li><classname link="true">LzDataSelectionManager</classname></li>
+          <li><classname link="true">lz.dataselectionmanager</classname></li>
       </ul>
 
       <fixme>
@@ -583,11 +583,11 @@
     identifier.</para>
     <para>For example, the code above might lead to the following
     DOM structure at runtime:</para>
-    <programlisting>LzView { … }
-  LzReplicationManager { datapath: { ... }, ... }
-  LzView { name: 'Bob' }
+    <programlisting>lz.view { … }
+  lz.ReplicationManager { datapath: { ... }, ... }
+  lz.view { name: 'Bob' }
   ...
-  LzView { name: 'Edna' }
+  lz.view { name: 'Edna' }
   </programlisting>
     <para>The replicator has additional attributes and methods that
     are accessible to Javascript:</para>

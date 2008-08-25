@@ -127,7 +127,7 @@ for each instance:</para>
 </example>
 
 <calloutlist><callout arearefs="N10086"><para>
-    The <indexterm><primary>extends</primary></indexterm><sgmltag class="attribute">extends</sgmltag> is optional here.  The default base class is <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname>.</para></callout><callout arearefs="N10090"><para>
+    The <indexterm><primary>extends</primary></indexterm><sgmltag class="attribute">extends</sgmltag> is optional here.  The default base class is <indexterm><primary>lz.view</primary></indexterm><classname>lz.view</classname>.</para></callout><callout arearefs="N10090"><para>
     Create an instance of <indexterm><primary>myframe</primary></indexterm><classname>myframe</classname>.</para></callout></calloutlist>
 
 <para/></section><section id="introductory-classes.methods"><title>Methods</title>
@@ -214,7 +214,7 @@ is generally not desirable for container classes. e.g.:</para>
 
 <para>This behavior can be changed using the
 <indexterm><primary>node.defaultplacement</primary></indexterm><sgmltag class="attribute">node.defaultplacement</sgmltag> attribute or the
-<indexterm><primary><literal>LzNode.determinePlacement()</literal></primary></indexterm><methodname>LzNode.determinePlacement()</methodname> method. Using
+<indexterm><primary><literal>lz.node.determinePlacement()</literal></primary></indexterm><methodname>lz.node.determinePlacement()</methodname> method. Using
 <indexterm><primary>defaultplacement</primary></indexterm><sgmltag class="attribute">defaultplacement</sgmltag> is simple — this is a
 class attribute that identifies by name the subview where a child
 should be attached.  In this example, the interior view is named and

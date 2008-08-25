@@ -34,7 +34,7 @@
         if (top.p.childNodes.length == 0) {
             top.addNode(n)
         } else {    
-          var ne = new LzDataElement(n)
+          var ne = new lz.DataElement(n)
           top.p.insertBefore(ne, top.p.getFirstChild())
         }
         parent.input.clearText()

@@ -183,7 +183,7 @@ Lz.swfEmbed({url: &apos;programs/LFC-$10.lzx?lzt=swf&apos;, id: &apos;d0e165236S
       </programlisting>
       The value of these variables is a result tree fragment; it's not just the name of the variables. This becomes important when we descend into the <literal>describe-members</literal> template.</para>
     <note><para>Review the table in <xref linkend="LFC-to-js2doc"/> to get a feel for why these XPath's return the desired result sets.</para></note>
-    <para>This all ends up down in the <literal>member-data-row</literal> template in js2doc2dbk.xsl, which fill in columns K, L, M, N, and O in the diagram above. Turn to LzText.lzs, to find where these variables were declared:</para>
+    <para>This all ends up down in the <literal>member-data-row</literal> template in js2doc2dbk.xsl, which fill in columns K, L, M, N, and O in the diagram above. Turn to lz.text.lzs, to find where these variables were declared:</para>
     <informalexample><programlisting>
       /**  
       * <emphasis>@lzxtype</emphasis> numberExpression (region L)
@@ -208,8 +208,8 @@ Lz.swfEmbed({url: &apos;programs/LFC-$10.lzx?lzt=swf&apos;, id: &apos;d0e165236S
     <para>That takes us to the template <programlisting> &lt;xsl:template match="initarg|property" mode="describe-member"&gt;</programlisting>
       also in js2doc2dbk.xsl. Dancing through a variety of complex template matching, the XSL ends up examining mostly these elements of the js2doc:
       <informalexample><programlisting>
-        &lt;class extends=&quot;LzView&quot;&gt;
-          &lt;property access=&quot;private&quot; id=&quot;LzText.tagname&quot; <emphasis>name=&quot;tagname&quot; value=&quot;text&quot;&gt;</emphasis>&lt;!-- region 6 --&gt;
+        &lt;class extends=&quot;lz.view&quot;&gt;
+          &lt;property access=&quot;private&quot; id=&quot;lz.text.tagname&quot; <emphasis>name=&quot;tagname&quot; value=&quot;text&quot;&gt;</emphasis>&lt;!-- region 6 --&gt;
             &lt;doc&gt;
               &lt;tag name=&quot;modifiers&quot;&gt;
                 &lt;text&gt;override&lt;/text&gt;
@@ -217,11 +217,11 @@ Lz.swfEmbed({url: &apos;programs/LFC-$10.lzx?lzt=swf&apos;, id: &apos;d0e165236S
             &lt;/doc&gt;
           &lt;/property&gt;
         ...          
-        &lt;property id=&quot;LzText.prototype.format&quot; <emphasis>name=&quot;format&quot;</emphasis>&lt;!-- regions 1, 2 --&gt; 
+        &lt;property id=&quot;lz.text.prototype.format&quot; <emphasis>name=&quot;format&quot;</emphasis>&lt;!-- regions 1, 2 --&gt; 
         access=&quot;public&quot;&gt;
           &lt;doc&gt;
             <emphasis>&lt;text&gt;Formatted output.
-              Formats its arguments using &lt;xref linkend=&quot;LzFormatter.formatToString&quot;/&gt; and sets the text of the
+              Formats its arguments using &lt;xref linkend=&quot;lz.Formatter.formatToString&quot;/&gt; and sets the text of the
               view to the result.&lt;/text&gt;</emphasis>&lt;!-- region 7 --&gt;
             &lt;tag name=&quot;param&quot;&gt;
               &lt;text&gt;*... args: arguments to be formatted according to the
@@ -243,12 +243,12 @@ subsequent argument is to be substituted&lt;/text&gt;</emphasis>&lt;!-- region 1
       </programlisting></informalexample>
     </para>      
     
-    <para>To carry this reasoning all the way back to the javascript code definining the method, in <literal>WEB-INF/lps/lfc/views/LzText.lzs</literal>:</para>
+    <para>To carry this reasoning all the way back to the javascript code definining the method, in <literal>WEB-INF/lps/lfc/views/lz.text.lzs</literal>:</para>
     <programlisting>
       <emphasis>/**</emphasis>
       * Formatted output.
       * Formats its arguments using &lt;xref
-        * linkend=&quot;LzFormatter.formatToString&quot;/&gt; and sets the text of the
+        * linkend=&quot;lz.Formatter.formatToString&quot;/&gt; and sets the text of the
       * view to the result. 
       *
       * <emphasis>@param</emphasis> string control: A control string where % indicates a  

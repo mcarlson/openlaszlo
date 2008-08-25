@@ -10,14 +10,8 @@ Remote procedure calls work in proxied applications only.  They do not work in S
 <para/><section><title>Overview</title>
 <para><indexterm significance="preferred"><primary>OpenLaszlo RPC</primary></indexterm><glossterm>OpenLaszlo RPC</glossterm>, or just <indexterm significance="preferred"><primary>RPC</primary></indexterm><glossterm>RPC</glossterm>, is the general term used to
 define the implementation and APIs that invoke remote procedures calls or
-services over the network. Current RPC implementations are <indexterm><primary>javarpc</primary></indexterm><sgmltag class="element">&lt;javarpc&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: javarpc-->
-, <indexterm><primary>xmlrpc</primary></indexterm><sgmltag class="element">&lt;xmlrpc&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: xmlrpc-->
-, and
-<indexterm><primary>soap</primary></indexterm><sgmltag class="element">&lt;soap&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: soap-->
-.</para>
+services over the network. Current RPC implementations are <indexterm><primary>javarpc</primary></indexterm><sgmltag class="element">&lt;javarpc&gt;</sgmltag>, and
+<indexterm><primary>soap</primary></indexterm><sgmltag class="element">&lt;soap&gt;</sgmltag>.</para>
 <para>
 A related class, <indexterm><primary>XMLHTTPRequest</primary></indexterm><classname>XMLHTTPRequest</classname> (also called "AJAX API"), is described in <xref linkend="data-structures"/>.
 </para>
@@ -45,10 +39,10 @@ document), overloaded methods, passing header information, and so forth.</para>
 tag is the abstract base class for all<indexterm significance="preferred"><primary>RPC classes</primary></indexterm><glossterm>RPC classes</glossterm>.
 Instances of RPC classes are referred to as <indexterm significance="preferred"><primary>RPC objects</primary></indexterm><glossterm>RPC objects</glossterm>. RPC classes
 include &lt;soap&gt;, &lt;javarpc&gt;, &lt;xmlrpc&gt;, &lt;sessionrpc&gt;, and
-&lt;webapprpc&gt;. These classes are essentially LZX wrappers of ORL LzRPC
-services. <indexterm><primary>LzRPC</primary></indexterm><classname>LzRPC</classname> is the ORL abstract class for ORL RPC services. This service
+&lt;webapprpc&gt;. These classes are essentially LZX wrappers of ORL lz.rpc
+services. <indexterm><primary>lz.rpc</primary></indexterm><classname>lz.rpc</classname> is the ORL abstract class for ORL RPC services. This service
 provides the basic framework to invoke remote functions over the network.
-LzJavaRPCService, LzXMLRPCService, and LzSOAPService are subclasses of LzRPC,
+&lt;lz.javarpc&gt;, &lt;lz.xmlrpc&gt;, and &lt;lz.soap&gt; are subclasses of &lt;lz.rpc&gt;,
 and implement JavaRPC, XML-RPC, and SOAP, respectively.</para>
 
 
@@ -79,7 +73,7 @@ the associated Java API. If you're calling a SOAP function, you will need to loo
 <para/><section><title>Attributes</title>
 
 <para><indexterm significance="preferred"><primary>autoload</primary></indexterm><glossterm>autoload</glossterm>: (Boolean) if true, calls to load client proxy during
-init stage. If false, the proxy must be loaded using the load() method.
+init stage. If false, the proxy must be loaded using the <methodname>load()</methodname> method.
 <emphasis role="b">Default is true.</emphasis></para>
 <para><indexterm significance="preferred"><primary>secure</primary></indexterm><glossterm>secure</glossterm>: (Boolean) if true, creates a secure HTTPS connection
 between the client and the OpenLaszlo Server. Also see secureport below. <emphasis role="b">Default is
@@ -144,7 +138,7 @@ onerror event. See the &lt;remotecall&gt; section for details.</para>
 <para>The <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname> method is abstract in this class. Each subclass must define this
 method. <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname> is responsible for setting up the proxy </para>
 
-<para><emphasis role="b">load() implementation in javarpc.lzx</emphasis></para>
+<para><emphasis role="b"><methodname>load()</methodname> implementation in javarpc.lzx</emphasis></para>
 
 <informalexample role="live-example"><programlisting>
 &lt;method name="load"&gt;
@@ -163,7 +157,7 @@ method. <indexterm><primary><literal>load()</literal></primary></indexterm><meth
 &lt;/method&gt;
 </programlisting></informalexample>
 
-<para><emphasis role="b">load() implementation in soap.lzx</emphasis></para>
+<para><emphasis role="b"><methodname>load()</methodname> implementation in soap.lzx</emphasis></para>
 
 <informalexample role="live-example"><programlisting>
 &lt;method name="load"&gt;
@@ -173,7 +167,7 @@ method. <indexterm><primary><literal>load()</literal></primary></indexterm><meth
 &lt;/method&gt;
 </programlisting></informalexample>
 
-<para><emphasis role="b">load() implementation in xmlrpc.lzx</emphasis></para>
+<para><emphasis role="b"><methodname>load()</methodname> implementation in xmlrpc.lzx</emphasis></para>
 
 <informalexample role="live-example"><programlisting>
 &lt;method name="load"&gt;
@@ -195,7 +189,7 @@ method. <indexterm><primary><literal>load()</literal></primary></indexterm><meth
 that implementers of subclasses should be made aware of is the delegate property
 called _loadDel (note: an underscore prefix in a component variable indicates that it is
 private). This delegate must be passed in to any lower-level ORL APIs or must be
-called at the end of <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname>, as is done in the xmlrpc.lzx implementation of
+called at the end of <indexterm><primary><literal><methodname>load()</methodname></literal></primary></indexterm><methodname>load()</methodname>, as is done in the xmlrpc.lzx implementation of
 <indexterm><primary><literal>load()</literal></primary></indexterm><methodname>load()</methodname> (shown above). In turn, <literal>_loadDel</literal> calls the <indexterm><primary sortas="load"><literal>_load()</literal></primary></indexterm><methodname>_load()</methodname> method (a private
 method in &lt;rpc&gt;) that sets up the proxy, registers declared
 &lt;remotecall&gt; nodes, and finally sends the onload event.</para>
@@ -204,13 +198,13 @@ method in &lt;rpc&gt;) that sets up the proxy, registers declared
 
 <para/></section><section><title>unload()</title>
 
-<para>This method unloads the proxy from the RPC object. Just like load(), this
-method has a corresponding _unloadDel delegate and _unload handler method. By
-default, unload() sets the proxy property to null and then an unload event is
+<para>This method unloads the proxy from the RPC object. Just like <methodname>load()</methodname>, this
+method has a corresponding <literal>_unloadDel</literal> <literal>delegate</literal> and <literal>_unload</literal> handler method. By
+default, <methodname>unload()</methodname> sets the <literal>proxy</literal> property to null and then an <literal>unload</literal> event is
 sent. However, you can override this function in the cases where
 server-side clean up is required, as is done with JavaRPC objects.</para>
 
-<para><emphasis role="b">unload() implementation in javarpc.lzx</emphasis></para>
+<para><methodname>unload()</methodname> implementation in javarpc.lzx</para>
 
 <informalexample role="live-example"><programlisting>
 &lt;method name="unload"&gt;
@@ -345,12 +339,12 @@ name.</para>
 {
   status: 'ok',
   message: 'void', 
-  data: LzRPC.t_void, 
+  data: lz.rpc.t_void, 
   opinfo: OPINFO 
 }
 </programlisting></informalexample>
 
-<para>LzRPC.t_void is an object that represent a void return type.</para>
+<para>lz.rpc.t_void is an object that represent a void return type.</para>
 
 <para>A bad call returns an error object:</para>
 
@@ -392,23 +386,23 @@ Remote procedure calls return native objects, not XML, and cannot be used with
 
 
 
-<para/></section><section><title>Generating LzDataElement from return values</title>
+<para/></section><section><title>Generating lz.DataElement from return values</title>
 
-<para>Return values can be mapped to datasets or LzDataElements. This creates a
+<para>Return values can be mapped to datasets or lz.DataElements. This creates a
 convenient way to bind return values from remote calls zto elements in the OpenLaszlo canvas. <indexterm significance="preferred"><primary>Data mapped
 return values</primary></indexterm><glossterm>Data mapped
-return values</glossterm> can be generated using the <indexterm><primary><literal>LzDataElement.valueToElement()</literal></primary></indexterm><methodname>LzDataElement.valueToElement()</methodname>
+return values</glossterm> can be generated using the <indexterm><primary><literal>lz.DataElement.valueToElement()</literal></primary></indexterm><methodname>lz.DataElement.valueToElement()</methodname>
 method.</para>
 
 <example role="live-example">
-   <title>LzDataElement.valueToElement()</title>
+   <title>lz.DataElement.valueToElement()</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/rpc-$12.lzx"/></textobject> 
    </programlisting>
 </example>
 
 
-<para>The root node of <indexterm><primary><literal>LzDataElement.valueToElement()</literal></primary></indexterm><methodname>LzDataElement.valueToElement()</methodname> is named
+<para>The root node of <indexterm><primary><literal>lz.DataElement.valueToElement()</literal></primary></indexterm><methodname>lz.DataElement.valueToElement()</methodname> is named
 &lt;element&gt;. Simple type values are placed as text nodes of the root node.
 Array items are placed as &lt;item&gt; nodes under the root. Object properties
 are placed under the root with the name of the property representing the
@@ -457,10 +451,10 @@ maps to</para>
 &lt;/element&gt;
 </programlisting>
 
-<para/><section><title>SOAP calls and LzDataElements</title>
+<para/><section><title>SOAP calls and lz.DataElements</title>
 <para>Note that returned arrays from SOAP calls are treated a little
 differently. Each item in a SOAP array has a wrapper element, which is remapped
-back when turned into an <indexterm><primary>LzDataElement</primary></indexterm><classname>LzDataElement</classname>. That is, instead of wrapping array items
+back when turned into an <indexterm><primary>lz.DataElement</primary></indexterm><classname>lz.DataElement</classname>. That is, instead of wrapping array items
 in &lt;item&gt;, they're wrapped with the original element name specified in the
 SOAP message.</para>
 
@@ -506,11 +500,11 @@ array items.</para>
    </programlisting>
 </example>
 
-<para>The data-mapped return value can then be used with another <indexterm><primary>LzDataElement</primary></indexterm><classname>LzDataElement</classname> for
+<para>The data-mapped return value can then be used with another <indexterm><primary>lz.DataElement</primary></indexterm><classname>lz.DataElement</classname> for
 databinding purposes.</para>
 
 <example role="live-example">
-   <title>Setting generated return value LzDataElement in a dataset</title>
+   <title>Setting generated return value lz.DataElement in a dataset</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/rpc-$15.lzx"/></textobject> 
    </programlisting>
@@ -522,11 +516,11 @@ databinding purposes.</para>
 <para>There is more convenient way to generate data mapped return values. Instead
 of calling <methodname role="LzDataElement.prototype.valueToElement">valueToElement()</methodname> after each call, a <literal>dataobject</literal> property
 can be set in the delegate. <indexterm significance="preferred"><primary>Dataobject</primary></indexterm><glossterm>Dataobject</glossterm> must be a dataset or an
-LzDataElement and tells the RPC function to create a data mapped return value
+lz.DataElement and tells the RPC function to create a data mapped return value
 and set it on the dataobject. If the dataobject is a dataset, the child nodes of
 the data mapped return value are set as the child nodes of the dataset. If the
-dataobject is an LzDataElement, the root node of data mapped return value is
-appended as a child of the LzDataElement dataobject.</para>
+dataobject is an lz.DataElement, the root node of data mapped return value is
+appended as a child of the lz.DataElement dataobject.</para>
 
 <example role="live-example">
    <title>Setting a dataobject to a dataset</title>
@@ -536,19 +530,19 @@ appended as a child of the LzDataElement dataobject.</para>
 </example>
 
 
-<para>Note how the passed in LzDataElement child nodes are the child nodes of the
-dataset. Here's another example using an LzDataElement.</para>
+<para>Note how the passed in lz.DataElement child nodes are the child nodes of the
+dataset. Here's another example using an lz.DataElement.</para>
 
 <example role="live-example">
-   <title>Setting dataobject to an LzDataElement</title>
+   <title>Setting dataobject to an lz.DataElement</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/rpc-$17.lzx"/></textobject> 
    </programlisting>
 </example>
 
 
-<para>Unlike a dataset, the generated LzDataElement from the return value is
-appended as a child of the LzDataElement dataobject.</para>
+<para>Unlike a dataset, the generated lz.DataElement from the return value is
+appended as a child of the lz.DataElement dataobject.</para>
 
 
 
@@ -581,8 +575,8 @@ represents. <emphasis role="b">This is required.</emphasis></para>
 can refer to the same function stub, but names must be unique. <emphasis role="b">Default is
 value of funcname.</emphasis></para>
 
-<para><indexterm significance="preferred"><primary>dataobject</primary></indexterm><glossterm>dataobject</glossterm>: (Dataset|LzDataElement) if set, the return value will
-also be represented as a dataset or as a child of the LzDataElement. <emphasis role="b">Default
+<para><indexterm significance="preferred"><primary>dataobject</primary></indexterm><glossterm>dataobject</glossterm>: (Dataset|lz.DataElement) if set, the return value will
+also be represented as a dataset or as a child of the lz.DataElement. <emphasis role="b">Default
 is null.</emphasis></para>
 
 <para><indexterm significance="preferred"><primary>remotecontext</primary></indexterm><glossterm>remotecontext</glossterm>: (Object) this attribute is used when the remotecall

@@ -190,7 +190,7 @@ instances, or the application will "leak" memory:--&gt;
 
 &lt;/class&gt;
 </programlisting></example>
-<para/></section></section><section><title>Using a LzTimer to show the passage of time </title>
+<para/></section></section><section><title>Using a lz.Timer to show the passage of time </title>
 
 <para> 
 In the following example, a visual timer is created which shows each passing
@@ -202,11 +202,11 @@ the number of seconds passed, and then increments the secondsPassed attribute.
 The first time <indexterm><primary><literal>updateTimer()</literal></primary></indexterm><methodname>updateTimer()</methodname> is invoked, a new delegate is created which simply
 calls <indexterm><primary><literal>updateTimer()</literal></primary></indexterm><methodname>updateTimer()</methodname>,  and a timer is created which in turn calls the newly
 created delegate after 1 second.   Each subsequent time <indexterm><primary><literal>updateTimer()</literal></primary></indexterm><methodname>updateTimer()</methodname> is invoked
-by the delegate, instead of creating a new timer (which would be inefficient) , <indexterm><primary><literal>LzTimer.resetTimer()</literal></primary></indexterm><methodname>LzTimer.resetTimer()</methodname> is invoked.    
+by the delegate, instead of creating a new timer (which would be inefficient) , <indexterm><primary><literal>lz.Timer.resetTimer()</literal></primary></indexterm><methodname>lz.Timer.resetTimer()</methodname> is invoked.    
 </para> 
 
 <example role="live-example">
-   <title>Using LzTimer to create a second timer</title>
+   <title>Using lz.Timer to create a second timer</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/delegates-$3.lzx"/></textobject> 
    </programlisting>

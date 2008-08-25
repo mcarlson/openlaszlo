@@ -572,7 +572,7 @@ If you want to know the size of a piece of text, the simplest technique is to cr
 <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: text-->
  view using the font attributes that are appropriate and the call 
-the <interface>LzText.getTextWidth()</interface> method.
+the <interface>lz.text.getTextWidth()</interface> method.
 </para>
 <para condition="dhtml">
 Note that in DHTML, measuring font metrics is computationaly "expensive". Do it sparingly, as it can slow your application's performance considerably.
@@ -608,7 +608,7 @@ of <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;te
 <!--unknown tag: text-->
  have access to their font attributes at runtime.  Text views will have the
 <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag>, <indexterm><primary>fontsize</primary></indexterm><sgmltag class="attribute">fontsize</sgmltag>,  and <indexterm><primary>fontstyle</primary></indexterm><sgmltag class="attribute">fontstyle</sgmltag> attributes.
-You can look up the actual <interface>LzFont</interface> that is represented by a given 
+You can look up the actual <interface>lz.font</interface> that is represented by a given 
 <indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> and  <indexterm><primary>fontstyle</primary></indexterm><sgmltag class="attribute">fontstyle</sgmltag> via the <interface>LzFontManager</interface>.
 If you need to know the font attribute associated with a view that is not a text instance, the simplest way is to get the font attributes from a sibling view.  If no such view exists, you can create an invisible text view.
 </para>

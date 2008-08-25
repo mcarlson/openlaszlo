@@ -52,7 +52,7 @@ you should set a global flag <varname>catchErrors</varname> to <literal>false</l
 <para/></section><section id="lzunit.advanced"><title>Advanced techniques</title>
 <para/><section id="lzunit.syncexec"><title>Sequential execution of tests</title>
 <para>By default, the order of execution of individual tests within a test case is not guaranteed. That is, every test
-is executed at the next idle event (see the <indexterm><primary>LzIdle</primary></indexterm><classname>LzIdle</classname> documentation for details), and thus
+is executed at the next idle event (see the <indexterm><primary>lz.Idle</primary></indexterm><classname>lz.Idle</classname> documentation for details), and thus
 tests that take longer to execute may finish after those tests that were started later but do not need as much time to complete.
 If it is important that tests are run in the order they are written, set the global flag <varname>asynchronousTests</varname> to <literal>false</literal>,
 as in the following example.</para>
@@ -285,7 +285,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
    </programlisting>
 </example>
 
-<para>One of the maxims of test-driven development is "do the simplest thing that works". This LZX script satisfies the programming problem "display numbers infinitely", but the compiled application does not work! An infinitely looping <literal>Debug.write</literal> statement fills up memory, and results in the browser choking. We need the script to Debug.write, pause for breath, Debug.write, pause for breath, and so on. The answer is in the global object LzIdle, which I have never used. The problem now presents a challenge to learn something new about the language!</para>
+<para>One of the maxims of test-driven development is "do the simplest thing that works". This LZX script satisfies the programming problem "display numbers infinitely", but the compiled application does not work! An infinitely looping <literal>Debug.write</literal> statement fills up memory, and results in the browser choking. We need the script to Debug.write, pause for breath, Debug.write, pause for breath, and so on. The answer is in the global object lz.Idle, which I have never used. The problem now presents a challenge to learn something new about the language!</para>
 
 <para>How do you test for the idle state? Doesn't the testing itself mean the universe isn't idle?</para>
 
@@ -305,8 +305,8 @@ Of course, running both animators simultaneously will superimpose the effect of 
 
 <example role="live-example"><title>startDraggingFloater method</title><programlisting>
 &lt;method name="startDraggingFloater"&gt;
-  this.d = new LzDelegate(this, "adjustFloaterPosition", LzIdle, "onidle");
-  this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+  this.d = new LzDelegate(this, "adjustFloaterPosition", lz.Idle, "onidle");
+  this.gm = new LzDelegate(this, "cancelFloater", lz.GlobalMouse, "onmouseup");
 &lt;/method&gt;
     
 &lt;method name="adjustFloaterPosition"&gt;
@@ -339,7 +339,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
 </example>
 
 
-<para>It almost works! The problem now is that even though the "Stop" button sets goButton.go to false, the LzIdle function is still active, and triggers the <literal>count</literal> method. </para>
+<para>It almost works! The problem now is that even though the "Stop" button sets goButton.go to false, the lz.Idle function is still active, and triggers the <literal>count</literal> method. </para>
 
 <para>The solution is also found in the Layout and Design example. Idling calls the method <literal>startDraggingFloater</literal>, and its terminating condition is <literal>cancelFloater</literal>:</para>
 
@@ -351,7 +351,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
 &lt;/method&gt;
 </programlisting></example>
 
-<para>The cancelFloater method demonstrates how to unregister the LzIdle delegate with <literal>unregisterAll()</literal>. In our application, we will unregister the idle method when goButton is set to false:</para>
+<para>The cancelFloater method demonstrates how to unregister the lz.Idle delegate with <literal>unregisterAll()</literal>. In our application, we will unregister the idle method when goButton is set to false:</para>
 
 <example role="live-example">
    <title>testGoButtonCount</title>

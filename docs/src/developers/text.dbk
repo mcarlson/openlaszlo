@@ -17,13 +17,13 @@
   <!--unknown tag: inputtext-->
   tags (
   <indexterm>
-    <primary>LzText</primary>
+    <primary>lz.text</primary>
   </indexterm>
-  <classname>LzText</classname> and 
+  <classname>lz.text</classname> and 
   <indexterm>
-    <primary>LzInputText</primary>
+    <primary>lz.inputtext</primary>
   </indexterm>
-  <classname>LzInputText</classname>classes). It assumes you're
+  <classname>lz.inputtext</classname>classes). It assumes you're
   familiar with basic LZX concepts such as views (<xref linkend="views" />), methods, and attributes.</para>
   <para>For a gentle introduction, see 
   <xref linkend="text-tutorial" />.</para>
@@ -351,9 +351,9 @@
       </indexterm>
       <methodname>getTextHeight()</methodname>method on 
       <indexterm>
-        <primary>LzText</primary>
+        <primary>lz.text</primary>
       </indexterm>
-      <classname>LzText</classname>.</para>
+      <classname>lz.text</classname>.</para>
       <para>For a 
       <literal>multiline=true</literal> output text field, the
       system computes a property 
@@ -439,9 +439,9 @@
     <!--unknown tag: text-->
     tag instantiates an 
     <indexterm>
-      <primary>LzText</primary>
+      <primary>lz.text</primary>
     </indexterm>
-    <classname>LzText</classname> view. The text content can be
+    <classname>lz.text</classname> view. The text content can be
     specified at compile time using either of the two methods
     below; as the content of the 
     <indexterm>
@@ -493,7 +493,7 @@
     <para>You can format text the same way you use <literal>Debug.format()</literal>. The difference is
     that you need the debugger to be running to use <literal>Debug.format()</literal>, but <literal>text.format()</literal> is
     always availabe. Like <literal>Debug.format()</literal>, <literal>text.format()</literal> uses 
-    <ulink url="../reference/LzFormatter.html"><literal>LzFormatter</literal></ulink> to format text based
+    <ulink url="../reference/LzFormatter.html"><literal>lz.Formatter</literal></ulink> to format text based
     on a control string.</para>
           <example role="live-example">
         <title>Formated text</title>

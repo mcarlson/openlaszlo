@@ -23,7 +23,7 @@
         traverse(dptr);
     </handler>
     <method name="traverse" args="top">
-      var ne = new LzDataElement('entry', {name: '.', type: 'dir'})
+      var ne = new lz.DataElement('entry', {name: '.', type: 'dir'})
         do {
           if (top.xpathQuery('@type') == 'dir') {
             var root = top.dupePointer();
@@ -41,6 +41,6 @@
   </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -12,7 +12,7 @@ the essential simplicity of coding with animators.  A little further down there 
 <para>
 Note that when we refer to animation in LZX applications, we mean anything that changes over time. This usually means something visible, but not always. For example, one might animate output volume of an audio file. You can animate the opening and closing of tabs and windows, the positions of items on the screen, and so forth.
 </para>
-<para>For example, the following application defines an animator for a window that moves it to a position of x=100 over 1 second (1000 milliseconds). The animator is an instance of <indexterm><primary>LzAnimator</primary></indexterm><classname>LzAnimator</classname>, and is defined by using the <indexterm><primary>animator</primary></indexterm><sgmltag class="element">&lt;animator&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<para>For example, the following application defines an animator for a window that moves it to a position of x=100 over 1 second (1000 milliseconds). The animator is an instance of <indexterm><primary>lz.animator</primary></indexterm><classname>lz.animator</classname>, and is defined by using the <indexterm><primary>animator</primary></indexterm><sgmltag class="element">&lt;animator&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: animator-->
  tag.</para>
 
@@ -228,7 +228,7 @@ constant rate (linear).</para>
 <para/></section><section><title>Tags vs Script</title>
 <para>
 In OpenLaszlo applications you can achieve the same result by using XML tags or JavaScript APIs. The examples above have demonstrated how to use the <indexterm><primary>animator</primary></indexterm><sgmltag class="element">&lt;animator&gt;</sgmltag> tag.  Alternatively
-you can use the <indexterm><primary><literal>LzNode.animate()</literal></primary></indexterm><methodname>LzNode.animate()</methodname> method in script statements. The following example contrasts tag and script approaches to animating views.
+you can use the <indexterm><primary><literal>lz.node.animate()</literal></primary></indexterm><methodname>lz.node.animate()</methodname> method in script statements. The following example contrasts tag and script approaches to animating views.
 </para>
 
 <example role="live-example">
@@ -412,7 +412,7 @@ i. Constrain animations to varialble
 k.  animators by reference
  
 
-LzAnimator animates an attribute of another object over time.
+lz.animator animates an attribute of another object over time.
 It does this by generating a new number eveytime the iterate
 method is called. This sequence of numbers generated begins with the <b>from
 </b>value and ends with the <b>to</b> value weithin the

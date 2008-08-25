@@ -456,7 +456,7 @@
 
     <para>You can use a multi-frame resource to construct an
     animation that moves between frames when you call the 
-    <literal>LzView.play()</literal> method. Conversely, when
+    <literal>lz.view.play()</literal> method. Conversely, when
     you import a resource that contains an animation, each frame of
     the animation automatically becomes a frame in that resource.
     In other words, art assets that contain multiple frames

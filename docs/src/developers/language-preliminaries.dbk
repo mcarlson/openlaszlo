@@ -140,7 +140,7 @@ etc.);</para></listitem><listitem><para> the object model;</para></listitem><lis
 
 <para>JavaScript:</para> 
 
-<programlisting>myview = new LzView;</programlisting> 
+<programlisting>myview = new lz.view;</programlisting> 
 
 <programlisting>myview.setAttribute (bgcolor, red);</programlisting>
 
@@ -251,7 +251,7 @@ to test that program's validity.</para>
 <para/></section></section><section id="language-preliminaries.objects-and-attributes"><title>Objects and Attributes</title> 
 
 
-<para>LZX incorporates the standard object-oriented programming concepts of inheritance, encapsulation, and polymorphism. In general, a tag in an OpenLaszlo program corresponds to an object that is an instance of the class of that name. For example, the <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> tag corresponds to an <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> object.</para> 
+<para>LZX incorporates the standard object-oriented programming concepts of inheritance, encapsulation, and polymorphism. In general, a tag in an OpenLaszlo program corresponds to an object that is an instance of the class of that name. For example, the <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> tag corresponds to an <indexterm><primary>lz.view</primary></indexterm><classname>lz.view</classname> object.</para> 
 
 <para>To a first approximation, then, LZX can be described as a rule-based declarative language for manipulating visual (JavaScript) objects called views, where rules are expressed as constraints on the values of the attributes of those objects.</para> 
 
@@ -556,7 +556,7 @@ program.</para>
 
 <para>XML sources are stored as objects called datasets. The <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: dataset-->
- tag has attributes that allow you to, for example, control caching on the client and server, include or exclude http headers, queue requests, and so forth. Objects created by <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> are called LzDatasets. Methods on LzDatasets allow you to, for example, get and set query strings, parameters and so forth.</para> 
+ tag has attributes that allow you to, for example, control caching on the client and server, include or exclude http headers, queue requests, and so forth. Objects created by <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> are called lz.datasets. Methods on lz.datasets allow you to, for example, get and set query strings, parameters and so forth.</para> 
 
 <para/></section><section><title>   Data Manipulation</title> 
 
@@ -603,7 +603,7 @@ The preferred normalized form of class names is <literal>lz.[tagname]</literal> 
 then from the point of view of JavaScript, this would be an lz.bob object.
 </para>
 <para>
-In earlier versions of LZX (before OpenLaszlo 4), there was an asymmetric mapping between tag and class names, often of the form LzFoo &lt;—&gt; &lt;foo&gt;, as in the correspondence between, say the class name <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> and the tag name <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag>. (Notice in LzView the mixed case, and the absence of the period between lz and the tag name.) Also there was a distinction between LFC classes and user-created classes.  The new lz.foo form is consistent across LFC classes and user-created classes. The old forms will still work, and they appear throughout this documentation and in example code. At some point, however, the old forms will probably be deprecated, and it would be a good practice to adopt the new form in your code.</para>
+In earlier versions of LZX (before OpenLaszlo 4), there was an asymmetric mapping between tag and class names, often of the form LzFoo &lt;—&gt; &lt;foo&gt;, as in the correspondence between, say the class name <indexterm><primary>lz.view</primary></indexterm><classname>lz.view</classname> and the tag name <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag>. (Notice in lz.view the mixed case, and the absence of the period between lz and the tag name.) Also there was a distinction between LFC classes and user-created classes.  The new lz.foo form is consistent across LFC classes and user-created classes. The old forms will still work, and they appear throughout this documentation and in example code. At some point, however, the old forms will probably be deprecated, and it would be a good practice to adopt the new form in your code.</para>
 
 
 <para/></section><section><title>How to Combine Tags and Script</title> 
@@ -659,7 +659,7 @@ In earlier versions of LZX (before OpenLaszlo 4), there was an asymmetric mappin
 
 <para/></section><section><title>Use JavaScript when that is the only option.</title> 
 
-<para>There are several JavaScript APIs that perform functions that cannot be done using tags. For example, <literal>LzDelegate, LzEvent, LzParam</literal> and similar APIs perform operations that cannot be done using tags. Similarly, there are certain attributes of objects that can only be referenced by script, even for objects that were created with tags. For example, consider</para> 
+<para>There are several JavaScript APIs that perform functions that cannot be done using tags. For example, <literal>LzDelegate, lz.event, LzParam</literal> and similar APIs perform operations that cannot be done using tags. Similarly, there are certain attributes of objects that can only be referenced by script, even for objects that were created with tags. For example, consider</para> 
 
 <para><literal>&lt;view name="franklin"&gt;</literal></para> 
 
@@ -671,7 +671,7 @@ In earlier versions of LZX (before OpenLaszlo 4), there was an asymmetric mappin
 
 <para><literal>&lt;view name="sam"&gt;</literal></para> 
 <para>or script</para> 
-<para><literal>sam = new LzView();</literal></para> 
+<para><literal>sam = new lz.view();</literal></para> 
 
 <para>When you use the tag syntax you can quite naturally create hierarchies of nested subviews, define attributes as constraints, and lay out your code in a way that helps you conceptualize the placement of views on the canvas. Achieving any of these results in pure JavaScript would be a colossal pain and negate much of the benefit of the language. Learning to think in LZX means learning to think in terms of views that act nearly autonomously according to the constraints you establish at their creation.</para> 
 

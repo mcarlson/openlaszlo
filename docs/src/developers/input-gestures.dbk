@@ -62,7 +62,7 @@ Setting clickregion to a vector-based SWF turns the SWF shape into a clickable h
 <para/></section><section><title>Cursor Management</title>
 <para>
 The cursor automatically changes to a hand when it is over a clickable view, but if a custom cursor is desired, then
-this can be accomplished by defining a custom resource for the cursor and using it with LzCursor service as shown below.
+this can be accomplished by defining a custom resource for the cursor and using it with lz.Cursor service as shown below.
 </para>
 
 <example role="live-example">
@@ -73,7 +73,7 @@ this can be accomplished by defining a custom resource for the cursor and using 
 </example>
 
 <para/><section><title>Disabling the "hand" cursor</title>
-<para>By setting <indexterm><primary><literal>LzCursor.showHandCursor()</literal></primary></indexterm><methodname>LzCursor.showHandCursor()</methodname> to true or false, you show or hide the hand cursor for all clickable views.
+<para>By setting <indexterm><primary><literal>lz.Cursor.showHandCursor()</literal></primary></indexterm><methodname>lz.Cursor.showHandCursor()</methodname> to true or false, you show or hide the hand cursor for all clickable views.
 This means that you can, for example, prevent clicks from traveling
 through windows, without the hand cursor appearing.</para>
 <para>Here is an example showing the hand cursor turned on and off.</para>
@@ -167,12 +167,12 @@ For an application <literal>framitz.lzx</literal> that is deployed proxied (usin
 <literal>framitz.lzx?lzt=source</literal> in a new browser window. If you don't wish to make source visible, set <literal>allowRequestSOURCE=false </literal>in <literal>WEB-INF/lps/config/lps.properties</literal>. 
 </para>
 <para>
-Starting with Flash 8, you can control the content of the menu using the class <indexterm><primary>LzContextMenu</primary></indexterm><classname>LzContextMenu</classname>, which you
-instantiate using <literal>new LzContextMenu()</literal>. The method <indexterm><primary><literal>LzContextMenu.makeMenuItem ()</literal></primary></indexterm><methodname>LzContextMenu.makeMenuItem ()</methodname>instantiates an <literal>LzContextMenuItem</literal>.
+Starting with Flash 8, you can control the content of the menu using the class <indexterm><primary>lz.ContextMenu</primary></indexterm><classname>lz.ContextMenu</classname>, which you
+instantiate using <literal>new lz.ContextMenu()</literal>. The method <indexterm><primary><literal>lz.ContextMenu.makeMenuItem ()</literal></primary></indexterm><methodname>lz.ContextMenu.makeMenuItem ()</methodname>instantiates an <literal>lz.ContextMenuItem</literal>.
 </para>
 <para>
 To make a new menu, first you create the menu, then you create a menu item, and then you add the menu item to the menu.  The data type of the menu item is
-<literal>LzContextMenuItem</literal>; you supply the text that you want to appear in the menu -- the word 'Delete' may not be used as context menu text -- and a delegate that specifies how you want that menu item to be handled. <indexterm><primary><literal>LzContextMenu.addItem()</literal></primary></indexterm><methodname>LzContextMenu.addItem()</methodname> adds an item to that menu. So, to create a new menu you would do:
+<literal>lz.ContextMenuItem</literal>; you supply the text that you want to appear in the menu -- the word 'Delete' may not be used as context menu text -- and a delegate that specifies how you want that menu item to be handled. <indexterm><primary><literal>lz.ContextMenu.addItem()</literal></primary></indexterm><methodname>lz.ContextMenu.addItem()</methodname> adds an item to that menu. So, to create a new menu you would do:
 </para>
 
 <example role="live-example">
@@ -189,7 +189,7 @@ There is no method to clear the menu (Settings and About Flash Player are always
 like
 </para>
 <programlisting>
-var cmenu = new LzContextMenu();
+var cmenu = new lz.ContextMenu();
 canvas.setDefaultContextMenu(cmenu)
 </programlisting>
 <para>
@@ -202,9 +202,9 @@ of the source will be placed there if you desire to make your source visible. If
 </para>
 <para/></section><section><title>Keyboard Input</title>
 <para>
-In OpenLaszlo applications, the keyboard input can be accepted by the view which has the keyboard "focus".  The <indexterm><primary>LzFocus</primary></indexterm><classname>LzFocus</classname> service allows you to set and control the focus.  The opposite of focus is "blur", as discussed below.
+In OpenLaszlo applications, the keyboard input can be accepted by the view which has the keyboard "focus".  The <indexterm><primary>lz.Focus</primary></indexterm><classname>lz.Focus</classname> service allows you to set and control the focus.  The opposite of focus is "blur", as discussed below.
 </para>
-<para/><section><title>Focus and the LzFocus service</title>
+<para/><section><title>Focus and the lz.Focus service</title>
 <para>A focusable view is a view whose <indexterm><primary>focusable</primary></indexterm><sgmltag class="attribute">focusable</sgmltag> attribute is true (the
 default value).  When the user clicks on a focusable view, the focus
 is set to that view.  If the view is different from the previously
@@ -244,14 +244,14 @@ The tab and shift tab keys select the view returned by calling
 respectively, on the view that currently has the keyboard focus.</para>
 <para/></section><section><title>Programmatic control of focus group</title>
 <para>In addition to the tab key, focus within a focus group can also be set under programmatic control, by calling the 
-<indexterm><primary><literal>LzFocus.setFocus()</literal></primary></indexterm><methodname>LzFocus.setFocus()</methodname>, <indexterm><primary><literal>LzFocus.next()</literal></primary></indexterm><methodname>LzFocus.next()</methodname>, and
-<indexterm><primary><literal>LzFocus.prev()</literal></primary></indexterm><methodname>LzFocus.prev()</methodname> methods.</para>
+<indexterm><primary><literal>lz.Focus.setFocus()</literal></primary></indexterm><methodname>lz.Focus.setFocus()</methodname>, <indexterm><primary><literal>lz.Focus.next()</literal></primary></indexterm><methodname>lz.Focus.next()</methodname>, and
+<indexterm><primary><literal>lz.Focus.prev()</literal></primary></indexterm><methodname>lz.Focus.prev()</methodname> methods.</para>
 <para/></section></section><section><title>Reading Key Values </title>
 <para>
 One way of integrating keyboard input into your application is to have a focusable view capture pressed key codes. Only one view can be focusable at any one time. In this example, we're making that view focused oninit (although in a larger application, you could bring focus to that view using the tab key, or you could write an onclick method to tell it to focus).</para>
 <para>
-The example below illustrates use of <indexterm><primary>LzFocus</primary></indexterm><sgmltag class="element">&lt;LzFocus&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: LzFocus-->
+The example below illustrates use of <indexterm><primary>lz.Focus</primary></indexterm><sgmltag class="element">&lt;lz.Focus&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+
  to make a view able to accept keyboard input.</para>
 
 <example role="live-example">

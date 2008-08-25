@@ -67,7 +67,7 @@ headers. The string must contain XML and multiple nodes are allowed, i.e., a
 root node is not required. See the "SOAP headers" section for more
 details. <emphasis role="b">Default is null.</emphasis></para>
 
-<para><indexterm significance="preferred"><primary>responseheaders</primary></indexterm><glossterm>responseheaders</glossterm>: (LzDataset) if this is set, the responseheaders
+<para><indexterm significance="preferred"><primary>responseheaders</primary></indexterm><glossterm>responseheaders</glossterm>: (lz.dataset) if this is set, the responseheaders
 dataset contains the response header information from the last call that
 returned headers. See the "SOAP headers" section below for more
 details. <emphasis role="b">Default is null.</emphasis></para>
@@ -185,10 +185,10 @@ For interoperability, literal XML is preferred.
 </programlisting></example>
 
 <para>In the application, a document style operation returns an array of
-<indexterm><primary>LzDataElement</primary></indexterm><sgmltag class="element">&lt;LzDataElement&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: LzDataElement-->
+<indexterm><primary>lz.DataElement</primary></indexterm><sgmltag class="element">&lt;lz.DataElement&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+
 s, though often only a single
-<indexterm><primary>LzDataElement</primary></indexterm><sgmltag class="element">&lt;LzDataElement&gt;</sgmltag> will exist in the array.</para>
+<indexterm><primary>lz.DataElement</primary></indexterm><sgmltag class="element">&lt;lz.DataElement&gt;</sgmltag> will exist in the array.</para>
 
 <para>The parameter passed into the operation must match the XML schema as defined
 in the WSDL. The parameter passed in can be an XML string or a dataset. The

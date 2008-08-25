@@ -213,7 +213,7 @@ To position the floating view over the clicked view, you can use the <indexterm>
     &lt;attribute name="text" type="text"/&gt;
     &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
     &lt;handler name="onmousedown"&gt;
-      this.f = new LzView(canvas, {width: this.width,
+      this.f = new lz.view(canvas, {width: this.width,
                                    height: this.height,
                                    bgcolor: this.bgcolor,
                                    x: this.getAttributeRelative("x", canvas),
@@ -227,8 +227,8 @@ To position the floating view over the clicked view, you can use the <indexterm>
     &lt;/handler&gt;
     
     &lt;method name="startDraggingFloater"&gt;
-      this.d = new LzDelegate(this, "adjustFloaterPosition", LzIdle, "onidle");
-      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+      this.d = new LzDelegate(this, "adjustFloaterPosition", lz.Idle, "onidle");
+      this.gm = new LzDelegate(this, "cancelFloater", lz.GlobalMouse, "onmouseup");
     &lt;/method&gt;
     
     &lt;method name="adjustFloaterPosition"&gt;
@@ -271,7 +271,7 @@ To position the floating view over the clicked view, you can use the <indexterm>
     &lt;attribute name="text" type="text"/&gt;
     &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
     &lt;handler name="onmousedown"&gt;
-      this.f = new LzView(canvas, {width: this.width,
+      this.f = new lz.view(canvas, {width: this.width,
                                    height: this.height,
                                    bgcolor: this.bgcolor,
                                    x: this.getAttributeRelative("x", canvas),
@@ -285,8 +285,8 @@ To position the floating view over the clicked view, you can use the <indexterm>
     &lt;/handler&gt;
     
     &lt;method name="startDraggingFloater"&gt;
-      this.d = new LzDelegate(this, "adjustFloaterPosition", LzIdle, "onidle");
-      this.gm = new LzDelegate(this, "cancelFloater", LzGlobalMouse, "onmouseup");
+      this.d = new LzDelegate(this, "adjustFloaterPosition", lz.Idle, "onidle");
+      this.gm = new LzDelegate(this, "cancelFloater", lz.GlobalMouse, "onmouseup");
     &lt;/method&gt;
     
     &lt;method name="adjustFloaterPosition"&gt;

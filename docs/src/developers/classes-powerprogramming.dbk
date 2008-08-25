@@ -399,7 +399,7 @@ JavaScript counterpart; rather, the JavaScript name is <literal>lz.[tagname]</li
 <literal>new lz.view(...)</literal> (<emphasis role="b">not</emphasis> <literal>new view(...)</literal>). 
 </para>
 <note><para>
-In earlier versions of OpenLaszlo, there was an idiosyncratic mapping between class names and tag names, and classes in the LFC were handled differently than user defined classes. For example, the tagname <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> mapped to JavaScript class LzView. With OpenLaszlo 4.0, the <literal>lz.[tagname]</literal> mapping is universal, and the old mappings are deprecated. </para></note>
+In earlier versions of OpenLaszlo, there was an idiosyncratic mapping between class names and tag names, and classes in the LFC were handled differently than user defined classes. For example, the tagname <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> mapped to JavaScript class lz.view. With OpenLaszlo 4.0, the <literal>lz.[tagname]</literal> mapping is universal, and the old mappings are deprecated. </para></note>
 
 
  

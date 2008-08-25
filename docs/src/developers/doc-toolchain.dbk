@@ -74,7 +74,7 @@
     reading right now. </para>
   
   <section id="figuring-things-out"><title>Figuring things out</title>
-    <para>The DocBook toolchain is long and complicated, and the builds take upwards of ten minutes, as much as 40 minutes for a complete build. Do not allow this slow debug-edit-compile loop to dictate the pace of your progress! This author found that it was very effective to work on well-formed subsets of the data, and transform those subsets through a driver stylesheet containing only the templates of interest. With this technique, a debug-edit-compile iteration can take seconds, not hours. The source code includes a simple driver, aptly named <literal>docs/src/xsl/simple-driver.xsl</literal>, which is currently configured to investigate methods of <literal>LzBrowser</literal> when applied to <literal>LaszloLibrary-verbose.js2doc</literal>.</para>
+    <para>The DocBook toolchain is long and complicated, and the builds take upwards of ten minutes, as much as 40 minutes for a complete build. Do not allow this slow debug-edit-compile loop to dictate the pace of your progress! This author found that it was very effective to work on well-formed subsets of the data, and transform those subsets through a driver stylesheet containing only the templates of interest. With this technique, a debug-edit-compile iteration can take seconds, not hours. The source code includes a simple driver, aptly named <literal>docs/src/xsl/simple-driver.xsl</literal>, which is currently configured to investigate methods of <literal>lz.Browser</literal> when applied to <literal>LaszloLibrary-verbose.js2doc</literal>.</para>
     <para>A simpler way of figuring things out is just to run XPath queries against <literal>LaszloLibrary-verbose.js2doc</literal> Various XML editors support live XPath queries, including <ulink url="http://www.oxygenxml.com/">Oxygen XML Editor</ulink></para>
   </section>  
   
@@ -226,7 +226,7 @@
       <para>This will make more sense when we look at the js2doc output from the containsPt code
         above:
         <programlisting>
-            &lt;property id=&quot;LzView.prototype.containsPt&quot; name=&quot;containsPt&quot;&gt;
+            &lt;property id=&quot;lz.view.prototype.containsPt&quot; name=&quot;containsPt&quot;&gt;
               &lt;doc&gt;
                 &lt;text&gt;returns true if the point is contained within the view.&lt;/text&gt;
               &lt;/doc&gt;
@@ -264,14 +264,14 @@
           </thead>      
           <tbody>
             <row>
-              <entry><literal>id="LzView"</literal></entry>
-              <entry>The <literal>LzView</literal> class</entry>
-              <entry>The use of capital "Lz" indicates that the class LzView is part of the LFC. </entry>
+              <entry><literal>id="lz.view"</literal></entry>
+              <entry>The <literal>lz.view</literal> class</entry>
+              <entry>The use of capital "Lz" indicates that the class lz.view is part of the LFC. </entry>
             </row>            
             <row>
-              <entry><literal>id="LzView.prototype.containsPt"</literal></entry>
-              <entry>The <literal>containsPt</literal> method of <literal>LzView</literal></entry>
-              <entry>The presence of <literal>prototype</literal> means that the property being identified is present on all instances of the class. The use of capital "Lz" indicates that the class LzView is part of the LFC. </entry>
+              <entry><literal>id="lz.view.prototype.containsPt"</literal></entry>
+              <entry>The <literal>containsPt</literal> method of <literal>lz.view</literal></entry>
+              <entry>The presence of <literal>prototype</literal> means that the property being identified is present on all instances of the class. The use of capital "Lz" indicates that the class lz.view is part of the LFC. </entry>
             </row>
             <row>
               <entry><literal>id="tag.method"</literal></entry>
@@ -296,13 +296,13 @@
               <entry>The <literal>__ivars__</literal> indicates that the property being identified is present on each individual instance of the <literal>basewindow</literal> class.</entry>
             </row>
             <row>
-              <entry><literal>id="LzBrowser+dhtml"</literal></entry>
-              <entry>the <literal>LzBrowswer</literal> class, as it exists only in the dhtml runtime.</entry>
+              <entry><literal>id="lz.Browser+dhtml"</literal></entry>
+              <entry>the <literal>lz.Browswer</literal> class, as it exists only in the dhtml runtime.</entry>
               <entry>The <literal>+&lt;runtime&gt;</literal> suffix indicates runtime-specific behavior.</entry>
             </row>
             <row>
-              <entry><literal>id="LzBrowser+swf8+swf9"</literal></entry>
-              <entry>the <literal>LzBrowswer</literal> class, as it exists in the swf8, and swf9 runtimes.</entry>
+              <entry><literal>id="lz.Browser+swf8+swf9"</literal></entry>
+              <entry>the <literal>lz.Browswer</literal> class, as it exists in the swf8, and swf9 runtimes.</entry>
               <entry>Several runtimes can be appended to a class name to indicate that this behavior applies to all of the specified runtimes..</entry>
             </row>            
             <row>
@@ -432,13 +432,13 @@ Subclasses may override to create different behavior
         <title>js2doc2dbk walkthrough</title>
         <note><para>Get a beverage and a comfortable chair, then turn off the phone and lock the door. The next section is the very heart of 
           the reference toolchain, and understanding it requires holding a lot of context in your head all at once.</para></note>
-        <para>Let's look at the reference page for <xref linkend="LzText" />. The js2doc description of it is in <literal>docs/src/xsl/build/reference/LaszloLibrary-verbose.js2doc</literal>. Open that file and find the element describing <literal>LzText</literal>. Copy that element into a smaller file so you can look at it in detail. The element describing the <literal>LzText</literal> class begins with this line: 
+        <para>Let's look at the reference page for <xref linkend="LzText" />. The js2doc description of it is in <literal>docs/src/xsl/build/reference/LaszloLibrary-verbose.js2doc</literal>. Open that file and find the element describing <literal>lz.text</literal>. Copy that element into a smaller file so you can look at it in detail. The element describing the <literal>lz.text</literal> class begins with this line: 
           <programlisting>&lt;<emphasis>property</emphasis> id=&quot;LzText&quot; name=&quot;LzText&quot; unitid=&quot;views.LzText.lzs&quot; access=&quot;public&quot; topic=&quot;LFC&quot; subtopic=&quot;Text&quot;&gt;</programlisting>
         </para> 
         <note><para>To find a particular item in the giant LaszloLibrary-verbose.js2doc file, just search for it by id. This works because id's 
           are globally unique.</para> 
         </note>      
-        <para>Notice that the containing element here is <literal>&lt;property&gt;</literal>. In js2doc, property is the element that represents a useful chunk of the api. This particular element describes everything there is to know about <literal>LzText</literal>.</para>
+        <para>Notice that the containing element here is <literal>&lt;property&gt;</literal>. In js2doc, property is the element that represents a useful chunk of the api. This particular element describes everything there is to know about <literal>lz.text</literal>.</para>
         
         <para>The main template for generating a page in the reference is in the file <literal>docs/src/xsl/js2doc2dbk.xsl</literal>. We can tell from the js2doc output below, and our knowledge of DocBook, that the output begins with a &lt;refentry&gt; tag, so we can find the template that generates it by searching <literal>js2doc2dbk.xsl</literal> for <literal>&lt;refentry</literal> or by performing the equivalent XPath query: <literal>//refentry</literal>. This takes us to two templates, one that starts with     
           <programlisting>&lt;xsl:template <emphasis>match=&quot;property&quot; </emphasis>mode=&quot;refentry&quot;&gt;</programlisting>
@@ -449,12 +449,12 @@ Subclasses may override to create different behavior
           <programlisting>        
             &lt;xsl:variable name=&quot;<emphasis>jsname</emphasis>&quot; select=&quot;<emphasis>@name</emphasis>&quot;/&gt;
             &lt;xsl:variable name=&quot;<emphasis>lzxname</emphasis>&quot; select=&quot;<emphasis>&amp;tagname</emphasis>;&quot;/&gt;
-          </programlisting>These lines establish variables named $jsname and $lzxname. For <literal>$jsname</literal>, <literal>select=&quot;@name&quot; </literal> means "run the XPath query <literal>'@name'</literal> on the current node, and set the value of the <literal>$jsname</literal> variable to the result of that query." In your XML editor, run that query yourself; the result should be <literal>LzText</literal>. </para>        
+          </programlisting>These lines establish variables named $jsname and $lzxname. For <literal>$jsname</literal>, <literal>select=&quot;@name&quot; </literal> means "run the XPath query <literal>'@name'</literal> on the current node, and set the value of the <literal>$jsname</literal> variable to the result of that query." In your XML editor, run that query yourself; the result should be <literal>lz.text</literal>. </para>        
         <para>The declaration of <literal>$lzxname</literal> is more complicated, even though it looks just as simple as <literal>$jsname</literal>. Here we have <literal>select=&quot;&amp;tagname;&quot;</literal>. That's a reference to an entity; find that entity's definition at the beginning of js2doc2dbk.xsl:
           <programlisting>&lt;!ENTITY tagname        &apos;(doc/tag[@name=&quot;lzxname&quot;]/text)&apos;&gt;</programlisting> 
           Remember that entities are text substitutions, so after entity expansion, the lzxname declaration above would read:
           <programlisting>&lt;xsl:variable name=&quot;lzxname&quot; select=&quot;(doc/tag[@name=&quot;lzxname&quot;]/text)/&gt;</programlisting>
-          That's an XPath query which means "find a child of the current node who has a child element of type <literal>tag</literal> who has an attribute <literal>name</literal> whose value is <literal>lzxname</literal>. Return the textual content of that tag node's child <literal>text</literal> node." Consulting the js2doc fragment for LzText again, we can evaluate this query:
+          That's an XPath query which means "find a child of the current node who has a child element of type <literal>tag</literal> who has an attribute <literal>name</literal> whose value is <literal>lzxname</literal>. Return the textual content of that tag node's child <literal>text</literal> node." Consulting the js2doc fragment for lz.text again, we can evaluate this query:
           <informalexample><programlisting>
             &lt;<emphasis>property</emphasis> id=&quot;LzText&quot; name=&quot;LzText&quot; unitid=&quot;views.LzText.lzs&quot; access=&quot;public&quot; topic=&quot;LFC&quot; subtopic=&quot;Text&quot;&gt;
             &lt;<emphasis>doc</emphasis>&gt;
@@ -474,18 +474,18 @@ Subclasses may override to create different behavior
             ...</programlisting></informalexample> 
           So the value of <literal>$lzxname</literal> is "text".      
         </para>      
-        <note><para>The double meaning of "text" and "tag" here is unavoidable. Keep track of when we're talking about a domain concept -- LzText, aka "text," is a concept in the OpenLaszlo domain -- and when we're talking about a tools concept -- the text value of an XML element.</para></note>
+        <note><para>The double meaning of "text" and "tag" here is unavoidable. Keep track of when we're talking about a domain concept -- lz.text, aka "text," is a concept in the OpenLaszlo domain -- and when we're talking about a tools concept -- the text value of an XML element.</para></note>
         
         <para>Continuing our walkthrough of the main template for a reference entry in js2doc2dbk.xsl, skip over the next few variable declarations. Now we're at the first output instructions:
           <programlisting>&lt;refentry id=&quot;{$id-for-output}&quot; xreflabel=&quot;{$desc}&quot;&gt;
             &lt;xsl:if test=&quot;$lzxname&quot;&gt;&lt;anchor id=&quot;{concat(&apos;tag.&apos;,$lzxname)}&quot;/&gt;&lt;/xsl:if&gt; 
             ...</programlisting>
-          <literal>$id-for-output</literal> was one of the variables we skipped over; experience reveals that <literal>$id-for-output</literal> evaluates to <literal>LzText</literal> and that $desc  evaluates to <literal>&lt;text&gt;</literal>. The next line says, "if the variable named $lzxname has a non-null value, output an &lt;anchor&gt; tag with an id of 'tag.' + $lzxname." For LzText, we figured out above that <literal>$lzxname</literal> is <literal>text</literal>.</para>
+          <literal>$id-for-output</literal> was one of the variables we skipped over; experience reveals that <literal>$id-for-output</literal> evaluates to <literal>lz.text</literal> and that $desc  evaluates to <literal>&lt;text&gt;</literal>. The next line says, "if the variable named $lzxname has a non-null value, output an &lt;anchor&gt; tag with an id of 'tag.' + $lzxname." For lz.text, we figured out above that <literal>$lzxname</literal> is <literal>text</literal>.</para>
         <para> Now we can predict the DocBook output from this part of the template:
           <informalexample><programlisting>&lt;refentry xreflabel=&quot;&amp;lt;text&amp;gt;&quot; id=&quot;LzText&quot;&gt;
             &lt;anchor id=&quot;tag.text&quot;/&gt;</programlisting></informalexample>
         </para>
-        <para>To verify that's the output we'll get, look at the DocBook output for <emphasis>LzText</emphasis>. If you've done a documentation build, the LzText reference entry will be in <literal>docs/src/build/reference/lfcref.dbk</literal>. Open that file, and again find the <emphasis>LzText</emphasis> section.</para>
+        <para>To verify that's the output we'll get, look at the DocBook output for <emphasis>lz.text</emphasis>. If you've done a documentation build, the lz.text reference entry will be in <literal>docs/src/build/reference/lfcref.dbk</literal>. Open that file, and again find the <emphasis>lz.text</emphasis> section.</para>
         <note><para>In DocBook files, the trick for finding a particular element is the same as in LaszloLibrary-verbose; just search for <literal>id="LzText"</literal></para></note>      
         <informalexample><programlisting>&lt;<emphasis>refentry xreflabel=&quot;&amp;lt;text&amp;gt;&quot; id=&quot;LzText&quot;&gt;</emphasis>        
           <emphasis>&lt;anchor id=&quot;tag.text&quot;/&gt;</emphasis>        

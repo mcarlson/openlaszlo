@@ -4,8 +4,8 @@
 <title>Understanding Instantiation</title>
 <para/><section><title>Overview</title>
 <para>
-The instantiation of <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname> objects such as
-<indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> and <indexterm><primary>LzLayout</primary></indexterm><classname>LzLayout</classname> is a
+The instantiation of <indexterm><primary>lz.node</primary></indexterm><classname>lz.node</classname> objects such as
+<indexterm><primary>lz.view</primary></indexterm><classname>lz.view</classname> and <indexterm><primary>lz.layout</primary></indexterm><classname>lz.layout</classname> is a
 multi-phase procedure, but in general, you do not need to know the
 details of the instantiation of view objects; they "just work".  In
 rare cases, you will need to understand the details of the process.
@@ -25,7 +25,7 @@ two processes together are referred to as <indexterm significance="preferred"><p
 
 <para/></section><section><title>When instances are instantiated</title>
 <para>
-At a high level, the initialization of a <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname>,
+At a high level, the initialization of a <indexterm><primary>lz.node</primary></indexterm><classname>lz.node</classname>,
 the calling of its <indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> method, and sending of the
 <indexterm><primary><literal>oninit()</literal></primary></indexterm><methodname>oninit()</methodname> event is under the control of its
 <literal>initstage</literal> attribute, as follows:</para>
