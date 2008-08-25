@@ -57,7 +57,19 @@ public class ASTModifiedDefinition extends SimpleNode {
     }
 
     public void setNamespace(String value) {
-        if (access != DEFAULT_ACCESS) {
+        if ("public".equals(value)) {
+            setAccess(PUBLIC_ACCESS);
+        }
+        else if ("protected".equals(value)) {
+            setAccess(PROTECTED_ACCESS);
+        }
+        else if ("internal".equals(value)) {
+            setAccess(INTERNAL_ACCESS);
+        }
+        else if ("private".equals(value)) {
+            setAccess(PRIVATE_ACCESS);
+        }
+        else if (access != DEFAULT_ACCESS) {
             throw new ParseException(t, "cannot use namespace \"" + value + "\" with visibility \"" + access + "\"");
         }
         if (namespace != null) {

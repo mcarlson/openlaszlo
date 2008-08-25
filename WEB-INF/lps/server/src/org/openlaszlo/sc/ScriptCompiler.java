@@ -361,10 +361,9 @@ public class ScriptCompiler extends Cache {
         for (int i = 1; i < s.length(); i++)
             if (!Character.isJavaIdentifierPart(s.charAt(i)))
                 return false;
-        s = s.intern();
-        String[] keywords = {"break", "continue", "delete", "else", "for", "function", "if", "in", "instanceof", "new", "return", "this", "typeof", "var", "void", "while", "with", "case", "catch", "class", "const", "debugger", "default", "do", "enum", "export", "extends", "finally", "import", "super", "switch", "throw", "try"};
+        String[] keywords = {"break", "continue", "delete", "else", "false", "for", "function", "if", "implements", "in", "inherits", "interface", "instanceof", "mixin", "new", "null", "return", "this", "trait", "true", "typeof", "var", "void", "while", "with", "case", "catch", "class", "const", "debugger", "default", "do", "enum", "export", "extends", "finally", "import", "super", "switch", "throw", "try"};
         for (int i = 0; i < keywords.length; i++) {
-            if (s == keywords[i])
+            if (s.equals(keywords[i]))
                 return false;
         }
         return true;

@@ -206,11 +206,7 @@ TOKEN: {
 | < IMPLEMENTS: "implements" >
 | < IMPORT: "import" >
 | < INTERFACE: "interface" >
-| < INTERNAL: "internal" >
 | < OVERRIDE: "override" >
-| < PRIVATE: "private" >
-| < PROTECTED: "protected" >
-| < PUBLIC: "public" >
 | < STATIC: "static" >
 | < SUPER: "super" >
 
@@ -407,7 +403,6 @@ Token IdentifierOrAS3Keyword() #void : {Token t;}
   // Newer AS3 keywords are allowed as identifiers, other
   // keywords (like public, private, protected) apparently are not
   ( t=<IDENTIFIER>
-  | t=<INTERNAL>
   | t=<FINAL>
   | t=<STATIC>
   | t=<OVERRIDE>
@@ -1147,14 +1142,6 @@ void Modifiers(ASTModifiedDefinition mod): { Token t; }
   (
     t = <IDENTIFIER>
      {mod.setToken(t).setNamespace(t.image); }
-  | t = "public"
-     {mod.setToken(t).setAccess(ASTModifiedDefinition.PUBLIC_ACCESS);}
-  | t = "protected"
-     {mod.setToken(t).setAccess(ASTModifiedDefinition.PROTECTED_ACCESS);}
-  | t = "internal"
-     {mod.setToken(t).setAccess(ASTModifiedDefinition.INTERNAL_ACCESS);}
-  | t = "private"
-     {mod.setToken(t).setAccess(ASTModifiedDefinition.PRIVATE_ACCESS);}
   | t = "static"
      {mod.setToken(t).setStatic(true);}
   | t = "final"
