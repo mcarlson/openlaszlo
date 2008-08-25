@@ -91,15 +91,14 @@ class LzMouseKernel  {
     static function setCursorLocal ( what:String ) {
         if ( LzMouseKernel.__amLocked ) { return; }
         Mouse.hide();
-        cursorSprite.x = LFCApplication.stage.mouseX ;
-        cursorSprite.y = LFCApplication.stage.mouseY ;
+        cursorSprite.x = LFCApplication.stage.mouseX + 1;
+        cursorSprite.y = LFCApplication.stage.mouseY + 1;
         LFCApplication.setChildIndex(cursorSprite, LFCApplication._sprite.numChildren-1);
         if (lastCursorResource != what) {
             if (cursorSprite.numChildren > 0) {
                 cursorSprite.removeChildAt(0);
             }
             var resourceSprite = getCursorResource(what);
-            resourceSprite.y = 1;
             cursorSprite.addChild( resourceSprite );
             lastCursorResource = what;
         }
@@ -109,7 +108,6 @@ class LzMouseKernel  {
         cursorSprite.visible = true;
     }
 
- 
     static function mouseLeaveHandler(evt:Event):void {
         cursorSprite.visible = false;
     }
