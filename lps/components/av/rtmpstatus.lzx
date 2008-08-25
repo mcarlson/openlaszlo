@@ -29,8 +29,13 @@
         // This class should have an rtmp attribute to use a particular 
         // rtmpconnection, but default to the global one, and it should
         // also clean up properly.
-        if (!this.rtmpc) 
-            this.rtmpc = rtmpconnection.prototype._default;
+        if (! this.rtmpc) {
+            this.rtmpc = lz.rtmpconnection._default;
+            if (! this.rtmpc) {
+                if ($debug) Debug.warn("rtmpconnection not found for %w", this);
+                return;
+            }
+        }
 
         this._updateStageDelegate = 
             new LzDelegate(this, "_updateStage", this.rtmpc, "onstage");

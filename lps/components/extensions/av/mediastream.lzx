@@ -260,7 +260,7 @@
                     break;
 
                 default:
-                    Debug.warn("bogus mode: " + this.mode);
+                    if ($debug) Debug.warn("bogus mode: " + this.mode);
                     break;
 
             }
@@ -297,10 +297,7 @@
                 return;
             }
 
-            //Debug.write('_findnc', this.type);
-
             switch (this.type) {
-
                 case "http": {
                     if (!this["_nullnc"]) {
                         // keep one of these around for any http mediastream
@@ -321,15 +318,15 @@
 
                     // If we don't define our own connection, then use
                     // the default one (the first rtmpconnection created).
-                    //Debug.write("_findnc type rtmp, rtmpconnection", this.rtmpconnection, "_nc", lz.rtmpconnection.prototype._default._nc);
+                    //Debug.write("_findnc type rtmp, rtmpconnection", this.rtmpconnection, "_nc", lz.rtmpconnection._default._nc);
                     this._nc = 
                         this.rtmp ||
-                        rtmpconnection._default._nc;
+                        (lz.rtmpconnection._default && lz.rtmpconnection._default._nc);
                     break;
                 }
 
                 default: {
-                    if (this.debug) {
+                    if ($debug && this.debug) {
                         Debug.warn(
                             "unexpected protocol for url: %w %w",
                             this.url, 
@@ -337,7 +334,6 @@
                     }
                     break;
                 }
-
             }
 
           ]]>
@@ -365,7 +361,7 @@
             //Debug.write("mediastream _createStream", this, "_nc", this._nc, "_flashstream", this._flashstream, "type", this.type, "url", this.url);
 
             if (!this.url) {
-                if (this.debug) {
+                if ($debug && this.debug) {
                     Debug.warn(
                         "Can't create mediastream w/ no url: %w %w", 
                         this,
@@ -375,7 +371,7 @@
             }
 
             if (this._flashstream) {
-                Debug.warn("_flashstream already defined: %w", this._flashstream);
+                if ($debug) Debug.warn("_flashstream already defined: %w", this._flashstream);
                 return;
             }
 
@@ -409,7 +405,7 @@
         <!--- Handle the onStatus callback from the Flash NetStream object. 
               @keywords private -->
         <method name="_onStatus" args="info"><![CDATA[
-            if (this.debug) {
+            if ($debug && this.debug) {
                 Debug.write("mediastream _onStatus", this, info.code, info);
             }
 
@@ -502,7 +498,7 @@
                 }
 
                 default: {
-                    if (this.debug) {
+                    if ($debug && this.debug) {
                         Debug.warn("mediastream _onStatus not handled %w %w %w", this, info.code, info);
                     }
                     break;
@@ -560,7 +556,7 @@
         <!--- Handle the onPlayStatus callback from the Flash NetStream object. 
               @keywords private -->
         <method name="_onPlayStatus" args="info"><![CDATA[
-            if (this.debug) {
+            if ($debug && this.debug) {
                 Debug.write("mediastream onPlayStatus", this, info.code, info);
             }
 
@@ -577,7 +573,7 @@
                 }
 
                 default: {
-                    if (this.debug) {
+                    if ($debug && this.debug) {
                         Debug.warn("mediastream _onPlayStatus not handled: %w %w %w", this, info.code, info);
                     }
                     break;
@@ -596,7 +592,7 @@
         <method name="_onMetaData" args="info"><![CDATA[
             var propName;
             for (propName in info) {
-                if (this.debug) {
+                if ($debug && this.debug) {
                     Debug.write("MetaData: " + propName + " = " + info[propName]);
                 }
                 if (propName == "duration") {
@@ -657,7 +653,7 @@
                     break;
                 default:
                     if (start < 0) {
-                        Debug.warn("mediastream.play %w called with Flash-dependent start param: %w", this, start);
+                        if ($debug) Debug.warn("mediastream.play %w called with Flash-dependent start param: %w", this, start);
                     }
                     break;
             }
@@ -674,7 +670,7 @@
                     break;
                 default:
                     if (length < 0) {
-                        Debug.warn("mediastream.play %w called with Flash-dependent length param: %w", this, length);
+                        if ($debug) Debug.warn("mediastream.play %w called with Flash-dependent length param: %w", this, length);
                     }
                     break;
             }
@@ -698,13 +694,13 @@
                     reset = 3;
                     break;
                 default:
-                    Debug.warn("mediastream.play %w called with Flash-dependent length param: %w", length);
+                    if ($debug) Debug.warn("mediastream.play %w called with Flash-dependent length param: %w", length);
                     break;
             }
 
             //Debug.write("PLAY", this, start, pause, length, reset);
 
-            if (this.debug) {
+            if ($debug && this.debug) {
                 Debug.write("mediastream play", this, "_flashstream", this._flashstream, "type", this.type, "url", this.url);
             }
 
@@ -780,7 +776,7 @@
 
             setAttribute("mode", "playing");
 
-            if (this.debug) {
+            if ($debug && this.debug) {
                 //Debug.write("mediastream play", this, sname, typeof(sname), start);
             }
 
@@ -911,7 +907,7 @@
             //Debug.write("_setPaused", this, "paused", paused, "mode", this.mode, "progress", this.progress);
             if ((this.mode != "playing")  || !this._flashstream) {
                 if (paused) {
-                    Debug.warn("mediastream %w: trying to pause a stream that is not playing", this);
+                    if ($debug) Debug.warn("mediastream %w: trying to pause a stream that is not playing", this);
                 }
                 return;
             }
@@ -945,7 +941,7 @@
                 // TODO: Remember seek time for when we start?
                 // That might cause unexpected behavior. 
                 // Just ignore and warn for now. 
-                Debug.warn("mediastream %w seek with no _flashstream: %w", this, t);
+                if ($debug) Debug.warn("mediastream %w seek with no _flashstream: %w", this, t);
             }
           ]]>
         </method>

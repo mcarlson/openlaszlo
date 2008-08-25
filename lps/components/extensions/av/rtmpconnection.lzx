@@ -7,7 +7,8 @@
 <library>
     
     <class name="rtmpconnection" extends="node">
-
+        <!--- @keywords private -->
+        <attribute name="_default" value="null" allocation="class" />
 
         <!--- Connect automatically during init. If false, you need to explicitly
               call connect(). Default is true. -->
@@ -49,13 +50,11 @@
 
             // If this is the first instance, define a default NetConnection
             // for the class (used by other real-time objects, like videoview).
-            if (this["_default"] == undefined) {
-                rtmpconnection = new lz.node();
-                rtmpconnection._default = this;
+            if (! lz.rtmpconnection._default) {
+                lz.rtmpconnection._default = this;
             }
 
             if (this.debug) {
-
                 this._nc.onStatus = function(info){
                     this.t._onStatus(info);
                 }
@@ -68,7 +67,6 @@
                     _root.Debug.write("---------------> id: ", id);
                 }
                 **/
-
             }
 
             /** the following code should work now, but it hasn't
@@ -100,11 +98,11 @@
 
             if (this.debug) {
                 if (this.src == "") {
-                    Debug.write("no src url defined for", this);
+                    if ($debug) Debug.write("no src url defined for", this);
                     return;
                 }
                 if (typeof(src) != "string") {
-                    Debug.write("src", this.src, "must be a string in", this);
+                    if ($debug) Debug.write("src", this.src, "must be a string in", this);
                     return;
                 }
             }
@@ -118,7 +116,7 @@
             this.setAttribute("stage", 1);
 
             if (!ok) {
-                Debug.warn("connection failed bad url");
+                if ($debug) Debug.warn("connection failed bad url");
                 this.setAttribute("status", "disconnected");
                 this.setAttribute("stage", 0);
                 return;
@@ -140,7 +138,7 @@
         <!--- Handle the onStatus callback from the Flash NetConnection object. 
               @keywords private -->
         <method name="_onStatus" args="info"><![CDATA[
-            if (this.debug) {
+            if ($debug && this.debug) {
                 Debug.write("rtmpconnection", this, "_onStatus", info.code);
             }
 
@@ -201,7 +199,7 @@
             this.setAttribute("status", msg);
             this.setAttribute("stage", s);
 
-            if (this.debug) {
+            if ($debug && this.debug) {
                 if (s == 2) {
                     Debug.write("connected to " + this.src);
                 } else {
@@ -222,7 +220,7 @@
         <!--- Make a remote call to the rtmp server.
               TODO: We probably don't want to expose the Flash callback object. -->
         <method name="call" args="func, obj, params"><![CDATA[
-            if (this.debug) {
+            if ($debug && this.debug) {
                 Debug.write("call: func, obj, params", func, obj, params);
             }
 
@@ -295,7 +293,7 @@
         <!--- Call the remote method, passing the array of params. -->
         <method name="call" args="params"><![CDATA[
             if (this.funcname == null) {
-                Debug.write("No funcname given");
+                if ($debug) Debug.write("No funcname given");
                 if (this.onerror) {
                     this.onerror.sendEvent("No funcname given");
                 }
@@ -322,8 +320,8 @@
                     }
                 }
 
-            } else if (params.__proto__ != Array.prototype) {
-                Debug.write(this.name, "error: first argument (params) is not an array");
+            } else if (! (params instanceof Array)) {
+                if ($debug) Debug.write(this.name, "error: first argument (params) is not an array");
                 return -1;
             }
             var rtmpObject = null;
@@ -331,7 +329,7 @@
                 rtmpObject = this.parent;
             } else if(this.remotecontext  instanceof lz.rtmpconnection){
                 rtmpObject = this.remotecontext;
-            } else {
+            } else if ($debug) {
                 Debug.write("ERROR: no remotecontext availible abort call");
             }
 
