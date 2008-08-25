@@ -18,16 +18,33 @@
         <attribute name="responseXML" />
 
         <!--- Numeric code returned by server, such as 404 for "Not Found" or 200 for "OK" -->
-        <attribute name="status" />
+        <attribute name="status" value="0" type="number" />
 
         <!--- String message accompanying the status code -->
-        <attribute name="statusText" />
+        <attribute name="statusText" type="string" />
 
+        <!--- @keywords private -->
+        <attribute name="method" type="string" />
+        
+        <!--- @keywords private -->
+        <attribute name="url" type="string" />
+        
+        <!--- @keywords private -->
+        <attribute name="async" value="true" type="boolean" />
+
+        <!--- @keywords private -->
+        <attribute name="ondataDelegate" value="null" />
+
+        <!--- @keywords private -->
+        <attribute name="onerrorDelegate" value="null" />
 
         <!--- @keywords private -->
         <attribute name="dataset" value="null" />
 
-        <handler name="oninit">
+        <!--- @keywords private -->
+        <method name="init">
+            super.init();
+            
             if (this.dataset == null) {
                  this.dataset = new lz.dataset(this);
             }
@@ -39,7 +56,22 @@
                                                   this.dataset, "ondata" );
             this.onerrorDelegate = new LzDelegate( this , "onerrorHandler" , 
                                                   this.dataset, "onerror" );
-        </handler>
+        </method>
+        
+        <!--- @keywords private -->
+        <method name="destroy" >
+            if (this.ondataDelegate) {
+                this.ondataDelegate.unregisterAll();
+                this.ondataDelegate = null;
+            }
+            
+            if (this.onerrorDelegate) {
+                this.onerrorDelegate.unregisterAll();
+                this.onerrorDelegate = null;
+            }
+            
+            super.destroy();
+        </method>
 
 
         <!--=================================================================-->
@@ -51,68 +83,74 @@
             this.dataset.abort();
         </method>
 
-
         <!--- Returns complete set of headers (labels and values) as an LzParam -->
         <method name="getAllResponseHeaders">
-            return this.dataset.getAllResponseHeaders()
+            return this.dataset.getAllResponseHeaders();
         </method>
 
-
         <!--- Returns the string value of a single header label -->
-        <method name="getAllResponseHeader" args="hname">
+        <method name="getAllResponseHeader" args="hname:String">
+            // TODO: [20080825 anba] Possibly deprecate and remove, see TODO below in 'getResponseHeader()'
+            return this.dataset.getResponseHeader(hname);
+        </method>
+        
+        <!--- Returns the string value of a single header label -->
+        <method name="getResponseHeader" args="hname:String">
+            // TODO: [20080825 anba] added 'getResponseHeader()' because
+            // this is the actual name for the browser XMLHttpRequest. 
+            // I don't know why the original developer used 'getAllResponseHeader()'. 
             return this.dataset.getResponseHeader(hname);
         </method>
 
-
         <!--- Assigns destination URL, method, and other optional attributes of a pending request -->
-        <method name="open" args="method,url,async,uname,password">
-          <![CDATA[
-                 this.responseText = "";
-                 this.responseXML = null;
-                 this.url = url;
-                 this.method = method;
-                 this.async = async;
-                 if (!async) {
-                     Debug.write("warning: XMLHttpRequest.open('"+method+"','"+url+"','"+async+"') does not support synchronous mode");
-                 }
-                 this.uname = uname;
-                 this.password = password;
-                 if (uname != null || password != null) {
-                     Debug.write("warning: XMLHttpRequest.open() does not support HTTP authentication");
-                 }
-                 if (method.toLowerCase() == "get") {
-                     this.dataset.setQueryType("GET");
-                 } else if (method.toLowerCase() == "post") {
-                     this.dataset.setQueryType("POST");
-                 } else {
-                     Debug.write("XMLHttpRequest.open: method '"+method+"' not supported, use GET or POST");
-                 }
-                 if (!this.async) {
-                     Debug.write("XMLHttpRequest.open: only async request mode is supported");
-                 }
-                 this.setAttribute('readyState', 1); // open
-                 if (this.onreadystatechange != null) {
-                     this.onreadystatechange(this);
-                 }
-          ]]>
+        <method name="open" args="method:String!, url:String!, async:Boolean = true, uname:String = null, password:String = null">
+            <![CDATA[
+            this.responseText = "";
+            this.responseXML = null;
+            this.url = url;
+            this.method = method;
+            this.async = async;
+            if ($debug) {
+                if (!async) {
+                    Debug.write("warning: XMLHttpRequest.open('"+method+"','"+url+"','"+async+"') does not support synchronous mode");
+                }
+            }
+            this.uname = uname;
+            this.password = password;
+            if ($debug) {
+                if (uname != null || password != null) {
+                    Debug.write("warning: XMLHttpRequest.open() does not support HTTP authentication");
+                }
+            }
+            if (method.toLowerCase() == "get") {
+                this.dataset.setQueryType("GET");
+            } else if (method.toLowerCase() == "post") {
+                this.dataset.setQueryType("POST");
+            } else if ($debug) {
+                Debug.write("XMLHttpRequest.open: method '"+method+"' not supported, use GET or POST");
+            }
+            this.setAttribute('readyState', 1); // open
+            if (this.onreadystatechange != null) {
+                this.onreadystatechange(this);
+            }
+            ]]>
         </method>
 
         <method name="ondataHandler" args="d">
-           // Currently raw text response is only available for serverless requests
-           this.responseText = this.dataset.dataRequest['rawdata'];
-           this.responseXML = this.dataset;
-           this.status = 200; // maybe we need something a little more Laszlo-specific?
-           this.statusText = "OK";
-           this.setAttribute('readyState', 4); // 'receiving' (well, received...)
+            // Currently raw text response is only available for serverless requests
+            this.responseText = this.dataset.dataRequest['rawdata'];
+            this.responseXML = this.dataset;
+            this.status = 200; // maybe we need something a little more Laszlo-specific?
+            this.statusText = "OK";
+            this.setAttribute('readyState', 4); // 'receiving' (well, received...)
             if (this.onreadystatechange != null) {
-                  this.onreadystatechange(this);
+                this.onreadystatechange(this);
             }
         </method>
 
-
         <method name="onerrorHandler" args="d">
             <![CDATA[
-           // Currently raw text response is only available for serverless requests
+            // Currently raw text response is only available for serverless requests
             this.responseText = "";
             this.responseXML = null;
             // If the load was proxied, we can actually dig in the headers and get the
@@ -135,11 +173,10 @@
 
             this.setAttribute('readyState', 4); // 'receiving' (well, received...)
             if (this.onreadystatechange != null) {
-                  this.onreadystatechange(this);
+                this.onreadystatechange(this);
             }
             ]]>
         </method>
-
 
         <!--- Transmits the request, optionally with postable string or DOM object data
 
@@ -148,33 +185,36 @@
          <p>Doesn't support "content" arg yet for serverless operation</p>
 
          -->
-        <method name="send" args="content">
-          <![CDATA[
-                 if (method.toLowerCase() == "get" || method.toLowerCase() == "post") {
-                     this.setAttribute('readyState', 2); // sent
-                     this.dataset.setSrc(this.url);
+        <method name="send" args="content:*">
+            <![CDATA[
+            if (this.method.toLowerCase() == "get" || this.method.toLowerCase() == "post") {
+                this.setAttribute('readyState', 2); // sent
+                if (this.onreadystatechange != null) {
+                    this.onreadystatechange(this);
+                }
+                this.dataset.setSrc(this.url);
 
-                     // Try to handle content arg, as best we can
-                     // given the extremely lame Flash 6/7 HTTP APIs.
-                     if (content != null && this.dataset.isProxied()) {
-                         // Raw POST mechanism is only supported in proxied mode
-                         if (typeof(content) == 'string') {
-                             this.dataset.setQueryParam('lzpostbody', content);
-                         } else {
-                             // if it's not a string, and not null, assume it's XML
-                             this.dataset.setQueryParam('lzpostbody', content.serialize());
-                         }
-                     }
-                     this.dataset.doRequest();
-                 } else {
-                     Debug.write("XMLHttpRequest.send: method '"+method+"' not supported, use GET or POST");
-                 }
-                 ]]>
+                // Try to handle content arg, as best we can
+                // given the extremely lame Flash 6/7 HTTP APIs.
+                if (content != null && this.dataset.isProxied()) {
+                    // Raw POST mechanism is only supported in proxied mode
+                    if (typeof(content) == 'string') {
+                        this.dataset.setQueryParam('lzpostbody', content);
+                    } else {
+                        // if it's not a string, and not null, assume it's XML
+                        this.dataset.setQueryParam('lzpostbody', content.serialize());
+                    }
+                }
+                this.dataset.doRequest();
+            } else if ($debug) {
+                Debug.write("XMLHttpRequest.send: method '"+method+"' not supported, use GET or POST");
+            }
+            ]]>
         </method>
 
         <!--- Assigns a label/value pair to the header to be sent with a request -->
-        <method name="setRequestHeader" args="key,val">
-          this.dataset.setHeader(key,val);
+        <method name="setRequestHeader" args="key:String, val:String">
+            this.dataset.setHeader(key, val);
         </method>
 
         <doc>
