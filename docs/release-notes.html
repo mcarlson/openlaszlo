@@ -2,7 +2,7 @@
 <!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>OpenLaszlo 4.2 Alpha Release Notes</title>
+    <title>OpenLaszlo 4.2 Beta Release Notes</title>
     <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
             * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
             * Use is subject to license terms.                                            *
@@ -13,52 +13,35 @@
 
   <body class="release-notes">
 
-    <h1>Release Notes for OpenLaszlo 4.2 Alpha</h1>
+    <h1>Release Notes for OpenLaszlo 4.2 Beta</h1>
 
-    <p>OpenLaszlo 4.2 Alpha follows OpenLaszlo 4.1.1 as the next build from the trunk development
-      branch. The primary goal of this release is to provide alpha-level support for SWF9 features
+    <p>OpenLaszlo 4.2 Beta follows OpenLaszlo 4.1.1 as the next build from the trunk development
+      branch. The primary goal of this release is to provide beta-level support for SWF9 features
       as indicated below.</p>
     <ul>
-      <li>The sample applications LZPIX, Weather, and Component Sampler work with SWF9 <br />To
-        compile these applications to SWF9, navigate to the OpenLaszlo Quick Index, click on the
-        link for the desired application, click the SWF9 radio button, and compile.</li>
-      <li>SWF9 installation packaged w/flex compiler <br />Installing OpenLaszlo with the flex
-        compiler is one step.</li>
-      <li>databinding and basic replication</li>
-
-      <li>"implicit this" support<br />Note that there is a compiler limitation that "super" cannot
-        be used in methods in <code>&lt;state&gt;</code>s.</li>
-
-      <li>Text, fonts, scrolling, and selection APIs</li>
-
-      <li>Keyboard and mouse events</li>
-
-      <li>Multi-frame resource support</li>
-
-      <li>Image loading</li>
-      <li>Resource stretching</li>
-
-      <li>Script tag support</li>
-
-      <li>XML-RPC support</li>
+      <li>Javascript browser communication support (<a href="http://www.openlaszlo.org/jira/browse/LPP-5857">LPP-5857</a>)</li>
+      <li>Media streaming (AV components)</li>
+      <li>More media support (flv's, playing swf animations - conversion required for playback controls, sound)</li>
+      <li>HTML tag and mousewheel support</li>
+      <li>Laszlo debugger support (you can now use the Adobe debugger, described <a href="http://wiki.openlaszlo.org/SubversionBuildInstructions#Use_command_line_.27fdb.27_tool_to_debug_Flash_9_apps">here</a>)</li>
+      <li>Kernel support for embedded fonts, scaling</li>
+      <li>Amazon and Calendar sample applications running</li>   
     </ul>
-    <p>OpenLaszlo 4.2 Alpha is not a fully-qualified release. It has had limited testing for
+    <p>OpenLaszlo 4.2 Beta is not a fully-qualified release. It has had limited testing for
       specific features. This release is intended as a platform for initial porting and testing of
       SWF9 applications.</p>
     <h2>Installation Notes</h2>
-    <ul>
-      <li>For SWF9 development on Unix, you will need to manually <code>chmod 755</code> all the
+    <p>For SWF9 development on Unix, you will need to manually <code>chmod 755</code> all the
         binaries in <code>WEB-INF/server/bin/</code> before you can compile. This is true for both
-        the <code>.war</code> and <code>.gz</code> distributions.</li>
-      <li>The installation works best with JDK 1.6, although any version 1.5 or higher is acceptable.</li>
-    </ul>
-    <h2>Bugs Fixed in OpenLaszlo 4.2 Alpha</h2>
+        the <code>.war</code> and <code>.gz</code> distributions.</p>
+
+    <h2>Bugs Fixed in OpenLaszlo 4.2 Beta</h2>
     <p>A number of bugs have been fixed; we have provided a link to our JIRA bug tracking system
       where you can view the details:</p>
     <ul>
       <li>
         <a
-          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10760"
+          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10781"
           target="_blank">Fixed bugs</a>
       </li>
     </ul>
