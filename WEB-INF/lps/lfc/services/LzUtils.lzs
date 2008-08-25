@@ -65,18 +65,17 @@ class LzUtilsClass {
     }
 
     // Converts a floating point rgb.0a to a CSS #RRGGBBAA string
-    public function inttohex(n:*, p:*) {
+    public function inttohex(n:*, p:int = 6) {
         var s = lz.Utils.stringToColor(n);
         if (typeof s != 'number') return s;
 
         // default to 6 characters of padding
-        return '#' + this.dectohex(s, 6);
+        return '#' + this.dectohex(s, p);
     }
 
     // Converts a decimal number to hexadecimal with padding
-    public function dectohex(n:*, p:*) {
+    public function dectohex(n:*, p:int = 0) {
         if (typeof n != 'number') return n;
-        p = p ? p : 0;
 
         n = n & 0xffffff;
         var hex = n.toString(16);
