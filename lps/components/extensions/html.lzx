@@ -9,40 +9,39 @@
     <when runtime="dhtml">
     </when>
     <otherwise>
-<script>
+<script when="immediate">
 // proxy object for browser lz.embed.iframemanager
-lz.embed.iframemanager = {
-    owners: {}
-    ,create: function(owner, name, scrollbars) {
-        lz.Browser.callJS('lz.embed.iframemanager.create', function (id) { 
-                lz.embed.iframemanager.owners[id] = owner;
-                owner.setiframeid(id); 
-            }, canvas.id, name, scrollbars);
-    }
-    ,setPosition: function(id, x, y, width, height, v, z) {
-        lz.Browser.callJS('lz.embed.iframemanager.setPosition', null, id, x, y, width, height, v, z);
-    }
-    ,setSrc: function(id, src, history) {
-        lz.Browser.callJS('lz.embed.iframemanager.setSrc', null, id, src, history);
-    }
-    ,setVisible: function(id, v) {
-        lz.Browser.callJS('lz.embed.iframemanager.setVisible', null, id, v);
-    }
-    ,bringToFront: function(id) {
-        lz.Browser.callJS('lz.embed.iframemanager.bringToFront', null, id);
-    }
-    ,sendToBack: function(id) {
-        lz.Browser.callJS('lz.embed.iframemanager.sendToBack', null, id);
-    }
-    ,scrollBy: function(id, x, y) {
-        lz.Browser.callJS('lz.embed.iframemanager.scrollBy', null, id, x, y);
-    }
-    ,__gotload: function(id) {
-        if (lz.embed.iframemanager.owners[id]) lz.embed.iframemanager.owners[id].__gotload();
-    }
-    ,__destroy: function(id) {
-        lz.Browser.callJS('lz.embed.iframemanager.__destroy', null, id);
-    }
+lz.embed.iframemanager = new LzInheritedHash();
+lz.embed.iframemanager.owners = new LzInheritedHash();
+lz.embed.iframemanager.create = function(owner, name, scrollbars) {
+    lz.Browser.callJS('lz.embed.iframemanager.create', function (id) { 
+        lz.embed.iframemanager.owners[id] = owner;
+        owner.setiframeid(id); 
+    }, canvas.id, name, scrollbars);
+}
+lz.embed.iframemanager.setPosition = function(id, x, y, width, height, v, z) {
+    lz.Browser.callJS('lz.embed.iframemanager.setPosition', null, id, x, y, width, height, v, z);
+}
+lz.embed.iframemanager.setSrc = function(id, src, history) {
+    lz.Browser.callJS('lz.embed.iframemanager.setSrc', null, id, src, history);
+}
+lz.embed.iframemanager.setVisible = function(id, v) {
+    lz.Browser.callJS('lz.embed.iframemanager.setVisible', null, id, v);
+}
+lz.embed.iframemanager.bringToFront = function(id) {
+    lz.Browser.callJS('lz.embed.iframemanager.bringToFront', null, id);
+}
+lz.embed.iframemanager.sendToBack = function(id) {
+    lz.Browser.callJS('lz.embed.iframemanager.sendToBack', null, id);
+}
+lz.embed.iframemanager.scrollBy = function(id, x, y) {
+    lz.Browser.callJS('lz.embed.iframemanager.scrollBy', null, id, x, y);
+}
+lz.embed.iframemanager.__gotload = function(id) {
+    if (lz.embed.iframemanager.owners[id]) lz.embed.iframemanager.owners[id].__gotload();
+}
+lz.embed.iframemanager.__destroy = function(id) {
+    lz.Browser.callJS('lz.embed.iframemanager.__destroy', null, id);
 }
 </script>
 </otherwise>
@@ -74,7 +73,7 @@ lz.embed.iframemanager = {
         this._posdel.register(this.target, 'onx');
         this._posdel.register(this.target, 'ony');
         //Debug.write(t);
-        this.__updatepos();
+        this.__updatepos(null);
         if (this['ontarget']) this.ontarget.sendEvent(t);
     </method>
 
@@ -99,20 +98,17 @@ lz.embed.iframemanager = {
     </method>
 
     <!--- @access private -->
-    <method name="init">
-        super.init();
-
+    <handler name="oninit">
         if (this['target'] == null) {
             this.setAttribute('target', this.parent);
         }
         if ($dhtml) {
-            
             var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars, this.sprite.__LZdiv, 0);
         } else {
             var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars);
         }
         if (i) this.setiframeid(i);
-    </method>
+    </handler>
 
     <!--- @access private -->
     <method name="__updatepos" args="ignore">
@@ -137,7 +133,7 @@ lz.embed.iframemanager = {
         this.iframeid = id;
         if (this['isfront']) this.bringToFront();
         if (this['srcset']) lz.embed.iframemanager.setSrc(id, this.srcset, this.history);
-        this.__updatepos();
+        this.__updatepos(null);
         if ($dhtml) {
             this.setClickable(true);
         }
@@ -145,7 +141,7 @@ lz.embed.iframemanager = {
     </method>
     <method name="__gotload">
         this.setAttribute('loading', false);
-        this.__updatepos();
+        this.__updatepos(null);
         this.onload.sendEvent();
     </method>
     <method name="bringToFront">
@@ -179,7 +175,7 @@ lz.embed.iframemanager = {
         if (this._posdel) {
             this._posdel.unregisterAll();
         }
-        super.destroy.apply(this, arguments);
+        super.destroy();
     </method>
     <switch>
         <when runtime="dhtml">

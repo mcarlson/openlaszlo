@@ -68,19 +68,21 @@ class DojoExternalInterfaceClass {
         return true;
     }
     
-    function call(methodName, resultsCallback = null, ...parameters) {
-        /*
-        // we might have any number of optional arguments, so we have to 
-        // pass them in dynamically; strip out the results callback
+    function call(...args) {
+        var methodName = args[0];
+        var resultsCallback = args[1];
+
         var parameters = [];
-        for(var i = 0; i < arguments.length; i++){
+        for(var i = 0; i < args.length; i++){
             if(i != 1){ // skip the callback
-                parameters.push(arguments[i]);
+                parameters.push(args[i]);
             }
         }
-        */
-        
-        var results = ExternalInterface.call(methodName, parameters);
+
+        // we might have any number of optional arguments, so we have to 
+        // pass them in dynamically; strip out the results callback
+        //Debug.write('Calling', parameters);
+        var results = ExternalInterface.call.apply(null, parameters);
         
         // immediately give the results back, since ExternalInterface is
         // synchronous
@@ -100,7 +102,7 @@ class DojoExternalInterfaceClass {
         //Debug.write('loaded');
         //if (this.installing) return;
         this.call("lz.embed.dojo.loaded", null, this._id);
-        //LzBrowserKernel.__jsready();
+        LzBrowserKernel.__jsready();
     }
     
     function startExec(){ 

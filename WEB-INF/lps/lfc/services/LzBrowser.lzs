@@ -429,14 +429,14 @@ lz.BrowserService = LzBrowserService;  // publish
  */
 lz.Browser = LzBrowserService.LzBrowser;
 
-if ($as2){
+if ($dhtml){
+} else {
+  lz.embed = new LzInheritedHash();
   // proxy object for browser Lz
-  lz.embed = {
-    setCanvasAttribute: function (name, value, hist) {
-      lz.Browser.callJS('lz.embed.setCanvasAttribute', false, name, value, hist);
-    }
-    ,callMethod: function (js) {
-      lz.Browser.callJS('lz.embed.callMethod', false, js);
-    }
+  lz.embed.setCanvasAttribute  = function (name, value, hist) {
+    lz.Browser.callJS('lz.embed.setCanvasAttribute', false, name, value, hist);
+  }
+  lz.embed.callMethod = function (js) {
+    lz.Browser.callJS('lz.embed.callMethod', false, js);
   }
 }

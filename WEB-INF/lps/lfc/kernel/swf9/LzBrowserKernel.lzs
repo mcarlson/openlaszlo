@@ -52,13 +52,72 @@ static function loadJS ( js, target ){
   * @param String js: Browser javascript to execute
   */
 static function callJS (...args) {
+    var js = args[0];
+    var callback = args[1];
+    //DojoExternalInterface.call.apply(null, args);
+    if (LzBrowserKernel.jsready != true) {
+        LzBrowserKernel.__jslocked = true;
+    }
+    if (LzBrowserKernel.__jslocked == true) {
+        if (callback != false) {
+            var o = [];
+            for (var i = 0; i < args.length; i++) {
+                o[i] = args[i];
+            }
+            LzBrowserKernel.__jscallq.push(o);
+            //Debug.write('queued', LzBrowserKernel.__jscallq.length, o); 
+        }
+        return;
+    }
+
+    LzBrowserKernel.__jscallback = callback;
+
+    args[1] = LzBrowserKernel.callJSReturn;
+
+    //LzBrowserKernel.__jslocked = true;
+    //Debug.write('calling with args real', args);
     DojoExternalInterface.call.apply(null, args);
+
+    if (callback == false) {
+        LzBrowserKernel._dequeueJS();
+    }
 }
+
+/** @access private */ 
+static var jsready = false;
+/** @access private */ 
+static var __jscallback = null;
+/** @access private */ 
+static var __jslocked = false;
+/** @access private */ 
+static var __jscallq = [];
 
 // called from DojoExternalInterface
 /** @access private */ 
 static function __jsready () { 
-    //Debug.write('jsready');
+    //Debug.write('jsready', LzBrowserKernel.__jscallq);
+    LzBrowserKernel.jsready=true;
+    LzBrowserKernel._dequeueJS();
+}
+
+static function callJSReturn (a) {
+    if (LzBrowserKernel.__jscallback) {
+        //Debug.write('callJSReturn', a, LzBrowserKernel.__jscallback);
+        LzBrowserKernel.__jscallback.call(null, a);
+    }
+    LzBrowserKernel._dequeueJS();
+}
+
+/** @access private */ 
+static function _dequeueJS () {
+    //Debug.write('_dequeueJS');
+    LzBrowserKernel.__jslocked = false;
+    LzBrowserKernel.__jscallback = null;
+    if (LzBrowserKernel.__jscallq.length > 0) {
+        var a = LzBrowserKernel.__jscallq.pop();
+        //Debug.write('calling with args q', a);
+        LzBrowserKernel.callJS.apply(LzBrowserKernel, a);
+    }
 }
 
 /**

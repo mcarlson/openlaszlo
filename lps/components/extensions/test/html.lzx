@@ -11,19 +11,25 @@
             <edittext name="txt" text="http://w3.org/" width="300"/> 
             <button>Load
                 <handler name="onclick">
-                    classroot.main.setAttribute('src', parent.txt.getText()); 
-                    classroot.main.setAttribute('visible', true); 
+                    if (classroot.main) {
+                        classroot.main.setAttribute('src', parent.txt.getText()); 
+                        classroot.main.setAttribute('visible', true); 
+                    }
                 </handler>
             </button> 
             <button>Clear
                 <handler name="onclick">
-                    classroot.main.setAttribute('visible', false);
-                    classroot.main.setSrc(''); 
+                    if (classroot.main) {
+                        classroot.main.setAttribute('visible', false);
+                        classroot.main.setSrc(''); 
+                    }
                 </handler>
             </button> 
             <button>Destroy
                 <handler name="onclick">
-                    classroot.main.destroy();
+                    if (classroot.main) {
+                        classroot.main.destroy();
+                    }
                 </handler>
             </button> 
             <text name="status" y="3" fontstyle="bold" visible="${classroot.main.loading}">Loading...</text>
