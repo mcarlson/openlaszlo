@@ -12,14 +12,14 @@
         this.enabled=e;
         if ( this.enabled ) {
             this.updateDelegate.enable();
-            this.doupdate(true);
+            this.update(true);
        } else this.updateDelegate.disable();
     </method>
 
     <method name="addSubview" args="newsub"> <![CDATA[
         this.updateDelegate.register( newsub,  "onstartTime" );
         super.addSubview( newsub );
-        if (this.enabled) this.doupdate( true );
+        if (this.enabled) this.update( true );
         ]]>
     </method>
 
