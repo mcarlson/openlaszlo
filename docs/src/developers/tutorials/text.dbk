@@ -139,11 +139,10 @@ Note that the behavior of LZX applications differs between applications compiled
 
 <para>is wrong because the <indexterm><primary>a</primary></indexterm><sgmltag class="element">&lt;a&gt;</sgmltag> tag was closed before the <indexterm><primary>u</primary></indexterm><sgmltag class="element">&lt;u&gt;</sgmltag> tag.</para>
 
-<para/></section><section><title condition="html">The &lt;html&gt; tag</title>
-<para>
-In applications compiled for DHTML, the <indexterm><primary>html</primary></indexterm><sgmltag class="element">&lt;html&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<para/></section><section><title>The &lt;html&gt; tag</title>
+<para>The <indexterm><primary>html</primary></indexterm><sgmltag class="element">&lt;html&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: html-->
- tag allows you to include complete html pages within an OpenLaszlo application.  In the example below, the <indexterm><primary>html</primary></indexterm><sgmltag class="element">&lt;html&gt;</sgmltag> is used inside an OpenLaszlo window, which automatically provides scrollbars. Don't worry if you don't understand how the code in this example works; the concepts will be explained in later chapters. The key thing to note is that you can embed entire HTML pages.
+ tag allows you to include complete html pages within an OpenLaszlo application.  In the example below, the <indexterm><primary>html</primary></indexterm><sgmltag class="element">&lt;html&gt;</sgmltag> tag is used inside an OpenLaszlo window, which automatically provides scrollbars. Don't worry if you don't understand how the code in this example works; the concepts will be explained in later chapters. The key thing to note is that you can embed entire HTML pages.
 </para>
 <example role="live-example">
    <title>The &lt;html&gt; tag</title>
