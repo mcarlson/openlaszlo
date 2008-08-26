@@ -23,7 +23,11 @@
         ]]>
     </method>
 
-    <method name="doupdate" args="force">
+    <method name="reset" args="e=null">
+        this.update( true );
+    </method>
+
+    <method name="update" args="force=null">
         <![CDATA[
         var sv = this.subviews;
         if ( this.locked || this.enabled!=true ) return;
