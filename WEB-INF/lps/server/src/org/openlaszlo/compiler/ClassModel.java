@@ -135,6 +135,8 @@ public class ClassModel implements Comparable {
     LFCTag2JSClass.put("datasource", "LzDatasource");
     LFCTag2JSClass.put("lzhttpdataprovider", "LzHTTPDataProvider");
     LFCTag2JSClass.put("import", "LzLibrary");
+    LFCTag2JSClass.put("contextmenu", "LzContextMenu");
+    LFCTag2JSClass.put("contextmenuitem", "LzContextMenuItem");
   }
 
   public static String LZXTag2JSClass(String s) {

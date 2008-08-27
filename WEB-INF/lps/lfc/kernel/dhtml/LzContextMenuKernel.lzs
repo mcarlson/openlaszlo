@@ -99,7 +99,7 @@ function __show (send=true) {
         var cm = items[i].kernel;
         var v = cm.cmenuitem;
         if (v.visible != true) continue; 
-        if (v.separatorBefore) o += '<br/>';
+        if (v.separatorBefore) o += '<hr/>';
 
         var caption = v.caption;
         // Don't display the same item twice (matches swf behavior)

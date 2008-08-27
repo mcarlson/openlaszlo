@@ -104,6 +104,7 @@
     <element>doc</element>
     <element>node</element>
     <element>splash</element>
+    <element>contextmenu</element>
     <!-- soon to be deprecated -->
     <element>connectiondatasource</element>
   </containsElements>
@@ -318,6 +319,7 @@
     <element>text</element>
     <element>inputtext</element>
     <element>node</element>
+    <element>contextmenu</element>
   </containsElements>
 
   <method name="$lzc$getAttributeRelative_dependencies"/>
@@ -1096,6 +1098,24 @@ element attribute "
   <attribute name="showInternalProperties" type="boolean" value="false"/>
 </interface>
 
+<interface name="contextmenu" extends="node" >
+  <event name="onmenuopen" />
+  
+  <attribute name="delegate" type="expression" value="null" />
+  
+  <containsElements>
+    <element>contextmenuitem</element>
+  </containsElements>
+</interface>
 
+<interface name="contextmenuitem" extends="node" >
+  <event name="onselect" />
+  
+  <attribute name="delegate" type="expression" value="null" />
+  <attribute name="caption" type="string" value="" />
+  <attribute name="enabled" type="boolean" value="true" />
+  <attribute name="separatorbefore" type="boolean" value="false" />
+  <attribute name="visible" type="boolean" value="true" />
+</interface>
 
 </library>

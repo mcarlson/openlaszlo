@@ -262,7 +262,8 @@ LzSprite.prototype.__defaultStyles['#lzcontextmenu'] = {
     fontFamily: 'Verdana,Vera,sans-serif',
     fontSize: '13px',
     margin: '2px',
-    color: '#999'
+    color: '#999',
+    minWidth: '100px'
 };
 
 LzSprite.prototype.uid = 0;

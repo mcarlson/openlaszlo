@@ -17,29 +17,58 @@
   *
   * @shortdesc A contextual menu
   */
-class LzContextMenu extends LzNode {
-
-function LzContextMenu (del:LzDelegate = null) {
-    this.kernel = new LzContextMenuKernel(this);
-
-    this.items = [];
-    // set callback
-    this.setDelegate(del);
-}
+public final class LzContextMenu extends LzNode {
 
 /** @access private
   * @modifiers override 
   */
 static var tagname = 'contextmenu';
 
+/** @access private */
+static var attributes = new LzInheritedHash(LzNode.attributes);
+
 /**
   * @lzxtype event
   */
 var onmenuopen:LzDeclaredEventClass = LzDeclaredEvent;
 
+/** @access private */
 var kernel:LzContextMenuKernel = null;
+/** @access private */
 var items:Array = null;
 
+function LzContextMenu (del:* = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
+    // NOTE: [20080825 anba] for bwcomp we also accept a LzDelegate as the first argument
+    super(del is LzNode ? del cast LzNode : null, del is LzNode ? attrs : {delegate: del}, children, instcall);
+}
+
+/** @access private */
+override function construct (parent, args) {
+    super.construct(parent, args);
+    
+    this.kernel = new LzContextMenuKernel(this);
+
+    this.items = [];
+    
+    var del:* = (args && args['delegate']) || null;
+    delete args['delegate'];
+    
+    // set callback
+    this.setDelegate(del);
+}
+
+/** @access private */
+override function init () {
+    super.init();
+    
+    var p:LzNode = this.parent;
+    if (p && p is LzView) {
+        (p cast LzView).setContextMenu(this);
+    }
+}
+
+/** @access private */
+function $lzc$set_delegate (delegate:*) :void { this.setDelegate(delegate); }
 
 /**
   * Sets the delegate which will be called when the menu is opened
@@ -118,21 +147,58 @@ lz[LzContextMenu.tagname] = LzContextMenu;  // publish
   * 
   * @shortdesc A menu item within a context menu
   */
-class LzContextMenuItem extends LzNode {
-
-function LzContextMenuItem (title:String, del:*) {
-    this.kernel = new LzContextMenuItemKernel(this, title, del);
-};
+public final class LzContextMenuItem extends LzNode {
 
 /** @access private
   * @modifiers override 
   */
 static var tagname = 'contextmenuitem';
 
+/** @access private */
+static var attributes = new LzInheritedHash(LzNode.attributes);
+
+/** @access public */
 var onselect:LzDeclaredEventClass = LzDeclaredEvent;
 
+/** @access private */
 var kernel:LzContextMenuItemKernel = null;
 
+function LzContextMenuItem (title:*, del:Object? = null, children:Array? = null, instcall:Boolean = false) {
+    // NOTE: [20080825 anba] for bwcomp we also accept a String 
+    // and a LzDelegate/Function as the first two arguments
+    super(title is LzNode ? title cast LzNode : null, title is LzNode ? del : {title: title, delegate: del}, children, instcall);
+};
+
+/** @access private */
+override function construct (parent, args) {
+    super.construct(parent, args);
+    
+    var title:String = (args && args['title']) || "";
+    delete args['title'];
+    var del:* = (args && args['delegate']) || null;
+    delete args['delegate'];
+    
+    this.kernel = new LzContextMenuItemKernel(this, title, del);
+    
+    if (parent && parent is LzContextMenu) {
+        parent.addItem(this);
+    }
+}
+
+/** @access private */
+function $lzc$set_delegate (delegate:*) :void { this.setDelegate(delegate); }
+
+/** @access private */
+function $lzc$set_caption (caption:String) :void { this.setCaption(caption); }
+
+/** @access private */
+function $lzc$set_enabled (val:Boolean) :void { this.setEnabled(val); }
+
+/** @access private */
+function $lzc$set_separatorbefore (val:Boolean) :void { this.setSeparatorBefore(val); }
+
+/** @access private */
+function $lzc$set_visible (val:Boolean) :void { this.setVisible(val); }
 
 /**
   * LzContextMenuItem.setDelegate
