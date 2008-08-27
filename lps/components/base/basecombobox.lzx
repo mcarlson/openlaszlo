@@ -579,7 +579,7 @@
         <!--- Add the specified item to list to the end of the list.
               @param String txt: the text for the item.
               @param Object val: the value for the item. -->
-        <method name="addItem" args="txt, val" >
+        <method name="addItem" args="txt, val=null" >
             this.cblist.addItem(txt,val);
         </method>
 

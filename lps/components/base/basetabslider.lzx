@@ -203,7 +203,7 @@
               tabelement.
               @param String txt: The name of the tabelement. 
               @param Object value: The value of the tabelement. -->
-        <method name="addItem" args="txt, value" > <![CDATA[
+        <method name="addItem" args="txt, value=null" > <![CDATA[
             var v = new lz[this.itemclassname](this,{text:txt, value:value});
             this.onheight.sendEvent(); // force an update
         ]]> </method>

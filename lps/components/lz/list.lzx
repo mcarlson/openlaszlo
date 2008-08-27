@@ -275,7 +275,7 @@
         <!--- Add the specified item to the end of the list.
               @param String txt: the text for the item.
               @param Object val: the value for the item. -->
-        <method name="addItem" args="txt, val" >
+        <method name="addItem" args="txt, val=null" >
             if (this.itemclassname == "") {
                 this.itemclassname = "textlistitem";
             }

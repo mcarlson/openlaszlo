@@ -292,7 +292,7 @@
               (use the data APIs instead).
               @param String text: the text for the item.
               @param Object value: the value for the item. -->
-        <method name="addItem" args="text, value" >
+        <method name="addItem" args="text, value=null" >
             if (this['itemclassname'] &amp;&amp; lz[this.itemclassname]) {
                 new lz[this.itemclassname](this, {text:text, value:value});
             } else if ($debug) {
