@@ -33,7 +33,8 @@ rm -rf frameworks/projects/framework/src
 rm -rf frameworks/projects/framework/asdoc
 rm -rf frameworks/projects/rpc/src
 
-rm -rf frameworks/libs/air
+# leave the AIR libraries, frameworks/libs/air
+
 rm -rf frameworks/projects/airframework
 rm -rf frameworks/projects/flash-integration
 rm -rf frameworks/projects/flex
