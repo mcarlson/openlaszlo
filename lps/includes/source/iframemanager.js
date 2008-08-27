@@ -6,9 +6,15 @@ lz.embed.iframemanager = {
     __counter: 0
     ,__frames: {}
     ,__namebyid: {}
-    ,create: function(owner, name, scrollbars, appendto, defaultz) {
+    ,create: function(owner, name, scrollbars, appendto, defaultz, canvasref) {
         //console.log(owner + ', ' + name + ', ' + scrollbars + ', ' + appendto + ', ' + defaultz)
         var i = document.createElement('iframe');
+        // Find owner div
+        if (typeof owner == 'string') {
+            i.appcontainer = lz.embed.applications[owner]._getSWFDiv();
+        } else {
+            i.appcontainer = canvasref.sprite.__LZdiv;
+        }
         i.owner = owner;
         i.skiponload = true;
 
@@ -88,8 +94,9 @@ lz.embed.iframemanager = {
         //console.log('setPosition', id, x, y, width, height, visible)
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
-        if (x != null) iframe.style.left = x + 'px';
-        if (y != null) iframe.style.top = y + 'px';
+        var pos = lz.embed.getAbsolutePosition(iframe.appcontainer);
+        if (x != null) iframe.style.left = (x + pos.x) + 'px';
+        if (y != null) iframe.style.top = (y + pos.y) + 'px';
         if (width != null) iframe.style.width = width + 'px';
         if (height != null) iframe.style.height = height + 'px';
         if (visible != null) {
@@ -165,6 +172,8 @@ lz.embed.iframemanager = {
     ,__destroy: function(id) { 
         var iframe = lz.embed.iframemanager.__frames[id];
         if (iframe) {
+            iframe.owner = null;
+            iframe.appcontainer = null;
             LzSprite.prototype.__discardElement(iframe);
             delete lz.embed.iframemanager.__frames[id];
             delete lz.embed.iframemanager.__namebyid[id];

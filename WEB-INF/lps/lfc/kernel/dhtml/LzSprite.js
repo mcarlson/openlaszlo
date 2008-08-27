@@ -1627,52 +1627,7 @@ LzSprite.prototype.__getPos = function() {
     if (dirty == false && this.__poscache) return this.__poscache;
 
     // compute position
-    var el = this.__LZdiv;
-    var parent = null;
-    var pos = {};
-    var box;
-
-    if (lz.embed.browser.isIE) { // IE
-        box = el.getBoundingClientRect();
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-        return {x: box.left + scrollLeft, y: box.top + scrollTop};
-    } else if (document.getBoxObjectFor) { // gecko
-        box = document.getBoxObjectFor(el);
-        pos = {x: box.x, y: box.y};
-    } else { // safari/opera
-        pos = {x: el.offsetLeft, y: el.offsetTop};
-        parent = el.offsetParent;
-        if (parent != el) {
-            while (parent) {
-                pos.x += parent.offsetLeft;
-                pos.y += parent.offsetTop;
-                parent = parent.offsetParent;
-            }
-        }
-
-        // opera & (safari absolute) incorrectly account for body offsetTop
-        if ( this.quirks.absolute_position_accounts_for_offset && this.hasOwnProperty('getStyle') && this.getStyle(el, 'position') == 'absolute' ) {
-            pos.y -= document.body.offsetTop;
-        }
-    }
-
-    if (el.parentNode) {
-        parent = el.parentNode;
-    } else {
-        parent = null;
-    }
-
-    while (parent && parent.tagName != 'BODY' && parent.tagName != 'HTML') {
-        pos.x -= parent.scrollLeft;
-        pos.y -= parent.scrollTop;
-
-        if (parent.parentNode) {
-            parent = parent.parentNode;
-        } else {
-            parent = null;
-        }
-    }
+    var pos = lz.embed.getAbsolutePosition(this.__LZdiv);
 
     // set this and parents' __poscachedirty to false
     var p = this;

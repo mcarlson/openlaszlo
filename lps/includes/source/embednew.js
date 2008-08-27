@@ -647,6 +647,59 @@ lz.embed = {
         lz.embed._handlers = {};
         //alert('_cleanupHandlers');
     }
+    ,/**
+     * Utility method for finding the absolute position of a div (formerly from dhtml/LzSprite.js).  Returns a hash of x/y values.
+     *
+     * @param el:div Div to find position of.
+     */
+    getAbsolutePosition: function(el) {
+        var parent = null;
+        var pos = {};
+        var box;
+
+        if (!(lz.embed.browser.isFirefox && el == document.body) && el.getBoundingClientRect ) { // IE and FF3
+            box = el.getBoundingClientRect();
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+            return {x: box.left + scrollLeft, y: box.top + scrollTop};
+        } else if (document.getBoxObjectFor) { // gecko
+            box = document.getBoxObjectFor(el);
+            pos = {x: box.x, y: box.y};
+        } else { // safari/opera
+            pos = {x: el.offsetLeft, y: el.offsetTop};
+            parent = el.offsetParent;
+            if (parent != el) {
+                while (parent) {
+                    pos.x += parent.offsetLeft;
+                    pos.y += parent.offsetTop;
+                    parent = parent.offsetParent;
+                }
+            }
+
+            // opera & (safari absolute) incorrectly account for body offsetTop
+            if ( this.quirks.absolute_position_accounts_for_offset && this.hasOwnProperty('getStyle') && this.getStyle(el, 'position') == 'absolute' ) {
+                pos.y -= document.body.offsetTop;
+            }
+        }
+
+        if (el.parentNode) {
+            parent = el.parentNode;
+        } else {
+            parent = null;
+        }
+
+        while (parent && parent.tagName != 'BODY' && parent.tagName != 'HTML') {
+            pos.x -= parent.scrollLeft;
+            pos.y -= parent.scrollTop;
+
+            if (parent.parentNode) {
+                parent = parent.parentNode;
+            } else {
+                parent = null;
+            }
+        } 
+        return pos;
+    }
 };
 
 // init browser detection

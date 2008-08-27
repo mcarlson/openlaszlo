@@ -103,7 +103,7 @@ lz.embed.iframemanager.__destroy = function(id) {
             this.setAttribute('target', this.parent);
         }
         if ($dhtml) {
-            var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars, this.sprite.__LZdiv, 0);
+            var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars, this.sprite.__LZdiv, 0, canvas);
         } else {
             var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars);
         }
