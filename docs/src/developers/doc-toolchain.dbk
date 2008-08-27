@@ -297,7 +297,7 @@
             </row>
             <row>
               <entry><literal>id="lz.Browser+dhtml"</literal></entry>
-              <entry>the <literal>lz.Browswer</literal> class, as it exists only in the dhtml runtime.</entry>
+              <entry>the <literal>lz.Browser</literal> class, as it exists only in the dhtml runtime.</entry>
               <entry>The <literal>+&lt;runtime&gt;</literal> suffix indicates runtime-specific behavior.</entry>
             </row>
             <row>

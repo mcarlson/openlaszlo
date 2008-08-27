@@ -70,7 +70,7 @@ hierarchy. You can see this in the fact that the <literal>parent</literal> in th
 <para>
 This example highlights the metaphysical nature of states: they modify the meta-object protocol enough so that
  their contents can be stored and applied elsewhere. (This could conceivably be a feature of the system as a whole 
- as in, for example, <literal>an lz.node.setParent(otherlz.node)</literal>, but it's not). 
+ as in, for example, <literal>an lz.node.setParent(otherNode)</literal>, but it's not). 
 </para>
 <para/>
 <section><title>Attributes of states</title>

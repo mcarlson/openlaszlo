@@ -575,7 +575,7 @@ represents. <emphasis role="b">This is required.</emphasis></para>
 can refer to the same function stub, but names must be unique. <emphasis role="b">Default is
 value of funcname.</emphasis></para>
 
-<para><indexterm significance="preferred"><primary>dataobject</primary></indexterm><glossterm>dataobject</glossterm>: (Dataset|lz.DataElement) if set, the return value will
+<para><indexterm significance="preferred"><primary>dataobject</primary></indexterm><glossterm>dataobject</glossterm>: (lz.dataset|lz.DataElement) if set, the return value will
 also be represented as a dataset or as a child of the lz.DataElement. <emphasis role="b">Default
 is null.</emphasis></para>
 

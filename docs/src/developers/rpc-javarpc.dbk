@@ -246,7 +246,7 @@ considered a double. For example:</para>
     myrpc.proxy.myMethod([ mydouble ], new LzDelegate(...));
 </programlisting></informalexample>
 
-<para>lz.rpc can be found in <literal>$LPS_HOME/lps/components/rpc/library/lz.rpc.js</literal>.</para>
+<para>lz.rpc can be found in <literal>$LPS_HOME/lps/components/rpc/library/rpc.js</literal>.</para>
 
 <example role="live-example">
    <title>Passing different parameter types</title>
