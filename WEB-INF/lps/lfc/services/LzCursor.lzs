@@ -44,7 +44,7 @@
  * @access public
  * @shortdesc LzCursorService provides methods for changing the mouse cursor.
  */
-public class LzCursorService {
+public class LzCursorService extends LzEventable {
   /** The cursor service.  Also available as the global
    * <code>lz.Cursor</code>.
    *
@@ -98,7 +98,7 @@ public class LzCursorService {
    * Restores the default cursor if there is no locked cursor on
    * the screen.
    */
-  function restoreCursor() {
+  function restoreCursor(ignore=null) {
       LzMouseKernel.restoreCursor();
   }
 

@@ -1,8 +1,7 @@
-
 <canvas height="30">
   <resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/>
   <button onclick="setCursor()" text="Click me to change the cursor for 1/2 second">
-    <method name="setCursor">
+    <method name="setCursor" args="cursor=null">
       lz.Cursor.setCursorGlobal('waitcursor');
       // call lz.Cursor.restoreCursor() after 1/2 second
       var del= new LzDelegate(lz.Cursor, 'restoreCursor');

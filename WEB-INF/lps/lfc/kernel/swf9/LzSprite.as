@@ -906,7 +906,7 @@ dynamic public class LzSprite extends Sprite {
       /**
        * CURSOR is a string naming the resource to be used as the mouse pointer
        */
-      function setCursor ( cursor:String ){
+      function setCursor ( cursor:String=null ){
           if (cursor == null) return;
           if (cursor != '') {
               this.cursorResource = cursor;

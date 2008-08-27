@@ -2657,7 +2657,7 @@ function setClickable ( amclickable ){
   * this view. Or '' for default cursor.
   * @deprecated Use setAttribute('cursor', ...) instead.
   */
-function setCursor ( cursor ){
+function setCursor ( cursor = null){
     this.sprite.setCursor(cursor);
 }
 
