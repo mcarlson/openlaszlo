@@ -185,6 +185,9 @@ dynamic public class LzSprite extends Sprite {
           if (this.owner != null) {
               this.owner.resourceevent('totalframes', res.frames.length);
           }
+          if (imgLoader) {
+              this.unload();   
+          }
           if (this.resourceObj == null) {
               this.createResourceBitmap()  
           }
@@ -210,6 +213,7 @@ dynamic public class LzSprite extends Sprite {
 
           this.resource = url;
           if (! imgLoader) {
+            if (this.resourceObj) this.unload();
             imgLoader = new Loader();
             this.resourceObj = imgLoader;
             this.addChildAt(imgLoader, IMGDEPTH);
@@ -219,7 +223,7 @@ dynamic public class LzSprite extends Sprite {
           }
           var res = this.resourceObj;
           if (res) {
-            res.scaleX = res.scaleY = 1;
+            res.scaleX = res.scaleY = 1.0;
           }
           //Debug.write('sprite setsource load ', url);
           imgLoader.load(new URLRequest(url));
@@ -565,7 +569,7 @@ dynamic public class LzSprite extends Sprite {
           o Stops at the current frame if framenumber is null 
       */
       public function stop( fn:Number = 1, rel:Boolean = false ):void {
-          if (this.resource == null) {
+          if (this.resource == null || imgLoader) {
               return;
           }
           var resinfo = LzResourceLibrary[this.resource];
@@ -818,7 +822,12 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function unload() {
-          trace('LzSprite.unload not yet implemented');
+        if (this.resourceObj) this.removeChild(this.resourceObj);
+        // clear out cached values
+        this.lastreswidth = this.lastresheight = this.resourcewidth = this.resourceheight = 0;
+        this.resource = null;
+        imgLoader = null;
+        this.resourceObj = null;
       }
 
       public function setAccessible(accessible:*) {
@@ -964,6 +973,13 @@ dynamic public class LzSprite extends Sprite {
       }
 
       function setAASilent(s) {
+      }
+
+      function updateResourceSize(skipsend = null){
+        this.setWidth(this._setrescwidth?this.width:this.resourcewidth);
+        this.setHeight(this._setrescheight?this.height:this.resourceheight);
+
+        if (! skipsend && ! this.__LZhaser) this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
       }
 
   }#
