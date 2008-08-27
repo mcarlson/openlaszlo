@@ -116,7 +116,7 @@ Remember that the code here is procedural, so alpha values apply to
 In the above example, the <literal>globalAlpha</literal> value is 1 (the default) when the line is stroked and .3 when the color is filled in.
 </para>
 <para>
-A <literal>fillStyle</literal> can be a color gradient, that is, a pattern that blends colors over its area. To use a gradient, first create it using the appropriate (linear or radial) constructor function, then set the <literal>fillStyle</literal> to be the gradient.  A gradient is an object of the type <indexterm><primary>LzCanvasGradient</primary></indexterm><classname>LzCanvasGradient</classname>; you define
+A <literal>fillStyle</literal> can be a color gradient, that is, a pattern that blends colors over its area. To use a gradient, first create it using the appropriate (linear or radial) constructor function, then set the <literal>fillStyle</literal> to be the gradient.  A gradient is an object of the type <indexterm><primary>LzCanvasGradient</primary></indexterm><classname>lz.CanvasGradient</classname>; you define
 the parameters of the gradient by using methods such as <methodname role="drawview.prototype.addColorStop">addColorStop</methodname> on it. <methodname role="lz.drawview.prototype.addColorStop">addColorStop</methodname> takes two arguments: the number of the stop,
 and the color.  
 </para>

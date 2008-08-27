@@ -308,12 +308,12 @@ immediately be propagated to all of the instances of that class:</para>
 <para>Aside from defining and naming the new multi-frame resources at the
 top of the code, the only other change was to extend the
 <indexterm><primary>basebutton</primary></indexterm><classname>basebutton</classname> class instead of the
-<indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> class. The
+<indexterm><primary>LzView</primary></indexterm><classname>lz.view</classname> class. The
 <indexterm><primary>basebutton</primary></indexterm><classname>basebutton</classname> class is a predefined class that
 gives simple mouse rollover and click behavior to a view with a
 multiframe resource. Since the <indexterm><primary>basebutton</primary></indexterm><classname>basebutton</classname> class
-extends <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname>, it inherits all
-<indexterm><primary>LzView</primary></indexterm><classname>LzView</classname>'s attributes. This means that we can
+extends <indexterm><primary>LzView</primary></indexterm><classname>lz.view</classname>, it inherits all
+<indexterm><primary>LzView</primary></indexterm><classname>lz.view</classname>'s attributes. This means that we can
 still use the same attributes (e.g. <indexterm><primary>onclick</primary></indexterm><sgmltag class="attribute">onclick</sgmltag> and
 <indexterm><primary>resource</primary></indexterm><sgmltag class="attribute">resource</sgmltag>) in our new <indexterm><primary>calcButton</primary></indexterm><classname>calcButton</classname> class, as we could in the original
 <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>

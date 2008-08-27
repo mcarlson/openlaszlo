@@ -130,7 +130,7 @@ and of course the particular application. The CDATA method is perhaps a little m
 <para>Methods are in some ways similar to functions. They contain blocks of code between <indexterm><primary>method</primary></indexterm><sgmltag class="element">&lt;method&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: method-->
  tags, and are associated with particular classes. 
-In the <xref linkend="art_assets"/> tutorial, we saw a few methods of the <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> class that pertain to resources:</para>
+In the <xref linkend="art_assets"/> tutorial, we saw a few methods of the <indexterm><primary>LzView</primary></indexterm><classname>lz.view</classname> class that pertain to resources:</para>
 
 <itemizedlist spacing="compact"><listitem><para><indexterm><primary><literal>play()</literal></primary></indexterm><methodname>play()</methodname></para></listitem><listitem><para><indexterm><primary><literal>stop()</literal></primary></indexterm><methodname>stop()</methodname></para></listitem><listitem><para><indexterm><primary><literal>getOffset()</literal></primary></indexterm><methodname>getOffset()</methodname></para></listitem><listitem><para><indexterm><primary><literal>getMaxOffset()</literal></primary></indexterm><methodname>getMaxOffset()</methodname></para></listitem></itemizedlist>
 
@@ -140,7 +140,7 @@ In the <xref linkend="art_assets"/> tutorial, we saw a few methods of the <index
  element is actually a view, as we saw
 before. There are a few methods that apply to it. The
 <indexterm><primary>window</primary></indexterm><classname>window</classname> class <glossterm>extends</glossterm>
-<indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> class. This means that windows
+<indexterm><primary>LzView</primary></indexterm><classname>lz.view</classname> class. This means that windows
 <glossterm>inherit</glossterm> all the attributes and methods of views.</para>
 
 <example role="live-example">
@@ -181,7 +181,7 @@ Using xml, we can configure those objects with attributes and child nodes. Using
 The last thing to note is the use of single quotes inside the function call.</para>
 <para/><section><title>Using Script to manipulate attributes</title>
 
-<para>Remember that <indexterm><primary>window</primary></indexterm><classname>window</classname>  extends the <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> class. That means that each window has
+<para>Remember that <indexterm><primary>window</primary></indexterm><classname>window</classname>  extends the <indexterm><primary>LzView</primary></indexterm><classname>lz.view</classname> class. That means that each window has
 all the attributes of a <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: view-->
 .  Here's an example of how to use script to manipulate some of those assets.</para>
@@ -202,7 +202,7 @@ all the attributes of a <indexterm><primary>view</primary></indexterm><sgmltag c
  twice doesn't help, because all that does is reset the x attribute to a constant amount (150px).</para>
 
 <para>Instead, we need to figure out where the second window is, and then add an increment to it each time the button is clicked. 
-Looking again at the API reference for the <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> class, we can see that there is a <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname> method to get the <indexterm><primary>x</primary></indexterm><sgmltag class="attribute">x</sgmltag> attribute.</para>
+Looking again at the API reference for the <indexterm><primary>LzView</primary></indexterm><classname>lz.view</classname> class, we can see that there is a <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname> method to get the <indexterm><primary>x</primary></indexterm><sgmltag class="attribute">x</sgmltag> attribute.</para>
 
 <para>So we could say:</para>
 <example role="live-example">

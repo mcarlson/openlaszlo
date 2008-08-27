@@ -184,8 +184,8 @@ offset too:</para>
 
 
 
-<para>First we assign the offset properties to the window. Next, we create the delegate (testing first to make sure it does not already exist). The delegate becomes a attribute of the window (<literal>this.sizerDel = new...</literal>). When we create a delegate, we have to pass it the context (<literal>this</literal>), the method to call (<indexterm><primary><literal>adjustSize()</literal></primary></indexterm><methodname>adjustSize()</methodname>), the event sender (<indexterm><primary>LzIdle</primary></indexterm><classname>LzIdle</classname>) and the event name (<indexterm><primary>onidle event</primary></indexterm><literal>onidle</literal>).</para>
-<para>This translates to something like: "Every time the <indexterm><primary>LzIdle</primary></indexterm><classname>LzIdle</classname> service publishes an
+<para>First we assign the offset properties to the window. Next, we create the delegate (testing first to make sure it does not already exist). The delegate becomes a attribute of the window (<literal>this.sizerDel = new...</literal>). When we create a delegate, we have to pass it the context (<literal>this</literal>), the method to call (<indexterm><primary><literal>adjustSize()</literal></primary></indexterm><methodname>adjustSize()</methodname>), the event sender (<indexterm><primary>LzIdle</primary></indexterm><classname>lz.Idle</classname>) and the event name (<indexterm><primary>onidle event</primary></indexterm><literal>onidle</literal>).</para>
+<para>This translates to something like: "Every time the <indexterm><primary>LzIdle</primary></indexterm><classname>lz.Idle</classname> service publishes an
  <indexterm><primary>onidle event</primary></indexterm><literal>onidle</literal> event, call the <indexterm><primary><literal>adjustSize()</literal></primary></indexterm><methodname>adjustSize()</methodname> method as if it were called from <literal>this</literal>".</para>
 
 
