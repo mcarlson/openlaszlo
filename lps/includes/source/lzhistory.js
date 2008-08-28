@@ -224,14 +224,19 @@ lz.embed.history = {
         if (app && app.loaded && app.runtime == 'swf') {
             var p = app._getSWFDiv();
             if (p) {
+                /*
+                // for swf6/7 communications, to prevent trampling callbacks.
                 //console.log('__setFlash', h, app, id, p);
                 var cid = p.GetVariable("_callbackID") + '';
                 if (cid == 'null') {
-                    lz.embed[id]._lasthash = app.callMethod("lz.History.receiveHistory(" + h + ")");
+                */    
+                lz.embed[id]._lasthash = app.callMethod("lz.History.receiveHistory(" + h + ")");
+                /*
                 } else {
                     setTimeout('lz.embed.history.__setFlash(' + h + ',"' + id + '")', 10);
                 //alert('busy');
                 }
+                */
             }
         }
     }
