@@ -343,7 +343,8 @@
             var esel = this._esel;
 
             // Debug.write("setFormatAttribute, sel is %d to %d", ssel, esel);             
-            this.currentformat[attr] = val;
+            if (this.currentformat)
+                this.currentformat[attr] = val;
             this.isHTML = true;
                                     
             // if no region is selected, apply format at insertion point

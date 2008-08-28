@@ -51,6 +51,18 @@ class $lzc$class_richinputtext extends LzInputText {
 
   var defaultformat = null;
 
+
+  /**
+    * @access private
+    */
+  override function construct ( parent , args ){
+    super.construct.apply(this, arguments);
+    if ($swf8) { }
+    else {
+      Debug.warn("The dhtml and swf9 runtime do not support richinputtext");
+    }
+  }
+
   //-----------------------------------------------------------------------------
   // Set the contents of the richinputtext to the string passed in. Pass in
   // null or an empty string to clear the component's contents.
@@ -59,6 +71,7 @@ class $lzc$class_richinputtext extends LzInputText {
   // @param String t: the string to which to set the text
   //-----------------------------------------------------------------------------
   function setText ( t ){
+    if ($swf8) {} else { return;}
 
     if (typeof(t) == 'undefined' || t == null) {
       t = "";
@@ -98,6 +111,7 @@ class $lzc$class_richinputtext extends LzInputText {
   // @return: The string in the text field, with html formatting.
   //-----------------------------------------------------------------------------
   function updateData (){
+    if ($swf8) {} else { return '';}
     return this.sprite.__LZtextclip.htmlText;
   }
 
@@ -111,9 +125,10 @@ class $lzc$class_richinputtext extends LzInputText {
   // @param textformat fmt: the  default format
   //-----------------------------------------------------------------------------
   function setDefaultFormat ( fmt ){
+    if ($swf8) {} else { return;}
 
     this.defaultformat = fmt;
-    var flashformat = new TextFormat();
+    var flashformat = new lz.textformat();
     for (var i in fmt) {
       flashformat[i] = fmt[i];
     }
@@ -128,7 +143,9 @@ class $lzc$class_richinputtext extends LzInputText {
   // @keywords private
   //-----------------------------------------------------------------------------
   function _forceResetDefaultFormat ( ){
-    var flashformat = new TextFormat();
+    if ($swf8) {} else { return;}
+
+    var flashformat = new lz.textformat();
     for (var i in this.defaultformat) {
       flashformat[i] = this.defaultformat[i];
     }
@@ -146,6 +163,7 @@ class $lzc$class_richinputtext extends LzInputText {
   // @param t: the new contents of the text field
   //-----------------------------------------------------------------------------
   function setHTMLText ( t ){
+    if ($swf8) {} else { return;}
 
     if (this['defaultformat']) {
       t = this['defaultformat'].toHTML() + t + "</font>";
@@ -162,6 +180,8 @@ class $lzc$class_richinputtext extends LzInputText {
   // @return: The string in the text field
   //-----------------------------------------------------------------------------
   function getText ( ){
+    if ($swf8) {} else { return '';}
+
     var rawtext = this.sprite.__LZtextclip.text;
     return rawtext.split("\r").join("\n");
   }
@@ -172,6 +192,8 @@ class $lzc$class_richinputtext extends LzInputText {
   // @return: HTML of the formatted string in the text field
   //-----------------------------------------------------------------------------
   function getHTMLText ( ){
+    if ($swf8) {} else { return '';}
+
     return this.sprite.__LZtextclip.htmlText;
   }
 
@@ -198,8 +220,10 @@ class $lzc$class_richinputtext extends LzInputText {
   // @param integer endIndex: index of the end of the selection.
   //------------------------------------------------------------------------------
   function applyTextAttr (attr, val, beginIndex, endIndex){
+    if ($swf8) {} else { return;}
+
     // Start with a TextFormat object with no attributes set
-    var format = new TextFormat();
+    var format = new lz.textformat();
 
     // Change the text format based on the format passed in.
     format[attr] = val;
@@ -213,6 +237,8 @@ class $lzc$class_richinputtext extends LzInputText {
   // if toHTML is not specified, append the text to the plaintext.
   //------------------------------------------------------------------------------
   function appendText(str, toHTML) {
+    if ($swf8) {} else { return;}
+
     if (toHTML) {
       this.sprite.__LZtextclip.htmlText = this.sprite.__LZtextclip.htmlText + str;
     } else {
@@ -230,9 +256,11 @@ class $lzc$class_richinputtext extends LzInputText {
   //------------------------------------------------------------------------------
 
   function getTextFormat(beginindex, endindex) {
-    var flashformat = this.sprite.__LZtextclip.getTextFormat(beginindex, endindex);
     var fmt = new lz.textformat(this);
 
+    if ($swf8) {} else { return fmt;}
+
+    var flashformat = this.sprite.__LZtextclip.getTextFormat(beginindex, endindex);
     for (var i in flashformat) {
       fmt[i] = flashformat[i];
     }
@@ -248,7 +276,9 @@ class $lzc$class_richinputtext extends LzInputText {
   // @param integer endIndex: index of the last character of the range
   //------------------------------------------------------------------------------
   function setTextFormat(fmt, beginindex, endindex) {
-    var flashformat = new TextFormat();
+    if ($swf8) {} else { return;}
+
+    var flashformat = new lz.textformat();
 
     for (var i in fmt) {
       flashformat[i] = fmt[i];
@@ -271,11 +301,13 @@ class $lzc$class_richinputtext extends LzInputText {
   // @param integer endIndex: index of the last character of the range
   //------------------------------------------------------------------------------
   function toggleFormat(attr, beginindex, endindex) {
+    if ($swf8) {} else { return;}
+
     // Due to what seems to be a bug in flash, we create a new, all-undefined
     // TextFormat object, and *only* set the particular attribute we are
     // toggling. Otherwise, the font may change unpredictably.
     var format = this.sprite.__LZtextclip.getTextFormat(beginindex, endindex);
-    var newFormat = new TextFormat();
+    var newFormat = new lz.textformat();
     switch (attr) {
       case "bold":
         newFormat.bold =  !format.bold;
@@ -302,6 +334,8 @@ class $lzc$class_richinputtext extends LzInputText {
   // @param String: str string to put where the current selection is in the string
   //------------------------------------------------------------------------------
   function replaceSel (str) {
+    if ($swf8) {} else { return;}
+
     this.sprite.__LZtextclip.replaceSel(str);
   }
 
@@ -314,6 +348,8 @@ class $lzc$class_richinputtext extends LzInputText {
   // there
   //------------------------------------------------------------------------------
   function replaceText (s, e, txt) {
+    if ($swf8) {} else { return;}
+
     this.sprite.__LZtextclip.replaceText(s,e,txt);
   }
 }
