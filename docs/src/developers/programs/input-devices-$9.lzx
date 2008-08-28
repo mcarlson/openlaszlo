@@ -5,7 +5,7 @@
 <text text="For my context menu to work, I need to run in SWF8"/>
 
 <handler name="oninit">
-    var cmenu = new LzContextMenu(); // create the menu
+    var cmenu = new lz.contextmenu(); // create the menu
     var item1 = cmenu.makeMenuItem('hello', new LzDelegate(this, "handlerightclick")); // create the menu item, and set up an LzDelegate as a callback
     cmenu.addItem(item1); //add the item to the menu
     this.setContextMenu(cmenu);

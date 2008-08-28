@@ -167,12 +167,12 @@ For an application <literal>framitz.lzx</literal> that is deployed proxied (usin
 <literal>framitz.lzx?lzt=source</literal> in a new browser window. If you don't wish to make source visible, set <literal>allowRequestSOURCE=false </literal>in <literal>WEB-INF/lps/config/lps.properties</literal>. 
 </para>
 <para>
-Starting with Flash 8, you can control the content of the menu using the class <indexterm><primary>lz.ContextMenu</primary></indexterm><classname>lz.ContextMenu</classname>, which you
-instantiate using <literal>new lz.ContextMenu()</literal>. The method <indexterm><primary><literal>lz.ContextMenu.makeMenuItem ()</literal></primary></indexterm><methodname>lz.ContextMenu.makeMenuItem ()</methodname>instantiates an <literal>lz.ContextMenuItem</literal>.
+Starting with Flash 8, you can control the content of the menu using the class <indexterm><primary>lz.ContextMenu</primary></indexterm><classname>lz.contextmenu</classname>, which you
+instantiate using <literal>new lz.contextmenu()</literal>. The method <indexterm><primary><literal>lz.contextmenu.makeMenuItem ()</literal></primary></indexterm><methodname>lz.contextmenu.makeMenuItem ()</methodname>instantiates an <literal>lz.contextmenuitem</literal>.
 </para>
 <para>
 To make a new menu, first you create the menu, then you create a menu item, and then you add the menu item to the menu.  The data type of the menu item is
-<literal>lz.ContextMenuItem</literal>; you supply the text that you want to appear in the menu -- the word 'Delete' may not be used as context menu text -- and a delegate that specifies how you want that menu item to be handled. <indexterm><primary><literal>lz.ContextMenu.addItem()</literal></primary></indexterm><methodname>lz.ContextMenu.addItem()</methodname> adds an item to that menu. So, to create a new menu you would do:
+<literal>lz.contextmenuitem</literal>; you supply the text that you want to appear in the menu (the word 'Delete' may not be used as context menu text) and a delegate that specifies how you want that menu item to be handled. <indexterm><primary><literal>lz.contextmenu.addItem()</literal></primary></indexterm><methodname>lz.contextmenu.addItem()</methodname> adds an item to that menu. So, to create a new menu you would do:
 </para>
 
 <example role="live-example">
@@ -189,7 +189,7 @@ There is no method to clear the menu (Settings and About Flash Player are always
 like
 </para>
 <programlisting>
-var cmenu = new lz.ContextMenu();
+var cmenu = new lz.contextmenu();
 canvas.setDefaultContextMenu(cmenu)
 </programlisting>
 <para>
