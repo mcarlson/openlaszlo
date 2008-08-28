@@ -9,9 +9,9 @@
 For a gentle introduction to databinding and manipulation in OpenLaszlo applications, you may start
  with the tutorial: <xref linkend="data-tutorial" />
 </para>
-<para/><section><title>Preview of databinding</title>
+<section><title>Preview of databinding</title>
 <para>By "databinding" we mean the automatic association of a value in an XML data structure with an element in the LZX view hierarchy of the application. This chapter explores various aspects of databinding and manipulation in OpenLaszlo applications. Before going into specific details, we'll start with a conceptual overview of how data is represented in LZX applications, and the APIs for manipulating it.</para>
-<para/><section><title>Types of data objects</title>
+<section><title>Types of data objects</title>
 <para>
 A dataset (<indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname>) is two things:</para>
 <itemizedlist spacing="compact"><listitem><para>Firstly, it is the client side store for XML data. It's where a single XML document lives in an OpenLaszlo application. </para></listitem><listitem><para>Secondly, it's the mechanism by which OpenLaszlo applications make HTTP GET or POST requests.</para></listitem></itemizedlist>
@@ -20,14 +20,14 @@ A dataset (<indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dat
 lz.DataElement is a subclass of <indexterm><primary>lz.DataNode</primary></indexterm><classname>lz.DataNode</classname>, as is <indexterm><primary>lz.DataText.</primary></indexterm><classname>lz.DataText.</classname>.
 </para>
 <para>Finally, note that a dataset is a subclass of lz.DataElement, which means that all of the methods which work on lz.DataElements also work on lz.datasets, although the usual method of manipulating datasets is with datapaths and datapointers, as explained below.</para>
-<para/></section><section><title>Two ways to interact with data</title>
+</section><section><title>Two ways to interact with data</title>
 <para>
 As we have said, all data in OpenLaszlo applications is in XML format. 
 There are two related but distinct ways of using and manipulating that data in OpenLaszlo applications; that is, there two API models:</para>
 <itemizedlist spacing="compact"><listitem><para>The DOM model—in which the APIs allow you to directly manipulate elements of a Document Object Model using DOM conventions.</para></listitem><listitem><para>The DataPointer model—in which the APIs allow you to position a logical cursor within the dataset using XPATH syntax</para></listitem></itemizedlist>
 <para>
 These two categories of APIs have similar functionality with large areas of overlap. However, there are some things that can only be done (or can best be done) using one specific approach (and not the other).  This means that in many situations there are two logically distinct ways to achieve the same result. Learning to master data manipulation in LZX is a matter of becoming fluent in both approaches and knowing when to use each.</para>
-<para/><section><title>lz.DataNodes and the DOM APIs</title>
+<section><title>lz.DataNodes and the DOM APIs</title>
 <para>
 The <ulink url="http://www.w3.org/DOM/">Document Object Model</ulink> is, according to the W3C specification, "a platform-  and language-neutral interface that will allow programs and  scripts to dynamically access and update the content, structure  and style of documents." In the LZX context, the "document" is that lz.DataNode.
 </para>
@@ -42,7 +42,7 @@ advanced data manipulation in OpenLaszlo applications employ the various methods
  and the related concepts of datapointers and datapaths.
 </para>
 
-<para/></section><section><title>Datapointers and Datapaths</title>
+</section><section><title>Datapointers and Datapaths</title>
 <para>
 In addition to lz.DataNodes, which can only be manipulated in script, LZX includes the notions of
  <indexterm><primary>datapath</primary></indexterm><sgmltag class="element">&lt;datapath&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -52,7 +52,7 @@ In addition to lz.DataNodes, which can only be manipulated in script, LZX includ
 , which provide a convenient, tag-based
 mechanism for typical data manipulation. By using datapointers to move through the data, you control the behavior of views that are bound to that data.
 </para>
-<para/></section></section></section><section id="databinding.datasets"><title>OpenLaszlo datasets and data nodes</title>
+</section></section></section><section id="databinding.datasets"><title>OpenLaszlo datasets and data nodes</title>
 <para>
 Data in OpenLaszlo applications can be declared with a tag, or built up using procedural (script) APIs. The script APIs operate on <indexterm><primary>lz.DataNode</primary></indexterm><classname>lz.DataNode</classname>s.
 </para>
@@ -128,7 +128,7 @@ dataset named <varname>menu</varname> with the XML returned.  You can
 click the button to see the serialized contents of the dataset.</para>
 
 
-<para/><section><title>The <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute</title>
+<section><title>The <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute</title>
 
 <para>The <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute should be a well-formed
 URL that points to the back-end data source that will produce the
@@ -161,7 +161,7 @@ XML elements and attributes in memory.  These APIs are discussed in
 pertain to data transport.</para>
   <anchor id="databinding.datapaths"/>
 
-<para/><section><title>Interpreting a datapath</title>
+<section><title>Interpreting a datapath</title>
 <para>The <indexterm><primary>datapath</primary></indexterm><sgmltag class="attribute">datapath</sgmltag> 
 of the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: text-->
@@ -207,7 +207,7 @@ a <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;vie
 <para>The datapath of the entire <varname>rowOfData</varname> view has now become Homer's <varname>person</varname> node. 
 The child elements of <varname>rowOfData</varname> inherit this, so their datapaths can be referenced relatively.</para>
 
-<para/></section><section><title>Multiple rows of data</title>
+</section><section><title>Multiple rows of data</title>
 
 <para>In the above example we used a single <varname>rowOfData</varname> node. Next, we shall use a range of all of the nodes:</para>
 
@@ -224,7 +224,7 @@ often as is necessary.</para>
 
 
 <para>Remember that datapaths bind themselves to a view, so if the data changes, so will the view. </para>
-<para/></section></section></section><section id="databinding.including"><title>Ways to include data</title>
+</section></section></section><section id="databinding.including"><title>Ways to include data</title>
 
 <para>
 The source for a dataset may be anything that returns XML, including sources elsewhere on the web.  For instance, the source may be a URL for a .jsp or .php program that generates XML data "on the fly."  This is a typical architecture for OpenLaszlo applications.  
@@ -251,18 +251,18 @@ The table below highlights ways of categorizing datasets according to where the 
     </entry></row></tbody></tgroup></informaltable>
 
 
-<para/><section id="databinding.embedded"><title>Embedded Data</title>
+<section id="databinding.embedded"><title>Embedded Data</title>
 
 <para>Embedded data is XML between the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> tags. When the OpenLaszlo Compiler compiles the application, the data is bound into it. The data can still be changed after the application runs. </para>
 
 
-<para/></section><section id="databinding.included"><title>Included Data</title>
+</section><section id="databinding.included"><title>Included Data</title>
 <para>Included data is essentially the same as embedded data, except that the XML itself is kept in a separate file. The size of the initial download will be the same as with embedded data.</para>
 
 <para>It is locally referenced via the filesystem, so it can be placed in other directories. Included data is static.</para>
 
 
-<para/></section><section id="databinding.http"><title>HTTP Data</title>
+</section><section id="databinding.http"><title>HTTP Data</title>
 <para>Remote data goes over HTTP, which means it can (but doesn't have to) be dynamic. If it is static, then the only difference between it and included or embedded data is that it is downloaded after the application loads. The <literal>type="http"</literal> attribute tells the OpenLaszlo Server that this is an HTTP request. The requests can be either GET or POST. </para>
 
 <para>There are several points at which the client makes requests for the data:</para>
@@ -270,7 +270,7 @@ The table below highlights ways of categorizing datasets according to where the 
 <itemizedlist spacing="compact"><listitem><para>The client will request the data
 <!-- fix typo LI 9/3/2007 -->
 <!-- as soon as the app loads if the the dataset's  -->
-as soon as the app loads if the dataset's <indexterm><primary>request</primary></indexterm><sgmltag class="attribute">request</sgmltag> attribute is true. </para></listitem><listitem><para>The client will also request the data every time the querystring or base URL of the dataset changes (using the <indexterm><primary><literal>setQueryString()</literal></primary></indexterm><methodname>setQueryString()</methodname> or <indexterm><primary><literal>setURL()</literal></primary></indexterm><methodname>setURL()</methodname> respectively) methods of the LzHTTPDataset object.</para></listitem><listitem><para>When the dataset's <indexterm><primary><literal>doRequest()</literal></primary></indexterm><methodname>doRequest()</methodname> method gets called.</para></listitem></itemizedlist>
+as soon as the app loads if the dataset's <indexterm><primary>request</primary></indexterm><sgmltag class="attribute">request</sgmltag> attribute is true. </para></listitem><listitem><para>The client will also request the data every time the querystring or base URL of the dataset changes (using the <indexterm><primary><literal>setQueryString()</literal></primary></indexterm><methodname>setQueryString()</methodname> or <indexterm><primary><literal>setURL()</literal></primary></indexterm><methodname>setURL()</methodname> respectively) methods of the <literal>lz.dataset</literal> object.</para></listitem><listitem><para>When the dataset's <indexterm><primary><literal>doRequest()</literal></primary></indexterm><methodname>doRequest()</methodname> method gets called.</para></listitem></itemizedlist>
 
 <para>In the table above, we referenced a file locally (myXMLDoc.xml), but we could have done it absolutely, or we could have hit a server-side script (PHP, ASP, JSP or some CGI) that returned an XML document. We could add the query string to the <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag> tag:</para>
 
@@ -281,7 +281,7 @@ as soon as the app loads if the dataset's <indexterm><primary>request</primary><
 
 <para>The <literal>type="http"</literal> attribute gets implied when the <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute contains "<literal>http://</literal>".</para>
 
-<para/></section><section><title>Dataset Scope</title>
+</section><section><title>Dataset Scope</title>
 <para>
 If specified on the canvas, datasets are visible to and accessible by the entire application. Datasets can also be local to a class.
 </para>
@@ -297,7 +297,7 @@ Here is a simple program that illustrates use of local datasets (the file tests/
    </programlisting>
 </example>
 
-<para/></section><section><title><indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal>, <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal> and <indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal> event</title>
+</section><section><title><indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal>, <indexterm><primary>onerror event</primary></indexterm><literal>onerror</literal> and <indexterm><primary>ontimeout event</primary></indexterm><literal>ontimeout</literal> event</title>
 
 <para>When the application's <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname> receives the data, the
 <indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal> event is sent.  In the case that an error occured
@@ -310,7 +310,7 @@ exactly one of <indexterm><primary>ondata event</primary></indexterm><literal>on
 </para>
 
 
-<para/></section><section><title>POST support</title>
+</section><section><title>POST support</title>
 <para>Datasets support both HTTP GET and POST methods for communicating
 with the OpenLaszlo Server and back-end servers.  The default is GET but this can be
 changed with the <literal>lz.dataset.setQueryType()</literal> API.  In
@@ -319,7 +319,7 @@ POST.</para>
 
 
 
-<para/></section><section><title>HTTP Request and Response headers</title>
+</section><section><title>HTTP Request and Response headers</title>
 
 <para>In general, the OpenLaszlo Server proxies HTTP request and response headers
 to and from the back-end.  However, certain headers are specifically
@@ -330,7 +330,7 @@ Note that response headers are not available to SOLO applications.
 
 <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>include the list here</remark></para>
 
-<para/></section><section><title>Cookies</title>
+</section><section><title>Cookies</title>
 
 <para>The OpenLaszlo Server proxies all "Cookie" request headers and all
 "<literal>Set-Cookie</literal>" response headers.  Because of
@@ -338,19 +338,7 @@ the domain name restrictions on cookies, the OpenLaszlo Server can only properly
 proxy these cookie headers when the back-end host is in the same
 domain (or a subdomain) or the OpenLaszlo host.  For more on this topic, see <xref linkend="cookies"/></para>
 
-
-<para/></section><section><title>Datasources</title>
-
-<para>Underlying each dataset that communicates over HTTP is an
-<indexterm><primary>LzDatasource</primary></indexterm><classname>LzDatasource</classname> object.  This object abstracts all protocol
-specific communication.  In general, you do not need to use the
-datasource object yourself, except for very rare situations.</para>
-<para>
-For example, one situation is when you are running the OpenLaszlo Server secure port
-on something other than 443; the only place you can specify the
-secure port is on the datasource.</para>
-
-<para/></section></section><section><title>AJAX API</title>
+</section></section><section><title>AJAX API</title>
 <para>
  
 <indexterm><primary>XMLHTTPRequest</primary></indexterm><sgmltag class="element">&lt;XMLHTTPRequest&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -371,7 +359,7 @@ Here is an example of the XMLHTTPRequest class.
 </example>
 
 
-<para/><section><title>Using XMLHTTPRequest() in SOLO applications</title>
+<section><title>Using XMLHTTPRequest() in SOLO applications</title>
 <para>In SOLO applications, the <indexterm><primary>XMLHTTPRequest</primary></indexterm><classname>XMLHTTPRequest</classname> class does provide one capability that is not currently available from datasets; that is, you can get the raw text of the XML as a string, before it is parsed.  You do this using the <indexterm><primary><literal>responseText()</literal></primary></indexterm><methodname>responseText()</methodname> method. This capability is only available in SOLO applications.
 </para>
 <para>
@@ -381,7 +369,7 @@ Also, in SOLO deployed applications, the <indexterm><primary>XMLHTTPRequest</pri
 <itemizedlist spacing="compact"><listitem><para>HTTP headers are not settable</para></listitem><listitem><para>response headers are not accessible</para></listitem><listitem><para>you cannot send raw POST data</para></listitem><listitem><para>you cannot send repeated query args in a POST using LoadVars</para></listitem><listitem><para>Username/password HTTP Auth args to send() are not supported.</para></listitem></itemizedlist>
 
   
-<para/></section></section><section id="databinding.datapointers"><title>Datapointers</title>
+</section></section><section id="databinding.datapointers"><title>Datapointers</title>
 
 <para>We introduced datapaths first, which are extensions of datapointers, but they can become cumbersome. A datapointer points to just one place of the dataset at a time, but can be moved around -- you can have multiple datapointers, each pointing to a different part of a dataset.</para>
 
@@ -409,8 +397,8 @@ Also, in SOLO deployed applications, the <indexterm><primary>XMLHTTPRequest</pri
 
 
 
-<para/></section><section><title>Accessing data</title>
-<para/><section><title>Datasets</title>
+</section><section><title>Accessing data</title>
+<section><title>Datasets</title>
 
 <para>A <indexterm><primary>dataset</primary></indexterm><sgmltag class="element">&lt;dataset&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: dataset-->
@@ -431,7 +419,7 @@ repopulate them programmatically by calling the
 the URL of the dataset when one of the <indexterm><primary><literal>setSrc()</literal></primary></indexterm><methodname>setSrc()</methodname>,
 <indexterm><primary><literal>setQueryString()</literal></primary></indexterm><methodname>setQueryString()</methodname>, or <indexterm><primary><literal>setQueryParam()</literal></primary></indexterm><methodname>setQueryParam()</methodname>
 methods is called.</para>
-<para/><section><title>Globally Visible Datasets</title>
+<section><title>Globally Visible Datasets</title>
 <para>When a dataset is defined as an immediate child of <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">&lt;canvas&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: canvas-->
  or <indexterm><primary>library</primary></indexterm><sgmltag class="element">&lt;library&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -448,7 +436,7 @@ simply by its name (it is globally visible):</para>
 </example>
 
 
-<para/></section><section><title>Datasets created at runtime</title>
+</section><section><title>Datasets created at runtime</title>
 <para>Datasets can also be created at runtime in script by calling the constructor for the <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname>:
 <literal>var dset = new lz.dataset(null, {name: 'mydset'})</literal>. The first argument to the constructor is 
 the dataset's parent node, which is the <indexterm><primary>datasource</primary></indexterm><sgmltag class="element">&lt;datasource&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
@@ -458,7 +446,7 @@ parameter is allowed to be null — in this case a datasource will be created im
 </para>
 
 
-<para/></section></section></section><section><title>Simple binding</title>
+</section></section></section><section><title>Simple binding</title>
 
 <para>The LZX event system allows you to insert custom data
 handling into the application as needed. This is typically done by
@@ -469,7 +457,7 @@ constraint on an expression-type attribute and processing changes to
 the attribute's value with the
 <literal>on<varname>attribute_name</varname></literal> handler.</para>
 
-<para/><section><title>Overriding applyData</title>
+<section><title>Overriding applyData</title>
 
 <para>The <indexterm><primary><literal>applyData()</literal></primary></indexterm><methodname>applyData()</methodname> method is called on any node that is
 declared with a datapath that matches a terminal selector, such as
@@ -487,11 +475,11 @@ is bound to a datapath that matches a data node (see below).
 
 
 
-<para/></section><section><title>Attribute bindings using $path</title>
+</section><section><title>Attribute bindings using $path</title>
 <para>Attributes of a node can be bound to data explicitly by using the <literal>$path{}</literal> constraint syntax. The expression
 inside the curly brackets must evaluate to a string, which is interpreted as a relative XPath expression. 
 </para>
-<para/><section><title>Absolute paths</title>
+<section><title>Absolute paths</title>
 <para>If you
 need to use an absolute path in the expression, you could instead constrain the attribute to the result of an 
 <indexterm><primary><literal>xpathQuery()</literal></primary></indexterm><methodname>xpathQuery()</methodname> call: <literal>visible="dp.xpathQuery('mydset:/record/row[1]/@visible')"</literal>. A
@@ -509,7 +497,7 @@ on a node's datapath will store the current value for that attribute back in the
 </example>
 
 
-<para/></section><section><title>Attribute values by $path constraint</title>
+</section><section><title>Attribute values by $path constraint</title>
 
 <para>The <literal>dataset</literal> is basically an array. Assigning a node's attribute value by <literal>$path</literal> constraint, and then using the XPath expression <literal>myData:/myXML/person</literal> -- which gathers all the "person" nodes -- results in replication of the node as many times as necessary to correspond with each item in the dataset.</para>
 
@@ -522,7 +510,7 @@ on a node's datapath will store the current value for that attribute back in the
    </programlisting>
 </example>
 
-<para/></section><section><title>$path values in calculations</title>
+</section><section><title>$path values in calculations</title>
 <para>
 JavaScript provides easy casting from string to numeric data types. The $path{...} syntax is defined to return a string, which can be used to assign a value to an attribute.  You can combine attributes to preform calculations based on strings returned from a $path{...} inquiry on a dataset.
 </para>
@@ -535,7 +523,7 @@ Say, for example that you had a dataset that contained temperatures in Fahrenhei
 
 
 
-<para/></section></section><section><title>The .data property</title>
+</section></section><section><title>The .data property</title>
 <para>The <structfield>data</structfield> property is a shorthand way of accessing data referenced by a datapointer or a datapath. 
 For convenience, a datamapped node gets its data property set to that of the datapath it is bound to. In the example
 below, the color view changes its properties as the data field to which they are constrained follows the "order" 
@@ -552,7 +540,7 @@ evident from the debugger output.</para>
 
 
 
-<para/></section><section><title>Using ondata to process updates</title>
+</section><section><title>Using ondata to process updates</title>
 <para>For a datapointer, a datapath, or a datamapped node, the <indexterm><primary>ondata event</primary></indexterm><literal>ondata</literal> event is sent whenever the data it 
 is bound to changes. This implies that for XPaths that select a data node, ondata event is sent only when the 
 datapointer is set to point to a different node. If the pointer selects an operator, i.e. <literal>"text()"</literal> or <literal>"@attr"</literal> it is 
@@ -577,14 +565,14 @@ document.</para>
 
 
 
-<para/></section></section><section><title>Manipulating datapointers</title>
+</section></section><section><title>Manipulating datapointers</title>
 <para>
 Recall that datapointer is an object that represents a pointer to a node in a <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.dataset</classname>. The datapointer can be repositioned using either cursor movements calls such as <indexterm><primary><literal>selectNext()</literal></primary></indexterm><methodname>selectNext()</methodname>, or by running an XPath request via <indexterm><primary><literal>setXPath()</literal></primary></indexterm><methodname>setXPath()</methodname>.
 </para>
 <para>
 Datapointers support a subset of the XPath specification, which uses a notation similar to the UNIX file-system to refer to nodes within a dataset. Once a datapointer is bound to a node in a dataset it will keep pointing to that node until it is moved. If the dataset is edited, the behavior of the datapointer will be controlled by its rerunxpath attribute. If this attribute is true (the default value), it will continue pointing to its current node as long as it is valid.
 </para>
-<para/><section><title><indexterm><primary>rerunxpath</primary></indexterm><sgmltag class="attribute">rerunxpath</sgmltag></title>
+<section><title><indexterm><primary>rerunxpath</primary></indexterm><sgmltag class="attribute">rerunxpath</sgmltag></title>
 <para>The <indexterm><primary>rerunxpath</primary></indexterm><sgmltag class="attribute">rerunxpath</sgmltag> property of datapointer determines whether the XPath expression is re-evaluated every time the 
 contents of the dataset change. The default is false; if set to true, every time the dataset is edited, the XPath 
 binding is refreshed. In other words, the datapointer is assumed to be "constant" unless the <indexterm><primary>rerunxpath</primary></indexterm><sgmltag class="attribute">rerunxpath</sgmltag> attribute 
@@ -602,7 +590,7 @@ is true.</para>
 the ondata event is sent by the datapointers intended to be bound to the first node in the dataset. However, the 
 first one is declared with <literal>rerunxpath="true"</literal>, and therefore it points to the actual first data node, while the 
 second one remembers the node it was referencing initially, and never gets updated.</para>
-<para/></section><section><title>Forcing visibility of datamapped views</title>
+</section><section><title>Forcing visibility of datamapped views</title>
 <para>By default, a view that is databound will have a <literal>visibility</literal> attribute of <literal>
 collapse</literal>, 
 which will cause it not to be visible when it has no data, that is, when the xpath does not match 
@@ -634,7 +622,7 @@ depending on the presence or absence of data.</para>
    </programlisting>
 </example>
 
-<para/></section><section><title>Update timing (order of data initialization)</title>
+</section><section><title>Update timing (order of data initialization)</title>
 <para>Because data contained by static datasets is compiled into the application, it is available immediately. 
 Therefore any datapointers that have a static dataset as part of their paths will send the ondata event before
 any children of the canvas are instantiated by the runtime. This is important to remember if all changes in the 
@@ -661,7 +649,7 @@ Note that the <indexterm><primary>lz.dataset</primary></indexterm><classname>lz.
 way of synchronizing UI operations with arrival of data it is tied to. As stated above, static datasets cause ondata 
 to be sent as soon as they are instantiated.</para>
 
-<para/></section><section><title>Iterator methods</title>
+</section><section><title>Iterator methods</title>
 <para>Often, the <indexterm><primary>lz.datapointer</primary></indexterm><classname>lz.datapointer</classname> API provides the most convenient way to traverse the hierarchy of nodes in a dataset. Below
 is an example that recursively walks a dataset mapped to a tree by calling iterator methods on a datapointer initially 
 set to the top of the dataset, and adds a new node at each level.</para>
@@ -673,8 +661,8 @@ set to the top of the dataset, and adds a new node at each level.</para>
 </example>
 
 
-<para/></section></section><section><title>Data processing</title>
-<para/><section><title>Using <indexterm><primary><literal>setPointer()</literal></primary></indexterm><methodname>setPointer()</methodname> to bind data</title>
+</section></section><section><title>Data processing</title>
+<section><title>Using <indexterm><primary><literal>setPointer()</literal></primary></indexterm><methodname>setPointer()</methodname> to bind data</title>
 <para>As an essential part of their functionality, datapointers (and datapaths) can be set directly to data nodes. 
 The example below uses the <indexterm><primary><literal>setPointer()</literal></primary></indexterm><methodname>setPointer()</methodname> method to set the target view's datapath to the node referenced by the 
 datapath of the selected view. In effect, this maps the details view to the contact currently selected in the 
@@ -687,7 +675,7 @@ dataset.</para>
 </example>
 
 
-<para/></section><section><title>Controlling a datapath</title>
+</section><section><title>Controlling a datapath</title>
 
 <para><indexterm><primary>lz.datapath</primary></indexterm><classname>lz.datapath</classname> is a subclass of <indexterm><primary>lz.datapointer</primary></indexterm><classname>lz.datapointer</classname>, and therefore can be used in much the same way to iterate over data.
 The example below treats the datapath of each of the replicated view as a pointer to the dataset that backs it.
@@ -726,4 +714,4 @@ by calling the <indexterm><primary><literal>setXPath()</literal></primary></inde
 </example>
 
 
-<para/></section></section></chapter>
+</section></section></chapter>
