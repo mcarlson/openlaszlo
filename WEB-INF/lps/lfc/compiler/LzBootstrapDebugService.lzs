@@ -1,0 +1,577 @@
+/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
+
+/**
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ *            Reserved.  Use is subject to license terms.
+ *
+ * @topic LZX
+ * @subtopic Debugging
+ * @access public
+ */
+
+
+/**
+ * Set by the server to tell Debug.__write to log back to the server
+ * @access private
+ */
+var _dbg_log_all_writes = (!! global.logdebug);
+
+// Automatically enable logging if there is a javascript console log
+// function
+if ($js1) {
+  _dbg_log_all_writes = ('console' in global) && (typeof console.log == 'function');
+}
+
+/**
+ * Bootstrap debug UI
+ *
+ * This is the interface of the core debugger to whatever console is
+ * available in the runtime.  At bootstrap, we provide a primitive to
+ * the DHTML debugger display.  Other runtimes will replace the
+ * bootstrap with a more appropriate one.
+ *
+ * @access private
+ */
+class LzBootstrapDebugConsole {
+  // Messages that will be displayed once a real console is
+  // instantiated.  Messages are either LzMessage's that can be output
+  // using .toString() or .toHTML(), depending on the destination (log
+  // file or console, respectively), or text (that is already
+  // formatted HTML, sent via addHTMLText).
+  var saved_msgs:Array;
+
+  function LzBootstrapDebugConsole () {
+    this.saved_msgs = new Array;
+  }
+
+  /**
+   * Doc'd on real definition
+   * Bootstrap version
+   * @access private
+   *
+   * @devnote Should probably be called addMessage
+   */
+  function addText (msg) {
+    if ($dhtml) {
+      // Rhino support
+      if (print && (print is Function)) {
+        var str = '' + msg;
+        try {
+          if (msg && msg['toHTML'] is Function) {
+            str = msg.toHTML();
+          } else {
+            str = String(msg).toHTML();
+          }
+        } catch (e) {};
+        print (str);
+      }
+    }
+    // We know this is just going to capture the raw message for
+    // replay later
+    this.addHTMLText(msg);
+  };
+
+  /**
+   * Echo to the console in the debugger font
+   *
+   * @param String str: what to echo
+   * @param Boolean newLine: whether to echo a trailing newline,
+   * default true
+   *
+   * @access private
+   */
+  function echo (str, newLine:Boolean=true) {
+    this.addHTMLText('<i>' + str + '</i>' + (newLine?'\n':''));
+  }
+
+  /**
+   * Doc'd on real definition
+   * Bootstrap version
+   * @access private
+   *
+   */
+  function addHTMLText (msg) {
+    this.saved_msgs.push(msg);
+  };
+
+  /**
+   * Make a 'presentation' of an object
+   *
+   * Inform the debugger UI of the connection between a representation
+   * and and object ID.  The UI returns a (possibly updated/encoded)
+   * representation that, when passed to `addHTMLText` will allow the
+   * UI to recover the object by ID from the debugger (say for
+   * inspection, or evaluation).
+   *
+   * @param String rep: The representation of the object
+   * @param Number id: the id of the object
+   * @param Object attrs: Additional attributes of the presentation,
+   * e.g., 'type' or 'color'
+   * @return String: the encoded representation (most likely as an
+   * HTML link).
+   *
+   * @access private
+   */
+  function makeObjectLink (rep:String, id:Number, attrs=null) {
+    // TODO: [2008-08-19 ptw] Seems like a reasonable thing to encode
+    // the ID here as a hint, but maybe that is not appropriate for
+    // the most primitive console?
+    if (id != null) {
+      return '<a title="#' + id + '">' + rep + '</a>';
+    }
+    return rep;
+  }
+};
+
+/**
+ * Bootstrap debug Logger
+ *
+ * This is the interface of the core debugger to whatever logger is
+ * available in the runtime.  At bootstrap, we provide a primitive
+ * logger to the server (for SWF) or to the browser console if it
+ * exists (for DHTML).  Other runtimes may replace the
+ * bootstrap with a more appropriate one.
+ *
+ * @access private
+ */
+class LzBootstrapDebugLogger {
+  if ($as2) {
+    var url:String;
+  }
+
+  /**
+   * Doc'd on real definition
+   * Bootstrap version
+   * @access private
+   *
+   * @devnote This implementation of log does not depend on any of
+   * the LFC working and hence can be used from startup on.
+   */
+  function log (msg) {
+#pragma "warnUndefinedReferences=false"
+    if ($as2) {
+      // send URL to LzServlet: lzt=eval lz_log=true lz_msg=$MSG
+      var url = this['url'];
+      if (! url) {
+        url = _root._url; // LzBrowser.getLoadURL();
+        var q = url.indexOf("?");
+        if (q >= 0) {
+          url = url.substring(0, q);
+        }
+        this.url = url;
+      }
+      url += "?lz_log=true&lzt=eval&lz_load=false&lz_script="+encodeURIComponent(String(msg));
+      // Flash-specific call -- 5 is magic?!
+      loadVariables(url, 5);
+    } else {
+      // Log to runtime console, if it exists
+      if (('console' in global) && (typeof console.log == 'function')) {
+        var fn = 'log';
+        if (msg instanceof LzError) {
+          fn = 'error';
+        } else if (msg instanceof LzWarning) {
+          fn = 'warn';
+        } else if (msg instanceof LzInfo) {
+          fn = 'info';
+        } else if (msg instanceof LzDebug) {
+          fn = 'debug';
+        }
+        if (typeof console[fn] != 'function') {
+          fn = 'log';
+        }
+        if ((msg instanceof LzMessage) || (msg instanceof LzSourceMessage)) {
+          console[fn].apply(console, msg.toArray());
+        } else {
+          console[fn]('' + msg);
+        }
+      }
+    }
+  };
+};
+
+/**
+ * Bootstrap debug service
+ * @access private
+ */
+dynamic class LzBootstrapDebugService {
+  /** Backtrace stack
+   * @access private
+   */
+  var backtraceStack:Array;
+  /** Backtrace for uncaught errors
+   * @access private
+   */
+  var uncaughtBacktraceStack:Array;
+
+  var logger:LzBootstrapDebugLogger;
+  var console:LzBootstrapDebugConsole;
+
+  function LzBootstrapDebugService (logger:LzBootstrapDebugLogger=new LzBootstrapDebugLogger(),
+                                    console:LzBootstrapDebugConsole=new LzBootstrapDebugConsole()) {
+    // Copy these from the initial Debug object
+    var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
+    for (var k in copy) {
+      this[k] = Debug[k];
+    }
+    this.logger = logger;
+    this.console = console;
+  }
+
+  /**
+   * Log a message to the runtime logger
+   *
+   * @param String message:  The message to send to the logger
+   *
+   * @access private
+   */
+  function log (...args) {
+    return this.logger.log.apply(this.logger, args);
+  }
+
+  /**
+   * Trampoline to runtime console
+   * @access private
+   */
+  function makeObjectLink(...args) {
+    return this.console.makeObjectLink.apply(this.console, args);
+  }
+
+  /**
+   * Doc'd on real definition
+   * Bootstrap version
+   * @access private
+   */
+  function __write (msg) {
+    if (_dbg_log_all_writes) {
+      this.logger.log(msg);
+    }
+    this.console.addText(msg);
+  };
+
+  /**
+   * Doc'd on real definition
+   * Bootstrap version
+   * @access private
+   */
+  function debug (...args) {
+    this.__write('DEBUG: ' + args.join(' '));
+  };
+
+  /**
+   * Doc'd on real definition
+   * Bootstrap version
+   * @access private
+   */
+  function info (...args) {
+    this.__write('INFO: ' + args.join(' '));
+  };
+
+  /**
+   * Doc'd on real definition
+   * Bootstrap version
+   * @access private
+   */
+  function warn (...args) {
+    this.__write('WARNING: ' + args.join(' '));
+  };
+
+  /**
+   * Doc'd on real definition
+   * Bootstrap version
+   * @access private
+   */
+  function error (...args) {
+    this.__write('ERROR: ' + args.join(' '));
+  };
+
+  /**
+   * Deprecation message.
+   * @param lznode obj: The object the deprecated method is being called
+   * on (usually `this`).
+   * @param Function method: The method being called (usually
+   * arguments.callee)
+   * @param Function method: The replacement method
+   * @access private
+   */
+  function deprecated (obj, method, replacement) {
+    Debug.info("%w.%s is deprecated.  Use %w.%s instead", obj, method, obj, replacement);
+  }
+
+  /**
+   * Evaluate a closure in context, reporting errors
+   *
+   * @param String fileName: The source file
+   * @param Number lineNumber: The source line
+   * @param Function closure: The closure to evaluate
+   * @param Object context: The context to evaluate the closure in
+   *
+   * @access private
+   */
+  function evalCarefully (fileName, lineNumber, closure, context) {
+#pragma "warnUndefinedReferences=false"
+    try {
+      return closure.call(context);
+    } catch(e) {
+      $reportSourceWarning(fileName, lineNumber, e);
+    }
+  };
+
+  /**
+   * Evaluate a closure in context, ignoring errors
+   *
+   * @param Function closure: the closure to evaluate
+   * @param Object context: the context to evaluate the closure in
+   * @param * errval: the value to return if there is an error
+   *
+   * @access private
+   */
+  function ignoringErrors (closure, context, errval) {
+#pragma "warnUndefinedReferences=false"
+    try {
+      return closure.call(context);
+    } catch(e) {
+      return errval;
+    }
+  };
+
+  /**
+   * @access private
+   * XML escape
+   */
+  function xmlEscape (ts) {
+    if (ts && ((typeof(ts) == "string") || (ts instanceof String))) {
+      var outstr = "";
+      var tlen = ts.length;
+      for (var i = 0; i < tlen; i++) {
+        var c = ts.charAt(i);
+        if (c == '<') {
+          outstr += "&lt;";
+        } else if (c == '>') {
+          outstr += "&gt;";
+        } else if (c == '&') {
+          outstr += "&amp;";
+        } else {
+          outstr += c;
+        }
+      }
+      return outstr;
+    } else {
+      return ts;
+    }
+  };
+
+  function _dbg_name () {
+    if (this === Debug) { return '#Debug'; } else return null;
+  }
+};
+
+/**
+ * <p>There are three ways to enable the debugger, as described in
+ * the <a
+ * href="${dguide}debugging.html#enabling-the-debugger">Debugging</a>
+ * chapter of the Developer's Guide.</p>
+ *
+ * <p>The debugger can be useful in debugging your own code, but you
+ * should also use debugging to report bugs.  The debugger method
+ * <xref linkend="Debug+debug.bugReport"/> will output information
+ * that can be cut and pasted into a bug report to aid in
+ * diagnosing the bug.</p>
+ *
+ * <p>The debugger has a range of methods for formatting output to the
+ * debugger console:
+ * <xref linkend="Debug+debug.debug"/>,
+ * <xref linkend="Debug+debug.info"/>,
+ * <xref linkend="Debug+debug.warn"/>, and
+ * <xref linkend="Debug+debug.error"/>.
+ * Each of these is based upon the basic formatted output method
+ * <xref linkend="Debug+debug.format"/>.  The variants prefix their
+ * message with a label (DEBUG, INFO, WARNING, or ERROR) and will
+ * print in a distinct color.  When backtraces are enabled, these
+ * debug messages will also give a source location.</p>
+ *
+ * <p>The debug messages can be silenced by setting
+ * <xref linkend="Debug+debug.messageLevel"/>.</p>
+ *
+ * <p>Debugger messages are <em>inspectable</em>, as the example below
+ * demonstrates.  Clicking on the printed representation of the
+ * object (in blue) will show the details of the object.  The
+ * message itself can also be inspected.  When backtraces are
+ * enabled, one component of the message will be a backtrace that
+ * can be inspected to see the call chain and function arguments
+ * that resulted in the message.</p>
+ *
+ * <example title="Debug output methods"><programlisting><![CDATA[
+ * <canvas debug="true" height="150">
+ *   <debug width="350" height="90%" x="5" y="5" fontsize="8"/>
+ *   <script>
+ *     Debug.format("Hello %s!", 'world');
+ *     Debug.debug("Click there -> %w to inspect the object", {a: 1, b: 2});
+ *   </script>
+ * </canvas>]]>
+ * </programlisting></example>
+ *
+ * <p>The debugger can be used to trace method calls using
+ * <xref linkend="Debug+debug.trace"/>
+ * and it can be used to monitor instance variables using
+ * <xref linkend="Debug+debug.monitor"/></p>
+ *
+ * <example title="Debug tracing and monitoring"><programlisting><![CDATA[
+ * <canvas debug="true" height="150">
+ *   <debug width="350" height="90%" x="5" y="5" fontsize="8"/>
+ *   <script>
+ *     var o = {a: 7, f: function (x) { return x * x;}};
+ *     Debug.monitor(o, 'a');
+ *     o.a = 42;
+ *     Debug.trace(o, 'f');
+ *     o.f(4);
+ *   </script>
+ * </canvas>]]>
+ * </programlisting></example>
+ *
+ * <p>The optional <code>debug</code> tag controls the
+ * appearance of the debugger when debugging is on. It does not
+ * cause the application to be compiled with debugging mode enabled.
+ * By default, the debug window will be sized to fit the lower 1/2
+ * of the canvas, and can be resized as necessary.</p>
+ *
+ * @shortdesc The Laszlo debugger
+ * @lzxname debug
+ * @keywords private_constructor
+ * @access public
+ * @topic LZX
+ * @subtopic Debugging
+ *
+ * @devnote As soon as we have the LzBootstrapDebugService, we install it.
+ * This will get overridden by the full debugger when it loads
+ */
+var Debug = new LzBootstrapDebugService();
+
+/**
+ * @access private
+ * To catch swf 'trace()' calls
+ */
+function trace (...args) { Debug.info.apply(Debug, args); }
+
+/**
+ * Compiler support for debugger warnings.  These presently pollute
+ * the global environment, because you need a toe-hold somewhere.
+ */
+
+/** Bootstrap version of base warning function
+ * @access private
+ */
+function $reportSourceWarning (filename, lineNumber, msg, fatal) {
+#pragma "warnUndefinedReferences=false"
+  var warning = filename + '@' + lineNumber + ': ' + msg + '\n';
+  Debug[fatal?'error':'warning'](warning);
+};
+
+// Each of the warnings that the compile may call maintains a flag to
+// avoid recursing (e.g., when the debugger has a bug).
+
+// TODO: [2003-01-08 ptw] Consider a fall-back mechanism for getting
+// debugger bugs reported.
+
+/** @access private */
+function $reportUndefinedObjectProperty (filename, lineNumber, propertyName) {
+#pragma "warnUndefinedReferences=false"
+  if (! arguments.callee._dbg_recursive_call) {
+    arguments.callee._dbg_recursive_call = true;
+    $reportSourceWarning(filename, lineNumber, "undefined object does not have a property '" + propertyName + "'", true);
+    arguments.callee._dbg_recursive_call = false;
+  }
+};
+$reportUndefinedObjectProperty._dbg_recursive_call = false;
+
+/** @access private */
+function $reportUndefinedProperty (filename, lineNumber, propertyName) {
+#pragma "warnUndefinedReferences=false"
+  if (! arguments.callee._dbg_recursive_call) {
+    arguments.callee._dbg_recursive_call = true;
+    $reportSourceWarning(filename, lineNumber, "reference to undefined property '" + propertyName + "'", false);
+    arguments.callee._dbg_recursive_call = false;
+  }
+};
+$reportUndefinedProperty._dbg_recursive_call = false;
+
+/** @access private */
+function $reportUndefinedVariable (filename, lineNumber, variableName) {
+#pragma "warnUndefinedReferences=false"
+  if (! arguments.callee._dbg_recursive_call) {
+    arguments.callee._dbg_recursive_call = true;
+    $reportSourceWarning(filename, lineNumber, "reference to undefined variable '" + variableName + "'", true);
+    arguments.callee._dbg_recursive_call = false;
+  }
+};
+$reportUndefinedVariable._dbg_recursive_call = false;
+
+/** @access private */
+function $reportNotFunction(filename, lineNumber, name, value) {
+#pragma "warnUndefinedReferences=false"
+  if (! arguments.callee._dbg_recursive_call) {
+    arguments.callee._dbg_recursive_call = true;
+    var msg = "call to non-function";
+    if (typeof name == "string")
+      msg += " '" + name + "'";
+    msg += " (type '" + typeof value + "')";
+    if (typeof value == "undefined") {
+      msg = "call to undefined function";
+      if (typeof name == "string")
+        msg += " '" + name + "'";
+    }
+    $reportSourceWarning(filename, lineNumber, msg, true)
+      arguments.callee._dbg_recursive_call = false;
+  }
+};
+$reportNotFunction._dbg_recursive_call = false;
+
+/** @access private */
+function $reportUndefinedMethod(filename, lineNumber, name, value) {
+#pragma "warnUndefinedReferences=false"
+  if (! arguments.callee._dbg_recursive_call) {
+    {
+      arguments.callee._dbg_recursive_call = true;
+
+      var msg = "call to non-method";
+      if (typeof name == "string")
+        msg += " '" + name + "'";
+      msg += " (type '" + typeof value + "')";
+      if (typeof value == "undefined") {
+        msg = "call to undefined method";
+        if (typeof name == "string")
+          msg += " '" + name + "'";
+      }
+      $reportSourceWarning(filename, lineNumber, msg, true);
+    }
+    {
+      arguments.callee._dbg_recursive_call = false;
+    }
+  }
+};
+$reportUndefinedMethod._dbg_recursive_call = false;
+
+
+if ($js1) {
+  /**
+   * We can't use evalCarefully everywhere, so we also install a default
+   * error handler
+   */
+  if (typeof window.addEventListener == 'function') {
+    // The DOM 1 interface is more useful than the DOM 2 interface
+    window.onerror = function (errorString, fileName, lineNo) {
+#pragma "warnUndefinedReferences=false"
+      if (Debug.uncaughtBacktraceStack) {
+        // If backtracing has caught our stack info, use that rather
+        // than browser info
+        errorString = new String(errorString);
+        errorString.$lzsc$b = Debug.uncaughtBacktraceStack;
+        Debug.uncaughtBacktraceStack = null;
+        fileName = null;
+        lineNo = null;
+      }
+      $reportSourceWarning(fileName, lineNo, errorString, true);
+      // pass through to browser debugger
+      return false;
+    }
+  }
+}

@@ -18,9 +18,12 @@ if ($swf9) {
 } else {
 // Basic runtime and stubs
 #include "compiler/LzRuntime.lzs"
-// Class runtime for js1 runtimes
+// Class runtime for js1 runtimes, must load before BootstrapDebugService
 // TODO [2007-12-17 ptw] Move to platform/js1
 #include "compiler/Class.lzs"
+  if ($debug) {
+#include "compiler/LzBootstrapDebugService.lzs"
+  }
 }
 
 // Debugger (and LzFormatter) requires this, so must be loaded very early

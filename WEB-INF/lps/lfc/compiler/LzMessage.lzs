@@ -12,11 +12,11 @@
  *
  * @access private
  */
-class LzMessage {
+class LzBootstrapMessage {
   var message = '';
   var length = 0;
 
-  function LzMessage (message = null) {
+  function LzBootstrapMessage (message = null) {
     if (message != null) {
       this.appendInternal('' + message, message);
     }
@@ -34,7 +34,9 @@ class LzMessage {
     }
   }
 
-  function indexOf(...args) { return message.indexOf.apply(message, args); }
+  function indexOf(...args) {
+    return this.message.indexOf.apply(this.message, args);
+  }
 
   // TODO: [2005-05-08 ptw] (LPP-5934) When toString is declared
   // public, remove the swf9 special-case
@@ -55,4 +57,16 @@ class LzMessage {
       return this.toString();
     }
   }
-}
+};
+
+var LzMessage = LzBootstrapMessage;
+
+/**
+ * Convert a String to HTML for display in the Debugger by escaping
+ * the HTML characters in the String.
+ * @access private
+ */
+String.prototype.toHTML = function () {
+  return Debug.xmlEscape(this);
+};
+

@@ -16,17 +16,17 @@
   *
   * @access private
   */
-function LzMonitor (file, line, message) {
-  // super.apply(arguments);
-  LzSourceMessage.apply(this, arguments);
-};
+class LzMonitor extends LzSourceMessage {
+  static var type = 'MONITOR';
+  // Same color as Debug.debug
+  static var color = '#00cc00';
 
-LzMonitor.prototype = new LzSourceMessage();
-LzMonitor.prototype.constructor = LzMonitor;
-LzMonitor.format = LzSourceMessage.format;
-LzMonitor.prototype.type = 'MONITOR';
-// Same color as Debug.debug
-LzMonitor.prototype.color = '#00cc00';
+  function LzMonitor (file:String=null, line:Number=0, message:String='') {
+    super(file, line, message);
+  };
+
+  static var format = LzSourceMessage.format;
+};
 
 /**
   * Create a monitor message from a format string

@@ -191,7 +191,7 @@ Debug.traceStep = function (steps=Infinity, milliseconds=1300) {
                     this.loops,
                     this.loopCount / this.loops,
                     this.loopElapsed / this.loops)
-        this.format(' ... done!\n');
+        this.format(' \u2026 done!\n');
         // done
         return true;
       }
@@ -287,11 +287,8 @@ Debug.traceStep = function (steps=Infinity, milliseconds=1300) {
       queuedSlots.ancestors.push(o);
     }
     var ownProperties = [];
-    if ($as2) {
-      this.objectOwnProperties(o, ownProperties, ownProperties);
-    } else
     try {
-      this.objectOwnProperties(o, ownProperties, ownProperties);
+      this.objectOwnProperties(o, ownProperties, ownProperties, Infinity, true);
     } catch (e) {};
     for (var i = ownProperties.length - 1; i >= 0; i--) {
       var p = ownProperties[i];
@@ -449,7 +446,7 @@ Debug.markObjects = function () {
   } else {
     Debug.warn("Memory tracing is for experimental use only in this runtime.")
   }
-  Debug.format('Marking objects ... ');
+  Debug.format('Marking objects \u2026 ');
   // Output must come before init, so it is not seen as a leak
   setTimeout(function () { Debug.initTrace(); }, 10);
 }
@@ -464,7 +461,7 @@ Debug.findNewObjects = function () {
     } else {
       Debug.warn("Memory tracing is for experimental use only in this runtime.")
     }
-    Debug.format('Finding new objects ... ');
+    Debug.format('Finding new objects \u2026 ');
     // Output must come before init, so it is not seen as a leak
     setTimeout(function () { Debug.initTrace(true, true); }, 10);
   } else {
@@ -665,7 +662,7 @@ Debug.whyAlive = function (top=10) {
         var lil = l[i].leaked;
         if (! isNaN(lil)) { rest += lil; }
       }
-      Debug.format("%=s [%d more @ ~%0.0d smoots each]", l, '...', n, rest/n);
+      Debug.format("%=s [%d more @ ~%0.0d smoots each]", l, '\u2026', n, rest/n);
     }
 
     // Return the data for inspection

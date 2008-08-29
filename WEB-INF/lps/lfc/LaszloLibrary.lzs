@@ -15,6 +15,18 @@ var _Copyright = "Portions of this file are copyright (c) 2001-2008 by Laszlo Sy
 // Compiler runtime support first
 #include "compiler/Library.lzs"
 
+if ($debug) {
+  if ($swf9) {
+
+  } else {
+    #include "debugger/Library.lzs"
+  }
+} else {
+  if ($dhtml) {
+    #include "debugger/stubs.lzs"
+  }
+}
+
 if ($profile) {
   if ($swf9) {
   } else {
@@ -28,21 +40,6 @@ if ($profile) {
 }
 
 #include "core/Library.lzs"
-
-// NOTE: [hqm 2008-07] moved debugger to load after the class system, so we can
-// implement debugger as classes
-if ($debug) {
-  if ($swf9) {
-
-  } else {
-    #include "debugger/Library.lzs"
-  }
-} else {
-  if ($dhtml) {
-    #include "debugger/stubs.lzs"
-  }
-}
-
 
 #include "events/Library.lzs"
 
@@ -69,10 +66,6 @@ if ($swf9) {
   }
   if ($debug) {
     // Must be loaded last -- tells the core debugger loading is done
-    if ($dhtml) {
-#include "debugger/platform/dhtml/LzInit.js"
-    } else {
-#include "debugger/platform/swf/LzInit.as"
-    }
+#include "debugger/LzInit.lzs"
   }
 }

@@ -50,7 +50,7 @@ dynamic class LzDebugService with LzFormatter {
 
 var Debug = new LzDebugService();
 
-class LzSourceMessage extends LzMessage {
+class LzSourceMessage extends LzBootstrapMessage {
   var file;
   var line;
 
@@ -65,7 +65,6 @@ class LzSourceMessage extends LzMessage {
       this.message = new LzMessage(message);
     }
   }
-
 }
 
 /**

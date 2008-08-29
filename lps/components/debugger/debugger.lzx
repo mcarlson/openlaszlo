@@ -136,28 +136,11 @@
     <attribute name="options" value="ignorelayout" />
 
     <attribute name="solo_mode" value="false" />
+    <attribute name="isLoaded" value="false" />
 
     <!-- METHODS -->
     <method name="construct" args="parent, args">
       super.construct(parent, args);
-      // Now inherit from core debugger
-      var lzd = __LzDebug;
-      var warn = lzd.warn;
-      // Remove methods that will be superceded
-      for (var i in lzd) {
-        if (typeof(this[i]) != 'undefined') {
-//           warn.call(lzd, 'Removing %w.%s: %w', lzd, i, lzd[i]);
-          delete lzd[i];
-        }
-      }
-      // insert the core debugger in the proto chain
-      global.__LzDebug.__proto__ = this.__proto__;
-      this.__proto__ = global.__LzDebug;
-      this.id = 'Debug';
-      // redefine the core debugger here so as not to get a warning
-      // about redefining it from setName
-      global.Debug = this;
-      global.__LzDebug = this;
       this.commandhistory_ptr = this.commandhistory.length;
     </method>
 
@@ -167,7 +150,7 @@
 
     <method name="setHeight" args="h" > 
         super.setHeight( Math.max( 112 , Math.min( h , canvas.height) ) ); 
-        if (!__LzDebug.isLoading) {
+        if (this.isLoaded) {
            this.middle.content.updateDisplay();
        }
     </method> 
@@ -268,21 +251,6 @@
        ]]>
     </method>
 
-    <!-- prompt state -->
-    <attribute name="atPrompt" value="false" />
-
-    <!-- emit a prompt if you need one -->
-    <method name="freshPrompt">
-      <![CDATA[
-        if (! this.atPrompt) {
-            this.freshLine();
-            this.addHTMLText('<font color="#00CC00">lzx&gt; </font>');
-            this.atPrompt = true;
-        }
-      ]]>
-    </method>
-
-
     <method name="checkServerResponse">
       <![CDATA[
         var loadobj = new LoadVars();
@@ -297,8 +265,7 @@
       <![CDATA[
       // NB: This is a callback handler, and 'this' will be bound to some LoadVars object, not to Debug
       if (src == undefined) {
-        Debug.freshLine();  
-        Debug.addHTMLText('<font color="#FF8800">Debugger cannot contact LPS server, switching to SOLO mode.</font>\n');
+        Debug.warn('Debugger cannot contact LPS server, switching to SOLO mode.');
         Debug.setAttribute('solo_mode', true);
       }
       ]]>
@@ -312,14 +279,14 @@
        this.commandhistory_ptr = this.commandhistory.length;
        this.persist.data.commandhistory = this.commandhistory;
        // Echo input to output
-       this.freshPrompt();
-       this.addHTMLText('<font color="#00CC00">'+String(expr).toHTML()+"</font>\n");
+       Debug.freshPrompt();
+       this.echo(String(expr).toHTML());
        // Will try to compile as 'Debug.displayResult(expr);' and if
        // that fails, will try to compile as a series of statements
        // (with no display).  Finally, will compile
        // 'Debug.__write(<error message>)' if both of those fail.
        if (this.solo_mode) {
-           this.displayResult(eval(expr));
+           Debug.displayResult(eval(expr));
        } else {
            this.evalloader.request( { lz_load : false,
                                           lzt : "eval",
@@ -336,64 +303,10 @@
        ]]>
     </method>
 
-    <!--- Used to display the results of doEval (if any)
-      @keywords private -->
-    <method name="displayResult" args="result">
-      <![CDATA[
-       if (typeof(result) != 'undefined') {
-         // Advance saved results if you have a new one
-         if (result !== global._) {
-           if (typeof(global.__) != 'undefined') { 
-             global.___ = global.__;
-           }
-           if (typeof(global._) != 'undefined') {
-             global.__ = global._;
-           }
-           global._ = result;
-         }
-       }
-
-       if (this.remoteDebug) { return; } 
-
-       this.freshLine();
-       // Output any result from the evalloader
-       if (typeof(result) != 'undefined') {
-           // Turn off pretty for results
-           this.format("%#w", result)
-       }
-      this.freshPrompt();
-      ]]>
-    </method>
-
     <method name="evalString" args="expr">
       this.evalloader.request( { lz_load : false,
                                  lzt : "eval",
                                  lz_script : "#file evalString\n#line 0\n" + expr } )
-    </method>
-
-    <!--- Write a message to the debug window console.
-         @param [Object] objects: List of objects to write.
-    -->
-    <method name="write" args="objects">
-      <![CDATA[
-      if (this.remoteDebug) {
-          var n = arguments.length
-          // Pass each value to __write individually so they can be
-          // 'presented' as objects if applicable
-          for (var i = 0; i < n; i++) {
-              var v = arguments[i];
-              var s = ((i == (n-1)) ? '\n' : ' ');
-              this.sockWriteLog(v);
-          }
-      } else {
-          if (!this.consoleRemote && !this['visible']) {
-              this.setAttribute('visible', true);
-              this.bringToFront();
-          }
-          // Call the primitive method
-          this.writeInternal.apply(this, arguments);
-      }
-      ]]>
     </method>
 
     <!--- Clear the output from the debug window -->
@@ -597,24 +510,11 @@
         this.bottom.center.input.setText(this.ObjectForID(id));
     </method>
 
-    <method name="displayObj" args="id">
-      <![CDATA[
-        var obj = this.ObjectForID(id);
-        // Make it look like you executed a command, even though
-        // you don't need to compile to do this
-        this.freshPrompt();
-        this.addHTMLText('<font color="#00CC00">' +
-                         this.formatToString("Debug.inspect(%0.48w)", obj).toHTML() +
-                         '</font>\n');
-        this.displayResult(this.inspect(obj));
-      ]]>
-    </method>
-
    <method name="inspectObject" args="obj">
     if (lz.Keys.isKeyDown('capslock')) {
       // force and ID, so the object can be inspected
-      var id = this.IDForObject(obj, true);
-      this.displayResult(obj);
+      var id = Debug.IDForObject(obj, true);
+      Debug.displayResult(obj);
     }
    </method>
 
@@ -789,7 +689,7 @@
         // keep a minimum of two lines of text displayed
           var minheight = (classroot.lineheight + 16);
           super.setHeight( Math.max( parent.smallInputAreaHeight , Math.min( h , parent.height - (parent.top.height + minheight)) ) ); 
-          if (!__LzDebug.isLoading) {
+          if (parent.isLoaded) {
              parent.middle.content.updateDisplay();
          }
        </method> 
@@ -927,17 +827,19 @@
 
   <method name="addText"  args="msg">
      <![CDATA[
-       if (__LzDebug.isLoading) {
-           __LzDebug.saved_msgs.push(msg);
+       var str = '' + msg;
+       if (msg && (msg['toHTML'] is Function)) {
+           str = msg.toHTML();
        } else {
-           var str;
-           if (msg && msg['toHTML']) {
-               str = msg.toHTML();
-           } else {
-               str = String(msg).toHTML();
-           }
-           this.addHTMLText(str);
+           str = String(msg).toHTML();
        }
+       this.addHTMLText(str);
+     ]]>
+  </method>
+
+  <method name="echo" args="str, newLine:Boolean=true">
+     <![CDATA[
+      this.addHTMLText('<font color="#00CC00">' + str + '</font>' + (newLine?'\n':''));
      ]]>
   </method>
 
@@ -956,6 +858,17 @@
      ]]>
   </method>
 
+  <method name="makeObjectLink" args="rep:String, id:Number, attrs=null">
+     <![CDATA[
+      var color = '#0000ff';
+      if (attrs && attrs.color) { color = attrs.color };
+      if (id != null) {
+        return '<a href="asfunction:_root.$modules.lz.Debug.displayObj,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
+      }
+      return rep;
+     ]]>
+  </method>
+
   <!--- Scroll the debugger output window to display the last line of text  -->
   <method name="scrollToEnd">
      this.middle.content.scrollToEnd();
@@ -966,63 +879,20 @@
         //------------------------------------------------------------------------------
         // This is called when the application is loaded.
         //------------------------------------------------------------------------------
-        __LzDebug.isLoading = false;
+        this.isLoaded = true;
+        this.remoteDebug = false;
 
-        if (typeof(global.lzconsoledebug) != 'undefined') {
-           this.consoleRemote = true;
-           this.setAttribute('visible',false);
-            // Open the remote debugger socket 
-            __LzDebug.startupConsoleRemote();
-        } else if (typeof(global.remotedebug) != 'undefined') {
-           // This case mismatch here is intentional: "remotedebug" is the query arg, 
-           // "Debug.remoteDebug" is the attribute on the Debugger window.
-            this.remoteDebug = true;
-            this.setAttribute('visible', false );
-            // Open the remote debugger socket 
-            this.startupRemote();
+        Debug.attachDebugConsole(this);
 
-            this.write = function (objects) {
-                var n = arguments.length
-                // Pass each value individually so they can be
-                // 'presented' as objects if applicable
-                for (var i = 0; i < n; i++) {
-                    var v = arguments[i];
-                    var s = ((i == (n-1)) ? '\n' : ' ');
-                    this.sockWriteLog(v);
-                }
-            }
-            // Write out any queued messages from app startup.
-            for (var i = 0; i < this.saved_msgs.length; i++) {
-                var msg = this.saved_msgs[i];
-                if (msg instanceof LzSourceMessage) {
-                    this.sockWriteWarning(msg.file, msg.line, msg.message.toString());
-                } else {
-                    this.sockWriteLog(String(msg));
-                }
-            }
-        } else {
-            this.remoteDebug = false;
-
-            // print saved messages and warnings
-            for (var i = 0; i < this.saved_msgs.length; i++) {
-                this.__write(this.saved_msgs[i]);
-            }
-            this.setAttribute('visible', true );
-            this.bringToFront();
-        }
+        this.setAttribute('visible', true );
+        this.bringToFront();
 
         this.scrollToEnd();
-
-        // Let's keep these saved msgs around for the remote debugger 
-        // to look at if it wants.
-        // this.saved_msgs = [];
 
         // See if the LPS server is present; if not fall back to simpler eval()
         if (canvas.proxied == false) {
            this.checkServerResponse();
         }
-
-
       ]]>
   </method>
 

@@ -41,20 +41,27 @@ public final class ResponderEVAL extends Responder
         }
 
         if (logmsg) {
-            // Just write to the log and let the output connection close
-            mLogger.info(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="CLIENT_LOG " + p[0]
- */
+          String message =
+            /* (non-Javadoc)
+             * @i18n.test
+             * @org-mes="CLIENT_LOG " + p[0]
+             */
             org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ResponderEVAL.class.getName(),"051018-50", new Object[] {script})
-);
-            byte[] action = new byte[0];
-            int swfversion = 6;
-            ScriptCompiler.writeScriptToStream(action, out, swfversion);          
-            out.flush();
-            FileUtils.close(out);
+              ResponderEVAL.class.getName(),"051018-50", new Object[] {script});
+          if (script.startsWith("ERROR")) {
+            mLogger.error(message);
+          } else if (script.startsWith("WARNING")) {
+            mLogger.warn(message);
+          } else if (script.startsWith("INFO")) {
+            mLogger.info(message);
+          } else {
+            mLogger.debug(message);
+          }
+          byte[] action = new byte[0];
+          int swfversion = 6;
+          ScriptCompiler.writeScriptToStream(action, out, swfversion);
+          out.flush();
+          FileUtils.close(out);
         } else {
             mLogger.info(
 /* (non-Javadoc)

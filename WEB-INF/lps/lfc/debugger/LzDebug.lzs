@@ -10,519 +10,1341 @@
   * @subtopic Debugging
   */
 
-/**
-  * The Debug singleton is created compiler/LzRuntime so that some
-  * early bootstrap methods can be attached.
-  * @todo 2006-04-20 ptw: Remove when compiler no longer references
-  * @access private
-  */
-var __LzDebug = Debug;
-
-/** See yourself
-  * @access private
-  */
-Debug._dbg_name = 'Debug';
 /** Give global a pretty name
   * @access private
   */
 global._dbg_name = 'global';
 
-/*
- * Debug parameters
- */
+/**
+ ** Generic DebugService
+ **/
 
 /**
-  * Debug.write will truncate the printed representation of any object
-  * whose length is greater than Debug.printLength (default value
-  * 1024).
-  *
-  * @type Number
-  * @see: Debug.inspect.printLength
-  */
-Debug.printLength = 1024;
-
-/**
-  * Debug.write will print 'pretty' versions of objects if this is
-  * true (default is true).
-  *
-  * @type Boolean
-  */
-Debug.printPretty = true;
-
-/**
- * Possible values of Debug.messageLevel (q.v.)
- * @keywords readonly
- * @type Object
- */
-Debug.messageLevels = {ALL: 0, MONITOR: 1, TRACE: 2, DEBUG: 3, INFO: 4, WARNING: 5, ERROR: 6, NONE: 7};
-
-/**
- * Debug messages are enabled/disabled by the
- * setting of Debug.messageLevel.  The valid levels are one of the
- * keys of Debug.messageLevels.  All messages of a lower level than
- * the current setting will be suppressed
+ * <p><code>Debug</code> is the single instance of the class
+ * <code>LzDebugService</code>.</p>
  *
- * @type String
+ * <p></p>
+ *
+ * @access public
  */
-Debug.messageLevel = 'ALL';
+dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
+  /**
+   * For debugging the transition from base to real
+   * @access private
+   */
+  var base;
+  /**
+   * @access private
+   */
+  function LzDebugService(base:LzBootstrapDebugService) {
+    super(base.logger, base.console);
+    this.base = base;
+    // Preserve any state created in the base service
+    var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
+    for (var k in copy) {
+      this[k] = base[k];
+    }
+  }
 
-/**
-  * Array of prefixes that indicate internal properties to the
-  * inspector.  If Debug.showInternalProperties is false, any properties
-  * with a prefix in this set will not be displayed.
-  * @access private
-  */
-Debug.internalPropertyPrefixes = [ '$', '__' ];
+  /*
+   * Debug parameters
+   */
 
-/**
-  * Debug.inspect will show internal properties if this is true
-  * (default is false).
-  *
-  * @type Boolean
-  */
-Debug.showInternalProperties = false;
+  /**
+   * Debug.write will truncate the printed representation of any object
+   * whose length is greater than Debug.printLength (default value
+   * 1024).
+   *
+   * @type Number
+   * @see: Debug.inspectPrintLength
+   */
+  var printLength:Number = 1024;
 
-/** Any amendments to the environment for debug evaluator, initially
-  * just _, __, and ___.  Could put things like write, format, inspect.
-  * @access private
-  */
-Debug.environment = {};
+  /**
+   * Possible values of Debug.messageLevel (q.v.)
+   * @keywords readonly
+   * @type Object
+   */
+  static var messageLevels = {ALL: 0, MONITOR: 1, TRACE: 2, DEBUG: 3, INFO: 4, WARNING: 5, ERROR: 6, NONE: 7};
 
-/**
-  * Display version info.
-  *
-  * Displays various version information about the running application
-  * such as the URL it was loaded from, the version of the LPS that is
-  * running and the underlying runtime version.
-  */
-Debug.versionInfo = function () {
-  this.write(LzCanvas.versionInfoString());
-}
+  /**
+   * Debug messages are enabled/disabled by the
+   * setting of Debug.messageLevel.  The valid levels are one of the
+   * keys of Debug.messageLevels.  All messages of a lower level than
+   * the current setting will be suppressed
+   *
+   * @type String
+   */
+  var messageLevel:String = 'ALL';
+
+  /**
+   * Array of prefixes that indicate internal properties to the
+   * inspector.  If Debug.showInternalProperties is false, any properties
+   * with a prefix in this set will not be displayed.
+   * @access private
+   */
+  static var internalPropertyPrefixes = [ '$', '__' ];
+
+  /**
+   * Debug.inspect will show internal properties if this is true
+   * (default is false).
+   *
+   * @type Boolean
+   */
+  var showInternalProperties:Boolean = false;
+
+  /** Any amendments to the environment for debug evaluator, initially
+   * just _, __, and ___.  Could put things like write, format, inspect.
+   * @access private
+   */
+  var environment = {};
+
+  /**
+   * Output state
+   * @access private
+   */
+  var atFreshLine = true;
+  /**
+   * Output state
+   * @access private
+   */
+  var atPrompt = false;
+
+  /**
+   ** Generic debug I/O
+   **/
+
+  /**
+   * Attaches the real debug console once it is available, and replays
+   * any messages saved in the bootstrap console.  Typically called
+   * from makeDebugWindow
+   */
+  function attachDebugConsole (console:LzBootstrapDebugConsole) {
+    var old = this.console;
+    this.console = console;
+    // Replay saved messages
+    var sm = old.saved_msgs;
+    var sml = sm.length;
+    for (var i = 0; i < sml; i++) {
+      this.console.addText(sm[i]);
+    }
+  }
+
+  /**
+   * Puts the typeout on a fresh line
+   * @access private
+   */
+  function freshLine () {
+    if (! this.atFreshLine) {
+      this.console.addText('\n');
+      this.atFreshLine = true;
+    }
+  };
+
+  /**
+   * Emit a prompt if not at one
+   * @access private
+   */
+  function freshPrompt () {
+    if (! this.atPrompt) {
+      this.freshLine();
+      this.console.echo('lzx&gt; ', false);
+      this.atPrompt = true;
+    }
+  };
+
+  /**
+   * Display an object from an ID
+   *
+   * Used by makeObjectLink callback
+   * @access private
+   */
+  function displayObj(id:Number) {
+    var obj = this.ObjectForID(id);
+    // Make it look like you executed a command, even though
+    // you don't need to compile to do this
+    this.freshPrompt();
+    this.console.echo(this.formatToString("Debug.inspect(%0.48w)", obj).toHTML());
+    this.displayResult(this.inspect(obj));
+  }
+
+  /**
+   * Update state of freshLine and freshPrompt based on output
+   * @access private
+   */
+  function updateOutputState (msg) {
+    var str = String(msg);
+    this.atFreshLine = (str.charAt(str.length-1) == '\n');
+    if (str.length) { this.atPrompt = false; }
+  }
 
 
-/**
-  * Display the properties of an object on the debug console.
-  * <code>Debug.inspect</code> displays each of the properties of its
-  * argument object using <code>Debug.write</code>.  Properties that
-  * have complex values (or long representations that are abbreviated)
-  * are displayed as links.  Clicking on the link will invoke
-  * <code>Debug.inspect</code> on that object.
-  * 
-  * @param Object obj: the object to inspect
-  * @param Null reserved: reserved for future use
-  */
-Debug.inspect = function (obj, reserved) {
-  var msg = this.inspectInternal(obj, reserved);
-  // after computing msg, which may produce warnings or errors
-  this.freshLine();
-  this.addHTMLText(msg);
-  return obj;
-}
-
-/**
-  * Debug.inspect will truncate the printed representation of any properties
-  * whose length is greater than Debug.inspect.printLength (default value
-  * 256).
-  *
-  * @type Number
-  * @see Debug.printLength
-  */
-Debug.inspect.printLength = 256;
-
-/*
- * Initial stubs, overwitten to be more functional by later generic or
- * platform-specific code.
- */
-
-/**
-  * Compute an informative type string for debugging.
-  * Classes and instances can define their own _dbg_typename method
-  * (which must return a string) or property (which must be a string)
-  * to override the default behavior.
-  * 
-  * This function returns the first of the following values:
-  * - thing._dbg_typename(), if thing._dbg_typename is a function and
-  * returns a non-null value.
-  * - thing._dbg_typename, if it's a string.
-  * - the __proto__'s constructor name, which should reflect instanceof
-  * if it does not, the reputed type will be enclosed in ?'s,
-  * indicating a possibly corrupted object
-  * - as a last resort: typeof(thing)
-  * 
-  * If the prototype is is a complex prototype (if it is not the
-  * constructor prototype) a unique ID (of the prototype) is appended.
-  * 
-  * If the object has a length, that is appended in parentheses.
-  * 
-  * @param thing:any The object to find the type of
-  * @return string representation of the type of thing
-  *
-  * @access private
-  */
-Debug.__typeof = function (thing) { return typeof thing; }
-
-/**
-  * Compute a function name if you can
-  * @param Boolean isGlobal: if true, will only return the name if it is
-  * a global name.
-  * 
-  * @access private
-  */
-Debug.functionName = function (fn, isGlobal) { return String(fn); }
-
-/**
-  * Coerce to an informative string for debugging
-  * Singleton types and atomic types are represented by
-  * themselves.  Strings are quoted.  Other types are printed as a type
-  * followed by a description.  By default an object is described by
-  * its properties, a function by its name (if available).  Objects are
-  * given an id that can be used to distinguish and inspect them.
-  * 
-  * Classes and instances may define their own _dbg_name method (which
-  * must return a string) or property (which must be a string) to
-  * override the default description.
-  * 
-  * @param any thing: The object to coerce to a string
-  * @param Boolean pretty: return a 'prettier' (but possibly ambiguous)
-  * representation, default false.
-  * @param Number limit: don't return a string longer than, default
-  * Debug.printLength
-  * @param Boolean unique: disambiguate representations by attaching a
-  * unique identifier, default (! pretty)
-  * @return String representation of the thing
-  *
-  * @access private
-  */
-  Debug.__String = function (thing, pretty, limit, unique) { return String(thing); }
-
-/**
-  * Make a hyperlink to display an object by id, if id is not supplied,
-  * try to find it first
-  * @access private
-  */
-Debug.makeObjectLink = function (obj, id) { return obj; }
-
-/**
-  * Body of inspect: print the object and its properties, making links
-  * for exploring properties that are objects
-  * 
-  * @access private
-  * @param obj:Object the object to inspect
-  * @param showInternalProperties:Boolean (optional) whether to display internal
-  * properties or not.  Defaults to Debug.showInternalProperties
-  */
-Debug.inspectInternal = function (obj, showInternalProperties) { return this.__String(obj); }
-
-/*
- * Utility Functions
- */
-
-/**
-  * @access private
-  * XML escape
-  */
-Debug.xmlEscape = function (ts) {
-  if (ts && ((typeof(ts) == "string") || (ts instanceof String))) {
-    var outstr = "";
-    var tlen = ts.length;
-    for (var i = 0; i < tlen; i++) {
-      var c = ts.charAt(i);
-      if (c == '<') {
-        outstr += "&lt;";
-      } else if (c == '>') {
-        outstr += "&gt;";
-      } else if (c == '&') {
-        outstr += "&amp;";
-      } else {
-        outstr += c;
+  /**
+   * Display a result and update the previous result values
+   * @access private
+   */
+  function displayResult (result:*):void {
+    var e = this.environment;
+    if (result !== (void 0)) {
+      // Advance saved results if you have a new one
+      if (result !== e['_']) {
+        if (e['__'] !== (void 0)) {
+          e.___ = e.__;
+        }
+        if (e['_'] !== (void 0)) {
+          e.__ = e._;
+        }
+        e._ = result;
       }
     }
-    return outstr;
-  } else {
-    return ts;
-  }
-}
-
-/**
-  * Internal property predicate.  Tests to see if str has a prefix in
-  * Debug.internalPropertyPrefixes.
-  * @access private
-  */
-Debug.internalProperty = function (str) {
-  // Use the component value of this attribute
-  var ipp = this.internalPropertyPrefixes;
-  for (var key in ipp) {
-    if (str.indexOf(ipp[key]) == 0) {
-      return true;
+    this.freshLine();
+    // Output any result from the evalloader
+    if (result !== (void 0)) {
+      this.format("%#w", result);
     }
-  }
-  return false;
-}
+    this.freshPrompt();
+  };
 
-/**
-  * Hash of characters to escape in strings when printPretty is false.
-  * (These are the ECMAScript SingleEscapeCharacter's for String
-  * Literals (7.8.4).
-  * @access private
-  */
-Debug.singleEscapeCharacters = {
-  '\\b': '\b',
-  '\\t': '\t',
-  '\\n': '\n',
-  '\\v': '\v',
-  '\\f': '\f',
-  '\\r': '\r',
-  '\\"': '\"',
-  '\\\'': '\'',
-  '\\\\': '\\'
-};
+  /**
+   ** Generic formatted output for the Laszlo Debugger
+   **/
 
-/**
-  * Abbreviate a string
-  * @param s:String the string to abbreviate
-  * @param l:Number the desired length, defaults to Debug.printLength
-  * 
-  * @access private
-  */
-Debug.abbreviate = function(s, l=Debug.printLength) {
-  var ellipsis = '...'; // '\u2026' doesn't work, wah.
-  if (s.length > (l - ellipsis.length)) {
-    s = s.substring(0, l - ellipsis.length) + ellipsis;
-  }
-  return s;
-}
-
-/**
-  * Escape a string
-  * @param s:String the string to abbreviate
-  * @param quoted:boolean whether to quote the string or not (and if
-  * you do, to not escape the opposite quote inside the string).
-  * 
-  * @access private
-  */
-Debug.stringEscape = function (s, quoted) {
-  // Have to handle '\\' first.
-  s = s.split('\\').join('\\\\');
-  var np = this.singleEscapeCharacters;
-  // quotes are skipped and ignored unless quoted
-  var skip = '"';
-  var quote = "";
-  var ignore = "'";
-  if (quoted) {
-    ignore = "";
-    var singles = s.split("'").length;
-    var doubles = s.split('"').length;
-    if (singles > doubles) {
-      skip = "'";
-      quote = '"';
-    } else {
-      skip = '"';
-      quote = "'";
+  /**
+   * All output passes through here.  Maintains freshLine state.
+   * Optionally logs all output acccording to the setting of
+   * _dbg_log_all_writes
+   * @access private
+   */
+  override function __write (msg) {
+    if (_dbg_log_all_writes) {
+      this.logger.log(msg);
     }
+    this.console.addText(msg);
+    this.updateOutputState(msg);
+  };
+
+  /**
+   * Display one or more objects on the debug console.
+   *
+   * Note: <xref linkend="Debug+debug.format"/> allows more control
+   * over displaying multiple objects. Use it instead of
+   * Debug.write.
+   *
+   * <code>Debug.write</code> displays objects on the debug console in
+   * an informative format.  Simple objects are represented as
+   * themselves.  Printed Complex objects are represented by their type
+   * and a concise description.  Long representations (and long Strings)
+   * are abbreviated if they are longer than <xref linkend="Debug+debug.printLength"/>.  Complex
+   * objects and abbreviated objects presented as links.  Clicking on
+   * the link will invoke <xref linkend="Debug+debug.inspect"/> on the object,
+   * giving more detail.
+   *
+   * @param Array * any: One or more values to display.  Multiple
+   * values are separated by spaces, so <code>Debug.write("The answer
+   * is:", 39+3)</code> will display: <code>The answer is: 42</code>
+   */
+  function write (...any) {
+    // Call format in 'compatibility' mode
+    var msg = this.formatToString.apply(this, arguments);
+    this.freshLine();
+    this.__write(msg);
+  };
+
+
+  /**
+   * Display formatted output to the debug console.
+   *
+   * Formats its arguments using <xref
+   * linkend="LzFormatter.prototype.formatToString"/>.
+   *
+   * @param String control: A control string where % indicates a
+   * subsequent argument is to be substituted
+   *
+   * @param Array * args: Any number of arguments to be formatted
+   * according to the control string
+   */
+  function format (control:String, ...args) {
+    this.__write(this.formatToString.apply(this, [control].concat(args)));
   }
-  for (var rep in np) {
-    var ch = np[rep];
-    if ((ch != '\\') && (ch != skip)  && (ch != ignore)) {
-      s = s.split(ch).join(rep);
+
+  /**
+   ** Upgraded messages, now that we have full source messages
+   **/
+
+  /**
+   * warnInternal tracks recursion and silences messages below
+   * messageLevel
+   */
+  function warnInternal (xtor:Function, control:String, ...args) {
+    var sourceMessage = LzSourceMessage;
+    var level = sourceMessage.level
+      if (level > sourceMessage.levelMax) { return; }
+    try {
+      sourceMessage.level = level + 1;
+      // Safari and Firefox do not implement arguments as an array
+      var msg = xtor.format.apply(xtor, [null, null, control].concat(args));
+      {
+        var mls = LzDebugService.messageLevels;
+        var t = xtor.type;
+        // Default to printing any 'unknown' types
+        if ((t in mls) ? (mls[t] >= mls[this.messageLevel]) : true) {
+          this.freshLine();
+          this.__write(msg);
+        }
+      }
     }
-  }
-  return quote + s + quote;
-}
-
-
-/*
- * Object table
- */
-
-/** Debug ID counter
-  * @access private
-  */
-Debug.objseq = 0;
-
-/** Debug ID table
-  * @access private
-  */
-Debug.id_to_object_table = [];
-
-/**
-  * Return the unique ID for an object either by finding the object in
-  * the table, or if it is not in the table by creating a new entry and
-  * ID for it.  Assigns unique names to function objects so they can be
-  * distinguished.  Normally only objects will be assigned an ID, pass
-  * force=true to force non-object to be interned.
-  * 
-  * @param object obj: the object to intern
-  * @param boolean force: whether to force interning, even if the
-  * object is not 'interesting'
-  *
-  * @access private
-  */
-Debug.IDForObject = function (obj, force) {
-  var id;
-  for (id = 0; id < this.id_to_object_table.length; id++) {
-    if (this.id_to_object_table[id] === obj) {
-      return id;
+    finally {
+      sourceMessage.level = level;
     }
+    return msg;
   }
-  if (!force) {
-    // ID anything that has identity (N.B., typeof will return
-    // 'object' for runtime objects that may be of interest, even though
-    // they are not instances of Object
-    if (! (obj && ((typeof obj == 'object') || (obj instanceof Object)))) {
-      return null;
+
+  /**
+   * Display a warning message on the console.
+   *
+   * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
+   * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+   *
+   * @param string control: A control string where % indicates a
+   * subsequent argument is to be substituted
+   *
+   * @param Array * args: Any number of arguments to be formatted
+   * according to the control string
+   */
+  override function warn (control:String, ...args) {
+    return this.warnInternal.apply(this, [LzWarning, control].concat(args));
+  };
+
+  /**
+   * Display an error message on the console.
+   *
+   * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
+   * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+   *
+   * @param string control: A control string where % indicates a
+   * subsequent argument is to be substituted
+   *
+   * @param Array * args: Any number of arguments to be formatted
+   * according to the control string
+   */
+  override function error (control:String, ...args) {
+    return this.warnInternal.apply(this, [LzError, control].concat(args));
+  };
+
+  /**
+   * Display an informational message on the console.
+   *
+   * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
+   * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+   *
+   * @param string control: A control string where % indicates a
+   * subsequent argument is to be substituted
+   *
+   * @param Array * args: Any number of arguments to be formatted
+   * according to the control string
+   */
+  override function info (control:String, ...args) {
+    return this.warnInternal.apply(this, [LzInfo, control].concat(args));
+  };
+
+  /**
+   * Display a debugging message on the console.
+   *
+   * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
+   * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+   *
+   * @param string control: A control string where % indicates a
+   * subsequent argument is to be substituted
+   *
+   * @param Array * args: Any number of arguments to be formatted
+   * according to the control string
+   */
+  override function debug (control:String, ...args) {
+    return this.warnInternal.apply(this, [LzDebug, control].concat(args));
+  };
+
+
+
+  /**
+   * Display the properties of an object on the debug console.
+   * <code>Debug.inspect</code> displays each of the properties of its
+   * argument object using <code>Debug.write</code>.  Properties that
+   * have complex values (or long representations that are abbreviated)
+   * are displayed as links.  Clicking on the link will invoke
+   * <code>Debug.inspect</code> on that object.
+   *
+   * @param Object obj: the object to inspect
+   * @return Object: the inspected object
+   */
+  function inspect (obj:Object):Object {
+    var msg = this.inspectInternal(obj);
+    // after computing msg, which may produce warnings or errors
+    this.freshLine();
+    // The output of inspectInternal is an HTML string with
+    // object-links encoded in it, so we want to pass this straight
+    // through to addHTMLText, not addText
+    this.console.addHTMLText(msg);
+    this.updateOutputState(msg);
+    return obj;
+  };
+
+  /**
+   * Debug.inspect will truncate the printed representation of any properties
+   * whose length is greater than Debug.inspectPrintLength (default value
+   * 256).
+   *
+   * @type Number
+   * @see Debug.printLength
+   */
+  var inspectPrintLength:Number = 256;
+
+
+  /**
+   ** Object table
+   **/
+
+  /**
+   * Debug ID counter
+   * @access private
+   */
+  var objseq = 0;
+
+  /**
+   * Debug ID table
+   * @access private
+   */
+  var id_to_object_table = [];
+
+  /**
+   * Return the unique ID for an object either by finding the object in
+   * the table, or if it is not in the table by creating a new entry and
+   * ID for it.  Assigns unique names to function objects so they can be
+   * distinguished.  Normally only objects will be assigned an ID, pass
+   * force=true to force non-object to be interned.
+   *
+   * @param * obj: the object to intern
+   * @param Boolean force: whether to force interning, even if the
+   * object is not 'interesting'. Default false.
+   * @return Number: the object ID
+   *
+   * @access private
+   */
+  function IDForObject (obj:*, force:Boolean=false):Number {
+    var id:Number;
+    var ot = this.id_to_object_table;
+    for (id = ot.length - 1; id >= 0; id--) {
+      if (ot[id] === obj) {
+        return id;
+      }
     }
+    if (!force) {
+      // ID anything that has identity
+      if (! this.isObjectLike(obj)) {
+        return null;
+      }
+    }
+    id = this.objseq++;
+    this.id_to_object_table[id] = obj;
+    return id;
+  };
+
+  /**
+   * Find the object associated with a particular debug ID
+   *
+   * @param Number id: the ID to look up
+   * @return *: the object with that ID
+   *
+   * @access private
+   */
+  function ObjectForID (id) {
+    return this.id_to_object_table[id];
+  };
+
+  /**
+   ** Generic presentation and inspection
+   **/
+
+  /**
+   * Compute an informative type string for debugging.
+   * Classes and instances can define their own _dbg_typename method
+   * (which must return a string) or property (which must be a string)
+   * to override the default behavior.
+   *
+   * This function returns the first of the following values:
+   * - thing._dbg_typename(), if thing._dbg_typename is a function and
+   * returns a non-null value.
+   * - thing._dbg_typename, if it's a string.
+   * - the __proto__'s constructor name, which should reflect instanceof
+   * if it does not, the reputed type will be enclosed in ?'s,
+   * indicating a possibly corrupted object
+   * - as a last resort: typeof(thing)
+   *
+   * If the prototype is is a complex prototype (if it is not the
+   * constructor prototype) a unique ID (of the prototype) is appended.
+   *
+   * If the object has a length, that is appended in parentheses.
+   *
+   * @param * thing: The object to find the type of
+   * @return String: representation of the type of thing
+   *
+   * @access private
+   */
+  function __typeof (thing:*):String {
+    try {
+      // default type
+      var n = typeof(thing);
+      // Refine Object subtypes
+      if (this.isObjectLike(thing)) {
+        // In Javascript the only link to the prototype is through the
+        // constructor property
+        var oc = thing['constructor'];
+
+        // Check for user typename
+        var user_name = null;
+        if (thing['_dbg_typename'] && (thing._dbg_typename is Function)) {
+          // Guard against broken user routines
+          try {
+            user_name = thing._dbg_typename();
+          } catch (e) {}
+        } else if (typeof(thing._dbg_typename) == 'string') {
+          user_name = thing._dbg_typename;
+        }
+        // No or invalid user typename, use constructor
+        if (this.isStringLike(user_name)) {
+          n = user_name;
+        } else if (oc) {
+          var ocn = this.functionName(oc, false);
+          if (! ocn) {
+            // tip o' the pin to osteele.com
+            var ts = thing.toString();
+            var s = '[object '.length;
+            var e = ts.indexOf(']');
+            if ((ts.indexOf('[object ') == 0) &&
+                (e == ts.length - 1)) {
+              ocn = ts.substring(s, e);
+            } else if ((ts.indexOf('[') == 0) &&
+                       (ts.indexOf(']') == ts.length - 1)) {
+              ocn = ts.substring(1, ts.length - 1);
+            }
+          }
+          if (ocn) {
+            if (oc !== eval(ocn)) {
+              // Uniquify non-global constructors
+              var id = this.IDForObject(oc);
+              ocn += '#' + id;
+            }
+            n = ocn;
+          }
+          // verify constructor
+          if ((oc is Function) && (! (thing is oc))) {
+            // prototype
+            if (thing === oc['prototype']) {
+              // What is the right type for a prototype?
+              // For now, let it be
+            } else {
+              // We are not a member of the class defined by our constructor?
+              // Enclose type in question marks
+              n = '\u00bf' + n + '?';
+            }
+          } else
+            // verify constructor prototype
+            if (oc['prototype'] && (oc.prototype['isPrototypeOf'] is Function) &&
+                (! oc.prototype.isPrototypeOf(thing))) {
+              // prototype
+              if (thing === oc.prototype) {
+                // What is the right type for a prototype?
+                // For now, let it be
+              } else {
+                // Our constructor's prototype is not a prototype of us?
+                // Enclose type in exclamation marks
+                n = '\u00a1' + n + '!';
+              }
+            }
+        }
+      }
+      // Show dimensions, if applicable
+      try {
+        if (this.isArrayLike(thing)) {
+          n += '(' + thing.length + ')';
+        }
+      } catch (e) {};
+    }
+    catch (e) {
+      try {
+        n = this.formatToString("Error %0.24w computing __typeof", e);
+      }
+      catch (e) {
+        n = "Recursive error computing __typeof";
+      }
+    }
+    return n;
+  };
+
+  /**
+   * Compute a function name if you can
+   *
+   * @param Function fn: the function whose name to compute
+   * @param Boolean isGlobal: if true, will only return the name if it is
+   * a global name.
+   * @return String: the function name
+   *
+   * @access private
+   */
+  function functionName (fn:Function, isGlobal:Boolean=false) {
+    if (fn && (fn is Function)) {
+      // _dbg_name takes precedence over the actual function name
+      if (fn.hasOwnProperty('_dbg_name')) {
+        var n = fn._dbg_name;
+      } else {
+        // tip o' the pin to osteele.com
+        var fstring = fn.toString();
+        var s = 'function '.length;
+        var e = fstring.indexOf(' (');
+        if ((fstring.indexOf('function ') == 0) && (e > s)) {
+          n = fstring.substring(s, e);
+        }
+      }
+      if (n) {
+        if ((! isGlobal) || (fn === eval(n))) {
+          return n;
+        }
+      }
+    }
+    return null;
+  };
+
+  /**
+   * Compute the description for __String
+   *
+   * May be overridden in subclasses to add descriptions for
+   * platform-dependent types
+   *
+   * @access private
+   */
+  function __StringDescription(thing:*, pretty:Boolean, limit:Number, unique:Boolean):Object {
+    try {
+      // Evade infinite recursion
+      if (limit <= 0) return {pretty: true, description: '\xABwhoops!\xBB'};
+      // Return primitive types early, so you don't stumble on them in
+      // unforgiving runtimes.
+      if (thing === (void 0)) {
+        return {pretty: true, description: '(void 0)'};
+      }
+      if (thing === null) {
+        return {pretty: true, description: 'null'};
+      }
+
+      var t = typeof(thing);
+      var debug_name = null;
+      var s = '';
+
+      if (this.isObjectLike(thing)) {
+        // Bind printLength short while calling user methods
+        var opl = this.printLength;
+        this.printLength = (limit < this.inspectPrintLength)?limit:this.inspectPrintLength;
+        var dn = thing['_dbg_name'];
+        // Look for class prototypes
+        if ((thing['constructor'] is Function) &&
+            (thing === thing.constructor['prototype'])) {
+          debug_name = '.prototype';
+        } else if (dn is Function) {
+          // Guard against broken user routines
+          try {
+            // Not dn(), because need thing context
+            debug_name = thing._dbg_name();
+          }
+          catch (e) {}
+        } else if (this.isStringLike(dn)) {
+          debug_name = dn;
+        }
+        this.printLength = opl;
+      }
+      if (this.isStringLike(debug_name)) {
+        // If the debug name does not start with '#' (indicating that it
+        // is a global ID), turn pretty off
+        if (debug_name.charAt(0) != '#') {
+          pretty = (! unique);
+        }
+        // User method returned a valid answer
+        // Sanitize it
+        s = this.stringEscape(debug_name);
+      } else if ((t == 'null') || (t == 'number') || (t == 'boolean')) {
+        // Primitive types with print/read consistency print as pretty,
+        // unless abbreviated below
+        pretty = true;
+        s = String(thing);
+        // TODO: [2008-08-17 ptw] return now?
+      } else if (this.isStringLike(thing)) {
+        // No pretty for subclasses
+        if (thing is String && (thing.constructor !== String)) {
+          pretty = (! unique);
+        }
+        // abbreviate rep if necessary
+        s = this.abbreviate(thing, limit);
+        // print/read consistency
+        var prc = (s === thing);
+        // if you abbreviate, don't be pretty
+        if (! prc) { pretty = (! unique); }
+        // escape non-printing controls that otherwise are
+        // indistinguishable
+        s = this.stringEscape(s, true);
+        // If you still have print/read consistency, stop here
+        if ((t == 'string') && prc) {
+          return {pretty: pretty, description: s};
+        }
+        // Long strings and String objects get an ID so they can be
+        // inspected
+        this.IDForObject(thing, true);
+      } else if ((t == 'function') || (thing is Function)) {
+        var n = this.functionName(thing, unique);
+        if (n != null) {
+          s = n;
+        } else {
+          // not a global function, can't be pretty if you want unique
+          pretty = (! unique);
+          s = this.functionName(thing, false);
+          // unnamed function, will get type and uniquified below
+          if (s == null) { s = ''; }
+        }
+      } else if (this.isObjectLike(thing)) {
+        // No pretty if thing.constructor.prototype is not
+        // thing's prototype, as this indicates some sort of
+        // bizarre object
+        if ((! thing['constructor']) ||
+            (! thing.constructor['prototype']) ||
+            (! (thing.constructor.prototype['isPrototypeOf'] is Function)) ||
+            (! thing.constructor.prototype.isPrototypeOf(thing))) {
+          pretty = (! unique);
+        }
+        // Catch wrappers (but not subtypes of wrappers)
+        if (thing['constructor'] &&
+            (thing.constructor === Date ||
+             thing.constructor === Boolean ||
+             thing.constructor === Number)) {
+          // Show the unwrapped value
+          // Don't use String(), because that yields "[type Object]" for
+          // broken instances, whereas toString() will return undefined.
+          s = thing.toString();
+          if (s == null) { s = ''; }
+        }
+        else if (thing is String) {
+          // handled above, but don't fall into array
+        }
+        // If it has a user-defined toString method, use that, but defend
+        // against broken methods
+        else if ((thing['toString'] is Function) &&
+                 (thing.toString !== {}.toString) &&
+                 (thing.toString !== [].toString) &&
+                 (s = (function () {
+                     try {
+                       var u = thing.toString();
+                       if ((typeof(u) != 'undefined') &&
+                           (u != 'undefined')) {
+                         return u;
+                       }
+                     } catch (e) {} })())) {
+          // No pretty for these, you don't know if the user
+          // toString is uniquifying
+          pretty = (! unique);
+        }
+        // Print unidentified objects and arrays as abbreviated list of props
+        else {
+          var names = [];
+          var indices = this.isArrayLike(thing)?[]:null;
+          this.objectOwnProperties(thing, names, indices, limit);
+          if (indices) { indices.sort(this.numericOrdering); }
+
+          // No pretty for subclasses or non-objects or array-like objects
+          // that are not Arrays.
+          if (! (indices ?
+                 ((thing is Array) && (thing.constructor === Array)) :
+                 ((thing is Object) && (thing.constructor === Object)))) {
+            pretty = (! unique);
+          }
+          if (indices) {
+            // Present as an array, Don't accumulate beyond limit
+            var next = 0;
+            for (var i = 0; (i < indices.length) && (s.length < limit); i ++) {
+              var key = indices[i];
+              if (key != next) {
+                s += '\u2026, ';
+              }
+              // TODO: [2005-06-22 ptw] Use __String in case element is huge
+              s += String(thing[key]) + ', ';
+              next = key + 1;
+            }
+            if (s != '' && i == indices.length) { s = s.substring(0, s.length - 2); }
+            s = '[' + s + ']';
+          } else {
+            var ellip = true;
+            // Present as an object, Don't accumulate beyond limit
+            for (var i = 0; (i < names.length) && (s.length < limit); i ++) {
+              var e = names[i];
+              var v = thing[e];
+              var tv = typeof(v);
+              var dtv = this.__typeof(v);
+              // Ignore "empty" properties and methods, ignore internal
+              // slots and slots that have an internal type
+              if ((tv != 'undefined') &&
+                  (tv != 'function') &&
+                  (('' + v) != '') &&
+                  (! this.internalProperty(e)) &&
+                  (! this.internalProperty(dtv))) {
+                ellip = true;
+                // TODO: [2005-06-22 ptw] Use __String in case element is huge
+                s += '' + e + ': ' + String(v) + ', ';
+              } else {
+                if (ellip) {
+                  s += '\u2026, ';
+                  ellip = false;
+                }
+              }
+            }
+            if (s != '' && i == names.length) {s = s.substring(0, s.length - 2); }
+            s = '{' + s + '}';
+          }
+        }
+      } else {
+        // Shouldn't ever get here
+        pretty = (! unique);
+        s = String(thing);
+      }
+    }
+    catch (e) {
+      pretty = false;
+      try {
+        s = this.formatToString("Error: %0.24w computing __String", e);
+      }
+      catch (e) {
+        s = "Recursive error computing __String";
+      }
+    }
+
+    return {pretty: pretty, description: s};
   }
-  id = this.objseq++;
-  this.id_to_object_table[id] = obj;
-  return id;
-}
 
-/**
-  * Find the object associated with a particular debug ID
-  * @access private
-  */
-Debug.ObjectForID = function (id) {
-  return this.id_to_object_table[id];
-};
+  /**
+   * Coerce to an informative string for debugging
+   * Singleton types and atomic types are represented by
+   * themselves.  Strings are quoted.  Other types are printed as a type
+   * followed by a description.  By default an object is described by
+   * its properties, a function by its name (if available).  Objects are
+   * given an id that can be used to distinguish and inspect them.
+   *
+   * Classes and instances may define their own _dbg_name property
+   * (which may be a Function returning a String or a String) to
+   * override the default description.
+   *
+   * @param * thing: The object to coerce to a string
+   * @param Boolean pretty: return a 'prettier' (but possibly ambiguous)
+   * representation, default true.
+   * @param Number limit: don't return a string longer than, default
+   * Debug.printLength
+   * @param Boolean unique: disambiguate representations by attaching a
+   * unique identifier, default (! pretty)
+   * @return LzMessage: String representation of thing
+   *
+   * @access private
+   */
+  function __String (thing:*, pretty:Boolean=true, limit:Number=(void 0), unique:Boolean=(void 0)):String {
+    if (limit === (void 0)) { limit = pretty?this.printLength:64; }
+    if (unique === (void 0)) { unique = (! pretty); }
 
-/**
- * Format information about an error suitably for reporting a bug.
- *
- * This method can be used to create a report suitable for
- * copy/pasting into a bug report.  To use it, enable backtraces and
- * debugging, inspect the error message that you believe reveals a
- * bug, then invoke `Debug.bugReport()` in the debugger.  Copy and
- * paste the output of that call into your bug report.
- *
- * @param * error: An error message or ID.  Defaults to the last error
- * that was inspected.
- * @param Boolean verbose: If true, each frame
- * argument in the backtrace will be inspected.  Defaults to the value
- * of Debug.showInternalProperties.
- *
- * @note By inspecting an error message (by clicking on it), the error
- * message will be assigned to the Debug environment variable `_`.
- * Thus to enable a verbose report (which will detail all arguments of
- * each frame, as opposed to just the `this` argument), invoke as
- * `Debug.bugReport(_, true)`.
- */
-Debug.bugReport = function (error=null, verbose=Debug.showInternalProperties) {
-  if (error == null) {
-    with (global) {
-      with (Debug.environment) {
+    var d  = this.__StringDescription(thing, pretty, limit, unique);
+    var s = d.description;
+    if (d.pretty &&
+        ((! unique) || (typeof(thing) != 'object')) &&
+        (s != "") && (s.length < limit)) {
+      return s;
+    }
+
+    // Compute id; force if you couldn't print pretty due to
+    // abbreviating
+    var id = this.IDForObject(thing, s.length >= limit);
+    // Build representation
+    var r = '\u00AB';             // <<
+    r += this.__typeof(thing);
+    if (unique && (id != null)) {r += ('#' + id);}
+    // Only abbreviate the description, don't lose the type or ID
+    if (s != '') {
+      var room = limit - r.length - 4; // '| ' + '...' + '>>'
+      if (room > 0) {
+        r += '| ';
+        r += this.abbreviate(s, room);
+      }
+    }
+    r += '\u00BB'; // >>
+    return r;
+  };
+
+  /**
+   * Body of inspect: Create an LZMessage of the object and its
+   * properties, making links for exploring properties that are objects
+   *
+   * @param Object obj: the object to inspect
+   * @param Boolean showInternalProperties: (optional) whether to display internal
+   * properties or not.  Defaults to Debug.showInternalProperties
+   * @return LzMessage: the annotated object
+   *
+   * @access private
+   */
+  function inspectInternal (obj, showInternalProperties:Boolean=(void 0)) {
+    var si = (showInternalProperties === (void 0)) ? Debug.showInternalProperties : false;
+    var opl = this.printLength;
+    try {
+      // TODO: [2003-09-12 ptw] either bind or pass as option
+      // Disable printLength for printing the name of a non-object in case
+      // it was abbreviated, otherwise set it short
+      if (! this.isObjectLike(obj)) {
+        this.printLength = Infinity;
+      } else {
+        this.printLength = this.inspectPrintLength;
+      }
+      // Turn off pretty for name
+      var name = this.xmlEscape(this.__String(obj, false));
+      if (! (obj instanceof Object)) {
+        return name;
+      }
+      // Print properties with abbreviated length
+      this.printLength = this.inspectPrintLength;
+
+      var names = [];
+      var indices = this.isArrayLike(obj)?[]:null;
+      this.objectOwnProperties(obj, names, indices, Infinity, si);
+      names.sort(this.caseInsensitiveOrdering);
+      if (indices) { indices.sort(this.numericOrdering); }
+
+      var description = "";
+      var nnames = names.length;
+      var val;
+      var wid = 0;
+      // Align all names if annotating 'weight'
+      if (this.markGeneration > 0) {
+        for (var i = 0; i < nnames; i++) {
+          var keywidth = names[i].length;
+          if (keywidth > wid) { wid = keywidth; }
+        }
+      }
+      if (indices) {
+        var keywidth = ('' + obj.length).length;
+        if (keywidth > wid) { wid = keywidth; }
+      }
+      var last;
+      for (var i = 0; i < nnames; i++) {
+        var key = names[i];
+        // Some runtimes duplicate inherited slots
+        if (key != last) {
+          last = key;
+          val = obj[key];
+          if (si ||
+              ((! this.internalProperty(key)) &&
+               // Only show slots with internal type if showing
+               // internals
+               (! this.internalProperty(this.__typeof(val))))) {
+            description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
+          }
+        }
+      }
+
+      if (indices) {
+        for (var i = 0; i < indices.length; i++) {
+          var key = indices[i];
+          val = obj[key];
+          // Don't bother with ellipses, since we are displaying the key
+          // here
+          description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
+        }
+      }
+    } finally {
+      this.printLength = opl;
+    }
+    // Annotate 'weight' if available
+    if (this.markGeneration > 0) {
+      var leaked = this.annotation.leaked;
+      if (this.isObjectLike(obj) &&
+          (obj['hasOwnProperty'] is Function) &&
+          obj.hasOwnProperty(leaked) &&
+          obj[leaked]) {
+        name += ' (\u00A3' + obj[leaked] + ')'; // 'Pounds'
+      }
+    }
+    if (description != "") { description = ' {\n' + description + '}'; }
+    return name + description;
+  };
+
+  /**
+   * Compute slot description
+   * @access private
+   */
+  function computeSlotDescription (obj, key, val, wid) {
+    var r = key + ':';
+    wid++;
+    try {
+      // Annotate 'weight' if available
+      if (this.markGeneration > 0) {
+        var annotation = this.annotation;
+        var leaked = annotation.leaked;
+        var why = annotation.why;
+        var wf = '        ';
+        wid += wf.length;
+        if ((val is Object) &&
+            (val['hasOwnProperty'] is Function) &&
+            val.hasOwnProperty(leaked) &&
+            val[leaked] &&
+            // only print if charged to parent (or parent was not leaked)
+            ((! obj.hasOwnProperty(leaked)) || (val[why].indexOf(obj[why]) == 0))) {
+          r += this.pad(' (\u00A3' + val[leaked] + ')', wf.length);
+        } else {
+          r += wf;
+        }
+      }
+      var ostr = this.xmlEscape(this.__String(val));
+      // Second, in case __String interns an abbreviated object
+      var id = this.IDForObject(val);
+      r = this.pad(r, wid);
+      r += ' ' + this.console.makeObjectLink(ostr, id);
+    }
+    catch (e) {
+      try {
+        r += this.formatToString(" Error: %w computing description", e);
+      }
+      catch (e) {
+        r += " Error computing description";
+      }
+    }
+    return r;
+  };
+
+  /**
+   ** Utility Functions
+   **/
+
+  /**
+   * Predicate for deciding if an object is 'Object-like' (has
+   * interesting properties)
+   *
+   * @access private
+   */
+  function isObjectLike (obj:*):Boolean {
+    // (N.B., typeof will return 'object' for runtime objects that may
+    // be of interest, even though they are not instances of Object)
+    return obj && ((obj is Object) || typeof(obj) == 'object');
+  }
+
+  /**
+   * Predicate for deciding if an object is 'Array-like' (has a
+   * non-negative integer length property)
+   *
+   * @access private
+   */
+  function isArrayLike (obj:*):Boolean {
+    var ol = obj['length'];
+    return ((typeof(ol) == 'number' || ol is Number) &&
+            ((ol|0) === ol) &&
+            (ol >= 0));
+  }
+
+  /**
+   * Predicate for deciding if an object is 'String-like' (is a
+   * string, String or LzMessage)
+   *
+   * @access private
+   */
+  function isStringLike (obj:*):Boolean {
+    return (typeof obj == 'string') ||
+      (obj is String) ||
+      (obj is LzMessage);
+  }
+
+  /** @access private */
+  function caseInsensitiveOrdering (a:String, b:String):Number {
+    var al = a.toLowerCase();
+    var bl = b.toLowerCase();
+    return (al > bl) - (al < bl);
+  }
+
+  /** @access private */
+  function numericOrdering (a:String, b:String):Number {
+    var al = Number(a);
+    var bl = Number(b);
+    return (al > bl) - (al < bl);
+  }
+
+  /**
+   * Internal property predicate.  Tests to see if str has a prefix in
+   * Debug.internalPropertyPrefixes.
+   * @access private
+   */
+  function internalProperty (str) {
+    // Use the component value of this attribute
+    var ipp = LzDebugService.internalPropertyPrefixes;
+    for (var key in ipp) {
+      if (str.indexOf(ipp[key]) == 0) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  /**
+   * Hash of characters to escape in strings when printPretty is false.
+   * (These are the ECMAScript SingleEscapeCharacter's for String
+   * Literals (7.8.4).
+   * @access private
+   */
+  static var singleEscapeCharacters = {
+    '\\b': '\b',
+    '\\t': '\t',
+    '\\n': '\n',
+    '\\v': '\v',
+    '\\f': '\f',
+    '\\r': '\r',
+    '\\"': '\"',
+    '\\\'': '\'',
+    '\\\\': '\\'
+  };
+
+  /**
+   * Abbreviate a string
+   *
+   * @param String s: the string to abbreviate
+   * @param Number l: the desired length, defaults to Debug.printLength
+   *
+   * @return String: the abbreviated string
+   * @access private
+   */
+  function abbreviate(s:String, l:Number=null):String {
+    if (!l) { l = Debug.printLength; }
+    var ellipsis = '\u2026';
+    if (s.length > (l - ellipsis.length)) {
+      s = s.substring(0, l - ellipsis.length) + ellipsis;
+    }
+    return s;
+  };
+
+  /**
+   * Escape a string
+   *
+   * @param String s: the string to abbreviate
+   * @param Boolean quoted: whether to quote the string or not (and if
+   * you do, to not escape the opposite quote inside the string).
+   * Default false.
+   * @return String: the escaped (and optionally quoted) string
+   *
+   * @access private
+   *
+   * @devnote Intentionally written not using RegEx because some
+   * runtimes do not support RegEx
+   */
+  function stringEscape (s:String, quoted:Boolean=false) {
+    // Have to handle '\\' first.
+    s = s.split('\\').join('\\\\');
+    var np = LzDebugService.singleEscapeCharacters;
+    // quotes are skipped and ignored unless quoted
+    var skip = '"';
+    var quote = "";
+    var ignore = "'";
+    if (quoted) {
+      ignore = "";
+      var singles = s.split("'").length;
+      var doubles = s.split('"').length;
+      if (singles > doubles) {
+        skip = "'";
+        quote = '"';
+      } else {
+        skip = '"';
+        quote = "'";
+      }
+    }
+    for (var rep in np) {
+      var ch = np[rep];
+      if ((ch != '\\') && (ch != skip) && (ch != ignore)) {
+        s = s.split(ch).join(rep);
+      }
+    }
+    return quote + s + quote;
+  };
+
+  /**
+   * Display version info.
+   *
+   * Displays various version information about the running application
+   * such as the URL it was loaded from, the version of the LPS that is
+   * running and the underlying runtime version.
+   */
+  function versionInfo ():void {
+    this.write(LzCanvas.versionInfoString());
+  };
+
+  /**
+   * Format information about an error suitably for reporting a bug.
+   *
+   * This method can be used to create a report suitable for
+   * copy/pasting into a bug report.  To use it, enable backtraces and
+   * debugging, inspect the error message that you believe reveals a
+   * bug, then invoke `Debug.bugReport()` in the debugger.  Copy and
+   * paste the output of that call into your bug report.
+   *
+   * @param * error: An error message or ID.  Defaults to the last error
+   * that was inspected.
+   * @param Boolean verbose: If true, each frame
+   * argument in the backtrace will be inspected.  Defaults to the value
+   * of Debug.showInternalProperties.
+   *
+   * @note By inspecting an error message (by clicking on it), the error
+   * message will be assigned to the Debug environment variable `_`.
+   * Thus to enable a verbose report (which will detail all arguments of
+   * each frame, as opposed to just the `this` argument), invoke as
+   * `Debug.bugReport(_, true)`.
+   */
+  function bugReport (error=null, verbose:Boolean=null) {
+    if (error == null) {
+      with (this.environment) {
         error = _;
       }
     }
-  }
-  if (typeof(error) == 'number') {
-    error = this.ObjectForID(error);
-  }
-  if (! (error instanceof LzSourceMessage)) {
-    Debug.error("You must provide an error to report.  Please inspect an error message and try again.")
-    return;
-  }
-  if (! (('backtrace' in error) && (error.backtrace instanceof LzBacktrace))) {
-    Debug.error("Backtraces must be on to report a bug.  Please enable backtracing and try again.");
-    return;
-  }
-  var inspected = {};
-  function inspect (obj, verbose) {
-    var id = verbose && Debug.IDForObject(obj);
-    if (id && (! (id in inspected))) {
-      inspected[id] = obj;
+    if (typeof(error) == 'number') {
+      error = this.ObjectForID(error);
     }
-    return obj;
-  }
-
-  Debug.format("Please copy the following information into your bug report:\n\n---START OF BUG REPORT---\n\nLPS VERSION INFORMATION:\n");
-  Debug.versionInfo();
-  Debug.format("\nERROR MESSAGE: %s", error);
-  Debug.format("\nERROR BACKTRACE:");
-  error.backtrace.map(
-    function (frame) {
-      Debug.format("\n%w", frame);
-      Debug.format("\n  this: %#w", inspect(frame['this'], true));
-      var args = frame.arguments;
-      for (var i = 0; i < args.length; i++) {
-        Debug.format("\n  arg %2d: %#w", i, inspect(args[i], verbose));
+    if (! (error instanceof LzSourceMessage)) {
+      this.error("You must provide an error to report.  Please inspect an error message and try again.")
+        return;
+    }
+    if (! (error.backtrace is LzBacktrace)) {
+      this.error("Backtraces must be on to report a bug.  Please enable backtracing and try again.");
+      return;
+    }
+    if (verbose == null) { verbose = this.showInternalProperties; }
+    var inspected = {};
+    function inspect (obj, verbose) {
+      var id = verbose && Debug.IDForObject(obj);
+      if (id && (! (id in inspected))) {
+        inspected[id] = obj;
       }
-    });
-  var keys = [];
-  // Present the object's in ID-order so they are easier to find.
-  for (var id in inspected) {
-    keys.push(id);
-  }
-  if (keys.length > 0) {
-    Debug.format("\n\nOBJECT DETAILS:");
-    
-    keys.sort(function (a, b) {
-        var al = parseInt(a);
-        var bl = parseInt(b);
-        return ((al > bl)?1:0) - ((al < bl)?1:0);
-      });
-    for (var i = 0; i < keys.length; i++) {
-      var obj = inspected[keys[i]];
-      Debug.format("\n");
-      // Thus copy/paste will not get the 'hotlink' markup
-      Debug.inspect(obj);
-      Debug.format("\n");
+      return obj;
     }
-  }
-  Debug.format("\n---END OF BUG REPORT---\n");
+
+    this.format("Please copy the following information into your bug report:\n\n---START OF BUG REPORT---\n\nLPS VERSION INFORMATION:\n");
+    this.versionInfo();
+    this.format("\nERROR MESSAGE: %s", error);
+    this.format("\nERROR BACKTRACE:");
+    error.backtrace.map(
+      function (frame) {
+        this.format("\n%w", frame);
+        this.format("\n  this: %#w", inspect(frame['this'], true));
+        var args = frame.arguments;
+        for (var i = 0; i < args.length; i++) {
+          this.format("\n  arg %2d: %#w", i, inspect(args[i], verbose));
+        }
+      });
+    var keys = [];
+    // Present the object's in ID-order so they are easier to find.
+    for (var id in inspected) {
+      keys.push(id);
+    }
+    if (keys.length > 0) {
+      this.format("\n\nOBJECT DETAILS:");
+
+      keys.sort(function (a, b) {
+          var al = parseInt(a);
+          var bl = parseInt(b);
+          return ((al > bl)?1:0) - ((al < bl)?1:0);
+        });
+      for (var i = 0; i < keys.length; i++) {
+        var obj = inspected[keys[i]];
+        this.format("\n");
+        // Thus copy/paste will not get the 'hotlink' markup
+        this.inspect(obj);
+        this.format("\n");
+      }
+    }
+    this.format("\n---END OF BUG REPORT---\n");
+  };
+
+  /**
+   * Fills two arrays with the object's own properties.  If the object
+   * has a non-negative integer 'length' property (i.e., might be
+   * intended as an Array), numeric names that fall between 0 and the
+   * value of length are added to the `indices` array, otherwise they
+   * are added to the `names` array.  If either array is null, those
+   * properties will be omitted altogether.
+   *
+   * @param * obj: the object to examine
+   * @param Array names: the array to append names to
+   * @param Array indices: the array to append indices to
+   * @param Number limit: don't accumulate more than this many properties (used
+   * to limit computation on large objects), default Infinity
+   * @param Boolan nonEnumerable: include platform-dependent
+   * non-enumerable properties
+   *
+   * @access private
+   */
+  function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
+    // Check for 'array-ness'
+    var ol = obj['length'];
+    var alen = ((typeof(ol) == 'number' || ol is Number) &&
+                (Math.floor(ol) === ol) &&
+                (ol >= 0)) ? ol : false;
+    var hopp = obj['hasOwnProperty'] is Function;
+    // Use typeof == 'object' rather than instanceof Object for native prototypes
+    var proto = ((typeof obj['__proto__'] == 'object') ? obj.__proto__ :
+                 ((obj['constructor'] && (typeof obj.constructor.prototype == 'object')) ?
+                  obj.constructor.prototype : false));
+    for (var key in obj) {
+      // Heuristic to find 'interesting' slots, by which we mean slots
+      // that have a non-inherited value.  This should find 'own' slots,
+      // getters, and funny 'native' slots like swf movieclips, etc.
+      var isown = false;
+      if (! proto) {
+        isown = true;
+      } else {
+        try {
+          // Be careful calling hasOwnProperty (it could be a method in
+          // a native prototype that will fail when called on the
+          // prototype itself)
+          isown = obj.hasOwnProperty(key);
+        } catch (e) {
+          try {
+            // Be careful poking at prototypes (consider getters that
+            // may fail when called on the prototype)
+            isown = (obj[key] !== proto[key]);
+          } catch (e) {}
+        }
+      }
+      if (isown) {
+        if ((alen != false) &&
+            // Only `==` here because all keys are strings
+            ((key | 0) == key) &&
+            (0 <= key) && (key < alen)) {
+          if (indices) {
+            // Ensure indices are numbers, not strings
+            indices.push(Number(key));
+            if (--limit == 0) { return; }
+          }
+        } else {
+          if (names) {
+            names.push(key);
+            if (--limit == 0) { return; }
+          }
+        }
+      }
+    }
+  };
 };
 
 /**
- * Fills two arrays with the object's own properties.  If the object
- * has a non-negative integer 'length' property (i.e., might be
- * intended as an Array), numeric names that fall between 0 and the
- * value of length are added to the `indices` array, otherwise they
- * are added to the `names` array.  If either array is null, those
- * properties will be omitted altogether.  @param obj:Object the
- * object to examine @param names:Array the array to append names to
- * @param indices:Array the array to append indices to @param
- * limit:Number don't accumulate more than this many properties (used
- * to limit computation on large objects), default Infinity
- *
- * @access private
- */
-Debug.objectOwnProperties = function (obj, names, indices, limit) {
-  if (!limit) { limit = Infinity; };
-  // Check for 'array-ness'
-  var alen = (('length' in obj) &&
-              (Math.floor(obj.length) === obj.length) &&
-              (obj.length >= 0)) ? obj.length : false;
-  var hopp = 'hasOwnProperty' in obj && obj.hasOwnProperty instanceof Function;
-  // Use typeof == 'object' rather than instanceof Object for native prototypes
-  var proto = (('__proto__' in obj && (typeof obj.__proto__ == 'object')) ? obj.__proto__ :
-               (('constructor' in obj && (typeof obj.constructor.prototype == 'object')) ? obj.constructor.prototype : false));
-  for (var key in obj) {
-    // Heuristic to find 'interesting' slots, by which we mean slots
-    // that have a non-inherited value.  This should find 'own' slots,
-    // getters, and funny 'native' slots like swf movieclips, etc.
-    if ((! proto) ||
-        // Be careful calling hasOwnProperty (it could be a method in
-        // a native prototype that will fail when called on the
-        // prototype itself)
-        this.ignoringErrors(function () { return obj.hasOwnProperty(key);}, this, (! (key in proto))) ||
-        // Be careful poking at prototypes (consider getters that may
-        // fail when called on the prototype)
-        (obj[key] !== this.ignoringErrors(function () { return proto[key];}, this, {}))) {
-      if ((alen != false) &&
-          // Only `==` here because all keys are strings
-          (Math.floor(key) == key) &&
-          (0 <= key) && (key < alen)) {
-        if (indices) {
-          // Ensure indices are numbers, not strings
-          indices.push(Number(key));
-          if (--limit == 0) { return; }
-        }
-      } else {
-        if (names) {
-          names.push(key);
-          if (--limit == 0) { return; }
-        }
-      }
-    }
-  }
-};
+  * The Debug singleton is created in compiler/LzBootstrapDebugService so
+  * a primitive debugger is available during bootstrapping.  It is
+  * replaced here with the more capable debugger
+  *
+  * @access private
+  */
+Debug = new LzDebugService(Debug);
+
+/**
+  * @todo 2006-04-20 ptw: Remove when compiler no longer references
+  * @access private
+  */
+var __LzDebug = Debug;
+
 

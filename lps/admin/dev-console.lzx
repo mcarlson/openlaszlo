@@ -363,7 +363,7 @@
   <method name="displayObjectByID" args="uid">
     <![CDATA[
     // Not very abstract, but it works for now
-    receivingLC.send("lc_appdebug"+app_uid, "evalExpr", "_root.$modules.lz.Debug.displayObj("+uid+")");
+    receivingLC.send("lc_appdebug"+app_uid, "displayObj", uid);
     ]]>
   </method>
 

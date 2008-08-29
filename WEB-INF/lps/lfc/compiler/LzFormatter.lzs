@@ -377,7 +377,7 @@ mixin LzFormatter {
               str = Debug.functionName(value, false);
             }
             if (! str) {
-              str =  'function () {...}';
+              str =  'function () {\u2026}';
             }
           } else if (typeof value == 'number') {
             // Must convert number to string for proper padding

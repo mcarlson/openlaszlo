@@ -1,552 +1,476 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
 /**
-  *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
-  *            Use is subject to license terms.
-  *
-  * @access public
-  * @topic LZX
-  * @subtopic Debugging
-  */
+ *
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ *
+ * @access public
+ * @topic LZX
+ * @subtopic Debugging
+ */
 
 // Messages for the LaszloDebugger
 
 /**
-  * A message is a string with annotations for the objects represented.
-  *
-  * This replaces the bootstrap LzMessage class in
-  * compiler/LzFormatter
-  *
-  * @param String message: initial message
-  * @access private
-  *
-  * @devnote TODO: [2007-09-05 ptw] Convert to class declaration
-  */
-var LzMessage = function LzMessage (message='') {
-  // A Message would like to be a subclass of string, but mutable
-  // TODO: [2006-04-11 ptw] Make this a real class
-  this.constructor = arguments.callee;
+ * A message is a string with annotations for the objects represented.
+ *
+ * This replaces the bootstrap LzMessage class in
+ * compiler/LzFormatter
+ *
+ * @access private
+ *
+ * @devnote A Message would like to be a subclass of string, but
+ * mutable
+ */
+class LzDebugMessage extends LzBootstrapMessage {
+  var objects:Array;
 
-  // can't be in prototype as it would be shared
-  // could be a getter to defer allocation
-  this.objects = [];
-  // defaulted in prototype
-  if (arguments.length > 0) {
-    this.appendInternal('' + message, message);
+  /**
+   * @param String message: initial message
+   */
+  function LzDebugMessage (message:String=null) {
+    // can't be in prototype as it would be shared
+    // could be a getter to defer allocation
+    this.objects = [];
+    super(message);
   }
-}
 
-// A Message would like to be a subclass of string, but mutable
-LzMessage.prototype = new String();
-LzMessage.prototype.message = '';
-LzMessage.prototype.length = 0;
+  // TODO: [2006-04-17 ptw] When javascript has getters and setters:
+  // function get length () { return this.message.length; };
+  // function set length (length) { this.message.length = length; return this.length; };
 
-// TODO: [2006-04-17 ptw] When javascript has getters and setters:
-// LzMessage.prototype.['get length()'] = function () { return this.message.length; };
-// LzMessage.prototype.['set length()'] = function (length) { this.message.length = length; return this.length; };
-
-//---
-// Implements String interface
-/** @access private */
-/**
-  *LzMessage.prototype.charAt = function () { return this.message.charAt.apply(this, arguments); }
-  */
-// Implements String interface
-/** @access private */
-/**
-  *LzMessage.prototype.charCodeAt = function () { return this.message.charCodeAt.apply(this, arguments); }
-  */
-// Implements String interface
-/** @access private */
-/**
-  *LzMessage.prototype.indexOf = function () { return this.message.indexOf.apply(this, arguments); }
-  */
-// Implements String interface
-/** @access private */
-/**
-  *LzMessage.prototype.lastIndexOf = function () { return this.message.lastIndexOf.apply(this, arguments); }
-  */
-// Implements String interface
-/** @access private */
-//---
-LzMessage.prototype.toLowerCase = function () {
-  var msg = new LzMessage(this.message.toLowerCase.apply(this, arguments));
-  msg.objects = this.objects.concat();
-  return msg;
-}
-/**
-  * Implements String interface
-  * @access private
-  */
-LzMessage.prototype.toUpperCase = function () {
-  var msg = new LzMessage(this.message.toUpperCase.apply(this, arguments));
-  msg.objects = this.objects.concat();
-  return msg;
-}
-/**
-  * Implements String interface
-  * @access private
-  */
-// Barf: apply does not work for toString or valueOf !?!?!
-LzMessage.prototype.toString = function (radix) { return this.message.toString(radix); }
-/**
-  * Implements String interface
-  * @access private
-  */
-// Barf: apply does not work for toString or valueOf !?!?!
-LzMessage.prototype.valueOf = function () { return this.message.valueOf(); }
-/**
-  * Implements String interface
-  * @access private
-  */
-LzMessage.prototype.concat = function (...args) { 
-  var msg = new LzMessage(this.message.concat.apply(this, args));
-  var offset = this.message.length;
-  for (var i = 0; i < args.length; i++) {
-    var arg = args[i];
-    if (arg instanceof LzMessage) {
-      var ao = arg.objects;
-      for (var j = 0; j < ao.length; j++) {
-        var od = ao[j];
-        msg.objects.push({id: od.id, start: od.start+offset, end: od.end+offset});
+  // Implements String interface
+  /** @access private */
+  function charAt (index) { return this.message.charAt(index); }
+  // Implements String interface
+  /** @access private */
+  function charCodeAt (index) { return this.message.charCodeAt(index); }
+  // Implements String interface
+  /** @access private */
+  function indexOf (key) { return this.message.indexOf(key); }
+  // Implements String interface
+  /** @access private */
+  function lastIndexOf (key) { return this.message.lastIndexOf(key); }
+  // Implements String interface
+  /** @access private */
+  function toLowerCase () {
+    var msg = new LzMessage(this.message.toLowerCase());
+    msg.objects = this.objects.concat();
+    return msg;
+  };
+  /**
+   * Implements String interface
+   * @access private
+   */
+  function toUpperCase () {
+    var msg = new LzDebugMessage(this.message.toUpperCase());
+    msg.objects = this.objects.concat();
+    return msg;
+  };
+  /**
+   * Implements String interface
+   * @access private
+   */
+  function toString (radix) { return this.message.toString(radix); };
+  /**
+   * Implements String interface
+   * @access private
+   */
+  function valueOf () { return this.message.valueOf(); };
+  /**
+   * Implements String interface
+   * @access private
+   */
+  function concat (...args):LzDebugMessage {
+    var msg = new LzDebugMessage(this.message.concat.apply(this.message, args));
+    var offset = this.message.length;
+    for (var i = 0; i < args.length; i++) {
+      var arg = args[i];
+      if (arg is LzDebugMessage) {
+        var ao = (arg cast LzDebugMessage).objects;
+        for (var j = 0; j < ao.length; j++) {
+          var od = ao[j];
+          msg.objects.push({id: od.id, start: od.start+offset, end: od.end+offset});
+        }
       }
+      offset += String(arg).length;
     }
-    offset += String(arg).length;
+    return msg;
   }
-  return msg;
-}
-/**
-  * Implements String interface
-  * @access private
-  */
-// TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-LzMessage.prototype.slice = function (...args) { return this.message.slice.apply(this, args); }
-/**
-  * Implements String interface
-  * @access private
-  */
-// TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-LzMessage.prototype.split = function (...args) { return this.message.split.apply(this, args); }
-/**
-  * Implements String interface
-  * @access private
-  */
-// TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-LzMessage.prototype.substr = function (...args) { return this.message.substr.apply(this, args); }
-/**
-  * Implements String interface
-  * @access private
-  */
-// TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-LzMessage.prototype.substring = function (...args) { return this.message.substring.apply(this, args); }
+  /**
+   * Implements String interface
+   * @access private
+   */
+  // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
+  function slice (...args):String { return this.message.slice.apply(this.message, args); }
+  /**
+   * Implements String interface
+   * @access private
+   */
+  // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
+  function split (...args):String { return this.message.split.apply(this.message, args); }
+  /**
+   * Implements String interface
+   * @access private
+   */
+  // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
+  function substr (...args):String { return this.message.substr.apply(this.message, args); }
+  /**
+   * Implements String interface
+   * @access private
+   */
+  // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
+  function substring (...args):String { return this.message.substring.apply(this.message, args); }
 
-/**
-  * Appends str to the message.  If obj is passed, it is recorded as an
-  * annotation permitting the object corresponding to the string to be
-  * recovered.
-  * 
-  * @access private
-  * 
-  * @param String str: the representation of an object
-  * @param Object obj: the object represented, or null
-  */
-LzMessage.prototype.appendInternal = function (str, obj=null) {
-  if (obj) {
-    var id = Debug.IDForObject(obj);
-  } else {
-    var id = null;
-  }
-  if (id == null) {
-    this.message += str;
-  } else if (obj instanceof LzMessage) {
-    // If it is already a message, just concatenate it
+  /**
+   * Appends str to the message.  If obj is passed, it is recorded as an
+   * annotation permitting the object corresponding to the string to be
+   * recovered.
+   * 
+   * @access private
+   * 
+   * @param String str: the representation of an object
+   * @param Object obj: the object represented, or null
+   *
+   * @devnote We use ID's rather than the actual object so that the ID
+   * table is the only place where the debugger retains objects (which
+   * means it can be made weak, or flushed to conserve storage).
+   */
+  override function appendInternal (str:String, obj=null) {
+    if (obj != null) {
+      var id = Debug.IDForObject(obj);
+    } else {
+      var id = null;
+    }
+    if (id == null) {
+      this.message += str;
+    } else if (obj is LzDebugMessage) {
+      // If it is already a message, just concatenate it
+      var arg:LzDebugMessage = obj;
       var offset = this.message.length;
-      this.message += obj.message;
-      var ao = obj.objects;
+      this.message += arg.message;
+      var ao = arg.objects;
       for (var j = 0; j < ao.length; j++) {
         var od = ao[j];
         this.objects.push({id: od.id, start: od.start+offset, end: od.end+offset});
       }
-  } else {
-    var start = this.message.length;
-    this.message += str;
-    var end = this.message.length;
-    this.objects.push({id: id, start: start, end: end});
-  }
-  this.length = this.message.length;
-}
-
-/**
-  * Approximates `\+` for Messages
-  * A string representation of each argument is appended to the
-  * message.  Objects are recorded in a fashion that will enable the
-  * representation to be linked back to the object.
-  * 
-  * @param Array * args: the arguments to append to the initial message
-  * 
-  * @access private
-  */
-LzMessage.prototype.append = function (...args) {
-  var len = args.length;
-  for (var i = 0; i < len; i++) {
-    var arg = args[i];
-    // annotate objects and things you have ID'd
-    if ((arg instanceof Object) || (Debug.IDForObject(arg) != null)) {
-      // pretty, no limit, but unique; for write-compatibility
-      var str = Debug.__String(arg, true, Infinity, true);
-      this.appendInternal(str, arg);
     } else {
-      this.appendInternal(String(arg));
+      var start = this.message.length;
+      this.message += str;
+      var end = this.message.length;
+      this.objects.push({id: id, start: start, end: end});
+    }
+    this.length = this.message.length;
+  }
+
+  /**
+   * Approximates `\+` for Messages
+   * A string representation of each argument is appended to the
+   * message.  Objects are recorded in a fashion that will enable the
+   * representation to be linked back to the object.
+   * 
+   * @param Array * args: the arguments to append to the initial message
+   * 
+   * @access private
+   */
+  override function append (...args) {
+    var len = args.length;
+    for (var i = 0; i < len; i++) {
+      var arg = args[i];
+      // annotate objects and things you have ID'd
+      if ((arg is Object) || Debug.isObjectLike(arg) || (Debug.IDForObject(arg) != null)) {
+        // pretty, no limit, but unique; for write-compatibility
+        var str = Debug.__String(arg, true, Infinity, true);
+        this.appendInternal(str, arg);
+      } else {
+        this.appendInternal(String(arg));
+      }
     }
   }
-}
 
-/**
-  * Convert a String to HTML for display in the Debugger by escaping
-  * the HTML characters in the String.
-  * @access private
-  */
-String.prototype.toHTML = function () {
-  return Debug.xmlEscape(this);
-}
-
-/**
- * Convert a message to an array for passing to a remote debugger.
- * @param linkMaker:function(representation:String, id:Number) A
- * function that generates a link to the object with the id using the
- * representation.  Defaults to just returning the object
- *
- * @access private
- */
-LzMessage.prototype.toArray = function (linkMaker=function (rep, id) {return Debug.ObjectForID(id);}) {
-  var msg = this.message;
-  var base = 0;
-  var limit = msg.length;
-  var start = 0;
-  var end = 0;
-  var objs = this.objects
-  var id;
-  var array = []
-  var len = objs.length;
-  for (var i = 0; i < len; i++) {
-    var annot = objs[i];
-    start = annot.start;
-    end = annot.end;
-    id = annot.id;
-    array.push(msg.substring(base, start).toHTML());
-    array.push(linkMaker(msg.substring(start,end).toHTML(), id));
-    base = end;
+  /**
+   * Convert a message to an array for passing to a remote debugger.
+   * @param linkMaker:function(representation:String, id:Number) A
+   * function that generates a link to the object with the id using the
+   * representation.  Defaults to just returning the object
+   *
+   * @access private
+   */
+  function toArray (linkMaker=function (rep, id) {return Debug.ObjectForID(id);}):Array {
+    var msg = this.message;
+    var base = 0;
+    var limit = msg.length;
+    var start = 0;
+    var end = 0;
+    var objs = this.objects
+      var id;
+    var array = []
+      var len = objs.length;
+    for (var i = 0; i < len; i++) {
+      var annot = objs[i];
+      start = annot.start;
+      end = annot.end;
+      id = annot.id;
+      array.push(msg.substring(base, start).toHTML());
+      array.push(linkMaker(msg.substring(start,end).toHTML(), id));
+      base = end;
+    }
+    array.push(msg.substring(base, limit).toHTML());
+    return array;
   }
-  array.push(msg.substring(base, limit).toHTML());
-  return array;
-}
 
-/**
-  * Convert a Message to HTML for display in the Debugger generating
-  * links for each object represented.
-  * @access private
-  */
-LzMessage.prototype.toHTML = function () {
-  return this.toArray(function () {
-      return Debug.makeObjectLink.apply(Debug, arguments);
-    }).join('');
+  /**
+   * Convert a Message to HTML for display in the Debugger generating
+   * links for each object represented.
+   * @access private
+   */
+  function toHTML () {
+    return this.toArray(function (...args) {
+        return Debug.makeObjectLink.apply(Debug, args);
+      }).join('');
+  };
+
+  // Mimic built-in class, which hides all prototype methods
+  // ASSetPropFlags(LzMessage.prototype, null, 1);
 };
 
-// Mimic built-in class, which hides all prototype methods
-//ASSetPropFlags(LzMessage.prototype, null, 1);
+/**
+ * Replace the bootstrap message with the more full-featured debug message
+ */
+var LzMessage = LzDebugMessage;
 
 /**
-  * A SourceMessage wraps a message with a file and line number
-  * @param String file: filename or null
-  * @param Number line: line number or null
-  * @param LzMessage message: the warning message
-  * 
-  * @see LzSourceMessage.format
-  * @access private
-  */
-function LzSourceMessage (file:String=null, line:Number=0, message:String='') {
-  // Append a backtrace if there is one -- skip back to the
-  // $reportSourceWarning or warnInternal frames.
-  if ('backtraceStack' in Debug) {
-    var skip;
-    if ((message instanceof String) && ('$lzsc$b' in message)) {
-      // An uncaught error reported by the window.onerror handler will
-      // have a captured stack
-      Debug.backtraceStack = message.$lzsc$b;
-      skip = 2;
-    } else {
-      var bts = Debug.backtraceStack;
-      var btsl = bts.length;
-      skip = 3;
-      for (var i = btsl - 1; i > skip; i--) {
-        var callee = bts[i].callee;
-        if (callee === $reportSourceWarning ||
-            callee === Debug.warnInternal) {
-          // Skip the caller and the constructor frames too
-          skip = btsl - i + 3;
-          break;
-        }
-      }
-    }
-    if (Debug.backtraceStack.length > skip) {
-      this.backtrace = Debug.backtrace(skip);
-      // Heuristicate file/line from backtrace if available
-      if (file == null && this.backtrace) {
-        var top = this.backtrace.userStackFrame();
-        if (top) {
-          file = top.filename();
-          line = top.lineno();
-        }
-      }
-    }
-  }
-  this.file = file;
-  this.line = line;
-  if (message instanceof LzMessage) {
-    this.message = message;
-  } else {
-    this.message = new LzMessage(message);
-  }
-}
-
-LzSourceMessage.prototype.type = '';
-LzSourceMessage.prototype.color = '#000000';
-
-/* Limit recursion */
-LzSourceMessage.level = 0;
-LzSourceMessage.levelMax = 5;
-
-/**
- * Create a warning from a format string
+ * A SourceMessage wraps a message with a file and line number
  * @param String file: filename or null
  * @param Number line: line number or null
- * @param String control: a format control string
- * @param Array * args: the arguments to the format control
- *
+ * @param LzMessage message: the warning message
+ * 
+ * @see LzSourceMessage.format
  * @access private
  */
-LzSourceMessage.format = function (file:String=null, line:Number=0, control:String='', ...args) {
-  var debug = Debug;
-  var message = debug.formatToString.apply(debug, [control].concat(args));
-  // Heuristicate file/line from args
-  if (file == null) {
-    for (var i = 0; i < args.length; i++) {
-      var arg = args[i];
-      if (arg is LzNode) {
-        file = arg['_dbg_filename'] || null;
-        line = arg['_dbg_lineno'] || 0;
+class LzSourceMessage {
+  var file:String;
+  var line:Number;
+  var backtrace;
+  static var type = '';
+  static var color = '#000000';
+
+
+  function LzSourceMessage (file:String=null, line:Number=0, message:String='') {
+
+    // Append a backtrace if there is one -- skip back to the
+    // $reportSourceWarning or warnInternal frames.
+    if ('backtraceStack' in Debug) {
+      var skip;
+      if ((message is String) && (message['$lzsc$b'])) {
+        // An uncaught error reported by the window.onerror handler will
+        // have a captured stack
+        Debug.backtraceStack = message.$lzsc$b;
+        skip = 2;
+      } else {
+        var bts = Debug.backtraceStack;
+        var btsl = bts.length;
+        skip = 3;
+        for (var i = btsl - 1; i > skip; i--) {
+          var callee = bts[i].callee;
+          if (callee === $reportSourceWarning ||
+              callee === Debug.warnInternal) {
+            // Skip the caller and the constructor frames too
+            skip = btsl - i + 3;
+            break;
+          }
+        }
+      }
+      if (Debug.backtraceStack.length > skip) {
+        this.backtrace = Debug.backtrace(skip);
+        // Heuristicate file/line from backtrace if available
+        if (file == null && this.backtrace) {
+          var top = this.backtrace.userStackFrame();
+          if (top) {
+            file = top.filename();
+            line = top.lineno();
+          }
+        }
       }
     }
-  }
-  return new this.prototype.constructor(file, line, message);
-}
-
-/**
- * Get the location as a string
- * @access private
- */
-LzSourceMessage.prototype.locationString = function () {
-  var str = this.type;
-  if (this.file) {
-    str += ' @';
-    str += this.file;
-    if (this.line) {
-      str += '#';
-      str += this.line;
+    this.file = file;
+    this.line = line;
+    if (message instanceof LzMessage) {
+      this.message = message;
+    } else {
+      this.message = new LzMessage(message);
     }
   }
-  str += ': ';
-  return str;
-}
 
-/**
- * For console logging
- * @access private
- */
-LzSourceMessage.prototype.toArray = function () {
-  var array = [this.locationString()];
-  if (this.message instanceof LzMessage) {
-    return array.concat(this.message.toArray());
+  /* Limit recursion */
+  static var level = 0;
+  static var levelMax = 5;
+
+  /**
+   * Create a warning from a format string
+   * @param String file: filename or null
+   * @param Number line: line number or null
+   * @param String control: a format control string
+   * @param Array * args: the arguments to the format control
+   *
+   * @access private
+   */
+  static var format = function format (file:String=null, line:Number=0, control:String='', ...args) {
+    var debug = Debug;
+    var message = debug.formatToString.apply(debug, [control].concat(args));
+    // Heuristicate file/line from args
+    if (file == null) {
+      for (var i = 0; i < args.length; i++) {
+        var arg = args[i];
+        if (arg is LzNode) {
+          file = arg['_dbg_filename'] || null;
+          line = arg['_dbg_lineno'] || 0;
+        }
+      }
+    }
+    return new this(file, line, message);
   }
-  return array.concat('' + this.message);
-}
+
+  /**
+   * Get the location as a string
+   * @access private
+   */
+    function locationString (prefix:String='') {
+      var str = prefix;
+      if (this.file) {
+        if (str.length) { str += ' '; }
+        str += '@';
+        str += this.file;
+        if (this.line) {
+          str += '#';
+          str += this.line;
+        }
+      }
+      if (str.length) { str += ': '; }
+      return str;
+    }
+
+  /**
+   * For console logging
+   * @access private
+   */
+  function toArray () {
+    var array = [this.locationString(this.constructor.type)];
+    if (this.message is LzMessage) {
+      return array.concat(this.message.toArray());
+    }
+    return array.concat('' + this.message);
+  }
+
+  /**
+   * Internal implementation of toString and toHTML
+   * @access private
+   */
+  function toStringInternal (conversion) {
+    return this.locationString(this.constructor.type) + this.message[conversion]();
+  }
+
+  /**
+   * @access private
+   */
+  var _dbg_name = function () {
+    // Omit type from _dbg_name, since it is implicit in the class
+    return this.locationString('') + this.message;
+  }
+
+  /**
+   * Convert a SourceMessage to a String
+   * @access private
+   */
+  // TODO: [2005-05-08 ptw] (LPP-5934) When toString is declared
+  // public, remove the swf9 special-case
+    if ($swf9) {
+      prototype.toString = function () {
+        // SourceMessages auto-append a newline (although they really just want to
+        // prepend a fresh-line)
+        return this.toStringInternal('toString') + '\n';
+      }
+    } else {
+      function toString () {
+        // SourceMessages auto-append a newline (although they really just want to
+        // prepend a fresh-line)
+        return this.toStringInternal('toString') + '\n';
+      }
+    }
+
+
+  /**
+   * Convert a SourceMessage to HTML
+   * @access private
+   */
+  function toHTML () {
+    // make the entire sourceMessage object inspectable
+    var id = Debug.IDForObject(this);
+    // SourceMessages auto-append a newline (although they really just want to
+    // prepend a fresh-line)
+    return Debug.makeObjectLink(this.toStringInternal('toHTML'), id, this.constructor) + '\n';
+  }
+};
 
 /**
-  * Internal implementation of toString and toHTML
-  * @access private
-  */
-LzSourceMessage.prototype.toStringInternal = function (conversion) {
-  return this.locationString() + this.message[conversion]();
-}
-
-/**
-  * @access private
-  */
-LzSourceMessage.prototype._dbg_name = function () {
-  return this.toStringInternal('toString');
-}
-
-/**
- * Convert a SourceMessage to a String
+ * A Warning is a sourceMessage with the tag 'WARN'
  * @access private
  */
-LzSourceMessage.prototype.toString = function () {
-  // SourceMessages auto-append a newline (although they really just want to
-  // prepend a fresh-line)
-  return this.toStringInternal('toString') + '\n';
-}
+class LzWarning extends LzSourceMessage {
+  static var type = 'WARNING';
+  static var color = '#ff9900';
+
+  function LzWarning (file:String=null, line:Number=0, message:String='') {
+    super(file, line, message);
+  }
+
+  static var format = LzSourceMessage.format;
+};
 
 /**
- * Convert a SourceMessage to HTML
+ * An Error is a sourceMessage with the tag 'ERROR'
  * @access private
  */
-LzSourceMessage.prototype.toHTML = function () {
-  // make the entire sourceMessage object inspectable
-  var id = Debug.IDForObject(this);
-  // SourceMessages auto-append a newline (although they really just want to
-  // prepend a fresh-line)
-  return Debug.makeObjectLink(this.toStringInternal('toHTML'), id, this) + '\n'
-}
+class LzError extends LzSourceMessage {
+  static var type = 'ERROR';
+  static var color = '#ff0000';
+
+  function LzError (file:String=null, line:Number=0, message:String='') {
+    super(file, line, message);
+  }
+
+  static var format = LzSourceMessage.format;
+};
 
 /**
-  * A Warning is a sourceMessage with the tag 'WARN'
-  * @access private
-  */
-function LzWarning (file, line, message) {
-  // super.apply(arguments);
-  LzSourceMessage.apply(this, arguments);
-}
+ * An Info is a sourceMessage with the tag 'INFO'
+ * @access private
+ */
+class LzInfo extends LzSourceMessage {
+  static var type = 'INFO';
+  static var color = '#0066cc';
 
-LzWarning.prototype = new LzSourceMessage();
-LzWarning.prototype.constructor = LzWarning;
-LzWarning.format = LzSourceMessage.format;
-LzWarning.prototype.type = 'WARNING';
-LzWarning.prototype.color = '#ff9900';
+  function LzInfo  (file:String=null, line:Number=0, message:String='') {
+    super(file, line, message);
+  }
 
-
-/**
-  * An Error is a sourceMessage with the tag 'ERROR'
-  * @access private
-  */
-function LzError (file, line, message) {
-  // super.apply(arguments);
-  LzSourceMessage.apply(this, arguments);
-}
-
-LzError.prototype = new LzSourceMessage();
-LzError.prototype.constructor = LzError;
-LzError.format = LzSourceMessage.format;
-LzError.prototype.type = 'ERROR';
-LzError.prototype.color = '#ff0000';
+  static var format = LzSourceMessage.format;
+};
 
 /**
-  * An Info is a sourceMessage with the tag 'INFO'
-  * @access private
-  */
-function LzInfo (file, line, message) {
-  // super.apply(arguments);
-  LzSourceMessage.apply(this, arguments);
-}
+ * A Debug is a sourceMessage with the tag 'DEBUG'
+ * @access private
+ */
+class LzDebug extends LzSourceMessage {
+  static var type = 'DEBUG';
+  static var color = '#00cc00';
 
-LzInfo.prototype = new LzSourceMessage();
-LzInfo.prototype.constructor = LzInfo;
-LzInfo.format = LzSourceMessage.format;
-LzInfo.prototype.type = 'INFO';
-LzInfo.prototype.color = '#0066cc';
+  function LzDebug  (file:String=null, line:Number=0, message:String='') {
+    super(file, line, message);
+  }
 
-/**
-  * A Debug is a sourceMessage with the tag 'DEBUG'
-  * @access private
-  */
-function LzDebug (file, line, message) {
-  // super.apply(arguments);
-  LzSourceMessage.apply(this, arguments);
-}
-
-LzDebug.prototype = new LzSourceMessage();
-LzDebug.prototype.constructor = LzDebug;
-LzDebug.format = LzSourceMessage.format;
-LzDebug.prototype.type = 'DEBUG';
-LzDebug.prototype.color = '#00cc00';
-
-// Expose these as Debug methods
-
-// Debug.warnInternal in kernel
-
-/**
-  * Display a warning message on the console.
-  *
-  * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-  * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
-  *
-  * @param string control: A control string where % indicates a
-  * subsequent argument is to be substituted
-  *
-  * @param Array * args: Any number of arguments to be formatted
-  * according to the control string
-  */
-Debug.warn = function (control:String, ...args) {
-  return this.warnInternal.apply(this, [LzWarning, control].concat(args));
-}
-/**
-  * Display an error message on the console.
-  *
-  * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-  * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
-  *
-  * @param string control: A control string where % indicates a
-  * subsequent argument is to be substituted
-  *
-  * @param Array * args: Any number of arguments to be formatted
-  * according to the control string
-  */
-  Debug.error = function (control:String, ...args) {
-    return this.warnInternal.apply(this, [LzError, control].concat(args));
-}
-
-/**
-  * Display an informational message on the console.
-  *
-  * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-  * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
-  *
-  * @param string control: A control string where % indicates a
-  * subsequent argument is to be substituted
-  *
-  * @param Array * args: Any number of arguments to be formatted
-  * according to the control string
-  */
-Debug.info = function (control:String, ...args) {
-  return this.warnInternal.apply(this, [LzInfo, control].concat(args));
-}
-
-/**
-  * Display a debugging message on the console.
-  *
-  * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-  * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
-  *
-  * @param string control: A control string where % indicates a
-  * subsequent argument is to be substituted
-  *
-  * @param Array * args: Any number of arguments to be formatted
-  * according to the control string
-  */
-Debug.debug = function (control:String, ...args) {
-  return this.warnInternal.apply(this, [LzDebug, control].concat(args));
+  static var format = LzSourceMessage.format;
 };
 
 
-/**
- * Deprecation message.
- * @param lznode obj: The object the deprecated method is being called
- * on (usually `this`).
- * @param Function method: The method being called (usually
- * arguments.callee)
- * @param Function method: The replacement method
- * @access private
- */
-Debug.deprecated = function (obj, method, replacement) {
-  Debug.info("%w.%s is deprecated.  Use %w.%s instead", obj, method, obj, replacement);
-}

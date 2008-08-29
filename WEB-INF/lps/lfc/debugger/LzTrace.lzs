@@ -16,20 +16,18 @@
   * A Trace is a warning with the tag 'TRACE'
   * @access private
   */
-function LzTrace (file, line, message) {
-  // super.apply(arguments);
-  LzSourceMessage.apply(this, arguments);
-}
+class LzTrace extends LzSourceMessage {
+  static var type = 'TRACE';
+  // Same color as Debug.debug
+  static var color = '#00cc00';
 
-LzTrace.prototype = new LzSourceMessage();
-LzTrace.prototype.constructor = LzTrace;
+  function LzTrace (file:String=null, line:Number=0, message:String='') {
+    super(file, line, message);
+  }
 
-LzTrace.format = LzSourceMessage.format;
+  static var format = LzSourceMessage.format;
+};
 
-LzTrace.prototype.type = 'TRACE';
-
-// Same color as Debug.debug
-LzTrace.prototype.color = '#00cc00';
 
 /**
   * Create a trace message from a format string

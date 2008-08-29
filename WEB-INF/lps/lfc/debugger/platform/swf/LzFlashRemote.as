@@ -12,198 +12,184 @@
   *            Use is subject to license terms.
   */
 
+class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
+#pragma "warnUndefinedReferences=true"
+  var consoleConnected = false;
 
-if ($debug) {
+  function LzFlashRemoteDebugConsole () {
+    super();
+    // query arg lzconsoledebug indicates that we want to run the console debugger
+    // query arg lzappuid is an optional application connection id
+    // Debug.log('startupConsoleRemote executing');
+    this.makeConsoleRDBLoader();
+    this.createLocalConnections();
+    this.openConsoleConnection();
+  };
 
-} else {
-    /** Define placeholder Debug object to forward messages to console
-      * @access private
-      */
-    Debug = new Object;
-    
-    /** @access private */
-    __LzDebug = Debug;
-}
+  var receivingLC:LocalConnection;
 
-Debug.consoleConnected = false;
-Debug.consoleMsgQueue = [];
-
-/**
-  * @access private
-  */
-Debug.queueConsoleMsg = function (msg) {
-    this.consoleMsgQueue[this.consoleMsgQueue.length] = msg;
-}
-
-/**
-  * @access private
-  */
-Debug.sendQueuedConsoleMsgs = function () {
-    for (var i = 0; i < this.consoleMsgQueue.length; i++) {
-        var msg = this.consoleMsgQueue[i];
-        this.cdSendMsg(msg);
+  /**
+   * @access private
+   */
+  override function addHTMLText (msg) {
+    if (! this.consoleConnected) {
+      this.saved_msgs.push(msg);
+      return;
     }
-}
-
-/**
-  * @access private
-  */
-Debug.cdSendMsg = function (data) {
-    if (this.consoleConnected) {
-        if (data instanceof LzSourceMessage) {
-            //Debug.write("sending warning", data);
-            this.receivingLC.send(this.consolename, "debugWarning", data.file, data.line, data.toHTML());
-        } else if (data instanceof LzMessage) {
-            //Debug.write("sending message", data.toString());
-            this.receivingLC.send(this.consolename, "debugResult", data.toHTML(), null);
-        } else {
-            //Debug.write("sending data", data);
-            this.receivingLC.send(this.consolename, "debugResult", data, null);
-        }
+    if (msg is LzSourceMessage) {
+      //Debug.write("sending warning", msg);
+      this.receivingLC.send(this.consolename, "debugWarning", msg.file, msg.line, msg.toHTML());
+    } else if (msg is LzMessage) {
+      //Debug.write("sending message", msg.toString());
+      this.receivingLC.send(this.consolename, "debugResult", msg.toHTML(), null);
     } else {
-        this.queueConsoleMsg(data);
+      //Debug.write("sending msg", msg);
+      this.receivingLC.send(this.consolename, "debugResult", msg, null);
     }
-}
+  };
 
-/**
-  * @access private
-  */
-Debug.cdEvalExpression = function (expr) {
-    Debug.inEvalRequest = true;
-    var req = "foo.lzx?lzr=swf8&lzt=eval&lz_script="+escape("#file evalString\n#line 0\n" + expr);
-    Debug.crdbloader.loadMovie( req );
-}
+  /**
+   * @access private
+   */
+  override function addText (msg) {
+    if (! this.consoleConnected) {
+      this.saved_msgs.push(msg);
+      return;
+    }
+    var str = '' + msg;
+    try {
+      if (msg && msg['toHTML'] is Function) {
+        str = msg.toHTML();
+      } else {
+        str = String(msg).toHTML();
+      }
+    } catch (e) {};
+    this.addHTMLText(str);
+  };
 
-/**
-  * @access private
-  */
-Debug.makeConsoleRDBLoader = function () {
+  /**
+   * @access private
+   */
+  function echo (str, newLine:Boolean=true) {
+    this.addHTMLText('<font color="#00CC00">' + str + '</font>' + (newLine?'\n':''));
+  }
+
+  /**
+   * @access private
+   */
+  override function makeObjectLink (rep, id:Number, attrs=null) {
+    var color = '#0000ff';
+    if (attrs && attrs.color) { color = attrs.color };
+    if (id != null) {
+      // Note this is invoking a trampoline in the console that will
+      // call back to us to display the object
+      return '<a href="asfunction:_root.canvas.displayObjectByID,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
+    }
+    return rep;
+  };
+
+  /** @access private */
+  var evalcount = 0;
+
+  /**
+   * @access private
+   */
+  override function doEval (expr:String) {
+    // Echo input to output
+    this.echo(String(expr).toHTML());
+    try {
+      var req = "__remote-debugger.lzx?lzr=swf8&lzt=eval&lz_script="+escape("#file remote-eval-" + (this.evalcount++) + "\n#line 0\n" + expr);
+      this.crdbloader.loadMovie( req );
+//       with (Debug.environment) {
+//         var value = window.eval(expr);
+//       }
+//       Debug.displayResult(value);
+    } catch (e) {
+      Debug.error(e);
+    }
+  };
+
+  /**
+   ** Platform-specific bits
+   **/
+
+  /** @access private */
+  var crdbloader;
+
+  /**
+   * @access private
+   */
+  function makeConsoleRDBLoader () {
     // use a movieclip for loading executable code
     this.crdbloader =_root.attachMovie( "empty" , 'lzconsoledebugloader' , 9259 );
-}
+  };
 
+  /**
+   * The console sends to indicate it is alive and listening.
+   * @access private
+   */
+  function consoleAlive (val) {
+    this.consoleConnected = true;
+    // Replay saved messages
+    var sm = this.saved_msgs;
+    var sml = sm.length;
+    for (var i = 0; i < sml; i++) {
+      this.addText(sm[i]);
+    }
+  };
 
-/**
-  * @access private
-  * query arg lzconsoledebug indicates that we want to run the console debugger
-  * query arg lzappuid is an optional application connection id
-  * 
-  */
-Debug.startupConsoleRemote = function () {
-  if (typeof(lzconsoledebug) != 'undefined') {
-    Debug.write('startupConsoleRemote executing');
-    Debug.consoleDebug = true;
-    Debug.makeConsoleRDBLoader();
-    Debug.createLocalConnections();
-    Debug.openConsoleConnection();
-    // redefine Debug.addText to output to the remote connection
-    // @keywords private -- appease doc tool doc tool
-    Debug.addHTMLText = function (val) {
-      Debug.cdSendMsg(val);
-    };
-    // @keywords private -- appease doc tool doc tool
-    Debug.addText = function (msg) {
-      var str;
-      if (msg && 'toHTML' in msg) {
-        str = msg.toHTML();
-      } else if ('toHTML' in String) {
-        str = String(msg).toHTML();
-      } else {
-        str = '' + msg;
-      }
-      this.addHTMLText(str);
-    };
-    // @keywords private -- appease doc tool doc tool
-    Debug.displayObj = function (id) {
-        var obj = this.ObjectForID(id);
-        // Make it look like you executed a command, even though
-        // you don't need to compile to do this
-        this.freshPrompt();
-        this.addHTMLText(this.inspectInternal(obj));
-    };
-    // @keywords private -- appease doc tool doc tool
-    Debug.makeObjectLink = function (rep, id=Debug.IDForObject(rep), attrs=null) {
-      var color = '#0000ff';
-      if (attrs && attrs.color) { color = attrs.color };
-      if (id != null) {
-        return '<a href="asfunction:_root.canvas.displayObjectByID,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
-      }
-      return rep;
-    };
-  }
-}
+  /** @access private */
+  var listenername;
+  /** @access private */
+  var consolename;
 
-/**
-  * @access private
-  */
-// The console sends to indicate it is alive and listening.
-Debug.consoleAlive = function(val) { 
-    Debug.consoleConnected = true;
-    Debug.sendQueuedConsoleMsgs();
-}
-
-
-/**
-  * @access private
-  */
-Debug.localConnectionPropertyList = function(objid) { 
-    //
-}
-
-
-/**
-  * @access private
-  */
-Debug.createLocalConnections = function () {
+  /**
+   * @access private
+   */
+  function createLocalConnections () {
     //var appname = lz.Browser.getBaseURL().file;
     // [TODO hqm 2006-05: use a constant app name of "XXX", while we debug
     // the remote debugger]
     var appname = "XXX";
-    Debug.listenername = "lc_appdebug"+appname
-    Debug.consolename = "lc_consoledebug"+appname
-}
+    this.listenername = "lc_appdebug"+appname;
+    this.consolename = "lc_consoledebug"+appname;
+  };
 
-/**
-  * @access private
-  */
-Debug.openConsoleConnection = function () {
+  /**
+   * @access private
+   */
+  function writeConsoleInitMessage () {
+    if (typeof(LzCanvas) != 'undefined') {
+      this.addText("connection from app: \n" + LzCanvas.versionInfoString());
+    } else {
+      this.addText("connection from app: " +
+                   //lz.Browser.getLoadURLAsLzURL() +
+                   " ['canvas' has not been defined yet, eval won't work] ");
+    }
+  };
+
+  /**
+   * @access private
+   */
+  function openConsoleConnection () {
     //this.write("Application: "+lz.Browser.getLoadURLAsLzURL()+" connected to debug console.");
-    this.receivingLC = new LocalConnection();
+    var lc = new LocalConnection();
+    var that = this;
 
     // Set up RPC functions:
     // hook for evaluating an expression
-    this.receivingLC.evalExpr = this.cdEvalExpression;
-    // hook for getting the list of property names of an object, by id
-    this.receivingLC.propList = this.localConnectionPropertyList;
+    lc.evalExpr = function (...args) { that.doEval.apply(that, args) };
+    lc.displayObj = function (...args) { Debug.displayObj.apply(Debug, args); }
+    // Unused
+//     // hook for getting the list of property names of an object, by id
+//     lc.propList = that.localConnectionPropertyList;
     // signal from console that the console is up and listening
-    this.receivingLC.consoleAlive = this.consoleAlive;
+    lc.consoleAlive = function (...args) { that.consoleAlive.apply(that, args) };
 
-    this.receivingLC.connect(this.listenername);
+    this.receivingLC = lc;
+
+    lc.connect(this.listenername);
     this.writeConsoleInitMessage();
+  };
 
-    for (var i = 0; i < this.saved_msgs.length; i++) {
-        this.cdSendMsg(this.saved_msgs[i]);
-    }
-
-}
-
-
-
-/**
-  * @access private
-  */
-Debug.writeConsoleInitMessage = function () {
-    if (typeof(canvas) != 'undefined') {
-        this.cdSendMsg("connection from app: " +
-                       lz.Browser.getLoadURLAsLzURL() + 
-                       ", build:  "+ canvas.lpsbuild + 
-                       ", lpsversion: "+ canvas.lpsversion + 
-                       ", lpsrelease: "+ canvas.lpsrelease +
-                       ", runtime: " + canvas.runtime);
-    } else {
-        this.cdSendMsg("connection from app: " +
-                       //lz.Browser.getLoadURLAsLzURL() +
-                       " ['canvas' has not been defined yet, eval won't work] ");
-    }
-}
-
+};

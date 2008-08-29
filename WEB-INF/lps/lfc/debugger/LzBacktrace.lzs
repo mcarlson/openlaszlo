@@ -163,7 +163,7 @@ LzBacktrace.prototype.toStringInternal = function(printer=function (o) { return 
     backtrace += printer(this[i]) + sep;
   }
   // Trim trailing sep
-  if (backtrace != '') {
+  if (backtrace != '' && i < 0) {
     backtrace = backtrace.substring(0, backtrace.length - sep.length);
   }
   backtrace = Debug.abbreviate(backtrace, length);

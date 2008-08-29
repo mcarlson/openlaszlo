@@ -338,7 +338,7 @@ if ($debug) {
 function _dbg_name (){
     var name = Debug.formatToString("%0.48w.%s()", this.c, this.m);
     if (this[0]) {
-      name += Debug.formatToString("/* handles %w%s */", this[0], this[1]?" ...":"");
+      name += Debug.formatToString("/* handles %w%s */", this[0], this[1]?" \u2026":"");
     }
     return name;
 }
