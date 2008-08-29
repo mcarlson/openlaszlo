@@ -352,11 +352,9 @@ dynamic public class LzSprite extends Sprite {
             }
 
             // If this.showhandcursor is null, inherit value from LzMouseKernel.showhandcursor
-            if (this.clickable) {
+            if (this.clickable && this.clickbutton) {
                 this.clickbutton.useHandCursor = (showhandcursor == null) ? LzMouseKernel.showhandcursor : showhandcursor;
             }
-
-
 
       }
 
