@@ -11,9 +11,8 @@
 
 <para>This chapter explains the <indexterm><primary>richinputtext</primary></indexterm><sgmltag class="element">&lt;richinputtext&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: richinputtext-->
- component, which  allows you to include and manipulate html-formatted text in your applications. This diagram describes the architecture of the rich text editor:</para>
+ component, which  allows you to include and manipulate html-formatted text in your applications.</para>
 
-<informalfigure><mediaobject><imageobject><imagedata fileref="images/object_model.png"/></imageobject></mediaobject></informalfigure>
 <para>
 To use rich this component, include the line:</para>
 <programlisting>
