@@ -154,6 +154,24 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   };
 
   /**
+   * Evaluate an expression (using the console interface to compile if necessary)
+   * @access private
+   */
+  function doEval (expr) {
+    this.freshPrompt();
+    this.console.doEval(expr);
+  };
+
+
+  /**
+   * Trampoline to console
+   * @access private
+   */
+  function clear () {
+    this.console.clear();
+  }
+
+  /**
    * Display an object from an ID
    *
    * Used by makeObjectLink callback
@@ -1199,9 +1217,11 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   function bugReport (error=null, verbose:Boolean=null) {
     if (error == null) {
-      with (this.environment) {
-        error = _;
-      }
+      try {
+        with (this.environment) {
+          error = _;
+        }
+      } catch (e) {}
     }
     if (typeof(error) == 'number') {
       error = this.ObjectForID(error);

@@ -72,6 +72,11 @@ class LzBootstrapDebugConsole {
   };
 
   /**
+   * Clear the console
+   */
+  function clear () { };
+
+  /**
    * Echo to the console in the debugger font
    *
    * @param String str: what to echo

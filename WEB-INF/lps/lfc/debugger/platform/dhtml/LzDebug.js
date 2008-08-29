@@ -37,6 +37,14 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
   };
 
   /**
+   * Clear the console
+   */
+  override function clear () {
+    var dw = this.DebugWindow;
+    dw.document.body.innerHTML = '';
+  };
+
+  /**
    * @access private
    */
   override function addText (msg) {
@@ -84,7 +92,7 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
    *
    * @access private
    */
-  override function doEval (str:String) {
+  override function doEval (expr:String) {
 #pragma "warnUndefinedReferences=false"
     // Echo input to output
     this.echo(String(expr).toHTML());
@@ -180,15 +188,6 @@ class LzDHTMLDebugService extends LzDebugService {
         }
       }
     }
-  };
-
-  /**
-   * Evaluate an expression
-   * @access private
-   */
-  function doEval (expr) {
-    this.freshPrompt();
-    this.console.doEval(expr);
   };
 
   /**
