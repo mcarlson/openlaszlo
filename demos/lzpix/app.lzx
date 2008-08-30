@@ -263,7 +263,9 @@
                 var lc = this.ph.clones[ this.ph.clones.length-1 ];
                 //Debug.write("ondata ( dataset ): lc .......................................",lc);                
                 this.doneDel.unregisterAll();
-                this.doneDel.register( lc, "oninit" );
+                if (lc != null) {
+                    this.doneDel.register( lc, "oninit" );
+                }
             </method>
                         
             <method name="initialReplicationDone" args="ignore=null">
