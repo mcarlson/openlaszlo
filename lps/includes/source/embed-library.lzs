@@ -9,5 +9,6 @@ try {
 #include "iframemanager.js"
 #include "mousewheel.js"
 #include "lzhistory.js"
+#include "regexp.js"
 // Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.  Use is
 // subject to license terms.

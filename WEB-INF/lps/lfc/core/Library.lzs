@@ -9,6 +9,7 @@
 
 #include "core/LzConstants.lzs"
 #include "core/LzDefs.lzs"
+#include "core/LzCache.lzs"
 
 if ($swf9) {
     #include "core/dummyclasses.js"
@@ -16,7 +17,6 @@ if ($swf9) {
 #include "core/LzEventable.lzs"
 #include "core/PresentationTypes.lzs"
 #include "core/LzNode.lzs"
-
 
 if ($swf9) {
 } else {

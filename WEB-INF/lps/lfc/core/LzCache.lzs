@@ -1,0 +1,137 @@
+/**
+  * @copyright Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic LFC
+  * @subtopic Helpers
+  * @access private
+  * @author abargull
+  */
+
+/**
+  * A simple size-limited cache for the non-undefined objects.
+  * @access private
+  */
+final class LzCache {
+    /** @access private */
+    private const size :uint;
+    /** @access private */
+    private const slots :uint;
+    /** @access private */
+    private const destroyable: Boolean;
+    
+    /** @access private */
+    private var capacity :int;
+    /** @access private */
+    private var curslot :int;
+    /** @access private */
+    private var data :Array = null;
+    
+    /**
+      * Constructs a new cache.
+      * 
+      * @param unit size: size per slot
+      * @param uint slots: total number of slots
+      * @param Boolean destroyable: if true, "destroy" will be called 
+      * on the cached objects when they are removed
+      * @access private
+      */
+    public function LzCache (size:uint = 16, slots:uint = 2, destroyable:Boolean = true) {
+        this.size = size;
+        this.slots = slots;
+        this.destroyable = destroyable;
+        this.clear();
+    }
+    
+    /**
+      * Clears all cached contents and resets the cache to its initial state.
+      * 
+      * @access private
+      */
+    public function clear () :void {
+        this.curslot = 0;
+        this.capacity = 0;
+        var sl:int = this.slots;
+        if (! this.data) this.data = new Array(sl);
+        var d:Array = this.data;
+        for (var i:int = 0; i < sl; ++i) {
+            if (this.destroyable) {
+                var dobj:Object = d[i];
+                for (var k:String in dobj) {
+                    dobj[k].destroy();
+                }
+            }
+            d[i] = {};
+        }
+    }
+    
+    /**
+      * @access private
+      */
+    private function ensureSlot() :void {
+        if (++this.capacity > this.size) {
+            var nexts:int = (this.curslot + 1) % this.slots;
+            var d:Array = this.data;
+            
+            if (this.destroyable) {
+                var dobj:Object = d[nexts];
+                for (var k:String in dobj) {
+                    dobj[k].destroy();
+                }
+            }
+            d[nexts] = {};
+            
+            this.curslot = nexts;
+            this.capacity = 1;
+        }
+    }
+    
+    /**
+      * Store new entry 'val' with 'key' in the cache.
+      * 
+      * @param String key: the identifier for the cache-entry
+      * @param * val: a non-undefined object to cache
+      * @return *: the previous cached entry with key 'key', if any
+      * @access private
+      */
+    public function put (key:String, val:*) :* {
+        var old:* = this.get(key);
+        if (old === void(0)) {
+            // check capacity
+            this.ensureSlot();
+        }
+        this.data[this.curslot][key] = val;
+        
+        return old;
+    }
+    
+    /**
+      * Retrieve entry 'key' from cache.
+      * 
+      * @param String key: the cache-entry identifier
+      * @return *: the cached object, undefined otherwise
+      * @access private
+      */
+    public function get (key:String) :* {
+        var sl:int = this.slots;
+        var cs:int = this.curslot;
+        var d:Array = this.data;
+        for (var i:int = 0; i < sl; ++i) {
+            var idx:int = (cs + i) % sl;
+            var val:* = d[idx][key];
+            if (val !== void(0)) {
+                if (idx != cs) {
+                    // delete old reference
+                    delete d[idx][key];
+                    // check capacity
+                    this.ensureSlot();
+                    // copy to current "data"-slot
+                    // (curslot may have changed, so use explicitly)
+                    d[this.curslot][key] = val;
+                }
+                return val;
+            }
+        }
+        return void(0);
+    }
+}

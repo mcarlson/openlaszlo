@@ -32,3 +32,4 @@
 #include "kernel/swf/LzScreenKernel.as"
 #include "kernel/swf/LzContextMenuKernel.lzs"
 #include "kernel/swf/dojo/Library.lzs"
+#include "kernel/swf/LzRegExp.lzs"

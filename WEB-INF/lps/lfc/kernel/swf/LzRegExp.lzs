@@ -1,0 +1,232 @@
+/**
+  * LzRegExp.as
+  *
+  * @copyright Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @topic Kernel
+  * @subtopic AS2
+  * @author abargull
+  */
+
+/**
+  * @access private
+  */
+final class JSRegExp {
+    /** @access private */
+    static var uid_counter :uint = 0;
+    
+    /** @access private */
+    private const uid :uint;
+    /** @access private */
+    var __isready:Boolean = false;
+    /** @access private */
+    var __jsobj:Boolean = false;
+    
+    /**
+      * @access private
+      */
+    function JSRegExp () {
+        this.uid = JSRegExp.uid_counter++;
+    }
+    
+    /**
+      * @access private
+      */
+    private function create (pattern:String, flags:String) :void {
+        this.__jsobj = true;
+        var res = flash.external.ExternalInterface.call("lz.embed.regex.create", this.uid, 
+                    RegExp.__mask(pattern), RegExp.__mask(flags));
+        if (res === true) {
+            this.__isready = true;
+        } else if ($debug) {
+            Debug.warn(res);
+        }
+    }
+    
+    /**
+      * @access private
+      */
+    function destroy () :void {
+        this.__isready = false;
+        if (this.__jsobj) {
+            flash.external.ExternalInterface.call("lz.embed.regex.remove", this.uid);
+            this.__jsobj = false;
+        }
+    }
+}
+
+/**
+  * @access public
+  */
+public final class RegExp {
+    /** @access private */
+    static var cache :LzCache = new LzCache();
+    
+    /** @access private */
+    private var jsre :JSRegExp;
+    /** @access private */
+    private const flags :String;
+    
+    /** @access public */
+    public const source :String;
+    /** @access public */
+    public const global :Boolean;
+    /** @access public */
+    public const ignoreCase :String;
+    /** @access public */
+    public const multiline :Boolean;
+    /** @access public */
+    public var lastIndex :int;
+    
+    /**
+      * @access public
+      */
+    public function RegExp (pattern:String!, flags:String! = "") {
+        this.source = pattern;
+        this.flags = flags;
+        this.global = flags.indexOf("g") >= 0;
+        this.ignoreCase = flags.indexOf("i") >= 0;
+        this.multiline = flags.indexOf("m") >= 0;
+        this.lastIndex = 0;
+        this.jsre = null;
+    }
+    
+    /**
+      * @access public
+      */
+    public function toString () :String {
+        return "/" + this.source + "/" + this.flags;
+    }
+    
+    /**
+      * @access private
+      */
+    private function getJSRe () :JSRegExp {
+        var key :String = this.source + "$*" + this.flags;
+        var jsre :JSRegExp = RegExp.cache.get(key);
+        if (! jsre) {
+            jsre = new JSRegExp();
+            jsre.create(this.source, this.flags);
+            RegExp.cache.put(key, jsre);
+        }
+        
+        return jsre;
+    }
+    
+    /**
+      * @access private
+      */
+    function __call (fn:String, ...args) :* {
+        if (! this.jsre) this.jsre = this.getJSRe();
+        else if (! this.jsre.__jsobj) this.jsre.create(this.source, this.flags);
+        
+        if (this.jsre.__isready) {
+            return flash.external.ExternalInterface.call.apply(null, [fn, this.jsre.uid].concat(args));
+        } else if ($debug) {
+            Debug.info("%w not ready!", this);
+        }
+    }
+    
+    /**
+      * @access public
+      */
+    public function test (s:String) :Boolean {
+        var ret:Array = this.__call("lz.embed.regex.test", RegExp.__mask(s), this.lastIndex);
+        this.lastIndex = ret[1];
+        return ret[0];
+    }
+    
+    /**
+      * @access public
+      */
+    public function exec (s:String) :Array {
+        var ret:Array = this.__call("lz.embed.regex.exec", RegExp.__mask(s), this.lastIndex);
+        if (ret) {
+            this.lastIndex = ret.pop();
+            ret.index = ret.pop();
+            ret.input = s;
+            return RegExp.__unmaskArr(ret);
+        } else {
+            this.lastIndex = 0;
+            return null;
+        }
+    }
+    
+    /**
+      * @access private
+      */
+    function destroy () :void {
+        if (this.jsre) {
+            this.jsre.destroy();
+            this.jsre = null;
+        }
+    }
+    
+    /* ExternalInterface-nits:
+     * Masking is needed because ExternalInterface changes the empty string "" to "null".
+     * As a workaround we mask "" to "__#lznull" and later unmask "__#lznull" back to "" in 'regexp.js'.
+     * A spaces-only string works in flash->browser direction, but the counter direction produces again "null".
+     * ExternalInterface requires double-escaping of backslashes (only from flash to browser).
+     */
+    
+    /**
+      * @access private
+      */
+    static function __mask (s:String) :String {
+        return s == null ? s : s.length != 0 ? (s = s.toString()).indexOf("\\") >= 0 ? s.split("\\").join("\\\\") : s : "__#lznull";
+    }
+    
+    /**
+      * @access private
+      */
+    static function __unmask (s:String) :String {
+        if (s == null || s.substr(0, 9) != "__#lznull") return s;
+        var r = "";
+        for (var i = 9; i < s.length; ++i) {
+            switch (s.charAt(i)) {
+                case 'w': r += ' '; break;
+                case 'f': r += '\f'; break;
+                case 'n': r += '\n'; break;
+                case 'r': r += '\r'; break;
+                case 't': r += '\t'; break;
+                case 's': r += '\u00A0'; break;
+                case 'l': r += '\u2028'; break;
+                case 'p': r += '\u2029'; break;
+            }
+        }
+        return r;
+    }
+    
+    /**
+      * @access private
+      */
+    static function __unmaskArr (a:Array) :Array {
+        var unmask:Function = RegExp.__unmask;
+        for (var i:int = 0; i < a.length; ++i) {
+            a[i] = unmask(a[i]);
+        }
+        return a;
+    }
+}
+
+String.prototype.match = function (re:*) :Array? {
+    if (!(re instanceof RegExp)) re = new RegExp(re + "");//coerce to string
+    var ret:Array = re.__call("lz.embed.regex.match", RegExp.__mask(this));
+    return ret ? RegExp.__unmaskArr(ret) : null;
+}
+
+String.prototype.replace = function (re:*, s:Object) :String {
+    if (re instanceof RegExp) {
+        return RegExp.__unmask(re.__call("lz.embed.regex.replace", RegExp.__mask(this), RegExp.__mask(s)));
+    } else {
+        re = re + "";//coerce to string
+        var i:int = this.indexOf(re);
+        return i >= 0 ? this.substring(0, i) + s + this.substring(i + re.length) : this;
+    }
+}
+
+String.prototype.search = function (re:*) :int {
+    if (!(re instanceof RegExp)) re = new RegExp(re + "");//coerce to string
+    return re.__call("lz.embed.regex.search", RegExp.__mask(this));
+}

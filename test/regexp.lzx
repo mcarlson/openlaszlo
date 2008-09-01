@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<canvas debug="true" >
+    
+    <include href="lzunit"/>
+
+    <class name="TestRegExp" extends="TestCase">
+        <method name="addTests"><![CDATA[
+            this.addTest("testReplace");
+            this.addTest("testSearch");
+            this.addTest("testMatch");
+            this.addTest("testExec");
+            this.addTest("testTest");
+            this.addTest("testFlags");
+            this.addTest("testSpecialChars");
+            this.addTest("testEcma");
+            this.addTest("testWhitespace");
+        ]]></method>
+        
+        <method name="testReplace" ><![CDATA[
+            assertEquals("string", "strong".replace(new RegExp("o"), "i"));
+            assertEquals("123", "1230000".replace(new RegExp("(00)+$"), ""));
+            assertEquals("openlaszli", "ipenlaszli".replace(new RegExp("i"), "o"));
+            assertEquals("openlaszlo", "ipenlaszli".replace(new RegExp("i", "g"), "o"));
+            assertEquals("John Smith", "Smith, John".replace(new RegExp("(\\w+), (\\w+)"), "$2 $1"));
+            assertEquals("-1-2-3-", "123".replace(new RegExp("", "g"), "-"));
+            assertEquals("1.2.3", "123".replace(new RegExp("(\\d)(?=\\d)", "g"), "$1."));
+            
+            assertEquals("string", "strong".replace("o", "i"));
+            assertEquals("openlaszli", "ipenlaszli".replace("i", "o"));
+        ]]></method>
+        
+        <method name="testSearch" ><![CDATA[
+            assertEquals(0, "abc".search(new RegExp("a")));
+            assertEquals(1, "abc".search(new RegExp("b")));
+            assertEquals(2, "abc".search(new RegExp("c")));
+            assertEquals(0, "abc".search(new RegExp("a|b|c")));
+            
+            assertEquals(0, "abc".search("a"));
+            assertEquals(1, "abc".search("b"));
+            assertEquals(2, "abc".search("c"));
+            assertEquals(0, "abc".search("a|b|c"));
+        ]]></method>
+        
+        <method name="testMatch" ><![CDATA[
+            assertTrue(equalArrays(["dog"], "dog, cat, fog".match(new RegExp("[a-z]og", ""))));
+            assertTrue(equalArrays(["dog", "fog"], "dog, cat, fog".match(new RegExp("[a-z]og", "g"))));
+            assertTrue(equalArrays(["dog"], "dog, cat, fog".match("[a-z]og")));
+            
+            var src = "il sole, la luna, lo strumento, il cane, la ciliegia, le verdure, la mela";
+            assertTrue(equalArrays(["il sole", "il cane"], src.match(new RegExp("il \\w+", "g"))));
+            assertTrue(equalArrays(["il sole"], src.match("il \\w+")));
+        ]]></method>
+        
+        <method name="testExec" ><![CDATA[
+            var src = "The quick brown fox jumps over the lazy dog.";
+            var re = new RegExp("\\w+", "g");
+            
+            var words = [];
+            var indices = [];
+            var lastindices = [];
+            
+            assertEquals(0, re.lastIndex);
+            
+            var arr:Array;
+            while ((arr = re.exec(src)) != null) {
+                words.push(arr[0]);
+                indices.push(arr.index);
+                lastindices.push(re.lastIndex);
+            }
+            
+            assertEquals(0, re.lastIndex);
+            
+            assertTrue(equalArrays(["The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"], words));
+            assertTrue(equalArrays([0, 4, 10, 16, 20, 26, 31, 35, 40], indices));
+            assertTrue(equalArrays([3, 9, 15, 19, 25, 30, 34, 39, 43], lastindices));
+            
+            /* ------------------------------------------------------------ */
+            
+            var src = "il sole, la luna, lo strumento, il cane, la ciliegia, le verdure, la mela";
+            var re = new RegExp("la (\\w+)", "g");
+            assertTrue(equalArrays(["la luna", "luna"], re.exec(src)));
+            assertTrue(equalArrays(["la ciliegia", "ciliegia"], re.exec(src)));
+            assertTrue(equalArrays(["la mela", "mela"], re.exec(src)));
+            assertNull(re.exec(src));
+        ]]></method>
+        
+        <method name="testTest" ><![CDATA[
+            var src = "die Sonne, der Mond, das Werkzeug, der Hund, die Kirsche, das Gemüse, der Apfel";
+            var re = new RegExp("der (\\w+)", "g");
+            assertTrue(re.test(src));
+            assertEquals(19, re.lastIndex);
+            assertTrue(re.test(src));
+            assertEquals(43, re.lastIndex);
+            assertTrue(re.test(src));
+            assertEquals(79, re.lastIndex);
+            assertFalse(re.test(src));
+            assertEquals(0, re.lastIndex);
+        ]]></method>
+        
+        <method name="testFlags" ><![CDATA[
+            assertEquals(0, "ABC".search(new RegExp("a", "i")));
+            assertEquals(0, "abc".search(new RegExp("A", "i")));
+            
+            var src = "a\nA\nAb\naB";
+            assertNull(src.match(new RegExp("^[A-Z].*$")));
+            assertTrue(equalArrays(["A"], src.match(new RegExp("^[A-Z].*$", "m"))));
+            assertTrue(equalArrays(["A", "Ab"], src.match(new RegExp("^[A-Z].*$", "gm"))));
+        ]]></method>
+        
+        <method name="testSpecialChars" ><![CDATA[
+            assertEquals(0, "äöü".search(new RegExp("ä")));
+        ]]></method>
+        
+        <method name="testEcma" ><![CDATA[
+            //some tests from "Standard ECMA-262 - 3rd Edition December 1999"
+            assertTrue(equalArrays(["a"], new RegExp("a|ab").exec("abc")));
+            assertTrue(equalArrays(["abcde"], new RegExp("a[a-z]{2,4}").exec("abcdefghi")));
+            assertTrue(equalArrays(["abc"], new RegExp("a[a-z]{2,4}?").exec("abcdefghi")));
+            assertTrue(equalArrays(["aaba", "ba"], new RegExp("(aa|aabaac|ba|b|c)*").exec("aabaac")));
+            assertEquals("aaaaa", "aaaaaaaaaa,aaaaaaaaaaaaaaa".replace(new RegExp("^(a+)\\1*,\\1+$"), "$1"));
+            assertTrue(equalArrays(["b", ""], new RegExp("(a*)b\\1+").exec("baaaac")));
+            assertTrue(equalArrays(["", "aaa"], new RegExp("(?=(a+))").exec("baaabac")));
+            assertTrue(equalArrays(["aba", "a"], new RegExp("(?=(a+))a*b\\1").exec("baaabac")));
+            
+            // Internet Explorer doesn't even get the tests which are listed in the spec...
+            Debug.info("expected failure in IE");
+            assertTrue(equalArrays(["abc", "a", "a", void(0), "bc", void(0), "bc"], new RegExp("((a)|(ab))((c)|(bc))").exec("abc")));
+            Debug.info("expected failure in IE");
+            assertTrue(equalArrays(["zaacbbbcac", "z", "ac", "a", void(0), "c"], new RegExp("(z)((a+)?(b+)?(c))*").exec("zaacbbbcac")));
+            Debug.info("expected failure in IE");
+            assertTrue(equalArrays(["baaabaac", "ba", void(0), "abaac"], new RegExp("(.*?)a(?!(a+)b\\2c)\\2(.*)").exec("baaabaac")));
+        ]]></method>
+        
+        <method name="testWhitespace" ><![CDATA[
+            assertTrue(equalArrays([" ", "  "], "| |  |".match(new RegExp("(\\s+)(?=\\|)", "g"))));
+            assertTrue(equalArrays([" ", " \t"], "| | \t|".match(new RegExp("(\\s+)(?=\\|)", "g"))));
+        ]]></method>
+        
+        <method name="equalArrays" args="a1:Array, a2:Array" ><![CDATA[
+            if (a1 && a2) {
+                if (a1.length == a2.length) {
+                    var len:int = a1.length;
+                    for (var i:int = 0; i < len; ++i) {
+                        if (a1[i] != a2[i]) return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
+            return !(a1 || a2);
+        ]]></method>
+    </class>
+
+    <TestSuite>
+      <TestRegExp />
+    </TestSuite>
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.        *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
