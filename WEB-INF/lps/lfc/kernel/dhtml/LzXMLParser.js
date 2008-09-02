@@ -1,7 +1,7 @@
 /**
   * LzXMLParser.js
   *
-  * @copyright Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -12,9 +12,8 @@
   * @shortdesc Utility for parsing text into native XML DOM object
   */
 
-var LzXMLParser = new Object;
-
-LzXMLParser.parseXML = function( str, trimwhitespace, nsprefix ){
+var LzXMLParser = {
+parseXML: function (str, trimwhitespace, nsprefix) {
     #pragma "passThrough=true" 
     // TODO [hqm 05-2006] need to add third arg, NSPREFIX, to
     // this method, and to the node copy routine , see the SWF
@@ -22,9 +21,9 @@ LzXMLParser.parseXML = function( str, trimwhitespace, nsprefix ){
     // to both swf and DHTML, with a conditionalized version for IE probably.
     var parser = new DOMParser();
     var doc = parser.parseFromString(str, "text/xml");
-    //Debug.write("LzXMLParser.parseXML", doc.childNodes[0], str);
     return doc.childNodes[0];
 }
+} // end of LzXMLParser
 
 // DOMparser for IE and safari
 // http://erik.eae.net/archives/2005/07/03/20.19.18/

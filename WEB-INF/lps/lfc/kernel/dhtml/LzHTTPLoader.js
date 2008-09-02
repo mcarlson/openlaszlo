@@ -18,23 +18,33 @@ var LzHTTPLoader = function (owner, proxied) {
     this.__loaderid = LzHTTPLoader.loaderIDCounter++;
 }
 
+LzHTTPLoader.GET_METHOD    = "GET";
+LzHTTPLoader.POST_METHOD   = "POST";
+LzHTTPLoader.PUT_METHOD    = "PUT";
+LzHTTPLoader.DELETE_METHOD = "DELETE";
+
+// holds list of outstanding data requests, to handle timeouts
+LzHTTPLoader.activeRequests = {};
+LzHTTPLoader.loaderIDCounter = 0;
+
 // Default callback handlers
+LzHTTPLoader.prototype.loadSuccess = function (loader, data) {}
+LzHTTPLoader.prototype.loadError   = function (loader, data) {}
+LzHTTPLoader.prototype.loadTimeout = function (loader, data) {}
+
 LzHTTPLoader.prototype.loadContent = function (self, content) {
     if (this.options['parsexml']) {
-        this.translateXML(content);
+        this.translateXML();
     } else {
         this.loadSuccess(this, content);
     }
 }
 
-LzHTTPLoader.prototype.loadSuccess = function (loader, data) {}
-LzHTTPLoader.prototype.loadError   = function (loader, data) {}
-LzHTTPLoader.prototype.loadTimeout = function (loader, data) {}
-
 /* Parse response into XML data. */ 
-LzHTTPLoader.prototype.translateXML = function (content) {
+LzHTTPLoader.prototype.translateXML = function () {
     var lzxdata = null;
     if (this.responseXML != null) {
+        var elt;
         var nodes = this.responseXML.childNodes;
         // find first content (type == 1) child node
         for (var i = 0; i < nodes.length; i++) {
@@ -52,7 +62,6 @@ LzHTTPLoader.prototype.translateXML = function (content) {
     this.loadSuccess(this, lzxdata);
 }
 
-
 /* Returns the response as a string  */
 LzHTTPLoader.prototype.getResponse = function () {
     return this.responseText;
@@ -60,20 +69,19 @@ LzHTTPLoader.prototype.getResponse = function () {
 
 /* Returns numeric status code (200, 404, 500, etc...) */
 LzHTTPLoader.prototype.getResponseStatus = function () {
-    // nyi
+    return this.responseStatus;
 }
 
-// TODO [hqm 2007-02] this is not very useful now because we are
-// immediately null'ing out the req field as soon as the request
-// returns, in order to assist IE in garbage collecting.
-
-/* Returns an array of response headers  */
+/* Returns an object of response headers  */
 LzHTTPLoader.prototype.getResponseHeaders = function () {
-    // [todo hqm 2006-07] this returns a string at the moment, needs to be parsed into
-    // a hash table
-    return this.req.getAllResponseHeaders();
+    //return this.req.getAllResponseHeaders();
+    return this.responseHeaders;
 }
 
+LzHTTPLoader.prototype.getResponseHeader = function (key) {
+    //return this.req.getResponseHeader(key);
+    return this.responseHeaders[key];
+}
 
 /* @param Object obj:  A hash table of headers for the HTTP request
    @access public
@@ -86,18 +94,8 @@ LzHTTPLoader.prototype.setRequestHeaders = function (obj) {
    @param String val:  header value
    @access public
 */
-
 LzHTTPLoader.prototype.setRequestHeader = function (key, val) {
     this.requestheaders[key] = val;
-}
-
-LzHTTPLoader.prototype.abort = function () {
-    if (this.req) {
-        this.__abort = true;
-        this.req.abort();
-        this.req = null;
-        this.removeTimeout(this);
-    }
 }
 
 /* @public */
@@ -110,20 +108,17 @@ LzHTTPLoader.prototype.getOption = function (key:String) :* {
     return this.options[key];
 }
 
-
 /* @public */
 LzHTTPLoader.prototype.setProxied = function (proxied) {
     this.setOption('proxied', proxied);
 }
 
-/* @public
- */
+/* @public */
 LzHTTPLoader.prototype.setQueryParams = function (qparams) {
     this.queryparams = qparams;
 }
 
-/* @public
- */
+/* @public */
 LzHTTPLoader.prototype.setQueryString = function (qstring) {
     this.querystring = qstring;
 }
@@ -137,34 +132,45 @@ LzHTTPLoader.prototype.setQueueing = function (queuing) {
     // [todo hqm 2006-07] NYI
 }
 
-// TODO [hqm 2007-02] this is not useful right now because we are
-// null'ing out the req field as soon as the request returns, in order
-// to assist IE in garbage collecting.
-LzHTTPLoader.prototype.getResponseHeader = function (key) {
-    return this.req.getResponseHeader(key);
+LzHTTPLoader.prototype.abort = function () {
+    if (this.req) {
+        this.__abort = true;
+        this.req.abort();
+        this.req = null;
+        this.removeTimeout(this);
+    }
 }
 
-LzHTTPLoader.GET_METHOD    = "GET";
-LzHTTPLoader.POST_METHOD   = "POST";
-LzHTTPLoader.PUT_METHOD    = "PUT";
-LzHTTPLoader.DELETE_METHOD = "DELETE";
-
-// headers can be a hashtable or null
-
 LzHTTPLoader.prototype.open = function (method, url, username, password) {
-    if (this.req) {
-        Debug.warn("pending request for id=%s", this.__loaderid);
+    if ($debug) {
+        if (this.req) {
+            // TODO: what is the expected behaviour? 
+            // ignore the new request or cancel the previous one?
+            Debug.warn("pending request for id=%s", this.__loaderid);
+        }
     }
     
     {
         #pragma "passThrough=true" 
-        this.req =  window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+        this.req = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     }
+    this.responseStatus = 0;
+    this.responseHeaders = null;
+    this.responseText = null;
+    this.responseXML = null;
+    
     this.__abort = false;
     this.__timeout = false;
     this.requesturl = url;
     this.requestmethod = method;
+}
 
+LzHTTPLoader.prototype.send = function (content) {
+    this.loadXMLDoc(/* method */ this.requestmethod,
+                    /* url */ this.requesturl,
+                    /* headers */ this.requestheaders,
+                    /* postbody */ content,
+                    /* ignorewhite */ true);
 }
 
 //   @access public
@@ -191,66 +197,44 @@ LzHTTPLoader.prototype.makeProxiedURL = function ( proxyurl, url,  httpmethod, l
         return lz.Browser.makeProxiedURL(params);
 }
 
-LzHTTPLoader.prototype.send = function (content) {
-    this.loadXMLDoc(/* method */ this.requestmethod,
-                    /* url */ this.requesturl,
-                    /* headers */ this.requestheaders,
-                    /* postbody */ content,
-                    /* ignorewhite */ true);
-}
-
-// holds list of outstanding data requests, to handle timeouts
-//LzHTTPLoader.activeRequests = [];
-LzHTTPLoader.activeRequests = {};
-LzHTTPLoader.loaderIDCounter = 0;
-
 // Default infinite timeout
 LzHTTPLoader.prototype.timeout = Infinity;
 
 LzHTTPLoader.prototype.setTimeout = function (timeout) {
     this.timeout = timeout;
-    // [todo hqm 2006-07] Should we have  an API method for setting LzLoader timeout?
+    // [todo hqm 2006-07] Should we have an API method for setting LzLoader timeout?
 }
 
 // Set up a pending timeout for a loader.
-/*
-LzHTTPLoader.prototype.setupTimeout = function (obj, duration) {
+LzHTTPLoader.prototype.setupTimeout = function (loader, duration) {
     var endtime = (new Date()).getTime() + duration;
-    LzHTTPLoader.activeRequests.push(obj, endtime);
-    setTimeout("LzHTTPLoader.__LZcheckXMLHTTPTimeouts()", duration);
-}
-*/
-LzHTTPLoader.prototype.setupTimeout = function (obj, duration) {
-    var endtime = (new Date()).getTime() + duration;
-    //obj.__loaderid = LzHTTPLoader.loaderIDCounter++;//uncomment to give LzHTTPLoader-instance a new loader-id
-    var lid = obj.__loaderid;
+    var lid = loader.__loaderid;
     
-    LzHTTPLoader.activeRequests[lid] = [obj, endtime];
+    LzHTTPLoader.activeRequests[lid] = [loader, endtime];
     var timeoutid = setTimeout("LzHTTPLoader.__LZcheckXMLHTTPTimeouts(" + lid + ")", duration);
     LzHTTPLoader.activeRequests[lid][2] = timeoutid;
 }
-    
+
 // Remove a loader from the timeouts list.
-LzHTTPLoader.prototype.removeTimeout = function (target) {
-    var lid = target.__loaderid;
+LzHTTPLoader.prototype.removeTimeout = function (loader) {
+    var lid = loader.__loaderid;
     //Debug.write("remove timeout for id=%s", lid);
     if (lid != null) {
         var reqarr = LzHTTPLoader.activeRequests[lid];
-        if (reqarr && reqarr[0] === target) {
+        if (reqarr && reqarr[0] === loader) {
             clearTimeout(reqarr[2]);
             delete LzHTTPLoader.activeRequests[lid];
         }
     }
 }
-    
-    
+
 // Check if any outstanding requests have timed out. 
 LzHTTPLoader.__LZcheckXMLHTTPTimeouts = function (lid) {
-    var req = LzHTTPLoader.activeRequests[lid];
-    if (req) {
+    var reqarr = LzHTTPLoader.activeRequests[lid];
+    if (reqarr) {
         var now = (new Date()).getTime();
-        var loader = req[0];
-        var dstimeout = req[1];
+        var loader = reqarr[0];
+        var dstimeout = reqarr[1];
         //Debug.write("diff %d", now - dstimeout);
         if (now >= dstimeout) {
             //Debug.write("timeout for %s", lid);
@@ -265,16 +249,16 @@ LzHTTPLoader.__LZcheckXMLHTTPTimeouts = function (lid) {
             // if it hasn't timed out, add it back to the list for the future
             //Debug.write("recheck timeout");
             var timeoutid = setTimeout("LzHTTPLoader.__LZcheckXMLHTTPTimeouts(" + lid + ")", now - dstimeout);
-            req[2] = timeoutid;
+            reqarr[2] = timeoutid;
         }
     }
 }
 
 LzHTTPLoader.prototype.getElapsedTime = function () {
-    return  ((new Date()).getTime() - this.gstart);
+    return ((new Date()).getTime() - this.gstart);
 }
 
-
+// headers can be a hashtable or null
 LzHTTPLoader.prototype.__setRequestHeaders = function (xhr, headers) {
     if (headers != null) {
         for (var key in headers) {
@@ -285,58 +269,68 @@ LzHTTPLoader.prototype.__setRequestHeaders = function (xhr, headers) {
     }
 }
 
+LzHTTPLoader.prototype.__getAllResponseHeaders = function (xhr) {
+    var re = new RegExp("^([-\\w]+):\\s*(\\S(?:.*\\S)?)\\s*$", "mg");
+    var respheader = xhr.getAllResponseHeaders();
+    
+    var allheaders = {};
+    var header;
+    while ((header = re.exec(respheader)) != null) {
+        allheaders[header[1]] = header[2];
+    }
+    
+    return allheaders;
+}
+
 // public
 // parsexml flag : if true, translate native XML tree into LzDataNode tree,
 //                 if false, don't attempt to translate the XML (if it exists)
-
 LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ignorewhite) {
-    if(this.req) {
+    if (this.req) {
         // we can't close over "this", so use another variable name. 
         var self = this;
         this.req.onreadystatechange = function () {
-            if (self.req == null) { return; }
-            //Debug.write("readyState=%d", self.req.readyState);
-            if (self.req.readyState == 4) {
+            var xhr = self.req;
+            if (xhr == null) { return; }
+            //Debug.write("readyState=%d", xhr.readyState);
+            if (xhr.readyState == 4) {
                 if (self.__timeout) {
-                    //Debug.write("timeout for id=%s, xhr=%w", self.__loaderid, self.req);
+                    // request has timed out, ignore ready-state
                 } else if (self.__abort) {
-                    //Debug.write("abort for id=%s, xhr=%w", self.__loaderid, self.req);
+                    // request was cancelled, ignore ready-state
                 } else {
+                    self.removeTimeout(self);
+                    self.req = null;
+                    
                     var status = -1;
                     try {
-                        status = self.req.status;
+                        status = xhr.status;
                     } catch (e) {
                         //if you abort a request, readyState will be set to 4, 
                         //but reading status will result in an exception (at least in Firefox).
-                        //Debug.write("catched error: %s", e);
                     }
                     
                     // only if "OK"
-                    //Debug.write("status=%d", status);
+                    self.responseStatus = status;
                     if (status == 200 || status == 304) {
-                        var elt = null;
-                        var xml = self.req.responseXML;
-                        self.responseXML = xml;
-                        self.responseText = self.req.responseText;
-                        self.removeTimeout(self);
-                    
-                        /**** DEBUGGING 
-                        var xmlSerializer = new XMLSerializer();
-                        var markup = xmlSerializer.serializeToString(elt);
-                        Debug.write("loadXMLDoc", elt, markup, d.serialize());
-                         *** /DEBUGGING
-                         */
-                        self.req = null;
+                        self.responseXML = xhr.responseXML;
+                        self.responseText = xhr.responseText;
+                        self.responseHeaders = self.__getAllResponseHeaders(xhr);
+                        
+                        //DEBUGGING:
+                        //var xmlSerializer = new XMLSerializer();
+                        //var markup = xmlSerializer.serializeToString(self.responseXML);
+                        //Debug.write("loadXMLDoc", markup);
+                        
                         // Callback with raw text string
                         self.loadContent(self, self.responseText);
                     } else {
-                        self.removeTimeout(self);
-                        self.req = null;
                         self.loadError(self, null);
                     }
                 }
             }
         };
+        
         this.req.open(method, url, true);
         // If no content-type for POST was explicitly specified,
         // use "application/x-www-form-urlencoded"
@@ -344,11 +338,12 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
             headers['content-type'] = 'application/x-www-form-urlencoded';
         }
         this.__setRequestHeaders(this.req, headers);
+        this.gstart = (new Date()).getTime();
         this.req.send(postbody);
-    }
-    // Set up the timeout
-    if (isFinite(this.timeout)) {
-        this.setupTimeout(this, this.timeout);
+        
+        // Set up the timeout
+        if (isFinite(this.timeout)) {
+            this.setupTimeout(this, this.timeout);
+        }
     }
 }
-
