@@ -13,23 +13,26 @@
         // only if request shows "loaded"
         if (request.readyState == 4) {
             // only if "OK"
+            Debug.write("request.responseText:", request.responseText);
             if (request.status == 200) {
                 Debug.write("arg =", request);
                 Debug.write("request.status", request.status);
-                Debug.write("request.responseText:", request.responseText);
                 Debug.write("request.responseXML:", request.responseXML);
                 Debug.write("request.getAllResponseHeaders:", request.getAllResponseHeaders());
             } else {
+
                 Debug.write("There was a problem retrieving the XML data:\n" +
                             request.statusText);
             }
         }
     }
 
+var req;
     
     function loadXMLDoc(url) {
         // branch for native XMLHttpRequest object
-        req = new XMLHttpRequest();
+        req = new lz.XMLHttpRequest();
+        req.parsexml = parsecb.getValue();
         req.onreadystatechange = processReqChange;
         req.open("GET", url, true);
         req.setRequestHeader('X-Test', 'one');
@@ -46,7 +49,12 @@
     <button onclick="loadXMLDoc(in1.getText())">Load Data</button>
 
     <button onclick="loadXMLDoc('badurl')">Test Error Handling, this should fail</button>
+    <checkbox id="parsecb" value="true">parse xml?</checkbox>
 
 
 
 </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
