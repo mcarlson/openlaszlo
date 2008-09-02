@@ -677,7 +677,8 @@ lz.embed = {
             }
 
             // opera & (safari absolute) incorrectly account for body offsetTop
-            if ( this.quirks.absolute_position_accounts_for_offset && this.hasOwnProperty('getStyle') && this.getStyle(el, 'position') == 'absolute' ) {
+            // used quirks.absolute_position_accounts_for_offset before...
+            if ( (lz.embed.browser.isSafari || lz.embed.browser.isOpera) && this.hasOwnProperty('getStyle') && this.getStyle(el, 'position') == 'absolute' ) {
                 pos.y -= document.body.offsetTop;
             }
         }
@@ -685,7 +686,7 @@ lz.embed = {
         if (el.parentNode) {
             parent = el.parentNode;
         } else {
-            parent = null;
+            return pos;
         }
 
         while (parent && parent.tagName != 'BODY' && parent.tagName != 'HTML') {
@@ -695,7 +696,7 @@ lz.embed = {
             if (parent.parentNode) {
                 parent = parent.parentNode;
             } else {
-                parent = null;
+                return pos;
             }
         } 
         return pos;
