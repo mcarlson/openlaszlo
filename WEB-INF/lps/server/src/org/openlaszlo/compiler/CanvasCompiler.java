@@ -416,7 +416,8 @@ class CanvasCompiler extends ToplevelCompiler {
       Element child = (Element) iter.next();
       if (NodeModel.isPropertyElement(child)) {
         model.addPropertyElement(child);
-      } else if (LibraryCompiler.isElement(child)) {
+      } else if ( (LibraryCompiler.isElement(child)) ||
+                  (ImportCompiler.isElement(child))){
         Element libraryElement = LibraryCompiler.resolveLibraryElement(
           child, mEnv, visited);
         if (libraryElement != null) {
