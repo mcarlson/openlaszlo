@@ -16,25 +16,23 @@
     <node name="gDataMan">
         <handler name="oninit">
             this.errdel = new LzDelegate( this, "dsError" );
-            errdel.register( photods , "onerror" );
-            errdel.register( infods , "onerror" );
-            errdel.register( sizeds , "onerror" );
-            errdel.register( userds , "onerror" );
-            errdel.register( favoritesds , "onerror" );
-            errdel.register( frobds , "onerror" );
-            errdel.register( tokends , "onerror" );
+            this['errdel'].register( photods , "onerror" );
+            this['errdel'].register( infods , "onerror" );
+            this['errdel'].register( sizeds , "onerror" );
+            this['errdel'].register( userds , "onerror" );
+            this['errdel'].register( frobds , "onerror" );
+            this['errdel'].register( tokends , "onerror" );
 
-            errdel.register( photods , "ontimeout" );
-            errdel.register( infods , "ontimeout" );
-            errdel.register( sizeds , "ontimeout" );
-            errdel.register( userds , "ontimeout" );
-            errdel.register( favoritesds , "ontimeout" );
-            errdel.register( frobds , "ontimeout" );
-            errdel.register( tokends, "ontimeout" );
+            this['errdel'].register( photods , "ontimeout" );
+            this['errdel'].register( infods , "ontimeout" );
+            this['errdel'].register( sizeds , "ontimeout" );
+            this['errdel'].register( userds , "ontimeout" );
+            this['errdel'].register( frobds , "ontimeout" );
+            this['errdel'].register( tokends, "ontimeout" );
         </handler>
 
-        <method name="dsError">
-            gError.show();
+        <method name="dsError" args="v">
+            this['gError'].show();
         </method>
         
         <!-- 
@@ -49,14 +47,16 @@
             SUPPORTS ALL  METHODS DESCRIBED IN FLICKR SERVICES API THAT REQUIRE AUTHENTICATION
             http://www.flickr.com/services/api/
         -->
-        <method name="doAuthFlickrRequest" args="ds, argobjarr"><![CDATA[
+        <method name="doAuthFlickrRequest" args="ds, argobjarr">
+            <![CDATA[
             var token=tokends.getPointer().xpathQuery("rsp/auth/token/text()");
             argobjarr.push(
                 {argname:"auth_token", 
                 argvalue:token} );
                 
             doFlickrRequest(ds, argobjarr);
-        ]]></method>
+            ]]>
+        </method>
 
         <!-- 
             builds, signs and sends FlickrRequest 
@@ -68,7 +68,8 @@
             SUPPORTS ALL METHODS DESCRIBED IN FLICKR SERVICES API
             http://www.flickr.com/services/api/
         -->
-        <method name="doFlickrRequest" args="ds, argobjarr"><![CDATA[
+        <method name="doFlickrRequest" args="ds, argobjarr">
+            <![CDATA[
             // clear query params
             ds.setQueryParams(null);
 
@@ -109,8 +110,8 @@
 
             // make actual request
             ds.doRequest();
-            // Debug.write('Loading URL', ds); 
-        ]]></method>
+            ]]>
+        </method>
 
         <!-- 
              authenticate if necessary but not if already authenticated 
@@ -136,7 +137,8 @@
             var argobj = [{argname:"method",argvalue:"flickr.auth.getFrob"}];
             this.doFlickrRequest(frobds, argobj);            
         </method>
-        <method name="_handleFrob" ><![CDATA[
+        <method name="_handleFrob" >
+            <![CDATA[
             if (global['debugdata']) Debug.write("handle frob", frobds.serialize());
             var frob = frobds.getPointer().xpathQuery("rsp/frob/text()");
 
@@ -155,11 +157,14 @@
             // TODO: possibly put up some UI here to note that out-of-app authentication will occur
             // then call doAuth() function again
             lz.Browser.loadURL(url, "_blank");
-        ]]></method>
-        <method name="_handleToken"><![CDATA[
+            ]]>
+        </method>
+        <method name="_handleToken">
+            <![CDATA[
             if (global['debugdata']) Debug.write("_handleToken", tokends);
             var stat=tokends.getPointer().xpathQuery("rsp/@stat");
-        ]]></method>
+            ]]>
+        </method>
 
         <!-- Only search for photos with a creative commons license:
             http://creativecommons.org/licenses/by/2.0/
@@ -196,24 +201,14 @@
 
         <method name="getPhotoURL" args="dp, suffix">
             <![CDATA[
-            //Debug.write("canvas.isoffline",canvas.isoffline);
-            if ( canvas.isoffline ) {
-               var n = Math.round( Math.random(1)*5);
-               var link = 'http:data/offlineimages/photo' + n + '.jpg';   
-               //Debug.write("getImageURL",link);
-               return link
-            } else {
-                var id=dp.p.getAttr("id");
-                var suf = (suffix != '') ? "_"+suffix: "";
-    
-                // build URL to image
-                var server=dp.p.getAttr("server");
-                var secret=dp.p.getAttr("secret");
-                var s="http://static.flickr.com/"+server+"/"+id+"_"+secret + suf + ".jpg";
-                //Debug.write(s); 
-                return s;
-            }
-            
+            var id=dp.p.getAttr("id");
+            var suf = (suffix != '') ? "_"+suffix: "";
+
+            // build URL to image
+            var server=dp.p.getAttr("server");
+            var secret=dp.p.getAttr("secret");
+            var s="http://static.flickr.com/"+server+"/"+id+"_"+secret + suf + ".jpg";
+            return s;
             ]]>
         </method>
 
@@ -231,7 +226,6 @@
 
         <!-- Load owner info --> 
         <method name="loadUserInfo" args="user_id">
-            //Debug.write("loadUserInfo"); 
             var argobj = [
                 {argname:"method", 
                 argvalue:"flickr.people.getInfo"},
@@ -243,7 +237,6 @@
                     
         <!-- Load size info. --> 
         <method name="loadSizeInfo" args="photo_id">
-            // Debug.write("loadSizeInfo"); 
             var argobj = [
                 {argname:"method", 
                 argvalue:"flickr.photos.getSizes"},
@@ -252,32 +245,31 @@
                 ];
             gDataMan.doFlickrRequest(canvas.sizeds, argobj);
         </method>
-
     </node>
 
     <!-- ds to query for photos -->
-    <dataset name="photods" ondata="if (global['debugdata']) Debug.write('got data', this)" type="http" clientcacheable="true"/>
+    <dataset name="photods" ondata="if (global['debugdata']) Debug.write('got data', this)" type="http" cacheable="true"/>
     
     <!-- ds to query for photo info -->
-    <dataset name="infods"  ondata="if (global['debugdata']) Debug.write('got info', this)" type="http" clientcacheable="true"/>
+    <dataset name="infods"  ondata="if (global['debugdata']) Debug.write('got info', this)" type="http" cacheable="true"/>
+    
+    <!-- ds to store clipboard contents -->
+    <dataset name="clipds" />
+    
+    <!-- datapointer for setting up clipboard -->
+    <datapointer name="clipDP" xpath="clipds:/" oninit="this.addNode('photos')"/>
     
     <!-- photo sizes -->
-    <dataset name="sizeds" type="http" clientcacheable="true" />
+    <dataset name="sizeds" type="http" cacheable="true" />
     
     <!-- ds to query for user info -->
-    <dataset name="userds" ondata="if (global['debugdata']) Debug.write('got user', this)" clientcacheable="true" />
-
-    <!-- information about the favorites -->
-    <dataset name="favoritesds" ondata="if (global['debugdata']) Debug.write('got favorites', this)" />
+    <dataset name="userds" ondata="if (global['debugdata']) Debug.write('got user', this)" cacheable="true" />
 
     <!-- auth... -->
     <dataset name="frobds" type="http" ondata="gDataMan._handleFrob()" />
 
     <!-- token for logged-in user -->
     <dataset name="tokends" type="http" ondata="gDataMan._handleToken()" />
-
-    <!-- just for testing... -->
-    <dataset name="testds" type="http" ondata="if (global['debugdata']) Debug.write('ondata', this)" />
 
 </library>
 

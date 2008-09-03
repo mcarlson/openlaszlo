@@ -4,7 +4,7 @@
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
 <library>
-    <class name="taglink" width="100" clickable="true" with="Spatialnav">
+    <class name="taglink" width="100" clickable="true">
         <view resource="icon_taglink_rsc" />
         <text name="txt" x="13" y="-4" text="tag title" width="87" fgcolor="0xa1a1a1" fontsize="10"  />
         

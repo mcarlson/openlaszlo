@@ -4,22 +4,41 @@
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
 <view id="clips" bgcolor="black" 
-       width="240"  y="${parent.height - height - 22}" height="53" visible="false"   >
-    <animator name="open_anm"  attribute="height" to="210"  duration="300"  />
-    <animator name="close_anm" attribute="height" to="53"  duration="300"  />
+       width="240"  y="${parent.height - height}" height="53" visible="false"   >
+    <animator name="open_anm"  attribute="height" to="210"  duration="300" start="false" />
+    <animator name="close_anm" attribute="height" to="0"  duration="300" start="false" />
+    <animator name="drop_open" attribute="height" to="210" duration="500" start="false"/>
+    <animatorgroup name="drop_shut" process="sequential" start="false" onstop="parent.setAttribute('visible', false)">
+        <animator name="hold" attribute="height" to="210" duration="400" start="false"/>
+        <animator name="drop" attribute="height" to="0" duration="300" start="false"/>
+    </animatorgroup>
     
     <method name="addPhoto" args="photo">
-        this.content.repl.nodes.push( photo.data );
-        this.content.repl.setNodes( this.content.repl.nodes );
+        clipDP.setXPath('clipds:/photos');
+        var clipid = photo.datapath.xpathQuery('@id');
+        var clipown = photo.datapath.xpathQuery('@owner');
+        var clipsec = photo.datapath.xpathQuery('@secret');
+        var clipser = photo.datapath.xpathQuery('@server');
+        var clipfar = photo.datapath.xpathQuery('@farm');
+        var cliptit = photo.datapath.xpathQuery('@title');
+        var clipispu = photo.datapath.xpathQuery('@ispublic');
+        var clipisfr = photo.datapath.xpathQuery('@isfriend');
+        var clipisfa = photo.datapath.xpathQuery('@isfamily');
+        clipDP.addNode('photo', null, {'id':clipid, 'owner':clipown, 'secret':clipsec, 'server':clipser, 'farm':clipfar, 'title':cliptit, 'ispublic':clipispu, 'isfriend':clipisfr, 'isfamily':clipisfa});
+        //this.content.repl.nodes.push( photo.data );
+        //this.content.repl.setNodes( this.content.repl.nodes );
     </method>
     
     <footerbutton  name="btn" text="Clips" width="${parent.width}" xtext="13" onmouseup="parent.close_anm.doStart(); highlight.hide()" >
         <handler name="onstop" reference="parent.close_anm" >
-            parent.setAttribute('visible',  false );
-            navmanager.focus( clipsmainbtn );
+            parent.setAttribute('visible', false );
+            canvas.highlight.show(clipsmainbtn, 0);
+            navmanager.focus( clipsmainbtn, false );
         </handler>
         <handler name="onstop" reference="parent.open_anm" >
-            navmanager.focus( this );
+            canvas.highlight.show(this, 0);
+            canvas.highlight.bringToFront();
+            navmanager.focus( this, false );
         </handler>
      </footerbutton>
      
@@ -27,16 +46,18 @@
           x="10" 
           y="${parent.btn.height + 10}"
           width="${parent.width - 20}" 
-          height="${parent.height - y - 30}"  
+          height="${parent.height - y}"  
           clip="true" bgcolor="black" >
         <hintedlayout xspacing="28" yspacing="20"/>
-        <replicator name="repl" nodes="[]">
-            <photo width="${54}">
-                <handler name="onmouseup" >
-                    container.showDetails( 'photo' )
-                </handler>
-            </photo>
-        </replicator>
+        <photo width="${54}" name="repl" datapath="clipds:/photos/*">
+            <handler name="onmouseup" >
+                <![CDATA[
+                container.setAttribute('lastphoto', this);
+                container.showDetails( 'photo' );
+                clips.close_anm.doStart();
+                ]]>
+            </handler>
+        </photo>
     </view>
 
 </view>

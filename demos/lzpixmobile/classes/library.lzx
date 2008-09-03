@@ -7,11 +7,9 @@
     <include href="mobilescroller.lzx" />    
     <include href="photo.lzx" />    
     <include href="buddyicon.lzx" />   
-    <include href="taglink.lzx" />   
-    <include href="pivotlayout.lzx" />
+    <include href="taglink.lzx" />
     <include href="footerbutton.lzx" />
     <include href="optionsbutton.lzx" />
-    <include href="optionsmenuitem.lzx" />
     <include href="search.lzx" />
     <include href="dataman.lzx" />
 </library>

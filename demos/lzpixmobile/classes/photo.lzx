@@ -1,13 +1,12 @@
 <!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
 
-    <class name="photo" width="54" height="54"  with="Spatialnav">
+    <class name="photo" width="54" height="54" focusable="${clips.visible ? (this.parent.parent != clips ? false : true) : true}">
         <attribute name="defaultplacement" value="interior" type="text" />
         <attribute name="text" value="title" type="text" />   
         <attribute name="imagelink"  value="" type="text" />   
         <attribute name="clipfactor" value="0"
                    setter="this.setClipFactor( clipfactor )"/>
-
 
         <attribute name="loaded" value="false"/>
         <attribute name="aspect" value="1"/>
@@ -25,7 +24,7 @@
         <attribute name="border" value="1"/>
 
         <event name="onfocused"/>
-        <event name="lasturl" value="null"/>
+        <event name="lasturl"/>
         <method name="getThumbnailURL">
             return gDataMan.getPhotoURL(this.datapath, 't');
         </method>
@@ -50,16 +49,26 @@
         </handler>
         <handler name="onloaded" args="l">
             if (l) {
-                if (navmanager.focused == this) navmanager.refocus();
+                if(this.id == "fullview"){
+                    if(gContent.showimage == false){
+                        navmanager.focus(si, false);
+                    } else {
+                        navmanager.refocus();
+                    }
+                } else {
+                    if (navmanager.focused == this) navmanager.refocus();
+                }
             }
         </handler>
 
         
         <method name="setImage" args="s">
-             //Debug.write("set source s=",s);
-             // TODO: [mc 7-31-2006] Reversing these two lines causes IE image loading bugs - see lps/includes/lfc/test/resourceload.lzx.  Fix here for now. 
-             this.intparent.setAttribute('visible', false);
-             this.intparent.interior.setSource(s);
+            //Debug.write("set source s=",s);
+            // TODO: [mc 7-31-2006] Reversing these two lines causes IE image loading bugs - see lps/includes/lfc/test/resourceload.lzx.  Fix here for now. 
+            this.intparent.setAttribute('visible', false);
+            this.setAttribute('opacity', 0);
+            this.intparent.interior.unload();
+            this.intparent.interior.setSource(s);
         </method>
    
         <attribute name="_lastw" value="null"/>
@@ -119,6 +128,7 @@
         </method>
 
         <handler name="onload" reference="intparent.interior">
+            <![CDATA[
             //Debug.write("onload");
             var irw = intparent.interior.resourcewidth;
             var irh = intparent.interior.resourceheight;
@@ -138,20 +148,13 @@
             this.updateX( true );
             this.updateY( true );
             this.setAttribute( "loaded", true );
-            intparent.interior.setAttribute("opacity", 0);
-            this.intparent.setAttribute('visible', true);
-            intparent.interior.animate('opacity', 1, 200);
+            if(typeof this.id != 'undefined' && this.id != "clipdrop"){
+                this.setAttribute("opacity", 0);
+                this.intparent.setAttribute('visible', true);
+                this.animate('opacity', 1, 200);
+            }
+            ]]>
         </handler>
-
-        
-        <!-- use this event to figure out if the view just got clicked 
-             (and not dragged -->
-        <attribute name="onplainclick" value="null"/>
-        
-        <!-- shadow -->
-        <!--
-        <view name="shadow" bgcolor="black" opacity=".5" />
-        -->
              
         <!-- border -->
         <view name="borderbg" bgcolor="white" />
@@ -163,76 +166,35 @@
               width="${parent.width - 2*classroot.border}"
               height="${parent.height - 2*classroot.border}" >             
 
-            <view name="interior" stretches="both"> <!-- 0xd9d9d9 -->
-                <state applied="${classroot.doesdrag}">
-                    <handler name="onmousedown">
-                        classroot.onmousedown.sendEvent();
-                    </handler>
-                    <handler name="onmouseup">
-                        classroot.onmouseup.sendEvent();
-                    </handler>
-                </state>
-            </view>
+            <view name="interior" stretches="both"/> <!-- 0xd9d9d9 -->
 
         </view>
- 
-
-        <handler name="onmousedown">
-            if ( this.doesdrag ) this.startDragCheck();
-        </handler>
 
         <method name="getCanvasFocusRect">
-            var rect = [ this.intparent.getAttributeRelative('x', canvas) -4,
+            <![CDATA[
+            if(typeof this.intparent != 'undefined' && typeof this.intparent.x != 'undefined'){
+                var rect = [ this.intparent.getAttributeRelative('x', canvas) -4,
                          this.intparent.getAttributeRelative('y', canvas) - 4,
                          this.intparent.getAttributeRelative('width', canvas) + 8,
                          this.intparent.getAttributeRelative('height', canvas) + 8];
-            return rect;
-        </method>
-
-        <handler name="onmouseup">
-            if ( this.draginitiator ){
-                this.stopDrag();
             } else {
-                this.ddcdel.unregisterAll();
-                if ( this.onplainclick ) this.onplainclick.sendEvent( this );
-             }
-        </handler>
-        
-        <attribute name="doesdrag" value="false"/>
-        
-        <method name="startDragCheck">
-            //info('startDragCheck');
-            _mdtime = new Date();
-            this.ddcdel.register( lz.Idle, "onidle" );
-            this._ddcxp = this.getMouse( "x" );
-            this._ddcyp = this.getMouse( "y" );
-        </method>
-
-        <attribute name="draginitiator" value="false"/>
-
-        <attribute name="ddcdel"
-                   value="$once{ new LzDelegate( this, 'doDragCheck' ) }"/>
-
-        <method name="doDragCheck">
-            <![CDATA[
-            var dx = this.getMouse( "x" ) - _ddcxp;
-            var dy =  this.getMouse( "y" ) - _ddcyp;
-            if ( ( ( new Date() ) - _mdtime > mousedownBeforeDrag ) ||
-                 ( 5 < ( Math.abs( dx ) + Math.abs( dy ) ) ) ){
-                this.startDrag( dx, dy );
+                var rect = [7, 51, 60, 60];
             }
+            return rect;
             ]]>
         </method>
 
-        <attribute name="mousedownBeforeDrag" value="300"/>
-        <method name="startDrag">
-            this.ddcdel.unregisterAll();
-            this.setAttribute ( "draginitiator" , true );
-        </method>
-
-        <method name="stopDrag">
-            this.setAttribute ( "draginitiator" , false );
-        </method>
+        <handler name="onmouseup">
+            <![CDATA[
+            if(this.id != "fullview"){
+                canvas.highlight.show(si, 0);
+                navmanager.focus(si, false);
+            } else {
+                canvas.highlight.show(container.lastphoto, 0);
+                navmanager.focus(si, false);
+            }
+            ]]>
+        </handler>
 
         <method name="setClipFactor" args="cf">
             this.clipfactor = cf;
@@ -242,16 +204,40 @@
 
         <method name="handlekeydown" args="k">
             <![CDATA[
-            if (this['lastview'] && k == 39) {
+            if (this['lastview'] && k == 39) { // Right arrow
                 container.content.forward();
                 // cancel spatial navigation
                 return true;
-            } else if (this['firstview'] && k == 37 && container.content.start > 0) {
+            } else if (this['firstview'] && k == 37 && container.content.start > 0) { // Left arrow
                 container.content.back();
                 // cancel spatial navigation
                 return true;
             }
             ]]>
+        </method>
+        
+        <method name="findnext">
+            <![CDATA[
+            if(this['next'] && this['next'].visible){
+                return this.next;
+            }
+            ]]>
+        </method>
+        <method name="findprev">
+            if(this['prev']){
+                return this.prev;
+            }
+        </method>
+        <method name="handlekeyup" args="k">
+            if(k == 13){
+                this.onmouseup.sendEvent();
+                this.onclick.sendEvent();
+            }
+        </method>
+        <method name="construct" args="parent, args">
+            this.focusable = true;
+            super.construct(parent, args);
+            if(navmanager) navmanager.add(this);
         </method>
     </class>
 </library>

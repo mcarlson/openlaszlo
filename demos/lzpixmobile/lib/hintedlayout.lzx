@@ -41,6 +41,7 @@
             var defaultSpacing = ('spacing' in args)?args.spacing:this.spacing;
             if (! ('xspacing' in args)) args.xspacing = defaultSpacing;
             if (! ('yspacing' in args)) args.yspacing = defaultSpacing;
+            this.doupdateDelegate = new lz.Delegate(this, "doupdate");
         </method>
 
         <!--- @keywords private -->
@@ -54,19 +55,19 @@
 
         <!--- @keywords private -->
         <method name="addSubview" args="newsub">
-            this.updateDelegate.register( newsub,  'onwidth');
-            this.updateDelegate.register( newsub,  'onheight');
-            this.updateDelegate.register( newsub,  'onvisible');
-            this.updateDelegate.register( this.immediateparent,  'onwidth');
+            this.doupdateDelegate.register( newsub,  'onwidth');
+            this.doupdateDelegate.register( newsub,  'onheight');
+            this.doupdateDelegate.register( newsub,  'onvisible');
+            this.doupdateDelegate.register( this.immediateparent,  'onwidth');
             super.addSubview( newsub );
-            this.update();
-    </method>
+            this.doupdate(null);
+        </method>
 
         <!--- This method is usually called automatically when any of the views
             controlled by the layout change their size , or when the size of
             layout's immediateparent changes. However it can be called directly
             to force the layout to update -->
-        <method name="update">
+        <method name="doupdate" args="v">
             <![CDATA[
             if ( this.locked ) return;
             var l = this.subviews.length;
@@ -129,9 +130,19 @@
                 this.setAttribute('first', firstv);
             }
             if (s) {
-                if (s) s.lastview = true;
-                this.setAttribute('last', s);
+                // Sets the last view appropriately when in 2x2 view.
+                if (typeof this.parent.id != 'undefined' && this.parent.id ==
+                    'gContent' && gContent.pagesize == 4){
+                    if(typeof this.subviews[3] != 'undefined'){
+                        this.subviews[3].lastview = true;
+                        this.setAttribute('last', this.subviews[3]);
+                    }
+                } else {
+                    if (s) s.lastview = true;
+                    this.setAttribute('last', s);
+                }
             }
+            super.update();
             ]]>
         </method>
         <!--- @keywords private -->

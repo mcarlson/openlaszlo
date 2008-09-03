@@ -129,7 +129,12 @@ function core_md5(x, len)
     c = safe_add(c, oldc);
     d = safe_add(d, oldd);
   }
-  return Array(a, b, c, d);
+  var mdarr = new Array(4);
+  mdarr[0] = a;
+  mdarr[1] = b;
+  mdarr[2] = c;
+  mdarr[3] = d;
+  return mdarr;
 
 }
 
@@ -201,7 +206,7 @@ function bit_rol(num, cnt)
  */
 function str2binl(str)
 {
-  var bin = Array();
+  var bin = Array(1);
   var mask = (1 << chrsz) - 1;
   for(var i = 0; i < str.length * chrsz; i += chrsz)
     bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (i%32);

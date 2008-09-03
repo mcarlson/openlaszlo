@@ -15,10 +15,10 @@
 
     <resource name="icon_pageleft_rsc"     src="icon-pageleft.png" />
     <resource name="icon_pageright_rsc"    src="icon-pageright.png" />
+    <resource name="icon_pagedown_rsc" src="icon-pagedown.png"/>
+    <resource name="icon_pageup_rsc" src="icon-pageup.png"/>
 
     <resource name="icon_taglink_rsc"    src="taglink_icon2.gif" />
-
-    <resource name="arrowhelp_rsc"    src="arrowhelp.png" />
     
     <resource name="header_button_rsc" >
         <frame src="header-button-mup.png" />

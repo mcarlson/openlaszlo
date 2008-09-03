@@ -6,10 +6,11 @@
 <view id="photodetails" opacity="0" width="${parent.width}" y="${parent.header.height}" clip="true" visible="false">
         
     <animator name="showanim" attribute="opacity" to="1" duration="300"  start="false" onstart="parent.setAttribute('visible', true)"/>
-    <animator name="hideanim" attribute="opacity" to="0" duration="300"  start="false" onstop="parent.setAttribute('visible', false)"/>
+    <animator name="hideanim" attribute="opacity" to="0" duration="200"  start="false" onstop="parent.setAttribute('visible', false)"/>
 
     <method name="setPhoto" args="p" >
         fullview.setImage( p.getPhotoURL() );
+        clipdrop.setImage( p.getPhotoURL() );
         headerphoto.setImage( p.getThumbnailURL() );
         var photoid = p.datapath.p.getAttr("id"); 
 
@@ -18,42 +19,54 @@
     </method>
     
     
-    <view name="container" >
+    <view name="container" width="${parent.width}">
         <animator name="slideup"   attribute="y" to="-256" duration="300"  start="false" onstop="parent.setFocus()"/>
         <animator name="slidedown" attribute="y" to="0" duration="300"  start="false" onstop="parent.setFocus()"/>
 
-        <method name="setFocus" ><![CDATA[
-            if ( y < 0 ) navmanager.focus( mobilepage1 )
-            else navmanager.focus( fullview )
-        ]]></method>
+        <method name="setFocus" args="direction">
+            <![CDATA[
+            mscroll.scrollToPage(mscroll.currentpage);
+            ]]>
+        </method>
         
         <simplelayout spacing="0" inset="6" />
         <photo id="fullview" x="8" 
                 y="53" 
                 visible="true" 
-                width="224"  height="228"  >
+                width="224"  height="228" >
 
             <method name="handlekeydown" args="k" >
                 <![CDATA[
-                var offset = container.lastphoto.clonenumber
+                var offset = container.lastphoto.clonenumber;
                 switch( k ) {
-                    case 38: // up arrow
-                        container.hideDetails()
-                        return true;
-                    case 40: // down arrow
-                        parent.slideup.doStart();
-                        return true;
                     case 37: // left arrow
                         offset -= 1;
                         if (offset < 0) offset = 0;
-                        container.lastphoto = gContent.repl.getCloneForOffset( offset );
+                        for(var i = 0; i < gContent.subviews.length; i++){
+                            if(gContent.subviews[i] == container.lastphoto){
+                                if(i > 0){
+                                    container.lastphoto = gContent.subviews[i - 1];
+                                }
+                            }
+                        }
+                        //container.lastphoto = gContent.repl.getCloneForOffset( offset );
                         photodetails.setPhoto(container.lastphoto);
+                        header_txt.setText( container.lastphoto.text );
                         return true;
                     case 39: // right arrow
                         offset += 1;
                         if (offset > gContent.pagesize - 1) offset = gContent.pagesize - 1;
-                        container.lastphoto = gContent.repl.getCloneForOffset( offset );
+                        //container.lastphoto = gContent.repl.getCloneForOffset( offset );
+                        for(var i = 0; i < gContent.subviews.length; i++){
+                            if(gContent.subviews[i] == container.lastphoto){
+                                if(i < gContent.subviews.length - 1){
+                                    container.lastphoto = gContent.subviews[i + 1];
+                                    break;
+                                }
+                            }
+                        }
                         photodetails.setPhoto(container.lastphoto);
+                        header_txt.setText( container.lastphoto.text );
                         return true;
                     default:
                         return false;    
@@ -65,11 +78,15 @@
             </handler>
             <handler name="onfocused" >
                 <![CDATA[
+                gContent.setAttribute('showimage', true);
                 if (parent.y < 0) {
-                    navmanager.focus(null);
+                    navmanager.focus(null, false);
                     parent.slidedown.doStart();
                 }
                 ]]>
+            </handler>
+            <handler name="onblur">
+                gContent.setAttribute('showimage', false);
             </handler>
         </photo>
         
@@ -95,9 +112,8 @@
             
         </view>
         
-        <mobilescroller width="${parent.width}" height="168"
+        <mobilescroller id="mscroll" width="${parent.width}" height="168"
                         datapath="infods:/rsp/photo"  >
-                        
             <simplelayout axis="y" spacing="5" />
                                                 
             <text fgcolor="0xe3e3e3" fontstyle="bold" fontsize="11" visible="${parent.desc.text != ''}">Description</text>
@@ -109,12 +125,12 @@
 
             <text fgcolor="white" fontstyle="bold" fontsize="11" height="23" >Tags</text>
 
-            <view x="5"  width="${parent.width}">
+            <view name="tum" x="5"  width="${parent.width}">
                 <handler name="ondata" reference="infods">
                     this.tl.setDatapath('infods:/rsp/photo/tags/tag[1-19]/text()');
                 </handler>
                 <wrappinglayout spacing="3" />      
-                <taglink name="tl" clickable="true" >
+                <taglink name="tl" clickable="true" focusable="false">
                     <handler name="onclick">
                         var t = this.txt.getText();
                         sbox.setText( t );
@@ -123,20 +139,15 @@
                 </taglink>
             </view>
         </mobilescroller>
+        
     </view>
 
-
     <method name="showDetails" args="screen">
-    
         if ( screen == 'photo' ) {
-            this.container.setY( 0 );
-            navmanager.focus( fullview );       
+            this.container.setY( 0 );      
         } else if ( screen == 'info' ) {
             this.container.setY( -256 );
-            navmanager.focus( mobilepage1 );         
+            navmanager.focus( nx, false );
         }
-
     </method>
-
-    
 </view> <!-- END photodetails -->

@@ -5,7 +5,7 @@
 * X_LZ_COPYRIGHT_END ******************************************************-->
 <library>
 
-    <class name="optionsbutton" clickable="true" with="Spatialnav" >
+    <class name="optionsbutton" clickable="true" focusable="${!clips.visible}">
         <attribute name="text" type="string" value="" />
         <basebutton name="btn" resource="option_button_rsc" stretches="width" width="100%"  onclick="parent.onclick.sendEvent()" >
             <handler name="onmousedown" reference="classroot">
@@ -27,6 +27,36 @@
                          this.getAttributeRelative('width', canvas) + 4,
                          this.getAttributeRelative('height', canvas) + 4];
             return rect;
+        </method>
+        
+        
+        <method name="findnext">
+            <![CDATA[
+            if(this['next'] && this['next'].visible){
+                return this.next;
+            }
+            ]]>
+        </method>
+        <method name="findprev">
+            if(this['prev']){
+                return this.prev;
+            }
+        </method>
+        <method name="handlekeydown" args="k">
+            if(k == 13){
+                this.onmousedown.sendEvent();
+            }
+        </method>
+        <method name="handlekeyup" args="k">
+            if(k == 13){
+                this.onmouseup.sendEvent();
+                this.onclick.sendEvent();
+            }
+        </method>
+        <method name="construct" args="parent, args">
+            this.focusable = true;
+            super.construct(parent, args);
+            if(navmanager) navmanager.add(this);
         </method>
     </class>
 

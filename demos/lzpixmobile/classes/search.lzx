@@ -1,6 +1,6 @@
 <!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
-    <class name="search" extends="inputtext" with="Spatialnav" bgcolor="white" text="interesting" y="-5" visible="false">
+    <class name="search" extends="inputtext" bgcolor="white" text="interesting" y="-5" visible="false">
     
         <attribute name="opened" value="false"  />
         <animator name="open"  attribute="y" to="25" duration="200" start="false"/>
@@ -22,27 +22,28 @@
             
         <method name="handlekeydown" args="k" >
             if ( k == 13 ) { //return key
-                this.load()
+                this.load(null);
                 this.toggle();
             }
         </method>
 
         <handler name="onstop" reference="this.close" >
-            this.setAttribute('visible',  false );
+            this.setAttribute('visible', false );
         </handler>
 
         <handler name="onstart" reference="this.open" >
-            this.setAttribute('visible',  true );
+            this.setAttribute('visible', true );
         </handler>
         
         <handler name="onstop" reference="this.open" >
-            navmanager.focus( this );
+            navmanager.focus( this, false );
         </handler>
 
         <handler name="oninit" method="load"/>
-        <method name="load">
+        <method name="load" args="v">
             gDataMan.loadPhotosByTag(this.getText());
-            container.hideDetails();
+            container.hideDetails(true);
+            gContent.setAttribute('firstrun', true);
         </method>
         
         <method name="toggle" >
@@ -53,6 +54,31 @@
             }
             this.opened = !this.opened;
         </method >
+        
+        
+        <method name="findnext">
+            <![CDATA[
+            if(this['next'] && this['next'].visible){
+                return this.next;
+            }
+            ]]>
+        </method>
+        <method name="findprev">
+            if(this['prev']){
+                return this.prev;
+            }
+        </method>
+        <method name="handlekeyup" args="k">
+            if(k == 13){
+                this.onmouseup.sendEvent();
+                this.onclick.sendEvent();
+            }
+        </method>
+        <method name="construct" args="parent, args">
+            this.focusable = true;
+            super.construct(parent, args);
+            if(navmanager) navmanager.add(this);
+        </method>
 
     </class>
 </library>

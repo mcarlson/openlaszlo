@@ -4,45 +4,6 @@
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
 <library> 
-    <interface name="Spatialnav">
-      <method name="findnext" />
-      <method name="findprev" />
-      <method name="handlekeydown" args="k" />
-      <method name="handlekeyup" args="k" />
-    </interface>
-    <script when="immediate">
-    <![CDATA[
-        mixin Spatialnav {
-            function construct(parent, args) {
-                this.focusable = true;
-                super.construct(parent, args);
-                if (navmanager) navmanager.add(this);
-            }
-            function findnext() {
-                if (this['next'] && this['next'].visible) { 
-                    return this.next;
-                }
-            }
-            function findprev() {
-                if (this['prev']) { 
-                    return this.prev;
-                }
-            }
-            function handlekeydown(k) {
-                if (k == 13) {
-                    this.onmousedown.sendEvent();
-                }
-            }
-            function handlekeyup(k) {
-                if (k == 13) {
-                    this.onmouseup.sendEvent();
-                    this.onclick.sendEvent();
-                }
-            }
-        }
-        ]]>
-    </script>
-
     <node name="navmanager">
         <attribute name="views" value="{}"/>
         <attribute name="focused" value="null"/>
@@ -61,18 +22,24 @@
             return (Math.atan2(dy, dx) / Math.PI) + 1;
         </method>
         
-        <method name="focus" args="v">
+        <method name="focus" args="v,ani">
             <![CDATA[
-            if (v == this.focused) return;
-            //Debug.warn("focus on", v);
+            if (v == this.focused || v == null) return;
+            //if (typeof v.id != 'undefined' && v.id == "fullview" && this.focused instanceof taglink) return;
+            // Sets the cursor without animation.
+            if(v && ani == false){
+                canvas.highlight.show(v, 0);
+            }
             this.setAttribute('focused', v);
-            if (v && v['onfocused'] ) v.onfocused.sendEvent();
+            if (v && v['onfocused'] ){
+                v.onfocused.sendEvent();
+            }
             ]]>
         </method>
         
         <handler name="onwidth" reference="canvas" method="refocus"/>
         <handler name="onheight" reference="canvas" method="refocus"/>
-        <method name="refocus">
+        <method name="refocus" args="v">
             if (this.focused) this.setAttribute('focused', this.focused);
         </method>
         
@@ -109,7 +76,7 @@
                 }
             }
             if (show) {
-                this.focus(show);
+                this.focus(show, true);
             } else {
                 this.move(k);
             }
@@ -151,7 +118,6 @@
                     f = f.immediateparent;
                 }
             }
-
 
             var maxdistance = this.distance(canvas.width, canvas.height);
             var mindistance = Infinity;
@@ -204,7 +170,7 @@
                 }
             }
 
-            if (closest) this.focus(closest);
+            if (closest) this.focus(closest, true);
             ]]>
         </method>
     </node>
