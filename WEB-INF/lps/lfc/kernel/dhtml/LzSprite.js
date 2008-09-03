@@ -311,6 +311,7 @@ LzSprite.prototype.quirks = {
     ,ie6_improve_memory_performance: false
     ,text_height_includes_margins: false
     ,inputtext_size_includes_margin: false
+    ,listen_for_mouseover_out: true
 }
 
 LzSprite.prototype.capabilities = {
@@ -430,6 +431,12 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['keypress_function_keys'] = false;
             // Safari 3.x does not send global key events to apps embedded in an iframe
             quirks['keyboardlistentotop'] = true;
+
+            // turn off mouseover activation for iphone
+            if (browser.isIphone) {
+                quirks['activate_on_mouseover'] = false;
+                quirks['listen_for_mouseover_out'] = false;
+            }
         } else if (browser.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
@@ -813,7 +820,7 @@ LzSprite.prototype.__setClickable = function(c, div) {
         div.ondblclick = f;
         div.onmouseenter = f;
         div.onmouseleave = f;
-    } else {
+    } else if (this.quirks.listen_for_mouseover_out) {
         div.onmouseover = f;
         div.onmouseout = f;
     }

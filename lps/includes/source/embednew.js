@@ -432,6 +432,7 @@ lz.embed = {
                 || "an unknown version";
             this.OS = this.searchString(this.dataOS) || "an unknown OS";
             this.initted = true;
+            this.isNetscape = this.isSafari = this.isOpera = this.isFirefox = this.isIE = this.isIphone = false;
             if (this.browser == 'Netscape') {
                 // currently only used for IE spoofing NS8
                 this.isNetscape = true;
@@ -444,6 +445,9 @@ lz.embed = {
             } else if (this.browser == 'Explorer') {
                 // true if we're on ie and not being spoofed
                 this.isIE = true;
+            } else if (this.browser == 'iPhone') {
+                this.isSafari = true;
+                this.isIphone = true;
             }
         },
         searchString: function (data) {
@@ -465,6 +469,12 @@ lz.embed = {
             return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
         },
         dataBrowser: [
+            {
+                string: navigator.userAgent,
+                subString: "iPhone",
+                identity: "iPhone",
+                versionSearch: "WebKit"
+            },
             {
                 string: navigator.userAgent,
                 subString: "Apple",
