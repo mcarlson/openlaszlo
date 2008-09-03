@@ -132,7 +132,7 @@
               an issue where selectfirst="true" wasn't working for remote
               data.
               @keywords private -->
-        <method name="_updateSelectionOnData" ><![CDATA[
+        <method name="_updateSelectionOnData" args="ignore=null" ><![CDATA[
             var dp = new lz.datapointer(this);
             
             var arr = dp.xpathQuery(this.itemdatapath);

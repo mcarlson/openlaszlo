@@ -272,7 +272,7 @@
                 }
             } else if (this._otherstyledel) {
                 this._otherstyledel.unregisterAll();
-                delete this._otherstyledel;
+                this._otherstyledel = null;
             }
             _setstyle(s);
             ]]>
@@ -381,13 +381,13 @@
             } 
             if (this._otherstyledel) {
                 this._otherstyledel.unregisterAll();
-                delete this._otherstyledel;
+                this._otherstyledel = null;
             }
             if (this._styledel) {
                 this._styledel.unregisterAll();
-                delete this._styledel;
+                this._styledel = null;
             }
-            super.destroy.apply(this, arguments);
+            super.destroy();
             ]]>
         </method>
 
