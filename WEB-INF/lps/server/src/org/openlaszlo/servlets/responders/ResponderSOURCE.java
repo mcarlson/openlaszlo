@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -53,14 +53,10 @@ public final class ResponderSOURCE extends ResponderCompile
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 ResponderSOURCE.class.getName(),"051018-53", new Object[] {fileName})
 );
-        if (fileName.endsWith(".lzo")) {
-            fileName = StringUtils.setCharAt(fileName, fileName.length() - 1, 'x');
-        }
-    
         ServletOutputStream  out = res.getOutputStream();
 
         try {
-            res.setContentType ("text/html");
+            res.setContentType ("text/html; charset=utf-8");
             writeHeader(out, null);
             writeText(out, FileUtils.readFileString(new File(fileName)));
             writeFooter(out);
