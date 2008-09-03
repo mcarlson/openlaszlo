@@ -33,7 +33,7 @@ public class LzIdleKernel  {
             }    
         }
 
-        public static function __update  ():void{
+        public static function __update(event:Event):void{
             for (var i:int = __callbacks.length - 1; i >= 0; i--) {
                 var s = (__callbacks[i])[0];
                 s[__callbacks[i][1]]( getTimer() );
@@ -41,7 +41,8 @@ public class LzIdleKernel  {
         }
 
         public static function startTimer(msecs:uint):void {
-            setInterval( LzIdleKernel.__update, msecs );
+            LFCApplication.stage.addEventListener(Event.ENTER_FRAME, LzIdleKernel.__update);
+            //setInterval( LzIdleKernel.__update, msecs );
         }
 
     }#

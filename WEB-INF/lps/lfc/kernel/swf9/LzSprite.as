@@ -311,6 +311,7 @@ dynamic public class LzSprite extends Sprite {
               this.__mouseEvent(e);
               this.__mouseEvent(new MouseEvent('mouseupoutside'));
           }
+          LzMouseKernel.__lastMouseDown = null;
       }
 
       public function __mouseEvent( e:MouseEvent ){
@@ -325,11 +326,14 @@ dynamic public class LzSprite extends Sprite {
             } else if (eventname == 'onmouseup') {
                 if (LzMouseKernel.__lastMouseDown == this) {
                     // cancel mousedown event bubbling...
+                    LzMouseKernel.__lastMouseDown = null;
                     e.stopPropagation();
                     this.__mousedown = false;
                 } else {
                     skipevent = true;
                 }
+            } else if (eventname == 'onmouseupoutside') {
+                this.__mousedown = false;
             } else {
                 e.stopPropagation();
             }
