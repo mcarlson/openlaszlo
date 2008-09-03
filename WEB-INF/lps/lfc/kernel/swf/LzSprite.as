@@ -15,20 +15,14 @@
 var LzSprite = function(newowner, isroot, args) {
     if (newowner == null) return this;
     this.owner = newowner;
-    //Debug.write('---> New sprite', newowner, newowner.immediateparent, newowner.immediateparent.sprite);
-
 
     if (isroot) {
         this.isroot = true;
         var is = _root.spriteroot;
         if (! is) {
-            var is = _root.attachMovie('empty', 'spriteroot', 1000);
+            is = _root.attachMovie('empty', 'spriteroot', 1000);
         }
         this.__LZmovieClipRef = is;
-        //is._x=5;
-        //is._y=5;
-        //this.setOpacity(.3);
-        //this.mask = null;
         
         this.__LZsvdepth = 1;
     } else {
@@ -76,25 +70,27 @@ LzSprite.prototype.setAccessible = function(accessible) {
     _root._focusrect = accessible == true ? true : 0;
 }
 
+LzSprite.prototype.__setAAProperty = function (aaprop, val, btnval, mc) {
+    if (mc._accProps == null) mc._accProps = {};
+    mc._accProps[aaprop] = val;
+
+    if ((mc = this.__LZbuttonRef.but)){
+        if (mc._accProps == null) mc._accProps = {};
+        mc._accProps[aaprop] = btnval;
+    }
+    //LzBrowser.updateAccessibility();
+}
+
 /**
   * Activate/inactivate children for accessibility
   * @param Boolean s: If true, activate the current view and all of its children
   */
 LzSprite.prototype.setAAActive = function( s, mc ){
     if (mc == null || mc == 'aaactive') mc = this.getMCRef();
-    //Debug.write('setAAActive ', s + ' ' + mc);
-    if (mc._accProps == null) mc._accProps = {};
-    //if forceSimple is true, it is the same as the Make Child Object Accessible option being unchecked. If forceSimple is false, it is the same as the Make Child Object Accessible option being checked.
-    mc._accProps.forceSimple = s == false;
-
-    if (mc = this.__LZbuttonRef.but){
-        if (mc._accProps == null) mc._accProps = {};
-        mc._accProps.forceSimple = s;
-    }
-    //LzSprite.updateAccessibility();
-    this.aaactive = s;
+    //if forceSimple is true, it is the same as the Make Child Object Accessible option being unchecked. 
+    //If forceSimple is false, it is the same as the Make Child Object Accessible option being checked.
+    this.__setAAProperty('forceSimple', s == false, s, mc);
 }
-
 
 /**
   * Set accessibility name
@@ -102,15 +98,7 @@ LzSprite.prototype.setAAActive = function( s, mc ){
   */
 LzSprite.prototype.setAAName = function( s, mc ){
     if (mc == null || mc == 'aaname') mc = this.getMCRef();
-    //Debug.write('setAAName ', s + ' ' + mc);
-    if (mc._accProps == null) mc._accProps = {};
-    mc._accProps.name = s;
-    if (mc = this.__LZbuttonRef.but){
-        if (mc._accProps == null) mc._accProps = {};
-        mc._accProps.name = s;
-    }
-    //LzSprite.updateAccessibility();
-    this.aaname = s;
+    this.__setAAProperty('name', s, s, mc);
 }
 
 /**
@@ -119,26 +107,7 @@ LzSprite.prototype.setAAName = function( s, mc ){
   */
 LzSprite.prototype.setAADescription = function( s, mc ){
     if (mc == null || mc == 'aadescription') mc = this.getMCRef();
-    //Debug.write('setAADescription ', s + ' ' + mc);
-    if (mc._accProps == null) mc._accProps = {};
-    mc._accProps.description = s;
-    if (mc = this.__LZbuttonRef.but){
-        if (mc._accProps == null) mc._accProps = {};
-        mc._accProps.description = s;
-    }
-    //LzSprite.updateAccessibility();
-    this.aadescription = s;
-}
-
-/**
-  * Set accessibility tab order
-  * @param number s: The tab order index for this view.  Must be a unique number.
-  */
-LzSprite.prototype.setAATabIndex = function( s, mc ){
-    if (mc == null || mc == 'aatabindex') mc = this.getMCRef();
-    //Debug.write('setAATabIndex ', mc);
-    mc.tabIndex = s;
-    this.aatabindex = s;
+    this.__setAAProperty('description', s, s, mc);
 }
 
 /**
@@ -148,16 +117,18 @@ LzSprite.prototype.setAATabIndex = function( s, mc ){
   */
 LzSprite.prototype.setAASilent = function( s, mc ){
     if (mc == null || mc == 'aasilent') mc = this.getMCRef();
-    //Debug.write('setAASilent ', s + ' ' + mc);
-    if (mc._accProps == null) mc._accProps = {};
-    mc._accProps.silent = s;
-    if (mc = this.__LZbuttonRef.but){
-        if (mc._accProps == null) mc._accProps = {};
-        mc._accProps.silent = s;
-    }
-    //LzSprite.updateAccessibility();
-    this.aasilent = s;
+    this.__setAAProperty('silent', s, s, mc);
 }
+
+/**
+  * Set accessibility tab order
+  * @param number s: The tab order index for this view.  Must be a unique number.
+  */
+LzSprite.prototype.setAATabIndex = function( s, mc ){
+    if (mc == null || mc == 'aatabindex') mc = this.getMCRef();
+    mc.tabIndex = s;
+}
+
 
 // FIRST_SUBVIEW_DEPTH: This is so that default objects (such as
 // buttons, and in swf6 masks) can be attached above the view's
@@ -170,12 +141,6 @@ LzSprite.prototype.MASK_DEPTH = 3;
 LzSprite.prototype.CLIPS_PER_SUBVIEW = 2;
 LzSprite.prototype.BACKGROUND_DEPTH_OFFSET = -1;
 LzSprite.prototype.FOREGROUND_DEPTH_OFFSET = 0;
-
-
-//@field Boolean focusable: If true, this view will participate in keyboard
-// focus and will receive focus events and keyboard events
-// when it has the focus. (see lz.Focus for more details)
-LzSprite.prototype.focusable = false;
 
 LzSprite.prototype.visible =   true;
 
@@ -194,6 +159,7 @@ LzSprite.prototype.rotation =   0;
 // takes it's dimensions from the resource and there is no scaling.
 LzSprite.prototype.width =   0;
 LzSprite.prototype.height =   0;
+// @devnote: "LzMouseEvents" is defined in SWFFile.java
 LzSprite.prototype.__LZclickregion =  "LzMouseEvents";
 
 // @devnote Sprite scale is stored as a fraction, but the runtime clip
@@ -213,14 +179,6 @@ LzSprite.prototype.frame =   0;
 
 // Used by loaders to track load state
 LzSprite.prototype.loadperc =   0;
-//@field Number framesloadratio: For views whose resource is loaded at runtime,
-//the ratio of the loaded frames to the total frames. This is a number between
-//zero and 1.
-LzSprite.prototype.framesloadratio =   0;
-//@field Number loadratio: For views whose resource is loaded at runtime,
-//ratio of the loaded bytes to the total bytes. This is a number between 
-//zero and 1.
-LzSprite.prototype.loadratio =   0;
 
 //@field Boolean hassetwidth: If true, then setWidth() has been called on this
 //view, and the view will not be sized to its contents. 
@@ -228,9 +186,6 @@ LzSprite.prototype.hassetheight = false;
 //@field Boolean hassetheight: If true, then setHeight() has been called on this
 //view, and the view will not be sized to its contents. 
 LzSprite.prototype.hassetwidth = false;
-
-//need quick check for viewness
-LzSprite.prototype.__LZisView = true;
 
 // maximum number of frames to wait to load an mp3 audio
 LzSprite.prototype.__lzskipplaychecklimitmax = 20;
@@ -303,11 +258,9 @@ LzSprite.prototype.setResource = function ( resourceName ) {
         //this is easier than figuring out what the depth and name should be
         //from this context, but it's not necessary.
         var mc = this.owner.immediateparent.sprite.attachResourceToChildView( resourceName, this );
-        this.setMovieClip( mc , resourceName );
-        // Copy previous right-click context menu if there is one,
-        // from background-color movieclip.
-        var oldmenu = this.__LZbgRef.menu;
-        mv.menu = oldmenu;
+        this.setMovieClip( mc, resourceName );
+        // Install right-click context menu if there is one
+        mc.menu = this.__contextmenu && this.__contextmenu.kernel.__LZcontextMenu();
     }
 
     this.updateResourceSize(true);
@@ -330,14 +283,11 @@ LzSprite.prototype.doReplaceResource = function(resourceName) {
     var reclick = this.__LZbuttonRef._visible;
     this.__LZbuttonRef = null;
 
-    var oldmenu = this.__LZmovieClipRef.menu;
-    if (oldmenu == null) {
-        oldmenu = this.__LZbgRef.menu;
-    }
+    var oldmenu = this.__contextmenu && this.__contextmenu.kernel.__LZcontextMenu();
     var oldname = this.__LZmovieClipRef._name;
     var mc = this.owner.immediateparent.sprite.attachResourceToChildView( resourceName, this, oldname);
 
-    this.setMovieClip( mc , resourceName );
+    this.setMovieClip( mc, resourceName );
     mc.menu = oldmenu;
 
     if ( reclick ){
@@ -437,12 +387,6 @@ LzSprite.prototype.attachResourceToChildView = function ( resourceName,
     
     var newmc = this.__LZmovieClipRef.attachMovie( resourceName, instName, depth);
 
-
-
-    //@event onaddsubresource: Sent when a child view adds a resource
-    // not found in view
-    // if (this.owner.onaddsubresource && this.owner.onaddsubresource.ready) this.owner.onaddsubresource.sendEvent( childsprite.owner );
-
     return newmc;
 }
 
@@ -465,21 +409,16 @@ LzSprite.prototype.attachBackgroundToChild = function ( childsprite ){
     var depth = this.FIRST_SUBVIEW_DEPTH +
       (childsprite.__LZdepth * this.CLIPS_PER_SUBVIEW) +
       this.BACKGROUND_DEPTH_OFFSET;
-
-    var mc = this.__LZmovieClipRef.attachMovie( "swatch", "$b" + this.__LZsubUniqueNum, depth );
+    
+    // @devnote _xscale, _yscale: See note at LzSprite#width for why this is correct
+    var initObject = { _xscale: childsprite.width, _yscale: childsprite.height,
+                        _x: childsprite.x, _y: childsprite.y,
+                        _alpha: childsprite.opacity * 100, 
+                        _rotation: childsprite.rotation % 360,
+                        _visible: childsprite.visible && childsprite.owner.isinited };
+    
+    var mc = this.__LZmovieClipRef.attachMovie( "swatch", "$b" + this.__LZsubUniqueNum, depth, initObject );
     childsprite.__LZbgRef = mc;
-
-    // @devnote See note at LzSprite#width for why this is correct
-    childsprite.__LZbgRef._xscale = childsprite.width;
-    childsprite.__LZbgRef._yscale = childsprite.height;
-
-    childsprite.__LZbgRef._x = childsprite.x;
-    childsprite.__LZbgRef._y = childsprite.y;
-
-    childsprite.__LZbgRef._alpha = childsprite.opacity * 100 ;
-    childsprite.__LZbgRef._rotation = childsprite.rotation % 360;
-
-    childsprite.__LZbgRef._visible = childsprite.visible && childsprite.owner.isinited;
 }
 
 
@@ -491,13 +430,9 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
     //@field Number bgcolor: The color of background of this view. Null if there is
     //no bgcolor. A number from 0 - 0xFFFFFF.
     if (bgc != null) {
-        if ( $debug ){
-            var bgcn = Number( bgc );
-            if ( bgcn != bgcn ) {
-                if ( $debug ){
-                    Debug.write( "Invalid value for bgcolor: " + 
-                                       bgca,this );
-                }
+        if ($debug) {
+            if (isNaN(Number( bgc ))) {
+                Debug.write( "Invalid value for bgcolor: " + bgca, this );
             }
         }
         this.bgcolor = Number(bgc);
@@ -558,12 +493,10 @@ LzSprite.prototype.applyBG = function () {
   * @param Number v: The new value for <attribute>x</attribute>.
   */
 LzSprite.prototype.setX = function ( v ){
-    //Debug.warn('Sprite.setX');
     //@field Number x: The x position of the view
     this.x = v;
     this.__LZmovieClipRef._x = v;
     this.__LZbgRef._x = v;
-    //Debug.write('Sprite.setX', this, v, this.__LZmovieClipRef, this.__LZmovieClipRef._x);
 }
 
 /**
@@ -610,7 +543,7 @@ LzSprite.prototype.setWidth = function ( v ){
             // defaults
             this._xscale = 1;
             // clip scale is in percent
-            this.__LZmovieClipRef._xscale =  100;
+            this.__LZmovieClipRef._xscale = 100;
         }
         return;
     }
@@ -624,7 +557,6 @@ LzSprite.prototype.setWidth = function ( v ){
         this._xscale = xscale;
         // clip scale is in percent
         this.__LZmovieClipRef._xscale = xscale * 100;
-        if (this.__LZrightmenuclip) this.__LZrightmenuclip._xscale = xscale * 100;
     } else {
         // If the view does not stretch, we have to resize the mask
         // NOTE: [2008-01-24 ptw] This seems wrong.  If the view is
@@ -635,13 +567,12 @@ LzSprite.prototype.setWidth = function ( v ){
         if ( this.masked ){
             this.__LZmaskClip._xscale = v;
         }
-        if (this.__LZrightmenuclip) this.__LZrightmenuclip._xscale = v;
     }
     
     this.hassetwidth = true;
     
     if (this.setButtonSize)
-        this.setButtonSize( "width" , v );
+        this.setButtonSize( "width", v );
 
     if (typeof(this.__LZbgRef._xscale) != 'undefined') 
         this.__LZbgRef._xscale = v;
@@ -664,7 +595,7 @@ LzSprite.prototype.setHeight = function ( v ){
             // defaults
             this._yscale = 1;
             // clip scale is in percent
-            this.__LZmovieClipRef._yscale =  100;
+            this.__LZmovieClipRef._yscale = 100;
         }
         return;
     }
@@ -678,7 +609,6 @@ LzSprite.prototype.setHeight = function ( v ){
         this._yscale = yscale;
         // clip scale is in percent
         this.__LZmovieClipRef._yscale = yscale * 100;
-        if (this.__LZrightmenuclip) this.__LZrightmenuclip._yscale = yscale * 100;
     } else {
         // If the view does not stretch, we have to resize the mask
         // NOTE: [2008-01-24 ptw] This seems wrong.  If the view is
@@ -689,12 +619,11 @@ LzSprite.prototype.setHeight = function ( v ){
         if ( this.masked ){
             this.__LZmaskClip._yscale = v;
         }
-        if (this.__LZrightmenuclip) this.__LZrightmenuclip._yscale = v;
     }
     this.hassetheight = true;
     
     if (this.setButtonSize)
-        this.setButtonSize( "height" , v );
+        this.setButtonSize( "height", v );
 
     if (typeof(this.__LZbgRef._yscale) != 'undefined')
         this.__LZbgRef._yscale = v;
@@ -766,20 +695,10 @@ LzSprite.prototype.stretchResource = function ( stretch ){
   * This function sets or removes the clip/mask
   */
 LzSprite.prototype.setClip = function (c){
-    if (c) {
-        this.makeMasked();
-    } else {
+    if (! c) {
         this.removeMask();
-    }    
-}    
-
-/**
-  * This function applies the MakeMasked view transformer.
-  * @access private
-  */
-LzSprite.prototype.makeMasked = function ( ){
-    this.masked = true;
-    this.mask = this;
+    }
+    this.masked = c;
 }
 
 /**
@@ -792,16 +711,17 @@ LzSprite.prototype.removeMask = function () {
     mask.removeMovieClip();
     delete this.__LZmaskClip;
     this.masked = false;
-    this.mask = null;
 }
 
 /**
+  * @param Boolean s: used by drawview
   * @access private
   */
 LzSprite.prototype.applyMask = function (s) {
     if ( this.__LZmovieClipRef == null ){
-        Debug.warn("Cannot apply mask before resource has been attached in",
-                    this);
+        if ($debug) {
+            Debug.warn("Cannot apply mask before resource has been attached in", this);
+        }
         return;
     }
     if (s && this.cachebitmap) {
@@ -813,21 +733,15 @@ LzSprite.prototype.applyMask = function (s) {
     if (s) {
         var mask = mc.createEmptyMovieClip("$mcM", this.MASK_DEPTH);
     } else {
-        var mask = mc.attachMovie( "swatch", "$mcM", this.MASK_DEPTH);
+        // The mask is attached as a child of the view clip, so we just
+        // align it with the clip and it will follow along if the clip is
+        // scaled, translated or rotated.
+        var mask = mc.attachMovie( "swatch", "$mcM", this.MASK_DEPTH, 
+                        {_x: 0, _y: 0, _width: this.width, _height: this.height});
     }
-    //mask.tabIndex = tabindexcounter++;
-    // The mask is attached as a child of the view clip, so we just
-    // align it with the clip and it will follow along if the clip is
-    // scaled, translated or rotated.
-    mask._x = 0;
-    mask._y = 0;
-    if (! s) {
-        mask._width = this.width;
-        mask._height = this.height;
-    }
+    
     this.__LZmaskClip = mask;
     this.masked = true;
-    this.mask = this;
     mc.setMask(mask);
 }
 
@@ -835,6 +749,7 @@ LzSprite.prototype.applyMask = function (s) {
   * @access private
   * */
 LzSprite.prototype.setClickRegion = function ( cr ){
+    //@devnote "LzMouseEvents" is defined in SWFFile.java
     if (cr == null) cr = "LzMouseEvents";
     this.__LZclickregion = cr;
 }
@@ -845,62 +760,27 @@ LzSprite.prototype.setClickRegion = function ( cr ){
   * @param amclickable: Boolean indicating the view's clickability
   */
 LzSprite.prototype.setClickable = function ( amclickable ){
-    //@event onmousedown: Sent when the mouse button goes down over a view
-    //onmousedown is only sent by views which are clickable
-    //@event onmouseup:Sent when the mouse button comes up after going down over
-    //a clickable view This event is only sent by views which are clickable
-    //@event onmouseupoutside: Sent when the mouse button comes up outside a
-    //view This event is only sent by views which are clickable
-    //after it went down over the view. This event is only sent by views which
-    //are clickable
-    //@event onclick:Sent when the mouse button comes up over a view after going
-    //down over the same view. This event is only sent by views which are
-    //clickable
-    //@event onmouseover: Sent when the mouse button is up and the mouse rolls
-    //over the view  This event is only sent by views which are clickable
-    //@event onmouseout: Sent when the mouse button is up and the mouse rolls
-    //off the view. This event is only sent by views which are clickable
-    //@event onmousedragin: Sent when the mouse button went down over the view
-    //and the button is still down when mouse rolls back inside the view.
-    //This event is only sent by views which are clickable
-    //@event onmousedragout: Sent when the mouse button went down over the view
-    //and the button is still down when mouse rolls outside the view.
-    //This event is only sent by views which are clickable
-    //@event ondblclick: Sent when the mouse is doubleclicked over the view,
-    //but only if anyone is listening for the event. A view which is clicked
-    //twice in rapid succession, but has no delegates registered for its
-    //ondblclick event, will simply send two click events.
-    //The view's doubleclick time can be adjusted by setting its
-    //DOUBLE_CLICK_TIME attribute
-
-
     if ( this.__LZmovieClipRef == null ){
         this.makeContainerResource( );
     }
 
     if ( amclickable != false && !this.__LZbuttonRef){
-        var mc = this.__LZmovieClipRef.attachMovie( this.__LZclickregion, "$mcB", this.BUTTON_DEPTH );
-        mc._height = 0;
-        mc._width = 0;
+        var mc = this.__LZmovieClipRef.attachMovie( this.__LZclickregion, "$mcB", 
+                    this.BUTTON_DEPTH, {_width: 0, _height: 0} );
 
         // TODO: turn on only in accessible mode...
-        // attach view ref to Button for callback
-        mc.but.__lzview = this.owner;
         mc.but.onSetFocus = Button.prototype.__gotFocus;
         mc.but.onKillFocus = Button.prototype.__lostFocus;
+        if (this.showhandcursor == false) mc.but.useHandCursor = false;
 
         this.__LZbuttonRef = mc;
-        //mc.tabIndex = tabindexcounter++;
-        if (this.showhandcursor == false) this.setShowHandCursor(this.showhandcursor);
         this.setButtonSize = this._setButtonSize;
         this.setButtonSize( "width" , this.width );
         this.setButtonSize( "height" , this.height );
-        this.__LZbuttonRef.myView = this.owner;
+        this.__LZbuttonRef.myView = this.owner;//required property, see SWFFile.java
     } else {
         this.__LZbuttonRef._visible = amclickable;
     }
-
-    this.clickable = amclickable;
 }
 
 
@@ -916,7 +796,7 @@ LzSprite.prototype.setClickable = function ( amclickable ){
   * (100 / &lt;parent scale&gt;) factor.
   */
 LzSprite.prototype._setButtonSize = function ( axis , bsize ){
-    var sc ="_" + ( axis =="width" ? "x" : "y" ) + "scale" ;
+    var sc = "_" + ( axis == "width" ? "x" : "y" ) + "scale" ;
     this.__LZbuttonRef[ sc ] = ( 100 / this.__LZmovieClipRef[ sc ] ) * bsize;
 }
 
@@ -931,13 +811,8 @@ LzSprite.prototype._setButtonSize = function ( axis , bsize ){
   * @param String headers: Headers to send with the request, if any.
   */
 LzSprite.prototype.setSource = function ( source, cache, headers, filetype){
-    //@event onerror: Sent when there is an error loading the view's resource.
-    //For proxied loads, the argument sent with the event is the error string
-    //sent by the server.
-    //@event ontimeout: Sent when the request to load media for the view times
-    //out
+    //@devnote: after this call, setSource, setResource, getMCRef and destroy have been over-ridden
     LzMakeLoadSprite.transform( this, source, cache, headers, filetype);
-    //after this call, setSource  and doReplaceResource have been over-ridden
 }
 
 
@@ -1001,23 +876,15 @@ LzSprite.prototype.destroy = function(){
         delete this._muDel;
     }
 
-    this.__LZFinishDestroyOnIdle();
-}
-
-/**
-  * @access private
-  */
-LzSprite.prototype.__LZFinishDestroyOnIdle = function (){
     if ( this.__LZmovieClipRef != null ){
-        //Debug.write( "remove movieclip" );
         removeMovieClip( this.__LZmovieClipRef );
         delete this.__LZmovieClipRef;
     }
 
-  if ( this.__LZbgRef != null ){
-    removeMovieClip( this.__LZbgRef );
-    delete this.__LZbgRef;
-  }
+    if ( this.__LZbgRef != null ){
+        removeMovieClip( this.__LZbgRef );
+        delete this.__LZbgRef;
+    }
 }
 
 /**
@@ -1115,31 +982,12 @@ LzSprite.prototype.getColorObj = function (){
 
 
 /**
-  * Returns the width of the view.
-  * @keywords protected 
-  * @deprecated
-  */
-LzSprite.prototype.getWidth = function (){
-    return this.width;
-}
-
-/**
-  * Returns the height of the view.
-  * @keywords protected 
-  * @deprecated
-  */
-LzSprite.prototype.getHeight = function (){
-    return this.height;
-}
-
-
-/**
   * This method makes this view the frontmost subview of this view's parent.
   * */
 LzSprite.prototype.bringToFront = function ( ){
     //Debug.write('bringToFront', this);
     //this is really a function of the parent view
-    this.owner.immediateparent.sprite.changeOrder ( this , 1);
+    this.owner.immediateparent.sprite.changeOrder( this , 1);
 }
 
 /**
@@ -1148,7 +996,7 @@ LzSprite.prototype.bringToFront = function ( ){
 LzSprite.prototype.sendToBack = function ( ){
     //Debug.write('sendToBack', this);
     //this is really a function of the parent view
-    this.owner.immediateparent.sprite.changeOrder ( this , -1);
+    this.owner.immediateparent.sprite.changeOrder( this , -1);
 }
 
 /**
@@ -1233,7 +1081,7 @@ LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
 
     var reback = cSprite.__LZisBackgrounded;
     if (reback) {
-        var menu = cSprite.__LZbgRef.menu;
+        var menu = cSprite.__contextmenu && cSprite.__contextmenu.kernel.__LZcontextMenu();
         var al = cSprite.__LZbgRef._alpha;
     }
     cSprite.removeBG();
@@ -1261,7 +1109,7 @@ LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
         next = dir;
 
         if ( nv.__LZisBackgrounded ){
-            var menu2 = nv.__LZbgRef.menu;
+            var menu2 = nv.__contextmenu && nv.__contextmenu.kernel.__LZcontextMenu();
             var al2 = nv.__LZbgRef._alpha;
             nv.removeBG();
             nv.applyBG();
@@ -1329,7 +1177,7 @@ LzSprite.prototype.getAttachPoint = function ( cSprite ){
   * it
   */
 LzSprite.prototype.setShowHandCursor = function ( s ){
-    if (!this.__LZbuttonRef) {
+    if (! this.__LZbuttonRef) {
         this.setClickable( true );
     }
     
@@ -1356,7 +1204,7 @@ LzSprite.prototype.setCursor = function( cursor ){
                                                 this.owner , 'onmouseout');
         }
         
-        if (!this.__LZbuttonRef) {
+        if (! this.__LZbuttonRef) {
             this.setClickable( true );
         }
     } else {
@@ -1429,18 +1277,13 @@ LzSprite.prototype.updatePlayStatus = function (ignore){
     }
 
     var tf = this.getMCRef()._totalframes;
-    if (  this.totalframes != tf ){
-        if (tf != undefined) {
-            this.totalframes = tf;
-            this.owner.resourceevent('totalframes', this.totalframes);
-        }
+    if ( tf != undefined && this.totalframes != tf ){
+        this.totalframes = tf;
+        this.owner.resourceevent('totalframes', this.totalframes);
     }
 
     if ( this.playing && this.frame == this.totalframes &&
          this.totalframes > 1 ){
-        //@event onlastframe: Sent when the view sets its frame (resource
-        //number) to the last frame. This can be used to find out when a
-        //streaming media clip is done playing.
         this.owner.resourceevent('lastframe', null, true);
         this.checkPlayStatus();
     }
@@ -1462,7 +1305,8 @@ LzSprite.prototype.checkPlayStatus = function (){
     this.__lzskipplaycheck = 0;
     this.__lzskipplaychecklimit = 4;
     // skip more frames for mp3 audio resources to allow tracking to work correctly
-     if (('isaudio' in this.getMCRef()) && (this.getMCRef().isaudio == true)) this.__lzskipplaychecklimit = LzSprite.prototype.__lzskipplaychecklimitmax;
+    if (('isaudio' in this.getMCRef()) && (this.getMCRef().isaudio == true)) 
+        this.__lzskipplaychecklimit = LzSprite.prototype.__lzskipplaychecklimitmax;
     
     //Debug.warn('checkPlayStatus %w %w %w %w', this.__lzcheckframe, this.frame, this.totalframes, this.__lzskipplaychecklimit);
     this.checkPlayStatusDel.register( lz.Idle, "onidle" );
@@ -1503,7 +1347,8 @@ LzSprite.prototype.checkPlayStatus2 = function (ignore){
   * 
   * @param Integer f: If defined, begin playing at the given frame. Otherwise,
   * begin playing at the current frame.
-  * @param Boolean rel: If true, f is relative to the current frame.  Otherwise f is relative to the beginning of the resource.
+  * @param Boolean rel: If true, f is relative to the current frame.  
+  * Otherwise f is relative to the beginning of the resource.
   */
 LzSprite.prototype.play = function (f, rel){
     var m = this.getMCRef();
@@ -1520,7 +1365,6 @@ LzSprite.prototype.play = function (f, rel){
     }
 
     this.trackPlay();
-    //@event onplay: Sent when a view begins playing its resource
     this.owner.resourceevent('play', null, true);
 }
 
@@ -1528,7 +1372,8 @@ LzSprite.prototype.play = function (f, rel){
   * Stop playing the attached resource
   * @param Integer f: If defined, stop playing at the given frame. Otherwise,
   * stop at the current frame.
-  * @param Boolean rel: If true, f is relative to the current frame.  Otherwise it is relative to the start position of the resource.
+  * @param Boolean rel: If true, f is relative to the current frame. 
+  * Otherwise it is relative to the start position of the resource.
   */
 LzSprite.prototype.stop = function (f, rel){
     var m = this.getMCRef();
@@ -1545,36 +1390,36 @@ LzSprite.prototype.stop = function (f, rel){
         m.stop();
     }
 
-    //@event onstop: Sent when a view's resource that is capable of playing is
-    //stopped. This is only called if stop is called directly; when a resource
-    //hits its last frame, the LzView event onlastframe is called.
     if ( this.playing ) this.owner.resourceevent('stop', null, true);
     this.stopTrackPlay();
 }
 
 /**
+  * @param String a: method to call, one of: "play", "stop", "checkPlayStatus"
+  * @param * arg1: optional argument
+  * @param * arg2: optional argument
   * @access private
   */
-LzSprite.prototype.queuePlayAction = function ( a , arg1 , arg2 ){
-    //Debug.write('queuePlayAction', a, arg1, arg2);
+LzSprite.prototype.queuePlayAction = function ( a, arg1, arg2 ){
     if ( this.queuedplayaction == null ){
         this.queuedplayaction = [];
         if ( this.doQueuedDel == null ){
-            this.doQueuedDel = new LzDelegate( this , "doQueuedPlayAction" );
+            this.doQueuedDel = new LzDelegate( this, "doQueuedPlayAction" );
         }
         this.doQueuedDel.register( this.owner, "onload" );
     }
-    this.queuedplayaction.push([ a , arg1 , arg2 ]);
+    this.queuedplayaction.push( a, arg1, arg2 );
 }
 
 /**
   * @access private
   */
 LzSprite.prototype.doQueuedPlayAction = function (ignore){
-    for (var i=0; i < this.queuedplayaction.length; i++) {
-        var qa = this.queuedplayaction[i];
-        //Debug.write('doQueuedPlayAction', qa);
-        this[ qa[0] ] ( qa[1] , qa[2] );
+    this.doQueuedDel.unregisterAll();
+    
+    var qa = this.queuedplayaction;
+    for (var i = 0; i < qa.length; i += 3) {
+        this[ qa[i] ] ( qa[i + 1], qa[i + 2] );
     }
     this.queuedplayaction = null;
 }
@@ -1653,51 +1498,35 @@ LzSprite.prototype.getZ = function() {
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
 LzSprite.prototype.setContextMenu = function ( cmenu ){
-    // For back compatibility, we accept either LzContextMenu or (Flash primitive) ContextMenu
-    if (! (cmenu instanceof ContextMenu)) {
-        this.__contextmenu = cmenu;
-        cmenu = cmenu.kernel.__LZcontextMenu();
-    } else {
-      if ($debug) {
-        Debug.info("Passing a Flash ContextMenu to LzView.setContextMenu is deprecated, use LzContextMenu instead");
-      }
-    }
+    this.__contextmenu = cmenu;
+    cmenu = cmenu.kernel.__LZcontextMenu();
 
-    // [todo hqm 01-24-07] SWF-specific 
-    if (this.owner == canvas || this instanceof LzTextSprite) {
-        // check canvas for LPP-4214, instanceof LzTextSprite for LPP-5533
-        var mc = this.getMCRef();
-        if (this.owner == canvas) {
-            // must use _root if canvas
-            var mc = _root;
-        } 
-        if (mc != null) {
-            mc.menu = cmenu;
-        }
-    } else {
+    if (! (this.owner == canvas || this instanceof LzTextSprite)) {
+        // normal views install the context-menu on their background-clip
         var mb = this.__LZbgRef;
         if (mb == null) {
+            // if not present, create an invisible clip
             this.setBGColor(0xffffff);
             var mb = this.__LZbgRef;
             mb._alpha = 0;
         }
         this._bgcolorhidden = true;
         mb.menu = cmenu;
-
-        // Install menu on foreground resource clip if there is one
-        var mc = this.getMCRef();
-        if (mc != null) {
-            mc.menu = cmenu;
-        }
     }
 
-    if ($debug) {
-        if (mb == null && mc == null) {
-        Debug.warn("LzView.setContextMenu: cannot set menu on view %w, it has no foreground or background movieclip", this.owner);
-        }
+    // Install menu on foreground resource clip if there is one,
+    // must use _root if canvas
+    var mc = this.owner == canvas ? _root : this.getMCRef();
+    if (mc != null) {
+        mc.menu = cmenu;
     }
 }
 
+/**
+  * LzSprite.setDefaultContextMenu
+  * Install the default menu for the right-mouse-button 
+  * @param LzContextMenu cmenu: LzContextMenu to install 
+  */
 LzSprite.prototype.setDefaultContextMenu = function ( cmenu ){
     MovieClip.prototype.menu = cmenu.kernel.__LZcontextMenu();
 }
@@ -1732,12 +1561,10 @@ LzSprite.prototype.getContext = LzSprite.prototype.getMCRef;
   * @access private
   */
 Button.prototype.__gotFocus = function ( oldfocus ){
-  // SWF-specific
     if (_root._focusrect != true) return;
-    //Debug.write('__gotFocus', oldfocus);
-    if (!(lz.Focus.getFocus() == this.__lzview)) {
+    if (!(lz.Focus.getFocus() == this._parent.myView)) {
         var tabdown = lz.Keys.isKeyDown('tab');
-        lz.Focus.setFocus(this.__lzview, false);
+        lz.Focus.setFocus(this._parent.myView, false);
     }
 }
 
@@ -1745,9 +1572,7 @@ Button.prototype.__gotFocus = function ( oldfocus ){
   * @access private
   */
 Button.prototype.__lostFocus = function ( ){
-  // SWF-specific
     if (_root._focusrect != true) return;
-    //Debug.write('__lostFocus');
-    if (this.__lzview.hasFocus) lz.Focus.clearFocus();
+    if (this._parent.myView.hasFocus) lz.Focus.clearFocus();
 }
 }
