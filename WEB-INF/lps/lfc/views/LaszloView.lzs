@@ -183,13 +183,6 @@ var onlastframe = LzDeclaredEvent;
   */
 var onload = LzDeclaredEvent;
 
-/** Sends a percentage (0-1) reflecting the amount of a media file that's been downloaded.  Deprecated - see onframesloadratio.
-  * @lzxtype event
-  * @keywords deprecated 
-  * @access public
-  */
-var onloadperc = LzDeclaredEvent;
-
 /** Sends a percentage (0-1) reflecting the number of frames downloaded.
   * @lzxtype event
   * @access public
@@ -957,10 +950,6 @@ var frame = 1;
 /** @access private */
 function $lzc$set_frame(v) { this.setResourceNumber(v); }
 
-/** @keywords deprecated 
-  * @access private 
-  */
-var loadperc =   0;
 /** For views whose resource is loaded at runtime,
   * the ratio of the loaded frames to the total frames. This is a number between
   * zero and 1.
@@ -1187,15 +1176,6 @@ function searchSubviews ( prop , val) {
         }
     }
     return null;
-}
-
-/** @access private */
-function searchimmediateparents ( prop ){
-    if ( $debug ){
-      Debug.deprecated(this, arguments.callee, this.searchParents);
-    }
-
-    return this.searchParents( prop );
 }
 
 /**
@@ -1969,30 +1949,6 @@ function getColorTransform (){
         this.__warnCapability('view.getColorTransform()'); 
     }
 }
-
-
-/**
-  * Returns the width of the view.
-  * @keywords private
-  * @deprecated use the width attribute directly
-  */
-function getWidth (){
-    if ($debug) Debug.deprecated(this, arguments.callee, 'width');
-    return this.width;
-}
-
-/**
-  * Returns the height of the view.
-  * @keywords private
-  * @deprecated use the height attribute directly
-  */
-function getHeight (){
-    if ($debug) Debug.deprecated(this, arguments.callee, 'height');
-    return this.height;
-}
-
-//__LZcheckwidth = true;
-//__LZcheckheight = true;
 
 /**
  * @devnote measureSize must agree with this
@@ -2836,27 +2792,6 @@ function getID3 ( ){
     }
 }
 
-
-/** @access private */
-var __LZdidPPwarn = false;
-
-/** @access private */
-function getPlayPerc ( ){
-    if ( $debug ){
-        if ( !this.__LZdidPPwarn ){
-          Debug.info("%w.%s is deprecated.  Use frame/totalframes attributes instead.",
-                     this, arguments.callee);
-        }
-        this.__LZdidPPwarn = true;
-    }
-    return this.frame/this.totalframes;
-}
-
-/** @access private */
-function $lzc$getPlayPerc_dependencies ( who , self ){
-    return [ self, "frame" ];
-}
-
 /**
   * Shows or hides the hand cursor for this view.
   * @param Boolean s: true shows the hand cursor for this view, false hides 
@@ -3140,8 +3075,8 @@ function $lzc$set_cachebitmap( cache ) {
         this.cachebitmap = cache;
         if (this.capabilities.bitmapcaching) {
             this.sprite.setBitmapCache(cache);
-        } else {
-            if ($debug) this.__warnCapability('view.cachebitmap'); 
+        } else if ($debug) {
+            this.__warnCapability('view.cachebitmap'); 
         }
     }
 }

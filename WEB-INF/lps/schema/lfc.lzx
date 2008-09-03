@@ -326,7 +326,6 @@
   <method name="$lzc$getBounds_dependencies"/>
   <method name="$lzc$getCurrentTime_dependencies"/>
   <method name="$lzc$getMouse_dependencies"/>
-  <method name="$lzc$getPlayPerc_dependencies"/>
   <method name="$lzc$getTotalTime_dependencies"/>
   <method name="$lzc$setAttributeRelative_dependencies"/>
   <method name="$lzc$set_aaactive"/>
@@ -389,18 +388,15 @@
   <method name="getContextMenu"/>
   <method name="getCurrentTime"/>
   <method name="getDepthList"/>
-  <method name="getHeight"/>
   <method name="getID3"/>
   <method name="getLinkage"/>
   <method name="getMCRef"/>
   <method name="getMouse"/>
   <method name="getNextSelection"/>
   <method name="getPan"/>
-  <method name="getPlayPerc"/>
   <method name="getPrevSelection"/>
   <method name="getTotalTime"/>
   <method name="getVolume"/>
-  <method name="getWidth"/>
   <method name="getZ"/>
   <method name="init"/>
   <method name="makeMasked"/>
@@ -418,7 +414,6 @@
   <method name="resourceloaderror"/>
   <method name="resourceloadtimeout"/>
   <method name="searchSubviews"/>
-  <method name="searchimmediateparents"/>
   <method name="seek"/>
   <method name="sendBehind"/>
   <method name="sendInFrontOf"/>
