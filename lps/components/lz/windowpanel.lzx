@@ -123,23 +123,20 @@
         </state>
 
         <!--- @keywords private -->
-        <method name="setBGColor" args="c">
+        <setter name="bgcolor" args="c"> <![CDATA[
+            // DON'T call the super setter, we take over bgcolor to control
+            // the bgcolor of the content pane.
             this.bgcolor = c;
-            // don't actually set the bgcolor, since 'content' view
-            // sets its bgcolor from this attribute
-            if (this['onbgcolor']) {
-                this.onbgcolor.sendEvent(c);
+            var event = this['onbgcolor'];
+            if (event && event.ready) {
+                event.sendEvent(c);
             }
-        </method>
+        ]]> </setter>
 
         <!--- @keywords private -->
         <attribute name="_usecontentwidth" value="true"/>
         <!--- @keywords private -->
         <attribute name="_usecontentheight" value="true"/>
-
-        <attribute name="bgcolor" setter="this._setBGColor( bgcolor );" />
-        <!--- @keywords private -->
-        <attribute name="_bgcolor"  value="null" />
 
         <!--- @keywords private -->
         <method name="construct" args="p,args"> <![CDATA[
@@ -283,18 +280,8 @@
             setTint(this.middle, s.basecolor);
             setTint(this.bottom, s.basecolor);
             title_area.title.setAttribute('fgcolor', s.textcolor);
-            if (this._bgcolor == null) {
+            if (this.bgcolor == null) {
                 this.content.setAttribute("bgcolor", s.bgcolor);
-            } else {
-                this.content.setAttribute("bgcolor", this._bgcolor);
-            }
-        </method>
-
-        <!--- @keywords private -->
-        <method name="_setBGColor" args="color">
-            this._bgcolor = color;
-            if (_initcomplete) {
-                this.content.setAttribute("bgcolor", color );
             }
         </method>
 

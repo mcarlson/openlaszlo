@@ -101,14 +101,14 @@
         </method>
 
 
-        <!--- Set the height of the basetabslider.
+        <!--- Set the height of the basetabslider. Overrides LzView setter
               @param Number h: the height. -->
-        <method name="setHeight" args="h" >
+        <setter name="setHeight" args="h" >
             if ( h != height ) {
-                super.setHeight(h);
+                super.setAttribute('height', h);
                 this.resetHeight();
             }
-        </method>
+        </setter>
 
 
         <!--- Select a tabelement.

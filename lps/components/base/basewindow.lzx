@@ -357,16 +357,16 @@
         </method>
 
         <!--- @keywords private -->
-        <method name="setHeight" args="h">
+        <setter name="height" args="h">
            var nh = Math.round(h);
-           super.setHeight(nh);
-        </method>
+           super.setAttribute('height', nh);
+        </setter>
 
         <!--- @keywords private -->
-        <method name="setWidth" args="w">
+        <setter name="setWidth" args="w">
            var nw = Math.round(w);
-           super.setWidth(nw);
-        </method>
+           super.setAttribute('width', nw);
+        </setter>
 
         <doc>
           <tag name="shortdesc"><text>base window class</text></tag>

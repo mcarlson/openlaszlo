@@ -61,9 +61,9 @@
                     onclick="parent.doSort()"
                     clickable="$once{classroot.sortable}">
 
-                <method name="setClickable" args="cl">
-                    <![CDATA[ super.setClickable( cl && classroot.sortable );]]>
-                </method>
+                <setter name="clickable" args="cl">
+                    <![CDATA[ super.setAttribute ('clickable', cl && this.classroot.sortable );]]>
+                </setter>
                     
                 <view resource="lzgridsortarrow_rsrc"  name="sortarrow"
                       x="${ parent._title.x + parent._title.width + 2}"

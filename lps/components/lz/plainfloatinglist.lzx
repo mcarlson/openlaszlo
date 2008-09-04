@@ -41,10 +41,10 @@
         </method>
         
         <!--- @keywords private -->
-        <method name="setBGColor" args="c" >
+        <setter name="bgcolor" args="c" >
             if ( !isinited ) return;
-            this.bkgnd.borderview.setBGColor(c);
-        </method>
+            this.bkgnd.borderview.setAttribute('bgcolor', c);
+        </setter>
 
         <!-- initially this view will cover the contents of the list.
              this is rectified oninit by sending this.sendToBack()
@@ -75,7 +75,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

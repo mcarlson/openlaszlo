@@ -679,9 +679,9 @@ override function __LZcallInit ( an = null ){
 /**
   * @access private
   */
-override function setWidth (v ){
+override function $lzc$set_width(v) {
     if ( $debug ){
-        Debug.error( "setWidth cannot be called on the canvas." );
+        Debug.error( "You cannot set the width on the canvas." );
     }
 }
 
@@ -695,27 +695,27 @@ function isProxied ( ){
 /**
   * @access private
   */
-override function setX ( v, force = null){
+override function $lzc$set_x(v) {
     if ( $debug ){
-        Debug.error( "setX cannot be called on the canvas." );
+        Debug.error( "You cannot set the X coordinate on the canvas." );
     }
 }
 
 /**
   * @access private
   */
-override function setHeight (v ){
+override function $lzc$set_height(v) {
     if ( $debug ){
-        Debug.error( "setHeight cannot be called on the canvas." );
+        Debug.error( "You cannot set the height on the canvas." );
     }
 }
 
 /**
   * @access private
   */
-override function setY ( v, force = null){
+override function $lzc$set_y(v) {
     if ( $debug ){
-        Debug.error( "setY cannot be called on the canvas." );
+        Debug.error( "You cannot set the Y coordinate on the canvas." );
     }
 }
 

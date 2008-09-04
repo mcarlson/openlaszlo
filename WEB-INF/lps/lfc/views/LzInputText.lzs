@@ -216,6 +216,19 @@ override function updateData () {
   */
     public var enabled = true;
 
+/**
+  * @access private
+  */
+function $lzc$set_enabled(enabled) {
+    this.focusable = true;
+    this.enabled = enabled;
+    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
+    isprite.setEnabled(enabled);
+    if (this.onenabled.ready) this.onenabled.sendEvent(enabled);
+}
+
+
+
 
 /**
   * Sets whether user can modify input text field
@@ -223,17 +236,9 @@ override function updateData () {
   * @deprecated Use setAttribute('enabled', ...) instead.
   */
 function setEnabled (enabled){
-    this.setAttribute('focusable', enabled);
-    this.enabled = enabled;
-    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
-    isprite.setEnabled(enabled);
-    if (this.onenabled.ready) this.onenabled.sendEvent(enabled);
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_enabled(enabled);
 }
-
-/**
-  * @access private
-  */
-function $lzc$set_enabled(v) { this.setEnabled(v); }
 
 /**
   * Set the html flag on this text view

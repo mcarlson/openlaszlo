@@ -42,14 +42,14 @@
         </baseedittext>
 
         <!--- @keywords private -->
-        <method name="setWidth" args="w">
-            super.setWidth(w);
+        <setter name="width" args="w">
+            super.setAttribute('width', w);
             if (this.isinited ) {
                 this.border.setWidth(w - this.labelwidth);
                 this.txt.setWidth(w - this.labelwidth - 2);
 
             }
-        </method>
+        </setter>
         
         <!--- Set text for border input.
               @param String t: text to set. 

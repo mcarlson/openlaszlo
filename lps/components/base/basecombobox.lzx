@@ -554,7 +554,7 @@
            return rv;
         </method>
 
-        <!--- Sets the displayed text.
+        <!--- Sets the displayed text. (This isn't an override from LzText)
               @param String t: the text to display. -->
         <method name="setText" args="t">
             this.text = t;
@@ -668,9 +668,9 @@
             }
         </method>
 
-        <method name="setWidth" args="w">
-            super.setWidth(Math.max(w,this.min_width));
-        </method>
+        <setter name="width" args="w">
+            super.setAttribute('width', (Math.max(w,this.min_width)));
+        </setter>
 
         <doc>
           <tag name="shortdesc"><text>baseclass for a combobox</text></tag>

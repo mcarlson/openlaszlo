@@ -12,9 +12,6 @@
         @keywords readonly -->
     <attribute name="color" value="0xffffff"/>
 
-    <!--- setting the fgcolor attribute is equivalent to setting bgcolor -->
-    <attribute name="fgcolor" setter="this.setColor( fgcolor )" />
-
     <!--- @keywords private -->
     <method name="construct" args="parent, args">  <![CDATA[
         super.construct( parent, args );
@@ -31,15 +28,17 @@
     </method>
 
 
-    <!--- @keywords private -->
-    <method name="setColor" args="c">
-        this.setBGColor( c );
-    </method>
+    <!--- setting the fgcolor attribute is equivalent to setting bgcolor
+        @keywords private -->
+
+    <setter name="fgcolor" args="c">
+        this.setAttribute('bgcolor', c);
+    </setter>
 
     <!--- sets the bgcolor with the color transform applied
     @param Number c: new bgcolor (e.g. 0xffffff for white)
     -->
-    <method name="setBGColor" args="c"> <![CDATA[
+    <setter name="bgcolor" args="c"> <![CDATA[
         this.color = c;
         if (this.ctransform != null) {
              var red= (c >> 16) & 0xFF;
@@ -57,9 +56,9 @@
              c = blue + (green << 8) + (red << 16);
 
         }
-        super.setBGColor(c);
+        super.setAttribute('bgcolor', c);
         ]]>
-    </method>
+    </setter>
 
     <!--- affects the bgcolor, unlike in regular views where only the
         resource and subviews are affected by the color transform
@@ -68,7 +67,7 @@
     <method name="setColorTransform" args="o">
         delete this.ctransform;
         this.ctransform = o;
-        this.setBGColor(this.color);
+        this.setAttribute('bgcolor', this.color);
     </method>
 
     <doc>

@@ -110,23 +110,87 @@ dynamic class LzText extends LzView with LzFormatter {
   * @keywords read-only
   */
     var selectable = false;
+
+function $lzc$set_selectable(isSel) {
+    this.selectable = isSel;
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setSelectable(isSel);
+}
+
+
 // these 4 are only available in swf8 and higher
 /** @access private */
     var antiAliasType = "advanced";
+
 /** @access private */
-    function $lzc$set_antiAliasType(v) { this.setAntiAliasType(v) }
+function $lzc$set_antiAliasType(aliasType) {
+    if (this.capabilities.advancedfonts) {    
+        if ((aliasType == "normal") || (aliasType == "advanced")) {
+            this.antiAliasType = aliasType; 
+            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+            tsprite.setAntiAliasType(aliasType);
+        } else if ($debug) {
+            Debug.warn("antiAliasType invalid, must be 'normal' or 'advanced', but you said '" + aliasType + "'");
+        }        
+    } else if ($debug) {
+        this.__warnCapability('text.setAntiAliasType()'); 
+    }
+}
+
 /** @access private */
     var gridFit = "subpixel";
+
 /** @access private */
-    function $lzc$set_gridFit(v) { this.setGridFit(v) }
+function $lzc$set_gridFit(gridFit) {
+    if (this.capabilities.advancedfonts) {    
+        if ((gridFit == "none") || (gridFit == "pixel") || (gridFit == "subpixel")) {
+            this.gridFit = gridFit; 
+            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+            tsprite.setGridFit(gridFit);
+        } else if ($debug) {
+            Debug.warn("gridFit invalid, must be 'none', 'pixel', or 'subpixel' but you said '" + gridFit + "'");
+        }
+    } else if ($debug) {
+        this.__warnCapability('text.setGridFit()'); 
+    }
+}
+
 /** @access private */
     var sharpness = 0;
+
 /** @access private */
-    function $lzc$set_sharpness(v) { this.setSharpness(v) }
+function $lzc$set_sharpness(sharpness) {
+    if (this.capabilities.advancedfonts) {
+        if  ((sharpness >= -400) && (sharpness <= 400)) {
+            this.sharpness = sharpness; 
+            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+            tsprite.setSharpness(sharpness);
+        } else if ($debug) {
+            Debug.warn("sharpness out of range, must be -400 to 400");
+        }        
+    } else if ($debug) {
+        this.__warnCapability('text.setSharpness()'); 
+    }
+}
+
 /** @access private */
     var thickness = 0;
+
 /** @access private */
-    function $lzc$set_thickness(v) { this.setThickness(v) }
+function $lzc$set_thickness(thickness) {
+    if (this.capabilities.advancedfonts) {
+        if  ((thickness >= -200) && (thickness <= 200)) {
+            this.thickness = thickness;
+            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+            tsprite.setThickness(thickness); 
+        } else if ($debug) {
+            Debug.warn("thickness out of range, must be -200 to 200");
+        }
+    } else if ($debug) {
+        this.__warnCapability('text.setThickness()'); 
+    }
+}
+
 
 /** @access private */
     function LzText ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
@@ -146,12 +210,32 @@ dynamic class LzText extends LzView with LzFormatter {
     var yscroll;
 
 /**
+  * @access private
+  */
+function $lzc$set_yscroll(n) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setYScroll(n);
+    this.yscroll = n;
+    this.onyscroll.sendEvent(n);
+}
+
+/**
   * The x scroll position of the textfield.
   * @lzxtype Number
   * @type Number
   * @keywords read-only
   */
     var xscroll;
+
+/**
+  * @access private
+  */
+function $lzc$set_xscroll(n) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setXScroll(n);
+    this.xscroll = n;
+    this.onxscroll.sendEvent(n);
+}
 
 /** @access private */
     var scrollheight;
@@ -253,11 +337,62 @@ var multiline;
 var resize = true;
 
 /**
+  * @access private
+  */
+function $lzc$set_resize(val) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setResize(val);
+    this.resize = val;
+}
+
+
+/**
   * The text to display in this text field.
   * @lzxtype string
   * @type String
   */
 var text;
+
+/**
+  * @access private
+  */
+function $lzc$set_text(t) {
+    // force to a string
+    t = '' + t;
+    if (this._textrecompute != true && t == this.getText()) return;
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    if (this.visible) tsprite.setVisible(this.visible);
+    if (this.maxlength != null && t.length > this.maxlength){
+        t = t.substring(0, this.maxlength);
+    }
+    tsprite.setText(t);
+    this.text =  t;
+
+    if (this.width == 0 || (this.resize && this.multiline == false)) {
+        // single line resizable fields adjust their width to match the text
+        var w = this.getTextWidth();
+        // only set width if it changed
+        if (w != this.width) {
+            this.$lzc$set_width (w);
+        }
+    }
+
+    //resizable fields adjust their height
+    if (this.sizeToHeight) {
+        var h = tsprite.getTextfieldHeight();
+        if (h > 0) {
+            this.$lzc$set_height (h);
+        }
+    }
+
+    if (this.ontext.ready) this.ontext.sendEvent(t);
+    this._textrecompute = false;
+}
+
+
+/** true forces $lzc$set_text to do a full update
+    @access private */
+var _textrecompute:Boolean = false;
 
 /** @access private */ 
 var colorstring = "#000000"; // black
@@ -272,7 +407,7 @@ override function init () {
         var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
         var h = tsprite.getTextfieldHeight();
         if (h > 0) {
-            this.setHeight(h);
+            this.$lzc$set_height(h);
         }
     }
 }
@@ -321,10 +456,10 @@ override function construct ( parent, args ) {
     this.xscroll = 0;
 
     this.resize = ('resize' in args && (! (args.resize is LzValueExpr))) ? (!! args.resize) : this.resize;
-    this.setResize(this.resize);
+    this.setAttribute('resize', this.resize);
     
     if ('maxlength' in args && (! (args.maxlength is LzValueExpr)) && args.maxlength != null) {
-        this.setMaxLength(args.maxlength);
+       this.$lzc$set_maxlength(args.maxlength);
     }
 
     this.text =  (!('text' in args) || args.text == null || args.text instanceof LzInitExpr) ? "" : args.text;
@@ -356,7 +491,7 @@ override function construct ( parent, args ) {
             }
         }
     } else {
-        this.setResize(false);
+        this.$lzc$set_resize(false);
     }
 
     // To compute our height:
@@ -368,22 +503,22 @@ override function construct ( parent, args ) {
     if (!this.hassetheight) {
         this.sizeToHeight = true;
     } else if (! (args.height is LzValueExpr)) {
-        this.setHeight(args.height);
+        this.$lzc$set_height(args.height);
     }
     // Default the scrollheight to the visible height.
     this.scrollheight = this.height;
 
     if ('pattern' in args && (! (args.pattern is LzValueExpr)) && args.pattern != null) {
-        this.setPattern(args.pattern);
+        this.$lzc$set_pattern(args.pattern);
     }
 
 
     if (this.capabilities.advancedfonts) {
         if (! 'antiAliasType' in args && args.antiAliasType == null) {
-            this.setAntiAliasType("advanced"); 
+            this.$lzc$set_antiAliasType ("advanced");
         }
         if (! 'gridFit' in args && args.gridFit == null) {
-            this.setGridFit("subpixel"); 
+            this.$lzc$set_gridFit ("subpixel");
         }
     }
 }
@@ -412,23 +547,7 @@ override function getMCRef () {
 /**
   * @access private
   */
-function $lzc$set_text(v) { this.setText(v); }
-/**
-  * @access private
-  */
-function $lzc$set_resize(v) { this.setResize(v); }
-/**
-  * @access private
-  */
 var $lzc$set_multiline = -1;
-/**
-  * @access private
-  */
-function $lzc$set_yscroll(v) { this.setYScroll(v); }
-/**
-  * @access private
-  */
-function $lzc$set_xscroll(v) { this.setXScroll(v); }
 
 /**
   * If true, the text is selectable
@@ -439,7 +558,6 @@ function $lzc$set_xscroll(v) { this.setXScroll(v); }
 // no var decl since this is a virtual field
   * @access private
   */
-function $lzc$set_selectable(v) { this.setSelectable(v); }
 LzText.attributes.selectable = false;
 
 /**
@@ -449,8 +567,21 @@ LzText.attributes.selectable = false;
   * @keywords read-only
   */
 var maxlength; 
+
 /** @access private */ 
-function $lzc$set_maxlength(v) { this.setMaxLength(v); }
+function $lzc$set_maxlength(val) {
+    if (val == null || val == '') return;
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setMaxLength(val);
+    this.maxlength = val;
+    if (this.onmaxlength.ready) this.onmaxlength.sendEvent(val);
+
+    var t = this.getText();
+    if(t && t.length > this.maxlength){
+        this._textrecompute = true;
+        this.$lzc$set_text (t);
+    }
+}
 
 /**
   * regexp describing set of characters allowed in this field Restrict the characters that can be entered to a pattern specified by a regular expression. 
@@ -460,11 +591,19 @@ function $lzc$set_maxlength(v) { this.setMaxLength(v); }
   * @keywords read-only
   */
 var pattern; 
+
 /** @access private */  
-function $lzc$set_pattern(v) { this.setPattern(v); }
+function $lzc$set_pattern(val) {
+    if (val == null || val == '') return;
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setPattern(val);
+    this.pattern = val;
+    if (this.onpattern.ready) this.onpattern.sendEvent(val);
+}
 
 
 LzText.attributes.clip = true;
+
 
 
 
@@ -476,24 +615,23 @@ LzText.attributes.clip = true;
   * @param Boolean val: if true, the textfield will recompute it's width after setText() is called
   */
 function setResize ( val ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setResize(val);
-    this.resize = val;
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_resize(val);
 }
 
 
 /**
   * @access private
   */
-override function setWidth ( val ){
+override function $lzc$set_width(val) {
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     tsprite.setWidth(val);
-    super.setWidth.apply(this, arguments);
+    super.$lzc$set_width.apply(this, arguments);
     // recalculate height
     if (this.sizeToHeight) {
         var h = tsprite.getTextfieldHeight();
         if (h > 0) {
-            this.setHeight(h);
+            this.$lzc$set_height (h);
         }
     }
 }
@@ -512,14 +650,14 @@ function addText ( t ){
     //tsprite.appendText( t );
     //this.text = tsprite.getText();
  
-   this.setText( this.getText() + t );
+    this.$lzc$set_text (this.getText() + t);
 }
 
 /**
   * Clears the text field (by setting its text to the empty string)
   */
 function clearText ( ){
-    this.setText( "" );
+    this.$lzc$set_text ("");
 }
 
 /**
@@ -528,17 +666,10 @@ function clearText ( ){
   * @deprecated Use setAttribute('maxlength', ...) instead.
   */
 function setMaxLength ( val ){
-    if (val == null || val == '') return;
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setMaxLength(val);
-    this.maxlength = val;
-    if (this.onmaxlength.ready) this.onmaxlength.sendEvent(val);
-
-    var t = this.getText();
-    if(t && t.length > this.maxlength){
-        this.setText (t, true);
-    }
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_maxlength(val);
 }
+
 
 /**
   * @access private
@@ -546,11 +677,8 @@ function setMaxLength ( val ){
   * @deprecated Use setAttribute('pattern', ...) instead.
   */
 function setPattern ( val ){
-    if (val == null || val == '') return;
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setPattern(val);
-    this.pattern = val;
-    if (this.onpattern.ready) this.onpattern.sendEvent(val);
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_pattern(val);
 }
 
 /**
@@ -585,7 +713,7 @@ override function applyData ( d ){
     if ( null == d ){
         this.clearText();
     } else {
-        this.setText( d );
+        this.$lzc$set_text (d);
     }
 }
 
@@ -660,11 +788,10 @@ function getBottomScroll ( ){
   * @deprecated Use setAttribute('xscroll', ...) instead.
   */
 function setXScroll ( n ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setXScroll(n);
-    this.xscroll = n;
-    this.onxscroll.sendEvent(n);
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_xscroll(n);
 }
+
 
 /**
   * Set the y scroll position of the textfield.
@@ -673,24 +800,9 @@ function setXScroll ( n ){
   * @deprecated Use setAttribute('yscroll', ...) instead.
   */
 function setYScroll ( n ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setYScroll(n);
-    this.yscroll = n;
-    this.onyscroll.sendEvent(n);
+    this.$lzc$set_yscroll(n);
 }
 
-/**
-  * @access private
-  */
-override function $lzc$set_font(v) { this.setFontName(v); }
-/**
-  * @access private
-  */
-function $lzc$set_fontsize(v) { this.setFontSize(v); }
-/**
-  * @access private
-  */
-function $lzc$set_fontstyle(v) { this.setFontStyle(v); }
 
 /**
   * @access private
@@ -784,41 +896,15 @@ function parseImgAttributes(attrs, str) {
     return end;
 }
 
+
 /**
   * Sets the text of the field to display
   * @param String t: the string to which to set the text
   * @deprecated Use setAttribute('text', ...) instead.
   */
-function setText ( t, force = null){
-    // force to a string
-    t = '' + t;
-    if (force != true && t == this.getText()) return;
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
-    if (this.visible) tsprite.setVisible(this.visible);
-    if (this.maxlength != null && t.length > this.maxlength){
-        t = t.substring(0, this.maxlength);
-    }
-    tsprite.setText(t);
-    this.text =  t;
-
-    if (this.width == 0 || (this.resize && this.multiline == false)) {
-        // single line resizable fields adjust their width to match the text
-        var w = this.getTextWidth();
-        // only set width if it changed
-        if (w != this.width) {
-            this.setWidth(w);
-        }
-    }
-
-    //resizable fields adjust their height
-    if (this.sizeToHeight) {
-        var h = tsprite.getTextfieldHeight();
-        if (h > 0) {
-            this.setHeight(h);
-        }
-    }
-
-    if (this.ontext.ready) this.ontext.sendEvent(t);
+function setText (t) {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_text(t);    
 }
 
 /**
@@ -834,7 +920,7 @@ function setText ( t, force = null){
   * control string
   */
 function format (control:String, ...args) {
-  this.setText(this.formatToString.apply(this, [control].concat(args)));
+    this.$lzc$set_text (this.formatToString.apply(this, [control].concat(args)));
 }
 
 /**
@@ -895,20 +981,32 @@ function escapeText( ts ){
   * @deprecated Use setAttribute('selectable', ...) instead.
   */
 function setSelectable ( isSel ){
-    this.selectable = isSel;
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setSelectable(isSel);
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_selectable(isSel);
 }
 
 /**
   * @access private
   */
-override function setFontName ( fname ,prop = null){
+override function $lzc$set_font(fname) {
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     tsprite.setFontName(fname);
     this.fontname = fname;
     // force recompute of height if needed
-    this.setText( this.getText(), true);
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
+}
+
+/**
+  * @access private
+  */
+function $lzc$set_fontsize(fsize) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setFontSize(fsize);
+    this.fontsize = fsize;
+    // force recompute of height if needed
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
 }
 
 /**
@@ -916,11 +1014,17 @@ override function setFontName ( fname ,prop = null){
   * @deprecated Use setAttribute('fontsize', ...) instead.
   */
 function setFontSize ( fsize ){
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_fontsize(fsize);
+}
+
+/**
+  * @access private
+  */
+function $lzc$set_fontstyle(fstyle) {
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setFontSize(fsize);
-    this.fontsize = fsize;
-    // force recompute of height if needed
-    this.setText( this.getText(), true);
+    tsprite.setFontStyle(fstyle);
+    this.fontstyle = fstyle;
 }
 
 /**
@@ -928,10 +1032,9 @@ function setFontSize ( fsize ){
   * @deprecated Use setAttribute('fontstyle', ...) instead.
   */
 function setFontStyle ( fstyle ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setFontStyle(fstyle);
-    this.fontstyle = fstyle;
- }
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_fontstyle(fstyle);
+}
 
 
 /**
@@ -974,6 +1077,7 @@ function setEmbedFonts ( onroff ){
     tsprite.setEmbedFonts(onroff);
 }
 
+
 /***
  * Sets what type of antialiasing the text field should use. Only works in swf8
  * and higher. 
@@ -981,17 +1085,8 @@ function setEmbedFonts ( onroff ){
  * @deprecated Use setAttribute('antiAliasType', ...) instead.
  */
 function setAntiAliasType( aliasType ){
-    if (this.capabilities.advancedfonts) {    
-        if ((aliasType == "normal") || (aliasType == "advanced")) {
-            this.antiAliasType = aliasType; 
-            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-            tsprite.setAntiAliasType(aliasType);
-        } else if ($debug) {
-            Debug.warn("antiAliasType invalid, must be 'normal' or 'advanced', but you said '" + aliasType + "'");
-        }        
-    } else if ($debug) {
-        this.__warnCapability('text.setAntiAliasType()'); 
-    }
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_antiAliasType(aliasType);
 }
 
 /**
@@ -1006,6 +1101,7 @@ function getAntiAliasType() {
     }
 }
 
+
 /***
  * Sets what type of grid fitting the text field should use. 
  * Only works in swf8 and higher. 
@@ -1013,17 +1109,8 @@ function getAntiAliasType() {
  * @deprecated Use setAttribute('gridFit', ...) instead.
  */
 function setGridFit( gridFit ){
-    if (this.capabilities.advancedfonts) {    
-        if ((gridFit == "none") || (gridFit == "pixel") || (gridFit == "subpixel")) {
-            this.gridFit = gridFit; 
-            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-            tsprite.setGridFit(gridFit);
-        } else if ($debug) {
-            Debug.warn("gridFit invalid, must be 'none', 'pixel', or 'subpixel' but you said '" + gridFit + "'");
-        }
-    } else if ($debug) {
-        this.__warnCapability('text.setGridFit()'); 
-    }
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_gridFit(gridFit);
 }
 
 /**
@@ -1046,17 +1133,8 @@ function getGridFit() {
  * @deprecated Use setAttribute('sharpness', ...) instead.
  */
 function setSharpness( sharpness ){
-    if (this.capabilities.advancedfonts) {
-        if  ((sharpness >= -400) && (sharpness <= 400)) {
-            this.sharpness = sharpness; 
-            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-            tsprite.setSharpness(sharpness);
-        } else if ($debug) {
-            Debug.warn("sharpness out of range, must be -400 to 400");
-        }        
-    } else if ($debug) {
-        this.__warnCapability('text.setSharpness()'); 
-    }
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_sharpness(sharpness);
 }
 
 /**
@@ -1072,6 +1150,7 @@ function getSharpness() {
 }
 
 
+
 /***
  * Sets the thickness for the text rendering 
  * Only works in swf8 and higher. 
@@ -1079,17 +1158,8 @@ function getSharpness() {
  * @deprecated Use setAttribute('thickness', ...) instead.
  */
 function setThickness( thickness ){
-    if (this.capabilities.advancedfonts) {
-        if  ((thickness >= -200) && (thickness <= 200)) {
-            this.thickness = thickness;
-            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-            tsprite.setThickness(thickness); 
-        } else if ($debug) {
-            Debug.warn("thickness out of range, must be -200 to 200");
-        }
-    } else if ($debug) {
-        this.__warnCapability('text.setThickness()'); 
-    }
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_thickness(thickness);
 }
 
 /**

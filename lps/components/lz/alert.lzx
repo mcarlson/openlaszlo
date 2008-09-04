@@ -42,9 +42,9 @@
 
         <text name="alerttext" x="${parent.text_x}" y="${parent.text_y}"
             resize="true" multiline="true">
-            <attribute name="text" type="text" value="${parent.text}" setter="this.mySetText(text)"/>
-            <method name="mySetText" args="t">
-                super.setText(t);
+            <attribute name="text" type="text" value="${parent.text}"/>
+            <setter name="text" args="t">
+                super.setAttribute('text', t);
                 if (!parent._usecontentwidth) {
                     this.setWidth(parent.width
                         - parent.inset_left - parent.inset_right
@@ -58,7 +58,7 @@
                     }
                     this.setWidth(twidth);
                 }
-            </method>
+            </setter>
         </text>
 
         <!--- Opens the alert window. -->

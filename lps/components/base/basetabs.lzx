@@ -358,9 +358,9 @@
               @keywords private -->
         <attribute name="_keepchildren" value="0" type="number" />
 
-        <!--- Overrides LzNode.setDatapath().
+        <!--- Overrides LzNode.datapath setter
               @keywords private -->
-        <method name="setDatapath" args="dp">
+        <setter name="datapath" args="dp">
 
                     if (null != this.datapath) {
                 this.datapath.setXPath(dp);
@@ -371,7 +371,7 @@
                 }
                 new lz.datapath ( this, data_args );
             }
-        </method>
+        </setter>
 
 
         <!--- Everything after _keepchildren number will be swallowed by 

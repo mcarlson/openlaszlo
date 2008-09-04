@@ -56,11 +56,6 @@
               @keywords private -->
         <attribute name="_mdoffset" value="2"/>
 
-        <!--- The background color for the tabelement. -->
-        <attribute name="bgcolor" setter="this._setBGColor( bgcolor );" />
-
-        <!--- @keywords private -->
-        <attribute name="_bgcolor"  value="null" />
         <!--- Insets the header art on the x-axis. Default is 0. -->
         <attribute name="headerpadding"   value="0" />
 
@@ -97,6 +92,7 @@
             <view name="content"
                   x="${classroot.inset_left}"
                   y="${classroot.inset_top}" 
+                  bgcolor="${classroot.bgcolor}"           
                   width="${ Math.max(parent.width - classroot.inset_left - classroot.inset_right, 0 ) }" 
                   height="${ Math.max(parent.height - classroot.inset_top - classroot.inset_bottom, 0) }" 
                   clip="true" visible="${classroot.contentvisible}"/>
@@ -126,20 +122,10 @@
             if (this.style != null) {
                 super._applystyle(s);
                 this.top.header.txt.setAttribute("fgcolor", s.textcolor);
-                if (this._bgcolor == null) {
+                if (this.bgcolor == null) {
                     this.container.setAttribute("bgcolor", s.bgcolor);
-                } else {
-                    this.container.setAttribute("bgcolor", this._bgcolor);
                 }
-                this.top.setBGColor(s.bordercolor);
-            }
-        </method>
-
-        <!--- @keywords private -->
-        <method name="_setBGColor" args="color">
-            this._bgcolor = color;
-            if (_initcomplete) {
-                this.container.setAttribute("bgcolor", color );
+                this.top.setAttribute('bgcolor', s.bordercolor);
             }
         </method>
 

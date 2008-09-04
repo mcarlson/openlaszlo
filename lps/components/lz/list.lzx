@@ -68,7 +68,7 @@
               y="${classroot.border_top}"
               width="${classroot.width
                         - classroot.border_right - classroot.border_left}"
-              bgcolor="${classroot._bgcolor}"
+              bgcolor="${classroot.bgcolor}"
               clip="true">
             <!-- height of this view is set in class' adjustheight method -->
 
@@ -229,7 +229,7 @@
         <attribute name="_heightinternal" value="false" type="boolean" />
 
         <!--- @keywords private -->
-        <method name="setHeight" args="h"> <![CDATA[
+        <setter name="height" args="h"> <![CDATA[
             if (h != null && !this._heightinternal) {
                 this._hasSetHeight = true;
             } else {
@@ -239,13 +239,13 @@
                     h = hgt + border_top + border_bottom;
                 }
             }
-            super.setHeight(h);
+            super.setAttribute('height', h);
             if ( this._initcomplete ) {
                 interior.setHeight( h - border_top - border_bottom );
                 checkscrollbar();
             }
             ]]>
-        </method>
+        </setter>
 
          <!--- @keywords private -->
          <method name="checkscrollbar"> <![CDATA[
@@ -284,34 +284,32 @@
         </method>
 
          <!--- @keywords private -->
-         <attribute name="_bgcolor" value="null"/>
-         <!--- @keywords private -->
          <attribute name="_setbordercolor" value="false" type="boolean" />
 
-         <!--- this._setbordercolor == true : call super to set border color
-               else set _bgcolor for "interior" view
-               @keywords private -->
-         <method name="setBGColor" args="c">
-             if (this._setbordercolor) {
-                super.setBGColor(c);
-             } else {
-                 // don't actually set the bgcolor,  'interior' view
-                 // sets its bgcolor from this attribute
-                this._bgcolor = c;
-                 if (this['on_bgcolor']) {
-                     this.on_bgcolor.sendEvent(c);
-                 }
-             }
-         </method>
+        <!--- @keywords private -->
+        <setter name="bgcolor" args="c"> <![CDATA[
+            if (this._setbordercolor) {
+                super.setAttribute('bgcolor', c);
+            }
+            else {
+                // DON'T call the super setter, we take over bgcolor to control
+                // the bgcolor of the content pane.
+                this.bgcolor = c;
+                var event = this['onbgcolor'];
+                if (event && event.ready) {
+                    event.sendEvent(c);
+                }
+            }
+        ]]> </setter>
 
          <!--- @keywords private -->
         <method name="_applystyle" args="s">
             if (this.style != null) {
                 super._applystyle(s);
                 this._setbordercolor = true;
-                this.setBGColor(s.bordercolor);
+                this.setAttribute('bgcolor', s.bordercolor);
                 this._setbordercolor = false;
-                if (this._bgcolor == null) this.interior.setBGColor(s.bgcolor);
+                if (this.bgcolor == null) this.interior.setAttribute('bgcolor', s.bgcolor);
             }
         </method>
 

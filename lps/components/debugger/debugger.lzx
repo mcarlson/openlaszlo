@@ -144,24 +144,24 @@
       this.commandhistory_ptr = this.commandhistory.length;
     </method>
 
-    <method name="setWidth" args="w" > 
-        super.setWidth( Math.max( 170 , Math.min( w , canvas.width) ) ); 
-    </method> 
+    <setter name="width" args="w" > 
+        super.setAttribute('width', Math.max( 170 , Math.min( w , canvas.width) ) ); 
+    </setter> 
 
-    <method name="setHeight" args="h" > 
-        super.setHeight( Math.max( 112 , Math.min( h , canvas.height) ) ); 
+    <setter name="height" args="h" > 
+        super.setAttribute ('height', Math.max( 112 , Math.min( h , canvas.height) ) ); 
         if (this.isLoaded) {
            this.middle.content.updateDisplay();
        }
-    </method> 
+    </setter> 
 
-    <method name="setX" args="x, force=null" > 
-        super.setX( Math.max( 0-(this.width-10), Math.min( x , canvas.width - 4) ) ); 
-    </method> 
+    <setter name="x" args="x, force=null" > 
+        super.setAttribute ('x', Math.max( 0-(this.width-10), Math.min( x , canvas.width - 4) ) ); 
+    </setter> 
 
-    <method name="setY" args="y, force=null" > 
-        super.setY( Math.max( 0 , Math.min( y , canvas.height - 4) ) ); 
-    </method> 
+    <setter name="y" args="y, force=null" > 
+        super.setAttribute ('y', Math.max( 0 , Math.min( y , canvas.height - 4) ) ); 
+    </setter> 
 
     <method name="initEvalView">
       <![CDATA[
@@ -685,14 +685,14 @@
           onmousedown="parent.bringToFront()"
         pixellock="true">
 
-       <method name="setHeight" args="h" > 
+       <setter name="setHeight" args="h" > 
         // keep a minimum of two lines of text displayed
           var minheight = (classroot.lineheight + 16);
-          super.setHeight( Math.max( parent.smallInputAreaHeight , Math.min( h , parent.height - (parent.top.height + minheight)) ) ); 
+          super.setAttribute('height', Math.max( parent.smallInputAreaHeight , Math.min( h , parent.height - (parent.top.height + minheight)) ) ); 
           if (parent.isLoaded) {
              parent.middle.content.updateDisplay();
          }
-       </method> 
+       </setter> 
 
        <state name="splitter">
           <attribute name="height" 

@@ -22,7 +22,7 @@
         <attribute name="_selectonevent" value="onclick" type="string" setter="this.setSelectOnEvent(_selectonevent)" />
 
         <!--- @keywords private -->
-        <method name="setDatapath" args="dp">
+        <setter name="datapath" args="dp">
             if (null != this.datapath) {
                 this.datapath.setXPath(dp);
             } else {
@@ -37,7 +37,7 @@
                 }
                 new lz.datapath ( this, data_args );
             }
-        </method>
+        </setter>
 
         <!--- @keywords private -->
         <attribute name="_valuedatapath" value="null"/>

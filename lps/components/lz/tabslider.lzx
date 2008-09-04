@@ -19,18 +19,13 @@
         <attribute name="bordercolor"  value="${this.style != null ? this.style.bordercolor : null}"
                    setter="this.setBorderColor( bordercolor )" type="color" />
 
-        <!--- Background color. -->
-        <attribute name="bgcolor" setter="this._setBGColor( bgcolor );" />
-
-        <!--- @keywords private  -->
-        <attribute name="_bgcolor"  value="null" />
-
         <!--- The size of the border. Default is 1 pixel. -->
         <attribute name="bordersize"  value="1" setter="this.setBordersize(bordersize)" />
 
         <view name="content"
             x="${parent.bordersize}"
             y="${parent.bordersize}"
+            bgcolor="${classroot.bgcolor}"           
             width="${parent.width - 2*parent.bordersize}"
             height="${parent.height - 2*parent.bordersize}"  >
 
@@ -52,16 +47,7 @@
               @param Number color: the color number. -->
         <method name="setBorderColor" args="color" >
             this.bordercolor = color;
-            this.setBGColor( color );
-        </method>
-
-        <!--- Setter for bgcolor.
-              @keywords private -->
-        <method name="_setBGColor" args="color" >
-            this._bgcolor = color;
-            if (_initcomplete) {
-                this.content.setBGColor( color );
-            }
+            this.setAttribute('bgcolor', color); 
         </method>
 
         <!--- @keywords private -->
@@ -71,10 +57,8 @@
                 this.interiorcolor = s.bgcolor;
                 this.fgcolor = s.textcolor;
                 this.bordercolor = s.bordercolor;
-                if (this._bgcolor == null) {
-                    this._setBGColor(s.bgcolor);
-                } else {
-                    this._setBGColor(this._bgcolor);
+                if (this.bgcolor == null) {
+                    this.content.setAttribute('bgcolor', s.bgcolor);
                 }
             }
         </method>

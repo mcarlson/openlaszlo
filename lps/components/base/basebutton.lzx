@@ -100,15 +100,15 @@
         <!--- Overrides view's method for resourceviewcount.
               @param Number r: resource number.
               @access private -->
-        <method name="setResourceNumber" args="r"><![CDATA[
+        <setter name="frame" args="r"><![CDATA[
             if ( this.resourceviewcount > 0 ) {
                 for (var i = 0;i < resourceviewcount; i++ ) {
-                    this.subviews[i].setResourceNumber(r);
+                    this.subviews[i].setAttribute('frame', r);
                 }
             } else {
-                super.setResourceNumber(r);
+                super.setAttribute('frame', r);
             }
-       ]]> </method>
+       ]]> </setter>
 
         <!--- When the space bar is down, basebutton shows its down state. -->
         <method name="doSpaceDown" >

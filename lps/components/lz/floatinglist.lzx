@@ -123,12 +123,12 @@
             <view resource="menucap_mid" stretches="width"/>
             <view resource="menucap_rt"/>
             <stableborderlayout axis="x" />
-            <method name="setResourceNumber" args="r"> <![CDATA[
+            <setter name="frame" args="r"> <![CDATA[
                 var L = this.subviews.length;
                 for ( var i = 0; i < L; i++ ) {
-                    this.subviews[i].setResourceNumber(r);
+                    this.subviews[i].setAttribute('frame', r);
                 } 
-             ]]> </method>
+             ]]> </setter>
             <method name="setY" args="y, force=null"> <![CDATA[
                 super.setY(y);
                 if ( y < 0 ) {
@@ -154,10 +154,10 @@
         </method>
         
         <!--- @keywords private -->
-        <method name="setBGColor" args="c" >
+        <setter name="bgcolor" args="c" >
             if ( !isinited ) return;
-            this.bkgnd.borderview.setBGColor(c);
-        </method>
+            this.bkgnd.borderview.setAttribute('bgcolor', c);
+        </setter>
 
         <!--- @keywords private -->
         <method name="getMenuCapHeight">
