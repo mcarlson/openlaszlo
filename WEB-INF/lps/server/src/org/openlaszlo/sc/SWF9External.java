@@ -567,6 +567,173 @@ public class SWF9External {
     }
   }
 
+  /**
+   * Run the compiler using the command/arguments in cmd. Invokes the Flex compiler classes
+   * directly, does not exec a subprocess. 
+   * Collect and report any errors, and check for the existence
+   * of the output file.
+   * @throw CompilerError if there are errors messages from the external
+   *        compiler, or if any part of the compilation process has problems
+   */
+  public void callJavaCompileCommand(List cmd, String dir, List tunits,
+                                 String outfileName)
+    throws IOException          // TODO: [2007-11-20 dda] clean up, why catch only some exceptions?
+  {
+    String compilerClass = (String) cmd.remove(0);
+    String[] cmdstr = (String[])cmd.toArray(new String[0]);
+    String prettycmd = prettyCommand(cmd);
+    System.err.println("Executing compiler: (cd " + dir + "; " + prettycmd + ")");
+    String bigErrorString = "";
+    int bigErrorCount = 0;
+
+    // Generate a small script (unix style) to document how
+    // to build this batch of files.
+    String buildsh = isWindows() ? "rem build script\n" : "#!/bin/sh\n";
+    buildsh += "cd \"" + dir + "\"\n";
+    buildsh += prettycmd + "\n";
+    String buildfn = isWindows() ? "build.bat" : "build.sh";
+    Compiler.emitFile(workDirectoryName(buildfn), buildsh);
+
+    // Save original System.err, System.out
+    PrintStream sout = System.out;
+    PrintStream serr = System.err;
+
+    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    ByteArrayOutputStream berr = new ByteArrayOutputStream();
+
+    PrintStream nout = new PrintStream(bout);
+    PrintStream nerr = new PrintStream(berr);
+
+    // Rebind to capture output
+    System.setErr(nerr);
+    System.setOut(nout);
+
+    // flex2.tools.Mxmlc +flexlib="$FLEX_HOME/frameworks"
+    // flex2.tools.Compc
+    // 
+
+    System.setProperty("FLEX_HOME", FLEX_HOME());
+    // The Mxlmc and Compc util classes need to see this arg first in the args list
+    cmd.add(0, "+flexlib="+FLEX_HOME()+"/frameworks");
+
+    //Process proc = Runtime.getRuntime().exec(cmdstr, (String[])newenv.toArray(new String[0]), null);
+    try {
+      int exitval = 1;
+
+      String args[] = (String[])cmd.toArray(new String[0]);
+      if (compilerClass.equals("mxmlc")) {
+        flex2.tools.Mxmlc.mxmlc(args);
+        exitval = flex2.compiler.util.ThreadLocalToolkit.errorCount();
+
+      } else if (compilerClass.equals("compc")) {
+        flex2.tools.Compc.compc(args);
+        exitval = flex2.compiler.util.ThreadLocalToolkit.errorCount();
+      } 
+
+      nerr.flush();
+      nout.flush();
+
+      // Restore system output and err streams
+      System.setErr(serr);
+      System.setOut(sout);
+
+      System.out.println("compiler output is "+bout.toString());
+
+      OutputCollector outcollect = new OutputCollector(new ByteArrayInputStream(bout.toByteArray()));
+      ExternalCompilerErrorCollector errcollect =
+        new ExternalCompilerErrorCollector(new ByteArrayInputStream(berr.toByteArray()), tunits);
+      outcollect.start();
+      errcollect.start();
+      outcollect.join();
+      errcollect.join();
+
+      if (outcollect.getException() != null) {
+        System.err.println("Error collecting compiler output: " + outcollect.getException());
+        // TODO: [2007-11-20 dda] log this
+      }
+      String compilerOutput = outcollect.getOutput();
+      if (compilerOutput.length() > 0) {
+        System.err.println("compiler output:\n" + compilerOutput);
+      }
+
+      if (errcollect.getException() != null) {
+        System.err.println("Error collecting compiler output: " + errcollect.getException());
+        // TODO: [2007-11-20 dda] log this
+      }
+      List errs = errcollect.getErrors();
+      if (errs.size() > 0) {
+        System.err.println("ERRORS: ");
+        for (Iterator iter = errs.iterator(); iter.hasNext(); ) {
+          ExternalCompilerError err = (ExternalCompilerError)iter.next();
+          TranslationUnit tunit = err.getTranslationUnit();
+          String srcLineStr;
+          TranslationUnit.SourceFileLine srcFileLine;
+
+          // actualSrcLine is the name/linenumber of the actual files
+          // used in compilation, not the original sources.
+          String actualSrcFile = null;
+          if (tunit == null) {
+            actualSrcFile = "(unknown)";
+          }
+          else  {
+            actualSrcFile = tunit.getSourceFileName();
+            if (actualSrcFile == null)
+              actualSrcFile = "(" + tunit.getName() + ")";
+          }
+
+          String actualSrcLine = "[" + actualSrcFile + ": " + err.getLineNumber() + "] ";
+
+          if (tunit == null) {
+            srcLineStr = "tunit/line unknown: ";
+          }
+          else if ((srcFileLine = tunit.originalLineNumber(err.getLineNumber())) == null) {
+            srcLineStr = "line unknown: ";
+          }
+          else {
+            srcLineStr = srcFileLine.sourcefile.name + ": " + srcFileLine.line + ": ";
+          }
+          System.err.println(actualSrcLine + srcLineStr + err.getErrorString());
+
+          // bigErrorString will be passed as an exception.
+          if (bigErrorString.length() > 0) {
+            bigErrorString += "\n";
+          }
+          bigErrorCount++;
+          if (bigErrorCount < MAX_ERRORS_SHOWN) {
+            bigErrorString += srcLineStr + err.cleanedErrorString();
+          }
+          else if (bigErrorCount == 50) {
+            bigErrorString += ".... more than " + MAX_ERRORS_SHOWN +
+              " errors, additional errors not shown.";
+          }
+        }
+      }
+
+      if (exitval != 0) {
+        System.err.println("FAIL: compiler returned " + exitval);
+      }
+    }
+    catch (InterruptedException ie) {
+      throw new CompilerError("Interrupted compiler");
+    } finally {
+      // Restore system output and err streams
+      System.setErr(serr);
+      System.setOut(sout);
+    }
+
+    
+    System.err.println("Done executing compiler");
+    if (!new File(outfileName).exists()) {
+      System.err.println("Intermediate file " + outfileName + ": does not exist");
+      if (bigErrorString.length() > 0) {
+        throw new CompilerError(bigErrorString);
+      }
+      else {
+        throw new CompilerError("Errors from compiler, output file not created");
+      }
+    }
+  }
+
   public static String FLEX_HOME () {
     return LPS.HOME()+File.separator+"WEB-INF";
   }
@@ -614,14 +781,36 @@ public class SWF9External {
     String outfilebase;
     String exeSuffix = isWindows() ? ".exe" : "";
     
+    // NB: this code used to call execCompileCommand, and pass in the pathname of
+    // a shell script to invoke the flex compiler. It now calls callJavaCompileCommand
+    // to directly call into the flex jar file now.
+    //
+    // The first arg in the cmd list is the name 'compc' or 'mxmlc',
+    // which will be mapped to the appropriate class in
+    // callJavaCompileCommand
+
     if (buildSharedLibrary) {
       outfilebase = "app.swc";
-      cmd.add(getFlexPathname("bin" + File.separator + "compc" + exeSuffix));
+      cmd.add("compc");
+      // cmd.add(getFlexPathname("bin" + File.separator + "compc" + exeSuffix));
+
     }
     else {
       outfilebase = "app.swf";
-      cmd.add(getFlexPathname("bin" + File.separator + "mxmlc" + exeSuffix));
+      cmd.add("mxmlc");
+      // cmd.add(getFlexPathname("bin" + File.separator + "mxmlc" + exeSuffix));
+
     }
+
+    // Path to the flex compiler config file
+    cmd.add("-load-config="+getFlexPathname("frameworks/flex-config.xml"));
+
+    // -compiler.source-path [path-element] [...]   alias -sp 
+    //list of path elements that form the roots of ActionScript class 
+    //hierarchies (repeatable)
+
+    //    file-specs [path-element] [...]   a list of source files to compile, the last file specified will be 
+    //used as the target application (repeatable, default variable)
 
     String outfilename = workdir.getPath() + File.separator + outfilebase;
     boolean swf9Warnings = getLPSBoolean("compiler.swf9.warnings", true);
@@ -665,7 +854,8 @@ public class SWF9External {
       cmd.add(workdir.getPath() + File.separator + mainclassname + ".as");
     }
     
-    execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
+    //execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
+    callJavaCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
     return getBytes(outfilename);
   }
 
