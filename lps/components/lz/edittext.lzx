@@ -79,8 +79,8 @@
                 this.setText( this._initialtext );
             }
 
-            field.setMaxLength(this.maxlength);
-            field.setPattern(this.pattern);
+            field.setAttribute('maxlength', this.maxlength);
+            field.setAttribute('pattern', this.pattern);
 
             ]]>
         </method>
@@ -90,7 +90,7 @@
             this.text = t;
             if (this._initcomplete) {
                 this.setValue(t, true);
-                this.field.setText(this.value);
+                this.field.setAttribute('text', this.value);
                 if (this['ontext']) this.ontext.sendEvent();
             } else {
                 this._initialtext = t;
@@ -105,14 +105,14 @@
         <!-- Sets the maxmimum number of characters which can be entered. -->
         <method name="setMaxlength" args="n">
           this.setAttribute('maxlength', n);
-          this.field.setMaxLength(n);
+          this.field.setAttribute('maxlength', n);
         </method>
 
 
         <!-- Set the characters which can be entered into a text field. -->
         <method name="setPattern" args="r">
           this.setAttribute('pattern', r);
-          field.setPattern(r);
+          field.setAttribute('pattern', r);
         </method>
 
         <method name="setSelection" args="start,end=null">
@@ -225,16 +225,16 @@
                 this.field.setAttribute('enabled', true);
                 this.field.setAttribute('fgcolor', this.style != null ? this.style.textcolor : null);
                 this._face.setAttribute( 'opacity', 1 );
-                this._outerbezel.setResourceNumber( 1 );
-                this._innerbezel.setResourceNumber( 1 );
+                this._outerbezel.setAttribute('frame', 1 );
+                this._innerbezel.setAttribute('frame', 1 );
             } else {
                 this.field.setAttribute('enabled', false);
                 this.field.setAttribute('width', this.width - 6);
                 this.field.setAttribute('height', this.height - 6);
                 this.field.setAttribute('fgcolor', this.style != null ? this.style.textdisabledcolor : null);
                 this._face.setAttribute( 'opacity', .65 );
-                this._outerbezel.setResourceNumber( 2 );
-                this._innerbezel.setResourceNumber( 2 );
+                this._outerbezel.setAttribute('frame', 2 );
+                this._innerbezel.setAttribute('frame', 2 );
             }
         </method>
 

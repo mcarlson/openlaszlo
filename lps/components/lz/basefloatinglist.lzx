@@ -330,8 +330,8 @@
             if (v) {
                 updateAttachLocation();
             } else {
-                this.setX(-1000);
-                this.setY(-1000);
+                this.setAttribute('x', -1000);
+                this.setAttribute('y', -1000);
             }
         </handler>
         

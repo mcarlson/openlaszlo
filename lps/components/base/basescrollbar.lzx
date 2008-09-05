@@ -158,9 +158,9 @@
                 }
                 // only auto-align if there developer did not specify a target
                 if (this.axis == 'y') {
-                    this.setAlign('right');
+                    this.setAttribute('align', 'right');
                 } else {
-                    this.setValign('bottom');
+                    this.setAttribute('valign', 'bottom');
                 }
                 autoalign = true;
             }

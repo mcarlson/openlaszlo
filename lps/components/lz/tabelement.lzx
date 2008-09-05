@@ -68,11 +68,11 @@
                 <handler name="onmousedown">
                     classroot.container.shdw.setAttribute('visible', false);
 
-                    parent.header.setY(classroot._mdoffset);
+                    parent.header.setAttribute('y', classroot._mdoffset);
                 </handler>
                 <handler name="onmouseup">
                     classroot.container.shdw.setAttribute('visible', classroot.shadowvisible);
-                    parent.header.setY(0);
+                    parent.header.setAttribute('y', 0);
                </handler>
                <handler name="onclick">
                    classroot.parent.select(classroot);

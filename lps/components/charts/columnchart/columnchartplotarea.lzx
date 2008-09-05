@@ -54,8 +54,8 @@
                         //var lx = v.x - label.width/2 + v.width/2;
                         var lx = (v.width - label.width)/2 + v.x + 3;
                     
-                        label.setX( lx+label.width>this.width?this.width-label.width:lx<0?2:lx-5);
-                        label.setY( ly<this.y?2:ly);
+                        label.setAttribute('x', lx+label.width>this.width?this.width-label.width:lx<0?2:lx-5);
+                        label.setAttribute('y', ly<this.y?2:ly);
                         label.setAttribute('visible',  v.x>0 && v.x <this.width )
                     }
                 }
@@ -79,11 +79,11 @@
             v.setAttribute('visible', false);
             
             
-            v.setX(x * this._xscale + this._xoffset);
-            //v.setY(this._yoffset);
-            v.setY(this._yoffset-(height*this._yscale*-1));
-            v.setWidth(width * this._xscale);
-            v.setHeight((height * this._yscale*-1));
+            v.setAttribute('x', x * this._xscale + this._xoffset);
+            //v.setAttribute('y', this._yoffset);
+            v.setAttribute('y', this._yoffset-(height*this._yscale*-1));
+            v.setAttribute('width', width * this._xscale);
+            v.setAttribute('height', (height * this._yscale*-1));
             v.style = style;        
             v.render()
             v.setAttribute('visible', true);

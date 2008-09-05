@@ -77,7 +77,7 @@
 
             // update the text field with the day of this dayview
             //setDay(dayview.dateNum);
-            this.top.day.setText( dayview.dayOfMonth );
+            this.top.day.setAttribute('text', dayview.dayOfMonth );
 
             // Make sure the grow button is set to '+'
             //top.bkgnd.r.setStateNum(dayview.opened ? 1:0);

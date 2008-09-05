@@ -83,12 +83,12 @@
             }
             
             //resize this view
-            this.setWidth(parent.style.valuepointstyle.point.width+lExtraTextDistance);
-            this.setHeight(parent.style.valuepointstyle.point.height);
+            this.setAttribute('width', parent.style.valuepointstyle.point.width+lExtraTextDistance);
+            this.setAttribute('height', parent.style.valuepointstyle.point.height);
             
             //move to the point and center
-            this.setX(parent.plotarea.x + lDistanceX - (parent.style.valuepointstyle.point.width/2));
-            this.setY(parent.plotarea.y + (parent.plotarea.height - lDIstanceY) - (parent.style.valuepointstyle.point.height/2));
+            this.setAttribute('x', parent.plotarea.x + lDistanceX - (parent.style.valuepointstyle.point.width/2));
+            this.setAttribute('y', parent.plotarea.y + (parent.plotarea.height - lDIstanceY) - (parent.style.valuepointstyle.point.height/2));
             
             this.marker.clear();
             this.marker.style = parent.style.valuepointstyle;

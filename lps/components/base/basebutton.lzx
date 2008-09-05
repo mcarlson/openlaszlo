@@ -194,7 +194,7 @@
               should appear to be down.
               @param Boolean sd: unused. -->
         <method name="showDown" args="sd=null">
-            this.setResourceNumber( this.downResourceNumber );
+            this.setAttribute('frame', this.downResourceNumber );
         </method>
 
         <!--- This function is called whenever the button's visible state
@@ -202,9 +202,9 @@
               @param Boolean sd: unused. -->
         <method name="showUp" args="sd=null"> <![CDATA[
             if (!this._enabled && this.disabledResourceNumber) {
-                this.setResourceNumber( this.disabledResourceNumber );
+                this.setAttribute('frame', this.disabledResourceNumber );
             } else {
-                this.setResourceNumber( this.normalResourceNumber );
+                this.setAttribute('frame', this.normalResourceNumber );
             }
         ]]>
         </method>
@@ -213,13 +213,13 @@
               appear to be highlighted to indicate that it can be clicked. 
               @param Boolean sd: unused. -->
         <method name="showOver" args="sd=null">
-            this.setResourceNumber( this.overResourceNumber );
+            this.setAttribute('frame', this.overResourceNumber );
         </method>
 
         <!--- @access private -->
         <method name="setreference" args="r">
              this.reference = r;
-             if (r != this) this.setClickable(false)
+             if (r != this) this.setAttribute('clickable', false)
         </method>
 
         <!--- @access private -->

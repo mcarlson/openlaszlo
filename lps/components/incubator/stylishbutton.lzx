@@ -75,7 +75,7 @@
         
         <method name="updatePositions">
         
-            if (this["txt"]) txt.setText(this.text); 
+            if (this["txt"]) txt.setAttribute('text', this.text); 
         
             var lw = (this["left"] ? left.width : 0) + (this["showleftborder"] ? 1 : 0); 
             var rw = (this["right"] ? right.width : 0) + (this["showrightborder"] ? 1 : 0);
@@ -90,13 +90,13 @@
             var extraWidth = Math.max(0, Math.round( (width - needsWidth) / 2)); 
             
             if (this["leftborder"]) {
-                leftborder.setX(curX); 
+                leftborder.setAttribute('x', curX); 
                 curX += 1; 
             }
             
             // show the left resource
             if (this["left"]) {
-                left.setX(curX);
+                left.setAttribute('x', curX);
                 curX += left.width;
                 // add to offset left
                 nside+=1;
@@ -110,42 +110,42 @@
                         
             // position the middle view.
             // it goes behind the icon and text
-            middle.setX(curX);
+            middle.setAttribute('x', curX);
             
             curX += extraWidth; 
 
             // position the icon
             if (this["icon"]) {
-                icon.setX(Math.round(curX-(.25*iw*(nside)))); 
+                icon.setAttribute('x', Math.round(curX-(.25*iw*(nside)))); 
                 curX += icon.width;
                 // Center icon vertically unless icony has been set explicitly
-                icon.setY( (icony != 0) ? icony : Math.round(height-icon.height )/2);
+                icon.setAttribute('y', (icony != 0) ? icony : Math.round(height-icon.height )/2);
             }
             
             if (this["txt"]) {
                 // position the text
-                txt.setX(curX);
-                txt.setText(this.text); 
+                txt.setAttribute('x', curX);
+                txt.setAttribute('text', this.text); 
                 // Center text vertically unless texty was set explicitly
-                txt.setY( (texty != 0) ? texty : (height-txt.height )/2);
+                txt.setAttribute('y', (texty != 0) ? texty : (height-txt.height )/2);
                 curX += txt.width;
                 curX += spacing;
             }
             
             curX += extraWidth; 
-            middle.setWidth(curX - middle.x);           
+            middle.setAttribute('width', curX - middle.x);           
             
             // position the right thingy
             if (this["right"]) {
-                right.setX(curX);
+                right.setAttribute('x', curX);
                 curX += right.width;
             } 
                         
             if (this["rightborder"]) {
-                rightborder.setX(curX - 1);
+                rightborder.setAttribute('x', curX - 1);
             }
 
-            this.setWidth(curX); 
+            this.setAttribute('width', curX); 
         </method>
         
         <method name="init"><![CDATA[

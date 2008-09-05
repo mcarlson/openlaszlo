@@ -103,7 +103,7 @@
 
         <!--- Set the height of the basetabslider. Overrides LzView setter
               @param Number h: the height. -->
-        <setter name="setHeight" args="h" >
+        <setter name="height" args="h" >
             if ( h != height ) {
                 super.setAttribute('height', h);
                 this.resetHeight();
@@ -155,7 +155,7 @@
                 // value before calling calcAvailableHeight
                 if ( v instanceof lz.basetabelement ) v.setAttribute('minheight', this.mintabheight);
             }
-            // v.setHeight(v.minheight);
+            // v.setAttribute('height', v.minheight);
 
             this.calcAvailableHeight();
             var opentab = this.getSelection();

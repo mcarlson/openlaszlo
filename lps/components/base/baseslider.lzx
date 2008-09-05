@@ -304,7 +304,7 @@
         
         <!--- constrain to parents bounds, and adjust slider value when dragged
               @keywords private -->
-        <method name="setX" args="x,force=null"><![CDATA[
+        <setter name="x" args="x"><![CDATA[
             var boundedx = x;
             
             var w = this.width;
@@ -319,7 +319,7 @@
                 }
             }
             
-            super.setX(boundedx);
+            super.setAttribute('x', boundedx);
             
             //update slider value
             var slider = this.parent.parent;
@@ -331,7 +331,7 @@
                     slider.setAttribute("value", thumbVal);
                 }
             }
-        ]]></method>
+        ]]></setter>
     </class><!-- end basesliderthumb class -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

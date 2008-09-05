@@ -88,7 +88,7 @@
         if (isdefault) {
             lz._componentmanager.service.setDefaultStyle(this);
             if (this['canvascolor'] != null) {
-                 canvas.setBGColor(this.canvascolor);
+                 canvas.setAttribute('bgcolor', this.canvascolor);
             }
         }
         if (this.onisdefault) this.onisdefault.sendEvent(this);
@@ -108,7 +108,7 @@
     <!--- set canvas bgcolor if not already set
           @keywords private -->
     <method name="setCanvasColor" args="newcolor"> <![CDATA[
-            if (this.isdefault && newcolor != null) { canvas.setBGColor(newcolor); }
+            if (this.isdefault && newcolor != null) { canvas.setAttribute('bgcolor', newcolor); }
             this.canvascolor = newcolor;
             if (this.onstylechanged) this.onstylechanged.sendEvent(this);
     ]]> </method>

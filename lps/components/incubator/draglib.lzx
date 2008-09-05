@@ -117,8 +117,8 @@
     <method name="startdrag" args="src, xoffset, yoffset">
       this.startx = src.getAttributeRelative('x', canvas);
       this.starty = src.getAttributeRelative('y', canvas);
-      this.setX(this.startx);
-      this.setY(this.starty);
+      this.setAttribute('x', this.startx);
+      this.setAttribute('y', this.starty);
       this.bringToFront();
       this.setAttribute('visible', true);
       this.source = src;

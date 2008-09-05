@@ -81,12 +81,12 @@
     <!--- @keywords private -->
     <method name="showDown" args="sd=null">
         if (this.hasdefault) {
-            this._outerbezel.setResourceNumber( 5 );
+            this._outerbezel.setAttribute('frame', 5 );
         } else {
-            this._outerbezel.setResourceNumber( this.downResourceNumber );
+            this._outerbezel.setAttribute('frame', this.downResourceNumber );
         }
-        this._face.setResourceNumber( this.downResourceNumber );
-        this._innerbezel.setResourceNumber( this.downResourceNumber );
+        this._face.setAttribute('frame', this.downResourceNumber );
+        this._innerbezel.setAttribute('frame', this.downResourceNumber );
         setAttribute('buttonstate', 2);
 
     </method>
@@ -95,18 +95,18 @@
     <method name="showUp" args="sd=null">
         if (_enabled) {
             if (this.hasdefault) {
-                this._outerbezel.setResourceNumber( 5 );
+                this._outerbezel.setAttribute('frame', 5 );
             } else {
-                this._outerbezel.setResourceNumber( this.normalResourceNumber );
+                this._outerbezel.setAttribute('frame', this.normalResourceNumber );
             }
-            this._face.setResourceNumber( this.normalResourceNumber );
-            this._innerbezel.setResourceNumber( this.normalResourceNumber );
+            this._face.setAttribute('frame', this.normalResourceNumber );
+            this._innerbezel.setAttribute('frame', this.normalResourceNumber );
             if (this.style) this._title.setAttribute("fgcolor", this.style.textcolor);
         } else {
             if (this.style) this. _title.setAttribute("fgcolor", this.style.textdisabledcolor);
-            this._face.setResourceNumber( this.disabledResourceNumber );
-            this._outerbezel.setResourceNumber( this.disabledResourceNumber );
-            this._innerbezel.setResourceNumber( this.disabledResourceNumber );
+            this._face.setAttribute('frame', this.disabledResourceNumber );
+            this._outerbezel.setAttribute('frame', this.disabledResourceNumber );
+            this._innerbezel.setAttribute('frame', this.disabledResourceNumber );
         }
 
         setAttribute('buttonstate', 1);
@@ -115,12 +115,12 @@
     <!--- @keywords private -->
     <method name="showOver" args="sd=null">
         if (this.hasdefault) {
-            this._outerbezel.setResourceNumber( 5 );
+            this._outerbezel.setAttribute('frame', 5 );
         } else {
-            this._outerbezel.setResourceNumber( this.overResourceNumber );
+            this._outerbezel.setAttribute('frame', this.overResourceNumber );
         }
-        this._face.setResourceNumber( this.overResourceNumber );
-        this._innerbezel.setResourceNumber( this.overResourceNumber );
+        this._face.setAttribute('frame', this.overResourceNumber );
+        this._innerbezel.setAttribute('frame', this.overResourceNumber );
         setAttribute('buttonstate', 1);
     </method>
 

@@ -65,23 +65,23 @@
             super.setMonthToShow(month,year);
             this.display.month.datapath.setXPath(
             "datepicker_strings_en:/months/month[@index='" + month + "']/@full" );
-            this.disyear.year.setText( year);
+            this.disyear.year.setAttribute('text', year);
         </method>
         
         <handler name="onselecteddate">
             
             if( this.selecteddate != null ) {
-                this.selected.year.setText( this.selecteddate.getFullYear() );
+                this.selected.year.setAttribute('text', this.selecteddate.getFullYear() );
                 this.selected.month.datapath.setXPath(
                         "datepicker_strings_en:/months/month[@index='" + 
                         this.selecteddate.getMonth() + "']/@full" ); 
-                this.selected.mydate.setText( this.selecteddate.getDate() );
+                this.selected.mydate.setAttribute('text', this.selecteddate.getDate() );
                 
                var selectedtime = this.selected.month.text;
                
                var getmonvalue = month2value(selectedtime);
                              
-               this.selected.datavalue.setText(this.selected.year.text+"-"+getmonvalue+"-"+judgeday(selected.mydate.text));
+               this.selected.datavalue.setAttribute('text', this.selected.year.text+"-"+getmonvalue+"-"+judgeday(selected.mydate.text));
                 Debug.write(this.selected.datavalue.text);
             }
         </handler>

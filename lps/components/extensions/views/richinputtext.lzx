@@ -87,12 +87,12 @@ class $lzc$class_richinputtext extends LzInputText {
 
     if (this.resize && (this.multiline == false)) {
       // single line resizable fields adjust their width to match the text
-      this.setWidth(this.getTextWidth());
+      this.setAttribute('width', this.getTextWidth());
     }
 
     //multiline resizable fields adjust their height
     if (this.multiline && this.sizeToHeight) {
-      this.setHeight(mc._height);
+      this.setAttribute('height', mc._height);
     }
 
     if (this.multiline && this.scroll == 0 ) {

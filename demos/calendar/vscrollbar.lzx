@@ -146,7 +146,7 @@ Math.limit = function(value, min, max) {
                if (classroot.targetview) {
                    var newY = Math.floor((-classroot.targetview.y/classroot.targetview.height)
                                          *parent.height);
-                   this.setY(newY);
+                   this.setAttribute('y', newY);
                }
              </method>
 
@@ -154,7 +154,7 @@ Math.limit = function(value, min, max) {
                if (classroot.targetview) {
                    var newHeight = Math.floor((classroot.height/classroot.targetview.height)
                         *parent.height);
-                   this.setHeight(newHeight);
+                   this.setAttribute('height', newHeight);
                }
              </method>
 

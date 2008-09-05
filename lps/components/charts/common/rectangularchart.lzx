@@ -218,9 +218,9 @@
                 vaxis.style = new lz.axisstyle();
             }
             
-            vaxis.setX( (this.plotarea[x] != null ? this.plotarea.x : this.x) );
-            vaxis.setY( (this.plotarea[y] != null ? this.plotarea.y : this.y) );
-            vaxis.setHeight( (this.plotarea[height] != null ? this.plotarea.height : this.height) );
+            vaxis.setAttribute('x', (this.plotarea[x] != null ? this.plotarea.x : this.x) );
+            vaxis.setAttribute('y', (this.plotarea[y] != null ? this.plotarea.y : this.y) );
+            vaxis.setAttribute('height', (this.plotarea[height] != null ? this.plotarea.height : this.height) );
 
             vaxis.render();
             
@@ -233,10 +233,10 @@
                 haxis.style = new lz.axisstyle();
             }
             
-            haxis.setX( (this.plotarea[x] != null ? this.plotarea.x : this.x) );
-            haxis.setY( (this.plotarea[y] != null && this.plotarea[height] != null ? 
+            haxis.setAttribute('x', (this.plotarea[x] != null ? this.plotarea.x : this.x) );
+            haxis.setAttribute('y', (this.plotarea[y] != null && this.plotarea[height] != null ? 
                            this.plotarea.y + this.plotarea.height : this.y + this.height) );
-            haxis.setWidth( (this.plotarea[width] != null ? this.plotarea.width : this.width) );
+            haxis.setAttribute('width', (this.plotarea[width] != null ? this.plotarea.width : this.width) );
 
             haxis.render();         
         ]]>    
@@ -318,12 +318,12 @@
             }
 
             this.xoffset = this.width;
-            vaxis.setX( this.leftMargin );
-            vaxis.setY( this.topMargin );
+            vaxis.setAttribute('x', this.leftMargin );
+            vaxis.setAttribute('y', this.topMargin );
             vaxis.render();
 
-            haxis.setX( this.leftMargin );
-            haxis.setY( (vaxis.y + vaxis.height) );
+            haxis.setAttribute('x', this.leftMargin );
+            haxis.setAttribute('y', (vaxis.y + vaxis.height) );
             haxis.render();
         ]]>
 

@@ -98,8 +98,8 @@
             
             var fupdCellBounds = function(ignore=null) {
                 //'this' points to the grid cell
-                this.setX( this.ownerColumn.x );
-                this.setWidth( this.ownerColumn.colwidth );
+                this.setAttribute('x', this.ownerColumn.x );
+                this.setAttribute('width', this.ownerColumn.colwidth );
             };
             
             var contentspkg = this._contentsPackage;

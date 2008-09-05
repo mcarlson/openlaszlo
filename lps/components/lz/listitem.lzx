@@ -68,13 +68,13 @@
             if (this.style != null) {
                 if (_enabled) {
                     if (selected)
-                        this.setBGColor(style.selectedcolor)
+                        this.setAttribute('bgcolor', style.selectedcolor)
                     else if ( hilited )
-                        this.setBGColor(style.hilitecolor);
+                        this.setAttribute('bgcolor', style.hilitecolor);
                     else
-                        this.setBGColor(style.textfieldcolor);
+                        this.setAttribute('bgcolor', style.textfieldcolor);
                 } else {
-                   this.setBGColor(style.textfieldcolor);
+                   this.setAttribute('bgcolor', style.textfieldcolor);
                 }
             }
         </method>

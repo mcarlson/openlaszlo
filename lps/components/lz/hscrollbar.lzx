@@ -34,9 +34,9 @@
                 newbgcolor = p.bgcolor;
                 if (newbgcolor == null) newbgcolor = 0xffffff;
             }
-            this.setBGColor(newbgcolor);
+            this.setAttribute('bgcolor', newbgcolor);
         } else {
-            this.setBGColor(0x595959);
+            this.setAttribute('bgcolor', 0x595959);
         }
         super._showEnabled();
     ]]>

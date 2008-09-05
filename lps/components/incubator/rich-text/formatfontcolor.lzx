@@ -54,7 +54,7 @@
             [bshine 08.09.2007] -->
          <handler name="oneditor" args="e">
              this.setValue(this.editor.defaultfontcolor, true);
-             this.csq.setColor(this.editor.defaultfontcolor);             
+             this.csq.setAttribute('fgcolor', this.editor.defaultfontcolor);             
          </handler>
          
          <!---  @keywords private
@@ -68,7 +68,7 @@
          <handler name="onselect"><![CDATA[
                 var color  = this.value; 
                 
-                this.csq.setColor(color);
+                this.csq.setAttribute('fgcolor', color);
 
                 //------------------------------------------------------------
                 // make sure that we call into editor if this combobox has

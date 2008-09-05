@@ -46,7 +46,7 @@
             <setter name="text" args="t">
                 super.setAttribute('text', t);
                 if (!parent._usecontentwidth) {
-                    this.setWidth(parent.width
+                    this.setAttribute('width', parent.width
                         - parent.inset_left - parent.inset_right
                         - parent.content_inset_left - parent.content_inset_right );
                 } else {
@@ -56,7 +56,7 @@
                         // since there is always extra space on the right
                         twidth = parent.maxtextwidth;
                     }
-                    this.setWidth(twidth);
+                    this.setAttribute('width', twidth);
                 }
             </setter>
         </text>

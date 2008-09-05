@@ -317,7 +317,7 @@
     <method name="stuffInput" args="str">
         var infield = this.bottom.center.input;
         lz.Focus.setFocus(infield);
-        infield.setText(str);
+        infield.setAttribute('text', str);
         lz.Timer.addTimer(this.moveCaretDel, 1);
     </method>
 
@@ -507,7 +507,7 @@
     </method>
 
     <method name="stuffObjectId" args="id">
-        this.bottom.center.input.setText(this.ObjectForID(id));
+        this.bottom.center.input.setAttribute('text', this.ObjectForID(id));
     </method>
 
    <method name="inspectObject" args="obj">
@@ -519,7 +519,7 @@
    </method>
 
     <method name="setTitle" args="t" >
-        this.top.title.setText( t )
+        this.top.title.setAttribute('text', t )
     </method>
 
 
@@ -590,8 +590,8 @@
     <view name="top" width="${parent.width}" height="24" pixellock="true" clip="true"
           oninit="this.controls.bringToFront()"> 
         <view name="background" width="${parent.width}"  clip="true"
-            onmouseover="grabber.setResourceNumber(2)"
-            onmouseout="grabber.setResourceNumber(1)"
+            onmouseover="grabber.setAttribute('frame', 2)"
+            onmouseout="grabber.setAttribute('frame', 1)"
             onmousedown="classroot.bringToFront(); parent.parent.drag.setAttribute('applied', true)"
             onmouseup="parent.parent.drag.setAttribute('applied', false)"
         oninit="this.right.bringToFront()">
@@ -685,7 +685,7 @@
           onmousedown="parent.bringToFront()"
         pixellock="true">
 
-       <setter name="setHeight" args="h" > 
+       <setter name="height" args="h" > 
         // keep a minimum of two lines of text displayed
           var minheight = (classroot.lineheight + 16);
           super.setAttribute('height', Math.max( parent.smallInputAreaHeight , Math.min( h , parent.height - (parent.top.height + minheight)) ) ); 
@@ -794,10 +794,10 @@
              <view resource="resizer_rsc" name="resizer"  pixellock="true" 
                      y="${parent.height - 11}"
                      x="${parent.width - 11}"
-                     onmouseover="this.setResourceNumber(2);"
-                     onmouseout="this.setResourceNumber(1);"
-                     onmousedown="this.setResourceNumber(2); classroot.bringToFront(); classroot.resize.setAttribute('applied', true)"
-                     onmouseup="this.setResourceNumber(1); classroot.resize.setAttribute('applied', false)"
+                     onmouseover="this.setAttribute('frame', 2);"
+                     onmouseout="this.setAttribute('frame', 1);"
+                     onmousedown="this.setAttribute('frame', 2); classroot.bringToFront(); classroot.resize.setAttribute('applied', true)"
+                     onmouseup="this.setAttribute('frame', 1); classroot.resize.setAttribute('applied', false)"
                  />
 
          </view> <!-- END BOTTOM-RIGHT -->

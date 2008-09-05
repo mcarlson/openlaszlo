@@ -316,15 +316,15 @@
                 positionY = halfRadius*Math.sin(-halfAngle*Math.PI/180)+y;
 
                 if(!_datalabel.labelOut) {
-                    _datalabel.setX(positionX - _datalabel.width/2);
+                    _datalabel.setAttribute('x', positionX - _datalabel.width/2);
                 } else {
                     if(halfAngle < 90 || halfAngle > 270) {
-                        _datalabel.setX(positionX);
+                        _datalabel.setAttribute('x', positionX);
                     } else {
-                        _datalabel.setX(positionX - _datalabel.width);
+                        _datalabel.setAttribute('x', positionX - _datalabel.width);
                     }
                 }
-                _datalabel.setY(positionY - _datalabel.height/2);
+                _datalabel.setAttribute('y', positionY - _datalabel.height/2);
                 _datalabel.bringToFront();
             ]]>
         </method>    

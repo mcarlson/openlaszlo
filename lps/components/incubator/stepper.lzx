@@ -79,7 +79,7 @@
 
                         (typeof(classroot.maximum) != 'undefined' && classroot.maximum >= n)) {
 
-                              this.setText(n);
+                              this.setAttribute('text', n);
 
                         }
 
@@ -97,7 +97,7 @@
 
                         (typeof(classroot.minimum) != 'undefined' && classroot.minimum <= n)) {
 
-                              this.setText(n);
+                              this.setAttribute('text', n);
 
                         }
 

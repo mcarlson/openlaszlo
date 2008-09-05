@@ -146,7 +146,7 @@
                             Debug.write("The First Child = ",theFirst);
                             
                             var firstChildData = theFirst.data;
-                            this.setText(firstChildData);
+                            this.setAttribute('text', firstChildData);
                             this.setSelection(theInput.length,firstChildData.length);
                         } else {
                              classroot.myFloatBox.setAttribute("visible",false);
@@ -186,7 +186,7 @@
                 </handler>
                 <handler name="onselect">
                     Debug.write("onselect ",this.data);
-                    parent.owner.theeditor.actual.setText(this.data);
+                    parent.owner.theeditor.actual.setAttribute('text', this.data);
                     var actualTyped = parent.owner.theeditor.actual.actuallyTyped;
                     parent.owner.theeditor.actual.setSelection(actualTyped.length,this.data.length);
                 </handler>

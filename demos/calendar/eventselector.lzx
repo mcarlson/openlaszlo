@@ -38,7 +38,7 @@
                     var ap = h < 12 ? 'a' : 'p';
                     if ( h > 12) h-=12;
                     else if ( h==0 ) h='12';
-                    this.setText( h + ap );
+                    this.setAttribute('text', h + ap );
                     ]]>
                 </handler>
             </text>
@@ -296,7 +296,7 @@
         <method name="updateOver" args="d">
             //called by day (d);
             if ( !this.freedragging ) return;
-            bar.setWidth( d.eventwidth );
+            bar.setAttribute('width', d.eventwidth );
 
             if ( xoff > bar.width ){
                 //move it over so that you're still dragging it in a
@@ -335,17 +335,17 @@
                             this.setAttribute( "freedragging" , false );
                             //this needs to happen second, after the
                             //clipping view changes coordinates
-                            bar.setX( this.origx );
+                            bar.setAttribute('x', this.origx );
                             //need to reset y in new coordinate system
                         }
                         if ( ybar <= 0 ){
                             if (this['followview'].classroot.details.bgrect.scrollview['sb']) this['followview'].classroot.details.bgrect.scrollview.sb.step(-1);
-                            bar.setY( 0 );
+                            bar.setAttribute('y', 0 );
                         } else if ( ybar > h ){
                             if (this['followview'].classroot.details.bgrect.scrollview['sb']) this['followview'].classroot.details.bgrect.scrollview.sb.step(1);
-                            bar.setY( h );
+                            bar.setAttribute('y', h );
                         } else {
-                            bar.setY( this.getMouse( 'y' ) - yoff );
+                            bar.setAttribute('y', this.getMouse( 'y' ) - yoff );
                         }
 
                         var newStartHour = Math.floor (
@@ -359,7 +359,7 @@
                         if (newStartHour >  12) newStartHour-=12;
                         if (newStartHour == 0) newStartHour='12';
 
-                        bar.timeArea.setText(newStartHour+ap);
+                        bar.timeArea.setAttribute('text', newStartHour+ap);
                     }
                 }
             }
@@ -369,8 +369,8 @@
             }
 
             if ( this.freedragging ){
-                bar.setX( this.getMouse( 'x' ) - xoff );
-                bar.setY( this.getMouse( 'y' ) - yoff );
+                bar.setAttribute('x', this.getMouse( 'x' ) - xoff );
+                bar.setAttribute('y', this.getMouse( 'y' ) - yoff );
             }
             ]]>
         </method>
@@ -396,41 +396,41 @@
         <!-- MOUSEEVENT METHODS-->
         <handler name="onmousedown" >
             this.mouseisdown = true;
-            this.bkgnd.button.setResourceNumber( this.downRsrcNumber );
-            this.i.setX(1);
-            this.i.setY(1);
+            this.bkgnd.button.setAttribute('frame', this.downRsrcNumber );
+            this.i.setAttribute('x', 1);
+            this.i.setAttribute('y', 1);
         </handler>
 
         <handler name="onmouseup" >
             this.mouseisdown = false;
             if (this.mouseisover) {
-                this.bkgnd.button.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.button.setAttribute('frame', this.overRsrcNumber );
             } else {
-                this.bkgnd.button.setResourceNumber( this.normalRsrcNumber );
+                this.bkgnd.button.setAttribute('frame', this.normalRsrcNumber );
             }
-            this.i.setX(0);
-            this.i.setY(0);
+            this.i.setAttribute('x', 0);
+            this.i.setAttribute('y', 0);
         </handler>
 
         <handler name="onmouseover" ><![CDATA[
             this.mouseisover = true;
             if (this.mouseisdown) {
-                this.bkgnd.button.setResourceNumber( this.downRsrcNumber );
-                this.i.setX(1);
-                this.i.setY(1);
+                this.bkgnd.button.setAttribute('frame', this.downRsrcNumber );
+                this.i.setAttribute('x', 1);
+                this.i.setAttribute('y', 1);
             } else {
-                this.bkgnd.button.setResourceNumber( this.overRsrcNumber );
-                this.i.setX(0);
-                this.i.setY(0);
+                this.bkgnd.button.setAttribute('frame', this.overRsrcNumber );
+                this.i.setAttribute('x', 0);
+                this.i.setAttribute('y', 0);
             }
 
          ]]> </handler>
 
         <handler name="onmouseout" > <![CDATA[
             this.mouseisover = false;
-            this.bkgnd.button.setResourceNumber( this.normalRsrcNumber );
-            this.i.setX(0);
-            this.i.setY(0);
+            this.bkgnd.button.setAttribute('frame', this.normalRsrcNumber );
+            this.i.setAttribute('x', 0);
+            this.i.setAttribute('y', 0);
         ]]> </handler>
 
    </class>

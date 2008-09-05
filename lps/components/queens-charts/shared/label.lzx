@@ -99,8 +99,8 @@
                 var dd = [parent.classroot, "scaler"];
                 this.applyConstraint("y", ff, dd);
             } else if(this.charttype == "pie"){
-                this.setX(this.x - this.width / 2);
-                this.setY(this.y - this.height / 2);
+                this.setAttribute('x', this.x - this.width / 2);
+                this.setAttribute('y', this.y - this.height / 2);
             }
             ]]>
         </method>
@@ -125,7 +125,7 @@
             <handler name="ontext">
                 <![CDATA[
                 if(this.sprite.width != 0 && this.sprite.width != 4){
-                    parent.setWidth(this.sprite.width + 4);
+                    parent.setAttribute('width', this.sprite.width + 4);
                     if(parent.context){
                         parent.renderBorder();
                     }
@@ -199,7 +199,7 @@
                     }
                     var d = [barlink, "x"];
                     this.applyConstraint("x", f, d);
-                    this.setY(this.y + this.ticklength + this.loffset);
+                    this.setAttribute('y', this.y + this.ticklength + this.loffset);
                 } else {
                     // Really only needed to compensate for this little issue with the
                     // barchart directional switch.
@@ -230,9 +230,9 @@
                     }
                     var d = [barlink, "y"];
                     this.applyConstraint("y", f, d);
-                    this.setX(this.x - this.width - this.ticklength - this.loffset);
+                    this.setAttribute('x', this.x - this.width - this.ticklength - this.loffset);
                 } else {
-                    this.setX(parent.width - this.width - this.ticklength - 4);
+                    this.setAttribute('x', parent.width - this.width - this.ticklength - 4);
                     var f = function(){
                         this.setAttribute("y", parent.height - ((parent.height / this.numlabels) *
                             this.labelnumber) - ((parent.classroot.parent.minimum %
@@ -254,7 +254,7 @@
             <handler name="ontext">
                 <![CDATA[
                 if(this.sprite.width != 0 && this.sprite.width != 4){
-                    parent.setWidth(this.sprite.width);
+                    parent.setAttribute('width', this.sprite.width);
                 }
                 ]]>
             </handler>

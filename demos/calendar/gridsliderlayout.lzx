@@ -315,10 +315,10 @@
                 if (vis) {
                     if (this.doanimation) {
                         if (!s.visible) {
-                            if (s.x != x)       s.setX(x);
-                            if (s.y != y)       s.setY(y);
-                            if (s.width != w)   s.setWidth(w);
-                            if (s.height != h)  s.setHeight(h);
+                            if (s.x != x)       s.setAttribute('x', x);
+                            if (s.y != y)       s.setAttribute('y', y);
+                            if (s.width != w)   s.setAttribute('width', w);
+                            if (s.height != h)  s.setAttribute('height', h);
                             // To speed up the process only the currently visible
                             // views are animated, while the hidden views are
                             // given there final dimensions and then popped into view
@@ -330,10 +330,10 @@
                             didAnimation=true;
                         }
                     } else {
-                        if (s.x != x)       s.setX(x);
-                        if (s.y != y)       s.setY(y);
-                        if (s.width != w)   s.setWidth(w);
-                        if (s.height != h)  s.setHeight(h);
+                        if (s.x != x)       s.setAttribute('x', x);
+                        if (s.y != y)       s.setAttribute('y', y);
+                        if (s.width != w)   s.setAttribute('width', w);
+                        if (s.height != h)  s.setAttribute('height', h);
                         if (!s.visible) s.setAttribute('visible', true);
                     }
                 } else {
@@ -344,8 +344,8 @@
                         if (this.doanimation) {
                             s.animateTo(x, s.y, w, s.height);
                         } else {
-                            if (s.x != x)       s.setX(x);
-                            if (s.width != w)   s.setWidth(w);
+                            if (s.x != x)       s.setAttribute('x', x);
+                            if (s.width != w)   s.setAttribute('width', w);
                         }
                     }
                     if (s.visible) s.setAttribute('visible', false);
@@ -396,7 +396,7 @@
         for (var i =0; i < this.subviews.length; i++) {
             s = this.subviews[i];
             if (s['update_vis_later']){
-                if (!s.opened && s.details.bgrect.container.dataview) s.details.bgrect.container.dataview.setY(0);            
+                if (!s.opened && s.details.bgrect.container.dataview) s.details.bgrect.container.dataview.setAttribute('y', 0);            
                 s.setAttribute('visible', true);
             }
 

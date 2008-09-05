@@ -85,9 +85,9 @@
 
         <handler name="onenabled">
             if( this.enabled ) {
-                this.icon.setOpacity( 1 );
+                this.icon.setAttribute('opacity', 1 );
             } else { 
-                this.icon.setOpacity( .5 );
+                this.icon.setAttribute('opacity', .5 );
             }
         </handler>
    </class>
@@ -522,11 +522,11 @@
               selecteddate="new Date()"&gt;
               &lt;handler name="onselecteddate"&gt;
               if( this.selecteddate != null ) {
-              display.year.setText( this.selecteddate.getFullYear() );
+              display.year.setAttribute('text', this.selecteddate.getFullYear() );
               display.month.datapath.setXPath(
               "datepicker_strings_en:/months/month[@index='" + 
               this.selecteddate.getMonth() + "']/@full" ); 
-              display.date.setText( this.selecteddate.getDate() );
+              display.date.setAttribute('text', this.selecteddate.getDate() );
               } 
               &lt;/handler&gt;
               &lt;/datepicker&gt; 

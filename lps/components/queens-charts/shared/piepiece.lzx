@@ -120,15 +120,15 @@
             var ratx = this.centerx - sx;
             var raty = this.centery - sy;
             
-            this.setX(this.x - (.08 * (ratx)));
-            this.setY(this.y - (.08 * (raty)));
+            this.setAttribute('x', this.x - (.08 * (ratx)));
+            this.setAttribute('y', this.y - (.08 * (raty)));
             ]]>
         </method>
         <!--- De-explodes this piece. -->
         <method name="collapseThis">
             <![CDATA[
-            this.setX(this.collapsex);
-            this.setY(this.collapsey);
+            this.setAttribute('x', this.collapsex);
+            this.setAttribute('y', this.collapsey);
             ]]>
         </method>
         

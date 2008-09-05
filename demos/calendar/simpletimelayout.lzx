@@ -1,6 +1,6 @@
 <library>
 <class name="simpletimelayout" extends="layout" >
-    <attribute name="enabled" value="true" setter="this.setEnabled(enabled)"/>
+    <attribute name="enabled" value="true" setter="setEnabled(enabled)"/>
     <attribute name="viewheight" value="22"/>
 
     <method name="setEnabled" args="e">
@@ -59,7 +59,7 @@
             var c = 0;
             for(var i=0; i <= l; i++) {
                 var s = sv[i];
-                s.setY( c );
+                s.setAttribute('y', c );
                 c += s.height;
             }
         }

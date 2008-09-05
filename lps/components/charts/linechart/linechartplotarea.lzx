@@ -88,8 +88,8 @@
          -->
         <method name="renderDataPoint" args="x, y, tooltip, style, point">
             
-            point.setX(x * this._xscale + this._xoffset - (style.point.width/2));
-            point.setY(y * this._yscale + this._yoffset - (style.point.height/2));
+            point.setAttribute('x', x * this._xscale + this._xoffset - (style.point.width/2));
+            point.setAttribute('y', y * this._yscale + this._yoffset - (style.point.height/2));
 
             point.tooltip = tooltip;
             if((point["style"] == null) || style.updateNeeded(point))
@@ -127,9 +127,9 @@
                             label.bringToFront(); 
                             style.markUpdated(label);                        
                         }
-                        //label.setX( lx+label.width>plotarea.width?plotarea.width-label.width-5:lx );
-                        label.setX( lx );
-                        label.setY(devicey - label.height/2);
+                        //label.setAttribute('x', lx+label.width>plotarea.width?plotarea.width-label.width-5:lx );
+                        label.setAttribute('x', lx );
+                        label.setAttribute('y', devicey - label.height/2);
                     }
                             
                     var devicex = this.toDeviceX(xseries[i]);
@@ -150,7 +150,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

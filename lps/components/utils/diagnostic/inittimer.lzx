@@ -9,7 +9,7 @@
         </handler>
         <text id="mytext" resize="true">
             <method name="tellTime" args="t">
-                this.setText( "Time taken: " + t );
+                this.setAttribute('text', "Time taken: " + t );
             </method>
         </text>
     </class>

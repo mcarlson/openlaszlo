@@ -135,14 +135,14 @@
                     new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:(parent.expanded ? this.titletextsize : 10), tcolor:this.titlecolor});
                 }
-                this.setWidth(litemwidth * numcols);
-                this.setHeight(litemheight * numrows + (this.ltitle != null ? this.legendtitle.height : 0));
-                this.setX((parent.width - this.width) / 2);
+                this.setAttribute('width', litemwidth * numcols);
+                this.setAttribute('height', litemheight * numrows + (this.ltitle != null ? this.legendtitle.height : 0));
+                this.setAttribute('x', (parent.width - this.width) / 2);
                 if(this.posit == 'bottom'){
-                    this.setY((this.centery + this.pieradius) +
+                    this.setAttribute('y', (this.centery + this.pieradius) +
                         (parent.height - this.centery - this.pieradius - this.height) / 2);
                 } else {
-                    this.setY((this.centery - this.pieradius - this.height) / 2);
+                    this.setAttribute('y', (this.centery - this.pieradius - this.height) / 2);
                 }
             } else if(this.posit == 'left' || this.posit == 'right') {
                 var numcols = Math.floor(Math.sqrt(this.itemnums));
@@ -156,21 +156,21 @@
                     new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:(parent.expanded ? this.titletextsize : 10), tcolor:this.titlecolor});
                 }
-                this.setWidth(litemwidth * numcols);
-                this.setHeight(litemheight * numrows + (this.ltitle != null ? this.legendtitle.height : 0));
+                this.setAttribute('width', litemwidth * numcols);
+                this.setAttribute('height', litemheight * numrows + (this.ltitle != null ? this.legendtitle.height : 0));
                 if(this.posit == 'left'){
-                    this.setX((this.centerx - this.pieradius - this.width) / 2);
-                    this.setY((parent.height - this.height) / 2);
+                    this.setAttribute('x', (this.centerx - this.pieradius - this.width) / 2);
+                    this.setAttribute('y', (parent.height - this.height) / 2);
                 } else {
-                    this.setX((this.centerx + this.pieradius) +
+                    this.setAttribute('x', (this.centerx + this.pieradius) +
                         (parent.width - this.centerx - this.pieradius - this.width) / 2);
-                    this.setY((parent.height - this.height) / 2);
+                    this.setAttribute('y', (parent.height - this.height) / 2);
                 }
             } else {
-                this.setWidth(this.legendwidth);
-                this.setHeight(this.legendheight);
-                this.setX(this.legendx);
-                this.setY(this.legendy);
+                this.setAttribute('width', this.legendwidth);
+                this.setAttribute('height', this.legendheight);
+                this.setAttribute('x', this.legendx);
+                this.setAttribute('y', this.legendy);
                 if(this.width / 4 > this.height){
                     var numrows = Math.floor(Math.sqrt(this.itemnums));
                     if(numrows > 1){
@@ -305,8 +305,8 @@
                     new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:this.titletextsize, tcolor:this.titlecolor});
                 }
-                this.setWidth(litemwidth * numcols);
-                this.setHeight(litemheight * numrows + (this.ltitle != null ? this.legendtitle.height : 0));
+                this.setAttribute('width', litemwidth * numcols);
+                this.setAttribute('height', litemheight * numrows + (this.ltitle != null ? this.legendtitle.height : 0));
 
                 // Create legend items.
                 for(var i = 0; i < dnum; i++){
@@ -353,8 +353,8 @@
                     new lz.legendtitle(this, {name:'legendtitle', ltitle:this.ltitle, tposit:this.titleposition,
                         ttsize:this.titletextsize, tcolor:this.titlecolor});
                 }
-                this.setWidth(litemwidth * numcols);
-                this.setHeight(litemheight * numrows + (this.ltitle != null ? this.legendtitle.height : 0));
+                this.setAttribute('width', litemwidth * numcols);
+                this.setAttribute('height', litemheight * numrows + (this.ltitle != null ? this.legendtitle.height : 0));
 
                 // Create legend items.
                 for(var i = 0; i < dnum; i++){
@@ -450,9 +450,9 @@
         <attribute name="lpiece" value="$once{null}"/>
         <handler name="oninit">
             if(this.itemlabel != null){
-                this.ltext.setText(itemlabel);
+                this.ltext.setAttribute('text', itemlabel);
             } else {
-                this.ltext.setText(itemvalue);
+                this.ltext.setAttribute('text', itemvalue);
             }
         </handler>
         <handler name="onmouseover">

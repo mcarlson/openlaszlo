@@ -96,14 +96,14 @@ Currently the best way to change them at runtime is to apply a &lt;style&gt;.
     <handler name="onwidth">
         if (!this['_rr']) return;     // ignore these events if the roundrect 
                                       // itself hasn't been built yet
-        _rr.setWidth(this.width);
+        _rr.setAttribute('width', this.width);
         _rr.drawStructure();
     </handler>
     
     <handler name="onheight">
         if (!this['_rr']) return;     // ignore these events if the roundrect 
                                       // itself hasn't been built yet
-        _rr.setHeight(this.height);
+        _rr.setAttribute('height', this.height);
         _rr.drawStructure();
     </handler>
     

@@ -87,7 +87,7 @@
                         if( parent.parent.legendborder ) 
                             parent.parent.border();
                         else
-                            parent.parent.setBGColor(parent.parent.fillColor);
+                            parent.parent.setAttribute('bgcolor', parent.parent.fillColor);
                     }    
                 </handler>
 
@@ -102,7 +102,7 @@
                         if( parent.parent.legendborder ) 
                             parent.parent.border();
                         else
-                            parent.parent.setBGColor(parent.parent.fillColor);
+                            parent.parent.setAttribute('bgcolor', parent.parent.fillColor);
                     </method>
                 </datapath>
             </legenditem>            
@@ -246,11 +246,11 @@
                     legendmarkeritem = legenditem.legendmarker;
                     if ( imagesPath[i] != null ){
                         legendmarkeritem.setSource(imagesPath[i]);
-                        legendmarkeritem.setOpacity(ldatastyle.region.opacity);
+                        legendmarkeritem.setAttribute('opacity', ldatastyle.region.opacity);
                         legendmarkeritem.setAttribute( "visible", true );
                     }
                     else
-                        legendmarkeritem.setBGColor(colors[i]);
+                        legendmarkeritem.setAttribute('bgcolor', colors[i]);
                     this.setAttribute('identifier', i);
                 }
             ]]>

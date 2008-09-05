@@ -115,7 +115,7 @@
                         //componentdoes, the data for this thing can sometimes
                         //get set before it's ready for it
                         if ( !this._initcomplete ) {
-                            this.setText( d );
+                            this.setAttribute('text', d );
                         } else {
                             super.applyData(d);
                         }

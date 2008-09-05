@@ -211,7 +211,7 @@
             var itheight = cls[ 0 ].height;
             var adj = itheight * -dir;
             var ny = y + adj;
-            this.setY( Math.min( 0 , Math.max( mask.height - height, ny ) ) );
+            this.setAttribute('y', Math.min( 0 , Math.max( mask.height - height, ny ) ) );
 
         </method>
 
@@ -273,7 +273,7 @@
                 if ( dragisover ){
                     parent.select( parent.nodeinst.clones[ cpos ] );
                 } else {
-                    this.setY( cy + cpos * h );
+                    this.setAttribute('y', cy + cpos * h );
                     parent.select( null );
                 }
 
@@ -318,7 +318,7 @@
 
         <!--- @access private -->
         <method name="_updateDragged">
-            dragged.setY( this.getMouse( 'y' ) - _ydragoff );
+            dragged.setAttribute('y', this.getMouse( 'y' ) - _ydragoff );
         </method>
 
         <method name="endDrag" args="who">

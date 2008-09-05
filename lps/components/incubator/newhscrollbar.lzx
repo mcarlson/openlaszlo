@@ -98,9 +98,9 @@
         if ( ! enabled ) {
             this._obgcolor = this.bgcolor;
         }
-        this.setOpacity( enabled ? 1 : 0.6 );
-        this.setBGColor( enabled ? this._obgcolor : parent.bgcolor );
-        this.thumb.setClickable( enabled );
+        this.setAttribute('opacity', enabled ? 1 : 0.6 );
+        this.setAttribute('bgcolor', enabled ? this._obgcolor : parent.bgcolor );
+        this.thumb.setAttribute('clickable', enabled );
         this.thumb.setAttribute('visible', true);
     </method>
 

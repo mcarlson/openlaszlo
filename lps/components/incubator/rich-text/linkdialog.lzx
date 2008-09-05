@@ -43,7 +43,7 @@
         <method name="show">
             this.ssel = this.editor._ssel;
             this.esel = this.editor._esel; 
-            this.urlfield.setText("http://");
+            this.urlfield.setAttribute('text', "http://");
             var ntextlength = this.urlfield.getText().length;
             this.urlfield.setSelection(ntextlength,ntextlength);
             this._animShow.doStart();

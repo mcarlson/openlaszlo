@@ -18,9 +18,9 @@
 
         <!--- @keywords private -->
         <method name="_applystyle" args="s">
-            track.setBGColor(s.bordercolor);
-            track.background.setBGColor(s.basecolor);
-            track.filled.setBGColor(s.selectedcolor);
+            track.setAttribute('bgcolor', s.bordercolor);
+            track.background.setAttribute('bgcolor', s.basecolor);
+            track.filled.setAttribute('bgcolor', s.selectedcolor);
         </method>
         <doc>
             <tag name="shortdesc"><text>

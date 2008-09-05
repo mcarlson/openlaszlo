@@ -35,7 +35,7 @@
         super.setValue(v);
 
         if (this.isinited) {
-            this.editbkgnd.textfield.setText(v);
+            this.editbkgnd.textfield.setAttribute('text', v);
            // lz.Focus.setFocus(this.editbkgnd.textfield);
            var index = this.editbkgnd.textfield.text.length;
            this.editbkgnd.textfield.setSelection(index,index);

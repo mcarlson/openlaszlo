@@ -89,7 +89,7 @@
 
     <!--- @keywords private -->
     <method name="showTip"> <![CDATA[
-        canvas.tooltipview.setText(this.text);
+        canvas.tooltipview.setAttribute('text', this.text);
         
         var py = parent.getAttributeRelative( 'y', canvas )
         var tipx = canvas.width;
@@ -123,8 +123,8 @@
 
         }
 
-        canvas.tooltipview.setX( tipx );
-        canvas.tooltipview.setY( tipy );
+        canvas.tooltipview.setAttribute('x', tipx );
+        canvas.tooltipview.setAttribute('y', tipy );
         canvas.tooltipview.setPointerX( this._lastmousex, pointerontop );
         canvas.tooltipview.bringToFront( this.text );
         canvas.tooltipview.setAttribute('visible',  true );

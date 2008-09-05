@@ -32,7 +32,7 @@
 
         <!--- @keywords private -->
         <method name="setText" args="t">
-            txt.setText(t);
+            txt.setAttribute('text', t);
         </method>
 
         <!--- @keywords private -->
@@ -61,7 +61,7 @@
             else if( style.region.image != null ) {
                 this.setSource( style.region.image );
                 this.setAttribute( "stretches", style.region.stretches );
-                this.setOpacity(style.region.opacity);
+                this.setAttribute('opacity', style.region.opacity);
 
             }
             else if( parent.constructor.tagname == "columnchartplotarea" ) {

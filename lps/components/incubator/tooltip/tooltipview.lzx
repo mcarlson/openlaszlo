@@ -15,7 +15,7 @@
       bgcolor="0x252525"
       width="${t.width + 6}" height="17" 
       visible="false">
-    <attribute name="text" value="" type="html" setter="this.setText(text)" />
+    <attribute name="text" value="" type="html" setter="this.setAttribute('text', text)" />
 
     <!-- shadow left -->
     <view bgcolor="black" opacity=".3" 
@@ -41,19 +41,19 @@
     <!--- sets the text of the tooltip -->
     <method name="setText" args="new_text">
         if ( !isinited ) return; 
-        this.t.setText(new_text);
+        this.t.setAttribute('text', new_text);
     </method>
 
     <method name="setPointerX" args="mx, isontop ">
         var nx = Math.min( mx - x, width - 12)
-        this.pointer.setX( nx );
+        this.pointer.setAttribute('x', nx );
 
         if ( isontop ) {
             this.pointer.setAttribute( 'frame', 1 ); 
-            this.pointer.setY( 1 - this.pointer.height); 
+            this.pointer.setAttribute('y', 1 - this.pointer.height); 
         } else {
             this.pointer.setAttribute( 'frame', 2 ); 
-            this.pointer.setY( height - 1); 
+            this.pointer.setAttribute('y', height - 1); 
         }
     </method>
     
@@ -61,7 +61,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

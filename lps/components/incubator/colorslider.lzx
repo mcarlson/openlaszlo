@@ -4,7 +4,7 @@
 
     <class name="myslider" extends="slider" minvalue="0" maxvalue="255" value="0" showfill="1" width="90" thumbheight="8" >
         <handler name="oninit">
-            this.track.background.setBGColor("0xFFFFFF"); 
+            this.track.background.setAttribute('bgcolor', "0xFFFFFF"); 
         </handler>
         <handler name="onvalue">
             classroot.gotColor();
@@ -59,17 +59,17 @@
             }
 
             if(typeof this.colorlayout.colorchooser.mycolor.red.track != 'undefined'){
-                this.colorlayout.colorchooser.mycolor.red.track.filled.setBGColor("0x"+r+""+"0000");
+                this.colorlayout.colorchooser.mycolor.red.track.filled.setAttribute('bgcolor', "0x"+r+""+"0000");
             }
             if(typeof this.colorlayout.colorchooser.mycolor.green.track != 'undefined'){
-                this.colorlayout.colorchooser.mycolor.green.track.filled.setBGColor("0x00"+g+"00");
+                this.colorlayout.colorchooser.mycolor.green.track.filled.setAttribute('bgcolor', "0x00"+g+"00");
             }
             if(typeof this.colorlayout.colorchooser.mycolor.blue.track != 'undefined'){
-                this.colorlayout.colorchooser.mycolor.blue.track.filled.setBGColor("0x0000"+b);
+                this.colorlayout.colorchooser.mycolor.blue.track.filled.setAttribute('bgcolor', "0x0000"+b);
             }
 
             clr = "0x"+r+""+g+""+b;
-            this.colorlayout.colorchooser.clist.cinfo.colortext.setText(clr);
+            this.colorlayout.colorchooser.clist.cinfo.colortext.setAttribute('text', clr);
             ]]>
         </method>
         <method name="toHex" args="d">

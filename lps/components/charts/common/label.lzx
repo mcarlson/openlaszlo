@@ -44,26 +44,26 @@
             -->
         <method name="render" args="txt">
         <![CDATA[ 
-            this.textContent.setText(txt);  
+            this.textContent.setAttribute('text', txt);  
                                   
             if(style.updateNeeded(this) || !enableCache)
             {           
                 this.clear();
                            
                 if (style.opacity != null) {
-                    this.setOpacity(style.opacity);
+                    this.setAttribute('opacity', style.opacity);
                 }
 
                 //set the font style
                 this.textContent.setAttribute('fontsize', style.fontsize);
                 this.textContent.setAttribute('height', style.fontsize+6);
-                this.textContent.setColor(style.fontcolor);
+                this.textContent.setAttribute('fgcolor', style.fontcolor);
                 this.textContent.setAttribute('font', style.fontname);
                 
                 if (style.fillcolor!=null && style.fillcolor!='null') {
-                    this.textContent.setBGColor(style.fillcolor);
+                    this.textContent.setAttribute('bgcolor', style.fillcolor);
                 } else {
-                    this.textContent.setBGColor(null);
+                    this.textContent.setAttribute('bgcolor', null);
                 }
                 
                 this.setAttribute('lineWidth', style.linesize);
@@ -81,8 +81,8 @@
             }            
                 
             if( style.linesize!=null && style.linesize>0 ) {            
-                this.textContent.setX(Math.ceil(style.linesize/2));
-                this.textContent.setY(0);
+                this.textContent.setAttribute('x', Math.ceil(style.linesize/2));
+                this.textContent.setAttribute('y', 0);
                 this.setAttribute('height', textContent.height+Math.ceil(style.linesize/2));
                 this.setAttribute('width', textContent.width+style.linesize);
                 this.border();
@@ -121,7 +121,7 @@
         <!--- @keywords private -->
         <method name="applyRotation" args="pAngle, pfontName">
             if (this.embeddedFont(pfontName)) {
-                this.setRotation(pAngle);
+                this.setAttribute('rotation', pAngle);
             }
         </method>        
         <!--- @keywords private -->

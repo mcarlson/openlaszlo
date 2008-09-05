@@ -111,7 +111,7 @@
         <attribute name="pattern" value="$once{null}" type="string" />
 
         <!--- The height of the edit text box, default: 20. -->
-        <attribute name="height" value="20" setter="this.setHeight(height)"/>
+        <attribute name="height" value="20" setter="this.setAttribute('height', height)"/>
 
         <!--- The width of the edit text box, default: 106. -->
         <attribute name="width" value="106"/>
@@ -150,7 +150,7 @@
               internalinputfield using _placeTextY().
               @keywords private -->
         <method name="setHeight" args="h">
-            super.setHeight(h);
+            super.setAttribute('height', h);
             this._initialtexty = (!this._initcomplete);
             if (this._initcomplete) this._placeTextY()
         </method>
@@ -172,10 +172,9 @@
         <method name="_placeTextY">
             if (this._field) {
                 if (this.multiline) {
-                    this._field.setY(2);
+                    this._field.setAttribute('y', 2);
                 } else {
-                    this._field.setY( 
-                        (this.height - this._field.fontsize) / 2 - 3 
+                    this._field.setAttribute('y',                         (this.height - this._field.fontsize) / 2 - 3 
                     );
                 }
             }
@@ -206,10 +205,10 @@
                     this._field.setMultiline(this.multiline);
                 }
                 if (this.maxlength != null) {
-                    this._field.setMaxLength(this.maxlength);
+                    this._field.setAttribute('maxlength', this.maxlength);
                 }
                 if (this.pattern != null) {
-                    this._field.setPattern(this.pattern);
+                    this._field.setAttribute('pattern', this.pattern);
                 }
             }
             ]]>
@@ -240,7 +239,7 @@
                 if (! _ignorecalldown) {
                     if (this._field) {
                         // Have to set internal inputtext's nocallback attr. It
-                        // can't be passed into _field.setText() since it's not an
+                        // can't be passed into _field.setAttribute('text', ) since it's not an
                         // laszlo method. Nocallback means that setValue called
                         // internal inputtext and inputtext should not call setValue
                         // back.
@@ -248,7 +247,7 @@
 
                         // _internalinputtext's ontext will trigger an ontext and
                         // onvalue event so we don't send those events here.
-                        this._field.setText(value);
+                        this._field.setAttribute('text', value);
                     }
                 }
                
@@ -311,7 +310,7 @@
         <!-- Set the characters which can be entered into a text field. -->
         <method name="setPattern" args="r">
             this.setAttribute('pattern', r);
-            this._field.setPattern(r);
+            this._field.setAttribute('pattern', r);
         </method>
 
         <!--- Returns string displayed in this component. Also see getText().
@@ -337,7 +336,7 @@
 
         <!--- @keywords private -->
         <method name="_showEnabled">
-            this._field.setEnabled(this._enabled);
+            this._field.setAttribute('enabled', this._enabled);
         </method>
 
         <!--- @keywords private -->

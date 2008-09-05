@@ -241,7 +241,7 @@
             }
             super.setAttribute('height', h);
             if ( this._initcomplete ) {
-                interior.setHeight( h - border_top - border_bottom );
+                interior.setAttribute('height', h - border_top - border_bottom );
                 checkscrollbar();
             }
             ]]>
@@ -267,7 +267,7 @@
             } else {
                 var hgt = this.calcMyHeight();
                 this._heightinternal = true;
-                this.setHeight( hgt + border_top + border_bottom);
+                this.setAttribute('height', hgt + border_top + border_bottom);
                 this._heightinternal = false;
             }
         ]]></method>

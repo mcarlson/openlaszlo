@@ -259,7 +259,7 @@
         <method name="_applystyle" args="s">
             if (this.style != null) {
                 //parent.setAttribute('bgcolor',s.menuitembgcolor);
-                this.setBGColor(s.textfieldcolor);
+                this.setAttribute('bgcolor', s.textfieldcolor);
             }
         </method>
 
@@ -446,7 +446,7 @@
                 // because order of execution demands it.
                 this.commandstate.apply( true );
                 var t = command.keysToString();
-                this.cmdkeys.setText(t);
+                this.cmdkeys.setAttribute('text', t);
             }
         </method>       
                     

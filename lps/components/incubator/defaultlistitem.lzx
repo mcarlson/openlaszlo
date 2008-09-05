@@ -19,8 +19,8 @@
        </handler>
 
         <method name="adjustDefault">
-            if (this.isdefault) this._title.setWidth(this.default_x);
-            else this._title.setWidth(this.width);
+            if (this.isdefault) this._title.setAttribute('width', this.default_x);
+            else this._title.setAttribute('width', this.width);
 
         </method>
 

@@ -25,9 +25,9 @@
             if (this.starttime = 0) this.starttime = t;
             var duration = (t - this.starttime) / 1000;;   // in secs
             this.fps = this.numframes / duration;
-            fps_text.setText( 'fps: '+ this.fps );
+            fps_text.setAttribute('text', 'fps: '+ this.fps );
             var delta = t - this.lasttime;
-            if (!this.mouseisdown) time_text.setText( 'ms/frame: '+ delta );
+            if (!this.mouseisdown) time_text.setAttribute('text', 'ms/frame: '+ delta );
             this.lasttime = t;
         </method>
 

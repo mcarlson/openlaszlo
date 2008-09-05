@@ -101,7 +101,7 @@
                    // adjust label style attributes
                    //this.txt.setAttribute('font', this.style.label.fontname);
                    this.txt.setAttribute('fontsize', this.style.label.fontsize);
-                   this.txt.setColor(this.style.label.fontcolor);
+                   this.txt.setAttribute('fgcolor', this.style.label.fontcolor);
 
                    // adjust region style attributes
                    this.fillStyle = this.style.region.color;
@@ -163,8 +163,8 @@
             this.objStroke.clear();
 
             if ( this.axis == 'x' ) {
-                this.setY(parent.plotarea.y);
-                this.setHeight(parent.plotarea.height);
+                this.setAttribute('y', parent.plotarea.y);
+                this.setAttribute('height', parent.plotarea.height);
 
                 // Configures the left side of the region
                 if( (parent.plotarea.minx <= lowValue) && (lowValue <= parent.plotarea.maxx)) {
@@ -189,8 +189,8 @@
                                                                     parent.plotarea.maxx) );
                 }
 
-                this.setX(parent.plotarea.x + lowDeviceX);
-                this.setWidth( highDeviceX - lowDeviceX + this.objStroke.strokeWidth );
+                this.setAttribute('x', parent.plotarea.x + lowDeviceX);
+                this.setAttribute('width', highDeviceX - lowDeviceX + this.objStroke.strokeWidth );
 
                 if( (highDeviceX - lowDeviceX) != 0 )
                     this.setAttribute('visible', this.regionEnabled);
@@ -198,8 +198,8 @@
                     this.setAttribute('visible',  false );
 
             } else  if ( this.axis == 'y' ) {
-                this.setX(parent.plotarea.x);
-                this.setWidth(parent.plotarea.width);
+                this.setAttribute('x', parent.plotarea.x);
+                this.setAttribute('width', parent.plotarea.width);
 
                 // Configures the bottom side of the region
                 if( (parent.plotarea.miny <= lowValue) && (lowValue <= parent.plotarea.maxy) ) {
@@ -223,8 +223,8 @@
                                                                     parent.plotarea.maxy) );
                 }
 
-                this.setY(parent.plotarea.y + parent.plotarea.height - highDeviceY);
-                this.setHeight( highDeviceY - lowDeviceY + this.objStroke.strokeWidth );
+                this.setAttribute('y', parent.plotarea.y + parent.plotarea.height - highDeviceY);
+                this.setAttribute('height', highDeviceY - lowDeviceY + this.objStroke.strokeWidth );
 
                 if( (highDeviceY - lowDeviceY) != 0 )
                     this.setAttribute('visible', this.regionEnabled);

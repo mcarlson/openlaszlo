@@ -38,7 +38,7 @@ function _applyCSS () {
                     //         
                     if (this instanceof lz.text) {
                         var n = Number(v);
-                        this.setColor(n); // must be a color
+                        this.setAttribute('fgcolor', n); // must be a color
                     }
                 }
                 

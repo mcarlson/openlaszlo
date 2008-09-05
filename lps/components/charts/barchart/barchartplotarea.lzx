@@ -38,8 +38,8 @@
                             label.setAttribute('style', style.label);
                             label.render(labelseries[i]);
         
-                            label.setX( lx+label.width>this.width?this.width-label.width:lx );
-                            label.setY( v.y + v.height);
+                            label.setAttribute('x', lx+label.width>this.width?this.width-label.width:lx );
+                            label.setAttribute('y', v.y + v.height);
                             label.bringToFront();
                         }
                     }
@@ -59,10 +59,10 @@
             var v = _barspool.getView();
 
             v.setAttribute('visible', false);
-            v.setX(this._xoffset);
-            v.setY(x * this._yscale + this._yoffset);
-            v.setWidth(height * this._xscale);
-            v.setHeight(width * this._yscale);
+            v.setAttribute('x', this._xoffset);
+            v.setAttribute('y', x * this._yscale + this._yoffset);
+            v.setAttribute('width', height * this._xscale);
+            v.setAttribute('height', width * this._yscale);
             v.style = style;
             v.render();
             v.setAttribute('visible', true);

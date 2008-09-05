@@ -557,8 +557,8 @@
                     this.setAttribute('context', this.__LZcanvas.getContext("2d"));
                 }
             }
-            function setWidth(w) {
-                super.setWidth(w);
+            override function $lzc$set_width(w) {
+                super.$lzc$set_width.apply(this, arguments);
                 w = Math.floor(w);
                 var h = Math.floor(this.height);
                 if (h > 0 && w > 0) {
@@ -572,8 +572,8 @@
                     this.__LZcanvas.style.visibility = "hidden";
                 }
             }
-            function setHeight(h) {
-                super.setHeight(h);
+            override function $lzc$set_height(h) {
+                super.$lzc$set_width.apply(this, arguments);
                 var w = Math.floor(this.width);
                 h = Math.floor(h);
                 if (w > 0 && h > 0) {
@@ -1258,22 +1258,22 @@
             }
 
             if ($swf8) {
-                function setWidth(w, ...internal) {
-                    if (internal.length == 0) this.__measurewidth = w == null;
-                    super.setWidth(w);
+                override function $lzc$set_width(w) {
+                    this.__measurewidth = w == null;
+                    super.setAttribute('width', w);
                 }
 
-                function setHeight(h, ...internal) {
-                    if (internal.length == 0) this.__measureheight = h == null;
-                    super.setHeight(h);
+                override function $lzc$set_height(h) {
+                    this.__measureheight = h == null;
+                    super.setAttribute('height', h);
                 }
             }
 
             function __updateSize() {
                 if ($swf8) {
                     var mc = this.sprite.getContext();
-                    if (this.__measurewidth) this.setWidth(mc._width, true);
-                    if (this.__measureheight) this.setHeight(mc._height, true);
+                    if (this.__measurewidth) this.setAttribute('width', mc._width, true);
+                    if (this.__measureheight) this.setAttribute('height', mc._height, true);
                 }
             }
     

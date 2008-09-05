@@ -35,7 +35,7 @@
             <method name="onComplete" args="fr"><![CDATA[
                 super.onComplete();
                 parent.progressBar.setValue(100);
-                parent.txtFile.setText(this.msg);
+                parent.txtFile.setAttribute('text', this.msg);
                 parent.setAttribute('erroroccured', false);
                 parent.oncomplete.sendEvent('File: '+ this.fileref.name + ' uploading completed!');
             ]]>
@@ -43,12 +43,12 @@
 
             <method name="onProgress" args="fr, bytesLoaded, bytesTotal"><![CDATA[
                 parent.progressBar.setValue(bytesLoaded * 100 / bytesTotal);
-                parent.txtFile.setText(this.msg);
+                parent.txtFile.setAttribute('text', this.msg);
             ]]>
             </method>
 
             <method name="onSelect" args="fr"><![CDATA[
-                parent.txtFile.setText(getName());
+                parent.txtFile.setAttribute('text', getName());
                 parent.progressBar.setValue(0);
                 parent.onselect.sendEvent('File: '+ this.fileref.name + ' has been selected!');
             ]]>
@@ -62,21 +62,21 @@
 
             <method name="onSecurityError">
                 super.onSecurityError();
-                parent.txtFile.setText(this.msg);
+                parent.txtFile.setAttribute('text', this.msg);
                 parent.setAttribute('erroroccured', true);
                 parent.onerror.sendEvent('Security Error occured while uploading '+ this.fileref.name + ' !');
             </method>
 
             <method name="onIOError">
                  super.onIOError();
-                 parent.txtFile.setText(this.msg);
+                 parent.txtFile.setAttribute('text', this.msg);
                  parent.setAttribute('erroroccured', true);
                  parent.onerror.sendEvent('IO Error occured while uploading '+ this.fileref.name + ' !');
             </method>
 
             <method name="onHTTPError">
                  super.onHTTPError();
-                 parent.txtFile.setText(this.msg);
+                 parent.txtFile.setAttribute('text', this.msg);
                  parent.setAttribute('erroroccured', true);
                  parent.onerror.sendEvent('HTTP Error occured while uploading '+ this.fileref.name + ' !');
             </method>
@@ -105,7 +105,7 @@
             <handler name="onclick"><![CDATA[
                 parent.myFileUpload.setAttribute('uploadenable',false);
                 this.setAttribute('enabled',false);
-                parent.txtFile.setText('');
+                parent.txtFile.setAttribute('text', '');
                 parent.progressBar.initValue();
                 parent.setAttribute('erroroccured', false);
                 parent.setAttribute('selected', false);
@@ -122,12 +122,12 @@
 
             <method name="setValue" args="value"><![CDATA[
                 status.setAttribute('width', value * 98 / 100);
-                percent.setText(Math.round(value) + '%');
+                percent.setAttribute('text', Math.round(value) + '%');
             ]]>
             </method>
             <method name="initValue"><![CDATA[
                 status.setAttribute('width',0);
-                percent.setText('');
+                percent.setAttribute('text', '');
             ]]>
             </method>
         </view>

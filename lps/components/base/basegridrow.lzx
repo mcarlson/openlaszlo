@@ -38,7 +38,7 @@
         <method name="updateBGColor">
             var nbg = this.getBGColor();
             if ( nbg != this.bgcolor ){
-                this.setBGColor( nbg );
+                this.setAttribute('bgcolor', nbg );
             }
         </method>
 

@@ -18,7 +18,7 @@
         @keyword private
         -->
     <method name="init">    
-            this.setWidth(objStroke.strokeWidth);
+            this.setAttribute('width', objStroke.strokeWidth);
             super.init();
     </method>    
     <!--- Render the vertical axis line
@@ -41,31 +41,31 @@
      if ( this.titleX == null && this.titleY == null ){
             switch( titleLocation ) {
                 case "high":                    
-                    this.titleView.setX((this.width + this.style.tickmajor.length)+titleGap);
-                    this.titleView.setY((this.height)/2);
+                    this.titleView.setAttribute('x', (this.width + this.style.tickmajor.length)+titleGap);
+                    this.titleView.setAttribute('y', (this.height)/2);
                     break;
             
                 case "low":
-                    this.titleView.setX(-(this.width + this.tickMarksView.width)- titleGap - titleView.width);
-                    this.titleView.setY((this.height)/2);
+                    this.titleView.setAttribute('x', -(this.width + this.tickMarksView.width)- titleGap - titleView.width);
+                    this.titleView.setAttribute('y', (this.height)/2);
                     if ( this.titleView.embeddedFont(style.label.fontname) ){
                         if ( style.label.fontangle > 20 &&  style.label.fontangle < 45)
-                            this.titleView.setX(this.titleView.x + this.titleView.width/4);
+                            this.titleView.setAttribute('x', this.titleView.x + this.titleView.width/4);
                         else if ( (style.label.fontangle > 45 &&  style.label.fontangle < 90) || (style.label.fontangle > 220 &&  style.label.fontangle <= 270))
-                            this.titleView.setX(this.titleView.x + this.titleView.width/2);
+                            this.titleView.setAttribute('x', this.titleView.x + this.titleView.width/2);
                         else if ( style.label.fontangle >= 90 &&  style.label.fontangle < 220)
-                            this.titleView.setX(this.titleView.x + this.titleView.width);
+                            this.titleView.setAttribute('x', this.titleView.x + this.titleView.width);
                     }
                     break;
             
                 case "default":
-                    this.titleView.setX(- (this.titleView.width/2));
-                    this.titleView.setY( - this.titleGap - this.titleView.height);
+                    this.titleView.setAttribute('x', - (this.titleView.width/2));
+                    this.titleView.setAttribute('y', - this.titleGap - this.titleView.height);
                     break;
             }
         } else {
-            this.titleView.setX(this.titleX);
-            this.titleView.setY(this.titleY);
+            this.titleView.setAttribute('x', this.titleX);
+            this.titleView.setAttribute('y', this.titleY);
         }
             ]]>
     </method>
@@ -128,8 +128,8 @@
             @keywords private -->
     <method name="setLabelPos" args="pLabel,pOffset,pTW,pTH,pPos">
     <![CDATA[
-        pLabel.setX(-pOffset-pTW);
-        pLabel.setY( this.height-pPos-(pTH/2) );
+        pLabel.setAttribute('x', -pOffset-pTW);
+        pLabel.setAttribute('y', this.height-pPos-(pTH/2) );
 
         if ( (pLabel.getTextWidth() + this.style.tickmajor.length) >= this.tickMarksView.width )
             this.tickMarksView.setAttribute('width', this.style.tickmajor.length + pLabel.getTextWidth());

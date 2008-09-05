@@ -127,10 +127,10 @@
             <text name="monthtitle" fontstyle="bold"
                 fgcolor="#FFFFFF" y="10">
                 <handler name="ontext">
-                    this.setX( Math.round( ( this.parent.width -
+                    this.setAttribute('x', Math.round( ( this.parent.width -
                                this.getTextWidth())/2.0) - 2);
-                    this.setWidth (this.getTextWidth()+2);
-                    this.parent.monthtitleshdw.setWidth (this.getTextWidth()+2);
+                    this.setAttribute('width', this.getTextWidth()+2);
+                    this.parent.monthtitleshdw.setAttribute('width', this.getTextWidth()+2);
 
                 </handler>
             </text>
@@ -155,7 +155,7 @@
         <attribute name="viewstyle" type="string" value="month"/>
 
         <animator name="fadeUp" attribute="opacity"
-                  onstop="dayselectorlook.setOpacity( 1 )"
+                  onstop="dayselectorlook.setAttribute('opacity', 1 )"
                   duration="1000" from="0" to="1"
                   start="false"/>
 
@@ -321,7 +321,7 @@
               var t = LzTimeKernel.getTimer();
               this.setMonthAndYear(nxtmonth,nxtyear);
               if (global['mytext'] != null){
-                  global['mytext'].setText( LzTimeKernel.getTimer() -t );
+                  global['mytext'].setAttribute('text', LzTimeKernel.getTimer() -t );
               }
               cal_interior.viewstyle = "month";
           </method>
@@ -378,7 +378,7 @@
               gridlayout.showgrid(noanimation);
 
               var t = canvas.calMonths[mth] + " " + yr;
-              toppanel.mbar.monthtitle.setText(t);
+              toppanel.mbar.monthtitle.setAttribute('text', t);
 
               this.setDates();
 
@@ -390,12 +390,12 @@
           <!-- These are used by the info panel when it slides in and out -->
           <method name="contract" >
               gridlayout.doanimation = false;
-              this.setWidth(cal_interior.width - 208);
+              this.setAttribute('width', cal_interior.width - 208);
           </method>
 
           <method name="expand" >
               gridlayout.doanimation = false;
-              this.setWidth(cal_interior.width);
+              this.setAttribute('width', cal_interior.width);
           </method>
 
           <!-- This method sets the dates for all the days in the grid,

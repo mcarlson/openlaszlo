@@ -52,7 +52,7 @@
                        onapply="parent.setTimeOffset(7.5);
                                 parent.parent.scrollview.scrollState.apply()"
                        onremove="parent.parent.scrollview.scrollState.remove();
-                                parent.parent.container.setY(0)">
+                                parent.parent.container.setAttribute('y', 0)">
                         <view name="marks" resource="tgrid" x="-2" pixellock="true"/>
                     </state>
                     <method name="setTimeOffset" args="hours">
@@ -76,7 +76,7 @@
                         if (hours&gt;13) hours=12.5;
                         var tgrid_zero = 11;
                         var pixels_per_hour = 22;
-                        //marks.setY(-(hours * pixels_per_hour + tgrid_zero));
+                        //marks.setAttribute('y', -(hours * pixels_per_hour + tgrid_zero));
                     </method>
                 </view>
 
@@ -148,7 +148,7 @@
             this.year=this.startdate.getFullYear();
             this.month = this.startdate.getMonth();
             this.dayOfMonth=d.getDate();
-            this.details.dayofmonth.setText(this.dayOfMonth);
+            this.details.dayofmonth.setAttribute('text', this.dayOfMonth);
 
             // *NEW: Assign new datapath
             var vDatapath =
@@ -175,7 +175,7 @@
             } else {
                 this.unselectedColor = 0x9BA9B1;
             }
-            this.details.bgrect.setBGColor(this.unselectedColor);
+            this.details.bgrect.setAttribute('bgcolor', this.unselectedColor);
             this.details.dayofmonth.setAttribute('fgcolor',textColor); ]]>
         </method>
 
@@ -207,9 +207,9 @@
         <method name="hilite" args="dohilite, dontupdate">
             if (dohilite) {
                 if ( !dontupdate ) eventselector.updateOver( this );
-                details.bgrect.setBGColor(0xD3D3D3);
+                details.bgrect.setAttribute('bgcolor', 0xD3D3D3);
             } else {
-                details.bgrect.setBGColor(this.unselectedColor);
+                details.bgrect.setAttribute('bgcolor', this.unselectedColor);
             }
         </method>
 

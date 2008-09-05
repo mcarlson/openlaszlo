@@ -159,22 +159,22 @@
         
         <handler name="onmaxlimit">
             Debug.write("*************slider width: " + this.width);
-            leftknob.setX(0);
-            rightknob.setX(this.width);
+            leftknob.setAttribute('x', 0);
+            rightknob.setAttribute('x', this.width);
         </handler>
         
         <method name="setMinValue" args="minvalue">
         <![CDATA[
             var temp = (minvalue - this.minlimit);
             if(temp < 0) temp = 0;
-            this.leftknob.setX(temp /  this.valueratio);
+            this.leftknob.setAttribute('x', temp /  this.valueratio);
         ]]>
         </method>
         
         <method name="setMaxValue" args="maxvalue">
             var temp = (maxvalue - this.minlimit);
             
-            this.rightknob.setX(temp /  this.valueratio);
+            this.rightknob.setAttribute('x', temp /  this.valueratio);
         </method>
         
     </class>

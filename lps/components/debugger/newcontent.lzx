@@ -144,7 +144,7 @@
               var real_scroll_width = (parent.width - (parent.arrowbuttonwidth * 2))  - parent.thumbwidth + 2;
               // scroll the text window horizontally
               parent.setAttribute('autoscroll', false);
-              parent.parent.setXScroll(-(((x - parent.arrowbuttonwidth)  / real_scroll_width) * (parent.parent.textpane.width)));
+              parent.parent.setAttribute('xscroll', -(((x - parent.arrowbuttonwidth)  / real_scroll_width) * (parent.parent.textpane.width)));
               parent.adjustDraggerXpos()
               parent.setAttribute('autoscroll',true);
            </method> 
@@ -241,10 +241,10 @@
                    y="6" x="4" />
 
            <method name="higlight_dragger" args="n">
-              this.stretch.setResourceNumber(n);
-              this.top.setResourceNumber(n);
-              this.bottom.setResourceNumber(n);
-              this.dimples.setResourceNumber(n)
+              this.stretch.setAttribute('frame', n);
+              this.top.setAttribute('frame', n);
+              this.bottom.setAttribute('frame', n);
+              this.dimples.setAttribute('frame', n)
            </method>
 
            <setter name="y" args="y" > 
@@ -373,7 +373,7 @@
      </method>
 
      <method name="setFontSize" args="size">
-       textpane.setFontSize(size);
+       textpane.setAttribute('fontsize', size);
      </method>
 
  </class>

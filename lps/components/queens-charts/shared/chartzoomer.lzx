@@ -41,12 +41,12 @@
 
         <handler name="onmousedown">
             <![CDATA[
-            this.setWidth(0);
-            this.setHeight(0);
+            this.setAttribute('width', 0);
+            this.setAttribute('height', 0);
             this.setAttribute('cornerx', parent.getMouse('x'));
             this.setAttribute('cornery', parent.getMouse('y'));
-            this.setX(this.cornerx);
-            this.setY(this.cornery);
+            this.setAttribute('x', this.cornerx);
+            this.setAttribute('y', this.cornery);
             this.rs.setAttribute('applied', true);
             this.setAttribute('bgcolor', this.zoomcolor);
             ]]>
@@ -77,10 +77,10 @@
                 parent.setAttribute('scaledmax', parent.scaledmax * newhratio);
                 parent.setAttribute('scaler', parent.scaler * newhratio);
             }
-            this.setWidth(parent.plotwidth);
-            this.setHeight(parent.plotheight);
-            this.setX(parent.plotx);
-            this.setY(parent.ploty);
+            this.setAttribute('width', parent.plotwidth);
+            this.setAttribute('height', parent.plotheight);
+            this.setAttribute('x', parent.plotx);
+            this.setAttribute('y', parent.ploty);
             this.rs.setAttribute('applied', false);
             this.setAttribute('bgcolor', null);
             parent.setAttribute('zooming', false);

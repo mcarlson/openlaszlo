@@ -125,9 +125,9 @@
                    resource="scrolldragdimpleshorz_rsc" options="ignorelayout" 
                    x="6" y="4" />
 
-           <method name="setX" args="x, force=null" > 
-              super.setX( Math.max(parent.arrowbuttonwidth-1 , Math.min( x, parent.width - parent.arrowbuttonwidth))); 
-           </method> 
+           <setter name="x" args="x" > 
+              super.setAttribute('x', Math.max(parent.arrowbuttonwidth-1 , Math.min( x, parent.width - parent.arrowbuttonwidth))); 
+           </setter>
 
           <!-- this gets called every time the x value changes -->
           <handler name="onx" reference="this"> 
@@ -140,7 +140,7 @@
               var real_scroll_width = (parent.width - (parent.arrowbuttonwidth * 2))  - parent.thumbwidth + 2;
               // scroll the text window horizontally
               parent.setAttribute('autoscroll', false);
-              parent.parent.setXScroll(-(((x - parent.arrowbuttonwidth)  / real_scroll_width) * (parent.parent.content.textpane.width)));
+              parent.parent.setAttribute('xscroll', -(((x - parent.arrowbuttonwidth)  / real_scroll_width) * (parent.parent.content.textpane.width)));
               parent.adjustDraggerXpos()
               parent.setAttribute('autoscroll',true);
            </method> 
@@ -149,7 +149,7 @@
      <method name="adjustDraggerXpos">
        // disable the constraint between ypos of dragger and text window for a moment
        this.setAttribute('autoscroll', false);
-       this.dragger.setX(this.computeDraggerXPos());
+       this.dragger.setAttribute('x', this.computeDraggerXPos());
        this.setAttribute('autoscroll', true);
      </method>
 
@@ -245,15 +245,15 @@
                    y="6" x="4" />
 
            <method name="higlight_dragger" args="n">
-              this.stretch.setResourceNumber(n);
-              this.top.setResourceNumber(n);
-              this.bottom.setResourceNumber(n);
-              this.dimples.setResourceNumber(n)
+              this.stretch.setAttribute('frame', n);
+              this.top.setAttribute('frame', n);
+              this.bottom.setAttribute('frame', n);
+              this.dimples.setAttribute('frame', n)
            </method>
 
-           <method name="setY" args="y, force=null" > 
-              super.setY( Math.max(parent.arrowbuttonheight-1 , Math.min( y , parent.height - (parent.thumbheight + parent.arrowbuttonheight)))); 
-           </method> 
+           <setter name="y" args="y" > 
+              super.setAttribute('y', Math.max(parent.arrowbuttonheight-1 , Math.min( y , parent.height - (parent.thumbheight + parent.arrowbuttonheight)))); 
+           </setter>
 
           <!-- this gets called every time the y value changes -->
           <handler name="ony" reference="this"> 
@@ -281,7 +281,7 @@
                           width="${parent.width - 11}" 
                           bgcolor="#666666" height="13" />
 
-    <setter name="setHeight" args="h" > 
+    <setter name="height" args="h" > 
        super.setAttribute('height', h);
        this.updateDisplay();
     </setter>
@@ -341,7 +341,7 @@
        this.computeVisibleRegion();
        // disable the constraint between ypos of dragger and text window for a moment
        this.setAttribute('autoscroll', false);
-       this.scrollbar.dragger.setY(this.computeDraggerYPos());
+       this.scrollbar.dragger.setAttribute('y', this.computeDraggerYPos());
        this.setAttribute('autoscroll', true);
 
        <![CDATA[
@@ -352,7 +352,7 @@
         for (i = 0; i < this.visiblelines; i++) {
           str += this.textlines[i + l];
         }
-        this.content.textpane.setText(str);
+        this.content.textpane.setAttribute('text', str);
        ]]>
      </method>
 
@@ -384,12 +384,12 @@
 
      <!-- incrementally slide the text content area left or right -->
      <method name="scrollx" args="nx">
-       this.content.textpane.setX(Math.min(0, Math.max(-(this.content.textpane.width), this.content.textpane.x + nx)));
+       this.content.textpane.setAttribute('x', Math.min(0, Math.max(-(this.content.textpane.width), this.content.textpane.x + nx)));
      </method>
 
      <!-- set the x offset of the text output content area -->
      <method name="setXScroll" args="x">
-       this.content.textpane.setX(Math.max (-(this.content.textpane.width), Math.min( 0, x)));
+       this.content.textpane.setAttribute('x', Math.max (-(this.content.textpane.width), Math.min( 0, x)));
      </method>
 
 

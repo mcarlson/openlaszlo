@@ -41,7 +41,7 @@
             var valtext = this.innercompornent.getText();
             if(trim && val == null){
                 valtext = this.dotrim(valtext);
-                this.innercompornent.setText(valtext);
+                this.innercompornent.setAttribute('text', valtext);
             }
 
             return valtext;
@@ -74,11 +74,11 @@
         
         <method name="setErrorMessage" >
             if(this.errorstring == ""){
-                messagetext.setText("");
+                messagetext.setAttribute('text', "");
                 icon.setok();
                 this.setAttribute("iserror", false);
             }else{
-                messagetext.setText(this.errorstring);
+                messagetext.setAttribute('text', this.errorstring);
                 icon.seterror();
                 this.setAttribute("iserror", true);
             }
@@ -86,7 +86,7 @@
         </method>
 
         <method name="cleanErrors">
-            messagetext.setText("");
+            messagetext.setAttribute('text', "");
             icon.clear();
         </method>
 

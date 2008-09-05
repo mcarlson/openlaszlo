@@ -106,13 +106,13 @@
         <method name="init"><![CDATA[
             super.init();
             if ( this.value == null && this.defaulttext != null ) {
-                this._cbtext.setText(this.defaulttext);
+                this._cbtext.setAttribute('text', this.defaulttext);
             } else {
                 this._updateSelectionOnData();
             }
 
             if ( this.statictext != null ) {
-                this._cbtext.setText( this.statictext );
+                this._cbtext.setAttribute('text', this.statictext );
             }
         ]]></method>
         
@@ -220,7 +220,7 @@
                t = this.defaulttext;
 
             if ( this._cbtext && (this.statictext == null) ) {
-                this._cbtext.setText(t);
+                this._cbtext.setAttribute('text', t);
             }
 
             if (this.selected == null || dp['p'] !== this.selected['p']) {
@@ -300,7 +300,7 @@
                 }
 
                 var w = ( this.listwidth != null ? this.listwidth : this.width );
-                cblist.setWidth(w);
+                cblist.setAttribute('width', w);
                 cblist.setAttachTarget(this);
                 cblist.setAttribute('shownitems', this.shownitems);
 
@@ -445,7 +445,7 @@
                     }
                 }
                 this.setValue(item.value);
-                if ( item && this.statictext == null ) this._cbtext.setText(item.text);
+                if ( item && this.statictext == null ) this._cbtext.setAttribute('text', item.text);
             }
 
             this.setAttribute("isopen", false);
@@ -640,16 +640,16 @@
                     classroot.toggle()
                </handler>
                <handler name="onmouseout">
-                    this.setBGColor(0xCCCCCC);
+                    this.setAttribute('bgcolor', 0xCCCCCC);
                </handler>
                <handler name="onmouseup">
-                    this.setBGColor(0xCCCCCC);
+                    this.setAttribute('bgcolor', 0xCCCCCC);
                </handler>
                <handler name="onmouseover">
-                    this.setBGColor(0xEEEEEE);
+                    this.setAttribute('bgcolor', 0xEEEEEE);
                </handler>
                <handler name="onmousedown">
-                    this.setBGColor(0xAAAAAA);
+                    this.setAttribute('bgcolor', 0xAAAAAA);
                </handler>
           </view>
           <text name="_text" width="${ parent.width - 19 }" x="7" />

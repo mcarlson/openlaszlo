@@ -98,7 +98,7 @@
                         this.setAttribute("stretches", classroot.iconstretches);
                         
                         // scale the resource proportionally to the view height
-                        this.setWidth( Math.round(this.resourcewidth*height*1.0/this.resourceheight) );
+                        this.setAttribute('width', Math.round(this.resourcewidth*height*1.0/this.resourceheight) );
                     }
 
                     // FIXME: [gse 2006-02-06] for some reason play="false" causes a hard loop on startup

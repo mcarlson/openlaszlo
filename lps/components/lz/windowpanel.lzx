@@ -157,7 +157,7 @@
                     Debug.write( "requested width smaller than minwidth," +
                                  " ignored: "+ this);
                 }
-                this.setWidth(this.minwidth);
+                this.setAttribute('width', this.minwidth);
                 setAttribute('_usecontentwidth', false );
             }
             if (this.height <  this.minheight && !this._usecontentheight ) {
@@ -165,7 +165,7 @@
                     Debug.write( "requested height smaller than minheight," +
                                 " ignored: "+ this );
                 }
-                this.setHeight(this.minheight);
+                this.setAttribute('height', this.minheight);
                 setAttribute('_usecontentheight', false );
             }
         ]]> </method>
@@ -209,35 +209,35 @@
                     var iconwidth = (parent.icon.width > 0) ? parent.icon.width + padding : parent.icon.width;
                     var twidth=0;
                     if (parent.title.getText() == "") {
-                        parent.gripper_left.setWidth(parent.width - parent.controls.x);
-                        parent.gripper_right.setWidth(0);
+                        parent.gripper_left.setAttribute('width', parent.width - parent.controls.x);
+                        parent.gripper_right.setAttribute('width', 0);
                         return;
                     } else {
-                        parent.gripper_left.setWidth(gripper_left);
+                        parent.gripper_left.setAttribute('width', gripper_left);
                         twidth = parent.title.getTextWidth();
                         twidth = Math.ceil(twidth);
                     }
 
                     var next_x = gripper_left + padding;
-                    parent.icon.setX(next_x);
+                    parent.icon.setAttribute('x', next_x);
                     next_x += iconwidth;
-                    parent.title.setX(next_x);
+                    parent.title.setAttribute('x', next_x);
 
-                    parent.controls.setX(parent.width - parent.controls.width);
+                    parent.controls.setAttribute('x', parent.width - parent.controls.width);
 
                     var availspace = parent.width - iconwidth - parent.controls.width
                         - gripper_left - gripper_right - padding*2;
                     if (twidth > availspace) {
                          twidth = availspace;
                     }
-                    parent.title.setWidth(twidth);
+                    parent.title.setAttribute('width', twidth);
 
                     //var gripper_padding = 0;
                     //if (twidth > 0) gripper_padding = 4;
                     next_x += twidth + padding;
 
-                    parent.gripper_right.setX(next_x);
-                    parent.gripper_right.setWidth(parent.controls.x - next_x);
+                    parent.gripper_right.setAttribute('x', next_x);
+                    parent.gripper_right.setAttribute('width', parent.controls.x - next_x);
                     ]]>
                 </method>
             </layout>

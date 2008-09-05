@@ -16,27 +16,27 @@
         <attribute name="overRsrcNumber"     value="2"     type="number"/>
         <attribute name="downRsrcNumber"     value="3"     type="number"/>
         <attribute name="deselectRsrcNumber" value="4"     type="number"/>
-        <attribute name="width"              setter="this.widthSetter(width);"/>
+
         <attribute name="keepinitialwidth"   value="false"/>
         <attribute name="enabled"            value="true" />
         <attribute name="mouseisdown"        value="false"/>
         <event name="onsafeclick"/>        
 
-        <method name="widthSetter" args="w">
-            this.setWidth(w)
+        <setter name="width" args="w">
+            super.setAttribute('width', w);
             this.keepinitialwidth = true;
-        </method>
+        </setter>
 
         <method name="setEnabled" args="b">
             this.enabled = b;
             if (this.enabled) {
-                this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
-                this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );
-                this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
+                this.bkgnd.lft.setAttribute('frame', this.normalRsrcNumber );
+                this.bkgnd.mid.setAttribute('frame', this.normalRsrcNumber );
+                this.bkgnd.rgt.setAttribute('frame', this.normalRsrcNumber );
             } else {
-                this.bkgnd.lft.setResourceNumber( this.deselectRsrcNumber );
-                this.bkgnd.mid.setResourceNumber( this.deselectRsrcNumber );
-                this.bkgnd.rgt.setResourceNumber( this.deselectRsrcNumber );
+                this.bkgnd.lft.setAttribute('frame', this.deselectRsrcNumber );
+                this.bkgnd.mid.setAttribute('frame', this.deselectRsrcNumber );
+                this.bkgnd.rgt.setAttribute('frame', this.deselectRsrcNumber );
             }
         </method>
 
@@ -121,21 +121,21 @@
 
             <method name="update" >
                 if (this.keepinitialwidth) {
-                    this.title.setX( Math.floor((this.width - this.title.getTextWidth())/2.0));
-                    this.title_hilite.setX(this.title.x + 0.5);
+                    this.title.setAttribute('x', Math.floor((this.width - this.title.getTextWidth())/2.0));
+                    this.title_hilite.setAttribute('x', this.title.x + 0.5);
                 } else {
-                    this.setWidth(Math.round(this.title.getTextWidth()) + this.bkgnd.lft.leftinset + this.bkgnd.rgt.rightinset);
+                    this.setAttribute('width', Math.round(this.title.getTextWidth()) + this.bkgnd.lft.leftinset + this.bkgnd.rgt.rightinset);
                 }
             </method>
             
             <method name="domouseup" >
-                this.title_hilite.setY(this.yadjust + 0.7);
-                this.title.setY(this.yadjust);
+                this.title_hilite.setAttribute('y', this.yadjust + 0.7);
+                this.title.setAttribute('y', this.yadjust);
             </method>
 
             <method name="domousedown" >
-                this.title_hilite.setY(this.yadjust + 1.7);
-                this.title.setY(this.yadjust + 1);
+                this.title_hilite.setAttribute('y', this.yadjust + 1.7);
+                this.title.setAttribute('y', this.yadjust + 1);
             </method>
 
 
@@ -150,22 +150,22 @@
                 <attribute name="defaultY" type="number" value="0"/>
                 <method name="placeicon">
                     this.defaultY = Math.floor((this.parent.height - this.height)/2.0);
-                    this.setY(defaultY);
+                    this.setAttribute('y', defaultY);
                 </method>
             </view>
             
             <method name="update" >
-                this.iconv.setX( this.bkgnd.lft.leftinset);
-                if (!this.keepinitialwidth) this.setWidth(this.iconv.width + this.bkgnd.lft.leftinset + this.bkgnd.rgt.rightinset);
+                this.iconv.setAttribute('x', this.bkgnd.lft.leftinset);
+                if (!this.keepinitialwidth) this.setAttribute('width', this.iconv.width + this.bkgnd.lft.leftinset + this.bkgnd.rgt.rightinset);
             </method>
 
             <method name="domouseup" >
-                this.iconv.setY(this.iconv.defaultY);
+                this.iconv.setAttribute('y', this.iconv.defaultY);
             </method>
 
 
             <method name="domousedown" >
-                this.iconv.setY(this.iconv.defaultY + 1);
+                this.iconv.setAttribute('y', this.iconv.defaultY + 1);
             </method>
 
         </state>
@@ -175,32 +175,32 @@
             <!-- if applied is TRUE, then button has an icon and text so add support for both-->
 
             <method name="update" >
-                this.iconv.setX( this.bkgnd.lft.leftinset);
-                this.title_hilite.setX(this.iconv.x + this.iconv.width + 
+                this.iconv.setAttribute('x', this.bkgnd.lft.leftinset);
+                this.title_hilite.setAttribute('x', this.iconv.x + this.iconv.width + 
                                        this.divider );
-                this.title.setX( this.iconv.x + this.iconv.width + 
+                this.title.setAttribute('x', this.iconv.x + this.iconv.width + 
                                   this.divider );
-                if (!this.keepinitialwidth) this.setWidth( this.iconv.width + 
+                if (!this.keepinitialwidth) this.setAttribute('width', this.iconv.width + 
                   this.divider + Math.round(this.title.getTextWidth()) + 
                   this.bkgnd.lft.leftinset + this.bkgnd.rgt.rightinset);
             </method>
 
             <method name="domousedown" > 
-                this.iconv.setY(this.iconv.defaultY + 1);
-                this.title_hilite.setY(this.yadjust + 1.7);
-                this.title.setY(this.yadjust + 1);
+                this.iconv.setAttribute('y', this.iconv.defaultY + 1);
+                this.title_hilite.setAttribute('y', this.yadjust + 1.7);
+                this.title.setAttribute('y', this.yadjust + 1);
             </method>
 
             <method name="domouseup" >
-                this.iconv.setY(this.iconv.defaultY);
-                this.title_hilite.setY(this.yadjust + 0.7);
-                this.title.setY(this.yadjust);
+                this.iconv.setAttribute('y', this.iconv.defaultY);
+                this.title_hilite.setAttribute('y', this.yadjust + 0.7);
+                this.title.setAttribute('y', this.yadjust);
             </method>
         </state>
       
       
     <handler name="oninit" >
-        this.setEnabled(this.enabled);
+        this.setAttribute('enabled', this.enabled);
         this.update();
         
         // A Delegate to perform an action on the event 'onsafeclick'
@@ -223,9 +223,9 @@
     </method>
 
     <method name="domouseover" >
-        this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );
-        this.bkgnd.mid.setResourceNumber( this.overRsrcNumber );
-        this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );
+        this.bkgnd.lft.setAttribute('frame', this.overRsrcNumber );
+        this.bkgnd.mid.setAttribute('frame', this.overRsrcNumber );
+        this.bkgnd.rgt.setAttribute('frame', this.overRsrcNumber );
     </method>
 
     <!-- MOUSE EVENTS -->
@@ -233,9 +233,9 @@
         if ( this.enabled) {
             this.mouseisdown = true;
             this.domousedown();
-            this.bkgnd.lft.setResourceNumber( this.downRsrcNumber );
-            this.bkgnd.mid.setResourceNumber( this.downRsrcNumber );
-            this.bkgnd.rgt.setResourceNumber( this.downRsrcNumber );
+            this.bkgnd.lft.setAttribute('frame', this.downRsrcNumber );
+            this.bkgnd.mid.setAttribute('frame', this.downRsrcNumber );
+            this.bkgnd.rgt.setAttribute('frame', this.downRsrcNumber );
         }
     </handler>
 
@@ -244,13 +244,13 @@
         if (this.enabled) {
             this.domouseup();
             if (this.mouseisover) {
-                this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );
-                this.bkgnd.mid.setResourceNumber( this.overRsrcNumber );
-                this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.lft.setAttribute('frame', this.overRsrcNumber );
+                this.bkgnd.mid.setAttribute('frame', this.overRsrcNumber );
+                this.bkgnd.rgt.setAttribute('frame', this.overRsrcNumber );
             } else {
-                this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
-                this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );
-                this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
+                this.bkgnd.lft.setAttribute('frame', this.normalRsrcNumber );
+                this.bkgnd.mid.setAttribute('frame', this.normalRsrcNumber );
+                this.bkgnd.rgt.setAttribute('frame', this.normalRsrcNumber );
             }
         }
     </handler>
@@ -260,14 +260,14 @@
             this.mouseisover = true;
             if (this.mouseisdown) {
                 this.domousedown();
-                this.bkgnd.lft.setResourceNumber( this.downRsrcNumber );
-                this.bkgnd.mid.setResourceNumber( this.downRsrcNumber );
-                this.bkgnd.rgt.setResourceNumber( this.downRsrcNumber );
+                this.bkgnd.lft.setAttribute('frame', this.downRsrcNumber );
+                this.bkgnd.mid.setAttribute('frame', this.downRsrcNumber );
+                this.bkgnd.rgt.setAttribute('frame', this.downRsrcNumber );
             } else {
                 this.domouseup();
-                this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );
-                this.bkgnd.mid.setResourceNumber( this.overRsrcNumber );
-                this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.lft.setAttribute('frame', this.overRsrcNumber );
+                this.bkgnd.mid.setAttribute('frame', this.overRsrcNumber );
+                this.bkgnd.rgt.setAttribute('frame', this.overRsrcNumber );
             }
         }
      ]]> </handler>
@@ -275,9 +275,9 @@
     <handler name="onmouseout" > <![CDATA[
         this.mouseisover = false;
         this.domouseup();
-        this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
-        this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );
-        this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
+        this.bkgnd.lft.setAttribute('frame', this.normalRsrcNumber );
+        this.bkgnd.mid.setAttribute('frame', this.normalRsrcNumber );
+        this.bkgnd.rgt.setAttribute('frame', this.normalRsrcNumber );
     ]]> </handler>
 
     <handler name="onclick" >

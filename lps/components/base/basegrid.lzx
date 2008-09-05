@@ -370,7 +370,7 @@
                     this.setDatapath( "." );
                     this.datapath.setAttribute( "datacontrolsvisibility",
                                                 false );
-                    this.setVisibility( ovisibility );
+                    this.setAttribute('visibility', ovisibility );
                 }
 
                 var cells = this.inferColumns();
@@ -434,7 +434,7 @@
                 if ( noSTH ){
                     this.setAttribute( "sizetoheader", true );
                 } else if ( !this.sizetoheader ){
-                    this.setWidth ( this.header.hcontent.width );
+                    this.setAttribute('width', this.header.hcontent.width );
                 }
             }
             //now force it to be boolean
@@ -502,7 +502,7 @@
                 if ( s != -1 ){
                     var bottompart = this.height - 
                                         (this.content.y + this.content.height );
-                    this.setHeight( bottompart + this.content.y + s * rowheight );
+                    this.setAttribute('height', bottompart + this.content.y + s * rowheight );
                 }
             }
 

@@ -181,7 +181,7 @@
 
         <!--- Set the videoview width. 
               @keywords private -->
-        <setter name="setWidth" args="w"><![CDATA[
+        <setter name="width" args="w"><![CDATA[
             super.setAttribute('width', w);
 
             if (!this._clipinitdone) { 
@@ -198,7 +198,7 @@
 
         <!--- Set the videoview height. 
               @keywords private -->
-        <setter name="setHeight" args="h"><![CDATA[
+        <setter name="height" args="h"><![CDATA[
             super.setAttribute('height', h);
 
             if (!this._clipinitdone) {

@@ -16,8 +16,8 @@
         <method name="show" args="txt">
             this.setAttribute('visible', true);
             this.bringToFront();   
-            this.setX(parent.getMouse("x") - 5);
-            this.setY(parent.getMouse("y") - 15);
+            this.setAttribute('x', parent.getMouse("x") - 5);
+            this.setAttribute('y', parent.getMouse("y") - 15);
             
             this.render(txt);
             

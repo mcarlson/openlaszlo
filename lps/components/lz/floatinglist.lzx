@@ -77,7 +77,7 @@
                 this.cornerresourcenumber = 2;
             }
             if ( !isinited ) return;                        
-            this.right.top.setResourceNumber( this.cornerresourcenumber );
+            this.right.top.setAttribute('frame', this.cornerresourcenumber );
             if ( oncornerresourcenumber ) this.oncornerresourcenumber.sendEvent();
         </method>   
     </class>
@@ -118,7 +118,7 @@
         <view name="menucap" y="${parent._currentattachy == 'top'? -height + 1:parent.height }"
               width="${classroot.width}" 
               ignoreplacement="true" 
-              oninit="this.setResourceNumber(1)">
+              oninit="this.setAttribute('frame', 1)">
             <view resource="menucap_lft"/>
             <view resource="menucap_mid" stretches="width"/>
             <view resource="menucap_rt"/>
@@ -129,14 +129,14 @@
                     this.subviews[i].setAttribute('frame', r);
                 } 
              ]]> </setter>
-            <method name="setY" args="y, force=null"> <![CDATA[
-                super.setY(y);
+            <setter name="y" args="y"> <![CDATA[
+                super.setAttribute('y', y);
                 if ( y < 0 ) {
-                    this.setResourceNumber(1);
+                    this.setAttribute('frame', 1);
                 } else {
-                    this.setResourceNumber(2);
+                    this.setAttribute('frame', 2);
                 }
-             ]]> </method>
+             ]]> </setter>
         </view>
 
         <!--- @keywords private -->

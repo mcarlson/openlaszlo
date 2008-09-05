@@ -53,7 +53,7 @@
         </method>
         
         <method name="setWindowTitle" args="s">
-                this.title.setText(s);
+                this.title.setAttribute('text', s);
         </method>
         
     </class>

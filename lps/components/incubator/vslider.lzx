@@ -28,7 +28,7 @@
         <attribute name="drag_max" value="0" type="number" />
         <handler name="oninit">
                 //Setting the initVal
-                this.setY(getPosFromValue(this.parent.initvalue));
+                this.setAttribute('y', getPosFromValue(this.parent.initvalue));
         </handler>
         
         <method name="getValueFromPos">
@@ -47,7 +47,7 @@
         </method>
         
         <method name="setY" args="v">
-                super.setY(v);
+                super.setAttribute('y', v);
         var thumbVal = getValueFromPos();
         if (thumbVal != parent.value) {
             this.parent.setValue(thumbVal);

@@ -27,9 +27,9 @@
         <method name="init">
             if ( ! this.hassetwidth ){
                 if ( this.showheader ){
-                    this.setWidth( mybutton.measureWidth()  );
+                    this.setAttribute('width', mybutton.measureWidth()  );
                 } else {
-                    this.setWidth( this.minwidth );
+                    this.setAttribute('width', this.minwidth );
                 }
             }
             if ( this.showheader ){

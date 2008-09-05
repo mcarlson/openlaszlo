@@ -13,7 +13,7 @@
         <method name="render" args="txt">
                //do not set style twice
                if(styleSet) {
-                    this.textContent.setText(txt);  
+                    this.textContent.setAttribute('text', txt);  
                } else {
                     super.render(txt);
                     styleSet = true;

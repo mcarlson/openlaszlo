@@ -37,12 +37,12 @@
 
     <handler name="onmouseover">
       label.setAttribute('fgcolor', this.hoverColor);
-      label.setText(makeTags(this.hoverTags)+this.text);
+      label.setAttribute('text', makeTags(this.hoverTags)+this.text);
     </handler>
 
     <handler name="onmouseout">
       label.setAttribute('fgcolor', this.color);
-      label.setText(this.text);
+      label.setAttribute('text', this.text);
     </handler>
 
     <handler name="onclick">

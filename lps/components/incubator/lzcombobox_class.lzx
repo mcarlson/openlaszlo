@@ -47,12 +47,12 @@
         <method name="_applystyle">
             if (selected) {
                 this.hilite.setAttribute("visible", true);
-                this.hilite.setResourceNumber(2);
+                this.hilite.setAttribute('frame', 2);
                 this.setTint(this.hilite, this.style.selectedcolor);
             }
             else if ( hilited ) {
                 this.hilite.setAttribute("visible", true);
-                this.hilite.setResourceNumber(1);
+                this.hilite.setAttribute('frame', 1);
                 this.setTint(this.hilite, this.style.hilitecolor);
             }
             else {

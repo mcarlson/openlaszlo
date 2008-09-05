@@ -54,7 +54,7 @@
         <!--- Set the text. 
               @param String t: text value for input. -->
         <method name="setText" args="t">
-            this.input.setText(t);
+            this.input.setAttribute('text', t);
         </method>
         
         <!--- Get the text.
@@ -85,7 +85,7 @@
 
         <!--- @keywords private -->
         <method name="applyData" args="d">
-            this.input.setText( d );
+            this.input.setAttribute('text', d );
         </method>
 
         <!--- @keywords private -->

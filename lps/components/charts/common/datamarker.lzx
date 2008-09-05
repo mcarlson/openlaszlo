@@ -26,14 +26,14 @@
         <method name="renderValuePoint">
         <![CDATA[ 
             //resize this view
-            this.pointrepresentation.setWidth(this.style.point.width);
-            this.pointrepresentation.setHeight(this.style.point.height);
+            this.pointrepresentation.setAttribute('width', this.style.point.width);
+            this.pointrepresentation.setAttribute('height', this.style.point.height);
                    //Check if it is a figure or an image
             if( this.style.point.image != null ) {
                 //Must be a resource
                 this.pointrepresentation.setSource(this.style.point.image);
                 this.pointrepresentation.setAttribute('stretches', both);
-                this.pointrepresentation.setOpacity(this.style.point.opacity);
+                this.pointrepresentation.setAttribute('opacity', this.style.point.opacity);
             } else if (this.style.point.shape=='circle' || 
                        this.style.point.shape=='triangle' ||
                        this.style.point.shape=='square' ||
@@ -98,8 +98,8 @@
                         this.pointrepresentation.setAttribute('visible',false);
                             
                     } else {                            
-                            this.pointrepresentation.setOpacity(this.style.point.opacity);
-                            this.pointrepresentation.setBGColor(this.style.point.color);
+                            this.pointrepresentation.setAttribute('opacity', this.style.point.opacity);
+                            this.pointrepresentation.setAttribute('bgcolor', this.style.point.color);
                             this.pointrepresentation.setAttribute('visible',true);
                     }
         ]]>

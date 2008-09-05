@@ -19,7 +19,7 @@
     <attribute name="labelLenght" type="number" value="0" />
     <!--- Init method-->
     <method name="init">    
-            this.setHeight(objStroke.strokeWidth);
+            this.setAttribute('height', objStroke.strokeWidth);
             super.init();
     </method>
 
@@ -41,22 +41,22 @@
     if ( this.titleX == null && this.titleY == null ){
             switch( this.titleLocation ) {
                 case "high":
-                    this.titleView.setX((this.width - this.titleView.width)/2);
-                    this.titleView.setY(-(this.height + this.style.tickmajor.length)- this.titleGap - this.titleView.height);
+                    this.titleView.setAttribute('x', (this.width - this.titleView.width)/2);
+                    this.titleView.setAttribute('y', -(this.height + this.style.tickmajor.length)- this.titleGap - this.titleView.height);
                     break;
                 
                 case "low":
-                    this.titleView.setX((this.width - this.titleView.width)/2);
-                    this.titleView.setY((this.height + this.tickMarksView.height)+ this.titleGap);
+                    this.titleView.setAttribute('x', (this.width - this.titleView.width)/2);
+                    this.titleView.setAttribute('y', (this.height + this.tickMarksView.height)+ this.titleGap);
                     if ( this.titleView.embeddedFont(style.label.fontname) ){
                         if ( style.label.fontangle > 20 &&  style.label.fontangle < 45)
-                            this.titleView.setX(this.titleView.x + this.titleView.width/4);
+                            this.titleView.setAttribute('x', this.titleView.x + this.titleView.width/4);
                         else if ( style.label.fontangle > 45 &&  style.label.fontangle <= 270){
-                            this.titleView.setX(this.titleView.x + this.titleView.width/2);
+                            this.titleView.setAttribute('x', this.titleView.x + this.titleView.width/2);
                             if ( style.label.fontangle > 90 &&  style.label.fontangle <= 180)
-                                this.titleView.setY(this.titleView.y + this.titleView.height);
+                                this.titleView.setAttribute('y', this.titleView.y + this.titleView.height);
                             else if ( style.label.fontangle > 180)
-                                this.titleView.setY(this.titleView.y + this.titleView.width);
+                                this.titleView.setAttribute('y', this.titleView.y + this.titleView.width);
                         }
                         if (  style.label.fontangle > 0 )
                             this.titleView.setAttribute('height', this.titleView.width);
@@ -64,13 +64,13 @@
                     break;
                 
                 case "default":
-                    this.titleView.setX(this.width  + this.titleGap);
-                    this.titleView.setY(-(this.titleView.height/2));
+                    this.titleView.setAttribute('x', this.width  + this.titleGap);
+                    this.titleView.setAttribute('y', -(this.titleView.height/2));
                     break;
             }
         } else {
-            this.titleView.setX(this.titleX);
-            this.titleView.setY(this.titleY);
+            this.titleView.setAttribute('x', this.titleX);
+            this.titleView.setAttribute('y', this.titleY);
         }       
             ]]> </method>
             
@@ -141,7 +141,7 @@
                         }
                         
                         //Set label y
-                        lL.setY(lInitalYMark + (lCL * (labelstyle.label.fontsize+2) ));
+                        lL.setAttribute('y', lInitalYMark + (lCL * (labelstyle.label.fontsize+2) ));
                     }
 
                     this.tickMarksView.setAttribute('height', (lLevels * (labelstyle.label.fontsize+3)));
@@ -194,8 +194,8 @@
                 @keywords private -->
         <method name="setLabelPos" args="pLabel,pOffset,pTW,pTH,pPos">
         <![CDATA[
-            pLabel.setX(pPos-(pTW/2));
-            pLabel.setY(this.height+pOffset);
+            pLabel.setAttribute('x', pPos-(pTW/2));
+            pLabel.setAttribute('y', this.height+pOffset);
 
             if ( (pLabel.getTextHeight() + this.style.tickmajor.length) >= this.tickMarksView.height )
                 this.tickMarksView.setAttribute('height', this.style.tickmajor.length + pLabel.getTextHeight());

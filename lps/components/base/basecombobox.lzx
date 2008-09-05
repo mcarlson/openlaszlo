@@ -143,8 +143,8 @@
                         txt = classroot.defaulttext;
                     }
                 }
-                if (this.cbtext) this.cbtext.setText( txt );
-                if (this._dsblfield) this._dsblfield.setText( txt );
+                if (this.cbtext) this.cbtext.setAttribute('text', txt );
+                if (this._dsblfield) this._dsblfield.setAttribute('text', txt );
                 parent._applystyle( parent.style );
             </method>
 
@@ -181,7 +181,7 @@
                     </handler>
                     <!-- pass up to component level so subclassers can catch -->
                     <handler name="onblur" args="v">
-                         classroot.setText( this.getText() );
+                         classroot.setAttribute('text', this.getText() );
                          if ( classroot['onblur'] ) classroot.onblur.sendEvent(v);
                     </handler>
                     <!-- pass up to component level so subclassers can catch -->
@@ -558,8 +558,8 @@
               @param String t: the text to display. -->
         <method name="setText" args="t">
             this.text = t;
-            this.interior.cbtext.setText( t );
-            if (!this._enabled) interior._dsblfield.setText( t );
+            this.interior.cbtext.setAttribute('text', t );
+            if (!this._enabled) interior._dsblfield.setAttribute('text', t );
             if ( this.ontext ) this.ontext.sendEvent( t );
         </method>
 
@@ -640,6 +640,7 @@
         <method name="_applystyle" args="s">
             if (this.style != null) {
                 if (editable) {
+Debug.warn("textfieldcolor", s.textfieldcolor, s);
                     interior.editbkgnd.setAttribute("bgcolor", s.textfieldcolor);
                     interior.cbtext.setAttribute('bgcolor',s.textfieldcolor);
                 } else {
@@ -662,7 +663,7 @@
                 } else {
                    interior._dsblfield.setAttribute('visible', true);
                 }
-                interior._dsblfield.setText(this.getText());
+                interior._dsblfield.setAttribute('text', this.getText());
             } else {
                 if (interior._dsblfield) interior._dsblfield.setAttribute('visible', false);
             }

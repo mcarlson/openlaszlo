@@ -290,7 +290,7 @@
                 ny = this.mask.height - pos - this.replicatedsize;
             } else if (pos < -y) ny = -pos;
     
-            if (y != ny) this.container.setY(ny);
+            if (y != ny) this.container.setAttribute('y', ny);
             ]]>
         </method>
     </class>

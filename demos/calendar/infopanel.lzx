@@ -45,16 +45,16 @@
         <handler name="onopenstart" >
             // tab is about to open
             this.interior.setAttribute('visible', true);
-            this.top.setBGColor(0xE2E4DF);
-            this.top.tline.setBGColor(0xB8B9B5)
-            this.top.bline.setBGColor(0xFDFFFF)
+            this.top.setAttribute('bgcolor', 0xE2E4DF);
+            this.top.tline.setAttribute('bgcolor', 0xB8B9B5)
+            this.top.bline.setAttribute('bgcolor', 0xFDFFFF)
         </handler>
 
         <handler name="onclosestart" >
             //tab is about to close
-            this.top.setBGColor(0xEEF0EB);
-            this.top.tline.setBGColor(0xFDFFFF)
-            this.top.bline.setBGColor(0xC6C7C4)
+            this.top.setAttribute('bgcolor', 0xEEF0EB);
+            this.top.tline.setAttribute('bgcolor', 0xFDFFFF)
+            this.top.bline.setAttribute('bgcolor', 0xC6C7C4)
         </handler>
 
         <handler name="onclosestop" >
@@ -98,7 +98,7 @@
                                                       attrs.day + ", " +
                                                       attrs.year;
                             }
-                            this.setText( s );
+                            this.setAttribute('text', s );
                             ]]>
                         </method>
                     </textbox>
@@ -186,7 +186,7 @@
                              bgcolor="0xEEF0EB" bordercolor="0x333333"
                              datapath="start[1]/@*" >
                         <method name="applyData" args="attrs">
-                            this.setText( parent.getLongTime( attrs ));
+                            this.setAttribute('text', parent.getLongTime( attrs ));
                         </method>
                     </textbox>
                     <basebutton x="$immediately{60-11}" width="14" 
@@ -205,7 +205,7 @@
                              bgcolor="0xEEF0EB" bordercolor="0x333333"
                              datapath="end[1]/@*" >
                         <method name="applyData" args="attrs">
-                            this.setText( parent.getLongTime( attrs ));
+                            this.setAttribute('text', parent.getLongTime( attrs ));
                         </method>
                     </textbox>
                     <basebutton x="149" width="14" resource="info_larrow"
@@ -330,7 +330,7 @@
             calgrid.contract();
 
             this.setAttribute('visible', true);
-            this.setOpacity(1);
+            this.setAttribute('opacity', 1);
             this.slideopen1.doStart();
             this.slideopen2.doStart();
             this.opened = true;

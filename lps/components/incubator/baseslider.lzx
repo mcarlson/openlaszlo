@@ -112,16 +112,16 @@
         <method name="_adjustThumb">
             var perc = getPercentage();
             var x = Math.round( (this.width-track.thumb.width)*perc );
-            track.thumb.setX(x);
+            track.thumb.setAttribute('x', x);
         </method>
         
         <!--- @keywords private -->
         <handler name="onkeydown" args="k">
             //left arrow
-            if (k==37) this.track.thumb.setX(this.track.thumb.x-keystep);
+            if (k==37) this.track.thumb.setAttribute('x', this.track.thumb.x-keystep);
             else
             //right arrow
-            if (k==39) this.track.thumb.setX(this.track.thumb.x+keystep);
+            if (k==39) this.track.thumb.setAttribute('x', this.track.thumb.x+keystep);
         </handler>
         
         <!--- @keywords private -->
@@ -176,7 +176,7 @@
             if (parent.x > x) {
               boundedx =  parent.x;
             }
-            super.setX(boundedx);
+            super.setAttribute('x', boundedx);
             
             //update slider value
             var perc = ( (x) / (parent.parent.width-width) );

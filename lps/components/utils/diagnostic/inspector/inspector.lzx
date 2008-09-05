@@ -25,7 +25,7 @@
         </method>
 
         <method name="setnewcolor" args="c">
-            this.obj.setBGColor(c);
+            this.obj.setAttribute('bgcolor', c);
             // updatecolor was getting white when color == null ???
             setAttribute('color', c);
         </method>
@@ -48,7 +48,7 @@
               text="${parent.text}"/>
 
         <state applied="${parent.editing}" pooling="true"
-               onapplied="parent.editbox.setText(parent.text)"
+               onapplied="parent.editbox.setAttribute('text', parent.text)"
                onremove="parent.setAttribute('text', parent.editbox.getText())">
             <edittext name="editbox" width="${parent.t.width + 10}">
                 <method name="init">
@@ -104,8 +104,8 @@
             <text text="${classroot.reference.name == null ?
                     classroot.reference.constructor.tagname : classroot.reference.name}"
                 onclick="classroot.toggle()"
-                onmouseover="parent.setBGColor(0xddddff)"
-                onmouseout="parent.setBGColor(null)"/>
+                onmouseover="parent.setAttribute('bgcolor', 0xddddff)"
+                onmouseout="parent.setAttribute('bgcolor', null)"/>
             <state applied="${classroot.reference instanceof lz.view}">
                 <colorbox y="1" obj="classroot.reference"/>
                 <propedit text="${classroot.reference.x}" obj="classroot.reference" prop="x"/>

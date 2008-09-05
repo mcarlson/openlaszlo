@@ -363,7 +363,7 @@
         </setter>
 
         <!--- @keywords private -->
-        <setter name="setWidth" args="w">
+        <setter name="width" args="w">
            var nw = Math.round(w);
            super.setAttribute('width', nw);
         </setter>

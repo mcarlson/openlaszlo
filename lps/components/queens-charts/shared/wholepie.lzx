@@ -143,19 +143,19 @@
             } else {
                 if(!this.expanded){
                     this.setAttribute('expanded', true);
-                    this.setWidth(parent.width);
-                    this.setHeight(parent.height);
-                    this.setX(0);
-                    this.setY(0);
+                    this.setAttribute('width', parent.width);
+                    this.setAttribute('height', parent.height);
+                    this.setAttribute('x', 0);
+                    this.setAttribute('y', 0);
                     this.eatPie();
                     this.buildPie();
                     parent.setAttribute('selectedpie', this);
                 } else {
                     this.setAttribute('expanded', false);
-                    this.setWidth(this.origwidth);
-                    this.setHeight(this.origheight);
-                    this.setX(this.origx);
-                    this.setY(this.origy);
+                    this.setAttribute('width', this.origwidth);
+                    this.setAttribute('height', this.origheight);
+                    this.setAttribute('x', this.origx);
+                    this.setAttribute('y', this.origy);
                     this.eatPie();
                     this.buildPie();
                     parent.setAttribute('selectedpie', null);

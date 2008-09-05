@@ -262,13 +262,13 @@
                 &lt;/handler&gt;
             
                 &lt;method name="setHilite" args="ishilite"&gt;
-                 if (ishilite ) this.setBGColor(0x00FF00);
-                 else this.setBGColor(0xFF0000)
+                 if (ishilite ) this.setAttribute('bgcolor', 0x00FF00);
+                 else this.setAttribute('bgcolor', 0xFF0000)
                 &lt;/method&gt;
             
                 &lt;method name="setSelect" args="isSelect"&gt;
-                  if (isSelect) this.setBGColor(0x0000FF);
-                  else this.setBGColor(0xFF0000)
+                  if (isSelect) this.setAttribute('bgcolor', 0x0000FF);
+                  else this.setAttribute('bgcolor', 0xFF0000)
                 &lt;/method&gt;
               &lt;/class&gt;
             

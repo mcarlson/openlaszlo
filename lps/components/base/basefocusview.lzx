@@ -34,10 +34,10 @@
     
         <!--- This method called when no view is focused. -->
         <method name="reset">
-            this.setX(0);
-            this.setY(0);
-            this.setWidth( canvas.width );
-            this.setHeight( canvas.height );
+            this.setAttribute('x', 0);
+            this.setAttribute('y', 0);
+            this.setAttribute('width', canvas.width );
+            this.setAttribute('height', canvas.height );
             setTarget( null );
         </method>
         
@@ -63,7 +63,7 @@
             if ( this.target ) this.setTarget( null )
 
             // Make sure this focusview is visible if it is active
-               this.setVisibility( this.active?'visible':'hidden' );
+               this.setAttribute('visibility', this.active?'visible':'hidden' );
 
             // store the target that the focusview will be constrained to when
             // it stops animating.
@@ -96,7 +96,7 @@
                 
                 // fade in the brackets to balance out the fade out
                 if (this.capabilities['minimize_opacity_changes']) {
-                    this.setVisibility( 'visible' );
+                    this.setAttribute('visibility', 'visible' );
                 } else {
                     this.animate('opacity', 1, 500);
                 }
@@ -121,10 +121,10 @@
                     nh = v.getAttributeRelative( 'height', canvas );
                 }
  
-                this.setX( nx );
-                   this.setY( ny );
-                   this.setWidth( nw );
-                   this.setHeight( nh );    
+                this.setAttribute('x', nx );
+                   this.setAttribute('y', ny );
+                   this.setAttribute('width', nw );
+                   this.setAttribute('height', nh );    
                }
 
         ]]> </method>
@@ -154,7 +154,7 @@
         <method name="fadeout" args="ignore" >
             if (_dofadeout) {
                 if (this.capabilities['minimize_opacity_changes']) {
-                    this.setVisibility( 'hidden' );
+                    this.setAttribute('visibility', 'hidden' );
                 } else {
                     this.animate( 'opacity' ,0 , 500);
                 }
@@ -209,11 +209,11 @@
             var rct = null;
                if ( target['getFocusRect'] ) rct = target.getFocusRect();
                if ( rct ) {
-                this.setX( rct[0] );
-                this.setY( rct[1] );
+                this.setAttribute('x', rct[0] );
+                this.setAttribute('y', rct[1] );
             } else {
-                this.setX( this.target.getAttributeRelative('x', canvas) );
-                this.setY( this.target.getAttributeRelative('y', canvas) );
+                this.setAttribute('x', this.target.getAttributeRelative('x', canvas) );
+                this.setAttribute('y', this.target.getAttributeRelative('y', canvas) );
             }
         </method>
 
@@ -222,9 +222,9 @@
             var rct = null;
                if ( target['getFocusRect'] ) rct = target.getFocusRect();
                if ( rct ) {
-                this.setWidth( rct[2] );
+                this.setAttribute('width', rct[2] );
             } else {
-                this.setWidth( this.target.width );
+                this.setAttribute('width', this.target.width );
             }
         </method>
 
@@ -233,9 +233,9 @@
             var rct = null;
                if ( target['getFocusRect'] ) rct = target.getFocusRect();
                if ( rct ) {
-                this.setHeight( rct[3] );
+                this.setAttribute('height', rct[3] );
             } else {
-                this.setHeight( this.target.height );
+                this.setAttribute('height', this.target.height );
             }
         </method>
 

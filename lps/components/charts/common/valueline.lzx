@@ -83,14 +83,14 @@
                 if((parent.plotarea.minx <= this.data) && (this.data <= parent.plotarea.maxx)){ 
 
                     var devicex = parent.haxis.getPixelDistance(this.data);                   
-                    this.setHeight(parent.plotarea.height);
-                    this.setWidth(parent.style.valuelinestyle.line.size);
+                    this.setAttribute('height', parent.plotarea.height);
+                    this.setAttribute('width', parent.style.valuelinestyle.line.size);
                     
                     this.lineWidth = parent.style.valuelinestyle.line.size;
                     this.strokeStyle = parent.style.valuelinestyle.line.color;
                     
-                    this.setX(parent.plotarea.x + devicex);
-                    this.setY(parent.plotarea.y);
+                    this.setAttribute('x', parent.plotarea.x + devicex);
+                    this.setAttribute('y', parent.plotarea.y);
                     
                     this.beginPath();
                     this.moveTo(0, 0);
@@ -102,13 +102,13 @@
                 if((parent.plotarea.miny <= this.data) && (this.data <= parent.plotarea.maxy)){
 
                     var devicey = parent.vaxis.getPixelDistance(this.data);                   
-                    this.setWidth(parent.plotarea.width);
-                    this.setHeight(parent.style.valuelinestyle.line.size);
+                    this.setAttribute('width', parent.plotarea.width);
+                    this.setAttribute('height', parent.style.valuelinestyle.line.size);
                     this.lineWidth = parent.style.valuelinestyle.line.size;
                     this.strokeStyle = parent.style.valuelinestyle.line.color;
                     
-                    this.setX(parent.plotarea.x);
-                    this.setY(parent.plotarea.y + parent.plotarea.height - devicey);
+                    this.setAttribute('x', parent.plotarea.x);
+                    this.setAttribute('y', parent.plotarea.y + parent.plotarea.height - devicey);
                     
                     this.beginPath();
                     this.moveTo(0, 0);
