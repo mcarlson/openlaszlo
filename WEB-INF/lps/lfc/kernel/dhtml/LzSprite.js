@@ -40,8 +40,7 @@ var LzSprite = function(owner, isroot) {
             div.style.width = width; 
             var widthispercentage = width.indexOf('%') != -1;
             var w = widthispercentage ? width : parseInt(width);
-            this._w = w;
-            this.width = w;
+            this._w = this.width = w;
         }
         var height = p.height;
         if (height) {
@@ -49,8 +48,7 @@ var LzSprite = function(owner, isroot) {
             div.style.height = height; 
             var heightispercentage = height.indexOf('%') != -1;
             var h = heightispercentage ? height : parseInt(height);
-            this._h = h;
-            this.height = h;
+            this._h = this.height = h;
         }
         if (p.id) {
             this._id = p.id;
@@ -434,8 +432,9 @@ LzSprite.prototype.__updateQuirks = function () {
 
             // turn off mouseover activation for iphone
             if (browser.isIphone) {
-                quirks['activate_on_mouseover'] = false;
-                quirks['listen_for_mouseover_out'] = false;
+                //quirks['activate_on_mouseover'] = false;
+                //quirks['listen_for_mouseover_out'] = false;
+                quirks['canvas_div_cannot_be_clipped'] = true;
             }
         } else if (browser.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0

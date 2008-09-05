@@ -240,36 +240,44 @@ dynamic class LzCanvas extends LzView {
 
         delete args.proxied;
 
+        // Default to arg values
+        var width = args.width;
+        var height = args.height;
+        var bgcolor = args.bgcolor;
+        delete args.width;
+        delete args.height;
+        delete args.bgcolor;
+
         if (capabilities.readcanvassizefromsprite == true) {
             if (this.sprite.width) {
-                args.width = this.sprite.width;
+                width = this.sprite.width;
             }
             if (this.sprite.height) {
-                args.height = this.sprite.height;
+                height = this.sprite.height;
             }
             if (this.sprite.bgcolor) {
-                args.bgcolor = this.sprite.bgcolor;
+                bgcolor = this.sprite.bgcolor;
             }
         } else {
             // read from init args
             if (lz.Browser.getInitArg('width') != null) {
-                args.width = lz.Browser.getInitArg('width');
+                width = lz.Browser.getInitArg('width');
             }
 
             if (lz.Browser.getInitArg('height') != null) {
-                args.height = lz.Browser.getInitArg('height');
+                height = lz.Browser.getInitArg('height');
             }
 
             if (lz.Browser.getInitArg('bgcolor') != null) {
-                args.bgcolor = lz.Browser.getInitArg('bgcolor');
+                bgcolor = lz.Browser.getInitArg('bgcolor');
             }
         }
 
         this.__canvaswidthratio = null;
-        this.width = Number(args.width);
+        this.width = Number(width);
         if (isNaN(this.width)) {
-            if (args.width.charAt(args.width.length-1) == '%') {
-                var percent = Number(args.width.substr(0, args.width.length-1));
+            if (width.charAt(width.length-1) == '%') {
+                var percent = Number(width.substr(0, width.length-1));
                 this.__canvaswidthratio = percent/100;
                 if (capabilities.scalecanvastopercentage != true) {
                     // some runtimes already scale the viewport size, so take the reported size literally to avoid scaling twice
@@ -277,18 +285,17 @@ dynamic class LzCanvas extends LzView {
                 }
             } else {
                 if ( $debug ){
-                    Debug.warn('ignored bad value %#w for canvas width', args.width);
+                    Debug.warn('ignored bad value %#w for canvas width', width);
                 }
                 this.width = 400;
             }
         }
-        delete args.width;
 
         this.__canvasheightratio = null;
-        this.height = Number(args.height);
+        this.height = Number(height);
         if (isNaN(this.height)) {
-            if (args.height.charAt(args.height.length-1) == '%') {
-                var percent = Number(args.height.substr(0, args.height.length-1));
+            if (height.charAt(height.length-1) == '%') {
+                var percent = Number(height.substr(0, height.length-1));
                 this.__canvasheightratio = percent/100;
                 if (capabilities.scalecanvastopercentage != true) {
                     // some runtimes already scale the viewport size, so take the reported size literally to avoid scaling twice
@@ -296,12 +303,11 @@ dynamic class LzCanvas extends LzView {
                 }
             } else {
                 if ( $debug ){
-                    Debug.warn('ignored bad value %#w for canvas height', args.height);
+                    Debug.warn('ignored bad value %#w for canvas height', height);
                 }
                 this.height = 400;
             }
         }
-        delete args.height;
 
         if ($swf9) {
             // Set the canvas width/height to good initial values.
@@ -314,8 +320,7 @@ dynamic class LzCanvas extends LzView {
             LzScreenKernel.setCallback(this, '__windowResize');
         }
 
-        this.bgcolor = lz.Utils.hextoint(args.bgcolor);
-        delete args.bgcolor;
+        this.bgcolor = lz.Utils.hextoint(bgcolor);
 
         this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;
         delete args.lpsversion;
@@ -347,14 +352,6 @@ dynamic class LzCanvas extends LzView {
         LzPlatform.initCanvas(this);
 
         this.id = lz.Browser.getInitArg('id');
-
-        if ($swf9) {
-            ////////////////////////////////////////////////////////////////
-            //DEBUG
-            ////////////////////////////////////////////////////////////////
-            //trace('canvas.sprite.width = ', this.sprite.width, this.sprite);
-            //trace('canvas.sprite.height = ', this.sprite.height);
-        }
     }
 
 /**
