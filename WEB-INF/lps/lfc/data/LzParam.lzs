@@ -10,14 +10,14 @@
   */
 
 /**
-  * <p>LzParam provide utilities for manipulating name-value pairs. 
-  *   For example, LzParam objects can be used to manage a name/value pairs for an 
+  * <p>lz.Param provides utilities for manipulating name-value pairs. 
+  *   For example, lz.Param objects can be used to manage a name/value pairs for an 
   *   HTTP request.</p>
   * 
   * <programlisting>
   *     &lt;method name=&quot;sendData&quot; args=&quot;action&quot;&gt;
   *         var d=canvas.datasets.dsSendData;
-  *         var p=new LzParam();
+  *         var p=new lz.Param();
   *         p.addValue( &quot;action&quot;, action, true);
   *         p.addValue( &quot;firstName&quot;, &quot;Bob&quot;, true);
   *         p.addValue( &quot;lastName&quot;, &quot;Jones&quot;, true);
@@ -29,7 +29,7 @@
   * </programlisting>
   * 
   * @shortdesc A utility class for manipulating name-value pairs  
-  * @devnote LzParam objects hold onto parameters (name/value pairs) and provide methods 
+  * @devnote lz.Param objects hold onto parameters (name/value pairs) and provide methods 
   * and utilities to reserialize them.  They are used whenever case matters for 
   * keys or parameter names (objects don't work here...)
   * 
@@ -77,13 +77,13 @@ static function parseQueryString (query:String) :Object {
 /**
   * Parse a URL query string, returns an object with key-value pairs
   * @return Object
-  * @deprecated: Use LzParam.parseQueryString() instead
+  * @deprecated: Use lz.Param.parseQueryString() instead
   */
 function parseQueryString (query:String) :Object {
     if ($debug) {
-        Debug.info(this, ".parseQueryString is deprecated. Use LzParam.parseQueryString instead");
+        Debug.info(this, ".parseQueryString is deprecated. Use lz.Param.parseQueryString instead");
     }
-    return LzParam.parseQueryString(query);
+    return lz.Param.parseQueryString(query);
 }
 
 /**
@@ -97,7 +97,7 @@ function addObject (o:Object) :void {
 }
 
 /**
-  * Returns a clone of this LzParam. Argument is deprecated.
+  * Returns a clone of this lz.Param. Argument is deprecated.
   * @keywords deprecated: Argument is deprecated
   * @return LzParam
   */
@@ -105,7 +105,7 @@ function clone (arg=null) :LzParam {
     if ($debug) {
         if (arg) Debug.info("%w.%s is deprecated. Do not pass as argument to clone()", this, arguments.callee);
     }
-    var o:LzParam = new LzParam();
+    var o:LzParam = new lz.Param();
     for (var n:String in this.d) {
         o.d[ n ] = this.d[ n ].concat();
     }

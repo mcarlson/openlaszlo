@@ -98,6 +98,7 @@ my $curfile = "unknown file";  # track current file for error messages
 # This list is derived from:
 #   WEB-INF/lps/server/src/org/openlaszlo/compiler/ClassModel.java
 my %lzxname = (
+    # global classes
     LzNode                  => "lz.node",
     LzView                  => "lz.view",
     LzText                  => "lz.text",
@@ -118,6 +119,21 @@ my %lzxname = (
     LzDatasource            => "lz.datasource",
     LzHTTPDataProvider      => "lz.lzhttpdataprovider",
     LzLibrary               => "lz.import",
+    LzDelegate              => "lz.Delegate",
+    LzParam                 => "lz.Param",
+    # service classes
+    LzTimer                 => "lz.Timer",
+    LzTrack                 => "lz.Track",
+    LzGlobalMouse           => "lz.GlobalMouse",
+    LzKeys                  => "lz.Keys",
+    LzIdle                  => "lz.Idle",
+    LzCursor                => "lz.Cursor",
+    LzModeManager           => "lz.ModeManager",
+    LzInstantiator          => "lz.Instantiator",
+    LzFocus                 => "lz.Focus",
+    LzBrowser               => "lz.Browser",
+    LzHistory               => "lz.History",
+    LzAudio                 => "lz.Audio",
     );
 
 # This list of known classes.  We add to it each time
@@ -199,10 +215,12 @@ sub create_test {
         "y = new myotherclass  // want lz.myotherclass\n" .
         "y = new global[zz]  // want lz[zz]\n" .
         "y = new somethingelse[*]\n" .
-        "y = n instanceof LzParam\n" .
         "y = n instanceof LzView  // want lz.view\n" .
         "y = new LzView(new Integer(new LzNode(), new LzView))   // 3 subs\n" .
         "</class>" .
+        "y = n instanceof LzParam\n // want lz.Param" .
+        "var f=LzFocus.getFocus();  // want lz.Focus" . 
+        "<handler name=\"onkeydown\" reference=\"LzKeys\" args=\"keycode\">  // want lz.Keys" . 
         "<class name=\"myotherclass\"/>\n";
 
     close OUT;

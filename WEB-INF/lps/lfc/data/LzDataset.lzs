@@ -425,7 +425,7 @@ function getQueryString (){
   */
 function getParams () :LzParam {
     if (this.params == null) {
-        this.params = new LzParam();
+        this.params = new lz.Param();
     }
 
     return this.params;
@@ -526,10 +526,10 @@ function getPointer (){
 function setQueryString( s ) {
     this.params = null;
     if ( typeof( s ) == "object" ){
-        if (s instanceof LzParam){
+        if (s instanceof lz.Param){
             this.querystring = s.toString();
         } else {
-            var p = new LzParam ();
+            var p = new lz.Param ();
             for ( var n in s ) {
                 p.setValue( n, s[n], true );
             }
@@ -618,7 +618,7 @@ function getLoadTime( ) {
 function setQueryParam( key , val ) {
     this.querystring = null;
     if ( ! this.params ){
-        this.params = new LzParam();
+        this.params = new lz.Param();
     }
     this.params.setValue( key, val );
 
@@ -639,7 +639,7 @@ function setQueryParam( key , val ) {
 function setQueryParams( o ) {
     this.querystring = null;
     if ( ! this.params ){
-        this.params = new LzParam();
+        this.params = new lz.Param();
     }
 
     if ( o ) {
@@ -724,8 +724,8 @@ function doRequest(ignore=null) {
     // values. Note, this is independent of the query portion of the
     // this.src URL. 
     if (this.querystring) {
-        dreq.queryparams = new LzParam();
-        dreq.queryparams.addObject(LzParam.parseQueryString(this.querystring));
+        dreq.queryparams = new lz.Param();
+        dreq.queryparams.addObject(lz.Param.parseQueryString(this.querystring));
     } else {
         // otherwise, use the this.params value
         dreq.queryparams = this.params;
@@ -902,7 +902,7 @@ function getAllResponseHeaders() {
   */
 function setHeader ( k , val ){ 
     if ( !this.headers ) {
-        this.headers = new LzParam();
+        this.headers = new lz.Param();
     }
 
     this.headers.setValue( k , val );

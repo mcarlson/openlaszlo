@@ -276,7 +276,7 @@ class LzHTTPDataProvider extends LzDataProvider {
      * @param LzDataElement data:
      */
     function loadResponse( dreq, data ) {
-        var headers = new LzParam( );
+        var headers = new lz.Param( );
         // build a hashtable of header values. 
         // If the header is repeated, construct a list to hold
         // all its values.

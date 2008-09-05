@@ -455,7 +455,7 @@ LzLoadQueue.loadXML = function (loadobj) {
             uquery = url.substring(marker+1, url.length);
             url_noquery = url.substring(0,marker);
 
-            var uitems = LzParam.parseQueryString(uquery);
+            var uitems = lz.Param.parseQueryString(uquery);
             for ( var key in uitems) {
                 lvar[key] = uitems[key];
             }
@@ -480,7 +480,7 @@ LzLoadQueue.loadXML = function (loadobj) {
 
         var content = loadobj.rawpostbody;
         // Copy the postbody data onto the LoadVars, it will be POST'ed
-        var pdata = LzParam.parseQueryString(content);
+        var pdata = lz.Param.parseQueryString(content);
         for ( var key in pdata) {
             lvar[key] = pdata[key];
         }
@@ -514,7 +514,7 @@ LzLoadQueue.loadXML = function (loadobj) {
             } else {
                 var content = loadobj.rawpostbody;
                 // Copy the postbody data onto the LoadVars, it will be POST'ed
-                var pdata = LzParam.parseQueryString(content);
+                var pdata = lz.Param.parseQueryString(content);
                 for ( var key in pdata) {
                     lvar[key] = pdata[key];
                 }
