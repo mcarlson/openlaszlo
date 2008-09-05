@@ -110,8 +110,9 @@ dynamic class LzState extends LzNode {
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
   /**
-   * Sent after a state is applied.  The event argument is the state
-   * that is being applied.
+   * Backward compatible version of `onapplied`
+   * @deprecated in 4.2
+   * @access private
    * @lzxtype event
    */
   var onapply:LzDeclaredEventClass = LzDeclaredEvent;
@@ -183,8 +184,11 @@ dynamic class LzState extends LzNode {
 
   /** @access private */
   static var props = { apply : true }; // unused?
-  /** @access private */
-  static var events = { onremove : true , onapply : true };
+  /**
+   * Remove onapply after 4.2
+   * @access private
+   */
+  static var events = { onremove : true , onapply : true, onapplied : true };
   prototype.$isstate = true; // Defined in LzNode
   /** @access private */
   var asyncnew = false;
@@ -332,6 +336,7 @@ dynamic class LzState extends LzNode {
 
     parent.__LZdelegates = od;
 
+    // Remove onapply after 4.2
     if (this.onapply.ready) this.onapply.sendEvent( this );
     if (this.onapplied.ready) this.onapplied.sendEvent( true );
   }
