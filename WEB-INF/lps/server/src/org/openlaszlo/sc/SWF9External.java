@@ -576,11 +576,12 @@ public class SWF9External {
    * @throw CompilerError if there are errors messages from the external
    *        compiler, or if any part of the compilation process has problems
    */
-  public void callJavaCompileCommand(List cmd, String dir, List tunits,
+  public void callJavaCompileCommand(List acmd, String dir, List tunits,
                                  String outfileName)
     throws IOException          // TODO: [2007-11-20 dda] clean up, why catch only some exceptions?
   {
-    String compilerClass = (String) cmd.remove(0);
+    final List cmd = acmd;
+    final String compilerClass = (String) cmd.remove(0);
     String[] cmdstr = (String[])cmd.toArray(new String[0]);
     String prettycmd = prettyCommand(cmd);
     System.err.println("Executing compiler: (cd " + dir + "; " + prettycmd + ")");
@@ -619,27 +620,41 @@ public class SWF9External {
     System.setProperty("FLEX_HOME", FLEX_HOME());
     // The Mxlmc and Compc util classes need to see this arg first in the args list
     cmd.add(0, "+flexlib="+FLEX_HOME()+"/frameworks");
+    cmd.add(0, "-compiler.headless-server=true");
 
-    //Process proc = Runtime.getRuntime().exec(cmdstr, (String[])newenv.toArray(new String[0]), null);
+    final Integer exitval[] = new Integer[1];
+
+    Thread worker = new Thread() {
+        public void run() {
+          //Process proc = Runtime.getRuntime().exec(cmdstr, (String[])newenv.toArray(new String[0]), null);
+
+          String args[] = (String[])cmd.toArray(new String[0]);
+          if (compilerClass.equals("mxmlc")) {
+            flex2.tools.Mxmlc.mxmlc(args);
+            exitval[0] = new Integer(flex2.compiler.util.ThreadLocalToolkit.errorCount());
+
+          } else if (compilerClass.equals("compc")) {
+            flex2.tools.Compc.compc(args);
+            exitval[0] = new Integer(flex2.compiler.util.ThreadLocalToolkit.errorCount());
+          } 
+
+        }
+      };
+
+      try {
+        worker.start();
+        worker.join();
+      } catch (java.lang.InterruptedException e) {
+        throw new CompilerError("Errors from compiler, output file not created" + e);      
+      } finally {
+        // Restore system output and err streams
+        System.setErr(serr);
+        System.setOut(sout);
+      }
+
     try {
-      int exitval = 1;
-
-      String args[] = (String[])cmd.toArray(new String[0]);
-      if (compilerClass.equals("mxmlc")) {
-        flex2.tools.Mxmlc.mxmlc(args);
-        exitval = flex2.compiler.util.ThreadLocalToolkit.errorCount();
-
-      } else if (compilerClass.equals("compc")) {
-        flex2.tools.Compc.compc(args);
-        exitval = flex2.compiler.util.ThreadLocalToolkit.errorCount();
-      } 
-
       nerr.flush();
       nout.flush();
-
-      // Restore system output and err streams
-      System.setErr(serr);
-      System.setOut(sout);
 
       System.out.println("compiler output is "+bout.toString());
 
@@ -713,18 +728,12 @@ public class SWF9External {
         }
       }
 
-      if (exitval != 0) {
+      if (exitval[0].intValue() != 0) {
         System.err.println("FAIL: compiler returned " + exitval);
       }
-    }
-    catch (InterruptedException ie) {
+    } catch (InterruptedException ie) {
       throw new CompilerError("Interrupted compiler");
-    } finally {
-      // Restore system output and err streams
-      System.setErr(serr);
-      System.setOut(sout);
     }
-
     
     System.err.println("Done executing compiler");
     if (!new File(outfileName).exists()) {
@@ -736,6 +745,8 @@ public class SWF9External {
         throw new CompilerError("Errors from compiler, output file not created");
       }
     }
+
+      
   }
 
   public static String FLEX_HOME () {
