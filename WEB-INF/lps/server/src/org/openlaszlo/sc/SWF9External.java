@@ -455,6 +455,7 @@ public class SWF9External {
                                  String outfileName)
     throws IOException          // TODO: [2007-11-20 dda] clean up, why catch only some exceptions?
   {
+    String compilerClass = (String) cmd.remove(0);
     String[] cmdstr = (String[])cmd.toArray(new String[0]);
     String prettycmd = prettyCommand(cmd);
     System.err.println("Executing compiler: (cd " + dir + "; " + prettycmd + ")");
@@ -593,6 +594,9 @@ public class SWF9External {
     buildsh += prettycmd + "\n";
     String buildfn = isWindows() ? "build.bat" : "build.sh";
     Compiler.emitFile(workDirectoryName(buildfn), buildsh);
+
+    // Remove the shell script executable path from beginning of cmd arg list
+    cmd.remove(0);
 
     // Save original System.err, System.out
     PrintStream sout = System.out;
@@ -792,14 +796,12 @@ public class SWF9External {
     if (buildSharedLibrary) {
       outfilebase = "app.swc";
       cmd.add("compc");
-      // cmd.add(getFlexPathname("bin" + File.separator + "compc" + exeSuffix));
-
+      cmd.add(getFlexPathname("bin" + File.separator + "compc" + exeSuffix));
     }
     else {
       outfilebase = "app.swf";
       cmd.add("mxmlc");
-      // cmd.add(getFlexPathname("bin" + File.separator + "mxmlc" + exeSuffix));
-
+      cmd.add(getFlexPathname("bin" + File.separator + "mxmlc" + exeSuffix));
     }
 
     // Path to the flex compiler config file
