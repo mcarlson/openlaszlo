@@ -420,7 +420,7 @@
 
     <property name="java.opts" value="" />
     <property name="tomcat.java.opts"
-        value="${java.opts} ${tomcat.debug.opts} ${tomcat.profile.opts} -Xms128m -Xmx512m -Dlps.config.dir=${lps.config.dir} -Dlps.config.dir.abs=${lps.config.dir.abs} -Dcom.apple.backgroundOnly=true -Djava.awt.headless=true -Djavax.net.ssl.trustStore=${LPS_HOME}/build-tools/lzcacerts -Djavax.net.ssl.trustStorePassword=changeit -Dfile.encoding=UTF-8" />
+        value="${java.opts} ${tomcat.debug.opts} ${tomcat.profile.opts} -Xms128m -Xmx800m -Dlps.config.dir=${lps.config.dir} -Dlps.config.dir.abs=${lps.config.dir.abs} -Dcom.apple.backgroundOnly=true -Djava.awt.headless=true -Djavax.net.ssl.trustStore=${LPS_HOME}/build-tools/lzcacerts -Djavax.net.ssl.trustStorePassword=changeit -Dfile.encoding=UTF-8" />
 
     <property name="dev-war-file"  value="openlaszlo-${version.id}.war" />
     <property name="servlet-war-file"  value="openlaszlo-${version.id}-servlet.war" />
