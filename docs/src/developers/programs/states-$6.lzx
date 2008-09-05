@@ -1,7 +1,7 @@
 
 <canvas>
-  <window title="state demo" width="400" height="300">
-    <state name="max" apply="true">
+  <window title="state demo" width="400" height="300" oninit="this.max.setAttribute('applied', true)">
+    <state name="max">
       <animatorgroup duration="1000" process="simultaneous">
         <animator attribute="width" to="400"/>
         <animator attribute="height" to="300"/>
@@ -10,7 +10,7 @@
       </animatorgroup>
       <text align="center" y="20%">M a x i m i z e d</text>
     </state>
-    <state name="min" >
+    <state name="min">
       <animatorgroup duration="1000" process="simultaneous">
         <animator attribute="width" to="170"/>
         <animator attribute="height" to="100"/>
@@ -22,14 +22,14 @@
     <button placement="title_area" align="right" height="16"> Toggle
       <attribute name="isMax" value="true"/>
       <handler name="onclick">
-        if (this.isMax) {parent.max.remove(); parent.min.apply();}
-        else {parent.max.apply(); parent.min.remove();}
+        if (this.isMax) {parent.max.setAttribute('applied', false); parent.min.setAttribute('applied', true);}
+        else {parent.max.setAttribute('applied', true); parent.min.setAttribute('applied', false);}
         this.isMax = !this.isMax;
       </handler>
     </button>
 </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

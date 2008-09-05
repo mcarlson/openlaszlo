@@ -2,9 +2,9 @@
 <canvas height="160">
     <simplelayout spacing="5" />
     <slider id = "m" value="25" minvalue="0" maxvalue="100" />
-    <text text = "$immediately{'immediately: ' + m.value}" />
-    <text text = "$once{'once: ' + m.value}" />
-    <text text = "$always{'always: ' + m.value}" />
+    <text text = "$immediately{'immediately: ' + (m?m.value:'undefined')}" />
+    <text text = "$once{'once: ' + (m?m.value:'undefined')}" />
+    <text text = "$always{'always: ' + (m?m.value:'undefined')}" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *

@@ -1,23 +1,23 @@
-
 <canvas debug="true">
   <class name="testState" extends="state">
-    <attribute name="countApplies"  value="0"
+    <attribute name="countApplies" type="number" value="0"
                setter="this.countApplies = countApplies"/>
-    <method name="apply">
-      this.setAttribute('countApplies', ++this.countApplies);
-      super.apply();
-    </method>
+    <handler name="onapplied">
+        <![CDATA[
+        this.setAttribute('countApplies', this['countApplies'] >= 0 ? ++this.countApplies : 1);
+        ]]>
+    </handler>
   </class>
   <button >Try it
     <handler name="onclick">
-      ts.apply();
+      ts.setAttribute('applied', true);
       Debug.write("applies:" + ts.countApplies);
-      ts.remove();
+      ts.setAttribute('applied', false);
     </handler>
     <testState name="ts"/>
   </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

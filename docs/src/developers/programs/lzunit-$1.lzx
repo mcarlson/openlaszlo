@@ -12,10 +12,7 @@
         assertEquals(prop1, 'foo')
       </method>
       <method name="testfailure">
-        assertTrue(mytext.multiline, "This is not a multiline text field")
-      </method>
-      <method name="testerror">
-        callFoo()
+        assertFalse(mytext.multiline, "This is not a multiline text field")
       </method>
       <method name="addTests"> 
           this.addTest("testsuccess");
@@ -26,6 +23,6 @@
   </TestSuite>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
