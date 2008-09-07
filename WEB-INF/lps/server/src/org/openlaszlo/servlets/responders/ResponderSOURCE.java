@@ -53,12 +53,27 @@ public final class ResponderSOURCE extends ResponderCompile
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 ResponderSOURCE.class.getName(),"051018-53", new Object[] {fileName})
 );
-        ServletOutputStream  out = res.getOutputStream();
 
+        res.setContentType ("text/html; charset=utf-8");
+        ServletOutputStream  out = res.getOutputStream();
         try {
-            res.setContentType ("text/html; charset=utf-8");
-            writeHeader(out, null);
-            writeText(out, FileUtils.readFileString(new File(fileName)));
+             writeHeader(out, null);
+//            writeText(out, FileUtils.readFileString(new File(fileName)));
+                    FileInputStream fis = new FileInputStream(fileName);
+                    InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+                    BufferedReader reader = new BufferedReader(isr);
+
+                    String line;
+                    StringBuffer sb = new StringBuffer();
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                        sb.append("\n");
+                    }
+                    reader.close();
+            isr.close();
+            fis.close();
+//           writeText(out, FileUtils.readFileString(new File(fileName)));
+            writeText(out, sb.toString());
             writeFooter(out);
         } finally {
             FileUtils.close(out);

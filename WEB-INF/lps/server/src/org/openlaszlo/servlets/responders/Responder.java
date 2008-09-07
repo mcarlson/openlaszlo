@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -740,6 +740,7 @@ public abstract class Responder
         // Add in title and link
         out.println("<html><head><title>" + title + "</title>");
 
+        out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">");
         String ico = LPS.getProperty("shortcut.icon", "http://www.laszlosystems.com/images/laszlo.ico");
         out.println("<link rel=\"SHORTCUT ICON\" href=\"" + ico + 
                     "\"></head>\n");
