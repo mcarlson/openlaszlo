@@ -4,7 +4,9 @@
                setter="this.countApplies = countApplies"/>
     <handler name="onapplied">
         <![CDATA[
-        this.setAttribute('countApplies', this['countApplies'] >= 0 ? ++this.countApplies : 1);
+        if(this.applied == true){
+            this.setAttribute('countApplies', this['countApplies'] >= 0 ? ++this.countApplies : 1);
+        }
         ]]>
     </handler>
   </class>
