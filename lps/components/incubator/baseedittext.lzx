@@ -111,7 +111,7 @@
         <attribute name="pattern" value="$once{null}" type="string" />
 
         <!--- The height of the edit text box, default: 20. -->
-        <attribute name="height" value="20" setter="this.setAttribute('height', height)"/>
+        <attribute name="height" value="20"/>
 
         <!--- The width of the edit text box, default: 106. -->
         <attribute name="width" value="106"/>
@@ -149,11 +149,11 @@
         <!--- Set baseedittext height and correctly place text for
               internalinputfield using _placeTextY().
               @keywords private -->
-        <method name="setHeight" args="h">
+        <setter name="height" args="h">
             super.setAttribute('height', h);
             this._initialtexty = (!this._initcomplete);
             if (this._initcomplete) this._placeTextY()
-        </method>
+        </setter>
 
         <!--- Set edittext's and _field's multiline attributes. Will affect text
               placement if multiline attribute changes.

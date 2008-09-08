@@ -269,6 +269,13 @@ sub convert_file {
     my @lines=<IN>;
     close(IN);
 
+    # If the file contains any attribute setters, tell the user to manually
+    # check it
+    my $contents = join("\n", @lines);
+    if ($contents =~ /setter\s*=\s*['"]/) {
+      print "$file contains attribute setters. Please check these files manually\n";
+    }
+
     # Do each of the substitutions listed in %substitutions
     # map() does exactly what we want
     while (my ($orig, $replacement) = each(%substitutions)) {

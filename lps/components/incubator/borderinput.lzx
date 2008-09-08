@@ -5,7 +5,7 @@
 <library >
     <class name="borderinput">
         <attribute name="changed" value="${this.txt.changed}" />
-        <attribute name="text" setter="this.setAttribute('text', text)" />
+        <attribute name="text" setter="this.setText(text)" />
         <attribute name="labelwidth" type="number" value="80"/>
 
         <!-- label -->

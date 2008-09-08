@@ -15,7 +15,7 @@
       bgcolor="0x252525"
       width="${t.width + 6}" height="17" 
       visible="false">
-    <attribute name="text" value="" type="html" setter="this.setAttribute('text', text)" />
+    <attribute name="text" value="" type="html" setter="this.setText(text)" />
 
     <!-- shadow left -->
     <view bgcolor="black" opacity=".3" 

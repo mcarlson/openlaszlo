@@ -167,7 +167,7 @@
 
         <!--- constrain to parents bounds, and adjust slider value when dragged
               @keywords private -->
-        <method name="setX" args="x">
+        <setter name="x" args="x">
             var boundedx = x;
             if ( x > parent.width-width ) {
               var constrainX = parent.width-width;
@@ -187,7 +187,7 @@
             if (thedragstate.applied || lz.Keys.isKeyDown("leftarrow") || lz.Keys.isKeyDown("rightarrow") ) {
                 parent.parent.setValue(val);
             }
-        </method>
+        </setter>
     </class><!-- end basesliderthumb class -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

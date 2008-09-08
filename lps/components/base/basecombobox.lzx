@@ -640,7 +640,6 @@
         <method name="_applystyle" args="s">
             if (this.style != null) {
                 if (editable) {
-Debug.warn("textfieldcolor", s.textfieldcolor, s);
                     interior.editbkgnd.setAttribute("bgcolor", s.textfieldcolor);
                     interior.cbtext.setAttribute('bgcolor',s.textfieldcolor);
                 } else {
