@@ -148,6 +148,7 @@
                 this.intparent.setAttribute('visible', true);
             }
             intparent.interior.animate('opacity', 1, 200);
+            this.txt.adjustDimensions();
         </handler>
 
         

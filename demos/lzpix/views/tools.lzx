@@ -148,7 +148,7 @@
         <method name="displayPrevPage" >
             <![CDATA[
             if ( this.startindex > 1 ) {
-                if(photoscontainer.lyt.totalitems == 18){
+                if(photoscontainer.lyt.totalitems <= 18){
                     this.nextendindex     = this.startindex - 1;
                     this.nextstartindex   = Math.max( this.nextendindex - photoscontainer.lyt.totalitems + 1, 1 );
                     if (  this.nextstartindex == 1  ) this.nextendindex =  photoscontainer.lyt.totalitems;
