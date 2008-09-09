@@ -38,7 +38,7 @@ if ($debug) {
             Debug.monitor(LzLoadQueue, 'openConx');
         }
     }
-        LzLoadQueue.__LZinit();
+    LzLoadQueue.__LZinit();
 }
 
 /**
@@ -93,9 +93,11 @@ LzLoadQueue.XMLOnDataHandler = function (src) {
     LzLoadQueue.unloadRequest(this);
 
     if (src == undefined) {
-        if (!this.proxied) {
-            Debug.warn("LzLoadQueue.XMLOnDataHandler load failed from URL %w, no data received.", this.url);
-            Debug.warn("Failure to load data in serverless apps may be caused by Flash player security policies. Check your data server crossdomain.xml file");
+        if ($debug) {
+            if (! this.proxied) {
+                Debug.warn("LzLoadQueue.XMLOnDataHandler load failed from URL %w, no data received.", this.url);
+                Debug.warn("Failure to load data in serverless apps may be caused by Flash player security policies. Check your data server crossdomain.xml file");
+            }
         }
         this.onload(false);
         //Debug.write("this.loader.onerror.ready =", this.loader.onerror.ready);
@@ -176,8 +178,8 @@ LzLoadQueue.loadFinished = function( loadmc ){
         }
     }
 
-    while( this.openConx < this.maxOpen && this.hasMoreInQueue() ){
-        this.makeRequest( this.getNextFromQueue() );
+    for (var next; this.openConx < this.maxOpen && (next = this.getNextFromQueue()); ) {
+        this.makeRequest( next );
     }
 
     if ( ! this.loading.length)  {
@@ -221,9 +223,10 @@ LzLoadQueue.addToQueue = function( loadmc ){
   * @access private
   */
 LzLoadQueue.getNextFromQueue = function( ){
-    for ( var i = 0; i < this.listofqs.length; i++ ){
-        if ( this.listofqs[ i ].length ) {
-            return this.listofqs[ i ].shift();
+    var loq = this.listofqs;
+    for ( var i = 0; i < loq.length; i++ ){
+        if ( loq[ i ].length ) {
+            return loq[ i ].shift();
         }
     }
 }
@@ -232,8 +235,9 @@ LzLoadQueue.getNextFromQueue = function( ){
   * @access private
   */
 LzLoadQueue.hasMoreInQueue= function( ){
-    for ( var i = 0; i < this.listofqs.length; i++ ){
-        if ( this.listofqs[ i ].length ) {
+    var loq = this.listofqs;
+    for ( var i = 0; i < loq.length; i++ ){
+        if ( loq[ i ].length ) {
             return true;
         }
     }
@@ -245,15 +249,10 @@ LzLoadQueue.hasMoreInQueue= function( ){
   */
 LzLoadQueue.defaultPriorityAssignment = function( loadmc , prior ){
     if ( prior != null ) return prior;
-    if ( loadmc.lzt == "eval" ) return 2;
-    if ( loadmc.lzt == "data" ) return 4;
-    if ( loadmc.lzt == "media" ) {
-        return 6;
-        //PC?
-        //if ( loadmc.lzt == "media" ) return 6;
-    } else {
-        return 8;
-    }
+    else if ( loadmc.lzt == "eval" ) return 2;
+    else if ( loadmc.lzt == "data" ) return 4;
+    else if ( loadmc.lzt == "media" ) return 6;
+    else return 8;
 }
 
 /**
@@ -283,11 +282,15 @@ LzLoadQueue.makeRequest = function( loadobj ){
     if ( !loadobj.valid ) return;
 
     if (loadobj.loading || loadobj.loaded) {
-        Debug.error('duplicate request', loadobj);
+        if ($debug) {
+            Debug.error('duplicate request', loadobj);
+        }
         return;
     }
     if (loadobj.lzt == 'xmldata' && ! loadobj.url && ! loadobj.reqobj.url) {
-        Debug.error('no url to load', loadobj);
+        if ($debug) {
+            Debug.error('no url to load', loadobj);
+        }
         return;
     }
 
@@ -395,10 +398,10 @@ LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
         loadobj.lmc = loadobj;
         //Debug.write('LzLoadQueue new lmc for loadobj', loadobj, loadobj.lmc);
     } else {
-    loadobj.lmcnum++;
-    //loadobj.attachMovie( "empty" , "lmc" + loadobj.lmcnum , 9 );
-    loadobj.createEmptyMovieClip( "lmc" + loadobj.lmcnum , 9 );
-    loadobj.lmc = loadobj[ 'lmc' + loadobj.lmcnum ];
+        loadobj.lmcnum++;
+        //loadobj.attachMovie( "empty" , "lmc" + loadobj.lmcnum , 9 );
+        loadobj.createEmptyMovieClip( "lmc" + loadobj.lmcnum , 9 );
+        loadobj.lmc = loadobj[ 'lmc' + loadobj.lmcnum ];
     }
 
     if ( dopost ){
@@ -416,11 +419,6 @@ LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
   * @access private
   */
 LzLoadQueue.loadXML = function (loadobj) {
-    // Set the onData handler to intercept returning data
-    loadobj.onData = LzLoadQueue.XMLOnDataHandler;
-
-    var dopost = (loadobj.reqtype.toUpperCase() == 'POST');
-
     /*
       [1] If request is PROXIED, send the URL as given, with query string stripped off,
       parsed, and each arg is set as a property on the LoadVar object.
@@ -432,74 +430,50 @@ LzLoadQueue.loadXML = function (loadobj) {
 
           [4] If it is a POST request, send to URL as given including query string.
             take the rawpostbody property from loadobj, parse it, and set as properties
-            on the LoadVars object. This is as close as we can get to doing a POST.
+            on the LoadVars object. 
 
-            We can't really post an arbitrary raw data string. The best we could do would
-            be to use XML sendAndLoad with a single  XML child text node, but that still
-            XML-escapes the text, so it isn't really much use.
+            We can't really post an arbitrary raw data string. The best we can do is 
+            to use XML sendAndLoad with a single XML child text node, but that still
+            XML-escapes the text.
 
     */
-
-    var url = loadobj.url;
-    var url_noquery = url;
-    var lvar = new LoadVars();
-    var solo = !loadobj.proxied;
-
-    var marker = url.indexOf('?');
-    var uquery = "";
     
-    // If it's proxied, or a SOLO GET, strip the query args from URL and set them as
-    // properties on LoadVars obj
-    if (loadobj.proxied || !dopost) {
-        if (marker != -1) {
-            uquery = url.substring(marker+1, url.length);
-            url_noquery = url.substring(0,marker);
+    // Set the onData handler to intercept returning data
+    loadobj.onData = LzLoadQueue.XMLOnDataHandler;
 
-            var uitems = lz.Param.parseQueryString(uquery);
-            for ( var key in uitems) {
-                lvar[key] = uitems[key];
-            }
-        }
-    }
+    var dopost = (loadobj.reqtype.toUpperCase() == 'POST');
+    var lvar = new LoadVars();
+    var url = loadobj.url;
+    var solo = !loadobj.proxied;
 
     // convert base url to absolute path, otherwise Flash is not happy
     var reqstr;
-
     if (solo && dopost) {
         // For a SOLO POST, request the complete URL including query args
-        reqstr = lz.Browser.toAbsoluteURL( loadobj.url, loadobj.secure );
+        reqstr = lz.Browser.toAbsoluteURL( url, loadobj.secure );
     } else {
-        // otherwise, get the url with the query string trimmed off
-        reqstr = lz.Browser.toAbsoluteURL( url_noquery, loadobj.secure );
+        // If it's proxied, or a SOLO GET, strip the query args from URL and set them as
+        // properties on LoadVars obj
+        var marker = url.indexOf('?');
+        if (marker != -1) {
+            var uquery = url.substring(marker + 1, url.length);
+            url = url.substring(0, marker);
+
+            var uitems = lz.Param.parseQueryString(uquery);
+            for (var key in uitems) {
+                lvar[key] = uitems[key];
+            }
+        }
+        
+        // get the url with the query string trimmed off
+        reqstr = lz.Browser.toAbsoluteURL( url, loadobj.secure );
     }
 
-    if (loadobj.proxied) {
-        // PROXY request: proxy parameters have been stored on
-        // rawpostbody, get them out and append them to the LoadVars
-        // obj, to POST to LPS proxy server.
-
-        var content = loadobj.rawpostbody;
-        // Copy the postbody data onto the LoadVars, it will be POST'ed
-        var pdata = lz.Param.parseQueryString(content);
-        for ( var key in pdata) {
-            lvar[key] = pdata[key];
-        }
-
-        lvar.sendAndLoad(reqstr , loadobj, "POST" );
-    } else {
-        // SOLO request:
-
-        // Set any specified request headers
-        var header;
-        var headers = loadobj.loader.requestheaders;
-
-        if (dopost) {
-            for ( header in headers) {
-                lvar.addRequestHeader(header, headers[header]);
-            }
-            var lzpostbody = loadobj.rawpostbody;
-            var hasquerydata = loadobj.hasquerydata; // boolean
-            if (lzpostbody != null && !hasquerydata) {
+    var method = loadobj.proxied || dopost ? "POST" : "GET";
+    if (method == "POST") {
+        var lzpostbody = loadobj.rawpostbody;
+        if (lzpostbody != null) {
+            if (solo && !loadobj.hasquerydata) {
                 // This is supposed to be a "raw" data post. The best
                 // we can do is to use XML.sendAndLoad, with a Flash
                 // XML Text node as the data. This will still
@@ -507,28 +481,34 @@ LzLoadQueue.loadXML = function (loadobj) {
                 // raw data.
                 var xmlraw = new XML();
                 xmlraw.parseXML(lzpostbody);
-                for ( header in headers) {
-                    xmlraw.addRequestHeader(header, headers[header]);
-                }
-                xmlraw.sendAndLoad(reqstr, loadobj);
+                // replace LoadVars with XML
+                lvar = xmlraw;
             } else {
-                var content = loadobj.rawpostbody;
+                // if PROXY request: proxy parameters have been stored on
+                // rawpostbody, get them out and append them to the LoadVars
+                // obj, to POST to LPS proxy server.
+                
                 // Copy the postbody data onto the LoadVars, it will be POST'ed
-                var pdata = lz.Param.parseQueryString(content);
-                for ( var key in pdata) {
+                var pdata = lz.Param.parseQueryString(lzpostbody);
+                for (var key in pdata) {
                     lvar[key] = pdata[key];
                 }
-                lvar.sendAndLoad(reqstr , loadobj , "POST");
             }
-        } else {
-            // For a GET request, all query args have been placed on
-            // the lvar object already.
-            for ( header in headers) {
-                lvar.addRequestHeader(header, headers[header]);
-            }
-            lvar.sendAndLoad(reqstr , loadobj, "GET" );
+        }
+    } else {
+        // For a SOLO GET request, all query args have been placed on
+        // the lvar object already.
+    }
+    
+    if (solo) {
+        // SOLO: Set any specified request headers
+        var headers = loadobj.loader.requestheaders;
+        for (var header in headers) {
+            lvar.addRequestHeader(header, headers[header]);
         }
     }
+    
+    lvar.sendAndLoad(reqstr, loadobj, method );
 }
 
 

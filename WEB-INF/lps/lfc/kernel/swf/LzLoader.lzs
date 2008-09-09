@@ -75,7 +75,6 @@ function removeCopyTask() {
 }
 
 
-var onerror = LzDeclaredEvent;
 var ondata = LzDeclaredEvent;
 var oncontent = LzDeclaredEvent;
 var onrequest = LzDeclaredEvent;
@@ -161,15 +160,12 @@ function returnData ( loadobj , data ){
     if (loadobj instanceof MovieClip) {
         // Nothing to do
     } else if (loadobj instanceof XMLNode) {
-
         // The raw XML response string was stashed here by LzLoadQueue.XMLOnDataHandler
         // TODO [2005-08-11 ptw] Is there not an issue that there
         // could be multiple requests?
         data.rawtext = this.rawtext;
-    } else {
-        if ($debug) {
-            Debug.error("%w.returnData: unhandled loadobj %w", this, loadobj);
-        }
+    } else if ($debug) {
+        Debug.error("%w.returnData: unhandled loadobj %w", this, loadobj);
     }
 
     // Ok, we have loaded this.  loadFinished changes state of loadobj
@@ -179,7 +175,7 @@ function returnData ( loadobj , data ){
     // would have to worry about getLoadMovie trying to reuse the
     // loadobj before we have finished with it.
 
-    // this is done in LzLoadQueue.XMLOnDataHandler now, in order
+    // This is done in LzLoadQueue.XMLOnDataHandler now, in order
     // to pipeline a new load request while the data copy task is happening.
 
 
@@ -190,12 +186,14 @@ function returnData ( loadobj , data ){
     this.lastloadtime = getTimer() - loadobj.loadtime;
 
     var err;
-    if ( data.childNodes[0].nodeName == "error") {
+    if (! data) {
+        // Nothing to do
+    } else if (data.childNodes[0].nodeName == "error") {
         err = data.childNodes[0].attributes.msg;
     } else if (data.nodeName == "error") {
         err = data.attributes.msg;
     } else if (data == "medialoaderror") {
-        err="Media load error";
+        err = "Media load error";
     }
 
     if ( err != null ){
@@ -228,7 +226,7 @@ function returnData ( loadobj , data ){
     } else {
         if ( loadobj.timedout ){
             this.doTimeOut(loadobj);
-        } else if( data ){
+        } else if ( data ){
             if (this.ondata.ready) this.ondata.sendEvent( data );
         }
     }
@@ -716,18 +714,16 @@ static function debugLoadObj (loadobj, typename) {
     }
 /** @access private */
     loadobj._dbg_name = function () {
-        with (this) {
-            var state = valid?"initialized":"invalid";
-            // Decode boolean flags into state.  Order is important.
-            if (loading) { state = valid?"loading":"aborting"; }
-            if (loaded) { state = valid?"loaded":"aborted"; }
-            if (timedout) { state = "timedout"; }
-            // TODO: [2005-08-11 ptw] LzURL should be able to
-            // parse a relative URL
-            var url = (new LzURL(this.url)).file;
-            if (! url) { url = this.url; }
-            return Debug.formatToString("%s (%s)", url, state);
-        }
+        var state = this.valid ? "initialized" : "invalid";
+        // Decode boolean flags into state.  Order is important.
+        if (this.loading) { state = this.valid ? "loading" : "aborting"; }
+        if (this.loaded) { state = this.valid ? "loaded" : "aborted"; }
+        if (this.timedout) { state = "timedout"; }
+        // TODO: [2005-08-11 ptw] LzURL should be able to
+        // parse a relative URL
+        var url = (new LzURL(this.reqobj.url)).file;
+        if (! url) { url = this.reqobj.url; }
+        return Debug.formatToString("%s (%s)", url, state);
     };
     loadobj._dbg_typename = typename;
     // Monitor state variables if requested

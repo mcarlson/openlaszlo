@@ -16,8 +16,8 @@
   *     <canvas height="220" debug="true">
   *     <debug x="0" y="0" height="200" width="450"/>
   *     <script>
-  *         var urlstring = 'http://localhost:8080/lps/lzurl_example.lzx?lzt=swf';
-  *         var url = new LzURL(urlstring);
+  *         var urlstring:String = 'http://localhost:8080/lps/lzurl_example.lzx?lzt=swf';
+  *         var url:LzURL = new LzURL(urlstring);
   *
   *         // list each part of this url
   *         Debug.write("protocol: " + url.protocol);
@@ -43,11 +43,9 @@
   * ]]></example>
   *
   *
-  * @param String url: URL to parse
-  *
   * http://www.ietf.org/rfc/rfc2396.txt specifies the syntax for a URI
   *
-  * We also need to handle these cases that  OpenLaszlo allows
+  * We also need to handle these cases that OpenLaszlo allows
   * which aren't real URLs:
   * 
   * http:foo.html
@@ -57,36 +55,26 @@
   * http:/foo/bar.ksp?q=12
   * 
   */
-public class  LzURL {
+public class LzURL {
 
-    var protocol = null;
-    var host = null;
-    var port = null;
-    var path = null;
-    var file = null;
-    var query = null;
-    var fragment = null;
-    var _parsed = null;
+    var protocol :String = null;
+    var host :String = null;
+    var port :String = null;
+    var path :String = null;
+    var file :String = null;
+    var query :String = null;
+    var fragment :String = null;
+    var _parsed :String = null;
 
-    // TODO [hqm 2008-01] this should take an option arg (url=null), but our
-    // parser doesn't accept that at the moment.
-    public function LzURL ( ...rest ){
-        this.protocol = null;
-        this.host = null;
-        this.port = null;
-        this.path = null;
-        this.file = null;
-        this.query = null;
-        this.fragment = null;
-        if (rest.length > 0) {
-            var url = rest[0];
-            if ( url != null ) {
-                this.parseURL( url );
-            }
+    /** 
+      * @param String url: URL to parse
+      * @access public 
+      */
+    public function LzURL (url:String? = null) {
+        if (url != null) {
+            this.parseURL( url );
         }
     }
-
-
 
     /**
      * Parses the protocol, host, port, path, file ,query and fragment properties for 
@@ -94,22 +82,20 @@ public class  LzURL {
      * 
      * @param String url: URL to parse
      */
-    public function parseURL (url)
-    {
+    public function parseURL (url:String) :void {
         if (this._parsed == url) return;
         this._parsed = url;
 
         // Look for protocol marker "protocol:[//host]"
-        var i0 = 0;
-        var i1 = url.indexOf(":");
+        var i0:int = 0;
+        var i1:int = url.indexOf(":");
 
         // Look for query or fragment char, which delimits end of host/path
-
         // "blah/barf/searchme?btnI=1&q=laszlosystems.com#foobar;bax"
 
-        var iquery = url.indexOf("?", i0);
-        var ifrag = url.indexOf("#", i0);
-        var iopt = url.length;
+        var iquery:int = url.indexOf("?", i0);
+        var ifrag:int = url.indexOf("#", i0);
+        var iopt:int = url.length;
 
         if (ifrag != -1) {
             iopt = ifrag;
@@ -132,8 +118,8 @@ public class  LzURL {
                     // There is only a host field, no path e.g.:  http://www.foo.com[?query][#fragment]
                     i1 = iopt;
                 }
-                var hostPort = url.substring(i0, i1);
-                var i = hostPort.indexOf(":");
+                var hostPort:String = url.substring(i0, i1);
+                var i:int = hostPort.indexOf(":");
                 if (i == -1 ) {
                     this.host = hostPort;
                     this.port = null;
@@ -164,7 +150,6 @@ public class  LzURL {
         if (iquery != -1) {
             this.query = url.substring(iquery+1, ifrag);
         }
-
     }
 
     /** split out the path and file portion of a url path
@@ -179,13 +164,12 @@ public class  LzURL {
         foo.html                := null, "foo.html"
         @access private
     */
-    function _splitPath(pathfile)
-    {
+    private function _splitPath (pathfile:String) :void {
         if (pathfile == "") {
             return;
         }
     
-        var ls = pathfile.lastIndexOf("/");
+        var ls:int = pathfile.lastIndexOf("/");
         if (ls != -1) {
             // case "/", "/foo", "/foo/bar", "/foo/bar/";
             this.path = pathfile.substring(0,ls+1);
@@ -200,12 +184,11 @@ public class  LzURL {
         this.file = pathfile;
     }
 
-
     /** @access private */ 
-    function dupe (){
+    function dupe () :LzURL {
         //make this function fast, because it is called by lz.Browser.toAbsoluteURL
         //which is called frequently by the loader
-        var o = new LzURL();
+        var o:LzURL = new LzURL();
         o.protocol = this.protocol;
         o.host = this.host;
         o.port = this.port;
@@ -219,9 +202,8 @@ public class  LzURL {
     /**
      * Returns this URL as a string
      */
-    function toString()
-    {
-        var out = "";
+    function toString () :String {
+        var out:String = "";
 
         if (this.protocol != null) {
             out += this.protocol + ":";
@@ -246,43 +228,26 @@ public class  LzURL {
         if (null != this.fragment) {
             out += "#" + this.fragment;
         }
-
     
         //Debug.write("orig: "+ this._parsed + ", Parsed: " + out );
         return out;
     }
-
     
 
     /**
      * Returns URL merged with DEFAULTS as an LzURL
+     * @param LzURL url: base URL
+     * @param LzURL defaults: default URL
+     * @return LzURL: the merged URL
      */
-    static function merge( url, defaults) 
-    {
-
-        var m = url.dupe();
-    
-        if (url.protocol == null) {
-            m.protocol = defaults.protocol;
+    static function merge (url:LzURL, defaults:LzURL) :LzURL {
+        var m:LzURL = new LzURL();
+        var tocopy:Object = {protocol:true, host:true, port:true,
+                                path:true, file:true, query:true, fragment: true};
+        for (var key:String in tocopy) {
+            m[key] = url[key] != null ? url[key] : defaults[key];
         }
-        if (url.host == null) {
-            m.host = defaults.host;
-        }
-        if (url.port == null) {
-            m.port = defaults.port;
-        }
-        if (url.path == null) {
-            m.path = defaults.path;
-        }
-        if (url.file == null) {
-            m.file = defaults.file;
-        }
-        if (url.query == null) {
-            m.query = defaults.query;
-        }
-        if (url.fragment == null) {
-            m.fragment = defaults.fragment;
-        }
+        
         return m;
     }
 }
