@@ -56,11 +56,11 @@ lz.embed.iframemanager.__destroy = function(id) {
     <attribute name="ready" value="false"/>
     <attribute name="history" value="true"/>
 
-    <attribute name="target" value="null" setter="this.setTarget(target)"/>
+    <attribute name="target" value="null"/>
     <attribute name="framename" value="" type="string"/>
     <event name="onload"/>
     <event name="onready"/>
-    <method name="setTarget" args="t">
+    <setter name="target" args="t">
         if (t == null) return;
         this.target = t;
         if (this['_posdel']) {
@@ -75,18 +75,18 @@ lz.embed.iframemanager.__destroy = function(id) {
         //Debug.write(t);
         this.__updatepos(null);
         if (this['ontarget']) this.ontarget.sendEvent(t);
-    </method>
+    </setter>
 
-    <attribute name="visible" type="expression" value="true" setter="setVisible(visible)"/>
-    <method name="setVisible" args="v">
+    <attribute name="visible" type="expression" value="true"/>
+    <setter name="visible" args="v">
         this.visible = v;
         if (this['iframeid']) lz.embed.iframemanager.setVisible(this.iframeid, v);
         if (this['onvisible']) this.onvisible.sendEvent(v);
-    </method>
+    </setter>
 
-    <attribute name="src" type="text" setter="this.setSrc(src)"/>
+    <attribute name="src" type="text"/>
     <event name="onsrc"/>
-    <method name="setSrc" args="s">
+    <setter name="src" args="s">
         this.src = s;
         this.setAttribute('loading', true);
         if (this['iframeid']) {
@@ -95,7 +95,7 @@ lz.embed.iframemanager.__destroy = function(id) {
             this.srcset = s;
         }
         this.onsrc.sendEvent(s);
-    </method>
+    </setter>
 
     <!--- @access private -->
     <handler name="oninit">

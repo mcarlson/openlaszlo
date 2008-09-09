@@ -140,7 +140,7 @@
                         this.values[i] = this.processData(this.values[i]);
                     }
                 }
-                this.dataview.setDatapath(this.columndatapath);
+                this.dataview.setAttribute('datapath', this.columndatapath);
             }
             
         ]]>    

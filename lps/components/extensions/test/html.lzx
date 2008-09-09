@@ -21,7 +21,7 @@
                 <handler name="onclick">
                     if (classroot.main) {
                         classroot.main.setAttribute('visible', false);
-                        classroot.main.setSrc(''); 
+                        classroot.main.setAttribute('src', ''); 
                     }
                 </handler>
             </button> 

@@ -309,7 +309,7 @@
                   itd = "local:" + "parent.owner." + itd.substring( 6 );
                 }
 
-                cblist.item.setDatapath(itd);
+                cblist.item.setAttribute('datapath', itd);
 
                 cblist.setAttribute('attach', this.listattach);
                 if (this._selectdel == null) {

@@ -138,7 +138,7 @@
         
         <method name="setContentdatapath" args="cdp" >
             if (this.isinited) {
-                this._getReplicator().setDatapath( cdp );
+                this._getReplicator().setAttribute('datapath', cdp );
             }
             this.contentdatapath = cdp;
             if (this["oncontentdatapath"]) {
@@ -367,7 +367,7 @@
                 if ( ! this.datapath ) {
                     haddatapath = false;
                     var ovisibility = this.visibility;
-                    this.setDatapath( "." );
+                    this.setAttribute('datapath', "." );
                     this.datapath.setAttribute( "datacontrolsvisibility",
                                                 false );
                     this.setAttribute('visibility', ovisibility );

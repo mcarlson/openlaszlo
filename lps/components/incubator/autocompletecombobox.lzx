@@ -32,7 +32,7 @@
             this.setAttribute("__component_contents",[]);
             Debug.write("autocompletecombobox got datapath = ",this.datapath.xpath);
             Debug.write("The float box : ",myFloatBox);
-            myFloatBox.setDatapath(this.datapath.xpath);
+            myFloatBox.setAttribute('datapath', this.datapath.xpath);
         </handler>
         
         <method name="showAll">
@@ -177,7 +177,7 @@
             <handler name="ondata">
                 Debug.write("floatinglist got data = ",this.data);
                 var childXPath = this.datapath.xpath + "/"+owner.contentpath;
-                this.replicated_textitem.setDatapath(childXPath);
+                this.replicated_textitem.setAttribute('datapath', childXPath);
             </handler>
             
           <textlistitem name="replicated_textitem" datapath="">

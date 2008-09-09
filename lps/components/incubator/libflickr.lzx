@@ -92,7 +92,7 @@
             var api_sig_string=gGlobals.SHAREDSECRET;
 
             // set source
-            ds.setSrc(gGlobals.RESTSRC);
+            ds.setAttribute('src', gGlobals.RESTSRC);
 
             // add api_key
             argobjarr.push({argname:"api_key", argvalue:apikey});

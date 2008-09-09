@@ -22,32 +22,6 @@
 # Adapated from convert_required.pl by Don Anderson
 
 
-################
-# Conversions:
-#
-# On script lines that contain references to classes such
-# as LzAudio, LzBrowser, ...  (the complete list is in
-# convert_class_name_changes()):
-#
-#  -    change the name from Lz<name> to lz.<name>
-#
-# On script lines that are of the form 'new classname...' or
-# 'instanceof classname...':
-#
-#   -   if classname already has lz. , no change
-#
-#   -   if classname is a class/interface defined in one of the input
-#       files (e.g. via <class name="classname"...), then
-#       change to new lz.classname  (or instanceof lz.classname).
-#
-#   -  if classname is class for a LFC tagname, convert it to tagname
-#      and add lz.  (new LzView => lz.view)
-#
-#   -   new global[...] is converted to new lz[...]
-#
-#   -   otherwise, no change (this includes Object, Array, ...).
-#
-
 use File::Basename;
 use File::Copy;
 use Getopt::Std;
@@ -67,6 +41,8 @@ Options:
            for each file changed, invoke the graphical difftool,
            and prompt the user to keep or not keep the changes
 
+   -q
+          Quiet mode. Only display files that have been modified.
    -t
            create output for simple tests in /tmp/convtest
 
@@ -90,6 +66,7 @@ END
 ##
 my $DEBUGLEVEL=0;      # set to non-zero to get successive amounts of debug out
 my $curfile = "unknown file";  # track current file for error messages
+my $quietmode=undef;   # Set to a vlue to run quietly.
 
 # Mapping of old setter to attribute name
 my %settername = (
@@ -137,24 +114,64 @@ my %settername = (
     'setSharpness' => 'sharpness',
     'setThickness' => 'thickness',
 # lz.inputtext
-    'setEnabled' => 'enabled'
+    'setEnabled' => 'enabled',
+# lz.animator
+    'setMotion' => 'motion',
+    'setTo' => 'to',
+# lz.animatorgroup
+    'setTarget' => 'target',
+    'setDuration' => 'duration',
+# lz.node
+    'setDatapath' => 'datapath',  # Also used in LzReplicationManager
+# lz.dataset
+    # 'setData' => 'data',  # Used in dataset/datatext but 2 args in dataset
+    'setSrc' => 'src',
+    'setRequest' => 'request',
+    'setAutorequest' => 'autorequest',
+# lz.command
+    'setKeys' => 'key'
 );
 
 
+# Search an array for the string and returns 1 if found. Else undef
+# search_array($arrayref, $string)
+sub search_array
+{
+  my ($arrayref, $string) = @_;
+  return undef unless defined($arrayref);
+
+  foreach my $s (@$arrayref) {
+      if ($s eq $string) {
+	  return 1;
+      }
+  }
+
+  return undef;
+}
+
+
+# initialize_substitutions(\@ignore)
+#
 # Take the information from %settername and construct a hash with the
 # actual substitutions to make.
 #   replace '.setter(' with 'setAttribute( 'attribute', '
 #   replace '.setter (' with 'setAttribute( 'attribute', '
+#
+# If an arrayref is supplied, these setter names are not overridden in the
+# file. This reduces the chance of making a mistake.
 
 my %substitutions = ();
 sub initialize_substitutions
 {
-  my $size = scalar keys %substitutions;
-  if ($size > 0) {
-    return;
-  }
+  my $ignore = shift(@_);
+  %substitutions = ();
 
   while (my ($setter, $attribute) = each(%settername)) {
+    # Don't process setters in our ignore list
+    if (defined search_array($ignore, $setter)) {
+      next;
+    }
+
     # We replace '.setter(' or '.setter ('
     my $setter1 = "\\.$setter\\s*\\(\\s*";
     my $replacement = ".setAttribute('$attribute', ";
@@ -247,6 +264,17 @@ sub file_cannot_exist {
     }
 }
 
+# Compares two array refs of strings. Returns 1 if equal, 0 if not equal
+sub compare_arrays {
+    my ($ref1, $ref2) = @_;
+    return 0 unless @$ref1 == @$ref2;
+    for (my $i=0; $i<@$ref1; $i++) {
+        return 0 if $ref1->[$i] ne $ref2->[$i];
+    }
+    return 1;
+}
+
+
 ##
 # convert_file(filename)
 # Do all conversions for the file.
@@ -257,29 +285,63 @@ sub convert_file {
     my $event;
     my $name;
 
-    # Make sure the substitutions are initialized
-    initialize_substitutions ();
-
     debugentry(1, "convert_file", @_);
     $curfile = $file;
+    if (!defined $quietmode && -f "$file.bak") {
+	print "WARNING: Skipping $file because $file.bak already exists\n";
+	return;
+    }
     copy("$file", "$file.bak") || die("Cannot copy to $file.bak");
-
+ 
     # Read the entire file, process it, and write it back
     open(IN, "<$file") || die("Cannot open $file");
     my @lines=<IN>;
     close(IN);
 
+    my @orig = @lines;
+
+    # Get the list of method names defined in this file. Warn the user if these
+    # names conflict with our stored names
+    my @methods = ();
+    my @ignore = ();
+    foreach my $line (@lines) {
+	if ($line =~ /\<method.*name=\"(.*?)\".*\>/) {
+            push @methods, $1;
+	}
+        # Catch this: lz.embed.iframemanager.setSrc = function(...)
+	elsif ($line =~ /.+\.(.+?)\s*\=\s*function/) {
+            push @methods, $1;
+	}
+    }
+    foreach my $method (@methods) {
+        if (exists $settername{$method}) {
+            push @ignore, $method;
+	    print "WARNING. Possible Conflict: The method '$method' in $file will not be converted by this script because of a possible name collision. Calls to '$method' are normally converted to setAttribute by this script. Please check this file manually.\n";
+	}
+    }
+
+    # Make sure the substitutions are initialized
+    initialize_substitutions (\@ignore);
+
     # If the file contains any attribute setters, tell the user to manually
     # check it
     my $contents = join("\n", @lines);
-    if ($contents =~ /setter\s*=\s*['"]/) {
-      print "$file contains attribute setters. Please check these files manually\n";
+    if ($contents =~ /setter\s*=\s*\"\s*setAttribute\s*\"/) {
+      print "$file might contain a recursive attribute setters. Please check this file manually\n";
     }
 
     # Do each of the substitutions listed in %substitutions
     # map() does exactly what we want
     while (my ($orig, $replacement) = each(%substitutions)) {
 	map(s/$orig/$replacement/g, @lines);
+    }
+
+    if (compare_arrays(\@orig, \@lines) == 1) {
+        # No change made to file. Don't write anything
+        if (!defined $quietmode) {
+            print "No changes to '$file'. Skipping\n";
+        }
+        return;
     }
 
     # Second, convert the files
@@ -298,7 +360,7 @@ sub convert_file {
 ##
 my $file;
 my %options;
-$ok = getopts("d:tx:vg:", \%options);
+$ok = getopts("qd:tx:vg:", \%options);
 if (!$ok) {
     print STDERR "$USAGE";
     exit(1);
@@ -309,6 +371,10 @@ $DEBUGLEVEL = $options{d} || '0';
 if ($options{v}) {
     print STDOUT "$PROG: version $VERSION\n";
     exit(0);
+}
+
+if ($options{q}) {
+    $quietmode = 1;
 }
 
 if ($options{t}) {
@@ -329,12 +395,6 @@ my $confirm = 0;
 if ($options{g}) {
     $diffTool = $options{g};
     $confirm = 1;
-}
-
-foreach $file (@ARGV) {
-    if (! -f $file) {
-    }
-    file_cannot_exist("$file.bak");
 }
 
 foreach $file (@ARGV) {

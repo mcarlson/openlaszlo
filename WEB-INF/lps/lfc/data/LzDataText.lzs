@@ -45,7 +45,16 @@ var nodeName :String = '#text';
 var data :String = "";
 
 /** @access private */
-function $lzc$set_data(v:String) :void { this.setData(v); }
+function $lzc$set_data(newdata:String) :void {
+    this.data = newdata;
+    if (this.ondata && this.ondata.ready) {
+        this.ondata.sendEvent( newdata );
+    }
+    if (this.ownerDocument) {
+        this.ownerDocument.handleDocumentChange( "data", this, 1 );
+    }
+}
+
 
 /** @type Number
   * @keywords read-only 
@@ -58,13 +67,8 @@ var length :Number = 0;
   * @deprecated Use setAttribute('data', ...) instead.
   */
 public function setData ( newdata:String ) {
-    this.data = newdata;
-    if (this.ondata && this.ondata.ready) {
-        this.ondata.sendEvent( newdata );
-    }
-    if (this.ownerDocument) {
-        this.ownerDocument.handleDocumentChange( "data", this, 1 );
-    }
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_data(newdata);
 }
 
 /**

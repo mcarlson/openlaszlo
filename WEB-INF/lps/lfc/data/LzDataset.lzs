@@ -262,7 +262,12 @@ function $lzc$set_data(v) { this.setData(v); }
   */
 var src = null;
 /** @access private */
-function $lzc$set_src(v) { this.setSrc(v); }
+function $lzc$set_src(src) {
+    this.src = src;
+    if ( this.autorequest ){
+        this.doRequest() ;
+    }
+}
 
 
 /** If autorequest is true, a new request will be issued automatically when the source or query params are modified.
@@ -272,7 +277,9 @@ function $lzc$set_src(v) { this.setSrc(v); }
 var autorequest = false;
 
 /** @access private */
-function $lzc$set_autorequest(v) { this.setAutorequest(v); }
+function $lzc$set_autorequest(b) {
+    this.autorequest = b;
+}
 
 /** If true, the datset will make a request when it
   * inits. The default for this is false.
@@ -281,7 +288,14 @@ function $lzc$set_autorequest(v) { this.setAutorequest(v); }
   */
 var request = false;
 /** @access private */
-function $lzc$set_request(v) { this.setRequest(v); }
+function $lzc$set_request(b) {
+    this.request = b;
+    if ( ! b ) return;
+    if ( !this.isinited ){
+        this.reqOnInitDel = new LzDelegate( this , "doRequest" , 
+                                                  this, "oninit" );
+    }
+}
 
 /** @access private */
 var headers = null;
@@ -449,7 +463,7 @@ function getStatusCode (){
   * Sets the data for the dataset
   * @param data a LzDataElement or list of Elements
   * @param headers optional HTTP response headers
-  * @deprecated Use setAttribute('data', ...) instead.
+  * @deprecated Use setAttribute('data', ...) instead when headers is not specified.
   * @access private
   */
 override function setData( data , headers = null ) {
@@ -560,10 +574,8 @@ function setQueryString( s ) {
   */
 
 function setSrc( src ) {
-    this.src = src;
-    if ( this.autorequest ){
-        this.doRequest() ;
-    }
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_src(src);
 }
 
 /**
@@ -592,12 +604,8 @@ function setProxyRequests( val ) {
   * @deprecated Use setAttribute('request', ...) instead.
   */
 function setRequest( b ) {
-    this.request = b;
-    if ( ! b ) return;
-    if ( !this.isinited ){
-        this.reqOnInitDel = new LzDelegate( this , "doRequest" , 
-                                                  this, "oninit" );
-    }
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_request(b);
 }
 
 /**
@@ -811,7 +819,8 @@ function handleDataResponse (datareq) {
   * @deprecated Use setAttribute('autorequest', ...) instead.
   */
 function setAutorequest(b) {
-    this.autorequest = b;
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_autorequest(b);
 }
 
 /**
