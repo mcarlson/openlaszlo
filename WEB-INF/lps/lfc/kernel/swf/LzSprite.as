@@ -440,13 +440,13 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
         if (this._bgcolorhidden) {
             this.__LZbgRef._alpha = this.opacity * 100;
             // overriding context menu color so opacity setting works
-            this._bgcolorshown = true;
+            this._bgcolorhidden = false;
         }
     } else {
-        if (this._bgcolorhidden) {
+        if (this.__contextmenu) {
             this.__LZbgRef._alpha = 0;
-            //opacity setting should not work
-            this._bgcolorshown = false;
+            // opacity setting should not work
+            this._bgcolorhidden = true;
         } else {
             this.bgcolor = null;
             this.removeBG();
@@ -458,7 +458,7 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
   * @access private
   */
 LzSprite.prototype.removeBG = function () {
-    if (this.__LZisBackgrounded ) {
+    if (this.__LZisBackgrounded) {
         this.__LZbgRef.removeMovieClip();
         this.__LZbgRef = null;
         delete this.__LZbgColorO;
@@ -470,13 +470,13 @@ LzSprite.prototype.removeBG = function () {
   * @access private
   */
 LzSprite.prototype.applyBG = function () {
-    if (! this.__LZisBackgrounded ) {
+    if (! this.__LZisBackgrounded) {
         this.owner.immediateparent.sprite.attachBackgroundToChild( this );
         this.__LZisBackgrounded = true;
     }
     var bgc = this.bgcolor;
-    if ( bgc != null ) {
-        if ( !('__LZbgColorO' in this) ) {
+    if (bgc != null) {
+        if (! ('__LZbgColorO' in this)) {
             this.__LZbgColorO = new Color( this.__LZbgRef );
         }
         this.__LZbgColorO.setRGB( bgc );
@@ -634,11 +634,11 @@ LzSprite.prototype.setOpacity = function ( v ){
     //a number between 0 and 1
     this.opacity = v;
     if (this.__LZmovieClipRef)
-        this.__LZmovieClipRef._alpha = 100*v;
+        this.__LZmovieClipRef._alpha = 100 * v;
 
     // set the bgcolor alpha if not set by the context menu and overridden by the context menu
-    if (this.__LZbgRef && (this._bgcolorhidden != true && this._bgcolorshown != true))
-         this.__LZbgRef._alpha = 100*v;
+    if (this.__LZbgRef && this._bgcolorhidden != true)
+        this.__LZbgRef._alpha = 100 * v;
 }
 
 /**
@@ -985,18 +985,16 @@ LzSprite.prototype.getColorObj = function (){
   * This method makes this view the frontmost subview of this view's parent.
   * */
 LzSprite.prototype.bringToFront = function ( ){
-    //Debug.write('bringToFront', this);
     //this is really a function of the parent view
-    this.owner.immediateparent.sprite.changeOrder( this , 1);
+    this.owner.immediateparent.sprite.changeOrder( this, 1);
 }
 
 /**
   * This method makes this view the hindmost subview of this view's parent.
   */
 LzSprite.prototype.sendToBack = function ( ){
-    //Debug.write('sendToBack', this);
     //this is really a function of the parent view
-    this.owner.immediateparent.sprite.changeOrder( this , -1);
+    this.owner.immediateparent.sprite.changeOrder( this, -1);
 }
 
 /**
@@ -1006,7 +1004,7 @@ LzSprite.prototype.sendToBack = function ( ){
   * @return Boolean: Method returns true if the operation is successful.
   */
 LzSprite.prototype.sendBehind = function ( v ){
-    return this.owner.immediateparent.sprite.changeOrder( this, -1, v , false );
+    return this.owner.immediateparent.sprite.changeOrder( this, -1, v, false );
 }
 
 /**
@@ -1016,7 +1014,7 @@ LzSprite.prototype.sendBehind = function ( v ){
   * @return Boolean: Method returns true if the operation is successful.
   */
 LzSprite.prototype.sendInFrontOf = function ( v ){
-    return this.owner.immediateparent.sprite.changeOrder( this, 1, v , true );
+    return this.owner.immediateparent.sprite.changeOrder( this, 1, v, true );
 }
 
 /**
@@ -1024,10 +1022,12 @@ LzSprite.prototype.sendInFrontOf = function ( v ){
   * @keywords flashspecific private
   * 
   * @param cSprite: a reference to the child sprite to be moved to the front
+  * @param dir: direction, either -1 = backward, or 1 = forward
+  * @param fv: 
+  * @param inf: inf(rontof) = true or behind = false
   */
-LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
+LzSprite.prototype.changeOrder = function (cSprite, dir, fv, inf) {
     var dl = this.getDepthList();
-    var dll = dl.length;
     var sw;
     //Debug.write('changeOrder', dl, fv);
     if ( fv ){
@@ -1035,6 +1035,7 @@ LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
         var foundcView = false;
         var foundfv = false;
         var dir = 0;
+        var dll = dl.length;
         for ( var i = 0; i < dll; i++ ){
             var v = dl[ i ];
             if ( !v ) {
@@ -1071,7 +1072,6 @@ LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
     if ( dir == 0) return false;
 
     var next = dir;
-    var nv;
     if ( cSprite.__LZmovieClipRef == null ){
         cSprite.makeContainerResource();
     }
@@ -1083,11 +1083,12 @@ LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
     if (reback) {
         var menu = cSprite.__contextmenu && cSprite.__contextmenu.kernel.__LZcontextMenu();
         var al = cSprite.__LZbgRef._alpha;
+        cSprite.removeBG();
     }
-    cSprite.removeBG();
-    while (cSprite.__LZdepth + next < dl.length  && cSprite.__LZdepth+next >= 0 ){
+    
+    while ((cSprite.__LZdepth + next < dl.length) && (cSprite.__LZdepth + next >= 0)) {
         var d = cSprite.__LZdepth;
-        nv = dl[ d+next ];
+        var nv = dl[ d+next ];
         if ( nv == null ){
             //there's no view there. We have to skip it.
             next += dir;
@@ -1132,8 +1133,9 @@ LzSprite.prototype.changeOrder = function (cSprite , dir , fv , inf ){
   */
 LzSprite.prototype.getDepthList = function (){
     var a = [];
-    for ( var i = this.owner.subviews.length-1; i >= 0; i-- ){
-        var sv = this.owner.subviews[ i ].sprite;
+    var sviews = this.owner.subviews;
+    for ( var i = sviews.length - 1; i >= 0; i-- ){
+        var sv = sviews[ i ].sprite;
         a[ sv.__LZdepth ] = sv;
     }
     return a;
@@ -1271,7 +1273,7 @@ LzSprite.prototype.updatePlayStatus = function (ignore){
     var c = this.getMCRef()._currentframe;
     //Debug.write('updatePlayStatus', c);
 
-    if ( this.frame != c && c != null ){
+    if ( c != null && this.frame != c ){
         this.frame = c;
         this.owner.resourceevent('frame', this.frame);
     }
@@ -1507,16 +1509,16 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
         if (mb == null) {
             // if not present, create an invisible clip
             this.setBGColor(0xffffff);
-            var mb = this.__LZbgRef;
+            mb = this.__LZbgRef;
             mb._alpha = 0;
+            this._bgcolorhidden = true;
         }
-        this._bgcolorhidden = true;
         mb.menu = cmenu;
     }
 
     // Install menu on foreground resource clip if there is one,
     // must use _root if canvas
-    var mc = this.owner == canvas ? _root : this.getMCRef();
+    var mc = this.owner === canvas ? _root : this.getMCRef();
     if (mc != null) {
         mc.menu = cmenu;
     }
