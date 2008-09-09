@@ -39,7 +39,7 @@
 
         <method name="startDrag">
             this.setAttribute( "dragging", true );
-            parent.beginDrag( this , _ix, _iy );
+            parent.beginDrag( this , this._ix, this._iy );
         </method>
 
         <handler name="onmouseup">

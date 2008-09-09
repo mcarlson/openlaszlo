@@ -134,7 +134,9 @@
 
             if( this.latestdate == null ) {
                 this.latestdate = new Date();
-                this.latestdate.setYear( this.latestdate.getFullYear() + 1 );
+                if(this.latestdate['setYear']){
+                    this.latestdate.setYear( this.latestdate.getFullYear() + 1 );
+                }
             }
 
             if( this.xinset == null ) { 
@@ -329,13 +331,13 @@
                         this.focusPreviousDay();
                     } 
                     else if ( k == 38 ) {
-                        this.focusPreviousWeek( this._focusDay );
+                        this.focusPreviousWeek();
                     } 
                     else if ( k == 39 ) {
-                        this.focusNextDay( this._focusDay );
+                        this.focusNextDay();
                     } 
                     else if ( k == 40 ) {
-                        this.focusNextWeek( this._focusDay );
+                        this.focusNextWeek();
                     } else if ( k == 13 ) {
                         this.selectFocusDay();
                         content.subviews[this._focusDay[0]].subviews[this._focusDay[1]].buttonpush();

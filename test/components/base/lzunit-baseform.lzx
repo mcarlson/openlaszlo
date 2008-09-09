@@ -61,10 +61,10 @@
         
         <method name="testToXML">
             // this is related to LPP-1535
-            var str = bf1.cb1.toXML();
+            var str = bf1.cb1.toXML(false);
             assertTrue(str.indexOf("cb1") >= 0);
             bf1.cb1.setAttribute("submitname", "carabiner");
-            str = bf1.cb1.toXML();
+            str = bf1.cb1.toXML(false);
             assertTrue(str.indexOf("carabiner") >= 0);
         </method>
         <method name="addTests"> 
@@ -120,7 +120,7 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -40,7 +40,7 @@
         <attribute name="defaulttext"  value="$once{null}" type="string" />
 
         <!--- The value of the selected item. -->
-        <attribute name="value" value="null" setter="this.setValue(value)" />
+        <attribute name="value" value="null" setter="this.doSetValue(value, false, false)" />
 
         <!--- Datapointer to selected item. 
               @keywords readonly -->
@@ -147,7 +147,7 @@
                 } else {
                     if (this._selectedIndex != -1) {
                         //fix for LPP-5549
-                        this._updateSelectionByIndex(this._selectedIndex, true);
+                        this._updateSelectionByIndex(this._selectedIndex, true, false);
                     }
                 }
             } else {
@@ -184,7 +184,7 @@
               This also updates the selected value in the combobox to reflect
               the new value (in case it was changed).
               @param Boolean isChanged: true if changed, else false. -->
-        <method name="setChanged" args="isChanged"><![CDATA[
+        <method name="doSetChanged" args="isChanged"><![CDATA[
             super.setChanged( isChanged );
             // Be sure to update the selection, because value might have been
             // changed programmatically
@@ -230,7 +230,7 @@
                     } else {
                         var v = null;
                     }
-                    this.setValue(v, true, true);
+                    this.doSetValue(v, true, true);
                 }
                 this.setAttribute('text', t);
                 
@@ -356,7 +356,7 @@
                 
                     lz.ModeManager.makeModal( this );
                 
-                    this._setupcblist();
+                    this._setupcblist(false);
                 
                     this._cblist.bringToFront();
                     this._cblist.setAttribute('visible', true);
@@ -444,7 +444,7 @@
                         Debug.warn("null item value in _flistselect");
                     }
                 }
-                this.setValue(item.value);
+                this.doSetValue(item.value, false, false);
                 if ( item && this.statictext == null ) this._cbtext.setAttribute('text', item.text);
             }
 
@@ -482,7 +482,7 @@
               @param Object value: the value of the item to select. -->
         <method name="selectItem" args="value"><![CDATA[
             var i = this.getItemIndex(value);
-            if (i != -1) this._updateSelectionByIndex(i);
+            if (i != -1) this._updateSelectionByIndex(i, false, false);
         ]]></method>
 
         <!--- Get item's index by value. Returns
@@ -509,14 +509,14 @@
         <!--- Select an item by index.
               @param Number index: the index of the item to select. -->
         <method name="selectItemAt" args="index" ><![CDATA[
-            this._updateSelectionByIndex(index);
-            this._setupcblist();
+            this._updateSelectionByIndex(index, false, false);
+            this._setupcblist(false);
         ]]></method>
 
         <!--- Set value of combobox.
               @param String|Number value: value to set.
               @param Boolean isinitvalue: true if value is an init value. -->
-        <method name="setValue" args="value, isinitvalue, ignoreselection"><![CDATA[
+        <method name="doSetValue" args="value, isinitvalue, ignoreselection"><![CDATA[
             if (this['value'] != value) {
                 var i = this.getItemIndex(value);
                 this._selectedIndex = i;
@@ -526,7 +526,7 @@
                 }
                 
                 if ( i != -1 && !ignoreselection) {
-                    this._updateSelectionByIndex(i, true);
+                    this._updateSelectionByIndex(i, true, false);
                 }
             }
         ]]></method>

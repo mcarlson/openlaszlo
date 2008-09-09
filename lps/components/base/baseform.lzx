@@ -13,7 +13,7 @@
         <!--- Boolean to determine whether the baseformitem was changed. Default
               is false. -->
         <attribute name="changed" value="false" 
-                   setter="this.setChanged(changed)" />
+                   setter="this.setChanged(changed, false)" />
 
         <!--- Event sent when baseformitem is changed. Only sent once when true
               or once when false. -->

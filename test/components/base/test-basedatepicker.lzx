@@ -23,8 +23,8 @@
     
     <class name="mydatepicker" 
            extends="basedatepicker" 
-           weekclass="myweek"
-           dayclass="myday"
+           weekclass="lz.myweek"
+           dayclass="lz.myday"
            xinset="0"
            yinset="0">
 
@@ -32,16 +32,16 @@
             super.setMonthToShow(month,year);
             this.display.month.datapath.setXPath(
             "datepicker_strings_en:/months/month[@index='" + month + "']/@full" );
-            this.display.year.setText( year );
+            this.display.year.setAttribute('text', year );
         </method>
 
         <handler name="onselecteddate">
             if( this.selecteddate != null ) {
-                this.selected.year.setText( this.selecteddate.getFullYear() );
+                this.selected.year.setAttribute('text', this.selecteddate.getFullYear() );
                 this.selected.month.datapath.setXPath(
                         "datepicker_strings_en:/months/month[@index='" + 
                         this.selecteddate.getMonth() + "']/@full" ); 
-                this.selected.date.setText( this.selecteddate.getDate() );
+                this.selected.date.setAttribute('text', this.selecteddate.getDate() );
             }
         </handler>
 

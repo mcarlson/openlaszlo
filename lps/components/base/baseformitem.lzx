@@ -97,7 +97,7 @@
                 if (this['_parentform'] && 
                     this._parentform['changed'] != undefined && 
                     ! this._parentform.changed) {
-                    this._parentform.setChanged(changed);
+                    this._parentform.setChanged(changed, false);
                 }
             }
             // notify about reset to original state...

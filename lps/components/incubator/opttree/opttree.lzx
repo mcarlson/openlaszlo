@@ -42,7 +42,7 @@
                    value="${ opttreecontroller.nodelist }"/>
 
         <attribute name="nodelist" value="nodecollection" when="always"
-                   setter="nodeinst.datapath.setNodes( nodelist )"/>
+                   setter="this.nodeinst.datapath.setNodes( nodelist )"/>
 
         <include href="opttreecontroller.lzx"/>
 
@@ -103,7 +103,7 @@
             var curr = this.highlighted;
 
             if ( !curr ){
-                var cls = nodeinst.clones;
+                var cls = this.nodeinst.clones;
                 if ( !cls.length ) return;
                 this.select( cls[ 0 ] );
                 return;
@@ -152,7 +152,7 @@
             //returns the next clone in the flattened list given an existing
             //clone and a direction to move in. adjusts the position of the
             //opttree within its clipping region if necessary.
-            var cls = nodeinst.clones;
+            var cls = this.nodeinst.clones;
             if ( !cls.length ) return null;
 
             var clnum = null;
@@ -184,7 +184,7 @@
             var clptr = who.datapath.p;
             var clptrnum = null;
 
-            var nodes = nodeinst.nodes;
+            var nodes = this.nodeinst.nodes;
 
             var clptrnum = null;
             for ( var i = 0; i < nodes.length; i++ ){
@@ -207,7 +207,7 @@
         <method name="_adjustMargin" args="dir">
             //moves the opttree up or down (depending on the dir) in within
             //its clipping region.
-            var cls = nodeinst.clones;
+            var cls = this.nodeinst.clones;
             var itheight = cls[ 0 ].height;
             var adj = itheight * -dir;
             var ny = y + adj;
@@ -220,7 +220,7 @@
             <![CDATA[ 
             //finds the clone pointing to the given LzDataElement or returns
             //null if that clone is not mapped
-            var cls = nodeinst.clones;
+            var cls = this.nodeinst.clones;
             for ( var i = 0; i < cls.length; i++ ){
                 if ( cls[ i ].datapath.p == p ) {
                     return cls[ i ];
@@ -270,15 +270,15 @@
                     this.cpos = Math.floor( ( py - czero.y ) / h );
                 }
 
-                if ( dragisover ){
-                    parent.select( parent.nodeinst.clones[ cpos ] );
+                if ( this.dragisover ){
+                    parent.select( parent.nodeinst.clones[ this.cpos ] );
                 } else {
-                    this.setAttribute('y', cy + cpos * h );
+                    this.setAttribute('y', cy + this.cpos * h );
                     parent.select( null );
                 }
 
-                if ( visible != !dragisover ){
-                    this.setAttribute('visible',  !dragisover );
+                if ( visible != !this.dragisover ){
+                    this.setAttribute('visible',  !this.dragisover );
                 }
                 ]]>
             </method>
@@ -301,43 +301,43 @@
 
             dragged.setAttribute('visible',  true );
             this.dragdata = who.datapath.p;
-            var dragparent = dragdata.parentNode
+            var dragparent = this.dragdata.parentNode
 
-            dragparent.removeChild( dragdata );
+            dragparent.removeChild( this.dragdata );
 
             var dpc = this._findInClones( dragparent );
             if ( dpc ) dpc.checkChildren();
 
-            dragged.datapath.setPointer( dragdata );
+            dragged.datapath.setPointer( this.dragdata );
             dragged.bringToFront();
 
-            dragupdel.register( lz.Idle, "onidle" );
+            this.dragupdel.register( lz.Idle, "onidle" );
             _clicker.drag( true );
 
         </method>
 
         <!--- @access private -->
         <method name="_updateDragged">
-            dragged.setAttribute('y', this.getMouse( 'y' ) - _ydragoff );
+            dragged.setAttribute('y', this.getMouse( 'y' ) - this._ydragoff );
         </method>
 
         <method name="endDrag" args="who">
             <![CDATA[
-            dragupdel.unregisterAll();
+            this.dragupdel.unregisterAll();
             dragged.setAttribute('visible',  false );
             _clicker.drag( false );
 
             if ( _clicker.dragisover ){
                 var p = selman.getSelection()[ 0 ].p;
                 if ( p.childNodes && p.childNodes.length ){
-                    p.insertBefore( dragdata , p.getFirstChild() );
+                    p.insertBefore( this.dragdata , p.getFirstChild() );
                 } else {
-                    p.appendChild( dragdata );
+                    p.appendChild( this.dragdata );
                 }
                 this._findInClones( p ).checkChildren();
             } else {
                 var cn = _clicker.cpos;
-                var ac = nodeinst.clones[ cn - 1 ];
+                var ac = this.nodeinst.clones[ cn - 1 ];
                 if ( !ac ){
                     return;
                 }
@@ -345,18 +345,18 @@
                 var p = ac.datapath.p;
                 if ( p.attributes[ openattr ] == "true" &&
                      ac.datapath.xpathQuery( nodepath ) ){
-                    p.insertBefore( dragdata , p.getFirstChild() );
+                    p.insertBefore( this.dragdata , p.getFirstChild() );
                 } else{
                     var ns = p.getNextSibling(); 
                     if ( ns ){
-                        ns.parentNode.insertBefore( dragdata , ns );
+                        ns.parentNode.insertBefore( this.dragdata , ns );
                     } else {
-                        p.parentNode.appendChild( dragdata );
+                        p.parentNode.appendChild( this.dragdata );
                     }
                 }
             }
 
-            this.updateHierarchy( dragdata );
+            this.updateHierarchy( this.dragdata );
             ]]>
         </method>
 
