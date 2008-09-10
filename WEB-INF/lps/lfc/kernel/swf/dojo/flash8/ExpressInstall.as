@@ -79,17 +79,9 @@ class ExpressInstall {
 		this.hold.startUpdate();
 	}
 
-	function callBack(msg = 'Download.Failed'){
+	function onInstallStatus(msg){
         //Debug.write('callBack', "javascript:lz.embed.dojo.installer._onInstallStatus('"+msg+"')");
         _root.getURL("javascript:lz.embed.dojo.installer._onInstallStatus('"+msg+"')");
-    }
-
-	function onInstallStatus(msg){
-        if (msg == 'Download.Complete') {
-            _root.getURL(_root.MMredirectURL);
-        } else {
-            this.callBack(msg);
-        }
 	}
 }
 

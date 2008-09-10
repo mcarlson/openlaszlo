@@ -569,10 +569,11 @@ lz.embed.dojo.Info.prototype = {
     
     _detectVersion: function(){
         var versionStr;
+        var isIE = lz.embed.browser.isIE;
         
         // loop backwards through the versions until we find the newest version    
         for(var testVersion = 25; testVersion > 0; testVersion--){
-            if(lz.embed.browser.isIE){
+            if(isIE){
                 versionStr = VBGetSwfVer(testVersion);
             }else{
                 versionStr = this._JSFlashInfo(testVersion);        
@@ -583,7 +584,7 @@ lz.embed.dojo.Info.prototype = {
                 return;
             }else if(versionStr != 0){
                 var versionArray;
-                if(lz.embed.browser.isIE){
+                if(isIE){
                     var tempArray = versionStr.split(" ");
                     var tempString = tempArray[1];
                     versionArray = tempString.split(",");
@@ -648,19 +649,22 @@ lz.embed.dojo.Info.prototype = {
             return;
         }
         
+        /*
         // detect if the user has over-ridden the default flash version
-        if (typeof lz.embed.options["forceFlashComm"] != "undefined" &&
-                typeof lz.embed.options["forceFlashComm"] != null){
-            this.commVersion = lz.embed.options["forceFlashComm"];
+        if (typeof embed.options["forceFlashComm"] != "undefined" &&
+                typeof embed.options["forceFlashComm"] != null){
+            this.commVersion = embed.options["forceFlashComm"];
             return;
         }
+        */
         
         // we prefer Flash 6 features over Flash 8, because they are much faster
         // and much less buggy
         
+        var browser = lz.embed.browser;
         // at this point, we don't have a flash file to detect features on,
         // so we need to instead look at the browser environment we are in
-        if(lz.embed.browser.isSafari == true || lz.embed.browser.isOpera == true){
+        if(browser.isSafari == true || browser.isOpera == true){
             this.commVersion = 8;
         }else{
             this.commVersion = 6;
@@ -748,7 +752,9 @@ lz.embed.dojo.Embed.prototype = {
                         + '://www.macromedia.com/go/getflashplayer">';
         }else{ // Flash 8
         */
-            if (flashVer > lz.embed.dojo.version) doExpressInstall = true;
+
+            var embed = lz.embed;
+            if (flashVer > embed.dojo.version) doExpressInstall = true;
             swfloc = this.properties.flash8;
             var swflocObjectVars = this.properties.flashvars;
             var swflocEmbedVars = this.properties.flashvars;
@@ -764,7 +770,7 @@ lz.embed.dojo.Embed.prototype = {
                                 + "&MMplayerType=PlugIn";
             }
 
-            if (lz.embed.browser.isIE) {
+            if (embed.browser.isIE) {
                 objectHTML =
                 '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" '
                   + 'codebase="'
@@ -1329,7 +1335,9 @@ lz.embed.dojo.Install.prototype = {
     _onInstallStatus: function(msg){
         if (msg == "Download.Complete"){
             // Installation is complete.
-            lz.embed.dojo._initialize();
+            if (lz.embed.browser.isIE) {
+                top.location = top.location + '';
+            }
         }else if(msg == "Download.Cancelled"){
             alert("This content requires a more recent version of the Macromedia "
                         +" Flash Player.");
