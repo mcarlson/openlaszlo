@@ -54,56 +54,67 @@
             <![CDATA[
             if(this.charttype == "bar"){
                 if(this.drawaxis == 'x'){
-                    var f = function(){   
-                        this.setAttribute("x", this.barlink.x + (this.barlink.width / 2) -
-                            (this.width / 2));       
-                    }
                     var d = [this.barlink, "x"];
-                    this.applyConstraint("x", f, d);
-                    var ff = function(){
-                        this.setAttribute("y", this.barlink.y - this.height - 4);
-                    }
+                    this.applyConstraintMethod("__constraintBarX_x", d);
+                    
                     var dd = [this.barlink, "y"];
-                    this.applyConstraint("y", ff, dd);
+                    this.applyConstraintMethod("__constraintBarX_y", dd);
+                    
                     if(this.fadein == true){
                         this.fader.doStart();
                     }
                 } else {
-                    var f = function(){   
-                        this.setAttribute("x", (Math.abs(parent.classroot.minimum) * parent.classroot.altscaler) +
-                            this.barlink.width + 4);       
-                    }
                     var d = [this.barlink, "x"];
-                    this.applyConstraint("x", f, d);
-                    var ff = function(){   
-                        this.setAttribute("y", this.barlink.y + ((this.barlink.height - this.height) / 2));
-                    }
+                    this.applyConstraintMethod("__constraintBarY_x", d);
+                    
                     var dd = [this.barlink, "y"];
-                    this.applyConstraint("y", ff, dd);
+                    this.applyConstraintMethod("__constraintBarY_y", dd);
+                    
                     if(this.fadein == true && parent.anicomplete == false){
                         this.fader.doStart();
                     }
                 }
             } else if(this.charttype == "line"){
-                var f = function(){
-                    this.setAttribute("x", parent.classroot.altscaler * this.rvalx +
-                        parent.classroot.altzero);
-                }
                 var d = [parent.classroot, "altscaler"];
-                this.applyConstraint("x", f, d);
-                var ff = function(){
-                    this.setAttribute("y", parent.classroot.dataclip.datapane.height -
-                        (parent.classroot.scaler * this.rvaly) -
-                        (parent.classroot.minimum * parent.classroot.scaler * -1) - this.height - 3);
-                }
+                this.applyConstraintMethod("__constraintLine_x", d);
+                
                 var dd = [parent.classroot, "scaler"];
-                this.applyConstraint("y", ff, dd);
+                this.applyConstraintMethod("__constraintLine_y", dd);
             } else if(this.charttype == "pie"){
                 this.setAttribute('x', this.x - this.width / 2);
                 this.setAttribute('y', this.y - this.height / 2);
             }
             ]]>
         </method>
+        
+        <method name="__constraintBarX_x" args="ignore" ><![CDATA[
+            this.setAttribute("x", this.barlink.x + (this.barlink.width / 2) -
+                (this.width / 2));
+        ]]></method>
+        
+        <method name="__constraintBarX_y" args="ignore" ><![CDATA[
+            this.setAttribute("y", this.barlink.y - this.height - 4);
+        ]]></method>
+        
+        <method name="__constraintBarY_x" args="ignore" ><![CDATA[
+            this.setAttribute("x", (Math.abs(parent.classroot.minimum) * parent.classroot.altscaler) +
+                this.barlink.width + 4);
+        ]]></method>
+        
+        <method name="__constraintBarY_y" args="ignore" ><![CDATA[
+            this.setAttribute("y", this.barlink.y + ((this.barlink.height - this.height) / 2));
+        ]]></method>
+        
+        <method name="__constraintLine_x" args="ignore" ><![CDATA[
+            this.setAttribute("x", parent.classroot.altscaler * this.rvalx +
+                parent.classroot.altzero);
+        ]]></method>
+        
+        <method name="__constraintLine_y" args="ignore" ><![CDATA[
+            this.setAttribute("y", parent.classroot.dataclip.datapane.height -
+                (parent.classroot.scaler * this.rvaly) -
+                (parent.classroot.minimum * parent.classroot.scaler * -1) - this.height - 3);
+        ]]></method>
 
         <method name="renderBorder">
             <![CDATA[
@@ -193,54 +204,31 @@
                 var barlink = parent.classroot.parent.dataclip.datapane['bar'+this.labelset+
                     this.labelnumber];
                 if(this.labelset != null){
-                    var f = function(){   
-                        this.setAttribute("x", barlink.x + (barlink.width / 2) -
-                            (this.width / 2));       
-                    }
                     var d = [barlink, "x"];
-                    this.applyConstraint("x", f, d);
+                    this.applyConstraintMethod("__constraintTickXLabel_x", d);
                     this.setAttribute('y', this.y + this.ticklength + this.loffset);
                 } else {
                     // Really only needed to compensate for this little issue with the
                     // barchart directional switch.
                     if(this.charttype == 'bar'){
-                        var f = function(){   
-                            this.setAttribute("x", ((parent.width / this.numlabels) *
-                                (this.labelnumber)) - (this.width / 2) -
-                                ((parent.classroot.parent.minimum % parent.classroot.parent.hgridspacing) *
-                                parent.classroot.parent.altscaler));
-                        }
+                        var cm = "__constraintTickXNoLabelBar_x";
                     } else {
-                        var f = function(){   
-                            this.setAttribute("x", ((parent.width / this.numlabels) *
-                                (this.labelnumber)) - (this.width / 2) -
-                                ((parent.classroot.parent.altminimum % parent.classroot.parent.vgridspacing) *
-                                parent.classroot.parent.altscaler));
-                        }
+                        var cm = "__constraintTickXNoLabel_x";
                     }
                     var d = [parent, "width"];
-                    this.applyConstraint("x", f, d);
+                    this.applyConstraintMethod(cm, d);
                 }
             } else {
                 var barlink = parent.classroot.parent.dataclip.datapane['bar'+this.labelset+
                     this.labelnumber];
                 if(this.labelset != null){
-                    var f = function(){   
-                        this.setAttribute("y", barlink.y + ((barlink.height - this.height) / 2));       
-                    }
                     var d = [barlink, "y"];
-                    this.applyConstraint("y", f, d);
+                    this.applyConstraintMethod("__constraintTickYLabel_y", d);
                     this.setAttribute('x', this.x - this.width - this.ticklength - this.loffset);
                 } else {
                     this.setAttribute('x', parent.width - this.width - this.ticklength - 4);
-                    var f = function(){
-                        this.setAttribute("y", parent.height - ((parent.height / this.numlabels) *
-                            this.labelnumber) - ((parent.classroot.parent.minimum %
-                            parent.classroot.parent.hgridspacing) * parent.classroot.parent.scaler * -1) -
-                            (this.height / 2));
-                    }
                     var d = [parent, "height"];
-                    this.applyConstraint("y", f, d);
+                    this.applyConstraintMethod("__constraintTickYNoLabel_y", d);
                 }
             }
             if(this.labelangle != null){
@@ -248,6 +236,37 @@
             }
             ]]>
         </method>
+        
+        <method name="__constraintTickXLabel_x" args="ignore" ><![CDATA[
+            this.setAttribute("x", barlink.x + (barlink.width / 2) -
+                (this.width / 2));
+        ]]></method>
+        
+        <method name="__constraintTickXNoLabelBar_x" args="ignore" ><![CDATA[
+            this.setAttribute("x", ((parent.width / this.numlabels) *
+                (this.labelnumber)) - (this.width / 2) -
+                ((parent.classroot.parent.minimum % parent.classroot.parent.hgridspacing) *
+                parent.classroot.parent.altscaler));
+        ]]></method>
+        
+        <method name="__constraintTickXNoLabel_x" args="ignore" ><![CDATA[
+            this.setAttribute("x", ((parent.width / this.numlabels) *
+                (this.labelnumber)) - (this.width / 2) -
+                ((parent.classroot.parent.altminimum % parent.classroot.parent.vgridspacing) *
+                parent.classroot.parent.altscaler));
+        ]]></method>
+        
+        <method name="__constraintTickYLabel_y" args="ignore" ><![CDATA[
+            this.setAttribute("y", barlink.y + ((barlink.height - this.height) / 2));
+        ]]></method>
+        
+        <method name="__constraintTickYNoLabel_y" args="ignore" ><![CDATA[
+            this.setAttribute("y", parent.height - ((parent.height / this.numlabels) *
+                this.labelnumber) - ((parent.classroot.parent.minimum %
+                parent.classroot.parent.hgridspacing) * parent.classroot.parent.scaler * -1) -
+                (this.height / 2));
+        ]]></method>
+        
         <text name="realtext" resize="true" text="${parent.ltext}"
             fontsize="${parent.ltextsize}" x="${(parent.width - this.width) / 2}"
             fgcolor="${parent.ltcolor}" y="${(parent.height - this.height) / 2}">

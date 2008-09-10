@@ -40,33 +40,28 @@
                         Debug.error("%s.scrollbarclassname invalid: %s", this, classname);
                     }
                 }
+                
+                this._vs = new (lz[classname])(this, 
+                                                 { axis: "y",
+                                                   scrollattr: "pos",
+                                                   scrolltarget: this.inp });
                 var vsinit = function () {
                     var p = this.parent;
                     
                     // _vs.x="${parent.width - this.width}" 
-                    this.applyConstraint("x", 
-                        function() { this.setAttribute("x", this.parent.width - this.width); },
-                        [p, "width", this, "width"]);
+                    this.addProperty("__constraintX", function(ignore) { this.setAttribute("x", this.parent.width - this.width); });
+                    this.applyConstraintMethod("__constraintX", [p, "width", this, "width"]);
                     
                     // _vs.stepsize="${parent.inp.lineheight}" 
-                    this.applyConstraint("stepsize", 
-                        function() { this.setAttribute("stepsize", this.parent.inp.lineheight); }, 
-                        [p.inp, "lineheight"]);
+                    this.addProperty("__constraintStepsize", function(ignore) { this.setAttribute("stepsize", this.parent.inp.lineheight); });
+                    this.applyConstraintMethod("__constraintStepsize", [p.inp, "lineheight"]);
                     
-                    // _vs.scrollmax="${parent.inp.maxheight}" />
-                    this.applyConstraint("scrollmax", 
-                        function() { this.setAttribute("scrollmax", this.parent.inp.maxheight); }, 
-                        [p.inp, "maxheight"]);
-
-                    #pragma "methodName=init"
-                    super.init();
+                    // _vs.scrollmax="${parent.inp.maxheight}" 
+                    this.addProperty("__constraintScrollmax", function(ignore) { this.setAttribute("scrollmax", this.parent.inp.maxheight); });
+                    this.applyConstraintMethod("__constraintScrollmax", [p.inp, "maxheight"]);
                 }
                 
-                this._vs =  new (lz[classname])(this, 
-                                                 { axis: "y",
-                                                   scrollattr: "pos",
-                                                   scrolltarget: this.inp,
-                                                   init: vsinit });
+                vsinit.call(this._vs);
             }
         </method>
         

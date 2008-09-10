@@ -52,63 +52,29 @@
             // Constrains width and positioning to the size and scale of
             // the bar view.
             if(this.drawaxis == 'x'){
-                var f = function(){   
-                    this.setAttribute("width",
-                        (parent.width / this.siblingbars) - this.barspace);       
-                }
                 var d = [parent, "width"];
-                this.applyConstraint("width", f, d);
+                this.applyConstraintMethod("__constraintAxisX_width", d);
 
-                var ff = function(){
-                    this.setAttribute("x", ((this.barnumber * this.totalsets) *
-                        (this.width + this.barspace)) + ((this.width + this.barspace) *
-                        this.barset));
-                }
                 var dd = [this, "width"];
-                this.applyConstraint("x", ff, dd);
+                this.applyConstraintMethod("__constraintAxisX_x", dd);
 
-                var fff = function(){
-                    this.setAttribute("height", Math.abs(this.bvalue) * parent.classroot.scaler);
-                }
                 var ddd = [parent.classroot, "scaler"];
-                this.applyConstraint("height", fff, ddd);
+                this.applyConstraintMethod("__constraintAxisX_height",  ddd);
 
-                var g = function(){
-                    if(this.bvalue < 0){
-                        this.setAttribute("y", parent.height - (Math.abs(parent.classroot.minimum) * parent.classroot.scaler));
-                    } else {
-                        this.setAttribute("y", parent.height - (Math.abs(parent.classroot.minimum) * parent.classroot.scaler) -
-                            this.height - (parent.classroot.zerowidth / 2));
-                    }
-                }
                 var h = [parent, "height"];
-                this.applyConstraint("y", g, h);
+                this.applyConstraintMethod("__constraintAxisX_y", h);
             } else {
-                var f = function(){
-                    this.setAttribute("height",
-                        (parent.height / this.siblingbars) - this.barspace);
-                }
                 var d = [parent, "height"];
-                this.applyConstraint("height", f, d);
-                var ff = function(){
-                    this.setAttribute("y", ((this.barnumber * this.totalsets) *
-                        (this.height + this.barspace)) + ((this.height + this.barspace) *
-                        this.barset));
-                }
-                var dd = [this, "height"];
-                this.applyConstraint("y", ff, dd);
-                var fff = function(){
-                    this.setAttribute("width", Math.abs(this.bvalue) * parent.classroot.altscaler);
-                }
-                var ddd = [parent.classroot, "altscaler"];
-                this.applyConstraint("width", fff, ddd);
+                this.applyConstraintMethod("__constraintAxisY_height", d);
 
-                var g = function(){
-                    this.setAttribute("x", (Math.abs(parent.classroot.minimum) * parent.classroot.altscaler) -
-                        (parent.classroot.zerowidth / 2) - (this.bvalue < 0 ? this.width : 0));
-                }
+                var dd = [this, "height"];
+                this.applyConstraintMethod("__constraintAxisY_y", dd);
+
+                var ddd = [parent.classroot, "altscaler"];
+                this.applyConstraintMethod("__constraintAxisY_width", ddd);
+
                 var h = [parent, "width"];
-                this.applyConstraint("x", g, h);
+                this.applyConstraintMethod("__constraintAxisY_x", h);
             }
             // Sends bars behind labels.
             this.sendBehind(parent.subnodes[2]);
@@ -137,6 +103,50 @@
             }
             ]]>
         </method>
+        
+        <method name="__constraintAxisX_x" args="ignore" ><![CDATA[
+            this.setAttribute("x", ((this.barnumber * this.totalsets) *
+                (this.width + this.barspace)) + ((this.width + this.barspace) *
+                this.barset));
+        ]]></method>
+        
+        <method name="__constraintAxisX_y" args="ignore" ><![CDATA[
+            if(this.bvalue < 0){
+                this.setAttribute("y", parent.height - (Math.abs(parent.classroot.minimum) * parent.classroot.scaler));
+            } else {
+                this.setAttribute("y", parent.height - (Math.abs(parent.classroot.minimum) * parent.classroot.scaler) -
+                    this.height - (parent.classroot.zerowidth / 2));
+            }
+        ]]></method>
+        
+        <method name="__constraintAxisX_width" args="ignore" ><![CDATA[
+            this.setAttribute("width",
+                (parent.width / this.siblingbars) - this.barspace);
+        ]]></method>
+        
+        <method name="__constraintAxisX_height" args="ignore" ><![CDATA[
+            this.setAttribute("height", Math.abs(this.bvalue) * parent.classroot.scaler);
+        ]]></method>
+        
+        <method name="__constraintAxisY_x" args="ignore" ><![CDATA[
+            this.setAttribute("x", (Math.abs(parent.classroot.minimum) * parent.classroot.altscaler) -
+                (parent.classroot.zerowidth / 2) - (this.bvalue < 0 ? this.width : 0));
+        ]]></method>
+        
+        <method name="__constraintAxisY_y" args="ignore" ><![CDATA[
+            this.setAttribute("y", ((this.barnumber * this.totalsets) *
+                (this.height + this.barspace)) + ((this.height + this.barspace) *
+                this.barset));
+        ]]></method>
+        
+        <method name="__constraintAxisY_width" args="ignore" ><![CDATA[
+            this.setAttribute("width", Math.abs(this.bvalue) * parent.classroot.altscaler);
+        ]]></method>
+        
+        <method name="__constraintAxisY_height" args="ignore" ><![CDATA[
+            this.setAttribute("height",
+                (parent.height / this.siblingbars) - this.barspace);
+        ]]></method>
 
         <!--- Animations for bars.  Can easily be extended in the future to include
             different animations for a greater range of visual awesomeness. -->
