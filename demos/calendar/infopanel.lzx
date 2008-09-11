@@ -98,7 +98,7 @@
                                                       attrs.day + ", " +
                                                       attrs.year;
                             }
-                            this.setAttribute('text', s );
+                            this.setText( s );
                             ]]>
                         </method>
                     </textbox>
@@ -186,7 +186,7 @@
                              bgcolor="0xEEF0EB" bordercolor="0x333333"
                              datapath="start[1]/@*" >
                         <method name="applyData" args="attrs">
-                            this.setAttribute('text', parent.getLongTime( attrs ));
+                            this.setText(parent.getLongTime( attrs ));
                         </method>
                     </textbox>
                     <basebutton x="$immediately{60-11}" width="14" 
@@ -205,7 +205,7 @@
                              bgcolor="0xEEF0EB" bordercolor="0x333333"
                              datapath="end[1]/@*" >
                         <method name="applyData" args="attrs">
-                            this.setAttribute('text', parent.getLongTime( attrs ));
+                            this.setText(parent.getLongTime( attrs ));
                         </method>
                     </textbox>
                     <basebutton x="149" width="14" resource="info_larrow"

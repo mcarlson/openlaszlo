@@ -4,7 +4,7 @@
 
         <addresslist name="list" width="${parent.width}" height="${parent.height}">
             <method name="newAddress">
-                parent.form.form.setDatapath("new:/address");
+                parent.form.form.setAttribute('datapath', "new:/address");
                 parent.form.setAttribute("mode", "new");
                 this.setAttribute("height", 0);
                 parent.form.show();
@@ -12,7 +12,7 @@
             <method name="editAddress" args="clonenbr">
                 parent.form.setAttribute("mode", "edit");
                 this.setAttribute("height", 0);
-                parent.form.form.setDatapath("dsAddressList:/addresslist/address["+(clonenbr+1)+"]");
+                parent.form.form.setAttribute('datapath', "dsAddressList:/addresslist/address["+(clonenbr+1)+"]");
                 parent.form.show();
             </method>
         </addresslist>

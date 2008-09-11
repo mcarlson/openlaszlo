@@ -327,7 +327,7 @@ sub convert_file {
     # check it
     my $contents = join("\n", @lines);
     if ($contents =~ /setter\s*=\s*\"\s*setAttribute\s*\"/) {
-      print "$file might contain a recursive attribute setters. Please check this file manually\n";
+      print "$file might contain a recursive attribute setters. Please check your setter=\"...\" entries manually\n";
     }
 
     # Do each of the substitutions listed in %substitutions

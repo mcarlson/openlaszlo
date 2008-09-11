@@ -4,7 +4,7 @@
 
         <cardlist name="list" width="${parent.width}" height="${parent.height}">
             <method name="newCard">
-                parent.form.form.setDatapath("new:/creditcard");
+                parent.form.form.setAttribute('datapath', "new:/creditcard");
                 parent.form.setAttribute("mode", "new");
                 this.setAttribute("height", 0);
                 parent.form.setAttribute("height", parent.height);
@@ -13,7 +13,7 @@
                 parent.form.setAttribute("mode", "edit");
                 this.setAttribute("height", 0);
                 parent.form.setAttribute("height", parent.height);
-                parent.form.form.setDatapath("dsCreditCardList:/creditcardlist/creditcard["+(clonenbr+1)+"]");
+                parent.form.form.setAttribute('datapath', "dsCreditCardList:/creditcardlist/creditcard["+(clonenbr+1)+"]");
             </method>
         </cardlist>
         <cardform name="form" width="${parent.width}" height="0" visible="${this.height != 0}">

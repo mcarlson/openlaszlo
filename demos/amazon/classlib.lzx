@@ -22,12 +22,12 @@
         <method name="select">
           if (selectionobject.selectedItem) {
             if (selectionobject.selectedItem.img)
-              selectionobject.selectedItem.img.setResourceNumber(1);
+              selectionobject.selectedItem.img.setAttribute('frame', 1);
             else
               // Looks like the selected radio button was deleted
               selectionobject.selectedItem = null;
           }
-          this.img.setResourceNumber(2);
+          this.img.setAttribute('frame', 2);
           selectionobject.setAttribute("selectedItem", this);
           selectionobject.setAttribute("val", this.val);
         </method>
@@ -36,15 +36,15 @@
 
 
     <class name="linktext" extends="text"
-        onmouseover="setColor(0x800080)"
-        onmouseout="setColor(0x000000)"
-        onmouseup="setColor(0x000000)"/>
+        onmouseover="this.setAttribute('fgcolor', 0x800080)"
+        onmouseout="this.setAttribute('fgcolor', 0x000000)"
+        onmouseup="this.setAttribute('fgcolor', 0x000000)"/>
 
     <class name="mouseview" extends="basebutton"
-        onmouseover="this.setResourceNumber(2)"
-        onmouseout="this.setResourceNumber(1)"
-        onmousedown="this.setResourceNumber(3)"
-        onmouseup="this.setResourceNumber(1)"/>
+        onmouseover="this.setAttribute('frame', 2)"
+        onmouseout="this.setAttribute('frame', 1)"
+        onmousedown="this.setAttribute('frame', 3)"
+        onmouseup="this.setAttribute('frame', 1)"/>
 
     <class name="vtabpanel" width="${tab.width}" height="${parent.height}" 
            bgcolor="white" defaultplacement="content" clickable="true">
@@ -59,10 +59,10 @@
 
             <simplelayout axis="y"/>
             <view clickable="true" name="tabButton"
-                onmouseover="setResourceNumber(classroot.opened=='true'?5:2)"
-                onmouseout="setResourceNumber(classroot.opened=='true'?4:1)"
-                onmousedown="setResourceNumber(classroot.opened=='true'?6:3)"
-                onmouseup="setResourceNumber(classroot.opened=='true'?4:1)">
+                onmouseover="setAttribute('frame',classroot.opened=='true'?5:2)"
+                onmouseout="setAttribute('frame',classroot.opened=='true'?4:1)"
+                onmousedown="setAttribute('frame',classroot.opened=='true'?6:3)"
+                onmouseup="setAttribute('frame',classroot.opened=='true'?4:1)">
                 <attribute name="resource" value="${classroot.tabresource}"/>
                 <handler name="onclick">
                     if (classroot.opened=="true") {
@@ -93,7 +93,7 @@
                         classroot.opened = 'false';
                         classroot.container.content.setAttribute('visible', false);
                     }
-                    parent.tabButton.setResourceNumber(classroot.opened=='true'?4:1);
+                    parent.tabButton.setAttribute('frame', classroot.opened=='true'?4:1);
                     classroot.panelDragger.setAttribute('applied', false);
                 </handler>
 
@@ -162,7 +162,7 @@
 
         <view name="top" width="${parent.width}" clip="true" clickable="true">
             <mouseview resource="tabslider" width="${parent.width}" stretches="width" onclick="parent.parent.parent.openTab(parent.parent)"/>
-            <text name="label" oninit="this.setText(parent.parent.label)" fontsize="12"  fontstyle="bold" fgcolor="#2F4D86" x="8" y="2" width="100%" />
+            <text name="label" oninit="this.setAttribute('text', parent.parent.label)" fontsize="12"  fontstyle="bold" fgcolor="#2F4D86" x="8" y="2" width="100%" />
             <text name="annotation" fontsize="12"  fontstyle="bold" 
                   fgcolor="#2F4D86" x="455" y="2" width="25" />
         </view>
@@ -178,7 +178,7 @@
         </method>
 
         <method name="setAnnotation" args="a">
-            this.top.annotation.setText( a );
+            this.top.annotation.setAttribute('text', a );
         </method>
 
     </class>
@@ -211,8 +211,8 @@
     </class>
 
     <class name="trashcan" resource="trash_can" 
-           onmouseover="this.setResourceNumber( 2 )"
-           onmouseout="this.setResourceNumber( 1 )">
+           onmouseover="this.setAttribute('frame', 2 )"
+           onmouseout="this.setAttribute('frame', 1 )">
 
     </class>
 
