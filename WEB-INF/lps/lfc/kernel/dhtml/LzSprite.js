@@ -1267,7 +1267,7 @@ LzSprite.prototype.__imgonerror = function(i, cacheHit) {
         }
     }
     
-    this.owner.resourceloaderror({resource: this.resource});
+    this.owner.resourceloaderror();
     if (this.skiponload != true){
         // for user-loaded media
         this.__updateLoadStatus(1);
@@ -1304,7 +1304,7 @@ LzSprite.prototype.__imgontimeout = function(i, cacheHit) {
         }
     }
     
-    this.owner.resourceloadtimeout({resource: this.resource});
+    this.owner.resourceloadtimeout();
     if (this.skiponload != true){
         // for user-loaded media
         this.__updateLoadStatus(1);

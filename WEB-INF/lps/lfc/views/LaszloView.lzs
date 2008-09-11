@@ -1678,26 +1678,26 @@ function resourceload(i) {
   * @access private
   * Called by the sprite when the resource load error occurs 
   */
-function resourceloaderror() {
+function resourceloaderror(e=null) {
     this.resourcewidth = 0;
     this.resourceheight = 0;
     if (this.onresourcewidth.ready) this.onresourcewidth.sendEvent(0);
     if (this.onresourceheight.ready) this.onresourceheight.sendEvent(0);
     this.reevaluateSize();
-    if (this.onerror.ready) this.onerror.sendEvent();
+    if (this.onerror.ready) this.onerror.sendEvent(e);
 }
 
 /**
   * @access private
   * Called by the sprite when the resource load timeout occurs 
   */
-function resourceloadtimeout() {
+function resourceloadtimeout(e=null) {
     this.resourcewidth = 0;
     this.resourceheight = 0;
     if (this.onresourcewidth.ready) this.onresourcewidth.sendEvent(0);
     if (this.onresourceheight.ready) this.onresourceheight.sendEvent(0);
     this.reevaluateSize();
-    if (this.ontimeout.ready) this.ontimeout.sendEvent();
+    if (this.ontimeout.ready) this.ontimeout.sendEvent(e);
 }
 
 /**

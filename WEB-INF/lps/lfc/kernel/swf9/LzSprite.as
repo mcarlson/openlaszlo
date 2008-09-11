@@ -11,18 +11,17 @@
 
 dynamic public class LzSprite extends Sprite {
 
-      #passthrough (toplevel:true) {  
-
+#passthrough (toplevel:true) {
   import flash.display.*;
   import flash.events.*;
   import flash.ui.*;
   import flash.geom.*;
   import flash.utils.*;
   import mx.controls.Button;
-  import flash.net.URLRequest;  
+  import flash.net.URLRequest;
 }#
 
-#passthrough  {  
+#passthrough  {
 
       public var owner:* = null;
 
@@ -220,7 +219,11 @@ dynamic public class LzSprite extends Sprite {
             var info:LoaderInfo = imgLoader.contentLoaderInfo;
             info.addEventListener(Event.INIT, loaderInitHandler);
             info.addEventListener(IOErrorEvent.IO_ERROR, loaderEventHandler);
+          } else {
+            //TODO [20080911 anba] cancel current load?
+            // imgLoader.close();
           }
+
           var res = this.resourceObj;
           if (res) {
             res.scaleX = res.scaleY = 1.0;
@@ -228,7 +231,6 @@ dynamic public class LzSprite extends Sprite {
           //Debug.write('sprite setsource load ', url);
           imgLoader.load(new URLRequest(url));
       }
-
 
       public function loaderInitHandler(event:Event):void {
           // These progress event listeners can only be installed after the init event
@@ -239,45 +241,52 @@ dynamic public class LzSprite extends Sprite {
           info.addEventListener(Event.OPEN, loaderEventHandler);
           info.addEventListener(Event.UNLOAD, loaderEventHandler); 
           info.addEventListener(Event.COMPLETE, loaderEventHandler);
-          info.addEventListener(HTTPStatusEvent.HTTP_STATUS, loaderEventHandler);
-          // trace(event);
+          // @devnote: From the HTTPStatusEvent reference page:
+          // > Some Flash Player environments may be unable to detect HTTP status codes; 
+          // > a status code of 0 is always reported in these cases.
+          // Http status is actually only available for the IE Flash-Plugin. 
+          //info.addEventListener(HTTPStatusEvent.HTTP_STATUS, loaderEventHandler);
       }
 
       public function loaderEventHandler(event:Event):void {
           try {
-              var loader:Loader = Loader(event.target.loader);
+              //@devnote: accessing the Loader through "event.target.loader" may 
+              // throw runtime error #2099 (at least for an IOErrorEvent):
+              // > "The loading object is not sufficiently loaded to provide this information."
+
+              //TODO [20080911 anba] set resoucewidth/height to 0 for every event?
               this.resourcewidth = 0;
               this.resourceheight = 0;
-              try {
-                  this.resourcewidth = loader.width;
-                  this.resourceheight = loader.height;
-              } catch (e) {
-              }
               if (event.type == Event.COMPLETE) {
+                  try {
+                      var loader:Loader = Loader(event.target.loader);
+                      this.resourcewidth = loader.width;
+                      this.resourceheight = loader.height;
+                  } catch (e) {
+                  }
                   this.resourceLoaded = true;
                   // Apply stretch if needed, now that we know the asset dimensions.
                   this.applyStretchResource();
                   // send events, including onload
                   sendResourceLoad();
+                  this.owner.resourceevent('loadratio', 1);
               } else if (event.type == IOErrorEvent.IO_ERROR) {
-                  // TODO [hqm 2007-12] is this the right event type? Should we be looking
-                  // at HTTP_STATUS event error codes also?
+                  //TODO [20080911 anba] how can "owner" become null here?
                   if (this.owner != null) {
-                      this.owner.resourceloaderror( event );
+                      this.owner.resourceloaderror( (event as IOErrorEvent).text );
                   }
               } else if (event.type == ProgressEvent.PROGRESS) {
-                  var ev = event;
-                  if (ev) {
-                      var lr = ev.bytesLoaded / ev.bytesTotal;
-                      if (!isNaN(lr)) {
-                          this.owner.resourceevent('loadratio', lr);
-                      }
+                  var ev:ProgressEvent = event as ProgressEvent;
+                  var lr = ev.bytesLoaded / ev.bytesTotal;
+                  if (! isNaN(lr)) {
+                      this.owner.resourceevent('loadratio', lr);
                   }
               } else if (event.type == Event.OPEN) {
                   this.owner.resourceevent('loadratio', 0);
+              } else if (event.type == Event.UNLOAD) {
               }
           } catch (error:Error) {
-              trace(error);
+              trace(event.type + " " + error);
           }
       }
       
