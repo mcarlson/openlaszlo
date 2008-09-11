@@ -92,12 +92,12 @@
         <handler name="onfocus" >
             this.parent.select(this);
             this.top.bg.animate("opacity",.33,333,false);
-            this.top.titlebox.setColor(0xFFFFFF);
+            this.top.titlebox.setAttribute('fgcolor', 0xFFFFFF);
         </handler>
         
         <handler name="onblur" >
             this.top.bg.animate("opacity",1,333,false);
-            this.top.titlebox.setColor(0xCAD0EC);
+            this.top.titlebox.setAttribute('fgcolor', 0xCAD0EC);
         </handler>
     </class>
 
@@ -234,25 +234,25 @@
             <handler name="ondata">
                 var title = this.xpathQuery("/rss/channel/title/text()");
                 if ( title.indexOf( "Error" ) != -1 ) {
-                    error.setText("Error: " +
+                    error.setAttribute('text', "Error: " +
                           this.xpathQuery( '/rss/channel/item/title/text()' ) );
                     zipBtn.animate('x',0,333,false);
                     return;
                 }
-                error.setText("                               ");
+                error.setAttribute('text', "                               ");
 
                 zipBtn.animate('x',-2000,333,false);
                 weatherApp.showWeather();
             </handler>
 
             <handler name="onerror">
-                error.setText("Server error: " +
+                error.setAttribute('text', "Server error: " +
                                this.getDataset().getErrorString());
                 zipBtn.animate('x',0,333,false);
             </handler>
 
             <handler name="ontimeout">
-                error.setText("Error: Load timed out.");
+                error.setAttribute('text', "Error: Load timed out.");
                 zipBtn.animate('x',0,333,false);
             </handler>
         </datapointer>
@@ -286,12 +286,12 @@
                 <method name="doMouseDown">
                     this.setAttribute('x', this.x + 1);
                     this.setAttribute('y', this.y + 1);
-                    bkgnd.setResourceNumber(2);
+                    bkgnd.setAttribute('frame', 2);
                 </method>
                 <method name="doMouseUp">
                     this.setAttribute('x', this.x - 1);
                     this.setAttribute('y', this.y - 1);
-                    bkgnd.setResourceNumber(1);
+                    bkgnd.setAttribute('frame', 1);
                     weatherApp.loadWeather();
                 </method>
             </view>
@@ -315,10 +315,10 @@
         <method name="loadWeather">
             var z = zipcode.getText();
             zipBtn.animate('x',-2000,333,true);
-            error.setText("Loading weather data...");
+            error.setAttribute('text', "Loading weather data...");
             weatherdata.setQueryString({p:  z});
             weatherdata.doRequest();
-            weatherApp.topBar.zip.setText(z);
+            weatherApp.topBar.zip.setAttribute('text', z);
         </method>
 
         <method name="showWeather">
@@ -333,7 +333,7 @@
             weatherContent.setAttribute('visible', false);
             zipBtn.animate('x',0,333,false);
             topBar.goout.doStart();
-            zipcode.setText('');
+            zipcode.setAttribute('text', '');
             lz.Focus.setFocus(zipcode.field);
         </method>
     </view> <!-- END WeatherApp -->
