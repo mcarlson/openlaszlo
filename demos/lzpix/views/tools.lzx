@@ -30,7 +30,7 @@
         </method>
         
         <method name="resetOnLoad">
-            this.loadtext.setText('Loading...');
+            this.loadtext.setAttribute('text', 'Loading...');
             this.setAttribute('waitforload', true);
             this.setAttribute('startindex', 1);
             this.setAttribute('nextstartindex', 1);
@@ -123,7 +123,7 @@
                 Unfortunately, we have to go by sets of 100, because Flickr's
                 API breaks data up into single-request XML pages of 100 items
                 apiece. */
-                this.loadtext.setText('Next 100...');
+                this.loadtext.setAttribute('text', 'Next 100...');
                 this.setAttribute('waitforload', true);
                 this.nextstartindex = 1;
                 this.nextendindex = Math.min(this.nextstartindex + photoscontainer.lyt.pagesize - 1, this.numberofphotos );
@@ -163,7 +163,7 @@
                 Unfortunately, we have to go by sets of 100, because Flickr's
                 API breaks data up into single-request XML pages of 100 items
                 apiece. */
-                this.loadtext.setText('Prev 100...');
+                this.loadtext.setAttribute('text', 'Prev 100...');
                 this.setAttribute('waitforload', true);
                 this.nextendindex = this.numberofphotos;
                 this.nextstartindex = this.nextendindex - photoscontainer.lyt.totalitems + 1;
@@ -188,7 +188,7 @@
             var eindex = this.nextstartindex + bufferamount;
             var xpath_str  = 'photods:/rsp/photos/photo[' + this.nextstartindex + '-' + eindex + ']'
 
-            photoscontainer.ph.setDatapath(xpath_str);
+            photoscontainer.ph.setAttribute('datapath', xpath_str);
             photoscontainer.watchforlast();
             this.startindex = this.nextstartindex;
             this.endindex = this.nextendindex;
@@ -203,8 +203,8 @@
         </handler>
 
         <method name="displayRange"  args="s,e" >
-            this.firstphotoindex.setText( s + (photoscontainer.lyt.perpage * (photoscontainer.lyt.currentpage - 1)));
-            this.lastphotoindex.setText( e + (photoscontainer.lyt.perpage * (photoscontainer.lyt.currentpage - 1)));
+            this.firstphotoindex.setAttribute('text', s + (photoscontainer.lyt.perpage * (photoscontainer.lyt.currentpage - 1)));
+            this.lastphotoindex.setAttribute('text', e + (photoscontainer.lyt.perpage * (photoscontainer.lyt.currentpage - 1)));
         </method>
 
         <method name="setpPagingParams" args="n" >

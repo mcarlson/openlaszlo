@@ -40,15 +40,15 @@
         
         <method name="showNote" args="show">
             if (show) {
-                this.setOpacity(0.3);
-                txtborder.setOpacity(1)                
-                authorlabel.setOpacity(1);
-                notelabel.setOpacity(1);
+                this.setAttribute('opacity', 0.3);
+                txtborder.setAttribute('opacity', 1)                
+                authorlabel.setAttribute('opacity', 1);
+                notelabel.setAttribute('opacity', 1);
             } else {
-                this.setOpacity(0.01);                
-                txtborder.setOpacity(0.5)
-                authorlabel.setOpacity(0);
-                notelabel.setOpacity(0);            
+                this.setAttribute('opacity', 0.01);                
+                txtborder.setAttribute('opacity', 0.5)
+                authorlabel.setAttribute('opacity', 0);
+                notelabel.setAttribute('opacity', 0);            
             }
         </method>
         

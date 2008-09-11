@@ -33,7 +33,7 @@
             if ( !d ) return;
             var dp = this.datapath;
             // var txt = dp.xpathQuery('@title');
-            this.txt.setText( dp.xpathQuery('@title') );
+            this.txt.setAttribute('text', dp.xpathQuery('@title') );
             //this.setAttribute('text',txt);
             this.setImage(this.getImageURL('t'));
         
@@ -74,7 +74,7 @@
         <method name="updateX" args="force">
             <![CDATA[
             if ( !this.isinited ) return;
-            if ( height != width ) this.setHeight( width );
+            if ( height != width ) this.setAttribute('height', width );
             if ( _lastw == width && force != true ) {
                 return;
             } 
@@ -85,14 +85,14 @@
 
             var ipwidth = iwidth + clipfactor * ( width - iwidth - 2*border);
             var ipx = this.width/2 - ipwidth/2;
-            intparent.setX( ipx);
-            intparent.setWidth( ipwidth);
-            borderbg.setX( ipx  - this.border );
-            borderbg.setWidth( ipwidth  + 2*this.border );
-            intparent.interior.setX( ix - ipx );
-            intparent.interior.setWidth( iwidth );
-            shadow.setX( border + ipx );
-            shadow.setWidth( ipwidth + this.border );
+            intparent.setAttribute('x', ipx);
+            intparent.setAttribute('width', ipwidth);
+            borderbg.setAttribute('x', ipx  - this.border );
+            borderbg.setAttribute('width', ipwidth  + 2*this.border );
+            intparent.interior.setAttribute('x', ix - ipx );
+            intparent.interior.setAttribute('width', iwidth );
+            shadow.setAttribute('x', border + ipx );
+            shadow.setAttribute('width', ipwidth + this.border );
             ]]>
         </method>
 
@@ -101,7 +101,7 @@
         <method name="updateY" args="force">
             <![CDATA[
             if ( !this.isinited ) return;
-            if ( width != height ) this.setWidth( height );
+            if ( width != height ) this.setAttribute('width', height );
             if ( _lasth == height && force != true ) {
                 return;
             } 
@@ -113,14 +113,14 @@
             var ipheight = iheight + clipfactor * ( height - iheight - 2*border);
             var ipy = this.height/2 - ipheight/2;
 
-            intparent.setY( ipy);
-            intparent.setHeight( ipheight );
-            borderbg.setY( ipy  - this.border );
-            borderbg.setHeight( ipheight  + 2*this.border );
-            intparent.interior.setHeight( iheight );
-            intparent.interior.setY( iy - ipy );
-            shadow.setY( border + ipy );
-            shadow.setHeight( ipheight + this.border );
+            intparent.setAttribute('y', ipy);
+            intparent.setAttribute('height', ipheight );
+            borderbg.setAttribute('y', ipy  - this.border );
+            borderbg.setAttribute('height', ipheight  + 2*this.border );
+            intparent.interior.setAttribute('height', iheight );
+            intparent.interior.setAttribute('y', iy - ipy );
+            shadow.setAttribute('y', border + ipy );
+            shadow.setAttribute('height', ipheight + this.border );
             ]]>
         </method>
 
@@ -200,11 +200,11 @@
                 this.adjustDimensions();
             </handler>
             <method name="adjustDimensions" >
-               this.setWidth(classroot.width + 20);
+               this.setAttribute('width', classroot.width + 20);
                var tw = Math.min(this.getTextWidth(),width);
                var tx = (classroot.width - tw)/2;
-               this.setX(tx);
-               this.setY(classroot.height + 3);
+               this.setAttribute('x', tx);
+               this.setAttribute('y', classroot.height + 3);
              </method>
              <method name="makeVisible">
                 

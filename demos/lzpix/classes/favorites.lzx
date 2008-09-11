@@ -70,7 +70,7 @@
 
                 if ( c < -parent[ axis ] + mymask[ axis ] + mymask[ sizeAxis ] &&
                      s.height != parent.height - 5 ){
-                    s.setHeight( parent.height -5);
+                    s.setAttribute('height', parent.height -5);
                 }
                 c += this.spacing + s[ this.sizeAxis ];
             }

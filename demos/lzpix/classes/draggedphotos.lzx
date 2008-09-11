@@ -6,8 +6,8 @@
         <attribute name="sellist"/>
 
         <method name="startDrag" args="who, sel , ix , iy">
-            this.setX( who.getAttributeRelative( 'x', this ) + ix );
-            this.setY( who.getAttributeRelative( 'y', this ) + iy );
+            this.setAttribute('x', who.getAttributeRelative( 'x', this ) + ix );
+            this.setAttribute('y', who.getAttributeRelative( 'y', this ) + iy );
             if ( activephotos.length ) this.poolAll();
             this.sellist = sel.concat();
             this.addSelection( sellist );
@@ -35,8 +35,8 @@
                 if ( !( p.loaded && !p.visible ) ) continue;
                 var e = sellist[ i ];
                 p.setAttribute('visible',  true );
-                p.setX( e.getAttributeRelative( 'x', p ) );
-                p.setY( e.getAttributeRelative( 'y', p ) );
+                p.setAttribute('x', e.getAttributeRelative( 'x', p ) );
+                p.setAttribute('y', e.getAttributeRelative( 'y', p ) );
                 p.setAttribute( "clipfactor" , 0 );
 
                 p.animate( "x", i * stackoffset , adur );

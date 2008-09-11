@@ -85,7 +85,7 @@
                 var api_sig_string=gGlobals.SHAREDSECRET;
     
                 // set source
-                ds.setSrc(gGlobals.RESTSRC);
+                ds.setAttribute('src', gGlobals.RESTSRC);
     
                 // add api_key
                 argobjarr.push({argname:"api_key", argvalue:gGlobals.API_KEY});
@@ -129,17 +129,17 @@
         <method name="loadOfflineData" args="ds, argobj">
             if (ds == photods) {
                 // TODO: get a different dataset depending on which tag was requested
-                photods.setSrc("data/offline/data1.xml"); 
+                photods.setAttribute('src', "data/offline/data1.xml"); 
                 photods.doRequest(); 
             } else if (ds == infods) {  
                 var photoid = argobj[1].argvalue;
                 var infosrc ="data/offline/pinfo/pinfo_" + photoid + ".xml";
                 // Debug.write("loading offline data for photoid ", photoid);
-                infods.setSrc(infosrc); 
+                infods.setAttribute('src', infosrc); 
                 infods.doRequest();
             } else if (ds == userds)  {
                 var userid = argobj[1].argvalue;            
-                userds.setSrc("data/offline/uinfo/uinfo_" + userid + ".xml"); 
+                userds.setAttribute('src', "data/offline/uinfo/uinfo_" + userid + ".xml"); 
                 userds.doRequest();            
             } else {
                 Debug.write("Not making request, don't know what ds is: ", ds); 

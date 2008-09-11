@@ -168,11 +168,11 @@
                 var v =  ph_arg.intparent.interior;
                 //Debug.write("transitionToDetails");
 
-                canvas.details.ph.setX( v.getAttributeRelative('x', canvas) -1 );
-                canvas.details.ph.setY( v.getAttributeRelative('y', canvas) -1 );
+                canvas.details.ph.setAttribute('x', v.getAttributeRelative('x', canvas) -1 );
+                canvas.details.ph.setAttribute('y', v.getAttributeRelative('y', canvas) -1 );
                 var maxdim = (v.width > v.height) ? v.width + 2 : v.height + 2;
-                canvas.details.ph.setWidth( maxdim );
-                canvas.details.ph.setHeight( maxdim );
+                canvas.details.ph.setAttribute('width', maxdim );
+                canvas.details.ph.setAttribute('height', maxdim );
 
                 canvas.details.setAttribute('visible',  true );
 
@@ -183,7 +183,7 @@
                 
                 //adjust an animation parameter before starting transition
                 this.lyt.updateOnIdle( true );
-                canvas.interior.details_bkgnd.setHeight(2);
+                canvas.interior.details_bkgnd.setAttribute('height', 2);
                 canvas.interior.details_bkgnd.setAttribute('visible',  true );
                 this.lyt.transitiontolinear_anm.grp.yspacing.setAttribute('to', -photoscontainer.lyt.photodimension*photoscontainer.lyt.photoscale);
                 this.lyt.transitiontolinear_anm.doStart();
@@ -197,7 +197,7 @@
             
             <handler name="onstop" reference="this.lyt.transitiontogrid_anm" >
                 //Debug.write("TOOLS back onclick", photoscontainer.detailphoto);
-                canvas.interior.details_bkgnd.setHeight(0);
+                canvas.interior.details_bkgnd.setAttribute('height', 0);
                 canvas.interior.details_bkgnd.setAttribute('visible',  false );
                 this.lyt.isgrid = true;
                 this.lyt.myreset();
@@ -218,7 +218,7 @@
                 } else  {
                 
                     canvas.details.setAttribute('visible',  false );
-                    canvas.details.info.setX(1500);
+                    canvas.details.info.setAttribute('x', 1500);
                 }
                 
             ]]></method>
@@ -252,7 +252,7 @@
                 photoscontainer.lyt.setAttribute('perpage', perpage);
                 photoscontainer.lyt.setAttribute('totalpages', totalpages);
                 tls.setpPagingParams( c );
-                gResultsCountLabel.setText( this.buildResultsString(c) );                 
+                gResultsCountLabel.setAttribute('text', this.buildResultsString(c) );                 
                 this.watchforlast();
                 photoscontainer.lyt.calcpageparams = true;
             </handler>
@@ -384,9 +384,9 @@
                 <attribute name="isselected" value="false"/>
 
                 <method name="setSelected" args="s">
-                    this.borderbg.setBGColor(s ? "0xFFD800" : "0xFFFFFF"); 
+                    this.borderbg.setAttribute('bgcolor', s ? "0xFFD800" : "0xFFFFFF"); 
                     this.setAttribute( "isselected" , s );
-                    this.intparent.setOpacity( s ? .5 : 1 );
+                    this.intparent.setAttribute('opacity', s ? .5 : 1 );
                 </method>
 
                 <method name="intersectsRectangle" args="x1, y1, x2, y2">
@@ -418,18 +418,18 @@
                     var mx = this.parent.getMouse( 'x' );
                     var my = this.parent.getMouse( 'y' );
                     if ( mx < _sx ){
-                        this.setX( mx );
-                        this.setWidth( this._sx - mx - 1);
+                        this.setAttribute('x', mx );
+                        this.setAttribute('width', this._sx - mx - 1);
                     } else {
-                        this.setX( this._sx );
-                        this.setWidth( mx - this._sx + 1);
+                        this.setAttribute('x', this._sx );
+                        this.setAttribute('width', mx - this._sx + 1);
                     }
                     if ( my < this._sy ){
-                        this.setY( my );
-                        this.setHeight( this._sy - my - 1);
+                        this.setAttribute('y', my );
+                        this.setAttribute('height', this._sy - my - 1);
                     } else {
-                        this.setY( this._sy );
-                        this.setHeight( my - this._sy + 1);
+                        this.setAttribute('y', this._sy );
+                        this.setAttribute('height', my - this._sy + 1);
                     }
                     ]]>
                 </method>
@@ -604,7 +604,7 @@
             }
             tls.reset();
             tls.enableZoom();
-            gResultsCountLabel.setText("...searching..."); 
+            gResultsCountLabel.setAttribute('text', "...searching..."); 
             super.sendsearch();           
         </method>
 

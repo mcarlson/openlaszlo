@@ -57,7 +57,7 @@
     </class>
     
     
-    <class name="note" extends="box" onmouseover="this.txtborder.setOpacity(1)" onmouseout="this.txtborder.setOpacity(0)">
+    <class name="note" extends="box" onmouseover="this.txtborder.setAttribute('opacity', 1)" onmouseout="this.txtborder.setAttribute('opacity', 0)">
         <!-- should be using a drawview, but I will be using views instead -->
         <box name="txtborder" y="${parent.height - 1}" width="${parent.width}" height="20" opacity=".1">
             <view bgcolor="white" opacity=".7" x="1" y="1" width="${parent.width - 2}" height="${parent.height - 2}" />
@@ -88,14 +88,14 @@
         <note datapath="infods:/rsp/photo/notes/note" width="0" height="0" x="10" y="10">
             <handler name="ondata" args="d" ><![CDATA[
                 var dp = this.datapath;
-                this.txtborder.txt.setText( dp.xpathQuery('text()') );
-                this.setX(Number(dp.xpathQuery('@x')));
-                this.setY(Number(dp.xpathQuery('@y')));
+                this.txtborder.txt.setAttribute('text', dp.xpathQuery('text()') );
+                this.setAttribute('x', Number(dp.xpathQuery('@x')));
+                this.setAttribute('y', Number(dp.xpathQuery('@y')));
                 this.animate('width',Number(dp.xpathQuery('@w')),300);
                 this.animate('height',Number(dp.xpathQuery('@h')),300);
                 /*
-                this.setWidth(Number(dp.xpathQuery('@w')));
-                this.setHeight(Number(dp.xpathQuery('@h')));
+                this.setAttribute('width', Number(dp.xpathQuery('@w')));
+                this.setAttribute('height', Number(dp.xpathQuery('@h')));
                 */
             ]]></handler>
         </note>

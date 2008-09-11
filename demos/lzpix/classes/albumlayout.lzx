@@ -94,8 +94,8 @@
                 s.setAttribute(this.otherAxis,otherpos);
                 
                 // set width and height of subview
-                s.setWidth(Math.round(photodimension*photoscale));
-                s.setHeight(Math.round(photodimension*photoscale));
+                s.setAttribute('width', Math.round(photodimension*photoscale));
+                s.setAttribute('height', Math.round(photodimension*photoscale));
                 
                 // adjust next position by dimension of previous subview
                 pos += s[this.sizeAxis];

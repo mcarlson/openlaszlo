@@ -10,7 +10,7 @@
         <text name="txt" x="15" y="-4" text="tag title" width="100" fgcolor="0x5c5c5c" fontsize="10"/>
         <handler name="ondata" args="t" >
             if ( t == null || t == undefined ) t = "";                
-            this.txt.setText(t);            
+            this.txt.setAttribute('text', t);            
         </handler>
 
     </class>
@@ -66,14 +66,14 @@
             if (w == 0) { return; }
             var par = h / w;
             if (par < rar) {
-                this.setHeight(h);
-                this.setWidth( Math.round(h / rar) );
+                this.setAttribute('height', h);
+                this.setAttribute('width', Math.round(h / rar) );
             } else if (par > rar) {
-                this.setHeight( Math.round(w * rar) );
-                this.setWidth(w);
+                this.setAttribute('height', Math.round(w * rar) );
+                this.setAttribute('width', w);
             } else {
-                this.setHeight(h);
-                this.setWidth(w);
+                this.setAttribute('height', h);
+                this.setAttribute('width', w);
             }
         ]]></method>
     </class>
@@ -204,8 +204,8 @@
                 // change text to reflect the correct formatting of the date and time 
                 if ( !d ) return;
                 var str = classroot.toDateString( datapath.xpathQuery( "dates/@posted" ) );
-                inner.formattedDate.setText(str); 
-                inner.userlabel.setText( datapath.xpathQuery( "owner/@username" ) );
+                inner.formattedDate.setAttribute('text', str); 
+                inner.userlabel.setAttribute('text', datapath.xpathQuery( "owner/@username" ) );
             </handler>
 
             <view name="inner" x="30" y="-3" visible="true">
@@ -245,14 +245,14 @@
             <text fgcolor="0x5c5c5c" fontstyle="bold" fontsize="12" height="23" >Tags</text>
             <view x="5"  width="${parent.width}">
                 <handler name="ondata" reference="infods">
-                    this.tl.setDatapath('infods:/rsp/photo/tags/tag[1-19]/text()');
+                    this.tl.setAttribute('datapath', 'infods:/rsp/photo/tags/tag[1-19]/text()');
                 </handler>
                 <wrappinglayout spacing="3" />      
                 <!-- Only display first 20 tags --> 
                 <taglink name="tl" clickable="true" >
                      <handler name="onclick"  >
                         var t = this.txt.getText();
-                        canvas.srch.setText( t );
+                        canvas.srch.setAttribute('text', t );
                         canvas.srch.sendsearch();
                     </handler>
                 </taglink>

@@ -93,20 +93,20 @@
         </method>
         
         <method name="update" args="ignore=null">
-            this.tp.setX( this.tplft.width );
-            this.tprgt.setX( width - this.tprgt.width );
-            this.tp.setWidth( width - this.tplft.width - this.tprgt.width );
+            this.tp.setAttribute('x', this.tplft.width );
+            this.tprgt.setAttribute('x', width - this.tprgt.width );
+            this.tp.setAttribute('width', width - this.tplft.width - this.tprgt.width );
             
-            this.lft.setY( this.tplft.height );
-            this.lft.setHeight( this.height - this.tplft.height );
-            this.rgt.setX( width - this.rgt.width );
-            this.rgt.setY( this.tprgt.height );
-            this.rgt.setHeight( height - this.tprgt.height );
-            this.interior.setX( this.lft.width - 4 );
-            this.interior.setY( this.tp.height - 4 );
-            this.interior.setWidth( width - this.interior.x - this.rgt.width + 4);
-            this.interior.setHeight( height - this.interior.y );
-            this.setY( canvas.height - height);
+            this.lft.setAttribute('y', this.tplft.height );
+            this.lft.setAttribute('height', this.height - this.tplft.height );
+            this.rgt.setAttribute('x', width - this.rgt.width );
+            this.rgt.setAttribute('y', this.tprgt.height );
+            this.rgt.setAttribute('height', height - this.tprgt.height );
+            this.interior.setAttribute('x', this.lft.width - 4 );
+            this.interior.setAttribute('y', this.tp.height - 4 );
+            this.interior.setAttribute('width', width - this.interior.x - this.rgt.width + 4);
+            this.interior.setAttribute('height', height - this.interior.y );
+            this.setAttribute('y', canvas.height - height);
         </method>
        
        <method name="toggle"  >

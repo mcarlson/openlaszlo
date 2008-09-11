@@ -120,8 +120,8 @@
     
             for(var i=0; i < l; i++) {
                 var s = this.subviews[i]; 
-                s.setHeight( parent.height );
-                s.setWidth( s.height);
+                s.setAttribute('height', parent.height );
+                s.setAttribute('width', s.height);
                 
                 if ( !s.visible ) continue;
                 if ( s[ this.axis ] != c ){
@@ -204,8 +204,8 @@
                 var s = this.subviews[i];
                 s.setAttribute(this.axis,pos);
                 s.setAttribute(this.otherAxis,otherpos);
-                s.setWidth(Math.round(photodimension*photoscale));
-                s.setHeight(Math.round(photodimension*photoscale));
+                s.setAttribute('width', Math.round(photodimension*photoscale));
+                s.setAttribute('height', Math.round(photodimension*photoscale));
                 
                 pos += s[this.sizeAxis];
                 if ( i < (l - 1)) {

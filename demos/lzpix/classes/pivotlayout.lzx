@@ -180,24 +180,24 @@
                 if (!s.intparent) continue;
 
 
-                //if ( i == pivotindex ) s.setBGColor(0x00FF00)
-                //else s.setBGColor(0xFF0000);
+                //if ( i == pivotindex ) s.setAttribute('bgcolor', 0x00FF00)
+                //else s.setAttribute('bgcolor', 0xFF0000);
                               
                 if ( i != pivotindex) {
-                     s.intparent.setOpacity( dimmer );
+                     s.intparent.setAttribute('opacity', dimmer );
                 }
 
                 
                 // set the position of that subview
-                s.setX( xpos );
-                s.setY( ypos );
+                s.setAttribute('x', xpos );
+                s.setAttribute('y', ypos );
                 if (s.txt) {
                    s.txt.setAttribute('visible',  this.textvisible );
                 }
                 
                 // set width and height of that subview
-                s.setWidth( itemwidth );
-                s.setHeight( itemwidth );
+                s.setAttribute('width', itemwidth );
+                s.setAttribute('height', itemwidth );
                 
                 // set visibile to true or false 
                 // if item is being clipped by immediateparent view
@@ -291,7 +291,7 @@
                 var s;
                 if ( i != pivotindex ) {
                     s = this.subviews[i];
-                    s.intparent.setOpacity(o);
+                    s.intparent.setAttribute('opacity', o);
                 }
             }
          ]]></method>
