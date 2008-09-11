@@ -243,6 +243,7 @@ class CanvasCompiler extends ToplevelCompiler {
         inits.put("lpsversion", ScriptCompiler.quote(LPS.getVersion()));
         inits.put("lpsrelease", ScriptCompiler.quote(LPS.getRelease()));
         inits.put("runtime", ScriptCompiler.quote(canvas.getRuntime()));
+        inits.put("builddate", ScriptCompiler.quote((new Date()).toString()));
         inits.put("__LZproxied",
                   ScriptCompiler.quote(
                       mEnv.getProperty(mEnv.PROXIED_PROPERTY, APP_PROXIED_DEFAULT ? "true" : "false")));

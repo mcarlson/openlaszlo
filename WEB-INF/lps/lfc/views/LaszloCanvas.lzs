@@ -96,6 +96,11 @@ dynamic class LzCanvas extends LzView {
       * @keywords final
       */
     public var lpsbuilddate;
+    /** A String specifying the date and time of the application build. "Fri Sep 05 18:06:44 PDT 2008"
+      * @type String
+      * @keywords final
+      */
+    public var builddate;
     /** A String describing the target runtime. "dhtml" | "swf7" | "swf8" are currently supported. Others are in development.
       * @type String
       * @keywords final
@@ -348,6 +353,8 @@ dynamic class LzCanvas extends LzView {
         // Create the default dataprovider
         this.defaultdataprovider = this.httpdataprovider = new LzHTTPDataProvider();
 
+        this.builddate = args.builddate;
+        delete args.builddate;
 
         LzPlatform.initCanvas(this);
 
