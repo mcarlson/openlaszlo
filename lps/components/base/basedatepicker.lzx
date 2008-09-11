@@ -134,9 +134,7 @@
 
             if( this.latestdate == null ) {
                 this.latestdate = new Date();
-                if(this.latestdate['setYear']){
-                    this.latestdate.setYear( this.latestdate.getFullYear() + 1 );
-                }
+                this.latestdate.setFullYear(this.latestdate.getFullYear() + 1, this.latestdate.getMonth(), this.latestdate.getDay());
             }
 
             if( this.xinset == null ) { 
