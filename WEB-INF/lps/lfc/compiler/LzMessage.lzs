@@ -34,11 +34,12 @@ class LzBootstrapMessage {
     }
   }
 
-  function indexOf(...args) {
-    return this.message.indexOf.apply(this.message, args);
-  }
+  // Implements String interface (this is the only one we need early
+  // on, see LzDebugMessage)
+  /** @access private */
+  function indexOf (key) { return this.message.indexOf(key); }
 
-  // TODO: [2005-05-08 ptw] (LPP-5934) When toString is declared
+  // TODO: [2008-05-08 ptw] (LPP-5934) When toString is declared
   // public, remove the swf9 special-case
   if ($swf9) {
     prototype.toString = function () { return this.message; }
@@ -49,14 +50,40 @@ class LzBootstrapMessage {
   }
 
   function toHTML () {
-    // TODO: [2005-05-08 ptw] (LPP-5934) When toString is declared
+    // TODO: [2008-05-08 ptw] (LPP-5934) When toString is declared
     // public, remove the swf9 special-case
     if ($swf9) {
-      return this['toString']();
+      return this['toString']().toHTML();
     } else {
-      return this.toString();
+      return this.toString().toHTML();
     }
   }
+
+  /**
+   * @access private
+   * XML escape
+   */
+  static function xmlEscape (ts) {
+    if (ts && ((typeof(ts) == "string") || (ts instanceof String))) {
+      var outstr = "";
+      var tlen = ts.length;
+      for (var i = 0; i < tlen; i++) {
+        var c = ts.charAt(i);
+        if (c == '<') {
+          outstr += "&lt;";
+        } else if (c == '>') {
+          outstr += "&gt;";
+        } else if (c == '&') {
+          outstr += "&amp;";
+        } else {
+          outstr += c;
+        }
+      }
+      return outstr;
+    } else {
+      return ts;
+    }
+  };
 };
 
 var LzMessage = LzBootstrapMessage;
@@ -67,6 +94,6 @@ var LzMessage = LzBootstrapMessage;
  * @access private
  */
 String.prototype.toHTML = function () {
-  return Debug.xmlEscape(this);
+  return LzMessage.xmlEscape(this);
 };
 

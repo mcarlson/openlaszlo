@@ -46,9 +46,7 @@ class LzDebugMessage extends LzBootstrapMessage {
   // Implements String interface
   /** @access private */
   function charCodeAt (index) { return this.message.charCodeAt(index); }
-  // Implements String interface
-  /** @access private */
-  function indexOf (key) { return this.message.indexOf(key); }
+  // indexOf in LzBootstrapMessage
   // Implements String interface
   /** @access private */
   function lastIndexOf (key) { return this.message.lastIndexOf(key); }
@@ -231,6 +229,11 @@ class LzDebugMessage extends LzBootstrapMessage {
       }).join('');
   };
 
+  /**
+   * Propagate this
+   * @access private
+   */
+  static var xmlEscape = LzBootstrapMessage.xmlEscape;
   // Mimic built-in class, which hides all prototype methods
   // ASSetPropFlags(LzMessage.prototype, null, 1);
 };
@@ -252,12 +255,13 @@ var LzMessage = LzDebugMessage;
 class LzSourceMessage {
   var file:String;
   var line:Number;
+  var message:LzMessage
   var backtrace;
   static var type = '';
   static var color = '#000000';
 
 
-  function LzSourceMessage (file:String=null, line:Number=0, message:String='') {
+  function LzSourceMessage (file:String=null, line:Number=0, message='') {
 
     // Append a backtrace if there is one -- skip back to the
     // $reportSourceWarning or warnInternal frames.

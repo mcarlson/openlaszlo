@@ -11,94 +11,46 @@
 
 
 /**
- * Set by the server to tell Debug.__write to log back to the server
- * @access private
- */
-var _dbg_log_all_writes = (!! global.logdebug);
-
-// Automatically enable logging if there is a javascript console log
-// function
-if ($js1) {
-  _dbg_log_all_writes = ('console' in global) && (typeof console.log == 'function');
-}
-
-/**
- * Bootstrap debug UI
+ * The Debug Console interface
  *
- * This is the interface of the core debugger to whatever console is
- * available in the runtime.  At bootstrap, we provide a primitive to
- * the DHTML debugger display.  Other runtimes will replace the
- * bootstrap with a more appropriate one.
+ * This interface defines the protocol between the debugger and the console
  *
  * @access private
  */
-class LzBootstrapDebugConsole {
-  // Messages that will be displayed once a real console is
-  // instantiated.  Messages are either LzMessage's that can be output
-  // using .toString() or .toHTML(), depending on the destination (log
-  // file or console, respectively), or text (that is already
-  // formatted HTML, sent via addHTMLText).
-  var saved_msgs:Array;
-
-  function LzBootstrapDebugConsole () {
-    this.saved_msgs = new Array;
-  }
-
+/* interface */ class LzDebugConsole {
   /**
-   * Doc'd on real definition
-   * Bootstrap version
-   * @access private
+   * Adds literal output to the console, ensuring HTML markup is
+   * properly escaped.
    *
-   * @devnote Should probably be called addMessage
+   * @param msg: Will be coerced to a String if it is not
+   *
+   * @ access private
    */
-  function addText (msg) {
-    if ($dhtml) {
-      // Rhino support
-      if (print && (print is Function)) {
-        var str = '' + msg;
-        try {
-          if (msg && msg['toHTML'] is Function) {
-            str = msg.toHTML();
-          } else {
-            str = String(msg).toHTML();
-          }
-        } catch (e) {};
-        print (str);
-      }
-    }
-    // We know this is just going to capture the raw message for
-    // replay later
-    this.addHTMLText(msg);
-  };
-
+  function addText (msg) {};
   /**
-   * Clear the console
+   * Clears the console
+   * @ access private
    */
-  function clear () { };
-
+  function clear () {};
   /**
-   * Echo to the console in the debugger font
+   * Adds output to the console, potentially marking it with a font or
+   * color to indicate that it is input, not output.
    *
    * @param String str: what to echo
    * @param Boolean newLine: whether to echo a trailing newline,
    * default true
    *
-   * @access private
+   * @ access private
    */
-  function echo (str, newLine:Boolean=true) {
-    this.addHTMLText('<i>' + str + '</i>' + (newLine?'\n':''));
-  }
-
+  function echo (str, newLine:Boolean=true) {};
   /**
-   * Doc'd on real definition
-   * Bootstrap version
-   * @access private
+   * Add HTML output to the console
    *
+   * @param msg: Will be coerced to a String if it is not.  HTML
+   * markup will be interpreted as markup, as opposed to being
+   * escaped.
    */
-  function addHTMLText (msg) {
-    this.saved_msgs.push(msg);
-  };
-
+  function addHTMLText (msg) {};
   /**
    * Make a 'presentation' of an object
    *
@@ -115,6 +67,103 @@ class LzBootstrapDebugConsole {
    * @return String: the encoded representation (most likely as an
    * HTML link).
    *
+   * @ access private
+   */
+  function makeObjectLink (rep:String, id:Number, attrs=null):String {};
+  /**
+   * Evaluate an expression and call Debug.displayResult on the result
+   * (or Debug.error if the evaluation causes an error).
+   *
+   * This is part of the console protocol because it may require using
+   * the console link to compile the expression to be evaluated, which
+   * is then loaded and executed.  The result is then displayed by
+   * calling back to the debugger `displayResult` method
+   *
+   * @access private
+   */
+  function doEval (expr:String) {};
+};
+
+
+/**
+ * Bootstrap debug UI
+ *
+ * This is the interface of the core debugger to whatever console is
+ * available in the runtime.  At bootstrap, we provide a primitive to
+ * the DHTML debugger display.  Other runtimes will replace the
+ * bootstrap with a more appropriate one.
+ *
+ * @access private
+ */
+class LzBootstrapDebugConsole /* implements  LzDebugConsole */ {
+  // Messages that will be displayed once a real console is
+  // instantiated.  Messages are either LzMessage's that can be output
+  // using .toString() or .toHTML(), depending on the destination (log
+  // file or console, respectively), or text (that is already
+  // formatted HTML, sent via addHTMLText).
+  var saved_msgs:Array;
+
+  function LzBootstrapDebugConsole () {
+    this.saved_msgs = new Array;
+  }
+
+  /**
+   * Doc'd on interface
+   * Bootstrap version
+   * @access private
+   *
+   * @devnote Should probably be called addMessage
+   */
+  function addText (msg) {
+    var str;
+    try {
+      if (msg && msg['toHTML'] is Function) {
+        str = msg.toHTML();
+      } else {
+        str = String(msg).toHTML();
+      }
+    } catch (e) {
+      str = '' + msg;
+    };
+    if ($dhtml) {
+      // Rhino support
+      if (print && (print is Function)) {
+        print (str);
+      }
+    }
+    // We know this is just going to capture the raw message for
+    // replay later
+    this.addHTMLText(str);
+  };
+
+  /**
+   * Doc'd on interface
+   * Bootstrap version
+   * @access private
+   */
+  function clear () { };
+
+  /**
+   * Doc'd on interface
+   * Bootstrap version
+   * @access private
+   */
+  function echo (str, newLine:Boolean=true) {
+    this.addHTMLText('<i>' + str + '</i>' + (newLine?'\n':''));
+  }
+
+  /**
+   * Doc'd on interface
+   * Bootstrap version
+   * @access private
+   */
+  function addHTMLText (msg) {
+    this.saved_msgs.push(msg);
+  };
+
+  /**
+   * Doc'd on interface
+   * Bootstrap version
    * @access private
    */
   function makeObjectLink (rep:String, id:Number, attrs=null) {
@@ -125,6 +174,20 @@ class LzBootstrapDebugConsole {
       return '<a title="#' + id + '">' + rep + '</a>';
     }
     return rep;
+  }
+
+  /**
+   * Doc'd on interface
+   * Bootstrap version
+   * @access private
+   */
+  function doEval (expr:String) {
+    // Bootstrap implementation
+    try {
+      Debug.displayResult(eval(expr));
+    } catch (e) {
+      Debug.error(e);
+    }
   }
 };
 
@@ -184,10 +247,13 @@ class LzBootstrapDebugLogger {
         if (typeof console[fn] != 'function') {
           fn = 'log';
         }
-        if ((msg instanceof LzMessage) || (msg instanceof LzSourceMessage)) {
+        if ((console[fn].length == 0) && ((msg instanceof LzMessage) || (msg instanceof LzSourceMessage))) {
+          // Firebug console takes multiple arguments and knows how to
+          // present arguments that are objects properly
           console[fn].apply(console, msg.toArray());
         } else {
-          console[fn]('' + msg);
+          // Other consoles are not so smart...
+          console[fn](msg.toString());
         }
       }
     }
@@ -208,6 +274,7 @@ dynamic class LzBootstrapDebugService {
    */
   var uncaughtBacktraceStack:Array;
 
+  var log_all_writes:Boolean = false;
   var logger:LzBootstrapDebugLogger;
   var console:LzBootstrapDebugConsole;
 
@@ -217,6 +284,14 @@ dynamic class LzBootstrapDebugService {
     var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
     for (var k in copy) {
       this[k] = Debug[k];
+    }
+    // `logdebug` is set by the server to tell Debug.__write to log
+    // back to the server
+    this.log_all_writes = (!! global['logdebug']);
+    // Automatically enable logging if there is a javascript console
+    // log function
+    if ($js1) {
+      this.log_all_writes = (global['console']) && (typeof global.console['log'] == 'function');
     }
     this.logger = logger;
     this.console = console;
@@ -242,12 +317,22 @@ dynamic class LzBootstrapDebugService {
   }
 
   /**
+   * Callback for console doEval
+   * @access private
+   */
+  function displayResult (result:*):void {
+    if (result !== (void 0)) {
+      this.__write(result);
+    }
+  };
+
+  /**
    * Doc'd on real definition
    * Bootstrap version
    * @access private
    */
   function __write (msg) {
-    if (_dbg_log_all_writes) {
+    if (this.log_all_writes) {
       this.logger.log(msg);
     }
     this.console.addText(msg);
@@ -336,32 +421,6 @@ dynamic class LzBootstrapDebugService {
       return closure.call(context);
     } catch(e) {
       return errval;
-    }
-  };
-
-  /**
-   * @access private
-   * XML escape
-   */
-  function xmlEscape (ts) {
-    if (ts && ((typeof(ts) == "string") || (ts instanceof String))) {
-      var outstr = "";
-      var tlen = ts.length;
-      for (var i = 0; i < tlen; i++) {
-        var c = ts.charAt(i);
-        if (c == '<') {
-          outstr += "&lt;";
-        } else if (c == '>') {
-          outstr += "&gt;";
-        } else if (c == '&') {
-          outstr += "&amp;";
-        } else {
-          outstr += c;
-        }
-      }
-      return outstr;
-    } else {
-      return ts;
     }
   };
 

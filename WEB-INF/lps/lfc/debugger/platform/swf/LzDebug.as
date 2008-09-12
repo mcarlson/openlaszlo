@@ -256,7 +256,13 @@ class LzAS2DebugService extends LzDebugService {
  *
  * @access private
  */
-__LzDebug = Debug = new LzAS2DebugService(Debug);
+var Debug = new LzAS2DebugService(Debug);
+/**
+  * TODO: [2006-04-20 ptw] Remove when compiler no longer references
+  * @access private
+  */
+var __LzDebug = Debug;
+
 
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************

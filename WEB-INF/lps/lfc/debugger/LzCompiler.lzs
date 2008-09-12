@@ -2,7 +2,7 @@
 
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -18,14 +18,7 @@ Debug.sourceWarningHistory = [];
 // LzWarning
 var $reportSourceWarning = function (filename, lineNumber, msg, fatal) {
 #pragma "warnUndefinedReferences=false"
-  var warning;
-  // Very early on, you don't have anything
-  if (LzWarning) {
-    var what = (fatal?LzError:LzWarning);
-    warning = new what(filename, lineNumber, msg);
-  } else {
-    warning = (fatal?'ERROR: ':'WARNING: ') + filename + ':' + lineNumber + ': ' + msg + '\n';
-  }
+  var warning = new (fatal?LzError:LzWarning)(filename, lineNumber, msg);
   var warningString = warning.toString();
   if (Debug.sourceWarningHistory[warningString]) {
     return;

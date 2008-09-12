@@ -48,14 +48,16 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
    * @access private
    */
   override function addText (msg) {
-    var str = '' + msg;
+    var str;
     try {
       if (msg && msg['toHTML'] is Function) {
         str = msg.toHTML();
       } else {
         str = String(msg).toHTML();
       }
-    } catch (e) {};
+    } catch (e) {
+      str = '' + msg;
+    };
     try {
       this.addHTMLText(str);
     } catch (e) {
@@ -94,8 +96,6 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
    */
   override function doEval (expr:String) {
 #pragma "warnUndefinedReferences=false"
-    // Echo input to output
-    this.echo(String(expr).toHTML());
     try {
       with (Debug.environment) {
         var value = window.eval(expr);
@@ -112,8 +112,7 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
    * @access private
    */
   override function makeObjectLink (rep, id:Number, attrs=null) {
-    var type = 'INSPECT';
-    if (attrs && attrs['type']) { type = attrs.type };
+    var type = (attrs && attrs['type']) ? attrs.type : 'INSPECT';
     if (id != null) {
       var obj = Debug.ObjectForID(id);
       var tip = Debug.formatToString("Inspect %0.32#w", obj);
@@ -333,7 +332,12 @@ class LzDHTMLDebugService extends LzDebugService {
  *
  * @access private
  */
-__LzDebug = Debug = new LzDHTMLDebugService(Debug);
+var Debug = new LzDHTMLDebugService(Debug);
+/**
+  * TODO: [2006-04-20 ptw] Remove when compiler no longer references
+  * @access private
+  */
+var __LzDebug = Debug;
 
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************

@@ -6,8 +6,7 @@
 
 
 <!--
- N.B. this (singleton) class actually extends the core debugger object defined in
- lfc/core/LzDebug.as by some tricky surgery in construct, q.v.
+ N.B. this (singleton) class actually implements only the Debug Console interface.  The debugger proper is part of the LFC.
 -->
 
 <include href="base/basebutton.lzx"/>
@@ -827,11 +826,15 @@
 
   <method name="addText"  args="msg">
      <![CDATA[
-       var str = '' + msg;
-       if (msg && (msg['toHTML'] is Function)) {
-           str = msg.toHTML();
-       } else {
-           str = String(msg).toHTML();
+       var str;
+       try {
+         if (msg && (msg['toHTML'] is Function)) {
+             str = msg.toHTML();
+         } else {
+             str = String(msg).toHTML();
+         }
+       } catch (e){
+         str  = '' + msg;
        }
        this.addHTMLText(str);
      ]]>

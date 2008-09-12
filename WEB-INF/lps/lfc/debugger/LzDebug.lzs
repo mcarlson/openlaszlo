@@ -159,7 +159,14 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   function doEval (expr) {
     this.freshPrompt();
-    this.console.doEval(expr);
+    // Echo input to output
+    this.console.echo(String(expr).toHTML());
+    try {
+      // The console evaluator will call back to displayResult
+      this.console.doEval(expr);
+    } catch (e) {
+      this.error(e);
+    }
   };
 
 
@@ -201,7 +208,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display a result and update the previous result values
    * @access private
    */
-  function displayResult (result:*):void {
+  override function displayResult (result:*):void {
     var e = this.environment;
     if (result !== (void 0)) {
       // Advance saved results if you have a new one
@@ -230,11 +237,11 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   /**
    * All output passes through here.  Maintains freshLine state.
    * Optionally logs all output acccording to the setting of
-   * _dbg_log_all_writes
+   * Debug.log_all_writes
    * @access private
    */
   override function __write (msg) {
-    if (_dbg_log_all_writes) {
+    if (this.log_all_writes) {
       this.logger.log(msg);
     }
     this.console.addText(msg);
@@ -919,7 +926,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         this.printLength = this.inspectPrintLength;
       }
       // Turn off pretty for name
-      var name = this.xmlEscape(this.__String(obj, false));
+      // TODO: [2008-09-05 ptw] Why do we have to xmlEscape this?
+      var name = LzMessage.xmlEscape(this.__String(obj, false));
       if (! (obj instanceof Object)) {
         return name;
       }
@@ -1016,7 +1024,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           r += wf;
         }
       }
-      var ostr = this.xmlEscape(this.__String(val));
+      // TODO: [2008-09-05 ptw] Why do we have to xmlEscape this?
+      var ostr = LzMessage.xmlEscape(this.__String(val));
       // Second, in case __String interns an abbreviated object
       var id = this.IDForObject(val);
       r = this.pad(r, wid);
@@ -1096,7 +1105,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function internalProperty (str) {
     // Use the component value of this attribute
     var ipp = LzDebugService.internalPropertyPrefixes;
-    for (var key in ipp) {
+    for (var key = ipp.length - 1; key >= 0; key--) {
       if (str.indexOf(ipp[key]) == 0) {
         return true;
       }
@@ -1359,10 +1368,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   *
   * @access private
   */
-Debug = new LzDebugService(Debug);
+var Debug = new LzDebugService(Debug);
 
 /**
-  * @todo 2006-04-20 ptw: Remove when compiler no longer references
+  * TODO: [2006-04-20 ptw] Remove when compiler no longer references
   * @access private
   */
 var __LzDebug = Debug;

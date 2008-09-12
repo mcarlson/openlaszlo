@@ -56,14 +56,16 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
       this.saved_msgs.push(msg);
       return;
     }
-    var str = '' + msg;
+    var str;
     try {
       if (msg && msg['toHTML'] is Function) {
         str = msg.toHTML();
       } else {
         str = String(msg).toHTML();
       }
-    } catch (e) {};
+    } catch (e) {
+      str  = '' + msg;
+    };
     this.addHTMLText(str);
   };
 
@@ -78,8 +80,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
    * @access private
    */
   override function makeObjectLink (rep, id:Number, attrs=null) {
-    var color = '#0000ff';
-    if (attrs && attrs.color) { color = attrs.color };
+    var color = (attrs && attrs['color']) ? attrs.color : '#0000ff';
     if (id != null) {
       // Note this is invoking a trampoline in the console that will
       // call back to us to display the object
@@ -95,18 +96,10 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
    * @access private
    */
   override function doEval (expr:String) {
-    // Echo input to output
-    this.echo(String(expr).toHTML());
-    try {
-      var req = "__remote-debugger.lzx?lzr=swf8&lzt=eval&lz_script="+escape("#file remote-eval-" + (this.evalcount++) + "\n#line 0\n" + expr);
-      this.crdbloader.loadMovie( req );
-//       with (Debug.environment) {
-//         var value = window.eval(expr);
-//       }
-//       Debug.displayResult(value);
-    } catch (e) {
-      Debug.error(e);
-    }
+    // The eval responder will compile the expression inside a
+    // callback to Debug.displayResult
+    var req = "__remote-debugger.lzx?lzr=swf8&lzt=eval&lz_script="+escape("#file remote-eval-" + (this.evalcount++) + "\n#line 0\n" + expr);
+    this.crdbloader.loadMovie( req );
   };
 
   /**
@@ -178,7 +171,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
 
     // Set up RPC functions:
     // hook for evaluating an expression
-    lc.evalExpr = function (...args) { that.doEval.apply(that, args) };
+    lc.evalExpr = function (...args) { Debug.doEval.apply(Debug, args) };
     lc.displayObj = function (...args) { Debug.displayObj.apply(Debug, args); }
     // Unused
 //     // hook for getting the list of property names of an object, by id
