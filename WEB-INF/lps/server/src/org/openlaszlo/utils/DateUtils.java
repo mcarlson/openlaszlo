@@ -3,15 +3,18 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.utils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.TimeZone;
+import java.util.Locale;
 
 import org.openlaszlo.utils.ChainedException;
 
@@ -44,5 +47,11 @@ public class DateUtils {
             throw new ChainedException(e);
         }
     }
+
+  public static String getISO8601DateString(Date d) {
+    DateFormat dfm = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+    dfm.setTimeZone(TimeZone.getTimeZone("GMT"));
+    return dfm.format(d);
+  }
 }
 

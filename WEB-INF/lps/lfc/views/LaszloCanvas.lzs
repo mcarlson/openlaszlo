@@ -96,11 +96,11 @@ dynamic class LzCanvas extends LzView {
       * @keywords final
       */
     public var lpsbuilddate;
-    /** A String specifying the date and time of the application build. "Fri Sep 05 18:06:44 PDT 2008"
+    /** A String specifying the date and time of the application build. "2008-09-12T14:15:12Z"
       * @type String
       * @keywords final
       */
-    public var builddate;
+    public var appbuilddate;
     /** A String describing the target runtime. "dhtml" | "swf7" | "swf8" are currently supported. Others are in development.
       * @type String
       * @keywords final
@@ -352,9 +352,6 @@ dynamic class LzCanvas extends LzView {
 
         // Create the default dataprovider
         this.defaultdataprovider = this.httpdataprovider = new LzHTTPDataProvider();
-
-        this.builddate = args.builddate;
-        delete args.builddate;
 
         LzPlatform.initCanvas(this);
 
@@ -739,10 +736,13 @@ function setDefaultContextMenu ( cmenu ){
 static function versionInfoString () :String {
   return (
     'URL: ' + lz.Browser.getLoadURL() + '\n' +
-    'Version: ' + canvas.lpsversion + '\n' +
-    'Release: ' + canvas.lpsrelease + '\n' +
-    'Build: ' + canvas.lpsbuild + '\n' +
-    'Date: ' + canvas.lpsbuilddate + '\n' +
+    'LPS\n' +
+    '  Version: ' + canvas.lpsversion + '\n' +
+    '  Release: ' + canvas.lpsrelease + '\n' +
+    '  Build: ' + canvas.lpsbuild + '\n' +
+    '  Date: ' + canvas.lpsbuilddate + '\n' +
+    'Application\n' +
+    '  Date: ' + canvas.appbuilddate + '\n' +
     'Target: ' + canvas.runtime + '\n' +
     'Runtime: ' + lz.Browser.getVersion() + '\n' +
     'OS: ' + lz.Browser.getOS() + '\n');

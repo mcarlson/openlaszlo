@@ -765,7 +765,7 @@
           <fileset dir="credits" />
       </copy>
 
-      <tstamp><format property="BUILDDATE" pattern="hh:mm aa dd-MMM-yyyy" locale="en"/></tstamp>
+      <tstamp><format property="BUILDDATE" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="GMT" locale="en"/></tstamp>
       <copy todir="${builddir-dev}">
           <!-- need the html and the css -->
           <fileset dir="docs">

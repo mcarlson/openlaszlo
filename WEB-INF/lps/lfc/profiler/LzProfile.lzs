@@ -500,13 +500,7 @@
             // Write the header
             this.info("Profile version: " + this.version);
             this.info("Date: " + (new Date).toString());
-            this.info("Profiling: " + lz.Browser.getLoadURL());
-            this.info("LPS Version: " + canvas.lpsversion);
-            this.info("LPS Release: " + canvas.lpsrelease);
-            this.info("LPS Build: " + canvas.lpsbuild);
-            this.info("LPS Build Date: " + canvas.lpsbuilddate);
-            this.info("LPS Target: " + canvas.runtime);
-            this.info("Runtime: " + lz.Browser.getVersion());
+            this.info(LzCanvas.versionInfoString());
             this.lpsVersionDone = true;
         }
 

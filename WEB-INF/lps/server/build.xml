@@ -300,8 +300,7 @@ javac (1.4);
     <echo message="LPS_HOME is ${LPS_HOME}." />
     <!-- Create LPS.xml based on timestamp -->
     <tstamp>
-        <format property="BUILDDATE" 
-                pattern="yyyy-MM-dd'T'HH:mm:ssZ" locale="en"/>
+        <format property="BUILDDATE" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="GMT" locale="en"/>
     </tstamp>
     <copy overwrite="true" tofile="build/${pkg.server}/lps.xml"
             file="src/${pkg.server}/lps.xml.proto">
