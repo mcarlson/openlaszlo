@@ -364,7 +364,7 @@
 
             // Prevent the user from clicking anything else
             lz.ModeManager.makeModal( this );
-            this.message.setText( message );
+            this.message.setAttribute('text', message );
         </method>
         <method name="playAgain">
             // Close the dialog box and, reset the game

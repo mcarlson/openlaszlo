@@ -16,25 +16,25 @@
     <!-- Connector used for createUser action -->
     <ServiceConnector name="createUserConn" form="$once{parent}">
       <method name="handleResult" args="message">
-        form.searchSubnodes("name", "messageBox").setText(message);
+        form.searchSubnodes("name", "messageBox").setAttribute('text', message);
       </method>
     </ServiceConnector>
 
     <!-- Connector used for updateUser action -->
     <ServiceConnector name="updateUserConn" form="$once{parent}">
       <method name="handleResult" args="message">
-        form.searchSubnodes("name", "messageBox").setText(message);
+        form.searchSubnodes("name", "messageBox").setAttribute('text', message);
       </method>
     </ServiceConnector>
 
 
         <!-- METHOD SECTION -->
     <method name="clear">
-      searchSubnodes("name", "login").setText('');
-      searchSubnodes("name", "realName").setText('');
-      searchSubnodes("name", "email").setText('');
-      searchSubnodes("name", "password1").setText('');
-      searchSubnodes("name", "password2").setText('');
+      searchSubnodes("name", "login").setAttribute('text', '');
+      searchSubnodes("name", "realName").setAttribute('text', '');
+      searchSubnodes("name", "email").setAttribute('text', '');
+      searchSubnodes("name", "password1").setAttribute('text', '');
+      searchSubnodes("name", "password2").setAttribute('text', '');
       parent.user = null;
       content.createState.setAttribute('applied', true);
       content.updateState.setAttribute('applied', false);
@@ -61,9 +61,9 @@
     <!--- Load data of existing user into form -->
     <method name="loadUser" args="user">
       this.user = user;
-      parent.searchSubnodes("name", "login").setText(user.login);
-      parent.searchSubnodes("name", "realName").setText(user.realName);
-      parent.searchSubnodes("name", "email").setText(user.email);
+      parent.searchSubnodes("name", "login").setAttribute('text', user.login);
+      parent.searchSubnodes("name", "realName").setAttribute('text', user.realName);
+      parent.searchSubnodes("name", "email").setAttribute('text', user.email);
       content.createState.setAttribute('applied', false);
       content.updateState.setAttribute('applied', true);
     </method>
@@ -104,7 +104,7 @@
              bgcolor="#cccccc" borderSize="2" visible="true" clip="true">
         <method name="setText" args="t">
           if (t.length > 0) {
-            this.textField.setText(t);
+            this.textField.setAttribute('text', t);
             this.setAttribute("visible", true);
             this.animate('height', 30, 400);
           } else {

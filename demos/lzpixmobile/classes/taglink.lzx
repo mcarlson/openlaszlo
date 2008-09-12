@@ -10,7 +10,7 @@
         
         <handler name="ondata" args="t" >
             if ( t == null || t == undefined ) t = "";                
-            this.txt.setText(t);            
+            this.txt.setAttribute('text', t);            
         </handler>
 
         <method name="getCanvasFocusRect">

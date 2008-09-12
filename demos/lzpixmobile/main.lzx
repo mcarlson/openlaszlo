@@ -83,12 +83,12 @@
             <photo width="${54 * gContent.scale * .01}" name="repl" datapath="photo[1-9]">
                 <handler name="onfocused" >
                     container.setAttribute('lastphoto', this);
-                    header_txt.setText( this.text );
+                    header_txt.setAttribute('text', this.text );
                 </handler>
                 <handler name="onmousedown">
                     canvas.highlight.show(this, 0);
                     container.setAttribute('lastphoto', this);
-                    header_txt.setText(this.text);
+                    header_txt.setAttribute('text', this.text);
                 </handler>
                 <handler name="onmouseup" >
                     container.showDetails( 'photo' );
@@ -150,7 +150,7 @@
 
             <method name="update" args="start">
                 <![CDATA[
-                this.setX(10);
+                this.setAttribute('x', 10);
                 var c = this.datapath.xpathQuery('photo');
                 this.length = c.length;
                 if (this.length) {
@@ -158,7 +158,7 @@
                     var dpstring = 'photods:/rsp/photos/photo['+(this.start+1)+'-'+(this.start+this.pagesize)+']';
                     this.repl.setAttribute('datapath', dpstring);
                 }
-                header_txt.setText('loading page ' + (Math.floor(this.start / this.pagesize) + 1) + ' of ' + (Math.floor(this.length / this.pagesize) + 1))
+                header_txt.setAttribute('text', 'loading page ' + (Math.floor(this.start / this.pagesize) + 1) + ' of ' + (Math.floor(this.length / this.pagesize) + 1))
                 lay.doupdate(null);
                 if(this.didzoom == true && typeof container.lastphoto != 'undefined'){
                     if(container.lastphoto.visible == true){

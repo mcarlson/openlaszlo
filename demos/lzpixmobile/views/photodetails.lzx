@@ -51,7 +51,7 @@
                         }
                         //container.lastphoto = gContent.repl.getCloneForOffset( offset );
                         photodetails.setPhoto(container.lastphoto);
-                        header_txt.setText( container.lastphoto.text );
+                        header_txt.setAttribute('text', container.lastphoto.text );
                         return true;
                     case 39: // right arrow
                         offset += 1;
@@ -66,7 +66,7 @@
                             }
                         }
                         photodetails.setPhoto(container.lastphoto);
-                        header_txt.setText( container.lastphoto.text );
+                        header_txt.setAttribute('text', container.lastphoto.text );
                         return true;
                     default:
                         return false;    
@@ -127,13 +127,13 @@
 
             <view name="tum" x="5"  width="${parent.width}">
                 <handler name="ondata" reference="infods">
-                    this.tl.setDatapath('infods:/rsp/photo/tags/tag[1-19]/text()');
+                    this.tl.setAttribute('datapath', 'infods:/rsp/photo/tags/tag[1-19]/text()');
                 </handler>
                 <wrappinglayout spacing="3" />      
                 <taglink name="tl" clickable="true" focusable="false">
                     <handler name="onclick">
                         var t = this.txt.getText();
-                        sbox.setText( t );
+                        sbox.setAttribute('text', t );
                         sbox.load();
                     </handler>
                 </taglink>
@@ -144,9 +144,9 @@
 
     <method name="showDetails" args="screen">
         if ( screen == 'photo' ) {
-            this.container.setY( 0 );      
+            this.container.setAttribute('y', 0 );      
         } else if ( screen == 'info' ) {
-            this.container.setY( -256 );
+            this.container.setAttribute('y', -256 );
             navmanager.focus( nx, false );
         }
     </method>

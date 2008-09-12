@@ -23,7 +23,7 @@
 
     <ServiceConnector name="createTaskConn" form="$once{parent}">
       <method name="handleResult" args="message">
-        form.searchSubnodes("name", "messageBox").setText(message);
+        form.searchSubnodes("name", "messageBox").setAttribute('text', message);
       </method>
     </ServiceConnector>
 
@@ -36,8 +36,8 @@
         <!-- METHOD SECTION -->
     <method name="clear">
       parent.user = null;
-      searchSubnodes("name", "title").setText('');
-      searchSubnodes("name", "description").setText('');
+      searchSubnodes("name", "title").setAttribute('text', '');
+      searchSubnodes("name", "description").setAttribute('text', '');
     </method>
 
 
@@ -63,7 +63,7 @@
     </method>
 
     <method name="setMessage" args="msg">
-      messageBox.setText(msg);
+      messageBox.setAttribute('text', msg);
     </method>
 
     <method name="updateTask">
@@ -97,7 +97,7 @@
            bgcolor="#cccccc" borderSize="2" visible="false" clip="true">
       <method name="setText" args="t">
         if (t.length > 0) {
-          this.textField.setText(t);
+          this.textField.setAttribute('text', t);
           this.setAttribute("visible", true);
           this.animate('height', 30, 400);
         } else {
@@ -125,7 +125,7 @@
             var day = this.selecteddate.getDate();
             var month = this.selecteddate.getMonth();
             var year = this.selecteddate.getFullYear();
-            parent.deadline.setText(year+"/"+(month+1)+"/"+day);
+            parent.deadline.setAttribute('text', year+"/"+(month+1)+"/"+day);
           }
           ]]>
         </handler>

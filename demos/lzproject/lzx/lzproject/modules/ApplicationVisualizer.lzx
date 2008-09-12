@@ -37,20 +37,20 @@
           }
           // Set a delegate for the ondata events both of successDP and failureDP
       this.updateDel.register(selectedService, "ondata");
-          searchSubnodes("name", "successDatapath").setText(selectedService.successDatapath);
-          searchSubnodes("name", "failureDatapath").setText(selectedService.failureDatapath);
-          searchSubnodes("name", "lastRequestTime").setText(selectedService._lastRequestTime);
-          searchSubnodes("name", "errorCount").setText(selectedService._errorCount);
-          searchSubnodes("name", "requestCount").setText(selectedService._requestCount);
-          searchSubnodes("name", "lastMessage").setText(selectedService._lastMessage);
-          searchSubnodes("name", "xmlSerialized").setText(selectedService._xmlSerialized);
+          searchSubnodes("name", "successDatapath").setAttribute('text', selectedService.successDatapath);
+          searchSubnodes("name", "failureDatapath").setAttribute('text', selectedService.failureDatapath);
+          searchSubnodes("name", "lastRequestTime").setAttribute('text', selectedService._lastRequestTime);
+          searchSubnodes("name", "errorCount").setAttribute('text', selectedService._errorCount);
+          searchSubnodes("name", "requestCount").setAttribute('text', selectedService._requestCount);
+          searchSubnodes("name", "lastMessage").setAttribute('text', selectedService._lastMessage);
+          searchSubnodes("name", "xmlSerialized").setAttribute('text', selectedService._xmlSerialized);
           // Now get the URL for this REST web service
           var host = lz.Browser.getLoadURLAsLzURL().host;
           var path = lz.Browser.getLoadURLAsLzURL().path;
           var port = lz.Browser.getLoadURLAsLzURL().port;
           var base = lz.Browser.getLoadURLAsLzURL();
           var datasetSrc = selectedService._dsRef.src;
-          searchSubnodes("name", "serviceUrl").setText(datasetSrc);
+          searchSubnodes("name", "serviceUrl").setAttribute('text', datasetSrc);
           // Check if we have a connector and a form for the service
           var connector = selectedService._connector;
           if (connector != null) {

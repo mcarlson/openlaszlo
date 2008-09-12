@@ -24,7 +24,7 @@
     <!-- connector connecting to createProject service -->
     <ServiceConnector name="createProjectConn" form="$once{parent}">
       <method name="handleResult" args="message">
-        form.searchSubnodes("name", "messageBox").setText(message);
+        form.searchSubnodes("name", "messageBox").setAttribute('text', message);
       </method>
     </ServiceConnector>
 
@@ -58,8 +58,8 @@
 
     <!--- Reset the form -->
     <method name="reset">
-      parent.searchSubnodes("name", "projectName").setText('');
-      parent.searchSubnodes("name", "description").setText('');
+      parent.searchSubnodes("name", "projectName").setAttribute('text', '');
+      parent.searchSubnodes("name", "description").setAttribute('text', '');
       this.setAttribute("visible", false);
     </method>
 
@@ -71,9 +71,9 @@
            bgcolor="#cccccc" borderSize="2" visible="true" clip="true">
       <method name="setText" args="t">
           if (t.length > 0) {
-            this.textField.setText(t);
+            this.textField.setAttribute('text', t);
           } else {
-            this.textField.setText(classroot.i18n.newProjectMessage);
+            this.textField.setAttribute('text', classroot.i18n.newProjectMessage);
           }
       </method>
       <text name="textField" align="center" fgcolor="#2c4c62" fontsize="12"

@@ -8,11 +8,11 @@
 
     <class name="randombox" width="20" height="20" with="Spatialnav">
         <handler name="oninit">
-            this.setWidth((Math.random() * 60) + 10);
-            this.setHeight((Math.random() * 60) + 10);
-            this.setX(Math.random() * (canvas.width - this.width));
-            this.setY(Math.random() * (canvas.height - this.height));
-            this.setBGColor(Math.random() * 0xffffff);
+            this.setAttribute('width', (Math.random() * 60) + 10);
+            this.setAttribute('height', (Math.random() * 60) + 10);
+            this.setAttribute('x', Math.random() * (canvas.width - this.width));
+            this.setAttribute('y', Math.random() * (canvas.height - this.height));
+            this.setAttribute('bgcolor', Math.random() * 0xffffff);
         </handler>
     </class>
     

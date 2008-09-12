@@ -143,7 +143,7 @@
             <attribute name="i18nUser" type="string" value="$path{'../../login/user/text()'}" />
             <handler name="ondata" args="p">
               if (p != null) {
-                  this.setText(this.i18nUser + ": " + p.childNodes[0]);
+                  this.setAttribute('text', this.i18nUser + ": " + p.childNodes[0]);
               }
             </handler>
           </text>
@@ -152,7 +152,7 @@
               value="$path{'../../main/lastLogin/text()'}" />
             <handler name="ondata" args="p">
               if (p != null) {
-                  this.setText(this.i18nLastLogin + ": " + p.childNodes[0]);
+                  this.setAttribute('text', this.i18nLastLogin + ": " + p.childNodes[0]);
               }
             </handler>
           </text>
@@ -228,7 +228,7 @@
                                   var dp = listProjectsDS.getPointer();
                                   dp.setXPath("listProjectsDS:/response/projects/project[@id = '"
                                       +projectID+"']/running"),
-                                  this.setText(dp.getNodeText());
+                                  this.setAttribute('text', dp.getNodeText());
                               </handler>
                       </text>
                   </view>
@@ -246,7 +246,7 @@
                                   var dp = listProjectsDS.getPointer();
                                   dp.setXPath("listProjectsDS:/response/projects/project[@id = '"
                                       +projectID+"']/description"),
-                                  this.setText(dp.getNodeText());
+                                  this.setAttribute('text', dp.getNodeText());
                               </handler>
                   </text>
                     </BorderedBox>
@@ -367,7 +367,7 @@
                                   var dp = listProjectsDS.getPointer();
                                   dp.setXPath("listProjectsDS:/response/projects/project[@id = '"
                                       +projectID+"']/description"),
-                                  this.setText(dp.getNodeText());
+                                  this.setAttribute('text', dp.getNodeText());
                               </handler>
                         </text>
                     </BorderedBox>

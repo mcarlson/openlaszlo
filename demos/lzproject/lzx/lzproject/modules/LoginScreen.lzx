@@ -23,7 +23,7 @@
     <!-- Service connector connecting to login service -->
     <ServiceConnector name="loginConn" form="$once{parent}">
       <method name="handleResult" args="message">
-        form.searchSubnodes("name", "messageBox").setText(message);
+        form.searchSubnodes("name", "messageBox").setAttribute('text', message);
       </method>
     </ServiceConnector>
 
@@ -60,22 +60,22 @@
 
     <!--- Display an error message for the user -->
     <method name="showError" args="messageTxt">
-      this.messageBox.setText(messageTxt);
+      this.messageBox.setAttribute('text', messageTxt);
     </method>
 
     <!--- Show a localized message from the i18n container -->
     <method name="showMessage" args="key">
       if (key != null) {
-          this.messageBox.setText(this.i18n[key]);
+          this.messageBox.setAttribute('text', this.i18n[key]);
       } else {
-          this.messageBox.setText('');
+          this.messageBox.setAttribute('text', '');
       }
     </method>
 
     <!--- Reset the form -->
     <method name="reset">
-      loginName.setText('');
-      password.setText('');
+      loginName.setAttribute('text', '');
+      password.setAttribute('text', '');
     </method>
 
     <!--- Validate the form data -->
@@ -109,7 +109,7 @@
     <BorderedBox name="messageBox" x="20" y="70" height="32" width="${parent.width-40}" borderColor="#6eaed8"
          bgcolor="#c6dff0">
       <method name="setText" args="t">
-        this.textField.setText(t);
+        this.textField.setAttribute('text', t);
       </method>
         <text name="textField" align="center" fgcolor="#2c4c62" fontsize="14" datapath="i18nDS:/app/login/loginMessage/text()" />
     </BorderedBox>

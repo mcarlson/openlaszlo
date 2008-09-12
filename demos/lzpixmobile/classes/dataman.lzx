@@ -77,7 +77,7 @@
             var api_sig_string=gGlobals.SHAREDSECRET;
 
             // set source
-            ds.setSrc(gGlobals.RESTSRC);
+            ds.setAttribute('src', gGlobals.RESTSRC);
 
             // add api_key
             argobjarr.push({argname:"api_key", argvalue:gGlobals.API_KEY});
@@ -194,7 +194,7 @@
                 ]
             } 
 
-            header_txt.setText('loading tags: ' + tags);
+            header_txt.setAttribute('text', 'loading tags: ' + tags);
 
             this.doFlickrRequest(photods, argobj);                    
         </method>
