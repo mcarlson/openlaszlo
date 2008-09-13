@@ -19,7 +19,7 @@
         </handler>
 
         <method name="testCarla">
-            this.assertEquals( 0x366d3c, gCarla.getAttribute("bgcolor") );
+            this.assertEquals( 0x366d3c, gCarla["bgcolor"] );
             this.finishedTest("testCarla");
         </method>
 

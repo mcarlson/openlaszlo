@@ -11,13 +11,13 @@
         
         <method name="testRobby">
             assertNotNull( gRobbyElement );
-            assertEquals( 279, gRobbyElement.getWidth() );
-            assertEquals( "uc berkeley", gRobbyElement.getAttribute("miscdata"));
+            assertEquals( 279, gRobbyElement['width'] );
+            assertEquals( "uc berkeley", gRobbyElement["miscdata"]);
         </method>
         <method name="testPatrick">
             assertNotNull( gPatrickElement );
-            assertEquals( 279, gPatrickElement.getWidth() );
-            assertEquals( "uc berkeley", gPatrickElement.getAttribute("miscdata"));
+            assertEquals( 279, gPatrickElement['width'] );
+            assertEquals( "uc berkeley", gPatrickElement["miscdata"]);
         </method>
         <method name="addTests"> 
             this.addTest("testRobby");

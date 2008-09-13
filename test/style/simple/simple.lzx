@@ -1,4 +1,4 @@
-<!-- Copyright 2007 Laszlo Systems --> 
+<!-- Copyright 2007, 2008 Laszlo Systems --> 
 <library>
 
 
@@ -14,11 +14,11 @@
 <view id="gSimple" width="50" height="50">
     <handler name="onconstruct" method="applyStyle" /> 
     
-    <method name="applyStyle">
+    <method name="applyStyle" args="ignore">
         Debug.write("this is not simple bbbb");
         var style = LzCSSStyle.getComputedStyle( this );
         var bgc = style.getPropertyValue( "bgcolor" );
-        this.setBGColor(bgc);
+        this.setAttribute('bgcolor', bgc);
     </method>
     <text>hi there</text>
 </view> 

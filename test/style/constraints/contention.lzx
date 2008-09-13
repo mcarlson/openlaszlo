@@ -21,13 +21,13 @@
         
     <class name="ContentionTestCase" extends="TestCase">
         <method name="testCantThinkOfAName">
-            assertUndefined(perry.getAttribute("textx"), "textx should be undefined"); 
-            assertEquals(0, gene.getAttribute("x"), "gene should have an x of 0"); 
-            assertEquals(0, perry.getAttribute("x"), "perry should have an x of 0"); 
+            assertUndefined(perry["textx"], "textx should be undefined"); 
+            assertEquals(0, gene["x"], "gene should have an x of 0"); 
+            assertEquals(0, perry["x"], "perry should have an x of 0"); 
         </method>
         
         <method name="testConstantOverridesConstraint">
-            assertEquals(27, dyson.getAttribute("x")); 
+            assertEquals(27, dyson["x"]); 
         </method>
         <method name="addTests"> 
             this.addTest("testCantThinkOfAName");

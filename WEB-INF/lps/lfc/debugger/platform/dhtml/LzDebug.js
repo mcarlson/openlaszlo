@@ -118,7 +118,7 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
       var tip = Debug.formatToString("Inspect %0.32#w", obj);
       // This ends up being inserted into the debugger output iframe.
       // We look up $modules in the parent it shares with the app.
-      return '<a class="' + type + '" title="' + tip + '" href="javascript:window.parent.$modules.lz.Debug.displayObj(' + id + ')">' + rep +"</a>";
+      return '<span class="' + type + '" title="' + tip + '" onclick="javascript:window.parent.$modules.lz.Debug.displayObj(' + id + ')">' + rep +"</span>";
     }
     return rep;
   };

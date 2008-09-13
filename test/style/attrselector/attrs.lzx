@@ -34,19 +34,25 @@
     <class name="AttrSelectorTestCase" extends="TestCase">
         <method name="testCanyon">
             assertNotNull( gCanyon );
-            assertEquals( 300, gCanyon.getWidth() );
-            assertEquals( "san jose state", gCanyon.getAttribute("miscdata"));
+            assertEquals( 300, gCanyon['width'] );
+            assertEquals( "san jose state", gCanyon["miscdata"]);
         </method>
 
         <method name="testJareth">
             assertNotNull( gJareth );
-            assertEquals( 200, gJareth.getWidth() );
-            assertEquals( "somewhere far away", gJareth.getAttribute("miscdata"));
+            assertEquals( 200, gJareth['width'] );
+            assertEquals( "somewhere far away", gJareth["miscdata"]);
         </method>
 
         <method name="testNonNameAttrs">
-            assertEquals( 0x25592c, gEverest.getAttribute("innercolor") );
-            assertEquals( 0xbe6127, gDouggie.getAttribute("innercolor") );            
+            assertEquals( 0x25592c, gEverest["innercolor"] );
+            assertEquals( 0xbe6127, gDouggie["innercolor"] );            
+        </method>
+
+        <method name="addTests">
+          for (var t in {testCanyon: true, testJareth: true, testNonNameAttrs: true}) {
+            this.addTest(t);
+          }
         </method>
     </class>
 </library>

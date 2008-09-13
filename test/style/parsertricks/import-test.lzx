@@ -27,11 +27,11 @@
         </handler>-->
 
         <method name="testCarla">
-            assertEquals( '0x366d3c', gCarla.getAttribute("bgcolor") );
+            assertEquals( '0x366d3c', gCarla["bgcolor"] );
             <!--this.finishedTest("testCarla");-->
         </method>
         <method name="testPaul">
-            assertEquals( '0xd19063', gPaul.getAttribute("bgcolor") );
+            assertEquals( '0xd19063', gPaul["bgcolor"] );
             <!--this.finishedTest("testPaul");-->
         </method>
         <method name="addTests"> 

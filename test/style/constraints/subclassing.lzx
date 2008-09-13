@@ -64,23 +64,23 @@
     <class name="CSSSubclassingTestCase" extends="TestCase" >
 
          <method name="testClassConstraint">
-             this.assertEquals(purple, sb0.getAttribute("bgcolor"), "Class CSS value");
-             this.assertEquals(fuchsia, sb0.inner.getAttribute("bgcolor"), "Class CSS attr");
+             this.assertEquals(purple, sb0["bgcolor"], "Class CSS value");
+             this.assertEquals(fuchsia, sb0.inner["bgcolor"], "Class CSS attr");
          </method>
 
          <method name="testInstanceOverrideConstraint">
-             this.assertEquals(maroon, sb1.getAttribute("bgcolor"), "Instance override CSS value");
-             this.assertEquals(red, sb1.inner.getAttribute("bgcolor"), "Instance override CSS attr");
+             this.assertEquals(maroon, sb1["bgcolor"], "Instance override CSS value");
+             this.assertEquals(red, sb1.inner["bgcolor"], "Instance override CSS attr");
          </method>
 
          <method name="testSubclassOverrideConstraint">
              <![CDATA[
-             this.assertEquals("150", sb2.getAttribute("width"), "Subclass override attribute");
-             this.assertEquals(navy, sb2.getAttribute("bgcolor"), "Subclass override CSS value");
-             this.assertEquals(blue, sb2.inner.getAttribute("bgcolor"), "Subclass override CSS attr");
-             this.assertEquals(green, sb3.getAttribute("bgcolor"), "Subclass override CSS value");
-             this.assertEquals(999, sb3.getAttribute("width"), "Subclass CSS value override");
-             this.assertEquals(lime, sb3.inner.getAttribute("bgcolor"), "Subclass override CSS attr attribute");
+             this.assertEquals("150", sb2["width"], "Subclass override attribute");
+             this.assertEquals(navy, sb2["bgcolor"], "Subclass override CSS value");
+             this.assertEquals(blue, sb2.inner["bgcolor"], "Subclass override CSS attr");
+             this.assertEquals(green, sb3["bgcolor"], "Subclass override CSS value");
+             this.assertEquals(999, sb3["width"], "Subclass CSS value override");
+             this.assertEquals(lime, sb3.inner["bgcolor"], "Subclass override CSS attr attribute");
              this.assertEquals(999, sb5.width, "LPP-4451");
              this.assertEquals(testing.width/2, sb6.width, "LPP-4451-inverse");
              ]]>

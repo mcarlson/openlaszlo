@@ -26,10 +26,10 @@
     <!-- See LPP-4182 undefined CSS values used to be null. now they're undefined. -->
     <class name="UndefinedsTestCase" extends="TestCase">
             <method name="testUndefinedIsUndefined">
-                assertUndefined(fazzleblarb.getAttribute("foobles"));
+                assertUndefined(fazzleblarb["foobles"]);
             </method>
             <method name="testUnspecifiedIsUndefined">
-                assertUndefined(fazzleblarb.getAttribute("undef"));
+                assertUndefined(fazzleblarb["undef"]);
             </method>
             <method name="addTests"> 
                 this.addTest("testUndefinedIsUndefined");
@@ -41,4 +41,4 @@
         Debug.info("there should be a warning about a reference to an undefined property 'undef'");
     </script>
 </library>
-<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved. -->

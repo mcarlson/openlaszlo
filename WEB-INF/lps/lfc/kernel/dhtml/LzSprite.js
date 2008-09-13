@@ -610,21 +610,21 @@ LzSprite.prototype.setResource = function ( r ){
 }
 
 LzSprite.prototype.getResourceUrls = function (resourcename) {
+    var urls = [];
     // look up resource name in LzResourceLibrary
     // LzResourceLibrary is in the format:
     // LzResourceLibrary.lzscrollbar_xthumbleft_rsc={ptype:"ar"||"sr",frames:["lps/components/lz/resources/scrollbar/scrollthumb_x_lft.png"],width:1.0,height:12.0}
     var res = LzResourceLibrary[resourcename];
     if (! res) {
         if ($debug) {
-            Debug.warn('Could not find resource', resourcename);
+            Debug.warn('Could not find resource named %#s', resourcename);
         }
-        return;
+        return urls;
     }
 
     this.resourceWidth = res.width;
     this.resourceHeight = res.height;
 
-    var urls = []; 
     var baseurl = '';
     if (res.ptype && res.ptype == 'sr') {
         baseurl = lz.embed.options.resourceroot;

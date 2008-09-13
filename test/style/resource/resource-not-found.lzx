@@ -50,22 +50,22 @@
     <class name="ResourceTestCase" extends="TestCase">
         <!-- Descendant selectors test -->
         <method name="testFoundResource">
-            assertTrue( "test.png", gJason.getAttribute("resource") );
-            assertEquals( 77, gJason.getAttribute("resourceheight"), "jason resourceheight" );
-            assertEquals( 206, gJason.getAttribute("resourcewidth"), "jason resourcewidth");
+            assertTrue( "test.png", gJason["resource"] );
+            assertEquals( 77, gJason["resourceheight"], "jason resourceheight" );
+            assertEquals( 206, gJason["resourcewidth"], "jason resourcewidth");
 
-            assertTrue( 77, gMarsh.getAttribute("resourceheight"), "marsh height" );
-            assertTrue( 206, gMarsh.getAttribute("resourcewidth"), "marsh width" );
+            assertTrue( 77, gMarsh["resourceheight"], "marsh height" );
+            assertTrue( 206, gMarsh["resourcewidth"], "marsh width" );
 
-            assertTrue( 77, gJim.getAttribute("resourceheight"), "jim height" );
-            assertTrue( 206, gJim.getAttribute("resourcewidth"), "jim width" );
+            assertTrue( 77, gJim["resourceheight"], "jim height" );
+            assertTrue( 206, gJim["resourcewidth"], "jim width" );
         </method>
 
         <method name="testFoundStyledResource">
             // gBonk should be just like gJason, but gBonk is styled with CSS
-            assertTrue( "test.png", gBonk.getAttribute("resource") );
-            assertEquals( 77, gBonk.getAttribute("resourceheight") );
-            assertEquals( 206, gBonk.getAttribute("resourcewidth") );             
+            assertTrue( "test.png", gBonk["resource"] );
+            assertEquals( 77, gBonk["resourceheight"] );
+            assertEquals( 206, gBonk["resourcewidth"] );             
         </method>
 
         <method name="addTests"> 
@@ -75,5 +75,5 @@
     </class>
 
 </library>
-<!-- Copyright 2007 Laszlo Systems -->       
+<!-- Copyright 2007, 2008 Laszlo Systems -->       
    

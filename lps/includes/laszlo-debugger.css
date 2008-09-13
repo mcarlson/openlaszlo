@@ -15,30 +15,36 @@ body
 }
 
 /* Debug link styles */
-a.DEBUG, a.INFO, a.WARNING, a.ERROR, a.TRACE, a.MONITOR { text-decoration: none; }
+span.DEBUG, span.INFO, span.WARNING, span.ERROR, span.TRACE, span.MONITOR span.INSPECT {
+    cursor: pointer;
+    text-decoration: none;
+}
 
-a.INSPECT { }
+span.INSPECT {
+    color: #0000ff;
+    text-decoration: underline;
+}
 
 /* Debugger prompts are span.DEBUG */
-span.DEBUG, a.DEBUG, a.TRACE, a.MONITOR
+span.DEBUG, span.DEBUG, span.TRACE, span.MONITOR
 {
 	color: #00cc00;
 	background-color: white;
 }
 
-a.INFO
+span.INFO
 {
 	color: #0066cc;
 	background-color: white;
 }
 
-a.WARNING
+span.WARNING
 {
 	color: #ff9900;
 	background-color: white;
 }
 
-a.ERROR
+span.ERROR
 {
 	color: #ff0000;
 	background-color: white;
@@ -50,6 +56,6 @@ span.OUTPUT
     white-space: pre;
 }
 /*
- * Copyright 2006, 2007 Laszlo Systems, Inc.  All Rights Reserved.
+ * Copyright 2006, 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
  * Use is subject to license terms.
  */

@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas bgcolor="0xAAAAAA">
     <include href="../test"/>
     <include href="lzunit"/>
@@ -71,7 +71,7 @@
 <TestSuite name="texttestsuite">
 <TestCase>
         <method name="testSimpleText">
-            assertEquals( '0xAA33AA', gt2.getAttribute("bgcolor"));
+            assertEquals( '0xAA33AA', gt2["bgcolor"]);
 
             // The color of the sprite for gt3 should now have the color string specified in
             // stylefontcolor
@@ -83,12 +83,12 @@
             }
 
             // it would be nice if this worked, too.
-            assertEquals( '0x993399', gt3.getAttribute("fgcolor"));
+            assertEquals( '0x993399', gt3["fgcolor"]);
 
-            assertEquals( 18, gt4.getAttribute("fontsize"));
+            assertEquals( 18, gt4["fontsize"]);
 
-            assertEquals( "bold", gt6.getAttribute("fontstyle"));
-            // this.assertEquals( "bold", gt7.getAttribute("fontstyle"));
+            assertEquals( "bold", gt6["fontstyle"]);
+            // this.assertEquals( "bold", gt7["fontstyle"]);
         </method>
 
 

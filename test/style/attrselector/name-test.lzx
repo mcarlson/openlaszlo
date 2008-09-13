@@ -1,3 +1,4 @@
+
 <!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <!-- Remember: attribute selectors win over element selectors. --> 
@@ -72,8 +73,8 @@
 
 <class name="AttrNameTestCase" extends="TestCase">
         <method name="testthename">
-            assertEquals( "i am thename", joseph.getAttribute("testdata") );
-            assertEquals( "i am view", snoopy.getAttribute("testdata") );                                    
+            assertEquals( "i am thename", joseph["testdata"] );
+            assertEquals( "i am view", snoopy["testdata"] );                                    
         </method>
 
         <!-- This is known to fail in swf6, but works in swf7 and swf8. Filed as 
@@ -88,7 +89,7 @@
                 If edgar takes his style from rule 2, which feels like the
                 right behavior, the next assertion will pass.
             */ 
-            assertEquals( "i am testclass", edgar.getAttribute("testdata") );             
+            assertEquals( "i am testclass", edgar["testdata"] );             
             /* 
                 The situation is the same for cheever, but with selecting for
                 element type of view rather than a user class. 
@@ -97,22 +98,28 @@
                 should have the same success, because they only differ by whether
                 the class is a user class or built-in class.                 
             */            
-            assertEquals( "i am view", cheever.getAttribute("testdata") );                                   
+            assertEquals( "i am view", cheever["testdata"] );                                   
         </method>
 
         <method name="testNameVsElement">
-            assertEquals( "i am view", alice.getAttribute("testdata") );            
+            assertEquals( "i am view", alice["testdata"] );            
             /* randy is the reverse of the edgar test case */ 
-            assertEquals( "i am view", randy.getAttribute("testdata") );                        
-            assertEquals( "i am thename", doug.getAttribute("testdata") );            
+            assertEquals( "i am view", randy["testdata"] );                        
+            assertEquals( "i am thename", doug["testdata"] );            
         </method>
         
         <method name="testBigParty">
             Debug.write("testBigParty");
             // This tests LPP-4063, CSS name attribute selector doesn't work in Flash 6
-            assertEquals(100, mytitle.getAttribute("x") );
+            assertEquals(100, mytitle["x"] );
         </method>
 
+
+        <method name="addTests">
+          for (var t in {testthename: true, testNamedAncestor: true, testNameVsElement: true, testBigParty: true}) {
+            this.addTest(t);
+          }
+        </method>
 </class>
 
 </library>

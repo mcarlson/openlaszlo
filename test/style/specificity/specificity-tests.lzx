@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <!-- [2007.05.25] These tests are failing and are probably ROTTEN
     because the way rules are exported as javascript by the compiler 
@@ -88,9 +88,9 @@ compiler output for these rules.
         ]]></method>
         
         <method name="testLittleBoys">
-            assertEquals( 0xAA00AA, gLittleGeorge.getAttribute("favoritecolor"));
-            this.assertEquals( 0xAA00AA, gRobertJr.getAttribute("favoritecolor"));            
-            this.assertEquals( 0x441a0a, gIndio.getAttribute("favoritecolor"));               
+            assertEquals( 0xAA00AA, gLittleGeorge["favoritecolor"]);
+            this.assertEquals( 0xAA00AA, gRobertJr["favoritecolor"]);            
+            this.assertEquals( 0x441a0a, gIndio["favoritecolor"]);               
         </method>
         <method name="addTests"> 
             this.addTest("testLessThan");

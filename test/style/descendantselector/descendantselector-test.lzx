@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>    
     <stylesheet src="../neighborhood/kennedy.css" />
     
@@ -6,32 +6,32 @@
 
         <!-- Descendant selectors test -->        
         <method name="testSimpleDescendant">
-            assertEquals("politician", gJoeJr.getAttribute("occupation"));            
-            assertEquals("politician", gRosemary.getAttribute("occupation"));            
-            assertEquals("politician", gKathleen.getAttribute("occupation"));            
+            assertEquals("politician", gJoeJr["occupation"]);            
+            assertEquals("politician", gRosemary["occupation"]);            
+            assertEquals("politician", gKathleen["occupation"]);            
         </method>
 
         <method name="testOverridenDescendant">
-            assertEquals("president", gJFK.getAttribute("occupation"));
-            assertEquals("senator", gTed.getAttribute("occupation"));                                                
+            assertEquals("president", gJFK["occupation"]);
+            assertEquals("senator", gTed["occupation"]);                                                
         </method>
 
         <!-- Descendant selectors test --> 
         <method name="testGrandchildren">
-            assertEquals("jetsetter", gCBK.getAttribute("occupation"));
-            assertEquals("jetsetter", gJFKJr.getAttribute("occupation"));            
-            assertEquals("jetsetter", gPatrick.getAttribute("occupation"));            
+            assertEquals("jetsetter", gCBK["occupation"]);
+            assertEquals("jetsetter", gJFKJr["occupation"]);            
+            assertEquals("jetsetter", gPatrick["occupation"]);            
         </method>
         
         <!-- This is the heart of how themes for diamond will work. --> 
         <method name="testCatAncestor">
-            assertEquals( "kennedycat", gJoeCat.getAttribute("misc"));                        
-            assertEquals( "kennedycat", gPatCat.getAttribute("misc"));                                    
-            assertEquals( "smithcat", gBlackie.getAttribute("misc"));                                                
+            assertEquals( "kennedycat", gJoeCat["misc"]);                        
+            assertEquals( "kennedycat", gPatCat["misc"]);                                    
+            assertEquals( "smithcat", gBlackie["misc"]);                                                
         </method>
         
         <method name="testSpecificity">
-            assertEquals("plainoldcat", gKittycat.getAttribute("misc"));        
+            assertEquals("plainoldcat", gKittycat["misc"]);        
         </method>
         
         <method name="addTests"> 

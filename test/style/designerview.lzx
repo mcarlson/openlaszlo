@@ -1,4 +1,4 @@
-<!-- Copyright 2006-2007 Laszlo Systems -->
+<!-- Copyright 2006-2008 Laszlo Systems -->
 <library> 
 
 <stylesheet>    
@@ -12,6 +12,7 @@
 specific and override it. --> 
 <stylesheet>
     designerview {
+        group: none;
         width: 50;
         height: 50;
         borderwidth: 10;

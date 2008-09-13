@@ -182,7 +182,7 @@ class LzStyleAttrBinder {
     this.source = source;
   }
 
-  function bind() {
+  function bind(ignore) {
     var target = this.target;
     target.setAttribute(this.dest, target[this.source]);
   }

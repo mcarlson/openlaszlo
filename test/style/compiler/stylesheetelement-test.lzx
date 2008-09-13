@@ -53,30 +53,37 @@
     </view>
 
      <method name="testPlain">
-         assertEquals( 279, gPlainDV.getWidth() );
-         assertEquals( "uc berkeley", gPlainDV.getAttribute("miscdata"));
+         assertEquals( 279, gPlainDV['width'] );
+         assertEquals( "uc berkeley", gPlainDV["miscdata"]);
      </method>
 
      <method name="testPhilip">
          assertNotNull( gPhilip );
-         assertEquals( 300, gPhilip.getWidth() );
-         assertEquals( "san jose state", gPhilip.getAttribute("miscdata"));
+         assertEquals( 300, gPhilip['width'] );
+         assertEquals( "san jose state", gPhilip["miscdata"]);
      </method>
 
      <method name="testGeorge">
          assertNotNull( gGeorge );
-         assertEquals( 200, gGeorge.getWidth() );
-         assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"));
+         assertEquals( 200, gGeorge['width'] );
+         assertEquals( "somewhere far away", gGeorge["miscdata"]);
      </method>
 
      <method name="testNonNameAttrs">
-         assertEquals( '0x25592c', gGroove.getAttribute("innercolor") );
-         assertEquals( '0xbe6127', gYuck.getAttribute("innercolor") );            
+         assertEquals( '0x25592c', gGroove["innercolor"] );
+         assertEquals( '0xbe6127', gYuck["innercolor"] );            
      </method>
 
      <method name="testLibrary">
-         assertEquals( '0x004499', gBiblio.getAttribute("innercolor") );
+         assertEquals( '0x004499', gBiblio["innercolor"] );
      </method>
+
+
+        <method name="addTests">
+          for (var t in {testPlain: true, testPhilip: true, testGeorge: true, testNonNameAttrs: true, testLibrary: true}) {
+            this.addTest(t);
+          }
+        </method>
 
 </class>
 </library>

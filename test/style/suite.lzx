@@ -723,29 +723,29 @@ dezignerview {
 <!--attribute tests-->
         <method name="testPhilip">
             assertNotNull( gPhilip );
-            assertEquals( 300, gPhilip.getWidth() );
-            assertEquals( "san jose state", gPhilip.getAttribute("miscdata"));
+            assertEquals( 300, gPhilip['width'] );
+            assertEquals( "san jose state", gPhilip["miscdata"]);
             Debug.write('attribute testPhilip');
         </method>
 
         <method name="testGeorge">
             assertNotNull( gGeorge );
-            assertEquals( 200, gGeorge.getWidth() );
-            assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"));
+            assertEquals( 200, gGeorge['width'] );
+            assertEquals( "somewhere far away", gGeorge["miscdata"]);
             Debug.write('attribute testGeorge');
         </method>
 
         <!-- fix
         <method name="testNonNameAttrs">
-            assertEquals( 0x25592c, gGroove.getAttribute("innercolor") );
-            assertEquals( 0xbe6127, gYuck.getAttribute("innercolor") );            
+            assertEquals( 0x25592c, gGroove["innercolor"] );
+            assertEquals( 0xbe6127, gYuck["innercolor"] );            
             Debug.write('attribute testNonNameAttrs');
          </method>
          -->
 
         <method name="testthename">
-            assertEquals( "i am thename", joseph.getAttribute("testdata") );
-            assertEquals( "i am view", snoopy.getAttribute("testdata") );                                    
+            assertEquals( "i am thename", joseph["testdata"] );
+            assertEquals( "i am view", snoopy["testdata"] );                                    
             Debug.write('attribute testTheName');
         </method>
 
@@ -757,7 +757,7 @@ dezignerview {
                 If edgar takes his style from rule 2, which feels like the
                 right behavior, the next assertion will pass.
             */ 
-            assertEquals( "i am testclass", edgar.getAttribute("testdata") );             
+            assertEquals( "i am testclass", edgar["testdata"] );             
             /* 
                 The situation is the same for cheever, but with selecting for
                 element type of view rather than a user class. 
@@ -766,15 +766,15 @@ dezignerview {
                 should have the same success, because they only differ by whether
                 the class is a user class or built-in class.                 
             */            
-            assertEquals( "i am view", cheever.getAttribute("testdata") );                                   
+            assertEquals( "i am view", cheever["testdata"] );                                   
            Debug.write('attribute testNamedAncestor');
          </method>
 
         <method name="testNameVsElement">
-            assertEquals( "i am view", alice.getAttribute("testdata") );            
+            assertEquals( "i am view", alice["testdata"] );            
             /* randy is the reverse of the edgar test case */ 
-            assertEquals( "i am view", randy.getAttribute("testdata") );                        
-            assertEquals( "i am thename", doug.getAttribute("testdata") );            
+            assertEquals( "i am view", randy["testdata"] );                        
+            assertEquals( "i am thename", doug["testdata"] );            
            Debug.write('attribute testNameVsElement');
          </method>
 <!--end attribute tests-->
@@ -806,23 +806,23 @@ dezignerview {
 
 <!--subclassing-->
          <method name="testClassConstraint">
-             this.assertEquals(purple, sb0.getAttribute("bgcolor"));
-             this.assertEquals(fuchsia, sb0.inner.getAttribute("bgcolor"));
+             this.assertEquals(purple, sb0["bgcolor"]);
+             this.assertEquals(fuchsia, sb0.inner["bgcolor"]);
              Debug.write("subclassing testClassConstraint");
          </method>
 
          <method name="testInstanceOverrideConstraint">
-             this.assertEquals(maroon, sb1.getAttribute("bgcolor"));
-             this.assertEquals(red, sb1.inner.getAttribute("bgcolor"));
+             this.assertEquals(maroon, sb1["bgcolor"]);
+             this.assertEquals(red, sb1.inner["bgcolor"]);
              Debug.write("subclassing testInstanceOverrideConstraint");
          </method>
 
          <method name="testSubclassOverrideConstraint">
-             this.assertEquals("150", sb2.getAttribute("width"));
-             this.assertEquals(navy, sb2.getAttribute("bgcolor"));
-             this.assertEquals(blue, sb2.inner.getAttribute("bgcolor"));
-             this.assertEquals(green, sb3.getAttribute("bgcolor"));
-             this.assertEquals(lime, sb3.inner.getAttribute("bgcolor"));
+             this.assertEquals("150", sb2["width"]);
+             this.assertEquals(navy, sb2["bgcolor"]);
+             this.assertEquals(blue, sb2.inner["bgcolor"]);
+             this.assertEquals(green, sb3["bgcolor"]);
+             this.assertEquals(lime, sb3.inner["bgcolor"]);
              Debug.write("subclassing testSubclassOverrideConstraint");
          </method>
 <!--end subclassing-->
@@ -831,15 +831,15 @@ dezignerview {
 <!--element selector tests-->
         <method name="testRobby">
             assertNotNull( gRobby );
-            assertEquals( 279, gRobby.getWidth() );
-            assertEquals( "uc berkeley", gRobby.getAttribute("miscdata"));
+            assertEquals( 279, gRobby['width'] );
+            assertEquals( "uc berkeley", gRobby["miscdata"]);
             Debug.write('Element selector testRobby');
         </method>
 
         <method name="testPatrick">
             assertNotNull( ePatrick );
-            assertEquals( 279, ePatrick.getWidth() );
-            assertEquals( "uc berkeley", ePatrick.getAttribute("miscdata"));
+            assertEquals( 279, ePatrick['width'] );
+            assertEquals( "uc berkeley", ePatrick["miscdata"]);
             Debug.write('Element selector testPatrick');
         </method>
 <!--end element selector test-->
@@ -855,33 +855,33 @@ dezignerview {
         </method>
         
          <method name="testTopLevel">
-            assertEquals( "0x0000AA", gJoeSr.getAttribute("favoritecolor"));
+            assertEquals( "0x0000AA", gJoeSr["favoritecolor"]);
             Debug.write("testTopLevel");
         </method>
 
         <method name="testTwoLevel">
-            assertEquals( "0x00AA00", gJFK.getAttribute("favoritecolor"));
-            assertEquals( "0xAA0000", gBo.getAttribute("favoritecolor"));            
-            assertEquals( "gstreetcat", gKittycat.getAttribute("meowsound"));
-            assertEquals( "gstreetcat", gBlackie.getAttribute("meowsound"));            
-            assertEquals( "kennedycat", gPatCat.getAttribute("meowsound"));            
+            assertEquals( "0x00AA00", gJFK["favoritecolor"]);
+            assertEquals( "0xAA0000", gBo["favoritecolor"]);            
+            assertEquals( "gstreetcat", gKittycat["meowsound"]);
+            assertEquals( "gstreetcat", gBlackie["meowsound"]);            
+            assertEquals( "kennedycat", gPatCat["meowsound"]);            
             Debug.write("testTwoLevel");
         </method>
 
         <method name="testThreeLevel">
-            assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
-            assertEquals( "0xAA00AA", gRobertJr.getAttribute("favoritecolor"));            
-            assertEquals( "0x441a0a", gIndio.getAttribute("favoritecolor"));               
+            assertEquals( "0xAA00AA", gLittleGeorge["favoritecolor"]);
+            assertEquals( "0xAA00AA", gRobertJr["favoritecolor"]);            
+            assertEquals( "0x441a0a", gIndio["favoritecolor"]);               
             Debug.write("testThreeLevel");
         </method>
 
 <!--end descendant selector tests-->
 <!--fake tests-->
     <method name="testColors">
-        assertEquals( '0x000088', gLiOne.getAttribute("fontcolor") );
-        assertEquals( '0x008800', gBan.getAttribute("fontcolor") );        
-        assertEquals( '0x880000', gLiSub.getAttribute("fontcolor") );                
-        assertEquals( '0x880000', gLiSpecial.getAttribute("fontcolor") );                        
+        assertEquals( '0x000088', gLiOne["fontcolor"] );
+        assertEquals( '0x008800', gBan["fontcolor"] );        
+        assertEquals( '0x880000', gLiSub["fontcolor"] );                
+        assertEquals( '0x880000', gLiSpecial["fontcolor"] );                        
         Debug.write("testColors");
     </method>
 <!--end fake-->
@@ -889,15 +889,15 @@ dezignerview {
        <!--id selector tests-->
         <method name="testPhilip">
             assertNotNull( iPhilip );
-            assertEquals( 300, iPhilip.getWidth() );
-            assertEquals( "san jose state", iPhilip.getAttribute("miscdata"));
+            assertEquals( 300, iPhilip['width'] );
+            assertEquals( "san jose state", iPhilip["miscdata"]);
             Debug.write("id selector testPhilip");
         </method>
 
         <method name="testGeorge">
             assertNotNull( iGeorge );
-            assertEquals( 200, iGeorge.getWidth() );
-            assertEquals( "somewhere far away", iGeorge.getAttribute("miscdata"));
+            assertEquals( 200, iGeorge['width'] );
+            assertEquals( "somewhere far away", iGeorge["miscdata"]);
             Debug.write("testGeorge");
         </method>
         
@@ -913,9 +913,9 @@ dezignerview {
 
 <!--test resources-->
        <method name="testFoundStyledResource">
-            assertTrue( "test.png", gBonk.getAttribute("resource") );
-            assertEquals( 77, gBonk.getAttribute("resourceheight") );
-            assertEquals( 206, gBonk.getAttribute("resourcewidth") );             
+            assertTrue( "test.png", gBonk["resource"] );
+            assertEquals( 77, gBonk["resourceheight"] );
+            assertEquals( 206, gBonk["resourcewidth"] );             
             Debug.write("testFoundStyledResource");
         </method>
 
@@ -973,9 +973,9 @@ dezignerview {
         </method>
 
         <method name="testLittleBoys">
-            assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
-            this.assertEquals( "0xAA00AA", gRobertJr.getAttribute("favoritecolor"));            
-            this.assertEquals( "0x441a0a", gIndio.getAttribute("favoritecolor"));               
+            assertEquals( "0xAA00AA", gLittleGeorge["favoritecolor"]);
+            this.assertEquals( "0xAA00AA", gRobertJr["favoritecolor"]);            
+            this.assertEquals( "0x441a0a", gIndio["favoritecolor"]);               
             Debug.write("testLittleBoys"); 
         </method>
 
@@ -983,7 +983,7 @@ dezignerview {
 
 <!--typography tests-->
        <method name="testSimpleText">
-            assertEquals( '0xAA33AA', gt2.getAttribute("bgcolor"));
+            assertEquals( '0xAA33AA', gt2["bgcolor"]);
             
             // The htmltext for gt3 should now have the color string specified in
             // stylefontcolor
@@ -993,11 +993,11 @@ dezignerview {
             this.assertTrue( indexOfColor > 0 , "993399 present in htmltext"); 
 
 <!--            // it would be nice if this worked, too. 
-            assertEquals( '0x993399', gt3.getAttribute("fgcolor"));             
-            assertEquals( 18, gt4.getAttribute("fontsize"));-->
+            assertEquals( '0x993399', gt3["fgcolor"]);             
+            assertEquals( 18, gt4["fontsize"]);-->
              
-            assertEquals( "bold", gt6.getAttribute("fontstyle")); 
-            // this.assertEquals( "bold", gt7.getAttribute("fontstyle"));             
+            assertEquals( "bold", gt6["fontstyle"]); 
+            // this.assertEquals( "bold", gt7["fontstyle"]);             
             
             Debug.write("testSimpleText");
         </method>
@@ -1042,4 +1042,4 @@ dezignerview {
 
 </canvas>
 
-<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved. -->

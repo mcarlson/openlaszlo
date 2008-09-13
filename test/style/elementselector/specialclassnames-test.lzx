@@ -31,16 +31,16 @@
         <view id="gJean" name="jean" width="250" height="150" bgcolor="$style{'nicebgcolor'}" />
 
         <method name="testview">
-            assertEquals( '0x366d3c', this.gView.getAttribute("bgcolor") );
-            assertEquals( "Frank", this.gView.getAttribute("name"))
+            assertEquals( '0x366d3c', this.gView["bgcolor"] );
+            assertEquals( "Frank", this.gView["name"])
         </method>
 
         <method name="testtext">
-            assertEquals( "text loves foo!", gFooText.getAttribute("text"));
+            assertEquals( "text loves foo!", gFooText["text"]);
         </method>
 
         <method name="testclassattr">
-            assertEquals( '0x81103f', this.gJean.getAttribute("bgcolor"));
+            assertEquals( '0x81103f', this.gJean["bgcolor"]);
         </method>
     </class>
     
