@@ -168,9 +168,9 @@ mixin LzFormatter {
         ((al > 0) != (control.indexOf('%') >= 0))) {
       // Process each value to individually so they can be
       // 'presented' as objects if applicable
-      args.unshift(control);
+      args = [control].concat(args);
       al++;
-      var out = new LzMessage;
+      var out = new LzMessage();
       for (var i = 0; i < al; i++) {
         var arg = args[i];
         var sep = ((i == (al-1)) ? '\n' : ' ');

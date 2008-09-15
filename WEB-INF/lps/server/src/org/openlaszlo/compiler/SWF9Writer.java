@@ -368,7 +368,7 @@ class SWF9Writer extends ObjectWriter {
 
         // Bring up a debug window if needed.
         if (debug && makedebugwindow) {
-            //addScript("__LzDebug.makeDebugWindow()");
+            addScript("Debug.makeDebugWindow()");
         }
 
 

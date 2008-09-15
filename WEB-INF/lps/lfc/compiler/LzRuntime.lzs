@@ -9,13 +9,15 @@
   * @subtopic Runtime
   */
 
+if ($swf9) {
+} else { 
 /**
   * DHTML/SWF compatibility
   *
   * @todo 2006-04-07 ptw Remove when _root is eradicated from .lzs
   */
 window._root = window;
-
+}
 /**
  * Modules
  * TODO [2006-03-12 ptw] if the LFC is shared this needs to be multiplexed
@@ -31,6 +33,10 @@ $modules.runtime = global;
 $modules.runtime = this;
 }
 
+if ($swf9) {
+
+} else {
+
 /**
  * Define LZ module
  * TODO: [2006-03-21 ptw] Make this an object that inherits from
@@ -44,7 +50,7 @@ $modules.lz = $modules.runtime;
  * LZ so that we do not pollute the LZ module
  */
 $modules.user = $modules.lz;
-
+}
 /**
  * Define global
  * TODO [2006-03-12 ptw] if the LFC is shared this needs to be multiplexed
@@ -52,8 +58,6 @@ $modules.user = $modules.lz;
 if ($swf9) {
 } else {
 var global = $modules.user;
-}
-
 if ($debug) {
   // Define a debug object, since backtracing will look for it.  We
   // could add some primitive debug commands here to debug the class
@@ -73,8 +77,20 @@ if ($debug) {
     */
   window.parent.$modules = $modules;
 }
+}
 
 if ($as2) {
 var encodeURIComponent = escape;
 }
 
+/*
+ * Map string to global value, since swf9 runtime does not support any
+ * kind of eval()
+ *
+ * N.B. we need to declare the function globalValue() as a 'var', 
+ * because that's the only way right now to get the script compiler to
+ * put it at the top level in the swf9 intermediate .as files, outside
+ * of the LFCApplication.
+ */
+
+var  globalValue = function (name) { return this[name]; }

@@ -3,12 +3,20 @@
       @subtopic Debugging
   -->
 <library>
+
+  <!-- the debug eval loader; it's platform-specific -->
+  <switch>
+    <when runtime="swf8">
+      <include href="platform/swf8/eval.lzs"/>
+    </when>
+    <when runtime="swf9">
+      <include href="platform/swf9/eval.lzs"/>
+    </when>
+  </switch>
+
   <switch>
     <when runtime="dhtml">
       <!-- no debug window in DHTML, it is in its own iframe -->
-    </when>
-    <when runtime="swf9">
-      <!-- swf9 debugger uses fdb for now -->
     </when>
     <otherwise>
       <include href="debugger.lzx"/>

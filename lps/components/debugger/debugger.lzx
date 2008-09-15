@@ -154,11 +154,11 @@
        }
     </setter> 
 
-    <setter name="x" args="x, force=null" > 
+    <setter name="x" args="x" > 
         super.setAttribute ('x', Math.max( 0-(this.width-10), Math.min( x , canvas.width - 4) ) ); 
     </setter> 
 
-    <setter name="y" args="y, force=null" > 
+    <setter name="y" args="y" > 
         super.setAttribute ('y', Math.max( 0 , Math.min( y , canvas.height - 4) ) ); 
     </setter> 
 
@@ -166,7 +166,7 @@
       <![CDATA[
        global._ = null;
        //TODO: This uses Flash-specific APIs
-       this.evalloader = new LzLoader(this.sprite, { attachname: 'debugloader' });
+       this.evalloader = new LzDebugEvalLoader(this);
        this.loaded();
        var text = this.bottom.center.input;
        this.lineheight = text.getTextHeight()+4;
@@ -250,26 +250,6 @@
        ]]>
     </method>
 
-    <method name="checkServerResponse">
-      <![CDATA[
-        var loadobj = new LoadVars();
-        loadobj.onData = this.checkServerResponseHandler;
-        var reqstr =  lz.Browser.toAbsoluteURL( "__dbgprobe.lzx?lzt=stat", false );
-        loadobj.sendAndLoad(reqstr , loadobj, "POST" );
-      ]]>
-    </method>
-
-
-    <method name="checkServerResponseHandler" args="src">
-      <![CDATA[
-      // NB: This is a callback handler, and 'this' will be bound to some LoadVars object, not to Debug
-      if (src == undefined) {
-        Debug.warn('Debugger cannot contact LPS server, switching to SOLO mode.');
-        Debug.setAttribute('solo_mode', true);
-      }
-      ]]>
-    </method>
-
     <!-- send the input text field to server for compile/eval -->
     <method name="doEval">
       <![CDATA[
@@ -279,21 +259,15 @@
        this.persist.data.commandhistory = this.commandhistory;
        // Echo input to output
        Debug.freshPrompt();
-       this.echo(String(expr).toHTML());
+       this.echo(String(expr)['toHTML']());
        // Will try to compile as 'Debug.displayResult(expr);' and if
        // that fails, will try to compile as a series of statements
        // (with no display).  Finally, will compile
        // 'Debug.__write(<error message>)' if both of those fail.
        if (this.solo_mode) {
-           Debug.displayResult(eval(expr));
+           Debug.displayResult(globalValue(expr));
        } else {
-           this.evalloader.request( { lz_load : false,
-                                          lzt : "eval",
-                                          proxied: true,
-                                          url: "__debugger.lzx",
-                                          lz_script : "#file interactive-eval-"+
-                                          this.commandhistory.length + 
-                                          "\n#line 0\n" + expr } );
+          this.evalloader.doEval(expr, this.commandhistory.length);
        }
        // Clear the input text field
        if (!this.bottom.center.input.multiline) {
@@ -303,9 +277,7 @@
     </method>
 
     <method name="evalString" args="expr">
-      this.evalloader.request( { lz_load : false,
-                                 lzt : "eval",
-                                 lz_script : "#file evalString\n#line 0\n" + expr } )
+      this.evalloader.doEval(expr, this.commandhistory.length);
     </method>
 
     <!--- Clear the output from the debug window -->
@@ -369,7 +341,7 @@
         var objs = expr.split('.');
         var part = null;
         if (objs[0]['constructor']) {
-          var obj = eval(objs[0]) || global;
+          var obj = globalValue(objs[0]) || global;
         } else {
           var obj = global;
         }
@@ -831,7 +803,7 @@
          if (msg && (msg['toHTML'] is Function)) {
              str = msg.toHTML();
          } else {
-             str = String(msg).toHTML();
+             str = String(msg)['toHTML']();
          }
        } catch (e){
          str  = '' + msg;
@@ -861,7 +833,7 @@
      ]]>
   </method>
 
-  <method name="makeObjectLink" args="rep:String, id:Number, attrs=null">
+  <method name="makeObjectLink" args="rep:String, id, attrs=null">
      <![CDATA[
       var color = '#0000ff';
       if (attrs && attrs.color) { color = attrs.color };
@@ -885,8 +857,13 @@
         this.isLoaded = true;
         this.remoteDebug = false;
 
-        Debug.attachDebugConsole(this);
-
+        if ($swf9) {
+            var bridge:LzDebugConsole = new LzDebuggerWindowConsoleBridge(this);
+            trace('calling attachDebugConsole', bridge);
+            Debug.attachDebugConsole(bridge);
+        } else {
+           Debug.attachDebugConsole(this);
+        }
         this.setAttribute('visible', true );
         this.bringToFront();
 
@@ -894,7 +871,7 @@
 
         // See if the LPS server is present; if not fall back to simpler eval()
         if (canvas.proxied == false) {
-           this.checkServerResponse();
+           this.evalloader.checkServerResponse();
         }
       ]]>
   </method>

@@ -37,12 +37,14 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @access private
    */
   function LzDebugService(base:LzBootstrapDebugService) {
-    super(base.logger, base.console);
+    super(base ? base.logger : null, base ? base.console : null);
     this.base = base;
     // Preserve any state created in the base service
-    var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
-    for (var k in copy) {
-      this[k] = base[k];
+    if (!$swf9) {
+      var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
+      for (var k in copy) {
+        this[k] = base[k];
+      }
     }
   }
 
@@ -119,7 +121,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * any messages saved in the bootstrap console.  Typically called
    * from makeDebugWindow
    */
-  function attachDebugConsole (console:LzBootstrapDebugConsole) {
+  function attachDebugConsole (console:LzDebugConsole) {
     var old = this.console;
     this.console = console;
     // Replay saved messages
@@ -160,7 +162,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function doEval (expr) {
     this.freshPrompt();
     // Echo input to output
-    this.console.echo(String(expr).toHTML());
+    this.console.echo(String(expr)['toHTML']());
     try {
       // The console evaluator will call back to displayResult
       this.console.doEval(expr);
@@ -189,7 +191,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     // Make it look like you executed a command, even though
     // you don't need to compile to do this
     this.freshPrompt();
-    this.console.echo(this.formatToString("Debug.inspect(%0.48w)", obj).toHTML());
+    this.console.echo(this.formatToString("Debug.inspect(%0.48w)", obj)['toHTML']());
     this.displayResult(this.inspect(obj));
   }
 
@@ -270,7 +272,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   function write (...any) {
     // Call format in 'compatibility' mode
-    var msg = this.formatToString.apply(this, arguments);
+    var msg;
+    msg = this.formatToString.apply(this, any);
     this.freshLine();
     this.__write(msg);
   };
@@ -300,6 +303,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * warnInternal tracks recursion and silences messages below
    * messageLevel
    */
+  /**
+   * warnInternal tracks recursion and silences messages below
+   * messageLevel
+   */
   function warnInternal (xtor:Function, control:String, ...args) {
     var sourceMessage = LzSourceMessage;
     var level = sourceMessage.level
@@ -307,10 +314,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     try {
       sourceMessage.level = level + 1;
       // Safari and Firefox do not implement arguments as an array
-      var msg = xtor.format.apply(xtor, [null, null, control].concat(args));
+      var msg = xtor['format'].apply(xtor, [null, null, control].concat(args));
       {
         var mls = LzDebugService.messageLevels;
-        var t = xtor.type;
+        var t = xtor['type'];
         // Default to printing any 'unknown' types
         if ((t in mls) ? (mls[t] >= mls[this.messageLevel]) : true) {
           this.freshLine();
@@ -336,8 +343,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @param Array * args: Any number of arguments to be formatted
    * according to the control string
    */
-  override function warn (control:String, ...args) {
-    return this.warnInternal.apply(this, [LzWarning, control].concat(args));
+  override function warn (...args) {
+    return this.warnInternal.apply(this, [LzWarning].concat(args));
   };
 
   /**
@@ -352,8 +359,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @param Array * args: Any number of arguments to be formatted
    * according to the control string
    */
-  override function error (control:String, ...args) {
-    return this.warnInternal.apply(this, [LzError, control].concat(args));
+  override function error (...args) {
+    return this.warnInternal.apply(this, [LzError].concat(args));
   };
 
   /**
@@ -368,8 +375,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @param Array * args: Any number of arguments to be formatted
    * according to the control string
    */
-  override function info (control:String, ...args) {
-    return this.warnInternal.apply(this, [LzInfo, control].concat(args));
+  override function info (...args) {
+    return this.warnInternal.apply(this, [LzInfo].concat(args));
   };
 
   /**
@@ -384,8 +391,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @param Array * args: Any number of arguments to be formatted
    * according to the control string
    */
-  override function debug (control:String, ...args) {
-    return this.warnInternal.apply(this, [LzDebug, control].concat(args));
+  override function debug (...args) {
+    return this.warnInternal.apply(this, [LzDebug].concat(args));
   };
 
 
@@ -452,10 +459,15 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * object is not 'interesting'. Default false.
    * @return Number: the object ID
    *
+   *
    * @access private
    */
   function IDForObject (obj:*, force:Boolean=false):Number {
     var id:Number;
+    // N.B. [hqm 2008-09-11] in swf9 we can use the flash.utils.Dictionary object
+    // to do hash table lookups using === object equality, so we don't need to
+    // iterate over the id_to_object_table to see if an object has been interned.
+    // So this method is overridden in swf9 runtime, in LzAS3DebugService
     var ot = this.id_to_object_table;
     for (id = ot.length - 1; id >= 0; id--) {
       if (ot[id] === obj) {
@@ -514,7 +526,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  function __typeof (thing:*):String {
+  function __typeof (thing):String {
     try {
       // default type
       var n = typeof(thing);
@@ -526,13 +538,16 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
 
         // Check for user typename
         var user_name = null;
-        if (thing['_dbg_typename'] && (thing._dbg_typename is Function)) {
-          // Guard against broken user routines
-          try {
-            user_name = thing._dbg_typename();
-          } catch (e) {}
-        } else if (typeof(thing._dbg_typename) == 'string') {
-          user_name = thing._dbg_typename;
+
+        if (thing['_dbg_typename']) {
+          if (thing._dbg_typename is Function) {
+            // Guard against broken user routines
+            try {
+              user_name = thing._dbg_typename();
+            } catch (e) {}
+          } else if (typeof(thing._dbg_typename) == 'string') {
+            user_name = thing._dbg_typename;
+          }
         }
         // No or invalid user typename, use constructor
         if (this.isStringLike(user_name)) {
@@ -553,7 +568,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
             }
           }
           if (ocn) {
-            if (oc !== eval(ocn)) {
+            if (oc !== globalValue(ocn)) {
               // Uniquify non-global constructors
               var id = this.IDForObject(oc);
               ocn += '#' + id;
@@ -596,7 +611,16 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     }
     catch (e) {
       try {
-        n = this.formatToString("Error %0.24w computing __typeof", e);
+        // TODO hqm 2008-09-13  in swf9 there's a recursive loop in formatToString now, so this
+        // just makes a string here for swf9
+        if ($swf9) {
+             n = ("Error: "+e+" computing __typeof");
+        } else {
+             n = this.formatToString("Error %0.24w computing __typeof", e);
+        }
+
+
+
       }
       catch (e) {
         n = "Recursive error computing __typeof";
@@ -619,10 +643,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     if (fn && (fn is Function)) {
       // _dbg_name takes precedence over the actual function name
       if (fn.hasOwnProperty('_dbg_name')) {
-        var n = fn._dbg_name;
+        var n = fn['_dbg_name'];
       } else {
         // tip o' the pin to osteele.com
-        var fstring = fn.toString();
+        var fstring = fn['toString']();
         var s = 'function '.length;
         var e = fstring.indexOf(' (');
         if ((fstring.indexOf('function ') == 0) && (e > s)) {
@@ -630,7 +654,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         }
       }
       if (n) {
-        if ((! isGlobal) || (fn === eval(n))) {
+        if ((! isGlobal) || (fn === globalValue(n))) {
           return n;
         }
       }
@@ -646,7 +670,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  function __StringDescription(thing:*, pretty:Boolean, limit:Number, unique:Boolean):Object {
+  function __StringDescription(thing, pretty:Boolean, limit:Number, unique:Boolean):Object {
     try {
       // Evade infinite recursion
       if (limit <= 0) return {pretty: true, description: '\xABwhoops!\xBB'};
@@ -676,7 +700,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           // Guard against broken user routines
           try {
             // Not dn(), because need thing context
-            debug_name = thing._dbg_name();
+            debug_name = thing['_dbg_name']();
           }
           catch (e) {}
         } else if (this.isStringLike(dn)) {
@@ -781,11 +805,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
 
           // No pretty for subclasses or non-objects or array-like objects
           // that are not Arrays.
-          if (! (indices ?
-                 ((thing is Array) && (thing.constructor === Array)) :
-                 ((thing is Object) && (thing.constructor === Object)))) {
+          var z = indices ?
+            ((thing is Array) && (thing.constructor === Array)) : ((thing is Object) && (thing.constructor === Object));
+          if (! z) {
             pretty = (! unique);
           }
+
           if (indices) {
             // Present as an array, Don't accumulate beyond limit
             var next = 0;
@@ -838,7 +863,13 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     catch (e) {
       pretty = false;
       try {
-        s = this.formatToString("Error: %0.24w computing __String", e);
+        // TODO hqm 2008-09-13  in swf9 there's a recursive loop in formatToString now, so this
+        // just makes a string here for swf9
+        if ($swf9) {
+          s = "Error: "+e+"  computing __String";
+        } else {
+           s = this.formatToString("Error: %0.24w computing __String", e);
+        }
       }
       catch (e) {
         s = "Recursive error computing __String";
@@ -871,7 +902,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  function __String (thing:*, pretty:Boolean=true, limit:Number=(void 0), unique:Boolean=(void 0)):String {
+  function __String (thing:*, pretty:Boolean=true, limit=(void 0), unique=(void 0)):String {
     if (limit === (void 0)) { limit = pretty?this.printLength:64; }
     if (unique === (void 0)) { unique = (! pretty); }
 
@@ -1087,14 +1118,22 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function caseInsensitiveOrdering (a:String, b:String):Number {
     var al = a.toLowerCase();
     var bl = b.toLowerCase();
-    return (al > bl) - (al < bl);
+    if ($swf9) {
+      return al.localCompare(bl);
+    } else {
+      return (al > bl) - (al < bl);
+    }
   }
 
   /** @access private */
   function numericOrdering (a:String, b:String):Number {
     var al = Number(a);
     var bl = Number(b);
-    return (al > bl) - (al < bl);
+    if ($swf9) {
+      return al.localCompare(bl);
+    } else {
+      return (al > bl) - (al < bl);
+    }
   }
 
   /**
@@ -1140,7 +1179,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @return String: the abbreviated string
    * @access private
    */
-  function abbreviate(s:String, l:Number=null):String {
+  function abbreviate(s:String, l=null):String {
     if (!l) { l = Debug.printLength; }
     var ellipsis = '\u2026';
     if (s.length > (l - ellipsis.length)) {
@@ -1224,7 +1263,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * each frame, as opposed to just the `this` argument), invoke as
    * `Debug.bugReport(_, true)`.
    */
-  function bugReport (error=null, verbose:Boolean=null) {
+  function bugReport (error=null, verbose=null) {
     if (error == null) {
       try {
         with (this.environment) {
@@ -1239,10 +1278,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       this.error("You must provide an error to report.  Please inspect an error message and try again.")
         return;
     }
+    // TODO [hqm 2008-09-11] LzBacktrace not yet working in swf9
     if (! (error.backtrace is LzBacktrace)) {
       this.error("Backtraces must be on to report a bug.  Please enable backtracing and try again.");
       return;
     }
+
     if (verbose == null) { verbose = this.showInternalProperties; }
     var inspected = {};
     function inspect (obj, verbose) {
@@ -1359,8 +1400,13 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       }
     }
   };
-};
 
+}
+
+
+if ($swf9) {
+
+} else {
 /**
   * The Debug singleton is created in compiler/LzBootstrapDebugService so
   * a primitive debugger is available during bootstrapping.  It is
@@ -1375,5 +1421,5 @@ var Debug = new LzDebugService(Debug);
   * @access private
   */
 var __LzDebug = Debug;
-
+}
 

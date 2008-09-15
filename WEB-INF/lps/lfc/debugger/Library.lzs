@@ -33,21 +33,36 @@
     #include "debugger/platform/dhtml/LzDebug.js"
   } else if ($as2) {
     #include "debugger/platform/swf/LzDebug.as"
+  } else if ($swf9) {
+    #include "debugger/platform/swf9/LzDebug.as"
+    #include "debugger/platform/swf9/LzFlashRemote.as"
+    #include "debugger/platform/swf9/LzDebuggerWindowConsoleBridge.as"
   }
 
-  // Now we can install a better $reportSourceWarning
-  #include "debugger/LzCompiler.lzs"
+  if ($swf9) {
+    // we're not doing backtrace, trace, or monitor in swf9 yet
+    // Make backtraces placeholder
+    #include "debugger/platform/swf9/LzBacktrace.as"
+  } else {
+    // Now we can install a better $reportSourceWarning
+    #include "debugger/LzCompiler.lzs"
 
-  // Make backtraces work
-  #include "debugger/LzBacktrace.lzs"
-  #include "debugger/LzTrace.lzs"
-  #include "debugger/LzMonitor.lzs"
-  // Add memory tracing
-  #include "debugger/LzMemory.lzs"
+    // Make backtraces work
+    #include "debugger/LzBacktrace.lzs"
+    #include "debugger/LzTrace.lzs"
+    #include "debugger/LzMonitor.lzs"
+    // Add memory tracing
+    #include "debugger/LzMemory.lzs"
+  }
+
   if ($as2) {
     // Order beyond here has not been thought about (yet)
     #include "debugger/platform/swf/LzRemote.as"
     #include "debugger/platform/swf/LzFlashRemote.as"
+  } else if ($swf9) {
+
+    // #include "debugger/platform/swf9/LzFlashRemote.as"
   }
+    
   // N.B.: LzInit.as is loaded as the last thing in LaszloLibrary
 }

@@ -22,7 +22,7 @@ class LzBootstrapMessage {
     }
   }
 
-  function appendInternal (str, obj = null) {
+ function appendInternal (str:String, obj = null) {
     this.message += str;
     this.length = this.message.length;
   }
@@ -52,11 +52,7 @@ class LzBootstrapMessage {
   function toHTML () {
     // TODO: [2008-05-08 ptw] (LPP-5934) When toString is declared
     // public, remove the swf9 special-case
-    if ($swf9) {
       return this['toString']().toHTML();
-    } else {
-      return this.toString().toHTML();
-    }
   }
 
   /**
@@ -86,7 +82,35 @@ class LzBootstrapMessage {
   };
 };
 
-var LzMessage = LzBootstrapMessage;
+if ($swf9) {
+    if ($debug) {
+        // we don't need to do this bootstrapping rebinding of LzMessage in swf9, LzMessage is declared in
+        // debugger/LzMessage.lzs
+    } else {
+        class LzMessage extends LzBootstrapMessage {
+            function LzMessage (message:String=null) {
+                super(message);
+            }
+
+            /**
+             * Propagate this
+             * @access private
+             */
+            static var xmlEscape = LzBootstrapMessage.xmlEscape;
+        }
+    }
+} else {
+  var LzMessage = LzBootstrapMessage;
+}
+
+
+if ($swf9) {
+
+String.prototype.toHTML = function () {
+  return LzBootstrapMessage.xmlEscape(this);
+};
+
+} else {
 
 /**
  * Convert a String to HTML for display in the Debugger by escaping
@@ -96,4 +120,4 @@ var LzMessage = LzBootstrapMessage;
 String.prototype.toHTML = function () {
   return LzMessage.xmlEscape(this);
 };
-
+}

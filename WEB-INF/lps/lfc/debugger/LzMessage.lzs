@@ -49,6 +49,11 @@ class LzDebugMessage extends LzBootstrapMessage {
   // indexOf in LzBootstrapMessage
   // Implements String interface
   /** @access private */
+
+  override function indexOf (key) { return this.message.indexOf(key); }
+  // Implements String interface
+  /** @access private */
+
   function lastIndexOf (key) { return this.message.lastIndexOf(key); }
   // Implements String interface
   /** @access private */
@@ -195,7 +200,10 @@ class LzDebugMessage extends LzBootstrapMessage {
    *
    * @access private
    */
-  function toArray (linkMaker=function (rep, id) {return Debug.ObjectForID(id);}):Array {
+  function toArray (linkMaker=null):Array {
+    if (linkMaker == null) {
+      linkMaker = function (rep, id) {return Debug.ObjectForID(id);}
+    }
     var msg = this.message;
     var base = 0;
     var limit = msg.length;
@@ -223,7 +231,7 @@ class LzDebugMessage extends LzBootstrapMessage {
    * links for each object represented.
    * @access private
    */
-  function toHTML () {
+  override function toHTML () {
     return this.toArray(function (...args) {
         return Debug.makeObjectLink.apply(Debug, args);
       }).join('');
@@ -238,10 +246,24 @@ class LzDebugMessage extends LzBootstrapMessage {
   // ASSetPropFlags(LzMessage.prototype, null, 1);
 };
 
-/**
+if ($swf9) {
+  class LzMessage extends LzDebugMessage {
+    function LzMessage (message:String=null) {
+      super(message);
+    }
+
+  /**
+   * Propagate this
+   * @access private
+   */
+  static var xmlEscape = LzBootstrapMessage.xmlEscape;
+  }
+
+} else {/**
  * Replace the bootstrap message with the more full-featured debug message
  */
 var LzMessage = LzDebugMessage;
+}
 
 /**
  * A SourceMessage wraps a message with a file and line number
@@ -255,14 +277,25 @@ var LzMessage = LzDebugMessage;
 class LzSourceMessage {
   var file:String;
   var line:Number;
-  var message:LzMessage
+  var message:LzMessage;
   var backtrace;
   static var type = '';
   static var color = '#000000';
 
 
-  function LzSourceMessage (file:String=null, line:Number=0, message='') {
+  if ($swf9) {
+    function LzSourceMessage (file:String=null, line:Number=0, message:Object='') {
+      this.file = file;
+      this.line = line;
+      if (message is LzMessage) {
+        this.message = message cast LzMessage;
+      } else {
+        this.message = new LzMessage(message cast String);
+      }
+    }
+  } else {
 
+  function LzSourceMessage (file:String=null, line:Number=0, message:String='') {
     // Append a backtrace if there is one -- skip back to the
     // $reportSourceWarning or warnInternal frames.
     if ('backtraceStack' in Debug) {
@@ -305,6 +338,7 @@ class LzSourceMessage {
     } else {
       this.message = new LzMessage(message);
     }
+  }
   }
 
   /* Limit recursion */
@@ -360,9 +394,9 @@ class LzSourceMessage {
    * @access private
    */
   function toArray () {
-    var array = [this.locationString(this.constructor.type)];
+    var array = [this.locationString(this['constructor'].type)];
     if (this.message is LzMessage) {
-      return array.concat(this.message.toArray());
+      return array.concat((this.message cast LzMessage).toArray());
     }
     return array.concat('' + this.message);
   }
@@ -372,7 +406,7 @@ class LzSourceMessage {
    * @access private
    */
   function toStringInternal (conversion) {
-    return this.locationString(this.constructor.type) + this.message[conversion]();
+    return this.locationString(this['constructor'].type) + this.message[conversion]();
   }
 
   /**
@@ -413,7 +447,7 @@ class LzSourceMessage {
     var id = Debug.IDForObject(this);
     // SourceMessages auto-append a newline (although they really just want to
     // prepend a fresh-line)
-    return Debug.makeObjectLink(this.toStringInternal('toHTML'), id, this.constructor) + '\n';
+    return Debug.makeObjectLink(this.toStringInternal('toHTML'), id, this['constructor']) + '\n';
   }
 };
 

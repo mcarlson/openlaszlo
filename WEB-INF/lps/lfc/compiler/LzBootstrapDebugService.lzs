@@ -18,6 +18,14 @@
  * @access private
  */
 /* interface */ class LzDebugConsole {
+
+  // Messages that will be displayed once a real console is
+  // instantiated.  Messages are either LzMessage's that can be output
+  // using .toString() or .toHTML(), depending on the destination (log
+  // file or console, respectively), or text (that is already
+  // formatted HTML, sent via addHTMLText).
+  var saved_msgs:Array;
+
   /**
    * Adds literal output to the console, ensuring HTML markup is
    * properly escaped.
@@ -69,7 +77,7 @@
    *
    * @ access private
    */
-  function makeObjectLink (rep:String, id:Number, attrs=null):String {};
+  function makeObjectLink (rep:String, id, attrs=null):String {};
   /**
    * Evaluate an expression and call Debug.displayResult on the result
    * (or Debug.error if the evaluation causes an error).
@@ -95,13 +103,7 @@
  *
  * @access private
  */
-class LzBootstrapDebugConsole /* implements  LzDebugConsole */ {
-  // Messages that will be displayed once a real console is
-  // instantiated.  Messages are either LzMessage's that can be output
-  // using .toString() or .toHTML(), depending on the destination (log
-  // file or console, respectively), or text (that is already
-  // formatted HTML, sent via addHTMLText).
-  var saved_msgs:Array;
+class LzBootstrapDebugConsole extends LzDebugConsole /* implements  LzDebugConsole */ {
 
   function LzBootstrapDebugConsole () {
     this.saved_msgs = new Array;
@@ -114,13 +116,13 @@ class LzBootstrapDebugConsole /* implements  LzDebugConsole */ {
    *
    * @devnote Should probably be called addMessage
    */
-  function addText (msg) {
+  override function addText (msg) {
     var str;
     try {
       if (msg && msg['toHTML'] is Function) {
         str = msg.toHTML();
       } else {
-        str = String(msg).toHTML();
+        str = String(msg)['toHTML']();
       }
     } catch (e) {
       str = '' + msg;
@@ -141,14 +143,14 @@ class LzBootstrapDebugConsole /* implements  LzDebugConsole */ {
    * Bootstrap version
    * @access private
    */
-  function clear () { };
+  override function clear () { };
 
   /**
    * Doc'd on interface
    * Bootstrap version
    * @access private
    */
-  function echo (str, newLine:Boolean=true) {
+  override function echo (str, newLine:Boolean=true) {
     this.addHTMLText('<i>' + str + '</i>' + (newLine?'\n':''));
   }
 
@@ -157,7 +159,7 @@ class LzBootstrapDebugConsole /* implements  LzDebugConsole */ {
    * Bootstrap version
    * @access private
    */
-  function addHTMLText (msg) {
+  override function addHTMLText (msg) {
     this.saved_msgs.push(msg);
   };
 
@@ -166,7 +168,7 @@ class LzBootstrapDebugConsole /* implements  LzDebugConsole */ {
    * Bootstrap version
    * @access private
    */
-  function makeObjectLink (rep:String, id:Number, attrs=null) {
+  override function makeObjectLink (rep:String, id, attrs=null):String {
     // TODO: [2008-08-19 ptw] Seems like a reasonable thing to encode
     // the ID here as a hint, but maybe that is not appropriate for
     // the most primitive console?
@@ -181,10 +183,10 @@ class LzBootstrapDebugConsole /* implements  LzDebugConsole */ {
    * Bootstrap version
    * @access private
    */
-  function doEval (expr:String) {
+  override function doEval (expr:String) {
     // Bootstrap implementation
     try {
-      Debug.displayResult(eval(expr));
+      Debug.displayResult(globalValue(expr));
     } catch (e) {
       Debug.error(e);
     }
@@ -207,6 +209,9 @@ class LzBootstrapDebugLogger {
     var url:String;
   }
 
+if ($swf9) {
+  function log (msg) { trace (msg); }
+} else {
   /**
    * Doc'd on real definition
    * Bootstrap version
@@ -258,6 +263,8 @@ class LzBootstrapDebugLogger {
       }
     }
   };
+}
+
 };
 
 /**
@@ -268,23 +275,33 @@ dynamic class LzBootstrapDebugService {
   /** Backtrace stack
    * @access private
    */
-  var backtraceStack:Array;
+  var backtraceStack:*;
   /** Backtrace for uncaught errors
    * @access private
    */
-  var uncaughtBacktraceStack:Array;
+  var uncaughtBacktraceStack:*;
 
   var log_all_writes:Boolean = false;
   var logger:LzBootstrapDebugLogger;
-  var console:LzBootstrapDebugConsole;
+  var console:LzDebugConsole;
 
-  function LzBootstrapDebugService (logger:LzBootstrapDebugLogger=new LzBootstrapDebugLogger(),
-                                    console:LzBootstrapDebugConsole=new LzBootstrapDebugConsole()) {
-    // Copy these from the initial Debug object
-    var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
-    for (var k in copy) {
-      this[k] = Debug[k];
+  function LzBootstrapDebugService (logger:LzBootstrapDebugLogger=null,
+                                    console:LzDebugConsole=null) {
+    if (logger == null) {
+      logger = new LzBootstrapDebugLogger();
     }
+
+    if (console == null) {
+      console = new LzBootstrapDebugConsole();
+    }
+    if (!$swf9) {
+      // Copy these from the initial Debug object
+      var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
+      for (var k in copy) {
+        this[k] = Debug[k];
+      }
+    }
+
     // `logdebug` is set by the server to tell Debug.__write to log
     // back to the server
     this.log_all_writes = (!! global['logdebug']);
@@ -293,6 +310,7 @@ dynamic class LzBootstrapDebugService {
     if ($js1) {
       this.log_all_writes = (global['console']) && (typeof global.console['log'] == 'function');
     }
+
     this.logger = logger;
     this.console = console;
   }
@@ -508,14 +526,21 @@ dynamic class LzBootstrapDebugService {
  * @devnote As soon as we have the LzBootstrapDebugService, we install it.
  * This will get overridden by the full debugger when it loads
  */
-var Debug = new LzBootstrapDebugService();
+if ($swf9) {
+  // We don't do the bootstrapping rebinding in swf9
+} else {
+  var Debug = new LzBootstrapDebugService();
+}
 
-/**
+if ($swf9) {
+} else {
+  /**
  * @access private
  * To catch swf 'trace()' calls
  */
 function trace (...args) { Debug.info.apply(Debug, args); }
 
+}
 /**
  * Compiler support for debugger warnings.  These presently pollute
  * the global environment, because you need a toe-hold somewhere.

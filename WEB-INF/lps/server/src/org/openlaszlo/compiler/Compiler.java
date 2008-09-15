@@ -585,7 +585,7 @@ public class Compiler {
             // compile as sequence of statements.  If that fails too,
             // report the parse error.
             try {
-                prog += "(function () { with(global) { lzconsole.write("+script +")} })();";
+                prog += "(function () { with(global) { Debug.write("+script +")} })();";
                 objcode = ScriptCompiler.compileToByteArray(prog, props);
             } catch (org.openlaszlo.sc.parser.ParseException e) {
                 try {
@@ -595,7 +595,7 @@ public class Compiler {
                 } catch (Exception e2) {
                     mLogger.info("error compiling/writing script: " + e2.getMessage());
                     objcode = ScriptCompiler.compileToByteArray(
-                        "lzconsole.write(" + ScriptCompiler.quote("Parse error: "+ e2.getMessage()) + ")",
+                        "Debug.write(" + ScriptCompiler.quote("Parse error: "+ e2.getMessage()) + ")",
                         props);
                 }
             }

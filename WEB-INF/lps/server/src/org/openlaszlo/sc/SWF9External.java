@@ -846,7 +846,16 @@ public class SWF9External {
       cmd.add("-default-size");
       cmd.add(options.get(Compiler.CANVAS_WIDTH, "800"));
       cmd.add(options.get(Compiler.CANVAS_HEIGHT, "600"));
-      cmd.add("-library-path+=" + getLFCLibrary(options.getBoolean(Compiler.DEBUG_SWF9)));
+      cmd.add("-compiler.library-path+=" + getLFCLibrary(options.getBoolean(Compiler.DEBUG_SWF9)));
+
+      // Add in WEB-INF/flexlib and APPDIR/flexlib to flex library search paths if they exist
+      if ((new File(getFlexPathname("flexlib"))).isDirectory()) {
+        cmd.add("-compiler.library-path+=" + getFlexPathname("flexlib"));
+      } 
+      if ((new File(workdir.getPath() + File.separator + "flexlib")).isDirectory()) {
+        cmd.add("-compiler.library-path+=" + getFlexPathname("flexlib"));
+      } 
+
     }
     else {
       // must be last before list of classes to follow.

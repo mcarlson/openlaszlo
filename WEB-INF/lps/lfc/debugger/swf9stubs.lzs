@@ -10,7 +10,18 @@
 // This file implements the debugger stubs, so that DHTML apps can make refernces to
 // Debug.write, etc, when the full debugger is not compiled/linked in.
 
-dynamic class LzDebugService with LzFormatter {
+
+
+var  $reportSourceWarning = function (...ignore) { };
+var  $reportUndefinedObjectProperty = function (...ignore) { };
+var  $reportUndefinedProperty = function (...ignore) { };
+var  $reportUndefinedVariable = function (...ignore) { };
+var  $reportNotFunction = function (...ignore) { };
+var  $reportUndefinedMethod = function (...ignore) { };
+
+if ($debug) {
+} else {
+    dynamic class LzDebugService with LzFormatter {
     public function write(...args):void {
         var str = this.formatToString.apply(this, args);
         trace(str);
@@ -46,60 +57,11 @@ dynamic class LzDebugService with LzFormatter {
     public function __typeof (thing) { return typeof thing; }
     public function functionName (fn, isGlobal=false) { return String(fn); }
     public function __String (thing, pretty=null, limit=null, unique=null) { return String(thing); }
+
 }
-
-var Debug = new LzDebugService();
-
-class LzSourceMessage extends LzBootstrapMessage {
-  var file;
-  var line;
-
-  function LzSourceMessage (file:String=null, line:Number=0, message:String='') {
-    // Append a backtrace if there is one -- skip back to the
-    // $reportSourceWarning or warnInternal frames.
-    this.file = file;
-    this.line = line;
-    if (message instanceof LzMessage) {
-      this.message = message;
-    } else {
-      this.message = new LzMessage(message);
-    }
-  }
-}
-
-/**
-  * A Warning is a sourceMessage with the tag 'WARN'
-  * @access private
-  */
-class LzWarning extends LzSourceMessage {
-    function LzWarning (file, line, message) {
-        super(file, line, message);
-    }
+// Just enough substrate for non-debug mode to work
+    var Debug = new LzDebugService();
 }
 
 
-class LzError extends LzSourceMessage {
-    function LzError (file, line, message) {
-        super(file, line, message);
-    }
-}
 
-class LzDebug extends LzSourceMessage {
-    function LzDebug (file, line, message) {
-        super(file, line, message);
-    }
-}
-
-class LzInfo extends LzSourceMessage {
-    function LzInfo (file, line, message) {
-        super(file, line, message);
-    }
-}
-
-
-var  $reportSourceWarning = function (...ignore) { };
-var  $reportUndefinedObjectProperty = function (...ignore) { };
-var  $reportUndefinedProperty = function (...ignore) { };
-var  $reportUndefinedVariable = function (...ignore) { };
-var  $reportNotFunction = function (...ignore) { };
-var  $reportUndefinedMethod = function (...ignore) { };

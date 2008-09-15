@@ -16,11 +16,7 @@ var _Copyright = "Portions of this file are copyright (c) 2001-2008 by Laszlo Sy
 #include "compiler/Library.lzs"
 
 if ($debug) {
-  if ($swf9) {
-
-  } else {
-    #include "debugger/Library.lzs"
-  }
+  #include "debugger/Library.lzs"
 } else {
   if ($dhtml) {
     #include "debugger/stubs.lzs"
@@ -54,7 +50,7 @@ if ($profile) {
 
 if ($swf9) {
   //Debugger placeholder
-#include "debugger/swf9stubs.lzs"
+  #include "debugger/swf9stubs.lzs"
     // Initialize the DojoExternalInterface class
     var DojoExternalInterface = new DojoExternalInterfaceClass( LzBrowserKernel.getInitArg('id') );
 

@@ -426,7 +426,7 @@ Debug.initTrace = function (findLeaks=false, noteWhy=false) {
   if ('___' in global) {
     this.mark(global.___);
   }
-  this.mark(this.evalloader);
+  this.mark(this.console.evalloader);
   // Create the initial obstack element: global
   var osel = ["global", global];
   osel.path = [];
