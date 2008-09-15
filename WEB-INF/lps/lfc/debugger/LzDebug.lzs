@@ -538,8 +538,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
 
         // Check for user typename
         var user_name = null;
-
-        if (thing['_dbg_typename']) {
+        // Have to use `in` here, because you apparently cannot use []
+        // on Number (even though it is an Object) in swf9
+        if ('_dbg_typename' in thing) {
           if (thing._dbg_typename is Function) {
             // Guard against broken user routines
             try {
@@ -611,16 +612,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     }
     catch (e) {
       try {
-        // TODO hqm 2008-09-13  in swf9 there's a recursive loop in formatToString now, so this
-        // just makes a string here for swf9
-        if ($swf9) {
-             n = ("Error: "+e+" computing __typeof");
-        } else {
-             n = this.formatToString("Error %0.24w computing __typeof", e);
-        }
-
-
-
+        // Use %s to prevent recursion
+        n = this.formatToString("Error %0.24s computing __typeof", e);
       }
       catch (e) {
         n = "Recursive error computing __typeof";
@@ -639,7 +632,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  function functionName (fn:Function, isGlobal:Boolean=false) {
+  function functionName (fn, isGlobal:Boolean=false) {
     if (fn && (fn is Function)) {
       // _dbg_name takes precedence over the actual function name
       if (fn.hasOwnProperty('_dbg_name')) {
@@ -691,16 +684,19 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         // Bind printLength short while calling user methods
         var opl = this.printLength;
         this.printLength = (limit < this.inspectPrintLength)?limit:this.inspectPrintLength;
-        var dn = thing['_dbg_name'];
+        // Have to use `in` here, because you apparently cannot use []
+        // on Number (even though it is an Object) in swf9
+        var dn = '_dbg_name' in thing ? thing._dbg_name : null;
         // Look for class prototypes
-        if ((thing['constructor'] is Function) &&
+        if (('constructor' in thing) &&
+            (thing.constructor is Function) &&
             (thing === thing.constructor['prototype'])) {
           debug_name = '.prototype';
         } else if (dn is Function) {
           // Guard against broken user routines
           try {
             // Not dn(), because need thing context
-            debug_name = thing['_dbg_name']();
+            debug_name = thing._dbg_name();
           }
           catch (e) {}
         } else if (this.isStringLike(dn)) {
@@ -863,13 +859,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     catch (e) {
       pretty = false;
       try {
-        // TODO hqm 2008-09-13  in swf9 there's a recursive loop in formatToString now, so this
-        // just makes a string here for swf9
-        if ($swf9) {
-          s = "Error: "+e+"  computing __String";
-        } else {
-           s = this.formatToString("Error: %0.24w computing __String", e);
-        }
+        // Use %s to prevent recursion
+        s = this.formatToString("Error: %0.24s computing __String", e);
       }
       catch (e) {
         s = "Recursive error computing __String";

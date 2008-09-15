@@ -118,8 +118,8 @@ class LzAS3DebugService extends LzDebugService {
   /**
    * @access private
    */
-  override function functionName (fn:Function, mustBeUnique:Boolean=false) {
-    if (fn is Function) {
+  override function functionName (fn, mustBeUnique:Boolean=false) {
+    if (fn && (fn is Function)) {
       if (fn.hasOwnProperty('_dbg_name') || fn.hasOwnProperty('name')) {
         var n = fn.hasOwnProperty('_dbg_name') ? fn['_dbg_name'] : fn['name'];
         if ((! mustBeUnique) || (fn === globalValue(n))) {
