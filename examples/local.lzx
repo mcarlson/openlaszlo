@@ -30,7 +30,7 @@
     <view x="30" y="30" >
         <view height="40" bgcolor="yellow" font="Helvetica" fontsize="20" datapath="keys:/keys/row">
             <text name="key" width="30" datapath="key[-5]" 
-                  ondata="this.setText( this.datapath.xpathQuery( 't/text()' ))" />
+                  ondata="this.setAttribute('text', this.datapath.xpathQuery( 't/text()' ))" />
             <simplelayout axis="x" spacing="10"/>
         </view>
         <simplelayout axis="y" spacing="4"/>
@@ -50,7 +50,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -59,7 +59,7 @@
                         } else {
                             val = val.join(', ');
                         }
-                        a1val.setText(val);
+                        a1val.setAttribute('text', val);
                     </handler>
                 </button>
                 <text multiline="true" id="a1val" width="200" height="60"/>

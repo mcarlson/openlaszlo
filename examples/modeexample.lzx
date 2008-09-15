@@ -82,7 +82,7 @@
                     <handler name="onvisible" args="isvisible">
                         if (isvisible) {
                             more.setAttribute('visible', true);
-                            this.setHeight(50);
+                            this.setAttribute('height', 50);
                         }
                     </handler>
                 </view>
@@ -183,7 +183,7 @@
 
                 <text y="15" width="100" name="mytext">Mouse Event Tester</text>
                 <method name="report" args="t" >
-                    this.mytext.setText( t );
+                    this.mytext.setAttribute('text', t );
                 </method>
             </view>
             <view name="global_mouse_tester"
@@ -204,20 +204,20 @@
                     </method>
 
                     <method name="globalMouseUp" args="vc">
-                        this.setText( "mouseup from " + vc );
+                        this.setAttribute('text', "mouseup from " + vc );
                         lz.Timer.resetTimer( this.cleard , 3000 );
                     </method>
                     <method name="globalMouseDown" args="vc">
-                        this.setText( "mousedown from " + vc );
+                        this.setAttribute('text', "mousedown from " + vc );
                     </method>
 
                     <method name="globalMouseRollover" args="vc">
-                        this.setText( "mouse over " + vc );
+                        this.setAttribute('text', "mouse over " + vc );
                         lz.Timer.resetTimer( this.cleard , 3000 );
                     </method>
 
                     <method name="cleartext" >
-                        this.setText( "" );
+                        this.setAttribute('text', "" );
                     </method>
 
 

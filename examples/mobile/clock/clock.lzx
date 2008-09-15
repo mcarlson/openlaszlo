@@ -40,7 +40,7 @@
         <!-- AM or PM -->
         <text font="Helmet" fontsize="14" name="dayandampm" x="130" y="132" visible="false" >SUN  AM
             <handler name="ontext" >
-                this.setX(100 - Math.floor(this.getTextWidth()/2.0));
+                this.setAttribute('x', 100 - Math.floor(this.getTextWidth()/2.0));
                 this.setAttribute('visible', true);
             </handler>
         </text>
@@ -91,7 +91,7 @@
             } else {
                 var hourLabel="AM";
             }
-            this.dayandampm.setText(dayArray[dayNum] + " " + hourLabel);
+            this.dayandampm.setAttribute('text', dayArray[dayNum] + " " + hourLabel);
 
             // Get Minutes and Seconds
             var minNum=currentTimeObj.getMinutes();

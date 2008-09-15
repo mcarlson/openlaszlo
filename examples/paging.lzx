@@ -104,13 +104,13 @@
                 </view>
 
                 <view bgcolor="red" width="20" height="20" clickable="true"
-                      onmouseup="parent.cview.setBGColor(this.bgcolor)"/>
+                      onmouseup="parent.cview.setAttribute('bgcolor', this.bgcolor)"/>
                 <view bgcolor="blue" width="20"   height="20" clickable="true"
-                      onmouseup="parent.cview.setBGColor(this.bgcolor)"/>
+                      onmouseup="parent.cview.setAttribute('bgcolor', this.bgcolor)"/>
                 <view bgcolor="yellow"  width="20" height="20" clickable="true"
-                      onmouseup="parent.cview.setBGColor(this.bgcolor)"/>
+                      onmouseup="parent.cview.setAttribute('bgcolor', this.bgcolor)"/>
                 <view bgcolor="purple"  width="20" height="20" clickable="true"
-                      onmouseup="parent.cview.setBGColor(this.bgcolor)"/>
+                      onmouseup="parent.cview.setAttribute('bgcolor', this.bgcolor)"/>
 
 
                 <simplelayout axis="x" spacing="3" />

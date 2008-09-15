@@ -21,7 +21,7 @@
               clickable="true" >
         </view>
         <method name="init" >
-            Debug.setX(300);
+            Debug.setAttribute('x', 300);
             Debug.write("Initializing");
             super.init();
             this.curImage = 1;
@@ -85,7 +85,7 @@
 <!-- see http://hubble.stsci.edu/copyright/copyright/ for copyright info -->
 </canvas>    
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

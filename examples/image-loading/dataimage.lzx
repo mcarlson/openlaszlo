@@ -32,7 +32,7 @@
               font="Helvetica" fontsize="12" fontstyle="bold"
               fgcolor="#FFFFFF" oninit="setAttribute('visible', false)" >
             <handler name="ontext" >
-                this.setX(-this.getTextWidth() - 2 );
+                this.setAttribute('x', -this.getTextWidth() - 2 );
             </handler>
         </text> 
         
@@ -66,11 +66,11 @@
         </handler>
         
         <handler name="onmousedown" >
-            this.setBGColor(0xFFC600);
+            this.setAttribute('bgcolor', 0xFFC600);
         </handler>
         
         <handler name="onmouseup" >
-            this.setBGColor(0x00769E);
+            this.setAttribute('bgcolor', 0x00769E);
             container.showSection(this.section);
         </handler>
  

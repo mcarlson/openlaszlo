@@ -11,7 +11,7 @@
     <list name="env" width="250" height="200">
         <textlistitem name="ti" datapath="envDset:/*" text="$path{'name()'}">
             <handler name="onselect">
-                canvas.display.setText(datapath.xpathQuery('text()'))
+                canvas.display.setAttribute('text', datapath.xpathQuery('text()'))
             </handler>
         </textlistitem>
     </list>

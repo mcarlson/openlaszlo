@@ -19,7 +19,7 @@
     </class>
 
     <mywindow id="w1" 
-               x="30" y="30" oninit="this.result.setText( this.test( 'success' ) );">
+               x="30" y="30" oninit="this.result.setAttribute('text', this.test( 'success' ) );">
         <text>instance view</text>
         <text name="result" width="200">result</text>
     </mywindow>
@@ -28,7 +28,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

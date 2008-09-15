@@ -178,7 +178,7 @@
                 url.protocol = 'https';
                 url.port = secure.p.port.getText();
 
-                ds.setSrc(url.toString());
+                ds.setAttribute('src', url.toString());
             }
 
             var requests = 1;
