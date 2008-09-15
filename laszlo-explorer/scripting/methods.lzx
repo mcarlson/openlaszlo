@@ -14,10 +14,10 @@
     <method name="toggleSize">
       var w = this.width;
       var h = this.height;
-      this.setWidth(h);
-      this.setHeight(w);
+      this.setAttribute('width', h);
+      this.setAttribute('height', w);
     </method>
   </view>
 </canvas>
 
-
+<!-- Copyright 2008 Laszlo Systems, Inc.  All rights reserved.  Use subject to license terms. -->

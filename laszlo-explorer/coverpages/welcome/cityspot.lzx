@@ -36,17 +36,17 @@
               font="Kgr,Lucida Sans Unicode,Lucida Grande,sans-serif" fontsize="8" datapath="name/text()" >
             <method name="setLabelPosition" >
                 if ( this.parent.position == 1) {
-                    this.setX(-this.getTextWidth() - 7);
-                    this.setY(-9);
+                    this.setAttribute('x', -this.getTextWidth() - 7);
+                    this.setAttribute('y', -9);
                 } else if ( this.parent.position == 2) {
-                    this.setX(Math.round(-this.getTextWidth()/2 ));
-                    this.setY(-19);
+                    this.setAttribute('x', Math.round(-this.getTextWidth()/2 ));
+                    this.setAttribute('y', -19);
                 } else if ( this.parent.position == 3) {
-                    this.setX(4);
-                    this.setY(-8);
+                    this.setAttribute('x', 4);
+                    this.setAttribute('y', -8);
                 } else {
-                    this.setX(Math.round(-this.getTextWidth()/2 - 2 ));
-                    this.setY(0);
+                    this.setAttribute('x', Math.round(-this.getTextWidth()/2 - 2 ));
+                    this.setAttribute('y', 0);
                 }
            </method>
         </text>
@@ -71,8 +71,8 @@
             <![CDATA[
 
             // First, position the dot for the city
-            this.setX(1*this.datapath.xpathQuery('@x'));
-            this.setY(1*this.datapath.xpathQuery('@y'));
+            this.setAttribute('x', 1*this.datapath.xpathQuery('@x'));
+            this.setAttribute('y', 1*this.datapath.xpathQuery('@y'));
             this.position = (1*this.datapath.xpathQuery('@labelposition'));
             // Now set the timezone for the city
             this.timezoneoffset = (1*this.datapath.xpathQuery('@timezoneoffset'));
@@ -112,7 +112,7 @@
         <!-- set sync and set clock name to a specific city -->
         <method  name="activateclock" args="clockObj">
             this.syncclock(clockObj);
-            myclocktext.setText( this.title.getText() );
+            myclocktext.setAttribute('text', this.title.getText() );
         </method>
 
     </class> <!-- end cityspot -->

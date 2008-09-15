@@ -186,9 +186,9 @@
 
   <!-- ItemButton class the visible portion of navButtons -->
   <class name="itembutton" placement="item" datapath="."
-    onmouseover="background.setResourceNumber(2)"
+    onmouseover="background.setAttribute('frame', 2)"
     onmouseout="showUp()"
-    onmousedown="background.setResourceNumber(3)"
+    onmousedown="background.setAttribute('frame', 3)"
     onmouseup="showUp()" clickable="true">
 
     <attribute name="level" type="number"/>
@@ -224,7 +224,7 @@
 
         var action = dp.xpathQuery("@action");
         if (action == 'popup' || action == 'source' || action == 'popupexternal') {
-            icon.setResourceNumber(4);
+            icon.setAttribute('frame', 4);
         }
     </handler>
 
@@ -299,10 +299,10 @@
 
     <handler name="onopen" reference="classroot" method="showUp"/>
     <method name="showUp" args="v">
-        background.setResourceNumber(classroot.open ? 4 : 1);
+        background.setAttribute('frame', classroot.open ? 4 : 1);
         // Only toggle arrow if there are subnodes
         if (this.datapath.getNodeCount()) {
-            icon.setResourceNumber(classroot.open ? 2 : 1);
+            icon.setAttribute('frame', classroot.open ? 2 : 1);
         }
     </method>
 

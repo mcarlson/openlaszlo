@@ -1,6 +1,6 @@
 <canvas>
-  <button onclick="vw.setWidth(200)">Expand Width</button>
-  <button x="120" onclick="vw.setWidth(100)">Reset</button>
+  <button onclick="vw.setAttribute('width', 200)">Expand Width</button>
+  <button x="120" onclick="vw.setAttribute('width', 100)">Reset</button>
   
   <view id="vw" y="30" width="100" height="100" >
     
@@ -11,4 +11,4 @@
    </view>
 </canvas>
 
-<!-- Copyright 2006 - 2007 Laszlo Systems, Inc.  All rights reserved.  Use subject to license terms. -->
+<!-- Copyright 2006 - 2008 Laszlo Systems, Inc.  All rights reserved.  Use subject to license terms. -->

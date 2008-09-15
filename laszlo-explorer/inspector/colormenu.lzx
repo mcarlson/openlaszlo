@@ -34,8 +34,8 @@
          if (newx + width > canvas.width) {
             newx -= width;
          }
-         this.setX(newx - 5);
-         this.setY(newy - 5);
+         this.setAttribute('x', newx - 5);
+         this.setAttribute('y', newy - 5);
          this.bringToFront();
          this.setAttribute('visible', true);
          lz.Track.activate('mymenu');
