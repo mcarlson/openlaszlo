@@ -158,6 +158,7 @@
     <element>handler</element>
     <element>doc</element>
     <element>node</element>
+    <element>passthrough</element>
   </containsElements>
 
   <method name="$lzc$set_$classrootdepth"/>

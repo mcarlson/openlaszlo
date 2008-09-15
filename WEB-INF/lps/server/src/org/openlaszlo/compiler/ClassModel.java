@@ -183,6 +183,12 @@ public class ClassModel implements Comparable {
 
     // Build the class body
     String classBody = "";
+    if (nodeModel.passthroughBlock != null) {
+      classBody += "#passthrough (toplevel:true) {\n" +
+                   nodeModel.passthroughBlock +
+                   "\n}#\n";
+    }
+
     if (tagName != null) {
       // Set the tag name
       nodeModel.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));

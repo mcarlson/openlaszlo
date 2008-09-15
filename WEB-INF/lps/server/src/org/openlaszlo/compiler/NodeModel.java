@@ -64,6 +64,9 @@ public class NodeModel implements Cloneable {
 
     NodeModel     datapath = null;
 
+    String passthroughBlock = null;
+
+
     /** [eventName: String, methodName: String, Function] */
     List delegateList = new Vector();
     ClassModel parentClassModel;
@@ -166,28 +169,14 @@ public class NodeModel implements Cloneable {
         }
     }
 
-
-    /* List of flash builtins to warn about if the user tries to redefine them */
-    private static final String FLASH6_BUILTINS_PROPERTY_FILE = (
-        LPS.getMiscDirectory() + File.separator + "flash6-builtins.properties"
-        );
-
-
     private static final String FLASH7_BUILTINS_PROPERTY_FILE = (
         LPS.getMiscDirectory() + File.separator + "flash7-builtins.properties"
         );
 
-    public static final Properties sFlash6Builtins = new Properties();
     public static final Properties sFlash7Builtins = new Properties();
 
     static {
         try {
-            InputStream is6 = new FileInputStream(FLASH6_BUILTINS_PROPERTY_FILE);
-            try {
-                sFlash6Builtins.load(is6);
-            } finally {
-                is6.close();
-            }
 
             InputStream is7 = new FileInputStream(FLASH7_BUILTINS_PROPERTY_FILE);
             try {
@@ -820,9 +809,7 @@ public class NodeModel implements Cloneable {
             if (("id".equals(name) || "name".equals(name)) &&
                  (value != null &&
                   (env.getRuntime().indexOf("swf") == 0) &&
-                  ("swf6".equals(env.getRuntime()) ?
-                   sFlash6Builtins.containsKey(value.toLowerCase()) :
-                   sFlash7Builtins.containsKey(value))))  {
+                  sFlash7Builtins.containsKey(value)))  {
                 env.warn(
 /* (non-Javadoc)
  * @i18n.test
@@ -1180,6 +1167,12 @@ solution =
                     checkChildNameConflict(element.getName(), child, env);
                     NodeModel dpnode = elementAsModel(child, schema, env);
                     this.datapath = dpnode;
+                } else if (child.getName().equals("passthrough")) {
+                  if (env.getRuntime().equals("swf9")) {
+                    passthroughBlock = child.getText();
+                  } else {
+                    env.warn("The passthrough tag can only be used in swf9 runtime, perhaps you could put this in a switch tag?",child);
+                  }
                 } else {
                     checkChildNameConflict(element.getName(), child, env);
                     NodeModel childModel = elementAsModel(child, schema, env);
