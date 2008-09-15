@@ -1,11 +1,11 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
-
 <library>
-
+    <include href="extensions/av/mediastream.lzx"/>
+    <include href="extensions/av/videoview.lzx"/>
 
     <class name="videoscreen"
         bgcolor="0x000000"
@@ -64,7 +64,7 @@
 
         <mediastream 
             name="ms"
-            debug="true" 
+            debug="false" 
             autoplay="${classroot.autoplay}"
             type="${classroot.type}" 
             url="${classroot.url}"
@@ -82,13 +82,15 @@
             playvolume="${classroot.volume}"
         >
 
-            <camera name="mycam"
-                show="${classroot.capturing}"
-            />
-
-            <microphone name="mymic"
-                capturing="${classroot.capturing}"
-            />
+        <switch>
+            <when runtime="as2">
+                <!-- TODO: add back when as3 is supported -->
+                <camera name="mycam"
+                    show="${classroot.capturing}" />
+                <microphone name="mymic"
+                    capturing="${classroot.capturing}" />
+            </when>
+        </switch>  
 
         </videoview>
 

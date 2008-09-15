@@ -275,7 +275,11 @@
               user can change the device permission and 
               other properties. -->
         <method name="showSettings"><![CDATA[
-            System.showSettings(0);
+            if ($swf9) {
+                // TODO    
+            } else {
+                System.showSettings(0);
+            }
           ]]>
         </method>
 
@@ -307,7 +311,7 @@
             // to a number. 
             this.startDevice();
 
-            if (this.ondeviceindex) {
+            if (this.ondeviceindex.ready) {
                 this.ondeviceindex.sendEvent(this.deviceindex);
             }
           ]]>
@@ -324,7 +328,7 @@
 
             this.capturing = capturing;
 
-            if (this.oncapturing) {
+            if (this.oncapturing.ready) {
                 this.oncapturing.sendEvent();
             }
           ]]>
@@ -408,7 +412,7 @@
         <method name="_updateAllowed"><![CDATA[
             //Debug.write("mediadevice _updateAllowed", this, this['allowed'])
 
-            if (this.onallowed) {
+            if (this.onallowed.ready) {
                 this.onallowed.sendEvent(this.allowed);
             }
           ]]>

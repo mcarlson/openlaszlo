@@ -5,9 +5,8 @@
 
 
 <library>
-
-
     <include href="videovolumebutton.lzx"/>
+    <include href="videotogglebutton.lzx"/>
 
 
     <resource name="play_button">
@@ -28,6 +27,35 @@
         src="resources/thumb.png"
     />
 
+    <class name="timetext" extends="text">
+        <method name="formatTimeHHMMSS" args="t"> 
+            <![CDATA[
+            if (isNaN(t)) {
+                t = 0;
+            }
+
+            var seconds = 
+                Math.floor(t);
+            var ticks =
+                Math.floor(10 * (t - seconds));
+            var minutes = 
+                Math.floor(seconds / 60);
+
+            seconds = seconds % 60;
+
+            var hours = 
+                Math.floor(minutes / 60);
+
+            minutes = minutes % 60;
+
+            return (
+                ((hours < 10) ? ("0" + hours) : hours) + ":" +
+                ((minutes < 10) ? ("0" + minutes) : minutes) + ":" +
+                ((seconds < 10) ? ("0" + seconds) : seconds));
+
+            ]]>
+        </method>
+    </class>
 
     <class name="videoslider"
         bgcolor="0x808080"
@@ -73,7 +101,7 @@
         </handler>
 
 
-        <method name="handleTracking"><![CDATA[
+        <method name="handleTracking" args="ignore = null"><![CDATA[
             var newValue = this.slider.getTrackValue();
             if (newValue != this.trackvalue) {
                 this.setAttribute("trackvalue", newValue);
@@ -243,7 +271,7 @@
           />
 
 
-          <text name="timefield"
+          <timetext name="timefield"
             resize="true"
             fontsize="11"
             x="${(parent.width - this.width) / 2}"

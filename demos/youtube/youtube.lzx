@@ -9,7 +9,6 @@
   height="100%"
 >
     
-    <include href="av/videoutils.lzx"/>
     <include href="av/videotogglebutton.lzx"/>
     <include href="av/videoscreen.lzx"/>
     <include href="av/videoslider.lzx"/>

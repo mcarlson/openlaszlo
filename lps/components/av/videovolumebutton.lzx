@@ -6,6 +6,7 @@
 
 <library>
 
+    <include href="av/videotogglebutton.lzx"/>
 
     <resource name="volume_button_rsc">
         <frame src="resources/volume_button_up.png"/>
@@ -139,7 +140,7 @@
             </handler>
 
 
-            <method name="_handleIdle"><![CDATA[
+            <method name="_handleIdle" args="ignore=null"><![CDATA[
                 var y = 
                     this.getMouse("y") -
                     classroot.adjusterBorder;

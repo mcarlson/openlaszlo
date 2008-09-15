@@ -25,32 +25,36 @@
 
         <attribute name="_updateStageDelegate" value="null"/>
 
-        <handler name="oninit"><![CDATA[
+        <handler name="oninit" args="ignore"><![CDATA[
         // This class should have an rtmp attribute to use a particular 
         // rtmpconnection, but default to the global one, and it should
         // also clean up properly.
         if (! this.rtmpc) {
-            this.rtmpc = lz.rtmpconnection._default;
-            if (! this.rtmpc) {
+            if (canvas.rtmpconnections) this.setAttribute('rtmpc', canvas.rtmpconnections._default);
+            if (this.rtmpc == null) {
                 if ($debug) Debug.warn("rtmpconnection not found for %w", this);
                 return;
             }
         }
-
-        this._updateStageDelegate = 
-            new LzDelegate(this, "_updateStage", this.rtmpc, "onstage");
         ]]>
         </handler>
 
         <handler name="ondestroy"><![CDATA[
-        this._updateStageDelegate.unregisterAll();
+            this._updateStageDelegate.unregisterAll();
         ]]>
         </handler>
 
+        <setter name="rtmpc" args="conn = null">
+            this.rtmpc = conn;
+            if (this._updateStageDelegate) this._updateStageDelegate.unregisterAll();
+            if (conn = null) return;
+            this._updateStageDelegate = 
+                new LzDelegate(this, "_updateStage", this.rtmpc, "onstage");
+        </setter>
 
         <!--- @access private -->
-        <method name="_updateStage"><![CDATA[
-        this.setAttribute('frame', this.rtmpc.stage + 1);
+        <method name="_updateStage" args="ignore"><![CDATA[
+            this.setAttribute('frame', this.rtmpc.stage + 1);
         ]]>
         </method>
         <doc>

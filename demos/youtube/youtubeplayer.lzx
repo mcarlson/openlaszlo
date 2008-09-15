@@ -29,7 +29,7 @@
         canvas.setAttribute("searchTag", tag);
         tag = tag.split(" ").join(",").split(";").join(",");
         var ds = ds_videoList;
-        ds.abort();
+        //ds.abort();
         ds.setQueryParams(null);
         ds.setQueryParam("method", "videosListByTag");
         ds.setQueryParam("tag", tag);
