@@ -1,0 +1,64 @@
+<library>
+<script when="immediate">
+<![CDATA[
+
+public class LzDebugEvalLoader {
+    #passthrough (toplevel:true) {  
+    import flash.display.*;
+    import flash.events.*;
+    import flash.utils.*;
+    import flash.text.*;
+    import flash.system.*;
+    import flash.net.*;
+    import flash.ui.*;
+    import flash.text.Font;
+    }#
+
+    var loader:Loader;
+
+    public function LzDebugEvalLoader (view) {
+        this.loader = new Loader();
+        loader.contentLoaderInfo.addEventListener(Event.INIT, debugEvalListener);
+    }
+
+    public function doEval(expr:String, seq:int=0) {
+        var url = "hello.lzx?lzr=swf9&lz_load=false&lzt=eval&lz_script=" + encodeURIComponent(expr)+"&lzbc=" +(new Date()).getTime();
+        this.loader.load(new URLRequest(url),
+                         new LoaderContext(false,
+                                           new ApplicationDomain(ApplicationDomain.currentDomain)));
+    }
+
+    public function debugEvalListener (e:Event):void {
+        e.target.loader.unload();
+    }
+
+    public function checkServerResponse () {
+        var loadobj = new Loader();
+        loadobj.contentLoaderInfo.addEventListener(Event.INIT, checkServerResponseHandler);
+        loadobj.onData = this.checkServerResponseHandler;
+        var reqstr =  lz.Browser.toAbsoluteURL( "__dbgprobe.lzx?lzt=stat", false );
+        this.loader.load(new URLRequest(reqstr),
+                         new LoaderContext(false,
+                                           new ApplicationDomain(ApplicationDomain.currentDomain)));
+    }
+
+
+    public function checkServerResponseHandler (src) {
+      // NB: This is a callback handler, and 'this' will be bound to some LoadVars object, not to Debug
+      if (src == undefined) {
+        Debug.warn('Debugger cannot contact LPS server, switching to SOLO mode.');
+        Debug.setAttribute('solo_mode', true);
+      }
+    }
+
+
+}
+
+]]>
+</script>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

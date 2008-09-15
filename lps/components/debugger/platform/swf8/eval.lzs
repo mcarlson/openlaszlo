@@ -1,0 +1,50 @@
+<library>
+<script when="immediate">
+<![CDATA[
+
+class LzDebugEvalLoader {
+
+    var loader;
+
+    function LzDebugEvalLoader (view) {
+        this.loader = new LzLoader(view.sprite, { attachname: 'debugloader' });
+    }
+
+    function doEval(expr:String, seq:int=0) {
+        this.loader.request( { lz_load : false,
+                               lzt : "eval",
+                               proxied: true,
+                               url: "__debugger.lzx",
+                               lz_script : "#file interactive-eval-"+ seq + 
+                               "\n#line 0\n" + expr } );
+    }
+
+
+    function checkServerResponse () {
+        var loadobj = new LoadVars();
+        loadobj.onData = this.checkServerResponseHandler;
+        var reqstr =  lz.Browser.toAbsoluteURL( "__dbgprobe.lzx?lzt=stat", false );
+        loadobj.sendAndLoad(reqstr , loadobj, "POST" );
+    }
+
+
+    function checkServerResponseHandler (src) {
+      // NB: This is a callback handler, and 'this' will be bound to some LoadVars object, not to Debug
+      if (src == undefined) {
+        Debug.warn('Debugger cannot contact LPS server, switching to SOLO mode.');
+        Debug.setAttribute('solo_mode', true);
+      }
+    }
+
+
+
+}
+
+]]>
+</script>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

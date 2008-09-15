@@ -861,6 +861,7 @@
             var bridge:LzDebugConsole = new LzDebuggerWindowConsoleBridge(this);
             trace('calling attachDebugConsole', bridge);
             Debug.attachDebugConsole(bridge);
+            trace('Debug =', Debug);
         } else {
            Debug.attachDebugConsole(this);
         }
