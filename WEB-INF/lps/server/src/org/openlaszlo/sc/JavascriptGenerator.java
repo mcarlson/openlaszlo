@@ -1339,7 +1339,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           ;
         } else {
           if (debug) {
-            r = "$" + regno++ + "_" + k;
+            r =  k + "_$" + regno++ ;
           } else {
             r = "$" + regno++;
           }
