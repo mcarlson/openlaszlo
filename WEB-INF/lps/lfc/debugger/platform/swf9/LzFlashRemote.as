@@ -63,14 +63,16 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
       this.saved_msgs.push(msg);
       return;
     }
-    var str = '' + msg;
+    var str;
     try {
       if (msg && msg['toHTML'] is Function) {
         str = msg['toHTML']();
       } else {
         str = String(msg)['toHTML']();
       }
-    } catch (e) {};
+    } catch (e) {
+      str  = '' + msg;
+    };
     this.addHTMLText(str);
   };
 
@@ -85,12 +87,11 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
    * @access private
    */
     override function makeObjectLink (rep:String, id:*, attrs=null) {
-    var color = '#0000ff';
-    if (attrs && attrs.color) { color = attrs.color };
+    var color = (attrs && attrs['color']) ? attrs.color : '#0000ff';
     if (id != null) {
       // Note this is invoking a trampoline in the console that will
       // call back to us to display the object
-      return '<a href="asfunction:canvas.displayObjectByID,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
+      return '<a href="asfunction:_root.canvas.displayObjectByID,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
     }
     return rep;
   };
@@ -102,9 +103,6 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
    * @access private
    */
   override function doEval (expr:String) {
-    // Echo input to output
-    this.echo(String(expr)['toHTML']());
-    try {
         // Send EVAL request to LPS server
         // It doesn't matter what path/filename we use, as long as it has ".lzx" suffix, so it is
         // handled by the LPS. The lzt=eval causes the request to be served by the EVAL Responder.
@@ -112,9 +110,6 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
         debugloader.load(new URLRequest(url),
                          new LoaderContext(false,
                                            new ApplicationDomain(ApplicationDomain.currentDomain)));
-    } catch (e) {
-        Debug.error(e);
-    }
   };
 
   /**
@@ -186,7 +181,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
   /** RPC handler function for eval(); must be public
    */
   public function evalExpr(...args) {
-      this.doEval.apply(this, args);
+      Debug.doEval.apply(this, args);
   }
 
   /** RPC handler to display a value; must be public */
