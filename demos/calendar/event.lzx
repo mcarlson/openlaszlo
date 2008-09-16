@@ -110,7 +110,7 @@
                 this.smalltitletext.setAttribute('x', 25 );
                 this.setAttribute('x', 0 );
                 this.setAttribute('height', 22);
-                this.parent.closedlayout.doupdate(true);
+                this.parent.closedlayout.update(true);
             }
         </method>
 

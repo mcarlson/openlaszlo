@@ -122,10 +122,10 @@
             //Debug.write("selectData: "+e);
             //Debug.write ("selectData Deselecting: "+
                             //currenteventDP.serialize());
-            if(currenteventDP.p != null){
-                currenteventDP.setNodeAttribute( "selected" , false );
+            if(currenteventDP['p'] != null){
+                currenteventDP.setNodeAttribute( "selected" , 'false' );
             }
-            e.datapath.setNodeAttribute( "selected" , true );
+            e.datapath.setNodeAttribute( "selected" , 'true' );
         </method>
 
         <method name="setSelectedEvent" args="e , sdrag "><![CDATA[

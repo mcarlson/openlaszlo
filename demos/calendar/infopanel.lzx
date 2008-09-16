@@ -70,7 +70,7 @@
 
     <!-- CLASS: info_Panel =============================================== -->
     <!-- ================================================================= -->
-    <class name="info_Panel" extends="basepanel" clip="true">
+    <class name="info_Panel" extends="basepanel" clip="true" onclick="Debug.write(this.datapath)">
 
         <attribute name="opened" value="false"/>
         <attribute name="dataapply" value="false"/>

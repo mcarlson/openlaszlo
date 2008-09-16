@@ -141,29 +141,29 @@
             // Set the right current cal day for new events
             var selDay = calgrid.daySelectionMgr.getSelection()[0];
             if ( selDay ){
-                blankeventDP.setNodeAttribute('selected',true);
+                blankeventDP.setNodeAttribute('selected','true');
                 blankeventDP.setXPath('start[1]');
                 blankeventDP.setNodeAttribute('year',
-                         selDay.startdate.getFullYear());
+                         selDay.startdate.getFullYear()+'');
                 blankeventDP.setNodeAttribute('month',
-                             selDay.startdate.getMonth()+1);
+                             (selDay.startdate.getMonth()+1)+'');
                 blankeventDP.setNodeAttribute('day',
-                             selDay.startdate.getDate());
+                             selDay.startdate.getDate()+'');
 
-                blankeventDP.setNodeAttribute('hour', 9 );
-                blankeventDP.setNodeAttribute('minute', 0 );
+                blankeventDP.setNodeAttribute('hour', '9' );
+                blankeventDP.setNodeAttribute('minute', '0' );
 
                 blankeventDP.setXPath('../end[1]');
 
                 blankeventDP.setNodeAttribute('year',
-                             selDay.startdate.getFullYear());
+                             selDay.startdate.getFullYear()+'');
                 blankeventDP.setNodeAttribute('month',
-                             selDay.startdate.getMonth()+1);
+                             (selDay.startdate.getMonth()+1)+'');
                 blankeventDP.setNodeAttribute('day',
-                             selDay.startdate.getDate());
+                             selDay.startdate.getDate()+'');
 
-                blankeventDP.setNodeAttribute('hour', 10 );
-                blankeventDP.setNodeAttribute('minute', 0 );
+                blankeventDP.setNodeAttribute('hour', '10' );
+                blankeventDP.setNodeAttribute('minute', '0' );
 
 
                 blankeventDP.setXPath('../summary[1]');
@@ -185,7 +185,7 @@
             getNewNode(alleventsDP,'day'+day);
 
             // Add the event
-            currenteventDP.setNodeAttribute( "selected" , false );
+            currenteventDP.setNodeAttribute( "selected" , 'false' );
             var newPoint = alleventsDP.addNodeFromPointer(blankeventDP);
 
             // Set the event data pointer to the top of the event data
@@ -220,6 +220,9 @@
 
         <method name="deleteEvent">
             // Deletes the current node
+            if(currenteventDP.xpathQuery('summary/@value') == "New Event"){
+                currenteventDP.setNodeAttribute("selected", 'false');
+            }
             currenteventDP.deleteNode();
             //currenteventDP.setXPath('blankEvent:/event[1]');
             
@@ -240,7 +243,7 @@
             if (typeof(emintmp) == 'undefined') emintmp = 0;
             if (typeof(smintmp) == 'undefined') smintmp = 0;
 
-            var evlen = ehourtmp * 60 + emintmp - (shourtmp * 60 + smintmp);
+            var evlen = Number(ehourtmp) * 60 + Number(emintmp) - (Number(shourtmp) * 60 + Number(smintmp));
             if (evlen < 0) evlen += 60*24;
             if (evlen == 0) evlen = 15;
 
@@ -248,8 +251,8 @@
             var evlenmin = evlen - ( evlenhour * 60 );
 
             tempDP.setXPath('start[1]');
-            tempDP.setNodeAttribute('hour', shour);
-            tempDP.setNodeAttribute('minute', smin);
+            tempDP.setNodeAttribute('hour', shour+'');
+            tempDP.setNodeAttribute('minute', smin+'');
 
             tempDP.setXPath('../end[1]');
 
@@ -274,8 +277,8 @@
                 ehour = 23;
                 emin = 45;
             }
-            tempDP.setNodeAttribute('hour', ehour);
-            tempDP.setNodeAttribute('minute', emin);
+            tempDP.setNodeAttribute('hour', ehour+'');
+            tempDP.setNodeAttribute('minute', emin+'');
         ]]></method>
 
         <method name="getNewNode" args="dp,node">    <![CDATA[
@@ -298,16 +301,16 @@
             tempDP.setFromPointer( dp );
 
             tempDP.setXPath('start[1]');
-            tempDP.setNodeAttribute('year',year);
-            tempDP.setNodeAttribute('month',month);
-            tempDP.setNodeAttribute('day',day);
+            tempDP.setNodeAttribute('year',year+'');
+            tempDP.setNodeAttribute('month',month+'');
+            tempDP.setNodeAttribute('day',day+'');
 
             tempDP.selectParent();
 
             tempDP.setXPath('end[1]');
-            tempDP.setNodeAttribute('year',year);
-            tempDP.setNodeAttribute('month',month);
-            tempDP.setNodeAttribute('day',day);
+            tempDP.setNodeAttribute('year',year+'');
+            tempDP.setNodeAttribute('month',month+'');
+            tempDP.setNodeAttribute('day',day+'');
 
 
         </method>
@@ -430,8 +433,8 @@
                     if(eHour != 0){
                         tempDP.setFromPointer( currenteventDP );
                         tempDP.setXPath('end[1]');
-                        tempDP.setNodeAttribute( 'hour' , eHour );
-                        tempDP.setNodeAttribute( 'minute' , eMinute );
+                        tempDP.setNodeAttribute( 'hour' , eHour+'' );
+                        tempDP.setNodeAttribute( 'minute' , eMinute+'' );
                     }
                 }
             }

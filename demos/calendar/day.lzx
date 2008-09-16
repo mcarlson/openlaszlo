@@ -159,7 +159,7 @@
             //Debug.write ("*assigning: "+this+" a new day datapath: "
                             //+vDatapath);
 
-            this.details.bgrect.container.dataview.setDatapath(vDatapath);
+            this.details.bgrect.container.dataview.setAttribute('datapath', vDatapath);
 
 
             var textColor = 0xDAE3E8;
