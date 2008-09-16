@@ -133,8 +133,7 @@ class LzDebugMessage extends LzBootstrapMessage {
    * 
    * @access private
    * 
-   * @param String str: the representation of an object
-   * @param Object obj: the object represented, or null
+   * @param String str: the representation of an object'   * @param Object obj: the object represented, or null
    *
    * @devnote We use ID's rather than the actual object so that the ID
    * table is the only place where the debugger retains objects (which
@@ -182,7 +181,9 @@ class LzDebugMessage extends LzBootstrapMessage {
     for (var i = 0; i < len; i++) {
       var arg = args[i];
       // annotate objects and things you have ID'd
-      if ((arg is Object) || Debug.isObjectLike(arg) || (Debug.IDForObject(arg) != null)) {
+      // Don't treat String's as Objects (in swf9, all strings are Strings!)
+      if ((! ((arg is String) && (arg['constructor'] === String))) &&
+          ((arg is Object) || Debug.isObjectLike(arg) || (Debug.IDForObject(arg) != null))) {
         // pretty, no limit, but unique; for write-compatibility
         var str = Debug.__String(arg, true, Infinity, true);
         this.appendInternal(str, arg);
