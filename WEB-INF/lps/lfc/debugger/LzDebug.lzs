@@ -942,81 +942,90 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     var si = (showInternalProperties === (void 0)) ? Debug.showInternalProperties : false;
     var opl = this.printLength;
     try {
-      // TODO: [2003-09-12 ptw] either bind or pass as option
-      // Disable printLength for printing the name of a non-object in case
-      // it was abbreviated, otherwise set it short
-      if (! this.isObjectLike(obj)) {
-        this.printLength = Infinity;
-      } else {
+      try {
+        // TODO: [2003-09-12 ptw] either bind or pass as option
+        // Disable printLength for printing the name of a non-object in case
+        // it was abbreviated, otherwise set it short
+        if (! this.isObjectLike(obj)) {
+          this.printLength = Infinity;
+        } else {
+          this.printLength = this.inspectPrintLength;
+        }
+        // Turn off pretty for name
+        // TODO: [2008-09-05 ptw] Why do we have to xmlEscape this?
+        var name = LzMessage.xmlEscape(this.__String(obj, false));
+        if (! (obj instanceof Object)) {
+          return name;
+        }
+        // Print properties with abbreviated length
         this.printLength = this.inspectPrintLength;
-      }
-      // Turn off pretty for name
-      // TODO: [2008-09-05 ptw] Why do we have to xmlEscape this?
-      var name = LzMessage.xmlEscape(this.__String(obj, false));
-      if (! (obj instanceof Object)) {
-        return name;
-      }
-      // Print properties with abbreviated length
-      this.printLength = this.inspectPrintLength;
 
-      var names = [];
-      var indices = this.isArrayLike(obj)?[]:null;
-      this.objectOwnProperties(obj, names, indices, Infinity, si);
-      names.sort(this.caseInsensitiveOrdering);
-      if (indices) { indices.sort(this.numericOrdering); }
+        var names = [];
+        var indices = this.isArrayLike(obj)?[]:null;
+        this.objectOwnProperties(obj, names, indices, Infinity, si);
+        names.sort(this.caseInsensitiveOrdering);
+        if (indices) { indices.sort(this.numericOrdering); }
 
-      var description = "";
-      var nnames = names.length;
-      var val;
-      var wid = 0;
-      // Align all names if annotating 'weight'
-      if (this.markGeneration > 0) {
-        for (var i = 0; i < nnames; i++) {
-          var keywidth = names[i].length;
+        var description = "";
+        var nnames = names.length;
+        var val;
+        var wid = 0;
+        // Align all names if annotating 'weight'
+        if ('markGeneration' in this && this.markGeneration > 0) {
+          for (var i = 0; i < nnames; i++) {
+            var keywidth = names[i].length;
+            if (keywidth > wid) { wid = keywidth; }
+          }
+        }
+        if (indices) {
+          var keywidth = ('' + obj.length).length;
           if (keywidth > wid) { wid = keywidth; }
         }
-      }
-      if (indices) {
-        var keywidth = ('' + obj.length).length;
-        if (keywidth > wid) { wid = keywidth; }
-      }
-      var last;
-      for (var i = 0; i < nnames; i++) {
-        var key = names[i];
-        // Some runtimes duplicate inherited slots
-        if (key != last) {
-          last = key;
-          val = obj[key];
-          if (si ||
-              ((! this.internalProperty(key)) &&
-               // Only show slots with internal type if showing
-               // internals
-               (! this.internalProperty(this.__typeof(val))))) {
+        var last;
+        for (var i = 0; i < nnames; i++) {
+          var key = names[i];
+          // Some runtimes duplicate inherited slots
+          if (key != last) {
+            last = key;
+            val = obj[key];
+            if (si ||
+                ((! this.internalProperty(key)) &&
+                 // Only show slots with internal type if showing
+                 // internals
+                 (! this.internalProperty(this.__typeof(val))))) {
+              description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
+            }
+          }
+        }
+        if (indices) {
+          for (var i = 0; i < indices.length; i++) {
+            var key = indices[i];
+            val = obj[key];
+            // Don't bother with ellipses, since we are displaying the key
+            // here
             description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
           }
         }
+      } finally {
+        this.printLength = opl;
       }
-
-      if (indices) {
-        for (var i = 0; i < indices.length; i++) {
-          var key = indices[i];
-          val = obj[key];
-          // Don't bother with ellipses, since we are displaying the key
-          // here
-          description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
+      // Annotate 'weight' if available
+      if (('markGeneration' in this) && this.markGeneration > 0) {
+        var leaked = this.annotation.leaked;
+        if (this.isObjectLike(obj) &&
+            (obj['hasOwnProperty'] is Function) &&
+            obj.hasOwnProperty(leaked) &&
+            obj[leaked]) {
+          name += ' (\u00A3' + obj[leaked] + ')'; // 'Pounds'
         }
       }
-    } finally {
-      this.printLength = opl;
-    }
-    // Annotate 'weight' if available
-    if (this.markGeneration > 0) {
-      var leaked = this.annotation.leaked;
-      if (this.isObjectLike(obj) &&
-          (obj['hasOwnProperty'] is Function) &&
-          obj.hasOwnProperty(leaked) &&
-          obj[leaked]) {
-        name += ' (\u00A3' + obj[leaked] + ')'; // 'Pounds'
+    } catch (e) {
+      try {
+        // Use %s to prevent recursion
+        description = this.formatToString("Error: %0.24s computing inspectInternal", e);
+      }
+      catch (e) {
+        description = "Recursive error computing inspectInternal";
       }
     }
     if (description != "") { description = ' {\n' + description + '}'; }
@@ -1032,7 +1041,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     wid++;
     try {
       // Annotate 'weight' if available
-      if (this.markGeneration > 0) {
+      if ('markGeneration' in this && this.markGeneration > 0) {
         var annotation = this.annotation;
         var leaked = annotation.leaked;
         var why = annotation.why;
