@@ -5,11 +5,17 @@
         held down. -->
    <class name="basebuttonrepeater" extends="basebutton">
        <!---  @keywords private -->
-       <attribute name="_lasttime" value="0"/>
+       <attribute name="_lasttime" value="0" type="number" />
        <!---  @keywords private -->
-       <attribute name="stillDownDelegate" value="0"/>
+       <attribute name="stillDownDelegate" value="null" type="expression" />
        <!---  @keywords private -->
-       <method name="stillDownEventGenerator">
+       <attribute name="isMouseDown" value="false" type="boolean" />
+       
+       <!--- @keywords public -->
+       <event name="onmousestilldown" />
+       
+       <!---  @keywords private -->
+       <method name="stillDownEventGenerator" args="ignore" >
             var now = (new Date()).getTime();
             var diff = now - this._lasttime;
             this._lasttime = now;
@@ -28,17 +34,17 @@
 
        <!--- @keywords private -->
         <handler name="onmousedown">
-            var now = new Date();
-            this._lasttime = now.getTime();
+            this._lasttime = (new Date()).getTime();
             this.isMouseDown = true;
-            if (!this.stillDownDelegate) {
-               this.stillDownDelegate = new LzDelegate( this, "stillDownEventGenerator");
-           }
+            if (! this.stillDownDelegate) {
+               this.stillDownDelegate = new LzDelegate( this, "stillDownEventGenerator" );
+            }
             lz.Timer.addTimer( this.stillDownDelegate, 500 );
         </handler>
+        
         <!--- @keywords private -->
-        <handler name= "onmouseup">
-            this.isMouseDown=false;
+        <handler name="onmouseup">
+            this.isMouseDown = false;
             lz.Timer.removeTimer( this.stillDownDelegate );
         </handler>
         
