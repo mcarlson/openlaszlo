@@ -10,10 +10,11 @@
 
 class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
 
-    var window:LzView;
+    var window;
 
-    function LzDebuggerWindowConsoleBridge (view:LzView) {
-        this.window = view;
+    function LzDebuggerWindowConsoleBridge (view) {
+      trace('LzDebuggerWindowConsoleBridge', view);
+      this.window = view;
     }
 
     /**
@@ -24,7 +25,8 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @devnote Should probably be called addMessage
      */
     override function addText (msg) {
-        this.window['addText'](msg);
+      trace(' addText', msg);
+      this.window.addText(msg);
     }
 
     /**
@@ -33,7 +35,8 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function clear () {
-        this.window['clearWindow']()
+      trace(' clear' );
+      this.window.clearWindow()
     };
 
     /**
@@ -42,7 +45,8 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function echo (str, newLine:Boolean=true) {
-        this.window['echo'](str, newLine);
+      trace(' echo', str);
+      this.window.echo(str, newLine);
     }
 
     /**
@@ -51,7 +55,8 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function addHTMLText (msg) {
-        this.window['addHTMLText'](msg);
+      trace(' addHTMLText', msg);
+      this.window.addHTMLText(msg);
     };
 
     /**
@@ -60,7 +65,8 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function makeObjectLink (rep:String, id, attrs=null):String {
-        this.window['makeObjectLink'](rep,id,attrs);
+      trace(' makeObjectLink', rep);
+      this.window.makeObjectLink(rep,id,attrs);
     }
 
     /**
@@ -69,6 +75,7 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function doEval (expr:String) {
-        this.window['doEval'](expr);
+      trace(' doEval', expr);
+      this.window.doEval(expr);
     }
 }

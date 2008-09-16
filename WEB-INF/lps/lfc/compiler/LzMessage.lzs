@@ -104,14 +104,6 @@ if ($swf9) {
 }
 
 
-if ($swf9) {
-
-String.prototype.toHTML = function () {
-  return LzBootstrapMessage.xmlEscape(this);
-};
-
-} else {
-
 /**
  * Convert a String to HTML for display in the Debugger by escaping
  * the HTML characters in the String.
@@ -120,4 +112,4 @@ String.prototype.toHTML = function () {
 String.prototype.toHTML = function () {
   return LzMessage.xmlEscape(this);
 };
-}
+
