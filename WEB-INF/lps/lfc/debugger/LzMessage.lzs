@@ -133,7 +133,8 @@ class LzDebugMessage extends LzBootstrapMessage {
    * 
    * @access private
    * 
-   * @param String str: the representation of an object'   * @param Object obj: the object represented, or null
+   * @param String str: the representation of an object
+   * @param Object obj: the object represented, or null
    *
    * @devnote We use ID's rather than the actual object so that the ID
    * table is the only place where the debugger retains objects (which

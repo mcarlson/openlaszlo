@@ -637,6 +637,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       // _dbg_name takes precedence over the actual function name
       if (fn.hasOwnProperty('_dbg_name')) {
         var n = fn['_dbg_name'];
+      } else if (fn['tagname'] && fn === lz[fn.tagname]) {
+        // Handle tag classes
+        return '<' + fn.tagname + '>';
       } else {
         // tip o' the pin to osteele.com
         var fstring = fn['toString']();
@@ -721,7 +724,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         // TODO: [2008-08-17 ptw] return now?
       } else if (this.isStringLike(thing)) {
         // No pretty for subclasses
-        if (thing is String && (thing.constructor !== String)) {
+        if (thing is String && (thing['constructor'] !== String)) {
           pretty = (! unique);
         }
         // abbreviate rep if necessary
@@ -1110,7 +1113,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     var al = a.toLowerCase();
     var bl = b.toLowerCase();
     if ($swf9) {
-      return al.localCompare(bl);
+      return al.localeCompare(bl);
     } else {
       return (al > bl) - (al < bl);
     }
@@ -1120,11 +1123,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function numericOrdering (a:String, b:String):Number {
     var al = Number(a);
     var bl = Number(b);
-    if ($swf9) {
-      return al.localCompare(bl);
-    } else {
-      return (al > bl) - (al < bl);
-    }
+    return Number(al > bl) - Number(al < bl);
   }
 
   /**

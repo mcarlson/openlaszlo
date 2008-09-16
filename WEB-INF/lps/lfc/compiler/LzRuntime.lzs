@@ -93,4 +93,13 @@ var encodeURIComponent = escape;
  * of the LFCApplication.
  */
 
-var  globalValue = function (name) { return this[name]; }
+var  globalValue = function (name) {
+  // Semi-kludge:  We name our tag classes <tagname>.  Since <> are
+  // not valid symbol constituents, there is no confusion here
+  if (name.charAt(0) == '<' && name.charAt(name.length-1) == '>') {
+    return lz[name.substring(1, name.length-1)];
+  }
+  // TODO: [2008-09-16 ptw] This does not work for built-in classes in
+  // swf9 :(
+  return this[name];
+}

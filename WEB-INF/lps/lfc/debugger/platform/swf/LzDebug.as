@@ -193,6 +193,9 @@ class LzAS2DebugService extends LzDebugService {
         if ((! mustBeUnique) || (fn === eval(n))) {
           return n;
         }
+      } else if (fn['tagname'] && fn === lz[fn.tagname]) {
+        // Handle tag classes
+        return '<' + fn.tagname + '>';
       }
     }
     return null;
