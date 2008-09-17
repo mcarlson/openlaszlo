@@ -9,12 +9,12 @@
   */
 
 /**
-  * <p>An <classname>LzAnimatorGroup</classname> wraps several
+* <p>An <classname>lz.animatorgroup</classname> wraps several
   * <sgmltag class="element" role="LzAnimator">&lt;animator&gt;</sgmltag>s, and runs them in sequence or
-  * simultaneously . As an example, the code below animates a view first
+  * simultaneously. As an example, the code below animates a view first
   * along the x-axis and then the y.</p>
   *   
-  * <example extract="false"><programlisting>
+  * <example><programlisting class="code" extract="false">
   * &lt;canvas&gt;
   *   &lt;view bgcolor="red" width="100" height="100"&gt;
   *     &lt;animatorgroup process="sequential"&gt;
