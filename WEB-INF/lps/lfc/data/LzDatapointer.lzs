@@ -1313,7 +1313,7 @@ function serialize () :String {
 
 if ($debug) {
 /** @access private */
-override function _dbg_name () :String {
+LzDatapointer.prototype._dbg_name = function () :String {
     if (this.p) {
         return this.p._dbg_name();
     }

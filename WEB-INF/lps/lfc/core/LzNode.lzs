@@ -66,7 +66,6 @@ public dynamic class LzNode extends LzEventable {
     }
   }
 
-
   /**
    * Helper function to merge an class or instance's attributes with
    * those of its superclass.  Broken out because it is called by
@@ -188,10 +187,6 @@ public dynamic class LzNode extends LzEventable {
     // in which case your name is also an it
     var bindname = this.$lzc$bind_name;
     if (bindname) { bindname.call(null, this) };
-
-    this.__LZUID = "__U" + ++LzNode.__UIDs;
-    this.__LZdeferDelegates = true;
-    var qpos = LzDelegate.__LZdelegatesQueue.length;
 
     // Node node start
     if ($profile) {
@@ -2087,40 +2082,41 @@ public dynamic class LzNode extends LzEventable {
     return s;
   }
 
-  /**
-   * debugString hook
-   *
-   * If the node has an id (and is the value of that id), return that
-   * (prefixed by #, as a css id would be), if it has a name (and is the
-   * value of that name in its parent), return that (prefixed by ., as a
-   * property would be.
-   *
-   * If the node has no valid name or id, call the toString method (for
-   * backward compatibility).  TODO: [2005-07-30 ptw] rewrite all those
-   * toString methods that really should be _dbg_name methods.
-   *
-   * @access private
-   */
-  function _dbg_name (){
-    if ((typeof(this.id) == 'string') &&
-        (global[this.id] === this)) {
-      return "#" + this.id;
-    } else if ((typeof(this.name) == 'string') &&
-               (this.parent[this.name] === this)) {
-      return '.' + this.name;
-    } else {
-      // Don't use LzNode.toString, which is lame
-      var ts = this.toString();
-      if (ts == this.getDebugIdentification()) {
-        // Return empty string so __String does not call
-        // LzNode#toString, which won't add any information
-        return "";
+  if ($debug) {
+    /**
+     * debugString hook
+     *
+     * If the node has an id (and is the value of that id), return that
+     * (prefixed by #, as a css id would be), if it has a name (and is the
+     * value of that name in its parent), return that (prefixed by ., as a
+     * property would be.
+     *
+     * If the node has no valid name or id, call the toString method (for
+     * backward compatibility).  TODO: [2005-07-30 ptw] rewrite all those
+     * toString methods that really should be _dbg_name methods.
+     *
+     * @access private
+     */
+    LzNode.prototype._dbg_name = function (){
+      if ((typeof(this.id) == 'string') &&
+          (global[this.id] === this)) {
+        return "#" + this.id;
+      } else if ((typeof(this.name) == 'string') &&
+                 (this.parent[this.name] === this)) {
+        return '.' + this.name;
       } else {
-        return ts;
+        // Don't use LzNode.toString, which is lame
+        var ts = this.toString();
+        if (ts == this.getDebugIdentification()) {
+          // Return empty string so __String does not call
+          // LzNode#toString, which won't add any information
+          return "";
+        } else {
+          return ts;
+        }
       }
     }
   }
-
 
   //+++++ Wacky class stuff
 

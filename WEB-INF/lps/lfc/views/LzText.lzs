@@ -729,8 +729,8 @@ if ($debug) {
 /**
   * @access private
   */
-override function _dbg_name ( ){
-  var id = super._dbg_name();
+LzText.prototype._dbg_name = function ( ){
+  var id = LzView.prototype._dbg_name.call(this);
   if (id != this.toString()) {
     return id;
   } else {

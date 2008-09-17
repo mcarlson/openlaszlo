@@ -696,10 +696,11 @@ function queuedCopyFlashXML_internal () {
     }
 }
 
+if ($debug) {
 /**
   * @access private
   */
-function _dbg_name () {
+LzLoader.prototype._dbg_name = function () {
     var lr = this.lastrequest;
     if (this.queueing) {
         var el = this.expectedList;
@@ -714,7 +715,6 @@ function _dbg_name () {
     }
 }
 
-if ($debug) {
 /**
   * Set to true to monitor loadMovie state changes when debugging
   * @access private

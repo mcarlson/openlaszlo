@@ -442,7 +442,7 @@ dynamic class LzBootstrapDebugService {
     }
   };
 
-  function _dbg_name () {
+  LzBootstrapDebugService.prototype._dbg_name = function () {
     if (this === Debug) { return '#Debug'; } else return null;
   }
 };

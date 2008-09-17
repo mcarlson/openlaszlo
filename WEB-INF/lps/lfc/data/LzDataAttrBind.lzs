@@ -125,7 +125,7 @@ override function toString () :String {
 }
 
 if ($debug) {
-    override function _dbg_name () {
+     LzDataAttrBind.prototype._dbg_name = function () {
         return Debug.formatToString("%w.%s=\"$path{%w}\"", this.node, this.setAttr, this.xpath);
     }
 }

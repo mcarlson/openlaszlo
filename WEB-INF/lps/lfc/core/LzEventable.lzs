@@ -128,5 +128,13 @@ class LzEventable {
     }
   }
 
+  if ($debug) {
+    // In debug mode, the compiler fills these in
+    LzEventable.prototype._dbg_filename = null;
+    LzEventable.prototype._dbg_lineno = null;
+    // Subclasses can define these to be either strings or functions
+    LzEventable.prototype._dbg_typename = null;
+    LzEventable.prototype._dbg_name = null;
+  }
 } // End of LzEventable
 lz.Eventable = LzEventable;  // publish

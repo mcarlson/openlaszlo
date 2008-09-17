@@ -115,7 +115,7 @@ class LzViewLinkage {
   * Debug name gives the linkage as a 2d transform, just for yuks
   * @access private
   */
-    function _dbg_name () {
+    LzViewLinkage.prototype._dbg_name = function () {
       return '[' +
         this.scale.x + ' 0 ' + this.offset.x +
         ' 0 ' + this.scale.y + ' ' + this.offset.y +

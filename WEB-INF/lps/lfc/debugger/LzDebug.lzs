@@ -307,7 +307,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * warnInternal tracks recursion and silences messages below
    * messageLevel
    */
-  function warnInternal (xtor:Function, control:String, ...args) {
+  function warnInternal (xtor:Class, control:String, ...args) {
     var sourceMessage = LzSourceMessage;
     var level = sourceMessage.level
       if (level > sourceMessage.levelMax) { return; }
@@ -538,8 +538,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
 
         // Check for user typename
         var user_name = null;
-        // Have to use `in` here, because you apparently cannot use []
-        // on Number (even though it is an Object) in swf9
+        // Have to use `in` here, because only our objects will have
+        // this (and they will have it on their class prototype).
         if ('_dbg_typename' in thing) {
           if (thing._dbg_typename is Function) {
             // Guard against broken user routines
@@ -687,12 +687,13 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         // Bind printLength short while calling user methods
         var opl = this.printLength;
         this.printLength = (limit < this.inspectPrintLength)?limit:this.inspectPrintLength;
-        // Have to use `in` here, because you apparently cannot use []
-        // on Number (even though it is an Object) in swf9
+        // Have to use `in` here, because only our objects will have
+        // this (and they will have it on their class prototype).
         var dn = '_dbg_name' in thing ? thing._dbg_name : null;
         // Look for class prototypes
-        if (('constructor' in thing) &&
-            (thing.constructor is Function) &&
+        // TODO: [2008-09-17 ptw] constructors are Class's in swf9,
+        // not Function's.
+        if ((thing['constructor'] is Function) &&
             (thing === thing.constructor['prototype'])) {
           debug_name = '.prototype';
         } else if (dn is Function) {
@@ -798,15 +799,16 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         // Print unidentified objects and arrays as abbreviated list of props
         else {
           var names = [];
-          var indices = this.isArrayLike(thing)?[]:null;
+          var indices = (this.isArrayLike(thing) && (! this.isStringLike(thing)))?[]:null;
           this.objectOwnProperties(thing, names, indices, limit);
           if (indices) { indices.sort(this.numericOrdering); }
 
           // No pretty for subclasses or non-objects or array-like objects
           // that are not Arrays.
-          var z = indices ?
-            ((thing is Array) && (thing.constructor === Array)) : ((thing is Object) && (thing.constructor === Object));
-          if (! z) {
+          var notPretty = indices ?
+            (this.isArrayLike(thing) && (thing.constructor !== Array)) :
+            (this.isObjectLike(thing) && (thing.constructor !== Object));
+          if (notPretty) {
             pretty = (! unique);
           }
 
@@ -954,14 +956,14 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         // Turn off pretty for name
         // TODO: [2008-09-05 ptw] Why do we have to xmlEscape this?
         var name = LzMessage.xmlEscape(this.__String(obj, false));
-        if (! (obj instanceof Object)) {
+        if (! (this.isObjectLike(obj))) {
           return name;
         }
         // Print properties with abbreviated length
         this.printLength = this.inspectPrintLength;
 
         var names = [];
-        var indices = this.isArrayLike(obj)?[]:null;
+        var indices = (this.isArrayLike(obj) && (! this.isStringLike(obj)))?[]:null;
         this.objectOwnProperties(obj, names, indices, Infinity, si);
         names.sort(this.caseInsensitiveOrdering);
         if (indices) { indices.sort(this.numericOrdering); }
@@ -1019,14 +1021,15 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           name += ' (\u00A3' + obj[leaked] + ')'; // 'Pounds'
         }
       }
-    } catch (e) {
-      try {
-        // Use %s to prevent recursion
-        description = this.formatToString("Error: %0.24s computing inspectInternal", e);
-      }
-      catch (e) {
-        description = "Recursive error computing inspectInternal";
-      }
+//     } catch (e) {
+//       try {
+//         // Use %s to prevent recursion
+//         description = this.formatToString("Error: %0.24s computing inspectInternal", e);
+//       }
+//       catch (e) {
+//         description = "Recursive error computing inspectInternal";
+//       }
+    } finally {
     }
     if (description != "") { description = ' {\n' + description + '}'; }
     return name + description;
@@ -1089,7 +1092,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function isObjectLike (obj:*):Boolean {
     // (N.B., typeof will return 'object' for runtime objects that may
     // be of interest, even though they are not instances of Object)
-    return obj && ((obj is Object) || typeof(obj) == 'object');
+    // NOTE [2008-09-16 ptw] In JS2 all primitives (boolean, number,
+    // string) are auto-wrapped, so you can't ask `obj is Object` to
+    // distinguish primitives from objects
+    return obj && (typeof(obj) == 'object');
   }
 
   /**
@@ -1099,10 +1105,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @access private
    */
   function isArrayLike (obj:*):Boolean {
-    var ol = obj['length'];
-    return ((typeof(ol) == 'number' || ol is Number) &&
-            ((ol|0) === ol) &&
-            (ol >= 0));
+    if ((obj is Array) || ('length' in obj)) {
+      var ol = obj['length'];
+      return ((typeof(ol) == 'number' || ol is Number) &&
+              ((ol|0) === ol) &&
+              (ol >= 0));
+    }
   }
 
   /**
@@ -1273,7 +1281,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     if (typeof(error) == 'number') {
       error = this.ObjectForID(error);
     }
-    if (! (error instanceof LzSourceMessage)) {
+    if (! (error is LzSourceMessage)) {
       this.error("You must provide an error to report.  Please inspect an error message and try again.")
         return;
     }
@@ -1356,9 +1364,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
                 (ol >= 0)) ? ol : false;
     var hopp = obj['hasOwnProperty'] is Function;
     // Use typeof == 'object' rather than instanceof Object for native prototypes
-    var proto = ((typeof obj['__proto__'] == 'object') ? obj.__proto__ :
-                 ((obj['constructor'] && (typeof obj.constructor.prototype == 'object')) ?
-                  obj.constructor.prototype : false));
+    var proto = ((obj['constructor'] && (typeof obj.constructor['prototype'] == 'object')) ?
+                 obj.constructor.prototype : false);
     for (var key in obj) {
       // Heuristic to find 'interesting' slots, by which we mean slots
       // that have a non-inherited value.  This should find 'own' slots,

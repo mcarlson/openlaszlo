@@ -75,7 +75,7 @@ class LzDebugMessage extends LzBootstrapMessage {
    * Implements String interface
    * @access private
    */
-  function toString (radix) { return this.message.toString(radix); };
+  function toString () { return this.message.toString(); };
   /**
    * Implements String interface
    * @access private
@@ -280,6 +280,7 @@ class LzSourceMessage {
   var file:String;
   var line:Number;
   var message:LzMessage;
+  var length:Number;
   var backtrace;
   static var type = '';
   static var color = '#000000';
@@ -340,6 +341,7 @@ class LzSourceMessage {
     } else {
       this.message = new LzMessage(message);
     }
+    this.length = this.toString().length;
   }
   }
 

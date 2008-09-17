@@ -144,17 +144,6 @@
 <class name="DebugObject" extends="text">
     <!--- whether or not to emit debugging statements -->
     <attribute name="debugWrite" />
-
-    <!--- @keywords required -->
-    <method name="debugFields">
-        return [];
-    </method>
-
-    <!--- @keywords required -->
-    <method name="_dbg_typename">
-        return "DebugObject";
-    </method>
-
         
     // compare two XML objects for lisp-style EQUAL 
     // this takes two string
@@ -225,30 +214,6 @@
     </method>
 
     <!---
-      @return String: a string describing the object in detail.
-    -->
-    <method name="_dbg_name">
-        <![CDATA[
-            var f = this.debugFields();
-            var s = this["toString"]();
-            if (f.length > 0 || s == "[object Object]") {
-                s = "";
-                for (var e in f) {
-                    var i = f[e];
-                    var v = this[i];
-                    // Ignore "empty" properties
-                    if (v && ("" + v) != "") {
-                        s += "" + i + ": " + v + ", ";
-                    }
-                }
-                if (s != "")
-                    s = "{" + s.substring(0, s.length - 2) + "}";
-            }
-            return s;
-        ]]>
-    </method>
-
-    <!---
       Takes any number of arguments and outputs them using
       Debug.debug.  Strings are output literally, any other objects
       are described in more detail using Debug.__String (which uses
@@ -289,10 +254,6 @@
   assertFalse) and identity (assertSame, assertNotSame) assertions.
 -->
 <class name="Test" extends="DebugObject">
-    <method name="_dbg_typename">
-        return "Test";
-    </method>
-
     <!-- attributes -->
     <!---
       Used to accumulate test results in the absence of exceptions
@@ -311,10 +272,6 @@
       @keywords private
     -->
     <attribute name="debugLZUnit" value="false" />
-
-    <method name="_dbg_name">
-        return this.constructor.tagname;
-    </method>
 
     <method name="debugFields">
         var f = super.debugFields();
@@ -654,10 +611,6 @@
   @param testName: the name of the test
 -->
 <class name="TestCase" extends="Test">
-    <method name="_dbg_typename">
-        return "TestCase";
-    </method>
-
     <!--- The name of the TestCase -->
     <attribute name="name" />
 
@@ -900,10 +853,6 @@
   for an example of this tag.
 -->
 <class name="TestResult" extends="DebugObject" opacity="0.9" bgcolor="0xCCCCCC">
-    <method name="_dbg_typename">
-        return "TestResult";
-    </method>
-
     <!--- @keywords private -->
     <attribute name="totalTests" value="${canvas.runTests}"/>
     <!--- @keywords private -->
@@ -1083,10 +1032,6 @@
   display the results of the tests.
 -->
 <class name="TestSuite" extends="Test" width="100%" height="100%">
-    <method name="_dbg_typename">
-        return "TestSuite";
-    </method>
-
     <!--- @keywords private
          String logfile: logfile to log to, goes in LPS log directory -->
     <attribute name="logfile" type="string" value="lzunit.log" />
