@@ -1,0 +1,17 @@
+<canvas height="350" debug="true" >
+  <script>
+    //one of: "ALL", "DEBUG", "INFO", "WARNING", "ERROR", "NONE"
+    Debug.messageLevel = "WARNING";
+    
+    Debug.write("write");
+    
+    Debug.debug("debug");
+    Debug.info("info");
+    Debug.warn("warn");
+    Debug.error("error");
+  </script>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

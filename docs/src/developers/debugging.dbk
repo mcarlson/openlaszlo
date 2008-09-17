@@ -326,7 +326,21 @@ the length of the object — it may take a very long time to
 print if it is large).</para>
 <para>
 When the debugger prints an object, if the type part of the description is enclosed in ?'s, it means that the object is potentially corrupted. (Technically it means that <literal>object instanceof object.[[prototype]].constructor</literal> is not true.)</para>
-<para/></section></section><section id="logging-to-the-server"><title>Logging to the Server</title>
+<para/></section>
+<section>
+  <title>Debug message level</title>
+  <para>Debug messages are enabled/disabled by the setting of <literal>Debug.messageLevel</literal>. 
+    The valid levels are one of the keys of <literal>Debug.messageLevels</literal>. All messages of a 
+    lower level than the current setting will be suppressed.</para>
+  <example role="live-example">
+    <title>Setting the debug message level</title>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/debuglevel.lzx"/></textobject> 
+    </programlisting>
+  </example>
+</section>
+</section> 
+  <section id="logging-to-the-server"><title>Logging to the Server</title>
 
 <para>Messages can be written from an LZX application to the
 <glossterm>server log</glossterm> through the use of the
