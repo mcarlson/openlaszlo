@@ -123,7 +123,8 @@ dynamic class LzCanvas extends LzView {
       */
     var __LZmousemoveDel:LzDelegate;    
 
-
+    /** @access private */
+    var __LZDefaultCanvasMenu :LzContextMenu;
 
     /**
      * <p>
@@ -353,7 +354,11 @@ dynamic class LzCanvas extends LzView {
         // Create the default dataprovider
         this.defaultdataprovider = this.httpdataprovider = new LzHTTPDataProvider();
 
-        LzPlatform.initCanvas(this);
+        if ($svg) {
+            //not for svg
+        } else {
+            this.buildDefaultMenu();
+        }
 
         this.id = lz.Browser.getInitArg('id');
     }
@@ -727,6 +732,46 @@ override function $lzc$set_y(v) {
 function setDefaultContextMenu ( cmenu ){
     this.setContextMenu(cmenu);
     this.sprite.setDefaultContextMenu( cmenu );
+}
+
+/**
+  * Build the default righ-click menu object
+  * @access private
+  */
+function buildDefaultMenu () {
+    this.__LZDefaultCanvasMenu = new LzContextMenu();
+    this.__LZDefaultCanvasMenu.hideBuiltInItems();
+    
+    var defaultMenuItem:LzContextMenuItem = new LzContextMenuItem("About OpenLaszlo...",
+                                                new LzDelegate(this, '__LZdefaultMenuItemHandler'));
+    this.__LZDefaultCanvasMenu.addItem(defaultMenuItem);
+    
+    if (this.proxied) {
+        var viewSourceMenuItem:LzContextMenuItem = new LzContextMenuItem("View Source",
+                                                    new LzDelegate(this, '__LZviewSourceMenuItemHandler'));
+        this.__LZDefaultCanvasMenu.addItem(viewSourceMenuItem);
+    }
+    
+    // Install the default menu onto MovieClip, so it shows up everywhere by default
+    this.setDefaultContextMenu(this.__LZDefaultCanvasMenu);
+}
+
+/**
+  * @access private
+  */
+function __LZdefaultMenuItemHandler (item:LzContextMenuItem) {
+    // load a url 
+    lz.Browser.loadURL("http://www.openlaszlo.org", "lz_about");
+}
+
+/**
+  * @access private
+  */
+function __LZviewSourceMenuItemHandler (item:LzContextMenuItem) {
+    // view source for this app
+    // /examples/components/edittext_example.lzx
+    var url = lz.Browser.getBaseURL() + "?lzt=source";
+    lz.Browser.loadURL(url, "lz_source");
 }
 
 /**
