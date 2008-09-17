@@ -230,3 +230,14 @@ String.prototype.search = function (re:*) :int {
     if (!(re instanceof RegExp)) re = new RegExp(re + "");//coerce to string
     return re.__call("lz.embed.regex.search", RegExp.__mask(this));
 }
+
+String.prototype.__split = String.prototype.split;
+
+String.prototype.split = function (sep:*, limit:Number) :Array {
+    if (sep instanceof RegExp) {
+        return RegExp.__unmaskArr(sep.__call("lz.embed.regex.split", RegExp.__mask(this), limit));
+    } else {
+        // call shadowed 
+        return String.prototype.__split.apply(this, arguments);
+    }
+}

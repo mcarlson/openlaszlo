@@ -8,6 +8,7 @@
             this.addTest("testReplace");
             this.addTest("testSearch");
             this.addTest("testMatch");
+            this.addTest("testSplit");
             this.addTest("testExec");
             this.addTest("testTest");
             this.addTest("testFlags");
@@ -51,6 +52,17 @@
             assertTrue(equalArrays(["il sole"], src.match("il \\w+")));
         ]]></method>
         
+        <method name="testSplit" ><![CDATA[
+            //test shadowed String.prototype.split
+            assertTrue(equalArrays(["a", "b", "c"], "a;b;c".split(";")));
+            assertTrue(equalArrays(["", "a", "b", "c"], ";a;b;c".split(";")));
+            
+            assertTrue(equalArrays(["a", "b", "c"], "a;b;c".split(new RegExp("[;]"))));
+            assertTrue(equalArrays(["a", "b", "c"], "a;b,c".split(new RegExp("[,;]"))));
+            assertTrue(equalArrays(["a", "b"], "a;b,c".split(new RegExp("[,;]"), 2)));
+            assertTrue(equalArrays(["10,0", "a", "b"], "10,0,a,b".split(new RegExp(",(?!\\d)"))));
+        ]]></method>
+        
         <method name="testExec" ><![CDATA[
             var src = "The quick brown fox jumps over the lazy dog.";
             var re = new RegExp("\\w+", "g");
@@ -69,7 +81,8 @@
             }
             
             assertEquals(0, re.lastIndex);
-            
+                      var splits = 
+  
             assertTrue(equalArrays(["The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"], words));
             assertTrue(equalArrays([0, 4, 10, 16, 20, 26, 31, 35, 40], indices));
             assertTrue(equalArrays([3, 9, 15, 19, 25, 30, 34, 39, 43], lastindices));
@@ -121,8 +134,15 @@
             assertTrue(equalArrays(["b", ""], new RegExp("(a*)b\\1+").exec("baaaac")));
             assertTrue(equalArrays(["", "aaa"], new RegExp("(?=(a+))").exec("baaabac")));
             assertTrue(equalArrays(["aba", "a"], new RegExp("(?=(a+))a*b\\1").exec("baaabac")));
+            assertTrue(equalArrays(["a", "b"], "ab".split(new RegExp("a*?"))));
             
-            // Internet Explorer doesn't even get the tests which are listed in the spec...
+            // Fails in Internet Explorer and Firefox, only Opera follows the spec (don't know about Safari?)
+            Debug.info("expected failure in IE and Firefox");
+            assertTrue(equalArrays(["A", void(0), "B", "bold", "/", "B", "and", void(0), "CODE", "coded", "/", "CODE", ""], "A<B>bold</B>and<CODE>coded</CODE>".split(new RegExp("<(/)?([^<>]+)>"))));
+            
+            // Internet Explorer doesn't even get all tests which are listed in the spec...
+            Debug.info("expected failure in IE");
+            assertTrue(equalArrays(["", "b"], "ab".split(new RegExp("a*"))));
             Debug.info("expected failure in IE");
             assertTrue(equalArrays(["abc", "a", "a", void(0), "bc", void(0), "bc"], new RegExp("((a)|(ab))((c)|(bc))").exec("abc")));
             Debug.info("expected failure in IE");

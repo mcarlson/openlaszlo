@@ -56,6 +56,11 @@ lz.embed.regex = {
                 var o = lz.embed.regex;
                 return o.unmask(s).search(o.cache[id]);
             },
+    split:
+            function (id, s, limit) {
+                var o = lz.embed.regex;
+                return o.maskArr(o.unmask(s).split(o.cache[id], limit));
+            },
     remove:
             function (id) {
                 delete lz.embed.regex.cache[id];
