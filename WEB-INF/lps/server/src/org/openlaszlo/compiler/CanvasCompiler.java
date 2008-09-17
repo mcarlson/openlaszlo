@@ -82,16 +82,16 @@ class CanvasCompiler extends ToplevelCompiler {
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 CanvasCompiler.class.getName(),"051018-77", new Object[] {versionNumber})
 ;
-            if (versionNumber.equals("1.1"))
+            if (versionNumber.equals("4.2"))
                 ;
-            else if (versionNumber.equals("1.0"))
+            else if (versionNumber.equals("1.1") || versionNumber.equals("1.0")) 
                 mEnv.warn(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes=p[0] + "  It is recommended that you run it in debug mode and fix all compiler and debugger warnings, and that you read the migration guide in the developer documentation."
  */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CanvasCompiler.class.getName(),"051018-88", new Object[] {msg})
+                org.openlaszlo.i18n.LaszloMessages.getMessage(
+                    CanvasCompiler.class.getName(),"051018-88", new Object[] {msg})
 , element);
             else
                 mEnv.warn(msg, element);

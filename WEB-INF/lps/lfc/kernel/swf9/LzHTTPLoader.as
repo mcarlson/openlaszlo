@@ -272,7 +272,7 @@ public class LzHTTPLoader {
 
     private function completeHandler(event:Event):void {
         // trace("completeHandler: " + event + ", target = " + event.target);
-        if (event.target is URLLoader) {
+        if (event && event.target is URLLoader) {
             //trace("completeHandler: " , this, loader);
             //trace("completeHandler: bytesLoaded" , loader.bytesLoaded, 'bytesTotal', loader.bytesTotal);
             //trace('typeof data:', typeof(loader.data), loader.data.length, 'parsexml=', options.parsexml);

@@ -119,6 +119,8 @@ class LzTimerService {
         //if (! del.c.__LZdeleted && del.c[del.f]) del.c[del.f]( (new Date()).getTime() );
       }
     }
+    // prevent bogus timeouts which cause exceptions in swf9
+    if (! millisecs || millisecs < 1) millisecs = 1;
     var id = LzTimeKernel.setTimeout(f, millisecs);
     if ($debug) {
       // Debug.format("created timer %w for delegate %w\n", id, d);

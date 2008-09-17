@@ -1172,7 +1172,7 @@ public dynamic class LzNode extends LzEventable {
    * </ul>
    * @param async: If true, children of new node will be created asynchronously
    */
-  function makeChild ( e , async ){
+  function makeChild ( e , async=null){
     //e.type = what this child is
     //e.name = subtype
     //e.attrs = init args

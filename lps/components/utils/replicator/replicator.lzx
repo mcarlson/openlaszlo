@@ -228,7 +228,7 @@
             
             @param LzView v: The clone whose data is being set.
             @param n: The node to which it is being set. -->
-        <method name="setData" args="v,n">
+        <method name="setData" args="v,n=null">
             if (v) {
                 v.setData( this.nodes[ n ] );
                 if (v['applyData']) v.applyData(this.nodes[n]);
