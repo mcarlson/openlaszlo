@@ -48,7 +48,7 @@
   <!-- This is too verbose, we use a style sheet instead -->
   <xsl:param name="table.borders.with.css" select="0"/>
   <!-- Chunking -->
-  <xsl:param name="chunk.fast" select="1"/>
+  <xsl:param name="chunk.fast" select="0"/>
   <xsl:param name="chunk.section.depth" select="0"/>
   <xsl:param name="chunker.output.indent" select="'yes'"/>
   <xsl:param name="html.extra.head.links" select="0"/>

@@ -13,6 +13,7 @@
 <doc>
 <tag name="lzxname"><text>a</text></tag>
 <tag name="shortdesc"><text>HTML hypertext link.</text></tag>
+<tag name="docfilename"><text>tag-a</text></tag>
 <text>
 <p/>
 <p>HTML hypertext link.  This tag can only occur inside XHTML
@@ -101,6 +102,7 @@ text containers such as <sgmltag class="element" role="LzText">&lt;text&gt;</sgm
 <doc>
 <tag name="shortdesc"><text>Bold Text.</text></tag>
 <tag name="lzxname"><text>&lt;b&gt;</text></tag>
+<tag name="docfilename"><text>tag-b</text></tag>
 <text>
 <p>HTML bold character markup.  This tag can only occur inside XHTML
 text containers such as <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag> and
@@ -122,6 +124,7 @@ text containers such as <sgmltag class="element" role="LzText">&lt;text&gt;</sgm
 <doc>
 <tag name="shortdesc"><text>Line break.</text></tag>
 <tag name="lzxname"><text>&lt;br&gt;</text></tag>
+<tag name="docfilename"><text>tag-br</text></tag>
 <text>
 <p>HTML line break.  This tag can only occur inside XHTML
 text containers such as <tagname>text</tagname>.</p>
@@ -145,6 +148,7 @@ a start and an end tag: <code>&lt;br/&gt;</code> or
 <doc>
 <tag name="shortdesc"><text>Inline font markup.</text></tag>
 <tag name="lzxname"><text>font</text></tag>
+<tag name="docfilename"><text>tag-font</text></tag>
 <text>
 <para>A <sgmltag class="element">&lt;font&gt;</sgmltag> tag controls the font face, size, and color for its textual content.</para>
 <note>The XHMTL <sgmltag class="element">&lt;font&gt;</sgmltag> tag, which controls the appearance of its content, is different 
@@ -183,7 +187,8 @@ from the top-level <sgmltag class="element" role="LzFont">&lt;font&gt;</sgmltag>
 <property id="tag-i" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
 <tag name="shortdesc"><text>Italic text.</text></tag>
-<tag name="lzxname"><text>i</text></tag>
+<tag name="lzxname"><text>&lt;i&gt;</text></tag>
+<tag name="docfilename"><text>tag-i</text></tag>
 <p/>
 <text>
 <p>HTML italic character markup.  This tag can only occur inside
@@ -204,6 +209,7 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 <doc>
 <tag name="shortdesc"><text>A way to import images into html</text></tag>
 <tag name="lzxname"><text>img</text></tag>
+<tag name="docfilename"><text>tag-img</text></tag>
 <text>
 <p>
  The compiler supports the &lt;img&gt; tag in HTML text content, for 
@@ -262,6 +268,7 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 <doc>
 <tag name="shortdesc"><text>Paragraph.</text></tag>
 <tag name="lzxname"><text>&lt;p&gt;</text></tag>
+<tag name="docfilename"><text>tag-p</text></tag>
 <text>
 
 <p>An HTML paragraph.  This tag only occurs inside XHTML text such as
@@ -284,6 +291,7 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 <doc>
 <tag name="shortdesc"><text>Preformatted text.</text></tag>
 <tag name="lzxname"><text>&lt;pre&gt;</text></tag>
+<tag name="docfilename"><text>tag-pre</text></tag>
 <text>
 <p>An HTML preformatted text region.  Whitespace and line breaks within
 this element are preserved.</p>
@@ -312,6 +320,7 @@ this element are preserved.</p>
 <doc>
 <tag name="shortdesc"><text>Underlined text.</text></tag>
 <tag name="lzxname"><text>&lt;u&gt;</text></tag>
+<tag name="docfilename"><text>tag-u</text></tag>
 <text>
 <p>HTML underlined character markup.  This tag can only occur inside
 XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag> and
@@ -333,6 +342,7 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 <doc>
 <tag name="shortdesc"><text>Imports an audio file.</text></tag>
 <tag name="lzxname"><text>&lt;audio&gt;</text></tag>
+<tag name="docfilename"><text>tag-audio</text></tag>
 <text>
 <warning>This tag is obsolete.  Its functionality has been replaced by
 the <tagname>resource</tagname> tag.</warning>
@@ -376,6 +386,7 @@ rates: 11.025 khz, 22.5 khz, and 44.1 khz, and encoded at no more than
 <doc>
 <tag name="shortdesc"><text></text></tag>
 <tag name="lzxname"><text>face</text></tag>
+<tag name="docfilename"><text>tag-face</text></tag>
 <text>
 <p>Defines a font face or style within the font family that the
 outer element defines.</p>
@@ -409,6 +420,7 @@ See the <a href="LzFont.html" target="_self">font</a> element for details.
 <doc>
 <tag name="shortdesc"><text>A tag that defines a media object that can be associated with a view.</text></tag>
 <tag name="lzxname"><text>resource</text></tag>
+<tag name="docfilename"><text>tag-resource</text></tag>
 <text>
 
 <p>This tag defines a media object, that can be presented within a
@@ -470,6 +482,7 @@ For details on multi-frame resources, see <a href="tag-frame.html">frame</a>.
 <doc>
 <tag name="shortdesc"><text>A frame of a multi-frame resource.</text></tag>
 <tag name="lzxname"><text>frame</text></tag>
+<tag name="docfilename"><text>tag-frame</text></tag>
 <text>
 <p>The <tagname>frame</tagname> tag is used to define a single frame
 of a multi-frame <sgmltag class="element" role="tag-resource">&lt;resource&gt;</sgmltag>.  A multi-frame resource

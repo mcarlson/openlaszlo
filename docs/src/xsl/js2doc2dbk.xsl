@@ -22,6 +22,7 @@
 <!ENTITY raquo "&#187;">
 
 <!ENTITY tagname        '(doc/tag[@name="lzxname"]/text)'>
+<!ENTITY docfilename    '(doc/tag[@name="docfilename"]/text)'>
 <!ENTITY shortdesc      '(doc/tag[@name="shortdesc"]/text)'>
 <!ENTITY lzxtype        '(doc/tag[@name="lzxtype"]/text)'>
 <!ENTITY lzxdefault     '(doc/tag[@name="lzxdefault"]/text)'>
@@ -136,6 +137,7 @@
 
       <xsl:variable name="jsname" select="@name"/>
       <xsl:variable name="lzxname" select="&tagname;"/>
+      <xsl:variable name="docfilename" select="&docfilename;"/>
       <xsl:variable name="desc">
         <xsl:apply-templates select="." mode="desc"/>
       </xsl:variable>
@@ -153,9 +155,49 @@
 
       </xsl:variable>
 
+      <!-- collect the +debug part.... -->
+
+      <!-- filename generation, part 1.
+           override 'id as filename' behavior, we want: lz.tagname.html -->
+      <xsl:variable name="tmp-filebase-for-output">
+        <xsl:choose>
+          <xsl:when test="$docfilename">
+            <xsl:value-of select="$docfilename"/>
+          </xsl:when>
+          <xsl:when test="$lzxname">
+            <xsl:value-of select="concat('lz.', $lzxname)"/>
+          </xsl:when>
+          <xsl:when test="starts-with($jsname, 'Lz')">
+            <xsl:value-of select="concat('lz.', substring-after($jsname, 'Lz'))"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@id"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+
+      <!-- filename generation, part 2.
+           restore any '+' in the id (e.g. tag.splash+as2.html)
+           and remove spaces from final filename -->
+      <xsl:variable name="filebase-for-output">
+        <xsl:choose>
+          <xsl:when test="contains(@id,'+') and not(contains($tmp-filebase-for-output,'+'))">
+            <xsl:value-of select="concat(translate($tmp-filebase-for-output,' ','_'), '+', substring-after(@id,'+'))"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="translate($tmp-filebase-for-output,' ','_')"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
 
       <refentry id="{$id-for-output}" xreflabel="{$desc}">
+        <para role="postprocess-info-jsname">
+          <xsl:value-of select="$jsname"/>
+        </para>
         <xsl:if test="$lzxname"><anchor id="{concat('tag.',$lzxname)}"/></xsl:if>
+        <xsl:processing-instruction name="dbhtml">
+          <xsl:text>filename="</xsl:text><xsl:value-of select="$filebase-for-output"/><xsl:text>.html"</xsl:text>
+        </xsl:processing-instruction>
         <refmeta>
           <refentrytitle><xsl:value-of select="$desc"/></refentrytitle>
         </refmeta>

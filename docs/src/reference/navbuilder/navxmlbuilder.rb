@@ -90,6 +90,25 @@ def tagname_for(filename)
   tag
 end
 
+def javascriptname_for(filename)
+  js = nil;
+  open(filename) {|f|
+      f.each_line { |line|
+          line.chomp!
+          if (line =~ /postprocess/) then
+          end
+          if (line =~ /@@.*original javascript name.*@@/) then
+              js = line.sub(/.*@@.*= */, '').sub(/ *@@/, '')
+              break
+          elsif (line =~ /<p class="postprocess-info-jsname">/) then
+              js = line.sub(/.*postprocess-info-jsname">/, '').sub(/<.*/, '')
+              break
+          end
+      }
+  }
+  js
+end
+
 # If the title of this document does not have a tag name, return it.
 def nontagname_for(filename)
   name = nil;
@@ -145,16 +164,15 @@ generate_index("{[Ll]z,tag}*.html", $outdir + "/tags.xml", "index") { | file,ful
 
   name
  }
-generate_index("{Lz*,Debug*}.html", $outdir + "/classes.xml", "index") { | file,fullname | 
-  name = tagname_for(fullname);
-  if (name) then
-    name = 'lz.' + name;
-  else
-    name = nontagname_for(fullname);
+generate_index("{lz.*,Lz*,Debug*}.html", $outdir + "/classes.xml", "index") { | file,fullname | 
+  name = nil
+  jsname = javascriptname_for(fullname);
+  if (jsname && jsname != "") then
+    name = tagname_for(fullname);
     if (name) then
-      name = name.sub(/\$lzc\$class_/, 'lz.');
+      name = 'lz.' + name;
     else
-      name = file.sub(/\.html/, '').sub(/([^+]*)\+(.*)/, '\1 (\2)').gsub(/\+/, ' ');
+      name = jsname.sub(/\$lzc\$class_/, 'lz.').sub(/^Lz/, 'lz.');
     end
   end
   name

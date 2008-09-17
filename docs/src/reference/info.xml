@@ -13,6 +13,7 @@
 <property id="info-attributes" topic="LZX" subtopic="General Information" access="public">
 <doc>
 <tag name="lzxname"><text>An introduction to Attributes</text></tag>
+<tag name="docfilename"><text>info-attributes</text></tag>
 <text>
 <p>Attributes can be an element of a tag or a property of a JavaScript
   class. Attributes are declared and set in tags, but they can also

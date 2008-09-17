@@ -1,24 +1,24 @@
 <toc>
     <category title="Structure">
-        <item title="&amp;lt;attribute&amp;gt;"  href="tag.attribute.html" />
-        <item title="&amp;lt;handler&amp;gt;" href="LzDelegate.html" />
-        <item title="&amp;lt;event&amp;gt;" href="LzEvent.html" />
-        <item title="&amp;lt;canvas&amp;gt;" href="LzCanvas.html" />
-        <item title="&amp;lt;import&amp;gt;" href="tag.import.html" />
-        <item title="&amp;lt;include&amp;gt;" href="tag.include.html" />
-        <item title="&amp;lt;library&amp;gt;" href="tag.library.html" />
-        <item title="&amp;lt;splash&amp;gt;" href="tag.splash+as2.html" />
-        <item title="&amp;lt;splash view&amp;gt;" href="tag.splash-view.html" />
-        <item title="lz.ContextMenu" href="LzContextMenu.html" />
-        <item title="lz.ContextMenuItem" href="LzContextMenuItem.html" />
+        <item title="&amp;lt;attribute&amp;gt;"  href="lz.attribute.html" />
+        <item title="&amp;lt;handler&amp;gt;" href="lz.handler.html" />
+        <item title="&amp;lt;event&amp;gt;" href="lz.event.html" />
+        <item title="&amp;lt;canvas&amp;gt;" href="lz.canvas.html" />
+        <item title="&amp;lt;import&amp;gt;" href="lz.import.html" />
+        <item title="&amp;lt;include&amp;gt;" href="lz.include.html" />
+        <item title="&amp;lt;library&amp;gt;" href="lz.library.html" />
+        <item title="&amp;lt;splash&amp;gt;" href="lz.splash+as2.html" />
+        <item title="&amp;lt;splash view&amp;gt;" href="lz.splash_view.html" />
+        <item title="lz.ContextMenu" href="lz.ContextMenu.html" />
+        <item title="lz.ContextMenuItem" href="lz.ContextMenuItem.html" />
     </category>
     <category title="View Basics">
         <item title="&amp;lt;drawview&amp;gt;" href="lz.drawview.html"/>
         <item title="&amp;lt;html&amp;gt;" href="lz.html.html"/>
-        <item title="&amp;lt;inputtext&amp;gt;" href="LzInputText.html" />
-<!-- TODO [dda 3.29.2008] is this defined in includes/source/excanvas.js?      <item title="LzCanvasGradient" href="LzCanvasGradient.html" />         -->
-        <item title="&amp;lt;text&amp;gt;" href="LzText.html" />
-        <item title="&amp;lt;view&amp;gt;" href="LzView.html"/>              
+        <item title="&amp;lt;inputtext&amp;gt;" href="lz.inputtext.html" />
+<!-- TODO [dda 3.29.2008] is this defined in includes/source/excanvas.js?      <item title="LzCanvasGradient" href="lz.CanvasGradient.html" />         -->
+        <item title="&amp;lt;text&amp;gt;" href="lz.text.html" />
+        <item title="&amp;lt;view&amp;gt;" href="lz.view.html"/>              
     </category>
     <category title="Components">       
         <item title="&amp;lt;alert&amp;gt;" href="lz.alert.html" />
@@ -73,7 +73,7 @@
     <category title="Layouts">
         <item title="&amp;lt;constantboundslayout&amp;gt;" href="lz.constantboundslayout.html" />
         <item title="&amp;lt;constantlayout&amp;gt;" href="lz.constantlayout.html" />
-        <item title="&amp;lt;layout&amp;gt;" href="LzLayout.html" />        
+        <item title="&amp;lt;layout&amp;gt;" href="lz.layout.html" />        
         <item title="&amp;lt;resizelayout&amp;gt;" href="lz.resizelayout.html" />
         <item title="&amp;lt;reverselayout&amp;gt;" href="lz.reverselayout.html" />
         <item title="&amp;lt;simpleboundslayout&amp;gt;" href="lz.simpleboundslayout.html" />
@@ -83,21 +83,21 @@
     </category>
     
     <category title="Animation">
-        <item title="&amp;lt;animator&amp;gt;" href="LzAnimator.html" />
-        <item title="&amp;lt;animatorgroup&amp;gt;" href="LzAnimatorGroup.html" />        
+        <item title="&amp;lt;animator&amp;gt;" href="lz.animator.html" />
+        <item title="&amp;lt;animatorgroup&amp;gt;" href="lz.animatorgroup.html" />        
     </category>
     
     <category title="Events">
-        <item title="&amp;lt;handler&amp;gt;" href="LzDelegate.html" />
-        <item title="&amp;lt;event&amp;gt;" href="LzEvent.html" />
-        <item title="lz.Eventable" href="LzEventable.html" />
-        <item title="lz.GlobalMouse" href="LzGlobalMouseService.html" />
-        <item title="lz.Idle" href="LzIdleService.html" />
-        <item title="lz.Keys" href="LzKeysService.html" />
-        <item title="lz.ModeManager" href="LzModeManagerService.html" />
-        <item title="lz.Timer" href="LzTimerService.html" />
-        <item title="lz.Track" href="LzTrackService.html" />
-        <item title="lz.History" href="LzHistoryService.html" />
+        <item title="&amp;lt;handler&amp;gt;" href="lz.handler.html" />
+        <item title="&amp;lt;event&amp;gt;" href="lz.event.html" />
+        <item title="lz.Eventable" href="lz.Eventable.html" />
+        <item title="lz.GlobalMouse" href="lz.GlobalMouseService.html" />
+        <item title="lz.Idle" href="lz.IdleService.html" />
+        <item title="lz.Keys" href="lz.KeysService.html" />
+        <item title="lz.ModeManager" href="lz.ModeManagerService.html" />
+        <item title="lz.Timer" href="lz.TimerService.html" />
+        <item title="lz.Track" href="lz.TrackService.html" />
+        <item title="lz.History" href="lz.HistoryService.html" />
     </category>
     
     
@@ -116,47 +116,47 @@
     
     <category title="Media" >
         <item title="&amp;lt;audio&amp;gt;" href="tag-audio.html"/>
-        <item title="&amp;lt;font&amp;gt;" href="LzFont.html" />
+        <item title="&amp;lt;font&amp;gt;" href="lz.Font.html" />
         <item title="&amp;lt;face&amp;gt;" href="tag-face.html"/>
         <item title="&amp;lt;frame&amp;gt;" href="tag-frame.html"/>
         <item title="&amp;lt;image&amp;gt;" href="lz.image.html"/>
         <item title="&amp;lt;resource&amp;gt;" href="tag-resource.html"/>
-        <item title="lz.Audio" href="LzAudioService.html" />
+        <item title="lz.Audio" href="lz.AudioService.html" />
         <!-- LzFontManager ???  -->
     </category>
     
     <category title="Data">
-        <item title="&amp;lt;datapath&amp;gt;" href="LzDatapath.html" />
-        <item title="&amp;lt;datapointer&amp;gt;" href="LzDatapointer.html" />
-        <item title="&amp;lt;dataprovider&amp;gt;" href="LzDataProvider.html" />
-        <item title="&amp;lt;datarequest&amp;gt;" href="LzDataRequest.html" />
-        <item title="&amp;lt;dataselectionmanager&amp;gt;" href="LzDataSelectionManager.html" />
-        <item title="&amp;lt;dataset&amp;gt;" href="LzDataset.html" />
-        <item title="&amp;lt;httpdataprovider&amp;gt;" href="LzHTTPDataProvider.html" />
-        <item title="&amp;lt;httpdatarequest&amp;gt;" href="LzHTTPDataRequest.html" />
-        <item title="lz.Param" href="LzParam.html" />
-        <item title="lz.DataElement" href="LzDataElement.html" />
-        <item title="lz.DataNode" href="LzDataNode.html" />
-        <item title="lz.DataNodeMixin" href="LzDataNodeMixin.html" />
-        <item title="lz.DataText" href="LzDataText.html" />
-        <item title="lz.LazyReplicationManager" href="LzLazyReplicationManager.html" />
-        <item title="lz.ReplicationManager" href="LzReplicationManager.html" />
-        <item title="lz.ResizeReplicationManager" href="LzResizeReplicationManager.html" />
+        <item title="&amp;lt;datapath&amp;gt;" href="lz.datapath.html" />
+        <item title="&amp;lt;datapointer&amp;gt;" href="lz.datapointer.html" />
+        <item title="&amp;lt;dataprovider&amp;gt;" href="lz.dataprovider.html" />
+        <item title="&amp;lt;datarequest&amp;gt;" href="lz.datarequest.html" />
+        <item title="&amp;lt;dataselectionmanager&amp;gt;" href="lz.dataselectionManager.html" />
+        <item title="&amp;lt;dataset&amp;gt;" href="lz.dataset.html" />
+        <item title="&amp;lt;httpdataprovider&amp;gt;" href="lz.httpdataprovider.html" />
+        <item title="&amp;lt;httpdatarequest&amp;gt;" href="lz.httpdatarequest.html" />
+        <item title="lz.Param" href="lz.Param.html" />
+        <item title="lz.DataElement" href="lz.DataElement.html" />
+        <item title="lz.DataNode" href="lz.DataNode.html" />
+        <item title="lz.DataNodeMixin" href="lz.DataNodeMixin.html" />
+        <item title="lz.DataText" href="lz.DataText.html" />
+        <item title="lz.LazyReplicationManager" href="lz.LazyReplicationManager.html" />
+        <item title="lz.ReplicationManager" href="lz.ReplicationManager.html" />
+        <item title="lz.ResizeReplicationManager" href="lz.ResizeReplicationManager.html" />
     </category>
     
     <category title="Scripting">
-        <item title="&amp;lt;handler&amp;gt;" href="tag.handler.html" />
-        <item title="&amp;lt;event&amp;gt;" href="LzEvent.html" />
-        <item title="&amp;lt;method&amp;gt;" href="tag.method.html" />
-        <item title="&amp;lt;node&amp;gt;" href="LzNode.html" />
-        <item title="&amp;lt;script&amp;gt;" href="LzScript.html" />
-        <item title="lz.CSSStyleSheet" href="LzCSSStyleSheet.html" />
+        <item title="&amp;lt;handler&amp;gt;" href="lz.handler.html" />
+        <item title="&amp;lt;event&amp;gt;" href="lz.Event.html" />
+        <item title="&amp;lt;method&amp;gt;" href="lz.method.html" />
+        <item title="&amp;lt;node&amp;gt;" href="lz.node.html" />
+        <item title="&amp;lt;script&amp;gt;" href="lz.script.html" />
+        <item title="lz.CSSStyleSheet" href="lz.CSSStyleSheet.html" />
     </category>
     <category title="States">
         <item title="&amp;lt;dragstate&amp;gt;" href="lz.dragstate.html" />
         <item title="&amp;lt;resizestate&amp;gt;" href="lz.resizestate.html" />
         <item title="&amp;lt;resizestatemin&amp;gt;" href="lz.resizestatemin.html" />
-        <item title="&amp;lt;state&amp;gt;" href="LzState.html" />
+        <item title="&amp;lt;state&amp;gt;" href="lz.State.html" />
     </category>
     
     <category title="Base Classes">
@@ -204,8 +204,8 @@
     </category>
     
     <category title="Menus and Commands">
-        <item title="&amp;lt;command&amp;gt;" href="LzCommand.html" />
-        <item title="&amp;lt;selectionmanager&amp;gt;" href="LzSelectionManager.html" />
+        <item title="&amp;lt;command&amp;gt;" href="lz.Command.html" />
+        <item title="&amp;lt;selectionmanager&amp;gt;" href="lz.SelectionManager.html" />
     </category>
     <category title="RPC">
         <item title="&amp;lt;javarpc&amp;gt;" href="lz.javarpc.html" />
@@ -213,7 +213,7 @@
         <item title="&amp;lt;rpc&amp;gt;" href="lz.rpc.html" />
         <item title="&amp;lt;remotecall&amp;gt;" href="lz.remotecall.html" />
         <item title="&amp;lt;soap&amp;gt;" href="lz.soap.html" />
-        <item title="&amp;lt;security&amp;gt;" href="tag.security.html" />
+        <item title="&amp;lt;security&amp;gt;" href="lz.security.html" />
         <item title="&amp;lt;sessionrpc&amp;gt;" href="lz.sessionrpc.html" />
         <item title="&amp;lt;webapprpc&amp;gt;" href="lz.webapprpc.html" />
         <item title="&amp;lt;xmlrpc&amp;gt;" href="lz.xmlrpc.html" />
@@ -221,11 +221,11 @@
     </category>
     
     <category title="Services">
-        <item title="lz.Browser" href="LzBrowserService.html" />
-        <item title="lz.Cursor" href="LzCursorService.html" />
-        <item title="lz.Focus" href="LzFocusService.html" />
-        <item title="lz.Track" href="LzTrackService.html" />
-        <item title="lz.URL" href="LzURL.html" />
+        <item title="lz.Browser" href="lz.BrowserService.html" />
+        <item title="lz.Cursor" href="lz.CursorService.html" />
+        <item title="lz.Focus" href="lz.FocusService.html" />
+        <item title="lz.Track" href="lz.TrackService.html" />
+        <item title="lz.URL" href="lz.URL.html" />
     </category>
     
     <category title="Charts and Graphs">
@@ -278,7 +278,7 @@
     </category>
     
     <category title="Development">
-        <item title="Debug" href="Debug+debug.html"/>
+       <!-- TODO: need something for debugging... <item title="Debug" href="Debug+debug.html"/> -->
         <item title="&amp;lt;SyncTester&amp;gt;" href="lz.SyncTester.html" />
         <item title="&amp;lt;Test&amp;gt;" href="lz.Test.html" />
         <item title="&amp;lt;TestCase&amp;gt;" href="lz.TestCase.html" />
