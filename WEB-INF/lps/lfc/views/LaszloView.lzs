@@ -2714,7 +2714,11 @@ function setBGColor ( bgc ) {
   * 
   * @param String source: The URL from which to load the resource for this view.
   * @param String cache: If set, controls caching behavior. Choices are
-  * <code>none</code> , <code>clientonly</code> , <code>serveronly</code> , <code>both</code> (the default for Flash).  DHTML applications cache media on the client only.  DHTML supports the <code>memorycache</code> option which enables in-memory resource caching.  This enhances performance when swapping resources quickly, and is used internally for multi-frame resources.  Media loaded with <code>memorycache</code> will remain in memory until the page is unloaded or unload() is called.
+  * <code>none</code> , <code>clientonly</code> , <code>serveronly</code> , <code>both</code> (the default for Flash).  
+  * DHTML applications cache media on the client only. DHTML supports the <code>memorycache</code> option which 
+  * enables in-memory resource caching. This enhances performance when swapping resources quickly, and is used 
+  * internally for multi-frame resources. Media loaded with <code>memorycache</code> will remain in memory until 
+  * the page is unloaded or unload() is called.
   * @param String headers: Headers to send with the request, if any.
   * @param String filetype: Filetype, e.g. 'mp3' or 'jpg'.  If not specified, it will be derived from the URL.
   */
@@ -2781,7 +2785,7 @@ function setCursor ( cursor = null){
 
 
 /** @access private */
-function $lzc$set_play(b) {
+function $lzc$set_play (b:Boolean) :void {
     if ( b ) {
         this.play();
     } else {
@@ -2794,7 +2798,7 @@ function $lzc$set_play(b) {
   * @param Boolean b: If true, starts playing, otherwise stops
   * @deprecated Use setAttribute('play', ...) instead.
   */
-function setPlay (b){
+function setPlay (b:Boolean) :void {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_play(b);
 }
@@ -2803,9 +2807,8 @@ function setPlay (b){
   * Get a reference to the control mc - may be overridden by loader
   * @access private
   */
-function getMCRef () {
+function getMCRef () :* {
     return this.sprite.getMCRef();
-    //return this.__LZmovieClipRef;
 }
 
 /**
@@ -2819,7 +2822,7 @@ function getMCRef () {
   * begin playing at the current frame.
   * @param Boolean rel: If true, f is relative to the current frame.  Otherwise f is relative to the beginning of the resource.
   */
-function play (f = null, rel = null){
+function play (f/*:Number?*/ = null, rel:Boolean = false) :void {
     this.sprite.play(f, rel);
 }
 
@@ -2829,7 +2832,7 @@ function play (f = null, rel = null){
   * stop at the current frame.
   * @param Boolean rel: If true, f is relative to the current frame.  Otherwise it is relative to the start position of the resource.
   */
-function stop (f = null, rel = null){
+function stop (f/*:Number?*/ = null, rel:Boolean = false) :void {
     this.sprite.stop(f, rel);
 }
 
@@ -2837,7 +2840,7 @@ function stop (f = null, rel = null){
   * Set the volume of the attached resource
   * @param Integer v: A number from 0 to 100 representing a volume level
   */
-function setVolume (v) {
+function setVolume (v:Number) :void {
     if (this.capabilities.audio) {
         this.sprite.setVolume(v);
     } else if ($debug) {
@@ -2849,7 +2852,7 @@ function setVolume (v) {
   * Get the volume of the attached resource
   * @return Integer: A number from 0 to 100 representing a volume level
   */
-function getVolume () {
+function getVolume () :Number {
     if (this.capabilities.audio) {
         return this.sprite.getVolume();
     } else if ($debug) {
@@ -2861,7 +2864,7 @@ function getVolume () {
   * Set the pan of the attached resource
   * @param Integer p: A number from -100 to 100 representing a pan level
   */
-function setPan (p) {
+function setPan (p:Number) :void {
     if (this.capabilities.audio) {
         this.sprite.setPan(p);
     } else if ($debug) {
@@ -2873,7 +2876,7 @@ function setPan (p) {
   * Get the pan of the attached resource
   * @return Integer: A number from -100 to 100 representing a pan level
   */
-function getPan () {
+function getPan () :Number {
     if (this.capabilities.audio) {
         return this.sprite.getPan();
     } else if ($debug) {
@@ -2897,16 +2900,16 @@ function getZ () {
   * 
   * @param Integer secs: Number of seconds to skip forward or backward (if negative)
   */
-function seek ( secs ){
-    var m = this.getMCRef();
+function seek (secs:Number) :void {
+    var m:* = this.getMCRef();
     if (m.isaudio == true) {
         m.seek(secs, this.playing)
     } else {
-        var f = secs*canvas.framerate;
-        if ( this.playing ) {
-            this.play( f , true);
+        var f:Number = secs * canvas.framerate;
+        if (this.playing) {
+            this.play(f, true);
         } else {
-            this.stop( f , true);
+            this.stop(f, true);
         }
     }
 }
@@ -2916,8 +2919,8 @@ function seek ( secs ){
   * @return Number: The number of seconds of media between the current frame and the
   * first frame
   */
-function getCurrentTime ( ){
-    var m = this.getMCRef();
+function getCurrentTime () :Number {
+    var m:* = this.getMCRef();
     if (m.isaudio == true) {
         return m.getCurrentTime();
     } else {
@@ -2926,8 +2929,8 @@ function getCurrentTime ( ){
 }
 
 /** @access private */
-function $lzc$getCurrentTime_dependencies ( who, self ){
-    return [ self , "frame" ];
+function $lzc$getCurrentTime_dependencies ( who, self ) :Array {
+    return [ self, "frame" ];
 }
 
 
@@ -2935,8 +2938,8 @@ function $lzc$getCurrentTime_dependencies ( who, self ){
   * Returns the total amount of time the resource would take to play.
   * @return Number: Seconds of media controlled by this view.
   */
-function getTotalTime ( ){
-    var m = this.getMCRef();
+function getTotalTime () :Number {
+    var m:* = this.getMCRef();
     if (m.isaudio == true) {
         return m.getTotalTime();
     } else {
@@ -2944,8 +2947,8 @@ function getTotalTime ( ){
     }
 }
 /** @access private */
-function $lzc$getTotalTime_dependencies ( who, self ){
-    return [ self , "load" ];
+function $lzc$getTotalTime_dependencies ( who, self ) :Array {
+    return [ self, "load" ];
 }
 
 /**
@@ -2953,8 +2956,8 @@ function $lzc$getTotalTime_dependencies ( who, self ){
   * with proxy == false;
   * @return Object: Object containind id3 tag data, if available.
   */
-function getID3 ( ){
-    var m = this.getMCRef();
+function getID3 () :Object {
+    var m:* = this.getMCRef();
     if (m.isaudio == true) {
         return m.getID3();
     }

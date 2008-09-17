@@ -19,6 +19,12 @@ dynamic public class LzSprite extends Sprite {
   import flash.utils.*;
   import mx.controls.Button;
   import flash.net.URLRequest;
+  import flash.media.Sound;
+  import flash.media.SoundChannel;
+  import flash.media.SoundMixer;
+  import flash.media.SoundTransform;
+  import flash.media.SoundLoaderContext;
+  import flash.media.ID3Info;
 }#
 
 #passthrough  {
@@ -58,7 +64,13 @@ dynamic public class LzSprite extends Sprite {
       var resourceCache:Array = null;
 
       public var resourceLoaded:Boolean = false;
-
+      
+      /* private */ static const soundLoaderContext:SoundLoaderContext = new SoundLoaderContext(1000, true);
+      /* private */ static const MP3_FPS:Number = 30;
+      /* private */ var sound:Sound = null;
+      /* private */ var soundChannel:SoundChannel = null;
+      /* private */ var soundLoading:Boolean = false;
+      
       //@field Boolean _setrescwidth: If true, the view does not set its
       //resource to the width given in a call to
       //<method>setAttribute</method>. By default, views do not scale their
@@ -97,8 +109,10 @@ dynamic public class LzSprite extends Sprite {
           if (owner == null) return;
           if (isroot) {
               this.isroot = true;
+              this.mouseEnabled = true;// @devnote: see LPP-6980
+          } else {
+              this.mouseEnabled = false;
           }
-          this.mouseEnabled = false;
       }
 
       public function init (v:Boolean = true):void {
@@ -152,7 +166,7 @@ dynamic public class LzSprite extends Sprite {
       */
       public function setResource (r:String):void {
           if (this.resource == r) return;
-          if ( r.indexOf('http:') == 0 || r.indexOf('https:') == 0){
+          if (r.indexOf('http:') == 0 || r.indexOf('https:') == 0) {
               this.skiponload = false;
               this.setSource( r );
               return;
@@ -168,33 +182,56 @@ dynamic public class LzSprite extends Sprite {
           // frames: ["lps/components/lz/resources/focus/focus_bot_rt_shdw.png"], width: 9, height: 9};
 
 
-          //Debug.write('setting resource', r);  
-          this.resource = r;
+          //Debug.write('setting resource', r);
 
-          var res = LzResourceLibrary[r];
+          var res:Object = LzResourceLibrary[r];
           if (! res) {
               if ($debug) {
                   Debug.warn('Could not find resource', r);
               }
               return;
           }
-
-          this.resourcewidth = res.width;
-          this.resourceheight = res.height;
-          if (this.owner != null) {
-              this.owner.resourceevent('totalframes', res.frames.length);
+          
+          if (LzAsset.isBitmapAsset(r) 
+                || LzAsset.isMovieClipAsset(r) 
+                || LzAsset.isMovieClipLoaderAsset(r)) {
+              this.resourcewidth = res.width;
+              this.resourceheight = res.height;
+              if (this.owner != null) {
+                  this.owner.resourceevent('totalframes', res.frames.length);
+              }
+              if (imgLoader) {
+                  this.unload();
+              } else if (this.isaudio) {
+                  // unload previous sound-resource
+                  this.unloadSound();
+              }
+              
+              if (this.resourceObj == null) {
+                  this.createResourceBitmap()  
+              }
+              
+              this.resource = r;
+              // instantiate resource at frame 1
+              this.stop(1);
+              // send events, but skip onload
+              sendResourceLoad(true);
+          } else if (LzAsset.isSoundAsset(r)) {
+              // unload previous image-resource and sound-resource
+              this.unload();
+              this.resource = r;
+              
+              this.sound = new res['assetclass']() as Sound;
+              this.owner.resourceevent('totalframes', Math.floor(this.sound.length * 0.001 * MP3_FPS));
+              
+              // TODO: add condition on this
+              this.startPlay()
+              
+              // send events, but skip onload
+              this.sendResourceLoad(true);
+          } else if ($debug) {
+              Debug.warn('Unhandled asset: ', LzAsset.getAssetType(r) + " " + r);
           }
-          if (imgLoader) {
-              this.unload();   
-          }
-          if (this.resourceObj == null) {
-              this.createResourceBitmap()  
-          }
-
-          // instantiate resource at frame 1
-          this.stop(1);
-          // send events, but skip onload
-          sendResourceLoad(true);
       }
 
 
@@ -205,31 +242,54 @@ dynamic public class LzSprite extends Sprite {
           o Loads and displays media from the specified url
           o Uses the resourceload callback method when the resource finishes loading 
       */
-      public function setSource (url:String, cache = null, headers = null, filetype = null):void {
-         if (url == null || url == 'null') {
-             return;
-         }
-
-          this.resource = url;
-          if (! imgLoader) {
-            if (this.resourceObj) this.unload();
-            imgLoader = new Loader();
-            this.resourceObj = imgLoader;
-            this.addChildAt(imgLoader, IMGDEPTH);
-            var info:LoaderInfo = imgLoader.contentLoaderInfo;
-            info.addEventListener(Event.INIT, loaderInitHandler);
-            info.addEventListener(IOErrorEvent.IO_ERROR, loaderEventHandler);
+      public function setSource (url:String, cache:String = null, headers:String = null, filetype:String = null) :void {
+          if (url == null || url == 'null') {
+              return;
+          }
+          
+          if (getFileType(url, filetype) == "mp3") {
+              // unload previous image-resource and sound-resource
+              this.unload();
+              this.resource = url;
+              this.loadSound(url);
           } else {
-            //TODO [20080911 anba] cancel current load?
-            // imgLoader.close();
+              if (this.isaudio) {
+                  // unload previous sound-resource
+                  this.unloadSound();
+              }
+            
+              if (! imgLoader) {
+                  if (this.resourceObj) {
+                      this.unload();
+                  }
+                  imgLoader = new Loader();
+                  this.resourceObj = imgLoader;
+                  this.addChildAt(imgLoader, IMGDEPTH);
+                  var info:LoaderInfo = imgLoader.contentLoaderInfo;
+                  info.addEventListener(Event.INIT, loaderInitHandler);
+                  info.addEventListener(IOErrorEvent.IO_ERROR, loaderEventHandler);
+              } else {
+                  //TODO [20080911 anba] cancel current load?
+                  // imgLoader.close();
+              }
+              
+              this.resource = url;
+              var res = this.resourceObj;
+              if (res) {
+                  res.scaleX = res.scaleY = 1.0;
+              }
+              //Debug.write('sprite setsource load ', url);
+              imgLoader.load(new URLRequest(url));
           }
-
-          var res = this.resourceObj;
-          if (res) {
-            res.scaleX = res.scaleY = 1.0;
+      }
+      
+      private function getFileType (url:String, filetype:String = null) :String {
+          if (filetype != null) {
+              return filetype.toLowerCase();
+          } else {
+              var si = url.lastIndexOf(".");
+              return si != -1 ? url.substring(si + 1).toLowerCase() : null;
           }
-          //Debug.write('sprite setsource load ', url);
-          imgLoader.load(new URLRequest(url));
       }
 
       public function loaderInitHandler(event:Event):void {
@@ -277,7 +337,7 @@ dynamic public class LzSprite extends Sprite {
                   }
               } else if (event.type == ProgressEvent.PROGRESS) {
                   var ev:ProgressEvent = event as ProgressEvent;
-                  var lr = ev.bytesLoaded / ev.bytesTotal;
+                  var lr:Number = ev.bytesLoaded / ev.bytesTotal;
                   if (! isNaN(lr)) {
                       this.owner.resourceevent('loadratio', lr);
                   }
@@ -290,8 +350,169 @@ dynamic public class LzSprite extends Sprite {
           }
       }
       
+      /** 
+        * <code>true</code> if a sound is attached to this sprite.
+        */
+      public function get isaudio () :Boolean {
+          return this.sound != null;
+      }
+      
+      /** 
+        * Load/Stream a sound from an URL.
+        */
+      private function loadSound (url:String) :void {
+          this.sound = new Sound();
+          this.sound.addEventListener(Event.OPEN, soundLoadHandler);
+          this.sound.addEventListener(Event.COMPLETE, soundLoadHandler);
+          this.sound.addEventListener(ProgressEvent.PROGRESS, soundLoadHandler);
+          this.sound.addEventListener(IOErrorEvent.IO_ERROR, soundLoadHandler);
+          
+          this.sound.load(new URLRequest(url), LzSprite.soundLoaderContext);
+          
+          // TODO: add condition on this
+          this.startPlay();
+      }
+      
+      /** 
+        * Stop current playback and unload sound
+        */
+      private function unloadSound () :void {
+          if (this.playing) {
+              // stop playing
+              this.stopPlay();
+          }
+          if (this.sound) {
+              if (this.soundLoading) {
+                  // stop streaming sound
+                  this.sound.close();
+                  this.soundLoading = false;
+              }
+              this.sound = null;
+          }
+      }
+      
+      /** 
+        * Start sound playback and tracking
+        * @param Number frame: frame/secs to start at playing
+        * @param Boolean isFrame: if set to false, treat 'frame' as seconds
+        */
+      private function startPlay (frame:Number = 0, isFrame:Boolean = true) :void {
+          var pos:Number = (isFrame ? (frame / MP3_FPS) : frame) * 1000;
+          
+          this.playing = true;
+          this.owner.playing = true;
+          this.soundChannel = this.sound.play(pos, 0, this.soundTransform);
+          this.addEventListener(Event.ENTER_FRAME, soundFrameHandler);
+          this.soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
+      }
+      
+      /** 
+        * Stop sound playback and tracking
+        * @return Number: the current frame when playback was stopped
+        */
+      private function stopPlay () :Number {
+          var frame:Number = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
+          
+          this.playing = false;
+          this.owner.playing = false;
+          this.removeEventListener(Event.ENTER_FRAME, soundFrameHandler);
+          this.soundChannel.stop();
+          this.soundChannel = null;
+          
+          return frame;
+      }
+      
+      /** 
+        * Update play status
+        */
+      private function updatePlay (play:Boolean, framenumber:*, rel:Boolean) :void {
+          var fr:Number;
+          if (this.playing) {
+              // stop previous playback
+              fr = this.stopPlay();
+          } else {
+              // TODO: this.frame is initialized with 1, which
+              // means we currently skip 33ms at the beginning
+              fr = this.frame;
+          }
+          
+          if (framenumber != null) {
+              framenumber += rel ? fr : 0;
+          } else {
+              framenumber = fr;
+          }
+          
+          if (play) {
+              this.startPlay(framenumber);
+          } else {
+              this.frame = framenumber;
+              this.owner.resourceevent('frame', framenumber);
+          }
+      }
+      
+      /** 
+        * Progress sound loading
+        */
+      private function soundLoadHandler (event:Event) :void {
+          try {
+              if (event.type == Event.OPEN) {
+                  this.soundLoading = true;
+                  this.owner.resourceevent('loadratio', 0);
+              } else if (event.type == Event.COMPLETE) {
+                  this.soundLoading = false;
+                  this.owner.resourceevent('loadratio', 1);
+                  this.owner.resourceevent('totalframes', Math.floor(this.sound.length * 0.001 * MP3_FPS));
+                  
+                  // send events, including onload
+                  this.sendResourceLoad();
+              } else if (event.type == ProgressEvent.PROGRESS) {
+                  var ev:ProgressEvent = event as ProgressEvent;
+                  var lr:Number = ev.bytesLoaded / ev.bytesTotal;
+                  if (! isNaN(lr)) {
+                      this.owner.resourceevent('loadratio', lr);
+                  }
+              } else if (event.type == IOErrorEvent.IO_ERROR) {
+                  this.soundLoading = false;
+                  this.owner.resourceevent('loadratio', 0);
+                  this.owner.resourceloaderror( (event as IOErrorEvent).text );
+              }
+          } catch (error:Error) {
+              trace(event.type + " " + error);
+          }
+      }
+      
+      /** 
+        * Track playback
+        */
+      private function soundFrameHandler (event:Event = null) :void {
+          // Event.ENTER_FRAME
+          var fr:Number = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
+          this.frame = fr;
+          this.owner.resourceevent('frame', fr);
+          
+          var tfr:Number = Math.floor(this.sound.length * 0.001 * MP3_FPS);
+          this.owner.resourceevent('totalframes', tfr);
+      }
+      
+      /** 
+        * Sound complete
+        */
+      private function soundCompleteHandler (event:Event) :void {
+          // Event.SOUND_COMPLETE
+          if (this.playing) {
+              // call manually to update 'frame'
+              this.soundFrameHandler();
+              // SoundChannel.position does not stop exactly at Sound.length, 
+              // there are a few ms difference between both values. 
+              // So instead of comparing 'frame' == 'totalframes', 
+              // we'll send the 'lastframe'-event when playback stopped.
+              this.owner.resourceevent('lastframe', null, true);
+              this.stopPlay();
+          }
+      }
+      
       //// Mouse event trampoline
-      public function attachMouseEvents(dobj:DisplayObject) {
+      public function attachMouseEvents(dobj:DisplayObject) :void {
           dobj.addEventListener(MouseEvent.CLICK, __mouseEvent, false);
           dobj.addEventListener(MouseEvent.DOUBLE_CLICK, handleMouse_DOUBLE_CLICK, false);
           dobj.addEventListener(MouseEvent.MOUSE_DOWN, __mouseEvent, false);
@@ -300,7 +521,7 @@ dynamic public class LzSprite extends Sprite {
           dobj.addEventListener(MouseEvent.MOUSE_OUT, __mouseEvent, false);
       }
 
-      public function removeMouseEvents(dobj:DisplayObject) {
+      public function removeMouseEvents(dobj:DisplayObject) :void {
           dobj.removeEventListener(MouseEvent.CLICK, __mouseEvent, false);
           dobj.removeEventListener(MouseEvent.DOUBLE_CLICK, handleMouse_DOUBLE_CLICK, false);
           dobj.removeEventListener(MouseEvent.MOUSE_DOWN, __mouseEvent, false);
@@ -309,13 +530,13 @@ dynamic public class LzSprite extends Sprite {
           dobj.removeEventListener(MouseEvent.MOUSE_OUT, __mouseEvent, false);
       }
 
-      public function handleMouse_DOUBLE_CLICK (event:MouseEvent) {
+      public function handleMouse_DOUBLE_CLICK (event:MouseEvent) :void {
           LzMouseKernel.__sendEvent( owner, 'ondblclick');
           event.stopPropagation();
       }
 
       // called by LzMouseKernel when mouse goes up on another sprite
-      public function __globalmouseup( e:MouseEvent ){
+      public function __globalmouseup( e:MouseEvent ) :void {
           if (this.__mousedown) {
               this.__mouseEvent(e);
               this.__mouseEvent(new MouseEvent('mouseupoutside'));
@@ -323,7 +544,7 @@ dynamic public class LzSprite extends Sprite {
           LzMouseKernel.__lastMouseDown = null;
       }
 
-      public function __mouseEvent( e:MouseEvent ){
+      public function __mouseEvent( e:MouseEvent ) :void {
             var skipevent = false;
             var eventname = 'on' + e.type.toLowerCase();
 
@@ -381,7 +602,7 @@ dynamic public class LzSprite extends Sprite {
           this.clickable = c;
           this.buttonMode = c;
           this.tabEnabled = false;
-          this.mouseEnabled = c;
+          this.mouseEnabled = c || this.isroot;// @devnote: see LPP-6980
           attachMouseEvents(this);
           var cb:SimpleButton = this.clickbutton;
           //trace('sprite setClickable' , c, 'cb',cb);
@@ -459,7 +680,6 @@ dynamic public class LzSprite extends Sprite {
       public function setY ( y:Number ):void {
           this.y = y;
       }
-
 
 
       /** setWidth( Number:width )
@@ -569,9 +789,16 @@ dynamic public class LzSprite extends Sprite {
           o Plays a multiframe resource starting at the specified framenumber
           o Plays from the current frame if framenumber is null 
       */
-      public function play( framenumber:Number = 1,  rel:Boolean = false ):void {
-          // TODO [hqm 2008-04] what to do about playing movies? 
-          stop(framenumber);
+      public function play (framenumber:* = null, rel:Boolean = false) :void {
+          if (! this.isaudio) {
+              // TODO [hqm 2008-04] what to do about playing movies? 
+              stop(framenumber);
+          } else {
+              // audio-resource is attached
+              this.updatePlay(true, framenumber, rel);
+              
+              this.owner.resourceevent('play', null, true);
+          }
       }
 
 
@@ -579,57 +806,69 @@ dynamic public class LzSprite extends Sprite {
           o Stops a multiframe resource at the specified framenumber
           o Stops at the current frame if framenumber is null 
       */
-      public function stop( fn:Number = 1, rel:Boolean = false ):void {
-          if (this.resource == null || imgLoader) {
-              return;
-          }
-          var resinfo = LzResourceLibrary[this.resource];
-
-          // Frames are one based not zero based
-          var frames = resinfo.frames;
-          if (fn > frames.length) {
-            fn = frames.length
-          }
-          this.frame = fn;
-          var framenumber = fn - 1;
-
-          var assetclass;
-          // single frame resources get an entry in LzResourceLibrary which has
-          // 'assetclass' pointing to the resource Class object.
-          if (resinfo.assetclass is Class) {
-              assetclass = resinfo.assetclass;
+      public function stop (fn:* = null, rel:Boolean = false) :void {
+          if (! this.isaudio) {
+              if (this.resource == null || imgLoader) {
+                  return;
+              }
+              
+              var resinfo = LzResourceLibrary[this.resource];
+              
+              // Frames are one based not zero based
+              var frames = resinfo.frames;
+              if (fn == null) {
+                  fn = 1;
+              }
+              if (fn > frames.length) {
+                  fn = frames.length;
+              }
+              this.frame = fn;
+              var framenumber = fn - 1;
+              
+              var assetclass;
+              // single frame resources get an entry in LzResourceLibrary which has
+              // 'assetclass' pointing to the resource Class object.
+              if (resinfo.assetclass is Class) {
+                  assetclass = resinfo.assetclass;
+              } else {
+                  // Multiframe resources have an array of Class objects in frames[]
+                  assetclass = frames[framenumber];
+              }
+              
+              if (! assetclass) return;
+              if (this.resourceCache == null) {
+                  this.resourceCache = [];
+              }
+              var asset:DisplayObject = this.resourceCache[framenumber];
+              if (asset == null) {
+                  //Debug.write('CACHE MISS, new ',assetclass);
+                  asset = new assetclass();
+                  asset.scaleX = 1.0
+                  asset.scaleY = 1.0;
+                  this.resourceCache[framenumber] = asset;
+              }
+              
+              var oRect:Rectangle = asset.getBounds( asset );
+              if (oRect.width == 0 || oRect.height == 0) {
+                // it can take a while for new resources to show up.  Call back until we have a valid size.
+                setTimeout(this.__resetframe, 50);
+                return;
+              }
+              
+              var res = this.resourceObj; 
+              var rect = new Rectangle(0, 0, this.resourcewidth, this.resourceheight);
+              res.bitmapData.fillRect(rect, 0x00000000);
+              copyBitmap(asset, this.resourcewidth, this.resourceheight, res.bitmapData);
+              //Debug.write('set resource to', asset, oRect); 
+              
+              this.applyStretchResource();
           } else {
-              // Multiframe resources have an array of Class objects in frames[]
-              assetclass = frames[framenumber];
+              // audio-resource is attached
+              var p:Boolean = this.playing;
+              this.updatePlay(false, fn, rel);
+              
+              if (p) this.owner.resourceevent('stop', null, true);
           }
-
-          if (! assetclass) return;
-          if (this.resourceCache == null) {
-              this.resourceCache = [];
-          }
-          var asset:DisplayObject = this.resourceCache[framenumber];
-          if (asset == null) {
-              //Debug.write('CACHE MISS, new ',assetclass);
-              asset = new assetclass();
-              asset.scaleX = 1.0
-              asset.scaleY = 1.0;
-              this.resourceCache[framenumber] = asset;
-          }
-
-          var oRect:Rectangle = asset.getBounds( asset );
-          if (oRect.width == 0 || oRect.height == 0) {
-            // it can take a while for new resources to show up.  Call back until we have a valid size.
-            setTimeout(this.__resetframe, 50);
-            return;
-          }
-
-          var res = this.resourceObj; 
-          var rect = new Rectangle(0, 0, this.resourcewidth, this.resourceheight);
-          res.bitmapData.fillRect(rect, 0x00000000);
-          copyBitmap(asset, this.resourcewidth, this.resourceheight, res.bitmapData);
-          //Debug.write('set resource to', asset, oRect); 
-
-          this.applyStretchResource();
       }
 
       public function __resetframe():void {
@@ -745,9 +984,10 @@ dynamic public class LzSprite extends Sprite {
           o if recursive is true, the sprite destroys all its children as well 
       */
       public function destroy( ):void {
-    //PBR
-    if (parent)
-          parent.removeChild(this);
+          //PBR
+          if (parent) {
+              parent.removeChild(this);
+          }
       }
 
 
@@ -834,10 +1074,11 @@ dynamic public class LzSprite extends Sprite {
 
       public function unload() {
         if (this.resourceObj) this.removeChild(this.resourceObj);
+        if (this.isaudio) this.unloadSound();
         // clear out cached values
         this.lastreswidth = this.lastresheight = this.resourcewidth = this.resourceheight = 0;
         this.resource = null;
-        imgLoader = null;
+        this.imgLoader = null;
         this.resourceObj = null;
       }
 
@@ -871,17 +1112,18 @@ dynamic public class LzSprite extends Sprite {
        * Install menu items for the right-mouse-button 
        * @param LzContextMenu cmenu: LzContextMenu to install on this view
        */
-      function  setContextMenu ( lzmenu ){
+      function setContextMenu ( lzmenu ){
           if (lzmenu == null) {
               this.__contextmenu = null;
           } else {
-              // For back compatibility, we accept either LzContextMenu or (Flash primitive) ContextMenu
               this.__contextmenu = lzmenu;
               var cmenu:ContextMenu = lzmenu.kernel.__LZcontextMenu();
 
               // TODO [hqm 2008-04] make this do the more complex stuff that swf8 LzSprite does now,
               // where it checks for a resource or bgcolor sprite, in order to make the clickable region
               // match what the user expects.
+
+              // TODO: [20080914 anba] blocked by LPP-6980
 
               // "contextMenu" is a swf9 property on flash.display.Sprite
               this.contextMenu = cmenu;
@@ -890,9 +1132,10 @@ dynamic public class LzSprite extends Sprite {
 
       function setDefaultContextMenu ( cmenu ){
           if (cmenu != null) {
-// LPP-5868
-// Generates: Error #2071: The Stage class does not implement this property or method
-//              LFCApplication.stage.contextMenu = cmenu.kernel.__LZcontextMenu();
+              // even though Stage extends flash.display.InterativeObject, you cannot attach 
+              // a context-menu to it, instead we attach the context-menu to application-sprite
+              // LFCApplication.stage.contextMenu = cmenu.kernel.__LZcontextMenu();
+              LFCApplication._sprite.contextMenu = cmenu.kernel.__LZcontextMenu();
           }
       }
 
@@ -948,42 +1191,97 @@ dynamic public class LzSprite extends Sprite {
           LzMouseKernel.restoreCursorLocal();
       }
 
-      function setVolume (v) {
-          trace('setVolume not currently implemented in swf9.');
+      function setVolume (v:Number) :void {
+          LzAudioKernel.setVolume(v, this);
       }
 
-      function getVolume () {
-          trace('getVolume not currently implemented in swf9.');
+      function getVolume () :Number {
+          return LzAudioKernel.getVolume(this);
       }
 
-      function setPan (v) {
-          trace('setPan not currently implemented in swf9.');
+      function setPan (p:Number) :void {
+          LzAudioKernel.setPan(p, this);
       }
 
-      function getPan () {
-          trace('getPan not currently implemented in swf9.');
+      function getPan () :Number {
+          return LzAudioKernel.getPan(this);
+      }
+      
+      /** 
+        * @param Number secs: 
+        * @param Boolean playing: 
+        */
+      function seek (secs:Number, doplay:Boolean) :void {
+          if (this.isaudio) {
+              var pos:Number = Math.max(this.getCurrentTime() + secs, 0);
+              if (this.playing) {
+                  this.stopPlay();
+              }
+              if (doplay) {
+                  this.startPlay(pos, false);
+              } else {
+                  var fr:Number = Math.floor(pos * MP3_FPS);
+                  this.frame = fr;
+                  this.owner.resourceevent('frame', fr);
+              }
+          }
+      }
+      
+      /** 
+        * @return Number: time elapsed (in seconds)
+        */
+      function getCurrentTime () :Number {
+          if (this.isaudio) {
+              if (this.playing) {
+                  // use SoundChannel if possible, it is more accurate
+                  return this.soundChannel.position * 0.001;
+              } else {
+                  return (this.frame / MP3_FPS);
+              }
+          } else {
+              return 0;
+          }
+      }
+      
+      /** 
+        * @return Number: length of the current sound (in seconds)
+        */
+      function getTotalTime () :Number {
+          return this.isaudio ? this.sound.length * 0.001 : 0;
+      }
+      
+      /** 
+        * @return ID3Info: id3-info of the current sound
+        */
+      function getID3 () :ID3Info {
+          return this.isaudio ? this.sound.id3 : null;
       }
 
       /**
-         
-       */
+        *
+        */
       function setShowHandCursor ( s:* ){
           this.showhandcursor = s;
       }
 
       function setAAActive(s) {
+          trace('LzSprite.setAAActive not yet implemented');
       }
 
       function setAAName(s) {
+          trace('LzSprite.setAAName not yet implemented');
       }
 
       function setAADescription(s) {
+          trace('LzSprite.setAADescription not yet implemented');
       }
 
       function setAATabIndex(s) {
+          trace('LzSprite.setAATabIndex not yet implemented');
       }
 
       function setAASilent(s) {
+          trace('LzSprite.setAASilent not yet implemented');
       }
 
       function updateResourceSize(skipsend = null){

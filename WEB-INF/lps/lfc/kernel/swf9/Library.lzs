@@ -37,6 +37,7 @@
 #include "kernel/swf9/LzScreenKernel.as"
 #include "kernel/swf9/LzContextMenuKernel.lzs"
 #include "kernel/swf9/LzAudioKernel.lzs"
+#include "kernel/swf9/LzAsset.as"
     //#include "kernel/swf9/dojo/Library.lzs"
 
 #include "kernel/swf9/DojoExternalInterface.as"
