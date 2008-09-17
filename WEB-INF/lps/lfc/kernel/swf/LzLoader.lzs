@@ -334,7 +334,7 @@ function request ( o ){
         o.proxyurl = null;
     }
 
-    if (typeof(o.proxied) != undefined && o.proxied != null) {
+    if (typeof(o.proxied) != 'undefined' && o.proxied != null) {
         lmv.proxied = o.proxied;
     } else {
         lmv.proxied = canvas.isProxied();
