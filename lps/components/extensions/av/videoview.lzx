@@ -3,19 +3,25 @@
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
-
-
     <include href="mediastream.lzx" />
 
     <!--
-        Video view.
         Based on code by Raju Bitter
-
-        @START_CODE
-            <videoview/>
-        @END_CODE
     -->
     <interface name="videoview" extends="view" width="160" height="120">
+      <doc>
+        <tag name="shortdesc"><text>Allows video playback.</text></tag>
+        <text>
+          <p><tagname>videoview</tagname> allows applications to play video from HTTP or RTMP servers.</p> 
+
+          <example><programlisting class="code">
+          &lt;canvas&gt;
+            &lt;videoview url="http://www.archive.org/download//JudgeMediaTestVideoFile_0/video.flv" type="http" autoplay="true" width="320" height="240"/&gt;
+          &lt;/canvas&gt;
+          </programlisting></example>
+        </text>
+      </doc>
+
         <!--- The url of the mediastream, maybe a relative URL, 
               for example: "http://localhost/myvideo.flv", or simply "myvideo.flv".
               When type="rtmp", the url is always relative the the rtmpconnection.
@@ -40,7 +46,7 @@
               @keywords readonly -->
         <attribute name="mic" value="null"/>
 
-        <!--- The mediastream object. -->
+        <!--- The mediastream object.  A mediastream will be automatically generated if one is not specified at init time. -->
         <attribute name="stream" value="null" when="once"/>
 
         <!--- The volume for video playback, a float from 0 to 1. Default 1. -->
@@ -158,6 +164,10 @@
                 }
     
                 this._urldel = new LzDelegate( this, "_setPlayStream", this.stream, "onplaying")
+                if (this.stream.playing) {
+                    // in case this stream is already playing...
+                    this._setPlayStream();
+                }
                 if (this.url) this.stream.setAttribute("url", this.url);
 
                 this._initcomplete = true;
@@ -173,10 +183,10 @@
                 //Debug.write("videoview init END", this);
             }
     
-            function _setPlayStream (ignore) {
+            function _setPlayStream (ignore=null) {
                 if (this.stream.playing) {
                     if (! this.stream._flashstream) return;
-                    //Debug.write("videoview _setPlayStream", this, "s", this.stream, "fs", this.stream._flashstream, "vid", vid);
+                    //Debug.write("videoview _setPlayStream", this, "s", this.stream, "fs", this.stream._flashstream);
                     this._attachStream(this.stream._flashstream);
                     this.setAttribute("width", this.width);
                     this.setAttribute("height", this.height);

@@ -1,16 +1,26 @@
-<!---
-   
-    @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
-               Use is subject to license terms.
-   
-    @access public
-    @affects lz.rtmpconnection
-    @topic Video
-    @subtopic Streaming
-  -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
+  <!--
+      Based on code by Raju Bitter
+  -->
   <interface name="rtmpconnection" extends="node">
-  
+    <doc>
+      <tag name="shortdesc"><text>Allows connections to RTMP servers</text></tag>
+      <text>
+        <p><tagname>rtmpconnection</tagname> allows applications to connect to RTMP servers, like http://osflash.org/red5 or http://www.wowzamedia.com/.  Note that you'll need a server running with the appropriate URLs set up for this example to work.</p> 
+        
+        <example><programlisting class="code">
+        &lt;canvas&gt;
+            &lt;rtmpconnection src="rtmp://localhost:1935/simplevideostreaming/" autoconnect="true"/&gt;
+            &lt;videoplayer url="Extremists.flv" type="rtmp" autoplay="true" width="320" height="240"/&gt;
+        &lt;/canvas&gt;
+        </programlisting></example>
+      </text>
+    </doc> 
+
     <!--- Connect automatically during init. If false, you need to explicitly
           call connect().
           Default is true.
@@ -49,7 +59,7 @@
           @type Boolean
           @access public
     -->
-    <attribute name="debug" value="true"/>
+    <attribute name="debug" value="false"/>
     
     <!--- Event sent when connection established. 
           @access private -->
@@ -57,7 +67,6 @@
     <!--- Event sent when an error occurs
           @access private -->
     <event name="onerror"/>
-
   </interface> <!-- rtmpconnection -->
 
   <!-- these methods are shared across runtimes>
@@ -69,8 +78,6 @@
     }
   ]]></script-->
 
-  <!-- runtime-specific implementations
-        Based on code by Raju Bitter -->
   <switch>
     <when runtime="dhtml">
       <!-- no support for RTMP in DHTML -->
@@ -102,7 +109,7 @@
             var status = "disconnected";
             var stage = 0;
             var src = "";
-            var debug = true;
+            var debug = false;
             var _nc = null;
             
             var onconnect = LzDeclaredEvent;
@@ -130,11 +137,11 @@
                 
                 if (canvas.rtmpconnections[this.name] != null) {
                     if ($debug) {
-                        if (this.name == "_default")
+                        if (this.name == "_default") {
                             Debug.warn("A default RTMP connection already exists, please name rtmpconnections if you use more than one");
-                        else 
-                            Debug.warn("An RTMP connection already exists with the name '%s': %w",
-                                       this.name, canvas.rtmpconnections[this.name]);
+                        } else {
+                            Debug.warn("An RTMP connection already exists with the name '%s': %w", this.name, canvas.rtmpconnections[this.name]);
+                        }
                     }
                 }
                 

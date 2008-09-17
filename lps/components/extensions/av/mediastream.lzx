@@ -1,17 +1,26 @@
-<!---
-    Based on code by Raju Bitter
-   
-    @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
-               Use is subject to license terms.
-   
-    @access public
-    @affects lz.rtmpconnection
-    @topic Video
-    @subtopic Streaming
-  -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
 
+  <!--
+      Based on code by Raju Bitter
+    -->
   <interface name="mediastream" extends="node">
+    <doc>
+      <tag name="shortdesc"><text>Allows video playback.</text></tag>
+      <text>
+        <p><tagname>mediastream</tagname> allows applications to stream video from HTTP or RTMP servers.  Classes like <sgmltag class="element" role="lz.videoview">&lt;videoview&gt;</sgmltag> use mediastreams to handle the connection to the server.</p> 
+            
+        <example><programlisting class="code">
+        &lt;canvas&gt;
+          &lt;mediastream name="ms" autoplay="true" type="http" url="http://www.archive.org/download//JudgeMediaTestVideoFile_0/video.flv"/&gt;
+          &lt;videoview type="http" autoplay="true" width="320" height="240" stream="canvas.ms"/&gt;
+        &lt;/canvas&gt;
+        </programlisting></example>
+      </text>
+    </doc>
   
     <!--- The url of the mediastream, maybe be relative URL, 
           for example: http://localhost/myvideo.flv, or simply myvideo.flv
