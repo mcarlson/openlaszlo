@@ -32,13 +32,13 @@ class LzHTTPDataProvider extends LzDataProvider {
     }  
 
     /** @access private
-     * @param LzHTTPDataRequest dreq: The data request
-     */
-    function makeLoader ( dreq ) {
-        var proxied = dreq.proxied;
+      * @param LzHTTPDataRequest dreq: The data request
+      */
+    function makeLoader (dreq:LzHTTPDataRequest) :LzHTTPLoader {
+        var proxied:Boolean = dreq.proxied;
         // If there is no loader, or if the loader changed it's proxied
         // flag, make a new loader.
-        var tloader = new LzHTTPLoader(this, proxied);
+        var tloader:LzHTTPLoader = new LzHTTPLoader(this, proxied);
         dreq.loader = tloader;
         tloader.loadSuccess = this.loadSuccess;
         tloader.loadError   = this.loadError;
@@ -46,23 +46,20 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         tloader.setProxied(proxied);
 
-        /** TODO [hqm 2007-08] This code below to deal with secureport is likely broken, 
-         * I need to undersatnd what is the behavior of "secureport"
-         */
+        // TODO [hqm 2007-08] This code below to deal with secureport is likely broken, 
+        // I need to understand what is the behavior of "secureport"
         /*************/
         // TODO [pbr 2008-08-04] dreq.secure will never be null
-        var secure = dreq.secure;
+        var secure:Boolean = dreq.secure;
         if (secure == null) {
             if (dreq.src.substring(0, 5) == "https") {
                 secure = true;
             }
         }
-        if (secure) {
-            tloader.baserequest = lz.Browser.getBaseURL( secure, dreq.secureport );
-            //Debug.write('basereq ' + tloader.baserequest);
-        }
+        
         tloader.secure = secure;
         if (secure) {
+            tloader.baserequest = lz.Browser.getBaseURL(secure, dreq.secureport);
             tloader.secureport = dreq.secureport;
         }
         /*************/
@@ -70,61 +67,60 @@ class LzHTTPDataProvider extends LzDataProvider {
         return tloader;
     }
 
-
-
     /**
      * Interrupts any load in progress for the given dataset.
      * @param LzDataRequest dreq: The data request for which to interrupt the load.
      * @access public
      */
-    function abortLoadForRequest( dreq ) {
-        dreq.loader.abort();        
+    override function abortLoadForRequest (dreq:LzDataRequest) :void {
+        (dreq cast LzHTTPDataRequest).loader.abort();
     }
 
     /**
      * @access public
      */
-    override function doRequest ( dreq ) {
+    override function doRequest (dreq:LzDataRequest) :void {
+        var httpdreq = dreq cast LzHTTPDataRequest;
+        
         // dreq.src can be null if the dataset is loaded from initialdata
-        if (!dreq.src)
+        if (! httpdreq.src)
             return;
 
         //build request
-        var proxied = dreq.proxied;
+        var proxied:Boolean = httpdreq.proxied;
+        
         // Check for previously created loader, we can reuse it
-
         // TODO [hqm 2007-08] If multirequests is true, we make a new loader
         // for each request. Is this correct? 
-        var tloader = dreq.loader;
-        if ( tloader == null || dreq.multirequest == true || dreq.queuerequests == true) {
-            tloader = this.makeLoader( dreq );
+        var tloader:LzHTTPLoader = httpdreq.loader;
+        if (tloader == null || httpdreq.multirequest == true || httpdreq.queuerequests == true) {
+            tloader = this.makeLoader( httpdreq );
         }
 
-        tloader.dataRequest = dreq;
+        tloader.dataRequest = httpdreq;
 
-        tloader.setQueueing(dreq.queuerequests);
-        tloader.setTimeout(dreq.timeout);
+        tloader.setQueueing(httpdreq.queuerequests);
+        tloader.setTimeout(httpdreq.timeout);
 
-        tloader.setOption('serverproxyargs', dreq.serverproxyargs);
-        tloader.setOption('cacheable',      dreq.cacheable == true);
-        tloader.setOption('timeout',        dreq.timeout);
-        tloader.setOption('trimwhitespace', dreq.trimwhitespace == true);
-        tloader.setOption('nsprefix',       dreq.nsprefix == true);
-        tloader.setOption('sendheaders',    dreq.getresponseheaders == true);
-        tloader.setOption('parsexml',       dreq.parsexml);
+        tloader.setOption('serverproxyargs', httpdreq.serverproxyargs);
+        tloader.setOption('cacheable',       httpdreq.cacheable == true);
+        tloader.setOption('timeout',         httpdreq.timeout);
+        tloader.setOption('trimwhitespace',  httpdreq.trimwhitespace == true);
+        tloader.setOption('nsprefix',        httpdreq.nsprefix == true);
+        tloader.setOption('sendheaders',     httpdreq.getresponseheaders == true);
+        tloader.setOption('parsexml',        httpdreq.parsexml);
 
-        if ( dreq.clientcacheable != null ){
-            tloader.setOption('ccache',     dreq.clientcacheable);
+        if (httpdreq.clientcacheable != null) {
+            tloader.setOption('ccache',      httpdreq.clientcacheable);
         }
 
-
-        var headers = {};
-        var headerparams = dreq.requestheaders;
+        var headers:Object = {};
+        var headerparams:LzParam = httpdreq.requestheaders;
         if (headerparams != null) {
-            var headernames = headerparams.getNames();
-            for (var i = 0; i < headernames.length; i++) {
-                var key = headernames[i];
-                var val = headerparams.getValue(key);
+            var headernames:Array = headerparams.getNames();
+            for (var i:int = 0; i < headernames.length; i++) {
+                var key:String = headernames[i];
+                var val:String = headerparams.getValue(key);
                 if (proxied) {
                     // Pass this to makeProxiedURL
                     headers[key] = val;
@@ -135,25 +131,21 @@ class LzHTTPDataProvider extends LzDataProvider {
             }
         }
 
-        var qparams = dreq.queryparams;
-
-        // Convert queryparams table into a URL-encoded query-style string
-        var sep = '';
-        var q = '';
-        
-        // If an explicit post body content arg wasn't supplied, make
-        // a url-form-encoded string from the queryparams data.
-
-        var cachebreak = "__lzbc__="+(new Date()).getTime();
+        var qparams:LzParam = httpdreq.queryparams;
 
         // Default assume we are posting query data (key-value pairs)
-        var hasquerydata = true;
+        var hasquerydata:Boolean = true;
 
-
-        var postbody = dreq.postbody;
+        // If an explicit post body content arg wasn't supplied, make
+        // a url-form-encoded string from the queryparams data.
+        var postbody:String = httpdreq.postbody;
         if (postbody == null && qparams != null) {
+            // Convert queryparams table into a URL-encoded query-style string
+            var sep:String = '';
+            var q:String = '';
+            
             var names:Array = qparams.getNames();
-            for ( var i:int = 0; i < names.length; ++i ){
+            for (var i:int = 0; i < names.length; ++i) {
                 var name:String = names[i];
                 q += sep + name + '=' + encodeURIComponent(qparams.getValue(name));
                 sep = '&';
@@ -167,11 +159,10 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         tloader.setOption('hasquerydata', hasquerydata);
 
-
-        var lzurl = new LzURL(dreq.src);
+        var lzurl:LzURL = new LzURL(httpdreq.src);
 
         // For GET requests, merge in params data with URL query 
-        if (dreq.method == "GET") {
+        if (httpdreq.method == "GET") {
             if (lzurl.query == null) {
                 lzurl.query = postbody;
             } else {
@@ -182,6 +173,8 @@ class LzHTTPDataProvider extends LzDataProvider {
             postbody = null;
         }
 
+        var cachebreak:String = "__lzbc__=" + (new Date()).getTime();
+
         // [LPP-5368] If this is a SOLO POST request, with an empty
         // POST body, put the 'cache-breaking' arg into this post
         // body. This prevents the case of an empty POST body, which
@@ -191,30 +184,29 @@ class LzHTTPDataProvider extends LzDataProvider {
         // just SWF, in order to make things more consistent for the
         // app developer; they will get this magic arg added across
         // all platforms.
-        if (!proxied && (dreq.method == "POST") && (postbody == null || postbody == ''))  {
+        if (!proxied && (httpdreq.method == "POST") && (postbody == null || postbody == '')) {
             postbody = cachebreak;
         }
 
         // convert url back to string
-        var url;
+        var url:String;
         if (proxied) {
             // TODO [hqm 2007-08-03] make the API for makeProxiedURL take an explicit host arg,
             // so we can set the proxy from user code
-            url = tloader.makeProxiedURL(dreq.proxyurl, lzurl.toString(), dreq.method, "xmldata" , headers, postbody);
+            url = tloader.makeProxiedURL(httpdreq.proxyurl, lzurl.toString(), httpdreq.method, "xmldata" , headers, postbody);
 
             // We need to move the proxy string query data to the
             // postbody; can't leave it in the URL string since it
             // could be arbitrarily long.
-            var marker = url.indexOf('?');
-            var uquery = url.substring(marker+1, url.length);
-            var url_noquery = url.substring(0,marker);
+            var marker:int = url.indexOf('?');
+            var uquery:String = url.substring(marker + 1, url.length);
+            var url_noquery:String = url.substring(0, marker);
             url = url_noquery + '?' + cachebreak;
             postbody = uquery;
-
         }  else {
             // break the browser cache by adding a unique string to the url
-            if (!dreq.clientcacheable) {
-                if (dreq.method == "GET") {
+            if (! httpdreq.clientcacheable) {
+                if (httpdreq.method == "GET") {
                     // GET case: add to url query portion
                     if (lzurl.query == null) {
                         lzurl.query = cachebreak;
@@ -227,36 +219,39 @@ class LzHTTPDataProvider extends LzDataProvider {
             url = lzurl.toString();
         }
    
-        dreq.loadstarttime = (new Date()).getTime();
+        httpdreq.loadstarttime = (new Date()).getTime();
 
-        dreq.status =  "loading";
-        tloader.open ( proxied ? "POST" : dreq.method, url, /* username */ null, /* password */ null);
+        httpdreq.status = LzDataRequest.LOADING;
+        tloader.open ( proxied ? "POST" : httpdreq.method, url, /* username */ null, /* password */ null);
         tloader.send (/* content */ postbody);
     }
 
     /**
+     * callback function for LzHTTPLoader
      * @access private
      */
-    function loadSuccess ( loader, data ) { 
-        var dreq = loader.dataRequest;
+    function loadSuccess (loader:LzHTTPLoader, data:LzDataElement) :void { 
+        var dreq:LzHTTPDataRequest = loader.dataRequest;
         dreq.status = LzDataRequest.SUCCESS;
         loader.owner.loadResponse( dreq, data );
     }
 
     /**
+     * callback function for LzHTTPLoader
      * @access private
      */
-    function loadError( loader, data ) { 
-        var dreq = loader.dataRequest;
-        dreq.status = "error";
+    function loadError (loader:LzHTTPLoader, data:LzDataElement) :void { 
+        var dreq:LzHTTPDataRequest = loader.dataRequest;
+        dreq.status = LzDataRequest.ERROR;
         loader.owner.loadResponse( dreq, data );
     }
 
     /**
+     * callback function for LzHTTPLoader
      * @access private
      */
-    function loadTimeout( loader, data ) { 
-        var dreq = loader.dataRequest;
+    function loadTimeout (loader:LzHTTPLoader, data:LzDataElement) :void { 
+        var dreq:LzHTTPDataRequest = loader.dataRequest;
         dreq.loadtime = (new Date()).getTime() - dreq.loadstarttime;
         dreq.status = LzDataRequest.TIMEOUT;
         dreq.onstatus.sendEvent( dreq );
@@ -265,23 +260,17 @@ class LzHTTPDataProvider extends LzDataProvider {
     /**
      * @access private
      */
-    function setRequestError (dreq, msg) {
+    function setRequestError (dreq:LzHTTPDataRequest, msg:String) :void {
         dreq.error = msg;
         dreq.status = LzDataRequest.ERROR;
     }
 
     /**
      * @access private
-     * @param dataRequest dreq:
+     * @param LzHTTPDataRequest dreq:
      * @param LzDataElement data:
      */
-    function loadResponse( dreq, data ) {
-        var headers = new lz.Param( );
-        // build a hashtable of header values. 
-        // If the header is repeated, construct a list to hold
-        // all its values.
-        var content = null;
-
+    function loadResponse (dreq:LzHTTPDataRequest, data:LzDataElement) :void {
         dreq.loadtime = (new Date()).getTime() - dreq.loadstarttime;
 
         if (data == null) {
@@ -290,9 +279,9 @@ class LzHTTPDataProvider extends LzDataProvider {
             return;
         }
 
-        var proxied = dreq.proxied;
+        var proxied:Boolean = dreq.proxied;
 
-        if (!dreq.parsexml) {
+        if (! dreq.parsexml) {
             // TODO [hqm 2008-07] Currently, if parsexml == false, we just return the raw
             // data, we do not attempt to parse out the headers (i.e.,
             // do not assume the response is wrapped in
@@ -302,7 +291,7 @@ class LzHTTPDataProvider extends LzDataProvider {
             // return all proxied responses wrapped up in that format,
             // but it is not being done now for RPC and other raw data users.
             dreq.rawdata = dreq.loader.getResponse();
-            dreq.onstatus.sendEvent(dreq);
+            dreq.onstatus.sendEvent( dreq );
             return;
         } else if (proxied && data.childNodes[0].nodeName == "error") {
             this.setRequestError(dreq, data.childNodes[0].attributes['msg']);
@@ -310,16 +299,22 @@ class LzHTTPDataProvider extends LzDataProvider {
             return;
         }
 
+        // build a hashtable of header values. 
+        // If the header is repeated, construct a list to hold
+        // all its values.
+        var headers:LzParam = new lz.Param();
+        var content:LzDataElement = null;
+        
         if (proxied) {
             // For proxied requests, we get back an XML wrapper
             // <resulset><body>DATA</body><headers>HEADERS</headers></resultset>
             // extract the headers and body below:
-            var hos = (data.childNodes.length > 1 && data.childNodes[1].childNodes) ? data.childNodes[1].childNodes : null;
+            var hos:Array = (data.childNodes.length > 1 && data.childNodes[1].childNodes) ? data.childNodes[1].childNodes : null;
             // get proxy metadata (header, etc) info if any
             if (hos != null) {
-                for ( var i = 0; i < hos.length; i++ ){
-                    var h = hos[i];
-                    if (h.attributes) headers.addValue( h.attributes.name , h.attributes.value );
+                for (var i:int = 0; i < hos.length; i++) {
+                    var h:LzDataElement = hos[i];
+                    if (h.attributes) headers.addValue(h.attributes.name, h.attributes.value);
                 }
             }
             if (data.childNodes[0].childNodes) content = data.childNodes[0].childNodes[0];
@@ -334,92 +329,5 @@ class LzHTTPDataProvider extends LzDataProvider {
         dreq.onstatus.sendEvent( dreq );
     }
 }
+
 lz.HTTPDataProvider = LzHTTPDataProvider;  // publish
-
-
-/**
-  * <p>
-  * <class>LzHTTPDataRequest</class> implements the DataProvider interface, to support HTTP data requests.
-  * </p>
-  *
-  * @shortdesc A class to represent HTTP data requests.
-  * @lzxname httpdatarequest
-  */
-
-
-class LzHTTPDataRequest extends LzDataRequest {
-
-    function LzHTTPDataRequest (requestor = null) { 
-        super(requestor);
-    } 
-
-    var method:String = "GET"; //  : String; // GET, POST, PUT, DELETE
-    var postbody:String;
-    var proxied:Boolean;
-    var proxyurl:String;  
-    var multirequest:Boolean = false;
-    var queuerequests:Boolean = false;
-
-    /** An LzParam object which holds query key-value pairs.
-        @type LzParam
-    */
-    var queryparams = null; // : LzParam object
-
-    /** An LzParam object which holds HTTP request headers as key-value pairs.
-        @type LzParam
-    */
-    var requestheaders = null; // : LzParam object
-
-    /** Flag to say whether proxied server should return with HTTP response metadata added. 
-        @type Boolean
-    */
-    var getresponsheaders = false;
-    /** An LzParam object which holds HTTP response headers
-        @type LzParam
-    */
-    var responseheaders = null; 
-
-    var getresponseheaders = null;
-
-    /** Flag to say whether data is cacheable at the server
-        @type Boolean
-    */
-    var  cacheable         = false;
-    /** Flag to say whether data is cacheable at the client (browser)
-        @type Boolean
-    */
-    var  clientcacheable   = null;
-    /** Flag to say whether whitespace should be trimmed from text element data in returned XML data
-        @type Boolean
-    */
-    var  trimwhitespace    = false;
-    /** Flag to say whether namespace prefixes on element and attribute names is preserved in XML data
-        @type Boolean
-    */
-    var  nsprefix          = false;
-
-
-    /** A hashtable object of extra args to be sent along with the LPS server proxy control args.  */
-    var serverproxyargs = null;
-
-    /** The LZX DOM element containing the loaded data */
-    var xmldata = null;
-    /** Time taken by load, in milliseconds
-        @type Number
-    */
-    var loadtime = 0;
-    var loadstarttime;
-
-    var secure = false;
-    var secureport;
-
-
-    /** Flag which says if the loader should attempt to parse the response as XML */
-    var parsexml:Boolean = true;
-
-    // private, pointer to our lzhttploader
-    /** @access private */
-    var loader = null;
-
-}
-lz.HTTPDataRequest = LzHTTPDataRequest;  // publish

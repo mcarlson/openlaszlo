@@ -30,8 +30,7 @@
   * @shortdesc An abstract class to represent backend data sources.
   * @lzxname dataprovider
   */
-
-class LzDataProvider extends LzEventable {
+/* abstract */ class LzDataProvider extends LzEventable {
 
     function LzDataProvider () {
         super();
@@ -42,8 +41,15 @@ class LzDataProvider extends LzEventable {
      * @access public
      * @param LzDataRequest dreq: The data request to run
      */
-    function doRequest ( dreq ) {
-
+    function doRequest (dreq:LzDataRequest) :void {
+    }
+    
+    /**
+     * Interrupts any load in progress.
+     * @param LzDataRequest dreq: The data request for which to interrupt the load.
+     * @access public
+     */
+    function abortLoadForRequest (dreq:LzDataRequest) :void {
     }
 }
 

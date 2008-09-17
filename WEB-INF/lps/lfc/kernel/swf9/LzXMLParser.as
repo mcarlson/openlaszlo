@@ -23,7 +23,7 @@ public class LzXMLParser {
   * @param boolean trimwhitespace: if true, text nodes have whitespace trimmed from start and end.
   * @return nativeXMLObject: An XML DOM object native to the runtime platform
   */
-public static function parseXML( str, trimwhitespace, nsprefix ){
+public static function parseXML (str:String, trimwhitespace:Boolean, nsprefix:Boolean) :XML {
     XML.ignoreWhitespace = trimwhitespace;
     var xmlobj:XML = XML(str);
     xmlobj.normalize();

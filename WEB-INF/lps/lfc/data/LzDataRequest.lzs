@@ -16,74 +16,82 @@
   * @shortdesc An abstract class to represent data requests.
   * @lzxname datarequest
   */
-class LzDataRequest extends LzEventable {
-    
+/* abstract */ class LzDataRequest extends LzEventable {
+
     /* Status value constants */
     /**
-    * @type String
-    * @lzxdefault "success"
-    * @keywords read-only
-    */
+      * @type String
+      * @lzxdefault "success"
+      * @keywords read-only
+      */
     static const SUCCESS :String = 'success';
     /**
-    * @type String
-    * @lzxdefault "timeout"
-    * @keywords read-only
-    */
+      * @type String
+      * @lzxdefault "timeout"
+      * @keywords read-only
+      */
     static const TIMEOUT :String = 'timeout';
     /**
-    * @type String
-    * @lzxdefault "error"
-    * @keywords read-only
-    */
+      * @type String
+      * @lzxdefault "error"
+      * @keywords read-only
+      */
     static const ERROR :String = 'error';
     /**
-    * @type String
-    * @lzxdefault "ready"
-    * @keywords read-only
-    */
+      * @type String
+      * @lzxdefault "ready"
+      * @keywords read-only
+      */
     static const READY :String = 'ready';
+    /**
+      * @type String
+      * @lzxdefault "loading"
+      * @keywords read-only
+      */
+    static const LOADING :String = 'loading';
 
     /** An optional property that's the object using the DataRequest to pass into the dataprovider's doRequest method.
-    * @type Object
-    */
-    var requestor = null; 
+      * @type Object
+      */
+    var requestor :* = null;
+
     /** An object which holds the protocol-specific source to load data from
-    * @type Object
-    */
-    var src       = null; 
+      * @type String
+      */
+    var src :String = null;
+
     /** The timeout in milliseconds
-    @type Number
-    */
-    var timeout   = Infinity;
-    /** The status, one of 'success', 'timeout', 'error', or 'ready'
-     @type String
-    */
-    var status    = null; 
+      * @type Number
+      */
+    var timeout :Number = Infinity;
+
+    /** The status, one of 'success', 'timeout', 'error', 'ready' or 'loading'
+      * @type String
+      */
+    var status :String = null;
+
     /** Raw data returned by request 
-    * @type String
-    */
-    var rawdata   = null; 
+      * @type String
+      */
+    var rawdata :String = null;
 
-    /**  Used by dataprovider to record error messages 
-    * @type String
-    */
-    var error = null; 
-    
+    /** Used by dataprovider to record error messages 
+      * @type String
+      */
+    var error :String = null;
+
     /** Sent as data or other conditions occur during the execution of this request.
-    * @lzxtype event 
-    */
-    var onstatus = LzDeclaredEvent;
-    
+      * @lzxtype event 
+      */
+    var onstatus :LzDeclaredEventClass = LzDeclaredEvent;
+
     /** 
-    * The object using the DataRequest to pass into the dataprovider's doRequest method.
-    * @param Object requestor: The object using the DataRequest to pass into the dataprovider's doRequest method.
-    */
-    function LzDataRequest (requestor = null) { 
-        this.requestor = requestor; 
-    } 
-
-
+      * The object using the DataRequest to pass into the dataprovider's doRequest method.
+      * @param Object requestor: The object using the DataRequest to pass into the dataprovider's doRequest method.
+      */
+    function LzDataRequest (requestor:* = null) {
+        this.requestor = requestor;
+    }
 }
 
 lz.DataRequest = LzDataRequest;  //publish

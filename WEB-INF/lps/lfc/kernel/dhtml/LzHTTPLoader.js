@@ -142,12 +142,11 @@ LzHTTPLoader.prototype.abort = function () {
 }
 
 LzHTTPLoader.prototype.open = function (method, url, username, password) {
-    if ($debug) {
-        if (this.req) {
-            // TODO: what is the expected behaviour? 
-            // ignore the new request or cancel the previous one?
+    if (this.req) {
+        if ($debug) {
             Debug.warn("pending request for id=%s", this.__loaderid);
         }
+        this.abort();
     }
     
     {

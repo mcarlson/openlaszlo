@@ -48,8 +48,6 @@ public dynamic class LzNode extends LzEventable {
   //     var  syncNew:Boolean = null;
   /** @access private */
   var __LZdeferredcarr:Array = null;
-  /** @access private */
-  var data:* = null;
 
   /** @access private */
   var classChildren:Array = null;
@@ -1655,17 +1653,26 @@ public dynamic class LzNode extends LzEventable {
     this.$lzc$set_datapath(dp);
   }
 
+  /** @access private */
+  var data:* = null;
+  
+  /**
+    * @access private
+    */
+  function $lzc$set_data (v:*) :void { this.setData(v); }
+
   /**
    * Sets the datacontext for the node to the data element given as an
    * argument.
    * @access public
    * @param LzDataElement data: The dataelement to use as the context
    * @param ignore: This parameter is only used in LzDataset
+   * @deprecated Use setAttribute('data', ...) instead
    */
-  function setData(data, ignore=null) {
+  function setData (data:*, ignore=null) :void {
     this.data = data;
-    var dp = (this.datapath != null) ? this.datapath : new LzDatapath(this);
-    dp.setPointer(data);
+    var dp:LzDatapath = (this.datapath != null) ? this.datapath : new LzDatapath(this);
+    dp.setPointer(data /*cast LzDataNodeMixin*/);
     if (this.ondata.ready) this.ondata.sendEvent(data);
   }
 
@@ -1690,7 +1697,6 @@ public dynamic class LzNode extends LzEventable {
    *
    * @access public
    */
-
   function updateData () /*:String*/ { 
     return void(0); 
   } 

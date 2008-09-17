@@ -12,6 +12,7 @@
 #include "data/LzDataText.lzs"
 #include "data/LzDataRequest.lzs"
 #include "data/LzDataProvider.lzs"
+#include "data/LzHTTPDataRequest.lzs"
 #include "data/LzHTTPDataProvider.lzs"
 #include "data/LzDataset.lzs"
 #include "data/LzDatapointer.lzs"

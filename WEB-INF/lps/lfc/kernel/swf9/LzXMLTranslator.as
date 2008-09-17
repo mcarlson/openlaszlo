@@ -11,31 +11,30 @@
 /**
   * @shortdesc: Utility for converting native XML DOM object into LzDataNode tree
   */
-
 public class LzXMLTranslator {
 
-static function copyXML (xmlobj:XML, trimwhitespace:Boolean, nsprefix:Boolean) :LzDataElementMixin {
+static function copyXML (xmlobj:XML, trimwhitespace:Boolean, nsprefix:Boolean) :LzDataElement {
     var lfcnode:LzDataNodeMixin = copyFlashXML(xmlobj, trimwhitespace, nsprefix);
     if (lfcnode == null) {
         trace('LzXMLTranslator.copyXML: lfcnode.children is null', lfcnode);
     }
     
-    if ( lfcnode is LzDataText ) {
+    if (lfcnode is LzDataText) {
         return null;
     }
     
-    return (lfcnode cast LzDataElementMixin);
+    return (lfcnode cast LzDataElement);
 }
 
 
-static var whitespaceChars = {' ': true, '\r': true, '\n': true, '\t': true};
+static const whitespaceChars :Object = {' ': true, '\r': true, '\n': true, '\t': true};
 
 
 /**
   * trim whitespace from start and end of string
   * @access private
   */
-static function trim( str:String ) :String {
+static function trim (str:String) :String {
     var whitech:Object = whitespaceChars;
     var len:int = str.length;
     var sindex:int = 0;
@@ -112,7 +111,7 @@ static function copyFlashXML (node:XML, trimwhitespace:Boolean, nsprefix:Boolean
         lfcnode = new LzDataElement(nname, cattrs);
         var children:XMLList = node.children();
         var newchildren:Array = [];
-        for (var i:int  = 0; i < children.length(); i++ ) {
+        for (var i:int  = 0; i < children.length(); i++) {
             var child:XML = children[i];
             var lfcchild:LzDataNodeMixin = copyFlashXML(child, trimwhitespace, nsprefix);
             newchildren[i] = lfcchild;
@@ -122,6 +121,4 @@ static function copyFlashXML (node:XML, trimwhitespace:Boolean, nsprefix:Boolean
     return lfcnode;
 }
 
-
 } // End of LzXMLTranslator
-      

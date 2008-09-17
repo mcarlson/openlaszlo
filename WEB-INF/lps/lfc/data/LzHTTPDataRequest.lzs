@@ -1,0 +1,115 @@
+/**
+  *
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @topic LFC
+  * @subtopic Data
+  */
+
+/**
+  * <p>
+  * <class>LzHTTPDataRequest</class> implements the DataProvider interface, to support HTTP data requests.
+  * </p>
+  *
+  * @shortdesc A class to represent HTTP data requests.
+  * @lzxname httpdatarequest
+  */
+class LzHTTPDataRequest extends LzDataRequest {
+
+    /** @type String */
+    var method :String = "GET"; // GET, POST, PUT, DELETE
+
+    /** @type String */
+    var postbody :String;
+
+    /** @type Boolean */
+    var proxied :Boolean;
+
+    /** @type String */
+    var proxyurl :String;
+
+    /** @type Boolean */
+    var multirequest :Boolean = false;
+
+    /** @type Boolean */
+    var queuerequests :Boolean = false;
+
+    /** An LzParam object which holds query key-value pairs.
+      * @type LzParam
+      */
+    var queryparams :LzParam = null;
+
+    /** An LzParam object which holds HTTP request headers as key-value pairs.
+      * @type LzParam
+      */
+    var requestheaders :LzParam = null;
+
+    /** Flag to say whether proxied server should return with HTTP response metadata added.
+      * @type Boolean
+      */
+    var getresponsheaders :Boolean = false;
+
+    /** An LzParam object which holds HTTP response headers
+      * @type LzParam
+      */
+    var responseheaders :LzParam;
+
+    /** @type Boolean */
+    var getresponseheaders :Boolean = false;
+
+    /** Flag to say whether data is cacheable at the server
+      * @type Boolean
+      */
+    var cacheable :Boolean = false;
+
+    /** Flag to say whether data is cacheable at the client (browser)
+      * @type Boolean
+      */
+    var clientcacheable :Boolean  = false;
+
+    /** Flag to say whether whitespace should be trimmed from text element data in returned XML data
+      * @type Boolean
+      */
+    var trimwhitespace :Boolean = false;
+
+    /** Flag to say whether namespace prefixes on element and attribute names is preserved in XML data
+      * @type Boolean
+      */
+    var nsprefix :Boolean = false;
+
+    /** A hashtable object of extra args to be sent along with the LPS server proxy control args. */
+    var serverproxyargs :* = null;
+
+    /** The LZX DOM element containing the loaded data */
+    var xmldata :LzDataElement = null;
+
+    /** Time taken by load, in milliseconds
+      * @type Number
+      */
+    var loadtime :Number = 0;
+
+    /** @type Number */
+    var loadstarttime :Number;
+
+    /** @type Boolean */
+    var secure :Boolean = false;
+
+    /** @type uint */
+    var secureport :uint;
+
+    /** Flag which says if the loader should attempt to parse the response as XML */
+    var parsexml :Boolean = true;
+
+    /** private, pointer to our LzHTTPLoader
+      * @access private
+      */
+    var loader :LzHTTPLoader = null;
+
+    function LzHTTPDataRequest (requestor:* = null) {
+        super(requestor);
+    }
+}
+
+lz.HTTPDataRequest = LzHTTPDataRequest;  // publish

@@ -30,8 +30,7 @@
   * 
   * @shortdesc A utility class for manipulating name-value pairs  
   * @devnote lz.Param objects hold onto parameters (name/value pairs) and provide methods 
-  * and utilities to reserialize them.  They are used whenever case matters for 
-  * keys or parameter names (objects don't work here...)
+  * and utilities to reserialize them. 
   * 
   * @lzxname params
   */
@@ -43,8 +42,15 @@ var d :Object = null;
 // default separator and delimiter
 /** @access private */
 var delimiter :String = "&";
+
+/** @access private */
+function $lzc$set_delimiter (d:String) :void { this.setDelimiter(d); }
+
 /** @access private */
 var separator :String = "=";
+
+/** @access private */
+function $lzc$set_separator (s:String) :void { this.setSeparator(s); }
 
 /**
   * @access private
@@ -53,6 +59,7 @@ function LzParam () {
     super();
     this.d = {};
 }
+
 
 /**
   * Parse a URL query string, returns an object with key-value pairs
@@ -74,6 +81,7 @@ static function parseQueryString (query:String) :Object {
   return queries;
 }
 
+
 /**
   * Parse a URL query string, returns an object with key-value pairs
   * @return Object
@@ -85,6 +93,7 @@ function parseQueryString (query:String) :Object {
     }
     return lz.Param.parseQueryString(query);
 }
+
 
 /**
   * Adds a series of name/value pairs from an object
@@ -103,6 +112,7 @@ function addObject (o:Object) :void {
   */
 function clone (arg=null) :LzParam {
     if ($debug) {
+        //TODO: [20080917 anba] deprecated since 4.1 remove in 4.3+
         if (arg) Debug.info("%w.%s is deprecated. Do not pass as argument to clone()", this, arguments.callee);
     }
     var o:LzParam = new lz.Param();
@@ -182,23 +192,31 @@ function getValue (name:String) :String? {
 
 
 /**
+  * Get values by name
+  * @param String name: The name to look up - must evaluate to a string
+  * @return [String]: An array of values for the specified name
+  */
+function getValues (name:String) :Array? {
+    var a:Array = this.d[ name ];
+    if (a != null) {
+        return a.concat();
+    }
+}
+
+
+/**
   * Get a value by name irrespective of case.
   * @param String name: The name to look up - must evaluate to a string
   * @return [String]: An array of values that case-insensitively match name
   * @keywords deprecated
   */
 function getValueNoCase (name:String) :* {
+    //TODO: [20080917 anba] deprecated since 4.2 remove in 4.3+
     if ($debug) {
-        Debug.info("%w.%s is deprecated.", this, arguments.callee);
+        Debug.deprecated(this, arguments.callee, this.getValues);
     }
-    var a:Array = this.d[ name ];
-    if (a != null) {
-        if (a.length == 1) {
-            return a[ 0 ];
-        } else {
-            return a.concat();
-        }
-    }
+    var a:Array = this.getValues(name);
+    return a != null && a.length == 1 ? a[0] : a;
 }
 
 
@@ -213,14 +231,6 @@ function getNames () :Array {
     }
     return o;
 }
-
-
-/** @access private */
-function $lzc$set_delimiter(d:String) :void { this.setDelimiter(d); }
-
-
-/** @access private */
-function $lzc$set_separator(s:String) :void { this.setSeparator(s); }
 
 
 /**
@@ -256,6 +266,7 @@ function setSeparator (s:String) :String {
 function toString () :String {
     return this.serialize();
 }
+
 
 /**
   * Returns a string representation using the current separator and delimiter 
