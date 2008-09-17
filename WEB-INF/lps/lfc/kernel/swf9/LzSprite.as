@@ -686,6 +686,7 @@ dynamic public class LzSprite extends Sprite {
           o Sets the sprite to the specified width 
       */
       public function setWidth( v:* ):void {
+          if (isNaN(v)) return;
           this.lzwidth = v;
           this.applyStretchResource();
           // TODO [hqm 2008-01] We need to add back in the code here to
@@ -709,6 +710,7 @@ dynamic public class LzSprite extends Sprite {
           o Sets the sprite to the specified height 
       */
       public function setHeight( v:* ):void {
+          if (isNaN(v)) return;
           this.lzheight = v;
           this.applyStretchResource();
           // TODO [hqm 2008-01] We need to add back in the code here to
