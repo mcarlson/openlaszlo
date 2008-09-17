@@ -19,17 +19,5 @@ if($swf9) {
 
 #include "views/LaszloCanvas.lzs"
 
-if ($as2) {
-    #include "views/platform/LzPlatform.lzs"
-} else if ($dhtml) {
-    #include "views/platform/LzPlatform.lzs"
-} else if ($svg) {
-    #include "views/platform/svg/LzPlatform.js"
-} else if ($swf9) {
-    #include "views/platform/LzPlatform.lzs"
-} else {
-    Debug.error('views/Library.lzs unsupported runtime %s', $runtime)
-}
-
 #include "views/LzScript.lzs"
 
