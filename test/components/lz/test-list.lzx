@@ -46,7 +46,7 @@
         <attribute name="text" value="test name" type="html" />
         <view bgcolor="0x979797" width="${this.title.getTextWidth() + 10}" height="20" >
            <text x="4" y="2" name="title" text="${classroot.text}" resize="true" fgcolor="0xFFFFFF" >
-                <handler name="ontext">parent.setWidth(this.getTextwidth() + 10)</handler>
+                <handler name="ontext">parent.setAttribute('width', this.getTextwidth() + 10)</handler>
            </text>
         </view>
         <view bgcolor="0x979797" width="100%"  options="releaseToLayout" height="10" >
@@ -63,7 +63,7 @@
        <view bgcolor="red" width="10" height="10" x="5" y="5" />
        <statictext text="${classroot.text}" fgcolor="0x4B4B4B" >
             <handler name="ontext">
-               this.setX(parent.width - this.getTextWidth() - 25);
+               this.setAttribute('x', parent.width - this.getTextWidth() - 25);
             </handler>
        </statictext>
     </class>
@@ -85,7 +85,7 @@
                     <button>Get Value
                         <handler name="onclick">
                             var val = a1.getValue();
-                            a1val.setText(typeof(val) + '\n' + val);
+                            a1val.setAttribute('text', typeof(val) + '\n' + val);
                         </handler>
                     </button>
                     <button>Clear
@@ -131,7 +131,7 @@
                     <button>Get Value
                         <handler name="onclick">
                             var val = b1.getValue();
-                            b1val.setText(typeof(val) + '\n' + val);
+                            b1val.setAttribute('text', typeof(val) + '\n' + val);
                         </handler>
                     </button>
                     <button>Clear

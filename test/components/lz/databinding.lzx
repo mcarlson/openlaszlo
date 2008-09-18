@@ -34,7 +34,7 @@
     <class name="viewer" defaultplacement="'content'">
         <attribute name="text" value="dataset name" type="html" />
         <method name="setTitle" args="text">
-            this.a.b.c.title.setText(text);
+            this.a.b.c.title.setAttribute('text', text);
         </method>
         <view name="a" bgcolor="0x979797" width="200" height="100">
             <view name="b" bgcolor="0xC0C0C0" x="2" y="2"
@@ -44,7 +44,7 @@
                    <text x="4" y="2" name="title" text="${classroot.text}" 
                          resize="true" fgcolor="0xFFFFFF" >
                         <handler name="ontext">
-                            parent.setWidth(this.getTextwidth() + 10)
+                            parent.setAttribute('width', this.getTextwidth() + 10)
                         </handler>
                    </text>
                 </view>
@@ -57,7 +57,7 @@
         <attribute name="text" value="test name" type="html" />
         <view bgcolor="0x979797" width="${this.title.getTextWidth() + 10}" height="20" >
            <text x="4" y="2" name="title" text="${classroot.text}" resize="true" fgcolor="0xFFFFFF" >
-                <handler name="ontext">parent.setWidth(this.getTextwidth() + 10)</handler>
+                <handler name="ontext">parent.setAttribute('width', this.getTextwidth() + 10)</handler>
            </text>
         </view>
         <view bgcolor="0x979797" width="100%"  options="releaseToLayout" height="10" >
@@ -170,7 +170,7 @@
                                 for (var i=1; i < arr.length; i++) {
                                     str += ',' + arr[i];
                                 }
-                                parent.parent.status.setText(str);
+                                parent.parent.status.setAttribute('text', str);
                             }                                   
                         }
                     ]]>
@@ -189,7 +189,7 @@
                               value='$path{"value/text()"}' >
                     <handler name="onselected" args="isSelected">
                         if (isSelected) {
-                            parent.parent.status.setText('value: ' + parent.value);
+                            parent.parent.status.setAttribute('text', 'value: ' + parent.value);
                         }
                     </handler>
                 </textlistitem>

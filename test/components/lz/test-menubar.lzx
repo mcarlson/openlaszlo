@@ -48,7 +48,7 @@
         </menubar>
     </window>
 
-    <menubar name="mbar" width="300" x="10" y="20" onclick="this.setX(300)">
+    <menubar name="mbar" width="300" x="10" y="20" onclick="this.setAttribute('x', 300)">
          <menu name="file" width="200"  >File
             <menuitem text="New..." command="cmd_new" />
             <menuseparator/>
@@ -89,7 +89,7 @@
    </menubar> 
    
 
-   <menubar name="mbarbottom" width="300" x="10" y="400" onclick="this.setX(300)">
+   <menubar name="mbarbottom" width="300" x="10" y="400" onclick="this.setAttribute('x', 300)">
          <menu name="file" id="mfile" width="200"  >File
             <menuitem text="New..." command="cmd_new" />
             <menuseparator/>

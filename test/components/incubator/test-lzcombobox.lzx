@@ -203,7 +203,7 @@
                         // Don't understand why I have to do this when value is data
                         // bound using datapath. Another way around this is to set 
                         // datacontrolsvisibility in datapath node for combobox. -pk
-                        if (! this.visible) this.setVisible(true);
+                        if (! this.visible) this.setAttribute('visible', true);
                     </handler>
 
     <!--
@@ -239,10 +239,10 @@
                 <view datapath="echoer:/response[1]" layout="axis: y">
                     <view datapath="formcomponent">
                         <text datapath="@name" resize="true">
-                            <method name="setText" args="n">
+                            <setter name="text" args="n">
                                 var val = this.datapath.xpathQuery('text()');
-                                super.setText(n + ': ' + val);
-                            </method>
+                                super.setAttribute('text', n + ': ' + val);
+                            </setter>
                         </text>
                     </view>
                 </view>

@@ -21,7 +21,7 @@ var textStyleSuite = new LzTestSuite("Text Style Test Suite");
 
 
 textStyleSuite.testJustText = function () {
-    t1.setText("project runway");
+    t1.setAttribute('text', "project runway");
     LzTestManager.assertEquals( "project runway", t1.getText());
 }
 
@@ -42,11 +42,11 @@ textStyleSuite.testRenderingHints = function () {
     if (t2.sprite.capabilities.advancedfonts) {
         LzTestManager.assertEquals( 0, t3.getSharpness() ); // should be 0 by default
         LzTestManager.assertEquals( 0, t3.getThickness() ); // should be 0 by default
-        t4.setSharpness(377);
+        t4.setAttribute('sharpness', 377);
         LzTestManager.assertEquals( 377, t4.getSharpness() );
-        t4.setThickness(112);
+        t4.setAttribute('thickness', 112);
         LzTestManager.assertEquals( 112, t4.getThickness() );
-        t4.setSharpness(-212);
+        t4.setAttribute('sharpness', -212);
         LzTestManager.assertEquals( -212, t4.getSharpness() );
     
         LzTestManager.assertEquals( 27, t6.getSharpness() );
@@ -63,23 +63,23 @@ textStyleSuite.testRenderingDefaults = function () {
     if (t2.sprite.capabilities.advancedfonts) {
         LzTestManager.assertEquals("advanced", t4.getAntiAliasType()); // should be "advanced" by default
         LzTestManager.assertEquals("advanced", t5.getAntiAliasType()); // should be "advanced" by default
-        t5.setAntiAliasType("normal");
+        t5.setAttribute('aliasType', "normal");
         LzTestManager.assertEquals("normal", t5.getAntiAliasType()); 
-        t5.setAntiAliasType("weirdo"); // should have no effect, not a legal value
+        t5.setAttribute('aliasType', "weirdo"); // should have no effect, not a legal value
         LzTestManager.assertEquals("normal", t5.getAntiAliasType());     
     }
 }
 
 textStyleSuite.testHintsLimits = function () {
     if (t2.sprite.capabilities.advancedfonts) {
-        t4.setSharpness(-212);
-        t4.setSharpness(515); // should be out of range, shouldn't change value
+        t4.setAttribute('sharpness', -212);
+        t4.setAttribute('sharpness', 515); // should be out of range, shouldn't change value
         LzTestManager.assertEquals( -212, t4.getSharpness() );
-        t4.setSharpness(-2378); // should be out of range, shouldn't change value
+        t4.setAttribute('sharpness', -2378); // should be out of range, shouldn't change value
         LzTestManager.assertEquals( -212, t4.getSharpness() );
-        t4.setThickness(315); // should be out of range, shouldn't change value
+        t4.setAttribute('thickness', 315); // should be out of range, shouldn't change value
         LzTestManager.assertEquals( 112, t4.getThickness() );
-        t4.setThickness(-2378); // should be out of range, shouldn't change value
+        t4.setAttribute('thickness', -2378); // should be out of range, shouldn't change value
         LzTestManager.assertEquals( 112, t4.getThickness() );
     }
 }
@@ -100,7 +100,7 @@ textStyleSuite.addTest(textStyleSuite.testRenderingDefaults);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

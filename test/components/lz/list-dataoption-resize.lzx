@@ -109,8 +109,8 @@
     <inittimer/>
     <class name="resizelistitem" extends="textlistitem">
         <handler name="onselected">
-            if (this.selected) this.setHeight(40);
-            else this.setHeight(20);
+            if (this.selected) this.setAttribute('height', 40);
+            else this.setAttribute('height', 20);
         </handler>
     </class>
     <view x="20" y="30" layout="axis:x;spacing:20">
@@ -133,7 +133,7 @@
                     <button>Get Value
                         <handler name="onclick">
                             var val = d2.getValue();
-                            d2val.setText(typeof(val) + '\n' + val);
+                            d2val.setAttribute('text', typeof(val) + '\n' + val);
                         </handler>
                     </button>
                     <button>Clear

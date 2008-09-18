@@ -1,6 +1,6 @@
 <canvas height="600" width="600" bgcolor="silver" debug="true" oninit="debug.sety(240);
-    debug.setX(260);
-    debug.setHeight(200)">
+    debug.setAttribute('x', 260);
+    debug.setAttribute('height', 200)">
 
 <resource name="cherry" src="../testmedia/cherry.png"/>
 
@@ -73,6 +73,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

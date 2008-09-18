@@ -38,7 +38,7 @@
         <attribute name="text" value="test name" type="html" />
         <view bgcolor="0x979797" width="${this.title.getTextWidth() + 10}" height="20" >
            <text x="4" y="2" name="title" text="${classroot.text}" resize="true" fgcolor="0xFFFFFF" >
-                <handler name="ontext">parent.setWidth(this.getTextwidth() + 10)</handler>
+                <handler name="ontext">parent.setAttribute('width', this.getTextwidth() + 10)</handler>
            </text>
         </view>
         <view bgcolor="0x979797" width="100%"  options="releaseToLayout" height="10" >
@@ -113,7 +113,7 @@
                                         </view>
                                 </view>
                                 <view>
-                                        <button onclick="this.parent.vle.setText(cbox1.getValue())" > get value </button>
+                                        <button onclick="this.parent.vle.setAttribute('text', cbox1.getValue())" > get value </button>
                                         <edittext x="150" width="100" name="vle" />
                            </view>
                            <view>
@@ -166,7 +166,7 @@
                         <view x="150" y="5" >
                                 <button y="15" >set datapath to http data
                                         <handler name="onclick" >
-                                                cbox3.lineitem.setDatapath('itemsdata:/ds/item');
+                                                cbox3.lineitem.setAttribute('datapath', 'itemsdata:/ds/item');
                                         </handler>
                                 </button>
                                 <simplelayout axis="y" spacing="5" />

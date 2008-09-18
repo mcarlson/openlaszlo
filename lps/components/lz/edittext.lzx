@@ -23,7 +23,7 @@
     <class name="edittext" extends="baseformitem"
            focusable="false">
         <!--- The text that appears in the component. -->
-        <attribute name="text" type="text" setter="setText(text)"/>
+        <attribute name="text" type="text"/>
 
         <!--- Set to true for multiple lines, default: false.
               @keywords final -->
@@ -76,7 +76,7 @@
             }
             super.init();
             if ( this._initialtext != null ){
-                this.setText( this._initialtext );
+                this.setAttribute('text', this._initialtext );
             }
 
             field.setAttribute('maxlength', this.maxlength);
@@ -85,8 +85,15 @@
             ]]>
         </method>
 
-        <!--- @keywords private -->
+        <!--- @deprecated Use setAttribute('text', ...) instead.
+              @keywords private -->
         <method name="setText" args="t">
+            Debug.warn("edittext.setText is deprecated. Use setAttribute instead");
+            this.setAttribute('text', t);
+        </method>
+
+        <!--- @keywords private -->
+        <setter name="text" args="t">
             this.text = t;
             if (this._initcomplete) {
                 this.setValue(t, true);
@@ -95,11 +102,11 @@
             } else {
                 this._initialtext = t;
             }
-        </method>
+        </setter>
 
         <!--- Clears the text field. -->
         <method name="clearText" >
-            this.setText("");
+            this.setAttribute('text', "");
         </method>
 
         <!-- Sets the maxmimum number of characters which can be entered. -->
@@ -210,7 +217,7 @@
         <!-- Updates the text property of the component to the text that is
              entered in its input field. -->
         <method name="updateText">
-            this.setText( this.field.getText() );
+            this.setAttribute('text', this.field.getText() );
         </method>
 
         <!--- Returns string displayed in this component, like getText().

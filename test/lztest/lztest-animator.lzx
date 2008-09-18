@@ -170,9 +170,9 @@ suite.test2 = function() {
 
   // to
   LzTestManager.assertEquals (100, Number(a1.getAttribute ('origto')), "from (1) failure");
-  a1.setTo(150);
+  a1.setAttribute('to', 150);
   LzTestManager.assertEquals (150, Number(a1.getAttribute ('origto')), "from (1) failure");
-  a1.setTo(100);
+  a1.setAttribute('to', 100);
 
 
   // Test motion. The object starts in default conditions
@@ -224,7 +224,7 @@ suite.test2 = function() {
 //         Any errors will be reported after the test ends
 suite.test3 = function() {
   a1.from = 200;
-  a1.setTo(400);
+  a1.setAttribute('to', 400);
   a1.doStart();
 }
 

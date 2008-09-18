@@ -229,12 +229,12 @@ suite.test1 = function() {
 
 
   // Direct calls
-  view1.setX (20);
-  view1.setY (40);
-  view1.setWidth (70);
-  view1.setHeight (50);
-  view1.setBGColor (0x00ff00);
-  view1.setColor (0x0000ff);
+  view1.setAttribute('x', 20);
+  view1.setAttribute('y', 40);
+  view1.setAttribute('width', 70);
+  view1.setAttribute('height', 50);
+  view1.setAttribute('bgcolor', 0x00ff00);
+  view1.setAttribute('fgcolor', 0x0000ff);
 
 
   // This will report an error until lps 3.3.1 is merged to legals
@@ -257,17 +257,17 @@ suite.test2 = function() {
   LzTestManager.assertEquals (1,  view2.getAttribute('totalframes'), 'view2.totalframes failure');
 
   // Turn off the v1
-  view2.v1.setVisible (false);
+  view2.v1.setAttribute('visible', false);
 
   loctest("view2 (2)", view2, [75,0,100,120]);
   loctest("view2.v2 (2)", view2.v2, [90,100,10,20]);
 
   // Now do v2 (all that is left is the embedded image)
-  view2.v2.setVisible (false);
+  view2.v2.setAttribute('visible', false);
   loctest("view2 (3)", view2, [75,0,1,1]);
 
   // Turn on v1
-  view2.v1.setVisible (true);
+  view2.v1.setAttribute('visible', true);
   loctest("view2 (4)", view2, [75,0,10,30]);
   loctest("view2.v1 (2)", view2.v1, [0,0,10,30]);
 }
@@ -360,13 +360,13 @@ suite.test7 = function() {
   LzTestManager.assertEquals (view7.height+1, view7.rotation, "view7.rotation failure");  
 
   // Alter the subview width
-  view7.v1.setWidth (40);
+  view7.v1.setAttribute('width', 40);
   LzTestManager.assertEquals (view7.v1.x + view7.v1.width, view7.width, "view7.width failure (2)");
   LzTestManager.assertEquals (view7.width+1, view7.height, "view7.height failure (2)");
   LzTestManager.assertEquals (view7.height+1, view7.rotation, "view7.rotation failure (2)");
 
   // Alter the view width
-  view7.setWidth (42);
+  view7.setAttribute('width', 42);
   LzTestManager.assertEquals (42, view7.width, "view7.width failure (3)");
   LzTestManager.assertEquals (view7.width+1, view7.height, "view7.height failure (3)");
   LzTestManager.assertEquals (view7.height+1, view7.rotation, "view7.rotation failure (3)");
@@ -396,22 +396,22 @@ suite.test8 = function() {
 suite.test9 = function() {
   loctest ('view9', view9.v1, [0,0,10,15]);
 
-  view9.v1.setAlign ('center');
+  view9.v1.setAttribute('align', 'center');
   loctest ('view9 (center)', view9.v1, [5,0,10,15]);
 
-  view9.v1.setAlign ('right');
+  view9.v1.setAttribute('align', 'right');
   loctest ('view9 (right)', view9.v1, [10,0,10,15]);
 
-  view9.v1.setAlign ('left');
+  view9.v1.setAttribute('align', 'left');
   loctest ('view9 (left)', view9.v1, [0,0,10,15]);
 
-  view9.v1.setValign ('middle');
+  view9.v1.setAttribute('valign', 'middle');
   loctest ('view9 (middle)', view9.v1, [0,7.5,10,15]);
 
-  view9.v1.setValign ('bottom');
+  view9.v1.setAttribute('valign', 'bottom');
   loctest ('view9 (bottom)', view9.v1, [0,15,10,15]);
 
-  view9.v1.setValign ('top');
+  view9.v1.setAttribute('valign', 'top');
   loctest ('view9 (top)', view9.v1, [0,0,10,15]);
 }
 
@@ -440,7 +440,7 @@ suite.test11 = function() {
   loctest ('view11.v1', view11.v1, [0,0,10,20]);
   loctest ('view11.v2', view11.v2, [90,80,10,20]);
 
-  view11.v2.setVisible (false);
+  view11.v2.setAttribute('visible', false);
 
   LzTestManager.assertEquals (10, view11.width, "view11.width failure (2)");
   LzTestManager.assertEquals (20, view11.height, "view11.height failure (2)");

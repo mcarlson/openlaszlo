@@ -112,7 +112,7 @@
             </animatorgroup>
             <method name="setupDelegate">
                 this.repeatevent = new LzEvent(moveright, "myrepeatEvent")
-                moveright.setAttribute("onrepeat", repeatevent)
+                moveright.setAttribute("onrepeat", this.repeatevent)
                 this.del = new LzDelegate(parent, "repeatEventHandler", moveright, "myrepeatEvent")
             </method>
         </view>
@@ -142,7 +142,7 @@
         <text name="sizeme" resize="true" bgcolor="yellow">Short text</text>
         <method name="testResize">
             var oldwidth = sizeme.width
-            sizeme.setText("Longer text than was there before")
+            sizeme.setAttribute('text', "Longer text than was there before")
             assertTrue(sizeme.width &gt; oldwidth)
         </method>
         <method name="addTests"> 
@@ -167,8 +167,8 @@
 
         <method name="testInitOrder">
             this.names = [ 'a' , 'b' , 'c' , 'd' , 'e' ]
-            for ( var i =0; i &lt; names.length; i++ ){
-                new lz.slowinit( this, { name : names[ i ] } );
+            for ( var i =0; i &lt; this.names.length; i++ ){
+                new lz.slowinit( this, { name : this.names[ i ] } );
             }
         </method>
         <method name="tearDown">
@@ -223,26 +223,26 @@
         </method>
 
         <method name="testFunMeth">
-            assertEquals(Math.PI, e().b());
+            assertEquals(Math.PI, this.e().b());
         </method>
 
         <method name="testArrMeth">
-            assertEquals(Math.PI, a[0]());
+            assertEquals(Math.PI, this.a[0]());
         </method>
 
         <method name="testFunFun">
-            assertSame(g, f(), "g == f()");
+            assertSame(g, this.f(), "g == f()");
             assertEquals(42, g(), "42 == g()");
-            var gee = f();
+            var gee = this.f();
             assertEquals(42, gee(), "42 == gee()");
-            var ans = f()();
+            var ans = this.f()();
             assertEquals(42, ans, "42 == ans");
-            assertEquals(42, f()(), "42 == f()()");
+            assertEquals(42, this.f()(), "42 == f()()");
         </method>
 
         <method name="testObjMeth">
             <![CDATA[
-                with (o) {
+                with (this.o) {
             assertSame(g, f(), "g == f()");
             assertEquals(24, g(), "24 == g()");
             var gee = f();
@@ -400,9 +400,9 @@
         <![CDATA[
             var d = new Date()
             this.tmstmp.push(d.getTime())
-            if (!(tmstmp.length % 2))
+            if (!(this.tmstmp.length % 2))
             {
-                var delay = tmstmp[1] - tmstmp[0]
+                var delay = this.tmstmp[1] - this.tmstmp[0]
                 assertTrue( delay < 32, "Expected delay less than 32 ms, got " + delay)
             }
         ]]>
@@ -752,6 +752,10 @@
     </dataset>
     
     <class name="bug_1664" extends="TestCase">
+        <attribute name="appliedData"/>
+        <attribute name="appliedTermData"/>
+        <attribute name="eventTermData"/>
+        <attribute name="eventData"/>
         <view datapath="bug1664:/node/text()">
             <method name="applyData" args="d">
                 parent.appliedTermData = d
@@ -801,7 +805,7 @@
                 <method name="testEmptyReturn">
                         if (!false) return
                         assertTrue(false)
-                        debug.write('you should not see this line')
+                        Debug.write('you should not see this line')
                 </method>
                 <method name="addTests"> 
                     this.addTest("testEmptyReturn");
@@ -812,7 +816,7 @@
         
                 <view name="foo" width="50" height="100" bgcolor="blue"/>
                 <method name="testZeroDuration">
-                        anim = foo.animate('rotation', 180, 0)
+                        var anim = foo.animate('rotation', 180, 0)
                         assertNull(anim, 'Animator with duration of 0 was created!')
                 </method>
                 <method name="addTests"> 
@@ -1036,12 +1040,12 @@
                 <inputtext name="inp_field" resize="true" height="15"/>
                 
                 <method name="testText">
-                        txt_field.setText(343926)
+                        txt_field.setAttribute('text', 343926)
                         assertNotNull(txt_field.getText())
                 </method>
 
                 <method name="testInputText">
-                        inp_field.setText(5671)
+                        inp_field.setAttribute('text', 5671)
                         assertNotNull(inp_field.getText())
                 </method>
                 <method name="addTests"> 

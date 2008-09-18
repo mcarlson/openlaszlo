@@ -53,7 +53,7 @@ text="$path{'text()'}" value="$path{'@value'}"/>
         <button x="65" y="80">Cancel
             <handler name="onclick">
                 lz.ModeManager.release( this.parent );
-                this.parent.setBGColor(null);
+                this.parent.setAttribute('bgcolor', null);
             </handler>
         </button>
 
@@ -61,7 +61,7 @@ text="$path{'text()'}" value="$path{'@value'}"/>
         <button name="Save" x="145" y="80">Make Modal
             <handler name="onclick">
                 lz.ModeManager.makeModal( this.parent );
-                this.parent.setBGColor(yellow);
+                this.parent.setAttribute('bgcolor', yellow);
             </handler>
         </button>
     </view>

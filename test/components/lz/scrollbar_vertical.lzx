@@ -1,6 +1,6 @@
 <canvas height="600" width="600" debug="true" oninit="debug.sety(170);
-    debug.setX(220);
-    debug.setHeight(140)">
+    debug.setAttribute('x', 220);
+    debug.setAttribute('height', 140)">
 
 <resource name="cherry" src="../testmedia/cherry.png"/>
 

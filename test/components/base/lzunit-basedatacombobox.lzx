@@ -17,16 +17,16 @@
               classroot.toggle()
           </handler>
           <handler name="onmouseout">
-              this.setBGColor(0xCCCCCC);
+              this.setAttribute('bgcolor', 0xCCCCCC);
           </handler>
           <handler name="onmouseup">
-              this.setBGColor(0xCCCCCC);
+              this.setAttribute('bgcolor', 0xCCCCCC);
           </handler>
           <handler name="onmouseover">
-              this.setBGColor(0xEEEEEE);
+              this.setAttribute('bgcolor', 0xEEEEEE);
           </handler>
           <handler name="onmousedown">
-              this.setBGColor(0xAAAAAA);
+              this.setAttribute('bgcolor', 0xAAAAAA);
           </handler>
       </view>
       <text name="_text" width="${ parent.width - 19 }" x="7" />

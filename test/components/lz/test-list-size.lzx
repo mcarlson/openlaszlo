@@ -46,8 +46,8 @@
     <inittimer/>
     <class name="resizelistitem" extends="textlistitem">
         <handler name="onselected">
-            if (this.selected) this.setHeight(40);
-            else this.setHeight(20);
+            if (this.selected) this.setAttribute('height', 40);
+            else this.setAttribute('height', 20);
         </handler>
     </class>
     <view x="20" y="30" layout="axis:x;spacing:20">
@@ -81,11 +81,11 @@
                     if (d1.height == 100) {
                         d1.setAttribute('shownitems', 4);
                         d1.setheight(null);
-                        desc.setText('height == null, shownitems == 4');
+                        desc.setAttribute('text', 'height == null, shownitems == 4');
                     } else {
                         d1.setheight(100);
                     d1.setAttribute('shownitems', -1);
-                        desc.setText('height == 100, shownitems == -1');
+                        desc.setAttribute('text', 'height == 100, shownitems == -1');
                     }
                 </handler>
             </button>

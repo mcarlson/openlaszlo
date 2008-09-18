@@ -33,7 +33,7 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
         <text resize="true" id="t1">A</text>
         <text fontsize="28" id="t2">B</text>
         <text fontsize="36" id="t3" >C</text>
-        <text multiline="true" width="100" id="t4" oninit="setText('oneline\ntwolines');"/>
+        <text multiline="true" width="100" id="t4" oninit="this.setAttribute('text', 'oneline\ntwolines');"/>
         <text text="Username:" id="t5"/>
         <view>
             <text multiline="true" id="t6">Oneline<br/>Two lines<br/>Three</text>
@@ -41,10 +41,10 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
         <text multiline="true" id="t7" width="350">The text that appears in the combobox may be different from the
             value represented by the list item.  In the examples below the value is
             displayed using a constraint tied to the value attribute of the combobox</text>
-        <text text="" resize="false" width="100" fgcolor="0x1b1191" fontsize="10" id="t8" oninit="this.setText('foo bar bar foo')"/>
-        <text text="" width="100" fgcolor="0x1b1191" fontsize="10" id="t9" oninit="this.setText('foo bar bar foo')"/>
-        <text text="" resize="true" width="100" fgcolor="0x1b1191" fontsize="10" id="t10" oninit="this.setText('foo bar bar foo')"/>
-        <text multiline="true" id="t11" width="350" oninit="this.setText('The text that appears in the combobox may be different from the
+        <text text="" resize="false" width="100" fgcolor="0x1b1191" fontsize="10" id="t8" oninit="this.setAttribute('text', 'foo bar bar foo')"/>
+        <text text="" width="100" fgcolor="0x1b1191" fontsize="10" id="t9" oninit="this.setAttribute('text', 'foo bar bar foo')"/>
+        <text text="" resize="true" width="100" fgcolor="0x1b1191" fontsize="10" id="t10" oninit="this.setAttribute('text', 'foo bar bar foo')"/>
+        <text multiline="true" id="t11" width="350" oninit="this.setAttribute('text', 'The text that appears in the combobox may be different from the
             value represented by the list item.  In the examples below the value is
             displayed using a constraint tied to the value attribute of the combobox')"/>
 
@@ -99,13 +99,13 @@ var textSizeSuite = new LzTestSuite("Text Size Test Suite");
 
 
 textSizeSuite.testJustText = function () {
-    t1.setText("Heebee Jeebee");
+    t1.setAttribute('text', "Heebee Jeebee");
     LzTestManager.assertEquals( "Heebee Jeebee", t1.getText());
-    it4.setText("DDD");
+    it4.setAttribute('text', "DDD");
     LzTestManager.assertEquals( "DDD", it4.getText());
-    it6.setText("DDD");
+    it6.setAttribute('text', "DDD");
     LzTestManager.assertEquals( "DDD", it6.getText());
-    it7.setText('The text that appears in the combobox may be different from the value represented by the list item.  In the examples below the value is displayed using a constraint tied to the value attribute of the combobox');
+    it7.setAttribute('text', 'The text that appears in the combobox may be different from the value represented by the list item.  In the examples below the value is displayed using a constraint tied to the value attribute of the combobox');
     LzTestManager.assertEquals( 'The text that appears in the combobox may be different from the value represented by the list item.  In the examples below the value is displayed using a constraint tied to the value attribute of the combobox', it7.getText());
 }
 

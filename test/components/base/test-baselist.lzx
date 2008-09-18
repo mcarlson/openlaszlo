@@ -46,7 +46,7 @@
             this._mousein = true;
             ishilited = this._mousein;
         }
-        this.setBGColor(this.selected ? green : (ishilited ? yellow : this.mycolor));
+        this.setAttribute('bgcolor', this.selected ? green : (ishilited ? yellow : this.mycolor));
     </method>
 </class>
 <text y="10" resize="true" width="${canvas.width}" multiline="true">
@@ -79,8 +79,8 @@
             </view>
         </baselist>
         <view layout="axis:y; spacing:10">
-            <button onclick="v.setY(Math.max(-v.height+mylist.height, v.y-20))">scroll up</button>
-            <button onclick="v.setY(Math.min(0, v.y+20))">scroll down</button>
+            <button onclick="v.setAttribute('y', Math.max(-v.height+mylist.height, v.y-20))">scroll up</button>
+            <button onclick="v.setAttribute('y', Math.min(0, v.y+20))">scroll down</button>
         </view>
     </view>
 
@@ -93,16 +93,16 @@
                 <myitem datapath="listdata3:/item">
                     <text datapath="text()"/>
                     <handler name="onselected">
-                        if (this.selected) this.setHeight(40);
-                        else this.setHeight(20);
+                        if (this.selected) this.setAttribute('height', 40);
+                        else this.setAttribute('height', 20);
                     </handler>
 
                 </myitem>
             </view>
         </baselist>
         <view layout="axis:y; spacing:10">
-            <button onclick="v2.setY(Math.max(-v2.height+mylist2.height, v2.y-20))">scroll up</button>
-            <button onclick="v2.setY(Math.min(0, v2.y+20))">scroll down</button>
+            <button onclick="v2.setAttribute('y', Math.max(-v2.height+mylist2.height, v2.y-20))">scroll up</button>
+            <button onclick="v2.setAttribute('y', Math.min(0, v2.y+20))">scroll down</button>
         </view>
     </view>
 </view>

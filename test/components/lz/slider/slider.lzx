@@ -118,7 +118,7 @@
             <attribute name="maxx" value="$once{parent.width}"/>
         </sliderknob>
         <method name="setvalue" args="v">
-            this.knob.setX((v - this.minlimit)/this.valueratio);
+            this.knob.setAttribute('x', (v - this.minlimit)/this.valueratio);
         </method>
     </class>
 

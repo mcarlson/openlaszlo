@@ -122,16 +122,16 @@ suite.test1 = function() {
   LzTestManager.assertEquals (10, text1.maxlength, "text1.maxlength failure");
 
   // Change the length of the string
-  text1.setText('12345678901234567890');
+  text1.setAttribute('text', '12345678901234567890');
   LzTestManager.assertEquals ("1234567890", text1.getText(), "LPP-2208: text1 maxlength not working");  
 
   // Now change the maxLength and try again
-  text1.setMaxLength (8);
+  text1.setAttribute('maxlength', 8);
   LzTestManager.assertEquals (8, text1.maxlength, "text1.maxlength failure");
   LzTestManager.assertEquals ("12345678", text1.getText(), "LPP-4775: text1 maxlength not working");  
 
   // Use invalid characters (not in the pattern)
-  text1.setText('1abc23def4');
+  text1.setAttribute('text', '1abc23def4');
   LzTestManager.assertEquals ("abcdef", text1.getText(), "LPP-2209: text1 pattern not working");  
 
 }
@@ -217,17 +217,17 @@ suite.test2 = function() {
 // test3:  Test methods
 suite.test3 = function() {
   // setResize()
-  text3.setText ("1");
+  text3.setAttribute('text', "1");
   var w = text3.getWidth();
   var h = text3.getHeight();
 
-  text3.setResize (false);
+  text3.setAttribute('resize', false);
   text3.addText ("2");
   LzTestManager.assertEquals (w, text3.getWidth(), "text3.getTextWidth() failure");
   LzTestManager.assertEquals (h, text3.getHeight(), "text3.getTextHeight() failure");
   LzTestManager.assertTrue (text3.getTextWidth() != text3.getWidth(), "text3.getTextWidth() != text3.getWidth()");
 
-  text3.setResize (true);
+  text3.setAttribute('resize', true);
   text3.addText ("3");
   LzTestManager.assertTrue (text3.getTextWidth() == text3.getWidth(), "text3.getTextWidth() == text3.getWidth()");
 
@@ -238,16 +238,16 @@ suite.test3 = function() {
   /* This doesn't pad the text if there's no text to pad, so we need to set the text and then
   find the size of the pre-padding. */
   var prew = 0;
-  text3.setText('*');
+  text3.setAttribute('text', '*');
   var t3w1 = text3.getTextWidth();
-  text3.setText('**');
+  text3.setAttribute('text', '**');
   var t3w2 = text3.getTextWidth() - t3w1;
-  text3.setText('');
+  text3.setAttribute('text', '');
   LzTestManager.assertEquals (text3.sprite.PAD_TEXTWIDTH, t3w1 - t3w2,  "text3.getTextWidth() failure (2)");  
   LzTestManager.assertEquals (0, text3.getTextHeight(),  "text3.getTextHeight() failure (2)");  
 
   // setText () (special characters)
-  text3.setText ("<>");  // Works ok but not displayed
+  text3.setAttribute('text', "<>");  // Works ok but not displayed
   LzTestManager.assertEquals ("<>", text3.getText(),  "text3.getText() failure (3)");    
   // escapeText ()
   LzTestManager.assertEquals ('', text3.escapeText(''),  "text3.escapeText() failure");  
@@ -259,13 +259,13 @@ suite.test3 = function() {
   LzTestManager.assertEquals ('&gt;', text3.escapeText('>'),  "text3.escapeText() > failure");  
   LzTestManager.assertEquals ('&gt;&lt;', text3.escapeText('><'),  "text3.escapeText() >< failure");  
 
-  text3.setText ("&\\\"<>");
+  text3.setAttribute('text', "&\\\"<>");
   LzTestManager.assertEquals ("&\\\"&lt;&gt;", text3.escapeText(),  "text3.escapeText() string failure");  
 }
 
 // test4:  Test selection methods
 suite.test4 = function() {
-  text4.setText (" 123 ");
+  text4.setAttribute('text', " 123 ");
   LzTestManager.assertEquals (' 123 ', text4.getText(),  "text4.getText() failure");  
 
   LzTestManager.assertEquals (-1, text4.getSelectionSize(),  "text4.getSelectionSize() failure");    
@@ -289,9 +289,9 @@ suite.test4 = function() {
   LzTestManager.assertEquals (0, text4.getSelectionPosition(),  "text4.getSelectionPosition() failure (5)");    
 
   if ($dhtml) {
-      text4ml.setText('\r\n01234\r\n\r\n567890123456789\r\n')
+      text4ml.setAttribute('text', '\r\n01234\r\n\r\n567890123456789\r\n')
   } else {
-      text4ml.setText('\n01234\n\n567890123456789\n')
+      text4ml.setAttribute('text', '\n01234\n\n567890123456789\n')
   }
   text4ml.setSelection(5, 14);
   LzTestManager.assertEquals (9, text4ml.getSelectionSize(),  "text4ml.getSelectionSize() failure (6)");    
@@ -304,10 +304,10 @@ suite.test4 = function() {
   LzTestManager.assertEquals (5, text4ml.getSelectionPosition(),  "text4ml.getSelectionPosition() failure (8)");    
 
 /*
-  text4.setText ("     ");  // Note: The user cannot select a string of spaces
+  text4.setAttribute('text', "     ");  // Note: The user cannot select a string of spaces
   text4.setSelection (0, 4);
-  text4.setSelectable(true);
-  text4.setText ("123");
+  text4.setAttribute('selectable', true);
+  text4.setAttribute('text', "123");
 */
 }
 
@@ -325,7 +325,7 @@ suite.test5 = function() {
   var lines = 0;
   var yspacing = 0;
   for (var i=0; i<txt.length; i++) {
-    view5.t2.setText (txt.substr(0, i+1));
+    view5.t2.setAttribute('text', txt.substr(0, i+1));
     var y = view5.t2.getTextHeight();
     if (yspacing == 0)
       yspacing = y;
@@ -349,25 +349,25 @@ suite.test5 = function() {
 // test6:  HTML Markup
 suite.test6 = function() {
   var s1 = '<a href="http://www.openlaszlo.org">Link</a>';
-  view6.t1.setText(s1);
-  view6.t2.setText(s1);
+  view6.t1.setAttribute('text', s1);
+  view6.t2.setAttribute('text', s1);
   LzTestManager.assertEquals (s1, view6.t1.getText(),  "view6.t1.getText() failure");    
   LzTestManager.assertEquals (s1, view6.t2.getText(),  "view6.t2.getText() failure");    
-  view6.t1.setText('openLaszlo');
+  view6.t1.setAttribute('text', 'openLaszlo');
   var w = view6.t1.getTextWidth();
   var h = view6.t1.getTextHeight();
 
   var s2 = 'open<b>Laszlo</b>';
-  view6.t1.setText(s2);
-  view6.t2.setText(s2);
+  view6.t1.setAttribute('text', s2);
+  view6.t2.setAttribute('text', s2);
   LzTestManager.assertEquals (s2, view6.t1.getText(),  "view6.t1.getText() failure (2)");    
   LzTestManager.assertEquals (s2, view6.t2.getText(),  "view6.t2.getText() failure (2)");    
   LzTestManager.assertTrue (view6.t1.getTextWidth()>w,  "view6.t1.getTextWidth() bold failure");     
   LzTestManager.assertTrue (view6.t2.getTextWidth()>w,  "view6.t2.getTextWidth() bold failure");     
 
   var s3 = 'open<i>Laszlo</i>';
-  view6.t1.setText(s3);
-  view6.t2.setText(s3);
+  view6.t1.setAttribute('text', s3);
+  view6.t2.setAttribute('text', s3);
   LzTestManager.assertEquals (s3, view6.t1.getText(),  "view6.t1.getText() failure (3)");    
   LzTestManager.assertEquals (s3, view6.t2.getText(),  "view6.t2.getText() failure (3)");    
 
@@ -375,8 +375,8 @@ suite.test6 = function() {
   LzTestManager.assertEquals (w, view6.t2.getTextWidth(),  "view6.t2.getTextWidth() italic failure");     
 
   var s4 = 'open<u>Laszlo</u>';
-  view6.t1.setText(s4);
-  view6.t2.setText(s4);
+  view6.t1.setAttribute('text', s4);
+  view6.t2.setAttribute('text', s4);
   LzTestManager.assertEquals (s4, view6.t1.getText(),  "view6.t1.getText() failure (4)");    
   LzTestManager.assertEquals (s4, view6.t2.getText(),  "view6.t2.getText() failure (4)");    
 
@@ -386,8 +386,8 @@ suite.test6 = function() {
   LzTestManager.assertEquals (h, view6.t2.getTextHeight(),  "LPP-4651: view6.t2.getTextHeight() underline failure");
 
   var s5 = 'open<p>Laszlo</p>';
-  view6.t1.setText(s5);
-  view6.t2.setText(s5);
+  view6.t1.setAttribute('text', s5);
+  view6.t2.setAttribute('text', s5);
   LzTestManager.assertEquals (s5, view6.t1.getText(),  "view6.t1.getText() failure (5)");    
   LzTestManager.assertEquals (s5, view6.t2.getText(),  "view6.t2.getText() failure (5)");    
 
@@ -398,8 +398,8 @@ suite.test6 = function() {
 
 
   var s6 = 'open<br/><br/>Laszlo';
-  view6.t1.setText(s6);
-  view6.t2.setText(s6);
+  view6.t1.setAttribute('text', s6);
+  view6.t2.setAttribute('text', s6);
   LzTestManager.assertEquals (s6, view6.t1.getText(),  "view6.t1.getText() failure (6)");    
   LzTestManager.assertEquals (s6, view6.t2.getText(),  "view6.t2.getText() failure (6)");    
 
@@ -409,8 +409,8 @@ suite.test6 = function() {
   LzTestManager.assertEquals (h*3, view6.t2.getTextHeight(),  "LPP-4651: view6.t2.getTextHeight() <br> failure");
 
   var s7 = 'open<img src="10x10.gif"/>Laszlo';
-  view6.t1.setText(s7);
-  view6.t2.setText(s7);
+  view6.t1.setAttribute('text', s7);
+  view6.t2.setAttribute('text', s7);
   LzTestManager.assertEquals (s7, view6.t1.getText(),  "view6.t1.getText() failure (7)");
   LzTestManager.assertEquals (s7, view6.t2.getText(),  "view6.t2.getText() failure (7)");
 
@@ -425,7 +425,7 @@ suite.test7 = function() {
   var w = text7.getTextWidth();
 
   var s1 = 'open<img alt="alt tag" src="na"/>Laszlo';
-  text7.setWidth(s1);
+  text7.setAttribute('width', s1);
   LzTestManager.assertEquals ("openLaszlo", text7.getText(), 'text7.getText() failure');
 
   LzTestManager.assertFalse (w == text7.getTextWidth(), 'LPP-2215: alt tag appears to be ignored');

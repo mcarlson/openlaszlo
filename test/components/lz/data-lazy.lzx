@@ -224,7 +224,7 @@
                     <button>Get Value
                         <handler name="onclick">
                             var val = d2.getValue();
-                            d2val.setText(typeof(val) + '\n' + val);
+                            d2val.setAttribute('text', typeof(val) + '\n' + val);
                         </handler>
                     </button>
                     <button>Clear

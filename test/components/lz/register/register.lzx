@@ -18,7 +18,7 @@
 
             if (code == 'fail') {
                 if (rt == 'login') {
-                    loginerror.setVisible(true);
+                    loginerror.setAttribute('visible', true);
                     loginerror.setText(message);
                 } else if (rt == 'register') {
 
@@ -33,17 +33,17 @@
                 return;
             } 
 
-            loginerror.setVisible(false);
+            loginerror.setAttribute('visible', false);
 
-            screen1.a.setTo(0);
+            screen1.a.setAttribute('to', 0);
             screen1.a.doStart();
 
             if (rt == 'login') {
-                screen2.a.setTo(1);
+                screen2.a.setAttribute('to', 1);
                 screen2.a.doStart();
             } else if (rt == 'register') {
 
-                regsuccess.a.setTo(1);                
+                regsuccess.a.setAttribute('to', 1);                
                 regsuccess.a.doStart();
 
                 tmessage.setText('Required fields will be in bold');
@@ -186,7 +186,7 @@
                         } else if (p1 != p2) {
                             tpassword.setAttribute('fgcolor', 0xff0000);
                             tpassword2.setAttribute('fgcolor', 0xff0000);
-                            perror.setVisible(true); 
+                            perror.setAttribute('visible', true); 
                             isOk = false;
                         }
 
@@ -225,7 +225,7 @@
 //                         tusernamemsg.setAttribute('fgcolor', 0x4d4d4d);
                          tpassword.setAttribute('fgcolor', 0x4d4d4d);
                          tpassword2.setAttribute('fgcolor', 0x4d4d4d);
-                         perror.setVisible(false);
+                         perror.setAttribute('visible', false);
                     </method>
                 </button>
                 <simplelayout axis="y" spacing="17"/>
@@ -306,18 +306,18 @@
 
             <text x="${Math.round((parent.width-this.width)/2)}" font="vera_super_bold" 
                   fgcolor="0x4d4d4d" datapath="@username" resize="true">
-                <method name="setText">
+                <setter name="text">
                     if (typeof(this.datapath.data) != 'undefined') {
-                        super.setText(this.datapath.data + "'s information");
+                        super.setAttribute('text', this.datapath.data + "'s information");
                     }
-                </method>
+                </setter>
             </text>
 
             <view x="20">
                 <simplelayout axis="y" spacing="5" />
 
                 <text datapath="name/text()" resize="true">
-                    <method name="setText">
+                    <setter name="text">
                         if (typeof(this.datapath.data) != 'undefined') {
                             var salutation = 
                                 this.datapath.xpathQuery("/authentication[1]/registration[1]/salutation[1]/text()");
@@ -325,9 +325,9 @@
                             else if (salutation == 'mrs') salutation = 'Mrs.';
                             else if (salutation == 'ms')  salutation = 'Ms.';
 
-                            super.setText(salutation + ' ' + this.datapath.data);
+                            super.setAttribute('text', salutation + ' ' + this.datapath.data);
                         }
-                    </method>
+                    </setter>
                 </text>
 
                 <text datapath="company[1]/text()" resize="true" />
@@ -335,13 +335,13 @@
                 <text datapath="website[1]/text()" resize="true" />
                 <text datapath="phone[1]/text()" resize="true" />
                 <text datapath="sendnews[1]/text()" resize="true">
-                    <method name="setText">
+                    <setter name="text">
                         if (typeof(this.datapath.data) != 'undefined') {
                             var yesOrNo =
                                 (this.datapath.data == 'true' ? 'yes' : 'no');
-                            super.setText("Receive Laszlo newsletter emails? " + yesOrNo);
+                            super.setAttribute('text', "Receive Laszlo newsletter emails? " + yesOrNo);
                         }
-                    </method>
+                    </setter>
                 </text>
             </view>
 
@@ -363,8 +363,8 @@
                     sendnews.setValue(false);
                     regbut.reset();
 
-                    screen2.a.setTo(0);
-                    screen1.a.setTo(1);
+                    screen2.a.setAttribute('to', 0);
+                    screen1.a.setAttribute('to', 1);
                     screen2.a.doStart();
                     screen1.a.doStart();
                     
@@ -391,9 +391,9 @@
 
             <button x="${Math.round((parent.width-this.width)/2)}">Continue
                 <handler name="onclick">
-                    regsuccess.a.setTo(0);
+                    regsuccess.a.setAttribute('to', 0);
                     regsuccess.a.doStart();
-                    screen2.a.setTo(1);
+                    screen2.a.setAttribute('to', 1);
                     screen2.a.doStart();
                 </handler>
             </button>

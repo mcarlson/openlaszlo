@@ -80,7 +80,7 @@ make it long and skinny.</alert>
 
 
 <view align="right" layout="spacing:20">
-<button  text="appear" onclick="closeme.setVisible(true)" />
+<button  text="appear" onclick="closeme.setAttribute('visible', true)" />
 <button text="new simple window" onclick="new window(canvas,{title:'new', name:'anon'})" />
 <button text="open modal dialog" onclick="md.open()" />
 <button text="modal dialog clip test" onclick="mdclip.open()" />
