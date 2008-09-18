@@ -75,7 +75,7 @@
         </method>
         
         <!-- @keywords private -->
-        <method name="_updateChildren">
+        <method name="_updateChildren" args="ignore=null" >
             <![CDATA[
             // TODO: use changepackage to do something smarter here
             var p = this._pointer.xpathQuery(this.xpath);
@@ -236,7 +236,7 @@
         </method>
         
         <!-- @keywords private -->
-        <method name="__adjustVisibleClones">
+        <method name="__adjustVisibleClones" args="ignore=null" >
             <![CDATA[
             var p = this.container;
             for (var l in p.layouts) {

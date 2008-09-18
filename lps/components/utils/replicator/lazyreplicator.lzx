@@ -49,7 +49,7 @@
         <attribute name="_lastNodesLength" value="0"/>
         
         <!-- @keywords private -->
-        <method name="__adjustVisibleClones">
+        <method name="__adjustVisibleClones" args="ignore=null" >
             <![CDATA[
             if ( ! this.nodes ) {
                 while ( this.clones.length ) this.poolClone( this.clones.pop() );
