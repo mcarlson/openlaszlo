@@ -120,10 +120,22 @@ class LzAS3DebugService extends LzDebugService {
    * @access private
    */
   override function functionName (fn, mustBeUnique:Boolean=false) {
-    if ((fn is Class) && fn['tagname']) {
-      // Handle tag classes
-      if ((! mustBeUnique) || (fn === lz[fn.tagname])) {
-        return '<' + fn.tagname + '>';
+    if (fn is Class) {
+      if (fn['tagname']) {
+        // Handle tag classes
+        if ((! mustBeUnique) || (fn === lz[fn.tagname])) {
+          return '<' + fn.tagname + '>';
+        }
+      }
+      // tip o' the pin to osteele.com
+      var fstring = fn['toString']();
+      var s = '[class '.length;
+      var e = fstring.indexOf(']');
+      if ((fstring.indexOf('[class ') == 0) && (e == fstring.length -1)) {
+        var n = fstring.substring(s, e);
+        if ((! mustBeUnique) || (fn === globalValue(n))) {
+          return n;
+        }
       }
     }
     return super.functionName(fn, mustBeUnique);

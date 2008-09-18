@@ -328,46 +328,6 @@ public dynamic class LzNode extends LzEventable {
    */
   function constructWithArgs(args:*) { }
 
-
-  // class initializer
-  if ($swf9) {
-
-  } else {
-    /**
-     * Link up the getter/setter/defaultattr inheritance
-     * @access private
-     * @param Object prototype: the class prototype
-     */
-    static function initialize (prototype) {
-
-      // Install in constructor map
-      // this in a class initializer, is the class
-      if (this.hasOwnProperty('tagname')) {
-        var tagname = this.tagname;
-        if (tagname) {
-          if (lz[tagname] !== this) {
-            if ($debug) {
-              if (tagname in lz) {
-                Debug.warn("Redefining tag %s from %w to %w",
-                           tagname, lz[tagname], this);
-              }
-              //           Debug.debug("lz[%s] = %s", tagname, this);
-            }
-            lz[tagname] = this;
-          }
-          if ($debug) {
-            // Use the package tag name as the typename
-            this._dbg_name = prototype._dbg_typename = 'lz.' + tagname;
-          }
-        }
-        //   } else {
-        //     if ($debug) {
-        //       Debug.debug("No tag for node class %w", this);
-        //     }
-      }
-    }
-  }
-
   /** This event is sent right before a node becomes active --
    * e.g. before a view displays, or before a layout affects its subviews.
    * @lzxtype event
