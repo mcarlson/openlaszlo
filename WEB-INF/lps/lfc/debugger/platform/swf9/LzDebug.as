@@ -86,12 +86,12 @@ class LzAS3DebugService extends LzDebugService {
   };
 
 
-  /**
-   * @access private
+   /**
+    * @access private
    * @devnote The only reason this is here is because the SWF eval
    * compiler does not (yet) wrap `with (Debug.environment)` around the
    * compiled expression, so we have to put the "previous value's" in
-   * _level0
+  * _level0
    */
   override function displayResult (result) {
     if (typeof(result) != 'undefined') {
@@ -113,6 +113,7 @@ class LzAS3DebugService extends LzDebugService {
     }
     this.freshPrompt();
   }
+
 
 
   /**

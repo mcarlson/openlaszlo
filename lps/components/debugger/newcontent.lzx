@@ -85,7 +85,7 @@
      <!-- User clicked in the track that the thumb slides in, we need to decide
                whether to page left (they clicked left of the thumb) or right (they clicked
                right of  the thumb) -->
-     <method name="clickInThumbTrackX" args="x"> 
+<method name="clickInThumbTrackX" args="x"> 
               if (x > (this.dragger.x + this.dragger.width)) {
                  parent.scrollx(-parent.parent.width); 
               } else {
@@ -94,12 +94,12 @@
            this.adjustDraggerXpos();
      </method>
 
-     <method name="scrollLeft" args="n">
+<method name="scrollLeft" args="n">
            parent.scrollx(n)
            this.adjustDraggerXpos();
      </method>
 
-     <method name="scrollRight" args="n">
+<method name="scrollRight" args="n">
            parent.scrollx(-n)
            this.adjustDraggerXpos();
      </method>
@@ -140,7 +140,7 @@
               }
           </handler>
 
-          <method name="handleThumbPosX" args="x" > 
+<method name="handleThumbPosX" args="x" > 
               var real_scroll_width = (parent.width - (parent.arrowbuttonwidth * 2))  - parent.thumbwidth + 2;
               // scroll the text window horizontally
               parent.setAttribute('autoscroll', false);
@@ -150,14 +150,14 @@
            </method> 
      </view>
 
-     <method name="adjustDraggerXpos">
+<method name="adjustDraggerXpos">
        // disable the constraint between ypos of dragger and text window for a moment
        this.setAttribute('autoscroll', false);
        this.dragger.setAttribute('x', this.computeDraggerXPos());
        this.setAttribute('autoscroll', true);
      </method>
 
-     <method name="computeDraggerXPos">
+<method name="computeDraggerXPos">
        // subtract out height of left and right buttons
        var bw = this.arrowbuttonwidth;
        var real_scroll_width = (this.width - (bw * 2 + this.thumbwidth)) + 2;
@@ -188,7 +188,7 @@
            when we set the text line offset (this.setLine()) -->
      <attribute name="autoscroll" type="expression" value="true" />
 
-     <method name="setWrapLines" args="val">
+<method name="setWrapLines" args="val">
         this.textpane.setMultiline(val);
      </method>
 
@@ -198,6 +198,15 @@
              width="${this.multiline ? parent.width - 12 : 4096}"
              height="${parent.height-11}" />
             
+     <!-- TODO [hqm 2008-09] sending of the ontextlink event for
+          hyperlinks currently only is implemented in swf9 -->
+     <handler name="ontextlink" args="val:String">
+       if (val.indexOf("objid=") == 0) {
+           var objid:String = val.substr(6);
+           $modules.lz.Debug.displayObj(Number(objid));
+       }
+     </handler>
+
      <view name="scrollbar" x="${parent.width-12}" height="${parent.height-11}" bgcolor="#666666"
               onmousedown="this.clickInThumbTrack(this.getMouse( 'y' ))" >
 
@@ -209,7 +218,7 @@
           <!-- User clicked in the track that the thumb slides in, we need to decide
                whether to page up (they clicked above the thumb) or down (they clicked
                below the thumb) -->
-          <method name="clickInThumbTrack" args="y"> 
+<method name="clickInThumbTrack" args="y"> 
               if (y > (this.dragger.y + this.dragger.height)) {
                  parent.pageDown(); 
               } else {
@@ -240,7 +249,7 @@
                    resource="scrollDragDimples_rsc" 
                    y="6" x="4" />
 
-           <method name="higlight_dragger" args="n">
+<method name="higlight_dragger" args="n">
               this.stretch.setAttribute('frame', n);
               this.top.setAttribute('frame', n);
               this.bottom.setAttribute('frame', n);
@@ -259,7 +268,7 @@
           </handler>
 
       <!-- force the content pane to scroll to position corresponding to thumb y pos in bar -->
-          <method name="handleThumbPos" args="y" > 
+<method name="handleThumbPos" args="y" > 
               <![CDATA[
                   // scroll the text window
                      var bh = parent.arrowbuttonheight;
@@ -287,23 +296,23 @@
     </setter> 
 
 
-     <method name="setText" args="str">
+<method name="setText" args="str">
         this.clear();
         this.addText(str);
      </method>
 
-    <method name="addText" args="str">
+<method name="addText" args="str">
        this.textpane.addText(str);
        this.updateDisplay();
      </method>
 
-     <method name="clear">
+<method name="clear">
       this.textpane.clearText();
       this.setLine(0);
       this.updateDisplay();
      </method>
 
-     <method name="updateDisplay">
+<method name="updateDisplay">
        // disable the constraint between ypos of dragger and text window for a moment
        this.setAttribute('autoscroll', false);
        this.scrollbar.dragger.setAttribute('y', this.computeDraggerYPos());
@@ -311,21 +320,21 @@
      </method>
 
 
-     <method name="setLine" args="n">
+<method name="setLine" args="n">
        this.textpane.setScroll(n);
      </method>
 
-     <method name="setLineNoScroll" args="n">
+<method name="setLineNoScroll" args="n">
        this.textpane.setScroll(n);
      </method>
 
-     <method name="computeVisibleRegion" >
+<method name="computeVisibleRegion" >
          // no-op
      </method>
 
      <!-- compute what the y pos of the thumb should be based on what text line offset we are
           displaying now -->
-     <method name="computeDraggerYPos">
+<method name="computeDraggerYPos">
        // subtract out height of up and down buttons
        var bh = this.scrollbar.arrowbuttonheight;
        var real_scroll_height = (this.scrollbar.height - (bh * 2 + this.scrollbar.thumbheight)) + 2;
@@ -337,42 +346,42 @@
        return bh -1  + ypos;
      </method>
 
-     <method name="pageUp" args="n">
+<method name="pageUp" args="n=null">
          var tpane = this.textpane;
          tpane.setScroll(tpane.getScroll() - (tpane.getBottomScroll()  - tpane.getScroll()));
          this.updateDisplay();
      </method>
-     <method name="pageDown" args="n">
+<method name="pageDown" args="n=null">
          var tpane = this.textpane;
          tpane.setScroll(tpane.getScroll() + (tpane.getBottomScroll()  - tpane.getScroll()));
          this.updateDisplay();
      </method>
 
-     <method name="incScroll" args="n">
+<method name="incScroll" args="n">
        this.textpane.setScroll(this.textpane.getScroll() + n);
        this.updateDisplay();
      </method>
 
      <!-- incrementally slide the text content area left or right -->
-     <method name="scrollx" args="nx">
+<method name="scrollx" args="nx">
        this.textpane.setAttribute('x', Math.min(0, Math.max(-(this.textpane.width), this.textpane.x + nx)));
      </method>
 
      <!-- set the x offset of the text output content area -->
-     <method name="setXScroll" args="x">
+<method name="setXScroll" args="x">
        this.textpane.setAttribute('x', Math.max (-(this.textpane.width), Math.min( 0, x)));
      </method>
 
-     <method name="scrollToEnd">
+<method name="scrollToEnd">
        this.setLine(textpane.getMaxScroll());
        this.updateDisplay();
      </method>
 
-     <method name="fontheight">
+<method name="fontheight">
         return this.textpane.font.height;
      </method>
 
-     <method name="setFontSize" args="size">
+<method name="setFontSize" args="size">
        textpane.setAttribute('fontsize', size);
      </method>
 

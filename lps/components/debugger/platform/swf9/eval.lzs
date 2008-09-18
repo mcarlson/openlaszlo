@@ -51,6 +51,20 @@ public class LzDebugEvalLoader {
       }
     }
 
+    public function addTextLinkCallback(lztext:LzText) {
+        var textfield:TextField = (lztext.sprite cast LzTextSprite).textfield;
+        textfield.addEventListener(TextEvent.LINK, textLinkCallback);
+    }
+
+    public function textLinkCallback (e:TextEvent) {
+        var obj = e.text;
+        if (obj.indexOf("objid=") == 0) {
+            var objid = obj.substr(6);
+            trace('textLinkCallback object id = ', objid);
+            Debug.displayObj(Number(objid));
+        }
+    }
+
 
 }
 

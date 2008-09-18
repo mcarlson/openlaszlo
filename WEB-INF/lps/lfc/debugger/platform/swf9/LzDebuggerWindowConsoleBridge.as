@@ -13,7 +13,6 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
     var window;
 
     function LzDebuggerWindowConsoleBridge (view) {
-      trace('LzDebuggerWindowConsoleBridge', view);
       this.window = view;
     }
 
@@ -25,7 +24,6 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @devnote Should probably be called addMessage
      */
     override function addText (msg) {
-      trace(' addText', msg);
       this.window.addText(msg);
     }
 
@@ -35,7 +33,6 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function clear () {
-      trace(' clear' );
       this.window.clearWindow()
     };
 
@@ -45,7 +42,6 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function echo (str, newLine:Boolean=true) {
-      trace(' echo', str);
       this.window.echo(str, newLine);
     }
 
@@ -55,7 +51,6 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function addHTMLText (msg) {
-      trace(' addHTMLText', msg);
       this.window.addHTMLText(msg);
     };
 
@@ -65,8 +60,7 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function makeObjectLink (rep:String, id, attrs=null):String {
-      trace(' makeObjectLink', rep);
-      this.window.makeObjectLink(rep,id,attrs);
+      return this.window.makeObjectLink(rep,id,attrs);
     }
 
     /**
@@ -75,7 +69,6 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
      * @access private
      */
     override function doEval (expr:String) {
-      trace(' doEval', expr);
       this.window.doEval(expr);
     }
 }

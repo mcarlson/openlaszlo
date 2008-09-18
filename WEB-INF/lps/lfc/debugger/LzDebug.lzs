@@ -991,7 +991,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
             last = key;
             val = obj[key];
             if (si ||
-                ((! this.internalProperty(key)) &&
+                ((! this.internalProperty(String(key))) &&
                  // Only show slots with internal type if showing
                  // internals
                  (! this.internalProperty(this.__typeof(val))))) {
@@ -1148,7 +1148,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Debug.internalPropertyPrefixes.
    * @access private
    */
-  function internalProperty (str) {
+  function internalProperty (str:String) {
     // Use the component value of this attribute
     var ipp = LzDebugService.internalPropertyPrefixes;
     for (var key = ipp.length - 1; key >= 0; key--) {
@@ -1358,7 +1358,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
     // Check for 'array-ness'
-    var ol = obj['length'];
+    var ol;
+    try {
+      ol = obj['length'];
+    } catch (e) {
+      return;
+    }
     var alen = ((typeof(ol) == 'number' || ol is Number) &&
                 (Math.floor(ol) === ol) &&
                 (ol >= 0)) ? ol : false;

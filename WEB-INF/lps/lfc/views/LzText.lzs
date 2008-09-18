@@ -253,6 +253,13 @@ static var attributes = new LzInheritedHash(LzView.attributes);
   * @lzxtype event
   */
 var ontext = LzDeclaredEvent;
+
+/** Sent when a clickable HTML link in the text field is clicked.
+ *  Event data is a string with the link value.
+ * @lzxtype event
+ */
+var ontextlink = LzDeclaredEvent;
+
 /** @lzxtype event 
   * @access private */
 var onmaxlength = LzDeclaredEvent;
@@ -1255,6 +1262,15 @@ function getSelectionSize ( ){
     return siz;
     */
 }
+
+public function makeTextLink(str, value) {
+    return this.sprite.makeTextLink(str,value);
+}
+
+public function enableClickableLinks( enabled:Boolean):void {
+    this.sprite.enableClickableLinks(enabled);
+}
+
 
 } // End of LzText
 

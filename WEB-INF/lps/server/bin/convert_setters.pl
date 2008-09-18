@@ -1,5 +1,4 @@
-#!/cygdrive/c/Perl/bin/perl
-# !/usr/bin/perl
+#!/usr/bin/perl
 # Copyright 2008 Laszlo Systems.  Use according to license terms.
 #
 # convert_setters.pl

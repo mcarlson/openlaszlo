@@ -894,3 +894,15 @@ LzTextSprite.prototype.getSelectionSize = function ( ){
     var siz = Selection.getEndIndex() - Selection.getBeginIndex();
     return siz;
 }
+
+
+LzTextSprite.prototype.enableClickableLinks = function ( enabled) {
+}
+
+LzTextSprite.prototype.textLinkHandler = function (e:TextEvent) {
+            this.owner.ontextlink.sendEvent(e.text);
+        }
+
+LzTextSprite.prototype.makeTextLink = function (str, value) {
+    return '<a href="actionscript:'+value+'">'+str+'</a>';
+}

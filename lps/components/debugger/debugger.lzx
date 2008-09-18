@@ -138,7 +138,7 @@
     <attribute name="isLoaded" value="false" />
 
     <!-- METHODS -->
-    <method name="construct" args="parent, args">
+<method name="construct" args="parent, args">
       super.construct(parent, args);
       this.commandhistory_ptr = this.commandhistory.length;
     </method>
@@ -162,23 +162,30 @@
         super.setAttribute ('y', Math.max( 0 , Math.min( y , canvas.height - 4) ) ); 
     </setter> 
 
-    <method name="initEvalView">
+<method name="initEvalView">
       <![CDATA[
        global._ = null;
        //TODO: This uses Flash-specific APIs
        this.evalloader = new LzDebugEvalLoader(this);
+
+       // To support clickable links in swf9, we need to add an as3 event listener
+       // on the output LzText's flash textfield object.
+       if ($swf9) {
+           this.evalloader.addTextLinkCallback(this.middle.content.textpane);
+       }
+
        this.loaded();
        var text = this.bottom.center.input;
        this.lineheight = text.getTextHeight()+4;
        this.setAttribute("smallInputAreaHeight", this.lineheight + 16);
-       this.inspectDel = new LzDelegate(this, "inspectObject");
+       this.inspectDel = new lz.Delegate(this, "inspectObject");
        this.inspectDel.register(lz.GlobalMouse, "onmousedown");
-       this.moveCaretDel = new LzDelegate(this, 'sendCaretToEOL');
+       this.moveCaretDel = new lz.Delegate(this, 'sendCaretToEOL');
        this.restoreDebuggerState()
      ]]>
     </method>
 
-    <method name="handleFocus">
+<method name="handleFocus">
       <![CDATA[
       this.bringToFront();
       if (this.bottom.center.input.height > this.smallInputAreaHeight) {
@@ -201,7 +208,7 @@
       ]]>
     </method>
 
-    <method name="handleBlur">
+<method name="handleBlur">
        <![CDATA[
        _dbg_cmd_eval.active = false;
        _dbg_cmd_hist_prev.active = false;
@@ -225,7 +232,7 @@
     <command id="_dbg_cmd_complete_paren" onselect="parent.doCommandCompletion('(')"  key="['(']" active="false"/>        
     ?>
     <!--- Substitute entity character escapes for HTML meta-characters  -->
-    <method name="escapeText" args="ts" >
+<method name="escapeText" args="ts" >
       <![CDATA[
           var i;
           if (typeof(ts) == "string") {
@@ -251,7 +258,7 @@
     </method>
 
     <!-- send the input text field to server for compile/eval -->
-    <method name="doEval">
+<method name="doEval">
       <![CDATA[
        var expr = this.bottom.center.input.getText();
        this.commandhistory[this.commandhistory.length] = expr;
@@ -276,30 +283,30 @@
        ]]>
     </method>
 
-    <method name="evalString" args="expr">
+<method name="evalString" args="expr">
       this.evalloader.doEval(expr, this.commandhistory.length);
     </method>
 
     <!--- Clear the output from the debug window -->
-    <method name="clearWindow">
+<method name="clearWindow">
       this.middle.content.clear();
     </method>
 
-    <method name="stuffInput" args="str">
+<method name="stuffInput" args="str">
         var infield = this.bottom.center.input;
         lz.Focus.setFocus(infield);
         infield.setAttribute('text', str);
         lz.Timer.addTimer(this.moveCaretDel, 1);
     </method>
 
-    <method name="sendCaretToEOL">
+<method name="sendCaretToEOL">
         var infield = this.bottom.center.input;
         lz.Focus.setFocus(infield);
         var content = infield.getText();
         infield.setSelection(content.length, content.length);
     </method>
 
-    <method name="doCommandHistory" args="offset">
+<method name="doCommandHistory" args="offset">
         <![CDATA[
         var ptr = this.commandhistory_ptr;
         var expr;
@@ -320,7 +327,7 @@
 
     <attribute name="lastpart" value="null" />
     <attribute name="lastobj" value="null" />
-    <method name="doCommandCompletion" args="char">
+<method name="doCommandCompletion" args="char">
       <![CDATA[
         var leader = '';
         var expr = this.bottom.center.input.getText();
@@ -477,11 +484,11 @@
      ]]>
     </method>
 
-    <method name="stuffObjectId" args="id">
+<method name="stuffObjectId" args="id">
         this.bottom.center.input.setAttribute('text', this.ObjectForID(id));
     </method>
 
-   <method name="inspectObject" args="obj">
+<method name="inspectObject" args="obj">
     if (lz.Keys.isKeyDown('capslock')) {
       // force and ID, so the object can be inspected
       var id = Debug.IDForObject(obj, true);
@@ -489,13 +496,13 @@
     }
    </method>
 
-    <method name="setTitle" args="t" >
+<method name="setTitle" args="t" >
         this.top.title.setAttribute('text', t )
     </method>
 
 
     <!--- Toggle the debug window from minimized to maximized size -->
-    <method name="toggleMinimizeWindow">
+<method name="toggleMinimizeWindow">
         var _dbgw = this.width;
         var _dbgh = this.height;
         var _dbgx = this.x;
@@ -524,14 +531,14 @@
     <handler name="onapplied" reference="drag" method="saveDebuggerState"/>
     <handler name="onapplied" reference="resize" method="saveDebuggerState"/>
             
-    <method name="saveDebuggerState" args="d">
+<method name="saveDebuggerState" args="d">
         this.persist.data['_pdbgwidth'] = this.width;
         this.persist.data['_pdbgheight'] = this.height;
         this.persist.data['_pdbgx'] = this.x;
         this.persist.data['_pdbgy'] = this.y;
     </method>
 
-    <method name="restoreDebuggerState" >
+<method name="restoreDebuggerState" >
        // restore persisted data
        this.persist = LzBrowserKernel.getPersistedObject('__lzdebugger');
        for (var i in this.persist.data) {
@@ -598,7 +605,7 @@
 
        <view name="logo" resource="title_rsc" x="9" y="8"/>
  
-       <method name="appname">
+<method name="appname">
          <![CDATA[
          var url = lz.Browser.getBaseURL();
          var i = url.lastIndexOf("/");
@@ -632,10 +639,10 @@
    </view> 
    <!-- END MIDDLE -->
 
-   <method name="showprefs">
+<method name="showprefs">
    </method>
 
-   <method name="adjustMultiline">
+<method name="adjustMultiline">
      <![CDATA[
          // when the user drags the splitter to enlarge the input area height,
          // we check if the height is more than a single line, and if so
@@ -674,7 +681,7 @@
         <!-- START BOTTOM-LEFT -->
          <view name="left" height="${parent.height}" >
 
-           <method name="doSingleLine">
+<method name="doSingleLine">
              this.upButton.setAttribute('visible', true); 
              this.downButton.setAttribute('visible', false)
              this.parent.center.input.setMultiline(false);
@@ -682,7 +689,7 @@
              this.parent.animate("height",classroot.smallInputAreaHeight,333,false);
            </method>
 
-           <method name="doMultiLine">
+<method name="doMultiLine">
              this.downButton.setAttribute('visible', true); 
              this.upButton.setAttribute('visible', false)
              // Check if we have room to grow the input area
@@ -781,7 +788,7 @@
 
 
 
-    <method name="clear" >
+<method name="clear" >
       //------------------------------------------------------------------------------
       // Clears the console
       //------------------------------------------------------------------------------
@@ -792,11 +799,11 @@
   <!--- Scroll the debugger output window to display the specified  output history line number at the top of the window
          @param Number l: line number
     -->
-    <method name="setLine" args="l" >
+<method name="setLine" args="l" >
         this.middle.content.setLine(l);
     </method>
 
-  <method name="addText"  args="msg">
+<method name="addText"  args="msg">
      <![CDATA[
        var str;
        try {
@@ -806,13 +813,14 @@
              str = String(msg)['toHTML']();
          }
        } catch (e){
-         str  = '' + msg;
+           trace('error in addText, e=', e, msg);
+           str  = e + ': ' + msg;
        }
        this.addHTMLText(str);
      ]]>
   </method>
 
-  <method name="echo" args="str, newLine:Boolean=true">
+<method name="echo" args="str, newLine:Boolean=true">
      <![CDATA[
       this.addHTMLText('<font color="#00CC00">' + str + '</font>' + (newLine?'\n':''));
      ]]>
@@ -822,7 +830,8 @@
     Only called internally, when you know you already have valid HTML
     @keywords private
     -->
-  <method name="addHTMLText" args="str">
+
+<method name="addHTMLText" args="str">
      <![CDATA[
        // Funky thing that Henry discovered you have to do to make newlines
        // why wouldn't <br/> work?
@@ -833,23 +842,28 @@
      ]]>
   </method>
 
-  <method name="makeObjectLink" args="rep:String, id, attrs=null">
+<method name="makeObjectLink" args="rep:String, id, attrs=null">
      <![CDATA[
       var color = '#0000ff';
       if (attrs && attrs.color) { color = attrs.color };
       if (id != null) {
-        return '<a href="asfunction:_root.$modules.lz.Debug.displayObj,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
+          // TODO hqm 2008-09-15 Make this use new lz.text.makeTextLink API when it is working
+          if ($swf9) {
+              return '<a href="event:objid=' + id + '"><font color="' + color + '">' + rep +"</font></a>";
+          } else {
+              return '<a href="asfunction:_root.$modules.lz.Debug.displayObj,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
+          }
       }
       return rep;
      ]]>
   </method>
 
   <!--- Scroll the debugger output window to display the last line of text  -->
-  <method name="scrollToEnd">
+<method name="scrollToEnd">
      this.middle.content.scrollToEnd();
   </method>
 
-  <method name="loaded" >
+<method name="loaded" >
      <![CDATA[
         //------------------------------------------------------------------------------
         // This is called when the application is loaded.
@@ -859,10 +873,8 @@
 
         if ($swf9) {
             var bridge:LzDebugConsole = new LzDebuggerWindowConsoleBridge(this);
-            trace('calling attachDebugConsole', bridge);
             Debug.attachDebugConsole(bridge);
-            trace('Debug =', Debug);
-        } else {
+         } else {
            Debug.attachDebugConsole(this);
         }
         this.setAttribute('visible', true );
@@ -881,7 +893,7 @@
     this.bringToFront();
   </handler>
 
-  <method name="setWrapLines" args="val">
+<method name="setWrapLines" args="val">
     this.middle.content.setWrapLines(val);
   </method>
 
