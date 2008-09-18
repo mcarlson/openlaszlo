@@ -585,12 +585,17 @@ public class Compiler {
             // compile as sequence of statements.  If that fails too,
             // report the parse error.
             try {
-                prog += "(function () { with(global) { Debug.displayResult("+script +")} })();";
+                prog += "(function () { with(global) { try {\n" 
+                    + "Debug.displayResult("+script +");\n"
+                    + "} catch (e) { "
+                    + " Debug.displayResult(e); \n"
+                    + "}\n"
+                    + "} })();";
                 objcode = ScriptCompiler.compileToByteArray(prog, props);
             } catch (org.openlaszlo.sc.parser.ParseException e) {
                 try {
                     prog += "var mycode = (function () {\n"+
-                        "with (global) { " + script  +" }\n});\n"+"mycode();\n";
+                        "with (global) { try {" + script  +"} catch(e) {Debug.diplayResult(e);} }\n});\n"+"mycode();\n";
                     objcode = ScriptCompiler.compileToByteArray(prog, props);
                 } catch (Exception e2) {
                     mLogger.info("error compiling/writing script: " + e2.getMessage());

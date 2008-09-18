@@ -96,14 +96,14 @@ class LzAS3DebugService extends LzDebugService {
   override function displayResult (result) {
     if (typeof(result) != 'undefined') {
       // Advance saved results if you have a new one
-      if (result !== _) {
-        if (typeof(__) != 'undefined') {
-          ___ = __;
+      if (result !== global._) {
+        if (typeof(global.__) != 'undefined') {
+          global.___ = global.__;
         }
-        if (typeof(_) != 'undefined') {
-          __ = _;
+        if (typeof(global._) != 'undefined') {
+          global.__ = global._;
         }
-        _ = result;
+        global._ = result;
       }
     }
     this.freshLine();
