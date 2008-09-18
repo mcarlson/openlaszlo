@@ -56,8 +56,13 @@ Options:
                 setattribute  - setVisible -> setAttribute('visible', ...) etc.
                 widthheight   - getWidth(),getHeight() to width,height
                 tagname       - constructor.classname to constructor.tagname
-                states        - apply=" -> applied=", state.apply()/remove() -> setAttribute('applied', true|false)
+                states        - apply=" -> applied="
+                applycall     - state.apply()/remove() -> setAttribute('applied', true|false)
                 proxymethods  - Lz.setCanvasAttribute()/callMethod() -> lz.embed.* 
+
+   -a applylist
+           applylist is a comma separated list of transforms to apply,
+           chosen from the same list above
 
    -v
            show version number and exit
@@ -79,14 +84,16 @@ END
 ################
 
 ##
-# These are the transforms we'll do, these are turned off by the -x option.
+# These are the transforms in their default state,
+# these are turned off/on by the -x/-a options.
 ##
 %xform = {};
 $xform{method}=1;       # transform <method event=
 $xform{setattribute}=1; # transform calls like setVisible into setAttribute(...
 $xform{widthheight}=1;  # transform getWidth(),getHeight() to width,height
 $xform{tagname}=1;      # transform constructor.classname to constructor.tagname
-$xform{states}=1;       # transform apply=" -> applied=", state.apply()/remove() -> setAttribute('applied', true|false)
+$xform{states}=1;       # transform apply=" -> applied="
+$xform{applycall}=0;    # transform state.apply()/remove() -> setAttribute('applied', true|false)
 $xform{proxymethods}=1; # transform Lz.setCanvasAttribute()/callMethod() -> lz.embed.* 
 
 ##
@@ -323,11 +330,18 @@ sub emit_content {
 
     #### transform states
     #
-    # apply=" -> applied=", state.apply()/remove() -> setAttribute('applied', true|false)
+    # apply=" -> applied="
 
     if ($xform{states}) {
-        s/apply="/applied="/g;
-        # May cause problems with function.apply() but what can you do? 
+        s/\bapply="/applied="/g;
+    }
+
+    #### transform apply calls
+    # This is not done by default
+    # May cause problems with function.apply()
+    #
+    # state.apply()/remove() -> setAttribute('applied', true|false)
+    if ($xform{applycall}) {
         s/\.apply\(\w*?\)/.setAttribute('applied', true)/g;
         s/\.remove\(\w*?\)/.setAttribute('applied', false)/g;
     }
@@ -426,7 +440,7 @@ sub convert_file {
 ##
 my $file;
 my %options;
-$ok = getopts("d:tx:vg:", \%options);
+$ok = getopts("d:tx:a:vg:", \%options);
 if (!$ok) {
     print STDERR "$USAGE";
     exit(1);
@@ -443,6 +457,18 @@ foreach my $xval (@xvalues) {
     }
     print STDOUT "Turning off $xval\n";
     $xform{$xval} = 0;
+}
+
+my $aopt = $options{a} || '';
+my @avalues = split(',', $aopt);
+foreach my $aval (@avalues) {
+    if (!exists $xform{$aval}) {
+        print STDERR "$aval: unknown transform\n";
+        print STDERR "$USAGE";
+        exit(1);
+    }
+    print STDOUT "Turning on $aval\n";
+    $xform{$aval} = 1;
 }
 
 if ($options{v}) {
