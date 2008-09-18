@@ -30,7 +30,7 @@
             })(null, null);
           }
         </script><script type="text/javascript" src="<%= request.getContextPath() %>/lps/includes/embed-compressed.js"></script><script type="text/javascript">
-lz.embed.lfc('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js', '<%= request.getContextPath() %>');
+lz.embed.lfc('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js', '<%= request.getContextPath() %>/');
 </script><style type="text/css">
         	html, body
         	{
@@ -57,13 +57,13 @@ lz.embed.lfc('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js', '<%
 </form>
 </div> 
         <script type="text/javascript">
-              lz.embed.swf({url: 'history.lzx?lzt=swf', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf8', accessible: 'false'});
+              lz.embed.swf({url: 'history.lzx?lzt=swf&debug=true', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf8', accessible: 'false', history: true});
+        </script>
+        <script type="text/javascript">
+              lz.embed.swf({url: 'history.lzx?lzt=swf&lzr=swf9&debug=true', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf9', accessible: 'false', history: true});
             </script>
         <script type="text/javascript">
-              lz.embed.swf({url: 'history.lzx?lzt=swf&lzr=swf7', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzswf7', accessible: 'false'});
-            </script>
-        <script type="text/javascript">
-              lz.embed.dhtml({url: 'history.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzdhtml'});
+              lz.embed.dhtml({url: 'history.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '200', id: 'lzdhtml', history: true});
         </script>
         <noscript>
             Please enable JavaScript in order to use this application.
