@@ -137,6 +137,8 @@
     <attribute name="solo_mode" value="false" />
     <attribute name="isLoaded" value="false" />
 
+    <attribute name="evalloader" value="null"/>
+
     <!-- METHODS -->
 <method name="construct" args="parent, args">
       super.construct(parent, args);
@@ -299,7 +301,7 @@
         lz.Timer.addTimer(this.moveCaretDel, 1);
     </method>
 
-<method name="sendCaretToEOL">
+<method name="sendCaretToEOL" args="ignore=null">
         var infield = this.bottom.center.input;
         lz.Focus.setFocus(infield);
         var content = infield.getText();
