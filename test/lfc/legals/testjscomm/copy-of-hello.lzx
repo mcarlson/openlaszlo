@@ -27,13 +27,13 @@
     <text text="${parent.foo}" width="100"/>
     <text text="${parent.farb}" width="100"/>
     <text name="stat" multiline="true" width="1000"/>
-    <text oninit="this.setText('Flash player version: ' + lz.Browser.getVersion())" width="1000"/>
+    <text oninit="this.setAttribute('text', 'Flash player version: ' + lz.Browser.getVersion())" width="1000"/>
 
     <view name="aview" y="80" bgcolor="red" width="20" height="30">
         <method name="testMethod" args="str, bool1, bool2, num1, num2, prop1, prop2">
         <![CDATA[
             if (str == 'foo' && bool1 ==true && bool2 == false && num1 == 1 && num2 == 0 && prop1 == 20 && prop2 == 30) {
-                this.setBGColor(0x00ff00);
+                this.setAttribute('bgcolor', 0x00ff00);
                 return true;
             } 
         ]]>

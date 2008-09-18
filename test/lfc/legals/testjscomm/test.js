@@ -29,8 +29,20 @@ function getSet(app, name) {
 }
 
 function testMethodCalls(app) {
+    testAppMethod(app);
+    testServiceMethod(app);
+    testAppMethod(app);
+}
+
+function testAppMethod(app) {
     var val = app.callMethod('aview.testMethod(\'foo\', true, false, 1, 0, width, height)')
     if (! val) alert('warning: method argument test failed.') 
+    //console.log('result of callMethod', val, typeof val);
+}
+function testServiceMethod(app) {
+    var val = app.callMethod('lz.Browser.getVersion()')
+    if (! val) alert('warning: method argument test failed.') 
+    //console.log('result of callMethod', val, typeof val);
 }
 
 function getUserAgent() {
