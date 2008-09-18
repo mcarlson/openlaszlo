@@ -344,7 +344,7 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-435", new Object[] {builtin, tagName, also})
 , elt);
         }
-        ClassModel info = new ClassModel(tagName, superclass, this, elt, env);
+        ClassModel info = new ClassModel(tagName, superclass, true, this, elt, env);
         mClassMap.put(tagName, info);
 
         if (sInputTextElements.contains(superTagName)) {
@@ -458,7 +458,7 @@ public class ViewSchema extends Schema {
 
     /** Adds a ClassModel entry into the class table for CLASSNAME. */
   private void makeNewStaticClass (String classname, CompilationEnvironment env) {
-      ClassModel info = new ClassModel(classname, null, this, null, env);
+      ClassModel info = new ClassModel(classname, this, env);
         if (sInputTextElements.contains(classname)) {
             info.isInputText = true;
             info.hasInputText = true;

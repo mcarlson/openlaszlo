@@ -15,6 +15,8 @@ public class ClassModel implements Comparable {
     protected final ViewSchema schema;
     /** This is really the LZX tag name */
     public final String tagName;
+    /** Classes that are created for single instances */
+    public final boolean anonymous;
     /** And this is the actual class name */
     public final String className;
     final CompilationEnvironment env;
@@ -59,11 +61,12 @@ public class ClassModel implements Comparable {
     }
 
     // Construct a user-defined class
-    public ClassModel(String tagName, ClassModel superclass,
+    public ClassModel(String tagName, ClassModel superclass, boolean publish,
                       ViewSchema schema, Element definition, CompilationEnvironment env) {
         this.tagName = tagName;
+        this.anonymous = (! publish);
         this.env = env;
-        if (tagName != null) {
+        if ((!anonymous) && (tagName != null)) {
           this.className = LZXTag2JSClass(tagName);
         } else {
           this.className = LZXTag2JSClass(env.methodNameGenerator.next());
@@ -83,7 +86,7 @@ public class ClassModel implements Comparable {
 
   // Construct a builtin class
   public ClassModel(String tagName, ViewSchema schema, CompilationEnvironment env) {
-    this(tagName, null, schema, null, env);
+      this(tagName, null, true, schema, null, env);
   }
 
   public int compareTo(Object other) throws ClassCastException {
@@ -293,7 +296,7 @@ public class ClassModel implements Comparable {
                       nodeModel.getClassAttrs(),
                       classBody);
     env.compileScript(scriptClass.toString(), definition);
-    if (tagName != null) {
+    if ((! anonymous) && (tagName != null)) {
       env.addTag(tagName, className);
     }
   }

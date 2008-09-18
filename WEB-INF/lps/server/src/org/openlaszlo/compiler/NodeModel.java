@@ -2092,19 +2092,8 @@ solution =
             }
         }
         if (hasMethods) {
-            // If there are methods, make a class
-            if (debug) {
-              String name = id;
-              if (name == null) {
-                name = CompilerUtils.attributeUniqueName(element, "class");
-              }
-              // Update tagname to our custom class
-              tagName = tagName + "_" + name;
-            } else {
-              // Don't create a tag for anonymous classes
-              tagName = null;
-            }
-            classModel = new ClassModel(tagName, parentClassModel, schema, element, env);
+            // If there are methods, make a class (but don't publish it)
+            classModel = new ClassModel(tagName, parentClassModel, false, schema, element, env);
             classModel.setNodeModel(this);
             classModel.emitClassDeclaration(env);
         } else {

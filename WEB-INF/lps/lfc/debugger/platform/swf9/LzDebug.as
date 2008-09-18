@@ -112,7 +112,7 @@ class LzAS3DebugService extends LzDebugService {
       this.format("%#w", result);
     }
     this.freshPrompt();
-  }
+  };
 
 
 
@@ -120,26 +120,13 @@ class LzAS3DebugService extends LzDebugService {
    * @access private
    */
   override function functionName (fn, mustBeUnique:Boolean=false) {
-    if (fn && ((fn is Function) || (fn is Class))) {
-      if (fn.hasOwnProperty('_dbg_name') || fn.hasOwnProperty('name')) {
-        var n = fn.hasOwnProperty('_dbg_name') ? fn['_dbg_name'] : fn['name'];
-      } else if ((fn is Class) && (fn['tagname']) && (fn === lz[fn.tagname])) {
-        // Handle tag classes
+    if ((fn is Class) && fn['tagname']) {
+      // Handle tag classes
+      if ((! mustBeUnique) || (fn === lz[fn.tagname])) {
         return '<' + fn.tagname + '>';
-      } else {
-        // tip o' the pin to osteele.com
-        var fstring = fn['toString']();
-        var s = '[class '.length;
-        var e = fstring.indexOf(']');
-        if ((fstring.indexOf('[class ') == 0) && (e == fstring.length -1)) {
-          n = fstring.substring(s, e);
-        }
-      }
-      if ((! mustBeUnique) || (fn === globalValue(n))) {
-        return n;
       }
     }
-    return null;
+    return super.functionName(fn, mustBeUnique);
   }
 
   /**

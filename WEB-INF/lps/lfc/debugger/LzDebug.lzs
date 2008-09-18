@@ -637,9 +637,11 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       // _dbg_name takes precedence over the actual function name
       if (fn.hasOwnProperty('_dbg_name')) {
         var n = fn['_dbg_name'];
-      } else if (fn['tagname'] && fn === lz[fn.tagname]) {
+      } else if (fn['tagname']) {
         // Handle tag classes
-        return '<' + fn.tagname + '>';
+        if ((! isGlobal) || (fn === lz[fn.tagname])) {
+          return '<' + fn.tagname + '>';
+        }
       } else {
         // tip o' the pin to osteele.com
         var fstring = fn['toString']();
@@ -1021,14 +1023,14 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           name += ' (\u00A3' + obj[leaked] + ')'; // 'Pounds'
         }
       }
-//     } catch (e) {
-//       try {
-//         // Use %s to prevent recursion
-//         description = this.formatToString("Error: %0.24s computing inspectInternal", e);
-//       }
-//       catch (e) {
-//         description = "Recursive error computing inspectInternal";
-//       }
+    } catch (e) {
+      try {
+        // Use %s to prevent recursion
+        description = this.formatToString("Error: %0.24s computing inspectInternal", e);
+      }
+      catch (e) {
+        description = "Recursive error computing inspectInternal";
+      }
     } finally {
     }
     if (description != "") { description = ' {\n' + description + '}'; }
