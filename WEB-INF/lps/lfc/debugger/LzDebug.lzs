@@ -210,7 +210,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display a result and update the previous result values
    * @access private
    */
-  override function displayResult (result:*):void {
+  override function displayResult (result=(void 0)):void {
     var e = this.environment;
     if (result !== (void 0)) {
       // Advance saved results if you have a new one

@@ -338,7 +338,7 @@ dynamic class LzBootstrapDebugService {
    * Callback for console doEval
    * @access private
    */
-  function displayResult (result:*):void {
+  function displayResult (result=(void 0)):void {
     if (result !== (void 0)) {
       this.__write(result);
     }

@@ -93,7 +93,7 @@ class LzAS3DebugService extends LzDebugService {
    * compiled expression, so we have to put the "previous value's" in
   * _level0
    */
-  override function displayResult (result) {
+  override function displayResult (result=(void 0)) {
     if (typeof(result) != 'undefined') {
       // Advance saved results if you have a new one
       if (result !== global._) {
