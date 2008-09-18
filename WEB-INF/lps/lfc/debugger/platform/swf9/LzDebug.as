@@ -137,12 +137,20 @@ class LzAS3DebugService extends LzDebugService {
    *
    * @access private
    */
+  #passthrough {
   override function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
     // TODO [2008-09-11 hqm] not sure what to do here, maybe we can use the introspection API
     // flash.utils.describeType() to at least enumerate public properties... 
+    var description:XML = describeType(obj);
+    trace('objectOwnProperties', description);
+    for each(var a:XML in description.variable) {
+        if (names != null) {
+          names.push(a.@name);
+        }
+      }
     return super.objectOwnProperties(obj, names, indices, limit,nonEnumerable);
-
   }
+  }#
 }
 
 var Debug = new LzAS3DebugService(null);
