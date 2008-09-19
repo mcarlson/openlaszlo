@@ -1,0 +1,49 @@
+# This file can be used to compare application file sizes against 4.0.13,
+# used like so:
+#
+#   $ cd $LPS_HOME
+#   $ ant -Dappsize.input=appsize-4.0.txt appsize
+#
+# Note that some of the URL/file names have changed since 4.0.
+# This file lists the 4.2 equivalent names (in the component sampler,
+# 'style_example.lzx' is now 'component_sampler.lzx')
+# If you run this input against a 4.0 server, you would need to change
+# the names back -- see comment below.
+#
+apps=lzpix.dhtml,lzpix.swf8,components.swf8
+totalsize=676437
+
+lzpix.dhtml.size=96631
+lzpix.dhtml.1.path=demos/lzpix/app.lzx?lzr=dhtml&lzt=html
+lzpix.dhtml.1.size=1235
+lzpix.dhtml.2.path=lps/includes/embed-compressed.js
+lzpix.dhtml.2.size=9257
+lzpix.dhtml.3.path=lps/includes/lfc/LFCdhtml.js
+lzpix.dhtml.3.size=67222
+lzpix.dhtml.4.path=demos/lzpix/app.lzx?lzt=object&lzt=object&lzr=dhtml
+lzpix.dhtml.4.size=18917
+
+lzpix.swf8.size=380273
+lzpix.swf8.1.path=demos/lzpix/app.lzx?lzr=swf8&lzt=html
+lzpix.swf8.1.size=1017
+lzpix.swf8.2.path=lps/includes/embed-compressed.js
+lzpix.swf8.2.size=9257
+lzpix.swf8.3.path=demos/lzpix/app.lzx?lzt=swf&lzr=swf8
+lzpix.swf8.3.size=369999
+
+# Some of the paths here have changed, see below
+components.swf8.size=199533
+components.swf8.1.path=laszlo-explorer/content.jsp?src=/examples/components/component_sampler.lzx&tag=undefined&title=Sampler&action=undefined&lzr=swf8
+components.swf8.1.size=774
+components.swf8.2.path=examples/components/component_sampler.lzx?lzt=html&lzr=swf8
+components.swf8.2.size=1029
+components.swf8.3.path=lps/includes/embed-compressed.js
+components.swf8.3.size=9257
+components.swf8.4.path=examples/components/component_sampler.lzx?lzt=swf&lzr=swf8
+components.swf8.4.size=188473
+
+# Originally the paths above were:
+# components.swf8.1.path=laszlo-explorer/content.jsp?src=/examples/components/style_example.lzx&tag=undefined&title=Sampler&action=undefined&lzr=swf8
+# components.swf8.2.path=examples/components/style_example.lzx?lzt=html&lzr=swf8
+# components.swf8.3.path=lps/includes/embed-compressed.js
+# components.swf8.4.path=examples/components/style_example.lzx?lzt=swf&lzr=swf8

@@ -71,7 +71,6 @@
     <property name="catalina.engine" value="Catalina" />
     <property name="catalina.host"   value="localhost" />
 
-
     <path id="3rd.party.classpath" >
         <dirset dir="${webapp-lps-home}/server/build" />
         <fileset dir="WEB-INF/lib">
@@ -80,6 +79,10 @@
         <fileset dir="3rd-party/jars/dev" />
         <fileset
                 dir="${LZ_VENDOR_ROOT}" includes="*.jar" />
+    </path>
+    <path id="lps.test.classpath">
+        <fileset dir="3rd-party" includes="**/*.jar" />
+        <fileset dir="WEB-INF/lib" includes="**/*.jar" />
     </path>
 
     <!-- Properties describing which OS as binary flags -->
@@ -970,6 +973,40 @@
        <exec executable="bash">
            <arg line="-c 'installer/macosx/mkpkg.sh ${version.id} ${version.id.upper} Server/${tomcat}'" />
        </exec>
+  </target>
+
+  <!--================  Target [compiled-app-size] ==============-->
+
+  <!--
+   To get the application size versus a recent benchmark, do 'ant appsize'.
+   To do the same versus 4.0, do 'ant -Dappsize.input-appsize-4.0.txt appsize'
+   See test/appsize/readme.txt for more info.
+    -->
+
+  <target name="appsize" depends="init,build,build-classes"
+          unless="skip.appsize"
+          description="Check application file sizes" >
+
+    <!-- override to get input/output files in a different directory -->
+    <property name="appsize.dir"     value="test/appsize" />
+
+    <!-- override to change the input file, for example:  -->
+    <property name="appsize.input"   value="appsize-input.txt" />
+
+    <!-- override to change the output file -->
+    <property name="appsize.output"  value="appsize-output.txt" />
+
+    <!-- override to change the URL to a different branch for comparison -->
+    <property name="appsize.branch"  value="${lps.branch}" />
+
+    <!-- Set to -v for verbose, and/or -i to ignore errors -->
+    <property name="appsize.flags"  value="" />
+
+    <java classname="org.openlaszlo.test.netsize.Netsize"
+          fork="yes" failonerror="yes" classpathref="lps.test.classpath">
+      <arg line="${appsize.flags} -p ${appsize.branch} -f ${appsize.dir}/${appsize.input} -n ${appsize.dir}/${appsize.output}"/>
+    </java>
+    
   </target>
 
   <!--================  Target [runlzunit] ==============-->
