@@ -27,11 +27,13 @@ appsize-output.txt to appsize-input.txt and committing this change.
 
 If you see *much* worse results (factor of 2 or greater) than expected,
 it is likely that you do not have compression turned on for the version
-of tomcat you are testing with.  In your conf/server.xml you'll want a
-line that looks like this:
+of tomcat you are testing with.  In your conf/server.xml you'll want to
+adjust your <Connector> entry so that it has these attributes:
 
          <Connector port="8080" .......
-			   compressableMimeType="application/xml,text/html,text/xml,text/javascript,application/x-javascript,application/javascript,application/x-shockwave-flash"/>
+               compression="on" 
+               compressionMinSize="2048" 
+               compressableMimeType="application/xml,text/html,text/xml,text/javascript,application/x-javascript,application/javascript,application/x-shockwave-flash"
 
 ================================================================
 
