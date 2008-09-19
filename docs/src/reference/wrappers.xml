@@ -564,5 +564,55 @@ mouse rollover and down state behavior:</p>
   </property>
 </class>
 </property>
-
+  <property id="tag-setter" topic="LZX" subtopic="Scripting" access="public">
+    <doc>
+      <tag name="shortdesc"><text>A tag to declare or override attribute setter methods.</text></tag>
+      <tag name="lzxname"><text>setter</text></tag>
+      <tag name="docfilename"><text>tag-setter</text></tag>
+      <text>
+        <p>Use the <tagname>setter</tagname> tag to declare or override 
+          attribute setter methods. Note that this functionality is new, and you may have to
+          change your code written for OpenLaszlo 4.1 and earlier. For example, this 4.1.x code: .
+          For example:</p>
+        
+<programlisting class="code">
+  &lt;method name=&quot;setY&quot; args=&quot;y&quot; &gt; 
+    super.setY( Math.max(parent.arrowbuttonheight-1 , Math.min( y , parent.height - (parent.thumbheight + parent.arrowbuttonheight)))); 
+  &lt;/method&gt;    
+</programlisting>
+        
+        <p>Would need to be changed to:</p>
+<programlisting class="code">
+  &lt;setter name=&quot;y&quot; args=&quot;y&quot; &gt;
+    super.setAttribute(&apos;y&apos;, Math.max(parent.arrowbuttonheight-1 , Math.min( y , parent.height - (parent.thumbheight + parent.arrowbuttonheight))));
+  &lt;/setter&gt;
+</programlisting>
+        <p>Here's another example. If you had this code in OpenLaszlo 4.1 or earlier:</p>
+        
+<programlisting class="code">
+  &lt;text x=&quot;${Math.round((parent.width-this.width)/2)}&quot; font=&quot;vera_super_bold&quot; fgcolor=&quot;0x4d4d4d&quot; datapath=&quot;@username&quot; resize=&quot;true&quot;&gt;
+    &lt;method name=&quot;setText&quot;&gt;
+      if (typeof(this.datapath.data) != &apos;undefined&apos;) {
+      super.setText(this.datapath.data + &quot;&apos;s information&quot;);
+      }
+    &lt;/method&gt;
+  &lt;/text&gt;
+</programlisting>
+        
+        <p>You would change it to:</p>
+<programlisting class="code">
+  &lt;text x=&quot;${Math.round((parent.width-this.width)/2)}&quot; font=&quot;vera_super_bold&quot; fgcolor=&quot;0x4d4d4d&quot; datapath=&quot;@username&quot; resize=&quot;true&quot;&gt;
+    &lt;setter name=&quot;text&quot;&gt;
+      if (typeof(this.datapath.data) != &apos;undefined&apos;) {
+      super.setAttribute(&apos;text&apos;, this.datapath.data + &quot;&apos;s information&quot;);
+      }
+    &lt;/setter&gt;
+  &lt;/text&gt;
+</programlisting>
+        <p>LFC setter methods like <literal>setWidth()</literal>, <literal>setHeight()</literal>, 
+          and <literal>setBGColor()</literal> are now deprecated. They continue to 
+          work but if you use them, a warning message is displayed in the debugging console. </p>
+      </text>
+    </doc>
+  </property>
 </js2doc>

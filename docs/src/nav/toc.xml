@@ -147,10 +147,11 @@
     <category title="Scripting">
         <item title="&amp;lt;handler&amp;gt;" href="lz.handler.html" />
         <item title="&amp;lt;event&amp;gt;" href="lz.event.html" />
+        <item title="lz.CSSStyleSheet" href="lz.CSSStyleSheet.html" />
         <item title="&amp;lt;method&amp;gt;" href="lz.method.html" />
         <item title="&amp;lt;node&amp;gt;" href="lz.node.html" />
         <item title="&amp;lt;script&amp;gt;" href="lz.script.html" />
-        <item title="lz.CSSStyleSheet" href="lz.CSSStyleSheet.html" />
+        <item title="&amp;lt;setter&amp;gt;" href="tag-setter.html" />
     </category>
     <category title="States">
         <item title="&amp;lt;dragstate&amp;gt;" href="lz.dragstate.html" />
