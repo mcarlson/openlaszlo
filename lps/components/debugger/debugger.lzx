@@ -543,23 +543,26 @@
 <method name="restoreDebuggerState" >
        // restore persisted data
        this.persist = LzBrowserKernel.getPersistedObject('__lzdebugger');
-       for (var i in this.persist.data) {
-           if (this[i] != null) {
-               this[i] = this.persist.data[i];
-               //Debug.write('restored', i, this[i]);
+       if (this.persist) {
+           for (var i in this.persist.data) {
+               if (this[i] != null) {
+                   this[i] = this.persist.data[i];
+                   //Debug.write('restored', i, this[i]);
+               }
            }
-       }
-       if (this.persist.data['_pdbgwidth'] != null) {
-           this.setAttribute('width', this.persist.data._pdbgwidth);
-       }
-       if (this.persist.data['_pdbgheight'] != null) {
-           this.setAttribute('height', this.persist.data._pdbgheight);
-       }
-       if (this.persist.data['_pdbgx'] != null) {
-           this.setAttribute('x', this.persist.data._pdbgx);
-       }
-       if (this.persist.data['_pdbgy'] != null) {
-           this.setAttribute('y', this.persist.data._pdbgy);
+
+           if (this.persist.data['_pdbgwidth'] != null) {
+               this.setAttribute('width', this.persist.data._pdbgwidth);
+           }
+           if (this.persist.data['_pdbgheight'] != null) {
+               this.setAttribute('height', this.persist.data._pdbgheight);
+           }
+           if (this.persist.data['_pdbgx'] != null) {
+               this.setAttribute('x', this.persist.data._pdbgx);
+           }
+           if (this.persist.data['_pdbgy'] != null) {
+               this.setAttribute('y', this.persist.data._pdbgy);
+           }
        }
     </method>
 
