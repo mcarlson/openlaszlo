@@ -41,16 +41,16 @@
         
         <!-- Write the "O" or "X" in the cell -->
         <method name="setLabel" args="currentPlayer">
-            currentGo++;
-            if (currentPlayer == "O") {
+            gamemanager.currentGo++;
+            if (gamemanager.currentPlayer == "O") {
                 this.noughtOrCross = this.nought;
                 this.noughtOrCross.play( 6 );
-            } else if (currentPlayer == "X") {
+            } else if (gamemanager.currentPlayer == "X") {
                 this.noughtOrCross = this.cross;
                 this.noughtOrCross.play( 6 );
             }
             this.isClicked = true;
-            this.buttonLabel = currentPlayer;
+            this.buttonLabel = gamemanager.currentPlayer;
         </method>
         
         <view name="nought" resource="noughtImg" />
@@ -163,31 +163,27 @@
 <!-- ===================================================================== -->
 <!-- = Global Scripts                                                    = -->
 <!-- ===================================================================== -->
-    <script>
-        <![CDATA[
-        // globals
-        //
-        var currentPlayer = "O";
-        var currentGo = 0;
-
-        // set switches between the two players
-        //
-        function setCurrentPlayer() {
+    <node id="gamemanager" >
+        <attribute name="currentPlayer" value="O" type="string" />
+        <attribute name="currentGo" value="0" type="number" />
+        
+        <!-- set switches between the two players -->
+        <method name="setCurrentPlayer" ><![CDATA[
             if (currentPlayer == "O") {
                 currentPlayer = "X";
             } else {
                 currentPlayer = "O";
             }
-        }
-
-
-        // Find 3 in a row
-        // loop through the surrounding 8 squares, checking each
-        // of them for a match with the current one. when a match
-        // is found, continue along the same line in both directions
-        // to check for 3 in a row.
-        //
-        function isWin(cell) {
+        ]]></method>
+        
+        <!-- 
+            Find 3 in a row
+            loop through the surrounding 8 squares, checking each
+            of them for a match with the current one. when a match
+            is found, continue along the same line in both directions
+            to check for 3 in a row.
+        -->
+        <method name="isWin" args="cell" ><![CDATA[
             for ( var c=-1; c<2; c++ ) {
                 for ( var r=-1; r<2; r++ ) {
                     // Debug.write( "row " + r + "    col " + c );
@@ -241,31 +237,30 @@
                 }
             }
             return false;
-        }
-
-        // returns the object identifier of a button
-        // based on its coordinates
-        //
-        function getCell(c, r, cell) {
+        ]]></method>
+        
+        <!-- 
+            returns the object identifier of a button
+            based on its coordinates
+        -->
+        <method name="getCell" args="c, r, cell" ><![CDATA[
             // var buttonObj = cell.parent.parent["row" + r].subviews[c];
             var buttonObj = cell.parent.parent["row" + r]["col" + c];
             return buttonObj;
-        }
-
-        // checks the coordinates to see if the cell
-        // falls within the 3*3 range
-        //
-        function isCellLegal(c, r) {
+        ]]></method>
+        
+        <!--
+            checks the coordinates to see if the cell
+            falls within the 3*3 range
+        -->
+        <method name="isCellLegal" args="c, r"><![CDATA[
             if ( (c >= 0) && (c < 3) ) {
                 if ( (r >= 0) && (r < 3) ) {
                     return true;
                 } else return false;
             } else return false;
-        }
-
-        ]]>
-    </script>
-
+        ]]></method>
+    </node>
 
 <!-- ===================================================================== -->
 <!-- = The Game Area                                                     = -->
@@ -295,20 +290,20 @@
                         var row = cell.immediateparent.row;
                         var col = cell.col;                
 
-                        cell.setLabel( currentPlayer );
-                        if ( isWin(cell) ) {
+                        cell.setLabel( gamemanager.currentPlayer );
+                        if ( gamemanager.isWin(cell) ) {
                             victory_line.drawLine();
-                            var message = "Player " + currentPlayer
+                            var message = "Player " + gamemanager.currentPlayer
                             message += " has won!";
                             gameOver.showGameOver( message );
                             return;
                         }                
                         
-                        setCurrentPlayer();
+                        gamemanager.setCurrentPlayer();
 
 
                         // Stalemate
-                        if (currentGo >= 9) {
+                        if (gamemanager.currentGo >= 9) {
                             var message = "Nobody wins.";
                             gameOver.showGameOver( message );
                             return;
@@ -378,8 +373,8 @@
             gameOverScreen.setAttribute('visible',  false );
 
             // reset globals
-            currentPlayer = "O";
-            currentGo = 0;
+            gamemanager.currentPlayer = "O";
+            gamemanager.currentGo = 0;
 
             allRowsCols.rows.row0.reset();
             allRowsCols.rows.row1.reset();
