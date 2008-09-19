@@ -319,7 +319,6 @@ LzSprite.prototype.makeContainerResource = function ( ) {
   */
 LzSprite.prototype.setMovieClip = function ( mc , mcID) {
     this.__LZmovieClipRef = mc;
-    //mc.tabIndex = tabindexcounter++;
     if (this.masked) {
       this.applyMask();
     }
@@ -377,8 +376,6 @@ LzSprite.prototype.attachResourceToChildView = function ( resourceName,
         }
         var instName = ("$m" + this.__LZsubUniqueNum );
     }
-
-    //mc.tabIndex = tabindexcounter++;
 
     //Debug.write('Sprite.depth', this.FIRST_SUBVIEW_DEPTH, childsprite.owner.sprite.__LZdepth, this.CLIPS_PER_SUBVIEW, this.FOREGROUND_DEPTH_OFFSET)
     var depth = this.FIRST_SUBVIEW_DEPTH + 
@@ -665,8 +662,8 @@ LzSprite.prototype.updateResourceSize = function (skipsend){
         this.resourceheight = rt.height;
     } else {
         // Get the true size by unscaling. Note: clip scale is in percent
-        this.resourcewidth = mc._width/(mc._xscale/100);
-        this.resourceheight = mc._height/(mc._yscale/100);
+        this.resourcewidth = Math.round(mc._width/(mc._xscale/100));
+        this.resourceheight = Math.round(mc._height/(mc._yscale/100));
     }
 
     if (! skipsend && ! this.__LZhaser) this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
