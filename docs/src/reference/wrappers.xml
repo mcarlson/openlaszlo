@@ -101,7 +101,7 @@ text containers such as <sgmltag class="element" role="LzText">&lt;text&gt;</sgm
 <property id="tag-b" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
 <tag name="shortdesc"><text>Bold Text.</text></tag>
-<tag name="lzxname"><text>&lt;b&gt;</text></tag>
+<tag name="lzxname"><text>b</text></tag>
 <tag name="docfilename"><text>tag-b</text></tag>
 <text>
 <p>HTML bold character markup.  This tag can only occur inside XHTML
@@ -118,12 +118,13 @@ text containers such as <sgmltag class="element" role="LzText">&lt;text&gt;</sgm
 
 </text>
 </doc>
+<class/>
 </property>
 
 <property id="tag-br" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
 <tag name="shortdesc"><text>Line break.</text></tag>
-<tag name="lzxname"><text>&lt;br&gt;</text></tag>
+<tag name="lzxname"><text>br</text></tag>
 <tag name="docfilename"><text>tag-br</text></tag>
 <text>
 <p>HTML line break.  This tag can only occur inside XHTML
@@ -142,6 +143,7 @@ a start and an end tag: <code>&lt;br/&gt;</code> or
 
 </text>
 </doc>
+<class/>
 </property>
 
 <property id="tag-font" topic="LZX" subtopic="HTML Markup" access="public">
@@ -187,7 +189,7 @@ from the top-level <sgmltag class="element" role="LzFont">&lt;font&gt;</sgmltag>
 <property id="tag-i" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
 <tag name="shortdesc"><text>Italic text.</text></tag>
-<tag name="lzxname"><text>&lt;i&gt;</text></tag>
+<tag name="lzxname"><text>i</text></tag>
 <tag name="docfilename"><text>tag-i</text></tag>
 <p/>
 <text>
@@ -203,6 +205,7 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 
 </text>
 </doc>
+<class/>
 </property>
 
 <property id="tag-img" topic="LZX" subtopic="HTML Markup" access="public">
@@ -267,7 +270,7 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 <property id="tag-p" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
 <tag name="shortdesc"><text>Paragraph.</text></tag>
-<tag name="lzxname"><text>&lt;p&gt;</text></tag>
+<tag name="lzxname"><text>p</text></tag>
 <tag name="docfilename"><text>tag-p</text></tag>
 <text>
 
@@ -285,12 +288,13 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 
 </text>
 </doc>
+<class/>
 </property>
 
 <property id="tag-pre" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
 <tag name="shortdesc"><text>Preformatted text.</text></tag>
-<tag name="lzxname"><text>&lt;pre&gt;</text></tag>
+<tag name="lzxname"><text>pre</text></tag>
 <tag name="docfilename"><text>tag-pre</text></tag>
 <text>
 <p>An HTML preformatted text region.  Whitespace and line breaks within
@@ -314,12 +318,13 @@ this element are preserved.</p>
 
 </text>
 </doc>
+<class/>
 </property>
 
 <property id="tag-u" topic="LZX" subtopic="HTML Markup" access="public">
 <doc>
 <tag name="shortdesc"><text>Underlined text.</text></tag>
-<tag name="lzxname"><text>&lt;u&gt;</text></tag>
+<tag name="lzxname"><text>u</text></tag>
 <tag name="docfilename"><text>tag-u</text></tag>
 <text>
 <p>HTML underlined character markup.  This tag can only occur inside
@@ -334,6 +339,7 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 
 </text>
 </doc>
+<class/>
 </property>
 
 
@@ -341,7 +347,7 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 <property id="tag-audio" topic="LZX" subtopic="Media" access="public">
 <doc>
 <tag name="shortdesc"><text>Imports an audio file.</text></tag>
-<tag name="lzxname"><text>&lt;audio&gt;</text></tag>
+<tag name="lzxname"><text>audio</text></tag>
 <tag name="docfilename"><text>tag-audio</text></tag>
 <text>
 <warning>This tag is obsolete.  Its functionality has been replaced by
@@ -380,6 +386,7 @@ rates: 11.025 khz, 22.5 khz, and 44.1 khz, and encoded at no more than
 
 </text>
 </doc>
+<class/>
 </property>
 
 <property id="tag-face" topic="LZX" subtopic="Media" access="public">
@@ -614,5 +621,6 @@ mouse rollover and down state behavior:</p>
           work but if you use them, a warning message is displayed in the debugging console. </p>
       </text>
     </doc>
+    <class/>
   </property>
 </js2doc>
