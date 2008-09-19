@@ -151,8 +151,6 @@ public class LzKeysService extends LzEventable {
 
     /** @access private */
     function __keyEvent ( delta, k, type ){
-        //Debug.write('lz.Keys.__keyEvent', delta, k, type);
-
         //for each key change, send the corresponding event
         for (var key in delta) {
             var down = delta[key];

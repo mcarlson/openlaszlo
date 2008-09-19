@@ -199,8 +199,11 @@
              height="${parent.height-11}" />
             
      <!-- TODO [hqm 2008-09] sending of the ontextlink event for
-          hyperlinks currently only is implemented in swf9 -->
+          hyperlinks currently only is implemented in swf9.
+     -->
      <handler name="ontextlink" args="val:String">
+       // Look for a a string which is "objid=NNNNN"
+       // and use NNNNN as the object ID to display
        if (val.indexOf("objid=") == 0) {
            var objid:String = val.substr(6);
            $modules.lz.Debug.displayObj(Number(objid));

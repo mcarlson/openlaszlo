@@ -154,12 +154,11 @@ class LzAS3DebugService extends LzDebugService {
     // TODO [2008-09-11 hqm] not sure what to do here, maybe we can use the introspection API
     // flash.utils.describeType() to at least enumerate public properties... 
     var description:XML = describeType(obj);
-    trace('objectOwnProperties', description);
-    for each(var a:XML in description.variable) {
-        if (names != null) {
+    if (names != null) {
+      for each(var a:XML in description.variable) {
           names.push(a.@name);
         }
-      }
+    }
     return super.objectOwnProperties(obj, names, indices, limit,nonEnumerable);
   }
   }#
