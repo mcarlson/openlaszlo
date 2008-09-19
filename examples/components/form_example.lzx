@@ -18,7 +18,7 @@
     <tabs id="tb" x="40" y="$once{tt.y + tt.height}"> 
       <tabpane text="Example 1">
         <form id="ex1">
-            <submit name="submitter" data="${echoer}"/>
+            <submit name="submitter" dataset="${echoer}"/>
 
             <statictext>What is your definition of fun?</statictext>
             <radiogroup x="30" name="definition">
@@ -45,7 +45,7 @@
 
       <tabpane text="Example 2" >
         <form height="${ex1.height}" layout="axis: y; spacing: 15" >
-            <submit name="submitter" data="${echoer}"/>
+            <submit name="submitter" dataset="${echoer}"/>
 
             <view layout="axis: x; spacing: 5">
                 <text y="2" >First name:</text>
@@ -91,7 +91,7 @@
    </tabs>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

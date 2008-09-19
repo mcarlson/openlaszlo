@@ -151,7 +151,7 @@
               &lt;dataset name="echoer" type="http" src="/@WEBAPP@/examples/components/echo.jsp" /&gt;
               &lt;window id="win" &gt;
               &lt;form&gt;
-              &lt;submit name="survey" data="${echoer}"/&gt;
+              &lt;submit name="survey" dataset="${echoer}"/&gt;
               &lt;statictext&gt;What is your favorite vacation spot?&lt;/statictext&gt;
               &lt;radiogroup name="place"&gt;
               &lt;radiobutton&gt;Hawaii&lt;/radiobutton&gt;

@@ -52,7 +52,7 @@
 
             <form name="form" bgcolor="#c0c0c0" spacing="33">
 
-                <submit id="surveysubmit" data="${surveydataset}" />
+                <submit id="surveysubmit" dataset="${surveydataset}" />
  
                 <view height="20" >
                     <text>What is your favorite vacation spot?</text>
@@ -84,10 +84,18 @@
         <attribute name="vote" type="string" />
         <attribute name="total" type="number" />
         <attribute name="myvote" type="expression" />
-        <attribute name="lcname" value="${this.cname.toLowerCase()}" />
-        <attribute name="img"   value="${'http:' + this.lcname + '.gif' }" />
+        <attribute name="lcname" />
+        <attribute name="img" />
         <attribute name="p"     value="${votes/total}" />
         <attribute name="h"     value="100" />
+        
+        <handler name="oninit">
+            if(this.cname != null){
+                this.setAttribute('lcname', this.cname.toLowerCase());
+                this.setAttribute('img', 'http:' + this.lcname + '.gif');
+                this.pic.setSource(this.img);
+            }
+        </handler>
 
         <simplelayout axis="y" />
         <view bgcolor="#BFBFBF" 
@@ -107,7 +115,7 @@
                           height="${this.parent.height-1}" />
                 </view>
                 <view x="-1" name="voteswatch" bgcolor="black"
-                      visible="${this.classroot.vote == this.classroot.lcname}"
+                      visible="${this.classroot.vote == this.classroot['lcname']}"
                       width="${this.classroot.pic.width}"
                       height="${this.subviews[0].height + 1}" >
                     <votepatch x="1" y="1" height="2" 
@@ -116,7 +124,7 @@
                 <rtext align="center" text="${this.classroot.votes}" /> 
             </view>
         </view>
-        <view name="pic" resource="${this.parent.img}" />
+        <view name="pic" />
         <view height="5" width="1" />
         <rtext width="1" align="center" text="${this.classroot.cname}" /> 
         <view height="5" width="1" />
@@ -135,7 +143,7 @@
                 return;
             }
             if (this.status == 'ok') {
-                if (this.getAttribute('visible') == false) {
+                if (this.visible == false) {
                     this.setAttribute('x', 0);
                     this.setAttribute('visible', true);
                 }

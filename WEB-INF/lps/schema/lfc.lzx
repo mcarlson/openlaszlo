@@ -165,6 +165,7 @@
   <method name="$lzc$set_$datapath"/>
   <method name="$lzc$set_$delegates"/>
   <method name="$lzc$set_$refs"/>
+  <method name="$lzc$set_data"/>
   <method name="$lzc$set_datapath"/>
   <method name="$lzc$set_id"/>
   <method name="$lzc$set_name"/>
@@ -775,7 +776,6 @@
   </containsElements>
 
   <method name="$lzc$set_autorequest"/>
-  <method name="$lzc$set_data"/>
   <method name="$lzc$set_initialdata"/>
   <method name="$lzc$set_name"/>
   <method name="$lzc$set_querytype"/>

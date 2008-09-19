@@ -5,7 +5,7 @@
   
   <window x="10" y="10" >
     <form id="ex1" bgcolor="0xAAB5C8" >
-      <submit name="submitter" data="${echoer}"/>
+      <submit name="submitter" dataset="${echoer}"/>
       
       <statictext fontstyle="bold" >
         What's your current name?
