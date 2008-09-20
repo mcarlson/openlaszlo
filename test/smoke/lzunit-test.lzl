@@ -528,7 +528,7 @@
             Debug.info("Testing error system: '%0.24s' (above) is expected as part of this test", message);
             return;
         }
-        super.error(format("Wrong error", expectedError, message));
+        super.error(tformat("Wrong error", expectedError, message));
       ]]>
     </method>
 

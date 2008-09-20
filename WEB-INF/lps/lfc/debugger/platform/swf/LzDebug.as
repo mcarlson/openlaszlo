@@ -185,13 +185,37 @@ class LzAS2DebugService extends LzDebugService {
 
   /**
    * @access private
+   * @devnote This is carefully constructed so that if there is a
+   * preferred name but mustBeUnique cannot be satisfied, we return
+   * null (because the debugger may re-call us without the unique
+   * requirement, to get the preferred name).
    */
   override function functionName (fn, mustBeUnique) {
     if (fn is Function) {
-      if (fn.hasOwnProperty('_dbg_name') || fn.hasOwnProperty('name')) {
-        var n = fn.hasOwnProperty('_dbg_name') ? fn._dbg_name : fn.name;
+      // JS1 constructors are Function
+      if (fn.hasOwnProperty('tagname')) {
+        var n = fn.tagname;
+        if ((! mustBeUnique) || (fn === lz[n])) {
+          return '<' + n + '>';
+        } else {
+          return null;
+        }
+      }
+      if (fn.hasOwnProperty('classname')) {
+        var n = fn.classname;
         if ((! mustBeUnique) || (fn === eval(n))) {
           return n;
+        } else {
+          return null;
+        }
+      }
+      if (fn.hasOwnProperty('name')) {
+        // swf back-end still uses 'name' sometimes...
+        var n = fn.name;
+        if ((! mustBeUnique) || (fn === eval(n))) {
+          return n;
+        } else {
+          return null;
         }
       }
     }

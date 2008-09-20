@@ -34,7 +34,6 @@ Instance.classname = 'Instance';
 Instance.prototype.classname = 'Object';
 if ($debug) {
   Instance._dbg_typename = 'Class';
-  Instance._dbg_name = Instance.prototype._dbg_typename = 'Instance';
 }
 
 
@@ -85,14 +84,7 @@ if ($debug) {
           // their tag name
           value._dbg_owner = this;
           value._dbg_typename = function _dbg_typename () {
-            var o = this._dbg_owner;
-            var t = o._dbg_typename;
-            // Prototypes have their own typename, instances should
-            // not, use that to distinguish methods that have been
-            // added directly to instances
-            if (! o.hasOwnProperty('_dbg_typename')) {
-              t += '#' + Debug.IDForObject(o);
-            }
+            var t = Debug.functionName(this._dbg_owner._dbg_prototype_for);
             return t + ' function';
           }
         }
@@ -272,7 +264,9 @@ var Class = {
     if ($debug) {
       if (value instanceof Function && (! value._dbg_typename)) {
         value._dbg_owner = this;
-        value._dbg_typename = function _dbg_typename () { return this._dbg_owner._dbg_name + ' static function'};
+        value._dbg_typename = function _dbg_typename () {
+          return Debug.functionName(this._dbg_owner) + ' static function'
+        };
       }
     }
   },
@@ -303,7 +297,8 @@ var Class = {
     nc.classname = classname;
     if ($debug) {
       nc._dbg_typename = this._dbg_name;
-      nc._dbg_name = classname;
+      // _dbg_name not needed because functionName computes class
+      // names now
     }
     this.addStaticProperty.call(nc, 'addStaticProperty', this.addStaticProperty);
     // NOTE: [2006-10-10 ptw] This could be inherited from the
@@ -360,10 +355,9 @@ var Class = {
     // Create super link
     nc.prototype = prototype;
     if ($debug) {
-      // NOTE: [2007-01-12 ptw] Debug.__String relies on prototypes
-      // having their own `_dbg_typename` property as a hint that it
-      // may be a prototype object (and _dbg_name may not work).
-      prototype._dbg_typename = classname
+      // For debugging, maintain a link from the prototype to the
+      // class it is the prototype for
+      prototype._dbg_prototype_for = nc
     }
     // Class.initialize:  Install initial values
     if (instanceProperties) {
@@ -416,7 +410,7 @@ var Trait = {
     }
     if ($debug) {
       if (value instanceof Function && (! value._dbg_typename)) {
-        value._dbg_typename = this._dbg_name + ' function';
+        value._dbg_typename = this.classname + ' function';
       }
     }
   },
@@ -424,7 +418,7 @@ var Trait = {
     this[name] = value;
     if ($debug) {
       if (value instanceof Function && (! value._dbg_typename)) {
-        value._dbg_typename = this._dbg_name + ' static function';
+        value._dbg_typename = this.classname + ' static function';
       }
     }
   },
@@ -471,7 +465,6 @@ var Trait = {
     xtor.classname = interstitialname;
     if ($debug) {
       xtor._dbg_typename = 'Interstitial Constructor';
-      xtor._dbg_name = xtor.classname;
     }
     #pragma "passThrough=true"
     var t = new xtor();
@@ -495,7 +488,6 @@ var Trait = {
       constructor: this,
       classname: classname,
       _dbg_typename: this._dbg_name,
-      _dbg_name: classname,
       prototype: superTrait ? superTrait.make() : new Object,
       instanceProperties: superTrait ? superTrait.instanceProperties.slice(0) : new Array,
       // Remembers all implementations of the Trait

@@ -154,37 +154,19 @@ class LzDHTMLDebugService extends LzDebugService {
    * Called last thing by the compiler when the app is completely loaded.
    */
   function makeDebugWindow () {
-    // Name all global singletons
-    var module = $modules.lz;
-    var idp = new RegExp('^[_$\\w\\d]+$');
-    for (var name in module) {
-      if (name.match(idp)) {
-        try {
-          var obj = module[name];
-          if (obj instanceof Object &&
-              obj.constructor &&
-              (! obj.hasOwnProperty('_dbg_name'))) {
-            obj._dbg_name = '#' + name;
-          }
-        }
-        catch (e) {
-          //        Debug.debug("Can't name %w", name);
+    // Some browsers don't enumerate these
+    var ptypes = {Array: Array, Boolean: Boolean, Date: Date,
+                  Function: Function, Number: Number,
+                  Object: Object, String: String};
+    for (var n in ptypes) {
+      var p = ptypes[n];
+      try {
+        if (! Debug.functionName(p)) {
+          p._dbg_name = n;
         }
       }
-      // Some browsers don't enumerate these
-      var ptypes = {Array: Array, Boolean: Boolean, Date: Date,
-                    Function: Function, Number: Number,
-                    Object: Object, String: String};
-      for (var n in ptypes) {
-        var p = ptypes[n];
-        try {
-          if (! Debug.functionName(p)) {
-            p._dbg_name = n;
-          }
-        }
-        catch (e) {
-          //        Debug.debug("Can't name %w", name);
-        }
+      catch (e) {
+        //        Debug.debug("Can't name %w", name);
       }
     }
   };
@@ -245,6 +227,30 @@ class LzDHTMLDebugService extends LzDebugService {
     } catch (e) {}
     return super.__StringDescription(thing, pretty, limit, unique);
   };
+
+  /**
+   * @access private
+   */
+  override function functionName (fn, mustBeUnique) {
+    if (fn is Function) {
+      // JS1 constructors are Function
+      // JS1 constructors are Function
+      if (fn.hasOwnProperty('tagname')) {
+        var n = fn.tagname;
+        if ((! mustBeUnique) || (fn === lz[n])) {
+          return '<' + n + '>';
+        }
+      }
+      if (fn.hasOwnProperty('classname')) {
+        var n = fn.classname;
+        if ((! mustBeUnique) || (fn === eval(n))) {
+          return n;
+        }
+      }
+    }
+    return super.functionName(fn, mustBeUnique);
+  };
+
 
   /**
    * Adds unenumerable object properties for DHMTL runtime

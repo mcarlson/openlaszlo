@@ -6,25 +6,6 @@
 // Scope the #pragma
 {
 #pragma 'warnUndefinedReferences=true'
-
-  // Name all global singletons
-  // N.B. function expression avoids polluting module with temp vars
-  (function () {
-    var module = lz;
-    for (var name in module) {
-      try {
-        var obj = module[name];
-
-        if (obj is Object &&
-            obj['constructor'] &&
-            (! obj.hasOwnProperty('_dbg_name'))) {
-          obj._dbg_name = 'lz.' + name;
-        }
-      } catch (e) {
-        Debug.debug("Can't name %w", name);
-      }
-    }
-  })();
 }
 // #pragma 
 

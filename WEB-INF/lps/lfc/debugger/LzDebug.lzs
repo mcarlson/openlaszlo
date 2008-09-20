@@ -554,30 +554,35 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         if (this.isStringLike(user_name)) {
           n = user_name;
         } else if (oc) {
-          var ocn = this.functionName(oc, false);
-          if (! ocn) {
-            // tip o' the pin to osteele.com
-            var ts = thing.toString();
-            var s = '[object '.length;
-            var e = ts.indexOf(']');
-            if ((ts.indexOf('[object ') == 0) &&
-                (e == ts.length - 1)) {
-              ocn = ts.substring(s, e);
-            } else if ((ts.indexOf('[') == 0) &&
-                       (ts.indexOf(']') == ts.length - 1)) {
-              ocn = ts.substring(1, ts.length - 1);
-            }
-          }
+          var ocn = this.functionName(oc, true);
           if (ocn) {
-            if (oc !== globalValue(ocn)) {
-              // Uniquify non-global constructors
-              var id = this.IDForObject(oc);
-              ocn += '#' + id;
-            }
             n = ocn;
+          } else {
+            ocn = this.functionName(oc, false);
+            if (! ocn) {
+              // tip o' the pin to osteele.com
+              var ts = thing.toString();
+              var s = '[object '.length;
+              var e = ts.indexOf(']');
+              if ((ts.indexOf('[object ') == 0) &&
+                  (e == ts.length - 1)) {
+                ocn = ts.substring(s, e);
+              } else if ((ts.indexOf('[') == 0) &&
+                         (ts.indexOf(']') == ts.length - 1)) {
+                ocn = ts.substring(1, ts.length - 1);
+              }
+            }
+            if (ocn) {
+              if (oc !== globalValue(ocn)) {
+                // Uniquify non-global constructors
+                var id = this.IDForObject(oc, true);
+                ocn += '#' + id;
+              }
+              n = ocn;
+            }
           }
           // verify constructor
-          if ((oc is Function) && (! (thing is oc))) {
+          if (oc && (! (thing is oc))) {
             // prototype
             if (thing === oc['prototype']) {
               // What is the right type for a prototype?
@@ -631,28 +636,29 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @return String: the function name
    *
    * @access private
+   * @devnote This is carefully constructed so that if there is a
+   * preferred name but mustBeUnique cannot be satisfied, we return
+   * null (because the debugger may re-call us without the unique
+   * requirement, to get the preferred name).
    */
-  function functionName (fn, isGlobal:Boolean=false) {
-    if (fn && (fn is Function)) {
+  function functionName (fn, mustBeUnique:Boolean=false) {
+    if (fn is Function) {
       // _dbg_name takes precedence over the actual function name
       if (fn.hasOwnProperty('_dbg_name')) {
         var n = fn['_dbg_name'];
-      } else if (fn['tagname']) {
-        // Handle tag classes
-        if ((! isGlobal) || (fn === lz[fn.tagname])) {
-          return '<' + fn.tagname + '>';
-        }
       } else {
         // tip o' the pin to osteele.com
         var fstring = fn['toString']();
         var s = 'function '.length;
-        var e = fstring.indexOf(' (');
+        var e = fstring.indexOf('(');
         if ((fstring.indexOf('function ') == 0) && (e > s)) {
+          while (fstring.charAt(s) == ' ') { s++; }
+          while (fstring.charAt(e - 1) == ' ') { e--; }
           n = fstring.substring(s, e);
         }
       }
       if (n) {
-        if ((! isGlobal) || (fn === globalValue(n))) {
+        if ((! mustBeUnique) || (fn === globalValue(n))) {
           return n;
         }
       }
@@ -695,9 +701,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         // Look for class prototypes
         // TODO: [2008-09-17 ptw] constructors are Class's in swf9,
         // not Function's.
-        if ((thing['constructor'] is Function) &&
-            (thing === thing.constructor['prototype'])) {
-          debug_name = '.prototype';
+        if (thing['_dbg_prototype_for']) {
+          debug_name = thing._dbg_prototype_for + '.prototype';
         } else if (dn is Function) {
           // Guard against broken user routines
           try {
@@ -1094,10 +1099,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function isObjectLike (obj:*):Boolean {
     // (N.B., typeof will return 'object' for runtime objects that may
     // be of interest, even though they are not instances of Object)
-    // NOTE [2008-09-16 ptw] In JS2 all primitives (boolean, number,
-    // string) are auto-wrapped, so you can't ask `obj is Object` to
-    // distinguish primitives from objects
-    return obj && (typeof(obj) == 'object');
+    return obj && ((obj is Object) || (typeof(obj) == 'object'));
   }
 
   /**

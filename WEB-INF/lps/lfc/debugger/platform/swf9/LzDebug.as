@@ -115,16 +115,50 @@ class LzAS3DebugService extends LzDebugService {
   };
 
 
+  /**
+   * Predicate for deciding if an object is 'Object-like' (has
+   * interesting properties)
+   *
+   * @access private
+   */
+  override function isObjectLike (obj:*):Boolean {
+    // NOTE [2008-09-16 ptw] In JS2 all primitives (boolean, number,
+    // string) are auto-wrapped, so you can't ask `obj is Object` to
+    // distinguish primitives from objects
+    return obj && (typeof(obj) == 'object');
+  };
 
   /**
+   * Adds handling of swf9 Class
+   *
    * @access private
+   */
+  override function __StringDescription (thing:*, pretty:Boolean, limit:Number, unique:Boolean):Object {
+    if (thing is Class) {
+      var s = this.functionName(thing);
+      if (s) {
+        return {pretty: pretty, description: s}
+      }
+    }
+    return super.__StringDescription(thing, pretty, limit, unique);
+  }
+
+  /** 
+   * @access private
+   * @devnote This is carefully constructed so that if there is a
+   * preferred name but mustBeUnique cannot be satisfied, we return
+   * null (because the debugger may re-call us without the unique
+   * requirement, to get the preferred name).
    */
   override function functionName (fn, mustBeUnique:Boolean=false) {
     if (fn is Class) {
+      // JS2 constructors are Class
       if (fn['tagname']) {
         // Handle tag classes
         if ((! mustBeUnique) || (fn === lz[fn.tagname])) {
           return '<' + fn.tagname + '>';
+        } else {
+          return null;
         }
       }
       // tip o' the pin to osteele.com
@@ -135,11 +169,13 @@ class LzAS3DebugService extends LzDebugService {
         var n = fstring.substring(s, e);
         if ((! mustBeUnique) || (fn === globalValue(n))) {
           return n;
+        } else {
+          return null;
         }
       }
     }
     return super.functionName(fn, mustBeUnique);
-  }
+  };
 
   /**
    * @access private
