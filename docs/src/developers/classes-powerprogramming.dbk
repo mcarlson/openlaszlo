@@ -136,7 +136,91 @@ Remember, you can call the original click code in the new method by using the su
  
 
  
-<para/></section></section><section><title>Classroot</title>
+<para/></section>
+<section id="settertag">
+   <title>Attribute setters defined with <literal>&lt;setter/&gt;</literal></title>
+   <para>Use the <literal>&lt;setter&gt;</literal> tag to declare or override 
+      attribute setter methods. Note that this functionality is new, and you may have to
+      change your code written for OpenLaszlo 4.1 and earlier. For example, this 4.1.x code:</para>
+   
+   <programlisting class="code">
+      &lt;method name=&quot;setY&quot; args=&quot;y&quot; &gt; 
+      super.setY( Math.max(parent.arrowbuttonheight-1 , Math.min( y , parent.height - (parent.thumbheight + parent.arrowbuttonheight)))); 
+      &lt;/method&gt;    
+   </programlisting>
+   
+   <para>Would need to be changed to:</para>
+   <programlisting class="code">
+      &lt;setter name=&quot;y&quot; args=&quot;y&quot; &gt;
+      super.setAttribute(&apos;y&apos;, Math.max(parent.arrowbuttonheight-1 , Math.min( y , parent.height - (parent.thumbheight + parent.arrowbuttonheight))));
+      &lt;/setter&gt;
+   </programlisting>
+   <para>Here's another example. If you had this code in OpenLaszlo 4.1 or earlier:</para>
+   
+   <programlisting class="code">
+      &lt;text x=&quot;${Math.round((parent.width-this.width)/2)}&quot; font=&quot;vera_super_bold&quot; fgcolor=&quot;0x4d4d4d&quot; datapath=&quot;@username&quot; resize=&quot;true&quot;&gt;
+      &lt;method name=&quot;setText&quot;&gt;
+      if (typeof(this.datapath.data) != &apos;undefined&apos;) {
+      super.setText(this.datapath.data + &quot;&apos;s information&quot;);
+      }
+      &lt;/method&gt;
+      &lt;/text&gt;
+   </programlisting>
+   
+   <para>You would change it to:</para>
+   <programlisting class="code">
+      &lt;text x=&quot;${Math.round((parent.width-this.width)/2)}&quot; font=&quot;vera_super_bold&quot; fgcolor=&quot;0x4d4d4d&quot; datapath=&quot;@username&quot; resize=&quot;true&quot;&gt;
+      &lt;setter name=&quot;text&quot;&gt;
+      if (typeof(this.datapath.data) != &apos;undefined&apos;) {
+      super.setAttribute(&apos;text&apos;, this.datapath.data + &quot;&apos;s information&quot;);
+      }
+      &lt;/setter&gt;
+      &lt;/text&gt;
+   </programlisting>
+   <para>LFC setter methods like <literal>setWidth()</literal>, <literal>setHeight()</literal>, 
+      and <literal>setBGColor()</literal> are now deprecated. They continue to 
+      work but if you use them, a warning message is displayed in the debugging console. </para>
+<section><title>Attribute Setters for Component Developers</title>
+   <para>Some LFC components mimic text objects. For example, <literal>&lt;edittext&gt;</literal> is similar to <literal>&lt;inputtext&gt;</literal> but it does not extend a text object.</para>
+   
+   <para>This is what the text attribute used to look like in <literal>&lt;edittext&gt;</literal>:</para> 
+   <programlisting class="code">
+      &lt;attribute name=&quot;text&quot; type=&quot;text&quot; setter=&quot;setText(text)&quot;/&gt;
+      ...
+      &lt;method name=&quot;setText&quot; args=&quot;t&quot;&gt;
+      this.text = t;
+      if (this._initcomplete) {
+      this.setValue(t, true);
+      this.field.setAttribute(&apos;text&apos;, this.value);
+      if (this[&apos;ontext&apos;]) this.ontext.sendEvent();
+      } else {
+      this._initialtext = t;
+      }
+      &lt;/method&gt;
+   </programlisting>
+   <para>As you can see, this allows setting the text object via <literal>setAttribute('text',...)</literal> and <literal>setText()</literal>. To make this code run a little faster (by removing a call to <literal>setText()</literal> from the setter), and follow how the LFC does it, this was rewritten to use the <literal>&lt;setter&gt;</literal> tag:</para>
+   <programlisting class="code">
+      &lt;attribute name=&quot;text&quot; type=&quot;text&quot;/&gt;
+      ...
+      &lt;method name=&quot;setText&quot; args=&quot;t&quot;&gt;
+      Debug.warn(&quot;edittext.setText is deprecated. Use setAttribute instead&quot;);
+      this.setAttribute(&apos;text&apos;, t);
+      &lt;/method&gt;
+      
+      &lt;setter name=&quot;text&quot; args=&quot;t&quot;&gt;
+      this.text = t;
+      if (this._initcomplete) {
+      this.setValue(t, true);
+      this.field.setAttribute(&apos;text&apos;, this.value);
+      if (this[&apos;ontext&apos;]) this.ontext.sendEvent();
+      } else {
+      this._initialtext = t;
+      }
+      &lt;/setter&gt;
+   </programlisting></section>
+</section>
+</section>
+   <section><title>Classroot</title>
 
 <para>The <literal>classroot</literal> property is a convenient short-hand that
 refers to the root node of a class instance. It's often used by a
