@@ -90,18 +90,29 @@ def tagname_for(filename)
   tag
 end
 
+# items that are classes are marked by an 'info comment'
+# marker
+def is_marked_as_class(filename)
+  result = nil
+  open(filename) {|f|
+    f.each_line { |line|
+      line.chomp!
+      if (line =~ /@@ info is-class=/) then
+        result = true
+        break
+      end
+    }
+  }
+  result
+end
+
 def javascriptname_for(filename)
   js = nil;
   open(filename) {|f|
       f.each_line { |line|
           line.chomp!
-          if (line =~ /postprocess/) then
-          end
-          if (line =~ /@@.*original javascript name.*@@/) then
-              js = line.sub(/.*@@.*= */, '').sub(/ *@@/, '')
-              break
-          elsif (line =~ /<p class="postprocess-info-jsname">/) then
-              js = line.sub(/.*postprocess-info-jsname">/, '').sub(/<.*/, '')
+          if (line =~ /@@ info jsname=.*@@/) then
+              js = line.sub(/.*@@.*= */, '').sub(/ *@@ *-->/, '')
               break
           end
       }
@@ -166,13 +177,15 @@ generate_index("{[Ll]z,tag}*.html", $outdir + "/tags.xml", "index") { | file,ful
  }
 generate_index("{lz.*,Lz*,Debug*}.html", $outdir + "/classes.xml", "index") { | file,fullname | 
   name = nil
-  jsname = javascriptname_for(fullname);
-  if (jsname && jsname != "") then
-    name = tagname_for(fullname);
-    if (name) then
-      name = 'lz.' + name;
-    else
-      name = jsname.sub(/\$lzc\$class_/, 'lz.').sub(/^Lz/, 'lz.');
+  if (is_marked_as_class(fullname)) then
+    jsname = javascriptname_for(fullname);
+    if (jsname && jsname != "") then
+      name = tagname_for(fullname);
+      if (name) then
+        name = 'lz.' + name;
+      else
+        name = jsname.sub(/\$lzc\$class_/, 'lz.').sub(/^Lz/, 'lz.');
+      end
     end
   end
   name

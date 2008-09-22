@@ -847,6 +847,11 @@ All Rights Reserved. Use is subject to license terms.</p>
           <fileset dir="nav" includes="*.*"/>
       </copy>
       <exec executable="ruby" failonerror="true">
+        <arg value="${reference.src.dir}/postprocess.rb" />
+        <arg value="--inputdir" />
+        <arg value="${reference.output.dir}" />
+      </exec>
+      <exec executable="ruby" failonerror="true">
         <arg value="${reference.src.dir}/navbuilder/navxmlbuilder.rb" />
         <arg value="--inputdir" />
         <arg value="${reference.output.dir}" />
@@ -855,11 +860,6 @@ All Rights Reserved. Use is subject to license terms.</p>
       </exec>
       <exec executable="ruby" failonerror="true">
         <arg value="${reference.src.dir}/navbuilder/toccheck.rb" />
-        <arg value="--inputdir" />
-        <arg value="${reference.output.dir}" />
-      </exec>
-      <exec executable="ruby" failonerror="true">
-        <arg value="${reference.src.dir}/postprocess.rb" />
         <arg value="--inputdir" />
         <arg value="${reference.output.dir}" />
       </exec>

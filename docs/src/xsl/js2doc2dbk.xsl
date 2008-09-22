@@ -194,6 +194,10 @@
         <para role="postprocess-info-jsname">
           <xsl:value-of select="$jsname"/>
         </para>
+        <xsl:variable name="classcontents" select="class"/>
+        <xsl:if test="$classcontents">
+          <para role="postprocess-info-is-class"/>
+        </xsl:if>
         <xsl:if test="$lzxname"><anchor id="{concat('tag.',$lzxname)}"/></xsl:if>
         <xsl:processing-instruction name="dbhtml">
           <xsl:text>filename="</xsl:text><xsl:value-of select="$filebase-for-output"/><xsl:text>.html"</xsl:text>
@@ -297,6 +301,7 @@
         <xsl:variable name="ovars" select="&objectvalue;/property[not(&privateslot;) and &isvisible;]"/>
         <xsl:variable name="events" select="&objectvalue;/property[@name='__ivars__' or @name='prototype']/object/property[doc/tag[@name='lzxtype']/text = 'event' and &isvisible;]" />
         <xsl:variable name="initargs" select="class/initarg[not(contains(@access, 'private'))]" />
+
 
         <!-- Initialization Arguments -->
         <xsl:if test="$show.init.args">
