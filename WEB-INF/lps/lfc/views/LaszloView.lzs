@@ -259,6 +259,11 @@ var onmousetrackover = LzDeclaredEvent;
   */
 var onmousetrackup = LzDeclaredEvent;
 
+/** @access private 
+  * @lzxtype event 
+  */
+var onmousetrackout = LzDeclaredEvent;
+
 /** The onmouseup event is sent when the pointing device button is
   * released over an element.
   * @lzxtype event

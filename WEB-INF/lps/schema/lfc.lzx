@@ -85,7 +85,6 @@
     <element>audio</element>
     <element>resource</element>
     <element>font</element>
-    <element>datasource</element>
     <element>datapointer</element>
     <element>dataset</element>
     <element>debugger</element>
@@ -105,8 +104,6 @@
     <element>node</element>
     <element>splash</element>
     <element>contextmenu</element>
-    <!-- soon to be deprecated -->
-    <element>connectiondatasource</element>
   </containsElements>
 </interface>
 
@@ -290,6 +287,7 @@
   <event name="onmouseover"/>
   <event name="onmousetrackover"/>
   <event name="onmousetrackup"/>
+  <event name="onmousetrackout"/>
   <event name="onmouseup"/>
   <event name="onmouseupoutside"/>
   <event name="onmousedragin"/>
@@ -923,21 +921,6 @@
   <method name="setOrder"/>
 </interface>
 
-
-<interface name="datasource" extends="node">
-  <attribute name="timeout" type="number"/>
-  <attribute name="secure" type="boolean"/> {booleanLiteral}?
-  <attribute name="proxied" type="inheritableBoolean" value="inherit"/>
-  <!-- A dataset element within a @e{datasource} element defines a set
-       of data that is retrieved from that datasource.  The name
-       of the dataset can be used in the datapath attribute of
-       a view.
-  -->
-  <containsElements>
-    <element>dataset</element>
-  </containsElements>
-</interface>
-
 <interface name="font" extends="Instance">
   <attribute name="name" type="token"/>
   <attribute  name="device" type="boolean" value="false"/>
@@ -998,8 +981,6 @@ element attribute "
   <event name="onapply" />
   <event name="onremove" />
 </interface>
-
-<interface name="datarequest" extends="node"/>
 
 <interface name="layout" extends="node">
   <attribute name="locked" type="boolean"/>
