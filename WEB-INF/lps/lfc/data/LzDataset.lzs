@@ -543,7 +543,7 @@ function setQueryString (s:*) :void {
   * http:/foo.ksp?q=12
   * http:/foo/bar.ksp?q=12
   */
-function setSrc (src:String) :void {
+final function setSrc (src:String) :void {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_src(src);
 }
@@ -572,7 +572,7 @@ function setProxyRequests (val:String) :void {
   * initialized
   * @deprecated Use setAttribute('request', ...) instead.
   */
-function setRequest(b:Boolean) :void {
+final function setRequest(b:Boolean) :void {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_request(b);
 }
@@ -787,7 +787,7 @@ function handleDataResponse (datareq:LzHTTPDataRequest) :void {
   * @param b: A boolean value - true to turn on autorequest, false to turn off
   * @deprecated Use setAttribute('autorequest', ...) instead.
   */
-function setAutorequest (b:Boolean) :void {
+final function setAutorequest (b:Boolean) :void {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_autorequest(b);
 }

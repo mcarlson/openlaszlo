@@ -75,7 +75,7 @@ function LzCommand ( parent:LzNode? = null, attrs:Object? = null, children:Array
   * @param [String] k: An array of keys, given as strings. 
   * @deprecated Use setAttribute('key', ...) instead.
   */
-function setKeys ( k ){
+final function setKeys ( k ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_key(k);
 }

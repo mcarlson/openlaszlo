@@ -282,7 +282,7 @@ function $lzc$set_target ( new_target ){
 /** Remove after 4.1
  * @deprecated Use setAttribute('target', ...) instead.
  * @access private */
-function setTarget (n) {
+final function setTarget (n) {
   if ($debug) {
     Debug.deprecated(this, arguments.callee, this.setAttribute);
   }
@@ -460,7 +460,7 @@ function stop( ) {
 /** Remove after 4.1
  * @deprecated Use setAttribute('duration', ...) instead.
  * @access private */
-function setDuration(duration){
+final function setDuration(duration){
   if ($debug) {
     Debug.deprecated(this, arguments.callee, this.setAttribute);
   }

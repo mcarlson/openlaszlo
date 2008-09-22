@@ -235,7 +235,7 @@ function $lzc$set_enabled(enabled) {
   * @param Boolean enabled: true if the text field can be edited
   * @deprecated Use setAttribute('enabled', ...) instead.
   */
-function setEnabled (enabled){
+final function setEnabled (enabled){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_enabled(enabled);
 }
@@ -302,16 +302,16 @@ function _modechanged(modalview) {
   */
 function _setallowselectable(value) {
     this._allowselectable = value;
-    this.setSelectable( this._selectable );
+    this.$lzc$set_selectable( this._selectable );
 }
 
 /** 
   * @access private
   */
-override function setSelectable(value) {
+override function $lzc$set_selectable(value) {
     this._selectable = value;
     // depending on allowselectable : the setted value or false !
-    super.setSelectable( this._allowselectable ? value : false );
+    super.$lzc$set_selectable( this._allowselectable ? value : false );
 }
 
 } // End of LzInputText

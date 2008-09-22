@@ -1531,7 +1531,7 @@ var resourceheight:Number = 0;
   * <code>class</code> is a keyword reserved for future use.)
   * @deprecated Use setAttribute('layout', ...) instead.
   */
-function setLayout ( layoutobj ){
+final function setLayout ( layoutobj ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_layout(layoutobj);    
 }
@@ -1543,7 +1543,7 @@ function setLayout ( layoutobj ){
   * @param String val: The value for the new font name
   * @deprecated Use setAttribute('font', ...) instead.
   */
-function setFontName ( val ,prop = null){
+final function setFontName ( val ,prop = null){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_font(val);    
 }
@@ -1631,7 +1631,7 @@ var _resource = null;
   * @deprecated Use setAttribute('resource', ...) instead.
   * @param String v: a string naming the id of the resource to attach
   */
-function setResource(v) {
+final function setResource(v) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_resource(v);    
 }
@@ -1789,7 +1789,7 @@ function __LZFinishDestroyOnIdle (){
   * `null` will make the view visible only if it has a data binding.
   * @deprecated Use setAttribute('visible', ...) instead.
   */
-function setVisible(v) { 
+final function setVisible(v) { 
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_visible(v)
 }
@@ -1809,7 +1809,7 @@ function setVisible(v) {
   * @param String amVisible: visibility of view
   * @deprecated Use setAttribute('visibility', ...) instead.
   */
-function setVisibility( amVisible ) {
+final function setVisibility( amVisible ) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_visibility(amVisible);
 }
@@ -1851,7 +1851,7 @@ function __LZupdateShown( ) {
   * @param Number v: The new value for the width
   * @deprecated Use setAttribute('width', ...) instead.
   */
-function setWidth ( v ){
+final function setWidth ( v ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_width(v);
 }
@@ -1867,7 +1867,7 @@ function setWidth ( v ){
   * @param Number v: The new value for the height
   * @deprecated Use setAttribute('height', ...) instead.
   */
-function setHeight ( v ){
+final function setHeight ( v ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_height(v);
 }
@@ -1880,7 +1880,7 @@ function setHeight ( v ){
   * @param Number v: The new value for the opacity
   * @deprecated Use setAttribute('opacity', ...) instead.
   */
-function setOpacity ( v ){
+final function setOpacity ( v ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_opacity(v);
 }
@@ -1893,7 +1893,7 @@ function setOpacity ( v ){
   * @param Number v: The new value for <attribute>x</attribute>.
   * @deprecated Use setAttribute('x', ...) instead.
   */
-function setX (v){
+final function setX (v){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_x(v);
 }
@@ -1903,7 +1903,7 @@ function setX (v){
   * @param Number v: The new value for <attribute>y</attribute>.
   * @deprecated Use setAttribute('y', ...) instead.
   */
-function setY (v) {
+final function setY (v) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_y(v);
 }
@@ -1914,7 +1914,7 @@ function setY (v) {
   * @param Number v: The new value for <attribute>rotation</attribute>.
   * @deprecated Use setAttribute('rotation', ...) instead.
   */
-function setRotation ( v ){
+final function setRotation ( v ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_rotation(v);
 }
@@ -1932,7 +1932,7 @@ function setRotation ( v ){
   * @devnote TODO: [2008-02-07 ptw] Apparently we never supported
   * 'onalign', should we?
   */
-function setAlign ( align ){
+final function setAlign ( align ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_align(align);
 }
@@ -1955,7 +1955,7 @@ function __LZalignRight (e=null) {
   * @param Integer o: The x offset
   * @deprecated Use setAttribute('xoffset', ...) instead.
   */
-function setXOffset ( o ){
+final function setXOffset ( o ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_xoffset(o);
 }
@@ -1965,7 +1965,7 @@ function setXOffset ( o ){
   * @param Integer o: The y offset
   * @deprecated Use setAttribute('yoffset', ...) instead.
   */
-function setYOffset ( o ){
+final function setYOffset ( o ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_yoffset(o);
 }
@@ -2059,7 +2059,7 @@ function $lzc$getBounds_dependencies ( who , self ){
   * @devnote TODO: [2008-02-07 ptw] Apparently we never supported
   * 'onvalign', should we?
   */
-function setValign ( valign ){
+final function setValign ( valign ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_valign(valign);
 }
@@ -2084,7 +2084,7 @@ function __LZvalignBottom (e=null) {
   * @param Integer c: A color in rgb format; for example, 0xff0000 is red.
   * @deprecated Use setAttribute('fgcolor', ...) instead.
   */
-function setColor ( c ){
+final function setColor ( c ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_fgcolor(c);
 }
@@ -2681,7 +2681,7 @@ function sendToBack ( ){
   * @param Integer n: the number of the resource to show
   * @deprecated Use setAttribute('frame', ...) instead.
   */
-function setResourceNumber( n ) {
+final function setResourceNumber( n ) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_frame(n); 
 }
@@ -2696,7 +2696,7 @@ function setResourceNumber( n ) {
   * @param String v: Set the resource to stretch only in the given axis ("width" or
   * "height") or in both axes ("both"). 
   */
-function stretchResource(v) { 
+final function stretchResource(v) { 
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_stretches(v); 
 }
@@ -2707,7 +2707,7 @@ function stretchResource(v) {
   * @param Integer bgc: The 0-FFFFFF number to be used for the new background color.
   * @deprecated Use setAttribute('bgcolor', ...) instead.
   */
-function setBGColor ( bgc ) {
+final function setBGColor ( bgc ) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_bgcolor(bgc);
 }
@@ -2766,7 +2766,7 @@ function removeMask () {
   * @param Boolean amclickable: Boolean indicating the view's clickability
   * @deprecated Use setAttribute('clickable', ...) instead.
   */
-function setClickable ( amclickable ){
+final function setClickable ( amclickable ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_clickable(amclickable);
 }
@@ -2783,7 +2783,7 @@ function $lzc$set_cursor(cursor) {
   * this view. Or '' for default cursor.
   * @deprecated Use setAttribute('cursor', ...) instead.
   */
-function setCursor ( cursor = null){
+final function setCursor ( cursor = null){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_cursor(cursor);
 }
@@ -2803,7 +2803,7 @@ function $lzc$set_play (b:Boolean) :void {
   * @param Boolean b: If true, starts playing, otherwise stops
   * @deprecated Use setAttribute('play', ...) instead.
   */
-function setPlay (b:Boolean) :void {
+final function setPlay (b:Boolean) :void {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_play(b);
 }
@@ -2975,7 +2975,7 @@ function getID3 () :Object {
   * it
   * @deprecated Use setAttribute('showhandcursor', ...) instead.
   */
-function setShowHandCursor ( s ){
+final function setShowHandCursor ( s ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_showhandcursor(s);
 }
@@ -2996,7 +2996,7 @@ function setAccessible (accessible) {
   * @param Boolean s: If true, activate the current view and all of its children
   * @deprecated Use setAttribute('aaactive', ...) instead.
   */
-function setAAActive ( s ){
+final function setAAActive ( s ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_aaactive(s);
 }
@@ -3007,7 +3007,7 @@ function setAAActive ( s ){
   * @param string s: Sets the accessibility name for this view
   * @deprecated Use setAttribute('aaname', ...) instead.
   */
-function setAAName ( s ){
+final function setAAName ( s ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_aaname(s);
 }
@@ -3018,7 +3018,7 @@ function setAAName ( s ){
   * @param string s: Sets the accessibility description for this view
   * @deprecated Use setAttribute('aadescription', ...) instead.
   */
-function setAADescription ( s ){
+final function setAADescription ( s ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_aadescription(s);
 }
@@ -3028,7 +3028,7 @@ function setAADescription ( s ){
   * @param number s: The tab order index for this view.  Must be a unique number.
   * @deprecated Use setAttribute('aatabindex', ...) instead.
   */
-function setAATabIndex ( s ){
+final function setAATabIndex ( s ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_aatabindex(s);
 }
@@ -3039,7 +3039,7 @@ function setAATabIndex ( s ){
   * If false, it is active to the screen reader.
   * @deprecated Use setAttribute('aasilent', ...) instead.
   */
-function setAASilent ( s ){
+final function setAASilent ( s ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_aasilent(s);
 }
@@ -3152,7 +3152,7 @@ var __proxypolicy = null;
   * @param Object f: If a string, use as a URL to the proxy server. If a function, it should take a URL of a resource, and return the URL of the proxy server to use to load that resource.
   * @deprecated Use setAttribute('proxyurl', ...) instead.
   */
-function setProxyURL ( f ){
+final function setProxyURL ( f ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_proxyurl(f);
 }

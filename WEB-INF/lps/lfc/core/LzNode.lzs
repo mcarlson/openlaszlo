@@ -1608,7 +1608,7 @@ public dynamic class LzNode extends LzEventable {
    * @param String dp: The string to use as the datapath.
    * @deprecated Use setAttribute('datapath', ...) instead.
    */
-  function setDatapath ( dp ) {
+  final function setDatapath ( dp ) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_datapath(dp);
   }

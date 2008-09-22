@@ -512,7 +512,8 @@ function compareVersion ( ver , over = null ){
   * called.
   * @access private
   */
-override function setResource (v ) {
+override function $lzc$set_resource( v ) {
+
     if ($swf9) {
         //
     } else {

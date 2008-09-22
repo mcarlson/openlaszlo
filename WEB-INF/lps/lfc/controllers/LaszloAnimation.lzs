@@ -92,7 +92,7 @@ function $lzc$set_motion ( eparam ){
  * @deprecated Use setAttribute('motion', ...) instead.
  * @access private
  */
-function setMotion (eparam) {
+final function setMotion (eparam) {
   if ($debug) {
     Debug.deprecated(this, arguments.callee, this.setAttribute);
   }
@@ -113,7 +113,7 @@ function $lzc$set_to ( eparam ) {
  * @deprecated Use setAttribute('to', ...) instead.
  * @access private
  */
-function setTo (eparam) {
+final function setTo (eparam) {
   if ($debug) {
     Debug.deprecated(this, arguments.callee, this.setAttribute);
   }

@@ -111,6 +111,7 @@ dynamic class LzText extends LzView with LzFormatter {
   */
     var selectable = false;
 
+/** @access private */
 function $lzc$set_selectable(isSel) {
     this.selectable = isSel;
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
@@ -621,7 +622,7 @@ LzText.attributes.clip = true;
   * LzText only (cannot be used with LzInputText).
   * @param Boolean val: if true, the textfield will recompute it's width after setText() is called
   */
-function setResize ( val ){
+final function setResize ( val ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_resize(val);
 }
@@ -672,7 +673,7 @@ function clearText ( ){
   * Set the maximum number of chars a textfield can contain
   * @deprecated Use setAttribute('maxlength', ...) instead.
   */
-function setMaxLength ( val ){
+final function setMaxLength ( val ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_maxlength(val);
 }
@@ -683,7 +684,7 @@ function setMaxLength ( val ){
   * Set the pattern of chars a textfield can contain
   * @deprecated Use setAttribute('pattern', ...) instead.
   */
-function setPattern ( val ){
+final function setPattern ( val ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_pattern(val);
 }
@@ -794,7 +795,7 @@ function getBottomScroll ( ){
   * (n is always &lt; 0)
   * @deprecated Use setAttribute('xscroll', ...) instead.
   */
-function setXScroll ( n ){
+final function setXScroll ( n ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_xscroll(n);
 }
@@ -909,7 +910,7 @@ function parseImgAttributes(attrs, str) {
   * @param String t: the string to which to set the text
   * @deprecated Use setAttribute('text', ...) instead.
   */
-function setText (t) {
+final function setText (t) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_text(t);    
 }
@@ -987,7 +988,7 @@ function escapeText( ts ){
   * @param Boolean isSel: true if the text may be selected by the user
   * @deprecated Use setAttribute('selectable', ...) instead.
   */
-function setSelectable ( isSel ){
+final function setSelectable ( isSel ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_selectable(isSel);
 }
@@ -1020,7 +1021,7 @@ function $lzc$set_fontsize(fsize) {
   * @access private
   * @deprecated Use setAttribute('fontsize', ...) instead.
   */
-function setFontSize ( fsize ){
+final function setFontSize ( fsize ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_fontsize(fsize);
 }
@@ -1038,7 +1039,7 @@ function $lzc$set_fontstyle(fstyle) {
   * @access private
   * @deprecated Use setAttribute('fontstyle', ...) instead.
   */
-function setFontStyle ( fstyle ){
+final function setFontStyle ( fstyle ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_fontstyle(fstyle);
 }
@@ -1091,7 +1092,7 @@ function setEmbedFonts ( onroff ){
  * @param String aliasType: "normal" or "advanced"
  * @deprecated Use setAttribute('antiAliasType', ...) instead.
  */
-function setAntiAliasType( aliasType ){
+final function setAntiAliasType( aliasType ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_antiAliasType(aliasType);
 }
@@ -1115,7 +1116,7 @@ function getAntiAliasType() {
  * @param String gridFit: "none", "pixel", or "subpixel"
  * @deprecated Use setAttribute('gridFit', ...) instead.
  */
-function setGridFit( gridFit ){
+final function setGridFit( gridFit ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_gridFit(gridFit);
 }
@@ -1139,7 +1140,7 @@ function getGridFit() {
  * @param Number sharpness: -400 to 400
  * @deprecated Use setAttribute('sharpness', ...) instead.
  */
-function setSharpness( sharpness ){
+final function setSharpness( sharpness ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_sharpness(sharpness);
 }
@@ -1164,7 +1165,7 @@ function getSharpness() {
  * @param Number thickness: -200 to 200
  * @deprecated Use setAttribute('thickness', ...) instead.
  */
-function setThickness( thickness ){
+final function setThickness( thickness ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_thickness(thickness);
 }
