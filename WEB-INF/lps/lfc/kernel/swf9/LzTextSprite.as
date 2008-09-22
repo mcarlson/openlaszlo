@@ -65,18 +65,13 @@ public class LzTextSprite extends LzSprite {
 
         public function enableClickableLinks( enabled:Boolean):void {
             if (enabled) {
-                trace('enableClickableLinks true')
                 addEventListener(TextEvent.LINK, textLinkHandler);
-                this.textfield.mouseEnabled = true;
             } else {
-                trace('enableClickableLinks false')
                 removeEventListener(TextEvent.LINK, textLinkHandler);
-                this.textfield.mouseEnabled = this.clickable || this.textfield.selectable;
             }
         }
 
         public function textLinkHandler(e:TextEvent) {
-            trace('got textLinkHandler', e.text);
             this.owner.ontextlink.sendEvent(e.text);
         }
 

@@ -534,10 +534,12 @@
     <handler name="onapplied" reference="resize" method="saveDebuggerState"/>
             
 <method name="saveDebuggerState" args="d">
+    if (this.persist) {
         this.persist.data['_pdbgwidth'] = this.width;
         this.persist.data['_pdbgheight'] = this.height;
         this.persist.data['_pdbgx'] = this.x;
         this.persist.data['_pdbgy'] = this.y;
+    }
     </method>
 
 <method name="restoreDebuggerState" >

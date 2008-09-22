@@ -1,0 +1,28 @@
+<canvas width="100%" height="400" debug="true">
+  <debug  fontsize="12"/>
+
+  <text id="tf"  multiline="true" width="400" height="300" 
+        selectable="true"
+                     >
+     <handler name="ontextlink" args="val:String">
+       Debug.write('ontextlink', val);
+     </handler>
+  </text>
+    
+  <script>
+    <![CDATA[
+    tf.addText('This is one hyperlink. <font color="#0000ff">');
+    var link = tf.makeTextLink("Click on me for value1", "value1");
+    tf.addText(link);
+    tf.addText('</font>\nThis is another hyperlink. <font color="#0000ff">');
+    tf.addText(tf.makeTextLink("Click on me for value2", "value2"));
+    tf.addText("</font>");
+    ]]>
+  </script>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

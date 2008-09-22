@@ -438,3 +438,48 @@ LzTextSprite.prototype.setHeight = function (h){
     this.__setHeight(h);
     if (this.multiline) this._styledirty = true;
 }
+
+
+////////////////////////////////////////////////////////////////
+// Hyperlink support
+////////////////////////////////////////////////////////////////
+
+LzTextSprite.prototype.enableClickableLinks = function ( enabled) {
+}
+
+LzTextSprite.prototype.makeTextLink = function (str, value) {
+    LzTextSprite.addLinkID(this.owner);
+    var uid = this.owner.getUID();
+    return "<span onclick=\"javascript:$modules.lz.__callTextLink('" + uid+"', '" + value +"')\">" + str +"</span>";
+}
+
+// value is encoded as VIEWID:value
+$modules.lz.__callTextLink = function (viewID, val) {
+    var view = LzTextSprite.linkIDMap[viewID];
+    if (view != null) {
+        view.ontextlink.sendEvent(val);
+    }
+}
+
+// map from UIDs to views with clickable links.
+// allows us to send ontextlink events to the owner view when user clicks on a
+// hyperlink in text, via an "actionscript:" routine
+LzTextSprite.linkIDMap = [];
+
+LzTextSprite.addLinkID = function (view) {
+    LzTextSprite.linkIDMap[view.getUID()] = view;
+}
+
+
+LzTextSprite.deleteLinkID = function (view) {
+    delete LzTextSprite.linkIDMap[view.getUID()];
+}
+
+// Clean up the link ID table if this view is destroyed
+LzTextSprite.prototype._viewdestroy = LzSprite.prototype.destroy;
+
+LzTextSprite.prototype.destroy = function(){
+    LzTextSprite.deleteLinkID(this.owner.getUID());
+    this._viewdestroy( );
+}
+    

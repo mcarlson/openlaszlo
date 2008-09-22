@@ -579,6 +579,8 @@
   <attribute name="thickness" type="numberExpression"     value="0"  />
   <attribute name="text" type="string"/>
   <attribute name="embedfonts" type="boolean" />
+  <event name="ontextlink"/>
+
   <containsElements>
     <element>pre</element>
     <element>a</element>
@@ -626,6 +628,7 @@
   <method name="getTextHeight"/>
   <method name="getTextWidth"/>
   <method name="getThickness"/>
+  <method name="makeTextLink"/>
   <method name="parseImgAttributes"/>
   <method name="setAntiAliasType"/>
   <method name="setBorder"/>
