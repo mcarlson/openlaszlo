@@ -328,7 +328,7 @@
           t.setMinValue(0);
           t.setMaxValue(10);
           t.checkConsistency(this);
-          verifyrange(t);
+          verifyrange();
           verifythumbrange(t);
         </method>
         
