@@ -8,10 +8,10 @@
           title="Simple Window">
     <button text="My button" 
             onclick="this.parent.parent.windowTwo.setAttribute('x',
-            this.parent.parent.windowTwo.getAttribute('x') + 20)"/>
+            this.parent.parent.windowTwo.x + 20)"/>
   </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

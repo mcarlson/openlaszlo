@@ -35,8 +35,8 @@
     
     <method name="initButton">
       this.buttonText.setAttribute('x', 
-                                   this.getAttribute('labelX'));
-      this.buttonText.setAttribute('text', this.getAttribute('buttLabel'));
+                                   this.labelX);
+      this.buttonText.setAttribute('text', this.buttLabel);
     </method>
         
     <text name="buttonText" font="obliqueText" fontsize="25" 

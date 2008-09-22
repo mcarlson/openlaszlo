@@ -11,12 +11,12 @@
     if (goButton.go==true) {
         this.setAttribute('text', 'Stop');
         this.setAttribute('go', false);
-        Debug.write(this.getAttribute('go'), "should be 'false'");
+        Debug.write(this.go, "should be 'false'");
         }
     else {
     this.setAttribute('text', 'Go');
     this.setAttribute('go', true);
-    Debug.write(this.getAttribute('go'), "should be 'true'");
+    Debug.write(this.go, "should be 'true'");
     }
 </handler>
 

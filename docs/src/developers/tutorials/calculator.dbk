@@ -353,8 +353,8 @@ using classes as a divider.</para>
     
     &lt;method name="initButton"&gt;
       this.buttonText.setAttribute('x', 
-                                   this.getAttribute('labelX'));
-      this.buttonText.setAttribute('text', this.getAttribute('buttLabel'));
+                                   this.labelX);
+      this.buttonText.setAttribute('text', this.buttLabel);
     &lt;/method&gt;
     
     &lt;text name="buttonText" font="obliqueText" fontsize="25" 

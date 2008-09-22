@@ -202,7 +202,7 @@ all the attributes of a <indexterm><primary>view</primary></indexterm><sgmltag c
  twice doesn't help, because all that does is reset the x attribute to a constant amount (150px).</para>
 
 <para>Instead, we need to figure out where the second window is, and then add an increment to it each time the button is clicked. 
-Looking again at the API reference for the <indexterm><primary>LzView</primary></indexterm><classname>lz.view</classname> class, we can see that there is a <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname> method to get the <indexterm><primary>x</primary></indexterm><sgmltag class="attribute">x</sgmltag> attribute.</para>
+   To do that, use the . operator to get the <sgmltag class="attribute">x</sgmltag> attribute: <literal>this.parent.parent.windowTwo.x</literal>.</para>
 
 <para>So we could say:</para>
 <example role="live-example">

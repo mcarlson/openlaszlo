@@ -306,7 +306,7 @@ to test that program's validity.</para>
 
 <para>Defines a new kind of view object, <literal>froboz</literal>, that has fifty attributes: the 49 that it has inherited from view, plus the new attribute named <indexterm><primary>whatnot</primary></indexterm><sgmltag class="attribute">whatnot</sgmltag>.</para> 
 
-<para>We have seen that attributes can be set, that is, assigned values, in LZX tags. It is also possible to set attribute values in script using the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method. Additionally, values of attributes can be read, or "gotten" in script (but not in tags) using the <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname> method. (Methods will be explained below).</para> 
+<para>We have seen that attributes can be set, that is, assigned values, in LZX tags. It is also possible to set attribute values in script using the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method. Additionally, values of attributes can be read, or "gotten" in script (but not in tags) using the <literal>.</literal> operator.</para> 
 
 <para>Assume the existence of a view named <varname>johnny</varname>. This view may have been created by a tag or in script; how the view came into existence does not matter.</para> 
 
@@ -315,7 +315,7 @@ to test that program's validity.</para>
 
 <para>and to read the value the height would be</para> 
 
-<para><literal>johnny.getAttribute("height");</literal></para> 
+<para><literal>johnny.height;</literal></para> 
 
 <para>Every time that an attribute is set, that is, every time the value of an attribute changes, an object called an <literal>event</literal> is generated. The next section discusses what events are, and how they work in LZX programs.</para> 
 

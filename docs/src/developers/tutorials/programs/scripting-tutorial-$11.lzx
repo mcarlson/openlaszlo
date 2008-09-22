@@ -5,7 +5,7 @@
     //
     function moveWindow() {
       var increment = 20;
-      var originalX = canvas.windowTwo.getAttribute('x');
+      var originalX = canvas.windowTwo.x;
       var newX = originalX + increment;
       canvas.windowTwo.setAttribute('x', newX);
     }
@@ -21,6 +21,6 @@
   </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

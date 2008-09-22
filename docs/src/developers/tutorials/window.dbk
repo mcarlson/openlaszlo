@@ -190,7 +190,7 @@ offset too:</para>
 
 
 
-<para>Later, we clear this delegate by calling the <indexterm><primary><literal>unregisterAll()</literal></primary></indexterm><methodname>unregisterAll()</methodname> method, and setting the delegate to null, so that it will evaluate to false next time we do the <literal>if (!this.getAttribute('sizerDel'))</literal> test.</para>
+<para>Later, we clear this delegate by calling the <indexterm><primary><literal>unregisterAll()</literal></primary></indexterm><methodname>unregisterAll()</methodname> method, and setting the delegate to null, so that it will evaluate to false next time we do the <literal>if (!this.sizerDel)</literal> test.</para>
 
 <para>The window resizes smoothly, but as you can see, strange things can happen when the window is resized quickly. This is because the sizes of some of the elements get set to a negative value, causing our window to break. Also, it's possible to completely invert the window.</para>
 

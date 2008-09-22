@@ -120,7 +120,7 @@ The following discussion of syntax is really unfortunate.
 </remark></para>
 
 <para>In the above example we are using two methods of referencing properties of a view. For example, 
-we use <literal>this.getAttribute('width')</literal> and <literal>this.width</literal>. They <emphasis role="em">are</emphasis> different, and there are 
+we use <literal>this.width</literal> and <literal>this.width</literal>. They <emphasis role="em">are</emphasis> different, and there are 
 specific situations when you can and can't use the <literal>this.width</literal> syntax. 
 In short, <literal>this.width</literal> can only be used in constraints.</para>
 

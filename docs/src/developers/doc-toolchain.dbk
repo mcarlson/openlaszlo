@@ -211,8 +211,8 @@
             * <emphasis>@return Boolean: boolean indicating whether or not the point lies within the view</emphasis>
             */
             function containsPt( x,y ) {
-                return (((this.getAttribute(&quot;height&quot;)&gt;= y) &amp;&amp; (y &gt;= 0)) &amp;&amp;
-                ((this.getAttribute(&quot;width&quot;)&gt;= x) &amp;&amp; (x &gt;= 0)));
+                return (((this.height&gt;= y) &amp;&amp; (y &gt;= 0)) &amp;&amp;
+                ((this.width&gt;= x) &amp;&amp; (x &gt;= 0)));
             }            
           </programlisting>
       <para>Turning those structured comments into the js2doc intermediate format is achieved by a

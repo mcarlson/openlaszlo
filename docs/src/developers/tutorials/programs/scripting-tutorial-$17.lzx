@@ -5,15 +5,15 @@
     <!-- Moves the second window specified number of pixels 
          in specified direction -->
     <method name="moveWindow" args="buttonObj">
-      direction = buttonObj.getAttribute("direction");
-      distance = parseInt(buttonObj.getAttribute("distance"));
+      direction = buttonObj.direction;
+      distance = parseInt(buttonObj.distance);
       // decide which direction to go
       if (direction == "left") {
        var increment = -1 * distance;
       } else if (direction == "right") {
         var increment = distance;
       }
-      var originalX = this.getAttribute('x');
+      var originalX = this.x;
       var newX = originalX + increment;
       this.setAttribute('x', newX);
     </method>
@@ -41,6 +41,6 @@
   </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

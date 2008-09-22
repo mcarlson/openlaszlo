@@ -24,8 +24,8 @@
 
         <method name="initButton">
             this.buttonText.setAttribute( 'x', 
-                                          this.getAttribute( 'labelX' ) );
-            this.buttonText.setAttribute('text',  this.getAttribute( 'buttLabel' ) );
+                                          this.labelX );
+            this.buttonText.setAttribute('text',  this.buttLabel );
         </method>
         
         <text name="buttonText" font="obliqueText" fontsize="25" 
@@ -39,6 +39,6 @@
 
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
