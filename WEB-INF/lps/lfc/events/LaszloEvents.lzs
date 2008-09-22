@@ -336,7 +336,7 @@ if ($debug) {
   * @access private
   */
   LzDelegate.prototype._dbg_name = function (){
-    var name = Debug.formatToString("%0.48w.%s()", this.c, this.m);
+    var name = Debug.formatToString("%0.48#w.%s()", this.c, this.m);
     if (this[0]) {
       name += Debug.formatToString("/* handles %w%s */", this[0], this[1]?" \u2026":"");
     }
@@ -606,7 +606,7 @@ if ($debug) {
   * @access private
   */
 LzEvent.prototype._dbg_name = function (){
-    return Debug.formatToString("%0.48w.%s", this._dbg_eventSender, this._dbg_eventName);
+    return Debug.formatToString("%0.48#w.%s", this._dbg_eventSender, this._dbg_eventName);
 }
 }
 

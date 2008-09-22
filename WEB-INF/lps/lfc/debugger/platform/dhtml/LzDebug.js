@@ -182,9 +182,11 @@ class LzDHTMLDebugService extends LzDebugService {
    */
   override function __StringDescription (thing:*, pretty:Boolean, limit:Number, unique:Boolean):Object {
     try {
-      if ((!!window.HTMLElement ? thing instanceof HTMLElement : t == 'object' && !thing.constructor) &&
+      if ((!!window.HTMLElement ? thing instanceof HTMLElement : typeof(thing) == 'object' && !thing.constructor) &&
           (! isNaN(Number(thing['nodeType'])))) {
         // test for HTMLElement if avaliable, second expression helps to filter IE-HTMLElements
+        // NOTE: IE does not provide a HTMLElement-class, but we know their HTMLElements return 'object' for typeof,
+        // but as they're no proper JS-Objects (no 'constructor' property), we use this info as a hint.
 
         // tip o' the pin to osteele.com for the notation format
         function nodeToString(node) {
@@ -234,17 +236,20 @@ class LzDHTMLDebugService extends LzDebugService {
   override function functionName (fn, mustBeUnique) {
     if (fn is Function) {
       // JS1 constructors are Function
-      // JS1 constructors are Function
       if (fn.hasOwnProperty('tagname')) {
         var n = fn.tagname;
         if ((! mustBeUnique) || (fn === lz[n])) {
           return '<' + n + '>';
+        } else {
+          return null;
         }
       }
       if (fn.hasOwnProperty('classname')) {
         var n = fn.classname;
         if ((! mustBeUnique) || (fn === eval(n))) {
           return n;
+        } else {
+          return null;
         }
       }
     }

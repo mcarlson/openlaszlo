@@ -385,6 +385,14 @@ mixin LzFormatter {
           } else {
             str = '' + value;
           }
+          if ($debug) {
+            // alternate => show abbreviation
+            if (alternate) {
+              var width = decimals || Debug.printLength;
+              str = Debug.abbreviate(str, width);
+              decimals = null;
+            }
+          }
           out.appendInternal(this.pad(str, length, decimals, pad, sign, radix, force),
                              object);
           argno++;                  // consume value

@@ -280,7 +280,7 @@ class LzSourceMessage {
   var file:String;
   var line:Number;
   var message:LzMessage;
-  var length:Number;
+  public var length:Number;
   var backtrace;
   static var type = '';
   static var color = '#000000';

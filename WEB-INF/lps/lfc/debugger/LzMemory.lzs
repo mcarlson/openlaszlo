@@ -530,7 +530,7 @@ class __LzLeak {
   */
 class __LzLeaks /* extends Array */ {
   // Act like an Array
-  var length = 0;
+  public var length = 0;
 
   var sort = Array.prototype.sort;
 

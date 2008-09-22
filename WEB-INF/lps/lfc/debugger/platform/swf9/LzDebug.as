@@ -125,8 +125,34 @@ class LzAS3DebugService extends LzDebugService {
     // NOTE [2008-09-16 ptw] In JS2 all primitives (boolean, number,
     // string) are auto-wrapped, so you can't ask `obj is Object` to
     // distinguish primitives from objects
-    return obj && (typeof(obj) == 'object');
+    return !!obj && (typeof(obj) == 'object');
   };
+
+  /**
+   * Predicate for deciding if an object is 'Array-like' (has a
+   * non-negative integer length property)
+   *
+   * @access private
+   *
+   * @devnote TODO [2008-09-22 ptw] (LPP-XXXX) The swf9 back end is
+   * currently discarding return declarations, so we have to comment
+   * out the declaration here to avoid an invalid override error
+   */
+  #passthrough {
+  override function isArrayLike (obj:*)/*:Boolean*/ {
+    // Efficiency
+    if (obj is Array) { return true; }
+    if (! (typeof obj == 'object')) { return false; }
+    // NOTE [2008-09-20 ptw] In JS2 you can't ask obj['length'] if the
+    // object's class doesn't have such a property, or is not dynamic
+    var description:XML = describeType(obj);
+    if ((description.@isDynamic == 'true') ||
+        (description.variable.(@name == 'length').length() != 0)) {
+      return super.isArrayLike(obj);
+    }
+    return  false;
+  };
+  }#
 
   /**
    * Adds handling of swf9 Class

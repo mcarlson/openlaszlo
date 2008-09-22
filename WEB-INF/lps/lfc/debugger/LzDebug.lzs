@@ -534,7 +534,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       if (this.isObjectLike(thing)) {
         // In Javascript the only link to the prototype is through the
         // constructor property
-        var oc = thing['constructor'];
+        var oc = thing is Object && thing['constructor'];
 
         // Check for user typename
         var user_name = null;
@@ -618,7 +618,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     catch (e) {
       try {
         // Use %s to prevent recursion
-        n = this.formatToString("Error %0.24s computing __typeof", e);
+        n = this.formatToString("Error: %0.24#s computing __typeof", e);
       }
       catch (e) {
         n = "Recursive error computing __typeof";
@@ -694,26 +694,31 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       if (this.isObjectLike(thing)) {
         // Bind printLength short while calling user methods
         var opl = this.printLength;
-        this.printLength = (limit < this.inspectPrintLength)?limit:this.inspectPrintLength;
-        // Have to use `in` here, because only our objects will have
-        // this (and they will have it on their class prototype).
-        var dn = '_dbg_name' in thing ? thing._dbg_name : null;
-        // Look for class prototypes
-        // TODO: [2008-09-17 ptw] constructors are Class's in swf9,
-        // not Function's.
-        if (thing['_dbg_prototype_for']) {
-          debug_name = thing._dbg_prototype_for + '.prototype';
-        } else if (dn is Function) {
-          // Guard against broken user routines
-          try {
-            // Not dn(), because need thing context
-            debug_name = thing._dbg_name();
+        try {
+          this.printLength = (limit < this.inspectPrintLength)?limit:this.inspectPrintLength;
+          // Look for class prototypes
+          // TODO: [2008-09-17 ptw] constructors are Class's in swf9,
+          // not Function's.
+          if (thing.hasOwnProperty('_dbg_prototype_for')) {
+            debug_name = this.functionName(thing._dbg_prototype_for) + '.prototype';
+          } else {
+            // Have to use `in` here, because only our objects will have
+            // this (and they will have it on their class prototype).
+            var dn = '_dbg_name' in thing ? thing._dbg_name : null;
+            if (dn is Function) {
+              // Guard against broken user routines
+              try {
+                // Not dn(), because need thing context
+                debug_name = thing._dbg_name();
+              }
+              catch (e) {};
+            } else if (this.isStringLike(dn)) {
+              debug_name = dn;
+            }
           }
-          catch (e) {}
-        } else if (this.isStringLike(dn)) {
-          debug_name = dn;
+        } finally {
+          this.printLength = opl;
         }
-        this.printLength = opl;
       }
       if (this.isStringLike(debug_name)) {
         // If the debug name does not start with '#' (indicating that it
@@ -872,7 +877,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       pretty = false;
       try {
         // Use %s to prevent recursion
-        s = this.formatToString("Error: %0.24s computing __String", e);
+        s = this.formatToString("Error: %0.24#s computing __String", e);
       }
       catch (e) {
         s = "Recursive error computing __String";
@@ -912,7 +917,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     var d  = this.__StringDescription(thing, pretty, limit, unique);
     var s = d.description;
     if (d.pretty &&
-        ((! unique) || (typeof(thing) != 'object')) &&
+        ((! unique) || (! this.isObjectLike(thing))) &&
         (s != "") && (s.length < limit)) {
       return s;
     }
@@ -961,7 +966,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           this.printLength = this.inspectPrintLength;
         }
         // Turn off pretty for name
-        // TODO: [2008-09-05 ptw] Why do we have to xmlEscape this?
+        // Note: inspectInternal is expected to return the
+        // HTML-encoded string
         var name = LzMessage.xmlEscape(this.__String(obj, false));
         if (! (this.isObjectLike(obj))) {
           return name;
@@ -1031,12 +1037,13 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     } catch (e) {
       try {
         // Use %s to prevent recursion
-        description = this.formatToString("Error: %0.24s computing inspectInternal", e);
+        // Note: inspectInternal is expected to return the
+        // HTML-encoded string
+        description = this.formatToString("Error: %0.24#s computing inspectInternal", e).toHTML();
       }
       catch (e) {
         description = "Recursive error computing inspectInternal";
       }
-    } finally {
     }
     if (description != "") { description = ' {\n' + description + '}'; }
     return name + description;
@@ -1068,7 +1075,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           r += wf;
         }
       }
-      // TODO: [2008-09-05 ptw] Why do we have to xmlEscape this?
+      // Note: inspectInternal is expected to return the
+      // HTML-encoded string
       var ostr = LzMessage.xmlEscape(this.__String(val));
       // Second, in case __String interns an abbreviated object
       var id = this.IDForObject(val);
@@ -1077,7 +1085,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     }
     catch (e) {
       try {
-        r += this.formatToString(" Error: %w computing description", e);
+        // Note: inspectInternal is expected to return the
+        // HTML-encoded string
+        r += this.formatToString(" Error: %0.24#s computing slot description", e).toHTML();
       }
       catch (e) {
         r += " Error computing description";
@@ -1109,12 +1119,13 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @access private
    */
   function isArrayLike (obj:*):Boolean {
-    if ((obj is Array) || ('length' in obj)) {
-      var ol = obj['length'];
+    if ((obj is Array) || (obj['length'] != (void 0))) {
+      var ol = obj.length;
       return ((typeof(ol) == 'number' || ol is Number) &&
               ((ol|0) === ol) &&
               (ol >= 0));
     }
+    return false;
   }
 
   /**
@@ -1362,19 +1373,14 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
     // Check for 'array-ness'
-    var ol;
+    var alen = false;
+    if (this.isArrayLike(obj)) { alen = obj.length; }
+    var proto = false;
     try {
-      ol = obj['length'];
-    } catch (e) {
-      return;
-    }
-    var alen = ((typeof(ol) == 'number' || ol is Number) &&
-                (Math.floor(ol) === ol) &&
-                (ol >= 0)) ? ol : false;
-    var hopp = obj['hasOwnProperty'] is Function;
     // Use typeof == 'object' rather than instanceof Object for native prototypes
-    var proto = ((obj['constructor'] && (typeof obj.constructor['prototype'] == 'object')) ?
-                 obj.constructor.prototype : false);
+      proto = ((obj['constructor'] && (typeof obj.constructor['prototype'] == 'object')) ?
+               obj.constructor.prototype : false);
+    } catch (e) {};
     for (var key in obj) {
       // Heuristic to find 'interesting' slots, by which we mean slots
       // that have a non-inherited value.  This should find 'own' slots,
@@ -1393,7 +1399,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
             // Be careful poking at prototypes (consider getters that
             // may fail when called on the prototype)
             isown = (obj[key] !== proto[key]);
-          } catch (e) {}
+          } catch (e) {};
         }
       }
       if (isown) {

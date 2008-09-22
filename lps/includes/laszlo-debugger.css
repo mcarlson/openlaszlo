@@ -15,7 +15,7 @@ body
 }
 
 /* Debug link styles */
-span.DEBUG, span.INFO, span.WARNING, span.ERROR, span.TRACE, span.MONITOR span.INSPECT {
+span.DEBUG, span.INFO, span.WARNING, span.ERROR, span.TRACE, span.MONITOR, span.INSPECT {
     cursor: pointer;
     text-decoration: none;
 }

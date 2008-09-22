@@ -465,6 +465,7 @@ var Trait = {
     xtor.classname = interstitialname;
     if ($debug) {
       xtor._dbg_typename = 'Interstitial Constructor';
+      xtor._dbg_name = xtor.classname;
     }
     #pragma "passThrough=true"
     var t = new xtor();
@@ -488,6 +489,7 @@ var Trait = {
       constructor: this,
       classname: classname,
       _dbg_typename: this._dbg_name,
+      _dbg_name: classname,
       prototype: superTrait ? superTrait.make() : new Object,
       instanceProperties: superTrait ? superTrait.instanceProperties.slice(0) : new Array,
       // Remembers all implementations of the Trait
