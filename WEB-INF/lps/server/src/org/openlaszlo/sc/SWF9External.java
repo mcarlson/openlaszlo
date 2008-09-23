@@ -344,6 +344,7 @@ public class SWF9External {
     private List errors = new ArrayList();
     private ExternalCompilerError lastError = null;
     private TranslationUnit[] tunits;
+    private List severe = new ArrayList();
 
     // we don't expect this to be terribly big, can fit in memory
     StringBuffer sb = new StringBuffer();
@@ -369,6 +370,13 @@ public class SWF9External {
       return null;
     }
 
+    // Do our best to identify severe errors that happen in practice.
+    // We'll probably need to add to this list.
+
+    public boolean matchSevere(String str) {
+      return str.contains("OutOfMemoryError") || str.contains("Java heap space");
+    }
+
     public void collect(String str) {
       
       // We expect errors from this compiler to start with the file name.
@@ -386,6 +394,9 @@ public class SWF9External {
                                                str);
         errors.add(lastError);
       }
+      else if (matchSevere(str)) {
+        severe.add(str);
+      }
       else {
         if (lastError == null) {
           System.err.println("Stray error string from external compiler: " + str);
@@ -398,6 +409,10 @@ public class SWF9External {
     
     public List getErrors() {
       return errors;
+    }
+
+    public List getSevereErrors() {
+      return severe;
     }
   }
 
@@ -444,6 +459,28 @@ public class SWF9External {
     }
   }
 
+  // The string collected in BigErrorString
+  // will be passed as an exception, so it can't be too large
+  //
+  public static class BigErrorString {
+    int count = 0;
+    String str = "";
+
+    public void add(String errstr) {
+      if (str.length() > 0) {
+        str += "\n";
+      }
+      count++;
+      if (count < MAX_ERRORS_SHOWN) {
+        str += errstr;
+      }
+      else if (count == MAX_ERRORS_SHOWN) {
+        str += ".... more than " + MAX_ERRORS_SHOWN +
+          " errors, additional errors not shown.";
+      }
+    }
+  }
+
   /**
    * Run the compiler using the command/arguments in cmd.
    * Collect and report any errors, and check for the existence
@@ -459,8 +496,7 @@ public class SWF9External {
     String[] cmdstr = (String[])cmd.toArray(new String[0]);
     String prettycmd = prettyCommand(cmd);
     System.err.println("Executing compiler: (cd " + dir + "; " + prettycmd + ")");
-    String bigErrorString = "";
-    int bigErrorCount = 0;
+    BigErrorString bigErrorString = new BigErrorString();
 
     // Generate a small script (unix style) to document how
     // to build this batch of files.
@@ -500,6 +536,14 @@ public class SWF9External {
         System.err.println("Error collecting compiler output: " + errcollect.getException());
         // TODO: [2007-11-20 dda] log this
       }
+      List severe = errcollect.getSevereErrors();
+      if (severe.size() > 0) {
+        for (Iterator iter = severe.iterator(); iter.hasNext(); ) {
+          String errstr = "SEVERE ERROR: " + (String)iter.next();
+          bigErrorString.add(errstr);
+          System.err.println(errstr);
+        }
+      }
       List errs = errcollect.getErrors();
       if (errs.size() > 0) {
         System.err.println("ERRORS: ");
@@ -534,18 +578,7 @@ public class SWF9External {
           }
           System.err.println(actualSrcLine + srcLineStr + err.getErrorString());
 
-          // bigErrorString will be passed as an exception.
-          if (bigErrorString.length() > 0) {
-            bigErrorString += "\n";
-          }
-          bigErrorCount++;
-          if (bigErrorCount < MAX_ERRORS_SHOWN) {
-            bigErrorString += srcLineStr + err.cleanedErrorString();
-          }
-          else if (bigErrorCount == 50) {
-            bigErrorString += ".... more than " + MAX_ERRORS_SHOWN +
-              " errors, additional errors not shown.";
-          }
+          bigErrorString.add(srcLineStr + err.cleanedErrorString());
         }
       }
 
@@ -559,8 +592,8 @@ public class SWF9External {
     System.err.println("Done executing compiler");
     if (!new File(outfileName).exists()) {
       System.err.println("Intermediate file " + outfileName + ": does not exist");
-      if (bigErrorString.length() > 0) {
-        throw new CompilerError(bigErrorString);
+      if (bigErrorString.str.length() > 0) {
+        throw new CompilerError(bigErrorString.str);
       }
       else {
         throw new CompilerError("Errors from compiler, output file not created");
@@ -585,8 +618,7 @@ public class SWF9External {
     String[] cmdstr = (String[])cmd.toArray(new String[0]);
     String prettycmd = prettyCommand(cmd);
     System.err.println("Executing compiler: (cd " + dir + "; " + prettycmd + ")");
-    String bigErrorString = "";
-    int bigErrorCount = 0;
+    BigErrorString bigErrorString = new BigErrorString();
 
     // Generate a small script (unix style) to document how
     // to build this batch of files.
@@ -679,6 +711,14 @@ public class SWF9External {
         System.err.println("Error collecting compiler output: " + errcollect.getException());
         // TODO: [2007-11-20 dda] log this
       }
+      List severe = errcollect.getSevereErrors();
+      if (severe.size() > 0) {
+        for (Iterator iter = severe.iterator(); iter.hasNext(); ) {
+          String errstr = "SEVERE ERROR: " + (String)iter.next();
+          bigErrorString.add(errstr);
+          System.err.println(errstr);
+        }
+      }
       List errs = errcollect.getErrors();
       if (errs.size() > 0) {
         System.err.println("ERRORS: ");
@@ -713,23 +753,12 @@ public class SWF9External {
           }
           System.err.println(actualSrcLine + srcLineStr + err.getErrorString());
 
-          // bigErrorString will be passed as an exception.
-          if (bigErrorString.length() > 0) {
-            bigErrorString += "\n";
-          }
-          bigErrorCount++;
-          if (bigErrorCount < MAX_ERRORS_SHOWN) {
-            bigErrorString += srcLineStr + err.cleanedErrorString();
-          }
-          else if (bigErrorCount == 50) {
-            bigErrorString += ".... more than " + MAX_ERRORS_SHOWN +
-              " errors, additional errors not shown.";
-          }
+          bigErrorString.add(srcLineStr + err.cleanedErrorString());
         }
       }
 
       if (exitval[0].intValue() != 0) {
-        System.err.println("FAIL: compiler returned " + exitval);
+        System.err.println("FAIL: compiler returned " + exitval[0].intValue());
       }
     } catch (InterruptedException ie) {
       throw new CompilerError("Interrupted compiler");
@@ -738,8 +767,8 @@ public class SWF9External {
     System.err.println("Done executing compiler");
     if (!new File(outfileName).exists()) {
       System.err.println("Intermediate file " + outfileName + ": does not exist");
-      if (bigErrorString.length() > 0) {
-        throw new CompilerError(bigErrorString);
+      if (bigErrorString.str.length() > 0) {
+        throw new CompilerError(bigErrorString.str);
       }
       else {
         throw new CompilerError("Errors from compiler, output file not created");
