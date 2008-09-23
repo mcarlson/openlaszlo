@@ -3,14 +3,8 @@
       @subtopic General
   -->
 <library>
-  <switch>
-    <!-- TODO: add back when as3 is supported -->
-    <when runtime="as2">
-      <include href="views/richinputtext.lzx" />
-      <include href="views/LzTextFormat.lzx" />
-    </when>
-  </switch>  
-
+  <include href="views/richinputtext.lzx" />
+  <include href="views/LzTextFormat.lzx" />
   <include href="html.lzx" />
   <include href="drawview.lzx" />
   <include href="av/library.lzx" />

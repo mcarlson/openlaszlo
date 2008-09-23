@@ -64,10 +64,15 @@
             var deviceindex = 
                 this['deviceindex'];
 
-            if (deviceindex == null) {
-                dev = Microphone.get();
+            var dev = null;
+            if ($swf8) {
+                if (deviceindex == null) {
+                    dev = Microphone.get();
+                } else {
+                    dev = Microphone.get(deviceindex);
+                }
             } else {
-                dev = Microphone.get(deviceindex);
+                if ($debug) Debug.warn('%w is not supported in this runtime.', 'microphone')
             }
 
             this._dev = 
@@ -91,13 +96,17 @@
         <!--- Start the microphone. -->
         <method name="startDevice"><![CDATA[
             //Debug.write("microphone startdevice", this);
-            this._mc = 
-                _root.createEmptyMovieClip("__LZmicMovieClip", 10000);
+            if ($swf8) {
+                this._mc = 
+                    _root.createEmptyMovieClip("__LZmicMovieClip", 10000);
 
-            // This is done to supress pesky feedback. 
-            this._sound = 
-                new Sound(this._mc);
-            this._sound.setVolume(0);
+                // This is done to supress pesky feedback. 
+                this._sound = 
+                    new Sound(this._mc);
+                this._sound.setVolume(0);
+            } else {
+                if ($debug) Debug.warn('%w is not supported in this runtime.', 'microphone')
+            }
 
             super.startDevice();
 

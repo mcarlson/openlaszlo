@@ -68,10 +68,15 @@
             var deviceindex = 
                 this['deviceindex'];
 
-            if (deviceindex == null) {
-                dev = Camera.get();
+            var dev = null;
+            if ($swf8) {
+                if (deviceindex == null) {
+                    dev = Camera.get();
+                } else {
+                    dev = Camera.get(deviceindex);
+                }
             } else {
-                dev = Camera.get(deviceindex);
+                if ($debug) Debug.warn('%w is not supported in this runtime.', 'camera')
             }
             
             this._dev = dev;
@@ -120,7 +125,7 @@
             //Debug.write("camera _updateAllowed", this, this.allowed, "show", this.show);
 
             // Call super to send the onallowed event.
-            super._updateAllowed(allowed);
+            super._updateAllowed();
 
             // Update the camera show state, since the camera is 
             // only shown when both show and allow are true.
@@ -215,7 +220,9 @@
         <!--- Get the names of the cameras. Returns an array of strings. 
               This might take a while to run, since it has to scan the devices. -->
         <method name="getCameraNames"><![CDATA[
-            return Camera.names;
+            if ($swf8) {
+                return Camera.names;
+            }
           ]]>
         </method>
 

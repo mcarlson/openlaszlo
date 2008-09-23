@@ -3,13 +3,8 @@
       @subtopic Audio-Video
   -->
 <library>
-  <switch>
-    <!-- TODO: add back when as3 is supported -->
-    <when runtime="as2">
-      <include href="camera.lzx" />
-      <include href="microphone.lzx" />
-    </when>
-  </switch>  
+  <include href="camera.lzx" />
+  <include href="microphone.lzx" />
   <include href="rtmpconnection.lzx" />
   <include href="mediadevice.lzx" />
   <include href="mediastream.lzx" />

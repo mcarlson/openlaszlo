@@ -21,7 +21,7 @@
     <attribute name="indent"  />
     <attribute name="leading"  />
 
-    <method name="construct">
+    <method name="construct" args="parent, args">
         this.font = null;
         this.size = null;
         this.color = null;
@@ -36,7 +36,7 @@
         this.indent = null; 
         this.leading = null; 
         
-        super.construct();
+        super.construct(parent, arguments);
     </method>
 
     <!--- Creates an html tag matching this format. --> 
