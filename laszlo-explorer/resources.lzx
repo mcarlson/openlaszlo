@@ -1,9 +1,10 @@
 <library>
     <!-- resources used by explore-nav.lzx -->
       <!-- Fonts -->
-  <font name="itemfont">
+      <!-- Uncomment when LPP-7038 is fixed. -->
+<!--  <font name="itemfont">
       <face src="helmetb.ttf" />
-  </font>
+  </font>-->
 
     <!--    <face src="nav/frank-demi.ttf" />-->
 
@@ -74,6 +75,6 @@
   </resource>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

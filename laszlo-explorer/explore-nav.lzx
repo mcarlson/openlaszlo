@@ -187,9 +187,9 @@
   <!-- ItemButton class the visible portion of navButtons -->
   <class name="itembutton" placement="item" datapath="."
     onmouseover="background.setAttribute('frame', 2)"
-    onmouseout="showUp()"
+    onmouseout="showUp(null)"
     onmousedown="background.setAttribute('frame', 3)"
-    onmouseup="showUp()" clickable="true">
+    onmouseup="showUp(null)" clickable="true">
 
     <attribute name="level" type="number"/>
     <attribute name="text" type="string"/>
@@ -228,7 +228,9 @@
         }
     </handler>
 
-    <handler name="onopen" reference="classroot" method="doaction"/>
+    <handler name="onopen" reference="classroot">
+        this.doaction(null);
+    </handler>
     <method name="doaction" args="v">  <![CDATA[
         var dp = this.datapath;
         var autoselect = dp.xpathQuery("@autoselect");
@@ -285,7 +287,7 @@
         var dp = this.datapath;
         var tagtype = dp.xpathQuery("name()");
 
-      classroot.changeFocus();
+      classroot.changeFocus(null);
 
       // only open subitems if there are
       if (! this.isleaf) {
@@ -293,11 +295,13 @@
         // if ( !classroot.open ) -- this did not completely work, so just always open
         classroot.setAttribute("open", true);
       }
-      this.doaction();
+      this.doaction(null);
       ]]>
     </method>
 
-    <handler name="onopen" reference="classroot" method="showUp"/>
+    <handler name="onopen" reference="classroot">
+        this.showUp(null);
+    </handler>
     <method name="showUp" args="v">
         background.setAttribute('frame', classroot.open ? 4 : 1);
         // Only toggle arrow if there are subnodes
@@ -310,8 +314,9 @@
 
     <view name="icon" resource="icon" y="9" stretches="both" width="11" height="11"
         x="${classroot.width - this.width - 6 }" />
-      
-    <text name="label" x="${6 + classroot.level*7}" valign="middle" font="itemfont,helvetica,sans-serif" fgcolor="#ffffff"
+<!-- Uncomment when LPP-7038 is fixed, and delete the line currently replacing it. -->      
+<!--    <text name="label" x="${6 + classroot.level*7}" valign="middle" font="itemfont,helvetica,sans-serif" fgcolor="#ffffff" -->
+    <text name="label" x="${6 + classroot.level*7}" valign="middle" font="helvetica,sans-serif" fgcolor="#ffffff"
         fontsize="13" width="${parent.width-x}" text="${classroot.text}"/>
   </class>
 
