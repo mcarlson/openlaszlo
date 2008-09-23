@@ -15,6 +15,7 @@
 var LzSprite = function(newowner, isroot) {
     if (newowner == null) return this;
     this.owner = newowner;
+    this._accProps = {};
 
     if (isroot) {
         this.isroot = true;
@@ -64,7 +65,7 @@ LzSprite.prototype.capabilities = {
     ,history: true
 }
 
-/**
+/** Turns accessibility on by showing/hiding the global yellow flash focusrect
   * @param Boolean accessible
   */
 LzSprite.prototype.setAccessible = function(accessible) {
@@ -72,15 +73,21 @@ LzSprite.prototype.setAccessible = function(accessible) {
 }
 
 LzSprite.prototype.__setAAProperty = function (aaprop, val, btnval, mc) {
-    if (mc._accProps == null) mc._accProps = {};
-    mc._accProps[aaprop] = val;
+    this._accProps[aaprop] = val;
 
-    if ((mc = this.__LZbuttonRef.but)){
-        if (mc._accProps == null) mc._accProps = {};
-        mc._accProps[aaprop] = btnval;
+    mc._accProps = this._accProps;
+
+    if (this.__LZbuttonRef.but) {
+        this.__LZbuttonRef.but._accProps = this._accProps;
     }
     //LzBrowser.updateAccessibility();
 }
+
+/**
+  * @access private
+  * A cache of accessibility properties
+  */
+LzSprite.prototype._accProps = null;
 
 /**
   * Activate/inactivate children for accessibility
@@ -769,6 +776,8 @@ LzSprite.prototype.setClickable = function ( amclickable ){
         if (this.showhandcursor == false) mc.but.useHandCursor = false;
 
         this.__LZbuttonRef = mc;
+        // Set accessibility props
+        this.__LZbuttonRef.but._accProps = this._accProps;
         this.setButtonSize = this._setButtonSize;
         this.setButtonSize( "width" , this.width );
         this.setButtonSize( "height" , this.height );
