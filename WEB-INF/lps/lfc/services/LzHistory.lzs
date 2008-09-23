@@ -227,8 +227,8 @@ function __initPersist() {
         if (! this._persistso) {
             this._persistso = LzBrowserKernel.getPersistedObject('historystate');
         }
-        var d = this._persistso.data;
-        if (d) {
+        if (this._persistso && this._persistso.data) {
+            var d = this._persistso.data;
             this.__lzhistq = [];
             for (var i in d) {
                 this.__lzhistq[i] = d[i];
@@ -264,7 +264,6 @@ function clear() {
 function setPersist(p) {
     if (this.capabilities.persistence) {
         this.persist = p;
-        this.__initPersist();
     } else {
         if ($debug) {
             Debug.warn('The %s runtime does not support %s', canvas['runtime'], 'lz.History.setPersist()');
