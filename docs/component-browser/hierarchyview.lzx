@@ -33,10 +33,10 @@
               not being multiselected. -->
         <method name="toggleOpenAndFocus">
         <![CDATA[
-            this.changeFocus();
+            this.changeFocus(this);
             if (! this.isleaf) {
-                if (! LzKeys.isKeyDown("control") &&
-                    ! LzKeys.isKeyDown("shift")) {
+                if (! lz.Keys.isKeyDown("control") &&
+                    ! lz.Keys.isKeyDown("shift")) {
                         this.setAttribute("open", ! this.open);
                 }
             }
@@ -65,9 +65,9 @@
                     var file = (classroot.file != '' ? classroot.file : classroot.text + '.html');
                     var url = canvas.urlprefix + file;
                     if ($runtime == 'dhtml') {
-                        LzBrowser.loadURL( url, "test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");
+                        lz.Browser.loadURL( url, "test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");
                     } else {
-                        LzBrowser.loadJS('window.open("' + url + '","test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");');
+                        lz.Browser.loadJS('window.open("' + url + '","test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");');
                     }
                 </handler>
                 <handler name="onmouseup">

@@ -70,9 +70,9 @@
             var file = (this.file != '' ? this.file : 'lz.' + this.text + '.html');
             var url = canvas.urlprefix + file;
             if ($runtime == 'dhtml') {
-                LzBrowser.loadURL( url, "laszlo_reference","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");
+                lz.Browser.loadURL( url, "laszlo_reference","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");
             } else {
-                LzBrowser.loadJS('window.open("' + url + '","laszlo_reference","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");');
+                lz.Browser.loadJS('window.open("' + url + '","laszlo_reference","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address");');
             }
         </handler>
         <handler name="onmouseup">
