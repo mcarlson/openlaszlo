@@ -428,20 +428,6 @@ dot syntax:</para>
    </programlisting>
 </example>
 
-
-<para>Attributes can also be read using the
-<indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname> method. This is unnecessary most of the
-time, but can be useful for retrieving the value of an arbitrary
-attribute, whose name is represented by a string.</para>
-
-<example role="live-example">
-   <title>Using getAttribute to retrieve an attribute value</title>
-   <programlisting language="lzx">
-   <textobject><textdata fileref="programs/methods-events-attributes-$16.lzx"/></textobject> 
-   </programlisting>
-</example>
-
-
 <para>All attributes that are settable in script (see below) can be set
 using the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method:</para>
 
@@ -860,13 +846,13 @@ to those variables using the keyword <literal>this</literal>.
 
 <para>
 There are four ways of getting and setting attributes in LZX, each with benefits and drawbacks:</para>
-<itemizedlist spacing="compact"><listitem><para>Using <methodname role="LzNode.prototype.setAttribute">setAttribute()</methodname> and <methodname role="LzNode.prototype.getAttribute">getAttribute()</methodname></para></listitem><listitem><para>Using predefined "setters" for certain attributes, such as <indexterm><primary><literal>onx()</literal></primary></indexterm><methodname>onx()</methodname> and <indexterm><primary><literal>ony()</literal></primary></indexterm><methodname>ony()</methodname></para></listitem><listitem><para>using custom getter and setter methods, as explained above</para></listitem><listitem><para>Reading and writing attributes directly—that is, without using a setter or getter method</para></listitem></itemizedlist>
+<itemizedlist spacing="compact"><listitem><para>Using <methodname role="LzNode.prototype.setAttribute">setAttribute()</methodname> and the <literal>.</literal> operator</para></listitem><listitem><para>Using predefined "setters" for certain attributes, such as <indexterm><primary><literal>onx()</literal></primary></indexterm><methodname>onx()</methodname> and <indexterm><primary><literal>ony()</literal></primary></indexterm><methodname>ony()</methodname></para></listitem><listitem><para>using custom getter and setter methods, as explained above</para></listitem><listitem><para>Reading and writing attributes directly: that is, without using a setter or getter method</para></listitem></itemizedlist>
 
 
-<para/><section><title>setAttribute() and getAttribute() </title>
+<para/><section><title>setAttribute()</title>
 
 <para>
-The most reliable way to set and get attributes is by invoking <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname> or <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>
+The most reliable way to set attributes is by invoking  <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>
 on the view, class, or node that contains the target attribute.  Invoking <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>
 automatically fires the associated 'on' event for the attribute in question.  Having the
 associated event fire is required for constraints tied to the attribute in question to function
@@ -874,8 +860,8 @@ correctly.
 </para>
 
 <para>
-Performance wise, using <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname> and <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> are the slowest way to have access to
-attributes.   The reasons for this slowness is twofold:</para>
+Performance wise, using  <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> is the slowest way to have access to
+attributes. The reasons for this slowness is twofold:</para>
 
 <itemizedlist spacing="compact"><listitem><para> Method calls are generally considered slow when compared to making no method call at
     all</para></listitem><listitem><para> <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> fires the associated <literal>on<varname>attribute</varname></literal> event, and updates 
@@ -885,10 +871,9 @@ constraints on the target attribute. </para></listitem></itemizedlist>
 <para/></section><section id="explicitAtt"><title> Explicit attribute setter methods </title>
 
 <para> Some attributes of OpenLaszlo Runtime Library classes have explicit getter and setter methods defined for them.  
-The <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> class has several of these such as <indexterm><primary><literal>setX()</literal></primary></indexterm><methodname>setX()</methodname>, <indexterm><primary><literal>setWidth()</literal></primary></indexterm><methodname>setWidth()</methodname>, etc.
-Performance wise and functionally, the use of these methods is essentially the same as making
-calls to <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> or <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname>.  For consistency, use of these methods is discouraged: Use
-<indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> and <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname> instead.
+For example, the <indexterm><primary>lz.view</primary></indexterm><classname>lz.view</classname> class has several of these such as <indexterm><primary><literal>setX()</literal></primary></indexterm><methodname>setX()</methodname>, <indexterm><primary><literal>setWidth()</literal></primary></indexterm><methodname>setWidth()</methodname>, etc. However, these
+   explicit setter methods are deprecated, and use of these methods is discouraged: use
+<indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> instead.
 </para>
 
 <example role="live-example"><title>Using a setter method</title><programlisting>
@@ -903,15 +888,15 @@ calls to <indexterm><primary><literal>setAttribute()</literal></primary></indext
 </programlisting></example> 
 
 <para> If you write your own setter or getter method, it will not automatically be invoked by
-<indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> or <indexterm><primary><literal>getAttribute()</literal></primary></indexterm><methodname>getAttribute()</methodname>, thus this practice is not recommended.  Instead, the best
+<indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>, thus this practice is not recommended.  Instead, the best
 practice for executing specific code when an attribute is set is to handle the associated 
 onattribute event.  </para> 
 
-<para/></section><section><title> Getting and setting attributes directly </title>
+<para/></section><section><title>Setting attributes directly </title>
 
-<para> It is also possible to get and set attributes directly without invoking any method at all,
+<para> It is also possible to set attributes directly without invoking any method at all,
 however, this practice is generally discouraged as it may result in unexpected behavior.  
-Since no method call is made, the associated <literal>onattribute</literal> events will not be fired.  Any
+Since no method call is made, the associated <literal>onattribute</literal> events will not be fired. Any
 constraints tied to the attribute also will not be updated.  When setting attributes on LFC
 objects, it is definitely a bad idea to set attributes  directly as their explicit setter
 methods, which contain important processing code, won't be called. 
@@ -928,17 +913,5 @@ methods, which contain important processing code, won't be called.
   &lt;/method&gt;
 &lt;/node&gt;
 </programlisting></example> 
-
-<para>
-For these reasons, performance wise, setting directly —for example, <literal>setX</literal>—is the
-fastest way to modify an attribute, and may be appropriate in a limited set of situations,
-though is not considered "safe".   
-Getting attributes directly is safe.   Getting attributes
-directly, and setting attributes using <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>, while seemingly the ideal
- solution, is
-inconsistent, and may cause confusion or errors when new developers unfamiliar with LZX are
-brought on to a project.  Consider these choices carefully when
-setting coding standards for your LZX project.
-</para> 
 
 <para/></section></section></section></chapter>
