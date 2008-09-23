@@ -3,7 +3,7 @@
     <class name="cdview" width="${parent.width}" height="82">
 
         <resizelayout axis="x" spacing="8"/>
-        <view name="cover" datapath="SmallImage/URL/text()" y="7" width="50" height="50" clip="true"
+        <view name="cover" datapath="SmallImage/URL/text()" y="7" width="50" height="50" stretches="both"
             onmouseover="dragsmall.display(this, this.datapath.xpathQuery('text()'))"
             onmouseout="dragsmall.hide()"
             onmousedown="dragsmall.start()"
