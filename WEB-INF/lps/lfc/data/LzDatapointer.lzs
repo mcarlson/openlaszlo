@@ -11,7 +11,7 @@
 /**
   * <p>
   * A datapointer is an object that represents a pointer to a node in a
-  * <sgmltag class="element" role="LzDataset">LzDataset</sgmltag>. The datapointer can be repositioned
+  * <sgmltag class="element" role="LzDataset">lz.dataset</sgmltag>. The datapointer can be repositioned
   * using either cursor movements calls such as 
   * <xref linkend="LzDatapointer.prototype.selectNext"/>, or by running an XPath 
   * request via <xref linkend="LzDatapointer.prototype.setXPath"/>.

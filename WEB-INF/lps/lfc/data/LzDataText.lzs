@@ -9,7 +9,7 @@
   */
 
 /**
-  * An LzDataText represents a text node a in a hierarchical dataset. An LzDataText can only contain text data. It can be a child a of an <sgmltag class="element" role="LzDataElement">LzDataElement</sgmltag>. See the example on <sgmltag class="element" role="LzDataNodeMixin">LzDataNodeMixin</sgmltag>. 
+  * An <code>lz.DataText</code> represents a text node a in a hierarchical dataset. An <code>lz.DataText</code> can only contain text data. It can be a child a of an <sgmltag class="element" role="LzDataElement">lz.DataElement</sgmltag>. See the example on <sgmltag class="element" role="LzDataNodeMixin">lz.DataNodeMixin</sgmltag>. 
   *
   * @shortdesc Represents a text node in a set of data.
   * @see lzdatanodemixin, lzdataelement, datapointer

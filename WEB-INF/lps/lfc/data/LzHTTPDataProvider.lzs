@@ -11,12 +11,12 @@
 
 /**
   * <p>
-  * <class>LzHTTPDataProvider</class> implements the DataProvider interface, to support HTTP data requests.
+  * <class>lz.HTTPDataProvider</class> implements the DataProvider interface, to support HTTP data requests.
   * </p>  
   * <p>
   * Requests are submitted using the <method>doRequest</method>, passing a  request
-  * object of type <class>LzHTTPDataRequest</class>. And instance of <class>LzHTTPDataProvider</class> is the default
-  * data provider for the runtime, and is what is used by <class>LzDataset</class> to load data.
+  * object of type <class>lz.HTTPDataRequest</class>. And instance of <class>lz.HTTPDataProvider</class> is the default
+  * data provider for the runtime, and is what is used by <class>lz.dataset</class> to load data.
   * </p>
   * <p>
   * <event>onstatus</event>: Sent to a datarequest to update the status of the request.</p>

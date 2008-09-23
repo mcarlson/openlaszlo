@@ -10,7 +10,7 @@
 
 /**
   * <p><code>lz.Audio</code> is the single instance of the class
-  * <code>LzAudioService</code>.</p>
+  * <code>lz.AudioService</code>.</p>
   *
   * <example><![CDATA[
 <canvas height="150">

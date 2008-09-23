@@ -10,7 +10,7 @@
  
 /**
  * <p><code>lz.Browser</code> is the single instance of the class
- * <code>LzBrowserService</code>.</p>
+ * <code>lz.BrowserService</code>.</p>
  *
  * <p>Interface to the browser via the runtime kernel</p>
  * <p>The <classname>lz.Browser</classname> service provides access to the browser and player environment. 

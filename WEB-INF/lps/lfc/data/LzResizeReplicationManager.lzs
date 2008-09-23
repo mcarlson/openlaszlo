@@ -9,13 +9,13 @@
   */
 
 /**
-  * <p>The <classname>LzResizeReplicationManager</classname> extends
+  * <p>The <classname>lz.ResizeReplicationManager</classname> extends
   * the capabilities of the
-  * <sgmltag class="element" role="LzLazyReplicationManager">LzLazyReplicationManager</sgmltag> so that the
+  * <sgmltag class="element" role="LzLazyReplicationManager">lz.LazyReplicationManager</sgmltag> so that the
   * elements in the replication can be resized in their axis. All of
   * the restrictions on the use of the
-  * <classname>LzLazyReplicationManager</classname> apply to the
-  * <classname>LzResizeReplicationManager</classname> except for this
+  * <classname>lz.LazyReplicationManager</classname> apply to the
+  * <classname>lz.ResizeReplicationManager</classname> except for this
   * one:</p>
   *
   * <ul>

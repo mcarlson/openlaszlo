@@ -11,7 +11,7 @@
 
 /**
  * <p><code>lz.GlobalMouse</code> is the single instance of the class
- * <code>LzGlobalMouseService</code>.</p>
+ * <code>lz.GlobalMouseService</code>.</p>
  *
  * <p>The <code>lz.GlobalMouse</code> service sends events any time the
  * mouse button state changes, even if mouse events are locked using

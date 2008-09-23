@@ -12,7 +12,7 @@
 
 /**
   * <p>
-  * <class>LzDataprovider</class> is an abstract class that can be extended to create new kinds 
+  * <class>lz.Dataprovider</class> is an abstract class that can be extended to create new kinds 
   * of dataproviders, such as <sgmltag class="element" role="LzHTTPDataProvider">&lt;HTTPDataProvider&gt;</sgmltag>. These dataproviders 
   * are the client's representation of a backend entity. There is no tag that 
   * corresponds to this class.

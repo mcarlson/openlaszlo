@@ -8,7 +8,7 @@
  */
 
 /**
- * <p>LzEventable is the base class for any class that wishes to send
+ * <p><code>lz.Eventable</code> is the base class for any class that wishes to send
  * and receive events.  It defines the setAttribute protocol that
  * creates implicit events for every attribute that is modified using
  * setAttribute.</p>

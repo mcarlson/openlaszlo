@@ -41,7 +41,7 @@
   * </ul>
   * 
   * <p>
-  * If a dataset is not explictly contained within in a <sgmltag class="element" role="LzDataProvider">LzDataProvider</sgmltag>, it will make an instance of datasource and be contained inside that. A dataset can be populated or re-poplulated at runtime by calling <code>doRequest</code> on the dataset. The result of the request is then returned to the application and the dataset's <link linkend="LzNode.__ivars__.ondata"><literal>ondata</literal></link> event is run. Any <xref linkend="LzDatapointer"/> that is bound to the dataset will also run its <link linkend="LzNode.__ivars__.ondata"><literal>ondata</literal></link> event at this time as well.
+  * If a dataset is not explictly contained within in a <sgmltag class="element" role="LzDataProvider">lz.DataProvider</sgmltag>, it will make an instance of datasource and be contained inside that. A dataset can be populated or re-poplulated at runtime by calling <code>doRequest</code> on the dataset. The result of the request is then returned to the application and the dataset's <link linkend="LzNode.__ivars__.ondata"><literal>ondata</literal></link> event is run. Any <xref linkend="LzDatapointer"/> that is bound to the dataset will also run its <link linkend="LzNode.__ivars__.ondata"><literal>ondata</literal></link> event at this time as well.
   * </p>
   * <p>See the <a href="${dguide}data-structures.html">Developers's Guide</a> for more discussion of data and datasets. </p>
   * <p>

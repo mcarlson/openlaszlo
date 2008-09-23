@@ -667,7 +667,7 @@ lz.DataElementMixin = LzDataElementMixin;  // publish
 
 /**
   * <p>
-  * An LzDataElement represents a node a in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or <sgmltag class="element" role="LzDataText">LzDataText</sgmltag>, which represents a text node. See the example on <sgmltag class="element" role="LzDataNodeMixin">LzDataNodeMixin</sgmltag>. 
+  * An <code>lz.DataElement</code> represents a node a in a hierarchical dataset. An <code>lz.DataElement</code> can contain other <code>lz.DataElements</code>, or <sgmltag class="element" role="LzDataText">lz.DataText</sgmltag>, which represents a text node. See the example on <sgmltag class="element" role="LzDataNodeMixin">lz.DataNodeMixin</sgmltag>. 
   * </p>
   *
   * @shortdesc A node of hierarchical data.

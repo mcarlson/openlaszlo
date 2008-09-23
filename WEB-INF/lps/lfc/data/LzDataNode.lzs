@@ -9,7 +9,7 @@
   */
   
 /**
-  * <p><classname>LzDataNode</classname> is the base class for the classes
+  * <p><classname>lz.DataNode</classname> is the base class for the classes
   * that represent OpenLaszlo's hierarchical data format.</p>
   * 
   * <example>
@@ -241,7 +241,7 @@ lz.DataNodeMixin = LzDataNodeMixin;  // publish
  *
  * @shortdesc The base class for a node of hierarchical data.
  *
- * <p> LzDataNode is deprecated, all methods and constants have been moved to <link linkend="LzDataElement">LzDataElement</link></p>
+ * <p><code>lz.DataNode</code> is deprecated, all methods and constants have been moved to <link linkend="LzDataElement">lz.DataElement</link></p>
  *
  * @access public
  * @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead. The methods and constants in this class are deprecated

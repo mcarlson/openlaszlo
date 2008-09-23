@@ -11,7 +11,7 @@
 
 /**
  * <p><code>lz.Cursor</code> is the single instance of the class
- * <code>LzCursorService</code>.</p>
+ * <code>lz.CursorService</code>.</p>
  *
  * <p>This example shows how the cursor can be set on a view so that
  * it will change when the mouse is over that view:</p>

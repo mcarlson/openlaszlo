@@ -11,7 +11,7 @@
 
 /**
   * <p><code>lz.ModeManager</code> is the single instance of the class
-  * <code>LzModeManagerService</code>.</p>
+  * <code>lz.ModeManagerService</code>.</p>
   *
   * <p>
   * The mode manager controls the dispatch of mouse events to the rest 

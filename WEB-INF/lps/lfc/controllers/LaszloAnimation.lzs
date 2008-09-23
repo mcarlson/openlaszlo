@@ -10,7 +10,6 @@
   */
 
 /**
-  * LzAnimator
   * <p>Animators change the value of an object's attribute over a
   * specified duration in milliseconds. For example, the following program
   * defines an animator for a window that moves it to a position of x=100

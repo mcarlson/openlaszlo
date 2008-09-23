@@ -10,7 +10,7 @@
 
 /**
  * <p><code>lz.Timer</code> is the single instance of the class
- * <code>LzTimerService</code>.</p>
+ * <code>lz.TimerService</code>.</p>
  *
  * <p>lz.Timer is used to invoke functionality after a specific
  * amount of time. By using a <xref linkend="LzDelegate"/> to refer

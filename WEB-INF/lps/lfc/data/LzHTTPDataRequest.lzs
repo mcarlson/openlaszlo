@@ -10,7 +10,7 @@
 
 /**
   * <p>
-  * <class>LzHTTPDataRequest</class> implements the DataProvider interface, to support HTTP data requests.
+  * <class>lz.httpdatarequest</class> implements the DataProvider interface, to support HTTP data requests.
   * </p>
   *
   * @shortdesc A class to represent HTTP data requests.

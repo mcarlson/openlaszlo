@@ -11,9 +11,9 @@
 /**
   * <p>If a datapath's <attribute>replication</attribute> attribute is set
   * to <code>lazy</code>, then a match to multiple nodes will create an
-  * <classname>LzLazyReplicationManager</classname> instead of an
+  * <classname>lz.LazyReplicationManager</classname> instead of an
   *
-  * <sgmltag class="element" role="LzReplicationManager">LzReplicationManager</sgmltag>. The lazy replication
+  * <sgmltag class="element" role="LzReplicationManager">lz.ReplicationManager</sgmltag>. The lazy replication
   * manager creates only enough replicated views in order to display the
   * data, so there is not a view for each data node. This enables the
   * display of very large datasets.</p>

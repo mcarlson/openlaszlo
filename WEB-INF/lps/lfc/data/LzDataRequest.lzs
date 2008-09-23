@@ -10,8 +10,8 @@
   */
 
 /**
-  * <class>LzDataRequest</class> is an abstract class that can be extended to create new kinds 
-  * of data requests, which are passed to a <class>DataProvider</class> when making a request.
+  * <class>lz.DataRequest</class> is an abstract class that can be extended to create new kinds 
+  * of data requests, which are passed to a <class>lz.DataProvider</class> when making a request.
   *
   * @shortdesc An abstract class to represent data requests.
   * @lzxname datarequest

@@ -14,7 +14,7 @@
   * of the view is created for each match. The replicated views are
   * referred to as <glossterm>clones</glossterm>. When this happens, a
   * <glossterm>replication manager</glossterm> (or a subclass of
-  * <classname>LzReplicationManager</classname>) is created to manage the
+  * <classname>lz.ReplicationManager</classname>) is created to manage the
   * clones. Replication managers are never directly instantiated &#x2014;
   * 
   * they are created when a datapath makes multiple matches.</p>
