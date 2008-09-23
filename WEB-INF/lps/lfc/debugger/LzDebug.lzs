@@ -141,6 +141,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       this.console.addText('\n');
       this.atFreshLine = true;
     }
+    this.atPrompt = false;
   };
 
   /**
@@ -156,13 +157,24 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   };
 
   /**
+   * Echo 'input' to the console
+   * @access private
+   */
+  function echo (str, newLine:Boolean=true) {
+    this.console.echo(str, newLine);
+    this.atPrompt = false;
+    this.atFreshLine = newLine;
+  };
+
+
+  /**
    * Evaluate an expression (using the console interface to compile if necessary)
    * @access private
    */
   function doEval (expr) {
     this.freshPrompt();
     // Echo input to output
-    this.console.echo(String(expr)['toHTML']());
+    this.echo(String(expr)['toHTML']());
     try {
       // The console evaluator will call back to displayResult
       this.console.doEval(expr);
@@ -191,7 +203,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     // Make it look like you executed a command, even though
     // you don't need to compile to do this
     this.freshPrompt();
-    this.console.echo(this.formatToString("Debug.inspect(%0.48w)", obj)['toHTML']());
+    this.echo(this.formatToString("Debug.inspect(%0.48w)", obj)['toHTML']());
     this.displayResult(this.inspect(obj));
   }
 
@@ -811,7 +823,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         // Print unidentified objects and arrays as abbreviated list of props
         else {
           var names = [];
-          var indices = (this.isArrayLike(thing) && (! this.isStringLike(thing)))?[]:null;
+          var indices = (this.isArrayLike(thing))?[]:null;
           this.objectOwnProperties(thing, names, indices, limit);
           if (indices) { indices.sort(this.numericOrdering); }
 
@@ -1117,9 +1129,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * non-negative integer length property)
    *
    * @access private
+   *
+   * @devnote TODO: [2008-09-23 ptw] (LPP-7034) Remove public
+   * declaration after 7034 is resolved
    */
-  public function isArrayLike (obj:*)/* :Boolean */ {
-    if ((obj is Array) || (obj['length'] != (void 0))) {
+  public function isArrayLike (obj:*):Boolean {
+    if (obj && ((obj is Array) || (obj['length'] != (void 0)))) {
       var ol = obj.length;
       return ((typeof(ol) == 'number' || ol is Number) &&
               ((ol|0) === ol) &&
@@ -1370,6 +1385,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * non-enumerable properties
    *
    * @access private
+   *
+   * @devnote TODO: [2008-09-23 ptw] (LPP-7034) Remove public
+   * declaration after 7034 is resolved
    */
   public function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
     // Check for 'array-ness'

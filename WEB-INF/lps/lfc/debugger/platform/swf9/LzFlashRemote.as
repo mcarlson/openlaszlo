@@ -79,7 +79,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
   /**
    * @access private
    */
-    override function echo (str, newLine:Boolean=true) {
+  override function echo (str, newLine:Boolean=true) {
     this.addHTMLText('<font color="#00CC00">' + str + '</font>' + (newLine?'\n':''));
   }
 

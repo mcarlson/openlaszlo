@@ -141,6 +141,7 @@ class LzAS3DebugService extends LzDebugService {
   #passthrough {
     public override function isArrayLike (obj:*)/*:Boolean*/ {
     // Efficiency
+    if (! obj) { return false; }
     if (obj is Array) { return true; }
     if (! (typeof obj == 'object')) { return false; }
     // NOTE [2008-09-20 ptw] In JS2 you can't ask obj['length'] if the
