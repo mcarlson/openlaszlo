@@ -49,11 +49,21 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
    */
   public final static int MAIN_CONSTRUCTOR_STREAM = 3;
 
-  /** Main class gets default constructor inserted with initialization */
-  private String mainClassName = null;
+  /** Configuration options for an instance of the SWF9ParseTreePrinter.
+   * Nicer than a mess of constructor parameters.
+   */
+  public static class Config extends ParseTreePrinter.Config {
+    boolean islib = false;
+    public Config setIsLib(boolean value) { islib = value; return this; }
 
-  /** True if we are creating a shared library */
-  private boolean islib;
+    String mainClassName = null;
+    public Config setMainClassName(String value) { mainClassName = value; return this; }
+
+    boolean forcePublicMembers = false;
+    public Config setForcePublicMembers(boolean value) { forcePublicMembers = value; return this; }
+  }
+  Config config;
+
 
   /** State variable that is true while we are in a mixin */
   private boolean inmixin = false;
@@ -66,22 +76,21 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
   }
   
   public SWF9ParseTreePrinter() {
-    this(false, false, null, false, false, null);
+    this(new Config());
   }
   
   public SWF9ParseTreePrinter(boolean compress) {
-    this(compress, false, null, false, false, null);
+    this((Config)new Config().setCompress(compress));
   }
   
   public SWF9ParseTreePrinter(boolean compress, boolean obfuscate) {
-    this(compress, obfuscate, null, false, false, null);
+    this((Config)new Config().setCompress(compress).setObfuscate(obfuscate));
   }
 
-  public SWF9ParseTreePrinter(boolean compress, boolean obfuscate, String mainClassName, boolean sharedLibrary, boolean trackLines, String dumpAnnotationsFile) {
+  public SWF9ParseTreePrinter(Config config) {
     // never compress or obfuscate
-    super(false, false, trackLines, dumpAnnotationsFile);
-    this.mainClassName = mainClassName;
-    this.islib = sharedLibrary;
+    super(config.setCompress(false).setObfuscate(false));
+    this.config = (Config)super.config;
   }
 
   /**
@@ -121,7 +130,7 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
         defaultTunit = tunit;
         iter.remove();
       }
-      else if (tunit.getName().equals(mainClassName)) {
+      else if (tunit.getName().equals(config.mainClassName)) {
         mainTunit = tunit;
       }
     }
@@ -132,7 +141,7 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     // our assumptions about where we put top level statements.
     if (mainTunit != null) {
       String topstmts = defaultTunit.getContents();
-      if (islib) {
+      if (config.islib) {
         mainTunit.addStreamText(CLASS_LEVEL_STREAM, topstmts);
       }
       else {
@@ -212,7 +221,9 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
 
   // override
   public String visitModifiedDefinition(SimpleNode node, String[] children) {
-    String mods = ((ASTModifiedDefinition)node).toJavascriptString();
+    SimpleNode parent = node.getParent();
+    boolean forcePublic = (config.forcePublicMembers && parent != null && parent instanceof ASTClassDefinition);
+    String mods = ((ASTModifiedDefinition)node).toJavascriptString(forcePublic);
     return prependMods(children[0], mods);
   }
   
@@ -243,8 +254,8 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
 
     sb.append("{\n");
     sb.append(annotateInsertStream(CLASS_LEVEL_STREAM));
-    if (classnm.equals(mainClassName) && !islib) {
-      sb.append("public function " + mainClassName + "(sprite:Sprite=null) {\n");
+    if (classnm.equals(config.mainClassName) && !config.islib) {
+      sb.append("public function " + config.mainClassName + "(sprite:Sprite=null) {\n");
       sb.append("super(sprite);\n");
       sb.append(annotateInsertStream(MAIN_CONSTRUCTOR_STREAM));
       sb.append("}\n");

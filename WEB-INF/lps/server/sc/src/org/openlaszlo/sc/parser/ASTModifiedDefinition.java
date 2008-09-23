@@ -173,12 +173,23 @@ public class ASTModifiedDefinition extends SimpleNode {
     }
 
     public String toJavascriptString() {
+        return toJavascriptString(false);
+    }
+
+    public String toJavascriptString(boolean forcePublic) {
         String str = namespace;
         if (namespace == null) {
-            if (access == DEFAULT_ACCESS)
-                str = "";
-            else
-                str = access;
+            if (forcePublic) {
+                str = PUBLIC_ACCESS;
+            }
+            else {
+                if (access == DEFAULT_ACCESS) {
+                    str = "";
+                }
+                else {
+                    str = access;
+                }
+            }
         }
         if (isStatic)
             str += " static";

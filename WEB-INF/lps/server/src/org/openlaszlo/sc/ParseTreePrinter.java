@@ -43,13 +43,28 @@ import org.openlaszlo.sc.InstructionPrinter;
 // This class supports the Javascript translator
 public class ParseTreePrinter {
 
-  // For debugging
-  public static final boolean DEBUG_NODE_OUTPUT = false;
-  public static final boolean DEBUG_LINE_NUMBER = false;
+  /** Configuration options for an instance of the ParseTreePrinter.
+   * Nicer than a mess of constructor parameters.
+   */
+  public static class Config {
+    boolean compress = false;
+    public Config setCompress(boolean value) { compress = value; return this; }
 
-  boolean compress;
-  boolean trackLines;
-  String dumpLineAnnotationsFile;
+    boolean obfuscate = false;
+    public Config setObfuscate(boolean value) { obfuscate = value; return this; }
+
+    boolean trackLines = false;
+    public Config setTrackLines(boolean value) { trackLines = value; return this; }
+
+    String dumpLineAnnotationsFile = null;
+    public Config setDumpLineAnnotationsFile(String value) { dumpLineAnnotationsFile = value; return this; }
+
+    // For debugging, for now, must be set by hand
+    public static final boolean DEBUG_NODE_OUTPUT = false;
+    public static final boolean DEBUG_LINE_NUMBER = false;
+  }
+  Config config;
+
   String SPACE;
   String NEWLINE;
   String COMMA;
@@ -67,26 +82,25 @@ public class ParseTreePrinter {
   private String currentClassName = null;
   
   public ParseTreePrinter() {
-    this(false, false);
+    this(new Config());
   }
   
   public ParseTreePrinter(boolean compress) {
-    this(compress, false);
+    this(new Config().setCompress(compress));
   }
 
   public ParseTreePrinter(boolean compress, boolean obfuscate) {
-    this(compress, obfuscate, false, null);
+    this(new Config().setCompress(compress).setObfuscate(obfuscate));
   }
 
   // TODO: [2007-11-21 dda] if compress/obfuscate are on, probably
   // can turn off generation of annotations.
-  public ParseTreePrinter(boolean compress, boolean obfuscate, boolean trackLines, String dumpLineAnnotationsFile) {
-    this.compress = compress;
-    this.trackLines = trackLines;
-    this.dumpLineAnnotationsFile = dumpLineAnnotationsFile;
+  public ParseTreePrinter(Config config) {
+    this.config = config;
+
     // Set whitespace
-    this.SPACE = compress ? "" : " ";
-    this.NEWLINE = obfuscate ? "" : "\n";
+    this.SPACE = config.compress ? "" : " ";
+    this.NEWLINE = config.obfuscate ? "" : "\n";
     // Set punctuation
     this.COMMA = "," + SPACE;
     this.COLON = ":" + SPACE;
@@ -96,7 +110,7 @@ public class ParseTreePrinter {
     this.OPENPAREN = SPACE + "(";
     this.CLOSEPAREN = ")" + SPACE;
     this.SEMI = ";";
-    this.OPTIONAL_SEMI = (compress && "\n".equals(NEWLINE)) ? NEWLINE : SEMI;
+    this.OPTIONAL_SEMI = (config.compress && "\n".equals(NEWLINE)) ? NEWLINE : SEMI;
   }
   
   public void print(SimpleNode node) {
@@ -209,9 +223,9 @@ public class ParseTreePrinter {
           sb.append(sep);
           sb.append(child);
           if (! childRaw.endsWith(SEMI)) {
-            sep = SEMI + (compress ? SPACE : NEWLINE);
+            sep = SEMI + (config.compress ? SPACE : NEWLINE);
           } else {
-            sep = (compress ? SPACE : NEWLINE);
+            sep = (config.compress ? SPACE : NEWLINE);
           }
         }
       }
@@ -742,7 +756,7 @@ public class ParseTreePrinter {
   
   public String visitFunctionExpression(SimpleNode node, String[] children) {
     // Elide optional name if compressing, otherwise leave it for debugging
-    return doFunctionDeclaration(node, children, this.compress ? false : true, false);
+    return doFunctionDeclaration(node, children, config.compress ? false : true, false);
   }
   
   String doFunctionDeclaration(SimpleNode node, String[] children, boolean useName, boolean inmixin) {
@@ -800,7 +814,7 @@ public class ParseTreePrinter {
         if (l == 0 ) {return "0";}
         else {
           String d = Long.toString(l);
-          if (compress && l > 0) {
+          if (config.compress && l > 0) {
             String h = "0x" + Long.toHexString(l);
             if (h.length() <= d.length()) {
               return h;
@@ -970,7 +984,7 @@ public class ParseTreePrinter {
    * Prefix line number annotation to a string.
    */
   public String lnum(SimpleNode node, String str) {
-    if (!trackLines)
+    if (!config.trackLines)
       return str;
 
     // If we are not already at an annotation at the same file/line number,
@@ -987,7 +1001,7 @@ public class ParseTreePrinter {
     }
     result += str;
 
-    if (DEBUG_NODE_OUTPUT)
+    if (Config.DEBUG_NODE_OUTPUT)
       result = annotateNode(node, result);
 
     return result;
@@ -998,7 +1012,7 @@ public class ParseTreePrinter {
    * at this point.
    */
   public String forceBlankLnum() {
-    if (!trackLines) {
+    if (!config.trackLines) {
       return "";
     } else {
       return NEWLINE + annotateFileLineNumber("", true);
@@ -1200,11 +1214,11 @@ public class ParseTreePrinter {
   }
 
   public List makeTranslationUnits(String annotated, final SourceFileMap sources) {
-    if (dumpLineAnnotationsFile != null) {
-      Compiler.emitFile(dumpLineAnnotationsFile, printableAnnotations(annotated));
-      System.err.println("Created " + dumpLineAnnotationsFile);
+    if (config.dumpLineAnnotationsFile != null) {
+      Compiler.emitFile(config.dumpLineAnnotationsFile, printableAnnotations(annotated));
+      System.err.println("Created " + config.dumpLineAnnotationsFile);
     }
-    if (DEBUG_NODE_OUTPUT) {
+    if (Config.DEBUG_NODE_OUTPUT) {
       System.out.println("ANNOTATED OUTPUT:\n" + printableAnnotations(annotated));
     }
 
@@ -1243,7 +1257,7 @@ public class ParseTreePrinter {
           // statements, and we don't want to break up output lines
           // with pointless srclocs.
 
-          if (!fileSame && trackLines) {
+          if (!fileSame && config.trackLines) {
 
             // We need to emit at the beginning of the line,
             // even if the file has changed.  If we break up lines,
@@ -1266,13 +1280,13 @@ public class ParseTreePrinter {
             showSrcloc = true;
           }
           // Otherwise, at the beginning of a line, show it if it has changed.
-          else if (atBol && trackLines && ns.linenum > 0 &&
+          else if (atBol && config.trackLines && ns.linenum > 0 &&
                    (!lineSame || !fileSame)) {
             showSrcloc = true;
           }
 
           // If debugging, indicate the reasons we are or are not showing loc
-          if (DEBUG_LINE_NUMBER && trackLines) {
+          if (Config.DEBUG_LINE_NUMBER && config.trackLines) {
 
             String shorthand = showSrcloc ? "L: " : "!L: ";
             if (!ns.hasfile) {
@@ -1296,7 +1310,7 @@ public class ParseTreePrinter {
         public String notify(char op, String operand) {
           switch (op) {
           case ANNOTATE_OP_TEXT:
-            if (DEBUG_LINE_NUMBER) {
+            if (Config.DEBUG_LINE_NUMBER) {
               int nl = operand.indexOf('\n');
               if (nl >= 0) {
                 int curline = curtu.getTextLineNumber();

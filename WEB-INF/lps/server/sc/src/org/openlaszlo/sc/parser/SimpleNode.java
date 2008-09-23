@@ -123,6 +123,10 @@ public abstract class SimpleNode implements Node, Serializable {
     public void setChildren(SimpleNode[] children) {
         this.children = children;
     }
+
+    public SimpleNode getParent() {
+        return (SimpleNode)parent;
+    }
     
     // Jython interfaces
     public Node __getitem__(int n) {

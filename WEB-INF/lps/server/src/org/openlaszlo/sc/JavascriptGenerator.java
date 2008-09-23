@@ -194,9 +194,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   public List makeTranslationUnits(SimpleNode translatedNode, boolean compress, boolean obfuscate)
   {
-    boolean trackLines = options.getBoolean(Compiler.TRACK_LINES);
-    String dumpann = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
-    return (new ParseTreePrinter(compress, obfuscate, trackLines, dumpann)).makeTranslationUnits(translatedNode, sources);
+    ParseTreePrinter.Config config = new ParseTreePrinter.Config();
+    config.compress = compress;
+    config.obfuscate = obfuscate;
+    config.trackLines = options.getBoolean(Compiler.TRACK_LINES);
+    config.dumpLineAnnotationsFile = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
+    return (new ParseTreePrinter(config)).makeTranslationUnits(translatedNode, sources);
   }
 
   public byte[] postProcess(List tunits) {

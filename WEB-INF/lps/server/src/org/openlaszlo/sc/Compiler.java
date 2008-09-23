@@ -467,6 +467,7 @@ public class Compiler {
   public static String DUMP_LINE_ANNOTATIONS = "dumpLineAnnotations";
   public static String DISABLE_CONSTANT_POOL = "disableConstantPool";
   public static String DISABLE_TRACK_LINES = "disableTrackLines";
+  public static String DISABLE_PUBLIC_FOR_DEBUG = "disablePublicForDebug";
   public static String ELIMINATE_DEAD_EXPRESSIONS = "eliminateDeadExpressions";
   public static String FLASH_COMPILER_COMPATABILITY = "flashCompilerCompatability";
   public static String GENERATE_FUNCTION_2 = "generateFunction2";

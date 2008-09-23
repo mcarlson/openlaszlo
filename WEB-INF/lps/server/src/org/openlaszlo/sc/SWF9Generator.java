@@ -664,20 +664,23 @@ public class SWF9Generator extends JavascriptGenerator {
    */
   public List makeTranslationUnits(SimpleNode translatedNode, boolean compress, boolean obfuscate)
   {
-    boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
-    boolean debugEval = options.getBoolean(Compiler.DEBUG_EVAL);
-    boolean trackLines = options.getBoolean(Compiler.TRACK_LINES);
+    SWF9ParseTreePrinter.Config config = new SWF9ParseTreePrinter.Config();
+    config.compress = compress;
+    config.obfuscate = obfuscate;
+    config.islib = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
+    config.trackLines = options.getBoolean(Compiler.TRACK_LINES);
+    config.dumpLineAnnotationsFile = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
+    config.forcePublicMembers = options.getBoolean(Compiler.DEBUG_SWF9) && !options.getBoolean(Compiler.DISABLE_PUBLIC_FOR_DEBUG);
 
-    String mainClass;
-    if (buildSharedLibrary) {
-      mainClass = SWF9Generator.MAIN_LIB_CLASSNAME;
+    if (config.islib) {
+      config.mainClassName = SWF9Generator.MAIN_LIB_CLASSNAME;
     } else {
-      mainClass = debugEval ? SWF9Generator.DEBUG_EVAL_CLASSNAME : SWF9Generator.MAIN_APP_CLASSNAME;
-      trackLines = true;        // needed to get error messages that relate to original source
+      config.mainClassName = options.getBoolean(Compiler.DEBUG_EVAL) ?
+        SWF9Generator.DEBUG_EVAL_CLASSNAME : SWF9Generator.MAIN_APP_CLASSNAME;
+      config.trackLines = true;        // needed to get error messages that relate to original source
     }
 
-    String dumpann = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
-    return (new SWF9ParseTreePrinter(compress, obfuscate, mainClass, buildSharedLibrary, trackLines, dumpann)).makeTranslationUnits(translatedNode, sources);
+    return (new SWF9ParseTreePrinter(config)).makeTranslationUnits(translatedNode, sources);
   }
 
   /** Implements CodeGenerator.
