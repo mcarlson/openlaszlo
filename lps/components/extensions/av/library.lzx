@@ -3,14 +3,19 @@
       @subtopic Audio-Video
   -->
 <library>
+  <switch>
+    <!-- TODO: add back when as3 is supported -->
+    <when runtime="as2">
+      <include href="camera.lzx" />
+      <include href="microphone.lzx" />
+    </when>
+  </switch>  
   <include href="rtmpconnection.lzx" />
-  <include href="camera.lzx" />
   <include href="mediadevice.lzx" />
   <include href="mediastream.lzx" />
-  <include href="microphone.lzx" />
   <include href="videoview.lzx" />
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
