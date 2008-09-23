@@ -68,6 +68,15 @@ var __lzdirty = false;
 var __lzhistq = [];
 /** @access private */
 var __lzcurrstate = {};
+// TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
+if ($swf9) {
+/** @access private */
+    var capabilities = LzSprite.capabilities;
+} else {
+    /** @access private */
+    var capabilities = LzSprite.prototype.capabilities;
+}
+
 
 /** Sent when the history offset changes.
   * @lzxtype event
@@ -76,6 +85,7 @@ var __lzcurrstate = {};
 var onoffset = LzDeclaredEvent;
 
 /**
+  * Called from the embedding system when the history changes.
   * @access private
   */
 function receiveHistory(o){
@@ -91,16 +101,16 @@ function receiveHistory(o){
     }
 
     var h = this.__lzhistq[offset];
+    //Debug.write('receiveHistory', o, l, h, this._persistso);
     for (var u in h) {
         var obj = h[u];
         //Debug.write('restoring state ', global[obj.c], obj.c, obj.n, obj.v);
         global[obj.c].setAttribute(obj.n, obj.v);
     }
 
-    //Debug.write('onhistory ', offset, this.__lzhistq);
+    //Debug.write('onhistory ', offset, this.offset);
     this.setAttribute('offset', offset);
-    //LzBrowserKernel.receivedHistory(o);
-    return offset * 1;
+    return offset;
 }
 
 /**
@@ -252,7 +262,7 @@ function clear() {
   * @param Boolean p: If true, persistence will be turned on
   */
 function setPersist(p) {
-    if (LzView.prototype.capabilities.persistence) {
+    if (this.capabilities.persistence) {
         this.persist = p;
         this.__initPersist();
     } else {
@@ -262,13 +272,15 @@ function setPersist(p) {
     }
 }
 
-/** Called by the canvas sprite after init
+/** Called by the canvas during init
   * @access private 
   */
-function __start() {
+function __start(id) {
     //Debug.write('setReady', isReady);
+    lz.Browser.callJS( "lz.embed.history.listen('" + id + "')" );
     this.isReady = true;
-    this.setAttribute('ready', true);
+    this.ready = true;
+    if (this.onready.ready) this.onready.sendEvent(true);
 }
 }
 lz.HistoryService = LzHistoryService;  // publish

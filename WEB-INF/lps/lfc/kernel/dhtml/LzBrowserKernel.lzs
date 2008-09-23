@@ -151,6 +151,16 @@ static function getInitArg (name) {
 }
 
 /**
+  * This function returns the id the app was started with
+  * 
+  * @return String: The id the app was started with
+  */
+static function getAppID() {
+    return LzSprite.__rootSprite._id;
+}
+
+
+/**
   * Turns the flash context menu on or off
   * @keywords flashspecific private
   * @param Boolean truefalse: boolean value - true for on, false for off.

@@ -1201,7 +1201,7 @@ lz.embed.dojo.Communicator.prototype = {
             resultsArray.push(piece);
         }
         var results = resultsArray.join("");
-        //alert('_chunkReturnData', results);
+        //console.log('_chunkReturnData', id, results);
         
         return results;
     },
@@ -1211,6 +1211,15 @@ lz.embed.dojo.Communicator.prototype = {
     // Flash 8 communication.
     _execFlash: function(methodName, methodArgs, id){
         var plugin = lz.embed.dojo.obj[id].get();
+
+        /* Bypass dojo
+        var methodid = "dojo.comm." + id + "." + methodName;
+        var method = plugin[methodid]
+        //console.log('Found method', method, 'calling with', methodArgs);
+
+        var results = plugin[methodid](methodArgs);
+        */
+
         //alert(plugin + ', ' + plugin.startExec);
                 
         // begin Flash method execution
@@ -1232,9 +1241,11 @@ lz.embed.dojo.Communicator.prototype = {
         
         // decode the results
         results = this._decodeData(results);
-        
+
         // reset everything
         plugin.endExec();
+
+        //console.log('_execFlash', methodName, methodArgs, results);
         
         return results;
     }

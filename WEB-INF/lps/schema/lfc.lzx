@@ -77,6 +77,8 @@
   <attribute name="lpsbuild" type="string" final="true" />
   <attribute name="lpsbuilddate" type="string" final="true" />
   <attribute name="runtime" type="string" final="true" />
+  <!-- If true, enable history feature -->
+  <attribute name="history" type="boolean" value="false"/>
 
   <containsElements>
     <element>view</element>

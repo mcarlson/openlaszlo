@@ -101,9 +101,11 @@ dynamic public class LzSprite extends Sprite {
       ,bitmapcaching: true
       ,persistence: true
       ,clickmasking: false
+      // history won't work yet because LzUtils.safeEval() doesn't return values for methods in the global scope - see LPP-7008
+      ,history: false
       }
 
-      public function LzSprite (newowner = null, isroot = null, args = null) {
+      public function LzSprite (newowner = null, isroot = null) {
           // owner:*, isroot:Boolean
           this.owner = newowner;
           if (owner == null) return;

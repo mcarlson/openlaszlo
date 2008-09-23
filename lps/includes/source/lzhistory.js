@@ -7,14 +7,16 @@
   */
 
 lz.embed.history = {
-    active: true 
+    active: null 
     ,_currentstate: null 
     ,_apps: []
     ,_intervalID: null
-    ,init: function(app) {
+    ,_registeredapps: {}
+    ,intervaltime: 200
+    ,init: function() {
         var _this = lz.embed.history;
-        // Store a reference to the app
-        _this._apps.push(app);
+        if (_this.active || _this.active == false) return;
+        _this.active = true;
         //console.log('init', _this._apps);
         _this._title = top.document.title;
         var currstate = _this.get();
@@ -71,9 +73,34 @@ lz.embed.history = {
             }
         }
         //alert('init ' + currstate);
-        if (this._intervalID == null) this._intervalID = setInterval('lz.embed.history._checklocationhash()', 100)
+        if (_this._intervalID != null) {
+            clearInterval(_this._intervalID);
+        }
+        if (_this.intervaltime > 0) {
+            _this._intervalID = setInterval('lz.embed.history._checklocationhash()', _this.intervaltime)
+        }
     }
-
+    ,listen: function(apporid) {
+        if (typeof apporid == 'string') {
+            //console.log('looking for', apporid, lz.embed.applications);
+            apporid = lz.embed.applications[apporid];
+            if (! apporid || ! apporid.runtime) {
+                //console.log('no app found', apporid);
+                return
+            }
+        }
+        if (! apporid) return;
+        var _this = lz.embed.history;
+        if (_this._registeredapps[apporid._id]) {
+            //console.log('already listening', apporid);
+            return;
+        }
+        // Store a reference to the app
+        _this._registeredapps[apporid.id] = true;
+        _this._apps.push(apporid);
+        //console.log('listening', apporid, lz.embed.history._apps);
+        _this.init();
+    }
     ,/** @access private */
     _checklocationhash: function() {
         if (lz.embed.dojo && lz.embed.dojo.info && lz.embed.dojo.info.installing) return;
@@ -113,7 +140,7 @@ lz.embed.history = {
     }
     ,/** */
     set: function(s) {
-        if (lz.embed.history.active != true) return;
+        if (lz.embed.history.active == false) return;
         if (s == null) s = '';
         if (lz.embed.history._currentstate == s) return;
         lz.embed.history._currentstate = s;
@@ -192,11 +219,11 @@ lz.embed.history = {
                     if (window['canvas']) canvas.setAttribute(name, val);
                 }
             } else {
-            //alert('_parse test' + h + ', ' + _this._lasthash);
+            //console.log('_parse test' + h + ', ' + _this._lasthash, app);
             //history id
                 if (app.runtime == 'swf') {
                     _this.__setFlash(h, app._id);
-                } else if (window['Lz'] && lz['History'] && lz.History['isReady'] && lz.History['receiveHistory']) {
+                } else if (window['lz'] && lz['History'] && lz.History['isReady'] && lz.History['receiveHistory']) {
                     //console.log('dhtml ' + h);
                     lz.History.receiveHistory(h);
                 }
@@ -226,11 +253,17 @@ lz.embed.history = {
             if (p) {
                 /*
                 // for swf6/7 communications, to prevent trampling callbacks.
-                //console.log('__setFlash', h, app, id, p);
                 var cid = p.GetVariable("_callbackID") + '';
                 if (cid == 'null') {
                 */    
-                lz.embed[id]._lasthash = app.callMethod("lz.History.receiveHistory(" + h + ")");
+
+                var result = app.callMethod("lz.History.receiveHistory(" + h + ")");
+                //console.log('__setFlash', h, result, app);
+                //fails in swf9 - see LPP-7008 
+                //app._lasthash = result;
+                //Assume all went well in swf.
+                app._lasthash = h;
+
                 /*
                 } else {
                     setTimeout('lz.embed.history.__setFlash(' + h + ',"' + id + '")', 10);

@@ -31,6 +31,7 @@
   * @subtopic Views
   * @access public
   * @initarg Boolean accessible: Specifies if this application is intended to be accessible
+  * @initarg Boolean history: Specifies if this application is intended to use history
   * @initarg Boolean debug: If true, the application is compiled with debugging enabled.
   * @initarg Number width: Specifies the width of the canvas
   * @initarg Number height: Specifies the height of the canvas
@@ -184,15 +185,13 @@ dynamic class LzCanvas extends LzView {
       * @param Object args: Initialization args
       */
     override function construct (parent , args) {
-        var capabilities;
-
-        this.__makeSprite(args);
+        this.__makeSprite(null);
 
         // TODO [hqm 2008-04] how can we make this consistent across runtimes ? 
         if ($swf9) {
-            capabilities = LzSprite.capabilities;
+            var capabilities = LzSprite.capabilities;
         } else {
-            capabilities = LzSprite.prototype.capabilities;
+            var capabilities = LzSprite.prototype.capabilities;
         }
 
         // TODO: [2006-05-19 ptw] The original did not do this, should we?
@@ -211,11 +210,30 @@ dynamic class LzCanvas extends LzView {
 
         this.mask = null;
 
-        // turn on focusrect if canvas.accessible is true
-        // SWF-specific
-        if ('accessible' in args)
-            this.sprite.setAccessible(args.accessible);
-        // *** SWF-specific END
+        if (args.accessible) {
+            if (capabilities.accessibility == true) {
+                // turn on focusrect if canvas.accessible is true
+                this.sprite.setAccessible(args.accessible);
+            } else if ($debug) {
+                Debug.warn("This runtime doesn't support accessibility.");
+            }
+        }
+
+        if ((typeof(args.history) == "undefined") || args.history == null) {
+            var historyarg = lz.Browser.getInitArg('history');
+            if (historyarg != null) {
+                this.history = (historyarg == "true"); // convert string to boolean
+            }
+        } else if (args.history) {
+            this.history = true;
+        }
+
+        if (this.history && capabilities.history != true) {
+            if ($debug) {
+                Debug.warn("This runtime doesn't support history.");
+            }
+            this.history = false;
+        }
 
         this.viewLevel = 0;
         this.resourcetable = {};
@@ -231,8 +249,9 @@ dynamic class LzCanvas extends LzView {
             // Default to the 'baked in' value set by the compiler
             var lzproxied_query_arg = (args.__LZproxied == "true");
             // Override with the lzproxied query arg supplied at runtime, if present.
-            if (lz.Browser.getInitArg('lzproxied') != null) {
-                lzproxied_query_arg = (lz.Browser.getInitArg('lzproxied') == "true"); // convert string to boolean
+            var proxyarg = lz.Browser.getInitArg('lzproxied');
+            if (proxyarg != null) {
+                lzproxied_query_arg = (proxyarg == "true"); // convert string to boolean
             }
             this.proxied = lzproxied_query_arg;
         } else {
@@ -360,7 +379,7 @@ dynamic class LzCanvas extends LzView {
             this.buildDefaultMenu();
         }
 
-        this.id = lz.Browser.getInitArg('id');
+        this.id = lz.Browser.getAppID();
     }
 
 /**
@@ -392,13 +411,7 @@ function __LZmousedown(e) {
   * @access private
   */
 override function __makeSprite(args) {
-    if ($swf9) {
-        //trace('canvas.__makeSprite making canvas sprite, sprite is already', this.sprite, 'args', args);
-    }
-    this.sprite = new LzSprite(this, true, args);
-    if ($debug) {
-        //Debug.write("making canvas sprite", this.sprite);
-    }
+    this.sprite = new LzSprite(this, true);
 }
 
 var onmouseleave = LzDeclaredEvent;
@@ -568,12 +581,21 @@ function initDone (){
   * (By the root resolver in LaszloLibrary).
   */
 override function init (){
+    // Canvas-only: This is so the canvas sprite knows when to show its children and 
+    this.sprite.init(true);
+
     if ($swf9) {
         //trace("LzCanvas.init called");
         // cheapo debugger printing
         sprite.addChild(lzconsole.consoletext);
         sprite.addChild(lzconsole.consoleinputtext);
         //lzconsole.write("elapsed time "+getTimer()+" msec");
+    }
+
+    // start up history
+    if (this.history == true) {
+        // Tell lz.History we're ready to send events
+        lz.History.__start(this.id); 
     }
 }
 
@@ -662,8 +684,7 @@ override function __LZcallInit ( an = null ){
     }
 
     this.init();
-    // Canvas-only: This is so the canvas sprite knows when to show its children
-    this.sprite.init(true);
+
     if (this.oninit.ready) this.oninit.sendEvent( this );
     if (this.onafterinit.ready) this.onafterinit.sendEvent( this );
     if (this.datapath && this.datapath.__LZApplyDataOnInit) {

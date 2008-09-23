@@ -12,7 +12,7 @@
 {
 #pragma "warnUndefinedReferences=false"
 
-var LzSprite = function(newowner, isroot, args) {
+var LzSprite = function(newowner, isroot) {
     if (newowner == null) return this;
     this.owner = newowner;
 
@@ -61,6 +61,7 @@ LzSprite.prototype.capabilities = {
     ,persistence: true
     ,clickmasking: true
     ,clickregion: true
+    ,history: true
 }
 
 /**
@@ -220,9 +221,6 @@ LzSprite.prototype.init = function( ) {
 
         // Tell JavaScript that you are ready to have method calls
         DojoExternalInterface.loaded();
-
-        // Tell lz.History we're ready to send events
-        lz.History.__start(); 
     }
 }
 

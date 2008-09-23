@@ -53,6 +53,9 @@ public class Canvas implements java.io.Serializable {
     /** Default canvas accessibility */
     private static final boolean DEFAULT_ACCESSIBLE = false;
 
+    /** Default canvas history */
+    private static final boolean DEFAULT_HISTORY = false;
+
     /** Default canvas font info */
     // TODO: [2003-10-25 bloch] this should come from the build system
     public static final String DEFAULT_VERSION = "1.1";
@@ -126,6 +129,9 @@ public class Canvas implements java.io.Serializable {
     
     /** accessibility for the canvas. */
     private boolean mAccessible = DEFAULT_ACCESSIBLE;
+
+    /** history for the canvas. */
+    private boolean mHistory = DEFAULT_HISTORY;
 
     /** Persistent connection parameters. */
     private boolean mIsConnected = false;
@@ -301,6 +307,11 @@ public class Canvas implements java.io.Serializable {
     public boolean getAccessible() {
         return mAccessible;
     }
+
+    /** @return history */
+    public boolean getHistory() {
+        return mHistory;
+    }
     
     public String getISBN() {
         return "192975213X";
@@ -319,6 +330,11 @@ public class Canvas implements java.io.Serializable {
     /** @param accessible */
     public void setAccessible(boolean accessible) {
         mAccessible = accessible;
+    }
+
+    /** @param accessible */
+    public void setHistory(boolean history) {
+        mHistory = history;
     }
 
     /** @return Heartbeat */
@@ -426,6 +442,7 @@ public class Canvas implements java.io.Serializable {
             "debug='" + mDebug + "' " +
             "id='" + XMLUtils.escapeXml(getID()) +"' " +
             "accessible='" + XMLUtils.escapeXml(getAccessible() + "") +"' " +
+            "history='" + XMLUtils.escapeXml(getHistory() + "") +"' " +
             ">");
         buffer.append(content);
         buffer.append(getInfoAsString());

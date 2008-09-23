@@ -63,6 +63,14 @@ class DojoExternalInterfaceClass {
         
         // tell JavaScript about DojoExternalInterface new method so we can create a proxy
         //Debug.write('calling dojo.flash.comm.' + this._id + "._addExternalInterfaceCallback", methodName, this._id);
+
+		/* bypass dojo
+        var wrapperCall = function(args) {
+            //Debug.write('Called', instance, '.', methodName, 'with', args);
+            return instance[methodName].apply(instance, args);
+        }
+        ExternalInterface.addCallback("dojo.comm." + this._id + "." + methodName, wrapperCall);
+		*/
         ExternalInterface.call("lz.embed.dojo.comm." + this._id + "._addExternalInterfaceCallback", methodName, this._id);
                                                      
         return true;
@@ -247,5 +255,3 @@ class DojoExternalInterfaceClass {
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
-
-// vim:ts=4:noet:tw=0:

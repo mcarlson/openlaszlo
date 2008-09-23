@@ -442,9 +442,6 @@ override function construct ( parent , args) {
 
     this.__makeSprite(args);
 
-    //this.__LZdepth = ip.__LZsvdepth++;
-    //this.__LZsvdepth = 0;
-
     if ( 'width' in args ){
         this.hassetwidth = true;
         this.__LZcheckwidth = false;
@@ -467,6 +464,7 @@ override function construct ( parent , args) {
         this.$lzc$set_resource( args.resource );
         args.resource = LzNode._ignoreAttribute;
     }
+
     if($debug){
         if(args['valign'] && args['y']){
             Debug.warn(this, "y attribute ignored; superseded by valign constraint.");
@@ -492,8 +490,7 @@ function __spriteAttribute(attrname:String, value){
   * @access private
   */
 function __makeSprite(args) {
-    //trace('LzView.__makeSprite', args);
-    this.sprite = new LzSprite(this, false, args);
+    this.sprite = new LzSprite(this, false);
 }
 
 /**

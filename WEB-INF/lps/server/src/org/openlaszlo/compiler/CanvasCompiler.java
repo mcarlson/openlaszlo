@@ -299,6 +299,7 @@ class CanvasCompiler extends ToplevelCompiler {
         String title = elt.getAttributeValue("title");
         String id = elt.getAttributeValue("id");
         String accessible = elt.getAttributeValue("accessible");
+        String history = elt.getAttributeValue("history");
         
         if (width != null) {
             if (isPercentageDimension(width)) {
@@ -340,6 +341,9 @@ class CanvasCompiler extends ToplevelCompiler {
         }
         if (accessible != null) {
             canvas.setAccessible(accessible.equals("true"));
+        }
+        if (history != null) {
+            canvas.setHistory(history.equals("true"));
         }
         
         // Persistent connection parameters

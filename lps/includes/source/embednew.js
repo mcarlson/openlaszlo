@@ -44,7 +44,7 @@ lz.embed = {
      * function is called.  
      *
      * @param properties:Object properties used to write the swf, e.g. 
-     * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600', id: 'lzapp', accessible: 'true'}
+     * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600', id: 'lzapp', accessible: true, history: true/false}
      *
      * @param minimumVersion:Number the version the flash player should 
      * upgrade to if necessary.  Defaults to 8.
@@ -89,8 +89,11 @@ lz.embed = {
 
         var queryvals = this.__getqueryurl(url);
 
-        if (properties.accessible == 'true') {
+        if (properties.accessible && properties.accessible != 'false') {
             queryvals.flashvars += '&accessible=true';
+        }
+        if (properties.history) {
+            queryvals.flashvars += '&history=true';
         }
         if (properties.bgcolor != null) {
             queryvals.flashvars += '&bgcolor=' + escape(properties.bgcolor);
@@ -134,8 +137,6 @@ lz.embed = {
         // listen for history unless properties.history == false
         if (properties.history == false) {
             lz.embed.history.active = false;
-        } else {
-            app._onload.push(lz.embed.history.init);
         }
         // for callbacks onload
         lz.embed.dojo.addLoadedListener(lz.embed._loaded, app);
@@ -184,7 +185,7 @@ lz.embed = {
      * where this function is called to load the LZX Application.
      *
      * @param properties:Object properties used to write the dhtml, e.g. 
-     * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600', id: 'dhtmlapp'}
+     * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600', id: 'dhtmlapp', history: true/false}
      *
      * DHTML adds support for the cancelkeyboardcontrol option.  Setting cancelkeyboardcontrol to true will prevent the application from grabbing keyboard events for tab, arrow and enter keys, and disables application activation.
      * 
@@ -195,6 +196,7 @@ lz.embed = {
         var queryvals = this.__getqueryurl(properties.url, true);
         var url = queryvals.url + '?lzt=object&' + queryvals.query;
 
+        // properties read by root sprite
         lz.embed.__propcache = {
             bgcolor: properties.bgcolor
             ,width: properties.width.indexOf('%') == -1 ? properties.width + 'px' : properties.width
@@ -220,8 +222,6 @@ lz.embed = {
         // listen for history unless properties.history == false
         if (properties.history == false) {
             lz.embed.history.active = false;
-        } else {
-            app._onload.push(lz.embed.history.init);
         }
 
         this.__dhtmlLoadScript(url)

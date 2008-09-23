@@ -327,6 +327,7 @@ LzSprite.prototype.capabilities = {
     ,persistence: false
     ,clickmasking: false
     ,minimize_opacity_changes: false
+    ,history: true
 }
 
 LzSprite.prototype.__updateQuirks = function () {
@@ -541,8 +542,6 @@ LzSprite.prototype.init = function(v) {
         if (this._id) {
             lz.embed[this._id]._ready(this.owner);
         }
-        // Tell lz.History we're ready to send/receive events
-        lz.History.__start(); 
     }
 }
 

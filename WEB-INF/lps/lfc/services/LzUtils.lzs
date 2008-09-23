@@ -223,24 +223,25 @@ class LzUtilsClass {
 
         var path = js.split('.');
         for (var i = 0; i < path.length; i++) {
-            var n = path[i];
-            if (i == 0 && ! scope[n]) {
-                // look in global scope if canvas lookup fails
-                scope = global;
-            }
-            scope = scope[n];
-            if (i == 0 && n == 'lz') {
-                // for AS3 - no global scope lookup
-                scope = lz;
-            }
             var lastscope = scope;
+            var n = path[i];
+            // look in global scope if canvas lookup fails
+            if (i == 0 && ! scope[n]) {
+                scope = globalValue(n);
+            } else {
+                scope = scope[n];
+            }
             //Debug.write('found', n, 'in scope', scope);  
         }
 
-        var args = arglist == null ? lz.Utils.__unpackList(args, null) : arglist;
+        var args = arglist == null ? lz.Utils.__unpackList(args, lastscope) : arglist;
+        //var args = lz.Utils.__unpackList(args, lastscope);
 
-        //Debug.write('found scope', scope, 'args', args, 'for path', path, arglist);  
-        return scope.apply(lastscope, args);
+        //Debug.write('found scope', scope,'in', lastscope, 'args', args, 'for path', path, arglist);  
+        // return values don't work for global scopes in swf9, e.g. 'lz.Browser.getVersion()' - see LPP-7008
+        var result = scope.apply(lastscope, args);
+        //Debug.write('result', result);
+        return result;
     }
 
     // Flash needs help referencing global classes :(
