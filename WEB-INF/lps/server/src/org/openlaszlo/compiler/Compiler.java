@@ -562,7 +562,7 @@ public class Compiler {
             props.setProperty("canvasWidth", "1000");
             props.setProperty("canvasHeight", "600");
             Map compileTimeConstants = new HashMap();
-            compileTimeConstants.put("$debug", new Boolean(false));
+            compileTimeConstants.put("$debug", new Boolean(true));
             compileTimeConstants.put("$profile", new Boolean(false));
             compileTimeConstants.put("$backtrace", new Boolean(false));
             compileTimeConstants.put("$runtime", "swf9");
@@ -577,6 +577,7 @@ public class Compiler {
             compileTimeConstants.put("$js1", Boolean.valueOf(false));
             props.put("compileTimeConstants", compileTimeConstants);
             props.setProperty(CompilationEnvironment.DEBUG_EVAL_PROPERTY, "true");
+            props.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "true");
             byte[] objcode;
             String prog = "";
 
@@ -595,7 +596,7 @@ public class Compiler {
             } catch (org.openlaszlo.sc.parser.ParseException e) {
                 try {
                     String nprog = prog + "var mycode = (function () {\n"+
-                        "with (global) { try {" + script  +"} catch(e) {Debug.diplayResult(e);} }\n});\n"+"mycode();\n";
+                        "with (global) { try {" + script  +"} catch(e) {Debug.displayResult(e);} }\n});\n"+"mycode();\n";
                     objcode = ScriptCompiler.compileToByteArray(nprog, props);
                 } catch (Exception e2) {
                     mLogger.info("error compiling/writing script: " + e2.getMessage());

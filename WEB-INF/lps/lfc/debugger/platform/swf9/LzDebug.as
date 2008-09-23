@@ -139,7 +139,7 @@ class LzAS3DebugService extends LzDebugService {
    * out the declaration here to avoid an invalid override error
    */
   #passthrough {
-  override function isArrayLike (obj:*)/*:Boolean*/ {
+    public override function isArrayLike (obj:*)/*:Boolean*/ {
     // Efficiency
     if (obj is Array) { return true; }
     if (! (typeof obj == 'object')) { return false; }
@@ -212,7 +212,8 @@ class LzAS3DebugService extends LzDebugService {
    * @access private
    */
   #passthrough {
-  override function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
+  // all methods are coerced to public when compiling for debug
+  public override function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
     // TODO [2008-09-11 hqm] not sure what to do here, maybe we can use the introspection API
     // flash.utils.describeType() to at least enumerate public properties... 
     var description:XML = describeType(obj);

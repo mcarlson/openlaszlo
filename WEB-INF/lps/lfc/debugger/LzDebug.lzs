@@ -1118,7 +1118,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  function isArrayLike (obj:*):Boolean {
+  public function isArrayLike (obj:*)/* :Boolean */ {
     if ((obj is Array) || (obj['length'] != (void 0))) {
       var ol = obj.length;
       return ((typeof(ol) == 'number' || ol is Number) &&
@@ -1371,7 +1371,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
+  public function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
     // Check for 'array-ness'
     var alen = false;
     if (this.isArrayLike(obj)) { alen = obj.length; }
