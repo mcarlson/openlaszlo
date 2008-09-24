@@ -284,11 +284,23 @@ function $lzc$set_request (b:Boolean) {
 
 /** @access private */
 var headers :LzParam = null;
+
 /** Proxy data requests via the proxy server. Inherits value from canvas.proxied flag.
   * @type Boolean or null
   * @lzxdefault null
   */
 var proxied :* = null;
+/** @access private */
+function $lzc$set_proxied (val:*) :void {
+    // @devnote: Object lookup does an auto string-coercion
+    var nval:* = ({'true': true, 'false': false, 'null': null, inherit: null})[val];
+    if (nval !== void(0)) {
+        this.proxied = nval;
+    } else if ($debug) {
+        Debug.warn("%w.proxied must be one of 'inherit', 'true', or 'false', but was %w", this, val);
+    }
+}
+
 /** @access private */
 var responseheaders :LzParam = null;
 /** If true, the client should ensure that each request is made, rather than just 
@@ -554,17 +566,12 @@ final function setSrc (src:String) :void {
   * @param String val: If 'true', the dataset will make its request when it is 
   * initialized, if 'false', request will be direct, if 'inherit', it will inherit
   * from its datasource.
+  * @deprecated Use setAttribute('proxied', ...) instead.
   */
-function setProxyRequests (val:String) :void {
-    if (typeof(val) != 'string') {
-        if ($debug) {
-            Debug.warn("arg '%w' to setProxyRequests must be a string with value 'inherit', 'true', or 'false'", val);
-        }
-    } else {
-        this.proxied = val;
-    }
+final function setProxyRequests (val:String) :void {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_proxied(val);
 }
-
 
 /**
   * Sets whether or not the dataset makes its request upon initialization
@@ -572,7 +579,7 @@ function setProxyRequests (val:String) :void {
   * initialized
   * @deprecated Use setAttribute('request', ...) instead.
   */
-final function setRequest(b:Boolean) :void {
+final function setRequest (b:Boolean) :void {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_request(b);
 }
@@ -639,8 +646,8 @@ function setQueryParams (obj:Object) :void {
   */
 function isProxied () :Boolean {
     // Check if the dataset has a "proxied" attribute which overrides dataset's value
-    if (this.proxied != null && this.proxied != "inherit") {
-        return (this.proxied == true); // coerce to boolean
+    if (this.proxied != null) {
+        return this.proxied;
     } else {
         return canvas.proxied;
     }
