@@ -2,7 +2,7 @@
 
 # For the debug LFC, we don't compile with --debug, as that turns on
 # undefined warnings and is very slow, but we do turn on nameFunctions,
-# which makes 'inspect' much more useful, and define $debug=true, which 
+# which makes 'inspect' much more useful, and define $debug=true, which
 # will conditionally compile in the debug aspects of LaszloLibrary
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
@@ -13,7 +13,7 @@
 runtime=`sed -n -e '/compiler.runtime.default/s/.*=\(.*\)$/\1/p' < ../config/lps.properties`
 options=
 while [ $# -gt 0 ]; do
-  case "$1" in 
+  case "$1" in
    -o ) output=$2 ; shift 2 ;;
    --runtime=* ) runtime=${1#--runtime=} ; shift ;;
    * ) options="${options} $1"; shift ;;
@@ -23,11 +23,9 @@ if [ "$runtime" == "dhtml" ]; then
     suffix="js"
 fi
 if [ "$runtime" == "swf9" ]; then
-    options="${options} --option buildSharedLibrary=true"
+    options="${options} -g --option buildSharedLibrary=true"
     suffix="swc"
 fi
 
 ant -Dlfc.output=${output:-LFC${runtime#swf}-debug.${suffix:-"lzl"}} -Dlfc.runtime=${runtime} -Dlfc.source=LaszloLibrary.lzs \
     -Dlfc.options="--option nameFunctions --option warnGlobalAssignments \"-D\\\$debug=true\" ${options}" lfc
-
-
