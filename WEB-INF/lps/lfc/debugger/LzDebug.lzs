@@ -648,12 +648,16 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @return String: the function name
    *
    * @access private
+   *
    * @devnote This is carefully constructed so that if there is a
    * preferred name but mustBeUnique cannot be satisfied, we return
    * null (because the debugger may re-call us without the unique
    * requirement, to get the preferred name).
+   *
+   * @devnote TODO: [2008-09-23 ptw] (LPP-7034) Remove public
+   * declaration after 7034 is resolved
    */
-  function functionName (fn, mustBeUnique:Boolean=false) {
+  public function functionName (fn, mustBeUnique:Boolean=false) {
     if (fn is Function) {
       // _dbg_name takes precedence over the actual function name
       if (fn.hasOwnProperty('_dbg_name')) {

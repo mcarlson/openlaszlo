@@ -232,8 +232,11 @@ class LzDHTMLDebugService extends LzDebugService {
 
   /**
    * @access private
+   *
+   * @devnote TODO: [2008-09-23 ptw] (LPP-7034) Remove public
+   * declaration after 7034 is resolved
    */
-  override function functionName (fn, mustBeUnique) {
+  public override function functionName (fn, mustBeUnique) {
     if (fn is Function) {
       // JS1 constructors are Function
       if (fn.hasOwnProperty('tagname')) {

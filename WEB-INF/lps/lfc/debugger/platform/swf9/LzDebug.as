@@ -176,8 +176,13 @@ class LzAS3DebugService extends LzDebugService {
    * preferred name but mustBeUnique cannot be satisfied, we return
    * null (because the debugger may re-call us without the unique
    * requirement, to get the preferred name).
+   *
+   * @devnote TODO: [2008-09-23 ptw] (LPP-7034) Remove public
+   * declaration after 7034 is resolved
    */
-  override function functionName (fn, mustBeUnique:Boolean=false) {
+#passthrough{
+  // all methods are coerced to public when compiling for debug
+  public override function functionName (fn, mustBeUnique:Boolean=false) {
     if (fn is Class) {
       // JS2 constructors are Class
       if (fn['tagname']) {
@@ -188,21 +193,21 @@ class LzAS3DebugService extends LzDebugService {
           return null;
         }
       }
-      // tip o' the pin to osteele.com
-      var fstring = fn['toString']();
-      var s = '[class '.length;
-      var e = fstring.indexOf(']');
-      if ((fstring.indexOf('[class ') == 0) && (e == fstring.length -1)) {
-        var n = fstring.substring(s, e);
-        if ((! mustBeUnique) || (fn === globalValue(n))) {
+      var n = getQualifiedClassName(fn);
+      if (! mustBeUnique) {
           return n;
-        } else {
-          return null;
-        }
+      } else {
+        try {
+          if (fn == getDefinitionByName(n)) {
+            return n;
+          }
+        } catch (e) {};
+        return null;
       }
     }
     return super.functionName(fn, mustBeUnique);
   };
+}#
 
   /**
    * @access private
