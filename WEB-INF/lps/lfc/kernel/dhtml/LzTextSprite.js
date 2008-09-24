@@ -471,8 +471,8 @@ LzTextSprite.addLinkID = function (view) {
 }
 
 
-LzTextSprite.deleteLinkID = function (view) {
-    delete LzTextSprite.linkIDMap[view.getUID()];
+LzTextSprite.deleteLinkID = function (UID) {
+    delete LzTextSprite.linkIDMap[UID];
 }
 
 // Clean up the link ID table if this view is destroyed
