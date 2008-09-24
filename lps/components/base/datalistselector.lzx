@@ -77,7 +77,6 @@
             var selection = this.getSelection();
             if (selection.length == 0) return null;
 
-
             var textdp = this.immediateparent.subviews[0]._textdatapath;
             if (!textdp) textdp = 'text()';
             if ( selection.length == 1  && !multiselect) {
@@ -136,7 +135,7 @@
             var nodelist = immediateparent.subviews[0].cloneManager.nodes;
 
             if (!dir) dir = 1;
-            found_index = found_index += dir;
+            found_index += dir;
             if (found_index == -1) found_index = 0;
             if (found_index == nodelist.length) found_index = nodelist.length -1;
 
@@ -186,34 +185,35 @@
        </method>
 
        <method name="_ensureItemInViewByIndex" args="index">  <![CDATA[
-            if (!immediateparent.subviews || immediateparent.subviews.length == 0) { return; }
-            var clipview = immediateparent.parent;
-            var itemheight = immediateparent.subviews[0].height;
+            var ip = this.immediateparent;
+            var svs = ip.subviews;
+            if (!svs || svs.length == 0) { return; }
+            var itemheight = svs[0].height;
             var itemy = index * itemheight;
             var spacing = 0;
             if ( index > 0 ){
-                var cloneman = immediateparent.subviews[0].cloneManager;
+                var cloneman = svs[0].cloneManager;
                 if (parent['spacing'] ) {
                     spacing = parent.spacing;
-                } else if ( cloneman['spacing'] ){
+                } else if ( cloneman && cloneman['spacing'] ){
                     spacing = cloneman.spacing;
                 }
                 itemy += (spacing * (index-1));
             }
             var changed = false;
-
-           if ( (itemy + itemheight) > clipview.height - immediateparent.y ) {
-               var diff = clipview.height - immediateparent.y - (itemy + itemheight + spacing);
-               var newY = Math.max((clipview.height - immediateparent.height),
-                                immediateparent.y + diff);
-               immediateparent.setAttribute("y", newY);
+            var clipheight = ip.parent.height;
+            var ipY = ip.y;
+           if ( (itemy + itemheight) > clipheight - ipY ) {
+               var diff = clipheight - ipY - (itemy + itemheight + spacing);
+               var newY = Math.max((clipheight - ip.height), ipY + diff);
+               ip.setAttribute("y", newY);
                changed = true;
            }
            // check for selection above interior
-           else if ( (immediateparent.y * -1) > itemy ) {
-               var diff = (immediateparent.y*-1) - itemy - spacing;
-               var newY = Math.min(0, (immediateparent.y + diff));
-               immediateparent.setAttribute("y",newY);
+           else if ( (ipY * -1) > itemy ) {
+               var diff = (ipY*-1) - itemy - spacing;
+               var newY = Math.min(0, (ipY + diff));
+               ip.setAttribute("y", newY);
                changed = true;
            }
            if (changed) {
@@ -224,12 +224,11 @@
 
         <method name="getItemByIndex" args="index">
             <![CDATA[ 
-            if (!immediateparent.subviews || immediateparent.subviews.length == 0) return null;
-            this._ensureItemInViewByIndex( index );
             var svs = immediateparent.subviews;
+            if (!svs || svs.length == 0) return null;
+            this._ensureItemInViewByIndex( index );
             var cl = svs[0].cloneManager;
             if (cl == null) {
-                // return undefined
                 return ( index == 0 ? svs[0] : undefined );
             }
             var pos = cl.clones[0].datapath.xpathQuery( 'position()' ) - 1;
