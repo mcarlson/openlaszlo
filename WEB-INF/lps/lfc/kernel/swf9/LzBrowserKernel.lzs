@@ -40,7 +40,7 @@ static function loadURL ( url, target=null, features=null ){
   * By default, the javascript specified in 'js' is executed in the current
   * browser frame .
   */
-static function loadJS ( js, target ){
+static function loadJS ( js, target='_self'){
   navigateToURL(new URLRequest('javascript:' + js + ';void(0);'), target);
 }
 
