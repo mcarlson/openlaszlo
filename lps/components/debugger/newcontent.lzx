@@ -74,97 +74,98 @@
 
 
 <!-- The horizontal scrollbar for the debugger window -->
- <class name="_dbg_horiz_scrollbar" 
-        onmousedown="this.clickInThumbTrackX(this.getMouse( 'x' ))">
-     <!-- These constants ought to be derived automatically from the resources -->
-     <attribute name="arrowbuttonwidth" value="12" />
-     <attribute name="thumbwidth" value="24" />
+<class name="_dbg_horiz_scrollbar" 
+       onmousedown="this.clickInThumbTrackX(this.getMouse( 'x' ))">
+  <!-- These constants ought to be derived automatically from the resources -->
+  <attribute name="arrowbuttonwidth" value="12" />
+  <attribute name="thumbwidth" value="24" />
 
-     <attribute name="autoscroll" type="expression" value="true" />
+  <attribute name="autoscroll" type="expression" value="true" />
 
-     <!-- User clicked in the track that the thumb slides in, we need to decide
-               whether to page left (they clicked left of the thumb) or right (they clicked
-               right of  the thumb) -->
-<method name="clickInThumbTrackX" args="x"> 
-              if (x > (this.dragger.x + this.dragger.width)) {
-                 parent.scrollx(-parent.parent.width); 
-              } else {
-                 parent.scrollx(parent.parent.width); 
-              }
-           this.adjustDraggerXpos();
-     </method>
-
-<method name="scrollLeft" args="n">
-           parent.scrollx(n)
-           this.adjustDraggerXpos();
-     </method>
-
-<method name="scrollRight" args="n">
-           parent.scrollx(-n)
-           this.adjustDraggerXpos();
-     </method>
-
-
+  <!-- User clicked in the track that the thumb slides in, we need to decide
+       whether to page left (they clicked left of the thumb) or right (they clicked
+       right of  the thumb) -->
+  <method name="clickInThumbTrackX" args="x"> 
+    if (x > (this.dragger.x + this.dragger.width)) {
+        parent.scrollx(-parent.parent.width); 
+    } else {
+        parent.scrollx(parent.parent.width); 
+    }
+    this.adjustDraggerXpos();
+  </method>
+  
+  <method name="scrollLeft" args="n">
+    parent.scrollx(n)
+    this.adjustDraggerXpos();
+  </method>
+  
+  <method name="scrollRight" args="n">
+    parent.scrollx(-n)
+    this.adjustDraggerXpos();
+  </method>
+  
+  
+  <stableborderlayout axis="x" />
+  
+  <basebutton resource="leftbtn_rsc" x="-1" 
+              onclick="parent.scrollLeft(32)" />
+  <view resource="scrollstretchhorz_rsc" height="13" 
+        options="releasetolayout" 
+        stretches="both" />
+  <basebutton resource="rightbtn_rsc" 
+              onclick="parent.scrollRight(32)" />
+  
+  <view name="dragger" width="${parent.thumbwidth}" x="12"
+        onmousedown="this.hdrag.setAttribute('applied', true)"
+        onmouseup="this.hdrag.setAttribute('applied', false)" >
+    
+    <_dbg_lzhdrag name="hdrag" />
     <stableborderlayout axis="x" />
-
-    <basebutton resource="leftbtn_rsc" x="-1" 
-                    onclick="parent.scrollLeft(32)" />
-    <view resource="scrollstretchhorz_rsc" height="13" 
-              options="releasetolayout" 
-              stretches="both" />
-    <basebutton resource="rightbtn_rsc" 
-                   onclick="parent.scrollRight(32)" />
-
-    <view name="dragger" width="${parent.thumbwidth}" x="12"
-              onmousedown="this.hdrag.setAttribute('applied', true)"
-              onmouseup="this.hdrag.setAttribute('applied', false)" >
-
-            <_dbg_lzhdrag name="hdrag" />
-            <stableborderlayout axis="x" />
-            <view name="left" resource="scrolldragleft_rsc" pixellock="true" />
-            <view name="stretch" resource="scrolldraghorz_rsc" 
-                stretches="width" />
-            <view name="right" resource="scrolldragright_rsc" />
-            <view name="dimples"
-                   resource="scrolldragdimpleshorz_rsc" options="ignorelayout" 
-                   x="6" y="4" />
-
-           <setter name="x" args="x" > 
-              super.setAttribute('x', Math.max(parent.arrowbuttonwidth-1 , Math.min( x, parent.width - parent.arrowbuttonwidth)));
-           </setter> 
-
-          <!-- this gets called every time the x value changes -->
-          <handler name="onx" reference="this"> 
-              if (parent.autoscroll) {
-                  this.handleThumbPosX(this.x);
-              }
-          </handler>
-
-<method name="handleThumbPosX" args="x" > 
-              var real_scroll_width = (parent.width - (parent.arrowbuttonwidth * 2))  - parent.thumbwidth + 2;
-              // scroll the text window horizontally
-              parent.setAttribute('autoscroll', false);
-              parent.parent.setAttribute('xscroll', -(((x - parent.arrowbuttonwidth)  / real_scroll_width) * (parent.parent.textpane.width)));
-              parent.adjustDraggerXpos()
-              parent.setAttribute('autoscroll',true);
-           </method> 
-     </view>
-
-<method name="adjustDraggerXpos">
-       // disable the constraint between ypos of dragger and text window for a moment
-       this.setAttribute('autoscroll', false);
-       this.dragger.setAttribute('x', this.computeDraggerXPos());
-       this.setAttribute('autoscroll', true);
-     </method>
-
-<method name="computeDraggerXPos">
-       // subtract out height of left and right buttons
-       var bw = this.arrowbuttonwidth;
-       var real_scroll_width = (this.width - (bw * 2 + this.thumbwidth)) + 2;
-       var xpos = Math.floor((Math.abs(parent.textpane.x) / (parent.textpane.width)) * real_scroll_width);
-       return (bw -1)  + xpos;
-     </method>
-
+    <view name="left" resource="scrolldragleft_rsc" pixellock="true" />
+    <view name="stretch" resource="scrolldraghorz_rsc" 
+          stretches="width" />
+    <view name="right" resource="scrolldragright_rsc" />
+    <view name="dimples"
+          resource="scrolldragdimpleshorz_rsc" options="ignorelayout" 
+          x="6" y="4" />
+    
+    <setter name="x" args="x" > 
+      super.setAttribute('x', Math.max(parent.arrowbuttonwidth-1 , Math.min( x, parent.width - parent.arrowbuttonwidth)));
+    </setter> 
+    
+    <!-- this gets called every time the x value changes -->
+    <handler name="onx" reference="this"> 
+      if (parent.autoscroll) {
+          this.handleThumbPosX(this.x);
+      }
+    </handler>
+    
+    <method name="handleThumbPosX" args="x" > 
+      var real_scroll_width = (parent.width - (parent.arrowbuttonwidth * 2))  - parent.thumbwidth + 2;
+      // scroll the text window horizontally
+      var hscroll = ((x - parent.arrowbuttonwidth)  / real_scroll_width) * (parent.parent.textpane.width);
+      parent.setAttribute('autoscroll', false);
+      parent.parent.setXScroll(-hscroll);
+      if (!hdrag.applied) { parent.adjustDraggerXpos();  }
+      parent.setAttribute('autoscroll',true);
+    </method> 
+  </view>
+  
+  <method name="adjustDraggerXpos">
+    // disable the constraint between ypos of dragger and text window for a moment
+    this.setAttribute('autoscroll', false);
+    this.dragger.setAttribute('x', this.computeDraggerXPos());
+    this.setAttribute('autoscroll', true);
+  </method>
+  
+  <method name="computeDraggerXPos">
+    // subtract out height of left and right buttons
+    var bw = this.arrowbuttonwidth;
+    var real_scroll_width = (this.width - (bw * 2 + this.thumbwidth)) + 2;
+    var xpos = Math.floor((Math.abs(parent.textpane.x) / (parent.textpane.width)) * real_scroll_width);
+    return (bw -1)  + xpos;
+  </method>
+  
 
  </class>
 
@@ -271,7 +272,7 @@
           </handler>
 
       <!-- force the content pane to scroll to position corresponding to thumb y pos in bar -->
-<method name="handleThumbPos" args="y" > 
+      <method name="handleThumbPos" args="y" > 
               <![CDATA[
                   // scroll the text window
                      var bh = parent.arrowbuttonheight;
@@ -366,7 +367,7 @@
      </method>
 
      <!-- incrementally slide the text content area left or right -->
-<method name="scrollx" args="nx">
+     <method name="scrollx" args="nx">
        this.textpane.setAttribute('x', Math.min(0, Math.max(-(this.textpane.width), this.textpane.x + nx)));
      </method>
 
