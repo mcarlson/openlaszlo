@@ -20,7 +20,7 @@
   * the onmousedown events.  When views are registered using the
   * <classname>lz.Track</classname> service, they will receive events
   * independent of the mouse button state.
-  * 
+  *
   * </p>
   * <p>
   * In using lz.Track, views register with a particular group.
@@ -29,7 +29,7 @@
   * the mouse position enters (<event>ontrackover</event>), leaves (<event>ontrackout</event>) or when the mouse
   * button goes up (<event>ontrackup</event>).
   * </p>
-  * 
+  *
   * <h2>Example: a simple color picker</h2>
   * <p>
   * This simple color picker displays its color in a rectangle, then
@@ -41,7 +41,7 @@
   * <!--
   * <img src="images/lztrack/colorpicker.gif" width="131" height="42" />
   * -->
-  * 
+  *
   * <p>The code below defines the class "colorspot" which represents a
   * tracked view.  This class handles visual state changes triggered by
   * the track events and sends an event to its parent when a new color is
@@ -52,13 +52,13 @@
   * typical for a set of sibling views to share the same track group;
   * however, tracked views that share the same trackgroup may be anywhere
   * in view hierarchy.</p>
-  * 
+  *
   * <example title="Using lz.Track to build a color chooser">
   * &lt;canvas height="60"&gt;
   *   &lt;class name="colorspot" clickable="true"
   *     width="22" height="22" bgcolor="0x000000"&gt;
   *     &lt;attribute name="mycolor"/&gt;
-  * 
+  *
   *     &lt;attribute name="trackgroup" type="string" value="${parent.trackgroup}"/&gt;
   *     &lt;view name="spot" bgcolor="${parent.mycolor}"
   *         x="2" y="2" width="18" height="18"/&gt;
@@ -68,7 +68,7 @@
   *     &lt;handler name="onmousetrackover"&gt;
   *         setAttribute('bgcolor', 0xdedede); // hilite: gray
   *     &lt;/handler&gt;
-  * 
+  *
   *     &lt;handler name="onmousetrackout"&gt;
   *         setAttribute('bgcolor', 0x000000); // normal: black
   *     &lt;/handler&gt;
@@ -76,7 +76,7 @@
   *         parent.onnewcolor.sendEvent(this.spot.bgcolor);
   *     &lt;/handler&gt;
   *   &lt;/class&gt;
-  * 
+  *
   *   &lt;view bgcolor="0x0000ff" width="20" height="20"
   *       onmousedown="this.colorpicker.setVisible(true); lz.Track.activate('mymenu');"
   *       onmouseup="this.colorpicker.setVisible(false); lz.Track.deactivate('mymenu');"&gt;
@@ -85,305 +85,314 @@
   *       &lt;handler name="onnewcolor" args="newcolor"&gt;
   *           parent.setAttribute('bgcolor', newcolor);
   *       &lt;/handler&gt;
-  * 
+  *
   *       &lt;simplelayout axis="x"/&gt;
   *       &lt;colorspot mycolor="0x0000ff"/&gt;
   *       &lt;colorspot mycolor="0x00ff00"/&gt;
   *       &lt;colorspot mycolor="0xffff00"/&gt;
   *       &lt;colorspot mycolor="0xff0000"/&gt;
   *       &lt;colorspot mycolor="0x00ffff"/&gt;
-  * 
+  *
   *     &lt;/view&gt;
   *   &lt;/view&gt;
   *   &lt;text&gt;Click on the square, then release the mouse button to select a new color.&lt;/text&gt;
   *   &lt;simplelayout axis="y" spacing="20"/&gt;
   * &lt;/canvas&gt;
   * </example>
-  * 
+  *
   * @shortdesc Enables tracking mouse events over a group of views.
   */
 
-class LzTrackService extends LzEventable {
+public final class LzTrackService extends LzEventable {
 
-/**
-  * @event onmousetrackover:  sent when the mouse is over a view that is registered to
-  * an active track group
-  * @event onmousetrackout:  sent when the mouse is leaves the visible area of a view
-  * that was previously sent an 'ontrackover' event
-  * @event onmousetrackup:  sent when the mouse button is released over a view that
-  * is registered to an active track group
-  */
+    /**
+      * @event onmousetrackover:  sent when the mouse is over a view that is registered to
+      * an active track group
+      * @event onmousetrackout:  sent when the mouse is leaves the visible area of a view
+      * that was previously sent an 'ontrackover' event
+      * @event onmousetrackup:  sent when the mouse button is released over a view that
+      * is registered to an active track group
+      */
 
-/** @access private */
-var __LZreg = new Object; // list of registered views (that will be tracked)
-/** @access private */
-var __LZactivegroups = null;
-/** @access private */
-var __LZtrackDel = null;
-/** @access private */
-var __LZoptimizeforaxis = 'x';
-/** @access private */
-var __LZmouseupDel = null;
+    /** @access private */
+    var __LZreg :Object = new Object; // list of registered views (that will be tracked)
+    /** @access private */
+    var __LZactivegroups :Array = null;
+    /** @access private */
+    var __LZtrackDel :LzDelegate = null;
+    /** @access private */
+    var __LZmouseupDel :LzDelegate = null;
+    /** @access private */
+    var __LZdestroydel :LzDelegate = null;
 
-/** @access private */
-var __LZlastmouseup = null;
-/** @access private */
-var __LZlasthit = null;
-
-/** @access private */
-var __LZdestroydel:LzDelegate = null;
+    /** @access private */
+    var __LZlastmouseup :LzView = null;
 
 
-/** @access private */
-function LzTrackService (){
-    super();
+    /**
+     * The track service.  Also available as the global
+     * <code>lz.Track</code>.
+     *
+     * @type LzTrackService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    public static const LzTrack:LzTrackService;
 
-    this.__LZtrackDel = new LzDelegate( this, "__LZtrack" );// called on idle
-    this.__LZmouseupDel = new LzDelegate( this, "__LZmouseup", lz.GlobalMouse, 'onmouseup');// called on global mouseup
-    this.__LZactivegroups = [];
-}
+    /** @access private
+     * @devnote AS3 does not allow private constructors, so we need the
+     * error
+     */
+    function LzTrackService () {
+        super();
+        //    if (LzTrackService.LzTrack) {
+        //      throw new Error("There can be only one LzTrack");
+        //    }
 
-
-/**
-  * register a view to be tracked by a particular track group
-  * @param LzView v: a reference to the view to add to the track group
-  * @param String group: the name of the track group
-  * @access public
-  * @devnote should we create a bounding rect for the views, or instead register a view
-  * as a groups bounding rect.
-  */
-function register ( v, group ){
-    if (v == null || group == null) return;
-    if (typeof(this.__LZreg[group]) == "undefined") {
-         this.__LZreg[group] = [];
-          // __LZlasthit means that onmousedownover has been sent to this view,
-          // but not onmousedownout
-         this.__LZreg[group].__LZlasthit = 0;
+        this.__LZtrackDel = new LzDelegate( this, "__LZtrack" );// called on idle
+        this.__LZmouseupDel = new LzDelegate( this, "__LZmouseup", lz.GlobalMouse, 'onmouseup');// called on global mouseup
+        this.__LZdestroydel = new LzDelegate( this, "__LZdestroyitem" );
+        this.__LZactivegroups = [];
     }
-    this.__LZreg[group].push( v );
 
-    // register for when the view is destroyed, so we can clean up after
-    if (!this.__LZdestroydel) {
-       this.__LZdestroydel = new LzDelegate( this, "__LZdestroyitem" );
+    // Create the singleton
+    LzTrackService.LzTrack = new LzTrackService();
+
+    /**
+      * register a view to be tracked by a particular track group
+      * @param LzView v: a reference to the view to add to the track group
+      * @param String group: the name of the track group
+      * @access public
+      * @devnote should we create a bounding rect for the views, or instead register a view
+      * as a groups bounding rect.
+      */
+    function register (v:LzView, group:String) :void {
+        if (v == null || group == null) return;
+        var reglist:Array = this.__LZreg[group];
+        if (! reglist) {
+            this.__LZreg[group] = reglist = [];
+             // __LZlasthit means that onmousedownover has been sent to this view,
+             // but not onmousedownout
+            reglist.__LZlasthit = null;
+            reglist.__LZactive = false;
+        }
+        reglist.push( v );
+
+        // register for when the view is destroyed, so we can clean up after
+        this.__LZdestroydel.register(v, "ondestroy");
     }
-    this.__LZdestroydel.register(v, "ondestroy");
-}
 
-/**
-  * unregister a view to be tracked by a particular track group
-  * @param LzView v: a reference to the view to remove from the track group
-  * @param String group: the name of the track group
-  * @access public
-  */
-function unregister ( v, group ){
-    if (v == null || group == null) return;
-    var reglist = this.__LZreg[group];
-    if (reglist) {
-        for (var i = 0; i < reglist.length; i++) {
-            if (reglist[i] == v) {
-                reglist.splice(i, 1);
+    /**
+      * unregister a view to be tracked by a particular track group
+      * @param LzView v: a reference to the view to remove from the track group
+      * @param String group: the name of the track group
+      * @access public
+      */
+    function unregister (v:LzView, group:String) :void {
+        if (v == null || group == null) return;
+        var reglist:Array = this.__LZreg[group];
+        if (reglist) {
+            for (var i:int = 0; i < reglist.length; i++) {
+                if (reglist[i] == v) {
+                    reglist.splice(i, 1);
+                }
+            }
+            // Remove empty groups
+            if (reglist.length == 0) {
+                if (reglist.__LZactive) {
+                    this.deactivate(group);
+                }
+                delete this.__LZreg[group];
             }
         }
-        // Remove empty groups
-        if (reglist.length == 0) {
-            delete this.__LZreg[group];
-        }
-    }    
-    this.__LZdestroydel.unregisterFrom(v.ondestroy);
-}
+        this.__LZdestroydel.unregisterFrom(v.ondestroy);
+    }
 
-/**
-  * called when a registered view is destroyed.  We need to remove it from
-  * all track groups, so we don't leak memory
-  * @access private
-  */
-function __LZdestroyitem (v){
-    for (var i in this.__LZreg) {
-        this.unregister(v, i);
-    }
-}
-/**
-  * activate tracking for a particular group. Any number of groups can be tracked
-  * simultaneously. This is useful for tracking mechanisms like menus.
-  * @param String group: the name of the track group to activate
-  */
-function activate ( group:String ){
-    var agroups:Array = this.__LZactivegroups;
-    if (agroups.length == 0) {
-        // don't want to re-register, in case we are just switching active groups
-        this.__LZtrackDel.register( lz.Idle, "onidle" );
-    }
-    // see if group is already active
-    var reg:Object = this.__LZreg;
-    for (var i:int = 0; i < agroups.length; ++i) {
-        if (agroups[i] == reg[group]) {
-            // nothing to do, group is already active
-            return;
+    /**
+      * called when a registered view is destroyed.  We need to remove it from
+      * all track groups, so we don't leak memory
+      * @access private
+      */
+    function __LZdestroyitem (v:LzView) :void {
+        for (var group:String in this.__LZreg) {
+            this.unregister(v, group);
         }
     }
-    // group was not active so put it onto activegroups array
-    agroups.push(reg[group]);
-}
+    /**
+      * activate tracking for a particular group. Any number of groups can be tracked
+      * simultaneously. This is useful for tracking mechanisms like menus.
+      * @param String group: the name of the track group to activate
+      */
+    function activate (group:String) :void {
+        var reglist:Array = this.__LZreg[group];
+        if (reglist && ! reglist.__LZactive) {// see if group is already active
+            reglist.__LZactive = true;
+            var agroups:Array = this.__LZactivegroups;
+            if (agroups.length == 0) {
+                // don't want to re-register, in case we are just switching active groups
+                this.__LZtrackDel.register( lz.Idle, "onidle" );
+            }
+            // group was not active so put it onto activegroups array
+            agroups.push(reglist);
+        }
+    }
 
-/**
-  * deactivate tracking for a particular group
-  * @param String group: the name of the track group to deactivate
-  */
-function deactivate ( group ) {
-    var agroups:Array = this.__LZactivegroups;
-    var reg:Object = this.__LZreg;
-    for (var i:int = 0; i < agroups.length; ++i) {
-        if (agroups[i] == reg[group]) {
-            agroups.splice(i, 1);
-         }
+    /**
+      * deactivate tracking for a particular group
+      * @param String group: the name of the track group to deactivate
+      */
+    function deactivate (group:String) :void {
+        var reglist:Array = this.__LZreg[group];
+        if (reglist && reglist.__LZactive) {
+            var agroups:Array = this.__LZactivegroups;
+            for (var i:int = 0; i < agroups.length; ++i) {
+                if (agroups[i] == reglist) {
+                    agroups.splice(i, 1);
+                    break;
+                }
+            }
+            if (agroups.length == 0) {
+                this.__LZtrackDel.unregisterAll();
+            }
+            reglist.__LZactive = false;
+            reglist.__LZlasthit = null;// should send ontrackmouseout ?
+        }
     }
-    if (agroups.length == 0) {
-      this.__LZtrackDel.unregisterAll();
-    }
-    if (typeof(reg[group]) != "undefined") {
-        reg[group].__LZlasthit = null;   // should send ontrackmouseout ?
-    }
-}
 
-/**
-  * @access private
-  * returns the topmost view (a or b)
-  */
-function __LZtopview (a, b) {
-    var btemp = b; var atemp=a;
-    while (atemp.nodeLevel < btemp.nodeLevel) {
-        btemp = btemp.immediateparent;
-        if (btemp == a)    // a is in b's parent chain
-            return b;      // child is always on top
+    /**
+      * @access private
+      * returns the topmost view (a or b)
+      */
+    function __LZtopview (a:LzView, b:LzView) :LzView {
+        var atemp:LzView = a;
+        var btemp:LzView = b;
+        while (atemp.nodeLevel < btemp.nodeLevel) {
+            btemp = btemp.immediateparent;
+            if (btemp == a)    // a is in b's parent chain
+                return b;      // child is always on top
+        }
+        while (btemp.nodeLevel < atemp.nodeLevel) {
+            atemp = atemp.immediateparent;
+            if (atemp == b)    // b is in a's parent chain
+                return a;      // child is always on top
+        }
+        // nodeLevel is equal
+        while (atemp.immediateparent != btemp.immediateparent) {
+            atemp = atemp.immediateparent;
+            btemp = btemp.immediateparent;
+        }
+        // a and b are siblings, check depth
+        return (atemp.getZ() > btemp.getZ()) ? a : b;
     }
-    while (btemp.nodeLevel < atemp.nodeLevel) {
-        atemp = atemp.immediateparent;
-        if (atemp == b)    // b is in a's parent chain
-            return a;      // child is always on top
+
+    /**
+      * @access private
+      * return topmost view in an array of views
+      */
+    function __LZfindTopmost (vlist:Array) :LzView {
+        var top:LzView = vlist[0];
+        for (var i:int = 1; i < vlist.length; i++) {
+            top = this.__LZtopview(top, vlist[i]);
+        }
+        return top;
     }
-    // nodeLevel is equal
-    while (atemp.immediateparent != btemp.immediateparent) {
-        atemp = atemp.immediateparent;
-        btemp = btemp.immediateparent;
-    }
-    // a and b are siblings, check depth
-    if (atemp.getZ() > btemp.getZ()) return a;
-    else return b;
-}
 
-/**
-  * @access private
-  * return topmost view in an array of views
-  */
-function __LZfindTopmost (vlist) {
-    var top = vlist[0];
-    for (var i=1; i < vlist.length; i++) {
-        top = this.__LZtopview(top, vlist[i]);
-    }
-    return top;
-}
+    /**
+      * @access private
+      * iterate through a trackgroup and add those views that are under the mouse to
+      * a hitlist.
+      */
+    function __LZtrackgroup (group:Array, hitlist:Array) :void {
+        //check mouse pos
 
-
-/**
-  * @access private
-  * iterate through a trackgroup and add those views that are under the mouse to
-  * a hitlist.
-  */
-function __LZtrackgroup (group,hitlist) {
-    //check mouse pos
-
-    // this will be slow on vertical menus because
-    // the mouse_x will intersect with all menuitems if 
-    // if it intersects any menuitem. We should include
-    // an optimise for axis attribute as part of a group.
-    for (var i=0; i < group.length; i++) {
-       var v = group[i];
-       if ( v.visible ) { // dont check mouse if not visible
-           var vx = v.getMouse('x');
-           if (vx > 0 && vx < v.width) {   // inside width
-                var vy = v.getMouse('y');
-                if (vy > 0 && vy < v.height) {  // inside height
+        // this will be slow on vertical menus because
+        // the mouse_x will intersect with all menuitems if
+        // if it intersects any menuitem. We should include
+        // an optimise for axis attribute as part of a group.
+        for (var i:int = 0; i < group.length; i++) {
+            var v:LzView = group[i];
+            if (v.visible) { // dont check mouse if not visible
+                var vpos:Object = v.getMouse(null);
+                var vx:Number = vpos.x;
+                var vy:Number = vpos.y;
+                if (vx > 0 && vx < v.width  // inside width
+                        && vy > 0 && vy < v.height) { // inside height
                     hitlist.push(v);
                 }
-          }
-      }
+            }
+        }
     }
-}
 
+    /**
+      * @access private
+      * called on idle when the mouse is down, sends events to topmost view
+      * NOTE: it would be good to have bounding rectangles on these groups
+      */
+    function __LZtrack (ignore:*) :void {
+        var foundviews:Array = [];
+        var agroups:Array = this.__LZactivegroups;
+        for (var i:int = 0; i < agroups.length; ++i) {
+            //would love to check to see if the mouse is within a group's
+            //bounding rect. this would significantly speed up menu tracking.
+            var thisgroup:Array = agroups[i];
 
-/**
-  * @access private
-  * called on idle when the mouse is down, sends events to topmost view
-  * NOTE: it would be good to have bounding rectangles on these groups
-  */
-function __LZtrack (ignore) {
-    var foundviews = [];
-    for (var i:int = 0; i < this.__LZactivegroups.length; ++i) {
-        var hitlist =[];
-        //would love to check to see if the mouse is within a group's 
-        //bounding rect. this would significantly speed up menu tracking.
-        var thisgroup = this.__LZactivegroups[i];
+            // build a combined hitlist from all groups
+            var hitlist:Array = [];
+            this.__LZtrackgroup(thisgroup, hitlist);
 
-        // build a combined hitlist from all groups
-        if (thisgroup) this.__LZtrackgroup(thisgroup,hitlist);
-
-        if ( !hitlist.length && thisgroup && thisgroup.__LZlasthit ) {  // over no tracked views
-                var onmtrackout:LzDeclaredEventClass = thisgroup.__LZlasthit.onmousetrackout;
-                if (onmtrackout && onmtrackout.ready)
-                    onmtrackout.sendEvent(thisgroup.__LZlasthit);
-                thisgroup.__LZlasthit = null;
-        }  else {
-            var fd = this.__LZfindTopmost(hitlist);
-            if ( fd &&  fd != thisgroup.__LZlasthit ) { 
-                if (thisgroup.__LZlasthit) {
-                    var onmtrackout:LzDeclaredEventClass = thisgroup.__LZlasthit.onmousetrackout;
-                    if (onmtrackout && onmtrackout.ready)
-                        onmtrackout.sendEvent( thisgroup.__LZlasthit );
-                }
-                 // save this found value so that we can send the onmousetrackover
-                 // after ALL of the onmousetrackouts from all trackgroups are sent
+            var lhit:LzView = thisgroup.__LZlasthit;
+            if (hitlist.length) {
+                var fd:LzView = this.__LZfindTopmost(hitlist);
+                if (fd == lhit) continue;
+                // save this found value so that we can send the onmousetrackover
+                // after ALL of the onmousetrackouts from all trackgroups are sent
                 foundviews.push(fd);
-                thisgroup.__LZlasthit = fd;
+            } else {
+                // over no tracked views
+                var fd:LzView = null;
             }
+            if (lhit) {
+                var onmtrackout:LzDeclaredEventClass = lhit.onmousetrackout;
+                if (onmtrackout.ready)
+                    onmtrackout.sendEvent(lhit);
+            }
+            thisgroup.__LZlasthit = fd;
         }
-    } 
-    var len = foundviews.length;
-    if ( len ) {
-        for (var i=0; i < len; i++) {
-            var v = foundviews[i]
-            if (v.onmousetrackover.ready) v.onmousetrackover.sendEvent( v );
+        for (var i:int = 0, len:int = foundviews.length; i < len; ++i) {
+            var v:LzView = foundviews[i]
+            if (v.onmousetrackover.ready)
+                v.onmousetrackover.sendEvent( v );
         }
     }
-}
 
-/**
-  * @access private
-  * called before mouseup event is sent
-  */
-function __LZmouseup(ignore) {
-    //Debug.info('lz.Track.__LZmouseup');
-    for (var i:int = 0; i < this.__LZactivegroups.length; ++i) {
-        var thisgroup = this.__LZactivegroups[i];
-        //Debug.info('i', i, thisgroup, thisgroup.__LZlasthit, thisgroup.__LZlasthit.onmousetrackup);
-        if (thisgroup && thisgroup.__LZlasthit) {
-            var onmtrackup:LzDeclaredEventClass = thisgroup.__LZlasthit.onmousetrackup;
-            if (onmtrackup && onmtrackup.ready) {
-                if (this['__LZlastmouseup'] == thisgroup.__LZlasthit) {
-                    this.__LZlastmouseup = null;
-                } else {
-                    onmtrackup.sendEvent(this.__LZlasthit);
-                    this.__LZlastmouseup = thisgroup.__LZlasthit;
+    /**
+      * @access private
+      * called before mouseup event is sent
+      */
+    function __LZmouseup (ignore:*) :void {
+        //Debug.info('lz.Track.__LZmouseup');
+        var agroups:Array = this.__LZactivegroups;
+        for (var i:int = 0; i < agroups.length; ++i) {
+            var lhit:LzView = agroups[i].__LZlasthit;
+            if (lhit) {
+                var onmtrackup:LzDeclaredEventClass = lhit.onmousetrackup;
+                if (onmtrackup.ready) {
+                    if (this.__LZlastmouseup == lhit) {
+                        this.__LZlastmouseup = null;
+                    } else {
+                        onmtrackup.sendEvent(lhit);
+                        this.__LZlastmouseup = lhit;
+                    }
                 }
             }
         }
     }
-}
 
 } // End of LzTrackService
 lz.TrackService = LzTrackService;  // publish
 
 
 /**
-  * lz.Track is a shortcut for <a href="LzTrackService.html">LzTrackService</a>.
+  * lz.Track is a shortcut for <a href="LzTrackService.html">LzTrackService.LzTrack</a>.
   */
-lz.Track = new LzTrackService();
+lz.Track = LzTrackService.LzTrack;
