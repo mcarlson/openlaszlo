@@ -16,11 +16,11 @@
   <view x="${cart.x+10}" y="${cart.y+55}" 
         resource="norahjones.jpg"
         onmousedown="dragging.setAttribute('applied', true)"
-        onmouseup="dragging.setAttribute('applied', false); stop()">
+        onmouseup="dragging.setAttribute('applied', false); stopDrag()">
     
     <dragstate name="dragging"/>
     
-    <method name="stop">
+    <method name="stopDrag">
       if (this.x>wish.x) {
         this.animate("x", wish.x+10, 300);
         this.animate("y", wish.y+55, 300);
