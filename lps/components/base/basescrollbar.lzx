@@ -11,7 +11,7 @@
 
         <!--- The view that is controlled by the scrollbar.
               @keywords final -->
-        <attribute name="scrolltarget" value="0" type="expression" when="always"/>
+        <attribute name="scrolltarget" value="null" type="expression" when="always"/>
 
         <!--- Axis may be "x" or "y", controls the orientation and default
               scrollattr, default: "y"
@@ -166,7 +166,7 @@
             }
 
             if (!this.focusview) {
-                if (this.scrolltarget['focusable']) {
+                if (this.scrolltarget && this.scrolltarget['focusable']) {
                     this.focusview = this.scrolltarget;
                 } else if (this.immediateparent['focusable']) {
                     this.focusview = this.immediateparent;
