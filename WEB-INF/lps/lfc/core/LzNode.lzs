@@ -60,7 +60,9 @@ public dynamic class LzNode extends LzEventable {
     // call super(). Need to make those real compile time methods (and setters).
     /** @access private */
     function addProperty(key:*,val:*):void {
-      this[key] = val;
+      if (val !== undefined) {
+        this[key] = val;
+      }
     }
   }
 
