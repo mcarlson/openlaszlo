@@ -1264,6 +1264,16 @@ function getSelectionSize ( ){
     */
 }
 
+/**
+  * Return a string which can be used to insert a hyperlink in a text field.
+  * @param String str: The text displayed in the hyperlink.
+  * @param String value: The value returned when the link is clicked.
+  * @access public
+  The text returned by makeTextLink can be appended to the text of a
+  text field. It will make an HTML-style anchor, and will have a
+  displayed representation of the string STR. When clicked, the link will
+  send an ontextlink event to the text view, with a value of VALUE.
+ */
 public function makeTextLink(str, value) {
     return this.sprite.makeTextLink(str,value);
 }

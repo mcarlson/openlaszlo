@@ -314,6 +314,13 @@ public class Compiler {
             env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, debug);
         }
 
+        String lzconsoledebug = props.getProperty(CompilationEnvironment.CONSOLEDEBUG_PROPERTY);
+        if (lzconsoledebug != null) {
+            env.setProperty(CompilationEnvironment.CONSOLEDEBUG_PROPERTY, lzconsoledebug);
+        }
+        
+
+
         String backtrace = props.getProperty(CompilationEnvironment.BACKTRACE_PROPERTY);
         if (backtrace != null) {
             if ("true".equals(backtrace)) {

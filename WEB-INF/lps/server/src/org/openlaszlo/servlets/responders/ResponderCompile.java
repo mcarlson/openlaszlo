@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -412,6 +412,7 @@ public abstract class ResponderCompile extends Responder
      * <li> "lzr" (swf version := swf5 | swf6)
      * <li> "lzproxied" true|false
      * <li> "lzscript" true|false   -- emit javascript, not object file
+     * <li> "lzconsoledebug" use remote debug protocol
      * <li> "cssfile"
      * <ul>
      * also grabs the request URL.
@@ -436,6 +437,14 @@ public abstract class ResponderCompile extends Responder
             if (logdebug != null) {
                 props.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, logdebug);
             }
+
+            // Look for "lzconsoledebug=true" flag
+            props.setProperty(CompilationEnvironment.CONSOLEDEBUG_PROPERTY, "false");
+            String lzconsoledebug = req.getParameter(CompilationEnvironment.CONSOLEDEBUG_PROPERTY);
+            if (lzconsoledebug != null) {
+                props.setProperty(CompilationEnvironment.CONSOLEDEBUG_PROPERTY, lzconsoledebug);
+            }
+
 
             // Look for "debug=true" flag
             props.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "false");

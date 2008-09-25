@@ -39,10 +39,13 @@ class DebugCompiler extends ViewCompiler {
         element.setName(DEBUG_WINDOW_CLASSNAME);
         // If the canvas does not have the debug flag, or if we have already instantiated a debugger,
         // return now.
+        // Or, if lzconsoledebug=true, don't compile the debugger window view, we will be using
+        // a remote connection instead. 
         if (!mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY)
             || mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW)
             // No debug window in DHTML -- it is in its own iframe.
-            || mEnv.isDHTML()) {
+            || mEnv.isDHTML()
+            || mEnv.getBooleanProperty(mEnv.CONSOLEDEBUG_PROPERTY)) {
             return;
         } else {
             mEnv.setProperty(mEnv.USER_DEBUG_WINDOW, true);

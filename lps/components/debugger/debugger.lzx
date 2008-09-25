@@ -126,7 +126,7 @@
 
     <attribute name="initstage" value="immediate" />
 
-    <attribute name="persist" value="null" />
+    <attribute name="persist" value="false" />
     <attribute name="commandhistory" value="[]" />
     <attribute name="commandhistory_ptr" value="0" />
 
@@ -183,7 +183,7 @@
        this.inspectDel = new lz.Delegate(this, "inspectObject");
        this.inspectDel.register(lz.GlobalMouse, "onmousedown");
        this.moveCaretDel = new lz.Delegate(this, 'sendCaretToEOL');
-       this.restoreDebuggerState()
+       this.restoreDebuggerState();
      ]]>
     </method>
 
@@ -265,7 +265,9 @@
        var expr = this.bottom.center.input.getText();
        this.commandhistory[this.commandhistory.length] = expr;
        this.commandhistory_ptr = this.commandhistory.length;
-       this.persist.data.commandhistory = this.commandhistory;
+       if (this.persistedData) {
+            this.persistedData.data.commandhistory = this.commandhistory;
+       }
        // Echo input to output
        Debug.freshPrompt();
        this.echo(String(expr)['toHTML']());
@@ -318,7 +320,7 @@
             (expr = this.bottom.center.input.getText())) {
           this.commandhistory[this.commandhistory.length] = expr;
           this.commandhistory_ptr = this.commandhistory.length;
-          this.persist.data.commandhistory = this.commandhistory;
+          if (this.persistedData) { this.persistedData.data.commandhistory = this.commandhistory; }
         }
         ptr += offset;
         ptr = Math.max(0, Math.min(this.commandhistory.length-1, ptr));
@@ -534,36 +536,36 @@
     <handler name="onapplied" reference="resize" method="saveDebuggerState"/>
             
 <method name="saveDebuggerState" args="d">
-    if (this.persist) {
-        this.persist.data['_pdbgwidth'] = this.width;
-        this.persist.data['_pdbgheight'] = this.height;
-        this.persist.data['_pdbgx'] = this.x;
-        this.persist.data['_pdbgy'] = this.y;
+    if (this.persistedData) {
+        this.persistedData.data['_pdbgwidth'] = this.width;
+        this.persistedData.data['_pdbgheight'] = this.height;
+        this.persistedData.data['_pdbgx'] = this.x;
+        this.persistedData.data['_pdbgy'] = this.y;
     }
     </method>
 
 <method name="restoreDebuggerState" >
-       // restore persisted data
-       this.persist = LzBrowserKernel.getPersistedObject('__lzdebugger');
+       // restore persistedDataed data
+       this.persistedData = LzBrowserKernel.getPersistedObject('__lzdebugger');
        if (this.persist) {
-           for (var i in this.persist.data) {
+           for (var i in this.persistedData.data) {
                if (this[i] != null) {
-                   this[i] = this.persist.data[i];
+                   this[i] = this.persistedData.data[i];
                    //Debug.write('restored', i, this[i]);
                }
            }
 
-           if (this.persist.data['_pdbgwidth'] != null) {
-               this.setAttribute('width', this.persist.data._pdbgwidth);
+           if (this.persistedData.data['_pdbgwidth'] != null) {
+               this.setAttribute('width', this.persistedData.data._pdbgwidth);
            }
-           if (this.persist.data['_pdbgheight'] != null) {
-               this.setAttribute('height', this.persist.data._pdbgheight);
+           if (this.persistedData.data['_pdbgheight'] != null) {
+               this.setAttribute('height', this.persistedData.data._pdbgheight);
            }
-           if (this.persist.data['_pdbgx'] != null) {
-               this.setAttribute('x', this.persist.data._pdbgx);
+           if (this.persistedData.data['_pdbgx'] != null) {
+               this.setAttribute('x', this.persistedData.data._pdbgx);
            }
-           if (this.persist.data['_pdbgy'] != null) {
-               this.setAttribute('y', this.persist.data._pdbgy);
+           if (this.persistedData.data['_pdbgy'] != null) {
+               this.setAttribute('y', this.persistedData.data._pdbgy);
            }
        }
     </method>

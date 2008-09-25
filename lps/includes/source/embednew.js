@@ -269,7 +269,7 @@ lz.embed = {
 
             // add lps vars to query string
             if (i == 'lzr' || i == 'lzt'
-                || i == 'krank' || i == 'debug' || i == 'profile' || i == 'lzbacktrace'
+                || i == 'debug' || i == 'profile' || i == 'lzbacktrace' || i =='lzconsoledebug'
                 || i == 'lzdebug' || i == 'lzkrank' || i == 'lzprofile'
                 || i == 'fb' || i == 'sourcelocators' || i == '_canvas_debug') {
                 query += i + '=' + v + '&';
