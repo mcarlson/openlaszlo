@@ -147,7 +147,7 @@ Note that the behavior of LZX applications differs between applications compiled
 <example role="live-example">
    <title>The &lt;html&gt; tag</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/text-tutorial-$6.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/html.lzx"/></textobject> 
    </programlisting>
 </example>
 
