@@ -632,10 +632,26 @@ class SWF9Writer extends ObjectWriter {
         } catch (IOException e) {
             throw new ImportResourceError(inputFile.toString(), e, mEnv);
         }
-        String weight = FontInfo.styleBitsToString(styleBits, true);
+        String weight = "plain";
+        String style = "plain";
+        /* weight := plain|normal, bold
+           style := plain|normal, italic
+        */
 
-        sbuf.append("[Embed(mimeType='application/x-font', source='"+rpath+"', fontName='"+
-                    face+"', fontWeight='"+weight+"')]\n");
+        if ((styleBits & FontInfo.BOLD) != 0) {
+            weight = "bold";
+        }
+        if ((styleBits & FontInfo.ITALIC) != 0) {
+            style = "italic";
+        }
+
+        sbuf.append("[Embed(mimeType='application/x-font-truetype', source='"+rpath+"', fontName='"+
+                    face+"', fontWeight='"+weight+"'," +
+                    "fontStyle='" + style + "'," +
+                    "advancedAntiAliasing='true'" +
+                    ")]\n");
+
+
         String assetClassname = "__embed_lzfont_" + face;
         sbuf.append("var "+assetClassname+":Class;\n");
         sbuf.append("}#\n");
