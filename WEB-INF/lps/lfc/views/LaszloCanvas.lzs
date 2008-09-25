@@ -464,17 +464,23 @@ var __LZlfcversion = "0";
   */
 var proxied = true;
 
-/** If present, specifies the default timeout in milliseconds of data load requests
+/** If present, specifies the default timeout in milliseconds for data load requests
   * @type Number
   * @lzxtype numberExpression
   */
 var dataloadtimeout = 30000;
 
-/** If present, specifies the default timeout in milliseconds of media load requests
+/** If present, specifies the default timeout in milliseconds for media load requests
   * @type Number
   * @lzxtype numberExpression
   */
 var medialoadtimeout = 30000;
+
+/** If present, specifies the default timeout in milliseconds for media errors.  An error occurs when no bytes have been received.  This is used in Flash to detect media loads that have failed due to the security policy.
+  * @type Number
+  * @lzxtype numberExpression
+  */
+var mediaerrortimeout = 2000;
 
 /** A number from 0-1 that represents the
   * percentage of the app that has been instantiated.

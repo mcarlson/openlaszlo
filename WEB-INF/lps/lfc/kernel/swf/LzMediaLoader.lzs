@@ -21,7 +21,7 @@ function LzMediaLoader (owner, args) {
     this.loadCheckerDel = new LzDelegate( this, "testLoad" );
     this.errorCheckerDel = new LzDelegate( this, "testError" );
 
-    this.errortimeout = 2000;
+    this.errortimeout = canvas.mediaerrortimeout;
     this.timeout = canvas.medialoadtimeout;
 
     //setup loadmovie stuff that never changes

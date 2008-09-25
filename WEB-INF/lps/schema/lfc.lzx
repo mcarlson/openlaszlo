@@ -59,10 +59,12 @@
   <attribute name="debug" type="boolean" value="false"/>
   <!-- If true, enable backtraces in debugger -->
   <attribute name="backtrace" type="boolean" value="false"/>
-  <!-- The loader timeout on data requests -->
+  <!-- The loader timeout for data requests -->
   <attribute name="dataloadtimeout" type="numberExpression"/>
-  <!-- The loader timeout on media requests -->
+  <!-- The loader timeout for media requests -->
   <attribute name="medialoadtimeout" type="numberExpression"/>
+  <!-- The loader error timeout for media requests -->
+  <attribute name="mediaerrortimeout" type="numberExpression"/>
   <!-- A list of names for libraries that are included in the application. -->
   <attribute name="libraries" type="string" value=""/>
   <!-- If true, compiler will embed fonts into application -->
