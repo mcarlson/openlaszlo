@@ -20,112 +20,137 @@
 </canvas>]]></example>
   *
   *
-  * @shortdesc This service manages audio resource playback.  Check canvas.capabilities.audio to ensure your runtime supports audio.
+  * @shortdesc This service manages audio resource playback. Check canvas.capabilities.audio to ensure your runtime supports audio.
   * @access public
-  * 
+  *
   */
-class LzAudioService {
-// TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
-if ($swf9) {
+public final class LzAudioService {
+    // TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
+    if ($swf9) {
+        /** @access private */
+        var capabilities :* = LzSprite.capabilities;
+    } else {
+        /** @access private */
+        var capabilities :* = LzSprite.prototype.capabilities;
+    }
+
+    /** The audio service. Also available as the global
+     * <code>lz.Audio</code>.
+     *
+     * @type LzAudioService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    public static const LzAudio:LzAudioService;
+
+    /** @access private
+     * @devnote AS3 does not allow private constructors, so we need the
+     * error
+     */
+    function LzAudioService () {
+      super();
+      //    if (LzAudioService.LzAudio) {
+      //      throw new Error("There can be only one LzAudio");
+      //    }
+    }
+
+    // Create the singleton
+    LzAudioService.LzAudio = new LzAudioService();
+
+    /**
+      * Sets the current sound resource and starts playing it.
+      * @param String snd: Name of a sound resource to play
+      */
+    function playSound (snd:String) :void {
+        if (this.capabilities.audio) {
+            LzAudioKernel.playSound(snd);
+        } else if ($debug) {
+            this.__warnCapability('lz.Audio.playSound()');
+        }
+    }
+
+    /**
+      * Stop playing the current sound
+      * */
+    function stopSound () :void {
+        if (this.capabilities.audio) {
+            LzAudioKernel.stopSound();
+        } else if ($debug) {
+            this.__warnCapability('lz.Audio.stopSound()');
+        }
+    }
+
+    /**
+      * Start playing the current sound
+      *
+      */
+    function startSound () :void {
+        if (this.capabilities.audio) {
+            LzAudioKernel.startSound();
+        } else if ($debug) {
+            this.__warnCapability('lz.Audio.startSound()');
+        }
+    }
+
+    /**
+      * Get the global volume
+      * @return Number: volume from 0 to 100 (0 is silent).
+      */
+    function getVolume () :Number {
+        if (this.capabilities.audio) {
+            return LzAudioKernel.getVolume();
+        } else if ($debug) {
+            this.__warnCapability('lz.Audio.getVolume()');
+        }
+    }
+
+    /**
+      * Set the global volume.
+      * @param Number v: linear volume from 0 to 100 (0 is silent).
+      */
+    function setVolume (v:Number) :void {
+        if (this.capabilities.audio) {
+            LzAudioKernel.setVolume(v);
+        } else if ($debug) {
+            this.__warnCapability('lz.Audio.setVolume()');
+        }
+    }
+
+    /**
+      * Get the global pan.
+      * @return Number: linear pan from -100 to +100 (left to right)
+      */
+    function getPan () :Number {
+        if (this.capabilities.audio) {
+            return LzAudioKernel.getPan();
+        } else if ($debug) {
+            this.__warnCapability('lz.Audio.getPan()');
+        }
+    }
+
+    /**
+      * Set the global pan.
+      * @param Number p: linear pan from -100 to +100 (left to right)
+      */
+    function setPan (p:Number) :void {
+        if (this.capabilities.audio) {
+            LzAudioKernel.setPan(p);
+        } else if ($debug) {
+            this.__warnCapability('lz.Audio.setPan()');
+        }
+    }
+
+if ($debug) {
     /** @access private */
-    var capabilities = LzSprite.capabilities;
-} else {
-    /** @access private */
-    var capabilities = LzSprite.prototype.capabilities;
-}
-
-/**
-  * Sets the current sound resource and starts playing it. 
-  * @param String snd: Name of a sound resource to play
-  */
-function playSound( snd ){
-    if (this.capabilities.audio) {
-        LzAudioKernel.playSound(snd);
-    } else if ($debug) {
-        this.__warnCapability('lz.Audio.playSound()'); 
+    function __warnCapability (msg:String) :void {
+        Debug.warn('The %s runtime does not support %s', canvas['runtime'], msg);
     }
-}
-
-/**
-  * Stop playing the current sound
-  * */
-function stopSound(){
-    if (this.capabilities.audio) {
-        LzAudioKernel.stopSound();
-    } else if ($debug) {
-        this.__warnCapability('lz.Audio.stopSound()'); 
-    }
-}
-
-/**
-  * Start playing the current sound
-  * 
-  */
-function startSound() {
-    if (this.capabilities.audio) {
-        LzAudioKernel.startSound();
-    } else if ($debug) {
-        this.__warnCapability('lz.Audio.startSound()'); 
-    }
-}
-
-/**
-  * Get the global volume
-  * @return Number: volume from 0 to 100 (0 is silent).
-  */
-function getVolume() {
-    if (this.capabilities.audio) {
-        return LzAudioKernel.getVolume();
-    } else if ($debug) {
-        this.__warnCapability('lz.Audio.getVolume()'); 
-    }
-}
-
-/**
-  * Set the global volume.
-  * @param Number v: linear volume from 0 to 100 (0 is silent).
-  */
-function setVolume(v) {
-    if (this.capabilities.audio) {
-        LzAudioKernel.setVolume(v);
-    } else if ($debug) {
-        this.__warnCapability('lz.Audio.setVolume()'); 
-    }
-}
-
-/**
-  * Get the global pan.
-  * @return Number: linear pan from -100 to +100 (left to right)
-  */
-function getPan() {
-    if (this.capabilities.audio) {
-        return LzAudioKernel.getPan();
-    } else if ($debug) {
-        this.__warnCapability('lz.Audio.getPan()'); 
-    }
-}
-
-/**
-  * Set the global pan.
-  * @param Number p: linear pan from -100 to +100 (left to right)
-  */
-function setPan(p) {
-    if (this.capabilities.audio) {
-        LzAudioKernel.setPan(p);
-    } else if ($debug) {
-        this.__warnCapability('lz.Audio.setPan()'); 
-    }
-}
-
-/** @access private */ 
-function __warnCapability(msg) {
-    Debug.warn('The %s runtime does not support %s', canvas['runtime'], msg); 
 }
 
 } // End of LzAudioService
 lz.AudioService = LzAudioService;  // publish
 
 /**
-  * lz.Audio is a shortcut for <a href="LzAudioService.html">LzAudioService</a>.
+  * lz.Audio is a shortcut for <a href="LzAudioService.html">LzAudioService.LzAudio</a>.
   */
-lz.Audio = new LzAudioService();
+lz.Audio = LzAudioService.LzAudio;

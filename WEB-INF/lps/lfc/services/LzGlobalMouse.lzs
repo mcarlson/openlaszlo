@@ -78,109 +78,112 @@
  * rollover or button state changes.  The argument sent with the events is the
  * view that was clicked. If no view was clicked, the argument is null.
  */
-public class LzGlobalMouseService extends LzEventable {
-  /**
-   * The global mouse service.  Also available as the global
-   * <code>lz.GlobalMouse</code>.
-   *
-   * @type LzGlobalMouseService
-   * @keywords readonly
-   * @devnote this should be a public getter to enforce readonly
-   */
-  static var LzGlobalMouse:LzGlobalMouseService;
+public final class LzGlobalMouseService extends LzEventable {
+    /**
+     * The global mouse service.  Also available as the global
+     * <code>lz.GlobalMouse</code>.
+     *
+     * @type LzGlobalMouseService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    public static const LzGlobalMouse:LzGlobalMouseService;
 
-  /** @access private
-   * @devnote AS3 does not allow private constructors, so we need the
-   * error
-   */
-  function LzGlobalMouseService() {
-    //    if (LzGlobalMouseService.LzGlobalMouse) {
-    //      throw new Error("There can be only one LzGlobalMouse");
-    //    }
-  }
-  LzGlobalMouseService.LzGlobalMouse = new LzGlobalMouseService;
-
-  /** Sent whenever the mouse moves
-   * @access public
-   * @lzxtype event
-   */
-  var onmousemove = LzDeclaredEvent;
-
-  /** Sent whenever the mouse button goes up
-   * @access public
-   * @lzxtype event
-   */
-  var onmouseup = LzDeclaredEvent;
-
-  /** Sent whenever the mouse button goes up outside the view where it
-   * first went down
-   * @access public
-   * @lzxtype event
-   */
-  var onmouseupoutside = LzDeclaredEvent;
-
-  /** Sent whenever the mouse enters a view
-   * @access public
-   * @lzxtype event
-   */
-  var onmouseover = LzDeclaredEvent;
-
-  /** Sent whenever the mouse leaves a view
-   * @access public
-   * @lzxtype event
-   */
-  var onmouseout = LzDeclaredEvent;
-
-  /** Sent whenever the mouse button goes down
-   * @access public
-   * @lzxtype event
-   */
-  var onmousedown = LzDeclaredEvent;
-
-  /** Sent whenever the mouse is dragged in to a view
-   * @access public
-   * @lzxtype event
-   */
-  var onmousedragin = LzDeclaredEvent;
-
-  /** Sent whenever the mouse is dragged out of a view
-   * @access public
-   * @lzxtype event
-   */
-  var onmousedragout = LzDeclaredEvent;
-
-  /** Sent whenever the mouse is dragged out of the application window
-   * @access public
-   * @lzxtype event
-   */
-  var onmouseleave = LzDeclaredEvent;
-
-  /** Sent whenever the mouse button is clicked
-   * @access public
-   * @lzxtype event
-   */
-  var onclick = LzDeclaredEvent;
-
-  /** Sent whenever the mouse button is double-clicked
-   * @access public
-   * @lzxtype event
-   */
-  var ondblclick = LzDeclaredEvent;
-
-  /** @access private */
-  var __movecounter = 0;
-
-  /** @access private */
-  function __mouseEvent (eventname, view) {
-    if (eventname == 'onmouseleave') { canvas.onmouseleave.sendEvent(); }
-    if (eventname == 'onmousemove') { this.__movecounter++; }
-    var ev = this[eventname];
-    if (ev) {
-      if (ev.ready) { ev.sendEvent(view); }
-    } else if ($debug) {
-      Debug.debug("Unknown mouse event %s", eventname);
+    /** @access private
+     * @devnote AS3 does not allow private constructors, so we need the
+     * error
+     */
+    function LzGlobalMouseService() {
+        super();
+        //    if (LzGlobalMouseService.LzGlobalMouse) {
+        //      throw new Error("There can be only one LzGlobalMouse");
+        //    }
     }
-  }
+
+    // Create the singleton
+    LzGlobalMouseService.LzGlobalMouse = new LzGlobalMouseService();
+
+    /** Sent whenever the mouse moves
+     * @access public
+     * @lzxtype event
+     */
+    var onmousemove :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse button goes up
+     * @access public
+     * @lzxtype event
+     */
+    var onmouseup :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse button goes up outside the view where it
+     * first went down
+     * @access public
+     * @lzxtype event
+     */
+    var onmouseupoutside :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse enters a view
+     * @access public
+     * @lzxtype event
+     */
+    var onmouseover :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse leaves a view
+     * @access public
+     * @lzxtype event
+     */
+    var onmouseout :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse button goes down
+     * @access public
+     * @lzxtype event
+     */
+    var onmousedown :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse is dragged in to a view
+     * @access public
+     * @lzxtype event
+     */
+    var onmousedragin :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse is dragged out of a view
+     * @access public
+     * @lzxtype event
+     */
+    var onmousedragout :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse is dragged out of the application window
+     * @access public
+     * @lzxtype event
+     */
+    var onmouseleave :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse button is clicked
+     * @access public
+     * @lzxtype event
+     */
+    var onclick :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** Sent whenever the mouse button is double-clicked
+     * @access public
+     * @lzxtype event
+     */
+    var ondblclick :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /** @access private */
+    var __movecounter:int = 0;
+
+    /** @access private */
+    function __mouseEvent (eventname:String, view:*) :void {
+        if (eventname == 'onmouseleave') { canvas.onmouseleave.sendEvent(); }
+        else if (eventname == 'onmousemove') { this.__movecounter++; }
+        var ev:LzDeclaredEventClass = this[eventname];
+        if (ev) {
+            if (ev.ready) { ev.sendEvent(view); }
+        } else if ($debug) {
+            Debug.debug("Unknown mouse event %s", eventname);
+        }
+    }
 }
 lz.GlobalMouseService = LzGlobalMouseService;  // publish
 

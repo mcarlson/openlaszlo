@@ -40,67 +40,70 @@
  *   &lt;/button&gt;
  * &lt;/canvas&gt;
  * </example>
- * @devnote TODO: [2008-03-20 ptw] This should be `implements` not `extends`.
  * @access public
  * @shortdesc LzCursorService provides methods for changing the mouse cursor.
  */
-public class LzCursorService extends LzEventable {
-  /** The cursor service.  Also available as the global
-   * <code>lz.Cursor</code>.
-   *
-   * @type LzCursorService
-   * @keywords readonly
-   * @devnote this should be a public getter to enforce readonly
-   */
-    public static var LzCursor:LzCursorService;
+public final class LzCursorService extends LzEventable {
+    /** The cursor service.  Also available as the global
+     * <code>lz.Cursor</code>.
+     *
+     * @type LzCursorService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    public static const LzCursor:LzCursorService;
 
-  /** @access private 
-   * @devnote AS3 does not allow private constructors, so we need the
-   * error
-   */
-  public function LzCursorService() {
-    if (LzCursorService.LzCursor) {
-      throw new Error("There can be only one LzCursor");
+    /** @access private
+     * @devnote AS3 does not allow private constructors, so we need the
+     * error
+     */
+    public function LzCursorService () {
+        super();
+        // if (LzCursorService.LzCursor) {
+        //  throw new Error("There can be only one LzCursor");
+        // }
     }
-  }
 
-  /**
-   * Shows or hides the hand cursor for all clickable views.
-   * @param Boolean show: true shows the hand cursor for buttons, false hides it
-   */
-  function showHandCursor(show:Boolean) {
-      LzMouseKernel.showHandCursor(show);
-  }
+    // Create the singleton
+    LzCursorService.LzCursor = new LzCursorService();
 
-  /**
-   * Sets the cursor to a resource
-   * @param String resource: The resource to use as the cursor.
-   */
-  function setCursorGlobal(resource:String) {
-      LzMouseKernel.setCursorGlobal(resource);
-  }
+    /**
+     * Shows or hides the hand cursor for all clickable views.
+     * @param Boolean show: true shows the hand cursor for buttons, false hides it
+     */
+    function showHandCursor (show:Boolean) :void {
+        LzMouseKernel.showHandCursor(show);
+    }
 
-  /**
-   * Prevents the cursor from being changed until unlock is called.
-   */
-  function lock() {
-      LzMouseKernel.lock();
-  }
+    /**
+     * Sets the cursor to a resource
+     * @param String resource: The resource to use as the cursor.
+     */
+    function setCursorGlobal (resource:String) :void {
+        LzMouseKernel.setCursorGlobal(resource);
+    }
 
-  /**
-   * Restores the default cursor.
-   */
-  function unlock() {
+    /**
+     * Prevents the cursor from being changed until unlock is called.
+     */
+    function lock () :void {
+        LzMouseKernel.lock();
+    }
+
+    /**
+     * Restores the default cursor.
+     */
+    function unlock () :void {
         LzMouseKernel.unlock();
-  }
+    }
 
-  /**
-   * Restores the default cursor if there is no locked cursor on
-   * the screen.
-   */
-  function restoreCursor(ignore=null) {
-      LzMouseKernel.restoreCursor();
-  }
+    /**
+     * Restores the default cursor if there is no locked cursor on
+     * the screen.
+     */
+    function restoreCursor () :void {
+        LzMouseKernel.restoreCursor();
+    }
 
 }
 lz.CursorService = LzCursorService;  // publish
@@ -141,4 +144,4 @@ lz.CursorService = LzCursorService;  // publish
  * @type LzCursorService
  * @shortdesc  lz.Cursor is a shortcut for <link linkend="LzCursorService">LzCursorService.LzCursor</link>
  */
-lz.Cursor = new LzCursorService(); 
+lz.Cursor = LzCursorService.LzCursor;

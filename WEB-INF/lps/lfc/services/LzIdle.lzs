@@ -32,92 +32,94 @@
  * @devnote This object sends an 'onidle' event when there is no synchronous script
  * running after each frame update.
  */
-class LzIdleService extends LzEventable {
-  /** @access private */
-  var coi;
-  /** @access private */
-  var regNext:Boolean = false;
-  /** @access private */
-  var removeCOI = null;
+public final class LzIdleService extends LzEventable {
+    /** @access private */
+    var coi :Array;
+    /** @access private */
+    var regNext :Boolean = false;
+    /** @access private */
+    var removeCOI :LzDelegate = null;
 
-  /**
-   * The idle service.  Also available as the global
-   * <code>lz.Idle</code>.
-   *
-   * @type LzIdleService
-   * @keywords readonly
-   * @devnote this should be a public getter to enforce readonly
-   */
-  static var LzIdle:LzIdleService;
+    /**
+     * The idle service.  Also available as the global
+     * <code>lz.Idle</code>.
+     *
+     * @type LzIdleService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    public static const LzIdle:LzIdleService;
 
-  /** @access private
-   * @devnote AS3 does not allow private constructors, so we need the
-   * error
-   */
-  function LzIdleService () {
-    //    if (LzIdleService.LzIdle) {
-    //      throw new Error("There can be only one LzIdle");
-    //    }
-    // Create array on instance, not prototype
-    this.coi = new Array;
-    this.removeCOI = new LzDelegate( this , "removeCallIdleDelegates" );
-    LzIdleKernel.addCallback( this, '__idleupdate' );
-  }
-  /* Avoid idle noise in the profiler */
-  {
+    /** @access private
+     * @devnote AS3 does not allow private constructors, so we need the
+     * error
+     */
+    function LzIdleService () {
+        super();
+        //    if (LzIdleService.LzIdle) {
+        //      throw new Error("There can be only one LzIdle");
+        //    }
+        // Create array on instance, not prototype
+        this.coi = new Array;
+        this.removeCOI = new LzDelegate( this, "removeCallIdleDelegates" );
+        LzIdleKernel.addCallback( this, '__idleupdate' );
+    }
+
+/* Avoid idle noise in the profiler */
+{
 #pragma "profile=false"
     // Create the singleton
     LzIdleService.LzIdle = new LzIdleService();
-  }
+}
 
-  /**
-   * Calls the given delegate at the next idle event. This can be used
-   * for a non-repeating callback.
-   *
-   * @param LzDelegate d: The delegate to be called on the next idle
-   * event.
-   */
-  function callOnIdle ( d ){
-    this.coi.push(d);
-    if (!this.regNext) {
-      this.regNext = true;
-      this.removeCOI.register( this , "onidle" );
-    }
-  }
-
-  /**
-   * @access private
-   */
-  function removeCallIdleDelegates ( t ){
-    var arr = this.coi;
-    this.coi = new Array;
-    //call in order
-    for (var i = 0; i < arr.length; i++ ){
-      arr[i].execute( t );
+    /**
+     * Calls the given delegate at the next idle event. This can be used
+     * for a non-repeating callback.
+     *
+     * @param LzDelegate d: The delegate to be called on the next idle
+     * event.
+     */
+    function callOnIdle (d:LzDelegate) :void {
+        this.coi.push(d);
+        if (! this.regNext) {
+            this.regNext = true;
+            this.removeCOI.register( this , "onidle" );
+        }
     }
 
-    if (this.coi.length == 0) {
-      // Note that the executed items may have added to the (new)
-      // coi queue, only unregister if the queue is empty
-      this.removeCOI.unregisterFrom(this.onidle);
-      this.regNext = false;
-    }
-  }
+    /**
+     * @access private
+     */
+    function removeCallIdleDelegates (t:*) :void {
+        var arr:Array = this.coi;
+        this.coi = new Array;
+        //call in order
+        for (var i:int = 0; i < arr.length; i++) {
+            arr[i].execute( t );
+        }
 
-  /** This is the idle event for the system, sent by this service
-   * @lzxtype event
-   */
-  var onidle = LzDeclaredEvent;
-
-  /**
-   * __idleupdate is a callback function from LzIdleKernel.
-   * @access private
-   */
-  function __idleupdate (t) {
-    if (this.onidle.ready) {
-      this.onidle.sendEvent(t);
+        if (this.coi.length == 0) {
+            // Note that the executed items may have added to the (new)
+            // coi queue, only unregister if the queue is empty
+            this.removeCOI.unregisterFrom(this.onidle);
+            this.regNext = false;
+        }
     }
-  }
+
+    /** This is the idle event for the system, sent by this service
+     * @lzxtype event
+     */
+    var onidle :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /**
+     * __idleupdate is a callback function from LzIdleKernel.
+     * @access private
+     */
+    function __idleupdate (t:*) :void {
+        if (this.onidle.ready) {
+            this.onidle.sendEvent(t);
+        }
+    }
 }
 lz.IdleService = LzIdleService;  // publish
 
