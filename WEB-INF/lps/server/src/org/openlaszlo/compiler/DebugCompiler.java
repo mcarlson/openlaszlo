@@ -41,9 +41,6 @@ class DebugCompiler extends ViewCompiler {
         // return now.
         if (!mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY)
             || mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW)
-            // TODO [hqm 2008 08] remove this clause when we define a SWF9 LzDebugWindow.
-            // There is no SWF9 debugger window component yet (LzDebugWindow), so don't try to instantiate one
-            || mEnv.getRuntime().equals("swf9")
             // No debug window in DHTML -- it is in its own iframe.
             || mEnv.isDHTML()) {
             return;
