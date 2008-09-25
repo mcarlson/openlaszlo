@@ -444,7 +444,7 @@
             if ( this.command ) {
                 // force the appplication of this state
                 // because order of execution demands it.
-                this.commandstate.apply( true );
+                this.commandstate.apply();
                 var t = command.keysToString();
                 this.cmdkeys.setAttribute('text', t);
             }
