@@ -20,7 +20,7 @@
                                 calgrid.locked=true;
                                 calgrid.gridlayout.setopenview(null,false);
                                 calgrid.locked=false;
-                                calgrid.showmonthview();
+                                calgrid.showmonthview(true);
                             } else calgrid.gridlayout.setopenview(null,true);
                         }
                     </handler>

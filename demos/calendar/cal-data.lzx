@@ -205,13 +205,16 @@
             getNewNode(alleventsDP,'day'+day);
 
             tempDP.setFromPointer( currenteventDP );
+            tempDP.setNodeAttribute('selected', 'false');
             // Copy current data to new location
             // If the record being moved is selected (usually the case, 
             // currenteventDP changes after this call
             var newPoint = alleventsDP.addNodeFromPointer(currenteventDP);
+            currenteventDP.setFromPointer(newPoint);
 
             //Delete the original node
             tempDP.deleteNode();
+            currenteventDP.setNodeAttribute('selected', 'true');
 
             // Set the event data pointer to the top of the event data
             alleventsDP.setXPath('eventdata:/vcalendar[1]');
@@ -220,9 +223,7 @@
 
         <method name="deleteEvent">
             // Deletes the current node
-            if(currenteventDP.xpathQuery('summary/@value') == "New Event"){
-                currenteventDP.setNodeAttribute("selected", 'false');
-            }
+            currenteventDP.setNodeAttribute("selected", 'false');
             currenteventDP.deleteNode();
             //currenteventDP.setXPath('blankEvent:/event[1]');
             
