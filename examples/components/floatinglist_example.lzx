@@ -23,14 +23,14 @@
             flist.setAttribute('visible', !flist.visible);
         </handler>
 
-        <method name="animate">
+        <method name="startAnimate">
             genwaypoint();
             xanim.cycle=true;
             yanim.cycle=true;
             xanim.doStart();
             yanim.doStart();
         </method>
-        <method name="stop">
+        <method name="stopAnimate">
             xanim.cycle=false;
             yanim.cycle=false;
             xanim.stop();
@@ -90,19 +90,19 @@
                 <handler name="onvalue">
                     if (this.isinited) {
                         if (value==true) {
-                            canvas.content.b1.animate();
-                            canvas.content.b2.animate();
-                            canvas.content.b3.animate();
-                            canvas.content.b4.animate();
-                            canvas.content.b5.animate();
-                            canvas.content.b6.animate();
+                            canvas.content.b1.startAnimate();
+                            canvas.content.b2.startAnimate();
+                            canvas.content.b3.startAnimate();
+                            canvas.content.b4.startAnimate();
+                            canvas.content.b5.startAnimate();
+                            canvas.content.b6.startAnimate();
                         } else {
-                            canvas.content.b1.stop();
-                            canvas.content.b2.stop();
-                            canvas.content.b3.stop();
-                            canvas.content.b4.stop();
-                            canvas.content.b5.stop();
-                            canvas.content.b6.stop();
+                            canvas.content.b1.stopAnimate();
+                            canvas.content.b2.stopAnimate();
+                            canvas.content.b3.stopAnimate();
+                            canvas.content.b4.stopAnimate();
+                            canvas.content.b5.stopAnimate();
+                            canvas.content.b6.stopAnimate();
                         }
                     }
                 </handler>
