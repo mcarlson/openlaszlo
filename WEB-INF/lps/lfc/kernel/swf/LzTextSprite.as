@@ -14,6 +14,7 @@ var LzTextSprite = function(newowner, args) {
     this.__LZsvdepth = 0;
 
     this.owner = newowner;
+    this._accProps = {};
 
     //inherited attributes, documented in view
     this.fontname = args.font;
@@ -43,6 +44,7 @@ var LzTextSprite = function(newowner, args) {
     //Debug.write('created', textclip, 'in', mc, txtname);
 
     this.__LZtextclip = textclip;
+    this.__LZtextclip._accProps = this._accProps;
     // set a pointer back to this view from the TextField object
     textclip.__lzview = this.owner;
     this.__LZtextclip.__cacheSelection = TextField.prototype.__cacheSelection;
