@@ -63,8 +63,6 @@ dynamic public class LzSprite extends Sprite {
       // Cache for instantiated assets in a multiframe resource set
       var resourceCache:Array = null;
 
-      public var resourceLoaded:Boolean = false;
-      
       /* private */ static const soundLoaderContext:SoundLoaderContext = new SoundLoaderContext(1000, true);
       /* private */ static const MP3_FPS:Number = 30;
       /* private */ var sound:Sound = null;
@@ -265,6 +263,7 @@ dynamic public class LzSprite extends Sprite {
                       this.unload();
                   }
                   imgLoader = new Loader();
+                  imgLoader.mouseEnabled = false;// @devnote: see LPP-7022
                   this.resourceObj = imgLoader;
                   this.addChildAt(imgLoader, IMGDEPTH);
                   var info:LoaderInfo = imgLoader.contentLoaderInfo;
@@ -326,7 +325,6 @@ dynamic public class LzSprite extends Sprite {
                       this.resourceheight = loader.height;
                   } catch (e) {
                   }
-                  this.resourceLoaded = true;
                   // Apply stretch if needed, now that we know the asset dimensions.
                   this.applyStretchResource();
                   // send events, including onload
