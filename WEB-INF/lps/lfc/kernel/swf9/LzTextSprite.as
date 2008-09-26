@@ -54,6 +54,7 @@ public class LzTextSprite extends LzSprite {
           if (this.clickable == c) return;
 
           this.textfield.mouseEnabled = c || this.textfield.selectable;
+          this.setCancelBubbling();
 
           this.clickable = c;
           if (c) {
@@ -61,6 +62,36 @@ public class LzTextSprite extends LzSprite {
           } else {
               removeMouseEvents(this.textfield);
           }
+      }
+
+      // turn on/off canceling of mouse event bubbling
+      private function setCancelBubbling():void {
+          var dobj:DisplayObject = this.textfield;
+
+          // base on the displayobject's mouseenabled property - on for selectable
+          var prevent = this.textfield.mouseEnabled;
+          // if clickable is on, we don't want to cancel events
+          if (this.clickable) prevent = false;
+
+          if (prevent) {
+              dobj.addEventListener(MouseEvent.CLICK, __ignoreMouseEvent);
+              dobj.addEventListener(MouseEvent.DOUBLE_CLICK, __ignoreMouseEvent);
+              dobj.addEventListener(MouseEvent.MOUSE_DOWN, __ignoreMouseEvent);
+              dobj.addEventListener(MouseEvent.MOUSE_UP, __ignoreMouseEvent);
+              dobj.addEventListener(MouseEvent.MOUSE_OVER, __ignoreMouseEvent);
+              dobj.addEventListener(MouseEvent.MOUSE_OUT, __ignoreMouseEvent);
+          } else {
+              dobj.removeEventListener(MouseEvent.CLICK, __ignoreMouseEvent);
+              dobj.removeEventListener(MouseEvent.DOUBLE_CLICK, __ignoreMouseEvent);
+              dobj.removeEventListener(MouseEvent.MOUSE_DOWN, __ignoreMouseEvent);
+              dobj.removeEventListener(MouseEvent.MOUSE_UP, __ignoreMouseEvent);
+              dobj.removeEventListener(MouseEvent.MOUSE_OVER, __ignoreMouseEvent);
+              dobj.removeEventListener(MouseEvent.MOUSE_OUT, __ignoreMouseEvent);
+          }
+      }
+
+      private function __ignoreMouseEvent(e:MouseEvent) :void {
+          e.stopPropagation();
       }
 
         public function enableClickableLinks( enabled:Boolean):void {
@@ -367,6 +398,7 @@ public class LzTextSprite extends LzSprite {
         public function setSelectable ( isSel:Boolean ):void {
             this.textfield.selectable = isSel;
             this.textfield.mouseEnabled = isSel || this.clickable;
+            this.setCancelBubbling();
         }
       
         public function getTextWidth ( ):Number {
