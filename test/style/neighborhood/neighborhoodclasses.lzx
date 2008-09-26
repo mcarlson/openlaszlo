@@ -8,16 +8,16 @@
 
 <stylesheet>
 street {
-  streetname: none;
-  streettype: none;
+  streetname: 'none';
+  streettype: 'none';
 }
 house {
-  paintcolor: none;
-  misc: none;
-  streetaddress: none;
+  paintcolor: 'none';
+  misc: 'none';
+  streetaddress: 'none';
 }
 animal {
-  bgcolor: none;
+  bgcolor: 'none';
 }
 </stylesheet>
 

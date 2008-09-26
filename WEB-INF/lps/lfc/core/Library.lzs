@@ -15,6 +15,8 @@ if ($swf9) {
     #include "core/dummyclasses.js"
 }
 #include "core/LzEventable.lzs"
+// LzStyleAttrBinder extends LzEventable
+#include "core/LzStyleAttrBinder.lzs"
 #include "core/PresentationTypes.lzs"
 #include "core/LzNode.lzs"
 

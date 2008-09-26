@@ -68,7 +68,7 @@
         
         <!-- Descendant selectors test -->        
         <method name="testLookupTimes"><![CDATA[
-            var t = getTimer();
+            var t = (new Date()).getTime();
             for ( var i = iter; i >= 0; i-- ){
                 assertEquals( 10, this.getCSSProp( subsubID, "prop1" ));
                 assertEquals( 20, this.getCSSProp( subsubID, "prop2" ));
@@ -79,7 +79,7 @@
                 assertEquals( 60, this.getCSSProp( subsubID, "prop7" ));
                 assertEquals( 70, this.getCSSProp( subsubID, "prop8" ) );
             }
-            var tt = getTimer() - t ;
+            var tt = (new Date()).getTime() - t ;
             assertTrue(1 < tt );
             Debug.write( 'Lookup test took: ' + tt );
         ]]></method>

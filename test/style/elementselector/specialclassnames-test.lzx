@@ -10,38 +10,43 @@
             foo: "text loves foo!";
         }
         
-        view[name="jean"] {
+        view[name="gJean"] {
             nicebgcolor: #81103f;   
         }
 
     </stylesheet>
     
     
-    <class name="SpecialClassNamesTestCase">
-        <view id="gView" 
-            name="$style{'styledname'}"
+    <class name="SpecialClassNamesTestCase" extends="TestCase">
+        <view name="gView" 
             bgcolor="$style{'nicebgcolor'}"
             height="100" width="100">
-            <text text="$style{'styledname'}" 
+            <text name="text"
                 width="$once{parent.width}"/>
         </view>
 
-        <text id="gFooText" text="$style{'foo'}" width="200" />
+        <text name="gFooText" text="$style{'foo'}" width="200" />
 
-        <view id="gJean" name="jean" width="250" height="150" bgcolor="$style{'nicebgcolor'}" />
+        <view name="gJean" width="250" height="150" bgcolor="$style{'nicebgcolor'}" />
 
         <method name="testview">
-            assertEquals( '0x366d3c', this.gView["bgcolor"] );
-            assertEquals( "Frank", this.gView["name"])
+            assertEquals( 0x366d3c, this.gView["bgcolor"] );
         </method>
 
         <method name="testtext">
-            assertEquals( "text loves foo!", gFooText["text"]);
+            assertEquals( "text loves foo!", this.gFooText["text"]);
         </method>
 
         <method name="testclassattr">
             assertEquals( '0x81103f', this.gJean["bgcolor"]);
         </method>
+
+        <method name="addTests">
+          for (var t in {testview: true, testtext: true, testclassattr: true}) {
+            this.addTest(t);
+          }
+        </method>
+
     </class>
     
 </library>

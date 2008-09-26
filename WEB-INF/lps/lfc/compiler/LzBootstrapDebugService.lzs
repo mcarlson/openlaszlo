@@ -304,7 +304,7 @@ dynamic class LzBootstrapDebugService {
 
     // `logdebug` is set by the server to tell Debug.__write to log
     // back to the server
-    this.log_all_writes = (!! global['logdebug']);
+    this.log_all_writes = (!! globalValue('logdebug'));
     // Automatically enable logging if there is a javascript console
     // log function
     if ($js1) {

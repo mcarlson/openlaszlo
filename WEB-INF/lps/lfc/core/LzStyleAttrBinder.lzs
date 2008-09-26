@@ -1,0 +1,33 @@
+/**
+ * Private class used to create the binder for `LzStyleAttr` bindings.
+ *
+ * @copyright Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ *
+ * @param lz.node target: The target node
+ * @param String dest: The destination attribute
+ * @param String source: The source attribute
+ *
+ * @access private
+ *
+ * @devnote FIXME: [2008-09-25 ptw] (LPP-7037) This really only wants
+ * to be an LzDelegatable, not an LzEventable
+ */
+class LzStyleAttrBinder extends LzEventable {
+  var target:LzNode;
+  var dest:String;
+  var source:String;
+
+  function LzStyleAttrBinder (target:LzNode, dest:String, source:String) {
+    super();
+    this.target = target;
+    this.dest = dest;
+    this.source = source;
+  }
+
+  function bind(ignore=null) {
+    var target = this.target;
+    target.setAttribute(this.dest, target[this.source]);
+  }
+}
+

@@ -146,9 +146,7 @@ class LzAlwaysExpr extends LzConstraintExpr {
  * @access private
  */
 class LzStyleExpr extends LzValueExpr {
-  var sourceAttributeName:String;
-  function LzStyleExpr(sourceAttributeName:String) {
-    this.sourceAttributeName = sourceAttributeName;
+  function LzStyleExpr() {
   }
 }
 
@@ -157,44 +155,22 @@ class LzStyleExpr extends LzValueExpr {
  * @access private
  */
 class LzStyleAttr extends LzStyleExpr {
+  var sourceAttributeName:String
   function LzStyleAttr(sourceAttributeName:String) {
-    super(sourceAttributeName);
+    super();
+    this.sourceAttributeName = sourceAttributeName;
   }
 };
-
-/**
- * Private class used to create the binder for `LzStyleAttr` bindings.
- *
- * @param lz.node target: The target node
- * @param String dest: The destination attribute
- * @param String source: The source attribute
- *
- *@access private
- */
-class LzStyleAttrBinder {
-  var target:LzNode;
-  var dest:String;
-  var source:String;
-
-  function LzStyleAttrBinder (target:LzNode, dest:String, source:String) {
-    this.target = target;
-    this.dest = dest;
-    this.source = source;
-  }
-
-  function bind(ignore) {
-    var target = this.target;
-    target.setAttribute(this.dest, target[this.source]);
-  }
-}
 
 /**
  * Private class used to define an identifier constraint
  * @access private
  */
 class LzStyleIdent extends LzStyleExpr {
-  function LzStyleIdent(sourceAttributeName:String) {
-    super(sourceAttributeName);
+  var sourceValueClosure:Function
+  function LzStyleIdent(sourceValueClosure:Function) {
+    super();
+    this.sourceValueClosure = sourceValueClosure;
   }
 }
 

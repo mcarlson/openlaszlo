@@ -301,8 +301,13 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
              str = "new LzStyleAttr('" + processEscapes(lu.getStringValue()) + "')";
            break;
 
+           // swf9 can't look up global's in an application except by
+           // compiling a function... <sigh />
+           // NB: Probably most often these 'identifiers' are things
+           // like colors or fonts, but, since we don't know the
+           // context, we can't say for sure
          case LexicalUnit.SAC_IDENT:
-             str = "new LzStyleIdent('" + processEscapes(lu.getStringValue()) + "')";
+           str = "new LzStyleIdent(function () { return " + processEscapes(lu.getStringValue()) + "; })";
            break;
 
          case LexicalUnit.SAC_STRING_VALUE:

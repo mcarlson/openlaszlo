@@ -43,8 +43,6 @@ public dynamic class LzNode extends LzEventable {
 
   /** @access private */
   var __LZisnew:Boolean = false;
-  /** @access private */
-  var __LZstyleConstraints:* = null;
   //     var  syncNew:Boolean = null;
   /** @access private */
   var __LZdeferredcarr:Array = null;
@@ -607,9 +605,22 @@ public dynamic class LzNode extends LzEventable {
    * @access private
    */
   function __LZstyleBindAttribute(attr, prop) {
-    // we are going to bypass the CSS API and call the underlying
-    // implementation because we're concerned about speed
-    var styleValue = LzCSSStyle.getPropertyValueFor(this, prop);
+    // Inlined version of LzCSSStyle.getPropertyValueFor
+    // Get the property cache for this node
+    var pc = this['__LZPropertyCache'] || LzCSSStyle.getPropertyCache(this);
+
+    // Fix for LPP-3024: if we're in debug mode, warn when CSS lookup
+    // fail
+    if ($debug) {
+      if (! (prop in pc)) {
+        Debug.warn("No CSS value found for node %#w for property name %s", this, prop);
+        // Cache negative values lazily
+        pc[prop] = (void 0);
+      }
+    }
+
+    var styleValue = pc[prop];
+
     // This is a hack because people want to give color styles as
     // Ox... which is not valid CSS, so they pass it as a string.
     // They really should be using #...
@@ -621,8 +632,9 @@ public dynamic class LzNode extends LzEventable {
     }
     // Style expressions are constraints
     if (styleValue is LzStyleExpr) {
-      var source = styleValue.sourceAttributeName;
       if (styleValue is LzStyleAttr) {
+        var sa:LzStyleAttr = (styleValue cast LzStyleAttr);
+        var source = sa.sourceAttributeName;
         // Create a new binder to update the destination attribute,
         var binder = new LzStyleAttrBinder(this, attr, source);
         // register it on the source attribute,
@@ -635,7 +647,8 @@ public dynamic class LzNode extends LzEventable {
         // bind it
         binder.bind();
       } else if (styleValue is LzStyleIdent) {
-        this.setAttribute(attr, global[source]);
+        var si:LzStyleIdent = (styleValue cast LzStyleIdent);
+        this.setAttribute(attr, si.sourceValueClosure.call(null));
       } else if ($debug) {
         Debug.error("Unknown style expression %w", styleValue);
       }
@@ -2067,7 +2080,7 @@ public dynamic class LzNode extends LzEventable {
      */
     LzNode.prototype._dbg_name = function (){
       if ((typeof(this.id) == 'string') &&
-          (global[this.id] === this)) {
+          (globalValue(this.id) === this)) {
         return "#" + this.id;
       } else if ((typeof(this.name) == 'string') &&
                  (this.parent[this.name] === this)) {

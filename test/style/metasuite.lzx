@@ -22,6 +22,7 @@
     <include href="idselector/ids.lzx"/>
     <include href="elementselector/elementselector-test.lzx" />
     <include href="elementselector/specialclassnames-test.lzx" />
+    <include href="merging/merging.lzx" />
     <include href="resource/resource-not-found.lzx" />
     <include href="simple/simple.lzx" />
     <include href="simple/undefineds.lzx" />
@@ -44,6 +45,7 @@
         <IdsTestCase />
         <ElementTestCase />
         <SpecialClassNamesTestCase />
+        <MergingTestCase />
         <ResourceTestCase />
         <ConstraintSpeedTestCase />
         <ApplicabilityTestCase />

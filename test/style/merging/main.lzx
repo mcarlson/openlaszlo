@@ -1,0 +1,11 @@
+<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true" >
+  <include href="lzunit" />
+  <script>
+    Debug.write("This test file tests CSS rule merging.");
+  </script>
+  <include href="merging.lzx" />
+  <TestSuite>
+    <MergingTestCase />
+  </TestSuite>
+</canvas>

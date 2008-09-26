@@ -1,0 +1,50 @@
+<library>
+
+  <!-- Works OK because no css overrides exist. -->
+  <stylesheet>
+    foo {bgcolor: #ff0000;}
+    foo {a:"a";}
+  </stylesheet>
+  <class name="foo" bgcolor="$style{'bgcolor'}" width="20" height="20"/>
+
+  <!-- Works OK because no css overrides exist. -->
+  <stylesheet>
+    bar {bgcolor: #00ff00;}
+    bar {a:"a";}
+  </stylesheet>
+  <class name="bar" bgcolor="$style{'bgcolor'}" width="20" height="20"/>
+
+  <!-- Fails SILENTLY because css overrides exist. -->
+  <stylesheet>
+    baz {bgcolor: #0000ff; b:"b";}
+    baz {b:"b";}
+  </stylesheet>
+  <class name="baz" extends="foo"/>
+
+  <!-- Fails VERBOSELY because css overrides exist. -->
+  <stylesheet>
+    boo {bgcolor: #ff00ff; b:"b";}
+    boo {b:"b";}
+  </stylesheet>
+  <class name="boo" bgcolor="$style{'bgcolor'}" width="20" height="20"/>
+
+  <class name="MergingTestCase" extends="TestCase">
+    <foo name="foo" x="20"/><!-- Should be red -->
+    <bar name="bar" x="50"/><!-- Should be green -->
+    <baz name="baz" x="80"/><!-- Should be blue -->
+    <boo name="boo" x="110"/><!-- Should be violet -->
+
+
+    <method name="testMerging">
+      assertEquals(0xff0000, this.foo.bgcolor);
+      assertEquals(0x00ff00, this.bar.bgcolor);
+      assertEquals(0x0000ff, this.baz.bgcolor);
+      assertEquals(0xff00ff, this.boo.bgcolor);
+    </method>
+
+    <method name="addTests">
+      addTest('testMerging');
+    </method>
+  </class>
+</library>
+<!-- Copyright 2008 Laszlo Systems, Inc. -->

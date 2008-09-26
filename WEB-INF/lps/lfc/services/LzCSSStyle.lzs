@@ -1,536 +1,549 @@
 /**
-  *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
-  *            Use is subject to license terms.
-  *
-  * @affects lzcssstyle lzcssstylerule
-  * @access public
-  * @topic LFC
-  * @subtopic CSS
-  */
+ *
+ * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ *
+ * @affects lzcssstyle lzcssstylerule
+ * @access public
+ * @topic LFC
+ * @subtopic CSS
+ */
 
 /**
-  * <p>This service provides style information.</p>
-  * <p>This implements Interface ViewCSS (introduced in DOM Level 2)
-  * from here: http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-ViewCSS
-  * </p>
-  */
+ * <p>This service provides style information.</p>
+ * <p>This implements Interface ViewCSS (introduced in DOM Level 2)
+ * from here: http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-ViewCSS
+ * </p>
+ */
 class LzCSSStyleRule {
 
-function LzCSSStyleRule(){
-} 
+  function LzCSSStyleRule() {};
 
-/** @access private */
-var properties = null;
-/** @access private */
-var selector = null;
-//No rule has a specificity of zero
-/** @access private */
-var specificity = 0;
+  /** @access private */
+  var properties = null;
+  /** @access private */
+  var selector = null;
+  //No rule has a specificity of zero
+  /** @access private */
+  var specificity = 0;
 
-/** @access private */
-var parsed = null;
+  /** @access private */
+  var parsed = null;
 
-/** @access private */
-var _lexorder
+  /** @access private */
+  var _lexorder
 
-// this is inlined in __compareSpecificity() - keep in sync
-function getSpecificity () {
-    
-    // Only calculate this once. Store it after we've calculated it once.     
+  // this is inlined in __compareSpecificity() - keep in sync
+  function getSpecificity () {
+    // Only calculate this once. Store it after we've calculated it once.
     // No rule has a specificity of 0
     if ( !this.specificity ) {
-        //need to treat compound selectors differently
+      var s = 0;
+      var p = this.parsed;
 
-        if ( this.parsed.type == LzCSSStyle._sel_compound ){
-            for ( var i = 0; i < this.parsed.length; i++ ){
-                this.specificity += LzCSSStyle.getSelectorSpecificity( this.parsed[ i ] );
-            }
-        } else {
-            this.specificity = LzCSSStyle.getSelectorSpecificity( this.parsed );
+      //need to treat compound selectors differently
+      if ( p.type == LzCSSStyle._sel_compound ){
+        for ( var i = 0, l = p.length; i < l; i++ ){
+          s += LzCSSStyle.getSelectorSpecificity( p[ i ] );
         }
-
-        //Debug.write( 'specificity for' , this , this.specificity );
+      } else {
+        s = LzCSSStyle.getSelectorSpecificity( p );
+      }
+      this.specificity = s;
+      //Debug.write( 'specificity for' , this , this.specificity );
     }
 
-    return this.specificity; 
-}
+    return this.specificity;
+  };
 
-/** For a simple selector, figure out the specificity based on the type of the
-  * element. We determine the type of the simple selector with some quick and
-  * easy checks for sentinel characters. 
-  * @access private
-  */ 
-function _getSimpleSelectorSpecificity ( selarr, k ) {
-    var sel = selarr[k];
-    //Debug.write( 'selarr' , selarr , "sel" , sel );
-
-    // If this simple selector includes an element type, that counts for
-    // specificity of +1. 
-    if (k == "simpleselector") {
-        return 1; 
+  /** @access private */
+  var _dbg_name = function () {
+    function pname (rp) {
+      var rptn = rp['tagname'];
+      var rpi = rp['id'];
+      var rpa = rp['attrname'];
+      if (! (rptn||rpi||rpa)) { return '*'; }
+      return (rptn?rptn:'')+(rpi?('#'+rpi):'')+(rpa?('['+rpa+'='+rp.attrvalue+']'):'');
     }
-    
-    if (sel.indexOf("#") >= 0) {
-        // it's an id selector
-        return 100; 
+    var rp = this.parsed;
+    if (rp['length']) {
+      var n = '';
+      for (var i = 0; i < rp.length; i++) {
+        n += pname(rp[i]) + ' ';
+      }
+      n = n.substring(0, n.length-1);
+    } else {
+      var n = pname(rp);
     }
-    
-    if (sel.indexOf("[") >= 0) {
-        // it's an attr=value selector
-        return 10; 
+    return '#' + this._lexorder + ' ' + n + ' (' + this.specificity + ')';
+  };
+
+  function equal (that) {
+    function equal (pa, pb) {
+      return ((pa['tagname'] == pb['tagname']) &&
+              (pa['id'] == pb['id']) &&
+              (pa['attrname'] == pb['attrname']) &&
+              (pa['attrvalue'] == pb['attrvalue']));
     }
-    
-    return 1 ;
-}
+    var rap = this.parsed;
+    var rbp = that.parsed;
+    if (rap['length'] != rbp['length']) {
+      return false;
+    }
+    if (rap['length']) {
+      for (var i = rap.length - 1; i >= 0; i--) {
+        if (! equal(rap[i], rbp[i])) {
+          return false;
+        }
+      }
+    }
+    if (! equal(rap, rbp)) {
+      return false;
+    }
+    var aprops = this.properties;
+    var bprops = that.properties;
+    for (var ak in aprops) {
+      if (aprops[ak] !== bprops[ak]) { return false; }
+    }
+    for (var bk in bprops) {
+      if (aprops[bk] !== bprops[bk]) { return false; }
+    }
+    return true;
+  };
 
-} // End of LzCSSStyleRule
-lz.CSSStyleRule = LzCSSStyleRule;  // publish
-
+};                                // End of LzCSSStyleRule
+lz.CSSStyleRule = LzCSSStyleRule; // publish
 
 
 class LzCSSStyleClass {
 
-function LzCSSStyleClass () {}
+  function LzCSSStyleClass () {};
 
-
-function getComputedStyle ( node ){
+  function getComputedStyle ( node ){
     var csssd = new LzCSSStyleDeclaration( );
     csssd.setNode( node );
     return csssd;
-}
+  };
 
-//LzCSSStyle.time1 = 0;
-function getPropertyValueFor ( initialnode , pname ){
-    //Debug.warn("node: %w, pname: %w, rules: %w\n", node, pname, this._rules);
-
-    //var t = getTimer();
-    if (!initialnode || !pname) return;
-
-    var node = initialnode;
-    while (node != canvas) {
-        if (! node.__LZPropertyCache) {
-            node.__LZPropertyCache = {};
-        } else {
-            var val = node.__LZPropertyCache[pname];
-            if (val != null) return val;
-        }
-
-        var rules = node.__LZRuleCache;
-        if ( !rules ) {
-            rules = new Array();
-            var r;
-            for ( var i = this._rules.length -1; i >=0; i-- ){
-                r = this._rules[ i ];
-                var rp = r.parsed;
-                //inlined: if (rp.type == this._sel_compound && this._compoundSelectorApplies( rp, node )) {
-                if (rp.type == this._sel_compound) {
-                    var curnode = node; 
-                    var sindex = rp.length - 1;
-                    var firstone = true;
-                    var result = false;
-
-                    while (curnode != canvas){
-                        //recursively loop through selectors, ensuring each applies to the current node or a parent 
-                        var nrp = rp[sindex]
-                        var t = nrp.type;
-
-                        if ( t == this._sel_star ||
-                            (t == this._sel_id && nrp.id == curnode.id) ||
-                            (t == this._sel_tag && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
-                            (t == this._sel_attribute && curnode[ nrp.attrname ] == nrp.attrvalue) ||
-                            (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
-                            (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode ))){
-                            if ( sindex-- == 0 ){
-                                result = true;
-                                break;
-                            }
-                        } else if ( firstone ){
-                            //if the last selector doesn't apply, then bail -- we'll
-                            //come back for this when we recurse over the parents in
-                            //getPropertyValueFor
-                            result = false;
-                            break;
-                        }
-
-                        curnode = curnode.parent;
-                        firstone = false;
-                    }
-                    if (result) rules.push(r); 
-                } else if ( rp.type == this._sel_star ||
-                    (rp.type == this._sel_id && rp.id == node.id) ||
-                    (rp.type == this._sel_tag && (((rp.tagname in lz) && (node is lz[ rp.tagname ])))) ||
-                    (rp.type == this._sel_attribute && node[ rp.attrname ] == rp.attrvalue) ||
-                    (rp.type == this._sel_tagAndAttr && node[ rp.attrname ] == rp.attrvalue && (((rp.tagname in lz) && (node is lz[ rp.tagname ]))))) {
-                    rules.push(r); 
-                }
-            }
-
-            //now look at any preprocessed rules
-            // NOTE: 
-            // it would be nice to just use (node.name) as the condition, but 
-            // swf6 does not obey obey the ECMA string->boolean coercion specification.
-            // As a workaround, we compare node.name to null, thereby ensuring we get a boolean
-            // in swf6 or ECMA-compatible runtimes
-            var pprules = (node.name != null) ? this._nameRules[ node.name ] : null;
-            if ( pprules ){
-                //same code as above, but inline to avoid function call overhead
-                for ( var i = pprules.length -1; i >=0; i-- ){
-                    r = pprules[ i ];
-                    var rp = r.parsed;
-                    //inlined: if (rp.type == this._sel_compound && this._compoundSelectorApplies( rp, node )) {
-                    if (rp.type == this._sel_compound) {
-                        var curnode = node; 
-                        var sindex = rp.length - 1;
-                        var firstone = true;
-                        var result = false;
-
-                        while (curnode != canvas){
-                            //recursively loop through selectors, ensuring each applies to the current node or a parent 
-                            var nrp = rp[sindex]
-                            t = nrp.type;
-
-                            if ( t == this._sel_star ||
-                                (t == this._sel_id && nrp.id == curnode.id) ||
-                                (t == this._sel_tag && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
-                                (t == this._sel_attribute && curnode[ nrp.attrname ] == nrp.attrvalue) ||
-                                (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
-                                (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode ))){
-                                if ( sindex-- == 0 ){
-                                    result = true;
-                                    break;
-                                }
-                            } else if ( firstone ){
-                                //if the last selector doesn't apply, then bail -- we'll
-                                //come back for this when we recurse over the parents in
-                                //getPropertyValueFor
-                                result = false;
-                                break;
-                            }
-
-                            curnode = curnode.parent;
-                            firstone = false;
-                        }
-                        if (result) rules.push(r); 
-                    } else if ( rp.type == this._sel_star ||
-                        (rp.type == this._sel_id && rp.id == node.id) ||
-                        (rp.type == this._sel_tag && (((rp.tagname in lz) && (node is lz[ rp.tagname ])))) ||
-                        (rp.type == this._sel_attribute && node[ rp.attrname ] == rp.attrvalue) ||
-                        (rp.type == this._sel_tagAndAttr && node[ rp.attrname ] == rp.attrvalue && (((rp.tagname in lz) && (node is lz[ rp.tagname ]))))) {
-                        rules.push(r); 
-                    }
-                }
-            }
-            
-            //sort match rules by their specificities
-            //first tell the sort function who this is being sorted for; the sort
-            //depends not only on the rules, but also on the specificity of the
-            //class selector, if one is present
-
-            rules.sort(this.__compareSpecificity); 
-        
-            node.__LZRuleCache = rules;
-        }
-
-//         Debug.write("About to print rule array.")
-//         LzCSSStyle._printRuleArray( rules );
-
-        var l = rules.length;
-        var i = 0;
-        while ( i < l ) {
-            val = rules[i++].properties[pname];
-            if (val != null) {
-                node.__LZPropertyCache[pname] = val;
-                return val;
-            }
-        }
-
-        node = node.immediateparent;
-        ////this.time1 += getTimer() - t;
+  // Hand-inlined in LzNode/__LZstyleBindAttribute
+  // Must be kept in sync
+  function getPropertyValueFor (node, pname) {
+    var pc = node['__LZPropertyCache'];
+    if (! pc) { pc = this.getPropertyCache(node); }
+    if (pname in pc) {
+      return pc[pname];
     }
-
     if ($debug) {
-        // Fix for LPP-3024: if we're in debug mode, warn when CSS lookup
-        // results in a null or undefined value. [bshine 08.03.2007]
-        Debug.warn(
-            "No CSS value found for node %#w for property name %s",
-            initialnode,
-            pname);             
+      // Fix for LPP-3024: if we're in debug mode, warn when CSS lookup
+      // results in a null or undefined value. [bshine 08.03.2007]
+      Debug.warn("No CSS value found for node %#w for property name %s", node, pname);
     }
-}
+    // Cache negative values lazily
+    return pc[pname] = (void 0);
+  };
 
-// this is inlined in __compareSpecificity() - keep in sync
-function getSelectorSpecificity ( parsedsel ){
-    // Go through all the selectors in the selector, keeping a running
-    // count of various kinds of selectors:
-    /*
-    count 1 if the selector is a `style` attribute rather than a selector, 
-        0 otherwise (= a) 
-    count the number of ID attributes in the selector (= b) 
-    count the number of other attributes and pseudo-classes in the selector (= c) 
-    count the number of element names and pseudo-elements in the selector (= d) 
-    */ 
+
+  function getPropertyCache ( node ) {
+    if ((!node) || (node === canvas)) return {};
+    var pc = node['__LZPropertyCache'];
+    if ( pc ) { return pc; }
+    // The cache is initialized from the parent, then our rules are
+    // added.
+    var ip = node.immediateparent;
+    // Apparently there can be orphan nodes that get styled?
+    if ((! ip ) || (ip === canvas)) {
+      var ipc = {};
+    } else {
+      var ipc = ip['__LZPropertyCache'] || this.getPropertyCache(ip);
+    }
+    var rules = node['__LZRuleCache'];
+    if ( !rules ) { rules = this.getRulesCache(node); }
+
+    // If we have no rules, we just share the parent cache
+    if (rules.length == 0) {
+      return node.__LZPropertyCache = ipc;
+    }
+
+    // If we have rules, copy the parent cache and add the properties
+    // our rules define
+    var pc = {};
+    for (var k in ipc) { pc[k] = ipc[k]; }
+    // Process the rules from least to most specific, so the
+    // most-specific win
+    for (var i = rules.length - 1; i >= 0; i--)  {
+      var props = rules[i].properties;
+      for (var pname in props) {
+        pc[pname] = props[pname];
+      }
+    }
+    return node.__LZPropertyCache = pc;
+  };
+
+  // Will we ever use this cache more than once?
+  function getRulesCache (node) {
+    var rules = node['__LZRuleCache'];
+    if (rules) { return rules; }
+    rules = new Array();
+    var tryRules = new Array();
+    // Repeat for rules, tag rules, attr rules, id rules; accumulating
+    // the rules that might apply (which are filtered more carefully in
+    // the second pass).
+
+    /**
+     * NOTE: [2008-09-08 ptw] These rules are gathered in approximate
+     * specificity order, to minimize the cost of the sort below.  Take
+     * great care if you muck with this code that you don't screw that
+     * up!
+     */
+    // Ensure the rule cohorts are in order
+    if (this._rulenum != this._lastSort) {
+      this._sortRules();
+    }
+
+    // Gather the id rules that could apply
+    var id = node['id'];
+    // Does this node have an id with rules?
+    if (id) {
+      var ir = this._idRules;
+      if (id in ir) {
+        tryRules = tryRules.concat(ir[id]);
+      }
+    }
+
+    // Gather the attribute rules that could apply
+    var ar = this._attrRules;
+    for (var k in ar) {
+      // Does this node have that attribute?
+      if (k in node) {
+        // Get the rules for that attribute with the value the node has
+        var rs = ar[k][node[k]];
+        // Is this an attribute with rules?
+        if (rs is Array) {
+          // Could filter on property value now... but you have to worry
+          // about compound rules
+          tryRules = tryRules.concat(rs);
+        }
+      }
+    }
+
+    // Gather the tag rules that could apply
+    var cr = this._tagRules;
+    for (var tn in cr) {
+      var c = lz[tn];
+      // Can we filter these any further here?
+      if (c && (node is c)) {
+        tryRules = tryRules.concat(cr[tn]);
+      }
+    }
+
+    // Are there any of these any more?
+    var rr = this._rules;
+    for (var i = rr.length - 1; i >= 0; i--) {
+      tryRules.push(rr[i]);
+    }
+
+    // Now winnow the rules by applicability, at the same time, see if
+    // any sorting is needed
+    var sortNeeded = false;
+    var lastSpecificity = Infinity;
+    for ( var i = 0, l = tryRules.length; i < l; i++ ) {
+      var r = tryRules[ i ];
+      if (! sortNeeded) {
+        var rs = r.specificity;
+        if ((! rs) || (rs >= lastSpecificity)) {
+          sortNeeded = true;
+        } else {
+          lastSpecificity = rs;
+        }
+      }
+      var rp = r.parsed;
+      var rpt = rp.type;
+      var compound = (rpt == this._sel_compound);
+      // Quick test for compound _not_ applying:  If the last selector
+      // is not applicable, no need to even try.  It will either apply
+      // to our parent (already cached) or a child, but not us.
+      if (compound) {
+        // Look at the last selector
+        rp = rp[rp.length - 1];
+        rpt = rp.type;
+      }
+      var rptn = rp.tagname;
+      // Classes get defined lazily, way after rules are parsed, so
+      // we have to look this up each time. But NOTE, in the
+      // optimization below, we only check the class if there is a
+      // TAGNAME.
+      var rpc = rptn ? lz[rptn] : null;
+      var rpi = rp['id'];
+      var rpa = rp['attrname'];
+      // Optimized test for applicability: we can ignore type because
+      // if a rule has a class, id, or attrname, they have to apply,
+      // and a 'star' rule has none of those
+      if (((! rptn) || (rpc && node is rpc)) &&
+          ((! rpi) || (node['id'] == rpi)) &&
+          ((! rpa) || (node[rpa] == rp.attrvalue))) {
+        if (! compound) {
+          rules.push(r);
+        } else {
+          // Last selector applies, so verify that the whole rule
+          // applies.  (Need to go back to original rule to do this.)
+          if (this._compoundSelectorApplies( r.parsed, node )) {
+            rules.push(r);
+          }
+        }
+      }
+    }
+
+    if (sortNeeded) {
+      //     if ($debug) {
+      //       var s = "";
+      //       for (var i = 0, l = rules.length; i < l; i++) {
+      //         s += rules[i].specificity + ' ';
+      //       }
+      //       Debug.debug("Sorting %w (%s)", rules, s);
+      //     }
+      rules.sort(this.__compareSpecificity);
+      //   } else if ($debug) {
+      //     Debug.debug("Saved a sort! %w", rules);
+    }
+
+    node.__LZRuleCache = rules;
+    return rules;
+  };
+
+
+  function getSelectorSpecificity ( parsedsel ) {
     switch ( parsedsel.type ){
-        case (this._sel_tag ):
-        case (this._sel_star ):
-            return 1;
+      case (this._sel_tag ):
+      case (this._sel_star ):
+        return 1;
 
-        case (this._sel_id ):
-            return 100;
+      case (this._sel_id ):
+        return 100;
 
-        case (this._sel_attribute ):
-            return 10;
+      case (this._sel_attribute ):
+        return 10;
 
-        case (this._sel_tagAndAttr ):
-            return 11; 
+      case (this._sel_tagAndAttr ):
+        return 11;
     }
-}
+  };
 
-/** @access private */
-function __compareSpecificity (rA, rB) {
-    // if rA specificity  is less than rB specifity, return -1
-    // if they're equal specificity, return 0
-    // if rB specifitity is less than rA specificity, return 1
-    if (! rA.specificity) {
-        //inline: rA.getSpecificity();
-        // Only calculate this once. Store it after we've calculated it once.     
-        // No rule has a specificity of 0
-        if ( !rA.specificity ) {
-            //need to treat compound selectors differently
-
-            if ( rA.parsed.type == LzCSSStyle._sel_compound ){
-                for ( var i = 0; i < rA.parsed.length; i++ ){
-                    //inline: rA.specificity += LzCSSStyle.getSelectorSpecificity( rA.parsed[ i ] );
-                    switch ( rA.parsed[i].type ){
-                        case (LzCSSStyle._sel_tag ):
-                        case (LzCSSStyle._sel_star ):
-                            rA.specificity += 1;
-                            break;
-
-                        case (LzCSSStyle._sel_id ):
-                            rA.specificity += 100;
-                            break;
-
-                        case (LzCSSStyle._sel_attribute ):
-                            rA.specificity += 10;
-                            break;
-
-                        case (LzCSSStyle._sel_tagAndAttr ):
-                            rA.specificity += 11; 
-                            break;
-                    }
-                }
-                } else {
-                    //inline: rA.specificity = LzCSSStyle.getSelectorSpecificity( rA.parsed );
-                    switch ( rA.parsed.type ){
-                        case (LzCSSStyle._sel_tag ):
-                        case (LzCSSStyle._sel_star ):
-                            rA.specificity = 1;
-                            break;
-
-                        case (LzCSSStyle._sel_id ):
-                            rA.specificity = 100;
-                            break;
-
-                        case (LzCSSStyle._sel_attribute ):
-                            rA.specificity = 10;
-                            break;
-
-                        case (LzCSSStyle._sel_tagAndAttr ):
-                            rA.specificity = 11; 
-                            break;
-                    }
-                }
-
-                //Debug.write( 'specificity for' , this , this.specificity );
-        }
-    }
-    if (! rB.specificity) {
-        //inline: rB.getSpecificity();
-        // Only calculate this once. Store it after we've calculated it once.     
-        // No rule has a specificity of 0
-        if ( !rB.specificity ) {
-            //need to treat compound selectors differently
-
-            if ( rB.parsed.type == LzCSSStyle._sel_compound ){
-                for ( var i = 0; i < rB.parsed.length; i++ ){
-                    //inline: rB.specificity += LzCSSStyle.getSelectorSpecificity( rB.parsed[ i ] );
-                    switch ( rB.parsed[i].type ){
-                        case (LzCSSStyle._sel_tag ):
-                        case (LzCSSStyle._sel_star ):
-                            rB.specificity += 1;
-                            break;
-
-                        case (LzCSSStyle._sel_id ):
-                            rB.specificity += 100;
-                            break;
-
-                        case (LzCSSStyle._sel_attribute ):
-                            rB.specificity += 10;
-                            break;
-
-                        case (LzCSSStyle._sel_tagAndAttr ):
-                            rB.specificity += 11; 
-                            break;
-                    }
-                }
-            } else {
-                //inline: rB.specificity = LzCSSStyle.getSelectorSpecificity( rB.parsed );
-                switch ( rB.parsed.type ){
-                    case (LzCSSStyle._sel_tag ):
-                    case (LzCSSStyle._sel_star ):
-                        rB.specificity = 1;
-                        break;
-
-                    case (LzCSSStyle._sel_id ):
-                        rB.specificity = 100;
-                        break;
-
-                    case (LzCSSStyle._sel_attribute ):
-                        rB.specificity = 10;
-                        break;
-
-                    case (LzCSSStyle._sel_tagAndAttr ):
-                        rB.specificity = 11; 
-                        break;
-                }
-            }
-
-            //Debug.write( 'specificity for' , this , this.specificity );
-        }
-    }
-
+  /** @access private */
+  function __compareSpecificity (rA, rB) {
+    // Specificity is stored when the rule is parsed
     var specificityA = rA.specificity;
     var specificityB = rB.specificity;
-    //Debug.write( rA, specificityA );
-    //Debug.write( rB, specificityB );
 
-    if ( specificityA == specificityB ){
-        // Laszlo has a special rules around applicability of rules. In the
-        // case where two selectors have the same specifity, AND both select
-        // classes, the one that applies to the closer class in the inheritance
-        // hierarchy wins
-
-        // if *that* matches, then the descendant rule with closer selectors
-        // wins
-
-        if ( rA.parsed.type == LzCSSStyle._sel_compound && 
-             rB.parsed.type == LzCSSStyle._sel_compound ){
-            //iterate through the compound selector arrays 
-            //assume that the selector arrays are the same length, due to
-            //specificity. if they don't, or if all the comparisons match, then
-            //we drop down to lexical order
-            for ( var i = 0; i < rA.parsed.length; i++ ){
-                //if we get here, it means that two rules have the same
-                //specificity but different numbers of descendants
-                if ( !rA.parsed[ i ] || !rB.parsed[ i ] ) break;
-
-                //if one or neither selector has a tagname, this test doesn't
-                //apply OR the tagnames are the same
-                if ( !rA.parsed[ i ].tagname || !rB.parsed[ i ].tagname ||
-                      rA.parsed[ i ].tagname ==  rB.parsed[ i ].tagname ){
-                    continue;
-                }
-
-                var rac = lz[ rA.parsed[ i ].tagname ];
-                var rbc = lz[ rB.parsed[ i ].tagname ];
-                
-                
-                return (((rac && rbc) && ('prototype' in rac) && (rac.prototype is rbc)) ? -1 : 1);
-                
-
-            }
-        } 
-
-        if ( ( rA.parsed.tagname && rB.parsed.tagname ) &&
-             ( rA.parsed.tagname != rB.parsed.tagname ) ){
-                var rac = lz[ rA.parsed.tagname ];
-                var rbc = lz[ rB.parsed.tagname ];
-                
-                return (((rac && rbc)
-                        && ('prototype' in rac) && 
-                        (rac.prototype is rbc)) 
-                    ? -1 : 1);
-
-        } else return (rA._lexorder < rB._lexorder ) ? 1 : -1;
+    // Simplest case: they have different specificity
+    if ( specificityA != specificityB ) {
+      return (specificityA < specificityB) ? 1 : -1;
     }
 
-    return (specificityA < specificityB) ? 1 : -1;
-}
+    // Ties that involve tag selectors are broken by comparing the
+    // specificity of the classes of the tags
+    var rap = rA.parsed;
+    var rbp = rB.parsed;
+    var lexorder = (rA._lexorder < rB._lexorder ) ? 1 : -1;
 
-/** @access private */
-function _printRuleArray (arr) {
-    for (var i = 0; i < arr.length; i++) {
-        Debug.write(i, arr[i]);
+    // Simple rules have no length
+    if ((! rap['length']) && (! rbp['length'])) {
+      // Simple tag rules have a class name property
+      var ratn = rap['tagname'];
+      var rbtn = rbp['tagname'];
+
+      // Simpler case: Not tag rules, or the classes are the same
+      if ((! ratn) || (! rbtn) || (ratn == rbtn)) {
+        return lexorder;
+      }
+
+      // Simple case: Neither compound
+      //  Push comes to shove -- the classes had better exist now
+      var rac = lz[ratn];
+      var rbc = lz[rbtn];
+      // Subclass test
+      // TODO: [2008-09-09 ptw] Will this work in JS2?
+      // We really want to test the subclass relationship of rac and rbc
+      if (rac && rbc) {
+        if (rbc.prototype.isPrototypeOf(rac.prototype)) { return -1; }
+        if (rac.prototype.isPrototypeOf(rbc.prototype)) { return 1; }
+      }
+      // The classes are not comparable, default
+      return lexorder;
     }
-    
-}
 
-/** @access private 
- *  This is inlined above in getPropertyValueFor() - make sure they stan in sync
- */
-function _compoundSelectorApplies (rp , node){
-    var curnode = node; 
-    var sindex = rp.length - 1;
-    var firstone = true;
-    var result = false;
-
-    while (curnode != canvas){
-        //recursively loop through selectors, ensuring each applies to the current node or a parent 
-        var nrp = rp[sindex]
-        var t = nrp.type;
-
-        if ( t == this._sel_star ||
-            (t == this._sel_id && nrp.id == curnode.id) ||
-            (t == this._sel_tag && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
-            (t == this._sel_attribute && curnode[ nrp.attrname ] == nrp.attrvalue) ||
-            (t == this._sel_tagAndAttr && curnode[ nrp.attrname ] == nrp.attrvalue && (((nrp.tagname in lz) && (curnode is lz[ nrp.tagname ])))) ||
-            (t == this._sel_compound && this._compoundSelectorApplies( nrp, curnode ))){
-            if ( sindex-- == 0 ){
-                result = true;
-                break;
-            }
-        } else if ( firstone ){
-            //if the last selector doesn't apply, then bail -- we'll
-            //come back for this when we recurse over the parents in
-            //getPropertyValueFor
-            result = false;
-            break;
+    // Hard case: Compound rule must be examined step-by-step
+    for ( var i = 0; i < rap.length; i++ ) {
+      var rapi = rap[i];
+      var rbpi = rbp[i];
+      // if we get here, it means that two rules have the same
+      // specificity but different numbers of descendants?
+      if ( !rapi || !rbpi ) {
+        //       if ($debug) {
+        //         Debug.debug("%s: %w <=> %w", arguments.callee, rA, rB);
+        //       }
+        // Punt to lexical order
+        break;
+      }
+      //  Classes get defined lazily, way after rules are
+      //  parsed, so we have to defer evaluating them
+      var ratn = rapi['tagname'];
+      var rbtn = rbpi['tagname'];
+      if ( ( ratn && rbtn ) && ( ratn != rbtn ) ) {
+        //  Push comes to shove -- the classes had better exist now
+        var rac = lz[ratn];
+        var rbc = lz[rbtn];
+        // Subclass test
+        // TODO: [2008-09-09 ptw] Will this work in JS2?
+        // We really want to test the subclass relationship of rac and rbc
+        if (rac && rbc) {
+          if (rbc.prototype.isPrototypeOf(rac.prototype)) { return -1; }
+          if (rac.prototype.isPrototypeOf(rbc.prototype)) { return 1; }
         }
-
-        curnode = curnode.parent;
-        firstone = false;
+        // The classes are not comparable, keep going
+      }
     }
-    return result;
-}
+    // Last ditch
+    return lexorder;
+  };
 
-/** @access private */
-var _sel_unknown = 0;
-/** @access private */
-var _sel_star = 1;
-/** @access private */
-var _sel_id = 2;
-/** @access private */
-var _sel_tag = 3
-/** @access private */
-var _sel_compound = 4
-/** @access private */
-var _sel_attribute = 5
-/** @access private */
-var _sel_tagAndAttr = 6
 
-/** @access private */
-var _rules = new Array();
+  /** @access private */
+  function _printRuleArray (arr) {
+    for (var i = 0; i < arr.length; i++) {
+      Debug.write(i, arr[i]);
+    }
+  };
 
-/** optimization for selectors which use [name="value"]
-  * @access private */
-var _nameRules = {};
+  /**
+   * The optimized applicability test is inlined in
+   * getPropertyValueFor(), make sure they stan in sync
+   * @access private
+   */
+  function _compoundSelectorApplies (parsedsel , startnode) {
+    // loop through selectors, ensuring each applies to the current node or a parent
+    for (var node = startnode, i = parsedsel.length - 1; i >= 0 && node !== canvas; i--, node = node.parent) {
+      // Components of a parsed compound rule are parsed
+      var rp = parsedsel[i];
+      var rptn = rp.tagname;
+      // Classes get defined lazily, way after rules are parsed, so
+      // we have to look this up each time. But NOTE, in the
+      // optimization below, we only check the class if there is a
+      // TAGNAME.
+      var rpc = rptn ? lz[rptn] : null;
+      var rpi = rp['id'];
+      var rpa = rp['attrname'];
+      // look up the nodes to see if this selector applies to the
+      // current node or a parent
+      while (node !== canvas) {
+        // Optimized test for applicability: we can ignore type because
+        // if a rule has a class, id, or attrname, they have to apply,
+        // and a 'star' rule has none of those
+        //
+        // NB: The old code tested for a compound selector in a
+        // compound selector, but that can't really happen, can it?
+        if (((! rptn) || (rpc && node is rpc)) &&
+            ((! rpi) || (node.id == rpi)) &&
+            ((! rpa) || (node[rpa] == rp.attrvalue))) {
+          // Match
+          if ( i == 0 ){
+            // Total match
+            return true;
+          } else {
+            // Match next
+            break;
+          }
+        } else {
+          if (node === startnode) {
+            // If the selector can't be anchored here, then exit.  If it
+            // applied in a parent, it will have already been examined
+            // and cached
+            return false;
+          }
+        }
+        // Go up a node and try to match again
+        // TODO: [2008-09-06 ptw] parent, not immediateparent?
+        node = node.parent;
+      }
+    }
+    // Got to the canvas or end of the rule without a match
+    return false;
+  };
 
-/** @access private */
-var _rulenum = 0
+  /** @access private */
+  var _sel_unknown = 0;
+  /** @access private */
+  var _sel_star = 1;
+  /** @access private */
+  var _sel_id = 2;
+  /** @access private */
+  var _sel_tag = 3;
+  /** @access private */
+  var _sel_compound = 4;
+  /** @access private */
+  var _sel_attribute = 5;
+  /** @access private */
+  var _sel_tagAndAttr = 6;
 
-/** @access private */
-function _addRule ( r ){
+  /** @access private */
+  var _rules = new Array();
+
+  /** optimization for selectors which use [<attr>=<value>]
+   * @access private */
+  var _attrRules = {};
+
+  /** optimization for selectors which use #id
+   * @access private */
+  var _idRules = {};
+
+  /** optimization for selectors which use tagname
+   * @access private */
+  var _tagRules = {};
+
+  /** @access private */
+  var _rulenum = 0;
+
+  /** @access private */
+  var _lastSort = -1;
+
+  function _sortRules () {
+    function deleteDuplicates (sortedRules) {
+      for (var i = sortedRules.length - 2; i >= 0; i--) {
+        if (sortedRules[i].equal(sortedRules[i + 1])) {
+          //           if ($debug) {
+          //             Debug.debug("Removing duplicate: %w == %w",
+          //                         sortedRules[i], sortedRules[i + 1]);
+          //           }
+          sortedRules.splice(i + 1, 1);
+        }
+      }
+      return sortedRules;
+    }
+
+    if (this._rulenum != this._lastSort) {
+      this._rules.sort(this.__compareSpecificity);
+      deleteDuplicates(this._rules);
+      for (var k in this._attrRules) {
+        var ars = this._attrRules[k];
+        for (var v in ars) {
+          ars[v].sort(this.__compareSpecificity);
+          deleteDuplicates(ars[v]);
+        }
+      }
+      for (var k in this._idRules) {
+        this._idRules[k].sort(this.__compareSpecificity);
+        deleteDuplicates(this._idRules[k]);
+      }
+      for (var k in this._tagRules) {
+        this._tagRules[k].sort(this.__compareSpecificity);
+        deleteDuplicates(this._tagRules[k]);
+      }
+
+      this._lastSort = this._rulenum;
+    }
+  };
+
+  /** @access private */
+  function _addRule ( r ) {
     //do some preprocessing to speed up lookups
     r._lexorder = this._rulenum++;
 
@@ -538,93 +551,111 @@ function _addRule ( r ){
     r.parsed = null;
     var lastsel;
     if ( sel is Array ){
-        r.parsed = [];
-        r.parsed.type = this._sel_compound;
-        for ( var i = 0; i < sel.length; i++ ){
-            r.parsed.push( this._parseSelector( sel[ i ] ) );
-        }
-        lastsel = r.parsed[ r.parsed.length -1 ];
-    } else { 
-        r.parsed = this._parseSelector( sel );
-        lastsel = r.parsed;
-    }
-
-    //special treatment for rules that use name=
-    //we could do this pretty easily for ID if ID rules were common,
-    //or for other attibute names
-    if ( ( lastsel.type == this._sel_attribute ||
-           lastsel.type == this._sel_tagAndAttr )
-           && lastsel.attrname == "name" ){
-        var aval = lastsel.attrvalue;
-        if ( !this._nameRules[ aval ] ) this._nameRules[ aval ] = [];
-          this._nameRules[ aval ].push( r );
+      r.parsed = [];
+      r.parsed.type = this._sel_compound;
+      for ( var i = 0; i < sel.length; i++ ){
+        r.parsed.push( this._parseSelector( sel[ i ] ) );
+      }
+      lastsel = r.parsed[ r.parsed.length -1 ];
     } else {
-        this._rules.push( r );
+      r.parsed = this._parseSelector( sel );
+      lastsel = r.parsed;
     }
-}
 
-/** @access private */
-function _parseSelector ( sel ){
+    // Cache this now
+    r.getSpecificity();
+
+    // Sort rules into different cohorts to reduce the number of rules
+    // we have to test for applicability in getRulesCache
+    if ( ( lastsel.type == this._sel_attribute ||
+           lastsel.type == this._sel_tagAndAttr ) ) {
+      // Since an attr rule is higher specificity than a tag rule, we
+      // put attr+tag rules here and filter on the attr first.
+      var attr = lastsel.attrname;
+      var atab = this._attrRules[ attr ];
+      if ( ! atab ) { atab = this._attrRules[ attr ] = {}; }
+      var val = lastsel.attrvalue;
+      var vtab = atab[val];
+      if (! vtab ) { vtab = atab[val] = []; }
+      vtab.push(r);
+    } else if (lastsel.type == this._sel_id) {
+      var id = lastsel.id;
+      if ( !this._idRules[ id ] ) { this._idRules[ id ] = []; }
+      this._idRules[ id ].push( r );
+    } else if (lastsel.type == this._sel_tag) {
+      var tag = lastsel.tagname;
+      if ( !this._tagRules[ tag ] ) { this._tagRules[ tag ] = []; }
+      this._tagRules[ tag ].push( r );
+    } else {
+      if ($debug) {
+        Debug.error("Unknown cohort for rule: %w", r);
+      }
+      this._rules.push( r );
+    }
+  };
+
+  /** @access private */
+  function _parseSelector ( sel ) {
     switch ( typeof ( sel ) ){
-        case "object":
-            if (sel.simpleselector) {
-                sel.type = this._sel_tagAndAttr;
-                sel.tagname = sel.simpleselector;
-            } else     
-                sel.type = this._sel_attribute;
-            return sel;
-            break;
-        case "string":
-            return this._parseStringSelector( sel );
-            break;
+      case "object":
+        if (sel.simpleselector) {
+          sel.type = this._sel_tagAndAttr;
+          sel.tagname = sel.simpleselector;
+        } else
+          sel.type = this._sel_attribute;
+        return sel;
+        break;
+      case "string":
+        return this._parseStringSelector( sel );
+        break;
     }
-}
+  };
 
-/** @access private */
-function _parseStringSelector ( sel ){
+  /** @access private */
+  function _parseStringSelector ( sel ) {
     var parsed = { };
     if ( sel == "*" ) {
-        parsed.type = this._sel_star;
+      parsed.type = this._sel_star;
     } else {
-        var index = sel.indexOf("#"); 
-        if (index >= 0) {
-            // Assumption: there should only be one # in a selector
-            parsed.id =  sel.substring(index + 1);        
-            parsed.type =  this._sel_id;
-        } else {
-            parsed.type =  this._sel_tag;
-            parsed.tagname = sel;
-        }
+      var index = sel.indexOf("#");
+      if (index >= 0) {
+        // Assumption: there should only be one # in a selector
+        parsed.id =  sel.substring(index + 1);
+        parsed.type =  this._sel_id;
+      } else {
+        parsed.type =  this._sel_tag;
+        parsed.tagname = sel;
+      }
 
     }
 
     return parsed;
-}
-
-} // End of LzCSSStyleClass
+  };
+};                              // End of LzCSSStyleClass
 
 var LzCSSStyle = new LzCSSStyleClass ();
 lz.CSSStyle = LzCSSStyleClass;  // publish
 
 
+
 /** These objects implement
-  * Interface CSSStyleDeclaration (introduced in DOM Level 2) from
-  * http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration
-  */
+ * Interface CSSStyleDeclaration (introduced in DOM Level 2) from
+ * http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration
+ */
 class LzCSSStyleDeclaration {
 
-function LzCSSStyleDeclaration (){ };
+  function LzCSSStyleDeclaration (){ };
 
-/** @access private */
-var _node = null;
+  /** @access private */
+  var _node = null;
 
-function getPropertyValue ( pname ){
+  function getPropertyValue ( pname ){
     return LzCSSStyle.getPropertyValueFor( this._node , pname );
-}
+  };
 
-function setNode ( node ){
+  function setNode ( node ){
     this._node = node;
-}
+  };
 
-} // End of LzCSSStyleDeclaration
-lz.CSSStyleDeclaration = LzCSSStyleDeclaration;  // publish
+};                              // End of LzCSSStyleDeclaration
+lz.CSSStyleDeclaration = LzCSSStyleDeclaration; // publish
