@@ -68,6 +68,9 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
   /** State variable that is true while we are in a mixin */
   private boolean inmixin = false;
 
+  /** State variable that is true while we are in a method */
+  private boolean inmethod = false;
+
   // Adjust the known operator names we output to include
   // ones that we know about.
   static {
@@ -221,8 +224,8 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
 
   // override
   public String visitModifiedDefinition(SimpleNode node, String[] children) {
-    SimpleNode parent = node.getParent();
-    boolean forcePublic = (config.forcePublicMembers && parent != null && parent instanceof ASTClassDefinition);
+    boolean forcePublic = config.forcePublicMembers && !inmethod &&
+      !(node.getChildren()[0] instanceof ASTEmptyExpression);
     String mods = ((ASTModifiedDefinition)node).toJavascriptString(forcePublic);
     return prependMods(children[0], mods);
   }
@@ -273,7 +276,13 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
 
   // override - don't emit body of methods for mixins
   public String visitFunctionDeclaration(SimpleNode node, String[] children) {
-    return doFunctionDeclaration(node, children, true, inmixin);
+    inmethod = true;
+    try {
+      return doFunctionDeclaration(node, children, true, inmixin);
+    }
+    finally {
+      inmethod = false;
+    }
   }
   
   public String visitPragmaDirective(SimpleNode node, String[] children) {
