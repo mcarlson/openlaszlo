@@ -85,4 +85,25 @@ function snippetLoaded ( loadmc, err ){
     canvas.initDone();
 }
 
+/*
+ * @param loadobj: the request object that is being handled
+  * @param data: unused by library loading, ResponderLIB server does not return an error swf
+  * @access private
+  */
+function returnData ( loadobj , data ){
+    LzLoadQueue.unloadRequest(loadobj);
+
+    var lib = this.owner.owner;
+
+    this.lastloadtime = getTimer() - loadobj.loadtime;
+
+    if ( loadobj.timedout ){
+        this.doTimeOut();
+        if (lib.ontimeout.ready) lib.ontimeout.sendEvent();
+    } else {
+        lib.loaded = true;
+    }
+}
+
+
 }; // End of LzLibraryLoader
