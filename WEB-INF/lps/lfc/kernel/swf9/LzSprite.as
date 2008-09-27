@@ -91,11 +91,11 @@ dynamic public class LzSprite extends Sprite {
       // the canvas already knows its size
       ,readcanvassizefromsprite: false
       ,opacity: true
+      ,advancedfonts: true
       ,colortransform: true
       ,audio: true
       ,accessibility: false
       ,htmlinputtext: true
-      ,advancedfonts: false
       ,bitmapcaching: true
       ,persistence: true
       ,clickmasking: false

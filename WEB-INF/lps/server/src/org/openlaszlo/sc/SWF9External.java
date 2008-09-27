@@ -652,7 +652,6 @@ public class SWF9External {
     System.setProperty("FLEX_HOME", FLEX_HOME());
     // The Mxlmc and Compc util classes need to see this arg first in the args list
     cmd.add(0, "+flexlib="+FLEX_HOME()+"/frameworks");
-    cmd.add(0, "-compiler.headless-server=true");
 
     final Integer exitval[] = new Integer[1];
 
@@ -868,9 +867,16 @@ public class SWF9External {
     if (options.getBoolean(Compiler.DEBUG_SWF9)) {
       cmd.add("-debug=true");
     }
+    cmd.add("-compiler.headless-server=true");
+    cmd.add("-compiler.fonts.advanced-anti-aliasing=true");
+
+
+
+
     cmd.add("-output");
     cmd.add(outfilename);
     
+
     if (!buildSharedLibrary) {
       cmd.add("-default-size");
       cmd.add(options.get(Compiler.CANVAS_WIDTH, "800"));

@@ -351,6 +351,7 @@ public class LzTextSprite extends LzSprite {
             //'cfontname=', cfontname);
 
             var tf:TextFormat = new TextFormat();
+            tf.kerning = true;
             tf.size = this.fontsize;
             tf.font = (this.font == null ? cfontname : this.font.name);
             tf.color = this.textcolor;
@@ -429,22 +430,34 @@ function setHScroll(s:Number) {
     this.textfield.scrollH = s;
 }
 
-function setAntiAliasType( aliasType ){}
+function setAntiAliasType( aliasType:String ):void {
+    var atype:String = (aliasType == 'advanced') ? flash.text.AntiAliasType.ADVANCED : flash.text.AntiAliasType.NORMAL;
+    this.textfield.antiAliasType = atype;
+}
 
-function getAntiAliasType() {}
-
+function getAntiAliasType():String {
+    return this.textfield.antiAliasType;
+}
 
 function setGridFit( gridFit ){}
 
 function getGridFit() {}
 
-function setSharpness( sharpness ){}
+function setSharpness( sharpness:Number ):void {
+    this.textfield.sharpness = sharpness;
+}
 
-function getSharpness() { }
+function getSharpness():Number {
+    return this.textfield.sharpness;
+}
 
-function setThickness( thickness ){}
+function setThickness( thickness:Number ):void{
+    this.textfield.thickness = thickness;
+}
 
-function getThickness() {}
+function getThickness():Number {
+    return this.textfield.thickness;
+}
 
 function setMaxLength(val:Number) {
     this.textfield.maxChars = val;
