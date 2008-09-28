@@ -128,7 +128,8 @@ class LzInputTextSprite extends LzTextSprite {
      * TODO [hqm 2008-01] Does we still need this workaround???
      */
     function __lostFocus (event:Event){
-        trace('lost focus', event.target);
+        __handlelostFocus(event);
+        //trace('lost focus', event.target);
         //if (this['__handlelostFocusdel'] == null) this.__handlelostFocusdel = new LzDelegate(this, "__handlelostFocus");
         //lz.Idle.callOnIdle(this.__handlelostFocusdel);
     }
