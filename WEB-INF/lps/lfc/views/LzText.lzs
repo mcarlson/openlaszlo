@@ -522,10 +522,10 @@ override function construct ( parent, args ) {
 
 
     if (this.capabilities.advancedfonts) {
-        if (! 'antiAliasType' in args && args.antiAliasType == null) {
+        if (! ('antiAliasType' in args) ) {
             this.$lzc$set_antiAliasType ("advanced");
         }
-        if (! 'gridFit' in args && args.gridFit == null) {
+        if (! ('gridFit' in args) ) {
             this.$lzc$set_gridFit ("subpixel");
         }
     }

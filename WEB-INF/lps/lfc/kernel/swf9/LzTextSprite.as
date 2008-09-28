@@ -142,7 +142,6 @@ public class LzTextSprite extends LzSprite {
             this.password = args.password  ? true : false;
             var textclip:TextField = this.textfield;
             textclip.displayAsPassword = this.password;
-            textclip.antiAliasType = flash.text.AntiAliasType.ADVANCED;
 
             textclip.selectable = args.selectable;
             textclip.autoSize = TextFieldAutoSize.NONE;
@@ -441,9 +440,13 @@ function getAntiAliasType():String {
     return this.textfield.antiAliasType;
 }
 
-function setGridFit( gridFit ){}
+function setGridFit( gridFit:String ):void{
+    this.textfield.gridFitType = gridFit;
+}
 
-function getGridFit() {}
+function getGridFit():String {
+    return this.textfield.gridFitType;
+}
 
 function setSharpness( sharpness:Number ):void {
     this.textfield.sharpness = sharpness;
