@@ -611,7 +611,7 @@ dynamic public class LzSprite extends Sprite {
               // explain how to add a sprite to the tab order using tabEnabled property. 
               if (cb == null) {
                   this.clickbutton = cb = new SimpleButton();
-                  addChild(cb);
+                  addChildAt(cb, 0);
               }
               cb.useHandCursor = (showhandcursor == null) ? LzMouseKernel.showhandcursor : showhandcursor;
               cb.tabEnabled = false;

@@ -41,17 +41,15 @@
 
                         <handler name="ondatasel" method="checkDataSel"/>
 
-                        <handler name="oninit">
-                            this.checkDataSel();
-                        </handler>
+                        <handler name="oninit" method="checkDataSel"/>
 
                         <handler name="onselect">
                             if ( this.value == 1 ){
-                                this.workdef = 0;
-                                this.homedef = 1;
+                                this.workdef = '0';
+                                this.homedef = '1';
                             } else if ( this.value == 2 ){
-                                this.workdef = 1;
-                                this.homedef = 0;
+                                this.workdef = '1';
+                                this.homedef = '0';
                             }
                             this.datapath.updateData();
                         </handler>

@@ -49,7 +49,7 @@
             <attribute name="focusable" value="${!editing &amp;&amp; 
                                                   parent.editable}"/>
 
-            <attribute name="editbox" value="null"/>
+            <attribute name="editbox" value="null" type="node" />
 
             <method name="init">
                 if ( parent.editable ){
