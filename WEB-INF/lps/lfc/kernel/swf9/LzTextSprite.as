@@ -132,6 +132,7 @@ public class LzTextSprite extends LzSprite {
             tfield.height = h;
             tfield.border = false;
             tfield.mouseEnabled = false;
+            tfield.tabEnabled = false;
             //tfield.cacheAsBitmap = true;
             addChild(tfield);
             return tfield;
@@ -141,6 +142,7 @@ public class LzTextSprite extends LzSprite {
             this.password = args.password  ? true : false;
             var textclip:TextField = this.textfield;
             textclip.displayAsPassword = this.password;
+            textclip.antiAliasType = flash.text.AntiAliasType.ADVANCED;
 
             textclip.selectable = args.selectable;
             textclip.autoSize = TextFieldAutoSize.NONE;
