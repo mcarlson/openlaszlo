@@ -91,7 +91,10 @@ public class LzTextSprite extends LzSprite {
       }
 
       private function __ignoreMouseEvent(e:MouseEvent) :void {
-          e.stopPropagation();
+          if (e.type != MouseEvent.MOUSE_UP || LzMouseKernel.__lastMouseDown == this) {
+              // don't cancel "onmouseup" if another sprite was selected
+              e.stopPropagation();
+          }
       }
 
         public function enableClickableLinks( enabled:Boolean):void {
