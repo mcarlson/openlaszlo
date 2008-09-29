@@ -122,14 +122,16 @@ override function construct ( odp , args ){
   * @devnote:  This could be a closure over the cloneManager, but we
   * believe this is a more efficient implementation
   */
-var __LZHandleCloneResize = function ( s:Number ) {
-    if (! this.datapath.p) return;
-    var cloneManager:LzResizeReplicationManager = this.cloneManager cast LzResizeReplicationManager;
-    var datasizevar:String = cloneManager.datasizevar;
-    var osize:Number = this.datapath.p[ datasizevar ] || cloneManager.viewsize;
-    if ( s != osize ){
-        this.datapath.p[ datasizevar ] = s;
-        cloneManager.__LZadjustVisibleClones(null, false);
+var __LZHandleCloneResize = function ( s:Number ) :void {
+    var p /*:LzDataNodeMixin*/ = this.datapath.p;
+    if (p) {
+        var cloneManager:LzResizeReplicationManager = this.cloneManager cast LzResizeReplicationManager;
+        var datasizevar:String = cloneManager.datasizevar;
+        var osize:Number = p.__LZgetSize(datasizevar) || cloneManager.viewsize;
+        if (s != osize) {
+            p.__LZsetSize(datasizevar, s);
+            cloneManager.__LZadjustVisibleClones(null, false);
+        }
     }
 }
 
@@ -163,7 +165,7 @@ function getPositionByNode ( n ) :Number? {
                 return pos + this.spacing;
             }
 
-            pos += this.spacing + ( cnode[this.datasizevar] || this.viewsize );
+            pos += this.spacing + ( cnode.__LZgetSize(this.datasizevar) || this.viewsize );
         }
     }
 }
@@ -221,7 +223,7 @@ override function __LZadjustVisibleClones(lastnodes:Array, newnodes:Boolean) :vo
     var notfirst:Boolean = true;
     for ( var i:int = 0; i < nodelen; i++ ){
         var cnode /*:LzDataNodeMixin*/ = this.nodes[ i ];
-        var ds:* = cnode[ this.datasizevar ];
+        var ds:* = cnode.__LZgetSize(this.datasizevar);
         var csiz:Number = ( ds == null ) ? this.viewsize : ds;
 
         cpos += this.spacing;
@@ -297,7 +299,7 @@ override function __LZadjustVisibleClones(lastnodes:Array, newnodes:Boolean) :vo
 
         this.clones[ i ] = cl;
         cl.setAttribute( this.axis , clpos );
-        var ds:* = cnode[ this.datasizevar ];
+        var ds:* = cnode.__LZgetSize(this.datasizevar);
         var csiz:Number = ( ds == null ) ? this.viewsize : ds;
         if ( cl[ this.sizeAxis ] != csiz ){
             cl.setAttribute( this.sizeAxis, csiz, true );

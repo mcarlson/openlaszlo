@@ -65,8 +65,7 @@
   * don't set it here!
   */
 
-mixin LzDataNodeMixin
-{
+mixin LzDataNodeMixin {
 /** @lzxtype event */
 var onownerDocument :LzDeclaredEventClass = LzDeclaredEvent;
 /** @lzxtype event */
@@ -105,12 +104,17 @@ var childNodes :Array = null;
 /** @access private */
 var __LZcoDirty :Boolean = true;
 
+/** 
+  * @devnote: used to track view-sizes, see LzResizeReplicationManager
+  * @access private
+  */
+var __LZsize :Object;
 
 /**
  * Returns the parent of this node
- * @return LzDataNodeMixin: the parent of this node
+ * @return LzDataElementMixin: the parent of this node
  */
-public function getParent () {
+public function getParent () /*:LzDataElementMixin*/ {
   return this.parentNode;
 }
 
@@ -129,7 +133,7 @@ public function getOffset () :int {
   * Returns the sibling before this one this node's parentNodes List of children
   * @return LzDataNodeMixin: The node preceeding this one in this node's childNodes
   */
-public function getPreviousSibling (){
+public function getPreviousSibling () /*:LzDataNodeMixin*/ {
     if (!this.parentNode) return null;
     if ( this.parentNode.__LZcoDirty ) this.parentNode.__LZupdateCO();
     return this.parentNode.childNodes[ this.__LZo - 1 ];
@@ -144,7 +148,7 @@ function $lzc$getPreviousSibling_dependencies( who, self ) :Array {
   * Returns the sibling after this one this node's parentNodes List of children
   * @return LzDataNodeMixin: The node succeeding this one in this node's childNodes
   */
-public function getNextSibling (){
+public function getNextSibling () /*:LzDataNodeMixin*/ {
     if (!this.parentNode) return null;
     if ( this.parentNode.__LZcoDirty ) this.parentNode.__LZupdateCO();
     return this.parentNode.childNodes[ this.__LZo + 1 ];
@@ -186,7 +190,7 @@ override function childOf ( el , allowself=false ) {
   * @param LzDataNodeMixin ownerDoc: The LzDataNodeMixin to act as the ownerDocument for
   * this node.
   */
-public function setOwnerDocument ( ownerDoc ){
+public function setOwnerDocument ( ownerDoc ) :void {
     this.ownerDocument = ownerDoc;
     if (this.childNodes) {
         for ( var i:int = 0; i < this.childNodes.length; i++ ){
@@ -220,15 +224,30 @@ public function serialize (len:Number = Infinity) :String {
 /**
   * @access private
   */
-function __LZlockFromUpdate ( locker:LzDatapath ){
+function __LZlockFromUpdate (locker:LzDatapath) :void {
     this.ownerDocument.__LZdoLock( locker );
 }
 
 /**
   * @access private
   */
-function __LZunlockFromUpdate ( locker:LzDatapath ){
+function __LZunlockFromUpdate (locker:LzDatapath) :void {
     this.ownerDocument.__LZdoUnlock( locker );
+}
+
+/**
+  * @access private
+  */
+function __LZgetSize (k:String) :* {
+    return this.__LZsize && this.__LZsize[k];
+}
+
+/**
+  * @access private
+  */
+function __LZsetSize (k:String, v:*) :void {
+    if (! this.__LZsize) this.__LZsize = {};
+    this.__LZsize[k] = v;
 }
 
 } // End of LzDataNodeMixin
