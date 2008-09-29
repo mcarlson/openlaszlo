@@ -1075,6 +1075,17 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function unload() {
+        if (this.imgLoader) {
+            try {
+                // close the stream
+                this.imgLoader.close();
+            } catch (error:Error) {
+                // throws an error if stream has already finished loading
+            }
+            // unload any content, call after close()
+            // for swf10: this.imgLoader.unloadAndStop();
+            this.imgLoader.unload();
+        }
         if (this.resourceObj) this.removeChild(this.resourceObj);
         if (this.isaudio) this.unloadSound();
         // clear out cached values
