@@ -329,10 +329,10 @@
     <view x="-15" resource="navbg"/>
     <basebutton resource="logobtn" x="2" y="6"
         onclick="lz.Browser.loadURL('http://www.openlaszlo.org', '_blank')"/>
-    <view x="10" y="570" layout="axis:y">
-      <text resize="true" fgcolor="white" font="smallfont,verdana,sans-serif" fontsize="8" text="${'Version: ' + canvas.version + ' (' + canvas.runtime + ')'}" />
+    <view x="10" y="570" layout="axis:y" >
+      <text resize="true" fgcolor="white" font="verdana,sans-serif" fontsize="10" text="${'Version: ' + canvas.version + ' (' + canvas.runtime + ')'}" />
       <view>
-        <text fgcolor="white" font="smallfont,verdana,sans-serif" fontsize="8" text="${'Build: ' + canvas.lpsbuild}"/>
+        <text fgcolor="white" font="verdana,sans-serif" fontsize="10" text="${'Build: ' + canvas.lpsbuild}"/>
         <simplelayout axis="x"/>
       </view>
     </view>
