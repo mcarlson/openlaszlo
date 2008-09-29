@@ -748,20 +748,68 @@ dynamic public class LzSprite extends Sprite {
           o Can be a number (0xff00ff):void or a string ('#ff00ff'):void 
       */
       public function setColor( color:* ):void {
-          trace('LzSprite.setColor not yet implemented');
+          if (color is String) {
+              color = lz.Utils.hextoint(color);
+          }
+          var nc:ColorTransform = new ColorTransform();
+          nc.color = color;
+          nc.alphaMultiplier = 1.0;
+          this.transform.colorTransform = nc;
       }
 
       public function getColor  (){
-          trace('LzSprite.getColor not yet implemented');
+          return this.transform.colorTransform.color;
       }
 
-      public function getColorTransform (){
-          trace('LzSprite.getColorTransform not yet implemented');
+
+
+      /**
+       * Returns an object that represents the color transformation currently applied
+       * to the view. The color transform object has the following possible keys
+       * 
+       * o.ra: percentage alpha for red component (-100 to 100);
+       * o.rb: offset for red component (-255 to 255);
+       * o.ga: percentage alpha for green component (-100 to 100);
+       * o.gb: offset for green component (-255 to 255);
+       * o.ba: percentage alpha for blue component (-100 to 100);
+       * o.bb: offset for blue component (-255 to 255);
+       * o.aa: percentage overall alpha (-100 to 100);
+       * o.ab: overall offset (-255 to 255);
+       */
+      public function getColorTransform ():*{
+          var ct = this.transform.colorTransform;
+          return {ra: ct.redMultiplier * 100, rb: ct.redOffset,
+                  ga: ct.greenMultiplier * 100, gb: ct.greenOffset,
+                  ba: ct.blueMultiplier * 100 , bb: ct.blueOffset,
+                  aa: ct.alphaMultiplier * 100, ab: ct.alphaOffset};
       }
 
-      public function setColorTransform(o=null) {
-          trace('LzSprite.setColorTransform not yet implemented');
+      /**
+       * color transforms everything contained in the view (except the
+       * background) by the transformation dictionary given in <param>o</param>.  The dictionary has
+       * the following possible keys:
+       * 
+       * o.ra: percentage alpha for red component (-100 to 100);
+       * o.rb: offset for red component (-255 to 255);
+       * o.ga: percentage alpha for green component (-100 to 100);
+       * o.gb: offset for green component (-255 to 255);
+       * o.ba: percentage alpha for blue component (-100 to 100);
+       * o.bb: offset for blue component (-255 to 255);
+       * o.aa: percentage overall alpha (-100 to 100);
+       * o.ab: overall offset (-255 to 255);
+       */
+      function setColorTransform ( o:* ){
+          this.transform.colorTransform = new ColorTransform(o.ra / 100.0,
+                                                             o.ga / 100.0,
+                                                             o.ba / 100.0,
+                                                             o.aa ? o.aa / 100.0: 1.0,
+                                                             o.rb,
+                                                             o.gb,
+                                                             o.bb,
+                                                             o.ab ? o.ab : 0);
       }
+      
+
 
       public function setFontName ( fname:String, prop=null ):void{
           this.fontname = fname;
