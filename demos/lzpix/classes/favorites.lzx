@@ -128,7 +128,7 @@
         <attribute name="footerarea" value="5" type="number" />
         
         <method name="loadSet" args="tag">
-            gSearch.setText( tag );         
+            gSearch.setAttribute('text', tag );         
         
             if ( !canvas.isopen ) {
                 gSearch.sendsearch_del.unregisterAll();

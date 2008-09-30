@@ -95,13 +95,13 @@
         
         <!-- Search for interesting photos. Gets the photos from today. -->
         <method name="searchInteresting">
-            this.txt.setAttribute('text', "interesting");
+            this.setTxt('text', "interesting");
             this.sendsearch();
         </method>
 
-        <method name="setText" args="t" >
+        <setter name="text" args="t" >
             this.content.txt.setAttribute('text', t);
-        </method>
+        </setter>
 
         <method name="getText">
             return this.content.txt.getText();
