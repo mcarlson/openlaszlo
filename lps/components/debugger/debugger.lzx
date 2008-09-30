@@ -545,9 +545,10 @@
     </method>
 
 <method name="restoreDebuggerState" >
+  <![CDATA[
        // restore persistedDataed data
        this.persistedData = LzBrowserKernel.getPersistedObject('__lzdebugger');
-       if (this.persist) {
+       if (this.persist && this.persistedData) {
            for (var i in this.persistedData.data) {
                if (this[i] != null) {
                    this[i] = this.persistedData.data[i];
@@ -568,6 +569,7 @@
                this.setAttribute('y', this.persistedData.data._pdbgy);
            }
        }
+       ]]>
     </method>
 
     <!-- Start Views -->

@@ -130,7 +130,7 @@
           x="6" y="4" />
     
     <setter name="x" args="x" > 
-      super.setAttribute('x', Math.max(parent.arrowbuttonwidth-1 , Math.min( x, parent.width - parent.arrowbuttonwidth)));
+      super.setAttribute('x', Math.max(parent.arrowbuttonwidth-1 , Math.min( x, parent.width - parent.arrowbuttonwidth - 24 )));
     </setter> 
     
     <!-- this gets called every time the x value changes -->
