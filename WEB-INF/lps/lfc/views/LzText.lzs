@@ -121,7 +121,7 @@ function $lzc$set_selectable(isSel) {
 
 // these 4 are only available in swf8 and higher
 /** @access private */
-    var antiAliasType = "advanced";
+var antiAliasType = "advanced";
 
 /** @access private */
 function $lzc$set_antiAliasType(aliasType) {
@@ -139,7 +139,7 @@ function $lzc$set_antiAliasType(aliasType) {
 }
 
 /** @access private */
-    var gridFit = "subpixel";
+var gridFit = "pixel";
 
 /** @access private */
 function $lzc$set_gridFit(gridFit) {

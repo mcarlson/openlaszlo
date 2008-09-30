@@ -129,6 +129,7 @@ public class LzTextSprite extends LzSprite {
 
         private function createTextField(nx:Number, ny:Number, w:Number, h:Number):TextField {
         var tfield:TextField = new TextField();
+            tfield.antiAliasType = flash.text.AntiAliasType.ADVANCED;
             tfield.x = nx;
             tfield.y = ny;
             tfield.width = w;
