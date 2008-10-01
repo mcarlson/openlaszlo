@@ -279,7 +279,7 @@
     </category>
     
     <category title="Development">
-       <!-- TODO: need something for debugging... <item title="Debug" href="Debug+debug.html"/> -->
+        <item title="Debug" href="lz.DebugService+debug.html"/>
         <item title="&amp;lt;SyncTester&amp;gt;" href="lz.SyncTester.html" />
         <item title="&amp;lt;Test&amp;gt;" href="lz.Test.html" />
         <item title="&amp;lt;TestCase&amp;gt;" href="lz.TestCase.html" />
