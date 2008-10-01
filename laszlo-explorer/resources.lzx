@@ -1,7 +1,6 @@
 <library>
     <!-- resources used by explore-nav.lzx -->
       <!-- Fonts -->
-      <!-- Uncomment when LPP-7038 is fixed. -->
   <font name="itemfont">
       <face src="helmetb.ttf"  style="bold"/>
   </font>
