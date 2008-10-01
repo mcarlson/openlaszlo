@@ -31,339 +31,344 @@
  *
  * @access private
  */
-dynamic public class LzInstantiatorService extends LzEventable {
+public dynamic final class LzInstantiatorService extends LzEventable {
 
-  /** @access private */
-  var checkQDel = null;
+    /** @access private */
+    var checkQDel :LzDelegate = null;
 
-  /**
-   * The instantiator service.  Also available as the global
-   * <code>lz.Instantiator</code>.
-   *
-   * @type LzInstantiatorService
-   * @keywords readonly
-   * @devnote this should be a public getter to enforce readonly
-   */
-  static var LzInstantiator:LzInstantiatorService;
+    /**
+     * The instantiator service.  Also available as the global
+     * <code>lz.Instantiator</code>.
+     *
+     * @type LzInstantiatorService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    static const LzInstantiator:LzInstantiatorService;
 
-  /** @access private
-   * @devnote AS3 does not allow private constructors, so we need the
-   * error
-   */
-  function LzInstantiatorService () {
-    this.checkQDel = new LzDelegate( this , "checkQ" );
-  }
-  LzInstantiatorService.LzInstantiator = new LzInstantiatorService();
-
-  /** @access private */
-  var halted = false;
-  /** @access private */
-  var isimmediate = false;
-  /** @access private */
-  var isdatareplicating = false;
-  /** @access private */
-  var istrickling = false;
-  /** @access private */
-  var isUpdating = false;
-  /** @access private */
-  var safe = true;
-  /**
-   * The length of time in miliseconds to spend
-   * synchronously creating nodes before allowing an idle event to pass.
-   * By default this is 500.
-   * @type Number
-   * @devnote empirical sweet spot at half second
-   * @access private
-   */
-  var timeout = 500;
-  /** @access private */
-  var makeQ = [];
-  /** @access private */
-  var trickleQ = [];
-  /** @access private */
-  var tricklingQ = [];
-  /** @access private */
-  var syncNew = true;
-  /**
-   * The length of time to spend creating initstage=
-   * "late" nodes before allowing an idle event to pass. By default this
-   * is 10 miliseconds.
-   * @type Number
-   * @acess private
-   */
-  var trickletime = 10;
-
-  /** @access private */
-  var datareplq:Array;
-
-  /**
-   * @access private
-   */
-  function setSafeInstantiation( isSafe ){
-    this.safe = isSafe;
-    if ( this.instanceQ.length ){
-      this.timeout = Infinity;
+    /** @access private
+     * @devnote AS3 does not allow private constructors, so we need the
+     * error
+     */
+    function LzInstantiatorService () {
+        super();
+        //    if (LzInstantiatorService.LzInstantiator) {
+        //      throw new Error("There can be only one LzInstantiator");
+        //    }
+        this.checkQDel = new LzDelegate( this, "checkQ" );
     }
-  }
 
-  /**
-   * Instantiate the child array for a view. This will be instantiated
-   * immediately, normally, or on the trickly depending on the state of the
-   * service
-   * @access private
-   * @param LzView v: The view to instantiate children for.
-   * @param [LzView] children: An array of children to create.
-   * @access private
-   */
-  function requestInstantiation( v , children  ){
-    if ( this.isimmediate ){
-      this.createImmediate( v , children.concat() );
-    } else {
-      var c = this.newReverseArray( children );
-      if ( this.isdatareplicating){
-        this.datareplq.push( v , c );
-      } else if ( this.istrickling){
-        this.tricklingQ.push( v , c );
-      } else {
-        this.makeQ.push( v , c );
-        this.checkUpdate();
-      }
-    }
-  }
+    // Create the singleton
+    LzInstantiatorService.LzInstantiator = new LzInstantiatorService();
 
-  /**
-   * @access private
-   */
-  function enableDataReplicationQueuing (){
-    this.isdatareplicating = true;
-    this.datareplq = [];
-  }
-  /**
-   * @access private
-   */
-  function clearDataReplicationQueue (){
-    this.isdatareplicating = false;
-    var drq = this.datareplq;
-    //now add them on backwards
-    for ( var i = drq.length-1; i>0; i-=2 ){
-      this.makeQ.push( drq[ i-1 ] , drq[ i ] );
-    }
-    this.checkUpdate();
-  }
+    /** @access private */
+    var halted :Boolean = false;
+    /** @access private */
+    var isimmediate :Boolean = false;
+    /** @access private */
+    var isdatareplicating :Boolean = false;
+    /** @access private */
+    var istrickling :Boolean = false;
+    /** @access private */
+    var isUpdating :Boolean = false;
+    /** @access private */
+    var safe :Boolean = true;
+    /**
+     * The length of time in miliseconds to spend
+     * synchronously creating nodes before allowing an idle event to pass.
+     * By default this is 500.
+     * @type Number
+     * @devnote empirical sweet spot at half second
+     * @access private
+     */
+    var timeout :Number = 500;
+    /** @access private */
+    var makeQ :Array = [];
+    /** @access private */
+    var trickleQ :Array = [];
+    /** @access private */
+    var tricklingQ :Array = [];
+    /** @access private */
+    var datareplQ :Array;
+    /** @access private */
+    var syncNew :Boolean = true;
+    /**
+     * The length of time to spend creating initstage=
+     * "late" nodes before allowing an idle event to pass. By default this
+     * is 10 miliseconds.
+     * @type Number
+     * @acess private
+     */
+    var trickletime :Number = 10;
 
-  /**
-   * @access private
-   */
-  function newReverseArray ( arr ){
-    var n = arr.length;
-    var a = Array(n);
-    var i = 0;
-    var j = n - 1;
-    while (i < n) {
-      a[i] = arr[j];
-      i++;
-      j--;
+    /**
+     * @access private
+     */
+    function setSafeInstantiation (isSafe:Boolean) :void {
+        this.safe = isSafe;
+        if (this.instanceQ.length) {
+            this.timeout = Infinity;
+        }
     }
-    return a;
-  }
-  /**
-   * @access private
-   */
-  function checkUpdate (){
-    if ( ! this.isUpdating && !this.halted ){
-      this.checkQDel.register( lz.Idle, "onidle" );
-      this.isUpdating = true;
-    }
-  }
 
-  /**
-   * @access private
-   *
-   * N.B.: [hqm 2008-03] This gets an event timer arg from the onidle event, which we ignore
-   */
-  function checkQ ( ignoreme = null){
-    if ( ! this.makeQ.length ) {
-      if (! this.tricklingQ.length ){
-        if ( !this.trickleQ.length ){
-          this.checkQDel.unregisterAll();
-          this.isUpdating = false;
-          return;
+    /**
+     * Instantiate the child array for a view. This will be instantiated
+     * immediately, normally, or on the trickly depending on the state of the
+     * service
+     * @access private
+     * @param LzNode v: The view to instantiate children for.
+     * @param [LzNode] children: An array of children to create.
+     * @access private
+     */
+    function requestInstantiation (v:LzNode, children:Array) :void {
+        if (this.isimmediate) {
+            this.createImmediate( v, children.concat() );
         } else {
-          var p =  this.trickleQ.shift();
-          var c =  this.trickleQ.shift();
-          this.tricklingQ.push( p , this.newReverseArray( c ) ) ;
-        }
-      }
-      this.istrickling = true;
-      this.makeSomeViews( this.tricklingQ , this.trickletime );
-      this.istrickling = false;
-    } else {
-      canvas.creatednodes += this.makeSomeViews( this.makeQ ,
-                                                 this.timeout );
-      if (canvas.updatePercentCreatedEnabled) {
-        canvas.updatePercentCreated();
-      }
-    }
-  }
-
-  /**
-   * @access private
-   */
-  function makeSomeViews ( cq , otime ){
-    var itime = ((new Date()).getTime());
-    var num = 0;
-    while( ((new Date()).getTime()) - itime < otime  && cq.length ) {
-      //take rightmost element of last list in list
-      var l = cq.length;
-      var larr = cq[l-1];
-      var par = cq[l-2];
-      var parDone = false;
-      // Don't bother with children of deleted parents
-      if (par['__LZdeleted'] || (larr[0] && larr[0]['__LZdeleted'])) {
-        cq.length -= 2;
-        continue;
-      }
-      // Use try/finally to make sure we unwind properly in the face
-      // of an error
-      try {
-        // Charge asynchronous time to parent views
-        if ($profile) {
-          var pq = [];
-          for (var i = 0; i <= l - 2; i += 2) {
-            var nm = cq[i]['_profile_instantiator_name'] || 'unknown';
-            if (nm) {
-              Profiler.event(nm, 'calls');
-              pq.push(nm);
+            var c:Array = this.newReverseArray( children );
+            if (this.isdatareplicating) {
+                this.datareplQ.push( v, c );
+            } else if (this.istrickling) {
+                this.tricklingQ.push( v, c );
+            } else {
+                this.makeQ.push( v, c );
+                this.checkUpdate();
             }
-          }
         }
-        // Make leaves
-        while( ( (new Date()).getTime() - itime < otime) ){
-          // Check for new leaves
-          if (l != cq.length) { break; }
-          // Check for done
-          if (! larr.length) { parDone = true; break; }
-          var c = larr.pop();
-          // FIXME: [2005-03-24 ptw] Somehow there are undefined
-          // entries on the queue?
-          if (c) {
-            par.makeChild( c, true );
-            num++;
-          }
-        }
-      } finally {
-        // Unwind parent view 'calls'
-        if ($profile) {
-          while (pq.length) { Profiler.event(pq.pop(), 'returns'); }
-        }
-      }
-      // Clear from queue
-      if (parDone) {
-        cq.length = l - 2;
-        par.__LZinstantiationDone();
-      }
     }
 
-    return num;
-  }
-
-  /**
-   * @access private
-   */
-  function trickleInstantiate ( v ,children ){
-    this.trickleQ.push ( v , children );
-    this.checkUpdate();
-  }
-
-  /**
-   * @access private
-   */
-  function createImmediate ( v , children ){
-    var c = this.newReverseArray( children );
-    var wasimmediate = this.isimmediate;
-    this.isimmediate = true;
-    this.makeSomeViews( [ v , c ], Infinity );
-    this.isimmediate = wasimmediate;
-  }
-
-  /**
-   * @access private
-   */
-  function completeTrickle ( v ){
-    if ( this.tricklingQ[ 0 ] == v ){
-      var wasimmediate = this.isimmediate;
-      this.isimmediate = true;
-      this.makeSomeViews( this.tricklingQ , Infinity );
-      this.isimmediate = wasimmediate;
-      this.tricklingQ = [];
-    } else {
-      var tql = this.trickleQ.length;
-      for ( var i = 0; i < tql ; i+=2){
-        if ( this.trickleQ[ i ] == v ){
-          var dchil =this.trickleQ[ i + 1 ] ;
-          this.trickleQ.splice( i , 2 );
-          this.createImmediate(  v , dchil );
-          return;
+    /**
+     * @access private
+     */
+    function enableDataReplicationQueuing () :void {
+        this.isdatareplicating = true;
+        this.datareplQ = [];
+    }
+    /**
+     * @access private
+     */
+    function clearDataReplicationQueue () :void {
+        this.isdatareplicating = false;
+        var drq:Array = this.datareplQ;
+        //now add them on backwards
+        for (var i:int = drq.length - 1; i > 0; i -= 2) {
+            this.makeQ.push( drq[ i-1 ], drq[ i ] );
         }
-      }
+        this.checkUpdate();
     }
-  }
 
-  /**
-   * @access private
-   */
-  function traceQ (){
-    var mql = this.makeQ.length;
-    trace( "****start trace" );
-    for ( var i = 0; i < mql ; i+=2){
-      var s = "";
-      for (var k = 0 ; k < this.makeQ[ i + 1].length; k++ ){
-        s+= this.makeQ[ i + 1 ][ k ].name + " |";
-      }
-      trace( this.makeQ[ i ] + " : |" + s  + " >>> " + this.makeQ[ i ] .getUID());
+    /**
+     * @access private
+     */
+    function newReverseArray (arr) :Array {
+        // return arr.concat().reverse();
+        var n:int = arr.length;
+        var a:Array = Array(n);
+        for (var i:int = 0, j:int = n - 1; i < n;) {
+            a[i++] = arr[j--];
+        }
+        return a;
     }
-    trace( "****trace done" );
-  }
+    /**
+     * @access private
+     */
+    function checkUpdate () :void {
+        if (! (this.isUpdating || this.halted)) {
+            this.checkQDel.register( lz.Idle, "onidle" );
+            this.isUpdating = true;
+        }
+    }
 
-  /**
-   * Stops the instantiatior until <code>resume</code> is called.
-   */
-  function halt (){
-    this.isUpdating = false;
-    this.halted = true;
-    this.checkQDel.unregisterAll();
-  }
+    /**
+     * @access private
+     *
+     * N.B.: [hqm 2008-03] This gets an event timer arg from the onidle event, which we ignore
+     */
+    function checkQ (ignoreme = null) :void {
+        if (! this.makeQ.length) {
+            if (! this.tricklingQ.length) {
+                if ( !this.trickleQ.length) {
+                    this.checkQDel.unregisterAll();
+                    this.isUpdating = false;
+                    return;
+                } else {
+                    var p:LzNode = this.trickleQ.shift();
+                    var c:Array = this.trickleQ.shift();
+                    this.tricklingQ.push( p, this.newReverseArray( c ) );
+                }
+            }
+            this.istrickling = true;
+            this.makeSomeViews( this.tricklingQ, this.trickletime );
+            this.istrickling = false;
+        } else {
+            canvas.creatednodes += this.makeSomeViews( this.makeQ,
+                                                       this.timeout );
+            if (canvas.updatePercentCreatedEnabled) {
+                canvas.updatePercentCreated();
+            }
+        }
+    }
 
-  /**
-   * Restarts the instantiatior after it is stopped with <code>halt</code>
-   */
-  function resume (){
-    this.halted = false;
-    this.checkUpdate( );
-  }
+    /**
+     * @access private
+     */
+    function makeSomeViews (cq:Array, otime:Number) :int {
+        var itime:Number = ((new Date()).getTime());
+        var num:int = 0;
+        while (((new Date()).getTime()) - itime < otime && cq.length) {
+            //take rightmost element of last list in list
+            var len:int = cq.length;
+            var larr:Array = cq[len-1];
+            var par:LzNode = cq[len-2];
+            var parDone:Boolean = false;
+            // Don't bother with children of deleted parents
+            if (par['__LZdeleted'] || (larr[0] && larr[0]['__LZdeleted'])) {
+                cq.length -= 2;
+                continue;
+            }
+            // Use try/finally to make sure we unwind properly in the face
+            // of an error
+            try {
+                if ($profile) {
+                    // Charge asynchronous time to parent views
+                    var pq:Array = [];
+                    for (var i:int = 0; i <= len - 2; i += 2) {
+                        var nm:* = cq[i]['_profile_instantiator_name'] || 'unknown';
+                        if (nm) {
+                            Profiler.event(nm, 'calls');
+                            pq.push(nm);
+                        }
+                    }
+                }
+                // Make leaves
+                while (( (new Date()).getTime() - itime < otime)) {
+                    // Check for new leaves
+                    if (len != cq.length) { break; }
+                    // Check for done
+                    if (! larr.length) { parDone = true; break; }
+                    var c:Object = larr.pop();
+                    // FIXME: [2005-03-24 ptw] Somehow there are undefined
+                    // entries on the queue?
+                    if (c) {
+                        par.makeChild( c, true );
+                        num++;
+                    }
+                }
+            } finally {
+                // Unwind parent view 'calls'
+                if ($profile) {
+                    while (pq.length) { 
+                        Profiler.event(pq.pop(), 'returns'); 
+                    }
+                }
+            }
+            // Clear from queue
+            if (parDone) {
+                cq.length = len - 2;
+                par.__LZinstantiationDone();
+            }
+        }
 
-  /**
-   * Used by Krank to instantiate all views before kranking
-   * @param limit:number limits time spent draining
-   * @return boolean true when done
-   * @access private
-   */
-  function drainQ (limit) {
-    var to = this.timeout;
-    var tt = this.trickletime;
-    var h = this.halted;
+        return num;
+    }
 
-    this.timeout = limit;
-    this.trickletime = limit;
-    this.halted = false;
-    this.isUpdating = true;
-    this.checkQ();
+    /**
+     * @access private
+     */
+    function trickleInstantiate (v:LzNode, children:Array) :void {
+        this.trickleQ.push( v, children );
+        this.checkUpdate();
+    }
 
-    this.halted = h;
-    this.timeout = to;
-    this.trickletime = tt;
-    return (! this.isUpdating);
-  }
+    /**
+     * @access private
+     */
+    function createImmediate (v:LzNode, children:Array) :void {
+        var c:Array = this.newReverseArray( children );
+        var wasimmediate:Boolean = this.isimmediate;
+        this.isimmediate = true;
+        this.makeSomeViews( [ v, c ], Infinity );
+        this.isimmediate = wasimmediate;
+    }
+
+    /**
+     * @access private
+     */
+    function completeTrickle (v:LzNode) :void {
+        if (this.tricklingQ[ 0 ] == v) {
+            var wasimmediate:Boolean = this.isimmediate;
+            this.isimmediate = true;
+            this.makeSomeViews( this.tricklingQ, Infinity );
+            this.isimmediate = wasimmediate;
+            this.tricklingQ = [];
+        } else {
+            var tq:Array = this.trickleQ;
+            var tql:int = tq.length;
+            for (var i:int = 0; i < tql; i += 2) {
+                if (tq[ i ] == v) {
+                    var dchil:Array = tq[ i + 1 ];
+                    tq.splice( i, 2 );
+                    this.createImmediate( v, dchil );
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * @access private
+     */
+    function traceQ () :void {
+        var mql:int = this.makeQ.length;
+        trace( "****start trace" );
+        for (var i:int = 0; i < mql; i += 2) {
+            var s:String = "";
+            for (var k:int = 0; k < this.makeQ[ i + 1 ].length; k++) {
+                s += this.makeQ[ i + 1 ][ k ].name + " |";
+            }
+            trace( this.makeQ[ i ] + " : |" + s  + " >>> " + this.makeQ[ i ].getUID() );
+        }
+        trace( "****trace done" );
+    }
+
+    /**
+     * Stops the instantiatior until <code>resume</code> is called.
+     */
+    function halt () :void {
+        this.isUpdating = false;
+        this.halted = true;
+        this.checkQDel.unregisterAll();
+    }
+
+    /**
+     * Restarts the instantiatior after it is stopped with <code>halt</code>
+     */
+    function resume () :void {
+        this.halted = false;
+        this.checkUpdate();
+    }
+
+    /**
+     * Used by Krank to instantiate all views before kranking
+     * @param limit:number limits time spent draining
+     * @return boolean true when done
+     * @access private
+     */
+    function drainQ (limit:Number) :Boolean {
+        var to:Number = this.timeout;
+        var tt:Number = this.trickletime;
+        var h:Boolean = this.halted;
+
+        this.timeout = limit;
+        this.trickletime = limit;
+        this.halted = false;
+        this.isUpdating = true;
+        this.checkQ();
+
+        this.halted = h;
+        this.timeout = to;
+        this.trickletime = tt;
+        return (! this.isUpdating);
+    }
 
 } // End of LzInstantiatorService
 
