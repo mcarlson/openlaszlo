@@ -12,6 +12,15 @@
 /** @access private */
 var _Copyright = "Portions of this file are copyright (c) 2001-2008 by Laszlo Systems, Inc.  All rights reserved.";
 
+// If profiling, we need to define this early, because the class
+// runtime will attempt to use it
+if ($profile) {
+  if ($swf9) {
+  } else {
+#include "profiler/LzProfile.lzs"
+  }
+}
+
 // Compiler runtime support first
 #include "compiler/Library.lzs"
 
@@ -26,7 +35,6 @@ if ($debug) {
 if ($profile) {
   if ($swf9) {
   } else {
-#include "profiler/LzProfile.lzs"
   // Default is to start the Profiler ASAP, and stop it in
   // canvas.init, so you can profile startup time.  If that is not
   // what you want, you can start/stop/pause/resume in your app around

@@ -223,36 +223,38 @@ dynamic public class LzInstantiatorService extends LzEventable {
         cq.length -= 2;
         continue;
       }
-      // Charge asynchronous time to parent views
-      if ($profile) {
-        for (var i = 0; i < l; i += 2) {
-          var nm = cq[i]['_profile_instantiator_name'];
-          if (nm) {
-            Profiler.event(nm, 'calls');
+      // Use try/finally to make sure we unwind properly in the face
+      // of an error
+      try {
+        // Charge asynchronous time to parent views
+        if ($profile) {
+          var pq = [];
+          for (var i = 0; i <= l - 2; i += 2) {
+            var nm = cq[i]['_profile_instantiator_name'] || 'unknown';
+            if (nm) {
+              Profiler.event(nm, 'calls');
+              pq.push(nm);
+            }
           }
         }
-      }
-      // Make leaves
-      while( ( (new Date()).getTime() - itime < otime) ){
-        // Check for new leaves
-        if (l != cq.length) { break; }
-        // Check for done
-        if (! larr.length) { parDone = true; break; }
-        var c = larr.pop();
-        // FIXME: [2005-03-24 ptw] Somehow there are undefined
-        // entries on the queue?
-        if (c) {
-          par.makeChild( c, true );
-          num++;
-        }
-      }
-      // Unwind parent view 'calls'
-      if ($profile) {
-        for (var i = l - 2; i >= 0; i -= 2) {
-          var nm = cq[i]['_profile__instantiator_name'];
-          if (nm) {
-            Profiler.event(nm, 'returns');
+        // Make leaves
+        while( ( (new Date()).getTime() - itime < otime) ){
+          // Check for new leaves
+          if (l != cq.length) { break; }
+          // Check for done
+          if (! larr.length) { parDone = true; break; }
+          var c = larr.pop();
+          // FIXME: [2005-03-24 ptw] Somehow there are undefined
+          // entries on the queue?
+          if (c) {
+            par.makeChild( c, true );
+            num++;
           }
+        }
+      } finally {
+        // Unwind parent view 'calls'
+        if ($profile) {
+          while (pq.length) { Profiler.event(pq.pop(), 'returns'); }
         }
       }
       // Clear from queue

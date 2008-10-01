@@ -391,7 +391,7 @@
     </method>
     
     <!-- @devnote TODO: [2007-10-23 ptw] Use LzFormatter as a mixin instead -->
-    <text name="formatter" />
+    <attribute name="formatter" value="new lz.text()" />
     <!---
       Format a failure message from a message, expected and actual
       values.

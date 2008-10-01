@@ -218,9 +218,13 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     AssignOpTable.put(ParserConstants.RUNSIGNEDSHIFTASSIGN, ParserConstants.RUNSIGNEDSHIFT);
   };
 
-  // Code to meter a function call.  If name is set, uses that,
-  // otherwise uses arguments.callee.name.  This code must be appended
-  // to the function prefix or suffix, as appropriate
+  // In-line version of Profiler#event (q.v.).
+  //
+  //  If name is set, uses that, otherwise uses arguments.callee.name.
+  // This code must be appended to the function prefix or suffix, as
+  // appropriate
+  //
+  // TODO: [2008-08-22 ptw] Replace name with _dbg_name
   SimpleNode[] meterFunctionEvent(SimpleNode node, String event, String name) {
     String getname;
     if (name != null) {
@@ -231,35 +235,25 @@ public class CodeGenerator extends CommonGenerator implements Translator {
 
     // Note _root.$lzprofiler can be undedefined to disable profiling
     // at run time.
-
-    // N.B., According to the Javascript spec, getTime() returns
-    // the time in milliseconds, but we have observed that the
-    // Flash player on some platforms tries to be accurate to
-    // microseconds (by including fractional milliseconds).  On
-    // other platforms, the time is not even accurate to
-    // milliseconds, hence the kludge to manually increment the
-    // clock to create a monotonic ordering.
-
-    // The choice of 0.01 to increment by is based on the
-    // observation that when floats are used as member names in an
-    // object they are coerced to strings with only 15 significant
-    // digits.  This should suffice for the next (10^13)-1
-    // microseconds (about 300 years).
-
+    //
     // TODO [2005-05016 ptw] (LPP-350) $flasm can clobber registers, so
     // we have to refresh then for each event
     String code = "" +
        "{" +
-         "\n#pragma 'warnUndefinedReferences=false'\n" +
          "var $lzsc$lzp = _root['$lzprofiler'];" +
          "if ($lzsc$lzp) {" +
-           "var $lzsc$tick = $lzsc$lzp.tick;" +
-           "var $lzsc$now = (new Date).getTime();" +
-           "if ($lzsc$tick >= $lzsc$now) {" +
-             "$lzsc$now = $lzsc$tick + 0.0078125;" +
-           "}" +
-           "$lzsc$lzp.tick = $lzsc$now;" +
-           "$lzsc$lzp." + event + "[$lzsc$now] = " + getname + ";" +
+         // Array keys are strings
+         "  var $lzsc$now = '' + ((new Date).getTime() - $lzsc$lzp.base);" +
+         // If the clock has not ticked (or the ms->String conversion
+         // makes it appear so), we log explicitly to the event buffer,
+         // otherwise we use the optimization of logging calls and
+         // returns to separate buffers
+         "  if ($lzsc$lzp.last == $lzsc$now) {" +
+         "    $lzsc$lzp.events[$lzsc$now] += ('," + event + ":' + " + getname + ");" +
+         "  } else {" +
+         "    $lzsc$lzp." + event + "[$lzsc$now] = " + getname + ";" +
+         "  }" +
+         "  $lzsc$lzp.last = $lzsc$now;" +
          "}" +
        "}" +
        "";

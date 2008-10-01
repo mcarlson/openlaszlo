@@ -35,6 +35,10 @@ Instance.prototype.classname = 'Object';
 if ($debug) {
   Instance._dbg_typename = 'Class';
 }
+if ($profile) {
+  Instance._dbg_name = Instance.name = 'new Instance';
+  Instance.prototype._profile_typename = 'Instance';
+}
 
 
 /**
@@ -86,6 +90,15 @@ if ($debug) {
           value._dbg_typename = function _dbg_typename () {
             var t = Debug.functionName(this._dbg_owner._dbg_prototype_for);
             return t + ' function';
+          }
+        }
+      }
+      if ($profile) {
+        if (! value._profile_name) {
+          // `this` is the prototype of the class here, not the class
+          var o = this['_profile_typename'];
+          if (o) {
+            value._profile_name = value._dbg_name = value.name = (o + '/' + value.name);
           }
         }
       }
@@ -149,6 +162,10 @@ Instance.prototype.addProperty('nextMethod', function nextMethod (currentMethod,
   * @devnote The call to the default method is optimized away in class constructors
   */
 Instance.prototype.addProperty('$lzsc$initialize', function $lzsc$initialize () {});
+if ($profile) {
+  var ii = Instance.prototype.$lzsc$initialize;
+  ii._dbg_name = ii.name = 'Instance';
+}
 
 /**
   * Class initialize method
@@ -169,11 +186,13 @@ Instance.initialize = function initialize (prototype) {
   // Scaffolding until the LFC is rewritten
   prototype.__initialized = false;
 };
-
 if ($debug) {
   Instance.initialize._dbg_typename = 'Instance static function';
 }
-
+if ($profile) {
+  var ii = Instance.initialize;
+  ii._dbg_name = ii.name = 'Instance.initialize';
+}
 
 if ($debug) {
   Instance.prototype.addProperty('validateClassStructure', function validateClassStructure () {
@@ -262,11 +281,20 @@ var Class = {
 //     }
     this[name] = value;
     if ($debug) {
-      if (value instanceof Function && (! value._dbg_typename)) {
+      if (value is Function && (! value._dbg_typename)) {
         value._dbg_owner = this;
         value._dbg_typename = function _dbg_typename () {
           return Debug.functionName(this._dbg_owner) + ' static function'
         };
+      }
+    }
+    if ($profile) {
+      if (value is Function  && (! value._profile_name)) {
+        // Here `this` is the class
+        var o = this.prototype['_profile_typename'];
+        if (o) {
+          value._profile_name = value._dbg_name = value.name = (o + '.' + value.name);
+        }
       }
     }
   },
@@ -279,31 +307,21 @@ var Class = {
   // instanceProperties:Array is a 'plist' of initial instance properties;
   // staticProperties:Array is a 'plist' of the inital class properties;
   make: function make (classname, traitsAndSuperclass, instanceProperties, staticProperties) {
-    // The constructor notes itself in every instance
-    var nc = function constructor () {
-      this.constructor = arguments.callee;
-      if ($debug) {
-        // Must come after the constructor is installed
-//         Debug.debug("Validate", this, this.validateClassStructure);
-        this.validateClassStructure();
+    if ($profile) {
+      var pcn = classname;
+      // Use tagname if it exists
+      if (staticProperties) {
+        for (var i = staticProperties.length - 1; i >= 1; i -= 2) {
+          var value = staticProperties[i];
+          var name = staticProperties[i - 1];
+          if (name == 'tagname') {
+            pcn = '<' + value + '>';
+            break;
+          }
+        }
       }
-      // Call the initializer if it is not the default
-      if (this.$lzsc$initialize !== Instance.prototype.$lzsc$initialize) {
-        // Debug.debug('Initializing', this);
-        this.$lzsc$initialize.apply(this, arguments);
-      }
-    };
-    nc.constructor = this;
-    nc.classname = classname;
-    if ($debug) {
-      nc._dbg_typename = this._dbg_name;
-      // _dbg_name not needed because functionName computes class
-      // names now
+      Profiler.event('new Class(' + pcn + ')', 'calls');
     }
-    this.addStaticProperty.call(nc, 'addStaticProperty', this.addStaticProperty);
-    // NOTE: [2006-10-10 ptw] This could be inherited from the
-    // superclass, and hence overridable... not needed yet.
-    nc.addStaticProperty('addProperty', this.addProperty);
     var superclass = null;
     if (traitsAndSuperclass instanceof Array) {
       for (var k = traitsAndSuperclass.length - 1; k >= 0; k--) {
@@ -327,12 +345,80 @@ var Class = {
       }
     }
     if (! superclass) { superclass = Instance; }
+    var nc = function constructor () {
+      // The constructor notes itself in every instance
+      this.constructor = arguments.callee;
+      if ($debug) {
+        // Must come after the constructor is installed
+//         Debug.debug("Validate", this, this.validateClassStructure);
+        this.validateClassStructure();
+      }
+      // Call the initializer if it is not the default
+      if (this.$lzsc$initialize !== Instance.prototype.$lzsc$initialize) {
+        // Debug.debug('Initializing', this);
+        // Annotate construction of Node subclasses
+        if ($profile) {
+          var lzn = lz['node'];
+          if (lzn && (this is lzn)) {
+            var nm = null;
+            // Have to extract name from attrs
+            var attrs = arguments[1];
+            if (attrs) {
+                if (attrs['id'] && (attrs.id != lzn._ignoreAttribute)) {
+                    nm = '#' + attrs.id;
+                } else if (attrs['name'] && (attrs.name != lzn._ignoreAttribute)) {
+                    nm = ((parent === canvas)?'#':'.') + attrs.name;
+                } else if (attrs['_profile_name']) {
+                    nm = attrs._profile_name;
+                }
+            }
+            try {
+              // Note start of named instantiations, insert
+              // call/return events to split out named instantiations.
+              // Named or not, set _profile_instantiator_name for
+              // annotation in LzInstantiator.makeSomeViews
+              if (nm) {
+                nm = this.constructor._dbg_name + '(' + nm + ')';
+                this._profile_name = nm;
+                // done: event in __LZcallInit
+                Profiler.event('start: ' + nm);
+                Profiler.event(nm, 'calls');
+                this._profile_instantiator_name = nm;
+              } else {
+                this._profile_instantiator_name = this.constructor._dbg_name;
+              }
+              this.$lzsc$initialize.apply(this, arguments);
+            } finally {
+              if (nm) {
+                Profiler.event(nm, 'returns');
+              }
+            }
+            return;
+          }
+        }
+        // Not $profile or not LzNode
+        this.$lzsc$initialize.apply(this, arguments);
+      }
+    };
+    nc.constructor = this;
+    nc.classname = classname;
+    if ($debug) {
+      nc._dbg_typename = this._dbg_name;
+      nc._dbg_name = classname;
+    }
+    if ($profile) {
+      // Give the constructor an intelligible name for profiling
+      nc._dbg_name = nc.name = 'new ' + pcn;
+    }
     // The prototype is an instance of our super, which causes us to
     // inherit our super's instanceProperties
     {
       // This has to be constructed carefully, so as _not_ to run the
       // class instance initializer
       var xtor = function prototype () { this.constructor = superclass; };
+      if ($profile) {
+        xtor._dbg_name = xtor.name = pcn + '.prototype';
+      }
       xtor.prototype = superclass.prototype;
       var prototype = new xtor(); // --- superclass.make();
     }
@@ -344,13 +430,9 @@ var Class = {
         prototype = t.makeInterstitial(prototype, i > 0 ? traitsAndSuperclass[i -1] : nc);
       }
     }
-    // Install the staticProperties
-    if (staticProperties) {
-      for (var i = staticProperties.length - 1; i >= 1; i -= 2) {
-        var value = staticProperties[i];
-        var name = staticProperties[i - 1];
-        nc.addStaticProperty(name, value);
-      }
+    if ($profile) {
+      // Give the prototype an intelligible name for profiling
+      prototype._profile_typename = pcn
     }
     // Create super link
     nc.prototype = prototype;
@@ -359,11 +441,30 @@ var Class = {
       // class it is the prototype for
       prototype._dbg_prototype_for = nc
     }
+    // Do this after installing the prototype, so profile names are correct
+    this.addStaticProperty.call(nc, 'addStaticProperty', this.addStaticProperty);
+    // NOTE: [2006-10-10 ptw] This could be inherited from the
+    // superclass, and hence overridable... not needed yet.
+    nc.addStaticProperty('addProperty', this.addProperty);
+    // Install the staticProperties
+    if (staticProperties) {
+      for (var i = staticProperties.length - 1; i >= 1; i -= 2) {
+        var value = staticProperties[i];
+        var name = staticProperties[i - 1];
+        nc.addStaticProperty(name, value);
+      }
+    }
     // Class.initialize:  Install initial values
     if (instanceProperties) {
       for (var i = instanceProperties.length - 1; i >= 1; i -= 2) {
         var value = instanceProperties[i];
         var name = instanceProperties[i - 1];
+        if ($profile) {
+          // Give the initializer an intelligible name for profiling
+          if ((name == '$lzsc$initialize') && (value is Function)) {
+            value._dbg_name = value.name = prototype._profile_typename;
+          }
+        }
         nc.addProperty(name, value);
       }
     }
@@ -380,6 +481,9 @@ var Class = {
       }
     })(prototype, nc);
     global[classname] = this.allClasses[classname] = nc;
+    if ($profile) {
+      Profiler.event('new Class(' + pcn + ')', 'returns');
+    }
     return nc;
   }
 };
@@ -388,6 +492,11 @@ if ($debug) {
   Class.addProperty._dbg_typename = 'Class static function';
   Class.addStaticProperty._dbg_typename = 'Class static function';
   Class.make._dbg_typename = 'Class static function';
+}
+if ($profile) {
+  Class.addProperty._profile_name = Class.addProperty._dbg_name = Class.addProperty.name = 'Class.addProperty';
+  Class.addStaticProperty._profile_name = Class.addStaticProperty._dbg_name = Class.addStaticProperty.name = 'Class.addStaticProperty'
+  Class.make._profile_name = Class.make._dbg_name = Class.make.name = 'Class.make';
 }
 
 /** Bootstrap Trait class */
@@ -430,6 +539,9 @@ var Trait = {
     var impls = this.implementations;
     // Remember combinations and re-use them if possible
     var interstitialname = this.classname + '+' + superclassInstance.constructor.classname;
+    if ($profile) {
+      Profiler.event('new Interstitial(' + interstitialname + ')', 'calls');
+    }
     var prototypename = sharable.classname + '|' + interstitialname;
     if (impls[prototypename]) {
       if ($debug) {
@@ -471,6 +583,9 @@ var Trait = {
     var t = new xtor();
     // Remember
     impls[prototypename] = t;
+    if ($profile) {
+      Profiler.event('new Interstitial(' + interstitialname + ')', 'returns');
+    }
     return t;
   },
   // Implements `is` operator for traits
@@ -485,6 +600,9 @@ var Trait = {
   },
   // How to make a Trait
   make: function make (classname, superTrait, instanceProperties, staticProperties) {
+    if ($profile) {
+      Profiler.event('new Mixin(' + classname + ')', 'calls');
+    }
     var nt = {
       constructor: this,
       classname: classname,
@@ -520,6 +638,9 @@ var Trait = {
       nt.initialize(nt.prototype);
     }
     global[classname] = this.allTraits[classname] = nt;
+    if ($profile) {
+      Profiler.event('new Mixin(' + classname + ')', 'returns');
+    }
     return nt;
   }
 };

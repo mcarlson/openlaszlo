@@ -73,7 +73,7 @@
         </appender>
         
         <logger name="org.openlaszlo" additivity="false">
-            <priority value="warn" />
+            <priority value="info" />
             <appender-ref ref="lps" />
         </logger>
 

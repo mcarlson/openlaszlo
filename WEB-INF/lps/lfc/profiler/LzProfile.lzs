@@ -28,24 +28,45 @@
 
 /**
   * Profiler
-  * 
+  *
   * Used to accumulate profiling statistics and send them to the
   * profile servlet on the LPS host this app was served from
-  * 
+  *
   * Code compiled with `pragma 'profile=true'` will record
   * function call and return information.  By default all code will
   * have profiling enabled when compiled with `?profile=true`
-  * 
+  *
   * Profiling can be controlled dynamically by the program being
   * profiled using the `stop`, `start`, `pause`, and `resume` methods.
-  * 
+  *
   * User events can be inserted into the profile log using the `event`
   * method.
   */
   Profiler = {
     // Increment if you change the file format
-    version: 4,
+    // In version 5, an entry may be a comma-separated string of
+    // entries that occured on the same clock tick (in previous
+    // versions, these entries were either artificially advanced or
+    // they replaced the coincident entry).
+    version: 5,
     seqnum: 0,
+
+    // May not be necessary?
+    maxLoops: 1000,
+    // ScriptRunningSlowly defaults to 1500
+    maxMilliseconds: 700,
+
+    grain: (function () {
+      // Estimate clock resolution
+      for (var i = 0, grain = 0; i < 100; i ++) {
+        var tock;
+        var now = '' + (new Date).getTime();
+        while (('' + (tock = ((new Date).getTime()))) == now);
+        var trial = Number(tock) - Number(now);
+        if (trial > grain) { grain = trial; }
+      }
+      return grain;
+      })(),
 
     //---
 
@@ -73,10 +94,10 @@
   * typically implemented as objects with a fill-pointer)
   * EXCEPT...  in IE Arrays are more efficient for large amounts of data
   * http://blogs.msdn.com/ericlippert/archive/2003/09/17/53038.aspx#71923
-  * If you have more than more than 256 members allocated in an object, 
+  * If you have more than more than 256 members allocated in an object,
   * a GC is triggered - and since it's mark and sweep, it's sloooow.
   */
-    Buffers: function () {
+    Buffers: function Buffers () {
       this.calls = [];
       this.events = []
       this.returns = [];
@@ -85,21 +106,22 @@
       this.callBuffer = [];
       this.eventBuffer = [];
       this.returnBuffer = [];
-      // Last ticker.  Used ensure monotonicity of (new Date).getTime() on
-      // platforms with poor granularity
-      this.tick = 0;
+      // Base ticker.  Used to reduce the range of the buffer for
+      // better granularity
+      this.base = (new Date).getTime();
+      this.last =  '' + ((new Date).getTime() - this.base);
       // Output version info when you connect
     },
 
 /**
   * Insert an event into the profiler log
-  * 
+  *
   * Logs a descriptive string with a timestamp to the profiler event
   * buffers.  These events will be dumped to the log with the key 'V'.
-  * 
+  *
   * @param String description: a descriptive string that will be
   * logged.
-  * 
+  *
   * @param 'calls'|'returns'|'events' buffer: The event buffer to log
   * to.  default 'events'.
   *
@@ -110,13 +132,18 @@
       #pragma 'warnUndefinedReferences=false'
       var $lzsc$lzp = $lzprofiler;
       if ($lzsc$lzp) {
-        var $lzsc$tick = $lzsc$lzp.tick;
-        var $lzsc$now = (new Date).getTime();
-        if ($lzsc$tick >= $lzsc$now) {
-          $lzsc$now = $lzsc$tick + 0.01;
+        // Array keys are strings
+        var $lzsc$now = '' + ((new Date).getTime() - $lzsc$lzp.base);
+        // If the clock has not ticked (or the ms->String conversion
+        // makes it appear so), we log explicitly to the event buffer,
+        // otherwise we use the optimization of logging calls and
+        // returns to separate buffers
+        if ($lzsc$lzp.last == $lzsc$now) {
+          $lzsc$lzp.events[$lzsc$now] += (',' + buffer + ':' + description);
+        } else {
+          $lzsc$lzp[buffer][$lzsc$now] = description;
         }
-        $lzsc$lzp.tick = $lzsc$now;
-        $lzsc$lzp[buffer][$lzsc$now] = description;
+        $lzsc$lzp.last = $lzsc$now;
       }
     },
 
@@ -127,6 +154,7 @@
         this.close();
         this.buffers = new this.Buffers();
         this.resume();
+        this.event('Profiler/start()');
     },
 
 /**
@@ -134,22 +162,12 @@
   * (has to wait for events and idle loop to be set up)
   */
 
-    // [todo hqm 2006] We're not using the idle loop currently, there are
-    // some issues in DHTML with idle loop callbacks
-    startBackground: function () {
-      var dd = this.dumpDel;
-      if (dd) {
-        dd.register(lz.Idle, 'onidle');
-      } else {
-        this.dumpDel = new LzDelegate(Profiler, 'dump', lz.Idle, 'onidle');
-      }
-    },
-
 /**
   * Stop the current profile run and ensure it is written out
   */
     stop: function () {
         //fconsole.write('stop');
+        this.event('Profiler/stop');
         this.pause();
         this.close();
     },
@@ -160,16 +178,8 @@
     pause: function () {
         //fconsole.write('pause');
         $lzprofiler = null;
-        var dd = this.dumpDel;
-        if (dd) {
-            dd.unregisterAll();
-        }
-
+        // Kick off the draining of data
         this.dump();
-
-        while(true) {
-            if (!this.dump()) break;
-      }
     },
 
 /**
@@ -177,11 +187,16 @@
   */
     resume: function () {
       $lzprofiler = this.buffers;
-      var dd = this.dumpDel;
-      if (dd) {
-        dd.register(lz.Idle, 'onidle');
+      // We don't want the buffers to get too large, but we also don't
+      // want to steal too much time from the application
+      var that = this;
+      if (! this.dumpTask) {
+        this.dumpTask = setInterval( function () { that.dump() }, 2 * this.maxMilliseconds );
       }
     },
+
+    socketState: 'closed',
+    dataState: 'idle',
 
 /**
   * Called to open a socket to the profile listener.
@@ -227,32 +242,37 @@
                 }
             }
         } else if ($as2) {
-              // We'll instantiate a LoadVars object when needed, for Flash runtime
-            #pragma "passThrough=true"
-            this.socket = new LoadVars();
-            this.returnval = new LoadVars();
-            // callback from Flash LoadVars.sendAndLoad()
-            this.returnval.onData = this.flashOnLoadHandler;
+          this.socket = new LoadVars();
         }
 
         //fconsole.write('connected socket');
 
         if(this.socket) {
+            this.socketState = 'opening';
             this.seqnum = 0;
             if ($as2) {
-               #pragma "passThrough=true"
-                this.socket = new LoadVars();
                 var lv = this.socket;
                 var nurl = this.url.dupe();
                 nurl.query = "";
                 lv.lzt = 'profile';
                 lv.command = 'open';
-                lv.sendAndLoad(nurl, lv, "POST");
+                this.returnval = new LoadVars();
+                // callback from Flash LoadVars.sendAndLoad()
+                this.returnval.onLoad = function () {
+//                   if ($debug) Debug.write('open--', 'socket:', Profiler.socketState, 'data:', Profiler.dataState);
+                  Profiler.socketState = 'open';
+                };
+                lv.sendAndLoad(nurl, this.returnval, "POST");
                 this.openTag('xml');
                 this.write('\n');
             } else if ($js1) {
                 var sock = this.socket;
-                sock.onreadystatechange = function () {Profiler.processSocketChange()};
+                sock.onreadystatechange = function () {
+                  if (Profiler.processSocketChange()) {
+//                     if ($debug) console.log('open--', 'socket:', Profiler.socketState, 'data:', Profiler.dataState);
+                    Profiler.socketState = 'open';
+                  }
+                };
                 var url = this.url.dupe();
                 url.query = 'lzt=profile&command=open';
                 sock.open('GET', url, false);
@@ -261,10 +281,10 @@
                 this.openTag('xml');
                 this.write('\n');
             } else {
-                Debug.error("Profiler.connect: Unsupported runtime %s", $runtime);
+              if ($debug) Debug.error("Profiler.connect: Unsupported runtime %s", $runtime);
             }
         } else {
-            Debug.error("Profiler.connect: Could not connect: %s", why);
+          if ($debug) Debug.error("Profiler.connect: Could not connect: %s", why);
         }
     }
     return this.socket;
@@ -275,12 +295,15 @@
       if (sock) {
         if (sock.readyState == 4) {
           if (sock.status == 200) {
-//             Debug.info("Profiler.processSocketChange: %s %s", sock.statusText, sock.responseText);
+//             if ($debug) Debug.info("Profiler.processSocketChange:
+//             %s %s", sock.statusText, sock.responseText);
+            return true;
           } else {
-            Debug.error("Profiler.processSocketChange: %s %s", sock.statusText, sock.responseText);
+            if ($debug) Debug.error("Profiler.processSocketChange: %s %s", sock.statusText, sock.responseText);
           }
         }
       }
+      return false;
     },
 
     // If we wanted to write the profiler data as xml
@@ -373,15 +396,15 @@
   * Flush the write buffer
   * @access private
   */
-    flush: function () {
+    flush: function (state) {
+        if (! state) { state = 'writing'; }
         if (this.socket) {
             var buf = this.writeBuffer;
             if (buf) {
-                delete this.writeBuffer;
+              if (this.dataState != 'idle') { return; }
+                this.dataState = state;
                 if ($as2) {
                     // use LoadVars
-                    #pragma "passThrough=true"
-                    this.socket = new LoadVars();
                     var lv = this.socket;
                     // Null the URL query string and move the query
                     // args to the POST body
@@ -394,17 +417,57 @@
                     lv.seqnum = seq
                     lv.pdata =  buf.join('');
                     //fconsole.write('flush as2 writing '+lv.pdata.length+' bytes');
+                    this.returnval = new LoadVars();
+                    // callback from Flash LoadVars.sendAndLoad()
+                    this.returnval.onLoad = function () {
+//                       if ($debug) Debug.write('data--', 'socket:', Profiler.socketState, 'data:', Profiler.dataState);
+                      Profiler.dataState = 'idle';
+                      delete Profiler.writeBuffer;
+                      // Check for more
+                      if (! Profiler.dump()) {
+                        if (! $lzprofiler) {
+                          // Stop the backround task
+                          var dt = Profiler.dumpTask;
+                          if (dt) {
+                            clearInterval(dt);
+                            Profiler.dumpTask = null;
+                          }
+                        }
+                        if (Profiler.socketState = 'closing') {
+                          Profiler.closed();
+                        }
+                      }
+                    };
                     lv.sendAndLoad(nurl, this.returnval, "POST");
                     //fconsole.write('sent data '+seq);
-
                 } else if ($js1) {
                     var sock = this.socket;
-                    sock.onreadystatechange = this.processSocketChange;
+                    sock.onreadystatechange = function () {
+                      if (Profiler.processSocketChange()) {
+//                         if ($debug) console.log('data--', 'socket:', Profiler.socketState, 'data:', Profiler.dataState);
+                        Profiler.dataState = 'idle';
+                        delete Profiler.writeBuffer;
+                        // Check for more
+                        if (! Profiler.dump()) {
+                          if (! $lzprofiler) {
+                            // Stop the backround task
+                            var dt = Profiler.dumpTask;
+                            if (dt) {
+                              clearInterval(dt);
+                              Profiler.dumpTask = null;
+                            }
+                          }
+                          if (Profiler.socketState = 'closing') {
+                            Profiler.closed();
+                          }
+                        }
+                      }
+                    };
                     var url = this.url.dupe();
                     url.query = 'lzt=profile&command=data&seqnum='+(this.seqnum++);
                     sock.open('POST', url, false);
                     sock.setRequestHeader(
-                        'Content-Type', 
+                        'Content-Type',
                         'application/x-www-form-urlencoded'
                         );
                     sock.send('pdata='+escape(buf.join('')));
@@ -413,11 +476,7 @@
         }
     },
 
-    flashOnLoadHandler: function (src) {
-        // not used right now
-    },
-
-/** 
+/**
   * Close the connection
   * Stops profiling, writes the end tag, flushes the data
   * NOTE: use `stop` to stop cleanly and ensure all data has been
@@ -426,13 +485,20 @@
   */
     close: function () {
       $lzprofiler = null;
+      //fconsole.write('close ');
       if (this.socket) {
         this.closeTag('xml');
+        this.socketState = 'closing';
         this.flush();
-        //fconsole.write('close ');
+      }
+    },
+
+    /**
+     * Called from the load handler when all data has been dumped
+     */
+    closed: function () {
+      if (this.socket) {
         if ($as2) {
-            #pragma "passThrough=true"
-            this.socket = new LoadVars();
             var lv = this.socket;
             var nurl = this.url.dupe();
             nurl.query = '';
@@ -440,48 +506,66 @@
             lv.command = 'close';
             // tell the server how many data messages to expect
             lv.nchunks = this.seqnum;
-            lv.sendAndLoad(nurl, lv, "POST");
+            this.returnval = new LoadVars();
+            // callback from Flash LoadVars.sendAndLoad()
+            this.returnval.onLoad = function () {
+//               if ($debug) Debug.write('closed--', 'socket:', Profiler.socketState, 'data:', Profiler.dataState);
+              Profiler.socketState = 'closed';
+              delete Profiler.socket;
+            };
+            lv.sendAndLoad(nurl, this.returnval, "POST");
         } else if ($js1) {
             var sock = this.socket;
-            sock.onreadystatechange = this.processSocketChange;
+            sock.onreadystatechange = function () {
+              if (Profiler.processSocketChange()) {
+//               if ($debug) console.log('closed--', 'socket:', Profiler.socketState, 'data:', Profiler.dataState);
+                Profiler.socketState = 'closed';
+                delete Profiler.socket;
+              }
+            };
             var url = this.url.dupe();
             url.query = 'lzt=profile&command=close&nchunks='+this.seqnum;
             sock.open('GET', url, false);
             sock.send('');
         }
-        delete this.socket;
       }
     },
 
 /**
   * Called to dump the accumulated profile information.
-  * 
+  *
   * @param ignoreme  LzEvent callback from lz.Idle passes clock arg, ignore it
   * @param Number loops: limit on the number of loop iterations,
   * defaults to 1000
   * @param Number ms: limit on the number of milliseconds to run,
   * defaults to 4000
-  * 
+  *
   * @access private
-  * 
+  *
   * In Flash, the dump method is called sequentially from the
   * LoadVars' sendAndLoad onData handler from the previous dump
   * call completing, in order not to smoosh the network requests
   * together (some are getting not making it to the server if they
   * are called back to back).
-  *  
+  *
   */
-    dump: function (ignoreme, loops=1000, ms=3000) {
+    dump: function (ignoreme, loops=null, ms=null) {
+        // defaults
+        if (loops == null) {
+            loops = this.maxLoops;
+        }
+        if (ms == null) {
+            ms = this.maxMilliseconds;
+        }
         var loopsMax = 0;
-
         if (! this.socket) {
             if (! this.connect()) {
                 return false;
             }
         }
 
-        this.event('dump: #'+this.seqnum);
-        //fconsole.write('dumping, loops='+loops);
+        // If still transmitting, ask to be called back
+        if (this.dataState != 'idle') { return true; }
 
         // Limit background processing so runtime doesn't abort us.  There
         //seems to be a limit both on total time in an idle function and
@@ -493,14 +577,17 @@
         var c = buffers.callBuffer;
         var r = buffers.returnBuffer;
         var v = buffers.eventBuffer;
-        var start = loopStart;
+        var start = loopStart - this.buffers.base;
+
+        //fconsole.write('dumping, loops='+loops);
 
         // Output LPS version when we know it
         if ((! this.lpsVersionDone) && canvas && canvas.isinited) {
             // Write the header
             this.info("Profile version: " + this.version);
             this.info("Date: " + (new Date).toString());
-            this.info(LzCanvas.versionInfoString());
+            this.info("Clock resolution: " + this.grain);
+            this.info("Profiling " + LzCanvas.versionInfoString());
             this.lpsVersionDone = true;
         }
 
@@ -523,7 +610,6 @@
         }
 
         loopsMax = (loopCount-1 > loopsMax) ? loopCount-1: loopsMax;
-
 
         // Dump return buffer
         loopCount = 0;
@@ -563,9 +649,9 @@
 
         loopsMax = (loopCount-1 > loopsMax) ? loopCount-1: loopsMax;
 
-        // Refill the buffers, if they are empty
-        if (buffersEmpty &&
-            (((new Date).getTime() - loopStart) < ms)) {
+        // Refill the buffers, if they are empty, and you have time
+        if (buffersEmpty) {
+          if (((new Date).getTime() - loopStart) < ms) {
             var reenable = false;
             var c = buffers.calls;
             var r = buffers.returns;
@@ -580,22 +666,30 @@
             buffers.returns = buffers.returnBuffer;
             buffers.calls = buffers.callBuffer;
             if (reenable) {
-                $lzprofiler = this;
+                $lzprofiler = buffers;
             }
+            // Check for more work
+            for (var t in c) { buffersEmpty = false; break; }
+            if (buffersEmpty) { for (var t in r) { buffersEmpty = false; break; } }
+            if (buffersEmpty) { for (var t in v) { buffersEmpty = false; break; } }
+            // Put the event buffers on the work queue
             buffers.callBuffer = c;
             buffers.returnBuffer = r;
             buffers.eventBuffer = v;
+          } else {
+            buffersEmpty = false;
+          }
         }
 
         // Record dump end time, if you started
         if (start == null) {
-            this.entry('E', (new Date()).getTime());
+            this.entry('E', (new Date()).getTime() - this.buffers.base);
         }
 
         this.flush();
-        // return whether there is more work
 
-        return (start == null);
+        // return true if there is more work
+        return (($lzprofiler != null) || (! buffersEmpty));
     }
   }
 }
