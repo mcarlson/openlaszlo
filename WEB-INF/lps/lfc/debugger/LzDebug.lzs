@@ -1339,13 +1339,14 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     this.versionInfo();
     this.format("\nERROR MESSAGE: %s", error);
     this.format("\nERROR BACKTRACE:");
+    var that = this;
     error.backtrace.map(
       function (frame) {
-        this.format("\n%w", frame);
-        this.format("\n  this: %#w", inspect(frame['this'], true));
+        that.format("\n%w", frame);
+        that.format("\n  this: %#w", inspect(frame['this'], true));
         var args = frame.arguments;
         for (var i = 0; i < args.length; i++) {
-          this.format("\n  arg %2d: %#w", i, inspect(args[i], verbose));
+          that.format("\n  arg %2d: %#w", i, inspect(args[i], verbose));
         }
       });
     var keys = [];
