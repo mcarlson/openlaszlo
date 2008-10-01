@@ -10,26 +10,23 @@
         When the control key is down, any item may be added to the
         selection.
              Default: false -->
-       <attribute name="multiselect" value="false"/>
+       <attribute name="multiselect" value="false" type="boolean"/>
        <!--- @keywords private -->
-       <attribute name="_forcemulti" value="false"/>
+       <attribute name="_forcemulti" value="false" type="boolean"/>
 
        <!-- already defined in LzNode -->
        <!--<attribute name="cloneManager" value="null"/>-->
-       <method name="isRangeSelect" args="item">
-           var allowselect = false;
-           if (multiselect) allowselect = super.isRangeSelect(item);
-           return allowselect;
-       </method>
-       <method name="isMultiSelect" args="item">
-           var allowselect = false;
-           if (_forcemulti) allowselect = true;
-           else if (multiselect) allowselect =  super.isMultiSelect(item);
-           return allowselect;
-       </method>
 
-       <method name="select" args="item"> <![CDATA[
-           if (item['length'] && multiselect) {
+       <method name="isRangeSelect" args="item" override="true"><![CDATA[
+           return this.multiselect && super.isRangeSelect(item);
+       ]]></method>
+
+       <method name="isMultiSelect" args="item" override="true"><![CDATA[
+           return this._forcemulti || (this.multiselect && super.isMultiSelect(item));
+       ]]></method>
+
+       <method name="select" args="item" override="true"><![CDATA[
+           if (this.multiselect && item is Array) {
                 this._forcemulti = true;
                 for (var i=0; i < item.length; i++) {
                    super.select(item[i]);
@@ -38,8 +35,7 @@
            } else {
                super.select(item);
            }
-           ]]>
-       </method>
+       ]]></method>
 
         <!---
             if no selection, return null
