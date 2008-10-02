@@ -29,11 +29,16 @@ SoundMC.prototype.isaudio = true;
 SoundMC.prototype.loadstate = 0;
 
 /**
-  * @access private
+  * @access private 
   */
-SoundMC.prototype.play = function() {
-    var t = this._currentframe / this._fps;
-    if (t < 0) t = 0;
+SoundMC.prototype.play = function(direct=false) {
+    // if we're not seeking to a specific frame and we're at the end already, start at the beginning
+    if (direct != true && this._currentframe == this._totalframes) {
+        t = 0;
+    } else {
+        var t = this._currentframe / this._fps;
+        if (t < 0) t = 0;
+    }
     this._sound.stop();
     this._sound.start(t)
     //Debug.write('play mp3', t);
@@ -46,7 +51,7 @@ SoundMC.prototype.play = function() {
   */
 SoundMC.prototype.gotoAndPlay = function(f) {
     this._currentframe = f;
-    this.play();
+    this.play(true);
 }
 
 

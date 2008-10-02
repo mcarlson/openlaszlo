@@ -43,6 +43,7 @@ dynamic public class LzSprite extends Sprite {
       public var clickregion:Shape = null;
       public var masksprite:Sprite = null;
       public var frame:int = 1;
+      public var totalframes:int = 1;
       public var frames:int = 1;
       public var resource:String = null;
       public var source:String = null;
@@ -198,7 +199,8 @@ dynamic public class LzSprite extends Sprite {
               this.resourcewidth = res.width;
               this.resourceheight = res.height;
               if (this.owner != null) {
-                  this.owner.resourceevent('totalframes', res.frames.length);
+                  this.totalframes = res.frames.length;
+                  this.owner.resourceevent('totalframes', this.totalframes);
               }
               if (imgLoader) {
                   this.unload();
@@ -222,7 +224,7 @@ dynamic public class LzSprite extends Sprite {
               this.resource = r;
               
               this.sound = new res['assetclass']() as Sound;
-              this.owner.resourceevent('totalframes', Math.floor(this.sound.length * 0.001 * MP3_FPS));
+              this.updateTotalframes();
               
               // TODO: add condition on this
               this.startPlay()
@@ -439,7 +441,8 @@ dynamic public class LzSprite extends Sprite {
           if (framenumber != null) {
               framenumber += rel ? fr : 0;
           } else {
-              framenumber = fr;
+              // start at the beginning again if we're already at the end.
+              framenumber = fr >= this.totalframes ? 0 : fr;
           }
           
           if (play) {
@@ -461,7 +464,7 @@ dynamic public class LzSprite extends Sprite {
               } else if (event.type == Event.COMPLETE) {
                   this.soundLoading = false;
                   this.owner.resourceevent('loadratio', 1);
-                  this.owner.resourceevent('totalframes', Math.floor(this.sound.length * 0.001 * MP3_FPS));
+                  this.updateTotalframes();
                   
                   // send events, including onload
                   this.sendResourceLoad();
@@ -484,13 +487,21 @@ dynamic public class LzSprite extends Sprite {
       /** 
         * Track playback
         */
-      private function soundFrameHandler (event:Event = null) :void {
+      private function soundFrameHandler (event:Event) :void {
           // Event.ENTER_FRAME
           var fr:Number = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
           this.frame = fr;
           this.owner.resourceevent('frame', fr);
           
-          var tfr:Number = Math.floor(this.sound.length * 0.001 * MP3_FPS);
+          this.updateTotalframes();
+      }
+
+      /** 
+        * update totalframes for audio
+        */
+      private function updateTotalframes () :void {
+          var tfr:Number = Math.floor(this.getTotalTime() * MP3_FPS);
+          this.totalframes = tfr;
           this.owner.resourceevent('totalframes', tfr);
       }
       
@@ -500,8 +511,9 @@ dynamic public class LzSprite extends Sprite {
       private function soundCompleteHandler (event:Event) :void {
           // Event.SOUND_COMPLETE
           if (this.playing) {
-              // call manually to update 'frame'
-              this.soundFrameHandler();
+              this.frame = this.totalframes;
+              this.owner.resourceevent('frame', this.frame);
+
               // SoundChannel.position does not stop exactly at Sound.length, 
               // there are a few ms difference between both values. 
               // So instead of comparing 'frame' == 'totalframes', 
@@ -1275,6 +1287,9 @@ dynamic public class LzSprite extends Sprite {
       function seek (secs:Number, doplay:Boolean) :void {
           if (this.isaudio) {
               var pos:Number = Math.max(this.getCurrentTime() + secs, 0);
+              // don't seek too far
+              if (pos > this.getTotalTime()) pos = this.getTotalTime();
+
               if (this.playing) {
                   this.stopPlay();
               }
