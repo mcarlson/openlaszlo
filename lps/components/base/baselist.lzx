@@ -97,7 +97,8 @@
                 if (this['_selector']) {
                     var sel = this._selector.getSelection();
                     if (sel && sel.length > 0) {
-                        this._hiliteview = sel[0];
+                        var selectedview =_selector.getNextSubview(sel[0]);
+                        this._hiliteview = selectedview;
                     }
                 }
             ]]>
@@ -108,7 +109,7 @@
         <!--- @keywords private -->
         <method name="_doblur" args="ignore">
         <![CDATA[
-          if (this._hiliteview && this._hiliteview['setHilite']) {
+          if (this._hiliteview) {
               this._hiliteview.setHilite(false);
           }
           this._hiliteview = null;
@@ -120,10 +121,10 @@
         <method name="setHilite" args="v" >
         <![CDATA[
             if (this._selector.allowhilite(v)) {
-                if ( this._hiliteview && this._hiliteview['setHilite']) this._hiliteview.setHilite(false);
+                if ( this._hiliteview ) this._hiliteview.setHilite(false);
                 this._hiliteview = v;
-                if (this._hiliteview) {
-                    v['setHilite'](true);
+                if (this._hiliteview ) {
+                    v.setHilite(true);
                 }
             }
         ]]>    
@@ -161,10 +162,10 @@
                 if (kc == 37  || kc == 38) {
                     next = _selector.getNextSubview(s, -1);
                 }
-                if ( this._hiliteview && this._hiliteview['setHilite'] && this._hiliteview != 0 ) {
+                if ( this._hiliteview && this._hiliteview != 0 ) {
                     this._hiliteview.setHilite(false);
                 }
-                next['setHilite'](true);
+                next.setHilite(true);
                 this._hiliteview = next;
              }
             ]]>
@@ -384,7 +385,7 @@
                 }
             }
 
-            if ( this._hiliteview && this._hiliteview['setHilite'] && this._hiliteview['enabled']) {
+            if ( this._hiliteview && this._hiliteview['enabled']) {
                 this._hiliteview.setHilite(false);
                 this._hiliteview = null;
             }
