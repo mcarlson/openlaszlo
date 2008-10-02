@@ -532,8 +532,8 @@
     <dragstate name="drag"/>
     <resizestate name="resize"/>
 
-    <handler name="onapplied" reference="drag" method="saveDebuggerState"/>
-    <handler name="onapplied" reference="resize" method="saveDebuggerState"/>
+    <handler name="onremove" reference="drag" method="saveDebuggerState"/>
+    <handler name="onremove" reference="resize" method="saveDebuggerState"/>
             
 <method name="saveDebuggerState" args="d">
     if (this.persistedData) {

@@ -48,7 +48,7 @@
               text="${parent.text}"/>
 
         <state applied="${parent.editing}" pooling="true"
-               onapplied="parent.editbox.setAttribute('text', parent.text)"
+               onapply="parent.editbox.setAttribute('text', parent.text)"
                onremove="parent.setAttribute('text', parent.editbox.getText())">
             <edittext name="editbox" width="${parent.t.width + 10}">
                 <method name="init">
