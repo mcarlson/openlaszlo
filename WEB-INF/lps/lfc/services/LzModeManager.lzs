@@ -141,7 +141,7 @@ public class LzModeManagerService extends LzEventable {
             var mView = this.modeArray[ i-- ];
             // exclude the debugger from the mode
             if ($debug) {
-                if (view && Debug && view.childOf(Debug))
+                if (view && Debug && (Debug.console is LzView) && view.childOf(Debug.console))
                     break;
             }
 
