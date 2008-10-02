@@ -12,7 +12,7 @@
             <view x="12" width="${parent.width}">
                 <datapath xpath="Item" pooling="true"/>
                 <simplelayout axis="x" spacing="6"/>
-                <view datapath="SmallImage/URL/text()" width="50" height="50" clip="true"
+                <view datapath="SmallImage/URL/text()" width="50" height="50" stretches="both"
                     onmouseover="dragsmall.display(this, this.datapath.getNodeText());"
                     onmouseout="dragsmall.hide();"
                     onmousedown="dragsmall.start();"

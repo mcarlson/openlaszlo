@@ -12,6 +12,7 @@
             <method name="editAddress" args="clonenbr">
                 parent.form.setAttribute("mode", "edit");
                 this.setAttribute("height", 0);
+                parent.form.form.setAttribute('datapath', "dsAddressList:/");
                 parent.form.form.setAttribute('datapath', "dsAddressList:/addresslist/address["+(clonenbr+1)+"]");
                 parent.form.show();
             </method>

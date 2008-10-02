@@ -13,6 +13,7 @@
                 parent.form.setAttribute("mode", "edit");
                 this.setAttribute("height", 0);
                 parent.form.setAttribute("height", parent.height);
+                parent.form.form.setAttribute('datapath', "dsCreditCardList:/");
                 parent.form.form.setAttribute('datapath', "dsCreditCardList:/creditcardlist/creditcard["+(clonenbr+1)+"]");
             </method>
         </cardlist>
