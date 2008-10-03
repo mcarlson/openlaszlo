@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -14,6 +14,7 @@ import java.io.*;
 import org.jdom.Element;
 import org.openlaszlo.compiler.ViewCompiler.*;
 import org.openlaszlo.server.*;
+import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.utils.*;
 import org.jdom.*;
 import org.apache.log4j.*;
@@ -49,7 +50,24 @@ abstract class ToplevelCompiler extends ElementCompiler {
             }
         }
     }
-    
+
+  /**
+   * Outputs the tag map entries for the tags defined in this
+   * top-level form
+   */
+  public void outputTagMap(CompilationEnvironment env) {
+        // Output the tag->class map.
+        String tagmap = "";
+        for (Iterator v = env.getTags().entrySet().iterator(); v.hasNext(); ) {
+          Map.Entry entry = (Map.Entry) v.next();
+          String tagName = (String) entry.getKey();
+          String className = (String) entry.getValue();
+          // Install in constructor map
+          tagmap += ("lz[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");
+        }
+        env.compileScript(tagmap);
+  }
+
     /** Parses out user class definitions.
      *
      * <p>

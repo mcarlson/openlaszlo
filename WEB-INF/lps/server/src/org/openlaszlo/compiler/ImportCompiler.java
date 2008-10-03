@@ -209,10 +209,11 @@ class ImportCompiler extends ToplevelCompiler {
 
                     }
                 }
+                // Now output the additions to the tag map
+                outputTagMap(env);
                 if (Compiler.SWF_RUNTIMES.contains(runtime)) {
                     ((SWFWriter) env.getGenerator()).setLevel0(false);
                 }
-
 
                 ViewCompiler.checkUnresolvedResourceReferences (env);
                 writer.closeSnippet();

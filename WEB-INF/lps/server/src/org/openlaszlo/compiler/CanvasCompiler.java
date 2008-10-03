@@ -183,17 +183,7 @@ class CanvasCompiler extends ToplevelCompiler {
             }
         }
         
-        // Output the tag->class map.
-        String tagmap = "";
-        for (Iterator v = mEnv.getTags().entrySet().iterator(); v.hasNext(); ) {
-          Map.Entry entry = (Map.Entry) v.next();
-          String tagName = (String) entry.getKey();
-          String className = (String) entry.getValue();
-          // Install in constructor map
-          tagmap += ("lz[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");
-        }
-        mEnv.compileScript(tagmap);
-
+        outputTagMap(mEnv);
     }
         
   void computePropertiesAndGlobals (Element element, NodeModel model, ViewSchema schema) {
