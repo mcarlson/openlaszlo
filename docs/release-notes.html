@@ -15,29 +15,76 @@
 
     <h1>Release Notes for OpenLaszlo 4.2 Beta 2</h1>
 
-    <p>OpenLaszlo 4.2 Beta 2 follows OpenLaszlo 4.2 Beta as the next build from the trunk development
-      branch. The primary goal of this release is to provide beta-level support for SWF9 features
-      as indicated below.</p>
+    <p>OpenLaszlo 4.2 Beta 2 follows OpenLaszlo 4.2 Beta as the next build from the trunk
+      development branch. The primary goal of this release is to provide beta-level support for SWF9
+      features as indicated below.</p>
+    <p>Release 4.2b2 highlights include:</p>
     <ul>
-      <li>Javascript browser communication support (<a href="http://www.openlaszlo.org/jira/browse/LPP-5857">LPP-5857</a>)</li>
-      <li>Media streaming (AV components)</li>
-      <li>More media support (playing SWF animations, sound)<br />
-        Note that there is an existing bug that does not allow playback controls for SWF9. SWF8 animations must be converted to SWF9 to get the playback controls once this bug is resolved.</li>
-      <li>HTML tag and mousewheel support</li>
-      <li>Laszlo debugger support (you can now use the Adobe debugger, described <a href="http://wiki.openlaszlo.org/SubversionBuildInstructions#Use_command_line_.27fdb.27_tool_to_debug_Flash_9_apps">here</a>)</li>
-      <li>Kernel support for embedded fonts, scaling</li>
-      <li>Amazon and Calendar sample applications running</li>   
+      <li><p>Significant progress on the Laszlo Debugger. It works well in SWF9 for inserting print statements into code for inspection. There is also a new debug tag
+        <code>&lt;debug persist="true"&gt;</code>, which will keep the debugger window size and position across reloads. Please note that backtrace is not working yet.</p></li>
+        <li><p>A working Laszlo Profiler in both SWF7 and SWF8</p></li>
+        <li><p>Improvements to mouse events (<code>onmouseover</code>, <code>mousedown</code>, <code>mouseup</code>) to reduce excess sending of events and to fix edge cases</p></li>
+        <li><p>A number of bug fixes for the <code>dataselectionmanager</code></p></li>
+        <li><p>Significant bug fixes to components (<code>datagrid</code>, <code>comboboxes</code>, <code>floating lists</code>)</p></li>
+        <li><p>Updated video extensions to current syntax for operation in SWF9</p></li>
+        <li><p>Audio working in SWF9</p></li>
+        <li><p>Support for the accessibility APIs</p></li>
+        <li><p>Support for Japanese characters in the Dev Console</p></li>
+        <li><p>Laszlo Explorer now runs in SWF9</p></li>
+        <li><p>FLVs work in SWF9</p></li>
+        <li><p>Playback controls work for SWF9 animations</p></li>
+        <li><p>Sample applications: Amazon, Calendar, YouTube, LzPix, and Components Sampler all running in SWF9</p></li>
     </ul>
     <p>OpenLaszlo 4.2 Beta 2 is not a fully-qualified release. It has had limited testing for
       specific features. This release is intended as a platform for initial porting and testing of
       SWF9 applications.</p>
-    <h2>Installation Notes</h2>
-    <p>For SWF9 development on Unix, you will need to manually <code>chmod 755</code> all the
-        binaries in <code>WEB-INF/server/bin/</code> before you can compile. This is true for both
-        the <code>.war</code> and <code>.gz</code> distributions.</p>
+    <h1>Running OpenLaszlo Server on Windows Vista</h1>
 
-    <h2>Bugs Fixed in OpenLaszlo 4.2 Beta 2</h2>
-    <p>A number of bugs have been fixed; we have provided a link to our JIRA bug tracking system
+    <p>There are two options. The first option is to manually ask for administrator privileges
+      whenever you want to start or stop the OpenLaszlo Server.</p>
+
+    <p>Navigate to <b>Start->All Programs->OpenLaszlo Server->Start OpenLaszlo Server</b>. Right
+      click and select <b>Run as administrator</b>. Click <b>Continue</b> when Vista displays a
+      dialog box asking for permission.</p>
+
+    <p>Use the same procedure to select <b>Stop OpenLaszlo Server</b> or <b>OpenLaszlo Explorer</b>.</p>
+
+
+    <p>The second option is to modify the application shortcuts to run as administrator whenever
+      they are selected.</p>
+
+    <ol>
+      <li>
+        <p>Navigate to <b>Start->All Programs->OpenLaszlo Server->Start OpenLaszlo Server</b>. Right
+          click and select <b>Properties</b>.</p>
+      </li>
+      <li>
+        <p>The properties dialog box should open in the <b>Shortcut</b> tab. Click on the
+            <b>Advanced...</b> button.</p>
+      </li>
+      <li>
+        <p>Click on the checkbox to <b>Run as administrator</b> and click the <b>OK</b> button.</p>
+      </li>
+      <li>
+        <p>Click the <b>OK</b> button on the <b>Shortcut</b> tab. Vista will display a dialog box
+          asking for permission to change the shortcut settings.</p>
+      </li>
+    </ol>
+
+    <p>Follow the same procedure for the <b>Stop OpenLaszlo Server</b> or <b>OpenLaszlo Explorer</b>
+      shortcuts.</p>
+
+    <p>Note: Microsoft Vista will still ask for permission to run as an administrator. However, you
+      do not have to remember to run as an administrator each time.</p>
+    <h1>Installation Notes</h1>
+
+
+    <p>For SWF9 development on Unix, you will need to manually <code>chmod 755</code> all the
+      binaries in <code>WEB-INF/server/bin/</code> before you can compile. This is true for both the
+        <code>.war</code> and <code>.gz</code> distributions.</p>
+
+    <h1>Bugs Fixed in OpenLaszlo 4.2 Beta 2</h1>
+    <p>The 4.2b2 release includes almost 130 bug fixes, primarily to support SWF9; we have provided a link to our JIRA bug tracking system
       where you can view the details:</p>
     <ul>
       <li>
