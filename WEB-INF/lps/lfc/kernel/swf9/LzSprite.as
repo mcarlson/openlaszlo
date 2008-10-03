@@ -83,6 +83,9 @@ dynamic public class LzSprite extends Sprite {
       public var _setrescheight:Boolean = false;
 
       private var __mousedown:Boolean = false;
+      // null if no resource is loaded, true if it's a compiled resource, and 
+      // false if it's loaded from an external URL
+      private var __isinternalresource:* = null;
 
 
       public static var capabilities:* = {
@@ -213,6 +216,7 @@ dynamic public class LzSprite extends Sprite {
                   this.createResourceBitmap()  
               }
               
+              this.__isinternalresource = true;
               this.resource = r;
               // instantiate resource at frame 1
               this.stop(1);
@@ -221,6 +225,7 @@ dynamic public class LzSprite extends Sprite {
           } else if (LzAsset.isSoundAsset(r)) {
               // unload previous image-resource and sound-resource
               this.unload();
+              this.__isinternalresource = true;
               this.resource = r;
               
               this.sound = new res['assetclass']() as Sound;
@@ -238,6 +243,7 @@ dynamic public class LzSprite extends Sprite {
 
 
       public var imgLoader:Loader;
+      public var loaderMC:MovieClip;
       private var IMGDEPTH:int = 0;
 
       /** setSource( String:url )
@@ -249,6 +255,8 @@ dynamic public class LzSprite extends Sprite {
               return;
           }
           
+          this.__isinternalresource = false;
+
           if (getFileType(url, filetype) == "mp3") {
               // unload previous image-resource and sound-resource
               this.unload();
@@ -321,6 +329,22 @@ dynamic public class LzSprite extends Sprite {
               this.resourcewidth = 0;
               this.resourceheight = 0;
               if (event.type == Event.COMPLETE) {
+                  var info:LoaderInfo = event.target as LoaderInfo;
+                  if (info.content is AVM1Movie) {
+                      if ($debug) {
+                          Debug.warn("Playback control will not work for the resource.  Please update or recompile the resource for Flash 9.", this.resource);
+                      }
+                      this.loaderMC = null;
+                  } else {
+                      // store a reference for playback control
+                      this.loaderMC = MovieClip(event.target.content);  
+
+                      this.totalframes = this.loaderMC.totalFrames;
+                      this.owner.resourceevent('totalframes', this.totalframes);
+                      this.loaderMC.addEventListener(Event.ENTER_FRAME, updateFrames);
+                      this.owner.resourceevent('play', null, true);
+                      this.playing = this.owner.playing = true;
+                  }
                   try {
                       var loader:Loader = Loader(event.target.loader);
                       this.resourcewidth = loader.width;
@@ -359,6 +383,17 @@ dynamic public class LzSprite extends Sprite {
           return this.sound != null;
       }
       
+      /** 
+        * Handle frame updates for loaded movieclips
+        */
+      private function updateFrames (event:Event) :void {
+          this.frame = this.loaderMC.currentFrame;
+          this.owner.resourceevent('frame', this.frame);
+          if (this.frame == this.totalframes) {
+              this.owner.resourceevent('lastframe', null, true);
+          }
+      }
+
       /** 
         * Load/Stream a sound from an URL.
         */
@@ -401,8 +436,7 @@ dynamic public class LzSprite extends Sprite {
       private function startPlay (frame:Number = 0, isFrame:Boolean = true) :void {
           var pos:Number = (isFrame ? (frame / MP3_FPS) : frame) * 1000;
           
-          this.playing = true;
-          this.owner.playing = true;
+          this.playing = this.owner.playing = true;
           this.soundChannel = this.sound.play(pos, 0, this.soundTransform);
           this.addEventListener(Event.ENTER_FRAME, soundFrameHandler);
           this.soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
@@ -415,8 +449,7 @@ dynamic public class LzSprite extends Sprite {
       private function stopPlay () :Number {
           var frame:Number = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
           
-          this.playing = false;
-          this.owner.playing = false;
+          this.playing = this.owner.playing = false;
           this.removeEventListener(Event.ENTER_FRAME, soundFrameHandler);
           this.soundChannel.stop();
           this.soundChannel = null;
@@ -425,7 +458,7 @@ dynamic public class LzSprite extends Sprite {
       }
       
       /** 
-        * Update play status
+        * Update sound play status
         */
       private function updatePlay (play:Boolean, framenumber:*, rel:Boolean) :void {
           var fr:Number;
@@ -852,14 +885,29 @@ dynamic public class LzSprite extends Sprite {
           o Plays from the current frame if framenumber is null 
       */
       public function play (framenumber:* = null, rel:Boolean = false) :void {
-          if (! this.isaudio) {
-              // TODO [hqm 2008-04] what to do about playing movies? 
-              stop(framenumber);
-          } else {
+          if (this.isaudio) {
               // audio-resource is attached
               this.updatePlay(true, framenumber, rel);
               
               this.owner.resourceevent('play', null, true);
+          } else if (this.__isinternalresource) {
+              stop(framenumber, rel);
+          } else if (this.loaderMC) {
+              this.owner.resourceevent('play', null, true);
+              this.playing = this.owner.playing = true;
+              if (framenumber == null) {
+                  this.loaderMC.play();
+              } else {
+                  if (rel) framenumber += this.frame;
+                  if (framenumber > this.totalframes) {
+                      framenumber = this.totalframes;
+                  } else if (framenumber < 1) {
+                      framenumber = 1;
+                  }
+                  this.loaderMC.gotoAndPlay(framenumber);
+              }
+          } else {
+              //Debug.write('unhandled play', framenumber, rel);
           }
       }
 
@@ -869,7 +917,13 @@ dynamic public class LzSprite extends Sprite {
           o Stops at the current frame if framenumber is null 
       */
       public function stop (fn:* = null, rel:Boolean = false) :void {
-          if (! this.isaudio) {
+          if (this.isaudio) {
+              // audio-resource is attached
+              var p:Boolean = this.playing;
+              this.updatePlay(false, fn, rel);
+              
+              if (p) this.owner.resourceevent('stop', null, true);
+          } else if (this.__isinternalresource) {
               if (this.resource == null || imgLoader) {
                   return;
               }
@@ -924,12 +978,23 @@ dynamic public class LzSprite extends Sprite {
               //Debug.write('set resource to', asset, oRect); 
               
               this.applyStretchResource();
+          } else if (this.loaderMC) {
+              if ( this.playing ) this.owner.resourceevent('stop', null, true);
+              this.playing = this.owner.playing = false;
+              if (fn == null) {
+                  this.loaderMC.stop();
+              } else {
+                  if (rel) fn += this.frame;
+                  if (fn > this.totalframes) {
+                      fn = this.totalframes;
+                  } else if (fn < 1) {
+                      fn = 1;
+                  }
+                  this.loaderMC.gotoAndStop(fn);
+              }
           } else {
-              // audio-resource is attached
-              var p:Boolean = this.playing;
-              this.updatePlay(false, fn, rel);
-              
-              if (p) this.owner.resourceevent('stop', null, true);
+              // This shouldn't happen - but it does, on roll over 
+              //Debug.write('unhandled stop', fn, rel);
           }
       }
 
@@ -1151,6 +1216,8 @@ dynamic public class LzSprite extends Sprite {
         // clear out cached values
         this.lastreswidth = this.lastresheight = this.resourcewidth = this.resourceheight = 0;
         this.resource = null;
+        this.__isinternalresource = null;
+        this.loaderMC = null;
         this.imgLoader = null;
         this.resourceObj = null;
       }

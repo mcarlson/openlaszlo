@@ -24,7 +24,6 @@ SoundMC.prototype = new MovieClip();
 SoundMC.prototype._currentframe = 0;
 SoundMC.prototype._framesloaded = 0;
 SoundMC.prototype._totalframes = 0;
-SoundMC.prototype._fps = 30;
 SoundMC.prototype.isaudio = true;
 SoundMC.prototype.loadstate = 0;
 
@@ -36,7 +35,7 @@ SoundMC.prototype.play = function(direct=false) {
     if (direct != true && this._currentframe == this._totalframes) {
         t = 0;
     } else {
-        var t = this._currentframe / this._fps;
+        var t = this._currentframe / canvas.framerate;
         if (t < 0) t = 0;
     }
     this._sound.stop();
@@ -120,8 +119,8 @@ SoundMC.prototype.unload = function( ) {
   * @access private
   */
 SoundMC.prototype.testPlay = function(ignore) {
-    this._totalframes = Math.floor(this._sound.duration * .001 * this._fps);
-    this._currentframe = Math.floor(this._sound.position * .001 * this._fps);
+    this._totalframes = Math.floor(this._sound.duration * .001 * canvas.framerate);
+    this._currentframe = Math.floor(this._sound.position * .001 * canvas.framerate);
     this._framesloaded = Math.floor((this._sound.getBytesLoaded() / this._sound.getBytesTotal()) * this._totalframes)
     //Debug.write('testPlay ', this._currentframe, this._totalframes, this._framesloaded);
 }
