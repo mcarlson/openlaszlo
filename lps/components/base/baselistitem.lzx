@@ -113,6 +113,12 @@
             ]]>
         </method>
 
+        <!---  Sets this item to be highlighted to distinguish it in a list of items.
+           -->
+        <method name="setHilite" args="hilite">
+          // abstract base method
+        </method>
+
         <doc>
           <tag name="shortdesc"><text>a group of these are managed by a baselist</text></tag>
           <text>

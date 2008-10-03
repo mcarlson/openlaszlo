@@ -50,7 +50,7 @@
         <method name="doEnterDown">
             <![CDATA[
             // TODO: [hqm 2006-09] LPP-2819 _hiliteview is null sometimes, why?
-            if ( this._hiliteview && this._hiliteview.enabled) {
+            if ( this._hiliteview is lz.view && this._hiliteview.enabled) {
                 this._hiliteview.setAttribute('selected', true);
             }
             ]]>
@@ -97,8 +97,9 @@
                 if (this['_selector']) {
                     var sel = this._selector.getSelection();
                     if (sel && sel.length > 0) {
-                        var selectedview =_selector.getNextSubview(sel[0]);
-                        this._hiliteview = selectedview;
+                        if (sel[0] is lz.view) {
+                            this._hiliteview = sel[0];
+                        }
                     }
                 }
             ]]>
@@ -109,7 +110,7 @@
         <!--- @keywords private -->
         <method name="_doblur" args="ignore">
         <![CDATA[
-          if (this._hiliteview) {
+          if (this._hiliteview is lz.view) {
               this._hiliteview.setHilite(false);
           }
           this._hiliteview = null;
@@ -121,9 +122,9 @@
         <method name="setHilite" args="v" >
         <![CDATA[
             if (this._selector.allowhilite(v)) {
-                if ( this._hiliteview ) this._hiliteview.setHilite(false);
+                if ( this._hiliteview is lz.view ) this._hiliteview.setHilite(false);
                 this._hiliteview = v;
-                if (this._hiliteview ) {
+                if (v is lz.view ) {
                     v.setHilite(true);
                 }
             }
@@ -136,7 +137,7 @@
         <method name="_dokeydown" args="kc">
             <![CDATA[
             /* select item on 'space' key */
-            if (kc == 32 && this._hiliteview && this._hiliteview.enabled) {
+            if (kc == 32 && this._hiliteview is lz.view && this._hiliteview.enabled) {
                this._hiliteview.setAttribute('selected', true);
               // this._hiliteview.setHilite(false);
                return;
@@ -162,7 +163,7 @@
                 if (kc == 37  || kc == 38) {
                     next = _selector.getNextSubview(s, -1);
                 }
-                if ( this._hiliteview && this._hiliteview != 0 ) {
+                if (  this._hiliteview != 0 && this._hiliteview is lz.view  ) {
                     this._hiliteview.setHilite(false);
                 }
                 next.setHilite(true);
@@ -385,7 +386,7 @@
                 }
             }
 
-            if ( this._hiliteview && this._hiliteview['enabled']) {
+            if ( this._hiliteview is lz.view && this._hiliteview['enabled']) {
                 this._hiliteview.setHilite(false);
                 this._hiliteview = null;
             }
