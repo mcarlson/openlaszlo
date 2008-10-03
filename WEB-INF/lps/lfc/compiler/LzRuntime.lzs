@@ -101,5 +101,5 @@ var  globalValue = function (name) {
   }
   // TODO: [2008-09-16 ptw] This does not work for built-in classes in
   // swf9 :(
-  return this[name];
+  return this[name] || global[name];
 }
