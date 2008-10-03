@@ -45,15 +45,15 @@
     </resource>
 
     <resource name="ok_butt">
-        <frame src="images/ok_butt_norm.swf"/>
-        <frame src="images/ok_butt_roll.swf"/>
-        <frame src="images/ok_butt_down.swf"/>
+        <frame src="images/autoPng/ok_butt_norm.png"/>
+        <frame src="images/autoPng/ok_butt_roll.png"/>
+        <frame src="images/autoPng/ok_butt_down.png"/>
     </resource>
 
     <resource name="cancel_butt">
-        <frame src="images/cancel_butt_norm.swf"/>
-        <frame src="images/cancel_butt_roll.swf"/>
-        <frame src="images/cancel_butt_down.swf"/>
+        <frame src="images/autoPng/cancel_butt_norm.png"/>
+        <frame src="images/autoPng/cancel_butt_roll.png"/>
+        <frame src="images/autoPng/cancel_butt_down.png"/>
     </resource>
 
     <resource name="info_butt">
