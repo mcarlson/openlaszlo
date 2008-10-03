@@ -38,7 +38,6 @@ public class LzDebugEvalLoader {
     public function checkServerResponse () {
         var loadobj = new Loader();
         loadobj.contentLoaderInfo.addEventListener(Event.INIT, checkServerResponseHandler);
-        loadobj.onData = this.checkServerResponseHandler;
         var reqstr =  lz.Browser.toAbsoluteURL( "__dbgprobe.lzx?lzt=stat", false );
         this.loader.load(new URLRequest(reqstr),
                          new LoaderContext(false,
