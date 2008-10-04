@@ -714,7 +714,7 @@ dynamic public class LzSprite extends Sprite {
       /** setX( Number:x )
           o Moves the sprite to the specified x coordinate 
       */
-      public function setX ( x:String ):void {
+      public function setX ( x:Number ):void {
           this.x = x;
       }
 
