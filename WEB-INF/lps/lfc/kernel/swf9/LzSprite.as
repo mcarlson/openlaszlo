@@ -711,7 +711,7 @@ dynamic public class LzSprite extends Sprite {
           trace("debugClick "+event + " " +event.target);
       }
 
-      /** setX( Number:x )
+      /** setX( String:x )
           o Moves the sprite to the specified x coordinate 
       */
       public function setX ( x:Number ):void {
