@@ -273,27 +273,10 @@ var _selectable;
   * Catch all lz.ModeManager events
   * @access private
   */
-function _modechanged(modalview) {
-    // !modalview = "lz.ModeManager release a view" => so allowselectable
-    if ( !modalview ) {
-        this._setallowselectable(true);
-    } else {
-        // lz.ModeManager make modalview as modal
-        // (modalview.nodeLevel > this.nodeLevel) = "This cannot be a child of the setted modal view"
-        // so not allowselectable
-        if ( modalview.nodeLevel > this.nodeLevel ) {
-            this._setallowselectable( false );
-        } else {
-            // is this a child of the setted modal view
-            var parentSeeking = this;
-
-            do {
-                parentSeeking = parentSeeking.parent;
-            } while ( parentSeeking != canvas && parentSeeking != modalview );
-
-            this._setallowselectable(parentSeeking != canvas);
-        }
-    }
+function _modechanged(modalview:LzView) :void {
+    // if !modalview = "lz.ModeManager release a view" => so allowselectable
+    // else query lz.ModeManager whether we can be selected
+    this._setallowselectable(!modalview || lz.ModeManager.__LZallowInput(modalview, this));
 }
 
 /** 

@@ -14,24 +14,24 @@
   * <code>lz.ModeManagerService</code>.</p>
   *
   * <p>
-  * The mode manager controls the dispatch of mouse events to the rest 
-  * of the system. The mode manager keeps a stack of modal views. When a 
-  * view is made <i>modal</i> (with the 
-  * call <xref linkend="lz.ModeManager.makeModal"/>) only it and 
+  * The mode manager controls the dispatch of mouse events to the rest
+  * of the system. The mode manager keeps a stack of modal views. When a
+  * view is made <i>modal</i> (with the
+  * call <xref linkend="lz.ModeManager.makeModal"/>) only it and
   * its children receive mouse events. </p>
-  * 
+  *
   * <p>
-  * In the example below, the window grabs the mode when it is opened and releases it when it is closed. Note that the button no longer responds to mouse examplesses after the window is made modal, but the children of the window (such as the close button and the drag bar) still do. For a more detailed example of using modes with Laslzo, see 
-  * <a href="${examples}modeexample.lzx">modeexample.lzx</a> in the examples 
+  * In the example below, the window grabs the mode when it is opened and releases it when it is closed. Note that the button no longer responds to mouse examplesses after the window is made modal, but the children of the window (such as the close button and the drag bar) still do. For a more detailed example of using modes with Laslzo, see
+  * <a href="${examples}modeexample.lzx">modeexample.lzx</a> in the examples
   * directory.
   * </p>
-  * 
+  *
   * <example title="Using the mode manager to make a window behave like a modal dialog">
   * &lt;canvas height="160"&gt;
   *   &lt;button name="b1" onclick="winDia.openWindow()"&gt;Show modal dialog&lt;/button&gt;
   *   &lt;window width="200" name="winDia" closeable="true" visible="false"
   *           x="150" title="modal dialog"&gt;
-  * 
+  *
   *     &lt;method name="openWindow"&gt;
   *       this.open();
   *       lz.ModeManager.makeModal(this);
@@ -41,61 +41,92 @@
   *       super.close();
   *     &lt;/method&gt;
   *   &lt;/window&gt;
-  * 
-  * &lt;/canvas&gt; 
+  *
+  * &lt;/canvas&gt;
   * </example>
-  * 
+  *
   * @shortdesc Controls pass-through of mouse events.
   * @see mode example
   * @devnote Manages the modal states of views and also notifies views ( that have
   * registered with it ) when their focus has changed.
   */
-public class LzModeManagerService extends LzEventable {
+public final class LzModeManagerService extends LzEventable {
     /** Sent when the mode changes.
-    * @lzxtype event
-    * @access public
-    */
-    var onmode = LzDeclaredEvent;
+     * @lzxtype event
+     * @access public
+     */
+    var onmode :LzDeclaredEventClass = LzDeclaredEvent;
 
     /** @access private */
-    var __LZlastclick = null;
+    var __LZlastclick :LzView = null;
     /** @access private */
-    var __LZlastClickTime = 0;
+    var __LZlastClickTime :Number = 0;
     /** @access private */
-    var willCall = false;
+    var willCall :Boolean = false;
     /** @access private */
-    var eventsLocked = false;
+    var eventsLocked :Boolean = false;
     /** @access private */
-    var modeArray = new Array();
+    var modeArray :Array = new Array();
+    /** @access private */
+    var remotedebug :* = null;
 
     /**
-    * Pushes the view onto the stack of modal views
-    * @param LzView view: The view intending to have modal iteraction
-    */
-    function makeModal ( view ) {
-        if (this.modeArray.length == 0 || !this.hasMode( view )) {
+     * The modemanager service.  Also available as the global
+     * <code>lz.ModeManager</code>.
+     *
+     * @type LzModeManagerService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    public static const LzModeManager:LzModeManagerService;
+
+    /** @access private
+     * @devnote AS3 does not allow private constructors, so we need the
+     * error
+     */
+    function LzModeManagerService () {
+        super();
+        //    if (LzModeManagerService.LzModeManager) {
+        //      throw new Error("There can be only one LzModeManager");
+        //    }
+        if ($swf9) {
+        } else {
+            LzMouseKernel.setCallback(this, 'rawMouseEvent');
+        }
+    }
+
+    // Create the singleton
+    LzModeManagerService.LzModeManager = new LzModeManagerService();
+
+    /**
+     * Pushes the view onto the stack of modal views
+     * @param LzView view: The view intending to have modal iteraction
+     */
+    function makeModal (view:LzView) :void {
+        if (view && (this.modeArray.length == 0 || !this.hasMode( view ))) {
             this.modeArray.push( view );
             if (this.onmode.ready) this.onmode.sendEvent( view );
-            var f = lz.Focus.getFocus();
-            if ( f && ! f.childOf( view ) ){
+            var f:LzView = lz.Focus.getFocus();
+            if (f && ! f.childOf( view )) {
                 lz.Focus.clearFocus();
             }
         }
     }
 
     /**
-    * Removes the view (and all the views below it) from the stack of modal views
-    * @param LzView view: The view to be released of modal interaction
-    */
-    function release ( view ) {
+     * Removes the view (and all the views below it) from the stack of modal views
+     * @param LzView view: The view to be released of modal interaction
+     */
+    function release (view:LzView) :void {
         //releases all views past this one in the modelist as well
-        for ( var i = this.modeArray.length-1 ; i >=0 ; i-- ){
-            if ( this.modeArray[ i ] == view ){
-                this.modeArray.splice( i , this.modeArray.length - i );
-                var newmode = this.modeArray[ i - 1 ];
+        var marr:Array = this.modeArray;
+        for (var i:int = marr.length - 1; i >= 0; i--) {
+            if (marr[ i ] == view) {
+                marr.splice( i, marr.length - i );
+                var newmode:LzView = marr[ i - 1 ];
                 if (this.onmode.ready) this.onmode.sendEvent( newmode || null );
-                var f = lz.Focus.getFocus();
-                if ( newmode && f && ! f.childOf( newmode ) ){
+                var f:LzView = lz.Focus.getFocus();
+                if (newmode && f && ! f.childOf( newmode )) {
                     lz.Focus.clearFocus();
                 }
                 return;
@@ -104,118 +135,144 @@ public class LzModeManagerService extends LzEventable {
     }
 
     /**
-    * Clears all modal views from the stack
-    */
-    function releaseAll ( ) {
+     * Clears all modal views from the stack
+     */
+    function releaseAll () :void {
         // reset array to remove all views
         this.modeArray = new Array();
         if (this.onmode.ready) this.onmode.sendEvent( null );
     }
 
     /**
-    * Check to see if the current event should be passed to its intended view
-    * @access private
-    * 
-    * @param LzView view: the view that received the event
-    * @param String eventStr: the event string
-    */
-    function handleMouseEvent ( view, eventStr ) {
+     * Check to see if the current event should be passed to its intended view
+     * @access private
+     *
+     * @param LzView view: the view that received the event
+     * @param String eventStr: the event string
+     */
+    function handleMouseEvent (view:LzView, eventStr:String) :void {
         //Debug.warn("%w, %w", view , eventStr);
         if (eventStr == "onmouseup") lz.Track.__LZmouseup(null);
 
-        var dosend = true;
-        var isinputtext = false;
-
-        if (view == null ) {  // check if the mouse event is in a inputtext
-            view = this.__findInputtextSelection(); 
+        if (view == null) {  // check if the mouse event is in a inputtext
+            view = this.__findInputtextSelection();
         }
 
         lz.GlobalMouse.__mouseEvent(eventStr, view);
 
-        if ( this.eventsLocked == true ){
+        if (view == null || this.eventsLocked) {
             return;
         }
 
-        var i = this.modeArray.length-1;
-        while( dosend && i >= 0 ){
-            var mView = this.modeArray[ i-- ];
+        var dosend:Boolean = true;
+        for (var i:int = this.modeArray.length - 1; dosend && i >= 0; --i) {
+            var mView = this.modeArray[ i ];
             // exclude the debugger from the mode
             if ($debug) {
-                if (view && Debug && (Debug.console is LzView) && view.childOf(Debug.console))
-                    break;
+                if ($as2 || $swf9) {
+                    if (this.remotedebug == null) {
+                        this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
+                    }
+                }
+                if ($as2) {
+                    if (!this.remotedebug && view.childOf(Debug.console))
+                        break;
+                } else if ($swf9) {
+                    if (!this.remotedebug && view.childOf(Debug.console.window))
+                        break;
+                } else if ($dhtml) {
+                    // DHTML-Debugger is not part of the lzx-application
+                }
             }
 
-            if (view && view.childOf( mView ) ){
+            if (view.childOf( mView )) {
                 break;
-            } else if (mView) {
-                dosend = mView.passModeEvent ? mView.passModeEvent( eventStr , view ) : null;
+            } else {
+                dosend = mView.passModeEvent ? mView.passModeEvent( eventStr, view ) : false;
             }
         }
 
-        if ( dosend ){
+        if (dosend) {
             //check for double-click
-            if ( eventStr == "onclick" ){
-                if ( this.__LZlastclick == view && view.ondblclick.ready &&
-                    (LzTimeKernel.getTimer() - this.__LZlastClickTime)< view.DOUBLE_CLICK_TIME ){
-                        //this is a double-click
-                        eventStr = "ondblclick";
-                        lz.GlobalMouse.__mouseEvent(eventStr, view);
-                        this.__LZlastclick = null;
+            if (eventStr == "onclick") {
+                if (this.__LZlastclick == view && view.ondblclick.ready &&
+                        (LzTimeKernel.getTimer() - this.__LZlastClickTime) < view.DOUBLE_CLICK_TIME) {
+                    //this is a double-click
+                    eventStr = "ondblclick";
+                    lz.GlobalMouse.__mouseEvent(eventStr, view);
+                    this.__LZlastclick = null;
                 } else {
                     this.__LZlastclick = view;
                     this.__LZlastClickTime = LzTimeKernel.getTimer();
                 }
             }
 
-            //Debug.warn("sending %w, %w", view , eventStr);
+            //Debug.warn("sending %w, %s", view, eventStr);
+            view.mouseevent( eventStr );
 
-            if (view) view.mouseevent( eventStr );
-            if ( eventStr == "onmousedown" ){
+            if (eventStr == "onmousedown") {
                 lz.Focus.__LZcheckFocusChange( view );
             }
-        } 
+        }
+    }
+    
+    /** @access private */
+    function __LZallowInput (modalview:LzView, input:LzInputText) :Boolean {
+        if ($debug) {
+            if ($as2 || $swf9) {
+                if (this.remotedebug == null) {
+                    this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
+                }
+            }
+            if ($as2) {
+                if (!this.remotedebug && input.childOf(Debug.console))
+                    return true;
+            } else if ($swf9) {
+                if (!this.remotedebug && input.childOf(Debug.console.window))
+                    return true;
+            } else if ($dhtml) {
+                // DHTML-Debugger is not part of the lzx-application
+            }
+        }
 
-
-        //this on matters for onmouseup and onmousedown, but it's easier to just
-        //set it regardless
-        //this[ "haveGlobal" + eventStr ] = false;
-
+        return input.childOf(modalview);
     }
 
     /**
-    * return true if the given view is allowed to receive the focus
-    * any view that is a child of the view that has the mode may be focused
-    * other views may not
-    * @access private
-    */
-    function __LZallowFocus ( view ) {
-        var len = this.modeArray.length;
-        return len == 0 || view.childOf ( this.modeArray[len-1] );
+     * return true if the given view is allowed to receive the focus
+     * any view that is a child of the view that has the mode may be focused
+     * other views may not
+     * @access private
+     */
+    function __LZallowFocus (view:LzView) :Boolean {
+        var len:int = this.modeArray.length;
+        return len == 0 || view.childOf( this.modeArray[len-1] );
     }
 
     /**
-    * Prevents all mouse events from firing.
-    * */
-    function globalLockMouseEvents (){
+     * Prevents all mouse events from firing.
+     */
+    function globalLockMouseEvents () :void {
         this.eventsLocked = true;
     }
 
     /**
-    * Restore normal mouse event firing.
-    * */
-    function globalUnlockMouseEvents (){
+     * Restore normal mouse event firing.
+     */
+    function globalUnlockMouseEvents () :void {
         this.eventsLocked = false;
     }
 
     /**
-    * Tests whether the given view is in the modelist.
-    * @param LzView view: The mode to be tested to see if it is in the modelist
-    * @return Boolean: true if the view is in the modelist
-    * 
-    */
-    function hasMode ( view ){
-        for ( var i = this.modeArray.length -1 ; i >= 0; i-- ){
-            if ( view == this.modeArray[ i ] ){
+     * Tests whether the given view is in the modelist.
+     * @param LzView view: The mode to be tested to see if it is in the modelist
+     * @return Boolean: true if the view is in the modelist
+     *
+     */
+    function hasMode (view:LzView) :Boolean {
+        var marr:Array = this.modeArray;
+        for (var i:int = marr.length - 1; i >= 0; i--) {
+            if (view == marr[ i ]) {
                 return true;
             }
         }
@@ -223,40 +280,35 @@ public class LzModeManagerService extends LzEventable {
     }
 
     /**
-    * @access private
-    */
-    function getModalView ( ){
+     * @access private
+     */
+    function getModalView () :LzView {
         return this.modeArray[ this.modeArray.length - 1] || null;
     }
 
     /**
-    * If a mouse event occurs in an input text field, find the focused view
-    * @access private
-    */
-    function __findInputtextSelection( ){
+     * If a mouse event occurs in an input text field, find the focused view
+     * @access private
+     */
+    function __findInputtextSelection () :LzView {
         return LzInputTextSprite.findSelection();
     }
 
     /**
-    * @access private
-    * receives mouse events from LzMouseKernel 
-    */
-    function rawMouseEvent(eventname, view) {
+     * @access private
+     * receives mouse events from LzMouseKernel
+     */
+    function rawMouseEvent (eventname:String, view:LzView) :void {
         if (eventname == 'onmousemove') {
-            lz.GlobalMouse.__mouseEvent('onmousemove', null); 
+            lz.GlobalMouse.__mouseEvent('onmousemove', null);
         } else {
-            this.handleMouseEvent( view , eventname );
+            this.handleMouseEvent(view, eventname);
         }
     }
 }
 lz.ModeManagerService = LzModeManagerService;  // publish
 
 /**
-  * lz.ModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService</a>.
+  * lz.ModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService.LzModeManager</a>.
   */
-lz.ModeManager = new LzModeManagerService();
-
-if ($swf9) {
-} else {
-    LzMouseKernel.setCallback(lz.ModeManager, 'rawMouseEvent');
-}
+lz.ModeManager = LzModeManagerService.LzModeManager;

@@ -193,10 +193,13 @@ class LzInputTextSprite extends LzTextSprite {
     }
 
     /**
-    * If a mouse event occurs in an input text field, find the focused view
-    * TODO: implement
-    */
-    static function findSelection(){
+     * If a mouse event occurs in an input text field, find the focused view
+     */
+    static function findSelection() :LzInputText {
+        var f:InteractiveObject = LFCApplication.stage.focus;
+        if (f is TextField && f.parent is LzInputTextSprite) {
+            return (f.parent as LzInputTextSprite).owner;
+        }
         return null;
     }
 
