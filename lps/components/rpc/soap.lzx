@@ -80,6 +80,40 @@
             }
             return ok;
         </method>
+
+
+
+       <method name="makeProxyStubFunction" args="fn">
+        <![CDATA[                                                
+           var stubinfo = this.proxyinfo[fn];
+           //"Multiply": function ()
+           //{var args = arguments.callee.args;
+           //                return LzSOAPService.invoke(arguments[1],
+           //   arguments[0],
+           // args.superclass.requestheaders,
+           // {"parts": [["tns:Multiply",
+           // null]],
+           // "opstyle": "document",
+           // "operation": "Multiply",
+           // "port": "MathServiceSoap",
+           // "service": "MathService",
+           // "wsdl": "http://www.dotnetjunkies.com/quickstart/aspplus......./mathservice.asmx?WSDL"},
+           //                                            args.superclass.secure,
+           var stubfunc = function (){
+               var args = arguments.callee.args;
+               return LzSOAPService.invoke(
+                   arguments[1], 
+                   arguments[0],
+                   args.superclass.requestheaders,
+                   stubinfo, false, null);
+           }
+           
+           return stubfunc;
+       ]]>                                                
+       </method>
+
+
+
         <doc>
             <tag name="shortdesc"><text>SOAP (Simple Object Access Prototcol)</text></tag>
             <text>

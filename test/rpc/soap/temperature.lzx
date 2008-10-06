@@ -1,6 +1,6 @@
-<canvas debug="true" height="800" width="1200">
+<canvas debug="true" height="800" width="100%">
 
-    <debug x="0" width="1200" height="370" y="80" fontsize="20"/>
+    <debug persist="true" x="0" width="1200" height="370" y="80" />
 
     <soap name="temperature" 
           wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter">

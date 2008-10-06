@@ -67,191 +67,257 @@
  */
 
 //=============================================================================
-// DEFINE OBJECT: QName
+// DEFINE OBJECT: LzQName
 //
 // Create a qualified name object.
 //
-// @param local: local part of the QName.
-// @param namespaceURI: namespace URI for the QName.
+// @param local: local part of the LzQName.
+// @param namespaceURI: namespace URI for the LzQName.
 //==============================================================================
-class QName {
+public class LzQName {
 
 var __LZns;
 var __LZlocal;
 
-function QName(local, namespaceURI)
+function LzQName(local, namespaceURI)
 {
     this.__LZlocal = local;
     this.__LZns = namespaceURI;
-    QName.SUPPORTED_TYPES[this.toString()] = true;
+    if (LzQName.SUPPORTED_TYPES == null) {
+        LzQName.SUPPORTED_TYPES = {};
+    }
+    LzQName.SUPPORTED_TYPES[this.toString()] = true;
 }
 
-static var SUPPORTED_TYPES = {};
+static var SUPPORTED_TYPES = null;
 
 //-----------------------------------------------------------------------------
-// String representation of this QName.
+// String representation of this LzQName.
 //-----------------------------------------------------------------------------
 function toString () {
-    return "QName {" + this.__LZns + "}" + this.__LZlocal;
+    return "LzQName {" + this.__LZns + "}" + this.__LZlocal;
 }
 
 //-----------------------------------------------------------------------------
-// QName simple XSD type constants
+// LzQName simple XSD type constants
 //-----------------------------------------------------------------------------
-static var XSD_STRING =
-    new QName("string", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_BOOLEAN =
-    new QName("boolean", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_DOUBLE =
-    new QName("double", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_FLOAT =
-    new QName("float", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_INT =
-    new QName("int", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_INTEGER =
-    new QName("integer", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_LONG =
-    new QName("long", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_SHORT =
-    new QName("short", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_BYTE =
-    new QName("byte", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_DECIMAL =
-    new QName("decimal", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_BASE64 =
-    new QName("base64Binary", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_HEXBIN =
-    new QName("hexBinary", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_ANYTYPE =
-    new QName("anyType", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_ANY =
-    new QName("any", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_QNAME =
-    new QName("QName", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_DATETIME =
-    new QName("dateTime", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_DATE =
-    new QName("date", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_TIME =
-    new QName("time", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
-static var XSD_TIMEINSTANT1999 =
-    new QName("timeInstant", LzNamespace.URI_1999_SCHEMA_XSD);
-static var XSD_TIMEINSTANT2000 =
-    new QName("timeInstant", LzNamespace.URI_2000_SCHEMA_XSD);
+    static var XSD_STRING;
+    XSD_STRING =
+    new LzQName("string", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_BOOLEAN;
+    XSD_BOOLEAN =
+    new LzQName("boolean", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_DOUBLE;
+    XSD_DOUBLE =
+    new LzQName("double", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_FLOAT;
+    XSD_FLOAT =
+    new LzQName("float", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_INT;
+    XSD_INT =
+    new LzQName("int", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_INTEGER;
+    XSD_INTEGER =
+    new LzQName("integer", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_LONG;
+    XSD_LONG =
+    new LzQName("long", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_SHORT;
+    XSD_SHORT =
+    new LzQName("short", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_BYTE;
+    XSD_BYTE =
+    new LzQName("byte", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_DECIMAL;
+    XSD_DECIMAL =
+    new LzQName("decimal", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_BASE64;
+    XSD_BASE64 =
+    new LzQName("base64Binary", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_HEXBIN;
+    XSD_HEXBIN =
+    new LzQName("hexBinary", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_ANYTYPE;
+    XSD_ANYTYPE =
+    new LzQName("anyType", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_ANY;
+    XSD_ANY =
+    new LzQName("any", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_QNAME;
+    XSD_QNAME =
+    new LzQName("LzQName", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_DATETIME;
+    XSD_DATETIME =
+    new LzQName("dateTime", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_DATE;
+    XSD_DATE =
+    new LzQName("date", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_TIME;
+    XSD_TIME =
+    new LzQName("time", LzNamespace.URI_DEFAULT_SCHEMA_XSD);
+    static var XSD_TIMEINSTANT1999;
+    XSD_TIMEINSTANT1999 =
+    new LzQName("timeInstant", LzNamespace.URI_1999_SCHEMA_XSD);
+    static var XSD_TIMEINSTANT2000;
+    XSD_TIMEINSTANT2000 =
+    new LzQName("timeInstant", LzNamespace.URI_2000_SCHEMA_XSD);
 
-static var XSD_NORMALIZEDSTRING = 
-    new QName("normalizedString", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_TOKEN = 
-    new QName("token", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_NORMALIZEDSTRING;
+    XSD_NORMALIZEDSTRING = 
+    new LzQName("normalizedString", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_TOKEN;
+    XSD_TOKEN = 
+    new LzQName("token", LzNamespace.URI_2001_SCHEMA_XSD);
 
-static var XSD_UNSIGNEDLONG = 
-    new QName("unsignedLong", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_UNSIGNEDINT = 
-    new QName("unsignedInt", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_UNSIGNEDSHORT = 
-    new QName("unsignedShort", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_UNSIGNEDBYTE = 
-    new QName("unsignedByte", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_POSITIVEINTEGER = 
-    new QName("positiveInteger", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_NEGATIVEINTEGER = 
-    new QName("negativeInteger", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_NONNEGATIVEINTEGER = 
-    new QName("nonNegativeInteger", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_NONPOSITIVEINTEGER = 
-    new QName("nonPositiveInteger", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_UNSIGNEDLONG;
+    XSD_UNSIGNEDLONG = 
+    new LzQName("unsignedLong", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_UNSIGNEDINT;
+    XSD_UNSIGNEDINT = 
+    new LzQName("unsignedInt", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_UNSIGNEDSHORT;
+    XSD_UNSIGNEDSHORT = 
+    new LzQName("unsignedShort", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_UNSIGNEDBYTE;
+    XSD_UNSIGNEDBYTE = 
+    new LzQName("unsignedByte", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_POSITIVEINTEGER;
+    XSD_POSITIVEINTEGER = 
+    new LzQName("positiveInteger", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_NEGATIVEINTEGER;
+    XSD_NEGATIVEINTEGER = 
+    new LzQName("negativeInteger", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_NONNEGATIVEINTEGER;
+    XSD_NONNEGATIVEINTEGER = 
+    new LzQName("nonNegativeInteger", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_NONPOSITIVEINTEGER;
+    XSD_NONPOSITIVEINTEGER = 
+    new LzQName("nonPositiveInteger", LzNamespace.URI_2001_SCHEMA_XSD);
 
-static var XSD_YEARMONTH = 
-    new QName("gYearMonth", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_MONTHDAY = 
-    new QName("gMonthDay", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_YEAR = 
-    new QName("gYear", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_MONTH = 
-    new QName("gMonth", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_DAY = 
-    new QName("gDay", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_DURATION = 
-    new QName("duration", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_YEARMONTH;
+    XSD_YEARMONTH = 
+    new LzQName("gYearMonth", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_MONTHDAY;
+    XSD_MONTHDAY = 
+    new LzQName("gMonthDay", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_YEAR;
+    XSD_YEAR = 
+    new LzQName("gYear", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_MONTH;
+    XSD_MONTH = 
+    new LzQName("gMonth", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_DAY;
+    XSD_DAY = 
+    new LzQName("gDay", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_DURATION;
+    XSD_DURATION = 
+    new LzQName("duration", LzNamespace.URI_2001_SCHEMA_XSD);
 
-static var XSD_NAME = 
-    new QName("Name", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_NCNAME = 
-    new QName("NCName", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_NMTOKEN = 
-    new QName("NMTOKEN", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_NMTOKENS = 
-    new QName("NMTOKENS", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_NOTATION = 
-    new QName("NOTATION", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_ENTITY = 
-    new QName("ENTITY", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_ENTITIES = 
-    new QName("ENTITIES", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_IDREF = 
-    new QName("IDREF", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_IDREFS = 
-    new QName("IDREFS", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_ANYURI = 
-    new QName("anyURI", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_LANGUAGE = 
-    new QName("language", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_ID = 
-    new QName("ID", LzNamespace.URI_2001_SCHEMA_XSD);
-static var XSD_SCHEMA = 
-    new QName("schema", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_NAME;
+    XSD_NAME = 
+    new LzQName("Name", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_NCNAME;
+    XSD_NCNAME = 
+    new LzQName("NCName", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_NMTOKEN;
+    XSD_NMTOKEN = 
+    new LzQName("NMTOKEN", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_NMTOKENS;
+    XSD_NMTOKENS = 
+    new LzQName("NMTOKENS", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_NOTATION;
+    XSD_NOTATION = 
+    new LzQName("NOTATION", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_ENTITY;
+    XSD_ENTITY = 
+    new LzQName("ENTITY", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_ENTITIES;
+    XSD_ENTITIES = 
+    new LzQName("ENTITIES", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_IDREF;
+    XSD_IDREF = 
+    new LzQName("IDREF", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_IDREFS;
+    XSD_IDREFS = 
+    new LzQName("IDREFS", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_ANYURI;
+    XSD_ANYURI = 
+    new LzQName("anyURI", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_LANGUAGE;
+    XSD_LANGUAGE = 
+    new LzQName("language", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_ID;
+    XSD_ID = 
+    new LzQName("ID", LzNamespace.URI_2001_SCHEMA_XSD);
+    static var XSD_SCHEMA;
+    XSD_SCHEMA = 
+    new LzQName("schema", LzNamespace.URI_2001_SCHEMA_XSD);
 
 //-----------------------------------------------------------------------------
-// QName SOAP encoding constants
+// LzQName SOAP encoding constants
 //-----------------------------------------------------------------------------
-static var SOAP_BASE64 = 
-    new QName("base64", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_BASE64BINARY = 
-    new QName("base64Binary", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_STRING = 
-    new QName("string", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_BOOLEAN = 
-    new QName("boolean", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_DOUBLE = 
-    new QName("double", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_FLOAT = 
-    new QName("float", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_INT = 
-    new QName("int", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_LONG = 
-    new QName("long", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_SHORT = 
-    new QName("short", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_BYTE = 
-    new QName("byte", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_INTEGER = 
-    new QName("integer", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_DECIMAL = 
-    new QName("decimal", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_ARRAY = 
-    new QName("Array", LzNamespace.URI_DEFAULT_SOAP_ENC);
-static var SOAP_ARRAY12 = 
-    new QName("Array", LzNamespace.URI_SOAP12_ENC);
+    static var SOAP_BASE64;
+    SOAP_BASE64 = 
+    new LzQName("base64", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_BASE64BINARY;
+    SOAP_BASE64BINARY = 
+    new LzQName("base64Binary", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_STRING;
+    SOAP_STRING = 
+    new LzQName("string", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_BOOLEAN;
+    SOAP_BOOLEAN = 
+    new LzQName("boolean", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_DOUBLE;
+    SOAP_DOUBLE = 
+    new LzQName("double", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_FLOAT;
+    SOAP_FLOAT = 
+    new LzQName("float", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_INT;
+    SOAP_INT = 
+    new LzQName("int", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_LONG;
+    SOAP_LONG = 
+    new LzQName("long", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_SHORT;
+    SOAP_SHORT = 
+    new LzQName("short", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_BYTE;
+    SOAP_BYTE = 
+    new LzQName("byte", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_INTEGER;
+    SOAP_INTEGER = 
+    new LzQName("integer", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_DECIMAL;
+    SOAP_DECIMAL = 
+    new LzQName("decimal", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_ARRAY;
+    SOAP_ARRAY = 
+    new LzQName("Array", LzNamespace.URI_DEFAULT_SOAP_ENC);
+    static var SOAP_ARRAY12;
+    SOAP_ARRAY12 = 
+    new LzQName("Array", LzNamespace.URI_SOAP12_ENC);
 
 //------------------------------------------------------------------------------
-// Get the local part of this QName.
+// Get the local part of this LzQName.
 //------------------------------------------------------------------------------
 function getLocalPart () {
     return this.__LZlocal;
 }
 
 //------------------------------------------------------------------------------
-// Get the namespace for this QName.
+// Get the namespace for this LzQName.
 //------------------------------------------------------------------------------
 function getNamespaceURI () {
     return this.__LZns;
 }
 
 //------------------------------------------------------------------------------
-// Compare this QName with another QName object.
-// @param qname: QName to compare against.
+// Compare this LzQName with another LzQName object.
+// @param qname: LzQName to compare against.
 // @return true if qame's local part and namespace URI are the same as this
-// QName's.
+// LzQName's.
 //------------------------------------------------------------------------------
 function equals (qname) {
     return this.__LZlocal == qname.__LZlocal &&
@@ -259,13 +325,13 @@ function equals (qname) {
 }
 
 //------------------------------------------------------------------------------
-// Lifted from Apache AXIS org.apache.axis.Constants.equals(QName, QName).
+// Lifted from Apache AXIS org.apache.axis.Constants.equals(LzQName, LzQName).
 //
-// The first QName is the current version of the name. The second QName is
+// The first LzQName is the current version of the name. The second LzQName is
 // compared with the first considering all namespace uri versions.
 //
-// @param first: currently supported QName
-// @param second: any QName
+// @param first: currently supported LzQName
+// @param second: any LzQName
 //------------------------------------------------------------------------------
 static function equals2 (first, second) {
     if (first == second) {
@@ -284,9 +350,9 @@ static function equals2 (first, second) {
     var namespaceURI = first.getNamespaceURI();
     var search = null;
     if (namespaceURI == LzNamespace.URI_DEFAULT_SOAP_ENC) {
-        search = LzNamespace.URIS_SOAP_ENC;
+        search = LzNamespace.URI_DEFAULT_SOAP_ENC;
     } else if (namespaceURI == LzNamespace.URI_DEFAULT_SOAP_ENV) {
-        search = LzNamespace.URIS_SOAP_ENV;
+        search = LzNamespace.URI_DEFAULT_SOAP_ENV;
     } else if (namespaceURI == LzNamespace.URI_DEFAULT_SCHEMA_XSD) {
         search = LzNamespace.URIS_SCHEMA_XSD;
     } else if (namespaceURI == LzNamespace.URI_DEFAULT_SCHEMA_XSI) {
@@ -307,13 +373,14 @@ static function equals2 (first, second) {
 //------------------------------------------------------------------------------
 // Check to see if qname is a supported primitive type. 
 //
-// @param QName qn: qname to check to see if it's a supported primitive type.
+// @param LzQName qn: qname to check to see if it's a supported primitive type.
 // @return true if supported, else false.
 //------------------------------------------------------------------------------
-static function isSupported (qn) {
-    return (!!QName.SUPPORTED_TYPES[qn.toString()]);
+static function isSupported (qn:LzQName) {
+    return (!!LzQName.SUPPORTED_TYPES[qn.toString()]);
 }
 
+}
 ]]>
 </script>
 </library>

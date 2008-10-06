@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -87,9 +87,6 @@ original :   String pathname =  org.openlaszlo.server.LPS.getTemplateDirectory()
             // Get the canvas first, so that if this fails and we
             // write the compilation error, nothing has been written
             // to out yet.
-            if (fileName.endsWith(".lzo")) {
-                fileName = fileName.substring(0, fileName.length() - 1) + "x";
-            }
             Canvas canvas = getCanvas(fileName, req);
             writeCanvas(out, req, canvas, fileName);
         } catch (CompilationError e) {

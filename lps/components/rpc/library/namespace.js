@@ -70,6 +70,8 @@
 
 class LzNamespace {
 
+var namespace:String;
+
     function LzNamespace (namespace) {
     this.namespace = namespace;
     }
@@ -90,47 +92,49 @@ static function getType  (ctqn) {
     return ns ? ns[ctqn.getLocalPart()] : null;
 }
 
-static var ns = {};
+public static var ns = {};
 
 //------------------------------------------------------------------------------
 // Statics from org.apache.axis.Constants.
 //------------------------------------------------------------------------------
 
 // SOAP encoding namespace URIs
-static var URI_SOAP11_ENC = "http://schemas.xmlsoap.org/soap/encoding/";
-static var URI_SOAP12_ENC = "http://www.w3.org/2002/12/soap-encoding";
-static var URI_SOAP12_NOENC =
+public static var URI_SOAP11_ENC = "http://schemas.xmlsoap.org/soap/encoding/";
+public static var URI_SOAP12_ENC = "http://www.w3.org/2002/12/soap-encoding";
+public static var URI_SOAP12_NOENC =
     "http://www.w3.org/2002/12/soap-envelope/encoding/none";
-static var URI_DEFAULT_SOAP_ENC = LzNamespace.URI_SOAP11_ENC
+public static var URI_DEFAULT_SOAP_ENC = "http://schemas.xmlsoap.org/soap/encoding/";
 
 // SOAP envelope namespace URIs
-static var URI_SOAP11_ENV = "http://schemas.xmlsoap.org/soap/envelope/" ;
-static var URI_SOAP12_ENV = "http://www.w3.org/2002/12/soap-envelope";
-static var URI_DEFAULT_SOAP_ENV = LzNamespace.URI_SOAP11_ENV;
+public static var URI_SOAP11_ENV = "http://schemas.xmlsoap.org/soap/envelope/" ;
+public static var URI_SOAP12_ENV = "http://www.w3.org/2002/12/soap-envelope";
+public static var URI_DEFAULT_SOAP_ENV = "http://schemas.xmlsoap.org/soap/envelope/" ;
 
 // Schema definition namespace URIs
-static var URI_1999_SCHEMA_XSD = "http://www.w3.org/1999/XMLSchema";
-static var URI_2000_SCHEMA_XSD = "http://www.w3.org/2000/10/XMLSchema";
-static var URI_2001_SCHEMA_XSD = "http://www.w3.org/2001/XMLSchema";
-static var URI_DEFAULT_SCHEMA_XSD = LzNamespace.URI_2001_SCHEMA_XSD;
+public static var URI_1999_SCHEMA_XSD = "http://www.w3.org/1999/XMLSchema";
+public static var URI_2000_SCHEMA_XSD = "http://www.w3.org/2000/10/XMLSchema";
+public static var URI_2001_SCHEMA_XSD = "http://www.w3.org/2001/XMLSchema";
+public static var URI_DEFAULT_SCHEMA_XSD = "http://www.w3.org/2001/XMLSchema";
 
-static var URIS_SCHEMA_XSD = 
-    [ LzNamespace.URI_2001_SCHEMA_XSD,
-      LzNamespace.URI_2000_SCHEMA_XSD,
-      LzNamespace.URI_1999_SCHEMA_XSD ];
+public static var URIS_SCHEMA_XSD = 
+    [ "http://www.w3.org/2001/XMLSchema",
+      "http://www.w3.org/2000/XMLSchema",
+      "http://www.w3.org/1999/XMLSchema"];
+
 
 // Schema instance namespace URIs
-static var URI_1999_SCHEMA_XSI = "http://www.w3.org/1999/XMLSchema-instance";
-static var URI_2000_SCHEMA_XSI =
+public static var URI_1999_SCHEMA_XSI = "http://www.w3.org/1999/XMLSchema-instance";
+public static var URI_2000_SCHEMA_XSI =
     "http://www.w3.org/2000/10/XMLSchema-instance";
-static var URI_2001_SCHEMA_XSI = "http://www.w3.org/2001/XMLSchema-instance";
-static var URI_DEFAULT_SCHEMA_XSI = LzNamespace.URI_2001_SCHEMA_XSI;
+public static var URI_2001_SCHEMA_XSI = "http://www.w3.org/2001/XMLSchema-instance";
+public static var URI_DEFAULT_SCHEMA_XSI = "http://www.w3.org/2001/XMLSchema-instance";
 
-static var URIS_SCHEMA_XSI =
-    [ LzNamespace.URI_1999_SCHEMA_XSI, 
-     LzNamespace.URI_2000_SCHEMA_XSI,
-     LzNamespace.URI_2001_SCHEMA_XSI ];
+public static var URIS_SCHEMA_XSI =
+    [ "http://www.w3.org/1999/XMLSchema-instance",
+      "http://www.w3.org/2000/10/XMLSchema-instance",
+      "http://www.w3.org/2001/10/XMLSchema-instance"];
 }
+
 
 
 ]]>

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -31,164 +31,122 @@ public class ClientSOAPService
         // Tells client data returned is an object 
         // this.__LZstubload = true
         body.append("{");
-        body.append("__LZstubload: true,");
+        body.append("\"__LZstubload\": true,");
 
         // SOAP specific information
         // object.stubinfo
-        body.append("stubinfo: ");
+        body.append("\"stubinfo\": ");
         {
             body.append("{");
             //------------------------------------------------------------
             // this.service = service.getServiceName()
-            body.append("service:" + ScriptCompiler.quote(service.getServiceName()) + ", ");
+            body.append("\"service\":" + ScriptCompiler.quote(service.getServiceName()) + ", ");
 
             //------------------------------------------------------------
             // this.port = service.getPort()
-            body.append("port: "+ ScriptCompiler.quote(service.getPort()) +",");
+            body.append("\"port\": "+ ScriptCompiler.quote(service.getPort()) +",");
 
             //------------------------------------------------------------
             // this.wsdl = service.getWSDL()
-            body.append("wsdl: "+ ScriptCompiler.quote(service.getWSDL()) + ",");
+            body.append("\"wsdl\": "+ ScriptCompiler.quote(service.getWSDL()) + ",");
 
             //------------------------------------------------------------
             // this.ctypes = <complexTypeInfoObject>
-            body.append("__LZctypes: ");
+            body.append("\"__LZctypes\": ");
             pushComplexTypeInfo(service.getSchemaComplexTypes());
             body.append(", ");
 
             //------------------------------------------------------------
             // this._namespace = namespace /* target namespace */
-            body.append("__LZnamespace: " + 
+            body.append("\"__LZnamespace\": " + 
                         ScriptCompiler.quote(service.getTargetNS()));
 
             body.append("},");
         }
 
         // object.stub
-        body.append("stub: ");
-        {
-            body.append("{");
+        body.append("\"stub\": ");
+        body.append("{");
             
-            int count = 0;
-            //------------------------------------------------------------
-            // Create client-side service operations. Assuming that 
-            // operations won't be null.
-            //------------------------------------------------------------
-            Map operations = service.getOperations();
-            Iterator iter = operations.keySet().iterator();
-            while (iter.hasNext()) {
+        int count = 0;
+        //------------------------------------------------------------
+        // Create client-side service operations. Assuming that 
+        // operations won't be null.
+        //------------------------------------------------------------
+        Map operations = service.getOperations();
+        Iterator iter = operations.keySet().iterator();
+        while (iter.hasNext()) {
 
-                String opName = (String)iter.next();
-                LZSOAPOperation op = (LZSOAPOperation)operations.get(opName);
+            String opName = (String)iter.next();
+            LZSOAPOperation op = (LZSOAPOperation)operations.get(opName);
 
-                if (mLogger.isDebugEnabled()) {
-                    mLogger.debug(
-                        /* (non-Javadoc)
-                         * @i18n.test
-                         * @org-mes="adding operation: " + p[0]
-                         */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                            ClientSOAPService.class.getName(),"051018-99", new Object[] {opName})
-                                  );
-                }
-
-                //------------------------------------------------------------
-                //
-                if (count++ > 0) { body.append(","); }
-
-                body.append(opName+": function () {");
-                {
-                    // arguments.callee.args gets set in the client and includes
-                    // secure and secureport information.
-                    //
-                    // var args = arguments.callee.args;
-                    body.append("var args = arguments.callee.args;\n");
-
-                    body.append("return LzSOAPService.invoke(");
-
-                    // _root.LzSOAP.invoke(
-                    //     delegate,
-                    //     args
-                    //     header
-                    //     opts, /* wsdl, service, port, operation, parts */
-                    //     this.secure,
-                    //     this.secureport,
-                    // );
-
-
-                    // 1. arguments[1] (should be delegate)
-                    body.append("arguments[1]");
-                    body.append(",");
-
-
-                    // 2. arguments[0] (should be array of arguments)
-                    body.append("arguments[0]");
-                    body.append(",");
-
-
-                    // 3. requestheaders
-                    body.append("args.superclass.requestheaders");
-                    body.append(",");
-
-
-
-                    // 4. opts
-                    {
-                        body.append("{");
-
-                        // 6. argument array of parameter type tuples like:
-                        //     [
-                        //       [ name1, element1, type1(qname) ], 
-                        //       [ name2, element2, type2(qname) ]
-                        body.append("parts: ");
-                        //     ]
-                        
-                        pushParts(op.getInputMessage(), op.getStyle());
-                        body.append(",");
-
-                        // 5. operation type
-                        body.append("opstyle: ");
-                        body.append(ScriptCompiler.quote(op.getStyle()));
-
-                        body.append(",");
-
-                        // 4. operation name
-                        body.append("operation: ");
-                        body.append(ScriptCompiler.quote(opName));
-                        body.append(",");
-
-                        // 3. SOAP port
-                        body.append("port: ");
-                        body.append(ScriptCompiler.quote(service.getPort()));
-                        body.append(",");
-
-                        // 2. SOAP service
-                        body.append("service: ");
-                        body.append(ScriptCompiler.quote(service.getServiceName()));
-                        body.append(",");
-
-                        // 1. SOAP wsdl
-                        body.append("wsdl: ");
-                        body.append(ScriptCompiler.quote(service.getWSDL()));
-                        body.append("}");
-                    }
-                    body.append(",");
-                    
-
-                    // 5. secure
-                    body.append("args.superclass.secure");
-                    body.append(",");
-
-
-                    // 6. secureport
-                    body.append("args.superclass.secureport");
-
-                    body.append(");");
-                    body.append("}");
-                }
+            if (mLogger.isDebugEnabled()) {
+                mLogger.debug(
+                    /* (non-Javadoc)
+                     * @i18n.test
+                     * @org-mes="adding operation: " + p[0]
+                     */
+                    org.openlaszlo.i18n.LaszloMessages.getMessage(
+                        ClientSOAPService.class.getName(),"051018-99", new Object[] {opName})
+                              );
             }
+
+            //------------------------------------------------------------
+            //
+            if (count++ > 0) { body.append(","); }
+
+            body.append("\""+opName+"\": ");
+
+            //"Multiply": function ()
+            // {var args = arguments.callee.args;
+            //return LzSOAPService.invoke(arguments[1],
+            //arguments[0],
+            //args.superclass.requestheaders,
+            //{"parts": [["tns:Multiply",
+            //               null]],
+            // "opstyle": "document",
+            // "operation": "Multiply",
+            // "port": "MathServiceSoap",
+            // "service": "MathService",
+            // "wsdl":
+            //              "http://www.dotnetjunkies.com/quickstart..../cs/mathservice.asmx?WSDL"},
+            // args.superclass.secure,
+            //args.superclass.secureport);}
+            body.append("{");
+            // 6. argument array of parameter type tuples like:
+            //     [
+            //       [ name1, element1, type1(qname) ], 
+            //       [ name2, element2, type2(qname) ]
+            body.append("\"parts\": ");
+            //     ]
+            pushParts(op.getInputMessage(), op.getStyle());
+            body.append(",");
+            // 5. operation type
+            body.append("\"opstyle\": ");
+            body.append(ScriptCompiler.quote(op.getStyle()));
+            body.append(",");
+                        
+            // 4. operation name
+            body.append("\"operation\": ");
+            body.append(ScriptCompiler.quote(opName));
+            body.append(",");
+
+            // 3. SOAP port
+            body.append("\"port\": ");
+            body.append(ScriptCompiler.quote(service.getPort()));
+            body.append(",");
+
+            // 2. SOAP service
+            body.append("\"service\": ");
+            body.append(ScriptCompiler.quote(service.getServiceName()));
+            body.append(",");
+
+            // 1. SOAP wsdl
+            body.append("\"wsdl\": ");
+            body.append(ScriptCompiler.quote(service.getWSDL()));
             body.append("}");
         }
+        body.append("}");
         body.append("}");
         return body.toString();
     }
@@ -261,7 +219,7 @@ public class ClientSOAPService
             if (count > 0) {
                 body.append(", ");
             }
-            if (null != (ct.getName().getLocalPart()) ||
+            if ((ct.getName().getLocalPart()) != null &&
                 !((ct.getName().getLocalPart()).equals(""))) {
 
                 mLogger.debug("pushComplexTypeInfo ct: "+ct.getName().getLocalPart()+" ,"
@@ -271,12 +229,12 @@ public class ClientSOAPService
                 body.append(ScriptCompiler.quote(ct.getName().getLocalPart())+": ");
                 body.append("{");
                 // namespace
-                body.append("ns: ");
+                body.append("\"ns\": ");
                 body.append(ScriptCompiler.quote(ct.getName().getNamespaceURI()));
                 body.append(",");
 
                 // type is one of simple, complex, array
-                body.append("type: ");
+                body.append("\"type\": ");
                 body.append(ScriptCompiler.quote(ct.getTypeString()));
                 body.append(",");
 

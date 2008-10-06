@@ -94,7 +94,7 @@
         <![CDATA[
             if (o.status == "error") {
                 if (this.onerror != LzDeclaredEvent) {
-                    this.onerror.sendEvent(o.message, o['error']);
+                    this.onerror.sendEvent(o.message + ' ' + o['error']);
                 } else {
                     Debug.error(this.name, "load error:", o.message);
                 }

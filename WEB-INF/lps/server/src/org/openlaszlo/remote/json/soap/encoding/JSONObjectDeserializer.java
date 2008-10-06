@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -218,10 +218,10 @@ public class JSONObjectDeserializer extends DeserializerImpl
                 }
 
                 body.append(",");
-                body.append("__LZclassnamespace: ");
+                body.append("\"__LZclassnamespace\": ");
                 body.append(ScriptCompiler.quote(mClassNameSpace));
                 body.append(",");
-                body.append("__LZclassname: ");
+                body.append("\"__LZclassname\": ");
                 body.append(ScriptCompiler.quote(mClassName));
                 body.append("})");
 

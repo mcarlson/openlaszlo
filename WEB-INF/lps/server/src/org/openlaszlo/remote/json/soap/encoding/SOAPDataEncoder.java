@@ -5,7 +5,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -268,8 +268,7 @@ public class SOAPDataEncoder implements ContentHandler {
 
         SOAPElement elem = ((SOAPElement)v.get(0));
         String str = serializeSOAPElt(elem);
-        body.append("LzDataNode.stringToLzData("+ScriptCompiler.quote(str)+")");
-
+        body.append(str);
 
         endDocument();
         } catch (IOException e) {

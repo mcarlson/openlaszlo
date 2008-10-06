@@ -88,8 +88,6 @@ function handleResponse (dreq:LzRPCDataRequest) {
         this.handleXMLRPCresponse(dreq);
     } else if (dreq.protocol == LzRPC.JAVARPC_PROTOCOL) {
         this.handleJSONRPCresponse(dreq);
-    } else if (dreq.protocol == LzRPC.SOAP_PROTOCOL) {
-        this.handleJSONRPCresponse(dreq);
     } else {
         Debug.error('LzRPC.handleResponse unknown protocol ', dreq.protocol);
     }
@@ -132,7 +130,6 @@ function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
                     seqnum: seqnum } );
 
     } else if (data && (data instanceof LzDataElement) && data.childNodes[0].nodeName == 'error') {
-
         var error = data.childNodes[0].attributes['msg'];
 
         // check if whitelist/blacklist is in effect
@@ -149,7 +146,6 @@ function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
                            seqnum: seqnum });
 
     } else if (typeof(data) == 'object' && data['faultCode'] != null) {
-
         // JavaRPC or XMLRPC error style
         // TODO: come up with a single way of returning RPC errors from server
         if (data.faultCode == 0 && data.faultString == 'void') {
@@ -169,7 +165,6 @@ function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
         }
 
     } else if (typeof(data) == 'object' && data['errortype'] != null) {
-
         // SOAP error style
         // TODO: come up with a single way of returning RPC errors from server
         delegate.execute({ status: 'error', errortype: data.errortype,
@@ -178,13 +173,11 @@ function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
                            seqnum: seqnum });
 
     } else if (typeof(data) == "undefined") {
-
         delegate.execute({ status: 'error', errortype: 'timeout',
                            message: 'timed out', opinfo: opinfo,
                            seqnum: seqnum });
 
     } else {
-
         if (delegate['dataobject'] != null) {
             if ( delegate.dataobject instanceof LzDataset ) {
                 var element = LzDataElement.valueToElement(data);

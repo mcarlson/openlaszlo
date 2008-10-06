@@ -1,6 +1,6 @@
 <canvas debug="true">
 
-    <debug y="100" x="140" />
+    <debug y="100" x="140" oninit="Debug.printLength = 1000000" persist="true"/>
 
     <text><b>Test .NET QuickStart MathService using LZX Web Services</b></text>
     <checkbox id="usescriptapi">Use script API</checkbox>

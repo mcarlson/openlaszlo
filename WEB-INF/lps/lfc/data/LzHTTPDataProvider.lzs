@@ -228,9 +228,11 @@ class LzHTTPDataProvider extends LzDataProvider {
 
     /**
      * callback function for LzHTTPLoader
+     * @param loader The loader which received the data
+     * @param data can be an LzDataElement or String
      * @access private
      */
-    function loadSuccess (loader:LzHTTPLoader, data:LzDataElement) :void { 
+    function loadSuccess (loader:LzHTTPLoader, data:*) :void { 
         var dreq:LzHTTPDataRequest = loader.dataRequest;
         dreq.status = LzDataRequest.SUCCESS;
         loader.owner.loadResponse( dreq, data );
@@ -238,9 +240,11 @@ class LzHTTPDataProvider extends LzDataProvider {
 
     /**
      * callback function for LzHTTPLoader
+     * @param loader The loader which received the data
+     * @param data can be an LzDataElement or String
      * @access private
      */
-    function loadError (loader:LzHTTPLoader, data:LzDataElement) :void { 
+    function loadError (loader:LzHTTPLoader, data:*) :void { 
         var dreq:LzHTTPDataRequest = loader.dataRequest;
         dreq.status = LzDataRequest.ERROR;
         loader.owner.loadResponse( dreq, data );
@@ -248,9 +252,11 @@ class LzHTTPDataProvider extends LzDataProvider {
 
     /**
      * callback function for LzHTTPLoader
+     * @param loader The loader which received the data
+     * @param data can be an LzDataElement or String
      * @access private
      */
-    function loadTimeout (loader:LzHTTPLoader, data:LzDataElement) :void { 
+    function loadTimeout (loader:LzHTTPLoader, data:*) :void { 
         var dreq:LzHTTPDataRequest = loader.dataRequest;
         dreq.loadtime = (new Date()).getTime() - dreq.loadstarttime;
         dreq.status = LzDataRequest.TIMEOUT;
@@ -270,7 +276,7 @@ class LzHTTPDataProvider extends LzDataProvider {
      * @param LzHTTPDataRequest dreq:
      * @param LzDataElement data:
      */
-    function loadResponse (dreq:LzHTTPDataRequest, data:LzDataElement) :void {
+    function loadResponse (dreq:LzHTTPDataRequest, data:*) :void {
         dreq.loadtime = (new Date()).getTime() - dreq.loadstarttime;
 
         if (data == null) {
