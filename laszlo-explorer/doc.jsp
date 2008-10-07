@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <%@ page pageEncoding="UTF-8"%>
@@ -53,7 +53,8 @@
 
         String htm = application.getRealPath(request.getParameter("src")+".htm");
         if (new File(htm).exists()) {
-            BufferedReader reader = new BufferedReader(new FileReader(htm));
+            InputStreamReader isr = new InputStreamReader(new FileInputStream(htm), "UTF-8");
+            BufferedReader reader = new BufferedReader(isr);
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line+"\n");
