@@ -68,7 +68,7 @@
 // DEFINE OBJECT: LzNamespace
 //======================================================================
 
-class LzNamespace {
+dynamic class LzNamespace {
 
 var namespace:String;
 

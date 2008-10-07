@@ -174,7 +174,8 @@ function __LZencSerializeParams (args, parts) {
         + "\" xmlns:soapenc=\"" + soapencNS + "\">\n";
 
     for (var i=0; i < args.length; i++) {
-        xml += this.__LZencSerialize(args[i], parts[i][0], parts[i][1], cr);
+        var qname = new LzQName(parts[i][1][0], parts[i][1][1]);
+        xml += this.__LZencSerialize(args[i], parts[i][0], qname, cr);
     }
     xml += "</params>\n";
     return xml;
@@ -359,7 +360,7 @@ override function __LZloadHook (stubinfo) {
 
 override function handleResponse (dreq:LzRPCDataRequest) {
     // The setup of the proxy object comes back as JSON
-    if (dreq.rpcinfo.opinfo && dreq.rpcinfo.opinfo.optype =='LOADOBJECT') {
+    if (dreq.rpcinfo.opinfo && dreq.rpcinfo.opinfo['optype'] =='LOADOBJECT') {
         this.handleJSONRPCresponse(dreq);
     } else {
         // the response to a SOAP operation comes back as XML

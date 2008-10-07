@@ -74,6 +74,8 @@
 // @param local: local part of the LzQName.
 // @param namespaceURI: namespace URI for the LzQName.
 //==============================================================================
+var QNAME_SUPPORTED_TYPES = {};
+
 public class LzQName {
 
 var __LZns;
@@ -83,13 +85,8 @@ function LzQName(local, namespaceURI)
 {
     this.__LZlocal = local;
     this.__LZns = namespaceURI;
-    if (LzQName.SUPPORTED_TYPES == null) {
-        LzQName.SUPPORTED_TYPES = {};
-    }
-    LzQName.SUPPORTED_TYPES[this.toString()] = true;
+    QNAME_SUPPORTED_TYPES[this.toString()] = true;
 }
-
-static var SUPPORTED_TYPES = null;
 
 //-----------------------------------------------------------------------------
 // String representation of this LzQName.

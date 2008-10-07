@@ -156,8 +156,11 @@ public class ClientSOAPService
             return "null";
         }
         // this can be optimized
-        return ("new QName("+ScriptCompiler.quote(qname.getLocalPart())+","
-                + ScriptCompiler.quote(qname.getNamespaceURI())+")");
+        //return ("new QName("+ScriptCompiler.quote(qname.getLocalPart())+","
+        //+ ScriptCompiler.quote(qname.getNamespaceURI())+")");
+        return ("[" + ScriptCompiler.quote(qname.getLocalPart())
+                + ", " + ScriptCompiler.quote(qname.getNamespaceURI()) +
+                "]");
     }
 
 
@@ -239,19 +242,19 @@ public class ClientSOAPService
                 body.append(",");
 
                 // QName for array type; null if complex type is not an array
-                body.append("typeQ: ");
+                body.append("\"typeQ\": ");
                 body.append(pushQName(ct.getArrayItemTypeQName()));
                 body.append(",");
 
                 // push members
-                body.append("members: ");
+                body.append("\"members\": ");
                 pushMembers(ct);
                 body.append(",");
 
                 // push base
                 ComplexType base = ct.getBase();
                 QName baseQName = (base != null ? base.getArrayItemTypeQName() : null);
-                body.append("base: ");
+                body.append("\"base\": ");
                 body.append(pushQName(baseQName));
 
                 body.append("}");
