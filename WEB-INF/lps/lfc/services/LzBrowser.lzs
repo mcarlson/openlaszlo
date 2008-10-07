@@ -160,6 +160,15 @@ class LzBrowserService {
   function updateAccessibility ()
     { LzBrowserKernel.updateAccessibility ();}
 
+  /**
+    * Loads a proxy policy file
+    * @keywords flashspecific
+    * @access private
+    */
+  function loadProxyPolicy (url) {
+    LzBrowserKernel.loadProxyPolicy(url);
+  }
+
   /** @access private */
   var postToLps = true;
   /** @access private */

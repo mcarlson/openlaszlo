@@ -17,6 +17,7 @@ class LzBrowserKernel {
 #passthrough (toplevel:true) {  
   import flash.net.*;
   import flash.system.Capabilities;
+  import flash.system.Security;
 }#
 
 /**
@@ -247,5 +248,13 @@ static function updateAccessibility () {
   throw new Error("updateAccessibility not implemented");
 }
 
+/**
+  * Updates accessibility data
+  * @keywords flashspecific
+  * @access private
+  */
+static function loadProxyPolicy (url) {
+    Security.loadPolicyFile(url);
+}
 
 } // End of LzBrowserKernel

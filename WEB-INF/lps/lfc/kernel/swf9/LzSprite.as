@@ -19,6 +19,7 @@ dynamic public class LzSprite extends Sprite {
   import flash.utils.*;
   import mx.controls.Button;
   import flash.net.URLRequest;
+  import flash.system.LoaderContext;
   import flash.media.Sound;
   import flash.media.SoundChannel;
   import flash.media.SoundMixer;
@@ -65,6 +66,8 @@ dynamic public class LzSprite extends Sprite {
       var resourceCache:Array = null;
 
       /* private */ static const soundLoaderContext:SoundLoaderContext = new SoundLoaderContext(1000, true);
+      /* private */ 
+      static const loaderContext:LoaderContext = new LoaderContext(true);
       /* private */ static const MP3_FPS:Number = 30;
       /* private */ var sound:Sound = null;
       /* private */ var soundChannel:SoundChannel = null;
@@ -260,6 +263,7 @@ dynamic public class LzSprite extends Sprite {
           if (getFileType(url, filetype) == "mp3") {
               // unload previous image-resource and sound-resource
               this.unload();
+              this.__isinternalresource = false;
               this.resource = url;
               this.loadSound(url);
           } else {
@@ -272,6 +276,7 @@ dynamic public class LzSprite extends Sprite {
                   if (this.resourceObj) {
                       this.unload();
                   }
+                  this.__isinternalresource = false;
                   imgLoader = new Loader();
                   imgLoader.mouseEnabled = false;// @devnote: see LPP-7022
                   this.resourceObj = imgLoader;
@@ -290,7 +295,7 @@ dynamic public class LzSprite extends Sprite {
                   res.scaleX = res.scaleY = 1.0;
               }
               //Debug.write('sprite setsource load ', url);
-              imgLoader.load(new URLRequest(url));
+              imgLoader.load(new URLRequest(url), loaderContext);
           }
       }
       
@@ -329,13 +334,17 @@ dynamic public class LzSprite extends Sprite {
               this.resourcewidth = 0;
               this.resourceheight = 0;
               if (event.type == Event.COMPLETE) {
+                  if (this.loaderMC) {
+                      this.loaderMC.removeEventListener(Event.ENTER_FRAME, updateFrames);
+                      this.loaderMC = null;
+                  }
+
                   var info:LoaderInfo = event.target as LoaderInfo;
                   if (info.content is AVM1Movie) {
                       if ($debug) {
                           Debug.warn("Playback control will not work for the resource.  Please update or recompile the resource for Flash 9.", this.resource);
                       }
-                      this.loaderMC = null;
-                  } else {
+                  } else if (info.content is MovieClip) {
                       // store a reference for playback control
                       this.loaderMC = MovieClip(event.target.content);  
 
@@ -345,6 +354,7 @@ dynamic public class LzSprite extends Sprite {
                       this.owner.resourceevent('play', null, true);
                       this.playing = this.owner.playing = true;
                   }
+
                   try {
                       var loader:Loader = Loader(event.target.loader);
                       this.resourcewidth = loader.width;
@@ -372,7 +382,7 @@ dynamic public class LzSprite extends Sprite {
               } else if (event.type == Event.UNLOAD) {
               }
           } catch (error:Error) {
-              trace(event.type + " " + error);
+              Debug.warn(event.type + " " + error);
           }
       }
       
@@ -1217,6 +1227,10 @@ dynamic public class LzSprite extends Sprite {
         this.lastreswidth = this.lastresheight = this.resourcewidth = this.resourceheight = 0;
         this.resource = null;
         this.__isinternalresource = null;
+        if (this.loaderMC) {
+            this.loaderMC.removeEventListener(Event.ENTER_FRAME, updateFrames);
+            this.loaderMC = null;
+        }
         this.loaderMC = null;
         this.imgLoader = null;
         this.resourceObj = null;

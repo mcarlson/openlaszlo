@@ -230,6 +230,14 @@ static function updateAccessibility () {
     Accessibility.updateProperties();
 }
 
+/**
+  * Loads a proxy policy file
+  * @keywords flashspecific
+  * @access private
+  */
+static function loadProxyPolicy (url) {
+    System.security.loadPolicyFile(url);
+}
 
 } // End of LzBrowserKernel
 
