@@ -190,6 +190,7 @@
         
         <!-- title -->
         <text text="" width="100" fgcolor="0x1b1191" fontsize="10" 
+              y="${classroot.height + 3}"
               name="txt" visible="false"><!-- Setting this initially to false
               seems to fix a visual issue where these would cluster on the
               upper left of the page in DHTML. -->
@@ -204,7 +205,6 @@
                var tw = Math.min(this.getTextWidth(),width);
                var tx = (classroot.width - tw)/2;
                this.setAttribute('x', tx);
-               this.setAttribute('y', classroot.height + 3);
              </method>
              <method name="makeVisible">
                 
