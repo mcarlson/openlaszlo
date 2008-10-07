@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
- * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+ * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
  * Use is subject to license terms.                                            *
  * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -94,7 +94,7 @@ public class JSONArrayDeserializer extends ArrayDeserializer
                 StringBuffer body = new StringBuffer();
                 int alen=list.size();
                 int count = 0;
-                body.append("LzSOAPService.__LZarray([");
+                body.append("[");
                 while (count < alen) {
                     body.append((String)(list.get(count)));
                     if (++count < alen) {
@@ -102,7 +102,7 @@ public class JSONArrayDeserializer extends ArrayDeserializer
                     }
                 }
 
-                body.append("],"+ScriptCompiler.quote(mItemTag)+")");
+                body.append("]");
                 value = body.toString();
 
                 mLogger.debug("JSONArrayDeserializer valueComplete value.class = "+value.getClass()+" value="+value);

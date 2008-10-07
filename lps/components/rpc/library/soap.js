@@ -69,9 +69,10 @@ function loadObject (delegate, opts, secure, secureport){
     if (service != null && service != "") params['service'] = service;
     if (port != null && port != "") params['port'] = port;
 
+    dreq.opinfo = {opstyle: 'rpc'};
+
     dreq.proxied = true;
     dreq.src = 'soap://soap';
-    dreq.opinfo = {optype: 'LOADOBJECT'};
     return this.request( dreq, delegate, secure, secureport );
 }
 
@@ -360,7 +361,7 @@ override function __LZloadHook (stubinfo) {
 
 override function handleResponse (dreq:LzRPCDataRequest) {
     // The setup of the proxy object comes back as JSON
-    if (dreq.rpcinfo.opinfo && dreq.rpcinfo.opinfo['optype'] =='LOADOBJECT') {
+    if (dreq.rpcinfo.opinfo && dreq.rpcinfo.opinfo['opstyle'] =='rpc') {
         this.handleJSONRPCresponse(dreq);
     } else {
         // the response to a SOAP operation comes back as XML
@@ -430,30 +431,6 @@ function handleSOAPXMLresponse (dreq:LzRPCDataRequest) {
 
 }
 
-
-//------------------------------------------------------------------------------
-// Prototype an object based on namespace and classname. If prototype doesn't 
-// exist, we leave the object alone. There's code in the server code under
-// remote.soap.encoding.SWFObjectDeserializer that create SWF bytes that call
-// this function.
-//
-// @param obj: object to correctly prototype.
-// @keywords private
-//------------------------------------------------------------------------------
-function __LZnormObj (obj) {
-    /*
-      var ns = LzNamespace.ns[obj.__LZclassnamespace];
-    var type = ns ? ns[obj.__LZclassname] : null;
-    if (typeof(type) == 'function') {
-        obj.__proto__ = type.prototype;
-    }
-    */
-
-// Debug.write('xxx', obj.__proto__, ',', obj);
-    return obj;
-}
-
-    
 //------------------------------------------------------------------------------
 //The SOAP deserializer on the server will call this to tag arrays with a "item"
 //property, used by LzDataElement.__LZv2E
@@ -462,7 +439,13 @@ function __LZarray (arr, tag) {
     arr.__LZtag = tag;
     return arr;
 }
+
+
+
 }
+
+
+
 
 // global SOAP service
 var LzSOAPService:LzSOAP = new LzSOAP();

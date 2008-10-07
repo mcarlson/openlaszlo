@@ -186,7 +186,6 @@ public class JSONObjectDeserializer extends DeserializerImpl
                 // push all members
                 Iterator iter = mMembers.entrySet().iterator();
                 String keys = "";
-                body.append("LzSOAPService.__LZnormObj(");
                 body.append("{");
                 int count = 0;
                 while (iter.hasNext()) {
@@ -223,7 +222,7 @@ public class JSONObjectDeserializer extends DeserializerImpl
                 body.append(",");
                 body.append("\"__LZclassname\": ");
                 body.append(ScriptCompiler.quote(mClassName));
-                body.append("})");
+                body.append("}");
 
                 // Call LzSOAPService.__LZnormObj(). This function will set the
                 // object's prototype to one that exists in the namespace and will

@@ -374,7 +374,7 @@ static function equals2 (first, second) {
 // @return true if supported, else false.
 //------------------------------------------------------------------------------
 static function isSupported (qn:LzQName) {
-    return (!!LzQName.SUPPORTED_TYPES[qn.toString()]);
+    return (!!QNAME_SUPPORTED_TYPES[qn.toString()]);
 }
 
 }
