@@ -222,16 +222,6 @@
 
     <!-- just for testing... -->
     <dataset name="testds" type="http" ondata="if (global['debugdata']) Debug.write('ondata', this)" />
-
-    <handler name="oninit">
-        // See http://www.yswfblog.com/blog/2007/08/29/flickr-now-even-more-flash-friendly/
-        if ($swf9) {
-            lz.Browser.loadProxyPolicy('http://farm1.static.flickr.com/crossdomain.xml');
-            lz.Browser.loadProxyPolicy('http://farm2.static.flickr.com/crossdomain.xml');
-            lz.Browser.loadProxyPolicy('http://farm3.static.flickr.com/crossdomain.xml');
-            lz.Browser.loadProxyPolicy('http://farm4.static.flickr.com/crossdomain.xml');
-        }
-    </handler>
 </library>
 
 <!--

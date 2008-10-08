@@ -340,19 +340,22 @@ dynamic public class LzSprite extends Sprite {
                   }
 
                   var info:LoaderInfo = event.target as LoaderInfo;
-                  if (info.content is AVM1Movie) {
-                      if ($debug) {
-                          Debug.warn("Playback control will not work for the resource.  Please update or recompile the resource for Flash 9.", this.resource);
+                  // avoid security exceptions
+                  if (info.parentAllowsChild) {
+                      if (info.content is AVM1Movie) {
+                          if ($debug) {
+                              Debug.warn("Playback control will not work for the resource.  Please update or recompile the resource for Flash 9.", this.resource);
+                          }
+                      } else if (info.content is MovieClip) {
+                          // store a reference for playback control
+                          this.loaderMC = MovieClip(info.content);  
+  
+                          this.totalframes = this.loaderMC.totalFrames;
+                          this.owner.resourceevent('totalframes', this.totalframes);
+                          this.loaderMC.addEventListener(Event.ENTER_FRAME, updateFrames);
+                          this.owner.resourceevent('play', null, true);
+                          this.playing = this.owner.playing = true;
                       }
-                  } else if (info.content is MovieClip) {
-                      // store a reference for playback control
-                      this.loaderMC = MovieClip(event.target.content);  
-
-                      this.totalframes = this.loaderMC.totalFrames;
-                      this.owner.resourceevent('totalframes', this.totalframes);
-                      this.loaderMC.addEventListener(Event.ENTER_FRAME, updateFrames);
-                      this.owner.resourceevent('play', null, true);
-                      this.playing = this.owner.playing = true;
                   }
 
                   try {
@@ -382,7 +385,7 @@ dynamic public class LzSprite extends Sprite {
               } else if (event.type == Event.UNLOAD) {
               }
           } catch (error:Error) {
-              Debug.warn(event.type + " " + error);
+              if ($debug) Debug.warn(event.type + " " + error);
           }
       }
       
