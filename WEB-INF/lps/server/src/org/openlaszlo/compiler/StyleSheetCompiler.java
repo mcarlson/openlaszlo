@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -143,16 +143,16 @@ class StyleSheetCompiler extends LibraryCompiler {
         String script = "";
         for (int i=0; i < handler.mRuleList.size(); i++) {  
             Rule rule = (Rule)handler.mRuleList.get(i);
-            // TODO: move this out out global scope [bshine 9.17.06]
-            String curRuleName = "__cssRule" + mEnv.uniqueName();
-            script += "var " + curRuleName + " = new LzCSSStyleRule(); \n";
-
-            String curRuleSelector = buildSelector(rule.getSelector());
-            script += curRuleName + ".selector = " + curRuleSelector + ";\n";
-            String curRuleProperties = buildPropertiesJavascript(rule);         
-            script += curRuleName + ".properties = " + curRuleProperties + ";\n";
-            script += " LzCSSStyle._addRule( " + curRuleName + " ); \n"; 
-            mLogger.debug("created rule " + curRuleName);
+            script += "$lzc$style._addRule(new $lzc$rule(" +
+              buildSelector(rule.getSelector()) + ", " +
+              buildPropertiesJavascript(rule);
+            if (mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY)) {
+              script += ", " +
+                ScriptCompiler.quote(Parser.getSourceMessagePathname(element)) + ", " +
+                i;
+            }
+            script +=
+              "));\n";
         }
         mLogger.debug("whole stylesheet as css " + script +"\n\n");
         mEnv.compileScript(CompilerUtils.sourceLocationDirective(element, true) +
@@ -164,7 +164,7 @@ class StyleSheetCompiler extends LibraryCompiler {
                            // that this be terminated with a `;` so
                            // that it is a statement, not an
                            // expression.
-                           " (function() { " + script + "})();", element ); 
+                           " (function() { var $lzc$style = LzCSSStyle, $lzc$rule = LzCSSStyleRule;\n" + script + "})();", element ); 
     }
 
 

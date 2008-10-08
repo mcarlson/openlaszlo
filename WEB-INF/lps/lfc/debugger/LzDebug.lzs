@@ -444,6 +444,78 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
 
 
   /**
+   * Explain the style bindings of properties on a node
+   *
+   * For each attribute of the node that has a $style binding, the CSS
+   * rules that apply to the node that could affect that binding are
+   * displayed.  The rules are displayed (with their source) from the
+   * most-specific to the least specific, and the style names and
+   * values of the rule that apply to this node are displayed.  Values
+   * that are superceded by more specific rules are displayed in <i
+   * style="text-decoration: line-through">italics</i>.
+   *
+   * @param LzNode node: the node of interest
+   * @param showInherited: whether to show inherited bindings
+   */
+  function explainStyleBindings(node, showInherited=false) {
+    var style = LzCSSStyle;
+    var pc = style.getPropertyCache(node);
+    var ppc = style.getPropertyCache(node.immediateparent);
+    var rc = style.getRulesCache(node);
+    var ps = [];
+    var sp = node.__LZStyledProperties;
+    for (var i = 0, l = sp.length; i < l; i++) {
+      var p = sp[i];
+      if (showInherited || (pc[p] !== ppc[p])) {
+        ps.push(p);
+      }
+    }
+    ps.sort(this.caseInsensitiveOrdering);
+    var rs = [];
+    for (var j = 0, m = rc.length; j < m; j++) {
+      var r = rc[j];
+      var rp = r.properties;
+      for (var i = 0, l = ps.length; i < l; i++) {
+        var p = ps[i];
+        if (p in rp) {
+          rs.push(r);
+          break;
+        }
+      }
+    }
+    var msg = '';
+    var vs = [];
+    for (var j = 0, m = rs.length; j < m; j++) {
+      var r = rs[j];
+      var rp = r.properties;
+      msg += (this.formatToString("/* @%s#%d (specificity %d, order %d) */\n", r._dbg_filename, r._dbg_lineno,  r.specificity, r._lexorder)).toHTML();
+      msg += (this.formatToString("%w {\n", r)).toHTML();
+      for (var i = 0, l = ps.length; i < l; i++) {
+        var p = ps[i];
+        if (p in rp) {
+          var x = vs[i];
+          // There must be a better way...
+          msg += (this.formatToString("  %s<span style='color:#931391'>%s</span>: ",  x?"<i style='text-decoration: line-through'>":'', p));
+          msg += (this.formatToString("%w", rp[p])).toHTML();
+          msg += (this.formatToString("%s;\n", x?'</i>':''));
+          vs[i] = true;
+        }
+      }
+      msg += (this.formatToString("}\n")).toHTML();
+    }
+    // Cf., inspect -- this pattern is copied directly from there
+    // after computing msg, which may produce warnings or errors
+    this.freshLine();
+    // The output of inspectInternal is an HTML string with
+    // object-links encoded in it, so we want to pass this straight
+    // through to addHTMLText, not addText
+    this.console.addHTMLText(msg);
+    this.updateOutputState(msg);
+    return node;
+  }
+
+
+  /**
    ** Object table
    **/
 

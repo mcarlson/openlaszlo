@@ -370,6 +370,10 @@ public dynamic class LzNode extends LzEventable {
   var __LZUID = null;
   /** @access private */
   var __LZPropertyCache = null;
+  if ($debug) {
+    /** @access private */
+    var __LZStyledProperties = null;
+  }
   /** @access private */
   var __LZRuleCache = null;
   /** @access private */
@@ -617,6 +621,9 @@ public dynamic class LzNode extends LzEventable {
         // Cache negative values lazily
         pc[prop] = (void 0);
       }
+      var sp = this.__LZStyledProperties;
+      if (sp == null) { sp = this.__LZStyledProperties = []; }
+      sp.push(prop);
     }
 
     var styleValue = pc[prop];

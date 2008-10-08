@@ -16,13 +16,26 @@
  * </p>
  */
 class LzCSSStyleRule {
-
-  function LzCSSStyleRule() {};
-
   /** @access private */
-  var properties = null;
+  var selector;
   /** @access private */
-  var selector = null;
+  var properties;
+  if ($debug) {
+  /** @access private */
+  var _dbg_filename;
+  /** @access private */
+  var _dbg_lineno;
+  }
+
+  function LzCSSStyleRule(selector, properties, source=null, line=null) {
+    this.selector = selector;
+    this.properties = properties;
+    if ($debug) {
+      this._dbg_filename = source;
+      this._dbg_lineno = line;
+    }
+  };
+
   //No rule has a specificity of zero
   /** @access private */
   var specificity = 0;
@@ -75,7 +88,7 @@ class LzCSSStyleRule {
     } else {
       var n = pname(rp);
     }
-    return '#' + this._lexorder + ' ' + n + ' (' + this.specificity + ')';
+    return n;
   };
 
   function equal (that) {
@@ -141,7 +154,6 @@ class LzCSSStyleClass {
     // Cache negative values lazily
     return pc[pname] = (void 0);
   };
-
 
   function getPropertyCache ( node ) {
     if ((!node) || (node === canvas)) return {};
