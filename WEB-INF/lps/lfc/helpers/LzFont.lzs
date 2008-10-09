@@ -15,11 +15,6 @@
   * TrueType format), a name, and a style (plain, bold, italic, or bold
   * italic).</p>
   * 
-  * <note>An <classname>LzFont</classname> object represents a named font
-  * in a given style.  The <classname>LzFontManager</classname> service
-  * stores these object. The constructor of this class is for internal
-  * use only.</note>
-  * 
   * <p>A font element within a <a href="LzCanvas.html"><code class="tagname">&lt;canvas&gt;</code></a> or
   * <a href="tag.library.html"><code class="tagname">&lt;library&gt;</code></a> defines a font, 
   *  which can be referenced by

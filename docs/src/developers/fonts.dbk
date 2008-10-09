@@ -475,26 +475,8 @@ These are described in turn below.
     default (pseudo-pixel) font, <literal>verity11</literal> is there as is an outline version of the same
     glyphs in <literal>bitstream-1.10-vera</literal>.
     </para>
-<para/></section></section><section><title>Font Metrics</title>
-<para>OpenLaszlo provides some basic APIs for measuring text.  You can use the <interface>LzFontManager</interface>
-to look up information about a given font name and style, including character advances (widths) and line ascents
-and descents.  The font metrics provided by the OpenLaszlo Runtime Library are all for the version of the default size
-of the given font (which is 8).  In order to adjust the font metrics for a given font, you must
-multiply the font metric by a factor that adjusts for the change in font size, <literal>fontsize/8</literal>.
-(Note: These APIs are likely to be deprecated in the future in lieu of APIs that 
-simply measure text). 
-</para>
-<para>
-If you want to know the size of a piece of text, the simplest technique is to create a
-<indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: text-->
- view using the font attributes that are appropriate and the call 
-the <interface>lz.text.getTextWidth()</interface> method.
-</para>
-<para condition="dhtml">
-Note that in DHTML, measuring font metrics is computationaly "expensive". Do it sparingly, as it can slow your application's performance considerably.
-</para>
-<para/></section><section><title condition="dhtml">DHTML Font design considerations</title>
+<para/></section></section>
+   <section><title condition="dhtml">DHTML Font design considerations</title>
 <para>
 There is a general tension in DHTML regarding who controls type
 size—the user or the application.  w3c leans toward the end user having ultimate control, which
@@ -515,21 +497,8 @@ that, relative to applications compiled to SWF, you need to step the size down f
 shows up too large.
 </para>
 
-
-
-
-<para/></section><section><title>Runtime Font APIs</title>
-<para>
-Font attributes are cascaded down the view hierarchy but only instances 
-of <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: text-->
- have access to their font attributes at runtime.  Text views will have the
-<indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag>, <indexterm><primary>fontsize</primary></indexterm><sgmltag class="attribute">fontsize</sgmltag>,  and <indexterm><primary>fontstyle</primary></indexterm><sgmltag class="attribute">fontstyle</sgmltag> attributes.
-You can look up the actual <interface>lz.font</interface> that is represented by a given 
-<indexterm><primary>font</primary></indexterm><sgmltag class="attribute">font</sgmltag> and  <indexterm><primary>fontstyle</primary></indexterm><sgmltag class="attribute">fontstyle</sgmltag> via the <interface>LzFontManager</interface>.
-If you need to know the font attribute associated with a view that is not a text instance, the simplest way is to get the font attributes from a sibling view.  If no such view exists, you can create an invisible text view.
-</para>
-<para/></section><section><title condition="swf">Performance considerations</title>
+<para/></section>
+   <section><title condition="swf">Performance considerations</title>
 <para>
 Embedded fonts (in applications compiled to SWF) increase the size of the application.
 </para>
