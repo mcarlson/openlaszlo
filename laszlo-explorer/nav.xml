@@ -246,66 +246,66 @@
       src="/laszlo-explorer/coverpages/form_cover.html" 
       text="Collect and submit responses without refresh.">
       <item title="Button" src="/examples/components/button_example.lzx" name="Button" text="A simple multi-frame button.">
-          <subitem popup="/docs/reference/index.html?lz-button.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem popup="/docs/reference/lz.button.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
           <subitem src="/examples/components/button_example.lzx" name="Source" action="source" />
       </item>
       <item title="Checkbox" src="/examples/components/checkbox_example.lzx" name="Checkbox" text="A simple toggle button." >
-          <subitem popup="/docs/reference/index.html?lz-checkbox.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem popup="/docs/reference/lz.checkbox.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
           <subitem src="/examples/components/checkbox_example.lzx" name="Source" action="source" />       </item>
       <item title="Combobox" src="/examples/components/combobox_example.lzx" name="Combobox" text="A dropdown list of selectable items.">
-          <subitem popup="/docs/reference/index.html?lz-combobox.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem popup="/docs/reference/lz.combobox.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
           <subitem src="/examples/components/combobox_example.lzx" name="Source" action="source" />       </item>
       <item title="Date Picker" src="/examples/components/datepicker_example.lzx" name="Date Picker" text="A Calendar Component">
-          <subitem popup="/docs/reference/index.html?lz-datepicker.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem popup="/docs/reference/lz.datepicker.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
           <subitem src="/examples/components/datepicker_example.lzx" name="Source" action="source" />       </item>
       <item title="Edittext" src="/examples/components/edittext_example.lzx" name="Edit Text" text="An editable text field">
-          <subitem popup="/docs/reference/index.html?lz-edittext.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem popup="/docs/reference/lz.edittext.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
           <subitem src="/examples/components/edittext_example.lzx" name="Source" action="source" />       </item>
       <item title="Form" src="/examples/components/form_example.lzx" name="Form" text="A form builder">
-          <subitem popup="/docs/reference/index.html?lz-form.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem popup="/docs/reference/lz.form.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
           <subitem src="/examples/components/form_example.lzx" name="Source" action="source" />       </item>
       <item title="List" src="/examples/components/list_example.lzx" name="List" text="For building lists">
-          <subitem popup="/docs/reference/index.html?lz-list.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem popup="/docs/reference/lz.list.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
           <subitem src="/examples/components/list_example.lzx" name="Source" action="source" />       </item>
         <item title="Radio Group" src="/examples/components/radiogroup_example.lzx" name="Radio Group" text="Enables 'one of many' selection" >
-          <subitem popup="/docs/reference/index.html?lz-radiogroup.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem popup="/docs/reference/lz.radiogroup.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
           <subitem src="/examples/components/radiogroup_example.lzx" name="Source" action="source" />       </item>
       <item title="slider" src="/examples/components/slider_example.lzx" name="Slider" text="Selection of single value from provided range.">
-          <subitem popup="/docs/reference/index.html?lz-slider.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+          <subitem popup="/docs/reference/lz.slider.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
           <subitem src="/examples/components/slider_example.lzx" name="Source" action="source" />
       </item>
     </topic>
     <topic name="General Components" src="/laszlo-explorer/coverpages/general_cover.html" title="OpenLaszlo Components" text="Build applications with pre-built coponents written in LZX.">
         <item title="Window" src="/examples/components/window_example.lzx" name="Window" text="OpenLaszlo's basic window.">
-            <subitem popup="/docs/reference/index.html?lz-window.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem popup="/docs/reference/lz.window.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
             <subitem src="/examples/components/window_example.lzx" name="Source" action="source" />
         </item>
         <item title="Tree Control" src="/examples/components/tree_example.lzx" name="Tree" text="Hide or reveal nesting">
-            <subitem popup="/docs/reference/index.html?lz-tree.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference" />
+            <subitem popup="/docs/reference/lz.tree.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference" />
             <subitem src="/examples/components/tree_example.lzx" name="Source" action="source" />
         </item>
         <item title="Data Grid" src="/examples/components/grid_example.lzx" name="Data Grid" text="Collect, display and manipulate data.">
-            <subitem popup="/docs/reference/index.html?lz-grid.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem popup="/docs/reference/lz.grid.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
             <subitem src="/examples/components/grid_example.lzx" name="Source" action="source" />
         </item>
         <item title="Tabslider" src="/examples/components/tabslider_example.lzx" name="Tabslider" text="Animate tabs" >
-            <subitem popup="/docs/reference/index.html?tabslider.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem popup="/docs/reference/lz.tabslider.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
             <subitem src="/examples/components/tabslider_example.lzx" name="Source" action="source" />
         </item>
         <item title="Tabs" src="/examples/components/tabs_example.lzx" name="Tabs" text="Gracefully hide or reveal related information." >
-            <subitem popup="/docs/reference/index.html?lz-tabs.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem popup="/docs/reference/lz.tabs.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
             <subitem src="/examples/components/tabs_example.lzx" name="Source" action="source" />
         </item>
         <item title="Floating list" src="/examples/components/floatinglist_example.lzx" name="Floating List" text="The list hovers over the canvas">
-            <subitem popup="/docs/reference/index.html?lz-floatinglist.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem popup="/docs/reference/lz.floatinglist.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
             <subitem src="/examples/components/floatinglist_example.lzx" name="Source" action="source" />
         </item>
         <item title="Scrollbar" src="/examples/components/scrollbar_example.lzx" name="Scrollbar" text="Horizontal or vertical.">
-            <subitem popup="/docs/reference/index.html?lz-scrollbar.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem popup="/docs/reference/lz.scrollbar.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
             <subitem src="/examples/components/scrollbar_example.lzx" name="Source" action="source" />
         </item>
         <item title="Menu" src="/examples/components/menu_example.lzx" name="Menu" text="Build menus easily.">
-            <subitem popup="/docs/reference/index.html?lz-menu.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
+            <subitem popup="/docs/reference/lz.menu.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszloreference"/>
             <subitem src="/examples/components/menu_example.lzx" name="Source" action="source" />
         </item>
       </topic>
