@@ -790,6 +790,14 @@ public class SWF9External {
   }
 
   /**
+   * Tells whether to exec a subprocess to run the flex compiler.
+   * Uses lps.properties entry for compiler.swf9.execflex
+   */
+  public static boolean execFlex() {
+    return "true".equals(LPS.getProperty("compiler.swf9.execflex"));
+  }
+
+  /**
    * Return a boolean value given by a property in the LPS properties.
    */
   public static boolean getLPSBoolean(String propname, boolean defaultValue) {
@@ -869,10 +877,6 @@ public class SWF9External {
     }
     cmd.add("-compiler.headless-server=true");
     cmd.add("-compiler.fonts.advanced-anti-aliasing=true");
-
-
-
-
     cmd.add("-output");
     cmd.add(outfilename);
     
@@ -911,8 +915,12 @@ public class SWF9External {
       cmd.add(workdir.getPath() + File.separator + mainclassname + ".as");
     }
     
-    //execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
-    callJavaCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
+    // Call the Flex compiler, either in its own exec'ed process or in a thread 
+    if (execFlex()) {
+      execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
+    } else {
+      callJavaCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
+    }
     return getBytes(outfilename);
   }
 
