@@ -838,7 +838,7 @@ function detachClone ( cl:LzView ) :void {
     var onremsub:LzDeclaredEventClass = cl.immediateparent.onremovesubview;
     if (onremsub.ready) onremsub.sendEvent( cl );
     cl.isdetatchedclone = true;
-    cl.p = null;
+    cl.datapath.p = null;
 }
 
 /**

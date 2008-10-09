@@ -101,6 +101,14 @@ static var attributes :Object = new LzInheritedHash(LzDatapointer.attributes);
   */
 var datacontrolsvisibility :Boolean = true;
 
+/**
+  * @access private
+  * @devnote Setter for datacontrolsvisiblity
+  */
+function $lzc$set_datacontrolsvisibility (v:Boolean) :void { 
+    this.datacontrolsvisibility = v;
+}
+
 /** @access private */
 var __LZtakeDPSlot :Boolean = true;
 /** @access private */
@@ -280,8 +288,6 @@ override function construct ( v , args ) :void {
                         pdp.__LZdepChildren.push( c );
                     }
                 }
-
-
             }
         } else if ($debug) {
             Debug.warn("unexpected state for '%w', couldn't find parent-datapath!", this);
@@ -629,14 +635,6 @@ override function __LZsetTracking ( who, additive:Boolean = false, needscheck:Bo
 
 /**
   * @access private
-  * @devnote Setter for datacontrolsvisiblity
-  */
-function $lzc$set_datacontrolsvisibility (v) :void { 
-    this.datacontrolsvisibility = v;
-}
-
-/**
-  * @access private
   * @devnote Setter for __LZmanager
   */
 function $lzc$set___LZmanager ( m:LzReplicationManager ) :void {
@@ -656,17 +654,16 @@ function setClonePointer( p /*:LzDataNodeMixin*/ ) :void {
     var pc:Boolean = this.p != p;
     this.p = p;
 
-    //FIXME: [20080327 anba] LPP-5328
-    //if ( pc || true ) {
+    // FIXME: [20080327 anba] (LPP-5328) this needs some tweaks to detect structural changes
+    // of a data-element, e.g. an attribute-node or a text-node has changed
     if ( pc ) {
-
         if ( p && this.sel != p.sel ){
             this.sel = p.sel || false;
             this.immediateparent.setSelected( this.sel );
         }
 
         this.__LZpchanged = true;
-        this.__LZsetData( );
+        this.__LZsetData();
     }
 }
 
