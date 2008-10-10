@@ -20,53 +20,67 @@
   * See <a href="${dguide}input-devices.html">The Software Developer's Guide</a> for a discussion of keyboard focus.
   * </p>
   * <p>Note that the view.getNextSelection() and view.getPrevSelection() methods can be overridden to change the tab order</p>
-  * 
+  *
   * @shortdesc Handles keyboard focus.
   */
-dynamic class LzFocusService extends LzEventable {
+public dynamic final class LzFocusService extends LzEventable {
 
     /** Sent when the focus changes, with the argument being the view
      * that was just focused. If nothing is focused, this event is sent with null.
      * @access public
-     * @lzxtype event 
+     * @lzxtype event
      */
-    var onfocus = LzDeclaredEvent;
+    var onfocus :LzDeclaredEventClass = LzDeclaredEvent;
 
     /** Sent when the last focusable object has been reached.
      * @access public
-     * @lzxtype event 
+     * @lzxtype event
      */
-    var onescapefocus = LzDeclaredEvent;
+    var onescapefocus :LzDeclaredEventClass = LzDeclaredEvent;
 
     /** A reference to the last view that held the focus
      * @type LzView
      * @keywords readonly
      */
-    var lastfocus = null;
+    var lastfocus :LzView = null;
     /** @access private */
-    var csel = null;
+    var csel :LzView = null;
     /** @access private */
-    var cseldest = null;
+    var cseldest :LzView = null;
 
-    /** @access private */
+    /** The focus service. Also available as the global
+     * <code>lz.Focus</code>.
+     *
+     * @type LzFocusService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    public static const LzFocus:LzFocusService;
+
+    /** @access private
+     * @devnote AS3 does not allow private constructors, so we need the
+     * error
+     */
     function LzFocusService () {
+        super();
+        //    if (LzFocusService.LzFocus) {
+        //      throw new Error("There can be only one LzFocus");
+        //    }
+        this.upDel = new LzDelegate(this, "gotKeyUp", lz.Keys, "onkeyup");
+        this.downDel = new LzDelegate(this, "gotKeyDown", lz.Keys, "onkeydown");
+        // This must be registered here after both lz.Focus and lz.Keys are initted
+        this.lastfocusDel = new LzDelegate(lz.Keys, "gotLastFocus", this, "onescapefocus");
     }
 
-    /** @access private */
-    function initialize () {
-        this.upDel = new LzDelegate( lz.Focus , "gotKeyUp", lz.Keys, "onkeyup");
-        this.downDel = new LzDelegate( lz.Focus , "gotKeyDown", lz.Keys, "onkeydown");
-        // This must be registered here after both lz.Focus and lz.Keys are initted 
-        this.lastfocusDel = new LzDelegate(lz.Keys, 'gotLastFocus', lz.Focus, 'onescapefocus');
-    }
-
+    // Create the singleton
+    LzFocusService.LzFocus = new LzFocusService();
 
     /** @access private */
-    var upDel;
+    var upDel :LzDelegate;
     /** @access private */
-    var downDel;
+    var downDel :LzDelegate;
     /** @access private */
-    var lastfocusDel;
+    var lastfocusDel :LzDelegate;
 
     /** This attribute is set to true when the focus has moved
      * because the user has hit the next or prev focus key (usually 'tab' and
@@ -76,32 +90,31 @@ dynamic class LzFocusService extends LzEventable {
      * @type Boolean
      * @keywords readonly
      */
-    var focuswithkey = false;
+    var focuswithkey :Boolean = false;
 
     /** @access private */
-    var __LZskipblur = false;
+    var __LZskipblur :Boolean = false;
     /** @access private */
-    var __LZsfnextfocus = -1;
+    var __LZsfnextfocus :* = -1;
     /** @access private */
-    var __LZsfrunning = false;
+    var __LZsfrunning :Boolean = false;
 
     /**
      * @access private
      */
-    function gotKeyUp( kC ){
-        //Debug.write("gotKeyUp "+kC);
-        if (this.csel && this.csel.onkeyup.ready) this.csel.onkeyup.sendEvent( kC );
+    function gotKeyUp (kC) :void {
+        if (this.csel && this.csel.onkeyup.ready)
+            this.csel.onkeyup.sendEvent( kC );
     }
 
     /**
      * @access private
      */
-    function gotKeyDown( kC ){
-        //Debug.write("gotKeyDown ", kC, lz.Keys.isKeyDown('shift'));
+    function gotKeyDown (kC) :void {
         if (this.csel && this.csel.onkeydown.ready)
             this.csel.onkeydown.sendEvent( kC );
-        if ( kC == lz.Keys.keyCodes.tab ){
-            if ( lz.Keys.isKeyDown( 'shift' ) ){
+        if (kC == lz.Keys.keyCodes.tab) {
+            if (lz.Keys.isKeyDown( 'shift' )) {
                 this.prev();
             } else {
                 this.next();
@@ -110,30 +123,12 @@ dynamic class LzFocusService extends LzEventable {
     }
 
     /**
+     * Called from lz.ModeManager#handleMouseEvent() on "onmousedown"
      * @access private
      */
-    function setNextKey( k ){
-        if ( $debug ){
-            Debug.error( 'Next key can no longer be set.');
-        }
-    }
-
-    /**
-     * @access private
-     */
-    function setPrevKey( k ){
-        if ( $debug ){
-            Debug.error( 'Prev key can no longer be set.');
-        }
-    }
-
-    /**
-     * @access private
-     */
-    function __LZcheckFocusChange ( v ){
-        //    if ( 'focusable' in v && v.focusable ){
-        if ( v && v.focusable ){
-            this.setFocus( v , false );
+    function __LZcheckFocusChange (v:LzView) :void {
+        if (v.focusable) {
+            this.setFocus( v, false );
         }
     }
 
@@ -149,92 +144,128 @@ dynamic class LzFocusService extends LzEventable {
      * The state of the view may be unknown during the blur/focus process. When
      * a view loses focus, its blurring variable is set to true during the
      * process.
-     * 
+     *
      * @param LzView newsel: The view to focus or null to clear focus
      */
-    function setFocus  ( newsel, fwkey = null ){
+    function setFocus (newsel:LzView, fwkey:* = null) :void {
         //undocumented attribute focuswithkey. If the second argument to this
         //method is defined, it sets the value of this.focuswithkey to the given
         //value.
 
-        if ( this.__LZsfrunning ){
+        if (this.__LZsfrunning) {
+            // another focus-change is currently running, 
+            // remember new selection and return
             this.__LZsfnextfocus = newsel;
             return;
         }
 
-        if ( this.cseldest == newsel ) {
+        if (this.cseldest == newsel) {
+            // don't change focus if focused view didn't change
             return;
         }
 
-        if ( this.csel && this.csel.shouldYieldFocus && !this.csel.shouldYieldFocus() ) {
+        var prevsel:LzView = this.csel;
+        if (prevsel && !prevsel.shouldYieldFocus()) {
+            // current selection does not allow a focus change
             return;
         }
 
-        var prevsel = this.csel;
+        if (newsel && !newsel.focusable) {
+            newsel = this.getNext(newsel);
+            if (this.cseldest == newsel) {
+                // don't change focus if focused view didn't change
+                return;
+            }
+        }
+
         if (prevsel) {
             // Give the view warning that it will be losing focus
             prevsel.blurring = true;
         }
 
+        // acquire focus lock
         this.__LZsfnextfocus = -1;
         this.__LZsfrunning = true;
-
-        if ( newsel && !newsel.focusable) {
-            newsel = this.getNext(newsel);
-        }
         this.cseldest = newsel;
 
-        if ( fwkey != null ){
-            this.focuswithkey  = fwkey;
+        if (fwkey != null) {
+            this.focuswithkey = !!fwkey; //coerce to boolean
         }
 
-        if ( !this.__LZskipblur ){
+        // check skipblur-flag to prevent multiple "onblur" events
+        if (! this.__LZskipblur) {
             this.__LZskipblur = true;
-            if (this.csel && this.csel.onblur.ready)
-                this.csel.onblur.sendEvent( newsel );
-            if ( this.__LZsfnextfocus != -1 ) {
-                //we've been called again
-                this.__LZsfrunning = false;
-                this.setFocus( this.__LZsfnextfocus );
-                return;
+            if (prevsel && prevsel.onblur.ready) {
+                prevsel.onblur.sendEvent( newsel );
+                var next:* = this.__LZsfnextfocus;
+                if (next != -1) {
+                    // we've been called again because of dispatching "onblur"
+                    if (next && !next.focusable) {
+                        next = this.getNext(next);
+                    }
+                    if (next != newsel) {
+                        // but only re-set focus if selection did change
+                        this.__LZsfrunning = false;
+                        this.setFocus( next );
+                        return;
+                    }
+                }
             }
         }
 
         //now focus changes
-        this.lastfocus = this.csel;
+        this.lastfocus = prevsel;
         this.csel = newsel;
         this.__LZskipblur = false;
-    
-
-        if (newsel && newsel.onfocus.ready) {
-            newsel.onfocus.sendEvent( newsel );
-        }
-        if ( this.__LZsfnextfocus != -1 ) {
-            //we've been called again
-            this.__LZsfrunning = false;
-            this.setFocus( this.__LZsfnextfocus );
-            return;
-        }
-
-        if (this.onfocus.ready) this.onfocus.sendEvent( newsel );
-        this.__LZsfrunning = false;
-        if ( this.__LZsfnextfocus != -1 ) {
-            //we've been called again
-            this.setFocus( this.__LZsfnextfocus );
-            return;
-        }
 
         if (prevsel) {
             // The focus is changed.
             prevsel.blurring = false;
         }
+
+        if (newsel && newsel.onfocus.ready) {
+            newsel.onfocus.sendEvent( newsel );
+            var next:* = this.__LZsfnextfocus;
+            if (next != -1) {
+                // we've been called again because of dispatching "onfocus"
+                if (next && !next.focusable) {
+                    next = this.getNext(next);
+                }
+                if (next != newsel) {
+                    // but only re-set focus if selection did change
+                    this.__LZsfrunning = false;
+                    this.setFocus( next );
+                    return;
+                }
+            }
+        }
+
+        if (this.onfocus.ready) {
+            this.onfocus.sendEvent( newsel );
+            var next:* = this.__LZsfnextfocus;
+            if (next != -1) {
+                // we've been called again because of dispatching "onfocus" (global)
+                if (next && !next.focusable) {
+                    next = this.getNext(next);
+                }
+                if (next != newsel) {
+                    // but only re-set focus if selection did change
+                    this.__LZsfrunning = false;
+                    this.setFocus( next );
+                    return;
+                }
+            }
+        }
+
+        // release focus lock
+        this.__LZsfrunning = false;
     }
 
     /**
      * Remove the focus from the currently focused view (if there is one).
      * An 'onblur' event is first sent to the view.
      */
-    function clearFocus ( ){
+    function clearFocus () :void {
         this.setFocus( null );
     }
 
@@ -242,87 +273,79 @@ dynamic class LzFocusService extends LzEventable {
      * Get the currently focused view.
      * @return LzView: The view that has the focus, or null if none does.
      */
-    function getFocus (){
+    function getFocus () :LzView {
         return this.csel;
     }
 
     /**
      * Move the focus to the next focusable view.
      */
-    function next (){
+    function next () :void {
         this.genMoveSelection( 1 );
     }
 
     /**
+     * Move the focus to the previous focusable view.
+     */
+    function prev () :void {
+        this.genMoveSelection( -1 );
+    }
+
+    /**
      * Returns the next focusable view.
-     * @param LzView focusview: optional starting view. By default focusview 
+     * @param LzView focusview: optional starting view. By default focusview
      * is the current focus.
      * @return LzView: The view that would be the next focus.
      */
-    function getNext ( focusview ){
-        if ( !focusview ) focusview = this.csel;
-        return this.moveSelSubview( focusview , 1 ) ;
+    function getNext (focusview:LzView = null) :LzView {
+        return this.moveSelSubview( focusview || this.csel, 1, false );
     }
 
     /**
      * Returns the previous focusable view.
-     * @param LzView focusview: optional starting view. By default focusview 
+     * @param LzView focusview: optional starting view. By default focusview
      * is the current focus.
-     * @return LzView: The view that would be the focus if you shift tabbed 
+     * @return LzView: The view that would be the focus if you shift tabbed
      */
-    function getPrev ( focusview ){
-        if ( !focusview ) focusview = this.csel;
-        return this.moveSelSubview( focusview , -1 ) ;
-    }
-
-
-    /**
-     * Move the focus to the previous focusable view.
-     */
-    function prev (){
-        this.genMoveSelection( -1 );
+    function getPrev (focusview:LzView = null) :LzView {
+        return this.moveSelSubview( focusview || this.csel, -1, false );
     }
 
     /**
      * @access private
      */
-    function genMoveSelection ( movedir  ){
-        var sel = this.csel;
-        var check = sel;
-
-        while ( sel && check != canvas ){
-            if (!check.visible ) {
+    function genMoveSelection (movedir:int) :void {
+        var sel:LzView = this.csel;
+        var check:LzView = sel;
+        while (sel && check != canvas) {
+            if (! check.visible) {
                 sel = null;
             }
             check = check.immediateparent;
         }
 
-        if ( sel == null ){
+        if (sel == null) {
             sel = lz.ModeManager.getModalView();
         }
-
-        var v = null;
-        if (sel && sel[ "get"+(movedir == 1 ? "Next" : "Prev")+"Selection" ]) v = sel[ "get"+(movedir == 1 ? "Next" : "Prev")+"Selection" ]();
-        if ( v == null ){
-            v = this.moveSelSubview( sel , movedir ) ;
+        
+        var meth:String = "get" + (movedir == 1 ? "Next" : "Prev") + "Selection";
+        var v:LzView = sel ? sel[meth]() : null;
+        if (v == null) {
+            v = this.moveSelSubview( sel, movedir, true );
         }
-
-        if ( !lz.ModeManager.__LZallowFocus( v ) ){
-            return;
+        if (lz.ModeManager.__LZallowFocus( v )) {
+            this.setFocus( v, true );
         }
-
-        this.setFocus( v , true );
     }
-
 
     /**
      * Append those of v and its descendants that are focusable, to accum.
      * Always include 'include', and include focus traps but don't descend
      * into them unless this is the outermost call (and top=true).
-     * 
+     *
      * @access private
      */
-    function accumulateSubviews(accum, v, includep, top=false) {
+    function accumulateSubviews (accum:Array, v:LzView, includep:LzView, top:Boolean) :void {
         // Always include the current view, even if it's not focusable,
         // since its index is used to find a focusable neighbor.
         if (v == includep || (v.focusable && v.visible))
@@ -330,20 +353,19 @@ dynamic class LzFocusService extends LzEventable {
         // Don't descend into focus traps, except always consider children
         // of the outermost call.
         if (top || (!v.focustrap && v.visible))
-            for (var i = 0; i < v.subviews.length; i++)
+            for (var i:int = 0; i < v.subviews.length; i++)
                 this.accumulateSubviews(accum, v.subviews[i], includep, false);
     }
-
 
     /**
      * Return an item in the same focus group as v, either preceding it (mvdir==-1)
      * or following it (mvdir==1) in preorder.
-     * 
+     *
      * @access private
      */
-    function moveSelSubview ( v , mvdir ){
+    function moveSelSubview (v:LzView, mvdir:int, sendEsc:Boolean) :LzView {
         // Find the closest parent that doesn't cross a focus trap boundary.
-        var root = v || canvas;
+        var root:LzView = v || canvas;
         // If v is a focus trap, make sure that we at least step up to its
         // parent, in order to tab to its siblings.
         // I don't think this is right, but I'm not 100% sure, so leaving comment
@@ -358,25 +380,33 @@ dynamic class LzFocusService extends LzEventable {
             root = root.immediateparent;
         // collect selectable children into focusgroup
         var focusgroup:Array = [];
+        // TODO: [20081006 anba] this is slow, we need to come up with a faster alternative
         this.accumulateSubviews(focusgroup, root, v, true);
 
         // set index to the index of v within the current focus group.
         var index:int = -1;
-        for (var i:int = 0; i < focusgroup.length; ++i)
-            if (focusgroup[i] == v) {
+        var fglen:int = focusgroup.length;
+        var escape:Boolean = false;
+        for (var i:int = 0; i < fglen; ++i) {
+            if (focusgroup[i] === v) {
+                escape = (mvdir == -1 && i == 0) || (mvdir == 1 && i == fglen - 1);
                 index = i;
                 break;
             }
+        }
 
-        if (index == focusgroup.length - 1) {
+        if (sendEsc && escape) {
             this.onescapefocus.sendEvent();
         }
+
         // If the current focus group doesn't include v, mvdir==1 should select
         // the first item and mvdir==-1 should select the last item.  index==-1
         // and mvdir==1 will already work for the first case.  Fix the second:
         if (index == -1 && mvdir == -1)
             index = 0;
-        index = (index + mvdir + focusgroup.length) % focusgroup.length;
+        // remember this is no modular arithmetic in a mathematical sense,
+        // so we need to add 'focusgroup.length'
+        index = (index + mvdir + fglen) % fglen;
         return focusgroup[index];
     }
 }
@@ -384,9 +414,8 @@ lz.FocusService = LzFocusService;  // publish
 
 /**
   * lz.Focus is a shortcut for <link linkend="LzFocusService">LzFocusService.LzFocus</link>
-  * This service manages the keyboard focus. At any time, at most one view has the keyboard focus. This is the view that receives key events when a key is pressed. 
+  * This service manages the keyboard focus. At any time, at most one view has the keyboard focus. This is the view that receives key events when a key is pressed.
   *
   * @shortdesc Handles keyboard focus.
   */
-lz.Focus= new LzFocusService();
-lz.Focus.initialize();
+lz.Focus = LzFocusService.LzFocus;
