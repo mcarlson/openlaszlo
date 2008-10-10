@@ -529,11 +529,18 @@
   <attribute name="indirect" type="boolean" value="false"/>
   <attribute name="relative" type="boolean" value="false"/>
   <attribute name="motion" type="string" value="easeboth" enum="linear|easein|easeout|easeboth"/>
-  <attribute name="onstart" type="script" />
-  <attribute name="onstop" type="script" />
   <attribute name="repeat" type="expression" />
   <attribute name="paused" type="boolean" value="false"/>
   <attribute name="target" type="reference"/>
+  <event name="ontarget"/>
+  <event name="onduration"/>
+  <event name="onstarted"/>
+  <event name="onstart"/>
+  <event name="onpaused"/>
+  <event name="onfinish"/>
+  <event name="onstop"/>
+  <event name="onrepeat"/>
+  
   <containsElements>
     <element>animator</element>
   </containsElements>
