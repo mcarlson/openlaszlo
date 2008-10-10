@@ -317,7 +317,9 @@
 
         <!--- @keywords private -->
         <handler name="ondata" args="d">
-            this.cblist.datapath.setPointer( d );
+            if(d is lz.DataNodeMixin){
+                this.cblist.datapath.setPointer( d );
+            }
         </handler>
 
         <!--- @keywords private -->
