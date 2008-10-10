@@ -276,18 +276,17 @@ public class ClassModel implements Comparable {
       }
     }
     // Create inits list, merged with superclass inits
-    //
+    nodeModel.setClassAttribute("attributes", "new LzInheritedHash(" + superClassName + ".attributes)");
     // NOTE: [2008-06-02 ptw] As an optimization, we don't do this if
-    // this class has no inits of its own.  Unlike LFC classes, an LZX
-    // class should not be manipulating its attributes directly, so
-    // this should be a safe optimization.
-    // NOTE: [2008-06-06 ptw] This optimization does not work.  Why?
-//     if (! inits.isEmpty()) {
-      nodeModel.setClassAttribute("attributes", "new LzInheritedHash(" + superClassName + ".attributes)");
+    // this class has no inits of its own.  (Unlike LFC classes, an LZX
+    // class should not be manipulating its attributes directly, so we
+    // ought not to have to make the copy above, but that mysteriously
+    // breaks things.)
+    if (! inits.isEmpty()) {
       classBody += "LzNode.mergeAttributes(" +
         ScriptCompiler.objectAsJavascript(inits) +
         ", "+env.getGlobalPrefix() + className + ".attributes);\n";
-//     }
+    }
     // Emit the class decl
     ScriptClass scriptClass =
       new ScriptClass(className,

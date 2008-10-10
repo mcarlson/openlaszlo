@@ -436,8 +436,8 @@ public abstract class CommonGenerator implements ASTVisitor {
       statements.setChildren((SimpleNode[])(stmts.toArray(new SimpleNode[0])));
       map.put("_5", statements);
       SimpleNode stmtNode = (new Compiler.Parser()).substitute(node,
-                                                               "(function () { with("+globalprefix+"_1"+")"+
-                                                               "with("+globalprefix+"_1.prototype) { _5 }})()",
+                                                               "(function ($lzsc$c) { with($lzsc$c)"+
+                                                               "with($lzsc$c.prototype) { _5 }})("+globalprefix+"_1)",
                                                                map);
       SimpleNode listNode = new ASTStatementList(0);
       listNode.set(0, replNode);
