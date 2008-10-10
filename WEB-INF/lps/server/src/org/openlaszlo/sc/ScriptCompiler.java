@@ -464,4 +464,79 @@ public class ScriptCompiler extends Cache {
         char hexchars[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
         return (hexchars[c & 0x0F]);
     }
+
+    /** Escape the specified string for JSON, enclosed in double-quotes, and character-quote
+     * any characters that need it.
+     * @param s a string
+     * @return a quoted string
+     */
+    public static String JSONquote(String s) {
+        try {
+            final char CHAR_ESCAPE = '\\';
+            java.io.StringReader reader = new java.io.StringReader(s);
+            java.io.StringWriter writer = new java.io.StringWriter();
+            int i;
+            int n = 0;
+            char quote = '\"';
+            writer.write(quote);
+            while ((i = reader.read()) != -1) {
+                char c = (char) i;
+                switch (c) {
+                case '\n':
+                    writer.write("\\n");
+                    break;                    
+                case '\r':
+                    writer.write("\\r");
+                    break;
+                case '\b':
+                    writer.write("\\b");
+                    break;
+                case '\t':
+                    writer.write("\\t");
+                    break;
+                case '\u000B':
+                    writer.write("\\v");
+                    break;
+                case '\f':
+                    writer.write("\\f");
+                    break;
+                case '\"':
+                case '\\':
+                case '/':
+                    writer.write(CHAR_ESCAPE);
+                    writer.write(c);
+                    break;
+                default:
+                    if (i == 0) {
+                        // ECMAScript NUL is a special case
+                        writer.write(CHAR_ESCAPE);
+                        writer.write('0');
+                    } else if (i < 32 || (i >= 128 && i <= 0xff)) {
+                        // ECMAScript string literal hex unicode escape sequence
+                        writer.write(CHAR_ESCAPE);
+                        writer.write('x');
+                        // Format as \ xXX two-digit zero padded hex string
+                        writer.write(hexchar((c >> 4) & 0x0F));
+                        writer.write(hexchar(c & 0x0F));
+                    } else if (i > 0xff) {
+                        // ECMAScript string literal hex unicode escape sequence
+                        writer.write(CHAR_ESCAPE);
+                        writer.write('u');
+                        // Format as \ uXXXX four-digit zero padded hex string
+                        writer.write(hexchar((c >> 12) & 0x0F));
+                        writer.write(hexchar((c >> 8) & 0x0F));
+                        writer.write(hexchar((c >> 4) & 0x0F));
+                        writer.write(hexchar(c & 0x0F));
+                    } else {
+                        writer.write(c);
+                    }
+                }
+            }
+            writer.write(quote);
+            return writer.toString();
+        } catch (java.io.IOException e) {
+            throw new ChainedException(e);
+        }
+    }
+
 }

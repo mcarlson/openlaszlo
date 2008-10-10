@@ -40,15 +40,15 @@ public class ClientSOAPService
             body.append("{");
             //------------------------------------------------------------
             // this.service = service.getServiceName()
-            body.append("\"service\":" + ScriptCompiler.quote(service.getServiceName()) + ", ");
+            body.append("\"service\":" + ScriptCompiler.JSONquote(service.getServiceName()) + ", ");
 
             //------------------------------------------------------------
             // this.port = service.getPort()
-            body.append("\"port\": "+ ScriptCompiler.quote(service.getPort()) +",");
+            body.append("\"port\": "+ ScriptCompiler.JSONquote(service.getPort()) +",");
 
             //------------------------------------------------------------
             // this.wsdl = service.getWSDL()
-            body.append("\"wsdl\": "+ ScriptCompiler.quote(service.getWSDL()) + ",");
+            body.append("\"wsdl\": "+ ScriptCompiler.JSONquote(service.getWSDL()) + ",");
 
             //------------------------------------------------------------
             // this.ctypes = <complexTypeInfoObject>
@@ -59,7 +59,7 @@ public class ClientSOAPService
             //------------------------------------------------------------
             // this._namespace = namespace /* target namespace */
             body.append("\"__LZnamespace\": " + 
-                        ScriptCompiler.quote(service.getTargetNS()));
+                        ScriptCompiler.JSONquote(service.getTargetNS()));
 
             body.append("},");
         }
@@ -123,27 +123,27 @@ public class ClientSOAPService
             body.append(",");
             // 5. operation type
             body.append("\"opstyle\": ");
-            body.append(ScriptCompiler.quote(op.getStyle()));
+            body.append(ScriptCompiler.JSONquote(op.getStyle()));
             body.append(",");
                         
             // 4. operation name
             body.append("\"operation\": ");
-            body.append(ScriptCompiler.quote(opName));
+            body.append(ScriptCompiler.JSONquote(opName));
             body.append(",");
 
             // 3. SOAP port
             body.append("\"port\": ");
-            body.append(ScriptCompiler.quote(service.getPort()));
+            body.append(ScriptCompiler.JSONquote(service.getPort()));
             body.append(",");
 
             // 2. SOAP service
             body.append("\"service\": ");
-            body.append(ScriptCompiler.quote(service.getServiceName()));
+            body.append(ScriptCompiler.JSONquote(service.getServiceName()));
             body.append(",");
 
             // 1. SOAP wsdl
             body.append("\"wsdl\": ");
-            body.append(ScriptCompiler.quote(service.getWSDL()));
+            body.append(ScriptCompiler.JSONquote(service.getWSDL()));
             body.append("}");
         }
         body.append("}");
@@ -156,10 +156,10 @@ public class ClientSOAPService
             return "null";
         }
         // this can be optimized
-        //return ("new QName("+ScriptCompiler.quote(qname.getLocalPart())+","
-        //+ ScriptCompiler.quote(qname.getNamespaceURI())+")");
-        return ("[" + ScriptCompiler.quote(qname.getLocalPart())
-                + ", " + ScriptCompiler.quote(qname.getNamespaceURI()) +
+        //return ("new QName("+ScriptCompiler.JSONquote(qname.getLocalPart())+","
+        //+ ScriptCompiler.JSONquote(qname.getNamespaceURI())+")");
+        return ("[" + ScriptCompiler.JSONquote(qname.getLocalPart())
+                + ", " + ScriptCompiler.JSONquote(qname.getNamespaceURI()) +
                 "]");
     }
 
@@ -186,10 +186,10 @@ public class ClientSOAPService
             body.append("[");
             if (style.equals("rpc")) {
                 // rpc calls use the name of the part as the name of element.
-                body.append(ScriptCompiler.quote(name));
+                body.append(ScriptCompiler.JSONquote(name));
             } else {
                 // documents use element name
-                body.append(ScriptCompiler.quote(element));
+                body.append(ScriptCompiler.JSONquote(element));
             }
             body.append(",");
             body.append(pushQName(typeName));
@@ -229,16 +229,16 @@ public class ClientSOAPService
                               + ct.getName() + ", "+ct);
 
                 count++;
-                body.append(ScriptCompiler.quote(ct.getName().getLocalPart())+": ");
+                body.append(ScriptCompiler.JSONquote(ct.getName().getLocalPart())+": ");
                 body.append("{");
                 // namespace
                 body.append("\"ns\": ");
-                body.append(ScriptCompiler.quote(ct.getName().getNamespaceURI()));
+                body.append(ScriptCompiler.JSONquote(ct.getName().getNamespaceURI()));
                 body.append(",");
 
                 // type is one of simple, complex, array
                 body.append("\"type\": ");
-                body.append(ScriptCompiler.quote(ct.getTypeString()));
+                body.append(ScriptCompiler.JSONquote(ct.getTypeString()));
                 body.append(",");
 
                 // QName for array type; null if complex type is not an array
@@ -290,7 +290,7 @@ public class ClientSOAPService
             Map.Entry entry = (Map.Entry)iter.next();
             String key = (String)entry.getKey();
             QName value = (QName)entry.getValue();
-            body.append(ScriptCompiler.quote(key)+": ");
+            body.append(ScriptCompiler.JSONquote(key)+": ");
             body.append(pushQName(value));
             count++;
         }

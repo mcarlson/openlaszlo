@@ -78,9 +78,9 @@ public class JSONArrayDeserializer extends ArrayDeserializer
     public void valueComplete() throws SAXException
     { 
 
-        /*
+
           // How to print a stack trace to the log:
-          RuntimeException st = new RuntimeException();
+        /*RuntimeException st = new RuntimeException();
           java.io.StringWriter sw = new java.io.StringWriter();
           java.io.PrintWriter ow = new java.io.PrintWriter(sw); 
           st.printStackTrace(ow);

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<canvas debug="true">
+
+    <!-- This SOAP service uses document/literal messages for its
+         operations. Each operation is passed a document as a parameter. -->
+    <soap name="soaptest" 
+          wsdl="http://127.0.0.1:8080/trunk/test/rpc/soap/SoapStringSimpleReturn.jws?wsdl">
+
+        <!-- Method to make a document for SOAP message requests -->
+        <method name="makedoc" args="func, av">
+        <![CDATA[
+            if (func == null) return;
+            var s =  '<' + func + ' xmlns="' + 'http://127.0.0.1:8080/trunk/test/rpc/soap/SoapStringSimpleReturn.jws' + '">' + 
+                               '<s>' + av + '</s>' + 
+                   '</' + func + '>';
+            Debug.write(s);
+            return s;
+        ]]>
+        </method>
+       
+        <handler name="onload">
+            // make buttons visible once SOAP object is loaded
+            canvas.buttons.setAttribute('visible', true);
+        </handler>
+
+        <handler name="ondata" args="value">
+            Debug.write(value);
+            result.setAttribute('text', value);
+        </handler>
+
+        <remotecall funcname="whatString">
+            <param value="${ canvas.soaptest.makedoc(parent.name, s.value ) }" />
+        </remotecall>
+    </soap>
+
+    <view name="buttons" x="10" y="10" visible="false" layout="spacing: 10" >
+        <text><b>SOAP Test</b></text>
+
+        <view layout="axis: x" ><text y="3">S:</text><edittext id="s"/></view>
+        <view layout="axis: x" ><text>result:</text><text id="result"/></view>
+
+        <button text="whatString" onclick="canvas.soaptest.whatString.invoke()" />
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+</canvas>

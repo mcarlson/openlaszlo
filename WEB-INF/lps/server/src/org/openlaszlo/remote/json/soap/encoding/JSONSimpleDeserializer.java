@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -192,7 +192,7 @@ public class JSONSimpleDeserializer extends DeserializerImpl
                 }
             } else if (javaType == String.class) {
                 // treat as a string by default
-                body.append(ScriptCompiler.quote(source));
+                body.append(ScriptCompiler.JSONquote(source));
             } else {
                 // catch all
                 mLogger.warn(
@@ -203,7 +203,7 @@ public class JSONSimpleDeserializer extends DeserializerImpl
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JSONSimpleDeserializer.class.getName(),"051018-210", new Object[] {javaType, source})
 );
-                body.append(ScriptCompiler.quote(source));
+                body.append(ScriptCompiler.JSONquote(source));
             }
         } catch (Exception e) {
             mLogger.error("Exception", e);

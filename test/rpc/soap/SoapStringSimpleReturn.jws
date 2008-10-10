@@ -1,0 +1,15 @@
+public class SoapStringSimpleReturn {
+	private String returnString = new String();
+/*
+	public String getReturnString() {
+		return returnString;
+	}
+
+	public void setReturnString(String returnString) {
+		this.returnString = returnString;
+	}
+*/	
+	public String whatString( String s ){
+		return s;
+	}
+}

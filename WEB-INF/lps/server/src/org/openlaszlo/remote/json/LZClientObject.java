@@ -45,7 +45,7 @@ public class LZClientObject
         body.append("\"__LZstubload\": true, ");
         // SOAP specific information
         body.append("\"stubinfo\": ");
-        body.append("{\"remoteClass\": "+ScriptCompiler.quote(classname)+"}, ");
+        body.append("{\"remoteClass\": "+ScriptCompiler.JSONquote(classname)+"}, ");
 
 
         // object.stub
@@ -85,7 +85,7 @@ public class LZClientObject
 
             //------------------------------------------------------------
             //
-            body.append(ScriptCompiler.quote(methodName)+": {");
+            body.append(ScriptCompiler.JSONquote(methodName)+": {");
             // Check to see if method's last two parameters are
             // HttpServletRequest and HttpServletResponse.
             Class[] params = methods[i].getParameterTypes();
@@ -114,8 +114,8 @@ public class LZClientObject
             //   doreq: TBD, dores: TBD}
                     
             body.append("\"op\": \"invoke\", ");
-            body.append("\"classname\": "+ScriptCompiler.quote(classname)+", ");
-            body.append("\"methodname\": "+ScriptCompiler.quote(classname+"."+methodName));
+            body.append("\"classname\": "+ScriptCompiler.JSONquote(classname)+", ");
+            body.append("\"methodname\": "+ScriptCompiler.JSONquote(classname+"."+methodName));
 
             if (doreq) {
                 body.append(", \"doreq\": true");

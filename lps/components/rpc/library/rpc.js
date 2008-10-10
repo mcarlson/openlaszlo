@@ -145,7 +145,7 @@ function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
                            message: error, opinfo: opinfo,
                            seqnum: seqnum });
 
-    } else if (typeof(data) == 'object' && data['faultCode'] != null) {
+    } else if (data && typeof(data) == 'object' && data['faultCode'] != null) {
         // JavaRPC or XMLRPC error style
         // TODO: come up with a single way of returning RPC errors from server
         if (data.faultCode == 0 && data.faultString == 'void') {
@@ -164,7 +164,7 @@ function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
                                seqnum: seqnum });
         }
 
-    } else if (typeof(data) == 'object' && data['errortype'] != null) {
+    } else if (data && typeof(data) == 'object' && data['errortype'] != null) {
         // SOAP error style
         // TODO: come up with a single way of returning RPC errors from server
         delegate.execute({ status: 'error', errortype: data.errortype,

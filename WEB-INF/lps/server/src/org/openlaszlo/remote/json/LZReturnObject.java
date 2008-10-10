@@ -59,7 +59,7 @@ public class LZReturnObject
 
     void pushString(String s) {
         mLogger.debug("pushString");
-        body.append(ScriptCompiler.quote(s));
+        body.append(ScriptCompiler.JSONquote(s));
     }
 
     void pushDouble(double d) {
@@ -84,10 +84,10 @@ public class LZReturnObject
             createReturnValue(Array.get(object, i));
         }
         body.append("]");
+        mLogger.debug("pushArray: " + body.toString());
     }
 
     void pushList(Object object) {
-        mLogger.debug("pushList");
         body.append("[");
         List list = (List)object;
         int length = list.size();
@@ -98,6 +98,8 @@ public class LZReturnObject
             createReturnValue(list.get(i));
         }
         body.append("]");
+        mLogger.debug("pushList: " + body.toString());
+
     }
 
     void pushNull() {
@@ -114,7 +116,7 @@ public class LZReturnObject
         //------------------------------------------------------------
         // varname.class = classname
         body.append("{");
-        body.append("\"class\": "+ScriptCompiler.quote(classname));
+        body.append("\"class\": "+ScriptCompiler.JSONquote(classname));
 
         if (mObjRetType == RETTYPE_JAVA_BEAN) {
             pushObjectJavaBean(object);
@@ -149,7 +151,7 @@ public class LZReturnObject
                               (value != null ? value.getClass() : null) );
             }
             body.append(",");
-            body.append(ScriptCompiler.quote(fieldName)+": ");
+            body.append(ScriptCompiler.JSONquote(fieldName)+": ");
             createReturnValue(value);
         }
     }
@@ -185,7 +187,7 @@ public class LZReturnObject
                                       ((value!=null)?value.getClass():null));
                     }
                     body.append(", ");
-                    body.append(ScriptCompiler.quote(fieldName)+": ");
+                    body.append(ScriptCompiler.JSONquote(fieldName)+": ");
                     createReturnValue(value);
 
                 }
@@ -206,7 +208,7 @@ public class LZReturnObject
                 body.append(", ");
             }
 
-            body.append(ScriptCompiler.quote(key)+": ");
+            body.append(ScriptCompiler.JSONquote(key)+": ");
             createReturnValue(map.get(key));
         }
         body.append("}");

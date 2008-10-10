@@ -192,8 +192,11 @@ function __LZencSerializeParams (args, parts) {
 // @param cr: counter reference for namespaces.
 // @keywords private
 //------------------------------------------------------------------------------
-    function __LZencSerialize (value, element, typeQ:LzQName, cr:Array) {
+    function __LZencSerialize (value, element, typeQ:*, cr:Array) {
 
+    if (typeQ is Array) {
+        typeQ = new LzQName(typeQ[0], typeQ[1]);
+    }
     var ct = LzNamespace.getType(typeQ);
 
     // _root.Debug.write('xxx', ct, typeQ, _root.LzQName.isSupported(typeQ));
@@ -250,6 +253,9 @@ function __LZencSerializeParams (args, parts) {
 // @keywords private
 //------------------------------------------------------------------------------
 function __LZencSerializeStruct (obj, element, typeQ, cr) {
+    if (typeQ is Array) {
+        typeQ = new LzQName(typeQ[0], typeQ[1]);
+    }
     var ns = "ns" + (cr[0]++);
     var ct = LzNamespace.getType(typeQ);
     var members = ct.members;

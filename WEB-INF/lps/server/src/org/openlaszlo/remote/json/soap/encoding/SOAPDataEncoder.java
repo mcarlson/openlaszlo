@@ -100,9 +100,9 @@ public class SOAPDataEncoder implements ContentHandler {
                     body.append("null");
                 } else {
                     body.append("new QName("+
-                                ScriptCompiler.quote(qname.getLocalPart()) +
+                                ScriptCompiler.JSONquote(qname.getLocalPart()) +
                                 ", "+
-                                ScriptCompiler.quote(qname.getNamespaceURI())
+                                ScriptCompiler.JSONquote(qname.getNamespaceURI())
                                 +")");
                 }
             } 
@@ -112,30 +112,30 @@ public class SOAPDataEncoder implements ContentHandler {
 
         if (actor != null) {
             body.append(items > 0 ? "," : "");
-            body.append("actor: "+ ScriptCompiler.quote(actor));
+            body.append("actor: "+ ScriptCompiler.JSONquote(actor));
             items++;
         }
         if (node != null) {
             body.append(items > 0 ? "," : "");
-            body.append("node: "+ScriptCompiler.quote(node));
+            body.append("node: "+ScriptCompiler.JSONquote(node));
             items++;
         }
 
         if (reason != null) {
             body.append(items > 0 ? "," : "");
-            body.append("reason: "+ScriptCompiler.quote(reason));
+            body.append("reason: "+ScriptCompiler.JSONquote(reason));
             items++;
         }
 
         if (role != null) {
             body.append(items > 0 ? "," : "");
-            body.append("role: "+ScriptCompiler.quote(role));
+            body.append("role: "+ScriptCompiler.JSONquote(role));
             items++;
         }
 
         if (faultstring != null) {
             body.append(items > 0 ? "," : "");
-            body.append("faultstring: "+ScriptCompiler.quote(faultstring));
+            body.append("faultstring: "+ScriptCompiler.JSONquote(faultstring));
             items++;
         }
 
@@ -143,16 +143,16 @@ public class SOAPDataEncoder implements ContentHandler {
             body.append(items > 0 ? "," : "");
             body.append("code: "+
                         "new QName("+
-                                ScriptCompiler.quote(code.getLocalPart()) +
+                                ScriptCompiler.JSONquote(code.getLocalPart()) +
                                 ", "+
-                                ScriptCompiler.quote(code.getNamespaceURI())
+                                ScriptCompiler.JSONquote(code.getNamespaceURI())
                                 +")");
             items++;
         }
 
 
         body.append(items > 0 ? "," : "");
-        body.append("errortype: "+ScriptCompiler.quote("fault"));
+        body.append("errortype: "+ScriptCompiler.JSONquote("fault"));
         body.append("}");
         end();
 
@@ -169,22 +169,22 @@ public class SOAPDataEncoder implements ContentHandler {
 
             int count = 3;
             body.append ("{");
-            body.append("stacktrace: "+ ScriptCompiler.quote(sw.toString()));
+            body.append("stacktrace: "+ ScriptCompiler.JSONquote(sw.toString()));
 
             body.append(",faultString: ");
             if (message != null) {
-                body.append(ScriptCompiler.quote(message));
+                body.append(ScriptCompiler.JSONquote(message));
             } else { 
-                ScriptCompiler.quote(sw.toString());
+                ScriptCompiler.JSONquote(sw.toString());
             }
 
             if (cause != null) {
                 body.append(",cause: ");
-                body.append(ScriptCompiler.quote(cause.toString()));
+                body.append(ScriptCompiler.JSONquote(cause.toString()));
             }
 
             body.append(", errortype: ");
-            body.append(ScriptCompiler.quote("exception"));
+            body.append(ScriptCompiler.JSONquote("exception"));
 
             body.append("}");
         }
@@ -218,7 +218,7 @@ public class SOAPDataEncoder implements ContentHandler {
         while (iter.hasNext()) {
             SOAPElement elt = (SOAPElement)iter.next();
             String str = serializeSOAPElt(elt);
-            buf.append(ScriptCompiler.quote(str));
+            buf.append(ScriptCompiler.JSONquote(str));
             if (hCount++ > 0) {
                 buf.append(",");
             }
@@ -293,10 +293,10 @@ public class SOAPDataEncoder implements ContentHandler {
             body = new StringBuffer(p.toString());
         } else {
             mLogger.debug("json.SOAPDataEncoder buildFromProgram p.getClass()="+p.getClass());
-            body = new StringBuffer(encodeArray(p));
+            Object[] p0 = (Object[]) p;
+            body = new StringBuffer(encodeObject(p0[0]));
         }
     }
-
 
     String encodeArray(Object obj) {
         Object[] p = (Object[]) obj;
@@ -309,6 +309,7 @@ public class SOAPDataEncoder implements ContentHandler {
         buf.append("]");
         return buf.toString();
     }
+
 
     String encodeObject(Object p) {
         try {

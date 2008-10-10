@@ -197,7 +197,7 @@ public class JSONObjectDeserializer extends DeserializerImpl
                     if (count++ > 0) {
                         body.append(",");
                     }
-                    body.append(ScriptCompiler.quote(k)+": ");
+                    body.append(ScriptCompiler.JSONquote(k)+": ");
                     if (v == null) {
                         body.append("null");
                     } else {
@@ -218,10 +218,10 @@ public class JSONObjectDeserializer extends DeserializerImpl
 
                 body.append(",");
                 body.append("\"__LZclassnamespace\": ");
-                body.append(ScriptCompiler.quote(mClassNameSpace));
+                body.append(ScriptCompiler.JSONquote(mClassNameSpace));
                 body.append(",");
                 body.append("\"__LZclassname\": ");
-                body.append(ScriptCompiler.quote(mClassName));
+                body.append(ScriptCompiler.JSONquote(mClassName));
                 body.append("}");
 
                 // Call LzSOAPService.__LZnormObj(). This function will set the
