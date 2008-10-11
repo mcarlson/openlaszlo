@@ -209,8 +209,7 @@
             var s = this[section];
             if ( s != this.currentSection ) {
                 var anm = this.currentSection.animate("opacity",0,200,false);
-                var d = new LzDelegate ( this , "fadeInNewSection" );
-                d.register ( anm , "onfinish" );
+                var d = new LzDelegate(this, "fadeInNewSection", anm, "onstop");
                 this.newSection = s;
             }
         </method>
