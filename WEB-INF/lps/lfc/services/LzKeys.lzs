@@ -15,9 +15,9 @@
   *
   * lz.Keys is a service that provides key handling messages. Objects can also
   * register callbacks to be sent when specific key combinitions are down.
-  * 
+  *
   * <p>Here is a simple example:</p>
-  * 
+  *
   * <example title="lz.Keys">
   * <programlisting>&lt;canvas height="140" debug="true"&gt;
   *   &lt;handler name="onkeydown" reference="lz.Keys" args="k"&gt;
@@ -32,218 +32,173 @@
   *   &lt;handler name="oninit"&gt;
   *     del = new LzDelegate(this, "pressA");
   *     lz.Keys.callOnKeyCombo(del, ["A"]);
-  *   &lt;/handler&gt; 
+  *   &lt;/handler&gt;
   * &lt;/canvas&gt;</programlisting></example>
   *
   * @shortdesc Keyboard input service.
   */
-public class LzKeysService extends LzEventable {
+public final class LzKeysService extends LzEventable {
+
+    /**
+     * The key service.  Also available as the global
+     * <code>lz.Keys</code>.
+     *
+     * @type LzKeysService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    public static const LzKeys:LzKeysService;
+
     /** @access private */
     function LzKeysService() {
         super();
+        //    if (LzKeysService.LzKeys) {
+        //      throw new Error("There can be only one LzKeys");
+        //    }
         if ($swf9) {
         } else {
             LzKeyboardKernel.setCallback(this, '__keyEvent');
         }
 
-
-        // add additional codes
-        this.keyCodes['add'] = 107;
-        // Backspace doesn't work in the Authoring tool player...
-        this.keyCodes['delete'] = 46;
-        this.keyCodes['0']  = 48 ;
-        this.keyCodes['1']  = 49 ;
-        this.keyCodes['2']  = 50 ;
-        this.keyCodes['3']  = 51 ;
-        this.keyCodes['4']  = 52 ;
-        this.keyCodes['5']  = 53 ;
-        this.keyCodes['6']  = 54 ;
-        this.keyCodes['7']  = 55 ;
-        this.keyCodes['8']  = 56 ;
-        this.keyCodes['9']  = 57 ;
-
-        this.keyCodes[')']  = 48 ;
-        this.keyCodes['!']  = 49 ;
-        this.keyCodes['@']  = 50 ;
-        this.keyCodes['#']  = 51 ;
-        this.keyCodes['$']  = 52 ;
-        this.keyCodes['%']  = 53 ;
-        this.keyCodes['^']  = 54 ;
-        this.keyCodes['&']  = 55 ;
-        this.keyCodes['*']  = 56 ;
-        this.keyCodes['(']  = 57 ;
-
-        this.keyCodes[';']  = 186 ;
-        this.keyCodes[':']  = 186 ;
-        this.keyCodes['=']  = 187 ;
-        this.keyCodes['+']  = 187 ;
-
-        this.keyCodes['<']  = 188 ;
-        this.keyCodes[',']  = 188 ;
-        this.keyCodes['-']  = 189 ;
-        this.keyCodes['_']  = 189; 
-        this.keyCodes['>']  = 190 ;
-        this.keyCodes['.']  = 190 ;
-        this.keyCodes['/']  = 191 ;
-        this.keyCodes['?']  = 191 ;
-
-        this.keyCodes['`']  = 192 ;
-        this.keyCodes['~']  = 192 ;
-        this.keyCodes['[']  = 219 ;
-        this.keyCodes['{']  = 219 ;
-        this.keyCodes['\\']  = 220 ;
-        this.keyCodes['|']  =  220; 
-        this.keyCodes[']']  = 221 ;
-        this.keyCodes['}']  = 221 ;
-        this.keyCodes['\"']  = 222 ;
-        this.keyCodes['\'']  = 222 ;
-
-        this.keyCodes['IME']  = 229 ;
+        if ($dhtml) {
+            // Need to explicitly register this.  Make sure lz.embed.mousewheel is there for
+            // lztest
+            if (lz.embed['mousewheel']) {
+                lz.embed.mousewheel.setCallback(this, '__mousewheelEvent');
+            }
+        }
     }
-        
+
+    // Create the singleton
+    LzKeysService.LzKeys = new LzKeysService();
+
     /**
-     * A hash where each of the keys that is currently 
+     * A hash where each of the keys that is currently
      * down on the keyboard is set to true.
      * @type Object
      * @access private
      */
-    var downKeysHash = {};
+    var downKeysHash :Object = {};
 
     /**
      * An array of currently pressed key codes.
      * @type Array
      * @access private
      */
-    var downKeysArray = [];
+    var downKeysArray :Array = [];
 
     /**
-     * An object used by callOnKeyCombo() to track kep combinations  
+     * An object used by callOnKeyCombo() to track key combinations
      * @type Object
      * @access private
      */
-    var keycombos = {};
+    var keycombos :Object = {};
 
     /**
-     * Sent when a key is pressed; sent with keycode 
+     * Sent when a key is pressed; sent with keycode
      * for key that was pressed.
      * @lzxtype event
      * @access public
      */
-    var onkeydown = LzDeclaredEvent;
+    var onkeydown :LzDeclaredEventClass = LzDeclaredEvent;
     /**
      * Sent whenever a key goes up; sent with keycode
      * for key that was let go.
      * @lzxtype event
      * @access public
      */
-    var onkeyup = LzDeclaredEvent;
+    var onkeyup :LzDeclaredEventClass = LzDeclaredEvent;
     /**
-     * Sent when the mouse wheel changes state.  Sent with a positive or 
-     * negative number depending on the direction and amount the wheel moved. 
+     * Sent when the mouse wheel changes state.  Sent with a positive or
+     * negative number depending on the direction and amount the wheel moved.
      * @lzxtype event
      * @access public
      */
-    var onmousewheeldelta = LzDeclaredEvent;
+    var onmousewheeldelta :LzDeclaredEventClass = LzDeclaredEvent;
 
     /** For mapping key names (control, shift, alt) back to character codes
       * @access private */
-    var codemap = {shift: 16, control: 17, alt: 18};
+    const codemap :Object = {shift: 16, control: 17, alt: 18};
 
     /** @access private */
-    function __keyEvent ( delta, k, type ){
+    function __keyEvent (delta:Object, k:Number, type:String) :void {
         //for each key change, send the corresponding event
-        for (var key in delta) {
-            var down = delta[key];
-            if (this.codemap[key] != null) k = this.codemap[key];
+        var cm:Object = this.codemap;
+        for (var key:String in delta) {
+            var down:Boolean = delta[key];
+            if (cm[key] != null) k = cm[key];
             if (down) {
                 this.gotKeyDown(k);
             } else {
                 this.gotKeyUp(k);
-            }    
+            }
         }
-    }    
+    }
 
     /**
-     * Called whenever a key is pressed with the Flash keycode corresponding to 
+     * Called whenever a key is pressed with the Flash keycode corresponding to
      * the down key.
-     * 
+     *
      * @access private
      * @param Number kC: The Flash keycode for the key that is down.
      * @param String info: if "extra" then ignore if you already got one
      */
-    function gotKeyDown ( kC, info = null ){
-        if ( this.downKeysArray.length > 0 ){
-            var badkeys = null;
+    function gotKeyDown (kC:Number, info:String = null) :void {
+        var dkhash:Object = this.downKeysHash;
+        var dkeys:Array = this.downKeysArray;
 
-            for ( var i = this.downKeysArray.length-1 ; i >=0; i-- ){
-                var dkC = this.downKeysArray[ i ];
-                if (  dkC == kC ) continue;
-            }
-        }
-        var firstkeydown = !this.downKeysHash[ kC ];
+        var firstkeydown:Boolean = !dkhash[ kC ];
         if (firstkeydown) {
-            this.downKeysHash[ kC ] = true;
-            this.downKeysArray.push (  kC );
-        } 
+            dkhash[ kC ] = true;
+            dkeys.push( kC );
+            dkeys.sort();
+        }
         // send key down event first, so inputtext will get key event
         // before a command that may change the focus
         if (firstkeydown || info != "extra") {
-            // won'tdown || info != "extra") {
             // won't send repeated key events in player XXX ?
 
             // check for IME
-            if (this.downKeysHash[229] != true) {
+            if (dkhash[229] != true) {
                 if (this.onkeydown.ready) this.onkeydown.sendEvent( kC );
             }
         }
-
-        if ( firstkeydown ){
-            var cp = this.keycombos;
-            var dkeys = this.downKeysArray;
-            dkeys.sort();
-            for ( var i = 0 ; i < dkeys.length && cp != null ; i++ ){
-                cp  = cp[ dkeys[ i ] ];
+        if (firstkeydown) {
+            var cp:Object = this.keycombos;
+            for (var i:int = 0; i < dkeys.length && cp != null; i++) {
+                cp = cp[ dkeys[ i ] ];
             }
 
             if (cp != null && 'delegates' in cp) {
-                for ( var i = 0 ; i < cp.delegates.length ; i++ ){
-                    cp.delegates[ i ].execute( this.downKeysArray );
+                var del:Array = cp.delegates;
+                for (var i:int = 0; i < del.length; i++) {
+                    del[ i ].execute( dkeys );
                 }
             }
         }
-
-        /*if ( Selection.getFocus() != null ){
-          passKeyPress( kC );
-          }*/
-            
     }
 
     /**
-     * Called whenever the a key is released with the Flash keycode 
+     * Called whenever the a key is released with the Flash keycode
      * corresponding to the up key.
-     * 
+     *
      * @access private
      * @param Number kC: The Flash keycode for the key that was released.
      */
-    function gotKeyUp ( kC ){
-
-        if (!this.downKeysHash[ kC ]) {
-            // Debug.write("derived keyDown", kC);
-        }
-    
-        if ( this.downKeysHash[229] != true && !this.downKeysHash[ kC ]) {
+    function gotKeyUp (kC:Number) :void {
+        var dkhash:Object = this.downKeysHash;
+        if (dkhash[229] != true && !dkhash[ kC ]) {
             // in FP5 some keys don't get a keydown event, but do get a keyup
             this.gotKeyDown( kC );
         }
 
-        delete this.downKeysHash[ kC ];
+        delete dkhash[ kC ];
 
-        this.downKeysArray = [];
-        for ( var k in this.downKeysHash ){
-            this.downKeysArray.push( k );
+        var dkeys:Array = this.downKeysArray = [];
+        for (var k:String in dkhash) {
+            dkeys.push( k );
         }
         if (this.onkeyup.ready) this.onkeyup.sendEvent( kC );
-
     }
 
     /**
@@ -251,15 +206,16 @@ public class LzKeysService extends LzEventable {
      * @param k: The name of the key to check for downness or an array of
      * key names, e.g. ['shift', 'tab']
      */
-    function isKeyDown ( k ){
+    function isKeyDown (k:*) :Boolean {
         if (typeof(k) == "string") {
             return (this.downKeysHash[ this.keyCodes[ k.toLowerCase() ] ] == true);
         } else {
             // an array of keys was passed
-            var down = true;
-            for (var i=0; i < k.length; i++) {
-                down = down && (this.downKeysHash[this.keyCodes[k[i].toLowerCase()]]
-                                == true);
+            var down:Boolean = true;
+            var dkhash:Object = this.downKeysHash;
+            var kc:Object = this.keyCodes;
+            for (var i:int = 0; i < k.length; i++) {
+                down = down && (dkhash[ kc[ k[i].toLowerCase() ] ] == true);
             }
             return down;
         }
@@ -267,7 +223,7 @@ public class LzKeysService extends LzEventable {
 
     /**
      * Instructs the service to call the given delegate whenever the
-     * given key combination is pressed.  
+     * given key combination is pressed.
      * The names for recognized special keys are (case-insensitive):
      * <ul>
      * <li>numbpad0 </li>
@@ -362,52 +318,53 @@ public class LzKeysService extends LzEventable {
      * @param LzDelegate d: The delegate to be called when the keycombo is down.
      * @param Array kCArr: Array of strings indicating which keys constitute the
      * keycombo. This array may be in any order.
+     * @devnote TODO: [20081012 anba] (LPP-7037) change param d to LzDelegatable
      */
-    function callOnKeyCombo ( d , kCArr ){
-
-        var kcSorted = [];
-        for (var i = 0; i < kCArr.length; i++ ){
-            kcSorted.push( this.keyCodes[ kCArr[ i ].toLowerCase() ] );
+    function callOnKeyCombo (d:*, kCArr:Array) :void {
+        var kc:Object = this.keyCodes;
+        var kcSorted:Array = [];
+        for (var i:int = 0; i < kCArr.length; i++) {
+            kcSorted.push( kc[ kCArr[ i ].toLowerCase() ] );
         }
-    
         kcSorted.sort();
-    
-        var cp = this.keycombos;
-        for ( var i = 0 ; i < kcSorted.length; i++ ){
 
-            if ( cp[ kcSorted[ i ] ] == null ){
-                cp[ kcSorted[ i ] ] = {};
-                cp[ kcSorted[ i ] ].delegates = [ ];
+        var cp:Object = this.keycombos;
+        for (var i:int = 0; i < kcSorted.length; i++) {
+            var cpnext:Object = cp[ kcSorted[ i ] ];
+            if (cpnext == null) {
+                cp[ kcSorted[ i ] ] = cpnext = {delegates: []};
             }
-            cp  = cp[ kcSorted[ i ] ];
+            cp = cpnext;
         }
         cp.delegates.push( d );
     }
-                        
+
     /**
-     * Removes the request to call the delegate on the keycombo. 
-     * @param LzDelegate d: The delegate that was to be called when the 
+     * Removes the request to call the delegate on the keycombo.
+     * @param LzDelegate d: The delegate that was to be called when the
      * keycombo was down.
-     * @param Array kCArr: An array of strings indicating which keys 
+     * @param Array kCArr: An array of strings indicating which keys
      * constituted the keycombo.
+     * @devnote TODO: [20081012 anba] (LPP-7037) change param d to LzDelegatable
      */
-    function removeKeyComboCall ( d , kCArr ){
-        var kcSorted = [];
-        for (var i = 0; i < kCArr.length; i++ ){
-            kcSorted.push( this.keyCodes[ kCArr[ i ].toLowerCase() ] );
+    function removeKeyComboCall (d:*, kCArr:Array) :* {
+        var kc:Object = this.keyCodes;
+        var kcSorted:Array = [];
+        for (var i:int = 0; i < kCArr.length; i++) {
+            kcSorted.push( kc[ kCArr[ i ].toLowerCase() ] );
         }
         kcSorted.sort();
 
-        var cp = this.keycombos;
-        for ( var i = 0 ; i < kcSorted.length; i++ ){
-            if ( cp[ kcSorted[ i ] ] == null ){
+        var cp:Object = this.keycombos;
+        for (var i:int = 0; i < kcSorted.length; i++) {
+            cp = cp[ kcSorted[ i ] ];
+            if (cp == null) {
                 return false; //error
             }
-            cp  = cp[ kcSorted[ i ] ];
         }
-        for ( var i = cp.delegates.length-1 ; i >=0; i-- ){
-            if ( cp.delegates[ i ] == d ){
-                cp.delegates.splice( i , 1 );
+        for (var i:int = cp.delegates.length - 1; i >= 0; i--) {
+            if (cp.delegates[ i ] == d) {
+                cp.delegates.splice( i, 1 );
             }
         }
     }
@@ -415,7 +372,7 @@ public class LzKeysService extends LzEventable {
     /**
      * @access private
      */
-    function enableEnter ( onroff ){
+    function enableEnter (onroff:Boolean) :void {
         //Debug.write("enableEnter: "+onroff);
         // SWF-specific
         if ($debug) Debug.write('lz.Keys.enableEnter not yet defined');
@@ -425,20 +382,26 @@ public class LzKeysService extends LzEventable {
     }
 
     /**
-      * The amount the mouse wheel last moved.  Use the 
+      * The amount the mouse wheel last moved.  Use the
       * onmousewheeldelta event to learn when this value changes.
       * @type Number
       * @lzxtype Number
       * @lzxdefault 0
       * @keywords readonly
       */
-    var mousewheeldelta = 0;
+    var mousewheeldelta :Number = 0;
 
     /** @access private */
-    function __mousewheelEvent(d) {
-        //Debug.write('__mousewheelEvent', d);
+    function __mousewheelEvent (d:Number) :void {
         this.mousewheeldelta = d;
         if (this.onmousewheeldelta.ready) this.onmousewheeldelta.sendEvent(d);
+    }
+
+    /** Called when the last focusable element is reached
+      * @access private
+      */
+    function gotLastFocus (ignore:*) :void {
+        LzKeyboardKernel.gotLastFocus();
     }
 
     /**
@@ -446,101 +409,66 @@ public class LzKeysService extends LzEventable {
      * @type Object
      * @access private
      */
-    var keyCodes = {
-    a : 65 ,
-    b : 66 ,
-    c : 67 ,
-    d : 68 ,
-    e : 69 ,
-    f : 70 ,
-    g : 71 ,
-    h : 72 ,
-    i : 73 ,
-    j : 74 ,
-    k : 75 ,
-    l : 76 ,
-    m : 77 ,
-    n : 78 ,
-    o : 79 ,
-    p : 80 ,
-    q : 81 ,
-    r : 82 ,
-    s : 83 ,
-    t : 84 ,
-    u : 85 ,
-    v : 86 ,
-    w : 87 ,
-    x : 88 ,
-    y : 89 ,
-    z : 90 ,
-    numbpad0 : 96 ,
-    numbpad1 : 97 ,
-    numbpad2 : 98 ,
-    numbpad3 : 99 ,
-    numbpad4 : 100 ,
-    numbpad5 : 101 ,
-    numbpad6 : 102 ,
-    numbpad7 : 103 ,
-    numbpad8 : 104 ,
-    numbpad9 : 105 ,
-    multiply : 106 ,
-    enter : 13 ,
-    subtract : 109 ,
-    decimal : 110 ,
-    divide : 111 ,
-    f1 : 112 ,
-    f2 : 113 ,
-    f3 : 114 ,
-    f4 : 115 ,
-    f5 : 116 ,
-    f6 : 117 ,
-    f7 : 118 ,
-    f8 : 119 ,
-    f9 : 120 ,
-    f10 : 121 ,
-    f11 : 122 ,
-    f12 : 123 ,
-    backspace : 8 ,
-    tab : 9 ,
-    clear : 12 ,
-    enter : 13 ,
-    shift : 16 ,
-    control : 17 ,
-    alt : 18 ,
-    capslock : 20 ,
-    esc : 27 ,
-    spacebar : 32 ,
-    pageup : 33 ,
-    pagedown : 34 ,
-    end : 35 ,
-    home : 36 ,
-    leftarrow : 37 ,
-    uparrow : 38 ,
-    rightarrow : 39 ,
-    downarrow : 40 ,
-    insert : 45 ,
-    help : 47 ,
-    numlock : 144
+    const keyCodes :Object = {
+    /* numerical keys and non-alphanum keys */
+    '0' : 48, ')' : 48,    ';'  : 186, ':'  : 186,
+    '1' : 49, '!' : 49,    '='  : 187, '+'  : 187,
+    '2' : 50, '@' : 50,    '<'  : 188, ','  : 188,
+    '3' : 51, '#' : 51,    '-'  : 189, '_'  : 189,
+    '4' : 52, '$' : 52,    '>'  : 190, '.'  : 190,
+    '5' : 53, '%' : 53,    '/'  : 191, '?'  : 191,
+    '6' : 54, '^' : 54,    '`'  : 192, '~'  : 192,
+    '7' : 55, '&' : 55,    '['  : 219, '{'  : 219,
+    '8' : 56, '*' : 56,    '\\' : 220, '|'  : 220,
+    '9' : 57, '(' : 57,    ']'  : 221, '}'  : 221,
+                           '\"' : 222, '\'' : 222,
+    /* alphabetical keys */
+    a : 65, b : 66, c : 67, d : 68, e : 69, f : 70, g : 71,
+    h : 72, i : 73, j : 74, k : 75, l : 76, m : 77, n : 78,
+    o : 79, p : 80, q : 81, r : 82, s : 83, t : 84, u : 85,
+    v : 86, w : 87, x : 88, y : 89, z : 90,
+
+    /* numpad keys */
+    numbpad0 : 96,  numbpad1 : 97,  numbpad2 : 98,  numbpad3 : 99,  numbpad4 : 100,
+    numbpad5 : 101, numbpad6 : 102, numbpad7 : 103, numbpad8 : 104, numbpad9 : 105,
+    multiply : 106, 'add'    : 107, subtract : 109, decimal  : 110, divide   : 111,
+
+    /* function keys */
+    f1 : 112, f2 : 113, f3 : 114, f4  : 115, f5  : 116, f6  : 117,
+    f7 : 118, f8 : 119, f9 : 120, f10 : 121, f11 : 122, f12 : 123,
+
+    /* special keys */
+    backspace : 8,
+    tab : 9,
+    clear : 12,
+    enter : 13,
+    shift : 16,
+    control : 17,
+    alt : 18,
+    'pause' : 19, 'break' : 19,
+    capslock : 20,
+    esc : 27,
+    spacebar : 32,
+    pageup : 33,
+    pagedown : 34,
+    end : 35,
+    home : 36,
+    leftarrow : 37,
+    uparrow : 38,
+    rightarrow : 39,
+    downarrow : 40,
+    insert : 45,
+    'delete' : 46,
+    help : 47,
+    numlock : 144,
+    screenlock : 145,
+    'IME' : 229
     }
 
-    /** Called when the last focusable element is reached
-      * @access private 
-      */
-    function gotLastFocus(ignore) {
-        LzKeyboardKernel.gotLastFocus();
-    }
 }
 lz.KeysService = LzKeysService;  // publish
 
 /**
-  * lz.Keys is a shortcut for <a href="LzKeysService.html">LzKeysService</a>.
+  * lz.Keys is a shortcut for <a href="LzKeysService.html">LzKeysService.LzKeys</a>.
   */
-lz.Keys = new LzKeysService();
-
-if ($dhtml) {
-    // Need to explicitly register this.  Make sure lz.embed.mousewheel is there for 
-    // lztest
-    if (lz.embed['mousewheel']) {
-        lz.embed.mousewheel.setCallback(lz.Keys, '__mousewheelEvent');
-    }
-}
+lz.Keys = LzKeysService.LzKeys;
