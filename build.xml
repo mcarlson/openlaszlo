@@ -1214,6 +1214,10 @@
           <fileset dir="WEB-INF/bin" />
       </copy>
 
+      <chmod file="${flexbin}/mxmlc" perm="755" />
+      <chmod file="${flexbin}/compc" perm="755" />
+      <chmod file="${flexbin}/fdb" perm="755" />
+
       <copy todir="${flex_frameworks}" >
           <fileset dir="WEB-INF/frameworks" />
       </copy>
