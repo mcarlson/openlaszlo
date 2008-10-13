@@ -6,47 +6,46 @@
 <!--                                                                       -->
 <!--=======================================================================-->
 
-<canvas bgcolor="#EAEAEA" debug="false"
-        width="640" height="540" oninit="Debug.setAttribute('x', 0);Debug.setAttribute('y', 360);"  >
+<canvas bgcolor="#EAEAEA" debug="false" width="640" height="540" >
     <dataset name="recs" >
-        <record name="firstone" email="poo@doo.slop" color="#FF0000" />
-        <record name="secondone" email="poo@doo.slop" color="#FFFF00" />
-        <record name="3rdone" email="poo@doo.slop" color="#FF00FF" />
-        <record name="4thone" email="poo@doo.slop" color="#FF00FF" />
-        <record name="5thone" email="poo@doo.slop" color="#FF00FF" />
-        <record name="sixth" email="poo@doo.slop" color="#FF00FF" />
-        <record name="seventh" email="poo@doo.slop" color="#00FFFF" />
-        <record name="eight" email="poo@doo.slop" color="#00FF00" />
-        <record name="niner" email="poo@doo.slop" color="#000000" />
-        <record name="twen" email="poo@doo.slop" color="#FF00FF" />
-        <record name="elven" email="poo@doo.slop" color="#FF00FF" />
-        <record name="twelve" email="poo@doo.slop" color="#FF00FF" />
+        <record name="firstone" email="poo@doo.slop" color="#FFAAAA" />
+        <record name="secondone" email="poo@doo.slop" color="#FFFFAA" />
+        <record name="3rdone" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="4thone" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="5thone" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="sixth" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="seventh" email="poo@doo.slop" color="#AAFFFF" />
+        <record name="eight" email="poo@doo.slop" color="#AAFFAA" />
+        <record name="niner" email="poo@doo.slop" color="#AAAAAA" />
+        <record name="twen" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="elven" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="twelve" email="poo@doo.slop" color="#FFAAFF" />
         <record name="thirteens" email="poo@doo.slop" color="#FFFFFF" />
-        <record name="fdourten" email="poo@doo.slop" color="#FF00FF" />
-        <record name="fivteen" email="poo@doo.slop" color="#FF00FF" />
-        <record name="sizteen" email="poo@doo.slop" color="#00FFFF" />
-        <record name="iwghteen" email="poo@doo.slop" color="#FF00FF" />
-        <record name="nineten" email="poo@doo.slop" color="#FFFF00" />
-        <record name="twenty" email="poo@doo.slop" color="#FF00FF" />
-        <record name="twenty1" email="poo@doo.slop" color="#FF00FF" />
-        <record name="22" email="poo@doo.slop" color="#00FF00" />
-        <record name="tewentyrthre" email="poo@doo.slop" color="#FF00FF" />
-        <record name="twentryfour" email="poo@doo.slop" color="#FF00FF" />
-        <record name="trenty five" email="poo@doo.slop" color="#FF00FF" />
-        <record name="26" email="poo@doo.slop" color="#FF00FF" />
-        <record name="2senve" email="poo@doo.slop" color="#FF00FF" />
-        <record name="thwenty eight" email="poo@doo.slop" color="#FF00FF" />
-        <record name="ewetny nine" email="poo@doo.slop" color="#FF00FF" />
-        <record name="rfritry" email="poo@doo.slop" color="#FF00FF" />
-        <record name="firthy 1" email="poo@doo.slop" color="#FF00FF" />
-        <record name="firth to last" email="poo@doo.slop" color="#FF00FF" />
-        <record name="fourth to last" email="poo@doo.slop" color="#FF00FF" />
-        <record name="3rd top last" email="poo@doo.slop" color="#00FF00" />
-        <record name="sec2last" email="poo@doo.slop" color="#FF00FF"/>
+        <record name="fdourten" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="fivteen" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="sizteen" email="poo@doo.slop" color="#AAFFFF" />
+        <record name="iwghteen" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="nineten" email="poo@doo.slop" color="#FFFFAA" />
+        <record name="twenty" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="twenty1" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="22" email="poo@doo.slop" color="#AAFFAA" />
+        <record name="tewentyrthre" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="twentryfour" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="trenty five" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="26" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="2senve" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="thwenty eight" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="ewetny nine" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="rfritry" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="firthy 1" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="firth to last" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="fourth to last" email="poo@doo.slop" color="#FFAAFF" />
+        <record name="3rd top last" email="poo@doo.slop" color="#AAFFAA" />
+        <record name="sec2last" email="poo@doo.slop" color="#FFAAFF"/>
         <record name="lastone" email="poo@doo.slop" color="#FFFFFF" />
     </dataset>
 
-    <window id="windw" resizable="true" width="230" height="238" x="30" y="70">
+    <window resizable="true" width="230" height="238" x="30" y="70">
         <view id="svpar">
             <view height="20" clickable='true'
                   width="200" name="sview"
@@ -80,7 +79,7 @@
         </handler>
     </button>
 
-    <view x="300" y="30" width="250" datapath="new:/record" id="newer" >
+    <view x="300" y="30" width="250" datapath="new:/record" >
         <view>
             <simplelayout axis="x" spacing="5" />
             <text width="45" valign="middle">Name:</text>
@@ -96,22 +95,21 @@
             <text width="45" valign="middle">Color:</text>
             <view width="200">
                 <view width="107" height="20" name="cview" datapath="@color"
-                      bgcolor="red">
+                      bgcolor="#FFAAAA">
                     <method name="updateData">
-                        return this.bgcolor != null? this.bgcolor :
-                                                          0xFFFFFF;
+                        return String(this.bgcolor != null ? this.bgcolor :
+                                                          0xFFFFFF);
                     </method>
                 </view>
 
-                <view bgcolor="red" width="20" height="20" clickable="true"
+                <view bgcolor="#FFAAAA" width="20" height="20" clickable="true"
                       onmouseup="parent.cview.setAttribute('bgcolor', this.bgcolor)"/>
-                <view bgcolor="blue" width="20"   height="20" clickable="true"
+                <view bgcolor="#AAAAFF" width="20"   height="20" clickable="true"
                       onmouseup="parent.cview.setAttribute('bgcolor', this.bgcolor)"/>
-                <view bgcolor="yellow"  width="20" height="20" clickable="true"
+                <view bgcolor="#FFFFAA" width="20" height="20" clickable="true"
                       onmouseup="parent.cview.setAttribute('bgcolor', this.bgcolor)"/>
-                <view bgcolor="purple"  width="20" height="20" clickable="true"
+                <view bgcolor="#DD80DD" width="20" height="20" clickable="true"
                       onmouseup="parent.cview.setAttribute('bgcolor', this.bgcolor)"/>
-
 
                 <simplelayout axis="x" spacing="3" />
             </view>
