@@ -16,24 +16,25 @@
       <button width="80" x="200">Add
         <handler name="onclick">
           parent.datapath.updateData();
-          var dp= phonebook.getPointer();   
+          var dp = phonebook.getPointer();
           dp.selectChild();
-          dp.addNodeFromPointer(parent.datapath);     
-          parent.setDatapath("new:/contact");         
+          dp.addNodeFromPointer(parent.datapath);
+          parent.setAttribute("datapath", "new:/contact");
         </handler>
       </button>
     </view>
   </view>
   <button text="Delete selected">
     <handler name="onclick"><![CDATA[
-      for (var c = 0; c < all.nodes.length; ++c)
-        with (all.clones[c]) {
-          if (datapath.xpathQuery('@checked') == true)  {
-            datapath.deleteNode()
-            c--
-          }
-        }]]>
-    </handler>
+      for (var c = 0; c < all.nodes.length;) {
+        var clone = all.clones[c];
+        if (clone.datapath.xpathQuery('@checked') == 'true') {
+          clone.datapath.deleteNode();
+        } else {
+          c += 1;
+        }
+      }
+    ]]></handler>
   </button>
   
   <view name="all">
@@ -42,13 +43,13 @@
       <simplelayout axis="x"/>
       <checkbox width="30" datapath="@checked">
         <handler name="onvalue">
-          datapath.updateData()
+          datapath.updateData();
         </handler>
         <method name="updateData">
-          return this.value
+          return String(this.value);
         </method>
         <method name="applyData" args="d">
-          setValue(d)
+          this.setValue(d);
         </method>
       </checkbox>
       <text datapath="@firstName"/>
@@ -59,6 +60,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
