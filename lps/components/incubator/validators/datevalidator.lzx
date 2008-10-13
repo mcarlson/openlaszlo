@@ -72,7 +72,7 @@
         <![CDATA[
             var year = getYear(value);
             if(isInt(year)){
-                var intYear = parseInt(year);
+                var intYear = parseInt(year, 10);
                 if( -1 < intYear && intYear < 10000)
                     return true;  
             }
@@ -84,7 +84,7 @@
         <![CDATA[
             var month = getMonth(value);
             if(isInt(month)){
-                var intMonth = parseInt(month);
+                var intMonth = parseInt(month, 10);
                 if(0 < intMonth && intMonth < 13)
                     return true;
             }
@@ -96,7 +96,7 @@
         <![CDATA[
             var date = getDate(value);
             if(isInt(date)){
-                var intDate = parseInt(date);
+                var intDate = parseInt(date, 10);
                 if(0 < intDate&& intDate <= getlastdate(value))
                     return true;
             }
@@ -105,7 +105,7 @@
             ]]>
         </method>
         <method name="getlastdate" args="value">
-            switch (parseInt(getMonth(value))){
+            switch (parseInt(getMonth(value), 10)){
                 case  2:
                   return getlastdayofFeb(value);
                 case  4: case  6: case  9: case 11:
@@ -116,7 +116,7 @@
         </method>
         <method name="getlastdayofFeb" args="value">
         <![CDATA[
-            var year = parseInt(getYear(value));
+            var year = parseInt(getYear(value), 10);
             if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0)
                 return 29;
             else
@@ -143,7 +143,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

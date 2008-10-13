@@ -58,7 +58,7 @@
             }
         </method>
 
-        <method name="iserrorchanged">
+        <method name="iserrorchanged" args="ignore=true">
             <![CDATA[
             var count = 0;
             for(var i = 0; i < this.validators.length; i++){

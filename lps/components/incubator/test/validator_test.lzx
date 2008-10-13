@@ -16,11 +16,11 @@
     <validatingForm name="myform" width="100%">
         <submit name="submit" />
         
-        <formlayout spacing="10" />
+        <simplelayout axis="y" spacing="10" />
         
         <text>name(5~20 chars):</text>
         <stringvalidator id="sv1" required="true" minLength="5" maxLength="20">
-            <edittext name="name" />
+            <edittext name="nametext" />
         </stringvalidator>
 
         <text>address(5~20 chars + trim):</text>
@@ -30,7 +30,7 @@
         
         <text>E-mail:</text>
         <emailvalidator required="true">
-            <edittext name="e-mail" />
+            <edittext name="email" />
         </emailvalidator>
         
         <text>birthday(mm/dd/yyyy):</text>

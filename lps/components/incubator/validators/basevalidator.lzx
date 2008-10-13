@@ -23,9 +23,7 @@
         <attribute name="requiredErrorstring" type="string" value="this field is required." />
         <attribute name="innercompornent" type="expression" value="null" />
         <attribute name="iserror" type="boolean" value="false" />
-
-
-        <method name="doValidation" />
+        <attribute name="trim" type="boolean" value="true" />
         
         <method name="addSubview" args="item">
             super.addSubview(item);

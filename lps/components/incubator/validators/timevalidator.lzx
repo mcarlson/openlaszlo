@@ -100,7 +100,7 @@
             var hour = getHour(value);
 
             if(isInt(hour)){
-                var intHour = parseInt(hour);
+                var intHour = parseInt(hour, 10);
                 if( -1 < intHour && intHour < 24)
                     return true;
             }
@@ -117,7 +117,7 @@
             var minutes = getMinutes(value);
 
             if(isInt(minutes)){
-                var intMinutes = parseInt(minutes);
+                var intMinutes = parseInt(minutes, 10);
                 if(-1 < intMinutes && intMinutes < 60)
                     return true;
             }
@@ -134,7 +134,7 @@
             var seconds = getSeconds(value);
 
             if(isInt(seconds)){
-                var intSeconds = parseInt(seconds);
+                var intSeconds = parseInt(seconds, 10);
                 if(-1 < intSeconds && intSeconds < 60)
                     return true;
             }
