@@ -134,6 +134,9 @@
                 this.shrink();
             }
         </handler>
+        <handler name="oninit">
+            this.main.toolbar_view.yearcombo.selectItem(this.showingyear);
+        </handler>
         <method name="expandFromIcon">
             super.expandFromIcon();
             parent.bringToFront();
