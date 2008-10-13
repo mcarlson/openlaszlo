@@ -254,10 +254,6 @@ try {
     <td align="right">Title for web page:</td><td><input name="apptitle" size="40" type="text" value="Laszlo Application"/></td>
   </tr>
   <tr><td/><td/></tr>
-  <tr>
-    <td align="right">Width x Height (leave blank for default):</td>
-    <td><input name="appwidth" size="5" type="text"/> x <input name="appheight" size="5" type="text"/>
-  </tr>
                                         
 </table>
 <p>
@@ -434,7 +430,7 @@ Paste this wrapper into a browser to deploy your app:
           html, body { margin: 0; padding: 0; height: 100%; }
           body { background-color: #eaeaea; }
         </style></head>
-   <body><object type="application/x-shockwave-flash" data="<%= appUrl %>.lzr=swf8.swf?lzproxied=false" width="640" height="400">
+   <body><object type="application/x-shockwave-flash" data="<%= appUrl %>.lzr=swf8.swf?lzproxied=false" width="<%= appwidth %>" height="<%= appheight %>">
          <param name="movie" value="<%= appUrl %>.lzr=swf8.swf?lzproxied=false">
          <param name="quality" value="high">
          <param name="scale" value="noscale">

@@ -159,7 +159,10 @@ lz.embed = {
      * @param resourceroot:String Base URL to load resources from. 
      */
     lfc: function (url, resourceroot) {
-        if (! resourceroot || typeof resourceroot != 'string' || resourceroot == '') {
+        // Default resourceroot to "." if an empty string is supplied
+        if (resourceroot == '') {
+            resourceroot = '.';
+        } else if (! resourceroot || typeof resourceroot != 'string') {
             alert('WARNING: lz.embed.lfc() requires a valid resourceroot to be specified.'); 
             return;
         }

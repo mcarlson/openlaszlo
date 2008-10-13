@@ -284,10 +284,7 @@ if (whatpage.equals("configure")) {
     <td align="right">Title for web page:</td><td><input name="apptitle" size="40" type="text" value="Laszlo Application"/></td>
   </tr>
   <tr><td/><td/></tr>
-  <tr>
-    <td align="right">Width x Height (leave blank for default):</td>
-    <td><input name="appwidth" size="5" type="text"/> x <input name="appheight" size="5" type="text"/>
-  </tr>
+
                                         
 </table>
 <p>
