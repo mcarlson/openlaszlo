@@ -10,130 +10,144 @@
   */
 
 /**
-  * 
+  *
   * <p>
-  * The <tagname>LzContextMenu</tagname> represents a context (right-click) menu.
+  * The <tagname>contextmenu</tagname> represents a context (right-click) menu.
   * </p>
+  *
+  * <example title="lz.ContextMenu example">
+  * &lt;canvas height="60"&gt;
+  *   &lt;view width="240" height="40" bgcolor="#aeaeae"&gt;
+  *     &lt;contextmenu&gt;
+  *       &lt;contextmenuitem caption="menu item"/&gt;
+  *     &lt;/contextmenu&gt;
+  *     &lt;text align="center"&gt;Right click for context menu&lt;/text&gt;
+  *   &lt;/view&gt;
+  * &lt;/canvas&gt;
+  * </example>
   *
   * @shortdesc A contextual menu
   */
 public final class LzContextMenu extends LzNode {
 
-/** @access private
-  * @modifiers override 
-  */
-static var tagname = 'contextmenu';
+    /** @access private
+      * @modifiers override
+      */
+    static var tagname :String = 'contextmenu';
 
-/** @access private */
-static var attributes = new LzInheritedHash(LzNode.attributes);
+    /** @access private */
+    static var attributes :Object = new LzInheritedHash(LzNode.attributes);
 
-/**
-  * @lzxtype event
-  */
-var onmenuopen:LzDeclaredEventClass = LzDeclaredEvent;
+    /** Send when the menu is opened
+      * @lzxtype event
+      */
+    var onmenuopen:LzDeclaredEventClass = LzDeclaredEvent;
 
-/** @access private */
-var kernel:LzContextMenuKernel = null;
-/** @access private */
-var items:Array = null;
+    /** @access private */
+    var kernel:LzContextMenuKernel = null;
+    /** @access private */
+    var items:Array = null;
 
-function LzContextMenu (del:* = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
-    // NOTE: [20080825 anba] for bwcomp we also accept a LzDelegate as the first argument
-    super(del is LzNode ? del cast LzNode : null, del is LzNode ? attrs : {delegate: del}, children, instcall);
-}
-
-/** @access private */
-override function construct (parent, args) {
-    super.construct(parent, args);
-    
-    this.kernel = new LzContextMenuKernel(this);
-
-    this.items = [];
-    
-    var del:* = (args && args['delegate']) || null;
-    delete args['delegate'];
-    
-    // set callback
-    this.setDelegate(del);
-}
-
-/** @access private */
-override function init () {
-    super.init();
-    
-    var p:LzNode = this.parent;
-    if (p && p is LzView) {
-        (p cast LzView).setContextMenu(this);
+    /** @access private */
+    function LzContextMenu (del:* = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
+        // NOTE: [20080825 anba] for bwcomp we also accept a LzDelegate as the first argument
+        super(del is LzNode ? del cast LzNode : null, del is LzNode ? attrs : {delegate: del}, children, instcall);
     }
-}
 
-/** @access private */
-function $lzc$set_delegate (delegate:*) :void { this.setDelegate(delegate); }
+    /** @access private */
+    override function construct (parent, args) {
+        super.construct(parent, args);
 
-/**
-  * Sets the delegate which will be called when the menu is opened
-  * @param LzDelegate delegate: delegate which is executed when item is selected. An
-  * onmenuopen event is also sent.
-  * 
-  * @access public
-  */
-function setDelegate (delegate:LzDelegate) :void {
-    this.kernel.setDelegate(delegate);
-}
+        this.kernel = new LzContextMenuKernel(this);
 
-/**
-  * Adds a menu items into a menu
-  * @param LzContextMenuItem item: LzContextMenuItem to install on this menu
-  * @access public
-  */
-function addItem (item:LzContextMenuItem) :void {
-    this.items.push(item);
-    this.kernel.addItem(item);
-}
+        this.items = [];
 
-/**
-  * Removes Flash-installed default menu items
-  * @access public
-  */
-function hideBuiltInItems () :void {
-    this.kernel.hideBuiltInItems();
-}
+        var del:* = (args && args['delegate']) || null;
+        delete args['delegate'];
 
-/**
-  * Shows Flash-installed default menu items
-  * @access public
-  */
-function showBuiltInItems () :void {
-    this.kernel.showBuiltInItems();
-}
+        // set callback
+        this.setDelegate(del);
+    }
 
-/**
-  * Remove all custom items from a menu
-  * @access public
-  */
-function clearItems () :void {
-    this.items = [];
-    this.kernel.clearItems();
-}
+    /** @access private */
+    override function init () {
+        super.init();
 
-/**
-  * Return list of custom items
-  * @access public
-  */
-function getItems () :Array {
-    return this.items;
-}
+        var p:LzNode = this.parent;
+        if (p && p is LzView) {
+            (p cast LzView).setContextMenu(this);
+        }
+    }
 
-/**
-  * create a new menu item for a LzContextMenu
-  * @param String title: menu item name
-  * @param function callback:  delegate to execute when item is selected
-  * @access public
-  */
-function makeMenuItem (title:String, callback:*) :LzContextMenuItem {
-  var item:LzContextMenuItem = new LzContextMenuItem(title, callback);
-  return item;
-}
+    /** @access private */
+    function $lzc$set_delegate (delegate:*) :void { this.setDelegate(delegate); }
+
+    /**
+      * Sets the delegate which will be called when the menu is opened
+      * @param LzDelegate delegate: delegate which is executed when item is selected. An
+      * onmenuopen event is also sent.
+      *
+      * @access public
+      */
+    function setDelegate (delegate:LzDelegate) :void {
+        this.kernel.setDelegate(delegate);
+    }
+
+    /**
+      * Adds a menu items into a menu
+      * @param LzContextMenuItem item: menu item to install on this menu
+      * @access public
+      */
+    function addItem (item:LzContextMenuItem) :void {
+        this.items.push(item);
+        this.kernel.addItem(item);
+    }
+
+    /**
+      * Removes Flash-installed default menu items
+      * @access public
+      */
+    function hideBuiltInItems () :void {
+        this.kernel.hideBuiltInItems();
+    }
+
+    /**
+      * Shows Flash-installed default menu items
+      * @access public
+      */
+    function showBuiltInItems () :void {
+        this.kernel.showBuiltInItems();
+    }
+
+    /**
+      * Remove all custom items from a menu
+      * @access public
+      */
+    function clearItems () :void {
+        this.items = [];
+        this.kernel.clearItems();
+    }
+
+    /**
+      * Return list of custom items
+      * @return [LzContextMenuItem]: all custom items
+      * @access public
+      */
+    function getItems () :Array {
+        return this.items;
+    }
+
+    /**
+      * Create a new menu item for a lz.ContextMenu
+      * @param String title: menu item name
+      * @param LzDelegate delegate: delegate to execute when item is selected
+      * @return LzContextMenuItem: the new menu item
+      * @access public
+      */
+    function makeMenuItem (title:String, delegate:*) :LzContextMenuItem {
+      var item:LzContextMenuItem = new LzContextMenuItem(title, delegate);
+      return item;
+    }
 
 }; // End of LzContextMenu
 lz[LzContextMenu.tagname] = LzContextMenu;  // publish
@@ -142,124 +156,136 @@ lz[LzContextMenu.tagname] = LzContextMenu;  // publish
 
 /**
   * <p>
-  * The class <tagname>LzContextMenuItem</tagname> represents a menu item within a context menu.
+  * The class <tagname>contextmenuitem</tagname> represents a menu item within a context menu.
   * </p>
-  * 
+  *
+  * <example title="lz.ContextMenuItem example">
+  * &lt;canvas height="60"&gt;
+  *   &lt;view width="240" height="40" bgcolor="#aeaeae"&gt;
+  *     &lt;contextmenu&gt;
+  *       &lt;contextmenuitem caption="menu item"/&gt;
+  *       &lt;contextmenuitem caption="disabled menu item" enabled="false"/&gt;
+  *       &lt;contextmenuitem caption="menu item with separator" separatorbefore="true"/&gt;
+  *     &lt;/contextmenu&gt;
+  *     &lt;text align="center"&gt;Right click for context menu&lt;/text&gt;
+  *   &lt;/view&gt;
+  * &lt;/canvas&gt;
+  * </example>
+  *
   * @shortdesc A menu item within a context menu
   */
 public final class LzContextMenuItem extends LzNode {
 
-/** @access private
-  * @modifiers override 
-  */
-static var tagname = 'contextmenuitem';
+    /** @access private
+      * @modifiers override
+      */
+    static var tagname :String = 'contextmenuitem';
 
-/** @access private */
-static var attributes = new LzInheritedHash(LzNode.attributes);
+    /** @access private */
+    static var attributes :Object = new LzInheritedHash(LzNode.attributes);
 
-/** @access public */
-var onselect:LzDeclaredEventClass = LzDeclaredEvent;
+    /** Send when the menu item is selected
+      * @access public
+      * @lzxtype event
+      */
+    var onselect:LzDeclaredEventClass = LzDeclaredEvent;
 
-/** @access private */
-var kernel:LzContextMenuItemKernel = null;
+    /** @access private */
+    var kernel:LzContextMenuItemKernel = null;
 
-function LzContextMenuItem (title:*, del:Object? = null, children:Array? = null, instcall:Boolean = false) {
-    // NOTE: [20080825 anba] for bwcomp we also accept a String 
-    // and a LzDelegate/Function as the first two arguments
-    super(title is LzNode ? title cast LzNode : null, title is LzNode ? del : {title: title, delegate: del}, children, instcall);
-};
+    /** @access private */
+    function LzContextMenuItem (title:*, del:Object? = null, children:Array? = null, instcall:Boolean = false) {
+        // NOTE: [20080825 anba] for bwcomp we also accept a String
+        // and a LzDelegate/Function as the first two arguments
+        super(title is LzNode ? title cast LzNode : null, title is LzNode ? del : {title: title, delegate: del}, children, instcall);
+    };
 
-/** @access private */
-override function construct (parent, args) {
-    super.construct(parent, args);
-    
-    var title:String = (args && args['title']) || "";
-    delete args['title'];
-    var del:* = (args && args['delegate']) || null;
-    delete args['delegate'];
-    
-    this.kernel = new LzContextMenuItemKernel(this, title, del);
-    
-    if (parent && parent is LzContextMenu) {
-        parent.addItem(this);
+    /** @access private */
+    override function construct (parent, args) {
+        super.construct(parent, args);
+
+        var title:String = (args && args['title']) || "";
+        delete args['title'];
+        var del:* = (args && args['delegate']) || null;
+        delete args['delegate'];
+
+        this.kernel = new LzContextMenuItemKernel(this, title, del);
+
+        if (parent && parent is LzContextMenu) {
+            parent.addItem(this);
+        }
     }
-}
 
-/** @access private */
-function $lzc$set_delegate (delegate:*) :void { this.setDelegate(delegate); }
+    /** @access private */
+    function $lzc$set_delegate (delegate:*) :void { this.setDelegate(delegate); }
 
-/** @access private */
-function $lzc$set_caption (caption:String) :void { this.setCaption(caption); }
+    /** @access private */
+    function $lzc$set_caption (caption:String) :void { this.setCaption(caption); }
 
-/** @access private */
-function $lzc$set_enabled (val:Boolean) :void { this.setEnabled(val); }
+    /** @access private */
+    function $lzc$set_enabled (val:Boolean) :void { this.setEnabled(val); }
 
-/** @access private */
-function $lzc$set_separatorbefore (val:Boolean) :void { this.setSeparatorBefore(val); }
+    /** @access private */
+    function $lzc$set_separatorbefore (val:Boolean) :void { this.setSeparatorBefore(val); }
 
-/** @access private */
-function $lzc$set_visible (val:Boolean) :void { this.setVisible(val); }
+    /** @access private */
+    function $lzc$set_visible (val:Boolean) :void { this.setVisible(val); }
 
-/**
-  * LzContextMenuItem.setDelegate
-  * Sets the delegate which will be called when the menu item is selected
-  * @param LzDelegate delegate: delegate which is executed when item is 
-  * selected. An onselect event is also sent.
-  * 
-  * @access public
-  */
-function setDelegate (delegate:*) :void {
-    this.kernel.setDelegate(delegate);
-}
+    /**
+      * Sets the delegate which will be called when the menu item is selected
+      * @param LzDelegate delegate: delegate which is executed when item is
+      * selected. An onselect event is also sent.
+      *
+      * @access public
+      */
+    function setDelegate (delegate:*) :void {
+        this.kernel.setDelegate(delegate);
+    }
 
-/**
-  * LzContextMenuItem.setCaption
-  * Sets the text string which is displayed for the menu item
-  * @param String caption: text string to display
-  * @access public
-  */
-function setCaption (caption:String) :void {
-    this.kernel.setCaption(caption);
-}
+    /**
+      * Sets the text string which is displayed for the menu item
+      * @param String caption: text string to display
+      * @access public
+      */
+    function setCaption (caption:String) :void {
+        this.kernel.setCaption(caption);
+    }
 
-/**
-  * LzContextMenuItem.getCaption
-  * Gets the text string which is displayed for the menu item
-  * @access public
-  */
-function getCaption () :String {
-    return this.kernel.getCaption();
-}
+    /**
+      * Gets the text string which is displayed for the menu item
+      * @return String: the text string
+      * @access public
+      */
+    function getCaption () :String {
+        return this.kernel.getCaption();
+    }
 
-/**
-  * LzContextMenuItem.setEnabled
-  * @param boolean val: if false, menu item is grayed out and will not respond to clicks
-  * @access public
-  */
-function setEnabled (val:Boolean) :void {
-    this.kernel.setEnabled(val);
-}
+    /**
+      * Sets the enabled status of the menu item
+      * @param boolean val: if false, menu item is grayed out and will not respond to clicks
+      * @access public
+      */
+    function setEnabled (val:Boolean) :void {
+        this.kernel.setEnabled(val);
+    }
 
-/**
-  * LzContextMenuItem.separatorBefore
-  * Draw a horizontal separator line before this item in the menu
-  * @param boolean val: sets visibility of separator line
-  * @access public
-  */
+    /**
+      * Draw a horizontal separator line before this item in the menu
+      * @param boolean val: sets visibility of separator line
+      * @access public
+      */
+    function setSeparatorBefore (val:Boolean) :void {
+        this.kernel.setSeparatorBefore(val);
+    }
 
-function setSeparatorBefore (val:Boolean) :void {
-    this.kernel.setSeparatorBefore(val);
-}
-
-/**
-  * LzContextMenuItem.setVisible
-  * Sets the visibility of the menu item
-  * @param boolean val: sets visibility
-  * @access public
-  */
-function setVisible (val:Boolean) :void {
-    this.kernel.setVisible(val);
-}
+    /**
+      * Sets the visibility of the menu item
+      * @param boolean val: sets visibility
+      * @access public
+      */
+    function setVisible (val:Boolean) :void {
+        this.kernel.setVisible(val);
+    }
 
 }; // End of LzContextMenuItem
 lz[LzContextMenuItem.tagname] = LzContextMenuItem;  // publish
