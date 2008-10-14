@@ -15,7 +15,7 @@
   * The <tagname>contextmenu</tagname> represents a context (right-click) menu.
   * </p>
   *
-  * <example title="lz.ContextMenu example">
+  * <example title="lz.contextmenu example">
   * &lt;canvas height="60"&gt;
   *   &lt;view width="240" height="40" bgcolor="#aeaeae"&gt;
   *     &lt;contextmenu&gt;
@@ -138,7 +138,7 @@ public final class LzContextMenu extends LzNode {
     }
 
     /**
-      * Create a new menu item for a lz.ContextMenu
+      * Create a new menu item for a lz.contextmenu
       * @param String title: menu item name
       * @param LzDelegate delegate: delegate to execute when item is selected
       * @return LzContextMenuItem: the new menu item
@@ -159,7 +159,7 @@ lz[LzContextMenu.tagname] = LzContextMenu;  // publish
   * The class <tagname>contextmenuitem</tagname> represents a menu item within a context menu.
   * </p>
   *
-  * <example title="lz.ContextMenuItem example">
+  * <example title="lz.contextmenuitem example">
   * &lt;canvas height="60"&gt;
   *   &lt;view width="240" height="40" bgcolor="#aeaeae"&gt;
   *     &lt;contextmenu&gt;
