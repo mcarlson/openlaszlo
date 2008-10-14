@@ -114,7 +114,7 @@ function attachLoadMovie (resc) {
             LzLoadQueue.loadFinished( mc );
         }
     } else if ($debug) {
-        Debug.error('%w.attachMovie(%w)', this, resc);
+        Debug.error('%w.attachLoadMovie(%w)', this, resc);
     }
 }
 
@@ -124,7 +124,7 @@ function attachLoadMovie (resc) {
  * want to access a URL which generates a supported format, but has an
  * suffix from which it is not possible to deduce the file type, like
  * .jsp or .php.
- * 
+ *
  * @access private
  */
 static var unsupportedMediaTypes = {
@@ -210,7 +210,7 @@ function testError (ignore) {
   * @access private
   */
 function testLoad (ignore) {
-    //skip first check because this can get called before load starts, in 
+    //skip first check because this can get called before load starts, in
     //which case load info is wrong
     //getBytesTotal is wrong before the header of the movie has loaded
 
@@ -226,7 +226,7 @@ function testLoad (ignore) {
     if (this.isjpeg && lmc._height <= 0) {
         //Debug.error('skipping 0 height jpeg');
         return;
-    }    
+    }
 
     if (this.checkonce) {
         //a swf loaded from another domain will be sandboxed. no load
@@ -283,14 +283,21 @@ function testLoad (ignore) {
                 if (loaded) {
                     //if mc.loaded is set, means returnData has already been called
                     //(probably by error swf.)
+                    var loaddone = false;
                     if (! this.mc.loaded) {
                         this.removeLoadChecker();
-                        if (this.onloaddone.ready) this.onloaddone.sendEvent( this );
+                        loaddone = true;
                     }
-                    
+
                     // TODO: [20080909 anba] send always for crossdomain loading?
                     if (! this.mc.loaded || xdomain) {
+                        // remove request from LzLoadQueue
                         this.returnData( this.mc );
+                    }
+
+                    if (loaddone && this.onloaddone.ready) {
+                        // send onloaddone event after removing request from queue
+                        this.onloaddone.sendEvent( this );
                     }
                 }
             }

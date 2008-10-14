@@ -59,6 +59,7 @@ LzMakeLoadSprite.createLoader = function (src, cache, headers, filetype) {
   * @param String filetype: Filetype, e.g. 'mp3' or 'jpg'.  If not specified, it will be derived from the URL.
   */
 LzMakeLoadSprite.setSource = function (src, cache, header, filetype) {
+    // unload anything currently loading...
     if (this.loader.mc.loading == true) {
         LzLoadQueue.unloadRequest(this.loader.mc);
     }
@@ -103,7 +104,10 @@ LzMakeLoadSprite.setResource = function (nresc) {
         if (this.queuedplayaction == null) {
             this.queuePlayAction("checkPlayStatus");
         }
-        //this.updateAfterLoad();
+        // make sure resource is updated, but no "onload"-event is sent
+        this.updateAfterLoad(null);
+        // need to call manually because no "onload"-event was sent
+        this.doQueuedPlayAction();
     }
 }
 
@@ -111,9 +115,9 @@ LzMakeLoadSprite.setResource = function (nresc) {
   * Updates movieclip properties after the resource has loaded
   * @access private
   */
-LzMakeLoadSprite.updateAfterLoad = function (ignore) {
+LzMakeLoadSprite.updateAfterLoad = function (mloader) {
     this.isloaded = true;
-    
+
     var mc = this.getMCRef();
     this.resourcewidth = mc._width;
     this.resourceheight = mc._height;
@@ -132,16 +136,16 @@ LzMakeLoadSprite.updateAfterLoad = function (ignore) {
     this.setHeight(this.hassetheight ? this.height : null);
     this.setWidth(this.hassetwidth ? this.width : null);
 
-    if (this.__contextmenu) {
-        this.setContextMenu(this.__contextmenu);
-    }
+    // Install right-click context menu if there is one
+    if (this.__contextmenu) mc.menu = this.__contextmenu.kernel.__LZcontextMenu();
 
-    this.owner.__LZvizLoad = true; 
+    this.owner.__LZvizLoad = true;
     this.owner.__LZupdateShown();
-    this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: false});
+    // skip event when called by setResource()
+    var skip = (mloader == null);
+    this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, 
+                                resource: this.resource, skiponload: skip});
     this.owner.reevaluateSize();
-    
-    //if (this.owner.onload) this.owner.onload.sendEvent( this.loader.mc );
 }
 
 /**

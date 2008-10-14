@@ -167,7 +167,7 @@ LzSprite.prototype.rotation =   0;
 // takes it's dimensions from the resource and there is no scaling.
 LzSprite.prototype.width =   0;
 LzSprite.prototype.height =   0;
-// @devnote: "LzMouseEvents" is defined in SWFFile.java
+// @devnote "LzMouseEvents" is defined in SWFFile.java
 LzSprite.prototype.__LZclickregion =  "LzMouseEvents";
 
 // @devnote Sprite scale is stored as a fraction, but the runtime clip
@@ -235,7 +235,8 @@ LzSprite.prototype.init = function( ) {
 /**
   * This method associates a view with a named library element. If the
   * view's <attribute>isVisible</attribute> property is true, the
-  * resource will be displayed when it is attached
+  * resource will be displayed when it is attached.
+  * May be overridden by loader.
   * 
   * @param String resourceName: a string naming the id of the resource to attach
   */
@@ -264,18 +265,14 @@ LzSprite.prototype.setResource = function ( resourceName ) {
         //from this context, but it's not necessary.
         var mc = this.owner.immediateparent.sprite.attachResourceToChildView( resourceName, this );
         this.setMovieClip( mc, resourceName );
-        // Install right-click context menu if there is one
-        mc.menu = this.__contextmenu && this.__contextmenu.kernel.__LZcontextMenu();
     }
 
     this.updateResourceSize(true);
 }
 
 
-
 /**
   * @access private
-  * May be overridden by loader
   */
 LzSprite.prototype.doReplaceResource = function(resourceName) {
     if ( this.owner.subviews.length ){
@@ -288,12 +285,9 @@ LzSprite.prototype.doReplaceResource = function(resourceName) {
     var reclick = this.__LZbuttonRef._visible;
     this.__LZbuttonRef = null;
 
-    var oldmenu = this.__contextmenu && this.__contextmenu.kernel.__LZcontextMenu();
     var oldname = this.__LZmovieClipRef._name;
-    var mc = this.owner.immediateparent.sprite.attachResourceToChildView( resourceName, this, oldname);
-
+    var mc = this.owner.immediateparent.sprite.attachResourceToChildView( resourceName, this, oldname );
     this.setMovieClip( mc, resourceName );
-    mc.menu = oldmenu;
 
     if ( reclick ){
         this.setClickable( true );
@@ -349,6 +343,8 @@ LzSprite.prototype.setMovieClip = function ( mc , mcID) {
     } else if ( this.owner.visibility != "collapse" ){
         this.__LZmovieClipRef._visible = this.visible;
     }
+    // TODO: [20081013 anba] is this call necessary? 
+    // see call hierarchy (setResource -> [doReplaceResource ->] setMovieClip)
     this.updateResourceSize();
 }
 
@@ -361,7 +357,7 @@ LzSprite.prototype.setMovieClip = function ( mc , mcID) {
   * @keywords flashspecific
   * 
   * @param resourceName: a string naming the resource to attach.  This is a resource defined with the <tagname>resource</tagname> tag.
-  * @param childsprite: a reference to the child sprite that the new resource will b
+  * @param childsprite: a reference to the child sprite that the new resource will be
   * attached to
   * 
   * @return: a reference to the newly attached resource
@@ -386,8 +382,10 @@ LzSprite.prototype.attachResourceToChildView = function ( resourceName,
     var depth = this.FIRST_SUBVIEW_DEPTH + 
       (childsprite.__LZdepth * this.CLIPS_PER_SUBVIEW) + 
       this.FOREGROUND_DEPTH_OFFSET;
-    
+
     var newmc = this.__LZmovieClipRef.attachMovie( resourceName, instName, depth);
+    // Install right-click context menu if there is one
+    if (childsprite.__contextmenu) newmc.menu = childsprite.__contextmenu.kernel.__LZcontextMenu();
 
     return newmc;
 }
@@ -397,7 +395,6 @@ LzSprite.prototype.attachResourceToChildView = function ( resourceName,
   * @access private
   */
 LzSprite.prototype.attachBackgroundToChild = function ( childsprite ){
-
     if (this.__LZmovieClipRef == null){
         this.makeContainerResource( );
     }
@@ -411,16 +408,19 @@ LzSprite.prototype.attachBackgroundToChild = function ( childsprite ){
     var depth = this.FIRST_SUBVIEW_DEPTH +
       (childsprite.__LZdepth * this.CLIPS_PER_SUBVIEW) +
       this.BACKGROUND_DEPTH_OFFSET;
-    
+
     // @devnote _xscale, _yscale: See note at LzSprite#width for why this is correct
     var initObject = { _xscale: childsprite.width, _yscale: childsprite.height,
                         _x: childsprite.x, _y: childsprite.y,
                         _alpha: childsprite.opacity * 100, 
                         _rotation: childsprite.rotation % 360,
                         _visible: childsprite.visible && childsprite.owner.isinited };
-    
+
     var mc = this.__LZmovieClipRef.attachMovie( "swatch", "$b" + this.__LZsubUniqueNum, depth, initObject );
-    childsprite.__LZbgRef = mc;
+    // Install right-click context menu if there is one
+    if (childsprite.__contextmenu) mc.menu = childsprite.__contextmenu.kernel.__LZcontextMenu();
+
+    return mc;
 }
 
 
@@ -434,7 +434,7 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
     if (bgc != null) {
         if ($debug) {
             if (isNaN(Number( bgc ))) {
-                Debug.write( "Invalid value for bgcolor: " + bgca, this );
+                Debug.write( "Invalid value for bgcolor on %w: %w", this, bgca );
             }
         }
         this.bgcolor = Number(bgc);
@@ -473,7 +473,7 @@ LzSprite.prototype.removeBG = function () {
   */
 LzSprite.prototype.applyBG = function () {
     if (! this.__LZisBackgrounded) {
-        this.owner.immediateparent.sprite.attachBackgroundToChild( this );
+        this.__LZbgRef = this.owner.immediateparent.sprite.attachBackgroundToChild( this );
         this.__LZisBackgrounded = true;
     }
     var bgc = this.bgcolor;
@@ -482,10 +482,6 @@ LzSprite.prototype.applyBG = function () {
             this.__LZbgColorO = new Color( this.__LZbgRef );
         }
         this.__LZbgColorO.setRGB( bgc );
-    }
-    // Reapply context menu if needed
-    if (this.__contextmenu) {
-        this.setContextMenu(this.__contextmenu);
     }
 }
 
@@ -671,7 +667,10 @@ LzSprite.prototype.updateResourceSize = function (skipsend){
         this.resourceheight = Math.round(mc._height/(mc._yscale/100));
     }
 
-    if (! skipsend && ! this.__LZhaser) this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
+    if (! skipsend && ! this.__LZhaser) {
+        this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight,
+                                    resource: this.resource, skiponload: true});
+    }
 }
 
 /**
@@ -815,10 +814,9 @@ LzSprite.prototype._setButtonSize = function ( axis , bsize ){
   * @param String headers: Headers to send with the request, if any.
   */
 LzSprite.prototype.setSource = function ( source, cache, headers, filetype){
-    //@devnote: after this call, setSource, setResource, getMCRef and destroy have been over-ridden
+    //@devnote after this call, setSource, setResource, getMCRef and destroy have been overridden
     LzMakeLoadSprite.transform( this, source, cache, headers, filetype);
 }
-
 
 /**
   * Adds a child sprite to this sprite's display hierarchy
@@ -855,6 +853,7 @@ LzSprite.prototype.predestroy = function(){
 
 /**
   * This method should remove a view, its media, and any of its subviews.
+  * May be overridden by loader.
   * @access private
   * 
   */
@@ -1085,11 +1084,10 @@ LzSprite.prototype.changeOrder = function (cSprite, dir, fv, inf) {
 
     var reback = cSprite.__LZisBackgrounded;
     if (reback) {
-        var menu = cSprite.__contextmenu && cSprite.__contextmenu.kernel.__LZcontextMenu();
         var al = cSprite.__LZbgRef._alpha;
         cSprite.removeBG();
     }
-    
+
     while ((cSprite.__LZdepth + next < dl.length) && (cSprite.__LZdepth + next >= 0)) {
         var d = cSprite.__LZdepth;
         var nv = dl[ d+next ];
@@ -1114,18 +1112,15 @@ LzSprite.prototype.changeOrder = function (cSprite, dir, fv, inf) {
         next = dir;
 
         if ( nv.__LZisBackgrounded ){
-            var menu2 = nv.__contextmenu && nv.__contextmenu.kernel.__LZcontextMenu();
             var al2 = nv.__LZbgRef._alpha;
             nv.removeBG();
             nv.applyBG();
-            nv.__LZbgRef.menu = menu2;
             nv.__LZbgRef._alpha = al2;
         }
     }
 
     if ( reback ){
         cSprite.applyBG();
-        cSprite.__LZbgRef.menu = menu;
         cSprite.__LZbgRef._alpha = al;
     }
     return true;
@@ -1507,7 +1502,7 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
     this.__contextmenu = cmenu;
     cmenu = cmenu.kernel.__LZcontextMenu();
 
-    if (! (this.owner == canvas || this instanceof LzTextSprite)) {
+    if (! (this.isroot || this instanceof LzTextSprite)) {
         // normal views install the context-menu on their background-clip
         var mb = this.__LZbgRef;
         if (mb == null) {
@@ -1522,7 +1517,7 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
 
     // Install menu on foreground resource clip if there is one,
     // must use _root if canvas
-    var mc = this.owner === canvas ? _root : this.getMCRef();
+    var mc = this.isroot ? _root : this.getMCRef();
     if (mc != null) {
         mc.menu = cmenu;
     }
