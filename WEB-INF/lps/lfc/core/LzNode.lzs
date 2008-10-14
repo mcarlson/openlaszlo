@@ -1265,7 +1265,7 @@ public dynamic class LzNode extends LzEventable {
     }
 
     if ( !this.datapath ){
-      this.setAttribute('datapath', ".");
+      this.$lzc$set_datapath(".");
     }
 
     if ( ! this.__LZdelegates ){

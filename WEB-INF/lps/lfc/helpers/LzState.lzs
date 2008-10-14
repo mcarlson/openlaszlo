@@ -589,7 +589,7 @@ dynamic class LzState extends LzNode {
    * @access private
    */
   function __LZdetach ( aview ){
-    aview.setAttribute("visible", false);
+    aview.$lzc$set_visible(false);
     return aview;
   }
 
@@ -597,7 +597,7 @@ dynamic class LzState extends LzNode {
    * @access private
    */
   function __LZretach ( aview ){
-    aview.setAttribute("visible", true);
+    aview.$lzc$set_visible(true);
     return aview;
   }
 
