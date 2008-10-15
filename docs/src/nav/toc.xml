@@ -9,8 +9,8 @@
         <item title="&amp;lt;library&amp;gt;" href="lz.library.html" />
         <item title="&amp;lt;splash&amp;gt;" href="lz.splash+as2.html" />
         <item title="&amp;lt;splash view&amp;gt;" href="lz.splash_view.html" />
-        <item title="lz.ContextMenu" href="lz.ContextMenu.html" />
-        <item title="lz.ContextMenuItem" href="lz.ContextMenuItem.html" />
+        <item title="&amp;lt;contextmenu&amp;gt;" href="lz.contextmenu.html" />
+        <item title="&amp;lt;contextmenuitem&amp;gt;" href="lz.contextmenuitem.html" />
     </category>
     <category title="View Basics">
         <item title="&amp;lt;drawview&amp;gt;" href="lz.drawview.html"/>

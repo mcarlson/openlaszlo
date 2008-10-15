@@ -27,6 +27,7 @@
   * </example>
   *
   * @shortdesc A contextual menu
+  * @lzxname contextmenu
   */
 public dynamic class LzContextMenu extends LzNode {
 
@@ -179,6 +180,7 @@ lz[LzContextMenu.tagname] = LzContextMenu;  // publish
   * </example>
   *
   * @shortdesc A menu item within a context menu
+  * @lzxname contextmenuitem
   */
 public dynamic class LzContextMenuItem extends LzNode {
 
