@@ -46,7 +46,9 @@
     </handler>
 
     <handler name="onclick">
-      lz.Browser.loadURL(this.href, this.target)
+        if(this.href != null){
+            lz.Browser.loadURL(this.href, this.target);
+        }
     </handler>
 
     <method name="makeTags" args="tags"><![CDATA[
