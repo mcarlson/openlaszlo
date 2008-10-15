@@ -3,7 +3,7 @@
     <text oninit="updateTimer()">
         <attribute name="secondsPassed" type="number" value="0"/> 
 
-        <method name="updateTimer">
+        <method name="updateTimer" args="time=null" >
             this.setAttribute('text', this.secondsPassed );
             this.secondsPassed++; 
 
