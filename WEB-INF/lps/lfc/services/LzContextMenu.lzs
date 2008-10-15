@@ -28,7 +28,7 @@
   *
   * @shortdesc A contextual menu
   */
-public final class LzContextMenu extends LzNode {
+public dynamic class LzContextMenu extends LzNode {
 
     /** @access private
       * @modifiers override
@@ -37,6 +37,12 @@ public final class LzContextMenu extends LzNode {
 
     /** @access private */
     static var attributes :Object = new LzInheritedHash(LzNode.attributes);
+
+    /** contextmenus ignore placement by default
+      *
+      * @modifiers override
+      */
+    LzContextMenu.attributes.ignoreplacement = true;
 
     /** Send when the menu is opened
       * @lzxtype event
@@ -73,9 +79,9 @@ public final class LzContextMenu extends LzNode {
     override function init () {
         super.init();
 
-        var p:LzNode = this.parent;
-        if (p && p is LzView) {
-            (p cast LzView).setContextMenu(this);
+        var ip:LzNode = this.immediateparent;
+        if (ip && ip is LzView) {
+            (ip cast LzView).setContextMenu(this);
         }
     }
 
@@ -174,7 +180,7 @@ lz[LzContextMenu.tagname] = LzContextMenu;  // publish
   *
   * @shortdesc A menu item within a context menu
   */
-public final class LzContextMenuItem extends LzNode {
+public dynamic class LzContextMenuItem extends LzNode {
 
     /** @access private
       * @modifiers override
@@ -211,8 +217,9 @@ public final class LzContextMenuItem extends LzNode {
 
         this.kernel = new LzContextMenuItemKernel(this, title, del);
 
-        if (parent && parent is LzContextMenu) {
-            parent.addItem(this);
+        var ip:LzNode = this.immediateparent;
+        if (ip && ip is LzContextMenu) {
+            (ip cast LzContextMenu).addItem(this);
         }
     }
 
