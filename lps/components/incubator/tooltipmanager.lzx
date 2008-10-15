@@ -48,7 +48,7 @@
         </handler>
 
         <handler name="oninit">
-             var tooltip = this.tooltip_obj");
+             var tooltip = this['tooltip_obj'];
              if(tooltip == undefined || tooltip == null) {
                 tooltip = new lz.basetooltip(canvas);
                 this.setAttribute("tooltip_obj",tooltip);
@@ -93,12 +93,17 @@
       this.destroyTooltip(component);
     </method>
     
-    <method name="showTooltip" >
+    <method name="showTooltip" args="ignore=null">
       <![CDATA[
       var component = this.__currentComponent;
-      
-      var keyID = component[this["component_identifier"]];
-      var msg = this.messageMap[keyID];
+      var cid = this['component_identifier'];
+      if(typeof cid != 'undefined'){
+        var keyID = component[cid];
+        var msg = this.messageMap[keyID];
+      } else {
+        var keyID = null;
+        var msg = null;
+      }
 
       
       var tooltip = this.tooltip_obj;

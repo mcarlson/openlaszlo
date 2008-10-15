@@ -59,7 +59,7 @@
 
       <view name="numberView" valign="middle" 
 
-        x="3" y="4"
+        x="3"
 
             height="${parent.height - 6}" width="${parent.width-parent.arrowView.width-6}">
 

@@ -236,8 +236,6 @@
       
     </view>
   </class>
-  
-  <colorpicker id="the_colorpicker"/>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *

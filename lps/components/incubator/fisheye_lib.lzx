@@ -4,7 +4,7 @@
   -->
 <library>
     <include href="utils/layouts/simpleboundslayout.lzx"/>
-    <include href="incubator/tooltipManager.lzx"/>
+    <include href="incubator/tooltipmanager.lzx"/>
     
     <class name="fisheye" defaultplacement="center" >
         <attribute name="start_size"    value="24" />
@@ -85,7 +85,7 @@
                     
                 
                     
-                    if (this.lastamount == amount) return;
+                    if (this['lastamount'] == amount) return;
                     if(amount > 0) {
                         
                          this.setAttribute("width",parent.start_size+amount);
