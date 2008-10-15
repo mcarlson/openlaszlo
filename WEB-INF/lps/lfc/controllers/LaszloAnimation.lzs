@@ -1,5 +1,5 @@
 /**
-  * LaszloAnimations.as 
+  * LaszloAnimations.as
   *
   * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -14,7 +14,7 @@
   * specified duration in milliseconds. For example, the following program
   * defines an animator for a window that moves it to a position of x=100
   * over 1 second (1000 milliseconds).</p>
-  * 
+  *
   * <example><programlisting class="code" extract="false">
   * &lt;canvas>
   *   &lt;window>
@@ -22,7 +22,7 @@
   *   &lt;/window>
   * &lt;/canvas>
   * </programlisting></example>
-  * 
+  *
   * <p>See the <a href="${dguide}animation.html">Guide</a> for a complete discussion of
   * animators and animation in Laszlo applications.</p>
   *
@@ -30,397 +30,396 @@
   * @shortdesc Changes the value of another object's attribute over time.
   * @see animatorgroup
   */
-dynamic class LzAnimator extends LzAnimatorGroup {
+public dynamic class LzAnimator extends LzAnimatorGroup {
 
-  function LzAnimator ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
-      this.calcMethod = this.calcNextValue;
-      super(parent,attrs,children,instcall);
-   }
+    /** @access private */
+    public function LzAnimator (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
+        super(parent, attrs, children, instcall);
+    }
 
+    /** @access private
+      * @modifiers override
+      */
+    static var tagname :String = 'animator';
+    /** @access private */
+    static var attributes :Object = new LzInheritedHash(LzAnimatorGroup.attributes);
 
-/** @access private
-  * @modifiers override 
-  */
-static var tagname = 'animator';
-/** @access private */
-static var attributes = new LzInheritedHash(LzAnimatorGroup.attributes);
+    /** @access private */
+    var calcMethod:Function;
+    /** @access private */
+    var lastIterationTime:Number;
+    /** @access private */
+    var currentValue:Number;
+    /** @access private */
+    var doBegin:Boolean;
+    /** @access private */
+    var beginPoleDelta:Number = .25;
+    /** @access private */
+    var endPoleDelta:Number = .25;
+    /** @access private */
+    var primary_K:Number;
+    /** @access private */
+    var origto:Number;
 
-var calcMethod:Function;
+    /**
+      * @access private
+      */
+    override function construct (parent, args) {
+        super.construct(parent, args);
+        this.calcMethod = this.calcNextValue;
+        this.primary_K = 1.0;
+    }
 
-var lastIterationTime:Number;
-var currentValue:Number;
-var doBegin:Boolean;
-
-var beginPoleDelta:Number = .25;
-var endPoleDelta:Number = .25;
-
-var primary_K:Number;
-var origto:Number;
-
-/**
-  * @access private
-  */
-override function construct ( parent , args ){
-    super.construct.apply(this, arguments);
-    this.primary_K          = 1.0;
-}
-
-/**
-  * Sets the motion style for the animator.
-  * @param String eparam: One of "easein", "easeout" , "linear" or "easeboth"
-  * to describe how the animator accelerates and decelerates. The default is
-  * "easeboth".
-  * @access private
-  */
-function $lzc$set_motion ( eparam ){
-    this.motion = eparam
-    //easin, easeout , linear , easeboth (default)
-    if ( eparam == "linear" ){
-        this.calcMethod = this.calcNextValueLinear;
-    } else {
-        this.calcMethod =  this.calcNextValue;
-        if ( eparam == "easeout" ){
-            this.beginPoleDelta = 100;
-        } else if ( eparam == "easein" ){
-            this.endPoleDelta = 15;
+    /**
+      * Sets the motion style for the animator.
+      * @param String eparam: One of "easein", "easeout" , "linear" or "easeboth"
+      * to describe how the animator accelerates and decelerates. The default is
+      * "easeboth".
+      * @access private
+      */
+    function $lzc$set_motion (eparam) {
+        this.motion = eparam;
+        //easin, easeout , linear , easeboth (default)
+        if (eparam == "linear") {
+            this.calcMethod = this.calcNextValueLinear;
+        } else {
+            this.calcMethod = this.calcNextValue;
+            if (eparam == "easeout") {
+                this.beginPoleDelta = 100;
+            } else if (eparam == "easein") {
+                this.endPoleDelta = 15;
+            }
         }
     }
-}
-/**
- * @deprecated in 4.1
- * @deprecated Use setAttribute('motion', ...) instead.
- * @access private
- */
-final function setMotion (eparam) {
-  if ($debug) {
-    Debug.deprecated(this, arguments.callee, this.setAttribute);
-  }
-  this.$lzc$set_motion(eparam);
-}
 
-
-/**
-  * Sets the destination value for the animator
-  * @param Number eparam: The destination value for the animator.
-  * @access private
-  */
-function $lzc$set_to ( eparam ) {
-    this.origto = Number(eparam);
-}
-/**
- * @deprecated in 4.1
- * @deprecated Use setAttribute('to', ...) instead.
- * @access private
- */
-final function setTo (eparam) {
-  if ($debug) {
-    Debug.deprecated(this, arguments.callee, this.setAttribute);
-  }
-  this.$lzc$set_to(eparam);
-}
-
-
-/**
-  * Calculate the control values  fro the animation. These will not change even
-  * if the animation is repeated.
-  *
-  * @access private
-  */
-function calcControlValues ( cval  = null){
-    // reset currentValue
-    this.currentValue = cval || 0;
-
-    // create direction multiplier
-    var dir = this.indirect ? -1 : 1;
-
-    // set beginPole and endPole values
-    if ( this.currentValue < this.to ) {
-        this.beginPole = this.currentValue - dir*this.beginPoleDelta;
-        this.endPole = this.to + dir*this.endPoleDelta;
-    }else{
-        this.beginPole = this.currentValue + dir*this.beginPoleDelta;
-        this.endPole = this.to - dir*this.endPoleDelta;
+    /**
+     * @deprecated in 4.1
+     * @deprecated Use setAttribute('motion', ...) instead.
+     * @access private
+     */
+    final function setMotion (eparam) {
+        if ($debug) {
+            Debug.deprecated(this, arguments.callee, this.setAttribute);
+        }
+        this.$lzc$set_motion(eparam);
     }
 
-    // calculate value for primary_K
-    // a default value of 1.0 means the attribute will be static, i.e.
-    // the animation will still be calculated but the result will
-    // always be the same.
-    this.primary_K = 1.0;
-
-    var kN = 1.0*(this.beginPole - this.to )*
-                 (this.currentValue - this.endPole);
-
-    var kD = 1.0*(this.beginPole - this.currentValue)*
-                 (this.to - this.endPole);
-
-    // NOTE: in future this should probaly check for really small amounts not
-    // just zero
-    if (kD != 0) this.primary_K = Math.abs(kN/kD);
-
-}
-
-
-/**
-  * this is called once to set any starting values that will only need to be
-  * calculated once even if the animator repeats
-  *
-  * BRET'S NOTE:  this.target.setAttribute( this.attribute , this.from ); not true if relative
-  * if doStart is called while animator is active, just return
-  * else if a "from" value has been specified then this
-  * Here is where the expected value for a view should be updated
-  *
-  * @access private
-  */
-override function doStart (){
-    if ( this.isactive ) return;
-    this.isactive = true;
-
-    this.prepareStart();
-
-    // give this animator processing time by registering it with lz.Idle service
-    this.updateDel.register( lz.Idle , "onidle" );
-}
-
-
-/**
-  * @access private
-  */
-override function prepareStart ( ){
-    // create a "repeat" counter to be decremented each time after the
-    // animator finishes a cycle.
-    this.crepeat = this.repeat;
-
-
-    // Set the attribute of the view to its "from" value but make sure
-    // expectedAttribute is updated.
-    if ( this.from != null ){
-        this.target.setAttribute( this.attribute , Number( this.from ) );
+    /**
+      * Sets the destination value for the animator
+      * @param Number eparam: The destination value for the animator.
+      * @access private
+      */
+    function $lzc$set_to (eparam) {
+        this.origto = Number(eparam);
     }
 
-    if ( this.relative ) {
-        this.to = this.origto;
-    }else{
-        this.to = this.origto - this.target.getExpectedAttribute(this.attribute);
-
-        // "to" has changed so calc new poles and K value
-        //this.calcControlValues();
+    /**
+     * @deprecated in 4.1
+     * @deprecated Use setAttribute('to', ...) instead.
+     * @access private
+     */
+    final function setTo (eparam) {
+        if ($debug) {
+            Debug.deprecated(this, arguments.callee, this.setAttribute);
+        }
+        this.$lzc$set_to(eparam);
     }
 
-    // update the expected attribute for this view so that animators attached
-    // after this one will can execute appropriately.
-    this.target.addToExpectedAttribute( this.attribute,this.to );
+    /**
+      * Calculate the control values for the animation. These will not change even
+      * if the animation is repeated.
+      *
+      * @access private
+      */
+    function calcControlValues (cval = null) :void {
+        // reset currentValue
+        this.currentValue = cval || 0;
 
-    // everytime an animator is started, a counter associated with that property
-    // is incremented. When this counter is decremented and reaches zero then
-    // the final expected value will be assigned to that attribute
-    this.target.__LZincrementCounter(this.attribute);
+        // create direction multiplier
+        var dir:int = this.indirect ? -1 : 1;
 
+        // set beginPole and endPole values
+        if (this.currentValue < this.to) {
+            this.beginPole = this.currentValue - dir * this.beginPoleDelta;
+            this.endPole = this.to + dir * this.endPoleDelta;
+        } else {
+            this.beginPole = this.currentValue + dir * this.beginPoleDelta;
+            this.endPole = this.to - dir * this.endPoleDelta;
+        }
 
-    // set current to zero since all animators are now relative
-    this.currentValue = 0;
+        // calculate value for primary_K
+        // a default value of 1.0 means the attribute will be static, i.e.
+        // the animation will still be calculated but the result will
+        // always be the same.
+        this.primary_K = 1.0;
 
-    //we already did this if !this.relative -- conditionalize?
-    this.calcControlValues();
+        var kN:Number = 1.0 * (this.beginPole - this.to) *
+                              (this.currentValue - this.endPole);
 
-    this.doBegin = true;
+        var kD:Number = 1.0 * (this.beginPole - this.currentValue) *
+                              (this.to - this.endPole);
 
-}
-
-/**
-  * reset the time variables and currentValue
-  * @access private
-  */
-override function resetAnimator() {
-    // Set the attribute of the view to its "from" value but make sure
-    // expectedAttribute is updated.
-    if ( this.from != null ){
-        this.target.setAttribute( this.attribute , this.from );
-        var d = this.from - this.target.getExpectedAttribute( this.attribute );
-        this.target.addToExpectedAttribute(this.attribute,d);
+        // NOTE: in future this should probaly check for really small amounts not
+        // just zero
+        if (kD != 0) this.primary_K = Math.abs(kN / kD);
     }
 
-    if (!this.relative) {
-        this.to = this.origto - this.target.getExpectedAttribute( this.attribute );
-        // "to" has changed so calc new poles and K value
+    /**
+      * this is called once to set any starting values that will only need to be
+      * calculated once even if the animator repeats
+      *
+      * BRET'S NOTE:  this.target.setAttribute( this.attribute, this.from ); not true if relative
+      * if doStart is called while animator is active, just return
+      * else if a "from" value has been specified then this
+      * Here is where the expected value for a view should be updated
+      *
+      * @access private
+      */
+    override function doStart () {
+        if (this.isactive) return;
+        this.isactive = true;
+
+        this.prepareStart();
+
+        // give this animator processing time by registering it with lz.Idle service
+        this.updateDel.register(lz.Idle, "onidle");
+    }
+
+    /**
+      * @access private
+      */
+    override function prepareStart () :void {
+        // create a "repeat" counter to be decremented each time after the
+        // animator finishes a cycle.
+        this.crepeat = this.repeat;
+        var targ:LzNode = this.target;
+        var attr:String = this.attribute;
+
+        // Set the attribute of the view to its "from" value but make sure
+        // expectedAttribute is updated.
+        if (this.from != null) {
+            targ.setAttribute(attr, Number(this.from));
+        }
+
+        if (this.relative) {
+            this.to = this.origto;
+        } else {
+            this.to = this.origto - targ.getExpectedAttribute(attr);
+
+            // "to" has changed so calc new poles and K value
+            //this.calcControlValues();
+        }
+
+        // update the expected attribute for this view so that animators attached
+        // after this one will can execute appropriately.
+        targ.addToExpectedAttribute(attr, this.to);
+
+        // everytime an animator is started, a counter associated with that property
+        // is incremented. When this counter is decremented and reaches zero then
+        // the final expected value will be assigned to that attribute
+        targ.__LZincrementCounter(attr);
+
+        // set current to zero since all animators are now relative
+        this.currentValue = 0;
+
+        //we already did this if !this.relative -- conditionalize?
         this.calcControlValues();
+
+        this.doBegin = true;
     }
 
-    // update the expected attribute for this view so that animators attached
-    // after this one will can execute appropriately.
-    this.target.addToExpectedAttribute(this.attribute,this.to);
-    this.target.__LZincrementCounter(this.attribute);
+    /**
+      * reset the time variables and currentValue
+      * @access private
+      */
+    override function resetAnimator () :void {
+        // Set the attribute of the view to its "from" value but make sure
+        // expectedAttribute is updated.
+        var targ:LzNode = this.target;
+        var attr:String = this.attribute;
 
-    // set current to zero since all animators are now relative
-    this.currentValue = 0;
+        var from:* = this.from;
+        if (from != null) {
+            targ.setAttribute(attr, from);
+            var d:Number = from - targ.getExpectedAttribute(attr);
+            targ.addToExpectedAttribute(attr, d);
+        }
 
-    this.doBegin = true;
-}
+        if (! this.relative) {
+            this.to = this.origto - targ.getExpectedAttribute(attr);
+            // "to" has changed so calc new poles and K value
+            this.calcControlValues();
+        }
 
+        // update the expected attribute for this view so that animators attached
+        // after this one will can execute appropriately.
+        targ.addToExpectedAttribute(attr, this.to);
+        targ.__LZincrementCounter(attr);
 
-/**
-  * beginAnimator is called on the first iteration of the animator.
-  *
-  * @access private
-  *
-  * @param Number time: the time in milliseconds that this animator will
-  * be assigned as its beginning time.
-  */
-function beginAnimator( time ) {
+        // set current to zero since all animators are now relative
+        this.currentValue = 0;
 
-    // set initial time parameters
-    this.startTime = time;
-    this.lastIterationTime = time;
-
-    if (this.onstart.ready) this.onstart.sendEvent( time );
-
-    //Set to false so next update does not call this function
-    this.doBegin = false;
-
-
-}
-
-/**
-  * @access private
-  */
-override function stop( ) {
-    if ( !this.isactive ) return;
-
-    var e_prop = "e_" +  this.attribute;
-    if (!this.target[e_prop].c) { this.target[e_prop].c = 0; }
-    this.target[e_prop].c--; //decrement animation counter for prop
-    if ( this.target[e_prop].c <= 0 ){
-        this.target[e_prop].c = 0;
-        this.target[e_prop].v = null;
-    } else {
-        this.target[e_prop].v -= this.to - this.currentValue;
+        this.doBegin = true;
     }
 
-    this.__LZhalt();
-}
+    /**
+      * beginAnimator is called on the first iteration of the animator.
+      *
+      * @access private
+      *
+      * @param Number time: the time in milliseconds that this animator will
+      * be assigned as its beginning time.
+      */
+    function beginAnimator (time:Number) :void {
+        // set initial time parameters
+        this.startTime = time;
+        this.lastIterationTime = time;
 
-/**
-  * @access private
-  */
-override function __LZfinalizeAnim( ) {
-    var e_prop = "e_" +  this.attribute;
-    if (!this.target[e_prop].c) { this.target[e_prop].c = 0; }
-    this.target[e_prop].c -= 1; //decrement animation counter for prop
+        if (this.onstart.ready) this.onstart.sendEvent(time);
 
-    if ( this.target[e_prop].c <= 0 ){
-        this.target[e_prop].c = 0;
-        this.target.setAttribute( this.attribute,this.target[e_prop].v);
-        this.target[e_prop].v = null;
+        //Set to false so next update does not call this function
+        this.doBegin = false;
     }
 
-    this.__LZhalt();
-}
+    /**
+      * @access private
+      */
+    override function stop () {
+        if (! this.isactive) return;
 
-/**
-  * This method calculates the next value of the parameter being animated. This
-  * method can be used by any Animator object that inherits from LzAnimator, as
-  * long as the parameter is a scalar value (i.e. a number instead of a point).
-  *
-  * @access private
-  *
-  * @param timeDifference: the time difference in milliseconds from the start
-  * of the animation.
-  * @return nextValue: the next value in the animations iteration sequence
-  */
-function calcNextValue( timeDifference ) {
-    // return the currentValue by default
-    var nextValue  = this.currentValue;
+        var targ:LzNode = this.target;
+        var e_prop:String = "e_" + this.attribute;
+        if (! targ[e_prop].c) {
+            targ[e_prop].c = 0;
+        }
+        targ[e_prop].c -= 1; //decrement animation counter for prop
+        if (targ[e_prop].c <= 0) {
+            targ[e_prop].c = 0;
+            targ[e_prop].v = null;
+        } else {
+            targ[e_prop].v -= this.to - this.currentValue;
+        }
 
-    // create local references
-    var aEndPole   = this.endPole;
-    var aBeginPole = this.beginPole;
-
-    // calculate new "K" value based on time difference
-    var K = Math.exp((timeDifference*1.0/this.duration)*
-                      Math.log(this.primary_K));
-
-    // calculate nextValue using the pole and new K value
-    if( K != 1.0 ) {
-       var aNumerator   = aBeginPole*aEndPole*(1 - K);
-       var aDenominator = aEndPole - K*aBeginPole;
-       if( aDenominator != 0.0 ) nextValue = aNumerator/aDenominator;
+        this.__LZhalt();
     }
-    return nextValue;
-}
 
+    /**
+      * @access private
+      */
+    override function __LZfinalizeAnim () :void {
+        var targ:LzNode = this.target;
+        var e_prop:String = "e_" + this.attribute;
+        if (! targ[e_prop].c) {
+            targ[e_prop].c = 0;
+        }
+        targ[e_prop].c -= 1; //decrement animation counter for prop
+        if (targ[e_prop].c <= 0) {
+            targ[e_prop].c = 0;
+            targ.setAttribute(this.attribute, targ[e_prop].v);
+            targ[e_prop].v = null;
+        }
 
+        this.__LZhalt();
+    }
 
-/**
- * This method replaces the nonlinear calcNextValue when motion is set to linear
-  *
-  * @access private
-  */
-function calcNextValueLinear( timeDifference ) {
-    var elapsed = timeDifference/this.duration;
-    return elapsed*this.to;
-}
+    /**
+      * This method calculates the next value of the parameter being animated. This
+      * method can be used by any Animator object that inherits from LzAnimator, as
+      * long as the parameter is a scalar value (i.e. a number instead of a point).
+      *
+      * @access private
+      *
+      * @param Number timeDifference: the time difference in milliseconds from the start
+      * of the animation.
+      * @return Number: the next value in the animations iteration sequence
+      */
+    function calcNextValue (timeDifference:Number) :Number {
+        // return the currentValue by default
+        var nextValue:Number = this.currentValue;
 
-/**
-  * This is one of the core methods of an LzAnimator object. This method gets
-  * called to iterate the animation only once and then sets the property of the
-  * associated view.
-  *
-  * @access private
-  *
-  * @param time: the time assigned to this iteration of the animator. this time
-  * value ( in milliseconds) is set by the animation queue and then passed
-  * onto to every animator to ensure that all animators are synched to the same
-  * value.
-  * @return animatorIsDone: a boolean indicating if the animation is complete
-  */
-public override function update( time ) {
-    var animatorIsDone = false;
+        // create local references
+        var aEndPole:Number = this.endPole;
+        var aBeginPole:Number = this.beginPole;
 
-    // If this is its first iteration then calc the necessary paramters.
-    // Calling this function here allows animators to be added to a queue at
-    // different times and then "synced" at start of execution, i.e. next onIdle
-    // event.
-    if ( this.doBegin ) {
-        this.beginAnimator( time );
-    } else {
-        if ( !this.paused ) {
-            var aTotalTimeDifference = time - this.startTime;
-            if ( aTotalTimeDifference < this.duration ) {
-                this.setValue( this.calcMethod( aTotalTimeDifference ));
-                this.lastIterationTime = time;
-            } else {
-                this.setValue( this.to );
-                return this.checkRepeat();
+        // calculate new "K" value based on time difference
+        var K:Number = Math.exp((timeDifference * 1.0 / this.duration) * Math.log(this.primary_K));
+
+        // calculate nextValue using the pole and new K value
+        if (K != 1.0) {
+           var aNumerator:Number = aBeginPole * aEndPole * (1 - K);
+           var aDenominator:Number = aEndPole - K * aBeginPole;
+           if (aDenominator != 0.0) nextValue = aNumerator / aDenominator;
+        }
+        return nextValue;
+    }
+
+    /**
+     * This method replaces the nonlinear calcNextValue when motion is set to linear
+     *
+     * @access private
+     * @return Number: the next value in the animations iteration sequence
+     */
+    function calcNextValueLinear (timeDifference:Number) :Number {
+        var elapsed:Number = timeDifference / this.duration;
+        return elapsed * this.to;
+    }
+
+    /**
+      * This is one of the core methods of an LzAnimator object. This method gets
+      * called to iterate the animation only once and then sets the property of the
+      * associated view.
+      *
+      * @access private
+      *
+      * @param Number time: the time assigned to this iteration of the animator. this time
+      * value (in milliseconds) is set by the animation queue and then passed
+      * onto to every animator to ensure that all animators are synched to the same
+      * value.
+      * @return Boolean: a boolean indicating if the animation is complete
+      */
+    override function update (time:Number) :Boolean {
+        // If this is its first iteration then calc the necessary paramters.
+        // Calling this function here allows animators to be added to a queue at
+        // different times and then "synced" at start of execution, i.e. next onIdle
+        // event.
+        if (this.doBegin) {
+            this.beginAnimator(time);
+        } else {
+            if (! this.paused) {
+                var aTotalTimeDifference:Number = time - this.startTime;
+                if (aTotalTimeDifference < this.duration) {
+                    this.setValue(this.calcMethod(aTotalTimeDifference));
+                    this.lastIterationTime = time;
+                } else {
+                    this.setValue(this.to);
+                    return this.checkRepeat();
+                }
             }
-         }
+        }
     }
-}
 
-/**
-  * sets the property specified in the binding to the <b>value</b>
-  *
-  * @access private
-  *
-  * @param value: to the value to be assigned
-  */
-function setValue( value ) {
-    // All animators are now relative at the core so add the difference
-    // of this value - the current value to the view's attribute.
-    var aDiff = value - this.currentValue;
-    if (this.target.setAttribute) {
-        //Debug.info('setValue', value, this.target);
-        this.target.setAttribute( this.attribute, this.target[this.attribute] + aDiff );
+    /**
+      * sets the property specified in the binding to the <b>value</b>
+      *
+      * @access private
+      *
+      * @param value: to the value to be assigned
+      */
+    function setValue (value:Number) :void {
+        // All animators are now relative at the core so add the difference
+        // of this value - the current value to the view's attribute.
+        var targ:LzNode = this.target;
+        var aDiff:Number = value - this.currentValue;
+        targ.setAttribute(this.attribute, targ[this.attribute] + aDiff);
+        this.currentValue = value;
     }
-    this.currentValue = value;
-}
 
-
-/**
-  * @access private
-  */
-override function toString(){
-    return "Animator for " + this.target + " attribute:" + this.attribute + " to:" + this.to;
-}
+    /**
+      * @access private
+      */
+    override function toString() {
+        return "Animator for " + this.target + " attribute:" + this.attribute + " to:" + this.to;
+    }
 
 } // End of LzAnimator
 
