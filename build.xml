@@ -1286,7 +1286,7 @@
            <exclude name="WEB-INF/bin/mxmlc*" />
            <exclude name="WEB-INF/bin/fdb*" />
            <exclude name="WEB-INF/bin/compc*" />
-           <zipfileset dir="${builddir}/lps-${version.id} filemode="755">
+           <zipfileset dir="${builddir}/lps-${version.id}" filemode="755">
                <include name="WEB-INF/bin/mxmlc*" />
                <include name="WEB-INF/bin/fdb*" />
                <include name="WEB-INF/bin/compc*" />
