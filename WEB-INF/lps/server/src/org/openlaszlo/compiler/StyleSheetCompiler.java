@@ -14,6 +14,7 @@ import org.openlaszlo.utils.FileUtils;
 import org.w3c.css.sac.*;
 import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 import java.text.MessageFormat;
 
 import org.jdom.Element;
@@ -132,6 +133,14 @@ class StyleSheetCompiler extends LibraryCompiler {
             // This catch clause will catch disastrous errors; normal expected
             // css-related errors are handled with the more specific catch clauses
             // above. 
+
+            /**
+             * NOTE: [2008-10-14 ptw] If you are trying to debug CSS
+             * style sheet errors, you propbably want to disable this
+             * catch clause, because it will hide the real error from
+             * you.
+             */
+
             mLogger.error("Exception compiling css: " + element + ", " + e.getMessage());
             throw new CompilationError("Error compiling css. " + e.getMessage());            
         }
@@ -145,7 +154,7 @@ class StyleSheetCompiler extends LibraryCompiler {
             Rule rule = (Rule)handler.mRuleList.get(i);
             script += "$lzc$style._addRule(new $lzc$rule(" +
               buildSelector(rule.getSelector()) + ", " +
-              buildPropertiesJavascript(rule);
+              buildPropertiesJavascript(rule, element, mEnv);
             if (mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY)) {
               script += ", " +
                 ScriptCompiler.quote(Parser.getSourceMessagePathname(element)) + ", " +
@@ -275,6 +284,8 @@ class StyleSheetCompiler extends LibraryCompiler {
         return str;
     }
 
+
+  Pattern resourcePattern = Pattern.compile("^\\s*resource\\s*\\(\\s*['\"]\\s*(.*)\\s*['\"]\\s*\\)\\s*$");
     /**
       * Build a string holding the javascript to create the rule's properties attribute. 
       * This should just be a standard javascript object composed of attributes and values,
@@ -282,8 +293,7 @@ class StyleSheetCompiler extends LibraryCompiler {
       * for example "{ width: 500, occupation: \"pet groomer and holistic veterinarian\",
                        miscdata: \"spends most days indoors\"}"" 
       */                       
-      
-    String buildPropertiesJavascript(Rule rule) {
+  String buildPropertiesJavascript(Rule rule, Element element, CompilationEnvironment env) {
         /*
         String props = "{ width: 500, occupation: \"pet groomer and holistic veterinarian\"," + 
                         " miscdata: \"spends most days indoors\"} ";
@@ -292,9 +302,33 @@ class StyleSheetCompiler extends LibraryCompiler {
       StringWriter result = new StringWriter();
       try {
         Map properties = rule.getStyleMap();
+        // Special handling for `resource` function: The argument is
+        // compiled as a resource `src` (pathname) and given a unique
+        // name, which replaces the function
+        for (Iterator i = properties.entrySet().iterator(); i.hasNext(); ) {
+          Map.Entry entry = (Map.Entry)i.next();
+          String key = (String)entry.getKey();
+          StyleProperty property = ((StyleProperty)entry.getValue());
+          Matcher m = resourcePattern.matcher(property.value);
+          if (m.matches()) {
+            String path = m.group(1);
+            String base = new File(Parser.getSourcePathname(element)).getParent();
+            File file = env.resolve(path, base);
+            // N.B.: Resources are always imported into the main
+            // program for the Flash target, hence the use of
+            // getResourceGenerator below
+            try {
+              String value = env.getResourceGenerator().importResource(file);
+              // Resources are passed by name
+              property.value = ScriptCompiler.quote(value);
+            } catch (ObjectWriter.ImportResourceError e) {
+              env.warn(e, element);
+            }
+          }
+        }
         ScriptCompiler.writeObject(properties, result);
       } catch (IOException e) {
-        throw new CompilationError("IO error writing property map");
+        throw new CompilationError(element, e);
       }
       return result.toString();
     }    
