@@ -554,9 +554,15 @@
           <tarfileset dir="${source-distro}" prefix="${source-distro}">
               <include name="*/**"/>
               <exclude name="${builddir-dev}/server/${tomcat}/bin/*"/>
+              <exclude name="${builddir-dev}/WEB-INF/bin/mxmlc*" />
+              <exclude name="${builddir-dev}/WEB-INF/bin/fdb*" />
+              <exclude name="${builddir-dev}/WEB-INF/bin/compc*" />
           </tarfileset>
           <tarfileset dir="${source-distro}" mode="755" prefix="${source-distro}">
               <include name="${buildir-dev>/server/${tomcat}/bin/*"/>
+              <include name="${builddir-dev}/WEB-INF/bin/mxmlc*" />
+              <include name="${builddir-dev}/WEB-INF/bin/fdb*" />
+              <include name="${builddir-dev}/WEB-INF/bin/compc*" />
           </tarfileset>
           <!-- credits source and binary-->
           <tarfileset dir="." prefix="${source-distro}">
@@ -905,6 +911,9 @@
                 <include name="bin/lzmc"/>
                 <include name="bin/convert_laszlo.pl"/>
                 <include name="bin/convert_required.pl"/>
+                <include name="WEB-INF/bin/mxmlc*" />
+                <include name="WEB-INF/bin/fdb*" />
+                <include name="WEB-INF/bin/compc*" />
             </tarfileset>
             <tarfileset dir="${builddir-dev}" prefix="${builddir-dev}/">
                 <include name="*/**"/>
@@ -915,6 +924,9 @@
                 <exclude name="bin/lzmc"/>
                 <exclude name="bin/convert_laszlo.pl"/>
                 <exclude name="bin/convert_required.pl"/>
+                <exclude name="WEB-INF/bin/mxmlc*" />
+                <exclude name="WEB-INF/bin/fdb*" />
+                <exclude name="WEB-INF/bin/compc*" />
             </tarfileset>
           </tar>
     </target>
@@ -1271,6 +1283,14 @@
            <exclude name="tools/**" />    <!-- is this true??? -->
            <exclude name="lps/utils/**" />
            <exclude name="WEB-INF/lps/work/**" />
+           <exclude name="WEB-INF/bin/mxmlc*" />
+           <exclude name="WEB-INF/bin/fdb*" />
+           <exclude name="WEB-INF/bin/compc*" />
+           <zipfileset dir="${builddir}/lps-${version.id} filemode="755">
+               <include name="WEB-INF/bin/mxmlc*" />
+               <include name="WEB-INF/bin/fdb*" />
+               <include name="WEB-INF/bin/compc*" />
+	   </zipfileset>
       </war>
 
       <property name="done.dist.core" value="1" />
