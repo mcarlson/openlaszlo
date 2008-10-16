@@ -12,7 +12,7 @@
   <view name="swatch" width="200" height="30" 
   datapath="colors:/value[1]/text()">
     <method name="applyData" args="v">
-      setAttribute('bgcolor', eval(v))
+      acceptAttribute('bgcolor', 'color', v);
       display.setAttribute('text', v)
     </method>
   </view>
@@ -27,6 +27,6 @@
   </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
