@@ -21,7 +21,7 @@ global._dbg_name = 'global';
 
 /**
  * <p><code>Debug</code> is the single instance of the class
- * <code>LzDebugService</code>.</p>
+ * <code>lz.DebugService</code>.</p>
  *
  * <p></p>
  *

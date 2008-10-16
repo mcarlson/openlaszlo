@@ -11,9 +11,9 @@
 /**
   * <p>The canvas is the container for all views within an application.</p>
   *
-  * <p>The <classname>LzCanvas</classname> class represents the viewable
+  * <p>The <classname>lz.canvas</classname> class represents the viewable
   * area of the application.  There is one instance of
-  * <classname>LzCanvas</classname>, named <varname>canvas</varname>.  The
+  * <classname>lz.canvas</classname>, named <varname>canvas</varname>.  The
   * canvas contains all views within an application.</p>
   * 
   * <p>The <tagname>canvas</tagname> tag is the document root of an LZX
