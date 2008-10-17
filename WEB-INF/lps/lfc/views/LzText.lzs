@@ -250,6 +250,20 @@ static var tagname = 'text';
 /** @access private */
 static var attributes = new LzInheritedHash(LzView.attributes);
 
+LzText.attributes.pixellock = true;
+LzText.attributes.clip = true;
+
+/**
+  * If true, the text is selectable
+  *
+  * @lzxtype booleanLiteral
+  * @type Boolean
+  * @modifiers virtual
+// no var decl since this is a virtual field
+  * @access private
+  */
+LzText.attributes.selectable = false;
+
 /** Sent whenever the text in the field changes. 
   * @lzxtype event
   */
@@ -305,7 +319,6 @@ function getDefaultWidth () {
     return 0;
 }
 
-LzText.attributes.pixellock = true;
 
 /**
   * If true, the lines of text are wrapped to fit within the text
@@ -464,7 +477,7 @@ override function construct ( parent, args ) {
     this.xscroll = 0;
 
     this.resize = ('resize' in args && (! (args.resize is LzValueExpr))) ? (!! args.resize) : this.resize;
-    this.setAttribute('resize', this.resize);
+    this.$lzc$set_resize(this.resize);
     
     if ('maxlength' in args && (! (args.maxlength is LzValueExpr)) && args.maxlength != null) {
        this.$lzc$set_maxlength(args.maxlength);
@@ -549,7 +562,6 @@ override function __makeSprite(args) {
 override function getMCRef () {
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     return tsprite.getMCRef();
-//    return this.__LZtextclip;
 }
 
 /**
@@ -557,16 +569,6 @@ override function getMCRef () {
   */
 var $lzc$set_multiline = -1;
 
-/**
-  * If true, the text is selectable
-  *
-  * @lzxtype booleanLiteral
-  * @type Boolean
-  * @modifiers virtual
-// no var decl since this is a virtual field
-  * @access private
-  */
-LzText.attributes.selectable = false;
 
 /**
   * Maximum number of characters allowed in this field
@@ -608,13 +610,6 @@ function $lzc$set_pattern(val) {
     this.pattern = val;
     if (this.onpattern.ready) this.onpattern.sendEvent(val);
 }
-
-
-LzText.attributes.clip = true;
-
-
-
-
 
 
 /**
@@ -849,10 +844,9 @@ function annotateAAimg (txt) {
     return ntxt;
 }
 
-// Parses HTML attributes of the form attrname="val" to attrs, up
-// until a closing right pointy bracket, and returns the offset of
-// that closing char.
-/**
+/** Parses HTML attributes of the form attrname="val" to attrs, up
+  * until a closing right pointy bracket, and returns the offset of
+  * that closing char.
   * @access private
   */
 function parseImgAttributes(attrs, str) {
@@ -962,7 +956,7 @@ static var escapeChars = { '>': '&gt;', '<': '&lt;'};
 /**
   * Returns an escaped version of the string if called with no args. If called
   * with a string argument, returns an escaped version of that string (escaped
-  * here means markup-escaped, hot http escaped.)
+  * here means markup-escaped, not http escaped.)
   * @param String ts: text string to escape
   */
 function escapeText( ts ){
@@ -1057,7 +1051,6 @@ function setMultiline ( ml ){
     this.multiline = (ml == true);
 }
 
-/// extensions for flash6 
 
 /**
   * @access private
@@ -1183,17 +1176,6 @@ function getThickness() {
 }
 
 
-
-/**
-  * @access private
-  */
-//TODO Remove this
-/*
-function __LZforceScrollAttrs () {
-    this.__LZtextclip.onScroller();
-}
-*/
-
 /** Sets the horizontal scroll position
   * @param Number s: horizontal scroll position
   */
@@ -1217,14 +1199,6 @@ function setSelection ( start , end=null ){
     if (end == null) { end = start; }
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
      tsprite.setSelection(start, end);
-    /*
-    var sf = targetPath( this.__LZtextclip);
-    if( Selection.getFocus() != sf ) {
-        Selection.setFocus( sf );
-    }
-
-    Selection.setSelection( start , end );
-    */
 }
 
 /**
@@ -1236,13 +1210,6 @@ function setSelection ( start , end=null ){
 function getSelectionPosition ( ){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     return  tsprite.getSelectionPosition();
-    /*
-    var sf = targetPath( this.__LZtextclip) ;
-    if( Selection.getFocus() != sf ) {
-        return -1;
-    }
-    return Selection.getBeginIndex();
-    */
 }
 
 /**
@@ -1254,14 +1221,6 @@ function getSelectionPosition ( ){
 function getSelectionSize ( ){
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     return tsprite.getSelectionSize();
-    /*
-    var sf = targetPath( this.__LZtextclip);
-    if( Selection.getFocus() != sf ) {
-        return -1;
-    }
-    var siz = Selection.getEndIndex() - Selection.getBeginIndex();
-    return siz;
-    */
 }
 
 /**
@@ -1275,7 +1234,7 @@ function getSelectionSize ( ){
   send an ontextlink event to the text view, with a value of VALUE.
  */
 public function makeTextLink(str, value) {
-    return this.sprite.makeTextLink(str,value);
+    return (this.sprite cast LzTextSprite).makeTextLink(str,value);
 }
 
 } // End of LzText
