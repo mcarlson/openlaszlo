@@ -819,11 +819,6 @@
           </filterset>
       </copy>
 
-      <!--change permissions on flex tools in WEB-INF bin directory -->
-      <chmod file="${builddir-dev}/Server/lps-${version.id}/WEB-INF/bin/mxmlc*" perm="755" />
-      <chmod file="${builddir-dev}/Server/lps-${version.id}/WEB-INF/bin/compc*" perm="755" />
-      <chmod file="${builddir-dev}/Server/lps-${version.id}/WEB-INF/bin/fdb*" perm="755" />
-
       <!-- copy in the Server - the lps directory and the server(tomcat) directory -->
       <mkdir dir="${builddir-dev-server}"/>
       <copy todir="${builddir-dev-server}">
@@ -867,6 +862,11 @@
       <copy todir="${builddir-dev-server}/${tomcat}/server/webapps/manager">
             <fileset dir="${server.home}/server/webapps/manager" />
       </copy>
+
+      <!--change permissions on flex tools in WEB-INF bin directory -->
+      <chmod file="${builddir-dev}/Server/lps-${version.id}/WEB-INF/bin/mxmlc*" perm="755" />
+      <chmod file="${builddir-dev}/Server/lps-${version.id}/WEB-INF/bin/compc*" perm="755" />
+      <chmod file="${builddir-dev}/Server/lps-${version.id}/WEB-INF/bin/fdb*" perm="755" />
 
       <property name="done.build-dist-dir-dev" value="true" />
   </target>
