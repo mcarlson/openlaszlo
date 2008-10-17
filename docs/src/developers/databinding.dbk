@@ -288,7 +288,7 @@ If specified on the canvas, datasets are visible to and accessible by the entire
 <itemizedlist spacing="compact"><listitem><para>Datasets will automatically name themselves <literal>localdata</literal> if a name is not specified </para></listitem><listitem><para>Local datapath syntax is 
 datapath="local:<emphasis role="i">reference.to.dataset.relative.to.parent</emphasis>:/path" </para></listitem><listitem><para> The name of the dataset can be omitted from the datapath if the dataset name is the default 'localdata', e.g. 'local:classroot:/' can be used instead of 'local:classroot.localdata:/' for a dataset named localdata in the classroot</para></listitem></itemizedlist>
 <para>
-Here is a simple program that illustrates use of local datasets (the file tests/data,  a sample XML file is included in this directory also.)
+   Here is a simple program that illustrates use of local datasets (the file testdata.xml,  a sample XML file is included in this directory also.)
 </para>
 <example role="live-example">
    <title>local datasets</title>
