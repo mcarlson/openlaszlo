@@ -167,7 +167,7 @@ static function getAppID() {
   */
 static function showMenu (truefalse) {
   //TODO Not implemented
-  Debug.warn("showMenu not implemented");
+  if ($debug) Debug.warn("showMenu not implemented");
 }
 
 
@@ -179,7 +179,7 @@ static function showMenu (truefalse) {
   */
 static function setClipboard (str){
   //TODO Not implemented
-  Debug.warn("setClipboard not implemented");
+  if ($debug) Debug.warn("setClipboard not implemented");
 }
 
 /**
@@ -190,7 +190,7 @@ static function setClipboard (str){
   */
 static function isAAActive (){
   //TODO Not implemented
-  Debug.warn("isAAActive not implemented");
+  if ($debug) Debug.warn("isAAActive not implemented");
   return false;
 }
 
@@ -201,7 +201,7 @@ static function isAAActive (){
   */
 static function updateAccessibility () {
   //TODO Not implemented
-  Debug.warn("updateAccessibility not implemented");
+  if ($debug) Debug.warn("updateAccessibility not implemented");
 }
 
 
