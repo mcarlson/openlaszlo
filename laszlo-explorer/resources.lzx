@@ -1,15 +1,5 @@
 <library>
     <!-- resources used by explore-nav.lzx -->
-      <!-- Fonts -->
-  <font name="itemfont">
-      <face src="helmetb.ttf"  style="bold"/>
-  </font>
-
-    <!--    <face src="nav/frank-demi.ttf" />-->
-
-  <font name="smallfont">
-    <face src="verity/verity9.ttf" />
-  </font>
 <!--  <font name="itemfont">-->
 <!--    <face src="verity/verity11.ttf" />-->
 <!--    <face src="verity/verity11bold.ttf"  style="bold" />-->

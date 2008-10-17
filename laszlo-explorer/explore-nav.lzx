@@ -315,7 +315,7 @@
     <view name="icon" resource="icon" y="9" stretches="both" width="11" height="11"
         x="${classroot.width - this.width - 6 }" />
     <text name="label" x="${6 + classroot.level*7}" valign="middle" 
-          fontstyle="bold" font="itemfont,helvetica,sans-serif" fgcolor="#ffffff" 
+          fontstyle="bold" font="helvetica,sans-serif" fgcolor="#ffffff" 
         fontsize="13" width="${parent.width-x}" text="${classroot.text}"/>
   </class>
 
