@@ -351,9 +351,6 @@ public dynamic class LzAnimatorGroup extends LzNode {
 
         this.isactive = true;
 
-        // store a copy of repeat for decrementing after each iteration
-        this.crepeat = this.repeat;
-
         this.prepareStart();
         this.updateDel.register(lz.Idle , "onidle");
         return true;
@@ -363,6 +360,8 @@ public dynamic class LzAnimatorGroup extends LzNode {
       * @access private
       */
     function prepareStart () :void {
+        // store a copy of repeat for decrementing after each iteration
+        this.crepeat = this.repeat;
         for (var i:int = this.animators.length - 1; i >= 0; i--) {
             this.animators[ i ].notstarted = true;
             //this.animators[ i ].prepareStart();
