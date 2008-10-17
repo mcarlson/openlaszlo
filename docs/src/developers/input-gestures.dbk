@@ -252,7 +252,7 @@ One way of integrating keyboard input into your application is to have a focusab
 <para>
 The example below illustrates use of <indexterm><primary>lz.Focus</primary></indexterm><sgmltag class="element">&lt;lz.Focus&gt;</sgmltag> to make a view able to accept keyboard input.</para>
 
-<note>The actual character that corresponds to a particular key depends on the operating system and local, so the character returned
+<note>The actual character that corresponds to a particular key depends on the operating system and locale, so the character returned
    by <literal>String.fromCharCode()</literal> may be different on your system.</note>
 <example role="live-example">
    <title>Reading key values</title>
