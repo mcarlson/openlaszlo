@@ -250,10 +250,10 @@ respectively, on the view that currently has the keyboard focus.</para>
 <para>
 One way of integrating keyboard input into your application is to have a focusable view capture pressed key codes. Only one view can be focusable at any one time. In this example, we're making that view focused oninit (although in a larger application, you could bring focus to that view using the tab key, or you could write an onclick method to tell it to focus).</para>
 <para>
-The example below illustrates use of <indexterm><primary>lz.Focus</primary></indexterm><sgmltag class="element">&lt;lz.Focus&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+The example below illustrates use of <indexterm><primary>lz.Focus</primary></indexterm><sgmltag class="element">&lt;lz.Focus&gt;</sgmltag> to make a view able to accept keyboard input.</para>
 
- to make a view able to accept keyboard input.</para>
-
+<note>The actual character that corresponds to a particular key depends on the operating system and local, so the character returned
+   by <literal>String.fromCharCode()</literal> may be different on your system.</note>
 <example role="live-example">
    <title>Reading key values</title>
    <programlisting language="lzx">
