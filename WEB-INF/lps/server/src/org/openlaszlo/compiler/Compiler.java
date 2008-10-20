@@ -715,7 +715,7 @@ public class Compiler {
         for (Iterator iter = tlc.getLibraries(env, root, null, externalLibraries, new HashSet()).iterator();
              iter.hasNext(); ) {
             File library = (File) iter.next();
-            Compiler.updateSchemaFromLibrary(library, env, schema, visited);
+            Compiler.updateSchemaFromLibrary(library, env, schema, visited, externalLibraries);
         }
         tlc.updateSchema(root, schema, visited);
     }
@@ -735,12 +735,25 @@ public class Compiler {
     }
     
     static void updateSchemaFromLibrary(File file, CompilationEnvironment env,
-                                        ViewSchema schema, Set visited)
+                                        ViewSchema schema, Set visited, Set externalLibraries)
     {
         Element root = LibraryCompiler.resolveLibraryElement(
             file, env, visited);
         if (root != null) {
-            Compiler.updateSchema(root, env, schema, visited);
+          try {
+            // Library keys are the canonical file name
+            File key = file.getCanonicalFile();
+            boolean old = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
+            boolean extern = (externalLibraries != null) ? externalLibraries.contains(key) : false;
+            try {
+              env.setProperty(CompilationEnvironment._EXTERNAL_LIBRARY, extern);
+              Compiler.updateSchema(root, env, schema, visited);
+            } finally {
+              env.setProperty(CompilationEnvironment._EXTERNAL_LIBRARY, old);
+            }
+          } catch (java.io.IOException e) {
+            throw new CompilationError(root, e);
+          }
         }
     }
 

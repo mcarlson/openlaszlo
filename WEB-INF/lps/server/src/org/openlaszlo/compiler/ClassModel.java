@@ -28,6 +28,7 @@ public class ClassModel implements Comparable {
     protected final Element definition;
     protected String kind;
     protected NodeModel nodeModel;
+    protected boolean modelOnly;
     
     /** Set of tags that can legally be nested in this element */
     protected Set mCanContainTags = new HashSet();
@@ -65,6 +66,7 @@ public class ClassModel implements Comparable {
                       ViewSchema schema, Element definition, CompilationEnvironment env) {
         this.tagName = tagName;
         this.anonymous = (! publish);
+        this.modelOnly = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
         this.env = env;
         if ((!anonymous) && (tagName != null)) {
           this.className = LZXTag2JSClass(tagName);
@@ -151,12 +153,14 @@ public class ClassModel implements Comparable {
   }
 
 
+  protected boolean declarationEmitted = false;
   /**
    * Emits a class model as a JS2 class declaration.  This is used
    * both by the class compiler and the instance compiler (when an
    * instance has methods, either explicit or implicit).
    */
   void emitClassDeclaration(CompilationEnvironment env) {
+    declarationEmitted = true;
     // className will be a global
     env.addId(className, definition);
     // Should the package prefix be in the model?  Should the
@@ -308,10 +312,15 @@ public class ClassModel implements Comparable {
     this.compile(env, false);
   }
 
+  /**
+   * This may be called to emit a class defintion, or to resolve
+   * either a forward or external (to this compilation unit)
+   * reference.  In all cases, we create the node model, which is used
+   * for calculating other compile-time optimizations.  For external
+   * references, we do not generate any code.
+   */
   public void compile(CompilationEnvironment env, boolean force) {
-    if (force ||
-        ((! isCompiled()) &&
-         (! "false".equals(env.getProperty(env.LINK_PROPERTY))))) {
+    if (! hasNodeModel()) {
       // We compile a class declaration just like a view, and then
       // add attribute declarations and perhaps some other stuff that
       // the runtime wants.
@@ -321,6 +330,8 @@ public class ClassModel implements Comparable {
       // Establish class root
       model.assignClassRoot(0);
       setNodeModel(model);
+    }
+    if (force || ((! isCompiled()) && (! modelOnly))) {
       emitClassDeclaration(env);
     }
   }
@@ -350,7 +361,7 @@ public class ClassModel implements Comparable {
     // Classes that are builtin or have been compiled
     // Or and interface:  for now, we generate nothing for an LZX
     // interface
-    return isBuiltin() || hasNodeModel() || "interface".equals(kind);
+    return declarationEmitted || isBuiltin() || "interface".equals(kind);
   }
 
   public ClassModel getSuperclassModel() {

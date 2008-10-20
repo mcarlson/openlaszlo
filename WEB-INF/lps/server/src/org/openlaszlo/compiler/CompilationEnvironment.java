@@ -54,6 +54,10 @@ public class CompilationEnvironment {
     // tag manually. If they didn't, we need to add a call to instantiate one.
     public static final String USER_DEBUG_WINDOW     = "userdebugwindow";
 
+    // Internal flag signals when the schema parser is parsing an
+    // external library (for library compiling)
+    public static final String _EXTERNAL_LIBRARY = "$externalLibrary";
+
     // Flag used by tooling - causes the compiler to skip code generation, and
     // build the ViewSchema only.
     public static final String NO_CODE_GENERATION = "nocodegeneration";
