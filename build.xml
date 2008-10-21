@@ -916,9 +916,9 @@
                 <include name="bin/lzmc"/>
                 <include name="bin/convert_laszlo.pl"/>
                 <include name="bin/convert_required.pl"/>
-                <include name="WEB-INF/bin/mxmlc*" />
-                <include name="WEB-INF/bin/fdb*" />
-                <include name="WEB-INF/bin/compc*" />
+                <include name="Server/lps-${version.id}/WEB-INF/bin/mxmlc*" />
+                <include name="Server/lps-${version.id}/WEB-INF/bin/fdb*" />
+                <include name="Server/lps-${version.id}/WEB-INF/bin/compc*" />
             </tarfileset>
             <tarfileset dir="${builddir-dev}" prefix="${builddir-dev}/">
                 <include name="*/**"/>
@@ -929,9 +929,9 @@
                 <exclude name="bin/lzmc"/>
                 <exclude name="bin/convert_laszlo.pl"/>
                 <exclude name="bin/convert_required.pl"/>
-                <exclude name="WEB-INF/bin/mxmlc*" />
-                <exclude name="WEB-INF/bin/fdb*" />
-                <exclude name="WEB-INF/bin/compc*" />
+                <exclude name="Server/lps-${version.id}/WEB-INF/bin/mxmlc*" />
+                <exclude name="Server/lps-${version.id}/WEB-INF/bin/fdb*" />
+                <exclude name="Server/lps-${version.id}/WEB-INF/bin/compc*" />
             </tarfileset>
           </tar>
     </target>
