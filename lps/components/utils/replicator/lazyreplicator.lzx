@@ -19,6 +19,7 @@
         
         <!-- @keywords private -->
         <method name="construct" args="p,a">
+            <![CDATA[ 
             super.construct( p, a );
 
             // TODO [hqm 2007 09] Lock the parent layout so it can't mess
@@ -29,13 +30,16 @@
             // all the time, it can only cause trouble.
             // 
             var p = this.container;
-            for (var l in p.layouts) {
-                p.layouts[l].lock();
+            if (p.layouts) {
+                for (var l=0, len=p.layouts.length; l<len; l++) {
+                    p.layouts[l].lock();
+                }
             }
     
     
             this.__emptyArray = [];
             this.clonedel = new LzDelegate( this, '__adjustVisibleClones');
+            ]]>
         </method>
         
         <!-- @keywords private -->
@@ -262,11 +266,15 @@
         </method>
         
         <method name="destroy">
+            <![CDATA[ 
             var p = this.container;
-            for (var l in p.layouts) {
-                p.layouts[l].unlock();
+            if (p.layouts) {
+                for (var l=0, len=p.layouts.length; l<len; l++) {
+                    p.layouts[l].unlock();
+                }
             }
             super.destroy.apply(this, arguments);
+            ]]>
         </method>
     </class>
 

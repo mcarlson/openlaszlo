@@ -17,9 +17,10 @@
         <!--- Load the object. If successful, this.proxy is set to an object
               with remote APIs. -->
         <method name="load">
+            <![CDATA[
             // Since there aren't any prototypes to load for XML-RPC,
             // we just create proxy using declared calls. 
-            for (var cn in this.subnodes) {
+            for (var cn=0, len=this.subnodes.length; cn<len; cn++) {
 
                 // create proxy object if it doesn't exist
                 if (this.proxy == null) this.proxy = {};
@@ -49,7 +50,7 @@
                 { status: 'ok', message: 'ok', 
                   stub: this.proxy, stubinfo: null }
             );
-
+        ]]>
         </method>
 
         <!--- @keywords private -->

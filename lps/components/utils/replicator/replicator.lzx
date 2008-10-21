@@ -148,7 +148,7 @@
             }
             if ( this._cloneprops[ n ] ) {
                 var p = this._cloneprops[ n ];
-                for ( var k in p ){
+                for ( var k=0, len=p.length; k<len; k++ ){
                     v.setAttribute( k, p[ k ] );
                 }
             }
@@ -183,7 +183,7 @@
             v.setAttribute( "data" ,  null );
             if ( n != null && this._cloneprops[ n ] ) {
                 var p = this._cloneprops[ n ];
-                for ( var k in p ){
+                for ( var k=0, len=p.length; k<len; k++ ){
                     v.setAttribute( k, null );
                 }
             }
@@ -239,7 +239,7 @@
         <method name="__adjustVisibleClones" args="ignore=null" >
             <![CDATA[
             var p = this.container;
-            for (var l in p.layouts) {
+            for (var l=0, len=p.layouts.length; l<len; l++) {
                 p.layouts[l].lock();
             }
             while( this.clones.length ) this.poolClone( this.clones.pop() );
@@ -251,7 +251,7 @@
                     this.clones[ i ] = cl;
                 }
             }
-            for (var l in p.layouts) {
+            for (var l=0, len=p.layouts.length; l<len; l++) {
                 p.layouts[l].unlock();
             }
             ]]>

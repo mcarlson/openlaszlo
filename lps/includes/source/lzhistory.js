@@ -201,7 +201,7 @@ lz.embed.history = {
     _parse: function(h) {
         var _this = lz.embed.history;
         if (h.length == 0) return;
-        for (var id in lz.embed.history._apps) {
+        for (var id=0, len=lz.embed.history._apps.length; id<len; id++) {
             var app = lz.embed.history._apps[id];
             if (! app.loaded || app._lasthash == h) continue;
             //console.log('sending for app', app._id, h);

@@ -28,7 +28,7 @@ function addTest( t ) {
 function printResults() {
     var countedfailedtests = 0;
     var countedpassedtests = 0;
-    for (var tc in this.tests) {
+    for (var tc=0, len=this.tests.length; tc<len; tc++) {
         if (this.results[tc] != "pass") {
             countedfailedtests += 1;
         } else {
@@ -115,7 +115,7 @@ function printSummary () {
     var passedsuitenames = [];
     var countedfailedsuites = 0;
     var countedpassedsuites = 0;
-    for (var suite in this.suites) {
+    for (var suite=0, len=this.suites.length; suite<len; suite++) {
         if (this.results[suite] != "pass") {
             this.suites[suite].printResults();
             countedfailedsuites += 1;
@@ -127,7 +127,7 @@ function printSummary () {
     }
     if (countedfailedsuites > 0) {
         var msg = "Failed " + countedfailedsuites + " suites";
-        for (var s in failedsuitenames) {
+        for (var s=0, len=failedsuitenames.length; s<len; s++) {
             msg = msg + ", " + failedsuitenames[s];
         }
         Debug.error(msg);
@@ -157,7 +157,7 @@ function printSummary () {
 
 function runTestSuites() {
     this.setupServerLogging();
-    for (var suite in this.suites) {
+    for (var suite=0, len=this.suites.length; suite<len; suite++) {
         this.results[suite] = "pre";
         this.cursuite = suite;
         var suiteObj = this.suites[suite];

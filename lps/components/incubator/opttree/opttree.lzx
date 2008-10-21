@@ -66,22 +66,26 @@
         </method>
 
         <method name="recursiveOpen" args="p, val">
+            <![CDATA[ 
             opttreecontroller.lock( p );
             this.setOpen( p , val );
             var c = opttreecontroller.getChildNodes( p );
-            for ( var k in c ){
+            for ( var k=0, len=c.length; k<len; k++){
                 this.recursiveOpen( c[ k ] , val );
             }
             opttreecontroller.unlock( p );
+            ]]>
         </method>
 
         <method name="setAllOpen" args="val">
+            <![CDATA[ 
             var ilist = opttreecontroller.getChildNodes( datapath.p );
             opttreecontroller.lock( "ao" );
-            for ( var k in ilist ){
+            for ( var k=0, len=ilist.length; k<len; k++ ){
                 this.recursiveOpen( ilist[ k ], val );
             }
             opttreecontroller.unlock( "ao" );
+            ]]>
         </method>
 
         <!--- Make the element

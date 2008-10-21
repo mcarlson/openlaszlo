@@ -158,29 +158,30 @@
                 item.c['_funcref'] = this.proxy[fname];
             }
 
-            for (var k in this.subnodes) {
-                var c = this.subnodes[k];
-                if ( ! (c instanceof lz.remotecall) ) continue;
+            if (this.subnodes) {
+                for (var k=0, len=this.subnodes.length; k<len; k++) {
+                    var c = this.subnodes[k];
+                    if ( ! (c instanceof lz.remotecall) ) continue;
 
-                // funcname is required
-                var fn = c['funcname'];
+                    // funcname is required
+                    var fn = c['funcname'];
 
 
-                if (fn == null) continue;
+                    if (fn == null) continue;
 
-                if (c['name'] == null) c['name'] = fn;
+                    if (c['name'] == null) c['name'] = fn;
 
-                if (!this.proxy[fn]) {
-                    this.proxy[fn] = this.makeProxyStubFunction(fn);
+                    if (!this.proxy[fn]) {
+                        this.proxy[fn] = this.makeProxyStubFunction(fn);
+                    }
+
+                    if (this._verifywithproxy && typeof(this.proxy[fn]) != 'function') {
+                        Debug.write(this.name, "warning: function", fn, "not defined");
+                        continue;
+                    }
+                    c._funcref = this.proxy[fn];
                 }
-
-                if (this._verifywithproxy && typeof(this.proxy[fn]) != 'function') {
-                    Debug.write(this.name, "warning: function", fn, "not defined");
-                    continue;
-                }
-                c._funcref = this.proxy[fn];
             }
-
             return true;
         ]]>
         </method>
