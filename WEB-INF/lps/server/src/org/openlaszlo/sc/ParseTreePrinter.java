@@ -1195,6 +1195,9 @@ public class ParseTreePrinter {
     boolean hasfile = false;
     int linenum = Integer.MIN_VALUE;
     int linediff = Integer.MIN_VALUE;
+    public String toString() {
+      return "LineNumberState(\"" + filename + "\", hasfile=" + hasfile + ", line=" + linenum + ", diff=" + linediff + ")";
+    }
   }
 
   public boolean isActualFile(String str) {

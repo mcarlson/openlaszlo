@@ -78,11 +78,53 @@ public class TranslationUnit
       String mark = INSERT_STREAM_MARK + i + INSERT_END_MARK;
       int markPos = result.indexOf(mark);
       if (markPos >= 0) {
-        result = result.substring(0, markPos) + getStreamText(i) +
-          result.substring(markPos + mark.length());
+        String before = result.substring(0, markPos);
+        String after = result.substring(markPos + mark.length());
+        Object insert = getStreamObject(i);
+        String text = "";
+        if (insert != null) {
+          if (insert instanceof String) {
+            text = (String)insert;
+          }
+          else if (insert instanceof TranslationUnit) {
+            text = ((TranslationUnit)insert).getContents();
+            insertLnums(countLines(before), countLines(text), ((TranslationUnit)insert).lnums);
+          }
+          else {
+            throw new RuntimeException("TranslationUnit.stream unsupported type" + insert.getClass().getName());
+          }
+        }
+        result = before + text + after;
       }
     }
     return result;
+  }
+
+  /** Merge the lnums from another translation unit
+   */
+  public void insertLnums(int startline, int nlines, SortedMap inserted) {
+
+    // from startline to the end, we must first shift all entries nlines.
+    // so we don't overwrite, we must go from the end to the beginning.
+    List keys = new ArrayList(lnums.keySet());
+    for (ListIterator liter=keys.listIterator(); liter.hasPrevious(); ) {
+      Integer key = (Integer)liter.previous();
+      int keyval = key.intValue();
+      if (keyval < startline) {
+        break;
+      }
+      lnums.put(new Integer(keyval + nlines), lnums.remove(key));
+    }
+
+    // now insert the new entries, checking for out of bounds
+    for (Iterator iter = inserted.keySet().iterator(); iter.hasNext(); ) {
+      Integer key = (Integer)iter.next();
+      int keyval = key.intValue();
+      if (keyval < 0 || keyval > nlines) {
+        throw new IndexOutOfBoundsException("linenumber table entry out of range: " + keyval + " is not in (0, " + nlines + ")");
+      }
+      lnums.put(new Integer(keyval + startline), inserted.get(key));
+    }
   }
 
   public boolean isDefaultTranslationUnit() {
@@ -107,7 +149,7 @@ public class TranslationUnit
 
   public void addText(String s) {
     text.append(s);
-    linenum += countOccurence(s, '\n');
+    linenum += countLines(s);
   }
 
   public int getTextLineNumber() {
@@ -129,12 +171,18 @@ public class TranslationUnit
     streams.put(key, cur);
   }
 
-  public String getStreamText(int streamNum) {
+  public void setStreamObject(int streamNum, Object o) {
     Integer key = new Integer(streamNum);
-    String cur = (String)streams.get(key);
-    if (cur == null)
-      cur = "";
-    return cur;
+    Object cur = streams.get(key);
+    if (cur != null) {
+      throw new RuntimeException("TranslationUnit.setStreamObject value should not already exist");
+    }
+    streams.put(key, o);
+  }
+
+  public Object getStreamObject(int streamNum) {
+    Integer key = new Integer(streamNum);
+    return streams.get(key);
   }
 
   public void setInputLineNumber(int inputLinenum, SourceFile srcf) {
@@ -148,7 +196,7 @@ public class TranslationUnit
     }
     // if the source file changed, we'll just use the first one.
     // otherwise, we want the smallest input line in the mapping.
-    else if (cur.sourcefile.equals(srcf) && inputLinenum < cur.line) {
+    else if (cur.sourcefile.equals(srcf) && inputLinenum < cur.line && inputLinenum > 0) {
       cur.line = inputLinenum;
       lnums.put(key, cur);
     }
@@ -162,6 +210,10 @@ public class TranslationUnit
       pos = s.indexOf(c, pos+1);
     }
     return count;
+  }
+
+  public static int countLines(String s) {
+    return countOccurence(s, '\n');
   }
 
   public String toString() {

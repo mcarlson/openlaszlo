@@ -143,12 +143,11 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     // If the main class is not present, we'll need to revisit
     // our assumptions about where we put top level statements.
     if (mainTunit != null) {
-      String topstmts = defaultTunit.getContents();
       if (config.islib) {
-        mainTunit.addStreamText(CLASS_LEVEL_STREAM, topstmts);
+        mainTunit.setStreamObject(CLASS_LEVEL_STREAM, defaultTunit);
       }
       else {
-        mainTunit.addStreamText(MAIN_CONSTRUCTOR_STREAM, topstmts);
+        mainTunit.setStreamObject(MAIN_CONSTRUCTOR_STREAM, defaultTunit);
       }
       mainTunit.setMainTranslationUnit(true);
     }
