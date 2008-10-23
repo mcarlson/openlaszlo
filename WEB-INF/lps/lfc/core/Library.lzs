@@ -10,10 +10,6 @@
 #include "core/LzConstants.lzs"
 #include "core/LzDefs.lzs"
 #include "core/LzCache.lzs"
-
-if ($swf9) {
-    #include "core/dummyclasses.js"
-}
 #include "core/LzEventable.lzs"
 // LzStyleAttrBinder extends LzEventable
 #include "core/LzStyleAttrBinder.lzs"
