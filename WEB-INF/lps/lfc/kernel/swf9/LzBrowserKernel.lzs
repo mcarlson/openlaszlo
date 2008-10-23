@@ -127,7 +127,7 @@ static function _dequeueJS () {
   */
 static function setHistory(n) {
     //Debug.write('__setHistory', n);
-    LzBrowserKernel.callJS('Lz.history.set', null, n);
+    LzBrowserKernel.callJS('lz.embed.history.set', null, n);
 }
 
 static function getPersistedObject(n) {
