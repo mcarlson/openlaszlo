@@ -2174,6 +2174,28 @@ public dynamic class LzNode extends LzEventable {
  presentationtypes['boolean'] = BooleanPresentationType;
  // TODO?: add css: CSSPresentationType, token: TokenPresentationType, script: ScriptPresentationType
 
+ /**
+  * @access private
+  * @param type:String the attribute type
+  * @param value:String the string representation of the desired value
+  * @return Any: the string parsed as the type
+  *
+  * Converts a string to a value using the presentation type's accept
+  * method
+  */
+ function acceptValue(type, value) {
+   var presentationtype = LzNode.presentationtypes[type];
+   // don't coerce null values
+   if (value != null) {
+     if (presentationtype == null) {
+       value = GenericPresentationType.accept(value, type);
+     } else {
+       value = presentationtype.accept(value);
+     }
+   }
+   return value;
+ }
+
   /**
    * @access private
    * @param name:String the name of the attribute
@@ -2184,15 +2206,7 @@ public dynamic class LzNode extends LzEventable {
    * presentationtype's accept method
    */
  function acceptAttribute(name, type, value) {
-   var presentationtype = LzNode.presentationtypes[type];
-   // don't coerce null values
-   if (value != null) {
-     if (presentationtype == null) {
-       value = GenericPresentationType.accept(value, type);
-     } else {
-       value = presentationtype.accept(value);
-     }
-   }
+   value = this.acceptValue(type, value);
    if (this[name] != value) {
     //Debug.write('acceptAttribute', name, type, value, typeof value, presentationtype);
     this.setAttribute(name, value);
@@ -2201,16 +2215,13 @@ public dynamic class LzNode extends LzEventable {
  
  /**
    * @access private
-   * presentAttribute
-   * @param name:String the name of the attribute
- * @param type:String the attribute type
+   * @param type:String the attribute type
    * @returns value:String
    * 
-   * Returns the value of the named attribute converted to a string by the
+   * Returns the value converted to a string by the
    * presentationtype's present method
    */
- function presentAttribute(name, type) {
-   var value = this[name];
+ function presentValue(type, value) {
    var presentationtype = LzNode.presentationtypes[type];
    if (presentationtype != null && presentationtype['present']) {
      value = presentationtype.present(value);
@@ -2220,6 +2231,19 @@ public dynamic class LzNode extends LzEventable {
    }
    //Debug.write('presentAttribute', name, type, value, typeof value, presentationtype);
    return value;
+ }
+
+ /**
+   * @access private
+   * @param name:String the name of the attribute
+   * @param type:String the attribute type
+   * @returns value:String
+   * 
+   * Returns the value of the named attribute converted to a string by the
+   * presentationtype's present method
+   */
+ function presentAttribute(name, type) {
+   return this.presentValue(type, this[name]);
  }
 
 

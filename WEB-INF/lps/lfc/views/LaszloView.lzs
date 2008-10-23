@@ -1996,13 +1996,15 @@ function getBounds (  ){
                    this.rotation , this.x , this.y] ;
                    //last three entries are just to track staleness
 
-    var i = mtrix.length - 1;
-    while ( mtrix[ i ] == LzView.__LZlastmtrix[ i ] ){
+    // Validate cache, if we have one
+    if (this.__LZstoredbounds) {
+      var i = mtrix.length - 1;
+      while ( mtrix[ i ] == LzView.__LZlastmtrix[ i ] ){
         if ( i-- == 0 ) {
-            return this.__LZstoredbounds;
+          return this.__LZstoredbounds;
         }
-    };
-
+      }
+    }
 
     var o = {};
 

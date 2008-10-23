@@ -28,6 +28,11 @@
         <attribute name="value" value="null" 
                    setter="this.setValue(value,false)" />
 
+        <!--- The type of value of the baseformitem. Default is none,
+             which will attempt to heuristicate the type from the
+             value. -->
+        <attribute name="type" value="" type="string" />
+
         <!--- Event sent when baseformitem is changed. Only sent once when true
               or once when false. -->
         <event name="onchanged" />
@@ -140,17 +145,18 @@
             ]]>
         </method>
 
-        <!--- This implementation sets the applied data as an initalizater
+        <!--- This implementation sets the applied data (a String) as an initalizater
               value. This is run by a datapath to get the data from a data node.
-              @param Any d: the data value to set in this object. -->
+              @param String d: the string representation of the data value to set in this object. -->
         <method name="applyData" args="d">
-            this.setValue(d,true);
+          this.setValue(this.acceptValue(this.type, d), true);
         </method>
 
-        <!--- This implementation returns the value. This is run by a datapath
-              to set the value to a data node. -->
+        <!--- This implementation returns the value as a String. This is run by a datapath
+              to set the value to a data node.
+              @return String: the representation of the data as a string -->
         <method name="updateData">
-            return this.value;
+          return this.presentAttribute('value', this.type);
         </method>
 
         <!--- Finds a baseform ancestor

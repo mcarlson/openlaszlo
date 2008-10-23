@@ -395,19 +395,21 @@
             ]]>
         </method>
 
-        <!--- when using databinding, this will interpret data supplied to this
-              component as the value for the component
-              @keywords private -->
-        <method name="applyData" args="d">
-            this.setAttribute( 'value' , d );
-        </method>
+        <!--- TODO: [2008-10-22 ptw] There probably should be an
+             override of applyData that worries about the
+             representation of a multiple selection, but that was not
+             there when I updated this to use accept/present, and the
+             existing override was just a duplicate of the inherited
+             method, so I removed it. -->
 
         <!--- this method puts data back into a the datamapped node when
               updateData is called
+              TODO: [2008-10-22 ptw] As above, there is no provision for presenting a multiple selection
               @keywords private -->
         <method name="updateData">
-            return this.getValue();
+          return this.presentValue(this.type, this.getValue());
         </method>
+
         <doc>
             <tag name="shortdesc"><text>An abstract class which all list components should subclass.</text></tag>
           <text>
