@@ -1,0 +1,328 @@
+<library>
+  
+  <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+  * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+  * Use is subject to license terms.                                            *
+  * X_LZ_COPYRIGHT_END ****************************************************** -->
+
+  <!-- Description:
+       The lfc's javadoc drives the creation of lfc.lzx (using js2doc.SchemaBuilder)
+       This file contains items that are not declared in the lfc javadoc, these
+       are merged into the corresponding position in lfc.lzx .
+       Any <insert> tag here inserts the elements underneath it at the
+       corresponding place - any item immediately under an <insert> cannot
+       match its 'name' attribute with an item already in lfc.lzx.
+       Items underneath <replace> tag must match corresponding names in lfc.lzx,
+       and the contents replaced what would have been present (from the lfc javadoc).
+       Any <delete> tag removes the item(s) from lfc.lzx.
+       Any other tag must exactly correspond to the same tag generated in lfc.lzx and
+       subnodes will be merged at that position using the above rules.
+  -->
+  
+  <!-- -=-=-=-=-=-=-=-=-  insert additional classes -=-=-=-=-=-=-=-=- -->
+  <insert>
+
+    <interface name="Instance" extends="Object">
+      <method name="validateClassStructure" final="true"/>
+      <method name="initialize" />
+      <method name="nextMethod" final="true"/>
+      <method name="addProperty"/><!-- cannot be final because node overrides it -->
+      <method name="constructor" final="true"/>
+      <method name="hasOwnProperty" final="true"/>
+      <method name="isPropertyEnumerable" final="true"/>
+      <method name="isPrototypeOf" final="true"/>
+      <method name="toLocaleString" final="true"/>
+      <method name="prototype" final="true"/>
+      <method name="apply" final="true"/> 
+      <method name="call" final="true"/>
+    </interface>
+
+    <interface name="library" extends="canvas">
+      <attribute name="href" type="string"/>
+      <attribute name="includes" type="string"/>
+      <attribute name="proxied" type="inheritableBoolean" value="inherit"/>
+      <!-- @keywords deprecated -->
+      <attribute name="validate" type="boolean" value="true"/>
+    </interface>
+
+    <interface name="class" extends="node">
+      <attribute name="extends" type="token" value="view"/>
+      <!-- The comma-separated list of mixins, applied in order -->
+      <attribute name="with" type="string"/>
+    </interface>
+
+    <interface name="interface" extends="node">
+      <attribute name="extends" type="token" value="view"/>
+      <!-- The comma-separated list of mixins, applied in order -->
+      <attribute name="with" type="string"/>
+    </interface>
+
+    <interface name="audio" extends="Instance">
+      <!-- The path of a file that contains the source for this object. -->
+      <attribute name="src" type="string"/>
+      <attribute name="id" type="ID"/>
+      <attribute name="name" type="token"/>
+    </interface>
+
+    <interface name="resource" extends="Instance">
+      <attribute name="src" type="string"/>
+      <attribute name="name" type="token"/>
+      <containsElements>
+        <element>frame</element>
+      </containsElements>
+    </interface>
+
+    <interface name="splash" extends="Instance">
+      <attribute name="hideafterinit" type= "boolean" />
+      <attribute name="persistent" type= "boolean" />
+      <containsElements>
+        <element>splashview</element>
+        <element>preloadresource</element>
+      </containsElements>
+    </interface>
+    
+    <interface name="splashview" extends="Instance">
+      <attribute name="name" type="token" />
+      <attribute name="resource" type="string" />
+      <attribute name="ratio" type="string" />
+      <attribute name="x" type="number" value="0"/>
+      <attribute name="y" type="number" value="0"/>
+      <attribute name="center" type="boolean" value="false"/>
+    </interface>
+    
+    <interface name="include" extends="Instance">
+      <attribute name="href" type="string"/>
+      <attribute name="type" type="string" value="xml" enum="text|xml"/>
+    </interface>
+    
+    <interface name="stylesheet" extends="Instance">
+      <!-- The pathname of a css file.  This pathname is resolved
+           relative to the file that contains the <tagname>stylesheet</tagname>
+           element.
+        -->
+      <attribute name="src" type="string" />
+    </interface>
+    
+    <interface name="preloadresource" extends="view">
+      <attribute name="name" type="token" />
+      <attribute name="ratio" type="string" />
+      <attribute name="synctoload" type="boolean" />
+      <attribute name="hideafterinit" type="boolean" />
+      <attribute name="center" type="boolean" />
+      <attribute name="synchronized" type="boolean" />
+      <attribute name="lastframe" type="number"  />
+      <attribute name="resource" type="string" />
+      <attribute name="resourcename" type="string" />
+    </interface>
+
+    <!-- Security -->
+    <interface name="security" extends="Instance">
+      <containsElements>
+        <element>allow</element>
+        <element>deny</element>
+      </containsElements>
+    </interface>
+    
+    <!-- debugger -->
+    <interface name="debug">
+      <attribute name="showInternalProperties" type="boolean" value="false"/>
+    </interface>
+
+  </insert>
+
+  <!-- -=-=-=-=-=-=-=-=-  modify existing classes -=-=-=-=-=-=-=-=- -->
+
+  <interface name="node" extends="Instance">
+    <!-- was type=token -->
+    <replace>
+      <attribute name="defaultplacement" type="string"/>
+    </replace>
+    <insert>
+      <attribute name="$lzc$bind_id" type="expression" />
+      <!-- The name of a variable that will be set to this object when the
+           application is started.  If this element is directly within a @e{canvas}
+           or @e{library} element, the global variable and the canvas
+           property with this name will be set to this object.  If this
+           element is within another object, that object's property with
+           this name will be set to this object.
+        -->
+      <attribute name="$delegates" type="expression"/>
+      <attribute name="$lzc$bind_name" type="expression" />
+      <containsElements>
+        <element>attribute</element>
+        <element>event</element>
+        <element>method</element>
+        <element>setter</element>
+        <element>handler</element>
+        <element>doc</element>
+        <element>node</element>
+        <element>passthrough</element>
+      </containsElements>
+    </insert>
+  </interface>
+  
+  <interface name="font" extends="Instance">
+    <insert>
+      <containsElements>
+        <element>face</element>
+      </containsElements>
+    </insert>
+  </interface>
+
+  <interface name="command" extends="node">
+    <insert>
+      <attribute name="key" value="expression"/>
+    </insert>
+  </interface>
+
+  <interface extends="view" name="canvas">
+    <insert>
+      <attribute name="debug" type="boolean" value="false"/>
+      <attribute name="title" type="string" value="OpenLaszlo Application"/>
+      <attribute name="id" type="ID"/>
+      <!-- If true, enable history feature -->
+      <attribute name="history" type="boolean" value="false"/>
+      <containsElements>
+        <element>view</element>
+        <element>script</element>
+        <element>stylesheet</element>
+        <element>audio</element>
+        <element>resource</element>
+        <element>font</element>
+        <element>datapointer</element>
+        <element>dataset</element>
+        <element>debugger</element>
+        <element>command</element>
+        <element>class</element>
+        <element>trait</element>
+        <element>include</element>
+        <element>library</element>
+        <element>layout</element>
+        <element>security</element>
+        <element>attribute</element>
+        <element>event</element>
+        <element>method</element>
+        <element>handler</element>
+        <element>doc</element>
+        <element>node</element>
+        <element>splash</element>
+        <element>contextmenu</element>
+      </containsElements>
+    </insert>
+  </interface>
+
+  <interface name="view" extends="node">
+    <insert>
+      <containsElements>
+        <element>dataselectionmanager</element>
+        <element>selectionmanager</element>
+        <element>text</element>
+        <element>inputtext</element>
+        <element>node</element>
+        <element>contextmenu</element>
+      </containsElements>
+      <!-- TODO: [2008-10-21 dda]: we are missing some events from view,
+           they are declared private, but were added to lfc.lzx.  Why? -->
+      <event name="onmousetrackover"/>
+      <event name="onmousetrackup"/>
+      <event name="onmousetrackout"/>
+    </insert>
+  </interface>
+  
+  <interface name="animatorgroup" extends="node">
+    <insert>
+      <containsElements>
+        <element>animator</element>
+      </containsElements>
+    </insert>
+  </interface>
+  
+  <interface name="text">
+    <insert>
+      <!-- TODO: There exist a private LzText.setEmbedFonts(), maybe needs to be public? -->
+      <attribute name="embedfonts" type="boolean" />
+      <containsElements>
+        <element>pre</element>
+        <element>a</element>
+        <element>b</element>
+        <element>li</element>
+        <element>img</element>
+        <element>font</element>
+        <element>i</element>
+        <element>p</element>
+        <element>br</element>
+        <element>u</element>
+      </containsElements>
+    </insert>
+  </interface>
+
+  
+  <!-- TODO [hqm 2007] We used to document the dialect of HTML we
+       support in <text> elements here, need to do that elsewhere.
+    -->
+  
+  <interface name="dataset" extends="node">
+    <insert>
+      <!-- TODO: this is marked *private* in the javadoc! -->
+      <attribute name="queuerequests" type="boolean"  value="false"/>
+      <containsElements>
+        <element>data</element>
+      </containsElements>
+    </insert>
+  </interface>
+  
+<!--
+TODO make sure NodeModel checks for these and only these attributes, and warns
+if any other is used
+
+element attribute " 
+        [lza:modifiers="final"]
+        attribute name "token" 
+      (attribute value "string" 
+            [lza:since="1.1"]
+             ([a:defaultValue="immediately"]
+               attribute when " "immediately" | "once" | "always" "
+             )
+       )
+      [a:defaultValue="expression"
+        lza:modifiers="final"]
+       attribute type ""boolean" | "color" | "expression" | "number" | "size" |
+                       "string" | "text" | "html""
+      [a:defaultValue="false"] 
+       attribute required "boolean" 
+      [lza:since="1.1"]
+       attribute setter "script"
+     "
+
+-->
+
+
+<!--   apply is listed as a final method in Instance,
+       and here in state it is unfortunately
+       both a setter attribute AND a method. No
+       real nice way to represent that.
+-->
+
+  <interface name="state" extends="node">
+    <delete>
+      <method name="apply"/>
+    </delete>
+    <insert>
+      <attribute name="apply" final="false" />
+    </insert>
+  </interface>
+
+  
+  <!--
+      Application Configuration
+    -->
+
+  <interface name="script" extends="node">
+    <insert>
+      <attribute name="type" type="string" />
+      <attribute name="when" type="string" enum="normal|immediate" value="normal"/>
+      <attribute name="src" type="string"/>
+    </insert>
+  </interface>
+  
+</library>

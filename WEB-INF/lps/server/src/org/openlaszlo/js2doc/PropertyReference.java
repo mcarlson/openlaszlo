@@ -135,7 +135,7 @@ public class PropertyReference {
     public String derivePropertyID() {
         if (this.isValid() == false) {
             logger.warning("propertyName: " + this.propertyName);
-            throw new InternalError("Can't derive ID of invalid property", null);
+            throw new InternalError("Can't derive ID of invalid property", (SimpleNode)null);
         }
         return JS2DocUtils.derivePropertyID(this.propertyOwner, this.propertyName, this.state);
     }

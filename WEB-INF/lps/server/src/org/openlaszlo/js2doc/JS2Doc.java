@@ -823,6 +823,7 @@ public class JS2Doc {
     
     static class XMLGenerateOptions {
         boolean createSchema = false;
+        String mergeSchema = null;
     }
 
     static public Document toXML(String inputString, 
@@ -884,10 +885,27 @@ public class JS2Doc {
             
             Element schemaRoot = null;
             if (xmlOptions.createSchema) {
-                org.w3c.dom.Document schemaDoc = factory.newDocumentBuilder().newDocument();
+                javax.xml.parsers.DocumentBuilder builder = factory.newDocumentBuilder();
+                org.w3c.dom.Document schemaDoc = builder.newDocument();
                 org.w3c.dom.Element libraryNode = schemaDoc.createElement("library");
                 schemaDoc.appendChild(libraryNode);
-                (new SchemaBuilder(docRoot)).build(libraryNode);
+
+                SchemaBuilder schemaBuilder = new SchemaBuilder(docRoot);
+                String schemaPath = xmlOptions.mergeSchema;
+                if (schemaPath != null) {
+                    Element schemaElement;
+                    try {
+                        schemaElement = builder.parse(schemaPath).getDocumentElement();
+                    }
+                    catch (org.xml.sax.SAXException e) {
+                        throw new RuntimeException(schemaPath + ": exception parsing schema file to merge", e);
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException(schemaPath + ": exception parsing schema file to merge", e);
+                    }
+                    schemaBuilder.addSchemaToMerge(schemaPath, schemaElement);
+                }
+                schemaBuilder.build(libraryNode);
 
                 // Emit the schema document instead of the original js2doc doc
                 doc = schemaDoc;

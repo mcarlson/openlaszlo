@@ -32,6 +32,8 @@ public class Main {
         "  Reprocess comments",
         "--schema",
         "  Produce schema file for lfc.lzx",
+        "--merge additionalschema",
+        "  Merge the schema file (used with --schema)",
         "--help",
         "  Prints this message.",
         "",
@@ -133,6 +135,12 @@ public class Main {
                         badform = true;
                 } else if (arg.equals("--schema")) {
                     xmlOptions.createSchema = true;
+                } else if (arg.equals("--merge")) {
+                    if (i < args.length) {
+                        i++;
+                        xmlOptions.mergeSchema = args[i];
+                    } else
+                        badform = true;
                 } else if (arg.equals("--help")) {
                     for (int j = 0; j < USAGE.length; j++) {
                         System.err.println(USAGE[j]);

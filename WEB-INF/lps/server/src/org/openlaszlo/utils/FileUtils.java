@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -144,7 +144,7 @@ public abstract class FileUtils {
         Perl5Compiler compiler = new Perl5Compiler();
         Pattern tmp = null;
         try {
-            tmp = compiler.compile("[^<]*\\s*<[?]xml\\s+[^>]*encoding=[\"'](.*)['\"][^>]*?>", Perl5Compiler.READ_ONLY_MASK);
+            tmp = compiler.compile("[^<]*\\s*<[?]xml\\s+[^>]*encoding=[\"']([^'\"]*)['\"][^>]*?>", Perl5Compiler.READ_ONLY_MASK);
         } catch( MalformedPatternException failed ) {
             System.err.println( failed );
             System.exit( 0 );

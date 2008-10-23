@@ -272,7 +272,7 @@ public class ReprocessComments {
                     } else {
                         org.w3c.dom.Element childElt = JS2DocUtils.findFirstChildElementWithAttribute(functionNode, "parameter", "name", paramName);
                         if (childElt == null) {
-                            logger.warning("Couldn't find parameter named " + paramName);
+                            logger.warning("Couldn't find parameter named " + paramName + " in " + ((Element)functionNode.getParentNode()).getAttribute("id"));
                         } else {
                             if (paramType != null) {
                                 // TODO [jgrandy 12/1/2006] check if @type already set

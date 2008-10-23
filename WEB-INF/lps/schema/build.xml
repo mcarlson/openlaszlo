@@ -15,13 +15,15 @@
   <target name="init">
     <tstamp/>
     <property name="build" value="./build"/>
-    <property name="build.dir" value="${LPS_HOME}/WEB-INF/lps/schema/build"/>
+    <property name="build.dir" value="${schema.dir}/build"/>
     <property name="rnc" value="lzx.rnc"/>
     <property name="docrng" value="lzxdoc.rng"/>
     <property name="rng" value="lzx.rng"/>
     <property name="xsd" value="lzx.xsd"/>
-    <property name="lfc.schema.file" value="lfc-new.lzx"/>
+    <property name="lfc.schema.file" value="lfc.lzx"/>
+    <property name="lfc.undeclared.schema.file" value="lfc-undeclared.lzx"/>
     <property name="html" value="lzx-reference.html"/>
+    <property name="schema.dir" value="${LPS_HOME}/WEB-INF/lps/schema"/>
     <property name="server.dir" value="${LPS_HOME}/WEB-INF/lps/server" />
     <property name="lfc.src.dir" value="${LPS_HOME}/WEB-INF/lps/lfc" />
     <property name="js2doc.src.dir" value="${LPS_HOME}/WEB-INF/lps/server/src/org/openlaszlo/js2doc/" />
@@ -74,16 +76,17 @@
       <uptodate property="lfc.schema.uptodate" targetfile="${lfc.schema.file}">
         <srcfiles dir="${lfc.src.dir}" includes="**/*" />
         <srcfiles dir="${js2doc.src.dir}" includes="**/*" />
+        <srcfiles file="${lfc.undeclared.schema.file}"/>
       </uptodate>
     </condition>
   </target>
 
   <!-- The lfc.schema target is called from lfc/build.xml -->
-  <target name="lfc.schema" description="build the lfc-new.lzx schema description"
+  <target name="lfc.schema" description="build the lfc.lzx schema description"
           depends="lfc.schema.uptodate" unless="uptodate">
-    <property name="js2doc.args" value="--schema --out ${build.dir}/lfc-new.xml --dir ${build.dir} ${lfc.src.dir}/LaszloLibrary.lzs" />
+    <property name="js2doc.args" value="--schema --merge ${schema.dir}/${lfc.undeclared.schema.file} --out ${build.dir}/lfc.xml --dir ${build.dir} ${lfc.src.dir}/LaszloLibrary.lzs" />
     <ant dir="${server.dir}" target="js2doc.schema" />
-    <copy file="${build.dir}/lfc-new.xml" tofile="${lfc.schema.file}"/>
+    <copy file="${build.dir}/lfc.xml" tofile="${lfc.schema.file}"/>
 
   </target>
 

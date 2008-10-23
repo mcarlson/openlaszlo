@@ -43,6 +43,14 @@ public class JS2DocUtils {
         public InternalError(Exception e) {
             super(e);
         }
+
+        /** Constructs an instance.
+         * @param message a string
+         * @param e an exception
+         */
+        public InternalError(String message, Exception e) {
+            super(message, e);
+        }
     }
 
 
