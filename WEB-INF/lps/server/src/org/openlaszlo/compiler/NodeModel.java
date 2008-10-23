@@ -705,6 +705,12 @@ public class NodeModel implements Cloneable {
 //             "}\n";
 //     }
 
+    /**
+     * Builds the body of a binder method for binding a global value to
+     * an instance.  NOTE: [2008-10-21 ptw] In swf9, we shadow these
+     * bindings in a table `global` to support the `globalValue` API for
+     * looking up global ID's at runtime.
+     */
     private static String buildIdBinderBody (String symbol, boolean setId, boolean debug) {
         return
             "if ($lzc$bind) {\n" +
@@ -716,8 +722,10 @@ public class NodeModel implements Cloneable {
              "") +
             (setId ? ("  $lzc$node.id = " + ScriptCompiler.quote(symbol) + ";\n") : "") +
             "  " + symbol + " = $lzc$node;\n" +
+            "  if ($swf9) { global[" + ScriptCompiler.quote(symbol) + "] = $lzc$node; }\n" +
             "} else if (" + symbol + " === $lzc$node) {\n" +
             "  " + symbol + " = null;\n" +
+            "  if ($swf9) { global[" + ScriptCompiler.quote(symbol) + "] = null; }\n" +
             (setId ? ("  $lzc$node.id = null;\n") : "") +
             "}\n";
     }

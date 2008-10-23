@@ -182,7 +182,7 @@ public dynamic class LzNode extends LzEventable {
     var bindid = this.$lzc$bind_id;
     if (bindid) { bindid.call(null, this) };
     // This will only exist if you were lexically on the canvas,
-    // in which case your name is also an it
+    // in which case your name is also an ID
     var bindname = this.$lzc$bind_name;
     if (bindname) { bindname.call(null, this) };
 
@@ -1565,53 +1565,86 @@ public dynamic class LzNode extends LzEventable {
 
   /**
    * Sets the name of the node.
+   *
+   * If the name is a non-empty string, will bind that name in the
+   * parent and immediateparent to this node, removing previous
+   * bindings (if any).  If this node is a child of the canvas, and
+   * the name is changed, the previous global binding (if any) will be
+   * removed.
+   *
    * @access private
    * @param String name: A string to use for the name of this node.
    */
-  function $lzc$set_name ( name ){
-    if ((typeof(name) == 'string') && name.length) {
+  function $lzc$set_name ( name:String ){
+    if ($swf9) {
+      // Don't need runtime type-check
+    } else if (! ((name === null) || (typeof name == 'string'))) {
       if ($debug) {
-        if (this.parent && this.parent[name] && this.parent[name] !== this) {
-          Debug.warn('Redefining %w.%s from %w to %w',
-                     this.parent, name, this.parent[name], this);
+        Debug.error('Invalid name %#w for %w', name, this);
+      }
+      return;
+    }
+
+    var old = this.name;
+    var p = this.parent;
+    var ip = this.immediateparent;
+
+    // If the name is changing, clean up any old bindings
+    if (old && (old != name)) {
+      // Adjust global binding (if any)
+      if (this.$lzc$bind_name) {
+        // If this has a global name binder (is on the canvas) and
+        // we are changing the name, unbind the global name
+        if (globalValue(old) === this) {
+          this.$lzc$bind_name.call(null, this, false);
         }
       }
-      if (this.parent) this.parent[ name ] = this;
-      //unless placement is used, this is called twice, but it's faster
-      //than checking to see if parent == immediateparent
-      //this supports name tunneling.
-      if ($debug) {
-        if (this.immediateparent && this.immediateparent[name] && this.immediateparent[name] !== this) {
-          Debug.warn('Redefining %w.%s from %w to %w',
-                     this.immediateparent, name, this.immediateparent[name], this);
-        }
+      // Adjust parent binding
+      if (p) {
+        if (old && (p[old] === this)) { p[old] = null; }
       }
-      if (this.immediateparent) this.immediateparent[  name ] = this;
-      this.name = name;
-      if ( this.parent === canvas ){
-        //it's an id
-        if ($debug) {
-          if (global[name] && global[name] !== this) {
-            Debug.warn('Redefining #%s from %w to %w',
-                       name, global[name], this);
-          }
-        }
-        // admit it!  the name is also an id in this case
-        if (! this.hasOwnProperty('id')) {
-          this.id = name;
-        }
-        // TODO: [2006-03-22 ptw] Should id's really go in the user/canvas module?
-        global[ name ] = this;
-      }
-    } else {
-      if ($debug) {
-        // Name is permitted to be null or undefined, meaning
-        // "don't name me"
-        if (name) {
-          Debug.error('Invalid name %w for %w', name, this);
-        }
+      // Adjust immediateparent binding
+      if (ip) {
+        if (old && (ip[old] === this)) { ip[old] = null; }
       }
     }
+
+    // If there is a new name, bind it
+    if (name && name.length) {
+      // Adjust parent binding
+      // NOTE [2008-10-21 ptw] This creates too much noise, because
+      // local datasets cheat in how they are made global.  We already
+      // don't warn about dynamically creating a node with an ID.
+//       if ($debug) {
+//         // We can't dynamically bind global names, so warn
+//         if ((p === canvas) && (globalValue(name) !== this)) {
+//           Debug.warn('Dynamically defining #%s as %w (because it is a named child of the canvas) is no longer supported',
+//                      name, this);
+//         }
+//       }
+      if ($debug) {
+        if (p && p[name] && p[name] !== this) {
+          Debug.warn('Redefining %w.%s from %w to %w',
+                     p, name, p[name], this);
+        }
+      }
+      if (p) {
+        p[ name ] = this;
+      }
+      // Adjust immediateparent binding
+      if ($debug) {
+        if (ip && ip[name] && ip[name] !== this) {
+          Debug.warn('Redefining %w.%s from %w to %w',
+                     ip, name, ip[name], this);
+        }
+      }
+      if (ip) {
+        ip[ name ] = this;
+      }
+    }
+
+    // Finally, update ourselves
+    this.name = name;
   }
 
   /**

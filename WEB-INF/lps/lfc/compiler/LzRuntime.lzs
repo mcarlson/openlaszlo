@@ -56,6 +56,11 @@ $modules.user = $modules.lz;
  * TODO [2006-03-12 ptw] if the LFC is shared this needs to be multiplexed
  */
 if ($swf9) {
+  // Shadow table `global`, used to support `globalValue`.  Cf.,
+  // compiler.NodeModel.buildIdBinderBody
+  // TODO: [2008-10-21 ptw] Use flex.utils.Dictionary if you can
+  // figure out the appropriate incantation
+  var global = {};
 } else {
 var global = $modules.user;
 if ($debug) {
@@ -92,8 +97,7 @@ var encodeURIComponent = escape;
  * put it at the top level in the swf9 intermediate .as files, outside
  * of the LFCApplication.
  */
-
-var  globalValue = function (name) {
+var globalValue = function (name:String) {
   // Semi-kludge:  We name our tag classes <tagname>.  Since <> are
   // not valid symbol constituents, there is no confusion here
   if (name.charAt(0) == '<' && name.charAt(name.length-1) == '>') {
@@ -102,4 +106,5 @@ var  globalValue = function (name) {
   // TODO: [2008-09-16 ptw] This does not work for built-in classes in
   // swf9 :(
   return this[name] || global[name];
-}
+};
+

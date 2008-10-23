@@ -352,7 +352,7 @@ override function construct (parent, args) {
   * Sets the name of this datasource - used only by initializer
   * @access private
   */
-override function $lzc$set_name(name) {
+override function $lzc$set_name(name:String) {
     super.$lzc$set_name.apply(this, arguments);
 
     // @devnote: Name is permitted to be null or undefined, meaning

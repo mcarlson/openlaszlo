@@ -4,8 +4,6 @@
   */
 
 
-var global:* = {};
-
 var canvas:LzCanvas;
 
 
