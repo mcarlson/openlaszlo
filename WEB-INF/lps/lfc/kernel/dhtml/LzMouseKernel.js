@@ -175,6 +175,12 @@ var LzMouseKernel = {
         }
     }
     ,setGlobalClickable: function (isclickable){
+        if (! isclickable) {
+            // reset any inputtexts that are showing so they don't disappear - see LPP-7190
+            if (LzInputTextSprite.prototype.__lastshown) {
+                LzInputTextSprite.prototype.__lastshown.__hide();
+            }
+        }
         var el = document.getElementById('lzcanvasclickdiv');
         el.style.display = isclickable ? 'block' : 'none';
     }

@@ -77,7 +77,7 @@ lz.embed.iframemanager.__destroy = function(id) {
         if (this['ontarget']) this.ontarget.sendEvent(t);
     </setter>
 
-    <attribute name="visible" type="expression" value="true"/>
+    <attribute name="visible" type="boolean" value="true"/>
     <setter name="visible" args="v">
         this.visible = v;
         if (this['iframeid']) lz.embed.iframemanager.setVisible(this.iframeid, v);
