@@ -108,19 +108,35 @@
         <method name="clearText" >
             this.setAttribute('text', "");
         </method>
-
+        
         <!-- Sets the maxmimum number of characters which can be entered. -->
         <method name="setMaxlength" args="n">
+          Debug.warn("edittext.setMaxlength is deprecated. Use setAttribute instead");
           this.setAttribute('maxlength', n);
-          this.field.setAttribute('maxlength', n);
         </method>
 
 
-        <!-- Set the characters which can be entered into a text field. -->
+        <!-- Sets the characters which can be entered into a text field. -->
         <method name="setPattern" args="r">
+          Debug.warn("edittext.setPattern is deprecated. Use setAttribute instead");
           this.setAttribute('pattern', r);
-          field.setAttribute('pattern', r);
         </method>
+
+        <!--- @keywords private -->
+        <setter name="maxlength" args="n">
+            if (this['maxlength'] === n) return;
+            this.maxlength = n;
+            if (this.isinited) field.setAttribute('maxlength', n);
+            if (this['onmaxlength']) this.onmaxlength.sendEvent(n);
+        </setter> 
+
+        <!--- @keywords private -->
+        <setter name="pattern" args="n">
+            if (this['pattern'] === n) return;
+            this.pattern = n;
+            if (this.isinited) field.setAttribute('pattern', n);
+            if (this['onpattern']) this.onpattern.sendEvent(n);
+        </setter>
 
         <method name="setSelection" args="start,end=null">
             field.setSelection(start, end);
