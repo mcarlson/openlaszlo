@@ -131,7 +131,7 @@
                 if (this.name == null) {
                     this.name = "_default";
                 }
-                if (!('rtmpconnections' in canvas) || null == canvas.rtmpconnections ) {
+                if (!canvas['rtmpconnections'] || null == canvas.rtmpconnections ) {
                     canvas.rtmpconnections = new Array();
                 }
                 
