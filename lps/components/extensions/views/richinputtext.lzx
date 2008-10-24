@@ -128,7 +128,7 @@ class $lzc$class_richinputtext extends LzInputText {
     if ($swf8) {} else { return;}
 
     this.defaultformat = fmt;
-    var flashformat = new lz.textformat();
+    var flashformat = new TextFormat();
     for (var i in fmt) {
       flashformat[i] = fmt[i];
     }
@@ -145,7 +145,7 @@ class $lzc$class_richinputtext extends LzInputText {
   function _forceResetDefaultFormat ( ){
     if ($swf8) {} else { return;}
 
-    var flashformat = new lz.textformat();
+    var flashformat = new TextFormat();
     for (var i in this.defaultformat) {
       flashformat[i] = this.defaultformat[i];
     }
@@ -223,7 +223,7 @@ class $lzc$class_richinputtext extends LzInputText {
     if ($swf8) {} else { return;}
 
     // Start with a TextFormat object with no attributes set
-    var format = new lz.textformat();
+    var format = new TextFormat();
 
     // Change the text format based on the format passed in.
     format[attr] = val;
@@ -278,7 +278,7 @@ class $lzc$class_richinputtext extends LzInputText {
   function setTextFormat(fmt, beginindex, endindex) {
     if ($swf8) {} else { return;}
 
-    var flashformat = new lz.textformat();
+    var flashformat = new TextFormat();
 
     for (var i in fmt) {
       flashformat[i] = fmt[i];
@@ -307,7 +307,7 @@ class $lzc$class_richinputtext extends LzInputText {
     // TextFormat object, and *only* set the particular attribute we are
     // toggling. Otherwise, the font may change unpredictably.
     var format = this.sprite.__LZtextclip.getTextFormat(beginindex, endindex);
-    var newFormat = new lz.textformat();
+    var newFormat = new TextFormat();
     switch (attr) {
       case "bold":
         newFormat.bold =  !format.bold;
