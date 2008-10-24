@@ -82,7 +82,8 @@ you vary their opacity. Here is a summary of the differences:
 <para>
 By default, OpenLaszlo applications use the device fonts.
 </para>
-
+   <note>The Adobe Flash API to measure text width is reporting an incorrect value: there's no way for us to know what the 
+      real width of the text is. As a result, you may see some clipping of text, as in the italicized fonts in the following code example.</note>
 <example role="live-example">
    <title>Using device fonts</title>
    <programlisting language="lzx">
