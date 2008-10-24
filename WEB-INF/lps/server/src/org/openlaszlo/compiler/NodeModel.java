@@ -1450,7 +1450,7 @@ solution =
         String args = CompilerUtils.attributeLocationDirective(element, "args") +
             XMLUtils.getAttributeValue(element, "args", "");
         String body = element.getText();
-        String returnType = element.getAttributeValue("type");
+        String returnType = element.getAttributeValue("returns");
 
         if ((name == null || !ScriptCompiler.isIdentifier(name)) &&
             (event == null || !ScriptCompiler.isIdentifier(event))) {

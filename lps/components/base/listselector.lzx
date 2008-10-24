@@ -14,11 +14,11 @@
         <!--- @keywords private -->
         <attribute name="_forcemulti" value="false" type="boolean"/>
 
-        <method name="isRangeSelect" args="item" override="true" type="Boolean"><![CDATA[
+        <method name="isRangeSelect" args="item" override="true" returns="Boolean"><![CDATA[
             return this.multiselect && super.isRangeSelect(item);
         ]]></method>
 
-        <method name="isMultiSelect" args="item" override="true" type="Boolean"><![CDATA[
+        <method name="isMultiSelect" args="item" override="true" returns="Boolean"><![CDATA[
             return this._forcemulti || (this.multiselect && super.isMultiSelect(item));
         ]]></method>
 
