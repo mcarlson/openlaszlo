@@ -77,7 +77,7 @@
    *
    * @ access private
    */
-  function makeObjectLink (rep:String, id, attrs=null):String {};
+  function makeObjectLink (rep:String, id, attrs=null):String { return undefined; };
   /**
    * Evaluate an expression and call Debug.displayResult on the result
    * (or Debug.error if the evaluation causes an error).

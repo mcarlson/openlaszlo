@@ -396,6 +396,7 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
                 }
             }
         }
+        return false; // TODO: [20081020 dda] review this return value change from LPP-7031
     }
 
     /**

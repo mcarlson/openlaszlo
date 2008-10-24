@@ -362,7 +362,7 @@ function setXPath ( p:String ) :Boolean? {
         this.parsedPath = null;
         // track if there's an ownerDocument
         if ( this.p ) this.__LZsetTracking( this.p.ownerDocument );
-        return;
+        return false;
     }
 
     this.xpath = p;
@@ -388,7 +388,7 @@ function setXPath ( p:String ) :Boolean? {
 /** @access private */
 function runXPath () :Boolean { 
     if ( !this.parsedPath ) {
-        return;
+        return false;
     }
 
     var newc /*:LzDataNodeMixin*/ = null;
@@ -469,7 +469,7 @@ function __LZHandleMultiNodes ( n:Array ) :LzReplicationManager {
     }
     this.__LZHandleNoNodes();
     
-    return void(0);
+    return null;
 }
 
 /** @access private */
@@ -601,18 +601,19 @@ function getLocalDataContext(pp:Array) :LzDataset {
         }
         if (n != null && !(n is LzDataset) && n['localdata'] is LzDataset) {
             n = n['localdata']
-            return n;
+              return (n cast LzDataset);
         }
     }
 
     if (n != null && n is LzDataset) {
-        return n;
+        return (n cast LzDataset);
     } else {
         if ($debug) {
             Debug.warn('local dataset "%w" not found in %w', pp, this.parent);
         }
         /* Could register for node creation if datapath is created before dataset
         */
+        return null;
     }
 }
 
@@ -941,7 +942,7 @@ function getNodeName () :String {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
         }
-        return;
+        return null;
     }
     return this.p.nodeName;
 }
@@ -974,11 +975,12 @@ function getNodeAttributes () :Object {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
         }
-        return;
+        return null;
     }
     if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         return this.p.attributes;
     }
+    return null;
 }
 
 /**
@@ -991,11 +993,12 @@ function getNodeAttribute (name:String) :String {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
         }
-        return;
+        return null;
     }
     if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         return this.p.attributes[ name ];
     }
+    return null;
 }
 
 /**
@@ -1044,11 +1047,12 @@ function getNodeText () :String {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
         }
-        return;
+        return null;
     }
     if (this.p.nodeType != LzDataElement.TEXT_NODE) {
         return this.p.__LZgetText();
     }
+    return null;
 }
 
 /**
@@ -1112,7 +1116,7 @@ function addNode (name:String, text:String = null, attrs:Object = null) :LzDataE
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
         }
-        return;
+        return null;
     }
 
     var nn:LzDataElement = new LzDataElement( name , attrs );
@@ -1180,12 +1184,12 @@ function comparePointer (ptr:LzDatapointer) :Boolean {
   * @return LzDatapointer: A pointer to the new node
   */
 function addNodeFromPointer (dp:LzDatapointer) :LzDatapointer {
-    if ( ! dp.p ) return;
+    if ( ! dp.p ) return null;
     if ( ! this.p ) {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
         }
-        return;
+        return null;
     }
 
     var n/*:LzDataNodeMixin*/ = dp.p.cloneNode( true );
@@ -1305,7 +1309,7 @@ function serialize () :String {
         if ( $debug ) {
             Debug.info("%s: p is null in %s", arguments.callee, this);
         }
-        return;
+        return null;
     }
     return this.p.serialize();
 }
@@ -1317,6 +1321,7 @@ LzDatapointer.prototype._dbg_name = function () :String {
     if (this.p) {
         return this.p._dbg_name();
     }
+    return null;
 }
 }
 

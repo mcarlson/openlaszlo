@@ -139,7 +139,8 @@ override function construct ( odp , args ){
 
     this.cloneAttrs.options = cloneopt;
 
-    var v:LzView = this.getNewClone( true );
+    // TODO: [20081020 dda] LPP-7031 removed typing, attempts to fix for SWF9 using casts fails smokecheck in DHTML
+    var v/*:LzView*/ = this.getNewClone( true );
     this.cloneimmediateparent = v.immediateparent;
     
     if (this.initialnodes) {
@@ -277,7 +278,8 @@ override function __LZadjustVisibleClones (lastnodes:Array, newnodes:Boolean) :v
 
     for ( var i:int = 0; i < newlength; i++ ){
         //before the new beginning
-        var cl:LzView = null;
+        // TODO: [20081020 dda] LPP-7031 removed typing, attempts to fix for SWF9 using casts fails smokecheck in DHTML
+        var cl/*:LzView*/ = null;
         if ( i + offset < 0 ){
             //this comes before the old data window
             if ( newlength + offset < oldlength  && oldlength > 0){
@@ -330,7 +332,7 @@ override function __LZadjustVisibleClones (lastnodes:Array, newnodes:Boolean) :v
 /**
   * @access private
   */
-override function toString () :String {
+override function toString () /*:String*/ {
     return "Lazy clone manager in " + this.cloneimmediateparent;
 }
 
@@ -338,7 +340,8 @@ override function toString () :String {
  * @access private
  */
 override function getCloneForNode ( p:LzDataElement, dontmake:Boolean = false ) :LzNode {
-    var cl:LzView = (super.getCloneForNode( p ) cast LzView) || null;
+    // TODO: [20081020 dda] LPP-7031 removed typing, attempts to fix for SWF9 using casts fails smokecheck in DHTML
+    var cl/*:LzView*/ = (super.getCloneForNode( p ) cast LzView) || null;
     if ( !cl && !dontmake ){
         //even though we're going to return this to the pool immediately,
         //use the class API to get a clone

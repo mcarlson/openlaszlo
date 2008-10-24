@@ -568,7 +568,7 @@ function __LZupdateData (recursive:Boolean = false) :void {
 /**
   * @access private
   */
-override function toString() :String {
+override function toString() /*:String*/ {
     return "Datapath for " + this.immediateparent;
 }
 

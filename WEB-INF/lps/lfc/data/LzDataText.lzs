@@ -89,7 +89,7 @@ override public function serialize (len:Number = Infinity) :String {
 /**
   * @access private
   */
-override function toString () :String {
+ override function toString () /*:String*/ {
     //return this.serialize();
     return this.data;
 }

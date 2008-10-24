@@ -282,10 +282,10 @@ public class NodeModel implements Cloneable {
           if (! ("swf9".equals(env.getRuntime()))) {
             pragmas += "\n#pragma 'withThis'\n";
           }
-          binder = new Method(bindername, args, pragmas, body, srcloc);
+          binder = new Method(bindername, args, "", pragmas, body, srcloc, null);
       } else {
           pragmas += "\n#pragma 'withThis'\n";
-          binder = new Function(bindername, args, pragmas, body, srcloc);
+          binder = new Function(bindername, args, "", pragmas, body, srcloc);
       }
       return binder;
     }
@@ -303,10 +303,10 @@ public class NodeModel implements Cloneable {
           if (! ("swf9".equals(env.getRuntime()))) {
             pragmas += "\n#pragma 'withThis'\n";
           }
-          dependencies = new Method(dependenciesname, "", pragmas, body, srcloc);
+          dependencies = new Method(dependenciesname, "", "", pragmas, body, srcloc, null);
       } else {
           pragmas += "\n#pragma 'withThis'\n";
-          dependencies = new Function(dependenciesname, "", pragmas, body, srcloc);
+          dependencies = new Function(dependenciesname, "", "", pragmas, body, srcloc);
       }
       return dependencies;
     }
@@ -1397,10 +1397,10 @@ solution =
                 if (! ("swf9".equals(env.getRuntime()))) {
                   pragmas += "\n#pragma 'withThis'\n";
                 }
-                referencefn = new Method(referencename, "", pragmas, refbody, srcloc);
+                referencefn = new Method(referencename, "", "", pragmas, refbody, srcloc, null);
             } else {
                 pragmas += "\n#pragma 'withThis'\n";
-                referencefn = new Function(referencename, "", pragmas, refbody, srcloc);
+                referencefn = new Function(referencename, "", "", pragmas, refbody, srcloc);
             }
             // Add reference computation as a method (so it can have
             // 'this' references work)
@@ -1423,10 +1423,10 @@ solution =
                 if (! ("swf9".equals(env.getRuntime()))) {
                   pragmas += "\n#pragma 'withThis'\n";
                 }
-                fndef = new Method(method, args, pragmas, body, srcloc);
+                fndef = new Method(method, args, "", pragmas, body, srcloc, null);
             } else {
                 pragmas += "\n#pragma 'withThis'\n";
-                fndef = new Function(method, args, pragmas, body, srcloc);
+                fndef = new Function(method, args, "", pragmas, body, srcloc);
             }
             // Add handler as a method
             addProperty(method, fndef, ALLOCATION_INSTANCE, element);
@@ -1450,6 +1450,7 @@ solution =
         String args = CompilerUtils.attributeLocationDirective(element, "args") +
             XMLUtils.getAttributeValue(element, "args", "");
         String body = element.getText();
+        String returnType = element.getAttributeValue("type");
 
         if ((name == null || !ScriptCompiler.isIdentifier(name)) &&
             (event == null || !ScriptCompiler.isIdentifier(event))) {
@@ -1498,10 +1499,10 @@ solution =
             return;
         }
 
-        addMethodInternal(name, args, body, element, allocation);
+        addMethodInternal(name, args, returnType, body, element, allocation);
     }
 
-  void addMethodInternal(String name, String args, String body, Element element, String allocation) {
+  void addMethodInternal(String name, String args, String returnType, String body, Element element, String allocation) {
         ClassModel superclassModel = getParentClassModel();
         // Override will be required if there is an inherited method
         // of the same name
@@ -1542,10 +1543,10 @@ solution =
             if (! ("swf9".equals(env.getRuntime()))) {
               pragmas += "\n#pragma 'withThis'\n";
             }
-            fndef = new Method(name, args, pragmas, body, name_loc, adjectives);
+            fndef = new Method(name, args, returnType, pragmas, body, name_loc, adjectives);
         } else {
             pragmas += "\n#pragma 'withThis'\n";
-            fndef = new Function(name, args, pragmas, body, name_loc);
+            fndef = new Function(name, args, returnType, pragmas, body, name_loc);
         }
         addProperty(name, fndef, allocation, element);
     }
@@ -1946,7 +1947,7 @@ solution =
       // the name set_<property name> NOTE: LzNode#applyArgs and
       // #setAttribute depend on this convention to find setters
       String settername = "$lzc$" + "set_" + attribute;
-      addMethodInternal(settername, args, body, element, allocation);
+      addMethodInternal(settername, args, "", body, element, allocation);
       // This is just for nice error messages
       if (setters.get(attribute) != null) {
         env.warn(

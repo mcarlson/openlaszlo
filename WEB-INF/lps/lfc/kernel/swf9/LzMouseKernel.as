@@ -117,7 +117,7 @@ class LzMouseKernel  {
           var resinfo = LzResourceLibrary[resource];
           var assetclass;
           var frames = resinfo.frames;
-          var asset:DisplayObject;
+          var asset:Sprite;
           // single frame resources get an entry in LzResourceLibrary which has
           // 'assetclass' pointing to the resource Class object.
           if (resinfo.assetclass is Class) {
@@ -127,7 +127,7 @@ class LzMouseKernel  {
               assetclass = frames[0];
           }
 
-          if (! assetclass) return;
+          if (! assetclass) return null;
           asset = new assetclass();
           asset.scaleX = 1.0;
           asset.scaleY = 1.0;

@@ -102,6 +102,7 @@ public final class LzAudioService {
         } else if ($debug) {
             this.__warnCapability('lz.Audio.getVolume()');
         }
+        return NaN;
     }
 
     /**
@@ -126,6 +127,7 @@ public final class LzAudioService {
         } else if ($debug) {
             this.__warnCapability('lz.Audio.getPan()');
         }
+        return NaN;
     }
 
     /**

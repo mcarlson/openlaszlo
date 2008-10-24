@@ -45,7 +45,8 @@ var type :String;
   * @access private
   */
 override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boolean { 
-    if ( super.__LZsendUpdate(upd, upp) ) {
+    var result:Boolean = super.__LZsendUpdate(upd, upp);
+    if ( result ) {
         var data:* = this.data;
         var node:LzNode = this.node;
         var attr:String = this.setAttr;
@@ -59,6 +60,7 @@ override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boo
             }
         }
     }
+    return result;
 }
 
 
@@ -120,7 +122,7 @@ function __LZupdateData (recursive:Boolean = false) :void {
     }
 }
 
-override function toString () :String { 
+override function toString () /*:String*/ { 
     return 'binder ' + this.xpath;
 }
 

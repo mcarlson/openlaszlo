@@ -273,6 +273,20 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     return annotateClass(classnm, sb.toString());
   }
 
+  // override - emit function return type,
+  // it is attached to the formal parameter list (which is really
+  // a signature)
+  public String functionReturnType(SimpleNode node) {
+    SimpleNode[] children = node.getChildren();
+    int pos = children.length-2;
+    ASTFormalParameterList signature = (ASTFormalParameterList)children[pos];
+    ASTIdentifier.Type returnType = signature.getReturnType();
+    if (returnType == null)
+      return "";
+    else
+      return ":" + returnType.toString();
+  }
+
   // override - don't emit body of methods for mixins
   public String visitFunctionDeclaration(SimpleNode node, String[] children) {
     inmethod = true;

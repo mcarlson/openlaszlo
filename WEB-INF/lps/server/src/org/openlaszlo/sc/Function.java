@@ -10,6 +10,7 @@ package org.openlaszlo.sc;
 public class Function {
   public String name;
   final String args;
+  final String returnType;
   final String preface;
   final String body;
   final String sourceLocation;
@@ -23,15 +24,16 @@ public class Function {
   }
 
   public Function(String name, String args, String body) {
-    this(name, args, "", body, null);
+    this(name, args, "", "", body, null);
   }
 
   // When there is a source location, we ask that the body be broken
   // up into a preface (any pragmas, etc. that the compiler must add)
   // and the body - the original function body in the program.
-  public Function(String name, String args, String preface, String body, String loc) {
+  public Function(String name, String args, String returnType, String preface, String body, String loc) {
     this.name = name;
     this.args = args;
+    this.returnType = returnType;
     this.preface = preface;
     this.body = body;
     this.sourceLocation = loc;
@@ -43,7 +45,14 @@ public class Function {
 
   public String toString() {
 
-    return "function " + name + "(" + args + ") {\n" +
+    String retstr;
+    if (returnType == null || returnType.trim().equals("")) {
+      retstr = "";
+    }
+    else {
+      retstr = ": " + returnType;
+    }
+    return "function " + name + "(" + args + ") " + retstr + " {\n" +
       preface +
       // we do not inject a newline after sourceLocation, it was
       // carefully positioned to be at the right column

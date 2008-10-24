@@ -295,7 +295,7 @@
 
 
             <selectionmanager name="selman" toggle="false">
-                <method name="isMultiSelect" args="s" >
+                <method name="isMultiSelect" args="s" type="Boolean" >
                     return lz.Keys.isKeyDown( "control" ) || lz.Keys.isKeyDown( "shift" ) ||
                            parent.isRectangleSelecting;
                 </method>

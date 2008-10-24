@@ -2862,6 +2862,7 @@ function getVolume () :Number {
     } else if ($debug) {
         this.__warnCapability('view.getVolume()'); 
     }
+    return NaN;
 }
 
 /**
@@ -2886,6 +2887,7 @@ function getPan () :Number {
     } else if ($debug) {
         this.__warnCapability('view.getPan()'); 
     }
+    return NaN;
 }
 
 /**
@@ -2965,6 +2967,7 @@ function getID3 () :Object {
     if (m.isaudio == true) {
         return m.getID3();
     }
+    return null;
 }
 
 

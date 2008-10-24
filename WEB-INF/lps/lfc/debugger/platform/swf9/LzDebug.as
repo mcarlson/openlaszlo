@@ -133,13 +133,9 @@ class LzAS3DebugService extends LzDebugService {
    * non-negative integer length property)
    *
    * @access private
-   *
-   * @devnote TODO [2008-09-22 ptw] (LPP-XXXX) The swf9 back end is
-   * currently discarding return declarations, so we have to comment
-   * out the declaration here to avoid an invalid override error
    */
   #passthrough {
-    public override function isArrayLike (obj:*)/*:Boolean*/ {
+    public override function isArrayLike (obj:*):Boolean {
     // Efficiency
     if (! obj) { return false; }
     if (obj is Array) { return true; }

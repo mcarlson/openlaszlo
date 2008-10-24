@@ -211,6 +211,7 @@ public function setOwnerDocument ( ownerDoc ) :void {
   */
 public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
     /* not implemented here */
+    return undefined;
 }
 
 /**
@@ -219,6 +220,7 @@ public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
   */
 public function serialize (len:Number = Infinity) :String {
     /* not implemented here */
+    return undefined;
 }
 
 /**
@@ -323,7 +325,7 @@ static function stringToLzData( str:String, trimwhitespace:Boolean = false, nspr
  * have to define it too.
  * @access private
  */
-function toString () :String { 
+function toString () /*:String*/ { 
     return "LzDataNode";
 }
 

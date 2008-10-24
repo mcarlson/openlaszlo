@@ -29,11 +29,11 @@ public class LFCApplication {
     static public var _sprite:Sprite;
 
     public static function addChild(child:DisplayObject):DisplayObject {
-       _sprite.addChild(child);
+       return _sprite.addChild(child);
     }
 
     public static function removeChild(child:DisplayObject):DisplayObject {
-       _sprite.removeChild(child);
+       return _sprite.removeChild(child);
     }
 
     public static function setChildIndex(child:DisplayObject, index:int):void {

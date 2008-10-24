@@ -482,7 +482,8 @@ override function __LZHandleMultiNodes ( n:Array ) :LzReplicationManager {
         layouts[i].unlock();
     }
     
-    return void(0);
+    return this;  // TODO: [20081020 dda] review this return value change from LPP-7031
+
 }
 
 /**
@@ -708,8 +709,8 @@ override function $lzc$set_datapath(v) :void {
   * @access private
   */
 override function setXPath ( xp:String ) :Boolean? {
-    if ( this.__LZpreventXPathUpdate ) return;
-    super.setXPath.apply(this, arguments); 
+    if ( this.__LZpreventXPathUpdate ) return false; // TODO: [20081020 dda] review this return value change from LPP-7031
+    return super.setXPath.apply(this, arguments); 
 }
 
 /**
@@ -742,12 +743,13 @@ function getCloneForNode ( p:LzDataElement, dontmake:Boolean = false ) :LzNode {
             return cls[ i ];
         }
     }
+    return null;
 }
  
 /**
   * @access private
   */
-override function toString () :String {
+override function toString () /*:String*/ {
     return "ReplicationManager in " + this.immediateparent;
 }
 

@@ -86,7 +86,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
   /**
    * @access private
    */
-    override function makeObjectLink (rep:String, id:*, attrs=null) {
+    override function makeObjectLink (rep:String, id:*, attrs=null):String {
     var color = (attrs && attrs['color']) ? attrs.color : '#0000ff';
     if (id != null) {
       // Note this is invoking a trampoline in the console that will

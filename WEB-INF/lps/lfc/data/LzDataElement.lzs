@@ -239,6 +239,7 @@ override public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
   */
 public function getAttr (name:String) :String {
     if (this.attributes) return this.attributes[ name ];
+    return null;
 }
 /** @access private */
 function $lzc$getAttr_dependencies (who , self) :Array {
@@ -611,7 +612,7 @@ public function handleDocumentChange ( what:String, who /*:LzDataNodeMixin*/, ty
 /**
   * @access private
   */
-override function toString () :String {
+override function toString () /*:String*/ {
     var r:String = this.serialize();
     return r;
 }
@@ -840,9 +841,8 @@ static function stringToLzData( str:String, trimwhitespace:Boolean=false, nspref
             }
             return null;
         }
-    } else {
-        return null;
     }
+    return null;
 }
 
 /** @type Dictionary 

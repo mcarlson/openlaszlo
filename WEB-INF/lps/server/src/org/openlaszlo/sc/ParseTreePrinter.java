@@ -773,6 +773,7 @@ public class ParseTreePrinter {
       return defaultVisitor(node, children);
     }
     String txt = "function" + (useName ? (" " + name) : "") + OPENPAREN + args + CLOSEPAREN;
+    txt += functionReturnType(node);
     if (!inmixin) {
       txt += makeBlock(body);
     }
@@ -783,6 +784,11 @@ public class ParseTreePrinter {
     // When functions go out of scope we should tell
     // any readers to forget the current line number info.
     return txt + forceBlankLnum();
+  }
+
+  // By default, return types are ignored
+  public String functionReturnType(SimpleNode node) {
+    return "";
   }
 
   public String visitClassDefinition(SimpleNode node, String[] children) {

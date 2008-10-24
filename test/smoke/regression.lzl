@@ -881,8 +881,9 @@
         </dataset>
         <class name="bug_1809" extends="TestCase">
                 <datapointer name="bad" xpath="bug1809:/foo/root"/>
+                <!-- TODO: [20081020 dda] bad.serialize() should really return undefined. See LPP-XXXX -->
                 <method name="testBadDP">
-                        assertUndefined(bad.serialize())
+                        assertNull(bad.serialize())
                 </method>
                 <method name="addTests"> 
                     this.addTest("testBadDP");

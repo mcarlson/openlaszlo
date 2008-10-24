@@ -19,18 +19,14 @@ public class Method extends Function {
   }
 
   public Method(String name, String args, String body) {
-    this(name, args, "", body, null);
+    this(name, args, "", "", body, null, null);
   }
 
   // When there is a source location, we ask that the body be broken
   // up into a preface (any pragmas, etc. that the compiler must add)
   // and the body - the original function body in the program.
-  public Method(String name, String args, String preface, String body, String loc) {
-    this(name, args, preface, body, loc, null);
-  }
-
-  public Method(String name, String args, String preface, String body, String loc, String adjectives) {
-    super(name, args, preface, body, loc);
+  public Method(String name, String args, String returnType, String preface, String body, String loc, String adjectives) {
+    super(name, args, returnType, preface, body, loc);
     this.adjectives = adjectives;
   }
 
@@ -40,7 +36,7 @@ public class Method extends Function {
   }
 
   public Function asFunction() {
-    return new Function(name, args, preface, body, sourceLocation);
+    return new Function(name, args, null, preface, body, sourceLocation);
   }
 }
 

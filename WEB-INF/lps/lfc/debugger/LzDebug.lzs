@@ -762,7 +762,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  function __StringDescription(thing, pretty:Boolean, limit:Number, unique:Boolean):Object {
+  function __StringDescription(thing:*, pretty:Boolean, limit:Number, unique:Boolean):Object {
     try {
       // Evade infinite recursion
       if (limit <= 0) return {pretty: true, description: '\xABwhoops!\xBB'};

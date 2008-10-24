@@ -168,6 +168,7 @@ function getPositionByNode ( n ) :Number? {
             pos += this.spacing + ( cnode.__LZgetSize(this.datasizevar) || this.viewsize );
         }
     }
+    return undefined;
 }
 
 
@@ -287,9 +288,9 @@ override function __LZadjustVisibleClones(lastnodes:Array, newnodes:Boolean) :vo
     for( var i:int = 0; i < this.clones.length; i++ ){
         var cnode /*:LzDataNodeMixin*/ = this.nodes[ i + newoffset ];
 
-        var cl:LzView = this.clones[ i ];
+        var cl:LzView = (this.clones[ i ] cast LzView);
         if ( !cl ){
-            cl = this.getNewClone( );
+            cl = (this.getNewClone( ) cast LzView);
             cl.clonenumber = i + newoffset;
             cl.datapath.setClonePointer( cnode );
             if (cl.onclonenumber.ready) cl.onclonenumber.sendEvent( i + newoffset );

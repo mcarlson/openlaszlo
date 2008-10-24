@@ -396,7 +396,7 @@ public dynamic class LzAnimatorGroup extends LzNode {
       */
     function update (time:Number) :Boolean {
         if (this.paused) {
-            return;
+            return false;    // TODO: [20081020 dda] review this return value change from LPP-7031
         }
 
         var animend:int = this.actAnim.length - 1;
@@ -533,6 +533,7 @@ public dynamic class LzAnimatorGroup extends LzNode {
             if (this.onrepeat.ready) this.onrepeat.sendEvent(new Date().getTime());
             //this.prepareStart();
             this.resetAnimator();
+            return false;    // TODO: [20081020 dda] review this return value change from LPP-7031
         }
     }
 

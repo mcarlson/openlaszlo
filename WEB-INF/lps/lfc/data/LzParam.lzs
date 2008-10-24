@@ -188,6 +188,7 @@ function getValue (name:String) :String? {
     if (a != null) {
         return a[ 0 ];
     }
+    return null;
 }
 
 
@@ -201,6 +202,7 @@ function getValues (name:String) :Array? {
     if (a != null) {
         return a.concat();
     }
+    return null;
 }
 
 
