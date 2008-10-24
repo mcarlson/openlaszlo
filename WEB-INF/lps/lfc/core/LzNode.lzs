@@ -412,7 +412,7 @@ public dynamic class LzNode extends LzEventable {
    * Examples: "mydata:", "mydata:/a/b", "/a/b".
    *
    * @type lz.datanode/String
-   * @lzxtype datanode/string
+   * @lzxtype string
    */
   var datapath = null;
 
