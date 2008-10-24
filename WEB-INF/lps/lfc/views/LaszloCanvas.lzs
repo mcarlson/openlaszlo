@@ -480,7 +480,7 @@ var medialoadtimeout = 30000;
   * @type Number
   * @lzxtype numberExpression
   */
-var mediaerrortimeout = 2000;
+var mediaerrortimeout = 4500;
 
 /** A number from 0-1 that represents the
   * percentage of the app that has been instantiated.
