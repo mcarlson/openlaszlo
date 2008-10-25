@@ -202,8 +202,14 @@ body.doc-index {
     text-decoration: none;
 }
 
+.refsect1 .title a:link {
+    color: white;
+    text-decoration: none;
+}
+
 .refsect1 .title a:visited {
     color: #00ffff;
+    text-decoration: none;
 }
 
 .refsect1 .title a:hover {
