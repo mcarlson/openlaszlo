@@ -11,7 +11,7 @@
 
         <!--- Check if a range is selected.
               @return Boolean: true if range is being selected, else false. -->
-        <method name="isRangeSelect" args="item">
+        <method name="isRangeSelect" args="item" returns="Boolean">
             var allowselect = false;
             if (multiselect) allowselect = super.isRangeSelect(item);
             return allowselect;
@@ -19,7 +19,7 @@
 
         <!--- Check if selection is multiselect.
               @return Boolean: true if multiselect is true, else false. -->
-        <method name="isMultiSelect" args="item">
+        <method name="isMultiSelect" args="item" returns="Boolean">
             var allowselect = false;
             if (multiselect) allowselect = super.isMultiSelect(item);
             return allowselect;
