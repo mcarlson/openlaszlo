@@ -48,6 +48,8 @@ class LzMouseKernel  {
     // Handles global mouse events
     static function __mouseHandler(event:MouseEvent):void {
         var eventname = 'on' + event.type.toLowerCase();
+        //Debug.write('__mouseHandler', eventname);
+
         if (eventname == 'onmouseup' && __lastMouseDown != null) {
             // call mouseup on the sprite that got the last mouse down  
             LzMouseKernel.__lastMouseDown.__globalmouseup(event);
@@ -62,6 +64,7 @@ class LzMouseKernel  {
         var eventname = 'on' + event.type.toLowerCase();
         LzMouseKernel.__sendEvent(null, eventname);
     }
+
 
     /**
     * Shows or hides the hand cursor for all clickable views.
@@ -88,8 +91,8 @@ class LzMouseKernel  {
     static function setCursorLocal ( what:String ) {
         if ( LzMouseKernel.__amLocked ) { return; }
         Mouse.hide();
-        cursorSprite.x = LFCApplication.stage.mouseX;
-        cursorSprite.y = LFCApplication.stage.mouseY;
+        cursorSprite.x = LFCApplication.stage.mouseX + 1;
+        cursorSprite.y = LFCApplication.stage.mouseY + 1;
         LFCApplication.setChildIndex(cursorSprite, LFCApplication._sprite.numChildren-1);
         if (lastCursorResource != what) {
             if (cursorSprite.numChildren > 0) {
@@ -178,7 +181,6 @@ class LzMouseKernel  {
 
     static function initCursor () {
         cursorSprite = new Sprite();
-        cursorSprite.mouseChildren = false;
         cursorSprite.mouseEnabled = false;
         // Add the cursor DisplayObject to the root sprite
         LFCApplication.addChild(cursorSprite);

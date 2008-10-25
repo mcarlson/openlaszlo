@@ -18,11 +18,7 @@ dynamic public class LzSprite extends Sprite {
   import flash.geom.*;
   import flash.utils.*;
   import mx.controls.Button;
-  import flash.net.*;
-  import flash.utils.*;
-  import flash.system.Security;
-  import flash.system.SecurityDomain;
-  import flash.system.ApplicationDomain;
+  import flash.net.URLRequest;
   import flash.system.LoaderContext;
   import flash.media.Sound;
   import flash.media.SoundChannel;
@@ -30,7 +26,6 @@ dynamic public class LzSprite extends Sprite {
   import flash.media.SoundTransform;
   import flash.media.SoundLoaderContext;
   import flash.media.ID3Info;
-
 }#
 
 #passthrough  {
@@ -66,13 +61,13 @@ dynamic public class LzSprite extends Sprite {
       public var fontstyle:String = "plain";
       public var fontname:String = "Verdana";
 
-      var resourceContainer:Sprite = null;
+      var resourceObj:DisplayObject = null;
       // Cache for instantiated assets in a multiframe resource set
       var resourceCache:Array = null;
 
       /* private */ static const soundLoaderContext:SoundLoaderContext = new SoundLoaderContext(1000, true);
-      /* private */ static const loaderContext:LoaderContext = new LoaderContext(true);
-
+      /* private */ 
+      static const loaderContext:LoaderContext = new LoaderContext(true);
       /* private */ static const MP3_FPS:Number = 30;
       /* private */ var sound:Sound = null;
       /* private */ var soundChannel:SoundChannel = null;
@@ -220,6 +215,10 @@ dynamic public class LzSprite extends Sprite {
                   this.unloadSound();
               }
               
+              if (this.resourceObj == null) {
+                  this.createResourceBitmap()  
+              }
+              
               this.__isinternalresource = true;
               this.resource = r;
               // instantiate resource at frame 1
@@ -250,13 +249,6 @@ dynamic public class LzSprite extends Sprite {
       public var loaderMC:MovieClip;
       private var IMGDEPTH:int = 0;
 
-      public function makeResourceContainer():void {
-          this.resourceContainer = new Sprite();
-          this.resourceContainer.mouseChildren = false;
-          this.addChildAt(resourceContainer, IMGDEPTH);
-      }
-
-
       /** setSource( String:url )
           o Loads and displays media from the specified url
           o Uses the resourceload callback method when the resource finishes loading 
@@ -265,46 +257,15 @@ dynamic public class LzSprite extends Sprite {
           if (url == null || url == 'null') {
               return;
           }
-
+          
           this.__isinternalresource = false;
-
-          var loadurl = url;
-          var proxied = this.owner.__LZcheckProxyPolicy( url );
-          var proxyurl = this.owner.getProxyURL(url);
-          if (proxied) {
-              var params:Object = {serverproxyargs: {},
-                                   timeout: canvas.medialoadtimeout,
-                                   proxyurl: proxyurl,
-                                   url: url,
-                                   httpmethod: 'GET',
-                                   service: 'media'
-              };
-              if (headers != null) {
-                  params.headers = headers;
-              }
-              if (cache == "none") {
-                  params.cache = false;
-                  params.ccache = false;
-              } else if (cache == "clientonly") {
-                  params.cache = false;
-                  params.ccache = true;
-              } else if (cache == "serveronly") {
-                  params.cache = true;
-                  params.ccache = false;
-              } else {
-                  params.cache = true;
-                  params.ccache = true;
-              }
-              loadurl = lz.Browser.makeProxiedURL(params);
-          }
-
 
           if (getFileType(url, filetype) == "mp3") {
               // unload previous image-resource and sound-resource
               this.unload();
               this.__isinternalresource = false;
               this.resource = url;
-              this.loadSound(loadurl);
+              this.loadSound(url);
           } else {
               if (this.isaudio) {
                   // unload previous sound-resource
@@ -312,16 +273,14 @@ dynamic public class LzSprite extends Sprite {
               }
             
               if (! imgLoader) {
-                  if (this.resourceContainer) {
+                  if (this.resourceObj) {
                       this.unload();
-                  } else {
-                      makeResourceContainer();
                   }
                   this.__isinternalresource = false;
                   imgLoader = new Loader();
                   imgLoader.mouseEnabled = false;// @devnote: see LPP-7022
-                  imgLoader.mouseChildren = false;
-                  this.resourceContainer.addChild(imgLoader);
+                  this.resourceObj = imgLoader;
+                  this.addChildAt(imgLoader, IMGDEPTH);
                   var info:LoaderInfo = imgLoader.contentLoaderInfo;
                   info.addEventListener(Event.INIT, loaderInitHandler);
                   info.addEventListener(IOErrorEvent.IO_ERROR, loaderEventHandler);
@@ -331,15 +290,14 @@ dynamic public class LzSprite extends Sprite {
               }
               
               this.resource = url;
-              var res = this.imgLoader;
+              var res = this.resourceObj;
               if (res) {
                   res.scaleX = res.scaleY = 1.0;
               }
-
-              imgLoader.load(new URLRequest(loadurl), LzSprite.loaderContext);
+              //Debug.write('sprite setsource load ', url);
+              imgLoader.load(new URLRequest(url), loaderContext);
           }
       }
-
       
       private function getFileType (url:String, filetype:String = null) :String {
           if (filetype != null) {
@@ -359,14 +317,12 @@ dynamic public class LzSprite extends Sprite {
           info.addEventListener(Event.OPEN, loaderEventHandler);
           info.addEventListener(Event.UNLOAD, loaderEventHandler); 
           info.addEventListener(Event.COMPLETE, loaderEventHandler);
-          info.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loaderEventHandler);
           // @devnote: From the HTTPStatusEvent reference page:
           // > Some Flash Player environments may be unable to detect HTTP status codes; 
           // > a status code of 0 is always reported in these cases.
           // Http status is actually only available for the IE Flash-Plugin. 
           //info.addEventListener(HTTPStatusEvent.HTTP_STATUS, loaderEventHandler);
       }
-
 
       public function loaderEventHandler(event:Event):void {
           try {
@@ -391,7 +347,6 @@ dynamic public class LzSprite extends Sprite {
                               Debug.warn("Playback control will not work for the resource.  Please update or recompile the resource for Flash 9.", this.resource);
                           }
                       } else if (info.content is MovieClip) {
-                          Debug.write("loaderEventHandler info.content is MovieClip");
                           // store a reference for playback control
                           this.loaderMC = MovieClip(info.content);  
   
@@ -414,8 +369,7 @@ dynamic public class LzSprite extends Sprite {
                   // send events, including onload
                   sendResourceLoad();
                   this.owner.resourceevent('loadratio', 1);
-              } else if (event.type == IOErrorEvent.IO_ERROR ||
-                         event.type == SecurityErrorEvent.SECURITY_ERROR) {
+              } else if (event.type == IOErrorEvent.IO_ERROR) {
                   //TODO [20080911 anba] how can "owner" become null here?
                   if (this.owner != null) {
                       this.owner.resourceloaderror( (event as IOErrorEvent).text );
@@ -742,6 +696,30 @@ dynamic public class LzSprite extends Sprite {
           }
       }
 
+      /** 
+        * @field DisplayObject from: Asset to copy from
+        * @field Number w: Width of the resource to copy, in pixels
+        * @field Number h: Height of the resource to copy, in pixels
+        * @field BitmapData to: Where to copy the bitmap.  If unspecified, a new BitmapData instance containing data from 'from' is returned.
+        * @field Matrix m: Optional transformation matrix
+        */
+      function copyBitmap(from, w, h, to = null, m = null) {
+        if (w == 0 || h == 0) return from;
+        if (w < 1) w = 1;
+        if (h < 1) h = 1;
+        var tmp = new BitmapData(w, h, true, 0x000000ff);
+
+        tmp.draw(from);
+
+        // If to wasn't supplied, return the bitmap as-is.
+        if (! to) {
+            return tmp;
+        }
+        //Debug.write('copying', from, w, h, to, m);
+        to.draw(tmp, m, null, null, null, true);
+        tmp.dispose();
+      }
+
       public function debugClick(event:Event):void {
           trace("debugClick "+event + " " +event.target);
       }
@@ -1006,13 +984,10 @@ dynamic public class LzSprite extends Sprite {
                 return;
               }
               
-              if (this.resourceContainer == null) {
-                  makeResourceContainer();
-              } else {
-                  removeChildren(this.resourceContainer);
-              }
-              this.resourceContainer.addChild(asset); 
-
+              var res = this.resourceObj; 
+              var rect = new Rectangle(0, 0, this.resourcewidth, this.resourceheight);
+              res.bitmapData.fillRect(rect, 0x00000000);
+              copyBitmap(asset, this.resourcewidth, this.resourceheight, res.bitmapData);
               //Debug.write('set resource to', asset, oRect); 
               
               this.applyStretchResource();
@@ -1039,6 +1014,24 @@ dynamic public class LzSprite extends Sprite {
       public function __resetframe():void {
           this.stop(this.frame);
       }
+
+      // Create a bitmap to hold resources
+      public function createResourceBitmap():void {
+          var w = this.resourcewidth;
+          var h = this.resourceheight;
+          if (w <= 0 || h <= 0) return;
+          if (w < 1) w = 1;
+          if (h < 1) h = 1;
+          if (w == this.lastreswidth && h == this.lastresheight) return;
+          this.lastreswidth = w;
+          this.lastresheight = h;
+          //Debug.write('creating', w, h);  
+          this.__bitmap = new BitmapData( w, h, true, 0x00000000 );
+          if (this.resourceObj) removeChild(resourceObj);
+          this.resourceObj = new Bitmap(this.__bitmap, 'auto', true);
+          addChild(this.resourceObj)
+      }
+
 
       /** setClip( Boolean:clip )kernel/swf9/
           o If true, clips the sprite's children to its width and height
@@ -1106,12 +1099,7 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function applyStretchResource():void {
-          if (this.resourceContainer == null || this.resourceContainer.numChildren == 0) {
-              return;
-          }
-
-          var res = this.resourceContainer.getChildAt(0);
-
+          var res = this.resourceObj;
           // Don't try to do anything while an image is loading
           if (res == null) return;
 
@@ -1215,12 +1203,6 @@ dynamic public class LzSprite extends Sprite {
           trace('LzSprite.setStyleObject not yet implemented');
       }
 
-      /** removes all children from a container */
-      public function removeChildren(container:DisplayObjectContainer):void {
-          while (container.numChildren > 0) {
-              container.removeChildAt(0);
-          }
-      }
 
       /** getStyleObject()
           o Gets the style object of the sprite 
@@ -1242,9 +1224,7 @@ dynamic public class LzSprite extends Sprite {
             // for swf10: this.imgLoader.unloadAndStop();
             this.imgLoader.unload();
         }
-        if (this.resourceContainer != null) {
-            removeChildren(this.resourceContainer);
-        }
+        if (this.resourceObj) this.removeChild(this.resourceObj);
         if (this.isaudio) this.unloadSound();
         // clear out cached values
         this.lastreswidth = this.lastresheight = this.resourcewidth = this.resourceheight = 0;
@@ -1256,6 +1236,7 @@ dynamic public class LzSprite extends Sprite {
         }
         this.loaderMC = null;
         this.imgLoader = null;
+        this.resourceObj = null;
       }
 
       public function setAccessible(accessible:*) {
