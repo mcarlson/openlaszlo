@@ -223,6 +223,8 @@ public class ViewSchema extends Schema {
         }
     }
 
+
+
     /** Checks to do when declaring a method on an instance;
      * Does the class exist?
      * Does the superclass allow overriding of this method?
@@ -859,4 +861,75 @@ public class ViewSchema extends Schema {
         }
         throw new ColorFormatException(str);
     }
+
+    /* Check for unknown attributes on a <method> tag */
+    static HashSet  methodAttributes = new HashSet();
+    static HashSet  attributeAttributes = new HashSet();
+    static HashSet  handlerAttributes = new HashSet();
+    static HashSet  setterAttributes = new HashSet();
+    static HashSet  eventAttributes = new HashSet();
+    static {
+        eventAttributes.add("name");
+
+        handlerAttributes.add("method");
+        handlerAttributes.add("name");
+        handlerAttributes.add("args");
+        handlerAttributes.add("reference");
+        
+        setterAttributes.add("name");
+        setterAttributes.add("args");
+        setterAttributes.add("allocation");
+
+        methodAttributes.add("name");
+        methodAttributes.add("args");
+        methodAttributes.add("returns");
+        methodAttributes.add("allocation");
+        methodAttributes.add("event");
+        methodAttributes.add("override");
+        methodAttributes.add("final");
+
+        attributeAttributes.add("value");
+        attributeAttributes.add("when");
+        attributeAttributes.add("type");
+        attributeAttributes.add("allocation");
+        attributeAttributes.add("name");
+        attributeAttributes.add("setter");
+
+    }
+
+    /* Check if any of the attributes are not valid for use on a <attribute> tag */
+    static void checkAttributeAttributes(Element elt, CompilationEnvironment env) throws CompilationError {
+        checkAttributes(elt, attributeAttributes, env);
+    }
+
+    /* Check if any of the attributes are not valid for use on a <method> tag */
+    static void checkMethodAttributes(Element elt, CompilationEnvironment env) throws CompilationError {
+        checkAttributes(elt, methodAttributes, env);
+    }
+
+    static void checkSetterAttributes(Element elt, CompilationEnvironment env) throws CompilationError {
+        checkAttributes(elt, setterAttributes, env);
+    }
+
+    static void checkHandlerAttributes(Element elt, CompilationEnvironment env) throws CompilationError {
+        checkAttributes(elt, handlerAttributes, env);
+    }
+
+    static void checkEventAttributes(Element elt, CompilationEnvironment env) throws CompilationError {
+        checkAttributes(elt, eventAttributes, env);
+    }
+
+
+
+
+    static void checkAttributes(Element elt, HashSet validValues, CompilationEnvironment env) {
+        for (Iterator iter = elt.getAttributes().iterator(); iter.hasNext();) {
+            Attribute attr = (Attribute) iter.next();
+            if (!validValues.contains(attr.getName())) {
+                env.warn("Unknown attribute '"+attr.getName()+"' on "+elt.getName(), elt);
+            }
+        }
+    }
+
+
 }

@@ -1,0 +1,27 @@
+<!-- declaring an attribute with an unknown property throws error-->
+<canvas width="300" height="200" bgcolor="red"> 
+
+  <class name='foo'>
+    <attribute name="foo" value="259" color="red"/>
+    <method name="baz" event="onfoo">
+      Debug.write('baz');
+    </method>
+    <method name="bar" value="259" />
+  </class>
+
+  <view name="foobar">
+    <method name="shazzam" args="foo" type="string"/>
+    <event name="onfoo" color="green"/>
+    <setter name="blah" flavor="chocolate"/>
+    <handler name="onbar" identity="17">
+      this.setAttribute('foo', 'bar');
+    </handler>
+  </view>
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

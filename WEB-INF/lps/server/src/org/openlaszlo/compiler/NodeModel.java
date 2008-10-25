@@ -1300,6 +1300,7 @@ solution =
      * if there is an attribute FOO such that name="onFOO".
      */
     void addHandlerElement(Element element) {
+        schema.checkHandlerAttributes(element, env);
         String method = element.getAttributeValue("method");
         // event name
         String event = element.getAttributeValue("name");
@@ -1442,8 +1443,8 @@ solution =
         }
     }
 
-
     void addMethodElement(Element element) {
+        schema.checkMethodAttributes(element, env);
         String name = element.getAttributeValue("name");
         String event = element.getAttributeValue("event");
         String allocation = XMLUtils.getAttributeValue(element, "allocation", ALLOCATION_INSTANCE);
@@ -1740,6 +1741,7 @@ solution =
      * example: <event name="onfoobar"/>
     */
     void addEventElement(Element element) {
+        schema.checkEventAttributes(element, env);
         String name;
         try {
             name = ElementCompiler.requireIdentifierAttributeValue(element, "name");
@@ -1775,6 +1777,9 @@ solution =
                 NodeModel.class.getName(),"051018-1157", new Object[] {element.getName()})
                     , element);
         }
+
+        // Check that all attributes on this <attribute> are known names
+        schema.checkAttributeAttributes(element, env);
 
         String value = element.getAttributeValue("value");
         String when = element.getAttributeValue("when");
@@ -1907,6 +1912,7 @@ solution =
      * setter/getter pairs.
      */
     void addSetterElement(Element element) {
+        schema.checkSetterAttributes(element, env);
         String attribute = element.getAttributeValue("name");
         if ((attribute == null || !ScriptCompiler.isIdentifier(attribute))) {
             env.warn("setter needs a non-null name attribute");
