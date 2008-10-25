@@ -82,7 +82,9 @@ var LzSprite = function(owner, isroot) {
             // Mouse detection for activiation/deactivation of keyboard events
             div.mouseisover = false;
             div.onmouseover = function(e) {
-                div.focus();
+                if (LzSprite.prototype.quirks.focus_on_mouseover) {
+                    div.focus();
+                }
                 if (LzInputTextSprite.prototype.__focusedSprite == null) LzKeyboardKernel.setKeyboardControl(true);
                 LzMouseKernel.setMouseControl(true);
                 this.mouseisover = true;
@@ -99,13 +101,17 @@ var LzSprite = function(owner, isroot) {
                     if (LzSprite.prototype.quirks.fix_ie_clickable) {
                         LzInputTextSprite.prototype.__setglobalclickable(true);
                     }
-                    if (LzInputTextSprite.prototype.__lastshown == null) this.focus();
+                    if (LzSprite.prototype.quirks.focus_on_mouseover) {
+                        if (LzInputTextSprite.prototype.__lastshown == null) div.focus();
+                    }
                     LzKeyboardKernel.setKeyboardControl(true);
                     LzMouseKernel.setMouseControl(true);
                     LzMouseKernel.__resetMouse();
                     this.mouseisover = true;
                 } else {
-                    if (LzInputTextSprite.prototype.__lastshown == null) this.blur();
+                    if (LzSprite.prototype.quirks.focus_on_mouseover) {
+                        if (LzInputTextSprite.prototype.__lastshown == null) div.blur();
+                    }
                     LzKeyboardKernel.setKeyboardControl(false);
                     LzMouseKernel.setMouseControl(false);
                     this.mouseisover = false;
@@ -310,6 +316,7 @@ LzSprite.prototype.quirks = {
     ,text_height_includes_margins: false
     ,inputtext_size_includes_margin: false
     ,listen_for_mouseover_out: true
+    ,focus_on_mouseover: true
 }
 
 LzSprite.prototype.capabilities = {
@@ -402,6 +409,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['fix_inputtext_with_parent_resource'] = true;
             // IE already includes margins for inputtexts
             quirks['inputtext_size_includes_margin'] = true;
+            // LPP-7229 - IE 'helpfully' scrolls focused/blurred divs into view
+            quirks['focus_on_mouseover'] = false;
         } else if (browser.isSafari) {
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;
