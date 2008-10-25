@@ -639,7 +639,7 @@ LzTextSprite.prototype.setFontName = function ( fname ){
     this.__setFormat();
     // recompute dimensions: must use clip html here -- inputtext may
     // have modified the contents
-    this.setText( this.__LZtextclip.htmlText );
+    this.setText( this.getText() );
 }
 
 /**
@@ -650,7 +650,7 @@ LzTextSprite.prototype.setFontSize = function ( fsize ){
     this.__setFormat();
     // recompute dimensions: must use clip html here -- inputtext may
     // have modified the contents
-    this.setText( this.__LZtextclip.htmlText );
+    this.setText( this.getText() );
 
 }
 
@@ -662,7 +662,7 @@ LzTextSprite.prototype.setFontStyle = function ( fstyle ){
     this.__setFormat();
     // recompute dimensions: must use clip html here -- inputtext may
     // have modified the contents
-    this.setText( this.__LZtextclip.htmlText );
+    this.setText( this.getText() );
 }
 
 /**
@@ -674,7 +674,7 @@ LzTextSprite.prototype.setColor = function ( c ){
     this.__setFormat();
     // recompute dimensions: must use clip html here -- inputtext may
     // have modified the contents
-    this.setText( this.__LZtextclip.htmlText );
+    this.setText( this.getText() );
 }
 
 /**
