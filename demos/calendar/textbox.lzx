@@ -20,9 +20,7 @@
 
 <!-- CLASS: inputtextbox ============================================= -->
 <!-- ================================================================= -->
-<class name="inputtextbox" extends="inputtext" bgcolor="white"
-    resizable="true" 
-    > <!-- fgcolor="#535353"-->
+<class name="inputtextbox" extends="inputtext" bgcolor="white"> <!-- fgcolor="#535353"-->
     <view name="v_border" height="1"       bgcolor="black" width="${parent.width}" />
     <view name="h_border" width="1"  y="1" bgcolor="black" height="${parent.height -1}" />
 
