@@ -258,6 +258,13 @@ LzSprite.prototype.setResource = function ( resourceName ) {
     this.__LZhaser = resourceName == "empty";
     this.resource = resourceName;
 
+    if (canvas.accessible) {
+        // use a special resource to ensure we can be focused by screen readers
+        if (! this.clickable && this.__LZhaser) {
+            resourceName = "accempty"
+        }
+    }
+
     if (this.__LZmovieClipRef != null ){
         this.doReplaceResource(resourceName);
     } else {
@@ -346,6 +353,8 @@ LzSprite.prototype.setMovieClip = function ( mc , mcID) {
     // TODO: [20081013 anba] is this call necessary? 
     // see call hierarchy (setResource -> [doReplaceResource ->] setMovieClip)
     this.updateResourceSize();
+
+    mc._accProps = this._accProps;
 }
 
 /**

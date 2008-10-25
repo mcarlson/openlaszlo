@@ -164,6 +164,17 @@ class SWFFile extends FlashFile {
             // 4. A movieclip with the export identifier "empty" that has 1 frame with nothing in it
             empty = movieClip = new Script(1);
             export("empty", movieClip);
+
+            // a movieclip containing a 1px by 1px transparent resource for accessibility
+            movieClip = new Script(1);
+            export("accempty", movieClip);
+            f0 = movieClip.getFrameAt(0);
+            Shape trans1px = new Shape();
+            trans1px.setFillStyle1( FillStyle.newSolid( new AlphaColor(1, 1, 1, 0) ) );
+            Rectangle2D r = new Rectangle2D.Double(0, 0, 1*TWIP, 1*TWIP); 
+            trans1px.drawRectangle( r );
+            trans1px.setBounds( r );
+            f0.addInstance(trans1px, 1, at, null);
              
             
             /* No longer required for swf6 and greater

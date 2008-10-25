@@ -182,6 +182,7 @@
       <attribute name="id" type="ID"/>
       <!-- If true, enable history feature -->
       <attribute name="history" type="boolean" value="false"/>
+      <attribute name="accessible" type="boolean" value="false"/>
       <containsElements>
         <element>view</element>
         <element>script</element>
