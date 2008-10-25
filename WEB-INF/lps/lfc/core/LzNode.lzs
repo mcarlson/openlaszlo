@@ -403,7 +403,7 @@ public dynamic class LzNode extends LzEventable {
   var subnodes = null;
 
   /** A shorthand version of <literal>&lt;datapath&gt;</literal>, specifies the data source for this node and its children.
-   * You write a string to datapath; reading datapath will yield a lz.datapath.
+   * You write a string to <literal>datapath</literal>; reading <literal>datapath</literal> will yield a <literal>lz.datapath</literal>.
    * If the value begins with an identifier followed by a colon, the
    * identifier names a dataset, and the portion of the string after
    * the colon is an XPath description of a portion of the data.
@@ -411,7 +411,7 @@ public dynamic class LzNode extends LzEventable {
    * the data, relative to the data source of this node's parent element.
    * Examples: "mydata:", "mydata:/a/b", "/a/b".
    *
-   * @type lz.datanode/String
+   * @type String
    * @lzxtype string
    */
   var datapath = null;
