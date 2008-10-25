@@ -482,7 +482,7 @@ override function __LZHandleMultiNodes ( n:Array ) :LzReplicationManager {
         layouts[i].unlock();
     }
     
-    return this;  // TODO: [20081020 dda] review this return value change from LPP-7031
+    return null;
 
 }
 
