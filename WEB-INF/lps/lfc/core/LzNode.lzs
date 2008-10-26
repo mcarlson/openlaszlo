@@ -162,7 +162,6 @@ public dynamic class LzNode extends LzEventable {
     super();
     this.__LZUID = "__U" + ++LzNode.__UIDs;
     this.__LZdeferDelegates = true;
-    var qpos = LzDelegate.__LZdelegatesQueue.length;
     // These have to be called really early on, we can't wait for
     // setters.  Someday they can just be in-lined in the custom
     // constructor the tag compiler writes...
@@ -295,10 +294,12 @@ public dynamic class LzNode extends LzEventable {
      */
     this.constructWithArgs( iargs );
 
-    this.__LZdeferDelegates = null;
-    if (qpos != LzDelegate.__LZdelegatesQueue.length) {
-      // Drain the events queue back to where we started
-      LzDelegate.__LZdrainDelegatesQueue(qpos);
+    this.__LZdeferDelegates = false;
+    var evq = this.__LZdelegatesQueue;
+    if (evq) {
+      // Drain the queued events
+      LzDelegate.__LZdrainDelegatesQueue(evq);
+      this.__LZdelegatesQueue = null;
     }
 
     if (this.onconstruct.ready) this.onconstruct.sendEvent( this );

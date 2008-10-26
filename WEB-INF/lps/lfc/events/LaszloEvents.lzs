@@ -283,19 +283,12 @@ public function enable (){
 }
 
   /**
-   * Queue for delegates that are deferred during node initialization
+   * Drain a deferred delegates queue
    * @access private
    */
-  static var __LZdelegatesQueue = [];
-
-  /**
-   * Drain the delegates queue back to position POS
-   * @access private
-   */
-  static function  __LZdrainDelegatesQueue (pos) {
-    var evq = LzDelegate.__LZdelegatesQueue;
+  static function  __LZdrainDelegatesQueue (evq:Array) {
     var n = evq.length;
-    var i = pos;
+    var i = 0;
     if (i < n) {
       var calledDelegates = new Array;
       var lockedEvents = new Array;
@@ -311,7 +304,7 @@ public function enable (){
           d.event_called = true; //this delegate has been called
           calledDelegates.push( d );
           // d.execute( eventValue ); inlined
-          if (d.c && ! d.c.__LZdeleted && d.m) d.m.call(d.c, eventValue);
+          if (d.c && (! d.c.__LZdeleted) && d.m) { d.m.call(d.c, eventValue); }
         }
         i+=3;
       }
@@ -322,7 +315,7 @@ public function enable (){
         e.locked = false;
       }
     }
-    evq.length = pos;
+    evq.length = 0;
   }
 
 /** @access private */
@@ -515,7 +508,6 @@ public override function sendEvent ( eventValue = null ){
     var calledDelegates = new Array;
 
     var d;
-    var evq = LzDelegate.__LZdelegatesQueue;
     for (var i = dll; i >= 0; i--){
         d = this.delegateList[ i ];
         //pointer may be bad due to deletions
@@ -527,6 +519,8 @@ public override function sendEvent ( eventValue = null ){
             var c = d.c;
             if (c && (! c.__LZdeleted)) {
                 if (c.__LZdeferDelegates) {
+                  var evq = c.__LZdelegatesQueue;
+                  if (!evq) { evq = c.__LZdelegatesQueue = new Array(); }
                   evq.push(this, d, eventValue);
                 } else if (d.m) {
                   // d.execute( eventValue ); inlined

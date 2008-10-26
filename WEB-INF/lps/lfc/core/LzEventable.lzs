@@ -78,6 +78,11 @@ class LzEventable {
 
     // To keep delegates from resurrecting us.  See LzDelegate#execute
     this.__LZdeleted = true;
+    // If we get destroyed while deferring events, just pretend those
+    // events were never sent (This happens if implicit replication
+    // replaces a node with a replication manager.  Sad but true.)
+    this.__LZdelegatesQueue = null;
+    this.__LZdeferDelegates = false;
 
     //remove events
     if (this._events != null) {
@@ -94,6 +99,8 @@ class LzEventable {
    * @access private
    */
   var __LZdeferDelegates:Boolean = false;
+  /** @access private */
+  var __LZdelegatesQueue = null;
 
   /** @access private */
   function childOf ( node, ignore=null ) { return false;}
