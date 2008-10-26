@@ -9,7 +9,7 @@
   * @author Henry Minsky &lt;hminsky@laszlosystems.com&gt;
   */
 
-dynamic public class LzSprite extends Sprite {
+public class LzSprite extends Sprite {
 
 #passthrough (toplevel:true) {
   import flash.display.*;
@@ -48,8 +48,6 @@ dynamic public class LzSprite extends Sprite {
       public var clickbutton:SimpleButton = null;
       public var clickregion:Shape = null;
       public var masksprite:Sprite = null;
-      public var frame:int = 1;
-      public var totalframes:int = 1;
       public var frames:int = 1;
       public var resource:String = null;
       public var source:String = null;
@@ -57,6 +55,10 @@ dynamic public class LzSprite extends Sprite {
       public var resourcewidth:Number = 0;
       public var resourceheight:Number = 0;
       public var isroot:Boolean = false;
+      var lastreswidth:Number = 0;
+      var lastresheight:Number = 0;
+      var skiponload = false;
+      var baseurl;
 
       // If null, the handcursor visibility is set to the value of LzMouseKernel.showhandcursor
       // whenevent a mouseover event happens.
@@ -70,8 +72,8 @@ dynamic public class LzSprite extends Sprite {
       // Cache for instantiated assets in a multiframe resource set
       var resourceCache:Array = null;
 
-      /* private */ static const soundLoaderContext:SoundLoaderContext = new SoundLoaderContext(1000, true);
       /* private */ static const loaderContext:LoaderContext = new LoaderContext(true);
+      /* private */ static const soundLoaderContext:SoundLoaderContext = new SoundLoaderContext(1000, true);
 
       /* private */ static const MP3_FPS:Number = 30;
       /* private */ var sound:Sound = null;
@@ -169,10 +171,31 @@ dynamic public class LzSprite extends Sprite {
           }
       }
 
+      private var _frame:int = 1;
 
-      var skiponload = false;
-      var baseurl;
-      function  __preloadFrames () { }
+      public function set frame (fr:int) :void {
+          this._frame = fr;
+          if (this.owner) {
+              this.owner.resourceevent('frame', fr);
+          }
+      }
+
+      public function get frame () :int {
+          return this._frame;
+      }
+
+      private var _totalframes:int = 1;
+
+      public function set totalframes (tfr:int) :void {
+          this._totalframes = tfr;
+          if (this.owner) {
+              this.owner.resourceevent('totalframes', tfr);
+          }
+      }
+
+      public function get totalframes () :int {
+          return this._totalframes;
+      }
 
       /** setResource( String:resource )
           o Displays a compiled-in resource (by name)
@@ -196,9 +219,6 @@ dynamic public class LzSprite extends Sprite {
           //  assetclass: __embed_lzasset_lzfocusbracket_bottomright_shdw,
           // frames: ["lps/components/lz/resources/focus/focus_bot_rt_shdw.png"], width: 9, height: 9};
 
-
-          //Debug.write('setting resource', r);
-
           var res:Object = LzResourceLibrary[r];
           if (! res) {
               if ($debug) {
@@ -212,11 +232,10 @@ dynamic public class LzSprite extends Sprite {
                 || LzAsset.isMovieClipLoaderAsset(r)) {
               this.resourcewidth = res.width;
               this.resourceheight = res.height;
-              if (this.owner != null) {
-                  this.totalframes = res.frames.length;
-                  this.owner.resourceevent('totalframes', this.totalframes);
-              }
+              this.totalframes = res.frames.length;
+
               if (imgLoader) {
+                  // unload previous http image-resource
                   this.unload();
               } else if (this.isaudio) {
                   // unload previous sound-resource
@@ -236,8 +255,8 @@ dynamic public class LzSprite extends Sprite {
               this.resource = r;
               
               this.sound = new res['assetclass']() as Sound;
-              this.updateTotalframes();
-              
+              this.totalframes = Math.floor(this.getTotalTime() * MP3_FPS);
+
               // TODO: add condition on this
               this.startPlay()
               
@@ -261,9 +280,6 @@ dynamic public class LzSprite extends Sprite {
           if (url == null || url == 'null') {
               return;
           }
-
-          this.__isinternalresource = false;
-
           var loadurl = url;
           var proxied = this.owner.__LZcheckProxyPolicy( url );
           var proxyurl = this.owner.getProxyURL(url);
@@ -309,9 +325,9 @@ dynamic public class LzSprite extends Sprite {
             
               if (! imgLoader) {
                   if (this.resourceContainer) {
+                      // unload previous internal image-resource
                       this.unload();
                   }
-                  this.__isinternalresource = false;
                   imgLoader = new Loader();
                   imgLoader.mouseEnabled = false;// @devnote: see LPP-7022
                   imgLoader.mouseChildren = false;
@@ -324,7 +340,7 @@ dynamic public class LzSprite extends Sprite {
                   //TODO [20080911 anba] cancel current load?
                   // imgLoader.close();
               }
-              
+              this.__isinternalresource = false;
               this.resource = url;
               var res = this.imgLoader;
               if (res) {
@@ -341,7 +357,7 @@ dynamic public class LzSprite extends Sprite {
           if (filetype != null) {
               return filetype.toLowerCase();
           } else {
-              var si = url.lastIndexOf(".");
+              var si:int = url.lastIndexOf(".");
               return si != -1 ? url.substring(si + 1).toLowerCase() : null;
           }
       }
@@ -387,12 +403,10 @@ dynamic public class LzSprite extends Sprite {
                               Debug.warn("Playback control will not work for the resource.  Please update or recompile the resource for Flash 9.", this.resource);
                           }
                       } else if (info.content is MovieClip) {
-                          Debug.write("loaderEventHandler info.content is MovieClip");
                           // store a reference for playback control
                           this.loaderMC = MovieClip(info.content);  
   
                           this.totalframes = this.loaderMC.totalFrames;
-                          this.owner.resourceevent('totalframes', this.totalframes);
                           this.loaderMC.addEventListener(Event.ENTER_FRAME, updateFrames);
                           this.owner.resourceevent('play', null, true);
                           this.playing = this.owner.playing = true;
@@ -414,7 +428,8 @@ dynamic public class LzSprite extends Sprite {
                          event.type == SecurityErrorEvent.SECURITY_ERROR) {
                   //TODO [20080911 anba] how can "owner" become null here?
                   if (this.owner != null) {
-                      this.owner.resourceloaderror( (event as IOErrorEvent).text );
+                      // IOErrorEvent/SecurityErrorEvent -> ErrorEvent -> TextEvent
+                      this.owner.resourceloaderror( (event as TextEvent).text );
                   }
               } else if (event.type == ProgressEvent.PROGRESS) {
                   var ev:ProgressEvent = event as ProgressEvent;
@@ -430,26 +445,25 @@ dynamic public class LzSprite extends Sprite {
               if ($debug) Debug.warn(event.type + " " + error);
           }
       }
-      
-      /** 
-        * <code>true</code> if a sound is attached to this sprite.
-        */
-      public function get isaudio () :Boolean {
-          return this.sound != null;
-      }
-      
-      /** 
+
+      /**
         * Handle frame updates for loaded movieclips
         */
       private function updateFrames (event:Event) :void {
           this.frame = this.loaderMC.currentFrame;
-          this.owner.resourceevent('frame', this.frame);
           if (this.frame == this.totalframes) {
               this.owner.resourceevent('lastframe', null, true);
           }
       }
 
-      /** 
+      /**
+        * <code>true</code> if a sound is attached to this sprite.
+        */
+      public function get isaudio () :Boolean {
+          return this.sound != null;
+      }
+
+      /**
         * Load/Stream a sound from an URL.
         */
       private function loadSound (url:String) :void {
@@ -537,7 +551,6 @@ dynamic public class LzSprite extends Sprite {
               this.startPlay(framenumber);
           } else {
               this.frame = framenumber;
-              this.owner.resourceevent('frame', framenumber);
           }
       }
       
@@ -552,8 +565,8 @@ dynamic public class LzSprite extends Sprite {
               } else if (event.type == Event.COMPLETE) {
                   this.soundLoading = false;
                   this.owner.resourceevent('loadratio', 1);
-                  this.updateTotalframes();
-                  
+                  this.totalframes = Math.floor(this.getTotalTime() * MP3_FPS);
+
                   // send events, including onload
                   this.sendResourceLoad();
               } else if (event.type == ProgressEvent.PROGRESS) {
@@ -577,30 +590,17 @@ dynamic public class LzSprite extends Sprite {
         */
       private function soundFrameHandler (event:Event) :void {
           // Event.ENTER_FRAME
-          var fr:Number = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
-          this.frame = fr;
-          this.owner.resourceevent('frame', fr);
-          
-          this.updateTotalframes();
+          this.frame = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
+          this.totalframes = Math.floor(this.getTotalTime() * MP3_FPS);
       }
 
-      /** 
-        * update totalframes for audio
-        */
-      private function updateTotalframes () :void {
-          var tfr:Number = Math.floor(this.getTotalTime() * MP3_FPS);
-          this.totalframes = tfr;
-          this.owner.resourceevent('totalframes', tfr);
-      }
-      
-      /** 
+      /**
         * Sound complete
         */
       private function soundCompleteHandler (event:Event) :void {
           // Event.SOUND_COMPLETE
           if (this.playing) {
               this.frame = this.totalframes;
-              this.owner.resourceevent('frame', this.frame);
 
               // SoundChannel.position does not stop exactly at Sound.length, 
               // there are a few ms difference between both values. 
@@ -955,24 +955,19 @@ dynamic public class LzSprite extends Sprite {
               
               if (p) this.owner.resourceevent('stop', null, true);
           } else if (this.__isinternalresource) {
-              if (this.resource == null || imgLoader) {
-                  return;
-              }
-              
-              var resinfo = LzResourceLibrary[this.resource];
-              
+              var resinfo:Object = LzResourceLibrary[this.resource];
+
               // Frames are one based not zero based
-              var frames = resinfo.frames;
-              if (fn == null) {
+              var frames:Array = resinfo.frames;
+              if (fn == null || fn < 1) {
                   fn = 1;
-              }
-              if (fn > frames.length) {
+              } else if (fn > frames.length) {
                   fn = frames.length;
               }
               this.frame = fn;
-              var framenumber = fn - 1;
-              
-              var assetclass;
+              var framenumber:int = fn - 1;
+
+              var assetclass:Class;
               // single frame resources get an entry in LzResourceLibrary which has
               // 'assetclass' pointing to the resource Class object.
               if (resinfo.assetclass is Class) {
@@ -981,36 +976,37 @@ dynamic public class LzSprite extends Sprite {
                   // Multiframe resources have an array of Class objects in frames[]
                   assetclass = frames[framenumber];
               }
-              
-              if (! assetclass) return;
-              if (this.resourceCache == null) {
-                  this.resourceCache = [];
-              }
-              var asset:DisplayObject = this.resourceCache[framenumber];
-              if (asset == null) {
-                  //Debug.write('CACHE MISS, new ',assetclass);
-                  asset = new assetclass();
-                  asset.scaleX = 1.0
-                  asset.scaleY = 1.0;
-                  this.resourceCache[framenumber] = asset;
-              }
-              
-              var oRect:Rectangle = asset.getBounds( asset );
-              if (oRect.width == 0 || oRect.height == 0) {
-                // it can take a while for new resources to show up.  Call back until we have a valid size.
-                setTimeout(this.__resetframe, 50);
-                return;
-              }
 
-              if (this.resourceContainer != null) {
-                  this.removeChild(this.resourceContainer);
-              }
-              this.resourceContainer = asset;
-              this.addChildAt(asset,IMGDEPTH);
+              if (assetclass) {
+                  if (this.resourceCache == null) {
+                      this.resourceCache = [];
+                  }
+                  var asset:DisplayObject = this.resourceCache[framenumber];
+                  if (asset == null) {
+                      //Debug.write('CACHE MISS, new ',assetclass);
+                      asset = new assetclass();
+                      asset.scaleX = 1.0
+                      asset.scaleY = 1.0;
+                      this.resourceCache[framenumber] = asset;
+                  }
 
-              //Debug.write('set resource to', asset, oRect); 
-              
-              this.applyStretchResource();
+                  var oRect:Rectangle = asset.getBounds( asset );
+                  if (oRect.width == 0 || oRect.height == 0) {
+                      // it can take a while for new resources to show up.  Call back until we have a valid size.
+                      setTimeout(this.__resetframe, 50);
+                      return;
+                  }
+                    
+                  if (this.resourceContainer != null) {
+                      this.removeChild(this.resourceContainer);
+                  }
+                  this.resourceContainer = asset;
+                  this.addChildAt(asset,IMGDEPTH);
+
+                  this.applyStretchResource();
+              } else {
+                  // bad resource?
+              }
           } else if (this.loaderMC) {
               if ( this.playing ) this.owner.resourceevent('stop', null, true);
               this.playing = this.owner.playing = false;
@@ -1090,13 +1086,13 @@ dynamic public class LzSprite extends Sprite {
           sprite's size
       */
       public function stretchResource( xory:String ):void {
-          if ( xory == null || xory == "x" || xory=="width" || xory=="both" ){
+          if (xory == "width" || xory == "both") {
               this._setrescwidth = true;
           }
 
-          if ( xory == null || xory == "y"|| xory=="height" || xory=="both" ){
+          if (xory == "height" || xory == "both") {
               this._setrescheight = true;
-          }          
+          }
           this.applyStretchResource();
       }
 
@@ -1110,15 +1106,15 @@ dynamic public class LzSprite extends Sprite {
           // Don't try to do anything while an image is loading
           if (res == null) return;
 
-          var scaleX = 1.0;
+          var scaleX:Number = 1.0;
           if (this.lzwidth && this._setrescwidth && this.resourcewidth) {
-              var scaleX =  this.lzwidth / this.resourcewidth;
-          } 
+              scaleX = this.lzwidth / this.resourcewidth;
+          }
 
-          var scaleY = 1.0;
+          var scaleY:Number = 1.0;
           if (this.lzheight && this._setrescheight && this.resourceheight) {
-              var scaleY =  this.lzheight / this.resourceheight;
-          } 
+              scaleY = this.lzheight / this.resourceheight;
+          }
 
           res.scaleX = scaleX;
           res.scaleY = scaleY;
@@ -1126,12 +1122,12 @@ dynamic public class LzSprite extends Sprite {
       }
 
 
-      /** destroy( Boolean:recursive )
+      /** destroy()
           o Causes the sprite to destroy itself
-          o if recursive is true, the sprite destroys all its children as well 
       */
       public function destroy( ):void {
           //PBR
+          this.unload();
           if (parent) {
               parent.removeChild(this);
           }
@@ -1210,19 +1206,19 @@ dynamic public class LzSprite extends Sprite {
           trace('LzSprite.setStyleObject not yet implemented');
       }
 
-      /** removes all children from a container */
-      public function removeChildren(container:DisplayObjectContainer):void {
-          while (container.numChildren > 0) {
-              container.removeChildAt(0);
-          }
-      }
-
       /** getStyleObject()
           o Gets the style object of the sprite 
       */
       public function getStyleObject():Object {
           trace('LzSprite.getStyleObject not yet implemented');
           return null;
+      }
+
+      /** removes all children from a container */
+      public function removeChildren(container:DisplayObjectContainer):void {
+          while (container.numChildren > 0) {
+              container.removeChildAt(0);
+          }
       }
 
       public function unload() {
@@ -1239,6 +1235,7 @@ dynamic public class LzSprite extends Sprite {
         }
         if (this.resourceContainer != null) {
             this.removeChild(this.resourceContainer);
+            this.resourceContainer = null;
         }
         if (this.isaudio) this.unloadSound();
         // clear out cached values
@@ -1249,7 +1246,6 @@ dynamic public class LzSprite extends Sprite {
             this.loaderMC.removeEventListener(Event.ENTER_FRAME, updateFrames);
             this.loaderMC = null;
         }
-        this.loaderMC = null;
         this.imgLoader = null;
       }
 
@@ -1384,9 +1380,11 @@ dynamic public class LzSprite extends Sprite {
         */
       function seek (secs:Number, doplay:Boolean) :void {
           if (this.isaudio) {
-              var pos:Number = Math.max(this.getCurrentTime() + secs, 0);
+              var pos:Number = this.getCurrentTime() + secs;
+              if (pos < 0) pos = 0;
               // don't seek too far
-              if (pos > this.getTotalTime()) pos = this.getTotalTime();
+              var total:Number = this.getTotalTime();
+              if (pos > total) pos = total;
 
               if (this.playing) {
                   this.stopPlay();
@@ -1394,9 +1392,7 @@ dynamic public class LzSprite extends Sprite {
               if (doplay) {
                   this.startPlay(pos, false);
               } else {
-                  var fr:Number = Math.floor(pos * MP3_FPS);
-                  this.frame = fr;
-                  this.owner.resourceevent('frame', fr);
+                  this.frame = Math.floor(pos * MP3_FPS);
               }
           }
       }
@@ -1462,7 +1458,11 @@ dynamic public class LzSprite extends Sprite {
         this.setWidth(this._setrescwidth?this.width:this.resourcewidth);
         this.setHeight(this._setrescheight?this.height:this.resourceheight);
 
-        if (! skipsend && ! this.__LZhaser) this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
+        if (! skipsend) this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
+      }
+
+      function setClickRegion (cr:*) :void {
+          trace('LzSprite.setClickRegion not yet implemented');
       }
 
   }#
