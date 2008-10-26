@@ -120,6 +120,7 @@ class LzInputTextSprite extends LzTextSprite {
      * @access private
      */
     function __onChanged (event:Event ){
+        this.text = this.getText();
         if (owner) owner.inputtextevent('onchange', this.text);
     }
 

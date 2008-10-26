@@ -186,6 +186,7 @@ function inputtextevent (eventname, value = null) {
     } else if (eventname == 'onchange') {
         //multiline resizable fields adjust their height
         var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
+        this.text = isprite.getText();
         if ( this.multiline && 
              this.sizeToHeight && 
              this.height != isprite.getTextfieldHeight() ) {

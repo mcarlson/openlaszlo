@@ -51,6 +51,7 @@ var LzInputTextSprite = function(newowner, args) {
     this.__LZtextclip = textclip;
     this.__LZtextclip._accProps = this._accProps;
     // set a pointer back to this view from the TextField object
+    textclip.__owner = this;
     textclip.__lzview = this.owner;
     textclip._visible = true;
     
@@ -234,7 +235,10 @@ TextField.prototype.__gotFocus = function ( oldfocus ){
   * @access private
   */
 TextField.prototype.__onChanged = function ( ){
-    if (this.__lzview) this.__lzview.inputtextevent('onchange', this.text);
+    if (this.__lzview) {
+        this.__owner.text = this.__owner.getText();
+        this.__lzview.inputtextevent('onchange', this.__owner.text);
+    }
 }
 
 /**
