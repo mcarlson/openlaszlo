@@ -65,7 +65,7 @@ public final class LzAudioService {
         if (this.capabilities.audio) {
             LzAudioKernel.playSound(snd);
         } else if ($debug) {
-            this.__warnCapability('lz.Audio.playSound()');
+            LzView.__warnCapability('lz.Audio.playSound()', 'audio');
         }
     }
 
@@ -76,7 +76,7 @@ public final class LzAudioService {
         if (this.capabilities.audio) {
             LzAudioKernel.stopSound();
         } else if ($debug) {
-            this.__warnCapability('lz.Audio.stopSound()');
+            LzView.__warnCapability('lz.Audio.stopSound()', 'audio');
         }
     }
 
@@ -88,7 +88,7 @@ public final class LzAudioService {
         if (this.capabilities.audio) {
             LzAudioKernel.startSound();
         } else if ($debug) {
-            this.__warnCapability('lz.Audio.startSound()');
+            LzView.__warnCapability('lz.Audio.startSound()', 'audio');
         }
     }
 
@@ -100,7 +100,7 @@ public final class LzAudioService {
         if (this.capabilities.audio) {
             return LzAudioKernel.getVolume();
         } else if ($debug) {
-            this.__warnCapability('lz.Audio.getVolume()');
+            LzView.__warnCapability('lz.Audio.getVolume()', 'audio');
         }
         return NaN;
     }
@@ -113,7 +113,7 @@ public final class LzAudioService {
         if (this.capabilities.audio) {
             LzAudioKernel.setVolume(v);
         } else if ($debug) {
-            this.__warnCapability('lz.Audio.setVolume()');
+            LzView.__warnCapability('lz.Audio.setVolume()', 'audio');
         }
     }
 
@@ -125,7 +125,7 @@ public final class LzAudioService {
         if (this.capabilities.audio) {
             return LzAudioKernel.getPan();
         } else if ($debug) {
-            this.__warnCapability('lz.Audio.getPan()');
+            LzView.__warnCapability('lz.Audio.getPan()', 'audio');
         }
         return NaN;
     }
@@ -138,16 +138,9 @@ public final class LzAudioService {
         if (this.capabilities.audio) {
             LzAudioKernel.setPan(p);
         } else if ($debug) {
-            this.__warnCapability('lz.Audio.setPan()');
+            LzView.__warnCapability('lz.Audio.setPan()', 'audio');
         }
     }
-
-if ($debug) {
-    /** @access private */
-    function __warnCapability (msg:String) :void {
-        Debug.warn('The %s runtime does not support %s', canvas['runtime'], msg);
-    }
-}
 
 } // End of LzAudioService
 lz.AudioService = LzAudioService;  // publish

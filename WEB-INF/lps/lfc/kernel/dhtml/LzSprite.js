@@ -336,6 +336,9 @@ LzSprite.prototype.capabilities = {
     ,clickmasking: false
     ,minimize_opacity_changes: false
     ,history: true
+    ,runtimemenus: false
+    ,setclipboard: false
+    ,proxypolicy: false
 }
 
 LzSprite.prototype.__updateQuirks = function () {

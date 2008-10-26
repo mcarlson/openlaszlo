@@ -700,7 +700,7 @@ function $lzc$set_clickregion(cr) {
     if (this.capabilities.clickregion) {
         this.sprite.setClickRegion(cr);
     } else if ($debug) {
-        this.__warnCapability('view.setClickRegion()'); 
+        LzView.__warnCapability('view.setClickRegion()', 'clickregion'); 
     }
     this.clickregion = cr;
 }
@@ -871,7 +871,7 @@ function $lzc$set_aaactive(s) {
         this.aaactive = s;
         this.sprite.setAAActive(s);
     } else if ($debug) {
-        this.__warnCapability('view.setAAActive()'); 
+        LzView.__warnCapability('view.setAAActive()', 'accessibility'); 
     }
 }
 
@@ -887,7 +887,7 @@ function $lzc$set_aaname(s) {
         this.aaname = s;
         this.sprite.setAAName(s);
     } else if ($debug) {
-        this.__warnCapability('view.setAAName()'); 
+        LzView.__warnCapability('view.setAAName()', 'accessibility'); 
     }
 }
 
@@ -903,7 +903,7 @@ function $lzc$set_aadescription(s) {
         this.aadescription = s;
         this.sprite.setAADescription(s);
     } else if ($debug) {
-        this.__warnCapability('view.setAADescription()'); 
+        LzView.__warnCapability('view.setAADescription()', 'accessibility'); 
     }
 }
 
@@ -919,7 +919,7 @@ function $lzc$set_aatabindex(s) {
         this.aatabindex = s;
         this.sprite.setAATabIndex(s);
     } else if ($debug) {
-        this.__warnCapability('view.setAATabIndex()'); 
+        LzView.__warnCapability('view.setAATabIndex()', 'accessibility'); 
     }
 }
 
@@ -936,7 +936,7 @@ function $lzc$set_aasilent(s) {
         this.aasilent = s;
         this.sprite.setAASilent(s);
     } else if ($debug) {
-        this.__warnCapability('view.setAASilent()'); 
+        LzView.__warnCapability('view.setAASilent()', 'accessibility'); 
     }
 }
 
@@ -1009,7 +1009,7 @@ function $lzc$set_opacity(v)
     if (this.capabilities.opacity) {
         this.sprite.setOpacity(v);
     } else if ($debug) {
-        this.__warnCapability('view.setOpacity()'); 
+        LzView.__warnCapability('view.setOpacity()', 'opacity'); 
     }
     this.opacity = v;
     if (this.onopacity.ready) this.onopacity.sendEvent( v );
@@ -1126,7 +1126,7 @@ function $lzc$set_rotation(v) {
     if (this.capabilities.rotation) {
         this.sprite.setRotation(v)
     } else if ($debug) {
-        this.__warnCapability('view.setRotation()'); 
+        LzView.__warnCapability('view.setRotation()', 'rotation'); 
     }
     this.rotation = v;
     var rrad = Math.PI /180 * this.rotation;
@@ -2119,7 +2119,7 @@ function setColorTransform ( o ){
     if (this.capabilities.colortransform) {
         this.sprite.setColorTransform(o);
     } else if ($debug) {
-        this.__warnCapability('view.setColorTransform()'); 
+        LzView.__warnCapability('view.setColorTransform()', 'colortransform'); 
     }
 }
 
@@ -2143,7 +2143,7 @@ function getColorTransform (){
     if (this.capabilities.colortransform) {
         return this.sprite.getColorTransform();
     } else if ($debug) {
-        this.__warnCapability('view.getColorTransform()'); 
+        LzView.__warnCapability('view.getColorTransform()', 'colortransform'); 
     }
 }
 
@@ -2848,7 +2848,7 @@ function setVolume (v:Number) :void {
     if (this.capabilities.audio) {
         this.sprite.setVolume(v);
     } else if ($debug) {
-        this.__warnCapability('view.setVolume()'); 
+        LzView.__warnCapability('view.setVolume()', 'audio'); 
     }
 }
 
@@ -2860,7 +2860,7 @@ function getVolume () :Number {
     if (this.capabilities.audio) {
         return this.sprite.getVolume();
     } else if ($debug) {
-        this.__warnCapability('view.getVolume()'); 
+        LzView.__warnCapability('view.getVolume()', 'audio'); 
     }
     return NaN;
 }
@@ -2873,7 +2873,7 @@ function setPan (p:Number) :void {
     if (this.capabilities.audio) {
         this.sprite.setPan(p);
     } else if ($debug) {
-        this.__warnCapability('view.setPan()'); 
+        LzView.__warnCapability('view.setPan()', 'audio'); 
     }
 }
 
@@ -2885,7 +2885,7 @@ function getPan () :Number {
     if (this.capabilities.audio) {
         return this.sprite.getPan();
     } else if ($debug) {
-        this.__warnCapability('view.getPan()'); 
+        LzView.__warnCapability('view.getPan()', 'audio'); 
     }
     return NaN;
 }
@@ -2989,7 +2989,7 @@ function setAccessible (accessible) {
     if (this.capabilities.accessibility) {
         this.sprite.setAccessible(accessible);
     } else if ($debug) {
-        this.__warnCapability('view.setAccessible()'); 
+        LzView.__warnCapability('view.setAccessible()', 'accessibility'); 
     }
 }
 
@@ -3205,9 +3205,12 @@ function getContextMenu ( ){
     return this.sprite.getContextMenu();
 }
 
-/** @access private */ 
-function __warnCapability(msg) {
-    Debug.warn('The %s runtime does not support %s', canvas['runtime'], msg); 
+/** @access private */
+static function __warnCapability (msg:String, capabilityname:String=''):void {
+    if ($debug) {
+        var check = capabilityname == '' ? '' : 'Check "canvas.capabilities.' + capabilityname + '" to avoid this warning.';
+        Debug.warn('The %s runtime does not support %s. %s', canvas['runtime'], msg, check);
+    }
 }
 
 /**
@@ -3239,7 +3242,7 @@ function $lzc$set_cachebitmap( cache ) {
         if (this.capabilities.bitmapcaching) {
             this.sprite.setBitmapCache(cache);
         } else if ($debug) {
-            this.__warnCapability('view.cachebitmap'); 
+            LzView.__warnCapability('view.cachebitmap', 'bitmapcaching'); 
         }
     }
 }

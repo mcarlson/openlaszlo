@@ -113,6 +113,9 @@ dynamic public class LzSprite extends Sprite {
       ,clickmasking: false
       // history won't work yet because LzUtils.safeEval() doesn't return values for methods in the global scope - see LPP-7008
       ,history: false
+      ,runtimemenus: true
+      ,setclipboard: true
+      ,proxypolicy: true
       }
 
       public function LzSprite (newowner = null, isroot = null) {

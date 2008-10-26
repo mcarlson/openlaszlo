@@ -31,6 +31,15 @@
  * @shortdesc Provides access to the browser and player environment
  */
 public final class LzBrowserService {
+    // TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
+    if ($swf9) {
+        /** @access private */
+        var capabilities :* = LzSprite.capabilities;
+    } else {
+        /** @access private */
+        var capabilities :* = LzSprite.prototype.capabilities;
+    }
+
     /**
      * The browser service.  Also available as the global
      * <code>lz.Browser</code>.
@@ -140,50 +149,70 @@ public final class LzBrowserService {
     }
 
     /**
-     * Turns the flash context menu on or off
-     * @keywords flashspecific private
+     * Turns the runtime-specific context menu on or off
+     *
      * @param Boolean truefalse: boolean value - true for on, false for off.
      */
     function showMenu (truefalse:Boolean) :void {
-        LzBrowserKernel.showMenu(truefalse);
+        if (this.capabilities.runtimemenus) {
+            LzBrowserKernel.showMenu(truefalse);
+        } else if ($debug) {
+            LzView.__warnCapability('lz.Browser.showMenu()', 'runtimemenus');
+        }
     }
 
     /**
      * Sets the system clipboard to the specified string
-     * @keywords flashspecific
      *
      * @param String str: String to set the system clipboard to
      */
     function setClipboard (str:String) :void {
-        LzBrowserKernel.setClipboard (str);
+        if (this.capabilities.setclipboard) {
+            LzBrowserKernel.setClipboard (str);
+        } else if ($debug) {
+            LzView.__warnCapability('lz.Browser.setClipboard()', 'setclipboard');
+        }
     }
 
     /**
-     * Determines if the a screen reader is active and the Flash player is focused
-     * @keywords flashspecific
+     * Determines if a screen reader is active and the application is focused
      *
-     * @return: True if a screen reader is active and the Flash player is focused
+     * @return: True if a screen reader is active and the application is focused
      */
     function isAAActive () :Boolean {
-        return LzBrowserKernel.isAAActive();
+        if (this.capabilities.accessibility) {
+            return LzBrowserKernel.isAAActive();
+        } else {
+            if ($debug) {
+                LzView.__warnCapability('lz.Browser.isAAActive()', 'accessibility');
+            }
+            // must return a value for swf9
+            return false;
+        }
     }
 
     /**
      * Updates accessibility data
-     * @keywords flashspecific
      * @access private
      */
     function updateAccessibility () :void  {
-        LzBrowserKernel.updateAccessibility();
+        if (this.capabilities.accessibility) {
+            LzBrowserKernel.updateAccessibility();
+        } else if ($debug) {
+            LzView.__warnCapability('lz.Browser.updateAccessibility()', 'accessibility');
+        }
     }
 
     /**
     * Loads a proxy policy file
-    * @keywords flashspecific
     * @access private
     */
     function loadProxyPolicy (url:String) :void {
-        LzBrowserKernel.loadProxyPolicy(url);
+        if (this.capabilities.proxypolicy) {
+            LzBrowserKernel.loadProxyPolicy(url);
+        } else if ($debug) {
+            LzView.__warnCapability('lz.Browser.loadProxyPolicy()', 'proxypolicy');
+        }
     }
 
     /** @access private */

@@ -250,7 +250,7 @@ function setHTML (htmlp) {
         var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
         isprite.setHTML(htmlp);
     } else if ($debug) {
-        this.__warnCapability('inputtext.setHTML()'); 
+        LzView.__warnCapability('inputtext.setHTML()', 'htmlinputtext'); 
     }
 }
 

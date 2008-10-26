@@ -18,6 +18,8 @@ class LzBrowserKernel {
   import flash.net.*;
   import flash.system.Capabilities;
   import flash.system.Security;
+  import flash.system.System;
+  import flash.accessibility.Accessibility;
 }#
 
 /**
@@ -210,20 +212,17 @@ static function getAppID() {
   * @param Boolean truefalse: boolean value - true for on, false for off.
   */
 static function showMenu (truefalse) {
-  //TODO Not implemented
-  throw new Error("showMenu not implemented");
+  LFCApplication.stage.showDefaultContextMenu = truefalse;  
 }
 
 
 /**
   * Sets the system clipboard to the specified string
-  * @keywords flashspecific
   * 
   * @param String str: String to set the system clipboard to
   */
 static function setClipboard (str){
-  //TODO Not implemented
-  throw new Error("setClipboard not implemented");
+  System.setClipboard(str);
 }
 
 /**
@@ -232,10 +231,8 @@ static function setClipboard (str){
   * 
   * @return: True if a screen reader is active and the Flash player is focused
   */
-static function isAAActive (){
-  //TODO Not implemented
-  throw new Error("isAAActive not implemented");
-  return false;
+static function isAAActive ():Boolean{
+  return Capabilities.hasAccessibility && Accessibility.active;
 }
 
 /**
@@ -244,8 +241,7 @@ static function isAAActive (){
   * @access private
   */
 static function updateAccessibility () {
-  //TODO Not implemented
-  throw new Error("updateAccessibility not implemented");
+  Accessibility.updateProperties();
 }
 
 /**
@@ -254,7 +250,7 @@ static function updateAccessibility () {
   * @access private
   */
 static function loadProxyPolicy (url) {
-    Security.loadPolicyFile(url);
+  Security.loadPolicyFile(url);
 }
 
 } // End of LzBrowserKernel

@@ -134,7 +134,7 @@ function $lzc$set_antiAliasType(aliasType) {
             Debug.warn("antiAliasType invalid, must be 'normal' or 'advanced', but you said '" + aliasType + "'");
         }        
     } else if ($debug) {
-        this.__warnCapability('text.setAntiAliasType()'); 
+        LzView.__warnCapability('text.setAntiAliasType()', 'advancedfonts'); 
     }
 }
 
@@ -152,7 +152,7 @@ function $lzc$set_gridFit(gridFit) {
             Debug.warn("gridFit invalid, must be 'none', 'pixel', or 'subpixel' but you said '" + gridFit + "'");
         }
     } else if ($debug) {
-        this.__warnCapability('text.setGridFit()'); 
+        LzView.__warnCapability('text.setGridFit()', 'advancedfonts'); 
     }
 }
 
@@ -170,7 +170,7 @@ function $lzc$set_sharpness(sharpness) {
             Debug.warn("sharpness out of range, must be -400 to 400");
         }        
     } else if ($debug) {
-        this.__warnCapability('text.setSharpness()'); 
+        LzView.__warnCapability('text.setSharpness()', 'advancedfonts'); 
     }
 }
 
@@ -188,7 +188,7 @@ function $lzc$set_thickness(thickness) {
             Debug.warn("thickness out of range, must be -200 to 200");
         }
     } else if ($debug) {
-        this.__warnCapability('text.setThickness()'); 
+        LzView.__warnCapability('text.setThickness()', 'advancedfonts'); 
     }
 }
 
@@ -1098,7 +1098,7 @@ function getAntiAliasType() {
     if (this.capabilities.advancedfonts) {    
         return this.antiAliasType;
     } else if ($debug) {
-        this.__warnCapability('text.getAntiAliasType()'); 
+        LzView.__warnCapability('text.getAntiAliasType()', 'advancedfonts'); 
     }
 }
 
@@ -1122,7 +1122,7 @@ function getGridFit() {
     if (this.capabilities.advancedfonts) {
         return this.gridFit; 
     } else if ($debug) {
-        this.__warnCapability('text.getGridFit()'); 
+        LzView.__warnCapability('text.getGridFit()', 'advancedfonts'); 
     }
 }
 
@@ -1146,7 +1146,7 @@ function getSharpness() {
     if (this.capabilities.advancedfonts) {    
         return this.sharpness; 
     } else if ($debug) {
-        this.__warnCapability('text.getSharpness()'); 
+        LzView.__warnCapability('text.getSharpness()', 'advancedfonts'); 
     }
 }
 
@@ -1171,7 +1171,7 @@ function getThickness() {
     if (this.capabilities.advancedfonts) {    
         return this.thickness;
     } else if ($debug) {
-        this.__warnCapability('text.getThickness()'); 
+        LzView.__warnCapability('text.getThickness()', 'advancedfonts'); 
     }
 }
 

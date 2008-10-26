@@ -63,6 +63,9 @@ LzSprite.prototype.capabilities = {
     ,clickmasking: true
     ,clickregion: true
     ,history: true
+    ,runtimemenus: true
+    ,setclipboard: true
+    ,proxypolicy: true
 }
 
 /** Turns accessibility on by showing/hiding the global yellow flash focusrect
