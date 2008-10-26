@@ -154,7 +154,8 @@ class LzInputTextSprite extends LzTextSprite {
      * @protected
      */
     override public function getText():String {
-            return textfield.text;
+        // We normalize swf's \r to \n
+        return this.textfield.text.split('\r').join('\n');
     }
 
     /**
