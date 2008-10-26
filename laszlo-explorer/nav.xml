@@ -167,6 +167,9 @@
         <item name="Proportions" action="explore" 
               src="/laszlo-explorer/constraints/proportions.lzx"  
               text="States -- a powerful abstraction"/>
+        <item name="CSS" action="explore"
+              src="/laszlo-explorer/constraints/css.lzx"
+              text="Using Cascading Style Sheets"/>
         <item name="Applying Constraints" action="explore" 
               src="/laszlo-explorer/constraints/splitpanel.lzx"  
               text="States -- a powerful abstraction"/>              
