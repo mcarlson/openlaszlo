@@ -9,7 +9,7 @@
   * @author Henry Minsky &lt;hminsky@laszlosystems.com&gt;
   */
 
-public class LzSprite extends Sprite {
+dynamic public class LzSprite extends Sprite {
 
 #passthrough (toplevel:true) {
   import flash.display.*;
