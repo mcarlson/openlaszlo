@@ -1178,9 +1178,12 @@ public dynamic class LzNode extends LzEventable {
         }
       }
     }
+    // Preferred
     var x = e['class'];
-    if ((! x) && e['tag']) {
-      x = lz[ e.tag ];
+    // Alternatively, look for `tag`
+    if (! x) {
+      if (e['tag']) { x = lz[ e.tag ]; }
+      // Finally, backward compatibility
       // TODO: [2008-10-26 ptw] Remove after 4.3
       if ((! x) && e['name']) {
         if ($debug) {
@@ -1198,7 +1201,7 @@ public dynamic class LzNode extends LzEventable {
         var ok = (x is Function);
       }
       if (! ok) {
-        name = e['tag'] || e['name'];
+        var name = e['tag'] || e['name'];
         if (name) {
           name = '<' + name + '>';
         } else {
