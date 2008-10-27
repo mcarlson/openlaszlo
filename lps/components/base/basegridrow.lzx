@@ -1,5 +1,5 @@
 <library>
-    
+    <include href="base/basecomponent.lzx" />
 
     <class name="basegridrow" extends="basecomponent">
         <attribute name="placement" value="rowparent" type="string"/>
