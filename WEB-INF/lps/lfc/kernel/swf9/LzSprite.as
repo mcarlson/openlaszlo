@@ -992,8 +992,8 @@ public class LzSprite extends Sprite {
 
                   var oRect:Rectangle = asset.getBounds( asset );
                   if (oRect.width == 0 || oRect.height == 0) {
-                      // it can take a while for new resources to show up.  Call back until we have a valid size.
-                      setTimeout(this.__resetframe, 50);
+                      // it can take a while for new resources to show up.  Call back on the next frame, when we have a valid size.
+                      LzIdleKernel.addCallback(this, '__resetframe');
                       return;
                   }
                     
@@ -1027,7 +1027,9 @@ public class LzSprite extends Sprite {
           }
       }
 
-      public function __resetframe():void {
+      /** Callback resets resources after they have loaded and displayed */
+      public function __resetframe(ignore=null):void {
+          LzIdleKernel.removeCallback(this, '__resetframe');
           this.stop(this.frame);
       }
 

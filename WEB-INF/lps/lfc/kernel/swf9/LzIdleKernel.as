@@ -29,7 +29,7 @@ public class LzIdleKernel  {
             for (var i:int = __callbacks.length - 1; i >= 0; i--) {
                 if (__callbacks[i][0] == scope && __callbacks[i][1] == funcname) {
                     return __callbacks.splice(i, 1)        
-                        }    
+                }    
             }    
         }
 
