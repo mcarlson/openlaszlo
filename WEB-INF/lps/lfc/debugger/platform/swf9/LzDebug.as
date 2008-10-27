@@ -60,13 +60,13 @@ class LzAS3DebugService extends LzDebugService {
   // Map of id=>object
   var swf9_id_table:Array = [];
 
-  override function IDForObject (obj:*, force:Boolean=false):Number {
+  override function IDForObject (obj:*, force:Boolean=false):* {
     var id:Number;
     // TODO [hqm 2008-09-11] in swf9 we can use the flash.utils.Dictionary object
     // to do hash table lookups using === object equality, so we don't need to
     // iterate over the id_to_object_table to see if an object has been interned.
     var ot = this.swf9_object_table;
-    if (ot[obj]  != null) {
+    if (ot[obj] != null) {
       return ot[obj];
     }
     if (!force) {
@@ -139,6 +139,7 @@ class LzAS3DebugService extends LzDebugService {
     // Efficiency
     if (! obj) { return false; }
     if (obj is Array) { return true; }
+    if (obj is String) { return true; }
     if (! (typeof obj == 'object')) { return false; }
     // NOTE [2008-09-20 ptw] In JS2 you can't ask obj['length'] if the
     // object's class doesn't have such a property, or is not dynamic

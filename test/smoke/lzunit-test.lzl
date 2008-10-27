@@ -230,9 +230,9 @@
 
       assertSame(true, true, "true === true");
 
-      // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
-      var flashVersion = lz.Browser.getVersion();
-      if ((! flashVersion) || flashVersion < 8 || flashVersion > 10) {
+      // This is broken in swf8
+      if ($swf8) {
+      } else {
           assertNotSame(NaN, NaN, "NaN !== NaN");
       }
 
@@ -440,7 +440,8 @@
       var nexp = 27;
 
 
-      if ((! flashVersion) || flashVersion < 8 || flashVersion > 10) {
+      if ($swf8) {
+      } else {
           nexp++;
           assertSame(NaN, NaN, "Expected");
       }
@@ -520,12 +521,12 @@
         } else if (typeof(expectedError) == "function") {
             if (expectedError(message)) {
                 expectedErrors++;
-                Debug.info("Testing error system: '%0.24s' (above) is expected as part of this test", message);
+                Debug.info("Testing error system: '%0.24#s' (above) is expected as part of this test", message);
                 return;
             }
         } else if (expectedError == message) {
             expectedErrors++;
-            Debug.info("Testing error system: '%0.24s' (above) is expected as part of this test", message);
+            Debug.info("Testing error system: '%0.24#s' (above) is expected as part of this test", message);
             return;
         }
         super.error(tformat("Wrong error", expectedError, message));
@@ -545,7 +546,7 @@
 
     <method name="testError">
       expectedError = "This is an intentional error";
-      Debug.debug("Testing error system: '%0.24s' will NOT be output as an error (even though you will get a message saying it is expected)", expectedError);
+      Debug.debug("Testing error system: '%0.24#s' will NOT be output as an error (even though you will get a message saying it is expected)", expectedError);
       error(expectedError);
       assertEquals(1, expectedErrors, "Total number of expected errors");
     </method>
@@ -561,7 +562,7 @@
 
       expectedError.expectedMatch = "testing";
       var msg = "testing: 1, 2, 3";
-      Debug.debug("Testing error system: '%0.24s' will NOT be output as an error (even though you will get a message saying it is expected)", msg);
+      Debug.debug("Testing error system: '%0.24#s' will NOT be output as an error (even though you will get a message saying it is expected)", msg);
       error(msg);
       assertEquals(1, expectedErrors, "Total number of expected errors");
 

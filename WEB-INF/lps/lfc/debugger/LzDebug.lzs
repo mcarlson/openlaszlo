@@ -541,12 +541,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @param * obj: the object to intern
    * @param Boolean force: whether to force interning, even if the
    * object is not 'interesting'. Default false.
-   * @return Number: the object ID
-   *
+   * @return *: the object ID (Number) or null, if obj is not
+   * 'interesting' and not forced
    *
    * @access private
    */
-  function IDForObject (obj:*, force:Boolean=false):Number {
+  function IDForObject (obj:*, force:Boolean=false):* {
     var id:Number;
     // N.B. [hqm 2008-09-11] in swf9 we can use the flash.utils.Dictionary object
     // to do hash table lookups using === object equality, so we don't need to
@@ -929,6 +929,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           } else {
             var ellip = true;
             // Present as an object, Don't accumulate beyond limit
+            // Sort keys for consistent output
+            names.sort(this.caseInsensitiveOrdering);
             for (var i = 0; (i < names.length) && (s.length < limit); i ++) {
               var e = names[i];
               var v = thing[e];
