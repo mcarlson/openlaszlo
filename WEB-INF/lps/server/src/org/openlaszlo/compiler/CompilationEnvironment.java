@@ -404,6 +404,10 @@ public class CompilationEnvironment {
         tagTable.put(tagName, className);
     }
 
+    public boolean tagDefined(String tagName) {
+        return tagTable.containsKey(tagName);
+    }
+
     public Map getTags () {
         return tagTable;
     }

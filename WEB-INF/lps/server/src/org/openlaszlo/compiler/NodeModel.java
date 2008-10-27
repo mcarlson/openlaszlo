@@ -2126,8 +2126,14 @@ solution =
         if (! classModel.isCompiled()) {
           classModel.compile(env);
         }
-        // The class to instantiate
-        map.put("class", classModel.className);
+        if (classModel.anonymous || classModel.builtin || env.tagDefined(tagName)) {
+          // The class to instantiate
+          map.put("class", classModel.className);
+        } else {
+          // Non-anonymous classes may be deferred, so we must
+          // indirect through the tagname
+          map.put("tag", ScriptCompiler.quote(tagName));
+        }
 
         return map;
     }

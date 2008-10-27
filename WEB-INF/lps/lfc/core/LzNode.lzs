@@ -1147,20 +1147,23 @@ public dynamic class LzNode extends LzEventable {
    *
    * @param e: A hash with the following elements:
    * <ul>
-   * <li>name : [the name of the tag to use for child] (deprecated)</li>
-   * <li>class : [the name of the class to use for child]</li>
+   * <li>tag : [the the tag to use for child]</li>
+   * <li>class : [the class to use for child]</li>
    * <li>attrs: [a hash of named attributes to pass to the constructor for the
    * new object</li>
    * <li>children: [an array of child objects (to the same specification) for the
    * new child</li>
    * </ul>
-   * @param async: If true, children of new node will be created asynchronously
+   * @param async: If true, children of new node will be created
+   * asynchronously
+   *
+   * @devnote One of `tag` or `class` must be supplied.  `class` is
+   * the actual class to instantiate, but for the case of external or
+   * loadable libraries (where the class may not be defined at the
+   * time the parameters to makeChild are evaluated) `tag` can be used
+   * to defer the lookup to instantiation time.
    */
   function makeChild ( e , async=null){
-    //e.type = what this child is
-    //e.name = subtype
-    //e.attrs = init args
-
     // This can happen if constructing a sibling destroys the parent
     // (which can be triggered by a changed dataset)
     if (this.__LZdeleted) {
@@ -1175,31 +1178,35 @@ public dynamic class LzNode extends LzEventable {
         }
       }
     }
-    var x;
-    if (e.name && lz[e.name]) {
-      if ($debug) {
-        Debug.deprecated(arguments.callee, 'name', 'class');
+    var x = e['class'];
+    if ((! x) && e['tag']) {
+      x = lz[ e.tag ];
+      // TODO: [2008-10-26 ptw] Remove after 4.3
+      if ((! x) && e['name']) {
+        if ($debug) {
+          Debug.deprecated(arguments.callee, 'name', 'class');
+        }
+        x = lz[ e.name ];
       }
-      x = lz[ e.name ];
-    } else {
-      x = e['class'];
     }
     // TODO: [2005-03-24 ptw] Remove this if we ever enable
     // warnings in the LFC as this will be redundant
-    if ($swf9) {
-      // TODO [hqm 2008-01] enable this warning unconditionally for now for swf9 debugging
-      //    if ($debug) {
-      if ((! x) || (! (x is Class))) {
-        Debug.error('Class', e['class'], 'has not been defined yet');
+    if ($debug) {
+      if ($swf9) {
+        var ok = (x is Class);
+      } else {
+        var ok = (x is Function);
       }
-    } else if ($debug) {
-      if ((! x) || (! (x instanceof Function))) {
-        Debug.error('Class %s has not been defined yet', e['class']);
+      if (! ok) {
+        name = e['tag'] || e['name'];
+        if (name) {
+          name = '<' + name + '>';
+        } else {
+          name = 'a class';
+        }
+        Debug.error('Attempt to instantiate %s, which has not been defined', name);
       }
     }
-    // TODO: [2005-04-20 ptw] Don't know what this means, preserved
-    // for posterity:
-    // ... new eval(namespace) [e.name]...
     var w;
     if (x) {
       w = new x(this, e.attrs , ('children' in e) ? e.children : null , async );
