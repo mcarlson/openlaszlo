@@ -282,7 +282,7 @@ could do that in this scenario:</para>
 will be a pointer to some view:</para>
 
 <example role="live-example"><title>Defining a pointer in a class definition</title><programlisting>
-&lt;class name="lz.PopupWindow"
+&lt;class name="PopupWindow"
        extends="windowpanel"
        width="160"
        height="160"&gt;
@@ -319,7 +319,7 @@ var c = new lz.PopupWindow(canvas, {title:'popupbutton',
 </listitem><listitem>
 <para>The quick and easy way: You could always store a pointer as a global variable, e.g.</para>
 
-<programlisting>canvas.targetWindow = new window(canvas, {height:80,width:80});</programlisting>
+<programlisting>canvas.targetWindow = new lz.window(canvas, {height:80,width:80});</programlisting>
 
 <para>or</para>
 
