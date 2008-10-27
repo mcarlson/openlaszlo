@@ -423,7 +423,7 @@ will need to instantiate an object using script. The script
 instantiation syntax for classes looks like:</para>
 
 <programlisting>
-var myobject = new myclass(<replaceable>parent</replaceable>, <replaceable>attributes</replaceable>, <replaceable>children</replaceable>, <replaceable>instcall</replaceable>)
+var myobject = new lz.myclass(<replaceable>parent</replaceable>, <replaceable>attributes</replaceable>, <replaceable>children</replaceable>, <replaceable>instcall</replaceable>)
 </programlisting>
 
 <para>where:</para>

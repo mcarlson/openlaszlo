@@ -282,7 +282,7 @@ could do that in this scenario:</para>
 will be a pointer to some view:</para>
 
 <example role="live-example"><title>Defining a pointer in a class definition</title><programlisting>
-&lt;class name="PopupWindow"
+&lt;class name="lz.PopupWindow"
        extends="windowpanel"
        width="160"
        height="160"&gt;
@@ -297,7 +297,7 @@ The following paragraph is pretty jargonny!
 <para>Then when you instantiate that class, pass a pointer to the view into its constructor function:</para>
 
 <example role="live-example"><title>passing a pointer in constructor function</title><programlisting>
-var c = new PopupWindow(canvas, {title:'popupbutton', 
+var c = new lz.PopupWindow(canvas, {title:'popupbutton', 
                                  height:200, 
                                  width:200, viewToAffect: RootWindow.winbutton}); 
 </programlisting></example>
@@ -310,8 +310,8 @@ in the <indexterm><primary>PopupWindow</primary></indexterm><classname>PopupWind
 <para>Now if you had just instantiated the <indexterm><primary>RootWindow</primary></indexterm><classname>RootWindow</classname> class, you could pass the variable <varname>b</varname> into the constructor function for the PopupWindow:</para>
 
 <example role="live-example"><title>passing a parameter to a constructor function</title><programlisting>
-var b = new window(canvas, {height:80,width:80});
-var c = new PopupWindow(canvas, {title:'popupbutton',
+var b = new lz.window(canvas, {height:80,width:80});
+var c = new lz.PopupWindow(canvas, {title:'popupbutton',
                                  height:200,
                                  width:200,
                                  viewToAffect: b}); 
