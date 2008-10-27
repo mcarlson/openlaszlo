@@ -240,6 +240,9 @@ dynamic public class LzSprite extends Sprite {
               } else if (this.isaudio) {
                   // unload previous sound-resource
                   this.unloadSound();
+              } else {
+                  // clear resource cache
+                  this.resourceCache = null;
               }
               
               this.__isinternalresource = true;
@@ -310,7 +313,6 @@ dynamic public class LzSprite extends Sprite {
               loadurl = lz.Browser.makeProxiedURL(params);
           }
 
-
           if (getFileType(url, filetype) == "mp3") {
               // unload previous image-resource and sound-resource
               this.unload();
@@ -348,7 +350,6 @@ dynamic public class LzSprite extends Sprite {
               }
 
               imgLoader.load(new URLRequest(loadurl), LzSprite.loaderContext);
-
           }
       }
 
@@ -1181,10 +1182,10 @@ dynamic public class LzSprite extends Sprite {
           }
       }
 
-/**
-  * Puts this sprite in front of one of its siblings.
-  * @param LzSprite v: The sprite this sprite should go in front of. If the passed sprite is null or not a sibling, the method has no effect.
-  */
+      /**
+        * Puts this sprite in front of one of its siblings.
+        * @param LzSprite v: The sprite this sprite should go in front of. If the passed sprite is null or not a sibling, the method has no effect.
+        */
       public function sendInFrontOf( sprite ){
           if (!this.isroot) {
               var i = parent.getChildIndex(sprite);
@@ -1251,6 +1252,7 @@ dynamic public class LzSprite extends Sprite {
             this.loaderMC = null;
         }
         this.imgLoader = null;
+        this.resourceCache = null;
       }
 
       public function setAccessible(accessible:*) {
