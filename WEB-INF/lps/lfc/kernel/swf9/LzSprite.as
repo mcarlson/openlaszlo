@@ -399,13 +399,12 @@ public class LzSprite extends Sprite {
                   // avoid security exceptions
                   if (info.parentAllowsChild) {
                       if (info.content is AVM1Movie) {
-                          if ($debug) {
+                        if ($debug) {
                               Debug.warn("Playback control will not work for the resource.  Please update or recompile the resource for Flash 9.", this.resource);
                           }
                       } else if (info.content is MovieClip) {
                           // store a reference for playback control
                           this.loaderMC = MovieClip(info.content);  
-  
                           this.totalframes = this.loaderMC.totalFrames;
                           this.loaderMC.addEventListener(Event.ENTER_FRAME, updateFrames);
                           this.owner.resourceevent('play', null, true);
@@ -703,10 +702,10 @@ public class LzSprite extends Sprite {
           this.buttonMode = c;
           this.tabEnabled = false;
           this.mouseEnabled = c || this.isroot;// @devnote: see LPP-6980
-          attachMouseEvents(this);
           var cb:SimpleButton = this.clickbutton;
           //trace('sprite setClickable' , c, 'cb',cb);
           if (this.clickable) {
+              attachMouseEvents(this);
               // TODO [hqm 2008-01] The Flash Sprite docs 
               // explain how to add a sprite to the tab order using tabEnabled property. 
               if (cb == null) {
@@ -730,11 +729,10 @@ public class LzSprite extends Sprite {
           } else {
               removeMouseEvents(this);
               if (cb) {
-                  removeMouseEvents(cb);
                   removeChild(cb);
+                  removeMouseEvents(cb);
                   this.clickbutton = null;
               }
-
           }
       }
 
@@ -1000,6 +998,10 @@ public class LzSprite extends Sprite {
                   if (this.resourceContainer != null) {
                       this.removeChild(this.resourceContainer);
                   }
+
+                  if (asset is InteractiveObject) InteractiveObject(asset).mouseEnabled = false;
+                  if (asset is DisplayObjectContainer) DisplayObjectContainer(asset).mouseChildren = false;
+
                   this.resourceContainer = asset;
                   this.addChildAt(asset,IMGDEPTH);
 
