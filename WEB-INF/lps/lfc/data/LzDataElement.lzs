@@ -14,12 +14,12 @@
   * @access public
   */
 mixin LzDataElementMixin {
-    // N.B.: LzDataElementTrait may or may not be an LzNode, so
+    // N.B.: LzDataElementMixin may or may not be an LzNode, so
     // _if_ it were to have an initialize method, it would have to
     // match LzNode.initialize's signature.
 
   /**
-   * @devnote These are the setters that this trait creates
+   * @devnote These are the setters that this mixin creates
    */
   /** @access private */
   function $lzc$set_attributes(v:Object) :void { this.setAttrs(v); }

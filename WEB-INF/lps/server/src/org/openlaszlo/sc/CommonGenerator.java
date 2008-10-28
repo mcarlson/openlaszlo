@@ -367,23 +367,23 @@ public abstract class CommonGenerator implements ASTVisitor {
   public SimpleNode visitClassDefinition(SimpleNode node, SimpleNode[] children) {
 //     System.err.println("enter visitClassDefinition: " +  (new ParseTreePrinter()).text(node));
 
-    ASTIdentifier classortrait = (ASTIdentifier)children[0];
+    ASTIdentifier classormixin = (ASTIdentifier)children[0];
     ASTIdentifier classname = (ASTIdentifier)children[1];
     String classnameString = classname.getName();
     SimpleNode superclass = children[2];
-    SimpleNode traits = children[3];
-    SimpleNode traitsandsuper;
-    if (traits instanceof ASTEmptyExpression) {
+    SimpleNode mixins = children[3];
+    SimpleNode mixinsandsuper;
+    if (mixins instanceof ASTEmptyExpression) {
       if (superclass instanceof ASTEmptyExpression) {
-        traitsandsuper = new ASTLiteral(null);
+        mixinsandsuper = new ASTLiteral(null);
       } else {
-        traitsandsuper = superclass;
+        mixinsandsuper = superclass;
       }
     } else {
-      traitsandsuper = new ASTArrayLiteral(0);
-      traitsandsuper.setChildren(traits.getChildren());
+      mixinsandsuper = new ASTArrayLiteral(0);
+      mixinsandsuper.setChildren(mixins.getChildren());
       if (! (superclass instanceof ASTEmptyExpression)) {
-        traitsandsuper.set(traitsandsuper.size(), superclass);
+        mixinsandsuper.set(mixinsandsuper.size(), superclass);
       }
     }
 
@@ -411,9 +411,9 @@ public abstract class CommonGenerator implements ASTVisitor {
     classProperties.setLocation(node);
 
     Map map = new HashMap();
-    String xtor = "class".equals(classortrait.getName())?"Class":"Trait";
+    String xtor = "class".equals(classormixin.getName())?"Class":"Mixin";
     map.put("_1", classname);
-    map.put("_2", traitsandsuper);
+    map.put("_2", mixinsandsuper);
     map.put("_3", instanceProperties);
     map.put("_4", classProperties);
     SimpleNode replNode = (new Compiler.Parser()).substitute(node,

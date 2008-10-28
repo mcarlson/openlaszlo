@@ -301,12 +301,12 @@ var Class = {
   _dbg_name: 'Class',
   allClasses: {Instance: Instance},
   // Class class factory. This is how you make a new class. Arguments
-  // are classname:String (required); traitsAndSuperclass:(Null ||
+  // are classname:String (required); mixinsAndSuperclass:(Null ||
   // Class || Array) if Null defaults to Instance, if Array, the
-  // elements of the array are the traits followed by the superclass;
+  // elements of the array are the mixins followed by the superclass;
   // instanceProperties:Array is a 'plist' of initial instance properties;
   // staticProperties:Array is a 'plist' of the inital class properties;
-  make: function make (classname, traitsAndSuperclass, instanceProperties, staticProperties) {
+  make: function make (classname, mixinsAndSuperclass, instanceProperties, staticProperties) {
     if ($profile) {
       var pcn = classname;
       // Use tagname if it exists
@@ -323,25 +323,25 @@ var Class = {
       Profiler.event('new Class(' + pcn + ')', 'calls');
     }
     var superclass = null;
-    if (traitsAndSuperclass instanceof Array) {
-      for (var k = traitsAndSuperclass.length - 1; k >= 0; k--) {
-        var c = traitsAndSuperclass[k];
+    if (mixinsAndSuperclass instanceof Array) {
+      for (var k = mixinsAndSuperclass.length - 1; k >= 0; k--) {
+        var c = mixinsAndSuperclass[k];
         if (c instanceof Function) {
           if ($debug) {
             if (superclass) {
               Debug.error("Class.make: Multiple superclasses %s and %s for class %s", superclass, c, classname);
             }
           }
-          traitsAndSuperclass.splice(k, 1);
+          mixinsAndSuperclass.splice(k, 1);
           superclass = c;
         }
       }
-    } else if (traitsAndSuperclass instanceof Function) {
-      superclass = traitsAndSuperclass;
-      traitsAndSuperclass = null;
+    } else if (mixinsAndSuperclass instanceof Function) {
+      superclass = mixinsAndSuperclass;
+      mixinsAndSuperclass = null;
     } else if ($debug) {
-      if (traitsAndSuperclass) {
-        Debug.error("Class.make: invalid superclass %w", traitsAndSuperclass);
+      if (mixinsAndSuperclass) {
+        Debug.error("Class.make: invalid superclass %w", mixinsAndSuperclass);
       }
     }
     if (! superclass) { superclass = Instance; }
@@ -422,12 +422,12 @@ var Class = {
       xtor.prototype = superclass.prototype;
       var prototype = new xtor(); // --- superclass.make();
     }
-    // Create any trait interstitials, following the pattern above
-    if (traitsAndSuperclass instanceof Array) {
-      for (var i = traitsAndSuperclass.length - 1; i >= 0; i--) {
-        var t = traitsAndSuperclass[i];
+    // Create any mixin interstitials, following the pattern above
+    if (mixinsAndSuperclass instanceof Array) {
+      for (var i = mixinsAndSuperclass.length - 1; i >= 0; i--) {
+        var t = mixinsAndSuperclass[i];
         // The second argument is the class this will be the prototype for
-        prototype = t.makeInterstitial(prototype, i > 0 ? traitsAndSuperclass[i -1] : nc);
+        prototype = t.makeInterstitial(prototype, i > 0 ? mixinsAndSuperclass[i -1] : nc);
       }
     }
     if ($profile) {
@@ -499,13 +499,13 @@ if ($profile) {
   Class.make._profile_name = Class.make._dbg_name = Class.make.name = 'Class.make';
 }
 
-/** Bootstrap Trait class */
-var Trait = {
+/** Bootstrap Mixin class */
+var Mixin = {
   prototype: new Instance(),
-  allTraits: {},
+  allMixins: {},
   _dbg_typename: Class._dbg_name,
-  _dbg_name: 'Trait',
-  // Adds a property to the Trait, and to all implementations
+  _dbg_name: 'Mixin',
+  // Adds a property to the Mixin, and to all implementations
   addProperty: function addProperty (name, value) {
     // Add to prototype
     this.prototype[name] = value;
@@ -531,10 +531,10 @@ var Trait = {
       }
     }
   },
-  // TODO: [2006-05-19 ptw] Should traits have make?  Can you
-  // instantiate a trait?  Don't use make as the method for making
+  // TODO: [2006-05-19 ptw] Should mixins have make?  Can you
+  // instantiate a mixin?  Don't use make as the method for making
   // an interstitial.
-  // Used internally to create a trait interstitial
+  // Used internally to create a mixin interstitial
   makeInterstitial: function makeInterstitial (superclassInstance, sharable) {
     var impls = this.implementations;
     // Remember combinations and re-use them if possible
@@ -565,7 +565,7 @@ var Trait = {
     // Make the interstitial
     var xtor = function interstitial () { this.constructor = arguments.callee; };
     xtor.prototype = superclassInstance;
-    // The trait's initialize method will run in Class.make (in the
+    // The mixin's initialize method will run in Class.make (in the
     // proper order).
     // TODO: [2006-05-26 ptw] are there other class properties
     // that need to be copied onto the interstitial?
@@ -588,7 +588,7 @@ var Trait = {
     }
     return t;
   },
-  // Implements `is` operator for traits
+  // Implements `is` operator for mixins
   $lzsc$isa: function $lzsc$isa (obj) {
     var impls = this.implementations;
     for (var prototypename in impls) {
@@ -598,8 +598,8 @@ var Trait = {
     }
     return false;
   },
-  // How to make a Trait
-  make: function make (classname, superTrait, instanceProperties, staticProperties) {
+  // How to make a Mixin
+  make: function make (classname, superMixin, instanceProperties, staticProperties) {
     if ($profile) {
       Profiler.event('new Mixin(' + classname + ')', 'calls');
     }
@@ -608,9 +608,9 @@ var Trait = {
       classname: classname,
       _dbg_typename: this._dbg_name,
       _dbg_name: classname,
-      prototype: superTrait ? superTrait.make() : new Object,
-      instanceProperties: superTrait ? superTrait.instanceProperties.slice(0) : new Array,
-      // Remembers all implementations of the Trait
+      prototype: superMixin ? superMixin.make() : new Object,
+      instanceProperties: superMixin ? superMixin.instanceProperties.slice(0) : new Array,
+      // Remembers all implementations of the Mixin
       implementations: {}
     };
     this.addStaticProperty.call(nt, 'addStaticProperty', this.addStaticProperty);
@@ -625,7 +625,7 @@ var Trait = {
         nt.addStaticProperty(name, value);
       }
     }
-    // Trait.initialize:  install initial values
+    // Mixin.initialize:  install initial values
     if (instanceProperties) {
       for (var i = instanceProperties.length - 1; i >= 1; i -= 2) {
         var value = instanceProperties[i];
@@ -637,7 +637,7 @@ var Trait = {
     if (nt.hasOwnProperty('initialize')) {
       nt.initialize(nt.prototype);
     }
-    global[classname] = this.allTraits[classname] = nt;
+    global[classname] = this.allMixins[classname] = nt;
     if ($profile) {
       Profiler.event('new Mixin(' + classname + ')', 'returns');
     }
@@ -646,8 +646,8 @@ var Trait = {
 };
 
 if ($debug) {
-  Trait.addStaticProperty._dbg_typename = 'Trait static function';
-  Trait.addProperty._dbg_typename = 'Trait static function';
-  Trait.makeInterstitial._dbg_typename = 'Trait static function';
-  Trait.make._dbg_typename = 'Trait static function';
+  Mixin.addStaticProperty._dbg_typename = 'Mixin static function';
+  Mixin.addProperty._dbg_typename = 'Mixin static function';
+  Mixin.makeInterstitial._dbg_typename = 'Mixin static function';
+  Mixin.make._dbg_typename = 'Mixin static function';
 }

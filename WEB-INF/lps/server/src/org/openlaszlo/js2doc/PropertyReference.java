@@ -163,7 +163,7 @@ public class PropertyReference {
         Iterator iter = Arrays.asList(children).iterator();
         
         SimpleNode temp = (SimpleNode) iter.next();
-        // assert temp instanceof ASTIdentifier && ((ASIdentifier) temp).getName() == "class" or "trait"
+        // assert temp instanceof ASTIdentifier && ((ASIdentifier) temp).getName() == "class" or "mixin"
 
         ASTIdentifier nameNode = (ASTIdentifier) iter.next();
         String name = nameNode.getName();
@@ -183,28 +183,28 @@ public class PropertyReference {
                 throw new InternalError("unexpected node type parsing extends", extendsNode);
         }
         
-        SimpleNode inheritsList = (SimpleNode) iter.next();
-        if (inheritsList instanceof ASTTraitsList) {
-            String inherits = "";
-            SimpleNode[] inheritsChildren = inheritsList.getChildren();
-            Iterator iter2 = Arrays.asList(inheritsChildren).iterator();
+        SimpleNode withList = (SimpleNode) iter.next();
+        if (withList instanceof ASTMixinsList) {
+            String with = "";
+            SimpleNode[] withChildren = withList.getChildren();
+            Iterator iter2 = Arrays.asList(withChildren).iterator();
             while (iter2.hasNext()) {
-                SimpleNode inheritsNode = (SimpleNode)iter2.next();
-                if (! (inheritsNode instanceof ASTIdentifier)) {
-                    throw new InternalError("unexpected node in inherits list", inheritsNode);
+                SimpleNode withNode = (SimpleNode)iter2.next();
+                if (! (withNode instanceof ASTIdentifier)) {
+                    throw new InternalError("unexpected node in with list", withNode);
                 }
-                if (inherits.length() > 0) {
-                    inherits += ",";
+                if (with.length() > 0) {
+                    with += ",";
                 }
-                inherits += ((ASTIdentifier)inheritsNode).getName();
+                with += ((ASTIdentifier)withNode).getName();
             }
 
-            if (inherits.length() > 0) {
-                classNode.setAttribute("inherits", inherits);
+            if (with.length() > 0) {
+                classNode.setAttribute("with", with);
             }
         } else {
-            if (! (inheritsList instanceof ASTEmptyExpression))
-                throw new InternalError("unexpected node type parsing inherits", inheritsList);
+            if (! (withList instanceof ASTEmptyExpression))
+                throw new InternalError("unexpected node type parsing with", withList);
         }
         
         this.cachedValue = classNode;

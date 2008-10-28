@@ -239,7 +239,7 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     if ("class".equals(classtype)) {
       sb.append("class");
     }
-    else if ("interface".equals(classtype) || "trait".equals(classtype)) {
+    else if ("interface".equals(classtype) || "mixin".equals(classtype)) {
       sb.append("interface");
     }
     else {

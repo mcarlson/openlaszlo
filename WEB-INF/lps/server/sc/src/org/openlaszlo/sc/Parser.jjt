@@ -215,9 +215,7 @@ TOKEN: {
 | < CAST: "cast" >
 
 // Our extensions
-| < INHERITS: "inherits" >      // obsolete
-| < MIXIN: "mixin" >            // obsolete
-| < TRAIT: "trait" >
+| < MIXIN: "mixin" >
 
 
 // These are not supposed to be keywords
@@ -425,10 +423,8 @@ void IdentifierOrKeyword() #Identifier : {Token t;}
   | t=<CLASS>
   | t=<EXTENDS>
   | t=<IMPLEMENTS>
-  | t=<INHERITS>
   | t=<WITH>
   | t=<INTERFACE>
-  | t=<TRAIT>
   | t=<MIXIN>
   )
     {jjtThis.setName(t.image);}
@@ -1089,17 +1085,16 @@ SimpleNode ClassProperty() #ModifiedDefinition : {}
   {return jjtThis; }
 }
 
-SimpleNode TraitsList() #TraitsList : {Token t;}
+SimpleNode MixinsList() #MixinsList : {Token t;}
 {
    Identifier() ("," Identifier())*
      { return jjtThis; }
 }
 
-void ClassOrTrait() #Identifier : {Token t;}
+void ClassOrMixin() #Identifier : {Token t;}
 {
   "class" {jjtThis.setName("class");}
-| "trait" {jjtThis.setName("trait");}
-| "mixin" {jjtThis.setName("trait");}
+| "mixin" {jjtThis.setName("mixin");}
 }
 
 void ClassDirective() #void : {}
@@ -1125,10 +1120,10 @@ SimpleNode ClassIfDirective() #ClassIfDirective : { Token t;}
 
 SimpleNode ClassDefinition() #ClassDefinition : {Token t;}
 {
-   ClassOrTrait() Identifier()
+   ClassOrMixin() Identifier()
 
    ["extends" Identifier() ] #EmptyExpression(jjtree.nodeArity()==0)
-   [("inherits" | "with" ) TraitsList() ] #EmptyExpression(jjtree.nodeArity()==0)
+   ["with" MixinsList() ] #EmptyExpression(jjtree.nodeArity()==0)
    "{" (
         ClassDirective()
        )* "}"

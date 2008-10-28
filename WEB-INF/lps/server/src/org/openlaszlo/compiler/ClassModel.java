@@ -41,7 +41,7 @@ public class ClassModel implements Comparable {
     protected boolean hasInputText = false;
     protected boolean isInputText = false;
         
-    public Set traitNames = new HashSet(2, 0.6f);
+    public Set mixinNames = new HashSet(2, 0.6f);
     
     /* Class or superclass has an <attribute type="text"/>  */
     protected boolean supportsTextAttribute = false;
@@ -241,11 +241,6 @@ public class ClassModel implements Comparable {
         // constructor!
         decls.put(key, value);
       } else if (value != null) {
-        // If this is a re-declared attribute, we just init it,
-        // don't re-declare it
-        if (superclassModel.getAttribute(key, NodeModel.ALLOCATION_INSTANCE) != null) {
-          inits.put(key, value);
-        }
         // If there is a setter for this attribute, or this is a
         // state, or this is an Array or Map argument that needs
         // magic merging, the value has to be installed as an init,
@@ -257,6 +252,8 @@ public class ClassModel implements Comparable {
         // fixed up in LzNode by installing inits that have no
         // setters when the arguments are merged
         if (true) { // (! (value instanceof String))  || setters.containsKey(key) || isstate) {
+          // If this is a re-declared attribute, we just init it,
+          // don't re-declare it
           if (! redeclared) {
             decls.put(key, null);
           }
@@ -289,7 +286,7 @@ public class ClassModel implements Comparable {
     if (! inits.isEmpty()) {
       classBody += "LzNode.mergeAttributes(" +
         ScriptCompiler.objectAsJavascript(inits) +
-        ", "+env.getGlobalPrefix() + className + ".attributes);\n";
+        ", " + env.getGlobalPrefix() + className + ".attributes);\n";
     }
     // Emit the class decl
     ScriptClass scriptClass =
