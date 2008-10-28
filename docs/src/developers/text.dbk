@@ -766,10 +766,7 @@
       </note>
       <para>Due to implementation details of the Flash Player, the
       <sgmltag class="element">&lt;img&gt;</sgmltag> tag is only rendered when the 
-      <indexterm>
-        <primary sortas="multiline">@multiline</primary>
-      </indexterm>
-      <sgmltag class="attribute">@multiline</sgmltag> attribute of
+     <literal>multiline</literal> attribute of
       the &lt;text&gt; element is true.</para>
       <para condition="dhtml">Applications compiled to DTHML may
       not match exactly the appearance of those compiled to SWF.
@@ -793,7 +790,7 @@
       the program source.</para>
       <itemizedlist spacing="compact">
         <listitem>
-          <para><sgmltag class="attribute">@src</sgmltag>: This attribute is either a URI, or a
+          <para><literal>src</literal>: This attribute is either a URI, or a
           JavaScript identifier. If it is a URI, it specifies the
           location of the image resource, which must be a JPEG or
           (Flash deployment targets only) SWF file. If it is a
@@ -802,51 +799,29 @@
           required.</para>
         </listitem>
         <listitem>
-          <para><sgmltag class="attribute">@align</sgmltag> = bottom | middle | top | left | right. The
-          values have the same meaning as in HTML:</para>
+          <para><literal>align</literal> = bottom | middle | top | left | right. The
+          values have the same meaning as in HTML.</para>
         </listitem>
+  
         <listitem>
-          <para>bottom: means that the bottom of the object should
-          be vertically aligned with the current baseline. This is
-          the default value.</para>
-        </listitem>
-        <listitem>
-          <para>middle: means that the center of the object should
-          be vertically aligned with the current baseline.</para>
-        </listitem>
-        <listitem>
-   <!-- remove duplicate para tag LI LPP-4642 9/4/2007-->        
-            <!-- <para> -->
-          <para>Two other values, left and right, cause the image
-          to float to the current left or right margin</para>
-        </listitem>
-        <!-- </para> -->
-               <!-- insert missing listitem, para tags LI LPP-4642 9/4/2007-->
-            <listitem>
-                <para>
- 
-            top: means that the top of the object should be
-        vertically aligned with the top of the current text
-        line.</para></listitem>
-        <listitem>
-          <para><sgmltag class="attribute">@alt</sgmltag>: string. When specified, the content of this
+          <para><literal>alt</literal>: string. When specified, the content of this
           attribute is made available to screen readers.</para>
         </listitem>
         <listitem>
-          <para><sgmltag class="attribute">@width</sgmltag>, <sgmltag class="attribute">@height</sgmltag>: When specified, the width and
+          <para><literal>width</literal>, <literal>height</literal>: When specified, the width and
           height attributes scale the natural image size to these
-          values. The value of <sgmltag class="attribute">@width</sgmltag> and <sgmltag class="attribute">@height</sgmltag> is a literal
-          number of pixels.</para>
+          values. The values of <literal>width</literal> and <literal>height</literal> are specified
+            in pixels.</para>
         </listitem>
         <listitem>
-          <para><sgmltag class="attribute">@hspace</sgmltag>: This attribute specifies the amount of
+          <para><literal>hspace</literal>: This attribute specifies the amount of
           white space to be inserted to the left and right of an
           IMG. The default value is not specified, but is generally
           a small, non-zero length. (On the Flash deployment
           target, this value is 8 pixels.)</para>
         </listitem>
         <listitem>
-          <para><sgmltag class="attribute">@vspace</sgmltag>: This attribute specifies the amount of
+          <para><literal>vspace</literal>: This attribute specifies the amount of
           white space to be inserted above and below an IMG. The
           default value is not specified, but is generally a small,
           non-zero length. (On the Flash deployment target, this
@@ -865,17 +840,6 @@
         <programlisting language="lzx">
           <textobject>
             <textdata fileref="programs/text-$16.lzx" />
-          </textobject>
-        </programlisting>
-      </example>
-      <para>Notice that you cannot have an image in a text tag
-      without also having text. Watch what happens when we comment
-      out the text:</para>
-      <example role="live-example">
-        <title>You must include text with images</title>
-        <programlisting language="lzx">
-          <textobject>
-            <textdata fileref="programs/text-$17.lzx" />
           </textobject>
         </programlisting>
       </example>
