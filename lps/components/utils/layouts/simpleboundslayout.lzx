@@ -61,7 +61,7 @@
               <sgmltag class="element" role="lz.simplelayout">&lt;simplelayout&gt;</sgmltag> that uses a views position and its width or height. 
               The example below shows the difference when using <classname>simpleboundslayout</classname> vs. a <classname>simplelayout</classname> 
               for a set of three views.</para>
-              <example title="Example of reverselayout">
+            <example title="Example of simpleboundslayout">
 <![CDATA[<canvas height="100">
   <include href="utils/layouts/simpleboundslayout.lzx"/>
   <view bgcolor="0x8A8A8A" x="10" y="10">
