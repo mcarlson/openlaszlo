@@ -1227,6 +1227,10 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function unload() {
+        if (this.owner != null) {
+              this.owner.resourceevent('loadratio', 0);
+              this.owner.resourceevent('framesloadratio', 0);
+        }
         if (this.imgLoader) {
             try {
                 // close the stream
