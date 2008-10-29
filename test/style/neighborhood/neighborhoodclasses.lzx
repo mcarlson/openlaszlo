@@ -30,7 +30,7 @@ animal {
 </class>
 
 <class name="kitten" extends="animal" >
-    <attribute name="furcolor" value="white" />
+    <attribute name="furcolor" value="white" type="color"/>
 </class>
 
 <class name="house" bgcolor="$style{'paintcolor'}">

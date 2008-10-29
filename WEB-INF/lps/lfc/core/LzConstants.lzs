@@ -11,35 +11,21 @@
   * @subtopic Constants
   */
 
-/** @deprecated - See lz.Utils.colornames */
-var black = 0x000000;
-/** @deprecated - See lz.Utils.colornames */
-var green = 0x008000;
-/** @deprecated - See lz.Utils.colornames */
-var silver = 0xC0C0C0;
-/** @deprecated - See lz.Utils.colornames */
-var lime = 0x00FF00;
-/** @deprecated - See lz.Utils.colornames */
-var gray = 0x808080;
-/** @deprecated - See lz.Utils.colornames */
-var olive = 0x808000;
-/** @deprecated - See lz.Utils.colornames */
-var white = 0xFFFFFF;
-/** @deprecated - See lz.Utils.colornames */
-var yellow = 0xFFFF00;
-/** @deprecated - See lz.Utils.colornames */
-var maroon = 0x800000;
-/** @deprecated - See lz.Utils.colornames */
-var navy = 0x000080;
-/** @deprecated - See lz.Utils.colornames */
-var red = 0xFF0000;
-/** @deprecated - See lz.Utils.colornames */
-var blue = 0x0000FF;
-/** @deprecated - See lz.Utils.colornames */
-var purple = 0x800080;
-/** @deprecated - See lz.Utils.colornames */
-var teal = 0x008080;
-/** @deprecated - See lz.Utils.colornames */
-var fuchsia = 0xFF00FF;
-/** @deprecated - See lz.Utils.colornames */
-var aqua = 0x00FFFF;
+lz.colors = {
+    black: 0x000000
+    ,green: 0x008000
+    ,silver: 0xC0C0C0
+    ,lime: 0x00FF00
+    ,gray: 0x808080
+    ,olive: 0x808000
+    ,white: 0xFFFFFF
+    ,yellow: 0xFFFF00
+    ,maroon: 0x800000
+    ,navy: 0x000080
+    ,red: 0xFF0000
+    ,blue: 0x0000FF
+    ,purple: 0x800080
+    ,teal: 0x008080
+    ,fuchsia: 0xFF00FF
+    ,aqua: 0x00FFFF
+}

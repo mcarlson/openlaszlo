@@ -1044,13 +1044,13 @@ LzSprite.prototype.setVisible = function ( v ){
 LzSprite.prototype.setColor = function ( c ){
     if (this.color == c) return;
     this.color = c;
-    this.__LZdiv.style.color = lz.Utils.inttohex(c);
+    this.__LZdiv.style.color = LzColorUtils.inttohex(c);
 }
 
 LzSprite.prototype.setBGColor = function ( c ){
     if (this.bgcolor == c) return;
     this.bgcolor = c;
-    this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : lz.Utils.inttohex(c);
+    this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzColorUtils.inttohex(c);
     if (this.quirks.fix_ie_background_height) {
         if (this.height != null && this.height < 2) {
             this.setSource(lz.embed.options.resourceroot + LzSprite.prototype.blankimage, true);

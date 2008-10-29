@@ -7,8 +7,8 @@
   * @access private
   */
 
-#include "core/LzConstants.lzs"
 #include "core/LzDefs.lzs"
+#include "core/LzConstants.lzs"
 #include "core/LzCache.lzs"
 #include "core/LzEventable.lzs"
 // LzStyleAttrBinder extends LzEventable

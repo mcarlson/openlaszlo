@@ -20,50 +20,50 @@
 
 
 <script when="immediate">
-    var offwhite = 0xf2f2f2;
-    var gray10 = 0x1a1a1a;
-    var gray20 = 0x333333;
-    var gray30 = 0x4d4d4d;
-    var gray40 = 0x666666;
-    var gray50 = 0x7f7f7f;
-    var gray60 = 0x999999;
-    var gray70 = 0xb3b3b3;
-    var gray80 = 0xcccccc;
-    var gray90 = 0xe5e5e5;
+    lz.colors.offwhite = 0xf2f2f2;
+    lz.colors.gray10 = 0x1a1a1a;
+    lz.colors.gray20 = 0x333333;
+    lz.colors.gray30 = 0x4d4d4d;
+    lz.colors.gray40 = 0x666666;
+    lz.colors.gray50 = 0x7f7f7f;
+    lz.colors.gray60 = 0x999999;
+    lz.colors.gray70 = 0xb3b3b3;
+    lz.colors.gray80 = 0xcccccc;
+    lz.colors.gray90 = 0xe5e5e5;
     
-    var iceblue1 = 0x325693;
-    var iceblue2 = 0x5381CE;
-    var iceblue3 = 0xBAC4D5;
-    var iceblue4 = 0xD5E4F3;
-    var iceblue5 = 0xEEF1F5;
+    lz.colors.iceblue1 = 0x325693;
+    lz.colors.iceblue2 = 0x5381CE;
+    lz.colors.iceblue3 = 0xBAC4D5;
+    lz.colors.iceblue4 = 0xD5E4F3;
+    lz.colors.iceblue5 = 0xEEF1F5;
     
-    var palegreen1 = 0x417641;
-    var palegreen2 = 0xB3D3B3;
-    var palegreen3 = 0xC0D49D;
-    var palegreen4 = 0xD3EAAA;
-    var palegreen5 = 0xEFF1E8;
+    lz.colors.palegreen1 = 0x417641;
+    lz.colors.palegreen2 = 0xB3D3B3;
+    lz.colors.palegreen3 = 0xC0D49D;
+    lz.colors.palegreen4 = 0xD3EAAA;
+    lz.colors.palegreen5 = 0xEFF1E8;
     
-    var gold1 = 0x8E6409;
-    var gold2 = 0xCBB14B;
-    var gold3 = 0xE6CF74;
-    var gold4 = 0xF8E496;
+    lz.colors.gold1 = 0x8E6409;
+    lz.colors.gold2 = 0xCBB14B;
+    lz.colors.gold3 = 0xE6CF74;
+    lz.colors.gold4 = 0xF8E496;
     
-    var sand1 = 0xD4C6A1;
-    var sand2 = 0xD9D7C2;
-    var sand3 = 0xF2EEDB;
-    var sand4 = 0xF3EEE1;
+    lz.colors.sand1 = 0xD4C6A1;
+    lz.colors.sand2 = 0xD9D7C2;
+    lz.colors.sand3 = 0xF2EEDB;
+    lz.colors.sand4 = 0xF3EEE1;
     
-    var ltpurple1 = 0x645698;
-    var ltpurple2 = 0xB7B0D1;
-    var ltpurple3 = 0xCBC1ED;
-    var ltpurple4 = 0xE9E7F0;
+    lz.colors.ltpurple1 = 0x645698;
+    lz.colors.ltpurple2 = 0xB7B0D1;
+    lz.colors.ltpurple3 = 0xCBC1ED;
+    lz.colors.ltpurple4 = 0xE9E7F0;
     
-    var grayblue = 0xBEC2C8;
-    var graygreen = 0xC0CCC0;
-    var graypurple = 0x9F9DB1;
+    lz.colors.grayblue = 0xBEC2C8;
+    lz.colors.graygreen = 0xC0CCC0;
+    lz.colors.graypurple = 0x9F9DB1;
    
-    var ltblue = 0xDDDDFF;
-    var ltgreen = 0xDDFFDD;
+    lz.colors.ltblue = 0xDDDDFF;
+    lz.colors.ltgreen = 0xDDFFDD;
 </script>
 
 

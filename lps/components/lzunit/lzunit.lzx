@@ -984,7 +984,7 @@
                 }
             }
             if (totalBad > 0) {
-                readout.setAttribute("bgcolor", red);
+                readout.setAttribute("bgcolor", lz.colors.red);
             }
             // TODO: [2002-11-10 ptw] setAttribute("text", ...) does not work?
             readout.setAttribute("text", lz.Browser.xmlEscape(this.toString()));

@@ -1035,7 +1035,7 @@ var bgcolor =   null;
   * @access private 
   */
 function $lzc$set_bgcolor(bgc) { 
-    bgc = lz.Utils.hextoint(bgc);
+    bgc = LzColorUtils.hextoint(bgc);
     //trace('setting bgcolor ',bgc, this, this.sprite);
     this.sprite.setBGColor(bgc);
     if (bgc != null) this.bgcolor = bgc;

@@ -167,10 +167,10 @@ class LzStyleAttr extends LzStyleExpr {
  * @access private
  */
 class LzStyleIdent extends LzStyleExpr {
-  var sourceValueClosure:Function
-  function LzStyleIdent(sourceValueClosure:Function) {
+  var sourceValueID:String
+  function LzStyleIdent(sourceValueID:String) {
     super();
-    this.sourceValueClosure = sourceValueClosure;
+    this.sourceValueID = sourceValueID;
   }
 }
 

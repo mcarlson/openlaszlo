@@ -268,6 +268,7 @@ public class NodeModel implements Cloneable {
         // cannot be determined until the style property value is
         // derived (at run time)
         installer = "__LZstyleBindAttribute";
+        body = body + ",'" + type + "'";
       }
       body = "this." + installer + "(" +
           ScriptCompiler.quote(name) + "," +
@@ -1609,8 +1610,7 @@ solution =
                         throw new CompilationError(source, name, e);
                     }
                 }
-                // TODO: [2003-05-02 ptw] Wrap non-constant colors in
-                // runtime parser
+                value = "LzColorUtils.convertColor('" + value + "')";
             } else if (type == ViewSchema.CSS_TYPE) {
                 if (when.equals(WHEN_IMMEDIATELY)) {
                     try {

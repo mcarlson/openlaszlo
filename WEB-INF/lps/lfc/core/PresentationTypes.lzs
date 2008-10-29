@@ -69,10 +69,10 @@ class NumberPresentationType extends PresentationType {
 //---
 class ColorPresentationType extends PresentationType {
   static function accept(value) {
-    return lz.Utils.hextoint(value);
+    return LzColorUtils.hextoint(value);
   }
   static function present(value) { 
-    return lz.Utils.inttohex(value);
+    return LzColorUtils.inttohex(value);
   }
 }
 

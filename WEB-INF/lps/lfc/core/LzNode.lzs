@@ -607,10 +607,11 @@ public dynamic class LzNode extends LzEventable {
    * @param String attr: The name of the attribute to bind
    * @param String prop: The name of the CSS property whose value the
    * attribute will be bound to
+   * @param String type: The type of the attribute to bind
    *
    * @access private
    */
-  function __LZstyleBindAttribute(attr, prop) {
+  function __LZstyleBindAttribute(attr, prop, type) {
     // Inlined version of LzCSSStyle.getPropertyValueFor
     // Get the property cache for this node
     var pc = this['__LZPropertyCache'] || LzCSSStyle.getPropertyCache(this);
@@ -657,7 +658,7 @@ public dynamic class LzNode extends LzEventable {
         binder.bind();
       } else if (styleValue is LzStyleIdent) {
         var si:LzStyleIdent = (styleValue cast LzStyleIdent);
-        this.setAttribute(attr, si.sourceValueClosure.call(null));
+        this.acceptAttribute(attr, type, si.sourceValueID);
       } else if ($debug) {
         Debug.error("Unknown style expression %w", styleValue);
       }

@@ -824,7 +824,7 @@ dynamic public class LzSprite extends Sprite {
       */
       public function setColor( color:* ):void {
           if (color is String) {
-              color = lz.Utils.hextoint(color);
+              color = LzColorUtils.hextoint(color);
           }
           var nc:ColorTransform = new ColorTransform();
           nc.color = color;

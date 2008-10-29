@@ -8,35 +8,35 @@
   <TestSuite>
     <TestCase>
         <method name="testdectohex">
-            assertEquals('ffff', LzUtils.dectohex(0xffff), "Convert to hex");
-            assertEquals('d', LzUtils.dectohex(13), "Convert to hex");
+            assertEquals('ffff', LzColorUtils.dectohex(0xffff), "Convert to hex");
+            assertEquals('d', LzColorUtils.dectohex(13), "Convert to hex");
         </method>
         <method name="testcolorconversion">
-            assertEquals('#ffff00', LzUtils.inttohex(0xffff00), "Convert to hex");
-            assertEquals('#0005f3', LzUtils.inttohex(1523), "Convert to hex");
-            assertEquals('#000001', LzUtils.inttohex(1), "Convert to hex");
-            assertEquals('#800080', LzUtils.inttohex('purple'), "Convert to hex");
-            assertEquals('#ff00ff', LzUtils.inttohex('rgba(255,0,255)'), "Convert to hex");
+            assertEquals('#ffff00', LzColorUtils.inttohex(0xffff00), "Convert to hex");
+            assertEquals('#0005f3', LzColorUtils.inttohex(1523), "Convert to hex");
+            assertEquals('#000001', LzColorUtils.inttohex(1), "Convert to hex");
+            assertEquals('#800080', LzColorUtils.inttohex('purple'), "Convert to hex");
+            assertEquals('#ff00ff', LzColorUtils.inttohex('rgba(255,0,255)'), "Convert to hex");
 
-            assertEquals(1523, LzUtils.hextoint('#0005F3'), "Convert to decimal");
-            assertEquals(14540253, LzUtils.hextoint('#DdD'), "Convert to decimal");
-            assertEquals(0xffff00, LzUtils.hextoint('#ffff00'), "Convert to decimal");
-            assertEquals(0xffff00, LzUtils.hextoint('0xffff00'), "Convert to decimal");
-            assertEquals(0x800080, LzUtils.hextoint('purple'), "Convert to decimal");
-            assertEquals(0xff00ff, LzUtils.hextoint('rgb(255,0,255)'), "Convert to decimal");
-            assertEquals(16776960.002, LzUtils.hextoint('#ffff0033'), "Convert to decimal");
+            assertEquals(1523, LzColorUtils.hextoint('#0005F3'), "Convert to decimal");
+            assertEquals(14540253, LzColorUtils.hextoint('#DdD'), "Convert to decimal");
+            assertEquals(0xffff00, LzColorUtils.hextoint('#ffff00'), "Convert to decimal");
+            assertEquals(0xffff00, LzColorUtils.hextoint('0xffff00'), "Convert to decimal");
+            assertEquals(0x800080, LzColorUtils.hextoint('purple'), "Convert to decimal");
+            assertEquals(0xff00ff, LzColorUtils.hextoint('rgb(255,0,255)'), "Convert to decimal");
+            assertEquals(16776960.002, LzColorUtils.hextoint('#ffff0033'), "Convert to decimal");
 
-            assertEquals('rgb(221,221,221)', LzUtils.torgb('#DDD'), "Convert to RGB");
-            assertEquals('rgb(221,221,221)', LzUtils.torgb('#DDDDDD'), "Convert to RGB");
-            assertEquals('rgba(221,221,221,221)', LzUtils.torgb('#DDDD'), "Convert to RGB");
-            assertEquals('rgba(221,221,221,221)', LzUtils.torgb('#DDDDDDDD'), "Convert to RGB");
-            assertEquals('rgb(128,0,128)', LzUtils.torgb('purple'), "Convert to RGB");
-            assertEquals('rgb(255,0,255)', LzUtils.torgb('rgb(255,0,255)'), "Convert to RGB");
+            assertEquals('rgb(221,221,221)', LzColorUtils.torgb('#DDD'), "Convert to RGB");
+            assertEquals('rgb(221,221,221)', LzColorUtils.torgb('#DDDDDD'), "Convert to RGB");
+            assertEquals('rgba(221,221,221,221)', LzColorUtils.torgb('#DDDD'), "Convert to RGB");
+            assertEquals('rgba(221,221,221,221)', LzColorUtils.torgb('#DDDDDDDD'), "Convert to RGB");
+            assertEquals('rgb(128,0,128)', LzColorUtils.torgb('purple'), "Convert to RGB");
+            assertEquals('rgb(255,0,255)', LzColorUtils.torgb('rgb(255,0,255)'), "Convert to RGB");
 
-            assertEquals(0xdddddd, LzUtils.fromrgb('rgb(221,221,221)'), "Convert from RGB");
-            assertEquals(14540253.01, LzUtils.fromrgb('rgb(221,221,221,1)'), "Convert from RGB");
-            assertEquals(0x800080, LzUtils.fromrgb('purple'), "Convert from RGB");
-            assertEquals(0xff00ff, LzUtils.fromrgb('rgb(255,0,255)'), "Convert from RGB");
+            assertEquals(0xdddddd, LzColorUtils.fromrgb('rgb(221,221,221)'), "Convert from RGB");
+            assertEquals(14540253.01, LzColorUtils.fromrgb('rgb(221,221,221,1)'), "Convert from RGB");
+            assertEquals(0x800080, LzColorUtils.fromrgb('purple'), "Convert from RGB");
+            assertEquals(0xff00ff, LzColorUtils.fromrgb('rgb(255,0,255)'), "Convert from RGB");
         </method>
         <method name="addTests"> 
             this.addTest("testdectohex");

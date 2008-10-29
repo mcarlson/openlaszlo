@@ -349,7 +349,7 @@ dynamic class LzCanvas extends LzView {
             LzScreenKernel.setCallback(this, '__windowResize');
         }
 
-        this.bgcolor = lz.Utils.hextoint(bgcolor);
+        this.bgcolor = LzColorUtils.hextoint(bgcolor);
 
         this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;
         delete args.lpsversion;

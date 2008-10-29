@@ -694,7 +694,7 @@
                         var ccache = lz.drawview._colorcache;
                         var fillStyleColor = ccache[this.fillStyle];
                         if (fillStyleColor == null) {
-                            fillStyleColor = lz.Utils.torgb(this.fillStyle);
+                            fillStyleColor = LzColorUtils.torgb(this.fillStyle);
                             ccache[this.fillStyle] = fillStyleColor;
                         }
                         this.context.fillStyle = fillStyleColor;
@@ -726,7 +726,7 @@
                     var ccache = lz.drawview._colorcache;
                     var strokeStyleColor = ccache[this.strokeStyle];
                     if (strokeStyleColor == null) {
-                        strokeStyleColor = lz.Utils.torgb(this.strokeStyle);
+                        strokeStyleColor = LzColorUtils.torgb(this.strokeStyle);
                         ccache[this.strokeStyle] = strokeStyleColor;
                     }
                     this.context.strokeStyle = strokeStyleColor;
@@ -836,7 +836,7 @@
             var ccache = lz.drawview._colorcache;
             var cstopColor = ccache[c];
             if (cstopColor == null) {
-                cstopColor = lz.Utils.torgb(c);
+                cstopColor = LzColorUtils.torgb(c);
                 ccache[c] = cstopColor;
             }
             this._g.addColorStop(o, cstopColor);
@@ -1152,7 +1152,7 @@
                 var ccache = lz.drawview._colorcache;
                 var cachedColor = ccache[val];
                 if (cachedColor == null) {
-                    cachedColor = lz.Utils.hextoint(val);
+                    cachedColor = LzColorUtils.hextoint(val);
                     var values = String(cachedColor).split('.');
                     var color = values[0];
                     var alpha = values.length > 1 ? Number('.' + values[1]) * 100 : null;
