@@ -277,6 +277,9 @@ LzSprite.prototype.setResource = function ( resourceName ) {
         this.setMovieClip( mc, resourceName );
     }
 
+    // We may have queued an action due to setter ordering
+    if (this.queuedplayaction) { this.doQueuedPlayAction(null); }
+
     this.updateResourceSize(true);
 }
 
@@ -1364,8 +1367,11 @@ LzSprite.prototype.checkPlayStatus2 = function (ignore){
   * Otherwise f is relative to the beginning of the resource.
   */
 LzSprite.prototype.play = function (f, rel){
+    // NOTE: [2008-10-29 ptw] We want to know if we have
+    // already have a clip assigned or not and queue this action if
+    // not, hence we check __LZhaser
     var m = this.getMCRef();
-    if ( m == null ) {
+    if ( this.__LZhaser ) {
         this.queuePlayAction( "play" , f , rel );
         return;
     }
@@ -1389,8 +1395,11 @@ LzSprite.prototype.play = function (f, rel){
   * Otherwise it is relative to the start position of the resource.
   */
 LzSprite.prototype.stop = function (f, rel){
+    // NOTE: [2008-10-29 ptw] We want to know if we have
+    // already have a clip assigned or not and queue this action if
+    // not, hence we check __LZhaser
     var m = this.getMCRef();
-    if ( m == null ) {
+    if ( this.__LZhaser ) {
         // always stop on the first frame
         this.queuePlayAction( "stop" , 0);
         return;
