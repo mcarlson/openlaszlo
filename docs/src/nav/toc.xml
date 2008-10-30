@@ -92,12 +92,12 @@
         <item title="&amp;lt;event&amp;gt;" href="lz.event.html" />
         <item title="lz.Eventable" href="lz.Eventable.html" />
         <item title="lz.GlobalMouse" href="lz.GlobalMouseService.html" />
+        <item title="lz.History" href="lz.HistoryService.html" />
         <item title="lz.Idle" href="lz.IdleService.html" />
         <item title="lz.Keys" href="lz.KeysService.html" />
         <item title="lz.ModeManager" href="lz.ModeManagerService.html" />
         <item title="lz.Timer" href="lz.TimerService.html" />
         <item title="lz.Track" href="lz.TrackService.html" />
-        <item title="lz.History" href="lz.HistoryService.html" />
     </category>
     
     
@@ -222,9 +222,16 @@
     </category>
     
     <category title="Services">
+        <item title="lz.Audio" href="lz.AudioService.html" />
         <item title="lz.Browser" href="lz.BrowserService.html" />
         <item title="lz.Cursor" href="lz.CursorService.html" />
         <item title="lz.Focus" href="lz.FocusService.html" />
+        <item title="lz.GlobalMouse" href="lz.GlobalMouseService.html" />
+        <item title="lz.History" href="lz.HistoryService.html" />
+        <item title="lz.Idle" href="lz.IdleService.html" />
+        <item title="lz.Keys" href="lz.KeysService.html" />
+        <item title="lz.ModeManager" href="lz.ModeManagerService.html" />
+        <item title="lz.Timer" href="lz.TimerService.html" />
         <item title="lz.Track" href="lz.TrackService.html" />
         <item title="lz.URL" href="lz.URL.html" />
     </category>
