@@ -652,36 +652,46 @@
     <method name="run" args="theTestResult, theTestName">  <![CDATA[
         dw("TestCase.run(", theTestName, ")");
         setResult(theTestResult);
-        var dn = this._dbg_name instanceof Function ? this._dbg_name() : this._dbg_name;
-        var tn = this._dbg_typename instanceof Function ? this._dbg_typename() : this._dbg_typename;
+        var dn = (this._dbg_name is Function) ? this._dbg_name() : this._dbg_name;
+        var tn = (this._dbg_typename is Function) ? this._dbg_typename() : this._dbg_typename;
         var prefix = (dn != tn) ? dn + ' >>> ' : ''
         this.result.startTest(prefix + theTestName);
         setUp();
-        //<!-- capture source warnings as errors around test -->
-        var inrsw = false;
-        var rsw = $reportSourceWarning;
-        var testcase = this;
-        var wrapper = function (fn, ln, msg) {
-          if (! inrsw) {
-            try {
-              inrsw = true;
-              rsw.call(rsw, fn, ln, msg);
-              testcase.error(msg);
-            } finally {
-              inrsw = false;
+
+        // NOTE: [2008-10-26 ptw] Intercepting source warnings is only
+        // available in debug mode
+
+        if ($debug) {
+          var inrsw = false;
+          var rsw = $reportSourceWarning;
+          var testcase = this;
+          var wrapper = function (fn, ln, msg) {
+            if (! inrsw) {
+              try {
+                inrsw = true;
+                rsw.call(rsw, fn, ln, msg);
+                testcase.error(msg);
+              } finally {
+                inrsw = false;
+              }
             }
           }
         }
         try {
-          if ($debug ) {
+          if ($debug){
             var savedrsw = $reportSourceWarning;
             if (catchErrors) {
                 $reportSourceWarning = wrapper;
             }
           }
           runTest(theTestName);
-        } finally {
+        } catch(e) {
           if ($debug) {
+            Debug.error("%s", e);
+          }
+          this.error('' + e);
+        } finally {
+          if ($debug){
             if (catchErrors) {
                 $reportSourceWarning = savedrsw;
             }

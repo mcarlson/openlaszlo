@@ -226,7 +226,7 @@ class LzCSSStyleClass {
     var ar = this._attrRules;
     for (var k in ar) {
       // Does this node have that attribute?
-      if (k in node) {
+      if (node[k]) {
         // Get the rules for that attribute with the value the node has
         var rs = ar[k][node[k]];
         // Is this an attribute with rules?
