@@ -14,6 +14,7 @@
 
 Debug.seqnum = 0;
 Debug.inEvalRequest = false;
+Debug.remoteDebug = false;
 
 /**
   * @access private
