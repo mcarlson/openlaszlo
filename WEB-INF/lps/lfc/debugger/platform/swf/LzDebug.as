@@ -145,7 +145,7 @@ class LzAS2DebugService extends LzDebugService {
   function makeDebugWindow () {
     // Make the real console.  This is only called if the user code
     // did not actually instantiate a <debug /> tag
-    if (typeof(global.lzconsoledebug) != 'undefined') {
+    if (global['lzconsoledebug'] == 'true') {
       // Open the remote debugger socket
       this.attachDebugConsole(new LzFlashRemoteDebugConsole());
     } else {
