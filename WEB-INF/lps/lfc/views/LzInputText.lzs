@@ -168,9 +168,11 @@ function _gotBlurEvent(e=null){
     isprite.gotBlur();
 }
 
-
+if ($dhtml) {
+private static const __LZinputmouse = {onclick: true, onmousedown: true, onmouseout: true};
 /** @access private 
  * Receive input text events from sprite
+ * TODO: [20081030 anba] (LPP-7113) re-merge with swf-version when working on LPP-7113
  */
 function inputtextevent (eventname, value = null) {
     //Debug.warn('inputtextevent', eventname, value);
@@ -197,7 +199,51 @@ function inputtextevent (eventname, value = null) {
     } else if (eventname == 'onblur') {
         this._focused = false;
     }
-    if (this[eventname].ready) this[eventname].sendEvent(value);
+    // we get these events from LzInputTextSprite:
+    // onblur, onselect, onfocus, onchange, 
+    // onmousedown, onmouseout, onclick
+    if (LzInputText.__LZinputmouse[eventname]) {
+        // use the service class to propagate mouse-events
+        lz.ModeManager.handleMouseEvent(this, eventname);
+    } else {
+        // FIXME: [20081030 anba] this isn't quite right, 
+        // e.g. we must use lz.Focus for focus events!
+        if (this[eventname].ready) this[eventname].sendEvent(value);
+    }
+}
+} else {
+/** @access private 
+ * Receive input text events from sprite
+ */
+function inputtextevent (eventname:String, value:* = null) :void {
+    if (eventname == 'onfocus' && this._focused) return;
+    if (eventname == 'onblur' && ! this._focused) return;
+
+    if (eventname == 'onfocus') {
+        this._focused = true;
+        if (lz.Focus.getFocus() !== this) {
+            var tabdown:Boolean = lz.Keys.isKeyDown('tab');
+            lz.Focus.setFocus(this, tabdown);
+        }
+    } else if (eventname == 'onchange') {
+        //multiline resizable fields adjust their height
+        var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
+        this.text = isprite.getText();
+        if ( this.multiline && 
+             this.sizeToHeight && 
+             this.height != isprite.getTextfieldHeight() ) {
+            this.setHeight(isprite.getTextfieldHeight());
+        }
+        if (this.ontext.ready) this.ontext.sendEvent(value);
+    } else if (eventname == 'onblur') {
+        this._focused = false;
+        if (lz.Focus.getFocus() === this) {
+            lz.Focus.clearFocus();
+        }
+    } else if ($debug) {
+        Debug.warn("unhandled inputtextevent='%s' in %#w", eventname, this);
+    }
+}
 }
 
 /**
@@ -227,9 +273,6 @@ function $lzc$set_enabled(enabled) {
     isprite.setEnabled(enabled);
     if (this.onenabled.ready) this.onenabled.sendEvent(enabled);
 }
-
-
-
 
 /**
   * Sets whether user can modify input text field

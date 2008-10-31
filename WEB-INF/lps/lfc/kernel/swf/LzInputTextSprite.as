@@ -57,10 +57,7 @@ var LzInputTextSprite = function(newowner, args) {
     
     this.password = args.password  ? true : false;
     textclip.password = this.password;
-
 }
-
-
 
 
 LzInputTextSprite.prototype = new LzTextSprite(null);
@@ -174,16 +171,25 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
 }
 
 /**
+  * Called from LzInputText#_gotFocusEvent() after focus was set by lz.Focus
   * @access private
   */
-LzInputTextSprite.prototype.gotFocus = function (  ){
-    //Debug.write('LzInputTextSprite.__handleOnFocus');
+LzInputTextSprite.prototype.gotFocus = function () {
     if ( this.hasFocus ) { return; }
     this.select();
     this.hasFocus = true;
 }
 
-LzInputTextSprite.prototype.select = function (  ){
+/**
+  * Called from LzInputText#_gotBlurEvent() after focus was cleared by lz.Focus
+  * @access private
+  */
+LzInputTextSprite.prototype.gotBlur = function () {
+    this.hasFocus = false;
+    this.deselect();
+}
+
+LzInputTextSprite.prototype.select = function () {
     var sf = targetPath(this.__LZtextclip);
 
     // calling setFocus() bashes the scroll and hscroll values, so save them
@@ -198,21 +204,11 @@ LzInputTextSprite.prototype.select = function (  ){
     this.__LZtextclip.background = false;
 }
 
-
-LzInputTextSprite.prototype.deselect = function (  ){
-    var sf =  targetPath(this.__LZtextclip);
+LzInputTextSprite.prototype.deselect = function () {
+    var sf = targetPath(this.__LZtextclip);
     if( Selection.getFocus() == sf ) {
         Selection.setFocus( null );
     }
-}
-
-/**
-  * @access private
-  */
-LzInputTextSprite.prototype.gotBlur = function (  ){
-    //Debug.write('LzInputTextSprite.__handleOnBlur');
-    this.hasFocus = false;
-    this.deselect();
 }
 
 /**
@@ -222,29 +218,15 @@ LzInputTextSprite.prototype.gotBlur = function (  ){
   * 
   * @access private
   */
-TextField.prototype.__gotFocus = function ( oldfocus ){
+TextField.prototype.__gotFocus = function (oldfocus) {
     // scroll text fields horizontally back to start
     if (this.__lzview) this.__lzview.inputtextevent('onfocus');
 }
 
-
-
-/**
-  * Register to be called when the text field is modified. Convert this
-  * into a LFC ontext event. 
-  * @access private
-  */
-TextField.prototype.__onChanged = function ( ){
-    if (this.__lzview) {
-        this.__owner.text = this.__owner.getText();
-        this.__lzview.inputtextevent('onchange', this.__owner.text);
-    }
-}
-
 /**
   * @access private
   */
-TextField.prototype.__lostFocus = function ( ){
+TextField.prototype.__lostFocus = function () {
     if (this['__handlelostFocusdel'] == null) this.__handlelostFocusdel = new LzDelegate(this, "__handlelostFocus");
     lz.Idle.callOnIdle(this.__handlelostFocusdel);
 }
@@ -255,23 +237,21 @@ TextField.prototype.__lostFocus = function ( ){
   * cleared, the button doesn't send mouse events.
   * @access private
   */
-TextField.prototype.__handlelostFocus = function ( ignore ){
-    //Debug.write('lostfocus', this.__lzview.hasFocus, lz.Focus.lastfocus, this, lz.Focus.getFocus(), this.__lzview, this.__lzview.inputtextevent);
-    if (this.__lzview == lz.Focus.getFocus()) {
-        lz.Focus.clearFocus();
-        if (this.__lzview) this.__lzview.inputtextevent('onblur');
-    }    
+TextField.prototype.__handlelostFocus = function (ignore) {
+    if (this.__lzview) this.__lzview.inputtextevent('onblur');
 }
 
 /**
-  * Retrieves the contents of the text field for use by a datapath. See
-  * <code>LzDatapath.updateData</code> for more on this.
-  * @access protected
+  * Register to be called when the text field is modified. Convert this
+  * into a LFC ontext event. 
+  * @access private
   */
-LzInputTextSprite.prototype.updateData = function (){
-    return this.__LZtextclip.text;
+TextField.prototype.__onChanged = function () {
+    if (this.__lzview) {
+        this.__owner.text = this.__owner.getText();
+        this.__lzview.inputtextevent('onchange', this.__owner.text);
+    }
 }
-
 
 /**
   * Sets whether user can modify input text field

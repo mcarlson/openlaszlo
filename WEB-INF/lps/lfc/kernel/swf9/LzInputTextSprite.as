@@ -12,12 +12,13 @@
   * @shortdesc Used for input text.
   * 
   */
-class LzInputTextSprite extends LzTextSprite {
+public class LzInputTextSprite extends LzTextSprite {
 
     #passthrough (toplevel:true) {  
         import flash.display.*;
         import flash.events.*;
         import flash.text.*;
+        import flash.utils.setTimeout;
     }#
 
     #passthrough  {
@@ -27,13 +28,11 @@ class LzInputTextSprite extends LzTextSprite {
         super(newowner);
     }
 
-
     var __handlelostFocusdel;
     var enabled = true;
     var focusable = true;
     var hasFocus = false;
     var scroll = 0;
-
 
     override public function __initTextProperties (args:Object) {
         super.__initTextProperties(args);
@@ -65,37 +64,39 @@ class LzInputTextSprite extends LzTextSprite {
         textfield.addEventListener(FocusEvent.FOCUS_OUT, __lostFocus);
 
         this.hasFocus = false;
-
     }
 
     /**
+     * Called from LzInputText#_gotFocusEvent() after focus was set by lz.Focus
      * @access private
      */
-    public function gotFocus ( ){
-        //Debug.write('LzInputTextSprite.__handleOnFocus');
+    public function gotFocus () :void {
         if ( this.hasFocus ) { return; }
+        // assign keyboard control
+        LFCApplication.stage.focus = this.textfield;
         this.select();
         this.hasFocus = true;
     }
 
-    function select (  ){
-        textfield.setSelection(0, textfield.text.length);
-
-    }
-
-    // XXXX selectionBeginIndex    property
-    
-    function deselect (  ){
-        textfield.setSelection(0,0);
-    }
-
     /**
+     * Called from LzInputText#_gotBlurEvent() after focus was cleared by lz.Focus
      * @access private
      */
-    function gotBlur (  ){
-        //Debug.write('LzInputTextSprite.__handleOnBlur');
+    function gotBlur () :void {
         this.hasFocus = false;
         this.deselect();
+        if (LFCApplication.stage.focus === this.textfield) {
+            // remove keyboard control
+            LFCApplication.stage.focus = null;
+        }
+    }
+
+    function select () :void {
+        textfield.setSelection(0, textfield.text.length);
+    }
+
+    function deselect () :void {
+        textfield.setSelection(0, 0);
     }
 
     /**
@@ -107,32 +108,18 @@ class LzInputTextSprite extends LzTextSprite {
      * 
      * @access private
      */
-    function __gotFocus ( event:Event ){
+    function __gotFocus (event:FocusEvent) :void {
         // scroll text fields horizontally back to start
         if (owner) owner.inputtextevent('onfocus');
-    }
-
-
-
-    /**
-     * Register to be called when the text field is modified. Convert this
-     * into a LFC ontext event. 
-     * @access private
-     */
-    function __onChanged (event:Event ){
-        this.text = this.getText();
-        if (owner) owner.inputtextevent('onchange', this.text);
     }
 
     /**
      * @access private
      * TODO [hqm 2008-01] Does we still need this workaround???
      */
-    function __lostFocus (event:Event){
-        __handlelostFocus(event);
-        //trace('lost focus', event.target);
-        //if (this['__handlelostFocusdel'] == null) this.__handlelostFocusdel = new LzDelegate(this, "__handlelostFocus");
-        //lz.Idle.callOnIdle(this.__handlelostFocusdel);
+    function __lostFocus (event:FocusEvent) :void {
+        // defer execution, see swf8 kernel
+        setTimeout(this.__handlelostFocus, 1, event);
     }
 
     /**
@@ -143,37 +130,34 @@ class LzInputTextSprite extends LzTextSprite {
      * cleared, the button doesn't send mouse events.
      * @access private
      */
-    function __handlelostFocus (evt ){
-        if (owner == lz.Focus.getFocus()) {
-            lz.Focus.clearFocus();
-            if (owner) owner.inputtextevent('onblur');
-        }    
+    function __handlelostFocus (event:Event) :void {
+        if (owner) owner.inputtextevent('onblur');
     }
-    
+
+    /**
+     * Register to be called when the text field is modified. Convert this
+     * into a LFC ontext event. 
+     * @access private
+     */
+    function __onChanged (event:Event) :void {
+        this.text = this.getText();
+        if (owner) owner.inputtextevent('onchange', this.text);
+    }
+
     /**
      * Get the current text for this inputtext-sprite.
      * @protected
      */
-    override public function getText():String {
+    override public function getText() :String {
         // We normalize swf's \r to \n
-        return this.textfield.text.split('\r').join('\n');
+        return this.textfield.text.replace(/\r/g, '\n');
     }
-
-    /**
-     * Retrieves the contents of the text field for use by a datapath. See
-     * <code>LzDatapath.updateData</code> for more on this.
-     * @access protected
-     */
-    function updateData (){
-        return textfield.text;
-    }
-
 
     /**
      * Sets whether user can modify input text field
      * @param Boolean enabled: true if the text field can be edited
      */
-    function setEnabled (enabled){
+    function setEnabled (enabled) :void {
         this.enabled = enabled;
         if (enabled) {
             textfield.type = 'input';
@@ -185,12 +169,11 @@ class LzInputTextSprite extends LzTextSprite {
     /**
      * Set the html flag on this text view
      */
-    function setHTML (htmlp) {
+    function setHTML (htmlp) :void {
         // TODO [hqm 2008-10] what do we do here?
     }
 
-
-    override public function getTextfieldHeight ( ){
+    override public function getTextfieldHeight () {
         return this.textfield.height;
     }
 
