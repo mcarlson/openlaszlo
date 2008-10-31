@@ -73,7 +73,7 @@
   * @lzxname datapointer
   * @see LzDataset
   */
-class LzDatapointer extends LzNode {
+public dynamic class LzDatapointer extends LzNode {
   #pragma "warnUndefinedReferences=true"
   
 /** @access private
@@ -85,12 +85,6 @@ static var tagname :String = 'datapointer';
 // ok?
 /** @access private */
 static var attributes :Object = {ignoreplacement: true};
-
-// swf9 issues a runtime error without this
-/** @access private */
-function $lzc$set_ignoreplacement (v) :void {
-    this.ignoreplacement = v;
-}
 
 /** @access private */
 function $lzc$set_xpath (v) :void { 

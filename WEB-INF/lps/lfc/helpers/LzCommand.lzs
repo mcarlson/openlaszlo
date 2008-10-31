@@ -29,7 +29,7 @@
   * @shortdesc An element that sends events in response to keyboard input.
   * @lzxname command
   */
-class LzCommand extends LzNode {
+public dynamic class LzCommand extends LzNode {
 
 /** @access private
   * @modifiers override 

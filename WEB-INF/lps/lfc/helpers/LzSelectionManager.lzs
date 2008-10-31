@@ -86,7 +86,7 @@
   * false to represent selectedness) when an element changes its selectedness
   * @devnote: TODO: [20080930 anba] (LPP-6080) uncomment typing in method signatures
   */
-public class LzSelectionManager extends LzNode {
+public dynamic class LzSelectionManager extends LzNode {
 
     /** @access private */
     function LzSelectionManager (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {

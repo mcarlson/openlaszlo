@@ -68,7 +68,7 @@
   * @lzxname dataselectionmanager
   * @devnote TODO: [20080930 anba] (LPP-6080) uncomment typing in method signatures
   */
-public class LzDataSelectionManager extends LzSelectionManager {
+public dynamic class LzDataSelectionManager extends LzSelectionManager {
 
     /** @access private */
     function LzDataSelectionManager (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
