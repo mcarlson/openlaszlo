@@ -45,7 +45,7 @@
   * </p>
   * <p>See the <a href="${dguide}data-structures.html">Developers's Guide</a> for more discussion of data and datasets. </p>
   * <p>
-  * <b>Datasets in SOLO applications</b>.  Datasets are implemented differently in proxied and SOLO applications, with slight differences in functionality. For example, in SOLO applications in the SWF7 and SWF8 runtime is it not possible to retrieve http response headers. Also, white space may be handled differently.  See the <a href="${dguide}proxied.html">Developer's Guide</a>.
+  * <b>Datasets in SOLO applications</b>.  Datasets are implemented differently in proxied and SOLO applications, with slight differences in functionality. For example, in SOLO applications in the SWF8 and SWF9 runtimes is it not possible to retrieve http response headers. Also, white space may be handled differently.  See the <a href="${dguide}proxied.html">Developer's Guide</a>.
   * </p>
   * 
   * <p>

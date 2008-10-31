@@ -216,7 +216,7 @@ XHTML text containers such as <sgmltag class="element" role="LzText">&lt;text&gt
 <text>
 <p>
  The compiler supports the &lt;img&gt; tag in HTML text content, for 
- applications compiled for swf7 and higher. The URL 
+ applications compiled for swf8 and higher. The URL 
  for the image must return an image in a format accepted by the Flash 
  player (.jpg, or .swf). No gif or .png or other formats will work. 
 </p>
