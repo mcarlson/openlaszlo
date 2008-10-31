@@ -19,11 +19,11 @@
     }
     
     #vHex {
-    bgcolorHex : "0x0000FF";
+    bgcolorHex : "#0000FF";
     }
 
     #tHex {
-    fgcolorHex : "0x0000FF";
+    fgcolorHex : "#0000FF";
     }
 
     #vParens {
@@ -75,6 +75,6 @@ Debug.write("8=explicitly colored rgb(0,0,255)");
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
