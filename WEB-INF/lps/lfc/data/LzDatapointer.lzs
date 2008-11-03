@@ -1274,6 +1274,7 @@ function makeTextNode (text, par) :LzDataText {
     return tn;
 }
 
+/* commenting out for now
 if ($as2) {
 // FIXME: [2006-03-22 ptw] (LPP-1867) 
 // These are short aliases for routines used by the old data compiler.
@@ -1285,6 +1286,7 @@ _root._rootndi    = prototype.makeRootNode;
 _root._m = prototype.makeElementNode;
 _root._t = prototype.makeTextNode;
 }
+*/
 
 ////////////////////////////////////////////////////////////////
 

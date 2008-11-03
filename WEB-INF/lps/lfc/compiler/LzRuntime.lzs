@@ -9,15 +9,6 @@
   * @subtopic Runtime
   */
 
-if ($swf9) {
-} else { 
-/**
-  * DHTML/SWF compatibility
-  *
-  * @todo 2006-04-07 ptw Remove when _root is eradicated from .lzs
-  */
-window._root = window;
-}
 /**
  * Modules
  * TODO [2006-03-12 ptw] if the LFC is shared this needs to be multiplexed
