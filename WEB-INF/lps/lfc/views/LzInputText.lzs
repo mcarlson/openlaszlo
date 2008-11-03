@@ -296,7 +296,9 @@ function setHTML (htmlp) {
         LzView.__warnCapability('inputtext.setHTML()', 'htmlinputtext'); 
     }
 }
-
+/** 
+* @access private
+*/
 override function getText ( ){
     return (this.sprite cast LzInputTextSprite).getText();    
 }
