@@ -63,7 +63,7 @@ the calling of its <indexterm><primary><literal>init()</literal></primary></inde
 When a <glossterm>node</glossterm> is instantiated, its
 attributes are the attributes explicitly given in the object, plus any
 attributes that the class specifies.  Similarly, its children will be
-the child en explicitly given in the object, plus any children that are
+the children explicitly given in the object, plus any children that are
 specified in the class.  The class <indexterm><primary><literal>construct()</literal></primary></indexterm><methodname>construct()</methodname> method
 is called, with these attributes and the parent view.
 </para>
@@ -71,8 +71,7 @@ is called, with these attributes and the parent view.
 <orderedlist spacing="compact"><listitem><para>A single dictionary is created which combines the attributes of
   the instance with the attributes of the class</para></listitem><listitem><para>A single array is created which combines the children of the
   instance with the children of the class</para></listitem><listitem><para><literal>construct(<varname>args</varname>, <varname>parent</varname>)</literal> is called.
-  <literal><varname>args</varname></literal> is a dictionary of your attributes (does not
-  include expressions, such <literal>width="${parent.width}"</literal>),
+  <literal><varname>args</varname></literal> is a dictionary of your attributes, 
   <literal><varname>parent</varname></literal> is the lexical parent. This method can only be
   declared in a class, not in an instance. You can modify the
   arguments or the parent before calling
