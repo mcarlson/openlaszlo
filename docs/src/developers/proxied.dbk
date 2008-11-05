@@ -289,7 +289,7 @@ LiveHTTPHeaders to monitor what actual request is being made to the server,
 this is often instructive.</para>
 
 <para/></section></section><section><title>
-Development/deployment workflow with for serverless applications: 
+Development/deployment workflow for serverless applications: 
 </title>
 <para>
 The development process for serverless applications is a simple variation on the usual Laszlo cycle:

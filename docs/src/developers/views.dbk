@@ -379,7 +379,7 @@ that are changing, not the <literal>x</literal> and <literal>y</literal> of the 
 <para>
 Views rotate around the registration point. By default, <literal>xoffset</literal> and <literal>yoffset</literal> values are both zero and the 
 registration point is in the upper left corner of each view. Offsets allow you to change the rotation point.  In the example below,
-the pivot point of the red square is the origin is its upper left corner; the pivot point of the blue square is its center (where x and y are set to "20").
+the pivot point of the red square is its upper left corner; the pivot point of the blue square is its center (where x and y are set to "20").
 
 </para>
  
