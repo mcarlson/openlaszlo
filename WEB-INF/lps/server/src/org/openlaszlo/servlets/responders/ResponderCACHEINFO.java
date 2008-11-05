@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -48,7 +48,6 @@ public final class ResponderCACHEINFO extends ResponderAdmin
     public static String cacheInfo(boolean doDetails, boolean doSC)
         throws IOException
     {
-        Cache mediaCache    = ResponderMEDIA.getCache();
         Cache dataCache     = ResponderDATA.getCache();
         CompilationManager compilerCache = ResponderCompile.getCompilationManager();
         Cache compilerMediaCache = null;
@@ -60,9 +59,7 @@ public final class ResponderCACHEINFO extends ResponderAdmin
 
         StringBuffer buf = new StringBuffer("");
         buf.append("<lps-cacheinfo>\n");
-        if (mediaCache != null) {
-            mediaCache.dumpXML(buf, "media-cache", doDetails);
-        }
+
         if (dataCache != null) {
             dataCache.dumpXML(buf, "data-cache", doDetails);
         }

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -89,7 +89,6 @@ public final class ResponderSTAT extends ResponderAdmin
             mLastCleared = new Date();
         }
 
-        RequestCache mediaCache = ResponderMEDIA.getCache();
         RequestCache dataCache  = ResponderDATA.getCache();
 
         StringBuffer buf = new StringBuffer("");

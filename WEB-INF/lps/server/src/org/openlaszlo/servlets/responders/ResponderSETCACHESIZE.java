@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -40,7 +40,7 @@ public final class ResponderSETCACHESIZE extends ResponderAdmin
             } else if (t != null && t.equalsIgnoreCase("compiler")) {
                 cache = ResponderCompile.getCompilationManager();
             } else {
-                cache = ResponderMEDIA.getCache();
+                throw new RuntimeException("unknown cache type "+t);
             }
             if (k != null && k.equalsIgnoreCase("disk")) {
                 inMem = false; 

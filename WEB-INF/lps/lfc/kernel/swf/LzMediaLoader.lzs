@@ -160,27 +160,29 @@ override function request (req, cache, headers, filetype) {
     this.proxied = policy;
     o.proxied = policy;
 
+    var suffix = null;
+    // warn for unsupported media types
+    if (filetype == null) {
+        var si = req.lastIndexOf(".");
+        if (si != -1) {
+            suffix = req.substring(si + 1, si.length).toLowerCase();
+        }
+    } else {
+        var suffix = filetype;
+    }
+
+    this.isjpeg = (suffix == 'jpeg' || suffix == 'jpg');
+    this.isaudio = (suffix == 'mp3');
+
     if (this.proxied) {
         o.proxyurl = proxyurl;
     } else {
-        // warn for unsupported media types
-        if (filetype == null) {
-            var suffix = null;
-            var si = req.lastIndexOf(".");
-            if (si != -1) {
-                suffix = req.substring(si + 1, si.length).toLowerCase();
-            }
-        } else {
-            var suffix = filetype;
-        }
         if ($debug) {
             if (suffix != null && LzMediaLoader.unsupportedMediaTypes[suffix]) {
                 Debug.warn("serverless loading of resources with type '%s'" +
                            " is not supported by the Flash player. %w", suffix, req);
             }
         }
-        this.isjpeg = (suffix == 'jpeg' || suffix == 'jpg');
-        this.isaudio = (suffix == 'mp3');
     }
 
     if (headers != null) {

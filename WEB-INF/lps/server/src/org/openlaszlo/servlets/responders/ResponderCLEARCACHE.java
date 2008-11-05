@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -29,7 +29,6 @@ public final class ResponderCLEARCACHE extends ResponderAdmin
 
     final static int CLEAR_COMPILATION = 0x01;
     final static int CLEAR_DATA        = 0x02;
-    final static int CLEAR_MEDIA       = 0x04;
     final static int CLEAR_SCRIPT      = 0x08;
 
     protected void respondAdmin(HttpServletRequest req, HttpServletResponse res)
@@ -50,12 +49,6 @@ public final class ResponderCLEARCACHE extends ResponderAdmin
         if ( doClear(clearOptions, CLEAR_DATA) ) {
             cleared = clearDataCache();
             buf.append("<data-cache cleared=\"" + cleared + "\" />\n");
-            if (! cleared) isOk = false;
-        }
-
-        if ( doClear(clearOptions, CLEAR_MEDIA) ) {
-            cleared = clearMediaCache();
-            buf.append("<media-cache cleared=\"" + cleared + "\" />\n");
             if (! cleared) isOk = false;
         }
 
@@ -101,7 +94,7 @@ public final class ResponderCLEARCACHE extends ResponderAdmin
     int getClearOptions(HttpServletRequest req) {
         String tokens = req.getParameter("cache");
         if (tokens == null || tokens.equals("")) {
-            return CLEAR_COMPILATION | CLEAR_DATA | CLEAR_MEDIA | CLEAR_SCRIPT;
+            return CLEAR_COMPILATION | CLEAR_DATA | CLEAR_SCRIPT;
         }
 
         int options = 0x00;
@@ -112,8 +105,6 @@ public final class ResponderCLEARCACHE extends ResponderAdmin
                 options |= CLEAR_COMPILATION;
             } else if ( o.equals("data") ) {
                 options |= CLEAR_DATA;
-            } else if ( o.equals("media") ) {
-                options |= CLEAR_MEDIA;
             } else if ( o.equals("script") ) {
                 options |= CLEAR_SCRIPT;
             }
@@ -124,12 +115,6 @@ public final class ResponderCLEARCACHE extends ResponderAdmin
 
     boolean clearScriptCache() {
         return ScriptCompiler.clearCacheStatic();
-    }
-
-    boolean clearMediaCache() {
-        RequestCache mediaCache = ResponderMEDIA.getCache();
-        if (mediaCache == null) return false;
-        return mediaCache.clearCache();
     }
 
     boolean clearDataCache() {
