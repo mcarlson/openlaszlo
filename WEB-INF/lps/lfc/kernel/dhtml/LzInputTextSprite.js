@@ -306,7 +306,6 @@ LzInputTextSprite.prototype.__setTextEvents = function(c) {
     div.onkeyup = f;
     div.onkeydown = f;
     div.onkeypress = f;
-    div.onselect = f;
     div.onchange = f;
     if (this.quirks.ie_paste_event || this.quirks.safari_paste_event) {
         div.onpaste = c ? function (e) { this.owner.__pasteHandlerEx(e) } : null;
@@ -381,7 +380,7 @@ LzInputTextSprite.prototype.__pasteHandler = function () {
     var val = this.__LzInputDiv.value;
     var that = this;
     
-    //use 1ms timeout to give UI enough time for updating
+    // use 1ms timeout to defer execution, so that UI can update its state
     setTimeout(function() {
         var newval = that.__LzInputDiv.value;
         var newlen = newval.length;
@@ -407,88 +406,79 @@ LzInputTextSprite.prototype.__pasteHandler = function () {
 }
 
 // Called from the scope of the div - use owner property
-LzInputTextSprite.prototype.__textEvent = function ( e ){
-    if (! e) e = window.event;
-    if (this.owner.__LZdeleted == true) return;
-    if (this.owner.__skipevent) {
-        this.owner.__skipevent = false;
+LzInputTextSprite.prototype.__textEvent = function ( evt ){
+    if (! evt) evt = window.event;
+    var sprite = this.owner;
+    var view = this.owner.owner;
+    if (sprite.__LZdeleted == true) return;
+    if (sprite.__skipevent) {
+        sprite.__skipevent = false;
         return;
     }
-    var eventname = 'on' + e.type;
-    if (this.owner.quirks.ie_mouse_events && eventname == 'onmouseleave') {
+    var eventname = 'on' + evt.type;
+    if (sprite.quirks.ie_mouse_events && eventname == 'onmouseleave') {
         eventname = 'onmouseout';
     }
-    if (this.owner.__shown != true) {
+    if (sprite.__shown != true) {
         // this only happens when tabbing in from outside the app
         if (eventname == 'onfocus') {
-            this.owner.__skipevent = true;
-            //this.owner.select()
-            this.owner.__show();
-            this.owner.__LzInputDiv.blur();
-            LzInputTextSprite.__lastfocus = this.owner;
+            sprite.__skipevent = true;
+            //sprite.select()
+            sprite.__show();
+            sprite.__LzInputDiv.blur();
+            LzInputTextSprite.__lastfocus = sprite;
             LzKeyboardKernel.setKeyboardControl(true);
         }
         return; 
-    } else if (this.owner.__shown == false) {
+    } else if (sprite.__shown == false) {
         return;
     }
-    var keycode = e ? e.keyCode : event.keyCode;
     if (eventname == 'onfocus' || eventname == 'onmousedown') {
         if (eventname == 'onfocus') {
             LzInputTextSprite.prototype.__setglobalclickable(false);
         }
-        LzInputTextSprite.prototype.__focusedSprite = this.owner;         
-        this.owner.__show();
-        if (eventname == 'onfocus' && this.owner._cancelfocus) {
-            this.owner._cancelfocus = false;
+        LzInputTextSprite.prototype.__focusedSprite = sprite;
+        sprite.__show();
+        if (eventname == 'onfocus' && sprite._cancelfocus) {
+            sprite._cancelfocus = false;
             return;
         }
         if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = false;
     } else if (eventname == 'onblur') {
         if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = true;
-        if (LzInputTextSprite.prototype.__focusedSprite == this.owner) {
+        if (LzInputTextSprite.prototype.__focusedSprite === sprite) {
             LzInputTextSprite.prototype.__focusedSprite = null;         
         }    
-        if (this.owner.__fix_inputtext_with_parent_resource && this.owner.__isMouseOver()) {
+        if (sprite.__fix_inputtext_with_parent_resource && sprite.__isMouseOver()) {
             //Debug.write('undo blur')
-            this.owner.select();
+            sprite.select();
             return;
         }
-        this.owner.__hide();
-        if (this.owner._cancelblur) {
-            this.owner._cancelblur = false;
+        sprite.__hide();
+        if (sprite._cancelblur) {
+            sprite._cancelblur = false;
             return;
         }
     } else if (eventname == 'onmouseout') {
-        this.owner.__setglobalclickable(true);
+        sprite.__setglobalclickable(true);
     }
 
-    if (this.owner.multiline && this.owner.owner.maxlength > 0) {
-        if (eventname == 'onkeypress') {
-            var evt = e ? e : event;
-            var charcode = this.owner.quirks.text_event_charcode ? evt.charCode : evt.keyCode;
-            
-            /* BUG:
-             * env: Safari - Win
-             * -> last char is \n, delete per backspace, notice Safari-UI did update, 
-             *      but __LzInputDiv.value still holds the \n!
-             *    blur inputtext, focus again -> \n is again there, also in UI!
-             * what about Safari - Mac?
-             */
-            
+    if (eventname == 'onkeypress') {
+        if (sprite.multiline && view.maxlength > 0) {
+            var charcode = sprite.quirks.text_event_charcode ? evt.charCode : evt.keyCode;            
             //Debug.write("charCode = %s, keyCode = %s, ctrlKey = %s, altKey = %s, shiftKey = %s", charcode, keycode, evt.ctrlKey, evt.altKey, evt.shiftKey);
-            
+
             if (!(evt.ctrlKey || evt.altKey) && (charcode || keycode == 13) && keycode != 8) {
-                var selsize = this.owner.getSelectionSize();
+                var selsize = sprite.getSelectionSize();
                 //[TODO anba 2008-01-06] use selsize==0 when LPP-5330 is fixed
                 if (selsize <= 0) {
-                    if (this.owner.quirks.text_ie_carriagereturn) {
-                        var val = this.owner.__LzInputDiv.value.replace(this.owner.____crregexp, '\n');
+                    if (sprite.quirks.text_ie_carriagereturn) {
+                        var val = sprite.__LzInputDiv.value.replace(sprite.____crregexp, '\n');
                     } else {
-                        var val = this.owner.__LzInputDiv.value;
+                        var val = sprite.__LzInputDiv.value;
                     }
-                    
-                    var len = val.length, max = this.owner.owner.maxlength;
+
+                    var len = val.length, max = view.maxlength;
                     if (len >= max) {
                         evt.returnValue = false;
                         if (evt.preventDefault) {
@@ -499,16 +489,17 @@ LzInputTextSprite.prototype.__textEvent = function ( e ){
             } else {
                 /* IE and Safari do not send 'onkeypress' for function-keys, */
                 /* but Firefox and Opera! */
-                if (this.owner.quirks.keypress_function_keys) {
+                if (sprite.quirks.keypress_function_keys) {
                     if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
                         var c = String.fromCharCode(charcode);
                         /* 'v' for Firefox and 'V' for Opera */
                         if (c == 'v' || c == 'V') {
                             //pasting per ctrl + v
                             //[TODO anba 2008-01-06] how to detect paste per context-menu?
-                            var len = this.owner.__LzInputDiv.value.length, max = this.owner.owner.maxlength;
-                            if (len < max || this.owner.getSelectionSize() > 0) {
-                                this.owner.__pasteHandler();
+                            //[TODO anba 2008-10-06] (LPP-5406) Firefox3 added context-menu events
+                            var len = sprite.__LzInputDiv.value.length, max = view.maxlength;
+                            if (len < max || sprite.getSelectionSize() > 0) {
+                                sprite.__pasteHandler();
                             } else {
                                 evt.returnValue = false;
                                 if (evt.preventDefault) {
@@ -520,25 +511,26 @@ LzInputTextSprite.prototype.__textEvent = function ( e ){
                 }
             }
         }
-    }
-    
-    if (eventname == 'onkeypress') {
-        /* we need to leave here, else LzInputText.inputtextevent(..) will freak out */
+        // don't forward 'onkeypress' to inputtextevent()
         return;
     }
 
     //Debug.info('__textEvent', eventname, keycode);
-    if (this.owner.owner) {
+    if (view) {
         // Generate the event. onkeyup/onkeydown sent by lz.Keys.js
         if (eventname == 'onkeydown' || eventname == 'onkeyup') {
-            var v = this.owner.__LzInputDiv.value;
-            if (v != this.owner.text) {
-                this.owner.text = v;
-                this.owner.owner.inputtextevent('onchange', v);
+            var v = sprite.__LzInputDiv.value;
+            if (v != sprite.text) {
+                sprite.text = v;
+                view.inputtextevent('onchange', v);
             }
-        }
-        else {
-            this.owner.owner.inputtextevent(eventname, keycode);
+        } else {
+            if (eventname == 'onmousedown') {
+                view.inputtextevent(eventname);
+                // also send an artifial 'onfocus' event
+                eventname = 'onfocus';
+            }
+            view.inputtextevent(eventname);
         }
     }
 }

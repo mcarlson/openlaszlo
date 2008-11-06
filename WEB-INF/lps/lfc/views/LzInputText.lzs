@@ -83,12 +83,6 @@ static var tagname = 'inputtext';
   */
 var onenabled = LzDeclaredEvent;
 
-
-/** @access private
-  * @lzxtype event
-  */
-var onselect = LzDeclaredEvent;
-
 /** 
   * Width to use for text field if none is specified
   * @access private
@@ -170,50 +164,11 @@ function _gotBlurEvent(e=null){
 
 if ($dhtml) {
 private static const __LZinputmouse = {onclick: true, onmousedown: true, onmouseout: true};
-/** @access private 
- * Receive input text events from sprite
- * TODO: [20081030 anba] (LPP-7113) re-merge with swf-version when working on LPP-7113
- */
-function inputtextevent (eventname, value = null) {
-    //Debug.warn('inputtextevent', eventname, value);
-    if (eventname == 'onfocus' && this._focused) return;
-    if (eventname == 'onblur' && ! this._focused) return;
-    if (eventname == 'onfocus' || eventname == 'onmousedown') {
-        this._focused = true;
-        if (lz.Focus.getFocus() != this) {
-            var tabdown = lz.Keys.isKeyDown('tab');
-            lz.Focus.setFocus(this, tabdown);
-            return;
-        }
-    } else if (eventname == 'onchange') {
-        //multiline resizable fields adjust their height
-        var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
-        this.text = isprite.getText();
-        if ( this.multiline && 
-             this.sizeToHeight && 
-             this.height != isprite.getTextfieldHeight() ) {
-            this.setHeight(isprite.getTextfieldHeight());
-        }
-        if (this.ontext.ready) this.ontext.sendEvent(value);
-        return;
-    } else if (eventname == 'onblur') {
-        this._focused = false;
-    }
-    // we get these events from LzInputTextSprite:
-    // onblur, onselect, onfocus, onchange, 
-    // onmousedown, onmouseout, onclick
-    if (LzInputText.__LZinputmouse[eventname]) {
-        // use the service class to propagate mouse-events
-        lz.ModeManager.handleMouseEvent(this, eventname);
-    } else {
-        // FIXME: [20081030 anba] this isn't quite right, 
-        // e.g. we must use lz.Focus for focus events!
-        if (this[eventname].ready) this[eventname].sendEvent(value);
-    }
 }
-} else {
+
 /** @access private 
- * Receive input text events from sprite
+ * Receive input text events from sprite: onblur, onfocus, onchange
+ * Additionally for dhtml: onmousedown, onmouseout, onclick
  */
 function inputtextevent (eventname:String, value:* = null) :void {
     if (eventname == 'onfocus' && this._focused) return;
@@ -240,10 +195,22 @@ function inputtextevent (eventname:String, value:* = null) :void {
         if (lz.Focus.getFocus() === this) {
             lz.Focus.clearFocus();
         }
-    } else if ($debug) {
-        Debug.warn("unhandled inputtextevent='%s' in %#w", eventname, this);
+    } else {
+        if ($dhtml) {
+            if (LzInputText.__LZinputmouse[eventname]) {
+                // must use lz.ModeManager to propagate mouse-events
+                // TODO: [20081031 anba] I don't know why the dhtml-kernel sends
+                // mouse-events through inputtextevent(). This code wasn't
+                // even executed when I ran simple testcases. Maybe it's just
+                // redundant now and we can remove it..
+                lz.ModeManager.handleMouseEvent(this, eventname);
+                return;
+            }
+        }
+        if ($debug) {
+            Debug.warn("unhandled inputtextevent='%s' in %#w", eventname, this);
+        }
     }
-}
 }
 
 /**
