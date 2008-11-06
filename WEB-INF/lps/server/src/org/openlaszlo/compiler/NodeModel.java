@@ -1605,9 +1605,7 @@ solution =
                         value = "0x" +
                             Integer.toHexString(ViewSchema.parseColor(value));
                     } catch (ColorFormatException e) {
-                        // Or just set when to WHEN_ONCE and fall
-                        // through to TODO?
-                        throw new CompilationError(source, name, e);
+                        when = WHEN_ONCE;
                     }
                 }
                 value = "LzColorUtils.convertColor('" + value + "')";

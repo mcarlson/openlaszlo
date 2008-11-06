@@ -68,7 +68,7 @@
     </view>
 
     <class name="mylistitem" extends="listitem" height="20">
-        <attribute name="color" value="0x000000" when="once"/>
+        <attribute name="color" type="color" value="0x000000" when="once"/>
         <view x="4" y="5" width="10" height="10" bgcolor="${parent.color}"/>
         <text x="18" text="${parent.text}"/>
     </class>
@@ -99,7 +99,7 @@
         <view layout="axis:y;spacing:5">
             <text>custom colors, spacing=2</text>
             <list style="customlistcolors" spacing="2" shownitems="6"
-                bgcolor="${iceblue4}">
+                bgcolor="iceblue4">
                 <textlistitem>Peter</textlistitem>
                 <textlistitem>Bret</textlistitem>
                 <textlistitem>Sarah</textlistitem>
