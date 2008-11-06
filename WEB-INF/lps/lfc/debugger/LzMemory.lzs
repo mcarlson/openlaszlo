@@ -9,10 +9,6 @@
   * @topic LZX
   * @subtopic Debugging
   *
-  * @devnote [2007-12-08 ptw] Throughout this file the code inside `if
-  * ($as2) { } else` is a duplicate of the following `try` block and
-  * is only needed until the compiler can correctly compile `try` for
-  * $as2.  Once that happens, the $as2 blocks can be removed.
   */
 
 // Memory analysis tools for the debugger
@@ -66,11 +62,6 @@ Debug.mark = function (o) {
     }
     return false;
   }
-  if ($as2) {
-    var annotation = this.annotation;
-    delete o[annotation.leaked];
-    o[annotation.marked] = this.markGeneration;
-  } else
   try {
     var annotation = this.annotation;
     delete o[annotation.leaked];
@@ -108,23 +99,17 @@ Debug.isMarked = function (o) {
   // native prototype that will fail when called on the prototype
   // itself).  If so, pretend the object is marked -- we can't trace
   // any deeper
-  if ($as2) {
+  try {
     if (! o.hasOwnProperty(marked)) {
       return null;
     }
     return o[marked] == this.markGeneration;
-  } else
-    try {
-      if (! o.hasOwnProperty(marked)) {
-        return null;
-      }
-      return o[marked] == this.markGeneration;
-    } catch (e) {
-      if (this.debugTrace) {
-        console.log('Not tracing %s\n', o);
-      }
-      return true;
+  } catch (e) {
+    if (this.debugTrace) {
+      console.log('Not tracing %s\n', o);
     }
+    return true;
+  }
 }
 
 /**
@@ -230,10 +215,6 @@ Debug.traceStep = function (steps=Infinity, milliseconds=1300) {
     // But only if asked to
     if (dopath) {
       var path = ose.path.concat(name);
-      if ($as2) {
-        // More compact than an Array
-        o[why] = path.join("\x01");
-      } else
       try {
         // More compact than an Array
         o[why] = path.join("\x01");
@@ -491,14 +472,6 @@ class __LzLeak {
       this.property = path.pop();
       // Make pretty
       this.path = path.join(".");
-      if ($as2) {
-        var p = eval(path[0]);
-        var pl = path.length;
-        for (var i = 1; i < pl; i++) {
-          p = p[path[i]];
-        }
-        this.parent = p;
-      } else
       try {
         var p = eval(path[0]);
         var pl = path.length;
@@ -558,33 +531,6 @@ class __LzLeaks /* extends Array */ {
     this.length = 0;
     for (var i = 0; i < ll; i = j) {
       var j = i + 1;
-      if ($as2) {
-        var p = l[i];
-        p[leaked] = p[size];
-        var pn = p[why];
-        if (typeof(pn) != 'undefined') {
-          while (j < ll) {
-            var c = l[j];
-            var cn = c[why];
-            if (typeof(cn) != 'undefined') {
-              if (cn.indexOf(pn) == 0) {
-                // Don't count loops
-                if (c !== p) {
-                  p[leaked] += c[size];
-                } else {
-                  if (Debug.debugTrace) {
-                    console.log('%s is %s\n', pn, cn);
-                  }
-                }
-                j++;
-                continue;
-              }
-            }
-            break;
-          }
-        }
-        this[this.length++] = new __LzLeak(p);
-      } else
       try {
         var p = l[i];
         p[leaked] = p[size];
