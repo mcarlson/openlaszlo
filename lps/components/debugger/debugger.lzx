@@ -548,6 +548,10 @@
   <![CDATA[
        // restore persistedDataed data
        this.persistedData = LzBrowserKernel.getPersistedObject('__lzdebugger');
+       if (this.persistedData) {
+           this.commandhistory = this.persistedData.data.commandhistory;
+           this.commandhistory_ptr = this.commandhistory.length;
+       }
        if (this.persist && this.persistedData) {
            for (var i in this.persistedData.data) {
                if (this[i] != null) {
