@@ -175,6 +175,17 @@
     </insert>
   </interface>
 
+  <interface name="contextmenuitem" extends="node">
+    <!-- add virtual attributes -->
+    <insert>
+      <attribute name="delegate" type="expression"/>
+      <attribute name="caption" type="string"/>
+      <attribute name="enabled" type="boolean"/>
+      <attribute name="separatorbefore" type="boolean"/>
+      <attribute name="visible" type="boolean"/>
+    </insert>
+  </interface>
+
   <interface extends="view" name="canvas">
     <insert>
       <attribute name="debug" type="boolean" value="false"/>
