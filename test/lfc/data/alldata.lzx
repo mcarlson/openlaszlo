@@ -4,7 +4,6 @@
   covers-tags: lzdata smoketest
 -->
 
-    <include href="lztest/xmlequals.lzx"/>
     <include href="datanode.lzx"/>
     <include href="datapointer.lzx"/>
     <include href="datapointerServerless.lzx"/>

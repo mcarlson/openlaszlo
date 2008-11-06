@@ -278,6 +278,7 @@ class LzHTTPDataProvider extends LzDataProvider {
      */
     function loadResponse (dreq:LzHTTPDataRequest, data:*) :void {
         dreq.loadtime = (new Date()).getTime() - dreq.loadstarttime;
+        dreq.rawdata = dreq.loader.getResponse();
 
         if (data == null) {
             this.setRequestError(dreq, "client could not parse XML from server");
@@ -296,7 +297,6 @@ class LzHTTPDataProvider extends LzDataProvider {
             // We might change this at some point and make the server
             // return all proxied responses wrapped up in that format,
             // but it is not being done now for RPC and other raw data users.
-            dreq.rawdata = dreq.loader.getResponse();
             dreq.onstatus.sendEvent( dreq );
             return;
         } else if (proxied && data.childNodes[0].nodeName == "error") {
@@ -331,7 +331,6 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         dreq.xmldata = content;
         dreq.responseheaders = headers;
-        dreq.rawdata = dreq.loader.getResponse();
         dreq.onstatus.sendEvent( dreq );
     }
 }

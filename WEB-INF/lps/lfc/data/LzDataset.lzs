@@ -100,6 +100,12 @@ LzDataset.attributes.name = 'localdata';
 /** @access private */
 static const slashPat :String = "/";
 
+/** Holds raw data response string from data source
+ * @type String
+ * @lzxdefault null
+ */
+var rawdata:String = null;
+
 /** Holds a pointer to the DataProvider which handles data load requests for this dataset. 
   * Default value is canvas.defaultdataprovider
   */
@@ -286,9 +292,10 @@ function $lzc$set_request (b:Boolean) {
 var headers :LzParam = null;
 
 /** Proxy data requests via the proxy server. Inherits value from canvas.proxied flag.
-  * @type Boolean or null
-  * @lzxdefault null
-  */
+ * @type inheritableBoolean
+ * @lzxdefault "inherit"
+ * @access public 
+ */
 var proxied :* = null;
 /** @access private */
 function $lzc$set_proxied (val:*) :void {
@@ -775,6 +782,8 @@ function handleDataResponse (datareq:LzHTTPDataRequest) :void {
         this.dsloadDel.unregisterFrom(datareq.onstatus);
     }
     
+    this.rawdata = datareq.rawdata;
+
     if (datareq.status == LzDataRequest.SUCCESS) {
         this.setData(datareq.xmldata, datareq.responseheaders);
     } else if (datareq.status == LzDataRequest.ERROR) {
