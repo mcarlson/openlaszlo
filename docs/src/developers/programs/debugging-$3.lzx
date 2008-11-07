@@ -1,5 +1,6 @@
 
 <canvas debug="true" height="150">
+  <debug y="10" />
   <handler name="oninit"><![CDATA[
     for (var i = 0; i < 10; i ++) {
       canvas.width();
@@ -7,6 +8,6 @@
   ]]></handler>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

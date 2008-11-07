@@ -1,7 +1,7 @@
-<canvas debug="true">
-<debug x="0" y="100" height="130" width="700"/>
+<canvas debug="true" width="600" height="225">
+<debug x="110" y="0" height="245" width="550"/>
   <button name="test" width="100" height="100">
-    <handler name="onclick" method="clicked" />
+    <handler name="onclick"> this.clicked(); </handler>
     <method name="clicked" args="ignore=null">
       this.x = this.getMouse('x');
       this.y = this.getMouse('y');

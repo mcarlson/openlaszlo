@@ -1,10 +1,10 @@
-<canvas debug="true">
+<canvas height="225" debug="true">
 <debug x="5" y="5" height="200" />
     <handler name="oninit">
         Debug.versionInfo()
     </handler>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
