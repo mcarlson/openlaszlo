@@ -665,6 +665,19 @@ public class CompilationManager extends Cache {
                         getProperties().getProperty(key));
                 }
             }
+            
+            String property = compilationProperties
+                    .getProperty(CompilationEnvironment.TRACK_LINES);
+            if (property != null) {
+                compiler.setProperty(CompilationEnvironment.TRACK_LINES, property);
+            }
+            
+            property = compilationProperties
+                    .getProperty(CompilationEnvironment.NAME_FUNCTIONS);
+            if (property != null) {
+                compiler.setProperty(CompilationEnvironment.NAME_FUNCTIONS, property);
+            }
+            
             DependencyTracker dependencyTracker =
                 new DependencyTracker(compilationProperties);
             TrackingFileResolver resolver =

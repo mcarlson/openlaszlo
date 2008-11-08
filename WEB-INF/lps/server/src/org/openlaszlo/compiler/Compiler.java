@@ -345,6 +345,16 @@ public class Compiler {
             env.setProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY, sourcelocators);
         }
 
+        String trackLines = props.getProperty(CompilationEnvironment.TRACK_LINES);
+        if (trackLines != null) {
+            env.setProperty(CompilationEnvironment.TRACK_LINES, trackLines);
+        }
+
+        String nameFunctions = props.getProperty(CompilationEnvironment.NAME_FUNCTIONS);
+        if (nameFunctions != null) {
+            env.setProperty(CompilationEnvironment.NAME_FUNCTIONS, nameFunctions);
+        }
+        
         try {
             mLogger.debug(
 /* (non-Javadoc)
@@ -414,8 +424,9 @@ public class Compiler {
                                          env.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY)));
             compileTimeConstants.put("$profile", new Boolean(
                                          env.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY)));
-            compileTimeConstants.put("$backtrace", new Boolean(
-                                         env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY)));
+
+            boolean backtraceValue = env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY);
+            compileTimeConstants.put("$backtrace", new Boolean(backtraceValue));
 
             runtime = env.getProperty(env.RUNTIME_PROPERTY);
 
@@ -456,6 +467,7 @@ public class Compiler {
             writer.close();
             
             Canvas canvas = env.getCanvas();
+            canvas.setBacktrace(backtraceValue);
             if (!errors.isEmpty()) {
                 if (canvas != null) {
                     canvas.setCompilationWarningText(

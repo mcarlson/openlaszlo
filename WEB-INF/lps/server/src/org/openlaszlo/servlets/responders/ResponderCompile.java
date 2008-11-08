@@ -474,6 +474,17 @@ public abstract class ResponderCompile extends Responder
                 props.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, backtrace);
             }
             
+            // Look for "hdebug=true" flag
+            // This flag is a shorthand for turning on various props needed by Harpoon debugging
+            props.setProperty(CompilationEnvironment.HDEBUG_PROPERTY, "false");
+            String hdebug = req.getParameter(CompilationEnvironment.HDEBUG_PROPERTY);
+            if (hdebug != null) {
+                props.setProperty(CompilationEnvironment.HDEBUG_PROPERTY, hdebug);
+                props.setProperty(CompilationEnvironment.NAME_FUNCTIONS, hdebug);
+                props.setProperty(CompilationEnvironment.TRACK_LINES, hdebug); 
+                props.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, hdebug); 
+            }
+
         }
 
         // Set the 'lzproxied' default = false

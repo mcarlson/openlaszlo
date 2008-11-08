@@ -274,7 +274,8 @@ lz.embed = {
             if (i == 'lzr' || i == 'lzt'
                 || i == 'debug' || i == 'profile' || i == 'lzbacktrace' || i =='lzconsoledebug'
                 || i == 'lzdebug' || i == 'lzkrank' || i == 'lzprofile'
-                || i == 'fb' || i == 'sourcelocators' || i == '_canvas_debug') {
+                || i == 'fb' || i == 'sourcelocators' || i == '_canvas_debug'
+                || i == 'hdebug') {
                 query += i + '=' + v + '&';
             }
 
