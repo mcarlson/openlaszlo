@@ -1,0 +1,59 @@
+<canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
+
+<!-- 
+
+SWF9 Google Maps API
+
+To use this, get a copy of the map_1_7a.swc from the Googe Map SDK and copy it to
+WEB-INF/flexlib (do not use the map_flex_*.swc library file, it expects the mx applicaton
+framework)
+
+Then compile this app with lzr=swf9
+
+-->
+
+  <script when="immediate"><![CDATA[
+         class FlashMapOL {
+            #passthrough (toplevel: true) {
+            import com.google.maps.*;
+            import flash.geom.*;
+            }#
+
+            var map:Map;
+
+            function createMap() {
+                map = new Map();
+                map.addEventListener(MapEvent.MAP_READY, onMapReady);
+                // Henry's key
+                map.key = "ABQIAAAAT-bIcrU96-d2UT9ao4fuQhQeYAb4p95ZEYTsQwGDQ7cOBxduDBQsJj99qzzLWoeHwQer1vjPN0wTNg";
+                map.setSize(new Point(LFCApplication.stage.stageWidth, LFCApplication.stage.stageHeight));
+                return map;
+            }
+
+             function onMapReady(event:MapEvent):void {
+                this.map.setCenter(new LatLng(40.736072,-73.992062), 14, MapType.NORMAL_MAP_TYPE);
+            }
+
+        }
+         
+        var mapfactory = new FlashMapOL();
+        lz.map = mapfactory.createMap();
+         
+    ]]>
+    </script>
+
+  <window id="mapwin" width="640" height="480">
+    <passthrough>
+      import flash.display.*;
+    </passthrough>
+    <handler name="oninit">
+      var sprite:Sprite = this.content.sprite
+      sprite.addChildAt(lz.map, sprite.numChildren);
+    </handler>
+  </window>
+</canvas>
