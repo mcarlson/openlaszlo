@@ -942,7 +942,7 @@ Debug.ObjectForID(NN)
       </note>
 
     </section>
-    <section> </section>
+
     <section id="debugsafari">
       <title>Using Safari</title>
       <para>If you are using Safari to debug DHTML, we recommend that you enable
