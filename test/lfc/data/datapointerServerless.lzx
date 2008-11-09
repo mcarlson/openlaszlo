@@ -43,7 +43,7 @@
                           dp.xpathQuery( '*/text()' ).join("") );
 
 
-            dp.setPointer  ( global[ dsname ].getFirstChild() ) ;
+            dp.setPointer  ( canvas.datasets[ dsname ].getFirstChild() ) ;
             assertEquals( 'data' , dp.getNodeName() );
             assertFalse( dp.setXPath  ( dsname + ":/ff"  ) );
             assertTrue( dp.setXPath  ( dsname+ ":/data"  ) );
@@ -57,7 +57,7 @@
             assertEquals( dp.p.attributes , dp.getNodeAttributes() );
             assertEquals( '22' , dp.getNodeAttribute( 'x' ) );
 
-            assertEquals( global[ dsname ], dp.getDataset( ) );
+            assertEquals( canvas.datasets[ dsname ], dp.getDataset( ) );
             dp.setNodeName ("bunny");
             assertEquals( '<bunny x="22"><ee/><ff/><bb>otherbb</bb><bb last="true"/></bunny>' ,  dp.serialize() );
             //broken;
