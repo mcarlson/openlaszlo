@@ -548,7 +548,7 @@ public class SchemaBuilder {
                     member.type = eprop.getAttribute("type");
                 }
                 if (member.type != null && !"".equals(member.type)) {
-                    member.type = convertAttributeType(member.type);
+                    member.type = convertAttributeType(eprop, member.type);
                     if (member.type.indexOf('|') >= 0) {
                         member.enumvalues = member.type;
                         member.type = "string";
@@ -656,24 +656,24 @@ public class SchemaBuilder {
      * generally use the type found in the doc, and teach the reader
      * of lfc.lzx to know those types.
      */
-    String convertAttributeType(String s) {
+    String convertAttributeType(Element el, String s) {
+        String result = null;
         if (s.indexOf('|') >= 0) {
-            s = s.replaceAll("\"", "").replaceAll("'", "").replaceAll(" ", "");
+            result = s.replaceAll("\"", "").replaceAll("'", "").replaceAll(" ", "");
             // special case: booleanLiteral|'inherit' becomes inheritableBoolean
-            if ("booleanLiteral|inherit".equals(s)) {
-                s = "inheritableBoolean";
+            if ("booleanLiteral|inherit".equals(result)) {
+                result = "inheritableBoolean";
             }
-            return s;
         } else if ("String".equals(s)) {
-            return "string";
+            result = "string";
         } else if ("Number".equals(s) || "integer".equals(s) || "uint".equals(s)) {
-            return "number";
+            result = "number";
         } else if ("Boolean".equals(s)) {
-            return "boolean";
+            result = "boolean";
         } else if ("booleanLiteral".equals(s)) {
-            return "boolean";   // TODO: not exactly true, but this is what appears in the schema...
+            result = "boolean";   // TODO: not exactly true, but this is what appears in the schema...
         } else if ("sizeExpression".equals(s)) {
-            return "size";
+            result = "size";
         } else if ("Array".equals(s) ||
                    "LzDataNodeMixin".equals(s) ||
                    "LzDelegate".equals(s) ||
@@ -686,11 +686,25 @@ public class SchemaBuilder {
                    "DisplayKeys".equals(s) ||
                    "Dictionary".equals(s)) {
             // TODO: these have no good alternative!
-            return "string";
-        } else {            
-            // TODO: others??
-            return s;
+            result = "string";
+        } else if ("ID".equals(s) ||
+                   "boolean".equals(s) ||
+                   "color".equals(s) ||
+                   "css".equals(s) ||
+                   "expression".equals(s) ||
+                   "inheritableBoolean".equals(s) ||
+                   "number".equals(s) ||
+                   "numberExpression".equals(s) ||
+                   "reference".equals(s) ||
+                   "size".equals(s) ||
+                   "string".equals(s) ||
+                   "token".equals(s)) {
+            result = s;
+        } else {
+            throw new SchemaBuilderError(position(el) + "type \"" +
+                                         s + "\" not supported by schema builder");
         }
+        return result;
     }
 
     String convertDefaultValue(String s) {
