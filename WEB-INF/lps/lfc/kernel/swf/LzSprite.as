@@ -1367,11 +1367,13 @@ LzSprite.prototype.checkPlayStatus2 = function (ignore){
   * Otherwise f is relative to the beginning of the resource.
   */
 LzSprite.prototype.play = function (f, rel){
-    // NOTE: [2008-10-29 ptw] We want to know if we have
-    // already have a clip assigned or not and queue this action if
-    // not, hence we check __LZhaser
+    // NOTE: [2008-10-29 ptw] We need to queue if a) we are loading a
+    // source (getMCRef will be null), or b) we don't (yet) have our
+    // resource assigned (resource will be "empty").  IWBNI getMCRef
+    // returned null in the latter case, but I couldn't tell if that
+    // would break it's contract with the rest of the world...
     var m = this.getMCRef();
-    if ( this.__LZhaser ) {
+    if ( m == null || this.resource == "empty" ) {
         this.queuePlayAction( "play" , f , rel );
         return;
     }
@@ -1395,11 +1397,13 @@ LzSprite.prototype.play = function (f, rel){
   * Otherwise it is relative to the start position of the resource.
   */
 LzSprite.prototype.stop = function (f, rel){
-    // NOTE: [2008-10-29 ptw] We want to know if we have
-    // already have a clip assigned or not and queue this action if
-    // not, hence we check __LZhaser
+    // NOTE: [2008-10-29 ptw] We need to queue if a) we are loading a
+    // source (getMCRef will be null), or b) we don't (yet) have our
+    // resource assigned (resource will be "empty").  IWBNI getMCRef
+    // returned null in the latter case, but I couldn't tell if that
+    // would break it's contract with the rest of the world...
     var m = this.getMCRef();
-    if ( this.__LZhaser ) {
+    if ( m == null || this.resource == "empty" ) {
         // always stop on the first frame
         this.queuePlayAction( "stop" , 0);
         return;
