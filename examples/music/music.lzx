@@ -17,10 +17,6 @@
     <view id="audioplayer" play="true" y="40" >
         
         <handler name="oninit" >
-            if ($swf8) {
-                // load mp3 unproxied, so we can get the ID3-Tag
-                this.setProxyPolicy(function (url) {return false;});
-            }
             this.setAttribute("resource", "http:music.mp3");
         </handler>
         
