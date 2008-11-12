@@ -1,6 +1,6 @@
 <canvas height="200" >
   <dataset name="numbers"/>
-  <datapointer name="top" xpath="numbers:/"/>
+  <datapointer name="thetop" xpath="numbers:/"/>
   
   <datapointer name="numptr">
     <handler name="ondata" args="d">
@@ -22,10 +22,10 @@
     </edittext>
     <button name="bSend" text="Add">
       <handler name="onclick" method="compute"/>
-        <method name="compute">
+        <method name="compute" args="ignore=null">
         if(parent.input.getText().length > 0){
-                top.addNode(parent.input.getText())
-                var end = top.xpathQuery('*/last()')
+                thetop.addNode(parent.input.getText())
+                var end = thetop.xpathQuery('*/last()')
                 numptr.setXPath('numbers:/*[' + end + ']')
                 parent.input.clearText()
       }
@@ -44,7 +44,7 @@
     <text id="result" fgcolor="blue" fontstyle="bold">
       <method name="update" args="v">
         parent.sum += Number(v)
-        this.setText(parent.sum / top.p.childNodes.length)
+        this.setAttribute('text', parent.sum / thetop.p.childNodes.length)
       </method>
     </text>
   </view>

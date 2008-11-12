@@ -2,7 +2,7 @@
   <dataset name="stack">
     <root/>
   </dataset>
-  <datapointer name="top" xpath="stack:/root"/>
+  <datapointer name="thetop" xpath="stack:/root"/>
   
   <datapointer xpath="stack:/root/*[1]/name()" rerunxpath="true">
     <handler name="ondata" args="d">
@@ -31,19 +31,19 @@
       <handler name="onclick" method="handleclick"/>
       <method name="handleclick" args="ignore">
         var n = parent.input.getText(); 
-        if (top.p.childNodes.length == 0) {
-            top.addNode(n)
+        if (thetop.p.childNodes.length == 0) {
+            thetop.addNode(n)
         } else {    
           var ne = new lz.DataElement(n)
-          top.p.insertBefore(ne, top.p.getFirstChild())
+          thetop.p.insertBefore(ne, thetop.p.getFirstChild())
         }
         parent.input.clearText()
       </method>
     </button>
     <button name="bPop" text="Pop">
       <handler name="onclick">
-        var last = top.xpathQuery('*[1]')
-        top.p.removeChild(last)
+        var last = thetop.xpathQuery('*[1]')
+        thetop.p.removeChild(last)
       </handler>
     </button>
   </view>
