@@ -34,7 +34,7 @@ public class CompilationEnvironment {
     public static final String PROXIED_PROPERTY           = "lzproxied";
     public static final String DEBUG_PROPERTY             = "debug";
     public static final String DEBUG_EVAL_PROPERTY        = "debugEval";
-    public static final String HDEBUG_PROPERTY            = "hdebug";
+    public static final String SOURCE_ANNOTATIONS_PROPERTY = "lzsourceannotations";
 
     // matches the values of sc.Compiler.DEBUG_BACKTRACE, NAME_FUNCTIONS, etc.
     public static final String BACKTRACE_PROPERTY         = "debugBacktrace";
