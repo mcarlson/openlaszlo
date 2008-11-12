@@ -39,57 +39,24 @@ class LzDebugMessage extends LzBootstrapMessage {
     super(message);
   }
 
-  // TODO: [2006-04-17 ptw] When javascript has getters and setters:
-  // function get length () { return this.message.length; };
-  // function set length (length) { this.message.length = length; return this.length; };
+  /// These methods implement the String interface (since we are not
+  /// allowed to subclass String, apparently
 
-  // Implements String interface
   /** @access private */
-  function charAt (index) { return this.message.charAt(index); }
-  // Implements String interface
-  /** @access private */
-  function charCodeAt (index) { return this.message.charCodeAt(index); }
-  // indexOf in LzBootstrapMessage
-  // Implements String interface
-  /** @access private */
-
-  override function indexOf (key) { return this.message.indexOf(key); }
-  // Implements String interface
-  /** @access private */
-
-  function lastIndexOf (key) { return this.message.lastIndexOf(key); }
-  // Implements String interface
-  /** @access private */
-  function toLowerCase () {
-    var msg = new LzMessage(this.message.toLowerCase());
+  override public function toLowerCase ():LzMessage {
+    var msg:LzMessage = new LzMessage(this.message.toLowerCase());
     msg.objects = this.objects.concat();
     return msg;
   };
-  /**
-   * Implements String interface
-   * @access private
-   */
-  function toUpperCase () {
-    var msg = new LzDebugMessage(this.message.toUpperCase());
+  /** @access private */
+  override public function toUpperCase ():LzMessage {
+    var msg:LzMessage = new LzMessage(this.message.toUpperCase());
     msg.objects = this.objects.concat();
     return msg;
   };
-  /**
-   * Implements String interface
-   * @access private
-   */
-  function toString () { return this.message.toString(); };
-  /**
-   * Implements String interface
-   * @access private
-   */
-  function valueOf () { return this.message.valueOf(); };
-  /**
-   * Implements String interface
-   * @access private
-   */
-  function concat (...args):LzDebugMessage {
-    var msg = new LzDebugMessage(this.message.concat.apply(this.message, args));
+  /** @access private */
+  override public function concat (...args):LzMessage {
+    var msg:LzMessage = new LzMessage(this.message.concat.apply(this.message, args));
     var offset = this.message.length;
     for (var i = 0; i < args.length; i++) {
       var arg = args[i];
@@ -104,30 +71,20 @@ class LzDebugMessage extends LzBootstrapMessage {
     }
     return msg;
   }
-  /**
-   * Implements String interface
-   * @access private
-   */
   // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-  function slice (...args):String { return this.message.slice.apply(this.message, args); }
-  /**
-   * Implements String interface
-   * @access private
-   */
+  /** @access private */
+  override public function slice (...args):String { return this.message.slice.apply(this.message, args); }
   // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-  function split (...args):String { return this.message.split.apply(this.message, args); }
-  /**
-   * Implements String interface
-   * @access private
-   */
+  /** @access private */
+  override public function split (...args):String { return this.message.split.apply(this.message, args); }
   // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-  function substr (...args):String { return this.message.substr.apply(this.message, args); }
-  /**
-   * Implements String interface
-   * @access private
-   */
+  /** @access private */
+  override public function substr (...args):String { return this.message.substr.apply(this.message, args); }
   // TODO: [2005-06-23 ptw] Make these methods maintain the objects array
-  function substring (...args):String { return this.message.substring.apply(this.message, args); }
+  /** @access private */
+  override public function substring (...args):String { return this.message.substring.apply(this.message, args); }
+
+  /// End of String interface
 
   /**
    * Appends str to the message.  If obj is passed, it is recorded as an
@@ -422,27 +379,17 @@ class LzSourceMessage {
   var _dbg_name = function () {
     // Omit type from _dbg_name, since it is implicit in the class
     return this.locationString('') + this.message;
-  }
+  };
 
   /**
    * Convert a SourceMessage to a String
    * @access private
    */
-  // TODO: [2005-05-08 ptw] (LPP-5934) When toString is declared
-  // public, remove the swf9 special-case
-    if ($swf9) {
-      prototype.toString = function () {
-        // SourceMessages auto-append a newline (although they really just want to
-        // prepend a fresh-line)
-        return this.toStringInternal('toString') + '\n';
-      }
-    } else {
-      function toString () {
-        // SourceMessages auto-append a newline (although they really just want to
-        // prepend a fresh-line)
-        return this.toStringInternal('toString') + '\n';
-      }
-    }
+  public function toString () {
+    // SourceMessages auto-append a newline (although they really just want to
+    // prepend a fresh-line)
+    return this.toStringInternal('toString') + '\n';
+  }
 
 
   /**

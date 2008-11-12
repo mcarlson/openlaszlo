@@ -488,7 +488,7 @@ class __LzLeak {
    * Describe an individual leak
    * @access private
    */
-  function toString () {
+  public function toString () {
     if (this.obj) {
       return Debug.formatToString("%=s.%s: (\xa3%d) %0.48#w", this['parent'], this.path, this.property, this.leaked, this['obj']);
     } else {

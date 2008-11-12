@@ -327,7 +327,7 @@ static function trim (s:String):String {
 /**
   * @access private
   */
-function toString (  ){
+public function toString (  ){
     return  "Parsed path for path: " + this.path;
 }
 

@@ -202,7 +202,7 @@ public class LzURL {
     /**
      * Returns this URL as a string
      */
-    function toString () :String {
+    public function toString () :String {
         var out:String = "";
 
         if (this.protocol != null) {

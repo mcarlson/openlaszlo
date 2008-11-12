@@ -380,7 +380,7 @@ function LzFont ( fontobject , attrs , style ){
   * value set in SWFWriter.java */
 var leading = 2;
 
-function toString (){
+public function toString (){
     return "Font style " + this.style + " of name " + this.name;
 }
 

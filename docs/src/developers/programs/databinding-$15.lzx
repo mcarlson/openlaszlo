@@ -1,28 +1,32 @@
-<canvas height="150" debug="true">
-  <debug x="150"/>
+<canvas height="155">
+  <debug x="50%" width="45%" y="5%" height="95%" />
   <dataset name="onion">
     <layer order="1"><layer><layer>core</layer></layer></layer>
   </dataset>
 
-  <view datapath="onion:/layer">
-     <simplelayout spacing="5"/>
-     <view width="${100 / this.data}" height="${100 / this.data}" 
-           bgcolor="0x09d055" datapath="@order" 
-           opacity="${Math.min(1, this.data / 3)}"/>
-    
+  <view datapath="onion:/layer" layout="spacing: 5">
     <button text="Peel next layer">
-      <handler name="onclick">
-        with (parent.datapath) {
-          Debug.write(data)
-          if (!selectChild()) this.setAttribute('enabled', false) 
-          else setNodeAttribute('order', Number(p.parentNode.attributes['order']) + 1)
-         }
-      </handler>
+      <handler name="onclick"><![CDATA[
+      with (parent.datapath) {
+      // Go down one layer
+      selectChild();
+      // If there are no more layers to go, disable ourself
+      if (getNodeCount() == 0) this.setAttribute('enabled', false);
+      // Finally, set the order attribute of the new layer to one more than it's parent
+      setNodeAttribute('order', String(Number(p.parentNode.attributes['order']) + 1));
+      }
+      ]]></handler>
     </button>
+    <attribute name="order" value="$path{'@order'}" type="number" />
+    <view width="${100 / parent.order}" height="${100 / parent.order}"
+          bgcolor="0x09d055"
+          opacity="${Math.min(1, parent.order / 3)}"
+          visible="${parent.order != null}" />
+    <text text="${this.escapeText(this.formatToString('order: %w, data: %#w', parent.order, parent.datapath.data))}" />
   </view>
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
+     * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.        *
+     * Use is subject to license terms.                                       *
+     * X_LZ_COPYRIGHT_END ***************************************************** -->

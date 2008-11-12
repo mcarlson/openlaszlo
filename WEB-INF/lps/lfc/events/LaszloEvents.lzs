@@ -319,7 +319,7 @@ public function enable (){
   }
 
 /** @access private */
-function toString (){
+public function toString (){
     return ("Delegate for " + this.c + " calls " + this.m + " " + this.__delegateID );
 }
 

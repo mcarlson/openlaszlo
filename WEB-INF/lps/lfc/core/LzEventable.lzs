@@ -143,5 +143,14 @@ class LzEventable {
     LzEventable.prototype._dbg_typename = null;
     LzEventable.prototype._dbg_name = null;
   }
+
+  // TODO: [2008-05-08 ptw] (LPP-5934) When toString is declared
+  // public, remove this.  For now, this acts to trampoline `String(...)`
+  // and `'' + ...` to our private toString methods
+  if ($swf9) {
+    /** @access private */
+    prototype.toString = function () { return this.toString(); }
+  }
+
 } // End of LzEventable
 lz.Eventable = LzEventable;  // publish

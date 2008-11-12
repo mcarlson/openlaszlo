@@ -22,7 +22,7 @@ class LzBootstrapMessage {
     }
   }
 
- function appendInternal (str:String, obj = null) {
+  function appendInternal (str:String, obj = null) {
     this.message += str;
     this.length = this.message.length;
   }
@@ -34,25 +34,55 @@ class LzBootstrapMessage {
     }
   }
 
-  // Implements String interface (this is the only one we need early
-  // on, see LzDebugMessage)
+  /// These methods implement the String interface (since we are not
+  /// allowed to subclass String, apparently
+
+  // TODO: [2006-04-17 ptw] When javascript has getters and setters:
+  // function get length () { return this.message.length; };
+  // function set length (length) { this.message.length = length; return this.length; };
+
   /** @access private */
-  function indexOf (key) { return this.message.indexOf(key); }
-
-  // TODO: [2008-05-08 ptw] (LPP-5934) When toString is declared
-  // public, remove the swf9 special-case
-  if ($swf9) {
-    prototype.toString = function () { return this.message; }
-  } else {
-    function toString () {
-      return this.message;
-    }
+  public function charAt (index) { return this.message.charAt(index); }
+  /** @access private */
+  public function charCodeAt (index) { return this.message.charCodeAt(index); }
+  /** @access private */
+  public function indexOf (key) { return this.message.indexOf(key); }
+  /** @access private */
+  public function lastIndexOf (key) { return this.message.lastIndexOf(key); }
+  /** @access private */
+  public function toLowerCase ():LzMessage {
+    return new LzMessage(this.message.toLowerCase());
+  };
+  /** @access private */
+  public function toUpperCase ():LzMessage {
+    return new LzMessage(this.message.toUpperCase());
+  };
+  /** @access private */
+  public function toString () { return this.message; };
+  /** @access private */
+  public function valueOf () { return this.message.valueOf(); };
+  /** @access private */
+  public function concat (...args):LzMessage {
+    return new LzMessage(this.message.concat.apply(this.message, args));
   }
+  /** @access private */
+  public function slice (...args):String { return this.message.slice.apply(this.message, args); }
+  /** @access private */
+  public function split (...args):String { return this.message.split.apply(this.message, args); }
+  /** @access private */
+  public function substr (...args):String { return this.message.substr.apply(this.message, args); }
+  /** @access private */
+  public function substring (...args):String { return this.message.substring.apply(this.message, args); }
 
+  /// End of String interface
+
+
+  // Our extension
+  /** @access private */
   function toHTML () {
     // TODO: [2008-05-08 ptw] (LPP-5934) When toString is declared
     // public, remove the swf9 special-case
-      return this['toString']().toHTML();
+    return this['toString']().toHTML();
   }
 
   /**
