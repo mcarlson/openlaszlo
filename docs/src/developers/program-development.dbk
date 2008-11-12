@@ -40,7 +40,7 @@ To return the "naked" OpenLaszlo application without the Developer's Console, si
 <para/></section></section><section><title>Start up the OpenLaszlo Server</title>
 
 <para>
-The way to start the OpenLaszlo Server (OLS) depends on the operating system and how it was installed. On Windows, typically you start OLS from the Start menu; on Mac OS X the default installation places the OpenLaszlo launch icon on your desktop. If you don't have the OpenLaszlo Server installed on your machine, you can download it from <ulink url="http://www.openlaszlo.org/oldownload/">http://www.openlaszlo.org/oldownload</ulink>.</para>
+  The way to start the OpenLaszlo Server (OLS) depends on the operating system and how it was installed. On Windows, typically you start OLS from the Start menu; on Mac OS X the default installation places the OpenLaszlo launch icon on your desktop. If you don't have the OpenLaszlo Server installed on your machine, you can download it from <ulink url="http://www.openlaszlo.org/download/">http://www.openlaszlo.org/download</ulink>.</para>
 
 
 <para/></section><section><title>Create a program file</title>
