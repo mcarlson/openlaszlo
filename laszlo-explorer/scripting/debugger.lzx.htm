@@ -1,27 +1,56 @@
-<b>Notes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for more details&nbsp;</b>
-<a href="../docs/reference/index.html?debug.html" target="laszlo-reference">debug reference</a>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>debug</title>
+    </head>
+    <body>
+        <table width="90%">
+            <tr>
+                <td width="150">
+                    <b>Notes</b>
+                </td>
+                <td width="130">
+                    <b>for more details</b>
+                </td>
+                <td>
+                    <a href="../docs/reference/lz.DebugService+debug.html" target="blank">debug
+                        reference</a>
+                </td>
+            </tr>
+        </table>
+        <hr />
 
-<hr>
+        <p>OpenLaszlo provides a powerful debugger to identify and solve problems in your
+            application. This example illustrates four different ways you can use the debugger: </p>
 
-<p>OpenLaszlo provides a powerful debugger to identify and solve problems in your application. This example illustrates four different ways you can use the debugger:
-</p>
+        <ol>
 
-<ol>
+            <li>Click the <b>Click Me!</b> button. A debugging message is written in the debugger.
+                This is done using <code class="script">Debug.format()</code> in the <code
+                    class="attribute">onclick</code> event handler of the button.</li>
 
-<li>Click the "Click Me!" button. A debugging message is written in the debugger. This is done using <font class=script>Debug.format()</font> in the onclick event handler of the button.</li>
+            <li>Notice that the output of <code class="script">Debug.format</code> is clickable. If
+                you click on it, the debugger will <i>inspect</i> the object. Any value the debugger
+                prints in <a style="text-decoration: none; color: #00f" href="#">blue</a> is
+                inspectable.</li>
 
-<li>Notice that the output of <font class="script">Debug.format</font> is clickable.  If you click on it, the debugger will 'inspect' the object.  Any value the debugger prints in <a style="text-decoration: none; color: #00f" href="#">blue</a> is inspectable.</li>
+            <li>You can also use the debugger to obtain runtime values of component attributes. For
+                example type <code class="script">myButton.width</code> in the input field at the
+                bottom of the debugger window, and then press enter: the width of the button is
+                displayed in the debugger's main window.</li>
 
-<li>You can also use the debugger to obtain runtime values of component attributes. For example type <font class=script>myButton.width</font> in the input field at the bottom of the debugger window, and then press enter: the width of the button is displayed in the debugger's main window.</li>
+            <li>Finally, you can use the debugger to interact with the application at runtime using
+                JavaScript. For example type <code class="script"
+                >logo.setAttribute("visible",true)</code> in the debugger's input field and press
+                enter: the logo now appears in the running application.</li>
 
-<li>Finally, you can use the debugger to interact with the application at runtime using JavaScript. For example type <font class=script>logo.setAttribute("visible",true)</font> in the debugger's input field and press enter: the logo now appears in the running application.</li>
+        </ol>
 
-</ol>
-
-<p>
-Notice how the <font class=attribute>debug</font> attribute of the <font class=tag>&lt;canvas&gt;</font> tag is used to turn on the debugger.
-</p>
-
+        <p> Notice how the <code class="attribute">debug</code> attribute of the <code class="tag"
+                >&lt;canvas&gt;</code> tag is used to turn on the debugger. </p>
+    </body>
+</html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
