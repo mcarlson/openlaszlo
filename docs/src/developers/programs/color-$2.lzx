@@ -1,18 +1,17 @@
-
 <canvas height="125">
 
   <stylesheet>
     
     #red {
-        bgcolor: "0xFF0000";
+        bgcolor: "#FF0000";
         }
 
     #blue {
-        bgcolor: "0x00FF00";
+        bgcolor: "#00FF00";
         }
             
     #green {
-        bgcolor: "0x0000FF";
+        bgcolor: "#0000FF";
         }
             
   </stylesheet>        
@@ -29,6 +28,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->        
