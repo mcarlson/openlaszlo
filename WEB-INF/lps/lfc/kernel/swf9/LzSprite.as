@@ -1207,7 +1207,8 @@ dynamic public class LzSprite extends Sprite {
       public function sendInFrontOf( sprite ){
           if (!this.isroot) {
               var i = parent.getChildIndex(sprite);
-              parent.setChildIndex(this, i);
+              var j = parent.getChildIndex(this);
+              if (j < i) parent.setChildIndex(this, i);
           }
       }
 
