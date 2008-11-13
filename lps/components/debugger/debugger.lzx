@@ -259,8 +259,14 @@
        ]]>
     </method>
 
+    <!-- Simple "path" expressions will only have symbols, `.`, or `[numbers]` -->
+    <!-- @keywords private readonly -->
+    <attribute name="SimpleExprPattern" value="$once{new RegExp('^([$_A-Za-z][$\\w]*)((\\.[$_A-Za-z][$\\w]*)|(\\[\\d+\\]))*$')}" />
+    <!-- Now pull out just the element 'selectors', so you can walk down them -->
+    <!-- @keywords private readonly -->
+    <attribute name="ElementPattern" value="$once{new RegExp('([$_A-Za-z][$\\w]*)|(\\d+)', 'g')}" />
     <!-- send the input text field to server for compile/eval -->
-<method name="doEval">
+    <method name="doEval">
       <![CDATA[
        var expr = this.bottom.center.input.getText();
        this.commandhistory[this.commandhistory.length] = expr;
@@ -271,14 +277,31 @@
        // Echo input to output
        Debug.freshPrompt();
        this.echo(String(expr)['toHTML']());
-       // Will try to compile as 'Debug.displayResult(expr);' and if
-       // that fails, will try to compile as a series of statements
-       // (with no display).  Finally, will compile
-       // 'Debug.__write(<error message>)' if both of those fail.
-       if (this.solo_mode) {
-           Debug.displayResult(globalValue(expr));
+       // try to avoid calling the compiler if you can
+       var simple, val;
+       if (expr.match(this.SimpleExprPattern)) {
+         simple = true;
+         try {
+           var parts = expr.match(this.ElementPattern)
+           val = globalValue(parts[0]);
+           for (var i = 1, l = parts.length; i < l; i++) {
+             val = val[parts[i]];
+           }
+         } catch (e) {
+           // If we get an error, the expression must not be simple
+           simple = false;
+         }
+       }
+       if (simple) {
+         Debug.displayResult(val);
+       } else if (! this.solo_mode) {
+         // Will try to compile as 'Debug.displayResult(expr);' and if
+         // that fails, will try to compile as a series of statements
+         // (with no display).  Finally, will compile
+         // 'Debug.__write(<error message>)' if both of those fail.
+         this.evalloader.doEval(expr, this.commandhistory.length);
        } else {
-          this.evalloader.doEval(expr, this.commandhistory.length);
+         Debug.warn('Expression too complex to evaluate in SOLO mode.');
        }
        // Clear the input text field
        if (!this.bottom.center.input.multiline) {
