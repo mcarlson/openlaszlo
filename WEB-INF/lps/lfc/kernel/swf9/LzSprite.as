@@ -674,9 +674,27 @@ dynamic public class LzSprite extends Sprite {
             // send dragin/out events if the mouse is currently down
             if (LzMouseKernel.__lastMouseDown &&
                 (eventname == 'onmouseover' || eventname == 'onmouseout')) {
-                    // only send mouseover/out if the mouse went down on this sprite
+                    // only send mouseover/out if the mouse went down on this sprite - see LPP-6677
                     if (LzMouseKernel.__lastMouseDown == this) {
                         LzMouseKernel.__sendEvent(this.owner, eventname);
+                    } else {
+                        // check to see if this sprite is in front of the sprite the mouse went down on.  See LPP-7300
+
+                        var target:* = e.target;
+                        var location:Point = new Point(target.mouseX, target.mouseY);
+                        location = target.localToGlobal(location);
+                        var sprites:Array = LFCApplication.stage.getObjectsUnderPoint(location);
+                        var sawself = false;
+                        for (var i = sprites.length; i >=0; i--) {
+                            if (sprites[i] == this) {
+                                sawself = true;
+                            } else if (sawself && sprites[i] == LzMouseKernel.__lastMouseDown) {
+                                // already saw ourselves, and we're on top of __lastMouseDown
+                                LzMouseKernel.__sendEvent(this.owner, eventname);
+                                break;
+
+                            }
+                        }
                     }
 
                     var dragname = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
