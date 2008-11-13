@@ -1,33 +1,33 @@
 apps=lzpix.dhtml,lzpix.swf8,lzpix.swf9,components.swf8
-totalsize=1623747
+totalsize=1623854
 
-lzpix.dhtml.size=515927
+lzpix.dhtml.size=515914
 lzpix.dhtml.1.path=demos/lzpix/app.lzx?lzr=dhtml&lzt=html
 lzpix.dhtml.1.size=3091
 lzpix.dhtml.2.path=lps/includes/embed-compressed.js
 lzpix.dhtml.2.size=34441
 lzpix.dhtml.3.path=lps/includes/lfc/LFCdhtml.js
-lzpix.dhtml.3.size=346533
+lzpix.dhtml.3.size=346520
 lzpix.dhtml.4.path=demos/lzpix/app.lzx?lzt=object&lzt=object&lzr=dhtml
 lzpix.dhtml.4.size=131862
 
-lzpix.swf8.size=424047
+lzpix.swf8.size=424007
 lzpix.swf8.1.path=demos/lzpix/app.lzx?lzr=swf8&lzt=html
 lzpix.swf8.1.size=2469
 lzpix.swf8.2.path=lps/includes/embed-compressed.js
 lzpix.swf8.2.size=34441
 lzpix.swf8.3.path=demos/lzpix/app.lzx?lzt=swf&lzr=swf8
-lzpix.swf8.3.size=387137
+lzpix.swf8.3.size=387097
 
-lzpix.swf9.size=423921
+lzpix.swf9.size=424110
 lzpix.swf9.1.path=demos/lzpix/app.lzx?lzr=swf9&lzt=html
 lzpix.swf9.1.size=2469
 lzpix.swf9.2.path=lps/includes/embed-compressed.js
 lzpix.swf9.2.size=34441
 lzpix.swf9.3.path=demos/lzpix/app.lzx?lzt=swf&lzr=swf9
-lzpix.swf9.3.size=387011
+lzpix.swf9.3.size=387200
 
-components.swf8.size=259852
+components.swf8.size=259823
 components.swf8.1.path=laszlo-explorer/content.jsp?src=/examples/components/component_sampler.lzx&tag=undefined&title=Sampler&action=undefined&lzr=swf8
 components.swf8.1.size=783
 components.swf8.2.path=examples/components/component_sampler.lzx?lzt=html&lzr=swf8
@@ -35,4 +35,4 @@ components.swf8.2.size=2500
 components.swf8.3.path=lps/includes/embed-compressed.js
 components.swf8.3.size=34441
 components.swf8.4.path=examples/components/component_sampler.lzx?lzt=swf&lzr=swf8
-components.swf8.4.size=222128
+components.swf8.4.size=222099
