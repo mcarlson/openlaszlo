@@ -467,7 +467,6 @@ public class Compiler {
             writer.close();
             
             Canvas canvas = env.getCanvas();
-            canvas.setBacktrace(backtraceValue);
             if (!errors.isEmpty()) {
                 if (canvas != null) {
                     canvas.setCompilationWarningText(
@@ -478,6 +477,7 @@ public class Compiler {
                 System.err.println(errors.toCompilationError().getMessage());
             }
             if (canvas != null) {
+              canvas.setBacktrace(backtraceValue);
               // set file path (relative to webapp) in canvas
               canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
             }
