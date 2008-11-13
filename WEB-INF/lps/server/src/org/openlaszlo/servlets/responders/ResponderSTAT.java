@@ -61,26 +61,17 @@ public final class ResponderSTAT extends ResponderAdmin
         throws IOException
     {
         ResponderCache dataResponder = (ResponderCache)getResponder("data");
-        ResponderCache mediaResponder = (ResponderCache)getResponder("media");
-
         if (dataResponder != null) {
             String durl = req.getParameter("durl");
             if (durl != null)
                 dataResponder.mURLStat.doURLCollection(durl.equals("1"));
         }
 
-        if (mediaResponder != null) {
-            String murl = req.getParameter("murl");
-            if (murl != null)
-                mediaResponder.mURLStat.doURLCollection(murl.equals("1"));
-        }
 
         String clear = req.getParameter("clear");
         if (clear != null && clear.equals("1")) {
             if (dataResponder != null)
                 dataResponder.mURLStat.clear();
-            if (mediaResponder != null)
-                mediaResponder.mURLStat.clear();
             Responder.mSTAT_allLoadCount.reset();
             Responder.mSTAT_compileLoadCount.reset();
             Responder.mSTAT_mediaLoadCount.reset();
@@ -115,8 +106,6 @@ public final class ResponderSTAT extends ResponderAdmin
             buf.append("<urls>");
             if (dataResponder != null)
                 buf.append(dataResponder.mURLStat.toXML());
-            if (mediaResponder != null)
-                buf.append(mediaResponder.mURLStat.toXML());
             buf.append("</urls>");
         }
         buf.append("</stat>\n");

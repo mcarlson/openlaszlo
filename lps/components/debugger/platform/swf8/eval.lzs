@@ -32,7 +32,7 @@ class LzDebugEvalLoader {
       // NB: This is a callback handler, and 'this' will be bound to some LoadVars object, not to Debug
       if (src == undefined) {
         Debug.warn('Debugger cannot contact LPS server, switching to SOLO mode.');
-        Debug.setAttribute('solo_mode', true);
+        Debug.console.setAttribute('solo_mode', true);
       }
     }
 

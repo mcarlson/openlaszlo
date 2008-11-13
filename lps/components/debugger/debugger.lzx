@@ -900,9 +900,8 @@
         this.scrollToEnd();
 
         // See if the LPS server is present; if not fall back to simpler eval()
-        if (canvas.proxied == false) {
-           this.evalloader.checkServerResponse();
-        }
+        this.evalloader.checkServerResponse();
+
       ]]>
   </method>
 

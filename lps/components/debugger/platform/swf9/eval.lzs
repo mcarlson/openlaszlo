@@ -19,6 +19,7 @@ public class LzDebugEvalLoader {
     public function LzDebugEvalLoader (view) {
         this.loader = new Loader();
         loader.contentLoaderInfo.addEventListener(Event.INIT, debugEvalListener);
+        loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, evalServerError);
     }
 
     public function doEval(expr:String, seq:int=0) {
@@ -33,6 +34,14 @@ public class LzDebugEvalLoader {
 
     public function debugEvalListener (e:Event):void {
         e.target.loader.unload();
+    }
+
+    public function evalServerError (e:Event):void {
+        e.target.loader.unload();
+        Debug.warn('Debugger cannot contact LPS server, switching to SOLO mode.');
+        if (Debug.console is LzDebuggerWindowConsoleBridge) {
+            Debug.console.window.setAttribute('solo_mode', true);
+        }
     }
 
     private function configureProbeListeners(dispatcher:IEventDispatcher):void {
