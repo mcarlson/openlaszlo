@@ -34,11 +34,11 @@
         </item>
     </dataset>
 
-    <class name="testborder" defaultplacement="'content'" >
+    <class name="testborder" defaultplacement="content" >
         <attribute name="text" value="test name" type="html" />
         <view bgcolor="0x979797" width="${this.title.getTextWidth() + 10}" height="20" >
            <text x="4" y="2" name="title" text="${classroot.text}" resize="true" fgcolor="0xFFFFFF" >
-                <handler name="ontext">parent.setAttribute('width', this.getTextwidth() + 10)</handler>
+                <handler name="ontext">parent.setAttribute('width', this.getTextWidth() + 10)</handler>
            </text>
         </view>
         <view bgcolor="0x979797" width="100%"  options="releaseToLayout" height="10" >
