@@ -33,10 +33,10 @@ class LzDebugMessage extends LzBootstrapMessage {
    * @param * message: initial message (either a String or an LzMessage)
    */
   function LzDebugMessage (message=null) {
+    super(message);
     // can't be in prototype as it would be shared
     // could be a getter to defer allocation
     this.objects = [];
-    super(message);
   }
 
   /// These methods implement the String interface (since we are not
