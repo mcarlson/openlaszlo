@@ -60,6 +60,10 @@ dynamic public class LzSprite extends Sprite {
       var skiponload = false;
       var baseurl;
 
+      // Used for workaround for contextmenu bug; use as a null hitArea for sprites that
+      // we don't want to get mouse events.
+      public static var emptySprite:Sprite = new Sprite();
+
       // If null, the handcursor visibility is set to the value of LzMouseKernel.showhandcursor
       // whenevent a mouseover event happens.
       public var showhandcursor:* = null;
@@ -1320,6 +1324,20 @@ dynamic public class LzSprite extends Sprite {
               // match what the user expects.
 
               // TODO: [20080914 anba] blocked by LPP-6980
+              var par = this;
+              while(par is Sprite) {
+                  par.mouseEnabled = true;
+
+                  // This hack turns off mouse events on sprites that
+                  // are not set as clickable, by setting 'hitArea' to
+                  // a zero size empty Sprite which is not on the
+                  // display list.
+                  if (par is LzSprite && !par.clickable) {
+                      par.hitArea = LzSprite.emptySprite;
+                  }
+
+                  par = par.parent;
+              }
 
               // "contextMenu" is a swf9 property on flash.display.Sprite
               this.contextMenu = cmenu;

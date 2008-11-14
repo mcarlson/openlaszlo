@@ -1,0 +1,37 @@
+<canvas height="300">
+
+        <contextmenu> 
+          <contextmenuitem caption="Right-clicked on canvas!" /> 
+        </contextmenu>    
+
+        <button x="300" y="10" id="but" onclick="Debug.write('clicked button', canvas)">Click Me
+        <contextmenu> 
+          <contextmenuitem caption="Right-clicked on button!" /> 
+        </contextmenu>    
+        </button>
+
+
+  <view id="ba" width="200" height="200" bgcolor="blue" onclick="Debug.write('clicked blue ba')">
+        <contextmenu> 
+          <contextmenuitem caption="Right-clicked on blue!" /> 
+        </contextmenu>    
+    <inputtext id="it"  multiline="true" width="200" height="200" bgcolor="#cccccc" x="20" y="20" clip="true">
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nulla a augue. Fusce vehicula, enim non rutrum cursus, purus diam pulvinar arcu, non pharetra tortor ante at felis. Nulla convallis mollis nisi. Nunc ullamcorper dapibus ligula. Aliquam pellentesque, libero in sollicitudin imperdiet, purus neque lobortis justo, imperdiet eleifend odio ligula sed tellus. Fusce auctor sapien at felis. Donec justo. Phasellus fermentum odio sodales pede. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In sit amet sapien. Duis dictum ornare eros. Proin magna odio, ultricies eget, aliquet vitae, interdum id, elit. Curabitur eros. Nunc velit arcu, laoreet eu, posuere in, consequat vitae, diam. Nam lacus nibh, vulputate vitae, iaculis et, cursus non, diam.
+    </inputtext>
+      <view width="200" height="200" x="80" y="80" bgcolor="red">
+        <contextmenu> 
+          <contextmenuitem caption="Right-clicked on red!" /> 
+        </contextmenu>    
+      </view>
+  </view>
+   
+
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

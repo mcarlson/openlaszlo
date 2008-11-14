@@ -1,0 +1,36 @@
+<canvas > 
+  <view name="blu"  width="300" height="50" x="100" y="100" bgcolor="blue"
+                          onclick="Debug.write('clicked blue')"
+                          onmouseover="Debug.write('mouseover blue')"
+                          onmouseout="Debug.write('mouseout blue')">
+        <contextmenu> 
+          <contextmenuitem caption="Right-clicked Blue!" /> 
+        </contextmenu>
+  </view>
+
+  <view name="t1" x="50" y="50" width="200" height="200" bgcolor="yellow" opacity="1">
+    <view name="ctx" width="100" height="100" bgcolor="red" 
+          onclick="Debug.write('clicked red')"> 
+        <contextmenu> 
+          <contextmenuitem caption="I am Red!" /> 
+        </contextmenu> 
+    </view> 
+    <view name="t2" width="50" height="50" bgcolor="purple"
+          x="100" y="80"/>
+
+  </view>
+
+  <button y="300" id="but"
+          onclick="Debug.write('clicked button')">Click Me
+        <contextmenu> 
+          <contextmenuitem caption="Right-clicked on button!" /> 
+        </contextmenu>    
+  </button>
+</canvas> 
+
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
