@@ -716,13 +716,13 @@
 
     <!-- 'Element to use inside remotecall. -->
     <class name="param" extends="node">
-        <!--- Value to use for paramter. A <code>getValue()</code> method can be declared
+        <!--- Value to use for parameter. A <code>getValue()</code> method can be declared
               inside param to use its return as the parameter value. If both
               <code>value</code> attribute and <code>getValue()</code> method are declared, param will use
               <code>getValue()</code>. -->
         <attribute name="value" value="null" type="expression" />
         <!--- Returns value.
-            @return String: the string representing the value. -->
+            @return *: the value to use for this parameter -->
         <method name="getValue">
           return this.value;
         </method>
@@ -731,7 +731,7 @@
             <text>
                 <p>Tag to declaratively set parameter values for <sgmltag class="element" role="lz.remotecall">&lt;remotecall&gt;</sgmltag>. If a 
                     <code>getValue()</code> method is declared in the body of <code>remotecall</code>, use its return as 
-                    value for paramter. If both <code>getValue()</code> method and <code>value</code> attribute are set in 
+                    value for parameter. If both <code>getValue()</code> method and <code>value</code> attribute are set in 
                     param, <code>getValue()</code> wins.</p>
                 <programlisting title="Usage example">
     &lt;remotecall name="func1" funcname="someFunc"&gt;
