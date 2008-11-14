@@ -2257,7 +2257,15 @@ public dynamic class LzNode extends LzEventable {
    */
  function presentAttribute(name, type) {
    return this.presentValue(type, this[name]);
+ };
+
+ /** @access private */
+ function $lzc$presentAttribute_dependencies(who , self, name, type) :Array {
+   // Just depends on the attribute being presented.  We don't expect
+   // the type to change (do we?)
+   return [ self,  name ];
  }
+
 
 
 } // End of LzNode

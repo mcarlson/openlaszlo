@@ -170,11 +170,20 @@ class LzColorUtils {
     }
 
     /** @access public
-      * Converts a floating point rgb.0a to a CSS #RRGGBBAA string
+      * Converts a floating point rgb.0a to a CSS color name (if
+      * appropriate) or #RRGGBBAA string
       */
     static function inttohex(n:*, p:int = 6) {
         var s = LzColorUtils.stringToColor(n);
         if (typeof s != 'number') return s;
+
+        // look up color names
+        var ctab = lz.colors;
+        for (var name in ctab) {
+          if (ctab[name] === n) {
+            return name;
+          }
+        }
 
         // default to 6 characters of padding
         return '#' + LzColorUtils.dectohex(s, p);
