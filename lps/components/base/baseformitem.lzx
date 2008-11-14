@@ -28,11 +28,6 @@
         <attribute name="value" value="null" 
                    setter="this.setValue(value,false)" />
 
-        <!--- The type of value of the baseformitem. Default is none,
-             which will attempt to heuristicate the type from the
-             value. -->
-        <attribute name="type" value="" type="string" />
-
         <!--- Event sent when baseformitem is changed. Only sent once when true
               or once when false. -->
         <event name="onchanged" />

@@ -276,7 +276,7 @@
                 resize="true"
                 x="${(this.classroot.width / 2) - (this.width / 2)}"
                 y="-14"
-                text="${this.parent.parent.parent.value}"
+                text="${this.parent.parent.parent.updateData()}"
                 visible="${this.classroot.showvalue}"
                 fgcolor="${this.classroot.style.textcolor}"
             />

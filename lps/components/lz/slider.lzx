@@ -8,11 +8,11 @@
 
         <state applied="${this.classroot.showrange}">
             <text y="${classroot.track.y + classroot.track.height + 2}"
-                text="${classroot.minvalue}" fgcolor="${classroot.style ? classroot.style.textcolor : this.fgcolor}"
+                text="${classroot.presentAttribute('minvalue', classroot.type)}" fgcolor="${classroot.style ? classroot.style.textcolor : this.fgcolor}"
             />
             <text y="${this.classroot.track.y + this.classroot.track.height + 2}" resize="true"
                 x="${classroot.track.x+classroot.track.width-width}"
-                text="${classroot.maxvalue}" fgcolor="${classroot.style ? classroot.style.textcolor : this.fgcolor}"
+                text="${classroot.presentAttribute('maxvalue', classroot.type)}" fgcolor="${classroot.style ? classroot.style.textcolor : this.fgcolor}"
             />
         </state>
 
