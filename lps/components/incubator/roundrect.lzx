@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2007-2008 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->
@@ -201,7 +201,7 @@ corners to them.
             } else {
                 var dirty = false;
                 var c = this._cache;
-                for (i in c) {
+                for (var i in c) {
                     if (c[i] != this[i]) {
                         c[i] = this[i];
                         dirty = true;
