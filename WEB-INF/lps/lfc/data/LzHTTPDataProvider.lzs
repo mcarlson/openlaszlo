@@ -325,6 +325,10 @@ class LzHTTPDataProvider extends LzDataProvider {
             }
             if (data.childNodes[0].childNodes) content = data.childNodes[0].childNodes[0];
         } else {
+            var hos:* = dreq.loader.getResponseHeaders();
+            if (hos) {
+                headers.addObject(hos);
+            }
             // SOLO requests are raw XML data
             content = data;
         }

@@ -836,18 +836,25 @@ function clearRequestHeaderParams () :void {
 }
 
 /**
-  * Returns the value for the specified response header, or false if there 
-  * was no header with that name.  If name is omitted, all response headers 
-  * are returned as an object of name/value pairs.
+  * Returns the value for the specified response header, or <code>null</code>
+  * if there was no header with that name.
   * 
   * @param String name: The name of the header to return
-  * @return String/Array: The value for the named header. If multiple headers 
+  * @return String/Array: The value for the named header. If multiple headers
   * are found, returns a list of values.
   * @return String
   */
 function getResponseHeader (name:String) :* {
-    var dreq:LzHTTPDataRequest = this.dataRequest;
-    return dreq ? dreq.responseheaders[ name ] : void(0);
+    var headers:LzParam = this.responseheaders;
+    if (headers) {
+        var val:Array = headers.getValues(name);
+        if (val && val.length == 1) {
+            return val[0];
+        } else {
+            return val;
+        }
+    }
+    return void(0);
 }
 
 /**
