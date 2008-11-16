@@ -132,7 +132,8 @@ dynamic public class LzSprite extends Sprite {
               this.isroot = true;
               this.mouseEnabled = true;// @devnote: see LPP-6980
           } else {
-              this.mouseEnabled = false;
+              this.mouseEnabled = true;
+              this.hitArea = LzSprite.emptySprite;
           }
       }
 
@@ -724,10 +725,10 @@ dynamic public class LzSprite extends Sprite {
           this.clickable = c;
           this.buttonMode = c;
           this.tabEnabled = false;
-          this.mouseEnabled = c || this.isroot;// @devnote: see LPP-6980
           var cb:SimpleButton = this.clickbutton;
           //trace('sprite setClickable' , c, 'cb',cb);
           if (this.clickable) {
+              this.hitArea = null;
               attachMouseEvents(this);
               // TODO [hqm 2008-01] The Flash Sprite docs 
               // explain how to add a sprite to the tab order using tabEnabled property. 
@@ -756,6 +757,7 @@ dynamic public class LzSprite extends Sprite {
                   removeMouseEvents(cb);
                   this.clickbutton = null;
               }
+              this.hitArea = LzSprite.emptySprite;
           }
       }
 
@@ -1323,21 +1325,6 @@ dynamic public class LzSprite extends Sprite {
               // where it checks for a resource or bgcolor sprite, in order to make the clickable region
               // match what the user expects.
 
-              // TODO: [20080914 anba] blocked by LPP-6980
-              var par = this;
-              while(par is Sprite) {
-                  par.mouseEnabled = true;
-
-                  // This hack turns off mouse events on sprites that
-                  // are not set as clickable, by setting 'hitArea' to
-                  // a zero size empty Sprite which is not on the
-                  // display list.
-                  if (par is LzSprite && !par.clickable) {
-                      par.hitArea = LzSprite.emptySprite;
-                  }
-
-                  par = par.parent;
-              }
 
               // "contextMenu" is a swf9 property on flash.display.Sprite
               this.contextMenu = cmenu;
