@@ -30,12 +30,14 @@
         <event name="onvalue"/>
 
         <!--- @keywords private -->
-        <method name="applyData" args="d">
+        <method name="acceptValue" args="d, type=null">
+            if (type == null) type = this.type;
+            var val = this.acceptTypeValue(type, d);
             //try to find the relevant radio button, or clear selection if none
-            this._setvalue( d );
+            this._setvalue( val );
             var item = null;
-            if (d != null) {
-                item = this.getItem( d );
+            if (val != null) {
+                item = this.getItem( val );
             }
             if ( item ) this.select( item );
             else this.clearSelection();
@@ -191,7 +193,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

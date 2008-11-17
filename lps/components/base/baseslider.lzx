@@ -31,8 +31,8 @@
         <!--- Turns on / off the bounding range text. -->
         <attribute name="showrange" value="true" type="boolean"/>
         
-        <!--- How far to move when key navigating. -->
-        <attribute name="keystep" value="2" type="number"/>
+        <!--- How far to move value when key navigating. -->
+        <attribute name="keystep" value="1" type="number"/>
         
         <!--- The border width. This can be set with a style. -->
         <attribute name="bordersize" value="1" type="number"/>
@@ -216,15 +216,14 @@
         
         <!--- @keywords private -->
         <handler name="onkeydown" args="k"><![CDATA[
-            //left arrow
             var track = this.track;
             if (track) {
-                var thumb = track.thumb;
                 if (k == 37) {
-                    thumb.setAttribute("x", thumb.x - this.keystep);
+                    //left arrow
+                    this.setValue(this.value - this.keystep);
                 } else if (k == 39) {
                     //right arrow
-                    thumb.setAttribute("x", thumb.x + this.keystep);
+                    this.setValue(this.value + this.keystep);
                 }
             }
         ]]></handler>
@@ -276,7 +275,7 @@
                 resize="true"
                 x="${(this.classroot.width / 2) - (this.width / 2)}"
                 y="-14"
-                text="${this.parent.parent.parent.updateData()}"
+                text="${this.parent.parent.parent.presentValue()}"
                 visible="${this.classroot.showvalue}"
                 fgcolor="${this.classroot.style.textcolor}"
             />

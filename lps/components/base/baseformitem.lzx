@@ -140,18 +140,13 @@
             ]]>
         </method>
 
-        <!--- This implementation sets the applied data (a String) as an initalizater
-              value. This is run by a datapath to get the data from a data node.
-              @param String d: the string representation of the data value to set in this object. -->
-        <method name="applyData" args="d">
-          this.setValue(this.acceptValue(this.type, d), true);
-        </method>
+        <!--- Override acceptValue to pass the magic second argument
+             to setValue so the new value is an initializer
 
-        <!--- This implementation returns the value as a String. This is run by a datapath
-              to set the value to a data node.
-              @return String: the representation of the data as a string -->
-        <method name="updateData">
-          return this.presentAttribute('value', this.type);
+            @access private -->
+        <method name="acceptValue" args="data, type=null">
+          if (type == null) type = this.type;
+          this.setValue(this.acceptTypeValue(type, data), true);
         </method>
 
         <!--- Finds a baseform ancestor

@@ -177,14 +177,6 @@ class LzColorUtils {
         var s = LzColorUtils.stringToColor(n);
         if (typeof s != 'number') return s;
 
-        // look up color names
-        var ctab = lz.colors;
-        for (var name in ctab) {
-          if (ctab[name] === n) {
-            return name;
-          }
-        }
-
         // default to 6 characters of padding
         return '#' + LzColorUtils.dectohex(s, p);
     }

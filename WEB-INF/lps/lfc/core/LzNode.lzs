@@ -2196,7 +2196,7 @@ public dynamic class LzNode extends LzEventable {
   * Converts a string to a value using the presentation type's accept
   * method
   */
- function acceptValue(type, value) {
+ function acceptTypeValue(type, value) {
    var presentationtype = LzNode.presentationtypes[type];
    // don't coerce null values
    if (value != null) {
@@ -2219,7 +2219,7 @@ public dynamic class LzNode extends LzEventable {
    * presentationtype's accept method
    */
  function acceptAttribute(name, type, value) {
-   value = this.acceptValue(type, value);
+   value = this.acceptTypeValue(type, value);
    if (this[name] != value) {
     //Debug.write('acceptAttribute', name, type, value, typeof value, presentationtype);
     this.setAttribute(name, value);
@@ -2234,7 +2234,7 @@ public dynamic class LzNode extends LzEventable {
    * Returns the value converted to a string by the
    * presentationtype's present method
    */
- function presentValue(type, value) {
+ function presentTypeValue(type, value) {
    var presentationtype = LzNode.presentationtypes[type];
    if (presentationtype != null && presentationtype['present']) {
      value = presentationtype.present(value);
@@ -2256,13 +2256,14 @@ public dynamic class LzNode extends LzEventable {
    * presentationtype's present method
    */
  function presentAttribute(name, type) {
-   return this.presentValue(type, this[name]);
+   return this.presentTypeValue(type, this[name]);
  };
 
  /** @access private */
  function $lzc$presentAttribute_dependencies(who , self, name, type) :Array {
    // Just depends on the attribute being presented.  We don't expect
-   // the type to change (do we?)
+   // the type to change (do we?)  In any case, we don't have the type
+   // as an attribute to depend on (yet).
    return [ self,  name ];
  }
 

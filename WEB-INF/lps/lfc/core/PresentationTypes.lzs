@@ -72,6 +72,14 @@ class ColorPresentationType extends PresentationType {
     return LzColorUtils.hextoint(value);
   }
   static function present(value) { 
+    // look up color names
+    var ctab = lz.colors;
+    for (var name in ctab) {
+      if (ctab[name] === value) {
+        return name;
+      }
+    }
+
     return LzColorUtils.inttohex(value);
   }
 }

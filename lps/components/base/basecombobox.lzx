@@ -536,9 +536,11 @@
             }
         </method>
 
-        <!--- @keywords private -->
-        <method name="applyData" args="d">
-            this.setText( d );
+        <!--- @keywords private
+            The `value` of a combobox is stored using setText
+        -->
+        <method name="acceptValue" args="data, type=null">
+            this.setText( data );
         </method>
 
 

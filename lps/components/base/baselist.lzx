@@ -396,19 +396,11 @@
         </method>
 
         <!--- TODO: [2008-10-22 ptw] There probably should be an
-             override of applyData that worries about the
+             override of applyData/updateData that worries about the
              representation of a multiple selection, but that was not
-             there when I updated this to use accept/present, and the
-             existing override was just a duplicate of the inherited
-             method, so I removed it. -->
-
-        <!--- this method puts data back into a the datamapped node when
-              updateData is called
-              TODO: [2008-10-22 ptw] As above, there is no provision for presenting a multiple selection
-              @keywords private -->
-        <method name="updateData">
-          return this.presentValue(this.type, this.getValue());
-        </method>
+             there when I updated to use acceptValue/presentValue, and
+             the existing overrides were just a duplicates of the
+             inherited methods, so I removed them. -->
 
         <doc>
             <tag name="shortdesc"><text>An abstract class which all list components should subclass.</text></tag>

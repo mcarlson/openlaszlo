@@ -219,12 +219,30 @@
             }
         </method>
 
-        <!--- @keywords private -->
+        <!---
+
+           For backward compatibility, applyData uses the LFC
+           interface, and acceptValue uses applyData.  TODO:
+           [2008-11-17 ptw] Fixed in New Components
+
+           @keywords private
+        -->
         <method name="applyData" args="d">
             this.field.applyData( d );
         </method>
 
         <!--- @keywords private -->
+        <method name="acceptValue" args="d, type=null">
+            this.applyData( d );
+        </method>
+
+        <!---
+           For backward compatibility, updateData causes the text of
+           the component to be updated, as opposed to presentValue,
+           which will call getValue (and not update).
+
+           @keywords private
+        -->
         <method name="updateData">
             this.updateText();
             return this.text;
@@ -241,6 +259,15 @@
         <method name="getValue">
             return  this.field.getText();
         </method>
+        <!--- TODO: [2008-11-14 ptw] There needs to be a simpler way
+             to declare simple dependencies like this in LZX
+             @access private
+        -->
+        <method name="$lzc$getValue_dependencies" args="who, self">
+          self = this.field
+          return self.$lzc$getText_dependencies(who, self);
+        </method>
+
 
         <!--- @keywords private -->
         <method name="_showEnabled">
