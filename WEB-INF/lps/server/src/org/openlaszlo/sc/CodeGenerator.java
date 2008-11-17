@@ -85,7 +85,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
 
   // does nothing here - may be overridden to set options
   public void setGeneratorOptions() {
-    globalprefix = this.options.getBoolean(Compiler.SWF_LOADABLE_LIB) ? "_level0." : "";
+    globalprefix = this.options.getBoolean(Compiler.SWF8_LOADABLE_LIB) ? "_level0." : "";
   }
 
 

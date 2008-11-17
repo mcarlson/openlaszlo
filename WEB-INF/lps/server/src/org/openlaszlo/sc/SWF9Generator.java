@@ -34,18 +34,7 @@ public class SWF9Generator extends JavascriptGenerator {
 
   public static final String PASSTHROUGH_TOPLEVEL = "toplevel";
 
-  /** The user 'main' class, which extends LFCApplication */
-  public final static String MAIN_APP_CLASSNAME = "LzApplication";
 
-  /** The top level class executed first, it creates a LzApplication object */
-  public final static String EXEC_APP_CLASSNAME = "LzSpriteApplication";
-
-  /** The LFC 'main' class, which extends nothing */
-  public final static String MAIN_LIB_CLASSNAME = "LFCApplication";
-
-  /** The class to use when compiling a debug eval statement */
-  public final static String DEBUG_EVAL_SUPERCLASS = "DebugExec";
-  public final static String DEBUG_EVAL_CLASSNAME  = "DebugEvaluate";
 
   /** The first part of a every emitted javascript file */
   public static final String DEFAULT_FILE_PREAMBLE = "package {\n";
@@ -553,36 +542,8 @@ public class SWF9Generator extends JavascriptGenerator {
   }
 
   public String preProcess(String source) {
-
-    String imports = "    #passthrough (toplevel:true) {  \n" +
-      "import flash.display.*;\n" +
-      "import flash.events.*;\n" +
-      "import flash.utils.*;\n" +
-      "import flash.text.*;\n" +
-      "import flash.system.*;\n" +
-      "import flash.net.*;\n" +
-      "import flash.ui.*;\n" +
-      "import flash.text.Font;\n" +
-      "}#\n";
-    
-
-    // TODO: [2007-1-14 dda] maybe tag compiler should emit app main class?
-    // We need a 'main' application class to inherit from Sprite and do some
-    // initialization, and currently there is no default one.
-    // We'll add one here, doing it later adds too many special cases.
     if (!options.getBoolean(Compiler.BUILD_SHARED_LIBRARY)) {
-      if (options.getBoolean(Compiler.DEBUG_EVAL)) {
-
-        source += "public class " + SWF9Generator.DEBUG_EVAL_CLASSNAME +
-          " extends " +  SWF9Generator.DEBUG_EVAL_SUPERCLASS + " {\n " + imports + "}\n";
-      } else {
-        source += "public class " + SWF9Generator.MAIN_APP_CLASSNAME +
-        " extends " +  SWF9Generator.MAIN_LIB_CLASSNAME + " {\n " + imports + "}\n";
-        source += "public class " + SWF9Generator.EXEC_APP_CLASSNAME +
-        " extends Sprite {\n " + imports + "var app:LzApplication;\n" +
-        " function " + SWF9Generator.EXEC_APP_CLASSNAME + "() {" +
-        " app = new LzApplication(this);}}\n";
-      }
+      source += options.get(Compiler.SWF9_APPLICATION_PREAMBLE);
     }
     return source;
   }
@@ -672,11 +633,11 @@ public class SWF9Generator extends JavascriptGenerator {
     config.dumpLineAnnotationsFile = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
     config.forcePublicMembers = options.getBoolean(Compiler.DEBUG_SWF9) && !options.getBoolean(Compiler.DISABLE_PUBLIC_FOR_DEBUG);
 
+    config.mainClassName = (String) options.get(Compiler.SWF9_APP_CLASSNAME);
+    System.err.println("mainClassName = "+config.mainClassName);
     if (config.islib) {
-      config.mainClassName = SWF9Generator.MAIN_LIB_CLASSNAME;
+      // 
     } else {
-      config.mainClassName = options.getBoolean(Compiler.DEBUG_EVAL) ?
-        SWF9Generator.DEBUG_EVAL_CLASSNAME : SWF9Generator.MAIN_APP_CLASSNAME;
       config.trackLines = true;        // needed to get error messages that relate to original source
     }
 

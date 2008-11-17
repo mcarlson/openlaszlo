@@ -597,6 +597,12 @@ public class Compiler {
             props.put("compileTimeConstants", compileTimeConstants);
             props.setProperty(CompilationEnvironment.DEBUG_EVAL_PROPERTY, "true");
             props.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "true");
+            props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, SWF9Writer.DEBUG_EVAL_CLASSNAME);
+            props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, SWF9Writer.DEBUG_EVAL_CLASSNAME);
+            props.put(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, 
+                      "public class " + SWF9Writer.DEBUG_EVAL_CLASSNAME +
+                      " extends " +  SWF9Writer.DEBUG_EVAL_SUPERCLASS + " {\n " + SWF9Writer.imports + "}\n");
+
             byte[] objcode;
             String prog = "";
 

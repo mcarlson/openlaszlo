@@ -150,9 +150,11 @@ class ImportCompiler extends ToplevelCompiler {
                 if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
                     writer = new DHTMLWriter(props, ostream,
                                              env.getMediaCache(), false, env);
+                } else if ("swf9".equals(runtime)) {
+                    writer = new SWF9Writer(props, ostream, env.getMediaCache(), false, env);
                 } else if (Compiler.SWF_RUNTIMES.contains(runtime)) {
-                    // Set the "SWF_LOADABLE_LIB" flag to true for this compiler
-                    props.setProperty(org.openlaszlo.sc.Compiler.SWF_LOADABLE_LIB, "true");
+                    // Set the "SWF8_LOADABLE_LIB" flag to true for this compiler
+                    props.setProperty(org.openlaszlo.sc.Compiler.SWF8_LOADABLE_LIB, "true");
                     // Ensures that _level0 is prefixed where needed in snippets code
                     env.setGlobalPrefix("_level0.");
                     writer = new SWFWriter(props, ostream,

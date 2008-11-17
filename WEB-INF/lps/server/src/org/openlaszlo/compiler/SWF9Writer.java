@@ -10,6 +10,7 @@
 package org.openlaszlo.compiler;
 
 import org.openlaszlo.sc.ScriptCompiler;
+import org.openlaszlo.sc.Compiler;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.FileUtils;
@@ -70,7 +71,6 @@ class SWF9Writer extends ObjectWriter {
                 CompilationEnvironment env) {
 
         super(props, stream, cache, importLibrary, env);
-
         scriptBuffer = new StringWriter();
         scriptWriter= new PrintWriter(scriptBuffer);
 
@@ -371,14 +371,18 @@ class SWF9Writer extends ObjectWriter {
             addScript("Debug.makeDebugWindow()");
         }
 
-
         // Put the canvas sprite on the 'stage'.
         addScript("addChild(canvas.sprite)");
         // Tell the canvas we're done loading.
         addScript("canvas.initDone()");
 
+        Properties props = (Properties)mProperties.clone();
+        // Set up the boilerplate code needed for the main swf9 application class
+        props.put(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeApplicationPreamble());
+        props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, MAIN_APP_CLASSNAME);
+        props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, EXEC_APP_CLASSNAME);
+
         try { 
-            Properties props = (Properties)mProperties.clone();
             scriptWriter.close();
             byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
             InputStream input = new ByteArrayInputStream(objcode);
@@ -396,6 +400,55 @@ class SWF9Writer extends ObjectWriter {
         this.liburl = url;
     }
 
+    /** The user 'main' class, which extends LFCApplication */
+    public final static String MAIN_APP_CLASSNAME = "LzApplication";
+    
+    /** The top level class executed first, it creates a LzApplication object */
+    public final static String EXEC_APP_CLASSNAME = "LzSpriteApplication";
+    
+    public final static String LFC_CLASSNAME = "LFCApplication";
+    
+    /** The class to use when compiling a debug eval statement */
+    public final static String DEBUG_EVAL_SUPERCLASS = "DebugExec";
+    public final static String DEBUG_EVAL_CLASSNAME  = "DebugEvaluate";
+
+    /** The "main" class name for 'import' (runtime loadable) libraries */
+    public final static String LIBRARY_CLASSNAME = "LzRuntimeLoadedLib";
+    
+    /** List of AS3 imports needed to compile an app */
+    public static final String imports = "    #passthrough (toplevel:true) {  \n" +
+            "import flash.display.*;\n" +
+            "import flash.events.*;\n" +
+            "import flash.utils.*;\n" +
+            "import flash.text.*;\n" +
+            "import flash.system.*;\n" +
+            "import flash.net.*;\n" +
+            "import flash.ui.*;\n" +
+            "import flash.text.Font;\n" +
+            "}#\n";
+
+    /** Create swf9 application boilerplate preamble as3 code 
+     */
+    public String makeApplicationPreamble() {
+        // MOVE THIS TO SWF9WRITER boilerplate generator code
+        String source = "public class " + MAIN_APP_CLASSNAME +
+            " extends " +  LFC_CLASSNAME + " {\n " + imports + "}\n";
+        source += "public class " + EXEC_APP_CLASSNAME +
+            " extends Sprite {\n " + imports + "var app:LzApplication;\n" +
+            " function " + EXEC_APP_CLASSNAME + "() {" +
+            " app = new LzApplication(this);}}\n";
+        return source;
+    }
+
+    /** Create swf9 import library  boilerplate preamble as3 code 
+     */
+    public String makeLibraryPreamble() {
+        return "NOT YET DEFINED";
+    }
+
+
+
+
     public void closeSnippet() throws IOException {
         // Callback to let library know we're done loading
         addScript("LzLibrary.__LZsnippetLoaded('"+this.liburl+"')");
@@ -404,8 +457,13 @@ class SWF9Writer extends ObjectWriter {
             throw new IllegalStateException("SWF9Writer.close() called twice");
         }
 
+        Properties props = (Properties)mProperties.clone();
+        // Pass in the table of lzx class defs
+        props.put(org.openlaszlo.sc.Compiler.EXPORTED_CLASS_DEFS, mEnv.getExportedClassDefs());
+        props.setProperty(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeLibraryPreamble());
+
         try { 
-            Properties props = (Properties)mProperties.clone();
+
             scriptWriter.close();
             byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
             InputStream input = new ByteArrayInputStream(objcode);

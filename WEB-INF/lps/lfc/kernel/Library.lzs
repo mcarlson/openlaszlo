@@ -10,8 +10,10 @@
 if ($swf9) {
 } else {
     #include "kernel/LzIdleKernel.lzs"
-    #include "kernel/LzLibraryCleanup.lzs"
 }
+
+#include "kernel/LzLibraryCleanup.lzs"
+
 
 
 //#include "kernel/LzRequires.lzs"

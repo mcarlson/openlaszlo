@@ -73,6 +73,10 @@ public class ClassModel implements Comparable {
         } else {
           this.className = LZXTag2JSClass(env.methodNameGenerator.next());
         }
+
+        // Keep track of this class name, in case we're compiling an <import> library
+        env.addExportedClassDef(tagName, this.className);
+
         this.superclass = superclass;
         this.definition = definition;
         if (definition != null) {

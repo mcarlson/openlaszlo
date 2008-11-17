@@ -224,6 +224,9 @@
 
       var ext = (v == 9) ? ".swc" : ".lzl";
       var shlibopt = "--option buildSharedLibrary=true ";
+      if (v == 9) {
+         shlibopt += "--option SWF9MainClassName=LFCApplication --option SWF9WrapperClassName=LzSpriteApplication ";
+      }
 
       // Check whether the options tell us to build this runtime at all
       var buildThisRuntime = lfc.getProperty("build.lfc.runtime.swf" + v);

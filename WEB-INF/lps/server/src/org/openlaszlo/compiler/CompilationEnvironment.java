@@ -73,6 +73,13 @@ public class CompilationEnvironment {
     protected File mApplicationFile = null;
     protected File mObjectFile = null;
 
+    /** List of class definitions that will be defined by a
+     * loadable library module.
+     * A map of tagname => classname , e.g.,
+     * lz['button'] = $lzc$class_button;
+    */
+    protected Map exportedClassDefs = new HashMap();
+
     final SymbolGenerator methodNameGenerator;
 
     /** Output is written here.
@@ -721,5 +728,14 @@ public class CompilationEnvironment {
             this.warnIfCannotContain(element, child);
         }
     }
+
+    public void addExportedClassDef(String tagname, String classname) {
+        exportedClassDefs.put(tagname, classname);
+    }
+
+    public Map getExportedClassDefs() {
+        return exportedClassDefs;
+    }
+
 
 }

@@ -203,7 +203,7 @@ public class lzsc  {
     String scriptFile = null;
     boolean incremental = false;
 
-    String defaultRuntime = LPS.getProperty("compiler.runtime.default", "swf7");
+    String defaultRuntime = LPS.getProperty("compiler.runtime.default", "swf8");
     // default constants
     compileTimeConstants.put("$debug", Boolean.FALSE);
     compileTimeConstants.put("$profile", Boolean.FALSE);

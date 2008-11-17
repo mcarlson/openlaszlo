@@ -468,6 +468,7 @@ public class Compiler {
   public static String DISABLE_CONSTANT_POOL = "disableConstantPool";
   public static String DISABLE_TRACK_LINES = "disableTrackLines";
   public static String DISABLE_PUBLIC_FOR_DEBUG = "disablePublicForDebug";
+  public static String EXPORTED_CLASS_DEFS = "exportedClassDefs";
   public static String ELIMINATE_DEAD_EXPRESSIONS = "eliminateDeadExpressions";
   public static String FLASH_COMPILER_COMPATABILITY = "flashCompilerCompatability";
   public static String GENERATE_FUNCTION_2 = "generateFunction2";
@@ -489,6 +490,11 @@ public class Compiler {
   public static String PRINT_INSTRUCTIONS = "printInstructions";
   public static String RESOLVER = "resolver";
   public static String SCRIPT_ELEMENT = "scriptElement";
+  public static String SWF9_APPLICATION_PREAMBLE = "SWF9applicationPreamble";
+  public static String SWF9_APP_CLASSNAME = "SWF9MainClassName";
+  public static String SWF9_WRAPPER_CLASSNAME = "SWF9WrapperClassName";
+  public static String SWF9_LFC_CLASSNAME = "SWF9LFCClassName";  
+  public static String SWF8_LOADABLE_LIB = "SWFLoadableLib";
   public static String TRACK_LINES = "trackLines";
   public static String VALIDATE_CACHES = "validateCaches";
   public static String WARN_UNDEFINED_REFERENCES = "warnUndefinedReferences";
@@ -496,7 +502,7 @@ public class Compiler {
   public static String WARN_UNUSED_LOCALS = "warnUnusedLocals";
   public static String WARN_UNUSED_PARAMETERS = "warnUnusedParameters";
   public static String WITH_THIS = "withThis";
-  public static String SWF_LOADABLE_LIB = "SWFLoadableLib";
+
 
   //
   // Parser

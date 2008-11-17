@@ -19,13 +19,7 @@
 #include "kernel/swf9/LzFontManager.as"
 #include "kernel/swf9/LzTimeKernel.as"
 
-    //#include "kernel/swf9/LzRequires.as"
-    //#include "kernel/swf9/LzInputTextSprite.as"
-    //#include "kernel/swf9/LzMakeLoadSprite.as"
-    //#include "kernel/swf9/LzFontManager.as"
-    //#include "kernel/swf9/LzFunctions.as"
-    //#include "kernel/swf9/LzSoundMC.as"
-    //#include "kernel/swf9/LzLibrary.lzs"
+#include "kernel/swf9/LzLibrary.as"
 #include "kernel/swf9/LzXMLParser.as"
 #include "kernel/swf9/LzXMLTranslator.as"
 #include "kernel/swf9/LzHTTPLoader.as"
@@ -33,13 +27,11 @@
 #include "kernel/swf9/LzMouseKernel.as"
 #include "kernel/swf9/LzBrowserKernel.lzs"
 #include "kernel/swf9/LzKeyboardKernel.as"
-    //#include "kernel/swf9/LzAudio.as"
+
 #include "kernel/swf9/LzScreenKernel.as"
 #include "kernel/swf9/LzContextMenuKernel.lzs"
 #include "kernel/swf9/LzAudioKernel.lzs"
 #include "kernel/swf9/LzAsset.as"
-    //#include "kernel/swf9/dojo/Library.lzs"
-
 #include "kernel/swf9/DojoExternalInterface.as"
 
 

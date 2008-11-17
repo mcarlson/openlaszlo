@@ -909,8 +909,7 @@ public class SWF9External {
       }
     }
     else {
-      String mainclassname =
-        (options.getBoolean(Compiler.DEBUG_EVAL)) ? SWF9Generator.DEBUG_EVAL_CLASSNAME : SWF9Generator.EXEC_APP_CLASSNAME;
+      String mainclassname = (String) options.get(Compiler.SWF9_WRAPPER_CLASSNAME);
       // For the application, we just list one .as file
       cmd.add(workdir.getPath() + File.separator + mainclassname + ".as");
     }
