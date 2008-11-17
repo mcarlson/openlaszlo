@@ -123,6 +123,20 @@ public class ViewSchema extends Schema {
         }
     }
     
+    public ViewSchema() {
+
+    }
+
+    CompilationEnvironment mEnv = null;
+
+    public ViewSchema(CompilationEnvironment env) {
+        this.mEnv = env;
+    }
+
+    public CompilationEnvironment getCompilationEnvironment() {
+        return mEnv;
+    }
+
     /** Set the attributes to the type.
      * @param attributes a list of attributes
      * @param type a type
