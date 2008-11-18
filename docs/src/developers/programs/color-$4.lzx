@@ -1,12 +1,10 @@
 
-<canvas height="850">
-  <window name="raptor" x="25" y="50" height="200" width="200" resizable="true" title="Resize this window">
-    <view name="red" height="${raptor.height*.5}" width="${raptor.height*.5}" bgcolor="0xFF0000"/>
-    <view name="blue" height="${raptor.red.height}" width="${raptor.red.width}" bgcolor="0x0000FF" x="${raptor.red.width-(raptor.red.width*.5)}" y="${raptor.red.height-(raptor.red.height*.5)}"/>
-    <view name="fuchsia" height="${raptor.red.height*.5}" width="${raptor.red.width*.5}" bgcolor="0xFF00FF" x="${raptor.red.width-(raptor.red.width*.5)}" y="${raptor.red.height-(raptor.red.height*.5)}" />
-  </window>
+<canvas height="150">
+  <view name="red" height="100" width="100" bgcolor="0xFF0000"/>
+  <view name="blue" x="50" y="50" height="100" width="100" bgcolor="0x0000FF"/>
+  <view name="fuchsia" x="50" y="50" height="50" width="50" bgcolor="0xFF00FF"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

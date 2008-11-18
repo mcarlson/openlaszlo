@@ -4,7 +4,7 @@
 <title>Color</title>
 <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 
-<para/><section><title>Overview</title>
+<section><title>Overview</title>
 
 <para>This chapter gives a brief introduction to the use of colors in OpenLaszlo applications. It explains the various syntaxes that are used to specify color, and gives general guidelines for using color effectively.</para>
 <para>
@@ -12,7 +12,7 @@ OpenLaszlo uses the standard web color definitions, three hexadecimal values in 
 </para>
 
 
-<para/></section><section><title>RGB or Red, Green, Blue</title>
+</section><section><title>RGB or Red, Green, Blue</title>
 <para>
 Each red, blue, or green dot can have a value from 0 to 255. If the red dot is fully "on" at 255, while blue and green are fully "off" at 0, we see red. The RBG color code for red is 255,0,0. Blue is 0,255,0; green is 0,0,255. (Some graphics systems combine an RGB triplet with an 8-bit alpha value, and get a 32-bit color word; in those systems, we think of colors as RGBA.)
 </para>
@@ -25,33 +25,31 @@ Each red, blue, or green dot can have a value from 0 to 255. If the red dot is f
 </example>
 
 
-<para/></section><section><title>Hexadecimal Code</title>
+</section>
+<section id="specifycolor"><title>Different Ways to Specify Color</title>
 <para>
-Some web applications require that RGB be expressed in hexadecimal (base 16 instead of base 10) values. OpenLaszlo much prefers hex values; for one thing, using hexadecimal values enables the use of stylesheets (see Cascading Style Sheets):
-</para>
-
-<example role="live-example">
-   <title>Using Hex for colors with stylesheet</title>
-   <programlisting language="lzx">
-   <textobject><textdata fileref="programs/color-$2.lzx"/></textobject> 
-   </programlisting>
-</example>
-
-<para>
-OpenLaszlo enables coloring in four ways: 0x000000, #000000, rgb(0,0,0), and "black". For now, the best reason to prefer to use the hex style 0x000000 is that it always works, whether the color is assigned explicitly within the view, or by stylesheet. Color assignment by stylesheet fails by name, #hex, or rgb(). Explicit color assignment by rgb() fails unless the RGB values are all numerals -- that is, rgb(0,0,0) produces black, but rgb(FF,FF,FF), which should produce white, comes back at compile time as an invalid color.
+OpenLaszlo enables coloring in four ways: 0x000000, #000000, <literal>rgb(0,0,0)</literal>, and "black". Using the format 0x000000 only works for explicit assignment; it does not work in CSS. Color assignment using <literal>rgb()</literal> must be specified with decimal values from 0 - 255.
 </para>
 <para>
 Coloring of text with fgcolor="foo" is enabled in the same fashions, but with the same limitations.
 </para>
 
 <example role="live-example">
-   <title>Coloring text using CSS</title>
+   <title>Applying color explicitly and with CSS</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/color-$3.lzx"/></textobject> 
    </programlisting>
 </example>
-
-<para/><section><title>Mixing Colors</title>
+   <para>You can also specify color using a number or an expression. <literal>presentValue()</literal> is used in the following
+      example to return <literal>value</literal> according to <literal>type</literal> as a string.</para>
+   <example role="live-example">
+      <title>Specifying color with a numeric or computed value</title>
+      <programlisting language="lzx">
+         <textobject><textdata fileref="programs/colorswatch.lzx"/></textobject> 
+      </programlisting>
+   </example>
+   
+<section><title>Mixing Colors</title>
 <para>
 To blend a color, combine the RGB values. Red (FF0000) plus blue (0000FF) equals fuchsia (FF00FF):
 </para>
@@ -63,7 +61,7 @@ To blend a color, combine the RGB values. Red (FF0000) plus blue (0000FF) equals
 </example>
 
 
-<para/></section><section><title>Standard Web Colors</title>
+</section><section><title>Standard Web Colors</title>
 <para>
 The 16 basic web colors can be employed by name:
 </para>
@@ -75,7 +73,7 @@ The 16 basic web colors can be employed by name:
    </programlisting>
 </example>
 
-<para/></section><section><title>Non-Standard Colors</title>
+</section><section><title>Non-Standard Colors</title>
 <para>
 To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes. Alternatively, the non-standard colors named in <literal>lps/components/base/colors.lzx</literal> were added to OpenLaszlo's global namespace. Those colors can also be employed by name, but note the ${constraint} syntax around the bgcolor specification.  There are two ways to make the constraint: <literal>bgcolor="${global['iceblue1']}"</literal> is the same as <literal>bgcolor="${iceblue1}"</literal>.
 </para>
@@ -87,7 +85,7 @@ To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes
    </programlisting>
 </example>
 
-<para/></section><section><title>Opacity</title>
+</section><section><title>Opacity</title>
 <para>
 In OpenLaszlo, a view has a color and an opacity which are handled separately. The <literal>opacity</literal> attribute ranges from 0 (transparent) to 1 (opaque).
 </para>
@@ -148,28 +146,4 @@ In OpenLaszlo, a view has a color and an opacity which are handled separately. T
    &lt;/canvas&gt;</programlisting>
       </section>
       
-<para/></section></section><section><title>When Red Isn't Red</title>
-
-<para>
-The print world paid careful attention to color matching: the color the client saw on the comprehensives in the conference room turned out the same as the color the customer saw on the cereal boxes. That involved synchronizing colors between a computer monitor and a laser printer (used to print the comprehensives), then the physical film separation into cyan, magenta, yellow, and black for the printer, and finally the finished product.
-</para>
-
-<para>
-Web publishers had to let go of all that. Color specifications look different on different platforms and workstations —Macintosh or Windows, normal backlit LCD screens or aging CRTs, projectors in a conference room or high fidelity cinema displays. Web designers pretend that "0x6C6BA2" is always the same color, and hope it looks right other places.
-</para>
-
-<para>
-The best you can do is look at your application on several different kinds of monitors and operating systems, and tweak the application until it looks decent on each platform.
-</para>
-
-<para>
-W3C aims to mitigate this problem with support for the color model <ulink url="http://www.w3.org/Graphics/Color/sRBG">SRBG: Standard Default Color Space for the Internet</ulink>.
-</para>
-
-<para>
-For more about this topic, look up "color gamut", "color space", "color matching", "display gamma", and the ActionScript function setColorTransform.
-</para>
-
-
-
-<para/></section></chapter>
+</section></section></chapter>
