@@ -1031,6 +1031,21 @@ dynamic public class LzSprite extends Sprite {
                   this.addChildAt(asset,IMGDEPTH);
 
                   this.applyStretchResource();
+
+                  if (asset is MovieClip && this.totalframes == 1) {
+                    var loader:Loader = MovieClip(asset).getChildAt(0) as Loader;
+                    if (loader.content is AVM1Movie) {
+                        //no playback control for AVM1 movies...
+                    } else {
+                        // treat as a loader...
+                        // could they make this any less obvious?
+                        // see http://www.bit-101.com/blog/?p=1435 
+                        this.__isinternalresource = false;
+                        this.loaderMC = MovieClip(loader.content);
+                        this.totalframes = this.loaderMC.totalFrames;
+                        this.loaderMC.gotoAndStop(fn);
+                    }
+                  }
               } else {
                   // bad resource?
               }
