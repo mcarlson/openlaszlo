@@ -85,7 +85,8 @@ This OpenLaszlo Explorer contains several demos compiled for both Flash and DHTM
 
 <div class="column-in" style="margin-top: 40px;">
 <h3 style="float: left">Reload OpenLaszlo Explorer</h3>
-<a href="../../index.jsp?lzr=swf8" target="_top" style="margin-left: 10px;"><img src="images/launch_flash.png" border="0"/></a>
+<a href="../../index.jsp?lzr=swf8" target="_top" style="margin-left: 10px;"><img src="images/launch_flash8.png" border="0"/></a>
+<a href="../../index.jsp?lzr=swf9" target="_top"><img src="images/launch_flash9.png" border="0"/></a>
 <a href="../../index.jsp?lzr=dhtml" target="_top"><img src="images/launch_dhtml.png" border="0"/></a>
 </div>
 
