@@ -457,18 +457,27 @@ class SWF9Writer extends ObjectWriter {
      */
     public String makeLibraryPreamble() {
         String source = "public class " + LIBRARY_CLASSNAME +
-            " extends LzBaseLoadableLib {\n " + imports + "\n" +
+            " extends LzBaseLib {\n " + imports + "\n" +
             "}\n";
+
         return source;
     }
 
     public void closeSnippet() throws IOException {
+
+        // Define the base app class for an import library. Must be
+        // structured this way to conform to what the swf9 script
+        // compiler expects for constructing the main app class.
+        addScript("class LzBaseLib extends Sprite { \n" +
+                  imports +  "\n" + 
+                  "public function runToplevelDefinitions() {}\n" +
+                  "public function exportClassDefs(link:Object) {\n" + 
+                  "this.runToplevelDefinitions();\n" + 
+                  "}\n" +
+                  "}\n");
+
         // Callback to let library know we're done loading
         //
-        // TODO [hqm 2008-11] This won't work, right? We want to call
-        // this static method on the LzLibrary class, but LzLibrary is
-        // in the main app's namespace. Do we need to pass in a
-        // pointer back to the main app's LzLibrary class? Should this be in exportClassDefs? 
         addScript("LzLibrary.__LZsnippetLoaded('"+this.liburl+"')");
 
         if (mCloseCalled) {
@@ -480,6 +489,7 @@ class SWF9Writer extends ObjectWriter {
         props.setProperty(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeLibraryPreamble());
         props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, LIBRARY_CLASSNAME);
         props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, LIBRARY_CLASSNAME);
+        props.put(org.openlaszlo.sc.Compiler.SWF9_LOADABLE_LIB, "true");
 
         /*
           System.err.println(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE));

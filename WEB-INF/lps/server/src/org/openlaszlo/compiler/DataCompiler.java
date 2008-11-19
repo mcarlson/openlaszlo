@@ -68,6 +68,15 @@ class DataCompiler extends ElementCompiler {
                          "," + trimwhitespace+");\n");
       // For swf9, make sure the global variable is referenced or the
       // Flash class loader won't load it.
+      // 
+      // TODO [hqm 2008-11] Note, we could also accomplish this by
+      // adding an explicit "-include dsetname" in the command line
+      // options to the flex compiler when we compile the library, to
+      // force it to link in this global var class, but it is simpler
+      // to just make a reference to it in the code here, and doesn't
+      // cost anything. I suppose some day the flex compiler may
+      // optimize out this useless statement, and then this hack would
+      // stop working.
       mEnv.compileScript(dsetname+" == true;");
 
     } catch (org.openlaszlo.xml.internal.MissingAttributeException err) {

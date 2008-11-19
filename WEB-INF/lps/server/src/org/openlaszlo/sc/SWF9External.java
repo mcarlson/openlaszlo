@@ -816,6 +816,14 @@ public class SWF9External {
     return LPS.getLFCDirectory() + File.separator + "LFC9" + dbgext + ".swc";
   }
 
+  /**
+   * Get the relative URL of the LFC shared library for SWF9.
+   */
+  public static String getLFCLibraryRelativeURL(boolean useDebug) {
+    String dbgext = useDebug ? "-debug" : "";
+    return "LFC9" + dbgext + ".swf";
+  }
+
   public static boolean isWindows() {
     String osname = System.getProperty("os.name");
     assert osname != null;
@@ -831,6 +839,8 @@ public class SWF9External {
     List cmd = new ArrayList();
     String outfilebase;
     String exeSuffix = isWindows() ? ".exe" : "";
+
+    boolean debug = options.getBoolean(Compiler.DEBUG_SWF9);
     
     // NB: this code used to call execCompileCommand, and pass in the pathname of
     // a shell script to invoke the flex compiler. It now calls callJavaCompileCommand
@@ -872,7 +882,7 @@ public class SWF9External {
     for (int i=1; i<=maxSubdirnum; i++) {
       cmd.add("-compiler.source-path+=" + workdir.getPath() + File.separator + i);
     }
-    if (options.getBoolean(Compiler.DEBUG_SWF9)) {
+    if (debug) {
       cmd.add("-debug=true");
     }
     cmd.add("-compiler.headless-server=true");
@@ -885,7 +895,25 @@ public class SWF9External {
       cmd.add("-default-size");
       cmd.add(options.get(Compiler.CANVAS_WIDTH, "800"));
       cmd.add(options.get(Compiler.CANVAS_HEIGHT, "600"));
-      cmd.add("-compiler.library-path+=" + getLFCLibrary(options.getBoolean(Compiler.DEBUG_SWF9)));
+      if (options.getBoolean(Compiler.SWF9_USE_RUNTIME_SHARED_LIB)) { // 
+      // TODO [hqm 2008-11] This usage of the Flash
+      // "runtime-shared-library" feature does not work yet. No matter
+      // what I try, when the app loads, it cannot find or load the
+      // LFC as a runtime shared library.  When this does work, it
+      // will be a good option to reduce app download size when
+      // multiple Laszlo apps are served from the same server.
+        cmd.add("-runtime-shared-library-path="+ getLFCLibrary(debug) + "," + 
+                "lib" + File.separator +  getLFCLibraryRelativeURL(debug) +
+                ",," // specifies explicitly empty policy file arg
+                ); 
+      } else {
+        cmd.add("-compiler.library-path+=" + getLFCLibrary(debug));
+      }
+
+      if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB)) {
+        // Exclude the LFC
+        cmd.add("-external-library-path+="+getLFCLibrary(debug));
+      }
 
       // Add in WEB-INF/flexlib and APPDIR/flexlib to flex library search paths if they exist
       if ((new File(getFlexPathname("flexlib"))).isDirectory()) {
