@@ -73,7 +73,6 @@ class SWF9Writer extends ObjectWriter {
         super(props, stream, cache, importLibrary, env);
         scriptBuffer = new StringWriter();
         scriptWriter= new PrintWriter(scriptBuffer);
-
     }
 
 
@@ -382,6 +381,13 @@ class SWF9Writer extends ObjectWriter {
         props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, MAIN_APP_CLASSNAME);
         props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, EXEC_APP_CLASSNAME);
 
+        /*
+          System.err.println(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE));
+        System.err.println(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME));
+        System.err.println(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME));
+
+        */
+
         try { 
             scriptWriter.close();
             byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
@@ -413,7 +419,7 @@ class SWF9Writer extends ObjectWriter {
     public final static String DEBUG_EVAL_CLASSNAME  = "DebugEvaluate";
 
     /** The "main" class name for 'import' (runtime loadable) libraries */
-    public final static String LIBRARY_CLASSNAME = "LzRuntimeLoadedLib";
+    public final static String LIBRARY_CLASSNAME = "LzRuntimeLoadableLib";
     
     /** List of AS3 imports needed to compile an app */
     public static final String imports = "    #passthrough (toplevel:true) {  \n" +
@@ -430,27 +436,39 @@ class SWF9Writer extends ObjectWriter {
     /** Create swf9 application boilerplate preamble as3 code 
      */
     public String makeApplicationPreamble() {
-        // MOVE THIS TO SWF9WRITER boilerplate generator code
         String source = "public class " + MAIN_APP_CLASSNAME +
-            " extends " +  LFC_CLASSNAME + " {\n " + imports + "}\n";
+            " extends " +  LFC_CLASSNAME + " {\n " + imports + "\n" + 
+            "public function " + MAIN_APP_CLASSNAME + "(sprite:Sprite=null) {\n" +
+            "super(sprite);\n" +
+            "runToplevelDefinitions();\n" + 
+            "}\n" + 
+            "}\n";
         source += "public class " + EXEC_APP_CLASSNAME +
-            " extends Sprite {\n " + imports + "var app:LzApplication;\n" +
-            " function " + EXEC_APP_CLASSNAME + "() {" +
-            " app = new LzApplication(this);}}\n";
+            " extends Sprite {\n " + imports +
+              "var app:LzApplication;\n" +
+              "function " + EXEC_APP_CLASSNAME + "() {" +
+                "app = new " + MAIN_APP_CLASSNAME + "(this);\n" +
+              "}\n" +
+            "}\n";
         return source;
     }
 
     /** Create swf9 import library  boilerplate preamble as3 code 
      */
     public String makeLibraryPreamble() {
-        return "NOT YET DEFINED";
+        String source = "public class " + LIBRARY_CLASSNAME +
+            " extends LzBaseLoadableLib {\n " + imports + "\n" +
+            "}\n";
+        return source;
     }
-
-
-
 
     public void closeSnippet() throws IOException {
         // Callback to let library know we're done loading
+        //
+        // TODO [hqm 2008-11] This won't work, right? We want to call
+        // this static method on the LzLibrary class, but LzLibrary is
+        // in the main app's namespace. Do we need to pass in a
+        // pointer back to the main app's LzLibrary class? Should this be in exportClassDefs? 
         addScript("LzLibrary.__LZsnippetLoaded('"+this.liburl+"')");
 
         if (mCloseCalled) {
@@ -459,8 +477,16 @@ class SWF9Writer extends ObjectWriter {
 
         Properties props = (Properties)mProperties.clone();
         // Pass in the table of lzx class defs
-        props.put(org.openlaszlo.sc.Compiler.EXPORTED_CLASS_DEFS, mEnv.getExportedClassDefs());
         props.setProperty(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeLibraryPreamble());
+        props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, LIBRARY_CLASSNAME);
+        props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, LIBRARY_CLASSNAME);
+
+        /*
+          System.err.println(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE));
+        System.err.println(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME));
+        System.err.println(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME));
+
+        */
 
         try { 
 

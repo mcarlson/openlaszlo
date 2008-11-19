@@ -1,5 +1,5 @@
 /**
-  * DebugExec.as
+  * LzBaseLoadableLib.as
   *
   * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -9,8 +9,9 @@
   * @author Henry Minsky &lt;hminsky@laszlosystems.com&gt;
   */
 
-public class DebugExec extends Sprite {
+public class LzBaseLoadableLib extends Sprite {
 
+    // This serves as the superclass of an <import> (runtime loadable) library
     #passthrough (toplevel:true) {  
     import flash.display.*;
     import flash.events.*;
@@ -20,28 +21,23 @@ public class DebugExec extends Sprite {
     import flash.net.*;
     import flash.ui.*;
     import flash.text.Font;
-    import flash.display.*;
     }#
 
-    public function DebugExec (...ignore) {
-        runToplevelDefinitions();
-    }
-
-    public function write(...args):void {
-        trace("DebugExec.write called with ", args.join(" "));
-        lzconsole.write(args.join(" "));
-    }
+    public function LzBaseLoadableLib () { }
 
     public function runToplevelDefinitions() {
         // Overridden by method in code emitted by SWF9 script compiler
     }
 
-    public function doit ():void {
-        trace("DebugExec.doit() was invoked...");
-        write("DebugExec.doit() was invoked...");
+    // A link object is passed in with pointers to main app globals
+    //library.exportClassDefs({lz: lz, canvas: canvas,
+    //    LzResourceLibrary: LzResourceLibrary
+    //    });
+    public function exportClassDefs(link:Object) {
+        this.runToplevelDefinitions();
     }
-}
 
+}
 
 
 

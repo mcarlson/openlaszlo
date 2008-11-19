@@ -91,7 +91,12 @@ class ImportCompiler extends ToplevelCompiler {
             String libfile = libsrcfile.getName();
             String libprefix = mEnv.getLibPrefix();
             String runtime = mEnv.getProperty(mEnv.RUNTIME_PROPERTY);
-            String extension = Compiler.SCRIPT_RUNTIMES.contains(runtime) ? ".js" : ".swf";
+            String extension = ".swf";
+            if ("swf9".equals(runtime)) {
+                extension = ".swf";
+            } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
+                extension = ".js";
+            } 
             String objfilename = libprefix + "/" + libfile + extension;
             String objpath = mEnv.getLibPrefixRelative() + "/" + libfile + extension;
 
@@ -147,11 +152,12 @@ class ImportCompiler extends ToplevelCompiler {
                 ObjectWriter writer;
 
                 String runtime = env.getProperty(env.RUNTIME_PROPERTY);
-                if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
+                if ("swf9".equals(runtime)) {
+                    props.setProperty(org.openlaszlo.sc.Compiler.SWF9_LOADABLE_LIB, "true");
+                    writer = new SWF9Writer(props, ostream, env.getMediaCache(), false, env);
+                } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
                     writer = new DHTMLWriter(props, ostream,
                                              env.getMediaCache(), false, env);
-                } else if ("swf9".equals(runtime)) {
-                    writer = new SWF9Writer(props, ostream, env.getMediaCache(), false, env);
                 } else if (Compiler.SWF_RUNTIMES.contains(runtime)) {
                     // Set the "SWF8_LOADABLE_LIB" flag to true for this compiler
                     props.setProperty(org.openlaszlo.sc.Compiler.SWF8_LOADABLE_LIB, "true");
@@ -211,8 +217,9 @@ class ImportCompiler extends ToplevelCompiler {
 
                     }
                 }
-                // Now output the additions to the tag map
+                // Now output the additions to the tag map.
                 outputTagMap(env);
+
                 if (Compiler.SWF_RUNTIMES.contains(runtime)) {
                     ((SWFWriter) env.getGenerator()).setLevel0(false);
                 }

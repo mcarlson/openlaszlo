@@ -34,7 +34,7 @@ class DataCompiler extends ElementCompiler {
      * would mean delaying the "ondata" of the datasets until they were processed. 
      */
 
-    static final String LOCAL_DATA_FNAME = "lzAddLocalData";
+    static final String LOCAL_DATA_FNAME = "canvas.lzAddLocalData";
 
     DataCompiler(CompilationEnvironment env) {
         super(env);

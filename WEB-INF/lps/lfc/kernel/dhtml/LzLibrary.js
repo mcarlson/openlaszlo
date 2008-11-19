@@ -149,7 +149,7 @@ static function __LZsnippetLoaded (url){
         Debug.error("could not find library with href", url);
     } else {
         lib.loaded = true;
-        LzInstantiateView({attrs: {libname: lib.name}, "class": LzLibraryCleanup}, 1);
+        canvas.LzInstantiateView({attrs: {libname: lib.name}, "class": LzLibraryCleanup}, 1);
         // Run the queue to instantiate all pending LzInstantiateView calls.
         canvas.initDone();
     }

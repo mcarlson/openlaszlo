@@ -26,7 +26,7 @@ abstract class ElementCompiler {
      * must match the name of the function in the runtime support
      * library. 
      */
-    protected static final String VIEW_INSTANTIATION_FNAME = "LzInstantiateView";
+    protected static final String VIEW_INSTANTIATION_FNAME = "canvas.LzInstantiateView";
     protected final CompilationEnvironment mEnv;
 
     ElementCompiler(CompilationEnvironment env) {

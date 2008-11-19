@@ -15,10 +15,18 @@
 class LzLibrary extends LzNode {
 
     #passthrough (toplevel:true) {  
-        import flash.events.*;
-        import flash.net.*;
-        import flash.utils.*;
-        import flash.xml.*;  
+  import flash.display.*;
+  import flash.events.*;
+  import flash.text.*;
+  import flash.ui.*;
+  import flash.geom.*;
+  import flash.utils.*;
+  import mx.controls.Button;
+  import flash.net.*;
+  import flash.utils.*;
+  import flash.system.*;
+
+
     }#
 
 /** @access private
@@ -58,6 +66,15 @@ var href;
 var stage = "late";//"late|defer"
 
 /**
+  * @access private
+  */
+function $lzc$set_stage(val) {
+    this.stage = val;
+}
+
+
+
+/**
  * Sent when this library has finished loading. 
  * 
  * @lzxtype event
@@ -65,13 +82,26 @@ var stage = "late";//"late|defer"
  */
 var onload = LzDeclaredEvent;
 
+/** @access private
+ * @modifiers override 
+ */
+function LzLibrary ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
+    super(parent,attrs,children,instcall);
+}
+
+/**
+  * @access private
+  */
+function $lzc$set_href(val) {
+    this.href = val;
+}
+
 /**
   * @access private
   */
 override function construct (parent, args) {
     this.stage = args.stage;
     super.construct.apply(this, arguments);
-    this.sprite = new LzSprite(this, false);
     LzLibrary.libraries[args.name] = this;
 }
 
@@ -93,7 +123,7 @@ override function destroy () {
         this.sprite.destroy();
         this.sprite = null;
     }
-    super.destroy.apply(this, arguments);
+    super.destroy();
 }
 
 /** @access private */
@@ -113,20 +143,31 @@ override function toString (){
     return "Library " + this.href + " named " + this.name;
 }
 
+public var loader:Loader = null;
+
 /**
   * Loads this library dynamically at runtime. Must only be called 
   * when stage was set to 'defer'.
   * 
   * @access public
   */
-function load (){
+function load () {
     if (this.loading || this.loaded) {
         return;
     }
     this.loading = true;
-    // TODO [hqm 2008-11]
-    // LOAD MODULE HERE !! (this.href);
-    Debug.write("LzLibrary.load NYI", this.href);
+    var request:URLRequest = new URLRequest(this.href);
+    request.method = URLRequestMethod.GET;
+    this.loader = new Loader();
+    var info:LoaderInfo = loader.contentLoaderInfo;
+    info.addEventListener(Event.COMPLETE, handleLoadComplete);
+    trace('loader.load ', this.href);
+    this.loader.load(request);
+}
+
+public function handleLoadComplete(event:Event):void {
+    var library:Object = event.target.content;
+    library.exportClassDefs(null);
 }
 
 /** 

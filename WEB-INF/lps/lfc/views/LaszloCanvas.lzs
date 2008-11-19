@@ -845,6 +845,16 @@ function __windowResize(size) {
     }
 }
 
+
+// Utility functions used by the instantiator process
+public function LzInstantiateView(e, tn = 1) {
+   canvas.initiatorAddNode( e , tn );
+}
+
+public function lzAddLocalData(name, d, trimwhitespace) {
+    return new LzDataset(canvas, {name: name, initialdata: d, trimwhitespace: trimwhitespace });
+}
+
 } // End of LzCanvas
 lz[LzCanvas.tagname] = LzCanvas;  // publish
 

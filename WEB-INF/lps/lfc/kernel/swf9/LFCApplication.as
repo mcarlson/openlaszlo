@@ -206,6 +206,12 @@ public class LFCApplication {
         */
         LzKeyboardKernel.__keyboardEvent(event, 'onkeydown');
     }
+
+    public function runToplevelDefinitions() {
+        // overridden by swf9 script compiler
+    }
+
+
 }
 
 // Resource library

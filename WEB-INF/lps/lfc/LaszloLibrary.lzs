@@ -54,7 +54,6 @@ if ($profile) {
 #include "helpers/Library.lzs"
 #include "data/Library.lzs"
 #include "services/Library.lzs"
-#include "glue/Library.lzs"
 
 if ($swf9) {
   //Debugger placeholder

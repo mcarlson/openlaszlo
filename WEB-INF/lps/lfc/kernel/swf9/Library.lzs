@@ -12,6 +12,7 @@
 #include "kernel/swf9/DebugExec.as"
 
 #include "kernel/swf9/LFCApplication.as"
+#include "kernel/swf9/LzBaseLoadableLib.as"
 #include "kernel/swf9/LzIdleKernel.as"
 #include "kernel/swf9/LzSprite.as"
 #include "kernel/swf9/LzTextSprite.as"

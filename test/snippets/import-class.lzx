@@ -5,7 +5,8 @@
   <method name="doLoaded">
     new lz.myclass(canvas, {fontsize: 8, text: '[1] loaded myclass'});
     new lz.myclass(canvas, {fontsize: 10, text: '[2] loaded myclass'});
-    new lz.myclass(canvas, {text: '[3] loaded myclass'});
+    var ki = new lz.myclass(canvas, {text: '[3] loaded myclass'});
+    Debug.write('loaded myclass! ki instanceof LzView', ki instanceof LzView);
 
   </method>
   <simplelayout spacing="2" />

@@ -2267,8 +2267,6 @@ public dynamic class LzNode extends LzEventable {
    return [ self,  name ];
  }
 
-
-
 } // End of LzNode
 
 lz[LzNode.tagname] = LzNode;  // publish

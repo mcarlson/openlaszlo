@@ -19,9 +19,14 @@ class LzLibraryCleanup extends LzNode {
 /** @access private */
     static var attributes = new LzInheritedHash(LzNode.attributes);
 
-    function LzLibraryCleanup ( owner , args ) {
-        super(owner, args);
-        var lib = LzLibrary.findLibrary(args.libname);
+    var lib:* = null;
+
+    function LzLibraryCleanup ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
+        super(parent,attrs,children,instcall);
+    }
+
+    function $lzc$set_libname(val) {
+        this.lib = LzLibrary.findLibrary(val);
         lib.loadfinished();
     }
 

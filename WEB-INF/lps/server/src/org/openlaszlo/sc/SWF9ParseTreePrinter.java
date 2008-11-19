@@ -256,12 +256,13 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
 
     sb.append("{\n");
     sb.append(annotateInsertStream(CLASS_LEVEL_STREAM));
+
     if (classnm.equals(config.mainClassName) && !config.islib) {
-      sb.append("public function " + config.mainClassName + "(sprite:Sprite=null) {\n");
-      sb.append("super(sprite);\n");
+      sb.append("override public function runToplevelDefinitions () {");
       sb.append(annotateInsertStream(MAIN_CONSTRUCTOR_STREAM));
       sb.append("}\n");
     }
+
     for (int i=4; i<children.length; i++) {
       sb.append(children[i]);
     }

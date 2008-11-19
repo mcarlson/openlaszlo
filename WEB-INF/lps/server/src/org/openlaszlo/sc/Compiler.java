@@ -494,7 +494,8 @@ public class Compiler {
   public static String SWF9_APP_CLASSNAME = "SWF9MainClassName";
   public static String SWF9_WRAPPER_CLASSNAME = "SWF9WrapperClassName";
   public static String SWF9_LFC_CLASSNAME = "SWF9LFCClassName";  
-  public static String SWF8_LOADABLE_LIB = "SWFLoadableLib";
+  public static String SWF9_LOADABLE_LIB = "SWF9LoadableLib";
+  public static String SWF8_LOADABLE_LIB = "SWF8LoadableLib";
   public static String TRACK_LINES = "trackLines";
   public static String VALIDATE_CACHES = "validateCaches";
   public static String WARN_UNDEFINED_REFERENCES = "warnUndefinedReferences";
