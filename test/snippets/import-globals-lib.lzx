@@ -1,12 +1,12 @@
 <library>
   <script>
     var blah = 0xff0000;
-    function foo() {
+    canvas.foo = function ()  {
         Debug.write('This is a message from a snippet script function');
     }
 
-    new lz.view(_root.canvas, {width: 50, height: 50, bgcolor: blah});
-    new lz.view(_root.canvas, {width: 50, height: 50, bgcolor: canvas.greencolor});
+    new lz.view(canvas, {width: 50, height: 50, bgcolor: blah});
+    new lz.view(canvas, {width: 50, height: 50, bgcolor: canvas.greencolor});
   </script>
   <view bgcolor="yellow" width="50" height="50" id="libview"
         oninit="Debug.write('This is a message from a snippet method')">

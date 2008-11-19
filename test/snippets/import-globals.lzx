@@ -21,7 +21,7 @@
   </text>
 
 
-  <import name="lib" href="import-globals-lib.lzx" stage="late" onload="foo()"/>
+  <import name="lib" href="import-globals-lib.lzx" stage="late" onload="canvas.foo()"/>
 
   <handler name="oninit">
     Debug.write("canvas got oninit event");

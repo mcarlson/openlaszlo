@@ -225,6 +225,19 @@ class ImportCompiler extends ToplevelCompiler {
                 }
 
                 ViewCompiler.checkUnresolvedResourceReferences (env);
+                
+                // Need to emit a copy of the globals declarations
+                // into the library app code we're building, because
+                // the swf9 compiler needs to be able to have
+                // declarations for them to compile references to
+                // them.
+                String globals = "";
+                for (Iterator v = mEnv.getIds().keySet().iterator(); v.hasNext(); ) {
+                    String id = (String)v.next();
+                    globals += ("var " +id + " = null;\n");
+                }
+                env.compileScript(globals);
+
                 writer.closeSnippet();
                 env.compileScript("// FINISH compiling <IMPORT> Library "+liburl+"\n");
             } finally {

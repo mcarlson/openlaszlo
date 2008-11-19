@@ -168,7 +168,10 @@ function load () {
 public function handleLoadComplete(event:Event):void {
     var library:Object = event.target.content;
     library.exportClassDefs(null);
+    this.libapp = library;
 }
+
+var libapp;
 
 /** 
  * Called by LzLibraryCleanup when this library has finished loading.

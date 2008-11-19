@@ -62,10 +62,14 @@ class DataCompiler extends ElementCompiler {
       boolean trimwhitespace = "true".equals(element.getAttributeValue("trimwhitespace"));
       String content = NodeModel.getDatasetContent(element, mEnv, trimwhitespace);
       // Initialize the global declaration
-      mEnv.compileScript(dsetname+" = "+
+      mEnv.compileScript("var "+ dsetname+" = "+
                          LOCAL_DATA_FNAME+"("+ScriptCompiler.quote(dsetname) +
                          ", " +content+
                          "," + trimwhitespace+");\n");
+      // For swf9, make sure the global variable is referenced or the
+      // Flash class loader won't load it.
+      mEnv.compileScript(dsetname+" == true;");
+
     } catch (org.openlaszlo.xml.internal.MissingAttributeException err) {
       throw new CompilationError(element, err);
     }

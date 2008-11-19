@@ -441,12 +441,12 @@ public class CompilationEnvironment {
      */
 
     ObjectWriter getResourceGenerator() {
-        return mMainObjectWriter;
-        
-        // Note: Returning the library's SWFWriter, as shown below,
-        // would make the compiler compile the resources into the
-        // loadable library:
-        //return mObjectWriter; 
+        if (this.getRuntime().equals("swf9")) {
+            // For swf9, we can embed the resource into the library
+            return mObjectWriter;
+        } else {
+            return mMainObjectWriter;
+        }
      }
      
     private boolean mSnippet = false;

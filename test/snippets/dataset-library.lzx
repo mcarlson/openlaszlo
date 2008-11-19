@@ -1,5 +1,5 @@
 <library>
-  <text>[loaded dataset library]</text>
+  <text text="${'mylibdset = ' + mylibdset}"/>
   <dataset name="mylibdset">
     <items>
       <item> Lorem ipsum dolor sit amet</item>
@@ -18,3 +18,7 @@
     </items>
   </dataset>
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
