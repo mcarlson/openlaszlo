@@ -913,6 +913,8 @@ public class SWF9External {
       if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB)) {
         // Exclude the LFC
         cmd.add("-external-library-path+="+getLFCLibrary(debug));
+        cmd.add("-includes");
+        cmd.add("LzLibrary");
       }
 
       // Add in WEB-INF/flexlib and APPDIR/flexlib to flex library search paths if they exist

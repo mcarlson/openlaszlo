@@ -746,12 +746,17 @@ class SWF9Writer extends ObjectWriter {
                     ")]\n");
 
 
-        String assetClassname = "__embed_lzfont_" + face;
+        String assetClassname = "__embed_lzfont_" + faceCounter++;
         sbuf.append("var "+assetClassname+":Class;\n");
+        sbuf.append("Font.registerFont("+assetClassname+");\n");
+
         sbuf.append("}#\n");
         addScript(sbuf.toString());        
         return font;
     }
+
+    // Gensym for embedded font classname
+    static int faceCounter = 1;
 
 
     /**

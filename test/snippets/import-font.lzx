@@ -8,6 +8,5 @@
 
  <import name="lib" href="font-library.lzx" stage="late" 
          onload="new lz.text(canvas,{text: 'foobar', font: 'myfont'})"/>
- <text fontsize="20" font="myfont">This should issue a compiler warning that the font cannot be used in an import library</text>
 
 </canvas>

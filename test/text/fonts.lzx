@@ -24,9 +24,6 @@
         <face src="ariosob.ttf" style="bold" />
     </font>
 
-    <font name="Chevara" src="chevarar.ttf">
-        <face src="chevaraor.ttf" style="bold" />
-    </font>
 
     <font name="Conga" src="congar.ttf">
         <face src="congab.ttf" style="bold" />
@@ -54,13 +51,6 @@
     </font>
 
     <!-- Fonts from the examples directory -->
-    <font src="../resources/ttf/clawless.ttf" name="Clawless" >
-        <face src="../resources/ttf/clawless.ttf" style="bold" />
-    </font>
-    <font src="../resources/ttf/kitchen.ttf"  name="Kitchen" >
-        <face src="../resources/ttf/kitchen.ttf" style="bold" />
-    </font>
-
     <!-- Laszlo Pixel Font (8) -->
     <font src="lzsans8.ttf"  name="Sans Serif 8">
       <face src="lzsans8b.ttf" style="bold" />
@@ -77,10 +67,6 @@
         <edittext  pixellock="true" 
                    multiline="true" height="100" 
                    width="200" >hello there
-        </edittext>
-        <edittext  pixellock="true" >Chevara
-            <method name="onconstruct" args="parent, args">
-            </method>
         </edittext>
         <text pixellock="true" ><u>Underline</u></text>
         <text pixellock="true" ><a href="http://www.laszlosystems.com">www.laszlosystems.com</a></text> 
@@ -184,27 +170,7 @@
         <text><b><i>BoldItalic </i>Bold </b><i>Italic </i><u>Underline <b>Bold Underline</b></u></text>
     </view>
 
-    <view width="400" font="Clawless" fontsize="24" > <simplelayout axis="y" spacing="10" />
-        <text>Clawless</text>
-        <!-- Note this font is missing the @,*,(,),= characters -->
-        <text>abcdefghijklmnopqrstuvwxyz1234567890!#$%^-</text>
-        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,.?;':"</text>
-        <inputtext>inputtext here</inputtext>
-        <edittext font="Clawless" multiline="true" height="100" width="100" >hello there</edittext>
-        <edittext font="Clawless">Clawless</edittext>
-        <text><u>Underline</u></text>
-    </view>
 
-    <view width="400" font="Kitchen" fontsize="24" > <simplelayout axis="y" spacing="10" />
-        <text>Kitchen</text>
-        <!-- Note this font is missing the @,*,(,),= characters -->
-        <text>abcdefghijklmnopqrstuvwxyz1234567890!#$%^-</text>
-        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./?;':"\~</text>
-        <inputtext>inputtext here</inputtext>
-        <edittext  font="Kitchen" multiline="true" height="100" width="100" >hello there</edittext>
-        <edittext font="Kitchen" >Kitchen</edittext>
-        <text><u>Underline</u></text>
-    </view>
 
     <!-- These fonts do not have italic and bold italic -->
     <view width="400" font="Arioso" fontsize="20" > 
@@ -230,19 +196,6 @@
         <edittext font="Conga" >Conga</edittext>
         <text><u>Underline</u></text>
     </view>
-
-    <view width="400" font="Chevara" fontsize="14" > 
-        <simplelayout axis="y" spacing="10" />
-        <text>Chevara</text>
-        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
-        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
-        <text><b>Bold</b></text>
-        <inputtext>inputtext here</inputtext>
-        <edittext multiline="true" height="100" width="100" >hello there</edittext>
-        <edittext font="Chevara" >Chevara</edittext>
-        <text><u>Underline</u></text>
-    </view>
-    <tester font="Clawless" fname="Clawless" />
 
     </view>
     <scrollbar axis="y"/>
