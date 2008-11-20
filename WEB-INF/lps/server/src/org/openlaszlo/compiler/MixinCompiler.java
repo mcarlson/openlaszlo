@@ -1,11 +1,11 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /**
- * <interface> compiler
+ * <mixin> compiler
  *
  * @author ptw@openlaszlo.org
  *
- * Adds interface to schema
+ * Adds mixin to schema
  */
 
 package org.openlaszlo.compiler;
@@ -13,11 +13,11 @@ package org.openlaszlo.compiler;
 import org.jdom.Element;
 
 /**
- * Compiler for <code>interface</code> elements.
+ * Compiler for <code>mixin</code> elements.
  */
-class InterfaceCompiler extends ClassCompiler {
+class MixinCompiler extends ClassCompiler {
     
-  InterfaceCompiler(CompilationEnvironment env) {
+  MixinCompiler(CompilationEnvironment env) {
     super(env);
   }
     
@@ -27,10 +27,10 @@ class InterfaceCompiler extends ClassCompiler {
    * @return see doc
    */
   static boolean isElement(Element element) {
-    return element.getName().equals("interface");
+    return element.getName().equals("mixin");
   }
 
-  // TODO [2008-10-28 ptw] Interfaces are not allowed 'extends' or
+  // TODO [2008-10-28 ptw] Mixins are not allowed 'extends' or
   // 'with' attributes
 }
 

@@ -665,6 +665,8 @@ public class Compiler {
             return new ResourceCompiler(env);
         } else if (ClassCompiler.isElement(element)) {
             return new ClassCompiler(env);
+        } else if (MixinCompiler.isElement(element)) {
+            return new MixinCompiler(env);
         } else if (InterfaceCompiler.isElement(element)) {
             return new InterfaceCompiler(env);
         } else if (DebugCompiler.isElement(element)) {

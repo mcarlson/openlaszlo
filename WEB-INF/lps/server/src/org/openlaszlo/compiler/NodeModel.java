@@ -569,32 +569,6 @@ public class NodeModel implements Cloneable {
             schema.getClassModel(parentName);
     }
 
-    // TODO: [2008-03-26 ptw] Need to integrate mixins into the search
-    // for inherited attributes
-    ClassModel[] mixinModels;
-
-    ClassModel[] getMixinModels() {
-        String parentName = this.tagName;
-        if (! "class".equals(parentName)) { return null; }
-        if (mixinModels != null) { return mixinModels; }
-        String mixinSpec = element.getAttributeValue("with");
-        String mixins[];
-        if (mixinSpec != null) {
-            mixins = mixinSpec.split("\\s+,\\s+");
-            mixinModels = new ClassModel[mixins.length];
-            for (int i = 0; i < mixins.length; i++) {
-                ClassModel mm =  schema.getClassModel(mixins[i]);
-                if (mm == null) {
-                     throw new CompilationError(
-                         "No model for mixin: " + mixins[i],
-                         element);
-                }
-                mixinModels[i] = mm;
-            }
-        }
-        return mixinModels;
-    }
-
     void setClassName(String name) {
         this.tagName = name;
         this.parentClassModel = getParentClassModel();
@@ -803,12 +777,13 @@ public class NodeModel implements Cloneable {
             // attributes are really 'meta' attributes, not
             // attributes of the class -- they will be processed by
             // the ClassModel or ClassCompiler
-            if ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName)) {
+            boolean isClass = "class".equals(tagName);
+            if (isClass || "interface".equals(tagName) || "mixin".equals(tagName)) {
                 // TODO: [2008-03-22 ptw] This should somehow be
                 // derived from the schema, but this does not work, so
                 // we hard-code the meta-attributes here
 //                 if (superclassModel.getAttribute(name) != null) {
-                if ("name".equals(name) || "extends".equals(name) || "with".equals(name)) {
+                if ("name".equals(name) || (isClass && ("extends".equals(name) || "with".equals(name)))) {
                     continue;
                 }
             }

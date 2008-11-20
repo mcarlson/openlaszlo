@@ -95,10 +95,8 @@ class ClassCompiler extends ViewCompiler  {
         Element elt = element;
         // Get meta attributes
         String classname = elt.getAttributeValue("name");
-        String superclass = elt.getAttributeValue("extends");
-        // TODO: [2008-03-22 ptw] Need to add all elements of all
-        // mixins to the schema for this class
-        String mixins = elt.getAttributeValue("with");
+        String superName = elt.getAttributeValue("extends");
+        String mixinSpec = elt.getAttributeValue("with");
         
         if (classname == null ||
             (schema.enforceValidIdentifier && !ScriptCompiler.isIdentifier(classname))) {
@@ -113,7 +111,7 @@ class ClassCompiler extends ViewCompiler  {
             throw(cerr);
         }
         
-        if (superclass != null && !ScriptCompiler.isIdentifier(superclass)) {
+        if (superName != null && !ScriptCompiler.isIdentifier(superName)) {
             mEnv.warn(
 /* (non-Javadoc)
  * @i18n.test
@@ -122,16 +120,53 @@ class ClassCompiler extends ViewCompiler  {
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 ClassCompiler.class.getName(),"051018-89")
 , elt);
-            superclass = null;
+            superName = null;
         }
-        if (superclass == null) {
-            // Default to LzView
-            superclass = ClassCompiler.DEFAULT_SUPERCLASS_NAME;
-        }
-        
-        ClassModel superclassinfo = schema.getClassModel(superclass);
 
-        if (superclassinfo == null) {
+        if (superName == null) {
+            // Default to LzView
+            superName = ClassCompiler.DEFAULT_SUPERCLASS_NAME;
+        }
+
+        // Create interstitials
+        if (mixinSpec != null) {
+            String mixins[] = mixinSpec.trim().split("\\s*,\\s*");
+            for (int i = mixins.length - 1; i >= 0; i--) {
+                String mixinName = mixins[i];
+                ClassModel mixinModel =  schema.getClassModel(mixinName);
+                if (mixinModel == null) {
+                     throw new CompilationError(
+                         "Undefined mixin " + mixinName + " for class " + classname,
+                         element);
+                }
+                // We duplicate the mixin definition, but turn it into
+                // a class definition, inheriting from the previous
+                // superName and implementing the mixin
+                Element interstitial = (Element)mixinModel.definition.clone();
+                interstitial.setName("class");
+                String interstitialName = mixinName + "$" + superName;
+                interstitial.setAttribute("name", interstitialName);
+                interstitial.setAttribute("extends", superName);
+                // TODO: [2008-11-10 ptw] Add "implements"
+//                 interstitial.setAttribute("implements", mixinName);
+                // Insert this element into the DOM before us
+                Element parent = (Element)((org.jdom.Parent)element).getParent();
+                int index = parent.indexOf(element);
+                parent.addContent(index, interstitial);
+                // Add it to the schema
+                updateSchema(interstitial, schema, visited);
+                // Update the superName
+                superName = interstitialName;
+            }
+            // Now adjust this DOM element to refer to the
+            // interstitial superclass
+            element.removeAttribute("with");
+            element.setAttribute("extends", superName);
+        }
+
+        ClassModel superModel = schema.getClassModel(superName);
+
+        if (superModel == null) {
 
             throw new CompilationError(
 /* (non-Javadoc)
@@ -139,10 +174,10 @@ class ClassCompiler extends ViewCompiler  {
  * @org-mes="undefined superclass " + p[0] + " for class " + p[1]
  */
             org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ClassCompiler.class.getName(),"051018-106", new Object[] {superclass, classname})
+                ClassCompiler.class.getName(),"051018-106", new Object[] {superName, classname})
 , elt);
         }
-        
+
         // Collect up the attribute defs, if any, of this class
         List attributeDefs = new ArrayList();
         Iterator iterator = element.getContent().iterator();
@@ -202,7 +237,7 @@ class ClassCompiler extends ViewCompiler  {
                     if (attrTypeName == null) {
                         // Check if this attribute exists in ancestor classes,
                         // and if so, default to that type.
-                        attrType = superclassinfo.getAttributeType(attrName, allocation);
+                        attrType = superModel.getAttributeType(attrName, allocation);
                         if (attrType == null) {
                             // The default attribute type
                             attrType = ViewSchema.EXPRESSION_TYPE;
@@ -257,7 +292,7 @@ class ClassCompiler extends ViewCompiler  {
         }
         
         // Add this class to the schema
-        schema.addElement(element, classname, superclass, attributeDefs, mEnv);
+        schema.addElement(element, classname, superName, attributeDefs, mEnv);
     }
     
     public void compile(Element elt) {

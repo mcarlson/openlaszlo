@@ -18,6 +18,12 @@
     fuchsia = 0xFF00FF
     aqua = 0x00FFFF -->
 
+<!---
+  These colors appear to have names similar to the X11 color names,
+  but the values do not always correspond.  They are just here as an
+  example of how one might define custom named colors, over and above
+  the W3C CSS3 standard colors that are built-in
+-->
 
 <script when="immediate">
     lz.colors.offwhite = 0xf2f2f2;

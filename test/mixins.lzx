@@ -1,0 +1,121 @@
+<canvas width="500" layout="axis: y; spacing: 25">
+    <!--- The base class of all ice cream desserts -->
+    <class name="icecream">
+      <attribute name="flavor" type="color" value="vanilla" />
+      <method name="toString">
+        return this.presentAttribute('flavor', 'color') + " icecream";
+      </method>
+      <view width="100%" height="100%" bgcolor="${parent.flavor}" />
+    </class>
+
+    <!--- This parlour only offers walnuts -->
+    <class name="walnuts" extends="view">
+      <attribute name="bgcolor" value="brown" />
+      <attribute name="ground" type="boolean" value="false" />
+      <attribute name="opacity" value="${this.ground?.5:1}" />
+      <method name="grind">
+        this.setAttribute('ground', true);
+      </method>
+      <method name="toString">
+        return (this.ground?"ground ":"") + "walnuts";
+      </method>
+    </class>
+
+    <!--- This is the 'toppings' mixin, which could be added to various desserts -->
+    <mixin name="toppings">
+      <attribute name="sauce" type="color" value="chocolate" />
+      <attribute name="whippedcream" type="boolean" value="true" />
+      <attribute name="cherry" type="boolean" value="true" />
+
+      <view name="layers" width="100%" layout="axis: y; spacing: 0" bgcolor="${canvas.bgcolor}">
+        <view width="25" height="25" x="${(parent.width - this.width)/2}"
+                visible="${classroot.cherry}" bgcolor="red" />
+        <walnuts name="nuts" width="100%" height="10"
+                 visible="${classroot.nuts}" ground="${classroot.ground}" />
+        <view width="100%" height="25"
+              visible="${classroot.whippedcream}" bgcolor="snow" />
+        <view width="100%" height="10" bgcolor="${classroot.sauce}" />
+      </view>
+
+      <attribute name="nuts" type="boolean" value="false" />
+      <attribute name="ground" type="boolean" value="false" />
+
+      <method name="toString">
+        return super.toString() + " with " +
+          this.presentAttribute('sauce', 'color') + " sauce" +
+          (this.whippedcream?", whipped cream":"") +
+          (this.nuts?(", " + this.layers.nuts.toString()):"") +
+          (this.cherry?", with a cherry on top":"");
+      </method>
+    </mixin>
+
+    <!---
+      Ok!  Let's build a dessert.  A sundae is based on icecream, and
+      we mixin toppings.  The resulting class has the attributes of
+      icecream and toppings, without us having to make toppings
+      inherit from icecream.
+    -->
+    <class name="sundae" extends="icecream" with="toppings">
+      <method name="toString">
+        return super.toString() + " sundae";
+      </method>
+    </class>
+
+    <attribute name="sauces" value="['chocolate', 'lavender', 'olive', 'orange', 'plum', 'snow', 'thistle', 'violet']" />
+    <attribute name="icecreams" value="['bisque', 'honeydew', 'lemonchiffon', 'lime', 'mintcream', 'papayawhip', 'peachpuff', 'salmon', 'tomato', 'wheat']"  />
+
+    <!--- Here's how you order your sundae -->
+    <view name="recipe" x="5%" width="90%" layout="axis: y; spacing: 3">
+      <text>
+        Build your own sundae:
+      </text>
+      <checkbox name="cherry">Cherry?</checkbox>
+      <view name="nutchoice" layout="axis: x; spacing: 3">
+        <checkbox name="nuts">Nuts?</checkbox>
+        <checkbox name="ground" enabled="${parent.nuts.getValue()}">Ground?</checkbox>
+      </view>
+      <checkbox name="whippedcream">Whipped Cream?</checkbox>
+      <view name="saucechoice" layout="axis: x; spacing: 3">
+        <text>Sauce:</text>
+        <combobox name="sauce" editable="false">
+          <replicator nodes="$once{canvas.sauces}">
+            <textlistitem text="${this.presentValue()}" type="color" />
+          </replicator>
+        </combobox>
+      </view>
+      <view name="icecreamchoice" layout="axis: x; spacing: 3">
+        <text>Ice Cream:</text>
+        <combobox name="icecream" editable="false">
+          <replicator nodes="$once{canvas.icecreams}">
+            <textlistitem text="${this.presentValue()}" type="color" />
+          </replicator>
+        </combobox>
+      </view>
+    </view>
+
+    <!--- And here's your WYSIWYG sundae -->
+    <sundae id="yoursundae"
+            width="100" height="150"
+            x="${(this.parent.width - this.width)/2}"
+            flavor="${recipe.icecreamchoice.icecream.getValue()}"
+            sauce="${recipe.saucechoice.sauce.getValue()}"
+            nuts="${recipe.nutchoice.nuts.getValue()}"
+            ground="${recipe.nutchoice.ground.getValue()}"
+            whippedcream="${recipe.whippedcream.getValue()}"
+            cherry="${recipe.cherry.getValue()}"
+    />
+
+    <!--- If you want the recipe for your sundae, push the button -->
+    <button x="${(this.parent.width - this.width)/2}"
+            onclick="description.format('You built a %s', yoursundae)">
+      Tell me the recipe!
+    </button>
+
+    <!--- And the recipe will show up here -->
+    <text name="description" x="5%" width="90%" multiline="true" />
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

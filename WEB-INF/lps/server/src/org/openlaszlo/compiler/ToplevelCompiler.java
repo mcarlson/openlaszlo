@@ -81,7 +81,9 @@ abstract class ToplevelCompiler extends ElementCompiler {
      * 
      */
     void updateSchema(Element element, ViewSchema schema, Set visited) {
-        Iterator iterator = element.getChildren().iterator();
+        // Make a copy of the list because we may insert interstitials
+        // into the real DOM
+        Iterator iterator = new ArrayList(element.getChildren()).iterator();
         while (iterator.hasNext()) {
             Element child = (Element) iterator.next();
             if (!NodeModel.isPropertyElement(child)) {
@@ -131,7 +133,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
                 includes.removeAll(libStart);
                 libsVisited.put(libFile, includes);
             }
-        } else if (compiler instanceof ClassCompiler || compiler instanceof InterfaceCompiler) {
+        } else if (compiler instanceof ClassCompiler) {
             String name = element.getAttributeValue("name");
             if (name != null) {
                 defined.add(name);
@@ -139,6 +141,13 @@ abstract class ToplevelCompiler extends ElementCompiler {
             String superclass = element.getAttributeValue("extends");
             if (superclass != null) {
                 referenced.add(superclass);
+            }
+            String mixinSpec = element.getAttributeValue("with");
+            if (mixinSpec != null) {
+              String mixins[] = mixinSpec.trim().split("\\s+,\\s+");
+              for (int i = 0; i < mixins.length; i++) {
+                referenced.add(mixins[i]);
+              }
             }
             ViewCompiler.collectElementNames(element, referenced);
         } else if (compiler instanceof ViewCompiler) {

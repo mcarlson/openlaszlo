@@ -52,9 +52,9 @@
     </interface>
 
     <interface name="interface" extends="node">
-      <attribute name="extends" type="token" value="view"/>
-      <!-- The comma-separated list of mixins, applied in order -->
-      <attribute name="with" type="string"/>
+    </interface>
+
+    <interface name="mixin" extends="node">
     </interface>
 
     <interface name="audio" extends="Instance">

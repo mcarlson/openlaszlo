@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -19,9 +19,20 @@ import org.jdom.Namespace;
  */
 public class ElementWithLocationInfo extends org.jdom.Element {
     SourceLocator locator = new SourceLocator();
+    // A cached copy of any HTML content for measuring
+    // TODO: [2008-11-10 ptw] I believe this is obsolete, was only used
+    // for swf5 compilation.
     String mHTMLContent = null;
     // The compiler model object that represents this element
     NodeModel model = null;
+
+    // Cloning copies only the locator annotation.  Other annotations
+    // need to be recomputed.
+    public Object clone() {
+      ElementWithLocationInfo e = (ElementWithLocationInfo)super.clone();
+      e.locator = locator;
+      return e;
+    }
 
     public static SourceLocator getSourceLocator(org.jdom.Element elt) {
         try {

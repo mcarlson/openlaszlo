@@ -25,7 +25,7 @@ public class ClassModel implements Comparable {
     protected ClassModel superclass;
     
     // This is null for the root class
-    protected final Element definition;
+    public final Element definition;
     protected String kind;
     protected NodeModel nodeModel;
     protected boolean modelOnly;
