@@ -46,9 +46,9 @@
     <!-- THE WINDOW -->
     <window title="My Window" name="childWindow" x="30" y="30"
         width="265" height="160" resizable="true" opacity="0"
-        closeable="true" bgcolor="#ccc" oninit="this.open();">
+        closeable="true" bgcolor="#ccc" oninit="this.open();" font="Helvetica">
 
-         <menubar width="100%" placement="menubar">
+         <menubar width="100%" placement="menubar" font="Helvetica">
              <menu text="File" width="180">
                 <menuitem text="New" />
                 <menuitem text="open..."/>
@@ -81,7 +81,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
