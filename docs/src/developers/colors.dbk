@@ -73,15 +73,14 @@ The 16 basic web colors can be employed by name:
    </programlisting>
 </example>
 
-</section><section><title>Non-Standard Colors</title>
+</section><section><title>Nonstandard Colors</title>
 <para>
-To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes. Alternatively, the non-standard colors named in <literal>lps/components/base/colors.lzx</literal> were added to OpenLaszlo's global namespace. Those colors can also be employed by name, but note the ${constraint} syntax around the bgcolor specification.  There are two ways to make the constraint: <literal>bgcolor="${global['iceblue1']}"</literal> is the same as <literal>bgcolor="${iceblue1}"</literal>.
-</para>
+To specify any color other than the 16 which are usable by name, use hex codes or <literal>rgb()</literal>. With <literal>rgb()</literal>, you can specify values as decimal or as percents. </para>
 
 <example role="live-example">
-   <title>Non-standard colors</title>
+   <title>Nonstandard colors</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/color-$6.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/nonstandardcolors.lzx"/></textobject> 
    </programlisting>
 </example>
 
