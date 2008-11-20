@@ -3,7 +3,7 @@
   <!-- and echoes it back in a response -->
   <dataset name="echoer" src="http:echoxml.jsp"/>
   
-  <window x="10" y="10" >
+  <view x="10" y="10" >
     <form id="ex1" bgcolor="0xAAB5C8" >
       <submit name="submitter" dataset="${echoer}"/>
       
@@ -49,5 +49,5 @@
       <text text="your name has been changed." 
             y="103" align="center" />
     </view>
-  </window>
+  </view>
 </canvas>
