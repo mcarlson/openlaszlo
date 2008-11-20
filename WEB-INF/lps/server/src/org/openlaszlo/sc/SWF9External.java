@@ -891,7 +891,15 @@ public class SWF9External {
     cmd.add(outfilename);
     
 
-    if (!buildSharedLibrary) {
+    if (buildSharedLibrary) {
+      // must be last before list of classes to follow.
+      cmd.add("-include-classes");
+      // For LFC library, we list all the classes.
+      for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
+        TranslationUnit tunit = (TranslationUnit)iter.next();
+        cmd.add(tunit.getName());
+      }
+    } else {
       cmd.add("-default-size");
       cmd.add(options.get(Compiler.CANVAS_WIDTH, "800"));
       cmd.add(options.get(Compiler.CANVAS_HEIGHT, "600"));
@@ -910,11 +918,10 @@ public class SWF9External {
         cmd.add("-compiler.library-path+=" + getLFCLibrary(debug));
       }
 
-      if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB)) {
-        // Exclude the LFC
+      if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB) ||
+          options.getBoolean(Compiler.DEBUG_EVAL)) {
+        // Don't include the LFC in this app
         cmd.add("-external-library-path+="+getLFCLibrary(debug));
-        cmd.add("-includes");
-        cmd.add("LzLibrary");
       }
 
       // Add in WEB-INF/flexlib and APPDIR/flexlib to flex library search paths if they exist
@@ -924,21 +931,9 @@ public class SWF9External {
       if ((new File(workdir.getPath() + File.separator + "flexlib")).isDirectory()) {
         cmd.add("-compiler.library-path+=" + getFlexPathname("flexlib"));
       } 
-
-    }
-    else {
-      // must be last before list of classes to follow.
-      cmd.add("-include-classes");
     }
     
-    if (buildSharedLibrary) {
-      // For a library, we list all the classes.
-      for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
-        TranslationUnit tunit = (TranslationUnit)iter.next();
-        cmd.add(tunit.getName());
-      }
-    }
-    else {
+    if (!buildSharedLibrary) {
       String mainclassname = (String) options.get(Compiler.SWF9_WRAPPER_CLASSNAME);
       // For the application, we just list one .as file
       cmd.add(workdir.getPath() + File.separator + mainclassname + ".as");

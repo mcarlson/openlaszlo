@@ -422,7 +422,8 @@ class SWF9Writer extends ObjectWriter {
     public final static String LIBRARY_CLASSNAME = "LzRuntimeLoadableLib";
     
     /** List of AS3 imports needed to compile an app */
-    public static final String imports = "    #passthrough (toplevel:true) {  \n" +
+    public static final String imports =
+            "#passthrough (toplevel:true) {  \n" +
             "import flash.display.*;\n" +
             "import flash.events.*;\n" +
             "import flash.utils.*;\n" +
@@ -430,7 +431,6 @@ class SWF9Writer extends ObjectWriter {
             "import flash.system.*;\n" +
             "import flash.net.*;\n" +
             "import flash.ui.*;\n" +
-            "import flash.text.Font;\n" +
             "}#\n";
 
     /** Create swf9 application boilerplate preamble as3 code 

@@ -604,8 +604,34 @@ public class Compiler {
                       " extends " +  SWF9Writer.DEBUG_EVAL_SUPERCLASS + " {\n " + SWF9Writer.imports + "}\n");
 
             byte[] objcode;
-            String prog = "";
-
+            String prog = "public class DebugExec extends Sprite {\n" +
+                "#passthrough (toplevel:true) {  \n" +
+                "import flash.data.*;\n" +
+                "import flash.desktop.*;\n" +
+                "import flash.display.*;\n" +
+                "import flash.errors.*;\n" +
+                "import flash.events.*;\n" +
+                "import flash.external.*;\n" +
+                "import flash.filesystem.*;\n" +
+                "import flash.filters.*;\n" +
+                "import flash.geom.*;\n" +
+                "import flash.html.*;\n" +
+                "import flash.media.*;\n" +
+                "import flash.net.*;\n" +
+                "import flash.printing.*;\n" +
+                "import flash.profiler.*;\n" +
+                "import flash.sampler.*;\n" +
+                "import flash.security.*;\n" +
+                "import flash.system.*;\n" +
+                "import flash.text.*;\n" +
+                "import flash.ui.*;\n" +
+                "import flash.utils.*;\n" +
+                "import flash.xml.*;\n" +
+                "}#\n" +
+                "public function DebugExec (...ignore) {runToplevelDefinitions();}\n" +
+                "public function write(...args):void {lzconsole.write(args.join(\" \"));}\n" +
+                "public function runToplevelDefinitions() {}\n" +
+                "}\n";
 
             // Try compiling as an expression first.  If that fails,
             // compile as sequence of statements.  If that fails too,

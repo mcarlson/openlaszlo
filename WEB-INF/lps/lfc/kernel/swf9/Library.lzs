@@ -9,8 +9,6 @@
   */
 
 // A class for loading and executing debug code at runtime
-#include "kernel/swf9/DebugExec.as"
-
 #include "kernel/swf9/LFCApplication.as"
 #include "kernel/swf9/LzIdleKernel.as"
 #include "kernel/swf9/LzSprite.as"
