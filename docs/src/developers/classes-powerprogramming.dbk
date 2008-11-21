@@ -470,26 +470,41 @@ Views that you create procedurally are not the same as "clones" created by data 
 <para>
 Changes made in step 2 will be ignored after replication.
 </para>
-<para/></section></section><section><title>Class Names and Tag Names</title>
-<para>All classes are defined in the global namespace. If you wanted to instantiate
-a class dynamically, you can write <literal>new
-global[classString](...)</literal>. Using the previous example, mybox can be
-instantiated like <literal>new global['mybox'](canvas.redbox, { bgcolor: 0x00ffff
-})</literal>.</para>
+<para/></section></section>
+
 <para/><section><title>Mapping Class and Tag Names</title>
 
 <para>Be aware that names for tag classes are not the same as their
-JavaScript counterpart; rather, the JavaScript name is <literal>lz.[tagname]</literal>. For example, to access a <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> in script, you would use <literal>lz.view</literal>. Thus, to instantiate a view through script, you would write
-<literal>new lz.view(...)</literal> (<emphasis role="b">not</emphasis> <literal>new view(...)</literal>). 
-</para>
+JavaScript counterpart; rather, the JavaScript name is <literal>lz.[tagname]</literal>. For example, you can create and instantiate a class <literal>someclass</literal> like this:</para>
+   
+   <programlisting>
+// create the class
+&lt;class name=&quot;someclass&quot;&gt;
+   //class definition
+&lt;/class&gt;
+      
+// make one
+new lz.someclass;
+   
+//or
+new lz['someclass'];</programlisting>
+   
+   <para>You can instantiate a variable class like this:</para>
+   <programlisting>
+var theclass = 'someclass'; 
+
+// make one
+new lz[theclass]; 
+   </programlisting>
+
 <note><para>
-In earlier versions of OpenLaszlo, there was an idiosyncratic mapping between class names and tag names, and classes in the LFC were handled differently than user defined classes. For example, the tagname <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> mapped to JavaScript class lz.view. With OpenLaszlo 4.0, the <literal>lz.[tagname]</literal> mapping is universal, and the old mappings are deprecated. </para></note>
+In earlier versions of OpenLaszlo, there was an idiosyncratic mapping between class names and tag names, and classes in the LFC were handled differently than user defined classes. For example, the tagname <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> mapped to JavaScript class <literal>LzView</literal>. With OpenLaszlo 4.0, the <literal>lz[tagname]</literal> mapping is universal, and the old mappings are deprecated. </para></note>
 
 
  
 
  
-<para/></section></section><section><title>Using LZX classes</title>
+<para/></section><section><title>Using LZX classes</title>
 
 
 
