@@ -56,7 +56,7 @@ attributes, and views inside a class are inherited down through each level.</par
 </example>
 <!-- remove this and other commented out code which the build ignores. IORIO 31 oct 2007 -->
 
-<para>Class definitions can include default values for attributes. For example, a class that <emphasis role="i">extends</emphasis> view can have default
+<para>Class definitions can include default values for attributes. For example, a class that <emphasis>extends</emphasis> view can have default
 <indexterm><primary>width</primary></indexterm><sgmltag class="attribute">width</sgmltag> and <indexterm><primary>height</primary></indexterm><sgmltag class="attribute">height</sgmltag>
 attributes:</para>
 
@@ -475,7 +475,7 @@ Changes made in step 2 will be ignored after replication.
 <para/><section><title>Mapping Class and Tag Names</title>
 
 <para>Be aware that names for tag classes are not the same as their
-JavaScript counterpart; rather, the JavaScript name is <literal>lz.[tagname]</literal>. For example, you can create and instantiate a class <literal>someclass</literal> like this:</para>
+JavaScript counterpart; rather, the JavaScript name is <literal>lz[<emphasis>tagname</emphasis>]</literal>. For example, you can create and instantiate a class <literal>someclass</literal> like this:</para>
    
    <programlisting>
 // create the class
