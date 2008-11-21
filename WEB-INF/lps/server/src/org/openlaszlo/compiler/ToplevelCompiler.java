@@ -238,8 +238,9 @@ abstract class ToplevelCompiler extends ElementCompiler {
             }
         }
         
-        // add the debugger, if canvas debug=true
-        if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
+        // If canvas debug=true, and we're not running a remote
+        // debugger, add the debugger-window component library
+        if (includesDebuggerWindow(env)) {
             if (explanations != null) {
                 explanations.put("debugger", "the canvas debug attribute is true");
             }
@@ -251,6 +252,17 @@ abstract class ToplevelCompiler extends ElementCompiler {
         return libraries;
     }
     
+    /** Decide whether to include the application GUI debugger component.
+     *
+     * Include the debugger window if debug=true no remote-debugging
+     * modes are enabled
+     */
+    static boolean includesDebuggerWindow(CompilationEnvironment env) {
+        return (env.getBooleanProperty(env.DEBUG_PROPERTY) &&
+                !env.getBooleanProperty(env.CONSOLEDEBUG_PROPERTY) &&
+                !env.getBooleanProperty(env.REMOTEDEBUG_PROPERTY));
+    }
+
     static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Set autoIncluded, Set visited) {
         Map externalMap = null;
         Map visitedMap = null;
