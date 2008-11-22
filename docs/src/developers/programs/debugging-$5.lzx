@@ -1,4 +1,4 @@
-<canvas debug="true" height="150">
+<canvas debug="true" height="150" width="100%">
   <debug y="10" />
   <handler name="oninit">
     Debug.write('subviews: ' + canvas.subviews);  <?lzx-co N10239?>

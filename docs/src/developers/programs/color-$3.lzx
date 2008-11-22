@@ -1,4 +1,4 @@
-<canvas width="860" debug="true">
+<canvas width="100%" debug="true">
 
   <stylesheet>
     #vName {

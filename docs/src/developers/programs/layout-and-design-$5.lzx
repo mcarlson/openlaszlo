@@ -1,5 +1,5 @@
 
-<canvas height="140">
+<canvas height="140" width="100%">
   <class name="coloredRect" height="80"/>
   
   <view x="10" y="10" name="container" width="200">
@@ -22,6 +22,6 @@
   </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

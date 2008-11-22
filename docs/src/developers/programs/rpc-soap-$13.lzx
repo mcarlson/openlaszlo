@@ -1,5 +1,5 @@
 
-<canvas debug="true" height="580" width="530">
+<canvas debug="true" height="580" width="100%">
 
     <debug x="10" y="10" width="510" height="560" />
 
@@ -28,6 +28,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

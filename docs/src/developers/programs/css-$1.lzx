@@ -1,6 +1,6 @@
 
 
-<canvas height="120">
+<canvas height="120" width="100%">
   <view height="100" width="100" bgcolor="#663399"/>
 </canvas>
 

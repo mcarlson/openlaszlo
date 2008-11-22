@@ -1,5 +1,5 @@
 
-<canvas height="300" width="700">
+<canvas height="300" width="100%">
   <window width="400" height="200" resizable="true">
     <attribute name="bordersize" value="${editor.bordersize.value}"/>
     <view y="20" name="editor" layout="axis:x; spacing:10; inset:10">
@@ -16,6 +16,6 @@
   </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

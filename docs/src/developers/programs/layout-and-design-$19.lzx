@@ -1,4 +1,4 @@
-<canvas height="400">
+<canvas height="400" width="100%">
   <debug  fontsize="12"/>
   <class name="box" width="50" height="30"  />
   <view name="myview">
@@ -31,6 +31,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

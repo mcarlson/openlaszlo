@@ -1,5 +1,5 @@
 
-<canvas width="800" >
+<canvas width="100%" >
   <!-- The data that provides the images -->
   <dataset name="ds_items">
     <items>

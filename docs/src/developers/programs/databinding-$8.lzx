@@ -1,5 +1,5 @@
 
-<canvas width="1400" height="600" debug="true">
+<canvas width="100%" height="600" debug="true">
   <debug width="400" height="300" fontsize="12" x="400"/>
 
   <include href="rpc/ajax.lzx" />

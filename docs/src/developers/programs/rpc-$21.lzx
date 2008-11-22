@@ -1,5 +1,5 @@
 
-<canvas debug="true" height="300" width="680">
+<canvas debug="true" height="300" width="100%">
 
     <debug x="100" width="450" height="280" />
 
@@ -38,6 +38,6 @@
     </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

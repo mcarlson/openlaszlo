@@ -1,4 +1,4 @@
-<canvas debug="true">
+<canvas debug="true" width="100%">
     <dataset name="ds" src="./shareddata/contacts_full.xml" />
     <datapointer name="dp" />
 
@@ -49,6 +49,6 @@
     </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

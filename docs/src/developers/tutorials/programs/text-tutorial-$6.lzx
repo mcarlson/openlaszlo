@@ -1,4 +1,4 @@
-<canvas>
+<canvas width="100%">
   <include href="extensions/html.lzx"/>
   <class name="browser" extends="window" resizable="true" bgcolor="silver">
     <edittext name="txt" text="http://openlaszlo.org/" width="300"/>

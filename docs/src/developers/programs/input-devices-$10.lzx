@@ -1,5 +1,5 @@
 
-<canvas  height="200" debug="true">
+<canvas width="100%" height="200" debug="true">
     <debug x="110" y="15" />
 
     <!-- NOTE: Even though the view below takes focus oninit,

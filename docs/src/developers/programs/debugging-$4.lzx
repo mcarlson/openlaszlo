@@ -1,4 +1,4 @@
-<canvas debug="true" height="200">
+<canvas debug="true" height="200" width="100%">
 <debug x="160" y="5" height="150" width="300" />
   <script>Debug.write('user code\n');</script>
   <button text="Get x, y" width="150" height="150"

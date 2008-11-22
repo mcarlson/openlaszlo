@@ -1,5 +1,5 @@
 
-<canvas height="100">
+<canvas height="100" width="100%">
    <view height="100" width="100" name="grandparent" bgcolor="red">
       <view height="50" width="50" name="parent" bgcolor="green">
         <view height="30" width="30" name="child" bgcolor="blue"/>
@@ -7,6 +7,6 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

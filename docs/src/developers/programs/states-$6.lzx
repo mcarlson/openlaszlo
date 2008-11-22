@@ -1,5 +1,5 @@
 
-<canvas>
+<canvas width="100%">
   <window title="state demo" width="400" height="300" oninit="this.max.setAttribute('applied', true)">
     <state name="max">
       <animatorgroup duration="1000" process="simultaneous">

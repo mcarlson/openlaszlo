@@ -1,5 +1,5 @@
 
-<canvas bgcolor="#EAEAEA" height="600" width="1000">
+<canvas bgcolor="#EAEAEA" height="600" width="100%">
 <!--- 
     This file demonstrates several ways to use the richinputtext class
     to set the formatting of rich formatted text. Corresponding "get"

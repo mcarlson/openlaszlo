@@ -1,5 +1,5 @@
 
-<canvas height="350">
+<canvas height="350" width="100%">
   <dataset name="vegetables">
     <celery/> <celeriac/> <carrot/> <florence_fennel/> <parsnip/> 
     <parsley/> <winter_endive/> <witloof_chicory/> <cardoon/> 

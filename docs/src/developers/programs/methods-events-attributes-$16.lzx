@@ -1,4 +1,4 @@
-<canvas height="20">
+<canvas height="20" width="100%">
   <view name="myView" width="20" height="20" bgcolor="red"/>
 
   <script>

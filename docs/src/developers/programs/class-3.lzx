@@ -1,5 +1,5 @@
 
-<canvas height="50">
+<canvas height="50" width="100%">
   <class name="myframe" extends="view">
     <attribute name="bgcolor" value="red"/>
     <attribute name="defaultplacement" value="insideview"/>

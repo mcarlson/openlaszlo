@@ -1,6 +1,6 @@
 
 
-<canvas debug="true" height="400">
+<canvas debug="true" height="400" width="100%">
     <!-- this isues one call of the freshmeat XML-RPC API -->
     <!-- Documented here: http://freshmeat.net/faq/view/49/ -->
 
@@ -36,6 +36,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

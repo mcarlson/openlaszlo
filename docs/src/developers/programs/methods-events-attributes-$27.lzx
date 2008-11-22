@@ -1,11 +1,11 @@
 
-<canvas height="50">
+<canvas height="50" width="100%">
    <view x=" 10" height="30" width="30" bgcolor="red"
    onclick="this.bringToFront()"/>
    <view  height="30" width="30" bgcolor="blue"
    onclick="this.bringToFront()"/> 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,4 +1,4 @@
-<canvas height="200" debug="true" >
+<canvas width="100%" height="200" debug="true" >
   <script>
     //one of: "ALL", "DEBUG", "INFO", "WARNING", "ERROR", "NONE"
     Debug.messageLevel = "WARNING";

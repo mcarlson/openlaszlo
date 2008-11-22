@@ -1,5 +1,5 @@
 
-<canvas height="160">
+<canvas height="160" width="100%">
   <class name="myframe" extends="view">
       <attribute name="bgcolor" value="red"/>
 

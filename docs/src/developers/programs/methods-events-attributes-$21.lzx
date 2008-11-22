@@ -1,5 +1,5 @@
 
-<canvas height="36">
+<canvas height="36" width="100%">
   <class name="diamond" width="${this.size}" height="${this.size}" rotation="45">
     <attribute name="size" type="number"/>
   </class>

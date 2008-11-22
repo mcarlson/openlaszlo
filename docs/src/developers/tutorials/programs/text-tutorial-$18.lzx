@@ -1,5 +1,5 @@
 
-<canvas height="160" width="500">
+<canvas height="160" width="100%">
    <edittext name="myText" x="10" y="15">Enter text here</edittext>
 
    <edittext name="myBigText" x="10" y="45"
@@ -8,6 +8,6 @@
    </edittext>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,4 +1,4 @@
-<canvas bgcolor="0xC9D8EB" debug="true">
+<canvas debug="true" width="100%" bgcolor="0xC9D8EB">
 
     <debug x="0" y="150" width="450" height="200" />
 

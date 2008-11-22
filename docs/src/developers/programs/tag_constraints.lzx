@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<canvas height="160">
+<canvas height="160" width="100%">
     <simplelayout spacing="5" />
     <slider id = "m" value="25" minvalue="0" maxvalue="100" />
     <text text = "$immediately{'immediately: ' + (m?m.value:'undefined')}" />

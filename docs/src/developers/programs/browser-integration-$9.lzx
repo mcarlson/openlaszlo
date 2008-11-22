@@ -1,5 +1,5 @@
 
-<canvas height="56" >
+<canvas width="100%" height="56">
   <simplelayout/>
   <button onclick="lz.Browser.loadURL('http://www.openlaszlo.org','newOpenLaszloWindow');" text="OpenLaszlo Homepage"/>
   <button onclick="lz.Browser.loadURL('http://www.mylaszlo.com','newOpenLaszloWindow');" text="myLaszlo.com"/>

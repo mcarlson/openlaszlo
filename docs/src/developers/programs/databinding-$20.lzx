@@ -1,5 +1,5 @@
 
-<canvas height="150">
+<canvas height="150" width="100%">
   <dataset name="phonebook" src="resources/phonebook.xml"/>
   <simplelayout axis="x" spacing="20"/>
   

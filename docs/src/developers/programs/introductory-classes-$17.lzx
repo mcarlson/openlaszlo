@@ -1,4 +1,4 @@
-<canvas height="75">
+<canvas height="75" width="100%">
   <script>
     var foo = new lz.view(canvas, {width: 50, height: 50, 
                                   x: 150, y: 0,

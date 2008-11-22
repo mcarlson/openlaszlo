@@ -1,5 +1,5 @@
 
-<canvas height="120">
+<canvas height="120" width="100%">
   <class name="coloredRect" width="20" height="80"/>
   <view width="50" height="50" bgcolor="yellow"/>
   <!-- Group of horizontally stacked views, isolated from app -->
@@ -12,6 +12,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

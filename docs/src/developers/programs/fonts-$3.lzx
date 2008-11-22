@@ -1,5 +1,5 @@
 
-<canvas height="50">
+<canvas height="50" width="100%">
   <simplelayout/>
   <view font="helvetica">
     <text>Howdy!</text>

@@ -1,6 +1,6 @@
 
 
-<canvas height="150">
+<canvas height="150" width="100%">
 
   <stylesheet>
     mookie {

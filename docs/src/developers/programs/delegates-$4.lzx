@@ -1,5 +1,5 @@
 
-<canvas height="150"> 
+<canvas height="150" width="100%">
     <dataset name="people">
         <people> 
             <person name="John"/> 

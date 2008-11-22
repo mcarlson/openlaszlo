@@ -1,5 +1,5 @@
 
-<canvas height="250" width="250">
+<canvas height="250" width="100%">
 <wrappinglayout axis="y" spacing="10"/>
     
 <class name="swatch" width="50" height="50"  />
@@ -56,6 +56,6 @@
 </swatch>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,5 +1,5 @@
     
-<canvas height="200" proxied="false">
+<canvas width="100%" height="200" proxied="false">
       <drawview height="200" width="200">
         <handler name="oncontext">
          this.moveTo(100,100);

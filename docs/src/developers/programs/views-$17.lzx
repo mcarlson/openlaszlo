@@ -1,5 +1,5 @@
 
-<canvas height="100">
+<canvas height="100" width="100%">
   <view x="60" y="60" height="40" width="40" bgcolor="red"
         onclick="this.rotate.doStart()">
     <animator name="rotate" attribute="rotation" to="45" duration="500"
@@ -12,6 +12,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,5 +1,5 @@
 
-<canvas height="150">
+<canvas height="150" width="100%">
   <view name="red" height="100" width="100" bgcolor="0xFF0000"/>
   <view name="blue" x="50" y="50" height="100" width="100" bgcolor="0x0000FF"/>
   <view name="fuchsia" x="50" y="50" height="50" width="50" bgcolor="0xFF00FF"/>

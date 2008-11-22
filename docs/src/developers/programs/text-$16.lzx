@@ -1,5 +1,5 @@
 
-<canvas height="320" >
+<canvas width="100%" height="320">
   <text multiline="true" width="300" height="300">
     Hello dear friends on the Red Planet! How is the Garden today?
     <img src="./images/horse-3.jpg"/>

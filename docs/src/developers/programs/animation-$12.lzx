@@ -1,5 +1,5 @@
 
-<canvas width="800" height="290" bgcolor="0xE5E1B0" >
+<canvas width="100%" height="290" bgcolor="0xE5E1B0" >
   <!-- INCLUDES That provide framework for the example -->
   <include href="animation_library.lzx"/>
   

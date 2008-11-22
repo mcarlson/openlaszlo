@@ -1,5 +1,5 @@
 
-<canvas height="125">
+<canvas height="125" width="100%">
   <simplelayout axis="x" spacing="10"/>
   <class name="gView">
     <view height="100" width="100"/>
@@ -9,6 +9,6 @@
   <gView id="green" bgcolor="rgb(0,0,255)"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** --> 

@@ -1,5 +1,5 @@
 
-<canvas height="120">
+<canvas height="120" width="100%">
     <hbox spacing="10">
     <vbox spacing="10" name="column1" bgcolor="red">
         <handler name="onclick">

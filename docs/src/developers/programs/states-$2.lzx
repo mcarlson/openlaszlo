@@ -1,5 +1,5 @@
 
-<canvas>
+<canvas width="100%">
   <view bgcolor="blue" width="20" height="20"
         onmousedown="this.setAttribute('mouseIsDown', true )"
         onmouseup="  this.setAttribute('mouseIsDown', false )">

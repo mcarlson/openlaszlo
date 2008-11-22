@@ -1,5 +1,5 @@
 
-<canvas debug="true" height="150">
+<canvas debug="true" height="150" width="100%">
   <debug y="10" />
   <handler name="oninit"><![CDATA[
     for (var i = 0; i < 10; i ++) {

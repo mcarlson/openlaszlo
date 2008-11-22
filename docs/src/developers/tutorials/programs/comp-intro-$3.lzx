@@ -1,5 +1,5 @@
 
-<canvas height="150">
+<canvas height="150" width="100%">
   <simplelayout/>
   <!--Here is a button created with a tag -->
   <button name="framitz" width="50">

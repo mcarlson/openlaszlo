@@ -1,5 +1,5 @@
 
-<canvas height="250">
+<canvas height="250" width="100%">
   <goldstyle name="defaultstyle" isdefault="true"/>
   <greenstyle name="specialstyle"/>
   <tabslider id="ts1" x="50" y="20"
@@ -25,6 +25,6 @@
   </tabslider>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,5 +1,5 @@
 
-<canvas width="300" height="300" debug="false">
+<canvas width="100%" height="300" debug="false">
     <class name="circle" extends="drawview" width="200" height="200">
         <attribute name="circlecolor" value="white"/>
         <attribute name="r" value="100"/>

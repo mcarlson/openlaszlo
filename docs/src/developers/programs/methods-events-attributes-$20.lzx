@@ -1,5 +1,5 @@
 
-<canvas height="60">
+<canvas height="60" width="100%">
     <view width="50" height="50" bgcolor="red" clickable="true" onclick="this.setAttribute('bgcolor', 'blue')"  />
 </canvas>
 

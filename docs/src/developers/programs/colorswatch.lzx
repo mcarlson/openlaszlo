@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<canvas height="150">
+<canvas height="150" width="100%">
     <simplelayout spacing="20"/>
     <view id="swatch" width="300" height="100" bgcolor="${color.value}"/>
     <view id="sliders">

@@ -1,5 +1,5 @@
 
-<canvas height="200">
+<canvas height="200" width="100%">
   <include href="lz/tree.lzx" />
   <dataset name="filesys" src="resources/dirtree.xml"/>
   <class name="fs_tree" extends="tree">

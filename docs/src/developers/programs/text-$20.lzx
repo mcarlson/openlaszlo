@@ -1,5 +1,5 @@
 
-<canvas>
+<canvas width="100%">
   <text multiline="true" width="100%">
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. 
     <img src="./images/horse-3.jpg"/>

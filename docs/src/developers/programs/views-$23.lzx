@@ -1,5 +1,5 @@
 
-<canvas height="80">
+<canvas height="80" width="100%">
   <class name="myclass">
     <simplelayout/>
     <view name="content"/>

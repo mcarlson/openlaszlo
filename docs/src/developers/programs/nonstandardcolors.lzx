@@ -1,4 +1,4 @@
-<canvas height="200">
+<canvas height="200" width="100%">
   <simplelayout axis="y"/>
   <text>using hex values</text>
   <view>

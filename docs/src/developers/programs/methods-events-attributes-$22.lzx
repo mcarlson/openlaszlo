@@ -1,5 +1,5 @@
 
-<canvas height="25">
+<canvas height="25" width="100%">
   <view width="25" bgcolor="red">
     <attribute name="height" value="25"/>
   </view>

@@ -1,5 +1,5 @@
 
-<canvas height="27" >
+<canvas width="100%" height="27">
   <button onclick="lz.Browser.loadURL('http://www.laszlosystems.com','_blank');" text="Click Me!"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

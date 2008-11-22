@@ -1,5 +1,5 @@
 
-<canvas height="120">
+<canvas height="120" width="100%">
    <simplelayout axis="y"/>
    <text font="sans-serif">Some text</text>
    <text font="Helvetica">Some text</text>

@@ -1,5 +1,5 @@
 
-<canvas height="125">
+<canvas height="125" width="100%">
      <font name="Times Roman">
           <face src="timmonsr.ttf" />
           <face src="timmonsb.ttf" style="bold"/>

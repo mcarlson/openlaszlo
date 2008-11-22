@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<canvas height="180"> 
+<canvas height="180" width="100%">
     <resource name="spinner_rsc" src="resources/spinner/"/> 
     
     <simplelayout axis="y"/> 

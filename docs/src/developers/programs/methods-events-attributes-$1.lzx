@@ -1,5 +1,5 @@
 
-<canvas debug="true">
+<canvas debug="true" width="100%">
   <debug /> 
   <node id="myNode"> 
     <method name="myMethod">

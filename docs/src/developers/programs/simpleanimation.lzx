@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<canvas height="50" width="500">
+<canvas height="50" width="100%">
     <view width="80" height="30" bgcolor="red" onclick="go.doStart()">
         <text align="center" valign="middle">Click Me!</text>    
         <animator name="go" attribute="x" to="100" duration="1000" start="false"/>

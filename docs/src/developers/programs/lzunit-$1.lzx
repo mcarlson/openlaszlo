@@ -1,5 +1,5 @@
 
-<canvas debug="true">
+<canvas debug="true" width="100%">
   <debug y="150"/>
   <include href="lzunit"/>
 

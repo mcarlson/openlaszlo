@@ -1,4 +1,4 @@
-<canvas height="150">
+<canvas height="150" width="100%">
   <dataset name="colors">
     <value>red</value>
     <value>green</value>

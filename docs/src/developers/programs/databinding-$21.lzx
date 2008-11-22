@@ -1,5 +1,5 @@
 
-<canvas height="150">
+<canvas height="150" width="100%">
   <dataset name="busy">
     <Monday order="1"/>
     <Tuesday order="2"/>
@@ -31,6 +31,6 @@
   <schedule name="f" target="${b}"  title="Free" bgcolor="0x00a000" datapath="free:/"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,5 +1,5 @@
 
-<canvas height="100">
+<canvas height="100" width="100%">
   <!-- create a simplelayout so embedded views are laid out  -->
   <!-- on top of each other.                                 -->
   <class name="class1" layout="class: simplelayout; spacing: 2">
@@ -20,6 +20,6 @@
   <class3/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

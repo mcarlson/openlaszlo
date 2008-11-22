@@ -1,5 +1,5 @@
 
-<canvas height="100" width="500">
+<canvas height="100" width="100%">
   <view bgcolor="red" width="200" height="30">
     <view bgcolor="blue" width="30" height="30"/>
     <view bgcolor="yellow" width="30" height="30"/>
@@ -14,6 +14,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

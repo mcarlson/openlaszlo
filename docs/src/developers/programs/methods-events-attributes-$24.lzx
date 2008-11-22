@@ -1,5 +1,5 @@
 
-<canvas height="300">
+<canvas height="300" width="100%">
     <simplelayout spacing="5"/>
     <class name="box" height="100" width="100" bgcolor="red">
        <attribute name="label" value="Label"  type="string"/>

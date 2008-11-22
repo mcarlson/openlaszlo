@@ -1,5 +1,5 @@
 
-<canvas height="20"> 
+<canvas height="20" width="100%">
     <text oninit="updateTimer()">
         <attribute name="secondsPassed" type="number" value="0"/> 
 

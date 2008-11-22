@@ -1,4 +1,4 @@
- <canvas height="100">
+ <canvas height="100" width="100%">
       <class name="clickClock" extends="text">
         <attribute name="dayTable"
                    value='["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]'

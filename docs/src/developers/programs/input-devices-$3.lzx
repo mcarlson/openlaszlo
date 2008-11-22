@@ -1,4 +1,4 @@
-<canvas height="30">
+<canvas height="30" width="100%">
   <resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/>
   <button onclick="setCursor()" text="Click me to change the cursor for 1/2 second">
     <method name="setCursor" args="cursor=null">

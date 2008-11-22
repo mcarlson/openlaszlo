@@ -1,4 +1,4 @@
-<canvas> 
+<canvas width="100%"> 
   <view x="250" width="20" height="20" bgcolor="red" y="${m.y}"/> 
   <view x="300" width="20" height="20" bgcolor="blue"> 
     <handler name="oninit"> 

@@ -1,5 +1,5 @@
 
-<canvas height="300" width="500">
+<canvas height="300" width="100%">
   <window x="20" y="20" width="200" height="250" 
           title="Simple Window" resizable="true">
     <simplelayout axis="y" spacing="10"/>

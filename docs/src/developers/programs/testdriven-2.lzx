@@ -1,4 +1,4 @@
-<canvas debug="true">
+<canvas debug="true" width="100%">
 <debug y="150"/>
 <include href="lzunit"/>
 <simplelayout axis="y" spacing="10"/>
@@ -21,4 +21,4 @@
 </TestSuite>
 
 </canvas>
-<!-- Copyright 2001-2007 Laszlo Systems, Inc. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc. -->

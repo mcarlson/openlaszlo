@@ -1,4 +1,4 @@
-<canvas debug="true" width="600" height="225">
+<canvas debug="true" width="100%" height="225">
 <debug x="110" y="0" height="245" width="550"/>
   <button name="test" width="100" height="100">
     <handler name="onclick"> this.clicked(); </handler>

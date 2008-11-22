@@ -1,5 +1,5 @@
 
-<canvas debug="true" height="200">
+<canvas debug="true" height="200" width="100%">
   <debug x="155"/>
 
   <class name="container" defaultplacement="red">

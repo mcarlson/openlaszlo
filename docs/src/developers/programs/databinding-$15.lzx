@@ -1,4 +1,4 @@
-<canvas height="155">
+<canvas height="155" width="100%">
   <debug x="50%" width="45%" y="5%" height="95%" />
   <dataset name="onion">
     <layer order="1"><layer><layer>core</layer></layer></layer>

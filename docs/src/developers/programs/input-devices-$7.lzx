@@ -1,5 +1,5 @@
 
-<canvas height="500" width="500" debug="true">
+<canvas height="500" width="100%" debug="true">
    <debug y="300"/>
    <view width="300" height="300" bgcolor="red" clickable="true" >
        <attribute name="moustracker_del" value="$once{ new LzDelegate( this, 'trackmouse' )}" />

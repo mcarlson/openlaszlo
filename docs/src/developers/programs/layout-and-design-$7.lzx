@@ -1,5 +1,5 @@
 
-<canvas>
+<canvas width="100%">
   <!-- A single colored box -->
   <class name="coloredBox" width="50" height="50" bgcolor="0xff0000"/>
   <!-- Yellow border; invisible at start -->
