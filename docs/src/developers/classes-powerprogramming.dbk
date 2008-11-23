@@ -447,9 +447,8 @@ var myobject = new lz.myclass(<replaceable>parent</replaceable>, <replaceable>at
     will be synchronized with the rest of the view system. See <xref linkend="initialization-and-instantiation"/>.
     </para></listitem></itemizedlist>
 
-<para>All these parameters are optional. Not setting any of these arguments (e.g.,
-<literal>new myclass()</literal>) is equivalent to <literal>new myclass(null,
-null, null, 0)</literal>.</para>
+   <para>All parameters are optional. Not setting any of these arguments (for example, <literal>new lz.myclass()</literal>) 
+      is equivalent to <literal>new lz.myclass(null, null, null, 0)</literal>.</para>
 
 <para>The following example shows you how to instantiate a new object through script and
 add it to another view.</para>
