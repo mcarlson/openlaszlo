@@ -101,6 +101,8 @@ dynamic public class LzSprite extends Sprite {
       // false if it's loaded from an external URL
       private var __isinternalresource:* = null;
 
+      // flag to track sprite the mouse went over while down to send mouseup event later -  see LPP-7300 and LPP-7335
+      private var __mouseoverInFront:* = null;
 
       public static var capabilities:* = {
       rotation: true
@@ -667,6 +669,10 @@ dynamic public class LzSprite extends Sprite {
                 } else {
                     skipevent = true;
                 }
+                if (this.__mouseoverInFront != null) {
+                    LzMouseKernel.__sendEvent(this.__mouseoverInFront.owner, 'onmouseover');
+                    this.__mouseoverInFront = null;
+                }
             } else if (eventname == 'onmouseupoutside') {
                 this.__mousedown = false;
             } else {
@@ -690,15 +696,22 @@ dynamic public class LzSprite extends Sprite {
                         location = target.localToGlobal(location);
                         var sprites:Array = LFCApplication.stage.getObjectsUnderPoint(location);
                         var sawself = false;
+                        var noreset = false;
                         for (var i = sprites.length; i >=0; i--) {
-                            if (sprites[i] == this) {
+                            var currsprite = sprites[i];
+                            if (currsprite == this) {
                                 sawself = true;
-                            } else if (sawself && sprites[i] == LzMouseKernel.__lastMouseDown) {
+                            } else if (sawself && currsprite == LzMouseKernel.__lastMouseDown) {
                                 // already saw ourselves, and we're on top of __lastMouseDown
-                                LzMouseKernel.__sendEvent(this.owner, eventname);
+                                // store reference to self for sending onmouseover event later - see LPP-7335
+                                LzMouseKernel.__lastMouseDown.__mouseoverInFront = this;
+                                noreset = true;
                                 break;
 
                             }
+                        }
+                        if (noreset == false) {
+                            LzMouseKernel.__lastMouseDown.__mouseoverInFront = null;
                         }
                     }
 
