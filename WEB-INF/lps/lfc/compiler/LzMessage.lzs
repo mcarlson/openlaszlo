@@ -141,6 +141,7 @@ if ($as3) {
         // we don't need to do this bootstrapping rebinding of LzMessage in as3, LzMessage is declared in
         // debugger/LzMessage.lzs
     } else {
+        /** @access private */
         class LzMessage extends LzBootstrapMessage {
             function LzMessage (message:String=null) {
                 super(message);
@@ -154,6 +155,7 @@ if ($as3) {
         }
     }
 } else {
+  /** @access private */
   var LzMessage = LzBootstrapMessage;
 }
 

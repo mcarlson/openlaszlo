@@ -4,9 +4,9 @@
  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
  *            Reserved.  Use is subject to license terms.
  *
+ * @access public
  * @topic LZX
  * @subtopic Debugging
- * @access public
  */
 
 
@@ -16,8 +16,10 @@
  * This interface defines the protocol between the debugger and the console
  *
  * @access private
+ *
+ * @devnote [2008-11-25 ptw] Should really just be an interface
  */
-/* interface */ class LzDebugConsole {
+class LzDebugConsole {
 
   // Messages that will be displayed once a real console is
   // instantiated.  Messages are either LzMessage's that can be output
@@ -32,12 +34,12 @@
    *
    * @param msg: Will be coerced to a String if it is not
    *
-   * @ access private
+   * @access private
    */
   function addText (msg) {};
   /**
    * Clears the console
-   * @ access private
+   * @access private
    */
   function clear () {};
   /**
@@ -48,7 +50,7 @@
    * @param Boolean newLine: whether to echo a trailing newline,
    * default true
    *
-   * @ access private
+   * @access private
    */
   function echo (str, newLine:Boolean=true) {};
   /**
@@ -75,7 +77,7 @@
    * @return String: the encoded representation (most likely as an
    * HTML link).
    *
-   * @ access private
+   * @access private
    */
   function makeObjectLink (rep:String, id, attrs=null):String { return undefined; };
   /**
@@ -281,10 +283,14 @@ dynamic class LzBootstrapDebugService {
    */
   var uncaughtBacktraceStack:*;
 
+  /** @access private */
   var log_all_writes:Boolean = false;
+  /** @access private */
   var logger:LzBootstrapDebugLogger;
+  /** @access private */
   var console:LzDebugConsole;
 
+  /** @access private */
   function LzBootstrapDebugService (logger:LzBootstrapDebugLogger=null,
                                     console:LzDebugConsole=null) {
     if (logger == null) {
@@ -442,93 +448,22 @@ dynamic class LzBootstrapDebugService {
     }
   };
 
+  /** @access private */
   LzBootstrapDebugService.prototype._dbg_name = function () {
     if (this === Debug) { return '#Debug'; } else return null;
   }
 };
 
-/**
- * <p>There are three ways to enable the debugger, as described in
- * the <a
- * href="${dguide}debugging.html#enabling-the-debugger">Debugging</a>
- * chapter of the Developer's Guide.</p>
- *
- * <p>The debugger can be useful in debugging your own code, but you
- * should also use debugging to report bugs.  The debugger method
- * <xref linkend="Debug+debug.bugReport"/> will output information
- * that can be cut and pasted into a bug report to aid in
- * diagnosing the bug.</p>
- *
- * <p>The debugger has a range of methods for formatting output to the
- * debugger console:
- * <xref linkend="Debug+debug.debug"/>,
- * <xref linkend="Debug+debug.info"/>,
- * <xref linkend="Debug+debug.warn"/>, and
- * <xref linkend="Debug+debug.error"/>.
- * Each of these is based upon the basic formatted output method
- * <xref linkend="Debug+debug.format"/>.  The variants prefix their
- * message with a label (DEBUG, INFO, WARNING, or ERROR) and will
- * print in a distinct color.  When backtraces are enabled, these
- * debug messages will also give a source location.</p>
- *
- * <p>The debug messages can be silenced by setting
- * <xref linkend="Debug+debug.messageLevel"/>.</p>
- *
- * <p>Debugger messages are <em>inspectable</em>, as the example below
- * demonstrates.  Clicking on the printed representation of the
- * object (in blue) will show the details of the object.  The
- * message itself can also be inspected.  When backtraces are
- * enabled, one component of the message will be a backtrace that
- * can be inspected to see the call chain and function arguments
- * that resulted in the message.</p>
- *
- * <example title="Debug output methods"><programlisting><![CDATA[
- * <canvas debug="true" height="150">
- *   <debug width="350" height="90%" x="5" y="5" fontsize="8"/>
- *   <script>
- *     Debug.format("Hello %s!", 'world');
- *     Debug.debug("Click there -> %w to inspect the object", {a: 1, b: 2});
- *   </script>
- * </canvas>]]>
- * </programlisting></example>
- *
- * <p>The debugger can be used to trace method calls using
- * <xref linkend="Debug+debug.trace"/>
- * and it can be used to monitor instance variables using
- * <xref linkend="Debug+debug.monitor"/></p>
- *
- * <example title="Debug tracing and monitoring"><programlisting><![CDATA[
- * <canvas debug="true" height="150">
- *   <debug width="350" height="90%" x="5" y="5" fontsize="8"/>
- *   <script>
- *     var o = {a: 7, f: function (x) { return x * x;}};
- *     Debug.monitor(o, 'a');
- *     o.a = 42;
- *     Debug.trace(o, 'f');
- *     o.f(4);
- *   </script>
- * </canvas>]]>
- * </programlisting></example>
- *
- * <p>The optional <code>debug</code> tag controls the
- * appearance of the debugger when debugging is on. It does not
- * cause the application to be compiled with debugging mode enabled.
- * By default, the debug window will be sized to fit the lower 1/2
- * of the canvas, and can be resized as necessary.</p>
- *
- * @shortdesc The Laszlo debugger
- * @lzxname debug
- * @keywords private_constructor
- * @access public
- * @topic LZX
- * @subtopic Debugging
- *
+/***
  * @devnote As soon as we have the LzBootstrapDebugService, we install it.
  * This will get overridden by the full debugger when it loads
+ *
+ * @access private
  */
 if ($as3) {
   // We don't do the bootstrapping rebinding in as3
 } else {
+  /** @access private */
   var Debug = new LzBootstrapDebugService();
 }
 

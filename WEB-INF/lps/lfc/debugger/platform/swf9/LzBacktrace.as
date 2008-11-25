@@ -11,6 +11,7 @@
   * @subtopic Debugging
   */
 
+/** @access private */
 class LzBacktrace {
   // just a placeholder for swf9
 }

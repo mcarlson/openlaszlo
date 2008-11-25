@@ -209,20 +209,23 @@ class LzDebugMessage extends LzBootstrapMessage {
 };
 
 if ($as3) {
+  /** @access private */
   class LzMessage extends LzDebugMessage {
     function LzMessage (message=null) {
       super(message);
     }
 
-  /**
-   * Propagate this
-   * @access private
-   */
-  static var xmlEscape = LzBootstrapMessage.xmlEscape;
+    /**
+     * Propagate this
+     * @access private
+     */
+    static var xmlEscape = LzBootstrapMessage.xmlEscape;
   }
-
-} else {/**
+} else {
+/**
  * Replace the bootstrap message with the more full-featured debug message
+ *
+ * @access private
  */
 var LzMessage = LzDebugMessage;
 }

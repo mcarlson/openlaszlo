@@ -13,8 +13,8 @@
  * Formatted output support
  *
  * <p>See <xref linkend="LzText" />s <xref
- * linkend="LzText.prototype.format" /> and <xref linkend="Debug+debug"
- * />s <xref linkend="Debug+debug.format" /> methods for
+ * linkend="LzText.prototype.format" /> and <xref linkend="LzDebugService+debug"
+ * />s <xref linkend="LzDebugService+debug.prototype.format" /> methods for
  * examples of how to present formatted text to the user
  * interface.</p>
  *
@@ -134,8 +134,8 @@ mixin LzFormatter {
    * specifier `w` that formats the argument as if by `Debug.__String`
    * with the 'pretty'.  If alternate format is requested (#), `w` uses the
    * full `Debug.__String` format used by <xref
-   * linkend="Debug+debug.write"/>.  `%w` format obeys <xref
-   * linkend="Debug+debug.printLength"/>.  If a precision is specified,
+   * linkend="LzDebugService+debug.prototype.write"/>.  `%w` format obeys <xref
+   * linkend="LzDebugService+debug.__ivars__.printLength"/>.  If a precision is specified,
    * that is used as printLength.
    *
    * When used to format a Debugger message, any Object that is
@@ -156,7 +156,7 @@ mixin LzFormatter {
    * feature).
    *
    * @devnote For backwards compatibility with <xref
-   * linkend="Debug+debug.write"/>, if control is not a string or
+   * linkend="LzDebugService+debug.prototype.write"/>, if control is not a string or
    * control has no formatting directives but there are multiple
    * arguments, all the arguments are emitted separated by spaces.
    */

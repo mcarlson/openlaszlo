@@ -15,6 +15,7 @@
   */
 global._dbg_name = 'global';
 
+
 /**
  ** Generic DebugService
  **/
@@ -23,7 +24,76 @@ global._dbg_name = 'global';
  * <p><code>Debug</code> is the single instance of the class
  * <code>lz.DebugService</code>.</p>
  *
- * <p></p>
+ * <p>There are three ways to enable the debugger, as described in
+ * the <a
+ * href="${dguide}debugging.html#enabling-the-debugger">Debugging</a>
+ * chapter of the Developer's Guide.</p>
+ *
+ * <p>The debugger can be useful in debugging your own code, but you
+ * should also use debugging to report bugs.  The debugger method
+ * <xref linkend="LzDebugService+debug.prototype.bugReport"/> will output information
+ * that can be cut and pasted into a bug report to aid in
+ * diagnosing the bug.</p>
+ *
+ * <p>The debugger has a range of methods for formatting output to the
+ * debugger console:
+ * <xref linkend="LzDebugService+debug.prototype.debug"/>,
+ * <xref linkend="LzDebugService+debug.prototype.info"/>,
+ * <xref linkend="LzDebugService+debug.prototype.warn"/>, and
+ * <xref linkend="LzDebugService+debug.prototype.error"/>.
+ * Each of these is based upon the basic formatted output method
+ * <xref linkend="LzDebugService+debug.prototype.format"/>.  The variants prefix their
+ * message with a label (DEBUG, INFO, WARNING, or ERROR) and will
+ * print in a distinct color.  When backtraces are enabled, these
+ * debug messages will also give a source location.</p>
+ *
+ * <p>The debug messages can be silenced by setting
+ * <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.</p>
+ *
+ * <p>Debugger messages are <em>inspectable</em>, as the example below
+ * demonstrates.  Clicking on the printed representation of the
+ * object (in blue) will show the details of the object.  The
+ * message itself can also be inspected.  When backtraces are
+ * enabled, one component of the message will be a backtrace that
+ * can be inspected to see the call chain and function arguments
+ * that resulted in the message.</p>
+ *
+ * <example title="Debug output methods"><programlisting><![CDATA[
+ * <canvas debug="true" height="150">
+ *   <debug y="5%" height="90%" />
+ *   <script>
+ *     Debug.format("Hello %s!\n", 'world');
+ *     Debug.debug("Click there -> %w to inspect the object", {a: 1, b: 2});
+ *   </script>
+ * </canvas>]]>
+ * </programlisting></example>
+ *
+ * <p>The debugger can be used to trace method calls using
+ * <xref linkend="LzDebugService+debug.prototype.trace"/>
+ * and it can be used to monitor instance variables using
+ * <xref linkend="LzDebugService+debug.prototype.monitor"/></p>
+ *
+ * <example title="Debug tracing and monitoring"><programlisting><![CDATA[
+ * <canvas debug="true" height="150">
+ *   <debug y="5%" height="90%" />
+ *   <script>
+ *     var o = {a: 7, f: function (x) { return x * x;}};
+ *     Debug.monitor(o, 'a');
+ *     o.a = 42;
+ *     Debug.trace(o, 'f');
+ *     o.f(4);
+ *   </script>
+ * </canvas>]]>
+ * </programlisting></example>
+ *
+ * <p>The optional <xref linkend="LzDebugConsoleWindow+debug"/> tag controls the appearance of
+ * the debugger console window when debugging is on.</p>
+ *
+ * @shortdesc The Laszlo debugger
+ * @keywords private_constructor
+ * @access public
+ * @topic LZX
+ * @subtopic Debugging
  *
  * @access public
  */
@@ -120,6 +190,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Attaches the real debug console once it is available, and replays
    * any messages saved in the bootstrap console.  Typically called
    * from makeDebugWindow
+   *
+   * @access private
    */
   function attachDebugConsole (console:LzDebugConsole) {
     var old = this.console;
@@ -265,7 +337,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   /**
    * Display one or more objects on the debug console.
    *
-   * Note: <xref linkend="Debug+debug.format"/> allows more control
+   * Note: <xref linkend="LzDebugService+debug.prototype.format"/> allows more control
    * over displaying multiple objects. Use it instead of
    * Debug.write.
    *
@@ -273,9 +345,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * an informative format.  Simple objects are represented as
    * themselves.  Printed Complex objects are represented by their type
    * and a concise description.  Long representations (and long Strings)
-   * are abbreviated if they are longer than <xref linkend="Debug+debug.printLength"/>.  Complex
+   * are abbreviated if they are longer than <xref linkend="LzDebugService+debug.__ivars__.printLength"/>.  Complex
    * objects and abbreviated objects presented as links.  Clicking on
-   * the link will invoke <xref linkend="Debug+debug.inspect"/> on the object,
+   * the link will invoke <xref linkend="LzDebugService+debug.prototype.inspect"/> on the object,
    * giving more detail.
    *
    * @param Array * any: One or more values to display.  Multiple
@@ -314,10 +386,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   /**
    * warnInternal tracks recursion and silences messages below
    * messageLevel
-   */
-  /**
-   * warnInternal tracks recursion and silences messages below
-   * messageLevel
+   *
+   * @access private
    */
   function warnInternal (xtor:Class, control:String, ...args) {
     var sourceMessage = LzSourceMessage;
@@ -347,7 +417,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display a warning message on the console.
    *
    * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-   * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+   * May be silenced by setting <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.
    *
    * @param string control: A control string where % indicates a
    * subsequent argument is to be substituted
@@ -363,7 +433,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display an error message on the console.
    *
    * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-   * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+   * May be silenced by setting <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.
    *
    * @param string control: A control string where % indicates a
    * subsequent argument is to be substituted
@@ -379,7 +449,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display an informational message on the console.
    *
    * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-   * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+   * May be silenced by setting <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.
    *
    * @param string control: A control string where % indicates a
    * subsequent argument is to be substituted
@@ -395,7 +465,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display a debugging message on the console.
    *
    * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-   * May be silenced by setting <xref linkend="Debug+debug.messageLevel"/>.
+   * May be silenced by setting <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.
    *
    * @param string control: A control string where % indicates a
    * subsequent argument is to be substituted
@@ -1542,3 +1612,47 @@ var Debug = new LzDebugService(Debug);
 var __LzDebug = Debug;
 }
 
+/**
+ * <p>The optional <code>debug</code> tag controls the appearance of
+ * the debugger console when debugging is on. It does <em>not</em>
+ * cause the application to be compiled with debugging mode enabled.
+ * By default, the debug console will appear as a <code>view</code> in
+ * the application canvas, sized to fit the lower 1/2 of the canvas.
+ * The usual <code>view</code> attributes can be used to size and
+ * position the debug console window.  If you need to programmatically
+ * control the debug console window, use the <code>name</code>
+ * attribute:</p>
+ *
+ * <example title="Controlling the Debug console window"><programlisting><![CDATA[
+ * <canvas debug="true" height="150">
+ *   <debug name="debugwindow" y="${button.y + button.height}" height="80%" />
+ *   <button name="button">
+ *     <attribute name="visible" value="${canvas['debugwindow'] != null}" />
+ *     <attribute name="text"
+         value="${canvas['debugwindow']?((canvas.debugwindow.visible?'hide':'show') + ' debugger'):null}" />
+ *     <handler name="onclick">
+ *       canvas.debugwindow.setAttribute('visible', (! canvas.debugwindow.visible));
+ *     </handler>
+ *   </button>
+ * </canvas>
+ * ]]></programlisting></example>
+ *
+ * <p>Note the conditionalization testing whether the named window
+ * exists or not.  The <code>debug</code> tag will <em>not</em> create
+ * a window in the application canvas if remote or console debugging
+ * is enabled.</p>
+ *
+ * @shortdesc Controlling the Laszlo debugger console window
+ * @lzxname debug
+ * @keywords private_constructor
+ * @access public
+ * @topic LZX
+ * @subtopic Debugging
+ *
+ * @access public
+ *
+ * @devnote [2008-1-25 ptw] This is a dummy class, here only for
+ * documentation purposes.
+ */
+class LzDebugConsoleWindow extends LzView {
+};
