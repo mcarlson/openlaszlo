@@ -90,7 +90,7 @@
         // tag->class mapping convention
         dynamic class $lzc$class_rtmpconnection extends LzNode {
             // Import statements
-            if ($swf9) {
+            if ($as3) {
                 #passthrough (toplevel:true) {                    
                     import flash.net.NetConnection;
                     import flash.events.ErrorEvent;
@@ -149,7 +149,7 @@
     
                 // Local reference to rtmpconnection.
                 this._nc = new NetConnection();
-                if ($swf9) {
+                if ($as3) {
                     this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onStatus);
                     this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
 
@@ -191,7 +191,7 @@
                 }
             } // end function _oninit
 
-            /** Catch swf9 security errors. **/
+            /** Catch as3 security errors. **/
             function _onSecurityError (error) {
                 var errstr = error + '';
                 if ($debug) Debug.warn("rtmpconnection _onSecurityError() " + errstr);
@@ -216,7 +216,7 @@
                     }
                 }
 
-                if ($swf9) {
+                if ($as3) {
                     //Debug.write('connecting', this._nc, this.src == "null" ? null : this.src)
                     this._nc.connect(this.src == "null" ? null : this.src);
                 } else {
@@ -236,7 +236,7 @@
             } // end function connect
 
             function _onStatus (evt) {
-                if ($swf9) evt = evt.info;
+                if ($as3) evt = evt.info;
                 var code = evt.code;
                 var description = evt.description;
 

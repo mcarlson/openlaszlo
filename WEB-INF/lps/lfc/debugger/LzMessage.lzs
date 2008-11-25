@@ -23,7 +23,7 @@
  * @devnote A Message would like to be a subclass of string, but
  * mutable.  Since few runtimes would permit that, we have to play
  * games.  We can't declare the `message` parameter as String, because
- * some runtimes (swf9) will coerce a message to String when passing
+ * some runtimes (as3) will coerce a message to String when passing
  * it as an argument, making concatenation of messages fail.
  */
 class LzDebugMessage extends LzBootstrapMessage {
@@ -142,7 +142,7 @@ class LzDebugMessage extends LzBootstrapMessage {
     for (var i = 0; i < len; i++) {
       var arg = args[i];
       // annotate objects and things you have ID'd
-      // Don't treat String's as Objects (in swf9, all strings are Strings!)
+      // Don't treat String's as Objects (in as3, all strings are Strings!)
       if ((! ((arg is String) && (arg['constructor'] === String))) &&
           ((arg is Object) || Debug.isObjectLike(arg) || (Debug.IDForObject(arg) != null))) {
         // pretty, no limit, but unique; for write-compatibility
@@ -208,7 +208,7 @@ class LzDebugMessage extends LzBootstrapMessage {
   // ASSetPropFlags(LzMessage.prototype, null, 1);
 };
 
-if ($swf9) {
+if ($as3) {
   class LzMessage extends LzDebugMessage {
     function LzMessage (message=null) {
       super(message);
@@ -246,7 +246,7 @@ class LzSourceMessage {
   static var color = '#000000';
 
 
-  if ($swf9) {
+  if ($as3) {
     function LzSourceMessage (file:String=null, line:Number=0, message='') {
       this.file = file;
       this.line = line;

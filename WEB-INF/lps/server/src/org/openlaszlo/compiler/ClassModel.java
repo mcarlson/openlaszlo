@@ -175,7 +175,7 @@ public class ClassModel implements Comparable {
 
     // TODO: [2008-06-02 ptw] This should be moved to the JS2 back-end
     // Build the constructor trampoline
-    if ("swf9".equals(env.getRuntime())) {
+    if (env.isAS3()) {
       String body = "";
       body += "super($lzc$parent, $lzc$attrs, $lzc$children, $lzc$async);\n";
       nodeModel.setAttribute(

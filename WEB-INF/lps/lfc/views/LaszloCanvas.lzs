@@ -188,7 +188,7 @@ dynamic class LzCanvas extends LzView {
         this.__makeSprite(null);
 
         // TODO [hqm 2008-04] how can we make this consistent across runtimes ? 
-        if ($swf9) {
+        if ($as3) {
             var capabilities = LzSprite.capabilities;
         } else {
             var capabilities = LzSprite.prototype.capabilities;
@@ -338,7 +338,7 @@ dynamic class LzCanvas extends LzView {
             }
         }
 
-        if ($swf9) {
+        if ($as3) {
             // Set the canvas width/height to good initial values.
             // TODO: ensure these can be read correctly from the embed tag
             this.sprite.setWidth(this.width);
@@ -537,7 +537,7 @@ function compareVersion ( ver , over = null ){
   */
 override function $lzc$set_resource( v ) {
 
-    if ($swf9) {
+    if ($as3) {
         //
     } else {
         Object.error("You can't set a resource for the canvas.");
@@ -594,7 +594,7 @@ override function init (){
     // Canvas-only: This is so the canvas sprite knows when to show its children and 
     this.sprite.init(true);
 
-    if ($swf9) {
+    if ($as3) {
         //trace("LzCanvas.init called");
         // cheapo debugger printing
         sprite.addChild(lzconsole.consoletext);
@@ -761,7 +761,7 @@ override function $lzc$set_y(v) {
   * Install default menu items for the right-mouse-button 
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
-function setDefaultContextMenu ( cmenu ){
+    function setDefaultContextMenu ( cmenu ){
     this.setContextMenu(cmenu);
     this.sprite.setDefaultContextMenu( cmenu );
 }

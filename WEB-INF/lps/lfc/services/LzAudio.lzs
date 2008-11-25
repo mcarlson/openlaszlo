@@ -26,7 +26,7 @@
   */
 public final class LzAudioService {
     // TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
-    if ($swf9) {
+    if ($as3) {
         /** @access private */
         var capabilities :* = LzSprite.capabilities;
     } else {

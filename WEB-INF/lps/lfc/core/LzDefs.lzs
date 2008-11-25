@@ -181,7 +181,7 @@ class LzStyleIdent extends LzStyleExpr {
   * overhead of a slower implementation, use LzDictionary).
   * @access private
   */
-if ($swf9) {
+if ($as3) {
 dynamic class LzInheritedHash extends Dictionary {
     #passthrough (toplevel:true) {
 import flash.utils.Dictionary;

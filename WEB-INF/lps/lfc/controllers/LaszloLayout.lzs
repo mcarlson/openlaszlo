@@ -146,15 +146,7 @@ override  function construct ( view , args) {
     super.construct.apply(this, arguments);
     this.subviews = new Array;
 
-    // TODO [hqm 2008-03] this is a hack to cast to type LzView for
-    // the SWF9 compiler, until the compiler is taught to understand
-    // type casting DHTML/SWF8
-    if ($swf9) {
-        this.vip = LzView(this.immediateparent);
-    } else {
-        this.vip = this.immediateparent;
-    }
-    
+    this.vip = (this.immediateparent cast LzView);
 
     // view.layouts: If it doesn't already exist, layouts create an array
     //in the view that it attaches to that hold the list of layouts attached

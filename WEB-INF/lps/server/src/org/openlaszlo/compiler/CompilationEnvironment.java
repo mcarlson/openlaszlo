@@ -434,15 +434,15 @@ public class CompilationEnvironment {
 
     /** By pointing at the main SWFWriter, this makes the resources
         compile into the main app. We have to do this because we
-        haven't figured out a way to get Flash to attach individual
+        haven't figured out a way to get Flash 8 to attach individual
         exported assets from a runtime loaded library into views in
         the main app.
      * @return the object writer
      */
 
     ObjectWriter getResourceGenerator() {
-        if (this.getRuntime().equals("swf9")) {
-            // For swf9, we can embed the resource into the library
+        if (isAS3()) {
+            // For as3, we can embed resources into loadable libraries.
             return mObjectWriter;
         } else {
             return mMainObjectWriter;
@@ -507,6 +507,10 @@ public class CompilationEnvironment {
     /** Return target Flash version (5, 6, ...) **/
     public String getRuntime() {
         return getProperty(RUNTIME_PROPERTY, mDefaultRuntime);
+    }
+
+    public boolean isAS3() {
+        return Compiler.AS3_RUNTIMES.contains(getProperty(RUNTIME_PROPERTY));
     }
 
     public String getRuntime(String defaultVersion) {
@@ -667,11 +671,9 @@ public class CompilationEnvironment {
     // [TODO hqm 01/06] this should be keyed off of the 'lzr' runtime
     // arg, it should return true for lzr=dhtml
     public boolean isDHTML() {
-
-        if (this.getRuntime().equals("swf9")) {
+        if (isAS3()) {
             return false;
         }
-        
         return Compiler.SCRIPT_RUNTIMES.contains(this.getRuntime());
     }
 

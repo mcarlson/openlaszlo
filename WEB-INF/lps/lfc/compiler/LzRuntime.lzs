@@ -18,13 +18,13 @@ var $modules = {};
 /**
  * Define runtime module
  */
-if ($swf9) {
+if ($as3) {
 $modules.runtime = global;
 } else {
 $modules.runtime = this;
 }
 
-if ($swf9) {
+if ($as3) {
 
 } else {
 
@@ -46,7 +46,7 @@ $modules.user = $modules.lz;
  * Define global
  * TODO [2006-03-12 ptw] if the LFC is shared this needs to be multiplexed
  */
-if ($swf9) {
+if ($as3) {
   // Shadow table `global`, used to support `globalValue`.  Cf.,
   // compiler.NodeModel.buildIdBinderBody
   // TODO: [2008-10-21 ptw] Use flex.utils.Dictionary if you can
@@ -85,7 +85,7 @@ var encodeURIComponent = escape;
  *
  * N.B. we need to declare the function globalValue() as a 'var', 
  * because that's the only way right now to get the script compiler to
- * put it at the top level in the swf9 intermediate .as files, outside
+ * put it at the top level in the as3 intermediate .as files, outside
  * of the LFCApplication.
  */
 var globalValue = function (name:String) {

@@ -13,7 +13,7 @@
 #include "helpers/LzCommand.lzs"
 
 if ($as2) {
-} else if ($swf9) {
+} else if ($as3) {
 } else if ($js1) {
 } else {
     Debug.error('helpers/Library.lzs unsupported runtime %s', $runtime);

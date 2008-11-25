@@ -275,7 +275,7 @@
               user can change the device permission and 
               other properties. -->
         <method name="showSettings"><![CDATA[
-            if ($swf9) {
+            if ($as3) {
                 // TODO    
             } else {
                 System.showSettings(0);

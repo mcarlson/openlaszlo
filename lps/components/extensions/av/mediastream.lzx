@@ -281,7 +281,7 @@
         // tag->class mapping convention
         dynamic class $lzc$class_mediastream extends LzNode {
             // Import statements
-            if ($swf9) {
+            if ($as3) {
                 #passthrough (toplevel:true) {  
                 import flash.media.*;
                 import flash.events.*;
@@ -426,7 +426,7 @@
     
                 // unload 
                 if (this._flashstream) {
-                    if ($swf9) {
+                    if ($as3) {
                         //this._flashstream.play(false);
                     } else {
                         this._flashstream.play(false);
@@ -544,7 +544,7 @@
                 /* seems to work better without this
                 // don't update if new lz.mediastream about to start
                 if (this._pendingstreamname != "") {
-                    if ($swf9) {
+                    if ($as3) {
                         // TODO: why doesn't _pendingstreamname get reset?
                     } else {
                         return;
@@ -554,7 +554,7 @@
     
                 var time = 0;
                 var progress = 1.0;
-                if ($swf9) {
+                if ($as3) {
                     var fps = this._flashstream.currentFPS;
                 } else {
                     var fps = this._flashstream.currentFps;
@@ -777,7 +777,7 @@
                     if ($debug) Debug.warn("No netconnection defined for %w.", this);
                     return;
                 }
-                if ($swf9) {
+                if ($as3) {
                     // TODO: why aren't we already connected?
                     //Debug.warn('Must connect before creating stream', this._nc, this._srcurl, this._nc.connected);
                     this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatus);
@@ -810,7 +810,7 @@
                 this.setAttribute("_flashstream", netstream);
                 //Debug.write("MADE _FLASHSTREAM", this._flashstream);
 
-                if ($swf9) {
+                if ($as3) {
                     this._flashstream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, this._onAsyncError);
                     this._flashstream.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatus);
                     var attachPoint = {};
@@ -835,7 +835,7 @@
                     _this._onMetaData(info);
                 };
 
-                if ($swf9) {
+                if ($as3) {
                     this._flashstream.client = attachPoint;
                 }
             }
@@ -1047,7 +1047,7 @@
                     }
                     return;
                 }
-                if ($swf9) {
+                if ($as3) {
                     if (paused) {
                         this._flashstream.pause();
                     } else {

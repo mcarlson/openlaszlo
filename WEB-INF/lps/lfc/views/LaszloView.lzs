@@ -406,7 +406,7 @@ var ondblclick = LzDeclaredEvent;
 var DOUBLE_CLICK_TIME = 500;
 
 // TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
-if ($swf9) {
+if ($as3) {
     /** @access private */
     var capabilities = LzSprite.capabilities;
 } else {
@@ -434,11 +434,7 @@ override function construct ( parent , args) {
 
     var vip:LzView = (this.immediateparent cast LzView);
 
-    // TODO [hqm 2008-03] this was not needed in dhtml/swf8, in what
-    // case is immediateparent coming up null in swf9?
-    if (ip) {
-        this.mask = ip.mask;
-    }    
+    this.mask = ip.mask;
 
     this.__makeSprite(args);
 
@@ -502,10 +498,6 @@ function __makeSprite(args) {
 override function init( ) {
     if (this.sprite) {
         this.sprite.init(this.visible);
-    } else {
-        // TODO [hqm 2008-03] I put this in for a bug I was seeing
-        // swf9, need to see if it is still happening
-        Debug.warn("LzView init method called and this.sprite is null", this);
     }
 }
 
@@ -520,12 +512,7 @@ function addSubview ( s ){
 
     if (this.sprite) {
         this.sprite.addChildSprite(s.sprite);
-    } else {
-        // TODO [hqm 2008-03] I put this in for a bug I was seeing
-        // swf9, need to see if it is still happening
-        Debug.warn("LzView.addSubview called when this.sprite is null", this);
     }
-
 
     // Don't use the prototype's default subviews array, it is a
     // sentinel which lives on the prototype and is shared by all
@@ -555,10 +542,7 @@ override function __LZinstantiationDone (){
     var vip:LzView = (this.immediateparent cast LzView);
     if (vip) {
         (vip).addSubview( this );
-    } else {
-        // TODO [hqm 2008-03] This is to trace a bug of null immediateparent seen in swf9 initialize
-        Debug.warn("LaszloView.__LZinstantiationDone immediateparent = null", this);
-    }
+    } 
 
     //this.callInherited( '__LZinstantiationDone' , arguments.callee );
     super.__LZinstantiationDone.apply(this, arguments);

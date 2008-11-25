@@ -55,7 +55,7 @@ public final class LzKeysService extends LzEventable {
         //    if (LzKeysService.LzKeys) {
         //      throw new Error("There can be only one LzKeys");
         //    }
-        if ($swf9) {
+        if ($as3) {
         } else {
             LzKeyboardKernel.setCallback(this, '__keyEvent');
         }
@@ -376,7 +376,7 @@ public final class LzKeysService extends LzEventable {
         //Debug.write("enableEnter: "+onroff);
         // SWF-specific
         if ($debug) Debug.write('lz.Keys.enableEnter not yet defined');
-        // TODO [hqm 2008-01] What is the way to do this in SWF9 ??
+        // TODO [hqm 2008-01] What is the way to do this in AS3 ??
         /*   _root.entercontrol.gotoAndStop( onroff ? 1 : 2 );
          */
     }

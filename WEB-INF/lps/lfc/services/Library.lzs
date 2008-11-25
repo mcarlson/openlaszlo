@@ -21,7 +21,7 @@
 
 #include "services/LzKeys.lzs"
 if ($js1) {
-} else if ($swf9) {
+} else if ($as3) {
 } else if ($as2) {
 } else {
     Debug.error('services/Library.lzs unsupported runtime %s', $runtime);

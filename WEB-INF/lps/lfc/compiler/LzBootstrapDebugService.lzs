@@ -209,7 +209,7 @@ class LzBootstrapDebugLogger {
     var url:String;
   }
 
-if ($swf9) {
+if ($as3) {
   function log (msg) { trace (msg); }
 } else {
   /**
@@ -294,7 +294,7 @@ dynamic class LzBootstrapDebugService {
     if (console == null) {
       console = new LzBootstrapDebugConsole();
     }
-    if (!$swf9) {
+    if (!$as3) {
       // Copy these from the initial Debug object
       var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
       for (var k in copy) {
@@ -526,13 +526,13 @@ dynamic class LzBootstrapDebugService {
  * @devnote As soon as we have the LzBootstrapDebugService, we install it.
  * This will get overridden by the full debugger when it loads
  */
-if ($swf9) {
-  // We don't do the bootstrapping rebinding in swf9
+if ($as3) {
+  // We don't do the bootstrapping rebinding in as3
 } else {
   var Debug = new LzBootstrapDebugService();
 }
 
-if ($swf9) {
+if ($as3) {
 } else {
   /**
  * @access private

@@ -433,7 +433,7 @@ class SWF9Writer extends ObjectWriter {
             "import flash.ui.*;\n" +
             "}#\n";
 
-    /** Create swf9 application boilerplate preamble as3 code 
+    /** Create application boilerplate preamble as3 code 
      */
     public String makeApplicationPreamble() {
         String source = "public class " + MAIN_APP_CLASSNAME +
@@ -453,7 +453,7 @@ class SWF9Writer extends ObjectWriter {
         return source;
     }
 
-    /** Create swf9 import library  boilerplate preamble as3 code 
+    /** Create import library  boilerplate preamble as3 code 
      */
     public String makeLibraryPreamble() {
         String source = "public class " + LIBRARY_CLASSNAME +
@@ -466,7 +466,7 @@ class SWF9Writer extends ObjectWriter {
     public void closeSnippet() throws IOException {
 
         // Define the base app class for an import library. Must be
-        // structured this way to conform to what the swf9 script
+        // structured this way to conform to what the as3 script
         // compiler expects for constructing the main app class.
         addScript("class LzBaseLib extends Sprite { \n" +
                   imports +  "\n" + 

@@ -91,7 +91,7 @@
         // tag->class mapping convention
         dynamic class $lzc$class_videoview extends LzView with NewvideoviewShared {
             // Import statements
-            if ($swf9) {
+            if ($as3) {
                 #passthrough (toplevel:true) {  
                 import flash.media.*;
                 import flash.net.NetConnection;
@@ -136,7 +136,7 @@
                     //Debug.write("videoview init made stream", this.stream);
                 }
                 
-                if ($swf9) {
+                if ($as3) {
                     var width = 320
                     var height = 240
                     if (this.height > 0 && this.height < 1024) height = this.height;
@@ -151,7 +151,7 @@
                 }
     
                 var vid = this._getflashvideo();
-                if ($swf9) {
+                if ($as3) {
                     vid.x = 0;
                     vid.y = 0;
                     vid.width = this.width;
@@ -196,7 +196,7 @@
             function _attachStream(fs) {
                 //Debug.write('_attachStream', fs);
                 var vid = this._getflashvideo();
-                if ($swf9) {
+                if ($as3) {
                     vid.attachNetStream(fs);
                     this._sound = this.stream._flashstream.soundTransform;
                 } else {
@@ -209,7 +209,7 @@
     
             function _getflashvideo () {
                 //Debug.write("_getflashvideo()");
-                if ($swf9) {
+                if ($as3) {
                     return this.sprite.__LZvideo;
                 } else {
                     return this.__LZmovieClipRef.__lzvideo;
@@ -224,7 +224,7 @@
                 }
     
                 var vid = this._getflashvideo();
-                if ($swf9) {    
+                if ($as3) {    
                     vid.width = w;
                 } else {
                     vid._width = w;
@@ -239,7 +239,7 @@
                 }
     
                 var vid = this._getflashvideo();
-                if ($swf9) {    
+                if ($as3) {    
                     vid.height = h;
                 } else {
                     vid._height = h;
@@ -251,7 +251,7 @@
                 this.playvolume = newplayvolume;
                 if (this.isinited && 
                     (this['_sound'] != null)) {
-                    if ($swf9) {
+                    if ($as3) {
                         //Debug.write('setting volume to ', newplayvolume);
                         this._sound.volume = newplayvolume;
                         this.stream._flashstream.soundTransform = this._sound;

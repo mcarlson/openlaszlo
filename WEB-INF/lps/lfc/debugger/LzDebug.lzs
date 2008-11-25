@@ -40,7 +40,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     super(base ? base.logger : null, base ? base.console : null);
     this.base = base;
     // Preserve any state created in the base service
-    if (!$swf9) {
+    if (!$as3) {
       var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
       for (var k in copy) {
         this[k] = base[k];
@@ -1237,7 +1237,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function caseInsensitiveOrdering (a:String, b:String):Number {
     var al = a.toLowerCase();
     var bl = b.toLowerCase();
-    if ($swf9) {
+    if ($as3) {
       return al.localeCompare(bl);
     } else {
       return (al > bl) - (al < bl);
@@ -1523,7 +1523,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
 }
 
 
-if ($swf9) {
+if ($as3) {
 
 } else {
 /**

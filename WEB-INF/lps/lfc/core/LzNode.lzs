@@ -52,7 +52,7 @@ public dynamic class LzNode extends LzEventable {
   /** @access private */
   var animators:Array = null;
 
-  if ($swf9) {
+  if ($as3) {
     ///////////////////////////////////////////////////////////////////
     // TODO [hqm 2008-01]  This won't work for adding methods that
     // call super(). Need to make those real compile time methods (and setters).
@@ -1196,7 +1196,7 @@ public dynamic class LzNode extends LzEventable {
     // TODO: [2005-03-24 ptw] Remove this if we ever enable
     // warnings in the LFC as this will be redundant
     if ($debug) {
-      if ($swf9) {
+      if ($as3) {
         var ok = (x is Class);
       } else {
         var ok = (x is Function);
@@ -1589,7 +1589,7 @@ public dynamic class LzNode extends LzEventable {
    * @param String name: A string to use for the name of this node.
    */
   function $lzc$set_name ( name:String ){
-    if ($swf9) {
+    if ($as3) {
       // Don't need runtime type-check
     } else if (! ((name === null) || (typeof name == 'string'))) {
       if ($debug) {
@@ -1823,7 +1823,7 @@ public dynamic class LzNode extends LzEventable {
     // inherited from your class, nor the default empty one inherited
     // from LzNode!
 
-    // TODO [hqm 2008-03] Will this work in swf9????
+    // TODO [hqm 2008-03] Will this work in as3????
     if (this.options === this['constructor'].prototype.options) {
       this.options = new LzInheritedHash(this.options);
     }
@@ -1932,7 +1932,6 @@ public dynamic class LzNode extends LzEventable {
       sview = sview.immediateparent;
 
       if ($debug) {
-        // TODO [hqm 2008-02] put this check in a $debug, when that is working for swf9
         if (sview == null) {
           Debug.error('searchParents got null immediateparent', this);
           return;
@@ -1992,7 +1991,7 @@ public dynamic class LzNode extends LzEventable {
     super.destroy();
 
     //don't allow a call on this method if I'm deleted
-    if ($swf9) {
+    if ($as3) {
       // TODO [hqm 2008-03]
       // flex compiler gives error if you assign a function to null, what do we do here?
     } else {
@@ -2152,20 +2151,6 @@ public dynamic class LzNode extends LzEventable {
     }
   }
 
-  //+++++ Wacky class stuff
-
-  if ($swf9) {
-    // TODO [hqm 2008-03] This is just a debugging print utility function for swf9
-    /** @access private */
-    public static function objAsString(obj) {
-      var s = "";
-      for (var k in obj) {
-        s+= k +": "+obj[k];
-        s+=", ";
-      }
-      return s;
-    }
-  }
   /**
    * @access private
    * setter for $datapath

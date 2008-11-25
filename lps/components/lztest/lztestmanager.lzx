@@ -77,7 +77,7 @@ function addSuite( s ) {
 
 function setupServerLogging() {
     // TODO: enable this once lz.Browser is working in swf9
-    if ($swf9) {
+    if ($as3) {
         return;
     }
     var lzurl = lz.Browser.getLoadURLAsLzURL();

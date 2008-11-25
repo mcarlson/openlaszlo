@@ -172,7 +172,7 @@
 
        // To support clickable links in swf9, we need to add an as3 event listener
        // on the output LzText's flash textfield object.
-       if ($swf9) {
+       if ($as3) {
            this.evalloader.addTextLinkCallback(this.middle.content.textpane);
        }
 
@@ -888,7 +888,7 @@
       if (attrs && attrs.color) { color = attrs.color };
       if (id != null) {
           // TODO hqm 2008-09-15 Make this use new lz.text.makeTextLink API when it is working
-          if ($swf9) {
+          if ($as3) {
               return '<a href="event:objid=' + id + '"><font color="' + color + '">' + rep +"</font></a>";
           } else {
               return '<a href="asfunction:_root.$modules.lz.Debug.displayObj,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
@@ -911,7 +911,7 @@
         this.isLoaded = true;
         this.remoteDebug = false;
 
-        if ($swf9) {
+        if ($as3) {
             var bridge:LzDebugConsole = new LzDebuggerWindowConsoleBridge(this);
             Debug.attachDebugConsole(bridge);
          } else {

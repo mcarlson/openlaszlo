@@ -25,9 +25,6 @@ if ($debug) {
     public function write(...args):void {
         var str = this.formatToString.apply(this, args);
         trace(str);
-        if ($debug)  {
-          LFCApplication.write(str);
-        }
     }
     public function inspect(...args):void {
       this.write('INSPECT: ' + this.formatToString.apply(this, args));

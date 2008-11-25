@@ -264,7 +264,7 @@ public class Compiler {
   public void defaultOptions() {
 
     // Disable debug compilation for swf9
-    if ("swf9".equals((String)options.get(RUNTIME))) {
+    if ("swf9".equals((String)options.get(RUNTIME)) || "swf10".equals((String)options.get(RUNTIME))) {
       options.putBoolean(DEBUG_SWF9, options.getBoolean(DEBUG));
       options.putBoolean(DEBUG, false);
       options.putBoolean(DEBUG_BACKTRACE, false);
@@ -329,7 +329,7 @@ public class Compiler {
       boolean obfuscate = options.getBoolean(OBFUSCATE);
       boolean isScript = org.openlaszlo.compiler.Compiler.SCRIPT_RUNTIMES.contains(runtime);
       Translator cg;
-      if (runtime.equals("swf9")) {
+      if (runtime.equals("swf9") || runtime.equals("swf10")) {
         cg = new SWF9Generator();
       }
       else if (isScript) {

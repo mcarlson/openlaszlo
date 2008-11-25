@@ -34,8 +34,8 @@ public class lzsc  {
     "Options:",
     "--help",
     "  Prints this message.",
-    "--runtime=(swf7|swf8|swf9|dhtml|j2me|svg)",
-    "   specify which runtime to compile code to. Only swf7, swf8, and dhtml are supported",
+    "--runtime=(swf7|swf8|swf9|swf10|dhtml|j2me|svg)",
+    "   specify which runtime to compile code to. Only swf7, swf8, swf9, swf10, and dhtml are supported",
     "--debug",
     "   include debugging information in output file",
     "--profile",
@@ -117,7 +117,8 @@ public class lzsc  {
 
       String runtime = (String)options.get(Compiler.RUNTIME);
       // Must be kept in sync with server/src/org/openlaszlo/compiler/Compiler.java creatObjectWriter
-      if ("dhtml".equals(runtime) || "j2me".equals(runtime) || "svg".equals(runtime) || "swf9".equals(runtime) ) {
+      if ("dhtml".equals(runtime) || "j2me".equals(runtime) || "svg".equals(runtime) || "swf9".equals(runtime)
+          || "swf10".equals(runtime)) {
         OutputStream ostr = new FileOutputStream(outf);
         try {
           ostr.write(bytes);
@@ -166,9 +167,10 @@ public class lzsc  {
 
   // Must be kept in sync with server/src/org/openlaszlo/compiler/Compiler.java compile
   boolean setRuntime(String runtime) {
-    if (! ("dhtml".equals(runtime) || "j2me".equals(runtime) || "svg".equals(runtime) || "swf9".equals(runtime) ||
+    if (! ("dhtml".equals(runtime) || "j2me".equals(runtime) || "svg".equals(runtime) ||
+           "swf9".equals(runtime) || "swf10".equals(runtime) ||
            "swf7".equals(runtime) || "swf8".equals(runtime))) {
-      usage("runtime must be one of swf7, swf8, swf9, dhtml, j2me, svg");
+      usage("runtime must be one of swf7, swf8, swf9, swf10, dhtml, j2me, svg");
       return false;
     }
     compileTimeConstants.put("$runtime", runtime);
@@ -180,7 +182,8 @@ public class lzsc  {
       "$as2",
       Boolean.valueOf("swf7".equals(runtime) || "swf8".equals(runtime) ));
     compileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
-    compileTimeConstants.put("$as3", Boolean.valueOf("swf9".equals(runtime)));
+    compileTimeConstants.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
+    compileTimeConstants.put("$as3", Boolean.valueOf("swf9".equals(runtime) || "swf10".equals(runtime)));
     compileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
     compileTimeConstants.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
     compileTimeConstants.put("$svg", Boolean.valueOf("svg".equals(runtime)));

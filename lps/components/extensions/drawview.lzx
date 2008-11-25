@@ -855,7 +855,7 @@
         // Classes that implement an interface must obey the LZX
         // tag->class mapping convention
         class $lzc$class_drawview extends LzView with DrawviewShared {
-            if ($swf9) {
+            if ($as3) {
                 #passthrough (toplevel:true) {  
                 import flash.geom.Matrix;
                 import flash.geom.Rectangle;
@@ -904,7 +904,7 @@
 
             // Add bitmap data drawing layer
             function rebuildBitmap (ignore) {
-                if ($swf9) {
+                if ($as3) {
                     return;
                 }
                 if (this['__bitmapmc']) {
@@ -913,7 +913,7 @@
 
                 var context = this.sprite.getContext();
                 this.__bitmapmc = context.createEmptyMovieClip("__bitmapmc",1000);
-                if ($swf9) {
+                if ($as3) {
                     this.__bitmapdata = new BitmapData(this.width, this.height, true, 0x000000ff);
                 } else {
                     this.__bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
@@ -1015,7 +1015,7 @@
             }
 
             function drawImage(image, x, y, w, h, r) {
-                if ($swf9) {
+                if ($as3) {
                     if ($debug) Debug.warn('Drawview.drawImage() is not yet supported in swf9.');
                 } else {
                     if (typeof image == 'string') {
@@ -1198,7 +1198,7 @@
                 if ($as2) this.context._visible = this.visible;
             }
     
-            if ($swf9) {    
+            if ($as3) {    
                 function clipPath() {
                     if ($debug) {
                         Debug.warn('Drawview.clipPath() is not currently supported in swf9.');
@@ -1279,7 +1279,7 @@
     
             function clear() {
                 this.context.clear();
-                if ($swf9) {
+                if ($as3) {
                 } else {
                     var rect = new flash.geom.Rectangle(0, 0, this.width, this.height);
                     if (this['__bitmapdata']) this.__bitmapdata.fillRect(rect, 0x000000ff);
@@ -1348,7 +1348,7 @@
             }
 
             function copyBitmap(from, w, h, to, m) {
-                if ($swf9) {
+                if ($as3) {
                     var tmp = new BitmapData(w, h, true, 0x000000ff);
                 } else {
                     var tmp = new flash.display.BitmapData(w, h, true, 0x000000ff);
@@ -1388,7 +1388,7 @@
                 var colorval = color.c | alpha;
                 //Debug.info(colorval, alpha, color, this.fillStyle)
 
-                if ($swf9) {
+                if ($as3) {
                     var rect = new Rectangle(x, y, w, h);
                 } else {
                     var rect = new flash.geom.Rectangle(x, y, w, h);
@@ -1397,7 +1397,7 @@
             }
 
             function getIdentityMatrix() {
-                if ($swf9) {
+                if ($as3) {
                     return new Matrix();
                 } else {
                     return new flash.geom.Matrix();
@@ -1418,7 +1418,7 @@
           * drawview.createRadialGradient.
           */
         class LzCanvasGradient {
-            if ($swf9) {
+            if ($as3) {
                 #passthrough (toplevel:true) {
                 import flash.geom.Matrix;
                 }#
@@ -1432,7 +1432,7 @@
             
             function LzCanvasGradient(c, m, isradial) {
                 this._context = c;
-                if ($swf9) {
+                if ($as3) {
                     var matrix = new Matrix();
                     m = matrix.createGradientBox(m.w,m.h,m.r,m.x,m.y);
                 }

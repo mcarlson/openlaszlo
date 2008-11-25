@@ -98,7 +98,7 @@ public dynamic final class LzDelegate {
    */
   public function LzDelegate (context:LzEventable, methodName:String, eventSender:LzEventable = null, eventName:String = null) {
     super();
-    if ($swf9) {
+    if ($as3) {
       // This type-check is superfluous in JS2, but we want it as an
       // aid to portability in JS1
     } else if (context is LzEventable) {
@@ -189,7 +189,7 @@ public function execute (eventValue){
   *
   */
   public function register ( eventSender:LzEventable , eventName:String) {
-    if ($swf9) {
+    if ($as3) {
       // This type-check is superfluous in JS2, but we want it as an
       // aid to portability in JS1
     } else if (eventSender is LzEventable) {
@@ -213,7 +213,7 @@ public function execute (eventValue){
         Debug.warn("Invalid delegate: %#w (must accept one argument to handle %w.%s)",
                    m, eventSender, eventName);
       }
-      if ($swf9) {
+      if ($as3) {
         var a = new Array(m.length);
         this.m = function (ignore:*) { return m.apply(this, a); }
       }

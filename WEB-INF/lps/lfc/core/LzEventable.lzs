@@ -147,7 +147,7 @@ class LzEventable {
   // TODO: [2008-05-08 ptw] (LPP-5934) When toString is declared
   // public, remove this.  For now, this acts to trampoline `String(...)`
   // and `'' + ...` to our private toString methods
-  if ($swf9) {
+  if ($as3) {
     /** @access private */
     prototype.toString = function () { return this.toString(); }
   }

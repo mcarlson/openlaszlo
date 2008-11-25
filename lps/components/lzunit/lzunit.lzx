@@ -347,7 +347,7 @@
         }
         if ($debug) {
           var file = null, line = null;
-          if ($swf9) {
+          if ($as3) {
           } else {
             // Find the failing test, which is four frames up
             var bt = Debug.backtrace(4);

@@ -153,7 +153,7 @@ public class LFCApplication {
             // Send EVAL request to LPS server
             // It doesn't matter what path/filename we use, as long as it has ".lzx" suffix, so it is
             // handled by the LPS. The lzt=eval causes the request to be served by the EVAL Responder.
-            var url = "hello.lzx?lzr=swf9&lz_load=false&lzt=eval&lz_script=" + encodeURIComponent(expr)+"&lzbc=" +(new Date()).getTime();
+            var url = "hello.lzx?lzr=" + $runtime + "&lz_load=false&lzt=eval&lz_script=" + encodeURIComponent(expr)+"&lzbc=" +(new Date()).getTime();
             debugloader.load(new URLRequest(url),
                              new LoaderContext(false,
                                                new ApplicationDomain(ApplicationDomain.currentDomain)));

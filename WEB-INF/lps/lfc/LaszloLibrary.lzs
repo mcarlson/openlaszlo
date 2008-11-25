@@ -15,7 +15,7 @@ var _Copyright = "Portions of this file are copyright (c) 2001-2008 by Laszlo Sy
 // If profiling, we need to define this early, because the class
 // runtime will attempt to use it
 if ($profile) {
-  if ($swf9) {
+  if ($as3) {
   } else {
 #include "profiler/LzProfile.lzs"
   }
@@ -33,7 +33,7 @@ if ($debug) {
 }
 
 if ($profile) {
-  if ($swf9) {
+  if ($as3) {
   } else {
   // Default is to start the Profiler ASAP, and stop it in
   // canvas.init, so you can profile startup time.  If that is not
@@ -55,7 +55,7 @@ if ($profile) {
 #include "data/Library.lzs"
 #include "services/Library.lzs"
 
-if ($swf9) {
+if ($as3) {
   //Debugger placeholder
   #include "debugger/swf9stubs.lzs"
     // Initialize the DojoExternalInterface class

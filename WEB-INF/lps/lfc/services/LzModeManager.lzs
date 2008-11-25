@@ -89,7 +89,7 @@ public final class LzModeManagerService extends LzEventable {
         //    if (LzModeManagerService.LzModeManager) {
         //      throw new Error("There can be only one LzModeManager");
         //    }
-        if ($swf9) {
+        if ($as3) {
         } else {
             LzMouseKernel.setCallback(this, 'rawMouseEvent');
         }
@@ -169,7 +169,7 @@ public final class LzModeManagerService extends LzEventable {
             var mView = this.modeArray[ i ];
             // exclude the debugger from the mode
             if ($debug) {
-                if ($as2 || $swf9) {
+                if ($as2 || $as3) {
                     if (this.remotedebug == null) {
                         this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
                     }
@@ -177,7 +177,7 @@ public final class LzModeManagerService extends LzEventable {
                 if ($as2) {
                     if (!this.remotedebug && view.childOf(Debug.console))
                         break;
-                } else if ($swf9) {
+                } else if ($as3) {
                     if (!this.remotedebug && view.childOf(Debug.console.window))
                         break;
                 } else if ($dhtml) {
@@ -219,7 +219,7 @@ public final class LzModeManagerService extends LzEventable {
     /** @access private */
     function __LZallowInput (modalview:LzView, input:LzInputText) :Boolean {
         if ($debug) {
-            if ($as2 || $swf9) {
+            if ($as2 || $as3) {
                 if (this.remotedebug == null) {
                     this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
                 }
@@ -227,7 +227,7 @@ public final class LzModeManagerService extends LzEventable {
             if ($as2) {
                 if (!this.remotedebug && input.childOf(Debug.console))
                     return true;
-            } else if ($swf9) {
+            } else if ($as3) {
                 if (!this.remotedebug && input.childOf(Debug.console.window))
                     return true;
             } else if ($dhtml) {

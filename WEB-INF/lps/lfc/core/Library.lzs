@@ -16,7 +16,7 @@
 #include "core/PresentationTypes.lzs"
 #include "core/LzNode.lzs"
 
-if ($swf9) {
+if ($as3) {
 } else {
     #include "core/UserClass.lzs"
 }

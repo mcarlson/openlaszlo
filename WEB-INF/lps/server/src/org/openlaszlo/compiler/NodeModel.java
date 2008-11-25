@@ -280,7 +280,7 @@ public class NodeModel implements Cloneable {
       if (canHaveMethods) {
           // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
           // in the script-compiler back-end
-          if (! ("swf9".equals(env.getRuntime()))) {
+        if (! (env.isAS3())) {
             pragmas += "\n#pragma 'withThis'\n";
           }
           binder = new Method(bindername, args, "", pragmas, body, srcloc, null);
@@ -301,7 +301,7 @@ public class NodeModel implements Cloneable {
       if (canHaveMethods) {
           // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
           // in the script-compiler back-end
-          if (! ("swf9".equals(env.getRuntime()))) {
+        if (! (env.isAS3())) {
             pragmas += "\n#pragma 'withThis'\n";
           }
           dependencies = new Method(dependenciesname, "", "", pragmas, body, srcloc, null);
@@ -697,10 +697,10 @@ public class NodeModel implements Cloneable {
              "") +
             (setId ? ("  $lzc$node.id = " + ScriptCompiler.quote(symbol) + ";\n") : "") +
             "  " + symbol + " = $lzc$node;\n" +
-            "  if ($swf9) { global[" + ScriptCompiler.quote(symbol) + "] = $lzc$node; }\n" +
+            "  if ($as3) { global[" + ScriptCompiler.quote(symbol) + "] = $lzc$node; }\n" +
             "} else if (" + symbol + " === $lzc$node) {\n" +
             "  " + symbol + " = null;\n" +
-            "  if ($swf9) { global[" + ScriptCompiler.quote(symbol) + "] = null; }\n" +
+            "  if ($as3) { global[" + ScriptCompiler.quote(symbol) + "] = null; }\n" +
             (setId ? ("  $lzc$node.id = null;\n") : "") +
             "}\n";
     }
@@ -727,7 +727,7 @@ public class NodeModel implements Cloneable {
         }
 
         // Add file/line information if debugging
-        if (debug && !("swf9".equals(env.getRuntime()))) {
+        if (debug && !(env.isAS3())) {
           // File/line stored separately for string sharing
           String name = "_dbg_filename";
           String filename = Parser.getSourceMessagePathname(element);
@@ -1152,10 +1152,10 @@ solution =
                     NodeModel dpnode = elementAsModel(child, schema, env);
                     this.datapath = dpnode;
                 } else if (child.getName().equals("passthrough")) {
-                  if (env.getRuntime().equals("swf9")) {
+                  if (env.isAS3()) {
                     passthroughBlock = child.getText();
                   } else {
-                    env.warn("The passthrough tag can only be used in swf9 runtime, perhaps you could put this in a switch tag?",child);
+                    env.warn("The passthrough tag can only be used in an as3 runtime, perhaps you could put this in a switch tag?",child);
                   }
                 } else {
                     checkChildNameConflict(element.getName(), child, env);
@@ -1371,7 +1371,7 @@ solution =
             if (canHaveMethods) {
                 // TODO: [2008-07-21 ptw] (LPP-5813) This should really
                 // be in the script-compiler back-end
-                if (! ("swf9".equals(env.getRuntime()))) {
+              if (! (env.isAS3())) {
                   pragmas += "\n#pragma 'withThis'\n";
                 }
                 referencefn = new Method(referencename, "", "", pragmas, refbody, srcloc, null);
@@ -1397,7 +1397,7 @@ solution =
             if (canHaveMethods) {
                 // TODO: [2008-07-21 ptw] (LPP-5813) This should really
                 // be in the script-compiler back-end
-                if (! ("swf9".equals(env.getRuntime()))) {
+              if (! (env.isAS3())) {
                   pragmas += "\n#pragma 'withThis'\n";
                 }
                 fndef = new Method(method, args, "", pragmas, body, srcloc, null);
@@ -1517,7 +1517,7 @@ solution =
             if (isfinal) { adjectives += " final"; }
             // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
             // in the script-compiler back-end
-            if (! ("swf9".equals(env.getRuntime()))) {
+            if (! (env.isAS3())) {
               pragmas += "\n#pragma 'withThis'\n";
             }
             fndef = new Method(name, args, returnType, pragmas, body, name_loc, adjectives);

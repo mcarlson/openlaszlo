@@ -7,7 +7,7 @@
   * @access private
   */
 
-if ($swf9) {
+if ($as3) {
 } else {
     #include "kernel/LzIdleKernel.lzs"
 }
@@ -17,7 +17,7 @@ if ($swf9) {
 
 
 //#include "kernel/LzRequires.lzs"
-if ($swf9) {
+if ($as3) {
     #include "kernel/swf9/Library.lzs"
 } else if ($dhtml) {
     #include "kernel/dhtml/Library.lzs"

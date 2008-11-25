@@ -10,14 +10,7 @@
 #include "views/LaszloView.lzs"
 #include "views/LzText.lzs"
 #include "views/LzInputText.lzs"
-
-if($swf9) {
-    #include "views/LzViewLinkage.js"
-} else {
-    #include "views/LzViewLinkage.lzs"
-}
-
+#include "views/LzViewLinkage.lzs"
 #include "views/LaszloCanvas.lzs"
-
 #include "views/LzScript.lzs"
 

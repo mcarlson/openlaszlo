@@ -58,7 +58,7 @@ public final class ResponderEVAL extends Responder
             mLogger.debug(message);
           }
           byte[] action = new byte[0];
-          int swfversion = 6;
+          int swfversion = 8;
           ScriptCompiler.writeScriptToStream(action, out, swfversion);
           out.flush();
           FileUtils.close(out);
@@ -78,8 +78,8 @@ public final class ResponderEVAL extends Responder
                 if (swfversion == null) {
                     swfversion = "swf8";
                 }
-                if ("swf9".equals(swfversion)) {
-                    compiler.compileAndWriteToSWF9(script, seqnum, out);
+                if (Compiler.AS3_RUNTIMES.contains(swfversion)) {
+                    compiler.compileAndWriteToAS3(script, swfversion, seqnum, out);
                 } else {
                     compiler.compileAndWriteToSWF(script, seqnum, out, swfversion);
                 }

@@ -36,11 +36,15 @@ public class Compiler {
     public static Logger SchemaLogger = Logger.getLogger("schema");
     
     public static List KNOWN_RUNTIMES =
-        Arrays.asList(new String[] {"swf7", "swf8", "swf9", "dhtml", "j2me", "svg", "null"});
+        Arrays.asList(new String[] {"swf7", "swf8", "swf9", "swf10", "dhtml", "j2me", "svg", "null"});
     public static List SCRIPT_RUNTIMES =
-        Arrays.asList(new String[] {"swf9", "dhtml", "j2me", "svg", "null"});
+        Arrays.asList(new String[] {"swf10", "swf9", "dhtml", "j2me", "svg", "null"});
     public static List SWF_RUNTIMES =
         Arrays.asList(new String[] {"swf7", "swf8"});
+    public static List AS3_RUNTIMES =
+        Arrays.asList(new String[] {"swf9", "swf10"});
+
+
     
     /** Called to resolve file references (<code>src</code>
      * attributes).
@@ -137,7 +141,7 @@ public class Compiler {
 
     public static String getObjectFileExtensionForRuntime (String runtime) {
         String ext;
-        if ("swf9".equals(runtime)) {
+        if (AS3_RUNTIMES.contains(runtime)) {
             ext = ".lzr=" + runtime + ".swf";
         } else {
             ext = SCRIPT_RUNTIMES.contains(runtime) ? ".js" : ".lzr=" + runtime + ".swf";
@@ -226,7 +230,7 @@ public class Compiler {
         // Must be kept in sync with server/sc/lzsc.py compile
         if ("null".equals(runtime)) {
             return new NullWriter(props, ostr, mMediaCache, true, env);
-        } else if ("swf9".equals(runtime)) {
+        } else if (env.isAS3()) {
             return new SWF9Writer(props, ostr, mMediaCache, true, env);            
         } else if (SCRIPT_RUNTIMES.contains(runtime)) {
             return new DHTMLWriter(props, ostr, mMediaCache, true, env);
@@ -436,7 +440,8 @@ public class Compiler {
             compileTimeConstants.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
             compileTimeConstants.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
             compileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
-            compileTimeConstants.put("$as3", Boolean.valueOf(Arrays.asList(new String[] {"swf9"}).contains(runtime)));
+            compileTimeConstants.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
+            compileTimeConstants.put("$as3", Boolean.valueOf(env.isAS3()));
             compileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
             compileTimeConstants.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
             compileTimeConstants.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
@@ -574,21 +579,22 @@ public class Compiler {
     }
 
 
-    public void compileAndWriteToSWF9 (String script, String seqnum, OutputStream out) {
+    public void compileAndWriteToAS3 (String script, String runtime, String seqnum, OutputStream out) {
         try {
             Properties props = new Properties();
-            props.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, "swf9");
+            props.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, runtime);
             props.setProperty("canvasWidth", "1000");
             props.setProperty("canvasHeight", "600");
             Map compileTimeConstants = new HashMap();
             compileTimeConstants.put("$debug", new Boolean(true));
             compileTimeConstants.put("$profile", new Boolean(false));
             compileTimeConstants.put("$backtrace", new Boolean(false));
-            compileTimeConstants.put("$runtime", "swf9");
+            compileTimeConstants.put("$runtime", runtime);
             compileTimeConstants.put("$swf7", Boolean.valueOf(false));
             compileTimeConstants.put("$swf8", Boolean.valueOf(false));
             compileTimeConstants.put("$as2", Boolean.valueOf(false));
-            compileTimeConstants.put("$swf9", Boolean.valueOf(true));
+            compileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
+            compileTimeConstants.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
             compileTimeConstants.put("$as3", Boolean.valueOf(true));
             compileTimeConstants.put("$dhtml", Boolean.valueOf(false));
             compileTimeConstants.put("$j2me", Boolean.valueOf(false));

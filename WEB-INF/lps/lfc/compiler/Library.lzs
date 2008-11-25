@@ -16,7 +16,7 @@
 
 // Basic runtime and stubs
 #include "compiler/LzRuntime.lzs"
-if ($swf9) {
+if ($as3) {
 } else {
 // Class runtime for js1 runtimes, must load before BootstrapDebugService
 // TODO [2007-12-17 ptw] Move to platform/js1

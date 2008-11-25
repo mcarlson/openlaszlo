@@ -92,7 +92,7 @@ class ImportCompiler extends ToplevelCompiler {
             String libprefix = mEnv.getLibPrefix();
             String runtime = mEnv.getProperty(mEnv.RUNTIME_PROPERTY);
             String extension = ".swf";
-            if ("swf9".equals(runtime)) {
+            if (mEnv.isAS3()) {
                 extension = ".swf";
             } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
                 extension = ".js";
@@ -152,7 +152,7 @@ class ImportCompiler extends ToplevelCompiler {
                 ObjectWriter writer;
 
                 String runtime = env.getProperty(env.RUNTIME_PROPERTY);
-                if ("swf9".equals(runtime)) {
+                if (env.isAS3()) {
                     props.setProperty(org.openlaszlo.sc.Compiler.SWF9_LOADABLE_LIB, "true");
                     writer = new SWF9Writer(props, ostream, env.getMediaCache(), false, env);
                 } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
