@@ -123,11 +123,6 @@
       </containsElements>
     </interface>
     
-    <!-- debugger -->
-    <interface name="debug">
-      <attribute name="showInternalProperties" type="boolean" value="false"/>
-    </interface>
-
   </insert>
 
   <!-- -=-=-=-=-=-=-=-=-  modify existing classes -=-=-=-=-=-=-=-=- -->
@@ -161,6 +156,13 @@
     </insert>
   </interface>
   
+  <!-- debugger -->
+  <interface name="debug" extends="view">
+    <insert>
+      <attribute name="showInternalProperties" type="boolean" value="false"/>
+    </insert>
+  </interface>
+
   <interface name="font" extends="Instance">
     <insert>
       <containsElements>
