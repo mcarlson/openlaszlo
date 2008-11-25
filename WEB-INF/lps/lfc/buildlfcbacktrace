@@ -22,9 +22,9 @@ done
 if [ "$runtime" == "dhtml" ]; then
     suffix="js"
 fi
-if [ "$runtime" == "swf9" || "$runtime" == "swf10"]; then
-    options="${options} --option buildSharedLibrary=true"  --option SWF9MainClassName=LFCApplication \
-     --option SWF9WrapperClassName=LzSpriteApplication "
+if [ "$runtime" == "swf9" -o "$runtime" == "swf10"]; then
+    options="${options} --option buildSharedLibrary=true --option SWF9MainClassName=LFCApplication \
+     --option SWF9WrapperClassName=LzSpriteApplication"
     suffix="swc"
 fi
 
