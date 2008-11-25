@@ -54,9 +54,9 @@ Debug.loopElapsed = 0;
   */
 Debug.mark = function (o) {
   // We can't trace things that don't support hasOwnProperty
-  if ((! (o instanceof Object)) ||
-      (! ('hasOwnProperty' in o)) ||
-      (! (o.hasOwnProperty instanceof Function))) {
+  if  ((! o) ||
+      (! (typeof o == 'object')) ||
+      (! (typeof o['hasOwnProperty'] == 'function'))) {
     if (this.debugTrace) {
       console.log('Not marking %s\n', o);
     }
@@ -68,7 +68,7 @@ Debug.mark = function (o) {
     o[annotation.marked] = this.markGeneration;
   } catch (e) { return false };
   return true;
-}
+};
 
 /**
   * Is an object marked?
@@ -86,9 +86,9 @@ Debug.mark = function (o) {
   */
 Debug.isMarked = function (o) {
   // We can't trace things that don't support hasOwnProperty
-  if ((! (o instanceof Object)) ||
-      (! ('hasOwnProperty' in o)) ||
-      (! (o.hasOwnProperty instanceof Function))) {
+  if ((! o) ||
+      (! (typeof o == 'object')) ||
+      (! (typeof o['hasOwnProperty'] == 'function'))) {
     if (this.debugTrace) {
       console.log('Not tracing %s\n', o);
     }
@@ -168,7 +168,7 @@ Debug.traceStep = function (steps=Infinity, milliseconds=1300) {
       // If it's the last object, we are done
       if (os.length == 0) {
         // Stop the idle callback
-        clearInterval(this.backgroundTask)
+        LzTimeKernel.clearInterval(this.backgroundTask)
         this.loops++;
         this.loopCount += loopCount;
         this.loopElapsed += loopElapsed;
@@ -221,6 +221,8 @@ Debug.traceStep = function (steps=Infinity, milliseconds=1300) {
       } catch (e) {};
     }
 
+    // Shouldn't happen, since we never add an object that
+    // would mutate (see below)
     if (o !== oo) {
       Debug.debug("Annotating %s[%s] (%#w) caused allocation of %#w", path, name, oo, o);
     }
@@ -273,37 +275,50 @@ Debug.traceStep = function (steps=Infinity, milliseconds=1300) {
     } catch (e) {};
     for (var i = ownProperties.length - 1; i >= 0; i--) {
       var p = ownProperties[i];
-      var v = o[p];
+
       // Very rough estimate of size
       obSize += 2;            // assume hashes are 50% full
-      if (typeof(v) == 'string') {
-        // Assume strings can be packed 4 chars/word
-        obSize += Math.ceil(v.length/4);
-      }
-      // Object weight is calculated below.
 
-      if (v instanceof Object) {
-        if (v !== o[p]) {
-          // Debug.debug("Accessing %s[%s] (%#w) caused allocation of %#w", o, p, v, o[p]);
+      // Here we ensure that we have an object that we can mark
+      // without mutating it.  If not, we just have to skip it
+      // The order of these tests is important for efficiency
+      try {
+        var v = o[p];
+        // Assume strings can be packed 4 chars/word
+        if (typeof v == 'string') {
+          obSize += Math.ceil(v.length/4);
+        }
+        // Object weight is calculated below.
+
+        if (! (v &&
+               (typeof v == 'object') &&
+               (v['hasOwnProperty'] instanceof Function))) {
+          if (this.debugTrace) {
+            // Debug.debug("%s[%s] (%#w) is untraceable", o, p, v);
+          }
+          v = null;
+        } else if (v !== o[p]) {
+          if (this.debugTrace) {
+            // Debug.debug("Accessing %s[%s] (%#w) caused allocation of %#w", o, p, v, o[p]);
+          }
+          v = null;
         } else {
-          try {
-            v[size] = 0;
-            if (v !== o[p]) {
+          v[size] = 0;
+          if (v !== o[p]) {
+            if (this.debugTrace) {
               Debug.debug("Mutating %s[%s] (%#w) caused allocation of %#w", o, p, v, o[p]);
             }
-          } catch (e) {
-            Debug.debug("Mutating %s[%s] (%#w) caused %#w", o, p, v, e);
             v = null;
           }
         }
+      } catch (err) {
+        if (this.debugTrace) {
+          Debug.debug("Mutating %s[%s] (%#w) caused %#w", o, p, v, err);
+        }
+        v = null;
       }
-      // The order of these tests is important for efficiency
-      if (
-          // Optimization: don't trace non-objects
-          (v instanceof Object) &&
-          // Correctness:  don't trace wrapper objects that are consed
-          // on each access
-          (v === o[p]) &&
+
+      if (v &&
           // Optimization: don't trace objects that have already been marked
           (! this.isMarked(v))
          ) {
@@ -407,7 +422,7 @@ Debug.initTrace = function (findLeaks=false, noteWhy=false) {
   if ('___' in global) {
     this.mark(global.___);
   }
-  this.mark(Debug.console.evalloader);
+
   // Create the initial obstack element: global
   var osel = ["global", global];
   osel.path = [];
@@ -415,7 +430,7 @@ Debug.initTrace = function (findLeaks=false, noteWhy=false) {
   this.obstack[0] = osel;
 
   // Start the trace background task
-  this.backgroundTask = setInterval(function () { Debug.traceStep(); }, 1400);
+  this.backgroundTask = LzTimeKernel.setInterval(function () { Debug.traceStep(); }, 1400);
 }
 
 /**
@@ -429,7 +444,7 @@ Debug.markObjects = function () {
   }
   Debug.format('Marking objects \u2026 ');
   // Output must come before init, so it is not seen as a leak
-  setTimeout(function () { Debug.initTrace(); }, 10);
+  LzTimeKernel.setTimeout(function () { Debug.initTrace(); }, 10);
 }
 
 /**
@@ -444,7 +459,7 @@ Debug.findNewObjects = function () {
     }
     Debug.format('Finding new objects \u2026 ');
     // Output must come before init, so it is not seen as a leak
-    setTimeout(function () { Debug.initTrace(true, true); }, 10);
+    LzTimeKernel.setTimeout(function () { Debug.initTrace(true, true); }, 10);
   } else {
     Debug.error('Call %w first', Debug.markObjects);
   }
