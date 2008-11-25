@@ -69,6 +69,25 @@ dynamic class LzScript extends LzNode {
   /** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
 
+  /***
+   * The pathname of a Javascript file. This pathname is resolved
+   * relative to the file that contains the
+   * <code>&lt;script&gt;</code> element.
+   *
+   * @keywords final
+   * @lzxtype string
+   * @access public
+   *
+   * @devnote TODO: [2008-11-21 ptw] This attribute is here only for
+   * documentation purposes.  There really needs to be a way to
+   * document 'special' (schema-only) attributes without creating a
+   * dummy variable
+   *
+   * @devnote TODO: [2008-11-21 ptw] The real schema attribute wants
+   * to be xsd:anyURI, but the schema generator barfs on that.
+   */
+  var src:String;
+
   /** @access private */
   public function LzScript ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
     super(parent,attrs,children,instcall);
