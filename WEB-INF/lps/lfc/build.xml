@@ -225,7 +225,7 @@
       var ext = (v == 9) ? ".swc" : ".lzl";
       var shlibopt = "--option buildSharedLibrary=true ";
       if (v == 9) {
-         shlibopt += "--option SWF9MainClassName=LFCApplication --option SWF9WrapperClassName=LzSpriteApplication ";
+         shlibopt += "--option SWF9MainClassName=LFCApplication --option SWF9WrapperClassName=LzSpriteApplication --option catchFunctionExceptions=false ";
       }
 
       // Check whether the options tell us to build this runtime at all

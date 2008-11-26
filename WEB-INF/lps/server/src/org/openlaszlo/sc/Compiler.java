@@ -454,6 +454,7 @@ public class Compiler {
   public static String CONDITIONAL_COMPILATION = "conditionalCompilation";
   public static String ALLOW_ROOT = "allowRoot";
   public static String CACHE_COMPILES = "cacheCompiles";
+  public static String CATCH_FUNCTION_EXCEPTIONS = "catchFunctionExceptions";
   public static String COMPILE_TRACE = "compileTrace";
   public static String COMPILE_TIME_CONSTANTS = "compileTimeConstants";
   public static String CONSTRAINT_FUNCTION = "constraintFunction";

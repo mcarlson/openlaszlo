@@ -1209,6 +1209,10 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         (new ParseTreePrinter()).print(depExpr);
       }
     }
+    // If either of error or suffix are set, a try block is created.
+    // predecls is only used if error/suffix are set, and are
+    // declarations that must appear before (outside of) try block
+    List predecls = new ArrayList();
     List prefix = new ArrayList();
     List error = new ArrayList();
     List suffix = new ArrayList();
@@ -1237,8 +1241,46 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       suffix.add((meterFunctionEvent(node, "returns", meterFunctionName)));
     }
 
+    // catchFunctionExceptions forces a catch of any exceptions.
+    // In debug mode the exception is reported, and in any case it is
+    // not propogated to our caller.
+    // To preserve return types, we implement this with a closure,
+    // but that introduces restrictions:
+    // We cannot put a super call in a closure.
+    // Having another function closure within a closure apparently
+    // causes problems accessing certain variables for the flex compiler.
+    boolean tryAll = options.getBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS)
+      && matchingAncestor(node.getParent(), ASTFunctionExpression.class) == null
+      && matchingDescendant(node, ASTSuperCallExpression.class) == null
+      && matchingDescendant(node, ASTFunctionExpression.class) == null
+      && functionName != null;
+      
+    String tryType = "";
+    if (tryAll) {
+      error.add(parseFragment("if ($debug) {" +
+                              "  $lzsc$runtime.reportException(" +
+                              ScriptCompiler.quote(functionNameIdentifier.filename) + ", " +
+                              functionNameIdentifier.beginLine + ", $lzsc$e); }"));
+
+      predecls.add(new Compiler.PassThroughNode(parseFragment("var $lzsc$ret:* = 0;")));
+      if (functionNameIdentifier != null && !functionNameIdentifier.isConstructor()) {
+        suffix.add(parseFragment("return $lzsc$ret;"));
+      }
+
+      // For typed functions, make the closure require a return,
+      // so the SWF9 compiler will be just as picky as without
+      // the closure.
+      if (((ASTFormalParameterList)params).getReturnType() != null) {
+        tryType = ": " + ((ASTFormalParameterList)params).getReturnType();
+      }
+      options.putBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS, false);
+    }
+
     // Analyze local variables (and functions)
     VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY));
+    for (Iterator i = predecls.iterator(); i.hasNext(); ) {
+      analyzer.visit((SimpleNode)i.next());
+    }
     for (Iterator i = prefix.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
@@ -1437,6 +1479,13 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       SimpleNode newStmts = new ASTStatementList(0);
       newStmts.setChildren((SimpleNode[])newBody.toArray(new SimpleNode[0]));
       SimpleNode tryNode = new ASTTryStatement(0);
+      if (tryAll) {
+        Map map = new HashMap();
+        newStmts = visitStatement(newStmts);
+        map.put("_1", newStmts);
+        String frag = "$lzsc$ret = (function()" + tryType + " { with (this) { _1 }}).call(this);";
+        newStmts = new Compiler.PassThroughNode((new Compiler.Parser()).substitute(newStmts, frag, map));
+      }
       tryNode.set(i++, newStmts);
       if (! error.isEmpty()) {
         SimpleNode catchNode = new ASTCatchClause(0);
@@ -1455,6 +1504,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       }
       newBody = new ArrayList();
       newBody.add(tryNode);
+      newBody.addAll(0, predecls);
     }
     // Process amended body
     SimpleNode newStmts = new ASTStatementList(0);
@@ -1499,7 +1549,41 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {
       return new SimpleNode[] { node, depExpr };
     }
+    if (tryAll) {
+      options.putBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS, true);
+    }
     return new SimpleNode[] { node, null };
+  }
+
+  // walk up the AST and find a match by type
+  SimpleNode matchingAncestor(SimpleNode node, Class matchClass) {
+    while (node != null) {
+      if (matchClass.equals(node.getClass())) {
+        return node;
+      }
+      node = node.getParent();
+    }
+    return null;
+  }
+
+  // walk down the AST and find a match by type
+  SimpleNode matchingDescendant(SimpleNode node, Class matchClass) {
+    if (node == null) {
+      return null;
+    }
+    else if (matchClass.equals(node.getClass())) {
+      return node;
+    }
+    else {
+      SimpleNode[] children = node.getChildren();
+      for (int i=0; i<children.length; i++) {
+        SimpleNode result = matchingDescendant(children[i], matchClass);
+        if (result != null) {
+          return result;
+        }
+      }
+    }
+    return null;
   }
 
   SimpleNode translateLiteralNode(SimpleNode node) {

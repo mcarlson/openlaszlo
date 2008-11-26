@@ -23,8 +23,11 @@ if [ "$runtime" == "dhtml" ]; then
     suffix="js"
 fi
 if [ "$runtime" == "swf9" -o "$runtime" == "swf10" ]; then
-    options="${options} -g --option buildSharedLibrary=true --option SWF9MainClassName=LFCApplication \
-    --option SWF9WrapperClassName=LzSpriteApplication"
+    options="${options} -g \
+     --option buildSharedLibrary=true \
+     --option SWF9MainClassName=LFCApplication \
+     --option SWF9WrapperClassName=LzSpriteApplication \
+     --option catchFunctionExceptions=false"
     suffix="swc"
 fi
 

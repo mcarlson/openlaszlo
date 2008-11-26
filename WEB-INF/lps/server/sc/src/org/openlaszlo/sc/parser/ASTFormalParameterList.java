@@ -33,4 +33,12 @@ public class ASTFormalParameterList extends SimpleNode {
         result.returnType = this.returnType;
         return result;
     }
+
+    public String toString() {
+        String s = super.toString();
+        if (this.returnType != null) {
+            s += "(returns:" + this.returnType.toString() + ")";
+        }
+        return s;
+    }
 }

@@ -75,6 +75,35 @@ if ($debug) {
 }
 }
 
+if ($as3) {
+  /**
+   * Class used for as3-only runtime support
+   *
+   * @access private
+   */
+  class $lzsc$runtime {
+
+  /**
+   * Report an exception to the debug window
+   *
+   * @param String fileName: The source file
+   * @param Number lineNumber: The source line
+   * @param Object e: exception received
+   *
+   * @access private
+   */
+    static function reportException (fileName, lineNumber, e) {
+        if ($debug) {
+          // TODO: [2008-11-26 dda] This message is not received?
+          //$reportSourceWarning(fileName, lineNumber, e.name + ": " + e.message, true);
+          Debug.warn("Exception ignored in function block at "
+                     + fileName + ":" + lineNumber
+                     + ": " + e.name + ": " + e.message);
+        }
+    }
+  }
+}
+
 if ($as2) {
 var encodeURIComponent = escape;
 }
