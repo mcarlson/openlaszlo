@@ -56,6 +56,7 @@ public class CompilationEnvironment {
     // Flag used internally, to mark whether the user instantiated a <debug>
     // tag manually. If they didn't, we need to add a call to instantiate one.
     public static final String USER_DEBUG_WINDOW     = "userdebugwindow";
+    public static final String DEBUGGER_WINDOW_SCRIPT = "userdebuggerwindowscript";
 
     // Internal flag signals when the schema parser is parsing an
     // external library (for library compiling)

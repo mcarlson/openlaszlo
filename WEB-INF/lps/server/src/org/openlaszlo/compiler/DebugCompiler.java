@@ -12,6 +12,8 @@ package org.openlaszlo.compiler;
 import org.jdom.Element;
 import java.io.File;
 import java.io.FileNotFoundException;
+import org.openlaszlo.sc.ScriptCompiler;
+import org.openlaszlo.utils.ChainedException;
 import java.util.*;
 
 /** 
@@ -49,7 +51,23 @@ class DebugCompiler extends ViewCompiler {
             return;
         } else {
             mEnv.setProperty(mEnv.USER_DEBUG_WINDOW, true);
-            super.compile(element);
+            // inlined from ViewCompiler.compile()
+            preprocess(element, mEnv);
+            NodeModel model = NodeModel.elementAsModel(element, mEnv.getSchema(), mEnv);
+            model = model.expandClassDefinitions();
+            Map map = model.asMap();
+            String classname = (String) map.get("class");
+            try {
+                java.io.Writer writer = new java.io.StringWriter();
+                ScriptCompiler.writeObject(map, writer);
+                String nodejs = writer.toString();
+                String script = "new "+classname + "(canvas, " + nodejs +".attrs" + ");\n";
+                // Store the script to construct the debugger window
+                mEnv.setProperty(CompilationEnvironment.DEBUGGER_WINDOW_SCRIPT, script);
+            } catch (java.io.IOException e) {
+                throw new ChainedException(e);
+            }
+
         }
     }
 }

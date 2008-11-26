@@ -360,14 +360,18 @@ class SWF9Writer extends ObjectWriter {
         
         boolean debug = mProperties.getProperty("debug", "false").equals("true");
 
-        // This indicates whether the user's source code already manually invoked
-        // <debug> to create a debug window. If they didn't explicitly call for
-        // a debugger window, instantiate one now by passing 'true' to __LzDebug.startDebugWindow()
-        boolean makedebugwindow =  !mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW);
-
         // Bring up a debug window if needed.
-        if (debug && makedebugwindow) {
-            addScript("Debug.makeDebugWindow()");
+        if (debug) {
+            boolean userSpecifiedDebugger = mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW);
+            // This indicates whether the user's source code already manually invoked
+            // <debug> to create a debug window. If they didn't explicitly call for
+            // a debugger window, instantiate one now by calling _LZDebug.makeDebugWindow()
+            if (userSpecifiedDebugger) {
+                addScript(mEnv.getProperty(mEnv.DEBUGGER_WINDOW_SCRIPT));
+            } else {
+                // Create debugger window with default init options
+                addScript("__LzDebug.makeDebugWindow()");
+            }
         }
 
         // Put the canvas sprite on the 'stage'.
