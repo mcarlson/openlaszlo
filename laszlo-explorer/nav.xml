@@ -351,8 +351,8 @@
     <topic src="/tools/index.html" name="Developer's Tools" title="Development Tools"  text="Tips for IDEs"/>
   </section>
 
-  <section name="Server Admin" src="/laszlo-explorer/coverpages/server_admin_cover.html">
+  <!--<section name="Server Admin" src="/laszlo-explorer/coverpages/server_admin_cover.html">
       <item src="/lps/admin/console.lzx" name="Admin Console" title="Administration" text="Set server parameters">
       </item>
-  </section>
+  </section>-->
 </menu>
