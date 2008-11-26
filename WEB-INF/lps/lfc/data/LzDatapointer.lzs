@@ -1073,7 +1073,7 @@ function setNodeText (val:String) :void {
         for (var i:int = 0; i < cnodes.length; i++) {
             var cn /*:LzDataNodeMixin*/ = cnodes[i];
             if (cn.nodeType == LzDataElement.TEXT_NODE) {
-                cn.setData( val );
+                cn.$lzc$set_data(val); 
                 foundit = true;
                 break;
             }
