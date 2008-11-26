@@ -205,8 +205,8 @@ probably not what you want.
 
         // Replace the resourceroot with a relative path
         // Lz.dhtmlEmbedLFC('/trunk/lps/includes/lfc/LFCdhtml.js', '/trunk');
-
-        wrapper = wrapper.replaceFirst("'" + request.getContextPath() + "'", "'lps"+File.separator+"resources'");
+        wrapper = wrapper.replaceFirst("lz.embed.lfc(.*?);",
+                                       "lz.embed.lfc('lps/includes/lfc/LFCdhtml.js', 'lps"+File.separator+"resources/');");
 
         // debugging print
         if (false) {

@@ -158,7 +158,7 @@ public class DeployMain {
                                                    title,
                                                    compilationProperties,
                                                    skipfiles));
-            } else if ("swf8".equals(runtime) || "swf7".equals(runtime)) {
+            } else if ("swf10".equals(runtime) || "swf8".equals(runtime) || "swf7".equals(runtime)) {
                 System.exit(DeploySOLOSWF.deploy(runtime,
                                                  wrapperonly,
                                                    null,

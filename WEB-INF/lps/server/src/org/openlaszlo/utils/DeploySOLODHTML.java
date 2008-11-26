@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import java.util.regex.*;
+
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -194,9 +196,10 @@ public class DeploySOLODHTML {
         //                 bgcolor: '#eaeaea', width: '800', height: '300', id: 'lzapp'});
 
         // Replace the resourceroot with a relative path
-        // Lz.dhtmlEmbedLFC('/trunk/lps/includes/lfc/LFCdhtml.js', '/trunk');
+        // lz.embed.lfc('/trunk/lps/includes/lfc/LFCdhtml.js', '/trunk');
 
-        wrapper = wrapper.replaceFirst("'" + lpspath + "'", "'lps"+File.separator+"resources'");
+        wrapper = wrapper.replaceFirst("lz.embed.lfc(.*?);",
+                                       "lz.embed.lfc('lps/includes/lfc/LFCdhtml.js', 'lps"+File.separator+"resources/');");
         
         // replace title
         // wrapper = wrapper.replaceFirst("<title>.*</title>", "<title>"+title+"</title>\n");
