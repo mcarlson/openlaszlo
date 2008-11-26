@@ -326,6 +326,20 @@
             var item = _contentview.subviews[index];
             _removeitem(item);
         </method>
+        
+        <!--- Removes all items from the list. -->
+        <method name="removeAllItems" >
+            <![CDATA[
+            // Sometimes a single cycle of the for below won't remove
+            // every subview, so we need to make sure it runs until it
+            // gets them all.
+            while(_contentview.subviews.length != 0){
+                for(var eg = 0; eg < _contentview.subviews.length; eg++){
+                    _removeitem(_contentview.subviews[eg]);
+                }
+            }
+            ]]>
+        </method>
 
         <!--- @keywords private -->
         <method name="_removeitem" args="item">
