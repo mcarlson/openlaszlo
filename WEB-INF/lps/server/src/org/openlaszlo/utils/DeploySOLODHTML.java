@@ -199,7 +199,7 @@ public class DeploySOLODHTML {
         // lz.embed.lfc('/trunk/lps/includes/lfc/LFCdhtml.js', '/trunk');
 
         wrapper = wrapper.replaceFirst("lz.embed.lfc(.*?);",
-                                       "lz.embed.lfc('lps/includes/lfc/LFCdhtml.js', 'lps"+File.separator+"resources/');");
+                                       "lz.embed.lfc('lps/includes/lfc/LFCdhtml.js', 'lps/resources/');");
         
         // replace title
         // wrapper = wrapper.replaceFirst("<title>.*</title>", "<title>"+title+"</title>\n");
