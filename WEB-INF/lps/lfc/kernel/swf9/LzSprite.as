@@ -102,7 +102,7 @@ dynamic public class LzSprite extends Sprite {
       private var __isinternalresource:* = null;
 
       // flag to track sprite the mouse went over while down to send mouseup event later -  see LPP-7300 and LPP-7335
-      private var __mouseoverInFront:* = null;
+      private var __mouseoverInFront:LzSprite = null;
 
       public static var capabilities:* = {
       rotation: true
@@ -661,17 +661,18 @@ dynamic public class LzSprite extends Sprite {
                 this.__mousedown = true;
                 LzMouseKernel.__lastMouseDown = this;
             } else if (eventname == 'onmouseup') {
-                if (LzMouseKernel.__lastMouseDown == this) {
+                if (LzMouseKernel.__lastMouseDown === this) {
                     // cancel mousedown event bubbling...
                     LzMouseKernel.__lastMouseDown = null;
                     e.stopPropagation();
                     this.__mousedown = false;
+
+                    if (this.__mouseoverInFront != null) {
+                        LzMouseKernel.__sendEvent(this.__mouseoverInFront.owner, 'onmouseover');
+                        this.__mouseoverInFront = null;
+                    }
                 } else {
                     skipevent = true;
-                }
-                if (this.__mouseoverInFront != null) {
-                    LzMouseKernel.__sendEvent(this.__mouseoverInFront.owner, 'onmouseover');
-                    this.__mouseoverInFront = null;
                 }
             } else if (eventname == 'onmouseupoutside') {
                 this.__mousedown = false;
@@ -686,31 +687,16 @@ dynamic public class LzSprite extends Sprite {
             if (LzMouseKernel.__lastMouseDown &&
                 (eventname == 'onmouseover' || eventname == 'onmouseout')) {
                     // only send mouseover/out if the mouse went down on this sprite - see LPP-6677
-                    if (LzMouseKernel.__lastMouseDown == this) {
+                    if (LzMouseKernel.__lastMouseDown === this) {
                         LzMouseKernel.__sendEvent(this.owner, eventname);
                     } else {
                         // check to see if this sprite is in front of the sprite the mouse went down on.  See LPP-7300
-
-                        var target:* = e.target;
-                        var location:Point = new Point(target.mouseX, target.mouseY);
-                        location = target.localToGlobal(location);
-                        var sprites:Array = LFCApplication.stage.getObjectsUnderPoint(location);
-                        var sawself = false;
-                        var noreset = false;
-                        for (var i = sprites.length; i >=0; i--) {
-                            var currsprite = sprites[i];
-                            if (currsprite == this) {
-                                sawself = true;
-                            } else if (sawself && currsprite == LzMouseKernel.__lastMouseDown) {
-                                // already saw ourselves, and we're on top of __lastMouseDown
-                                // store reference to self for sending onmouseover event later - see LPP-7335
-                                LzMouseKernel.__lastMouseDown.__mouseoverInFront = this;
-                                noreset = true;
-                                break;
-
-                            }
-                        }
-                        if (noreset == false) {
+                        var relObj:InteractiveObject = e.relatedObject;
+                        // relatedObject is the sprite's clickbutton, use parent to access the LzSprite
+                        if (relObj && relObj.parent === LzMouseKernel.__lastMouseDown) {
+                            // store reference to self for sending onmouseover event later - see LPP-7335
+                            LzMouseKernel.__lastMouseDown.__mouseoverInFront = this;
+                        } else {
                             LzMouseKernel.__lastMouseDown.__mouseoverInFront = null;
                         }
                     }
