@@ -86,7 +86,7 @@ global._dbg_name = 'global';
  * </canvas>]]>
  * </programlisting></example>
  *
- * <p>The optional <xref linkend="LzDebugConsoleWindow+debug"/> tag controls the appearance of
+ * <p>The optional <xref linkend="lz.debug"/> tag controls the appearance of
  * the debugger console window when debugging is on.</p>
  *
  * @shortdesc The Laszlo debugger
