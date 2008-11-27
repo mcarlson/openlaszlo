@@ -86,14 +86,15 @@
   * @initarg src
   * @initarg timeout
   */
-// [2008-03-18 pbr] dynamic is a temp fix to allow runtime property creation
-dynamic class LzDataset extends LzNode with LzDataElementMixin, LzDataNodeMixin {
+public dynamic class LzDataset extends LzNode with LzDataElementMixin, LzDataNodeMixin {
 /** @access private
   * @modifiers override 
   */
 static var tagname = 'dataset';
+
 /** @access private */
 static var attributes = new LzInheritedHash(LzNode.attributes);
+
 /** @access private */
 LzDataset.attributes.name = 'localdata';
 
@@ -116,16 +117,22 @@ var dataprovider :LzDataProvider;
   * @lzxdefault false
   */
 var multirequest :Boolean = false;
+
 /** @access private */
 var dataRequest :LzHTTPDataRequest = null; 
+
 /** @access private */
 var dataRequestClass :Class = LzHTTPDataRequest;
+
 /** @access private */
 var dsloadDel :LzDelegate = null;
+
 /** @access private */
 var errorstring :String;
+
 /** @access private */
 var reqOnInitDel :LzDelegate;
+
 /** TCP port number to use for secure (HTTPS) requests
   * @type uint
   * @lzxtype integer
@@ -158,6 +165,9 @@ function $lzc$set_timeout (t:Number) :void { this.timeout = t; }
 /** @access private */
 var postbody :String = null;
 
+/** @access private */
+function $lzc$set_postbody (s:String) :void { this.postbody = s; }
+
 /** When true, the server will accept
   * encoded responses for this request.  
   * Encoded responses require more work for the LPS (encoding the 
@@ -181,7 +191,7 @@ var acceptencodings :Boolean = false;
   */
 var type :String = null;
 
-/** An LzParams object which holds query key-value pairs.
+/** An lz.Param object which holds query key-value pairs.
   * @type LzParam
   */
 var params :LzParam = null;
@@ -212,7 +222,7 @@ var getresponseheaders :Boolean = false;
 var querytype :String = "GET";
 
 /** @access private */
-function $lzc$set_querytype (v:String) :void { this.setQueryType(v); }
+function $lzc$set_querytype (reqtype:String) :void { this.querytype = reqtype.toUpperCase(); }
 
 /** When true, the server will trim 
   * whitespace in the XML data (defaults to false).  
@@ -297,6 +307,7 @@ var headers :LzParam = null;
  * @access public 
  */
 var proxied :* = null;
+
 /** @access private */
 function $lzc$set_proxied (val:*) :void {
     // @devnote: Object lookup does an auto string-coercion
@@ -308,18 +319,39 @@ function $lzc$set_proxied (val:*) :void {
     }
 }
 
+/**
+  * Compute the boolean value for 'proxied', using inheritance if needed
+  * @access private
+  * @return boolean
+  */
+function isProxied () :Boolean {
+    // Check if the dataset has a "proxied" attribute which overrides dataset's value
+    return (this.proxied != null) ? this.proxied : canvas.proxied;
+}
+
 /** @access private */
 var responseheaders :LzParam = null;
+
 /** If true, the client should ensure that each request is made, rather than just 
   * making and reporting the last request.
   * @access private 
   */
 var queuerequests :Boolean = false;
+
 /** @access private */
 var oncanvas :Boolean;
 
-/** @access private */
-function $lzc$set_initialdata (v:String) :void { this.setInitialData(v); }
+/** "initialdata" is a virtual attribute, it is only used by the data-compiler.
+  * @access private
+  */
+function $lzc$set_initialdata (d:String) :void {
+    if (d != null) {
+        var e:LzDataElement = LzDataElement.stringToLzData(d, this.trimwhitespace, this.nsprefix);
+        if (e != null) {
+            this.setData(e.childNodes);
+        }
+    }
+}
 
 /** @access private */
 function LzDataset (parent:* = null, args:* = null, children:* = null, instcall:* = null) {
@@ -413,7 +445,7 @@ override function destroy () {
         delete canvas.datasets[ name ];
     }
 
-   super.destroy.apply(this, arguments);
+   super.destroy();
 }
 
 /**
@@ -437,7 +469,7 @@ function getQueryString () :String {
 }
 
 /**
-  * Returns an LzParam object holding any set request parameters for the 
+  * Returns an lz.Param object holding any set request parameters for the 
   * dataset.
   * @return LzParam: The request parameters for the dataset.
   */
@@ -474,7 +506,6 @@ override function setData (data:*, headers/*:LzParam*/ = null) :void {
 
     if (this.ondata.ready) this.ondata.sendEvent(this);
 }
-
 
 /**
   * Called when an error is received from the datasource.  
@@ -592,6 +623,57 @@ final function setRequest (b:Boolean) :void {
 }
 
 /**
+  * Turns autorequest on or off, depending on the value passed in. 
+  * If true, changes to dataset request parameters cause new datasets to be 
+  * automatically requested.  If autorequest is false, doRequest() must be 
+  * called manually after dataset request parameters are changed.
+  * 
+  * @access private
+  * @param b: A boolean value - true to turn on autorequest, false to turn off
+  * @deprecated Use setAttribute('autorequest', ...) instead.
+  */
+final function setAutorequest (b:Boolean) :void {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_autorequest(b);
+}
+
+/** Sets the raw content of a POST body.
+  * This replaces the old "lzpostbody" convention for passing raw POST data.
+  * @param String str: The string to use as the raw POST body content
+  * @deprecated Use setAttribute('postbody', ...) instead.
+  */
+final function setPostBody (str:String) :void {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_postbody(str);
+}
+
+/**
+  * Sets the query type of for the datasource to one of "POST" or "GET"
+  * by calling the method of the same name on this dataset's datasource.
+  * Note that this controls how the LPS server makes a request of the backend, as well 
+  * as how the client communicates with the LPS
+  * @param String reqtype: A string -- either "GET" or "POST". GET is the
+  * default. When the type is "POST", the query parameters will be sent in the 
+  * request body, encoded as application/x-www-form-urlencoded. If the type is "POST" and
+  * there is a exactly one request parameter and it is named "lzpostbody", it will be used
+  * as the raw request body (unencoded).  Use of "lzpostbody" with a request
+  * that has more than one request parameter is undefined.
+  * @deprecated Use setAttribute('querytype', ...) instead.
+  */
+final function setQueryType (reqtype:String) :void {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_querytype(reqtype);
+}
+
+/** @access private
+  * @deprecated Use setAttribute('initialdata', ...) instead.
+  */
+final function setInitialData (d:String) :void {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_initialdata(d);
+}
+
+/**
   * Returns the number of miliseconds it took to load the dataset's request
   * @return Int: Number of miliseconds it took to load the last request.
   */
@@ -645,25 +727,10 @@ function setQueryParams (obj:Object) :void {
     }
 }
 
-
 /**
-  * Compute the boolean value for 'proxied', using inheritance if needed
-  * @access private
-  * @return boolean
+  * Produce a hash table of key-value pairs.
+  * In the case of a duplicated key, creates an array of values.
   */
-function isProxied () :Boolean {
-    // Check if the dataset has a "proxied" attribute which overrides dataset's value
-    if (this.proxied != null) {
-        return this.proxied;
-    } else {
-        return canvas.proxied;
-    }
-}
-
-/**
-   Produce a hash table of key-value pairs.
-   In the case of a duplicated key, creates an array of values.
-*/
 static function queryStringToTable (query:String) :Object {
     var queries:Object = {};
     var parameters:Array = query.split('&');
@@ -794,31 +861,17 @@ function handleDataResponse (datareq:LzHTTPDataRequest) :void {
 }
 
 /**
-  * Turns autorequest on or off, depending on the value passed in. 
-  * If true, changes to dataset request parameters cause new datasets to be 
-  * automatically requested.  If autorequest is false, doRequest() must be 
-  * called manually after dataset request parameters are changed.
-  * 
-  * @access private
-  * @param b: A boolean value - true to turn on autorequest, false to turn off
-  * @deprecated Use setAttribute('autorequest', ...) instead.
-  */
-final function setAutorequest (b:Boolean) :void {
-    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
-    this.$lzc$set_autorequest(b);
-}
-
-/**
-  * Returns an error string if there was an error, or false if there was none.
-  * @return String: An error string, or false if none.
+  * Returns an error string if there was an error, or <code>undefined</code> if there was none.
+  * @return String: An error string, or <code>undefined</code> if none.
   */
 function getErrorString () :String { 
     return this.errorstring;
 }
 
 /* Meta stuff */
+
 /**
-  * Retrieves the LzParam object which represents the headers sent with
+  * Retrieves the lz.Param object which represents the headers sent with
   * the dataset's last request
   * @return LzParam: The headers from the dataset's last request
   */
@@ -858,30 +911,6 @@ function getResponseHeader (name:String) :* {
 }
 
 /**
-  * Sets the query type of for the datasource to one of "POST" or "GET"
-  * by calling the method of the same name on this dataset's datasource.
-  * Note that this controls how the LPS server makes a request of the backend, as well 
-  * as how the client communicates with the LPS
-  * @param Sring reqtype: A string -- either "GET" or "POST".  GET is the
-  * default.  When the type is "POST", the query parameters will be sent in the 
-  * request body, encoded as application/x-www-form-urlencoded  If the type is "POST" and
-  * there is a exactly one request parameter and it is named "lzpostbody", it will be used
-  * as the raw request body (unencoded).  Use of "lzpostbody" with a request
-  * that has more than one request parameter is undefined.
-  */
-function setQueryType (reqtype:String) :void {
-    this.querytype = reqtype.toUpperCase();
-}
-
-/** Sets the raw content of a POST body.
-  * This replaces the old "lzpostbody" convention for passing raw POST data.
-  * @param String str: The string to use as the raw POST body content
-  */
-function setPostBody (str:String) :void {
-    this.postbody = str;
-}
-
-/**
   * Stops the load of the dataset's current request
   */
 function abort () :void {
@@ -913,17 +942,6 @@ function setHeader (k:String, val:String) :void {
 
     this.headers.setValue(k, val);
 }
-
-/** @access private */
-function setInitialData (d:String) :void {
-    if (d != null) {
-        var e:LzDataElement = LzDataElement.stringToLzData(d, this.trimwhitespace, this.nsprefix);
-        if (e != null) {
-            this.setData(e.childNodes);
-        }
-    }
-}
-
 
 /**
   * Get string representation
@@ -978,7 +996,7 @@ function get (dataDel:LzDelegate = null, errorDel:LzDelegate = null, timeoutDel:
 function recycle (dset:LzDataset) :void {
     // clear any request-parameter stuff
     dset.setQueryParams(null);
-    dset.setPostBody(null);
+    dset.$lzc$set_postbody(null);
     dset.clearRequestHeaderParams();
     // clear events
     dset.ondata.clearDelegates();

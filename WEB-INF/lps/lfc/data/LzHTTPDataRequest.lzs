@@ -79,10 +79,14 @@ class LzHTTPDataRequest extends LzDataRequest {
       */
     var nsprefix :Boolean = false;
 
-    /** A hashtable object of extra args to be sent along with the LPS server proxy control args. */
+    /** A hashtable object of extra args to be sent along with the LPS server proxy control args.
+      * @type Object
+      */
     var serverproxyargs :* = null;
 
-    /** The LZX DOM element containing the loaded data */
+    /** The LZX DOM element containing the loaded data
+      * @type LzDataNodeMixin
+      */
     var xmldata :LzDataElement = null;
 
     /** Time taken by load, in milliseconds
@@ -99,7 +103,9 @@ class LzHTTPDataRequest extends LzDataRequest {
     /** @type uint */
     var secureport :uint;
 
-    /** Flag which says if the loader should attempt to parse the response as XML */
+    /** Flag which says if the loader should attempt to parse the response as XML
+      * @type Boolean
+      */
     var parsexml :Boolean = true;
 
     /** private, pointer to our LzHTTPLoader

@@ -141,17 +141,7 @@ class LzHTTPDataProvider extends LzDataProvider {
         var postbody:String = httpdreq.postbody;
         if (postbody == null && qparams != null) {
             // Convert queryparams table into a URL-encoded query-style string
-            var sep:String = '';
-            var q:String = '';
-            
-            var names:Array = qparams.getNames();
-            for (var i:int = 0; i < names.length; ++i) {
-                var name:String = names[i];
-                q += sep + name + '=' + encodeURIComponent(qparams.getValue(name));
-                sep = '&';
-            }
-
-            postbody = q;
+            postbody = qparams.serialize('=', '&', true);
         } else {
             //We are asking the swf8 runtime to treat this as raw data, as best it can
             hasquerydata = false;
