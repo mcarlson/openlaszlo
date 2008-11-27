@@ -132,7 +132,7 @@
               &lt;text datapath="position()"/&gt;
               &lt;/gridcolumn&gt;
               &lt;gridcolumn width="200"&gt; Name
-              &lt;text datapath="@displayname"/&gt;
+              &lt;text datapath="@displayname" resize="false"/&gt;
               &lt;/gridcolumn&gt;
               &lt;gridcolumn sortable="false"&gt; Home
               &lt;checkbox value="$path{'@home_default'}"
