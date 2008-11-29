@@ -358,7 +358,6 @@ class AnonDatasetGenerator extends LzEventable {
       * @access private
       */
     var pp:LzParsedPath = null;
-    
 
     /**
       * @access private
@@ -386,34 +385,44 @@ class AnonDatasetGenerator extends LzEventable {
       * @access private
       */
     var noncontext:Boolean = true;
-    
+
     /**
       * @access private
       */
     function AnonDatasetGenerator (pp:LzParsedPath) {
+        super();
         this.pp = pp;
     }
-    
+
     /** 
       * This is the shared interface with datapointer
       * @access private
       */
     function getContext () {
         //@devnote: this creates an anonymous dataset
-        var d = new LzDataset(null, {name: null});
-        
-        var ppsel = this.pp.selectors;
+        var d:LzDataset = new LzDataset(null, {name: null});
+
+        var ppsel:Array = this.pp.selectors;
         if (ppsel != null) {
-            var dp = d.getPointer();
-            for (var i = 0; i < ppsel.length; i++) {
+            var dp:LzDatapointer = d.getPointer();
+            for (var i:int = 0; i < ppsel.length; i++) {
                 if (ppsel[ i ] == "/") continue;
                 //TODO: test selector-type?
                 dp.addNode( ppsel[ i ] );
                 dp.selectChild();
             }
         }
-            
+
         return d;
+    }
+
+    /** 
+      * This is the shared interface with datapointer
+      * @access private
+      */
+    function getDataset () {
+        // we only create one-way datasets, so we can't provide this information
+        return null;
     }
 
 } // End of AnonDatasetGenerator
