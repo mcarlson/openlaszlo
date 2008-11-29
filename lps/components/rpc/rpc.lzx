@@ -435,9 +435,9 @@
             if (o.opinfo['responseheaders'] != null) {
                 var r = new LzDataElement("root", { }, o.opinfo.responseheaders);
                 if ( this.remotecontext != null && this.remotecontext.responseheaders != null) {
-                    this.remotecontext.responseheaders.setData( r );
+                    this.remotecontext.responseheaders.setAttribute("data", r);
                 } else if ( parent.responseheaders != null ) {
-                    parent.responseheaders.setData( r );
+                    parent.responseheaders.setAttribute("data", r);
                 }
             }
 

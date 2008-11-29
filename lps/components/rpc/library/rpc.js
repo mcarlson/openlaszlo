@@ -182,7 +182,7 @@ function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
             if ( delegate.dataobject instanceof LzDataset ) {
                 var element = LzDataElement.valueToElement(data);
                 // the child nodes of element will be placed in datasets childNodes
-                delegate.dataobject.setData( element.childNodes );
+                delegate.dataobject.setAttribute("data", element.childNodes);
             } else if ( delegate.dataobject instanceof LzDataElement ) {
                 var element = LzDataElement.valueToElement(data);
                 // xpath: element/value
@@ -308,7 +308,7 @@ function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
                     if ( delegate.dataobject instanceof LzDataset ) {
                         var element = LzDataElement.valueToElement(data);
                         // the child nodes of element will be placed in datasets childNodes
-                        delegate.dataobject.setData( element.childNodes );
+                        delegate.dataobject.setAttribute("data", element.childNodes);
                     } else if ( delegate.dataobject instanceof LzDataElement ) {
                         var element = LzDataElement.valueToElement(data);
                         // xpath: element/value
