@@ -57,7 +57,7 @@ Currently the best way to change them at runtime is to apply a &lt;style&gt;.
         this.setAttribute("downStartColor", s.basecolor)
         this.setAttribute("downStopColor", s.bgcolor)
 
-        this.setAttribute("overStartColor", white)
+        this.setAttribute("overStartColor", 0xFFFFFF)
         this.setAttribute("overStopColor", s.basecolor)
 
         this.setAttribute("upStartColor", s.hilitecolor)

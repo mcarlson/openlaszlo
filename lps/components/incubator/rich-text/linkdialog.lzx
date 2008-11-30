@@ -69,7 +69,7 @@
             var url = urlfield.getText();
             var fmt = this.editor.getTextFormat(this.ssel, this.esel); 
             fmt.url = url;
-            fmt.color = blue; 
+            fmt.color = 0x0000FF; 
             fmt.target = "_new"; 
             fmt.underline = true; 
             this.editor.setTextFormat(fmt, this.ssel, this.esel);

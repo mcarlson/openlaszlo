@@ -22,7 +22,7 @@
         </handler>
 
         <method name="setSelected" args="s">
-            label.setAttribute( "fgcolor", s ? red : black );
+            label.setAttribute( "fgcolor", s ? 0xFF0000 : 0x000000 );
         </method>
 
         <handler name="onclick">

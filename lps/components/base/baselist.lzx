@@ -451,12 +451,8 @@
               &lt;/dataset&gt;
             
               &lt;class name="myitem" extends="baselistitem"
-                     bgcolor="${selected ? yellow : white}"&gt;
-                 &lt;attribute name="text" type="text"/&gt;
-                 &lt;method name="applydata" args="d"&gt;
-                     setAttribute('text', d);
-                 &lt;/method&gt;
-                 &lt;text text="${parent.text}"/&gt;
+                     bgcolor="${selected ? 0xffff00 : 0xffffff}"&gt;
+                 &lt;text text="${parent.value}"/&gt;
               &lt;/class&gt;
             
               &lt;baselist layout="axis:y; spacing:2"&gt;
