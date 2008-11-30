@@ -109,6 +109,7 @@ var rawdata:String = null;
 
 /** Holds a pointer to the DataProvider which handles data load requests for this dataset. 
   * Default value is canvas.defaultdataprovider
+  * @lzxtype expression
   */
 var dataprovider :LzDataProvider;
 
@@ -140,7 +141,10 @@ var reqOnInitDel :LzDelegate;
   */
 var secureport :uint;
 
-/** The URL of the proxy server, for proxied requests */
+/** The URL of the proxy server, for proxied requests
+  * @type String
+  * @lzxtype string
+  */
 var proxyurl :String = null;
 
 /** Sent when the dataset's request results in an error. 
@@ -329,7 +333,9 @@ function isProxied () :Boolean {
     return (this.proxied != null) ? this.proxied : canvas.proxied;
 }
 
-/** @access private */
+/** HTTP response headers
+  * @access private
+  */
 var responseheaders :LzParam = null;
 
 /** If true, the client should ensure that each request is made, rather than just 
@@ -348,7 +354,7 @@ function $lzc$set_initialdata (d:String) :void {
     if (d != null) {
         var e:LzDataElement = LzDataElement.stringToLzData(d, this.trimwhitespace, this.nsprefix);
         if (e != null) {
-            this.setData(e.childNodes);
+            this.$lzc$set_data(e.childNodes);
         }
     }
 }
@@ -449,6 +455,23 @@ override function destroy () {
 }
 
 /**
+  * Returns an error string if there was an error, or <code>undefined</code> if there was none.
+  * @return String: An error string, or <code>undefined</code> if none.
+  */
+function getErrorString () :String { 
+    return this.errorstring;
+}
+
+/**
+  * Returns the number of miliseconds it took to load the dataset's request
+  * @return Int: Number of miliseconds it took to load the last request.
+  */
+function getLoadTime () :Number {
+    var dreq:LzHTTPDataRequest = this.dataRequest;
+    return dreq ? dreq.loadtime : 0;
+}
+
+/**
   * Return the src attribute of the dataset, if one was given.
   * @return String: The src of attribute of the dataset
   */
@@ -484,11 +507,9 @@ function getParams () :LzParam {
 /**
   * Sets the data for the dataset
   * @param data a LzDataElement or list of Elements
-  * @param headers optional HTTP response headers
-  * @deprecated Use setAttribute('data', ...) instead when headers is not specified.
   * @access private
   */
-override function setData (data:*, headers/*:LzParam*/ = null) :void {
+override function $lzc$set_data (data:*) :void {
     if (data == null) {
         return;
     } else if (data instanceof Array) {
@@ -496,13 +517,8 @@ override function setData (data:*, headers/*:LzParam*/ = null) :void {
     } else {
         this.setChildNodes([data]);
     }
-                
-    this.data = data;
 
-    if (this.responseheaders != null) {
-        this.responseheaders.destroy();
-    }
-    this.responseheaders = headers;
+    this.data = data;
 
     if (this.ondata.ready) this.ondata.sendEvent(this);
 }
@@ -577,6 +593,51 @@ function setQueryString (s:*) :void {
     }
 
     if (this.autorequest) {
+        this.doRequest();
+    }
+}
+
+/**
+  * Sets a named query parameter to the given value. The query parameters are 
+  * sent with every request.  The key 'lzpostbody' has a specific interpretation,
+  * see setQueryType() for details.
+  * @param String key: The name of the parameter
+  * @param String val: The value for the parameter
+  */
+function setQueryParam (key:String, val:String) :void {
+    this.querystring = null;
+    if (! this.params) {
+        this.params = new lz.Param();
+    }
+    this.params.setValue(key, val);
+
+    if (this.autorequest) {
+        this.doRequest();
+    }
+}
+
+/**
+  * Sets multiple query parameters from using the keys in the argument as keys
+  * and the values of those keys as values. This method can also be used to
+  * clear the query params, by passing null to it.
+  * @param Object o: An object whose keys are keys of parameters and whose 
+  * values are those parameters' values. Passing a value of null to this 
+  * method clears the query parameters.
+  * The key 'lzpostbody' has a specific interpretation, see setQueryType() for details.
+  */
+function setQueryParams (obj:Object) :void {
+    this.querystring = null;
+    if (! this.params) {
+        this.params = new lz.Param();
+    }
+
+    if (obj) {
+        this.params.addObject(obj);
+    } else if (obj == null) {
+        this.params.remove();
+    }
+
+    if (obj && this.autorequest) {
         this.doRequest();
     }
 }
@@ -674,60 +735,6 @@ final function setInitialData (d:String) :void {
 }
 
 /**
-  * Returns the number of miliseconds it took to load the dataset's request
-  * @return Int: Number of miliseconds it took to load the last request.
-  */
-function getLoadTime () :Number {
-    var dreq:LzHTTPDataRequest = this.dataRequest;
-    return dreq ? dreq.loadtime : 0;
-}
-
-/**
-  * Sets a named query parameter to the given value. The query parameters are 
-  * sent with every request.  The key 'lzpostbody' has a specific interpretation,
-  * see setQueryType() for details.
-  * @param String key: The name of the parameter
-  * @param String val: The value for the parameter
-  */
-function setQueryParam (key:String, val:String) :void {
-    this.querystring = null;
-    if (! this.params) {
-        this.params = new lz.Param();
-    }
-    this.params.setValue(key, val);
-
-    if (this.autorequest) {
-        this.doRequest();
-    }
-}
-
-/**
-  * Sets multiple query parameters from using the keys in the argument as keys
-  * and the values of those keys as values. This method can also be used to
-  * clear the query params, by passing null to it.
-  * @param Object o: An object whose keys are keys of parameters and whose 
-  * values are those parameters' values. Passing a value of null to this 
-  * method clears the query parameters.
-  * The key 'lzpostbody' has a specific interpretation, see setQueryType() for details.
-  */
-function setQueryParams (obj:Object) :void {
-    this.querystring = null;
-    if (! this.params) {
-        this.params = new lz.Param();
-    }
-
-    if (obj) {
-        this.params.addObject(obj);
-    } else if (obj == null) {
-        this.params.remove();
-    }
-
-    if (obj && this.autorequest) {
-        this.doRequest();
-    }
-}
-
-/**
   * Produce a hash table of key-value pairs.
   * In the case of a duplicated key, creates an array of values.
   */
@@ -756,6 +763,15 @@ static function queryStringToTable (query:String) :Object {
     return queries;
 }
 
+/**
+  * Stops the load of the dataset's current request
+  */
+function abort () :void {
+    var dreq:LzHTTPDataRequest = this.dataRequest;
+    if (dreq) {
+        this.dataprovider.abortLoadForRequest(dreq);
+    }
+}
 
 /**
   * Does a request immediately using the current values.  If autorequest is true,
@@ -842,17 +858,21 @@ function doRequest (ignore:* = null) :void {
 /**
   * @access private       
   * Called when  data request status changes.
-  * If status is 'success', call setData
+  * If status is 'success', sets data and responseheaders (if available)
   */
 function handleDataResponse (datareq:LzHTTPDataRequest) :void {
     if (this.dsloadDel != null) {
         this.dsloadDel.unregisterFrom(datareq.onstatus);
     }
-    
+
     this.rawdata = datareq.rawdata;
 
     if (datareq.status == LzDataRequest.SUCCESS) {
-        this.setData(datareq.xmldata, datareq.responseheaders);
+        if (this.responseheaders != null) {
+            this.responseheaders.destroy();
+        }
+        this.responseheaders = datareq.responseheaders;
+        this.$lzc$set_data(datareq.xmldata);
     } else if (datareq.status == LzDataRequest.ERROR) {
         this.gotError(datareq.error);
     } else if (datareq.status == LzDataRequest.TIMEOUT) {
@@ -860,15 +880,20 @@ function handleDataResponse (datareq:LzHTTPDataRequest) :void {
     }
 }
 
-/**
-  * Returns an error string if there was an error, or <code>undefined</code> if there was none.
-  * @return String: An error string, or <code>undefined</code> if none.
-  */
-function getErrorString () :String { 
-    return this.errorstring;
-}
-
 /* Meta stuff */
+
+/**
+  * Sets a header for the next request
+  * @param String k: Key for the header
+  * @param String val: Value for the header
+  */
+function setHeader (k:String, val:String) :void { 
+    if (! this.headers) {
+        this.headers = new lz.Param();
+    }
+
+    this.headers.setValue(k, val);
+}
 
 /**
   * Retrieves the lz.Param object which represents the headers sent with
@@ -911,16 +936,6 @@ function getResponseHeader (name:String) :* {
 }
 
 /**
-  * Stops the load of the dataset's current request
-  */
-function abort () :void {
-    var dreq:LzHTTPDataRequest = this.dataRequest;
-    if (dreq) {
-        this.dataprovider.abortLoadForRequest(dreq);
-    }
-}
-
-/**
   * Returns all response headers as an object of name/value pairs, or false
   * if there were none.
   * 
@@ -928,19 +943,6 @@ function abort () :void {
   */
 function getAllResponseHeaders () :LzParam {
     return this.responseheaders;
-}
-
-/**
-  * Sets a header for the next request
-  * @param String k: Key for the header
-  * @param String val: Value for the header
-  */
-function setHeader (k:String, val:String) :void { 
-    if (! this.headers) {
-        this.headers = new lz.Param();
-    }
-
-    this.headers.setValue(k, val);
 }
 
 /**
@@ -1003,7 +1005,7 @@ function recycle (dset:LzDataset) :void {
     dset.ontimeout.clearDelegates();
     dset.onerror.clearDelegates();
     // clear any data
-    dset.setData([]);
+    dset.$lzc$set_data([]);
     
     this._p.push(dset);
 }

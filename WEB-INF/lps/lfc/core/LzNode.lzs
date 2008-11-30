@@ -1683,11 +1683,15 @@ public dynamic class LzNode extends LzEventable {
 
   /** @access private */
   var data:* = null;
-  
+
   /**
     * @access private
     */
-  function $lzc$set_data (v:*) :void { this.setData(v); }
+  function $lzc$set_data (data:*) :void {
+    this.data = data;
+    (this.datapath || new LzDatapath(this)).setPointer(data /*cast LzDataNodeMixin*/);
+    if (this.ondata.ready) this.ondata.sendEvent(data);
+  }
 
   /**
    * Sets the datacontext for the node to the data element given as an
@@ -1696,12 +1700,11 @@ public dynamic class LzNode extends LzEventable {
    * @param LzDataElement data: The dataelement to use as the context
    * @param ignore: This parameter is only used in LzDataset
    * @deprecated Use setAttribute('data', ...) instead
+   * @devnote Don't mark as final, or replicator/lazyreplicator won't compile anymore
    */
   function setData (data:*, ignore=null) :void {
-    this.data = data;
-    var dp:LzDatapath = (this.datapath != null) ? this.datapath : new LzDatapath(this);
-    dp.setPointer(data /*cast LzDataNodeMixin*/);
-    if (this.ondata.ready) this.ondata.sendEvent(data);
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_data(data);
   }
 
   /**
@@ -1714,7 +1717,7 @@ public dynamic class LzNode extends LzEventable {
    */
   function applyData ( data ){
   }
-  
+
   /*
    * FIXME: [20080419 anba] doc: LPP-4259
    * FIXME: [20080419 anba] return type: LPP-4077
@@ -1725,9 +1728,9 @@ public dynamic class LzNode extends LzEventable {
    *
    * @access public
    */
-  function updateData () /*:String*/ { 
-    return void(0); 
-  } 
+  function updateData () /*:String*/ {
+    return void(0);
+  }
 
   /*
    * If you use LzSelectionManager, you can decide the selection method,
