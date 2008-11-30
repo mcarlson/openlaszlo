@@ -1,4 +1,10 @@
 <canvas > 
+
+        <contextmenu id="cc"> 
+          <contextmenuitem caption="Right-clicked on canvas!" onselect="Debug.write('clicked right')"/> 
+        </contextmenu>    
+
+
   <view name="blu"  width="300" height="50" x="100" y="100" bgcolor="blue"
                           onclick="Debug.write('clicked blue')"
                           onmouseover="Debug.write('mouseover blue')"
@@ -8,6 +14,7 @@
         </contextmenu>
   </view>
 
+  <text text="${'runtime = '+$runtime}"/>
   <view name="t1" x="50" y="50" width="200" height="200" bgcolor="yellow" opacity="1">
     <view name="ctx" width="100" height="100" bgcolor="red" 
           onclick="Debug.write('clicked red')"> 

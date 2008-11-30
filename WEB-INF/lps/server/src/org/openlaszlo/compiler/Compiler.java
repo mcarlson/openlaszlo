@@ -630,7 +630,6 @@ public class Compiler {
                 "import flash.xml.*;\n" +
                 "}#\n" +
                 "public function DebugExec (...ignore) {runToplevelDefinitions();}\n" +
-                "public function write(...args):void {lzconsole.write(args.join(\" \"));}\n" +
                 "public function runToplevelDefinitions() {}\n" +
                 "}\n";
 

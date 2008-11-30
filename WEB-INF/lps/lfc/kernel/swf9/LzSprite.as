@@ -55,6 +55,7 @@ dynamic public class LzSprite extends Sprite {
       public var resourcewidth:Number = 0;
       public var resourceheight:Number = 0;
       public var isroot:Boolean = false;
+      public static var rootSprite:LzSprite = null;
       var lastreswidth:Number = 0;
       var lastresheight:Number = 0;
       var skiponload = false;
@@ -132,6 +133,7 @@ dynamic public class LzSprite extends Sprite {
           if (owner == null) return;
           if (isroot) {
               this.isroot = true;
+              LzSprite.rootSprite = this;
               this.mouseEnabled = true;// @devnote: see LPP-6980
           } else {
               this.mouseEnabled = true;
@@ -1346,12 +1348,11 @@ dynamic public class LzSprite extends Sprite {
       }
 
       function setDefaultContextMenu ( cmenu ){
-          if (cmenu != null) {
-              // even though Stage extends flash.display.InterativeObject, you cannot attach 
-              // a context-menu to it, instead we attach the context-menu to application-sprite
-              // LFCApplication.stage.contextMenu = cmenu.kernel.__LZcontextMenu();
-              LFCApplication._sprite.contextMenu = cmenu.kernel.__LZcontextMenu();
-          }
+          // TODO [hqm 2008-11] In SWF8, we can set the contextMenu
+          // property of MovieClip.prototype, which puts the menu on
+          // every MovieClip by default. Not sure if there's any way
+          // to do that in swf9.
+          LzSprite.prototype.contextMenu = cmenu.kernel.__LZcontextMenu();
       }
 
       /**

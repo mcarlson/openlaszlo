@@ -1020,7 +1020,6 @@ var bgcolor =   null;
   */
 function $lzc$set_bgcolor(bgc) { 
     bgc = LzColorUtils.hextoint(bgc);
-    //trace('setting bgcolor ',bgc, this, this.sprite);
     this.sprite.setBGColor(bgc);
     if (bgc != null) this.bgcolor = bgc;
     if (this.onbgcolor.ready) this.onbgcolor.sendEvent( bgc );
@@ -3172,11 +3171,14 @@ function $lzc$set_proxyurl( f ){
 }
 
 
+var contextmenu:LzContextMenu =  null;
+
 /**
   * Install menu items for the right-mouse-button 
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
 function setContextMenu ( cmenu ){
+    this.contextmenu = cmenu;
     this.sprite.setContextMenu( cmenu );
 }
 

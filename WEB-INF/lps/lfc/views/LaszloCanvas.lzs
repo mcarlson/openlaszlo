@@ -350,6 +350,7 @@ dynamic class LzCanvas extends LzView {
         }
 
         this.bgcolor = LzColorUtils.hextoint(bgcolor);
+        this.setAttribute('bgcolor', bgcolor);
 
         this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;
         delete args.lpsversion;
@@ -376,12 +377,6 @@ dynamic class LzCanvas extends LzView {
 
         // Create the default dataprovider
         this.defaultdataprovider = this.httpdataprovider = new LzHTTPDataProvider();
-
-        if ($svg) {
-            //not for svg
-        } else {
-            this.buildDefaultMenu();
-        }
 
         this.id = lz.Browser.getAppID();
     }
@@ -586,27 +581,21 @@ function initDone (){
 
 /**
   * @access private
-  * @devnote Note that canvas functions that need to happen when the app is
-  * loaded should go here, so they will be invoked in kranked apps too.
-  * (By the root resolver in LaszloLibrary).
   */
 override function init (){
     // Canvas-only: This is so the canvas sprite knows when to show its children and 
     this.sprite.init(true);
-
-    if ($as3) {
-        //trace("LzCanvas.init called");
-        // cheapo debugger printing
-        sprite.addChild(lzconsole.consoletext);
-        sprite.addChild(lzconsole.consoleinputtext);
-        //lzconsole.write("elapsed time "+getTimer()+" msec");
-    }
 
     // start up history
     if (this.history == true) {
         // Tell lz.History we're ready to send events
         lz.History.__start(this.id); 
     }
+
+    if (this.contextmenu == null) {
+        this.buildDefaultMenu();
+    }
+
 }
 
 /**
@@ -762,8 +751,8 @@ override function $lzc$set_y(v) {
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
     function setDefaultContextMenu ( cmenu ){
-    this.setContextMenu(cmenu);
-    this.sprite.setDefaultContextMenu( cmenu );
+        this.setContextMenu(cmenu);
+        this.sprite.setDefaultContextMenu( cmenu );
 }
 
 /**

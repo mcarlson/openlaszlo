@@ -45,7 +45,6 @@ class LzAS3DebugService extends LzDebugService {
     // did not actually instantiate a <debug /> tag
     var params:Object = LFCApplication.stage.loaderInfo.parameters;
     var remote =( params[ "lzconsoledebug" ] ); 
-    trace('makeDebugWindow lzconsoledebug=',  'remote=', remote);
     if (remote == 'true') {
       // Open the remote debugger socket
       this.attachDebugConsole(new LzFlashRemoteDebugConsole());

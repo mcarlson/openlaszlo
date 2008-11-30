@@ -188,7 +188,7 @@ public class DeploySOLOSWF {
         // Replace the ServerRoot with a relative path
         // lzOptions = { ServerRoot: '/legals', splashhtml: '<img src="lps/includes/spinner.gif">', appendDivID: 'lzdhtmlappdiv'};
 
-        wrapper = wrapper.replaceFirst("ServerRoot:\\s*'_.*?'", "ServerRoot: 'lps"+File.separator+"resources'");
+        wrapper = wrapper.replaceFirst("ServerRoot:\\s*'_.*?'", "ServerRoot: 'lps/resources'");
 
 
 
@@ -229,10 +229,9 @@ public class DeploySOLOSWF {
         // These are the files to include in the ZIP file
         ArrayList filenames = new ArrayList();
         // LPS includes, (originally copied from /lps/includes/*)
-        filenames.add("lps"+File.separator+"includes"+File.separator+"embed-compressed.js");
-        filenames.add("lps"+File.separator+"includes"+File.separator+"blank.gif");
-        filenames.add("lps"+File.separator+"includes"+File.separator+"spinner.gif");
-
+        filenames.add("lps/includes/embed-compressed.js");
+        filenames.add("lps/includes/blank.gif");
+        filenames.add("lps/includes/spinner.gif");
 
         ArrayList appfiles = new ArrayList();
         //System.out.println("calling listFiles " + appdir);

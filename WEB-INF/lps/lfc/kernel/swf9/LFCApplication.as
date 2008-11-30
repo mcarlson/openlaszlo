@@ -53,11 +53,6 @@ public class LFCApplication {
 
         // Allow anyone to access the stage object
         LFCApplication.stage = LFCApplication._sprite.stage;
-        LFCApplication.write = this.write;
-
-        // trace("LFCApplication.stage = " + LFCApplication.stage);
-        // trace("  loaderInfo.loaderURL = " + LFCApplication.stage.loaderInfo.loaderURL);
-
         var idleTimerPeriod = 14; // msecs
 
         //trace('idle timer period = ', idleTimerPeriod , 'msecs');
@@ -88,94 +83,7 @@ public class LFCApplication {
         */
 
         LzKeyboardKernel.setCallback(lz.Keys, '__keyEvent');
-
-        // cheapo debug console
-        makeDebuggerFields();
-
-        
-
     }
-
-    // A simple debugger output and input field
-    function makeDebuggerFields () {
-        lzconsole = this;
-        var tfield:TextField = new TextField();
-        tfield.visible = false;
-        tfield.background = true;
-        tfield.backgroundColor = 0xcccccc;
-        tfield.x = 0;
-        tfield.y = 400;
-        tfield.wordWrap = true;
-        tfield.multiline = true;
-        tfield.width = 800;
-        tfield.height = 160;
-        tfield.border = true;
-        consoletext = tfield;
-
-        var ci:TextField =  new TextField();
-        consoleinputtext = ci;
-        ci.visible = false;
-        ci.background = true;
-        ci.backgroundColor = 0xffcccc;
-        ci.x = 0;
-        ci.y = 560;
-        ci.wordWrap = false;
-        ci.multiline = false;
-        ci.width = 800;
-        ci.height = 20;
-        ci.border = true;
-        ci.type = TextFieldType.INPUT;
-        ci.addEventListener(KeyboardEvent.KEY_DOWN, consoleInputHandler);
-
-        var newFormat:TextFormat = new TextFormat();
-        newFormat.size = 11;
-        newFormat.font = "Verdana";
-        ci.defaultTextFormat = newFormat;
-        consoletext.defaultTextFormat = newFormat;
-    }
-
-    // Debugger loader completion handler 
-    function debugEvalListener (e:Event):void {
-        e.target.loader.unload();
-        //DebugExec(e.target.content).doit();
-    }
-
-
-    function consoleInputHandler (event:KeyboardEvent ){
-        if (event.charCode == Keyboard.ENTER) {
-            var expr = consoleinputtext.text;
-            write(expr);
-            consoleinputtext.text = "";
-
-            var debugloader:Loader = new Loader();
-            debugloader.contentLoaderInfo.addEventListener(Event.INIT, debugEvalListener);
-
-            // Send EVAL request to LPS server
-            // It doesn't matter what path/filename we use, as long as it has ".lzx" suffix, so it is
-            // handled by the LPS. The lzt=eval causes the request to be served by the EVAL Responder.
-            var url = "hello.lzx?lzr=" + $runtime + "&lz_load=false&lzt=eval&lz_script=" + encodeURIComponent(expr)+"&lzbc=" +(new Date()).getTime();
-            debugloader.load(new URLRequest(url),
-                             new LoaderContext(false,
-                                               new ApplicationDomain(ApplicationDomain.currentDomain)));
-        }
-    }
-
-
-    ////////////////////////////////////////////////////////////////
-    // A crude debugger output window for now
-    public var consoletext:TextField;
-    public var consoleinputtext:TextField;
-    
-    public function write (...args) {
-        consoletext.visible = true;
-        consoleinputtext.visible = true;
-        consoletext.appendText( "\n" + args.join(" "));
-        consoletext.scrollV = consoletext.maxScrollV;
-    }
-    ////////////////////////////////////////////////////////////////
-
-
-
 
     function reportWheel(event:MouseEvent):void {
         /*
@@ -218,7 +126,7 @@ public class LFCApplication {
 // contains {ptype, class, frames, width, height}
 // ptype is one of "ar" (app relative) or "sr" (system relative)
 var LzResourceLibrary = {};
-var lzconsole;
+
 
 
 

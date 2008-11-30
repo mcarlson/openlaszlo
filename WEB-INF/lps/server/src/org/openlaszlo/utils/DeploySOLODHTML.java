@@ -237,9 +237,9 @@ public class DeploySOLODHTML {
         // These are the files to include in the ZIP file
         ArrayList filenames = new ArrayList();
         // LPS includes, (originally copied from /lps/includes/*)
-        filenames.add("lps"+File.separator+"includes"+File.separator+"embed-compressed.js");
-        filenames.add("lps"+File.separator+"includes"+File.separator+"blank.gif");
-        filenames.add("lps"+File.separator+"includes"+File.separator+"spinner.gif");
+        filenames.add("lps/includes/embed-compressed.js");
+        filenames.add("lps/includes/blank.gif");
+        filenames.add("lps/includes/spinner.gif");
 
 
         ArrayList appfiles = new ArrayList();
@@ -280,7 +280,7 @@ public class DeploySOLODHTML {
 
             // Copy the DHTML LFC to lps/includes/LFC-dhtml.js
             ArrayList lfcfiles = new ArrayList();
-            listFiles(lfcfiles, new File(basedir + ""+File.separator+"lps"+File.separator+"includes"+File.separator+"lfc"));
+            listFiles(lfcfiles, new File(basedir + "/lps/includes/lfc"));
             for (int i=0; i<lfcfiles.size(); i++) {
                 String fname = (String) lfcfiles.get(i);
                 if (!fname.matches(".*LFCdhtml.*.js")) { continue; }
@@ -304,7 +304,7 @@ public class DeploySOLODHTML {
                 String src = res.getAttribute("src");
                 String pathname = res.getAttribute("pathname");
                 String relativePathname = pathname.substring(basedir.getAbsolutePath().length() + 1);
-                String zip_pathname = "lps"+File.separator+"resources"+File.separator+relativePathname;
+                String zip_pathname = "lps/resources/"+relativePathname;
                 if (zippedfiles.contains(zip_pathname)) { continue; }
                 // compare the pathname that the resource resolved to with the app directory path 
                 if (pathname.startsWith(appdir.getAbsolutePath())) {
