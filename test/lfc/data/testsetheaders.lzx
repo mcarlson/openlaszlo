@@ -22,7 +22,7 @@
       Debug.write("testsetheaders.lzx sending edata");
       edata.setHeader("content-type", "pink-elephants/xml");
       edata.setQueryParam("flash8", "has bugs");
-      edata.setQueryType("POST");
+      edata.setAttribute("querytype", "POST");
       edata.doRequest();
     </method>
 

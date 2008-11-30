@@ -21,8 +21,8 @@
     <method name="sendit"><![CDATA[
       this.xmldat = "<top>This is posted data. <sub>With M&amp;M&apos;s chocolate candies</sub><node>3 &lt; 2 and &gt; 1 </node></top>";
       prdatapb_solo.setHeader("content-type", "application/xml");
-      prdatapb_solo.setQueryType("POST");
-      prdatapb_solo.setPostBody(this.xmldat);
+      prdatapb_solo.setAttribute("querytype", "POST");
+      prdatapb_solo.setAttribute("postbody", this.xmldat);
       prdatapb_solo.doRequest();
       ]]>
     </method>

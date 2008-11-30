@@ -19,7 +19,7 @@
 
     <method name="sendit">
       prdata.setHeader("content-type", "application/xml");
-      prdata.setQueryType("POST");
+      prdata.setAttribute("querytype", "POST");
       prdata.setQueryParam("lzpostbody", "This is posted data.");
       prdata.doRequest();
     </method>

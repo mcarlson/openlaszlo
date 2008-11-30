@@ -70,7 +70,7 @@
         <attribute name="onum" value="1"/>
         <handler name="onclick">
             Debug.write( 'set outer dpath to ' + this.dpaths[ this.onum ] );
-            par.setDatapath( this.dpaths[ this.onum] );
+            par.setAttribute( 'datapath', this.dpaths[ this.onum] );
             this.onum = ++this.onum &lt; 4 ? this.onum : 0;
         </handler>
     </button>

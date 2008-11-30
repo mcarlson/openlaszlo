@@ -21,7 +21,7 @@
     <method name="sendit">
       dsget_post_prox.setQueryParam("address", "67 Clyde Street");
       dsget_post_prox.setQueryParam("phone", "617-987-1234");
-      dsget_post_prox.setQueryType("POST");
+      dsget_post_prox.setAttribute("querytype", "POST");
       dsget_post_prox.doRequest();
     </method>
 

@@ -111,18 +111,18 @@
                 somedat.getFirstChild().getFirstChild().setNodeName( 'record' );
                 assertEquals( 6, replator.clones.length );
                 var opath = replator.xpath;
-                replator.setDatapath( opath + 'options/glasses/../..' );
+                replator.setAttribute( 'datapath', opath + 'options/glasses/../..' );
                 assertEquals( 4, replator.clones.length );
                 assertEquals( "Hoo" , replator.clones[3].n.getText());
                 assertEquals( 4 , replator.clones[3].pos);
                 assertEquals( 4 , replator.clones[3].cnt);
-                replator.setDatapath( opath );
+                replator.setAttribute( 'datapath', opath );
                 assertEquals( 6, replator.clones.length );
                 assertEquals( "Foo" , replator.clones[3].n.getText());
                 assertEquals( 4 , replator.clones[3].pos);
                 assertEquals( 6 , replator.clones[3].cnt);
-                replator.setDatapath( opath + 
-                                      'options/hairy[@color="red"]/../..' );
+                replator.setAttribute( 'datapath', opath +
+                                            'options/hairy[@color="red"]/../..' );
                 assertEquals( 1, replator.clones.length );
                 somedat.childNodes[0].childNodes[1].childNodes[2].
                             childNodes[0].setAttr( 'color' , 'red' );
@@ -131,7 +131,7 @@
                 somedat.childNodes[0].childNodes[1].childNodes[2].
                             childNodes[0].removeAttr( 'color' );
                 assertEquals( 1, replator.clones.length );
-                replator.setDatapath( opath );
+                replator.setAttribute( 'datapath', opath );
 
                 assertEquals( 6, rpar.repcnt );
 

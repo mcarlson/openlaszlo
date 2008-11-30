@@ -21,7 +21,7 @@
 
     <handler name="oninit">
       dsheaders.setHeader("content-type", "application/xml");
-      dsheaders.setQueryType("POST");
+      dsheaders.setAttribute("querytype", "POST");
       dsheaders.doRequest();
     </handler>
 

@@ -53,7 +53,7 @@
             assertEquals(  null, a.b.m.dattr );
             assertEquals( '' ,  a.b.n.dattr );
 
-            a.b.setDatapath( 'p' );
+            a.b.setAttribute( 'datapath', 'p' );
             assertEquals( 'ddd' , a.b.m.dattr );
             assertEquals( 'eee' , a.b.n.dattr );
 

@@ -54,7 +54,7 @@
                 <datatester datapath="nodeb[1]/@color" id="changeme"/>
                 <datatester datapath="nodeb[2]/@color" />
             </view>
-            <button onclick="setme.setDatapath( 'nodea[3]')">
+            <button onclick="setme.setAttribute( 'datapath', 'nodea[3]')">
                 Add datapath
             </button>
         <button >

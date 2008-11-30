@@ -21,7 +21,7 @@
     <method name="sendit">
       dsget.setQueryParam("address", "67 Clyde Street");
       dsget.setQueryParam("phone", "617-987-1234");
-      dsget.setQueryType("GET");
+      dsget.setAttribute("querytype", "GET");
       dsget.doRequest();
     </method>
 

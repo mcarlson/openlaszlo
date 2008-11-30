@@ -21,7 +21,7 @@
     <method name="sendit">
       dsgetsolo_.setQueryParam("address", "67 Clyde Street");
       dsgetsolo_.setQueryParam("phone", "617-987-1234");
-      dsgetsolo_.setQueryType("GET");
+      dsgetsolo_.setAttribute("querytype", "GET");
       dsgetsolo_.doRequest();
     </method>
 

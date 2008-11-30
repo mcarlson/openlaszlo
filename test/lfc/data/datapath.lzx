@@ -92,7 +92,7 @@
             assertEquals( et2, collector.ondata[2] );
             this.clearCollected();
 
-            et2.setDatapath( "record[2]/@a" );
+            et2.setAttribute( 'datapath' , "record[2]/@a" );
             assertEquals( 4 , this.collector.ondata.length );
             assertEquals( 2 , this.collector.applyData.length );
             assertEquals( et2, collector.ondata[2] );
@@ -110,7 +110,7 @@
             var et1 = etcRoot.etc1;
 
             Debug.write( p1 );
-            et1.setDatapath( 'data/@foo' );
+            et1.setAttribute( 'datapath' , 'data/@foo' );
             assertEquals ( '55' , et1.data );
             assertEquals( 2 , this.collector.ondata.length );
             assertEquals( 2 , this.collector.applyData.length );

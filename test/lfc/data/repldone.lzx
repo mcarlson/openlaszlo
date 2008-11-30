@@ -83,9 +83,9 @@
         <attribute name="toggle" value="false"/>
         <handler name="onclick">
             if ( toggle ){
-                rman.setDatapath( "ds1:/top/node" )
+                rman.setAttribute( 'datapath, "ds1:/top/node" );
             } else {
-                rman.setDatapath( " ds2 :/ top  /  xnode " )
+                rman.setAttribute( 'datapath, " ds2 :/ top  /  xnode " );
             }
             this.toggle = !this.toggle;
         </handler>

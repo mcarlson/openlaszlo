@@ -23,7 +23,7 @@
 
     <method name="sendit">
       prdatasolo.setHeader("content-type", "application/xml");
-      prdatasolo.setQueryType("POST");
+      prdatasolo.setAttribute("querytype", "POST");
       prdatasolo.setQueryParam("lzpostbody", "This is posted SOLO data.");
 
      
