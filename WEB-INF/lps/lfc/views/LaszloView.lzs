@@ -559,7 +559,6 @@ var mask;
   * See focus manager (LzFocus) for more details.
   * @type Boolean
   * @lzxtype boolean
-  * @keywords readonly
   */
 var focusable = false;
 
