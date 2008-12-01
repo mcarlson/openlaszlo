@@ -58,7 +58,7 @@ LzMakeLoadSprite.createLoader = function (src, cache, headers, filetype) {
   * @param String headers: Headers to send with the request (if any.)
   * @param String filetype: Filetype, e.g. 'mp3' or 'jpg'.  If not specified, it will be derived from the URL.
   */
-LzMakeLoadSprite.setSource = function (src, cache, header, filetype) {
+LzMakeLoadSprite.setSource = function (src, cache, headers, filetype) {
     // unload anything currently loading...
     if (this.loader.mc.loading == true) {
         LzLoadQueue.unloadRequest(this.loader.mc);

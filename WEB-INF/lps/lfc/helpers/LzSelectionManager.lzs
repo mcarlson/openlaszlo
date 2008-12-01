@@ -133,7 +133,7 @@ public dynamic class LzSelectionManager extends LzNode {
     var lastRangeStart :*;
 
     /**
-      * @param LzView view: A view above this one in the hierarchy that will determine
+      * @param LzView parent: A view above this one in the hierarchy that will determine
       * the placement of the selection manager.
       * @param Object args: A hash of initialization arguments
       *

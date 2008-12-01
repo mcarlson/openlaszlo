@@ -51,11 +51,9 @@ static function loadJS ( js, target='_self'){
 /**
   * Runs a Javascript method in the browser, returning the result  
   * @keywords flashspecific
-  * 
-  * @param String js: Browser javascript to execute
   */
 static function callJS (...args) {
-    var js = args[0];
+    var js = args[0];// String js: Browser javascript to execute
     var callback = args[1];
     //DojoExternalInterface.call.apply(null, args);
     if (LzBrowserKernel.jsready != true) {

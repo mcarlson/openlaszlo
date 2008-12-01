@@ -701,8 +701,8 @@ function destroyClone (v:LzNode) :void {
   * @deprecated Use setAttribute('datapath', ...) instead.
   * @access private
   */
-override function $lzc$set_datapath(v) :void {
-    this.setXPath(v);
+override function $lzc$set_datapath(xp) :void {
+    this.setXPath(xp);
 }
 
 /**
@@ -763,9 +763,9 @@ override function toString () /*:String*/ {
   * reason for this to be a public method.
   * @deprecated Use setAttribute('visible', ...) instead.
   */
-function setVisible(v:Boolean) :void { 
+function setVisible(vis:Boolean) :void { 
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
-    this.$lzc$set_visible(v);
+    this.$lzc$set_visible(vis);
 }
 
 /** @access private */

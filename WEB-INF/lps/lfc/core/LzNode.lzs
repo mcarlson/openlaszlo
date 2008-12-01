@@ -468,6 +468,7 @@ public dynamic class LzNode extends LzEventable {
    * so that nodes can be garbage collected when they are no longer needed.
    * See also, immediateparent.
    * @keywords readonly
+   * @type LzNode
    */
   var parent;
 

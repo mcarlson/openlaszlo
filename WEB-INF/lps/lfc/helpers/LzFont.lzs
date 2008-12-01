@@ -351,6 +351,7 @@ var lsbtable;
   */
 var rsbtable;
 
+/** @access private */
 var fontobject;
 
 
@@ -377,7 +378,9 @@ function LzFont ( fontobject , attrs , style ){
 }
 
 /** This is a constant set in the textfield the runtime uses. should match the
-  * value set in SWFWriter.java */
+  * value set in SWFWriter.java 
+  * @access private
+  */
 var leading = 2;
 
 public function toString (){

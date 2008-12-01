@@ -620,7 +620,7 @@ function setQueryParam (key:String, val:String) :void {
   * Sets multiple query parameters from using the keys in the argument as keys
   * and the values of those keys as values. This method can also be used to
   * clear the query params, by passing null to it.
-  * @param Object o: An object whose keys are keys of parameters and whose 
+  * @param Object obj: An object whose keys are keys of parameters and whose 
   * values are those parameters' values. Passing a value of null to this 
   * method clears the query parameters.
   * The key 'lzpostbody' has a specific interpretation, see setQueryType() for details.
@@ -993,7 +993,7 @@ function get (dataDel:LzDelegate = null, errorDel:LzDelegate = null, timeoutDel:
 
 /**
   * Recyles a dataset back into the pool for reuse
-  * @param d: The dataset to be recycled
+  * @param dset: The dataset to be recycled
   */
 function recycle (dset:LzDataset) :void {
     // clear any request-parameter stuff

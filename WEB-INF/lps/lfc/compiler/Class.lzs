@@ -25,7 +25,7 @@
   * all other classes are created by Class.make (below).
   */
 var Instance = function constructor () {
-  this.constructor = arguments.callee
+  this.constructor = arguments.callee;
   this.$lzsc$initialize.apply(this, arguments);
 };
 Instance.prototype.constructor = Instance;
@@ -163,8 +163,7 @@ Instance.prototype.addProperty('nextMethod', function nextMethod (currentMethod,
   */
 Instance.prototype.addProperty('$lzsc$initialize', function $lzsc$initialize () {});
 if ($profile) {
-  var ii = Instance.prototype.$lzsc$initialize;
-  ii._dbg_name = ii.name = 'Instance';
+  Instance.prototype.$lzsc$initialize._dbg_name = Instance.prototype.$lzsc$initialize.name = 'Instance';
 }
 
 /**
@@ -190,8 +189,7 @@ if ($debug) {
   Instance.initialize._dbg_typename = 'Instance static function';
 }
 if ($profile) {
-  var ii = Instance.initialize;
-  ii._dbg_name = ii.name = 'Instance.initialize';
+  Instance.initialize._dbg_name = Instance.initialize.name = 'Instance.initialize';
 }
 
 if ($debug) {
