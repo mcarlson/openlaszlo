@@ -1145,11 +1145,11 @@ function deleteNode() /*:LzDataNodeMixin*/ {
 
     var op /*:LzDataNodeMixin*/ = this.p
     if ( !this.rerunxpath ){
-        //move the pointer to the next sibling
-        if (!this.selectNext() ) {
+        //move the pointer to a sibling, try first the next sibling, then the previous sibling
+        if (! (this.selectNext() || this.selectPrev())) {
             this.__LZHandleNoNodes();
         }
-    }
+    } 
 
     op.parentNode.removeChild( op );
     return op;
