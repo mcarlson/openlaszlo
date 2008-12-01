@@ -112,10 +112,13 @@ function $lzc$set_p (v) :void {
   * @type LzDataNodeMixin
   */
 var p /*:LzDataNodeMixin*/ = null;//TODO: uncomment after LPP-5840
-// var data = null;
 
 /** The reference to a clonemanager from a clone.
-    @keywords read-only */ 
+  * @devnote context can be one of: 
+  * LzReplicationManager, LzDatapath, LzDataset, AnonDatasetGenerator
+  * @keywords read-only
+  * @type LzReplicationManager
+  */
 var context :* = null;
 
 /** @access private */
@@ -223,7 +226,7 @@ function xpathQuery ( p:Object ) :* {
     //LzDataset or AnonDatasetGenerator -> make interface?
     var ppcontext:* = pp.getContext( this );
     var nodes:* = this.__LZgetNodes( pp , ppcontext ? ppcontext : this.p );
-    
+
     if ( nodes == null ) return null;
 
     if ( pp.aggOperator != null ){
@@ -1351,7 +1354,6 @@ function setDataContext (dc, ignore:Boolean = false) :void {
             this.errorDel.register( dc , "onerror" );
             this.timeoutDel.register( dc , "ontimeout" );
         }
-
     }
 }
 

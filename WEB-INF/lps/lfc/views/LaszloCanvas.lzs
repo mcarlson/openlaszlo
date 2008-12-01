@@ -135,8 +135,8 @@ dynamic class LzCanvas extends LzView {
      * transport. The default  value of the <varname>canvas.defaultdataprovider</varname> is initially set to point
      * to this same object. 
      * @access public
+     * @type LzDataProvider
      */
-
     var httpdataprovider = null;
 
 
@@ -147,8 +147,8 @@ dynamic class LzCanvas extends LzView {
      * By default, this will be an instance of <classname>LzHTTPDataProvider</classname>, which will also be pointed to by
      * the <varname>canvas.httpdataprovider</varname>.
      * @access public
+     * @type LzDataProvider
      */
-
     var defaultdataprovider = null;
 
     /**
@@ -413,6 +413,10 @@ override function __makeSprite(args) {
     this.sprite = new LzSprite(this, true);
 }
 
+/** Sent whenever the mouse is dragged out of the application window
+  * @access public
+  * @lzxtype event
+  */
 var onmouseleave = LzDeclaredEvent;
 
 /** Sent whenever the number of created nodes changes 
@@ -595,7 +599,6 @@ override function init (){
     if (this.contextmenu == null) {
         this.buildDefaultMenu();
     }
-
 }
 
 /**
@@ -750,9 +753,9 @@ override function $lzc$set_y(v) {
   * Install default menu items for the right-mouse-button 
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
-    function setDefaultContextMenu ( cmenu ){
-        this.setContextMenu(cmenu);
-        this.sprite.setDefaultContextMenu( cmenu );
+function setDefaultContextMenu ( cmenu ){
+    this.$lzc$set_contextmenu( cmenu );
+    this.sprite.setDefaultContextMenu( cmenu );
 }
 
 /**

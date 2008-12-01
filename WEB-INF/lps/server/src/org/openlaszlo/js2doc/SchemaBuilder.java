@@ -675,10 +675,13 @@ public class SchemaBuilder {
         } else if ("sizeExpression".equals(s)) {
             result = "size";
         } else if ("Array".equals(s) ||
+                   "LzContextMenu".equals(s) ||
                    "LzDataNodeMixin".equals(s) ||
+                   "LzDataProvider".equals(s) ||
                    "LzDelegate".equals(s) ||
                    "LzNode".equals(s) ||
                    "LzParam".equals(s) ||
+                   "LzReplicationManager".equals(s) ||
                    "LzView".equals(s) ||
                    "Object".equals(s) ||
                    "[LzView]".equals(s) ||

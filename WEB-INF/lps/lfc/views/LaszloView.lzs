@@ -1743,22 +1743,6 @@ override function destroy( ){
     }
 }
 
-/*
-// @access private
-function __LZFinishDestroyOnIdle (){
-    if ( this.__LZmovieClipRef != null ){
-        //Debug.write( "remove movieclip" );
-        removeMovieClip( this.__LZmovieClipRef );
-        delete this.__LZmovieClipRef;
-    }
-
-  if ( this.__LZbgRef != null ){
-    removeMovieClip( this.__LZbgRef );
-    delete this.__LZbgRef;
-  }
-}
-*/
-
 /**
   * This method sets the <attribute>visible</attribute> attribute of the view
   * and also disables or re-enables any click region associated with the view.
@@ -1772,8 +1756,6 @@ final function setVisible(v) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_visible(v)
 }
-
-
 
 /**
   * This method sets the <attribute>visibility</attribute> attribute of the view
@@ -1835,14 +1817,11 @@ final function setWidth ( v ){
     this.$lzc$set_width(v);
 }
 
-
-
-
-    /**
-    * Sets the height of the view the given value. If the view is set to stretch
-    * its resource, the resource will be resized to the new value. If the value
-    * 'null' is given for the new height, then the height is unset, and the height
-    * of the view will be the size measured of its contents.
+/**
+  * Sets the height of the view the given value. If the view is set to stretch
+  * its resource, the resource will be resized to the new value. If the value
+  * 'null' is given for the new height, then the height is unset, and the height
+  * of the view will be the size measured of its contents.
   * @param Number v: The new value for the height
   * @deprecated Use setAttribute('height', ...) instead.
   */
@@ -1850,8 +1829,6 @@ final function setHeight ( v ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_height(v);
 }
-
-
 
 /**
   * Sets the opacity for the view.  The opacity is a number between 0.0
@@ -1863,9 +1840,6 @@ final function setOpacity ( v ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_opacity(v);
 }
-
-
-
 
 /**
   * Sets the <attribute>x</attribute> position of the view to the given value.
@@ -1887,7 +1861,6 @@ final function setY (v) {
     this.$lzc$set_y(v);
 }
 
-
 /**
   * Sets the <attribute>rotation</attribute> for the view to the given value.
   * @param Number v: The new value for <attribute>rotation</attribute>.
@@ -1897,7 +1870,6 @@ final function setRotation ( v ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_rotation(v);
 }
-
 
 /**
   * Sets the <attribute>alignment</attribute> for the view to the
@@ -2740,8 +2712,6 @@ function removeMask () {
 }
 
 
-
-
 /**
   * Makes a view clickable or not clickable.
   * @param Boolean amclickable: Boolean indicating the view's clickability
@@ -3169,25 +3139,34 @@ function $lzc$set_proxyurl( f ){
     this.proxyurl = f;
 }
 
-
-var contextmenu:LzContextMenu =  null;
-
 /**
-  * Install menu items for the right-mouse-button 
-  * @param LzContextMenu cmenu: LzContextMenu to install on this view
+  * The current context menu object
+  * @type LzContextMenu
   */
-function setContextMenu ( cmenu ){
+var contextmenu:LzContextMenu = null;
+
+/** @access private */
+function $lzc$set_contextmenu (cmenu:LzContextMenu) :void {
     this.contextmenu = cmenu;
     this.sprite.setContextMenu( cmenu );
 }
 
+/**
+  * Install menu items for the right-mouse-button 
+  * @param LzContextMenu cmenu: LzContextMenu to install on this view
+  * @deprecated Use setAttribute('contextmenu', ...) instead.
+  */
+final function setContextMenu ( cmenu ){
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_contextmenu(cmenu);
+}
 
 /**
   * Returns the current context menu object
   * @access public
   */
 function getContextMenu ( ){
-    return this.sprite.getContextMenu();
+    return this.contextmenu;
 }
 
 /** @access private */

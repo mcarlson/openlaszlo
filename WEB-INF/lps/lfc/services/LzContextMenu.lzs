@@ -73,7 +73,7 @@ public dynamic class LzContextMenu extends LzNode {
         delete args['delegate'];
 
         // set callback
-        this.setDelegate(del);
+        this.$lzc$set_delegate(del);
     }
 
     /** @access private */
@@ -82,22 +82,25 @@ public dynamic class LzContextMenu extends LzNode {
 
         var ip:LzNode = this.immediateparent;
         if (ip && ip is LzView) {
-            (ip cast LzView).setContextMenu(this);
+            (ip cast LzView).$lzc$set_contextmenu(this);
         }
     }
 
     /** @access private */
-    function $lzc$set_delegate (delegate:*) :void { this.setDelegate(delegate); }
+    function $lzc$set_delegate (delegate:*) :void {
+        this.kernel.setDelegate(delegate);
+    }
 
     /**
       * Sets the delegate which will be called when the menu is opened
       * @param LzDelegate delegate: delegate which is executed when item is selected. An
       * onmenuopen event is also sent.
-      *
+      * @deprecated Use setAttribute('delegate', ...) instead.
       * @access public
       */
-    function setDelegate (delegate:LzDelegate) :void {
-        this.kernel.setDelegate(delegate);
+    final function setDelegate (delegate:LzDelegate) :void {
+        if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+        this.$lzc$set_delegate(delegate);
     }
 
     /**
@@ -152,8 +155,8 @@ public dynamic class LzContextMenu extends LzNode {
       * @access public
       */
     function makeMenuItem (title:String, delegate:*) :LzContextMenuItem {
-      var item:LzContextMenuItem = new LzContextMenuItem(title, delegate);
-      return item;
+        var item:LzContextMenuItem = new LzContextMenuItem(title, delegate);
+        return item;
     }
 
 }; // End of LzContextMenu
@@ -226,19 +229,29 @@ public dynamic class LzContextMenuItem extends LzNode {
     }
 
     /** @access private */
-    function $lzc$set_delegate (delegate:*) :void { this.setDelegate(delegate); }
+    function $lzc$set_delegate (delegate:*) :void {
+        this.kernel.setDelegate(delegate);
+    }
 
     /** @access private */
-    function $lzc$set_caption (caption:String) :void { this.setCaption(caption); }
+    function $lzc$set_caption (caption:String) :void {
+        this.kernel.setCaption(caption);
+    }
 
     /** @access private */
-    function $lzc$set_enabled (val:Boolean) :void { this.setEnabled(val); }
+    function $lzc$set_enabled (val:Boolean) :void {
+        this.kernel.setEnabled(val);
+    }
 
     /** @access private */
-    function $lzc$set_separatorbefore (val:Boolean) :void { this.setSeparatorBefore(val); }
+    function $lzc$set_separatorbefore (val:Boolean) :void {
+        this.kernel.setSeparatorBefore(val);
+    }
 
     /** @access private */
-    function $lzc$set_visible (val:Boolean) :void { this.setVisible(val); }
+    function $lzc$set_visible (val:Boolean) :void {
+        this.kernel.setVisible(val);
+    }
 
     /**
       * Sets the delegate which will be called when the menu item is selected
@@ -246,18 +259,22 @@ public dynamic class LzContextMenuItem extends LzNode {
       * selected. An onselect event is also sent.
       *
       * @access public
+      * @deprecated Use setAttribute('delegate', ...) instead.
       */
-    function setDelegate (delegate:*) :void {
-        this.kernel.setDelegate(delegate);
+    final function setDelegate (delegate:*) :void {
+        if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+        this.$lzc$set_delegate(delegate);
     }
 
     /**
       * Sets the text string which is displayed for the menu item
       * @param String caption: text string to display
       * @access public
+      * @deprecated Use setAttribute('caption', ...) instead.
       */
-    function setCaption (caption:String) :void {
-        this.kernel.setCaption(caption);
+    final function setCaption (caption:String) :void {
+        if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+        this.$lzc$set_caption(caption);
     }
 
     /**
@@ -273,27 +290,33 @@ public dynamic class LzContextMenuItem extends LzNode {
       * Sets the enabled status of the menu item
       * @param boolean val: if false, menu item is grayed out and will not respond to clicks
       * @access public
+      * @deprecated Use setAttribute('enabled', ...) instead.
       */
-    function setEnabled (val:Boolean) :void {
-        this.kernel.setEnabled(val);
+    final function setEnabled (val:Boolean) :void {
+        if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+        this.$lzc$set_enabled(val);
     }
 
     /**
       * Draw a horizontal separator line before this item in the menu
       * @param boolean val: sets visibility of separator line
       * @access public
+      * @deprecated Use setAttribute('separatorbefore', ...) instead.
       */
-    function setSeparatorBefore (val:Boolean) :void {
-        this.kernel.setSeparatorBefore(val);
+    final function setSeparatorBefore (val:Boolean) :void {
+        if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+        this.$lzc$set_separatorbefore(val);
     }
 
     /**
       * Sets the visibility of the menu item
       * @param boolean val: sets visibility
       * @access public
+      * @deprecated Use setAttribute('visible', ...) instead.
       */
-    function setVisible (val:Boolean) :void {
-        this.kernel.setVisible(val);
+    final function setVisible (val:Boolean) :void {
+        if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+        this.$lzc$set_visible(val);
     }
 
 }; // End of LzContextMenuItem
