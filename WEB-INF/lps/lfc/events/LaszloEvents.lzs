@@ -424,10 +424,13 @@ public final class LzEvent extends LzDeclaredEventClass {
     /** @access private */
     var delegateList:Array = null;
     if ($debug) {
+      /** @access private */
       var _dbg_eventSender:*;
+      /** @access private */
       var _dbg_eventName:String;
     }
     if ($profile) {
+      /** @access private */
       var _dbg_profileName:String;
     }
 
