@@ -54,9 +54,11 @@
 
 
     <!---  Call the login service -->
+<!-- PBR
     <method name="login">
       i18nConn.callService();
     </method>
+-->
 
     <!--- Display an error message for the user -->
     <method name="showError" args="messageTxt">

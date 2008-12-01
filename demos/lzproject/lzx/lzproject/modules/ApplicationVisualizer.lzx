@@ -80,7 +80,7 @@
             // Iterate through all the services we have
             var counter = 0;
             // Sort array for sorting the keys in canvas.services
-            servicesSorted = new Array();
+            var servicesSorted = new Array();
             for (var key in canvas.services) {
               servicesSorted[counter] = key;
               counter++;

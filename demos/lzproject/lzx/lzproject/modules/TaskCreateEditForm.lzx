@@ -30,7 +30,7 @@
         <!-- EVENT & HANDLER SECTION -->
     <handler name="onselect" reference="parent.tab">
       // in case there's still data left in the form, clear it now
-      this.clear(true);
+      this.clear();
     </handler>
 
         <!-- METHOD SECTION -->

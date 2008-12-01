@@ -12,7 +12,7 @@
     <handler name="ontrigger" args="obj">
       this.prepareParams(obj.collectValues());
     </handler>
-    <method name="handleSuccess">
+    <method name="handleSuccess" args="msg, p">
       Debug.write('Resource bundle loaded');
       // If we are already logged in, we have to reload the data
       // containing I18N strings
@@ -56,7 +56,7 @@
       canvas.services.listTasks.startRequest()
       canvas.setAttribute('loggedIn', true);
     </method>
-    <method name="clearMessage">
+    <method name="clearMessage" args="p">
       if (canvas.loggedIn) {
         // user authenticated, show main screen
             this._connector.form.setAttribute('visible', false);
@@ -88,7 +88,7 @@
     <method name="handleFailure" args="errorMsg">
       Debug.warn('Web: ', errorMsg);
     </method>
-    <method name="handleSuccess">
+    <method name="handleSuccess" args="msg, p">
       canvas.setAttribute('loggedIn', false);
       canvas.setAttribute('login', '');
       Debug.write('User ' + canvas.login + " logged out!");
@@ -110,7 +110,7 @@
     <method name="handleError">
       Debug.error('Error loading project list!');
     </method>
-    <method name="handleSuccess">
+    <method name="handleSuccess" args="msg, p">
       Debug.write('Project list loaded');
     </method>
   </BackendService>
@@ -128,7 +128,7 @@
     <method name="handleError">
       Debug.error('Error creating project!');
     </method>
-    <method name="handleSuccess" args="message">
+    <method name="handleSuccess" args="message, p">
       Debug.write('Project created');
       this._connector.handleResult(message);
       canvas.services.listProjects.startRequest();
@@ -138,7 +138,7 @@
       Debug.write(message);
       this._connector.handleResult(message);
     </method>
-    <method name="clearMessage">
+    <method name="clearMessage" args="p">
       this._connector.handleResult('');
     </method>
   </BackendService>
@@ -152,7 +152,7 @@
     <method name="handleError">
       Debug.write('Error loading user list!');
     </method>
-    <method name="handleSuccess">
+    <method name="handleSuccess" args="msg, p">
       Debug.write('User list loaded');
     </method>
   </BackendService>
@@ -180,7 +180,7 @@
       Debug.write('Error creating user');
       this._connector.handleResult(message);
     </method>
-    <method name="clearMessage">
+    <method name="clearMessage" args="p">
       this._connector.handleResult('');
     </method>
   </BackendService>
@@ -198,7 +198,7 @@
     <method name="handleError">
       Debug.write('Error saving user!');
     </method>
-    <method name="handleSuccess" args="message">
+    <method name="handleSuccess" args="message, p">
       Debug.write('User updated');
       canvas.services.listUsers.startRequest();
       createUserForm.clear();
@@ -208,7 +208,7 @@
       Debug.write('Error saving user');
       this._connector.handleResult(message);
     </method>
-    <method name="clearMessage">
+    <method name="clearMessage" args="p">
       this._connector.handleResult('');
     </method>
   </BackendService>
@@ -226,7 +226,7 @@
     <method name="handleError">
       Debug.write('Error deleting user!');
     </method>
-    <method name="handleSuccess">
+    <method name="handleSuccess" args="msg, p">
       Debug.write('User deleted');
       // Reload the list of users
       canvas.services.listUsers.startRequest();
@@ -246,7 +246,7 @@
     <method name="handleError">
       Debug.write('Error loading task list!');
     </method>
-    <method name="handleSuccess">
+    <method name="handleSuccess" args="msg, p">
       Debug.write('Task list loaded');
     </method>
   </BackendService>
@@ -264,7 +264,7 @@
     <method name="handleError">
       Debug.write('Error creating task!');
     </method>
-    <method name="handleSuccess" args="message">
+    <method name="handleSuccess" args="message, p">
       Debug.write('Task created');
       canvas.services.listTasks.startRequest();
       createTaskForm.clear();
@@ -274,7 +274,7 @@
       Debug.write('Error saving task: ' + message);
       createTaskForm.setMessage(message);
     </method>
-    <method name="clearMessage">
+    <method name="clearMessage" args="p">
       createTaskForm.setMessage('');
     </method>
   </BackendService>
@@ -292,7 +292,7 @@
     <method name="handleError">
       Debug.write('Error marking tasked as finished!');
     </method>
-    <method name="handleSuccess" args="message">
+    <method name="handleSuccess" args="message, p">
       Debug.write('Task marked as finished');
       canvas.services.listTasks.startRequest();
     </method>
@@ -314,7 +314,7 @@
     <method name="handleError">
       Debug.write('Error deleting task!');
     </method>
-    <method name="handleSuccess" args="message">
+    <method name="handleSuccess" args="message, p">
       Debug.write('Task deleted');
       canvas.services.listTasks.startRequest();
     </method>
