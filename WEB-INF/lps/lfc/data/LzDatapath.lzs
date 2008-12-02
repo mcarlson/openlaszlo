@@ -220,9 +220,9 @@ function setOrder( xpath:String , comparator:* = null ) :void {
  * ...)</code>.
  *
  * @type String|Function
- * @lzxtype expression
+ * @lzxtype string
  */
-var sortorder :*;
+var sortorder :* = "ascending";
 /** @access private */
 function $lzc$set_sortorder( comparator:* ) :void {
   this.setComparator(comparator);
