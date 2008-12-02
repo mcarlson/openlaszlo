@@ -96,17 +96,5 @@
 <!--    remove link to nonexistant contrib. guide. IORIO: 22may08 -->
             <li><a href="docs/release-notes.html">Latest Release Notes</a></li>
         </ul>        
-        <p>OpenLaszlo Admin tools</p>
-        <ul>
-            <li><a href="lps/admin/console.lzx">Console</a></li>
-            <li><a href="foo.lzx?lzt=clearcache&amp;pwd=laszlo">Clear cache</a></li>
-            <li><a href="foo.lzx?lzt=cacheinfo&amp;pwd=laszlo">Cache statistics</a></li>
-            <li><a href="foo.lzx?lzt=cacheinfo&amp;details=1&amp;pwd=laszlo">Cache details</a></li>
-            <li><a href="foo.lzx?lzt=errorcount&amp;pwd=laszlo">OpenLaszlo Error count</a></li>
-            <li><a href="foo.lzx?lzt=errorcount&amp;clear=1&amp;pwd=laszlo">Clear OpenLaszlo error count</a></li>
-            <li><a href="foo.lzx?lzt=serverinfo&amp;pwd=laszlo">OpenLaszlo server info</a></li>
-            <li><a href="foo.lzx?lzt=log&amp;pwd=laszlo">Current OpenLaszlo log file (can be long)</a></li>
-            <li><a href="lps/admin/solo-deploy.jsp">SOLO Application Deployment Wizard</a></li>
-        </ul>
     </body>
 </html>
