@@ -274,12 +274,41 @@ If you subclass state you don't get classroot.</para>
 <para>
 will not have classroot defined.</para>
 
+<para/></section></section>
+   <section id="mixins">
+      <title><literal>&lt;mixin&gt;</literal>s</title>
+      <para><literal>&lt;mixin&gt;</literal> is like <literal>&lt;class&gt;</literal>
+         but rather than creating something you can instantiate, <literal>&lt;mixin&gt;</literal> creates a template that can be
+         <emphasis>mixed in</emphasis> (added to) more than one other class. A
+         <literal>&lt;mixin&gt;</literal> is like an interface, but it is allowed to have
+         state and implementation. </para>
+      
+      <para><literal>&lt;mixin&gt;</literal> is an advanced feature. To add a
+         <literal>&lt;mixin&gt;</literal> to a class you say: </para>
+      
+<programlisting>
+   &lt;class name=&quot;icecream&quot; ... /&gt; 
+   &lt;class name=&quot;walnuts&quot; ... /&gt; 
+   
+   &lt;mixin name=&quot;toppings&quot;&gt; 
+      &lt;attribute name=&quot;sauce&quot; type=&quot;color&quot; value=&quot;lavender&quot; /&gt; 
+      &lt;attribute name=&quot;whippedcream&quot; type=&quot;boolean&quot; value=&quot;true&quot; /&gt; 
+      &lt;attribute name=&quot;cherry&quot; type=&quot;boolean&quot; value=&quot;true&quot; /&gt; 
+      ... 
+   &lt;/mixin&gt; 
+   
+   &lt;class name=&quot;sundae&quot; extends=&quot;icecream&quot; with=&quot;toppings /&gt; 
+   
+   &lt;sundae name=&quot;chocfulla&quot; 
+      flavor=&quot;honeydew&quot; 
+      sauce=&quot;lemonchiffon&quot;&gt; 
+      &lt;walnuts ground=&quot;true&quot; /&gt; 
+   &lt;/sundae&gt; </programlisting>
+      
+      <para>See <literal>tests/mixins.lzx</literal> for a more complete example.</para>
+   </section>
 
-
-
-
-
-<para/></section></section><section><title>Declared text</title>
+<section><title>Declared text</title>
 
 <para>The <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: text-->
