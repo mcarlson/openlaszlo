@@ -149,16 +149,8 @@ If your container happens to also use Log4j as its logging mechanism (Tomcat 5.0
 you may see interactions between the container and LPS logging depending on how the Log4j appenders
 are configured for the LPS.
 </para>
-<para/></section></section><section><title>Using the LPS administrative console</title>
-<para>
-The Administrative console will display the current Log4j configuration
-in XML.  You can edit the configuration live in the console and press 'Update'
-to change the logging configuration w/out restarting the server.  If you'd like
-these configuration changes to persist accross server restarts, you can select the
-<emphasis role="i">save</emphasis> checkbox and the settings will be saved to <literal>$LPS_HOME/WEB-INF/lps/log4j.xml</literal>.
-</para>
-
-<para/></section><section><title>Logging from within LZX</title>
+<para/></section></section>
+  <section><title>Logging from within LZX</title>
 
 <para>
 You can log events from your application to the server quite simply.   There are

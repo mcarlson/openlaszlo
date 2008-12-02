@@ -835,11 +835,8 @@ I don't know if we need to go into them, but there are container specific issues
 <para/></section></section><section id="deployers-guide.monitoring"><title>Monitoring OpenLaszlo Server activity</title>
 <para>You can monitor OpenLaszlo Server activity by looking at the log file.  You can
 examine the log file directly on the server (see <link linkend="deployers-guide.logfile">above</link>
-for locating the log file).  Or you can use the simple administrator's console
-that comes with OpenLaszlo Server at
-<literal>http://$host:$port/$webapp/lps/admin/console.lzx</literal>.</para>
-<para>(If the administrative password has been configured in the <literal>lps.properties</literal>
-file, then you will need this password to use the console.)</para>
+for locating the log file).</para>
+
 <para>
 See also the next section on server <link linkend="deployers-guide.lpsstatistics">statistics</link>.
 </para>
