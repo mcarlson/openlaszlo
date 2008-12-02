@@ -209,13 +209,19 @@ var params :LzParam = null;
   */
 var nsprefix :Boolean = false;
 
-/** When true, the server will encode and 
+/** When true, the proxy server (if making a proxied request) will encode and 
   * send the HTTP response headers along with the data (defaults to false). 
   * Due to a lack of a native API to get this information, SOLO SWF applications
-  * will always return an empty set. 
+  * will always return an empty set.
+  *
+  * When making a proxied request,
+  * <attribute>getresponseheaders</attribute> must be true in
+  * order for the response headers to be retrieved via the
+  * <method>getResponseHeader</method> or
+  * <method>getAllResponseHeaders</method> methods.
+  *
   * @type Boolean
   * @lzxtype boolean
-  * @keywords read-only
   */
 var getresponseheaders :Boolean = false;
 
