@@ -631,7 +631,7 @@
       @keywords constructor
      -->
     <method name="construct" args="parent, args">
-        this.name = jsTrue(args["testName"]) ? args.testName : this.constructor.tagname;
+        if (jsTrue(args["testName"])) { this.name = args.testName; delete args.testName; }
 
         super.construct(parent, args);
 
@@ -652,10 +652,7 @@
     <method name="run" args="theTestResult, theTestName">  <![CDATA[
         dw("TestCase.run(", theTestName, ")");
         setResult(theTestResult);
-        var dn = (this._dbg_name is Function) ? this._dbg_name() : this._dbg_name;
-        var tn = (this._dbg_typename is Function) ? this._dbg_typename() : this._dbg_typename;
-        var prefix = (dn != tn) ? dn + ' >>> ' : ''
-        this.result.startTest(prefix + theTestName);
+        this.result.startTest(this.formatter.formatToString("%w/%s", this, theTestName));
         setUp();
 
         // NOTE: [2008-10-26 ptw] Intercepting source warnings is only
