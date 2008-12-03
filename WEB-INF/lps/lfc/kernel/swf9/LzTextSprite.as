@@ -182,9 +182,11 @@ public class LzTextSprite extends LzSprite {
             //    if  single line, use font line height
             //    else get height from flash textobject.textHeight 
             // 
-            if (args['height'] == null) {
+            // FIXME [2008-11-24 ptw] (LPP-7391) kernel sprites should not be
+            // using LzNode args directly
+            if (! this.owner.hassetheight) {
                 this.sizeToHeight = true;
-            } else if (! (args.height is LzValueExpr)) {
+            } else if (args['height'] != null) {
                 // Does setting height of the text object do the right thing in swf9?
                 textclip.height = args.height;
             }

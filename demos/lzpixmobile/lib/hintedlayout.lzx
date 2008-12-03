@@ -20,10 +20,10 @@
         <attribute name="yinset" value="0"/>
         <!--- A pixel amount to use between the views controlled by the layout in
             the x axis. -->
-        <attribute name="xspacing" value="null" />
+        <attribute name="xspacing" value="${this.spacing}" />
         <!--- A pixel amount to use between the views controlled by the layout in
             the y axis. -->
-        <attribute name="yspacing" value="null" />
+        <attribute name="yspacing" value="${this.spacing}" />
         <!--- If given, a number of miliseconds to use to animate the views in to
             place.-->
         <attribute name="duration"     value="0"/>
@@ -36,11 +36,6 @@
         <!--- @keywords private -->
         <method name="construct" args="parent, args">
             super.construct(parent, args);
-            <!-- The class default value is this.spacing, but the user may override that in args -->
-            <!-- If x and y spacing are not specified they take on the default value -->
-            var defaultSpacing = ('spacing' in args)?args.spacing:this.spacing;
-            if (! ('xspacing' in args)) args.xspacing = defaultSpacing;
-            if (! ('yspacing' in args)) args.yspacing = defaultSpacing;
             this.doupdateDelegate = new lz.Delegate(this, "doupdate");
         </method>
 

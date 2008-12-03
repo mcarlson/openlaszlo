@@ -290,6 +290,12 @@ override function construct ( odp , args ){
     } else {
         if (!view.isinited) {
             var via:Object = view._instanceAttrs;
+            // NOTE [2008-12-01 ptw]  I did not use
+            // LzNode/__LZhasConstraint here, because the original code
+            // only looks for visible in the instance attributes.  I
+            // can't tell if that was an error, or the designer
+            // intentionally did not want to consider the setting of
+            // visible in the class
             if (via != null && 'visible' in via && !(via.visible is LzInitExpr)) {
                 this.visible = via.visible;
             } else {
@@ -306,6 +312,11 @@ override function construct ( odp , args ){
 
     var ia:Object = view._instanceAttrs;
     var oa:Object = odp._instanceAttrs;
+    // NOTE [2008-12-01 ptw] I did not use LzNode/__LZhasConstraint
+    // here, because the original code only looks for visible in the
+    // instance attributes.  I can't tell if that was an error, or the
+    // designer intentionally did not want to consider the setting of
+    // visible in the class
     if (ia && 'datapath' in ia && ia.datapath is LzAlwaysExpr) {
         // <view datapath="${ ... }"/>
         // we need to mask this constraint

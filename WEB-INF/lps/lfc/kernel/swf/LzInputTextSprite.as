@@ -101,7 +101,7 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     //        if empty text content was supplied, use DEFAULT_WIDTH
 
 
-    //(args.width == null && typeof(args.$refs.width) != "function")
+    // (! this.owner.hassetwidth)
 
 
     // To compute our height:
@@ -110,7 +110,9 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight 
     // 
-    if (args['height'] == null) {
+    // FIXME [2008-11-24 ptw] (LPP-7391) kernel sprites should not be
+    // using LzNode args directly
+    if (! this.owner.hassetheight) {
         this.sizeToHeight = true;
         // set autoSize to get text measured
         textclip.autoSize = true;
@@ -124,7 +126,7 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
             // we got a correct line height from flash.
             textclip.autoSize = false;
         }
-    }  else if (! (args.height is LzValueExpr)) {
+    } else if (args['height'] != null) {
         textclip._height = args.height;
         //this.setHeight(args.height);
     }

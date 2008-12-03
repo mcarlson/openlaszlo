@@ -149,6 +149,21 @@ public dynamic class LzNode extends LzEventable {
   var _instanceChildren:Array = null;
 
 
+  /** @access private */
+  var __LzValueExprs = null;
+  /**
+   * Private interface to a very limited set of LFC classes (LzView,
+   * LzReplicationManager) that need to know in `construct` when an
+   * attribute will be constrained later by `__LZapplyArgs`.
+   *
+   * @param String attr: The name of the attribute to look up
+   * @returns boolean: True if it will be constrained (barring the
+   * constructor itself overriding it!)
+   *
+   * @access private */
+  function __LZhasConstraint(attr:String) {
+    return attr in this.__LzValueExprs;
+  }
   /**
    * @param LzNode parent: a node above this one in the hierarchy -- not
    * necessarily the immediate parent -- that will decide where this node goes
@@ -275,11 +290,34 @@ public dynamic class LzNode extends LzEventable {
       delete iargs["$datapath"];
     }
 
-    this.construct(  parent , iargs );
+    /// See LzNode/construct documentation for the purpose of this
+    // filtering/copying
 
+    // Remove the init expressions from the args when calling construct
+    var cargs = this.__LzValueExprs = {};
+    for (var key in iargs) {
+      var val = iargs[key];
+      if (val is LzValueExpr) {
+        cargs[key] = val;
+        delete iargs[key];
+      }
+    }
+    this.construct(  parent , iargs );
     // Construct may, through many tangled webs of replication and
     // placement, actually end up deleting us!  Bail out.
     if (this.__LZdeleted) { return; }
+
+    // Now put them back, unless they have been overridden
+    for (var key in cargs) {
+      // TODO [2008-12-02 ptw] Some legacy constructors appear to
+      // depend on overriding a constraint.  IWBNI the only thing a
+      // constructor could do would be to remove a constant arg that
+      // it had handled.
+      if (! (key in iargs)) {
+        iargs[key] = cargs[key];
+      }
+    }
+    this.__LzValueExprs = null;
 
     //        this.setClassEvents( this.constructor );
 
@@ -671,7 +709,7 @@ public dynamic class LzNode extends LzEventable {
   /**
    * The <code>construct</code> method of a node is called as part of
    * the process of constructing a node.  It is called <i>after</i>
-   * attributes with constant initial values have been filled in, but
+   * attributes with constant initial values of the class have been filled in, but
    * before any attributes that have setters or have been constrained
    * have been applied.
    *
@@ -717,12 +755,25 @@ public dynamic class LzNode extends LzEventable {
    * @param LzNode parent: The node that encloses this node in source,
    * or the node to which to attach this node.
    * @param Object args: A dictionary of attribute initializations for
-   * attributes that have setters or that have been constrained.  In
-   * general, your constructor should not modify this dictionary.  It
-   * may verify that an attribute is named in the dictionary to
-   * determine if the attribute will be modified by a setter or
-   * constraint.
+   * attributes that have setters or that have been supplied by the
+   * instance declaration.  In
+   * general, your construct method should <em>not</em> modify this dictionary.  It
+   * may delete a value from the dictionary to indicate that it has
+   * been handled by the construct method (and should not be further processed).
    *
+   * @devnote NOTE [2008-11-24 ptw] The construct method <em>only</em>
+   * sees constant initial arguments.  Non-constant bindings
+   * (constraints) are processed by <code>LzNode</code> to get
+   * inheritance/overriding correct, but they are an internal
+   * protocol, not exposed to user construct methods.  In general,
+   * overrides of construct should <em>only</em> be looking at
+   * <code>args</code> as a possible optimization (e.g., it may be
+   * possible to optimize some aspect of construction if certain
+   * attributes have constant initial values); or, if an attribute can
+   * <em>only</em> have a constant initial value, which can be
+   * enforced by processing that value in the constructor, removing it
+   * from <code>args</code>, and having a setter that does nothing (or
+   * signals an error in debug mode).
    */
   function construct ( parent , args ){
     // Set applyArgs ordering kludges.  LzView overrides these
@@ -2109,12 +2160,12 @@ public dynamic class LzNode extends LzEventable {
    * debugger.
    */
   function getDebugIdentification (){
-    var s = this['constructor'].tagname + " ";
-    if ( this.name != null ){
-      s += " name: " + this.name + " ";
+    var s = this['constructor'].tagname;
+    if ( this['name'] != null ){
+      s += " name: " + this.name;
     }
-    if ( this.id != null ){
-      s += " id: " + this.id + " ";
+    if ( this['id'] != null ){
+      s += " id: " + this.id;
     }
     return s;
   }

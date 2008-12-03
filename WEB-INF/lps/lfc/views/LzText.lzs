@@ -431,7 +431,10 @@ override function init () {
             this.$lzc$set_height(h);
         }
     }
-}
+};
+
+static var fontArgToAttr:Object = {font: 'fontname', fontsize: 'fontsize', fontstyle: 'fontstyle'};
+
 
 /**
   * @access private
@@ -445,45 +448,41 @@ override function construct ( parent, args ) {
     super.construct.apply(this, arguments);
 
     this.sizeToHeight = false;
-    
-    var fontMap:Object = {font:'fontname', fontsize:'fontsize', fontstyle:'fontstyle'};
-    var fontCpy:Object = {};
-    for (var key:String in fontMap) {
-        var hasArg:Boolean = (key in args) ? true : false;//can't just write "key in args" in swf9..
-        var initExpr:Boolean = hasArg && args[key] is LzInitExpr;
-        fontCpy[key] = initExpr ? args[key] : LzNode._ignoreAttribute;
-        if (hasArg && !initExpr) {
-            // a normal value, just install it
-            this[fontMap[key]] = args[key];
-        } else {
-            // font-attribute wasn't specified or it was a constraint, 
-            // need to lookup for initial font-attribute
-            var val:String = fontMap[key];
-            this[val] = args[key] = this.searchParents( val )[ val ];
-        }
+
+    // Install constant/default font attributes
+    for (var arg:String in LzText.fontArgToAttr) {
+      var attr:String = LzText.fontArgToAttr[arg];
+      // Default missing args
+      if (! (arg in args)) {
+        args[arg] = this.searchParents(attr)[attr];
+      }
+      this[attr] = args[arg];
     }
-    
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    // FIXME [2008-11-24 ptw] (LPP-7391) We should not be passing node
+    // init args across the kernel API, there should be a more
+    // explicit API that isolates the kernel from the node
+    // implementation details
     tsprite.__initTextProperties(args);
-    
-    for (var key:String in fontCpy) {
-        // if font-attribute was a constraint, copy it back, 
-        // else set it to LzNode._ignoreAttribute, 
-        // so it won't be processed by LzNode#__LZapplyArgs(..)
-        args[key] = fontCpy[key];
+
+    // Remove constant/default font attributes, so they won't be
+    // re-handled by LzNode/__LZapplyArgs
+    for (var arg:String in LzText.fontArgToAttr) {
+        delete args[arg];
     }
 
     this.yscroll = 0;
     this.xscroll = 0;
 
-    this.resize = ('resize' in args && (! (args.resize is LzValueExpr))) ? (!! args.resize) : this.resize;
+    this.resize = ('resize' in args) ? (!! args.resize) : this.resize;
     this.$lzc$set_resize(this.resize);
     
-    if ('maxlength' in args && (! (args.maxlength is LzValueExpr)) && args.maxlength != null) {
+    if (args['maxlength'] != null) {
        this.$lzc$set_maxlength(args.maxlength);
     }
 
-    this.text =  (!('text' in args) || args.text == null || args.text instanceof LzInitExpr) ? "" : args.text;
+    this.text =  (args['text'] != null) ? args.text : "";
     if(this.maxlength != null && this.text.length > this.maxlength){
         this.text = this.text.substring(0, this.maxlength);
     }
@@ -498,7 +497,7 @@ override function construct ( parent, args ) {
     // + if text is single line:
     //    if no width was supplied and there's no constraint, measure the text width:
     //        if empty text content was supplied, use DEFAULT_WIDTH
-    if (args.width == null) {
+    if (! this.hassetwidth) {
         if (this.multiline) {
             args.width = this.parent.width;
         } else {
@@ -521,15 +520,15 @@ override function construct ( parent, args ) {
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight 
     // 
-    if (!this.hassetheight) {
+    if (! this.hassetheight) {
         this.sizeToHeight = true;
-    } else if (! (args.height is LzValueExpr)) {
+    } else if (args['height'] != null) {
         this.$lzc$set_height(args.height);
     }
     // Default the scrollheight to the visible height.
     this.scrollheight = this.height;
 
-    if ('pattern' in args && (! (args.pattern is LzValueExpr)) && args.pattern != null) {
+    if (args['pattern'] != null) {
         this.$lzc$set_pattern(args.pattern);
     }
 

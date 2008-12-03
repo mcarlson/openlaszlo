@@ -438,25 +438,25 @@ override function construct ( parent , args) {
 
     this.__makeSprite(args);
 
-    if ( 'width' in args ){
+    if ( 'width' in args || this.__LZhasConstraint('width')) {
         this.hassetwidth = true;
         this.__LZcheckwidth = false;
     }
-    if ( 'height' in args ){
+    if ( 'height' in args || this.__LZhasConstraint('height')) {
         this.hassetheight = true;
         this.__LZcheckheight = false;
     }
 
-    if ('clip' in args && args['clip'] && (! (args.clip instanceof LzInitExpr)) ){
+    if (args['clip'] != null){
         this.clip = args.clip;
         this.makeMasked();
     }
-    if ('stretches' in args && args['stretches'] != null && (! (args.stretches instanceof LzInitExpr)) ){
+    if (args['stretches'] != null){
         this.$lzc$set_stretches(args.stretches);
         args.stretches = LzNode._ignoreAttribute;
     }
 
-    if (args['resource'] != null && (! (args.resource instanceof LzInitExpr)) ){
+    if (args['resource'] != null){
         this.$lzc$set_resource( args.resource );
         args.resource = LzNode._ignoreAttribute;
     }
