@@ -189,6 +189,7 @@
       <!-- If true, enable history feature -->
       <attribute name="history" type="boolean" value="false"/>
       <attribute name="accessible" type="boolean" value="false"/>
+      <attribute name="scriptlimits" type="css"/>
       <containsElements>
         <element>view</element>
         <element>script</element>
