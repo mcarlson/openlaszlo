@@ -410,15 +410,14 @@ function __LZApplyData( force:Boolean = false) :void {
             ip.applyData( this.data );
         }
     }
-
 }
 
 /**
   * @access private
   */
-override function setDataContext ( p, implicit:Boolean = false) :void {
-    if (p == null && this.immediateparent != null) {
-        p = this.immediateparent.searchParents( "datapath" ).datapath;
+override function setDataContext (dc, implicit:Boolean = false) :void {
+    if (dc == null && this.immediateparent != null) {
+        dc = this.immediateparent.searchParents( "datapath" ).datapath;
         implicit = true;
     } else if ($debug) {
         if (this.immediateparent == null) {
@@ -426,31 +425,32 @@ override function setDataContext ( p, implicit:Boolean = false) :void {
         }
     }
 
-    if ( p == this.context ) return;
+    if ( dc == this.context ) return;
 
     if ( implicit ){
-        if ( p.__LZdepChildren == null ){
-            p.__LZdepChildren = [ this ];
+        if ( dc.__LZdepChildren == null ){
+            dc.__LZdepChildren = [ this ];
         } else {
-            p.__LZdepChildren.push( this );
+            dc.__LZdepChildren.push( this );
         }
     } else {
         //not a depedent child
 
-        var dclist:Array = null;
-        if ( this.context ) dclist = this.context.__LZdepChildren;
-        if ( dclist ){
-            //remove self from list
-            for ( var i:int = 0; i < dclist.length; i++ ){
-                if ( dclist[ i ] === this ){
-                    dclist.splice( i , 1 );
-                    break;
+        if ( this.context && this.context is LzDatapath ){
+            var dclist:Array = this.context.__LZdepChildren;
+            if ( dclist ){
+                //remove self from list
+                for ( var i:int = 0; i < dclist.length; i++ ){
+                    if ( dclist[ i ] === this ){
+                        dclist.splice( i, 1 );
+                        break;
+                    }
                 }
             }
         }
     }
-    
-    super.setDataContext( p );
+
+    super.setDataContext( dc );
 }
 
 
@@ -474,7 +474,6 @@ override function destroy(){
                 }
             }
         }
-
     }
 
     var ip:LzNode = this.immediateparent;
