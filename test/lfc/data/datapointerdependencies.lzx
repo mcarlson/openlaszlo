@@ -1,6 +1,5 @@
 <library>
     <include href="lzunit/lzunit.lzx" />
-    <debug x="300"/>
 
     <dataset name="dpdepend">
         <r>

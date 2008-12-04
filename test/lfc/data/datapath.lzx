@@ -1,6 +1,5 @@
 <library>
     <include href="lzunit/lzunit.lzx" />
-    <debug x="300" width="500" height="400"/>
 
     <dataset name="eventtestset" src="testdata.xml"/>
     <dataset name="dptest1" src="testdata.xml"/>
