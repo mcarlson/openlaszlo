@@ -12,7 +12,7 @@
             x="40" y="40">
           <text x="10" y="10"
               width="${immediateparent.width-40}" multiline="true"
-              fgcolor="${iceblue1}">
+              fgcolor="blue">
               The style of this window has blue colors.  The
               instance overrides bgcolor to be light yellow.
               The window is closeable and resizable.
