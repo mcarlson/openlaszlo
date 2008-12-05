@@ -6,7 +6,7 @@
      @access public
      @topic LZX
      @subtopic Debugging
-     @devnote NOTE [2008-11-25 ptw] Dummy class to hold documentation for <debug> tag
+     @devnote NOTE [2008-11-25 ptw] Dummy class to hold documentation for debug tag
      @devnote TODO [2008-11-26 ptw] Make this the real class!
   -->
   <class name="debug">
@@ -14,14 +14,17 @@
       <tag name="shortdesc"><text>Controlling the Laszlo debugger console window</text></tag>
       <tag name="lzxname"><text>debug</text></tag>
       <text>
-       <p>The optional <code>debug</code> tag controls the appearance of
-       the debugger console when debugging is on. It does <em>not</em>
-       cause the application to be compiled with debugging mode enabled.
-       By default, the debug console will appear as a <code>view</code> in
-       the application canvas, sized to fit the lower 1/2 of the canvas.
-       The usual <code>view</code> attributes can be used to size and
+       <p>For runtimes that use a view on the application canvas as the debugger console window,
+       the optional <code>&lt;debug /&gt;</code> tag controls the appearance
+       of window.
+       The <code>&lt;debug /&gt;</code> tag does <em>not</em>
+       cause the application to be compiled with debugging mode enabled.</p>
+       <p>
+       When applicable, by default, the debug console will appear as a <code>view</code>
+       sized to fit the lower 1/2 of the canvas.
+       The usual <code>view</code> attributes can be used to override these defaults to size and
        position the debug console window.  If you need to programmatically
-       control the debug console window, use the <code>name</code>
+       control the debugger console window, use the <code>name</code>
        attribute:</p>
 
        <example class="program" id="debug-1" title="Controlling the Debug console window">
@@ -40,9 +43,10 @@
 ]]>
        </example>
 
-       <p>Note the conditionalization testing whether the named window
-       exists or not.  The <code>debug</code> tag will <em>not</em> create
-       a window in the application canvas if remote or console debugging
+       <p>Note the test to verify that the window exists before we try to manipulate it.
+       The <code>&lt;debug /&gt;</code> tag will <em>not</em> create
+       a window in the application canvas for runtimes or IDE's that have an external debugger console,
+       or if remote or developer console debugging
        is enabled.</p>
       </text>
     </doc>

@@ -48,7 +48,7 @@ global._dbg_name = 'global';
  * debug messages will also give a source location.</p>
  *
  * <p>The debug messages can be silenced by setting
- * <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.</p>
+ * <link linkend="LzDebugService+debug.__ivars__.messageLevel">Debug.messageLevel</link>.</p>
  *
  * <p>Debugger messages are <em>inspectable</em>, as the example below
  * demonstrates.  Clicking on the printed representation of the
@@ -345,12 +345,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * an informative format.  Simple objects are represented as
    * themselves.  Printed Complex objects are represented by their type
    * and a concise description.  Long representations (and long Strings)
-   * are abbreviated if they are longer than <xref linkend="LzDebugService+debug.__ivars__.printLength"/>.  Complex
+   * are abbreviated if they are longer than <link linkend="LzDebugService+debug.__ivars__.printLength">Debug.printLength</link>.  Complex
    * objects and abbreviated objects presented as links.  Clicking on
    * the link will invoke <xref linkend="LzDebugService+debug.prototype.inspect"/> on the object,
    * giving more detail.
    *
-   * @param Array * any: One or more values to display.  Multiple
+   * @param [*] any: One or more values to display.  Multiple
    * values are separated by spaces, so <code>Debug.write("The answer
    * is:", 39+3)</code> will display: <code>The answer is: 42</code>
    */
@@ -369,10 +369,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Formats its arguments using <xref
    * linkend="LzFormatter.prototype.formatToString"/>.
    *
-   * @param String control: A control string where % indicates a
-   * subsequent argument is to be substituted
+   * @param String control: A control string where % indicates the
+   * conversion of the corresponding argument
    *
-   * @param Array * args: Any number of arguments to be formatted
+   * @param [*] args: Any number of arguments to be formatted
    * according to the control string
    */
   function format (control:String, ...args) {
@@ -417,12 +417,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display a warning message on the console.
    *
    * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-   * May be silenced by setting <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.
+   * May be silenced by setting <link linkend="LzDebugService+debug.__ivars__.messageLevel">Debug.messageLevel</link>.
    *
-   * @param string control: A control string where % indicates a
-   * subsequent argument is to be substituted
+   * @param string control: A control string where % indicates the
+   * conversion of the corresponding argument
    *
-   * @param Array * args: Any number of arguments to be formatted
+   * @param [*] args: Any number of arguments to be formatted
    * according to the control string
    */
   override function warn (...args) {
@@ -433,12 +433,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display an error message on the console.
    *
    * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-   * May be silenced by setting <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.
+   * May be silenced by setting <link linkend="LzDebugService+debug.__ivars__.messageLevel">Debug.messageLevel</link>.
    *
-   * @param string control: A control string where % indicates a
-   * subsequent argument is to be substituted
+   * @param string control: A control string where % indicates the
+   * conversion of the corresponding argument
    *
-   * @param Array * args: Any number of arguments to be formatted
+   * @param [*] args: Any number of arguments to be formatted
    * according to the control string
    */
   override function error (...args) {
@@ -449,12 +449,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display an informational message on the console.
    *
    * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-   * May be silenced by setting <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.
+   * May be silenced by setting <link linkend="LzDebugService+debug.__ivars__.messageLevel">Debug.messageLevel</link>.
    *
-   * @param string control: A control string where % indicates a
-   * subsequent argument is to be substituted
+   * @param string control: A control string where % indicates the
+   * conversion of the corresponding argument
    *
-   * @param Array * args: Any number of arguments to be formatted
+   * @param [*] args: Any number of arguments to be formatted
    * according to the control string
    */
   override function info (...args) {
@@ -465,12 +465,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Display a debugging message on the console.
    *
    * Formats its arguments using <xref linkend="LzFormatter.prototype.formatToString"/>.
-   * May be silenced by setting <xref linkend="LzDebugService+debug.__ivars__.messageLevel"/>.
+   * May be silenced by setting <link linkend="LzDebugService+debug.__ivars__.messageLevel">Debug.messageLevel</link>.
    *
-   * @param string control: A control string where % indicates a
-   * subsequent argument is to be substituted
+   * @param string control: A control string where % indicates the
+   * conversion of the corresponding argument
    *
-   * @param Array * args: Any number of arguments to be formatted
+   * @param [*] args: Any number of arguments to be formatted
    * according to the control string
    */
   override function debug (...args) {

@@ -133,7 +133,7 @@ class LzDebugMessage extends LzBootstrapMessage {
    * message.  Objects are recorded in a fashion that will enable the
    * representation to be linked back to the object.
    * 
-   * @param Array * args: the arguments to append to the initial message
+   * @param [*] args: the arguments to append to the initial message
    * 
    * @access private
    */
@@ -317,7 +317,7 @@ class LzSourceMessage {
    * @param String file: filename or null
    * @param Number line: line number or null
    * @param String control: a format control string
-   * @param Array * args: the arguments to the format control
+   * @param [*] args: the arguments to the format control
    *
    * @access private
    */

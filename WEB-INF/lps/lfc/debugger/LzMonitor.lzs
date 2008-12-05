@@ -31,7 +31,7 @@ class LzMonitor extends LzSourceMessage {
 /**
   * Create a monitor message from a format string
   * @param String control: a format control string
-  * @param Array * args: the arguments to the format control
+  * @param [*] args: the arguments to the format control
   * 
   * @see Debug.format
   * 

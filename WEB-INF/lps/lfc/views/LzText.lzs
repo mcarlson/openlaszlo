@@ -433,6 +433,7 @@ override function init () {
     }
 };
 
+/** @access private */
 static var fontArgToAttr:Object = {font: 'fontname', fontsize: 'fontsize', fontstyle: 'fontstyle'};
 
 
@@ -914,10 +915,10 @@ final function setText (t) {
   * linkend="LzFormatter.prototype.formatToString"/> and sets the text of the
   * view to the result.
   *
-  * @param String control: A control string where % indicates a
-  * subsequent argument is to be substituted
+  * @param string control: A control string where % indicates the
+  * conversion of the corresponding argument
   *
-  * @param Array * args: arguments to be formatted according to the
+  * @param [*] args: arguments to be formatted according to the
   * control string
   */
 function format (control:String, ...args) {

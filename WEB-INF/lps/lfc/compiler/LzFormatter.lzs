@@ -12,11 +12,73 @@
 /**
  * Formatted output support
  *
- * <p>See <xref linkend="LzText" />s <xref
- * linkend="LzText.prototype.format" /> and <xref linkend="LzDebugService+debug"
- * />s <xref linkend="LzDebugService+debug.prototype.format" /> methods for
+ * <p>See <xref linkend="LzText" /> and <xref linkend="LzDebugService+debug"
+ * /> for additional
  * examples of how to present formatted text to the user
  * interface.</p>
+ *
+ * <p>Here are some simple examples that show the use of the
+ * <code>s</code> and <code>w</code> conversions:</p>
+ * <example title="%s, %w, and %#w"><programlisting>
+<![CDATA[
+<canvas debug="true" height="150" width="100%">
+<debug y="5%" height="90%" />
+  <script>
+    var myObj = {a: 'eh?', b: 'bee', c: 'sea'};
+    Debug.debug("My object using %%s conversion: %s", myObj);
+    Debug.debug("My object using %%w conversion: %w", myObj);
+    Debug.debug("My object using %%#w conversion: %#w", myObj);
+  </script>
+</canvas>
+]]>
+ * </programlisting></example>
+ *
+ * <p>Here is an example showing how representations can be
+ * abbreviated.  If you click on the abbreviated representation, you can inspect
+ * the entire object.</p>
+ * <example title="Abbreviating representations"><programlisting>
+<![CDATA[
+<canvas debug="true" height="150" width="100%">
+<debug y="5%" height="90%" />
+  <script>
+    var myObj = {one: 1, too: 2, 3: 'threeee', 42: "The answer", 'a very long tag name': "With a very long value to boot"};
+    Debug.write("My object using Debug.write:", myObj);
+    Debug.debug("My object using %%o.32w: %0.32w", myObj);
+  </script>
+</canvas>
+]]>
+ * </programlisting></example>
+ *
+ * <p>Here is an example showing how positional arguments could be
+ * used to accomodate parameterized control strings, say to support
+ * internationalizations where the values converted may have to be
+ * accessed in different orders.</p>
+ * <example title="Positional arguments"><programlisting>
+<![CDATA[
+<canvas layout="axis: y; spacing: 10" height="80" width="100%">
+  <debug y="5%" height="90%" />
+  <script>
+    var direction = {forward: "%1$s before %2$s", backward: "%2$s after %1$s"};
+  </script>
+  <text oninit="this.format(direction.forward, 'first', 'last')" />
+  <text oninit="this.format(direction.backward, 'first', 'last');"/>
+</canvas>
+]]>
+ * </programlisting></example>
+ *
+ * <p>Finally, here is an example of using a custom representation for
+ * an object</p>
+ * <example title="Custom object representation"><programlisting>
+<![CDATA[
+<canvas debug="true" height="150" width="100%">
+<debug y="5%" height="90%" />
+  <script>
+    var myObj = {a: "Complex", 'object with an': "ugly representation", 42: "The answer", length: 768};
+    Debug.debug("%=s &lt;-- click for further details", myObj, 'Complex!')
+  </script>
+</canvas>
+]]>
+ * </programlisting></example>
  *
  * @access public
  * @topic LZX
@@ -26,7 +88,11 @@ mixin LzFormatter {
 
 
   /**
-   * pad or trim a string to a specified length
+   * <p>Pad or trim a string to a specified length</p>
+   *
+   * <p>This is a support method <xref
+   * linkend="LzFormatter.prototype.formatToString" />, which is the
+   * preferred interface.</p>
    *
    * @param * value: the value to pad, will be coerced to a string if not a number
    * @param Number widthMin: the minimum width, if negative pad on the
@@ -119,36 +185,55 @@ mixin LzFormatter {
   }
 
   /**
-   * Formatted output to string
+   * <p>Formatted output to string</p>
    *
-   * Formats its arguments according to the control string.
+   * <p>Formats its arguments according to the control string.</p>
    *
-   * The standard <code>printf</code> conversions are accepted, with
-   * the exception of `a`, `n`, and `p`.  `e`, `f`, and `g`
-   * conversions are accepted but equivalent to `f`.  The `h` and `l`
-   * length modifiers are accepted but ignored.  No errors are
-   * signalled for invalid format controls or insufficient
-   * arguments.
+   * <p>The standard <a href="x-man-page://3/printf">Unix printf(3)</a> conversion specifications are accepted (with
+   * the exception of <code>a</code>, <code>n</code>, and <code>p</code>).  <code>e</code>, <code>f</code>, and <code>g</code>
+   * conversions are accepted but equivalent to <code>f</code>.
+   * Positional arguments using the <code>$</code> field are
+   * supported.  All the standard flags (<code>#</code> for alternate,
+   * <code>0</code> for zero padding, <code>-</code> for left
+   * justification, <code>&#160;</code> for sign alignment, <code>+</code>
+   * for explicit sign) are supported.  The <code>'</code> flag
+   * (thousands separator) is ignored. Field width and precision are
+   * supported, including the use of parameterized (<code>*</code>)
+   * values.
+   * The <code>h</code> and <code>l</code>
+   * length modifiers are accepted but ignored.</p>
    *
-   * If the Debugger is present, There is an additional format
-   * specifier `w` that formats the argument as if by `Debug.__String`
-   * with the 'pretty'.  If alternate format is requested (#), `w` uses the
-   * full `Debug.__String` format used by <xref
-   * linkend="LzDebugService+debug.prototype.write"/>.  `%w` format obeys <xref
-   * linkend="LzDebugService+debug.__ivars__.printLength"/>.  If a precision is specified,
-   * that is used as printLength.
+   * <p>No errors are
+   * signalled for invalid conversion directives.</p>
    *
-   * When used to format a Debugger message, any Object that is
-   * formatted by `s` or `w` will create a link that can be clicked on
-   * to inspect the object.  There is an additional modifier for the
-   * `w` format (=) which will take the next argument as the object to
-   * be represented (i.e., linked to) by the formatted string; thus
-   * permitting custom representations.
+   * <p>There is an additional conversion
+   * specifier <code>w</code> that formats the argument in a readable
+   * representation, similar to that of <xref
+   * linkend="LzDebugService+debug.prototype.write">Debug.write</xref>, but with less
+   * detail.  If the alternate form is requested (with the <code>#</code> flag), <code>w</code> uses the
+   * full representation used by <xref
+   * linkend="LzDebugService+debug.prototype.write">Debug.write</xref>.  The <code>%w</code> directive obeys <link
+   * linkend="LzDebugService+debug.__ivars__.printLength">Debug.printLength</link>.  If a precision is specified,
+   * that is used as <code>Debug.printLength</code> for the
+   * corresponding conversion.  If a representation is truncated
+   * because of precision for <code>w</code> or <code>#s</code> conversions, the abbreviation
+   * will be noted by ellipsis (&#x2026;), rather than truncation.  If the debugger is not present,
+   * <code>w</code> conversion behaves the same as <code>s</code>.</p>
+   *
+   * <p>Any Object that is
+   * represented by <code>s</code> or <code>w</code> conversions using the <code>Debug</code> formatted
+   * output methods will create a link that can be clicked on
+   * to inspect the represented object.  There is an additional flag for the
+   * <code>s</code> and <code>w</code> formats (<code>=</code>) which will take the next argument as the object to
+   * be represented (i.e., linked to) by the conversion; thus
+   * permitting custom representations.</p>
    *
    * @param String control: A control string where % indicates a
-   * subsequent argument is to be substituted.
+   * conversion directive that will be replaced by a representation of
+   * the corresponding argument as specified by the details of the
+   * conversion directive.
    *
-   * @param Array * args: arguments to be formatted according to the
+   * @param [*] args: arguments to be formatted according to the
    * control string.
    *
    * @return LzMessage: the return value is an LzMessage which can be
@@ -184,6 +269,7 @@ mixin LzFormatter {
     var ctrl = '' + control;
     // Zero-based
     var argno = 0;
+    var maxarg = 0;
     function getarg(i) {
       if (i >= al) {
         if ($debug) {
@@ -413,16 +499,17 @@ mixin LzFormatter {
       ctrl = ctrl.substring(start, limit);
       base = 0, limit = ctrl.length;
       start = 0, end = 0;
+      if (argno > maxarg) { maxarg = argno; }
     }
-    if (argno < al) {
+    if (maxarg < al) {
       if ($debug) {
         Debug.warn("%#0.48w: excess arguments", control);
       }
       // Output excess in 'write compatibility' mode
       out.appendInternal(' ');
-      for (; argno < al; argno++) {
-        var arg = getarg(argno);
-        var sep = ((argno == (al-1)) ? '\n' : ' ');
+      for (; maxarg < al; maxarg++) {
+        var arg = getarg(maxarg);
+        var sep = ((maxarg == (al-1)) ? '\n' : ' ');
         out.append(arg);
         out.appendInternal(sep);
       }

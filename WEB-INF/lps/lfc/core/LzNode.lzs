@@ -2222,6 +2222,7 @@ public dynamic class LzNode extends LzEventable {
     this.makeChild( dpobj , true);
   }
 
+  /** @access private */
  static var presentationtypes = {number: NumberPresentationType, numberExpression: NumberPresentationType, color: ColorPresentationType, inheritableBoolean: BooleanPresentationType, expression: ExpressionPresentationType, size: SizePresentationType}
  // setting boolean: above freaks out rhino
  presentationtypes['boolean'] = BooleanPresentationType;

@@ -32,7 +32,7 @@ class LzTrace extends LzSourceMessage {
 /**
   * Create a trace message from a format string
   * @param String control: a format control string
-  * @param Array * args: the arguments to the format control
+  * @param [*] args: the arguments to the format control
   * 
   * See also: Debug.format
   * 
