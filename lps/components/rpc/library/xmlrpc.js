@@ -70,7 +70,7 @@ function invoke (delegate, args, opts, secure, secureport) {
     var methodname = opts['methodname'];
     var mesg = new XMLRPCMessage(methodname);
     for (var i=0; i < args.length; i++) {
-        mesg.addParameter(lz.Browser.xmlEscape(args[i]));
+        mesg.addParameter(args[i]);
     }
 
     var requestObj = new LzRPCDataRequest(this);
