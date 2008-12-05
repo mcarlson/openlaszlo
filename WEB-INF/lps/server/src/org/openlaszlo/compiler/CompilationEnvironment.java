@@ -17,6 +17,7 @@ import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.xml.internal.XMLUtils;
+import org.openlaszlo.sc.ScriptCompilerInfo;
 
 /** Encapsulates all the context that script compilation needs to
  * refer to.  Instances of this class are threaded through the calls
@@ -147,6 +148,15 @@ public class CompilationEnvironment {
     /** Used for compiling SWF loadable libraries to refer to _level0 */
     private String mGlobalPrefix = "";
 
+    private List mLibraryCompilations = new ArrayList();
+
+    /** Information about where the ScriptCompiler put intermediate
+     * working files. This is used for linking loadable libraries for
+     * as3 runtime */
+    private ScriptCompilerInfo mMainAppInfo;
+
+    private CompilationEnvironment mMainCompilationEnv;
+
     /** Constructs an instance.
      * @param properties compilation properties
      * @param resolver
@@ -183,6 +193,7 @@ public class CompilationEnvironment {
         this.mImportedLibraryFiles = new HashSet(srcEnv.getImportedLibraryFiles());
         this.mLoadableImportedLibraryFiles = srcEnv.getLoadableImportedLibraryFiles();
         this.mResourceNames = srcEnv.getResourceNames();
+        this.mMainCompilationEnv = srcEnv;
     }
     
     /** Use this constructor for unit testing.  The Compiler uses the
@@ -724,5 +735,26 @@ public class CompilationEnvironment {
             this.warnIfCannotContain(element, child);
         }
     }
+
+    public void queueLibraryCompilation(LibraryCompilation lc) {
+        mLibraryCompilations.add(lc);
+    }
+
+    public List libraryCompilationQueue () {
+        return mLibraryCompilations;
+    }
+
+    public void setScriptCompilerInfo(ScriptCompilerInfo info) {
+        mMainAppInfo = info;
+    }
+
+    public ScriptCompilerInfo getScriptCompilerInfo() {
+        return mMainAppInfo;
+    }
+
+    public CompilationEnvironment getMainCompilationEnv() {
+        return mMainCompilationEnv;
+    }
+
 
 }

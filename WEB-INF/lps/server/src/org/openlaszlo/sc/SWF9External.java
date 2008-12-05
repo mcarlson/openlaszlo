@@ -50,8 +50,9 @@ public class SWF9External {
    */
   public static final String WORK_DIR_PREFIX = "lzgen";
 
-  private File workdir = createCompilationWorkDir();
+  private File workdir;
   private Compiler.OptionMap options;
+  private ScriptCompilerInfo mInfo;
 
   /*
    * Used by getFileNameForClassName to prevent filename conflicts.
@@ -70,6 +71,11 @@ public class SWF9External {
 
   public SWF9External(Compiler.OptionMap options) {
     this.options = options;
+    mInfo = (ScriptCompilerInfo) options.get(Compiler.COMPILER_INFO);
+    if (mInfo == null) {
+      mInfo = new ScriptCompilerInfo();
+    }
+    workdir = createCompilationWorkDir();
   }
 
   /**
@@ -138,6 +144,8 @@ public class SWF9External {
     catch (IOException ioe) {
       throw new CompilerError("getCompilationWorkDir: cannot get temp directory: " + ioe);
     }
+    // Copy the pointer to our work directory to the ScriptCompilerInfo object
+    this.mInfo.workDir = f;
     return f;
   }
 
@@ -905,11 +913,7 @@ public class SWF9External {
       cmd.add(options.get(Compiler.CANVAS_HEIGHT, "600"));
       if (options.getBoolean(Compiler.SWF9_USE_RUNTIME_SHARED_LIB)) { // 
       // TODO [hqm 2008-11] This usage of the Flash
-      // "runtime-shared-library" feature does not work yet. No matter
-      // what I try, when the app loads, it cannot find or load the
-      // LFC as a runtime shared library.  When this does work, it
-      // will be a good option to reduce app download size when
-      // multiple Laszlo apps are served from the same server.
+      // "runtime-shared-library" feature does not work yet. See LPP-7387
         cmd.add("-runtime-shared-library-path="+ getLFCLibrary(debug) + "," + 
                 "lib" + File.separator +  getLFCLibraryRelativeURL(debug) +
                 ",," // specifies explicitly empty policy file arg
@@ -922,6 +926,15 @@ public class SWF9External {
           options.getBoolean(Compiler.DEBUG_EVAL)) {
         // Don't include the LFC in this app
         cmd.add("-external-library-path+="+getLFCLibrary(debug));
+      }
+
+      if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB)) {
+        // If it's a loadable lib, check links against the main app,
+        // but don't link those classes in. We do this by declaring the main app
+        // source working directory as a external-library-path
+        cmd.add("-compiler.source-path+="+mInfo.mainAppWorkDir);
+        cmd.add("-external-library-path+="+mInfo.mainAppWorkDir);
+
       }
 
       // Add in WEB-INF/flexlib and APPDIR/flexlib to flex library search paths if they exist

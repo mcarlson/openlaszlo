@@ -540,5 +540,9 @@ abstract class ObjectWriter {
         this.mExecutionTimeout = timeout;
     }
 
+
+    public CompilationEnvironment getCompilationEnvironment () {
+        return mEnv;
+    }
 }
 

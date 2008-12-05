@@ -457,6 +457,7 @@ public class Compiler {
   public static String CATCH_FUNCTION_EXCEPTIONS = "catchFunctionExceptions";
   public static String COMPILE_TRACE = "compileTrace";
   public static String COMPILE_TIME_CONSTANTS = "compileTimeConstants";
+  public static String COMPILER_INFO = "compilerInfo";
   public static String CONSTRAINT_FUNCTION = "constraintFunction";
   public static String DEBUG = "debug";
   public static String DEBUG_BACKTRACE = "debugBacktrace";

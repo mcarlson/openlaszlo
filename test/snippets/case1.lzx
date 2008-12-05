@@ -1,0 +1,21 @@
+<canvas width="100%" height="100%" bgcolor="gray" > 
+ <import name="lib" stage="defer" href="case1-lib.lzx" /> 
+ <simplelayout /> 
+ <handler name="oninit"> 
+   Debug.write('loading lib...');
+   lib.load(); 
+ </handler> 
+ <handler name="onload" reference="lib" > 
+   Debug.write('...lib loaded');
+   canvas.showlater.apply(); 
+ </handler> 
+ <state name="showlater" applied="false" > 
+   <handler name="onapplied">
+     new lz.pak(this.parent, {text: "Main"});
+   </handler>
+ </state> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas> 

@@ -1,0 +1,10 @@
+<library> 
+  <include href="lz/button.lzx" /> 
+  <pak>Library</pak> 
+  <class name="pak" extends="button"/> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+</library> 

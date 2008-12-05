@@ -115,7 +115,7 @@ class ImportCompiler extends ToplevelCompiler {
                 throw new CompilationError(element, e);
             }
 
-            compileLibrary(libsrcfile, objfilename, objpath, module);
+            queueLibraryCompilation(libsrcfile, objfilename, objpath, module);
 
             // Emit code into main app to instantiate a LzLibrary
             // object, which implements the load() method.
@@ -132,6 +132,19 @@ class ImportCompiler extends ToplevelCompiler {
         if (element != null) {
             super.updateSchema(element, schema, visited);
         }
+    }
+
+
+
+    /**
+     * Queue this library to be compiled. The actual compilation must
+     * be done after the main application is compiled, so that the AS3
+     * compiler can use it to link against (actually, just to check
+     * the links).
+     */
+    void queueLibraryCompilation(File infile, String outfile, String liburl, Element element) {
+        LibraryCompilation lc = new LibraryCompilation(this, infile, outfile, liburl, element);
+        mEnv.queueLibraryCompilation(lc);
     }
 
     /**
@@ -226,18 +239,6 @@ class ImportCompiler extends ToplevelCompiler {
 
                 ViewCompiler.checkUnresolvedResourceReferences (env);
                 
-                // Need to emit a copy of the globals declarations
-                // into the library app code we're building, because
-                // the swf9 compiler needs to be able to have
-                // declarations for them to compile references to
-                // them.
-                String globals = "";
-                for (Iterator v = mEnv.getIds().keySet().iterator(); v.hasNext(); ) {
-                    String id = (String)v.next();
-                    globals += ("var " +id + " = null;\n");
-                }
-                env.compileScript(globals);
-
                 writer.closeSnippet();
                 env.compileScript("// FINISH compiling <IMPORT> Library "+liburl+"\n");
             } finally {
@@ -274,3 +275,4 @@ class ImportCompiler extends ToplevelCompiler {
 
     }
 }
+

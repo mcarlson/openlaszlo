@@ -201,6 +201,13 @@ public class Compiler {
                     }
                 }
             }
+
+            List libs = env.libraryCompilationQueue();
+            for (int i = 0; i < libs.size(); i++) {
+                LibraryCompilation lc = (LibraryCompilation) libs.get(i);
+                lc.importCompiler.compileLibrary(lc.infile, lc.outfile, lc.liburl, lc.element);
+            }
+
             success = true;
             return canvas;
         } catch (java.lang.OutOfMemoryError e) {

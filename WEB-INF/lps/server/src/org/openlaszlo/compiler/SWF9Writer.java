@@ -10,6 +10,7 @@
 package org.openlaszlo.compiler;
 
 import org.openlaszlo.sc.ScriptCompiler;
+import org.openlaszlo.sc.ScriptCompilerInfo;
 import org.openlaszlo.sc.Compiler;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.ChainedException;
@@ -392,10 +393,23 @@ class SWF9Writer extends ObjectWriter {
 
         */
 
+        ScriptCompilerInfo compilerInfo = new ScriptCompilerInfo();
+        props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
+
+
         try { 
             scriptWriter.close();
             byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
             InputStream input = new ByteArrayInputStream(objcode);
+
+            // Make a note of the location of the as3 working file dir
+            // used for compiling the main app. This is needed so the
+            // flex compiler can link any loadable libraries
+            // (<import>'s) against it.
+            File workdir = compilerInfo.workDir;
+            compilerInfo.mainAppWorkDir = workdir;
+            mEnv.setScriptCompilerInfo(compilerInfo);
+
             FileUtils.send(input, mStream);
         } catch (org.openlaszlo.sc.CompilerException e) {
             throw new CompilationError(e);
@@ -501,6 +515,10 @@ class SWF9Writer extends ObjectWriter {
         System.err.println(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME));
 
         */
+
+        // This will contain a pointer to the working dir created by compiling the main app
+        ScriptCompilerInfo compilerInfo = mEnv.getMainCompilationEnv().getScriptCompilerInfo();
+        props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
 
         try { 
 
