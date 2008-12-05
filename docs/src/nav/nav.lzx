@@ -43,7 +43,7 @@
 
   <simplelayout axis="y"/>
   <tabs x="5" width="${canvas.width-10}" height="${canvas.height}">
-    <tabpane width="${parent.width}">
+      <tabpane width="${parent.width}" bgcolor="0xffffff">
       Contents
       <view name="search" width="${parent.width}">
         <simplelayout axis="x"/>
@@ -121,7 +121,7 @@
       <button onclick="lz.Browser.loadURL('javascript:lzSetShowInlineExamples(false)')">Hide Examples</button>
 
     </tabpane>
-    <tabpane width="${parent.width}">
+      <tabpane width="${parent.width}" bgcolor="0xffffff">
       Classes
       <view clip="true" height="${parent.parent.height - 50}"
             width="${parent.width-20}">
@@ -131,7 +131,7 @@
           <wheelscrollbar/>
       </view>
     </tabpane>
-    <tabpane width="${parent.width}">
+      <tabpane width="${parent.width}" bgcolor="0xffffff">
       Tags
       <view clip="true" height="${parent.parent.height - 50}"
             width="${parent.width-20}">
