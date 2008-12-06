@@ -1,8 +1,8 @@
 
-<canvas height="135" width="100%" debug="true">
+<canvas height="200" width="100%" debug="true">
    <debug x="200"/>
    <button x="15" y="15"
-      onclick="Debug.write(canvas.theField.getText());">
+      onclick="Debug.debug('%s', canvas.theField.getText());">
       Get Text 
    </button>
 

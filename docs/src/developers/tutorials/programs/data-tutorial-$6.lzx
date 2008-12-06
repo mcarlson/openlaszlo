@@ -1,13 +1,12 @@
-
-<canvas height="180" width="100%" debug="true">
+<canvas height="50" width="100%">
+  <text id="sometext" />
   <dataset name="myData" src="resources/myShowData.xml" />
   <datapointer xpath="myData:/myXML" ondata="processData()"> 
     <method name="processData"> 
       this.selectChild(); 
       do { 
       if (this.xpathQuery( '@show' ) == 'south park') { 
-      Debug.write(this.xpathQuery('firstName/text()')); 
-      } 
+      sometext.addText(this.xpathQuery('firstName/text()') + "\n");      } 
       } while (this.selectNext()); 
     </method> 
   </datapointer> 

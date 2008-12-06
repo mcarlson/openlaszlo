@@ -147,7 +147,7 @@
 </example>
 
 
-  <para>For brevity's sake, we are writing to the debugger, and we are including the data from a local file. You can download that XML file <ulink url="http://labs.openlaszlo.org/trunk-nightly/docs/developers/programs/resources/myShowData.xml">here</ulink>, and here's what it looks like:</para>
+  <para>We are including the data from a local file. You can download that XML file <ulink url="http://labs.openlaszlo.org/trunk-nightly/docs/developers/programs/resources/myShowData.xml">here</ulink>, and here's what it looks like:</para>
   <programlisting>
     &lt;myXML&gt;
       &lt;person show=&quot;simpsons&quot;&gt;

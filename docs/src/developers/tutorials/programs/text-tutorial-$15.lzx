@@ -1,12 +1,12 @@
 
-<canvas height="135" width="100%" debug="true">
+<canvas height="200" width="100%" debug="true">
     <debug x="200"/>
    <font name="sansSerifFont" src="helmetr.ttf" />
 
    <script>
       function writeOutBit() {
       var myText = canvas.theField.getText();
-      Debug.write(myText);
+      Debug.debug("%s", myText);
    }
    </script>
 

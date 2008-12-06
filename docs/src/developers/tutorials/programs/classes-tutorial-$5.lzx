@@ -1,42 +1,35 @@
-
-<canvas width="100%" height="300" debug="true">
-  <debug x="175"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<canvas width="100%" height="180">
   <resource name="standardButton">
     <frame src="resources/button_blue.gif"/>
     <frame src="resources/button_green.gif"/>
   </resource>
-  
+
   <resource name="specialButton">
     <frame src="resources/button_red.gif"/>
     <frame src="resources/button_green.gif"/>
   </resource>
-  
-  <class name="MyButton" resource="standardButton" 
-         onclick="doAction()" onmouseover="doOver()" onmouseout="doOut()">
-    <method name="doAction">
-      Debug.write('Dog');
-    </method>
-    <method name="doOver">
-      this.setAttribute('frame', 2);
-    </method>
-    <method name="doOut">
-      this.setAttribute('frame', 1);
-    </method>
+
+  <class name="MyButton" resource="standardButton" onclick="doAction()" onmouseover="doOver()"
+    onmouseout="doOut()">
+    <method name="doAction"> pet.addText("dog "); </method>
+    <method name="doOver"> this.setAttribute('frame', 2); </method>
+    <method name="doOut"> this.setAttribute('frame', 1); </method>
   </class>
-  
+
   <class name="MySpecialButton" extends="MyButton" resource="specialButton">
-    <method name="doAction">
-      Debug.write('Monday');
-    </method>
+    <method name="doAction"> weekday.addText("Monday "); </method>
   </class>
-  
-  <view name="buttons" x="125" y="5">
+
+  <view name="buttons" x="5" y="5">
     <simplelayout axis="y" spacing="10"/>
     <MyButton/>
+    <text id="pet"/>
     <MySpecialButton/>
+    <text id="weekday"/>
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
+  * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+  * Use is subject to license terms.                                            *
+  * X_LZ_COPYRIGHT_END ****************************************************** -->

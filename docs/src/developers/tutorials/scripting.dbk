@@ -24,13 +24,9 @@ immediately. <indexterm><primary>script</primary></indexterm><sgmltag class="ele
 <indexterm><primary>canvas</primary></indexterm><sgmltag class="element">&lt;canvas&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: canvas-->
 . </para>
-<note><para>
- In the program below, note  the <literal>debug="true"</literal>
-attribute, which opens up the OpenLaszlo Debugger. In these tutorials we will use the debugger as a scratchpad to illustrate
-scripting concepts.</para></note>
 
 <example role="live-example">
-   <title>Using the debugger</title>
+   <title>Using the <literal>&lt;script&gt;</literal> tag</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/scripting-tutorial-$1.lzx"/></textobject> 
    </programlisting>
@@ -56,9 +52,9 @@ For example, consider this slight expansion of the preceding program:</para>
    </programlisting>
 </example>
 
-<para>Everything there is fine, except the "<literal>4 plus 3 is …</literal>" line. Four plus three should be 7, as in 
-the line immediately above it, right? What happened is that we concatenated numbers to strings 
-earlier on (<literal>4 + " plus " + 3</literal>), and that operation converted the numbers to strings.</para>
+   <para>Everything there is fine, except the "<literal>badtext.setAttribute( … );</literal>" line. Four plus three should be 7, as in 
+the line immediately above it, right? What happened is that we concatenated numbers to strings
+(<literal>(..." is " + first + second)</literal>). The next line shows one way to fix this problem.</para>
 <para>
 OpenLaszlo documentation is not intended to provide a complete reference for JavaScript. Later chapters do explain some
 advanced topics in scripting, but we recommend that you have a JavaScript reference handy while writing LZX.
@@ -72,7 +68,7 @@ advanced topics in scripting, but we recommend that you have a JavaScript refere
   &lt;-- the following code will not compile because of the angle bracket --&gt;
   &lt;script&gt;
     for (var i = 0; i &lt; 11; i++) {
-      Debug.write(i);
+      Debug.debug("%d", i);
     }
   &lt;/script&gt;
 &lt;/canvas&gt;
@@ -91,7 +87,7 @@ tags (in particular, <indexterm><primary>script</primary></indexterm><sgmltag cl
 &lt;canvas height="120"&gt;
    &lt;script&gt;
      for (var i = 0; i <emphasis role="em">&amp;lt;</emphasis> 11; i++) {
-       Debug.write(i);
+       Debug.debug("%d", i);
      }
    &lt;/script&gt;
 &lt;/canvas&gt;
@@ -102,7 +98,7 @@ tags (in particular, <indexterm><primary>script</primary></indexterm><sgmltag cl
    &lt;script&gt;
      <emphasis role="em">&lt;![CDATA[</emphasis>
      for (var i = 0; i &lt; 11; i++) {
-       Debug.write(i);
+       Debug.debug("%d", i);
      }
      <emphasis role="em">]]&gt;</emphasis>
    &lt;/script&gt;

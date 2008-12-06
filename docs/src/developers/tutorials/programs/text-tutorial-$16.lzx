@@ -1,13 +1,12 @@
 
-<canvas height="135" width="100%" debug="true">
-    <debug x="200"/>
+<canvas height="200" width="100%" debug="true">
    <inputtext name="myText" x="10" y="15">Enter text here</inputtext>
    <button x="45" y="45"
-      onclick="Debug.write(canvas.myText.getText());">
+      onclick="Debug.debug('%s', canvas.myText.getText());">
          Write out text 
    </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
