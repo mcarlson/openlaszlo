@@ -181,7 +181,7 @@ override function construct ( odp , args ){
     this.pooling = this.getDefaultPooling(); // Defined in LzDatapath
     this.__LZtakeDPSlot = false; // Defined in LzDatapath
     this.datacontrolsvisibility = false; // Defined in LzDatapath
-    
+
     //odp: original datapath
     var view:LzNode = odp.immediateparent;
     if (view === canvas) {
@@ -265,12 +265,15 @@ override function construct ( odp , args ){
 
     //add clone transformer to original instance attributes
     {
-      var cloneAttrs = new LzInheritedHash(view._instanceAttrs);
+      var cloneAttrs:Object = new LzInheritedHash(view._instanceAttrs);
 
-      delete cloneAttrs.datapath;
+      // Both datapaths _must_ be set.
+      // The _ignoreAttribute marker will remove any existing datapath
+      // inherited from class attributes (see LzNode#mergeAttributes).
+      cloneAttrs.datapath = LzNode._ignoreAttribute;
       cloneAttrs.$datapath = { 'class'  : lz.datapath };
       cloneAttrs.$datapath.attrs = { datacontrolsvisibility: odp.datacontrolsvisibility,
-                                     __LZmanager : this }
+                                     __LZmanager : this };
 
       delete cloneAttrs.id;
       delete cloneAttrs.name;
@@ -288,16 +291,10 @@ override function construct ( odp , args ){
     if (odp.datacontrolsvisibility) {
         this.visible = true;
     } else {
-        if (!view.isinited) {
-            var via:Object = view._instanceAttrs;
-            // NOTE [2008-12-01 ptw]  I did not use
-            // LzNode/__LZhasConstraint here, because the original code
-            // only looks for visible in the instance attributes.  I
-            // can't tell if that was an error, or the designer
-            // intentionally did not want to consider the setting of
-            // visible in the class
-            if (via != null && 'visible' in via && !(via.visible is LzInitExpr)) {
-                this.visible = via.visible;
+        if (! view.isinited) {
+            var vis:* = this.__LZgetInstanceAttr(view, "visible");
+            if (typeof(vis) == 'boolean' || vis is Boolean) {
+                this.visible = vis;
             } else {
                 this.visible = view.visible;
             }
@@ -310,72 +307,70 @@ override function construct ( odp , args ){
         this.pooling = args.pooling;
     }
 
-    var ia:Object = view._instanceAttrs;
-    var oa:Object = odp._instanceAttrs;
-    // NOTE [2008-12-01 ptw] I did not use LzNode/__LZhasConstraint
-    // here, because the original code only looks for visible in the
-    // instance attributes.  I can't tell if that was an error, or the
-    // designer intentionally did not want to consider the setting of
-    // visible in the class
-    if (ia && 'datapath' in ia && ia.datapath is LzAlwaysExpr) {
+    var dp:* = this.__LZgetInstanceAttr(view, "datapath");
+    if (dp is LzAlwaysExpr) {
         // <view datapath="${ ... }"/>
         // we need to mask this constraint
-        
+
         // NOTE: [2008-02-07 ptw] Why?  Why can't this just execute as
         // a constraint on the clone via the normal mechanism?
         // but, we want the constraint to apply to this object instead
-        this.__LZxpathconstr = view[ia.datapath.methodName];
-        this.__LZxpathdepend = view[ia.datapath.dependenciesName];
+        var dpCons:LzAlwaysExpr = (dp cast LzAlwaysExpr);
+        this.__LZxpathconstr = view[dpCons.methodName];
+        this.__LZxpathdepend = view[dpCons.dependenciesName];
         // NOTE: [2008-02-07 ptw] The method had better be available
         // on the clone (which means we really want a clone class here
         // to instantiate, rather than an instance to clone).
         this.__LZpreventXPathUpdate = true;
         this.applyConstraintExpr(new LzAlwaysExpr("__LZxpathconstr", "__LZxpathdepend"));
         this.__LZpreventXPathUpdate = false;
-        
+
         if (this.pooling) {
             //if we're pooling, release constraint from view so it won't run again
-            view.releaseConstraint("datapath");
+            view.releaseConstraintMethod(dpCons.methodName);
         }
-    } else if (oa && 'xpath' in oa && oa.xpath is LzAlwaysExpr){
-        //<view><datapath xpath="${ ... }"/>
-        //we want the constraint to apply to this object instead
-        
-        // we need to have an intermediate node, so relative constraints 
-        // like "xpath='${this.immediateparent.parent.anyproperty}'" 
-        // work for a replication-manager 
-        var refObj:LzRefNode = new LzRefNode(this);
-        // the constraint-method isn't actually a method for LzDatapath, 
-        // but a function, which is available through the odp's _instanceAttrs
-        refObj.__LZxpathconstr = oa[oa.xpath.methodName];
-        refObj.__LZxpathdepend = oa[oa.xpath.dependenciesName];
-        // NOTE: [2008-02-07 ptw] The method had better be available
-        // on the clone (which means the compiler really has to move
-        // it from the datapath subnode to the clone class).
-        this.__LZpreventXPathUpdate = true;
-        refObj.applyConstraintExpr(new LzAlwaysExpr("__LZxpathconstr", "__LZxpathdepend"));
-        this.__LZpreventXPathUpdate = false;
-        
-        if (this.pooling) {
-            //if we're pooling, release constraint from datapath so it won't run again
-            odp.releaseConstraint("xpath");
+    } else {
+        var xp:* = this.__LZgetInstanceAttr(odp, "xpath");
+        if (xp is LzAlwaysExpr) {
+            //<view><datapath xpath="${ ... }"/>
+            //we want the constraint to apply to this object instead
+
+            // we need to have an intermediate node, so relative constraints 
+            // like "xpath='${this.immediateparent.parent.anyproperty}'" 
+            // work for a replication-manager 
+            var refObj:LzRefNode = new LzRefNode(this);
+            // the constraint-method isn't a method on the datapath, but a function
+            // (so we don't need to worry about implicit 'this' in AS3)
+            var xpCons:LzAlwaysExpr = (xp cast LzAlwaysExpr);
+            refObj.__LZxpathconstr = odp[xpCons.methodName];
+            refObj.__LZxpathdepend = odp[xpCons.dependenciesName];
+            // NOTE: [2008-02-07 ptw] The method had better be available
+            // on the clone (which means the compiler really has to move
+            // it from the datapath subnode to the clone class).
+            this.__LZpreventXPathUpdate = true;
+            refObj.applyConstraintExpr(new LzAlwaysExpr("__LZxpathconstr", "__LZxpathdepend"));
+            this.__LZpreventXPathUpdate = false;
+
+            if (this.pooling) {
+                //if we're pooling, release constraint from datapath so it won't run again
+                odp.releaseConstraintMethod(xpCons.methodName);
+            }
         }
     }
 
     this.__LZsetCloneAttrs();
-
 
     if ( view._instanceChildren ){
         this.cloneChildren = view._instanceChildren.concat();
     } else {
         this.cloneChildren = [];
     }
-    
+
     var mycontext:* = odp.context;
 
     //clone pool is used to store available views   
     this.clones = [];
-    this.clonePool = [ ];
+    this.clonePool = [];
 
     if ( this.pooling ){
         odp.$lzc$set___LZmanager( this );
@@ -384,12 +379,31 @@ override function construct ( odp , args ){
         // of lexical order) make sure that the replicated view has been added
         // to the parent's subview list. Also, it's ok to call this if view was
         // already added
-        view.immediateparent.addSubview ( view );
+        view.immediateparent.addSubview( view );
     } else {
         this.destroyClone( view );
     }
 
-    this.setDataContext( mycontext , mycontext instanceof LzDatapointer);
+    this.setDataContext(mycontext, mycontext instanceof LzDatapointer);
+}
+
+/**
+  * @access private
+  */
+function __LZgetInstanceAttr (node:LzNode, attr:String) :* {
+    var ia:Object = node._instanceAttrs;
+    if (ia && attr in ia) {
+        // first look up 'real' instance attributes
+        return ia[attr];
+    } else {
+        var ca:Object = node['constructor'].attributes;
+        if (ca && attr in ca) {
+            // then look up class attributes
+            return ca[attr];
+        }
+    }
+    // return undefined if attribute wasn't found
+    return void(0);
 }
 
 /**
