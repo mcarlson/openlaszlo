@@ -290,10 +290,12 @@ public dynamic class LzNode extends LzEventable {
       delete iargs["$datapath"];
     }
 
-    /// See LzNode/construct documentation for the purpose of this
+    ///
+    // See LzNode/construct documentation for the purpose of this
     // filtering/copying
-
-    // Remove the init expressions from the args when calling construct
+    //
+    // Remove the init expressions from the args when calling
+    // construct
     var cargs = this.__LzValueExprs = {};
     for (var key in iargs) {
       var val = iargs[key];
@@ -307,15 +309,18 @@ public dynamic class LzNode extends LzEventable {
     // placement, actually end up deleting us!  Bail out.
     if (this.__LZdeleted) { return; }
 
-    // Now put them back, unless they have been overridden
+    // Now put them back
     for (var key in cargs) {
-      // TODO [2008-12-02 ptw] Some legacy constructors appear to
-      // depend on overriding a constraint.  IWBNI the only thing a
-      // constructor could do would be to remove a constant arg that
-      // it had handled.
-      if (! (key in iargs)) {
-        iargs[key] = cargs[key];
-      }
+      // NOTE: [2008-12-05 ptw] Some legacy constructors appear to
+      // depend on insertions to args _not_ overriding constraints
+      // (constraints were not visible to legacy constructors).  IWBNI
+      // the only thing a constructor could do would be to remove a
+      // constant arg that it had handled.  Maybe some day we can add
+      // a deprecation warning if a constraint is clobbering an arg
+      // that has been inserted by a sub-class -- that should be a
+      // clue that the sub-class constructor doesn't _really_ know
+      // what it is doing!
+      iargs[key] = cargs[key];
     }
     this.__LzValueExprs = null;
 
@@ -327,8 +332,8 @@ public dynamic class LzNode extends LzEventable {
     if (this.__LZdeleted) { return; }
 
     /**
-     * @todo 2006-05-24 ptw Adam says this is a hack that we should get
-     * rid of.
+     * TODO: [2006-05-24 ptw] Adam says this is a hack that we should get
+     * rid of. [2008-12-05 ptw] Some day!
      */
     this.constructWithArgs( iargs );
 
