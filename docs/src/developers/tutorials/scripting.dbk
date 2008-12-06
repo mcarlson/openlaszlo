@@ -54,7 +54,7 @@ For example, consider this slight expansion of the preceding program:</para>
 
    <para>Everything there is fine, except the "<literal>badtext.setAttribute( … );</literal>" line. Four plus three should be 7, as in 
 the line immediately above it, right? What happened is that we concatenated numbers to strings
-(<literal>(..." is " + first + second)</literal>). The next line shows one way to fix this problem.</para>
+(<literal>(..." is " + first + second)</literal>). The next line shows one way to fix this problem. The line after that shows a better way.</para>
 <para>
 OpenLaszlo documentation is not intended to provide a complete reference for JavaScript. Later chapters do explain some
 advanced topics in scripting, but we recommend that you have a JavaScript reference handy while writing LZX.
