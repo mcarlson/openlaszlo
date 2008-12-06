@@ -10,8 +10,6 @@
 
 
 /**
- * Formatted output support
- *
  * <p>See <xref linkend="LzText" /> and <xref linkend="LzDebugService+debug"
  * /> for additional
  * examples of how to present formatted text to the user
@@ -55,13 +53,14 @@
  * accessed in different orders.</p>
  * <example title="Positional arguments"><programlisting>
 <![CDATA[
-<canvas layout="axis: y; spacing: 10" height="80" width="100%">
+<canvas layout="axis: y; spacing: 10" height="60" width="100%">
   <debug y="5%" height="90%" />
   <script>
-    var direction = {forward: "%1$s before %2$s", backward: "%2$s after %1$s"};
+    var date = {us: "%2$d/%3$d/%1$d", eu: "%1$d-%2$02d-%3$02d"};
+    var now = new Date();
   </script>
-  <text oninit="this.format(direction.forward, 'first', 'last')" />
-  <text oninit="this.format(direction.backward, 'first', 'last');"/>
+  <text oninit="this.format(date.us, now.getFullYear(), now.getMonth(), now.getDay())" />
+  <text oninit="this.format(date.eu, now.getFullYear(), now.getMonth(), now.getDay());" />
 </canvas>
 ]]>
  * </programlisting></example>
@@ -80,6 +79,7 @@
 ]]>
  * </programlisting></example>
  *
+ * @shortdesc Formatted output support
  * @access public
  * @topic LZX
  * @subtopic Formatted Output
