@@ -83,6 +83,11 @@ public dynamic class LzNode extends LzEventable {
     for ( var k in attrs ) {
       var attrk = attrs[ k ];
       if ( attrk === LzNode._ignoreAttribute ) {
+        // NOTE: [2008-12-06 ptw] In cloning you are saving
+        // away a half-processed arglist that will be _re_-merged
+        // with the parent class args, so you need to have a way
+        // to memoize the deletion, 
+        // cf. LzReplicationManager#construct()
         delete dattrs[k];
       } else if (attrk is LzInitExpr) {
         dattrs[k] = attrk;
