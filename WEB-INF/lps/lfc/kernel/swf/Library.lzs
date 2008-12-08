@@ -15,6 +15,7 @@
 #include "kernel/swf/LzInputTextSprite.as"
 #include "kernel/swf/LzMakeLoadSprite.as"
 #include "kernel/swf/LzLoader.lzs"
+#include "kernel/swf/LzXMLLoader.lzs"
 #include "kernel/swf/LzMediaLoader.lzs"
 #include "kernel/swf/LzLibraryLoader.lzs"
 #include "kernel/swf/LzFontManager.as"

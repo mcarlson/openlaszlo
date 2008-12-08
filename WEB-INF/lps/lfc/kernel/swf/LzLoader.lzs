@@ -11,15 +11,16 @@
 /**
   * @access private
   */
-class LzLoader {
+class LzLoader extends LzEventable {
 
-function LzLoader ( owner , args ){
-    super(owner, args);
+function LzLoader (owner, args) {
+    super();
     //Debug.write("LzLoader initialize owner=",owner,'attachref=', args.attachRef, args);
     this.mc = args.attachRef == null ? owner.__LZmovieClipRef : args.attachRef;
     //this breaks media loading in swf: this.mc = args.attachRef == null ? owner.getMCRef() : args.attachRef;
 
     if ( args.attachRef == null && args.attachname != null ){
+        // attachname is only used in LzRemote
         this.mc.attachMovie( "empty" , args.attachname , this.newContextDepth );
         this.mc = this.mc[ args.attachname ];
     }
@@ -37,57 +38,28 @@ function LzLoader ( owner , args ){
     }
 
     this.owner = owner;
-
-    // For SOLO requests, we need to make an idle task to
-    // split up the work of copying the Flash XML tree into an LzDataNode tree
-    this.copyTaskDel = new LzDelegate( this , "copyFlashData" );
-
 }
 
 /**
   * @access private
   * (not really, but the doc tools will complain
   */
-function destroy () {
+override function destroy () {
     // [2005-08-25 ptw] Hosie doorknob black magic: removing a movie
     // clip from anywhere will magically delete any properties that
     // reference it (i.e., all movieclip references are weak,
     // apparently).
     this.mc.removeMovieClip();
+    super.destroy();
 }
-
-/**
-  * @access private
-  */
-function startCopyTask ( ){
-    //    Debug.write("starting copy idle task ");
-    this.copyTaskDel.register( lz.Idle, "onidle" );
-}
-
-/**
-  * @access private
-  */
-function removeCopyTask() {
-    // Remove copyTask delegate
-    //    Debug.write("removing copy idle task ", this);
-    this.copyTaskDel.unregisterAll();
-    this.copyQueue = null;
-}
-
 
 var ondata = LzDeclaredEvent;
-var oncontent = LzDeclaredEvent;
 var onrequest = LzDeclaredEvent;
 var ontimeout = LzDeclaredEvent;
 var onerror = LzDeclaredEvent;
 
-var requestheaders = {};
 var timeout = 30000;
-var doPersist = false;
 var doCacheRequest = true;
-
-var attachDepth = 9;
-var minHeader = 10;
 
 var queuing = false;
 
@@ -232,7 +204,6 @@ function returnData ( loadobj , data ){
     }
 }
 
-
 /**
   * @access private
   */
@@ -273,7 +244,7 @@ function initializeRequestObj (loadobj) {
     loadobj.loading = false;
     loadobj.data = null;
     // N.B. Do _NOT_ re-initialize lmcnum.  See comment in
-    // LzLoadQueue.loadMovieProxiedOrDirect
+    // LzLoadQueue.loadMovie
 
     // Set to false if aborted
     loadobj.valid = true;
@@ -348,26 +319,6 @@ function request ( o ){
     if (this.onrequest.ready) this.onrequest.sendEvent(o);
 }
 
-function setHeaders (headers) {
-    this.requestheaders = headers;
-}
-
-/**
-  * Request a data load using Flash XML object
-  * @access private
-  */
-function requestDirectXML ( o ){
-    if ($debug) {
-        LzLoader.debugLoadObj(o);
-    }
-    this.initializeRequestObj(o);
-
-    LzLoadQueue.enqueueRequest( o );
-    // We should probably be passing something other than the obj itself to
-    // the onrequest event
-    if (this.onrequest.ready) this.onrequest.sendEvent(o);
-}
-
 /**
   * @access private
   * @param MovieClip loadobj: the LoadMovie to unload, defaults to the
@@ -424,275 +375,6 @@ function doError ( loadobj ){
         this.returnData(loadobj);
         this.unload(loadobj);
         if (this.onerror.ready) this.onerror.sendEvent();
-    }
-}
-
-// Recursively copy a Flash XML(Node) tree into a LzDataElement
-// tree. Used by LzDataNode.stringToLzData
-/**
-  * @param boolean trimwhitespace: trim whitespace from start and end of text nodes
-  * @param boolean nsprefix: preserve namespace prefixes on node names and attribute names
-  * @access private
-  */
-function copyFlashXML (node, trimwhitespace, nsprefix) {
-    var nv = node.nodeValue;
-    var lfcnode = null;
-    // text node?
-    if (node.nodeType == 3) {
-        if (trimwhitespace == true) {
-            nv = LzDataElement.trim(nv);
-        }
-        lfcnode = new LzDataText(nv);
-    } else {
-        if (! nsprefix) {
-            // slow but sure way to copy attributes
-            var nattrs = node.attributes;
-            var cattrs = {};
-            var attrlist = [];
-            for (var key in nattrs) {
-                var nkey = key;
-                // strip namespace prefixes
-                var colpos = key.indexOf(':');
-                if (colpos >= 0) {
-                    nkey = key.substring(colpos + 1);
-                }
-                //cattrs[nkey] = nattrs[key];
-                attrlist.push(nkey, nattrs[key]);
-            }
-            
-            // Flash iterates over an object in reversed insertion order. 
-            // But as we want to preserve the original xml-attribute order, 
-            // we need to insert the attributes also in reversed order. 
-            for (var i = attrlist.length - 1; i >= 0; i -= 2) {
-                cattrs[attrlist[i - 1]] = attrlist[i];
-            }
-        } else {
-            // this is the fast path 
-            var cattrs = node.attributes;
-            cattrs.__proto__ = Object.prototype;
-            cattrs.constructor = Object;
-            ASSetPropFlags(cattrs, ['__proto__', 'constructor'], 1, 7);
-        }
-
-        var nname = node.nodeName;
-        if (nname && !nsprefix) {
-            // strip namespace prefix
-            var npos = nname.indexOf(':');
-            if (npos >= 0) {
-                nname = nname.substring(npos+1);
-            }
-        }
-
-        lfcnode = new LzDataElement(nname, cattrs);
-        var children = node.childNodes;
-        var newchildren = [];
-        for (var i  = 0; i < children.length; i++ ) {
-            var child = children[i];
-            var lfcchild = LzLoader.prototype.copyFlashXML(child, trimwhitespace, nsprefix);
-            newchildren[i] = lfcchild;
-        }
-        lfcnode.setChildNodes(newchildren);
-    }
-    return lfcnode;
-}
-
-// Holds the state of the copy queue.
-// {ptr: int   where we are in the queue
-//  q: array of pending work, entries are XMLNodes to be copied.
-//  xmlobj: the root Flash XML node we started with
-// }
-//
-var copyQueue = null;
-
-var rawtext = null;
-// native XML request/loader object
-var xmlloadobj = null;
-
-/**
- * @access private
- * called by loader when raw data was arrived, but not yet been parsed 
- */
-function gotRawData(content:String, loadobj:XML) {
-    this.rawtext = content;
-    this.xmlloadobj = loadobj;
-    if (this.oncontent.ready) this.oncontent.sendEvent(content);
-}
-
-
-function translateXML (content) {
-    this.xmlloadobj.parseXML(content);
-    // Copy the Flash XML tree into  tree of LFC LzData classes
-    this.queuedCopyFlashXML(this.xmlloadobj);
-}
-
-
-// Task that is called periodically from Idle loop.
-// This does the work of copying the Flash XML tree into a LzDataElement tree.
-// Run the copy queue
-/**
-  * @access private
-  */
-function copyFlashData ( ignore ) {
-    //    Debug.write("copyFlashData [1]", this.copyQueue.ptr);
-    if (this.copyQueue != null) {
-        //Debug.write("copyFlashData [2]");
-        this.queuedCopyFlashXML_internal();
-    } else {
-        this.removeCopyTask();
-    }
-}
-
-
-// Set up the work queue
-/**
-  * @access private
-  */
-function queuedCopyFlashXML(xmlnode) {
-    var rootnode = new LzDataElement('body');
-    this.lfcrootnode = rootnode;
-    rootnode.ownerDocument = rootnode;
-    xmlnode._lfcparent = rootnode;
-    var queue = [xmlnode];
-    // set up the work queue
-    this.copyQueue = {ptr: 0, q: queue, xmlobj: xmlnode};
-    this.trimwhitespace = xmlnode.trimwhitespace;
-    this.nsprefix       = xmlnode.nsprefix; 
-    var done = this.queuedCopyFlashXML_internal();
-    // If the copy wasn't completed in this quanta, start a task to finish it.
-    if (!done) {
-        this.startCopyTask();
-    }
-}
-
-var copyLoopsPerFrame = 1000;
-var maxLoopTime = 2000; // 2 seconds
-
-// Iterative implementation, using a queue, to translate a XMLNode tree into
-// a tree of LzDataElement.
-//
-// Queue contains list of XMLNodes to be copied
-/**
-  * @access private
-  */
-function queuedCopyFlashXML_internal () {
-    var nsprefix = this.nsprefix;
-    var trimwhitespace = this.trimwhitespace;
-    var ptr = this.copyQueue.ptr;
-    var q = this.copyQueue.q;
-    var iter = 0;
-    var maxiter = this.copyLoopsPerFrame;
-    var loopstart = (new Date).getTime();
-    var oproto = Object.prototype;
-    while (ptr < q.length && iter++ < maxiter) {
-
-        // check time once every 100 iterations
-        if ((iter % 100) == 0) {
-            var elapsed = (new Date).getTime() - loopstart;
-            if (elapsed > this.maxLoopTime) {
-                //Debug.write("too much time in queuedCopyFlashXML_internal, break");
-                break;
-            }
-        }
-
-        var node = q[ptr++];
-        var lfcparent = node._lfcparent;
-        delete node._lfcparent;
-        var nv = node.nodeValue;
-        var lfcnode = null;
-
-        // text node?
-        if (node.nodeType == 3) {
-            if (trimwhitespace == true) {
-                nv = LzDataElement.trim(nv);
-            }
-            // FIXME: [2008-3-31 pbr] This bypasses initialization
-            lfcnode = {__proto__: LzDataText.prototype, data: nv, parentNode: lfcparent, nodeType: LzDataElement.TEXT_NODE};
-        } else {
-            // Do we need to copy attributes list as well?
-            // After this works, try bashing the __proto__
-            // and see if GC still works.
-
-            if (! nsprefix) {
-                // this is slow, we iterate over every attribute name
-                var nattrs = node.attributes;
-                var cattrs = {};
-                var attrlist = [];
-                for (var key in nattrs) {
-                    var nkey = key;
-                    // strip namespace prefixes
-                    var colpos = key.indexOf(':');
-                    if (colpos >= 0) {
-                        nkey = key.substring(colpos + 1);
-                    }
-                    //cattrs[nkey] = nattrs[key];
-                    attrlist.push(nkey, nattrs[key]);
-                }
-                
-                // Flash iterates over an object in reversed insertion order. 
-                // But as we want to preserve the original xml-attribute order, 
-                // we need to insert the attributes also in reversed order. 
-                for (var i = attrlist.length - 1; i >= 0; i -= 2) {
-                    cattrs[attrlist[i - 1]] = attrlist[i];
-                }
-            } else {
-                // this is the fast path 
-                var cattrs = node.attributes;
-                cattrs.__proto__ = oproto;
-                cattrs.constructor = Object;
-                ASSetPropFlags(cattrs, ['__proto__', 'constructor'], 1, 7);
-             }
-
-            //lfcnode = new LzDataElement(node.nodeName, cattrs);
-
-            ////////
-
-            var nodename = node.nodeName;
-            if (nodename && !nsprefix) {
-                var npos = nodename.indexOf(':');
-                if (npos >= 0) {
-                    nodename = nodename.substring(npos+1);
-                }
-            }
-
-            // FIXME: [2008-3-31 pbr] This bypasses initialization
-            lfcnode = { __proto__: LzDataElement.prototype,
-                        nodeType: LzDataElement.ELEMENT_NODE,
-                        nodeName: nodename,
-                        attributes: cattrs,
-                        ownerDocument: lfcparent.ownerDocument,
-                        parentNode: lfcparent};
-        }
-
-        // Add to the parent's childnodes.
-        if (lfcparent.childNodes == null) {
-            lfcparent.childNodes = [lfcnode];
-        } else {
-            lfcparent.childNodes.push(lfcnode);
-        }
-
-        // queue the XMLNode children for processing
-        var children = node.childNodes;
-        if (children != null) {
-            for ( var i = 0; i < children.length; i++ ){
-                var c = children[i];
-                c._lfcparent = lfcnode;
-                q[q.length] = c;
-            }
-        }
-    }
-    this.copyQueue.ptr = ptr;
-    //Debug.write("leaving queuedCopyFlashXML_internal main loop", ptr, iter);
-    if (ptr >= q.length) {
-        // If we get here, we're finished with the tree copy.
-        // Unregister the idle loop handler
-        var xmlobj = this.copyQueue.xmlobj;
-        this.removeCopyTask();
-        // Proceed with getting this dataset returned to the customer
-        xmlobj.loader.returnData(xmlobj, this.lfcrootnode.childNodes[0].childNodes[0]);
-        // Indicate that we finished it all in one go, no need to queue more copy tasks
-        return true;
-    } else {
-        return false;
     }
 }
 

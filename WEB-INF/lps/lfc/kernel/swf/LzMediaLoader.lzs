@@ -45,6 +45,9 @@ var onloaddone = LzDeclaredEvent;
 /** @access private */
 var LOADERDEPTH = 9;
 
+/** @access private */
+var minHeader = 10;
+
 /**
   * @access private
   */

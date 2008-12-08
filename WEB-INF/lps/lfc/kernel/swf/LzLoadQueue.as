@@ -9,8 +9,7 @@
   */
 
 /**
-  * The load queue controls the queuing of data, media, and persistent 
-  * connection requests at runtime.
+  * The load queue controls the queuing of data and media requests at runtime.
   */
 var LzLoadQueue = new Object;
 
@@ -72,49 +71,6 @@ LzLoadQueue.enqueueRequest = function( loadmc ){
         this.makeRequest( loadmc );
     } else {
         this.addToQueue( loadmc );
-    }
-}
-
-
-/**
-  * @access private
-  * This function is the callback ondata handler which gets attached to
-  * the XML object that is getting data loaded into it. It is
-  * responsible for parsing the raw string into the xmlobj XML object,
-  * and then converting that datastructure into an LzDataElement tree,
-  * via the xmltolzdata() method.
-  * 
-  * N.B.: when this callback is invoked, 'this' is bound the the Flash
-  * XML object which is being used to handle the load request. It is *not* bound to 
-  * LzLoadQueue!
-  */
-LzLoadQueue.XMLOnDataHandler = function (src) {
-    // cancel the timeout handler
-    LzLoadQueue.unloadRequest(this);
-
-    if (src == undefined) {
-        if ($debug) {
-            if (! this.proxied) {
-                Debug.warn("LzLoadQueue.XMLOnDataHandler load failed from URL %w, no data received.", this.url);
-                Debug.warn("Failure to load data in serverless apps may be caused by Flash player security policies. Check your data server crossdomain.xml file");
-            }
-        }
-        this.onload(false);
-        //Debug.write("this.loader.onerror.ready =", this.loader.onerror.ready);
-        if (this.loader.onerror.ready) {
-            this.loader.onerror.sendEvent(null);
-        }
-    } else {
-        // If we timed out, and this response came in late, ignore it.
-        if (this.timedout) {
-            return;
-        }
-
-        // Create a queue containing one root node, myself, and convert it and all children to
-        // LzDataNodes.
-
-        this.onload(true);
-        this.loader.gotRawData(src, this);
     }
 }
 
@@ -315,11 +271,8 @@ LzLoadQueue.makeRequest = function( loadobj ){
 
     this.loading.push( loadobj );
 
-    if (loadobj.isaudio == true) {
-        //Debug.write('LzLoadQueue makeRequest', loadobj)
-        this.loadMovieProxiedOrDirect(loadobj);
-    } else if (typeof(loadobj) == "movieclip") {
-        this.loadMovieProxiedOrDirect(loadobj);
+    if (loadobj.isaudio == true || typeof(loadobj) == "movieclip") {
+        this.loadMovie(loadobj);
     } else {
         this.loadXML(loadobj);
     }
@@ -330,7 +283,7 @@ LzLoadQueue.makeRequest = function( loadobj ){
 /**
   * @access private
   */
-LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
+LzLoadQueue.loadMovie = function (loadobj) {
     var reqstr;
     // TODO [2008-06 hqm] We will eventually deprecate the "proxied" flag, and just use
     // proxyurl != null to indicate that we are proxied via the PROXYURL.
@@ -365,7 +318,7 @@ LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
         var dopost = (loadobj.reqobj.reqtype.toUpperCase() == 'POST');
         if (!dopost) {
             for ( var keys in loadobj.reqobj ){
-                reqstr += sep + keys + "=" + escape( loadobj.reqobj[ keys ] );
+                reqstr += sep + keys + "=" + encodeURIComponent( loadobj.reqobj[ keys ] );
                 if ( sep == "?" ){
                     sep = "&";
                 }
@@ -414,7 +367,6 @@ LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
     }
 }
 
-
 /**
   * @access private
   */
@@ -439,7 +391,7 @@ LzLoadQueue.loadXML = function (loadobj) {
     */
     
     // Set the onData handler to intercept returning data
-    loadobj.onData = LzLoadQueue.XMLOnDataHandler;
+    loadobj.onData = LzXMLLoader.XMLOnDataHandler;
 
     var dopost = (loadobj.reqtype.toUpperCase() == 'POST');
     var lvar = new LoadVars();
@@ -510,6 +462,3 @@ LzLoadQueue.loadXML = function (loadobj) {
     
     lvar.sendAndLoad(reqstr, loadobj, method );
 }
-
-
-

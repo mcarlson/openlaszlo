@@ -12,9 +12,9 @@
   * @shortdesc Send and receive text data over HTTP
   */
 
-// We have an internal 'lzloader' property which points to an LzLoader (Flash-7-8-specific)
+// We have an internal 'lzloader' property which points to an LzXMLLoader (Flash-7-8-specific)
 var LzHTTPLoader = function (owner, proxied) {
-    this.lzloader = this.makeLzLoader(proxied);
+    this.lzloader = new LzXMLLoader( this, {timeout : Infinity, proxied : proxied} );
     this.owner = owner;
     this.options = {
         // enable server (proxy) caching
@@ -32,7 +32,7 @@ var LzHTTPLoader = function (owner, proxied) {
     this.dsloadDel = new LzDelegate( this , "_loadSuccessHandler" ,
                                      this.lzloader , "ondata" );
     // Handler for raw string content, before parsing
-    this.dsloadDel = new LzDelegate( this , "loadContent" ,
+    this.dscontentDel = new LzDelegate( this , "loadContent" ,
                                      this.lzloader , "oncontent" );
     this.dserrorDel = new LzDelegate( this , "_loadErrorHandler" ,
                                       this.lzloader , "onerror" );
@@ -184,7 +184,7 @@ LzHTTPLoader.prototype.send = function (content) {
     //Debug.info("LzHTTPLoader.send parsexml", this.options.parsexml, content);
     this.xmlrequestobj.rawpostbody = content;
     this.lzloader.setHeaders(this.requestheaders);
-    this.lzloader.requestDirectXML( this.xmlrequestobj );
+    this.lzloader.request( this.xmlrequestobj );
 }
 
 
@@ -220,36 +220,4 @@ LzHTTPLoader.prototype.setTimeout = function (timeout) {
     this.timeout = timeout;
     // [todo hqm 2006-07] Should we have  an API method for setting LzLoader timeout?
     this.lzloader.timeout = timeout;
-}
-
-////////////////////////////////////////////////////////////////
-// swf-specific stuff
-
-/**
-  * This is a helper method to create a loader for the dataset.
-  * @access private
-  * @return LzLoader 
-  */
-LzHTTPLoader.prototype.makeLzLoader = function (proxied){
-    if ( ! $dataloaders ){
-        // SWF-specific
-        _root.attachMovie("empty", "$dataloaders", 4242);
-        var mc = $dataloaders;
-        mc.dsnum = 1;
-    }
-
-    $dataloaders.attachMovie( "empty", 
-                                   "dsloader" + $dataloaders.dsnum,
-                                   $dataloaders.dsnum );
-    var newloadermc = $dataloaders[ "dsloader" + 
-                                          $dataloaders.dsnum ];
-    $dataloaders.dsnum++;
-    
-    return new LzLoader( this, { attachRef : newloadermc ,
-                                       timeout : Infinity,
-                                       proxied: proxied} );
-}
-
-LzHTTPLoader.urlencode = function (str) {
-    return escape(str);
 }
