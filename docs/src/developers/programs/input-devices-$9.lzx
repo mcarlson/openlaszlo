@@ -1,21 +1,17 @@
-<canvas debug="true" width="100%">
-
-<view width="350" height="100" bgcolor="#cccccc">
-
-<text text="Right click in the gray area (but not on this text)"/>
-
-<handler name="oninit">
-    var cmenu = new lz.contextmenu(); // create the menu
-    var item1 = cmenu.makeMenuItem('hello', new LzDelegate(this, "handlerightclick")); // create the menu item, and set up an LzDelegate as a callback
-    cmenu.addItem(item1); //add the item to the menu
-    this.setContextMenu(cmenu);
-</handler>
-
- <method name="handlerightclick" args="val">
-    Debug.write("hello world");
-  </method>
-</view>
-
+<canvas height="200" width="100%">
+  <view width="350" height="100" bgcolor="#cccccc">
+    <text text="Right click in the gray area (but not on this text)"/> 
+    <handler name="oninit">
+      var cmenu = new lz.contextmenu(); // create the menu
+      var item1 = cmenu.makeMenuItem('hello', new LzDelegate(this, "handlerightclick")); // create the menu item, and set up an LzDelegate as a callback
+      cmenu.addItem(item1); //add the item to the menu
+      this.setAttribute("contextmenu", cmenu);
+    </handler>   
+    <method name="handlerightclick" args="val">
+      message.addText("\nhello world");
+    </method>
+  </view>
+  <text id="message" y="100" multiline="true" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *

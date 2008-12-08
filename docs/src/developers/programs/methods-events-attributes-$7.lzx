@@ -1,17 +1,16 @@
-
-<canvas debug="true" width="100%">
-  <debug y=" 20"/>
-  <button>
-   Howdy!
-   <handler name="onclick">
-      Debug.write("handler one")
-   </handler>
-     <handler name="onclick">
-      Debug.write("handler two")
-   </handler>
-  <handler name="onclick">
-      Debug.write("handler three")
-   </handler>
+<canvas height="100"  width="100%">
+   <text y="20" id="message" multiline="true" />
+   <button>
+      Howdy!
+      <handler name="onclick">
+         message.addText("\nhandler one")
+      </handler>
+      <handler name="onclick">
+         message.addText("\nhandler two")
+      </handler>
+      <handler name="onclick">
+         message.addText("\nhandler three")
+      </handler>
    </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

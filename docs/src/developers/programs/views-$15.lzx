@@ -1,10 +1,8 @@
-
-<canvas width="100%" height="300" debug="true">
-      <debug y="120"/>
-      <font src="helmetb.ttf" name="helmet"/>
+<canvas width="100%" height="300">
+  <font src="helmetb.ttf" name="helmet"/>
   <view stretches="both" height="100" bgcolor="red" 
-           onclick="this.animate('height', -10, 1000 , true );
-           Debug.write('greenview new width is', greenview.width)">
+    onclick="this.animate('height', -10, 1000 , true );
+    message.addText('\ngreenview new width is ' + greenview.width)">
     <attribute name="aspect" value="${unstretchedwidth/unstretchedheight}"/>
     <attribute name="width" value="${ height * aspect}"/>
     <view name="greenview" height="100" width="80" bgcolor="green"/>
@@ -12,6 +10,7 @@
       This is some text
     </text>
   </view>
+  <text id="message" y="100">Click on the green or red box</text>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *

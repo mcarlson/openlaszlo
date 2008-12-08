@@ -1,13 +1,11 @@
-
-<canvas debug="true" width="100%">
-  <debug /> 
-  <node id="myNode"> 
+<canvas height="30" width="100%">
+  <text id="message"> 
     <method name="myMethod">
-      Debug.write('It is a nice day if it does not rain.');          
+      this.setAttribute('text', 'Nice day if it doesn\'t rain.');         
     </method>
-  </node> 
+  </text> 
   <script>
-   myNode.myMethod()
+    message.myMethod()
   </script>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

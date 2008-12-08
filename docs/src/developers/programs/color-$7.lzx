@@ -1,16 +1,11 @@
-
-<canvas height="300" width="100%" debug="true">
-  <simplelayout axis="x"/>
+<canvas height="110" width="100%">
+  <simplelayout axis="x" spacing="4"/>
   <class name="fader">
     <view height="100" width="100">
-        <handler name="onclick">
-            immediateparent.animate('opacity', -.20, 25, true);
-        </handler>
-        <handler name="onmouseout" >
-            immediateparent.animate('opacity', 1, 2500, false);
-        </handler>
+      <handler name="onclick"> immediateparent.animate('opacity', -.20, 25, true); </handler>
+      <handler name="onmouseout"> immediateparent.animate('opacity', 1, 2500, false); </handler>
     </view>
-    
+
   </class>
   <fader name="houston" bgcolor="0xFF0000">
     <text text="Comet"/>
@@ -21,12 +16,12 @@
   <fader name="seattle" bgcolor="0x008000">
     <text text="Storm"/>
   </fader>
-  <script>
-    Debug.write("Click on a view to reduce its opacity.");
-    Debug.write("Mouse out to restore 100% opacity.");
-  </script>
+  <text multiline="true"> 
+    Click on a view to reduce its opacity.<br/> 
+    Mouse out to restore 100% opacity. 
+  </text>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
+  * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
+  * Use is subject to license terms.                                            *
+  * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,26 +1,25 @@
-
-<canvas debug="true" width="100%">
+<canvas height="200" width="100%">
   <class name="base" extends="button">
     <handler name="onclick" method="handleonclick" />
     <method name="handleonclick" args="v">
-      Debug.write("base click");
+      message.addText("\nbase click");
     </method>
   </class>
-
+  
   <class name="subaccumulate" extends="base">
     <handler name="onclick">
-      Debug.write("subaccumulate click");
+      message.addText("\nsubaccumulate click");
     </handler>
   </class>
-
+  
   <class name="suboverride" extends="base">
     <method name="handleonclick" args="v">
-      Debug.write("suboverride click");
+      message.addText("\nsuboverride click");
     </method>
   </class>
-
   <subaccumulate>accumulate</subaccumulate>
   <suboverride>override</suboverride>
+  <text id="message" multiline="true" />
   <simplelayout />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

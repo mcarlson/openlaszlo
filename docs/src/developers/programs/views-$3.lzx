@@ -1,7 +1,6 @@
-
-<canvas width="100%" height="160" debug="true">
-  <debug y="30"/>
-  <view height="20" width="20" onclick="Debug.write('howdy')"/>
+<canvas width="100%" height="30">
+  <view height="20" width="20" onclick="message.setAttribute('text', 'howdy')"/>
+  <text id="message" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *

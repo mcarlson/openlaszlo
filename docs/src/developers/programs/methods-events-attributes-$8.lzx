@@ -1,14 +1,12 @@
-
-<canvas debug="true" width="100%">
-   <debug y="50"/>
- <simplelayout/>
- <view name="myview" height="30" width="30" bgcolor="blue"/>
- <button>
-   Make red the blue box!
-  <handler name="onclick" method="redify"/>
-  <method name="redify" args="v">
-     parent.myview.setAttribute("bgcolor", red)
-  </method>
+<canvas height="50" width="100%">
+  <simplelayout/>
+  <view name="myview" height="30" width="30" bgcolor="blue"/>
+  <button>
+    Make red the blue box!
+    <handler name="onclick" method="redify"/>
+    <method name="redify" args="v">
+      parent.myview.setAttribute("bgcolor", "red")
+    </method>
   </button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

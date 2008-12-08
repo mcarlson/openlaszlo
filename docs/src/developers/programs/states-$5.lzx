@@ -1,9 +1,9 @@
-<canvas debug="true" width="100%">
+<canvas height="200" width="100%">
   <class name="testState" extends="state">
     <attribute name="countApplies" type="number" value="0"
-               setter="this.countApplies = countApplies"/>
+      setter="this.countApplies = countApplies"/>
     <handler name="onapplied">
-        <![CDATA[
+      <![CDATA[
         if(this.applied == true){
             this.setAttribute('countApplies', this['countApplies'] >= 0 ? ++this.countApplies : 1);
         }
@@ -13,11 +13,12 @@
   <button >Try it
     <handler name="onclick">
       ts.setAttribute('applied', true);
-      Debug.write("applies:" + ts.countApplies);
+      message.addText("\napplies:" + ts.countApplies);
       ts.setAttribute('applied', false);
     </handler>
     <testState name="ts"/>
   </button>
+  <text id="message" y="30" multiline="true" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
