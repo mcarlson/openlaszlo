@@ -183,16 +183,28 @@ function loadfinished (){
   if (this.onload.ready) this.onload.sendEvent(true);
 }
 
+/** @access private
+ */
+static function stripQueryString(str:String):String {
+    if (str.indexOf('?') > 0) {
+        str = str.substring(0,str.indexOf('?'));
+    }
+    return str;
+}
+
 /**
   * Callback for runtime loaded libraries
   * @access private
   */
 static function __LZsnippetLoaded (url){
     // find the lib with this url
+    // Strip out query string
+    url = LzLibrary.stripQueryString(url);
     var lib = null;
     var libs = LzLibrary.libraries;
     for (var l in libs ) {
-        if (libs[l].href == url) {
+        var libhref = LzLibrary.stripQueryString(libs[l].href);
+        if (libhref == url) {
             lib = libs[l];
             break;
         }
