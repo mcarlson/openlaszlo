@@ -2,15 +2,15 @@
     <class name="mywindow" extends="view">
         <attribute name="novalue"/>
         <attribute name="aroma" value="vanilla" type="string"/>
-        <attribute name="bgcolor" value="#FFFFFF"
-                   type="color" setter="this.applyWindowColor( bgcolor)" />
+        <attribute name="flavor" value="honeydew"
+                   type="color" setter="this.setAttribute( 'bgcolor', flavor )" />
         <method name="mymethod" args="x,y,z">
          Debug.write("x is" + x + ", y * z =" + (y * z));</method>
         <text>MyWindow's Text</text> 
     </class>
     <mywindow/>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

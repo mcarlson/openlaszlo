@@ -230,7 +230,7 @@
             @param n: The node to which it is being set. -->
         <method name="setData" args="v,n=null">
             if (v) {
-                v.setData( this.nodes[ n ] );
+                v.setAttribute('data', this.nodes[ n ]);
                 if (v['applyData']) v.applyData(this.nodes[n]);
             }
         </method>

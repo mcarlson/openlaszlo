@@ -202,7 +202,7 @@
         <element>debugger</element>
         <element>command</element>
         <element>class</element>
-        <element>trait</element>
+        <element>mixin</element>
         <element>include</element>
         <element>library</element>
         <element>layout</element>
