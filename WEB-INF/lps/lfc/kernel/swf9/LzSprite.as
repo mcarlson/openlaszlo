@@ -647,8 +647,17 @@ dynamic public class LzSprite extends Sprite {
       // called by LzMouseKernel when mouse goes up on another sprite
       public function __globalmouseup( e:MouseEvent ) :void {
           if (this.__mousedown) {
+              var mouseOverSprite:LzSprite = null;
+              if (this.__mouseoverInFront != null) {
+                  mouseOverSprite = this.__mouseoverInFront;
+                  this.__mouseoverInFront = null;
+              }
               this.__mouseEvent(e);
               this.__mouseEvent(new MouseEvent('mouseupoutside'));
+              if (mouseOverSprite != null) {
+                  // send after onmouseup(outside) (LPP-7335)
+                  LzMouseKernel.__sendEvent(mouseOverSprite.owner, 'onmouseover');
+              }
           }
           LzMouseKernel.__lastMouseDown = null;
       }
@@ -668,11 +677,6 @@ dynamic public class LzSprite extends Sprite {
                     LzMouseKernel.__lastMouseDown = null;
                     e.stopPropagation();
                     this.__mousedown = false;
-
-                    if (this.__mouseoverInFront != null) {
-                        LzMouseKernel.__sendEvent(this.__mouseoverInFront.owner, 'onmouseover');
-                        this.__mouseoverInFront = null;
-                    }
                 } else {
                     skipevent = true;
                 }
@@ -695,7 +699,7 @@ dynamic public class LzSprite extends Sprite {
                         // check to see if this sprite is in front of the sprite the mouse went down on.  See LPP-7300
                         var relObj:InteractiveObject = e.relatedObject;
                         // relatedObject is the sprite's clickbutton, use parent to access the LzSprite
-                        if (relObj && relObj.parent === LzMouseKernel.__lastMouseDown) {
+                        if (eventname == 'onmouseover' && relObj && relObj.parent === LzMouseKernel.__lastMouseDown) {
                             // store reference to self for sending onmouseover event later - see LPP-7335
                             LzMouseKernel.__lastMouseDown.__mouseoverInFront = this;
                         } else {
