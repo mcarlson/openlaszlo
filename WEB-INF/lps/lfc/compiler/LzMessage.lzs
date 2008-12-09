@@ -169,3 +169,12 @@ String.prototype.toHTML = function () {
   return LzMessage.xmlEscape(this);
 };
 
+if ($as2) {
+// make unenumerable in AS2 style
+ASSetPropFlags(String.prototype, ["toHTML"], 1, 0);
+} else if ($as3) {
+// make unenumerable in AS3 style
+String.prototype.setPropertyIsEnumerable("toHTML", false);
+} else {
+// can't make unenumerable in dhtml
+}

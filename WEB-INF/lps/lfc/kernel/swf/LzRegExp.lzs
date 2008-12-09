@@ -241,3 +241,6 @@ String.prototype.split = function (sep:*, limit:Number) :Array {
         return String.prototype.__split.apply(this, arguments);
     }
 }
+
+// make unenumerable
+ASSetPropFlags(String.prototype, ["__split", "search", "replace", "match"], 1, 0);
