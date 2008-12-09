@@ -689,9 +689,9 @@
          // set the view multiline=true
 
       if (this.bottom.center.input.height > this.smallInputAreaHeight) {
-        this.bottom.center.input.setMultiline(true);
+        this.bottom.center.input.setAttribute("multiline", true);
       } else {
-        this.bottom.center.input.setMultiline(false);
+        this.bottom.center.input.setAttribute("multiline", false);
       }
       this.middle.content.computeVisibleRegion();
       ]]>
@@ -724,7 +724,7 @@
 <method name="doSingleLine">
              this.upButton.setAttribute('visible', true); 
              this.downButton.setAttribute('visible', false)
-             this.parent.center.input.setMultiline(false);
+             this.parent.center.input.setAttribute("multiline", false);
              classroot.savedInputAreaHeight = Math.max(53, this.parent.height);
              this.parent.animate("height",classroot.smallInputAreaHeight,333,false);
            </method>
@@ -736,7 +736,7 @@
              var delta = classroot.savedInputAreaHeight - parent.height;
              delta = Math.min(classroot.middle.height - (classroot.lineheight * 2) , delta);
              if (delta > 0) {
-                 this.parent.center.input.setMultiline(true);
+                 this.parent.center.input.setAttribute("multiline", true);
                  // Squish the center content area up
                  this.parent.animate("height",classroot.savedInputAreaHeight,333,false);
              }

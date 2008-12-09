@@ -190,7 +190,7 @@
      <attribute name="autoscroll" type="expression" value="true" />
 
 <method name="setWrapLines" args="val">
-        this.textpane.setMultiline(val);
+        this.textpane.setAttribute("multiline", val);
      </method>
 
      <text name="textpane"
