@@ -1621,12 +1621,13 @@ public dynamic class LzNode extends LzEventable {
    * implementation was nonesense.
    */
   function releaseConstraintMethod (constraintMethodName) {
-    var result = false;
-    var dels = this.__LZdelegates;
+    var result:Boolean = false;
+    var dels:Array = this.__LZdelegates;
     if (dels) {
-      for (var i = 0; i < dels.length; ) {
-        var del = dels[i];
-        if (del.c === this && del.m === this[constraintMethodName]) {
+      for (var i:int = 0; i < dels.length; ) {
+        var del:* = dels[i];
+        if (del is LzDelegate && del.c === this &&
+                del.m === this[constraintMethodName]) {
           del.unregisterAll();
           dels.splice(i, 1);
           result = true;
