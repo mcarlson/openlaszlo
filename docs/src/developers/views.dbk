@@ -341,8 +341,7 @@ The text is smaller relative to the canvas and to the computer screen, but not t
 
 
 <para>
-Here we have modified the example to further illustrate the same point.  Notice how the width of the green view, as reported by the
-debugger, does not change, even as the view visibly shrinks.</para>
+Here we have modified the example to further illustrate the same point.  Notice how the width of the green view does not change, even as the view visibly shrinks.</para>
 
 <example role="live-example">
    <title>Simple scaling with text and colored view</title>

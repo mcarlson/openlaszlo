@@ -1,25 +1,23 @@
-<canvas debug="true" width="100%">
-    <debug />
-    
+<canvas width="100%" debug="true">  
     <class name="myclass_with_handler">
         <event name="myevent"/>
         <handler name="myevent" args="myargs">
-            Debug.debug("%w", (this + 'handling myevent, myargs=' + myargs));
-        </handler>
-        
-        <attribute name="season" type="string" value="spring" />
-        <event name="onseason" />
+            Debug.debug("%#w handling myevent, myargs = %w", this, myargs);
+        </handler>       
+        <attribute name="season" type="string" value="spring"/>
+        <event name="onseason"/>
         <handler name="onseason" args="s">
-            Debug.debug("%w", ("got season of " + s + ", season is " + season));
+            Debug.debug("got season of %w, season is %w", s, season);
         </handler>
-    </class>  
-    <myclass_with_handler id="foo" />   
-    <simplelayout axis="x" spacing="5" /> 
-    <button onclick="foo.myevent.sendEvent(12)" text="send the event" />
-    <button onclick="foo.setAttribute('season', 'fall')" text="autumn" /> 
+    </class>   
+    <myclass_with_handler id="foo"/>
+    <simplelayout axis="x" spacing="5"/>
+    <button onclick="foo.myevent.sendEvent(12)" text="send the event"/>
+    <button onclick="foo.setAttribute('season', 'fall')" text="autumn"/>
+    
     <!-- Don't do this! Setting an attribute directly with '=' shortcuts around
         the event system. This is not right; use setAttribute instead -->
-    <button onclick="foo.season='winter'" text="evil" /> 
+    <button onclick="foo.season='winter'" text="evil"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *

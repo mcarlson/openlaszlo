@@ -1,6 +1,5 @@
 <canvas width="100%" height="200" debug="true">
-    <debug x="110" y="15" />
-    
+    <debug x="110" y="15" />   
     <!-- NOTE: Even though the view below takes focus oninit,
         in some browsers you might still need to click on the
         application itself, to take the focus away from the 
@@ -18,11 +17,11 @@
         </handler>     
         <handler name="onkeydown" args="akeycode">
             // respond here    
-            Debug.debug("%w", ("Key pressed: " + akeycode));
+            Debug.debug("Key pressed: %w", akeycode);
             if ( this.keyCodes[akeycode] != undefined ) {
             Debug.debug("%s", this.keyCodes[akeycode] );
             } else {
-            Debug.debug("%w", ("you pressed: " + String.fromCharCode(akeycode)));
+            Debug.debug("You pressed: %w", String.fromCharCode(akeycode));
             }
         </handler>
     </view>
