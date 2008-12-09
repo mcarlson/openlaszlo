@@ -60,6 +60,7 @@
 
         try {
             doc = builder.build(inputFile);
+            inputFile.close();
         } catch (JDOMException e) {
             reportError("Could not parse xml.", result);
             return null;
@@ -193,61 +194,52 @@
         return true;
     }
 
+    private String getVideoInfo (String id, Document result) {
+         String pageUrl =
+            "http://www.youtube.com/get_video_info?video_id=" + id;
+
+        String content = null;
+        try {
+            URL u = new URL(pageUrl);
+            BufferedReader inputFile = new BufferedReader(new InputStreamReader(u.openStream()));
+            content = inputFile.readLine();
+            inputFile.close();
+        } catch (Exception e) {
+            reportError("Could not load url " + pageUrl + ": " + e.toString(), result);
+        }
+        return content;
+    }
 
     public void videoGetFlvUrl(
         String id,
         Document result)
     {
-        String pageUrl =
-            "http://www.youtube.com/v/" + id;
+        final boolean HIRES = false;
+        final boolean MP4 = false;
 
-        // Based on http://www.jeroenwijering.com/?thread=5484#msg50818
-        // Get Location header and parse strings from that...
-        String redirURL = null;
-        try {
-            URL u = new URL(pageUrl);
-            HttpURLConnection redir = (java.net.HttpURLConnection)u.openConnection();
-            redir.setFollowRedirects(false);
-            redir.connect();
-            redirURL = redir.getHeaderField("Location");
-            if (redirURL == null) {
-                throw new Exception("No Location header found");
-            }
-        } catch (Exception e) {
-            reportError("Could not load url " + redirURL + ": " + e.toString(), result);
-            return;
-        } // try
+        String vidInfo = getVideoInfo(id, result);
+        if (vidInfo == null) return;
 
-        Element resultEl =
-            new Element("videoGetFlvUrlResult");
-
-        String videoId = "";
         String tId = "";
-
-        // Extract the video_id and t fields from 
-        Pattern vidpat = Pattern.compile("video_id=[\\w\\d]+'?");
-        Pattern tpat = Pattern.compile("t=[\\w\\d\\-]+'?");
-        Matcher vidmatcher = vidpat.matcher(redirURL);
-        Matcher tmatcher = tpat.matcher(redirURL);
-        if ( vidmatcher.find() ) {
-            videoId = (redirURL.substring(vidmatcher.start(), vidmatcher.end()));
-            videoId = videoId.substring(9, videoId.length());
+        // Extract the token field
+        Pattern tpat = Pattern.compile("token=([\\w\\d\\-]+)");
+        Matcher tmatcher = tpat.matcher(vidInfo);
+        if (tmatcher.find()) {
+            tId = vidInfo.substring(tmatcher.start(1), tmatcher.end(1));
         } else {
-            reportError("video_id argument not found in HTML page", result);
-            return;
-        }
-        if ( tmatcher.find() ) {
-            tId = (redirURL.substring(tmatcher.start(), tmatcher.end()));
-            tId = tId.substring(2, tId.length());
-        } else {
-            reportError("t argument not found in URL", result);
+            reportError("token argument not found in video-info: " + vidInfo, result);
             return;
         }
 
-        String url =
-            "http://www.youtube.com/get_video?video_id=" + videoId + "&t=" + tId;
+        String url = "http://youtube.com/get_video.php?video_id=" + id + "&t=" + tId;
+        if (HIRES) {
+            url += "&fmt=6";
+        } else if (MP4) {
+            url += "&fmt=18";
+        }
 
-        resultEl.setAttribute("id", videoId);
+        Element resultEl = new Element("videoGetFlvUrlResult");
+        resultEl.setAttribute("id", id);
         resultEl.setAttribute("t", tId);
         resultEl.setAttribute("url", url);
         result.setRootElement(resultEl);
