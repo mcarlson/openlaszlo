@@ -21,7 +21,7 @@
     <scrollbar visible="${scrollable}"/>
   </view>
 
-  <datapointer xpath="filesys:/" ondata="myfs.openChildren()"/>
+  <datapointer xpath="filesys:/" ondata="myfs.openChildren(true)"/>
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
