@@ -39,6 +39,11 @@ public class LzTextSprite extends LzSprite {
         public var multiline:Boolean = false;
         public var underline:Boolean = false;
 
+        public var textalign:String = "left";
+        public var textindent:Number = 0;
+        public var letterspacing:Number = 0;
+        public var textdecoration:String = "none";
+
         public var sizeToHeight:Boolean = false;
         public var password:Boolean = false;
         public var scrollheight:Number = 0;
@@ -280,8 +285,6 @@ public class LzTextSprite extends LzSprite {
             }
         }
 
-
-
         public function appendText( t:String ):void {
             this.textfield.appendText(t);
             this.text = this.textfield.text;
@@ -310,7 +313,7 @@ public class LzTextSprite extends LzSprite {
                 t = t.toString();
             }
 
-            this.text =  t;
+            this.text = t;
             this.textfield.htmlText = t;
         
             if (this.resize && (this.multiline == false)) {
@@ -346,7 +349,6 @@ public class LzTextSprite extends LzSprite {
          * @access private
          */
         public function __setFormat ():void {
-
             this.setFontInfo();
             var cfontname = LzFontManager.__fontnameCacheMap[this.fontname];
             if (cfontname == null) {
@@ -364,25 +366,21 @@ public class LzTextSprite extends LzSprite {
             tf.color = this.textcolor;
 
             // If there is no font found, assume a device font
-            if (this.font == null) {
-                this.textfield.embedFonts = false;
+            this.textfield.embedFonts = (this.font != null);
+            
+            tf.bold = (this.fontstyle == "bold" || this.fontstyle =="bolditalic");
+            tf.italic = (this.fontstyle == "italic" || this.fontstyle =="bolditalic");
+            tf.underline = (this.underline || this.textdecoration == "underline");
+            tf.align = this.textalign;
+            tf.indent = this.textindent;
+            if (this.textindent < 0) {
+                tf.leftMargin = this.textindent * -1;
             } else {
-                this.textfield.embedFonts = true;
+                tf.leftMargin = 0;
             }
-
-            if (this.fontstyle == "bold" || this.fontstyle =="bolditalic"){
-                tf.bold = true;
-            }
-
-            if (this.fontstyle == "italic" || this.fontstyle =="bolditalic"){
-                tf.italic = true;
-            }
-            if (this.underline){
-                tf.underline = true;
-            }
+            tf.letterSpacing = this.letterspacing;
 
             this.textfield.defaultTextFormat = tf;
-
         }
  
       
@@ -391,11 +389,9 @@ public class LzTextSprite extends LzSprite {
             if (this.multiline) {
                 this.textfield.multiline = true;
                 this.textfield.wordWrap = true;
-
             } else {
                 this.textfield.multiline = false;
                 this.textfield.wordWrap = false;
-
             }
         }
 
@@ -410,12 +406,12 @@ public class LzTextSprite extends LzSprite {
         }
       
         public function getTextWidth ( ):Number {
-        var tf:TextField = this.textfield;
-        var ml:Boolean = tf.multiline;
-        var mw:Boolean = tf.wordWrap;
+            var tf:TextField = this.textfield;
+            var ml:Boolean = tf.multiline;
+            var mw:Boolean = tf.wordWrap;
             tf.multiline = false;
             tf.wordWrap = false;
-        var twidth:Number = (tf.textWidth == 0) ? 0 : tf.textWidth + LzTextSprite.PAD_TEXTWIDTH;
+            var twidth:Number = (tf.textWidth == 0) ? 0 : tf.textWidth + LzTextSprite.PAD_TEXTWIDTH;
             tf.multiline = ml;
             tf.wordWrap = mw;
             return twidth;
@@ -425,12 +421,9 @@ public class LzTextSprite extends LzSprite {
             return this.textfield.textHeight;
         }
 
-
-
         public function getTextfieldHeight ( ) {
             return this.textfield.height;
         }
-
 
 
 function setHScroll(s:Number) {
@@ -517,6 +510,33 @@ function getSelectionPosition() {
 function getSelectionSize() {
     return this.textfield.selectionEndIndex - this.textfield.selectionBeginIndex;
 }    
+
+    function setTextAlign (align:String) :void {
+        this.textalign = align;
+        this.__setFormat();
+        // force recompute of height if needed
+        this.setText( this.text );
+    }
+
+    function setTextIndent (indent:Number) :void {
+        this.textindent = indent;
+        this.__setFormat();
+        // force recompute of height if needed
+        this.setText( this.text );
+    }
+
+    function setLetterSpacing (spacing:Number) :void {
+        this.letterspacing = spacing;
+        this.__setFormat();
+        // force recompute of height if needed
+        this.setText( this.text );
+    }
+
+    function setTextDecoration (decoration:String) :void {
+        this.textdecoration = decoration;
+        this.__setFormat();
+        // note: don't need to recompute height
+    }
 
     }#
 }

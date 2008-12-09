@@ -55,6 +55,11 @@ LzTextSprite.prototype._fontWeight = 'normal';
 LzTextSprite.prototype._fontSize = '11px';
 LzTextSprite.prototype._fontFamily = 'Verdana,Vera,sans-serif';
 LzTextSprite.prototype._whiteSpace = 'normal';
+LzTextSprite.prototype._textAlign = 'left';
+LzTextSprite.prototype._textIndent = '0px';
+LzTextSprite.prototype.__LZtextIndent = 0;
+LzTextSprite.prototype._letterSpacing = '0px';
+LzTextSprite.prototype._textDecoration = 'none';
 LzTextSprite.prototype.__wpadding = 4;
 LzTextSprite.prototype.__hpadding = 4;
 LzTextSprite.prototype.__sizecacheupperbound = 1000;
@@ -251,12 +256,16 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
         style += ';font-weight: ' + this._fontWeight;
         style += ';font-family: ' + this._fontFamily;
         style += ';line-height: ' + LzSprite.prototype.__defaultStyles.lzswftext.lineHeight;
-        if (this.quirks['text_height_includes_margins']) {
-            style += ';letter-spacing: .2px';
-        }
+        style += ';letter-spacing: ' + this._letterSpacing;
+        style += ';text-indent: ' + this._textIndent;
+        style += ';text-align: ' + this._textAlign;
 
         if (this.multiline && ignorewidth != true) {
-            if (this.width) style += ';width: ' + this.width + 'px';
+            var w = this.width;
+            if (w) {
+                if (this.__LZtextIndent < 0) w += this.__LZtextIndent;
+                style += ';width: ' + w + 'px';
+            }
         }
         style += ';white-space: ' + this._whiteSpace;
 
@@ -420,11 +429,16 @@ LzTextSprite.prototype.setScroll = function ( ){
 }
 
 LzTextSprite.prototype.__setWidth = LzSprite.prototype.setWidth;
-LzTextSprite.prototype.setWidth = function (w){
-    if (w == null || w < 0 || isNaN(w) || this.width == w) return;
-    var wp = this.CSSDimension(w >= this.__wpadding ? w - this.__wpadding : 0);
-    this.__LZtextdiv.style.width = wp;
-    this.__LZtextdiv.style.clip = 'rect(0px ' + wp + ' ' + this.CSSDimension(this.height >= this.__hpadding ? this.height - this.__hpadding : 0) + ' 0px)';
+LzTextSprite.prototype.setWidth = function (w, force){
+    if (w == null || w < 0 || isNaN(w) || (this.width == w && !force)) return;
+    var wt = (w >= - this.__wpadding ? w - this.__wpadding : 0);
+    // need to substract (negative) text-indent from width (but not from clip!),
+    // because we've added a left-padding in setTextAlign()
+    var wtInd = (this.__LZtextIndent < 0 ? -1*this.__LZtextIndent : 0);
+    this.__LZtextdiv.style.width = this.CSSDimension(wt >= wtInd ? wt - wtInd : 0);
+    var wp = this.CSSDimension(wt);
+    var hp = this.CSSDimension(this.height >= this.__hpadding ? this.height - this.__hpadding : 0);
+    this.__LZtextdiv.style.clip = 'rect(0px ' + wp + ' ' + hp + ' 0px)';
     this.__setWidth(w);
     this._styledirty = true;
 }
@@ -432,9 +446,10 @@ LzTextSprite.prototype.setWidth = function (w){
 LzTextSprite.prototype.__setHeight = LzSprite.prototype.setHeight;
 LzTextSprite.prototype.setHeight = function (h){
     if (h == null || h < 0 || isNaN(h) || this.height == h) return;
+    var wp = this.CSSDimension(this.width >= this.__wpadding ? this.width - this.__wpadding : 0);
     var hp = this.CSSDimension(h >= this.__hpadding ? h - this.__hpadding : 0);
     this.__LZtextdiv.style.height = hp;
-    this.__LZtextdiv.style.clip = 'rect(0px ' + this.CSSDimension(this.width >= this.__wpadding ? this.width - this.__wpadding : 0) + ' ' + hp + ' 0px)';
+    this.__LZtextdiv.style.clip = 'rect(0px ' + wp + ' ' + hp + ' 0px)';
     this.__setHeight(h);
     if (this.multiline) this._styledirty = true;
 }
@@ -482,4 +497,59 @@ LzTextSprite.prototype.destroy = function(){
     LzTextSprite.deleteLinkID(this.owner.getUID());
     this._viewdestroy( );
 }
-    
+
+LzTextSprite.prototype.setTextAlign = function (align) {
+    if (this._textAlign != align) {
+        this._textAlign = align;
+        if (this.quirks.textstyle_on_textdiv) {
+            this.__LZtextdiv.style.textAlign = align;
+        } else {
+            this.__LZdiv.style.textAlign = align;
+        }
+        this._styledirty = true;
+    }
+}
+
+LzTextSprite.prototype.setTextIndent = function (indent) {
+    // In standard-compliance mode, all dimensions must have units
+    var indentPx = this.CSSDimension(indent);
+    if (this._textIndent != indentPx) {
+        var negInd = (indent < 0) || (this.__LZtextIndent < 0);
+        this._textIndent = indentPx;
+        this.__LZtextIndent = indent;
+        if (this.quirks.textstyle_on_textdiv) {
+            this.__LZtextdiv.style.textIndent = indentPx;
+        } else {
+            this.__LZdiv.style.textIndent = indentPx;
+        }
+        this._styledirty = true;
+        if (negInd) {
+            // only add padding for negative indent, but remove minus sign
+            this.__LZtextdiv.style.paddingLeft = (indent >= 0) ? "" : indentPx.substr(1);
+            // reset width
+            this.setWidth(this.width, true);
+        }
+    }
+}
+
+LzTextSprite.prototype.setLetterSpacing = function (spacing) {
+    // In standard-compliance mode, all dimensions must have units
+    spacing = this.CSSDimension(spacing);
+    if (this._letterSpacing != spacing) {
+        this._letterSpacing = spacing;
+        this.__LZdiv.style.letterSpacing = spacing;
+        this._styledirty = true;
+    }
+}
+
+LzTextSprite.prototype.setTextDecoration = function (decoration) {
+    if (this._textDecoration != decoration) {
+        this._textDecoration = decoration;
+        if (this.quirks.textdeco_on_textdiv) {
+            this.__LZtextdiv.style.textDecoration = decoration;
+        } else {
+            this.__LZdiv.style.textDecoration = decoration;
+        }
+        // note: don't need to mark style as dirty here
+    }
+}

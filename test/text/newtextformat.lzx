@@ -1,0 +1,37 @@
+<canvas debug="true" layout="axis:y;spacing:10" >
+
+    <dataset name="ds" >
+        <text>Lorem ipsum dolor sit amet.</text>
+        <text>Lorem ipsum dolor sit amet, consectetuer sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</text>
+    </dataset>
+
+    <view layout="axis:x;spacing:15" >
+        <text textalign="left"    width="200" bgcolor="#eaeaea" datapath="ds:/text[1]/text()" />
+        <text textalign="center"  width="200" bgcolor="#eaeaea" datapath="ds:/text[1]/text()" />
+        <text textalign="right"   width="200" bgcolor="#eaeaea" datapath="ds:/text[1]/text()" />
+        <!-- a multiline text is required for justify to work -->
+        <text textalign="justify" multiline="true" width="200" bgcolor="#eaeaea" datapath="ds:/text[2]/text()" />
+    </view>
+    
+    <view layout="axis:x;spacing:15" >
+        <text textdecoration="none" bgcolor="#eaeaea" datapath="ds:/text[1]/text()" />
+        <text textdecoration="underline" bgcolor="#eaeaea" datapath="ds:/text[1]/text()" />
+    </view>
+    
+    <view layout="axis:x;spacing:15" >
+        <text letterspacing="-2" bgcolor="#eaeaea" datapath="ds:/text[1]/text()" />
+        <text letterspacing="0" bgcolor="#eaeaea" datapath="ds:/text[1]/text()" />
+        <text letterspacing="5" bgcolor="#eaeaea" datapath="ds:/text[1]/text()" />
+    </view>
+    
+    <view layout="axis:x;spacing:15" >
+        <text textindent="-20" multiline="true" width="200" bgcolor="#eaeaea" datapath="ds:/text[2]/text()" />
+        <text textindent="0"   multiline="true" width="200" bgcolor="#eaeaea" datapath="ds:/text[2]/text()" />
+        <text textindent="20"  multiline="true" width="200" bgcolor="#eaeaea" datapath="ds:/text[2]/text()" />
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

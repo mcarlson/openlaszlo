@@ -170,7 +170,6 @@ LzTextSprite.prototype.hscroll = 0;
   */
 LzTextSprite.prototype.maxhscroll = 0;
 
-
 // [todo: 2004-3-29 hqm] lines seem to get the ends clipped off if you use the TextField.textWidth
 // from Flash, so I am adding a constant. Am I missing something here? 
 LzTextSprite.prototype.PAD_TEXTWIDTH = 4;
@@ -178,6 +177,23 @@ LzTextSprite.prototype.PAD_TEXTWIDTH = 4;
 LzTextSprite.prototype.classname = "LzTextSprite";
 
 LzTextSprite.prototype.DEFAULT_SIZE = 8;
+
+/**
+  * @access private
+  */
+LzTextSprite.prototype._textAlign = "left";
+/**
+  * @access private
+  */
+LzTextSprite.prototype._textIndent = 0;
+/**
+  * @access private
+  */
+LzTextSprite.prototype._letterSpacing = 0;
+/**
+  * @access private
+  */
+LzTextSprite.prototype._textDecoration = "none";
 
 /**
   * setResize set behavior of text field width when new text is added.
@@ -263,8 +279,11 @@ LzTextSprite.prototype.getTextWidth = function ( ){
 LzTextSprite.prototype.getTextfieldHeight = function ( ){
     var textclip = this.__LZtextclip;
 
-    // turn on autoSize temporarily
     var tca = textclip.autoSize;
+    var tcw = textclip._width;
+    var tch = textclip._height;
+
+    // turn on autoSize temporarily
     textclip.autoSize = true;
     // measure height and reset to the original values
     var h = textclip._height;
@@ -276,8 +295,10 @@ LzTextSprite.prototype.getTextfieldHeight = function ( ){
         var h = textclip._height;
         textclip.htmlText = tct;
     }
-        
+
     textclip.autoSize = tca;
+    textclip._height = tch;
+    textclip._width = tcw;
 
     return h;
 }
@@ -301,13 +322,15 @@ LzTextSprite.prototype.getTextHeight = function ( ){
         var tch = textclip._height;
         var tca = textclip.autoSize;
         var tct = textclip.htmlText;
+        var tcp = textclip.wordWrap;
 
         textclip.autoSize = true;
         // Make sure the test text does not wrap!
-        textclip._width = 500;
+        textclip.wordWrap = false;
         textclip.htmlText = "__ypgSAMPLE__";
         var h = textclip.textHeight;
 
+        textclip.wordWrap = tcp;
         textclip.autoSize = tca;
         textclip.htmlText = tct;
         textclip._width   = tcw;
@@ -617,7 +640,15 @@ LzTextSprite.prototype.__setFormat = function (){
     // Adjust style
     tf.bold = (this.fontstyle == "bold" || this.fontstyle =="bolditalic");
     tf.italic = (this.fontstyle == "italic" || this.fontstyle =="bolditalic");
-    tf.underline = !!this['underline'];
+    tf.underline = !!this['underline'] || this._textDecoration == "underline";
+    tf.align = this._textAlign;
+    tf.indent = this._textIndent;
+    if (this._textIndent < 0) {
+        tf.leftMargin = this._textIndent * -1;
+    } else {
+        tf.leftMargin = 0;
+    }
+    tf.letterSpacing = this._letterSpacing;
 
     // We want to adjust the current contents, _and_ any new contents.
     this.__LZtextclip.setNewTextFormat(tf);
@@ -946,3 +977,32 @@ LzTextSprite.prototype.destroy = function(){
     this._viewdestroy( );
 }
 
+LzTextSprite.prototype.setTextAlign = function (align) {
+    this._textAlign = align;
+    this.__setFormat();
+    // recompute dimensions: must use clip html here -- inputtext may
+    // have modified the contents
+    this.setText( this.getText() );
+}
+
+LzTextSprite.prototype.setTextIndent = function (indent) {
+    this._textIndent = indent;
+    this.__setFormat();
+    // recompute dimensions: must use clip html here -- inputtext may
+    // have modified the contents
+    this.setText( this.getText() );
+}
+
+LzTextSprite.prototype.setLetterSpacing = function (spacing) {
+    this._letterSpacing = spacing;
+    this.__setFormat();
+    // recompute dimensions: must use clip html here -- inputtext may
+    // have modified the contents
+    this.setText( this.getText() );
+}
+
+LzTextSprite.prototype.setTextDecoration = function (decoration) {
+    this._textDecoration = decoration;
+    this.__setFormat();
+    // note: don't need to recompute dimensions here
+}

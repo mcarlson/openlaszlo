@@ -173,7 +173,11 @@ LzSprite.prototype.__defaultStyles = {
         fontWeight: 'normal',
         fontSize: '11px',
         whiteSpace: 'normal',
-        position: 'absolute'
+        position: 'absolute',
+        textAlign: 'left',
+        textIndent: '0px',
+        letterSpacing: '0px',
+        textDecoration: 'none'
     },
     lzswftext: {
         fontFamily: 'Verdana,Vera,sans-serif',
@@ -184,7 +188,11 @@ LzSprite.prototype.__defaultStyles = {
         position: 'absolute',
         paddingTop: '2px',
         paddingLeft: '2px',
-        lineHeight: '120%'
+        lineHeight: '120%',
+        textAlign: 'left',
+        textIndent: '0px',
+        letterSpacing: '0px',
+        textDecoration: 'none'
     },
     lzinputtext: {
         fontFamily: 'Verdana,Vera,sans-serif',
@@ -194,7 +202,11 @@ LzSprite.prototype.__defaultStyles = {
         width: '100%',
         height: '100%',
         borderWidth: 0,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        textAlign: 'left',
+        textIndent: '0px',
+        letterSpacing: '0px',
+        textDecoration: 'none'
     },
     lzswfinputtext: {
         fontFamily: 'Verdana,Vera,sans-serif',
@@ -207,7 +219,11 @@ LzSprite.prototype.__defaultStyles = {
         backgroundColor: 'transparent',
         paddingTop: '1px',
         paddingLeft: '1px',
-        lineHeight: '120%'
+        lineHeight: '120%',
+        textAlign: 'left',
+        textIndent: '0px',
+        letterSpacing: '0px',
+        textDecoration: 'none'
     },
     lzswfinputtextmultiline: {
         fontFamily: 'Verdana,Vera,sans-serif',
@@ -220,7 +236,11 @@ LzSprite.prototype.__defaultStyles = {
         backgroundColor: 'transparent',
         paddingTop: '2px',
         paddingLeft: '1px',
-        lineHeight: '120%'
+        lineHeight: '120%',
+        textAlign: 'left',
+        textIndent: '0px',
+        letterSpacing: '0px',
+        textDecoration: 'none'
     },
     writeCSS: function() {
         var css = '';
@@ -318,6 +338,8 @@ LzSprite.prototype.quirks = {
     ,inputtext_size_includes_margin: false
     ,listen_for_mouseover_out: true
     ,focus_on_mouseover: true
+    ,textstyle_on_textdiv: false
+    ,textdeco_on_textdiv: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -415,6 +437,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['inputtext_size_includes_margin'] = true;
             // LPP-7229 - IE 'helpfully' scrolls focused/blurred divs into view
             quirks['focus_on_mouseover'] = false;
+            // required for text-align / text-indent to work
+            quirks['textstyle_on_textdiv'] = true;
         } else if (browser.isSafari) {
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;
@@ -459,6 +483,7 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['document_size_use_offsetheight'] = true;
             // Opera does not use charCode for onkeypress
             quirks['text_event_charcode'] = false;
+            quirks['textdeco_on_textdiv'] = true;
         } else if (browser.isFirefox) {
             if (browser.version < 2) {
                 // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
@@ -482,10 +507,7 @@ LzSprite.prototype.__updateQuirks = function () {
         }
         if (this.quirks['text_height_includes_margins']) {
             LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '0px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtext.letterSpacing = '.2px';
             LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '0px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.letterSpacing = '.2px';
-            LzSprite.prototype.__defaultStyles.lzswftext.letterSpacing = '.2px';
         }
 
         if (quirks['inputtext_size_includes_margin']) {

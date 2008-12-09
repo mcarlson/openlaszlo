@@ -449,24 +449,24 @@ override function construct ( parent, args ) {
     super.construct.apply(this, arguments);
 
     this.sizeToHeight = false;
-
+    
     // Install constant/default font attributes
     for (var arg:String in LzText.fontArgToAttr) {
       var attr:String = LzText.fontArgToAttr[arg];
       // Default missing args
       if (! (arg in args)) {
         args[arg] = this.searchParents(attr)[attr];
-      }
+        }
       this[attr] = args[arg];
     }
-
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     // FIXME [2008-11-24 ptw] (LPP-7391) We should not be passing node
     // init args across the kernel API, there should be a more
     // explicit API that isolates the kernel from the node
     // implementation details
     tsprite.__initTextProperties(args);
-
+    
     // Remove constant/default font attributes, so they won't be
     // re-handled by LzNode/__LZapplyArgs
     for (var arg:String in LzText.fontArgToAttr) {
@@ -488,7 +488,7 @@ override function construct ( parent, args ) {
         this.text = this.text.substring(0, this.maxlength);
     }
 
-    this.setMultiline( this.multiline );
+    this.$lzc$set_multiline( this.multiline );
 
     tsprite.setText( this.text );
 
@@ -521,7 +521,7 @@ override function construct ( parent, args ) {
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight 
     // 
-    if (! this.hassetheight) {
+    if (!this.hassetheight) {
         this.sizeToHeight = true;
     } else if (args['height'] != null) {
         this.$lzc$set_height(args.height);
@@ -563,11 +563,6 @@ override function getMCRef () {
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
     return tsprite.getMCRef();
 }
-
-/**
-  * @access private
-  */
-var $lzc$set_multiline = -1;
 
 
 /**
@@ -1038,17 +1033,25 @@ final function setFontStyle ( fstyle ){
     this.$lzc$set_fontstyle(fstyle);
 }
 
+/**
+  * @access private
+  */
+function $lzc$set_multiline(ml) :void {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    tsprite.setMultiline(ml);
+    this.multiline = (ml == true);
+}
 
 /**
   * Sets whether or not the textfield wraps.  If false, only a single line
   * of text will appear and extra lines will be trucated if the text is set with
   * multiple lines.
   * @param Boolean ml: true if the text field should allow multiple lines
+  * @deprecated Use setAttribute('multiline', ...) instead.
   */
-function setMultiline ( ml ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setMultiline(ml);
-    this.multiline = (ml == true);
+final function setMultiline ( ml ){
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_multiline(ml);
 }
 
 
@@ -1235,6 +1238,81 @@ function getSelectionSize ( ){
  */
 public function makeTextLink(str, value) {
     return (this.sprite cast LzTextSprite).makeTextLink(str,value);
+}
+
+
+/** text-align for this text
+  * @lzxtype string
+  * @type String
+  */
+var textalign :String = "left";
+
+/** text-indent for this text
+  * @lzxtype number
+  * @type Number
+  */
+var textindent :Number = 0;
+
+/** letter-spacing for this text
+  * @lzxtype number
+  * @type Number
+  */
+var letterspacing :Number = 0;
+
+/** text-decoration for this text
+  * @lzxtype string
+  * @type String
+  */
+var textdecoration :String = "none";
+
+/** @access private */
+function $lzc$set_textalign (align:String) :void {
+    align = align ? align.toLowerCase() : "left";
+    if (! (align == "left" || align == "right" || align == "center"
+            || align == "justify")) {
+        if ($debug) {
+            Debug.warn("invalid value for %w.textalign = %w", this, align);
+        }
+        align = "left";
+    }
+    this.textalign = align;
+    (this.sprite cast LzTextSprite).setTextAlign(align);
+    // force recompute of height if needed
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
+}
+
+/** @access private */
+function $lzc$set_textindent (indent:Number) :void {
+    this.textindent = indent;
+    (this.sprite cast LzTextSprite).setTextIndent(indent);
+    // force recompute of height if needed
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
+}
+
+/** @access private */
+function $lzc$set_letterspacing (spacing:Number) :void {
+    this.letterspacing = spacing;
+    (this.sprite cast LzTextSprite).setLetterSpacing(spacing);
+    // force recompute of height if needed
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
+}
+
+/** @access private */
+function $lzc$set_textdecoration (decoration:String) :void {
+    decoration = decoration ? decoration.toLowerCase() : "none";
+    if (! (decoration == "none" || decoration == "underline")) {
+        // CSS actually also allows: overline, line-through, blink
+        // but Flash can't handle that..
+        if ($debug) {
+            Debug.warn("invalid value for %w.textdecoration = %w", this, decoration);
+        }
+        decoration = "none";
+    }
+    this.textdecoration = decoration;
+    (this.sprite cast LzTextSprite).setTextDecoration(decoration);
 }
 
 } // End of LzText
