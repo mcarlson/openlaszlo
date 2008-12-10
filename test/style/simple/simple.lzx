@@ -39,7 +39,7 @@
    <class name="SimpleTestCase" extends="TestCase">
         <method name="testBasics">
             assertEquals(50, gSoy.width);  // KNOWN TO FAIL by bshine as of 08.01.2007
-            Debug.warn('expected 50 got 279 is a known failure in simple.lzx');
+            displayMessage('expected 50 got 279 is a known failure in simple.lzx');
             assertEquals(75, gAngelica.width);
         </method>
         <method name="testColors">
