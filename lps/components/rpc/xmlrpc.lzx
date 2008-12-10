@@ -84,13 +84,12 @@
                 <example>
     &lt;canvas debug="true" height="400"&gt;
     
-        &lt;debug x="10" y="40" width="450" height="350" /&gt;
+        &lt;debug x="10" y="40" width="450" height="350"/&gt;
         
-        &lt;xmlrpc name="meerkat"
-                service="http://www.oreillynet.com/meerkat/xml-rpc/server.php"&gt;
+        &lt;xmlrpc name="math" service="http://www.cookcomputing.com/xmlrpcsamples/math.rem"&gt;
             
             &lt;handler name="onload"&gt;
-                Debug.write('meerkat XML-RPC service loaded');
+                Debug.write('math XML-RPC service loaded');
                 Debug.write('proxy:');
                 Debug.inspect(this.proxy);
             &lt;/handler&gt;
@@ -103,14 +102,17 @@
                 Debug.write('onerror:', error);
             &lt;/handler&gt;
             
-            &lt;remotecall name="gc" funcname="meerkat.getCategories" /&gt;
+            &lt;remotecall name="add" funcname="math.Add"/&gt;
+            &lt;remotecall name="subtract" funcname="math.Subtract"/&gt;
+            &lt;remotecall name="multiply" funcname="math.Multiply"/&gt;
+            &lt;remotecall name="divide" funcname="math.Divide"/&gt;
             
         &lt;/xmlrpc&gt;
         
-        &lt;button text="getCategories" x="10" y="10"&gt;
+        &lt;button text="100+200" x="10" y="10"&gt;
             &lt;handler name="onclick"&gt;
-                Debug.write('getting categories...');
-                meerkat.gc.invoke()
+                Debug.write('100+200');
+                math.add.invoke([100,200]);
             &lt;/handler&gt;
         &lt;/button&gt;
     
