@@ -305,7 +305,11 @@ public class LzTextSprite extends LzSprite {
             }
 
             this.text = t;
+            var df:TextFormat = this.textfield.defaultTextFormat;
             this.textfield.htmlText = t;
+            // reset textformat to workaround flash player bug (FP-77)
+            this.textfield.setTextFormat(df);
+            this.textfield.defaultTextFormat = df;
         
             if (this.resize && (this.multiline == false)) {
                 // single line resizable fields adjust their width to match the text
