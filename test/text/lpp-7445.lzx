@@ -1,0 +1,9 @@
+<canvas debug="true" layout="axis:x;spacing:10" height="300">
+<!--  <button text="add text" onclick="canvas.textpane.addText('newtext')" />  -->
+  <text name="textpane" multiline="true" selectable="true" 
+      width="200" height="100" bgcolor="#eaeaea" /> 
+</canvas> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

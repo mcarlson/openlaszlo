@@ -1,0 +1,110 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- resize.lzx                                                             -->
+<!--                                                                       -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2008                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<!--  
+
+test runtime resizing of text
+-->
+
+<canvas width="1024" height="800"> 
+  <simplelayout axis="y" spacing="4" />
+
+  <window title="Text Resize Tests" width="400" height="200" resizable="true">
+    <text multiline="true" height="40" width="360" >no set width or height</text>
+        <view>
+           <simplelayout axis="x" spacing="10" />
+           <button text="test1" onclick="parent.parent.test1()" />
+           <button text="test2" onclick="parent.parent.test2()" />
+           <button text="test3" onclick="parent.parent.test3()" />
+           <button text="test4" onclick="parent.parent.test4()" />
+        </view>
+        <simplelayout axis="y" spacing="10" />
+        <method name="test1">
+           this.t1.setText("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        </method>
+        <method name="test2">
+           this.t1.setText("1234");
+        </method>
+        <method name="test3">
+           this.t1.setText("1234567890");
+        </method>
+        <method name="test4">
+          this.t1.setAttribute('fontsize', "48");
+        </method>
+        <text bgcolor="#ffcccc" name="t1">Initial text from server.</text> 
+    </window>
+
+
+  <window title="Text Resize Tests" width="400" height="200" y="200" resizable="true">
+    <text multiline="true" height="40" width="360" >has set width, no set height</text>
+        <view>
+           <simplelayout axis="x" spacing="10" />
+           <button text="test1" onclick="parent.parent.test1()" />
+           <button text="test2" onclick="parent.parent.test2()" />
+           <button text="test3" onclick="parent.parent.test3()" />
+           <button text="test4" onclick="parent.parent.test4()" />
+        </view>
+        <simplelayout axis="y" spacing="10" />
+        <method name="test1">
+           this.t1.setText("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        </method>
+        <method name="test2">
+           this.t1.setText("1234");
+        </method>
+        <method name="test3">
+           this.t1.setText("1234567890");
+        </method>
+
+        <method name="test4">
+          this.t1.setAttribute('fontsize', "48");
+        </method>
+        <text width="200" bgcolor="#ffcccc" name="t1">Initial text from server.</text> 
+    </window>
+
+
+
+
+
+    <dataset name="foo">
+      <bar>
+        <blah>1. This is some text</blah>
+        <blah>2. This is some more text</blah>
+        <blah>3. This is even more and more text which is so very long</blah>
+      </bar>
+    </dataset>
+
+
+
+    <window title="Text Resize Tests" width="400" height="200" resizable="true" x="400" y="200">
+        <simplelayout axis="y" />
+        <text>datapath test: text should size its width automatically, resize="true"</text>
+        <text resize="true" bgcolor="#ccffff"  name="key" width="30" datapath="foo:/bar/blah/text()" />
+        <simplelayout axis="y" spacing="4"/>
+    </window>
+
+
+    <window title="Text Resize Tests" width="400" height="200" resizable="true" x="0" y="400">
+        <simplelayout axis="y" />
+        <text>datapath test: text will be fixed width, truncated</text>
+        <text width="90" bgcolor="#ccffff"  name="key"  datapath="foo:/bar/blah/text()" />
+        <simplelayout axis="y" spacing="4"/>
+    </window>
+
+
+
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

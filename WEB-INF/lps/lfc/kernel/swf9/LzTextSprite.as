@@ -215,15 +215,6 @@ public class LzTextSprite extends LzSprite {
             }
         }
 
-        override public function setBGColor( c:* ):void {
-            if (c == null) {
-                this.textfield.background = false; }
-            else {
-                this.textfield.background = true; 
-                this.textfield.backgroundColor = c;
-            }
-        }
-
         public function setBorder ( onroff:Boolean):void {
             this.textfield.border = (onroff == true);
         }
@@ -327,19 +318,17 @@ public class LzTextSprite extends LzSprite {
 
             //multiline resizable fields adjust their height
             if (this.sizeToHeight) {
-                if (this.multiline) {
-                    //FIXME [20080602 anba] won't possibly work, example: 
-                    //textfield.textHeight=100
-                    //textfield.height=10
-                    //=> setHeight(Math.max(100, 10)) == setHeight(100)
-                    //setHeight sets textfield.height to 100
-                    //next round:
-                    //textfield.textHeight=10 (new text was entered)
-                    //textfield.height=100 (set above!)
-                    //=> setHeight(Math.max(10, 100)) == setHeight(100)
-                    // => textfield.height still 100, sprite-height didn't change, but it should!
-                    this.setHeight(Math.max(this.textfield.textHeight, this.textfield.height));
-                }
+                //FIXME [20080602 anba] won't possibly work, example: 
+                //textfield.textHeight=100
+                //textfield.height=10
+                //=> setHeight(Math.max(100, 10)) == setHeight(100)
+                //setHeight sets textfield.height to 100
+                //next round:
+                //textfield.textHeight=10 (new text was entered)
+                //textfield.height=100 (set above!)
+                //=> setHeight(Math.max(10, 100)) == setHeight(100)
+                // => textfield.height still 100, sprite-height didn't change, but it should!
+                this.setHeight(Math.max(this.textfield.textHeight, this.textfield.height));
             }
             //this.textfield.cacheAsBitmap = true;
         }
