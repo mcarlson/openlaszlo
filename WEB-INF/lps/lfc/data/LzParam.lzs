@@ -210,7 +210,7 @@ function getValues (name:String) :Array? {
   * Get a value by name irrespective of case.
   * @param String name: The name to look up - must evaluate to a string
   * @return [String]: An array of values that case-insensitively match name
-  * @keywords deprecated
+  * @deprecated Use getValues(...) instead
   */
 function getValueNoCase (name:String) :* {
     //TODO: [20080917 anba] deprecated since 4.2 remove in 4.3+

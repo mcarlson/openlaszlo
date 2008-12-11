@@ -1582,7 +1582,7 @@ var layouts = null;
 
 /**
   * Releases all the layouts applied to this view. <method>releaseLayouts()</method> has been deprecated.
-  * @keywords deprecated
+  * @deprecated
   * @devnote NOTE [2008-06-26 ptw] This is deprecated and tells you to
   * use setAttribute instead, but there is no setter for layouts.
   * What was really meant?
