@@ -26,9 +26,9 @@
         if ( this.locked || this.subviews.length &lt; 3 ) { return; }
         this.lock();
         var re = this.subviews[ 2 ][( this.sizeAxis )];
-        this.subviews[ 2 ].setAttribute( this.axis , newsize - re );
+        this.subviews[ 2 ].setAttribute( this.axis , newsize - re);
         this.subviews[ 1 ].setAttribute( this.sizeAxis , newsize - re -
-                                    this.subviews[ 1 ] [ this.axis ] );
+                                    this.subviews[ 1 ] [ this.axis ]  + .1);
         this.locked = false;
     </method>
 

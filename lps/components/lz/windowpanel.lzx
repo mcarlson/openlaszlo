@@ -170,7 +170,7 @@
             }
         ]]> </method>
 
-        <resizeview_x name="top" width="100%" frame="${parent.state}"
+        <resizeview_x name="top" width="100%" frame="${parent.state}" height="13.9"
             left="window_TL_rsc" middle="window_TM_rsc" right="window_TR_rsc">
         </resizeview_x>
 
