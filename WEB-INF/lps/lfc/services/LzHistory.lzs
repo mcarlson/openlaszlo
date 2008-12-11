@@ -26,265 +26,295 @@
   * @shortdesc Manages interaction with the browser history and back button.
   */
 
-public class LzHistoryService extends LzEventable {
-/**
-  * true if history system is ready to receive events (for 3.x compatibility).  Use the lz.History.onready event instead.
-  * @keywords deprecated  
-  */
-var isReady = false;
-/**
-  * true if history system is ready to receive events
-  */
-var ready = false;
-/** Sent when history events are ready to be sent and received.
-  * @lzxtype event
-  * @access public
-  */
-var onready = LzDeclaredEvent;
+public final class LzHistoryService extends LzEventable {
 
-/**
-  * If true, persistence is on.
-  * @type Boolean
-  * @keywords readonly
-  */
-var persist = false;
+    if ($swf9) {
+        #passthrough (toplevel:true) {
+            import flash.net.SharedObject;
+        }#
+    }
 
-/**
-  * If set, use this persisted object.
-  * @type Object
-  * @keywords readonly
-  */
-var _persistso = null;
+    /**
+     * The history service.  Also available as the global
+     * <code>lz.History</code>.
+     *
+     * @type LzHistoryService
+     * @keywords readonly
+     * @devnote this should be a public getter to enforce readonly
+     */
+    public static const LzHistory:LzHistoryService;
 
-/**
-  * The current offset (zero-based) in the history value stack.  Listen for the onoffset event to find out when lz.History value changes.
-  * @type Number
-  * @keywords readonly
-  */
-var offset = 0;
-/** @access private */
-var __lzdirty = false;
-/** @access private */
-var __lzhistq = [];
-/** @access private */
-var __lzcurrstate = {};
-// TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
-if ($as3) {
-/** @access private */
-    var capabilities = LzSprite.capabilities;
-} else {
     /** @access private */
-    var capabilities = LzSprite.prototype.capabilities;
-}
-
-
-/** Sent when the history offset changes.
-  * @lzxtype event
-  * @access public
-  */
-var onoffset = LzDeclaredEvent;
-
-/**
-  * Called from the embedding system when the history changes.
-  * @access private
-  */
-function receiveHistory(o){
-    if (this.persist && ! this._persistso) {
-        this.__initPersist();
-    }
-    var l = this.__lzhistq.length;
-    var offset = o * 1;
-    if (! offset) {
-        offset = 0;
-    } else if (offset > l - 1) {
-        offset = l;
+    function LzHistoryService() {
+        super();
+        //    if (LzHistoryService.LzHistory) {
+        //      throw new Error("There can be only one LzHistory");
+        //    }
     }
 
-    var h = this.__lzhistq[offset];
-    //Debug.write('receiveHistory', o, l, h, this._persistso);
-    for (var u in h) {
-        var obj = h[u];
-        //Debug.write('restoring state ', global[obj.c], obj.c, obj.n, obj.v);
-        global[obj.c].setAttribute(obj.n, obj.v);
+    // Create the singleton
+    LzHistoryService.LzHistory = new LzHistoryService();
+
+    /**
+      * true if history system is ready to receive events (for 3.x compatibility).  Use the lz.History.onready event instead.
+      * @deprecated Use the lz.History.onready event instead.
+      */
+    var isReady :Boolean = false;
+
+    /**
+      * true if history system is ready to receive events
+      */
+    var ready :Boolean = false;
+
+    /** Sent when history events are ready to be sent and received.
+      * @lzxtype event
+      * @access public
+      */
+    var onready :LzDeclaredEventClass = LzDeclaredEvent;
+
+    /**
+      * If true, persistence is on.
+      * @type Boolean
+      * @keywords readonly
+      */
+    var persist :Boolean = false;
+
+    /**
+      * If set, use this persisted object.
+      * @type Object
+      * @keywords readonly
+      */
+    var _persistso :SharedObject = null;
+
+    /**
+      * The current offset (zero-based) in the history value stack.  Listen for the onoffset event to find out when lz.History value changes.
+      * @type Number
+      * @keywords readonly
+      */
+    var offset :Number = 0;
+
+    /** @access private */
+    var __lzdirty :Boolean = false;
+    /** @access private */
+    var __lzhistq :Array = [];
+    /** @access private */
+    var __lzcurrstate :Object = {};
+
+    // TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
+    if ($as3) {
+        /** @access private */
+        var capabilities :* = LzSprite.capabilities;
+    } else {
+        /** @access private */
+        var capabilities :* = LzSprite.prototype.capabilities;
     }
 
-    //Debug.write('onhistory ', offset, this.offset);
-    this.setAttribute('offset', offset);
-    return offset;
-}
+    /** Sent when the history offset changes.
+      * @lzxtype event
+      * @access public
+      */
+    var onoffset :LzDeclaredEventClass = LzDeclaredEvent;
 
-/**
-  * @access private
-  */
-function receiveEvent(n, v){
-    //Debug.write('got event', n, v);
-    canvas.setAttribute(n, v);
-}
-
-/**
-  * @access private
-  */
-function getCanvasAttribute(n){
-    return canvas[n];
-}    
-
-/**
-  * @access private
-  */
-function setCanvasAttribute(n, v) {
-    this.receiveEvent(n,v);
-}
-
-/**
-  * Invoked by browser JavaScript to call a method
-  * @access private
-  */
-function callMethod(js) { 
-    return LzBrowserKernel.callMethod(js);
-}
-
-/**
-  * Saves a value and attribute name callback in the current offset of the 
-  * history stack.  When the browser back button causes the history offset 
-  * to change, the attribute will get set to the value saved at that offset,
-  * e.g. scope.setAttribute('attribute_name_to_set', value). 
-  * @param String who: Global id of the scope to be used
-  * @param String prop: Attribute name to be set
-  * @param val: Value to set the attribute to
-  */
-function save(who, prop, val) {
-    if (typeof who != 'string') {
-        if (who['id']) who = who['id'];
-        if ($debug) Debug.warn('Warning: this.save() requires a view ID to be passed in as a string for the first argument.');
-        if (! who) return;
-    }
-    if (val == null) val = global[who][prop];
-    this.__lzcurrstate[who] = {c: who, n: prop, v: val};
-    this.__lzdirty = true;
-    //Debug.write('set state of ',who,' to ', this.__lzcurrstate);
-}
-
-/**
-  * @access private
-  * Commits all registered values to the history stack at the current offset.
-  * Must be called to commit registered values.  Called automatically by 
-  * next and prev. 
-  */
-function commit() {
-    if (! this.__lzdirty) return;
-    this.__lzhistq[this.offset] = this.__lzcurrstate;
-    
-    //Debug.write('Stored state ', this.__lzcurrstate, out);
-    this.__lzhistq.length = this.offset + 1;
-    
-    if (this.persist) {
-        if (! this._persistso) {
+    /**
+      * Called from the embedding system when the history changes.
+      * @access private
+      */
+    function receiveHistory(o:*) :Number {
+        if (this.persist && ! this._persistso) {
             this.__initPersist();
         }
-        //Debug.write('_persistso: ', this._persistso);
-        this._persistso.data[this.offset] = this.__lzcurrstate;
-        //this._persistso.flush();
-    }
-    
-    this.__lzcurrstate = {};
-    this.__lzdirty = false;
-    //Debug.write('save', this.__lzhistq.length - 1, this.__lzhistq);
-}
-
-/**
-  * @access private
-  */
-function move(by) {
-    this.commit();
-    if (! by) by = 1;
-    var o = this.offset + by;
-    if (0 >= o) o = 0;
-    //Debug.write('Move to: ', o);
-    if (this.__lzhistq.length >= o) {
-        //Debug.write('move', o, this.__lzhistq.length, this.__lzhistq);
-        //this.offset = o;
-        LzBrowserKernel.setHistory(o);
-    }
-}
-
-/**
-  * Moves forward one step in the history stack.  Adds an item to the browser history.
-  */
-function next() {
-    this.move(1);
-}
-
-/**
-  * Moves back one step in the history stack.  Adds an item to the browser history
-  */
-function prev() {
-    this.move(-1);
-}
-
-/** @access private */
-function __initPersist() {
-    if (this.persist) {
-        if (! this._persistso) {
-            this._persistso = LzBrowserKernel.getPersistedObject('historystate');
+        var len:int = this.__lzhistq.length;
+        var offset:Number = o * 1;
+        if (! offset) {
+            offset = 0;
+        } else if (offset > len - 1) {
+            offset = len;
         }
-        if (this._persistso && this._persistso.data) {
-            var d = this._persistso.data;
-            this.__lzhistq = [];
-            for (var i in d) {
-                this.__lzhistq[i] = d[i];
-                //Debug.write('restoring', i, d[i]);
+    
+        var h:Object = this.__lzhistq[offset];
+        //Debug.write('receiveHistory', o, len, h, this._persistso);
+        for (var u:String in h) {
+            var obj:Object = h[u];
+            //Debug.write('restoring state ', global[obj.c], obj.c, obj.n, obj.v);
+            global[obj.c].setAttribute(obj.n, obj.v);
+        }
+    
+        //Debug.write('onhistory ', offset, this.offset);
+        this.setAttribute('offset', offset);
+        return offset;
+    }
+
+    /**
+      * @access private
+      */
+    function receiveEvent(n:String, v:*) :void {
+        //Debug.write('got event', n, v);
+        canvas.setAttribute(n, v);
+    }
+
+    /**
+      * @access private
+      */
+    function getCanvasAttribute(n:String) :* {
+        return canvas[n];
+    }    
+
+    /**
+      * @access private
+      */
+    function setCanvasAttribute(n:String, v:*) :void {
+        this.receiveEvent(n,v);
+    }
+
+    /**
+      * Invoked by browser JavaScript to call a method
+      * @access private
+      */
+    function callMethod(js:String) :* {
+        return LzBrowserKernel.callMethod(js);
+    }
+
+    /**
+      * Saves a value and attribute name callback in the current offset of the 
+      * history stack.  When the browser back button causes the history offset 
+      * to change, the attribute will get set to the value saved at that offset,
+      * e.g. scope.setAttribute('attribute_name_to_set', value). 
+      * @param String who: Global id of the scope to be used
+      * @param String prop: Attribute name to be set
+      * @param val: Value to set the attribute to
+      */
+    function save(who:*, prop:String, val:*) :void {
+        if (typeof who != 'string') {
+            if (who['id']) who = who['id'];
+            if ($debug) Debug.warn('Warning: this.save() requires a view ID to be passed in as a string for the first argument.');
+            if (! who) return;
+        }
+        if (val == null) val = global[who][prop];
+        this.__lzcurrstate[who] = {c: who, n: prop, v: val};
+        this.__lzdirty = true;
+        //Debug.write('set state of ',who,' to ', this.__lzcurrstate);
+    }
+
+    /**
+      * @access private
+      * Commits all registered values to the history stack at the current offset.
+      * Must be called to commit registered values.  Called automatically by 
+      * next and prev. 
+      */
+    function commit() :void {
+        if (! this.__lzdirty) return;
+        this.__lzhistq[this.offset] = this.__lzcurrstate;
+        
+        //Debug.write('Stored state ', this.__lzcurrstate, out);
+        this.__lzhistq.length = this.offset + 1;
+        
+        if (this.persist) {
+            if (! this._persistso) {
+                this.__initPersist();
+            }
+            //Debug.write('_persistso: ', this._persistso);
+            this._persistso.data[this.offset] = this.__lzcurrstate;
+            //this._persistso.flush();
+        }
+        
+        this.__lzcurrstate = {};
+        this.__lzdirty = false;
+        //Debug.write('save', this.__lzhistq.length - 1, this.__lzhistq);
+    }
+
+    /**
+      * @access private
+      */
+    function move(by:int = 1) :void {
+        this.commit();
+        var o:Number = this.offset + by;
+        if (0 >= o) o = 0;
+        //Debug.write('Move to: ', o);
+        if (this.__lzhistq.length >= o) {
+            //Debug.write('move', o, this.__lzhistq.length, this.__lzhistq);
+            //this.offset = o;
+            LzBrowserKernel.setHistory(o);
+        }
+    }
+
+    /**
+      * Moves forward one step in the history stack.  Adds an item to the browser history.
+      */
+    function next() :void {
+        this.move(1);
+    }
+
+    /**
+      * Moves back one step in the history stack.  Adds an item to the browser history
+      */
+    function prev() :void {
+        this.move(-1);
+    }
+
+    /** @access private */
+    function __initPersist() :void {
+        if (this.persist) {
+            if (! this._persistso) {
+                this._persistso = LzBrowserKernel.getPersistedObject('historystate');
+            }
+            if (this._persistso && this._persistso.data) {
+                var d:Object = this._persistso.data;
+                this.__lzhistq = [];
+                    for (var i:String in d) {
+                    this.__lzhistq[i] = d[i];
+                    //Debug.write('restoring', i, d[i]);
+                }
+            }
+        } else {
+            if (this._persistso) this._persistso = null;
+        }    
+    }
+
+
+    /**
+      * Clears out the history state.
+      */
+    function clear() :void {
+        if (this.persist) {
+            if (! this._persistso) {
+                this._persistso = LzBrowserKernel.getPersistedObject('historystate');
+            }
+            this._persistso.clear();
+            //this._persistso.flush();
+        }
+        this.__lzhistq = []
+        this.offset = 0;
+        if (this.onoffset.ready) this.onoffset.sendEvent(0);
+    }
+
+    /**
+      * Turns history persistence across app reloads on or off
+      * @param Boolean p: If true, persistence will be turned on
+      */
+    function setPersist(p:Boolean) :void {
+        if (this.capabilities.persistence) {
+            this.persist = p;
+        } else {
+            if ($debug) {
+                Debug.warn('The %s runtime does not support %s', canvas['runtime'], 'lz.History.setPersist()');
             }
         }
-    } else {
-        if (this._persistso) this._persistso = null;
-    }    
-}
-
-
-/**
-  * Clears out the history state.
-  */
-function clear() {
-    if (this.persist) {
-        if (! this._persistso) {
-            this._persistso = LzBrowserKernel.getPersistedObject('historystate');
-        }
-        this._persistso.clear();
-        //this._persistso.flush();
     }
-    this.__lzhistq = []
-    this.offset = 0;
-    if (this.onoffset.ready) this.onoffset.sendEvent(0);
-}
 
-/**
-  * Turns history persistence across app reloads on or off
-  * @param Boolean p: If true, persistence will be turned on
-  */
-function setPersist(p) {
-    if (this.capabilities.persistence) {
-        this.persist = p;
-    } else {
-        if ($debug) {
-            Debug.warn('The %s runtime does not support %s', canvas['runtime'], 'lz.History.setPersist()');
-        }
+    /** Called by the canvas during init
+      * @access private 
+      */
+    function __start(id:String) :void {
+        //Debug.write('setReady', isReady);
+        lz.Browser.callJS( "lz.embed.history.listen('" + id + "')" );
+        this.isReady = true;
+        this.ready = true;
+        if (this.onready.ready) this.onready.sendEvent(true);
     }
-}
-
-/** Called by the canvas during init
-  * @access private 
-  */
-function __start(id) {
-    //Debug.write('setReady', isReady);
-    lz.Browser.callJS( "lz.embed.history.listen('" + id + "')" );
-    this.isReady = true;
-    this.ready = true;
-    if (this.onready.ready) this.onready.sendEvent(true);
-}
 }
 lz.HistoryService = LzHistoryService;  // publish
 
 /**
-  * lz.History is a shortcut for <xref linkend="LzHistoryService" />.
+  * lz.History is a shortcut for <link linkend="LzHistoryService">LzHistoryService.LzHistory</link>
   */
-lz.History = new LzHistoryService();
+lz.History = LzHistoryService.LzHistory;
