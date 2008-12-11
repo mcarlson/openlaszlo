@@ -314,7 +314,7 @@ class LzDHTMLDebugService extends LzDebugService {
    * on a view will print the view and parent chain to the debugger.
    * 
    * @param Boolean enable : enable or disable outlines
-   * @param public
+   * @access public
    */
   function showDivs (enable) {
     if (enable == null) enable = true;

@@ -212,6 +212,7 @@ class LzBootstrapDebugLogger {
   }
 
 if ($as3) {
+  /** @access private */
   function log (msg) { trace (msg); }
 } else {
   /**

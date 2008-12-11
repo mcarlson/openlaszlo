@@ -162,7 +162,7 @@ public dynamic class LzNode extends LzEventable {
    * attribute will be constrained later by `__LZapplyArgs`.
    *
    * @param String attr: The name of the attribute to look up
-   * @returns boolean: True if it will be constrained (barring the
+   * @return boolean: True if it will be constrained (barring the
    * constructor itself overriding it!)
    *
    * @access private */
@@ -2281,7 +2281,7 @@ public dynamic class LzNode extends LzEventable {
  /**
    * @access private
    * @param type:String the attribute type
-   * @returns value:String
+   * @return value:String
    * 
    * Returns the value converted to a string by the
    * presentationtype's present method
@@ -2302,7 +2302,7 @@ public dynamic class LzNode extends LzEventable {
    * @access private
    * @param name:String the name of the attribute
    * @param type:String the attribute type
-   * @returns value:String
+   * @return value:String
    * 
    * Returns the value of the named attribute converted to a string by the
    * presentationtype's present method

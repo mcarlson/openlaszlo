@@ -785,7 +785,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Compute a function name if you can
    *
    * @param Function fn: the function whose name to compute
-   * @param Boolean isGlobal: if true, will only return the name if it is
+   * @param Boolean mustBeUnique: if true, will only return the name if it is
    * a global name.
    * @return String: the function name
    *

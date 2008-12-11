@@ -45,8 +45,8 @@ Debug.loopElapsed = 0;
 /**
   * Mark an object
   *
-  * @param o Object: the object
-  * @returns boolean: True unless the object could not be marked
+  * @param Object o: the object
+  * @return boolean: True unless the object could not be marked
   * (indicates it is probably a primitive object that we cannot trace
   * through)
   *
@@ -73,8 +73,8 @@ Debug.mark = function (o) {
 /**
   * Is an object marked?
   *
-  * @param o Object: the object
-  * @returns null|false|true: If the object has been marked in this
+  * @param Object o: the object
+  * @return null|false|true: If the object has been marked in this
   * generation, `true`; if the object has been marked, but not in this
   * generation, `false`; if the object has never been marked, `null`.
   * The latter distinction is used by the leak detector.
@@ -592,7 +592,7 @@ class __LzLeaks /* extends Array */ {
 /**
   * List new objects and why they are alive
   *
-  * @param top Number: How many leaks to detail, default is 10
+  * @param Number top: How many leaks to detail, default is 10
   * @access private
   */
 Debug.whyAlive = function (top=10) {
