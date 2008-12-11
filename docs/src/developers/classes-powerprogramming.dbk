@@ -129,7 +129,7 @@ Remember, you can call the original click code in the new method by using the su
 <informalexample role="live-example"><programlisting>
      &lt;method name="handleClick"&gt;
          super.handleClick();
-         Debug.write('new click');
+         Debug.debug('new click');
      &lt;/method&gt;
 </programlisting></informalexample>
 
@@ -590,8 +590,8 @@ explained in more detail in the next section.</para>
    </programlisting>
 </example>
 
-<para>Notice how view <varname>y</varname> follows view
-<varname>r</varname> in its subviews array. If a
+<para>Notice how view <varname>yellow</varname> follows view
+<varname>red</varname> in its subviews array. If a
 <indexterm><primary>simplelayout</primary></indexterm><sgmltag class="element">&lt;simplelayout&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: simplelayout-->
  is placed in view

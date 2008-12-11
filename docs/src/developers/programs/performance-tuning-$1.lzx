@@ -7,7 +7,7 @@
         // Default arguments
         switch (arguments.length) {
           case 0:
-            Debug.write("No measurement target");
+            Debug.debug("No measurement target");
             return;
           case 1:
             iterations = 500;
@@ -37,7 +37,7 @@
         var usPerOp = Math.round((total-overhead)*1000/(trials*iterations));
         // Report results
         if (description != null) {
-          Debug.write(description + ": " + usPerOp + "us");
+          Debug.debug("%w %w %w", description, usPerOp , "us");
         }
         return usPerOp;
       }

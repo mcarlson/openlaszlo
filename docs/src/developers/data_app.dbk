@@ -446,9 +446,9 @@ However, in this case, the page parameter values are not URI encoded and the req
 &lt;datapointer xpath="dsSendData:/"&gt;
   &lt;handler name="ondata"&gt;
     if (this.xpathQuery("result/text()") == "success") {
-      Debug.write("Operation succeeded");
+      Debug.debug("Operation succeeded");
     } else {
-      Debug.write("Operation failed");
+      Debug.debug("Operation failed");
     }
   &lt;/handler&gt;
 &lt;/datapointer&gt; 

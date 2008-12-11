@@ -12,7 +12,7 @@
     </method>
     
     <method name="sleep" args="v">
-        Debug.write("Sleeping");
+        Debug.debug("Sleeping");
     </method>
 
 <TestSuite>

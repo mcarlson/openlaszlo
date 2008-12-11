@@ -1,12 +1,9 @@
-
 <canvas debug="true" height="250" width="100%">
-  <debug y="115" width="330"/>
   <class name="foo">
-    <view name="r" bgcolor="red" width="100" height="100"/>
-  </class>
-  
-  <foo name="myfoo" oninit="Debug.write('subviews: ' + this.subviews)">
-    <view name="yel" bgcolor="yellow" width="50" height="50"/>
+    <view name="red" bgcolor="red" width="100" height="100"/>
+  </class> 
+  <foo name="myfoo" oninit="Debug.debug('subviews: %w', this.subviews)">
+    <view name="yellow" bgcolor="yellow" width="50" height="50"/>
   </foo>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

@@ -1,33 +1,28 @@
-
 <canvas debug="true" width="100%">
-<class name="myclass" height="40" bgcolor="blue">
-  <attribute name="button_label" type="text" value="button"/>
-  <handler name="onclick">
-    this.handleclick()
-  </handler>
-
-  <method name="handleclick">
-    Debug.write("this = " + this + "and classroot is" + classroot);
-  </method>
-  <button name="b1" height="30" text="${parent.button_label}"
-onclick="Debug.write('classroot of this button is: ' + classroot); parent.handleclick()" />
-</class>
-
-<class name="another_class" extends="myclass"/>
-
-<!-- foo and bar views are top-level instances, so their classroots are null.
-== The buttons are children of the foo and bar views, respectively, so ==
-== their classroots are defined. -->
-
-<myclass id="foo">
-  <another_class id="bar" bgcolor="red" button_label ="another button" y="25">
-     <method name="handleclick">
-       Debug.write("this = " + this + "and classroot is " + classroot);
-     </method>
- </another_class>
-</myclass>
+  <class name="myclass" height="40" bgcolor="blue">
+    <attribute name="button_label" type="text" value="button"/>
+    <handler name="onclick">
+      this.handleclick()
+    </handler>
+    <method name="handleclick">
+      Debug.debug("this = %w, and classroot is %w", this, classroot);
+    </method>
+    <button name="b1" height="30" text="${parent.button_label}" 
+      onclick="Debug.debug('classroooot of this button is: %#w', classroot); parent.handleclick()"/>
+  </class>
+  <class name="another_class" extends="myclass"/> 
+  <!-- foo and bar views are top-level instances, so their classroots are null.
+    == The buttons are children of the foo and bar views, respectively, so ==
+    == their classroots are defined. -->
+  <myclass id="foo">
+    <another_class id="bar" bgcolor="red" button_label="another button" y="25">
+      <method name="handleclick">
+        Debug.debug("this = %w, and classroot is %w", this, classroot);
+      </method>
+    </another_class>
+  </myclass>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

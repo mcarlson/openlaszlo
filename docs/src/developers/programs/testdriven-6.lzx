@@ -13,7 +13,7 @@
         this.setAttribute('text', 'Stop');
         this.setAttribute('go', false);
         while (goButton.counter&lt;Number.MAX_VALUE) {
-            Debug.write(goButton.counter);
+            Debug.debug("%w", goButton.counter);
             counter=counter+1;
             }
         }

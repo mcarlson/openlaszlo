@@ -1,21 +1,17 @@
-
-<canvas debug="true" height="140" width="100%">
-  <debug x="60"/>
-
+<canvas height="140" width="100%">
   <class name="foo">
     <method name="talk">
-      Debug.write("hello");
+      message.addText("\nhello");
     </method>
     <button text="click" onclick="parent.talk()"/>
   </class>
-
   <class name="bar" extends="foo">
     <method name="talk">
       super.talk();
-      Debug.write("goodbye");
+      message.addText("\ngoodbye");
     </method>
   </class>
-
+  <text id="message" y="30" multiline="true" />
   <bar/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

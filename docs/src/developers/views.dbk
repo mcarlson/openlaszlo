@@ -279,10 +279,10 @@ using the <indexterm><primary><literal>measureWidth()</literal></primary></index
 <programlisting>
 &lt;view bgcolor="yellow" width="30" height="100" clickable="true"&gt;
   &lt;handler name="onclick"&gt;
-    Debug.write("Actual Width: " + this.width);
-    Debug.write("Actual height: " + this.height);
-    Debug.write("Measured Width: " + this.measureWidth());
-    Debug.write("Measured Height: " + this.measureHeight());
+    Debug.debug("Actual Width: %w", this.width);
+    Debug.debug("Actual height: %w", this.height);
+    Debug.debug("Measured Width: %w", this.measureWidth());
+    Debug.debug("Measured Height:%w ", this.measureHeight());
   &lt;/handler&gt;
 
   &lt;view bgcolor="red" width="10" height="10" x="30" y="15"/&gt;

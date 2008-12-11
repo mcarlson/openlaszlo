@@ -1,16 +1,14 @@
 
 <canvas debug="true" height="300" width="100%">
 
-    <debug x="145" width="450" height="280" />
-
     <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
 
         <handler name="onload">
-            Debug.write('google soap service stub loaded');
+            Debug.debug('google soap service stub loaded');
         </handler>
 
         <handler name="onerror" args="error">
-            Debug.write('error:', error);
+            Debug.debug('error: %w', error);
         </handler>
 
         <remotecall name="search" funcname="doGoogleSearch">
@@ -27,7 +25,7 @@
             <param value="''" />
 
             <handler name="ondata" args="value">
-                Debug.write('result is:')
+                Debug.debug('result is:')
                 Debug.inspect(value);
             </handler>
 
@@ -47,7 +45,7 @@
                         searchTerm = 'republican';
                         toggle = 0;
                     }
-                    Debug.write('search term is', searchTerm);
+                    Debug.debug('search term is %w', searchTerm);
                     return searchTerm;
                 </method>
             </param>
@@ -61,7 +59,7 @@
             <param value="''" />
 
             <handler name="ondata" args="value">
-                Debug.write('result is:')
+                Debug.debug('result is:')
                 Debug.inspect(value);
             </handler>
 
@@ -72,14 +70,14 @@
 
     <button x="10" y="10" text="search">
         <handler name="onclick">
-            Debug.write('invoking search...');
+            Debug.debug('invoking search...');
             canvas.google.search.invoke();
         </handler>
     </button>
 
     <button x="10" y="10" text="toggle search">
         <handler name="onclick">
-            Debug.write('invoking togglesearch...');
+            Debug.debug('invoking togglesearch...');
             canvas.google.togglesearch.invoke();
         </handler>
     </button>

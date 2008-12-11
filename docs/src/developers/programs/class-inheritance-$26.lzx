@@ -1,18 +1,15 @@
-
 <canvas debug="true" height="200" width="100%">    
-  <debug x="155"/>
-
+  <debug x="155"/> 
   <class name="container" defaultplacement="red">
     <view name="red" bgcolor="red" width="150" height="150"/>
-  </class>
-
+  </class> 
   <!-- yellow's parent is top and its immediateparent   -->
   <!-- is red, since that's where it's actually placed. -->
   <container name="thetop">
     <view name="yellow" bgcolor="yellow" width="50" height="50">
       <handler name="oninit">
-        Debug.write('parent: ', this.parent);
-        Debug.write('immediateparent: ', this.immediateparent);
+        Debug.debug("parent: %w", this.parent);
+        Debug.debug('immediateparent: %w', this.immediateparent);
       </handler>
     </view>
   </container>

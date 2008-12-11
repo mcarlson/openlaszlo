@@ -17,14 +17,14 @@
         }
     }
     else {
-        Debug.write("Paused");
+        Debug.debug("Paused");
         this.setAttribute('text', 'Go');
         this.setAttribute('go', true);
     }
 </handler>
 
 <method name="count">
-    Debug.write(counter);
+    Debug.debug("%w", counter);
     counter=counter+1;
 </method>
 

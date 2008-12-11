@@ -7,7 +7,7 @@
       this.selectChild(2); 
       do {
         if (this.xpathQuery( '@show' ) == 'south park') {
-            Debug.write(this.xpathQuery('lastName/text()'));
+            Debug.debug("%w", this.xpathQuery('lastName/text()'));
         }
       } while (this.selectNext()); 
     </method>

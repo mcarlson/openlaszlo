@@ -695,7 +695,7 @@ attribute with a dataset.</para>
           ...
         &lt;handler name="ondata"&gt;
             // print out response headers whenever we get data.
-            Debug.write(resds.serialize());
+            Debug.debug("%w", resds.serialize());
         &lt;/handler&gt;
 
     &lt;/soap&gt;

@@ -1,7 +1,6 @@
-
 <canvas height="130" debug="true">
-  <command key="$once{['Control','n']}"
-           onselect="Debug.write('the [Ctrl-n] key combination was pressed');" />
+    <command key="$once{['Control','n']}"
+        onselect="Debug.debug('%w', 'the [Ctrl-n] key combination was pressed');" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *

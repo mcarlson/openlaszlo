@@ -285,7 +285,7 @@ Of course, running both animators simultaneously will superimpose the effect of 
    </programlisting>
 </example>
 
-<para>One of the maxims of test-driven development is "do the simplest thing that works". This LZX script satisfies the programming problem "display numbers infinitely", but the compiled application does not work! An infinitely looping <literal>Debug.write</literal> statement fills up memory, and results in the browser choking. We need the script to Debug.write, pause for breath, Debug.write, pause for breath, and so on. The answer is in the global object lz.Idle, which I have never used. The problem now presents a challenge to learn something new about the language!</para>
+<para>One of the maxims of test-driven development is "do the simplest thing that works". This LZX script satisfies the programming problem "display numbers infinitely", but the compiled application does not work! An infinitely looping <literal>Debug.debug</literal> statement fills up memory, and results in the browser choking. We need the script to <literal>Debug.debug</literal>, pause for breath, <literal>Debug.debug</literal>, pause for breath, and so on. The answer is in the global object <literal>lz.Idle</literal>, which I have never used. The problem now presents a challenge to learn something new about the language!</para>
 
 <para>How do you test for the idle state? Doesn't the testing itself mean the universe isn't idle?</para>
 

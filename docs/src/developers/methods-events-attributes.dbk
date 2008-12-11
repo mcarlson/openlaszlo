@@ -301,11 +301,11 @@ Suppose you want to handle, in one class, an event from some other object?  In t
 </para>
 <programlisting>
 &lt;handler name="onclick" reference="yours"&gt;
-  Debug.write("Someone is pushing your button");
+  Debug.debug("Someone is pushing your button");
 &lt;/handler&gt;
 </programlisting>
 <para>
-Here's an example:</para>
+Here's an example using <literal>&lt;text&gt;</literal>:</para>
 
 <example role="live-example">
    <title>Referencing an event in another object</title>
@@ -882,7 +882,7 @@ For example, the <indexterm><primary>lz.view</primary></indexterm><classname>lz.
   
   &lt;method name="doSomething"&gt;
     this.setWidth(10); 
-    Debug.write('width' + this.getWidth());        
+    Debug.debug('width %w', this.getWidth());        
   &lt;/method&gt; 
 &lt;/node&gt;
 </programlisting></example> 
@@ -909,7 +909,7 @@ methods, which contain important processing code, won't be called.
   
   &lt;method name="doSomething"&gt;
     this.width = 10;
-    Debug.write('width' + this.width);
+    Debug.debug('width %w' this.width);
   &lt;/method&gt;
 &lt;/node&gt;
 </programlisting></example> 

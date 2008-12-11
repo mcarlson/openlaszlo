@@ -7,11 +7,11 @@
 
     <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
         <handler name="onload">
-            Debug.write('google soap service loaded');
+            Debug.debug('google soap service loaded');
         </handler>
 
         <handler name="onerror" args="error">
-            Debug.write('error:', error);
+            Debug.error(error);
         </handler>
 
         <!-- See RPC chapter for details on remotecall and how dataobject is
@@ -31,7 +31,7 @@
             <param value="''" />
 
             <handler name="ondata" args="value">
-                Debug.write('search result:\n', value);
+                Debug.debug('search result: %w', value);
             </handler>
 
         </remotecall>
@@ -40,7 +40,7 @@
     <view x="10" y="10" layout="spacing: 5" >
         <view layout="axis: x; spacing: 5">
             <edittext id="s" text="SOAP" />
-            <button text="search" onclick="Debug.write('Invoking search...'); google.search.invoke()" />
+            <button text="search" onclick="Debug.debug('Invoking search...'); google.search.invoke()" />
         </view>
 
         <view width="505" height="140" bgcolor="silver" clip="true" layout="axis: y" >

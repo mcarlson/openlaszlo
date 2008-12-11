@@ -12,14 +12,14 @@
     <button text="Print total person nodes">
         <handler name="onclick">
             dp.setAttribute("xpath","ds:/addressbook/contacts");
-            Debug.write("total child nodes "+dp.getNodeCount() );
+            Debug.debug("total child nodes %w", dp.getNodeCount() );
         </handler>
     </button>
     <button text="Add 'fflinestone@cartoon.com' item">
         <handler name="onclick">
             dp.setAttribute("xpath","ds:/addressbook/contacts");
             var newnode = dp.addNode('person', 'Fred Flinestone', {'email':'fflinestone@cartoon.com'})
-            Debug.write("newnode="+newnode);
+            Debug.debug("newnode= = %w", newnode);
 
         </handler>
     </button>

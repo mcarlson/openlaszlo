@@ -1,7 +1,5 @@
 
 <canvas debug="true" width="100%">
- 
-    <debug x="100" y="10" height="275" />
 
     <!-- The security describes what classes are accessible or are allowed to be
          instantiated in the server. See the security section in this chapter
@@ -19,14 +17,14 @@
              createargs="[1, 'a string', 1.45]">
 
         <handler name="onerror" args="err">
-            Debug.write("----------");
-            Debug.write("onerror:", err)
+            Debug.debug("----------");
+            Debug.debug("onerror: %w", err)
         </handler>
 
         <handler name="onload">
-            Debug.write("----------");
-            Debug.write("constructed with", this.createargs);
-            Debug.write(this.proxy);
+            Debug.debug("----------");
+            Debug.debug("constructed with %w", this.createargs);
+            Debug.debug("%w", this.proxy);
         </handler>
 
     </javarpc>
@@ -46,10 +44,10 @@
 
         <remotecall funcname="getInfo" remotecontext="$once{canvas.ce}">
             <handler name="ondata" args="res">
-                Debug.write("----------");
-                Debug.write("method:", this.name)
-                Debug.write("return type:", typeof(res))
-                Debug.write("return value:", res);
+                Debug.debug("----------");
+                Debug.debug("method: %w", this.name)
+                Debug.debug("return type: %w", typeof(res))
+                Debug.debug("return value: %w", res);
             </handler>
         </remotecall>
     </button>

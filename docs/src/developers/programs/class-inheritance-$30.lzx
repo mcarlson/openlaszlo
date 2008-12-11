@@ -1,35 +1,29 @@
-
 <canvas debug="true" height="180" width="100%">
   <debug height="160"/>
-
   <class name="container">
     <!-- Don't forget to call super.construct(parent,args)!! -->
     <method name="construct" args="parent,args">
-      Debug.write("container construct", parent, args);
+      Debug.debug("container construct %w %w", parent, args);
       super.construct(parent, args);
     </method>
-
     <!-- The onconstruct event -->
     <handler name="onconstruct" args="v">
-      Debug.write("container onconstruct", v);
+      Debug.debug("container onconstruct %w", v);
     </handler>
-
     <method name="init">
-      Debug.write("container init");
+      Debug.debug("container init");
     </method>
-
     <handler name="oninit">
-      Debug.write("container oninit");
+      Debug.debug("container oninit");
     </handler>
   </class>
-
   <container>
-    <view name="outside" oninit="Debug.write('outside oninit')">
-      <view name="inside" oninit="Debug.write('inside oninit')"/>
+    <view name="outside" oninit="Debug.debug('outside oninit')">
+      <view name="inside" oninit="Debug.debug('inside oninit')"/>
     </view>        
   </container>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

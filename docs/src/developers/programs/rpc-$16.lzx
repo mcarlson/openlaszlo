@@ -1,8 +1,6 @@
 
 <canvas debug="true" width="100%">
 
-    <debug x="220" width="470" height="285" />
-
     <dataset name="myDataset" />
 
     <soap name="geography" 
@@ -11,14 +9,14 @@
         <attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" />
 
         <method name="handler" args="ret">
-            Debug.write('ret:', ret);
+            Debug.debug('ret: %w', ret);
             if (ret.status == 'ok') {
-                Debug.write('myDataset childNodes:', myDataset.childNodes);
+                Debug.debug('myDataset childNodes: %w', myDataset.childNodes);
             }
         </method>
 
         <handler name="onload">
-            Debug.write('geography soap service stub loaded');
+            Debug.debug('geography soap service stub loaded');
 
             // Here we set data
             this.myDel.dataobject = myDataset;

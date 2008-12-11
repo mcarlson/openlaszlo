@@ -1,24 +1,19 @@
-
-<canvas debug="true" height="125" width="100%">
-  <debug x="80" y="5" width="170" height="112"/>
-
+<canvas height="125" width="100%"> 
   <class name="top">
     <attribute name="myfoo" value="bar" type="string"/>
-  </class>
-  
+  </class> 
   <class name="middle" extends="top">
     <method name="doit">
-      Debug.write("myfoo is " + this.myfoo);
+      message.addText("\nmyfoo is " + this.myfoo);
     </method>
   </class>
-  
   <class name="bottom" extends="middle">
     <button text="clickme" onclick="parent.doit()"/>
   </class>
-  
+  <text id="message" y="30" multiline="true" />
   <bottom/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,29 +1,23 @@
-
-<canvas debug="true" height="160" width="100%">
-  <debug x="155" y="10"/>
-    
-  <!-- class deep -->
+<canvas height="200" width="100%">
   <class name="deep">
-    <attribute name="mytext" value="hello, world" type="string"/>
-    
-    <view bgcolor="red" width="150" height="150">
+    <attribute name="mytext" value="hello, world" type="string"/>   
+    <view bgcolor="red" width="250" height="150">
       <view bgcolor="green" width="75%" height="75%">
         <button text="clickme" width="75%" height="75%">
           <!-- classroot is a convenient way to access mytext -->
           <handler name="onclick">
-            Debug.write("classroot.mytext: " + classroot.mytext);
-            Debug.write("parent.parent.parent.mytext: " + 
-                        parent.parent.parent.mytext);
+            message.addText("\nclassroot.mytext: " + classroot.mytext);
+            message.addText("\nparent.parent.parent.mytext: " + 
+            parent.parent.parent.mytext);
           </handler>
-        </button>
-      </view>
+        </button>       
+      </view>     
     </view>
+    <text id="message" y="140" multiline="true" />
   </class>
-  
-  <!-- instance of class deep -->
   <deep/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

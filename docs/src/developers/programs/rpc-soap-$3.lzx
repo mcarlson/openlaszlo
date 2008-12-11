@@ -1,23 +1,21 @@
 
-<canvas debug="true" height="170" width="100%">
-
-    <debug x="10" y="10" width="415" height="150" />
-
+<canvas debug="true" height="200" width="100%">
+<debug height="150" y="10" />
     <soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl">
 
         <handler name="onload">
-            Debug.write('Amazon soap service loaded');
-            Debug.write('proxy is:', this.proxy);
+            Debug.debug('Amazon soap service loaded');
+            Debug.debug('proxy is: %w', this.proxy);
             this.unload();
         </handler>
 
         <handler name="onunload">
-            Debug.write('Amazon soap service unloaded');
-            Debug.write('proxy is:', this.proxy)
+            Debug.debug('Amazon soap service unloaded');
+            Debug.debug('proxy is: %w', this.proxy)
         </handler>
 
         <handler name="onerror" args="error">
-            Debug.write('error:', error);
+            Debug.error(error);
         </handler>
 
     </soap>

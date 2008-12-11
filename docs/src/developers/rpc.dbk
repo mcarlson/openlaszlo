@@ -234,30 +234,30 @@ be used for demonstration.</para>
 &lt;!-- SOAP --&gt;
 &lt;soap name="mySOAP" wsdl="..."&gt;
     &lt;handler name="onload"&gt;
-        Debug.write('soap proxy loaded:', this.proxy);
+        Debug.debug("soap proxy loaded: %w", this.proxy);
     &lt;/handler&gt;
     &lt;handler name="onunload"&gt;
-        Debug.write('soap proxy unloaded:', this.proxy);
+        Debug.debug("soap proxy unloaded: %w", this.proxy);
     &lt;/handler&gt;
 &lt;/soap&gt;
 
 &lt;!-- JavaRPC --&gt;
 &lt;javarpc name="myJavaRPC" classname="..." scope="..."&gt;
     &lt;handler name="onload"&gt;
-        Debug.write('javarpc proxy loaded:', this.proxy);
+        Debug.debug("javarpc proxy loaded: %w", this.proxy);
     &lt;/handler&gt;
     &lt;handler name="onunload"&gt;
-        Debug.write('javarpc proxy unloaded:', this.proxy);
+        Debug.debug("javarpc proxy unloaded: %w", this.proxy);
     &lt;/handler&gt;
 &lt;/javarpc&gt;
 
 &lt;!-- XML-RPC --&gt;
 &lt;xmlrpc name="myXMLRPC" service="..."&gt;
     &lt;handler name="onload"&gt;
-        Debug.write('xmlrpc proxy loaded:', this.proxy);
+        Debug.debug('xmlrpc proxy loaded: %w", this.proxy);
     &lt;/handler&gt;
     &lt;handler name="onunload"&gt;
-        Debug.write('xmlrpc proxy unloaded:', this.proxy);
+        Debug.debug("xmlrpc proxy unloaded: %w", this.proxy);
     &lt;/handler&gt;
 &lt;/xmlrpc&gt;
 </programlisting></informalexample>
@@ -280,11 +280,11 @@ function call will return from the backend. When the response is received, the d
 &lt;!-- Assume mySOAP.proxy contains a function stub called someFunction() --&gt;
 &lt;soap name="mySOAP" wsdl="..."&gt;
     &lt;handler name="onload"&gt;
-        Debug.write('soap proxy loaded:');
+        Debug.debug('soap proxy loaded:');
         Debug.inspect(this.proxy);
     &lt;/handler&gt;
     &lt;handler name="onunload"&gt;
-        Debug.write('soap proxy unloaded:', this.proxy);
+        Debug.debug("soap proxy unloaded: %w", this.proxy);
     &lt;/handler&gt;
 &lt;/soap&gt;
 
@@ -297,7 +297,7 @@ function call will return from the backend. When the response is received, the d
     &lt;/handler&gt;
 
     &lt;method name="handler" args="retObj"&gt;
-        Debug.write('RPC call returned', retObj);
+        Debug.debug("RPC call returned %w", retObj);
     &lt;/method&gt;
 
 &lt;/button&gt;

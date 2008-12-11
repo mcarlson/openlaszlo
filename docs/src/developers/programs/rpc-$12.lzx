@@ -1,14 +1,12 @@
 
 <canvas debug="true" width="100%">
 
-    <debug x="150" y="15" width="400" height="360" />
-
     <simplelayout spacing="5" />
 
     <method name="v2e" args="v">
-        Debug.write('Got', v);
+        Debug.debug('Got %w', v);
         var de = LzDataElement.valueToElement(v);
-        Debug.write(de.serialize());
+        Debug.debug("%w", de.serialize());
     </method>
 
     <button text="number">

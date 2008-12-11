@@ -1,8 +1,10 @@
-<canvas debug="true" height="150" width="100%">
-  <debug y="10" />
+<canvas debug="true" height="250" width="100%">
+  <debug y="10" height="200"/>
   <handler name="oninit">
-    Debug.write('subviews: ' + canvas.subviews);  <?lzx-co N10239?>
-    Debug.write('subviews:',   canvas.subviews);  <?lzx-co N10243?> 
+    Debug.write('subviews: ' + canvas.subviews);
+    Debug.write('subviews:',   canvas.subviews);
+    Debug.debug('subviews: %#w',   canvas.subviews);
+    Debug.debug('subviews: %w',   canvas.subviews);
   </handler>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

@@ -1,8 +1,6 @@
 
 <canvas debug="true" height="300" width="100%">
 
-    <debug width="470" height="285" />
-
     <soap name="geography" 
           wsdl="http://arcweb.esri.com/services/v2/PlaceFinderSample.wsdl">
 
@@ -10,17 +8,17 @@
 
         <method name="handler" args="retval">
             if (retval.status == 'error') {
-                Debug.write('error:', retval.message);
+                Debug.debug('error: %w', retval.message);
                 return;
             }
 
-            Debug.write('Got', retval.data);
+            Debug.debug('Got %w', retval.data);
             var el = LzDataElement.valueToElement(retval.data);
-            Debug.write(el.serialize());
+            Debug.debug("%w", el.serialize());
         </method>
 
         <handler name="onload">
-            Debug.write('geography soap service stub loaded');
+            Debug.debug('geography soap service stub loaded');
             this.proxy.getTypes([], this.myDel);
         </handler>
 
@@ -28,6 +26,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

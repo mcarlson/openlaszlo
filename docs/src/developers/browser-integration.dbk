@@ -387,7 +387,7 @@
         &lt;attribute name="reset"/&gt;
         &lt;handler name="onreset"&gt;
           redview.unfade.dostart()
-          Debug.write('Reset Button clicked')
+          Debug.debug('Reset Button clicked')
         &lt;/handler&gt;
         &lt;debug y="100"/&gt;
            &lt;view name="redview" bgcolor="red" height="30" width="150" clip="true"&gt;
@@ -662,7 +662,7 @@
             <example role="live-example">
                 <title>Accessing parameters</title>
                 <programlisting>&lt;canvas debug="true"
-        oninit="Debug.write(globalVar)"/&gt;</programlisting>
+        oninit="Debug.debug("%w", globalVar)"/&gt;</programlisting>
             </example>
             <para>In many cases you will have full control of the HTML
       content that is embedding your application. In many other
@@ -768,13 +768,6 @@
         <example role="live-example">
             <title>Selecting the Correct Canvas</title>
             <programlisting>
-            <!-- remove para tags for valid DocBook LI, LPP-4594 9/3/2007    -->
-        <!-- para is not a legal child of programlisting -->
-      <!-- <para role="fixme"> -->
-                <remark role="fixme">
-                    <emphasis role="para-label">FIXME:</emphasis> this is
-        broken</remark>
-      <!-- </para> -->
       &lt;script type="text/javascript"&gt; var screenW =
       screen.width; var screenH =0; switch (true) { case (screenW
       &gt;= 1280): screenW = 1280; screenH = 1024; break; case
@@ -883,12 +876,12 @@
       recordState(blob.title); &lt;/method&gt; &lt;handler
       name="oninit"&gt; unselectAll(); recordState("START");
       selectBlob(s1); &lt;/handler&gt; &lt;handler
-      name="onmystate"&gt; Debug.write("got onmystate event: ",
+      name="onmystate"&gt; Debug.debug("got onmystate event: ",
       this.mystate); gotoState(this.mystate); &lt;/handler&gt;
       &lt;method name="recordState" args="newstate"&gt;
       this.mystate = newstate; 
       <emphasis role="em">lz.History.save(this,'mystate',
-      this.mystate);</emphasis> Debug.write("recordState", newstate)
+      this.mystate);</emphasis> Debug.debug("recordState %w", newstate)
       &lt;/method&gt; &lt;method name="gotoState" args="ns"&gt;
       unselectAll(); if (ns == "START") { s1.select(true); } else
       if (ns == "STATE_2") { s2.select(true); } else if (ns ==

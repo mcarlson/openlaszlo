@@ -18,7 +18,7 @@ Be sure also to see <xref linkend="debugging"/>,  which includes explanations of
 <para>
 Simple timing measurements can be made using <literal>(new
 Date).getTime()</literal>, which will return a millisecond time.  You
-can use <literal>Debug.write</literal> or <literal>Debug.log</literal> to output
+can use <literal>Debug.debug</literal> or <literal>Debug.log</literal> to output
 timing data.  Here is a simple framework illustrating how you can use
 this to measure the cost of certain operations.  A more complete
 framework is available by including <literal>utils/performance</literal>.

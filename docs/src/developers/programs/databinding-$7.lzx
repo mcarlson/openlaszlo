@@ -1,5 +1,5 @@
 
-<canvas width="100%" height="200" >
+<canvas width="100%" height="300" >
   <debug fontsize="12"/>
   <include href="lztest/xmlequals.lzx"/>
 
@@ -13,16 +13,15 @@
     <text datapath="this.ds:/record/text()"/>
   </class>
   <myclass/>
+  
   <myclass/>
-
-
     <dataset name="gdata" src="resources/testdata.xml"/>
 
   <simplelayout spacing="2"/>
 
   <view name="nodatanoname" layout="axis: y" bgcolor="#cccccc">
     <handler name="onclick">
-        Debug.write(this.localdata);
+        Debug.debug("%w", this.localdata);
     </handler>
     <dataset/>
     <text>empty local dataset with no name</text>
@@ -30,7 +29,7 @@
 
   <view name="nodata" layout="axis: y" bgcolor="#cccccc">
     <handler name="onclick">
-        Debug.write(this.lds);
+        Debug.debug("%w", this.lds);
     </handler>
     <dataset name="lds"/>
     <text>empty local dataset</text>
@@ -38,7 +37,7 @@
 
   <view name="somedata" layout="axis: y" bgcolor="#cccccc">
     <handler name="onclick">
-        Debug.write(this.lds);
+        Debug.debug("%w", this.lds);
     </handler>
     <dataset name="lds">
         <foo>bar</foo>
@@ -46,7 +45,7 @@
     <text>local dataset</text>
     <handler reference="lds" name="oninit">
       <![CDATA[
-      Debug.write("somedata test data loaded", this);
+      Debug.debug("somedata test data loaded %w", this);
       if (this.lds.serialize() != '<lds><foo>bar</foo></lds>') {
       Debug.error("somedata serialized data does not match expected value");
       }
@@ -56,13 +55,13 @@
 
   <view name="filedata" layout="axis: y" bgcolor="#cccccc">
     <handler name="onclick">
-        Debug.write(this.lds);
+        Debug.debug("%w", this.lds);
     </handler>
     <dataset name="lds" src="resources/testdata.xml"/>
     <text>local dataset compiled in from external file</text>
     <handler reference="lds" name="oninit">
       <![CDATA[
-      Debug.write("filedata test data loaded", this);
+      Debug.debug("filedata test data loaded %w", this);
       if (! xmlstringequals(this.lds.serialize(), '<lds><persons><person id="1"><firstName>Dan</firstName><lastName>McGowan</lastName><modifyDate>3/25/05</modifyDate><address code="ML" id="1"><line1>2210 North 184th Street</line1><line2/><city>Shoreline</city></address></person><person id="2"><firstName>Barry</firstName><lastName>Bonds</lastName><modifyDate>3/25/05</modifyDate></person><person id="3"><firstName>Jeff</firstName><lastName>Beck</lastName><modifyDate>3/25/05</modifyDate></person></persons></lds>')) {
       Debug.error("filedata serialized data does not match expected value");
       }
@@ -72,14 +71,14 @@
 
   <view name="remotedata" layout="axis: y" bgcolor="#cccccc">
     <handler name="onclick">
-        Debug.write(this.lds);
+        Debug.debug("%w", this.lds);
     </handler>
     <dataset name="lds" src="resources/testdata.xml" type="http" request="true"/>
     <text>local dataset loaded at runtime</text>
-    <text datapath="local:parent.lds:/persons/person/firstName/text()" onclick="Debug.write(this.datapath)"/>
+    <text datapath="local:parent.lds:/persons/person/firstName/text()" onclick="Debug.debug('%w', this.datapath)"/>
     <handler reference="lds" name="ondata">
       <![CDATA[
-      Debug.write("remotedata test data loaded", this);
+      Debug.debug("remotedata test data loaded %w", this);
       if (! xmlstringequals(this.lds.serialize(), '<lds><persons><person id="1"><firstName>Dan</firstName><lastName>McGowan</lastName><modifyDate>3/25/05</modifyDate><address id="1" code="ML"><line1>2210 North 184th Street</line1><line2/><city>Shoreline</city></address></person><person id="2"><firstName>Barry</firstName><lastName>Bonds</lastName><modifyDate>3/25/05</modifyDate></person><person id="3"><firstName>Jeff</firstName><lastName>Beck</lastName><modifyDate>3/25/05</modifyDate></person></persons></lds>')) {
       Debug.error("remotedata serialized data does not match expected value");
       }
@@ -89,12 +88,12 @@
 
   <view name="remotedatarelative" layout="axis: y" bgcolor="#cccccc" datapath="local:lds:/persons/" visible="true">
     <handler name="onclick">
-        Debug.write(this.lds);
+        Debug.debug("%w", this.lds);
         this.datapath.setXPath(this.datapath.xpath);
     </handler>
     <dataset name="lds" src="resources/testdata.xml" type="http" request="true"/>
     <text>local dataset loaded at runtime and relative datapath - datapath doesn't resolve because dataset doesn't exist yet.  click to reparse xpath</text>
-    <text datapath="person/firstName/text()" onclick="Debug.write(this.datapath)"/>
+    <text datapath="person/firstName/text()" onclick="Debug.debug('%w', this.datapath)"/>
   </view>
 
   <class name="localdatatest">

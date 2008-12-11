@@ -1,32 +1,27 @@
-
 <canvas debug="true" height="200" width="100%">
-  <debug height="175"/>
-  
+  <debug height="175"/> 
   <class name="foo">
     <method name="doit">
-      Debug.write("foo: this is [" + this + "]");
-      Debug.write("foo: classroot is [" + classroot + "]");
-      Debug.write("foo: classroot.classroot is [" + classroot.classroot + "]");
+      Debug.debug("foo: this is [%w]", this);
+      Debug.debug("foo: classroot is [%w]", classroot);
+      Debug.debug("foo: classroot.classroot is [%w]", classroot.classroot);
     </method>
   </class>
-  
   <!-- boo contains a foo -->
   <class name="boo">
     <foo name="myfoo"/>
   </class>
-  
   <!-- goo contains a boo -->
   <class name="goo">
     <boo name="myboo"/>
     <handler name="oninit">
       myboo.myfoo.doit();
-      Debug.write("-----");
-      Debug.write("goo: this is [" + this + "]");
-      // warning will be displayed -- there is no classroot
-      Debug.write("goo: classroot is [" + classroot + "]");
+      Debug.debug("%s", "-----");
+      Debug.debug("goo: this is [%w]", this);
+      // error will be displayed -- there is no classroot
+      Debug.debug("goo: classroot is [%w]", classroot);
     </handler>
   </class>
-  
   <!-- Make an instance of goo -->
   <goo name="mygoo"/>
 </canvas>

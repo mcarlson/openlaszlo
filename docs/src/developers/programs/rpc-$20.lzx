@@ -7,11 +7,11 @@
 
     <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
         <handler name="onload">
-            Debug.write('google soap service stub loaded');
+            Debug.debug('google soap service stub loaded');
         </handler>
 
         <handler name="onerror" args="error">
-            Debug.write('error:', error);
+            Debug.debug('error: %w', error);
         </handler>
 
         <remotecall name="search" funcname="doGoogleSearch" 
@@ -29,7 +29,7 @@
             <param value="''" />
 
             <handler name="ondata" args="value">
-                Debug.write('got result');
+                Debug.debug('got result');
                 Debug.inspect(value);
             </handler>
 

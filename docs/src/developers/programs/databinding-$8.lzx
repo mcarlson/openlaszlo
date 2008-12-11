@@ -1,32 +1,26 @@
-
 <canvas width="100%" height="600" debug="true">
-  <debug width="400" height="300" fontsize="12" x="400"/>
-
   <include href="rpc/ajax.lzx" />
-
   <script>
     <![CDATA[
     
     var req = null;
 
     function processReqChange() {
-        Debug.write("processReqChange: req.readyState", req.readyState);
+        Debug.debug("processReqChange: req.readyState %w", req.readyState);
         // only if req shows "loaded"
         if (req.readyState == 4) {
             // only if "OK"
             if (req.status == 200) {
-                Debug.write("req.status", req.status);
-                Debug.write("req.responseText:", req.responseText);
-                Debug.write("req.responseXML:", req.responseXML);
-                Debug.write("req.getAllResponseHeaders:", req.getAllResponseHeaders());
+                Debug.debug("req.status %w", req.status);
+                Debug.debug("req.responseText: %w", req.responseText);
+                Debug.debug("req.responseXML: %w", req.responseXML);
+                Debug.debug("req.getAllResponseHeaders: %w", req.getAllResponseHeaders());
             } else {
-                Debug.write("There was a problem retrieving the XML data:\n" +
+                Debug.error("There was a problem retrieving the XML data: %w",
                             req.statusText);
             }
         }
-    }
-
-    
+    } 
     function loadXMLDoc(url) {
         // branch for native XMLHttpRequest object
         req = new lz.XMLHttpRequest();
@@ -36,20 +30,15 @@
         req.setRequestHeader('X-Test', 'two');
         req.send(null);
     }
-    
-
-
     ]]>
   </script>
     <simplelayout spacing="4"/>
     <edittext id="in1">example.xml</edittext>
     <button onclick="loadXMLDoc(in1.getText())">Load Data</button>
-
     <button onclick="loadXMLDoc('badurl')">Test Error Handling, this should fail</button>
-
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

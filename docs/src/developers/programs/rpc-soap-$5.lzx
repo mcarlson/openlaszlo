@@ -1,8 +1,6 @@
 
 <canvas debug="true" width="100%">
 
-    <debug y="30" x="145" width="350" height="300" />
-
     <!-- This SOAP service uses document/literal messages for its
          operations. Each operation is passed a document as a parameter. -->
     <soap name="maths" 
@@ -16,7 +14,7 @@
                                '<A>' + av + '</A>' + 
                                '<B>' + bv + '</B>' + 
                    '</' + func + '>';
-            Debug.write(s);
+            Debug.debug("%w", s);
             return s;
         ]]>
         </method>
@@ -27,15 +25,15 @@
         </handler>
 
         <handler name="onerror" args="error">
-            Debug.write('error:', error);
+            Debug.error(error);
         </handler>
 
         <handler name="ontimeout" args="error">
-            Debug.write('timeout:', error);
+            Debug.debug('timeout: %w', error);
         </handler>
 
         <handler name="ondata" args="value">
-            Debug.write(value);
+            Debug.debug("%w", value);
             result.setAttribute("text", value);
         </handler>
 

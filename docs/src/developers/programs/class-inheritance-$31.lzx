@@ -1,28 +1,24 @@
-
 <canvas debug="true" height="180" width="100%">
-  <debug height="160"/>
-
+  <debug height="160"/>  
   <class name="container">
     <handler name="onconstruct" args="v">
-      Debug.write("container onconstruct", v);
-    </handler>
-
+      Debug.format("container onconstruct %w", v);
+    </handler>   
     <method name="createChildren" args="c">
-      Debug.write("container createChildren", c);
-      Debug.write("    c[0].name:", c[0].name);
-      Debug.write("    c[0].attrs:", c[0].attrs);
-      Debug.write("    c[0].children:", c[0].children);
+      Debug.debug("container createChildren", c);
+      Debug.debug("    c[0].name: %w", c[0].name);
+      Debug.debug("    c[0].attrs: %w", c[0].attrs);
+      Debug.debug("    c[0].children: %w", c[0].children);
       super.createChildren(c);
     </method>
   </class>
-
   <container>
-   <view name="outside">
-     <view name="inside"/>
-   </view>
+    <view name="outside">
+      <view name="inside"/>
+    </view>
   </container>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

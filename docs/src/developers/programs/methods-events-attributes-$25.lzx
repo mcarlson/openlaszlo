@@ -5,7 +5,7 @@
     <attribute name="ontime" value="null"/> 
 
     <handler name="onclick"> 
-      Debug.write('inited:' + this.isinited); 
+      Debug.debug('inited: %w', this.isinited); 
       var now = (new Date()).getTime();
       this.setAttribute("time", now); 
     </handler> 

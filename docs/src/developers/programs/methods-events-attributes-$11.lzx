@@ -2,7 +2,7 @@
   <class name="base" extends="button">
     <handler name="onclick" method="handleonclick"/>
     <method name="handleonclick" args="v">
-      Debug.write("base click");
+      Debug.debug("base click");
     </method>
   </class>
   <simplelayout/>

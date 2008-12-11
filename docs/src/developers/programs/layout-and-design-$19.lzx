@@ -6,7 +6,7 @@
       <method name="addSubview" args="sv">
             if ( sv.getOption( 'goesInLayout1' ) ){
                 super.addSubview( sv );
-                Debug.write('adding ',sv,sv.name,'to layout1');
+                Debug.debug("adding %w, %w to layout2", sv, sv.name);
             }          
         </method>
     </simplelayout>
@@ -14,7 +14,7 @@
         <method name="addSubview" args="sv">
             if ( sv.getOption( 'goesInLayout2' ) ){
                 super.addSubview( sv );
-                Debug.write('adding ',sv, sv.name,'to layout2');
+                Debug.debug("adding %w %w to layout2", sv, sv.name);
             }
         </method>
     </simplelayout>

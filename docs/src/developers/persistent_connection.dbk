@@ -259,26 +259,26 @@ the logout XML return.</para>
   &lt;datapointer xpath="connection:loginDset:/login[1]/authentication[1]/response[1]/status[1]"&gt;
     &lt;handler name="ondata"&gt;
       var statusMessage = this.xpathQuery('@msg');
-      Debug.write('login: ' + statusMessage);
+      Debug.debug('login: %w', statusMessage);
     &lt;/handler&gt;
     &lt;handler name="onerror"&gt;
-      Debug.write('login resulted in error');
+      Debug.debug('login resulted in error');
     &lt;/handler&gt;
     &lt;handler name="ontimeout"&gt;
-      Debug.write('login timed out');
+      Debug.debug('login timed out');
     &lt;/handler&gt;
   &lt;/datapointer&gt;
 
   &lt;datapointer xpath="connection:logoutDset:/logout[1]/authentication[1]/response[1]/status[1]"&gt;
     &lt;handler name="ondata"&gt;
       var statusMessage = this.xpathQuery('@msg');
-      Debug.write('logout: ' + statusMessage);
+      Debug.debug('logout: %w', statusMessage);
     &lt;/handler&gt;
     &lt;handler name="onerror"&gt;
-      Debug.write('logout resulted in error');
+      Debug.debug('logout resulted in error');
     &lt;/handler&gt;
     &lt;handler name="ontimeout"&gt;
-      Debug.write('logout timed out');
+      Debug.debug('logout timed out');
     &lt;/handler&gt;
   &lt;/datapointer&gt;
 

@@ -15,15 +15,15 @@
              createargs="[1, 'a string', 1.45]">
 
         <handler name="onerror" args="err">
-            Debug.write("onerror:", err)
+            Debug.debug("onerror: %w", err)
         </handler>
 
         <handler name="onload">
-            Debug.write("loaded proxy:", this.proxy);
+            Debug.debug("loaded proxy: %w", this.proxy);
         </handler>
 
         <handler name="onunload">
-            Debug.write("unloaded proxy:", this.proxy);
+            Debug.debug("unloaded proxy: %w", this.proxy);
         </handler>
 
     </javarpc>
@@ -34,10 +34,10 @@
 
     <button text="unload" onclick="canvas.ce.unload()" />
 
-    <button text="proxy" onclick="Debug.write('proxy is', canvas.ce.proxy)" />
+    <button text="proxy" onclick="Debug.debug('proxy is %w', canvas.ce.proxy)" />
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

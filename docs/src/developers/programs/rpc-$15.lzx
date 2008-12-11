@@ -1,17 +1,15 @@
 
 <canvas debug="true" height="150" width="100%">
 
-    <debug x="80" y="10" width="400" height="120" />
-
     <dataset name="myDataset" />
 
     <simplelayout spacing="5" />
 
     <method name="v2e" args="v">
-        Debug.write('setting', v, 'to mydataset');
+        Debug.debug('setting %w to mydataset', v);
         var de = LzDataElement.valueToElement(v);
         myDataset.setAttribute("childNodes", de.childNodes )
-        Debug.write(myDataset.serialize());
+        Debug.debug("%w", myDataset.serialize());
     </method>
 
     <view datapath="myDataset:/" x="10" layout="inset: 10; spacing: 2">

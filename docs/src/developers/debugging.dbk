@@ -15,7 +15,7 @@
       <listitem>
         <para>The top portion of the debug window displays a scrolling list of debug messages. These
           include warning messages that the OpenLaszlo Runtime Library displays, as well as the
-          arguments to calls to <literal>Debug.write()</literal>.</para>
+          arguments to calls to <literal>Debug.debug()</literal>.</para>
       </listitem>
       <listitem>
         <para>The command-line portion of the debug window can be used to evaluate JavaScript
@@ -198,6 +198,7 @@
         <primary>variadic</primary>
       </indexterm><glossterm>variadic</glossterm>: they take any number of arguments. The text
       representations of the arguments are printed to the debugger log, separated by spaces.</para>
+    
 
     <example role="live-example">
       <title>Logging to the debugger</title>
@@ -205,7 +206,14 @@
    <textobject><textdata fileref="programs/debugging-$4.lzx"/></textobject> 
    </programlisting>
     </example>
-
+    <para><literal>Debug.write()</literal> is the simplest way to log to the debugger, but it's often 
+      a better strategy to use <literal>Debug.format()</literal> or one of its variants 
+      (<literal>Debug.debug()</literal>, <literal>Debug.info()</literal>, <literal>Debug.warn()</literal>, 
+      and <literal>Debug.error()</literal>. These methods give you more control over the format of
+      the output. See the reference pages for <ulink url="../reference/lz.DebugService+debug.html">Debug</ulink> and
+      <ulink url="../reference/lz.Formatter.html">lz.Formatter</ulink> for a complete description
+      and examples. In addition, you can control which messages are logged to the debugger using 
+      <link linkend="debugmessagelevel">Debug.messageLevel</link>.</para>
     <para>Some object are <glossterm baseform="inspect">inspectable</glossterm>. See <xref
         linkend="debugging.inspecting"/> for more about the inspect feature of the debugger. See
         <xref linkend="debugging.debug-tostring"/> to see how to customize the display of objects
@@ -253,7 +261,7 @@
         <literal>lz.Browser.LoadURL('http://www.laszlosystems.com/', '_blank')</literal>. (The last
       expression returns the value <literal>undefined</literal>, so the debugger does not print the
       expression value in the debugger log.) An example of a non-expression statements is
-        <literal>for (int i = 0; i &lt; 10; i++) Debug.write(i)</literal>. This is evaluated for
+        <literal>for (int i = 0; i &lt; 10; i++) Debug.debug("%d", i)</literal>. This is evaluated for
       effect, and the statement itself does not result in a value, although each execution of the
       loop prints the value of <varname>i</varname> to the debugger log.</para>
 
@@ -368,7 +376,7 @@ Function#2| foo
   <section id="debugging.inspecting">
     <title>Inspecting Objects</title>
     <!-- clarified explanation of abbreviated inspectable representation per LPP-4211, IORIO 18 oct 2007  -->
-    <para>Evaluating <literal>Debug.write(<varname>object</varname>)</literal>, where <literal>
+    <para>Evaluating <literal>Debug.debug(<varname>object</varname>)</literal>, where <literal>
         <varname>object</varname>
       </literal> is an expression that evaluates to a JavaScript object, displays an <indexterm
         significance="preferred">
@@ -413,21 +421,17 @@ Function#2| foo
         </primary>
       </indexterm><methodname>Debug.inspect()</methodname> function also displays the object and its
       properties. Evaluating <literal>Debug.inspect(<varname>object</varname>)</literal> is
-      equivalent to evaluating <literal>Debug.write(<varname>object</varname>)</literal> and then
+      equivalent to evaluating <literal>Debug.debug(<varname>object</varname>)</literal> and then
       clicking on the object's representation.</para>
 
     <note>
-      <para><indexterm>
-          <primary>
-            <literal>Debug.write()</literal>
-          </primary>
-        </indexterm><methodname>Debug.write()</methodname> behaves differently depending on whether
-        its argument is a string or a non-string object. Note the difference between the two calls
-        to <indexterm>
-          <primary>
-            <literal>Debug.write()</literal>
-          </primary>
-        </indexterm><methodname>Debug.write()</methodname> in the example below.</para>
+      <para>
+        <literal>Debug.write()</literal> behaves differently depending on whether its argument is a
+        string or a non-string object. Note the difference between the two calls to
+        <literal>Debug.write()</literal> in the example below.</para>
+      <para>Because it's easy to confuse these two calling styles, it's almost always better to use
+        <literal>Debug.format()</literal> or one of its variants, like
+        <literal>Debug.debug()</literal>.</para>
     </note>
 
     <example role="live-example">
@@ -437,16 +441,6 @@ Function#2| foo
    </programlisting>
     </example>
 
-    <calloutlist>
-      <callout arearefs="N10239">
-        <para>The (only) argument to <literal>Debug.write()</literal> is a string, so the value of
-            <literal>canvas.subviews</literal> is not inspectable.</para>
-      </callout>
-      <callout arearefs="N10243">
-        <para>The second argument to <literal>Debug.write()</literal> is an non-string Object, so it
-          is inspectable.</para>
-      </callout>
-    </calloutlist>
 
   </section>
   <section id="generate-bug-report">
@@ -627,7 +621,7 @@ if ($debug) {
           <literal>object instanceof object.[[prototype]].constructor</literal> is not true.)</para>
 
     </section>
-    <section>
+    <section id="debugmessagelevel">
       <title>Debug message level</title>
       <para>Debug messages are enabled/disabled by the setting of
         <literal>Debug.messageLevel</literal>. The valid levels are one of the keys of

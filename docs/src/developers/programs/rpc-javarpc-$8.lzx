@@ -1,7 +1,5 @@
 
 <canvas debug="true" height="300" width="100%">
- 
-    <debug x="250" y="10" width="500" height="275" />
 
     <security>
         <allow>
@@ -18,11 +16,11 @@
         </handler>
 
         <handler name="ondata" args="res">
-            Debug.write('(types ondata) response is:', res);
+            Debug.debug('(types ondata) response is: %w', res);
         </handler>
 
         <handler name="onerror" args="errmsg">
-            Debug.write('(types onerror) error:', errmsg);
+            Debug.debug('(types onerror) error: %w', errmsg);
         </handler>
 
         <!-- Declaratively pass an integer. -->

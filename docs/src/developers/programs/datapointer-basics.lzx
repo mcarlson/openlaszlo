@@ -10,7 +10,7 @@
             <handler name="onclick">
                 dp.setAttribute("xpath","ds:/addressbook/contacts/person[1]");
                 //dp.setXPath("ds:/addressbook/contacts/person[1]");
-                Debug.write(dp.getNodeAttribute('firstname'));
+                Debug.debug("%w", dp.getNodeAttribute('firstname'));
             </handler>
 
         </button>
@@ -18,14 +18,14 @@
         <button text="Show the full name of the owner of the address book.">
             <handler name="onclick">
                  dp.setAttribute("xpath","ds:/addressbook/metainformation/addressbookowner[1]/");
-                 Debug.write(dp.getNodeAttribute('firstname'),dp.getNodeAttribute('lastname'));
+                 Debug.debug("%w %w", dp.getNodeAttribute('firstname'), dp.getNodeAttribute('lastname'));
             </handler>
             
         </button>
         <button text="Show total of &amp;lt;person/&amp;gt; nodes?">
             <handler name="onclick">
                  dp.setAttribute("xpath","ds:/addressbook/contacts");
-                 Debug.write(dp.getNodeCount());
+                 Debug.debug("%w", dp.getNodeCount());
             </handler>
             
         </button>
@@ -33,16 +33,16 @@
         <button text="Show the value of the lastname of the 2nd node">
             <handler name="onclick">
                 dp.setAttribute("xpath","ds:/addressbook/contacts/person[2]");
-                Debug.write(dp.getNodeAttribute('firstname'));
+                Debug.debug("%w", dp.getNodeAttribute('firstname'));
             </handler>
             
         </button>
         <button text="Capitalize the firstname of the 2nd node">
             <handler name="onclick">
                 dp.setAttribute("xpath","ds:/addressbook/contacts/person[2]");
-                Debug.write("BEFORE ",dp.getNodeAttribute('firstname'));
+                Debug.debug("BEFORE %w", dp.getNodeAttribute('firstname'));
                 dp.setNodeAttribute('firstname',dp.getNodeAttribute('firstname').toUpperCase()) ;
-                Debug.write("AFTER ",dp.getNodeAttribute('firstname'));
+                Debug.debug("AFTER %w", dp.getNodeAttribute('firstname'));
             </handler>
             
         </button>

@@ -13,12 +13,12 @@
   </dataset>
   
   <script>
-    Debug.write(mydset);
-    Debug.write(canvas.datasets['mydset']);
-    Debug.write(week)
+    Debug.debug("%w", mydset);
+    Debug.debug("%w", canvas.datasets['mydset']);
+    Debug.debug("%w", week)
   </script>
   </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

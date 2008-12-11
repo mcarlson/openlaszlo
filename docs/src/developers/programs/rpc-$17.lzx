@@ -1,7 +1,5 @@
 
-<canvas debug="true" height="500" width="100%">
-
-    <debug x="220" width="470" height="285" />
+<canvas debug="true" height="300" width="100%">
 
     <dataset name="myDataset">
         <region name="Region-A" />
@@ -15,14 +13,14 @@
         <attribute name="myDel" value="$once{new LzDelegate(this, 'handler')}" />
 
         <method name="handler" args="ret">
-            Debug.write('ret:', ret);
+            Debug.debug('ret: %w', ret);
             if (ret.status == 'ok') {
-                Debug.write('myDataset childNodes:', myDataset.childNodes);
+                Debug.debug('myDataset childNodes: %w', myDataset.childNodes);
             }
         </method>
 
         <handler name="onload">
-            Debug.write('placefinder soap service stub loaded');
+            Debug.debug('placefinder soap service stub loaded');
             myView.setAttribute('visible', true);
             this.proxy.getTypes([], this.myDel);
         </handler>
@@ -49,7 +47,7 @@
                 } else if (text == "Region-B") {
                     this.regions.setAttribute("datapath", "element/i[7-12]");
                 } else {
-                    this.regions.setsetAttribute("datapath", "element/i[12-]");
+                    this.regions.setAttribute("datapath", "element/i[12-]");
                 }
                 var myDel = new LzDelegate(this, "gotData");
                 myDel.dataobject = this.datapath.p;

@@ -4,23 +4,21 @@
     <!-- this isues one call of the freshmeat XML-RPC API -->
     <!-- Documented here: http://freshmeat.net/faq/view/49/ -->
 
-    <debug x="10" y="40" width="450" height="350" />
-
     <xmlrpc name="freshmeat"
             service="http://freshmeat.net/xmlrpc/">
 
         <handler name="onload">
-            Debug.write('freshmeat XML-RPC service loaded');
-            Debug.write('proxy:');
+            Debug.debug('freshmeat XML-RPC service loaded');
+            Debug.debug('proxy:');
             Debug.inspect(this.proxy);
         </handler>
 
         <handler name="ondata" args="data">
-            Debug.write('got data:', data);
+            Debug.debug('got data: %w', data);
         </handler>
 
         <handler name="onerror" args="error">
-            Debug.write('onerror:', error);
+            Debug.debug('onerror: %w', error);
         </handler>
 
         <remotecall name="fal" funcname="fetch_available_licenses" />
@@ -29,7 +27,7 @@
 
     <button text="fetch_available_licenses" x="10" y="10">
         <handler name="onclick">
-            Debug.write('getting licenses...');
+            Debug.debug('getting licenses...');
             freshmeat.fal.invoke()
         </handler>
     </button>

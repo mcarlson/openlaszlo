@@ -499,7 +499,7 @@ In script, block comments are of the form</para>
 
 <para>The OpenLaszlo system includes an interactive debugger that can be compiled into any application. The debugger displays run time errors, and can be used interactively to inspect and set any tag attributes or JavaScript fields.</para>
 
-<para>You can also use the JavaScript <indexterm><primary><literal>Debug.write()</literal></primary></indexterm><methodname>Debug.write()</methodname> method
+<para>You can also use the JavaScript <indexterm><primary><literal>Debug.debug()</literal></primary></indexterm><methodname>Debug.debug()</methodname> method
 to cause messages to be displayed in the debugger pane. For
 example,</para>
 

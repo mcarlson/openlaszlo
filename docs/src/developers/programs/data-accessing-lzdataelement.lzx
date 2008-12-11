@@ -21,20 +21,20 @@
             <handler name="onclick">
                 var dp = new lz.datapointer();
                 dp.setAttribute("xpath","ds:/addressbook/contacts");
-                Debug.write(dp.p);
+                Debug.debug("%w", dp.p);
             </handler>
         </button>
 
         <button>Get lz.DataElement via datapath
             <handler name="onclick">
-                Debug.write(mylist.datapath.p);
+                Debug.debug("%w", mylist.datapath.p);
             </handler>
         </button>
 
         <button>Create a new lz.DataElement in JavaScript
             <handler name="onclick">
                 var newNode = new lz.DataElement('contacts', null, null);
-                Debug.write(newNode);
+                Debug.debug("%w", newNode);
             </handler>
         </button>
 

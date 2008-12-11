@@ -342,8 +342,8 @@ values. Components can declare events by adding a prefix of "on" with a type of
 <para>It only sends the event if the user of the component defines it like:</para>
 
 <example role="live-example"><title>Defining events in the slider</title><programlisting>
-&lt;slider onminvalue="Debug.write('minvalue:', this.minvalue)"
-        onmaxvalue="Debug.write('maxvalue:', this.maxvalue)"/&gt;
+&lt;slider onminvalue="Debug.debug('minvalue: %w', this.minvalue)"
+        onmaxvalue="Debug.debug('maxvalue: %w', this.maxvalue)"/&gt;
 </programlisting></example>
 
 <para/></section><section><title><indexterm><primary><literal>init()</literal></primary></indexterm><methodname>init()</methodname> vs. <indexterm><primary>oninit event</primary></indexterm><literal>oninit</literal></title>

@@ -1,7 +1,5 @@
 
 <canvas debug="true" height="450" width="100%">
- 
-    <debug x="10" y="130" width="740" height="275" />
 
     <security>
         <allow>
@@ -17,10 +15,10 @@
             canvas.buttons.setAttribute('visible', true);
         </handler>
         <handler name="ondata" args="res">
-            Debug.write('(return type ondata) value:', res, ', type:', typeof(res));
+            Debug.debug('(return type ondata) value: %w, type: %w', res, typeof(res));
         </handler>
         <handler name="onerror" args="errmsg">
-            Debug.write('(return type onerror) error:', errmsg);
+            Debug.debug('(return type onerror) error: %w', errmsg);
         </handler>
     </javarpc>
 
