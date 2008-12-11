@@ -16,7 +16,7 @@
     <boo name="myboo"/>
     <handler name="oninit">
       myboo.myfoo.doit();
-      Debug.debug("%s", "-----");
+      Debug.debug("-----");
       Debug.debug("goo: this is [%w]", this);
       // error will be displayed -- there is no classroot
       Debug.debug("goo: classroot is [%w]", classroot);

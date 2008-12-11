@@ -2,7 +2,7 @@
   <font src="helmetb.ttf" name="helmet"/>
   <view stretches="both" height="100" bgcolor="red" 
     onclick="this.animate('height', -10, 1000 , true );
-    message.addText('\ngreenview new width is ' + greenview.width)">
+    message.addText('\ngreenview new width is ', greenview.width)">
     <attribute name="aspect" value="${unstretchedwidth/unstretchedheight}"/>
     <attribute name="width" value="${ height * aspect}"/>
     <view name="greenview" height="100" width="80" bgcolor="green"/>

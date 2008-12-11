@@ -8,7 +8,7 @@
         </handler>
 
         <handler name="onerror" args="error">
-            Debug.debug('error: %w', error);
+            Debug.error("RPC error: %w", error);
         </handler>
 
         <remotecall name="search" funcname="doGoogleSearch">

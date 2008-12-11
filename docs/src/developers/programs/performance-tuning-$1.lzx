@@ -37,7 +37,7 @@
         var usPerOp = Math.round((total-overhead)*1000/(trials*iterations));
         // Report results
         if (description != null) {
-          Debug.debug("%w %w %w", description, usPerOp , "us");
+        Debug.debug("%w: %d\xB5s", description, usPerOp);
         }
         return usPerOp;
       }

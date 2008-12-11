@@ -8,7 +8,7 @@
 
         <method name="handler" args="retval">
             if (retval.status == 'error') {
-                Debug.debug('error: %w', retval.message);
+                Debug.error('%w', retval.message);
                 return;
             }
 

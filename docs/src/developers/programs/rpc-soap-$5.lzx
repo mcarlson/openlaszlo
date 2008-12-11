@@ -29,7 +29,7 @@
         </handler>
 
         <handler name="ontimeout" args="error">
-            Debug.debug('timeout: %w', error);
+            Debug.error("RPC timeout: %w", error);
         </handler>
 
         <handler name="ondata" args="value">
