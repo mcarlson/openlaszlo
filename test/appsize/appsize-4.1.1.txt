@@ -1,0 +1,52 @@
+# This file can be used to compare application file sizes against 4.1.1
+# used like so:
+#
+#   $ cd $LPS_HOME
+#   $ ant -Dappsize.input=appsize-4.1.1.txt appsize
+#
+# The statistics for 4.1.1 were obtained by:
+#   - stopping any running Tomcat 
+#   - downloading/installing the release from the Laszlo site
+#     this has the side effect of starting Tomcat
+#   - back in a development directory, run 'ant appsize',
+#     it connects to the server running at 8080.
+#   - copying test/appsize/appsize-output.txt to this file
+
+apps=lzpix.dhtml,lzpix.swf8,lzpix.swf9,components.swf8
+totalsize=1172045
+
+lzpix.dhtml.size=107196
+lzpix.dhtml.1.path=demos/lzpix/app.lzx?lzr=dhtml&lzt=html
+lzpix.dhtml.1.size=1224
+lzpix.dhtml.2.path=lps/includes/embed-compressed.js
+lzpix.dhtml.2.size=9328
+lzpix.dhtml.3.path=lps/includes/lfc/LFCdhtml.js
+lzpix.dhtml.3.size=71133
+lzpix.dhtml.4.path=demos/lzpix/app.lzx?lzt=object&lzt=object&lzr=dhtml
+lzpix.dhtml.4.size=25511
+
+lzpix.swf8.size=390679
+lzpix.swf8.1.path=demos/lzpix/app.lzx?lzr=swf8&lzt=html
+lzpix.swf8.1.size=992
+lzpix.swf8.2.path=lps/includes/embed-compressed.js
+lzpix.swf8.2.size=9328
+lzpix.swf8.3.path=demos/lzpix/app.lzx?lzt=swf&lzr=swf8
+lzpix.swf8.3.size=380359
+
+lzpix.swf9.size=447074
+lzpix.swf9.1.path=demos/lzpix/app.lzx?lzr=swf9&lzt=html
+lzpix.swf9.1.size=993
+lzpix.swf9.2.path=lps/includes/embed-compressed.js
+lzpix.swf9.2.size=9328
+lzpix.swf9.3.path=demos/lzpix/app.lzx?lzt=swf&lzr=swf9
+lzpix.swf9.3.size=436753
+
+components.swf8.size=227096
+components.swf8.1.path=laszlo-explorer/content.jsp?src=/examples/components/component_sampler.lzx&tag=undefined&title=Sampler&action=undefined&lzr=swf8
+components.swf8.1.size=781
+components.swf8.2.path=examples/components/component_sampler.lzx?lzt=html&lzr=swf8
+components.swf8.2.size=1007
+components.swf8.3.path=lps/includes/embed-compressed.js
+components.swf8.3.size=9328
+components.swf8.4.path=examples/components/component_sampler.lzx?lzt=swf&lzr=swf8
+components.swf8.4.size=215980

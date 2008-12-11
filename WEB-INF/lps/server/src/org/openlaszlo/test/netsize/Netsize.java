@@ -85,9 +85,9 @@ public class Netsize {
         this.configname = filename;
         Properties props = new Properties();
         try {
+            props.load(new FileInputStream(filename));
             long totsize = getSizeProperty(props, "totalsize");
             TotalSizer totals = new TotalSizer(filename, totsize);
-            props.load(new FileInputStream(filename));
             String applist = props.getProperty("apps");
             if (applist == null) {
                 throw new IOException(filename + ": expected 'apps' property");
