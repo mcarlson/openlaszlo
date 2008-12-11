@@ -306,10 +306,9 @@ public class LzTextSprite extends LzSprite {
 
             this.text = t;
             var df:TextFormat = this.textfield.defaultTextFormat;
-            this.textfield.htmlText = t;
             // reset textformat to workaround flash player bug (FP-77)
-            this.textfield.setTextFormat(df);
             this.textfield.defaultTextFormat = df;
+            this.textfield.htmlText = t;
         
             if (this.resize && (this.multiline == false)) {
                 // single line resizable fields adjust their width to match the text
@@ -460,7 +459,15 @@ function setMaxLength(val:Number) {
     this.textfield.maxChars = val;
 }
 
-function setPattern ( val ){}
+function setPattern (val:String) :void {
+    if (val == null || val == "") {
+        this.textfield.restrict = null;
+    } else if (new RegExp("^\\[.*\\]\\*$").test( val )) {
+        this.textfield.restrict = val.substring(1, val.length - 2);
+    } else if ($debug) {
+        Debug.warn('LzTextSprite.setPattern argument %w must be of the form "[...]*"', val);
+    }
+}
 
 function setSelection(start:Number, end:Number) { 
     this.textfield.setSelection(start, end);
