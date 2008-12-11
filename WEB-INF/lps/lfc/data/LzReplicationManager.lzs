@@ -184,6 +184,7 @@ override function construct ( odp , args ){
 
     //odp: original datapath
     var view:LzNode = odp.immediateparent;
+    this.classroot = view.classroot; 
     if (view === canvas) {
         // Initialize vars to reduce dhtml errors
         this.nodes = [];
