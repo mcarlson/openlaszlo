@@ -2,7 +2,7 @@
   <text id="message" multiline="true">
     <method name="returnsum" args="a,b">
       var sum = 3 + 4;
-      this.setAttribute('text', ('a + b = ', sum));          
+      this.setAttribute('text', ('a + b = ' + sum));          
       return sum;
     </method>
   </text>
@@ -10,10 +10,10 @@
     var x = 5;
     var y = message.returnsum();
     var z = x + y;
-    message.addText('\nz equals ',  z)
+    message.addText('\nz equals ' +  z)
   </script>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** --> 

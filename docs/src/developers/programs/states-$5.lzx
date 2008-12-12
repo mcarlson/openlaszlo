@@ -13,7 +13,7 @@
   <button >Try it
     <handler name="onclick">
       ts.setAttribute('applied', true);
-      message.addText("\napplies: ", ts.countApplies);
+      message.addText("\napplies: " + ts.countApplies);
       ts.setAttribute('applied', false);
     </handler>
     <testState name="ts"/>
