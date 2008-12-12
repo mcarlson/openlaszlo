@@ -643,7 +643,8 @@ function initiatorAddNode ( e , n ){
 
 /**
   * @access private
-  * @devnote N.B.: replaces LzNode.__LZcallInit, so must be kept in sync with that
+  * @devnote NOTE: !@#$ replaces LzNode.__LZcallInit, so must be kept
+  * in sync with that $#@!
   */
 override function __LZcallInit ( an = null ){
     //trace("lzcancas __LZcallinit isinited", this.isinited);
@@ -692,7 +693,12 @@ override function __LZcallInit ( an = null ){
     if (this.datapath && this.datapath.__LZApplyDataOnInit) {
         this.datapath.__LZApplyDataOnInit();
     }
-    
+
+    // set the user-visible flag now
+    this.inited = true;
+    // in-lined setAttribute
+    if (this.oninited.ready) { this.oninited.sendEvent( true ); }
+
     // Canvas-only: Note _canvas_ end, stop startup profiler
     if ($profile) {
         Profiler.event('done: #canvas');

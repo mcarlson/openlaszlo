@@ -377,8 +377,13 @@ public dynamic class LzNode extends LzEventable {
    */
   function constructWithArgs(args:*) { }
 
-  /** This event is sent right before a node becomes active --
-   * e.g. before a view displays, or before a layout affects its subviews.
+  /**
+   * This event is sent after the <varname>node</varname>'s
+   * <method>init</method> method has been called.  Simple actions
+   * that need to occur after the node's children have been
+   * initialized can be assigned to this event.  For more complex
+   * initialization, see the <method>init</method> method.
+   *
    * @lzxtype event
    */
   var oninit = LzDeclaredEvent;
@@ -429,17 +434,39 @@ public dynamic class LzNode extends LzEventable {
   var __LZdelegates = null;
 
   /**
-   * Indicates that a <varname>node</varname>'s <method>init</method> method has been
-   * called.  The execution of the <method>init</method> method is under
-   * control of the <attribute>initstage</attribute> attribute.
+   * Internal flag, private to the LFC.  Indicates that
+   * <method>__LZcallInit</method> has been entered.  User program's
+   * that want to know if <method>init</method> has been called should
+   * use <varname>inited</varname>.
+   *
+   * @type boolean
+   * @keywords read-only
+   * @access private
+   *
+   * @devnote TODO [2008-12-12 ptw] Rename this to __LZcallInitEntered
+   * througout the LFC after 4.2.  This is a private attribute that
+   * user program's should not be accessing.
+   */
+  var isinited = false;
+
+  /**
+   * Indicates that a <varname>node</varname>'s <method>init</method>
+   * method has been called.  True when <method>init</method> has been
+   * called and the <event>oninit</event> event has been sent.  The
+   * execution of the <method>init</method> method is under control of
+   * the <attribute>initstage</attribute> attribute.
    *
    * @type boolean
    * @keywords read-only
    * @see initstage
    * @see oninit
+   */
+  var inited = false;
+  /**
+   * @devnote Declare this so we can inline setAttribute in __LZcallInit
    * @access private
    */
-  var isinited = false;
+  var oninited = LzDeclaredEvent;
 
   /** An array of all of the LzNodes which consider
    * this LzNode their parent. This list is similar to the subviews list,
@@ -492,7 +519,7 @@ public dynamic class LzNode extends LzEventable {
    * is initialized.
    * </dd>
    * <dt><constant>late</constant></dt><dd>The <method>init</method> method is called during idle time.
-   * To check whether <method>init</method> has been called, check the <attribute>isinited</attribute>
+   * To check whether <method>init</method> has been called, check the <attribute>inited</attribute>
    * property.  Force calling <method>init</method> using the <method>completeInstantiation</method> method.
    * </dd>
    * <dt><constant>defer</constant></dt><dd>The <method>init</method> method will not be called unless
@@ -843,9 +870,14 @@ public dynamic class LzNode extends LzEventable {
   }
 
   /**
-   * Called at the same time that the node sends its oninit event -- usually
-   * when the node's siblings are instantiated, and always after the node's
-   * children are instantiated.
+   * This is the method to override if you need to do complex
+   * initialization tasks on instances of an LZX class after their
+   * children have been initialized.  After this method is called the
+   * <event>oninit</event> is sent, and the
+   * <varname>inited</varname> attribute will be
+   * <literal>true</literal>.
+   *
+   * @see oninit
    */
   function init ( ){
 
@@ -889,7 +921,8 @@ public dynamic class LzNode extends LzEventable {
 
   /**
    * @access private
-   * @devnote LzCanvas replaces this method, so must be kept in sync
+   * @devnote NOTE: !@#$ LzCanvas replaces this method, so must be
+   * kept in sync $#@!
    */
   function __LZcallInit (an:* = null ){
     if ( this.parent && this.parent.__LZpreventSubInit ){
@@ -937,6 +970,11 @@ public dynamic class LzNode extends LzEventable {
     if (this.datapath && this.datapath.__LZApplyDataOnInit) {
       this.datapath.__LZApplyDataOnInit();
     }
+
+    // set the user-visible flag now
+    this.inited = true;
+    // in-lined setAttribute
+    if (this.oninited.ready) { this.oninited.sendEvent( true ); }
 
     // Note node end
     if ($profile) {
