@@ -49,10 +49,17 @@ public class LFCApplication {
     
     public function LFCApplication (sprite:Sprite) {
 
-       LFCApplication._sprite = sprite;
+        LFCApplication._sprite = sprite;
+        // wait for the ADDED_TO_STAGE event before continuing to init
+        LFCApplication._sprite.addEventListener(Event.ADDED_TO_STAGE, initLFC);
+    }
 
+    private function initLFC(event:Event = null) {
+        LFCApplication._sprite.removeEventListener(Event.ADDED_TO_STAGE, initLFC);
         // Allow anyone to access the stage object
         LFCApplication.stage = LFCApplication._sprite.stage;
+        runToplevelDefinitions()
+
         var idleTimerPeriod = 14; // msecs
 
         //trace('idle timer period = ', idleTimerPeriod , 'msecs');

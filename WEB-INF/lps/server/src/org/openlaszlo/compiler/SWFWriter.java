@@ -221,15 +221,7 @@ class SWFWriter extends ObjectWriter {
     }
         
     void addPreloader(CompilationEnvironment env) {
-        if (mPreloaderAdded == true) 
-            throw new RuntimeException(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Preloader already added."
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                SWFWriter.class.getName(),"051018-282")
-);
+        if (mPreloaderAdded == true) return;
 
         // TODO: [2004-03-04 bloch] maybe someday we have different versions of
         // preloader.lzl (e.g. debug, profile).
@@ -308,6 +300,10 @@ class SWFWriter extends ObjectWriter {
         frame.addFlashObject(new SetBackgroundColor(new Color(0, 0, 0)));
 
         mEnv.getCanvas().addInfo(mInfo); 
+
+        // always write out the preloader...
+        ObjectWriter sw = mEnv.getGenerator();
+        sw.addPreloader(mEnv);
     }
 
 

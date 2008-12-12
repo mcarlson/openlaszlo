@@ -133,6 +133,7 @@ lz.embed = {
             ,loaded: false
             ,_sendMouseWheel: lz.embed._sendMouseWheel
             ,_setCanvasAttributeDequeue: lz.embed._setCanvasAttributeDequeue
+            ,_sendPercLoad: lz.embed._sendPercLoad
         }
         // listen for history unless properties.history == false
         if (properties.history == false) {
@@ -605,6 +606,13 @@ lz.embed = {
     ,/** @access private */
     _sendMouseWheel: function(d) {
         if (d != null) this.callMethod("lz.Keys.__mousewheelEvent(" + d + ")"); 
+    }
+    ,/** @access private */
+    _sendPercLoad: function(p) {
+        //alert('onpercload' + p);
+        if (this.onloadstatus && typeof this.onloadstatus == 'function') {
+            this.onloadstatus(p);
+        }
     }
 
     ,/**

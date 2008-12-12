@@ -458,7 +458,6 @@ class SWF9Writer extends ObjectWriter {
             " extends " +  LFC_CLASSNAME + " {\n " + imports + "\n" + 
             "public function " + MAIN_APP_CLASSNAME + "(sprite:Sprite=null) {\n" +
             "super(sprite);\n" +
-            "runToplevelDefinitions();\n" + 
             "}\n" + 
             "}\n";
         source += "public class " + EXEC_APP_CLASSNAME +
@@ -468,6 +467,8 @@ class SWF9Writer extends ObjectWriter {
                 "app = new " + MAIN_APP_CLASSNAME + "(this);\n" +
               "}\n" +
             "}\n";
+        // preloader code from kernel/swf9/LzPreloader.as -- eeek should come from extern file, maybe with JSP interpolation.
+        source += "// based on http://www.ghost23.de/blogarchive/2008/04/as3-application-1.html\n public class LzPreloader extends MovieClip {" + imports + "public function LzPreloader() { stop(); root.loaderInfo.addEventListener(ProgressEvent.PROGRESS,loadProgress); addEventListener(Event.ENTER_FRAME, enterFrame); } public function enterFrame(event:Event):void { if (framesLoaded == totalFrames) { root.loaderInfo.removeEventListener(ProgressEvent.PROGRESS,loadProgress); nextFrame(); var mainClass:Class = Class(loaderInfo.applicationDomain.getDefinition('LzSpriteApplication')); if(mainClass) { var main:DisplayObject = DisplayObject(new mainClass()); if (main) { removeEventListener(Event.ENTER_FRAME, enterFrame); stage.addChild(main); stage.removeChild(this); } } } } private function loadProgress(event:Event):void { var percload:Number = Math.floor(root.loaderInfo.bytesLoaded / root.loaderInfo.bytesTotal * 100); var id = stage.loaderInfo.parameters.id; if (id) { var js = 'if (window.lz && lz.embed && lz.embed.applications && lz.embed.applications.' + id + ') lz.embed.applications.' + id + '._sendPercLoad(' + percload + ')'; navigateToURL(new URLRequest('javascript:' + js + ';void(0);'), '_self'); } } } // end of preloader\n";
         return source;
     }
 

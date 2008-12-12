@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzpreloader
@@ -138,6 +138,11 @@ function heartbeat (p) {
   } else {
     // SWF-specific
     var percload = _root.getBytesLoaded() / _root.getBytesTotal();
+    var id = _root.id;
+    if (id) {
+        var js = 'if (window.lz && lz.embed && lz.embed.applications && lz.embed.applications.' + id + ') lz.embed.applications.' + id + '._sendPercLoad(' + Math.floor(percload * 100) + ')';
+        _root.getURL('javascript:' + js + ';void(0);');
+    }
 
     for (var i = 0; i < this.synctoloads.length; i++) {
         var mc = this.synctoloads[i];
