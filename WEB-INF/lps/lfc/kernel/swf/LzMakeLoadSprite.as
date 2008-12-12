@@ -79,8 +79,11 @@ LzMakeLoadSprite.setSource = function (src, cache, headers, filetype) {
     //this.owner.resource = src;
     //if (this.owner.onresource) this.owner.onresource.sendEvent( src );
 
-    this.owner.__LZvizLoad = false; 
-    this.owner.__LZupdateShown();
+    if (! this.__LZbuttonRef) {
+        // only hide if we're not clickable - see LPP-4957
+        this.owner.__LZvizLoad = false; 
+        this.owner.__LZupdateShown();
+    }
     this.loader.request(src, cache, headers, filetype);
 }
 
