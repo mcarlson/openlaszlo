@@ -111,7 +111,7 @@ class XMLRPCMessage {
 
 
     static function doValueXML(type,data){
-        var xml = "<" + type + ">" + ((data is String) ? lz.Browser.xmlEscape(data) : data )+ "</" + type + ">";
+        var xml = "<" + type + ">" + ((typeof(data) == 'string') ? lz.Browser.xmlEscape(data) : data )+ "</" + type + ">";
         return xml;
     }
 

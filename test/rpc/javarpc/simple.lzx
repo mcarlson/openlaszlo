@@ -83,14 +83,14 @@
         <button text="pass array" onclick="this.passArray.invoke()">
             <remotecall name="passArray" funcname="passClientArray" 
                         remotecontext="$once{ types_example_rpc }">
-                <param value="[1, 'a string', 4.5, false]" />
+                <param value="[1, 'a string &amp; more', 4.5, false]" />
             </remotecall>
         </button>
 
         <button text="pass hash" onclick="this.passObject.invoke()">
             <remotecall name="passObject" funcname="passClientObject" 
                         remotecontext="$once{ types_example_rpc }">
-                <param value="{ a: 1, b: 3.14159, c: 'a string value', d: true}">
+                <param value="{ a: 1, b: 3.14159, c: 'a string value with an &amp;amp;', d: true}">
                 </param>
             </remotecall>
         </button>
