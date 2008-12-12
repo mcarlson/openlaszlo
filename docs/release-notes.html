@@ -2,29 +2,27 @@
 <!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>OpenLaszlo 4.2 Beta 3 Release Notes</title>
+    <title>OpenLaszlo 4.2 Release Notes</title>
     <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
             * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
             * Use is subject to license terms.                                            *
             * X_LZ_COPYRIGHT_END ****************************************************** -->
 
-    <link rel="stylesheet" href="release-notes.css" type="text/css" />
+    <link rel="stylesheet" href="includes/docbook.css" type="text/css" />
   </head>
-
   <body class="release-notes">
+    <h1>Release Notes for OpenLaszlo 4.2</h1>
 
-    <h1>Release Notes for OpenLaszlo 4.2 Beta 3</h1>
-
-    <p>OpenLaszlo 4.2 Beta 3 follows OpenLaszlo 4.2 Beta 2 as the next build from the trunk
-      development branch. The primary goal of this release is to provide beta-level support for SWF9
+    <p>OpenLaszlo 4.2 follows OpenLaszlo 4.2 Beta 3 as the next build from the trunk development
+      branch. The primary goal of this release is to provide beta-level support for SWF9
       features<!-- as indicated below-->.</p>
-    <!--    <p>Release 4.2 Beta 3 highlights include:</p>
+    <!--    <p>Release 4.2 highlights include:</p>
     <p>bulleted list of new features</p>-->
-    <p>OpenLaszlo 4.2 Beta 3 is not a fully-qualified release. It has had limited testing for
-      specific features. This release is intended as a platform for initial porting and testing of
-      SWF9 applications.</p>
+    <p>OpenLaszlo 4.2 is not a fully-qualified release. It has had limited testing for specific
+      features. This release is intended as a platform for initial porting and testing of SWF9
+      applications.</p>
 
-    <h1>Running OpenLaszlo Server on Windows Vista</h1>
+    <h2>Running OpenLaszlo Server on Windows Vista</h2>
 
     <p>There are two options. The first option is to manually ask for administrator privileges
       whenever you want to start or stop the OpenLaszlo Server.</p>
@@ -71,7 +69,7 @@
     <p>Note: Microsoft Vista will still ask for permission to run as an administrator. However, you
       do not have to remember to run as an administrator each time.</p>
 
-    <h1>New SWF9 Compiler Switch</h1>
+    <h2>New SWF9 Compiler Switch</h2>
     <p>There is a new compiler switch in <code>WEB-INF/lps/config/lps.properties</code>:</p>
 
 
@@ -80,11 +78,11 @@
     </p>
 
 
-    <p>This switch controls whether the flex swf9 compiler is invoked in the same Java thread as the LPS
-      Server, or using a seperate exec'ed process. Setting <code>execflex=false</code> will be more
-      portable, as it doesn't depend on the shell and execution of a subprocess, however it will
-      require more max heap memory for the LPS Server. A minimum of 1024MB is recommended for the
-        <code>Java -Xmx</code> max heap memory init option.</p>
+    <p>This switch controls whether the flex swf9 compiler is invoked in the same Java thread as the
+      LPS Server, or using a seperate exec'ed process. Setting <code>execflex=false</code> will be
+      more portable, as it doesn't depend on the shell and execution of a subprocess, however it
+      will require more max heap memory for the LPS Server. A minimum of 1024MB is recommended for
+      the <code>Java -Xmx</code> max heap memory init option.</p>
 
     <p>If <code>execflex</code> is set to true, the flex compiler will be invoked in a separate
       process. This will use less heap memory from the main LPS server or servlet process. On Unix
@@ -95,18 +93,18 @@
       need to be set by hand.</p>
 
 
-    <h1>Bugs Fixed in OpenLaszlo 4.2 Beta 3</h1>
-    <p>The 4.2 beta 3 release includes more than 100 bug fixes, primarily to support SWF9; we have
-      provided a link to our JIRA bug tracking system where you can view the details:</p>
+    <h2>Bugs Fixed in OpenLaszlo 4.2</h2>
+    <p>The 4.2 release includes more than 140 bug fixes, primarily to support SWF9; we have provided
+      a link to our JIRA bug tracking system where you can view the details:</p>
     <ul>
       <li>
         <a
-          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10830"
+          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10840"
           target="_blank">Fixed bugs</a>
       </li>
     </ul>
 
-    <h1>OpenLaszlo 4.2 Beta 3 Credits</h1>
+    <h2>OpenLaszlo 4.2 Credits</h2>
     <p>We would like to thank the entire OpenLaszlo community for submitting bug fixes and
       participating in discussions to help make OpenLaszlo a better platform. Special thanks to
       Andr&#xE9; Bargull and Raju Bitter for their continued support of the project.</p>
