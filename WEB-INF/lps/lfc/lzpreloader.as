@@ -173,7 +173,7 @@ function done() {
 
   var svd = canvas.sprite.__LZsvdepth;
   canvas.sprite.__LZsvdepth = 0;
-  var v = new LzView(canvas, {name:this.name, visible:vis,
+  var v = new LzView(canvas, {name:this.name || null, visible:vis,
                               options: {ignorelayout:true}});
   v.sprite.setMovieClip(this.splashroot);
   canvas.sprite.__LZsvdepth = svd;
@@ -182,7 +182,7 @@ function done() {
   for (var i = 0; i < this.protoviews.length; i++) {
     var mc = this.protoviews[i];
     var ratio = mc.lastframe / mc._totalframes;
-    var nv = new LzView(v, {name: mc.name, x: mc._x, y: mc._y,
+    var nv = new LzView(v, {name: mc.name || null, x: mc._x, y: mc._y,
                                   width: mc._width, height: mc._height,
                                   totalframes: mc._totalframes, ratio: ratio,
                                   options: {ignorelayout: true}});
