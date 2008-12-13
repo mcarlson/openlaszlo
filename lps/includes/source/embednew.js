@@ -435,6 +435,7 @@ lz.embed = {
             this.version = this.searchVersion(navigator.userAgent)
                 || this.searchVersion(navigator.appVersion)
                 || "an unknown version";
+            this.osversion = this.searchOSVersion(navigator.userAgent) || "an unknown osversion";
             this.OS = this.searchString(this.dataOS) || "an unknown OS";
             this.initted = true;
             this.isNetscape = this.isSafari = this.isOpera = this.isFirefox = this.isIE = this.isIphone = false;
@@ -460,6 +461,7 @@ lz.embed = {
                 var dataString = data[i].string;
                 var dataProp = data[i].prop;
                 this.versionSearchString = data[i].versionSearch || data[i].identity;
+                this.osversionSearchString = data[i].osversionSearch || "";
                 if (dataString) {
                     if (dataString.indexOf(data[i].subString) != -1)
                         return data[i].identity;
@@ -472,6 +474,11 @@ lz.embed = {
             var index = dataString.indexOf(this.versionSearchString);
             if (index == -1) return;
             return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
+        },
+        searchOSVersion: function (dataString) {
+            var index = dataString.indexOf(this.osversionSearchString);
+            if (index == -1) return;
+            return parseFloat(dataString.substring(index+this.osversionSearchString.length+1));
         },
         dataBrowser: [
             {
@@ -520,7 +527,8 @@ lz.embed = {
                 string: navigator.userAgent,
                 subString: "MSIE",
                 identity: "Explorer",
-                versionSearch: "MSIE"
+                versionSearch: "MSIE",
+                osversionSearch: "Windows NT"
             },
             {
                 string: navigator.userAgent,

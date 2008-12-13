@@ -387,6 +387,13 @@ LzSprite.prototype.__updateQuirks = function () {
                 quirks['ie6_improve_memory_performance'] = true;
             } else {
                 quirks['invisible_parent_image_sizing_fix'] = true;
+                if (browser.osversion >= 6) {
+                    // IE7 on Vista (osversion=6) needs the alpha image loader
+                    // (Fixes LPP-3352 and others)
+                    // Does Windows7 behave like Vista?
+                    quirks['ie_alpha_image_loader'] = true;
+                }
+
             }
 
             quirks['ie_opacity'] = true;
