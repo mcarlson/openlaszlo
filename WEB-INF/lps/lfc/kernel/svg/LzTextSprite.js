@@ -1,7 +1,7 @@
 /**
   * LzTextSprite.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -28,6 +28,7 @@ LzTextSprite = function(owner) {
 }
 
 LzTextSprite.prototype = new LzSprite(null);
+LzTextSprite.prototype.text = '';
 
 LzTextSprite.prototype.__initTextProperties = function (args) {
     this.setFontName(args.font);
@@ -106,7 +107,7 @@ LzTextSprite.prototype.setMultiline = function(m) {
 
 LzTextSprite.prototype.getTextWidth = function () {
   //Debug.write('LzTextSprite.getTextWidth', this.text, this._textsizecache[this.text]);
-  if (this.text == null || this.text == '') return 0;
+  if (this.text == '') return 0;
   return this.getTextSize(this.text).width;
 }
 
@@ -122,7 +123,7 @@ LzTextSprite.prototype.getTextHeight = function () {
 
 LzTextSprite.prototype.getTextfieldHeight = function () {
     if (this.fieldHeight != null) return this.fieldHeight
-    if (this.text == null || this.text == '') {
+    if (this.text == '') {
         this.fieldHeight = 0;
         return 0;
     }
@@ -138,7 +139,7 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
 
   
 LzTextSprite.prototype.getTextSize = function (string) {
-    if (this.text == null || this.text == '') return {width: 0,height: 0};
+    if (this.text == '') return {width: 0,height: 0};
     if (! this._textsizecache) this._textsizecache = {};
     if (! this._textsizecache[string]) {
         var dim = {};

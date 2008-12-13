@@ -107,7 +107,6 @@ dynamic class LzText extends LzView with LzFormatter {
 /** If true, the text is selectable
   * @lzxtype booleanLiteral
   * @type Boolean
-  * @keywords read-only
   */
     var selectable = false;
 
@@ -206,7 +205,6 @@ function $lzc$set_thickness(thickness) {
   * The y scroll position of the textfield.
   * @lzxtype Number
   * @type Number
-  * @keywords read-only
   */
     var yscroll;
 
@@ -224,7 +222,6 @@ function $lzc$set_yscroll(n) {
   * The x scroll position of the textfield.
   * @lzxtype Number
   * @type Number
-  * @keywords read-only
   */
     var xscroll;
 
@@ -348,12 +345,11 @@ var multiline;
 
 /**
   * If true, the width of the text field will be recomputed each time
-  * setText() is called, so that the text view is exactly as wide as
+  * <varname>text</varname> is changed, so that the text view is exactly as wide as
   * the width of the widest line.  Defaults to true. 
   *
   * @lzxtype booleanLiteral
   * @type Boolean
-  * @keywords read-only
   */
 var resize = true;
 
@@ -368,18 +364,22 @@ function $lzc$set_resize(val) {
 
 
 /**
-  * The text to display in this text field.
+  * The text to display in this text field.  If set to a value that is
+  * not a string, the value will first be converted to a string as if
+  * by <code>String(value)</code>.  To display nothing, set the value
+  * to the empty string <code>""</code>.
   * @lzxtype string
   * @type String
   */
-var text;
+var text:String = '';
 
 /**
   * @access private
   */
-function $lzc$set_text(t) {
+function $lzc$set_text(t:*) {
     // force to a string
-    t = '' + t;
+    t = String(t);
+
     if (this._textrecompute != true && t == this.getText()) return;
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     if (this.visible) tsprite.setVisible(this.visible);
@@ -483,7 +483,7 @@ override function construct ( parent, args ) {
        this.$lzc$set_maxlength(args.maxlength);
     }
 
-    this.text =  (args['text'] != null) ? args.text : "";
+    this.text = ((args['text'] != null) ? String(args.text) : "");
     if(this.maxlength != null && this.text.length > this.maxlength){
         this.text = this.text.substring(0, this.maxlength);
     }
@@ -569,7 +569,6 @@ override function getMCRef () {
   * Maximum number of characters allowed in this field
   * @lzxtype numberExpression
   * @type Number
-  * @keywords read-only
   */
 var maxlength; 
 
@@ -593,7 +592,6 @@ function $lzc$set_maxlength(val) {
   * Currently only the expression [ ]* enclosing a set of characters or character ranges, preceded by an optional "^", is supported. examples: [0-9]* , [a-zA-Z0-9]*, [^0-9]*
   * @lzxtype string
   * @type String
-  * @keywords read-only
   */
 var pattern; 
 
@@ -611,6 +609,7 @@ function $lzc$set_pattern(val) {
   * setResize set behavior of text field width when new text is added.
   * LzText only (cannot be used with LzInputText).
   * @param Boolean val: if true, the textfield will recompute it's width after setText() is called
+  * @deprecated Use setAttribute('resize', ...) instead.
   */
 final function setResize ( val ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
@@ -798,6 +797,7 @@ final function setXScroll ( n ){
   * @deprecated Use setAttribute('yscroll', ...) instead.
   */
 function setYScroll ( n ){
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_yscroll(n);
 }
 
@@ -918,6 +918,22 @@ final function setText (t) {
   */
 function format (control:String, ...args) {
     this.$lzc$set_text (this.formatToString.apply(this, [control].concat(args)));
+}
+
+/**
+  * Appending version of formatted output.
+  * Formats its arguments using <xref
+  * linkend="LzFormatter.prototype.formatToString"/> and adds the
+  * result to the text of the view.
+  *
+  * @param string control: A control string where % indicates the
+  * conversion of the corresponding argument
+  *
+  * @param [*] args: arguments to be formatted according to the
+  * control string
+  */
+function addFormat (control:String, ...args) {
+  this.$lzc$set_text (this.getText() + this.formatToString.apply(this, [control].concat(args)));
 }
 
 /**

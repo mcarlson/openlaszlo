@@ -202,7 +202,7 @@ public class LzTextSprite extends LzSprite {
             // __setFormat during instantiation of an lzText. Figure
             // out how to suppress the other calls from setters.
             this.__setFormat();
-            this.setText(args.text);
+            this.setText((args['text'] != null) ? String(args.text) : '');
             
             if (this.sizeToHeight) {
                 //text and format is set, measure it
@@ -297,13 +297,7 @@ public class LzTextSprite extends LzSprite {
          * @param String t: the string to which to set the text
          */
         public function setText ( t:String ):void {
-            //this.textfield.cacheAsBitmap = false;          
-            if (t == null || typeof(t) == 'undefined' || t == 'null') {
-                t = "";
-            } else if (typeof(t) != "string") {
-                t = t.toString();
-            }
-
+            //this.textfield.cacheAsBitmap = false;
             this.text = t;
             var df:TextFormat = this.textfield.defaultTextFormat;
             // reset textformat to workaround flash player bug (FP-77)

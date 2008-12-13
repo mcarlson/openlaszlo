@@ -64,6 +64,7 @@ LzTextSprite.prototype.__wpadding = 4;
 LzTextSprite.prototype.__hpadding = 4;
 LzTextSprite.prototype.__sizecacheupperbound = 1000;
 LzTextSprite.prototype.selectable = true;
+LzTextSprite.prototype.text = '';
 LzTextSprite.prototype.resize = true;
 
 LzTextSprite.prototype.setFontSize = function (fsize) {
@@ -118,7 +119,6 @@ LzTextSprite.prototype.setFontName = function (fname) {
 LzTextSprite.prototype.setTextColor = LzSprite.prototype.setColor;
 
 LzTextSprite.prototype.setText = function(t, force) {
-    if (t == 'null') t = '';
     if (force != true && this.text == t) return;
     //Debug.write('LzTextSprite.setText', t);
 
@@ -180,7 +180,7 @@ LzTextSprite.prototype.setPattern = function ( val ){
 
 LzTextSprite.prototype.getTextWidth = function () {
   //Debug.write('LzTextSprite.getTextWidth', this.text, this._textsizecache[this.text]);
-  if (this.text == null || this.text == '') return 0;
+  if (this.text == '') return 0;
   return this.getTextSize(this.text, this.resize).width;
 }
 
@@ -196,7 +196,7 @@ LzTextSprite.prototype.getTextHeight = function () {
 
 LzTextSprite.prototype.getTextfieldHeight = function () {
     if (this._styledirty != true && this.fieldHeight != null) return this.fieldHeight
-    if (this.text == null || this.text == '') {
+    if (this.text == '') {
         this.fieldHeight = this.getTextSize(null).height;
         //Debug.debug('getTextfieldHeight: 0', this.fieldHeight);
         return this.fieldHeight;

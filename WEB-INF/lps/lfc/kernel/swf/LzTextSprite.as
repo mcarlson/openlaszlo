@@ -50,7 +50,7 @@ var LzTextSprite = function(newowner, args) {
     this.__LZtextclip.__cacheSelection = TextField.prototype.__cacheSelection;
     textclip._visible = true;
 
-    this.text =  args.text == null ? "" : args.text;
+    this.text = ((args['text'] != null) ? String(args.text) : '');
 
     //    textclip._quality = "BEST";
     ///   textclip._highquality = 2;
@@ -529,13 +529,7 @@ LzTextSprite.prototype.getText = function() {
   * setText sets the text of the field to display
   * @param String t: the string to which to set the text
   */
-LzTextSprite.prototype.setText = function ( t ){
-    // Keep in sync with LzTextSprite.setText()
-    if (typeof(t) == 'undefined' || t == 'null') {
-        t = "";
-    } else if (typeof(t) != "string") {
-        t = t.toString();
-    }
+  LzTextSprite.prototype.setText = function ( t ){
 
     // If accessibility is enabled, hunt for <img alt="...."> tags and assign and
     // put the alt tag somewhere a screen reader can find it.

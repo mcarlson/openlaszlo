@@ -1,7 +1,7 @@
 /**
   * LzInputTextSprite.js
   *
-  * @copyright Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -99,7 +99,7 @@ LzInputTextSprite.prototype.setMultiline = function(m) {
 
 LzInputTextSprite.prototype.getTextWidth = function () {
   //Debug.write('LzInputTextSprite.getTextWidth', this.text, this._textsizecache[this.text]);
-  if (this.text == null || this.text == '') return 0;
+  if (this.text == '') return 0;
   return this.getTextSize(this.text).width;
 }
 
@@ -115,7 +115,7 @@ LzInputTextSprite.prototype.getTextHeight = function () {
 
 LzInputTextSprite.prototype.getTextfieldHeight = function () {
     if (this.fieldHeight != null) return this.fieldHeight
-    if (this.text == null || this.text == '') {
+    if (this.text == '') {
         this.fieldHeight = 0;
         return 0;
     }
@@ -131,7 +131,7 @@ LzInputTextSprite.prototype.getTextfieldHeight = function () {
 
   
 LzInputTextSprite.prototype.getTextSize = function (string) {
-    if (this.text == null || this.text == '') return {width: 0,height: 0};
+    if (this.text == '') return {width: 0,height: 0};
     if (! this._textsizecache) this._textsizecache = {};
     if (! this._textsizecache[string]) {
         var dim = {};

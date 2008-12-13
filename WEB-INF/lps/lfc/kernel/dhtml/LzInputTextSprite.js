@@ -279,7 +279,6 @@ LzInputTextSprite.prototype.gotFocus = function() {
 }
 
 LzInputTextSprite.prototype.setText = function(t) {
-    if (t == null) return;
     if (t.indexOf('<br/>') != -1) {
         t = t.replace(this.br_to_newline_re, '\r') 
         //Debug.write('new text %w', t)
@@ -894,7 +893,7 @@ LzInputTextSprite.prototype.getText = function () {
 
 LzInputTextSprite.prototype.getTextfieldHeight = function () {
     if (this._styledirty != true && this.fieldHeight != null) return this.fieldHeight
-    if (this.text == null || this.text == '') {
+    if (this.text == '') {
         this.fieldHeight = this.getTextSize(null).height;
 //       Debug.debug('getTextfieldHeight: 0');
         return this.fieldHeight;
