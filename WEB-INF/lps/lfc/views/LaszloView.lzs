@@ -1119,8 +1119,8 @@ function $lzc$set_rotation(v) {
     if ( this.__LZhasoffset ){
         this._xrecompute = true;
         this._yrecompute = true;
-        $lzc$set_x(this.x);
-        $lzc$set_y(this.y);
+        this.$lzc$set_x(this.x);
+        this.$lzc$set_y(this.y);
     }
 
     var vip:LzView = (this.immediateparent cast LzView);
