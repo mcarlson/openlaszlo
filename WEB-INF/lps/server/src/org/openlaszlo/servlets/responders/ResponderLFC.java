@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -74,7 +74,8 @@ public final class ResponderLFC extends Responder
           "true".equals(req.getParameter(CompilationEnvironment.DEBUG_PROPERTY)) || 
             req.getParameter("_canvas_debug") != null,
           "true".equals(req.getParameter(CompilationEnvironment.PROFILE_PROPERTY)),
-          "true".equals(req.getParameter(CompilationEnvironment.BACKTRACE_PROPERTY)));
+          "true".equals(req.getParameter(CompilationEnvironment.BACKTRACE_PROPERTY)),
+          "true".equals(req.getParameter(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY)));
         String path = LPS.getLFCDirectory();
 
         File lfcfile = new File(path, lfc);

@@ -48,6 +48,7 @@ class CanvasCompiler extends ToplevelCompiler {
         canvas.setDebug(mEnv.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY));
         canvas.setProfile(mEnv.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY));
         canvas.setBacktrace(mEnv.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY));
+        canvas.setSourceAnnotations(mEnv.getBooleanProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY));
 
         // Set the "proxied" flag for this app.
         // canvas attribute overrides passed in arg, warn for conflict

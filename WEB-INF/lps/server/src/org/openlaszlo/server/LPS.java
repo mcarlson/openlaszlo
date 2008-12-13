@@ -208,7 +208,7 @@ RuntimeException(
       return HOME() + File.separator + LPS.getProperty("compiler.runtime.dir").replace('/', File.separatorChar);
     }
 
-    public static String getLFCname(String runtime, boolean debug, boolean profile, boolean backtrace) {
+    public static String getLFCname(String runtime, boolean debug, boolean profile, boolean backtrace, boolean sourceAnnotations) {
       String lfc = "LFC";
       String extension = "js";
       if (runtime == null) {
@@ -229,7 +229,7 @@ RuntimeException(
         lfc += "-profile";
       }
 
-      if (backtrace) {
+      if (backtrace || sourceAnnotations) {
         lfc += "-backtrace";
       } else if (debug) {
         lfc += "-debug";

@@ -409,6 +409,7 @@ public abstract class ResponderCompile extends Responder
      * <li> "lzbacktrace"
      * <li> "profile"
      * <li> "sourcelocators"
+     * <li> "lzsourceannotations"
      * <li> "lzr" (swf version := swf5 | swf6)
      * <li> "lzproxied" true|false
      * <li> "lzscript" true|false   -- emit javascript, not object file
@@ -474,14 +475,11 @@ public abstract class ResponderCompile extends Responder
                 props.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, backtrace);
             }
             
-            // Look for "sourceannotations=true" flag
-            // This flag is a shorthand for turning on various props needed by IDE debuggers
+            // Look for "lzsourceannotations=true" flag
             props.setProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY, "false");
             String srcann = req.getParameter(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY);
             if (srcann != null) {
                 props.setProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY, srcann);
-                props.setProperty(CompilationEnvironment.NAME_FUNCTIONS, srcann);
-                props.setProperty(CompilationEnvironment.TRACK_LINES, srcann); 
             }
 
         }

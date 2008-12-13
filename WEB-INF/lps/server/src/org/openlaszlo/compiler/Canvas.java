@@ -121,6 +121,9 @@ public class Canvas implements java.io.Serializable {
     /** computed backtrace flag, based on canvas 'backtrace' attribute + compilation request args **/
     private boolean mBacktrace = false;
 
+    /** computed source annotations flag from request args **/
+    private boolean mSourceAnnotations = false;
+
     /** computed profile flag from request args **/
     private boolean mProfile = false;
 
@@ -187,6 +190,13 @@ public class Canvas implements java.io.Serializable {
         return(mProfile);
     }
 
+    public void setSourceAnnotations(boolean val) {
+        mSourceAnnotations = val;
+    }
+
+    public boolean getSourceAnnotations() {
+        return(mSourceAnnotations);
+    }
 
     public void addInfo(Element info) {
         mInfo.addContent(info);
@@ -438,7 +448,7 @@ public class Canvas implements java.io.Serializable {
             "height='" + getHeightXML() + "' " +
             "proxied='" + isProxied() + "' " +
             "runtime='" + getRuntime() +"' " +
-            "lfc='" + LPS.getLFCname(getRuntime(), mDebug, mProfile, mBacktrace) + "' " +
+            "lfc='" + LPS.getLFCname(getRuntime(), mDebug, mProfile, mBacktrace, mSourceAnnotations) + "' " +
             "debug='" + mDebug + "' " +
             "id='" + XMLUtils.escapeXml(getID()) +"' " +
             "accessible='" + XMLUtils.escapeXml(getAccessible() + "") +"' " +

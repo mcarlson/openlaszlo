@@ -356,6 +356,11 @@ public class Compiler {
             env.setProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY, sourcelocators);
         }
 
+        String sourceannotations = props.getProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY);
+        if (sourceannotations != null) {
+            env.setProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY, sourceannotations);
+        }
+
         String trackLines = props.getProperty(CompilationEnvironment.TRACK_LINES);
         if (trackLines != null) {
             env.setProperty(CompilationEnvironment.TRACK_LINES, trackLines);
@@ -490,6 +495,7 @@ public class Compiler {
             }
             if (canvas != null) {
               canvas.setBacktrace(backtraceValue);
+              canvas.setSourceAnnotations(env.getBooleanProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY));
               // set file path (relative to webapp) in canvas
               canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
             }

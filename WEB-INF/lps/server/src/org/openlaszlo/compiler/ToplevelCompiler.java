@@ -291,7 +291,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
       return LPS.getLFCname(env.getRuntime(),
                             env.getBooleanProperty(env.DEBUG_PROPERTY),
                             env.getBooleanProperty(env.PROFILE_PROPERTY),
-                            env.getBooleanProperty(env.BACKTRACE_PROPERTY) ||
+                            env.getBooleanProperty(env.BACKTRACE_PROPERTY),
                             env.getBooleanProperty(env.SOURCE_ANNOTATIONS_PROPERTY));
     }
 

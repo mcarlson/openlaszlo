@@ -311,9 +311,10 @@ public class CompilationManager extends Cache {
         boolean isDebug = "true".equals(props.getProperty("debug"));
         boolean isProfile = "true".equals(props.getProperty("profile"));
         boolean isBacktrace = "true".equals(props.getProperty("backtrace"));
+        boolean isSourceAnnotations = "true".equals(props.getProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY));
         String runtime = props.getProperty(CompilationEnvironment.RUNTIME_PROPERTY);
 
-        String lfc = LPS.getLFCname( runtime, isDebug, isProfile, isBacktrace);
+        String lfc = LPS.getLFCname( runtime, isDebug, isProfile, isBacktrace, isSourceAnnotations);
         String path = LPS.getLFCDirectory();
 
         File lfcfile = new File(path, lfc);
