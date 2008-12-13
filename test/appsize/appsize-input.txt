@@ -1,30 +1,30 @@
 apps=lzpix.dhtml,lzpix.swf8,components.swf8
-totalsize=1206672
+totalsize=1216864
 
-lzpix.dhtml.size=518851
+lzpix.dhtml.size=523363
 lzpix.dhtml.1.path=demos/lzpix/app.lzx?lzr=dhtml&lzt=html
 lzpix.dhtml.1.size=3091
 lzpix.dhtml.2.path=lps/includes/embed-compressed.js
-lzpix.dhtml.2.size=34449
+lzpix.dhtml.2.size=34935
 lzpix.dhtml.3.path=lps/includes/lfc/LFCdhtml.js
-lzpix.dhtml.3.size=349210
+lzpix.dhtml.3.size=353232
 lzpix.dhtml.4.path=demos/lzpix/app.lzx?lzt=object&lzt=object&lzr=dhtml
-lzpix.dhtml.4.size=132101
+lzpix.dhtml.4.size=132105
 
-lzpix.swf8.size=425903
+lzpix.swf8.size=428725
 lzpix.swf8.1.path=demos/lzpix/app.lzx?lzr=swf8&lzt=html
-lzpix.swf8.1.size=2469
+lzpix.swf8.1.size=2795
 lzpix.swf8.2.path=lps/includes/embed-compressed.js
-lzpix.swf8.2.size=34449
+lzpix.swf8.2.size=34935
 lzpix.swf8.3.path=demos/lzpix/app.lzx?lzt=swf&lzr=swf8
-lzpix.swf8.3.size=388985
+lzpix.swf8.3.size=390995
 
-components.swf8.size=261918
+components.swf8.size=264776
 components.swf8.1.path=laszlo-explorer/content.jsp?src=/examples/components/component_sampler.lzx&tag=undefined&title=Sampler&action=undefined&lzr=swf8
 components.swf8.1.size=783
 components.swf8.2.path=examples/components/component_sampler.lzx?lzt=html&lzr=swf8
-components.swf8.2.size=2500
+components.swf8.2.size=2826
 components.swf8.3.path=lps/includes/embed-compressed.js
-components.swf8.3.size=34449
+components.swf8.3.size=34935
 components.swf8.4.path=examples/components/component_sampler.lzx?lzt=swf&lzr=swf8
-components.swf8.4.size=224186
+components.swf8.4.size=226232
