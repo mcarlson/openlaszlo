@@ -106,6 +106,8 @@ if (!window.CanvasRenderingContext2D) {
         // setup default css
         var ss = doc.createStyleSheet();
         ss.cssText = 'canvas{display:inline-block;overflow:hidden;' +
+            // set to use absolute positioning
+            'position:absolute;' + 
             // default size is 300x150 in Gecko and Opera
             'text-align:left;width:300px;height:150px}' +
             'g_vml_\\:*{behavior:url(#default#VML)}';

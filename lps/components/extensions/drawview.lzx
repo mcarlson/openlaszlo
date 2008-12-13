@@ -543,6 +543,7 @@
                 this.__LZcanvas.setAttribute('id', this.__id);
                 this.__LZcanvas.setAttribute('width', width);
                 this.__LZcanvas.setAttribute('height', height);
+                this.__LZcanvas.setAttribute('style', 'position: absolute');
                 this.__canvaswidth = width;
                 this.__canvasheight = height;
                 var div = this.getMCRef();
