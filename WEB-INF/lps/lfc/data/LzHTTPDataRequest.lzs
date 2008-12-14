@@ -49,15 +49,12 @@ class LzHTTPDataRequest extends LzDataRequest {
     /** Flag to say whether proxied server should return with HTTP response metadata added.
       * @type Boolean
       */
-    var getresponsheaders :Boolean = false;
+    var getresponseheaders :Boolean = false;
 
     /** An LzParam object which holds HTTP response headers
       * @type LzParam
       */
     var responseheaders :LzParam;
-
-    /** @type Boolean */
-    var getresponseheaders :Boolean = false;
 
     /** Flag to say whether data is cacheable at the server
       * @type Boolean
