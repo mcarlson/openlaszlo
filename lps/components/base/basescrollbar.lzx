@@ -272,11 +272,11 @@
                 this.heightDel = null;
             }
 
-            delete this.scrolltarget;
-            delete this.focusview;
-            delete this.othersb;
+            this.scrolltarget = null;
+            this.focusview = null;
+            this.othersb = null
 
-            super.destroy.apply(this, arguments);
+            super.destroy();
         ]]></method>
 
         <!---  @keywords private -->
@@ -534,24 +534,58 @@
     <!--- Basescrollthumb expects to be within a basescrollbar (or a subclass).
           In other words, its "classroot" must be a scrollbar. -->
     <class name="basescrollthumb" extends="basecomponent"
-           focusable="false" styleable="false"
-           onmousedown="classroot.targetPosDel.disable(); this.startDrag = true;
-                        this[classroot.axis+'thumbdrag'].setAttribute('applied', true)"
-           onmouseup="this[classroot.axis+'thumbdrag'].setAttribute('applied', false);
-                      classroot.targetPosDel.enable();">
+           focusable="false" styleable="false" >
         <!--- @keywords private -->
-       <handler name="oninit">
-           classroot.thumb = this;
-       </handler>
-        
+        <attribute name="target" value="null" />
+        <!--- @keywords private -->
+        <attribute name="axis" value="" type="string" />
+        <!--- @keywords private -->
+        <attribute name="trackscroll" value="0" type="number" />
+        <!--- @keywords private -->
+        <attribute name="targetscroll" value="0" type="number" />
+
+        <!--- @keywords private -->
+        <method name="init">
+            super.init();
+            this.classroot.thumb = this;
+        </method>
+
         <!--- @keywords private -->
         <method name="destroy" ><![CDATA[
-            delete this.classroot.thumb;
-            delete this.target;
-            
-            super.destroy.apply(this, arguments);
+            this.classroot.thumb = null;
+            this.target = null;
+
+            super.destroy();
         ]]></method>
-        
+
+        <!--- @keywords private -->
+        <handler name="onmousedown" method="startDrag" />
+        <!--- @keywords private -->
+        <handler name="onmouseup" method="stopDrag" />
+
+        <!--- @keywords private -->
+        <method name="startDrag" args="ignore=null"><![CDATA[
+            var croot = this.classroot;
+            // disable targetpos delegate while dragging
+            croot.targetPosDel.disable();
+            // calculate temp var for what doesn't change while dragging
+            var sizeAxis = croot.sizeAxis;
+            this.target = croot.scrolltarget;
+            this.axis = croot.axis;
+            this.trackscroll = this.immediateparent[sizeAxis] - this[sizeAxis];
+            this.targetscroll = croot.scrollmax - this.target.immediateparent[sizeAxis];
+            // apply thumbdrag state
+            this[this.axis + 'thumbdrag'].setAttribute('applied', true);
+        ]]></method>
+
+        <!--- @keywords private -->
+        <method name="stopDrag" args="ignore=null"><![CDATA[
+            // remove thumbdrag state
+            this[this.axis + 'thumbdrag'].setAttribute('applied', false);
+            // re-enable targetpos delegate
+            this.classroot.targetPosDel.enable();
+        ]]></method>
+
         <state name="ythumbdrag">
             <attribute name="doffset" value="this.getMouse( 'y' )" when="once" />
             <attribute name="y"
@@ -565,32 +599,19 @@
         </state>
 
         <!--- @keywords private -->
-        <method name="thumbControl" args="mousepos">
-            <![CDATA[
-            // thumbControl method becomes a method of 'thumb'
-            // when the state is applied
-            if (this.startDrag) {
-              // calculate temp var for what doesn't change while dragging
-                var sizeAxis = classroot.sizeAxis;
-                this.target = classroot.scrolltarget;
-                this.axis = classroot.axis;
-                this.trackscroll = this.immediateparent[sizeAxis] - this[sizeAxis];
-                this.targetscroll = classroot.scrollmax -
-                    classroot.scrolltarget.immediateparent[sizeAxis];
-                this.startDrag = false;
-            }
-            var pos = Math.round(-this[this.axis] /  this.trackscroll * this.targetscroll);
-
-
-            this.target.setAttribute(classroot.scrollattr, pos);
-
+        <method name="thumbControl" args="mousepos"><![CDATA[
             var thumbpos = mousepos - this.doffset;
-            if (thumbpos <= 0) return 0;
-            if (thumbpos > this.trackscroll) return this.trackscroll;
+            if (thumbpos <= 0) {
+                thumbpos = 0;
+            } else if (thumbpos > this.trackscroll) {
+                thumbpos = this.trackscroll;
+            }
+
+            var pos = Math.round(-thumbpos / this.trackscroll * this.targetscroll);
+            this.target.setAttribute(this.classroot.scrollattr, pos);
 
             return thumbpos;
-            ]]>
-        </method>
+        ]]></method>
 
         <doc>
           <tag name="shortdesc"><text>Provides non-visual aspects of a scrollbar thumb.</text></tag>
@@ -611,11 +632,11 @@
             <attribute name="direction" value="1"/>
             <!--- @keywords private -->
             <handler name="onmousedown">
-                classroot.step(this.direction);
+                this.classroot.step(this.direction);
             </handler>
             <!--- @keywords private -->
             <handler name="onmousestilldown">
-                classroot.step(this.direction);
+                this.classroot.step(this.direction);
             </handler>
         <doc>
           <tag name="shortdesc"><text>Provides non-visual aspects of scrollbar's arrow.</text></tag>
@@ -638,16 +659,11 @@
         <attribute name="direction" value="1"/>
         <!--- @keywords private -->
         <handler name="onmousedown">
-            //setAttribute('bgcolor', 0x000000);
-            classroot.page(this.direction);
+            this.classroot.page(this.direction);
         </handler>
         <!--- @keywords private -->
         <handler name="onmousestilldown">
-            classroot.page(this.direction);
-        </handler>
-        <!--- @keywords private -->
-        <handler name="onmouseup">
-            //setAttribute('bgcolor', 0xdedede);
+            this.classroot.page(this.direction);
         </handler>
         <doc>
           <tag name="shortdesc"><text>Provides non-visual aspects of a scrollbar track.</text></tag>

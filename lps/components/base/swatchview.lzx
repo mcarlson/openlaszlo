@@ -65,7 +65,6 @@
         @param Object o: color transform object (see view.setColorTransform for details)
     -->
     <method name="setColorTransform" args="o">
-        delete this.ctransform;
         this.ctransform = o;
         this.setAttribute('bgcolor', this.color);
     </method>

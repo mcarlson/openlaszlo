@@ -107,15 +107,15 @@
         <method name="_clearDels">
             if (this._dataDel) {
                 this._dataDel.unregisterAll();
-                delete this._dataDel;
+                this._dataDel = null;
             }
             if (this._errorDel) {
                 this._errorDel.unregisterAll();
-                delete this._errorDel;
+                this._errorDel = null;
             }
             if (this._timeoutDel) {
                 this._timeoutDel.unregisterAll();
-                delete this._timeoutDel;
+                this._timeoutDel = null;
             }
         </method>
 
