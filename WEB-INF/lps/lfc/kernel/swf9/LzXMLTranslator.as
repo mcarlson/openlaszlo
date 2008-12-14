@@ -116,7 +116,7 @@ static function copyFlashXML (node:XML, trimwhitespace:Boolean, nsprefix:Boolean
             var lfcchild:LzDataNodeMixin = copyFlashXML(child, trimwhitespace, nsprefix);
             newchildren[i] = lfcchild;
         }
-        (lfcnode cast LzDataElement).setChildNodes(newchildren);
+        (lfcnode cast LzDataElement).$lzc$set_childNodes(newchildren);
     }
     return lfcnode;
 }

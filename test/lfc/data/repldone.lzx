@@ -46,7 +46,7 @@
                     <![CDATA[
                     for ( var i = 0; i < nodes.length ; i++ ){
                         var tnode = nodes[i].getFirstChild();
-                        tnode.setData( tnode.data + "x" );
+                        tnode.setAttribute( "data", tnode.data + "x" );
                     }
                     ]]>
                 </handler>

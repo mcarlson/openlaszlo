@@ -18,19 +18,6 @@ mixin LzDataElementMixin {
     // _if_ it were to have an initialize method, it would have to
     // match LzNode.initialize's signature.
 
-  /**
-   * @devnote These are the setters that this mixin creates
-   */
-  /** @access private */
-  function $lzc$set_attributes(v:Object) :void { this.setAttrs(v); }
-  /** @access private */
-  function $lzc$set_childNodes(v:Array) :void { this.setChildNodes(v); }
-  /** @access private */
-  function $lzc$set_nodeName(v:String) :void { this.setNodeName(v); }
-  /** @access private */
-  function $lzc$set_ownerDocument(v:*) :void { this.setOwnerDocument(v); }
-
-
 /** @access private */
 var __LZchangeQ :Array = null;
 /** @access private */
@@ -79,7 +66,7 @@ public function insertBefore (newChild, refChild){
                 this.childNodes.splice( off, 0, newChild );
             }
             
-            newChild.setOwnerDocument( this.ownerDocument );
+            newChild.$lzc$set_ownerDocument( this.ownerDocument );
             newChild.parentNode = this;
             if (newChild.onparentNode.ready) newChild.onparentNode.sendEvent( this );
             if (this.onchildNodes.ready) this.onchildNodes.sendEvent( newChild );
@@ -124,13 +111,13 @@ public function replaceChild (newChild, oldChild){
             if (! samenode) {
                 //TODO [20080702 anba] this breaks smoke-check!
                 // oldChild.parentNode = null;
-                // oldChild.setOwnerDocument( null );
+                // oldChild.$lzc$set_ownerDocument( null );
                 //adjust node-offset
                 newChild.__LZo = off;
                 this.childNodes[ off ] = newChild;
             }
             
-            newChild.setOwnerDocument( this.ownerDocument );
+            newChild.$lzc$set_ownerDocument( this.ownerDocument );
             newChild.parentNode = this;
             if (newChild.onparentNode.ready) newChild.onparentNode.sendEvent( this );
             if (this.onchildNodes.ready) this.onchildNodes.sendEvent( newChild );
@@ -154,7 +141,7 @@ public function removeChild (oldChild){
     if (off >= 0) {
         //TODO [20080702 anba] this breaks smoke-check!
         // oldChild.parentNode = null;
-        // oldChild.setOwnerDocument( null );
+        // oldChild.$lzc$set_ownerDocument( null );
         
         this.__LZcoDirty = true;
         this.childNodes.splice( off, 1 );
@@ -199,7 +186,7 @@ public function appendChild (newChild){
         //instead of marking dirty, this is easy
         newChild.__LZo = this.childNodes.length - 1;
         
-        newChild.setOwnerDocument( this.ownerDocument );
+        newChild.$lzc$set_ownerDocument( this.ownerDocument );
         newChild.parentNode = this;
         if (newChild.onparentNode.ready) newChild.onparentNode.sendEvent( this );
         if (this.onchildNodes.ready) this.onchildNodes.sendEvent( newChild );
@@ -222,7 +209,7 @@ public function hasChildNodes () :Boolean {
   */
 override public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
     var n:LzDataElement = new LzDataElement(this.nodeName);
-    n.setAttrs( this.attributes );
+    n.$lzc$set_attributes( this.attributes );
     if ( deep ){
         for ( var i:int = 0 ; i < this.childNodes.length; i++ ){
             n.appendChild( this.childNodes[ i ].cloneNode( true ) );
@@ -372,39 +359,41 @@ function __LZupdateCO () :void {
     this.__LZcoDirty = false;
 }
 
-
-/**
-  * Sets the attributes of this node to the given Object.
-  * @param Object attrs: The object to use as the attrs for this node.
-  */
-public function setAttrs ( attrs:Object ) :void {
+/** @access private */
+function $lzc$set_attributes (attrs:Object) :void {
     var a:Object = {};
-    for ( var k:String in attrs ){ a[ k ] = attrs[ k ]; }
+    for (var k:String in attrs) { a[ k ] = attrs[ k ]; }
 
     this.attributes = a;
-    if (this.onattributes.ready) this.onattributes.sendEvent( a);
+    if (this.onattributes.ready) this.onattributes.sendEvent( a );
     if (this.ownerDocument) {
         this.ownerDocument.handleDocumentChange( "attributes", this, 1);
     }
 }
 
 /**
-  * Sets the children of this node to the given array.
-  * @param [LzDataNodeMixin] children: An array of LzDataNodeMixins to be the new children
-  * of this node
+  * Sets the attributes of this node to the given Object.
+  * @param Object attrs: The object to use as the attributes for this node.
+  * @deprecated Use setAttribute('attributes', ...) instead.
   */
-public function setChildNodes ( children:Array ) :void {
+public final function setAttrs (attrs:Object) :void {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_attributes(attrs);
+}
+
+/** @access private */
+function $lzc$set_childNodes (children:Array) :void {
     //TODO [20080702 anba] this breaks smoke-check!
     //var cn = this.childNodes;
     //if (cn && cn.length > 0) {
     //    for (var i = 0; i < cn.length; ++i) {
     //        cn.parentNode = null;
-    //        cn.setOwnerDocument( null );
+    //        cn.$lzc$set_ownerDocument( null );
     //    }
     //}
-    
+
     this.childNodes = children;
-    
+
     if (children.length > 0) {
         // special-case: we cannot call removeChild() if 'children' is the childNodes-Array
         // of another LzDataElement, because removeChild() alters the childNodes-Array directly. Argh!
@@ -412,9 +401,9 @@ public function setChildNodes ( children:Array ) :void {
         var otherParent = children[0].parentNode;
         if (otherParent != null && otherParent !== this && otherParent.childNodes === children) {
             notifyParent = false;
-            otherParent.setChildNodes([]);
+            otherParent.$lzc$set_childNodes([]);
         }
-        
+
         for (var i:int = 0; i < children.length; i++) {
             var c = children[ i ];
             if (c) {
@@ -423,27 +412,33 @@ public function setChildNodes ( children:Array ) :void {
                         c.parentNode.removeChild( c );
                     }
                 }
-                
-                c.setOwnerDocument( this.ownerDocument );
+
+                c.$lzc$set_ownerDocument( this.ownerDocument );
                 c.parentNode = this;
-                if (c.onparentNode && c.onparentNode.ready) c.onparentNode.sendEvent( this );
+                if (c.onparentNode.ready) c.onparentNode.sendEvent( this );
                 c.__LZo = i;
             }
         }
     }
-    
+
     this.__LZcoDirty = false;
-    if (this.onchildNodes) {
-        if (this.onchildNodes.ready) this.onchildNodes.sendEvent( children );
-    }
+    if (this.onchildNodes.ready) this.onchildNodes.sendEvent( children );
     this.ownerDocument.handleDocumentChange( "childNodes", this, 0);
 }
 
 /**
-  * Sets the name of this node.
-  * @param String name: The new name for this node
+  * Sets the children of this node to the given array.
+  * @param [LzDataNodeMixin] children: An array of LzDataNodeMixins to be the new children
+  * @deprecated Use setAttribute('childNodes', ...) instead.
+  * of this node
   */
-public function setNodeName ( name:String ) :void {
+public final function setChildNodes (children:Array) :void {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_childNodes(children);
+}
+
+/** @access private */
+function $lzc$set_nodeName (name:String) :void {
     this.nodeName = name;
     //since this can affect xpaths, send onchildNodes event
     if (this.onnodeName.ready) this.onnodeName.sendEvent( name );
@@ -453,6 +448,16 @@ public function setNodeName ( name:String ) :void {
     }
     this.ownerDocument.handleDocumentChange( "childNodeName", this.parentNode, 0 );
     this.ownerDocument.handleDocumentChange( "nodeName", this, 1 );
+}
+
+/**
+  * Sets the name of this node.
+  * @param String name: The new name for this node
+  * @deprecated Use setAttribute('nodeName', ...) instead.
+  */
+public final function setNodeName (name:String) :void {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_nodeName(name);
 }
 
 /**
@@ -603,7 +608,7 @@ public function handleDocumentChange ( what:String, who /*:LzDataNodeMixin*/, ty
     var o:Object = {who: who, what: what, type: type};
     if (cobj) o.cobj = cobj;
     if ( this.__LZchangeQ ){
-        this.__LZchangeQ.push ( o );
+        this.__LZchangeQ.push( o );
     } else {
         if (this.onDocumentChange.ready) this.onDocumentChange.sendEvent( o );
     }
@@ -613,8 +618,7 @@ public function handleDocumentChange ( what:String, who /*:LzDataNodeMixin*/, ty
   * @access private
   */
 override function toString () /*:String*/ {
-    var r:String = this.serialize();
-    return r;
+    return this.serialize();
 }
 
 /**
@@ -633,13 +637,14 @@ public function __LZdoLock ( locker:LzDatapath ) :void {
   * @access private
   */
 public function __LZdoUnlock ( locker:LzDatapath ) :void {
-    
+
     if ( this.__LZlocker != locker ){
         return;
     }
 
     var lzq:Array = this.__LZchangeQ;
     this.__LZchangeQ = null;
+    this.__LZlocker = null;
 
     if (lzq != null) {
         for ( var i:int = 0; i < lzq.length; i++ ){
@@ -656,7 +661,7 @@ public function __LZdoUnlock ( locker:LzDatapath ) :void {
             }
 
             if ( sendit ){
-                this.handleDocumentChange ( tc.what, tc.who, tc.type );
+                this.handleDocumentChange( tc.what, tc.who, tc.type );
             }
         }
     }
@@ -675,8 +680,7 @@ lz.DataElementMixin = LzDataElementMixin;  // publish
   * @see LzDataNodeMixin LzDataText LzDataPointer
   * @access public
   */
-class LzDataElement extends LzDataNode with LzDataElementMixin, LzDataNodeMixin
-{
+class LzDataElement extends LzDataNode with LzDataElementMixin, LzDataNodeMixin {
     /** DEFINE OBJECT: LzDataElement
      * This object represents a hierarchical data node.
      * @param String name: The name for this node.
@@ -686,17 +690,13 @@ class LzDataElement extends LzDataNode with LzDataElementMixin, LzDataNodeMixin
     function LzDataElement ( name:String, attributes:Object? = null, children:Array? = null) {
         // N.B.: LzDataElement is not an LzNode so has a different
         // initialize signature.
-            super();
-            this.nodeName = name;
-            this.nodeType = LzDataElement.ELEMENT_NODE;
-            this.attributes = attributes;
-            this.ownerDocument = this;
-            if (children == null) {
-                this.setChildNodes ( [] );
-            } else {
-                this.setChildNodes( children );
-            }
-        }
+        super();
+        this.nodeName = name;
+        this.nodeType = LzDataElement.ELEMENT_NODE;
+        this.attributes = attributes;
+        this.ownerDocument = this;
+        this.$lzc$set_childNodes( children || [] );
+    }
 
 /**
   * Returns a list of empty nodes, each named 'name'.
@@ -716,8 +716,7 @@ static function makeNodeList(count:int, name:String) :Array {
   * Get LzDataElement representation of primitive type, array, or object value.
   */
 static function valueToElement ( o:* ) :LzDataElement {
-    var n:LzDataElement = new LzDataElement("element", { }, LzDataElement.__LZv2E(o));
-    return n; 
+    return new LzDataElement("element", {}, LzDataElement.__LZv2E(o));
 }
 
 /**
@@ -728,7 +727,6 @@ static function valueToElement ( o:* ) :LzDataElement {
 static function __LZv2E ( o:* ) :Array {
 
     var type:String = typeof( o );
-    type.toLowerCase();
 
     var c:Array = [];
     if (type == "object") {
@@ -797,20 +795,17 @@ static const __LZescapechars :Object =
 static function __LZXMLescape ( t:* ) :* {
     if ( typeof( t ) != "string" ) return t;
 
+    const escChars:Object = LzDataElement.__LZescapechars;
     var olen:int = t.length;
     var r:String = "";
     for ( var i:int = 0; i < olen; i++ ){
         //handle newlines
         var code:Number = t.charCodeAt( i );
         if ( code < 32 ){
-            r += "&#x" + lz.Utils.dectohex(code, 0) + ";";
+            r += "&#x" + code.toString(16) + ";";
         } else {
             var c:String = t.charAt( i );
-            if ( LzDataElement.__LZescapechars[ c ] != null ){
-                r += LzDataElement.__LZescapechars[ c ];
-            } else {
-                r += c;
-            }
+            r += (escChars[c] || c);
         }
     }
 

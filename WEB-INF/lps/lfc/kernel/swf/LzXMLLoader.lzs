@@ -190,7 +190,7 @@ class LzXMLLoader extends LzLoader {
                 var lfcchild = LzXMLLoader.prototype.copyFlashXML(child, trimwhitespace, nsprefix);
                 newchildren[i] = lfcchild;
             }
-            lfcnode.setChildNodes(newchildren);
+            lfcnode.$lzc$set_childNodes(newchildren);
         }
         return lfcnode;
     }

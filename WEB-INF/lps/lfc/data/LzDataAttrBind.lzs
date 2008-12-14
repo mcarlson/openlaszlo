@@ -113,7 +113,7 @@ function __LZupdateData (recursive:Boolean = false) :void {
             } else if (ppdo == "__LZgetText") {
                 this.setNodeText( dat );
             } else if (ppdo == "attributes") {
-                this.p.setAttrs( dat );
+                this.p.$lzc$set_attributes( dat );
             } else {
                 //remove the "attributes." from the operator
                 this.setNodeAttribute( ppdo.substring( 11 ) , dat );

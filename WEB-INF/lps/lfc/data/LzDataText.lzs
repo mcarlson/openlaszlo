@@ -47,7 +47,7 @@ var data :String = "";
 /** @access private */
 function $lzc$set_data(newdata:String) :void {
     this.data = newdata;
-    if (this.ondata && this.ondata.ready) {
+    if (this.ondata.ready) {
         this.ondata.sendEvent( newdata );
     }
     if (this.ownerDocument) {
@@ -89,7 +89,7 @@ override public function serialize (len:Number = Infinity) :String {
 /**
   * @access private
   */
- override function toString () /*:String*/ {
+override function toString () /*:String*/ {
     //return this.serialize();
     return this.data;
 }

@@ -106,9 +106,9 @@
         <TestCase>
             <method name="test1">
                 assertEquals( 6, replator.clones.length );
-                somedat.getFirstChild().getFirstChild().setNodeName( 'plop' );
+                somedat.getFirstChild().getFirstChild().setAttribute( "nodeName", 'plop' );
                 assertEquals( 5, replator.clones.length );
-                somedat.getFirstChild().getFirstChild().setNodeName( 'record' );
+                somedat.getFirstChild().getFirstChild().setAttribute( "nodeName", 'record' );
                 assertEquals( 6, replator.clones.length );
                 var opath = replator.xpath;
                 replator.setAttribute( 'datapath', opath + 'options/glasses/../..' );

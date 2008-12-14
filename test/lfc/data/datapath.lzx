@@ -82,7 +82,7 @@
 
             assertFalse( etcRoot.etc1.datapath.setNodeName( 'data' ) );
             assertEquals( 0 , this.collector.ondata.length );
-            etcRoot.datapath.p.getFirstChild().setNodeName( 'data' );
+            etcRoot.datapath.p.getFirstChild().setAttribute( "nodeName", 'data' );
             assertEquals( 6 , this.collector.ondata.length );
             this.clearCollected();
 
@@ -130,11 +130,11 @@
             assertEquals( 0 , this.collector.ondata.length );
             assertEquals( 0 , this.collector.applyData.length );
 
-            nn.setNodeName( 'blumb' );
+            nn.setAttribute( "nodeName", 'blumb' );
             assertEquals( 0 , this.collector.ondata.length );
             assertEquals( 0 , this.collector.applyData.length );
 
-            nn.setNodeName( 'record' );
+            nn.setAttribute( "nodeName", 'record' );
             assertEquals( 4 , this.collector.ondata.length );
             assertEquals( 2 , this.collector.applyData.length );
             assertEquals( et2.etc3  , this.collector.ondata[0] );

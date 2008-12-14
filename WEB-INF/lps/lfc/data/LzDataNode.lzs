@@ -181,26 +181,33 @@ function childOfNode ( el, allowself:Boolean = false ) :Boolean {
   * @param Boolean allowself: If true, this function returns true if the given
   * node is the same as this node.
   */
-override function childOf ( el , allowself=false ) {
-  return this.childOfNode (el, allowself);
+override function childOf ( el, allowself=false ) {
+  return this.childOfNode(el, allowself);
+}
+
+/** @access private */
+function $lzc$set_ownerDocument (ownerDoc:LzDataElementMixin) :void {
+    this.ownerDocument = ownerDoc;
+    if (this.childNodes) {
+        for (var i:int = 0; i < this.childNodes.length; i++) {
+            this.childNodes[ i ].$lzc$set_ownerDocument( ownerDoc );
+        }
+    }
+
+    if (this.onownerDocument.ready) {
+        this.onownerDocument.sendEvent( ownerDoc );
+    }
 }
 
 /**
   * Sets the LzDataNodeMixin which is the ownerDocument for this node.
   * @param LzDataNodeMixin ownerDoc: The LzDataNodeMixin to act as the ownerDocument for
   * this node.
+  * @deprecated Use setAttribute('ownerDocument', ...) instead.
   */
-public function setOwnerDocument ( ownerDoc ) :void {
-    this.ownerDocument = ownerDoc;
-    if (this.childNodes) {
-        for ( var i:int = 0; i < this.childNodes.length; i++ ){
-            this.childNodes[ i ].setOwnerDocument( ownerDoc );
-        }
-    }
-
-    if (this.onownerDocument && this.onownerDocument.ready) {
-        this.onownerDocument.sendEvent( ownerDoc );
-    }
+public final function setOwnerDocument (ownerDoc) :void {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_ownerDocument(ownerDoc);
 }
 
 /**
@@ -239,6 +246,7 @@ function __LZunlockFromUpdate (locker:LzDatapath) :void {
 
 /**
   * @access private
+  * @see LzResizeReplicationManager
   */
 function __LZgetSize (k:String) :* {
     return this.__LZsize && this.__LZsize[k];
@@ -246,6 +254,7 @@ function __LZgetSize (k:String) :* {
 
 /**
   * @access private
+  * @see LzResizeReplicationManager
   */
 function __LZsetSize (k:String, v:*) :void {
     if (! this.__LZsize) this.__LZsize = {};

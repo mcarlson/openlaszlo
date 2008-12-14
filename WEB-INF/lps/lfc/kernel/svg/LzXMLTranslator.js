@@ -1,7 +1,7 @@
 /**
   * LzXMLTranslator.js
   *
-  * @copyright Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -75,7 +75,7 @@ LzXMLTranslator.copyBrowserXML = function (node, ignorewhite, trimwhite) {
             }
         }
 
-        lfcnode.setChildNodes(newchildren);
+        lfcnode.$lzc$set_childNodes(newchildren);
         return lfcnode;
     } else {
         // ignore all other node types

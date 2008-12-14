@@ -68,7 +68,7 @@ copyBrowserXML: function (node, ignorewhite, trimwhite, nsprefix) {
                 }
             }
             
-            lfcnode.setChildNodes(newchildren);
+            lfcnode.$lzc$set_childNodes(newchildren);
         }
         return lfcnode;
     } else {

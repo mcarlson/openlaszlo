@@ -438,7 +438,7 @@ override function $lzc$set_name(name:String) {
   * @access private
   */
 override function destroy () {
-    this.setChildNodes([ ]);
+    this.$lzc$set_childNodes([ ]);
     this.dataRequest = null;
 
     if (this.dsloadDel) {
@@ -519,9 +519,9 @@ override function $lzc$set_data (data:*) :void {
     if (data == null) {
         return;
     } else if (data instanceof Array) {
-        this.setChildNodes(data);
+        this.$lzc$set_childNodes(data);
     } else {
-        this.setChildNodes([data]);
+        this.$lzc$set_childNodes([data]);
     }
 
     this.data = data;

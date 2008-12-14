@@ -27,7 +27,7 @@
             assertEquals( 'slop' , a.b.n.dattr );
 
             dolpatbind.getFirstChild().setAttr( 'foo' , '11' );
-            dolpatbind.getFirstChild().getFirstChild().setData( 'newdata' );
+            dolpatbind.getFirstChild().getFirstChild().setAttribute( "data", 'newdata' );
 
             assertEquals( '11' , a.b.m.dattr );
             assertEquals( 'newdata' , a.b.n.dattr );

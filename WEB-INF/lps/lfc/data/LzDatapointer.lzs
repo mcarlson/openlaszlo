@@ -956,7 +956,7 @@ function setNodeName (name:String) :void {
         return;
     }
     if (this.p.nodeType != LzDataElement.TEXT_NODE) {
-        this.p.setNodeName( name );
+        this.p.$lzc$set_nodeName( name );
     }
 }
 

@@ -54,7 +54,7 @@
             assertEquals( "" , mydp.data );
             var nt = ne.appendChild( new LzDataText( "end text" ) );
             assertEquals( "end text" , mydp.data );
-            nt.setData( "new end" );
+            nt.setAttribute( "data", "new end" );
             assertEquals( "new end" , mydp.data );
             var nnt = ne.insertBefore( new LzDataText( "first text" ) ,
                                        ne.getFirstChild() ); 

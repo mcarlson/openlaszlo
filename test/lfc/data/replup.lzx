@@ -17,7 +17,7 @@
     <TestSuite>
         <TestCase>
             <method name="test1">
-                items.getFirstChild().getFirstChild().setData( 'changed' );
+                items.getFirstChild().getFirstChild().setAttribute( "data", 'changed' );
                 items.getFirstChild().setAttr( "value" , "zero" );
                 Debug.write( items.serialize() );
                 assertEquals ( "changed" , rman.clones[ 0 ].getText() );
@@ -33,6 +33,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
