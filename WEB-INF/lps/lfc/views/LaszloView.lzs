@@ -447,7 +447,7 @@ override function construct ( parent , args) {
         this.__LZcheckheight = false;
     }
 
-    if (args['clip'] != null){
+    if (args['clip']){
         this.clip = args.clip;
         this.makeMasked();
     }
