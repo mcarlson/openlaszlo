@@ -1,0 +1,21 @@
+<canvas height="80">
+  <class name="clickClock" extends="text" multiline="true">
+    <attribute name="times" value="0" />
+    <handler name="onclick">
+      var now = new Date;
+      this[(this.times++ == 0)?'format':'addFormat']("Click number: %d @ %02d:%02d:%02d.%03d\n",
+            this.times, 
+            now.getHours(), 
+            now.getMinutes(), 
+            now.getSeconds(), 
+            now.getMilliseconds());
+    </handler>
+  </class>
+  <clickClock>
+    Click Me!
+  </clickClock>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.             *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

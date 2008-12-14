@@ -496,10 +496,20 @@
     <ulink url="../reference/LzFormatter.html"><literal>lz.Formatter</literal></ulink> to format text based
     on a control string.</para>
           <example role="live-example">
-        <title>Formated text</title>
+        <title>Formated text with <literal>text.format()</literal></title>
         <programlisting language="lzx">
           <textobject>
             <textdata fileref="programs/textformat.lzx" />
+          </textobject>
+        </programlisting>
+          </example>
+      <para><literal>text.addFormat()</literal> is similar to <literal>text.format()</literal>, but instead of replacing text,
+      it appends to the text.</para>
+      <example role="live-example">
+        <title>Formated text with <literal>text.addFormat()</literal></title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/addformat.lzx" />
           </textobject>
         </programlisting>
       </example>
