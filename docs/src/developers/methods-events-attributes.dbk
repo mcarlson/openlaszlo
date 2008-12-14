@@ -1,7 +1,7 @@
 <chapter id="methods-events-attributes">
 <title>Methods, Events, Handlers, and Attributes</title>
 <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
-<para/><section><title> Overview </title>
+<section><title> Overview </title>
 
 <para>
 In LZX, the concepts of methods, events, handlers and attributes are related to each other in a braid-like way. In this chapter we'll show you how they weave together.
@@ -34,7 +34,7 @@ In the discussion below we'll assume a commonsense understanding of the meaning 
 <!--unknown tag: attribute-->
 . Attributes are examined more thoroughly at the end of this chapter.
 </para>
-<para/></section><section><title>Methods</title>
+</section><section><title>Methods</title>
 <para>
 A <indexterm><primary>method</primary></indexterm><sgmltag class="element">&lt;method&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: method-->
@@ -63,7 +63,7 @@ In the following example, the <indexterm><primary><literal>myMethod()</literal><
    </programlisting>
 </example>
 
-<para/><section><title>Naming methods</title>
+<section><title>Naming methods</title>
 <para>
 Choose method names carefully. Names should be descriptive, to help you and
 other readers of your code understand what they do. You need also to keep in mind that when you extend a class,
@@ -74,12 +74,12 @@ LZX Reference, which
 lists all methods for all Laszlo Foundation Classes (LFC).
 </para>
 
-<para/><section><title>Overriding Methods</title>
+<section><title>Overriding Methods</title>
 <para>
 When you create a class by extending another one, the new class inherits all the methods of the original.  You can then give a new definition to any of the inherited methods; this is called overriding.  See <xref linkend="class-inheritance"/> for a complete discussion.
 </para>
 
-<para/></section></section><section><title>Simple Arguments</title> 
+</section></section><section><title>Simple Arguments</title> 
 
 <para>
 The method attribute <indexterm><primary>args</primary></indexterm><sgmltag class="attribute">'args'</sgmltag> is used to pass arguments to a method.  The value of the 'args' attribute is a 
@@ -95,7 +95,7 @@ script to add the number 1 to the number 2, you would write <literal>myNode.add(
    </programlisting>
 </example>
 
-<para/></section><section><title> Return Values </title>
+</section><section><title> Return Values </title>
 
 <para>
 Sometimes when you write a method, you want the result to be returned to the calling script for
@@ -110,7 +110,7 @@ further processing.  In the following example, <literal>returnsum()</literal> me
 </example>
 
 
-<para/></section></section><section><title>Events</title>
+</section></section><section><title>Events</title>
 <para>
 In LZX, changes in the status of objects are communicated through events. Events can be used to trigger the execution of script. The script to be executed can be contained in an <glossterm>event handler</glossterm>, as explained in this chapter, or in a method that is invoked by a <glossterm>delegate</glossterm> as explained in <xref linkend="delegates"/>.
 </para>
@@ -125,7 +125,7 @@ In addition to the events that you define, there are also events that are built 
 <para>
 Unlike events in similar systems, OpenLaszlo's events are point-to-point, meaning that there is no general broadcast mechanism for events, and events do not trickle up or down the instance hierarchy.  Declaring an event that no handler (or delegate) is listening for has no effect. This allows objects to publish many more events than they actually need to create at runtime; this allows you flexibility in prototyping.
 </para>
-<para/><section><title>Implicit "on" events</title>
+<section><title>Implicit "on" events</title>
 <para>
 Any defined attribute has an associated event called
  "on" plus the name of the attribute. Whenever the value of any
@@ -145,7 +145,7 @@ events associated with them.  For example, the <indexterm><primary>view</primary
 that is generated whenever the user clicks the mouse while the cursor is positioned over the view— even though there is no attribute named "click".  See the <ulink url="../reference/../reference/" type="laszlo-reference">LZX Reference Manual</ulink> for a complete
 list of events associated with LFC classes.
 </para>
-<para/></section><section><title>The event tag</title>
+</section><section><title>The event tag</title>
 <para> 
 In addition to built-in and implicit events, you can explicitly declare events with the <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: event-->
@@ -155,11 +155,11 @@ In addition to built-in and implicit events, you can explicitly declare events w
 Note that in 3.n and earlier releases, you can send events that have not been explicitly declared.  However, this is not a good practice, and applications that rely on this will break with release 4.0. Therefore, it's good to get in the habit of declaring any events that you know you will send by calling <indexterm><primary><literal>sendEvent()</literal></primary></indexterm><methodname>sendEvent()</methodname>.
 </para>
 
-<para/><section><title>Naming events</title>
+<section><title>Naming events</title>
 <para>
 As discussed in the section below on handlers, events and their associated handlers must have the same name.  <note>Event names cannot start with a leading underscore.</note>
 </para>
-<para/></section></section><section><title>LzEvent and the sendEvent method</title>
+</section></section><section><title>LzEvent and the sendEvent method</title>
 <para>
 When you create an event using the <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag>, you are creating an instance of the class called <indexterm><primary>LzEvent</primary></indexterm><classname>LzEvent</classname>. You can then call the <indexterm><primary><literal>sendEvent()</literal></primary></indexterm><methodname>sendEvent()</methodname> on this class to explicitly cause the event to be sent. 
 </para>
@@ -178,7 +178,7 @@ You shouldn't send an event for which no handler has been defined. That is to sa
 <para>
 Note that there is virtually never any reason to create an event in script by creating a  new LzEvent.  Likewise, there is virtually never any reason for you to use any method on this event other than sendEvent.  Other methods are used internally within the Laszlo Foundation Classes; they are not intended for user code.
 </para>
-<para/></section></section><section><title>Event Handlers</title>
+</section></section><section><title>Event Handlers</title>
 <para>
 An event handler is the code that is executed when an event is received. An event can have zero or more handlers.
 </para>
@@ -189,7 +189,7 @@ There are two syntaxes that you can use to define handlers:</para>
 For convenience, you can use the onevent syntax for short handlers for some kinds of events, such as onclick, as explained below. For readability, however, the <indexterm><primary>
 handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag> syntax is often better.
 </para>
-<para/><section><title>"onevent" open tag syntax</title>
+<section><title>"onevent" open tag syntax</title>
 <para>
 The "onevent" syntax is available for attributes that correspond to the CSS event model—onclick, onmouseover, and so
 forth. For such events, the simplest way to declare an event handler is simply to include it in the definition tag of the node that contains the
@@ -208,13 +208,13 @@ the views's color from red to blue.
    </programlisting>
 </example>
 
-<para/></section><section><title>The &lt;handler&gt; tag</title>
+</section><section><title>The &lt;handler&gt; tag</title>
 <para>The <indexterm><primary>handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: handler-->
  tag defines how an instance responds to an event. A handler can either specify the code to handle an event or it can specify a method that should be invoked to handle the event. Any event can have an unlimited number of handlers associated with it.
 </para>
  
-<para/><section><title>Handler tag "name" attribute</title>
+<section><title>Handler tag "name" attribute</title>
 <para>
 The <indexterm><primary>handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag> tag defines code that is executed when an event that has the name of the handler is fired. The name of the handler is the same as the name of the event with which it is associated.  For example, the "onclick" event is handled by a handler also named "onclick".
 Event handlers defined in this way are executed whenever their associated <indexterm><primary>event</primary></indexterm><sgmltag class="attribute">event</sgmltag> occurs.
@@ -230,7 +230,7 @@ The following example shows how you might handle a button click:
    </programlisting>
 </example>
  
-<para/></section></section><section><title>Multiple handlers for the same event</title>
+</section></section><section><title>Multiple handlers for the same event</title>
 <para>
 An event can have associated with it any number of handlers. When that event is sent, all handlers associated with it are executed.
 </para>
@@ -242,7 +242,7 @@ An event can have associated with it any number of handlers. When that event is 
    </programlisting>
 </example>
 
-<para/></section><section><title>Handlers that call methods</title>
+</section><section><title>Handlers that call methods</title>
 <para>
 A handler may include JavaScript code to be executed when the associated event occurs, or it may reference a method that contains the code to be executed.  To reference another method, use the <indexterm><primary>method</primary></indexterm><sgmltag class="attribute">method</sgmltag> attribute of the <indexterm><primary>handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag> tag.</para>
 
@@ -253,7 +253,7 @@ A handler may include JavaScript code to be executed when the associated event o
    </programlisting>
 </example>
 
-<para/></section><section><title>Handlers in class definitions</title>
+</section><section><title>Handlers in class definitions</title>
 <para>
 A handler is not overridable in a subclass, so you can add as many handlers as you like to an event and they will all fire. 
 </para>
@@ -274,7 +274,7 @@ Recall that a method is an 'action' you can perform on an instance, and that you
   this.methodName();
 &lt;/handler&gt;
 </programlisting>
-<para/></section><section><title>Overriding handlers</title>
+</section><section><title>Overriding handlers</title>
 <para>
 If you want the superclass to define a handler that the subclass can override, you would have the handler point to a method, and in the subclass you just override the method. Let's repeat that to make it clear: when you want the subclass to have a different behavior than the superclass, don't attempt to override the handler in the subclass, and don't create a new handler in the subclass. Instead, have the handler in the superclass call a method, and then in the subclass, override that method.  Try this example, which hopefully makes all clear:</para>
 
@@ -317,7 +317,7 @@ Here's an example using <literal>&lt;text&gt;</literal>:</para>
 <para>
 Note that Mine handles a click on Yours.  Even though the handler is in Mine, it only runs when you click Yours. 
 </para>
-<para/></section><section><title>Comparing ways to send and handle events</title>
+</section><section><title>Comparing ways to send and handle events</title>
 <para>
 As has been discussed above, you can cause an event to be sent explicitly, by defining the event and then calling the <indexterm><primary><literal>sendEvent()</literal></primary></indexterm><methodname>sendEvent()</methodname> on it.  Or, you can use the <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> method to implicitly define and send an event.  A third way of defining events, using delegates, is explained in <xref linkend="delegates"/>.
 </para>
@@ -329,7 +329,7 @@ As has been discussed above, you can cause an event to be sent explicitly, by de
    </programlisting>
 </example>
 
-<para/></section><section><title>Testing for existence of events in "legacy" code</title>
+</section><section><title>Testing for existence of events in "legacy" code</title>
 <para>
 As is explained in <xref linkend="delegates"/>, an event doesn't really exist unless and until there is a delegate registered to receive it. In code that was written before the <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag> tag became part of the language,
 before sending an event it was necessary to test whether the receiving delegate existed; otherwise an error resulted. In order to create your own event, you needed to create an attribute like this:</para>
@@ -355,7 +355,7 @@ or like this:
 If you use the <indexterm><primary>event</primary></indexterm><sgmltag class="element">&lt;event&gt;</sgmltag> and <indexterm><primary>handler</primary></indexterm><sgmltag class="element">&lt;handler&gt;</sgmltag> syntax, you  do not have to worry about such tests. (The delegates are handled for you by the runtime.)
 </para>
 
-<para/></section></section><section id="methods-events-attributes.attribute-tag"><title>Attributes</title>
+</section></section><section id="methods-events-attributes.attribute-tag"><title>Attributes</title>
 <para>
 Attributes define properties of instances of classes.  For example, consider the <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: view-->
@@ -442,33 +442,14 @@ using the <indexterm><primary><literal>setAttribute()</literal></primary></index
 
 
 
-<para/><section><title>Categories of Attributes</title>
+<section><title>Categories of Attributes</title>
 <para>
-Attributes can be placed into five categories according to how they are set, read, and modified.
+Attributes can be placed into four categories according to how they are set, read, and modified.
 </para>
-<itemizedlist spacing="compact"><listitem><para>Attributes (with setter)</para></listitem><listitem><para>Attributes (without setter)</para></listitem><listitem><para>Event Handler (script may
+<itemizedlist spacing="compact"><listitem><para>Attributes</para></listitem><listitem><para>Event Handler (script may
       be defined in XML tag)</para></listitem><listitem><para>Final Attributes (defined only in XML tag)</para></listitem><listitem><para>Read-only Attributes (JavaScript fields)</para></listitem></itemizedlist>
 <para>These are described briefly in the following sections.</para>
-<para/><section><title>Attributes (with setter)</title>
-<para>These are built-in attributes which have setters that may be modified at runtime
-and used in constraint expressions. When <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>
-is called, the appropriate setter is called automatically. See <xref linkend="explicitAtt"/>. The
-value of an attribute can be retrieved through script using dot
-syntax, for example, <literal> myView.opacity</literal>. </para>
-
-<para>For example:</para>
-
-
-<example role="live-example">
-   <title>Using setAttribute to update a constraint</title>
-   <programlisting language="lzx">
-   <textobject><textdata fileref="programs/methods-events-attributes-$18.lzx"/></textobject> 
-   </programlisting>
-</example>
-
-
-
-<para/></section><section><title>Attributes (without setter)</title>
+<section><title>Attributes</title>
 <para>Some attributes are usable in a tag, but do not have a predefined
 setter method. Instead they use the default setter method
 (<indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>) to set their values at
@@ -484,7 +465,7 @@ declared and set in tags too.</para>
 </example>
 
 
-<para/></section><section><title>Event Handler Attributes</title>
+</section><section><title>Event Handler Attributes</title>
 <para>Event Handler attributes are instructions for what to perform when a particular event happens. They always contain script, and cannot be changed at run-time (i.e. from script). Their values cannot (and do not need to) be retrieved from script.</para>
 <example role="live-example">
     <title>Event handler attributes</title>
@@ -492,17 +473,17 @@ declared and set in tags too.</para>
       <textobject><textdata fileref="programs/methods-events-attributes-$20.lzx"/></textobject> 
     </programlisting>
 </example>
-<para/></section><section><title>Final Attributes</title>
+</section><section><title>Final Attributes</title>
 <para>Final attributes are declared and set in the tag, but cannot be changed in using script. 
 Good examples of final attributes are <indexterm><primary>name</primary></indexterm><sgmltag class="attribute">name</sgmltag> and <indexterm><primary>id</primary></indexterm><sgmltag class="attribute">id</sgmltag>. They can be read from script using dot syntax (e.g. myView.name).</para>
 
 
-<para/></section><section><title>Read Only Attributes (Fields)</title>
+</section><section><title>Read Only Attributes (Fields)</title>
 <para>Read Only attributes, sometimes called "Fields", are only available through
   the element's API. Since they are read-only, they cannot be set in a &lt;tag&gt;.
   Their values can be retrieved using dot syntax (e.g. myView.subviews).</para>
 
-<para/></section></section></section><section><title>The <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> tag</title>
+</section></section></section><section><title>The <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> tag</title>
 
 <para>The <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> tag has two uses.</para>
 
@@ -519,6 +500,7 @@ example:</para>
    </programlisting>
 </example>
 
+   <para>You can also use an instance to extend a class, just like a new class would (but without defining the class, if you only need one instance). So, just as in a class, the attribute element can be used to define an additional attribute.</para>
 
 <para>In an instance, the <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> element sets the attribute of the object that it is attached to.  
 In this use, the <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> element is equivalent to the use of an attribute in a tag header.  
@@ -541,12 +523,12 @@ can increase readability.
 </para>
 <para>
 You can also define new attributes. For these you must use the <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> tag.</para>
-<para/><section><title>Attributes and Constraints</title>
+<section><title>Attributes and Constraints</title>
 <para>Attributes can be <emphasis role="i">constrained</emphasis> to the value of other attributes.  
 
 See the <xref linkend="constraints"/> for details.
 </para>
-<para/></section>
+</section>
 <!-- add id to section so the reference can xref here. IORIO 22 0ct 2007 -->
 <section id="attribute-types"><title>Attribute types</title>
 <para>
@@ -572,26 +554,63 @@ To make sure attributes do what you want them to do, assign a <literal>type</lit
 </example>
 
 
-<para/><section><title>Using the <indexterm><primary>type</primary></indexterm><sgmltag class="element">&lt;type&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: type-->
- option</title>
+<section><title>Using the <literal>type</literal> attribute</title>
 
 <para>
-    The <literal>type</literal> option specifies the type of the attribute's value and affects how a value expression will be parsed: 
+    The <literal>type</literal> attribute specifies the type of the <literal>&lt;attribute&gt;</literal>'s value and affects how a value expression will be parsed: 
 </para>
-<variablelist><varlistentry><term>
-        string 
-    </term><listitem><para>
-        An XML <glossterm>string</glossterm>. To assign the value of an expression that yields a JavaScript <indexterm><primary>String</primary></indexterm><classname>String</classname>, use <literal>value="${<varname>expression</varname>}"</literal>. 
-    </para></listitem></varlistentry><varlistentry><term>
-        color 
-    </term><listitem><para>
-       A colorLiteral (see table below). To assign the value of a JavaScript expression, 
-use <literal>value="${<varname>expression</varname>}"</literal>. The expression must yield a numeric color value. 
-    </para></listitem></varlistentry><varlistentry><term>boolean</term><listitem><para>"true" or "false"</para></listitem></varlistentry><varlistentry><term>expression</term><listitem><para>An ECMAScript expression.</para></listitem></varlistentry><varlistentry><term>number</term><listitem><para>A numberLiteral, or an ${<varname>expression</varname>} which evaluates to a number.</para></listitem></varlistentry><varlistentry><term>size</term><listitem><para>A sizeLiteral, or an ${<varname>expression</varname>} which evaluates to a non-negative number.</para></listitem></varlistentry><varlistentry><term>text</term><listitem><para>plain unicode text or html </para></listitem></varlistentry><varlistentry><term>html</term><listitem><para>html-encoded text</para></listitem></varlistentry></variablelist> 
+   <table>
+      <title>Using the <literal>type</literal> attribute</title>
+      <tgroup cols="2">
+         <colspec colnum="1" colname="col1" colwidth="1*"/>
+         <colspec colnum="2" colname="col2" colwidth="5*"/>
+         <?dbhtml cellpadding="2" ?>
+         <thead>
+            <row>
+               <entry>Value</entry>
+               <entry>Definition</entry>
+            </row>
+         </thead>
+         <tbody><row><entry><literal>string</literal></entry> <entry>A <literal>string</literal>. To assign the value of an expression
+            that yields a JavaScript <classname>String</classname>, use
+            <literal>value="${<varname>expression</varname>}"</literal>.</entry> </row>
+         <row>
+            <entry><literal>color</literal></entry>
+            <entry>A <literal>colorLiteral</literal> (see <xref linkend="colorliterals" />). To assign the value of a JavaScript expression,
+               use <literal>value="${<varname>expression</varname>}"</literal>. The expression must
+               yield a numeric color value.</entry>
+         </row>
+         <row>
+            <entry><literal>boolean</literal></entry>
+            <entry>"true" or "false"</entry>
+         </row>
+         <row>
+            <entry><literal>expression</literal></entry>
+            <entry>An ECMAScript expression</entry>
+         </row>
+         <row>
+            <entry><literal>number</literal></entry>
+            <entry>A <literal>numberLiteral</literal>, or an ${<varname>expression</varname>} which evaluates to a
+               number.</entry>
+         </row>
+         <row>
+            <entry><literal>size</literal></entry>
+            <entry>A <literal>sizeLiteral</literal>, or an ${<varname>expression</varname>} which evaluates to a
+               non-negative number</entry>
+         </row>
+         <row>
+            <entry><literal>text</literal></entry>
+            <entry>plain unicode text or html</entry>
+         </row>
+         <row>
+            <entry><literal>html</literal></entry>
+            <entry>html-encoded text</entry>
+         </row></tbody>
+      </tgroup>
+   </table>
 
 <para>
-    All other types (boolean, expression, number, size, text) are parsed as expressions of the specified type. 
+    All other types (<literal>boolean</literal>, <literal>expression</literal>, <literal>number</literal>, <literal>size</literal>, <literal>text</literal>) are parsed as expressions of the specified type. 
 </para>
 <para role="fixme"><remark role="fixme"><emphasis role="para-label">FIXME: </emphasis>ype='boolean | color | expression | number | size | string | text | html' </remark></para>
 <para>
@@ -599,12 +618,13 @@ Note that in XML, types are specified in lower case, e.g., <literal>string</lite
 The two types are equivalent in LZX, but you must use the XML name in XML constructs and the JavaScript name in JavaScript constructs. 
 </para>
 
-<para/></section><section><title>Summary of color literals</title>
+</section><section id="colorliterals"><title>Summary of color literals</title>
 <para>Colors can have the following values:</para>
-<variablelist><varlistentry><term>colorLiteral</term><listitem><para>A color of the form <literal>#hhh</literal>, <literal>#hhhhhh</literal>, <literal>rgb(rv, gv, bv)</literal> or a CSS color name, where <varname>h</varname> is a hexadecimal digit, <varname>rv</varname>, <varname>gv</varname>, and <varname>bv</varname> are numbers between 0.0 and 1.0 inclusive, and the CSS color names are from the table below.</para></listitem></varlistentry></variablelist>
+<variablelist><varlistentry><term>colorLiteral</term><listitem><para>A color of the form <literal>#hhh</literal>, <literal>#hhhhhh</literal>, <literal>rgb(rv, gv, bv)</literal> or a CSS color name, where <varname>h</varname> is a hexadecimal digit, <varname>rv</varname>, <varname>gv</varname>, and <varname>bv</varname> are numbers between 0.0 and 1.0 inclusive, and the CSS color names are defined in <literal>lz.colors</literal>.</para></listitem></varlistentry></variablelist>
 
 <table><title>CSS color names</title>
 	<tgroup cols="2">
+	   <?dbhtml cellpadding="2" ?>
 	<thead>
 		<row><entry>CSS Name</entry><entry>Hex Value</entry></row>
 	</thead>
@@ -629,19 +649,22 @@ The two types are equivalent in LZX, but you must use the XML name in XML constr
 	</tgroup>
 </table>
 
-<para/></section><section><title>JavaScript attribute types</title>
-<para>JavaScript types start with a capital letter. These may be one of the native
+</section><section><title>JavaScript attribute types</title>
+<para>JavaScript types start with a capital letter. These may be one of the 
   JavaScript types, listed below or an LZX class. </para>
 <table>
 	<title>Native JavaScript types</title>
 	<tgroup cols="2">
+	   <colspec colnum="1" colname="col1" colwidth="1*"/>
+	   <colspec colnum="2" colname="col2" colwidth="5*"/>
+	   <?dbhtml cellpadding="2" ?>
 		<thead><row>
 			<entry>Type</entry>
 			<entry>Legal Values</entry>
 		</row></thead>
 		<tbody>
 			<row><entry>Boolean</entry><entry>true or false</entry></row>
-			<row><entry>String></entry><entry>single or double quotes may be used to 
+			<row><entry>String</entry><entry>single or double quotes may be used to 
 				specify a sequence of characters 
 				(e.g. var s = 'test' or var s = "test")</entry></row>
 			<row><entry>Number</entry><entry>used to specify simple values 
@@ -659,6 +682,9 @@ The two types are equivalent in LZX, but you must use the XML name in XML constr
 <table>
 	<title>Notes on Documentation</title>
 	<tgroup cols="2">
+	   <colspec colnum="1" colname="col1" colwidth="1*"/>
+	   <colspec colnum="2" colname="col2" colwidth="5*"/>
+	   <?dbhtml cellpadding="2" ?>
 		<thead><row>
 			<entry>Symbol</entry>
 			<entry>Notes</entry>
@@ -676,7 +702,7 @@ The two types are equivalent in LZX, but you must use the XML name in XML constr
 	</tgroup>
 </table>
 
-<para/></section></section><section><title>Attribute evaluation time</title>
+</section></section><section><title>Attribute evaluation time</title>
 
 <para>
     The value of an attribute, whether set in an attribute element or start tag, is evaluated according to the attribute <literal>when</literal> option.  <literal>when</literal> can be one of the following: 
@@ -707,7 +733,7 @@ The two types are equivalent in LZX, but you must use the XML name in XML constr
     Note that an attribute that is not given an initial value will not be created in the element by default: it should either be initialized in the <literal>init</literal> method using <literal>this.<varname>attrName</varname>=<varname>expression</varname></literal> or made a required attribute using the <literal>required="true"</literal> option. 
 </para>
 
-<para/></section><section><title>Accessing attribute values from JavaScript</title>
+</section><section><title>Accessing attribute values from JavaScript</title>
 
 <para>
 Attributes can normally be referred to in class methods and expressions by their name except when being initialized as above, 
@@ -756,7 +782,7 @@ in which case they must be referred to using <literal>this.</literal>, in order 
 </programlisting></example> 
 
 
-<para/></section><section><title> Defining <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> setters </title>
+</section><section><title> Defining <indexterm><primary>attribute</primary></indexterm><sgmltag class="element">&lt;attribute&gt;</sgmltag> setters </title>
 <para>
 In many cases, specific code operations need to take place when an attribute is
 set.  For example, when the <indexterm><primary>width</primary></indexterm><sgmltag class="attribute">width</sgmltag> attribute of a <indexterm><primary>view</primary></indexterm><sgmltag class="element">&lt;view&gt;</sgmltag> is set,
@@ -792,7 +818,7 @@ tied to the attribute will not be updated when the value of the attribute is cha
 </example>
 
 
-<para/></section><section><title>oninit event vs init method</title>
+</section><section><title>oninit event vs init method</title>
 
 <para> 
 Instances and subclasses of <indexterm><primary>LzNode</primary></indexterm><classname>LzNode</classname>, including <indexterm><primary>LzView</primary></indexterm><classname>LzView</classname> and classes defined using
@@ -823,7 +849,7 @@ button.  The <indexterm><primary><literal>init()</literal></primary></indexterm>
 </example>
 
 
-<para/></section><section><title>The keyword <literal>this</literal> </title> 
+</section><section><title>The keyword <literal>this</literal> </title> 
 
 <para>
 When setting variables local to the current class, node, or view, always refer
@@ -842,76 +868,47 @@ to those variables using the keyword <literal>this</literal>.
  Not using <literal>this</literal> can result in unpredictable results.  
 </para>
 
-<para/></section><section><title> Different ways to get and set attributes </title>
+</section><section><title> Different ways to get and set attributes </title>
 
 <para>
 There are four ways of getting and setting attributes in LZX, each with benefits and drawbacks:</para>
-<itemizedlist spacing="compact"><listitem><para>Using <methodname role="LzNode.prototype.setAttribute">setAttribute()</methodname> and the <literal>.</literal> operator</para></listitem><listitem><para>Using predefined "setters" for certain attributes, such as <indexterm><primary><literal>onx()</literal></primary></indexterm><methodname>onx()</methodname> and <indexterm><primary><literal>ony()</literal></primary></indexterm><methodname>ony()</methodname></para></listitem><listitem><para>using custom getter and setter methods, as explained above</para></listitem><listitem><para>Reading and writing attributes directly: that is, without using a setter or getter method</para></listitem></itemizedlist>
+   <itemizedlist spacing="compact">
+      <listitem>
+         <para>Using <methodname role="LzNode.prototype.setAttribute">setAttribute()</methodname> and
+            the <literal>.</literal> operator</para>
+      </listitem>
+      <listitem>
+         <para>Using predefined "setters" for certain attributes, such as <indexterm>
+            <primary>
+               <literal>onx()</literal>
+            </primary>
+         </indexterm><methodname>onx()</methodname> and <indexterm>
+            <primary>
+               <literal>ony()</literal>
+            </primary>
+         </indexterm><methodname>ony()</methodname></para>
+      </listitem>
+      <listitem>
+         <para>using custom getter and setter methods, as explained above</para>
+      </listitem>
+      <listitem>
+         <para>Reading and writing attributes directly: that is, without using a setter or getter
+            method</para>
+      </listitem>
+   </itemizedlist>
 
 
-<para/><section><title>setAttribute()</title>
+<section id="setattribute"><title>setAttribute()</title>
 
 <para>
-The most reliable way to set attributes is by invoking  <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>
+The <emphasis>only</emphasis> reliable way to set attributes is by invoking <literal>setAttribute()</literal>
 on the view, class, or node that contains the target attribute.  Invoking <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>
-automatically fires the associated 'on' event for the attribute in question.  Having the
+automatically fires the associated 'on' event for the attribute in question. Having the
 associated event fire is required for constraints tied to the attribute in question to function
 correctly. 
 </para>
+   <section><title>Setting attributes directly</title>
+   <para>The only time you would set an attribute using `.` would be if you were the "owner" of the attribute (it is in a class or instance that you are writing). If the attribute is from a class that you are using or sub-classing, or an instance that is from code that you did not write (built-in, library, etc.) you <emphasis>must</emphasis> use <literal>setAttribute()</literal> to set the value or you will surely break things.</para>
+</section>
 
-<para>
-Performance wise, using  <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> is the slowest way to have access to
-attributes. The reasons for this slowness is twofold:</para>
-
-<itemizedlist spacing="compact"><listitem><para> Method calls are generally considered slow when compared to making no method call at
-    all</para></listitem><listitem><para> <indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> fires the associated <literal>on<varname>attribute</varname></literal> event, and updates 
-constraints on the target attribute. </para></listitem></itemizedlist>
-
-
-<para/></section><section id="explicitAtt"><title> Explicit attribute setter methods </title>
-
-<para> Some attributes of OpenLaszlo Runtime Library classes have explicit getter and setter methods defined for them.  
-For example, the <indexterm><primary>lz.view</primary></indexterm><classname>lz.view</classname> class has several of these such as <indexterm><primary><literal>setX()</literal></primary></indexterm><methodname>setX()</methodname>, <indexterm><primary><literal>setWidth()</literal></primary></indexterm><methodname>setWidth()</methodname>, etc. However, these
-   explicit setter methods are deprecated, and use of these methods is discouraged: use
-<indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname> instead.
-</para>
-
-<example role="live-example"><title>Using a setter method</title><programlisting>
-&lt;node&gt;
-  &lt;attribute name="foo"/&gt;
-  
-  &lt;method name="doSomething"&gt;
-    this.setWidth(10); 
-    Debug.debug('width %w', this.getWidth());        
-  &lt;/method&gt; 
-&lt;/node&gt;
-</programlisting></example> 
-
-<para> If you write your own setter or getter method, it will not automatically be invoked by
-<indexterm><primary><literal>setAttribute()</literal></primary></indexterm><methodname>setAttribute()</methodname>, thus this practice is not recommended.  Instead, the best
-practice for executing specific code when an attribute is set is to handle the associated 
-onattribute event.  </para> 
-
-<para/></section><section><title>Setting attributes directly </title>
-
-<para> It is also possible to set attributes directly without invoking any method at all,
-however, this practice is generally discouraged as it may result in unexpected behavior.  
-Since no method call is made, the associated <literal>onattribute</literal> events will not be fired. Any
-constraints tied to the attribute also will not be updated.  When setting attributes on LFC
-objects, it is definitely a bad idea to set attributes  directly as their explicit setter
-methods, which contain important processing code, won't be called. 
-</para>
-
-
-<example role="live-example"><title>Setting attributes directly</title><programlisting>
-&lt;node&gt;
-  &lt;attribute name="foo"/&gt;
-  
-  &lt;method name="doSomething"&gt;
-    this.width = 10;
-    Debug.debug('width %w' this.width);
-  &lt;/method&gt;
-&lt;/node&gt;
-</programlisting></example> 
-
-<para/></section></section></section></chapter>
+</section></section></section></chapter>
