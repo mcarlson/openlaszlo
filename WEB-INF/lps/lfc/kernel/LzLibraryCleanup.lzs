@@ -27,7 +27,7 @@ class LzLibraryCleanup extends LzNode {
 
     function $lzc$set_libname(val) {
         this.lib = LzLibrary.findLibrary(val);
-        lib.loadfinished();
+        this.lib.loadfinished();
     }
 
 }; // End of LzLibraryCleanup

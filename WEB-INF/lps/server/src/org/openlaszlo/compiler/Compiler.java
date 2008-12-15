@@ -202,10 +202,16 @@ public class Compiler {
                 }
             }
 
-            List libs = env.libraryCompilationQueue();
-            for (int i = 0; i < libs.size(); i++) {
-                LibraryCompilation lc = (LibraryCompilation) libs.get(i);
-                lc.importCompiler.compileLibrary(lc.infile, lc.outfile, lc.liburl, lc.element);
+            // In AS3, we need to compile the import libraries after
+            // the main is compiled, in order to let the flex compiler
+            // check references in the library against the main app
+            // classes
+            if (env.isAS3()) {
+                List libs = env.libraryCompilationQueue();
+                for (int i = 0; i < libs.size(); i++) {
+                    LibraryCompilation lc = (LibraryCompilation) libs.get(i);
+                    lc.importCompiler.compileLibrary(lc.infile, lc.outfile, lc.liburl, lc.element);
+                }
             }
 
             success = true;

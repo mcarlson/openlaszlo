@@ -948,13 +948,21 @@ public class SWF9External {
     
     if (!buildSharedLibrary) {
       String mainclassname = (String) options.get(Compiler.SWF9_WRAPPER_CLASSNAME);
-      // Put application on second frame...
-      cmd.add("-frame");
-      cmd.add("two");
-      cmd.add(mainclassname);
-    
-      // List the preloader .as file - the application is on the second frame
-      cmd.add("-file-specs=" + workdir.getPath() + File.separator + "LzPreloader.as");
+
+      
+      // Insert preloader frame, unless we're compiling a loadable library
+      if (!(options.getBoolean(Compiler.SWF9_LOADABLE_LIB) ||
+            options.getBoolean(Compiler.DEBUG_EVAL))) {
+        // Put application on second frame...
+        cmd.add("-frame");
+        cmd.add("two");
+        cmd.add(mainclassname);
+        // List the preloader .as file - the application is on the second frame
+        cmd.add("-file-specs=" + workdir.getPath() + File.separator + "LzPreloader.as");
+      } else {
+      // For the application, we just list one .as file
+        cmd.add("-file-specs=" + workdir.getPath() + File.separator + mainclassname + ".as");
+      }
     }
 
     // Call the Flex compiler, either in its own exec'ed process or in a thread 

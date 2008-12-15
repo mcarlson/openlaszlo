@@ -115,7 +115,14 @@ class ImportCompiler extends ToplevelCompiler {
                 throw new CompilationError(element, e);
             }
 
-            queueLibraryCompilation(libsrcfile, objfilename, objpath, module);
+            if (mEnv.isAS3()) {
+                // In Flash 9/10 we compile the main app first, then compile the libraries
+                // against that generated source tree.
+                queueLibraryCompilation(libsrcfile, objfilename, objpath, module);
+            } else {
+                compileLibrary(libsrcfile, objfilename, objpath, module);
+            }
+
 
             // Emit code into main app to instantiate a LzLibrary
             // object, which implements the load() method.
@@ -167,7 +174,7 @@ class ImportCompiler extends ToplevelCompiler {
                 String runtime = env.getProperty(env.RUNTIME_PROPERTY);
                 if (env.isAS3()) {
                     props.setProperty(org.openlaszlo.sc.Compiler.SWF9_LOADABLE_LIB, "true");
-                    writer = new SWF9Writer(props, ostream, env.getMediaCache(), false, env);
+                    writer = new SWF9Writer(props, ostream, mEnv.getMediaCache(), false, env);
                 } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
                     writer = new DHTMLWriter(props, ostream,
                                              env.getMediaCache(), false, env);
