@@ -76,30 +76,52 @@ if ($debug) {
 }
 
 if ($as3) {
-  /**
-   * Class used for as3-only runtime support
-   *
-   * @access private
-   */
-  class $lzsc$runtime {
+  if ($debug) {
+    /**
+     * Class used for as3-only runtime support
+     *
+     * @access private
+     */
+    class $lzsc$runtime {
+      /**
+       * Copied from debug/LzCompiler because I don't know how to make
+       * that accessible in swf9
+       *
+       * @access private
+       */
+      static var sourceWarningHistory = [];
 
-  /**
-   * Report an exception to the debug window
-   *
-   * @param String fileName: The source file
-   * @param Number lineNumber: The source line
-   * @param Object e: exception received
-   *
-   * @access private
-   */
-    static function reportException (fileName, lineNumber, e) {
-        if ($debug) {
-          // TODO: [2008-11-26 dda] This message is not received?
-          //$reportSourceWarning(fileName, lineNumber, e.name + ": " + e.message, true);
-          Debug.warn("Exception ignored in function block at "
-                     + fileName + ":" + lineNumber
-                     + ": " + e.name + ": " + e.message);
+      /**
+       * Copied from debug/LzCompiler because I don't know how to make
+       * that accessible in swf9
+       *
+       * @access private
+       */
+      static function $reportSourceWarning (filename, lineNumber, msg, fatal) {
+        var warning = new (fatal?LzError:LzWarning)(filename, lineNumber, msg);
+        var warningString = warning.toString();
+        if (sourceWarningHistory[warningString]) {
+          return;
         }
+        sourceWarningHistory [warningString] = true;
+
+        Debug.freshLine();
+        // Logs and adds
+        Debug.__write(warning);
+      }
+
+      /**
+       * Report an exception to the debug window
+       *
+       * @param String fileName: The source file
+       * @param Number lineNumber: The source line
+       * @param Object e: exception received
+       *
+       * @access private
+       */
+      static function reportException (fileName, lineNumber, e) {
+        $reportSourceWarning(fileName, lineNumber, e.name + ": " + e.message, true);
+      }
     }
   }
 }

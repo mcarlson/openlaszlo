@@ -268,6 +268,10 @@ public class Compiler {
       options.putBoolean(DEBUG_SWF9, options.getBoolean(DEBUG));
       options.putBoolean(DEBUG, false);
       options.putBoolean(DEBUG_BACKTRACE, false);
+      if (! options.containsKey(CATCH_FUNCTION_EXCEPTIONS)) {
+        options.put(CATCH_FUNCTION_EXCEPTIONS,
+                    Boolean.valueOf(LPS.getProperty("compiler.swf9.catcherrors", "false")));
+      }
     }
 
     // TODO: [2008-05-18 dda] It may be possible to clean this up
