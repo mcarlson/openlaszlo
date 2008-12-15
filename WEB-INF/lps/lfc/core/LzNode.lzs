@@ -246,18 +246,6 @@ public dynamic class LzNode extends LzEventable {
           // should just be installed as a declaration
           var setr = '$lzc$set_' + key;
           if (! this[setr]) {
-            if ($debug) {
-              // Methods should only be added in
-              // instance attributes (for now:
-              // eventually instances with methods
-              // should be instantiations of singleton
-              // classes and then you should never be
-              // adding methods at instantiation
-              // time).
-              if (val is Function && (!attrs || val != attrs[key])) {
-                Debug.debug("Dynamic method? %s[%#w] = %s", this, key, val);
-              }
-            }
             this.addProperty(key, val);
             delete iargs[key];
           } else {
