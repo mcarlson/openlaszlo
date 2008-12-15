@@ -268,17 +268,29 @@ class LzDHTMLDebugService extends LzDebugService {
   override function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
 
     var hasProto = obj && obj['hasOwnProperty'];
-    if (names && nonEnumerable) {
+    if (names && nonEnumerable && hasProto) {
       // Unenumerable properties of ECMA objects
       // TODO: [2006-04-11 ptw] enumerate Global/Number/Math/Regexp
       // object properties
       for (var p in {callee: true, length: true, constructor: true, prototype: true}) {
         try {
-          if (hasProto && obj.hasOwnProperty(p)) {
+          if (obj.hasOwnProperty(p)) {
             names.push(p);
           }
         } catch (e) {};
       }
+    }
+
+    if (hasProto && indices) {
+      // Function.arguments is not a proper Array in JS1
+      try {
+        if (obj.hasOwnProperty('callee')) {
+          for (var i = 0, len = obj.length; i < len; ++i) {
+            indices.push(i);
+            if (--limit == 0) { return; }
+          }
+        }
+      } catch (e) {};
     }
 
     super.objectOwnProperties(obj, names, indices, limit, nonEnumerable);
