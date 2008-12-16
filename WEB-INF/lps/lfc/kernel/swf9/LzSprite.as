@@ -852,19 +852,16 @@ dynamic public class LzSprite extends Sprite {
           o Can be a number (0xff00ff):void or a string ('#ff00ff'):void 
       */
       public function setColor( color:* ):void {
-          if (color is String) {
-              color = LzColorUtils.hextoint(color);
-          }
-          var nc:ColorTransform = new ColorTransform();
-          nc.color = color;
-          nc.alphaMultiplier = 1.0;
-          this.transform.colorTransform = nc;
+          // Only applicable for text
       }
 
+      /** Returns the foreground color of the sprite. This isn't known so
+          0 is returned.
+      */
       public function getColor  (){
-          return this.transform.colorTransform.color;
+          // Only applicable for text
+          return 0;
       }
-
 
 
       /**
