@@ -694,13 +694,11 @@
                 switch (this.type) {
     
                     case "http": {
-                        if (!lz.mediastream["_nullnc"]) {
-                            // keep one of these around for any http mediastream
-                            // we need (weird flash thing that we need a 
-                            // null NetConnection)
-                            lz.mediastream._nullnc = new NetConnection();
-                            lz.mediastream._nullnc.connect(null);
-                        }
+                      // keep one of these around for any http mediastream
+                      // we need (weird flash thing that we need a 
+                      // null NetConnection)
+                       lz.mediastream._nullnc = new NetConnection();
+                       lz.mediastream._nullnc.connect(null);
                         this._nc = lz.mediastream._nullnc;
                         this._srcurl = null;
                         //Debug.write("_findnc made new _nullnc", this._nc, this._srcurl);
