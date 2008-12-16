@@ -518,7 +518,6 @@ LzSprite.prototype.__updateQuirks = function () {
         }
 
         if (quirks['inputtext_size_includes_margin']) {
-            LzSprite.prototype.__defaultStyles.lzswftext.paddingTop = '0px';
             LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '0px';
             LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '0px';
         }
