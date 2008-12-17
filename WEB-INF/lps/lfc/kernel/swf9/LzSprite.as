@@ -525,7 +525,11 @@ dynamic public class LzSprite extends Sprite {
         * @return Number: the current frame when playback was stopped
         */
       private function stopPlay () :Number {
-          var frame:Number = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
+          if (this.soundChannel) {
+             var frame:Number = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
+          } else {
+             var frame:Number = this.frame;
+          }
           
           this.playing = this.owner.playing = false;
           this.removeEventListener(Event.ENTER_FRAME, soundFrameHandler);
@@ -616,6 +620,8 @@ dynamic public class LzSprite extends Sprite {
               // So instead of comparing 'frame' == 'totalframes', 
               // we'll send the 'lastframe'-event when playback stopped.
               this.owner.resourceevent('lastframe', null, true);
+              // needs to be reset again!
+              this.frame = this.totalframes;
               this.stopPlay();
           }
       }
