@@ -31,8 +31,9 @@ Each red, blue, or green dot can have a value from 0 to 255. If the red dot is f
 OpenLaszlo enables coloring in four ways: 0x000000, #000000, <literal>rgb(0,0,0)</literal>, and "black". Using the format 0x000000 only works for explicit assignment; it does not work in CSS. Color assignment using <literal>rgb()</literal> must be specified with decimal values from 0 - 255.
 </para>
 <para>
-Coloring of text with fgcolor="foo" is enabled in the same fashions, but with the same limitations.
+Coloring of text with <literal>fgcolor="foo"</literal> is enabled in the same fashion, but with the same limitations.
 </para>
+   <note><para>CSS values in the style sheet should <emphasis>not</emphasis> be quoted. They are not strings, they are symbolic constants.</para></note>
 
 <example role="live-example">
    <title>Applying color explicitly and with CSS</title>

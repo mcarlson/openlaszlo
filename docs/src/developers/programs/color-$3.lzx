@@ -1,28 +1,29 @@
-<canvas width="100%" debug="true">
+<canvas width="100%" height="630" debug="true">
+  <debug y="120" height="500" />
 
   <stylesheet>
     #vName {
-    bgcolorName : "blue";
+    bgcolorName : blue;
     }
     
     #tName {
-    fgcolorName : "white";
+    fgcolorName : silver;
     }
 
     #vHex {
-    bgcolorHex : "#0000FF";
+    bgcolorHex : #0000ff;
     }
     
     #tHex {
-    fgcolorHex : "#FFFFFF";
+    fgcolorHex : #c0c0c0;
     }
 
     #vRGB {
-    bgcolorRGB : "rgb(0,0,255)";
+    bgcolorRGB : rgb(0,0,255);
     }
     
     #tRGB {
-    fgcolorRGB : "rgb(255,255,255)";
+    fgcolorRGB : rgb(191,191,191);
     }
     
   </stylesheet>
@@ -55,16 +56,16 @@
     <view layout="axis: x; spacing: 10">
 
       <view id="explicitVName" height="50" width="200" bgcolor="blue">
-        <text id="explicitTName" fontsize="30" fgcolor="white">value name</text>
+        <text id="explicitTName" fontsize="30" fgcolor="silver">value name</text>
       </view>
-      <view id="explicitVHex" height="50" width="200" bgcolor="#0000FF">
-        <text id="explicitTHex" fontsize="30" fgcolor="#FFFFFF">value #hex</text>
+      <view id="explicitVHex" height="50" width="200" bgcolor="#0000ff">
+        <text id="explicitTHex" fontsize="30" fgcolor="#c0c0c0">value #hex</text>
       </view>
       <view id="explicitVRGB" height="50" width="200" bgcolor="rgb(0,0,255)">
-        <text id="explicitTRGB" fontsize="30" fgcolor="rgb(255,255,255)">value rgb()</text>
+        <text id="explicitTRGB" fontsize="30" fgcolor="rgb(191,191,191)">value rgb()</text>
       </view>
       <view id="explicitVExpression" height="50" width="200" bgcolor="255">
-        <text id="explicitTExpression" fontsize="30" fgcolor="${~0}">value expr</text>
+        <text id="explicitTExpression" fontsize="30" fgcolor="${~4144959}">value expr</text>
       </view>
     </view>
   </view>
