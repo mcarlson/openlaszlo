@@ -425,7 +425,7 @@ public abstract class ResponderCompile extends Responder
         // Look for "runtime=..." flag
         String runtime = req.getParameter("lzr");
         if (runtime == null) {
-            runtime = LPS.getProperty("compiler.runtime.default", "swf6");
+            runtime = LPS.getProperty("compiler.runtime.default", "swf8");
         }
         props.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, runtime);
 

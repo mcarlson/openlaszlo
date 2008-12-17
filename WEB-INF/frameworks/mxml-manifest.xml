@@ -176,6 +176,7 @@
     <component id="PrintDataGrid" class="mx.printing.PrintDataGrid"/>
     <component id="ProgressBar" class="mx.controls.ProgressBar"/>
     <component id="RadialGradient" class="mx.graphics.RadialGradient"/>
+    <component id="RadialGradientStroke" class="mx.graphics.RadialGradientStroke"/>
     <component id="RadioButton" class="mx.controls.RadioButton"/>
     <component id="RadioButtonGroup" class="mx.controls.RadioButtonGroup"/>
 	<component id="RegExp" class="RegExp" lookupOnly="true"/>
@@ -195,6 +196,7 @@
     <component id="SetStyleAction" class="mx.effects.SetStyleAction"/>
     <component id="SocialSecurityValidator" class="mx.validators.SocialSecurityValidator"/>
     <component id="SolidColor" class="mx.graphics.SolidColor"/>
+    <component id="SolidColorStroke" class="mx.graphics.SolidColorStroke"/>
     <component id="Sort" class="mx.collections.Sort"/>
     <component id="SortField" class="mx.collections.SortField"/>
 	<component id="SoundEffect" class="mx.effects.SoundEffect"/>
@@ -216,7 +218,7 @@
     <component id="ToggleButtonBar" class="mx.controls.ToggleButtonBar"/>
     <component id="ToolBar" class="mx.controls.richTextEditorClasses.ToolBar"/>
     <component id="TraceTarget" class="mx.logging.targets.TraceTarget"/>
-	<component id="Transform" class="geom.filters.Transform" lookupOnly="true"/>
+	<component id="Transform" class="mx.geom.Transform"/>
     <component id="Transition" class="mx.states.Transition"/>
     <component id="Tree" class="mx.controls.Tree"/>
     <component id="UIComponent" class="mx.core.UIComponent"/>
@@ -240,6 +242,7 @@
 
 	<!-- rpc -->
     <component id="AMFChannel" class="mx.messaging.channels.AMFChannel"/>
+    <component id="CallResponder" class="mx.rpc.CallResponder"/>  
     <component id="ChannelSet" class="mx.messaging.ChannelSet"/>  
     <component id="Consumer" class="mx.messaging.Consumer"/>
     <component id="HTTPChannel" class="mx.messaging.channels.HTTPChannel"/>

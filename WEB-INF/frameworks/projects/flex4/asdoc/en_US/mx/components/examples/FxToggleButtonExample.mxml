@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!-- Simple example to demonstrate the FxToggleButton control -->
+<FxApplication xmlns="http://ns.adobe.com/mxml/2009">
+
+    <Script>
+        <![CDATA[
+
+            import mx.components.FxButton;
+            import flash.events.Event;
+
+            // Event handler function to print a message
+            // describing the FxToggleButton selected state.
+            // Toggle the fontWeight of the Label between bold and normal
+            private function printMessage(event:Event):void  {
+                if (event.target.selected){
+                    message.text += "fontWeight: bold" + "\n";
+                    lbl.setStyle('fontWeight', 'bold');
+                    togBtn.label = 'Bold';
+                }
+                else{
+                    message.text += "fontWeight: normal" + "\n";
+                    lbl.setStyle('fontWeight', 'normal');
+                    togBtn.label = 'Normal';
+                }
+            }
+        ]]>
+    </Script>
+
+    <Panel title="FxToggleButton Control Example" height="75%" width="75%"
+        horizontalCenter="0" verticalCenter="0" paddingTop="10" paddingBottom="10"
+        paddingLeft="10" paddingRight="10">
+
+            <VGroup>
+                <FxToggleButton id="togBtn" label="Normal" click="printMessage(event);"/>
+                <Label id="lbl" text="Label" />
+              </VGroup>
+
+            <FxTextArea id="message" height="100%" width="100%" color="#0000FF"/>
+    </Panel>
+</FxApplication>

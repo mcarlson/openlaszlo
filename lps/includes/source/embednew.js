@@ -54,22 +54,23 @@ lz.embed = {
         if (minimumVersion == null) minimumVersion = 8;
 
 
+        var requestVersion;
         var url = properties.url;
 
-        // look for version in query string
-        var i = url.indexOf('lzr=swf');
-        if (i == -1) {
+        var sp = url.split('?');
+        if (sp.length == 1)  {
+            // No lzr runtime arg supplied. 
             // add default version if missing
             url += '&lzr=swf8';
-            i = url.indexOf('lzr=swf');
-            //alert('added version ' + url + ', ' + i);
-        }    
-        // account for 'lzr=swf' length
-        i += 7; 
-
-        // get LPS swf request version
-        var requestVersion = url.substring(i, i + 1) * 1;
-
+        } else {
+            var queryvals = this.__parseQuery(sp[1]);
+            requestVersion = queryvals['lzr'];
+            if (requestVersion == null) {
+                requestVersion = 'swf8';
+                url += '&lzr=swf8';
+            }
+        }
+            
         // Check flash comm version
         if (lz.embed.dojo.info.commVersion > requestVersion) {
             // This should no longer be needed in a world without swf7

@@ -434,12 +434,7 @@ public class Compiler {
                 Compiler.class.getName(),"051018-357", new Object[] {root.getName()})
                 );
             }
-            Compiler.updateRootSchema(root, env, schema, externalLibraries);
-                        
-            if (noCodeGeneration) {
-                return null;
-            }
-            
+
             Properties nprops = (Properties) env.getProperties().clone();
             Map compileTimeConstants = new HashMap();
             compileTimeConstants.put("$debug", new Boolean(
@@ -474,7 +469,14 @@ public class Compiler {
             ObjectWriter writer = createObjectWriter(nprops, ostr, env, root);
 
             env.setObjectWriter(writer);
+            env.setCompileTimeConstants(compileTimeConstants);
 
+            Compiler.updateRootSchema(root, env, schema, externalLibraries);
+                        
+            if (noCodeGeneration) {
+                return null;
+            }
+            
 
             mLogger.debug("new env..." + env.getProperties().toString());
             
@@ -598,6 +600,9 @@ public class Compiler {
     }
 
 
+    /*
+     * Used by the debugger-evaluator. Compiles a standalone application which executes the javascript in SCRIPT.
+     */
     public void compileAndWriteToAS3 (String script, String runtime, String seqnum, OutputStream out) {
         try {
             Properties props = new Properties();

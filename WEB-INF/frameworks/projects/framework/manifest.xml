@@ -22,6 +22,7 @@
     <component id="ApplicationControlBar" class="mx.containers.ApplicationControlBar"/>
     <component id="Array" class="Array" lookupOnly="true"/>
     <component id="ArrayCollection" class="mx.collections.ArrayCollection"/>
+    <component id="ArrayList" class="mx.collections.ArrayList" />
 	<component id="BevelFilter" class="flash.filters.BevelFilter" lookupOnly="true"/>
     <component id="BitmapFill" class="mx.graphics.BitmapFill"/>
     <component id="Blur" class="mx.effects.Blur"/>
@@ -112,6 +113,7 @@
     <component id="PrintDataGrid" class="mx.printing.PrintDataGrid"/>
     <component id="ProgressBar" class="mx.controls.ProgressBar"/>
     <component id="RadialGradient" class="mx.graphics.RadialGradient"/>
+    <component id="RadialGradientStroke" class="mx.graphics.RadialGradientStroke"/>
     <component id="RadioButton" class="mx.controls.RadioButton"/>
     <component id="RadioButtonGroup" class="mx.controls.RadioButtonGroup"/>
     <component id="RegExp" class="RegExp" lookupOnly="true"/>
@@ -131,6 +133,7 @@
     <component id="SetStyleAction" class="mx.effects.SetStyleAction"/>
     <component id="SocialSecurityValidator" class="mx.validators.SocialSecurityValidator"/>
     <component id="SolidColor" class="mx.graphics.SolidColor"/>
+    <component id="SolidColorStroke" class="mx.graphics.SolidColorStroke"/>
     <component id="Sort" class="mx.collections.Sort"/>
     <component id="SortField" class="mx.collections.SortField"/>
     <component id="SoundEffect" class="mx.effects.SoundEffect"/>

@@ -577,7 +577,7 @@
       // Only test errors that are caught by the debug compiler for each runtime
       if ($dhtml) {
         // There are none for the dhtml compiler at present
-      } else if ($swf9) {
+      } else if ($as3) {
         // There are none for the swf9 compiler
       } else {
           expectedError.expectedMatch = "flooglesnort";

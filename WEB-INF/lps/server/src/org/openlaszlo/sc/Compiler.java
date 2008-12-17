@@ -263,7 +263,7 @@ public class Compiler {
   // Set internal flags that depend on external flags
   public void defaultOptions() {
 
-    // Disable debug compilation for swf9
+    // Disable debug compilation for swf9/swf10
     if ("swf9".equals((String)options.get(RUNTIME)) || "swf10".equals((String)options.get(RUNTIME))) {
       options.putBoolean(DEBUG_SWF9, options.getBoolean(DEBUG));
       options.putBoolean(DEBUG, false);

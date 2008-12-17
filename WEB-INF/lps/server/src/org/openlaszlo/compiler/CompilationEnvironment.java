@@ -150,6 +150,8 @@ public class CompilationEnvironment {
 
     private List mLibraryCompilations = new ArrayList();
 
+    private Map mCompileTimeConstants = null;
+
     /** Information about where the ScriptCompiler put intermediate
      * working files. This is used for linking loadable libraries for
      * as3 runtime */
@@ -189,6 +191,7 @@ public class CompilationEnvironment {
         // Default property values
         this.mSchema = srcEnv.getSchema();
         this.mCanvas = srcEnv.getCanvas();
+        this.mCompileTimeConstants = srcEnv.getCompileTimeConstants();
 
         this.mImportedLibraryFiles = new HashSet(srcEnv.getImportedLibraryFiles());
         this.mLoadableImportedLibraryFiles = srcEnv.getLoadableImportedLibraryFiles();
@@ -755,6 +758,15 @@ public class CompilationEnvironment {
     public CompilationEnvironment getMainCompilationEnv() {
         return mMainCompilationEnv;
     }
+
+    public void setCompileTimeConstants(Map map) {
+        mCompileTimeConstants = map;
+    }
+
+    public Map getCompileTimeConstants() {
+        return mCompileTimeConstants;
+    }
+
 
 
 }

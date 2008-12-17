@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CircleExample.mxml -->
+<Application xmlns="http://ns.adobe.com/mxml/2009">
+     <Panel title="Circle Graphic Example"
+        height="75%" width="75%" layout="horizontal"
+        paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
+          <Canvas top="0" bottom="0" left="0" right="0">
+               <Graphic x="0" y="0">
+                    <Path>
+                         <!-- Use segment tags to define the circle. -->
+                         <segments>
+                              <MoveSegment x="250" y="0"/>
+                              <QuadraticBezierSegment x="300" y="50" 
+                                   control1X="300" control1Y="0"/>
+
+                              <QuadraticBezierSegment x="250" y="100" 
+                                   control1X="300" control1Y="100"/>
+
+                              <QuadraticBezierSegment x="200" y="50" 
+                                   control1X="200" control1Y="100"/>
+
+                              <QuadraticBezierSegment x="250" y="0" 
+                                   control1X="200" control1Y="0"/>
+                         </segments>
+                         <!-- Define the border color of the arrow. -->
+                         <stroke>
+                              <Stroke color="0x888888"/>
+                         </stroke>
+                         <!-- Define the fill for the arrow. -->
+                         <fill>
+                              <LinearGradient rotation="90">
+                                   <GradientEntry color="0x000000" alpha="0.8"/>
+                                   <GradientEntry color="0xFFFFFF" alpha="0.8"/>
+                              </LinearGradient>
+                         </fill>
+                    </Path>
+               </Graphic>
+          </Canvas>
+     </Panel>
+</Application>

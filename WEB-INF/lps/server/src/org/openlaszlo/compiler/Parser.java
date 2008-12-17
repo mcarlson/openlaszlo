@@ -406,12 +406,43 @@ public class Parser {
     static final String WHEN = "when";
     static final String OTHERWISE = "otherwise";
 
+    /**
+       usage: 
+
+       <when property="$as3">  // checks for Boolean true 
+
+       <when property="$runtime" value="swf9"> // checks for string equality
+
+       for back compatibility:
+
+       <when runtime="swf9"> 
+
+    */
     protected boolean evaluateConditions(Element element, CompilationEnvironment env) {
-        if (element.getAttribute("runtime") != null
-            && !element.getAttributeValue("runtime").equals(env.getRuntime())) {
-            return false;
+        String propname = element.getAttributeValue("property");
+        if ( propname != null) {
+            Map cc = env.getCompileTimeConstants();
+            Object prop = cc.get(propname);
+            if (prop == null) {
+                return false;
+            } else if (prop instanceof Boolean) {
+                // Attempt to get the boolean value
+                return ((Boolean)prop).booleanValue();
+            } else if (prop instanceof String) {
+                String value = element.getAttributeValue("value");
+                if (value != null) {
+                    return prop.equals(value);
+                } else {
+                    return false;
+                }
+            }
+        } else if (element.getAttribute("runtime") != null) {
+            String val = element.getAttributeValue("runtime");
+            return env.getRuntime().equals(val);
+        } else {
+            throw new CompilationError("The 'when' tag requires a 'property' or 'runtime' attribute, e.g., <when property=\"$dhtml\">", element);
         }
-        return true;
+        return false;
     }
 
     public static String xmltostring(Element e) {

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!-- Simple example to demonstrate the TextView control. -->
+<FxApplication xmlns="http://ns.adobe.com/mxml/2009">
+    <layout>
+        <BasicLayout />
+    </layout>
+
+    <Style>
+        Panel {
+            horizontalCenter: 0;
+            verticalCenter: 0;
+            paddingLeft: 10;
+            paddingRight: 10;
+            paddingTop: 10;
+            paddingBottom: 10;
+        }
+
+        @font-face {
+            src: url("assets/MyriadWebPro.ttf");
+            fontFamily: "MyMyriad";
+            cff: true;
+        }
+
+        @font-face {
+            src: url("assets/MyriadWebPro-Bold.ttf");
+            fontFamily: "MyMyriad";
+            fontWeight: bold;
+            cff: true;
+        }
+
+        @font-face {
+            src: url("assets/MyriadWebPro-Italic.ttf");
+            fontFamily: "MyMyriad";
+            fontStyle: italic;
+            cff: true;
+        }
+    </Style>
+
+    <Panel title="TextView Control Example" layout="horizontal" width="75%" height="75%">
+        <TextView id="txtView" fontFamily="MyMyriad" fontLookup="embeddedCFF" fontSize="14"
+                width="400" height="100">
+            <content>
+                <![CDATA[
+                    <p>The TextView control supports rich text formatting such as:</p>
+                    <div marginLeft="20">
+                        <p fontWeight="bold">&#x00BB; bold text</p>
+                        <p fontStyle="italic">&#x00BB; italic text</p>
+                        <p textDecoration="underline">&#x00BB; underlined text</p>
+                        <p>&#x00BB; <a href="http://www.adobe.com/" target="_blank">hypertext</a></p>
+                        <p>&#x00BB; embedded images; <img source="assets/AirIcon12x12.gif" width="12" height="12" /></p>
+                        <p lineThrough="true">&#x00BB; strikethrough text</p>
+                        <p>&#x00BB; Word wrapping via<br />the &lt;br/&gt; tag</p>
+                        <p>&#x00BB; Formatting spans of text using the <span fontStyle="italic">&lt;span&gt;&lt;/span&gt;</span> tag.</p>
+                        <p>&#x00BB; And much, much more!</p>
+                    </div>
+                ]]>
+            </content>
+        </TextView>
+
+        <FxVSlider id="slider" minimum="0"
+                maximum="{txtView.contentHeight-txtView.height}"
+                liveDragging="true" height="{txtView.height}"
+                change="txtView.verticalScrollPosition = slider.value;" />
+    </Panel>
+
+</FxApplication>

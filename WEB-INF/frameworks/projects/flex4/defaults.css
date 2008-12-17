@@ -1,0 +1,155 @@
+/*
+////////////////////////////////////////////////////////////////////////////////
+//
+//  ADOBE SYSTEMS INCORPORATED
+//  Copyright 2008 Adobe Systems Incorporated
+//  All Rights Reserved.
+//
+//  NOTICE: Adobe permits you to use, modify, and distribute this file
+//  in accordance with the terms of the license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////////////////////////
+*/
+
+/* Default Skins */
+
+FxApplication
+{
+    skinClass: ClassReference("mx.skins.spark.FxApplicationSkin");
+    backgroundColor: #FFFFFF;
+}
+
+FxButton
+{
+    lineBreak: "explicit";
+	skinClass: ClassReference("mx.skins.spark.FxButtonSkin");
+	textAlign: "center";
+	verticalAlign: "middle";
+}
+
+FxButtonBar
+{
+	skinClass: ClassReference("mx.skins.spark.FxButtonBarSkin");
+}
+
+FxCheckBox
+{
+	skinClass: ClassReference("mx.skins.spark.FxCheckBoxSkin");
+    textAlign: "start";
+}
+
+FxComponent
+{
+    focusSkin: ClassReference("mx.skins.spark.FxFocusSkin");
+}
+
+FxContainer
+{
+    skinClass: ClassReference("mx.skins.spark.FxContainerSkin");
+}
+
+FxDataContainer
+{
+	skinClass: ClassReference("mx.skins.spark.FxDataContainerSkin");
+}
+
+FxHScrollBar
+{
+    skinClass: ClassReference("mx.skins.spark.FxHScrollBarSkin");
+}
+
+FxHSlider
+{
+    skinClass: ClassReference("mx.skins.spark.FxHSliderSkin");
+}
+
+FxList
+{
+	skinClass: ClassReference("mx.skins.spark.FxListSkin");
+}
+
+FxNumericStepper
+{
+    skinClass: ClassReference("mx.skins.spark.FxNumericStepperSkin");
+}
+
+FxPanel
+{
+	skinClass: ClassReference("mx.skins.spark.FxPanelSkin");
+}
+
+FxRadioButton
+{
+	skinClass: ClassReference("mx.skins.spark.FxRadioButtonSkin");
+    textAlign: "start";
+}
+
+FxScroller
+{
+    skinClass: ClassReference("mx.skins.spark.FxScrollerSkin");
+}
+
+FxSpinner
+{
+    skinClass: ClassReference("mx.skins.spark.FxSpinnerSkin");    
+}
+
+FxTextArea
+{
+	skinClass: ClassReference("mx.skins.spark.FxTextAreaSkin");
+}
+
+FxTextInput
+{
+	skinClass: ClassReference("mx.skins.spark.FxTextInputSkin");
+}
+
+FxToggleButton
+{
+	skinClass: ClassReference("mx.skins.spark.FxToggleButtonSkin");
+	textAlign: "center";
+	verticalAlign: "middle";
+}
+
+FxVScrollBar
+{
+	skinClass: ClassReference("mx.skins.spark.FxVScrollBarSkin");
+}
+
+FxVSlider
+{
+    skinClass: ClassReference("mx.skins.spark.FxVSliderSkin");
+}
+
+/* Default text styles for the Gumbo components. Eventually these
+   will be moved into the global selector, but to avoid collision
+   with the Halo defaults, they are currently defined here.
+   
+   The default font settings for Gumbo components are defined in
+   two selectors: TextGraphicElement, and TextView. */
+TextGraphicElement
+{
+    color: 0;
+    fontFamily: "Arial";
+    fontSize: 12;
+    textAlign: "start";
+}
+
+TextView
+{
+    color: 0;
+    fontFamily: "Arial";
+    fontSize: 12;
+    textAlign: "start";
+}
+
+global
+{
+    /* color: #000000; */
+    baseColor: #CCCCCC;
+    contentColor: #FFFFFF;
+    rollOverColor: #CEDBEF;
+    selectionColor: #A8C6EE;
+    focusColor: #70B2EE;
+    symbolColor: #000000;
+}

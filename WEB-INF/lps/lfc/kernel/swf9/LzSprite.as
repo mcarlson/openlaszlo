@@ -845,6 +845,19 @@ dynamic public class LzSprite extends Sprite {
           this.rotation = v;
       }
 
+      public function setRotationX(val:Number):void {
+          this['rotationX'] = val;
+      }
+
+      public function setRotationY(val:Number):void {
+          this['rotationY'] = val;
+      }
+
+      public function setRotationZ(val:Number):void {
+          this['rotationZ'] = val;
+      }
+
+
       /** setVisible( Boolean:visibility )
           o Sets the visibility of the sprite 
       */

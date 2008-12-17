@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!-- Simple example to demonstrate the FxTextInput control. -->
+<FxApplication xmlns="http://ns.adobe.com/mxml/2009">
+    <layout>
+        <BasicLayout />
+    </layout>
+
+    <Style>
+        Panel {
+            horizontalCenter: 0;
+            verticalCenter: 0;
+            paddingLeft: 10;
+            paddingRight: 10;
+            paddingTop: 10;
+            paddingBottom: 10;
+        }
+    </Style>
+
+    <Panel title="FxTextInput Control Example" width="75%" height="75%">
+        <FxTextInput id="src" text="Hello World!" />
+
+        <FxButton label="Copy Text" click="dest.text = src.text" />
+
+        <FxTextInput id="dest" />
+    </Panel>
+
+</FxApplication>

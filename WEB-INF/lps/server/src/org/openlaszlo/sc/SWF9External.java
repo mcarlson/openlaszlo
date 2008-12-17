@@ -946,10 +946,14 @@ public class SWF9External {
       } 
     }
     
+    if ("swf10".equals((String)options.get(Compiler.RUNTIME))) {
+      cmd.add("-target-player=10.0.0");
+    }
+
+
     if (!buildSharedLibrary) {
       String mainclassname = (String) options.get(Compiler.SWF9_WRAPPER_CLASSNAME);
 
-      
       // Insert preloader frame, unless we're compiling a loadable library
       if (!(options.getBoolean(Compiler.SWF9_LOADABLE_LIB) ||
             options.getBoolean(Compiler.DEBUG_EVAL))) {

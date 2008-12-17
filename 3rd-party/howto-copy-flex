@@ -3,29 +3,40 @@
 URL: http://opensource.adobe.com/svn/opensource/flex/sdk/trunk
 Repository Root: http://opensource.adobe.com/svn/opensource
 Repository UUID: a9308255-753e-0410-a2e9-80b3fbc4fff6
-Revision: 1912
+Revision: 4341
 Node Kind: directory
 Schedule: normal
-Last Changed Author: preilly@adobe.com
-Last Changed Rev: 1904
-Last Changed Date: 2008-05-30 16:12:21 -0400 (Fri, 30 May 2008)
+Last Changed Author: dloverin@adobe.com
+Last Changed Rev: 4338
+Last Changed Date: 2008-12-16 22:19:16 -0500 (Tue, 16 Dec 2008)
 
 ================================================================
 
 # assumes adobe flex tree is at ~/openlaszlo/adobe/trunk
 
-cp -r ~/openlaszlo/adobe/trunk/lib/*.jar $LPS_HOME/WEB-INF/lib
-cp -r ~/openlaszlo/adobe/trunk/frameworks $LPS_HOME/WEB-INF
-cp -r ~/openlaszlo/adobe/trunk/bin $LPS_HOME/WEB-INF
 
-# remove these XML parsers, they cause doc build to fail.
-# flex seems happy without them, maybe only needed for compiling MXML?
-rm $LPS_HOME/WEB-INF/lib xalan.jar
-rm $LPS_HOME/WEB-INF/lib xercesImpl.jar
-rm $LPS_HOME/WEB-INF/lib xercesImpl_ja.jar
-rm $LPS_HOME/WEB-INF/lib xercesPatch.jar
-rm $LPS_HOME/WEB-INF/lib xmlParserAPIs.jar
 
+# Need to copy without taking the svn files. First do an export from 
+# the adobe svn tree, to get a tree which has no .svn info in it
+
+svn export trunk /tmp/flex
+
+cp -r /tmp/flex/lib/*.jar $LPS_HOME/WEB-INF/lib
+
+# NOTE: I removed these XML parsers, they cause doc
+# build to fail.  flex seems happy without them, maybe only needed for
+# compiling MXML?  
+
+rm $LPS_HOME/WEB-INF/lib/xalan.jar
+rm $LPS_HOME/WEB-INF/lib/xercesImpl.jar
+rm $LPS_HOME/WEB-INF/lib/xercesImpl_ja.jar
+rm $LPS_HOME/WEB-INF/lib/xercesPatch.jar
+rm $LPS_HOME/WEB-INF/lib/xmlParserAPIs.jar
+
+
+
+cp -r /tmp/flex/frameworks $LPS_HOME/WEB-INF
+cp -r /tmp/flex/bin $LPS_HOME/WEB-INF
 
 # get rid of some unneeded source files
 cd $LPS_HOME/WEB-INF
@@ -49,11 +60,12 @@ rm -rf frameworks/themes
 
 
 
-================================================================
+# ================================================================
 
-OEM compiler API at
+# FLEX OEM compiler API at
+#  /Users/hqm/openlaszlo/adobe/trunk/modules/compiler/src/java/flex2/tools/oem:
+#
+#  [We tried to use this API to invoke the compiler but had to back out because there was
+#  some bug with spaces in pathnames in OSX]
 
-  /Users/hqm/openlaszlo/adobe/trunk/modules/compiler/src/java/flex2/tools/oem:
-
-
-find . -type d -name ".svn" -print | xargs rm -rf
+# find . -type d -name ".svn" -print | xargs rm -rf

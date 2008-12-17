@@ -217,14 +217,14 @@
       }
     }
 
-    var swfruntimes = [7, 8, 9];
+    var swfruntimes = [7, 8, 9, 10];
 
     for (var s in swfruntimes) {
       var v = swfruntimes[s];
 
-      var ext = (v == 9) ? ".swc" : ".lzl";
+      var ext = (v >= 9) ? ".swc" : ".lzl";
       var shlibopt = "--option buildSharedLibrary=true ";
-      if (v == 9) {
+      if (v >= 9) {
          shlibopt += "--option SWF9MainClassName=LFCApplication --option SWF9WrapperClassName=LzSpriteApplication --option catchFunctionExceptions=false ";
       }
 
@@ -238,7 +238,7 @@
         }
         if (buildDebug) {
           var dest = LFCdir + "LFC" + v + "-debug" + ext;
-          var platformopt = ((v == 9) ? "--option debug=true " : "");
+          var platformopt = ((v >= 9) ? "--option debug=true " : "");
           if (!(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply --debug
@@ -248,7 +248,7 @@
                     shlibopt + "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
           }
           var dest = LFCdir + "LFC" + v + "-backtrace" + ext;
-          if (v != 9 && !(new File(dest)).exists()) {
+          if ((v < 9) && !(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply -g3
             dobuild(dest,
@@ -257,7 +257,7 @@
           }
         }
         // TODO: [2008-01-11 dda] when ready, add extra builds for SWF9
-        if (buildProfile && v != 9) {
+        if (buildProfile && (v < 9)) {
           var profile = LFCdir + "LFC" + v + "-profile" + ext;
           if (!(new File(profile)).exists()) {
             dobuild(profile, "swf" + v, shlibopt + "--profile");

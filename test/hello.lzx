@@ -1,4 +1,4 @@
 <canvas> 
-    <text bgcolor="#ccffcc">Hello OpenLaszlo!</text>
+    <text bgcolor="#ccffcc" text="${canvas.runtime}"/>
     <view bgcolor="red" x="100" y="100"  height="40" width="40"/>
 </canvas>

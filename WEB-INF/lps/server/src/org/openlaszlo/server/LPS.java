@@ -218,10 +218,14 @@ RuntimeException(
       if (runtime.equals("swf9")) {
           runtime = "9";
           extension = "swc";
+      } else if (runtime.equals("swf10")) {
+          runtime = "10";
+          extension = "swc";
       } else if (runtime.indexOf("swf") == 0) {
         runtime = runtime.substring("swf".length());
         extension = "lzl";
       }
+
 
       lfc += runtime;
 

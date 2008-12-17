@@ -1130,6 +1130,7 @@ function $lzc$set_rotation(v) {
         vip.__LZcheckheightFunction( this );
 }
 
+
 /**
   * The width of the view
   * @access public

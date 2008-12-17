@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application  xmlns:mx="http://www.adobe.com/2006/mxml"
+		paddingLeft="0" paddingTop="0" paddingRight="0" paddingBottom="0"		
+		backgroundColor="#C3C3C3" layout="vertical" xmlns:local="*">
+	<mx:Script>
+		<![CDATA[
+			import mx.graphics.Ellipse;
+			import mx.graphics.Graphic;
+			import mx.graphics.Parser;
+			
+			private var result:Graphic;
+			public var urlResolver:Function;
+			[Bindable] 
+			public var errors:Array = [];
+			
+			public function parseFXG(x:XML):void
+			{
+				if(result != null)
+					holder.removeChild(result);
+				var parser:Parser = new Parser();
+				parser.urlResolver = urlResolver; 
+				result = parser.parse(x);
+				if(result != null)
+				{
+					holder.addChild(result);
+					holder.validateNow();
+					if (result.width > holder.width || 
+						result.height > holder.height)
+					{
+						result.x=0;
+						result.y=0;
+					}
+				}
+				holder.visible = (result != null);
+				scale = _scale;					
+				errors = parser.errors;
+				if (errors.length > 0)
+					fxgSource.errorString = errors.toString();
+				else
+					fxgSource.errorString = "";
+			}
+			
+			private var _scale:Number = 1;
+			
+			[Bindable] 
+			public function set scale(value:Number):void
+			{
+				_scale = value;
+				if(result != null)
+					result.scaleX = result.scaleY = _scale;
+			}
+			public function get scale():Number	
+			{
+				return _scale;
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Binding source="scaleSlider.value/100" destination="this.scale" />
+	<mx:Binding destination="scaleSlider.value" source="this.scale*100" />
+	<mx:HDividedBox width="100%" height="100%">
+		<local:FXGViewerComp id="holder" minWidth="0" width="100%" height="100%" />
+	 	<mx:VDividedBox width="100%" height="100%">
+			<mx:VBox width="100%" height="100%">
+				
+			<mx:TextArea width="100%" height="100%" id="fxgSource">				
+				<mx:text>
+					<![CDATA[<Graphic xmlns="http://ns.adobe.com/fxg/2008">
+					<TextGraphic width="300" height="50" x="50" y="50">
+						<content><p>Hello world</p></content>
+					</TextGraphic>
+					<Ellipse width="400" height="200" y="58" x="200">
+						<fill>
+							<RadialGradient>
+								<GradientEntry color="0xAAAAAA" />
+								<GradientEntry color="0x336699" />
+							</RadialGradient>
+						</fill>
+					</Ellipse>
+					</Graphic>]]>
+				</mx:text>
+			</mx:TextArea>
+			<mx:HBox width="100%">
+				<mx:Button label="Parse FXG" click="parseFXG(new XML(fxgSource.text))" />
+			</mx:HBox>
+			</mx:VBox>
+			<mx:List fontWeight="bold" color="#FF0000" width="100%" includeInLayout="{errors.length > 0}" visible="{errors.length > 0}" dataProvider="{errors}" />		
+		</mx:VDividedBox>
+	</mx:HDividedBox>
+	<mx:HBox width="100%" backgroundColor="#DDDDDD" paddingTop="4">
+		<mx:HSlider width="300" minimum="0" maximum="500" id="scaleSlider" liveDragging="true" value="100" />
+		<mx:Spacer width="100%" />
+		<mx:ComboBox id="fontSlider" selectedIndex="2" dataProvider="{[8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48]}" change="fxgSource.setStyle('fontSize', fontSlider.selectedItem);"/>	
+	</mx:HBox>	
+</mx:Application>

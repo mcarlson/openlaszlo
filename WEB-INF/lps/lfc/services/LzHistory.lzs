@@ -28,7 +28,7 @@
 
 public final class LzHistoryService extends LzEventable {
 
-    if ($swf9) {
+    if ($as3) {
         #passthrough (toplevel:true) {
             import flash.net.SharedObject;
         }#

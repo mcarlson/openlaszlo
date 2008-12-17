@@ -57,7 +57,7 @@
     <when runtime="swf8">
       <include href="platform/swf8/eval.lzs"/>
     </when>
-    <when runtime="swf9">
+    <when property="$as3">
       <include href="platform/swf9/eval.lzs"/>
     </when>
   </switch>

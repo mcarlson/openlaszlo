@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Simple example to demonstrate the FxHSlider control -->
+<FxApplication xmlns="http://ns.adobe.com/mxml/2009">
+    
+	<!-- Panel used as a container for FxHSlider control examples -->
+	<Panel title="FxHSlider Control Example" height="75%" width="75%" paddingTop="10"
+	    paddingLeft="10" horizontalCenter="0" verticalCenter="0">
+ 
+		<Group>
+			<layout>
+				<HorizontalLayout/>
+			</layout>
+        
+			<Spacer width="100" />                       
+                       
+			<Image id="fxImage" source="@Embed('assets/Nokia_6630.png')"/>           
+		</Group>
+                    
+    	<Text width="100%" text="Drag the slider to change the image transparency"/>    	
+		    
+		<FxHSlider id="hSlider" minimum="0" maximum="1" value="1" stepSize="0.1"
+		    valueInterval="0.1" liveDragging="true" change="fxImage.alpha=hSlider.value"/>
+	</Panel>                            
+</FxApplication>
