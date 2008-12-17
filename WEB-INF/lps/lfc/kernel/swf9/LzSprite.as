@@ -533,7 +533,7 @@ dynamic public class LzSprite extends Sprite {
           
           this.playing = this.owner.playing = false;
           this.removeEventListener(Event.ENTER_FRAME, soundFrameHandler);
-          this.soundChannel.stop();
+          if (this.soundChannel) this.soundChannel.stop();
           this.soundChannel = null;
           
           return frame;
