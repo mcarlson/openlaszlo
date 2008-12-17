@@ -24,8 +24,8 @@
             }
             if ($debug && this.verbose) Debug.warn(this.label, d);
             this.setAttribute('value', d);
-            this.txt.setText(this.label + ': '+ d);
-            this.bg.setBGColor('green');
+            this.txt.setAttribute('text', this.label + ': '+ d);
+            this.bg.setAttribute('bgcolor', 'green');
             ]]>
         </method>
 
