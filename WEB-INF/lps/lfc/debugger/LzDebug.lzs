@@ -1429,21 +1429,22 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   };
 
   /**
-   * Format information about an error suitably for reporting a bug.
+   * Format information about an error, warning, or other debugger
+   * message suitably for reporting a bug.
    *
    * This method can be used to create a report suitable for
    * copy/pasting into a bug report.  To use it, enable backtraces and
-   * debugging, inspect the error message that you believe reveals a
+   * debugging, inspect the debugger message that you believe reveals a
    * bug, then invoke `Debug.bugReport()` in the debugger.  Copy and
    * paste the output of that call into your bug report.
    *
-   * @param * error: An error message or ID.  Defaults to the last error
-   * that was inspected.
+   * @param * error: An debugger message or message ID.  Defaults to
+   * the last message that was inspected.
    * @param Boolean verbose: If true, each frame
    * argument in the backtrace will be inspected.  Defaults to the value
    * of Debug.showInternalProperties.
    *
-   * @note By inspecting an error message (by clicking on it), the error
+   * @note By inspectinga debugger message (by clicking on it), the
    * message will be assigned to the Debug environment variable `_`.
    * Thus to enable a verbose report (which will detail all arguments of
    * each frame, as opposed to just the `this` argument), invoke as
@@ -1461,7 +1462,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       error = this.ObjectForID(error);
     }
     if (! (error is LzSourceMessage)) {
-      this.error("You must provide an error to report.  Please inspect an error message and try again.")
+      this.error("You must provide a debugger message to report.  Please inspect a debugger message and try again.")
         return;
     }
     // TODO [hqm 2008-09-11] LzBacktrace not yet working in swf9
