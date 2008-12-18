@@ -108,6 +108,8 @@
              } else
              if ($dhtml) {
                assertEquals('dhtml', $runtime, "Compile-time constant");
+             } if ($swf10) {
+               assertEquals('swf10', $runtime, "Compile-time constant");
              } else
              {
                assertTrue(false, "Unknown $runtime " + $runtime);
