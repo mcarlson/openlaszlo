@@ -91,8 +91,7 @@
         <attribute name="value" value="null" setter="this.setValue(value)"/>
 
         <!--- Set to true for multiple lines. Default is false. -->
-        <attribute name="multiline" value="false" 
-                  setter="setMultiline(multiline)"/>
+        <attribute name="multiline" value="false"/>
 
         <!--- Set to true for a password field. Text will appear as ****. 
               This attribute cannot be changed at runtime.
@@ -158,13 +157,13 @@
         <!--- Set edittext's and _field's multiline attributes. Will affect text
               placement if multiline attribute changes.
               @keywords private -->
-        <method name="setMultiline" args="ml">
-            this.multiline = ml;
+        <setter name="multiline" args="newMultiline">
+            this.multiline = newMultiline;
             if (this._initcomplete) {
-                this._field.setMultiline(ml);
+                this._field.setAttribute('multiline', newMultiline);
                 this._placeTextY();
             }
-        </method>
+        </setter>
 
         <!--- If multiline, places text two pixels from top, else it calculates
               the middle point for the textbox. 
@@ -202,7 +201,7 @@
             if (this._field) {  // if you instantiate a baseedittext, 
                                 // it will not have an _field
                 if (this.multiline != this._field.multiline) {
-                    this._field.setMultiline(this.multiline);
+                    this._field.setAttribute("multiline", this.multiline);
                 }
                 if (this.maxlength != null) {
                     this._field.setAttribute('maxlength', this.maxlength);

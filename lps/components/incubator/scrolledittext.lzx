@@ -15,9 +15,7 @@
               x="${parent.border}" y="${parent.border}"/>
 
         <_newinternalinputtext name="inp" x="${parent.border}" 
-            y="${parent.border}" 
-            height="${parent.height-parent.border*2}"
-            width="${parent.width - parent.vscrollwidth - parent.border*2 }">
+            y="${parent.border}">
             <attribute name="lineheight"
                        value="${this.getTextHeight()/this.getMaxScroll()}"/>
             <attribute name="maxtextheight"
@@ -34,7 +32,21 @@
                     if (this.onpos) this.onpos.sendEvent(p);
                 }
             </method>
-            <handler name="onscroll">
+            
+            <method name="_constainWidth" args="IGNORE_THIS_ARG">
+                this.setAttribute("width", parent.width - parent.vscrollwidth - parent.border*2 );
+            </method>
+            
+            <method name="_constainHeight" args="IGNORE_THIS_ARG">
+                this.setAttribute("height", parent.height - parent.border*2 );
+            </method>
+            
+            <handler name="oninit">
+                this.applyConstraintMethod('_constainWidth', [parent, "width", parent, "vscrollwidth", parent, "border"]);
+                this.applyConstraintMethod('_constainHeight', [parent, "height", parent, "border"]);
+            </handler>
+            
+            <handler name="onscroll" args="IGNORE_THIS_ARG">
                 this.setPos(-this.lineheight * (this.scroll - 1), true);
             </handler>
         </_newinternalinputtext>
@@ -58,7 +70,7 @@
 
         <!--- Name of class to instantiate for vertical scroll bar.
               @keywords public -->
-        <attribute name="vscrollbarclassname" type="string" value="vscrollbar"/>
+        <attribute name="vscrollbarclassname" type="string" value="lz.vscrollbar"/>
         
         <!--- Our vertical scrollbar
               @keywords private -->
@@ -72,37 +84,36 @@
                     classname = "vscrollbar";
                 }
                 if ($debug) {
-                    if (typeof(global[classname]) == "undefined") {
+                    if (typeof(lz[classname]) == "undefined") {
                         Debug.write("scrollbarclassname undefined", this);
                     }
-                }
-                var vsinit = function () {
-                    var p = this.parent;
-                    // (_vs) x="${parent.width - this.width - parent.border + 1}" 
-                    this.applyConstraint("x", 
-                        function() { this.setAttribute("x", this.parent.width - this.width ); },
-                        [p, "width", this, "width", p, "border"]);
-                    
-                    // (_vs) stepsize="${scrolltarget.lineheight}" 
-                    this.applyConstraint("stepsize", 
-                        function() { this.setAttribute("stepsize", this.scrolltarget.lineheight); }, 
-                        [p.inp, "lineheight"]);
-                    
-                    // (_vs) scrollmax="${scrolltarget.maxheight}" />
-                    this.applyConstraint("scrollmax", 
-                        function() { this.setAttribute("scrollmax", this.scrolltarget.maxheight); }, 
-                        [p.inp, "maxheight"]);
-                        
-                    #pragma "methodName=init"
-                    super.init();
                 }
                 this._vs = new lz[classname](this, 
                                              { axis: "y",
                                                scrollattr: "pos",
-                                               scrolltarget: this.inp,
-                                               init: vsinit});
+                                               scrolltarget: this.inp});
+                                               
+                var xDel = new LzDelegate(this, 'updateX');
+                xDel.register(this._vs, 'onwidth');
+                xDel.register(this, 'onwidth');
+                xDel.register(this, 'onborder');
+                
+                new LzDelegate(this, 'updateScrollMax', this.inp, 'onmaxheight');
+                new LzDelegate(this, 'updateStepSize', this.inp, 'onlineheight');
 
             }
+        </method>
+        
+        <method name="updateX" args="IGNORE_THIS_ARG">
+            this._vs.setAttribute("x", this.width - this._vs.width );
+        </method>
+        
+        <method name="updateStepSize" args="IGNORE_THIS_ARG">
+            this._vs.setAttribute("stepsize", this.inp.lineheight);
+        </method>
+        
+        <method name="updateScrollMax" args="IGNORE_THIS_ARG">
+            this._vs.setAttribute("scrollmax", this.inp.maxheight);
         </method>
         
         <method name="init">

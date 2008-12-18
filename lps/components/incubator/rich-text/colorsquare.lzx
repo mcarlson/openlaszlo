@@ -2,10 +2,11 @@
     <include href="extensions/drawview.lzx"/>
     <!-- colorsquare
         class for use richtexttoolbar color swatch picker
-        when it constructs -->
+        when it constructs --> 
+        
     <class name="colorsquare" extends="drawview">
         <!--- color of the swatch - default set to black -->
-        <attribute name="swatchcolor" value="black"/>
+        <attribute name="swatchcolor" type="color" value="black"/>
         <!--- default set to false - whether to draw the swatch -->
         <attribute name="drawsquare" value="false"/>
         <!--- @keywords private -->
