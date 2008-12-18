@@ -11,10 +11,12 @@
     <link rel="stylesheet" href="includes/docbook.css" type="text/css" />
   </head>
   <body class="release-notes">
+    <hr />
     <h1>Release Notes for OpenLaszlo 4.2</h1>
-
+    <hr />
     <p>OpenLaszlo 4.2 follows OpenLaszlo 4.2 Beta 3 as the next build from the trunk development
-      branch. The primary goal of this release is to provide beta-level support for SWF9
+      branch, and is the first fully-qualified release since release 4.1.1. The primary goal of this release is to 
+      provide beta-level support for SWF9
       features<!-- as indicated below-->.</p>
     <!--    <p>Release 4.2 highlights include:</p>
     <p>bulleted list of new features</p>-->
@@ -91,10 +93,13 @@
       filesystem. This should happen automatically in the release, but may not be set correctly when
       deploying a WAR file using Tomcat's servlet manager; in that case those file permissions may
       need to be set by hand.</p>
-
+    <h2>New <code>addFormat()</code> Method for <code>&lt;text&gt;</code></h2>
+    <p>There is a new method on <code>&lt;text&gt;</code>, <code>addFormat()</code>, that
+    does the same as format, but appends to any existing text.</p>
+    <p>See the <a href="developers/text.html#textformat">Text Views</a> chapter of the Developer's Guide for a description and example.</p>
 
     <h2>Bugs Fixed in OpenLaszlo 4.2</h2>
-    <p>The 4.2 release includes more than 140 bug fixes, primarily to support SWF9; we have provided
+    <p>The 4.2 release includes more than 600 bug fixes since the last fully-qualified release since release 4.1.1; we have provided
       a link to our JIRA bug tracking system where you can view the details:</p>
     <ul>
       <li>
