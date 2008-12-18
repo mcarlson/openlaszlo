@@ -231,6 +231,14 @@
                         if (classroot.librarypopup) {
                             if (this.over) {
                                 classroot.librarypopup.popup(this, this.data.attributes);
+                                var clipper = this.getAttributeRelative('y', canvas);
+                                if(classroot.librarypopup.height > clipper){
+                                    // Trims description length if it's too long, to avoid
+                                    // a gigantic description that blocks the image.
+                                    var trimlength = (clipper/12) * 15;
+                                    var newdesc = (this.description.substring(0, trimlength) + ' [...]');
+                                    this.classroot.librarypopup.f.dlg.description.setAttribute('text', newdesc);
+                                }
                             } else {
                                 classroot.librarypopup.popdown();
                             }
