@@ -14,17 +14,60 @@
     <hr />
     <h1>Release Notes for OpenLaszlo 4.2</h1>
     <hr />
-    <p>OpenLaszlo 4.2 follows OpenLaszlo 4.2 Beta 3 as the next build from the trunk development
-      branch, and is the first fully-qualified release since release 4.1.1. The primary goal of this release is to 
-      provide beta-level support for SWF9
-      features<!-- as indicated below-->.</p>
-    <!--    <p>Release 4.2 highlights include:</p>
-    <p>bulleted list of new features</p>-->
-    <p>OpenLaszlo 4.2 is not a fully-qualified release. It has had limited testing for specific
-      features. This release is intended as a platform for initial porting and testing of SWF9
-      applications.</p>
+    <p>OpenLaszlo 4.2 is the next fully-qualified release since OpenLaszlo
+4.1.1, and is the recommended platform  for all application development in the SWF8, SWF9, and DHTML runtimes. This release follows the interim OpenLaszlo 4.2 Beta 3 release. The major new feature in OpenLaszlo 4.2 is the introduction of the SWF9 runtime, which can offer significant performance gains. Unlike previous versions of the Flash player, SWF9 has much stronger typing requirements and you must modify your code to take advantage of the performance gains it offers. To assist you in upgrading your applications to OpenLaszlo 4.2, we have provided various conversion scripts depending on your application goals.</p>
 
-    <h2>Running OpenLaszlo Server on Windows Vista</h2>
+<p>To migrate your 4.0.X or 4.1.1 applications, we
+strongly suggest that you refer to this wiki page:
+<a href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2" target="_blank">Runtime_Differences</a>. This page discusses the changes required by SWF9 and also provides a methodology for upgrading your application. It is very important that you run the automated conversion scripts in the recommended order,
+should you choose to take advantage of them. </p>
+
+<p>This release has been fully tested on the following operating systems/browser/runtime platforms:<BR>
+<ul>
+<li>Windows XP IE7 SWF8, SWF9, DHTML</li>
+<li>Windows XP FF3 SWF8, SWF9, DHTML</li>
+<li>Linux 2.6 kernel FF3 SWF8, SWF9, DHTML</li>
+<li>Mac OS X FF3 SWF8, SWF9, DHTML</li>
+<li>Mac OS X SAF3 SWF8, SWF9, DHTML</li>
+</ul><br>
+where: IE7 is Internet Explorer 7; FF3 is Firefox 3; and SAF3 is
+Safari 3. Please note that although we have also done some testing
+with Windows Vista, OpenLaszlo 4.2 has not been fully qualified
+against that operating system at this time. Please see the section below, <i>Running OpenLaszlo Server on Windows Vista</i>, for more information.</p>
+
+<p>As with any initial release of a new runtime platform, there will be edge cases that have problems. For OpenLaszlo 4.2, incubator components have not yet been updated to run; the same is true for the charting and graphing utilities, which continue to remain at a beta level. SOAP support is another area that is still very rough. These are straightforward tasks that would welcome community involvement. If you are interested in contributing to the project, please send us an <a href="mailto:laszlo-dev@openlaszlo.org">email</a> for more information.</p>
+
+<p>For every release, we rely on the OpenLaszlo community to help ensure the quality of the platform release and to determine its future direction. To propose or participate in discussion of new features, see the <a href="http://wiki.openlaszlo.org/Enhancement_Proposals" target="_blank">Wiki</a>. We encourage you to report any problems, and to make suggestions for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP>JIRA</a> bug tracking system. We'd also like to hear from you on the <a href="http://www.openlaszlo.org/lists" target="_blank">mailing lists</a> and in the <a href="http://forum.openlaszlo.org/" target="_blank">forums</a>.</p>
+
+
+    <h2>New SWF9 Compiler Switch</h2>
+    <p>There is a new compiler switch in <code>WEB-INF/lps/config/lps.properties</code>:</p>
+
+
+    <p>
+      <code>compiler.swf9.execflex=false</code>
+    </p>
+
+
+    <p>This switch controls whether the flex swf9 compiler is invoked in the same Java thread as the
+      LPS Server, or using a seperate exec'ed process. Setting <code>execflex=false</code> will be
+      more portable, as it doesn't depend on the shell and execution of a subprocess, however it
+      will require more max heap memory for the LPS Server. A minimum of 1024MB is recommended for
+      the <code>Java -Xmx</code> max heap memory init option.</p>
+
+    <p>If <code>execflex</code> is set to true, the flex compiler will be invoked in a separate
+      process. This will use less heap memory from the main LPS server or servlet process. On Unix
+      and OSX systems, the files in <code>WEB-INF/bin/mxmlc</code> and
+      <code>WEB-INF/bin/compc</code> will need to be set to executable permissions in the
+      filesystem. This should happen automatically in the release, but may not be set correctly when
+      deploying a WAR file using Tomcat's servlet manager; in that case those file permissions may
+      need to be set by hand.</p>
+    <h2>New <code>addFormat()</code> Method for <code>&lt;text&gt;</code></h2>
+    <p>There is a new method on <code>&lt;text&gt;</code>, <code>addFormat()</code>, that
+    does the same as format, but appends to any existing text.</p>
+    <p>See the <a href="developers/text.html#textformat">Text Views</a> chapter of the Developer's Guide for a description and example.</p>
+
+<h2>Running OpenLaszlo Server on Windows Vista</h2>
 
     <p>There are two options. The first option is to manually ask for administrator privileges
       whenever you want to start or stop the OpenLaszlo Server.</p>
@@ -71,32 +114,7 @@
     <p>Note: Microsoft Vista will still ask for permission to run as an administrator. However, you
       do not have to remember to run as an administrator each time.</p>
 
-    <h2>New SWF9 Compiler Switch</h2>
-    <p>There is a new compiler switch in <code>WEB-INF/lps/config/lps.properties</code>:</p>
 
-
-    <p>
-      <code>compiler.swf9.execflex=false</code>
-    </p>
-
-
-    <p>This switch controls whether the flex swf9 compiler is invoked in the same Java thread as the
-      LPS Server, or using a seperate exec'ed process. Setting <code>execflex=false</code> will be
-      more portable, as it doesn't depend on the shell and execution of a subprocess, however it
-      will require more max heap memory for the LPS Server. A minimum of 1024MB is recommended for
-      the <code>Java -Xmx</code> max heap memory init option.</p>
-
-    <p>If <code>execflex</code> is set to true, the flex compiler will be invoked in a separate
-      process. This will use less heap memory from the main LPS server or servlet process. On Unix
-      and OSX systems, the files in <code>WEB-INF/bin/mxmlc</code> and
-      <code>WEB-INF/bin/compc</code> will need to be set to executable permissions in the
-      filesystem. This should happen automatically in the release, but may not be set correctly when
-      deploying a WAR file using Tomcat's servlet manager; in that case those file permissions may
-      need to be set by hand.</p>
-    <h2>New <code>addFormat()</code> Method for <code>&lt;text&gt;</code></h2>
-    <p>There is a new method on <code>&lt;text&gt;</code>, <code>addFormat()</code>, that
-    does the same as format, but appends to any existing text.</p>
-    <p>See the <a href="developers/text.html#textformat">Text Views</a> chapter of the Developer's Guide for a description and example.</p>
 
     <h2>Bugs Fixed in OpenLaszlo 4.2</h2>
     <p>The 4.2 release includes more than 600 bug fixes since the last fully-qualified release since release 4.1.1; we have provided
@@ -111,8 +129,8 @@
 
     <h2>OpenLaszlo 4.2 Credits</h2>
     <p>We would like to thank the entire OpenLaszlo community for submitting bug fixes and
-      participating in discussions to help make OpenLaszlo a better platform. Special thanks to
-      Andr&#xE9; Bargull and Raju Bitter for their continued support of the project.</p>
+      participating in discussions to help make OpenLaszlo a better platform. We'd also like to thank the incredible engineering team at <a href="http://g.ho.st">G.ho.st</a>, who have worked with us as a sponsor to bring SWF9 to the communtiy.  And finally, special thanks to
+      Andr&#xE9; Bargull and Raju Bitter for their continued and amazing support of the project. </p>
 
     <hr />
     <p>Copyright &copy; 2002-2008 Laszlo Systems, Inc. All Rights Reserved. Unauthorized use,
