@@ -337,6 +337,17 @@
 
     <property file="${LPS_HOME}/build.properties"/>
 
+    <fail message="build.version (${build.version}, from nightly-go) is wrong.  It must match build.properties/version.id (${version.id})">
+      <condition>
+        <and>
+          <isset property="build.version" />
+          <not>
+            <equals arg1="${build.version}" arg2="${version.id}" />
+          </not>
+        </and>
+      </condition>
+    </fail>
+
     <property name="builddir"         value="lps-${version.id}-core" />
     <property name="builddir-credits" value="lps-${version.id}-core/3rdPartyCredits" />
     <property name="builddir-dev" value="lps-${version.id}" />
