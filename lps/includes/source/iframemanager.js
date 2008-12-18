@@ -33,6 +33,7 @@ lz.embed.iframemanager = {
         }
         lz.embed.__setAttr(i, 'id', id);
         if (scrollbars != true) lz.embed.__setAttr(i, 'scrolling', 'no');
+        if (document.all) lz.embed.__setAttr(i, 'frameBorder', '0');
         this.appendTo(id, appendto);
 
         var iframe = lz.embed.iframemanager.getFrame(id);
@@ -46,7 +47,8 @@ lz.embed.iframemanager = {
             iframe.style.border = '0';
         } else if (document.all) {
             // IE
-            lz.embed.__setAttr(iframe, 'border', '0');
+            // must be set before the iframe is appended to the document (LPP-7310)
+            // lz.embed.__setAttr(iframe, 'frameBorder', '0');
             lz.embed.__setAttr(iframe, 'allowtransparency', 'true');
 
             var metadata = lz.embed[iframe.owner]
