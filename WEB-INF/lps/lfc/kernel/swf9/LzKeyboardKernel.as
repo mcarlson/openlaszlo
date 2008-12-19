@@ -16,20 +16,18 @@ class LzKeyboardKernelClass
         var s, k = e.keyCode;
         var keyisdown = t == 'onkeydown';
         s = String.fromCharCode(k).toLowerCase();
-        if (keyisdown) {
-            // prevent duplicate onkeydown events - see LPP-7432 
-            if (k == __lastkeydown) return;
-            __lastkeydown = k;
-        } else { 
-            __lastkeydown = null;
-        }
+
+        // prevent duplicate onkeydown events - see LPP-7432 
+        if (__keyState[k] == keyisdown) return;
+        __keyState[k] = keyisdown;
+        
         delta[s] = keyisdown;
         if (this.__callback) this.__scope[this.__callback](delta, k, t);
     }
 
     var __callback = null;
     var __scope = null;
-    var __lastkeydown = null;
+    var __keyState:Object = {};
 
     function setCallback (scope, funcname) {
         this.__scope = scope;
