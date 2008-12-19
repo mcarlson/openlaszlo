@@ -669,8 +669,8 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function __mouseEvent( e:MouseEvent ) :void {
-            var skipevent = false;
-            var eventname = 'on' + e.type.toLowerCase();
+            var skipevent:Boolean = false;
+            var eventname:String = 'on' + e.type.toLowerCase();
 
             if (eventname == 'onmousedown') {
                 // cancel mousedown event bubbling...
@@ -698,23 +698,20 @@ dynamic public class LzSprite extends Sprite {
             // send dragin/out events if the mouse is currently down
             if (LzMouseKernel.__lastMouseDown &&
                 (eventname == 'onmouseover' || eventname == 'onmouseout')) {
-                    // only send mouseover/out if the mouse went down on this sprite - see LPP-6677
+                    // only send mouseover/out/dragin/dragout if the mouse went down on this sprite (LPP-6677, LPP-7335)
                     if (LzMouseKernel.__lastMouseDown === this) {
                         LzMouseKernel.__sendEvent(this.owner, eventname);
+
+                        var dragname:String = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
+                        LzMouseKernel.__sendEvent(this.owner, dragname);
                     } else {
-                        // check to see if this sprite is in front of the sprite the mouse went down on.  See LPP-7300
-                        var relObj:InteractiveObject = e.relatedObject;
-                        // relatedObject is the sprite's clickbutton, use parent to access the LzSprite
-                        if (eventname == 'onmouseover' && relObj && relObj.parent === LzMouseKernel.__lastMouseDown) {
-                            // store reference to self for sending onmouseover event later - see LPP-7335
+                        // defer mouse-events until mouse is released (LPP-7300, LPP-7335)
+                        if (eventname == 'onmouseover') {
                             LzMouseKernel.__lastMouseDown.__mouseoverInFront = this;
                         } else {
                             LzMouseKernel.__lastMouseDown.__mouseoverInFront = null;
                         }
                     }
-
-                    var dragname = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
-                    LzMouseKernel.__sendEvent(this.owner, dragname);
             } else {
                 LzMouseKernel.__sendEvent(this.owner, eventname);
             }
