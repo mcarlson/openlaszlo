@@ -122,6 +122,7 @@ LzMakeLoadSprite.updateAfterLoad = function (mloader) {
     this.isloaded = true;
 
     var mc = this.getMCRef();
+    mc.forceSmoothing = true;
     this.resourcewidth = mc._width;
     this.resourceheight = mc._height;
     this.currentframe = mc._currentframe;

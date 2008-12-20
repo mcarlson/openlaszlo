@@ -376,6 +376,7 @@ dynamic public class LzSprite extends Sprite {
           // These progress event listeners can only be installed after the init event
           // has been received. You get an error if you try to add them before this.
           var loader:Loader = Loader(event.target.loader);
+          event.target.content.smoothing = true;
           var info:LoaderInfo = LoaderInfo(loader.contentLoaderInfo);
           info.addEventListener(ProgressEvent.PROGRESS, loaderEventHandler);
           info.addEventListener(Event.OPEN, loaderEventHandler);
