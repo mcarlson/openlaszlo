@@ -55,10 +55,14 @@ this._y = 0;
 this._lastwidth = Stage.width;
 this._lastheight = Stage.height;
 
-// called by compiler (first thing) like:
+// called by compiler (first thing) like in 3.x:
 // lzpreloader.create({attrs: {}, name: "splash", children:
 //   [{attrs: {x: 100, name: "logo", synctoload: true, resourcename:
 //   logo, src: "logo.swf", y: 100}, name: "preloadresource"}]});
+
+// in 4.2 it looks like this:
+//_root.lzpreloader.create({attrs: {foo: void 0, hideafterinit: false }, children: [{attrs: {name: "foo" , persistent: true , resourcename: "foo" }, "class": $lzc$class_preloadresource}], "class": $lzc$class_splash});
+
 function create (iobj) {
   this.iobj = iobj
 }
@@ -74,7 +78,7 @@ function init () {
   }
   var iobj = this.iobj;
   delete this.iobj;
-  this.name = iobj.name;
+  this.name = iobj.name || 'splash';
   this.hideafterinit = iobj.attrs.hideafterinit;
   var viewprops = {x: true, y: true, width: true, height: true};
   var sr = _root.createEmptyMovieClip("spriteroot", 1000);

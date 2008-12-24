@@ -446,6 +446,11 @@ LzSprite.prototype.attachBackgroundToChild = function ( childsprite ){
 LzSprite.prototype.setBGColor = function ( bgc ) {
     //@field Number bgcolor: The color of background of this view. Null if there is
     //no bgcolor. A number from 0 - 0xFFFFFF.
+    if (this.isroot) {
+        // Don't apply background colors to the root sprite - interferes with splash/preloaders - see LPP-7509
+        if (this.__contextmenu) _root.menu = this.__contextmenu.kernel.__LZcontextMenu();
+        return;
+    }
     if (bgc != null) {
         if ($debug) {
             if (isNaN(Number( bgc ))) {
