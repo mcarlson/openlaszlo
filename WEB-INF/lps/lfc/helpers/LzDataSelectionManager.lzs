@@ -84,7 +84,11 @@ public dynamic class LzDataSelectionManager extends LzSelectionManager {
     static var attributes :Object = new LzInheritedHash(LzSelectionManager.attributes);
 
     /** @access private */
-    var manager :LzReplicationManager;
+    var manager :*;
+    // FIXME [20081215 anba] lz.replicator wants to be a fake 
+    // replication-manager, so I cannot use the proper type here; we 
+    // should add a mixin for lz.replicator and LzReplicationManager.
+    //var manager :LzReplicationManager;
 
     /** @access private */
     var singleClone :LzView;

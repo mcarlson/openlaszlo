@@ -17,22 +17,22 @@
         <!--- The size (width or height) in the replication axis of the view
             being replicated.  Assumes all subviews have same replicated size. -->
         <attribute name="replicatedsize" value="null" />
-    
+
         <!--- The axis in which to replicate-->
         <attribute name="axis" value="y" type="string"/>
-    
+
         <!--- A pixel amount to use between each replicated view -->
         <attribute name="spacing" value="0" />
-    
+
         <!--- The view that will contain the replicated nodes.  Defaults to the immediateparent of the replicator. -->
         <attribute name="container" />
 
         <!--- The view that will clip the replicated nodes.  Defaults to the immediateparent of the container -->
         <attribute name="mask" />
-    
+
         <!--- The list of elements controlled by this repliator -->
         <attribute name="clones" value="null"/>
-    
+
         <!--- The list of nodes over which this replictor acts -->
         <attribute name="nodes" value="null" setter="this.setNodes(nodes)"/>
 
@@ -44,7 +44,7 @@
         <attribute name="_sizes" value="{ x : 'width', y: 'height' }"/>
         <attribute name="_cloneprops" value="null"/>
         <attribute name="_clonepool" value="null"/>
-        
+
         <!-- @keywords private -->
         <method name="construct" args="p,a">
             this.clones = [];
@@ -54,7 +54,7 @@
             this.container = this.immediateparent;
             this.mask = this.container.immediateparent;
         </method>
-        
+
         <!-- @keywords private -->
         <method name="init">
             <![CDATA[
@@ -66,14 +66,14 @@
             }
             ]]>
         </method>
-        
+
         <method name="destroy">
             if (this['_ondatadel']) this._ondatadel.unregisterAll();
             this._pointer = null;
             this.dataset = null;
-            super.destroy.apply(this, arguments);
+            super.destroy();
         </method>
-        
+
         <!-- @keywords private -->
         <method name="_updateChildren" args="ignore=null" >
             <![CDATA[
@@ -83,29 +83,29 @@
             this.setNodes(p);
             ]]>
         </method>
-        
+
         <!-- @keywords private -->
         <method name="createChildren" args="c">
             <![CDATA[
             super.createChildren( [] ); 
             this.replicated = c[0];
-            
+
             if ( c.length > 1 ) {
-              Debug.warn("%s: only a single child view is replicated", this);
+              if ($debug) Debug.warn("%s: only a single child view is replicated", this);
               this.container.createChildren( c );
             } else {
               this.__LZinstantiationDone();
             }
             ]]>
         </method>
-        
+
         <event name="onnodes"/>
-        
+
         <!-- @keywords private -->
         <method name="set_nodes" args="n">
             this.setNodes(n);
         </method>
-        
+
         <!-- Replicate over the given list of elements.
             @param Array n: The list of elements over which to replicate -->
         <method name="setNodes" args="n">
@@ -118,7 +118,7 @@
             if (this.onnodes.ready) { this.onnodes.sendEvent(); }
             ]]>
         </method>
-        
+
         <!-- Insert a node in existing list of elements.
             @param Number idx: index to insert element
                 @param Object n: node to insert -->
@@ -127,7 +127,7 @@
             this._cloneprops.splice(idx,0, undefined); // maintain cloneprops indices
             this.__adjustVisibleClones();
         </method>
-        
+
         <!-- Called internally, but may be overridden.  This is the method
             which binds a given clone to an element in the nodes array.
             @param LzView v: the clone being bound
@@ -154,12 +154,12 @@
             }
             ]]>
         </method>
-        
+
         <!-- @keywords private -->
         <method name="setCloneProperty" args="v,prop,val">
             this.setClonePropertyByCN( v.clonenumber, prop ,val );
         </method>
-        
+
         <!-- @keywords private -->
         <method name="setClonePropertyByCN" args="n,prop,val">
             if ( !this._cloneprops[ n ] ) this._cloneprops[ n ] = {};
@@ -167,12 +167,12 @@
             var v = this.getCloneIfVisible( n );
             if ( v ) v.setAttribute( prop , val );
         </method>
-        
+
         <!-- @keywords private -->
         <method name="update" args="v,n">
             if ( v[ "update" ] ) v.update( v.data , n );
         </method>
-        
+
         <!-- TODO: defaults for clone attributes
             Called internally, but may be overridden.  This method is called
             when a given clone is about to be pooled or destroyed. -->
@@ -189,7 +189,7 @@
             }
             ]]>
         </method>
-        
+
         <!-- @keywords private -->
         <method name="getClone">
             var v;
@@ -201,7 +201,7 @@
             }
             return v;
         </method>
-        
+
         <!-- @keywords private -->
         <method name="_makeClone">
             var v = this.container.makeChild( this.replicated );
@@ -210,31 +210,31 @@
             v.setAttribute( "cloneManager", this );
             return v;
         </method>
-        
+
         <!-- @keywords private -->
         <method name="poolClone" args="c">
             if ( c.clonenumber ) this.unbind( c );
             if (c.visible != false) c.setAttribute('visible', false );
             this._clonepool.push( c );
         </method>
-        
+
         <!-- @keywords private -->
         <method name="getCloneIfVisible" args="n">
             return this.clones[ n ];
         </method>
-        
+
         <!-- Called internally, but may be overridden.  This method is called
             to set the data of a clone to an element in the nodes array.
             
             @param LzView v: The clone whose data is being set.
             @param n: The node to which it is being set. -->
-        <method name="setData" args="v,n=null">
+        <method name="setData" args="v:*,n=null">
             if (v) {
                 v.setAttribute('data', this.nodes[ n ]);
                 if (v['applyData']) v.applyData(this.nodes[n]);
             }
         </method>
-        
+
         <!-- @keywords private -->
         <method name="__adjustVisibleClones" args="ignore=null" >
             <![CDATA[
@@ -256,7 +256,7 @@
             }
             ]]>
         </method>
-        
+
         <!-- Gets the clone for the given offset, scrolling it into view first
             if necessary.
             @param Number n: The offset of the clone to get. -->
@@ -264,10 +264,10 @@
             this.ensureInView( n );
             return this.clones[ n ];
         </method>
-        
+
         <!-- Gets the clone for the given datanode
             @param LzDataNodeMixin datanode: The datanode of the clone to get -->
-        <method name="getCloneForNode" args="datanode">
+        <method name="getCloneForNode" args="datanode,dontmake = false">
             <![CDATA[
             var l = this.clones.length; 
             for ( var i = 0; i < l; i++ ){
@@ -277,7 +277,7 @@
             }
             ]]>
         </method>
-        
+
         <!-- Ensures that the clone at the given offset is visible under the mask
             @param Number n: The offset of the clone to scroll in view -->
         <method name="ensureInView" args="n">
@@ -285,14 +285,14 @@
             var y = this.container.y;
             var pos = n*this.replicatedsize;
             var ny = y;
-    
+
             if (typeof mask != 'undefined' && this.replicatedsize+pos >= this.mask.height - y) {
                 ny = this.mask.height - pos - this.replicatedsize;
             } else if (pos < -y) ny = -pos;
-    
+
             if (y != ny) this.container.setAttribute('y', ny);
             ]]>
         </method>
     </class>
-    
+
 </library>

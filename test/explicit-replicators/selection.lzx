@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true" proxied="false">
   <debug height="90%" width="40%" x="55%" y="5%" />
 
@@ -34,113 +34,84 @@
     </fibs>
   </dataset>
 
+  <!-- dataselectionmanagers cannot share datasets -->
+  <dataset name="testdata2" />
+  <dataset name="testdata3" />
+
+  <handler name="oninit" >
+    testdata2.setAttribute("childNodes", [testdata.getFirstChild().cloneNode(true)]);
+    testdata3.setAttribute("childNodes", [testdata.getFirstChild().cloneNode(true)]);
+  </handler>
+
   <text multiline="true">
     Compares selection behavior across replicators where the parent is a view (had problems with parent being a list.)  Be sure to test range selection and scrolling at various speeds.
   </text>
 
-  <window width="20%" height="20%" x="5%" y="5%" name="explicitlazyrepltest"
+  <class name="textitem" extends="text" >
+    <attribute name="selected" value="false"/>
+    <attribute name="bgcolor"
+               value="${selected ? 0xCCDDEE : null }"/>
+    <attribute name="index" value="$path{'position()'}" />
+    <attribute name="value" value="$path{'@value'}" />
+    <!-- for explicit replication -->
+    <method name="applyData" args="d">
+      this.show();
+    </method>
+    <!-- for implicit replication -->
+    <handler name="ondata" method="show" />
+
+    <method name="show" args="v=null" >
+      this.format('%s: %d', this.index, this.value);
+    </method>
+    <handler name="onclick">
+      parent.selman.select( this );
+    </handler>
+    <method name="setSelected" args="value" override="true">
+      this.selected = value;
+      this.onselected.sendEvent(value);
+    </method>
+  </class>
+
+  <window width="20%" height="20%" x="5%" y="5%"
           resizable="true" title="explicit lazy replicator">
     <view>
       <dataselectionmanager name="selman" id="dsel"/>
-      <lazyreplicator id="elr" dataset="testdata" xpath="fibs/fib">
-        <text width="100">
-          <attribute name="selected" value="false"/>
-          <attribute name="bgcolor"
-                     value="${selected ? 0xCCDDEE : null }"/>
-          <attribute name="index" value="$path{'position()'}" />
-          <attribute name="value" value="$path{'@value'}" />
-          <method name="applyData">
-            this.format('%s: %d', this.index, this.value);
-          </method>
-          <handler name="onclick">
-            //Debug.write(parent.selman.isSelected( this ), parent.selman.toggle);
-            parent.selman.select( this );
-          </handler>
-          <method name="setSelected" args="value">
-            this.selected = value;
-            this.onselected.sendEvent(value);
-          </method>
-        </text>
+      <lazyreplicator id="elr" dataset="testdata2" xpath="fibs/fib">
+        <textitem width="100" />
       </lazyreplicator>
     </view>
     <scrollbar/>
   </window>
 
-  <window width="20%" height="20%" x="30%" y="5%" name="implicitlazyrepltest"
+  <window width="20%" height="20%" x="30%" y="5%"
           resizable="true" title="implicit lazy replicator">
     <view>
       <dataselectionmanager name="selman" id="dsel2"/>
-      <text width="100" id="ilr">
-        <datapath xpath="testdata:/fibs/fib" replication="lazy" />
-        <attribute name="selected" value="false"/>
-        <attribute name="bgcolor"
-                   value="${('selected' in this &amp;&amp; this.selected) ? 0xCCDDEE : null }"/>
-        <attribute name="index" value="$path{'position()'}" />
-        <attribute name="value" value="$path{'@value'}" />
-        <handler name="ondata">
-          this.format('%s: %d', this.index, this.value);
-        </handler>
-        <handler name="onclick">
-          //Debug.write(parent.selman.isSelected( this ), parent.selman.toggle);
-          parent.selman.select( this );
-        </handler>
-        <method name="setSelected" args="value">
-          this.selected = value;
-          this.onselected.sendEvent(value);
-        </method>
-      </text>
+      <textitem width="100" >
+        <datapath xpath="testdata3:/fibs/fib" replication="lazy" />
+      </textitem>
     </view>
     <scrollbar/>
   </window>
 
-  <window width="20%" height="20%" x="5%" y="50%" name="explicitsimplerepltest"
+  <window width="20%" height="20%" x="5%" y="50%"
           resizable="true" title="explicit replicator">
     <view>
       <selectionmanager name="selman" />
       <simplelayout axis="y" spacing="0" />
       <replicator id="esr" dataset="testdata" xpath="/fibs/fib">
-        <text width="100">
-          <attribute name="selected" value="false"/>
-          <attribute name="bgcolor"
-                     value="${selected ? 0xCCDDEE : null }"/>
-          <attribute name="index" value="$path{'position()'}" />
-          <attribute name="value" value="$path{'@value'}" />
-          <method name="applyData">
-            this.format('%s: %d', this.index, this.value);
-          </method>
-          <handler name="onclick">
-            //Debug.write(parent.selman.isSelected( this ), parent.selman.toggle);
-            parent.selman.select( this );
-          </handler>
-        </text>
+        <textitem width="100" />
       </replicator>
     </view>
     <scrollbar/>
   </window>
 
-  <window width="20%" height="20%" x="30%" y="50%" name="implicitsimplerepltest"
+  <window width="20%" height="20%" x="30%" y="50%"
           resizable="true" title="implicit replicator">
     <view>
       <selectionmanager name="selman" />
       <simplelayout axis="y" spacing="0" />
-      <text width="100" id="isr" datapath="testdata:/fibs/fib">
-        <attribute name="selected" value="false" setter="setSelected" />
-        <attribute name="bgcolor"
-                   value="${('selected' in this &amp;&amp; this.selected) ? 0xCCDDEE : null }"/>
-        <attribute name="index" value="$path{'position()'}" />
-        <attribute name="value" value="$path{'@value'}" />
-        <handler name="ondata">
-          this.format('%s: %d', this.index, this.value);
-        </handler>
-        <handler name="onclick">
-          //Debug.write(parent.selman.isSelected( this ), parent.selman.toggle);
-          parent.selman.select( this );
-        </handler>
-        <method name="setSelected" args="value">
-          this.selected = value;
-          this.onselected.sendEvent(value);
-        </method>
-      </text>
+      <textitem width="100" datapath="testdata:/fibs/fib" />
     </view>
     <scrollbar/>
   </window>

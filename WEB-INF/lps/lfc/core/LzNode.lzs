@@ -1778,7 +1778,8 @@ public dynamic class LzNode extends LzEventable {
     */
   function $lzc$set_data (data:*) :void {
     this.data = data;
-    (this.datapath || new LzDatapath(this)).setPointer(data /*cast LzDataNodeMixin*/);
+    var dp:LzDatapath = this.datapath || new LzDatapath(this);
+    dp.setPointer(data /*cast LzDataNodeMixin*/);
     if (this.ondata.ready) this.ondata.sendEvent(data);
   }
 
