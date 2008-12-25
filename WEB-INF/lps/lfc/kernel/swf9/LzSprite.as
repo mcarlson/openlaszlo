@@ -526,15 +526,11 @@ dynamic public class LzSprite extends Sprite {
         * @return Number: the current frame when playback was stopped
         */
       private function stopPlay () :Number {
-          if (this.soundChannel) {
-             var frame:Number = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
-          } else {
-             var frame:Number = this.frame;
-          }
+          var frame:Number = Math.floor(this.soundChannel.position * 0.001 * MP3_FPS);
           
           this.playing = this.owner.playing = false;
           this.removeEventListener(Event.ENTER_FRAME, soundFrameHandler);
-          if (this.soundChannel) this.soundChannel.stop();
+          this.soundChannel.stop();
           this.soundChannel = null;
           
           return frame;
@@ -556,9 +552,12 @@ dynamic public class LzSprite extends Sprite {
           
           if (framenumber != null) {
               framenumber += rel ? fr : 0;
-          } else {
-              // start at the beginning again if we're already at the end.
+          } else if (play) {
+              // start at the beginning again if we're already at the end,
+              // but only if the music is going to be started (play=true)
               framenumber = fr >= this.totalframes ? 0 : fr;
+          } else {
+              framenumber = fr;
           }
           
           if (play) {
@@ -614,6 +613,7 @@ dynamic public class LzSprite extends Sprite {
       private function soundCompleteHandler (event:Event) :void {
           // Event.SOUND_COMPLETE
           if (this.playing) {
+              this.stopPlay();
               this.frame = this.totalframes;
 
               // SoundChannel.position does not stop exactly at Sound.length, 
@@ -621,9 +621,6 @@ dynamic public class LzSprite extends Sprite {
               // So instead of comparing 'frame' == 'totalframes', 
               // we'll send the 'lastframe'-event when playback stopped.
               this.owner.resourceevent('lastframe', null, true);
-              // needs to be reset again!
-              this.frame = this.totalframes;
-              this.stopPlay();
           }
       }
       
