@@ -29,10 +29,10 @@
             // turned off before any views get instantiated, and stays off
             // all the time, it can only cause trouble.
             // 
-            var p = this.container;
-            if (p.layouts) {
-                for (var l=0, len=p.layouts.length; l<len; l++) {
-                    p.layouts[l].lock();
+            var layouts = this.container.layouts;
+            if (layouts) {
+                for (var i = 0, len = layouts.length; i < len; i++) {
+                    layouts[i].lock();
                 }
             }
 
@@ -267,10 +267,10 @@
 
         <method name="destroy">
             <![CDATA[ 
-            var p = this.container;
-            if (p.layouts) {
-                for (var l=0, len=p.layouts.length; l<len; l++) {
-                    p.layouts[l].unlock();
+            var layouts = this.container.layouts;
+            if (layouts) {
+                for (var i = 0, len = layouts.length; i < len; i++) {
+                    layouts[i].unlock();
                 }
             }
             super.destroy();
