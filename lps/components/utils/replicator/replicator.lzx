@@ -239,8 +239,11 @@
         <method name="__adjustVisibleClones" args="ignore=null" >
             <![CDATA[
             var p = this.container;
-            for (var l=0, len=p.layouts.length; l<len; l++) {
-                p.layouts[l].lock();
+            var ll = p.layouts['length'];
+            if (ll) {
+                for (var l=0, len=ll; l<len; l++) {
+                    p.layouts[l].lock();
+                }
             }
             while( this.clones.length ) this.poolClone( this.clones.pop() );
             if (this['nodes'] != null) {
@@ -251,8 +254,10 @@
                     this.clones[ i ] = cl;
                 }
             }
-            for (var l=0, len=p.layouts.length; l<len; l++) {
-                p.layouts[l].unlock();
+            if (ll) {
+                for (var l=0, len=ll; l<len; l++) {
+                    p.layouts[l].unlock();
+                }
             }
             ]]>
         </method>
