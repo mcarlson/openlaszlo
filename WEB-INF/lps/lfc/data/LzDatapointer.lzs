@@ -491,14 +491,22 @@ function __LZsetData () :void {
 
 /** @access private */
 function __LZgetLast () :int { 
-    if ( this.context == null || this.context === this ) return 1;
-    return this.context.__LZgetLast() || 1;
+    var ctx:* = this.context;
+    if (ctx == null || ctx === this || !(ctx is LzDatapointer)) {
+        return 1;
+    } else {
+        return ctx.__LZgetLast() || 1;
+    }
 }
 
 /** @access private */
 function __LZgetPosition () :int { 
-    if ( this.context == null || this.context === this ) return 1;
-    return this.context.__LZgetPosition() || 1;
+    var ctx:* = this.context;
+    if (ctx == null || ctx === this || !(ctx is LzDatapointer)) {
+        return 1;
+    } else {
+        return ctx.__LZgetPosition() || 1;
+    }
 }
 
 /** @access private */
