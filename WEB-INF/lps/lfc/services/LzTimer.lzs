@@ -42,7 +42,7 @@
  *         lz.Timer.addTimer( new LzDelegate( this, "fadeText" ), 3000 );
  *     </method>
  *
- *     <method name="fadeText">
+ *     <method name="fadeText" args="ignore=null"> 
  *         myText.animate( "opacity", 0.0, 1000 );
  *     </method>
  * </canvas>
