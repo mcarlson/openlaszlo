@@ -51,7 +51,8 @@
                             this.datapath.p);
     </handler>
   </class>
-  
+
+ <view>
   <view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea">
     <!-- Area for viewing images -->
     <text>Stage</text>
@@ -71,6 +72,7 @@
     <text>Trash</text>
     <!-- ... -->
   </view>
+ </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *

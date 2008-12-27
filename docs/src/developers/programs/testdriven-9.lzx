@@ -23,7 +23,7 @@
     }
 </handler>
 
-<method name="count">
+<method name="count" args="v">
     Debug.debug("%w", counter);
     counter=counter+1;
 </method>

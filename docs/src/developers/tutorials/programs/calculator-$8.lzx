@@ -10,7 +10,7 @@
   
   
   <view resource="button_blu" clickable="true" 
-        onclick="display.inputDigit(this);">
+        onclick="/*display.inputDigit(this);*/">
     <text name="buttonText" font="obliqueText" fontsize="30" 
           fgcolor="#ffffff" x="9" valign="middle">
       0

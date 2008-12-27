@@ -111,7 +111,7 @@
           return;
         }
  
-        displ = this.screen.getText();
+        var displ = this.screen.getText();
         if  (displ == '0') { if (val == '0') {  
           return;
           }

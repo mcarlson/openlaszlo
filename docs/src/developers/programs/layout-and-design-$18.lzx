@@ -9,7 +9,7 @@
       super.addSubview(s);
       this.update();
     </method>
-    <method name="update">
+    <method name="update" args="e=null">
       <![CDATA[  
       if (this.locked) return;
       this.locked = true;

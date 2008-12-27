@@ -11,7 +11,7 @@
   <resource name="button_green" src="resources/button_green.gif"/>
   
   <class name="calcButton" resource="button_blu" clickable="true" 
-           onclick="display.inputDigit(this);" oninit="this.initButton()">
+           onclick="/*display.inputDigit(this);*/" oninit="this.initButton()">
     <attribute name="buttLabel" type="string"/>
     <attribute name="labelX" type="number" value="11"/>
     

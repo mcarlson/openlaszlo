@@ -5,7 +5,7 @@
       var d = [m, "y"]; 
       this.applyConstraintMethod("myConstraintMethod", d); 
     </handler> 
-    <method name="myConstraintMethod" > 
+    <method name="myConstraintMethod" args="ignore"> 
       this.setAttribute("y", m.y); 
     </method> 
   </view> 
