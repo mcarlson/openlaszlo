@@ -168,10 +168,10 @@ override function request (req, cache, headers, filetype) {
     if (filetype == null) {
         var si = req.lastIndexOf(".");
         if (si != -1) {
-            suffix = req.substring(si + 1, si.length).toLowerCase();
+            suffix = req.substring(si + 1).toLowerCase();
         }
     } else {
-        var suffix = filetype;
+        suffix = filetype;
     }
 
     this.isjpeg = (suffix == 'jpeg' || suffix == 'jpg');

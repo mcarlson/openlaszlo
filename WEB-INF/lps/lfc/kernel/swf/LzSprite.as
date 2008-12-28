@@ -1261,15 +1261,14 @@ LzSprite.prototype.trackPlay = function() {
     this.owner.playing = true;
     if ( this.owner.getOption("donttrackplay") || this.__LZtracking ) return;
 
-    if (null == this.updatePlayDel) {
-        this.updatePlayDel = new LzDelegate( this, "updatePlayStatus");
+    if (this.updatePlayDel == null) {
+        this.updatePlayDel = new LzDelegate(this, "updatePlayStatus");
+    } else {
+        this.updatePlayDel.unregisterAll();
     }
     this.__LZtracking = true;
-     if (this.updatePlayDel)
-         this.updatePlayDel.unregisterAll();
-    this.updatePlayDel.register( lz.Idle, "onidle" );
+    this.updatePlayDel.register(lz.Idle, "onidle");
 }
-
 
 /**
   * @access private
@@ -1283,22 +1282,21 @@ LzSprite.prototype.stopTrackPlay = function() {
     this.checkPlayStatusDel.unregisterAll();
 }
 
-
 /**
   * Updates the play percentage
   * @access private
   */
 LzSprite.prototype.updatePlayStatus = function (ignore){
-    var c = this.getMCRef()._currentframe;
-    //Debug.write('updatePlayStatus', c);
+    var mc = this.getMCRef();
 
+    var c = mc._currentframe;
     if ( c != null && this.frame != c ){
         this.frame = c;
         this.owner.resourceevent('frame', this.frame);
     }
 
-    var tf = this.getMCRef()._totalframes;
-    if ( tf != undefined && this.totalframes != tf ){
+    var tf = mc._totalframes;
+    if ( tf != null && this.totalframes != tf ){
         this.totalframes = tf;
         this.owner.resourceevent('totalframes', this.totalframes);
     }
@@ -1324,11 +1322,12 @@ LzSprite.prototype.checkPlayStatus = function (){
     this.__lzcheckframe = this.frame;
     this.__lzchecktotalframes = this.totalframes;
     this.__lzskipplaycheck = 0;
-    this.__lzskipplaychecklimit = 4;
     // skip more frames for mp3 audio resources to allow tracking to work correctly
-    if (('isaudio' in this.getMCRef()) && (this.getMCRef().isaudio == true)) 
+    if (this.getMCRef().isaudio == true) {
         this.__lzskipplaychecklimit = LzSprite.prototype.__lzskipplaychecklimitmax;
-    
+    } else {
+        this.__lzskipplaychecklimit = 4;
+    }
     //Debug.warn('checkPlayStatus %w %w %w %w', this.__lzcheckframe, this.frame, this.totalframes, this.__lzskipplaychecklimit);
     this.checkPlayStatusDel.register( lz.Idle, "onidle" );
 }
@@ -1339,7 +1338,6 @@ LzSprite.prototype.checkPlayStatus = function (){
   * changed.  May call itself
   */
 LzSprite.prototype.checkPlayStatus2 = function (ignore){
-    //Debug.write('checkPlayStatus2 ', this);
     this.updatePlayStatus();
     this.__lzskipplaycheck++;
     if (this.__lzskipplaycheck < this.__lzskipplaychecklimit) {
