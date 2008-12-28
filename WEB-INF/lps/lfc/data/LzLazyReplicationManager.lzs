@@ -139,8 +139,7 @@ override function construct ( odp , args ){
 
     this.cloneAttrs.options = cloneopt;
 
-    // TODO: [20081020 dda] LPP-7031 removed typing, attempts to fix for SWF9 using casts fails smokecheck in DHTML
-    var v/*:LzView*/ = this.getNewClone( true );
+    var v:LzView = (this.getNewClone( true ) cast LzView);
     this.cloneimmediateparent = v.immediateparent;
     
     if (this.initialnodes) {
@@ -278,15 +277,14 @@ override function __LZadjustVisibleClones (lastnodes:Array, newnodes:Boolean) :v
 
     for ( var i:int = 0; i < newlength; i++ ){
         //before the new beginning
-        // TODO: [20081020 dda] LPP-7031 removed typing, attempts to fix for SWF9 using casts fails smokecheck in DHTML
-        var cl/*:LzView*/ = null;
+        var cl:LzView = null;
         if ( i + offset < 0 ){
             //this comes before the old data window
             if ( newlength + offset < oldlength  && oldlength > 0){
                 //pull the clone off the end
                 cl = oldclones[ --oldlength ];
             } else {
-                cl = this.getNewClone();
+                cl = (this.getNewClone() cast LzView);
             }
         } else if ( i + offset >= oldlength ){
             //this comes after the old data window
@@ -294,7 +292,7 @@ override function __LZadjustVisibleClones (lastnodes:Array, newnodes:Boolean) :v
                 //pull the clone off the end
                 cl = oldclones[ oldstart++ ];
             } else {
-                cl = this.getNewClone();
+                cl = (this.getNewClone() cast LzView);
             }
         }
 
@@ -340,12 +338,11 @@ override function toString () /*:String*/ {
  * @access private
  */
 override function getCloneForNode ( p:LzDataElement, dontmake:Boolean = false ) :LzNode {
-    // TODO: [20081020 dda] LPP-7031 removed typing, attempts to fix for SWF9 using casts fails smokecheck in DHTML
-    var cl/*:LzView*/ = (super.getCloneForNode( p ) cast LzView) || null;
+    var cl:LzView = (super.getCloneForNode( p ) cast LzView) || null;
     if ( !cl && !dontmake ){
         //even though we're going to return this to the pool immediately,
         //use the class API to get a clone
-        cl = this.getNewClone();
+        cl = (this.getNewClone() cast LzView);
         cl.datapath.setClonePointer( p );
         this.detachClone( cl );
         this.clonePool.push ( cl );
