@@ -284,7 +284,7 @@ lz.embed.dojo = function(){
 lz.embed.dojo = {
     // Default values for embedding
     defaults: {
-        flash6: null,
+        //flash6: null,
         flash8: null,
         ready: false,
         visible: true,
@@ -531,7 +531,7 @@ lz.embed.dojo.Info.prototype = {
     //        8 - We use the ExternalInterface API. 
     //        -1 - For some reason neither method is supported, and no communication
     //        is possible. 
-    commVersion: 6,
+    commVersion: 8,
     
     // installing: Boolean
     //    Set if we are in the middle of a Flash installation session.
@@ -661,6 +661,7 @@ lz.embed.dojo.Info.prototype = {
         // we prefer Flash 6 features over Flash 8, because they are much faster
         // and much less buggy
         
+        /*
         var browser = lz.embed.browser;
         // at this point, we don't have a flash file to detect features on,
         // so we need to instead look at the browser environment we are in
@@ -669,6 +670,7 @@ lz.embed.dojo.Info.prototype = {
         }else{
             this.commVersion = 6;
         }
+        */
     }
 };
 

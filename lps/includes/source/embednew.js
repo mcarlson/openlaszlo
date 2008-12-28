@@ -54,8 +54,10 @@ lz.embed = {
         if (minimumVersion == null) minimumVersion = 8;
 
 
-        var requestVersion;
         var url = properties.url;
+
+        /*
+        var requestVersion;
 
         var sp = url.split('?');
         if (sp.length == 1)  {
@@ -87,6 +89,7 @@ lz.embed = {
         }    
 
         //alert(requestVersion + ', ' + minimumVersion);
+        */
 
         var queryvals = this.__getqueryurl(url);
 
@@ -114,7 +117,7 @@ lz.embed = {
             ,bgcolor: properties.bgcolor
             ,wmode: properties.wmode
             ,flashvars: queryvals.flashvars
-            ,flash6: url
+            //,flash6: url
             ,flash8: url
             ,appenddiv: lz.embed._getAppendDiv(properties.id, properties.appenddivid)
         };
