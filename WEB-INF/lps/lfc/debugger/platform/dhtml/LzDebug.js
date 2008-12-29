@@ -98,12 +98,27 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
 #pragma "warnUndefinedReferences=false"
     try {
       with (Debug.environment) {
-        var value = window.eval(expr);
+        // Evaluate as expression first
+        var value = window.eval('(' + expr + ')');
       }
       Debug.displayResult(value);
     }
     catch (e) {
-      Debug.error(e);
+      if (! (e is SyntaxError)) {
+        Debug.error("%s", e);
+        return;
+      }
+
+      // Not an expression, see if it is a statement
+      try {
+        with (Debug.environment) {
+          var value = window.eval(expr);
+        }
+        Debug.displayResult(value);
+      }
+      catch (e) {
+        Debug.error("%s", e);
+      }
     }
   }
 
