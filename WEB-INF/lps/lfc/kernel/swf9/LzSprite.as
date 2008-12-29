@@ -1,7 +1,7 @@
 /**
   * LzSprite.as
   *
-  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -376,7 +376,6 @@ dynamic public class LzSprite extends Sprite {
           // These progress event listeners can only be installed after the init event
           // has been received. You get an error if you try to add them before this.
           var loader:Loader = Loader(event.target.loader);
-          event.target.content.smoothing = true;
           var info:LoaderInfo = LoaderInfo(loader.contentLoaderInfo);
           info.addEventListener(ProgressEvent.PROGRESS, loaderEventHandler);
           info.addEventListener(Event.OPEN, loaderEventHandler);
@@ -410,7 +409,7 @@ dynamic public class LzSprite extends Sprite {
                   // avoid security exceptions
                   if (info.parentAllowsChild) {
                       if (info.content is AVM1Movie) {
-                        if ($debug) {
+                          if ($debug) {
                               Debug.warn("Playback control will not work for the resource.  Please update or recompile the resource for Flash 9.", this.resource);
                           }
                       } else if (info.content is MovieClip) {
@@ -420,6 +419,8 @@ dynamic public class LzSprite extends Sprite {
                           this.loaderMC.addEventListener(Event.ENTER_FRAME, updateFrames);
                           this.owner.resourceevent('play', null, true);
                           this.playing = this.owner.playing = true;
+                      } else if (info.content is Bitmap) {
+                          (info.content as Bitmap).smoothing = true;
                       }
                   }
 
@@ -1295,8 +1296,11 @@ dynamic public class LzSprite extends Sprite {
                 // throws an error if stream has already finished loading
             }
             // unload any content, call after close()
-            // for swf10: this.imgLoader.unloadAndStop();
-            this.imgLoader.unload();
+            if ($swf10) {
+                this.imgLoader['unloadAndStop']();
+            } else {
+                this.imgLoader.unload();
+            }
         }
         if (this.resourceContainer != null) {
             this.removeChild(this.resourceContainer);
