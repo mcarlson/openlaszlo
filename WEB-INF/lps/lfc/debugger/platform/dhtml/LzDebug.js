@@ -130,7 +130,7 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
     var type = (attrs && attrs['type']) ? attrs.type : 'INSPECT';
     if (id != null) {
       var obj = Debug.ObjectForID(id);
-      var tip = Debug.formatToString("Inspect %0.32#w", obj);
+      var tip = Debug.formatToString("Inspect %0.32#w", obj).toString().toHTML();
       // This ends up being inserted into the debugger output iframe.
       // We look up $modules in the parent it shares with the app.
       return '<span class="' + type + '" title="' + tip + '" onclick="javascript:window.parent.$modules.lz.Debug.displayObj(' + id + ')">' + rep +"</span>";
@@ -169,12 +169,8 @@ class LzDHTMLDebugService extends LzDebugService {
    * Called last thing by the compiler when the app is completely loaded.
    */
   function makeDebugWindow () {
-    // Some browsers don't enumerate these
-    var ptypes = {Array: Array, Boolean: Boolean, Date: Date,
-                  Function: Function, Number: Number,
-                  Object: Object, String: String};
-    for (var n in ptypes) {
-      var p = ptypes[n];
+    for (var n in __ES3Globals) {
+      var p = __ES3Globals[n];
       try {
         if (! Debug.functionName(p)) {
           p._dbg_name = n;

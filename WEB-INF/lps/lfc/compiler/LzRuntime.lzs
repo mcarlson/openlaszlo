@@ -130,6 +130,28 @@ if ($as2) {
 var encodeURIComponent = escape;
 }
 
+/**
+ * @access private
+ */
+var __ES3Globals = {
+    Array: Array,
+    Boolean: Boolean,
+    Date: Date,
+    Function: Function,
+    Math: Math,
+    Number: Number,
+    Object: Object,
+    RegExp: RegExp,
+    String: String,
+    Error: Error,
+    EvalError: EvalError,
+    RangeError: RangeError,
+    ReferenceError: ReferenceError,
+    SyntaxError: SyntaxError,
+    TypeError: TypeError,
+    URIError: URIError
+};
+
 /*
  * Map string to global value, since swf9 runtime does not support any
  * kind of eval()
@@ -145,8 +167,6 @@ var globalValue = function (name:String) {
   if (name.charAt(0) == '<' && name.charAt(name.length-1) == '>') {
     return lz[name.substring(1, name.length-1)];
   }
-  // TODO: [2008-09-16 ptw] This does not work for built-in classes in
-  // swf9 :(
-  return this[name] || global[name];
+  return this[name] || global[name] || __ES3Globals[name];
 };
 
