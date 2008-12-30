@@ -18,7 +18,10 @@ whitespacePat: new RegExp("^\\s*$"),
 stringTrimPat: new RegExp("^\\s+|\\s+$", "g"),
 
 copyXML: function (xmldoc, trimwhitespace, nsprefix) {
-    return this.copyBrowserXML(xmldoc, true, trimwhitespace, nsprefix);
+    var lfcnode = this.copyBrowserXML(xmldoc, true, trimwhitespace, nsprefix);
+    // create a new, empty ownerDocument (LPP-7537)
+    new LzDataElement(null, {}, [lfcnode]);
+    return lfcnode;
 },
 
 copyBrowserXML: function (node, ignorewhite, trimwhite, nsprefix) {

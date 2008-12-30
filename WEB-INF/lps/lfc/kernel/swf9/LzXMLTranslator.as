@@ -22,7 +22,8 @@ static function copyXML (xmlobj:XML, trimwhitespace:Boolean, nsprefix:Boolean) :
     if (lfcnode is LzDataText) {
         return null;
     }
-    
+    // create a new, empty ownerDocument (LPP-7537)
+    new LzDataElement(null, {}, [lfcnode]);
     return (lfcnode cast LzDataElement);
 }
 
