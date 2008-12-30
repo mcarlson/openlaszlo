@@ -111,27 +111,30 @@ class LzBootstrapMessage {
 
   /**
    * @access private
-   * XML escape
    */
-  static function xmlEscape (ts) {
-    if (ts && ((typeof(ts) == "string") || (ts instanceof String))) {
-      var outstr = "";
-      var tlen = ts.length;
-      for (var i = 0; i < tlen; i++) {
-        var c = ts.charAt(i);
-        if (c == '<') {
-          outstr += "&lt;";
-        } else if (c == '>') {
-          outstr += "&gt;";
-        } else if (c == '&') {
-          outstr += "&amp;";
+  static const xmlEscapeChars:Object = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'};
+
+  /**
+   * @access private
+   * XML escape
+   */ 
+  static function xmlEscape (input:*):* {
+    if (input && ((typeof(input) == "string") || (input is String))) {
+      const escChars:Object = LzBootstrapMessage.xmlEscapeChars;
+      var len:int = input.length;
+      var output:String = "";
+      for (var i:int = 0; i < len; i++) {
+        var code:Number = input.charCodeAt(i);
+        if ( code < 32 ){
+          output += "&#x" + code.toString(16) + ";";
         } else {
-          outstr += c;
+          var c:String = input.charAt(i);
+          output += (escChars[c] || c);
         }
       }
-      return outstr;
+      return output;
     } else {
-      return ts;
+      return input;
     }
   };
 };
