@@ -119,7 +119,11 @@ function $lzc$set_selectable(isSel) {
 
 
 // these 4 are only available in swf8 and higher
-/** @access private */
+/** antialias type for this text
+  * @lzxtype string
+  * @type String
+  * @runtimes as2
+  */
 var antiAliasType = "advanced";
 
 /** @access private */
@@ -137,7 +141,12 @@ function $lzc$set_antiAliasType(aliasType) {
     }
 }
 
-/** @access private */
+
+/** Grid fit for this text
+  * @lzxtype string
+  * @type String
+  * @runtimes as2
+  */
 var gridFit = "pixel";
 
 /** @access private */
@@ -155,8 +164,13 @@ function $lzc$set_gridFit(gridFit) {
     }
 }
 
-/** @access private */
-    var sharpness = 0;
+
+/** text sharpness for this text
+  * @lzxtype number
+  * @type Number
+  * @runtimes as2
+  */
+var sharpness = 0;
 
 /** @access private */
 function $lzc$set_sharpness(sharpness) {
@@ -173,8 +187,12 @@ function $lzc$set_sharpness(sharpness) {
     }
 }
 
-/** @access private */
-    var thickness = 0;
+/** text-thickness for this text
+  * @lzxtype number
+  * @type Number
+  * @runtimes as2
+  */
+var thickness = 0;
 
 /** @access private */
 function $lzc$set_thickness(thickness) {
