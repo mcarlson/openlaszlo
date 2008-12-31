@@ -136,6 +136,7 @@
       <include name="${webapp-lps-home}/server/bin/lzdc.bat" />
       <include name="${webapp-lps-home}/server/bin/convert_laszlo.pl" />
       <include name="${webapp-lps-home}/server/bin/convert_required.pl" />
+      <include name="${webapp-lps-home}/server/bin/convert_setters.pl" />
       <include name="3rd-party/jars/dev/servlet-2.3.jar" />
       <exclude name="building-lps.html" />
       <exclude name="**/build.xml" />
@@ -822,6 +823,9 @@
       <copy todir="${builddir-dev-bin}"
           file="${webapp-lps-home}/server/bin/convert_required.pl" />
       <chmod file="${builddir-dev-bin}/convert_required.pl" perm="755" />
+      <copy todir="${builddir-dev-bin}"
+          file="${webapp-lps-home}/server/bin/convert_setters.pl" />
+      <chmod file="${builddir-dev-bin}/convert_setters.pl" perm="755" />
       <copy todir="${builddir-dev-bin}">
           <fileset dir="${webapp-lps-home}/server/bin" includes="*.bat.proto" />
           <mapper type="glob" from="*.proto" to="*" />
@@ -927,6 +931,7 @@
                 <include name="bin/lzmc"/>
                 <include name="bin/convert_laszlo.pl"/>
                 <include name="bin/convert_required.pl"/>
+                <include name="bin/convert_setters.pl"/>
                 <include name="Server/lps-${version.id}/WEB-INF/bin/mxmlc*" />
                 <include name="Server/lps-${version.id}/WEB-INF/bin/fdb*" />
                 <include name="Server/lps-${version.id}/WEB-INF/bin/compc*" />
@@ -940,6 +945,7 @@
                 <exclude name="bin/lzmc"/>
                 <exclude name="bin/convert_laszlo.pl"/>
                 <exclude name="bin/convert_required.pl"/>
+                <exclude name="bin/convert_setters.pl"/>
                 <exclude name="Server/lps-${version.id}/WEB-INF/bin/mxmlc*" />
                 <exclude name="Server/lps-${version.id}/WEB-INF/bin/fdb*" />
                 <exclude name="Server/lps-${version.id}/WEB-INF/bin/compc*" />
