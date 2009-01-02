@@ -2,7 +2,7 @@
 /**
   * LzTextSprite.as
   *
-  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -47,6 +47,7 @@ public class LzTextSprite extends LzSprite {
         public var sizeToHeight:Boolean = false;
         public var password:Boolean = false;
         public var scrollheight:Number = 0;
+        public var html:Boolean = true;
 
         public function LzTextSprite (newowner = null, args = null) {
             super(newowner,false);
@@ -276,9 +277,24 @@ public class LzTextSprite extends LzSprite {
             }
         }
 
+        /**
+         * Set the html flag on this text view
+         */
+        function setHTML (htmlp:Boolean) :void {
+            // do _not_ reset text, see swf8-kernel
+            this.html = htmlp;
+        }
+
         public function appendText( t:String ):void {
-            this.textfield.appendText(t);
-            this.text = this.textfield.text;
+            this.text += t;
+            if (! this.html) {
+                this.textfield.appendText(t);
+            } else {
+                var df:TextFormat = this.textfield.defaultTextFormat;
+                // reset textformat to workaround flash player bug (FP-77)
+                this.textfield.defaultTextFormat = df;
+                this.textfield.htmlText = this.text;
+            }
         }
 
         public function getText():String {
@@ -299,11 +315,15 @@ public class LzTextSprite extends LzSprite {
         public function setText ( t:String ):void {
             //this.textfield.cacheAsBitmap = false;
             this.text = t;
-            var df:TextFormat = this.textfield.defaultTextFormat;
-            // reset textformat to workaround flash player bug (FP-77)
-            this.textfield.defaultTextFormat = df;
-            this.textfield.htmlText = t;
-        
+            if (this.html) {
+                var df:TextFormat = this.textfield.defaultTextFormat;
+                // reset textformat to workaround flash player bug (FP-77)
+                this.textfield.defaultTextFormat = df;
+                this.textfield.htmlText = t;
+            } else {
+                this.textfield.text = t;
+            }
+
             if (this.resize && (this.multiline == false)) {
                 // single line resizable fields adjust their width to match the text
                 var w:Number = this.getTextWidth();

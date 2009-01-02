@@ -1,7 +1,7 @@
 /**
   * LzInputTextSprite.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -164,13 +164,6 @@ public class LzInputTextSprite extends LzTextSprite {
         } else {
             textfield.type = 'dynamic';
         }
-    }
-
-    /**
-     * Set the html flag on this text view
-     */
-    function setHTML (htmlp) :void {
-        // TODO [hqm 2008-10] what do we do here?
     }
 
     override public function getTextfieldHeight () {
