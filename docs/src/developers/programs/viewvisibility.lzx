@@ -5,7 +5,7 @@
 
  <class name="light">
    // Attributes passed down to bulb
-   <attribute name="bulbColor" />
+   <attribute name="bulbColor" type="color" />
    <attribute name="bulbVisibility" type="string" />
    <attribute name="bulbXpath" type="string" />
 
@@ -62,6 +62,6 @@
  <button onclick="mydata.getPointer().addNode('element', 'newdata')">Add Data</button>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
