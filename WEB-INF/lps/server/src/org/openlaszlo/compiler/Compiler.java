@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -394,19 +394,34 @@ public class Compiler {
             }
 
 
+            Map compileTimeConstants = new HashMap();
+            compileTimeConstants.put("$debug", new Boolean(
+                                         env.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY)));
+            compileTimeConstants.put("$profile", new Boolean(
+                                         env.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY)));
+
+            boolean backtraceValue = env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY);
+            compileTimeConstants.put("$backtrace", new Boolean(backtraceValue));
+
+            runtime = env.getProperty(env.RUNTIME_PROPERTY);
+
+            // Must be kept in sync with server/sc/lzsc.py main
+            compileTimeConstants.put("$runtime", runtime);
+            compileTimeConstants.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
+            compileTimeConstants.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
+            compileTimeConstants.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
+            compileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
+            compileTimeConstants.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
+            compileTimeConstants.put("$as3", Boolean.valueOf(env.isAS3()));
+            compileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
+            compileTimeConstants.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
+            compileTimeConstants.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
+            compileTimeConstants.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
+            env.setCompileTimeConstants(compileTimeConstants);
+
             Document doc = env.getParser().parse(file, env);
             Element root = doc.getRootElement();
             
-            // Override passed in runtime target properties with the
-            // canvas values.
-            if ("true".equals(root.getAttributeValue("debug"))) {
-                env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, true);
-            }
-
-            if ("true".equals(root.getAttributeValue("profile"))) {
-                env.setProperty(CompilationEnvironment.PROFILE_PROPERTY, true);
-            }
-
             // cssfile cannot be set in the canvas tag
             String cssfile = props.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
             if (cssfile != null) {
@@ -436,30 +451,6 @@ public class Compiler {
             }
 
             Properties nprops = (Properties) env.getProperties().clone();
-            Map compileTimeConstants = new HashMap();
-            compileTimeConstants.put("$debug", new Boolean(
-                                         env.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY)));
-            compileTimeConstants.put("$profile", new Boolean(
-                                         env.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY)));
-
-            boolean backtraceValue = env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY);
-            compileTimeConstants.put("$backtrace", new Boolean(backtraceValue));
-
-            runtime = env.getProperty(env.RUNTIME_PROPERTY);
-
-            // Must be kept in sync with server/sc/lzsc.py main
-            compileTimeConstants.put("$runtime", runtime);
-            compileTimeConstants.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
-            compileTimeConstants.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
-            compileTimeConstants.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
-            compileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
-            compileTimeConstants.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
-            compileTimeConstants.put("$as3", Boolean.valueOf(env.isAS3()));
-            compileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
-            compileTimeConstants.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
-            compileTimeConstants.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
-            compileTimeConstants.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
-            
             // [todo: 2006-04-17 hqm] These compileTimeConstants will be used by the script compiler
             // at compile time, but they won't be emitted into the object code for user apps. Only
             // the compiled LFC emits code which defines these constants. We need to have some
@@ -469,7 +460,6 @@ public class Compiler {
             ObjectWriter writer = createObjectWriter(nprops, ostr, env, root);
 
             env.setObjectWriter(writer);
-            env.setCompileTimeConstants(compileTimeConstants);
 
             Compiler.updateRootSchema(root, env, schema, externalLibraries);
                         
@@ -651,7 +641,21 @@ public class Compiler {
                 "import flash.text.*;\n" +
                 "import flash.ui.*;\n" +
                 "import flash.utils.*;\n" +
-                "import flash.xml.*;\n" +
+                "import flash.xml.*;\n";
+
+            if ("swf10".equals(runtime)) {
+                // These it easier to debug SWF 10 Text Layout Framework code
+                prog = prog +
+                    "import flashx.textLayout.container.*;\n" +
+                    "import flashx.textLayout.compose.*;\n" +
+                    "import flashx.textLayout.elements.*;\n" +
+                    "import flashx.textLayout.conversion.*;\n" +
+                    "import flashx.textLayout.formats.*;\n" +
+                    "import flashx.textLayout.formats.Direction;\n" +
+                    "import flashx.textLayout.edit.*;\n" +
+                    "import flashx.textLayout.events.*;\n";
+            }
+            prog = prog + 
                 "}#\n" +
                 "public function DebugExec (...ignore) {runToplevelDefinitions();}\n" +
                 "public function runToplevelDefinitions() {}\n" +

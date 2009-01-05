@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -399,11 +399,30 @@ public class Parser {
         newCurrentFiles.add(key);
         Document doc = read(file);
         Element root = doc.getRootElement();
+
+        Map cc = env.getCompileTimeConstants();
+        // Override passed in runtime target properties 'debug' and 'profile' with 
+        // canvas values, if any.
+        if (root.getName().equals("canvas")) {
+            String dbg = root.getAttributeValue("debug");
+            if (dbg != null) {
+                cc.put("$debug", new Boolean(dbg));
+                env.setProperty(CompilationEnvironment.DEBUG_PROPERTY,  dbg.equals("true"));
+            }
+
+            String prof = root.getAttributeValue("profile");
+            if (prof != null) {
+                cc.put("$profile", new Boolean(prof));
+                env.setProperty(CompilationEnvironment.PROFILE_PROPERTY,  prof.equals("true"));
+            }
+        }
+
         expandIncludes(root, newCurrentFiles, env);
         return doc;
     }
 
     static final String WHEN = "when";
+    static final String UNLESS = "unless";
     static final String OTHERWISE = "otherwise";
 
     /**
@@ -480,6 +499,7 @@ public class Parser {
              iter.hasNext(); ) {
             Element child = (Element) iter.next();
             if (! (child.getName().equals("when")  ||
+                   child.getName().equals("unless") ||
                    child.getName().equals("otherwise"))) {
                 throw new CompilationError("unknown clause for a switch statement: "+child.getName(), child);
             }
@@ -492,6 +512,15 @@ public class Parser {
                 break;
             }
         }
+        for (Iterator iter = elt.getChildren(UNLESS, elt.getNamespace()).iterator();
+             iter.hasNext(); ) {
+            Element when = (Element) iter.next();
+            if (!evaluateConditions(when, env)) {
+                selected = when;
+                break;
+            }
+        }
+
         if (selected == null) {
             for (Iterator iter = elt.getChildren(OTHERWISE, elt.getNamespace()).iterator();
                  iter.hasNext(); ) {
