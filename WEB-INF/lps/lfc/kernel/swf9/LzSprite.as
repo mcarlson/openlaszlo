@@ -999,12 +999,12 @@ dynamic public class LzSprite extends Sprite {
 
               // Frames are one based not zero based
               var frames:Array = resinfo.frames;
+              var origfn = fn;
               if (fn == null || fn < 1) {
-                  fn = 1;
+                  origfn = fn = 1;
               } else if (fn > frames.length) {
                   fn = frames.length;
               }
-              this.frame = fn;
               var framenumber:int = fn - 1;
 
               var assetclass:Class;
@@ -1032,6 +1032,8 @@ dynamic public class LzSprite extends Sprite {
 
                   var oRect:Rectangle = asset.getBounds( asset );
                   if (oRect.width == 0 || oRect.height == 0) {
+                      // store the frame number passed in to prevent it from being reset
+                      this.frame = origfn;
                       // it can take a while for new resources to show up.  Call back on the next frame, when we have a valid size.
                       LzIdleKernel.addCallback(this, '__resetframe');
                       return;
@@ -1062,6 +1064,9 @@ dynamic public class LzSprite extends Sprite {
                         this.totalframes = this.loaderMC.totalFrames;
                         this.loaderMC.gotoAndStop(fn);
                     }
+                  } else {
+                    // Set later, to prevent movieclip resources from being forced to frame 1 - see LPP-7534
+                    this.frame = fn;
                   }
               } else {
                   // bad resource?
