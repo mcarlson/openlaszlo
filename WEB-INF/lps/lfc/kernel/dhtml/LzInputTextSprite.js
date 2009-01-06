@@ -1,7 +1,7 @@
 /**
   * LzInputTextSprite.js
   *
-  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -232,10 +232,13 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
     }
     // send to __LZdiv
     if (this.quirks.fix_ie_clickable) {
-        // [TODO ptw 1-18-2007] rather than twiddling the style or style sheet you could just have a rule like (assuming you used multiple classes): 
-        // .lzdiv + .lzclick { display: none; }
+        // [TODO ptw 1-18-2007] rather than twiddling the style or style sheet you could just have a rule
+        // like (assuming you used multiple classes): .lzdiv + .lzclick { display: none; }
         // and make the click be displayed or not by whether it is before or after the (input) div? 
-        // [max 1-18-2007] IE requires different nesting rules for inputtext.  Also, if there are _any_ clickable divs behind the inputtext they'll grab clicks.  This is the reason I temporarily hide all clickable divs when the inputtext is selected -  and the reason the inputtext can't be a child of the clickable view.
+        // [max 1-18-2007] IE requires different nesting rules for inputtext.  Also, if there are _any_
+        // clickable divs behind the inputtext they'll grab clicks.  This is the reason I temporarily
+        // hide all clickable divs when the inputtext is selected -  and the reason the inputtext can't
+        // be a child of the clickable view.
 
         this.__setglobalclickable(true);
         this.__LzInputDiv = this.__LZclickdiv.removeChild(this.__LzInputDiv);
@@ -312,57 +315,71 @@ LzInputTextSprite.prototype.__setTextEvents = function(c) {
 }
 
 LzInputTextSprite.prototype.__pasteHandlerEx = function (evt) {
-    if (this.multiline && this.owner.maxlength > 0) {
+    var checkre = !!(this.restrict);
+    var checkml = (this.multiline && this.owner.maxlength > 0);
+    if (checkre || checkml) {
         evt = evt ? evt : window.event;
-        
+
         if (this.quirks.safari_paste_event) {
-            var clipboardTxt = evt.clipboardData.getData("text/plain");
+            var txt = evt.clipboardData.getData("text/plain");
         } else {
-            var clipboardTxt = window.clipboardData.getData("TEXT");
-            clipboardTxt = clipboardTxt.replace(this.____crregexp, '\n');
+            var txt = window.clipboardData.getData("TEXT");
+            txt = txt.replace(this.____crregexp, '\n');
         }
-        
-        if (this.quirks.text_ie_carriagereturn) {
-            var len = this.__LzInputDiv.value.replace(this.____crregexp, '\n').length;
-        } else {
-            var len = this.__LzInputDiv.value.length;
-        }
-        
+
+        var stopPaste = false;
         var selsize = this.getSelectionSize();
         if (selsize < 0) selsize = 0;//[TODO anba 2008-01-06] remove after LPP-5330
-        var max = this.owner.maxlength + selsize;
-        var stopPaste = false;
-        
-        var maxchars = max - len;
-        if (maxchars > 0) {
-            var txt = clipboardTxt;
-            var txtLen = txt.length;
+
+        if (checkre) {
+            // remove invalid characters
+            var matched = txt.match(this.restrict);
+            if (matched == null) {
+                var newtxt = "";
+            } else {
+                var newtxt = matched.join("");
+            }
+            stopPaste = (newtxt != txt);
+            txt = newtxt;
+        }
+
+        if (checkml) {
+            var max = this.owner.maxlength + selsize;
+            if (this.quirks.text_ie_carriagereturn) {
+                var len = this.__LzInputDiv.value.replace(this.____crregexp, '\n').length;
+            } else {
+                var len = this.__LzInputDiv.value.length;
+            }
             
-            if (txtLen > maxchars) {
-                txt = txt.substring(0, maxchars);
+            var maxchars = max - len;
+            if (maxchars > 0) {
+                if (txt.length > maxchars) {
+                    txt = txt.substring(0, maxchars);
+                    stopPaste = true;
+                }
+            } else {
+                txt = "";
                 stopPaste = true;
             }
-        } else {
-            var txt = "";
-            stopPaste = true;
         }
-        
+
         if (stopPaste) {
             evt.returnValue = false;
             if (evt.preventDefault) {
                 evt.preventDefault();
             }
-            
+
             if (txt.length > 0) {
                 if (this.quirks.safari_paste_event) {
                     var val = this.__LzInputDiv.value;
                     var selpos = this.getSelectionPosition();
-                    
+
                     //update value
                     this.__LzInputDiv.value = val.substring(0, selpos) + txt + val.substring(selpos + selsize);
-                    
+
                     //fix selection
-                    this.__LzInputDiv.setSelectionRange(selpos + txt.length, selpos + txt.length);
+                    selpos += txt.length;
+                    this.__LzInputDiv.setSelectionRange(selpos, selpos);
                 } else {
                     var range = document.selection.createRange();
                     //this updates value and ensures right selection
@@ -378,28 +395,39 @@ LzInputTextSprite.prototype.__pasteHandler = function () {
     var selsize = this.getSelectionSize();
     var val = this.__LzInputDiv.value;
     var that = this;
-    
+
     // use 1ms timeout to defer execution, so that UI can update its state
     setTimeout(function() {
+        var checkre = !!(that.restrict);
+        var checkml = (that.multiline && that.owner.maxlength > 0);
         var newval = that.__LzInputDiv.value;
         var newlen = newval.length;
         var max = that.owner.maxlength;
-        
-        if (newlen > max) {
+
+        if (checkre || (checkml && newlen > max)) {
             var len = val.length;
-            var maxchars = max + selsize - len;
-            
-            //this was pasted
+            // this text was pasted
             var newc = newval.substr(selpos, newlen - len + selsize);
-            //but we can only take at max that many chars
-            newc = newc.substring(0, maxchars);
-            
+
+            if (checkre) {
+                // remove all invalid characters
+                var matched = newc.match(that.restrict);
+                newc = matched != null ? matched.join("") : "";
+            }
+
+            if (checkml) {
+                // we can only take at max that many chars
+                var maxchars = max + selsize - len;
+                newc = newc.substring(0, maxchars);
+            }
+
             //update value
             that.__LzInputDiv.value = val.substring(0, selpos) + newc + val.substring(selpos + selsize);
-            
+
             //fix selection
             //note: we're in Firefox/Opera, so we can savely call "setSelectionRange"
-            that.__LzInputDiv.setSelectionRange(selpos + newc.length, selpos + newc.length);
+            selpos += newc.length;
+            that.__LzInputDiv.setSelectionRange(selpos, selpos);
         }
     }, 1);
 }
@@ -447,7 +475,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
         if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = true;
         if (LzInputTextSprite.prototype.__focusedSprite === sprite) {
             LzInputTextSprite.prototype.__focusedSprite = null;         
-        }    
+        }
         if (sprite.__fix_inputtext_with_parent_resource && sprite.__isMouseOver()) {
             //Debug.write('undo blur')
             sprite.select();
@@ -463,39 +491,61 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
     }
 
     if (eventname == 'onkeypress') {
-        if (sprite.multiline && view.maxlength > 0) {
-            var charcode = sprite.quirks.text_event_charcode ? evt.charCode : evt.keyCode;            
+        if (sprite.restrict || (sprite.multiline && view.maxlength > 0)) {
+            var keycode = evt.keyCode;
+            var charcode = sprite.quirks.text_event_charcode ? evt.charCode : evt.keyCode;
+            // only printable characters or carriage return (modifier keys must not be active)
+            var validChar = (!(evt.ctrlKey || evt.altKey) && (charcode >= 32 || keycode == 13));
             //Debug.write("charCode = %s, keyCode = %s, ctrlKey = %s, altKey = %s, shiftKey = %s", charcode, keycode, evt.ctrlKey, evt.altKey, evt.shiftKey);
 
-            if (!(evt.ctrlKey || evt.altKey) && (charcode || keycode == 13) && keycode != 8) {
-                var selsize = sprite.getSelectionSize();
-                //[TODO anba 2008-01-06] use selsize==0 when LPP-5330 is fixed
-                if (selsize <= 0) {
+            if (validChar) {
+                var prevent = false;
+                if (keycode != 13 && sprite.restrict) {
+                    // only printable characters
+                    prevent = (0 > String.fromCharCode(charcode).search(sprite.restrict));
+                }
+                if (! prevent) {
+                    var selsize = sprite.getSelectionSize();
+                    //[TODO anba 2008-01-06] use selsize==0 when LPP-5330 is fixed
+                    if (selsize <= 0) {
                     if (sprite.quirks.text_ie_carriagereturn) {
-                        var val = sprite.__LzInputDiv.value.replace(sprite.____crregexp, '\n');
-                    } else {
-                        var val = sprite.__LzInputDiv.value;
-                    }
+                            var val = sprite.__LzInputDiv.value.replace(sprite.____crregexp, '\n');
+                        } else {
+                            var val = sprite.__LzInputDiv.value;
+                        }
 
-                    var len = val.length, max = view.maxlength;
-                    if (len >= max) {
-                        evt.returnValue = false;
-                        if (evt.preventDefault) {
-                            evt.preventDefault();
+                        var len = val.length, max = view.maxlength;
+                        if (len >= max) {
+                            prevent = true;
                         }
                     }
                 }
+                if (prevent) {
+                    evt.returnValue = false;
+                    if (evt.preventDefault) {
+                        evt.preventDefault();
+                    }
+                }
             } else {
-                /* IE and Safari do not send 'onkeypress' for function-keys, */
-                /* but Firefox and Opera! */
+                // IE and Safari do not send 'onkeypress' for function-keys,
+                // but Firefox and Opera!
                 if (sprite.quirks.keypress_function_keys) {
+                    var ispaste = false;
                     if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
                         var c = String.fromCharCode(charcode);
-                        /* 'v' for Firefox and 'V' for Opera */
-                        if (c == 'v' || c == 'V') {
-                            //pasting per ctrl + v
-                            //[TODO anba 2008-01-06] how to detect paste per context-menu?
-                            //[TODO anba 2008-10-06] (LPP-5406) Firefox3 added context-menu events
+                        // paste by ctrl + v ('v' for Firefox and 'V' for Opera)
+                        ispaste = (c == 'v' || c == 'V');
+                    } else if (evt.shiftKey && !evt.altKey && !evt.ctrlKey) {
+                        // paste by shift + insert (Windows)
+                        ispaste = (keycode == 45);
+                    }
+                    if (ispaste) {
+                        //[TODO anba 2008-01-06] how to detect paste per context-menu?
+                        //[TODO anba 2008-10-06] (LPP-5406) Firefox3 added context-menu events
+                        if (sprite.restrict) {
+                            // always call paste-handler if restrict was set
+                            sprite.__pasteHandler();
+                        } else {
                             var len = sprite.__LzInputDiv.value.length, max = view.maxlength;
                             if (len < max || sprite.getSelectionSize() > 0) {
                                 sprite.__pasteHandler();

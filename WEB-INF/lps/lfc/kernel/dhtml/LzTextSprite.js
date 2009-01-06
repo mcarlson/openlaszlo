@@ -1,7 +1,7 @@
 /**
   * LzTextSprite.js
   *
-  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -66,6 +66,7 @@ LzTextSprite.prototype.__sizecacheupperbound = 1000;
 LzTextSprite.prototype.selectable = true;
 LzTextSprite.prototype.text = '';
 LzTextSprite.prototype.resize = true;
+LzTextSprite.prototype.restrict = null;
 
 LzTextSprite.prototype.setFontSize = function (fsize) {
     if (fsize == null || fsize < 0) return;
@@ -172,9 +173,13 @@ LzTextSprite.prototype.setMultiline = function(m) {
 }
 
 LzTextSprite.prototype.setPattern = function ( val ){
-    // LPP-2550
-    if ($debug) {
-        Debug.warn('setPattern not yet implemented for dhtml');
+    if (val == null || val == "") {
+        this.restrict = null;
+    } else if (RegExp("^\\[.*\\]\\*$").test( val )) {
+        // remove "*" from end, always allow CR/LF (for flash compatibility)
+        this.restrict = RegExp(val.substring(0, val.length - 1) + "|[\\r\\n]", "g");
+    } else if ($debug) {
+        Debug.warn('LzTextSprite.setPattern argument %w must be of the form "[...]*"', val);
     }
 }
 
