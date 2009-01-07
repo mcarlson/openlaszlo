@@ -1,7 +1,7 @@
 /**
   * LzTextSprite.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -324,6 +324,14 @@ LzTextSprite.prototype.getTextHeight = function ( ){
         var tct = textclip.htmlText;
         var tcp = textclip.wordWrap;
 
+        var sf = targetPath(textclip);
+        var start = -1, end;
+        if (Selection.getFocus() === sf) {
+            // we need to reset selection when the textclip is focused (LPP-7569)
+            start = Selection.getBeginIndex();
+            end = Selection.getEndIndex();
+        }
+
         textclip.autoSize = true;
         // Make sure the test text does not wrap!
         textclip.wordWrap = false;
@@ -335,6 +343,10 @@ LzTextSprite.prototype.getTextHeight = function ( ){
         textclip.htmlText = tct;
         textclip._width   = tcw;
         textclip._height  = tch;
+
+        if (start != -1) {
+            Selection.setSelection(start, end);
+        }
     }
     return h;
 }

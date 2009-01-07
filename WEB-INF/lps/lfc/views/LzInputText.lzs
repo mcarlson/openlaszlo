@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -187,7 +187,7 @@ function inputtextevent (eventname:String, value:* = null) :void {
         if ( this.multiline && 
              this.sizeToHeight && 
              this.height != isprite.getTextfieldHeight() ) {
-            this.setHeight(isprite.getTextfieldHeight());
+            this.$lzc$set_height(isprite.getTextfieldHeight());
         }
         if (this.ontext.ready) this.ontext.sendEvent(value);
     } else if (eventname == 'onblur') {
