@@ -8,125 +8,90 @@
       Improvements by Sebastian Wagner
       Support for OL 4.2/SWF9 by Raju Bitter
   -->
-  <interface name="rtmpconnection" extends="node">
-    <doc>
-      <tag name="shortdesc"><text>Allows connections to RTMP servers</text></tag>
-      <text>
-        <p><tagname>rtmpconnection</tagname> allows applications to connect to RTMP servers, like http://osflash.org/red5 or http://www.wowzamedia.com/.  Note that you'll need a server running with the appropriate URLs set up for this example to work.</p> 
-        
-        <example><programlisting class="code">
-        &lt;canvas&gt;
-            &lt;rtmpconnection src="rtmp://localhost:1935/simplevideostreaming/" autoconnect="true"/&gt;
-            &lt;videoplayer url="Extremists.flv" type="rtmp" autoplay="true" width="320" height="240"/&gt;
-        &lt;/canvas&gt;
-        </programlisting></example>
-      </text>
-    </doc> 
-
-    <!--- Connect automatically during init. If false, you need to explicitly
-          call connect().
-          Default is true.
-          @type Boolean
-          @access public
-    -->
-    <attribute name="autoconnect" value="true" type="boolean" />
-        
-    <!--- String to indicate connection status.
-          @type string
-          @access public
-    -->
-    <attribute name="status" value="disconnected" type="string"/>
-
-    <!--- Number to indicate what stage of connection we're in:
-          0: disconnected, 1: connecting, 2: connected.
-          @type Number
-          @access public
-    -->
-    <attribute name="stage" value="0" type="number"/>
-
-    <!--- A reference to the Flash NetConnection object.
-          @type Object
-          @access private
-    -->
-    <attribute name="_nc" value="null" type="expression" />
-
-    <!--- Application url, for example
-          "rtmp:/appname" or "rtmp://myserver.com/myapp/".
-          @type String
-          @access private
-    -->
-    <attribute name="src" value="" type="string"/>
-
-    <!--- Turn on for verbose debugger output.
-          @type Boolean
-          @access public
-    -->
-    <attribute name="debug" value="false"/>
-    
-    <!--- Event sent when connection established. 
-          @access private -->
-    <event name="onconnect"/>
-    <!--- Event sent when an error occurs
-          @access private -->
-    <event name="onerror"/>
-  </interface> <!-- rtmpconnection -->
-
-  <!-- these methods are shared across runtimes>
-  <script when="immediate"><![CDATA[
-    mixin NewrtmpconnectionShared {
-        function NewrtmpconnectionShared ( parent:LzView? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
-            super(parent, attrs, children, instcall);
-        }
-    }
-  ]]></script-->
 
   <switch>
     <when runtime="dhtml">
       <!-- no support for RTMP in DHTML -->
     </when>
     <otherwise>
-      <!-- TODO [jgrandy 6/1/2007] <otherwise> should be <when runtime="as2"> but that isn't currently supported -->
-      <script when="immediate"><![CDATA[
+        <class name="rtmpconnection">
+            <doc>
+                <tag name="shortdesc"><text>Allows connections to RTMP servers</text></tag>
+                <text>
+                    <p><tagname>rtmpconnection</tagname> allows applications to connect to RTMP servers, like http://osflash.org/red5 or http://www.wowzamedia.com/.  Note that you'll need a server running with the appropriate URLs set up for this example to work.</p> 
+                    
+                    <example><programlisting class="code">
+                    &lt;canvas&gt;
+                        &lt;rtmpconnection src="rtmp://localhost:1935/simplevideostreaming/" autoconnect="true"/&gt;
+                        &lt;videoplayer url="Extremists.flv" type="rtmp" autoplay="true" width="320" height="240"/&gt;
+                    &lt;/canvas&gt;
+                    </programlisting></example>
+                </text>
+            </doc> 
 
-        // Classes that implement an interface must obey the LZX
-        // tag->class mapping convention
-        dynamic class $lzc$class_rtmpconnection extends LzNode {
-            // Import statements
-            if ($as3) {
-                #passthrough (toplevel:true) {                    
-                    import flash.net.NetConnection;
-                    import flash.events.ErrorEvent;
-                    import flash.events.StatusEvent;
-                    import flash.events.IOErrorEvent;
-                    import flash.events.NetStatusEvent;
-                    import flash.events.SecurityErrorEvent;
-                }#
-            }
-            // Next two are part of the required LFC tag class protocol
-            static var tagname = 'rtmpconnection';
-            static var attributes = new LzInheritedHash(LzNode.attributes);
-            static var uid = 0;
+            <switch>
+                <when property="$as3">
+                    <passthrough>
+                        import flash.net.NetConnection;
+                        import flash.events.ErrorEvent;
+                        import flash.events.StatusEvent;
+                        import flash.events.IOErrorEvent;
+                        import flash.events.NetStatusEvent;
+                        import flash.events.SecurityErrorEvent;
+                    </passthrough>
+                </when>
+            </switch>
+
+            <!--- Connect automatically during init. If false, you need to explicitly
+                call connect().
+                Default is true.
+                @type Boolean
+                @access public
+            -->
+            <attribute name="autoconnect" value="true" type="boolean" />
+                
+            <!--- String to indicate connection status.
+                @type string
+                @access public
+            -->
+            <attribute name="status" value="disconnected" type="string"/>
+
+            <!--- Number to indicate what stage of connection we're in:
+                0: disconnected, 1: connecting, 2: connected.
+                @type Number
+                @access public
+            -->
+            <attribute name="stage" value="0" type="number"/>
+
+            <!--- A reference to the Flash NetConnection object.
+                @type Object
+                @access private
+            -->
+            <attribute name="_nc" value="null" type="expression" />
+
+            <!--- Application url, for example
+                "rtmp:/appname" or "rtmp://myserver.com/myapp/".
+                @type String
+                @access private
+            -->
+            <attribute name="src" value="" type="string"/>
+
+            <!--- Turn on for verbose debugger output.
+                @type Boolean
+                @access public
+            -->
+            <attribute name="debug" value="false"/>
             
-            var autoconnect = true;
-            var status = "disconnected";
-            var stage = 0;
-            var src = "";
-            var debug = false;
-            var _nc = null;
+            <!--- Event sent when connection established. 
+                @access private -->
+            <event name="onconnect"/>
+            <!--- Event sent when an error occurs
+                @access private -->
+            <event name="onerror"/>
             
-            var onconnect = LzDeclaredEvent;
-            var onerror = LzDeclaredEvent;
+            <method name="init">
+                super.init();
 
-            override function construct(parent,args) {
-                super.construct(parent, args);
-                new LzDelegate( this , "_oninit" , this , "oninit" );
-            }
-
-            function $lzc$class_rtmpconnection(parent, attrs, children, async) {
-                super(parent, attrs, children, async);
-            }
-
-            function _oninit(ignore) {
                 // Store new RTMP connections in canvas.rtmpconnections. If no
                 // name is set for an rtmpconnection use "_default". Other real-time
                 // objects will use the canvas.rtmpconnections["_default"] NetConnection
@@ -148,7 +113,7 @@
                 }
                 
                 canvas.rtmpconnections[this.name] = this;
-    
+
                 // Local reference to rtmpconnection.
                 this._nc = new NetConnection();
                 if ($as3) {
@@ -174,9 +139,9 @@
                         _root.Debug.write("---------------> id: ", id);
                     }
                     **/
-    
+
                 }
-    
+
                 /** the following code should work now, but it hasn't
                     been tested, so I'll leave it commented out -sa
                 this._nc.__resolve = function(name) {
@@ -191,23 +156,22 @@
                 if (this.autoconnect) {
                     this.connect();
                 }
-            } // end function _oninit
+            </method>
 
-            /** Catch as3 security errors. **/
-            function _onSecurityError (error) {
+            <method name="_onSecurityError" args="error">
                 var errstr = error + '';
                 if ($debug) Debug.warn("rtmpconnection _onSecurityError() " + errstr);
                 if (this.onerror.ready) {
                     this.onerror.sendEvent(errstr);
                 }
-            }
-            
-            function connect() {
+            </method>
+                
+            <method name="connect">
                 //Debug.write("rtmpconnection.connect, stage", this.stage);
                 if (this.stage > 0) {
                     return; // already connected or connecting
                 }
-    
+
                 if ($debug) {
                     if (this.src == "") {
                         Debug.write("no src url defined for", this);
@@ -233,11 +197,9 @@
                 
                 this.setAttribute("status", "connecting");
                 this.setAttribute("stage", 1);
-    
-                
-            } // end function connect
+            </method>
 
-            function _onStatus (evt) {
+            <method name="_onStatus" args="evt">
                 if ($as3) evt = evt.info;
                 var code = evt.code;
                 
@@ -246,16 +208,16 @@
 
                 //Debug.write(evt);
                 //Debug.write("rtmpconnection", this, "_onStatus", code, description);
-    
+
                 if (this.debug) {
                     if ($debug) Debug.write("rtmpconnection", this, "_onStatus", code);
                 }
                 
                 var msg = "";
                 var s = this.stage;
-    
+
                 switch (code) {
-    
+
                     case "NetConnection.Connect.AppShutdown": {
                         // The application has been shut down 
                         // (for example, if the application is out of memory 
@@ -265,14 +227,14 @@
                         s = 0;
                         break;
                     }
-    
+
                     case "NetConnection.Connect.Closed": {
                         // The connection was successfully closed.
                         msg = "disconnected";
                         s = 0;
                         break;
                     }
-    
+
                     case "NetConnection.Connect.Failed": {
                         // The connection attempt failed; 
                         // for example, the server is not running.
@@ -280,7 +242,7 @@
                         s = 0;
                         break;
                     }
-    
+
                     case "NetConnection.Connect.Rejected": {
                         // The client does not have permission to connect 
                         // to the application, or the application expected 
@@ -290,24 +252,24 @@
                         s = 0;
                         break;
                     }
-    
+
                     case "NetConnection.Connect.Success": {
                         // The connection attempt succeeded.
                         msg = "connected";
                         s = 2;
                         break;
                     }
-    
+
                     default: {
                         msg = code;
                         break;
                     }
-    
+
                 }
-    
+
                 this.setAttribute("status", msg);
                 this.setAttribute("stage", s);
-    
+
                 if (this.debug) {
                     if ($debug) {
                         if (s == 2) {
@@ -317,29 +279,22 @@
                         }
                     }
                 }
-    
+
                 if (s == 2) {
                     if (this.onconnect.ready) {
                         this.onconnect.sendEvent();
                     }
                 }
-            } // end function _onstatus
+            </method>
 
-            function call (func, obj, params) {
+            <method name="callMethod" args="func, obj, params">
                 if (this.debug) {
-                    if ($debug) Debug.write("call: func, obj, params", func, obj, params);
+                    if ($debug) Debug.write("callMethod: func, obj, params", func, obj, params);
                 }
-    
-                if (params.length != 0) {
-                    this._nc.call.apply(arguments);
-                } else {
-                    this._nc.call(func, obj);
-                }
-            }
-                        
-        } // End of rtmpconnection
-        lz[$lzc$class_rtmpconnection.tagname] = $lzc$class_rtmpconnection;
-      ]]></script>
+
+                this._nc.call(func, obj, params);
+            </method>
+        </class>
     </otherwise>
   </switch>
 </library>
