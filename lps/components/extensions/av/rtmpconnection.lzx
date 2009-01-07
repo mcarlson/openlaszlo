@@ -1,10 +1,12 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
   <!--
-      Based on code by Raju Bitter
+      Originally written by Sarah Allen
+      Improvements by Sebastian Wagner
+      Support for OL 4.2/SWF9 by Raju Bitter
   -->
   <interface name="rtmpconnection" extends="node">
     <doc>
@@ -238,11 +240,12 @@
             function _onStatus (evt) {
                 if ($as3) evt = evt.info;
                 var code = evt.code;
-                var description = evt.description;
+                
+                // only used for debugging
+                var description = evt['description'] ? evt.description : "";
 
                 //Debug.write(evt);
-                //Debug.write("rtmpconnection", this, "_onStatus", code);
-                //Debug.write("Net status description: ", description);
+                //Debug.write("rtmpconnection", this, "_onStatus", code, description);
     
                 if (this.debug) {
                     if ($debug) Debug.write("rtmpconnection", this, "_onStatus", code);
