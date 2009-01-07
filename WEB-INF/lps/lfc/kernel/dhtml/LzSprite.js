@@ -4,7 +4,7 @@
 /**
   * LzSprite.js
   *
-  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -902,7 +902,8 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
             this.__mouseEvent('onclick', true);
             return;
         } else if (eventname == 'ondrag') {
-            // TODO: handle these?
+            // ignore these
+            return;
         }
     }
 
