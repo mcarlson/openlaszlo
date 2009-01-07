@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzview
@@ -77,13 +77,7 @@ static var tagname = 'view';
   static var __LZdelayedSetters = new LzInheritedHash(LzNode.__LZdelayedSetters);
 /** @access private */
   static var earlySetters = new LzInheritedHash(LzNode.earlySetters);
-    
-    /** true forces next call to setAttribute('x',...) to run
-        @access private */
-    var _xrecompute:Boolean = false;
-    /** true forces next call to setAttribute('y',...) to run
-        @access private */
-    var _yrecompute:Boolean = false;
+
     /** @access private */
     var __LZlayout
 
@@ -101,7 +95,7 @@ static var tagname = 'view';
       * @keywords readonly
       */
     var playing = false;
-    
+
 
 /** @access private */
 var _visible;
@@ -438,11 +432,11 @@ override function construct ( parent , args) {
 
     this.__makeSprite(args);
 
-    if ( 'width' in args || this.__LZhasConstraint('width')) {
+    if (args['width'] != null || this.__LZhasConstraint('width')) {
         this.hassetwidth = true;
         this.__LZcheckwidth = false;
     }
-    if ( 'height' in args || this.__LZhasConstraint('height')) {
+    if (args['height'] != null || this.__LZhasConstraint('height')) {
         this.hassetheight = true;
         this.__LZcheckheight = false;
     }
@@ -1030,35 +1024,50 @@ function $lzc$set_bgcolor(bgc) {
   * @lzxtype numberExpression
   * @lzxdefault "0"
   */
-var x =   0;
+var x = 0;
 
-/** @access private */
-var _x:Number;
+/**
+ * Memo of last x _set_.  Used for optimizing out redundant calls
+ * (profiling showed many calls during initialization as constraints
+ * settled).
+ *
+ * @devnote [2009-01-06 ptw] This is strictly a memoization of the
+ * last value set.  It starts out as `undefined`, and the comparison
+ * uses identity (`===`) to ensure that an initial setting of `null`
+ * is not ignored.
+ *
+ * @access private
+ */
+var __set_x_memo:*;
 
 /** @access private */
 function $lzc$set_x(v) {
-    if (this._xrecompute || this._x != v) {
-        this._x = v;
-        this.x = v;
-        if ( this.__LZhasoffset ){
-            if (this.capabilities.rotation) {
-                v -= ( this.xoffset * this.__LZrcos  -
-                    this.yoffset * this.__LZrsin );
-            } else {
-                v -= this.xoffset;
-            }
-        }
-        
-        if ( this.pixellock ) v = Math.floor( v );
-        this.sprite.setX(v)
-        
-        var vip:LzView = (this.immediateparent cast LzView);
-        if (vip.__LZcheckwidth)
-            vip.__LZcheckwidthFunction( this );
-        if (this.onx.ready) this.onx.sendEvent( this.x );
-        this._xrecompute = false;
+    // NOTE: [2009-01-06 ptw] See @devnote at __set_x_memo
+    if (this.__set_x_memo === v) {
+      // Always send the event
+      if (this.onx.ready) { this.onx.sendEvent( this.x ); }
+      return;
     }
+    // memoize
+    this.__set_x_memo = v;
+
+    this.x = v;
+    if ( this.__LZhasoffset ){
+        if (this.capabilities.rotation) {
+            v -= ( this.xoffset * this.__LZrcos  -
+                   this.yoffset * this.__LZrsin );
+        } else {
+            v -= this.xoffset;
+        }
+    }
+
+    if ( this.pixellock ) v = Math.floor( v );
+    this.sprite.setX(v)
+    var vip:LzView = (this.immediateparent cast LzView);
+    if (vip.__LZcheckwidth) { vip.__LZcheckwidthFunction( this ); }
+    if (this.onx.ready) { this.onx.sendEvent( this.x ); }
 }
+
 
 /** The vertical offset of this view's upper left corner from the
   * upper left corner of its container
@@ -1066,34 +1075,50 @@ function $lzc$set_x(v) {
   * @lzxtype numberExpression
   * @lzxdefault "0"
   */
-var y =   0;
+var y = 0;
 
-/** @access private */
-var _y:Number;
+/**
+ * Memo of last y _set_.  Used for optimizing out redundant calls
+ * (profiling showed many calls during initialization as constraints
+ * settled).
+ *
+ * @devnote [2009-01-06 ptw] This is strictly a memoization of the
+ * last value set.  It starts out as `undefined`, and the comparison
+ * uses identity (`===`) to ensure that an initial setting of `null`
+ * is not ignored.
+ *
+ * @access private
+ */
+var __set_y_memo:*;
 
 /** @access private */
 function $lzc$set_y(v) {
-    if (this._yrecompute || this._y != v) {
-        this._y = v;
-        this.y = v;
-        if ( this.__LZhasoffset ){
-            if (this.capabilities.rotation) {
-                v -= ( this.xoffset * this.__LZrsin  +
-                    this.yoffset * this.__LZrcos );
-            } else {
-                v -= this.yoffset;
-            }
-        }
-        
-        if ( this.pixellock ) v = Math.floor( v );
-        this.sprite.setY(v)
-        var vip:LzView = (this.immediateparent cast LzView);
-        if (vip.__LZcheckheight)
-            vip.__LZcheckheightFunction( this );
-        if (this.ony.ready) this.ony.sendEvent( this.y );
-        this._yrecompute = false;
+    // NOTE: [2009-01-06 ptw] See @devnote at __set_y_memo
+    if (this.__set_y_memo === v) {
+      // Always send the event
+      if (this.onx.ready) { this.onx.sendEvent( this.x ); }
+      return;
     }
+    // memoize
+    this.__set_y_memo = v;
+
+    this.y = v;
+    if ( this.__LZhasoffset ){
+        if (this.capabilities.rotation) {
+            v -= ( this.xoffset * this.__LZrsin  +
+                   this.yoffset * this.__LZrcos );
+        } else {
+            v -= this.yoffset;
+        }
+    }
+
+    if ( this.pixellock ) v = Math.floor( v );
+    this.sprite.setY(v)
+    var vip:LzView = (this.immediateparent cast LzView);
+    if (vip.__LZcheckheight) { vip.__LZcheckheightFunction( this ); }
+    if (this.ony.ready) { this.ony.sendEvent( this.y ); }
 }
+
 
 /** The rotation value for the view (in degrees).
   * Value may be less than zero or greater than 360.
@@ -1117,9 +1142,11 @@ function $lzc$set_rotation(v) {
     if (this.onrotation.ready) this.onrotation.sendEvent( v );
 
     if ( this.__LZhasoffset ){
-        this._xrecompute = true;
-        this._yrecompute = true;
+        // Clear the memo cache to force a recompute
+        this.__set_x_memo = void 0;
         this.$lzc$set_x(this.x);
+        // Clear the memo cache to force a recompute
+        this.__set_y_memo = void 0;
         this.$lzc$set_y(this.y);
     }
 
@@ -1132,109 +1159,151 @@ function $lzc$set_rotation(v) {
 
 
 /**
-  * The width of the view
+  * The width of the view.  Can be set to either a number, or
+  * <code>null</code>, to indicate that the view should be sized to
+  * hold its content.  When read, reflects the actual size of the view.
+  *
   * @access public
-  * @type Number
+  * @type *
   * @lzxtype sizeExpression
   */
-var width =   0;
+var width:* = 0;
 
-/** @access private */
-var _width:Number;
+/**
+ * Memo of last width _set_.  Used for optimizing out redundant calls
+ * (profiling showed many calls during initialization as constraints
+ * settled).
+ *
+ * @devnote [2009-01-06 ptw] This is strictly a memoization of the
+ * last value set.  It starts out as `undefined`, and the comparison
+ * uses identity (`===`) to ensure that an initial setting of `null`
+ * is not ignored.
+ *
+ * @access private
+ */
+var __set_width_memo:*;
 
 /** @access private */
 function $lzc$set_width(v) {
-    if (this._width != v) {
-        this._width = v;
-        this.sprite.setWidth(v);
+    // NOTE: [2009-01-06 ptw] See @devnote at __set_width_memo
+    if (this.__set_width_memo === v) {
+      // Always send the event
+      if (this.onwidth.ready) { this.onwidth.sendEvent( this.width ); }
+      return;
+    }
+    // memoize
+    this.__set_width_memo = v;
 
-        if ( v == null ){
-            this.hassetwidth = false;
-            // expose proto method
-            this.__LZcheckwidth = true;
-            if ( this._setrescwidth ){
-                // will be updated by reevaluateSize
-                this.unstretchedwidth = null;
-                // defaults
-                this._xscale = 1;
-                //this.__LZmovieClipRef._xscale =  100;
-            }
-            this.reevaluateSize( 'width' );
-            return;
-        }
-        this.width = v;
-        if ( this.pixellock ) v = Math.floor( v );
+    // NOTE: [2009-01-06 ptw] We used to unconditionally call
+    // `sprite.setWidth` here, but that is bogus because a null value
+    // will immediately be overridden by `reevaluateSize` below, and a
+    // non-null value will not be adjusted by `pixellock`.
+    if ( v == null ){
+        this.hassetwidth = false;
+        // expose proto method
+        this.__LZcheckwidth = true;
         if ( this._setrescwidth ){
+            // will be updated by reevaluateSize
+            this.unstretchedwidth = null;
+            // defaults
+            this._xscale = 1;
+        }
+        // NOTE: [2009-01-06 ptw] This will end up setting `width` to
+        // the width of the contents, will call `sprite.setWidth`
+        // with that value, and will send `onwidth`.
+        this.reevaluateSize( 'width' );
+        return;
+    }
+
+    this.width = v;
+    this.hassetwidth = true;
+    if ( this.pixellock ) { v = Math.floor( v ); }
+    if ( this._setrescwidth ){
         var xscale = this.unstretchedwidth == 0 ? 100 : v/this.unstretchedwidth;
         this._xscale = xscale;
-        //this.__LZmovieClipRef._xscale = xscale * 100;
-        } else {
-            this.__LZcheckwidth = false;
-        }
-        
-        this.hassetwidth = true;
-        
-        //this.__LZbgRef._xscale = v;
-
-        var vip:LzView = (this.immediateparent cast LzView);
-        if (vip && vip.__LZcheckwidth)
-            vip.__LZcheckwidthFunction( this );
-
-
-        if (this.onwidth.ready) this.onwidth.sendEvent( v );
+    } else {
+        this.__LZcheckwidth = false;
     }
+    this.sprite.setWidth(v);
+
+    var vip:LzView = (this.immediateparent cast LzView);
+    if (vip && vip.__LZcheckwidth) { vip.__LZcheckwidthFunction( this ); }
+
+    if (this.onwidth.ready) { this.onwidth.sendEvent( this.width ); }
 }
 
+
 /**
-  * The height of the view
+  * The height of the view.  Can be set to either a number, or
+  * <code>null</code>, to indicate that the view should be sized to
+  * hold its content.  When read, reflects the actual size of the view.
+  *
   * @access public
-  * @type Number
+  * @type *
   * @lzxtype sizeExpression
   */
-var height =   0;
+var height:* = 0;
 
-/** @access private */
-var _height:Number;
+/**
+ * Memo of last height _set_.  Used for optimizing out redundant calls
+ * (profiling showed many calls during initialization as constraints
+ * settled).
+ *
+ * @devnote [2009-01-06 ptw] This is strictly a memoization of the
+ * last value set.  It starts out as `undefined`, and the comparison
+ * uses identity (`===`) to ensure that an initial setting of `null`
+ * is not ignored.
+ *
+ * @access private
+ */
+var __set_height_memo:*;
 
 /** @access private */
 function $lzc$set_height(v) {
-    if (this._height != v) {
-        this._height = v;
-        this.sprite.setHeight(v);
-
-        if ( v == null ){
-            this.hassetheight = false;
-            // expose proto method
-            this.__LZcheckheight = true;
-
-            if ( this._setrescheight ){
-                // will be updated by reevaluateSize
-                this.unstretchedheight = null;
-                // defaults
-                this._yscale = 1;
-                //this.__LZmovieClipRef._yscale =  100;
-            }
-            this.reevaluateSize( 'height' );
-            return;
-        }
-        this.height = v;
-        if ( this.pixellock ) v = Math.floor( v );
-        if ( this._setrescheight ){
-            var yscale = this.unstretchedheight == 0 ? 100 : v/this.unstretchedheight;
-            this._yscale = yscale;
-            //this.__LZmovieClipRef._yscale = yscale * 100;
-        } else {
-            this.__LZcheckheight = false;
-        }
-        this.hassetheight = true;
-        
-        var vip:LzView = (this.immediateparent cast LzView);
-        if (vip && vip.__LZcheckheight)
-            vip.__LZcheckheightFunction( this );
-
-
-        if (this.onheight.ready) this.onheight.sendEvent( v );
+    // NOTE: [2009-01-06 ptw] See @devnote at __set_height_memo
+    if (this.__set_height_memo === v) {
+      // Always send the event
+      if (this.onheight.ready) { this.onheight.sendEvent( this.height ); }
+      return;
     }
+    // memoize
+    this.__set_height_memo = v;
+
+    // NOTE: [2009-01-06 ptw] We used to unconditionally call
+    // `sprite.setHeight` here, but that is bogus because a null value
+    // will immediately be overridden by `reevaluateSize` below, and a
+    // non-null value will not be adjusted by `pixellock`.
+    if ( v == null ){
+        this.hassetheight = false;
+        // expose proto method
+        this.__LZcheckheight = true;
+        if ( this._setrescheight ){
+            // will be updated by reevaluateSize
+            this.unstretchedheight = null;
+            // defaults
+            this._yscale = 1;
+        }
+        // NOTE: [2009-01-06 ptw] This will end up setting `height` to
+        // the height of the contents, will call `sprite.setHeight`
+        // with that value, and will send `onheight`.
+        this.reevaluateSize( 'height' );
+        return;
+    }
+
+    this.height = v;
+    this.hassetheight = true;
+    if ( this.pixellock ) { v = Math.floor( v ); }
+    if ( this._setrescheight ){
+        this._yscale = this.unstretchedheight == 0 ? 100 : v/this.unstretchedheight;
+    } else {
+        this.__LZcheckheight = false;
+    }
+    this.sprite.setHeight(v);
+
+    var vip:LzView = (this.immediateparent cast LzView);
+    if (vip && vip.__LZcheckheight) { vip.__LZcheckheightFunction( this ); }
+
+    if (this.onheight.ready) { this.onheight.sendEvent( this.height ); }
 }
 
 /** If stretches is not set to none, the width
@@ -1279,9 +1348,11 @@ var xoffset =   0;
 function $lzc$set_xoffset(o) {
     this.__LZhasoffset = o != 0;
     this.xoffset = o;
-    this._xrecompute = true;
-    this._yrecompute = true;
+    // Clear the memo cache to force a recompute
+    this.__set_x_memo = void 0;
     this.$lzc$set_x(this.x);
+    // Clear the memo cache to force a recompute
+    this.__set_y_memo = void 0;
     this.$lzc$set_y(this.y);
     if (this.onxoffset.ready) this.onxoffset.sendEvent( o );
 }
@@ -1303,9 +1374,11 @@ var yoffset =   0;
 function $lzc$set_yoffset(o) {
     this.__LZhasoffset = o != 0;
     this.yoffset = o;
-    this._xrecompute = true;
-    this._yrecompute = true;
+    // Clear the memo cache to force a recompute
+    this.__set_x_memo = void 0;
     this.$lzc$set_x(this.x);
+    // Clear the memo cache to force a recompute
+    this.__set_y_memo = void 0;
     this.$lzc$set_y(this.y);
     if (this.onyoffset.ready) this.onyoffset.sendEvent( o );
 }
@@ -1368,17 +1441,21 @@ var framesloadratio =   0;
   */
 var loadratio =   0;
 
-/** If true, then setWidth() has been called on this
-  * view, and the view will not be sized to its contents. 
-  * @type Boolean
-  * @keywords readonly  
-  */
+/**
+ * If true, then this view has an assigned or constrained height, and
+ * the view will not be sized to its contents.
+ *
+ * @type Boolean
+ * @keywords readonly
+ */
 var hassetheight = false;
-/** If true, then setHeight() has been called on this
-  * view, and the view will not be sized to its contents. 
-  * @type Boolean
-  * @keywords readonly  
-  */
+/**
+ * If true, then this view has an assigned or constrained width, and
+ * the view will not be sized to its contents.
+ *
+ * @type Boolean
+ * @keywords readonly
+ */
 var hassetwidth = false;
 
 /** need quick check for viewness
