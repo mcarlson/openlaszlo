@@ -1,7 +1,7 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
 /**
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -128,6 +128,7 @@ if ($as3) {
 
 if ($as2) {
 var encodeURIComponent = escape;
+var decodeURIComponent = unescape;
 }
 
 /**

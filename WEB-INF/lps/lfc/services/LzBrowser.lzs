@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzbrowser
@@ -335,9 +335,13 @@ public final class LzBrowserService {
      * Escape a string using URL encoding.
      * @param String str: The string to escape
      * @return String: An URL escaped string
+     * @deprecated Use encodeURIComponent(string) instead.
      */
     function urlEscape (str:String) :String {
-        return escape( str );
+        if ($debug) {
+            Debug.info('lz.Browser.urlEscape is deprecated, use encodeURIComponent instead');
+        }
+        return encodeURIComponent( str );
     }
 
     /**
@@ -346,7 +350,10 @@ public final class LzBrowserService {
      * @return String: An URL decoded string
      */
     function urlUnescape (str:String) :String {
-        return unescape( str.split('+').join(' ') );
+        if ($debug) {
+            Debug.info('lz.Browser.urlUnescape is deprecated, use decodeURIComponent instead');
+        }
+        return decodeURIComponent(str);
     }
 
     /** @access private */
