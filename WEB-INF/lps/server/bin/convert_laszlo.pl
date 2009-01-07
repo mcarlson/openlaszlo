@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Copyright 2008 Laszlo Systems.  Use according to license terms.
+# Copyright 2008, 2009 Laszlo Systems.  Use according to license terms.
 #
 # convert_laszlo_4.2.pl
 # Helps to convert 4.1 lzx programs (and potentially lzs) to
@@ -95,6 +95,7 @@ $xform{tagname}=1;      # transform constructor.classname to constructor.tagname
 $xform{states}=1;       # transform apply=" -> applied="
 $xform{applycall}=0;    # transform state.apply()/remove() -> setAttribute('applied', true|false)
 $xform{proxymethods}=1; # transform Lz.setCanvasAttribute()/callMethod() -> lz.embed.* 
+$xform{urlescape}=1;    # transform lz.embed.urlEscape() -> encodeURIComponent
 
 ##
 # Other global variables
@@ -352,6 +353,16 @@ sub emit_content {
 
     if ($xform{proxymethods}) {
         s/Lz.(setCanvasAttribute|callMethod)/lz.embed.$1/g;
+    }
+
+    #### transform urlEscape
+    #
+    # lz.Browser.urlEscape() -> encodeURIComponent
+    # lz.Browser.urlUnescape() -> decodeURIComponent
+
+    if ($xform{urlescape}) {
+        s/lz.Browser.urlEscape/encodeURIComponent/g;
+        s/lz.Browser.urlUnescape/decodeURIComponent/g;
     }
 
     debugln(3, "   EMIT CONTENT: " . $_);

@@ -1,6 +1,6 @@
 <library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
     <include href="lzunit/lzunit.lzx" />
@@ -917,7 +917,7 @@
                 <![CDATA[
                         var d = "A!@#$%^&*() c"; 
                         
-                        assertEquals(d, lz.Browser.urlUnescape(lz.Browser.urlEscape(d)))
+                        assertEquals(d, decodeURIComponent(encodeURIComponent(d)))
                 ]]>
                 </method>
                 <method name="addTests"> 

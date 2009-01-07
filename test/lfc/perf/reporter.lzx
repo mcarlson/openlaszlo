@@ -1,5 +1,5 @@
 <library>
-    <!-- Copyright 2006-2008 Laszlo Systems --> 
+    <!-- Copyright 2006-2009 Laszlo Systems --> 
 
     <node id="reporter"> 
         <method name="sendLogData" args="suitename">
@@ -12,27 +12,27 @@
           
            var serverURL = base + "/test/lfc/perf/reporter.jsp";
            var buildid = canvas.lpsbuild.split(" ")[0];
-           var browserInfo = lz.Browser.urlEscape(lz.Browser.getVersion());
+           var browserInfo = encodeURIComponent(lz.Browser.getVersion());
            for (var k in timingMeters) {
                var meter = timingMeters[k];
                // Debug.write("k %w", k);
                // Debug.write("meter %w", meter);
                var mean = meter.calcMean(); 
-               var query = "testname="+lz.Browser.urlEscape(meter.name)
-                 + "&suitename=" + lz.Browser.urlEscape(suitename)
-                 + "&duration=" + lz.Browser.urlEscape(mean) 
-                 + "&count=" + lz.Browser.urlEscape(meter.count)
-                 + "&min=" + lz.Browser.urlEscape(meter.min)
-                 + "&max=" + lz.Browser.urlEscape(meter.max)
-                 + "&uncertainty=" + lz.Browser.urlEscape(meter.calcUncertainty())
-                 + "&suiteName=" + lz.Browser.urlEscape(suitename)
-                 + "&runtime=" + lz.Browser.urlEscape(canvas.runtime) 
-                 + "&debug=" + lz.Browser.urlEscape($debug)
-                 + "&buildid=" + lz.Browser.urlEscape(buildid) 
-                 + "&builddate=" + lz.Browser.urlEscape(canvas.lpsbuilddate)
+               var query = "testname="+encodeURIComponent(meter.name)
+                 + "&suitename=" + encodeURIComponent(suitename)
+                 + "&duration=" + encodeURIComponent(mean) 
+                 + "&count=" + encodeURIComponent(meter.count)
+                 + "&min=" + encodeURIComponent(meter.min)
+                 + "&max=" + encodeURIComponent(meter.max)
+                 + "&uncertainty=" + encodeURIComponent(meter.calcUncertainty())
+                 + "&suiteName=" + encodeURIComponent(suitename)
+                 + "&runtime=" + encodeURIComponent(canvas.runtime) 
+                 + "&debug=" + encodeURIComponent($debug)
+                 + "&buildid=" + encodeURIComponent(buildid) 
+                 + "&builddate=" + encodeURIComponent(canvas.lpsbuilddate)
                  + "&browserinfo=" + browserInfo
-                 + "&branch=" + lz.Browser.urlEscape("branches-wafflecone"); 
-                 query += "&debug=" + lz.Browser.urlEscape($debug)                  
+                 + "&branch=" + encodeURIComponent("branches-wafflecone"); 
+                 query += "&debug=" + encodeURIComponent($debug)                  
                 // Debug.write("sendLogData", query);
                 var completeURL = serverURL + "?" + query;
                 
