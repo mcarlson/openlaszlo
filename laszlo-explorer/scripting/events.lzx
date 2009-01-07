@@ -1,12 +1,12 @@
 <canvas>
   <button onclick="vw.setAttribute('width', 200)">Expand Width</button>
   <button x="120" onclick="vw.setAttribute('width', 100)">Reset</button>
-  
+
   <view id="vw" y="30" width="100" height="100" >
-    
-    <!-- onwidth is sent anytime width is changed --> 
-    <handler name="onwidth" > 
-        this.setAttribute('bgcolor', (this.width > 100 ? red : blue));
+
+    <!-- onwidth is sent anytime width is changed -->
+    <handler name="onwidth" >
+        this.setAttribute('bgcolor', (this.width > 100 ? lz.colors.red : lz.colors.blue));
     </handler>
    </view>
 </canvas>
