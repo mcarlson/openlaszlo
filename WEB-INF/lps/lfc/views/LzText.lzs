@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -398,7 +398,10 @@ function $lzc$set_text(t:*) {
     // force to a string
     t = String(t);
 
-    if (this._textrecompute != true && t == this.getText()) return;
+    if (this._textrecompute != true && t == this.getText()) {
+        if (this.ontext.ready) this.ontext.sendEvent(t);
+        return;
+    }
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     if (this.visible) tsprite.setVisible(this.visible);
     if (this.maxlength != null && t.length > this.maxlength){
