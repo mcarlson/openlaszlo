@@ -72,6 +72,10 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
         <text fontsize="20" text="Click Me 2" id="t14"/>
         <text fontsize="${canvas.gfontSize}" id="t15" text="Click Me 1" resize="true"/>
         <text fontsize="20" resize="true" id="t16" text="Click Me 2"/>
+
+        <!-- from LPP-7586 -->
+        <text id="t17" multiline="false" width="50" bgcolor="#aeaeae" />
+        <text id="t18" multiline="true" width="50" bgcolor="#aeaeae" />
     </view>
 
     <view name="inputtexts">
@@ -148,6 +152,8 @@ textSizeSuite.testTextHeight = function () {
     LzTestManager.assertEquals(28, t16.height, "text16 height");
     t16.setAttribute('fontsize',50);
     LzTestManager.assertEquals(64, t16.height, "text16 height");
+
+    LzTestManager.assertEquals(t17.height, t18.height, "text18 height");
 }
 
 textSizeSuite.testInputtextHeight = function () {
@@ -216,7 +222,7 @@ textSizeSuite.addTest(textSizeSuite.testInputtextWidth);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

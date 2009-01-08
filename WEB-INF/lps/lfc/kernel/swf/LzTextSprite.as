@@ -291,8 +291,12 @@ LzTextSprite.prototype.getTextfieldHeight = function ( ){
     // Measure test string if the field is empty
     if (h == 4) {
         var tct = textclip.htmlText;
+        var tcp = textclip.wordWrap;
+        // Make sure the test text does not wrap!
+        textclip.wordWrap = false;
         textclip.htmlText = "__ypgSAMPLE__";
         var h = textclip._height;
+        textclip.wordWrap = tcp;
         textclip.htmlText = tct;
     }
 
