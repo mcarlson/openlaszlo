@@ -373,8 +373,8 @@
       p.addValue("firstName", firstName.getText(), true);
       p.addValue("lastName", lastName.getText(), true);
       p.addValue("phone", phone.getText(), true);
-      p.addValue("email", email.getText(), true);            // 3b
-      d.setAttribute('querystring', p);                                   // 3c
+      p.addValue("email", email.getText(), true);           // 3b
+      d.setQueryString(p);                                  // 3c
       d.doRequest();                                         // 3d
     &lt;/method&gt;
     &lt;!-- 4 --&gt;
