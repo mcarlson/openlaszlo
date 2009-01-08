@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -34,8 +34,8 @@ public class DeployMain {
         "  Short for -Dname=true.",
         "--wrapperonly",
         "  Only emit html wrapper page.",
-        "--runtime=[swf7|swf8|swf9|dhtml]",
-        "  Compile to swf7, swf8, swf9, dhtml",
+        "--runtime=[swf8|swf9|swf10|dhtml]",
+        "  Compile to swf8, swf9, swf10, dhtml",
         "--output pathname",
         "  The name of the output file to write.",
         "--title titlestring",
@@ -158,7 +158,7 @@ public class DeployMain {
                                                    title,
                                                    compilationProperties,
                                                    skipfiles));
-            } else if ("swf10".equals(runtime) || "swf8".equals(runtime) || "swf7".equals(runtime)) {
+            } else if ("swf10".equals(runtime) || "swf8".equals(runtime) || "swf9".equals(runtime)) {
                 System.exit(DeploySOLOSWF.deploy(runtime,
                                                  wrapperonly,
                                                    null,

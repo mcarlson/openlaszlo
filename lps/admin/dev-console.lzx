@@ -90,14 +90,16 @@
     </script>
 
   <method name="deploySOLO">
+    <![CDATA[
      var path = escape(app_fullpath.substring(app_lps_root.length));
      if (app_runtime == 'dhtml') {
         var url = app_lps_root + "/lps/admin/solo-dhtml-deploy.jsp?appurl="+path;
      } else {
-        var url = app_lps_root + "/lps/admin/solo-deploy.jsp?appurl="+path;
+        var url = app_lps_root + "/lps/admin/solo-deploy.jsp?appurl="+path+"&runtime="+app_runtime;
      }
 
      this.loadURL(url, '_blank');
+     ]]>
   </method>
 
 
@@ -428,7 +430,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

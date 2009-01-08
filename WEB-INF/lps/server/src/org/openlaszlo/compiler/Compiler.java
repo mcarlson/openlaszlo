@@ -142,9 +142,9 @@ public class Compiler {
     public static String getObjectFileExtensionForRuntime (String runtime) {
         String ext;
         if (AS3_RUNTIMES.contains(runtime)) {
-            ext = ".lzr=" + runtime + ".swf";
+            ext = "." + runtime + ".swf";
         } else {
-            ext = SCRIPT_RUNTIMES.contains(runtime) ? ".js" : ".lzr=" + runtime + ".swf";
+            ext = SCRIPT_RUNTIMES.contains(runtime) ? ".js" : "." + runtime + ".swf";
         }
         return ext;
     }

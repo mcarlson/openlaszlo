@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
 
       That should make a zip file which is relative to the web root and has
       /lps/includes/**
-      /foo/bar/**   -- will include the SOLO .lzx.lzr=swf7.swf file(s)
+      /foo/bar/**   -- will include the SOLO .lzx.swfNN.swf file(s)
       /foo/bar/baz.lzx.html  -- the wrapper file
     */
 
@@ -154,7 +154,7 @@ public class DeploySOLOSWF {
         TransformUtils.applyTransform(styleSheetPathname, properties, canvasXML, wrapperbuf);
         String wrapper = wrapperbuf.toString();
 
-        wrapper = wrapper.replaceAll("[.]lzx[?]lzt=swf'", ".lzx.lzr="+runtime+".swf?lzproxied=false'");
+        wrapper = wrapper.replaceAll("[.]lzx[?]lzt=swf'", ".lzx."+runtime+".swf?lzproxied=false'");
 
         if (wrapperonly) {
             // write wrapper to outputstream

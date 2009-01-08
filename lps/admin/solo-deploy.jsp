@@ -8,7 +8,7 @@
 <%@ page import="org.openlaszlo.utils.FileUtils.*" %>
     
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -29,7 +29,7 @@
 
       That should make a zip file which is relative to the web root and has
       /lps/includes/**
-      /foo/bar/**   -- will include the SOLO .lzx.lzr=swf7.swf file(s)
+      /foo/bar/**   -- will include the SOLO .lzx.swfN.swf file(s)
       /foo/bar/baz.lzx.html  -- the wrapper file
     */
 
@@ -53,6 +53,12 @@ if (appUrl == null) {
 
 appUrl = appUrl.trim();
 
+
+// Get the application target runtime, default to swf8
+String appRuntime = request.getParameter("runtime");
+if (appRuntime == null) {
+    appRuntime = "swf8";
+}
 
 String title = request.getParameter("apptitle");
 if (title == null) {  title = ""; }
@@ -125,16 +131,13 @@ certainly not what you want.
         }
 
         wrapperUrl = new URL(new URL(baseUrl),
-                             appUrl + "?lzt=html-object&lzproxied=false");
+                             appUrl + "?lzt=html-object&lzproxied=false&lzr="+appRuntime);
 
         lzhistUrl = new URL(new URL(baseUrl),
-                             appUrl + "?lzt=html&lzproxied=false");
+                             appUrl + "?lzt=html&lzproxied=false&lzr="+appRuntime);
 
-        URL swf8Url = new URL(new URL(baseUrl),
-                             appUrl + "?lzr=swf8&lzproxied=false");
-
-        URL swf7Url = new URL(new URL(baseUrl),
-                             appUrl + "?lzr=swf7&lzproxied=false");
+        URL swfUrl = new URL(new URL(baseUrl),
+                             appUrl + "?lzr="+appRuntime+"&lzproxied=false");
 
         // Grab a copy of the html-object wrapper
         String str;
@@ -153,15 +156,8 @@ certainly not what you want.
         }
         in.close();
 
-        // load a copy of the swf 8 version
-        in = new BufferedReader(new InputStreamReader(swf8Url.openStream()));
-        while ((str = in.readLine()) != null) 
-        {
-        }
-        in.close();
-
-        // load a copy of the swf 7 version
-        in = new BufferedReader(new InputStreamReader(swf7Url.openStream()));
+        // Load a copy of the app url , causing the compiler to run
+        in = new BufferedReader(new InputStreamReader(swfUrl.openStream()));
         while ((str = in.readLine()) != null) 
         {
         }
@@ -174,7 +170,7 @@ certainly not what you want.
         // remove the servlet prefix and leading slash
         lzhistwrapper = lzhistwrapper.replaceAll(request.getContextPath()+"/", "");
         lzhistwrapper = lzhistwrapper.replaceAll(request.getContextPath(), "");
-        lzhistwrapper = lzhistwrapper.replaceAll("[.]lzx[?]lzt=swf", ".lzx.lzr=swf8.swf?");
+        lzhistwrapper = lzhistwrapper.replaceAll("[.]lzx[?]lzt=swf", ".lzx."+appRuntime+".swf?");
 
     } 
     catch (MalformedURLException e) { %>
@@ -243,6 +239,7 @@ try {
 </td></tr><table>
 
 <form  method="POST" action="<%= sUrl %>">
+<input type="hidden" name="runtime" value="<%= appRuntime %>">     
 <input type="hidden" name="whatpage" value="preview">
 <table border=0 width=800>
   <tr>
@@ -274,7 +271,7 @@ try {
 <p>
 
 <%
-String soloURL = (request.getContextPath()+"/" + appUrl + ".lzr=swf8.swf?lzproxied=false");
+String soloURL = (request.getContextPath()+"/" + appUrl + "."+appRuntime+".swf?lzproxied=false");
 %>
 
 <tt>Using URL</tt> <a href="<%= soloURL %>"><tt><%= soloURL %></tt></a>
@@ -293,6 +290,7 @@ String soloURL = (request.getContextPath()+"/" + appUrl + ".lzr=swf8.swf?lzproxi
 <input type=radio name="whatpage" value="configure">Go back to change</td>
 <input type="hidden" name="appurl" value="<%= appUrl %>">
 <input type="hidden" name="apptitle" value="<%= title %>">
+<input type="hidden" name="runtime" value="<%= appRuntime %>">     
 
 <p>
 <input type=submit value="Continue...">
@@ -430,8 +428,8 @@ Paste this wrapper into a browser to deploy your app:
           html, body { margin: 0; padding: 0; height: 100%; }
           body { background-color: #eaeaea; }
         </style></head>
-   <body><object type="application/x-shockwave-flash" data="<%= appUrl %>.lzr=swf8.swf?lzproxied=false" width="<%= appwidth %>" height="<%= appheight %>">
-         <param name="movie" value="<%= appUrl %>.lzr=swf8.swf?lzproxied=false">
+   <body><object type="application/x-shockwave-flash" data="<%= appUrl %>.<%= appRuntime %>.swf?lzproxied=false" width="<%= appwidth %>" height="<%= appheight %>">
+         <param name="movie" value="<%= appUrl %>.<%= appRuntime %>.swf?lzproxied=false">
          <param name="quality" value="high">
          <param name="scale" value="noscale">
          <param name="salign" value="LT">
@@ -477,8 +475,8 @@ swin.document.write('<style type=\'text/css\'>');
 swin.document.write('          html, body { margin: 0; padding: 0; height: 100%; }');
 swin.document.write('          body { background-color: #eaeaea; }');
 swin.document.write('        </style></head>');
-swin.document.write('   <body><object type=\'application/x-shockwave-flash\' data=\'<%= appUrl %>.lzr=swf8.swf?lzproxied=false\' width=\'640\' height=\'400\'>');
-swin.document.write('         <param name=\'movie\' value=\'<%= appUrl %>.lzr=swf8.swf?lzproxied=false\'>');
+swin.document.write('   <body><object type=\'application/x-shockwave-flash\' data=\'<%= appUrl %>.<%= appRuntime %>.swf?lzproxied=false\' width=\'640\' height=\'400\'>');
+swin.document.write('         <param name=\'movie\' value=\'<%= appUrl %>.<%= appRuntime %>.swf?lzproxied=false\'>');
 swin.document.write('         <param name=\'quality\' value=\'high\'>');
 swin.document.write('         <param name=\'scale\' value=\'noscale\'>');
 swin.document.write('         <param name=\'salign\' value=\'LT\'>');
