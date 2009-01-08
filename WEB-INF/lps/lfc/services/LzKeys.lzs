@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzbrowser
@@ -21,13 +21,13 @@
   * <example title="lz.Keys">
   * <programlisting>&lt;canvas height="140" debug="true"&gt;
   *   &lt;handler name="onkeydown" reference="lz.Keys" args="k"&gt;
-  *     Debug.write("key " + k + " down");
+  *     Debug.debug("key %w %s", k, "down");
   *   &lt;/handler&gt;
   *   &lt;handler name="onkeyup" reference="lz.Keys" args="k"&gt;
-  *     Debug.write("key " + k + " up");
+  *     Debug.debug("key %w %s", k, "up");
   *   &lt;/handler&gt;
   *   &lt;method name="pressA"&gt;
-  *     Debug.write("A pressed");
+  *     Debug.debug("A pressed");
   *   &lt;/method&gt;
   *   &lt;handler name="oninit"&gt;
   *     del = new LzDelegate(this, "pressA");

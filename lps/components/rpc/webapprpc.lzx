@@ -116,25 +116,25 @@
         <webapprpc id="webapp" autoload="false">
             
             <handler name="oninit">
-                Debug.write('loading webapp object...');
+                Debug.debug('loading webapp object...');
                 this.load();
             </handler>        
             
             <handler name="onload">
-                Debug.write('webapp object loaded');
+                Debug.debug('webapp object loaded');
                 canvas.buttons.setAttribute('visible', true);
             </handler>        
             
             <handler name="ondata" args="data">
                 if (data == LzRPC.t_void) {
-                Debug.write("default ondata: void");
+                Debug.debug("default ondata: void");
                 } else {
-                Debug.write("default ondata:", data);
+                Debug.debug("default ondata: %w", data);
                 }
             </handler>
             
             <handler name="onerror" args="error">
-                Debug.write("default onerror:", error);
+                Debug.debug("default onerror: %w", error);
             </handler>
             
             <remotecall funcname="getMajorVersion" />
@@ -211,7 +211,7 @@
                 </handler>
                 
                 <method name="myhandler" args="data">
-                    Debug.write('myhandler:', data);
+                    Debug.debug('myhandler: %w', data);
                 </method>
                 
                 <button text="setmyattr" onclick="webapp.setmyattr.invoke()" />
@@ -268,7 +268,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -222,12 +222,12 @@
             wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter"&gt;
             &lt;method name="init"&gt;
                 super.init();
-                Debug.write('soap service loading...');
+                Debug.debug('soap service loading...');
                 this.load();
             &lt;/method&gt;
         &lt;handler name="onload"&gt;
-            Debug.write('temperature service loaded!');
-            Debug.write('---');
+            Debug.debug('temperature service loaded!');
+            Debug.debug('---');
     
             // don't allow others to call RPC object until proxy is loaded.
             canvas.convert.setAttribute('visible', true);
@@ -238,10 +238,10 @@
             &lt;handler name="onclick"&gt;
             var f = 100;
             canvas.temperature.proxy.FtoC([ f ], this.myDel)
-            Debug.write('Invoking FtoC...');
+            Debug.debug('Invoking FtoC...');
         &lt;/handler&gt;
         &lt;method name="myhandler" args="data"&gt;
-            Debug.write('got data:', data);
+            Debug.debug('got data: %w', data);
         &lt;/method&gt;
     
         &lt;/button&gt;
@@ -260,13 +260,13 @@
     
         &lt;method name="init"&gt;
             super.init();
-            Debug.write('soap service loading...');
+            Debug.debug('soap service loading...');
             this.load();
         &lt;/method&gt;
     
         &lt;handler name="onload"&gt;
-            Debug.write('temperature service loaded!');
-            Debug.write('---');
+            Debug.debug('temperature service loaded!');
+            Debug.debug('---');
     
             // don't allow others to call RPC object until proxy is loaded.
             canvas.convert.setAttribute('visible', true);
@@ -276,10 +276,10 @@
         &lt;param value="100" /&gt;
     
             &lt;handler name="ondata" args="value"&gt;
-                Debug.write('got data:', value);
+                Debug.debug('got data: %w', value);
                 &lt;/handler&gt;
                 &lt;handler name="onerror" args="errmsg"&gt;
-                Debug.write('error:', errmsg);
+                Debug.debug('error: %w', errmsg);
             &lt;/handler&gt;
     
         &lt;/remotecall&gt;
@@ -289,7 +289,7 @@
     &lt;button name="convert" text="convert" x="10" y="10" visible="false"&gt;
         &lt;handler name="onclick"&gt;
             canvas.temperature.FtoC.invoke();
-        Debug.write('Invoking FtoC...');
+        Debug.debug('Invoking FtoC...');
         &lt;/handler&gt;
     &lt;/button&gt;
     
@@ -498,20 +498,20 @@
         
             &lt;method name="init"&gt;
                 super.init();
-                Debug.write('soap service loading...');
+                Debug.debug('soap service loading...');
                 this.load();
             &lt;/method&gt;
             
             &lt;handler name="onload"&gt;
-            Debug.write('temperature service loaded!');
-            Debug.write('---');
+            Debug.debug('temperature service loaded!');
+            Debug.debug('---');
             
             // don't allow others to call RPC object until proxy is loaded.
             canvas.convert.setAttribute('visible', true);
             &lt;/handler&gt;
             
             &lt;handler name="ondata" args="value"&gt;
-                Debug.write('soap object parent ondata:', value);
+                Debug.debug('soap object parent ondata: %w', value);
             &lt;/handler&gt;
             
             &lt;remotecall <em>name="ftoc1" funcname="FtoC"</em>&gt;
@@ -521,7 +521,7 @@
             &lt;remotecall <em>name="ftoc2" funcname="FtoC"</em>&gt;
                 &lt;param value="200" /&gt;
                 &lt;handler name="ondata" args="value"&gt;
-                    Debug.write('ftoc ondata:', value);
+                    Debug.debug('ftoc ondata: %w', value);
                 &lt;/handler&gt;
             &lt;/remotecall&gt;
         
@@ -532,13 +532,13 @@
             &lt;button text="convert 100F to C"&gt;
                 &lt;handler name="onclick"&gt;
                 canvas.temperature.ftoc1.invoke()
-                Debug.write('Invoking FtoC 1...');
+                Debug.debug('Invoking FtoC 1...');
                 &lt;/handler&gt;
             &lt;/button&gt;
                 &lt;button text="convert 200F to C"&gt;
                 &lt;handler name="onclick"&gt;
                     canvas.temperature.ftoc2.invoke()
-                    Debug.write('Invoking FtoC 2...');
+                    Debug.debug('Invoking FtoC 2...');
                 &lt;/handler&gt;
             &lt;/button&gt;
         &lt;/view&gt;
@@ -560,24 +560,24 @@
         
             &lt;method name="init"&gt;
                 super.init();
-                Debug.write('soap service loading...');
+                Debug.debug('soap service loading...');
                 this.load();
             &lt;/method&gt;
             
             &lt;handler name="onload"&gt;
-                Debug.write('temperature service loaded!');
-                Debug.write('---');
+                Debug.debug('temperature service loaded!');
+                Debug.debug('---');
                 
                 // don't allow others to call RPC object until proxy is loaded.
                 canvas.convert.setAttribute('visible', true);
             &lt;/handler&gt;
             
             &lt;handler name="ondata" args="value"&gt;
-                Debug.write('soap object ondata:', value);
+                Debug.debug('soap object ondata: %w', value);
                 &lt;/handler&gt;
                 
                 &lt;handler name="onerror" args="errmsg"&gt;
-                Debug.write('error:', errmsg);
+                Debug.debug('error: %w', errmsg);
             &lt;/handler&gt;
         
         &lt;/soap&gt;
@@ -589,7 +589,7 @@
             
                 &lt;handler name="onclick"&gt;
                     this.FtoC.invoke()
-                    Debug.write('Converting 100F to Celsius...');
+                    Debug.debug('Converting 100F to Celsius...');
                 &lt;/handler&gt;
                 
                 &lt;remotecall funcname="FtoC" 
@@ -603,14 +603,14 @@
             
                 &lt;handler name="onclick"&gt;
                 this.FtoC.invoke()
-                    Debug.write('Converting 200F to Celsius...');
+                    Debug.debug('Converting 200F to Celsius...');
                 &lt;/handler&gt;
                 
                 &lt;remotecall funcname="FtoC"
                     remotecontext="$once{canvas.temperature}"&gt;
                     &lt;param value="200" /&gt;
                     &lt;handler name="ondata" args="value"&gt;
-                        Debug.write('200F in Celsius is', value);
+                        Debug.debug('200F in Celsius is %w', value);
                     &lt;/handler&gt;
                 &lt;/remotecall&gt;
             &lt;/button&gt;
@@ -644,11 +644,11 @@
         
         &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
             &lt;handler name="onload"&gt;
-                Debug.write('google soap service stub loaded');
+                Debug.debug('google soap service stub loaded');
             &lt;/handler&gt;
             
             &lt;handler name="onerror" args="error"&gt;
-                Debug.write('error:', error);
+                Debug.debug('error: %w', error);
             &lt;/handler&gt;
             
             &lt;remotecall name="search" funcname="doGoogleSearch" 
@@ -666,7 +666,7 @@
                 &lt;param value="''" /&gt;
                 
                 &lt;handler name="ondata" args="value"&gt;
-                    Debug.write('got result');
+                    Debug.debug('got result');
                     Debug.inspect(value);
                 &lt;/handler&gt;
             
@@ -768,7 +768,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

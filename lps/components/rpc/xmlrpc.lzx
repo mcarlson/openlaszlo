@@ -89,17 +89,17 @@
         &lt;xmlrpc name="math" service="http://www.cookcomputing.com/xmlrpcsamples/math.rem"&gt;
             
             &lt;handler name="onload"&gt;
-                Debug.write('math XML-RPC service loaded');
-                Debug.write('proxy:');
+                Debug.debug('math XML-RPC service loaded');
+                Debug.debug('proxy:');
                 Debug.inspect(this.proxy);
             &lt;/handler&gt;
             
             &lt;handler name="ondata" args="data"&gt;
-                Debug.write('got data:', data);
+                Debug.debug('got data: %w', data);
             &lt;/handler&gt;
             
             &lt;handler name="onerror" args="error"&gt;
-                Debug.write('onerror:', error);
+                Debug.debug('onerror: %w', error);
             &lt;/handler&gt;
             
             &lt;remotecall name="add" funcname="math.Add"/&gt;
@@ -111,7 +111,7 @@
         
         &lt;button text="100+200" x="10" y="10"&gt;
             &lt;handler name="onclick"&gt;
-                Debug.write('100+200');
+                Debug.debug('100+200');
                 math.add.invoke([100,200]);
             &lt;/handler&gt;
         &lt;/button&gt;
@@ -145,7 +145,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

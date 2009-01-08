@@ -135,7 +135,7 @@
   </menubar>
   
   <method name="whichOne" args="vThis">
-    Debug.write(vThis.parent.owner.text + " - "+ vThis.text);
+    Debug.debug("%w - %w", vThis.parent.owner.text, vThis.text);
   </method>
 </canvas>
                     ]]>
@@ -824,7 +824,7 @@
                &lt;/menubar&gt;
 
                &lt;method name="whichOne" args="vThis"&gt;
-               Debug.write(vThis.parent.owner.text + " - "+ vThis.text);
+               Debug.debug("%w - %w", vThis.parent.owner.text, vThis.text);
                &lt;/method&gt;
                &lt;/canvas&gt;
              </example>
@@ -861,7 +861,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

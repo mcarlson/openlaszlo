@@ -97,7 +97,7 @@
               &lt;button text="Toggle" onclick="checkMe.setAttribute('value', !checkMe.value)"/&gt;
               &lt;button text="Disable" onclick="checkMe.setAttribute('enabled', false)"/&gt;
               &lt;button text="Enable" onclick="checkMe.setAttribute('enabled', true)"/&gt;
-              &lt;button text="status" onclick="Debug.write('value: '+checkMe.value)"/&gt;
+              &lt;button text="status" onclick="Debug.debug('value: %w', checkMe.value)"/&gt;
               &lt;simplelayout axis="y" spacing="4"/&gt;
               &lt;/canvas&gt;
             </example>
@@ -118,7 +118,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

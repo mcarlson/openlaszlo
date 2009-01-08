@@ -277,19 +277,19 @@
         }
         
         function processReqChange(request) {
-            Debug.write("processReqChange: req.readyState", request.readyState);
+            Debug.debug("processReqChange: req.readyState %w", request.readyState);
             // only if request shows "loaded"
             if (request.readyState == 4) {
             // only if "OK"
         if (request.status == 200) {
-            Debug.write("arg =", request);
-            Debug.write("request.status", request.status);
-            Debug.write("request.responseText:", request.responseText);
-            Debug.write("request.responseXML:", request.responseXML);
-            Debug.write("request.getAllResponseaders:",
+            Debug.debug("arg = %w", request);
+            Debug.debug("request.status: %w", request.status);
+            Debug.debug("request.responseText: %w", request.responseText);
+            Debug.debug("request.responseXML %w:", request.responseXML);
+            Debug.debug("request.getAllResponseaders:",
             request.getAllResponseHeaders());
         } else {
-            Debug.write("There was a problem retrieving the XML data:\n" +
+            Debug.debug("There was a problem retrieving the XML data: %w\n",
             request.statusText);
                }
            }
@@ -303,7 +303,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

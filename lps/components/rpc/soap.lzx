@@ -138,15 +138,15 @@
             wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
         
             &lt;handler name="onload"&gt;
-                Debug.write('Amazon soap service loaded');
-                Debug.write('Compare proxy stubs with WSDL SOAP operations.');
-                Debug.write('Amazon WSDL at ' + this.wsdl);            
-                Debug.write('proxy:');
+                Debug.debug('Amazon soap service loaded');
+                Debug.debug('Compare proxy stubs with WSDL SOAP operations.');
+                Debug.debug('Amazon WSDL at %w', this.wsdl);            
+                Debug.debug('proxy:');
                 Debug.inspect(this.proxy);
             &lt;/handler&gt;
             
             &lt;handler name="onerror" args="error"&gt;
-                Debug.write('error:', error);
+                Debug.debug('error: %w', error);
             &lt;/handler&gt;
         
         &lt;/soap&gt;
@@ -176,7 +176,7 @@
                     '&lt;A&gt;' + av + '&lt;/A&gt;' + 
                     '&lt;B&gt;' + bv + '&lt;/B&gt;' + 
                 '&lt;/' + func + '&gt;';
-                Debug.write(s);
+                Debug.debug("%w", s);
                 return s;
                 ]]&gt;
             &lt;/method&gt;
@@ -187,15 +187,15 @@
             &lt;/handler&gt;
             
             &lt;handler name="onerror" args="error"&gt;
-                Debug.write('error:', error);
+                Debug.debug('error: %w', error);
             &lt;/handler&gt;
             
             &lt;handler name="ontimeout" args="error"&gt;
-                Debug.write('timeout:', error);
+                Debug.debug('timeout: %w', error);
             &lt;/handler&gt;
             
             &lt;handler name="ondata" args="value"&gt;
-                Debug.write(value);
+            Debug.debug("%w", value);
                 result.setAttribute('text', value);
             &lt;/handler&gt;
             
@@ -319,11 +319,11 @@
           
           &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
               &lt;handler name="onload"&gt;
-                  Debug.write('google soap service loaded');
+                  Debug.debug('google soap service loaded');
               &lt;/handler&gt;
               
               &lt;handler name="onerror" args="error"&gt;
-                  Debug.write('error:', error);
+                  Debug.debug('error: %w', error);
               &lt;/handler&gt;
               
               &lt;!-- See RPC chapter for details on remotecall and how dataobject is
@@ -343,7 +343,7 @@
                   &lt;param value="''" /&gt;
                   
                   &lt;handler name="ondata" args="value"&gt;
-                      Debug.write('search result:\n', value);
+                      Debug.debug('search result: %w\n', value);
                   &lt;/handler&gt;
               
               &lt;/remotecall&gt;
@@ -353,7 +353,7 @@
               &lt;view layout="axis: x; spacing: 5"&gt;
                   &lt;edittext id="s" text="SOAP" /&gt;
                   &lt;button text="search" 
-                  onclick="Debug.write('Invoking search...'); google.search.invoke()" /&gt;
+                  onclick="Debug.debug('Invoking search...'); google.search.invoke()" /&gt;
               &lt;/view&gt;
                   
               &lt;view width="505" height="140" bgcolor="silver" layout="axis: y" &gt;
@@ -403,7 +403,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

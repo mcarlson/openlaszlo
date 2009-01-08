@@ -267,11 +267,11 @@
         &lt;/handler&gt;
         
         &lt;handler name="ondata" args="res"&gt;
-            Debug.write('(types ondata) response is:', res);
+            Debug.debug('(types ondata) response is: %w', res);
         &lt;/handler&gt;
         
         &lt;handler name="onerror" args="errmsg"&gt;
-            Debug.write('(types onerror) error:', errmsg);
+            Debug.debug('(types onerror) error: %w', errmsg);
         &lt;/handler&gt;
         
         &lt;!-- Declaratively pass an integer. --&gt;
@@ -442,7 +442,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzcommand
@@ -12,7 +12,7 @@
 /**
   * <example class="program" id="command-1">
   * &lt;canvas height="130" debug="true"&gt;
-  *   &lt;command onselect="Debug.write('the enter key was pressed');" 
+  *   &lt;command onselect="Debug.debug('the enter key was pressed');" 
   *             key="['Enter']" /&gt;
   * 
   * &lt;/canvas&gt;

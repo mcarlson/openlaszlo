@@ -23,7 +23,7 @@
  *   </button>
  *   <script>
  *     // List the player version
- *     Debug.write('Player version: ' + lz.Browser.getVersion());
+ *     Debug.debug('Player version: %w', lz.Browser.getVersion());
  *   </script>
  * </canvas>]]>
  * </example>

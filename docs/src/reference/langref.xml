@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <js2doc>
@@ -540,7 +540,7 @@ of the system is present.</p>
 <view id="obj">
   <handler name="onmyevent" args="a">
     this.setBGColor(0xff0000);
-    Debug.write(this,'got onblah event, arg is',a);
+    Debug.debug('%w got onblah event, arg is %w', this, a);
   </handler>
 </view>]]></programlisting>
               then script code <literal>obj.onmyevent.sendEvent(259)</literal> will invoke this handler method.</para>
@@ -655,10 +655,10 @@ of the system is present.</p>
     <javarpc name="ce" scope="session" remoteclassname="examples.ConstructExample"
              createargs="[1]" autoload="false">
         <handler name="onerror" args="err">
-            Debug.write("onerror:", err)
+            Debug.debug("onerror: %w", err)
         </handler>
         <handler name="onload">
-            Debug.write("proxy loaded:", this.proxy);
+            Debug.debug("proxy loaded: %w", this.proxy);
         </handler>
     </javarpc>
 
@@ -668,10 +668,10 @@ of the system is present.</p>
     <javarpc name="te" scope="session" remoteclassname="examples.TypesExample"
              autoload="false">
         <handler name="onerror" args="err">
-            Debug.write("onerror:", err)
+            Debug.debug("onerror: %w", err)
         </handler>
         <handler name="onload">
-            Debug.write("proxy loaded:", this.proxy);
+            Debug.debug("proxy loaded: %w", this.proxy);
         </handler>
     </javarpc>
 

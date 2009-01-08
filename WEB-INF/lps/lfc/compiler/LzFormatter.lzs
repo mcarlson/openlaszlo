@@ -3,7 +3,7 @@
 /**
  * Formatted output
  *
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  */
 
@@ -40,7 +40,7 @@
 <debug y="5%" height="90%" />
   <script>
     var myObj = {one: 1, too: 2, 3: 'threeee', 42: "The answer", 'a very long tag name': "With a very long value to boot"};
-    Debug.write("My object using Debug.write:", myObj);
+    Debug.debug("My object using %%w: %w", myObj);
     Debug.debug("My object using %%o.32w: %0.32w", myObj);
   </script>
 </canvas>

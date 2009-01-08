@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LFC
@@ -60,7 +60,7 @@
   *     &lt;inputtext width="90" name="t"&gt;zip&lt;/inputtext&gt;
   *     &lt;button&gt;  submit
   *       &lt;handler name="onclick"&gt; var d = canvas.datasets.weatherdata;
-  *         Debug.write("sending request for weather data.");
+  *         Debug.debug("sending request for weather data.");
   *         d.setQueryString({zip : parent.t.getText()});
   *         d.doRequest(); 
   *       &lt;/handler&gt;
@@ -70,7 +70,7 @@
   *         var duplicate_pointer = this.dupePointer();
   *         duplicate_pointer.selectChild();
   *         while (duplicate_pointer.selectNext()){
-  *           Debug.write(duplicate_pointer.serialize());
+  *           Debug.debug("%w", duplicate_pointer.serialize());
   *         }
   *       &lt;/handler&gt;
   *     &lt;/datapointer&gt;

@@ -113,21 +113,21 @@
         &lt;sessionrpc id="session" autoload="false"&gt;
         
             &lt;handler name="oninit"&gt;
-                Debug.write('loading session object...')
+                Debug.debug('loading session object...')
                 this.load();
             &lt;/handler&gt;
             
             &lt;handler name="onload"&gt;
-                Debug.write('session object loaded');
+                Debug.debug('session object loaded');
                 canvas.buttons.setAttribute('visible', true);
             &lt;/handler&gt;        
             
             &lt;handler name="ondata" args="data"&gt;
-                Debug.write("default ondata:", data);
+                Debug.debug("default ondata: %w", data);
             &lt;/handler&gt;
             
             &lt;handler name="onerror" args="error"&gt;
-                Debug.write("default onerror:", error);
+                Debug.debug("default onerror: %w", error);
             &lt;/handler&gt;
             
             &lt;remotecall funcname="getId" /&gt;
@@ -192,7 +192,7 @@
                 &lt;/handler&gt;
                 
                 &lt;method name="myhandler" args="data"&gt;
-                    Debug.write('myhandler:', data);
+                    Debug.debug('myhandler: %w', data);
                 &lt;/method&gt;
                 
                 &lt;button text="setmyattr" onclick="session.setmyattr.invoke()" /&gt;
@@ -250,7 +250,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
