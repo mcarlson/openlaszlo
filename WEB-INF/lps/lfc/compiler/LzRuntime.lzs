@@ -163,6 +163,8 @@ var __ES3Globals = {
  * of the LFCApplication.
  */
 var globalValue = function (name:String) {
+  // remove this when LPP-7574 is fixed
+  if (name == 'lz') return lz;
   // Semi-kludge:  We name our tag classes <tagname>.  Since <> are
   // not valid symbol constituents, there is no confusion here
   if (name.charAt(0) == '<' && name.charAt(name.length-1) == '>') {

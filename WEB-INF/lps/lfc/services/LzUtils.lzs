@@ -1,7 +1,7 @@
 /**
   * LzUtils.lzs
   *
-  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Services
@@ -247,7 +247,7 @@ class LzUtilsClass {
     var colornames = lz.colors;
 
     // Unpack a javascript list from a string, giving each item the appropriate type 
-    function __unpackList(argstr, scope) {
+    function __unpackList(argstr, scope = null) {
         if (scope == null) scope = canvas;
         var args = argstr.split(',');
         // cast arguments to type
@@ -315,21 +315,6 @@ class LzUtilsClass {
         return result;
     }
 
-    // Flash needs help referencing global classes :(
-    var __as2globalclasses = {Number: Number, String: String, Boolean: Boolean, Date: Date, Array: Array, Object: Object, Function: Function};
-
-    function __findClass(classname) {
-        // short-circuting || would be much better - see LPP- 
-        var obj = lz.Utils.__as2globalclasses[classname];
-        if (obj) return obj;
-        obj = global[classname];
-        if (obj) return obj;
-        obj = canvas[classname];
-        if (obj) return obj;
-        obj = lz[classname];
-        if (obj) return obj;
-    }
-
     // 'new' an object from a javascript string.  Must begin with 'new '.
     function safeNew(js, arglist = null) {
         var orig = js;
@@ -346,7 +331,7 @@ class LzUtilsClass {
             js = js.substring(0, s);
         }
 
-        var obj = lz.Utils.__findClass(js);
+        var obj = globalValue(js);
         if (! obj) return;
 
         var args = arglist == null ? lz.Utils.__unpackList(args) : arglist;
