@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -48,15 +48,61 @@ lz.embed.iframemanager.__destroy = function(id) {
 </switch>
 
 <class name="html" extends="view">
-    <attribute name="widthoffset" type="number" value="0"/>
-    <attribute name="heightoffset" type="number" value="0"/>
+    <doc>
+      <tag name="shortdesc"><text>Adds the capability to display HTML pages.</text></tag>
+      <text>
+        <p><tagname>html</tagname> is a <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag> that displays HTML pages.</p> 
+        
+        <p>For best results in Flash, set the wmode attribute to 'transparent' when embedding the application.  See lps/components/extensions/test/html-swf.jsp for an example.  See lps/components/extensions/test/html.lzx for an example of embedding <tagname>html</tagname> in a window.</p>
+        
+        <example><programlisting class="code">
+&lt;canvas&gt; 
+    &lt;view y="50" width="100%" height="300" bgcolor="blue" onmousedown="res.apply()" onmouseup="res.remove()"&gt;
+        &lt;resizestate name="res"/&gt;
+        &lt;dragstate name="drg"/&gt;
+        &lt;text width="100%" bgcolor="gray" onmousedown="parent.drg.apply()" onmouseup="parent.drg.remove()"&gt;Drag here&lt;/text&gt;
+        &lt;html id="ht" src="http://google.com/" x="15" y="15" width="${parent.width - 30}" height="${parent.height - 30}"/&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+        </programlisting></example>
+                
+        <p><classname>html</classname> extends <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag>,
+        which is the fundamental visual class of LZX.</p>
+      </text>
+    </doc>
+
+    <!--- If true, the html tag will have scrollbars.
+          @type Boolean
+          @access public
+    -->
     <attribute name="scrollbars" type="boolean" value="true"/>
+    <!--- If true, the html tag is currently loading
+          @type Boolean
+          @access public
+          @keywords readonly
+    -->
     <attribute name="loading" type="boolean" value="false"/>
-    <attribute name="appendto" value="null"/>
+    <!--- If true, the html tag is ready to receive commands
+          @type Boolean
+          @access public
+          @keywords readonly
+    -->
     <attribute name="ready" value="false"/>
+    <!--- If true, the html tag will set browser history.
+          @type Boolean
+          @access public
+    -->
     <attribute name="history" value="true"/>
 
+    <!--- Sets the view to listen to for x/y/width/height change events.
+          @type LzView
+          @access public
+    -->
     <attribute name="target" value="null"/>
+    <!--- Sets the name/target of the html iframe.
+          @type String
+          @access public
+    -->
     <attribute name="framename" value="" type="string"/>
     <event name="onload"/>
     <event name="onready"/>
@@ -68,6 +114,10 @@ lz.embed.iframemanager.__destroy = function(id) {
         } else {
             this._posdel = new LzDelegate(this, '__updatepos'); 
         }
+        if (t != this) {
+            this._posdel.register(this, 'onwidth');
+            this._posdel.register(this, 'onheight');
+        }
         this._posdel.register(this.target, 'onwidth');
         this._posdel.register(this.target, 'onheight');
         this._posdel.register(this.target, 'onx');
@@ -77,6 +127,10 @@ lz.embed.iframemanager.__destroy = function(id) {
         if (this['ontarget']) this.ontarget.sendEvent(t);
     </setter>
 
+    <!--- Sets the visibility of the html tag
+          @type Boolean
+          @access public
+    -->
     <attribute name="visible" type="boolean" value="true"/>
     <setter name="visible" args="v">
         this.visible = v;
@@ -84,6 +138,10 @@ lz.embed.iframemanager.__destroy = function(id) {
         if (this['onvisible']) this.onvisible.sendEvent(v);
     </setter>
 
+    <!--- Sets the URL the html tag should load
+          @type String
+          @access public
+    -->
     <attribute name="src" type="text"/>
     <event name="onsrc"/>
     <setter name="src" args="s">
@@ -139,6 +197,7 @@ lz.embed.iframemanager.__destroy = function(id) {
         }
         this.setAttribute('ready', true);
     </method>
+    <!--- @access private -->
     <method name="__gotload">
         this.setAttribute('loading', false);
         this.__updatepos(null);
@@ -179,6 +238,7 @@ lz.embed.iframemanager.__destroy = function(id) {
     </method>
     <switch>
         <when runtime="dhtml">
+        <!--- @access private -->
         <attribute name="_mouseisdown" value="false"/>
         <handler name="onmouseover" reference="lz.GlobalMouse" args="e">
             <![CDATA[
