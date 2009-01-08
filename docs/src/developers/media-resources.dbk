@@ -210,14 +210,24 @@
     <para>Or they may be declared externally as first-class objects
     themselves:</para>
     <example role="live-example">
-      <title>Declaring a resource</title>
+      <title>Importing a resource</title>
       <programlisting language="lzx">
         <textobject>
           <textdata fileref="programs/media-resources-$2.lzx" />
         </textobject>
       </programlisting>
     </example>
-   
+    <note><para>You cannot set a resource on a view with subviews. The following
+    code will result in an error:</para>
+    </note>
+    <example role="live-example">
+      <title>Setting a resource on a view with subviews</title>
+      <programlisting language="lzx">
+        <textobject>
+          <textdata fileref="programs/viewresource.lzx" />
+        </textobject>
+      </programlisting>
+    </example>
     <section>
       <title>Resources are not views</title>
       <para>Note that a 
