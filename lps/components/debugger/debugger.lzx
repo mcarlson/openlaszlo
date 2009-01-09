@@ -101,7 +101,8 @@
 -->
 <class name="LzDebugWindow" 
        font="monospace" fontsize="11" fontstyle="plain"
-       y="50%" x="5%" height="45%" width="90%"
+       y="${canvas.height * .95 - this.height}" x="${canvas.width * .95 - this.width}"
+       height="45%" width="90%"
        oninit="initEvalView()" pixellock="true">
 
     <!-- ATTRIBUTES -->
@@ -940,7 +941,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
