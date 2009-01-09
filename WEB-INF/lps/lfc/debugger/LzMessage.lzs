@@ -2,7 +2,7 @@
 
 /**
  *
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @access public
@@ -27,16 +27,21 @@
  * it as an argument, making concatenation of messages fail.
  */
 class LzDebugMessage extends LzBootstrapMessage {
-  var objects:Array;
+  var objects:Array = [];
 
   /**
    * @param * message: initial message (either a String or an LzMessage)
    */
   function LzDebugMessage (message=null) {
+    if ($js1) {
+      // FIXME: [2009-01-09 ptw] (LPP-5232) Remove when compiler bug
+      // fixed
+      //
+      // prevent incorrect sharing of instance initial values in js1
+      // back-end
+      this.objects = [];
+    }
     super(message);
-    // can't be in prototype as it would be shared
-    // could be a getter to defer allocation
-    this.objects = [];
   }
 
   /// These methods implement the String interface (since we are not
