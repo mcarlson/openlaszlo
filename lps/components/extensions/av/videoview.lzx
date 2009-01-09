@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
@@ -72,7 +72,15 @@
   <script when="immediate"><![CDATA[
     mixin NewvideoviewShared {
         function NewvideoviewShared ( parent:LzView? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
-            super(parent, attrs, children, instcall);
+           if (attrs && attrs['type'] == null) attrs.type = 'http'
+           if (attrs && attrs['autoplay'] == null) attrs.autoplay = false;
+           if (attrs && attrs['cam'] == null) attrs.cam = null;
+           if (attrs && attrs['mic'] == null) attrs.mic = null;
+           if (attrs && attrs['width'] == null) attrs.width = 160;
+           if (attrs && attrs['height'] == null) attrs.height = 120;
+           if (attrs && attrs['playvolume'] == null) attrs.playvolume = 1.0;
+           if (attrs && attrs['url'] == null) attrs.url = "";
+           super(parent, attrs, children, instcall);
         }
     }
   ]]></script>

@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -36,17 +36,17 @@
             var a = 
                 gCamera.getCameraNames();
 
-            Debug.write('Camera name array: ', a, a.length);
+            //Debug.write('Camera name array: ', a, a.length);
             var n = a.length;
             var i;
             for (i = 0; i < n; i++) {
                 var cname = a[i];
-                Debug.write("Camera device index", i, "name", cname);
+                //Debug.write("Camera device index", i, "name", cname);
                 var c = 
                     new lz.camlistitem(
                         this, 
                         {text:cname, index:i});
-                Debug.write(c);
+                //Debug.write(c);
             }
           ]]>
         </handler>

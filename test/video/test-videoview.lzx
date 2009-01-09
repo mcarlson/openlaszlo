@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -12,6 +12,11 @@
         spacing="10"
     />
 
+    <text>a video stream from your camera should be displayed
+          in the rectangle below (it should be red before the
+          camera is allowed then after you click allow the 
+          video should display
+    </text>
 
     <button
         text="shrink width then height" 
@@ -51,7 +56,7 @@
         </animatorgroup>
 
 
-        <camera id="c" 
+        <camera id="c"
             show="true"
         />
 

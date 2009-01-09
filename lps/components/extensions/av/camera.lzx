@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
@@ -67,6 +67,7 @@
         <method name="_makeDevice"><![CDATA[
             var deviceindex = 
                 this['deviceindex'];
+            //Debug.write('setting up camera device', deviceindex);
 
             var dev = null;
             if ($swf8) {
@@ -76,7 +77,7 @@
                     dev = Camera.get(deviceindex);
                 }
             } else {
-                if ($debug) Debug.warn('%w is not supported in this runtime.', 'camera')
+                if ($Debug) Debug.warn('%w is not supported in this runtime.', 'camera')
             }
             
             this._dev = dev;
@@ -148,12 +149,13 @@
 
             this.show = show;
 
-            // Bail if we're not initialized, the dev isn't
+            // Bail if we're not initialized, the device isn't
             // initialized, or the parent isn't finished initializing
             // (or isn't a videoview).
             if ((!this.isinited) ||
                 (!this._dev) ||
                 (!immediateparent['_initcomplete'])) {
+                if (!immediateparent['cam']) immediateparent.cam = this; 
                 return;
             }
 
@@ -286,7 +288,8 @@
         </method>
 
         <doc>
-            <tag name="shortdesc"><text>A camera that can be connected to a rtmpserver.</text></tag>
+            <tag name="shortdesc"><text>A camera object that can be displayed
+            on a video view and/or broadcast to an rtmpserver.</text></tag>
             <text>
             <p>In order to use a camera in an LZX application, the <attribute>visible</attribute> and <attribute>allowed</attribute> attributes must be set to <attribute>true</attribute>. The <attribute>visible</attribute> indicates the program's intent and the <attribute>allowed</attribute> attribute indicates the user's permission. To protect privacy, camera operation must be explicitly approved by the user.</p>
             <programlisting>
