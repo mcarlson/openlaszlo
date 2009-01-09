@@ -175,7 +175,7 @@
   &lt;text y="10"&gt;First Name:&lt;/text&gt;
   &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
   &lt;text y="35"&gt;Last Name:&lt;/text&gt;
-  &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+  &lt;edittext name="lastName" datapath="@lastName" x="80" y="35"/&gt;
   &lt;text y="60"&gt;Phone:&lt;/text&gt;
   &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
   &lt;text y="85"&gt;Email:&lt;/text&gt;
@@ -360,7 +360,7 @@
     &lt;text y="10"&gt;First Name:&lt;/text&gt;
     &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
     &lt;text y="35"&gt;Last Name:&lt;/text&gt;
-    &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+    &lt;edittext name="lastName" datapath="@lastName" x="80" y="35"/&gt;
     &lt;text y="60"&gt;Phone:&lt;/text&gt;
     &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
     &lt;text y="85"&gt;Email:&lt;/text&gt;

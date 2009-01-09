@@ -12,7 +12,7 @@
       <text y="10">First Name:</text>
       <edittext name="firstName" datapath="@firstName" x="80" y="10"/>
       <text y="35">Last Name:</text>
-      <edittext name="lastname" datapath="@lastName" x="80" y="35"/>
+      <edittext name="lastName" datapath="@lastName" x="80" y="35"/>
       <text y="60">Phone:</text>
       <edittext name="phone" datapath="@phone" x="80" y="60"/>
       <text y="85">Email:</text>
@@ -43,7 +43,7 @@
       <text y="10">First Name:</text>
       <edittext name="firstName" datapath="@firstName" x="80" y="10"/>
       <text y="35">Last Name:</text>
-      <edittext name="lastname" datapath="@lastName" x="80" y="35"/>
+      <edittext name="lastName" datapath="@lastName" x="80" y="35"/>
       <text y="60">Phone:</text>
       <edittext name="phone" datapath="@phone" x="80" y="60"/>
       <text y="85">Email:</text>
@@ -62,6 +62,6 @@
   </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007 - 2009 Laszlo Systems, Inc.  All Rights Reserved.            *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
