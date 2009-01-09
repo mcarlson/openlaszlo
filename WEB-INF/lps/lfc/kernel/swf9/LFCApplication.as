@@ -1,7 +1,7 @@
 /**
   * LFCApplication.as
   *
-  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -90,6 +90,10 @@ public class LFCApplication {
         */
 
         LzKeyboardKernel.setCallback(lz.Keys, '__keyEvent');
+
+        // LPP-7597: This is the fix for LPP-7499 canvas size not intialized to browser size
+        LzScreenKernel.handleResizeEvent();
+
     }
 
     function reportWheel(event:MouseEvent):void {
