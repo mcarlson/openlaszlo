@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Simple example to demonstrate the FxSpinner control -->
+<FxApplication xmlns="http://ns.adobe.com/mxml/2009">
+
+	<!-- Panel used as a container for FxSpinner control examples -->
+	<Panel title="FxSpinner Control Example" height="75%" width="75%" paddingTop="10"
+	    paddingLeft="10" horizontalCenter="0" verticalCenter="0">
+
+		<Group>
+			<layout>
+				<HorizontalLayout/>
+			</layout>
+            
+			<Text text="Use the arrows to change tabs"/>            
+			<FxSpinner id="mySpinner" maximum="3"/>                    
+		</Group>            
+
+		<TabNavigator width="75%" height="75%" selectedIndex="{mySpinner.value}" >
+        
+			<HBox label="Tab 1">
+				<Text text="Text on Tab 1" fontSize="14" color="red"/>
+			</HBox>    	
+			<HBox label="Tab 2">
+				<Text text="Text on Tab 2" fontSize="16" color="blue"/>
+			</HBox>    	    
+			<HBox label="Tab 3">
+				<Text text="Text on Tab 3" fontSize="18" color="green"/>
+			</HBox>    	    
+			<HBox label="Tab 4">
+				<Text text="Text on Tab 4" fontSize="20" color="purple"/>
+			</HBox>    	            
+    	    
+		</TabNavigator>  
+        
+		<!-- Label that displays the current value of the FxSpinner -->
+		<Label color="purple" text="Current Tab = {mySpinner.value+1}"/>
+                                                          
+	</Panel>          
+</FxApplication> 

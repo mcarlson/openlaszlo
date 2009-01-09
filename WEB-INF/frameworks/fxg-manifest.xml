@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<!--
+
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2008 Adobe Systems Incorporated
+	All Rights Reserved.
+
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<componentPackage>
+
+<!-- Graphics -->
+    <component id="BitmapGraphic" class="mx.graphics.BitmapGraphic"/>
+    <component id="CloseSegment" class="mx.graphics.CloseSegment"/>
+    <component id="CubicBezierSegment" class="mx.graphics.CubicBezierSegment"/>
+    <component id="Ellipse" class="mx.graphics.Ellipse"/>
+    <component id="Graphic" class="mx.graphics.Graphic"/>
+    <component id="Group" class="mx.components.Group"/>
+    <component id="Line" class="mx.graphics.Line"/>
+    <component id="LineSegment" class="mx.graphics.LineSegment"/>
+    <component id="Matrix" class="flash.geom.Matrix" lookupOnly="true"/>
+    <component id="MoveSegment" class="mx.graphics.MoveSegment"/>
+    <component id="Path" class="mx.graphics.Path"/>
+    <component id="QuadraticBezierSegment" class="mx.graphics.QuadraticBezierSegment"/>
+    <component id="Rect" class="mx.graphics.Rect"/>
+    <component id="TextGraphic" class="mx.graphics.TextGraphic"/>
+    <component id="Transform" class="mx.geom.Transform"/>
+
+<!--Fills and Strokes -->
+    <component id="BitmapFill" class="mx.graphics.BitmapFill"/>
+    <component id="GradientEntry" class="mx.graphics.GradientEntry"/>
+    <component id="LinearGradient" class="mx.graphics.LinearGradient"/>
+    <component id="LinearGradientStroke" class="mx.graphics.LinearGradientStroke"/>
+    <component id="RadialGradient" class="mx.graphics.RadialGradient"/>
+    <component id="RadialGradientStroke" class="mx.graphics.RadialGradientStroke"/>
+    <component id="SolidColor" class="mx.graphics.SolidColor"/>
+    <component id="SolidColorStroke" class="mx.graphics.SolidColorStroke"/>
+    <component id="Stroke" class="mx.graphics.Stroke"/>
+
+<!-- Filters -->
+    <component id="BevelFilter" class="mx.filters.BevelFilter"/>
+    <component id="BlurFilter" class="mx.filters.BlurFilter"/>
+    <component id="ColorMatrixFilter" class="mx.filters.ColorMatrixFilter"/>
+    <component id="DropShadowFilter" class="mx.filters.DropShadowFilter"/>
+    <component id="GlowFilter" class="mx.filters.GlowFilter"/>
+    <component id="GradientBevelFilter" class="mx.filters.GradientBevelFilter"/>
+    <component id="GradientGlowFilter" class="mx.filters.GradientGlowFilter"/>
+
+<!-- Text -->
+    <component id="a" class="flashx.textLayout.elements.LinkElement"/>
+    <component id="br" class="flashx.textLayout.elements.BreakElement"/>
+    <component id="CharacterFormat" class="flashx.textLayout.formats.CharacterFormat"/>
+    <component id="ContainerFormat" class="flashx.textLayout.formats.ContainerFormat"/>
+    <component id="div" class="flashx.textLayout.elements.DivElement"/>
+    <component id="img" class="flashx.textLayout.elements.InlineGraphicElement"/>
+    <component id="p" class="flashx.textLayout.elements.ParagraphElement"/>
+    <component id="ParagraphFormat" class="flashx.textLayout.formats.ParagraphFormat"/>
+    <component id="span" class="flashx.textLayout.elements.SpanElement"/>
+    <component id="tab" class="flashx.textLayout.elements.TabElement"/>
+    <component id="TextFlow" class="flashx.textLayout.elements.TextFlow"/>
+
+</componentPackage>

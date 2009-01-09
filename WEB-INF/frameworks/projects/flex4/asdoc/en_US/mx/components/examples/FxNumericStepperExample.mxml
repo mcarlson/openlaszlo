@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Simple example to demonstrate the FxNumericStepper control -->
+<FxApplication xmlns="http://ns.adobe.com/mxml/2009">
+
+	<!-- Panel used as a container for FxNumericStepper control examples -->
+	<Panel title="FxNumericStepper Control Example" height="75%" width="75%" 
+	    paddingTop="10" paddingLeft="10" horizontalCenter="0" verticalCenter="0">
+
+	<Text width="100%" text="FxNumericStepper control with minimum=0, maximum=100, stepSize=1.5 and valueWrap=true"/>     
+	<Text width="100%" text="Value increments and decrements in multiples of 1.5 and wraps around."/>
+	<Text width="100%" text="NOTE: valueInterval must be set to the same value as stepSize or the NumericStepper value will be rounded."/>
+	      			        
+		<!-- FxNumericStepper Control -->
+		<FxNumericStepper id="myFxNS" width="55" value="1.5" stepSize="1.5" 
+		    valueInterval="1.5" valueWrap="true"/>      
+        
+		<!-- Label that displays the current value of the FxNumericStepper -->
+		<Label color="purple" text="Current value = {myFxNS.value}"/>
+                                                            
+	</Panel>                             
+</FxApplication> 

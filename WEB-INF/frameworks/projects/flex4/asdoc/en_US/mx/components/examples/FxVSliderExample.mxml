@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Simple example to demonstrate the FxVSlider control-->
+<FxApplication xmlns="http://ns.adobe.com/mxml/2009">
+    
+	<Script>
+		<![CDATA[
+			private var imageX:Number=0;          
+          
+			// Function to change the image size.
+			private function changeSize():void
+			{
+				fxImage.x=uint(imageX+vSlider.value);	         
+			}
+		]]>
+	</Script>    
+
+	<!-- Panel used as a container for FxVSlider control examples -->
+	<Panel title="FxVSlider Control Example" height="75%" width="75%" paddingTop="10"
+	    paddingLeft="10" horizontalCenter="0" verticalCenter="0">
+                                       
+		<Group>        
+			<layout> 
+				<HorizontalLayout/> 
+			</layout>
+
+			<!-- FxVSlider that calls the function changeSize anytime the value is
+			     changed -->
+			<FxVSlider id="vSlider" minimum="1" liveDragging="true" 
+			    change="changeSize();"/>  
+                                
+            <Image id="fxImage" source="@Embed('assets/Nokia_6630.png')" 
+               creationComplete="imageX=fxImage.x"/>                                        
+        </Group>                
+                      
+        <Text width="100%" text="Drag the slider to move the image"/>        
+                                                                          
+	</Panel>                                 
+</FxApplication> 

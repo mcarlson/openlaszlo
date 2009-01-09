@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!-- Simple example to demonstrate the FxButton control -->
+<FxApplication xmlns="http://ns.adobe.com/mxml/2009">
+    <Script>
+        <![CDATA[
+
+            import flash.events.Event;
+
+            // Event handler function to print a message
+            // describing the selected FxButton control.
+            private function printMessage(event:Event):void  {
+              message.text += event.target.label + " pressed" + "\n";
+            }
+
+        ]]>
+    </Script>
+
+    <Panel title="FxButton Control Example"
+        height="75%" width="75%" horizontalCenter="0"
+        verticalCenter="0" paddingTop="10" paddingBottom="10" paddingLeft="10"
+        paddingRight="10">
+            <VGroup width="100%">
+                <FxButton label="Default Button" click="printMessage(event);"/>
+                <FxButton label="autoRepeat Button" buttonDown="printMessage(event);"
+                    autoRepeat="true"/>
+                <FxButton label="Disabled Button" enabled="false"
+                    click="printMessage(event);"/>
+            </VGroup>
+            <FxTextArea x="80" y="0" id="message" height="100%" width="100%"
+                color="#0000FF"/>
+    </Panel>
+</FxApplication>

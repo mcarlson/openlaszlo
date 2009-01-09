@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!--
+
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2008 Adobe Systems Incorporated
+	All Rights Reserved.
+
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
+
+-->
+<componentPackage>
+
+    <!-- Flex4 Framework -->
+    <component id="AddAction" class="mx.effects.AddAction"/>
+    <component id="AddItems" class="mx.states.AddItems"/>
+    <component id="Animation" class="mx.effects.Animation"/>
+    <component id="BasicLayout" class="mx.layout.BasicLayout"/>
+    <component id="BevelFilter" class="mx.filters.BevelFilter"/>
+    <component id="BitmapGraphic" class="mx.graphics.BitmapGraphic"/>
+    <component id="BlurFilter" class="mx.filters.BlurFilter"/>
+    <component id="CallAction" class="mx.effects.CallAction"/>
+    <component id="CloseSegment" class="mx.graphics.CloseSegment"/>
+    <component id="ColorMatrixFilter" class="mx.filters.ColorMatrixFilter"/>
+    <component id="Constant" class="mx.effects.interpolation.Constant"/>
+    <component id="ConvolutionFilter" class="mx.filters.ConvolutionFilter"/>
+    <component id="CubicBezierSegment" class="mx.graphics.CubicBezierSegment"/>
+    <component id="DataGroup" class="mx.components.DataGroup"/>
+    <component id="DefaultComplexItemRenderer" class="mx.skins.spark.FxDefaultComplexItemRenderer"/>
+    <component id="DisplacementMapFilter" class="mx.filters.DisplacementMapFilter"/>
+    <component id="DropShadowFilter" class="mx.filters.DropShadowFilter"/>
+    <component id="Ellipse" class="mx.graphics.Ellipse"/>
+    <component id="FxAnimate" class="mx.effects.FxAnimate"/>
+    <component id="FxAnimate3D" class="mx.effects.FxAnimate3D"/>
+    <component id="FxAnimateColor" class="mx.effects.FxAnimateColor"/>
+    <component id="FxAnimateFilter" class="mx.effects.FxAnimateFilter"/>
+    <component id="FxApplication" class="mx.components.FxApplication" />
+    <component id="FxButton" class="mx.components.FxButton"/>
+    <component id="FxButtonBar" class="mx.components.FxButtonBar"/>
+    <component id="FxCheckBox" class="mx.components.FxCheckBox"/>
+    <component id="FxComponent" class="mx.components.baseClasses.FxComponent"/>
+    <component id="FxContainer" class="mx.components.FxContainer"/>
+    <component id="FxDataContainer" class="mx.components.FxDataContainer"/>
+    <component id="FxDefaultComplexItemRenderer" class="mx.skins.spark.FxDefaultComplexItemRenderer"/>
+    <component id="FxDefaultItemRenderer" class="mx.skins.spark.FxDefaultItemRenderer"/>
+    <component id="FxFade" class="mx.effects.FxFade"/>
+    <component id="FxHScrollBar" class="mx.components.FxHScrollBar"/>
+    <component id="FxHSlider" class="mx.components.FxHSlider"/>
+    <component id="FxList" class="mx.components.FxList"/>
+    <component id="FxListBase" class="mx.components.baseClasses.FxListBase"/>
+    <component id="FxMove" class="mx.effects.FxMove"/>
+    <component id="FxNumericStepper" class="mx.components.FxNumericStepper"/>
+    <component id="FxPanel" class="mx.components.FxPanel"/>
+    <component id="FxRadioButton" class="mx.components.FxRadioButton"/>
+    <component id="FxRange" class="mx.components.baseClasses.FxRange"/>
+    <component id="FxResize" class="mx.effects.FxResize"/>
+    <component id="FxRotate" class="mx.effects.FxRotate"/>
+    <component id="FxRotate3D" class="mx.effects.FxRotate3D"/>
+    <component id="FxScrollBar" class="mx.components.baseClasses.FxScrollBar"/>
+    <component id="FxScroller" class="mx.components.FxScroller"/>
+    <component id="FxSlider" class="mx.components.baseClasses.FxSlider"/>
+    <component id="FxSpinner" class = "mx.components.FxSpinner"/>
+    <component id="FxTextArea" class="mx.components.FxTextArea"/>
+    <component id="FxTextInput" class="mx.components.FxTextInput"/>
+    <component id="FxToggleButton" class="mx.components.FxToggleButton"/>
+    <component id="FxTrackBase" class="mx.components.baseClasses.FxTrackBase"/>
+    <component id="FxVScrollBar" class="mx.components.FxVScrollBar"/>
+    <component id="FxVSlider" class="mx.components.FxVSlider"/>
+    <component id="GlowFilter" class="mx.filters.GlowFilter"/>
+    <component id="GradientBevelFilter" class="mx.filters.GradientBevelFilter"/>
+    <component id="GradientGlowFilter" class="mx.filters.GradientGlowFilter"/>
+    <component id="Graphic" class="mx.graphics.Graphic"/>
+    <component id="Group" class="mx.components.Group"/>
+    <component id="HGroup" class="mx.components.HGroup"/>
+    <component id="HorizontalLayout" class="mx.layout.HorizontalLayout"/>
+    <component id="ItemRenderer" class="mx.components.ItemRenderer"/>
+    <component id="Line" class="mx.graphics.Line"/>
+    <component id="Linear" class="mx.effects.interpolation.Linear"/>
+    <component id="LineSegment" class="mx.graphics.LineSegment"/>
+    <component id="MoveSegment" class="mx.graphics.MoveSegment"/>
+    <component id="MXMLComponent" class="mx.components.MXMLComponent" />
+    <component id="Path" class="mx.graphics.Path"/>
+    <component id="Power" class="mx.effects.interpolation.Power"/>
+    <component id="PropertyValuesHolder" class="mx.effects.PropertyValuesHolder"/>
+    <component id="QuadraticBezierSegment" class="mx.graphics.QuadraticBezierSegment"/>
+    <component id="Rect" class="mx.graphics.Rect"/>
+    <component id="RemoveAction" class="mx.effects.RemoveAction"/>
+    <component id="SetAction" class="mx.effects.SetAction"/>
+    <component id="ShaderFilter" class="mx.filters.ShaderFilter"/>
+    <component id="Sine" class="mx.effects.interpolation.Sine"/>
+    <component id="Skin" class="mx.components.Skin"/>
+    <component id="SparkSkin" class="mx.skins.spark.SparkSkin" />
+    <component id="TextBox" class="mx.graphics.TextBox"/>
+    <component id="TextGraphic" class="mx.graphics.TextGraphic"/>
+    <component id="TextView" class="mx.components.TextView"/>
+    <component id="VerticalLayout" class="mx.layout.VerticalLayout"/>
+    <component id="VGroup" class="mx.components.VGroup"/>
+
+    <!-- Special Components -->
+    <component id="State" class="mx.states.State" lookupOnly="true"/>
+
+    <!-- AS3 Builtins -->
+    <component id="Array" class="Array" lookupOnly="true"/>
+    <component id="Boolean" class="Boolean" lookupOnly="true"/>
+    <component id="Class" class="Class" lookupOnly="true"/>
+    <component id="Date" class="Date" lookupOnly="true"/>
+    <component id="Function" class="Function" lookupOnly="true"/>
+    <component id="int" class="int" lookupOnly="true"/>
+    <component id="Number" class="Number" lookupOnly="true"/>
+    <component id="Object" class="Object" lookupOnly="true"/>
+    <component id="String" class="String" lookupOnly="true"/>
+    <component id="uint" class="uint" lookupOnly="true"/>
+    <component id="XML" class="XML" lookupOnly="true"/>
+    <component id="XMLList" class="XMLList" lookupOnly="true"/>
+ 
+    <!-- Flex 3 Graphics -->
+    <component id="BitmapFill" class="mx.graphics.BitmapFill" lookupOnly="true"/>
+    <component id="CompoundTransform" class="mx.geom.CompoundTransform" lookupOnly="true"/>
+    <component id="GradientEntry" class="mx.graphics.GradientEntry" lookupOnly="true"/>
+    <component id="LinearGradient" class="mx.graphics.LinearGradient" lookupOnly="true"/>
+    <component id="LinearGradientStroke" class="mx.graphics.LinearGradientStroke" lookupOnly="true"/>
+    <component id="RadialGradient" class="mx.graphics.RadialGradient" lookupOnly="true"/>
+    <component id="RadialGradientStroke" class="mx.graphics.RadialGradientStroke" lookupOnly="true"/>
+    <component id="SolidColor" class="mx.graphics.SolidColor" lookupOnly="true"/>
+    <component id="SolidColorStroke" class="mx.graphics.SolidColorStroke" lookupOnly="true"/>
+    <component id="Stroke" class="mx.graphics.Stroke" lookupOnly="true"/>
+    <component id="Transform" class="mx.geom.Transform" lookupOnly="true"/>
+
+</componentPackage>

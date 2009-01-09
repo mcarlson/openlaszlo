@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Canvas xmlns="http://www.adobe.com/2006/mxml"  
+		xmlns:mx="http://www.adobe.com/2006/mxml"
+		width="80%" 
+		height="65%" 
+		visible="false" 
+		borderStyle="solid" 
+		borderThickness="3" 
+		backgroundColor="#FFFFFF" 
+		borderColor="#000000">
+</Canvas>

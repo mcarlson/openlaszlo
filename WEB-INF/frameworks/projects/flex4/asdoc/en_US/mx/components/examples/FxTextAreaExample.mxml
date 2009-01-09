@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!-- Simple example to demonstrate the FxTextArea control. -->
+<FxApplication xmlns="http://ns.adobe.com/mxml/2009">
+    <layout>
+        <BasicLayout />
+    </layout>
+
+    <Style>
+        Panel {
+            horizontalCenter: 0;
+            verticalCenter: 0;
+            paddingLeft: 10;
+            paddingRight: 10;
+            paddingTop: 10;
+            paddingBottom: 10;
+        }
+    </Style>
+
+    <Panel title="FxTextArea Control Example" width="75%" height="75%">
+
+        <FxTextArea width="400" height="100">
+            <text>This is a multiline, editable FxTextArea control. If you need a non-editable multiline control, use the Text control.</text>
+        </FxTextArea>
+
+        <FxTextArea width="400" height="100">
+            <content><![CDATA[This is <span color="#FF0000">HTML text</span> in an <span fontWeight="bold">FxTextArea control</span>. Use the <span textDecoration="underline">content property</span> of the <span color="#008800">FxTextArea control</span> to include basic HTML markup in your text.]]></content>
+        </FxTextArea>
+    </Panel>
+
+</FxApplication>
