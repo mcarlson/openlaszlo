@@ -33,7 +33,9 @@ class LzDebugMessage extends LzBootstrapMessage {
    * @param * message: initial message (either a String or an LzMessage)
    */
   function LzDebugMessage (message=null) {
-    if ($js1) {
+    if ($as3) {
+      // Not needed for any JS2-compliant runtime
+    } else {
       // FIXME: [2009-01-09 ptw] (LPP-5232) Remove when compiler bug
       // fixed
       //
