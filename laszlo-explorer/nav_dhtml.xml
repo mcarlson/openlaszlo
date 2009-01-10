@@ -1,6 +1,6 @@
 <menu>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
     <section name="Welcome" src="/laszlo-explorer/coverpages/welcome/" title="OpenLaszlo Server" 
@@ -52,13 +52,13 @@
               src="/laszlo-explorer/coverpages/lzproject_cover.html"
               text="A demonstration of OpenLaszlo's multiple runtime capabilities." >
             <subitem title="Launch in DHTML" name="View in DHTML" action="popup" target="_blank"
-                     popup="/demos/lzproject/lzx/lzproject/lzproject.lzx" runtime="dhtml" height="700"/>
+                     popup="/demos/lzproject/lzx/lzproject/LZProject.lzx" runtime="dhtml" height="700"/>
             <subitem title="Launch in Flash 8" name="View in Flash 8" action="popup" target="_blank"
-                     popup="/demos/lzproject/lzx/lzproject/lzproject.lzx" runtime="swf8" height="700"/>
+                     popup="/demos/lzproject/lzx/lzproject/LZProject.lzx" runtime="swf8" height="700"/>
             <subitem title="Launch in Flash 9" name="View in Flash 9" action="popup" target="_blank"
-                     popup="/demos/lzproject/lzx/lzproject/lzproject.lzx" runtime="swf9" height="700"/>
+                     popup="/demos/lzproject/lzx/lzproject/LZProject.lzx" runtime="swf9" height="700"/>
             <subitem title="Source Code Explorer"
-                src="/demos/lzproject/lzx/lzproject/lzproject.lzx" name="Source" action="source" />
+                src="/demos/lzproject/lzx/lzproject/LZProject.lzx" name="Source" action="source" />
         </item>
     </section>
     
