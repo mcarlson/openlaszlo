@@ -59,6 +59,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
   <xsl:template match="/">
     <html>
       <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
         <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico"/>
         <!-- this tag helps laszlo apps look good on the iPhone. -->
         <meta name="viewport" content="width=device-width; initial-scale=1.0;"/>
@@ -164,6 +165,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
   </xsl:template>
 </xsl:stylesheet>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-     * Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
      * Use is subject to license terms.                                            *
      * X_LZ_COPYRIGHT_END ****************************************************** -->

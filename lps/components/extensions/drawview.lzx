@@ -1,6 +1,6 @@
 <!---
    
-    @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+    @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
                Use is subject to license terms.
    
     @access public
@@ -574,7 +574,7 @@
                 }
             }
             override function $lzc$set_height(h) {
-                super.$lzc$set_width.apply(this, arguments);
+                super.$lzc$set_height.apply(this, arguments);
                 var w = Math.floor(this.width);
                 h = Math.floor(h);
                 if (w > 0 && h > 0) {
