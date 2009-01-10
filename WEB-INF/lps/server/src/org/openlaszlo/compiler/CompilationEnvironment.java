@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -196,7 +196,7 @@ public class CompilationEnvironment {
         this.mImportedLibraryFiles = new HashSet(srcEnv.getImportedLibraryFiles());
         this.mLoadableImportedLibraryFiles = srcEnv.getLoadableImportedLibraryFiles();
         this.mResourceNames = srcEnv.getResourceNames();
-        this.mMainCompilationEnv = srcEnv;
+        this.mMainCompilationEnv = srcEnv.getMainCompilationEnv();
     }
     
     /** Use this constructor for unit testing.  The Compiler uses the
@@ -756,7 +756,7 @@ public class CompilationEnvironment {
     }
 
     public CompilationEnvironment getMainCompilationEnv() {
-        return mMainCompilationEnv;
+        return mMainCompilationEnv != null ? mMainCompilationEnv : this;
     }
 
     public void setCompileTimeConstants(Map map) {

@@ -495,6 +495,7 @@ public class Compiler {
   public static String PRINT_CONSTRAINTS = "printConstraints";
   public static String PRINT_INSTRUCTIONS = "printInstructions";
   public static String RESOLVER = "resolver";
+  public static String REUSE_WORK_DIRECTORY = "reuseWorkDirectory";
   public static String SCRIPT_ELEMENT = "scriptElement";
   public static String SWF9_APPLICATION_PREAMBLE = "SWF9applicationPreamble";
   public static String SWF9_APP_CLASSNAME = "SWF9MainClassName";
@@ -1075,6 +1076,6 @@ public class Compiler {
 }
 
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

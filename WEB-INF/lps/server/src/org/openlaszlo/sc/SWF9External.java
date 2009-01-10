@@ -75,7 +75,16 @@ public class SWF9External {
     if (mInfo == null) {
       mInfo = new ScriptCompilerInfo();
     }
-    workdir = createCompilationWorkDir();
+    if (options.getBoolean(Compiler.REUSE_WORK_DIRECTORY)) {
+      // Re-use the previous working directory from the ScriptCompilerInfo
+      workdir = mInfo.workDir;
+    } else {
+      workdir = createCompilationWorkDir();
+      // Copy pointer to working directory to the ScriptCompilerInfo,
+      // so any subsequent <import> library compilations can use it.
+      mInfo.workDir = workdir;
+    }
+    //System.err.println("REUSE_WORK_DIRECTORY = "+options.getBoolean(Compiler.REUSE_WORK_DIRECTORY) + " workdir = "+workdir);
   }
 
   /**
@@ -932,8 +941,8 @@ public class SWF9External {
         // If it's a loadable lib, check links against the main app,
         // but don't link those classes in. We do this by declaring the main app
         // source working directory as a external-library-path
-        cmd.add("-compiler.source-path+="+mInfo.mainAppWorkDir);
-        cmd.add("-external-library-path+="+mInfo.mainAppWorkDir);
+        cmd.add("-compiler.source-path+="+workdir);
+        cmd.add("-external-library-path+="+workdir);
 
       }
 
@@ -1092,7 +1101,7 @@ public class SWF9External {
 }
 
 /**
- * @copyright Copyright 2006-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -49,6 +49,8 @@ class ImportCompiler extends ToplevelCompiler {
         String href = XMLUtils.requireAttributeValue(element, HREF_ANAME);
         String libname = XMLUtils.requireAttributeValue(element, NAME_ANAME);
         String stage = XMLUtils.requireAttributeValue(element, "stage");
+
+        mLogger.debug("ImportCompiler.compile libname="+libname+", href="+href+", stage="+stage);
 
         Element module = LibraryCompiler.resolveLibraryElement(
             element, mEnv, mEnv.getImportedLibraryFiles());
@@ -118,6 +120,7 @@ class ImportCompiler extends ToplevelCompiler {
             if (mEnv.isAS3()) {
                 // In Flash 9/10 we compile the main app first, then compile the libraries
                 // against that generated source tree.
+                mLogger.debug("... queueing import lib compilation" +libsrcfile+", " +objfilename  +", "+ objpath+", "+module);
                 queueLibraryCompilation(libsrcfile, objfilename, objpath, module);
             } else {
                 compileLibrary(libsrcfile, objfilename, objpath, module);
@@ -151,7 +154,7 @@ class ImportCompiler extends ToplevelCompiler {
      */
     void queueLibraryCompilation(File infile, String outfile, String liburl, Element element) {
         LibraryCompilation lc = new LibraryCompilation(this, infile, outfile, liburl, element);
-        mEnv.queueLibraryCompilation(lc);
+        mEnv.getMainCompilationEnv().queueLibraryCompilation(lc);
     }
 
     /**
@@ -174,6 +177,9 @@ class ImportCompiler extends ToplevelCompiler {
                 String runtime = env.getProperty(env.RUNTIME_PROPERTY);
                 if (env.isAS3()) {
                     props.setProperty(org.openlaszlo.sc.Compiler.SWF9_LOADABLE_LIB, "true");
+                    // Compile the main app and all libraries using the same temp as3 dir, so all
+                    // definitions are easy to share when the flex compiler does link-checking.
+                    props.setProperty(org.openlaszlo.sc.Compiler.REUSE_WORK_DIRECTORY, "true");
                     writer = new SWF9Writer(props, ostream, mEnv.getMediaCache(), false, env);
                 } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
                     writer = new DHTMLWriter(props, ostream,
