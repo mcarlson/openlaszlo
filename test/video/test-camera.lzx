@@ -1,19 +1,13 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.         *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
 <canvas>
-
-
-    <class name="camlistitem" 
-        extends="textlistitem"
-    >
-
-
+    <!-- an item in the list of cameras, clicking on it will set the 'show'
+    attribute of the camera which displays it on its immediateparent -->
+    <class name="camlistitem" extends="textlistitem" >
         <attribute name="index" value="null"/>
-
-
         <handler name="onclick"><![CDATA[
             gCamera.setAttribute("deviceindex", this.index);
             if (!gCamera.show) {
@@ -21,16 +15,9 @@
             }
           ]]>
         </handler>
-
-
     </class>
 
-
-    <class name="cameralist" 
-        extends="list" 
-        width="300"
-    >
-
+    <class name="cameralist" extends="list" width="300" >
 
         <handler name="oninit"> <![CDATA[   
             var a = 
@@ -50,26 +37,22 @@
             }
           ]]>
         </handler>
-
-
     </class>
 
+    <simplelayout axis="y" spacing="10" inset="10" />
+    <constantlayout axis="x" value="10"/>
 
-    <simplelayout 
-        axis="y" 
-        spacing="10"
-    />
-
-
-    <text>list of available cameras (click to show):</text>
-
+    <text multiline="true" width="600">
+    This tests the camera class' getCameraNames method, as well as the
+    ability to dynamically show a camera and switch cameras.  Of course to
+    test switching cameras, you will need to have multiple deviced attached to
+    your machine.<br/><br/>
+    Below is the list of available cameras (click to show):</text>
 
     <cameralist id="clist"/>
-
 
     <videoview id="v">
         <camera id="gCamera"/>
     </videoview>
-
 
 </canvas>
