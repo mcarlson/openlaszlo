@@ -3,7 +3,7 @@
 <!ENTITY build_opt SYSTEM "file:../../build-tools/build-opt.xml">
 ]>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -19,7 +19,7 @@
         <arg value="--runtime=dhtml" />
         <arg value="dev-console.lzx" />
       </exec>
-      <move file="dev-console.lzr=swf8.swf" tofile="dev-console.lzx.swf" overwrite="yes"/>
+      <move file="dev-console.swf8.swf" tofile="dev-console.lzx.swf" overwrite="yes"/>
       <concat destfile="dev-console.lzx.js" force="yes">
         <filelist dir="."  files="../includes/lfc/LFCdhtml.js,dev-console.js"/>
       </concat>
