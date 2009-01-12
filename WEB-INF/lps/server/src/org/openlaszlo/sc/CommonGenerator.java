@@ -1071,6 +1071,9 @@ public abstract class CommonGenerator implements ASTVisitor {
   boolean isExpressionType(SimpleNode node) {
     // There are several AST types that end with each of the names that
     // endsWith tests for.
+    if (node instanceof ASTModifiedDefinition) {
+      node = node.get(0);
+    }
     String name = node.getClass().getName();
     return name.endsWith("Expression") ||
       name.endsWith("FunctionCallParameters") ||
