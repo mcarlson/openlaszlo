@@ -1,7 +1,7 @@
 /**
   * LzLibrary.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LZX
@@ -156,12 +156,13 @@ function load () {
         return;
     }
     this.loading = true;
-    var request:URLRequest = new URLRequest(this.href);
+    var loadurl:LzURL = lz.Browser.getBaseURL();
+    loadurl.file = this.href;
+    var request:URLRequest = new URLRequest(loadurl.toString());
     request.method = URLRequestMethod.GET;
     this.loader = new Loader();
     var info:LoaderInfo = loader.contentLoaderInfo;
     info.addEventListener(Event.COMPLETE, handleLoadComplete);
-    trace('loader.load ', this.href);
     this.loader.load(request);
 }
 
