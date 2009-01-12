@@ -767,6 +767,19 @@ public class CompilationEnvironment {
         return mCompileTimeConstants;
     }
 
-
+    // Set up runtime-related compile-time constants 
+    public void setRuntimeConstants(String runtime) {
+        mCompileTimeConstants.put("$runtime", runtime);
+        mCompileTimeConstants.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
+        mCompileTimeConstants.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
+        mCompileTimeConstants.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
+        mCompileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
+        mCompileTimeConstants.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
+        mCompileTimeConstants.put("$as3", Boolean.valueOf(this.isAS3()));
+        mCompileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
+        mCompileTimeConstants.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
+        mCompileTimeConstants.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
+        mCompileTimeConstants.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
+    }
 
 }

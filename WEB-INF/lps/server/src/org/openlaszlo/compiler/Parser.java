@@ -31,6 +31,7 @@ import org.apache.commons.collections.LRUMap;
 import org.openlaszlo.server.*;
 import org.openlaszlo.utils.*;
 import org.openlaszlo.xml.internal.*;
+import org.openlaszlo.css.CSSParser;
 
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -404,6 +405,15 @@ public class Parser {
         // Override passed in runtime target properties 'debug' and 'profile' with 
         // canvas values, if any.
         if (root.getName().equals("canvas")) {
+
+            String copts = root.getAttributeValue("compileroptions");
+            if (copts != null) {
+                parseCompilerOptions(root, env);
+            }
+
+            // "debug" and "profile" are here for back
+            // compatibility. But the preferred way to set compiler
+            // options is compileroptions="debug: true;backtrace: true"
             String dbg = root.getAttributeValue("debug");
             if (dbg != null) {
                 cc.put("$debug", new Boolean(dbg));
@@ -424,6 +434,52 @@ public class Parser {
     static final String WHEN = "when";
     static final String UNLESS = "unless";
     static final String OTHERWISE = "otherwise";
+
+    // Set compiler options
+    void parseCompilerOptions(Element element, CompilationEnvironment env) {
+        Map cc = env.getCompileTimeConstants();
+
+        try {
+            Map properties = new CSSParser
+                (new AttributeStream(element, "compileroptions")).Parse();
+
+            for (Iterator i2 = properties.entrySet().iterator(); i2.hasNext(); ) {
+                Map.Entry entry = (Map.Entry) i2.next();
+                String key = (String) entry.getKey();
+                Object value = entry.getValue();
+
+                mLogger.info("parseCompilerOptions key="+key+" value="+value + " typeof(value)="+value.getClass().getName());
+
+                if (key.equals("debug")) {
+                    if (! (value instanceof Boolean)) {
+                        throw new CompilationError("value of compileroptions.debug must be a boolean", element);
+                    }
+                    cc.put("$debug", value);
+                    env.setProperty(env.DEBUG_PROPERTY, ((Boolean) value).booleanValue());
+                } else if (key.equals("profile")) {
+                    if (! (value instanceof Boolean)) {
+                        throw new CompilationError("value of compileroptions.profile must be a boolean", element);
+                    }
+                    cc.put("$profile", value);
+                    env.setProperty(env.PROFILE_PROPERTY, ((Boolean) value).booleanValue());
+                } else if (key.equals("backtrace")) {
+                    if (! (value instanceof Boolean)) {
+                        throw new CompilationError("value of compileroptions.backtrace must be a boolean", element);
+                    }
+                    cc.put("$backtrace", value);
+                    env.setProperty(env.BACKTRACE_PROPERTY, ((Boolean) value).booleanValue());
+                } else if (key.equals("runtime")) {
+                    env.setProperty(env.RUNTIME_PROPERTY, (String)value);
+                    env.setRuntimeConstants((String)value);
+                }
+            }
+        } catch (org.openlaszlo.css.ParseException e) {
+            throw new CompilationError(e);
+        } catch (org.openlaszlo.css.TokenMgrError e) {
+            throw new CompilationError(e);
+        }
+    }
+
 
     /**
        usage: 

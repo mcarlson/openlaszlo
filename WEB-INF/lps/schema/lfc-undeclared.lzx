@@ -1,7 +1,7 @@
 <library>
   
   <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-  * Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+  * Copyright 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
   * Use is subject to license terms.                                            *
   * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -183,6 +183,7 @@
 
   <interface extends="view" name="canvas">
     <insert>
+      <attribute name="compileroptions" type="string" value=""/>
       <attribute name="debug" type="boolean" value="false"/>
       <attribute name="title" type="string" value="OpenLaszlo Application"/>
       <attribute name="id" type="ID"/>

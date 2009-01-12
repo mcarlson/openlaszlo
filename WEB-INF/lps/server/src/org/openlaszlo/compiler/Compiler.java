@@ -252,6 +252,29 @@ public class Compiler {
         }
     }
 
+    static void checkKnownRuntime (String runtime) throws CompilationError {
+        if (runtime != null) {
+            if (! KNOWN_RUNTIMES.contains(runtime)) {
+                List runtimes = new Vector();
+                for (Iterator iter = KNOWN_RUNTIMES.iterator();
+                     iter.hasNext(); ) {
+                    runtimes.add("\"" + iter.next() + "\"");
+                }
+                
+                throw new CompilationError(
+                    MessageFormat.format(
+                        "Request for unknown runtime: The runtime or \"lzr\" query parameter has the value \"{0}\".  It must be {1}{2}.",
+                        new String[] {
+                            runtime,
+                            new ChoiceFormat(
+                                "1#| 2#either | 2<one of ").
+                            format(runtimes.size()),
+                            new ListFormat("or").format(runtimes)
+                        }));
+            }
+        }
+    }
+
 
     /**
      * Compiles <var>file</var>, and write the bytes to
@@ -285,24 +308,6 @@ public class Compiler {
         if (runtime != null) {
             mLogger.info("canvas compiler compiling runtime = " + runtime);
             env.setProperty(env.RUNTIME_PROPERTY, runtime);
-            if (! KNOWN_RUNTIMES.contains(runtime)) {
-                List runtimes = new Vector();
-                for (Iterator iter = KNOWN_RUNTIMES.iterator();
-                     iter.hasNext(); ) {
-                    runtimes.add("\"" + iter.next() + "\"");
-                }
-                
-                throw new CompilationError(
-                    MessageFormat.format(
-                        "Request for unknown runtime: The \"lzr\" query parameter has the value \"{0}\".  It must be {1}{2}.",
-                        new String[] {
-                            runtime,
-                            new ChoiceFormat(
-                                "1#| 2#either | 2<one of ").
-                            format(runtimes.size()),
-                            new ListFormat("or").format(runtimes)
-                        }));
-            }
         }
 
         String proxied = props.getProperty(CompilationEnvironment.PROXIED_PROPERTY);
@@ -395,33 +400,24 @@ public class Compiler {
 
 
             Map compileTimeConstants = new HashMap();
+            env.setCompileTimeConstants(compileTimeConstants);
+
             compileTimeConstants.put("$debug", new Boolean(
                                          env.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY)));
             compileTimeConstants.put("$profile", new Boolean(
                                          env.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY)));
-
-            boolean backtraceValue = env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY);
-            compileTimeConstants.put("$backtrace", new Boolean(backtraceValue));
+            compileTimeConstants.put("$backtrace", new Boolean(
+                                         env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY)));
 
             runtime = env.getProperty(env.RUNTIME_PROPERTY);
-
             // Must be kept in sync with server/sc/lzsc.py main
-            compileTimeConstants.put("$runtime", runtime);
-            compileTimeConstants.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
-            compileTimeConstants.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
-            compileTimeConstants.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
-            compileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
-            compileTimeConstants.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
-            compileTimeConstants.put("$as3", Boolean.valueOf(env.isAS3()));
-            compileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
-            compileTimeConstants.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
-            compileTimeConstants.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
-            compileTimeConstants.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
-            env.setCompileTimeConstants(compileTimeConstants);
+            env.setRuntimeConstants(runtime);
 
             Document doc = env.getParser().parse(file, env);
             Element root = doc.getRootElement();
             
+            checkKnownRuntime(env.getProperty(env.RUNTIME_PROPERTY));
+
             // cssfile cannot be set in the canvas tag
             String cssfile = props.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
             if (cssfile != null) {
@@ -480,7 +476,7 @@ public class Compiler {
             // This isn't in a finally clause, because it won't generally
             // succeed if an error occurs.
             writer.close();
-            
+
             Canvas canvas = env.getCanvas();
             if (!errors.isEmpty()) {
                 if (canvas != null) {
@@ -492,7 +488,7 @@ public class Compiler {
                 System.err.println(errors.toCompilationError().getMessage());
             }
             if (canvas != null) {
-              canvas.setBacktrace(backtraceValue);
+              canvas.setBacktrace(env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY));
               canvas.setSourceAnnotations(env.getBooleanProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY));
               // set file path (relative to webapp) in canvas
               canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
