@@ -605,7 +605,6 @@ public abstract class CommonGenerator implements ASTVisitor {
     // Scope #pragma directives to block
     Compiler.OptionMap savedOptions = options;
     try {
-      options = options.copy();
       for (int i = 0; i < dirs.length; i++) {
         SimpleNode n = dirs[i];
         List p = props;
@@ -614,6 +613,7 @@ public abstract class CommonGenerator implements ASTVisitor {
         ASTModifiedDefinition mod = null;
         boolean ispublic = false;
         boolean isconstructor = false;
+        options = savedOptions.copy();
 
         if (n instanceof ASTModifiedDefinition) {
           assert (n.getChildren().length == 1);
@@ -643,7 +643,17 @@ public abstract class CommonGenerator implements ASTVisitor {
             SimpleNode funexpr = new ASTFunctionExpression(0);
             funexpr.setBeginLocation(n.filename, n.beginLine, n.beginColumn);
             funexpr.setChildren(c);
-            p.add(funexpr);
+
+            if (mod != null) {
+              mod = (ASTModifiedDefinition)mod.shallowCopy();
+              SimpleNode[] newchildren = new SimpleNode[1];
+              newchildren[0] = funexpr;
+              mod.setChildren(newchildren);
+              p.add(mod);
+            }
+            else {
+              p.add(funexpr);
+            }
           } else if (how == TranslateHow.AS_INTERFACE) {
             if (!isconstructor && ispublic) {
               stmts.add(n);
@@ -890,6 +900,9 @@ public abstract class CommonGenerator implements ASTVisitor {
     return visitStatementList(node, children);
   }
 
+  // An ASTModifiedDefinition can appear as a statement (modifying
+  // class and function definitions) or as an expression (modifying
+  // function expressions)
   public SimpleNode visitModifiedDefinition(SimpleNode node, SimpleNode[] children) {
     // Modifiers, like 'final', are ignored unless this is handled
     // by the runtime.
@@ -900,6 +913,18 @@ public abstract class CommonGenerator implements ASTVisitor {
     ((ASTModifiedDefinition)node).verifyTopLevel(child);
 
     return visitStatement(child);
+  }
+
+  public SimpleNode visitModifiedDefinitionExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
+    // Modifiers, like 'final', are ignored unless this is handled
+    // by the runtime.
+
+    assert children.length == 1;
+    SimpleNode child = children[0];
+
+    ((ASTModifiedDefinition)node).verifyTopLevel(child);
+
+    return visitExpression(child, isReferenced);
   }
 
   public SimpleNode visitLabeledStatement(SimpleNode node, SimpleNode[] children) {
@@ -1124,6 +1149,9 @@ public abstract class CommonGenerator implements ASTVisitor {
     else if (node instanceof ASTAssignmentExpression) {
       newNode = visitAssignmentExpression(node, isReferenced, children);
     }
+    else if (node instanceof ASTModifiedDefinition) {
+      newNode = visitModifiedDefinitionExpression(node, isReferenced, children);
+    }
     else if (node instanceof Compiler.PassThroughNode) {
       newNode = node;
     }
@@ -1186,9 +1214,15 @@ public abstract class CommonGenerator implements ASTVisitor {
     }
     return source;
   }
+
+  boolean isStatic(SimpleNode node) {
+    SimpleNode parent = node.getParent();
+    return (parent instanceof ASTModifiedDefinition &&
+            ((ASTModifiedDefinition)parent).isStatic());
+  }
 }
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/

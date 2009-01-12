@@ -1877,6 +1877,8 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     LinkedHashMap fundefs = analyzer.fundefs;
     Set closed = analyzer.closed;
     Set free = analyzer.free;
+    boolean isStatic = isStatic(node);
+    boolean withThis = options.getBoolean(Compiler.WITH_THIS) && !isStatic;
     // Note usage due to activation object and withThis
     if (! free.isEmpty()) {
       // TODO: [2005-06-29 ptw] with (_root) should not be
@@ -1885,7 +1887,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
         analyzer.incrementUsed("_root");
       }
-      if (options.getBoolean(Compiler.WITH_THIS)) {
+      if (withThis) {
         analyzer.incrementUsed("this");
       }
     }
@@ -2108,7 +2110,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       }
       collector.emit(Instructions.WITH.make(block));
     }
-    if ((! free.isEmpty()) && options.getBoolean(Compiler.WITH_THIS)) {
+    if ((! free.isEmpty()) && withThis) {
       if (registerMap.containsKey("this")) {
         collector.push(Values.Register(((Instructions.Register)registerMap.get("this")).regno));
       } else {
@@ -2657,6 +2659,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
 }
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/

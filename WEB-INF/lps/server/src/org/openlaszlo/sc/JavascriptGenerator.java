@@ -1250,16 +1250,16 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // Having another function closure within a closure apparently
     // causes problems accessing certain variables for the flex compiler.
     boolean tryAll = options.getBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS)
-      && matchingAncestor(node.getParent(), ASTFunctionExpression.class) == null
-      && matchingDescendant(node, ASTSuperCallExpression.class) == null
-      && matchingDescendant(node, ASTFunctionExpression.class) == null
+      && matchingAncestor(node, ASTFunctionExpression.class, false) == null
+      && matchingDescendant(node, ASTSuperCallExpression.class, false) == null
+      && matchingDescendant(node, ASTFunctionExpression.class, false) == null
       && functionName != null;
       
     String tryType = "";
     if (tryAll) {
       error.add(parseFragment("if ($debug) {" +
                               "  $lzsc$runtime.reportException(" +
-                              ScriptCompiler.quote(functionNameIdentifier.filename) + ", " +
+                              ScriptCompiler.quote(filename) + ", " +
                               functionNameIdentifier.beginLine + ", $lzsc$e); }"));
 
       predecls.add(new Compiler.PassThroughNode(parseFragment("var $lzsc$ret:* = 0;")));
@@ -1298,6 +1298,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     LinkedHashMap fundefs = analyzer.fundefs;
     Set closed = analyzer.closed;
     Set free = analyzer.free;
+    boolean isStatic = isStatic(node);
+    boolean withThis = options.getBoolean(Compiler.WITH_THIS) && !isStatic;
     // Note usage due to activation object and withThis
     if (! free.isEmpty()) {
       // TODO: [2005-06-29 ptw] with (_root) should not be
@@ -1306,7 +1308,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
         analyzer.incrementUsed("_root");
       }
-      if (options.getBoolean(Compiler.WITH_THIS)) {
+      if (withThis) {
         analyzer.incrementUsed("this");
       }
     }
@@ -1460,7 +1462,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
     // If the locals are not remapped, we assume we are in a runtime
     // that already does implicit this in methods...
-    if ((! free.isEmpty()) && options.getBoolean(Compiler.WITH_THIS) && remapLocals()) {
+    if ((! free.isEmpty()) && withThis && remapLocals()) {
       SimpleNode newStmts = new ASTStatementList(0);
       newStmts.setChildren((SimpleNode[])stmtList.toArray(new SimpleNode[0]));
       SimpleNode withNode = new ASTWithStatement(0);
@@ -1483,7 +1485,13 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         Map map = new HashMap();
         newStmts = visitStatement(newStmts);
         map.put("_1", newStmts);
-        String frag = "$lzsc$ret = (function()" + tryType + " { with (this) { _1 }}).call(this);";
+        String frag = "$lzsc$ret = (function()" + tryType + " {";
+        if (isStatic) {
+          frag += " { _1 }}).call(null);";
+        }
+        else {
+          frag += " with (this) { _1 }}).call(this);";
+        }
         newStmts = new Compiler.PassThroughNode((new Compiler.Parser()).substitute(newStmts, frag, map));
       }
       tryNode.set(i++, newStmts);
@@ -1555,29 +1563,30 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return new SimpleNode[] { node, null };
   }
 
-  // walk up the AST and find a match by type
-  SimpleNode matchingAncestor(SimpleNode node, Class matchClass) {
+  // walk up the AST and find a match by type, optionally skipping the original node
+  SimpleNode matchingAncestor(SimpleNode node, Class matchClass, boolean includeThis) {
     while (node != null) {
-      if (matchClass.equals(node.getClass())) {
+      if (includeThis && matchClass.equals(node.getClass())) {
         return node;
       }
+      includeThis = false;
       node = node.getParent();
     }
     return null;
   }
 
-  // walk down the AST and find a match by type
-  SimpleNode matchingDescendant(SimpleNode node, Class matchClass) {
+  // walk down the AST and find a match by type, optionally skipping the original node
+  SimpleNode matchingDescendant(SimpleNode node, Class matchClass, boolean includeThis) {
     if (node == null) {
       return null;
     }
-    else if (matchClass.equals(node.getClass())) {
+    else if (matchClass.equals(node.getClass()) && includeThis) {
       return node;
     }
     else {
       SimpleNode[] children = node.getChildren();
       for (int i=0; i<children.length; i++) {
-        SimpleNode result = matchingDescendant(children[i], matchClass);
+        SimpleNode result = matchingDescendant(children[i], matchClass, true);
         if (result != null) {
           return result;
         }
@@ -1846,7 +1855,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 }
 
 /**
- * @copyright Copyright 2006-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

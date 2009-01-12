@@ -22,15 +22,32 @@ public class ASTModifiedDefinition extends SimpleNode {
 
     private Token t;
 
+    private void internalCopy(ASTModifiedDefinition that) {
+        this.access = that.access;
+        this.isStatic = that.isStatic;
+        this.isFinal = that.isFinal;
+        this.isDynamic = that.isDynamic;
+        this.isOverride = that.isOverride;
+        this.namespace = that.namespace;
+
+        this.id = that.id;
+        this.parser = that.parser;
+        this.filename = that.filename;
+        this.beginLine = that.beginLine;
+        this.beginColumn = that.beginColumn;
+        this.comment = that.comment;
+        this.t = that.t;
+    }
+
+    public SimpleNode shallowCopy() {
+        ASTModifiedDefinition result = new ASTModifiedDefinition(id);
+        result.internalCopy(this);
+        return result;
+    }
+
     public SimpleNode deepCopy() {
         ASTModifiedDefinition result = (ASTModifiedDefinition)super.deepCopy();
-        result.access = this.access;
-        result.isStatic = this.isStatic;
-        result.isFinal = this.isFinal;
-        result.isDynamic = this.isDynamic;
-        result.isOverride = this.isOverride;
-        result.namespace = this.namespace;
-        result.t = this.t;
+        result.internalCopy(this);
         return result;
     }
 
@@ -152,6 +169,8 @@ public class ASTModifiedDefinition extends SimpleNode {
             verifyVariable(subnode);
         else if (subnode instanceof ASTFunctionDeclaration)
             verifyFunction(subnode);
+        else if (subnode instanceof ASTFunctionExpression)
+            verifyFunction(subnode);
         else if (subnode instanceof ASTClassDefinition)
             verifyClass(subnode);
         // A nested function leaves behind an empty expression
@@ -165,6 +184,8 @@ public class ASTModifiedDefinition extends SimpleNode {
         if (subnode instanceof ASTVariableStatement)
             verifyVariable(subnode);
         else if (subnode instanceof ASTFunctionDeclaration)
+            verifyFunction(subnode);
+        else if (subnode instanceof ASTFunctionExpression)
             verifyFunction(subnode);
         else if (subnode instanceof ASTClassDefinition)
             throw new ParseException("inner classes not allowed: " + subnode);
@@ -226,7 +247,7 @@ public class ASTModifiedDefinition extends SimpleNode {
 }
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
