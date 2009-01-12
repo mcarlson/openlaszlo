@@ -101,15 +101,42 @@
 -->
 <class name="LzDebugWindow" 
        font="monospace" fontsize="11" fontstyle="plain"
-       height="45%" width="90%"
        oninit="initEvalView()" pixellock="true">
 
-    <!-- sets the initial position of the debug window to constrain to the canvas -->
-    <state name="fit_on_canvas" applied="true">
-      <attribute name="y" value="${canvas.height * .95 - this.height}"/>
-      <attribute name="x" value="${canvas.width * .95 - this.width}"/>
+    <!-- Will be applied in construct if no width specified -->
+    <attribute name="default_width" value="false" />
+    <state applied="${parent.default_width}">
+      <attribute name="width" value="${canvas.width * .9}" />
     </state>
-
+    <!-- Will be applied in construct if no height specified -->
+    <attribute name="default_height" value="false" />
+    <state applied="${parent.default_height}">
+      <attribute name="height" value="${canvas.height *.5}" />
+    </state>
+    <!-- Will be applied in construct if no x specified -->
+    <attribute name="keep_width_on_canvas" value="false" />
+    <state applied="${parent.keep_width_on_canvas}">
+      <attribute name="x" value="${canvas.width * .95 - this.width}" />
+    </state>
+    <!-- Will be applied in construct if no y specified -->
+    <attribute name="keep_height_on_canvas" value="false" />
+    <state applied="${parent.keep_height_on_canvas}">
+      <attribute name="y" value="${canvas.height * .95 - this.height}" />
+    </state>
+    <!-- Remove the above if resize happens -->
+    <handler name="onapply" reference="resize">
+      this.setAttribute('default_width', false);
+      this.setAttribute('default_height', false);
+      this.setAttribute('keep_width_on_canvas', false);
+      this.setAttribute('keep_height_on_canvas', false);
+    </handler>
+    <!-- Remove the above if drag happens -->
+    <handler name="onapply" reference="drag">
+      this.setAttribute('default_width', false);
+      this.setAttribute('default_height', false);
+      this.setAttribute('keep_width_on_canvas', false);
+      this.setAttribute('keep_height_on_canvas', false);
+    </handler>
 
     <!-- ATTRIBUTES -->
     <attribute name="title" value="" type="string" />
@@ -147,10 +174,16 @@
     <attribute name="evalloader" value="null"/>
 
     <!-- METHODS -->
-<method name="construct" args="parent, args">
+    <method name="construct" args="parent, args"><![CDATA[
       super.construct(parent, args);
+      this.setAttribute('default_width', ! (this.hassetwidth));
+      this.setAttribute('default_height', ! (this.hassetheight));
+      // We have to cheat here: there is no public way to tell if the
+      // user has constrained x or y
+      this.setAttribute('keep_width_on_canvas', ! ('x' in args || this.__LZhasConstraint('x')));
+      this.setAttribute('keep_height_on_canvas', ! ('y' in args || this.__LZhasConstraint('y')));
       this.commandhistory_ptr = this.commandhistory.length;
-    </method>
+    ]]></method>
 
     <setter name="width" args="w" > 
         super.setAttribute('width', Math.max( 170 , Math.min( w , canvas.width) ) ); 
@@ -561,10 +594,6 @@
 
     <dragstate name="drag"/>
     <resizestate name="resize">
-      <!-- on resize, stop constraining position -->
-      <handler name="onapplied">
-          parent.fit_on_canvas.setAttribute('applied', false);
-     </handler>
     </resizestate>
 
     <handler name="onremove" reference="drag" method="saveDebuggerState"/>
