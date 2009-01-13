@@ -1,16 +1,18 @@
 <library>
 
-  <import name="lib2" href="class-library-2.lzx" 
-          stage="late"
-          onload="Debug.write('loaded class-library-2')"/>
 
-
-  <class name="myclass" bgcolor="#ffccff" 
+  <class name="myclass2" bgcolor="#ffccff" 
          width="${this.textview.width}"
          height="${this.textview.height}" fontsize="20">
     <attribute name="text" type="text"/>
     <text name="textview"  resize="true" text="${parent.text}"/>
   </class>
+
+  <text x="200" y="200">CLASS-LIBRARY-2 LOADED</text>
+  <script>
+    new lz.myclass2(canvas, {fontsize: 10, text: '[2] loaded myclass2 from class-library-2'});
+  </script>
+
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

@@ -950,11 +950,25 @@ public class SWF9External {
       if ((new File(getFlexPathname("flexlib"))).isDirectory()) {
         cmd.add("-compiler.library-path+=" + getFlexPathname("flexlib"));
       } 
+
       if ((new File(workdir.getPath() + File.separator + "flexlib")).isDirectory()) {
         cmd.add("-compiler.library-path+=" + getFlexPathname("flexlib"));
       } 
+
+      // TODO [hqm 2009-01] SEE LPP-7589 - when one loadable library
+      // is loaded by another loadable library at runtime, for some
+      // reason references to global "$as3" get a runtime unknown
+      // variable error. This is the workaround, explicitly including
+      // these globals definitions. For some reason, other globals,
+      // like 'canvas', don't seem to have this issue.
+      cmd.add("-includes");
+      for (Iterator iter = org.openlaszlo.compiler.Compiler.GLOBAL_RUNTIME_VARS.iterator(); iter.hasNext(); ) {
+         String varname = (String)iter.next();
+        cmd.add(varname);
+      }
     }
     
+
     if ("swf10".equals((String)options.get(Compiler.RUNTIME))) {
       cmd.add("-target-player=10.0.0");
     }

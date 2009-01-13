@@ -45,6 +45,11 @@ public class Compiler {
         Arrays.asList(new String[] {"swf9", "swf10"});
 
 
+    public static List GLOBAL_RUNTIME_VARS =
+        Arrays.asList(new String[] {
+                "$debug", "$profile", "$backtrace", "$runtime",
+                "$swf7", "$swf8", "$as2", "$swf9", "$swf10", "$as3", "$dhtml", "$j2me", "$svg", "$js1"
+            });
     
     /** Called to resolve file references (<code>src</code>
      * attributes).
