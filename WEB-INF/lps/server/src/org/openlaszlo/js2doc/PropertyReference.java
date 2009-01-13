@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -200,7 +200,7 @@ public class PropertyReference {
             }
 
             if (with.length() > 0) {
-                classNode.setAttribute("with", with);
+                classNode.setAttribute("inherits", with);
             }
         } else {
             if (! (withList instanceof ASTEmptyExpression))
