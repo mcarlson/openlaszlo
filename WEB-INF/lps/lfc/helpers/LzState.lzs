@@ -494,6 +494,10 @@ dynamic class LzState extends LzNode {
         var expr = rename[i + 1];
         var methodName = expr.methodName;
         var newMethodName = methodName + this.__LZUID;
+        var dbgName = null;
+        if ($debug) {
+          dbgName = expr._dbg_name;
+        }
         if (held[methodName] is Function) {
           // Method could be in held args, in which case we just rename
           // it
@@ -519,10 +523,10 @@ dynamic class LzState extends LzNode {
             held[newDependenciesName] = this[dependenciesName];
           }
           // Clone the init expr with the new nameS
-          held[key] = new (expr.constructor)(newMethodName, newDependenciesName, expr._dbg_name);
+          held[key] = new (expr.constructor)(newMethodName, newDependenciesName, dbgName);
         } else {
           // Clone the init expr with the new name
-          held[key] = new (expr.constructor)(newMethodName, expr._dbg_name);
+          held[key] = new (expr.constructor)(newMethodName, dbgName);
         }
       }
     }
