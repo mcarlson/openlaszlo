@@ -6,11 +6,24 @@
 // Scope the #pragma
 {
 #pragma 'warnUndefinedReferences=true'
+
+  // Give names to anything in lz that does not already have one
+  (function () {
+    for (var k in lz) {
+      var v = lz[k];
+      if (v['_dbg_name'] == null) {
+        try {
+          v._dbg_name = 'lz.' + k;
+        } catch (e) {
+        }
+      }
+    }
+  })();
 }
 // #pragma 
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 

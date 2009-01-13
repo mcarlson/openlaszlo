@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzstate
@@ -519,10 +519,10 @@ dynamic class LzState extends LzNode {
             held[newDependenciesName] = this[dependenciesName];
           }
           // Clone the init expr with the new nameS
-          held[key] = new (expr.constructor)(newMethodName, newDependenciesName);
+          held[key] = new (expr.constructor)(newMethodName, newDependenciesName, expr._dbg_name);
         } else {
           // Clone the init expr with the new name
-          held[key] = new (expr.constructor)(newMethodName);
+          held[key] = new (expr.constructor)(newMethodName, expr._dbg_name);
         }
       }
     }

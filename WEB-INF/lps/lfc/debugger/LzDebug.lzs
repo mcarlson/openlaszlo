@@ -2,7 +2,7 @@
 
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -155,7 +155,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * with a prefix in this set will not be displayed.
    * @access private
    */
-  static var internalPropertyPrefixes = [ '$', '__' ];
+  static var internalPropertyPrefixes = [ '$', '__', '_dbg_' ];
 
   /**
    * Debug.inspect will show internal properties if this is true

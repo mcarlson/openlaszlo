@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzevent lzdelegate
@@ -82,8 +82,8 @@
   * array if you are actually registered to more than one event.
   */
 public dynamic final class LzDelegate {
-    /** @access private */
-    var __delegateID:int = 0;
+  /** @access private */
+  var __delegateID:int = 0;
 
   /**
    * Create an LzDelegate
@@ -329,10 +329,21 @@ if ($debug) {
   * @access private
   */
   LzDelegate.prototype._dbg_name = function (){
-    var name = Debug.formatToString("%0.48#w.%s()", this.c, this.m);
-    if (this[0]) {
-      name += Debug.formatToString("/* handles %w%s */", this[0], this[1]?" \u2026":"");
+    var name = Debug.formatToString("%0.48w/<handler", this.c);
+    var ev0 = this[0];
+    if (ev0) {
+      name += Debug.formatToString(" name='%s'", ev0._dbg_eventName);
+      if (ev0._dbg_eventSender !== this.c) {
+        name += Debug.formatToString(" reference='%w'", ev0._dbg_eventSender);
+      }
+      if (Debug.functionName(this.m).indexOf('$') != 0) {
+        name += Debug.formatToString(" method='%w'", this.m);
+      }
+      if (this[1]) {
+        name += " \u2026";
+      }
     }
+    name += ">";
     return name;
 }
 }
@@ -603,7 +614,7 @@ if ($debug) {
   * @access private
   */
 LzEvent.prototype._dbg_name = function (){
-    return Debug.formatToString("%0.48#w.%s", this._dbg_eventSender, this._dbg_eventName);
+    return Debug.formatToString("%0.48w/<event name='%s'>", this._dbg_eventSender, this._dbg_eventName);
 }
 }
 
