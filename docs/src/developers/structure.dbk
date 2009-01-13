@@ -401,15 +401,8 @@ You can enclose blocks of code within <indexterm><primary>switch</primary></inde
  elements that are associated with a specific runtime.  The <indexterm><primary>switch</primary></indexterm><sgmltag class="element">&lt;switch&gt;</sgmltag> is a compiler directive that instructs the compiler to compile or omit blocks according to the target runtime to which the application is being compiled. 
 </para>
 
-<example role="live-example">
-   <title>Switch tag for conditional compilation</title>
-   <programlisting language="lzx">
-   <textobject><textdata fileref="programs/program-structure-$18.lzx"/></textobject> 
-   </programlisting>
-</example>
-
 <para>
-See <xref linkend="compiler"/> for a more in-depth discussion of these compiler directives.
+ See <xref linkend="compiler" />, <xref linkend="conditionalcompilation" /> for a more in-depth discussion of these compiler directives.
 </para>
 
 
