@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <!--- This is a declared replicator for visual elements. Unlike
         OpenLaszlo''s data-replication feature, a replicator can take an
@@ -79,7 +79,7 @@
             <![CDATA[
             // TODO: use changepackage to do something smarter here
             var p = this._pointer.xpathQuery(this.xpath);
-            if (p && ! p['length']) p = [p]; 
+            if (p && ! (p is Array)) p = [p]; 
             this.setNodes(p);
             ]]>
         </method>
