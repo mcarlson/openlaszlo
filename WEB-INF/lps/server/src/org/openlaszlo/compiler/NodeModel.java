@@ -4,7 +4,7 @@
  * ***************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -280,7 +280,7 @@ public class NodeModel implements Cloneable {
       if (canHaveMethods) {
           // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
           // in the script-compiler back-end
-        if (! (env.isAS3())) {
+          if (! (env.isAS3())) {
             pragmas += "\n#pragma 'withThis'\n";
           }
           binder = new Method(bindername, args, "", pragmas, body, srcloc, null);
@@ -301,7 +301,7 @@ public class NodeModel implements Cloneable {
       if (canHaveMethods) {
           // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
           // in the script-compiler back-end
-        if (! (env.isAS3())) {
+          if (! (env.isAS3())) {
             pragmas += "\n#pragma 'withThis'\n";
           }
           dependencies = new Method(dependenciesname, "", "", pragmas, body, srcloc, null);
@@ -320,6 +320,10 @@ public class NodeModel implements Cloneable {
       // there you go...
       if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
         String kind = "LzOnceExpr";
+        String debugDescription = "";
+        if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
+          debugDescription = ", " + ScriptCompiler.quote("$" + when + "{" + value + "}");
+        }
         if (when.equals(WHEN_ONCE) || when.equals(WHEN_PATH)) {
           // default
         } else if (when.equals(WHEN_STYLE)) {
@@ -333,10 +337,11 @@ public class NodeModel implements Cloneable {
           // Always constraints have a second value, the dependencies method
           return new BindingExpr("new " + kind + "(" + 
                                  ScriptCompiler.quote(bindername) + ", " +
-                                 ScriptCompiler.quote(dependenciesname) + ")");
+                                 ScriptCompiler.quote(dependenciesname) + 
+                                 debugDescription + ")");
         }
         // Return an initExpr as the 'value' of the attribute
-        return new BindingExpr("new " + kind + "(" + ScriptCompiler.quote(bindername) +")");
+        return new BindingExpr("new " + kind + "(" + ScriptCompiler.quote(bindername) + debugDescription + ")");
       } else if (when.equals(WHEN_IMMEDIATELY)) {
         if (CanvasCompiler.isElement(source) &&
             ("width".equals(name) || "height".equals(name))) {
@@ -1371,7 +1376,7 @@ solution =
             if (canHaveMethods) {
                 // TODO: [2008-07-21 ptw] (LPP-5813) This should really
                 // be in the script-compiler back-end
-              if (! (env.isAS3())) {
+                if (! (env.isAS3())) {
                   pragmas += "\n#pragma 'withThis'\n";
                 }
                 referencefn = new Method(referencename, "", "", pragmas, refbody, srcloc, null);
@@ -1397,7 +1402,7 @@ solution =
             if (canHaveMethods) {
                 // TODO: [2008-07-21 ptw] (LPP-5813) This should really
                 // be in the script-compiler back-end
-              if (! (env.isAS3())) {
+                if (! (env.isAS3())) {
                   pragmas += "\n#pragma 'withThis'\n";
                 }
                 fndef = new Method(method, args, "", pragmas, body, srcloc, null);
@@ -1515,14 +1520,17 @@ solution =
             String adjectives = "";
             if (override) { adjectives += " override"; }
             if (isfinal) { adjectives += " final"; }
-            // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
-            // in the script-compiler back-end
-            if (! (env.isAS3())) {
+            if (ALLOCATION_INSTANCE.equals(allocation) &&
+                // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
+                // in the script-compiler back-end
+                (! (env.isAS3()))) {
               pragmas += "\n#pragma 'withThis'\n";
             }
             fndef = new Method(name, args, returnType, pragmas, body, name_loc, adjectives);
         } else {
-            pragmas += "\n#pragma 'withThis'\n";
+            if (ALLOCATION_INSTANCE.equals(allocation)) {
+              pragmas += "\n#pragma 'withThis'\n";
+            }
             fndef = new Function(name, args, returnType, pragmas, body, name_loc);
         }
         addProperty(name, fndef, allocation, element);
