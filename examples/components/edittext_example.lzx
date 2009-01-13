@@ -1,5 +1,4 @@
 <canvas bgcolor="0xeaeaea" height="500">
-    <include href="lz/library.lzx" />
     <dataset name="ds">
         <item>first item from dataset</item>
         <item>second item from dataset</item>
@@ -34,7 +33,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

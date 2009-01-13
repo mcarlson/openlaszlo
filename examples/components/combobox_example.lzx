@@ -1,5 +1,4 @@
 <canvas bgcolor="#EAEAEA" width="640" height="400">
-    <include href="lz"/>
     <dataset name="items">
         <item value="item1" >item one</item>
         <item value="item2" >item two</item>
@@ -88,7 +87,7 @@ instance declaration, and datacombobox, which provides the same functionality bu
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
