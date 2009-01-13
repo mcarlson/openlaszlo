@@ -198,7 +198,7 @@
         <primary>variadic</primary>
       </indexterm><glossterm>variadic</glossterm>: they take any number of arguments. The text
       representations of the arguments are printed to the debugger log, separated by spaces.</para>
-    
+
 
     <example role="live-example">
       <title>Logging to the debugger</title>
@@ -206,14 +206,15 @@
    <textobject><textdata fileref="programs/debugging-$4.lzx"/></textobject> 
    </programlisting>
     </example>
-    <para><literal>Debug.write()</literal> is the simplest way to log to the debugger, but it's often 
-      a better strategy to use <literal>Debug.format()</literal> or one of its variants 
-      (<literal>Debug.debug()</literal>, <literal>Debug.info()</literal>, <literal>Debug.warn()</literal>, 
-      and <literal>Debug.error()</literal>. These methods give you more control over the format of
-      the output. See the reference pages for <ulink url="../reference/lz.DebugService+debug.html">Debug</ulink> and
-      <ulink url="../reference/lz.Formatter.html">lz.Formatter</ulink> for a complete description
-      and examples. In addition, you can control which messages are logged to the debugger using 
-      <link linkend="debugmessagelevel">Debug.messageLevel</link>.</para>
+    <para><literal>Debug.write()</literal> is the simplest way to log to the debugger, but it's
+      often a better strategy to use <literal>Debug.format()</literal> or one of its variants
+        (<literal>Debug.debug()</literal>, <literal>Debug.info()</literal>,
+      <literal>Debug.warn()</literal>, and <literal>Debug.error()</literal>. These methods give you
+      more control over the format of the output. See the reference pages for <ulink
+        url="../reference/lz.DebugService+debug.html">Debug</ulink> and <ulink
+        url="../reference/lz.Formatter.html">lz.Formatter</ulink> for a complete description and
+      examples. In addition, you can control which messages are logged to the debugger using <link
+        linkend="debugmessagelevel">Debug.messageLevel</link>.</para>
     <para>Some object are <glossterm baseform="inspect">inspectable</glossterm>. See <xref
         linkend="debugging.inspecting"/> for more about the inspect feature of the debugger. See
         <xref linkend="debugging.debug-tostring"/> to see how to customize the display of objects
@@ -261,9 +262,9 @@
         <literal>lz.Browser.LoadURL('http://www.laszlosystems.com/', '_blank')</literal>. (The last
       expression returns the value <literal>undefined</literal>, so the debugger does not print the
       expression value in the debugger log.) An example of a non-expression statements is
-        <literal>for (int i = 0; i &lt; 10; i++) Debug.debug("%d", i)</literal>. This is evaluated for
-      effect, and the statement itself does not result in a value, although each execution of the
-      loop prints the value of <varname>i</varname> to the debugger log.</para>
+        <literal>for (int i = 0; i &lt; 10; i++) Debug.debug("%d", i)</literal>. This is
+      evaluated for effect, and the statement itself does not result in a value, although each
+      execution of the loop prints the value of <varname>i</varname> to the debugger log.</para>
 
     <para>The debugger can be used to define global variables. Use the <literal>var</literal>
       keyword to define a new global variable. For example, after evaluating <literal>var
@@ -428,9 +429,9 @@ Function#2| foo
       <para>
         <literal>Debug.write()</literal> behaves differently depending on whether its argument is a
         string or a non-string object. Note the difference between the two calls to
-        <literal>Debug.write()</literal> in the example below.</para>
+          <literal>Debug.write()</literal> in the example below.</para>
       <para>Because it's easy to confuse these two calling styles, it's almost always better to use
-        <literal>Debug.format()</literal> or one of its variants, like
+          <literal>Debug.format()</literal> or one of its variants, like
         <literal>Debug.debug()</literal>.</para>
     </note>
 
@@ -740,8 +741,28 @@ if ($debug) {
         will be one of the properties of the object that you can inspect. Inspecting the backtrace
         will reveal the recorded stack frames which record: the function called,
         <literal>this</literal> and the arguments to the function.</para>
-
-
+      <section>
+        <title>Inspecting a debug message to see the backtrace</title>
+        <para>In the following example, when you click on the button, it causes a Debug message to
+          be printed.</para>
+        <para>Clicking on the debug message will inspect that, and reveal the backtrace associated
+          with the message. </para>
+        <note>
+          <para>The <literal>&lt;canvas compileroptions= "..."</literal> ensures that backtraces are on. This
+            example only works in <literal>trunk</literal>. Backtraces are currently only available
+            in SWF8 and DHTML runtimes.</para>
+        </note>
+        <para>If you click on one of the entries in the backtrace, you will see that it is a
+            <literal>StackFrame</literal>, and will tell you the function that is called, the
+          arguments, and the value of <literal>this</literal> in that call. Each of those in turn
+          can be clicked on to inspect more deeply.</para>
+        <example role="live-example">
+          <title>Backtrace example</title>
+          <programlisting language="lzx">
+            <textobject><textdata fileref="programs/backtrace.lzx"/></textobject> 
+          </programlisting>
+        </example>
+      </section>
     </section>
   </section>
   <section>
@@ -792,58 +813,7 @@ if ($debug) {
 
   </section>
   <!-- added id to section so we can link to here. IORIO 24 oct 2007 -->
-  <section id="trace-backtrace">
-    <title>Tracing and Backtracing</title>
-    <para>The debugger provides methods that allow you to see interactions between parts of your
-      application.</para>
 
-    <section>
-      <title>Tracing</title>
-      <para> When you invoke <literal>trace()</literal>, the debugger traces the named method of the
-        object and prints a message to the Debug console each time it is called or returned from.
-        When called, the message includes a timestamp, the name of the function and the arguments it
-        was called with. When returned from, the message gives the name of the function and the
-        value it returned (if any). If backtraces are enabled, inspecting the message will reveal
-        the call chain that caused the modification. </para>
-
-    </section>
-    <section>
-      <title>Backtracing</title>
-      <para> The configuration parameter <literal>compiler.debug.backtrace</literal>, when true,
-        causes the compiler to instrument functions to maintain a call stack. You must recompile
-        both the OpenLaszlo Runtime Library and your program if you change the setting of this
-        parameter. It defaults to false because there is significant overhead introduced in enabling
-        backtracing; in general it is only useful on small test cases. </para>
-      <!-- change title per LPP-4804, IORIO 15 oct 2007 -->
-      <para> The configuration parameter is set in the configuration file <literal>lps.config
-        </literal>, as explained in the <ulink
-          url="../deployers/deployers-guide.html#deployers-guide.lps.properties" type="">OpenLaszlo
-          System Administrator's Guide</ulink>.</para>
-      <para>Backtracing is enabled if the <literal>Backtrace</literal> checkbox is checked in the
-        developer's console. Backtracing is off by default because it imposes significant overhead
-        on application runtime, but it can be invaluable in tracking down difficult bugs.</para>
-
-      <para> To create your own backtrace at any time: </para>
-      <programlisting>
-Debug.backtrace()
-</programlisting>
-      <para> There is an optional argument that is the number of frames to skip in creating the
-        backtrace. </para>
-      <para> If you print a backtrace using <literal>Debug.write</literal>, it may be abbreviated,
-        but clicking on it will reveal the full backtrace. </para>
-      <para> Debugger warnings will automatically include a backtrace. A backtrace snapshot can
-        created by Debug.backtrace(). A backtrace is a subclass of array, converting it to a string
-        will create a trace from innermost to outermost call, inspecting it will reveal the actual
-        function objects that make up the array. </para>
-      <para> To get the full backtrace out of a debugger warning, you need to use: </para>
-      <programlisting>
-Debug.ObjectForID(NN)
-</programlisting>
-      <para> Where NN is the object ID of the backtrace object, and then click on the resulting
-        object to see the full trace. </para>
-
-    </section>
-  </section>
   <section>
     <title>Finding "memory leaks"</title>
     <para> A running OpenLaszlo application allocates parts of available virtual memory to store
