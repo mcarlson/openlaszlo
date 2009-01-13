@@ -879,12 +879,13 @@ public dynamic class LzNode extends LzEventable {
    *
    * @access private
    */
-  function __LZinstantiationDone (){
-    if ( !this.immediateparent ||  this.immediateparent.isinited ||
-         ( this.initstage == "early" ) ||
-         ( this.__LZisnew && lz.Instantiator.syncNew ) ){
+  function __LZinstantiationDone () :void {
+    if (!this.__LZdeleted && (!this.immediateparent ||
+            this.immediateparent.isinited ||
+            (this.initstage == "early") ||
+            (this.__LZisnew && lz.Instantiator.syncNew))) {
       //we need to init this and its subnodes
-      this.__LZcallInit( );
+      this.__LZcallInit();
     }
   }
 
@@ -931,14 +932,14 @@ public dynamic class LzNode extends LzEventable {
       while(i < l){
         var s = sl[ i++ ];
         //remember next one too
-        var t = sl[ i ]
-          if ( s.isinited || s.__LZlateinit ) continue;
+        var t = sl[ i ];
+        if ( s.isinited || s.__LZlateinit ) continue;
         s.__LZcallInit( );
         //if the next one is not where it was, back up till we find it or to
         //the beginning of the array
         if ( t != sl[ i ] ){
           // When does this ever happen?
-          //             Debug.warn('subnodes array changed after %w -> sl[%d]: %w', t, i, sl[i]);
+          // Debug.warn('subnodes array changed after %w -> sl[%d]: %w', t, i, sl[i]);
           while ( i > 0 ){
             if ( t == sl[ --i ] ) break;
           }
@@ -2082,14 +2083,6 @@ public dynamic class LzNode extends LzEventable {
     }
 
     super.destroy();
-
-    //don't allow a call on this method if I'm deleted
-    if ($as3) {
-      // TODO [hqm 2008-03]
-      // flex compiler gives error if you assign a function to null, what do we do here?
-    } else {
-      this.__LZinstantiationDone = null;
-    }
 
     //remove this and all subnodes
     if (this.subnodes != null) {
