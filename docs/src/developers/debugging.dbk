@@ -748,9 +748,12 @@ if ($debug) {
         <para>Clicking on the debug message will inspect that, and reveal the backtrace associated
           with the message. </para>
         <note>
-          <para>The <literal>&lt;canvas compileroptions= "..."</literal> ensures that backtraces are on. This
-            example only works in <literal>trunk</literal>. Backtraces are currently only available
-            in SWF8 and DHTML runtimes.</para>
+          <para>The <literal>&lt;canvas compileroptions= "..."</literal> ensures that backtraces
+            are on for this example. This option is only available in OpenLaszlo revisions 4.2.1 and
+            later. Backtraces can also be enabled in the developer console, which is what you would
+            normally do. In general, you would not deploy an application with backtraces on as they
+            impact the performance of the application significantly. Backtraces are currently only
+            available in SWF8 and DHTML runtimes.</para>
         </note>
         <para>If you click on one of the entries in the backtrace, you will see that it is a
             <literal>StackFrame</literal>, and will tell you the function that is called, the
