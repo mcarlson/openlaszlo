@@ -3,7 +3,7 @@
  * LzNode.lzs
  *
  *   *
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @topic LZX
@@ -2261,9 +2261,7 @@ public dynamic class LzNode extends LzEventable {
   }
 
   /** @access private */
- static var presentationtypes = {number: NumberPresentationType, numberExpression: NumberPresentationType, color: ColorPresentationType, inheritableBoolean: BooleanPresentationType, expression: ExpressionPresentationType, size: SizePresentationType}
- // setting boolean: above freaks out rhino
- presentationtypes['boolean'] = BooleanPresentationType;
+  static var presentationtypes = {string: StringPresentationType, number: NumberPresentationType, numberExpression: NumberPresentationType, color: ColorPresentationType, 'boolean': BooleanPresentationType, inheritableBoolean: BooleanPresentationType, expression: ExpressionPresentationType, size: SizePresentationType}
  // TODO?: add css: CSSPresentationType, token: TokenPresentationType, script: ScriptPresentationType
 
  /**
@@ -2279,10 +2277,10 @@ public dynamic class LzNode extends LzEventable {
    var presentationtype = LzNode.presentationtypes[type];
    // don't coerce null values
    if (value != null) {
-     if (presentationtype == null) {
-       value = GenericPresentationType.accept(value, type);
-     } else {
+     if (presentationtype != null) {
        value = presentationtype.accept(value);
+     } else if ($debug) {
+       Debug.error("%w: Unknown attribute type '%s'", arguments.callee, type);
      }
    }
    return value;

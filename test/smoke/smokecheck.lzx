@@ -1,6 +1,4 @@
 <canvas debug="true">
-  <!-- Debugger parameters, if invoked with debug=true -->
-  <debug height="50%" y="50%" width="100%" x="0"/>
 
 <!--
   covers-tags: lzview lznode lzdata smoketest
@@ -15,6 +13,7 @@
   <include href="getters-setters.lzl" />
   <include href="bitwise.lzl" />
   <include href="math.lzl" />
+  <include href="presentation-types.lzl"/>
   <include href="canvas-attributes.lzl"/>
   <include href="constraint.lzl"/>
   <include href="ecma.lzl"/>
@@ -34,6 +33,8 @@
 
     <!-- math function tests math.lzl -->
     <TestMath />
+
+    <TestPresentationTypes />
 
     <!-- All bitwise operators checked -->
     <BitwiseTest />
@@ -133,6 +134,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -7,37 +7,27 @@
   */
 
 /**
-  * A presentation type is a specification of how to map a Javascript type to 
+  * A presentation type is a specification of how to map a Javascript type to
   * and from a String representation.
-  * If an inherited class does not implement present(), 
+  * If an inherited class does not implement present(),
   * PresentationType.present() will be used.
   * @access private
   */
 class PresentationType {
   static function accept(value) {
-    return value; 
+    return value;
   }
-  static function present(value) { 
-    return "" + value; 
+  static function present(value) {
+    return String(value);
   }
 }
 
-/**
-  * Attempts to translate the type to a global class (number -> Number) 
-  * and return a new instance of that class.
-  * @access private
-  */
-class GenericPresentationType extends PresentationType {
-  static function accept(value, type) {
-    // Look for class as-is
-    var obj = globalValue(type);
-    if (! obj) {
-        // Convert to upper case
-        var uppertype = type.substring(0, 1).toUpperCase() + type.substring(1);
-        obj = globalValue(uppertype);
-        if (! obj) return value;
-    }
-    return new obj(value);
+//---
+// String presentation type
+//---
+class StringPresentationType extends PresentationType {
+  static function accept(value) {
+    return String(value);
   }
 }
 
@@ -46,8 +36,10 @@ class GenericPresentationType extends PresentationType {
 //---
 class BooleanPresentationType extends PresentationType {
   static function accept(value) {
+    // NOTE: [2009-01-13 ptw] Boolean("false") would not do what we
+    // expect (a non-empty string is considered true).
     switch (value.toLowerCase()) {
-      case "0": case "false":
+      case "": case "0": case "false":
         return false;
       default:
         return true;
@@ -60,7 +52,7 @@ class BooleanPresentationType extends PresentationType {
 //---
 class NumberPresentationType extends PresentationType {
   static function accept(value) {
-    return value |= 0;      
+    return Number(value);
   }
 }
 
@@ -71,7 +63,7 @@ class ColorPresentationType extends PresentationType {
   static function accept(value) {
     return LzColorUtils.hextoint(value);
   }
-  static function present(value) { 
+  static function present(value) {
     // look up color names
     var ctab = lz.colors;
     for (var name in ctab) {
@@ -104,6 +96,6 @@ class ExpressionPresentationType extends PresentationType {
 class SizePresentationType extends PresentationType {
   static function accept(value) {
     // TODO: handle percentage values?
-    return parseFloat(value);
+    return Number(value);
   }
 }
