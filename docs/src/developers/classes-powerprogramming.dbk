@@ -71,11 +71,11 @@ attributes:</para>
  
 <para/></section><section><title>Overriding methods, handlers and attributes</title>
 <para>A subclass can <indexterm significance="preferred"><primary>override</primary></indexterm><glossterm>override</glossterm>, that is, provide a different implementation from, a
-superclass method, but not for a handler. The overriding method can specify a different set of
-arguments from the superclass's method. For example, if your superclass's method
-has two arguments such as <literal>method(arg1, arg2)</literal>, you can choose to have a
-third argument for your subclass such as <literal>method(arg1, arg2, arg3)</literal>. 
-</para>
+superclass method, but not for a handler.</para>
+   <para>When a subclass defines a method with the same name as the super class, it <emphasis>overrides</emphasis> or replaces the superclass method.  If the superclass method's effect is desired the subclass method must invoke it using a super call. You cannot change the arguments when you override a method: they must match.</para>
+   
+   <para>When a subclass defines a handler with the same name as the superclass, it <emphasis>adds</emphasis> to the superclass handler. Both will be invoked when the named event is sent.</para>
+   
 <para>
 LZX does not support
  <glossterm>overloading</glossterm> methods. That means that you cannot have different methods, within one class, that have the same name. 
@@ -341,7 +341,7 @@ such a class.</para>
 </example>
 
 <para>A user-defined class can also handle text content by defining an
-attribute named <indexterm><primary>text</primary></indexterm><sgmltag class="attribute">text</sgmltag> with a value of
+attribute named <indexterm><primary>text</primary></indexterm><sgmltag class="attribute">text</sgmltag> with a type of
 <literal>text</literal> (for plain text) or <literal>html</literal> (for XHTML
 text), like <literal>&lt;attribute name="text"
 type="text"&gt;</literal>. There is another text type available called
