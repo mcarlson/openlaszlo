@@ -1245,24 +1245,41 @@ dynamic public class LzSprite extends Sprite {
 
       /**
         * Puts this sprite in front of one of its siblings.
-        * @param LzSprite v: The sprite this sprite should go in front of. If the passed sprite is null or not a sibling, the method has no effect.
+        * @param LzSprite v: The sprite this sprite should go in front of.
+        * If the passed sprite is null or not a sibling, the method has no effect.
         */
-      public function sendInFrontOf( sprite ){
+      public function sendInFrontOf (targetSprite:LzSprite) :void {
           if (!this.isroot) {
-              var i = parent.getChildIndex(sprite);
-              var j = parent.getChildIndex(this);
-              if (j < i) parent.setChildIndex(this, i);
+              try {
+                  // @devnote "http://help.adobe.com/en_US/AS3LCR/Flash_10.0/flash/display/DisplayObjectContainer.html#setChildIndex()"
+                  // > If a child is moved to an index LOWER than its current index,
+                  // > all children in between will INCREASE by 1 for their index reference.
+                  var myDepth:int = parent.getChildIndex(this);
+                  var targetDepth:int = parent.getChildIndex(targetSprite);
+                  parent.setChildIndex(this, myDepth < targetDepth ? targetDepth : targetDepth + 1);
+              } catch (e:Error) {
+                  // if targetSprite isn't a child of the DisplayObjectContainer
+              }
           }
       }
 
       /** sendBehind()
         * Puts this sprite behind one of its siblings.
-        * @param LzSprite sprite: The sprite this sprite should go in front of. If the sprite is null or not a sibling, the method has no effect.
+        * @param LzSprite sprite: The sprite this sprite should go in front of.
+        * If the sprite is null or not a sibling, the method has no effect.
       */
-      public function sendBehind( sprite ){
+      public function sendBehind (targetSprite:LzSprite) :void {
           if (!this.isroot) {
-              var i = parent.getChildIndex(sprite);
-              parent.setChildIndex(this, i);
+              try {
+                  // @devnote "http://help.adobe.com/en_US/AS3LCR/Flash_10.0/flash/display/DisplayObjectContainer.html#setChildIndex()"
+                  // > If a child is moved to an index HIGHER than its current index,
+                  // > all children in between will DECREASE by 1 for their index reference.
+                  var myDepth:int = parent.getChildIndex(this);
+                  var targetDepth:int = parent.getChildIndex(targetSprite);
+                  parent.setChildIndex(this, myDepth > targetDepth ? targetDepth : targetDepth - 1);
+              } catch (e:Error) {
+                  // if targetSprite isn't a child of the DisplayObjectContainer
+              }
           }
       }
 

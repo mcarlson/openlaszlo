@@ -2626,13 +2626,10 @@ function containsPt( x,y ) {
   * This method makes this view the frontmost subview of this view's parent.
   * */
 function bringToFront ( ){
-    //this is really a function of the parent view
-    //this.immediateparent.changeOrder ( this , 1);
-
     // FIXME: [hqm 2006-09] in some cases I have seen this.sprite unbound, is that ever OK?
     if (!this.sprite) {
         if ($debug) {
-            Debug.write("no sprite on ",this);
+            Debug.warn("no sprite on ",this);
         }
         return;
     }
@@ -2665,31 +2662,35 @@ function __zCompare(a, b) {
    var az = a.sprite.getZ();
    var bz = b.sprite.getZ();
    if (az < bz)
-      return -1
+      return -1;
    if (az > bz)
-      return 1
-   return 0
+      return 1;
+   return 0;
 }
 
 /**
-  * Puts this view behind one of its siblings.
-  * @param LzView v: The view this view should go in front of. If the passed 
+  * Puts this view directly behind one of its siblings. If this view is
+  * already in back of the target, but there are other views between this
+  * view and the target, that means this view will be moved in front of the
+  * intervening views.
+  * @param LzView v: The view this view should go behind. If the passed
   * view is null or not a sibling, the method has no effect.
   * @return Boolean: Method returns true if the operation is successful.
   */
 function sendBehind ( v ){
-    //return this.immediateparent.changeOrder( this, -1, v , false );
     return (v ? this.sprite.sendBehind(v.sprite) : false);
 }
 
 /**
-  * Puts this view in front of one of its siblings.
-  * @param LzView v: The view this view should go in front of. If the passed 
+  * Puts this view directly in front of one of its siblings. If this view is
+  * already in front of the target, but there are other views between this
+  * view and the target, that means this view will be moved in back of the
+  * intervening views.
+  * @param LzView v: The view this view should go in front of. If the passed
   * view is null or not a sibling, the method has no effect.
   * @return Boolean: Method returns true if the operation is successful.
   */
 function sendInFrontOf ( v ){
-    //return this.immediateparent.changeOrder( this, 1, v , true );
     return (v ? this.sprite.sendInFrontOf(v.sprite) : false);
 }
 
@@ -2697,8 +2698,6 @@ function sendInFrontOf ( v ){
   * This method makes this view the hindmost subview of this view's parent.
   */
 function sendToBack ( ){
-    //this is really a function of the parent view
-    //this.immediateparent.changeOrder ( this , -1);
     this.sprite.sendToBack();
 }
 
