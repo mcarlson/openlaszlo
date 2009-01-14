@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
- * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+ * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
  * Use is subject to license terms.                                            *
  * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -88,6 +88,7 @@ class SWF9Writer extends ObjectWriter {
         // Pass canvas dimensions through the script compiler to the Flex compiler
         mProperties.put("canvasWidth", Integer.toString(canvas.getWidth()));
         mProperties.put("canvasHeight", Integer.toString(canvas.getHeight()));
+        mEnv.getCanvas().addInfo(mInfo); 
     }
 
     void setCanvasDefaults(Canvas canvas, CompilerMediaCache mc) { };
@@ -248,12 +249,17 @@ class SWF9Writer extends ObjectWriter {
             mResourceMap.put(relPath, res); //[pga] was fileName
             def = res.getFlashDef();
             def.setName(name);
+
+            Element elt = new Element("resource");
+            elt.setAttribute("name", name);
+            elt.setAttribute("source", relPath); //[pga] was fileName
+            elt.setAttribute("filesize", "" + FileUtils.getSize(inputFile));
+            mInfo.addContent(elt);
         } else {
             def = res.getFlashDef();
             // Add an element with 0 size, since it's already there.
             Element elt = new Element("resource");
             elt.setAttribute("name", name);
-            // elt.setAttribute("mime-type", MimeType.MP3); 
             elt.setAttribute("source", relPath); //[pga] was fileName
             elt.setAttribute("filesize", "0");
             mInfo.addContent(elt);
