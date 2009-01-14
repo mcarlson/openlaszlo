@@ -1,5 +1,5 @@
 /**
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects animation lzanimatorgroup
@@ -451,8 +451,10 @@ public dynamic class LzAnimatorGroup extends LzNode {
       */
     function __LZaddToStartTime (ptime:Number) :void {
         this.startTime += ptime;
-        for (var i:int = 0; i < this.actAnim.length; i++) {
-            this.actAnim[ i ].__LZaddToStartTime(ptime);
+        if (this.actAnim) {
+            for (var i:int = 0; i < this.actAnim.length; i++) {
+                this.actAnim[ i ].__LZaddToStartTime(ptime);
+            }
         }
     }
 
