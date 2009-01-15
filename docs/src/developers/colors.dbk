@@ -1,109 +1,145 @@
 <chapter id="color">
 
 
-<title>Color</title>
-<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
+   <title>Color</title>
+   <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
 
-<section><title>Overview</title>
+   <section>
+      <title>Overview</title>
 
-<para>This chapter gives a brief introduction to the use of colors in OpenLaszlo applications. It explains the various syntaxes that are used to specify color, and gives general guidelines for using color effectively.</para>
-<para>
-OpenLaszlo uses the standard web color definitions, three hexadecimal values in a row, representing red, green, and blue components of a color (all colors can be created by mixing these three primary colors). Computer monitors are comprised of thousands of red, green, and blue dots grouped so closely by threes that our eyes see them as one blended color.
-</para>
+      <para>This chapter gives a brief introduction to the use of colors in OpenLaszlo applications.
+         It explains the various syntaxes that are used to specify color, and gives general
+         guidelines for using color effectively.</para>
+      <para> OpenLaszlo uses the standard web color definitions, three hexadecimal values in a row,
+         representing red, green, and blue components of a color (all colors can be created by
+         mixing these three primary colors). Computer monitors are comprised of thousands of red,
+         green, and blue dots grouped so closely by threes that our eyes see them as one blended
+         color. </para>
 
 
-</section><section><title>RGB or Red, Green, Blue</title>
-<para>
-Each red, blue, or green dot can have a value from 0 to 255. If the red dot is fully "on" at 255, while blue and green are fully "off" at 0, we see red. The RBG color code for red is 255,0,0. Blue is 0,255,0; green is 0,0,255. (Some graphics systems combine an RGB triplet with an 8-bit alpha value, and get a 32-bit color word; in those systems, we think of colors as RGBA.)
-</para>
+   </section>
+   <section>
+      <title>RGB or Red, Green, Blue</title>
+      <para> Each red, blue, or green dot can have a value from 0 to 255. If the red dot is fully
+         "on" at 255, while blue and green are fully "off" at 0, we see red. The RBG color code for
+         red is 255,0,0. Blue is 0,255,0; green is 0,0,255. (Some graphics systems combine an RGB
+         triplet with an 8-bit alpha value, and get a 32-bit color word; in those systems, we think
+         of colors as RGBA.) </para>
 
-<example role="live-example">
-   <title>RGB color values</title>
-   <programlisting language="lzx">
+      <example role="live-example">
+         <title>RGB color values</title>
+         <programlisting language="lzx">
    <textobject><textdata fileref="programs/color-$1.lzx"/></textobject> 
    </programlisting>
-</example>
+      </example>
 
 
-</section>
-<section id="specifycolor"><title>Different Ways to Specify Color</title>
-<para>
-OpenLaszlo enables coloring in four ways: 0x000000, #000000, <literal>rgb(0,0,0)</literal>, and "black". Using the format 0x000000 only works for explicit assignment; it does not work in CSS. Color assignment using <literal>rgb()</literal> must be specified with decimal values from 0 - 255.
-</para>
-<para>
-Coloring of text with <literal>fgcolor="foo"</literal> is enabled in the same fashion, but with the same limitations.
-</para>
-   <note><para>CSS values in the style sheet should <emphasis>not</emphasis> be quoted. They are not strings, they are symbolic constants.</para></note>
+   </section>
+   <section id="specifycolor">
+      <title>Different Ways to Specify Color</title>
+      <para> OpenLaszlo enables coloring in four ways: 0x000000, #000000,
+         <literal>rgb(0,0,0)</literal>, and "black". Using the format 0x000000 only works for
+         explicit assignment; it does not work in CSS. Color assignment using
+         <literal>rgb()</literal> must be specified with decimal values from 0 - 255. </para>
+      <para> Coloring of text with <literal>fgcolor="foo"</literal> is enabled in the same fashion,
+         but with the same limitations. </para>
+      <note>
+         <para>CSS values in the style sheet should <emphasis>not</emphasis> be quoted. They are not
+            strings, they are symbolic constants.</para>
+      </note>
 
-<example role="live-example">
-   <title>Applying color explicitly and with CSS</title>
-   <programlisting language="lzx">
+      <example role="live-example">
+         <title>Applying color explicitly and with CSS</title>
+         <programlisting language="lzx">
    <textobject><textdata fileref="programs/color-$3.lzx"/></textobject> 
    </programlisting>
-</example>
-   <para>You can also specify color using a number or an expression. <literal>presentValue()</literal> is used in the following
-      example to return <literal>value</literal> according to <literal>type</literal> as a string.</para>
-   <example role="live-example">
-      <title>Specifying color with a numeric or computed value</title>
-      <programlisting language="lzx">
+      </example>
+      <para>You can also specify color using a number or an expression.
+         <literal>presentValue()</literal> is used in the following example to return
+         <literal>value</literal> according to <literal>type</literal> as a string.</para>
+      <example role="live-example">
+         <title>Specifying color with a numeric or computed value</title>
+         <programlisting language="lzx">
          <textobject><textdata fileref="programs/colorswatch.lzx"/></textobject> 
       </programlisting>
-   </example>
-   
-<section><title>Mixing Colors</title>
-<para>
-To blend a color, combine the RGB values. Red (FF0000) plus blue (0000FF) equals fuchsia (FF00FF):
-</para>
-<example role="live-example">
-   <title>Blending Colors</title>
-   <programlisting language="lzx">
+      </example>
+
+      <section>
+         <title>Mixing Colors</title>
+         <para> To blend a color, combine the RGB values. Red (FF0000) plus blue (0000FF) equals
+            fuchsia (FF00FF): </para>
+         <example role="live-example">
+            <title>Blending Colors</title>
+            <programlisting language="lzx">
    <textobject><textdata fileref="programs/color-$4.lzx"/></textobject> 
    </programlisting>
-</example>
+         </example>
 
 
-</section><section><title>Standard Web Colors</title>
-<para>
-The 16 basic web colors can be employed by name:
-</para>
+      </section>
+      <section id="standardcolors">
+         <title>Standard Web Colors</title>
+         <para> The 16 basic web colors can be employed by name: </para>
 
-<example role="live-example">
-   <title>Named colors</title>
-   <programlisting language="lzx">
+         <example role="live-example">
+            <title>Named colors</title>
+            <programlisting language="lzx">
    <textobject><textdata fileref="programs/color-$5.lzx"/></textobject> 
    </programlisting>
-</example>
+         </example>
 
-</section><section><title>Nonstandard Colors</title>
-<para>
-To specify any color other than the 16 which are usable by name, use hex codes or <literal>rgb()</literal>. With <literal>rgb()</literal>, you can specify values as decimal or as percents. </para>
+      </section>
+      <section id="csscolors">
+         <title>CSS3 Colors</title>
+         <para>In addition to the standard web colors, you can also specify <ulink
+               url="http://www.w3.org/TR/css3-color/#svg-color">CSS3 colors</ulink> by name.</para>
+         <example role="live-example">
+            <title>CSS3 colors</title>
+            <programlisting language="lzx">
+            <textobject><textdata fileref="programs/csscolors.lzx"/></textobject> 
+         </programlisting>
+         </example>
+      </section>
+      <section>
+         <title>Nonstandard Colors</title>
+         <para> To specify any color other than the <link linkend="standardcolors">standard web
+               colors</link> or <link linkend="csscolors">CSS3 colors</link>, which are usable by
+            name, use hex codes or <literal>rgb()</literal>. With <literal>rgb()</literal>, you can
+            specify values as decimal or as percents. </para>
 
-<example role="live-example">
-   <title>Nonstandard colors</title>
-   <programlisting language="lzx">
+         <example role="live-example">
+            <title>Nonstandard colors</title>
+            <programlisting language="lzx">
    <textobject><textdata fileref="programs/nonstandardcolors.lzx"/></textobject> 
    </programlisting>
-</example>
+         </example>
 
-</section><section><title>Opacity</title>
-<para>
-In OpenLaszlo, a view has a color and an opacity which are handled separately. The <literal>opacity</literal> attribute ranges from 0 (transparent) to 1 (opaque).
-</para>
+      </section>
+      <section>
+         <title>Opacity</title>
+         <para> In OpenLaszlo, a view has a color and an opacity which are handled separately. The
+               <literal>opacity</literal> attribute ranges from 0 (transparent) to 1 (opaque). </para>
 
-<example role="live-example">
-   <title>Color and opacity</title>
-   <programlisting language="lzx">
+         <example role="live-example">
+            <title>Color and opacity</title>
+            <programlisting language="lzx">
    <textobject><textdata fileref="programs/color-$7.lzx"/></textobject> 
    </programlisting>
-</example>
+         </example>
 
 
-<para>When a view's <literal>opacity</literal> is set to 0, the <literal>visible</literal> attribute of that view turns to false.</para>
-</section>
-   <section><title>DHTML with Windows Internet Explorer: Opacity Issues</title>
-      <section><title>Internet Explorer: <literal>overflow="visible"</literal> Doesn't Work with <literal>opacity</literal></title>
-         <para>If you use the IE alpha-filter to set the opacity, the overflow will always be changed to <literal>hidden</literal>. The example below provides a workaround for this issue:</para>
-         <programlisting>
+         <para>When a view's <literal>opacity</literal> is set to 0, the <literal>visible</literal>
+            attribute of that view turns to false.</para>
+      </section>
+      <section>
+         <title>DHTML with Windows Internet Explorer: Opacity Issues</title>
+         <section>
+            <title>Internet Explorer: <literal>overflow="visible"</literal> Doesn't Work with
+                  <literal>opacity</literal></title>
+            <para>If you use the IE alpha-filter to set the opacity, the overflow will always be
+               changed to <literal>hidden</literal>. The example below provides a workaround for
+               this issue:</para>
+            <programlisting>
    &lt;canvas &gt;
       &lt;!-- the image will be clipped in IE DHTML due to nested opacity --&gt; 
       &lt;view opacity=&quot;.6&quot; width=&quot;150&quot; height=&quot;60&quot; bgcolor=&quot;red&quot;&gt; 
@@ -114,11 +150,15 @@ In OpenLaszlo, a view has a color and an opacity which are handled separately. T
       &lt;view y=&quot;200&quot; opacity=&quot;.6&quot; width=&quot;150&quot; height=&quot;60&quot; bgcolor=&quot;red&quot;/&gt; 
       &lt;view y=&quot;200&quot; opacity=&quot;.6&quot; width=&quot;${canvas.width}&quot; height=&quot;60&quot; resource=&quot;http:Unbenannt.png&quot; stretches=&quot;both&quot;/&gt; 
    &lt;/canvas&gt;</programlisting>
-      </section>
-      
-      <section><title>Internet Explorer 7 DHTML Doesn't honor view opacity for stacked (overlayed) views</title>
-         <para>If you have a shadow view that uses a partial opacity setting underneath another view to create a shadow effect, the topmost view overlaying the shadow disappears in Windows Internet Explorer 7, using DHTML. The following example shows the problem:</para>
-         <programlisting>
+         </section>
+
+         <section>
+            <title>Internet Explorer 7 DHTML Doesn't honor view opacity for stacked (overlayed)
+               views</title>
+            <para>If you have a shadow view that uses a partial opacity setting underneath another
+               view to create a shadow effect, the topmost view overlaying the shadow disappears in
+               Windows Internet Explorer 7, using DHTML. The following example shows the problem:</para>
+            <programlisting>
    &lt;canvas width=&quot;100%&quot; height=&quot;100%&quot; validate=&quot;false&quot; debug=&quot;true&quot; proxied=&quot;false&quot; bgcolor=&quot;0x00aaaa&quot;&gt; 
       &lt;view width=&quot;300&quot; height=&quot;100&quot;&gt; 
          &lt;view width=&quot;300&quot; height=&quot;100&quot; bgcolor=&quot;black&quot; opacity=&quot;0.3&quot;/&gt; 
@@ -126,7 +166,10 @@ In OpenLaszlo, a view has a color and an opacity which are handled separately. T
       &lt;/view&gt; 
       &lt;button text=&quot;Click me&quot; onclick=&quot;canvas.setAttribute(&apos;opacity&apos;, 0.50)&quot;/&gt; 
    &lt;/canvas&gt;</programlisting>
-         <para>In this test, the red view and the button disappear when the button is clicked, instead of receiving 50% opacity. You can work around this issue in Internet Explorer 7 DHTML to get the same effect, as follows:</para><programlisting>
+            <para>In this test, the red view and the button disappear when the button is clicked,
+               instead of receiving 50% opacity. You can work around this issue in Internet Explorer
+               7 DHTML to get the same effect, as follows:</para>
+            <programlisting>
    &lt;canvas width=&quot;100%&quot; height=&quot;100%&quot; validate=&quot;false&quot; debug=&quot;true&quot; proxied=&quot;false&quot; bgcolor=&quot;0x00aaaa&quot;&gt;
       &lt;simplelayout/&gt;
       &lt;!-- This example hides the red box when the button is clicked in IE DHTML --&gt;
@@ -144,6 +187,8 @@ In OpenLaszlo, a view has a color and an opacity which are handled separately. T
       &lt;/view&gt;
       &lt;button text=&quot;Click me&quot; onclick=&quot;container.root.setAttribute(&apos;opacity&apos;, 0.50)&quot;/&gt;
    &lt;/canvas&gt;</programlisting>
+         </section>
+
       </section>
-      
-</section></section></chapter>
+   </section>
+</chapter>
