@@ -93,9 +93,9 @@ class ImportCompiler extends ToplevelCompiler {
             String libfile = libsrcfile.getName();
             String libprefix = mEnv.getLibPrefix();
             String runtime = mEnv.getProperty(mEnv.RUNTIME_PROPERTY);
-            String extension = ".swf";
-            if (mEnv.isAS3()) {
-                extension = ".swf";
+            String extension = ".lib";
+            if (mEnv.isAS3() || mEnv.isSWF()) {
+                extension = "." + runtime + ".swf";
             } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
                 extension = ".js";
             } 
