@@ -42,6 +42,7 @@
         <attribute name="xpath" type="string"/>
 
         <attribute name="_sizes" value="{ x : 'width', y: 'height' }"/>
+        <!--- Array of maps of additional properties by clone number -->
         <attribute name="_cloneprops" value="null"/>
         <attribute name="_clonepool" value="null"/>
 
@@ -124,7 +125,7 @@
                 @param Object n: node to insert -->
         <method name="insertNode" args="idx,n">
             this.nodes.splice(idx, 0, n);
-            this._cloneprops.splice(idx,0, undefined); // maintain cloneprops indices
+            this._cloneprops.splice(idx,0, null); // maintain cloneprops indices
             this.__adjustVisibleClones();
         </method>
 
@@ -146,9 +147,10 @@
             if (isSelected != wasSelected) {
               v.setSelected(datapath['sel'] = isSelected);
             }
-            if ( this._cloneprops[ n ] ) {
+            if ( this._cloneprops[ n ] != null) {
                 var p = this._cloneprops[ n ];
-                for ( var k=0, len=p.length; k<len; k++ ){
+                // p is a hash, see setClonePropertyByCN
+                for ( var k in p ){
                     v.setAttribute( k, p[ k ] );
                 }
             }
@@ -162,7 +164,7 @@
 
         <!-- @keywords private -->
         <method name="setClonePropertyByCN" args="n,prop,val">
-            if ( !this._cloneprops[ n ] ) this._cloneprops[ n ] = {};
+            if ( this._cloneprops[ n ] == null ) { this._cloneprops[ n ] = {}; }
             this._cloneprops[ n ][ prop ] = val;
             var v = this.getCloneIfVisible( n );
             if ( v ) v.setAttribute( prop , val );
@@ -181,9 +183,10 @@
             var n = v.clonenumber;
             v.setAttribute( "clonenumber", null );
             v.setAttribute( "data" ,  null );
-            if ( n != null && this._cloneprops[ n ] ) {
+            if ( n != null && this._cloneprops[ n ] != null ) {
                 var p = this._cloneprops[ n ];
-                for ( var k=0, len=p.length; k<len; k++ ){
+                // p is a hash, see setClonePropertyByCN
+                for (var k in p){
                     v.setAttribute( k, null );
                 }
             }
