@@ -16,7 +16,7 @@
     <!--- Class used as the default item class in lzcombobox. See lzcombobox's
           itemclassname attribute. -->
     <class name="lzcombobox_item" extends="basedatacombobox_item" 
-           width="${null}" style="comboboxitem_style">
+           width="${null}">
 
         <!-- white background to hide the superclass text -->
         <view name="bg" width="${parent.width}" height="${parent.height}" 
@@ -34,17 +34,17 @@
         <!--- @keywords private -->
         <method name="setHilite" args="ishilited" >
             super.setHilite(ishilited);
-            if (this._initcomplete) _applystyle();
+            if (this._initcomplete) _doApplystyle();
         </method>
         
         <!--- @keywords private -->
         <method name="setSelected" args="isSelected" >
             super.setSelected(isSelected);
-            if (this._initcomplete) _applystyle();
+            if (this._initcomplete) _doApplystyle();
         </method>
 
         <!--- @keywords private -->
-        <method name="_applystyle">
+        <method name="_doApplystyle">
             if (selected) {
                 this.hilite.setAttribute("visible", true);
                 this.hilite.setAttribute('frame', 2);
@@ -87,7 +87,7 @@
           </lzcombobox>
           </code>
     -->
-    <class name="lzcombobox" extends="basedatacombobox" width="100" style="combobox_style" >
+    <class name="lzcombobox" extends="basedatacombobox" width="100" >
         <!--- The name of the class for items in the floating list. -->
         <attribute name="itemclassname" value="lzcombobox_item" type="string"/>
         
@@ -171,11 +171,21 @@
             ]]></method>
         </view>
 
-        <text name="_text" x="${parent.textx}" y="${parent.texty}"
-              font="$once{parent.style.font}" 
-              fontsize="$once{parent.style.fontsize}" 
-              fgcolor="$once{parent.style.textcolor}"
-              width="${ parent.width - 19 }" />
+        <text name="_text" x="${parent.textx}" y="${parent.texty}" width="${parent.width - 19}">
+            <handler name="oninit">
+                if(parent['style'] != null){
+                    if(parent.style['font']){
+                        this.setAttribute('font', parent.style.font);
+                    }
+                    if(parent.style['fontsize']){
+                        this.setAttribute('fontsize', parent.style.fontsize);
+                    }
+                    if(parent.style['fgcolor']){
+                        this.setAttribute('fgcolor', parent.style.fgcolor);
+                    }
+                }
+            </handler>
+        </text>
 
         <!--- @keywords private -->
         <method name="_applystyle" args="s">
@@ -191,7 +201,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

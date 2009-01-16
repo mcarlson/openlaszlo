@@ -13,7 +13,7 @@
 
     <!--- @keywords private -->
     <attribute name="changeDel" 
-               value="$once{ new LzDelegate( this, 'checkDocChange' ) }"/>
+               value="$once{ new lz.Delegate( this, 'checkDocChange' ) }"/>
 
     <!--- @keywords private -->
     <handler name="ondata" reference="parent">
@@ -103,7 +103,7 @@
     </method>
 </node>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2009 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

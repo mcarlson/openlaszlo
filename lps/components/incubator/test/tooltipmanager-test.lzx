@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006, 2008 Laszlo Systems, Inc. All Rights Reserved.              *
+* Copyright 2005-2006, 2009 Laszlo Systems, Inc. All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -42,7 +42,7 @@
             <view bgcolor="black" x="${parent.width-1}"        height="${parent.height}" width="1"/>
             
             <handler name="ontext">
-                theText.setAttribute("text",this.text);
+                theText.setAttribute("text",this['text']);
             </handler>
             <text name="theText" resize="true" text="${parent.text}" x="1" y="1"/>
         </view>

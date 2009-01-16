@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -14,7 +14,7 @@
 <class name="droptarget">
         <attribute name="text" type="text"/>
         <text text="${parent.text}"/>
-        <method name="init">
+       <method name="init">
             super.init();
             lz.Track.register(this, 'target');
        </method>
@@ -49,7 +49,7 @@
 
  <simplelayout axis="y" spacing="10"/>
     <view name="helptext" x="10" y="10"  bgcolor="0xeaeaea" width="300">
-        <text x="20" y="10" multiline="true" width="290" align="center">
+        <text y="10" multiline="true" width="290" align="center">
            This test file displays dragging properties. <br/><br/> Notice how the labels hilite when drug upon, and how the icons snap back when they are not placed on a label. 
            
         </text>

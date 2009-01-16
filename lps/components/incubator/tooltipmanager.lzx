@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.              *
+* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -64,12 +64,12 @@
         <method name="register" args="component">
             <![CDATA[
               { //register mouse over delegate
-                var over_delegate = new LzDelegate(this,"doMouseover");
+                var over_delegate = new lz.Delegate(this,"doMouseover");
                 this.onMouseOverDelegateArray.push(over_delegate);
                 over_delegate.register(component,"onmouseover");
               }
               {    //register mouse out delegate
-                var out_delegate = new LzDelegate(this,"doMouseout");
+                var out_delegate = new lz.Delegate(this,"doMouseout");
                 this.onMouseOutDelegateArray.push(out_delegate);
                 out_delegate.register(component,"onmouseout");
               }
@@ -79,7 +79,7 @@
     
     
     <method name="doMouseover" args="component">
-      var timerDelegate = new LzDelegate( this, "showTooltip",component,"name");
+      var timerDelegate = new lz.Delegate( this, "showTooltip",component,"name");
       this.setAttribute("__timerDelegate",timerDelegate);
       this.setAttribute("__currentComponent",component);
       lz.Timer.addTimer( timerDelegate, this.delay );
@@ -108,7 +108,7 @@
       
       var tooltip = this.tooltip_obj;
       
-      var override = component.tooltip;
+      var override = component['tooltip'];
       if(override == undefined || override == null) {
         tooltip.setAttribute("text",msg);
       } else {

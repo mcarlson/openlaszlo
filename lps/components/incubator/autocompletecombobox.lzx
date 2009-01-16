@@ -1,5 +1,5 @@
 <!---
-      @copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.
+      @copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.
                  Use is subject to license terms.
       @topic Incubator
       @subtopic Components
@@ -42,6 +42,9 @@
             } else {
             
                 var theDictionary = this.__component_contents;
+                if(typeof item == 'undefined'){
+                    var item = null;
+                }
                 for(item in theDictionary) {
                     var the_object = theDictionary[item];
                    
@@ -122,6 +125,9 @@
                 
                 <method name="computeBox" args="theInput">
                     <![CDATA[
+                    if(typeof item != 'undefined'){
+                        var item = null;
+                    }
                     var theDictionary = classroot.__component_contents;
                         for(item in theDictionary) {
                             var the_object = theDictionary[item];

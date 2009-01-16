@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2007-2009 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->
@@ -277,7 +277,7 @@ corners to them.
         
         <view name="content" x="0" y="0" width="$once{parent.width}"
             height="$once{parent.height}">
-            <method name="reset">
+        <method name="reset">
                 <![CDATA[
                 this.setAttribute( "x", parent.insetleft );
                 this.setAttribute( "y", parent.insettop );

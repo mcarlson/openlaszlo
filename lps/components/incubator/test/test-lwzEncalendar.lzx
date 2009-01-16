@@ -1,5 +1,5 @@
 <canvas debug="true">
-    <include href="lwzEncalendar.lzx"/>
+    <include href="../lwzCalendar/lwzEncalendar.lzx"/>
     <view name="calendarcontainer" x="10" y="10">
         <lwzendatepicker name="datepicker" x="2">
                      <handler name="oninit">
@@ -29,6 +29,6 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

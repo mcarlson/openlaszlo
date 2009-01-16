@@ -184,7 +184,7 @@
 
             if (this._shouldresettoolbar) {
                 if (! this['_caretMoveDel']) {
-                    this._caretMoveDel = new LzDelegate(this, '_caretmove');
+                    this._caretMoveDel = new lz.Delegate(this, '_caretmove');
                 }
                 //------------------------------------------------------------
                 // Let the caretmove method figure out how to make the formats
@@ -290,7 +290,7 @@
             @param boolean inCaretMove: True when the the method was called from a caret motion event
         -->
         
-       <method name="setCurrentFormat" args="fmt, inCaretMove">
+        <method name="setCurrentFormat" args="fmt, inCaretMove">
             // Store the start and end of the selection in temporary local 
             // variables, for performance. 
             // These member data were set in saveSelectionRegion. 
@@ -365,7 +365,7 @@
         <method name="delegateRestoreSelection">
             // Delegate to restore selection after an edit or focus is lost.
             if (! this['_selectiondel']) {
-                this._selectiondel = new LzDelegate(this, '_restoreSelection');
+                this._selectiondel = new lz.Delegate(this, '_restoreSelection');
             }            
             // After the formatting has been completed, need to wait a frame to
             // restore the selection.
@@ -376,7 +376,7 @@
         <method name="delegateInitSelection">
             // Let's send an idle event to call _focussel() in a minute; we'll have focus then
             if (! this['_focusseldel']) {
-                this._focusseldel = new LzDelegate(this, '_focussel');
+                this._focusseldel = new lz.Delegate(this, '_focussel');
             }
             lz.Idle.callOnIdle(this._focusseldel);  
         </method>
@@ -571,7 +571,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2005-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -52,7 +52,7 @@
         <method name="addevents" args="obj">
             if(typeof obj.isformvalidator != "undefined"){
                 if(obj.isformvalidator == true){
-                    new LzDelegate( this, "iserrorchanged", obj, "oniserror");
+                    new lz.Delegate( this, "iserrorchanged", obj, "oniserror");
                     this.validators.push(obj);
                 }
             }
@@ -74,7 +74,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2007, 2009 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

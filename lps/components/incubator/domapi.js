@@ -1,5 +1,5 @@
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2005 Laszlo Systems, Inc.  All Rights Reserved.                 *
+//* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.                 *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -47,7 +47,7 @@ var document = canvas;
  */
 LzNode.prototype.createElement = function (name, attributes) {
   if (typeof name == 'string')
-    return new eval(name)(this, attributes);
+    return new lz.eval(name)(this, attributes);
   else
     return new name(this, attributes);
 }
@@ -59,9 +59,9 @@ LzCanvas.prototype.getElementById = function (id) {
   // LZX doesn't keep an index of nodes by id.
   // Instead, it just binds the global variable with the id name to
   // the node.  So first, evaluate the string.
-  var e = eval(id);
+  var e = lz.eval(id);
   // This filters globals such as "var name = {id: 'name'}"
-  if (!(e instanceof LzNode)) return null;
+  if (!(e instanceof lz.node)) return null;
   // This filters globals such as "var name = <<expr>>", where
   // expression retrieves a node from the canvas hierarchy.
   if (e['id'] != id) return null;

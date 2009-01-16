@@ -55,8 +55,8 @@
     
     <class name="lwzendatepicker" 
            extends="basedatepicker" 
-           weekclass="myweek"
-           dayclass="myday"
+           weekclass="lz.myweek"
+           dayclass="lz.myday"
            xinset="0"
            yinset="0">
            
@@ -85,7 +85,7 @@
                 Debug.write(this.selected.datavalue.text);
             }
         </handler>
-         <method name="month2value" args="enmonth">
+        <method name="month2value" args="enmonth">
               <![CDATA[
              
                  switch(enmonth){
@@ -221,6 +221,6 @@
     
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

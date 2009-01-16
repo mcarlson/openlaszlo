@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <canvas debug="true">
@@ -21,7 +21,7 @@
                 </method>
 
                 <method name="onSelect" args="fr"><![CDATA[
-                    canvas.main.txtFile.setText(getName());
+                    canvas.main.txtFile.setAttribute('text', getName());
                     parent.myFileUpload.setAttribute('uploadenable', true);
                     canvas.main.upload.setAttribute('enabled', true);
                 ]]>
@@ -57,12 +57,12 @@
 
                 <method name="setValue" args="value"><![CDATA[
                     status.setAttribute('width', value * 361 / 100);
-                    percent.setText(Math.round(value) + '%');
+                    percent.setAttribute('text', Math.round(value) + '%');
                 ]]>
                 </method>
                 <method name="initValue"><![CDATA[
                     status.setAttribute('width',0);
-                    percent.setText('');
+                    percent.setAttribute('text', '');
                 ]]>
                 </method>
             </view>

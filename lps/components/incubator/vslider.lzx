@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 <!--
@@ -41,7 +41,7 @@
         <method name="getPosFromValue" args="val">
                 var perc = (val-this.parent.minvalue) / (this.parent.maxvalue-this.parent.minvalue);
                 //Debug.write(perc);
-                valY = (this.parent.switchaxis) ? ( (1-perc) * (this.parent.height-this.height)) : (perc * (this.parent.height-this.height));
+                var valY = (this.parent.switchaxis) ? ( (1-perc) * (this.parent.height-this.height)) : (perc * (this.parent.height-this.height));
                 //Debug.write("valY: ",Math.round(valY));
                 return Math.round(valY);
         </method>

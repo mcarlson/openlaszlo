@@ -144,7 +144,7 @@
         <method name="doEnterDown">
             <![CDATA[
             if ( this._enabled) {
-                this.showDown();
+                this.doShowDown();
             }
             ]]>
         </method>
@@ -154,25 +154,25 @@
             <![CDATA[
             if ( this._enabled) {
                 this.onclick.sendEvent();
-                this.showUp();
+                this.doShowUp();
             }
             ]]>
         </method>
 
         <!---  @keywords private -->
-        <method name="showOver">
+        <method name="doShowOver">
             super.showOver();
             if (this.content.txt.visible)
                 this.content.txt.setAttribute('fgcolor', this.enabled ? this.style.texthilitecolor : this.style.textdisabledcolor );
        </method>
         <!---  @keywords private -->
-        <method name="showUp">
+        <method name="doShowUp">
             super.showUp();
             if (this.content.txt.visible)
                 this.content.txt.setAttribute('fgcolor', this.enabled ? this.style.textcolor : this.style.textdisabledcolor );
         </method>
         <!---  @keywords private -->
-        <method name="showDown">
+        <method name="doShowDown">
             super.showDown();
             if (this.content.txt.visible)
                 this.content.txt.setAttribute('fgcolor', this.enabled ? this.style.textselectedcolor : this.style.textdisabledcolor );
@@ -189,8 +189,8 @@
                 var tc = s.textcolor*1;
                 //Debug.write("Button style .. s.textcolor,tc",s.textcolor, tc);
                 //this.content.txt.setAttribute("fgcolor", this.enabled ? tc : s.textdisabledcolor);
-                if (s.font) this.content.txt.setAttribute("font", s.font);
-                if (s.fontsize) this.content.txt.setAttribute("fontsize", s.fontsize);
+                if (s['font']) this.content.txt.setAttribute("font", s.font);
+                if (s['fontsize']) this.content.txt.setAttribute("fontsize", s.fontsize);
             }
         </method>
 
@@ -208,7 +208,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2009 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@    -->   
@@ -115,7 +115,7 @@
         }
         
         if ((this.borderSize > 0) || (this.borderSizeTop > 0)) {
-          if (this.borderColorTop == null) {
+          if (this['borderColorTop'] == null) {
             this.borderColorTop = this.borderColor;
           }
                     
@@ -135,7 +135,7 @@
         }
                 
         if ((this.borderSize > 0) || (this.borderSizeBottom > 0)) {
-          if (this.borderColorBottom == null) {
+          if (this['borderColorBottom'] == null) {
             this.borderColorBottom = this.borderColor;
           }
           // create bottom border
@@ -153,7 +153,7 @@
         }        
 
         if ((this.borderSize > 0) || (this.borderSizeLeft > 0)) {  
-          if (this.borderColorLeft == null) {
+          if (this['borderColorLeft'] == null) {
             this.borderColorLeft= this.borderColor;
           }
         

@@ -35,7 +35,7 @@
             // this.linkbtn.setAttribute("editor", ed);                                        
         
             // Set up delegate to watch for when the editor's format changes
-            this.del = new LzDelegate(this, "currentformatchanged"); 
+            this.del = new lz.Delegate(this, "currentformatchanged"); 
             this.del.register( ed, "oncurrentformat" ); 
         </method>   
     
@@ -74,7 +74,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-    * Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.                    *
+    * Copyright 2006-2009 Laszlo Systems, Inc. All Rights Reserved.                    *
     * Use is subject to license terms.                                            *
     * X_LZ_COPYRIGHT_END ****************************************************** -->
     <!-- @LZX_VERSION@                                                         -->

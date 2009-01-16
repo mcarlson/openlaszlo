@@ -23,7 +23,11 @@
               @param baseradiobutton rb: radio button to create group with.
               @keywords private -->
         <method name="createGroup" args="groupname,rb"><![CDATA[
-            var groupPlacement = rb.findForm();
+            if(rb['findForm']){
+                var groupPlacement = rb.findForm();
+            } else {
+                var groupPlacement = null;
+            }
             if (groupPlacement == null) groupPlacement = this;
             var group = new lz.baseradiogroup(groupPlacement, 
                            { name: groupname, 
@@ -197,7 +201,7 @@
           that can have many radiobuttons associated with it -->
     <class name="baseradiogroup" extends="baseformitem">
         <!--- The value for the baseradiogroup. -->
-        <attribute name="value" value="null" setter="this.setValue(value)"/>
+        <attribute name="value" value="null" setter="this.doSetValue(value, false)"/>
 
         <!--- Array of radiobuttons associated with this baseradiogroup.
               @keywords private -->
@@ -223,7 +227,7 @@
 
             if (this._rbuttons == null) this._rbuttons = [];
             if (rb.selected) {
-                this.setValue(rb.value);
+                this.doSetValue(rb.value, false);
             } else {
                 if (rb.value == this.value) {
                     if (!rb.selected) rb.setAttribute('selected', true);
@@ -239,7 +243,7 @@
               @param Any value: the value to set.
               @param Boolean isinitvalue: true if value is rollback value, else
               false. -->
-        <method name="setValue" args="value,isinitvalue"> <![CDATA[
+        <method name="doSetValue" args="value,isinitvalue"> <![CDATA[
             if (this['value'] == value) return;
             if (this._rbuttons != null) {
                 for (var i=0; i < this._rbuttons.length; i++) {
@@ -260,7 +264,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2009 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

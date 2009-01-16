@@ -47,8 +47,8 @@
     
     <!--- @keywords private -->
     <handler name="oninit">
-        this.overdel = new LzDelegate(this, "startCheck",parent,"onmouseover");
-        this.outdel = new LzDelegate(this, "hideTip",parent,"onmouseout");
+        this.overdel = new lz.Delegate(this, "startCheck",parent,"onmouseover");
+        this.outdel = new lz.Delegate(this, "hideTip",parent,"onmouseout");
         this.outdel.register(parent, "onclick");
     </handler>
 
@@ -57,7 +57,7 @@
         <![CDATA[
         if (this.text != null && this.text != "") {
             this._mousein = true;
-            if (!this._checkdel) this._checkdel = new LzDelegate(this, "checkTip");
+            if (!this._checkdel) this._checkdel = new lz.Delegate(this, "checkTip");
             this._lastmousex = canvas.getMouse('x');
             this._lastmousey = canvas.getMouse('y');
             this.lasttime = new Date();
@@ -68,7 +68,7 @@
     </method>
 
     <!--- @keywords private -->
-    <method name="checkTip">
+    <method name="checkTip" args="ignore=null">
         if (!this._mousein) return;
         var now = new Date();
         var newmousex = canvas.getMouse('x');
@@ -126,7 +126,7 @@
         canvas.tooltipview.setAttribute('x', tipx );
         canvas.tooltipview.setAttribute('y', tipy );
         canvas.tooltipview.setPointerX( this._lastmousex, pointerontop );
-        canvas.tooltipview.bringToFront( this.text );
+        canvas.tooltipview.bringToFront( );
         canvas.tooltipview.setAttribute('visible',  true );
     ]]></method>
 
@@ -139,7 +139,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

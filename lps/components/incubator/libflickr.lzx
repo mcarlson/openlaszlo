@@ -60,13 +60,13 @@
     -->
     <node name="gFlickr">
         <handler name="oninit">
-            this.errdel = new LzDelegate( this, "dsError" );
-            errdel.register( photods , "onerror" );
-            errdel.register( photods , "ontimeout" );
+            this.errdel = new lz.Delegate( this, "dsError" );
+            this['errdel'].register( photods , "onerror" );
+            this['errdel'].register( photods , "ontimeout" );
         </handler>
 
-        <method name="dsError">
-            gError.show();
+        <method name="dsError" args="ignore=null">
+            this['gError'].show();
         </method>
         
         <!-- 
@@ -179,6 +179,6 @@
 
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

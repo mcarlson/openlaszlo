@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -69,7 +69,7 @@
 
                   bgcolor="${classroot.bgcolor}">
 
-                  <method name="increment">
+                <method name="increment">
 
                         <![CDATA[
 
@@ -87,7 +87,7 @@
 
                   </method>
 
-                  <method name="decrement">
+                <method name="decrement">
 
                         <![CDATA[
 

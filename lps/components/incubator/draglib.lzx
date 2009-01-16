@@ -1,4 +1,4 @@
-<!--- @copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.
+<!--- @copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.
                  Use is subject to license terms.
   -->
 <library>
@@ -134,20 +134,20 @@
     <!--- called to stop the drag action, called by checkdrag.  If this is
         not over a drop target, it animates back to its origin (failed drop).
         Otherwise it disappears (successful drop).-->
-    <method name="stopdrag">
+    <method name="stopdrag" args="ignore=null">
       if (dropped) {
         this.setAttribute('visible', false);
       } else {
         var anm = this.animate('x', startx, 200);
         this.animate('y', starty, 200);
-        if ( !this._onstopdel )  this._onstopdel = new LzDelegate( this, 'hideme' );
+        if ( !this._onstopdel )  this._onstopdel = new lz.Delegate( this, 'hideme' );
         this._onstopdel.register( anm, 'onstop' );
       }
       ds.setAttribute('applied', false);
       lz.Track.deactivate(this.dropgroup);
     </method>
     <!--- @keywords private -->
-    <method name="hideme">
+    <method name="hideme" args="ignore=null">
       setAttribute('visible', false);
     </method>
     <!--- @keywords private -->

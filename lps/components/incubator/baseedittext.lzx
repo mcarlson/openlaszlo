@@ -14,8 +14,8 @@
           @keywords private -->
     <class name="_newinternalinputtext" extends="inputtext">
 
-        <!--- True means that setValue called internal inputtext and inputtext
-              should not call setValue back. -->
+        <!--- True means that doSetValue called internal inputtext and inputtext
+              should not call doSetValue back. -->
         <attribute name="ignorecallup" value="false" />
 
         <!--- Values like password and textwidth, which can't be changed at
@@ -50,7 +50,7 @@
         <handler name="ontext" method="doOnText" />
         <method name="doOnText" args="ignore">
             if (! this.ignorecallup) {
-                parent.setValue(this.getText(),false,true);
+                parent.doSetValue(this.getText(),false,true);
             }
             this.ignorecallup = false;
         </method>
@@ -84,11 +84,11 @@
     <class name="baseedittext" extends="baseformitem" focusable="false">
         <!--- The text that appears in the component. Text and value are the
               same. -->
-        <attribute name="text" type="html" setter="this.setValue(text)"/>
+        <attribute name="text" type="html" setter="this.doSetValue(text, false, false)"/>
 
         <!--- The text that appears in the component. Text and value are the
               same. -->
-        <attribute name="value" value="null" setter="this.setValue(value)"/>
+        <attribute name="value" value="null" setter="this.doSetValue(value, false, false)"/>
 
         <!--- Set to true for multiple lines. Default is false. -->
         <attribute name="multiline" value="false"/>
@@ -188,7 +188,7 @@
             this.rollbackvalue = "";
             // Check to see if we have to set text during init.
             if ( this['_initialtext'] != null ){
-                this.setValue( this._initialtext, true );
+                this.doSetValue( this._initialtext, true, false );
             }
             // Make sure value and text are in sync
             this.value = this.text;
@@ -213,19 +213,19 @@
             ]]>
         </method>
 
-        <!--- Set text. Wraps setValue().
+        <!--- Set text. Wraps doSetValue().
               @param String t: text to set.
               @param Boolean isinitvalue: if the text to set is an
               initvalue. -->
         <method name="setText" args="t,isinitvalue">
-            this.setValue(t,isinitvalue);
+            this.doSetValue(t,isinitvalue, false);
         </method>
 
         <!--- Set the value (text) of baseedittext.
               @param String value: the string to set.
               @param Boolean isinitvalue: if the string is an initvalue.
               @param Boolean isHTML: set HTML text. -->
-        <method name="setValue" args="value,isinitvalue,_ignorecalldown"><![CDATA[
+        <method name="doSetValue" args="value,isinitvalue,_ignorecalldown"><![CDATA[
               //----------------------------------------------------------------
               // @param Boolean _ignorecalldown: if true, means that setValue
               // should not call internal inputtext since that's what called
@@ -271,7 +271,7 @@
               @param Boolean isinitvalue: if true, clear and set empty string as
               initial value.. -->
         <method name="clearText" args="isinitvalue">
-            this.setValue('', isinitvalue);
+            this.doSetValue('', isinitvalue, false);
         </method>
 
         <!-- Sets the maxmimum number of characters which can be entered.
@@ -353,7 +353,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->

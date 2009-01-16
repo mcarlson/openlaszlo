@@ -47,7 +47,7 @@
             </handler>
             
             <handler name="onscroll" args="IGNORE_THIS_ARG">
-                this.setPos(-this.lineheight * (this.scroll - 1), true);
+                this.setPos(-this.lineheight * (this.scroll - 1));
             </handler>
         </_newinternalinputtext>
 
@@ -78,7 +78,7 @@
         
         <!--- @keywords private -->
         <method name="ensurevscrollbar">
-            if (this._vs == null) {
+            if (this['_vs'] == null) {
                 var classname = this.vscrollbarclassname;
                 if (classname == "") {
                     classname = "vscrollbar";
@@ -88,39 +88,47 @@
                         Debug.write("scrollbarclassname undefined", this);
                     }
                 }
-                this._vs = new lz[classname](this, 
-                                             { axis: "y",
-                                               scrollattr: "pos",
-                                               scrolltarget: this.inp});
-                                               
-                var xDel = new LzDelegate(this, 'updateX');
-                xDel.register(this._vs, 'onwidth');
-                xDel.register(this, 'onwidth');
-                xDel.register(this, 'onborder');
-                
-                new LzDelegate(this, 'updateScrollMax', this.inp, 'onmaxheight');
-                new LzDelegate(this, 'updateStepSize', this.inp, 'onlineheight');
+                if(typeof(lz[classname]) != "undefined"){
+                    this._vs = new lz[classname](this, 
+                                                 { axis: "y",
+                                                   scrollattr: "pos",
+                                                   scrolltarget: this.inp});
+                                                   
+                    var xDel = new lz.Delegate(this, 'updateX');
+                    xDel.register(this['_vs'], 'onwidth');
+                    xDel.register(this, 'onwidth');
+                    xDel.register(this, 'onborder');
+                    
+                    new lz.Delegate(this, 'updateScrollMax', this.inp, 'onmaxheight');
+                    new lz.Delegate(this, 'updateStepSize', this.inp, 'onlineheight');
+                }
 
             }
         </method>
         
         <method name="updateX" args="IGNORE_THIS_ARG">
-            this._vs.setAttribute("x", this.width - this._vs.width );
+            if(this['_vs']){
+                this._vs.setAttribute("x", this.width - this._vs.width );
+            }
         </method>
         
         <method name="updateStepSize" args="IGNORE_THIS_ARG">
-            this._vs.setAttribute("stepsize", this.inp.lineheight);
+            if(this['_vs']){
+                this._vs.setAttribute("stepsize", this.inp.lineheight);
+            }
         </method>
         
         <method name="updateScrollMax" args="IGNORE_THIS_ARG">
-            this._vs.setAttribute("scrollmax", this.inp.maxheight);
+            if(this['_vs']){
+                this._vs.setAttribute("scrollmax", this.inp.maxheight);
+            }
         </method>
         
         <method name="init">
             super.init();
             this.ensurevscrollbar();
-            setvscrollwidthfromvisibility(_vs.visible);
-            this.myDel = new LzDelegate(this, "setvscrollwidthfromvisibility", this._vs, "onvisible");
+            setvscrollwidthfromvisibility(this['_vs'] ? this._vs.visible : false);
+            this.myDel = new lz.Delegate(this, "setvscrollwidthfromvisibility", this['_vs'], "onvisible");
         </method>
 
  <!--- Overrides a parent method which calculates y position for text
@@ -138,7 +146,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
