@@ -30,7 +30,7 @@
             })(640, 140);
           }
         </script><script type="text/javascript" src="<%= request.getContextPath() %>/lps/includes/embed-compressed.js"></script><script type="text/javascript">
-              lz.embed.lfc('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js', '<%= request.getContextPath() %>');
+              lz.embed.lfc('<%= request.getContextPath() %>/lps/includes/lfc/LFCdhtml.js', '<%= request.getContextPath() %>/');
             </script><style type="text/css">
         	html, body
         	{
@@ -61,7 +61,7 @@
    </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
