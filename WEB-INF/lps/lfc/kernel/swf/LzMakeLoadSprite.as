@@ -1,7 +1,7 @@
 /**
   * LzMakeLoadSprite.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -158,6 +158,7 @@ LzMakeLoadSprite.updateAfterLoad = function (mloader) {
   */
 LzMakeLoadSprite.unload = function () {
     this.loader.unload(this.loader.mc);
+    this.stopTrackPlay();
 }
 
 /**
@@ -214,9 +215,9 @@ LzMakeLoadSprite.destroy = function () {
          this.errorDel.unregisterAll();
     if ('timeoutDel' in this)
          this.timeoutDel.unregisterAll();
- 
+
     this.loader.unload(this.loader.mc);
 
     // call shadowed destroy()
-    this.___destroy(); 
+    this.___destroy();
 }

@@ -2,7 +2,7 @@
 /**
   * LzSprite.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -882,16 +882,15 @@ LzSprite.prototype.destroy = function(){
     // To keep delegates from resurrecting us.  See LzDelegate#execute
     this.__LZdeleted = true;
 
-    if (this.updatePlayDel) {
-        this.updatePlayDel.unregisterAll();
-        delete this.updatePlayDel;
-    }
-    
+    this.stopTrackPlay();
+    delete this.updatePlayDel;
+    delete this.checkPlayStatusDel;
+
     if (this.doQueuedDel) {
         this.doQueuedDel.unregisterAll();
         delete this.doQueuedDel;
     }
-    
+
     if (this._moDel) {
         this._moDel.unregisterAll();
         delete this._moDel;
@@ -1353,6 +1352,7 @@ LzSprite.prototype.checkPlayStatus2 = function (ignore){
         if (this.updatePlayDel)
             this.updatePlayDel.unregisterAll();
         this.__LZtracking = false;
+        this.owner.playing = false;
     }
 }
 
