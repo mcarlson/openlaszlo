@@ -1,5 +1,5 @@
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -36,7 +36,7 @@ function getVersion() {
 var navigator = {userAgent: "lztest",
                 appVersion: "1.5R3",
                 vendor: "openlaszlo",
-                platform: "unknown"}; // This is expected to be in the top level namespace. 
+                platform: "rhino"}; // This is expected to be in the top level namespace. 
                 
 
 lz.embed.attachEventHandler = function () {

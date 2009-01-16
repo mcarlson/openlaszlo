@@ -12,25 +12,49 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
 
   function LzDHTMLDebugConsole () {
     super();
+    // But not in Rhino
+    if (navigator.platform == 'rhino') {
+      this.DebugWindow = true;
+      return;
+    }
+
     // The application and debugger are sibling iframes in the
     // dhtml embedding.
     try {
       this.DebugWindow = window.parent.frames['LaszloDebugger'];
     } catch (e) {
-      // But not in Rhino
     }
+
   };
+
+  function createDebugIframe() {
+    if (! this.DebugWindow) {
+      debugurl = lz.embed.options.resourceroot + 'lps/includes/laszlo-debugger.html'
+      var iframe = document.createElement('iframe');
+      lz.embed.__setAttr(iframe, 'id', 'LaszloDebugger')
+      lz.embed.__setAttr(iframe, 'name', 'LaszloDebugger')
+      lz.embed.__setAttr(iframe, 'src', debugurl)
+      lz.embed.__setAttr(iframe, 'width', '100%')
+      lz.embed.__setAttr(iframe, 'height', '200')
+      var y = canvas.height - 200;
+      lz.embed.__setAttr(iframe, 'style', 'position:absolute;z-index:10000000;top:' + y + 'px;')
+      canvas.sprite.__LZdiv.appendChild(iframe);
+      this.DebugWindow = window.frames['LaszloDebugger'];
+    }
+  }
 
   /**
    * @access private
    */
   override function addHTMLText (str) {
+    if (! this.DebugWindow) this.createDebugIframe();
     var dw = this.DebugWindow;
     var dwd = dw.document;
     var span = dwd.createElement('span');
     var dwdb = dwd.body;
     // IE does not display \n in white-space: pre, so we translate...
     span.innerHTML = '<span class="OUTPUT">' + str.split('\n').join('<br />') + '</span>';
+    console.log('addHTMLText',dwdb, str, span);
     dwdb.appendChild(span);
     // Scroll to end
     dw.scrollTo(0, dwdb.scrollHeight);
@@ -378,6 +402,6 @@ var __LzDebug = Debug;
 
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
