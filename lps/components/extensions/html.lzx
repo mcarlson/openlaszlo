@@ -242,9 +242,8 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
     <!---
       Calls a method in the the loaded page.
       @param String methodName: The name of the method to call
-      @param Array args: An optional list of arguments to pass to the method.
-      @param String scope: An scope the method should be called in.  Defaults to the global scope if unspecified.
       @param LzDelegate callbackDel: An optional LzDelegate which will be called with the return value from the method call.
+      @param args: Optional arguments to pass to the method.
     -->
     <method name="callJavascript" args="methodName, callbackDel = null, ...args">
         lz.embed.iframemanager.callJavascript(this.iframeid, methodName, callbackDel, args);
