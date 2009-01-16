@@ -17,11 +17,11 @@
        <!-- already defined in LzNode -->
        <!--<attribute name="cloneManager" value="null"/>-->
 
-       <method name="isRangeSelect" args="item" override="true" returns="Boolean"><![CDATA[
+       <method name="isRangeSelect" args="item" override="true"><![CDATA[
            return this.multiselect && super.isRangeSelect(item);
        ]]></method>
 
-       <method name="isMultiSelect" args="item" override="true" returns="Boolean"><![CDATA[
+       <method name="isMultiSelect" args="item" override="true"><![CDATA[
            return this._forcemulti || (this.multiselect && super.isMultiSelect(item));
        ]]></method>
 
@@ -280,7 +280,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

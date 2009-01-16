@@ -1,6 +1,6 @@
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->
 <canvas width="800" height="600" bgcolor="0xcfcfcf" proxied="true" title="LZPIX"> <!-- bgcolor="0xc0c0c0" -->
@@ -295,7 +295,7 @@
 
 
             <selectionmanager name="selman" toggle="false">
-                <method name="isMultiSelect" args="s" returns="Boolean" >
+                <method name="isMultiSelect" args="s" >
                     return lz.Keys.isKeyDown( "control" ) || lz.Keys.isKeyDown( "shift" ) ||
                            parent.isRectangleSelecting;
                 </method>
