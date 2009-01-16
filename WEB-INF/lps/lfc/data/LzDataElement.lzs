@@ -1,5 +1,5 @@
 /**
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -239,9 +239,11 @@ function $lzc$getAttr_dependencies (who , self) :Array {
   * @param String value: The value for the attribute.
   */
 public function setAttr (name:String, value:String) :String {
-    // warn for values that aren't strings
-    if ($debug) {
-        if (typeof value != 'string') Debug.warn('setAttr(%w, %w) called with a non-string value', name, value);
+    // Enforce string coercion for other runtimes.  This is consistent
+    // with other DOM's which only permit string attributes.
+    if ($as3) {
+    } else {
+      value = String(value);
     }
     if ( ! this.attributes ) {
       this.attributes = {};

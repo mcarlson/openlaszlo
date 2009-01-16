@@ -2267,13 +2267,13 @@ public dynamic class LzNode extends LzEventable {
   * method
   */
  function acceptTypeValue(type, value) {
-   var presentationtype = LzNode.presentationtypes[type];
-   // don't coerce null values
+   var presentationtype = type ? LzNode.presentationtypes[type] : null;
+   // don't coerce null (or undefined) values
    if (value != null) {
      if (presentationtype != null) {
        value = presentationtype.accept(value);
-     } else if ($debug) {
-       Debug.error("%w: Unknown attribute type '%s'", arguments.callee, type);
+     } else {
+       value = DefaultPresentationType.accept(value);
      }
    }
    return value;
@@ -2290,7 +2290,7 @@ public dynamic class LzNode extends LzEventable {
    */
  function acceptAttribute(name, type, value) {
    value = this.acceptTypeValue(type, value);
-   if (this[name] != value) {
+   if (this[name] !== value) {
     //Debug.write('acceptAttribute', name, type, value, typeof value, presentationtype);
     this.setAttribute(name, value);
    }

@@ -1209,7 +1209,7 @@
         <method name="test1">
             assertTrue( true );
             assertSame(  9, dmap.attrone );
-            assertSame(  '2', dmap.attrtwo );
+            assertSame(  2, dmap.attrtwo );
             assertSame(  10, dmap.attroneplusone );
 
             //change the data
@@ -1217,38 +1217,38 @@
             bug3285.getFirstChild().setAttr( 'datatwo', '22' );
 
             assertSame(  9, dmap.attrone );
-            assertSame(  '22', dmap.attrtwo );
+            assertSame(  22, dmap.attrtwo );
             assertSame(  10, dmap.attroneplusone );
 
             this.setAttribute( 'someval', 99 );
             assertSame(  99, dmap.attrone );
-            assertSame(  '22', dmap.attrtwo );
+            assertSame(  22, dmap.attrtwo );
             assertSame(  100, dmap.attroneplusone );
 
             //change the state
             dmap.setAttribute( 'datamapped' , true );
 
-            assertSame(  '11', dmap.attrone );
-            assertSame(  '22', dmap.attrtwo );
+            assertSame(  11, dmap.attrone );
+            assertSame(  22, dmap.attrtwo );
             assertSame(  12, dmap.attroneplusone );
 
             //change the data
             bug3285.getFirstChild().setAttr( 'dataone', '1' );
             bug3285.getFirstChild().setAttr( 'datatwo', '2' );
 
-            assertSame(  '1', dmap.attrone );
-            assertSame(  '2', dmap.attrtwo );
+            assertSame(  1, dmap.attrone );
+            assertSame(  2, dmap.attrtwo );
             assertSame(  2, dmap.attroneplusone );
 
             this.setAttribute( 'someval', 9 );
-            assertSame(  '1', dmap.attrone );
-            assertSame(  '2', dmap.attrtwo );
+            assertSame(  1, dmap.attrone );
+            assertSame(  2, dmap.attrtwo );
             assertSame(  2, dmap.attroneplusone );
 
             dmap.setAttribute( 'datamapped' , false );
 
             assertSame(  9, dmap.attrone );
-            assertSame(  '2', dmap.attrtwo );
+            assertSame(  2, dmap.attrtwo );
             assertSame(  10, dmap.attroneplusone );
 
             //change the data
@@ -1256,7 +1256,7 @@
             bug3285.getFirstChild().setAttr( 'datatwo', '22' );
 
             assertSame(  9, dmap.attrone );
-            assertSame(  '22', dmap.attrtwo );
+            assertSame(  22, dmap.attrtwo );
             assertSame(  10, dmap.attroneplusone );
 
         </method>

@@ -454,7 +454,7 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
     if (bgc != null) {
         if ($debug) {
             if (isNaN(Number( bgc ))) {
-                Debug.write( "Invalid value for bgcolor on %w: %w", this, bgca );
+                Debug.warn( "Invalid value for bgcolor on %w: %w", this, bgca );
             }
         }
         this.bgcolor = Number(bgc);

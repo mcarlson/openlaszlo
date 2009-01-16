@@ -1,33 +1,102 @@
 <library>
  <class name="TestPresentationTypes" extends="TestCase">
    <method name="addTests">
-     this.addTest("testPresentationTypes");
+     this.addTest("testValueEquality");
+     this.addTest("testAttributeEquality");
+     this.addTest("testValueIdentity");
+     this.addTest("testAttributeIdentity");
+     this.addTest("testPresentation");
+     this.addTest("testExpressionPresentationType");
    </method>
    <dataset name="ds" >
-     <item number="3.141592" string="hello" bool="true" />
+     <item 
+         number="3.141592"
+         string="hello"
+         bool="true"
+         color="rosybrown"
+         undefined="undefined"
+         null="null"
+         nan="NaN"
+         false="false"
+         true="true"
+         emtpy=""
+         />
    </dataset>
    <attribute name="aNumber" value="$path{'@number'}" type="number" />
    <attribute name="aString" value="$path{'@string'}" type="string" />
    <attribute name="aBool" value="$path{'@bool'}" type="boolean" />
+   <attribute name="aColor" value="$path{'@color'}" type="color" />
+
    <attribute name="aNumber2" value="$path{'@number'}" type="number" />
    <attribute name="aString2" value="$path{'@string'}" type="string" />
    <attribute name="aBool2" value="$path{'@bool'}" type="boolean" />
-   <method name="testPresentationTypes" >
+   <attribute name="aColor2" value="$path{'@color'}" type="color" />
+
+   <attribute name="eUndefined" value="$path{'@undefined'}" type="expression" />
+   <attribute name="eNull" value="$path{'@null'}" type="expression" />
+   <attribute name="eNan" value="$path{'@nan'}" type="expression" />
+   <attribute name="eFalse" value="$path{'@false'}" type="expression" />
+   <attribute name="eTrue" value="$path{'@true'}" type="expression" />
+   <attribute name="eEmpty" value="$path{'@empty'}" type="expression" />
+   <attribute name="eNumber" value="$path{'@number'}" type="expression" />
+   <attribute name="eString" value="$path{'@string'}" type="expression" />
+
+   <method name="setUp">
      this.setAttribute("datapath", "local:ds:/item");
+   </method>
+
+   <method name="testValueEquality" >
      this.assertEquals(this.aNumber, 3.141592);
      this.assertEquals(this.aString, "hello");
      this.assertEquals(this.aBool, true);
-     this.assertSame(this.aNumber, 3.141592);
-     this.assertSame(this.aString, "hello");
-     this.assertSame(this.aBool, true);
-     /* *************************** */
+     this.assertEquals(this.aColor, lz.colors.rosybrown);
+   </method>
+
+   <method name="testAttributeEquality" >
      this.assertEquals(this.aNumber, this.aNumber2);
      this.assertEquals(this.aString, this.aString2);
      this.assertEquals(this.aBool, this.aBool2);
+     this.assertEquals(this.aColor, this.aColor2);
+   </method>
+
+   <method name="testValueIdentity">
+     this.assertSame(this.aNumber, 3.141592);
+     this.assertSame(this.aString, "hello");
+     this.assertSame(this.aBool, true);
+     this.assertSame(this.aColor, lz.colors.rosybrown);
+   </method>
+
+   <method name="testAttributeIdentity">
      this.assertSame(this.aNumber, this.aNumber2);
      this.assertSame(this.aString, this.aString2);
      this.assertSame(this.aBool, this.aBool2);
+     this.assertSame(this.aColor, this.aColor2);
    </method>
+
+   <method name="testPresentation">
+     assertEquals(this.presentAttribute('aNumber', 'number'), "3.141592");
+     assertEquals(this.presentAttribute('aString', 'string'), "hello");
+     assertEquals(this.presentAttribute('aBool', 'boolean'), "true");
+     assertEquals(this.presentAttribute('aColor', 'color'), "rosybrown");
+   </method>
+   <method name="testExpressionPresentationType">
+     assertUndefined(this['eUndefined']);
+     assertNull(this.eNull);
+     assertTrue(isNaN(this.eNan), "NaN");
+     assertFalse(this.eFalse);
+     assertTrue(this.eTrue);
+     assertSame(this.eNumber, 3.141592);
+     assertSame(this.eString, "hello");
+
+     assertEquals(this.presentAttribute('eUndefined', 'expression'), "undefined");
+     assertEquals(this.presentAttribute('eNull', 'expression'), "null");
+     assertEquals(this.presentAttribute('eNan', 'expression'), "NaN");
+     assertEquals(this.presentAttribute('eFalse', 'expression'), "false");
+     assertEquals(this.presentAttribute('eTrue', 'expression'), "true");
+     assertEquals(this.presentAttribute('eNumber', 'expression'), "3.141592");
+     assertEquals(this.presentAttribute('eString', 'expression'), "hello");
+   </method>
+   
  </class>
  <!-- Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->
 </library>

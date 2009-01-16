@@ -1,18 +1,20 @@
 /**
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
-  *            Use is subject to license terms.
-  *
-  * @access public
-  * @topic LZX
-  */
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ *
+ * @access public
+ * @topic LZX
+ */
 
 /**
-  * A presentation type is a specification of how to map a Javascript type to
-  * and from a String representation.
-  * If an inherited class does not implement present(),
-  * PresentationType.present() will be used.
-  * @access private
-  */
+ * A presentation type is a specification of how to map a Javascript type to
+ * and from a String representation.
+ *
+ * If an inherited class does not implement present(),
+ * PresentationType.present() will be used.
+ *
+ * @access private
+ */
 class PresentationType {
   static function accept(value) {
     return value;
@@ -20,20 +22,45 @@ class PresentationType {
   static function present(value) {
     return String(value);
   }
+};
+
+/**
+ * Default presentation type
+ *
+ * If no type is specified, we just pass the value straight through,
+ * for backward compatibility.
+ *
+ * NOTE [2009-01-15 ptw] This is never what you want, it exists only
+ * for backwards compatibility.  After 4.2, make this issue a
+ * deprecation warning if it is invoked.
+ *
+ * @access private
+ */
+class DefaultPresentationType extends PresentationType {
+  static var accept = PresentationType.accept;
+  static function present(value) {
+    return value;
+  }
 }
 
-//---
-// String presentation type
-//---
+
+/**
+ * String presentation type
+ *
+ * @access private
+ */
 class StringPresentationType extends PresentationType {
   static function accept(value) {
     return String(value);
   }
+  static var present = PresentationType.present;
 }
 
-//---
-// Boolean presentation type
-//---
+/**
+ * Boolean presentation type
+ *
+ * @access private
+ */
 class BooleanPresentationType extends PresentationType {
   static function accept(value) {
     // NOTE: [2009-01-13 ptw] Boolean("false") would not do what we
@@ -45,20 +72,26 @@ class BooleanPresentationType extends PresentationType {
         return true;
     }
   }
+  static var present = PresentationType.present;
 }
 
-//---
-// Number presentation type
-//---
+/**
+ * Number presentation type
+ *
+ * @access private
+ */
 class NumberPresentationType extends PresentationType {
   static function accept(value) {
     return Number(value);
   }
+  static var present = PresentationType.present;
 }
 
-//---
-// Color presentation type
-//---
+/**
+ * Color presentation type
+ *
+ * @access private
+ */
 class ColorPresentationType extends PresentationType {
   static function accept(value) {
     return LzColorUtils.hextoint(value);
@@ -76,26 +109,53 @@ class ColorPresentationType extends PresentationType {
   }
 }
 
-//---
-// Expression presentation type
-//---
+/**
+ * Expression presentation type
+ *
+ * Attempts to heuristicate a typed value.  If you want something more
+ * accurate, specify a target type, don't rely on this!
+ *
+ * NOTE: [2009-01-14 ptw] This could should be expanded to use JSON,
+ * and so handle Date, Array, and Object (or perhaps a introduce
+ * JSONPresentationType)
+ *
+ * @access private
+ */
 class ExpressionPresentationType extends PresentationType {
   static function accept(value) {
-    // Create an instance if the value begins with 'new '
-    if (typeof value == 'string' && value.indexOf('new ') != -1) return lz.Utils.safeNew(value);
-    return value;
+    switch (value) {
+      case "undefined": return void 0;
+      case "null": return null;
+      case "false": return false;
+      case "true": return true;
+      case "NaN": return 0/0;
+      case "":
+        // Should this return the empty string, or null?  The empty
+        // string is more JSON-like, null is what Adam proposed in
+        // 'Laszlo XML DOM Data Type Strictness - RFC'
+        return "";
+    }
+    // Adam's RFC calls for us to heuristicate color values, but JSON
+    // would simply serialize them as numbers.  If you want to parse
+    // color names, you should use the color type.
+    if (! isNaN(value)) { return Number(value); }
+    return String(value);
   }
-  static function present(value) {
-    return value;
-  }
+  // Presentation is just the default string conversion.  JSON would
+  // be better because it would preserve the type (distinguish between
+  // literals and strings, e.g., `null` vs. `"null"`)
+  static var present = PresentationType.present;
 }
 
-//---
-// Size presentation type
-//---
+/**
+ * Size presentation type
+ *
+ * @access private
+ */
 class SizePresentationType extends PresentationType {
   static function accept(value) {
     // TODO: handle percentage values?
     return Number(value);
   }
+  static var present = PresentationType.present;
 }
