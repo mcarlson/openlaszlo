@@ -902,7 +902,7 @@ LzInputTextSprite.prototype.setFontName = function (fname) {
 LzInputTextSprite.prototype.setWidth = function (w) {
     if (w == null || w < 0 || isNaN(w) || this.width == w) return;
     // call LzSprite.setWidth();
-    var nw = this.__setWidth(w - this.____wpadding);
+    var nw = this.__setWidth(w);
     if (this.quirks.fix_clickable && nw != null) {
         this.__LZclickdiv.style.width = nw;
         this.__LZinputclickdiv.style.width = nw;
