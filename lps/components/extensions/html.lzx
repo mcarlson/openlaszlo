@@ -43,6 +43,13 @@ lz.embed.iframemanager.__gotload = function(id) {
 lz.embed.iframemanager.__destroy = function(id) {
     lz.Browser.callJS('lz.embed.iframemanager.__destroy', null, id);
 }
+lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, args) {
+    var callback = null;
+    if (callbackDel) callback = function(retVal) {
+                                    callbackDel.execute(retVal);
+                                };
+    lz.Browser.callJS('lz.embed.iframemanager.callJavascript', callback, id, methodName, null, args);
+}
 </script>
 </otherwise>
 </switch>
@@ -224,8 +231,23 @@ lz.embed.iframemanager.__destroy = function(id) {
             lz.embed.iframemanager.sendToBack(this.iframeid);
         }
     </method>
+    <!---
+      Scrolls the html tag to a specific position.
+      @param Number x: x position to scroll to
+      @param Number y: y position to scroll to
+    -->
     <method name="scrollBy" args="x, y">
         if (this['iframeid']) lz.embed.iframemanager.scrollBy(this.iframeid, x, y);
+    </method>
+    <!---
+      Calls a method in the the loaded page.
+      @param String methodName: The name of the method to call
+      @param Array args: An optional list of arguments to pass to the method.
+      @param String scope: An scope the method should be called in.  Defaults to the global scope if unspecified.
+      @param LzDelegate callbackDel: An optional LzDelegate which will be called with the return value from the method call.
+    -->
+    <method name="callJavascript" args="methodName, callbackDel = null, ...args">
+        lz.embed.iframemanager.callJavascript(this.iframeid, methodName, callbackDel, args);
     </method>
     <!--- @keywords private -->
     <method name="destroy">

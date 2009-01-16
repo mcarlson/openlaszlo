@@ -1,5 +1,5 @@
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 lz.embed.iframemanager = {
@@ -77,6 +77,17 @@ lz.embed.iframemanager = {
     }
     ,getFrame: function(id) { 
         return lz.embed.iframemanager.__frames[id];
+    }
+    ,getFrameWindow: function(id) {
+        if (!this['framesColl']) {
+            if (document.frames) { //Opera, Internet Explorer
+                this.framesColl = document.frames;
+            }
+            else {
+                this.framesColl = window.frames; //Firefox, Safari, Netscape
+            }
+        }
+        return this.framesColl[id];
     }
     ,setSrc: function(id, s, history) { 
         //console.log('setSrc', id, s, history)
@@ -179,6 +190,17 @@ lz.embed.iframemanager = {
             LzSprite.prototype.__discardElement(iframe);
             delete lz.embed.iframemanager.__frames[id];
             delete lz.embed.iframemanager.__namebyid[id];
+        }
+    }
+    ,callJavascript: function(id, methodName, callbackDel, args) {
+        var iframe = lz.embed.iframemanager.getFrameWindow(id);
+        if (!args) args = [];
+        var method = iframe.eval(methodName);
+        if (method) {
+            var retVal = method.apply(iframe, args);
+            //console.log('callJavascript', methodName, args, 'in', iframe, 'result', retVal);
+            if (callbackDel) callbackDel.execute(retVal);
+            return retVal;
         }
     }
 }
