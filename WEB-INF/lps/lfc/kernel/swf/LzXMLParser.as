@@ -1,7 +1,7 @@
 /**
   * LzXMLParser.as
   *
-  * @copyright Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -11,7 +11,6 @@
 /**
   * @shortdesc Utility for parsing text into native XML DOM object
   */
-
 var LzXMLParser = new Object;
 
 /**
@@ -27,6 +26,20 @@ LzXMLParser.parseXML = function( str, trimwhitespace, nsprefix ){
         var xmlobj = new XML();
         xmlobj.ignoreWhite = true;
         xmlobj.parseXML( str );
-        return xmlobj;
+        if (xmlobj.status == 0) {
+            return xmlobj;
+        } else {
+            // error descriptions from flash docs
+            var errors = ["A CDATA section was not properly terminated.", 
+             "The XML declaration was not properly terminated.",
+             "The DOCTYPE declaration was not properly terminated.",
+             "A comment was not properly terminated.",
+             "An XML element was malformed.",
+             "Out of memory.",
+             "An attribute value was not properly terminated.",
+             "A start-tag was not matched with an end-tag.",
+             "An end-tag was encountered without a matching start-tag."
+            ];
+            throw new Error(errors[xmlobj.status*(-1) - 2]);
+        }
 }
-

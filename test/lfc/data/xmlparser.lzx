@@ -1,0 +1,59 @@
+<library>
+
+  <include href="lzunit" />
+
+  <class name="TestXmlParser" extends="TestCase" >
+    <method name="addTests" >this.addTest("testXmlParser");</method>
+    <method name="testXmlParser" ><![CDATA[
+        Debug.info("debug-warnings are intended for this test");
+        assertNull(LzDataElement.stringToLzData(null));
+        assertNull(LzDataElement.stringToLzData(""));
+        assertNull(LzDataElement.stringToLzData("a"));
+        assertNull(LzDataElement.stringToLzData("<a"));
+        assertNull(LzDataElement.stringToLzData("a>"));
+        assertNull(LzDataElement.stringToLzData("<a>"));
+        assertNull(LzDataElement.stringToLzData("<a></b>"));
+        assertNull(LzDataElement.stringToLzData("<>"));
+        assertNull(LzDataElement.stringToLzData("</>"));
+        assertNull(LzDataElement.stringToLzData("<>/>"));
+        assertNull(LzDataElement.stringToLzData("<a x=/>"));
+        assertNull(LzDataElement.stringToLzData("<a x='<'/>"));
+        assertNull(LzDataElement.stringToLzData("<a><![CDATA[</a>"));
+        assertNull(LzDataElement.stringToLzData("<a><!" + "--</a>"));
+        assertNull(LzDataElement.stringToLzData("<?xml version=\"1.0\" >"));
+        assertNull(LzDataElement.stringToLzData("<a><b:c xmlns:b=\"abc\"></c></a>"));
+        assertNull(LzDataElement.stringToLzData("<a><b:c xmlns:b=\"abc\"></d:c></a>"));
+        if ($as2) {
+            // invalid xml, but parsed by flash
+        } else if ($as3) {
+            // invalid xml, but parsed by flash
+        } else {
+            assertNull(LzDataElement.stringToLzData("<0a />"));
+            assertNull(LzDataElement.stringToLzData("<a>&foo;</a>"));
+        }
+        if ($as2) {
+            // invalid xml, but parsed by flash
+        } else {
+            assertNull(LzDataElement.stringToLzData("<a/><a/>"));
+            assertNull(LzDataElement.stringToLzData("<//>"));
+            assertNull(LzDataElement.stringToLzData("<a:b></a:b>"));
+            if ($dhtml) {
+                var isSafari = lz.embed.browser.isSafari;
+            } else {
+                var isSafari = false;
+            }
+            if (! isSafari) {
+                // invalid xml, but parsed by Safari
+                assertNull(LzDataElement.stringToLzData("<a><b:c xmlns:b=\"\"/></a>"));
+            }
+            assertNull(LzDataElement.stringToLzData("<?xml version=\"1.0\" ?>"));
+            assertNull(LzDataElement.stringToLzData("<?xml version=\"1.0\" ?><?xml version=\"1.0\" ?>"));
+        }
+    ]]></method>
+  </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

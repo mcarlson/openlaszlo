@@ -29,9 +29,11 @@
     <include href="testheaderresponse.lzx"/>
     <include href="sendheaders.lzx"/>
     <include href="testclientcachebreaker.lzx"/>
+    <include href="xmlparser.lzx"/>
 
     <TestSuite>
         <TestDatanode/>
+        <TestXmlParser/>
         <TestDatapointer/>
         <TestDatapointerServerless/>
         <TestDPDepend/>
@@ -65,6 +67,6 @@
     </TestSuite>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

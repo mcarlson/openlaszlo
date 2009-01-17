@@ -843,7 +843,8 @@ static function stringToLzData( str:String, trimwhitespace:Boolean=false, nspref
 }
 
 /** @type Dictionary 
-  * @keywords read-only */
+  * @keywords read-only 
+  * @access private */
 static const whitespaceChars :Object = {' ': true, '\r': true, '\n': true, '\t': true};
 
 
