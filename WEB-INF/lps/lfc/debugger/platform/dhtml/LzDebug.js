@@ -10,6 +10,9 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
    */
   var DebugWindow = null;
 
+  /** @access private */
+  var __reNewline = RegExp('&#xa;|&#xA;|&#10;|\\n', 'g');
+
   function LzDHTMLDebugConsole () {
     super();
     // But not in Rhino
@@ -29,15 +32,15 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
 
   function createDebugIframe() {
     if (! this.DebugWindow) {
-      debugurl = lz.embed.options.resourceroot + 'lps/includes/laszlo-debugger.html'
+      var debugurl = lz.embed.options.resourceroot + 'lps/includes/laszlo-debugger.html';
       var iframe = document.createElement('iframe');
-      lz.embed.__setAttr(iframe, 'id', 'LaszloDebugger')
-      lz.embed.__setAttr(iframe, 'name', 'LaszloDebugger')
-      lz.embed.__setAttr(iframe, 'src', debugurl)
-      lz.embed.__setAttr(iframe, 'width', '100%')
-      lz.embed.__setAttr(iframe, 'height', '200')
+      lz.embed.__setAttr(iframe, 'id', 'LaszloDebugger');
+      lz.embed.__setAttr(iframe, 'name', 'LaszloDebugger');
+      lz.embed.__setAttr(iframe, 'src', debugurl);
+      lz.embed.__setAttr(iframe, 'width', '100%');
+      lz.embed.__setAttr(iframe, 'height', '200');
       var y = canvas.height - 200;
-      lz.embed.__setAttr(iframe, 'style', 'position:absolute;z-index:10000000;top:' + y + 'px;')
+      lz.embed.__setAttr(iframe, 'style', 'position:absolute;z-index:10000000;top:' + y + 'px;');
       canvas.sprite.__LZdiv.appendChild(iframe);
       this.DebugWindow = window.frames['LaszloDebugger'];
     }
@@ -53,8 +56,8 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
     var span = dwd.createElement('span');
     var dwdb = dwd.body;
     // IE does not display \n in white-space: pre, so we translate...
-    span.innerHTML = '<span class="OUTPUT">' + str.split('\n').join('<br />') + '</span>';
-    console.log('addHTMLText',dwdb, str, span);
+    span.innerHTML = '<span class="OUTPUT">' + str.replace(this.__reNewline, '<br />') + '</span>';
+    //console.log('addHTMLText',dwdb, str, span);
     dwdb.appendChild(span);
     // Scroll to end
     dw.scrollTo(0, dwdb.scrollHeight);
