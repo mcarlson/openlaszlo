@@ -8,25 +8,6 @@
   * @author Max Carlson &lt;max@openlaszlo.org&gt;
   */
 
-class LzColorUtilsWrapperClass {
-    // For back compatibility
-    function hextoint (value) {
-        if ($debug) Debug.deprecated(this, arguments.callee, LzColorUtils.hextoint);
-        return LzColorUtils.hextoint(value);
-    }
-
-    function inttohex (c) {
-        if ($debug) Debug.deprecated(this, arguments.callee, LzColorUtils.inttohex);
-        return LzColorUtils.inttohex(c);
-    }
-
-    function torgb (s) {
-        if ($debug) Debug.deprecated(this, arguments.callee, LzColorUtils.torgb);
-        return LzColorUtils.torgb(s);
-    }
-}
-
-
 // Global class with static methods for processing colors - required by the compiler for attribute type="color" conversion
 class LzColorUtils {
     /** @access public
@@ -183,10 +164,36 @@ class LzColorUtils {
 }
 
 class LzUtilsClass {
+    /* @access private */
+    var __SimpleExprPattern;
+    /* @access private */
+    var __ElementPattern;
+
+    function LzUtilsClass() {
+        this.__SimpleExprPattern = new RegExp('^\\s*([$_A-Za-z][$\\w]*)((\\s*\\.\\s*[$_A-Za-z][$\\w]*)|(\\s*\\[\\s*\\d+\\s*\\]))*\\s*$');
+        // Now pull out just the element 'selectors', so you can walk down them 
+        this.__ElementPattern = new RegExp('([$_A-Za-z][$\\w]*)|(\\d+)', 'g');
+    }
     // ***** color *****
 
     // For back compatibility
-    var color = new LzColorUtilsWrapperClass();
+    var color = {
+            // For back compatibility
+        hextoint: function hextoint (value) {
+            if ($debug) Debug.warn('lz.Utils.color.hextoint() is deprecated.  Use LzColorUtils.hextoint() instead.');
+            return LzColorUtils.hextoint(value);
+        }
+
+        ,inttohex: function inttohex (c) {
+            if ($debug) Debug.warn('lz.Utils.color.inttohex() is deprecated.  Use LzColorUtils.inttohex() instead.');
+            return LzColorUtils.inttohex(c);
+        }
+
+        ,torgb: function torgb (s) {
+            if ($debug) Debug.warn('lz.Utils.color.torgb() is deprecated.  Use LzColorUtils.torgb() instead.');
+            return LzColorUtils.torgb(s);
+        }
+    }
 
     /** @access public
       * Converts a CSS #RRGGBBAA string to a rgb.0a floating point 
@@ -247,12 +254,13 @@ class LzUtilsClass {
     var colornames = lz.colors;
 
     // Unpack a javascript list from a string, giving each item the appropriate type 
-    function __unpackList(argstr, scope = null) {
+    function __unpackList(argstr:String, scope = null) {
         if (scope == null) scope = canvas;
         var args = argstr.split(',');
         // cast arguments to type
         for (var i = 0; i < args.length; i++) {
             var a = args[i];
+            if (a == '') continue;
 
             // strip whitespace
             while (a.charAt(0) == ' ') {
@@ -278,13 +286,18 @@ class LzUtilsClass {
                 //Debug.write('found property', args[i], a);
             }
         }
+        //Debug.write('__unpackList', args);
         return args;
     }
 
-    // 'eval' a method from a javascript string.  Starts looking for references in the canvas.
-    function safeEval(js, arglist = null) {
-        var scope = canvas;
-        //Debug.write('callMethod', js);
+    /** @access public
+      * 'eval' a method or property from a javascript string.
+      */
+    function safeEval(js:String) {
+        // 'new' if the string begins with 'new '
+        if (js.indexOf('new ') == 0) return this.safeNew(js);
+
+        //Debug.write('safeEval', js);
         var s = js.indexOf('(')
         if (s != -1) {
             var e = js.indexOf(')')
@@ -292,31 +305,42 @@ class LzUtilsClass {
             js = js.substring(0, s);
         }
 
-        var path = js.split('.');
-        for (var i = 0; i < path.length; i++) {
-            var lastscope = scope;
-            var n = path[i];
-            // look in global scope if canvas lookup fails
-            if (i == 0 && ! scope[n]) {
-                scope = globalValue(n);
-            } else {
-                scope = scope[n];
+        // Find the scope for a path expression.  
+        // Simple "path" expressions will only have symbols, `.`, or `[numbers]`
+        var scope = null, val;
+        if (js.match(this.__SimpleExprPattern)) {
+            var parts = js.match(this.__ElementPattern)
+            val = globalValue(parts[0]);
+            for (var i = 1, l = parts.length; i < l; i++) {
+                scope = val;
+                val = val[parts[i]];
+                //Debug.write('found val', val);
             }
-            //Debug.write('found', n, 'in scope', scope);  
+            //Debug.write('final val', val, scope);
         }
 
-        var args = arglist == null ? lz.Utils.__unpackList(args, lastscope) : arglist;
-        //var args = lz.Utils.__unpackList(args, lastscope);
+        if (args != null) {
+            var args = lz.Utils.__unpackList(args, scope);
+        }
 
-        //Debug.write('found scope', scope,'in', lastscope, 'args', args, 'for path', path, arglist);  
+        if (! args || args.length == 0) {
+            //Debug.write('no args, found val', val);
+            return val;
+        }
+
+        //Debug.write('found val', val,'in', scope, 'args', args, 'for path', path, arglist);  
         // return values don't work for global scopes in swf9, e.g. 'lz.Browser.getVersion()' - see LPP-7008
-        var result = scope.apply(lastscope, args);
-        //Debug.write('result', result);
-        return result;
+        if (val) {
+            var result = val.apply(scope, args);
+            //Debug.write('result', result);
+            return result;
+        }
     }
 
-    // 'new' an object from a javascript string.  Must begin with 'new '.
-    function safeNew(js, arglist = null) {
+    /** @access public
+      * 'new' an object from a javascript string.  Must begin with 'new '.
+      */
+    function safeNew(js:String) {
         var orig = js;
 
         // strip 'new '
@@ -334,7 +358,7 @@ class LzUtilsClass {
         var obj = globalValue(js);
         if (! obj) return;
 
-        var args = arglist == null ? lz.Utils.__unpackList(args) : arglist;
+        var args = lz.Utils.__unpackList(args);
         // nasty... but at least it goes to 11!
         var size = args.length;
         if (size == 0) {
@@ -361,6 +385,8 @@ class LzUtilsClass {
             return new obj(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
         } else if (size == 11) {
             return new obj(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]);
+        } else {
+            if ($debug) Debug.warn('Too many arguments', args)
         }
     }
 }
