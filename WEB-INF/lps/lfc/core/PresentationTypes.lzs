@@ -154,6 +154,8 @@ class ExpressionPresentationType extends PresentationType {
  */
 class SizePresentationType extends PresentationType {
   static function accept(value) {
+    // sizeExpression can be null
+    if (value == "null") { return null; }
     // TODO: handle percentage values?
     return Number(value);
   }

@@ -299,6 +299,7 @@ public function enable (){
         // Mimic sendEvent which prohibits events and delegates from
         // recursing
         e.locked = true;
+        e.ready = false;
         lockedEvents.push(e);
         if (! d.event_called) {
           d.event_called = true; //this delegate has been called
@@ -313,6 +314,7 @@ public function enable (){
       }
       while (e = lockedEvents.pop()) {
         e.locked = false;
+        e.ready = e.delegateList.length != 0;
       }
     }
     evq.length = 0;
@@ -504,20 +506,20 @@ public function addDelegate (d){
  *  <code>null</code> will be sent.
  */
 public override function sendEvent ( eventValue = null ){
-    if ( this.locked ) { return; } //don't allow for multiple calls
-
+    if ( this.locked || (! this.ready) ) { return; }
+    // Our event system does not recurse
+    this.locked = true;
+    // You can't be ready if you are locked, this will avoid callers
+    // making a pointless call
+    this.ready = false;
     var dll = this.delegateList.length;
-    if (dll == 0) { return; }
 
     if ($profile) {
         var nm = this._dbg_profileName;
-
         if (nm) {
             Profiler.event(nm, 'calls');
         }
     }
-
-    this.locked = true;
 
     var calledDelegates = new Array;
 
@@ -556,6 +558,7 @@ public override function sendEvent ( eventValue = null ){
     }
 
     this.locked = false;
+    this.ready = this.delegateList.length != 0;
 }
 
 /**
@@ -577,9 +580,7 @@ public override function removeDelegate ( d = null ){
             break;
         }
     }
-    if ( this.delegateList.length == 0 ){
-        this.ready = false;
-    }
+    this.ready = this.delegateList.length != 0;
 }
 
 /**

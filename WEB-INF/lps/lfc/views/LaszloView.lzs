@@ -1042,6 +1042,8 @@ var __set_x_memo:*;
 
 /** @access private */
 function $lzc$set_x(v) {
+    // Ensure the getter is accurate
+    this.x = v;
     // NOTE: [2009-01-06 ptw] See @devnote at __set_x_memo
     if (this.__set_x_memo === v) {
       // Always send the event
@@ -1051,7 +1053,6 @@ function $lzc$set_x(v) {
     // memoize
     this.__set_x_memo = v;
 
-    this.x = v;
     if ( this.__LZhasoffset ){
         if (this.capabilities.rotation) {
             v -= ( this.xoffset * this.__LZrcos  -
@@ -1093,6 +1094,8 @@ var __set_y_memo:*;
 
 /** @access private */
 function $lzc$set_y(v) {
+    // Ensure the getter is accurate
+    this.y = v;
     // NOTE: [2009-01-06 ptw] See @devnote at __set_y_memo
     if (this.__set_y_memo === v) {
       // Always send the event
@@ -1102,7 +1105,6 @@ function $lzc$set_y(v) {
     // memoize
     this.__set_y_memo = v;
 
-    this.y = v;
     if ( this.__LZhasoffset ){
         if (this.capabilities.rotation) {
             v -= ( this.xoffset * this.__LZrsin  +
@@ -1185,6 +1187,13 @@ var __set_width_memo:*;
 
 /** @access private */
 function $lzc$set_width(v) {
+    // Ensure getters are accurate
+    if (v != null) {
+      this.hassetwidth = true;
+      this.width = v;
+    } else {
+      this.hassetwidth = false;
+    }
     // NOTE: [2009-01-06 ptw] See @devnote at __set_width_memo
     if (this.__set_width_memo === v) {
       // Always send the event
@@ -1199,7 +1208,6 @@ function $lzc$set_width(v) {
     // will immediately be overridden by `reevaluateSize` below, and a
     // non-null value will not be adjusted by `pixellock`.
     if ( v == null ){
-        this.hassetwidth = false;
         // expose proto method
         this.__LZcheckwidth = true;
         if ( this._setrescwidth ){
@@ -1215,8 +1223,6 @@ function $lzc$set_width(v) {
         return;
     }
 
-    this.width = v;
-    this.hassetwidth = true;
     if ( this.pixellock ) { v = Math.floor( v ); }
     if ( this._setrescwidth ){
         var xscale = this.unstretchedwidth == 0 ? 100 : v/this.unstretchedwidth;
@@ -1260,6 +1266,13 @@ var __set_height_memo:*;
 
 /** @access private */
 function $lzc$set_height(v) {
+    // Ensure getters are accurate
+    if (v != null) {
+      this.hassetheight = true;
+      this.height = v;
+    } else {
+      this.hassetheight = false;
+    }
     // NOTE: [2009-01-06 ptw] See @devnote at __set_height_memo
     if (this.__set_height_memo === v) {
       // Always send the event
@@ -1274,7 +1287,6 @@ function $lzc$set_height(v) {
     // will immediately be overridden by `reevaluateSize` below, and a
     // non-null value will not be adjusted by `pixellock`.
     if ( v == null ){
-        this.hassetheight = false;
         // expose proto method
         this.__LZcheckheight = true;
         if ( this._setrescheight ){
@@ -1290,8 +1302,6 @@ function $lzc$set_height(v) {
         return;
     }
 
-    this.height = v;
-    this.hassetheight = true;
     if ( this.pixellock ) { v = Math.floor( v ); }
     if ( this._setrescheight ){
         this._yscale = this.unstretchedheight == 0 ? 100 : v/this.unstretchedheight;

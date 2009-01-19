@@ -1389,7 +1389,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     }
     // TODO: [2002-12-03 ptw] There should be a more general
     // mechanism for matching patterns against AST's and replacing
-    // them.
+     // them.
     // FIXME: [2002-12-03 ptw] This substitution is not correct
     // because it does not verify that the method being inlined is
     // actually LzNode.setAttribute.
@@ -1402,7 +1402,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       String name = ((ASTIdentifier)fnchildren[1]).getName();
       // We can't expand this if an expression value is expected,
       // since we don't have 'let'
-      if (name.equals("setAttribute") && (! isReferenced)) {
+      if (name.equals("setAttribute") && (arglen == 2) && (! isReferenced)) {
         SimpleNode scope = fnchildren[0];
         SimpleNode property = args[0];
         SimpleNode value = args[1];
@@ -1410,7 +1410,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         String thisvar = "$lzsc$" + UUID().toString();
         String propvar = "$lzsc$" + UUID().toString();
         String valvar = "$lzsc$" + UUID().toString();
-        String changedvar = "$lzsc$" + UUID().toString();
         String svar = "$lzsc$" + UUID().toString();
         String evtvar = "$lzsc$" + UUID().toString();
         String decls = "";
@@ -1434,19 +1433,9 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         } else {
           decls += "var " + valvar + " = " + ptp.text(value) + ";";
         }
-        if (arglen > 2) {
-          SimpleNode ifchanged = args[2];
-          if (ifchanged instanceof ASTLiteral || ifchanged instanceof ASTIdentifier) {
-            changedvar = ptp.text(ifchanged);
-          } else {
-            decls += "var " + changedvar + " = " + ptp.text(ifchanged) + ";";
-          }
-        }
         newBody.add(parseFragment(decls));
         String fragment =
-          "if (! (" + thisvar + ".__LZdeleted " +
-              ((arglen > 2) ? ("|| (" + changedvar + " && (" + thisvar + "[" + propvar + "] == " + valvar + "))") : "") +
-              ")) {" +
+          "if (! (" + thisvar + ".__LZdeleted " + ")) {" +
             ((property instanceof ASTLiteral) ? "" : ("var " + svar + " = \"$lzc$set_\" + " + propvar + ";")) +
             "if (" + thisvar + "[" + svar + "] is Function) {" +
             "  " + thisvar + "[" + svar + "](" + valvar + ");" +

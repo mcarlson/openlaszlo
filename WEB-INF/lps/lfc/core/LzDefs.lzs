@@ -26,12 +26,10 @@ public class LzDeclaredEventClass {
     super();
   }
 
-  /** True when event is ready to be sent.
+  /** True when the event has listeners, and is not in progress
    * @type Boolean
    * @keywords readonly
    * @access private
-   * @devnote TODO: [2008-03-20 ptw] This really should just be:
-   * function get ready() { return this.delegateList.length > 0; }
    */
   public var ready:Boolean = false;
 
