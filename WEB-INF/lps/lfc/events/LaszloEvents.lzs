@@ -114,14 +114,23 @@ public dynamic final class LzDelegate {
       // We proceed anyways below, for back-compatibility
     }
     this.c = context;
-    var m = context[methodName];
+    var m:* = context[methodName];
     if (m is Function) {
       this.m = m;
+      if (m.length != 1) {
+        if ($debug) {
+          Debug.warn("Invalid delegate: %s.%s => %w (must accept one argument)", context, methodName, m);
+        }
+        if ($as3) {
+          var a:Array = new Array(m.length);
+          this.m = function (ignore:*) :* { return m.apply(this, a); }
+        }
+      }
     } else if ($debug) {
       Debug.error("Invalid delegate: %s.%s => %w (must be a Function)", context, methodName, m);
     }
-    if ( eventSender != null ){
-      this.register( eventSender , eventName );
+    if (eventSender != null) {
+      this.register( eventSender, eventName );
     }
 
     this.__delegateID = LzDelegate.__nextID++;
@@ -134,20 +143,20 @@ public dynamic final class LzDelegate {
  * @access private
  * @type Object
  */
-var c;
+var c:LzEventable;
 
 /** The method to call (will be applied to context)
  * @access private
- * @type String
+ * @type Function
  */
-var m;
+var m:Function;
 
 /** @access private */
-var lastevent = 0;
+var lastevent:int = 0;
 /** @access private */
-var enabled = true;
+var enabled:Boolean = true;
 /** @access private */
-var event_called = false;
+var event_called:Boolean = false;
 
 /**
   * Executes the named method in the given context with the given data. Returns
@@ -156,17 +165,17 @@ var event_called = false;
   * @param * eventValue: The data with which to call the method.
   * @return *: The value returned by the method call.
   */
-public function execute (eventValue){
+public function execute (eventValue:*) :* {
     // Don't execute if context has been deleted, as that could
     // 'resurrect' the deleted view, causing a memory leak
     // Usually this is because a deleted view has idle or timer events
     // still registered.
-    var context = this.c;
+    var context:LzEventable = this.c;
     if (this.enabled && context) {
         if (context['__LZdeleted']) {
             return;
         }
-        var m = this.m;
+        var m:Function = this.m;
         return m && m.call(context, eventValue);
     }
 }
@@ -188,7 +197,7 @@ public function execute (eventValue){
   * @param String eventName: The name of the event to register for.
   *
   */
-  public function register ( eventSender:LzEventable , eventName:String) {
+  public function register (eventSender:LzEventable, eventName:String) :void {
     if ($as3) {
       // This type-check is superfluous in JS2, but we want it as an
       // aid to portability in JS1
@@ -205,29 +214,21 @@ public function execute (eventValue){
       // We proceed anyways, for back-compatibility
     }
 
-    var anEvent = eventSender[ eventName ];
-
-    var m = this.m;
-    if (m && m.length != 1) {
-      if ($debug) {
-        Debug.warn("Invalid delegate: %#w (must accept one argument to handle %w.%s)",
-                   m, eventSender, eventName);
-      }
-      if ($as3) {
-        var a = new Array(m.length);
-        this.m = function (ignore:*) { return m.apply(this, a); }
-      }
+    if (this.c['__LZdeleted']) {
+        // don't register to event when context is deleted
+        return;
     }
 
+    var anEvent:* = eventSender[ eventName ];
     if (! (anEvent is LzEvent)){
       if ($debug) {
         if (anEvent && (! (anEvent is LzDeclaredEventClass))) {
           Debug.error("Invalid event: %w.%s => %w", eventSender, eventName, anEvent);
         }
       }
-      anEvent = new LzEvent( eventSender, eventName , this );
+      anEvent = new LzEvent( eventSender, eventName, this );
     } else {
-      anEvent.addDelegate( this );
+      (anEvent cast LzEvent).addDelegate( this );
     }
 
     this[ this.lastevent++ ] = anEvent;
@@ -236,8 +237,8 @@ public function execute (eventValue){
 /**
   * Unregisters the delegate for all of the events it is registered for.
   */
-public function unregisterAll ( ){
-    for (var i = 0; i< this.lastevent ; i++){
+public function unregisterAll () :void {
+    for (var i:int = 0; i < this.lastevent; i++) {
         this[ i ].removeDelegate( this );
         this[ i ] = null;
     }
@@ -249,11 +250,11 @@ public function unregisterAll ( ){
   * @param LzEvent event: The event to unregister the delegate from.
   *                       (e.g.  myview.onmouseup)
   */
-public function unregisterFrom ( event ){
-    var keep = [];
-    for (var i = 0; i< this.lastevent ; i++){
-        var ev = this[ i ];
-        if ( ev == event ){
+public function unregisterFrom (event:LzDeclaredEventClass) :void {
+    var keep:Array = [];
+    for (var i:int = 0; i < this.lastevent; i++) {
+        var ev:LzEvent = this[ i ];
+        if (ev === event) {
             ev.removeDelegate( this );
         } else {
             keep.push( ev );
@@ -262,8 +263,8 @@ public function unregisterFrom ( event ){
     }
     //now fix it
     this.lastevent = 0;
-    var l = keep.length;
-    for ( var i = 0; i < l; i++ ){
+    var len:int = keep.length;
+    for (var i:int = 0; i < len; i++) {
         this[ this.lastevent++ ] = keep[ i ];
     }
 }
@@ -271,14 +272,14 @@ public function unregisterFrom ( event ){
 /**
   * Disables the delegate until enable method is called.
   */
-public function disable (){
+public function disable () :void {
     this.enabled = false;
 }
 
 /**
   * Enables a delegate that has been disabled
   */
-public function enable (){
+public function enable () :void {
     this.enabled = true;
 }
 
@@ -286,16 +287,16 @@ public function enable (){
    * Drain a deferred delegates queue
    * @access private
    */
-  static function  __LZdrainDelegatesQueue (evq:Array) {
-    var n = evq.length;
-    var i = 0;
+  static function  __LZdrainDelegatesQueue (evq:Array) :void {
+    var n:int = evq.length;
+    var i:int = 0;
     if (i < n) {
-      var calledDelegates = new Array;
-      var lockedEvents = new Array;
+      var calledDelegates:Array = new Array;
+      var lockedEvents:Array = new Array;
       while (i < n) {
-        var e = evq[i];
-        var d = evq[i+1];
-        var eventValue = evq[i+2];
+        var e:LzEvent = evq[i];
+        var d:LzDelegate = evq[i+1];
+        var eventValue:* = evq[i+2];
         // Mimic sendEvent which prohibits events and delegates from
         // recursing
         e.locked = true;
@@ -307,14 +308,14 @@ public function enable (){
           // d.execute( eventValue ); inlined
           if (d.c && (! d.c.__LZdeleted) && d.m) { d.m.call(d.c, eventValue); }
         }
-        i+=3;
+        i += 3;
       }
       while (d = calledDelegates.pop()) {
         d.event_called = false;
       }
       while (e = lockedEvents.pop()) {
         e.locked = false;
-        e.ready = e.delegateList.length != 0;
+        e.ready = (e.delegateList.length != 0);
       }
     }
     evq.length = 0;
@@ -331,8 +332,8 @@ if ($debug) {
   * @access private
   */
   LzDelegate.prototype._dbg_name = function (){
-    var name = Debug.formatToString("%0.48w/<handler", this.c);
-    var ev0 = this[0];
+    var name:String = Debug.formatToString("%0.48w/<handler", this.c);
+    var ev0:LzEvent = this[0];
     if (ev0) {
       name += Debug.formatToString(" name='%s'", ev0._dbg_eventName);
       if (ev0._dbg_eventSender !== this.c) {
@@ -452,19 +453,19 @@ public final class LzEvent extends LzDeclaredEventClass {
    * @param String eventName: The name of this event.
    * @access private
    */
-  function LzEvent ( eventSender:LzEventable , eventName:String , d:* = null) {
+  function LzEvent (eventSender:LzEventable, eventName:String, d:* = null) {
     super();
-    var _evs = eventSender['_events'];
-    if (_evs == null ){
+    var _evs:Array = eventSender['_events'];
+    if (_evs == null) {
       eventSender._events = [ this ];
     } else {
-      _evs.push ( this );
+      _evs.push( this );
     }
     eventSender[ eventName ] = this;
-    if ( d ){
+    if (d) {
       this.delegateList = [d];
       this.ready = true;
-    }else{
+    } else {
       this.delegateList = [];
     }
     // If debugging or profiling, add an informative name
@@ -491,7 +492,7 @@ public final class LzEvent extends LzDeclaredEventClass {
   * @param LzDelegate d: The delegate to add to the list of delegates called by the event.
   * @access private
   */
-public function addDelegate (d){
+public function addDelegate (d:LzDelegate) :void {
     this.ready = true;
     this.delegateList.push(d);
 }
@@ -505,37 +506,37 @@ public function addDelegate (d){
  *  the delegates registered to receive the event.  If omitted,
  *  <code>null</code> will be sent.
  */
-public override function sendEvent ( eventValue = null ){
+public override function sendEvent (eventValue:* = null) :void {
     if ( this.locked || (! this.ready) ) { return; }
     // Our event system does not recurse
     this.locked = true;
     // You can't be ready if you are locked, this will avoid callers
     // making a pointless call
     this.ready = false;
-    var dll = this.delegateList.length;
 
     if ($profile) {
-        var nm = this._dbg_profileName;
+        var nm:* = this._dbg_profileName;
         if (nm) {
             Profiler.event(nm, 'calls');
         }
     }
 
-    var calledDelegates = new Array;
-
-    var d;
-    for (var i = dll; i >= 0; i--){
-        d = this.delegateList[ i ];
+    var dlist:Array = this.delegateList;
+    var dll:int = dlist.length;
+    var calledDelegates:Array = new Array;
+    var d:LzDelegate;
+    for (var i:int = dll; i >= 0; i--) {
+        d = dlist[ i ];
         //pointer may be bad due to deletions
-        if ( d && d.enabled && (! d.event_called)){
+        if (d && d.enabled && (! d.event_called)) {
             d.event_called = true; //this delegate has been called
             calledDelegates.push( d );
             // We _do_ worry about deleted contexts to make sure that
             // executing a delegate does not resurrect one!
-            var c = d.c;
+            var c:LzEventable = d.c;
             if (c && (! c.__LZdeleted)) {
                 if (c.__LZdeferDelegates) {
-                  var evq = c.__LZdelegatesQueue;
+                  var evq:Array = c.__LZdelegatesQueue;
                   if (!evq) { evq = c.__LZdelegatesQueue = new Array(); }
                   evq.push(this, d, eventValue);
                 } else if (d.m) {
@@ -546,52 +547,51 @@ public override function sendEvent ( eventValue = null ){
         }
     }
 
-    while (d = calledDelegates.pop() ){
+    while (d = calledDelegates.pop()) {
         d.event_called = false;
     }
 
     if ($profile) {
-        var nm = this._dbg_profileName;
+        var nm:* = this._dbg_profileName;
         if (nm) {
             Profiler.event(nm, 'returns');
         }
     }
 
     this.locked = false;
-    this.ready = this.delegateList.length != 0;
+    this.ready = (dlist.length != 0);
 }
 
 /**
   * Removes the delegate from the delegate list. In practice, this is rarely
   * called explicitly, since it does not update the delegate's list of stored
   * events. Right now, this is called only by <b><i>LzDelegate</i>.
-  * unregisterAll</b> Delegates should support a simple unregister command, that
-  * unregisters them for a single event, but to date, that has not proven
-  * necessary
+  * unregisterAll</b>
   *
   * @param LzDelegate d: The delegate to remove from the delegateList.
   * @access private
   */
-public override function removeDelegate ( d = null ){
-    var dll = this.delegateList.length;
-    for (var i = 0; i < dll; i++){
-        if (this.delegateList[i] === d){
-            this.delegateList.splice(i, 1);
+public override function removeDelegate (d:LzDelegate = null) :void {
+    var dlist:Array = this.delegateList;
+    var dll:int = dlist.length;
+    for (var i:int = 0; i < dll; i++) {
+        if (dlist[i] === d) {
+            dlist.splice(i, 1);
             break;
         }
     }
-    this.ready = this.delegateList.length != 0;
+    this.ready = (dlist.length != 0);
 }
 
 /**
   * Removes all delegates from this event
   * @access private
   */
-public override function clearDelegates (){
-    while (this.delegateList.length ){
-        this.delegateList[ 0 ].unregisterFrom( this );
+public override function clearDelegates () :void {
+    var dlist:Array = this.delegateList;
+    while (dlist.length) {
+        dlist[ 0 ].unregisterFrom( this );
     }
-    //this.delegateList = [];
     this.ready = false;
 }
 
@@ -600,7 +600,7 @@ public override function clearDelegates (){
   * @return Number: The number of delegates registered for the event.
   * @access private
   */
-override public function getDelegateCount ( ){
+override public function getDelegateCount () :int {
     return this.delegateList.length;
 }
 

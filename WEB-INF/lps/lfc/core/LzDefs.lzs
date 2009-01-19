@@ -43,7 +43,7 @@ public class LzDeclaredEventClass {
    *  the delegates registered to receive the event.  If omitted,
    *  <code>null</code> will be sent.
    */
-  public function  sendEvent (eventValue = null ){
+  public function  sendEvent (eventValue:* = null) :void {
     // TODO [hqm 2008-03] This would be useful debugging info to see
     // when apps call sendEvent on null events.
     /*
@@ -56,17 +56,17 @@ public class LzDeclaredEventClass {
   /**
    * @access private
    */
-  public function clearDelegates ( ){ };
+  public function clearDelegates () :void { };
 
   /**
    * @access private
    */
-  public function removeDelegate (d = null){ };
+  public function removeDelegate (d:LzDelegate = null) :void { };
 
   /**
    * @access private
    */
-  public function getDelegateCount ( ){return 0};
+  public function getDelegateCount () :int {return 0;};
 
   /**
    * @access private
