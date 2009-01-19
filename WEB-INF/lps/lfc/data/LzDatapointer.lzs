@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LFC
@@ -107,9 +107,20 @@ function $lzc$set_p (v) :void {
 }
 
 /** The LzDataNodeMixin that the datapointer is pointing
-  * to. Calling <method>setAttribute</method> on attribute calls
+  * to. Calling <method>setAttribute</method> on <attribute>p</attribute> calls
   * <method>LzDatapointer.setPointer</method>.
   * @type LzDataNodeMixin
+  *
+  * @devnote TODO: [2009-01-19 ptw] Maybe the attribute should be
+  * named `pointer`?  And the use of `p` deprecated?  It looks like
+  * someone may have started to do that, otherwise, what is the point
+  * of $lzc$set_pointer (above)?  If we did that, we wouldn't need the
+  * silly comment that setting `p` calls `setPointer`.
+  *
+  * @devnote FIXME: [2009-01-18 ptw] (LPP-5840) To enforce this type
+  * declaration in the interface, the compiler would need to transform
+  * the var to a getter/setter in the interface, and
+  * getter/setter/(hidden) state in each implementation.
   */
 var p /*:LzDataNodeMixin*/ = null;//TODO: uncomment after LPP-5840
 
@@ -304,6 +315,9 @@ function $lzc$xpathQuery_dependencies (who, self, p) :Array {
 /**
   * Points this datapointer at p.
   * @param LzDataNodeMixin p: The new target for this datapointer.
+  *
+  * @devnote TODO [2009-01-19 ptw] Shouldn't this be $lzc$set_pointer,
+  * and be final?
   */
 function setPointer ( p /*:LzDataNodeMixin*/ ) :Boolean {
     this.setXPath( null );

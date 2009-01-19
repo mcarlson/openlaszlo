@@ -139,13 +139,19 @@
             v.setAttribute( "clonenumber" , n );
             this.setData( v , n );
             this.update( v , n );
-            // Cooperate with dataselectionmanager, but take care
-            var datanode = this.nodes[n];
-            var datapath = v.datapath;
-            var isSelected = (datanode && datanode['sel']) || false;
-            var wasSelected = (datapath && datapath['sel']) || false;
-            if (isSelected != wasSelected) {
-              v.setSelected(datapath['sel'] = isSelected);
+            // Cooperate with dataselectionmanager, if there is one
+            if (v.datapath is LzDatapath) {
+                var datapath:LzDatapath = v.datapath cast LzDatapath;
+                var noden = this.nodes[n];
+                if (noden is LzDataNodeMixin) {
+                    // FIXME: [2009-01-19 ptw] (LPP-5840) Uncomment when fixed
+                    var datanode /* :LzDataNodeMixin */ = noden /* cast LzDataNodeMixin */;
+                    var isSelected = datanode.sel;
+                    var wasSelected = datapath.sel;
+                    if (isSelected != wasSelected) {
+                        v.setSelected(datapath.sel = isSelected);
+                    }
+                }
             }
             if ( this._cloneprops[ n ] != null) {
                 var p = this._cloneprops[ n ];
@@ -234,7 +240,7 @@
         <method name="setData" args="v:*,n=null">
             if (v) {
                 v.setAttribute('data', this.nodes[ n ]);
-                if (v['applyData']) v.applyData(this.nodes[n]);
+                v.applyData(this.nodes[n]);
             }
         </method>
 
@@ -274,16 +280,17 @@
 
         <!-- Gets the clone for the given datanode
             @param LzDataNodeMixin datanode: The datanode of the clone to get -->
-        <method name="getCloneForNode" args="datanode,dontmake = false">
-            <![CDATA[
-            var cls = this.clones;
-            for (var i = 0, len = cls.length; i < len; i++) {
-                if (cls[ i ].datapath.p == datanode) {
-                    return cls[ i ];
+        <method name="getCloneForNode" args="datanode,dontmake = false"><![CDATA[
+            if (datanode is LzDataNodeMixin) {
+                var cls = this.clones;
+                for (var i = 0, len = cls.length; i < len; i++) {
+                    var datapath = cls[i].datapath;
+                    if ((datapath is LzDatapath) && (datapath.p == datanode)) {
+                        return cls[ i ];
+                    }
                 }
             }
-            ]]>
-        </method>
+        ]]></method>
 
         <!-- Ensures that the clone at the given offset is visible under the mask
             @param Number n: The offset of the clone to scroll in view -->
