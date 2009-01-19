@@ -77,7 +77,7 @@
                     dev = Camera.get(deviceindex);
                 }
             } else {
-                if ($Debug) Debug.warn('%w is not supported in this runtime.', 'camera')
+                if ($debug) Debug.warn('%w is not supported in this runtime.', 'camera')
             }
             
             this._dev = dev;
