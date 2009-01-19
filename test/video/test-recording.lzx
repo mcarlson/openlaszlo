@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -9,102 +9,76 @@
     The recorded streams will be saved there.
 -->
 
-<canvas width="100%" height="80%" debug="true">
+<canvas width="100%" height="100%" debug="true">
 
+    <debug x="300" y="30" height="100%"/>
+    <simplelayout spacing="10"/>
+    <constantlayout axis="x" value="10"/>
 
-    <debug x="200"/>
+    <rtmpconnection id="rtc" autoconnect="true"
+            src="rtmp://localhost/test/instance1" />
 
-    <rtmpconnection id="rtc" 
-        autoconnect="true"
-        src="rtmp://localhost/test/instance1" 
-    />
+    <text multiline="true" width="${canvas.width-20}">
+    This test requires an RTMP server.  On the RTMP server there needs to be
+    an application called "test" see XXXX for server requirements.  The
+    recorded streams will be saved in "instance1" in the test application on
+    the server.
+    </text>
 
-    <simplelayout inset="10" spacing="10"/>
-
-    <rtmpstatus/>
-
-    <text
-        text="${rtc.status}"
-    />
-
-    <view
-        width="168" 
-        height="138"
-        bgcolor="black" 
-        onmousedown="this.resizer.apply()" 
-        onmouseup="this.resizer.remove()"
-    >
-
+    <text multiline="true" width="280">
+    Below you should see a shiny green dot and the word "connected" which
+    indicated a successful connection to the rtmp server."
+    </text>
+    <view layout="axis:x;spacing:10">
+        <rtmpstatus/>
+        <text text="${rtc.status}" />
+    </view>
+    <text multiline="true" width="280">
+    Check the "show camera" checkbox and choose "allow" when the Flash
+    security dialog pops up, the you should see your camera video stream in
+    the black box.
+    </text>
+    <checkbox id="gShow" text="show camera" />
+    <view width="168" height="138" bgcolor="black" 
+        onmousedown="this.resizer.apply()" onmouseup="this.resizer.remove()" >
         <resizestate name="resizer"/> 
+        <videoview id="v" x="4" y="4" 
+            width="${parent.width-8}" height="${parent.height-18}" 
+            debug="true">
 
-        <videoview id="v" 
-            x="4" 
-            y="4" 
-            width="${parent.width-8}" 
-            height="${parent.height-18}"
-        >
-
-            <mediastream
-                debug="true"
-        type="rtmp"
-        url="temp" 
-            />
-
-            <camera
-                show="${gShow.value}"
-            />
-
-            <microphone
-                capturing="${gShow.value}"
-            />
-
+            <mediastream id="ms" debug="true" type="rtmp" url="temp" />
+            <camera id="c" show="${gShow.value}" />
+            <microphone id="m" capturing="${gShow.value}" />
         </videoview>
+    </view>
+
+    <view layout="axis:x;spacing:10">
+        <text text="${'time: ' + v.stream.time}" />
+        <text text="${'total: ' + v.stream.totaltime}" />
+    </view>
+
+    <text multiline="true" width="280">
+    When you click record, you should see time and total show the same
+    numerical values.  When you click stop, both numbers and the video image
+    in the box should stop.
+    </text>
+    <view layout="axis: x; spacing: 10" >
+        <button text="record"
+            onclick="gShow.setValue(true); v.stream.record()" />
+
+        <button text="stop"
+            onclick="v.stream.stop(); gShow.setValue(false)" />
 
     </view>
 
-    <text
-        text="${'time: ' + v.stream.time}"
-    />
-
-    <text
-        text="${'totaltime: ' + v.stream.totaltime}"
-    />
-
-    <checkbox id="gShow" 
-        text="show camera"
-    />
-
-    <view 
-        layout="axis: x; spacing: 10"
-    >
-
-        <button
-            text="record"
-            onclick="gShow.setValue(true); v.stream.record()" 
-        />
-
-        <button
-            text="stop"
-            onclick="v.stream.stop(); gShow.setValue(false)" 
-        />
-
+    <text multiline="true" width="280">
+    After recording a video, clicking play should play the video and 'time'
+    should be update as the video plays. Clicking pause should cause both
+    'time' and video image to stop moving.
+    </text>
+    <view layout="axis: x; spacing: 10" >
+        <button text="play" onclick="gShow.setValue(false); v.stream.play()" />
+        <button text="pause" onclick="v.stream.pause()" />
     </view>
-
-    <view
-        layout="axis: x; spacing: 10"
-    >
-
-        <button
-            text="play"
-            onclick="gShow.setValue(false); v.stream.play()" 
-        />
-
-        <button
-            text="pause"
-            onclick="v.stream.pause()" 
-        />
-
-    </view>
-
 
 </canvas>
