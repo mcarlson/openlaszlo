@@ -4,7 +4,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -1444,25 +1444,32 @@ class SWFWriter extends ObjectWriter {
             
         actions.append(newline);
         actions.append("[");
-        // FIXME: [2003-03-19 bloch] We only support ANSI 8bit (up to
-        // 255) char encodings.  We lose the higher characters is
-        // UNICODE and we don't support anything else.
 
-        for(int i = 0; i < 256; i++) {
-            idx = font.getIndex(i);
-            adv = font.getAdvanceValue(idx);
+        // FIXME: [2003-03-19 bloch] We only support ANSI 8bit (up to 
+        // 255) char encodings. We lose the higher characters is 
+        // UNICODE and we don't support anything else. 
 
-            // Convert to pixels rounded to nearest 100th
-            double advance = emUnitsToPixels(adv);
-            actions.append(advance);
-            if (i != 255) {
-                actions.append(comma);
-            }
+        int maxSize = 256; 
+        String advanceTableMaxSize = LPS.getProperty("font.advancetable.max.size"); 
+        if (advanceTableMaxSize != null) { 
+            maxSize = Integer.parseInt(advanceTableMaxSize); 
+        } 
 
-            if (i%10 == 9) {
-                actions.append(newline);
-            }
-        }
+        for(int i = 0; i < maxSize; i++) { 
+            idx = font.getIndex(i); 
+            adv = font.getAdvanceValue(idx); 
+            // Convert to pixels rounded to nearest 100th 
+            double advance = emUnitsToPixels(adv); 
+            actions.append(advance); 
+            if (i != (maxSize-1)) { 
+                actions.append(comma); 
+            } 
+            if (i%10 == 9) { 
+                actions.append(newline); 
+            } 
+        } 
+
+
         actions.append("],");
         actions.append(newline);
 
@@ -1473,7 +1480,7 @@ class SWFWriter extends ObjectWriter {
         int m;
         int max;
         int adj;
-        for(int i = 0; i < 256; i++) {
+        for(int i = 0; i < maxSize; i++) {
             idx = font.getIndex(i);
             try {
                 m = (int)bounds[idx].getMinX();
@@ -1498,7 +1505,7 @@ class SWFWriter extends ObjectWriter {
             // Convert to pixels rounded to nearest 100th
             double lsb = emUnitsToPixels(adj);
             actions.append(lsb);
-            if (i != 255) {
+            if (i != maxSize-1) {
                 actions.append(comma);
             }
 
@@ -1514,7 +1521,7 @@ class SWFWriter extends ObjectWriter {
         actions.append(newline);
         actions.append("[");
 
-        for(int i = 0; i < 256; i++) {
+        for(int i = 0; i < maxSize; i++) {
             idx = font.getIndex(i);
             try {
                 m = (int)bounds[idx].getMaxX();
@@ -1528,7 +1535,7 @@ class SWFWriter extends ObjectWriter {
             // Convert to pixels rounded to nearest 100th
             double rsb = emUnitsToPixels(adj);
             actions.append(rsb);
-            if (i != 255) {
+            if (i != maxSize-1) {
                 actions.append(comma);
             }
 
