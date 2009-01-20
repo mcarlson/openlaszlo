@@ -1,0 +1,8 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+<!-- this is the example from the videoview doc -->
+<canvas>
+    <videoview url="http://www.archive.org/download//JudgeMediaTestVideoFile_0/video.flv" type="http" autoplay="true" width="320" height="240"/>
+</canvas>
