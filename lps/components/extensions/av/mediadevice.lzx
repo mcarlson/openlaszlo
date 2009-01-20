@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -11,31 +11,45 @@
         Media device, an abstract class.
     -->
     <class name="mediadevice" extends="node">
+        <switch>
+            <when property="$as3">
+                <passthrough>
+                    import flash.events.*;
+                </passthrough>
+            </when>
+        </switch>
 
-
-        <!--- Shared flag defined in mediadevice.prototype that 
-              tracks whether the user has allowed device access. 
+        <!--- Tracks whether the user has allowed device access. 
               True after user has accepted security dialog,
               false if the user denies access with security dialog.
-              Note: allowed is not defined in objects, but in the prototype. 
-              Initialized in the script at the end of the file.
               @keywords readonly -->
         <attribute name="allowed"  value="false"/>
 
-        <!--- Shared flag defined in mediadevice.prototype that 
+        <!--- Shared flag defined in lz.mediadevice that 
+              tracks whether the user has allowed device access. 
+              True after user has accepted security dialog,
+              false if the user denies access with security dialog.
+              Note: allowed is not defined in objects, but in lz.mediadevice. 
+              @keywords private -->
+        <attribute name="allowed"  value="false" allocation="class"/>
+
+        <!--- Shared flag defined in lz.mediadevice that 
               tracks whether we've figured out if we're allowed or not. 
               Default: false.
-              Note: allowed is not defined in objects, but in the prototype. 
-              Initialized in the script at the end of the file.
+              Note: allowed is not defined in objects, but in lz.mediadevice. 
               @keywords private -->
-        <attribute name="_allowedknown"/>
+        <attribute name="_allowedknown" value="false" allocation="class"/>
 
-        <!--- Shared array defined in mediadevice.prototype that 
+        <!--- Shared array defined in lz.mediadevice that 
               contains all mediadevice (or subclass) instances.
-              Note: _instances is not defined in objects, but in the prototype. 
-              Initialized in the script at the end of the file.
+              Note: _instances is not defined in objects, but in lz.mediadevice. 
               @keywords private -->
-        <attribute name="_instances"/>
+        <attribute name="_instances" value="[]" allocation="class"/>
+
+        <!--- Shared hash stored by device name.  Each value is an array of targets that should receive updates.
+              Note: _targets is not defined in objects, but in lz.mediadevice. 
+              @keywords private -->
+        <attribute name="_targets" value="{}" allocation="class"/>
 
         <!--- Reference to internal Flash device object.
               @keywords private -->
@@ -93,7 +107,7 @@
         <method name="init"><![CDATA[
             super.init();
 
-            this._instances.push(this);
+            lz.mediadevice._instances.push(this);
 
             //Debug.write("mediadevice init", this, "allowed", this["allowed"], "starting device");
 
@@ -111,7 +125,7 @@
             this.stopDevice();
 
             this.removeFromArray(
-                this._instances,
+                lz.mediadevice._instances,
                 this);
 
             super.destroy();
@@ -150,64 +164,60 @@
                 // Add ourself to the device's list of targets,
                 // creating it if necessary. 
 
-                var targets = dev['targets'];
-                if (targets == null) {
-                    targets = [];
-                    dev.targets = targets;
+                if (lz.mediadevice._targets[dev.name] == null) {
+                    lz.mediadevice._targets[dev.name] = [];
                 }
+                var devtargets = lz.mediadevice._targets[dev.name];
 
                 // Add this mediadevice to the Flash device's 
                 // list of targets, so we get notified of 
                 // interesting stuff (like onActivity).
-                targets.push(this);
+                devtargets.push(this);
 
-                // Hook up our notification events. 
+                
+                if ($as3) {
+                    dev.addEventListener(ActivityEvent.ACTIVITY, this._onActivityHandler);
+                    dev.addEventListener(StatusEvent.STATUS, lz.mediadevice._onStatusStatic);
+                } else {
+                    // Hook up our notification events. 
+                    dev.onActivity = function(active) {
+                        // delegate to shared method
+                        lz.mediadevice._onActiveStatic(dev, active);
+                    };
 
-                dev.onActivity = function(active) {
-                    // Send the onActivity notification to all mediadevice 
-                    // objects that are attached to this Flash device 
-                    // (in the targets array). 
-                    var targets = this.targets;
-                    var n = targets.length;
-                    var i;
-                    for (i = 0; i < n; i++) {
-                        targets[i]._onActivity(active);
-                    }
-                };
+                    dev.onStatus = function(info) {
+                        // Note: This notifier is handled specially,
+                        // because of the quirkyness of Flash's onStatus
+                        // notification. Flash only sends one notification
+                        // to a random device, not to each one. It's
+                        // really a global notification that needs to be
+                        // forwarded to all mediadevices, no matter which
+                        // camera or microphone Flash delivered it to. If
+                        // we switch a mediadevice's deviceindex away from
+                        // a Flash device (orphaning it), we still want
+                        // that Flash device to notify everybody of
+                        // onStatus changes, because the orphaned device
+                        // might be the one that gets notified when the
+                        // user changes the permission (only one device
+                        // ever is, no guessing which one). So we forward
+                        // that notification to all other mediadevices,
+                        // via _onStatusStatic. If we cleared out the
+                        // orphaned camera's notifier, then we might miss
+                        // an important notification, and if we didn't
+                        // reset its target when deleting a mediadevice,
+                        // we might notify a dead mediadevice.
 
-                dev.onStatus = function(info) {
+                        // The solution: we send this notification to the
+                        // mediadevice class method _onStaticStatic.
+                        // That's because orphaned Flash devices might
+                        // still get notified of onStatus events, and we
+                        // need to send them to somebody, and don't want
+                        // to send them to a dead object. The class method
+                        // forwards the message to all existing mediadevices.
 
-                    // Note: This notifier is handled specially,
-                    // because of the quirkyness of Flash's onStatus
-                    // notification. Flash only sends one notification
-                    // to a random device, not to each one. It's
-                    // really a global notification that needs to be
-                    // forwarded to all mediadevices, no matter which
-                    // camera or microphone Flash delivered it to. If
-                    // we switch a mediadevice's deviceindex away from
-                    // a Flash device (orphaning it), we still want
-                    // that Flash device to notify everybody of
-                    // onStatus changes, because the orphaned device
-                    // might be the one that gets notified when the
-                    // user changes the permission (only one device
-                    // ever is, no guessing which one). So we forward
-                    // that notification to all other mediadevices,
-                    // via _onStatusStatic. If we cleared out the
-                    // orphaned camera's notifier, then we might miss
-                    // an important notification, and if we didn't
-                    // reset its target when deleting a mediadevice,
-                    // we might notify a dead mediadevice.
-
-                    // The solution: we send this notification to the
-                    // mediadevice class method _onStaticStatic.
-                    // That's because orphaned Flash devices might
-                    // still get notified of onStatus events, and we
-                    // need to send them to somebody, and don't want
-                    // to send them to a dead object. The class method
-                    // forwards the message to all existing mediadevices.
-
-                    lz.mediadevice.prototype._onStatusStatic(info);
-                };
+                        lz.mediadevice._onStatusStatic(info);
+                    };
+                }
 
                 // Set up initial values for device properties.
 
@@ -225,15 +235,26 @@
                 // than we think it is. If so, notify all mediadevices.
                 var devallowed = 
                     !dev.muted;
-                //Debug.write("mediadevice", this, "allowed", this.allowed, "startDevice devallowed", devallowed);
-                if (this.allowed != devallowed) {
-                    lz.mediadevice.prototype._updateAllAllowedStatic(devallowed);
+                //Debug.write("mediadevice", this, "allowed", lz.mediadevice.allowed, "startDevice devallowed", devallowed);
+                if (lz.mediadevice.allowed != devallowed) {
+                    lz.mediadevice._updateAllAllowedStatic(devallowed);
                 }
             }
 
           ]]>
         </method>
 
+        <switch>
+            <when property="$as3">
+                <!--- Activity event handler for as3-->
+                <method name="_onActivityHandler" args="event">
+                    var dev = event.target;
+                    var active = event.activating;
+                    // delegate to shared method
+                    lz.mediadevice._onActiveStatic(dev, active);
+                </method>
+            </when>
+        </switch>
 
         <!--- Stops the device. -->
         <method name="stopDevice"><![CDATA[
@@ -244,7 +265,7 @@
 
             // Remove us from the device's list of targets.
             this.removeFromArray(
-                dev.targets, 
+                lz.mediadevice._targets[dev.name], 
                 this);
 
             this._dev = null;
@@ -334,21 +355,37 @@
           ]]>
         </method>
 
+        <!--- Static method called on lz.mediadevice 
+              Processes calls from Flash Camera/Microphone onActivity events. 
+              Send the onActivity notification to all mediadevice 
+              objects that are attached to this Flash device 
+              (in the targets array).
+              Don't call this on a mediadevice instance! 
+              @keywords private -->
+        <method name="_onActiveStatic" args="dev, active" allocation="class"><![CDATA[ 
+            //Debug.write("mediadevice _onActiveStatic", lz.mediadevice, dev, "active", active);
+            var targets = lz.mediadevice._targets[dev.name];
+            var n = targets.length;
+            var i;
+            for (i = 0; i < n; i++) {
+                targets[i]._onActivity(active);
+            }
+          ]]>
+        </method>
 
-        <!--- Static method called on mediadevice.prototype, 
-              the handler for the Flash Camera onStatus callback. 
+        <!--- Static method called on lz.mediadevice 
+              the handler for the Flash Camera/Microphone onStatus callback. 
               Info is the Flash status event name, like "Device.Action".
               This notifies all mediadevice instances that
               the allowed status changed.
               Don't call this on a mediadevice instance! 
               @keywords private -->
-        <method name="_onStatusStatic" args="info"><![CDATA[
-            // This is a static method, so "this" is mediadevice.prototype.
+        <method name="_onStatusStatic" args="info" allocation="class"><![CDATA[
             var tokens = info.code.split(".");
             var deviceName = tokens[0];
             var actionName = tokens[1];
 
-            //Debug.write("mediadevice _onStatusStatic", this, deviceName, actionName, "allowed", this.allowed);
+            //Debug.write("mediadevice _onStatusStatic", lz.mediadevice, deviceName, actionName, "allowed", lz.mediadevice.allowed);
 
             var allowedNow = null;
             var update = false;
@@ -356,7 +393,7 @@
             switch (actionName) {
 
                 case "Unmuted": {
-                    if (this.allowed != true) {
+                    if (lz.mediadevice.allowed != true) {
                         allowedNow = true;
                         update = true;
                     }
@@ -364,7 +401,7 @@
                 }
 
                 case "Muted": {
-                    if (this.allowed != false) {
+                    if (lz.mediadevice.allowed != false) {
                         allowedNow = false;
                         update = true;
                     }
@@ -374,46 +411,45 @@
             }
 
             if (update) {
-                //Debug.write("mediadevice", this, "_onStatusStatic allowed", allowedNow);
-                this._updateAllAllowedStatic(allowedNow);
+                //Debug.write("mediadevice", lz.mediadevice, "_onStatusStatic allowed", allowedNow);
+                lz.mediadevice._updateAllAllowedStatic(allowedNow);
             }
-
           ]]>
         </method>
 
 
-        <!--- Static method called on mediadevice.prototype,
+        <!--- Static method called on lz.mediadevice
               that sets the allowed class variable and tells
               all mediadevices that allowed changed.
               Don't call this on a mediadevice instance! 
               @keywords private -->
-        <method name="_updateAllAllowedStatic" args="allowedNow"><![CDATA[
-            // This is a static method, so "this" is mediadevice.prototype.
+        <method name="_updateAllAllowedStatic" args="allowedNow" allocation="class"><![CDATA[
             //Debug.write("_updateAllAllowedStatic", allowedNow, arguments.caller);
-            this.allowed = 
+            lz.mediadevice.allowed = 
                 allowedNow;
             var instances = 
-                this._instances;
+                lz.mediadevice._instances;
             var i;
             var n = instances.length;
             for (i = 0; i < n; i++) {
                 var dev = instances[i];
-                //Debug.write("_updateAllAllowedStatic", dev, this.allowed);
+                //Debug.write("_updateAllAllowedStatic", dev, lz.mediadevice.allowed);
                 dev._updateAllowed();
             } 
-            this._allowedknown = true;
+            lz.mediadevice._allowedknown = true;
           ]]>
         </method>
 
 
         <!--- Called on each mediadevice instance when the shared
-              mediadevice.prototype.allowed value changes.
+              lz.mediadevice.allowed value changes.
               @keywords private -->
         <method name="_updateAllowed"><![CDATA[
             //Debug.write("mediadevice _updateAllowed", this, this['allowed'])
+            this.allowed = lz.mediadevice.allowed;
 
             if (this.onallowed.ready) {
-                this.onallowed.sendEvent(this.allowed);
+                this.onallowed.sendEvent(lz.mediadevice.allowed);
             }
           ]]>
         </method>
@@ -436,16 +472,4 @@
             </doc>
 
     </class>
-
-
-    <script><![CDATA[
-
-        // Initialize the shared class variables in mediadevice.prototype. 
-        lz.mediadevice.prototype.allowed = false;
-        lz.mediadevice.prototype._allowedknown = false;
-        lz.mediadevice.prototype._instances = [];
-
-      ]]>
-    </script>
-
 </library>

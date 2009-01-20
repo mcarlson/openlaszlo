@@ -18,6 +18,13 @@
     <class name="camera" 
         extends="mediadevice"
     >
+        <switch>
+            <when property="$as3">
+                <passthrough>
+                    import flash.media.*;
+                </passthrough>
+            </when>
+        </switch>
 
 
         <!--- If true, show camera on immediateparent videoview.  -->
@@ -70,14 +77,18 @@
             //Debug.write('setting up camera device', deviceindex);
 
             var dev = null;
-            if ($swf8) {
+            if ($as3) {
+                if (deviceindex == null) {
+                    dev = flash.media.Camera.getCamera();
+                } else {
+                    dev = flash.media.Camera.getCamera(deviceindex);
+                }
+            } else {
                 if (deviceindex == null) {
                     dev = Camera.get();
                 } else {
                     dev = Camera.get(deviceindex);
                 }
-            } else {
-                if ($debug) Debug.warn('%w is not supported in this runtime.', 'camera')
             }
             
             this._dev = dev;
@@ -123,7 +134,7 @@
         <!--- Called when the allowed flag changes.
               @keywords private -->
         <method name="_updateAllowed"><![CDATA[
-            //Debug.write("camera _updateAllowed", this, this.allowed, "show", this.show);
+            //Debug.write("camera _updateAllowed", this, lz.mediadevice.allowed, "show", this.show);
 
             // Call super to send the onallowed event.
             super._updateAllowed();
@@ -168,13 +179,13 @@
                     ? immediateparent._getflashvideo()
                     : null;
 
-            //Debug.write("vid", vid, "show", show, "allowed", this.allowed);
+            //Debug.write("vid", vid, "show", show, "allowed", lz.mediadevice.allowed);
 
             if (vid != null) {
 
                 if ((show == false) ||
-                    (this._allowedknown &&
-                     (this.allowed == false))) {
+                    (lz.mediadevice._allowedknown &&
+                     (lz.mediadevice.allowed == false))) {
                     // Hide the video if show is false or (not allowed, and
                     // this is not the first time).
 
@@ -184,7 +195,11 @@
                     // false).
 
                     //Debug.write("detaching", this, vid);
-                    vid.attachVideo(null);
+                    if ($as3) {
+                        vid.attachCamera(null);
+                    } else {
+                        vid.attachVideo(null);
+                    }
                     //vid.clear(); // FIXME: this clears the video but makes subsequent attachvideo's not work.
                 } else {
                     // Try to show the video if show is true.
@@ -194,7 +209,11 @@
                     // all mediadevices. 
                     var dev = this._dev;
                     //Debug.write("attaching", this, vid, dev);
-                    vid.attachVideo(dev);
+                    if ($as3) {
+                        vid.attachCamera(dev);
+                    } else {
+                        vid.attachVideo(dev);
+                    }
 
                     // If this is the first device we've ever seen, 
                     // then initialize the allowed flag, and set 
@@ -205,8 +224,8 @@
                     // but might change to false later, if the user allows it. 
                     var devallowed = 
                         !dev.muted;
-                    if (this.allowed != devallowed) {
-                        this._updateAllAllowed(devallowed);
+                    if (lz.mediadevice.allowed != devallowed) {
+                        lz.mediadevice._updateAllAllowedStatic(devallowed);
                     }
                 }
             }
@@ -222,9 +241,12 @@
         <!--- Get the names of the cameras. Returns an array of strings. 
               This might take a while to run, since it has to scan the devices. -->
         <method name="getCameraNames"><![CDATA[
-            if ($swf8) {
-                return Camera.names;
+            if ($as3) {
+                var cam = flash.media.Camera;
+            } else {
+                var cam = Camera;
             }
+            return cam.names;
           ]]>
         </method>
 

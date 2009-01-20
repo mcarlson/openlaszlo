@@ -22,6 +22,11 @@
         <handler name="oninit"> <![CDATA[   
             var a = 
                 gCamera.getCameraNames();
+            if (! a) {
+                // TODO: fix this
+                if ($debug) Debug.write('no gCamera.getCameraNames()');
+                return;
+            }
 
             //Debug.write('Camera name array: ', a, a.length);
             var n = a.length;

@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -30,6 +30,13 @@
     <class name="microphone"
         extends="mediadevice"
     >
+        <switch>
+            <when property="$as3">
+                <passthrough>
+                    import flash.media.*;
+                </passthrough>
+            </when>
+        </switch>
 
 
         <!--- Flash movie clip for microphone. 
@@ -65,14 +72,21 @@
                 this['deviceindex'];
 
             var dev = null;
-            if ($swf8) {
+            if ($as3) {
+                if (deviceindex == null) {
+                    dev = flash.media.Microphone.getMicrophone();
+                } else {
+                    dev = flash.media.Microphone.getMicrophone(deviceindex);
+                }
+                // This is done to supress pesky feedback. 
+                dev.soundTransform = this._sound;
+                dev.setUseEchoSuppression(true)
+            } else {
                 if (deviceindex == null) {
                     dev = Microphone.get();
                 } else {
                     dev = Microphone.get(deviceindex);
                 }
-            } else {
-                if ($debug) Debug.warn('%w is not supported in this runtime.', 'microphone')
             }
 
             this._dev = 
@@ -96,16 +110,17 @@
         <!--- Start the microphone. -->
         <method name="startDevice"><![CDATA[
             //Debug.write("microphone startdevice", this);
-            if ($swf8) {
+
+            // This is done to supress pesky feedback. 
+            if ($as3) {
+                this._sound = new SoundTransform(0, 0);
+            } else {
                 this._mc = 
                     _root.createEmptyMovieClip("__LZmicMovieClip", 10000);
 
-                // This is done to supress pesky feedback. 
                 this._sound = 
                     new Sound(this._mc);
                 this._sound.setVolume(0);
-            } else {
-                if ($debug) Debug.warn('%w is not supported in this runtime.', 'microphone')
             }
 
             super.startDevice();
@@ -163,10 +178,18 @@
             }
 
             if (this._dev != null) {
-                if (capturing) {
-                    this._mc.attachAudio(this._dev);
+                if ($as3) {
+                    if (capturing) {
+                        this._dev.setLoopBack(true);
+                    } else {
+                        this._dev.setLoopBack(false);
+                    }
                 } else {
-                    this._mc.attachAudio(false);
+                    if (capturing) {
+                        this._mc.attachAudio(this._dev);
+                    } else {
+                        this._mc.attachAudio(false);
+                    }
                 }
                 this.setAttribute("active", this.active);
             }
@@ -177,7 +200,7 @@
 
         <!--- Handler for updating the microphone activity level attribute. 
               @keywords private -->
-        <method name="_updateLevel"><![CDATA[
+        <method name="_updateLevel" args="ignore = null"><![CDATA[
             var level = this._dev.activityLevel;
             if (level < 0) {
                 level = 0;
