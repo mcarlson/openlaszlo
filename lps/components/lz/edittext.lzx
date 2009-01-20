@@ -326,15 +326,12 @@
               &lt;/canvas&gt;
             </example>
 
-            <p>For details on how this component is constructed see the edittext section of
-            <a href="${component-design}/edittext.html"> The Component Design Guide</a>.
-            </p>
           </text>
         </doc>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

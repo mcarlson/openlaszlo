@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <%@ page contentType="text/html" %>
@@ -89,7 +89,7 @@
             <li><a href="docs">Docs index</a></li>
             <!-- change title per LPP-4804, IORIO 14 oct 2007 -->
             <li><a href="docs/developers">Application Developer's Guide</a></li>
-            <li><a href="docs/component-design">UI Designer's Guide</a></li>
+ <!--           <li><a href="docs/component-design">UI Designer's Guide</a></li>-->
             <!-- change title per LPP-4804, IORIO 14 oct 2007 -->
             <li><a href="docs/deployers">System Administrator's Guide</a></li>
             <li><a href="http://www.openlaszlo.org/lps3/docs/reference">Reference Guide (for OL 3.4, served from www.openlaszlo.org)</a> or <a href="docs/reference">Reference Guide (local)</a></li>

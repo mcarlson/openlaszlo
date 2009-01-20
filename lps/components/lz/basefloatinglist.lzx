@@ -376,13 +376,7 @@
                    and <xref linkend="lz.plainfloatinglist"/> for concrete extensions of this
                    base class.
                 </p>
-            <p><b>See Also:</b></p>
 
-              <ul>
-                  <li>
-                      For details on how this component is constructed, see the<a href="${component-design}/floatinglist.html">Floating List</a> section of the <a href="${component-design}/index.html" target="_blank">Component Design Guide</a>
-                  </li>
-              </ul>
             </text>
         </doc>
 
@@ -390,7 +384,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

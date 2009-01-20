@@ -1,6 +1,6 @@
 <menu>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
     <section name="Welcome" src="/laszlo-explorer/coverpages/welcome/" title="OpenLaszlo Server" 
@@ -346,7 +346,7 @@
     <topic popup="/docs/developers/index.html" name="Developer's Guide" action="popup" target="laszlodevguide" />
     <topic popup="/docs/deployers/index.html" name="Administrator's Guide" action="popup" target="laszloadminguide" />
     <!--topic popup="/docs/design/index.html" name="UI Designer's Guide" action="popup" target="laszlouiguide" /-->
-    <topic popup="/docs/component-design/index.html" name="Components Guide" action="popup" target="laszlocomponentguide" />
+<!--    <topic popup="/docs/component-design/index.html" name="Components Guide" action="popup" target="laszlocomponentguide" />-->
     <topic src="/docs/release-notes.html" name="Release Notes" />
     <topic src="/tools/index.html" name="Developer's Tools" title="Development Tools"  text="Tips for IDEs"/>
   </section>
