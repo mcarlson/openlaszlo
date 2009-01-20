@@ -152,6 +152,7 @@ var LzSprite = function(owner, isroot) {
 LzSprite.prototype.__defaultStyles = {
     lzdiv: {
         position: 'absolute'
+        ,backgroundRepeat: 'no-repeat'
     },
     lzclickdiv: {
         position: 'absolute'
@@ -340,6 +341,8 @@ LzSprite.prototype.quirks = {
     ,focus_on_mouseover: true
     ,textstyle_on_textdiv: false
     ,textdeco_on_textdiv: false
+    ,use_css_sprites: true
+    ,preload_images: true
 }
 
 LzSprite.prototype.capabilities = {
@@ -641,7 +644,10 @@ LzSprite.prototype.setResource = function ( r ){
 
     this.owner.resourceevent('totalframes', urls.length);
     this.frames = urls;
-    this.__preloadFrames();
+
+    if (this.quirks.preload_images && ! this.__usecssprite) {
+        this.__preloadFrames();
+    }
 
     this.skiponload = true;
     this.setSource(urls[0], true);
@@ -653,7 +659,7 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
     var urls = [];
     // look up resource name in LzResourceLibrary
     // LzResourceLibrary is in the format:
-    // LzResourceLibrary.lzscrollbar_xthumbleft_rsc={ptype:"ar"||"sr",frames:["lps/components/lz/resources/scrollbar/scrollthumb_x_lft.png"],width:1.0,height:12.0}
+    // LzResourceLibrary.lzscrollbar_xthumbleft_rsc={ptype:"ar"||"sr",frames:["lps/components/lz/resources/scrollbar/scrollthumb_x_lft.png"],width:1,height:12,sprite:"lps/components/lz/resources/scrollbar/scrollthumb_x_lft.sprite.png"}
     var res = LzResourceLibrary[resourcename];
     if (! res) {
         if ($debug) {
@@ -669,6 +675,15 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
     if (res.ptype && res.ptype == 'sr') {
         baseurl = lz.embed.options.resourceroot;
     }
+
+    if (this.quirks.use_css_sprites && res.sprite) {
+        this.__csssprite = baseurl + res.sprite;
+        this.__usecssprite = this.stretches == null;
+    } else {
+        this.__csssprite = this.__usecssprite = null;
+        if (this.__bgimage) this.__setBGImage(null);
+    }
+
     for (var i = 0; i < res.frames.length; i++) {
         urls[i] = baseurl + res.frames[i];
     }
@@ -706,22 +721,35 @@ LzSprite.prototype.setSource = function (url, usecache){
     }
 
     //Debug.info('setSource ' + url)
-    this.loading = true;
     this.source = url;
+
+    if (this.__usecssprite) {
+        if (! this.__LZimg) {
+            var im = document.createElement('img');
+            im.className = 'lzdiv';
+            im.owner = this;
+            im.src = lz.embed.options.resourceroot + LzSprite.prototype.blankimage;
+            this.__bindImage(im);
+        }
+        this.__updateStretches();
+        var imgurl = this.__csssprite ? this.__csssprite : url;
+        this.__setBGImage(imgurl);
+        //Debug.info('setSource ' + this.__LZdiv.style.backgroundImage, url);
+        this.owner.resourceload({width: this.resourceWidth, height: this.resourceHeight, resource: this.resource, skiponload: this.skiponload});
+        return;
+    }
+
+    if (! this.quirks.preload_images) {
+        this.owner.resourceload({width: this.resourceWidth, height: this.resourceHeight, resource: this.resource, skiponload: this.skiponload});
+    }
+
+    this.loading = true;
     if (! this.__ImgPool) {
         this.__ImgPool = new LzPool(LzSprite.prototype.__getImage, LzSprite.prototype.__gotImage, LzSprite.prototype.__destroyImage, this);
     }
     var im = this.__ImgPool.get(url, usecache != true);
+    this.__bindImage(im);
 
-    if (this.__LZimg && this.__LZimg.owner) {
-        //Debug.write('replaceChild', im.owner, this.__LZimg.owner);
-        this.__LZdiv.replaceChild(im, this.__LZimg);
-        this.__LZimg = im;
-    } else {
-        this.__LZimg = im;
-        this.__LZdiv.appendChild(this.__LZimg);
-    }
-    
     if (this.loading) {
         //FIXME: [20080203 anba] if this is a single-frame resource, "loading" won't be updated,
         //also see fixme in setResource(..)
@@ -741,6 +769,22 @@ LzSprite.prototype.setSource = function (url, usecache){
     }
     //FIXME: [20080126 anba] this is a no-op, why was it added here?
     if (this.clickable) this.setClickable(true);
+}
+
+LzSprite.prototype.__bindImage = function (im){
+    if (this.__LZimg && this.__LZimg.owner) {
+        //Debug.write('replaceChild', im.owner, this.__LZimg.owner);
+        this.__LZdiv.replaceChild(im, this.__LZimg);
+        this.__LZimg = im;
+    } else {
+        this.__LZimg = im;
+        this.__LZdiv.appendChild(this.__LZimg);
+    }
+}
+
+LzSprite.prototype.__setBGImage = function (url){
+    var bgurl = url ? "url('" + url + "')" : null;
+    this.__bgimage = this.__LZimg.style.backgroundImage = bgurl
 }
 
 /**
@@ -1531,6 +1575,13 @@ LzSprite.prototype.stretchResource = function(s) {
     s = (s != "none" ? s : null);//convert "none" to null
     if (this.stretches == s) return;
     this.stretches = s;
+    this.__usecssprite = (s == null && this.__csssprite);
+    if (! this.__usecssprite && this.__bgimage) {
+        // clear out the bgimage
+        this.__setBGImage(null);
+        // set up default image/imagepool
+        this.__setFrame(this.frame, true);
+    }
     //TODO: update 'sizingMethod' for IE6
     this.__updateStretches();
 }
@@ -1844,18 +1895,34 @@ LzSprite.prototype.sendInFrontOf = function ( frontSprite ){
 /**
   * @access private
   */
-LzSprite.prototype.__setFrame = function (f){
+LzSprite.prototype.__setFrame = function (f, force){
     if (f < 1) {
         f = 1;
     } else if (f > this.frames.length) {
         f = this.frames.length;
+    } 
+
+    var skipevent = false;
+    if (force) {
+        skipevent = f == this.frame;
+    } else if (f == this.frame) {
+        return;
     }
-    if (f == this.frame) return;
     //Debug.info('LzSprite.__setFrame', f);
     this.frame = f;
-    // from __updateFrame()    
-    var url = this.frames[this.frame - 1];
-    this.setSource(url, true);
+
+    if (this.__usecssprite) {
+        // use x axis for now...
+        var x = (this.frame - 1) * (- this.resourceWidth);
+        var y = 0;
+        this.__LZimg.style.backgroundPosition = x + 'px ' + y + 'px';
+        //Debug.write('frame', f, x, this.__LZdiv.style.backgroundPosition)
+    } else {
+        // from __updateFrame()    
+        var url = this.frames[this.frame - 1];
+        this.setSource(url, true);
+    }
+    if (skipevent) return;
     this.owner.resourceevent('frame', this.frame);
     if (this.frames.length == this.frame)
         this.owner.resourceevent('lastframe', null, true);

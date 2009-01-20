@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
- * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+ * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
  * Use is subject to license terms.                                            *
  * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -246,11 +246,6 @@ class DHTMLWriter extends ObjectWriter {
         int height = 0;
         int fNum = 0;
         String sep = "";
-        File dirfile = mEnv.getApplicationFile().getParentFile();
-        String appdir = dirfile != null ? dirfile.getPath() : ".";
-        mLogger.debug("appdir is: " + appdir + ", LPS.HOME() is: "+ LPS.HOME());
-        //File appHomeParent = new File(LPS.getHomeParent());
-        String sHome=LPS.HOME();
         boolean first = true;
         // Initialize the temporary buffer.
         StringBuffer sbuf= new StringBuffer("");
@@ -259,24 +254,11 @@ class DHTMLWriter extends ObjectWriter {
         }
         String pType;
         String relPath;
-        String arPath;
-        String srPath;
         for (Iterator e = sources.iterator() ; e.hasNext() ;) {
             File fFile = new File((String)e.next());
-            arPath = FileUtils.relativePath(fFile, appdir);
-            srPath = FileUtils.relativePath(fFile, sHome);
-            // TODO: Some of this should be rolled out of the loop.
-            if (arPath.length() <= srPath.length()) {
-                pType="ar";
-                relPath = arPath;
-            } else {
-                pType ="sr";
-                relPath = srPath;
-            }
-            // make it relative
-            if (relPath.charAt(0) == '/') {
-                 relPath = relPath.substring(1);
-           }
+            String[] fileInfo = getRelPath(fFile);
+            pType = fileInfo[0];
+            relPath = fileInfo[1];
 
             if (first == true) {
                 sbuf.append("LzResourceLibrary." + sResourceName + "={ptype: \"" + pType + "\", frames:[");
@@ -302,8 +284,53 @@ class DHTMLWriter extends ObjectWriter {
         mMultiFrameResourceSet.add(new Resource(sResourceName, width, height));
         sbuf.append("],width:" + width);
         sbuf.append(",height:" + height);
+
+        // create a montage for multiframe resources
+        if (sources.size() > 1) {
+            String montageFile = (String)sources.get(0);
+            montageFile = montageFile.substring(0, montageFile.indexOf('.')) + ".sprite" + montageFile.substring(montageFile.indexOf('.'));
+            try {
+                ImageMontageMaker.assemble(sources, montageFile);
+                String[] fileInfo = getRelPath(new File(montageFile));
+                relPath = fileInfo[1];
+                sbuf.append(",sprite:'" + relPath + "'");
+            } catch (Exception e) {
+                mLogger.error("Assembling css sprite: " + sources + ", " + e);
+            }
+        }
         sbuf.append("};");
         addScript(sbuf.toString());
+    }
+
+    private String[] getRelPath(File fFile) { 
+        File dirfile = mEnv.getApplicationFile().getParentFile();
+        String appdir = dirfile != null ? dirfile.getPath() : ".";
+        mLogger.debug("appdir is: " + appdir + ", LPS.HOME() is: "+ LPS.HOME());
+        //File appHomeParent = new File(LPS.getHomeParent());
+        String sHome=LPS.HOME();
+        String arPath;
+        String srPath;
+        String pType;
+        String relPath;
+        arPath = FileUtils.relativePath(fFile, appdir);
+        srPath = FileUtils.relativePath(fFile, sHome);
+        if (arPath.length() <= srPath.length()) {
+            pType="ar";
+            relPath = arPath;
+        } else {
+            pType ="sr";
+            relPath = srPath;
+        }
+
+        // make it relative and watch out, it comes back canonicalized with forward slashes.
+        // Comparing to file.separator is wrong on the pc.
+        if (relPath.charAt(0) == '/') {
+            relPath = relPath.substring(1);
+        }
+        mLogger.debug("relPath is: "+relPath);
+
+        String[] out = {pType, relPath};
+        return out;
     }
 
     public void close() throws IOException { 
