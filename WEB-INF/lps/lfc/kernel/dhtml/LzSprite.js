@@ -1754,6 +1754,8 @@ LzSprite.prototype.getHeight = function() {
   * Sets the cursor to the specified cursor ID.  
   * @param String c: cursor ID to use, or '' for default.  See 
   * http://www.quirksmode.org/css/cursor.html for valid IDs 
+  * Note that the name should be camelcased, e.g. colResize for the style 
+  * col-resize.
   */
 LzSprite.prototype.setCursor = function ( c ){
     if (this.quirks.no_cursor_colresize) {

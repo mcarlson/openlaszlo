@@ -2,22 +2,19 @@
     <include href="base/basefocusview.lzx"/>
 
     <!-- resources -->
-    <resource name="lzfocusbracket_topleft_rsrc"          
-               src="lz/resources/focus/focus_top_lft.png" />
-    <resource name="lzfocusbracket_topleft_shdw_rsrc"     
-               src="lz/resources/focus/focus_top_lft_shdw.png" />
-    <resource name="lzfocusbracket_topright_rsrc"         
-               src="lz/resources/focus/focus_top_rt.png" />
-    <resource name="lzfocusbracket_topright_shdw_rsrc"    
-               src="lz/resources/focus/focus_top_rt_shdw.png" />
-    <resource name="lzfocusbracket_bottomleft_rsrc"       
-               src="lz/resources/focus/focus_bot_lft.png" />
-    <resource name="lzfocusbracket_bottomleft_shdw_rsrc"  
-               src="lz/resources/focus/focus_bot_lft_shdw.png" />
-    <resource name="lzfocusbracket_bottomright_rsrc"      
-               src="lz/resources/focus/focus_bot_rt.png" />
-    <resource name="lzfocusbracket_bottomright_shdw"      
-               src="lz/resources/focus/focus_bot_rt_shdw.png" />
+    <resource name="lzfocusbracket_rsrc">
+        <frame src="lz/resources/focus/focus_top_lft.png"/>
+        <frame src="lz/resources/focus/focus_top_rt.png" />
+        <frame src="lz/resources/focus/focus_bot_lft.png" />
+        <frame src="lz/resources/focus/focus_bot_rt.png" />
+    </resource>
+
+    <resource name="lzfocusbracket_shdw">
+        <frame src="lz/resources/focus/focus_top_lft_shdw.png" />
+        <frame src="lz/resources/focus/focus_top_rt_shdw.png" />
+        <frame src="lz/resources/focus/focus_bot_lft_shdw.png" />
+        <frame src="lz/resources/focus/focus_bot_rt_shdw.png" />
+    </resource>
 
     <class name="focusoverlay" extends="basefocusview" >
         <!--- the offset is used by the brackets to 'offset' themselves from the
@@ -28,29 +25,29 @@
         <view name="topleft" 
               x="${-classroot.offset}" 
               y="${-classroot.offset}" >
-            <view resource="lzfocusbracket_topleft_shdw_rsrc" x="1" y="1" opacity=".25"/>
-            <view resource="lzfocusbracket_topleft_rsrc"/>
+            <view resource="lzfocusbracket_shdw" x="1" y="1" opacity=".25"/>
+            <view resource="lzfocusbracket_rsrc"/>
         </view>
         
         <view name="topright" 
               x="${parent.width - width + classroot.offset }" 
               y="${-classroot.offset}"  >
-            <view resource="lzfocusbracket_topright_shdw_rsrc" x="1" y="1" opacity=".25"/>
-            <view resource="lzfocusbracket_topright_rsrc"/>
+            <view resource="lzfocusbracket_shdw" frame="2" x="1" y="1" opacity=".25"/>
+            <view resource="lzfocusbracket_rsrc" frame="2"/>
         </view>
         
         <view name="bottomleft" 
               x="${-classroot.offset}"
               y="${parent.height - height + classroot.offset }"  >
-            <view resource="lzfocusbracket_bottomleft_shdw_rsrc" x="1" y="1" opacity=".25"/>
-            <view resource="lzfocusbracket_bottomleft_rsrc"/>
+            <view resource="lzfocusbracket_shdw" frame="3" x="1" y="1" opacity=".25"/>
+            <view resource="lzfocusbracket_rsrc" frame="3"/>
         </view>
         
         <view name="bottomright" 
               x="${ parent.width - width + classroot.offset  }" 
               y="${ parent.height - height + classroot.offset }" >
-            <view resource="lzfocusbracket_bottomright_shdw" x="1" y="1" opacity=".25"/>
-            <view resource="lzfocusbracket_bottomright_rsrc"/>
+            <view resource="lzfocusbracket_shdw" frame="4" x="1" y="1" opacity=".25"/>
+            <view resource="lzfocusbracket_rsrc" frame="4"/>
         </view>
         
         <!--- overrides base method to add a bounce effect as the brackets move from view to view
@@ -110,7 +107,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
