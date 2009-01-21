@@ -151,6 +151,25 @@ a complete discussion.
             </text>
           </doc>
         </property>
+        <property name="allocation" modifiers="final" id="attribute.__ivars__.allocation">
+          <doc>
+            <tag name="lzxdefault"><text>"instance"</text></tag>
+            <tag name="lzxtype"><text>"instance" | "class"</text></tag>
+            <text>One of:
+              <dl>
+                <dt><literal>class</literal></dt>
+                <dd>The attribute will be an attribute of the class; to refer to it, you say <literal>lz.classname.attributename</literal>.</dd>
+                <dt><literal>instance</literal></dt>
+                <dd>Each instance will have an attribute with the specified properties (<literal>name</literal>, <literal>type</literal>, <literal>value</literal>, etc.).</dd>
+              </dl>
+              <p>You can set <literal>allocation</literal> to <literal>class</literal> to get static attributes. 
+              Static properties are attached to the class itself, for example <literal>lz.classname</literal>.</p> 
+              <programlisting>&lt;attribute name="allowed" value="false" type="boolean" allocation="class" /&gt;</programlisting>
+              
+              <p>Setting <literal>allocation</literal> to <literal>class</literal> means the attribute is attached to the instance.</p>
+            </text>
+          </doc>
+        </property>
         <property name="type" type="String" modifiers="final" id="attribute.__ivars__.type">
           <doc>
             <tag name="lzxdefault"><text>"expression"</text></tag>
@@ -343,6 +362,25 @@ numbers.</p>
   <class>
     <property name="__ivars__" access="public">
       <object>
+        <property name="allocation" modifiers="final" id="method.__ivars__.allocation">
+          <doc>
+            <tag name="lzxdefault"><text>"instance"</text></tag>
+            <tag name="lzxtype"><text>"instance" | "class"</text></tag>
+            <text>One of:
+              <dl>
+                <dt><literal>class</literal></dt>
+                <dd>The attribute will be an attribute of the class; to refer to it, you say <literal>lz.classname.attributename</literal>.</dd>
+                <dt><literal>instance</literal></dt>
+                <dd>Each instance will have a method with the specified properties (<literal>name</literal>, or <literal>args</literal>).</dd>
+              </dl>
+              <p>You can set <literal>allocation</literal> to <literal>class</literal> to get static attributes. 
+                Static properties are attached to the class itself, for example <literal>lz.classname</literal>.</p> 
+              <programlisting>&lt;attribute name="allowed" value="false" type="boolean" allocation="class" /&gt;</programlisting>
+              
+              <p>Setting <literal>allocation</literal> to <literal>class</literal> means the attribute is attached to the instance.</p>
+            </text>
+          </doc>
+        </property>
         <property name="name" type="" modifiers="final">
           <doc>
             <tag name="lzxtype"><text>token</text></tag>
