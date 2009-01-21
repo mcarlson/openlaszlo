@@ -691,7 +691,7 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
 }
 
 LzSprite.prototype.CSSDimension = function (value, units) {
-    return Math.floor(value) + (units ? units : 'px');
+    return Math.round(value) + (units ? units : 'px');
 }
 
 LzSprite.prototype.loading = false;
