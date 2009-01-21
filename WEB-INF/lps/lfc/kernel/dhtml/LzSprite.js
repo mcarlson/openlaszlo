@@ -335,6 +335,7 @@ LzSprite.prototype.quirks = {
     ,fix_inputtext_with_parent_resource: false
     ,activate_on_mouseover: true
     ,ie6_improve_memory_performance: false
+    ,multiline_text_includes_overflow: false
     ,text_height_includes_margins: false
     ,inputtext_size_includes_margin: false
     ,listen_for_mouseover_out: true
@@ -445,6 +446,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['fix_inputtext_with_parent_resource'] = true;
             // IE already includes margins for inputtexts
             quirks['inputtext_size_includes_margin'] = true;
+            // LPP-3409 - IE needs overflow: 'auto' to remove unused scrollbar
+            quirks['multiline_text_includes_overflow'] = true;
             // LPP-7229 - IE 'helpfully' scrolls focused/blurred divs into view
             quirks['focus_on_mouseover'] = false;
             // required for text-align / text-indent to work
@@ -523,6 +526,10 @@ LzSprite.prototype.__updateQuirks = function () {
         if (quirks['inputtext_size_includes_margin']) {
             LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '0px';
             LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '0px';
+        }
+
+        if (quirks['multiline_text_includes_overflow']) {
+            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.overflow = 'auto';
         }
 
         if (quirks['css_hide_canvas_during_init']) {
