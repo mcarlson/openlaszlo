@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -206,6 +206,10 @@ class SolutionMessages {
                                 SolutionMessages.class.getName(),"051018-205")
                                                                         ));
 
+
+        errs.add(new SolutionMessage(VIEWCOMPILER, 
+                                     "unable to build font",
+                                     "The font may be a bold or italic style, try adding style=\"bold\" or \"italic\" attribute to font tag"));
 
         errs.add(new SolutionMessage(VIEWCOMPILER,
 /* (non-Javadoc)

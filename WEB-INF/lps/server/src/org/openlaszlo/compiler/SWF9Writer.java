@@ -418,7 +418,10 @@ class SWF9Writer extends ObjectWriter {
 
             FileUtils.send(input, mStream);
         } catch (org.openlaszlo.sc.CompilerException e) {
-            throw new CompilationError(e);
+            String solution = SolutionMessages.findSolution(e.getMessage());
+            CompilationError sol = new CompilationError(e);
+            sol.setSolution(solution);
+            throw sol;
         } catch (Exception e) {
             throw new ChainedException(e);
         }
