@@ -1,285 +1,1260 @@
 <appendix id="ecmascript-and-lzx">
-<?html2db class="appendix"?>
-<title>ECMAScript</title> 
+  <?html2db class="appendix"?>
+  <title>ECMAScript</title>
 
-<para>LZX uses JavaScript (ECMAScript, as defined by ECMA-262, edition 3), as a foundation
-for its scripting syntax. For more information please visit: <ulink url="http://www.ecma-international.org/">http://www.ecma-international.org/</ulink>.</para>
+  <para>LZX uses JavaScript (ECMAScript, as defined by ECMA-262, edition 3), as a foundation for its
+    scripting syntax. For more information please visit: <ulink
+      url="http://www.ecma-international.org/">http://www.ecma-international.org/</ulink>.</para>
 
-<para/><section><title>Including Script</title>
+  <para/>
+  <section>
+    <title>Including Script</title>
 
-<para>Script can go in four places in an LZX application:</para>
-<itemizedlist spacing="compact"><listitem><para>Inside an <glossterm>event attribute</glossterm> such as <indexterm><primary>onclick</primary></indexterm><sgmltag class="attribute">onclick</sgmltag>.</para>
-<informalexample role="live-example"><programlisting>
+    <para>Script can go in four places in an LZX application:</para>
+    <itemizedlist spacing="compact">
+      <listitem>
+        <para>Inside an <glossterm>event attribute</glossterm> such as <indexterm>
+            <primary>onclick</primary>
+          </indexterm><sgmltag class="attribute">onclick</sgmltag>.</para>
+        <informalexample role="live-example">
+          <programlisting>
 &lt;canvas height="30"&gt;
   &lt;button onclick="animate('x', 10, 1000, true)"&gt;Click&lt;/example&gt;
 &lt;/canvas&gt;
-</programlisting></informalexample>
-</listitem><listitem><para>In a <indexterm><primary>method</primary></indexterm><sgmltag class="element">&lt;method&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: method-->
- or <indexterm><primary>script</primary></indexterm><sgmltag class="element">&lt;script&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: script-->
- tag.</para></listitem><listitem><para>In an attribute with type <literal>expression</literal>.<remark role="todo">example</remark></para></listitem><listitem><para>Inside a constraint expression.<remark role="todo">xref</remark></para></listitem><listitem><para>In a separate file that is included via the <indexterm><primary>src</primary></indexterm><sgmltag class="attribute">src</sgmltag> attribute of the <indexterm><primary>script</primary></indexterm><sgmltag class="element">&lt;script&gt;</sgmltag> tag.</para>
-<informalexample role="live-example"><programlisting>
+</programlisting>
+        </informalexample>
+      </listitem>
+      <listitem>
+        <para>In a <indexterm>
+            <primary>method</primary>
+          </indexterm><sgmltag class="element">&lt;method&gt;</sgmltag><remark role="fixme"
+            >[unknown tag]</remark>
+          <!--unknown tag: method--> or <indexterm>
+            <primary>script</primary>
+          </indexterm><sgmltag class="element">&lt;script&gt;</sgmltag><remark role="fixme"
+            >[unknown tag]</remark>
+          <!--unknown tag: script--> tag.</para>
+      </listitem>
+      <listitem>
+        <para>In an attribute with type <literal>expression</literal>.<remark role="todo"
+          >example</remark></para>
+      </listitem>
+      <listitem>
+        <para>Inside a constraint expression.<remark role="todo">xref</remark></para>
+      </listitem>
+      <listitem>
+        <para>In a separate file that is included via the <indexterm>
+            <primary>src</primary>
+          </indexterm><sgmltag class="attribute">src</sgmltag> attribute of the <indexterm>
+            <primary>script</primary>
+          </indexterm><sgmltag class="element">&lt;script&gt;</sgmltag> tag.</para>
+        <informalexample role="live-example">
+          <programlisting>
 &lt;canvas&gt;
   &lt;include href="script.js"/&gt;
   &lt;!-- — --&gt;
 &lt;/canvas&gt;
-</programlisting></informalexample>
-</listitem></itemizedlist>
+</programlisting>
+        </informalexample>
+      </listitem>
+    </itemizedlist>
 
-<para/></section><section id="ecmascript-and-lzx.differences"><title>Differences between ECMA-262 and LZX</title> 
+    <para/>
+  </section>
+  <section id="ecmascript-and-lzx.differences">
+    <title>Differences between ECMA-262 and LZX</title>
 
-<para>The syntax and behaviour of LZX script is intended to be as
-specified by the ECMA-262 standard. However, there are some
-differences to be aware of, especially in the SWF runtime.</para>
+    <para>The syntax and behaviour of LZX script is intended to be as specified by the ECMA-262
+      standard. However, there are some differences to be aware of, especially in the SWF runtime.</para>
 
-<variablelist><varlistentry><term>
-    Exceptions 
-  </term><listitem>
-    <para>
-    <!-- fix LPP-4996: Remove "try-catch" from list of unsupported javascript thingies. IORIO 30 oct 2007 -->
-      There are no exceptions, and no exception handling in the SWF runtime: the SWF runtime does not signal any runtime errors.
-    </para>
-    <para>
-      Errors such as <literal>1/0</literal>, <literal><varname>u</varname>()</literal>, <literal><varname>k</varname>()</literal>, <literal><varname>u</varname>.<varname>p</varname></literal>, and <literal><varname>o</varname>.<varname>u</varname></literal> (where <literal><varname>u</varname></literal> is an undeclared variable, <literal><varname>k</varname></literal> is defined but isn't a function, and <literal><varname>o</varname></literal> is an object with property <literal><varname>p</varname></literal>) are silently ignored in the SWF runtime. (If debugging is enabled, all but the first of these will generate a warning message in the debugger window when evaluated.) 
-    </para>
-    
-    <para>The best practice for detecting program errors in LZX code is
-    to develop with debugging enabled (<xref linkend="debugging"/>)
-    and to write unit tests (<xref linkend="lzunit"/>).</para>
-    
-    <para>
-      The best practice for non-local transfer of control is to return a distinguished value or set a state variable. 
-    </para>
-  </listitem></varlistentry><varlistentry><term>
-    ECMAScript Objects
-  </term><listitem>
-    <para>Some ECMAScript objects and properties are not supported.  See
-    <xref linkend="ecmascript.object-table"/> for a list of supported
-    objects.</para>
-  </listitem></varlistentry><varlistentry><term>
-    Browser Objects 
-  </term><listitem>
-    <para>
-      ECMA-262 is NOT the same as client-side JavaScript as implemented by web browsers. This means that the objects that are browser specific (e.g. <literal>window</literal>, <literal>document</literal>, etc.) are not available to the LZX developer. 
-    </para>
-  </listitem></varlistentry><varlistentry><term>
-    Forward references
-  </term><listitem>
-    <para>
-      Forward references to functions are not supported.
-    </para>
-  </listitem></varlistentry></variablelist>
+    <variablelist>
+      <varlistentry>
+        <term> Exceptions </term>
+        <listitem>
+          <para>
+            <!-- fix LPP-4996: Remove "try-catch" from list of unsupported javascript thingies. IORIO 30 oct 2007 -->
+            There are no exceptions, and no exception handling in the SWF runtime: the SWF runtime
+            does not signal any runtime errors. </para>
+          <para> Errors such as <literal>1/0</literal>, <literal><varname>u</varname>()</literal>,
+                <literal><varname>k</varname>()</literal>,
+              <literal><varname>u</varname>.<varname>p</varname></literal>, and
+                <literal><varname>o</varname>.<varname>u</varname></literal> (where <literal>
+              <varname>u</varname>
+            </literal> is an undeclared variable, <literal>
+              <varname>k</varname>
+            </literal> is defined but isn't a function, and <literal>
+              <varname>o</varname>
+            </literal> is an object with property <literal>
+              <varname>p</varname>
+            </literal>) are silently ignored in the SWF runtime. (If debugging is enabled, all but
+            the first of these will generate a warning message in the debugger window when
+            evaluated.) </para>
 
-<para>LZX does not support the ECMAScript objects, attributes and methods
-presented in <literal role="unsupported">this font</literal> in the
-following table in the SWF runtime.</para>
+          <para>The best practice for detecting program errors in LZX code is to develop with
+            debugging enabled (<xref linkend="debugging"/>) and to write unit tests (<xref
+              linkend="lzunit"/>).</para>
 
-<table id="ecmascript.object-table" rowsep="1"><title>Supported ECMAScript Properties</title><tgroup cols="3"><thead><row><entry>ECMA Object</entry><entry>Properties</entry><entry>Methods</entry></row></thead><tbody><row><entry>
-        <para><literal role="supported">Arguments</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">callee</literal></para></member><member type="vert"><para><literal role="supported">length</literal></para></member></simplelist>
-      </entry><entry>
-         
-      </entry></row><row><entry>
-        <para><literal role="supported">Array</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Array.prototype</literal></para></member><member type="vert"><para><literal role="supported">constructor</literal></para></member><member type="vert"><para><literal role="supported">length</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Array(...)</literal></para></member><member type="vert"><para><literal role="supported">new Array(...)</literal></para></member><member type="vert"><para><literal role="supported">concat(...)</literal></para></member><member type="vert"><para><literal role="supported">join(separator)</literal></para></member><member type="vert"><para><literal role="supported">pop()</literal></para></member><member type="vert"><para><literal role="supported">push(...)</literal></para></member><member type="vert"><para><literal role="supported">reverse()</literal></para></member><member type="vert"><para><literal role="supported">shift()</literal></para></member><member type="vert"><para><literal role="supported">slice(start, end)</literal></para></member><member type="vert"><para><literal role="supported">sort(comparefn)</literal></para></member><member type="vert"><para><literal role="supported">splice(start, delete, ...)</literal></para></member><member type="vert"><para><literal role="supported">toLocalString()</literal></para></member><member type="vert"><para><literal role="supported">toString()</literal></para></member><member type="vert"><para><literal role="supported">unshift(...)</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="supported">Boolean</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Boolean.prototype</literal></para></member><member type="vert"><para><literal role="supported">constructor</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Boolean(value)</literal></para></member><member type="vert"><para><literal role="supported">new Boolean(value)</literal>
-          </para></member><member type="vert"><para><literal role="supported">toString()</literal></para></member><member type="vert"><para><literal role="supported">valueOf()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="supported">Date</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Date.prototype</literal></para></member><member type="vert"><para><literal role="supported">constructor</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Date(...)</literal></para></member><member type="vert"><para><literal role="supported">new Date(<varname>ms</varname>)</literal></para></member><member type="vert"><para><literal role="supported">new Date(...)</literal></para></member><member type="vert"><para><literal role="unsupported">new Date(<varname>string</varname>)</literal><footnoteref linkend="ecmascript.nodate"/></para></member><member type="vert"><para><literal role="unsupported">parse(<varname>string</varname>)</literal><footnote id="ecmascript.nodate">
-          <para><literal>new Date(<varname>string</varname>)</literal> and <indexterm><primary><literal>Date.parse()</literal></primary></indexterm><methodname>Date.parse()</methodname> are not supported. Passing a string to <literal>new Date(<varname>datestring</varname>)</literal> is not supported. The best practice is to construct dates from date components, for example: in place of <literal>new Date("7/20/1969")</literal> use <literal>new Date(1969, 7, 20)</literal>.</para></footnote>
-          </para></member><member type="vert"><para><literal role="supported">Date.UTC(...)</literal></para></member><member type="vert"><para><literal role="supported">get[UTC]Date()</literal></para></member><member type="vert"><para><literal role="supported">get[UTC]Day()</literal></para></member><member type="vert"><para><literal role="supported">get[UTC]FullYear()</literal></para></member><member type="vert"><para><literal role="supported">get[UTC]Hours()</literal></para></member><member type="vert"><para><literal role="supported">get[UTC]Millisconds()</literal></para></member><member type="vert"><para><literal role="supported">get[UTC]Minutes()</literal></para></member><member type="vert"><para><literal role="supported">get[UTC]Month()</literal></para></member><member type="vert"><para><literal role="supported">get[UTC]Seconds()</literal></para></member><member type="vert"><para><literal role="supported">getTime()</literal></para></member><member type="vert"><para><literal role="supported">getTimezoneOffset()</literal></para></member><member type="vert"><para><literal role="supported">getYear()</literal></para></member><member type="vert"><para><literal role="supported">set[UTC]Date(date)</literal></para></member><member type="vert"><para><literal role="supported">set[UTC]FullYear(year[, month[, date]])</literal></para></member><member type="vert"><para><literal role="supported">set[UTC]Hours(<varname>hours[, min[, sec[, ms]]]</varname>)</literal></para></member><member type="vert"><para><literal role="supported">set[UTC]Milliseconds(ms)</literal></para></member><member type="vert"><para><literal role="supported">set[UTC]Minutes(minutes[, sec[, ms]])</literal></para></member><member type="vert"><para><literal role="supported">set[UTC]Month(month[, date])</literal></para></member><member type="vert"><para><literal role="supported">set[UTC]Seconds(sec[, ms])</literal></para></member><member type="vert"><para><literal role="supported">setTime(ms)</literal></para></member><member type="vert"><para><literal role="supported">setYear(year)</literal></para></member><member type="vert"><para><literal role="unsupported">todateString()</literal></para></member><member type="vert"><para><literal role="unsupported">toGMTSting()</literal></para></member><member type="vert"><para><literal role="unsupported">toLocaleDateString()</literal></para></member><member type="vert"><para><literal role="supported">toLocaleString()</literal></para></member><member type="vert"><para><literal role="unsupported">toLocaleTimeString()</literal></para></member><member type="vert"><para><literal role="supported">toString()</literal></para></member><member type="vert"><para><literal role="unsupported">toTimeString()</literal></para></member><member type="vert"><para><literal role="unsupported">toUTCString()</literal></para></member><member type="vert"><para><literal role="supported">valueOf()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="unsupported">Error</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">Error.prototype</literal></para></member><member type="vert"><para><literal role="unsupported">constructor</literal></para></member><member type="vert"><para><literal role="unsupported">message</literal></para></member><member type="vert"><para><literal role="unsupported">name</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">Error(message)</literal></para></member><member type="vert"><para><literal role="unsupported">new Error(message)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="unsupported">EvalError</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">EvalError.prototype</literal></para></member><member type="vert"><para><literal role="unsupported">constructor</literal></para></member><member type="vert"><para><literal role="unsupported">message</literal></para></member><member type="vert"><para><literal role="unsupported">name</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">EvalError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">new EvalError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="supported">Function</literal></para>
-      </entry>
-      <!-- fix LPP-4338: apply and call are now supported. IORIO 28 sep 2007 -->
-      <entry>
-        <simplelist><member type="vert"><para><literal role="supported">Function.prototype</literal></para></member><member type="vert"><para><literal role="supported">constructor</literal></para></member><member type="vert"><para><literal role="supported">length</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Function(...)</literal></para></member><member type="vert"><para><literal role="supported">new Function(...)</literal></para></member><member type="vert"><para><literal role="supported">apply(this, args[])</literal></para></member><member type="vert"><para><literal role="supported">call(this, ...)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="supported">Global</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Infinity</literal></para></member><member type="vert"><para><literal role="supported">NaN</literal></para></member><member type="vert"><para><literal role="supported">undefined</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">decodeURI()</literal></para></member><member type="vert"><para><literal role="unsupported">decodeURIComponent()</literal></para></member><member type="vert"><para><literal role="unsupported">encodeURI(uri)</literal></para></member><member type="vert"><para><literal role="unsupported">encodeURIComponent(component)</literal></para></member><member type="vert"><para><literal role="supported">escape(<varname>string</varname>)</literal></para></member><member type="vert"><para><literal role="unsupported">eval(<varname>string</varname>)</literal><footnote>
-          <para>The <indexterm><primary><literal>eval()</literal></primary></indexterm><methodname>eval()</methodname> function cannot be used to execute arbitrary code.  It may only be used only to get the value of an identifier named by a <indexterm><primary>String</primary></indexterm><classname>String</classname>.</para></footnote>
+          <para> The best practice for non-local transfer of control is to return a distinguished
+            value or set a state variable. </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term> ECMAScript Objects </term>
+        <listitem>
+          <para>Some ECMAScript objects and properties are not supported. See <xref
+              linkend="ecmascript.object-table"/> for a list of supported objects.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term> Browser Objects </term>
+        <listitem>
+          <para> ECMA-262 is NOT the same as client-side JavaScript as implemented by web browsers.
+            This means that the objects that are browser specific (e.g. <literal>window</literal>,
+              <literal>document</literal>, etc.) are not available to the LZX developer. </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term> Forward references </term>
+        <listitem>
+          <para> Forward references to functions are not supported. </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
 
-          </para></member><member type="vert"><para><literal role="supported">isFinite(number)</literal></para></member><member type="vert"><para><literal role="supported">isNaN(number)</literal></para></member><member type="vert"><para><literal role="supported">parseFloat(string)</literal></para></member><member type="vert"><para><literal role="supported">parseInt(string[, radix])</literal></para></member><member type="vert"><para><literal role="supported">unescape(string)</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="supported">Math</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Math.E</literal></para></member><member type="vert"><para><literal role="supported">Math.LN2</literal></para></member><member type="vert"><para><literal role="supported">Math.LOG2E</literal></para></member><member type="vert"><para><literal role="supported">Math.PI</literal></para></member><member type="vert"><para><literal role="supported">Math.SQRT1_2</literal></para></member><member type="vert"><para><literal role="supported">Math.SQRT2</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">abs(x)</literal></para></member><member type="vert"><para><literal role="supported">acos(x)</literal></para></member><member type="vert"><para><literal role="supported">asin(x)</literal></para></member><member type="vert"><para><literal role="supported">atan(x)</literal></para></member><member type="vert"><para><literal role="supported">atan2(x, y)</literal></para></member><member type="vert"><para><literal role="supported">ceil(x)</literal></para></member><member type="vert"><para><literal role="supported">cos(x)</literal></para></member><member type="vert"><para><literal role="supported">exp(x)</literal></para></member><member type="vert"><para><literal role="supported">floor(x)</literal></para></member><member type="vert"><para><literal role="supported">log(x)</literal></para></member><member type="vert"><para><literal role="unsupported">max(...)</literal><footnote id="fn.min-man">
-          <para><indexterm><primary><literal>Math.max()</literal></primary></indexterm><methodname>Math.max()</methodname> and <indexterm><primary><literal>Math.min()</literal></primary></indexterm><methodname>Math.min()</methodname> only support two arguments.</para></footnote></para></member><member type="vert"><para><literal role="unsupported">min(...)</literal><footnoteref linkend="fn.min-man"/></para></member><member type="vert"><para><literal role="supported">pow(x, y)</literal></para></member><member type="vert"><para><literal role="supported">random()</literal></para></member><member type="vert"><para><literal role="supported">round(x)</literal></para></member><member type="vert"><para><literal role="supported">sin(x)</literal></para></member><member type="vert"><para><literal role="supported">sqrt(x)</literal></para></member><member type="vert"><para><literal role="supported">tan(x)</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="supported">Number</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Number.prototype</literal></para></member><member type="vert"><para><literal role="supported">Number.MAX_VALUE</literal></para></member><member type="vert"><para><literal role="supported">Number.MIN_VALUE</literal></para></member><member type="vert"><para><literal role="supported">Number.NaN</literal></para></member><member type="vert"><para><literal role="supported">Number.NEGATIVE_INFINITY</literal></para></member><member type="vert"><para><literal role="supported">Number.POSITIVE_INFINITY</literal></para></member><member type="vert"><para><literal role="supported">constructor</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Number(value)</literal></para></member><member type="vert"><para><literal role="supported">new Number(value)</literal></para></member><member type="vert"><para><literal role="supported">toString()</literal></para></member><member type="vert"><para><literal role="supported">toLocalString()</literal></para></member><member type="vert"><para><literal role="unsupported">toFixed()</literal></para></member><member type="vert"><para><literal role="unsupported">toExponential()</literal></para></member><member type="vert"><para><literal role="unsupported">toPrecision()</literal></para></member><member type="vert"><para><literal role="supported">valueOf()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="supported">Object</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Object.prototype</literal></para></member><member type="vert"><para><literal role="supported">constructor</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">Object()</literal></para></member><member type="vert"><para><literal role="supported">Object(value)</literal>
-          </para></member><member type="vert"><para><literal role="supported">new Object()</literal></para></member><member type="vert"><para><literal role="supported">hasOwnProperty(v)</literal></para></member><member type="vert"><para><literal role="supported">isPrototypeOf(v)</literal></para></member><member type="vert"><para><literal role="supported">propertyIsEnumerable(v)</literal></para></member><member type="vert"><para><literal role="supported">toLocalString()</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal><footnote>
-          <para><literal>Object.toString</literal> always returns "<literal>[object
-          Object]</literal>".</para></footnote>
-          </para></member><member type="vert"><para><literal role="supported">valueOf()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="unsupported">RangeError</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">RangeError.prototype</literal></para></member><member type="vert"><para><literal role="unsupported">constructor</literal></para></member><member type="vert"><para><literal role="unsupported">message</literal></para></member><member type="vert"><para><literal role="unsupported">name</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">RangeError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">new RangeError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="unsupported">ReferenceError</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">ReferenceError.prototype</literal></para></member><member type="vert"><para><literal role="unsupported">constructor</literal></para></member><member type="vert"><para><literal role="unsupported">message</literal></para></member><member type="vert"><para><literal role="unsupported">name</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">ReferenceError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">new ReferenceError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="unsupported">RegExp</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">RegExp.prototype</literal></para></member><member type="vert"><para><literal role="unsupported">constructor</literal></para></member><member type="vert"><para><literal role="unsupported">global</literal></para></member><member type="vert"><para><literal role="unsupported">ignoreCase</literal></para></member><member type="vert"><para><literal role="unsupported">lastIndex</literal></para></member><member type="vert"><para><literal role="unsupported">multiline</literal></para></member><member type="vert"><para><literal role="unsupported">source</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">RegExp(pattern, flags)</literal></para></member><member type="vert"><para><literal role="unsupported">new RegExp(pattern, flags)</literal></para></member><member type="vert"><para><literal role="unsupported">exec(string)</literal></para></member><member type="vert"><para><literal role="unsupported">test(string)</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="supported">String</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">String.prototype</literal></para></member><member type="vert"><para><literal role="supported">constructor</literal></para></member><member type="vert"><para><literal role="supported">length</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="supported">String(value)</literal></para></member><member type="vert"><para><literal role="supported">new String(value)</literal><footnote>
-          <para>Using <literal>new String(<varname>value</varname>)</literal> to clone a wrapper is not
-          supported.</para></footnote>
-          </para></member><member type="vert"><para><literal role="supported">String.fromCharCode(...)</literal></para></member><member type="vert"><para><literal role="supported">charAt(pos)</literal></para></member><member type="vert"><para><literal role="supported">charCodeAt(pos)</literal></para></member><member type="vert"><para><literal role="supported">concat(...)</literal></para></member><member type="vert"><para><literal role="supported">indexOf(searchstr[, start])</literal></para></member><member type="vert"><para><literal role="supported">lastIndexOf(searchstr[, start])</literal></para></member><member type="vert"><para><literal role="unsupported">localeCompare(that)</literal></para></member><member type="vert"><para><literal role="unsupported">match(regexp)</literal></para></member><member type="vert"><para><literal role="unsupported">replace(searchstr, replacement)</literal></para></member><member type="vert"><para><literal role="unsupported">search(regexp)</literal></para></member><member type="vert"><para><literal role="supported">slice(start[, end])</literal></para></member><member type="vert"><para><literal role="supported">split(delimiter)</literal></para></member><member type="vert"><para><literal role="supported">substring(start[, end])</literal></para></member><member type="vert"><para><literal role="unsupported">toLocaleLowerCase()</literal></para></member><member type="vert"><para><literal role="unsupported">toLocaleUpperCase()</literal></para></member><member type="vert"><para><literal role="supported">toLowerCase()</literal></para></member><member type="vert"><para><literal role="supported">toString()</literal></para></member><member type="vert"><para><literal role="supported">toUpperCase()</literal></para></member><member type="vert"><para><literal role="supported">valueOf()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="unsupported">SyntaxError</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">SyntaxError.prototype</literal></para></member><member type="vert"><para><literal role="unsupported">constructor</literal></para></member><member type="vert"><para><literal role="unsupported">message</literal></para></member><member type="vert"><para><literal role="unsupported">name</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">SyntaxError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">new SyntaxError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="unsupported">TypeError</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">TypeError.prototype</literal></para></member><member type="vert"><para><literal role="unsupported">constructor</literal></para></member><member type="vert"><para><literal role="unsupported">message</literal></para></member><member type="vert"><para><literal role="unsupported">name</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">TypeError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">new TypeError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
-      </entry></row><row><entry>
-        <para><literal role="unsupported">URIError</literal></para>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">URIError.prototype</literal></para></member><member type="vert"><para><literal role="unsupported">constructor</literal></para></member><member type="vert"><para><literal role="unsupported">message</literal></para></member><member type="vert"><para><literal role="unsupported">name</literal></para></member></simplelist>
-      </entry><entry>
-        <simplelist><member type="vert"><para><literal role="unsupported">URIError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">new URIError(message)</literal></para></member><member type="vert"><para><literal role="unsupported">toString()</literal></para></member></simplelist>
-      </entry></row></tbody></tgroup></table>
+    <para>LZX does not support the ECMAScript objects, attributes and methods presented in <literal
+        role="unsupported">this font</literal> in the following table in the SWF runtime.</para>
 
-<para/></section><section><title>Reserved Words</title>
+    <table id="ecmascript.object-table" rowsep="1" width="80%">
+    <title>Supported ECMAScript Properties</title>
+    <tgroup cols="3">
+        <colspec colnum="1" colname="col1" colwidth="20%"/>
+        <colspec colnum="2" colname="col2" colwidth="20%"/>
+        <colspec colnum="4" colname="col4" colwidth="60%"/>
+        <thead>
+            <row>
+                <entry>ECMA Object</entry>
+                <entry>Properties</entry>
+                <entry>Methods</entry>
+            </row>
+        </thead>
+        <tbody>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">Arguments</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">callee</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">length</literal>
+                    </para>
+                </entry>
+                <entry>   </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">Array</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Array.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">length</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Array(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">new Array(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">concat(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">join(separator)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">pop()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">push(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">reverse()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">shift()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">slice(start, end)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">sort(comparefn)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">splice(start, delete, ...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toLocalString()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toString()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">unshift(...)</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">Boolean</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Boolean.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">constructor</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Boolean(value)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">new Boolean(value)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toString()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">valueOf()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">Date</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Date.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">constructor</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Date(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">new Date(<varname>ms</varname>)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">new Date(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">new Date(<varname>string</varname>)</literal>
+                        <footnoteref linkend="ecmascript.nodate"/>
+                    </para>
+                    <para>
+                        <literal role="unsupported">parse(<varname>string</varname>)</literal>
+                        <footnote id="ecmascript.nodate">
+                            <para><literal>new Date(<varname>string</varname>)</literal> and <indexterm>
+                                    <primary>
+                                        <literal>Date.parse()</literal>
+                                    </primary>
+                                </indexterm><methodname>Date.parse()</methodname> are not supported.
+                                Passing a string to <literal>new
+                                Date(<varname>datestring</varname>)</literal> is not supported. The
+                                best practice is to construct dates from date components, for
+                                example: in place of <literal>new Date("7/20/1969")</literal> use
+                                    <literal>new Date(1969, 7, 20)</literal>.</para>
+                        </footnote>
+                    </para>
+                    <para>
+                        <literal role="supported">Date.UTC(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">get[UTC]Date()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">get[UTC]Day()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">get[UTC]FullYear()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">get[UTC]Hours()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">get[UTC]Millisconds()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">get[UTC]Minutes()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">get[UTC]Month()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">get[UTC]Seconds()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">getTime()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">getTimezoneOffset()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">getYear()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">set[UTC]Date(date)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">set[UTC]FullYear(year[, month[, date]])</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">set[UTC]Hours(<varname>hours[, min[, sec[,
+                            ms]]]</varname>)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">set[UTC]Milliseconds(ms)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">set[UTC]Minutes(minutes[, sec[, ms]])</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">set[UTC]Month(month[, date])</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">set[UTC]Seconds(sec[, ms])</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">setTime(ms)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">setYear(year)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">todateString()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toGMTSting()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toLocaleDateString()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toLocaleString()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toLocaleTimeString()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toString()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toTimeString()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toUTCString()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">valueOf()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="unsupported">Error</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">Error.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">message</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">name</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">Error(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">new Error(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toString()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="unsupported">EvalError</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">EvalError.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">message</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">name</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">EvalError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">new EvalError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toString()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">Function</literal>
+                    </para>
+                </entry>
+                <!-- fix LPP-4338: apply and call are now supported. IORIO 28 sep 2007 -->
+                <entry>
+                    <para>
+                        <literal role="supported">Function.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">length</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Function(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">new Function(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">apply(this, args[])</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">call(this, ...)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toString()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">Global</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Infinity</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">NaN</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">undefined</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">decodeURI()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">decodeURIComponent()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">encodeURI(uri)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">encodeURIComponent(component)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">escape(<varname>string</varname>)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">eval(<varname>string</varname>)</literal>
+                        <footnote>
+                            <para>The <indexterm>
+                                    <primary>
+                                        <literal>eval()</literal>
+                                    </primary>
+                                </indexterm><methodname>eval()</methodname> function cannot be used
+                                to execute arbitrary code. It may only be used only to get the value
+                                of an identifier named by a <indexterm>
+                                    <primary>String</primary>
+                                </indexterm><classname>String</classname>.</para>
+                        </footnote>
+                    </para>
+                    <para>
+                        <literal role="supported">isFinite(number)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">isNaN(number)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">parseFloat(string)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">parseInt(string[, radix])</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">unescape(string)</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">Math</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Math.E</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Math.LN2</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Math.LOG2E</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Math.PI</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Math.SQRT1_2</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Math.SQRT2</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">abs(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">acos(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">asin(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">atan(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">atan2(x, y)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">ceil(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">cos(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">exp(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">floor(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">log(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">max(...)</literal>
+                        <footnote id="fn.min-man">
+                            <para><indexterm>
+                                    <primary>
+                                        <literal>Math.max()</literal>
+                                    </primary>
+                                </indexterm><methodname>Math.max()</methodname> and <indexterm>
+                                    <primary>
+                                        <literal>Math.min()</literal>
+                                    </primary>
+                                </indexterm><methodname>Math.min()</methodname> only support two
+                                arguments.</para>
+                        </footnote>
+                    </para>
+                    <para>
+                        <literal role="unsupported">min(...)</literal>
+                        <footnoteref linkend="fn.min-man"/>
+                    </para>
+                    <para>
+                        <literal role="supported">pow(x, y)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">random()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">round(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">sin(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">sqrt(x)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">tan(x)</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">Number</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Number.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Number.MAX_VALUE</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Number.MIN_VALUE</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Number.NaN</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Number.NEGATIVE_INFINITY</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Number.POSITIVE_INFINITY</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">constructor</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Number(value)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">new Number(value)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toString()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toLocalString()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toFixed()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toExponential()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toPrecision()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">valueOf()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">Object</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Object.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">constructor</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">Object()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">Object(value)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">new Object()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">hasOwnProperty(v)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">isPrototypeOf(v)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">propertyIsEnumerable(v)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toLocalString()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toString()</literal>
+                        <footnote>
+                            <para><literal>Object.toString</literal> always returns
+                                    "<literal>[object Object]</literal>".</para>
+                        </footnote>
+                    </para>
+                    <para>
+                        <literal role="supported">valueOf()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="unsupported">RangeError</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">RangeError.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">message</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">name</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">RangeError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">new RangeError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toString()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="unsupported">ReferenceError</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">ReferenceError.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">message</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">name</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">ReferenceError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">new ReferenceError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toString()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal>RegExp</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal>RegExp.prototype</literal>
+                    </para>
+                    <para>
+                        <literal>constructor</literal>
+                    </para>
+                    <para>
+                        <literal>global</literal>
+                    </para>
+                    <para>
+                        <literal>ignoreCase</literal>
+                    </para>
+                    <para>
+                        <literal>lastIndex</literal>
+                    </para>
+                    <para>
+                        <literal>multiline</literal>
+                    </para>
+                    <para>
+                        <literal>source</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal>RegExp(pattern, flags)</literal>
+                    </para>
+                    <para>
+                        <literal>new RegExp(pattern, flags)</literal>
+                    </para>
+                    <para>
+                        <literal>exec(string)</literal>
+                    </para>
+                    <para>
+                        <literal>test(string)</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="supported">String</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">String.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">length</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="supported">String(value)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">new String(value)</literal>
+                        <footnote>
+                            <para>Using <literal>new String(<varname>value</varname>)</literal> to
+                                clone a wrapper is not supported.</para>
+                        </footnote>
+                    </para>
+                    <para>
+                        <literal role="supported">String.fromCharCode(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">charAt(pos)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">charCodeAt(pos)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">concat(...)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">indexOf(searchstr[, start])</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">lastIndexOf(searchstr[, start])</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">localeCompare(that)</literal>
+                    </para>
+                    <para>
+                        <literal>match(regexp)</literal>
+                    </para>
+                    <para>
+                        <literal>replace(searchstr, replacement)</literal>
+                    </para>
+                    <para>
+                        <literal>search(regexp)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">slice(start[, end])</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">split(delimiter)</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">substring(start[, end])</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toLocaleLowerCase()</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toLocaleUpperCase()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toLowerCase()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toString()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">toUpperCase()</literal>
+                    </para>
+                    <para>
+                        <literal role="supported">valueOf()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="unsupported">SyntaxError</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">SyntaxError.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">message</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">name</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">SyntaxError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">new SyntaxError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toString()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="unsupported">TypeError</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">TypeError.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">message</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">name</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">TypeError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">new TypeError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toString()</literal>
+                    </para>
+                </entry>
+            </row>
+            <row>
+                <entry>
+                    <para>
+                        <literal role="unsupported">URIError</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">URIError.prototype</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">constructor</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">message</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">name</literal>
+                    </para>
+                </entry>
+                <entry>
+                    <para>
+                        <literal role="unsupported">URIError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">new URIError(message)</literal>
+                    </para>
+                    <para>
+                        <literal role="unsupported">toString()</literal>
+                    </para>
+                </entry>
+            </row>
+        </tbody>
+    </tgroup>
+</table>
 
-<para>Reserved words may not be used as identifiers:</para>
+    <para/>
+  </section>
+  <section>
+    <title>Reserved Words</title>
 
-<table><?dbhtml table-width="100%"?><title>ECMAScript Keywords</title><tgroup cols="2"><thead><row><entry>Keywords</entry><entry>Reserved for future use</entry></row></thead><tbody><row><entry><simplelist type="vert" columns="3">
-    <member><literal>break</literal></member>
-    <member><literal>case</literal></member>
-    <member><literal>catch</literal></member>
-    <member><literal>continue</literal></member>
-    <member><literal>default</literal></member>
-    <member><literal>delete</literal></member>
-    <member><literal>do</literal></member>
-    <member><literal>else</literal></member>
-    <member><literal>finally</literal></member>
-    <member><literal>for</literal></member>
-    <member><literal>function</literal></member>
-    <member><literal>if</literal></member>
-    <member><literal>in</literal></member>
-    <member><literal>instanceof</literal></member>
-    <member><literal>new</literal></member>
-    <member><literal>return</literal></member>
-    <member><literal>switch</literal></member>
-    <member><literal>this</literal></member>
-    <member><literal>throw</literal></member>
-    <member><literal>try</literal></member>
-    <member><literal>typeof</literal></member>
-    <member><literal>var</literal></member>
-    <member><literal>void</literal></member>
-    <member><literal>undefined</literal></member>
-    <member><literal>while</literal></member>
-    <member><literal>with</literal></member>
-    </simplelist>
-    </entry><entry><simplelist columns="3">
-    <member><literal>abstract</literal></member>
-    <member><literal>boolean</literal></member>
-    <member><literal>byte</literal></member>
-    <member><literal>char</literal></member>
-    <member><literal>class</literal></member>
-    <member><literal>const</literal></member>
-    <member><literal>debugger</literal></member>
-    <member><literal>double</literal></member>
-    <member><literal>enum</literal></member>
-    <member><literal>export</literal></member>
-    <member><literal>extends</literal></member>
-    <member><literal>final</literal></member>
-    <member><literal>float</literal></member>
-    <member><literal>goto</literal></member>
-    <member><literal>implements</literal></member>
-    <member><literal>import</literal></member>
-    <member><literal>int</literal></member>
-    <member><literal>interface</literal></member>
-    <member><literal>long</literal></member>
-    <member><literal>native</literal></member>
-    <member><literal>package</literal></member>
-    <member><literal>private</literal></member>
-    <member><literal>protected</literal></member>
-    <member><literal>public</literal></member>
-    <member><literal>short</literal></member>
-    <member><literal>static</literal></member>
-    <member><literal>super</literal></member>
-    <member><literal>synchronized</literal></member>
-    <member><literal>throws</literal></member>
-    <member><literal>transient</literal></member>
-    <member><literal>volatile</literal></member>
-    </simplelist>
-    </entry></row></tbody></tgroup></table>
+    <para>Reserved words may not be used as identifiers:</para>
 
-<para>A property of an object may have any name, even that of a reserved
-word.  <literal>object.property</literal> and
-<literal>object['property']</literal> both refer to the
-<literal>property</literal> property of the object named
-<varname>object</varname>.  When using dot syntax
-(<literal>object.property</literal>) property names must be a valid
-identifiers, so <literal>object.default</literal>, for example, is a syntax
-error.  In this case <literal>object['default']</literal> can be used
-instead.</para>
+    <table>
+      <?dbhtml table-width="100%"?>
+      <title>ECMAScript Keywords</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Keywords</entry>
+            <entry>Reserved for future use</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>
+              <simplelist type="vert" columns="3">
+                <member>
+                  <literal>break</literal>
+                </member>
+                <member>
+                  <literal>case</literal>
+                </member>
+                <member>
+                  <literal>catch</literal>
+                </member>
+                <member>
+                  <literal>continue</literal>
+                </member>
+                <member>
+                  <literal>default</literal>
+                </member>
+                <member>
+                  <literal>delete</literal>
+                </member>
+                <member>
+                  <literal>do</literal>
+                </member>
+                <member>
+                  <literal>else</literal>
+                </member>
+                <member>
+                  <literal>finally</literal>
+                </member>
+                <member>
+                  <literal>for</literal>
+                </member>
+                <member>
+                  <literal>function</literal>
+                </member>
+                <member>
+                  <literal>if</literal>
+                </member>
+                <member>
+                  <literal>in</literal>
+                </member>
+                <member>
+                  <literal>instanceof</literal>
+                </member>
+                <member>
+                  <literal>new</literal>
+                </member>
+                <member>
+                  <literal>return</literal>
+                </member>
+                <member>
+                  <literal>switch</literal>
+                </member>
+                <member>
+                  <literal>this</literal>
+                </member>
+                <member>
+                  <literal>throw</literal>
+                </member>
+                <member>
+                  <literal>try</literal>
+                </member>
+                <member>
+                  <literal>typeof</literal>
+                </member>
+                <member>
+                  <literal>var</literal>
+                </member>
+                <member>
+                  <literal>void</literal>
+                </member>
+                <member>
+                  <literal>undefined</literal>
+                </member>
+                <member>
+                  <literal>while</literal>
+                </member>
+                <member>
+                  <literal>with</literal>
+                </member>
+              </simplelist>
+            </entry>
+            <entry>
+              <simplelist columns="3">
+                <member>
+                  <literal>abstract</literal>
+                </member>
+                <member>
+                  <literal>boolean</literal>
+                </member>
+                <member>
+                  <literal>byte</literal>
+                </member>
+                <member>
+                  <literal>char</literal>
+                </member>
+                <member>
+                  <literal>class</literal>
+                </member>
+                <member>
+                  <literal>const</literal>
+                </member>
+                <member>
+                  <literal>debugger</literal>
+                </member>
+                <member>
+                  <literal>double</literal>
+                </member>
+                <member>
+                  <literal>enum</literal>
+                </member>
+                <member>
+                  <literal>export</literal>
+                </member>
+                <member>
+                  <literal>extends</literal>
+                </member>
+                <member>
+                  <literal>final</literal>
+                </member>
+                <member>
+                  <literal>float</literal>
+                </member>
+                <member>
+                  <literal>goto</literal>
+                </member>
+                <member>
+                  <literal>implements</literal>
+                </member>
+                <member>
+                  <literal>import</literal>
+                </member>
+                <member>
+                  <literal>int</literal>
+                </member>
+                <member>
+                  <literal>interface</literal>
+                </member>
+                <member>
+                  <literal>long</literal>
+                </member>
+                <member>
+                  <literal>native</literal>
+                </member>
+                <member>
+                  <literal>package</literal>
+                </member>
+                <member>
+                  <literal>private</literal>
+                </member>
+                <member>
+                  <literal>protected</literal>
+                </member>
+                <member>
+                  <literal>public</literal>
+                </member>
+                <member>
+                  <literal>short</literal>
+                </member>
+                <member>
+                  <literal>static</literal>
+                </member>
+                <member>
+                  <literal>super</literal>
+                </member>
+                <member>
+                  <literal>synchronized</literal>
+                </member>
+                <member>
+                  <literal>throws</literal>
+                </member>
+                <member>
+                  <literal>transient</literal>
+                </member>
+                <member>
+                  <literal>volatile</literal>
+                </member>
+              </simplelist>
+            </entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
 
-<para>
-LZX script implements a subset of class declarations, as specified by <ulink url="http://developer.mozilla.org/es4/spec/chapter_9_classes.html">the ECMAScript 4 committee wiki</ulink>.  This extension is used in the LZX runtime implementation, but is not yet supported in user code.
-</para>
+    <para>A property of an object may have any name, even that of a reserved word.
+        <literal>object.property</literal> and <literal>object['property']</literal> both refer to
+      the <literal>property</literal> property of the object named <varname>object</varname>. When
+      using dot syntax (<literal>object.property</literal>) property names must be a valid
+      identifiers, so <literal>object.default</literal>, for example, is a syntax error. In this
+      case <literal>object['default']</literal> can be used instead.</para>
 
-<para/></section></appendix>
+    <para> LZX script implements a subset of class declarations, as specified by <ulink
+        url="http://developer.mozilla.org/es4/spec/chapter_9_classes.html">the ECMAScript 4
+        committee wiki</ulink>. This extension is used in the LZX runtime implementation, but is not
+      yet supported in user code. </para>
+
+    <para/>
+  </section>
+</appendix>
