@@ -499,9 +499,9 @@ on a node's datapath will store the current value for that attribute back in the
 
 </section><section><title>Attribute values by $path constraint</title>
 
-<para>The <literal>dataset</literal> is basically an array. Assigning a node's attribute value by <literal>$path</literal> constraint, and then using the XPath expression <literal>myData:/myXML/person</literal> -- which gathers all the "person" nodes -- results in replication of the node as many times as necessary to correspond with each item in the dataset.</para>
+<para>Assigning a node's attribute value by <literal>$path</literal> constraint results in replication of the node as many times as necessary to correspond to each item in the <literal>dataset</literal>.</para>
 
-<para>In this example, there are three items in the dataset, so the <literal>box</literal> node replicates three times.</para>
+<para>In this example, there are three items in the <literal>dataset</literal>, so the <literal>box</literal> node replicates three times.</para>
 
 <example role="live-example">
    <title>Assigning an attribute value by $path constraint</title>
