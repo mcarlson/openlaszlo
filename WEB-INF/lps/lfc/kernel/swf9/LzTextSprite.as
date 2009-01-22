@@ -142,7 +142,7 @@ public class LzTextSprite extends LzSprite {
             tfield.height = h;
             tfield.border = false;
             tfield.mouseEnabled = false;
-            tfield.tabEnabled = false;
+            tfield.tabEnabled = LFCApplication.textfieldTabEnabled;
             //tfield.cacheAsBitmap = true;
             addChild(tfield);
             return tfield;

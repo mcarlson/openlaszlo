@@ -40,15 +40,16 @@ public class LFCApplication {
         _sprite.setChildIndex(child, index);
     }
 
-
     // Allow anyone access to the stage object (see ctor below)
     public static var stage:Stage = null;
 
     // Allow anyone access to write to the debugger
     public static var write:Function;
-    
-    public function LFCApplication (sprite:Sprite) {
 
+    // global tabEnabled flag for TextField
+    public static var textfieldTabEnabled:Boolean = false;
+
+    public function LFCApplication (sprite:Sprite) {
         LFCApplication._sprite = sprite;
         // wait for the ADDED_TO_STAGE event before continuing to init
         LFCApplication._sprite.addEventListener(Event.ADDED_TO_STAGE, initLFC);
@@ -67,6 +68,11 @@ public class LFCApplication {
 
         stage.addEventListener(KeyboardEvent.KEY_DOWN,reportKeyDown);
         stage.addEventListener(KeyboardEvent.KEY_UP,reportKeyUp);
+        if (Capabilities.playerType == "ActiveX") {
+            // workaround for flash player bug FP-1355
+            LFCApplication.textfieldTabEnabled = true;
+            stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, preventFocusChange);
+        }
 
         // necessary for consistent behavior - in netscape browsers HTML is ignored
         stage.align = StageAlign.TOP_LEFT;
@@ -126,10 +132,15 @@ public class LFCApplication {
         LzKeyboardKernel.__keyboardEvent(event, 'onkeydown');
     }
 
+    function preventFocusChange(event:FocusEvent):void {
+        if (event.keyCode == 9) {
+            event.preventDefault();
+        }
+    }
+
     public function runToplevelDefinitions() {
         // overridden by swf9 script compiler
     }
-
 
 }
 
@@ -137,9 +148,3 @@ public class LFCApplication {
 // contains {ptype, class, frames, width, height}
 // ptype is one of "ar" (app relative) or "sr" (system relative)
 var LzResourceLibrary = {};
-
-
-
-
-
-

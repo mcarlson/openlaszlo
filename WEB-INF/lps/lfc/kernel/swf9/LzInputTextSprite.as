@@ -87,7 +87,7 @@ public class LzInputTextSprite extends LzTextSprite {
         this.deselect();
         if (LFCApplication.stage.focus === this.textfield) {
             // remove keyboard control
-            LFCApplication.stage.focus = null;
+            LFCApplication.stage.focus = LFCApplication.stage;
         }
     }
 
