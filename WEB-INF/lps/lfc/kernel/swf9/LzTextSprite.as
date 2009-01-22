@@ -166,12 +166,6 @@ public class LzTextSprite extends LzSprite {
             this.fontstyle = args.fontstyle;
             textclip.background = false;
 
-            // multiline text fields are left justified
-            if (args.multiline) {
-                textclip.autoSize = TextFieldAutoSize.LEFT;
-            }
-
-
             // To compute our width:
             // + if text is multiline:
             //    if no width is supplied, use parent width
@@ -192,6 +186,9 @@ public class LzTextSprite extends LzSprite {
             // using LzNode args directly
             if (! this.owner.hassetheight) {
                 this.sizeToHeight = true;
+                if (args.multiline) {
+                    textclip.autoSize = TextFieldAutoSize.LEFT;
+                }
             } else if (args['height'] != null) {
                 // Does setting height of the text object do the right thing in swf9?
                 textclip.height = args.height;
