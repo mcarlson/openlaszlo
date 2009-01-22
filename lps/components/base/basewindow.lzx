@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -51,16 +51,20 @@
             <attribute name="startx" value="$once{this.x}"/>
             <attribute name="ydoffset" value="this.getMouse( 'y' )" when="once" />
             <attribute name="xdoffset" value="this.getMouse( 'x' )" when="once" />
+            <!-- Don't call setDragPos() once the drag state has been changed -->
             <attribute name="y"
-                       value="${setDragPos('y', this.immediateparent.getMouse( 'y' ))}"/>
+                       value="${this.state != 3 ? setDragPos('y', this.immediateparent.getMouse( 'y' )) : this.immediateparent.getMouse( 'y' ) - this.ydoffset}"/>
             <attribute name="x"
-                       value="${setDragPos('x', this.immediateparent.getMouse( 'x' ))}"/>
+                       value="${this.state != 3 ? setDragPos('x', this.immediateparent.getMouse( 'x' )) : this.immediateparent.getMouse( 'x' ) - this.xdoffset}"/>
         </state>
 
         <method name="setDragPos" args="xory, mousepos">   <![CDATA[
             var newpos = mousepos - this[xory + 'doffset'];
             var diff = this[xory] - this['start' + xory];
+            // Only change the state after we've moved more than 3 pixels
             if (Math.abs(diff) > 3) {
+                // Note: this number has nothing to do with the number of 
+                // pixels - see documentation above for the state attribute.
                 setAttribute('state', 3);
             }
             return newpos;
