@@ -94,7 +94,7 @@
         <method name="_doFocus" args="ignore">
             <![CDATA[
             // the hiliteview is used for keyboard nav hiliting
-                if (this['_selector']) {
+                if (this['_selector'] != null) {
                     var sel = this._selector.getSelection();
                     if (sel && sel.length > 0) {
                         if (sel[0] is lz.view) {
@@ -253,7 +253,7 @@
         <!--- Get the number of items in the list.
               @return Number: number of items. -->
         <method name="getNumItems">
-            if (!this['_selector']) return 0; // too early
+            if (this['_selector'] == null) return 0; // too early
             return this._selector.getNumItems();
         </method>
 
@@ -362,10 +362,10 @@
         <!--- Select an item by index.
               @param Number index: the index of the item to select. -->
         <method name="selectItemAt" args="index" >
-          if (typeof(this._selector) != "undefined") {
+          if (this._selector != null) {
             var item = this._selector.getItemByIndex(index);
             select(item);
-            }
+          }
         </method>
 
         <!--- Clear the current selection. -->
@@ -490,7 +490,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
