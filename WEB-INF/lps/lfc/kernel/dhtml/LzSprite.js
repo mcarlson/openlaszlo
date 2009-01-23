@@ -1112,7 +1112,7 @@ LzSprite.prototype.setVisible = function ( v ){
     if (this.visible == v) return;
     //Debug.info('setVisible', v, this.owner.getUID());
     this.visible = v;
-    this.__LZdiv.style.display = v ? 'block' : 'none';
+    this.__LZdiv.style.display = (v && this.opacity != 0) ? 'block' : 'none';
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable && this.__LZclick) {
             this.__LZclick.style.display = v && this.clickable ? '' : 'none';
@@ -1153,13 +1153,7 @@ LzSprite.prototype.setOpacity = function ( o ){
     if (o != this._opacity) { 
         //Debug.info('setOpacity', o);
         this._opacity = o;
-        if (o == 0) {
-            this.__LZdiv.style.display = 'none';
-            this._opacitywas0 = true;
-        } else if (this._opacitywas0) {
-            this._opacitywas0 = false;
-            this.__LZdiv.style.display = 'block';
-        }
+        this.__LZdiv.style.display = (this.visible && o != 0) ? 'block' : 'none';
 
         if (this.quirks.ie_opacity) {
             if (o == 1) {
