@@ -2,7 +2,7 @@
   * @topic Browser
   * @subtopic Integration
   * @access public
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   * Use is subject to license terms.
   */
   
@@ -34,7 +34,7 @@
 
 lz.embed = {
     /** A hash of options used by the embedding system.  Must be set 
-     * resourceroot: the root url to load resources from
+     * serverroot: the root url to load resources from
      * cancelkeyboardcontrol: if true, dhtml keyboard control is canceled
      * @access private 
      */
@@ -161,19 +161,19 @@ lz.embed = {
      * function is called to load the LFC.  Must be called before lz.embed.dhtml().
      *
      * @param url:String url to LFC
-     * @param resourceroot:String Base URL to load resources from. 
+     * @param serverroot:String Base URL to load resources from. 
      */
-    lfc: function (url, resourceroot) {
-        // Default resourceroot to "." if an empty string is supplied
-        if (resourceroot == '') {
-            resourceroot = '.';
-        } else if (! resourceroot || typeof resourceroot != 'string') {
-            alert('WARNING: lz.embed.lfc() requires a valid resourceroot to be specified.'); 
+    lfc: function (url, serverroot) {
+        // Default serverroot to "." if an empty string is supplied
+        if (serverroot == '') {
+            serverroot = '.';
+        } else if (! serverroot || typeof serverroot != 'string') {
+            alert('WARNING: lz.embed.lfc() requires a valid serverroot to be specified.'); 
             return;
         }
-        lz.embed.options.resourceroot = resourceroot;
+        lz.embed.options.serverroot = serverroot;
         if (lz.embed.browser.isIE) {
-            var scripturl = resourceroot + 'lps/includes/excanvas.js';
+            var scripturl = serverroot + 'lps/includes/excanvas.js';
             this.__dhtmlLoadScript(scripturl)
         }
         if ((lz.embed.browser.isIE && lz.embed.browser.version < 7) || (lz.embed.browser.isSafari && lz.embed.browser.version <= 419.3)) {
@@ -195,7 +195,16 @@ lz.embed = {
      * @param properties:Object properties used to write the dhtml, e.g. 
      * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600', id: 'dhtmlapp', history: true/false}
      *
-     * DHTML adds support for the cancelkeyboardcontrol option.  Setting cancelkeyboardcontrol to true will prevent the application from grabbing keyboard events for tab, arrow and enter keys, and disables application activation.
+     * An 'approot' can be supplied in properties, which points to the
+     * application root directory. This is used in the case that the
+     * HTML wrapper page comes from a different directory than the
+     * application.
+     *
+     *
+     * DHTML adds support for the cancelkeyboardcontrol option.
+     * Setting cancelkeyboardcontrol to true will prevent the
+     * application from grabbing keyboard events for tab, arrow and
+     * enter keys, and disables application activation.
      * 
      * Note: lz.embed.lfc() must have already been called to load the
      * LFC.
@@ -213,7 +222,8 @@ lz.embed = {
             ,appenddiv: lz.embed._getAppendDiv(properties.id, properties.appenddivid)
             ,url: url
             ,cancelkeyboardcontrol: properties.cancelkeyboardcontrol
-            ,resourceroot: properties.resourceroot
+            ,serverroot: properties.serverroot
+            ,approot: (properties.approot != null ? properties.approot : '')
         };
 
         if (lz.embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 

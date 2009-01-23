@@ -61,9 +61,12 @@ var LzSprite = function(owner, isroot) {
             lz.embed.options.cancelkeyboardcontrol = p.cancelkeyboardcontrol;
         }
         // Needed by debugger which has an embedded LFC.
-        if (p.resourceroot) {
-            lz.embed.options.resourceroot = p.resourceroot;
+        if (p.serverroot) {
+            lz.embed.options.serverroot = p.serverroot;
         }
+
+        lz.embed.options.approot = (typeof(p.approot) == "string") ? p.approot : '';
+
         if (! this.quirks.canvas_div_cannot_be_clipped && width && ! widthispercentage && height && ! heightispercentage) {
             div.style.clip = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
             div.style.overflow = 'hidden';
@@ -678,9 +681,11 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
     this.resourceWidth = res.width;
     this.resourceHeight = res.height;
 
-    var baseurl = '';
+    var baseurl;
     if (res.ptype && res.ptype == 'sr') {
-        baseurl = lz.embed.options.resourceroot;
+        baseurl = lz.embed.options.serverroot;
+    } else {
+        baseurl = lz.embed.options.approot;
     }
 
     if (this.quirks.use_css_sprites && res.sprite) {
@@ -735,7 +740,7 @@ LzSprite.prototype.setSource = function (url, usecache){
             var im = document.createElement('img');
             im.className = 'lzdiv';
             im.owner = this;
-            im.src = lz.embed.options.resourceroot + LzSprite.prototype.blankimage;
+            im.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
             this.__bindImage(im);
         }
         this.__updateStretches();
@@ -839,7 +844,7 @@ LzSprite.prototype.setClickable = function(c) {
         if (! this.__LZclick) {
             if (this.quirks.fix_ie_clickable) {
                 this.__LZclick = document.createElement('img');
-                this.__LZclick.src = lz.embed.options.resourceroot + LzSprite.prototype.blankimage;
+                this.__LZclick.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
             } else {
                 this.__LZclick = document.createElement('div');
             }
@@ -869,7 +874,7 @@ LzSprite.prototype.setClickable = function(c) {
             if (! this.__LZclick) {
                 if (this.quirks.fix_ie_clickable) {
                     this.__LZclick = document.createElement('img');
-                    this.__LZclick.src = lz.embed.options.resourceroot + LzSprite.prototype.blankimage;
+                    this.__LZclick.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
                 } else {
                     this.__LZclick = document.createElement('div');
                 }
@@ -1133,7 +1138,7 @@ LzSprite.prototype.setBGColor = function ( c ){
     this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzColorUtils.inttohex(c);
     if (this.quirks.fix_ie_background_height) {
         if (this.height != null && this.height < 2) {
-            this.setSource(lz.embed.options.resourceroot + LzSprite.prototype.blankimage, true);
+            this.setSource(lz.embed.options.serverroot + LzSprite.prototype.blankimage, true);
         } else if (! this._fontSize) {
             this.__LZdiv.style.fontSize = '0px';
         }
