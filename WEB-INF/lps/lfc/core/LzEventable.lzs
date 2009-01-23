@@ -120,7 +120,8 @@ class LzEventable {
     // TODO: [2009-01-19 ptw] Remove after 4.2
     if ($debug) {
       if (ifchanged !== null) {
-        Debug.info("The `ifchanged` option is deprecated.  Make the test at the call site instead");
+        Debug.info("%w.setAttribute(%w, %w, %w):  The third parameter (ifchanged) is deprecated.  Use `if (this.%2$s !== %3$w) this.setAttribute(%2$w, %3$w)` instead",
+                   this, prop, val, ifchanged);
       }
     }
     if (this.__LZdeleted) { return; }

@@ -1273,8 +1273,12 @@
             function __updateSize() {
                 if ($swf8) {
                     var mc = this.sprite.getContext();
-                    if (this.__measurewidth) this.setAttribute('width', mc._width, true);
-                    if (this.__measureheight) this.setAttribute('height', mc._height, true);
+                    if (this.__measurewidth && this.width !== mc._width) {
+                      this.setAttribute('width', mc._width);
+                    }
+                    if (this.__measureheight && this.height !== mc._height) {
+                      this.setAttribute('height', mc._height);
+                    }
                 }
             }
     
