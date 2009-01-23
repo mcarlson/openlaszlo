@@ -3,15 +3,16 @@
 <!-- a frame named myframe --> 
 <canvas width="100%" height="100%" title="LZX Reference Navigation">
   <include href="lz/tree.lzx"/>
+  <attribute name="target" value="$once{lz.Browser.getInitArg('target')}" />
 
   <dataset name="tocdata" src="toc.xml"/>
   <dataset name="classesdata" src="classes.xml"/>
   <dataset name="tagsdata" src="tags.xml"/>
   
   <class name="link" extends="text" resize="true"
-         onmouseover="setAttribute('fgcolor', blue)"
-         onmouseout="setAttribute('fgcolor', black)"
-         onclick="lz.Browser.loadURL(this.datapath.xpathQuery('@href'), target)"/>
+         onmouseover="setAttribute('fgcolor', 'blue')"
+         onmouseout="setAttribute('fgcolor', 'black')"
+         onclick="lz.Browser.loadURL(this.datapath.xpathQuery('@href'), canvas.target)"/>
   <class name="wheelscrollbar" extends="scrollbar" mousewheelactive="true">
     <handler name="onmousewheeldelta" reference="lz.Keys" method="mousewheelUpdate"/>
   </class>
@@ -20,21 +21,21 @@
   <class name="linktree" extends="basetree" isleaf="true" recurse="false" >
       <method name="keySelect">
           super.keySelect();
-          lz.Browser.loadURL(this.datapath.xpathQuery('@href'), target);
+          lz.Browser.loadURL(this.datapath.xpathQuery('@href'), canvas.target);
       </method>
       <text text="${parent.text}" placement="item" name="t" resize="true" 
             onmouseover="setAttribute('fgcolor', classroot.style['texthilitecolor'])"
             onmouseout="setAttribute('fgcolor',   classroot.selected 
-                                                ? blue
+                                                ? 'blue'
                                                 : (   classroot.focused 
                                                     ? classroot.style['texthilitecolor']
                                                     : classroot.style['textcolor'] ))"
-            fgcolor="${ classroot.selected ? blue
+            fgcolor="${ classroot.selected ? 'blue'
                                            : (   classroot.focused 
                                                ? classroot.style['texthilitecolor']
                                                : classroot.style['textcolor'] ) }">
           <handler name="onclick">
-              lz.Browser.loadURL(classroot.datapath.xpathQuery('@href'), target);
+              lz.Browser.loadURL(classroot.datapath.xpathQuery('@href'), canvas.target);
               classroot.setAttribute('selected', true);
               classroot.changeFocus(classroot);
           </handler>
@@ -60,7 +61,7 @@
         </method>
       </view>
       <link text="Welcome"
-            onclick="lz.Browser.loadURL('ref.preface.html', target)"/>
+            onclick="lz.Browser.loadURL('ref.preface.html', canvas.target)"/>
       <view name="treeparent" clip="true" width="${parent.width - 20}"
             height="${Math.max(0,parent.parent.height - parent.search.height - 80)}">
         <attribute name="cgroup" value="0"/>
@@ -74,7 +75,7 @@
             var sleaf = cleaf;
             var canwrap = true;
             if (this.lastfound) {
-              this.lastfound.setAttribute( 'fgcolor', black );
+              this.lastfound.setAttribute( 'fgcolor', 'black' );
               this.lastfound = null;
             }
             while( !this.lastfound && 
@@ -88,7 +89,7 @@
                     //found one!
                     cgs.setAttribute( "open", true );
                     cgs.changeFocus();
-                    curr.setAttribute( "fgcolor", blue );
+                    curr.setAttribute( "fgcolor", 'blue' );
                     curr.changeFocus( );
                     this.lastfound = curr;
                 } 
@@ -146,6 +147,6 @@
   
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
