@@ -142,9 +142,7 @@ class DHTMLWriter extends ObjectWriter {
                         For now I'll leave this as it is. [pga]
                 */
                 String sFname = inputFile.toString() + File.separator + sources[i].getName();
-                File f = new File(sFname);
-                //mLogger.debug("DHTMLWriter file: " + sFname + " is a file? " + f.isFile());
-                if (f.isFile()) {
+                if (isFileValidForImport(sFname)) {
                     outsources.add(sFname);
                 }
             }
@@ -157,11 +155,8 @@ class DHTMLWriter extends ObjectWriter {
                 // Construct path from directory and file names. (see comment above [pga])
                 File fDir = inputFile.getParentFile();
                 String sFname = fDir.toString() + File.separator + sources[i].getName();
-                File f = new File(sFname); //sources[i];
-                //mLogger.debug("DHTMLWriter file: " + f.toString() + " is a file? " + f.isFile());
-
-                if (f.isFile()) {
-                    outsources.add(f.toString());
+                if (isFileValidForImport(sFname)) {
+                    outsources.add(sFname);
                 }
             }
             importResource(outsources, name, null);
@@ -300,6 +295,23 @@ class DHTMLWriter extends ObjectWriter {
         }
         sbuf.append("};");
         addScript(sbuf.toString());
+    }
+
+    /** Validate a given filename is good for importing
+     *
+     * @param fileName file name of the resource
+     * @return true if it is valid
+     */ 
+    private boolean isFileValidForImport(String fileName) { 
+        // skip auto-generated CSS sprites
+        if (fileName.indexOf(".sprite.") > -1) {
+            //mLogger.debug("skipping css sprite: "+fileName);
+            return false;
+        }
+
+        File f = new File(fileName);
+        //mLogger.debug("file: " + fileName + " is a file? " + f.isFile());
+        return f.isFile();
     }
 
     private String[] getRelPath(File fFile) { 
