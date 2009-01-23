@@ -1,7 +1,7 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
  *            Reserved.  Use is subject to license terms.
  *
  * @access public
@@ -130,10 +130,12 @@ class LzBootstrapDebugConsole extends LzDebugConsole /* implements  LzDebugConso
       str = '' + msg;
     };
     if ($dhtml) {
-      // Rhino support
-      if (print && (print is Function)) {
-        print (str);
-      }
+      try {
+        if (navigator.platform == 'rhino') {
+          print(str);
+          return;
+        }
+      } catch (e) {};
     }
     // We know this is just going to capture the raw message for
     // replay later

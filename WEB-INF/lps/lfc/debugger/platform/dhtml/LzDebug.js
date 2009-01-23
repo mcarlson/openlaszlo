@@ -13,44 +13,15 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
   /** @access private */
   var __reNewline = RegExp('&#xa;|&#xA;|&#10;|\\n', 'g');
 
-  function LzDHTMLDebugConsole () {
+  function LzDHTMLDebugConsole (iframe) {
     super();
-    // But not in Rhino
-    if (navigator.platform == 'rhino') {
-      this.DebugWindow = true;
-      return;
-    }
-
-    // The application and debugger are sibling iframes in the
-    // dhtml embedding.
-    try {
-      this.DebugWindow = window.parent.frames['LaszloDebugger'];
-    } catch (e) {
-    }
-
+    this.DebugWindow = iframe;
   };
-
-  function createDebugIframe() {
-    if (! this.DebugWindow) {
-      var debugurl = lz.embed.options.resourceroot + 'lps/includes/laszlo-debugger.html';
-      var iframe = document.createElement('iframe');
-      lz.embed.__setAttr(iframe, 'id', 'LaszloDebugger');
-      lz.embed.__setAttr(iframe, 'name', 'LaszloDebugger');
-      lz.embed.__setAttr(iframe, 'src', debugurl);
-      lz.embed.__setAttr(iframe, 'width', '100%');
-      lz.embed.__setAttr(iframe, 'height', '200');
-      var y = canvas.height - 200;
-      lz.embed.__setAttr(iframe, 'style', 'position:absolute;z-index:10000000;top:' + y + 'px;');
-      canvas.sprite.__LZdiv.appendChild(iframe);
-      this.DebugWindow = window.frames['LaszloDebugger'];
-    }
-  }
 
   /**
    * @access private
    */
   override function addHTMLText (str) {
-    if (! this.DebugWindow) this.createDebugIframe();
     var dw = this.DebugWindow;
     var dwd = dw.document;
     var span = dwd.createElement('span');
@@ -89,8 +60,7 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
       this.addHTMLText(str);
     } catch (e) {
       try {
-        // Rhino?
-        if (print.length > 0) {
+        if (navigator.platform == 'rhino') {
           print(str);
           return;
         }
@@ -187,8 +157,33 @@ class LzDHTMLDebugService extends LzDebugService {
     // constructor, rather than in makeDebugWindow, because the
     // console is implemented as an HTML iframe that exists before the
     // app is loaded
-    this.attachDebugConsole(new LzDHTMLDebugConsole());
-  }
+    var debugFrame;
+    try {
+      debugFrame = window.parent.frames['LaszloDebugger'];
+    }
+    catch (e) {};
+    if (debugFrame) {
+      this.attachDebugConsole(new LzDHTMLDebugConsole(debugFrame));
+    }
+  };
+
+  /**
+   * If the app has a custom wrapper that does not include the
+   * debugger frame, create it on the fly.
+   *
+   * @access private
+   */
+  function createDebugIframe() {
+    var debugurl = lz.embed.options.resourceroot + 'lps/includes/laszlo-debugger.html';
+    var iframe = '<iframe id="LaszloDebugger" name="LaszloDebugger" src="' + debugurl + '" width="100%" height="200"></iframe>';
+    var inputdiv = '<form id="dhtml-debugger-input" onsubmit="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" action="#"><div><input id="LaszloDebuggerInput" style="width:78%;" type="text"/><input type="button" onclick="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" value="eval"/><input type="button" onclick="$modules.lz.Debug.clear(); return false" value="clear"/><input type="button" onclick="$modules.lz.Debug.bugReport(); return false" value="bug report"/></div></form>';
+    var debugdiv = document.createElement('div');
+    debugdiv.innerHTML = iframe + inputdiv;
+    var y = canvas.height - 230;
+    lz.embed.__setAttr(debugdiv, 'style', 'position:absolute;z-index:10000000;top:' + y + 'px;width:100%;');
+    canvas.sprite.__LZdiv.appendChild(debugdiv);
+    return window.frames['LaszloDebugger'];
+  };
 
   /**
    * @access private
@@ -196,6 +191,11 @@ class LzDHTMLDebugService extends LzDebugService {
    * Called last thing by the compiler when the app is completely loaded.
    */
   function makeDebugWindow () {
+    // If we didn't succeed in attaching the debug console in
+    // construct, try now
+    if (! (this.console is LzDHTMLDebugConsole)) {
+      this.attachDebugConsole(new LzDHTMLDebugConsole(this.createDebugIframe()));
+    }
     for (var n in __ES3Globals) {
       var p = __ES3Globals[n];
       try {
