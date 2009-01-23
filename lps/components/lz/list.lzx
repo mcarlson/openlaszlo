@@ -68,7 +68,7 @@
               y="${classroot.border_top}"
               width="${classroot.width
                         - classroot.border_right - classroot.border_left}"
-              bgcolor="${classroot.bgcolor}"
+              bgcolor="${classroot._bgcolor}"
               clip="true">
             <!-- height of this view is set in class' adjustheight method -->
 
@@ -286,15 +286,20 @@
          <!--- @keywords private -->
          <attribute name="_setbordercolor" value="false" type="boolean" />
 
+         <!--- Used to pass bgcolor to 'interior' without affecting the
+               bgcolor of the class.
+               @keywords private -->
+         <attribute name="_bgcolor" value="null"/>
+
         <!--- @keywords private -->
         <setter name="bgcolor" args="c"> <![CDATA[
             if (this._setbordercolor) {
                 super.setAttribute('bgcolor', c);
             }
             else {
-                // DON'T call the super setter, we take over bgcolor to control
-                // the bgcolor of the content pane.
-                this.bgcolor = c;
+                // DON'T call the super setter, 'interior' view
+                // sets its bgcolor from this attribute
+                this._bgcolor = c;
                 var event = this['onbgcolor'];
                 if (event && event.ready) {
                     event.sendEvent(c);
@@ -309,7 +314,7 @@
                 this._setbordercolor = true;
                 this.setAttribute('bgcolor', s.bordercolor);
                 this._setbordercolor = false;
-                if (this.bgcolor == null) this.interior.setAttribute('bgcolor', s.bgcolor);
+                if (this._bgcolor == null) this.interior.setAttribute('bgcolor', s.bgcolor);
             }
         </method>
 
@@ -362,7 +367,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
