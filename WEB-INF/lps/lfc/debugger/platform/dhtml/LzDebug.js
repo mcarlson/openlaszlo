@@ -179,6 +179,12 @@ class LzDHTMLDebugService extends LzDebugService {
     var inputdiv = '<form id="dhtml-debugger-input" onsubmit="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" action="#"><div><input id="LaszloDebuggerInput" style="width:78%;" type="text"/><input type="button" onclick="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" value="eval"/><input type="button" onclick="$modules.lz.Debug.clear(); return false" value="clear"/><input type="button" onclick="$modules.lz.Debug.bugReport(); return false" value="bug report"/></div></form>';
     var debugdiv = document.createElement('div');
     debugdiv.innerHTML = iframe + inputdiv;
+    debugdiv.onmouseover = function (e) { 
+        if (!e) e = window.event;
+        e.cancelBubble = true;
+        LzKeyboardKernel.setKeyboardControl(false); 
+        return false;
+    }
     var y = canvas.height - 230;
     lz.embed.__setAttr(debugdiv, 'style', 'position:absolute;z-index:10000000;top:' + y + 'px;width:100%;');
     canvas.sprite.__LZdiv.appendChild(debugdiv);
