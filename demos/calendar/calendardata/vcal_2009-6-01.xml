@@ -1,44 +1,44 @@
 <vcalendar>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-    <year2005>
+    <year2009>
        <month6>
              <day2>
                 <event>
                    <summary value=" Mars Project Review"/>
                    <comment value="Discuss Agenda for next project."/>
-                   <start year="2005" month="6" day="2" hour="10"/>
-                   <end year="2005" month="6" day="2" hour="12"/>
+                   <start year="2009" month="6" day="2" hour="10"/>
+                   <end year="2009" month="6" day="2" hour="12"/>
                 </event>
                 <event>
                    <summary value="Online Conference"/>
                    <comment value="Demostrate Mars Rover to the President"/>
-                   <start year="2005" month="6" day="2" hour="3"/>
-                   <end year="2005" month="6" day="2" hour="4"/>
+                   <start year="2009" month="6" day="2" hour="3"/>
+                   <end year="2009" month="6" day="2" hour="4"/>
                 </event>
             </day2>
             <day12>
                 <event>
                    <summary value="Mars Mission Meeting"/>
                    <comment value="Discuss mission to Mars."/>
-                   <start year="2005" month="6" day="12" hour="10"/>
-                   <end year="2005" month="6" day="12" hour="12"/>
+                   <start year="2009" month="6" day="12" hour="10"/>
+                   <end year="2009" month="6" day="12" hour="12"/>
                 </event>
                 <event>
                    <summary value="Product Demo"/>
                    <comment value="Demostrate Laszlo to new customers"/>
-                   <start year="2005" month="6" day="12" hour="2"/>
-                   <end year="2005" month="6" day="12" hour="5"/>
+                   <start year="2009" month="6" day="12" hour="2"/>
+                   <end year="2009" month="6" day="12" hour="5"/>
                 </event>
             </day12>
             <day14>
                 <event>
                    <summary value="Flag Day"/>
                    <comment value="Flag Day"/>
-                   <start year="2005" month="6" day="14" hour="10"/>
-                   <end year="2005" month="6" day="14" hour="12"/>
+                   <start year="2009" month="6" day="14" hour="10"/>
+                   <end year="2009" month="6" day="14" hour="12"/>
                    <category value="holiday"/>
                 </event>
             </day14>
@@ -46,15 +46,15 @@
                 <event>
                    <summary value="Father's Day"/>
                    <comment value="Father's Day"/>
-                   <start year="2005" month="6" day="20" hour="10"/>
-                   <end year="2005" month="6" day="20" hour="12"/>
+                   <start year="2009" month="6" day="20" hour="10"/>
+                   <end year="2009" month="6" day="20" hour="12"/>
                    <category value="holiday"/>
                 </event>
                 <event>
                    <summary value="Summer Solstice"/>
                    <comment value="Summer Solstice"/>
-                   <start year="2005" month="6" day="20" hour="10"/>
-                   <end year="2005" month="6" day="20" hour="12"/>
+                   <start year="2009" month="6" day="20" hour="10"/>
+                   <end year="2009" month="6" day="20" hour="12"/>
                    <category value="astro"/>
                 </event>
             </day20>
@@ -62,11 +62,11 @@
                 <event>
                    <summary value="St. Jean-Baptiste Day"/>
                    <comment value="St. Jean-Baptiste Day"/>
-                   <start year="2005" month="6" day="24" hour="10"/>
-                   <end year="2005" month="6" day="24" hour="12"/>
+                   <start year="2009" month="6" day="24" hour="10"/>
+                   <end year="2009" month="6" day="24" hour="12"/>
                    <category value="holiday"/>
                 </event>
             </day24>
         </month6>
-    </year2005>
+    </year2009>
 </vcalendar>
