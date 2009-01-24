@@ -13,6 +13,7 @@
          onmouseover="setAttribute('fgcolor', 'blue')"
          onmouseout="setAttribute('fgcolor', 'black')"
          onclick="lz.Browser.loadURL(this.datapath.xpathQuery('@href'), canvas.target)"/>
+
   <class name="wheelscrollbar" extends="scrollbar" mousewheelactive="true">
     <handler name="onmousewheeldelta" reference="lz.Keys" method="mousewheelUpdate"/>
   </class>
@@ -30,10 +31,14 @@
                                                 : (   classroot.focused 
                                                     ? classroot.style['texthilitecolor']
                                                     : classroot.style['textcolor'] ))"
-            fgcolor="${ classroot.selected ? 'blue'
-                                           : (   classroot.focused 
-                                               ? classroot.style['texthilitecolor']
-                                               : classroot.style['textcolor'] ) }">
+            fgcolor="${classroot.selected
+                        ? 'blue'
+                        : (classroot.style
+                            ? (classroot.focused
+                                ? classroot.style['texthilitecolor']
+                                : classroot.style['textcolor'])
+                            : 'black')}"
+            >
           <handler name="onclick">
               lz.Browser.loadURL(classroot.datapath.xpathQuery('@href'), canvas.target);
               classroot.setAttribute('selected', true);
@@ -75,7 +80,7 @@
             var sleaf = cleaf;
             var canwrap = true;
             if (this.lastfound) {
-              this.lastfound.setAttribute( 'fgcolor', 'black' );
+              this.lastfound.setAttribute( 'fgcolor', lz.colors.black );
               this.lastfound = null;
             }
             while( !this.lastfound && 
@@ -88,9 +93,9 @@
                 if ( curr.text.toLowerCase().indexOf( tok )  > -1 ){
                     //found one!
                     cgs.setAttribute( "open", true );
-                    cgs.changeFocus();
-                    curr.setAttribute( "fgcolor", 'blue' );
-                    curr.changeFocus( );
+                    cgs.changeFocus(null);
+                    curr.setAttribute( "fgcolor", lz.colors.blue );
+                    curr.changeFocus(null);
                     this.lastfound = curr;
                 } 
 
@@ -101,9 +106,7 @@
                         this.cleaf = this.cgroup = 0;
                     }
                 }
-
             }
-
             ]]>
         </method>
 
@@ -111,7 +114,14 @@
               text="$path{'@title'}">
             <tree datapath="category" text="$path{'@title'}"
                   xindent="20" yindent="18" closesiblings="true">
-                <linktree datapath="item" text="$path{'@title'}" />
+                <attribute name="createdItems" value="false" type="boolean" />
+                <handler name="onopen" args="o"><![CDATA[
+                    if (o && !this.createdItems) {
+                        this.createdItems = true;
+                        this.items.setAttribute("datapath", "item");
+                    }
+                ]]></handler>
+                <linktree name="items" text="$path{'@title'}" />
             </tree>
         </tree>
         <wheelscrollbar/>
@@ -126,8 +136,10 @@
       Classes
       <view clip="true" height="${parent.parent.height - 50}"
             width="${parent.width-20}">
-          <view layout="y" width="${parent.width - 20}">
-            <link datapath="classesdata:/index/item" text="$path{'@title'}" />
+          <view layout="axis:y" width="${parent.width - 20}">
+            <link text="$path{'@title'}">
+              <datapath xpath="classesdata:/index/item" replication="lazy"/>
+            </link>
           </view>
           <wheelscrollbar/>
       </view>
@@ -136,8 +148,13 @@
       Tags
       <view clip="true" height="${parent.parent.height - 50}"
             width="${parent.width-20}">
-          <view layout="y" width="${parent.width - 20}">
-            <link datapath="tagsdata:/index/item" text="$path{'@title'}" />
+          <view layout="axis:y" width="${parent.width - 20}">
+            <link text="$path{'@title'}">
+              <setter name="text" args="t" >
+                super.setAttribute("text", this.escapeText(t));
+              </setter>
+              <datapath xpath="tagsdata:/index/item" replication="lazy"/>
+            </link>
           </view>
           <wheelscrollbar/>
       </view>
