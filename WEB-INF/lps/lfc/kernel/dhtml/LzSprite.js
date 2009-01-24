@@ -65,7 +65,9 @@ var LzSprite = function(owner, isroot) {
             lz.embed.options.serverroot = p.serverroot;
         }
 
-        lz.embed.options.approot = (typeof(p.approot) == "string") ? p.approot : '';
+        if (lz.embed.options) {
+            lz.embed.options.approot = (typeof(p.approot) == "string") ? p.approot : '';
+        }
 
         if (! this.quirks.canvas_div_cannot_be_clipped && width && ! widthispercentage && height && ! heightispercentage) {
             div.style.clip = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
