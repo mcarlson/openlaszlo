@@ -129,8 +129,6 @@ function $lzc$set_visible( amVisible ) {
   * @lzxtype event
   */
 var onaddsubview = LzDeclaredEvent;
-/** @access private */
-var onbgcolor = LzDeclaredEvent;
 /** The onblur event is sent when an element loses focus either
   * by the pointing device or by tabbing navigation.
   * @lzxtype event
@@ -689,18 +687,34 @@ function $lzc$set_clickregion(cr) {
   */
 var cursor;  
 
-/** A color to use to render object that appears inside this view,
-  * which includes any vector or bitmap art in the view's resource
-  * and any contained views.
-  * @lzxtype color
-  */
-var fgcolor;   
-
+/**
+ * The forground color of the view (and any views contained in it).
+ * This is the color of the ink that text and other drawing (such as
+ * vector or bitmap art) will be done in.
+ *
+ * May be set to any valid CSS color specification.  When read, will
+ * be read as the equivalent numeric value.  To retrieve a CSS color
+ * specification, use <code>this.presentAttribute('fgcolor',
+ * 'color')</code>.  Default is <code>0</code> (black).
+ *
+ * @lzxtype color
+ * @type Number
+ */
+var fgcolor = 0;
+/** @access private */
+var onfgcolor = LzDeclaredEvent;
 /** @access private */
 function $lzc$set_fgcolor(c) {
-    this.sprite.setColor(c);
-    this.fgcolor = c;
-}
+  // This enables setting to symbolic color names, which people expect
+  // to work, although they should use
+  // `this.acceptAttribute('fgcolor', 'color', value)`
+  if ((c != null) && isNaN(c)) {
+      c = this.acceptTypeValue('color', c);
+  }
+  this.sprite.setColor(c);
+  this.fgcolor = c;
+  if (this.onfgcolor.ready) this.onfgcolor.sendEvent( c );
+};
 
 /** The font to use for any <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag> or <sgmltag class="element" role="LzInputText">&lt;inputtext&gt;</sgmltag> elements that
   * appear inside this view. Like all the font properties
@@ -1001,22 +1015,33 @@ function $lzc$set_opacity(v)
 /** @access private */
 function $lzc$set_alpha(v) { this.$lzc$set_opacity(v); }
 
-/** The color of background of this view. Null if there is
-  * no bgcolor. A number from 0 - 0xFFFFFF.
-  * @lzxtype color
+/**
+ * The background color of the view.  Setting <code>bgcolor</code> to
+ * <code>null</code> will make the view transparent.
+ *
+ * May be set to any valid CSS color specification.  When read, will
+ * be read as the equivalent numeric value.  To retrieve a CSS color
+ * specification, use <code>this.presentAttribute('bgcolor',
+ * 'color')</code>.  Default is <code>null</code> (transparent).
+ *
+ * @lzxtype color
+ * @type Number
   */
-var bgcolor =   null;
-
-/** The background color of the canvas. 
-  * @lzxtype token
-  * @access private 
-  */
-function $lzc$set_bgcolor(bgc) { 
-    bgc = LzColorUtils.hextoint(bgc);
-    this.sprite.setBGColor(bgc);
-    if (bgc != null) this.bgcolor = bgc;
-    if (this.onbgcolor.ready) this.onbgcolor.sendEvent( bgc );
-}
+var bgcolor = null;
+/** @access private */
+var onbgcolor = LzDeclaredEvent;
+/** @access private */
+function $lzc$set_bgcolor(bgc) {
+  // This enables setting to symbolic color names, which people expect
+  // to work, although they should use
+  // `this.acceptAttribute('bgcolor', 'color', value)`
+  if ((bgc != null) && isNaN(bgc)) {
+    bgc = this.acceptTypeValue('color', bgc);
+  }
+  this.sprite.setBGColor(bgc);
+  this.bgcolor = bgc;
+  if (this.onbgcolor.ready) this.onbgcolor.sendEvent( bgc );
+};
 
 /** The horizontal offset of this view's upper left corner from the
   * upper left corner of its container.
