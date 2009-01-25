@@ -174,7 +174,7 @@ class LzDHTMLDebugService extends LzDebugService {
    * @access private
    */
   function createDebugIframe() {
-    var debugurl = lz.embed.options.resourceroot + 'lps/includes/laszlo-debugger.html';
+    var debugurl =  lz.embed.options.serverroot + 'lps/includes/laszlo-debugger.html';
     var iframe = '<iframe id="LaszloDebugger" name="LaszloDebugger" src="' + debugurl + '" width="100%" height="200"></iframe>';
     var inputdiv = '<form id="dhtml-debugger-input" onsubmit="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" action="#"><div><input id="LaszloDebuggerInput" style="width:78%;" type="text"/><input type="button" onclick="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" value="eval"/><input type="button" onclick="$modules.lz.Debug.clear(); return false" value="clear"/><input type="button" onclick="$modules.lz.Debug.bugReport(); return false" value="bug report"/></div></form>';
     var debugdiv = document.createElement('div');
@@ -199,7 +199,8 @@ class LzDHTMLDebugService extends LzDebugService {
   function makeDebugWindow () {
     // If we didn't succeed in attaching the debug console in
     // construct, try now
-    if (! (this.console is LzDHTMLDebugConsole)) {
+    if ((! (this.console is LzDHTMLDebugConsole)) &&
+        (navigator.platform != 'rhino')) {
       this.attachDebugConsole(new LzDHTMLDebugConsole(this.createDebugIframe()));
     }
     for (var n in __ES3Globals) {

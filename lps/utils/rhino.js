@@ -8,7 +8,8 @@ load("3rd-party/tools/BUFakeDom.js");
 
 // some setup to fake what the html embed does 
 lz = {};
-lz.embed = {__propcache: { appenddiv: document.createElement() } };
+lz.embed = {__propcache: { appenddiv: document.createElement() },
+            options: {}};
 
 // Fake the browser DOM
 // Laszlo app expects to run in an iframe
