@@ -20,15 +20,23 @@
 
   <!-- Create linktree so we can keyboard navigate. -->
   <class name="linktree" extends="basetree" isleaf="true" recurse="false" >
+      <attribute name="datasel" value="$path{'@datasel'}" type="boolean" />
+      <setter name="datasel" args="dsel" >
+          this.datasel = dsel;
+          this.setAttribute('selected', dsel);
+          if (dsel) {
+              this.changeFocus(null);
+          }
+      </setter>
       <method name="keySelect">
           super.keySelect();
           lz.Browser.loadURL(this.datapath.xpathQuery('@href'), canvas.target);
       </method>
-      <text text="${parent.text}" placement="item" name="t" resize="true" 
+      <text text="${parent.text}" placement="item"
             onmouseover="setAttribute('fgcolor', classroot.style['texthilitecolor'])"
-            onmouseout="setAttribute('fgcolor',   classroot.selected 
+            onmouseout="setAttribute('fgcolor', classroot.selected 
                                                 ? 'blue'
-                                                : (   classroot.focused 
+                                                : (classroot.focused 
                                                     ? classroot.style['texthilitecolor']
                                                     : classroot.style['textcolor'] ))"
             fgcolor="${classroot.selected
@@ -42,7 +50,7 @@
           <handler name="onclick">
               lz.Browser.loadURL(classroot.datapath.xpathQuery('@href'), canvas.target);
               classroot.setAttribute('selected', true);
-              classroot.changeFocus(classroot);
+              classroot.changeFocus(null);
           </handler>
       </text>
   </class>
@@ -69,46 +77,66 @@
             onclick="lz.Browser.loadURL('ref.preface.html', canvas.target)"/>
       <view name="treeparent" clip="true" width="${parent.width - 20}"
             height="${Math.max(0,parent.parent.height - parent.search.height - 80)}">
-        <attribute name="cgroup" value="0"/>
-        <attribute name="cleaf" value="0"/>
-        <attribute name="lastfound" value="null"/>
-        <method name="findNext" args="tok">
-            <![CDATA[ 
-            if ( tok == '' || tok == null ) return;
-            tok = tok.toLowerCase();
-            var sgroup = cgroup;
-            var sleaf = cleaf;
-            var canwrap = true;
-            if (this.lastfound) {
-              this.lastfound.setAttribute( 'fgcolor', lz.colors.black );
-              this.lastfound = null;
-            }
-            while( !this.lastfound && 
-                    ( canwrap || ( sgroup > cgroup ) ||
-                      (sgroup == cgroup && sleaf > cleaf) ) ){
+        <attribute name="lastCategory" value="0" type="number" />
+        <attribute name="lastItem" value="-1" type="number" />
+        <attribute name="lastData" value="null" />
+        <method name="findNext" args="tok"><![CDATA[
+            if (tok) {
+                tok = tok.toLowerCase();
 
-                var cgs = top.children.subviews[ cgroup ];
-                var curr = cgs.children.subviews[ cleaf ];
-
-                if ( curr.text.toLowerCase().indexOf( tok )  > -1 ){
-                    //found one!
-                    cgs.setAttribute( "open", true );
-                    cgs.changeFocus(null);
-                    curr.setAttribute( "fgcolor", lz.colors.blue );
-                    curr.changeFocus(null);
-                    this.lastfound = curr;
-                } 
-
-                if ( ++this.cleaf == cgs.children.subviews.length ){
-                    this.cleaf = 0;
-                    if ( ++this.cgroup == top.children.subviews.length ){
-                        canwrap = false;
-                        this.cleaf = this.cgroup = 0;
+                var afterLast = true;
+                var categories = tocdata.getFirstChild().getElementsByTagName("category");
+                for (var i = this.lastCategory; true; ) {
+                    var items = categories[i].getElementsByTagName("item");
+                    if (this.lastCategory == i) {
+                        // same category as last matched category
+                        if (afterLast) {
+                            // check only entries after last match
+                            var startAt = this.lastItem + 1;
+                            var endAt = items.length;
+                        } else {
+                            // check only entries before last match
+                            var startAt = 0;
+                            var endAt = this.lastItem;
+                        }
+                    } else {
+                        // search in full range
+                        var startAt = 0;
+                        var endAt = items.length;
+                    }
+                    for (var j = startAt; j < endAt; ++j) {
+                        var title = items[j].getAttr("title") || "";
+                        if (title.toLowerCase().indexOf(tok) > -1) {
+                            if (this.lastData) {
+                                // clear last match
+                                this.lastData.setAttr("datasel", "false");
+                            }
+                            // memorize new match
+                            this.lastCategory = i;
+                            this.lastItem = j;
+                            this.lastData = items[j];
+                            var catTree = this.top.children.subviews[i];
+                            catTree.setAttribute("open", true);
+                            catTree.changeFocus(null);
+                            items[j].setAttr("datasel", "true");
+                            return;
+                        }
+                    }
+                    if (!afterLast && i == this.lastCategory) {
+                        // found no entries, stop search
+                        return;
+                    } else {
+                        i += 1;
+                        if (i == categories.length) {
+                            // restart at 0
+                            i = 0;
+                            // this time check only entries before last match
+                            afterLast = false;
+                        }
                     }
                 }
             }
-            ]]>
-        </method>
+        ]]></method>
 
         <tree datapath="tocdata:/toc" showroot="false" name="top" autoscroll="true"
               text="$path{'@title'}">
@@ -127,10 +155,6 @@
         <wheelscrollbar/>
       </view>
       <simplelayout spacing="8"/>
-      
-      <button onclick="lz.Browser.loadURL('javascript:lzSetShowInlineExamples(true)')">Show Examples</button>
-      <button onclick="lz.Browser.loadURL('javascript:lzSetShowInlineExamples(false)')">Hide Examples</button>
-
     </tabpane>
     <tabpane width="${parent.width}">
       Classes

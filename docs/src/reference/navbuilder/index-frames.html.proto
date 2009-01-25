@@ -5,10 +5,10 @@
 <TITLE>OpenLaszlo @VERSIONID@ Reference</TITLE>
 </HEAD>
 <FRAMESET cols="240px, *" >
-  <FRAME name="lzxdocnavframe" src="nav.lzx?target=content" scrolling="no"/>
+  <FRAME name="lzxdocnavframe" src="nav.lzx?lzt=html&target=content" scrolling="no"/>
   <FRAME name="content" src="ref.preface.html" />
 </FRAMESET>
 </HTML>
 
-<!-- Copyright 2007, 2008 Laszlo Systems -->
+<!-- Copyright 2007-2009 Laszlo Systems -->
 
