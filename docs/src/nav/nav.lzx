@@ -9,10 +9,12 @@
   <dataset name="classesdata" src="classes.xml"/>
   <dataset name="tagsdata" src="tags.xml"/>
   
-  <class name="link" extends="text" resize="true"
+  <class name="link" extends="text"
          onmouseover="setAttribute('fgcolor', 'blue')"
          onmouseout="setAttribute('fgcolor', 'black')"
-         onclick="lz.Browser.loadURL(this.datapath.xpathQuery('@href'), canvas.target)"/>
+         onclick="lz.Browser.loadURL(this.href, canvas.target)">
+    <attribute name="href" value="" type="string"/>
+  </class>
 
   <class name="wheelscrollbar" extends="scrollbar" mousewheelactive="true">
     <handler name="onmousewheeldelta" reference="lz.Keys" method="mousewheelUpdate"/>
@@ -73,8 +75,7 @@
           parent.treeparent.findNext( token.getText() );
         </method>
       </view>
-      <link text="Welcome"
-            onclick="lz.Browser.loadURL('ref.preface.html', canvas.target)"/>
+      <link text="Welcome" href="ref.preface.html"/>
       <view name="treeparent" clip="true" width="${parent.width - 20}"
             height="${Math.max(0,parent.parent.height - parent.search.height - 80)}">
         <attribute name="lastCategory" value="0" type="number" />
@@ -161,7 +162,7 @@
       <view clip="true" height="${parent.parent.height - 50}"
             width="${parent.width-20}">
           <view layout="axis:y" width="${parent.width - 20}">
-            <link text="$path{'@title'}">
+            <link text="$path{'@title'}" href="$path{'@href'}">
               <datapath xpath="classesdata:/index/item" replication="lazy"/>
             </link>
           </view>
@@ -173,7 +174,7 @@
       <view clip="true" height="${parent.parent.height - 50}"
             width="${parent.width-20}">
           <view layout="axis:y" width="${parent.width - 20}">
-            <link text="$path{'@title'}">
+            <link text="$path{'@title'}" href="$path{'@href'}">
               <setter name="text" args="t" >
                 super.setAttribute("text", this.escapeText(t));
               </setter>
