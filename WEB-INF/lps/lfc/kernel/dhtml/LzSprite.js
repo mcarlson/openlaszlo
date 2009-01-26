@@ -655,7 +655,7 @@ LzSprite.prototype.setResource = function ( r ){
     this.owner.resourceevent('totalframes', urls.length);
     this.frames = urls;
 
-    if (this.quirks.preload_images && ! this.__usecssprite) {
+    if (this.quirks.preload_images && ! (this.stretches == null && this.__csssprite)) {
         this.__preloadFrames();
     }
 
@@ -690,9 +690,8 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
 
     if (this.quirks.use_css_sprites && res.sprite) {
         this.__csssprite = baseurl + res.sprite;
-        this.__usecssprite = this.stretches == null;
     } else {
-        this.__csssprite = this.__usecssprite = null;
+        this.__csssprite = null;
         if (this.__bgimage) this.__setBGImage(null);
     }
 
@@ -716,7 +715,10 @@ LzSprite.prototype.setSource = function (url, usecache){
         // called by a user
         this.skiponload = false;
         this.resource = url;
+        if (this.playing) this.stop();
         this.__updateLoadStatus(0);
+        this.__csssprite = null;
+        if (this.__bgimage) this.__setBGImage(null);
     }
     if (usecache == 'memorycache') {
         // use the memory cache - explictly turned on by the user
@@ -735,7 +737,8 @@ LzSprite.prototype.setSource = function (url, usecache){
     //Debug.info('setSource ' + url)
     this.source = url;
 
-    if (this.__usecssprite) {
+    
+    if (this.stretches == null && this.__csssprite) {
         if (! this.__LZimg) {
             var im = document.createElement('img');
             im.className = 'lzdiv';
@@ -1581,8 +1584,8 @@ LzSprite.prototype.stretchResource = function(s) {
     s = (s != "none" ? s : null);//convert "none" to null
     if (this.stretches == s) return;
     this.stretches = s;
-    this.__usecssprite = (s == null && this.__csssprite);
-    if (! this.__usecssprite && this.__bgimage) {
+    if (! (s == null && this.__csssprite) && this.__bgimage) {
+        if (this.quirks.preload_images) this.__preloadFrames();
         // clear out the bgimage
         this.__setBGImage(null);
         // set up default image/imagepool
@@ -1919,8 +1922,12 @@ LzSprite.prototype.__setFrame = function (f, force){
     //Debug.info('LzSprite.__setFrame', f);
     this.frame = f;
 
-    if (this.__usecssprite) {
+    if (this.stretches == null && this.__csssprite) {
         // use x axis for now...
+        if (! this.__bgimage) {
+            this.__LZimg.src = lz.embed.options.resourceroot + LzSprite.prototype.blankimage;
+            this.__setBGImage(this.__csssprite);
+        }
         var x = (this.frame - 1) * (- this.resourceWidth);
         var y = 0;
         this.__LZimg.style.backgroundPosition = x + 'px ' + y + 'px';
