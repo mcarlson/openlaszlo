@@ -1,23 +1,76 @@
-<canvas width="100%" height="350">
-   <wrappinglayout spacing="2" />
-   <script when="immediate"><![CDATA[
-   var colorNames = [];
-   for (var k in lz.colors) {
-     // This makes sure we don't pick up attributes that aren't
-     // names of colors...
-     if (!isNaN(lz.colors[k])) {
-       colorNames.push(k);
-     }
-   }
- ]]></script>
-   <!-- Replicate over the color names -->
-   <replicator nodes="$once{colorNames}">
-      <text width="130"
-         bgcolor="${this.data}"
-         fgcolor="${0xFFFFFF - this.bgcolor}"
-      />
-   </replicator>
-</canvas>
+<canvas height="674"> 
+  <view name="container" x="2" y="2" width="100%" height="100%"> 
+    <attribute name="colorNames" /> 
+    <attribute name="displayMode" value="0" /> 
+    <attribute name="_memo" value="[]" /> 
+    <method name="RGBtoHSV" args="rgb"><![CDATA[ 
+      var hsv = _memo[rgb]; 
+      return hsv ? hsv : (_memo[rgb] = LzColorUtils.tohsv(rgb)); 
+    ]]></method> 
+    <method name="HSVcompare" args="a, b"> 
+      var hsva = this.RGBtoHSV(lz.colors[a]); 
+      var hsvb = this.RGBtoHSV(lz.colors[b]); 
+      if (hsva.h == hsvb.h) { 
+      if (hsva.s == hsvb.s) { 
+      if (hsva.v == hsvb.v) { 
+      return 0; 
+      } 
+      return hsva.v > hsvb.v ? 1 : -1; 
+      } 
+      return hsva.s > hsvb.s ? 1 : -1; 
+      } 
+      return hsva.h > hsvb.h ? 1 : -1; 
+    </method> 
+    <handler name="onconstruct"><![CDATA[ 
+      var cn=[]; 
+      for (var k in lz.colors) { 
+        // This makes sure we don't pick up attributes that aren't 
+        // names of colors... 
+        if (!isNaN(lz.colors[k])) { cn.push(k); } 
+      } 
+      cn.sort(function (a, b) { return container.HSVcompare(a, b);}); 
+      this.setAttribute('colorNames', cn); 
+    ]]></handler> 
+    <wrappinglayout axis="y" spacing="2" /> 
+    <replicator nodes="${parent.colorNames}"> 
+      <view width="150" height="30" 
+        bgcolor="black" ondata="inset.display.setAttribute('text', data)"> 
+        <view name="inset" 
+          x="1" y="1" width="${parent.width - 2}" height="${parent.height - 2}" 
+          bgcolor="${parent.data}"> 
+          <attribute name="mode" value="${container.displayMode}" /> 
+          <handler name="onclick"> 
+            if (lz.Keys.isKeyDown("shift")) { 
+            container.setAttribute('displayMode', (this.mode + 1) % 4); 
+            } else { 
+            this.setAttribute('mode', (this.mode + 1) % 4); 
+            } 
+          </handler> 
+          <text name="display" align="center" valign="middle" bgcolor="white" > 
+            <handler name="onmode" reference="parent" args="mode"> 
+              switch (mode) { 
+              case 1: 
+              this.format("#%06X", parent.bgcolor); 
+              break; 
+              case 2: 
+              this.setAttribute('text', LzColorUtils.torgb(parent.bgcolor)); 
+              break; 
+              case 3: 
+              var hsv = container.RGBtoHSV(parent.bgcolor); 
+              this.format("h:%.0d\xB0 s:%.0d%% v:%.0d%%", hsv.h, hsv.s*100, hsv.v*100); 
+              break; 
+              default: 
+              this.setAttribute('text', parent.presentAttribute('bgcolor', 'color')); 
+              break; 
+              } 
+            </handler> 
+          </text> 
+        </view> 
+      </view> 
+    </replicator> 
+  </view> 
+</canvas> 
+
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
   * Copyright 2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.             *
   * Use is subject to license terms.                                            *

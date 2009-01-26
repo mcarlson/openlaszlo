@@ -92,7 +92,8 @@
       <section id="csscolors">
          <title>CSS3 Colors</title>
          <para>In addition to the standard web colors, you can also specify <ulink
-               url="http://www.w3.org/TR/css3-color/#svg-color">CSS3 colors</ulink> by name.</para>
+               url="http://www.w3.org/TR/css3-color/#svg-color">CSS3 colors</ulink> by name. Click
+         on the color name to see the hex value.</para>
          <example role="live-example">
             <title>CSS3 colors</title>
             <programlisting language="lzx">
