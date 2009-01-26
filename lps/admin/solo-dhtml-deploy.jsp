@@ -16,7 +16,7 @@
 
     
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -203,7 +203,7 @@ probably not what you want.
         //wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*'", ".lzx.js'");
         wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*?'", ".lzx.js'");
 
-        // Replace the resourceroot with a relative path
+        // Replace the serverroot with a relative path
         // Lz.dhtmlEmbedLFC('/trunk/lps/includes/lfc/LFCdhtml.js', '/trunk');
         wrapper = wrapper.replaceFirst("lz.embed.lfc(.*?);",
                                        "lz.embed.lfc('lps/includes/lfc/LFCdhtml.js', 'lps/resources/');");
