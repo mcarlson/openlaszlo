@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzmodemanager
@@ -121,7 +121,7 @@ public final class LzModeManagerService extends LzEventable {
         //releases all views past this one in the modelist as well
         var marr:Array = this.modeArray;
         for (var i:int = marr.length - 1; i >= 0; i--) {
-            if (marr[ i ] == view) {
+            if (marr[ i ] === view) {
                 marr.splice( i, marr.length - i );
                 var newmode:LzView = marr[ i - 1 ];
                 if (this.onmode.ready) this.onmode.sendEvent( newmode || null );
@@ -166,7 +166,12 @@ public final class LzModeManagerService extends LzEventable {
 
         var dosend:Boolean = true;
         for (var i:int = this.modeArray.length - 1; dosend && i >= 0; --i) {
-            var mView = this.modeArray[ i ];
+            var mView:LzView = this.modeArray[ i ];
+            if (! mView) {
+                // invalid entries are possible because the call to passModeEvent
+                // can have side-effects, e.g. modeArray may change (LPP-7681)
+                continue;
+            }
             // exclude the debugger from the mode
             if ($debug) {
                 if ($as2 || $as3) {
@@ -195,7 +200,7 @@ public final class LzModeManagerService extends LzEventable {
         if (dosend) {
             //check for double-click
             if (eventStr == "onclick") {
-                if (this.__LZlastclick == view && view.ondblclick.ready &&
+                if (this.__LZlastclick === view && view.ondblclick.ready &&
                         (LzTimeKernel.getTimer() - this.__LZlastClickTime) < view.DOUBLE_CLICK_TIME) {
                     //this is a double-click
                     eventStr = "ondblclick";
@@ -272,7 +277,7 @@ public final class LzModeManagerService extends LzEventable {
     function hasMode (view:LzView) :Boolean {
         var marr:Array = this.modeArray;
         for (var i:int = marr.length - 1; i >= 0; i--) {
-            if (view == marr[ i ]) {
+            if (view === marr[ i ]) {
                 return true;
             }
         }
