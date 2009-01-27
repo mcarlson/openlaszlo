@@ -37,7 +37,7 @@
 
         <attribute name="startdragdelay" value="800"/>
 
-        <method name="startDrag">
+        <method name="startDrag" args="ignore=null">
             this.setAttribute( "dragging", true );
             parent.beginDrag( this , this._ix, this._iy );
         </method>
