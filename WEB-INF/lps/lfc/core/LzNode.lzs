@@ -2218,23 +2218,73 @@ public dynamic class LzNode extends LzEventable {
      *
      * @access private
      */
-    LzNode.prototype._dbg_name = function (){
-      if ((typeof(this.id) == 'string') &&
-          (globalValue(this.id) === this)) {
-        return "#" + this.id;
-      } else if ((typeof(this.name) == 'string') &&
-                 (this.parent[this.name] === this)) {
-        return '.' + this.name;
-      } else {
-        // Don't use LzNode.toString, which is lame
-        var ts = this.toString();
-        if (ts == this.getDebugIdentification()) {
-          // Return empty string so __String does not call
-          // LzNode#toString, which won't add any information
-          return "";
-        } else {
-          return ts;
+    LzNode.prototype._dbg_name = function () {
+      // Modeled on Oliver's pseudo-xpath notation for DOM nodes
+      function nodePath(node:LzNode, limit=Infinity) {
+        if (node === canvas) { return ''; }
+        if (node === Debug.inspectContext) { return '.'; }
+        var nid = node.id;
+        if ((typeof nid == 'string') &&
+            (globalValue(nid) === node)) {
+          return "#" + nid;
         }
+        var nn = node.name;
+        if ((typeof nn == 'string') &&
+            (globalValue(nn) === node)) {
+          return "#" + nn;
+        }
+        var parent = node.immediateparent || node.parent;
+        var path = "";
+        if (parent != null) {
+          if ((typeof nn == 'string') && parent[nn] === node) {
+            // This is a little whacky, a node can be both a child and
+            // an attribute of a node.  We could have said
+            // `.${nct}[@name="${nn}"]`.
+            path = '@' + nn;
+          } else {
+            // Our tagnames are equivalent to a 'nodeName'.  If we
+            // support css classes, we should use a css class (with
+            // '.' prefix, over tagname, as it will be more specific.
+            var nct = node.constructor.tagname;
+            path = nct;
+            var sn = parent.subnodes;
+            var index, count = 0;
+            for (var i = 0, len = sn.length; i < len; i++) {
+              var sibling = sn[i];
+              if (nct == sibling.constructor.tagname) {
+                count ++;
+                if (index) break;
+              }
+              // xpath indices are 1-based, but we want to emit an
+              // index any time there is more than one match, hence
+              // this whacky order...
+              if (node === sibling) { index = count; }
+            }
+            if (count > 1) {
+              path += '[' + index + ']';
+            }
+          }
+          if (path.length >= limit) { return '\u2026'; }
+          try {
+            return nodePath(parent, limit - path.length - 1) + '/' + path;
+          } catch (e) {
+            return '\u2026/' + path;
+          }
+        }
+        return path;
+      };
+
+      var dn = nodePath(this, Debug.printLength);
+      if (dn != "") { return dn; }
+
+      // Don't use LzNode.toString, which is lame
+      var ts = this.toString();
+      if (ts == this.getDebugIdentification()) {
+        // Return empty string so __String does not call
+        // LzNode#toString, which won't add any information
+        return "";
+      } else {
+        return ts;
       }
     }
   }

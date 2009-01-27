@@ -61,6 +61,11 @@ var LzTextSprite = function(newowner, args) {
 
 LzTextSprite.prototype = new LzSprite(null);
 
+if ($debug) {
+/** @access private */
+LzTextSprite.prototype._dbg_typename = 'LzTextSprite';
+}
+
 LzTextSprite.prototype.textcolor = 0x0; // black
 
 LzTextSprite.prototype.__initTextProperties = function (args) {

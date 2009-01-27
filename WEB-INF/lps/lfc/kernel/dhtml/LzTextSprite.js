@@ -43,6 +43,11 @@ var LzTextSprite = function(owner) {
 
 LzTextSprite.prototype = new LzSprite(null);
 
+if ($debug) {
+/** @access private */
+LzTextSprite.prototype._dbg_typename = 'LzTextSprite';
+}
+
 LzTextSprite.prototype.__initTextProperties = function (args) {
     this.setFontName(args.font);
     this.setFontStyle(args.fontstyle);

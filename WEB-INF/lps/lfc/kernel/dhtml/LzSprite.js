@@ -149,6 +149,21 @@ var LzSprite = function(owner, isroot) {
     //Debug.debug('new LzSprite', this.__LZdiv, this.owner);
 }
 
+    if ($debug) {
+        /** @access private */
+        LzSprite.prototype._dbg_typename = 'LzSprite';
+        /** @access private */
+        LzSprite.prototype._dbg_name = function () {
+            var div = this.__LZdiv.style;
+            return Debug.formatToString("%w/@sprite [%s x %s]*[1 0 %s, 0 1 %s, 0 0 1]",
+                                        this.owner.sprite === this ? this.owner : '(orphan)',
+                                        div['width'] || 0, div['height'] || 0,
+                                        div['top'] || 0,
+                                        div['left'] || 0);
+        };
+    }
+
+
 /**
   * @access private
   */

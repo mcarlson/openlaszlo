@@ -32,6 +32,9 @@ var LzSprite = function(newowner, isroot) {
     }
 }
 
+if ($debug) {
+/** @access private */
+LzSprite.prototype._dbg_typename = 'LzSprite';
 /** @access private */
 LzSprite.prototype._dbg_name = function () {
   var xs = this._xscale;
@@ -39,12 +42,13 @@ LzSprite.prototype._dbg_name = function () {
   // Describe the sprite's actual dimensions, and the 2d transform
   // representing the x/y offset and scaling
   // TODO: [2008-01-30 ptw] Factor rotation into transform
-  return Debug.formatToString("%s [%0.2d x %0.2d]*[%0.2d 0 %0.2d, 0 %0.2d %0.2d, 0 0 1]",
-                              String(this),
+  return Debug.formatToString("%w/@sprite [%0.2d x %0.2d]*[%0.2d 0 %0.2d, 0 %0.2d %0.2d, 0 0 1]",
+                              this.owner.sprite === this ? this.owner : '(orphan)',
                               this.width/xs, this.height/ys,
                               xs, this.x,
                               ys, this.y)
 };
+}
 
 LzSprite.prototype.capabilities = {
     rotation: true

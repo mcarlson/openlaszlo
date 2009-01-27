@@ -990,8 +990,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
               if (key != next) {
                 s += '\u2026, ';
               }
-              // TODO: [2005-06-22 ptw] Use __String in case element is huge
-              s += String(thing[key]) + ', ';
+              // limit - 5 ensures room for "[..., ]"
+              s += this.__String(thing[key], true, limit - 5) + ', ';
               next = key + 1;
             }
             if (s != '' && i == indices.length) { s = s.substring(0, s.length - 2); }
@@ -1014,8 +1014,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
                   (! this.internalProperty(e)) &&
                   (! this.internalProperty(dtv))) {
                 ellip = true;
-                // TODO: [2005-06-22 ptw] Use __String in case element is huge
-                s += '' + e + ': ' + String(v) + ', ';
+                // limit - 5 ensures room for "{..., }"
+                s += '' + e + ': ' + this.__String(v, true, limit - 5) + ', ';
               } else {
                 if (ellip) {
                   s += '\u2026, ';
@@ -1102,6 +1102,15 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   };
 
   /**
+   * The object currently being inspected.  Allows the presentation of
+   * elements of the object to be context-sensitive (have shorter
+   * presentations, for instance).
+   *
+   * @access private
+   */
+  var inspectContext;
+
+  /**
    * Body of inspect: Create an LZMessage of the object and its
    * properties, making links for exploring properties that are objects
    *
@@ -1115,6 +1124,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function inspectInternal (obj, showInternalProperties:Boolean=(void 0)) {
     var si = (showInternalProperties === (void 0)) ? Debug.showInternalProperties : false;
     var opl = this.printLength;
+    var octx = this.inspectContext;
     try {
       try {
         // TODO: [2003-09-12 ptw] either bind or pass as option
@@ -1134,6 +1144,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         }
         // Print properties with abbreviated length
         this.printLength = this.inspectPrintLength;
+        this.inspectContext = obj;
 
         var names = [];
         var indices = (this.isArrayLike(obj) && (! this.isStringLike(obj)))?[]:null;
@@ -1183,6 +1194,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         }
       } finally {
         this.printLength = opl;
+        this.inspectContext = octx;
       }
       // Annotate 'weight' if available
       if (('markGeneration' in this) && this.markGeneration > 0) {
