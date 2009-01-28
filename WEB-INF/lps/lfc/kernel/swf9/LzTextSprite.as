@@ -70,6 +70,30 @@ public class LzTextSprite extends LzSprite {
           }
       }
 
+        public function addScrollEventListener():void {
+            this.textfield.addEventListener(flash.events.Event.SCROLL, __handleScrollEvent);
+        }
+
+        function __handleScrollEvent(e:Event) {
+            if ( this.owner.scroll != textfield.scrollV) {
+                this.owner.scroll = textfield.scrollV;
+                if (this.owner.onscroll.ready) this.owner.onscroll.sendEvent(textfield.scrollV);
+            }
+            if (this.owner.maxscroll != textfield.maxScrollV) {
+                this.owner.maxscroll = textfield.maxScrollV;
+                if (this.owner.onmaxscroll.ready) this.owner.onmaxscroll.sendEvent(textfield.maxScrollV);
+            }
+            if (this.owner.hscroll != textfield.scrollH) {
+                this.owner.hscroll = textfield.scrollH;
+                if (this.owner.onhscroll.ready) this.owner.onhscroll.sendEvent(textfield.scrollH);
+            }
+            if (this.owner.maxhscroll != textfield.maxScrollH) {
+                this.owner.maxhscroll = textfield.maxScrollH;
+                if (this.owner.onmaxhscroll.ready) this.owner.onmaxhscroll.sendEvent(textfield.maxScrollH);
+            }
+        }
+
+
       // turn on/off canceling of mouse event bubbling
       private function setCancelBubbling():void {
           var dobj:DisplayObject = this.textfield;
@@ -211,7 +235,12 @@ public class LzTextSprite extends LzSprite {
                 h += 4;//2*2px gutter, see flash docs for flash.text.TextLineMetrics 
                 this.setHeight(h);
             }
+
+            addScrollEventListener();
+
         }
+
+
 
         public function setBorder ( onroff:Boolean):void {
             this.textfield.border = (onroff == true);
@@ -344,6 +373,7 @@ public class LzTextSprite extends LzSprite {
                 // => textfield.height still 100, sprite-height didn't change, but it should!
                 this.setHeight(Math.max(this.textfield.textHeight, this.textfield.height));
             }
+
             //this.textfield.cacheAsBitmap = true;
         }
 
@@ -427,6 +457,7 @@ public class LzTextSprite extends LzSprite {
         public function getTextfieldHeight ( ) {
             return this.textfield.height;
         }
+
 
 
 function setHScroll(s:Number) {

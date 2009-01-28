@@ -290,23 +290,17 @@ var ontext = LzDeclaredEvent;
  */
 var ontextlink = LzDeclaredEvent;
 
-/** @lzxtype event 
-  * @access private */
+/** @lzxtype event */
 var onmaxlength = LzDeclaredEvent;
-/** @lzxtype event 
-  * @access private */
+/** @lzxtype event */
 var onpattern = LzDeclaredEvent;
-/** @lzxtype event 
-  * @access private */
+/** @lzxtype event */
 var onscroll = LzDeclaredEvent;
-/** @lzxtype event 
-  * @access private */
+/** @lzxtype event */
 var onmaxscroll = LzDeclaredEvent;
-/** @lzxtype event 
-  * @access private */
+/** @lzxtype event */
 var onhscroll = LzDeclaredEvent;
-/** @lzxtype event 
-  * @access private */
+/** @lzxtype event */
 var onmaxhscroll = LzDeclaredEvent;
 
 /**
