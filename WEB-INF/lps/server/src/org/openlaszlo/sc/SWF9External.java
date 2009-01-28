@@ -992,6 +992,9 @@ public class SWF9External {
       }
     }
 
+    // clear out any previously compiled object file
+    new File(outfilename).delete();
+
     // Call the Flex compiler, either in its own exec'ed process or in a thread 
     if (execFlex()) {
       execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
