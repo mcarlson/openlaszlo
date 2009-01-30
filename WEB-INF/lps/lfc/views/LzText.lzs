@@ -1,461 +1,593 @@
 /**
-  *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
-  *            Use is subject to license terms.
-  *
-  * @access public
-  * @affects lztext
-  * @topic LFC
-  * @subtopic Text
-  */
+ *
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ *
+ * @access public
+ * @affects lztext
+ * @topic LFC
+ * @subtopic Text
+ */
 
 /**
-  * <p>This class is used for non-editable text fields (as opposed to
-  * <sgmltag class="element" role="LzInputText">&lt;inputtext&gt;</sgmltag>).  A text field can be initalized
-  * with text content at compile time.</p>
-  * 
-  * <example>
-  * 
-  * &lt;canvas height="30"&gt;
-  *   &lt;text&gt;Hello world!&lt;/text&gt;
-  * &lt;/canvas&gt;
-  * </example>
-  *
-  * <p>Text objects can also display text that is computed at
-  * runtime.</p>
-  *
-  * <example><![CDATA[
-  *     <canvas height="30">
-  *       <class name="clickClock" extends="text">
-  *         <attribute name="dayTable"
-  *                    value='["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]'
-  *                    />
-  *         <handler name="onclick">
-  *           var now = new Date;
-  *           this.format("You clicked me at %02d:%02d:%02d on %s",
-  *                       now.getHours(),
-  *                       now.getMinutes(),
-  *                       now.getSeconds(),
-  *                       dayTable[now.getDay()]);
-  *         </handler>
-  *       </class>
-  *       <clickClock>
-  *         Click Me!
-  *       </clickClock>
-  *     </canvas>
-  * ]]></example>
-  *
-  * <p>
-  * Note that certain attributes on text objects, such as opacity and rotation, only work on 
-  * embedded fonts. They do not work on client fonts (also called platform fonts, native fonts, 
-  * platform fonts, etc). See the Developer's Guide for details.
-  * </p>
-  * <p><emphasis role="bold">See Also:</emphasis></p>
-  * <itemizedlist>
-  * <listitem>The <a href="${dguide}text.html">Text Views</a> chapter of the <a href="${dguide}">Developer's Guide</a> 
-  * for a discussion of how to include and manipulate text</listitem>
-  * <listitem>The <attribute>canvas.maxtextheight</attribute> and <attribute>canvas.maxtextwidth</attribute> attributes</listitem>
-  * </itemizedlist>
-  *
-  * @shortdesc The basic text display element.
-  * @devnote This is for regular and input text. 
-  * @lzxname text
-  *
-  * @initarg Boolean multiline
-  * @initarg String font
-  * @initarg Number fontsize
-  * @initarg String fontstyle
-  * @initarg Boolean resize
-  * @initarg String text
-  * @initarg Number maxlength:  maximum number of characters allowed in this field
-  * default: null
-  * @initarg String antiAliasType (swf8 only)
-  * @initarg String gridFit (swf8 only)
-  * @initarg Number sharpness  (swf8 only)
-  * @initarg Number thickness (swf8 only)
-  * @initarg String pattern:  regexp describing set of characters allowed in this field
-  * Restrict the characters that can be entered to a pattern
-  * specified by a regular expression.
-  * 
-  * Currently only the expression [ ]* enclosing a set of
-  * characters or character ranges, preceded by an optional "^", is
-  * supported.
-  * 
-  * examples: [0-9]*  ,  [a-zA-Z0-9]*,  [^0-9]*
-  * default: null
-  * 
-  * <attribute>width</attribute> and <attribute>height</attribute> are
-  * virtual properties -- they have setters and getters, but the actual
-  * state is stored in the text sprite. They are documented in the superclass, LzView, as well.
-  *
-  * <attribute>height</attribute>: The height of the text field. A Number. If unspecified,
-  * then the height of the text field will be set
-  * by default to enclose the initial text value. 
-  *
-  * <attribute>width</attribute>: The width of the text field. A Number. If width is not explicitly
-  * supplied, the text field will by default be sized to fit the width of
-  * the initial text value. 
-  */
+ * <p>This class is used for non-editable text fields (as opposed to
+ * <sgmltag class="element" role="LzInputText">&lt;inputtext&gt;</sgmltag>).  A text field can be initalized
+ * with text content at compile time.</p>
+ *
+ * <example>
+ *
+ * &lt;canvas height="30"&gt;
+ *   &lt;text&gt;Hello world!&lt;/text&gt;
+ * &lt;/canvas&gt;
+ * </example>
+ *
+ * <p>Text objects can also display text that is computed at
+ * runtime.</p>
+ *
+ * <example><![CDATA[
+ *     <canvas height="30">
+ *       <class name="clickClock" extends="text">
+ *         <attribute name="dayTable"
+ *                    value='["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]'
+ *                    />
+ *         <handler name="onclick">
+ *           var now = new Date;
+ *           this.format("You clicked me at %02d:%02d:%02d on %s",
+ *                       now.getHours(),
+ *                       now.getMinutes(),
+ *                       now.getSeconds(),
+ *                       dayTable[now.getDay()]);
+ *         </handler>
+ *       </class>
+ *       <clickClock>
+ *         Click Me!
+ *       </clickClock>
+ *     </canvas>
+ * ]]></example>
+ *
+ * <p>
+ * Note that certain attributes on text objects, such as opacity and rotation, only work on
+ * embedded fonts. They do not work on client fonts (also called platform fonts, native fonts,
+ * platform fonts, etc). See the Developer's Guide for details.
+ * </p>
+ * <p><emphasis role="bold">See Also:</emphasis></p>
+ * <itemizedlist>
+ * <listitem>The <a href="${dguide}text.html">Text Views</a> chapter of the <a href="${dguide}">Developer's Guide</a>
+ * for a discussion of how to include and manipulate text</listitem>
+ * <listitem>The <attribute>canvas.maxtextheight</attribute> and <attribute>canvas.maxtextwidth</attribute> attributes</listitem>
+ * </itemizedlist>
+ *
+ * @shortdesc The basic text display element.
+ * @devnote This is for regular and input text.
+ * @lzxname text
+ *
+ * @initarg Boolean multiline
+ * @initarg String font
+ * @initarg Number fontsize
+ * @initarg String fontstyle
+ * @initarg Boolean resize
+ * @initarg String text
+ * @initarg Number maxlength:  maximum number of characters allowed in this field
+ * default: null
+ * @initarg String antiAliasType (swf8 only)
+ * @initarg String gridFit (swf8 only)
+ * @initarg Number sharpness  (swf8 only)
+ * @initarg Number thickness (swf8 only)
+ * @initarg String pattern:  regexp describing set of characters allowed in this field
+ * Restrict the characters that can be entered to a pattern
+ * specified by a regular expression.
+ *
+ * Currently only the expression [ ]* enclosing a set of
+ * characters or character ranges, preceded by an optional "^", is
+ * supported.
+ *
+ * examples: [0-9]*  ,  [a-zA-Z0-9]*,  [^0-9]*
+ * default: null
+ *
+ * <attribute>width</attribute> and <attribute>height</attribute> are
+ * virtual properties -- they have setters and getters, but the actual
+ * state is stored in the text sprite. They are documented in the superclass, LzView, as well.
+ *
+ * <attribute>height</attribute>: The height of the text field. A Number. If unspecified,
+ * then the height of the text field will be set
+ * by default to enclose the initial text value.
+ *
+ * <attribute>width</attribute>: The width of the text field. A Number. If width is not explicitly
+ * supplied, the text field will by default be sized to fit the width of
+ * the initial text value.
+ */
 dynamic class LzText extends LzView with LzFormatter {
+  /*
+   * Node protocol stuff
+   */
 
-/** The number of lines that will fit in the current height
-  * @lzxtype Number
-  * @type Number
-  * @keywords read-only
-  */
-    var maxlines = 1;
-/** If true, the text is selectable
-  * @lzxtype booleanLiteral
-  * @type Boolean
-  */
-    var selectable = false;
+  /** @access private */
+  function LzText ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
+    super(parent,attrs,children,instcall);
+  }
+  /** @access private
+   * @modifiers override
+   */
+  static var tagname = 'text';
+  /** @access private */
+  static var attributes = new LzInheritedHash(LzView.attributes);
+  LzText.attributes.pixellock = true;
+  LzText.attributes.clip = true;
+  /**
+   * If true, the text is selectable
+   *
+   * @lzxtype booleanLiteral
+   * @type Boolean
+   * @modifiers virtual
+   // no var decl since this is a virtual field
+   * @access private
+   */
+  LzText.attributes.selectable = false;
 
-/** @access private */
-function $lzc$set_selectable(isSel) {
+  /*
+   * Instance variables
+   */
+
+  /** The number of lines that will fit in the current height
+   * @lzxtype Number
+   * @type Number
+   * @keywords read-only
+   */
+  var maxlines = 1;
+  /** If true, the text is selectable
+   * @lzxtype booleanLiteral
+   * @type Boolean
+   */
+  var selectable = false;
+  /** @access private */
+  function $lzc$set_selectable(isSel) {
     this.selectable = isSel;
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     tsprite.setSelectable(isSel);
-}
+  }
 
+  /*
+   * Advanced font interface
+   */
 
-// these 4 are only available in swf8 and higher
-/** antialias type for this text
-  * @lzxtype string
-  * @type String
-  * @runtimes as2
-  */
-var antiAliasType = "advanced";
-
-/** @access private */
-function $lzc$set_antiAliasType(aliasType) {
-    if (this.capabilities.advancedfonts) {    
-        if ((aliasType == "normal") || (aliasType == "advanced")) {
-            this.antiAliasType = aliasType; 
-            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-            tsprite.setAntiAliasType(aliasType);
-        } else if ($debug) {
-            Debug.warn("antiAliasType invalid, must be 'normal' or 'advanced', but you said '" + aliasType + "'");
-        }        
-    } else if ($debug) {
-        LzView.__warnCapability('text.setAntiAliasType()', 'advancedfonts'); 
-    }
-}
-
-
-/** Grid fit for this text
-  * @lzxtype string
-  * @type String
-  * @runtimes as2
-  */
-var gridFit = "pixel";
-
-/** @access private */
-function $lzc$set_gridFit(gridFit) {
-    if (this.capabilities.advancedfonts) {    
-        if ((gridFit == "none") || (gridFit == "pixel") || (gridFit == "subpixel")) {
-            this.gridFit = gridFit; 
-            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-            tsprite.setGridFit(gridFit);
-        } else if ($debug) {
-            Debug.warn("gridFit invalid, must be 'none', 'pixel', or 'subpixel' but you said '" + gridFit + "'");
-        }
-    } else if ($debug) {
-        LzView.__warnCapability('text.setGridFit()', 'advancedfonts'); 
-    }
-}
-
-
-/** text sharpness for this text
-  * @lzxtype number
-  * @type Number
-  * @runtimes as2
-  */
-var sharpness = 0;
-
-/** @access private */
-function $lzc$set_sharpness(sharpness) {
+  /** antialias type for this text
+   * @lzxtype string
+   * @type String
+   * @runtimes as2
+   */
+  var antiAliasType = "advanced";
+  /** @access private */
+  function $lzc$set_antiAliasType(aliasType) {
     if (this.capabilities.advancedfonts) {
-        if  ((sharpness >= -400) && (sharpness <= 400)) {
-            this.sharpness = sharpness; 
-            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-            tsprite.setSharpness(sharpness);
-        } else if ($debug) {
-            Debug.warn("sharpness out of range, must be -400 to 400");
-        }        
+      if ((aliasType == "normal") || (aliasType == "advanced")) {
+        this.antiAliasType = aliasType;
+        var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+        tsprite.setAntiAliasType(aliasType);
+      } else if ($debug) {
+        Debug.warn("antiAliasType invalid, must be 'normal' or 'advanced', but you said '" + aliasType + "'");
+      }
     } else if ($debug) {
-        LzView.__warnCapability('text.setSharpness()', 'advancedfonts'); 
+      LzView.__warnCapability('text.setAntiAliasType()', 'advancedfonts');
     }
-}
+  }
 
-/** text-thickness for this text
-  * @lzxtype number
-  * @type Number
-  * @runtimes as2
-  */
-var thickness = 0;
-
-/** @access private */
-function $lzc$set_thickness(thickness) {
+  /** Grid fit for this text
+   * @lzxtype string
+   * @type String
+   * @runtimes as2
+   */
+  var gridFit = "pixel";
+  /** @access private */
+  function $lzc$set_gridFit(gridFit) {
     if (this.capabilities.advancedfonts) {
-        if  ((thickness >= -200) && (thickness <= 200)) {
-            this.thickness = thickness;
-            var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-            tsprite.setThickness(thickness); 
-        } else if ($debug) {
-            Debug.warn("thickness out of range, must be -200 to 200");
-        }
+      if ((gridFit == "none") || (gridFit == "pixel") || (gridFit == "subpixel")) {
+        this.gridFit = gridFit;
+        var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+        tsprite.setGridFit(gridFit);
+      } else if ($debug) {
+        Debug.warn("gridFit invalid, must be 'none', 'pixel', or 'subpixel' but you said '" + gridFit + "'");
+      }
     } else if ($debug) {
-        LzView.__warnCapability('text.setThickness()', 'advancedfonts'); 
+      LzView.__warnCapability('text.setGridFit()', 'advancedfonts');
     }
-}
+  }
 
-
-/** @access private */
-    function LzText ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
-        super(parent,attrs,children,instcall);
+  /** text sharpness for this text
+   * @lzxtype number
+   * @type Number
+   * @runtimes as2
+   */
+  var sharpness = 0;
+  /** @access private */
+  function $lzc$set_sharpness(sharpness) {
+    if (this.capabilities.advancedfonts) {
+      if  ((sharpness >= -400) && (sharpness <= 400)) {
+        this.sharpness = sharpness;
+        var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+        tsprite.setSharpness(sharpness);
+      } else if ($debug) {
+        Debug.warn("sharpness out of range, must be -400 to 400");
+      }
+    } else if ($debug) {
+      LzView.__warnCapability('text.setSharpness()', 'advancedfonts');
     }
-    
+  }
 
-/** @access private */
-    var sizeToHeight;
+  /** text-thickness for this text
+   * @lzxtype number
+   * @type Number
+   * @runtimes as2
+   */
+  var thickness = 0;
+  /** @access private */
+  function $lzc$set_thickness(thickness) {
+    if (this.capabilities.advancedfonts) {
+      if  ((thickness >= -200) && (thickness <= 200)) {
+        this.thickness = thickness;
+        var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+        tsprite.setThickness(thickness);
+      } else if ($debug) {
+        Debug.warn("thickness out of range, must be -200 to 200");
+      }
+    } else if ($debug) {
+      LzView.__warnCapability('text.setThickness()', 'advancedfonts');
+    }
+  }
 
-/**
-  * The y scroll position of the textfield.
-  * @lzxtype Number
-  * @type Number
-  */
-    var yscroll;
 
-/**
-  * @access private
-  */
-function $lzc$set_yscroll(n) {
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /*
+   * Height/width interface
+   */
+
+  /** @access private */
+  var sizeToHeight;
+
+  /** @access private */
+  override function $lzc$set_width(val) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    tsprite.setWidth(val);
+    super.$lzc$set_width.apply(this, arguments);
+    // recalculate height
+    if (this.sizeToHeight) {
+      var h = tsprite.getTextfieldHeight();
+      if (h > 0) {
+        this.$lzc$set_height (h);
+      }
+    }
+  }
+
+  /**
+   * Width to use for text field if none is specified
+   * @access private
+   */
+  function getDefaultWidth () {
+    return 0;
+  }
+
+
+  /*
+   * Scrolling interface
+   */
+
+  /**
+   * The y scroll position of the textfield in pixels.  Default 0.
+   * @lzxtype Number
+   * @type Number
+   */
+  var yscroll = 0;
+  /** @access private */
+  function $lzc$set_yscroll(n) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     tsprite.setYScroll(n);
     this.yscroll = n;
     this.onyscroll.sendEvent(n);
-}
+  }
+  /** @lzxtype event */
+  var onyscroll = LzDeclaredEvent;
 
-/**
-  * The x scroll position of the textfield.
-  * @lzxtype Number
-  * @type Number
-  */
-    var xscroll;
-
-/**
-  * @access private
-  */
-function $lzc$set_xscroll(n) {
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /**
+   * The x scroll position of the textfield in pixels. Default 0.
+   * @lzxtype Number
+   * @type Number
+   */
+  var xscroll = 0;
+  /** @access private */
+  function $lzc$set_xscroll(n) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     tsprite.setXScroll(n);
     this.xscroll = n;
     this.onxscroll.sendEvent(n);
-}
+  }
+  /** @lzxtype event */
+  var onxscroll = LzDeclaredEvent;
 
-/** @access private */
-    var scrollheight;
+  /** @access private */
+  var scroll = 0;
+  /** @lzxtype event */
+  var onscroll = LzDeclaredEvent;
 
+  /** @access private */
+  var scrollheight;
 
+  /** @access private */
+  var maxscroll = 0;
+  /** @lzxtype event */
+  var onmaxscroll = LzDeclaredEvent;
 
-/** @access private
-  * @modifiers override 
-  */
-static var tagname = 'text';
-/** @access private */
-static var attributes = new LzInheritedHash(LzView.attributes);
+  /** @access private */
+  var hscroll = 0;
+  /** @lzxtype event */
+  var onhscroll = LzDeclaredEvent;
 
-LzText.attributes.pixellock = true;
-LzText.attributes.clip = true;
-
-/**
-  * If true, the text is selectable
-  *
-  * @lzxtype booleanLiteral
-  * @type Boolean
-  * @modifiers virtual
-// no var decl since this is a virtual field
-  * @access private
-  */
-LzText.attributes.selectable = false;
-
-/** Sent whenever the text in the field changes. 
-  * @lzxtype event
-  */
-var ontext = LzDeclaredEvent;
-
-/** Sent when a clickable HTML link in the text field is clicked.
- *  Event data is a string with the link value.
- * @lzxtype event
- */
-var ontextlink = LzDeclaredEvent;
-
-/** @lzxtype event */
-var onmaxlength = LzDeclaredEvent;
-/** @lzxtype event */
-var onpattern = LzDeclaredEvent;
-/** @lzxtype event */
-var onscroll = LzDeclaredEvent;
-/** @lzxtype event */
-var onmaxscroll = LzDeclaredEvent;
-/** @lzxtype event */
-var onhscroll = LzDeclaredEvent;
-/** @lzxtype event */
-var onmaxhscroll = LzDeclaredEvent;
-
-/**
-  * @access private
-  */
-var scroll = 0;
-/**
-  * @access private
-  */
-var maxscroll = 0;
-/**
-  * @access private
-  */
-var hscroll = 0;
-/**
-  * @access private
-  */
-var maxhscroll = 0;
-
-/** 
-  * Width to use for text field if none is specified
-  * @access private
-  */
-function getDefaultWidth () {
-    return 0;
-}
+  /** @access private */
+  var maxhscroll = 0;
+  /** @lzxtype event */
+  var onmaxhscroll = LzDeclaredEvent;
 
 
-/**
-  * If true, the lines of text are wrapped to fit within the text
-  * width.  (The name <varname>multiline</varname> is a misnomer.  Unwrapped text
-  * can be multiple lines if it contains a <code>&lt;br /&gt;</code> 
-  * or <code>&lt;p&gt;</code>
-  * element, or a line break within a <code>&lt;pre&gt;</code> element.
-  *
-  * This attribute defaults to true if width and height are
-  * explicitly specified.
-  *
-  * If you set multiline=true, you probably want to explicitly a
-  * width for the text also; if multiline=true and you do not specify
-  * a width, the system will pick an arbitrary width (100 pixels at
-  * the moment).
-  *
-  * When multiline=true, the text is automatially re-wrapped whenever
-  * the content is modified by calls to <method>setText</method>, or whenever the
-  * width of the text view is modified.
-  *
-  * @keywords final
-  * @lzxtype boolean
-  * @type Boolean
-  * @lzxdefault "false"
-  */
-var multiline;
+  /*
+   * Resizing interface
+   */
 
-/**
-  * If true, the width of the text field will be recomputed each time
-  * <varname>text</varname> is changed, so that the text view is exactly as wide as
-  * the width of the widest line.  Defaults to true. 
-  *
-  * @lzxtype booleanLiteral
-  * @type Boolean
-  */
-var resize = true;
+  /**
+   * If true, the lines of text are wrapped to fit within the text
+   * width.  (The name <varname>multiline</varname> is a misnomer.  Unwrapped text
+   * can be multiple lines if it contains a <code>&lt;br /&gt;</code>
+   * or <code>&lt;p&gt;</code>
+   * element, or a line break within a <code>&lt;pre&gt;</code> element.
+   *
+   * This attribute defaults to true if width and height are
+   * explicitly specified.
+   *
+   * If you set multiline=true, you probably want to explicitly a
+   * width for the text also; if multiline=true and you do not specify
+   * a width, the system will pick an arbitrary width (100 pixels at
+   * the moment).
+   *
+   * When multiline=true, the text is automatially re-wrapped whenever
+   * the content is modified by calls to <method>setText</method>, or whenever the
+   * width of the text view is modified.
+   *
+   * @keywords final
+   * @lzxtype boolean
+   * @type Boolean
+   * @lzxdefault "false"
+   */
+  var multiline;
+  /** @access private */
+  function $lzc$set_multiline(ml) :void {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    tsprite.setMultiline(ml);
+    this.multiline = (ml == true);
+  }
 
-/**
-  * @access private
-  */
-function $lzc$set_resize(val) {
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /**
+   * If true, the width of the text field will be recomputed each time
+   * <varname>text</varname> is changed, so that the text view is exactly as wide as
+   * the width of the widest line.  Defaults to true.
+   *
+   * @lzxtype booleanLiteral
+   * @type Boolean
+   */
+  var resize = true;
+  /** @access private */
+  function $lzc$set_resize(val) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     tsprite.setResize(val);
     this.resize = val;
-}
+  }
 
 
-/**
-  * The text to display in this text field.  If set to a value that is
-  * not a string, the value will first be converted to a string as if
-  * by <code>String(value)</code>.  To display nothing, set the value
-  * to the empty string <code>""</code>.
-  * @lzxtype string
-  * @type String
-  */
-var text:String = '';
+  /*
+   * Content interface
+   */
 
-/**
-  * @access private
-  */
-function $lzc$set_text(t:*) {
+  /**
+   * The text to display in this text field.  If set to a value that is
+   * not a string, the value will first be converted to a string as if
+   * by <code>String(value)</code>.  To display nothing, set the value
+   * to the empty string <code>""</code>.
+   * @lzxtype string
+   * @type String
+   */
+  var text:String = '';
+  /** @access private */
+  function $lzc$set_text(t:*) {
     // force to a string
     t = String(t);
 
     if (this._textrecompute != true && t == this.getText()) {
-        if (this.ontext.ready) this.ontext.sendEvent(t);
-        return;
+      if (this.ontext.ready) this.ontext.sendEvent(t);
+      return;
     }
     var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     if (this.visible) tsprite.setVisible(this.visible);
     if (this.maxlength != null && t.length > this.maxlength){
-        t = t.substring(0, this.maxlength);
+      t = t.substring(0, this.maxlength);
     }
     tsprite.setText(t);
     this.text =  t;
 
     if (this.width == 0 || (this.resize && this.multiline == false)) {
-        // single line resizable fields adjust their width to match the text
-        var w = this.getTextWidth();
-        // only set width if it changed
-        if (w != this.width) {
-            this.$lzc$set_width (w);
-        }
+      // single line resizable fields adjust their width to match the text
+      var w = this.getTextWidth();
+      // only set width if it changed
+      if (w != this.width) {
+        this.$lzc$set_width (w);
+      }
     }
-
     //resizable fields adjust their height
     if (this.sizeToHeight) {
-        var h = tsprite.getTextfieldHeight();
-        if (h > 0) {
-            this.$lzc$set_height (h);
-        }
+      var h = tsprite.getTextfieldHeight();
+      if (h > 0) {
+        this.$lzc$set_height (h);
+      }
     }
 
     if (this.ontext.ready) this.ontext.sendEvent(t);
     this._textrecompute = false;
-}
+  }
+  /** * @lzxtype event */
+  var ontext = LzDeclaredEvent;
 
+  /** Sent when a clickable HTML link in the text field is clicked.
+   *  Event data is a string with the link value.
+   * @lzxtype event
+   */
+  var ontextlink = LzDeclaredEvent;
 
-/** true forces $lzc$set_text to do a full update
-    @access private */
-var _textrecompute:Boolean = false;
+  /** true forces $lzc$set_text to do a full update
+      @access private */
+  var _textrecompute:Boolean = false;
 
-/** @access private */ 
-var colorstring = "#000000"; // black
+  /**
+   * Maximum number of characters allowed in this field
+   * @lzxtype numberExpression
+   * @type Number
+   */
+  var maxlength;
+  /** @access private */
+  function $lzc$set_maxlength(val) {
+    if (val == null || val == '') return;
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    tsprite.setMaxLength(val);
+    this.maxlength = val;
+    if (this.onmaxlength.ready) this.onmaxlength.sendEvent(val);
 
-/** @access private */
-override function init () {
-    super.init.apply(this, arguments);
-
-    // [max] had to do this because text fields don't have a height until they're attached into the DOM.
-    // multiline resizable fields adjust their height
-    if (this.sizeToHeight) {
-        var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-        var h = tsprite.getTextfieldHeight();
-        if (h > 0) {
-            this.$lzc$set_height(h);
-        }
+    var t = this.getText();
+    if(t && t.length > this.maxlength){
+      this._textrecompute = true;
+      this.$lzc$set_text (t);
     }
-};
+  }
+  /** @lzxtype event */
+  var onmaxlength = LzDeclaredEvent;
 
-/** @access private */
-static var fontArgToAttr:Object = {font: 'fontname', fontsize: 'fontsize', fontstyle: 'fontstyle'};
+  /**
+   * regexp describing set of characters allowed in this field Restrict the characters that can be entered to a pattern specified by a regular expression.
+   * Currently only the expression [ ]* enclosing a set of characters or character ranges, preceded by an optional "^", is supported. examples: [0-9]* , [a-zA-Z0-9]*, [^0-9]*
+   * @lzxtype string
+   * @type String
+   */
+  var pattern;
+  /** @access private */
+  function $lzc$set_pattern(val) {
+    if (val == null || val == '') return;
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    tsprite.setPattern(val);
+    this.pattern = val;
+    if (this.onpattern.ready) this.onpattern.sendEvent(val);
+  }
+  /** @lzxtype event */
+  var onpattern = LzDeclaredEvent;
+
+  /** @access private */
+  function $lzc$set_fontstyle(fstyle) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    tsprite.setFontStyle(fstyle);
+    this.fontstyle = fstyle;
+  }
+
+  /** @access private */
+  override function $lzc$set_font(fname) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    tsprite.setFontName(fname);
+    this.fontname = fname;
+    // force recompute of height if needed
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
+  }
+
+  /** @access private */
+  function $lzc$set_fontsize(fsize) {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    tsprite.setFontSize(fsize);
+    this.fontsize = fsize;
+    // force recompute of height if needed
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
+  }
+
+  /** text-align for this text
+   * @lzxtype string
+   * @type String
+   */
+  var textalign :String = "left";
+  /** @access private */
+  function $lzc$set_textalign (align:String) :void {
+    align = align ? align.toLowerCase() : "left";
+    if (! (align == "left" || align == "right" || align == "center"
+           || align == "justify")) {
+      if ($debug) {
+        Debug.warn("invalid value for %w.textalign = %w", this, align);
+      }
+      align = "left";
+    }
+    this.textalign = align;
+    (this.sprite cast LzTextSprite).setTextAlign(align);
+    // force recompute of height if needed
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
+  }
+
+  /** text-indent for this text
+   * @lzxtype number
+   * @type Number
+   */
+  var textindent :Number = 0;
+  /** @access private */
+  function $lzc$set_textindent (indent:Number) :void {
+    this.textindent = indent;
+    (this.sprite cast LzTextSprite).setTextIndent(indent);
+    // force recompute of height if needed
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
+  }
+
+  /** letter-spacing for this text
+   * @lzxtype number
+   * @type Number
+   */
+  var letterspacing :Number = 0;
+  /** @access private */
+  function $lzc$set_letterspacing (spacing:Number) :void {
+    this.letterspacing = spacing;
+    (this.sprite cast LzTextSprite).setLetterSpacing(spacing);
+    // force recompute of height if needed
+    this._textrecompute = true;
+    this.$lzc$set_text(this.getText());
+  }
+
+  /** text-decoration for this text
+   * @lzxtype string
+   * @type String
+   */
+  var textdecoration :String = "none";
+  /** @access private */
+  function $lzc$set_textdecoration (decoration:String) :void {
+    decoration = decoration ? decoration.toLowerCase() : "none";
+    if (! (decoration == "none" || decoration == "underline")) {
+      // CSS actually also allows: overline, line-through, blink
+      // but Flash can't handle that..
+      if ($debug) {
+        Debug.warn("invalid value for %w.textdecoration = %w", this, decoration);
+      }
+      decoration = "none";
+    }
+    this.textdecoration = decoration;
+    (this.sprite cast LzTextSprite).setTextDecoration(decoration);
+  }
 
 
-/**
-  * @access private
-  */
-override function construct ( parent, args ) {
+  /*
+   * Construct
+   */
+
+  /** @access private */
+  static var fontArgToAttr:Object = {font: 'fontname', fontsize: 'fontsize', fontstyle: 'fontstyle'};
+
+  /** @access private */
+  override function construct ( parent, args ) {
 
     // NOTE [2008-06-22 ptw] multiline cannot be constrained, it must
     // be set at init time
@@ -464,28 +596,28 @@ override function construct ( parent, args ) {
     super.construct.apply(this, arguments);
 
     this.sizeToHeight = false;
-    
+
     // Install constant/default font attributes
     for (var arg:String in LzText.fontArgToAttr) {
       var attr:String = LzText.fontArgToAttr[arg];
       // Default missing args
       if (! (arg in args)) {
         args[arg] = this.searchParents(attr)[attr];
-        }
+      }
       this[attr] = args[arg];
     }
-    
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     // FIXME [2008-11-24 ptw] (LPP-7391) We should not be passing node
     // init args across the kernel API, there should be a more
     // explicit API that isolates the kernel from the node
     // implementation details
     tsprite.__initTextProperties(args);
-    
+
     // Remove constant/default font attributes, so they won't be
     // re-handled by LzNode/__LZapplyArgs
     for (var arg:String in LzText.fontArgToAttr) {
-        delete args[arg];
+      delete args[arg];
     }
 
     this.yscroll = 0;
@@ -493,14 +625,14 @@ override function construct ( parent, args ) {
 
     this.resize = ('resize' in args) ? (!! args.resize) : this.resize;
     this.$lzc$set_resize(this.resize);
-    
+
     if (args['maxlength'] != null) {
-       this.$lzc$set_maxlength(args.maxlength);
+      this.$lzc$set_maxlength(args.maxlength);
     }
 
     this.text = ((args['text'] != null) ? String(args.text) : "");
     if(this.maxlength != null && this.text.length > this.maxlength){
-        this.text = this.text.substring(0, this.maxlength);
+      this.text = this.text.substring(0, this.maxlength);
     }
 
     this.$lzc$set_multiline( this.multiline );
@@ -514,146 +646,117 @@ override function construct ( parent, args ) {
     //    if no width was supplied and there's no constraint, measure the text width:
     //        if empty text content was supplied, use DEFAULT_WIDTH
     if (! this.hassetwidth) {
-        if (this.multiline) {
-            args.width = this.parent.width;
+      if (this.multiline) {
+        args.width = this.parent.width;
+      } else {
+        // if there's text content, measure its width
+        if (this.text != null && this.text != '' && this.text.length > 0) {
+          args.width = this.getTextWidth();
         } else {
-            // if there's text content, measure its width
-            if (this.text != null && this.text != '' && this.text.length > 0) {
-                args.width = this.getTextWidth();
-            } else {
-                // Input text will have a nonzero default width, so it behaves
-                // like HTML input field.
-                args.width = this.getDefaultWidth();
-            }
+          // Input text will have a nonzero default width, so it behaves
+          // like HTML input field.
+          args.width = this.getDefaultWidth();
         }
+      }
     } else {
-        this.$lzc$set_resize(false);
+      this.$lzc$set_resize(false);
     }
 
     // To compute our height:
     // + If height is supplied, use it.
     // + if no height supplied:
     //    if  single line, use font line height
-    //    else get height from flash textobject.textHeight 
-    // 
+    //    else get height from flash textobject.textHeight
+    //
     if (!this.hassetheight) {
-        this.sizeToHeight = true;
+      this.sizeToHeight = true;
     } else if (args['height'] != null) {
-        this.$lzc$set_height(args.height);
+      this.$lzc$set_height(args.height);
     }
     // Default the scrollheight to the visible height.
     this.scrollheight = this.height;
 
     if (args['pattern'] != null) {
-        this.$lzc$set_pattern(args.pattern);
+      this.$lzc$set_pattern(args.pattern);
     }
 
 
     if (this.capabilities.advancedfonts) {
-        if (! ('antiAliasType' in args) ) {
-            this.$lzc$set_antiAliasType ("advanced");
-        }
-        if (! ('gridFit' in args) ) {
-            this.$lzc$set_gridFit ("subpixel");
-        }
+      if (! ('antiAliasType' in args) ) {
+        this.$lzc$set_antiAliasType ("advanced");
+      }
+      if (! ('gridFit' in args) ) {
+        this.$lzc$set_gridFit ("subpixel");
+      }
     }
-}
+  }
 
-/**
-  * Called to create the sprite object.  May be overridden to use a specific 
-  * version, e.g. LzTextSprite();
-  * @access private
-  */
-override function __makeSprite(args) {
+
+  /*
+   * Init
+   */
+
+  /** @access private */
+  override function init () {
+    super.init.apply(this, arguments);
+
+    // [max] had to do this because text fields don't have a height until they're attached into the DOM.
+    // multiline resizable fields adjust their height
+    if (this.sizeToHeight) {
+      var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+      var h = tsprite.getTextfieldHeight();
+      if (h > 0) {
+        this.$lzc$set_height(h);
+      }
+    }
+  };
+
+
+  /*
+   *
+   */
+
+  /**
+   * Called to create the sprite object.  May be overridden to use a specific
+   * version, e.g. LzTextSprite();
+   * @access private
+   */
+  override function __makeSprite(args) {
     //Debug.write('__makeSprite', args);
     this.sprite = new LzTextSprite(this, args);
-}
+  }
 
 
-/**
-  * Get a reference to the control mc (overridden from LzView)
-  * @access private
-  */
-override function getMCRef () {
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /**
+   * Get a reference to the control mc (overridden from LzView)
+   * @access private
+   */
+  override function getMCRef () {
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     return tsprite.getMCRef();
-}
+  }
 
 
-/**
-  * Maximum number of characters allowed in this field
-  * @lzxtype numberExpression
-  * @type Number
-  */
-var maxlength; 
+  /*
+   * Methods
+   */
 
-/** @access private */ 
-function $lzc$set_maxlength(val) {
-    if (val == null || val == '') return;
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setMaxLength(val);
-    this.maxlength = val;
-    if (this.onmaxlength.ready) this.onmaxlength.sendEvent(val);
-
-    var t = this.getText();
-    if(t && t.length > this.maxlength){
-        this._textrecompute = true;
-        this.$lzc$set_text (t);
-    }
-}
-
-/**
-  * regexp describing set of characters allowed in this field Restrict the characters that can be entered to a pattern specified by a regular expression. 
-  * Currently only the expression [ ]* enclosing a set of characters or character ranges, preceded by an optional "^", is supported. examples: [0-9]* , [a-zA-Z0-9]*, [^0-9]*
-  * @lzxtype string
-  * @type String
-  */
-var pattern; 
-
-/** @access private */  
-function $lzc$set_pattern(val) {
-    if (val == null || val == '') return;
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setPattern(val);
-    this.pattern = val;
-    if (this.onpattern.ready) this.onpattern.sendEvent(val);
-}
-
-
-/**
-  * setResize set behavior of text field width when new text is added.
-  * LzText only (cannot be used with LzInputText).
-  * @param Boolean val: if true, the textfield will recompute it's width after setText() is called
-  * @deprecated Use setAttribute('resize', ...) instead.
-  */
-final function setResize ( val ){
+  /**
+   * setResize set behavior of text field width when new text is added.
+   * LzText only (cannot be used with LzInputText).
+   * @param Boolean val: if true, the textfield will recompute it's width after setText() is called
+   * @deprecated Use setAttribute('resize', ...) instead.
+   */
+  final function setResize ( val ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_resize(val);
-}
+  }
 
-
-/**
-  * @access private
-  */
-override function $lzc$set_width(val) {
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setWidth(val);
-    super.$lzc$set_width.apply(this, arguments);
-    // recalculate height
-    if (this.sizeToHeight) {
-        var h = tsprite.getTextfieldHeight();
-        if (h > 0) {
-            this.$lzc$set_height (h);
-        }
-    }
-}
-
-
-/**
-  * Appends the string to the current text in the textfield.
-  * @param String t: The string to add
-  */
-function addText ( t ){
+  /**
+   * Appends the string to the current text in the textfield.
+   * @param String t: The string to add
+   */
+  function addText ( t ){
     // TODO [hqm 2008-02] this could be done more efficiently (in swf9
     // anyway) with appendText. I think it needs to invoke the part of
     // setText that recomputes the dimensions if needed.  But we want
@@ -661,169 +764,134 @@ function addText ( t ){
     // setText to introduce a new level of function call there though.
     //tsprite.appendText( t );
     //this.text = tsprite.getText();
- 
+
     this.$lzc$set_text (this.getText() + t);
-}
+  }
 
-/**
-  * Clears the text field (by setting its text to the empty string)
-  */
-function clearText ( ){
+  /**
+   * Clears the text field (by setting its text to the empty string)
+   */
+  function clearText ( ){
     this.$lzc$set_text ("");
-}
+  }
 
-/**
-  * @access private
-  * Set the maximum number of chars a textfield can contain
-  * @deprecated Use setAttribute('maxlength', ...) instead.
-  */
-final function setMaxLength ( val ){
+  /**
+   * @access private
+   * Set the maximum number of chars a textfield can contain
+   * @deprecated Use setAttribute('maxlength', ...) instead.
+   */
+  final function setMaxLength ( val ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_maxlength(val);
-}
+  }
 
 
-/**
-  * @access private
-  * Set the pattern of chars a textfield can contain
-  * @deprecated Use setAttribute('pattern', ...) instead.
-  */
-final function setPattern ( val ){
+  /**
+   * @access private
+   * Set the pattern of chars a textfield can contain
+   * @deprecated Use setAttribute('pattern', ...) instead.
+   */
+  final function setPattern ( val ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_pattern(val);
-}
+  }
 
-/**
-  * Calculates the current width of the text held by the text field.
-  */
-function getTextWidth ( ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /**
+   * Calculates the current width of the text held by the text field.
+   */
+  function getTextWidth ( ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     return tsprite.getTextWidth();
-}
-/** @access private */
-function $lzc$getTextWidth_dependencies ( who , self){
-      return [ self , "text" ];
-}
+  }
+  /** @access private */
+  function $lzc$getTextWidth_dependencies ( who , self){
+    return [ self , "text" ];
+  }
 
-/**
-  * Calculates the current height of the text held by the text field.
-  */
-function getTextHeight ( ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /**
+   * Calculates the current height of the text held by the text field.
+   */
+  function getTextHeight ( ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     return tsprite.getTextHeight();
     //return this.__LZtextclip.textHeight;
-}
-/** @access private */
-function $lzc$getTextHeight_dependencies ( who , self){
-      return [ self , "text" ];
-}
+  }
+  /** @access private */
+  function $lzc$getTextHeight_dependencies ( who , self){
+    return [ self , "text" ];
+  }
 
-/**
-  * @access private
-  */
-override function applyData ( d ){
+  /** @access private */
+  override function applyData ( d ){
     if ( null == d ){
-        this.clearText();
+      this.clearText();
     } else {
-        this.$lzc$set_text (d);
-    }
-}
-
-/**
-  * @access private
-  */
-override function toString ( ){
-    return "LzText: " + this.getText();
-}
-
-
-if ($debug) {
-/**
-  * @access private
-  */
-LzText.prototype._dbg_name = function ( ){
-  var id = LzView.prototype._dbg_name.call(this);
-  if (id != this.toString()) {
-    return id;
-  } else {
-    var contents = this.getText();
-    if (contents) {
-      return Debug.stringEscape(contents, true);
+      this.$lzc$set_text (d);
     }
   }
-}
-}
 
-/** Sets the vertical scroll position
-  * @param Number h: scroll position
-  */
-function setScroll ( h ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /** Sets the vertical scroll position
+   * @param Number h: scroll position
+   */
+  function setScroll ( h ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     tsprite.setScroll(h);
-}
+  }
 
-/**
-  * @access private
-  */
-function getScroll ( ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /** @access private */
+  function getScroll ( ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     return tsprite.getScroll();
-}
+  }
 
 
-/**
-  * @access private
-  */
-function getMaxScroll ( ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /** @access private */
+  function getMaxScroll ( ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     return tsprite.getMaxScroll();
-}
-/** @access private */
-function $lzc$getMaxScroll_dependencies ( who , self){
-      return [ self , "maxscroll" ];
-}
+  }
+  /** @access private */
+  function $lzc$getMaxScroll_dependencies ( who , self){
+    return [ self , "maxscroll" ];
+  }
 
 
-/**
-  * @access private
-  */
-function getBottomScroll ( ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /** @access private */
+  function getBottomScroll ( ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     return tsprite.getBottomScroll();
-}
+  }
 
-/**
-  * Set the x scroll position of the textfield.
-  * @param Number n: set the left edge of the textfield to offset
-  * n pixels 
-  * (n is always &lt; 0)
-  * @deprecated Use setAttribute('xscroll', ...) instead.
-  */
-final function setXScroll ( n ){
+  /**
+   * Set the x scroll position of the textfield.
+   * @param Number n: set the left edge of the textfield to offset
+   * n pixels
+   * (n is always &lt; 0)
+   * @deprecated Use setAttribute('xscroll', ...) instead.
+   */
+  final function setXScroll ( n ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_xscroll(n);
-}
+  }
 
 
-/**
-  * Set the y scroll position of the textfield.
-  * @param Number n: set the top line of the textfield to offset n pixels
-  * vertically (n is always &lt; 0)
-  * @deprecated Use setAttribute('yscroll', ...) instead.
-  */
-function setYScroll ( n ){
+  /**
+   * Set the y scroll position of the textfield.
+   * @param Number n: set the top line of the textfield to offset n pixels
+   * vertically (n is always &lt; 0)
+   * @deprecated Use setAttribute('yscroll', ...) instead.
+   */
+  function setYScroll ( n ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_yscroll(n);
-}
+  }
 
 
-/**
-  * @access private
-  */
-function annotateAAimg (txt) {
+  /** @access private */
+  function annotateAAimg (txt) {
     if (typeof(txt) == "undefined") { return; }
     if (txt.length == 0) { return };
-    
+
     var ntxt = "";
     // search for <img ...> strings
     var start = 0;
@@ -832,34 +900,34 @@ function annotateAAimg (txt) {
     // pattern to search for start of img tag
     var IMGSTART = "<img ";
     while (true) {
-        i = txt.indexOf( IMGSTART, start );
-        if (i < 0) {
-            ntxt += txt.substring(start);
-            break;
-        }
-        // advance over the "<img " prefix
-        ntxt += txt.substring(start, i+IMGSTART.length);
-        start = i + IMGSTART.length;
+      i = txt.indexOf( IMGSTART, start );
+      if (i < 0) {
+        ntxt += txt.substring(start);
+        break;
+      }
+      // advance over the "<img " prefix
+      ntxt += txt.substring(start, i+IMGSTART.length);
+      start = i + IMGSTART.length;
 
-        var attrs = {};
-        end = start + this.parseImgAttributes(attrs, txt.substring(start));
-        ntxt += txt.substring(start,end+1);
-        if (attrs['alt'] != null) {
-            var altval = attrs['alt'];
-            ntxt += "[image " + altval+ "]";
-        }
+      var attrs = {};
+      end = start + this.parseImgAttributes(attrs, txt.substring(start));
+      ntxt += txt.substring(start,end+1);
+      if (attrs['alt'] != null) {
+        var altval = attrs['alt'];
+        ntxt += "[image " + altval+ "]";
+      }
 
-        start = end+1;
+      start = end+1;
     }
     return ntxt;
-}
+  }
 
-/** Parses HTML attributes of the form attrname="val" to attrs, up
-  * until a closing right pointy bracket, and returns the offset of
-  * that closing char.
-  * @access private
-  */
-function parseImgAttributes(attrs, str) {
+  /** Parses HTML attributes of the form attrname="val" to attrs, up
+   * until a closing right pointy bracket, and returns the offset of
+   * that closing char.
+   * @access private
+   */
+  function parseImgAttributes(attrs, str) {
     var i;
     var end = 0;
     var ATTNAME = 'attrname';
@@ -872,480 +940,379 @@ function parseImgAttributes(attrs, str) {
     var attrval;
     var delimiter;
     for (i = 0; i < smax; i++) {
-        end = i;
-        var c = str.charAt(i);
-        if (c == ">") {
-            break;
+      end = i;
+      var c = str.charAt(i);
+      if (c == ">") {
+        break;
+      }
+      if (mode == WHITESPACE) {
+        if (c != " ") {
+          mode = ATTNAME;
+          attrname = c;
         }
-        if (mode == WHITESPACE) {
-            if (c != " ") {
-                mode = ATTNAME;
-                attrname = c;
-            }
-        } else if (mode == ATTNAME) {
-            if ((c == " ") || (c == "=")) {
-                mode = WHITESPACE2;
-            } else {
-                attrname += c;
-            }
-        } else if (mode == WHITESPACE2) {
-            if ((c == " ") || (c == "=")) {
-                continue;
-            } else {
-                mode = ATTVAL;
-                delimiter = c;
-                attrval = "";
-            }
-        } else if (mode == ATTVAL) {
-            if (c != delimiter) {
-                attrval += c;
-            } else {
-                mode = WHITESPACE;
-                attrs[attrname] = attrval;
-            }
+      } else if (mode == ATTNAME) {
+        if ((c == " ") || (c == "=")) {
+          mode = WHITESPACE2;
+        } else {
+          attrname += c;
         }
+      } else if (mode == WHITESPACE2) {
+        if ((c == " ") || (c == "=")) {
+          continue;
+        } else {
+          mode = ATTVAL;
+          delimiter = c;
+          attrval = "";
+        }
+      } else if (mode == ATTVAL) {
+        if (c != delimiter) {
+          attrval += c;
+        } else {
+          mode = WHITESPACE;
+          attrs[attrname] = attrval;
+        }
+      }
     }
     return end;
-}
+  }
 
 
-/**
-  * Sets the text of the field to display
-  * @param String t: the string to which to set the text
-  * @deprecated Use setAttribute('text', ...) instead.
-  */
-final function setText (t) {
+  /**
+   * Sets the text of the field to display
+   * @param String t: the string to which to set the text
+   * @deprecated Use setAttribute('text', ...) instead.
+   */
+  final function setText (t) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
-    this.$lzc$set_text(t);    
-}
+    this.$lzc$set_text(t);
+  }
 
-/**
-  * Formatted output.
-  * Formats its arguments using <xref
-  * linkend="LzFormatter.prototype.formatToString"/> and sets the text of the
-  * view to the result.
-  *
-  * @param string control: A control string where % indicates the
-  * conversion of the corresponding argument
-  *
-  * @param [*] args: arguments to be formatted according to the
-  * control string
-  */
-function format (control:String, ...args) {
+  /**
+   * Formatted output.
+   * Formats its arguments using <xref
+   * linkend="LzFormatter.prototype.formatToString"/> and sets the text of the
+   * view to the result.
+   *
+   * @param string control: A control string where % indicates the
+   * conversion of the corresponding argument
+   *
+   * @param [*] args: arguments to be formatted according to the
+   * control string
+   */
+  function format (control:String, ...args) {
     this.$lzc$set_text (this.formatToString.apply(this, [control].concat(args)));
-}
+  }
 
-/**
-  * Appending version of formatted output.
-  * Formats its arguments using <xref
-  * linkend="LzFormatter.prototype.formatToString"/> and adds the
-  * result to the text of the view.
-  *
-  * @param string control: A control string where % indicates the
-  * conversion of the corresponding argument
-  *
-  * @param [*] args: arguments to be formatted according to the
-  * control string
-  */
-function addFormat (control:String, ...args) {
-  this.$lzc$set_text (this.getText() + this.formatToString.apply(this, [control].concat(args)));
-}
+  /**
+   * Appending version of formatted output.
+   * Formats its arguments using <xref
+   * linkend="LzFormatter.prototype.formatToString"/> and adds the
+   * result to the text of the view.
+   *
+   * @param string control: A control string where % indicates the
+   * conversion of the corresponding argument
+   *
+   * @param [*] args: arguments to be formatted according to the
+   * control string
+   */
+  function addFormat (control:String, ...args) {
+    this.$lzc$set_text (this.getText() + this.formatToString.apply(this, [control].concat(args)));
+  }
 
-/**
-  * This must be called after updating the measurement. This is done for speed.
-  *
-  * @access private
-  */
-function updateMaxLines (){
+  /**
+   * This must be called after updating the measurement. This is done for speed.
+   *
+   * @access private
+   */
+  function updateMaxLines (){
     var newlin = Math.floor( this.height / (  this.font.height -1 ) );
     if ( newlin != this.maxlines ){
-        this.maxlines = newlin;
+      this.maxlines = newlin;
     }
-}
+  }
 
-/**
-  * Returns the string represented in the text field
-  * @return String: The string in the text field
-  */
-function getText ( ){
+  /**
+   * Returns the string represented in the text field
+   * @return String: The string in the text field
+   * @deprecated Just use the <code>text</code> attribute
+   */
+  function getText ( ){
+    // Uncomment when unused in LFC and components...
+//     if ($debug) Debug.deprecated(this, arguments.callee, 'text');
     return this.text;
-}
+  }
+  /** @access private */
+  function $lzc$getText_dependencies ( who , self){
+    return [ self , "text" ];
+  }
 
-/** @access private */
-function $lzc$getText_dependencies ( who , self){
-      return [ self , "text" ];
-}
-
-/** @access private */
-static var escapeChars = { '>': '&gt;', '<': '&lt;'};
-
-/**
-  * Returns an escaped version of the string if called with no args. If called
-  * with a string argument, returns an escaped version of that string (escaped
-  * here means markup-escaped, not http escaped.)
-  * @param String ts: text string to escape
-  */
-function escapeText( ts ){
-
+  /** @access private */
+  static var escapeChars = { '>': '&gt;', '<': '&lt;'};
+  /**
+   * Returns an escaped version of the string if called with no args. If called
+   * with a string argument, returns an escaped version of that string (escaped
+   * here means markup-escaped, not http escaped.)
+   * @param String ts: text string to escape
+   */
+  function escapeText( ts ){
     var t = ts == null ? this.text : ts;
-
     var i;
     for ( var ec in LzText.escapeChars ){
-
-        while( t.indexOf( ec ) > -1 ){
-            i = t.indexOf( ec );
-            t = t.substring( 0 , i ) + LzText.escapeChars[ ec ]  +
-                t.substring( i+1 );
-        }
+      while( t.indexOf( ec ) > -1 ){
+        i = t.indexOf( ec );
+        t = t.substring( 0 , i ) + LzText.escapeChars[ ec ]  +
+          t.substring( i+1 );
+      }
     }
-
     return t;
+  }
 
-}
-
-/**
-  * Sets the selectability (with Ibeam cursor) of the text field
-  * @param Boolean isSel: true if the text may be selected by the user
-  * @deprecated Use setAttribute('selectable', ...) instead.
-  */
-final function setSelectable ( isSel ){
+  /**
+   * Sets the selectability (with Ibeam cursor) of the text field
+   * @param Boolean isSel: true if the text may be selected by the user
+   * @deprecated Use setAttribute('selectable', ...) instead.
+   */
+  final function setSelectable ( isSel ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_selectable(isSel);
-}
+  }
 
-/**
-  * @access private
-  */
-override function $lzc$set_font(fname) {
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setFontName(fname);
-    this.fontname = fname;
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
-}
-
-/**
-  * @access private
-  */
-function $lzc$set_fontsize(fsize) {
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setFontSize(fsize);
-    this.fontsize = fsize;
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
-}
-
-/**
-  * @access private
-  * @deprecated Use setAttribute('fontsize', ...) instead.
-  */
-final function setFontSize ( fsize ){
+  /**
+   * @access private
+   * @deprecated Use setAttribute('fontsize', ...) instead.
+   */
+  final function setFontSize ( fsize ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_fontsize(fsize);
-}
+  }
 
-/**
-  * @access private
-  */
-function $lzc$set_fontstyle(fstyle) {
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setFontStyle(fstyle);
-    this.fontstyle = fstyle;
-}
-
-/**
-  * @access private
-  * @deprecated Use setAttribute('fontstyle', ...) instead.
-  */
-final function setFontStyle ( fstyle ){
+  /**
+   * @access private
+   * @deprecated Use setAttribute('fontstyle', ...) instead.
+   */
+  final function setFontStyle ( fstyle ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_fontstyle(fstyle);
-}
+  }
 
-/**
-  * @access private
-  */
-function $lzc$set_multiline(ml) :void {
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-    tsprite.setMultiline(ml);
-    this.multiline = (ml == true);
-}
-
-/**
-  * Sets whether or not the textfield wraps.  If false, only a single line
-  * of text will appear and extra lines will be trucated if the text is set with
-  * multiple lines.
-  * @param Boolean ml: true if the text field should allow multiple lines
-  * @deprecated Use setAttribute('multiline', ...) instead.
-  */
-final function setMultiline ( ml ){
+  /**
+   * Sets whether or not the textfield wraps.  If false, only a single line
+   * of text will appear and extra lines will be trucated if the text is set with
+   * multiple lines.
+   * @param Boolean ml: true if the text field should allow multiple lines
+   * @deprecated Use setAttribute('multiline', ...) instead.
+   */
+  final function setMultiline ( ml ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_multiline(ml);
-}
+  }
 
 
-/**
-  * @access private
-  */
-function setBorder ( onroff ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /** @access private */
+  function setBorder ( onroff ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     tsprite.setBorder(onroff);
-}
+  }
 
-/**
-  * @access private
-  * @todo should wrapping be made orthogonal to the multiline flag?
-  */
-function setWordWrap ( wrap ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /**
+   * @access private
+   * @todo should wrapping be made orthogonal to the multiline flag?
+   */
+  function setWordWrap ( wrap ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     tsprite.setWordWrap(wrap);
-}
+  }
 
 
-/**
-  * @access private
-  */
-function setEmbedFonts ( onroff ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /** @access private */
+  function setEmbedFonts ( onroff ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     tsprite.setEmbedFonts(onroff);
-}
+  }
 
 
-/***
- * Sets what type of antialiasing the text field should use. Only works in swf8
- * and higher. 
- * @param String aliasType: "normal" or "advanced"
- * @deprecated Use setAttribute('antiAliasType', ...) instead.
- */
-final function setAntiAliasType( aliasType ){
+  /***
+   * Sets what type of antialiasing the text field should use. Only works in swf8
+   * and higher.
+   * @param String aliasType: "normal" or "advanced"
+   * @deprecated Use setAttribute('antiAliasType', ...) instead.
+   */
+  final function setAntiAliasType( aliasType ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_antiAliasType(aliasType);
-}
+  }
 
-/**
- * Gets the kind of antialiasing set on this text object
- * @return String: The current setting for text antialiasing
- */ 
-function getAntiAliasType() {
-    if (this.capabilities.advancedfonts) {    
-        return this.antiAliasType;
+  /**
+   * Gets the kind of antialiasing set on this text object
+   * @return String: The current setting for text antialiasing
+   */
+  function getAntiAliasType() {
+    if (this.capabilities.advancedfonts) {
+      return this.antiAliasType;
     } else if ($debug) {
-        LzView.__warnCapability('text.getAntiAliasType()', 'advancedfonts'); 
+      LzView.__warnCapability('text.getAntiAliasType()', 'advancedfonts');
     }
-}
+  }
 
 
-/***
- * Sets what type of grid fitting the text field should use. 
- * Only works in swf8 and higher. 
- * @param String gridFit: "none", "pixel", or "subpixel"
- * @deprecated Use setAttribute('gridFit', ...) instead.
- */
-final function setGridFit( gridFit ){
+  /***
+   * Sets what type of grid fitting the text field should use.
+   * Only works in swf8 and higher.
+   * @param String gridFit: "none", "pixel", or "subpixel"
+   * @deprecated Use setAttribute('gridFit', ...) instead.
+   */
+  final function setGridFit( gridFit ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_gridFit(gridFit);
-}
+  }
 
-/**
- * Gets the kind of grid fitting set on this text object
- * @return String: The current setting for grid fitting
- */ 
-function getGridFit() {
+  /**
+   * Gets the kind of grid fitting set on this text object
+   * @return String: The current setting for grid fitting
+   */
+  function getGridFit() {
     if (this.capabilities.advancedfonts) {
-        return this.gridFit; 
+      return this.gridFit;
     } else if ($debug) {
-        LzView.__warnCapability('text.getGridFit()', 'advancedfonts'); 
+      LzView.__warnCapability('text.getGridFit()', 'advancedfonts');
     }
-}
+  }
 
 
-/***
- * Sets the sharpness for the text rendering 
- * Only works in swf8 and higher. 
- * @param Number sharpness: -400 to 400
- * @deprecated Use setAttribute('sharpness', ...) instead.
- */
-final function setSharpness( sharpness ){
+  /***
+   * Sets the sharpness for the text rendering
+   * Only works in swf8 and higher.
+   * @param Number sharpness: -400 to 400
+   * @deprecated Use setAttribute('sharpness', ...) instead.
+   */
+  final function setSharpness( sharpness ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_sharpness(sharpness);
-}
+  }
 
-/**
- * Gets the sharpness rendering property of this text object
- * @return Number: The current sharpness rendering 
- */ 
-function getSharpness() {
-    if (this.capabilities.advancedfonts) {    
-        return this.sharpness; 
+  /**
+   * Gets the sharpness rendering property of this text object
+   * @return Number: The current sharpness rendering
+   */
+  function getSharpness() {
+    if (this.capabilities.advancedfonts) {
+      return this.sharpness;
     } else if ($debug) {
-        LzView.__warnCapability('text.getSharpness()', 'advancedfonts'); 
+      LzView.__warnCapability('text.getSharpness()', 'advancedfonts');
     }
-}
+  }
 
-
-
-/***
- * Sets the thickness for the text rendering 
- * Only works in swf8 and higher. 
- * @param Number thickness: -200 to 200
- * @deprecated Use setAttribute('thickness', ...) instead.
- */
-final function setThickness( thickness ){
+  /***
+   * Sets the thickness for the text rendering
+   * Only works in swf8 and higher.
+   * @param Number thickness: -200 to 200
+   * @deprecated Use setAttribute('thickness', ...) instead.
+   */
+  final function setThickness( thickness ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_thickness(thickness);
-}
+  }
 
-/**
- * Gets the thickness rendering property of this text object
- * @return Number: The current thickness rendering 
- */ 
-function getThickness() {
-    if (this.capabilities.advancedfonts) {    
-        return this.thickness;
+  /**
+   * Gets the thickness rendering property of this text object
+   * @return Number: The current thickness rendering
+   */
+  function getThickness() {
+    if (this.capabilities.advancedfonts) {
+      return this.thickness;
     } else if ($debug) {
-        LzView.__warnCapability('text.getThickness()', 'advancedfonts'); 
+      LzView.__warnCapability('text.getThickness()', 'advancedfonts');
     }
-}
+  }
 
-
-/** Sets the horizontal scroll position
-  * @param Number s: horizontal scroll position
-  */
-function setHScroll (s){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /** Sets the horizontal scroll position
+   * @param Number s: horizontal scroll position
+   */
+  function setHScroll (s){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     tsprite.setHScroll(s);
-}
+  }
 
-
-/**
-  * Positions the text selection within the text field. If this object does
-  * not already have the focus, this has the ancillary effect of giving it the
-  * focus.
-  * @param Number start: The beginning of the text selection, or the position 
-  * for the text cursor if no end is given. The index is 0 based.
-  * @param Number end: The end of the text selection. Optional. If not given,
-  * then the text cursor is positioned at the start point, but no text is 
-  * selected.
-  */
-function setSelection ( start , end=null ){
+  /**
+   * Positions the text selection within the text field. If this object does
+   * not already have the focus, this has the ancillary effect of giving it the
+   * focus.
+   * @param Number start: The beginning of the text selection, or the position
+   * for the text cursor if no end is given. The index is 0 based.
+   * @param Number end: The end of the text selection. Optional. If not given,
+   * then the text cursor is positioned at the start point, but no text is
+   * selected.
+   */
+  function setSelection ( start , end=null ){
     if (end == null) { end = start; }
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
-     tsprite.setSelection(start, end);
-}
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
+    tsprite.setSelection(start, end);
+  }
 
-/**
-  * Returns the position of the text cursor within this object. If the text
-  * cursor is not inside this object, then the method returns -1.
-  * @return Number: The position of the text cursor within this textfield, 0
-  * based. If the text cursor is not in the textfield, this method returns -1.
-  */
-function getSelectionPosition ( ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /**
+   * Returns the position of the text cursor within this object. If the text
+   * cursor is not inside this object, then the method returns -1.
+   * @return Number: The position of the text cursor within this textfield, 0
+   * based. If the text cursor is not in the textfield, this method returns -1.
+   */
+  function getSelectionPosition ( ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     return  tsprite.getSelectionPosition();
-}
+  }
 
-/**
-  * Returns the length of the text selection in within this object. If the text
-  * cursor is not inside this object, then the method returns -1.
-  * @return Number: The length of the text selection within this textfield.
-  * If the text cursor is not in the textfield, this method returns -1.
-  */
-function getSelectionSize ( ){
-    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);    
+  /**
+   * Returns the length of the text selection in within this object. If the text
+   * cursor is not inside this object, then the method returns -1.
+   * @return Number: The length of the text selection within this textfield.
+   * If the text cursor is not in the textfield, this method returns -1.
+   */
+  function getSelectionSize ( ){
+    var tsprite:LzTextSprite = (this.sprite cast LzTextSprite);
     return tsprite.getSelectionSize();
-}
+  }
+
+  /**
+   * Return a string which can be used to insert a hyperlink in a text field.
+   * @param String str: The text displayed in the hyperlink.
+   * @param String value: The value returned when the link is clicked.
+   * @access public
+   The text returned by makeTextLink can be appended to the text of a
+   text field. It will make an HTML-style anchor, and will have a
+   displayed representation of the string STR. When clicked, the link will
+   send an ontextlink event to the text view, with a value of VALUE.
+  */
+  public function makeTextLink(str, value) {
+    return (this.sprite cast LzTextSprite).makeTextLink(str,value);
+  }
+
+
+  /** @access private */
+  override function toString ( ){
+    return "LzText: " + this.getText();
+  }
+
+  if ($debug) {
+    /**
+     * @access private
+     */
+    LzText.prototype._dbg_name = function ( ){
+      var id = LzView.prototype._dbg_name.call(this);
+      if (id != this.toString()) {
+        return id;
+      } else {
+        var contents = this.getText();
+        if (contents) {
+          return Debug.stringEscape(contents, true);
+        }
+      }
+    }
+  }
+};
 
 /**
-  * Return a string which can be used to insert a hyperlink in a text field.
-  * @param String str: The text displayed in the hyperlink.
-  * @param String value: The value returned when the link is clicked.
-  * @access public
-  The text returned by makeTextLink can be appended to the text of a
-  text field. It will make an HTML-style anchor, and will have a
-  displayed representation of the string STR. When clicked, the link will
-  send an ontextlink event to the text view, with a value of VALUE.
+ * Publish as tag
+ * @access private
  */
-public function makeTextLink(str, value) {
-    return (this.sprite cast LzTextSprite).makeTextLink(str,value);
-}
+lz[LzText.tagname] = LzText;
 
 
-/** text-align for this text
-  * @lzxtype string
-  * @type String
-  */
-var textalign :String = "left";
-
-/** text-indent for this text
-  * @lzxtype number
-  * @type Number
-  */
-var textindent :Number = 0;
-
-/** letter-spacing for this text
-  * @lzxtype number
-  * @type Number
-  */
-var letterspacing :Number = 0;
-
-/** text-decoration for this text
-  * @lzxtype string
-  * @type String
-  */
-var textdecoration :String = "none";
-
-/** @access private */
-function $lzc$set_textalign (align:String) :void {
-    align = align ? align.toLowerCase() : "left";
-    if (! (align == "left" || align == "right" || align == "center"
-            || align == "justify")) {
-        if ($debug) {
-            Debug.warn("invalid value for %w.textalign = %w", this, align);
-        }
-        align = "left";
-    }
-    this.textalign = align;
-    (this.sprite cast LzTextSprite).setTextAlign(align);
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
-}
-
-/** @access private */
-function $lzc$set_textindent (indent:Number) :void {
-    this.textindent = indent;
-    (this.sprite cast LzTextSprite).setTextIndent(indent);
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
-}
-
-/** @access private */
-function $lzc$set_letterspacing (spacing:Number) :void {
-    this.letterspacing = spacing;
-    (this.sprite cast LzTextSprite).setLetterSpacing(spacing);
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
-}
-
-/** @access private */
-function $lzc$set_textdecoration (decoration:String) :void {
-    decoration = decoration ? decoration.toLowerCase() : "none";
-    if (! (decoration == "none" || decoration == "underline")) {
-        // CSS actually also allows: overline, line-through, blink
-        // but Flash can't handle that..
-        if ($debug) {
-            Debug.warn("invalid value for %w.textdecoration = %w", this, decoration);
-        }
-        decoration = "none";
-    }
-    this.textdecoration = decoration;
-    (this.sprite cast LzTextSprite).setTextDecoration(decoration);
-}
-
-} // End of LzText
-
-lz[LzText.tagname] = LzText;  // publish
