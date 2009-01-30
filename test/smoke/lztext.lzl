@@ -1,6 +1,6 @@
 <library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
   <include href="lzunit" />
@@ -130,19 +130,19 @@
                assertEquals('1,2,3                         ', (textFormatTest.format('%-30.5s', this.array), textFormatTest.text));
 //                assertEquals('[1, 2                         ', (textFormatTest.format('%-30.5w', this.array), textFormatTest.text));
                assertEquals('[object Object]', (textFormatTest.format('%s', this.object), textFormatTest.text));
-               assertEquals('{3: three, one: 1, two: too}', (textFormatTest.format('%w', this.object), textFormatTest.text));
+               assertEquals("{3: 'three', one: 1, two: 'too'}", (textFormatTest.format('%w', this.object), textFormatTest.text));
                assertEquals('[obje', (textFormatTest.format('%.5s', this.object), textFormatTest.text));
 //                assertEquals('{one:', (textFormatTest.format('%.5w', this.object), textFormatTest.text));
                assertEquals('               [object Object]', (textFormatTest.format('%30s', this.object), textFormatTest.text));
-               assertEquals('  {3: three, one: 1, two: too}', (textFormatTest.format('%30w', this.object), textFormatTest.text));
+               assertEquals("  {3: 'three', one: 1, two: 'too'}", (textFormatTest.format('%34w', this.object), textFormatTest.text));
                assertEquals('                         [obje', (textFormatTest.format('%30.5s', this.object), textFormatTest.text));
 //                assertEquals('                         {one:', (textFormatTest.format('%30.5w', this.object), textFormatTest.text));
                assertEquals('[object Object]', (textFormatTest.format('%-s', this.object), textFormatTest.text));
-               assertEquals('{3: three, one: 1, two: too}', (textFormatTest.format('%-w', this.object), textFormatTest.text));
+               assertEquals("{3: 'three', one: 1, two: 'too'}", (textFormatTest.format('%-w', this.object), textFormatTest.text));
                assertEquals('[obje', (textFormatTest.format('%-.5s', this.object), textFormatTest.text));
 //                assertEquals('{one:', (textFormatTest.format('%-.5w', this.object), textFormatTest.text));
                assertEquals('[object Object]               ', (textFormatTest.format('%-30s', this.object), textFormatTest.text));
-               assertEquals('{3: three, one: 1, two: too}  ', (textFormatTest.format('%-30w', this.object), textFormatTest.text));
+               assertEquals("{3: 'three', one: 1, two: 'too'}  ", (textFormatTest.format('%-34w', this.object), textFormatTest.text));
                assertEquals('[obje                         ', (textFormatTest.format('%-30.5s', this.object), textFormatTest.text));
 //                assertEquals('{one:                         ', (textFormatTest.format('%-30.5w', this.object), textFormatTest.text));
                assertEquals('true', (textFormatTest.format('%s', true), textFormatTest.text));

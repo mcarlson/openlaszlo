@@ -117,19 +117,19 @@
                assertEquals('1,2,3                         ', Debug.formatToString('%-30.5s', this.array));
 //                assertEquals('[1, 2                         ', Debug.formatToString('%-30.5w', this.array));
                assertEquals('[object Object]', Debug.formatToString('%s', this.object));
-               assertEquals('{3: three, one: 1, two: too}', Debug.formatToString('%w', this.object));
+               assertEquals("{3: 'three', one: 1, two: 'too'}", Debug.formatToString('%w', this.object));
                assertEquals('[obje', Debug.formatToString('%.5s', this.object));
 //                assertEquals('{one:', Debug.formatToString('%.5w', this.object));
                assertEquals('               [object Object]', Debug.formatToString('%30s', this.object));
-               assertEquals('  {3: three, one: 1, two: too}', Debug.formatToString('%30w', this.object));
+               assertEquals("  {3: 'three', one: 1, two: 'too'}", Debug.formatToString('%34w', this.object));
                assertEquals('                         [obje', Debug.formatToString('%30.5s', this.object));
 //                assertEquals('                         {one:', Debug.formatToString('%30.5w', this.object));
                assertEquals('[object Object]', Debug.formatToString('%-s', this.object));
-               assertEquals('{3: three, one: 1, two: too}', Debug.formatToString('%-w', this.object));
+               assertEquals("{3: 'three', one: 1, two: 'too'}", Debug.formatToString('%-w', this.object));
                assertEquals('[obje', Debug.formatToString('%-.5s', this.object));
 //                assertEquals('{one:', Debug.formatToString('%-.5w', this.object));
                assertEquals('[object Object]               ', Debug.formatToString('%-30s', this.object));
-               assertEquals('{3: three, one: 1, two: too}  ', Debug.formatToString('%-30w', this.object));
+               assertEquals("{3: 'three', one: 1, two: 'too'}  ", Debug.formatToString('%-34w', this.object));
                assertEquals('[obje                         ', Debug.formatToString('%-30.5s', this.object));
 //                assertEquals('{one:                         ', Debug.formatToString('%-30.5w', this.object));
                assertEquals('true', Debug.formatToString('%s', true));
@@ -213,6 +213,6 @@
   </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-     * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
      * Use is subject to license terms.                                            *
      * X_LZ_COPYRIGHT_END ****************************************************** -->
