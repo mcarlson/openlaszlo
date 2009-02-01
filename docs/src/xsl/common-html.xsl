@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -248,7 +248,7 @@
     <xsl:variable name="fname" select="textobject/textdata/@fileref"/>
     <xsl:variable name="query-parameters" select="parameter[@role='query']"/>
 
-    <!--If no canvas parameters are specified, set height to 400px and width to 500.
+    <!--If no canvas parameters are specified, set height to 400px.
       This fixes     LPP-5207 change height of example code window from 200 to 400 pixels
       [bshine 12.16.2007]
     -->         
@@ -407,7 +407,7 @@
         <xsl:call-template name="get-canvas-attribute">
           <xsl:with-param name="text" select="string($text)"/>
           <xsl:with-param name="attribute" select="'width'"/>
-          <xsl:with-param name="default" select="'500'"/>
+          <xsl:with-param name="default" select="'100%'"/>
         </xsl:call-template>
       </xsl:variable>
       <xsl:variable name="canvas-height">

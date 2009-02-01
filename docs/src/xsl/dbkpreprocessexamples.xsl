@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -125,9 +125,9 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="$warn.no.programlisting.canvas.dimension">
-          <xsl:message>programlisting: defaulting width to 500</xsl:message>
+          <xsl:message>programlisting: defaulting width to 100%</xsl:message>
         </xsl:if>
-        <xsl:text>500</xsl:text>
+        <xsl:text>100%</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
