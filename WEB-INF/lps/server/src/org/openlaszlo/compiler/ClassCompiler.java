@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -300,6 +300,12 @@ class ClassCompiler extends ViewCompiler  {
       ClassModel classModel = mEnv.getSchema().getClassModel(tagName);
       // May have already been compiled by a forward reference
       if (! classModel.isCompiled()) {
+        // NOTE: [2009-01-31 ptw] We force the class to be compiled,
+        // because it is in the file we are compiling (as opposed to
+        // being just analyzed for schema and inheritance, or being
+        // conditionally compiled as a forward reference (which will
+        // only be emitted if the class is not in an import and we are
+        // linking)
         classModel.compile(mEnv, true);
       }
     }

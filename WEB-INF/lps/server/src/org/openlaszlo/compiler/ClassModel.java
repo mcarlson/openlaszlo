@@ -66,7 +66,15 @@ public class ClassModel implements Comparable {
                       ViewSchema schema, Element definition, CompilationEnvironment env) {
         this.tagName = tagName;
         this.anonymous = (! publish);
-        this.modelOnly = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
+        // NOTE: [2009-01-31 ptw] If the class is in an import, or you
+        // are not linking, modelOnly is set to true to prevent class
+        // models that were created to compute the schema and
+        // inheritance from being emitted.  Classes that are actually
+        // in the library or application being compiled will be
+        // emitted because the are compiled with the `force` option,
+        // which overrides `modelOnly`.  See ClassCompiler.compile
+        this.modelOnly = ((!env.getBooleanProperty(env.LINK_PROPERTY)) ||
+                          env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY));
         this.env = env;
         if ((!anonymous) && (tagName != null)) {
           this.className = LZXTag2JSClass(tagName);
@@ -666,6 +674,6 @@ public class ClassModel implements Comparable {
 }
 
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
