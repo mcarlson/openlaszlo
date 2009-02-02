@@ -5,17 +5,17 @@
     <class name="basecheckbox" extends="baseformitem">
 
         <!--- True if it's checked, else false. Default is false. -->
-        <attribute name="value" value="false" setter="doSetValue(value, false)" />
+        <attribute name="value" value="false" setter="setValue(value, false)" />
 
         <!--- Toggles the value when the space bar is pressed while focused. -->
         <method name="doSpaceUp">
-            if (this._enabled) this.doSetValue(!this.value, false);
+            if (this._enabled) this.setValue(!this.value, false);
         </method>
 
         <!--- @keywords private -->
         <handler name="onclick" method="doClick" />
         <method name="doClick" args="ignore">
-            if (this._enabled) this.doSetValue(!this.value, false);
+            if (this._enabled) this.setValue(!this.value, false);
         </method>
 
         <!--- @keywords private -->
@@ -28,7 +28,7 @@
               @param Any value: can be any Javascript type and is evaluated as its
               boolean equivalent, strings "true" and "false" are treated specially
               to represent true and false respectively. -->
-        <method name="doSetValue" args="value,isinitvalue">
+        <method name="setValue" args="value,isinitvalue=null">
             if (this['value'] == value) return;
 
             if (value == "false") {

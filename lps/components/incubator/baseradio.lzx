@@ -201,7 +201,7 @@
           that can have many radiobuttons associated with it -->
     <class name="baseradiogroup" extends="baseformitem">
         <!--- The value for the baseradiogroup. -->
-        <attribute name="value" value="null" setter="this.doSetValue(value, false)"/>
+        <attribute name="value" value="null" setter="this.setValue(value, false)"/>
 
         <!--- Array of radiobuttons associated with this baseradiogroup.
               @keywords private -->
@@ -227,7 +227,7 @@
 
             if (this._rbuttons == null) this._rbuttons = [];
             if (rb.selected) {
-                this.doSetValue(rb.value, false);
+                this.setValue(rb.value, false);
             } else {
                 if (rb.value == this.value) {
                     if (!rb.selected) rb.setAttribute('selected', true);
@@ -243,7 +243,7 @@
               @param Any value: the value to set.
               @param Boolean isinitvalue: true if value is rollback value, else
               false. -->
-        <method name="doSetValue" args="value,isinitvalue"> <![CDATA[
+        <method name="setValue" args="value,isinitvalue=null"> <![CDATA[
             if (this['value'] == value) return;
             if (this._rbuttons != null) {
                 for (var i=0; i < this._rbuttons.length; i++) {
