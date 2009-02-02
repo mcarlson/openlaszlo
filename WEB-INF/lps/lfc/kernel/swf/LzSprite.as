@@ -1451,6 +1451,7 @@ LzSprite.prototype.doQueuedPlayAction = function (ignore){
     this.doQueuedDel.unregisterAll();
     
     var qa = this.queuedplayaction;
+    this.queuedplayaction = null;
     for (var i = 0; i < qa.length; i += 3) {
         this[ qa[i] ] ( qa[i + 1], qa[i + 2] );
     }
