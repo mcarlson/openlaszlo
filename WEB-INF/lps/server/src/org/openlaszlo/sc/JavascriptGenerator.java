@@ -1246,10 +1246,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       
     String tryType = "";
     if (tryAll) {
-      error.add(parseFragment("if ($debug) {" +
-                              "  $lzsc$runtime.reportException(" +
-                              ScriptCompiler.quote(filename) + ", " +
-                              functionNameIdentifier.beginLine + ", $lzsc$e); }"));
+      if (options.getBoolean(Compiler.DEBUG) || options.getBoolean(Compiler.DEBUG_SWF9)) {
+        error.add(parseFragment("$lzsc$runtime.reportException(" +
+                                ScriptCompiler.quote(filename) + ", " +
+                                functionNameIdentifier.beginLine + ", $lzsc$e);"));
+      }
 
       predecls.add(new Compiler.PassThroughNode(parseFragment("var $lzsc$ret:* = 0;")));
       if (functionNameIdentifier != null && !functionNameIdentifier.isConstructor()) {
