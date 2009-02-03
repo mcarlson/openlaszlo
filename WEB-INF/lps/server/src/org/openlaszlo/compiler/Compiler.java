@@ -124,8 +124,15 @@ public class Compiler {
     /** Create a CompilationEnvironment with the properties and 
      * FileResolver of this compiler.
      */
-    public CompilationEnvironment makeCompilationEnvironment() {
-        return new CompilationEnvironment(mProperties, mFileResolver, mMediaCache);
+    public CompilationEnvironment makeCompilationEnvironment(Properties options) {
+        Properties props = new Properties();
+        // First copy in properties that were set on the Compiler instance
+        props.putAll(mProperties);
+        // Then merge in properties that were passed into the call to compile()
+        if (options != null) {
+            props.putAll(options);
+        }
+        return new CompilationEnvironment(props, mFileResolver, mMediaCache);
     }
     
     /** Compiles <var>sourceFile</var> to <var>objectFile</var>.  If
@@ -177,14 +184,14 @@ public class Compiler {
 
         // Compile to a byte-array, and write out to objectFile, and 
         // write a copy into sourceFile.[swf|js] if this is a serverless deployment.
-        CompilationEnvironment env = makeCompilationEnvironment();
+        CompilationEnvironment env = makeCompilationEnvironment(props);
         ByteArrayOutputStream bstream = new ByteArrayOutputStream();
         OutputStream ostream = new FileOutputStream(objectFile);
         env.setObjectFile(objectFile);
 
         boolean success = false;
         try {
-            Canvas canvas = compile(sourceFile, bstream, props, env);
+            Canvas canvas = compile(sourceFile, bstream, env);
             bstream.writeTo(ostream);
             ostream.close();
 
@@ -192,7 +199,7 @@ public class Compiler {
             if (canvas != null && !canvas.isProxied()) {
 
                 // Create a foo.lzx.[js|swf] serverless deployment file for sourcefile foo.lzx
-                String runtime = props.getProperty(CompilationEnvironment.RUNTIME_PROPERTY);
+                String runtime = env.getRuntime();
                 String soloExtension = getObjectFileExtensionForRuntime(runtime);
 
                 OutputStream fostream = null;
@@ -296,7 +303,7 @@ public class Compiler {
      *
      */
 
-    public Canvas compile(File file, OutputStream ostr, Properties props, CompilationEnvironment env)
+    public Canvas compile(File file, OutputStream ostr, CompilationEnvironment env)
         throws CompilationError, IOException
     {
         mLogger.info("compiling " + file + "...");
@@ -304,89 +311,9 @@ public class Compiler {
         CompilationErrorHandler errors = env.getErrorHandler();
         env.setApplicationFile(file);
         
-        // Copy target properties (debug, logdebug, profile, krank,
-        // runtime) from props arg to CompilationEnvironment
-        String runtime = props.getProperty(env.RUNTIME_PROPERTY);
         boolean linking = (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY)));
         boolean noCodeGeneration = "true".equals(env.getProperty(CompilationEnvironment.NO_CODE_GENERATION));
 
-        if (runtime != null) {
-            mLogger.info("canvas compiler compiling runtime = " + runtime);
-            env.setProperty(env.RUNTIME_PROPERTY, runtime);
-        }
-
-        String proxied = props.getProperty(CompilationEnvironment.PROXIED_PROPERTY);
-        mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="looking for lzproxied, props= " + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                Compiler.class.getName(),"051018-257", new Object[] {props.toString()})
-);
-        if (proxied != null) {
-            mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="setting lzproxied to " + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                Compiler.class.getName(),"051018-266", new Object[] {proxied})
-);
-            env.setProperty(CompilationEnvironment.PROXIED_PROPERTY, proxied);
-        }
-
-        String debug = props.getProperty(CompilationEnvironment.DEBUG_PROPERTY);
-        if (debug != null) {
-            env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, debug);
-        }
-
-        String lzconsoledebug = props.getProperty(CompilationEnvironment.CONSOLEDEBUG_PROPERTY);
-        if (lzconsoledebug != null) {
-            env.setProperty(CompilationEnvironment.CONSOLEDEBUG_PROPERTY, lzconsoledebug);
-        }
-        
-
-
-        String backtrace = props.getProperty(CompilationEnvironment.BACKTRACE_PROPERTY);
-        if (backtrace != null) {
-            if ("true".equals(backtrace)) {
-                env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "true" );
-            }
-            env.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, backtrace);
-        }
-
-
-        String profile = props.getProperty(CompilationEnvironment.PROFILE_PROPERTY);
-        if (profile != null) {
-            env.setProperty(CompilationEnvironment.PROFILE_PROPERTY, profile);
-        }
-
-        String logdebug = props.getProperty(CompilationEnvironment.LOGDEBUG_PROPERTY);
-        if (logdebug != null) {
-            env.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, logdebug);
-        }
-
-        String sourcelocators = props.getProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY);
-        if (sourcelocators != null) {
-            env.setProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY, sourcelocators);
-        }
-
-        String sourceannotations = props.getProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY);
-        if (sourceannotations != null) {
-            env.setProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY, sourceannotations);
-        }
-
-        String trackLines = props.getProperty(CompilationEnvironment.TRACK_LINES);
-        if (trackLines != null) {
-            env.setProperty(CompilationEnvironment.TRACK_LINES, trackLines);
-        }
-
-        String nameFunctions = props.getProperty(CompilationEnvironment.NAME_FUNCTIONS);
-        if (nameFunctions != null) {
-            env.setProperty(CompilationEnvironment.NAME_FUNCTIONS, nameFunctions);
-        }
-        
         try {
             mLogger.debug(
 /* (non-Javadoc)
@@ -414,7 +341,7 @@ public class Compiler {
             compileTimeConstants.put("$backtrace", new Boolean(
                                          env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY)));
 
-            runtime = env.getProperty(env.RUNTIME_PROPERTY);
+            String runtime = env.getProperty(env.RUNTIME_PROPERTY);
             // Must be kept in sync with server/sc/lzsc.py main
             env.setRuntimeConstants(runtime);
 
@@ -424,7 +351,7 @@ public class Compiler {
             checkKnownRuntime(env.getProperty(env.RUNTIME_PROPERTY));
 
             // cssfile cannot be set in the canvas tag
-            String cssfile = props.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
+            String cssfile = env.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
             if (cssfile != null) {
                 mLogger.info("Got cssfile named: " + cssfile);             
                 cssfile = root.getAttributeValue("cssfile");
@@ -525,7 +452,7 @@ public class Compiler {
 
     public void compileAndWriteToSWF (String script, String seqnum, OutputStream out, String runtime) {
         try {
-            CompilationEnvironment env = makeCompilationEnvironment();
+            CompilationEnvironment env = makeCompilationEnvironment(null);
             env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, true);
             Properties props = (Properties) env.getProperties().clone();
             env.setProperty(env.RUNTIME_PROPERTY, runtime);

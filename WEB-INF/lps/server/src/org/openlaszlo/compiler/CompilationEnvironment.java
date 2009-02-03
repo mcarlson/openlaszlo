@@ -27,14 +27,15 @@ import org.openlaszlo.sc.ScriptCompilerInfo;
  */
 public class CompilationEnvironment {
     private final Properties mProperties;
-    
+    // Stores the user-supplied compilation properties, either from command line or query args
+    private final Properties mCommandLineOptions;
     // TODO this is suspicious. What if we want to change the build folder?
     public static final String DEFAULT_OUTPUT_DIR = "build";
     
-    public static final String RUNTIME_PROPERTY = "runtime";
-    public static final String PROXIED_PROPERTY           = "lzproxied";
-    public static final String DEBUG_PROPERTY             = "debug";
-    public static final String DEBUG_EVAL_PROPERTY        = "debugEval";
+    public static final String RUNTIME_PROPERTY            = "runtime";
+    public static final String PROXIED_PROPERTY            = "lzproxied";
+    public static final String DEBUG_PROPERTY              = "debug";
+    public static final String DEBUG_EVAL_PROPERTY         = "debugEval";
     public static final String SOURCE_ANNOTATIONS_PROPERTY = "lzsourceannotations";
 
     // matches the values of sc.Compiler.DEBUG_BACKTRACE, NAME_FUNCTIONS, etc.
@@ -53,6 +54,7 @@ public class CompilationEnvironment {
     public static final String CONSOLEDEBUG_PROPERTY  = "lzconsoledebug";
     public static final String EMBEDFONTS_PROPERTY    = "embedfonts";
     public static final String SOURCELOCATOR_PROPERTY = "sourcelocators";
+
 
     // Flag used internally, to mark whether the user instantiated a <debug>
     // tag manually. If they didn't, we need to add a call to instantiate one.
@@ -142,9 +144,6 @@ public class CompilationEnvironment {
     private static boolean mDefaultTextWidthInitialized = false;
     private static int mDefaultTextWidth = 100;
 
-    /** Default SWF version to compile to */
-    private String mDefaultRuntime = LPS.getRuntimeDefault();
-
     /** Used for compiling SWF loadable libraries to refer to _level0 */
     private String mGlobalPrefix = "";
 
@@ -165,13 +164,18 @@ public class CompilationEnvironment {
      * @param mcache
      */
     CompilationEnvironment(Properties properties, FileResolver resolver, CompilerMediaCache mcache) {
+        mCommandLineOptions = properties;
+        mProperties = new Properties();
+        initCompilerOptionDefaults();
+        // Merge command line options to override defaults
+        mProperties.putAll(properties);
+        
         // Use a local symbol generator so that we recycle method
         // names for each new view, to keep the constant pool small.
         this.methodNameGenerator = new SymbolGenerator("$m");
         this.mSchema = new ViewSchema(this);
         // lzc depends on the properties being shared, because it sets
         // them after creating the environment
-        this.mProperties = properties;
         this.mFileResolver = resolver;
         this.mParser = new Parser();
         this.mParser.setResolver(resolver);
@@ -185,6 +189,7 @@ public class CompilationEnvironment {
         // unique names!
         this.methodNameGenerator = srcEnv.methodNameGenerator;
         this.mProperties = (Properties) (srcEnv.getProperties().clone());
+        this.mCommandLineOptions = srcEnv.mCommandLineOptions;
         this.mFileResolver = srcEnv.getFileResolver();
         this.mParser = new Parser();
         this.mParser.setResolver(this.mFileResolver);
@@ -204,7 +209,26 @@ public class CompilationEnvironment {
     public CompilationEnvironment() {
         this(new Properties(), FileResolver.DEFAULT_FILE_RESOLVER, null);
     }
-    
+
+    // Compiler option default values
+    public void initCompilerOptionDefaults() {
+        mProperties.put( BACKTRACE_PROPERTY,          "false");
+        mProperties.put( CONSOLEDEBUG_PROPERTY,       "false");
+        mProperties.put( DEBUG_EVAL_PROPERTY,         "false");
+        mProperties.put( DEBUG_PROPERTY,              "false");
+        mProperties.put( EMBEDFONTS_PROPERTY,         "false");
+        mProperties.put( LINK_PROPERTY,               "true" );
+        mProperties.put( LOGDEBUG_PROPERTY,           "false");
+        mProperties.put( NAME_FUNCTIONS,              "false");
+        mProperties.put( PROFILE_PROPERTY,            "false");
+        mProperties.put( PROXIED_PROPERTY,            "true");
+        mProperties.put( REMOTEDEBUG_PROPERTY,        "false");
+        mProperties.put( RUNTIME_PROPERTY,             LPS.getRuntimeDefault());
+        mProperties.put( SOURCELOCATOR_PROPERTY,      "false");
+        mProperties.put( SOURCE_ANNOTATIONS_PROPERTY, "false");
+        mProperties.put( TRACK_LINES,                 "false");
+    }
+
     void setApplicationFile(File file) {
         mApplicationFile = file;
         mCompilerErrors.setFileBase(file.getParent());
@@ -519,9 +543,18 @@ public class CompilationEnvironment {
         mProperties.setProperty(name, value);
     }
 
+    void setCommandLineOption(String name, String val) {
+        mCommandLineOptions.setProperty(name,val);
+        setProperty(name, val);
+    }
+
+    String getCommandLineOption(String name) {
+        return mCommandLineOptions.getProperty(name);
+    }
+
     /** Return target Flash version (5, 6, ...) **/
     public String getRuntime() {
-        return getProperty(RUNTIME_PROPERTY, mDefaultRuntime);
+        return getProperty(RUNTIME_PROPERTY);
     }
 
     public boolean isAS3() {
