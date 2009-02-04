@@ -608,7 +608,9 @@
             }
 
             var pos = Math.round(-thumbpos / this.trackscroll * this.targetscroll);
-            this.target.setAttribute(this.classroot.scrollattr, pos);
+            if (pos != this.target[this.classroot.scrollattr]) {
+                this.target.setAttribute(this.classroot.scrollattr, pos);
+            }
 
             return thumbpos;
         ]]></method>
@@ -678,7 +680,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

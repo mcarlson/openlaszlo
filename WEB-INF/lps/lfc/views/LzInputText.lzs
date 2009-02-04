@@ -136,13 +136,15 @@ override function destroy(){
     super.destroy();
 }
 
+/** @access private */
+var isprite:LzInputTextSprite;
 /**
   * Called to create the sprite object.  May be overridden to use a specific 
   * version, e.g. LzTextSprite();
   * @access private
   */
 override function __makeSprite(args) {
-    this.sprite = new LzInputTextSprite(this, args);
+    this.sprite = this.tsprite = this.isprite = new LzInputTextSprite(this, args);
 }
 
 /** @access private */

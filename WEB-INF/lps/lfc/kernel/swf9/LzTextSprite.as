@@ -30,7 +30,27 @@ public class LzTextSprite extends LzSprite {
         public static var DEFAULT_SIZE = 11;
 
         var font = null;
-        public var lineheight = 11;
+
+        /**
+        * @access private
+        */
+        public var scroll:Number = 0;
+        /**
+        * @access private
+        */
+        public var maxscroll:Number = 0;
+        /**
+        * @access private
+        */
+        public var hscroll:Number = 0;
+        /**
+        * @access private
+        */
+        public var maxhscroll:Number = 0;
+        /**
+        * @access private
+        */
+        public var lineheight:Number = 1;
 
         public var textcolor = 0;
         public var text:String = "";
@@ -74,24 +94,28 @@ public class LzTextSprite extends LzSprite {
             this.textfield.addEventListener(flash.events.Event.SCROLL, __handleScrollEvent);
         }
 
-        function __handleScrollEvent(e:Event) {
-            if ( this.owner.scroll != textfield.scrollV) {
-                this.owner.scroll = textfield.scrollV;
-                if (this.owner.onscroll.ready) this.owner.onscroll.sendEvent(textfield.scrollV);
-            }
-            if (this.owner.maxscroll != textfield.maxScrollV) {
-                this.owner.maxscroll = textfield.maxScrollV;
-                if (this.owner.onmaxscroll.ready) this.owner.onmaxscroll.sendEvent(textfield.maxScrollV);
-            }
-            if (this.owner.hscroll != textfield.scrollH) {
-                this.owner.hscroll = textfield.scrollH;
-                if (this.owner.onhscroll.ready) this.owner.onhscroll.sendEvent(textfield.scrollH);
-            }
-            if (this.owner.maxhscroll != textfield.maxScrollH) {
-                this.owner.maxhscroll = textfield.maxScrollH;
-                if (this.owner.onmaxhscroll.ready) this.owner.onmaxhscroll.sendEvent(textfield.maxScrollH);
-            }
-        }
+    function __handleScrollEvent(e:Event = null) {
+      if (scroll !== textfield.scrollV) {
+        scroll = textfield.scrollV;
+        //Debug.info('__handleScrollEvent', 'scrollTop', lineNoToPixel(textfield.scrollV));
+        owner.scrollevent('scrollTop', lineNoToPixel(textfield.scrollV));
+      }
+      if (maxscroll !== textfield.maxScrollV) {
+        maxscroll = textfield.maxScrollV;
+        //Debug.info('__handleScrollEvent', 'scrollHeight', lineNoToPixel(textfield.maxScrollV));
+        owner.scrollevent('scrollHeight', lineNoToPixel(textfield.maxScrollV) + height);
+      }
+      if (hscroll !== textfield.scrollH) {
+        hscroll = textfield.scrollH;
+        //Debug.info('__handleScrollEvent', 'scrollLeft', textfield.scrollH);
+        owner.scrollevent('scrollLeft', textfield.scrollH);
+      }
+      if (maxhscroll !== textfield.maxScrollH) {
+        maxhscroll = textfield.maxScrollH;
+        //Debug.info('__handleScrollEvent', 'scrollWidth', textfield.maxScrollH);
+        owner.scrollevent('scrollWidth', textfield.maxScrollH + width);
+      }
+    }
 
 
       // turn on/off canceling of mouse event bubbling
@@ -147,6 +171,7 @@ public class LzTextSprite extends LzSprite {
             super.setWidth(w);
             if (w) {
                 this.textfield.width = w;
+                this.__handleScrollEvent();
             }
         }
 
@@ -154,6 +179,7 @@ public class LzTextSprite extends LzSprite {
             super.setHeight(h);
             if (h) {
                 this.textfield.height = h;
+                this.__handleScrollEvent();
             }
         }
 
@@ -227,9 +253,7 @@ public class LzTextSprite extends LzSprite {
             this.setText((args['text'] != null) ? String(args.text) : '');
             
             if (this.sizeToHeight) {
-                //text and format is set, measure it
-                var lm:TextLineMetrics = textclip.getLineMetrics(0);
-                var h = lm.ascent + lm.descent + lm.leading;
+                var h = this.lineheight;
                 //TODO [anba 20080602] is this ok for multiline? 
                 if (this.multiline) h *= textclip.numLines;
                 h += 4;//2*2px gutter, see flash docs for flash.text.TextLineMetrics 
@@ -237,7 +261,7 @@ public class LzTextSprite extends LzSprite {
             }
 
             addScrollEventListener();
-
+            __handleScrollEvent();
         }
 
 
@@ -283,12 +307,6 @@ public class LzTextSprite extends LzSprite {
         function setFontInfo () {
             this.font = LzFontManager.getFont( this.fontname , this.fontstyle );
             //Debug.write('setFontInfo this.font = ', this.font, 'this.fontname = ', this.fontname, this.fontstyle);
-
-            if (this.font != null) {
-                //Debug.write('font.leading', this.font.leading, 'font.height = ',this.font.height, 'fontsize =',this.fontsize);
-                this.lineheight = Number(this.font.leading) + ( Number(this.font.height) *
-                                                        Number(this.fontsize) / DEFAULT_SIZE );
-            }
         }
 
         /**
@@ -414,6 +432,14 @@ public class LzTextSprite extends LzSprite {
             tf.letterSpacing = this.letterspacing;
 
             this.textfield.defaultTextFormat = tf;
+
+            var lm:TextLineMetrics = this.textfield.getLineMetrics(0);
+            var lh = lm.ascent + lm.descent + lm.leading;
+            if (lh !== this.lineheight) {
+              this.lineheight = lh;
+              // Tell the owner the linescale has changed
+              this.owner.scrollevent('lineHeight', lh);
+            }
         }
  
       
@@ -535,16 +561,24 @@ function getBottomScroll() {
     return this.textfield.bottomScrollV;
 }
 
-function setXScroll ( n ){
-    Debug.write("LzTextSprite.setXScroll not yet implemented");
+function lineNoToPixel (n:Number):Number {
+  return (n - 1) * lineheight;
+}
+
+function pixelToLineNo (n:Number):Number {
+  return Math.ceil(n / lineheight) + 1;
 }
 
 function setYScroll ( n ){
-    Debug.write("LzTextSprite.setYScroll not yet implemented");
+  this.textfield.scrollV = this.pixelToLineNo((- n));
+}
+
+function setXScroll ( n ){
+  this.textfield.scrollH = (- n);
 }
 
 function setWordWrap ( wrap ){
-    Debug.write("LzTextSprite.setWordWrap not yet implemented");
+    Debug.warn("LzTextSprite.setWordWrap not yet implemented");
 }
 
 function getSelectionPosition() {

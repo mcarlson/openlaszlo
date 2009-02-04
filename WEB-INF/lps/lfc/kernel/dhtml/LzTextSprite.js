@@ -438,6 +438,14 @@ LzTextSprite.prototype.setScroll = function ( ){
     }
 }
 
+LzTextSprite.prototype.setYScroll = function (n){
+  this.__LZtextdiv.scrollTop = (- n);
+}
+
+LzTextSprite.prototype.setXScroll = function (n){
+  this.__LZtextdiv.scrollLeft = (- n);
+}
+
 LzTextSprite.prototype.__setWidth = LzSprite.prototype.setWidth;
 LzTextSprite.prototype.setWidth = function (w, force){
     if (w == null || w < 0 || isNaN(w) || (this.width == w && !force)) return;

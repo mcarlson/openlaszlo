@@ -397,14 +397,7 @@ var ondblclick = LzDeclaredEvent;
 /** @access private */
 var DOUBLE_CLICK_TIME = 500;
 
-// TODO [hqm 2008-03] Will asking for LzSprite.prototype.xxx  work in SWF9?
-if ($as3) {
-    /** @access private */
-    var capabilities = LzSprite.capabilities;
-} else {
-    /** @access private */
-    var capabilities = LzSprite.prototype.capabilities;
-}
+var capabilities;
 
 /**
   * Base level constructor for views. See LzNode.<method
@@ -429,6 +422,8 @@ override function construct ( parent , args) {
     this.mask = ip.mask;
 
     this.__makeSprite(args);
+    // Cache capabilities
+    this.capabilities = this.sprite.capabilities;
 
     if (args['width'] != null || this.__LZhasConstraint('width')) {
         this.hassetwidth = true;

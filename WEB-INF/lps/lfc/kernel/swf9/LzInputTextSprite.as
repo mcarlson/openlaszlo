@@ -32,7 +32,6 @@ public class LzInputTextSprite extends LzTextSprite {
     var enabled = true;
     var focusable = true;
     var hasFocus = false;
-    var scroll = 0;
 
     override public function __initTextProperties (args:Object) {
         super.__initTextProperties(args);

@@ -105,7 +105,10 @@ dynamic public class LzSprite extends Sprite {
       // flag to track sprite the mouse went over while down to send mouseup event later -  see LPP-7300 and LPP-7335
       private var __mouseoverInFront:LzSprite = null;
 
-      public static var capabilities:* = {
+      // NOTE: [2009-02-01 ptw] This may look like it should be a static
+      // var, but LFC code expects capabilities to be a
+      // property of the sprite, so we copy it to an instance var
+      static var capabilities:* = {
       rotation: true
       // Avoid scaling canvas to percentage values - SWF already scales the viewport size, so take window size literally to avoid scaling twice
       ,scalecanvastopercentage: false
@@ -125,7 +128,9 @@ dynamic public class LzSprite extends Sprite {
       ,runtimemenus: true
       ,setclipboard: true
       ,proxypolicy: true
-      }
+      ,linescrolling: true
+      };
+      var capabilities = LzSprite.capabilities;
 
       public function LzSprite (newowner = null, isroot = null) {
           // owner:*, isroot:Boolean

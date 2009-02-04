@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzcanvas
@@ -186,13 +186,7 @@ dynamic class LzCanvas extends LzView {
       */
     override function construct (parent , args) {
         this.__makeSprite(null);
-
-        // TODO [hqm 2008-04] how can we make this consistent across runtimes ? 
-        if ($as3) {
-            var capabilities = LzSprite.capabilities;
-        } else {
-            var capabilities = LzSprite.prototype.capabilities;
-        }
+        var capabilities = this.sprite.capabilities;
 
         // TODO: [2006-05-19 ptw] The original did not do this, should we?
         // super(null, args);

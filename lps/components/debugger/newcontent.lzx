@@ -3,7 +3,7 @@
 
  **************************************************************************-->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -325,11 +325,11 @@
 
 
 <method name="setLine" args="n">
-       this.textpane.setScroll(n);
+       this.textpane.setAttribute('scroll', n);
      </method>
 
 <method name="setLineNoScroll" args="n">
-       this.textpane.setScroll(n);
+       this.textpane.setAttribute('scroll', n);
      </method>
 
 <method name="computeVisibleRegion" >
@@ -352,17 +352,17 @@
 
 <method name="pageUp" args="n=null">
          var tpane = this.textpane;
-         tpane.setScroll(tpane.getScroll() - (tpane.getBottomScroll()  - tpane.getScroll()));
+         tpane.setAttribute('scroll', tpane.getScroll() - (tpane.getBottomScroll()  - tpane.getScroll()));
          this.updateDisplay();
      </method>
 <method name="pageDown" args="n=null">
          var tpane = this.textpane;
-         tpane.setScroll(tpane.getScroll() + (tpane.getBottomScroll()  - tpane.getScroll()));
+         tpane.setAttribute('scroll', tpane.getScroll() + (tpane.getBottomScroll()  - tpane.getScroll()));
          this.updateDisplay();
      </method>
 
 <method name="incScroll" args="n">
-       this.textpane.setScroll(this.textpane.getScroll() + n);
+       this.textpane.setAttribute('scroll', this.textpane.getScroll() + n);
        this.updateDisplay();
      </method>
 

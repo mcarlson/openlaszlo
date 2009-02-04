@@ -16,22 +16,19 @@
 
         <_newinternalinputtext name="inp" x="${parent.border}" 
             y="${parent.border}">
-            <attribute name="lineheight"
-                       value="${this.getTextHeight()/this.getMaxScroll()}"/>
-            <attribute name="maxtextheight"
-                       value="${this.getTextHeight() - (this.getTextHeight()/this.getMaxScroll())}"/>
-            <attribute name="maxheight" 
-                       value="${this.height + this.maxtextheight}"/>
-            <event name="onpos" />
-            <attribute name="pos" value="0" setter="this.setPos(pos)"/>
+            <attribute name="pos" value="0" type="number"/>
             
-            <method name="setPos" args="p">
-                if (this.isinited) {
-                    this.setScroll(Math.ceil(1 - (p / this.lineheight)));
+            <setter name="pos" args="p">
+                if (this.inited) {
+                    var scroll = Math.ceil(1 - (p / this.lineheight));
+                    if (scroll !== this.scroll) {
+                        this.setAttribute('scroll', scroll);
+                        //Debug.info('pos', p, this.scroll)
+                    }
                     this.pos = p;
                     if (this.onpos) this.onpos.sendEvent(p);
                 }
-            </method>
+            </setter>
             
             <method name="_constainWidth" args="IGNORE_THIS_ARG">
                 this.setAttribute("width", parent.width - parent.vscrollwidth - parent.border*2 );
@@ -47,7 +44,7 @@
             </handler>
             
             <handler name="onscroll" args="IGNORE_THIS_ARG">
-                this.setPos(-this.lineheight * (this.scroll - 1));
+                this.setAttribute('pos', -this.lineheight * (this.scroll - 1));
             </handler>
         </_newinternalinputtext>
 
@@ -64,13 +61,13 @@
             scrolltarget="parent.inp"
             x="${parent.width - this.width - parent.border + 1}" 
             stepsize="${parent.inp.lineheight}" 
-            scrollmax="${parent.inp.maxheight}">
+            scrollmax="${parent.inp.scrollheight}">
         </vscrollbar>
 -->
 
         <!--- Name of class to instantiate for vertical scroll bar.
               @keywords public -->
-        <attribute name="vscrollbarclassname" type="string" value="lz.vscrollbar"/>
+        <attribute name="vscrollbarclassname" type="string" value="vscrollbar"/>
         
         <!--- Our vertical scrollbar
               @keywords private -->
@@ -85,13 +82,14 @@
                 }
                 if ($debug) {
                     if (typeof(lz[classname]) == "undefined") {
-                        Debug.write("scrollbarclassname undefined", this);
+                        Debug.warn("scrollbarclassname undefined", this);
                     }
                 }
                 if(typeof(lz[classname]) != "undefined"){
                     this._vs = new lz[classname](this, 
                                                  { axis: "y",
                                                    scrollattr: "pos",
+                                                   scrollmax: "0",
                                                    scrolltarget: this.inp});
                                                    
                     var xDel = new lz.Delegate(this, 'updateX');
@@ -99,28 +97,31 @@
                     xDel.register(this, 'onwidth');
                     xDel.register(this, 'onborder');
                     
-                    new lz.Delegate(this, 'updateScrollMax', this.inp, 'onmaxheight');
+                    new lz.Delegate(this, 'updateScrollMax', this.inp, 'onscrollheight');
                     new lz.Delegate(this, 'updateStepSize', this.inp, 'onlineheight');
+                    // call once manually
+                    this.updateX();
+                    this.updateStepSize();
                 }
 
             }
         </method>
         
-        <method name="updateX" args="IGNORE_THIS_ARG">
+        <method name="updateX" args="IGNORE_THIS_ARG = null">
             if(this['_vs']){
                 this._vs.setAttribute("x", this.width - this._vs.width );
             }
         </method>
         
-        <method name="updateStepSize" args="IGNORE_THIS_ARG">
+        <method name="updateStepSize" args="IGNORE_THIS_ARG = null">
             if(this['_vs']){
                 this._vs.setAttribute("stepsize", this.inp.lineheight);
             }
         </method>
         
-        <method name="updateScrollMax" args="IGNORE_THIS_ARG">
+        <method name="updateScrollMax" args="IGNORE_THIS_ARG = null">
             if(this['_vs']){
-                this._vs.setAttribute("scrollmax", this.inp.maxheight);
+                this._vs.setAttribute("scrollmax", this.inp.scrollheight);
             }
         </method>
         

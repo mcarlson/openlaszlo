@@ -899,6 +899,14 @@ LzInputTextSprite.prototype.setFontName = function (fname) {
     }    
 }
 
+LzInputTextSprite.prototype.setYScroll = function (n){
+  this.__LzInputDiv.scrollTop = (- n);
+}
+
+LzInputTextSprite.prototype.setXScroll = function (n){
+  this.__LzInputDiv.scrollLeft = (- n);
+}
+
 LzInputTextSprite.prototype.setWidth = function (w) {
     if (w == null || w < 0 || isNaN(w) || this.width == w) return;
     // call LzSprite.setWidth();

@@ -383,6 +383,7 @@ LzSprite.prototype.capabilities = {
     ,runtimemenus: false
     ,setclipboard: false
     ,proxypolicy: false
+    ,linescrolling: false
 }
 
 LzSprite.prototype.__updateQuirks = function () {

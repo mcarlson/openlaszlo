@@ -70,6 +70,7 @@ LzSprite.prototype.capabilities = {
     ,runtimemenus: true
     ,setclipboard: true
     ,proxypolicy: true
+    ,linescrolling: true
 }
 
 /** Turns accessibility on by showing/hiding the global yellow flash focusrect
