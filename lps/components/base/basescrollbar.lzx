@@ -450,7 +450,7 @@
             
             
             <example title="An unconventional scrollbar">
-            &lt;canvas height="120" bgcolor="silver" maxtextheight="700"&gt;
+            &lt;canvas height="120" bgcolor="silver"&gt;
               &lt;class name="myscrollbar" extends="basescrollbar" width="20"&gt;
                 &lt;view name="scrolltrack" width="100%" options="releasetolayout"&gt;
                   &lt;basescrolltrack x="5" direction="-1"
