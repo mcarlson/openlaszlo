@@ -16,6 +16,13 @@
 
         <_newinternalinputtext name="inp" x="${parent.border}" 
             y="${parent.border}">
+            <!-- Supplied by lztext now
+                attribute name="lineheight"
+                       value="${this.getTextHeight()/this.getMaxScroll()}"/-->
+            <attribute name="maxtextheight"
+                       value="${this.lineheight * this.maxscroll}"/>
+            <attribute name="maxheight" 
+                       value="${this.height + this.maxtextheight}"/>
             <attribute name="pos" value="0" type="number"/>
             
             <setter name="pos" args="p">
@@ -121,7 +128,7 @@
         
         <method name="updateScrollMax" args="IGNORE_THIS_ARG = null">
             if(this['_vs']){
-                this._vs.setAttribute("scrollmax", this.inp.scrollheight);
+                this._vs.setAttribute("scrollmax", this.inp.maxheight);
             }
         </method>
         

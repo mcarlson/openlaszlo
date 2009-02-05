@@ -14,11 +14,11 @@
 
     <!--- @keywords private -->
     <method name="construct" args="parent, args">  <![CDATA[
+        super.construct( parent, args );
         // We _do_ support colortransform, independent of the
         // platform's support
         this.capabilities = new LzInheritedHash(this.capabilities);
         this.capabilities.colortransform = true;
-        super.construct( parent, args );
         if ( args['width'] == null ){
             args['width'] = this.immediateparent.width;
         }

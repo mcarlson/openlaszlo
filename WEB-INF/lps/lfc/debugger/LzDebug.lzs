@@ -1108,7 +1108,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  var inspectContext;
+  var inspectContext = null;
 
   /**
    * Body of inspect: Create an LZMessage of the object and its

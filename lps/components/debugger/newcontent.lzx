@@ -279,8 +279,8 @@
                      var tpane = classroot.textpane;
                      var mscroll = tpane.getMaxScroll();
                      var scroll = tpane.getScroll();
-                     var percent = (this.y - bh)  / (parent.height - (bh + bh + parent.thumbheight));
-                     var line = Math.floor(mscroll * percent) +1;
+                     var percent = Math.min(1, Math.max(0, (this.y - bh)  / (parent.height - (bh + bh + parent.thumbheight))));
+                     var line = Math.floor((mscroll-1) * percent) + 1;
                      this.classroot.setLineNoScroll(line);
                  ]]>
            </method> 
@@ -312,7 +312,7 @@
 
 <method name="clear">
       this.textpane.clearText();
-      this.setLine(0);
+      this.setLine(1);
       this.updateDisplay();
      </method>
 
@@ -352,17 +352,18 @@
 
 <method name="pageUp" args="n=null">
          var tpane = this.textpane;
-         tpane.setAttribute('scroll', tpane.getScroll() - (tpane.getBottomScroll()  - tpane.getScroll()));
+         tpane.setAttribute('scroll', Math.max(1, tpane.getScroll() - (tpane.getBottomScroll()  - tpane.getScroll())));
          this.updateDisplay();
      </method>
 <method name="pageDown" args="n=null">
          var tpane = this.textpane;
-         tpane.setAttribute('scroll', tpane.getScroll() + (tpane.getBottomScroll()  - tpane.getScroll()));
+         tpane.setAttribute('scroll', Math.min(tpane.maxscroll, tpane.getScroll() + (tpane.getBottomScroll()  - tpane.getScroll())));
          this.updateDisplay();
      </method>
 
 <method name="incScroll" args="n">
-       this.textpane.setAttribute('scroll', this.textpane.getScroll() + n);
+       var tpane = this.textpane;
+       tpane.setAttribute('scroll', Math.min(tpane.maxscroll, Math.max(1, tpane.getScroll() + n)));
        this.updateDisplay();
      </method>
 

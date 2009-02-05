@@ -9,6 +9,9 @@
  * @subtopic Text
  */
 
+{
+#pragma "warnUndefinedReferences=true"
+
 /**
  * <p>This class is used for non-editable text fields (as opposed to
  * <sgmltag class="element" role="LzInputText">&lt;inputtext&gt;</sgmltag>).  A text field can be initalized
@@ -243,6 +246,7 @@ dynamic class LzText extends LzView with LzFormatter {
     tsprite.setWidth(val);
     super.$lzc$set_width(val);
     // maxhscroll depends on width
+    if (this.scrollwidth < this.width) { this.scrollwidth = this.width; }
     this.updateAttribute('maxhscroll', this.scrollwidth - this.width);
     // recalculate height
     if (this.sizeToHeight) {
@@ -301,9 +305,17 @@ dynamic class LzText extends LzView with LzFormatter {
     if (this.capabilities.linescrolling) {
       lineNo = tsprite.pixelToLineNo(value);
     } else {
-      lineNo = Math.floor(value / this.lineheight) + 1;
+      lineNo = Math.floor((value / this.lineheight) + 1);
     }
     this.updateAttribute(name, lineNo);
+    if ($dhtml) {
+      // DHTML sprites do not have line attributes
+    } else if ($debug) {
+      // Max's assertion that line attributes match the sprite
+      if (this[name] != this.sprite[name]) {
+        Debug.warn("%w.%s: %d != %d", this, name, this[name], this.sprite[name]);
+      }
+    }
   }
 
   /**
@@ -313,7 +325,7 @@ dynamic class LzText extends LzView with LzFormatter {
    * @type Number
    * @keywords read-only
    */
-  var lineheight:Number;
+  var lineheight:Number = 0;
   /** @access private */
   function $lzc$set_lineheight(x:Number):void {
     if ($debug) { Debug.error("lineheight is read-only"); }
@@ -335,6 +347,12 @@ dynamic class LzText extends LzView with LzFormatter {
   var yscroll:Number = 0;
   /** @access private */
   function $lzc$set_yscroll(n:Number):void {
+    if (n > 0) {
+      if ($debug) {
+        Debug.warn("Invalid value for %w.yscroll: %w", this, n);
+      }
+      n = 0;
+    }
     this.tsprite.setYScroll(n);
     this.updateAttribute('yscroll', n);
     this.updateLineAttribute('scroll', (- n));
@@ -358,7 +376,7 @@ dynamic class LzText extends LzView with LzFormatter {
    * @type number
    * @keywords read-only
    */
-  var scrollheight:Number;
+  var scrollheight:Number = 0;
   /** @access private */
   function $lzc$set_scrollheight(x:Number):void {
     if ($debug) { Debug.error("scrollheight is read-only"); }
@@ -380,6 +398,12 @@ dynamic class LzText extends LzView with LzFormatter {
   var xscroll:Number = 0;
   /** @access private */
   function $lzc$set_xscroll(n:Number):void {
+    if (n > 0) {
+      if ($debug) {
+        Debug.warn("Invalid value for %w.xscroll: %w", this, n);
+      }
+      n = 0;
+    }
     this.tsprite.setXScroll(n);
     this.updateAttribute('xscroll', n);
     this.updateAttribute('hscroll', (- n));
@@ -403,7 +427,7 @@ dynamic class LzText extends LzView with LzFormatter {
    * @type number
    * @keywords read-only
    */
-  var scrollwidth:Number;
+  var scrollwidth:Number = 0;
   /** @access private */
   function $lzc$set_scrollwidth(x:Number):void {
     if ($debug) { Debug.error("scrollwidth is read-only"); }
@@ -428,6 +452,12 @@ dynamic class LzText extends LzView with LzFormatter {
   var scroll:Number = 1;
   /** @access private */
   function $lzc$set_scroll(n:Number):void {
+    if (n < 1 || n > this.maxscroll) {
+      if ($debug) {
+        Debug.warn("Invalid valuefor %w.scroll: %w (limits [1, %w])", this, n, this.maxscroll);
+      }
+      n = n < 1 ? 1 : this.maxscroll;
+    }
     var tsprite = this.tsprite;
     var pixel:Number;
     if (this.capabilities.linescrolling) {
@@ -461,14 +491,6 @@ dynamic class LzText extends LzView with LzFormatter {
   }
   /** @lzxtype event */
   var onmaxscroll:LzDeclaredEventClass = LzDeclaredEvent;
-  /**
-   * maxscroll depends on height
-   * @access private
-   */
-  override function $lzc$set_height(v) {
-    super.$lzc$set_height(v);
-    this.updateLineAttribute('maxscroll', this.scrollheight - this.height);
-  }
 
   /**
    * The horizontal scroll position in pixels.  Default 0.
@@ -478,6 +500,12 @@ dynamic class LzText extends LzView with LzFormatter {
   var hscroll:Number = 0;
   /** @access private */
   function $lzc$set_hscroll(n:Number):void {
+    if (n < 0 || n > this.maxhscroll) {
+      if ($debug) {
+        Debug.warn("Invalid value for %w.hscroll: %w (limits [0, %w])", this, n, this.maxhscroll);
+      }
+      n = n < 1 ? 1 : this.maxhscroll;
+    }
     // Call the pixel interface which will update the attribute and
     // send the event
     this.$lzc$set_xscroll((- n));
@@ -520,29 +548,31 @@ dynamic class LzText extends LzView with LzFormatter {
   function scrollevent(name:String, value):void {
     switch (name) {
       case 'scrollTop':
-        this.updateAttribute('yscroll', value);
+        this.updateAttribute('yscroll', (- value));
         this.updateLineAttribute('scroll', value);
         break;
       case 'scrollLeft':
-        this.updateAttribute('xscroll', value);
+        this.updateAttribute('xscroll', (- value));
         this.updateAttribute('hscroll', value);
         break;
       case 'scrollHeight':
         this.updateAttribute('scrollheight', value);
         // This can't be negative
-        this.updateLineAttribute('maxscroll', Math.max(0, value - this.height));
+        this.updateLineAttribute('maxscroll', Math.max(0, value - this.tsprite.height));
         break;
       case 'scrollWidth':
         this.updateAttribute('scrollwidth', value);
         // This can't be negative
-        this.updateAttribute('maxhscroll', Math.max(0, value - this.width));
+        this.updateAttribute('maxhscroll', Math.max(0, value - this.tsprite.width));
         break;
       case 'lineHeight':
         this.updateAttribute('lineheight', value);
         // Update all the line-based values...
-        this.updateLineAttribute('scroll', this.yscroll);
-        // This can't be negative
-        this.updateLineAttribute('maxscroll', Math.max(0, this.scrollheight - this.height));
+        if (this.inited) {
+          this.updateLineAttribute('scroll', (- this.yscroll));
+          // This can't be negative
+          this.updateLineAttribute('maxscroll', Math.max(0, this.scrollheight - this.tsprite.height));
+        }
         break;
       default:
         if ($debug) {
@@ -627,7 +657,7 @@ dynamic class LzText extends LzView with LzFormatter {
     }
     var tsprite = this.tsprite;
     if (this.visible) tsprite.setVisible(this.visible);
-    if (this.maxlength != null && t.length > this.maxlength){
+    if (t.length > this.maxlength){
       t = t.substring(0, this.maxlength);
     }
     tsprite.setText(t);
@@ -670,10 +700,16 @@ dynamic class LzText extends LzView with LzFormatter {
    * @lzxtype numberExpression
    * @type Number
    */
-  var maxlength;
+  var maxlength:Number = Infinity;
   /** @access private */
   function $lzc$set_maxlength(val) {
-    if (val == null || val == '') return;
+    if (val == null) { val = Infinity; }
+    if (isNaN(val)) {
+      if ($debug) {
+        Debug.warn("Invalid value for %w.maxlength: %w", this, val);
+      }
+      return;
+    }
     this.maxlength = val;
     this.tsprite.setMaxLength(val);
     if (this.onmaxlength.ready) this.onmaxlength.sendEvent(val);
@@ -739,7 +775,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if (! (align == "left" || align == "right" || align == "center"
            || align == "justify")) {
       if ($debug) {
-        Debug.warn("invalid value for %w.textalign = %w", this, align);
+        Debug.warn("Invalid value for %w.textalign: %w", this, align);
       }
       align = "left";
     }
@@ -790,7 +826,7 @@ dynamic class LzText extends LzView with LzFormatter {
       // CSS actually also allows: overline, line-through, blink
       // but Flash can't handle that..
       if ($debug) {
-        Debug.warn("invalid value for %w.textdecoration = %w", this, decoration);
+        Debug.warn("Invalid value for %w.textdecoration: %w", this, decoration);
       }
       decoration = "none";
     }
@@ -851,7 +887,7 @@ dynamic class LzText extends LzView with LzFormatter {
     }
 
     this.text = ((args['text'] != null) ? String(args.text) : "");
-    if(this.maxlength != null && this.text.length > this.maxlength){
+    if(this.text.length > this.maxlength){
       this.text = this.text.substring(0, this.maxlength);
     }
 
@@ -1057,12 +1093,14 @@ dynamic class LzText extends LzView with LzFormatter {
 
   /** @access private */
   function getScroll ( ){
-    return this.tsprite.getScroll();
+    //    if ($debug) Debug.deprecated(this, arguments.callee, 'scroll');
+    return this.scroll;
   }
 
   /** @access private */
   function getMaxScroll ( ){
-    return this.tsprite.getMaxScroll();
+    //    if ($debug) Debug.deprecated(this, arguments.callee, 'maxscroll');
+    return this.maxscroll;
   }
   /** @access private */
   function $lzc$getMaxScroll_dependencies ( who , self){
@@ -1071,7 +1109,8 @@ dynamic class LzText extends LzView with LzFormatter {
 
   /** @access private */
   function getBottomScroll ( ){
-    return this.tsprite.getBottomScroll();
+    //    if ($debug) Debug.deprecated(this, arguments.callee, 'scroll + height / lineheight');
+    return this.scroll + this.height / this.lineheight;
   }
 
   /**
@@ -1522,3 +1561,4 @@ dynamic class LzText extends LzView with LzFormatter {
 lz[LzText.tagname] = LzText;
 
 
+}

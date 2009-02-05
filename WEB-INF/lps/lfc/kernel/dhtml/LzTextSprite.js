@@ -16,7 +16,7 @@ var LzTextSprite = function(owner) {
 
     this.__LZdiv = document.createElement('div');
     this.__LZdiv.className = 'lzdiv';
-    this.__LZtextdiv = document.createElement('div');
+    this.scrolldiv = this.__LZtextdiv = document.createElement('div');
     this.__LZtextdiv.className = 'lzdiv';
     this.__LZdiv.appendChild(this.__LZtextdiv);  
     if (this.quirks.emulate_flash_font_metrics) {
@@ -81,6 +81,7 @@ LzTextSprite.prototype.setFontSize = function (fsize) {
         this._fontSize = fsize;
         this.__LZdiv.style.fontSize = fsize;
         this._styledirty = true;
+        this.__updatelineheight();
     }    
 }
 
@@ -105,12 +106,14 @@ LzTextSprite.prototype.setFontStyle = function (fstyle) {
         this._fontWeight = fweight;
         this.__LZdiv.style.fontWeight = fweight;
         this._styledirty = true;
+        this.__updatelineheight();
     }
 
     if (fstyle != this._fontStyle) {
         this._fontStyle = fstyle;
         this.__LZdiv.style.fontStyle = fstyle;
         this._styledirty = true;
+        this.__updatelineheight();
     }
 }
 
@@ -119,10 +122,59 @@ LzTextSprite.prototype.setFontName = function (fname) {
         this._fontFamily = fname;
         this.__LZdiv.style.fontFamily = fname;
         this._styledirty = true;
+        this.__updatelineheight();
     }
 }
 
 LzTextSprite.prototype.setTextColor = LzSprite.prototype.setColor;
+
+LzTextSprite.prototype.scrollTop;
+LzTextSprite.prototype.scrollHeight;
+LzTextSprite.prototype.scrollLeft;
+LzTextSprite.prototype.scrollWidth;
+LzTextSprite.prototype.lineHeight;
+
+LzTextSprite.prototype.__updatefieldsize = function ( ){
+  var lzv = this.owner;
+  var scrolldiv = this.scrolldiv;
+
+  if (this._styledirty) {
+    this.__updatelineheight();
+  }
+  var scrollHeight = scrolldiv.scrollHeight;
+  if (this.scrollHeight !== scrollHeight) {
+    this.scrollHeight = scrollHeight;
+    lzv.scrollevent('scrollHeight', scrollHeight);
+  }
+  var scrollTop = scrolldiv.scrollTop;
+  if (this.scrollTop !== scrollTop) {
+    this.scrollTop = scrollTop;
+    lzv.scrollevent('scrollTop', scrollTop);
+  }
+  var scrollWidth = scrolldiv.scrollWidth;
+  if (this.scrollWidth !== scrollWidth) {
+    this.scrollWidth = scrollWidth;
+    lzv.scrollevent('scrollWidth', scrollWidth);
+  }
+  var scrollLeft = scrolldiv.scrollLeft;
+  if (this.scrollLeft !== scrollLeft) {
+    this.scrollLeft = scrollLeft;
+    lzv.scrollevent('scrollLeft', scrollLeft);
+  }
+}
+
+LzTextSprite.prototype.lineHeight;
+
+LzTextSprite.prototype.__updatelineheight = function ( ){
+  var lzv = this.owner;
+  var scrolldiv = this.scrolldiv;
+  var lineHeight = this.getTextHeight();
+  if (this.lineHeight !== lineHeight) {
+    this.lineHeight = lineHeight;
+    lzv.scrollevent('lineHeight', lineHeight);
+  }
+}
+
 
 LzTextSprite.prototype.setText = function(t, force) {
     if (force != true && this.text == t) return;
@@ -147,6 +199,7 @@ LzTextSprite.prototype.setText = function(t, force) {
     }
     this.__LZtextdiv.innerHTML = t;
     this.fieldHeight = null;
+    this.__updatefieldsize();
 }
 
 LzTextSprite.prototype.setMultiline = function(m) {
@@ -439,11 +492,11 @@ LzTextSprite.prototype.setScroll = function ( ){
 }
 
 LzTextSprite.prototype.setYScroll = function (n){
-  this.__LZtextdiv.scrollTop = (- n);
+  this.scrolldiv.scrollTop = this.scrollTop = (- n);
 }
 
 LzTextSprite.prototype.setXScroll = function (n){
-  this.__LZtextdiv.scrollLeft = (- n);
+  this.scrolldiv.scrollLeft = this.scrollLeft = (- n);
 }
 
 LzTextSprite.prototype.__setWidth = LzSprite.prototype.setWidth;
@@ -458,6 +511,7 @@ LzTextSprite.prototype.setWidth = function (w, force){
     var hp = this.CSSDimension(this.height >= this.__hpadding ? this.height - this.__hpadding : 0);
     this.__LZtextdiv.style.clip = 'rect(0px ' + wp + ' ' + hp + ' 0px)';
     this.__setWidth(w);
+    this.__updatefieldsize();
     this._styledirty = true;
 }
 
@@ -469,6 +523,7 @@ LzTextSprite.prototype.setHeight = function (h){
     this.__LZtextdiv.style.height = hp;
     this.__LZtextdiv.style.clip = 'rect(0px ' + wp + ' ' + hp + ' 0px)';
     this.__setHeight(h);
+    this.__updatefieldsize();
     if (this.multiline) this._styledirty = true;
 }
 

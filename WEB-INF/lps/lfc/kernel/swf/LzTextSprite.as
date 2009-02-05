@@ -375,7 +375,7 @@ LzTextSprite.prototype.getTextHeight = function ( ){
   * @access private
   */
 LzTextSprite.prototype.setScroll = function ( h ){
-    this.__LZtextclip.scroll = h;
+    this.__LZtextclip.scroll = this.scroll = h;
 }
 
 /**
@@ -418,7 +418,7 @@ LzTextSprite.prototype.lineNoToPixel = function (n:Number):Number {
 }
 
 LzTextSprite.prototype.pixelToLineNo = function (n:Number):Number {
-  return Math.ceil(n / this.lineheight) + 1;
+  return Math.floor((n / this.lineheight) + 1);
 }
 
 /**
@@ -444,7 +444,7 @@ LzTextSprite.prototype.setYScroll = function ( n ){
 
     // Entire flash text field covers the visible textview height
     if ((rh + this.yscroll) >= this.height) {
-        this.__LZtextclip.scroll = 0;
+        this.__LZtextclip.scroll = this.scroll = 1;
         this.__LZtextclip._y = Math.min(0, this.yscroll);
     } else {
         // The flash text field would have to be scrolled up beyond it's bottom, so
@@ -460,7 +460,7 @@ LzTextSprite.prototype.setYScroll = function ( n ){
         var frac = Math.round(excess - (nlines * lh));
         //Debug.write("fraction="+fraction);
         // lines are 1-based
-        this.__LZtextclip.scroll = nlines + 1;
+        this.__LZtextclip.scroll = this.scroll = nlines + 1;
         // need to figure out where to put the fraction (add or subtract??)
         this.__LZtextclip._y = - Math.floor((dy + frac));
     }
@@ -594,9 +594,8 @@ LzTextSprite.prototype.getText = function() {
       if (h != this.height) this.setHeight(mc._height);
     }
 
-    if (this.multiline && this.scroll == 0 ) {
-        var scrolldel = new LzDelegate(this, "__LZforceScrollAttrs");
-        lz.Idle.callOnIdle(scrolldel);
+    if (this.multiline) {
+      this.__LZforceScrollAttrs();
     }
 
     // Fix for lpp-5449 (reset the selection if the new text is not
@@ -862,8 +861,19 @@ LzTextSprite.prototype.getThickness = function() {
 /**
   * @access private
   */
+LzTextSprite.prototype.__LZupdateScrollAttrs = function ( ignore ) {
+  this.__LZtextclip.onScroller();
+}
+
+/**
+  * @access private
+  */
 LzTextSprite.prototype.__LZforceScrollAttrs = function ( ignore ) {
-    this.__LZtextclip.onScroller();
+  this.__LZupdateScrollAttrs();
+  // The scroll attributes don't update right away, so we have to
+  // wait...
+  var scrolldel = new LzDelegate(this, "__LZupdateScrollAttrs");
+  lz.Idle.callOnIdle(scrolldel);
 }
 
 /**

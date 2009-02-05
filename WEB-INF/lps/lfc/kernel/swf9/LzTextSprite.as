@@ -487,7 +487,7 @@ public class LzTextSprite extends LzSprite {
 
 
 function setHScroll(s:Number) {
-    this.textfield.scrollH = s;
+    this.textfield.scrollH = this.hscroll = s;
 }
 
 function setAntiAliasType( aliasType:String ):void {
@@ -547,7 +547,7 @@ function setResize ( val:Boolean ) {
 }
 
 function setScroll ( h:Number ) {
-    this.textfield.scrollV = h;
+    this.textfield.scrollV = this.scroll = h;
 }
 function getScroll() {
     return this.textfield.scrollV;
@@ -566,15 +566,15 @@ function lineNoToPixel (n:Number):Number {
 }
 
 function pixelToLineNo (n:Number):Number {
-  return Math.ceil(n / lineheight) + 1;
+  return Math.floor((n / lineheight) + 1);
 }
 
 function setYScroll ( n ){
-  this.textfield.scrollV = this.pixelToLineNo((- n));
+  this.textfield.scrollV = this.scroll = this.pixelToLineNo((- n));
 }
 
 function setXScroll ( n ){
-  this.textfield.scrollH = (- n);
+  this.textfield.scrollH = this.hscroll = (- n);
 }
 
 function setWordWrap ( wrap ){

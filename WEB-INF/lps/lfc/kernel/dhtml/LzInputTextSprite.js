@@ -97,6 +97,7 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
         this.____hpadding = 0;
     }
 
+    this.scrolldiv = this.__LzInputDiv;
     //Debug.write(this.__LzInputDiv.style);
     this.__setTextEvents(true);
 }
@@ -290,6 +291,7 @@ LzInputTextSprite.prototype.setText = function(t) {
     this.__createInputText(t);
     this.__LzInputDiv.value = t;
     this.fieldHeight = null;
+    this.__updatefieldsize();
 }
 
 LzInputTextSprite.prototype.__setTextEvents = function(c) {
@@ -899,14 +901,6 @@ LzInputTextSprite.prototype.setFontName = function (fname) {
     }    
 }
 
-LzInputTextSprite.prototype.setYScroll = function (n){
-  this.__LzInputDiv.scrollTop = (- n);
-}
-
-LzInputTextSprite.prototype.setXScroll = function (n){
-  this.__LzInputDiv.scrollLeft = (- n);
-}
-
 LzInputTextSprite.prototype.setWidth = function (w) {
     if (w == null || w < 0 || isNaN(w) || this.width == w) return;
     // call LzSprite.setWidth();
@@ -915,6 +909,7 @@ LzInputTextSprite.prototype.setWidth = function (w) {
         this.__LZclickdiv.style.width = nw;
         this.__LZinputclickdiv.style.width = nw;
     }   
+    this.__updatefieldsize();
 }
 
 LzInputTextSprite.prototype.setHeight = function (h) {
@@ -932,6 +927,7 @@ LzInputTextSprite.prototype.setHeight = function (h) {
             }
         }
     }   
+    this.__updatefieldsize();
 }   
 
 // Must match LzSprite implementation
