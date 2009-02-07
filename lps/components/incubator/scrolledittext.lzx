@@ -14,8 +14,11 @@
               height="${parent.height-parent.border*2}" 
               x="${parent.border}" y="${parent.border}"/>
 
-        <_newinternalinputtext name="inp" x="${parent.border}" 
-            y="${parent.border}">
+        <_newinternalinputtext name="inp" 
+            x="${parent.border}" 
+            y="${parent.border}" 
+            height="${parent.height - parent.border * 2}" 
+            width="${parent.width - parent.vscrollwidth - parent.border*2}">
             <!-- Supplied by lztext now
                 attribute name="lineheight"
                        value="${this.getTextHeight()/this.getMaxScroll()}"/-->
@@ -36,19 +39,6 @@
                     if (this.onpos) this.onpos.sendEvent(p);
                 }
             </setter>
-            
-            <method name="_constainWidth" args="IGNORE_THIS_ARG">
-                this.setAttribute("width", parent.width - parent.vscrollwidth - parent.border*2 );
-            </method>
-            
-            <method name="_constainHeight" args="IGNORE_THIS_ARG">
-                this.setAttribute("height", parent.height - parent.border*2 );
-            </method>
-            
-            <handler name="oninit">
-                this.applyConstraintMethod('_constainWidth', [parent, "width", parent, "vscrollwidth", parent, "border"]);
-                this.applyConstraintMethod('_constainHeight', [parent, "height", parent, "border"]);
-            </handler>
             
             <handler name="onscroll" args="IGNORE_THIS_ARG">
                 this.setAttribute('pos', -this.lineheight * (this.scroll - 1));

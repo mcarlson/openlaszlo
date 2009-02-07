@@ -44,34 +44,18 @@ LzInputTextSprite.prototype.____crregexp = new RegExp('\\r\\n', 'g');
 LzInputTextSprite.prototype.__createInputText = function(t) {
     if (this.__LzInputDiv) return;
     //Debug.write('Multiline', this, this.multiline, this.owner.multiline);
-    if (this.owner && this.owner.password) {
-        this.__LzInputDiv = document.createElement('input');
-        lz.embed.__setAttr(this.__LzInputDiv, 'type', 'password');
-    } else if (this.owner && this.owner.multiline) {
-        this.__LzInputDiv = document.createElement('textarea');
-    } else {    
-        this.__LzInputDiv = document.createElement('input');
-        lz.embed.__setAttr(this.__LzInputDiv, 'type', 'text');
-    }
-    if (this.quirks.firefox_autocomplete_bug) {
-        lz.embed.__setAttr(this.__LzInputDiv, 'autocomplete', 'off');
-    }
-    this.__LzInputDiv.owner = this;
-    if (this.quirks.emulate_flash_font_metrics) {
-        if (this.owner && this.owner.multiline) {
-            this.__LzInputDiv.className = 'lzswfinputtextmultiline';
-        } else {
-            this.____hpadding = 1;
-            this.__LzInputDiv.className = 'lzswfinputtext';
-        }    
-    } else {    
-        this.__LzInputDiv.className = 'lzinputtext';
-    }    
+    var type = '';
     if (this.owner) {
-        lz.embed.__setAttr(this.__LzInputDiv, 'name', this.owner.name);
+        if (this.owner.password) {
+            type = 'password'
+        } else if (this.owner.multiline) {
+            type = 'multiline'
+        }
     }
+    this.__createInputDiv(type);
     if (t == null) t = '';
     lz.embed.__setAttr(this.__LzInputDiv, 'value', t);
+
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable) {
             this.__LZinputclickdiv = document.createElement('img');
@@ -93,13 +77,73 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
     }    
     this.__LZdiv.appendChild(this.__LzInputDiv);
 
-    if (this.quirks['inputtext_size_includes_margin']) {
-        this.____hpadding = 0;
-    }
-
-    this.scrolldiv = this.__LzInputDiv;
     //Debug.write(this.__LzInputDiv.style);
     this.__setTextEvents(true);
+}
+
+LzInputTextSprite.prototype.__createInputDiv = function(type) {
+    if (type === 'password') {
+        this.__LzInputDiv = document.createElement('input');
+        lz.embed.__setAttr(this.__LzInputDiv, 'type', 'password');
+    } else if (type === 'multiline') {
+        this.__LzInputDiv = document.createElement('textarea');
+    } else {    
+        this.__LzInputDiv = document.createElement('input');
+        lz.embed.__setAttr(this.__LzInputDiv, 'type', 'text');
+    }
+    if (this.quirks.firefox_autocomplete_bug) {
+        lz.embed.__setAttr(this.__LzInputDiv, 'autocomplete', 'off');
+    }
+    this.__LzInputDiv.owner = this;
+    if (this.quirks.emulate_flash_font_metrics) {
+        if (this.owner && this.owner.multiline) {
+            // Should reflect CSS defaults in LzSprite.js
+            this.____hpadding = 2;
+            this.__LzInputDiv.className = 'lzswfinputtextmultiline';
+        } else {
+            this.____hpadding = 1;
+            this.__LzInputDiv.className = 'lzswfinputtext';
+        }    
+        if (this.quirks['inputtext_size_includes_margin']) {
+            this.____hpadding = 0;
+        }
+    } else {    
+        this.__LzInputDiv.className = 'lzinputtext';
+    }    
+    if (this.owner) {
+        lz.embed.__setAttr(this.__LzInputDiv, 'name', this.owner.name);
+    }
+    this.scrolldiv = this.__LzInputDiv;
+}
+
+LzInputTextSprite.prototype.setMultiline = function(ml) {
+    var oldval = this.multiline;
+    this.multiline = ml == true;
+    if (oldval != null && this.multiline != oldval) {
+        // cache original values
+        var style = this.__LzInputDiv.style;
+        var scrollleft = this.__LzInputDiv.scrollLeft;
+        var scrolltop = this.__LzInputDiv.scrollTop;
+
+        // destroy old element
+        this.__setTextEvents(false);
+        this.__discardElement(this.__LzInputDiv);
+
+        this.__createInputDiv(ml ? 'multiline' : '');
+
+        // must set before appending
+        lz.embed.__setAttr(this.__LzInputDiv, 'style', style);
+        this.__LZdiv.appendChild(this.__LzInputDiv);
+        this.__LzInputDiv.style.overflow = ml ? 'hidden' : 'visible';
+        this.__LzInputDiv.scrollLeft = scrollleft;
+        this.__LzInputDiv.scrollTop = scrolltop;
+
+        // restore text events
+        this.__setTextEvents(true);
+
+        // restore text content
+        this.setText(this.text, true);
+    }
 }
 
 // called from the scope of __LZinputclickdiv
@@ -494,6 +538,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
 
     if (eventname == 'onkeypress') {
         if (sprite.restrict || (sprite.multiline && view.maxlength > 0)) {
+            sprite.__updatefieldsize();
             var keycode = evt.keyCode;
             var charcode = sprite.quirks.text_event_charcode ? evt.charCode : evt.keyCode;
             // only printable characters or carriage return (modifier keys must not be active)

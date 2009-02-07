@@ -36,8 +36,7 @@
         </button>
     </view>
 
-        <!--scrolledittext x="20" y="20" width="300" height="200" vscrollbarclassname="newvscrollbar">this is the fun scrolledittext</scrolledittext-->
-
+    <scrolledittext x="20" y="20" width="300" height="200">this is the fun scrolledittext with a default scrollbar</scrolledittext>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2006-2007, 2009 Laszlo Systems, Inc. All Rights Reserved.               *
