@@ -1,7 +1,7 @@
 /**
   * LzMouseKernel.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -26,6 +26,7 @@ class LzMouseKernel  {
     static var __callback = null;
     static var __scope = null;
     static var __lastMouseDown = null;
+    static var __mouseLeft:Boolean = false;
     static var __listeneradded:Boolean = false ;
 
     /**
@@ -53,6 +54,13 @@ class LzMouseKernel  {
             LzMouseKernel.__lastMouseDown.__globalmouseup(event);
             __lastMouseDown = null;
         } else {
+            if (__mouseLeft && event.buttonDown && LzMouseKernel.__lastMouseDown != null) {
+                __mouseLeft = false;
+                //Debug.write(eventname, event.buttonDown, LzMouseKernel.__lastMouseDown);
+                var ev = new MouseEvent('mouseup');
+                LzMouseKernel.__lastMouseDown.__globalmouseup(ev);
+                LzMouseKernel.__lastMouseDown = null;
+            }
             LzMouseKernel.__sendEvent(null, eventname);
         }
     }
@@ -60,6 +68,7 @@ class LzMouseKernel  {
     // handles MOUSE_LEAVES event
     static function __mouseLeavesHandler(event:Event):void {
         var eventname = 'on' + event.type.toLowerCase();
+        LzMouseKernel.__mouseLeft = true;
         LzMouseKernel.__sendEvent(null, eventname);
     }
 
