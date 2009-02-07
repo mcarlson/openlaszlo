@@ -161,7 +161,6 @@
 
                 var DOREQ = stubinfo['doreq'] ? stubinfo['doreq'] : false;
                 var DORES = stubinfo['dores'] ? stubinfo['dores'] : false;
-#pragma "catchFunctionExceptions=false"
                 var stubfunc = function (){
                    var args = arguments.callee.args;
                    return LzJavaRPCService.invoke(

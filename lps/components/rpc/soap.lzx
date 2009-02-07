@@ -99,7 +99,6 @@
            // "service": "MathService",
            // "wsdl": "http://www.dotnetjunkies.com/quickstart/aspplus......./mathservice.asmx?WSDL"},
            //                                            args.superclass.secure,
-#pragma "catchFunctionExceptions=false"
            var stubfunc = function (){
                var args = arguments.callee.args;
                return LzSOAPService.invoke(

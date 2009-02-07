@@ -1235,13 +1235,15 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // not propogated to our caller.
     // To preserve return types, we implement this with a closure,
     // but that introduces restrictions:
-    // We cannot put a super call in a closure.
-    // Having another function closure within a closure apparently
-    // causes problems accessing certain variables for the flex compiler.
+    // - We cannot put a super call in a closure.
+    // - Having another function closure within a closure apparently
+    //   causes problems accessing certain variables for the flex compiler.
+    // - We cannot put code that references 'arguments' into a closure.
     boolean tryAll = options.getBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS)
       && matchingAncestor(node, ASTFunctionExpression.class, false) == null
       && matchingDescendant(node, ASTSuperCallExpression.class, false) == null
       && matchingDescendant(node, ASTFunctionExpression.class, false) == null
+      && matchingIdentifier(node, "arguments") == null
       && functionName != null;
       
     String tryType = "";
@@ -1577,6 +1579,26 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       SimpleNode[] children = node.getChildren();
       for (int i=0; i<children.length; i++) {
         SimpleNode result = matchingDescendant(children[i], matchClass, true);
+        if (result != null) {
+          return result;
+        }
+      }
+    }
+    return null;
+  }
+
+  // walk down the AST and find a match of an identifier with a name
+  SimpleNode matchingIdentifier(SimpleNode node, String identName) {
+    if (node == null) {
+      return null;
+    }
+    else if (node instanceof ASTIdentifier && ((ASTIdentifier)node).getName().equals(identName)) {
+      return node;
+    }
+    else {
+      SimpleNode[] children = node.getChildren();
+      for (int i=0; i<children.length; i++) {
+        SimpleNode result = matchingIdentifier(children[i], identName);
         if (result != null) {
           return result;
         }

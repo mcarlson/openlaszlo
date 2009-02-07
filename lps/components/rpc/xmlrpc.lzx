@@ -31,7 +31,6 @@
 
                 // create proxy for a particular funcname only once.
                 if ( this.proxy[method] == null ) {
-#pragma "catchFunctionExceptions=false"
                     this.proxy[method] = function (paramArr, delegate) {
                         var args = arguments.callee.args;
                         LzXMLRPCService.invoke(delegate, paramArr, 
