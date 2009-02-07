@@ -54,18 +54,24 @@ class LzMouseKernel  {
             LzMouseKernel.__lastMouseDown.__globalmouseup(event);
             __lastMouseDown = null;
         } else {
-            if (__mouseLeft && event.buttonDown && LzMouseKernel.__lastMouseDown != null) {
+            if (__mouseLeft && event.buttonDown) {
                 __mouseLeft = false;
-                //Debug.write(eventname, event.buttonDown, LzMouseKernel.__lastMouseDown);
-                var ev = new MouseEvent('mouseup');
-                LzMouseKernel.__lastMouseDown.__globalmouseup(ev);
-                LzMouseKernel.__lastMouseDown = null;
+                LzMouseKernel.__mouseUpOutsideHandler();
             }
             LzMouseKernel.__sendEvent(null, eventname);
         }
     }
 
-    // handles MOUSE_LEAVES event
+    // sends mouseup and calls __globalmouseup when the mouse goes up outside the app - see LPP-7724
+    static function __mouseUpOutsideHandler():void {
+        if (LzMouseKernel.__lastMouseDown != null) {
+            var ev = new MouseEvent('mouseup');
+            LzMouseKernel.__lastMouseDown.__globalmouseup(ev);
+            LzMouseKernel.__lastMouseDown = null;
+        }
+    }
+
+    // handles MOUSE_LEAVE event
     static function __mouseLeavesHandler(event:Event):void {
         var eventname = 'on' + event.type.toLowerCase();
         LzMouseKernel.__mouseLeft = true;

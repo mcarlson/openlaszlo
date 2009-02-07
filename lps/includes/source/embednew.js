@@ -154,6 +154,24 @@ lz.embed = {
                 lz.embed.mousewheel.setCallback(app, '_sendMouseWheel');
             }
         }
+        if ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && lz.embed.browser.OS == 'Windows' && (lz.embed.browser.isOpera || lz.embed.browser.isFirefox)) {
+            // fix for LPP-7724
+            var div = swfargs.appenddiv;
+            div.onmouseout = function(e) {
+                div.mouseisoutside = true;
+            }
+            div.onmouseover = function(e) {
+                div.mouseisoutside = false;
+            }
+            //lz.embed.attachEventHandler(document, 'mouseup', div, '_gotmouseup');
+            div._gotmouseup = document.onmouseup = function(e) {
+                if (div.mouseisoutside) {
+                    // tell flash that the button went up outside
+                    app.callMethod('LzMouseKernel.__mouseUpOutsideHandler()');
+                    //console.log('mouseup ', lz.embed[app._id]);
+                }
+            }
+        }
     }
 
     ,/**

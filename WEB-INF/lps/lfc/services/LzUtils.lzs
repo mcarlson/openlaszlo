@@ -313,6 +313,7 @@ class LzUtilsClass {
 
     // Unpack a javascript list from a string, giving each item the appropriate type 
     function __unpackList(argstr:String, scope = null) {
+        if (argstr == '') return [];
         if (scope == null) scope = canvas;
         var args = argstr.split(',');
         // cast arguments to type
@@ -344,7 +345,7 @@ class LzUtilsClass {
                 //Debug.write('found property', args[i], a);
             }
         }
-        //Debug.write('__unpackList', args);
+        //Debug.write('__unpackList', argstr, args);
         return args;
     }
 
@@ -357,9 +358,10 @@ class LzUtilsClass {
 
         //Debug.write('safeEval', js);
         var s = js.indexOf('(')
+        var argstr = null;
         if (s != -1) {
             var e = js.indexOf(')')
-            var args = (js.substring(s + 1, e))
+            argstr = (js.substring(s + 1, e))
             js = js.substring(0, s);
         }
 
@@ -377,16 +379,14 @@ class LzUtilsClass {
             //Debug.write('final val', val, scope);
         }
 
-        if (args != null) {
-            var args = lz.Utils.__unpackList(args, scope);
-        }
-
-        if (! args || args.length == 0) {
+        if (argstr == null) {
             //Debug.write('no args, found val', val);
             return val;
         }
 
-        //Debug.write('found val', val,'in', scope, 'args', args, 'for path', path, arglist);  
+        var args = lz.Utils.__unpackList(argstr, scope);
+
+        //Debug.write('found val', val,'in', scope, 'args', args);  
         // return values don't work for global scopes in swf9, e.g. 'lz.Browser.getVersion()' - see LPP-7008
         if (val) {
             var result = val.apply(scope, args);
