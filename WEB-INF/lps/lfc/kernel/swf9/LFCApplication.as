@@ -89,11 +89,11 @@ public class LFCApplication {
 
         
         /* TODO [hqm 2008-01] Do we want to do anything with other
-         * events, like click, or mousewheel ?
+         * events, like click?
 
            stage.addEventListener(MouseEvent.CLICK, reportClick);
-           stage.addEventListener(MouseEvent.MOUSE_WHEEL, reportWheel);
         */
+        stage.addEventListener(MouseEvent.MOUSE_WHEEL, reportWheel);
 
         LzKeyboardKernel.setCallback(lz.Keys, '__keyEvent');
 
