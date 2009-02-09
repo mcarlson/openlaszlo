@@ -448,6 +448,10 @@ override function construct ( parent , args) {
         args.resource = LzNode._ignoreAttribute;
     }
 
+    if (args['fgcolor'] != null){
+        this.hasfgcolor = true;
+    }
+
     if($debug){
         if(args['valign'] && args['y']){
             Debug.warn(this, "y attribute ignored; superseded by valign constraint.");
@@ -696,6 +700,9 @@ var cursor;
  * @type Number
  */
 var fgcolor = 0;
+/** true if the view specified a fgcolor
+    @access private */
+var hasfgcolor = false;
 /** @access private */
 var onfgcolor = LzDeclaredEvent;
 /** @access private */

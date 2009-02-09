@@ -863,6 +863,20 @@ dynamic class LzText extends LzView with LzFormatter {
       this[attr] = args[arg];
     }
 
+    // fgcolor is inherited from a parent if one was specified
+    if (!('fgcolor' in args)) {
+      var sview = this;
+      do{
+        sview = sview.immediateparent;
+        var fg = sview['hasfgcolor'];
+        if (fg != null && fg){
+          args['fgcolor'] = sview['fgcolor']
+          break;
+        }
+      }while ( sview != canvas );
+    }
+
+
     var tsprite = this.tsprite;
     // FIXME [2008-11-24 ptw] (LPP-7391) We should not be passing node
     // init args across the kernel API, there should be a more

@@ -942,8 +942,8 @@ LzSprite.prototype.getMCRef = function () {
   * @param Integer c: A color in rgb format; for example, 0xff0000 is red.
   */
 LzSprite.prototype.setColor = function ( c ){
+    // Only applicable for text
     this.fgcolor = c;
-    this.getColorObj().setRGB( c );
 }
 
 /**
@@ -952,7 +952,8 @@ LzSprite.prototype.setColor = function ( c ){
   * Returns A color in rgb format; for example, 0xff0000 is red.
   */
 LzSprite.prototype.getColor = function (){
-    return this.getColorObj().getRGB();
+    // Only applicable for text
+    return this.fgcolor;
 }
 
 

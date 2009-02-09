@@ -747,6 +747,15 @@ LzTextSprite.prototype.setColor = function ( c ){
 }
 
 /**
+  * Gets the color of the view (the view's resource and any subviews) view as
+  * as set with setColor().
+  * Returns A color in rgb format; for example, 0xff0000 is red.
+  */
+LzSprite.prototype.getColor = function (){
+    return this.textcolor;
+}
+
+/**
   * Sets whether or not the textfield wraps.  If false, only a single line
   * of text will appear and extra lines will be trucated if the text is set with
   * multiple lines.
