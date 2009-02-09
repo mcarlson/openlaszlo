@@ -4,7 +4,7 @@
   <dataset name="echoer" src="http:echoxml.jsp"/>
   
   <view x="10" y="10" >
-    <form id="ex1" bgcolor="0xAAB5C8" >
+    <form id="ex1" bgcolor="#AAB5C8" >
       <submit name="submitter" dataset="${echoer}"/>
       
       <statictext fontstyle="bold" >
@@ -42,7 +42,7 @@
     </form>
     
     <view name="congrats" datapath="echoer:/response"
-          bgcolor="0xAAB5C8" clickable="true"
+          bgcolor="#AAB5C8" clickable="true"
           width="100%" height="100%" >
       <text text="Congrats!" fontstyle="bold"
             y="80" align="center"  />
