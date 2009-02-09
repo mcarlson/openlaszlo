@@ -111,7 +111,7 @@
               in the 'tabclass' attribute of basetabpane, tabpane, basetabs, and
               tabs classes. Basetabs uses this class as its default 'tabclass'.</para>
              <example><![CDATA[
-<canvas width="150" height="75">
+<canvas height="75">
   <include href="base"/>
 
   <class name="aquatab" extends="basetab" 
@@ -217,7 +217,7 @@
             <sgmltag class="element" role="lz.basetabs">&lt;basetabs&gt;</sgmltag> component.</p>
             
             <example title="custom basetabsbar">
-            &lt;canvas width="150" height="75"&gt;
+            &lt;canvas height="75"&gt;
               &lt;include href="base"/&gt;
             
               &lt;class name="aquatab" extends="basetab" 
@@ -442,7 +442,7 @@
             <classname>basetabscontent</classname>.</note>
             
             <example title="parent and immediate parent of basetabpane">
-            &lt;canvas width="500" height="140" debug="true"&gt;
+            &lt;canvas height="140" debug="true"&gt;
               &lt;debug x="150" y="10"/&gt;
               
               &lt;include href="base"/&gt;
@@ -541,7 +541,7 @@
                   <classname>contentclass</classname></p>
             
             <example title="custom basetabscontent with borders">
-            &lt;canvas width="150" height="75"&gt;
+            &lt;canvas height="75"&gt;
               &lt;include href="base"/&gt;
             
               &lt;class name="aquatab" extends="basetab" 
@@ -789,7 +789,7 @@
             items.</p>
             
             <example title="introduction to basetabs">
-            &lt;canvas width="150" height="75"&gt;
+            &lt;canvas height="75"&gt;
               &lt;include href="base"/&gt;
             
               &lt;class name="aquatab" extends="basetab" width="40" height="20" 
@@ -838,7 +838,7 @@
             <classname>basetabscontent</classname>.</p>
             
             <example title="modifying the basetabs look">
-            &lt;canvas width="150" height="75"&gt;
+            &lt;canvas height="75"&gt;
               &lt;include href="base"/&gt;
               
               &lt;class name="mytab" extends="basetab" width="40" height="20" bgcolor="lime"&gt;

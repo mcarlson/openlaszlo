@@ -164,7 +164,7 @@
         define a style with <code>isdefault="true"</code>.</p>
         
         <example title="Simple Style Example">
-        &lt;canvas height="60" width="200" &gt;
+        &lt;canvas height="60"&gt;
           &lt;greenstyle name="mystyle" isdefault="true"/&gt;
           &lt;checkbox&gt;Tell me more&lt;/checkbox&gt;
           &lt;button&gt;Submit&lt;/button&gt;
@@ -250,7 +250,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

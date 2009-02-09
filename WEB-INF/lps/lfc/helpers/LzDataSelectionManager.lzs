@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzdataselectionmanager
@@ -26,7 +26,7 @@
   * select a range. To modify this behavior, you can extend the <classname>lz.dataselectionmanager</classname> and implement
   * <method>isRangeSelect</method> and <method>isMultiSelect</method>.</p>
   * <example class="program" id="datasenectionmgr">
-  * &lt;canvas width="200" height="200"&gt;
+  * &lt;canvas height="200"&gt;
   *   &lt;dataset name="mydata"&gt;
   *     &lt;list&gt;
   *       &lt;item&gt;tricycle&lt;/item&gt;

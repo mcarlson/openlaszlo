@@ -180,7 +180,7 @@
               in tree as an example.</p>
 
             <example title="A lexical tree and a data replicated tree">
-              &lt;canvas width="450" height="250"&gt;
+              &lt;canvas height="250"&gt;
               &lt;include href="lz/tree.lzx"/&gt;
 
               &lt;dataset name="ancestors"&gt;

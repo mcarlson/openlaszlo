@@ -342,7 +342,7 @@
               <classname>scrollbar</classname> will be provided.</p>
 
             <example>
-              &lt;canvas width="200" height="100"&gt;
+              &lt;canvas height="100"&gt;
               &lt;list x="10" y="10"&gt;
               &lt;textlistitem text="item 1" value="1" selected="true"/&gt;
               &lt;textlistitem text="item 2" value="2"/&gt;

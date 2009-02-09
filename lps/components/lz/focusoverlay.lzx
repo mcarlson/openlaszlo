@@ -88,7 +88,7 @@
             space will activate the button.
             </p>
             <example title="Custom Focus Indicator">
-            &lt;canvas width="200" height="120" &gt;
+            &lt;canvas height="120" &gt;
               &lt;class name="myfocusclass" extends="basefocusview"&gt;
                 &lt;view bgcolor="blue" y="${parent.height+1}" height="2" width="${parent.width}"/&gt;
               &lt;/class&gt;

@@ -23,7 +23,7 @@
         
         <example><programlisting class="code">
         &lt;canvas&gt;
-            &lt;drawview width="200" height="200"&gt;
+            &lt;drawview height="200"&gt;
                 &lt;handler name="oncontext"&gt;
                     this.moveTo(100, 100);
                     this.lineTo(100, 200);

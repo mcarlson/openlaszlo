@@ -23,7 +23,7 @@
   * The following code shows one view nested inside another:</p>
   *   
   * <example class="code">
-  * &lt;canvas height="50" width="500"&gt;
+  * &lt;canvas height="50"&gt;
   *   &lt;view width="50" height="50" bgcolor="red"&gt;
   *     &lt;view width="30" height="30" bgcolor="blue"/&gt;
   *   &lt;/view&gt; 

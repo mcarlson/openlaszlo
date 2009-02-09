@@ -78,7 +78,7 @@
               attributes.</p>
 
             <example>
-              &lt;canvas width="200" height="100"&gt;
+              &lt;canvas height="100"&gt;
               &lt;combobox id="cbox" x="5" y="5" width="130" editable="false"&gt;
               &lt;textlistitem text="Dark Blue"  value="0x000055"/&gt;
               &lt;textlistitem text="Turquoise"  value="0x66dddd"/&gt;
@@ -98,7 +98,7 @@
             </p>
 
             <example>
-              &lt;canvas width="200" height="130"&gt;
+              &lt;canvas height="130"&gt;
               &lt;dataset name="items"&gt;
               &lt;item value="item1"&gt;item one&lt;/item&gt;
               &lt;item value="item2"&gt;item two&lt;/item&gt;
@@ -121,7 +121,7 @@
               below:</p>
 
             <example>
-              &lt;canvas width="200" height="130"&gt;
+              &lt;canvas height="130"&gt;
               &lt;class name="mylistitem" extends="listitem" width="100%" height="20" &gt;
               &lt;attribute name="text" value="" type="string"/&gt;
               &lt;!-- place a red square in the left hand side of mylistitem --&gt;

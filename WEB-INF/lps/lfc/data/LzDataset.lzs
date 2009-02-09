@@ -52,7 +52,7 @@
   * The example below makes a request of the cgi script on Laszlo's website that serves up weather information in xml form.</p>
   * 
   * <example title="Making a request using a dataset">
-  * <programlisting>&lt;canvas height="250" width="800" debug="true"&gt;
+  * <programlisting>&lt;canvas height="250" debug="true"&gt;
   *  &lt;debug y="100"/&gt; 
   *  &lt;dataset type="http" name="weatherdata"
   *           src="http://www.laszlosystems.com/cgi-pub/weather.cgi"/&gt; 

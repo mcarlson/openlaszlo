@@ -126,7 +126,7 @@
                 </p>
                 <example>
                     <![CDATA[
-<canvas width="150" height="100">
+<canvas height="100">
   <include href="lz" />
 
   <basetabs x="10" y="10" tabclass="tab">
@@ -206,7 +206,7 @@
                 </p>
                 <example>
                     <![CDATA[
-<canvas width="400" height="100">
+<canvas height="100">
   <include href="lz"/>
 
   <simplelayout axis="x" spacing="10"/>
@@ -325,7 +325,7 @@
                 </p>
                 <example>
                     <![CDATA[
-<canvas width="250" height="150" >
+<canvas height="150" >
   <include href="base"/>
 
   <simplelayout axis="y" spacing="5"/>
@@ -392,7 +392,7 @@
                 </p>
                 <example>
                     <![CDATA[
-<canvas width="450" height="100">
+<canvas height="100">
   <include href="lz"/>
   <simplelayout axis="x" spacing="10"/>
   
@@ -517,7 +517,7 @@
               is specified within the <tagname>tabs</tagname> tag.</p>
 
             <example>
-              &lt;canvas width="150" height="100"&gt;
+              &lt;canvas height="100"&gt;
               &lt;tabs&gt;
               &lt;tabpane text="one"&gt;
               &lt;button&gt;press one&lt;/button&gt;

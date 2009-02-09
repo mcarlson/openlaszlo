@@ -697,7 +697,7 @@
             </p>
 
             <example title="Basetree subclass with echoed text node">
-            &lt;canvas width="200" height="200"&gt;
+            &lt;canvas height="200"&gt;
               &lt;include href="base/basetree.lzx"/&gt;
             
               &lt;class name="echotree" extends="basetree"&gt;
@@ -740,7 +740,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

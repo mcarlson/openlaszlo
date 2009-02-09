@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -13,7 +13,7 @@
   * that represent OpenLaszlo's hierarchical data format.</p>
   * 
   * <example>
-  * &lt;canvas width="300" height="300"&gt;
+  * &lt;canvas height="300"&gt;
   *   &lt;simplelayout axis="y"/&gt;
   * 
   *   &lt;text width="300" height="250" bgcolor="silver" 

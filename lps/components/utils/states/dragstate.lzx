@@ -52,7 +52,7 @@
         When the dragstate is applied, the view with the dragstate will follow the mouse.
         </p>
         <example class="program" id="dragstate-1" title="Simple use of a dragstate">
-        &lt;canvas width="200" height="100"&gt;
+        &lt;canvas height="100"&gt;
             &lt;view bgcolor="blue" width="20" height="20"
                   onmousedown="dragger.setAttribute('applied', true)" onmouseup="dragger.setAttribute('applied', false)"&gt;
                 &lt;dragstate name="dragger"/&gt;
@@ -61,7 +61,7 @@
         </example>
         
         <example class="program" id="dragstate-2" title="Horizontal drag">
-        &lt;canvas width="200" height="100"&gt;
+        &lt;canvas height="100"&gt;
             &lt;view bgcolor="red" width="20" height="20"
                   onmousedown="dragger.setAttribute('applied', true)" onmouseup="dragger.setAttribute('applied', false)"&gt;
                 &lt;dragstate name="dragger" drag_axis="x"/&gt;
@@ -71,7 +71,7 @@
         
         <example class="program" id="dragstate-3" 
             title="Horizontal drag with simple bounds checking">
-        &lt;canvas width="200" height="100"&gt;
+        &lt;canvas height="100"&gt;
             &lt;view bgcolor="red" width="20" height="20"
                   onmousedown="dragger.setAttribute('applied', true)" onmouseup="dragger.setAttribute('applied', false)"&gt;
                 &lt;dragstate name="dragger" drag_axis="x"
@@ -107,7 +107,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
