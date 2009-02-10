@@ -20,14 +20,14 @@ class LzMouseKernel  {
 
     // sends mouse events to the callback
     static function __sendEvent(view, eventname) {
-        if (LzMouseKernel.__callback) LzMouseKernel.__scope[LzMouseKernel.__callback](eventname, view);
+        if (__callback) __scope[__callback](eventname, view);
         //Debug.write('LzMouseKernel event', eventname);
     }
     static var __callback = null;
     static var __scope = null;
     static var __lastMouseDown = null;
     static var __mouseLeft:Boolean = false;
-    static var __listeneradded:Boolean = false ;
+    static var __listeneradded:Boolean = false;
 
     /**
      * Shows or hides the hand cursor for all clickable views.
@@ -35,14 +35,20 @@ class LzMouseKernel  {
     static var showhandcursor:Boolean = true;
 
     static function setCallback (scope, funcname) {
-        LzMouseKernel.__scope = scope;
-        LzMouseKernel.__callback = funcname;
-        if (LzMouseKernel.__listeneradded == false) {
+        __scope = scope;
+        __callback = funcname;
+        if (__listeneradded == false) {
+            /* TODO [hqm 2008-01] Do we want to do anything with other
+            * events, like click?
+            stage.addEventListener(MouseEvent.CLICK, reportClick);
+            */
+
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_MOVE, __mouseHandler);
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_UP,   __mouseHandler);
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseHandler);
-            LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE,     __mouseLeavesHandler);
-            LzMouseKernel.__listeneradded = true;
+            LFCApplication.stage.addEventListener(MouseEvent.MOUSE_WHEEL, __mouseWheelHandler);
+            LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE, __mouseLeavesHandler);
+            __listeneradded = true;
         }
     }    
 
@@ -51,31 +57,35 @@ class LzMouseKernel  {
         var eventname = 'on' + event.type.toLowerCase();
         if (eventname == 'onmouseup' && __lastMouseDown != null) {
             // call mouseup on the sprite that got the last mouse down  
-            LzMouseKernel.__lastMouseDown.__globalmouseup(event);
+            __lastMouseDown.__globalmouseup(event);
             __lastMouseDown = null;
         } else {
             if (__mouseLeft && event.buttonDown) {
                 __mouseLeft = false;
-                LzMouseKernel.__mouseUpOutsideHandler();
+                __mouseUpOutsideHandler();
             }
-            LzMouseKernel.__sendEvent(null, eventname);
+            __sendEvent(null, eventname);
         }
     }
 
     // sends mouseup and calls __globalmouseup when the mouse goes up outside the app - see LPP-7724
     static function __mouseUpOutsideHandler():void {
-        if (LzMouseKernel.__lastMouseDown != null) {
+        if (__lastMouseDown != null) {
             var ev = new MouseEvent('mouseup');
-            LzMouseKernel.__lastMouseDown.__globalmouseup(ev);
-            LzMouseKernel.__lastMouseDown = null;
+            __lastMouseDown.__globalmouseup(ev);
+            __lastMouseDown = null;
         }
     }
 
     // handles MOUSE_LEAVE event
     static function __mouseLeavesHandler(event:Event):void {
         var eventname = 'on' + event.type.toLowerCase();
-        LzMouseKernel.__mouseLeft = true;
-        LzMouseKernel.__sendEvent(null, eventname);
+        __mouseLeft = true;
+        __sendEvent(null, eventname);
+    }
+
+    static function __mouseWheelHandler(event:MouseEvent):void {
+        lz.Keys.__mousewheelEvent(event.delta);
     }
 
     /**
@@ -83,7 +93,7 @@ class LzMouseKernel  {
     * @param Boolean show: true shows the hand cursor for buttons, false hides it
     */
     static function showHandCursor (show) {
-        LzMouseKernel.showhandcursor = show;
+        showhandcursor = show;
     }
 
     static var __amLocked:Boolean = false;
@@ -101,7 +111,7 @@ class LzMouseKernel  {
     }
 
     static function setCursorLocal ( what:String ) {
-        if ( LzMouseKernel.__amLocked ) { return; }
+        if ( __amLocked ) { return; }
         Mouse.hide();
         cursorSprite.x = LFCApplication.stage.mouseX;
         cursorSprite.y = LFCApplication.stage.mouseY;
@@ -154,7 +164,7 @@ class LzMouseKernel  {
     * @access private
     */
     static function restoreCursor ( ){
-        if ( LzMouseKernel.__amLocked ) { return; }
+        if ( __amLocked ) { return; }
         cursorSprite.stopDrag();
         cursorSprite.visible = false;
         globalCursorResource = null;
@@ -164,7 +174,7 @@ class LzMouseKernel  {
     /** Called by LzSprite to restore cursor to global value.
      */
     static function restoreCursorLocal ( ){
-        if ( LzMouseKernel.__amLocked ) { return; }
+        if ( __amLocked ) { return; }
         if (globalCursorResource == null) {
             // Restore to system default pointer
             restoreCursor();
@@ -179,7 +189,7 @@ class LzMouseKernel  {
     * 
     */
     static function lock (){
-        LzMouseKernel.__amLocked = true;
+        __amLocked = true;
     }
 
     /**
@@ -187,8 +197,8 @@ class LzMouseKernel  {
     * 
     */
     static function unlock (){
-        LzMouseKernel.__amLocked = false;
-        LzMouseKernel.restoreCursor(); 
+        __amLocked = false;
+        restoreCursor(); 
     }
 
     static function initCursor () {

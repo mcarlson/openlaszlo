@@ -66,8 +66,6 @@ public class LFCApplication {
         //trace('idle timer period = ', idleTimerPeriod , 'msecs');
         LzIdleKernel.startTimer( idleTimerPeriod );
 
-        stage.addEventListener(KeyboardEvent.KEY_DOWN,reportKeyDown);
-        stage.addEventListener(KeyboardEvent.KEY_UP,reportKeyUp);
         if (Capabilities.playerType == "ActiveX") {
             // workaround for flash player bug FP-1355
             LFCApplication.textfieldTabEnabled = true;
@@ -80,56 +78,11 @@ public class LFCApplication {
         //Stage.align = ('canvassalign' in global && global.canvassalign != null) ? global.canvassalign : "LT";
         //Stage.scaleMode = ('canvasscale' in global && global.canvasscale != null) ? global.canvasscale : "noScale";
 
-        stage.addEventListener(Event.RESIZE, resizeHandler);
-
-
         // Register for callbacks from the kernel
         LzMouseKernel.setCallback(lz.ModeManager, 'rawMouseEvent');
         LzMouseKernel.initCursor();
 
-        
-        /* TODO [hqm 2008-01] Do we want to do anything with other
-         * events, like click?
-
-           stage.addEventListener(MouseEvent.CLICK, reportClick);
-        */
-        stage.addEventListener(MouseEvent.MOUSE_WHEEL, reportWheel);
-
         LzKeyboardKernel.setCallback(lz.Keys, '__keyEvent');
-
-        // LPP-7597: This is the fix for LPP-7499 canvas size not intialized to browser size
-        LzScreenKernel.handleResizeEvent();
-
-    }
-
-    function reportWheel(event:MouseEvent):void {
-        /*
-        Debug.write(event.currentTarget.toString() + 
-              " dispatches MouseWheelEvent. delta = " + event.delta); */
-        lz.Keys.__mousewheelEvent(event.delta);
-    }
-
-    function resizeHandler(event:Event):void {
-        //trace('LFCApplication.resizeHandler stage width/height = ', stage.stageWidth, stage.stageHeight);
-        LzScreenKernel.handleResizeEvent();
-    }
-
-    function reportKeyUp(event:KeyboardEvent):void {
-        /*
-          trace("Key Released: " + String.fromCharCode(event.charCode) + 
-              " (key code: " + event.keyCode + " character code: " + 
-              event.charCode + ")");
-        */
-        LzKeyboardKernel.__keyboardEvent(event, 'onkeyup');
-    }
-
-    function reportKeyDown(event:KeyboardEvent):void {
-        /*
-          trace("Key Pressed: " + String.fromCharCode(event.charCode) + 
-              " (key code: " + event.keyCode + " character code: " 
-              + event.charCode + ")");
-        */
-        LzKeyboardKernel.__keyboardEvent(event, 'onkeydown');
     }
 
     function preventFocusChange(event:FocusEvent):void {

@@ -1,7 +1,7 @@
 /**
   * LzScreenKernel.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -19,25 +19,30 @@ public class LzScreenKernel {
 
     public static var width = null;
     public static var height = null;
-    public static function handleResizeEvent():void {
-        LzScreenKernel.width = LFCApplication.stage.stageWidth;
-        LzScreenKernel.height = LFCApplication.stage.stageHeight;
-        if (LzScreenKernel.__callback) {
-            LzScreenKernel.__scope[LzScreenKernel.__callback]({width: LzScreenKernel.width, height: LzScreenKernel.height});
-            //trace('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});
+    public static function handleResizeEvent(event:Event = null):void {
+        width = LFCApplication.stage.stageWidth;
+        height = LFCApplication.stage.stageHeight;
+        if (__callback) {
+            __scope[__callback]({width: width, height: height});
+            //trace('LzScreenKernel event', {width: width, height: height});
         }
     }
 
     static var __callback = null;
     static var __scope = null;
+    static var __listeneradded:Boolean = false;
 
     // N.B. The kernel API implementation used by LzCanvas currently
     // requires a call to handleResizeEvent when the callback is
     // set. This is the way that the canvas initial size gets set.
     public static function setCallback (scope, funcname) {
         //Debug.write('setCallback', scope, funcname);
-        __scope = scope;
-        __callback = funcname;
-        LzScreenKernel.handleResizeEvent();
+        if (__listeneradded == false) {
+            __scope = scope;
+            __callback = funcname;
+            LFCApplication.stage.addEventListener(Event.RESIZE, handleResizeEvent);
+            handleResizeEvent();
+            __listeneradded = true;
+        }
     }
 }
