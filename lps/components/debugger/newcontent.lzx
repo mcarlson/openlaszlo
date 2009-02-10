@@ -378,6 +378,11 @@
      </method>
 
 <method name="scrollToEnd">
+       var enddel = new LzDelegate(this, 'scrollToEnd_int')
+        lz.Idle.callOnIdle(enddel);
+     </method>
+
+<method name="scrollToEnd_int" args="e=null">
        this.setLine(textpane.getMaxScroll());
        this.updateDisplay();
      </method>
