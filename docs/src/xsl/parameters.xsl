@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <xsl:stylesheet
@@ -54,6 +54,9 @@
   <xsl:param name="html.extra.head.links" select="0"/>
   <!-- Miscellaneous -->
   <xsl:param name="show.comments">1</xsl:param>
+
+  <!-- Add link for display/submission of user community comments -->
+  <xsl:param name="show.usercomments">1</xsl:param>
 
    <!-- Reference appearance -->
    <xsl:param name="navig.showtitles">1</xsl:param>

@@ -452,6 +452,9 @@
   </xsl:template>
 
   <xsl:template name="user.footer.content">
+    <xsl:if test="$show.usercomments != 0">
+      <script type="text/javascript" src="../includes/commentwidget.js"></script>
+    </xsl:if>
     <hr/>
 <!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
 <p class="copyright">Copyright &#xA9; 2002-2008 <a target="_top"
