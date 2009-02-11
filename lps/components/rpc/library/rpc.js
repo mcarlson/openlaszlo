@@ -7,7 +7,7 @@
 
 /* LZ_COPYRIGHT_BEGIN */
 /****************************************************************************
- * Copyright (c) 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.       *
+ * Copyright (c) 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.       *
  * Use is subject to license terms                                          *
  ****************************************************************************/
 /* LZ_COPYRIGHT_END */
@@ -35,10 +35,14 @@ var dsloadDel:LzDelegate = null;
 //------------------------------------------------------------------------------
 // @param Number num: number to pass down to explicitly cast to a double
 //------------------------------------------------------------------------------
-static function DoubleWrapper (num) {
-    return new LzRPCDoubleWrapper(num);
-}
 
+
+    #passthrough {
+        static function DoubleWrapper (num) {
+            return new LzRPCDoubleWrapper(num);
+        };
+    }#
+       
 //------------------------------------------------------------
 // Global RPC sequence number for server requests.
 //------------------------------------------------------------
