@@ -453,7 +453,6 @@
 
   <xsl:template name="user.footer.content">
 
-    <hr/>
 <!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
 <p class="copyright">Copyright &#xA9; 2002-2008 <a target="_top"
 href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
@@ -462,7 +461,8 @@ distribution is strictly prohibited. This is the proprietary
 information of Laszlo Systems, Inc. Use is subject to license terms.</p>
 <!-- * H_LZ_COPYRIGHT_END ************************************************* -->
   </xsl:template>
-  
+ <!-- copy of template from html/chunk-common.xsl (and overrides that one)  --> 
+ <!-- adds user comment section to the end of each page                     -->
   <xsl:template name="footer.navigation">
     <xsl:param name="prev" select="/foo"/>
     <xsl:param name="next" select="/foo"/>
