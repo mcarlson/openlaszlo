@@ -18,7 +18,7 @@
         </h1>
         <p>Here's our stuff (we don't ship this internal index):</p>
         <ul>
-            <li><a href="docs/release-notes.html">Release Notes</a>
+            <li><a href="release-notes.html">Release Notes</a>
             </li>
             <li><a href="quick-index.html">OpenLaszlo Quick Index</a> (this replaces this file in the distro)
             </li>
@@ -94,7 +94,7 @@
             <li><a href="docs/deployers">System Administrator's Guide</a></li>
             <li><a href="http://www.openlaszlo.org/lps3/docs/reference">Reference Guide (for OL 3.4, served from www.openlaszlo.org)</a> or <a href="docs/reference">Reference Guide (local)</a></li>
 <!--    remove link to nonexistant contrib. guide. IORIO: 22may08 -->
-            <li><a href="docs/release-notes.html">Latest Release Notes</a></li>
+            <li><a href="release-notes.html">Latest Release Notes</a></li>
         </ul>        
     </body>
 </html>

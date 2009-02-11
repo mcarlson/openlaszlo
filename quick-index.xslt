@@ -22,7 +22,7 @@
         <div style="float:right"><img border="0" src="lps/includes/logo_web_sm.gif" alt="OpenLaszlo logo" /></div>
         <h1>OpenLaszlo Quick Index</h1>
         
-        <p><a href="docs/release-notes.html">Release Notes</a></p>
+        <p><a href="release-notes.html">Release Notes</a></p>
         <p>If this is the first time you've run OpenLaszlo
             or you are looking for an introduction, please try 
             Laszlo Explorer (<a href="laszlo-explorer/index.jsp?lzr=swf8">Flash</a>) (<a href="laszlo-explorer/index.jsp?lzr=dhtml">DHTML</a>).
