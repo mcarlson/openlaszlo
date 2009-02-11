@@ -41,7 +41,7 @@ public class CompilationError extends RuntimeException {
      * cause, instead of wrapping them in instances of
      * CompilationError.  This is useful for debugging the
      * compiler. */
-    public static boolean ThrowCompilationErrors = true;
+    public static boolean ThrowCompilationErrors = false;
 
     /** Constructs an instance.
      * @param message a string
