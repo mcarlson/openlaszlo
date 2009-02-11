@@ -39,6 +39,8 @@ public class Main {
         "  Location of script cache directory (default <lps>/work/scache)",
         "--media-cache-dir directory",
         "  Location of media cache directory (default <lps>/work/cache/cmcache)",
+        "--application-root",
+        "  Location of root of application directory, if different from LPS_HOME",
         "",
         "Output options:",
         "--runtime=[swf7|swf8|swf9|swf10|dhtml|j2me|svg|null]",
@@ -152,6 +154,8 @@ public class Main {
                     System.err.println("--keepscriptcache is deprecated.  This is now the default behavior.");
                 } else if (arg == "--flush-script-cache") {
                     flushScriptCache = true;
+                } else if (arg == "--copy-resources") {
+                    compiler.setProperty(CompilationEnvironment.COPY_RESOURCES_LOCAL, "true");
                 } else if (arg == "-o" || arg == "--output") {
                     outFileArg = safeArg("-o or --output", args, ++i);
                     if (outFileArg == null) {
@@ -431,7 +435,7 @@ public class Main {
 }
 
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

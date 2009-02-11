@@ -38,6 +38,11 @@ public class CompilationEnvironment {
     public static final String DEBUG_EVAL_PROPERTY         = "debugEval";
     public static final String SOURCE_ANNOTATIONS_PROPERTY = "lzsourceannotations";
 
+    // For DHTML runtime, make application-local copies of all compile
+    // time resource files.
+    public static final String COPY_RESOURCES_LOCAL        = "lzcopyresources";
+    public static final String APPLICATION_ROOT            = "applicationroot";
+
     // matches the values of sc.Compiler.DEBUG_BACKTRACE, NAME_FUNCTIONS, etc.
     public static final String BACKTRACE_PROPERTY         = "debugBacktrace";
     public static final String NAME_FUNCTIONS             = "nameFunctions";

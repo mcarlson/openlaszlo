@@ -119,7 +119,7 @@ public class DeployMain {
         }
 
         if (outfile == null) {
-            outfile = sourcepath + ".zip";
+            outfile = new File(sourcepath).getName() + ".zip";
         }
 
         if (sourcepath == null) {

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -735,6 +735,30 @@ mLogger.warn(
             super(message);
         }
     }
+
+    
+
+    /**
+       Find maximum common prefix of path1 and path2
+     */
+    public static String findMaxCommonPrefix(String path1, String path2) {
+        int i = 0;
+        int len1 = path1.length();
+        int len2 = path2.length();
+        while ((i < len1) && (i < len2)) {
+            if (path1.charAt(i) != path2.charAt(i)) {
+                break;
+            }
+            i++;
+        }
+        if (path1.charAt(i-1) == '/') {
+            return path1.substring(0, i-1);
+        } else {
+            return path1.substring(0, i);
+        }
+        
+    }
+
 
     /** Return a path that resolves to the same file relative to
      * dest as path does relative to source. Paths use '/' as

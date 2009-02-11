@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -415,6 +415,7 @@ public abstract class ResponderCompile extends Responder
      * <li> "lzscript" true|false   -- emit javascript, not object file
      * <li> "lzconsoledebug" use remote debug protocol
      * <li> "cssfile"
+     * <li> "lzcopyresources" -- dhtml compilation should make local copy of external resources
      * <ul>
      * also grabs the request URL.
      */
@@ -480,6 +481,14 @@ public abstract class ResponderCompile extends Responder
             String srcann = req.getParameter(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY);
             if (srcann != null) {
                 props.setProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY, srcann);
+            }
+
+            // Look for "lzcopyresources=true" flag
+            props.setProperty(CompilationEnvironment.COPY_RESOURCES_LOCAL, "false");
+            String lzcopyresources = req.getParameter(CompilationEnvironment.COPY_RESOURCES_LOCAL);
+            if (lzcopyresources != null) {
+                mLogger.info("lzcopyresources = "+lzcopyresources);
+                props.setProperty(CompilationEnvironment.COPY_RESOURCES_LOCAL, lzcopyresources);
             }
 
         }

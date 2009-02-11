@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -123,6 +123,8 @@ public class DeploySOLODHTML {
             // Compile a SOLO app with DHTML runtime.
             compilationProperties.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, "dhtml");
             compilationProperties.setProperty(CompilationEnvironment.PROXIED_PROPERTY, "false");
+            // Forces compiler to copy any external resources into an app subdirectory named lps/resources
+            compilationProperties.setProperty(CompilationEnvironment.COPY_RESOURCES_LOCAL, "true");
             org.openlaszlo.compiler.Compiler compiler = new org.openlaszlo.compiler.Compiler();
 
             //FIXME: this may create temp file anywhere
@@ -290,31 +292,6 @@ public class DeploySOLODHTML {
 
             // track how big the file is, check that we don't write more than some limit
             int contentSize = 0;
-
-            // Now make copies of all resources which live external to the app's home directory.
-            // Look for <resolve> tags in stats:
-            // <canvas>
-            //  <stats>
-            //   <resolve src="xxxx.png" pathname="c:\foo\bar\realpath.png"/>
-
-            Element stats = getChild(canvasElt, "stats");
-            NodeList elts = stats.getElementsByTagName("resolve");
-            for (int i=0; i < elts.getLength(); i++) {
-                Element res = (Element)elts.item(i);
-                String src = res.getAttribute("src");
-                String pathname = res.getAttribute("pathname");
-                String relativePathname = pathname.substring(basedir.getAbsolutePath().length() + 1);
-                String zip_pathname = "lps/resources/"+relativePathname;
-                if (zippedfiles.contains(zip_pathname)) { continue; }
-                // compare the pathname that the resource resolved to with the app directory path 
-                if (pathname.startsWith(appdir.getAbsolutePath())) {
-                    // It's under the app directory, ignore, we copied it already in the appfiles
-                    // code above.
-                } else {
-                    // Copy the resource file into lps/resources/serverroot-relative-pathname
-                    copyFileToZipFile(zout, pathname, zip_pathname, zippedfiles);
-                }
-            }
 
             // Compress the app files
             for (int i=0; i<appfiles.size(); i++) {

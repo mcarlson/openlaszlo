@@ -40,9 +40,15 @@ import org.apache.log4j.*;
  */
 class DHTMLWriter extends ObjectWriter {
 
+
+    static final String localResourceDir = "lps/resources";
+
     // Accumulate script here, to pass to script compiler
     protected PrintWriter scriptWriter = null;
     protected StringWriter scriptBuffer = null;
+
+    // List of declarations of resources
+    protected StringBuffer mResourceDefs = new StringBuffer();
 
     /** Logger */
     protected static Logger mLogger = org.apache.log4j.Logger.getLogger(DHTMLWriter.class);
@@ -167,29 +173,24 @@ class DHTMLWriter extends ObjectWriter {
         org.openlaszlo.iv.flash.api.FlashDef def = null;
 
         File dirfile = mEnv.getApplicationFile().getParentFile();
-        File appdir = dirfile != null ? dirfile : new File(".");
-        mLogger.debug("appdir is: " + appdir + ", LPS.HOME() is: "+ LPS.HOME());
-        //File appHomeParent = new File(LPS.getHomeParent());
-        String sHome=LPS.HOME();
-        // relativePath will perform canonicalization if needed, placing 
-        // the current dir in front of a path fragment.
-        String arPath = FileUtils.relativePath(inputFile, appdir);
-        String srPath = FileUtils.relativePath(inputFile, sHome);
-        String relPath;
-        String pType;
-        if (arPath.length() <= srPath.length()) {
-            pType="ar";
-            relPath = arPath;
-        } else {
-            pType ="sr";
-            relPath = srPath;
-        }
+        String[] fileInfo = getRelPath(inputFile);
+        String pType = fileInfo[0];
+        String relPath = fileInfo[1];
+
         // make it relative and watch out, it comes back canonicalized with forward slashes.
         // Comparing to file.separator is wrong on the pc.
          if (relPath.charAt(0) == '/') {
                  relPath = relPath.substring(1);
         }
-        mLogger.debug("relPath is: "+relPath);
+
+         // If this is a "external" resource and copy-resources flag
+         // is set, make a copy of the resource file to bundle with the app.
+         // (Note: the SOLO DHTML deploy script used to be responsible or this).
+         if (pType.equals("sr") && mEnv.getBooleanProperty(mEnv.COPY_RESOURCES_LOCAL)) {
+             // If this is a "sr" (server-root-relative) path, make a local copy in the
+             // localResourceDir
+             copyResourceFile(inputFile, dirfile, relPath);
+         }
 
         StringBuffer sbuf = new StringBuffer("LzResourceLibrary." + 
                                              name + "={ptype: \"" + pType + "\", frames:[");
@@ -225,9 +226,12 @@ class DHTMLWriter extends ObjectWriter {
             sbuf.append("]");
         }
         sbuf.append("};");
-        addScript(sbuf.toString());
+        mResourceDefs.append(sbuf.toString());
     }
 
+    public void addResourceDefs () {
+        addScript(mResourceDefs.toString());
+    }
     public void importResource(List sources, String sResourceName, File parent)
     {
         writeResourceLibraryDescriptor(sources, sResourceName, parent);
@@ -249,6 +253,8 @@ class DHTMLWriter extends ObjectWriter {
         }
         String pType;
         String relPath;
+        File dirfile = mEnv.getApplicationFile().getParentFile();
+
         for (Iterator e = sources.iterator() ; e.hasNext() ;) {
             File fFile = new File((String)e.next());
             String[] fileInfo = getRelPath(fFile);
@@ -261,6 +267,15 @@ class DHTMLWriter extends ObjectWriter {
             }
 
             mLogger.debug("relFile is: "+relPath);
+
+            // If this is a "external" resource and copy-resources flag
+            // is set, make a copy of the resource file to bundle with the app.
+            // (Note: the SOLO DHTML deploy script used to be responsible or this).
+            if (pType.equals("sr") && mEnv.getBooleanProperty(mEnv.COPY_RESOURCES_LOCAL)) {
+                // If this is a "sr" (server-root-relative) path, make a local copy in the
+                // localResourceDir
+                copyResourceFile(fFile, dirfile, relPath);
+            }
 
             sbuf.append(sep+"'"+relPath+"'");
             sep = ",";
@@ -288,13 +303,20 @@ class DHTMLWriter extends ObjectWriter {
                 ImageMontageMaker.assemble(sources, montageFile);
                 String[] fileInfo = getRelPath(new File(montageFile));
                 relPath = fileInfo[1];
+                pType = fileInfo[0];
+
+                if (pType.equals("sr") && mEnv.getBooleanProperty(mEnv.COPY_RESOURCES_LOCAL)) {
+                    // If this is a "sr" (server-root-relative) path, make a local copy in the
+                    // localResourceDir
+                    copyResourceFile(new File(montageFile), dirfile, relPath);
+                }
                 sbuf.append(",sprite:'" + relPath + "'");
             } catch (Exception e) {
                 mLogger.error("Assembling css sprite: " + sources + ", " + e);
             }
         }
         sbuf.append("};");
-        addScript(sbuf.toString());
+        mResourceDefs.append(sbuf.toString());
     }
 
     /** Validate a given filename is good for importing
@@ -315,34 +337,43 @@ class DHTMLWriter extends ObjectWriter {
     }
 
     private String[] getRelPath(File fFile) { 
-        File dirfile = mEnv.getApplicationFile().getParentFile();
-        String appdir = dirfile != null ? dirfile.getPath() : ".";
-        mLogger.debug("appdir is: " + appdir + ", LPS.HOME() is: "+ LPS.HOME());
-        //File appHomeParent = new File(LPS.getHomeParent());
-        String sHome=LPS.HOME();
-        String arPath;
-        String srPath;
-        String pType;
-        String relPath;
-        arPath = FileUtils.relativePath(fFile, appdir);
-        srPath = FileUtils.relativePath(fFile, sHome);
-        if (arPath.length() <= srPath.length()) {
-            pType="ar";
-            relPath = arPath;
-        } else {
-            pType ="sr";
-            relPath = srPath;
-        }
+        try {
+            File dirfile = mEnv.getApplicationFile().getParentFile();
+            String appdir = new File(dirfile != null ? dirfile.getPath() : ".").getCanonicalPath();
+            //File appHomeParent = new File(LPS.getHomeParent());
+            String sHome = LPS.HOME();
+            String arPath;
+            String pType;
+            String relPath;
 
-        // make it relative and watch out, it comes back canonicalized with forward slashes.
-        // Comparing to file.separator is wrong on the pc.
-        if (relPath.charAt(0) == '/') {
-            relPath = relPath.substring(1);
-        }
-        mLogger.debug("relPath is: "+relPath);
+            String appRelativePrefix = FileUtils.findMaxCommonPrefix(fFile.toString(), appdir);
+            String LPSRelativePrefix = FileUtils.findMaxCommonPrefix(fFile.toString(), sHome);
 
-        String[] out = {pType, relPath};
-        return out;
+            String prefix;
+
+            //appRelativePrefix.length() > LPSRelativePrefix.length() &&
+            if (fFile.toString().startsWith(appdir)) {
+                prefix = appRelativePrefix;
+                pType = "ar";}
+            else {
+                prefix = LPSRelativePrefix;
+                pType = "sr";
+            }
+
+            relPath = FileUtils.relativePath(fFile, prefix);
+
+            // make it relative and watch out, it comes back canonicalized with forward slashes.
+            // Comparing to file.separator is wrong on the pc.
+            if (relPath.charAt(0) == '/') {
+                relPath = relPath.substring(1);
+            }
+            mLogger.debug("relPath is: "+relPath);
+
+            String[] out = {pType, relPath};
+            return out;
+        } catch (java.io.IOException e) {
+            throw new ImportResourceError(fFile.toString(), e, mEnv);
+        }
     }
 
     public void close() throws IOException { 
@@ -353,6 +384,8 @@ class DHTMLWriter extends ObjectWriter {
             throw new IllegalStateException("DHTMLWriter.close() called twice");
         }
         
+        addResourceDefs();
+
         boolean debug = mProperties.getProperty("debug", "false").equals("true");
 
         // This indicates whether the user's source code already manually invoked
@@ -389,6 +422,8 @@ class DHTMLWriter extends ObjectWriter {
     }
 
     public void closeSnippet() throws IOException {
+        addResourceDefs();
+
         // Callback to let library know we're done loading
         addScript("LzLibrary.__LZsnippetLoaded('"+this.liburl+"')");
 
@@ -532,6 +567,29 @@ class DHTMLWriter extends ObjectWriter {
                 throw new ImportResourceError(fileName, e, mEnv);
         }
 
+    }
+
+    /**
+       Copies a file, INPUTFILE, to the file RELPATH relative to the
+       system-generated application local resources directory in
+       DESTDIR/lps/resources.
+     */
+    void copyResourceFile(File inputFile, File destdir, String relPath) {
+        try {
+            File resourceDirRoot = new File(destdir, localResourceDir);
+            File resCopy = new File(resourceDirRoot, relPath);
+            // Ensure that parent directories exist down to the file
+            File dir = resCopy.getParentFile();
+            if (dir != null)
+                dir.mkdirs();
+            // Make copy of file
+            FileUtils.send(new FileInputStream(inputFile), new FileOutputStream(resCopy));
+
+        }
+        catch (IOException e) {
+            mLogger.error("Error copying resource file in DHTMLWriter "+e.getMessage());
+            throw new ImportResourceError(inputFile.toString(), e, mEnv);
+        }
     }
 
 }
