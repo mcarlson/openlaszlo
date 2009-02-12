@@ -524,6 +524,8 @@ function getThickness():Number {
 }
 
 function setMaxLength(val:Number) {
+    // Runtime does not understand Infinity
+    if (val == Infinity) { val = null; }
     this.textfield.maxChars = val;
 }
 

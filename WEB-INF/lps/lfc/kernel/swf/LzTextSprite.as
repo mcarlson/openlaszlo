@@ -250,6 +250,8 @@ LzTextSprite.prototype._viewsetHeight = LzSprite.prototype.setHeight;
   * Set the maximum number of chars a textfield can contain
   */
 LzTextSprite.prototype.setMaxLength = function ( val ){
+    // Runtime does not understand Infinity
+    if (val == Infinity) { val = null; }
     this.__LZtextclip.maxChars = val;
 }
 

@@ -637,7 +637,10 @@ LzInputTextSprite.prototype.setEnabled = function ( val ){
 }
 
 LzInputTextSprite.prototype.setMaxLength = function ( val ){
-    if (val == null) return;
+    // Runtime does not understand Infinity (Actually Safari and Opera
+    // do, but Mozilla does not, probably neither does IE).  The
+    // clever ~>>> expression computes MOST_POSITIVE_FIXNUM.
+    if (val == Infinity) { val = ~0>>>1; }
     this.__LzInputDiv.maxLength = val;    
 }
 
