@@ -260,7 +260,7 @@ class ClassCompiler extends ViewCompiler  {
                     
                     AttributeSpec attrSpec = 
                         new AttributeSpec(attrName, attrType, attrDefault,
-                                          attrSetter, child);
+                                          attrSetter, "true".equals(attrRequired), child);
                     attrSpec.allocation = allocation;
                     attrSpec.isfinal = child.getAttributeValue("final");
                     if (attrName.equals("text") && attrTypeName != null) {

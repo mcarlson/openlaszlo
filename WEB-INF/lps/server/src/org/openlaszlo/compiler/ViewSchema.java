@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -186,6 +186,10 @@ public class ViewSchema extends Schema {
             classModel.attributeSpecs.put(attrName, attrspec);
         } else {
             classModel.classAttributeSpecs.put(attrName, attrspec);
+        }
+
+        if (attrspec.required) {
+            classModel.requiredAttributes.add(attrName);
         }
 
         if (attrName.equals("text")) {
@@ -408,6 +412,8 @@ public class ViewSchema extends Schema {
 
         // Add in the attribute declarations
         addAttributeDefs(elt, tagName, attributeDefs, env);
+        // merge in superclass requiredAttributes list to make lookup more efficient
+        info.requiredAttributes.addAll(superclass.requiredAttributes);
     }
 
     /**
@@ -1049,6 +1055,7 @@ public class ViewSchema extends Schema {
         attributeAttributes.add("allocation");
         attributeAttributes.add("name");
         attributeAttributes.add("setter");
+        attributeAttributes.add("required");
 
     }
 

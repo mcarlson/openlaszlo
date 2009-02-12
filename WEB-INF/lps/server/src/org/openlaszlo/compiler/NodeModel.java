@@ -519,10 +519,30 @@ public class NodeModel implements Cloneable {
               model.addProperty("clickable", "true", ALLOCATION_INSTANCE, elt);
             }
         }
+
+        // Check that all attributes required by the class or it's superclasses are present
+        checkRequiredAttributes(elt, model, schema);
+
         // Record the model in the element for classes
         ((ElementWithLocationInfo) elt).model = model;
         return model;
     }
+
+  private static void checkRequiredAttributes(Element element, NodeModel model, ViewSchema schema) {
+    ClassModel classinfo =  schema.getClassModel(element.getName());
+    Map attrs = model.attrs;
+
+    CompilationEnvironment env = schema.getCompilationEnvironment();
+    // Check that each required attribute is present in the list of supplied attributes
+    for (Iterator iter = classinfo.requiredAttributes.listIterator(); iter.hasNext(); ) {
+      String reqname = (String) iter.next();
+      if (!attrs.containsKey(reqname)) {
+        env.warn(
+            new CompilationError("Missing required attribute "+reqname+ " for tag "+element.getName() , element),
+            element);
+      }
+    }
+  }
 
   static void checkTagDeclared(Element element, ViewSchema schema) {
     ClassModel classinfo =  schema.getClassModel(element.getName());
