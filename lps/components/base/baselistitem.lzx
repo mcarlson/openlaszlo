@@ -85,8 +85,8 @@
         <method name="setSelected" args="s">
             <![CDATA[
                 this.selected = s;
-                if (this.onselect) this.onselect.sendEvent(this);
-                if (this.onselected) this.onselected.sendEvent(this);
+                if (this.onselect.ready) this.onselect.sendEvent(this);
+                if (this.onselected.ready) this.onselected.sendEvent(this);
             ]]>
         </method>
 
@@ -98,6 +98,10 @@
               @keywords private -->
         <method name="_setSelected" args="s">
             <![CDATA[
+                // set the value of the 'selected' attribute here
+                // since this may be called before the selection manager is
+                // created
+                this.selected = s;
                 if (s) {
                     if ($debug) {
                       if (s == "false") {
@@ -106,10 +110,6 @@
                     }
                     parent.select(this);
                 }
-                // set the value of the 'selected' attribute here
-                // since this may be called before the selection manager is
-                // created
-                this.selected = s;
             ]]>
         </method>
 
@@ -129,7 +129,7 @@
 </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
