@@ -8,7 +8,7 @@
  *
  */
 
-commentServerPath = "http://www.beartronics.com/comdoc";
+commentServerPath = "http://comments.openlaszlo.org/comdoc";
 
 href = document.location.href;
 // Compute the pathname of this doc page by grabbing everything after the "/docs/" in the url
