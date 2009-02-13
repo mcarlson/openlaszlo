@@ -204,17 +204,15 @@ dynamic class LzCanvas extends LzView {
 
         this.mask = null;
 
-        if (args.accessible) {
-            if (capabilities.accessibility == true) {
-                // turn on focusrect if canvas.accessible is true
-                this.sprite.setAccessible(args.accessible);
-                if (args.accessible) {
-                    this.sprite.setAAActive(true);
-                    this.sprite.setAASilent(false);
-                }
-            } else if ($debug) {
-                Debug.warn("This runtime doesn't support accessibility.");
+        if (capabilities.accessibility == true) {
+            // set accessible flags to true/false
+            this.sprite.setAccessible(args.accessible);
+            if (args.accessible) {
+                this.sprite.setAAActive(true);
+                this.sprite.setAASilent(false);
             }
+        } else if (args.accessible && $debug) {
+            Debug.warn("This runtime doesn't support accessibility.");
         }
 
         if ((typeof(args.history) == "undefined") || args.history == null) {

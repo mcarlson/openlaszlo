@@ -73,11 +73,15 @@ LzSprite.prototype.capabilities = {
     ,linescrolling: true
 }
 
-/** Turns accessibility on by showing/hiding the global yellow flash focusrect
+/** Turns accessibility on/off if accessible == true and a screen reader is active 
   * @param Boolean accessible
   */
 LzSprite.prototype.setAccessible = function(accessible) {
-    _root._focusrect = accessible == true ? true : 0;
+    var a = LzBrowserKernel.isAAActive() && accessible;
+    //Debug.write('setAccessible', LzBrowserKernel.isAAActive(), a, this);
+    // turn off ugly _focusrect
+    _root._focusrect = 0;
+    _root.spriteroot.accessible = a;
 }
 
 LzSprite.prototype.__setAAProperty = function (aaprop, val, btnval, mc) {
@@ -266,7 +270,7 @@ LzSprite.prototype.setResource = function ( resourceName ) {
     this.__LZhaser = resourceName == "empty";
     this.resource = resourceName;
 
-    if (canvas.accessible) {
+    if (_root.spriteroot.accessible) {
         // use a special resource to ensure we can be focused by screen readers
         if (! this.clickable && this.__LZhaser) {
             resourceName = "accempty"
@@ -336,6 +340,11 @@ LzSprite.prototype.makeContainerResource = function ( ) {
   */
 LzSprite.prototype.setMovieClip = function ( mc , mcID) {
     this.__LZmovieClipRef = mc;
+    if (_root.spriteroot.accessible) {
+        this.__LZmovieClipRef.onSetFocus = LzSprite.prototype.__gotFocus;
+        this.__LZmovieClipRef.onKillFocus = LzSprite.prototype.__lostFocus;
+        this.__LZmovieClipRef.myView = this.owner;
+    }
     if (this.masked) {
       this.applyMask();
     }
@@ -794,9 +803,6 @@ LzSprite.prototype.setClickable = function ( amclickable ){
         var mc = this.__LZmovieClipRef.attachMovie( this.__LZclickregion, "$mcB", 
                     this.BUTTON_DEPTH, {_width: 0, _height: 0} );
 
-        // TODO: turn on only in accessible mode...
-        mc.but.onSetFocus = Button.prototype.__gotFocus;
-        mc.but.onKillFocus = Button.prototype.__lostFocus;
         if (this.showhandcursor == false) mc.but.useHandCursor = false;
 
         this.__LZbuttonRef = mc;
@@ -806,6 +812,12 @@ LzSprite.prototype.setClickable = function ( amclickable ){
         this.setButtonSize( "width" , this.width );
         this.setButtonSize( "height" , this.height );
         this.__LZbuttonRef.myView = this.owner;//required property, see SWFFile.java
+        if (_root.spriteroot.accessible) {
+            mc.but.onSetFocus = LzSprite.prototype.__gotFocus;
+            mc.but.onKillFocus = LzSprite.prototype.__lostFocus;
+            mc.onSetFocus = LzSprite.prototype.__gotFocus;
+            mc.onKillFocus = LzSprite.prototype.__lostFocus;
+        }
     } else {
         this.__LZbuttonRef._visible = amclickable;
     }
@@ -1596,19 +1608,22 @@ LzSprite.prototype.getContext = LzSprite.prototype.getMCRef;
   * 
   * @access private
   */
-Button.prototype.__gotFocus = function ( oldfocus ){
-    if (_root._focusrect != true) return;
-    if (!(lz.Focus.getFocus() == this._parent.myView)) {
-        var tabdown = lz.Keys.isKeyDown('tab');
-        lz.Focus.setFocus(this._parent.myView, false);
+LzSprite.prototype.__gotFocus = function ( oldfocus ){
+    //Debug.warn('__gotFocus', this, this.myView, oldfocus);
+    if (_root.spriteroot.accessible != true) return;
+    var v = this.myView || this._parent.myView;
+    if (!(lz.Focus.getFocus() === v)) {
+        //var tabdown = lz.Keys.isKeyDown('tab');
+        lz.Focus.setFocus(this.myView);
     }
 }
 
 /**
   * @access private
   */
-Button.prototype.__lostFocus = function ( ){
-    if (_root._focusrect != true) return;
-    if (this._parent.myView.hasFocus) lz.Focus.clearFocus();
+LzSprite.prototype.__lostFocus = function ( ){
+    if (_root.spriteroot.accessible != true) return;
+    var v = this.myView || this._parent.myView;
+    if (v.hasFocus) lz.Focus.clearFocus();
 }
 }
