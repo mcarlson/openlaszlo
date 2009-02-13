@@ -384,6 +384,13 @@ class DHTMLWriter extends ObjectWriter {
             throw new IllegalStateException("DHTMLWriter.close() called twice");
         }
         
+        // special case for IE7, need to copy lps/includes/blank.gif to lps/resources/lps/includes/blank.gif
+        if (mEnv.getBooleanProperty(mEnv.COPY_RESOURCES_LOCAL)) {
+            File inputFile = new File(LPS.HOME() + "/lps/includes/blank.gif");
+            File dirfile = mEnv.getApplicationFile().getParentFile();
+            copyResourceFile(inputFile, dirfile, "lps/includes/blank.gif");
+        }
+
         addResourceDefs();
 
         boolean debug = mProperties.getProperty("debug", "false").equals("true");
