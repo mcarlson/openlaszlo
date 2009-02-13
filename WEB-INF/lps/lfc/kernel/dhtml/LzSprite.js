@@ -2040,7 +2040,7 @@ LzSprite.prototype.__setCSSClassProperty = function(classname, name, value) {
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
 LzSprite.prototype.setDefaultContextMenu = function( cmenu ){
-    LzMouseKernel.__defaultcontextmenu = cmenu;
+    LzSprite.__rootSprite.__contextmenu = cmenu;
 }
 
 /**

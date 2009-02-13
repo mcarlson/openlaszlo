@@ -1,7 +1,7 @@
 /**
   * LzMouseKernel.js
   *
-  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -17,7 +17,6 @@ var LzMouseKernel = {
     ,__y: 0
     ,owner: null
     ,__showncontextmenu: null
-    ,__defaultcontextmenu: null
     // handles global mousedown, move events
     ,__mouseEvent: function(e) {
         if (!e) {
@@ -47,12 +46,14 @@ var LzMouseKernel = {
 
         if (e.button == 2 && eventname != 'oncontextmenu') return;
         if (eventname == 'oncontextmenu') {
-            if (targ && targ.owner && targ.owner.__contextmenu) {
-                targ.owner.__contextmenu.kernel.__show();
-                return targ.owner.__contextmenu.kernel.showbuiltins;
-            } else if (LzMouseKernel.__defaultcontextmenu) {
-                LzMouseKernel.__defaultcontextmenu.kernel.__show();
-                return LzMouseKernel.__defaultcontextmenu.kernel.showbuiltins;
+            if (targ && targ.owner) {
+                // walk up the parent chain (canvas always has a default)
+                var owner = targ.owner;
+                while (! owner.__contextmenu && owner.__parent) {
+                    owner = owner.__parent;
+                }
+                owner.__contextmenu.kernel.__show();
+                return owner.__contextmenu.kernel.showbuiltins;
             }
         } else {
             LzMouseKernel.__sendEvent(eventname);
