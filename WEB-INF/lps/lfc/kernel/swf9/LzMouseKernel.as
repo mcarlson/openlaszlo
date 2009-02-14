@@ -47,7 +47,7 @@ class LzMouseKernel  {
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_UP,   __mouseHandler);
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseHandler);
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_WHEEL, __mouseWheelHandler);
-            LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE, __mouseLeavesHandler);
+            LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE, __mouseLeaveHandler);
             __listeneradded = true;
         }
     }    
@@ -60,9 +60,9 @@ class LzMouseKernel  {
             __lastMouseDown.__globalmouseup(event);
             __lastMouseDown = null;
         } else {
-            if (__mouseLeft && event.buttonDown) {
+            if (__mouseLeft) {
                 __mouseLeft = false;
-                __mouseUpOutsideHandler();
+                if (event.buttonDown) __mouseUpOutsideHandler();
             }
             __sendEvent(null, eventname);
         }
@@ -78,10 +78,9 @@ class LzMouseKernel  {
     }
 
     // handles MOUSE_LEAVE event
-    static function __mouseLeavesHandler(event:Event):void {
-        var eventname = 'on' + event.type.toLowerCase();
+    static function __mouseLeaveHandler(event:Event = null):void {
         __mouseLeft = true;
-        __sendEvent(null, eventname);
+        __sendEvent(null, 'onmouseleave');
     }
 
     static function __mouseWheelHandler(event:MouseEvent):void {
