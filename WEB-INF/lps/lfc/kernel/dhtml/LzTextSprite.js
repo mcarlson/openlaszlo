@@ -173,6 +173,9 @@ LzTextSprite.prototype.__updatelineheight = function ( ){
     this.lineHeight = lineHeight;
     lzv.scrollevent('lineHeight', lineHeight);
   }
+  if (this.resize) {
+      this.setWidth(this.getTextWidth());
+  }
 }
 
 
