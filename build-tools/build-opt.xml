@@ -1,7 +1,7 @@
 <target name="build-opt" unless="done.build-opt">
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -11,6 +11,28 @@
     <property name="LPS_HOME" value="${env.LPS_HOME}" />
     <fail unless="LPS_HOME" message="LPS_HOME is not set."/>
     
+    <!-- make sure we have a build.id -->
+    <xmlproperty file="${LPS_HOME}/repository-info.xml" keeproot="false" prefix="svninfo" />
+    <condition property="build.id" value="${svninfo.entry.commit(revision)} ${svninfo.entry(path)}">
+      <and>
+        <isset property="svninfo.entry.commit(revision)" />
+        <isset property="svninfo.entry(path)" />
+        <not>
+          <isset property="build.id" />
+        </not>
+      </and>
+    </condition>
+    <fail unless="build.id" message="build.id is not set" />
+
+    <!-- make sure we have a build.date -->
+    <tstamp><format property="timestamp.now" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="GMT" locale="en"/></tstamp>
+    <condition property="build.date" value="${timestamp.now}">
+      <not>
+        <isset property="build.date" />
+      </not>
+    </condition>
+    <fail unless="build.date" message="build.date is not set" />
+
     <basename property="lps.branch" file="${LPS_HOME}"/>
 
     <!-- make sure we have a working LZ_VENDOR_ROOT -->

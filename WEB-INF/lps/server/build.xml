@@ -5,7 +5,7 @@
 
 <project name="server" default="build" basedir=".">
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -108,27 +108,6 @@ javac (1.4);
   <property name="sc.src.py"   value="./sc" />
   <property name="js2doc.src.java" value="./src/${pkg.js2doc}"/>
 
-  <!--===============  Target [get-svn-info]  ==================-->
-  <target name="get-svn-info" unless="done.get-svn-info"
-    description="Get the current repository information">
-      <sequential>
-          <exec executable="svn" output="repository-info.xml">
-              <arg value="info" />
-              <arg value="--xml" />
-              <arg value="${LPS_HOME}" />
-          </exec>
-          <property name="done.get-svn-info" value="true" />
-      </sequential>
-  </target>
-
-  <!--===============  Target [setup-build-id]  ==================-->
-  <target name="setup-build-id" depends="get-svn-info" unless="build.id"
-    description="Load repository information into properties">
-      <xmlproperty file="repository-info.xml"/>
-      <property name="build.id" value="${info.entry.commit(revision)} ${info.entry(path)}" />
-      <echo message="build.id is '${build.id}'" />
-  </target>
-
   <!--===============  Target [copyjgen]  ==================-->
   <target name="copyjgen" unless="copyjgen.uptodate"
     description="Copy jgen files into misc directory">
@@ -182,7 +161,7 @@ javac (1.4);
   
   <!--===============  Target [init]  ===================-->
   <!-- Initialize property values for other targets to use. -->
-  <target name="init" depends="build-opt,setup-build-id">
+  <target name="init" depends="build-opt">
     <tstamp/>
 
   <!-- Ignore the system classpath -->
@@ -298,14 +277,10 @@ javac (1.4);
   <target name="lps-xml" depends="init" unless="done-lps-xml"
           description="Create the lps.xml file" >
     <echo message="LPS_HOME is ${LPS_HOME}." />
-    <!-- Create LPS.xml based on timestamp -->
-    <tstamp>
-        <format property="BUILDDATE" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="GMT" locale="en"/>
-    </tstamp>
     <copy overwrite="true" tofile="build/${pkg.server}/lps.xml"
             file="src/${pkg.server}/lps.xml.proto">
         <filterset>
-            <filter token="BUILDDATE" value="${BUILDDATE}" />
+            <filter token="BUILDDATE" value="${build.date}" />
             <filter token="BUILDID"   value="${build.id}" />
             <filter token="RELEASE"   value="${release}" />
             <filter token="VERSIONID" value="${version.id}" />
@@ -519,7 +494,7 @@ javac (1.4);
             <attribute name="Specification-Version" value="${version.id}"/>
             <attribute name="Specification-Vendor" value="laszlosystems.com"/>
             <attribute name="Implementation-Title" value="org.openlaszlo.server"/>
-            <attribute name="Implementation-Version" value="${release.id} ${build.id}"/> 
+            <attribute name="Implementation-Version" value="${release} ${build.id} ${build.date}"/>
             <attribute name="Implementation-Vendor" value="org.openlaszlo"/>
           </section>
         </manifest>

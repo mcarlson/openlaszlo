@@ -6,7 +6,7 @@
 <!--  Author: Eric Bloch  / Benjamin Shine                                  -->
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -156,7 +156,7 @@
 
   <patternset id="manifest.webapp.docs">
       <!-- these are relative to docs subdirectory -->
-      <!-- they are specified separately because we filter VERSIONID within them -->
+      <!-- they are specified separately because we filter VERSIOID within them -->
 
       <include name="*.html" />
       <include name="*.css" />
@@ -324,16 +324,32 @@
       <property name="skip.nsi-dev" value="true" />
   </target>
 
+  <!--===============  Target [get-svn-info]  ==================-->
+  <target name="get-svn-info" unless="done.get-svn-info"
+          description="Get the current repository information">
+    <property environment="env" />
+    <property name="LPS_HOME" value="${env.LPS_HOME}" />
+    <fail unless="LPS_HOME" message="LPS_HOME is not set."/>
+    <sequential>
+      <exec executable="svn" output="repository-info.xml">
+        <arg value="info" />
+        <arg value="--xml" />
+        <arg value="${LPS_HOME}" />
+      </exec>
+      <property name="done.get-svn-info" value="true" />
+    </sequential>
+  </target>
+
   <!--===============  Target [init]  ===================-->
   <target name="init" description="Target for initialization"
-          depends="build-opt"
+          depends="get-svn-info,build-opt"
           unless="done.init" >
     <tstamp/>
 
     <fail message="LPS_HOME (${LPS_HOME}) is wrong! It should be ${basedir}">
-        <condition>
-            <not> <equals arg1="${LPS_HOME}" arg2="${basedir}"/> </not>
-        </condition>
+      <condition>
+        <not> <equals arg1="${LPS_HOME}" arg2="${basedir}"/> </not>
+      </condition>
     </fail>
 
     <property file="${LPS_HOME}/build.properties"/>
@@ -369,7 +385,7 @@
     <echo message="    ant.home: ${ant.home}"/>
     <echo message="    JRE: ${java.version} (${java.vendor}) " />
     <echo message="    JAVA_HOME: ${env.JAVA_HOME}"/>
-    <echo message="    LPS Version: ${version.id} ${release}"/>
+    <echo message="    LPS Version: ${version.id} ${release} ${build.id} ${build.date}"/>
     <echo message="    LPS_HOME: ${LPS_HOME}"/>
     <echo message="    LZ_VENDOR_ROOT: ${env.LZ_VENDOR_ROOT}" />
     <echo message="    LZ_TOOLS_ROOT: ${env.LZ_TOOLS_ROOT}" />
@@ -469,6 +485,9 @@
       <ant dir="examples"             target="clean" />
       <delete includeEmptyDirs="true" >
           <fileset dir="." >
+              <include name="release-notes.*" />
+              <include name="README.txt" />
+              <include name="README.core.txt" />
               <include name="*.tar"/>
               <include name="*.tar.gz"/>
               <include name="*.nsi"/>
@@ -592,6 +611,7 @@
       unless="build.done"
       depends="init">
 
+      <ant target="update-version" />
       <ant target="laszlo-explorer" />
       <ant dir="${webapp-lps-home}/schema"  target="build" />
       <!-- Copy pieces of schema stuff to tools -->
@@ -775,7 +795,7 @@
   <!--================  Target [build-dist-dir-dev] ==============-->
   <target name="build-dist-dir-dev"
       description="Prepares dev copy of dist directory"
-      depends="disable-tomcat,init" unless="done.build-dist-dir-dev" >
+      depends="disable-tomcat,init,build,doc" unless="done.build-dist-dir-dev" >
 
       <copy todir="${builddir-dev}" >
           <fileset dir="${builddir}">
@@ -786,25 +806,11 @@
           <fileset dir="credits" />
       </copy>
 
-      <tstamp><format property="BUILDDATE" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="GMT" locale="en"/></tstamp>
       <copy todir="${builddir-dev}">
-          <!-- need the html and the css -->
-          <fileset dir="docs">
-            <include name="release-notes.*" />
-          </fileset>
-          <filterset>
-              <filter token="VERSIONID" value="${version.id}"/>
-              <filter token="BUILDID" value="${build.id}"/>
-              <filter token="BUILDDATE" value="${BUILDDATE}"/>
-              <filter token="RELEASEID" value="${release.id}"/>
-          </filterset>
-      </copy>
-
-      <copy tofile="${builddir-dev}/README.txt"
-            file="README.txt" overwrite="true">
-          <filterset>
-              <filter token="VERSIONID" value="${version.id}"/>
-          </filterset>
+        <fileset>
+          <include name="release-notes.*" />
+          <include name="README.txt" />
+        </fileset>
       </copy>
 
       <mkdir dir="${builddir-dev-bin}" />
@@ -1177,12 +1183,9 @@
 
       <copy todir="${builddir}">
           <!-- need the html and the css -->
-          <fileset dir="docs">
+          <fileset>
             <include name="release-notes.*" />
           </fileset>
-          <filterset>
-              <filter token="VERSIONID" value="${version.id}"/>
-          </filterset>
       </copy>
 
       <copy todir="${builddir}" file="docs/logo.gif" />
@@ -1469,26 +1472,48 @@
          <antcall target="tomcat.stop" />
      </target>
 
-     <!-- ============= Target [all] ===================== -->
-
-     <!-- ============= Target [make] ===================== -->
+     <!-- ============= Target [webapp.reload] ===================== -->
      <target name="webapp.reload"  depends="init,clean-cache" unless="no.tomcat"
          description="Reload lps development tree as webapp into tomcat5">
          <antcall target="webapp.undeploy" />
          <antcall target="webapp.deploy" />
      </target>
 
-   <target name="laszlo-explorer" depends="init"
-       description="Create supporting files for laszlo-explorer" >
-     <copy file="laszlo-explorer/coverpages/welcome/index.html.proto"
-           tofile="laszlo-explorer/coverpages/welcome/index.html" >
-       <filterset>
-         <filter token="VERSIONID" value="${version.id}"/>
-         </filterset>
-     </copy>
+     <!-- ============= Target [versioning] ===================== -->
+     <target name="update-version" depends="init"
+             description="Filters various files that want to include version, build, date, etc." >
+       <copy todir="${LPS_HOME}" overwrite="true">
+          <fileset dir="docs/src">
+            <include name="release-notes.*" />
+            <include name="README.txt" />
+            <include name="README.core.txt" />
+          </fileset>
+          <filterset>
+            <filter token="BUILDDATE" value="${build.date}" />
+            <filter token="BUILDID"   value="${build.id}" />
+            <filter token="RELEASE"   value="${release}" />
+            <filter token="RELEASEID" value="${release.id}" />
+            <filter token="VERSIONID" value="${version.id}" />
+          </filterset>
+      </copy>
+     </target>
 
-     <style style="quick-index.xslt"
-            in="laszlo-explorer/nav.xml"
-            out="quick-index.html" />
-   </target>
+     <!-- ============= Target [laszlo-explorer] ===================== -->
+     <target name="laszlo-explorer" depends="init"
+             description="Create supporting files for laszlo-explorer" >
+       <copy file="laszlo-explorer/coverpages/welcome/index.html.proto"
+             tofile="laszlo-explorer/coverpages/welcome/index.html" >
+         <filterset>
+           <filter token="BUILDDATE" value="${build.date}" />
+           <filter token="BUILDID"   value="${build.id}" />
+           <filter token="RELEASE"   value="${release}" />
+           <filter token="RELEASEID" value="${release.id}" />
+           <filter token="VERSIONID" value="${version.id}" />
+         </filterset>
+       </copy>
+
+       <style style="quick-index.xslt"
+              in="laszlo-explorer/nav.xml"
+              out="quick-index.html" />
+     </target>
 </project>

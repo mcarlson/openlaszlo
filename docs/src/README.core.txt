@@ -9,7 +9,6 @@ Here's what you'll find:
     lps-@VERSIONID@        - Expanded directory containing the 
                              LPS @VERSIONID@ web app.
     release-notes.html     - Release notes.
-    changelog.html         - Change log.
 
 Deploy the lps-@VERSIONID@ web application and surf to 
 
@@ -24,7 +23,9 @@ http://www.laszlosystems.com/developers/learn/documentation/
 
 --
 
+Build: @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@
+
 * T_LZ_COPYRIGHT_BEGIN ******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+* Copyright 2001-2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.            *
 * Use is subject to license terms.                                          *
 * T_LZ_COPYRIGHT_END ********************************************************
