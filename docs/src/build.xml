@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
  
@@ -161,7 +161,11 @@
         <fileset dir="." includes="**/*.proto" />
         <mapper type="glob" from="*.proto" to="*" />
         <filterset>
-          <filter token="VERSIONID" value="${version.id}"/>
+            <filter token="BUILDDATE" value="${build.date}" />
+            <filter token="BUILDID"   value="${build.id}" />
+            <filter token="RELEASE"   value="${release}" />
+            <filter token="RELEASEID" value="${release.id}" />
+            <filter token="VERSIONID" value="${version.id}" />
         </filterset>
       </copy>
 

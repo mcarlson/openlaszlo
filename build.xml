@@ -498,7 +498,8 @@
               <include name="tools/lzx.rng" />
               <include name="tools/lzx.xsd" />
               <include name="lps/utils/startup.var" />
-              <include name="quick-index.html"/>
+              <include name="quick-index.xslt"/>
+              <include name="index.html"/>
           </fileset>
           <!-- remove any lps jars, and some random cruft -->
           <fileset dir="./WEB-INF" >
@@ -1235,14 +1236,8 @@
           </fileset>
       </copy>
 
-
-      <copy tofile="${webapp}/index.html" file="quick-index.html" >
-          <filterset>
-               <filter token="BUILDID"   value="${build.id}"/>
-               <filter token="VERSIONID" value="${version.id}"/>
-               <filter token="VERSIONIDUPPER" value="${version.id.upper}"/>
-               <filter token="RELEASEID" value="${release.id}"/>
-          </filterset>
+      <!-- install the 'quick' index -->
+      <copy tofile="${webapp}/index.html" file="index.html" >
       </copy>
 
 
@@ -1487,6 +1482,7 @@
             <include name="release-notes.*" />
             <include name="README.txt" />
             <include name="README.core.txt" />
+            <include name="quick-index.xslt" />
           </fileset>
           <filterset>
             <filter token="BUILDDATE" value="${build.date}" />
@@ -1499,7 +1495,7 @@
      </target>
 
      <!-- ============= Target [laszlo-explorer] ===================== -->
-     <target name="laszlo-explorer" depends="init"
+     <target name="laszlo-explorer" depends="init,update-version"
              description="Create supporting files for laszlo-explorer" >
        <copy file="laszlo-explorer/coverpages/welcome/index.html.proto"
              tofile="laszlo-explorer/coverpages/welcome/index.html" >
@@ -1514,6 +1510,6 @@
 
        <style style="quick-index.xslt"
               in="laszlo-explorer/nav.xml"
-              out="quick-index.html" />
+              out="index.html" />
      </target>
 </project>

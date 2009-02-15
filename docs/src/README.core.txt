@@ -23,7 +23,7 @@ http://www.laszlosystems.com/developers/learn/documentation/
 
 --
 
-Build: @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@
+OpenLaszlo @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@
 
 * T_LZ_COPYRIGHT_BEGIN ******************************************************
 * Copyright 2001-2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.            *

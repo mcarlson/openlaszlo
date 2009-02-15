@@ -20,7 +20,7 @@ a copy from http://java.sun.com and set your JAVA_HOME environment variable.
 
 --
 
-Build: @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@
+OpenLaszlo @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@
 
 * T_LZ_COPYRIGHT_BEGIN ******************************************************
 * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.            *

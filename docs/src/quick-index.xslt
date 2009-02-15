@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- quick-index.xslt --> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -31,14 +31,14 @@
             <xsl:apply-templates select="*[not(@name='Laszlo in 10 Minutes')]"/> 
         </ul>
         <hr/>
+        <p>OpenLaszlo @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@</p>
 <!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
-<p class="copyright">Copyright &#xA9; 2002-2008 <a target="_top"
+<p class="copyright">Copyright &#xA9; 2002-2009 <a target="_top"
 href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
 All Rights Reserved. Unauthorized use, duplication or
 distribution is strictly prohibited. This is the proprietary
 information of Laszlo Systems, Inc. Use is subject to license terms.</p>
 <!-- * H_LZ_COPYRIGHT_END ************************************************* -->
-        <p>OpenLaszlo @VERSIONID@ build @BUILDID@ </p>
         </body>
         </html>
     </xsl:template>
