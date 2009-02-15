@@ -929,6 +929,7 @@ LzSprite.prototype.__setClickable = function(c, div) {
     // Prevent context menus in Firefox 1.5 - see LPP-2678
     div.onmousedown = f;
     div.onmouseup = f;
+    div.onmousemove = f;
     if (this.quirks.ie_mouse_events) {
         div.ondrag = f;
         div.ondblclick = f;
@@ -982,6 +983,14 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         }
     }
 
+    if (e.pageX || e.pageY) {
+        LzMouseKernel.__x = e.pageX;
+        LzMouseKernel.__y = e.pageY;
+    } else if (e.clientX || e.clientY) {
+        LzMouseKernel.__x = e.clientX;
+        LzMouseKernel.__y = e.clientY;
+    }
+
     if (window['LzInputTextSprite'] && eventname == 'onmouseover' && LzInputTextSprite.prototype.__lastshown != null) LzInputTextSprite.prototype.__hideIfNotFocused();
 
     if (eventname == 'onmousedown') {
@@ -1009,6 +1018,8 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         }
     } else if (eventname == 'onmouseupoutside') {
         this.__mouseisdown = false;
+    } else if (eventname == 'onmousemove') {
+        return;
     }
 
     //Debug.write('__mouseEvent', eventname, this.owner);
