@@ -93,7 +93,7 @@
     <!--================  Patternset [manifest] ==============-->
     <patternset id="manifest.top" >
         <include name="LICENSE.txt" />
-        <include name="release-notes.html />
+        <include name="release-notes.html" />
     </patternset>
 
   <!-- These are all the files that can be copied directly
