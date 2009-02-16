@@ -12,7 +12,6 @@
     <fail unless="LPS_HOME" message="LPS_HOME is not set."/>
     
     <!-- make sure we have a build.id -->
-    <xmlproperty file="${LPS_HOME}/repository-info.xml" keeproot="false" prefix="svninfo" />
     <condition property="build.id" value="${svninfo.entry.commit(revision)} ${svninfo.entry(path)}">
       <and>
         <isset property="svninfo.entry.commit(revision)" />

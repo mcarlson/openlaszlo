@@ -341,9 +341,15 @@
     </sequential>
   </target>
 
+  <!--===============  Target [read-svn-info]  ==================-->
+  <target name="read-svn-info" depends="get-svn-info" unless="build.id"
+    description="Load repository information into properties">
+      <xmlproperty file="${LPS_HOME}/repository-info.xml" keeproot="false" prefix="svninfo" />
+  </target>
+
   <!--===============  Target [init]  ===================-->
   <target name="init" description="Target for initialization"
-          depends="get-svn-info,build-opt"
+          depends="read-svn-info,build-opt"
           unless="done.init" >
     <tstamp/>
 
