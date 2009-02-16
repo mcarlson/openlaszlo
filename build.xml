@@ -93,6 +93,7 @@
     <!--================  Patternset [manifest] ==============-->
     <patternset id="manifest.top" >
         <include name="LICENSE.txt" />
+        <include name="release-notes.html />
     </patternset>
 
   <!-- These are all the files that can be copied directly
@@ -809,7 +810,6 @@
 
       <copy todir="${builddir-dev}">
         <fileset>
-          <include name="release-notes.*" />
           <include name="README.txt" />
         </fileset>
       </copy>
@@ -1179,13 +1179,6 @@
           </fileset>
           <fileset dir="${webapp-lps-home}/server/lib" >
               <include name="lps*.jar" />
-          </fileset>
-      </copy>
-
-      <copy todir="${builddir}">
-          <!-- need the html and the css -->
-          <fileset>
-            <include name="release-notes.*" />
           </fileset>
       </copy>
 

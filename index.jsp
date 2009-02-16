@@ -20,7 +20,7 @@
         <ul>
             <li><a href="release-notes.html">Release Notes</a>
             </li>
-            <li><a href="quick-index.html">OpenLaszlo Quick Index</a> (this replaces this file in the distro)
+            <li><a href="index.html">OpenLaszlo Quick Index</a> (this replaces this file in the distro)
             </li>
             <li>Laszlo Explorer
                 <ul>
