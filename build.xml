@@ -799,19 +799,14 @@
       description="Prepares dev copy of dist directory"
       depends="disable-tomcat,init,build,doc" unless="done.build-dist-dir-dev" >
 
-      <copy todir="${builddir-dev}" >
+      <copy todir="${builddir-dev}">
           <fileset dir="${builddir}">
               <patternset refid="manifest.top" />
+              <include name="README.txt" />
           </fileset>
       </copy>
       <copy todir="${builddir-dev-credits}">
           <fileset dir="credits" />
-      </copy>
-
-      <copy todir="${builddir-dev}">
-        <fileset>
-          <include name="README.txt" />
-        </fileset>
       </copy>
 
       <mkdir dir="${builddir-dev-bin}" />
