@@ -60,21 +60,21 @@ public function insertBefore (newChild, refChild){
                     newChild.parentNode.removeChild( newChild );
                 }
             }
-            
+
             if (! samenode) {
                 this.__LZcoDirty = true;
                 this.childNodes.splice( off, 0, newChild );
             }
-            
+
             newChild.$lzc$set_ownerDocument( this.ownerDocument );
             newChild.parentNode = this;
             if (newChild.onparentNode.ready) newChild.onparentNode.sendEvent( this );
             if (this.onchildNodes.ready) this.onchildNodes.sendEvent( newChild );
             this.ownerDocument.handleDocumentChange( "insertBefore", this, 0 );
-            
+
             return newChild;
         }
-        
+
         //raise DOMException "NOT_FOUND_ERR"
         return null;
     }
@@ -107,25 +107,27 @@ public function replaceChild (newChild, oldChild){
                     newChild.parentNode.removeChild( newChild );
                 }
             }
-            
+
             if (! samenode) {
-                //TODO [20080702 anba] this breaks smoke-check!
+                // @devnote parentNode needs to be set to null, but that breaks smoke-check.
+                // DOM Level1, parentNode description:
+                // "The parent of this node. [...], if a node has just been created and not yet
+                // added to the tree, or if it has been removed from the tree, this is null."
                 // oldChild.parentNode = null;
-                // oldChild.$lzc$set_ownerDocument( null );
                 //adjust node-offset
                 newChild.__LZo = off;
                 this.childNodes[ off ] = newChild;
             }
-            
+
             newChild.$lzc$set_ownerDocument( this.ownerDocument );
             newChild.parentNode = this;
             if (newChild.onparentNode.ready) newChild.onparentNode.sendEvent( this );
             if (this.onchildNodes.ready) this.onchildNodes.sendEvent( newChild );
             this.ownerDocument.handleDocumentChange( "childNodes", this, 0, newChild );
-            
+
             return newChild;
         }
-        
+
         //raise DOMException "NOT_FOUND_ERR"
         return null;
     }
@@ -139,19 +141,21 @@ public function replaceChild (newChild, oldChild){
 public function removeChild (oldChild){
     var off:int = this.__LZgetCO(oldChild);
     if (off >= 0) {
-        //TODO [20080702 anba] this breaks smoke-check!
+        // @devnote parentNode needs to be set to null, but that breaks smoke-check.
+        // DOM Level1, parentNode description:
+        // "The parent of this node. [...], if a node has just been created and not yet
+        // added to the tree, or if it has been removed from the tree, this is null."
         // oldChild.parentNode = null;
-        // oldChild.$lzc$set_ownerDocument( null );
-        
+
         this.__LZcoDirty = true;
         this.childNodes.splice( off, 1 );
-        
+
         if (this.onchildNodes.ready) this.onchildNodes.sendEvent( oldChild );
         this.ownerDocument.handleDocumentChange("removeChild", this, 0, oldChild);
-        
+
         return oldChild;
     }
-    
+
     //raise DOMException "NOT_FOUND_ERR"
     return null;
 }
@@ -176,22 +180,22 @@ public function appendChild (newChild){
                 newChild.parentNode.removeChild( newChild );
             }
         }
-        
+
         if (this.childNodes) {
             this.childNodes.push( newChild );
         } else {
             this.childNodes = [newChild];
         }
-        
+
         //instead of marking dirty, this is easy
         newChild.__LZo = this.childNodes.length - 1;
-        
+
         newChild.$lzc$set_ownerDocument( this.ownerDocument );
         newChild.parentNode = this;
         if (newChild.onparentNode.ready) newChild.onparentNode.sendEvent( this );
         if (this.onchildNodes.ready) this.onchildNodes.sendEvent( newChild );
         this.ownerDocument.handleDocumentChange( "appendChild", this, 0, newChild );
-        
+
         return newChild;
     }
 }
@@ -319,17 +323,19 @@ function $lzc$getLastChild_dependencies( who, self ) :Array {
 
 /** @access private */
 function __LZgetCO (child /*:LzDataNodeMixin*/) :int {
-    var cn:Array = this.childNodes;
-    if (! this.__LZcoDirty) {
-        //this is the fast path
-        var i:int = child.__LZo;
-        if (cn[i] === child) {
-            return i;
-        }
-    } else {
-        for (var i:int = cn.length - 1; i >= 0; --i) {
+    if (child != null) {
+        var cn:Array = this.childNodes;
+        if (! this.__LZcoDirty) {
+            //this is the fast path
+            var i:int = child.__LZo;
             if (cn[i] === child) {
                 return i;
+            }
+        } else {
+            for (var i:int = cn.length - 1; i >= 0; --i) {
+                if (cn[i] === child) {
+                    return i;
+                }
             }
         }
     }
@@ -385,15 +391,18 @@ public final function setAttrs (attrs:Object) :void {
 
 /** @access private */
 function $lzc$set_childNodes (children:Array) :void {
-    //TODO [20080702 anba] this breaks smoke-check!
+    // @devnote parentNode needs to be set to null, but that breaks smoke-check.
+    // DOM Level1, parentNode description:
+    // "The parent of this node. [...], if a node has just been created and not yet
+    // added to the tree, or if it has been removed from the tree, this is null."
     //var cn = this.childNodes;
     //if (cn && cn.length > 0) {
     //    for (var i = 0; i < cn.length; ++i) {
     //        cn.parentNode = null;
-    //        cn.$lzc$set_ownerDocument( null );
     //    }
     //}
 
+    if (! children) children = [];
     this.childNodes = children;
 
     if (children.length > 0) {
@@ -697,7 +706,7 @@ class LzDataElement extends LzDataNode with LzDataElementMixin, LzDataNodeMixin 
         this.nodeType = LzDataElement.ELEMENT_NODE;
         this.attributes = attributes;
         this.ownerDocument = this;
-        this.$lzc$set_childNodes( children || [] );
+        this.$lzc$set_childNodes( children );
     }
 
 /**
