@@ -1,7 +1,7 @@
 /**
   * LzXMLTranslator.lzs
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -94,6 +94,14 @@ static function copyFlashXML (node:XML, trimwhitespace:Boolean, nsprefix:Boolean
             } else {
                 cattrs[qattr.localName] = attr.toString();
             }
+        }
+
+        var nsDecl:Array = node.namespaceDeclarations();
+        for (var i:int = 0; i < nsDecl.length; ++i) {
+            var ns:Namespace = nsDecl[i];
+            var prefix:String = ns.prefix;
+            var key:String = (prefix == "" ? "xmlns" : nsprefix ? "xmlns:" + prefix : prefix);
+            cattrs[key] = ns.uri;
         }
 
         var nname:String;

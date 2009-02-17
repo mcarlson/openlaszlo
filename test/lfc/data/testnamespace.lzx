@@ -1,0 +1,23 @@
+<library>
+  <include href="lzunit" />
+  <class name="TestNamespace" extends="TestCase">
+    <method name="addTests" override="true" >
+      this.addTest("testNamespace");
+    </method>
+    <method name="testNamespace" ><![CDATA[
+      var xml = "<a G:att='val' xmlns:G='http://G.ho.st' xmlns='http://www.w3.org/1999/xhtml' />";
+      var data = LzDataElement.stringToLzData(xml, false, false);
+      var nsdata = LzDataElement.stringToLzData(xml, false, true);
+      assertEquals("val", data.getAttr("att"));
+      assertEquals("http://G.ho.st", data.getAttr("G"));
+      assertEquals("http://www.w3.org/1999/xhtml", data.getAttr("xmlns"));
+      assertEquals("val", nsdata.getAttr("G:att"));
+      assertEquals("http://G.ho.st", nsdata.getAttr("xmlns:G"));
+      assertEquals("http://www.w3.org/1999/xhtml", nsdata.getAttr("xmlns"));
+    ]]></method>
+  </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

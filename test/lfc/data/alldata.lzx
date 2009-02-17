@@ -17,6 +17,7 @@
     <include href="whitespace.lzx"/>
     <include href="testgetmethod.lzx"/>
     <include href="testgetmethodsolo.lzx"/>
+    <include href="testnamespace.lzx"/>
     <include href="testpostmethod.lzx"/>
     <include href="testpostmethodsolo.lzx"/>
     <include href="testsetheaders.lzx"/>
