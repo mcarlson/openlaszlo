@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -257,10 +257,10 @@ function LzParsedPath (pa:String, node:*) {
                         //Debug.write( 'found predicate ' + pred ); 
                         var attrpred = pred.split( '=' );
                         var a;
-                        var tattr = attrpred[ 0 ].substring(1);
+                        var tattr = attrpred.shift().substring(1);
 
-                        if ( attrpred.length > 1 ){
-                            var aval = LzParsedPath.trim( attrpred[1] );
+                        if ( attrpred.length > 0 ){
+                            var aval = LzParsedPath.trim( attrpred.join( '=' ) );
                             aval = aval.substring( 1 , aval.length-1);
                             a = { pred : 'attrval' ,
                                   attr : LzParsedPath.trim( tattr ),
