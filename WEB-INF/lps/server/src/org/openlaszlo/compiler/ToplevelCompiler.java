@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -54,6 +54,10 @@ abstract class ToplevelCompiler extends ElementCompiler {
   /**
    * Outputs the tag map entries for the tags defined in this
    * top-level form
+   *
+   * NOTE: [2009-02-18 ptw] Called once from CanvasCompiler.compile
+   * for whole program compile, or from LibraryCompiler.compile when
+   * not linking (creating a binary library).
    */
   public void outputTagMap(CompilationEnvironment env) {
         // Output the tag->class map.

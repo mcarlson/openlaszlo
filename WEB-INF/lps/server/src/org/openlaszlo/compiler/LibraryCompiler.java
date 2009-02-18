@@ -126,6 +126,13 @@ class LibraryCompiler extends ToplevelCompiler {
         if (element != null) {
             super.compile(element);
         }
+        // NOTE [2009-02-18 ptw] (LPP-7750) If we are not linking, we
+        // need to dump the tag map into the binary library (as
+        // opposed to dumping it when the canvas is compiled).
+        boolean linking = (! "false".equals(mEnv.getProperty(CompilationEnvironment.LINK_PROPERTY)));
+        if (! linking) {
+          outputTagMap(mEnv);
+        }
     }
 
     void updateSchema(Element element, ViewSchema schema, Set visited) {
@@ -139,6 +146,6 @@ class LibraryCompiler extends ToplevelCompiler {
 }
 
 /**
- * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2007, 2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

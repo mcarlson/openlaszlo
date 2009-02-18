@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -173,6 +173,7 @@ class CanvasCompiler extends ToplevelCompiler {
         
         handleAutoincludes(mEnv, element);
         
+        // NOTE: [2009-02-18 ptw] Replaces super.compile(), Cf., ToplevelCompiler
         // Compile child elements
         for (Iterator iter = element.getChildren().iterator();
              iter.hasNext(); ) {
