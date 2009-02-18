@@ -47,7 +47,7 @@
         <attribute name="mic" value="null"/>
 
         <!--- The mediastream object.  A mediastream will be automatically generated if one is not specified at init time. -->
-        <attribute name="stream" value="null" when="once"/>
+        <attribute name="stream" value="false" when="once"/>
 
         <!--- The volume for video playback, a float from 0 to 1. Default 1. -->
         <attribute name="playvolume" value="1.0"/>
@@ -116,7 +116,7 @@
             var debug = false;
             var mic = null;
             var playvolume = 1.0;
-            var stream = null;
+            var stream = false;
             var autoplay = false;
             var _initcomplete = false;
             var url = '';
@@ -178,8 +178,16 @@
                 }
                 if (this.url) this.stream.setAttribute("url", this.url);
 
+                if (this.cam) {
+                    this.stream.setAttribute('cam', this.cam);
+                }
+
+                if (this.mic) {
+                    this.stream.setAttribute('mic', this.mic);
+                }
+
                 this._initcomplete = true;
-    
+                
                 // FIXME
                 // Camera needs to be displayed after _initcomplete = true
                 var cam = this.cam;
@@ -319,7 +327,7 @@
                 this.cam = cam;
 
                 if (this['stream']) {
-                    this.stream._setCam(cam);
+                    this.stream.setAttribute('cam', cam);
                 }
             }
     
@@ -327,7 +335,7 @@
                 this.mic = mic;
 
                 if (this['stream']) {
-                    this.stream._setMic(mic);
+                    this.stream.setAttribute('mic', mic);
                 }
             }
         } // End of videoview

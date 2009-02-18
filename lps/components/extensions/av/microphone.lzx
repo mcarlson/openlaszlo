@@ -57,7 +57,7 @@
         <attribute name="_leveldel" value="$once{new LzDelegate(this, '_updateLevel')}"/>
 
         <!--- Mediastream to associate with the microphone, for audio recording. -->
-        <attribute name="stream" value="null" setter="this._setStream(stream)"/>
+        <attribute name="stream" value="null"/>
 
 
         <!--- Event sent when microphone level changes. 
@@ -125,12 +125,9 @@
 
             super.startDevice();
 
-            // Use duck typing to check for the existence of the
-            // _setMic method, instead of checking if the
-            // immediateparent is an instance of videoview, to avoid
-            // loading the videoview class if it's not needed.
-            if (immediateparent['_setMic']) {
-                immediateparent._setMic(this);
+            // check for the existence of immediateparent.videoview
+            if (lz['videoview'] && immediateparent instanceof lz.videoview) {
+                immediateparent.setAttribute('mic', this);
             }
 
             //Debug.write("microphone startDevice setting capturing", this.capturing);
@@ -168,10 +165,10 @@
 
         <!--- Setter for capturing attribute. 
               @keywords private -->
-        <method name="_setCapturing" args="capturing"> <![CDATA[
+        <setter name="capturing" args="capturing"> <![CDATA[
             //Debug.write("microphone _setCapturing", this, capturing, this.isinited, this._dev, this._mc);
 
-            super._setCapturing(capturing);
+            super.setAttribute('capturing', capturing);
 
             if (!this.isinited) {
                 return;
@@ -195,7 +192,7 @@
             }
 
           ]]>
-        </method>
+        </setter>
 
 
         <!--- Handler for updating the microphone activity level attribute. 
@@ -217,15 +214,15 @@
           to a mediastream, without an intervening videoview,
           for audio only recording.
               @keywords private -->
-        <method name="_setStream" args="stream"><![CDATA[
-        //Debug.write("microphone _setStream", stream);
+        <setter name="stream" args="stream"><![CDATA[
+        //Debug.write("microphone set stream", stream);
             this.stream = stream;
             if (stream) {
-                //Debug.write("microphone", this, "_setStream", stream);
-                stream._setMic(this);
+                //Debug.write("microphone", this, "set stream", stream);
+                stream.setAttribute('mic', this);
             }
           ]]>
-        </method>
+        </setter>
         <doc>
             <tag name="shortdesc">
                 <text>A microphone connection to a media server.</text>

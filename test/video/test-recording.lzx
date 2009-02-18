@@ -11,7 +11,7 @@
 
 <canvas width="100%" height="100%" debug="true">
 
-    <debug x="300" y="30" height="100%"/>
+    <debug x="300" y="30" height="100%" width="$once{canvas.width-this.x}"/>
     <simplelayout spacing="10"/>
     <constantlayout axis="x" value="10"/>
 
