@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -48,33 +48,27 @@ public class LZReturnObject
     }
 
     void pushInteger(int i) {
-        mLogger.debug("pushInteger");
         body.append(i);
     }
 
     void pushFloat(float f) {
-        mLogger.debug("pushFloat");
         body.append(f);
     }
 
     void pushString(String s) {
-        mLogger.debug("pushString");
         body.append(ScriptCompiler.JSONquote(s));
     }
 
     void pushDouble(double d) {
-        mLogger.debug("pushDouble");
         body.append(d);
     }
 
 
     void pushBoolean(boolean b) {
-        mLogger.debug("pushBoolean");
         body.append(b ? "true" : "false");
     }
 
     void pushArray(Object object) {
-        mLogger.debug("pushArray");
         body.append("[");
         int length = Array.getLength(object);
         for (int i = 0; i < length; i++) {
@@ -84,7 +78,6 @@ public class LZReturnObject
             createReturnValue(Array.get(object, i));
         }
         body.append("]");
-        mLogger.debug("pushArray: " + body.toString());
     }
 
     void pushList(Object object) {
@@ -98,8 +91,20 @@ public class LZReturnObject
             createReturnValue(list.get(i));
         }
         body.append("]");
-        mLogger.debug("pushList: " + body.toString());
+    }
 
+    void pushSet(Object object) {
+        Set set = (Set)object;
+        int length = set.size();
+        int i = 0;
+        body.append("[");
+        for (Iterator iter = set.iterator();iter.hasNext();) {
+            if (i++ > 0) {
+                body.append(", ");
+            }
+            createReturnValue(iter.next());
+        }
+        body.append("]");
     }
 
     void pushNull() {
@@ -219,7 +224,6 @@ public class LZReturnObject
      * Recurse through this function to create return value
      */
     void createReturnValue(Object object) {
-        mLogger.debug("createReturnValue");
         if (object == null) {
             pushNull();
             return;
@@ -230,6 +234,8 @@ public class LZReturnObject
             pushArray(object);
         } else if (List.class.isInstance(object)) {
             pushList(object);
+        } else if (Set.class.isInstance(object)) {
+            pushSet(object);
         } else if (Map.class.isInstance(object)) {
             pushMap((Map)object);
         } else if (cl == Integer.class) {
