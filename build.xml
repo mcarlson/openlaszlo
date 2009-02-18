@@ -1,7 +1,4 @@
-<!DOCTYPE project [
-    <!ENTITY build_opt SYSTEM "file:build-tools/build-opt.xml">
-    ]>
-
+<?xml version="1.0"?>
 <!--  build.xml                                                             -->
 <!--  Author: Eric Bloch  / Benjamin Shine                                  -->
 
@@ -47,7 +44,7 @@
         ant webapp.stop -- stop the LPS webapp, without stopping tomcat
     </description>
 
-    &build_opt;
+    <import file="./build-tools/build-opt.xml" />
 
     <!-- Ignore the system classpath -->
     <property name="build.sysclasspath" value="ignore" />
@@ -325,31 +322,9 @@
       <property name="skip.nsi-dev" value="true" />
   </target>
 
-  <!--===============  Target [get-svn-info]  ==================-->
-  <target name="get-svn-info" unless="done.get-svn-info"
-          description="Get the current repository information">
-    <property environment="env" />
-    <property name="LPS_HOME" value="${env.LPS_HOME}" />
-    <fail unless="LPS_HOME" message="LPS_HOME is not set."/>
-    <sequential>
-      <exec executable="svn" output="repository-info.xml">
-        <arg value="info" />
-        <arg value="--xml" />
-        <arg value="${LPS_HOME}" />
-      </exec>
-      <property name="done.get-svn-info" value="true" />
-    </sequential>
-  </target>
-
-  <!--===============  Target [read-svn-info]  ==================-->
-  <target name="read-svn-info" depends="get-svn-info" unless="build.id"
-    description="Load repository information into properties">
-      <xmlproperty file="${LPS_HOME}/repository-info.xml" keeproot="false" prefix="svninfo" />
-  </target>
-
   <!--===============  Target [init]  ===================-->
   <target name="init" description="Target for initialization"
-          depends="read-svn-info,build-opt"
+          depends="build-opt"
           unless="done.init" >
     <tstamp/>
 

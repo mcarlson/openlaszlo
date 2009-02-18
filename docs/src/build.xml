@@ -4,10 +4,6 @@
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
  
-<!DOCTYPE project [
-    <!ENTITY build_opt SYSTEM "file:../../build-tools/build-opt.xml">
-]>
-
 <!-- 
   To understand the documentation toolchain, please consult the developer's guide, 
   in Part XI, Documentation Tools and Guidelines, and especially in 
@@ -25,7 +21,7 @@
 -->
 <project name="reference" default="build">
     
-  &build_opt;
+  <import file="../../build-tools/build-opt.xml" />
 
   <property environment="env"/>
 

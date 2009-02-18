@@ -1,14 +1,11 @@
 <?xml version="1.0"?>
-<!DOCTYPE project [
-<!ENTITY build_opt SYSTEM "file:../../../build-tools/build-opt.xml">
-]>
 
 <project name="includes" default="build">
   <description>
     This is the build file for the lps/includes
   </description>
 
-  &build_opt;
+  <import file="../../../build-tools/build-opt.xml" />
 
   <target name="init" depends="build-opt">
     <tstamp />
@@ -91,7 +88,7 @@
 </project>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

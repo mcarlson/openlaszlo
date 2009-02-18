@@ -1,7 +1,4 @@
 <?xml version="1.0"?>
-<!DOCTYPE project [
-<!ENTITY build_opt SYSTEM "file:../../../build-tools/build-opt.xml">
-]>
 
 <project name="server" default="build" basedir=".">
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
@@ -13,7 +10,7 @@
       This is the build file for the LPS server subproject.
   </description>
 
-  &build_opt;
+  <import file="../../../build-tools/build-opt.xml" />
 
   <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"/>
 
