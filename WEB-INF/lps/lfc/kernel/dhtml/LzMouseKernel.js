@@ -35,13 +35,8 @@ var LzMouseKernel = {
             }
         }
         if (eventname == 'onmousemove') {
-            if (e.pageX || e.pageY) {
-                LzMouseKernel.__x = e.pageX;
-                LzMouseKernel.__y = e.pageY;
-            } else if (e.clientX || e.clientY) {
-                LzMouseKernel.__x = e.clientX;
-                LzMouseKernel.__y = e.clientY;
-            }
+            LzMouseKernel.__sendMouseMove(e);
+            return;
         }    
 
         if (e.button == 2 && eventname != 'oncontextmenu') return;
@@ -184,5 +179,19 @@ var LzMouseKernel = {
         }
         var el = document.getElementById('lzcanvasclickdiv');
         el.style.display = isclickable ? 'block' : 'none';
+    }
+
+    ,__sendMouseMove: function(e) {
+        if (e.pageX || e.pageY) {
+            LzMouseKernel.__x = e.pageX;
+            LzMouseKernel.__y = e.pageY;
+        } else if (e.clientX || e.clientY) {
+            LzMouseKernel.__x = e.clientX;
+            LzMouseKernel.__y = e.clientY;
+        } else {
+            // no move detected, just return
+            return;
+        }
+        LzMouseKernel.__sendEvent('onmousemove');
     }
 }

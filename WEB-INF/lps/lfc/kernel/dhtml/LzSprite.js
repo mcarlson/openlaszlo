@@ -983,13 +983,7 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         }
     }
 
-    if (e.pageX || e.pageY) {
-        LzMouseKernel.__x = e.pageX;
-        LzMouseKernel.__y = e.pageY;
-    } else if (e.clientX || e.clientY) {
-        LzMouseKernel.__x = e.clientX;
-        LzMouseKernel.__y = e.clientY;
-    }
+    LzMouseKernel.__sendMouseMove(e);
 
     if (window['LzInputTextSprite'] && eventname == 'onmouseover' && LzInputTextSprite.prototype.__lastshown != null) LzInputTextSprite.prototype.__hideIfNotFocused();
 
