@@ -3,11 +3,20 @@
     @subtopic Components
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
     <class name="fileupload">
+
+     <switch>
+       <when property="$as3">
+         <passthrough>
+           import flash.events.*;
+           import flash.net.*;
+         </passthrough>
+       </when>
+     </switch>
 
         <!--- message of feedback to user -->    
         <attribute name="msg" type="string" value="" />
@@ -22,12 +31,30 @@
         <!--- Enable upload. True to enable uploading, false to disable uploading. -->
         <attribute name="uploadenable" value="false" type="boolean"/>
         
-        <handler name="oninit" args="invoker">
-            <![CDATA[
-                fileref.addListener(invoker);
-            ]]>
-        </handler>
-        
+        <switch>
+          <when property="$as2">
+            <handler name="oninit" args="invoker">
+              <![CDATA[
+                 fileref.addListener(invoker);
+              ]]>
+            </handler>
+          </when>
+          <when property="$as3">
+            <handler name="oninit" args="invoker">
+              <![CDATA[
+              fileref.addEventListener(Event.CANCEL, cancelHandler);
+              fileref.addEventListener(Event.COMPLETE, completeHandler);
+              fileref.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+              fileref.addEventListener(Event.OPEN, openHandler);
+              fileref.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+              fileref.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+              fileref.addEventListener(Event.SELECT, selectHandler);
+              fileref.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+              ]]>
+            </handler>
+          </when>
+        </switch>
+
         <method name="browse">
             <![CDATA[
                 fileref.browse();
@@ -48,26 +75,105 @@
                 if(fileref.size/1000 > maxsize){
                     var exceed = 'Error: Uploaded file size:' + Math.round(fileref.size/1000) + 'k bytes exceeded ' + maxsize/1000000 + ' Mb limitation';
                     this.setAttribute("msg", exceed);
-                }
-                else{
+                }  else {
                     if(uploadenable){
-                        fileref.upload(url);
+                        if ($as3) {
+                            fileref.upload(new URLRequest(url));
+                        } else {
+                            fileref.upload(url);
+                        }
                     }
                 }
             ]]>
         </method>
         
+        <!-- AS3 event handlers -->
+        <switch>
+          <when property="$as3">
+           <method name="cancelHandler" args="event:Event">
+             if ($debug) {
+                 Debug.write(this, "got onCancel", event);
+             }
+             this.onCancel();
+           </method>
+
+           <method name="progressHandler" args="event:ProgressEvent">
+             if ($debug) {
+                 var file:FileReference = event.target cast FileReference;
+                 Debug.write(this, "got onProgress name=", file.name,
+                             "bytesLoaded=", event.bytesLoaded, "bytesTotal=", event.bytesTotal);
+             }
+             this.onProgress(file, event.bytesLoaded, event.bytesTotal);
+           </method>
+
+           <method name="openHandler" args="event:Event">
+             if ($debug) {
+                 Debug.write(this, "got onOpen");
+             }
+             this.onOpen();
+           </method>
+
+           <method name="completeHandler" args="event:Event">
+             if ($debug) {
+                 Debug.write(this, "got onComplete");
+             }
+             this.onComplete(event.target);
+           </method>
+
+           <method name="securityErrorHandler" args="event:SecurityErrorEvent">
+             if ($debug) {
+                 Debug.write(this, "got onSecurityError");
+             }
+             this.onSecurityError();
+           </method>
+
+           <method name="ioErrorHandler" args="event:IOErrorEvent">
+             if ($debug) {
+                 Debug.write(this, "got onIOError");
+             }
+             this.onIOError();
+           </method>
+
+           <method name="selectHandler" args="event:Event">
+             if ($debug) {
+                 var file:FileReference = FileReference(event.target);
+                 Debug.write(this, "got onSelect", "name=", file.name);
+             }
+             this.onSelect(file);
+           </method>
+
+
+           <method name="httpStatusHandler" args="event:HTTPStatusEvent">
+             <![CDATA[
+             if ($debug) {
+                 Debug.write(this, "got onHTTPError");
+             }
+             if (event.status >= 400 && event.status < 500) {
+               this.onHTTPError();
+             }
+             ]]>
+           </method>
+          </when>
+        </switch>
+
+        <!-- END AS3 event handlers -->
+
+        <method name="onSelect" args="fr">
+        </method>
+        
         <method name="onCancel">
         </method>
         
-        <method name="onProgress">
+        <method name="onProgress" args="fr,bytesLoaded,bytesTotal" >
         </method>
         
         <method name="onOpen">
         </method>
         
-        <method name="onComplete">
-            this.setAttribute("msg", fileref.name + " upload completed!");
+        <method name="onComplete" args="fr">
+          if (fr) {
+             this.setAttribute("msg", fr.name + " upload completed!");
+          }
         </method>
         
         <method name="onSecurityError">
@@ -81,7 +187,8 @@
         <method name="onHTTPError">
              this.setAttribute("msg", 'Http Error!');
         </method>
-        
+
+
         <doc>
             <tag name="shortdesc"><text>A swf8-specific class for uploading a single file to a server</text></tag>
             <text>

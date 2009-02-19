@@ -1,12 +1,11 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <canvas debug="true">
 <include href="incubator/uploader/fileuploadlist.lzx"/>
 <window name="main" title="File Upload Test" x="5" y="5" width="610" height="450">
-    <switch>
-        <when runtime="swf8">    
+
             <view name="upview">
                 <hbox spacing="15"/>
                 <simplelayout axis="y" spacing="10"/>
@@ -74,11 +73,6 @@
                                  +parent.fl4.myFileUpload.msg + '\n'
                                  +parent.fl5.myFileUpload.msg + '\n'}"/>
             </view>
-        </when>
-        <otherwise>
-             <text>The file upload feature requires swf8.</text>
-        </otherwise>
-    </switch>
 </window>    
 
 </canvas>

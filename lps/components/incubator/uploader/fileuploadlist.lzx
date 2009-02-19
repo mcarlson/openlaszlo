@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
@@ -22,18 +22,13 @@
         </handler>
 
         <event name="onerror" />
-        <handler name="onerror" args="msg">
-        </handler>
         <event name="oncomplete" />
-        <handler name="oncomplete" args="msg">
-        </handler>
-
 
         <!--- fileupload component   (invisible conponent)-->
 
         <fileupload name="myFileUpload" maxsize="$once{parent.maxsize}">
             <method name="onComplete" args="fr"><![CDATA[
-                super.onComplete();
+                super.onComplete(fr);
                 parent.progressBar.setValue(100);
                 parent.txtFile.setAttribute('text', this.msg);
                 parent.setAttribute('erroroccured', false);

@@ -1,13 +1,12 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <canvas debug="true">
 
 <include href="incubator/uploader/multiplefileupload.lzx"/>
 
-<switch>
-    <when runtime="swf8">
+
         <multiplefileupload y="10" id="mul" numfields="4"/>
 
         <window title="Test Window" x="540" y="10" width="250" height="350">
@@ -71,9 +70,5 @@
             </button>
 
         </window>
-    </when>
-    <otherwise>
-        <text>The file upload feature requires swf8.</text>
-    </otherwise>
-</switch>
+
 </canvas>

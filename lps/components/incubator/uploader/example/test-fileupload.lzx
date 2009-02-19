@@ -5,8 +5,6 @@
 <canvas debug="true">
 <include href="incubator/uploader/fileupload.lzx"/>
 <window name="main" title="File Upload Test" x="5" y="5" width="410" height="150">
-    <switch>
-        <when runtime="swf8">
             <fileupload name="myFileUpload" maxsize="15000">
                 <method name="onComplete" args="fr"><![CDATA[
                     canvas.main.progressBar.setValue(100);
@@ -67,11 +65,5 @@
                 </method>
             </view>
             <text name="msg" text="${parent.myFileUpload.msg}" x="11" y="75" fgcolor="red"/>
-        </when>
-        <otherwise>
-            <text>The file upload feature requires swf8.</text>
-        </otherwise>    
-    </switch>
-
 </window>    
 </canvas>
