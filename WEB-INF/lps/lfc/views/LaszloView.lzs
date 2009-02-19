@@ -1126,7 +1126,7 @@ function $lzc$set_y(v) {
     // NOTE: [2009-01-06 ptw] See @devnote at __set_y_memo
     if (this.__set_y_memo === v) {
       // Always send the event
-      if (this.onx.ready) { this.onx.sendEvent( this.x ); }
+      if (this.ony.ready) { this.ony.sendEvent( this.y ); }
       return;
     }
     // memoize
