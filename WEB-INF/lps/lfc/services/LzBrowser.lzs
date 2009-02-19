@@ -99,7 +99,11 @@ public final class LzBrowserService {
      * @param * arguments to call the method with
      */
     function callJS (methodname:String, callback:Function = null, args:* = null) :void {
-        LzBrowserKernel.callJS.apply(null, arguments);
+        try {
+            return LzBrowserKernel.callJS.apply(null, arguments);
+        } catch (e) {
+            if ($debug) Debug.error('lz.Browser.callJS() failed:', e);
+        }
     }
 
     /**
