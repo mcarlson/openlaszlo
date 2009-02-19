@@ -165,8 +165,6 @@ a complete discussion.
               <p>You can set <literal>allocation</literal> to <literal>class</literal> to get static attributes. 
               Static properties are attached to the class itself, for example <literal>lz.classname</literal>.</p> 
               <programlisting>&lt;attribute name="allowed" value="false" type="boolean" allocation="class" /&gt;</programlisting>
-              
-              <p>Setting <literal>allocation</literal> to <literal>class</literal> means the attribute is attached to the instance.</p>
             </text>
           </doc>
         </property>
@@ -377,7 +375,6 @@ numbers.</p>
                 Static properties are attached to the class itself, for example <literal>lz.classname</literal>.</p> 
               <programlisting>&lt;attribute name="allowed" value="false" type="boolean" allocation="class" /&gt;</programlisting>
               
-              <p>Setting <literal>allocation</literal> to <literal>class</literal> means the attribute is attached to the instance.</p>
             </text>
           </doc>
         </property>
