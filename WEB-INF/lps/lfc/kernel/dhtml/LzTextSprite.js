@@ -17,6 +17,7 @@ var LzTextSprite = function(owner) {
     this.__LZdiv = document.createElement('div');
     this.__LZdiv.className = 'lzdiv';
     this.scrolldiv = this.__LZtextdiv = document.createElement('div');
+    this.scrolldiv.owner = this;
     this.__LZtextdiv.className = 'lzdiv';
     this.__LZdiv.appendChild(this.__LZtextdiv);  
     if (this.quirks.emulate_flash_font_metrics) {
@@ -26,14 +27,14 @@ var LzTextSprite = function(owner) {
     }    
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
-        this.__LZclickdiv = document.createElement('div');
-        this.__LZclickdiv.className = 'lzdiv';
-        this.__LZclickdiv.owner = this;
+        this.__LZclickcontainerdiv = document.createElement('div');
+        this.__LZclickcontainerdiv.className = 'lzdiv';
+        this.__LZclickcontainerdiv.owner = this;
     }    
     if ($debug) {
         // annotate divs with sprite IDs
         this.__LZdiv.id = 'textsprite_' + this.uid;
-        this.__LZclickdiv.id = 'click_' + this.__LZdiv.id;
+        this.__LZclickcontainerdiv.id = 'click_' + this.__LZdiv.id;
     }
     if (this.quirks.ie_leak_prevention) {
         this.__sprites[this.uid] = this;

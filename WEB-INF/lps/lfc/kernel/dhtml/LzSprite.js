@@ -79,7 +79,7 @@ var LzSprite = function(owner, isroot) {
             cdiv.className = 'lzcanvasclickdiv';
             cdiv.id = 'lzcanvasclickdiv';
             root.appendChild(cdiv);
-            this.__LZclickdiv = cdiv;
+            this.__LZclickcontainerdiv = cdiv;
         }
 
         if (this.quirks.activate_on_mouseover) {
@@ -128,19 +128,19 @@ var LzSprite = function(owner, isroot) {
         this.__LZdiv = document.createElement('div');
         this.__LZdiv.className = 'lzdiv';
         if (this.quirks.fix_clickable) {
-            this.__LZclickdiv = document.createElement('div');
-            this.__LZclickdiv.className = 'lzdiv';
+            this.__LZclickcontainerdiv = document.createElement('div');
+            this.__LZclickcontainerdiv.className = 'lzdiv';
         }
     }
 
     if ($debug) {
         // annotate divs with sprite IDs, but don't override existing IDs!
         if (!this.__LZdiv.id) this.__LZdiv.id = 'sprite_' + this.uid;
-        if (!this.__LZclickdiv.id) this.__LZclickdiv.id = 'click_' + this.__LZdiv.id;
+        if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click_' + this.__LZdiv.id;
     }
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
-        this.__LZclickdiv.owner = this;
+        this.__LZclickcontainerdiv.owner = this;
     }
 
     if (this.quirks.ie_leak_prevention) {
@@ -651,7 +651,7 @@ LzSprite.prototype.addChildSprite = function(sprite) {
 
     this.__LZdiv.appendChild( sprite.__LZdiv );
     if (this.quirks.fix_clickable) {
-        this.__LZclickdiv.appendChild( sprite.__LZclickdiv );
+        this.__LZclickcontainerdiv.appendChild( sprite.__LZclickcontainerdiv );
     }
 
     sprite.__setZ(++this.__topZ);
@@ -872,7 +872,7 @@ LzSprite.prototype.setClickable = function(c) {
             this.__LZclick.style.width = this.__LZdiv.style.width;
             this.__LZclick.style.height = this.__LZdiv.style.height;
             if (this.quirks.fix_clickable) {
-                this.__LZclickdiv.appendChild(this.__LZclick);
+                this.__LZclickcontainerdiv.appendChild(this.__LZclick);
             } else {
                 this.__LZdiv.appendChild(this.__LZclick);
             }
@@ -882,7 +882,7 @@ LzSprite.prototype.setClickable = function(c) {
         if (this.quirks.fix_clickable) {
             if (this.quirks.fix_ie_clickable) {
                 //note: views with resources (__LZimg!) cannot have subviews (SWF-policy)
-                this.__LZclickdiv.style.display = c && this.visible ? '' : 'none';
+                this.__LZclickcontainerdiv.style.display = c && this.visible ? '' : 'none';
                 this.__LZclick.style.display = c && this.visible ? '' : 'none';
             } else {
                 this.__LZclick.style.display = c ? 'block' : 'none';
@@ -903,7 +903,7 @@ LzSprite.prototype.setClickable = function(c) {
                 this.__LZclick.style.height = this.__LZdiv.style.height;
                 //this.__LZclick.style.backgroundColor = '#ff00ff';
                 //this.__LZclick.style.opacity = .2;
-                this.__LZclickdiv.appendChild(this.__LZclick);
+                this.__LZclickcontainerdiv.appendChild(this.__LZclick);
             }
             this.__setClickable(c, this.__LZclick);
             if (this.quirks.fix_ie_clickable) {
@@ -988,6 +988,12 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
     if (window['LzInputTextSprite'] && eventname == 'onmouseover' && LzInputTextSprite.prototype.__lastshown != null) LzInputTextSprite.prototype.__hideIfNotFocused();
 
     if (eventname == 'onmousedown') {
+        if (e.button == 2) {
+            LzMouseKernel.__showContextMenu(this);
+            // setting cancelBubble doesn't help with window.oncontextmenu events not being sent for clickable sprites with a null default context menu - see LPP-7661
+            e.cancelBubble = false;
+            return true;
+        }
         // cancel mousedown event bubbling...
         e.cancelBubble = true;
         this.__mouseisdown = true;
@@ -1071,7 +1077,7 @@ LzSprite.prototype.setX = function ( x ){
         this._x = x;
         this.__LZdiv.style.left = x;
         if (this.quirks.fix_clickable) {
-            this.__LZclickdiv.style.left = x;
+            this.__LZclickcontainerdiv.style.left = x;
         }
     }
 }
@@ -1088,6 +1094,7 @@ LzSprite.prototype.setWidth = function ( w ){
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.width = w;
+        if (this.__contextmenu) this.__updateContextMenuDiv();
         return w;
     }
 }
@@ -1102,7 +1109,7 @@ LzSprite.prototype.setY = function ( y ){
         this._y = y;
         this.__LZdiv.style.top = y;
         if (this.quirks.fix_clickable) {
-            this.__LZclickdiv.style.top = y;
+            this.__LZclickcontainerdiv.style.top = y;
         }
     }
 }
@@ -1119,6 +1126,7 @@ LzSprite.prototype.setHeight = function ( h ){
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.height = h;
+        if (this.__contextmenu) this.__updateContextMenuDiv();
         return h;
     }
 }
@@ -1146,7 +1154,7 @@ LzSprite.prototype.setVisible = function ( v ){
         if (this.quirks.fix_ie_clickable && this.__LZclick) {
             this.__LZclick.style.display = v && this.clickable ? '' : 'none';
         }
-        this.__LZclickdiv.style.display = v ? 'block' : 'none';
+        this.__LZclickcontainerdiv.style.display = v ? 'block' : 'none';
     }
 }
 
@@ -1581,12 +1589,12 @@ LzSprite.prototype.__updateClip = function() {
         var s = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
         this.__LZdiv.style.clip = s
         if (this.quirks.fix_clickable) {
-            this.__LZclickdiv.style.clip = s
+            this.__LZclickcontainerdiv.style.clip = s
         }
     } else if (this.__LZdiv.style.clip) {
         this.__LZdiv.style.clip = 'rect(auto auto auto auto)';
         if (this.quirks.fix_clickable) {
-            this.__LZclickdiv.style.clip = 'rect(auto auto auto auto)';
+            this.__LZclickcontainerdiv.style.clip = 'rect(auto auto auto auto)';
         }
     }
 }
@@ -1695,8 +1703,8 @@ LzSprite.prototype.destroy = function() {
         }
         this.__discardElement(this.__LZinputclickdiv);
     }
-    if (this.__LZclickdiv) {
-        this.__discardElement(this.__LZclickdiv);
+    if (this.__LZclickcontainerdiv) {
+        this.__discardElement(this.__LZclickcontainerdiv);
     }
     if (this.__LZtextdiv) {
         this.__discardElement(this.__LZtextdiv);
@@ -1840,7 +1848,7 @@ LzSprite.prototype.bringToFront = function() {
 LzSprite.prototype.__setZ = function(z) {
     this.__LZdiv.style.zIndex = z;
     if (this.quirks.fix_clickable) {
-        this.__LZclickdiv.style.zIndex = z;
+        this.__LZclickcontainerdiv.style.zIndex = z;
     }
     this.__z = z;
 }
@@ -2054,7 +2062,23 @@ LzSprite.prototype.setDefaultContextMenu = function( cmenu ){
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
 LzSprite.prototype.setContextMenu = function( cmenu ){
+    //this.setClickable(true);
+    this.__updateContextMenuDiv();
     this.__contextmenu = cmenu;
+}
+
+/**
+  * Update the size of the div that will catch context menu events. 
+  * @access private
+  */
+LzSprite.prototype.__updateContextMenuDiv = function() {
+    if (! this.isroot) {
+        // Use the the scrolldiv if present (text/inputtext) or the click div 
+        // container (__LZclickcontainerdiv)
+        var div = this.scrolldiv ? this.scrolldiv : this.__LZclickcontainerdiv;
+        div.style.width = this.__LZdiv.style.width;
+        div.style.height = this.__LZdiv.style.height;
+    }
 }
 
 /**

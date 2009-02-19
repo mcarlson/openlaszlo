@@ -42,13 +42,7 @@ var LzMouseKernel = {
         if (e.button == 2 && eventname != 'oncontextmenu') return;
         if (eventname == 'oncontextmenu') {
             if (targ && targ.owner) {
-                // walk up the parent chain (canvas always has a default)
-                var owner = targ.owner;
-                while (! owner.__contextmenu && owner.__parent) {
-                    owner = owner.__parent;
-                }
-                owner.__contextmenu.kernel.__show();
-                return owner.__contextmenu.kernel.showbuiltins;
+                return LzMouseKernel.__showContextMenu(targ.owner);
             }
         } else {
             LzMouseKernel.__sendEvent(eventname);
@@ -193,5 +187,28 @@ var LzMouseKernel = {
             return;
         }
         LzMouseKernel.__sendEvent('onmousemove');
+    }
+    ,__showContextMenu: function(sprite) {
+        // show the default menu if not found...
+        var cmenu = LzSprite.__rootSprite.__contextmenu;
+        // walk up the parent chain looking for a __contextmenu
+        while (sprite.__parent) {
+            if (sprite.__contextmenu) {
+                // check mouse bounds
+                var mpos = sprite.getMouse();
+                //Debug.write('pos', mpos, sprite.width, sprite.height);
+                if (mpos.x >= 0 && mpos.x < sprite.width &&
+                    mpos.y >= 0 && mpos.y < sprite.height) {
+                    cmenu = sprite.__contextmenu;
+                    break;
+                }
+            }
+            sprite = sprite.__parent;
+        }
+        //Debug.warn('__showContextMenu', sprite);
+        if (cmenu) {
+            cmenu.kernel.__show();
+            return cmenu.kernel.showbuiltins;
+        }
     }
 }
