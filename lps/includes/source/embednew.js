@@ -723,7 +723,7 @@ lz.embed = {
             box = el.getBoundingClientRect();
             var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-            return {x: box.left + scrollLeft, y: box.top + scrollTop};
+            return {x: Math.floor(box.left + scrollLeft), y: Math.floor(box.top + scrollTop)};
         } else if (document.getBoxObjectFor) { // gecko
             box = document.getBoxObjectFor(el);
             pos = {x: box.x, y: box.y};
@@ -738,9 +738,14 @@ lz.embed = {
                 }
             }
 
+            // look up computed style for Safari
+            if (lz.embed.browser.isSafari && document.defaultView && document.defaultView.getComputedStyle) {
+                var styles = document.defaultView.getComputedStyle(el, '');
+            }
+                
             // opera & (safari absolute) incorrectly account for body offsetTop
             // used quirks.absolute_position_accounts_for_offset before...
-            if ( (lz.embed.browser.isSafari || lz.embed.browser.isOpera) && this.hasOwnProperty('getStyle') && this.getStyle(el, 'position') == 'absolute' ) {
+            if ( lz.embed.browser.isOpera || (lz.embed.browser.isSafari && styles && styles['position'] == 'absolute' ) ) {
                 pos.y -= document.body.offsetTop;
             }
         }

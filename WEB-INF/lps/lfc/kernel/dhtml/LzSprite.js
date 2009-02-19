@@ -19,6 +19,7 @@ var LzSprite = function(owner, isroot) {
 
     if (isroot) {
         this.isroot = true;
+        this.__initdone = false;
         LzSprite.__rootSprite = this;
         var div = document.createElement('div');
         div.className = 'lzcanvasdiv';
@@ -601,6 +602,9 @@ LzSprite.prototype.resourceWidth = null;
 LzSprite.prototype.resourceHeight = null;
 LzSprite.prototype.cursor = null;
 
+/** Must be called when the sprite should show itself, usually after the 
+  * owner is done initializing 
+  */
 LzSprite.prototype.init = function(v) {
     //Debug.write('init', this.visible, this.owner.getUID());
     this.setVisible(v);
@@ -612,6 +616,7 @@ LzSprite.prototype.init = function(v) {
         if (this._id) {
             lz.embed[this._id]._ready(this.owner);
         }
+        this.__initdone = true;
     }
 }
 
@@ -1314,23 +1319,11 @@ LzSprite.prototype.__imgonload = function(i, cacheHit) {
             // This or any parent divs who aren't visible measure 0x0
             // Make this and all parents visible, measure them, then restore their
             // state
-            var sprites = this.__findParents('visible');
-            //Debug.info('LzSprite.onload', i, i.width, i.height, sprites);
-            if (sprites.length > 0) {
-                var vals = [];
-                var l = sprites.length;
-                for (var n = 0; n < l; n++) {
-                    var v = sprites[n];
-                    vals[n] = v.__LZdiv.style.display;
-                    v.__LZdiv.style.display = 'block';
-                }
+            var f = function(i) {
                 this.resourceWidth = i.width;
                 this.resourceHeight = i.height;
-                for (var n = 0; n < l; n++) {
-                    var v = sprites[n];
-                    v.__LZdiv.style.display = vals[n];
-                }
             }
+            this.__processHiddenParents(f, i);
         }
         //TODO: Tear down filtered image and set to new size?
     
@@ -1360,6 +1353,38 @@ LzSprite.prototype.__imgonload = function(i, cacheHit) {
     } else {
         this.__clearImageEvents(i);
     }
+}
+
+/**
+  * Shows all hidden parent sprites, calls the method provided (with optional 
+  * additional args), then restores their previous visibility state.
+  * 
+  * @param Function method: The method to be called after showing parents
+  * @return Object: The return value for 'method' if there is one.
+  * @access private
+  */
+LzSprite.prototype.__processHiddenParents = function(method) {
+    var sprites = this.__findParents('visible');
+    //Debug.info('LzSprite.onload', i, i.width, i.height, sprites);
+    var vals = [];
+    var l = sprites.length;
+    // show parents, caching original values
+    for (var n = 0; n < l; n++) {
+        var v = sprites[n];
+        vals[n] = v.__LZdiv.style.display;
+        v.__LZdiv.style.display = 'block';
+    }
+
+    // call passed-in method with optional args
+    var args = Array.prototype.slice.call(arguments, 1);
+    var result = method.apply(this, args);
+
+    // restore original values
+    for (var n = 0; n < l; n++) {
+        var v = sprites[n];
+        v.__LZdiv.style.display = vals[n];
+    }
+    return result;
 }
 
 /**
@@ -1751,24 +1776,29 @@ LzSprite.prototype.__poscachedirty = true;
   * @access private
   */
 LzSprite.prototype.__getPos = function() {
+    // Handle lpp-4357
+    if (! LzSprite.__rootSprite.__initdone) {
+        return lz.embed.getAbsolutePosition(this.__LZdiv);
+    }
+
     // check if any this sprite or any parents are dirty 
     var dirty = false;
     var p = this;
-    while (p != this.__rootSprite) {
+    while (p != LzSprite.__rootSprite) {
         if (p.__poscachedirty) {
-            dirty = p;
+            dirty = true;
             break;
         }
         p = p.__parent;
     }
     if (dirty == false && this.__poscache) return this.__poscache;
 
-    // compute position
-    var pos = lz.embed.getAbsolutePosition(this.__LZdiv);
+    // compute position, temporarily showing hidden parents so they can be measured
+    var pos = this.__processHiddenParents(lz.embed.getAbsolutePosition, this.__LZdiv);
 
     // set this and parents' __poscachedirty to false
     var p = this;
-    while (p && p != this.__rootSprite) {
+    while (p && p != LzSprite.__rootSprite) {
         if (p.__parent) p.__poscachedirty = false;
         p = p.__parent;
     }
