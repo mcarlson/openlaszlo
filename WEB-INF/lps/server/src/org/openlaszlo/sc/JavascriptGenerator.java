@@ -1477,13 +1477,44 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         Map map = new HashMap();
         newStmts = visitStatement(newStmts);
         map.put("_1", newStmts);
-        String frag = "$lzsc$ret = (function()" + tryType + " {";
-        if (isStatic) {
-          frag += " { _1 }}).call(null);";
+
+        // build a typed parameter list for the function closure, which
+        // we will normally invoke using apply(this, arguments).
+        // When rest args (i.e. variable args) are present then 'arguments'
+        // is not available, so we must use the rest arg.  If there are fixed
+        // args in addition to rest args (e.g. function foo(a, b, ...rest))
+        // we'll need to assemble the new arg list array.
+        String paramlist = "";
+        String arglist = "";    // only used when fixed args mixed with ...rest
+        String applyarg = "arguments";
+        ParseTreePrinter ptp = new ParseTreePrinter();
+        for (int pcnt = 0, len = params.size(); pcnt < len; pcnt++) {
+          SimpleNode param = passThrough(params.get(pcnt));
+          // Must keep initializers, as apply honors them
+          if (param instanceof ASTIdentifier) {
+            ASTIdentifier paramid = (ASTIdentifier)param;
+            if (paramid.getEllipsis()) {
+              if (pcnt == 0) {
+                applyarg = paramid.getName();
+              }
+              else {
+                applyarg = "[" + arglist + "].concat(" + paramid.getName() + ")";
+              }
+              assert (pcnt + 1 == len) : "ellipsis param must be last";
+            }
+            if (pcnt > 0) {
+              paramlist += ",";
+              arglist += ",";
+            }
+            paramlist += paramid.toJavascriptString();
+            arglist += paramid.getName();
+          }
+          else if (param instanceof ASTFormalInitializer) {
+            paramlist += "=(" + ptp.text(param.get(0)) + ")";
+          }
         }
-        else {
-          frag += " with (this) { _1 }}).call(this);";
-        }
+        String frag = "$lzsc$ret = (function(" + paramlist + ")" + tryType +
+          " { _1 }).apply(" + (isStatic ? "null" : "this") + ", " + applyarg + ");";
         newStmts = new Compiler.PassThroughNode((new Compiler.Parser()).substitute(newStmts, frag, map));
       }
       tryNode.set(i++, newStmts);

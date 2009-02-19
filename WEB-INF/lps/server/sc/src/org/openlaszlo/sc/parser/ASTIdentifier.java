@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -101,13 +101,14 @@ public class ASTIdentifier extends SimpleNode {
         this.isconstructor = value;
     }
 
-    public String toString() {
+    public String toJavascriptString() {
         String dots = ellipsis ? "..." : "";
-        String typesuffix = "";
-        if (type != null) {
-            typesuffix = ": " + type.toString();
-        }
-        return "ASTIdentifier(" + dots + name + typesuffix + ")";
+        String typesuffix = (type == null) ? "" : (": " + type.toString());
+        return dots + name + typesuffix;
+    }
+
+    public String toString() {
+        return "ASTIdentifier(" + toJavascriptString() + ")";
     }
 
     /** Accept the visitor */

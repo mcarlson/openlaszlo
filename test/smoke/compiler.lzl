@@ -2,7 +2,7 @@
     Compiler Tests
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-     * Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
      * Use is subject to license terms.                                            *
      * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -132,8 +132,26 @@
              }
       ]]>
     </method>
+
+    <method name="varScope" args="ar1">
+       assertEquals("argvalue", ar1, "argument original value is used")
+       var ar1 = "varvalue"; 
+       assertEquals("varvalue", ar1, "redeclared variable value is used")
+    </method>
+
+    <method name="argScope">
+        var foo = {a: 3, test: function (a, ...rest) { return a;}};
+        assertEquals("42", foo.test(42), "argument scope used before object scope");
+     </method>
+
+    <method name="testMiscellaneousCompilation">
+      varScope("argvalue");
+      argScope();
+    </method>
+
     <method name="addTests"> 
         this.addTest("testOptionalArguments");
+        this.addTest("testMiscellaneousCompilation");
         this.addTest("testConditionalCompilation");
     </method> 
   </class>
