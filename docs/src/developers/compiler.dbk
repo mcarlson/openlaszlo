@@ -395,13 +395,27 @@ lzc --script --runtime=dhtml laszlo-explorer/basics/mediatst.lzx;
           <literal>$js1</literal>.</para>
 
       <example role="live-example">
-        <title>&lt;switch&gt; for conditional compilation</title>
+        <title>&lt;switch&gt; using &lt;when&gt; for conditional compilation</title>
         <programlisting language="lzx">
-   <textobject><textdata fileref="programs/compiler-$2.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/when.lzx"/></textobject> 
    </programlisting>
       </example>
 
-      <para/>
+<para>You can also use <literal>unless</literal> in a similar way.</para>
+      
+      <example role="live-example">
+        <title>&lt;switch&gt; using &lt;unless&gt; for conditional compilation</title>
+        <programlisting language="lzx">
+          <textobject><textdata fileref="programs/unless.lzx"/></textobject> 
+        </programlisting>
+      </example>
+      
+      You can also use this syntax:
+      <programlisting>&lt;when property="$runtime" value="swf9"&gt; // checks for string equality </programlisting>
+        
+        And for back compatibility: 
+        
+        <programlisting>&lt;when runtime="swf9"&gt;</programlisting>
     </section>
     <section>
       <title>Font and Face</title>
