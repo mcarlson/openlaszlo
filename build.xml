@@ -573,7 +573,7 @@
               <exclude name="${builddir-dev}/WEB-INF/bin/compc*" />
           </tarfileset>
           <tarfileset dir="${source-distro}" mode="755" prefix="${source-distro}">
-              <include name="${buildir-dev>/server/${tomcat}/bin/*"/>
+              <include name="${buildir-dev}/server/${tomcat}/bin/*"/>
               <include name="${builddir-dev}/WEB-INF/bin/mxmlc*" />
               <include name="${builddir-dev}/WEB-INF/bin/fdb*" />
               <include name="${builddir-dev}/WEB-INF/bin/compc*" />
@@ -1137,16 +1137,23 @@
       <property name="flexbin"    value="${webinf}/bin" />
       <property name="flex_frameworks"    value="${webinf}/frameworks" />
 
-
       <!-- Remove old builddir -->
       <delete dir="${builddir}" failonerror="true" />
 
       <mkdir dir="${builddir}" />
 
+      <!-- The README goes at the top of the build dir -->
       <copy tofile="${builddir}/README.txt" file="README.core.txt">
-          <filterset>
-              <filter token="VERSIONID" value="${version.id}"/>
-          </filterset>
+      </copy>
+      <copy todir="${builddir}" file="docs/logo.gif" />
+      <!-- Copy mainfest.top to builddir directory, these are duplicated in the webapp -->
+      <copy todir="${builddir}">
+          <fileset dir="." >
+              <patternset refid="manifest.top" />
+          </fileset>
+      </copy>
+      <copy todir="${builddir-credits}" >
+          <fileset dir="credits" />
       </copy>
 
       <copy todir="${libdir}" >
@@ -1158,34 +1165,36 @@
           </fileset>
       </copy>
 
-      <copy todir="${builddir}" file="docs/logo.gif" />
-
-      <!-- Copy mainfest to builddir directory -->
-      <copy todir="${builddir}">
-          <fileset dir="." >
-              <patternset refid="manifest.top" />
-          </fileset>
-      </copy>
-      <copy todir="${builddir-credits}" >
-          <fileset dir="credits" />
-      </copy>
-
       <copy file="lps/utils/startup.var.proto" tofile="lps/utils/startup.var" >
          <filterset>
-             <filter token="VERSIONID" value="${version.id}"/>
+            <filter token="BUILDDATE" value="${build.date}" />
+            <filter token="BUILDID"   value="${build.id}" />
+            <filter token="RELEASE"   value="${release}" />
+            <filter token="RELEASEID" value="${release.id}" />
+            <filter token="VERSIONID" value="${version.id}" />
          </filterset>
       </copy>
 
       <copy file="lps/utils/startup-static.html.proto" tofile="lps/utils/startup-static.html" >
          <filterset>
-             <filter token="VERSIONID" value="${version.id}"/>
+            <filter token="BUILDDATE" value="${build.date}" />
+            <filter token="BUILDID"   value="${build.id}" />
+            <filter token="RELEASE"   value="${release}" />
+            <filter token="RELEASEID" value="${release.id}" />
+            <filter token="VERSIONID" value="${version.id}" />
          </filterset>
       </copy>
 
       <copy todir="${webapp}">
           <fileset dir="." >
+              <patternset refid="manifest.top" />
+          </fileset>
+          <fileset dir="." >
               <patternset refid="manifest.webapp" />
           </fileset>
+      </copy>
+      <!-- install the 'quick' index -->
+      <copy tofile="${webapp}/index.html" file="index.html" >
       </copy>
 
       <copy todir="${webapp}/docs">
@@ -1193,7 +1202,11 @@
               <patternset refid="manifest.webapp.docs" />
           </fileset>
           <filterset>
-              <filter token="VERSIONID" value="${version.id}"/>
+            <filter token="BUILDDATE" value="${build.date}" />
+            <filter token="BUILDID"   value="${build.id}" />
+            <filter token="RELEASE"   value="${release}" />
+            <filter token="RELEASEID" value="${release.id}" />
+            <filter token="VERSIONID" value="${version.id}" />
           </filterset>
       </copy>
 
@@ -1204,11 +1217,6 @@
               <patternset refid="manifest.webapp.docs.images" />
           </fileset>
       </copy>
-
-      <!-- install the 'quick' index -->
-      <copy tofile="${webapp}/index.html" file="index.html" >
-      </copy>
-
 
       <!-- flex compiler support files -->
       <copy todir="${flexbin}" >
