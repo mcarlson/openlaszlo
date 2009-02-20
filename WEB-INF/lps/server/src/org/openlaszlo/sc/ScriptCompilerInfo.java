@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
- * Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+ * Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
  * Use is subject to license terms.                                            *
  * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -18,5 +18,14 @@ public class ScriptCompilerInfo {
     public File mainAppWorkDir = null;
     /** Path to a (library) compile's as3 working directory */
     public File workDir = null;
+
+    public String buildDirPathPrefix = null;
+
+    public String toString() {
+        return "{ScriptCompilerInfo: mainAppWorkDir="+mainAppWorkDir+
+            ", workDir="+workDir+
+            " buildDirPathPrefix="+buildDirPathPrefix+"}";
+    }
+
 }
 

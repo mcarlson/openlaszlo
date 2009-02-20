@@ -16,7 +16,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openlaszlo.sc.parser.*;
+import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.server.LPS;
+
+import org.apache.commons.collections.LRUMap;
 
 /**
  * The SWF9External manages communication with the
@@ -40,6 +43,15 @@ public class SWF9External {
    * that contains our compilation work directories, one for each compilation.
    */
   public static final String WORK_DIR_PARENT = "lzswf9";
+
+  /**
+   * Used for incremental compilation option of flex compiler. This
+   * table stores a copy of previously compiled .as file, so we know
+   * whether it has changed before we update the file on disk.
+   * 
+   */
+
+  public static final Map sIncrementalCompilationCache = Collections.synchronizedMap(new LRUMap(10000));
 
   /**
    * The prefix for naming the work directories, which appear
@@ -69,7 +81,7 @@ public class SWF9External {
 
   private int maxSubdirnum = 0;
 
-  public SWF9External(Compiler.OptionMap options) {
+  public SWF9External(Compiler.OptionMap options, boolean buildSharedLibrary) {
     this.options = options;
     mInfo = (ScriptCompilerInfo) options.get(Compiler.COMPILER_INFO);
     if (mInfo == null) {
@@ -79,13 +91,30 @@ public class SWF9External {
       // Re-use the previous working directory from the ScriptCompilerInfo
       workdir = mInfo.workDir;
     } else {
-      workdir = createCompilationWorkDir();
+      workdir = createCompilationWorkDir(options, buildSharedLibrary);
       // Copy pointer to working directory to the ScriptCompilerInfo,
       // so any subsequent <import> library compilations can use it.
       mInfo.workDir = workdir;
     }
-    //System.err.println("REUSE_WORK_DIRECTORY = "+options.getBoolean(Compiler.REUSE_WORK_DIRECTORY) + " workdir = "+workdir);
+
+    // If this is not an incremental compile, erase all files in the working directory
+    if (!options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
+      deleteDirectoryFiles(workdir);
+    } 
   }
+
+  public static void deleteDirectoryFiles(File dir) {
+    if (dir.isDirectory()) {
+      File[] children = dir.listFiles();
+      for (int i=0; i<children.length; i++) {
+        File f = children[i];
+        if (f.isFile()) {
+          f.delete();
+        }
+      }
+    }
+  }
+
 
   /**
    * Return the bytes in a file
@@ -133,7 +162,7 @@ public class SWF9External {
    * and return a File for it.
    * @throw CompilerError when directory creation fails
    */
-  private File createCompilationWorkDir()
+  private File createCompilationWorkDir(Compiler.OptionMap options, boolean buildSharedLibrary)
   {
     // TODO: [2007-11-20 dda] Need some provisions for file
     // cleanup on error, and on success too.
@@ -143,12 +172,20 @@ public class SWF9External {
       String tmpdirstr = System.getProperty("java.io.tmpdir");
       String swf9tmpdirstr = tmpdirstr + File.separator + WORK_DIR_PARENT;
       (new File(swf9tmpdirstr)).mkdirs();
-        
-      f = File.createTempFile(WORK_DIR_PREFIX, "", new File(swf9tmpdirstr));
-      if (!f.delete())
-        throw new CompilerError("getCompilationWorkDir: temp file does not exist");
-      if (!f.mkdir())
-        throw new CompilerError("getCompilationWorkDir: cannot make workdir");
+      String appDirPrefix = mInfo.buildDirPathPrefix;
+      if (buildSharedLibrary) {
+        // Compiling the LFC
+        f = File.createTempFile(WORK_DIR_PREFIX, "", new File(swf9tmpdirstr));
+        if (!f.delete()) {
+          throw new CompilerError("getCompilationWorkDir: temp file does not exist");
+        }
+        if (!f.mkdir()) {
+          throw new CompilerError("getCompilationWorkDir: cannot make workdir");
+        }
+      } else {
+        f = new File(swf9tmpdirstr + File.separator + appDirPrefix);
+        f.mkdirs();
+      }
     }
     catch (IOException ioe) {
       throw new CompilerError("getCompilationWorkDir: cannot get temp directory: " + ioe);
@@ -973,6 +1010,9 @@ public class SWF9External {
       cmd.add("-target-player=10.0.0");
     }
 
+    if (options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
+      cmd.add("-incremental=true");
+    }
 
     if (!buildSharedLibrary) {
       String mainclassname = (String) options.get(Compiler.SWF9_WRAPPER_CLASSNAME);
@@ -1099,6 +1139,22 @@ public class SWF9External {
     }
 
     FileOutputStream fos = null;
+
+    String content = pre + body + post;
+    File diskfile = new File(infilename);
+    if (options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
+      if (diskfile.exists()) {
+        String oldfile = (String) sIncrementalCompilationCache.get(infilename);
+        // If old contents of file are the same, don't rewrite the file
+        if (oldfile != null) {
+          if (content.equals(oldfile)) {
+            return;
+          }
+        }
+      }
+      // If we wrote a new file, enter the contents in the cache;
+      sIncrementalCompilationCache.put(infilename, content);
+    }
 
     try {
       fos = new FileOutputStream(infilename);

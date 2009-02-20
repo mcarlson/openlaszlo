@@ -480,6 +480,7 @@ public class Compiler {
   public static String GENERATE_FUNCTION_2 = "generateFunction2";
   public static String GENERATE_FUNCTION_2_FOR_LZX = "generateFunction2ForLZX";
   public static String GENERATE_PREDICTABLE_TEMPS = "generatePredictableTemps";
+  public static String INCREMENTAL_COMPILE = "incrementalCompile";
   public static String INCLUDES = "processIncludes";
   public static String INSTR_STATS = "instrStats";
   public static String LINK = "link";

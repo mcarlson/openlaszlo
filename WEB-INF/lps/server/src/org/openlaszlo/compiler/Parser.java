@@ -27,7 +27,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLFilter;
 import org.xml.sax.helpers.XMLFilterImpl;
-import org.apache.commons.collections.LRUMap;
 import org.openlaszlo.server.*;
 import org.openlaszlo.utils.*;
 import org.openlaszlo.xml.internal.*;
@@ -739,11 +738,6 @@ public class Parser {
 
         } 
     }
-    
-    /** Cache of compiled schema verifiers.  Type Map<String,
-     * org.iso_relax.verifier.Schema>, where the key is the string
-     * serialization of the schema.  */
-    private static LRUMap mSchemaCache = new LRUMap(1);
     
     void saveStartLocation (Element elt,
                             String pathname,

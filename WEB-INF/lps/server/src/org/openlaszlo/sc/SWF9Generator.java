@@ -651,7 +651,7 @@ public class SWF9Generator extends JavascriptGenerator {
   {
     boolean hasErrors = false;
     boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
-    SWF9External ex = new SWF9External(options);
+    SWF9External ex = new SWF9External(options, buildSharedLibrary);
 
     for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
       TranslationUnit tunit = (TranslationUnit)iter.next();
@@ -703,7 +703,7 @@ public class SWF9Generator extends JavascriptGenerator {
 }
 
 /**
- * @copyright Copyright 2006-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 
