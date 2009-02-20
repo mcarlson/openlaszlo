@@ -1,7 +1,7 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -175,6 +175,20 @@ public class ParseTreePrinter {
       sb.append(strings[l]);
     }
     return(sb.toString());
+  }
+
+  /**
+   * Return a list of strings with any empty or null strings removed
+   */
+  public String[] removeEmptyStrings(String[] strings) {
+    int len = strings.length;
+    List list = new ArrayList();
+    for (int i = 0; i < len; i++) {
+      if (strings[i] != null && unannotate(strings[i]).trim().length() > 0) {
+        list.add(strings[i]);
+      }
+    }
+    return (String[])list.toArray(new String[0]);
   }
 
   /**
@@ -879,7 +893,11 @@ public class ParseTreePrinter {
   }
   
   public String visitVariableDeclarationList(SimpleNode node, String[] children) {
-    return join(COMMA, children);
+    // As declarations are processed by the generator, they
+    // are sometimes replaced by ASTEmptyExpressions.
+    // The resulting empty strings need to be removed
+    // to avoid emitting adjacent commas.
+    return join(COMMA, removeEmptyStrings(children));
   }
 
   public String visitTryStatement(SimpleNode node, String[] children) {
