@@ -1,8 +1,8 @@
 <!---
-   
+
     @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
                Use is subject to license terms.
-   
+
     @access public
     @affects lzdrawview
     @topic LFC
@@ -11,33 +11,33 @@
 <library>
 
   <interface name="drawview" extends="view">
-  
+
     <doc>
       <tag name="shortdesc"><text>Adds procedural drawing APIs to view.</text></tag>
       <text>
-        <p><tagname>drawview</tagname> adds procedural drawing APIs to <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag></p> 
-        
+        <p><tagname>drawview</tagname> adds procedural drawing APIs to <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag></p>
+
         <p><tagname>drawview</tagname> implements a subset of the WHATWG drawing APIs, which can be found at:
         <a href="http://www.whatwg.org/specs/web-apps/current-work/#graphics">http://www.whatwg.org/specs/web-apps/current-work/#graphics</a>
         </p>
-        
+
         <example><programlisting class="code">
         &lt;canvas&gt;
-            &lt;drawview height="200"&gt;
+            &lt;drawview width="200" height="300"&gt;
                 &lt;handler name="oncontext"&gt;
                     this.moveTo(100, 100);
                     this.lineTo(100, 200);
                     this.quadraticCurveTo(150, 250, 200, 200);
                     this.closePath();
-        
+
                     this.fillStyle = 0x0000ff;
                     this.globalAlpha = .5;
                     this.fill();
-                    
+
                     this.strokeStyle = 0xffff00;
                     this.lineWidth = 5;
                     this.stroke();
-                    
+
                     var g = this.createRadialGradient(75, 75, .7, 300, 300, 0)
                     this.globalAlpha = 0;
                     g.addColorStop(0, 0x000000);
@@ -45,18 +45,18 @@
                     g.addColorStop(1, 0xffffff);
                     this.fillStyle = g;
                     this.fill();
-        
+
                     this.strokeStyle = 0x000000;
                     this.lineWidth = 0;
                     this.stroke();
-        
+
                     this.beginPath();
                     this.lineTo(75, 0);
                     this.lineTo(75, 75);
                     this.lineTo(0, 75);
                     this.lineTo(0, 0);
                     this.closePath();
-                    
+
                     var g = this.createLinearGradient(0,0,75,75)
                     this.globalAlpha = 0;
                     g.addColorStop(0, 0x000000);
@@ -68,7 +68,7 @@
             &lt;/drawview&gt;
         &lt;/canvas&gt;
         </programlisting></example>
-                
+
         <p><classname>drawview</classname> extends <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag>,
         which is the fundamental visual class of LZX.</p>
       </text>
@@ -84,7 +84,7 @@
           @access public
     -->
     <attribute name="globalAlpha" value= "1" type="number"/>
-    
+
     <!--- Gives the default width of lines, in coordinate space units.
           Negative values are ignored.  0 draws hairlines in swf - lines that
           are always 1 pixel wide even when scaled.
@@ -98,28 +98,28 @@
           @access public
     -->
     <attribute name="lineCap" value="round" type="string"/>
-    
+
     <!--- Represents the colour to use for the lines around shapes.  Specified as a hexadecimal number (0xffffff) or a CSS string ('#ff00ff' or '#f0f').
       @access public
     -->
     <attribute name="strokeStyle" value= "#000000" type="string"/>
-    
+
     <!--- Represents the colour or style to use for the fill inside the shapes. Can be either a hexadecimal number (0xffffff), a CSS string ('#ff00ff' or '#f0f'), or a CanvasGradient/LzCanvasGradient.
       @access public
     -->
     <attribute name="fillStyle" value= "#000000" type="string"/>
 
-    
+
     <!--- Contains a reference to the raw drawview context.  oncontext is sent when the context is ready to use, which can take some time in IE.
       @access public
     -->
     <attribute name="context" value="null"/>
-    
+
     <!--- If true, the bitmap result will be cached where possible.
       @access public
     -->
     <attribute name="cachebitmap" value="true" type="boolean"/>
-    
+
     <!--- Sent when the context is ready to use, which can take some time in IE.
       @access public
     -->
@@ -157,13 +157,13 @@
       @param Number y: y position to draw to
     -->
     <method name="quadraticCurveTo" args="cpx, cpy, x, y"/>
-    
+
     <!---
-      Adds the given coordinate (x, y) to the list of points of 
-      the subpath, and connects the two points with a bezier curve with control 
-      points (cp1x, cp1y) and (cp2x, cp2y). It then sets the current position to 
+      Adds the given coordinate (x, y) to the list of points of
+      the subpath, and connects the two points with a bezier curve with control
+      points (cp1x, cp1y) and (cp2x, cp2y). It then sets the current position to
       the given coordinate (x, y).
-      
+
       @param Number cp1x: X value of control point 1
       @param Number cp1y: Y value of control point 1
       @param Number cp2x: X value of control point 2
@@ -191,8 +191,8 @@
 
     <!---
       Takes four arguments, representing the start point (x0, y0) and end point (x1, y1) of the gradient, in coordinate space units, and returns an object representing a linear gradient initialised with that line.
-      Linear gradients are rendered such that at the starting point on the canvas the colour at offset 0 is used, that at the ending point the color at offset 1 is used, that all points on a line perpendicular to the line between the start and end points have the colour at the point where those two lines cross. (Of course, the colours are only painted where the shape they are being painted on needs them.) 
-      
+      Linear gradients are rendered such that at the starting point on the canvas the colour at offset 0 is used, that at the ending point the color at offset 1 is used, that all points on a line perpendicular to the line between the start and end points have the colour at the point where those two lines cross. (Of course, the colours are only painted where the shape they are being painted on needs them.)
+
       @param Number x0: Starting x position
       @param Number y0: Starting y position
       @param Number x1: Ending x position
@@ -202,9 +202,9 @@
     <method name="createLinearGradient" args="x0, y0, x1, y1" />
 
     <!---
-      Takes six arguments, the first three representing the start point (x0, y0) and rotation r0, and the last three representing the end point (x1, y1) and radius r1. The values are in coordinate space units. 
+      Takes six arguments, the first three representing the start point (x0, y0) and rotation r0, and the last three representing the end point (x1, y1) and radius r1. The values are in coordinate space units.
       Rotation doesn't appear to work for radial gradients.  Even so, it can be set by specifying r0 in radians.  r1 is ignored.
-      
+
       @param Number x0: Starting x position
       @param Number y0: Starting y position
       @param Number r0: Rotation of the gradient - not working
@@ -216,23 +216,23 @@
     <method name="createRadialGradient" args="x0, y0, r0, x1, y1, r1" />
 
     <!---
-      Adds an arc to the current path. The arc is a segment of a circle that has radius as given. 
+      Adds an arc to the current path. The arc is a segment of a circle that has radius as given.
       The circle segment is determined by the two angles startAngle and endAngle and begins at the given coordinate (x,y).
       If clockwise is true, the arc is drawn clockwise from startAngle to endAngle, otherwise it is drawn counter-clockwise (anti-clockwise).
-      
+
       @param Number x: Starting x position
       @param Number y: Starting y position
       @param Number radius: Radius
       @param Number startAngle: Angle to start in radians
       @param Number endAngle: Angle to end in radians
-      @param Number clockwise: anticlockwise if true, clockwise otherwise 
+      @param Number clockwise: anticlockwise if true, clockwise otherwise
     -->
     <method name="arc" args="x, y, radius, startAngle, endAngle, clockwise" />
 
     <!---
       Rect creates a new subpath containing just the rectangle with top left coordinate (x, y), width w and height h.
       Based on mc.drawRect() - by Ric Ewing (ric@formequalsfunction.com)
-      
+
       @param Number x: starting x position
       @param Number y: starting y position
       @param Number w: Width
@@ -244,7 +244,7 @@
     <!---
       Draws an oval at the origin x, y with a radius radius.  If yRadius is specified, radius is the x radius of the oval.
       Based on mc.drawOval() - by Ric Ewing (ric@formequalsfunction.com) - version 1.1 - 4.7.2002
-      
+
       @param Number x: Starting x position
       @param Number y: Starting y position
       @param Number radius: The radius of the oval. If [optional] yRadius is defined, r is the x radius.
@@ -414,7 +414,7 @@
             // Now calculate the sweep of each segment
             segAngle = arc/segs;
             // The math requires radians rather than degrees. To convert from degrees
-            // use the formula (degrees/180)*Math.PI to get radians. 
+            // use the formula (degrees/180)*Math.PI to get radians.
             theta = -(segAngle/180)*Math.PI;
             // convert angle startAngle to radians
             angle = -(startAngle/180)*Math.PI;
@@ -440,8 +440,8 @@
             }
             // In the native draw methods the user must specify the end point
             // which means that they always know where they are ending at, but
-            // here the endpoint is unknown unless the user calculates it on their 
-            // own. Lets be nice and let save them the hassle by passing it back. 
+            // here the endpoint is unknown unless the user calculates it on their
+            // own. Lets be nice and let save them the hassle by passing it back.
             return {x:bx, y:by};
         }
 
@@ -480,7 +480,7 @@
   <switch>
     <when runtime="dhtml">
       <script when="immediate"><![CDATA[
-      
+
         // Classes that implement an interface must obey the LZX
         // tag->class mapping convention
         class $lzc$class_drawview extends LzView with DrawviewShared {
@@ -496,13 +496,13 @@
             var strokeStyle = '#000000';
             var fillStyle = '#000000';
             var context = null;
-            
+
             var oncontext = LzDeclaredEvent;
 
             function getContext(type) {
                 return this.context;
             }
-    
+
             function construct(parent,args) {
                 super.construct(parent, args);
                 new LzDelegate( this , "_onconstruct" , this , "onconstruct" );
@@ -515,10 +515,10 @@
                     this._buildcanvas(w, h);
                 }
             }
-    
+
             function _buildcanvas(width, height) {
                 this.beginPath();
-    
+
                 if (this.__LZcanvas) {
                     this._lineWidth = null;
                     this._lineCap = null;
@@ -538,7 +538,7 @@
                 }
                 this.__id = 'canvas-' + (lz.drawview.uid++);
                 //Debug.write('_buildcanvas', this.__id, width, height);
-    
+
                 this.__LZcanvas = document.createElement('canvas');
                 this.__LZcanvas.setAttribute('id', this.__id);
                 this.__LZcanvas.setAttribute('width', width);
@@ -548,7 +548,7 @@
                 this.__canvasheight = height;
                 var div = this.getMCRef();
                 div.appendChild(this.__LZcanvas);
-    
+
                 if (lz.embed.browser.isIE) {
                     // IE can take a while to start up.
                     this._hidden = false;
@@ -558,8 +558,9 @@
                     this.setAttribute('context', this.__LZcanvas.getContext("2d"));
                 }
             }
+
             override function $lzc$set_width(w) {
-                super.$lzc$set_width.apply(this, arguments);
+                super.$lzc$set_width(w);
                 w = Math.floor(w);
                 var h = Math.floor(this.height);
                 if (h > 0 && w > 0) {
@@ -573,8 +574,9 @@
                     this.__LZcanvas.style.visibility = "hidden";
                 }
             }
+
             override function $lzc$set_height(h) {
-                super.$lzc$set_height.apply(this, arguments);
+                super.$lzc$set_height(h);
                 var w = Math.floor(this.width);
                 h = Math.floor(h);
                 if (w > 0 && h > 0) {
@@ -620,7 +622,7 @@
                 this.context.drawImage(image, 0, 0, w, h);
                 this.context.restore();
             }
- 
+
             function __initie() {
                 try {
                     if (this.__LZcanvas && this.__LZcanvas.parentNode != null) {
@@ -638,49 +640,49 @@
                     }
                 }
             }
-    
+
             function __checkContext() {
                 if ($debug) {
                     if (! this['context']) Debug.warn('this.context is not yet defined.  Please check for the presence of the context property before using drawing methods, and/or register for the oncontext event to find out when the property is available.');
                 }
             }
-    
+
             function beginPath() {
                 this.__path = [[1,0,0]];
                 this.__pathisopen = true;
             }
-    
+
             function closePath() {
                 if (this.__pathisopen) {
                     this.__path.push([0]);
                 }
                 this.__pathisopen = false;
             }
-    
+
             function moveTo(x,y) {
                 if (this.__pathisopen) {
                     this.__path.push([1, x,y]);
                 }
             }
-    
+
             function lineTo(x,y) {
                 if (this.__pathisopen) {
                     this.__path.push([2, x,y]);
                 }
             }
-    
+
             function quadraticCurveTo(cpx, cpy, x, y) {
                 if (this.__pathisopen) {
                     this.__path.push([3, cpx, cpy, x, y]);
                 }
             }
-    
+
             function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
                 if (this.__pathisopen) {
                     this.__path.push([4, cp1x, cp1y, cp2x, cp2y, x, y]);
                 }
             }
-    
+
             function fill() {
                 this.__playPath();
                 this.context.fill();
@@ -703,7 +705,7 @@
                     this._fillStyle = this.fillStyle;
                 }
             }
-    
+
             function __playPath() {
                 if (this.__path.length == 0) return;
                 if ($debug) this.__checkContext();
@@ -741,34 +743,34 @@
                     if (n == 0) {
                         this.context.closePath();
                     } else if (n == 3) {
-                        this.context.quadraticCurveTo(a[1], a[2], a[3], a[4]); 
+                        this.context.quadraticCurveTo(a[1], a[2], a[3], a[4]);
                     } else if (n == 4) {
-                        this.context.bezierCurveTo(a[1], a[2], a[3], a[4], a[5], a[6]); 
+                        this.context.bezierCurveTo(a[1], a[2], a[3], a[4], a[5], a[6]);
                     } else if (n == 1) {
-                        this.context.moveTo(a[1], a[2]); 
+                        this.context.moveTo(a[1], a[2]);
                     } else if (n == 2) {
-                        this.context.lineTo(a[1], a[2]); 
+                        this.context.lineTo(a[1], a[2]);
                     }
                 }
             }
-    
+
             function clipPath() {
                 if ($debug) {
-                    Debug.warn('Drawview.clipPath() is not currently supported in DHTML.');
+                    Debug.warn('lz.drawview.clipPath() is not currently supported in DHTML.');
                 }
             }
 
             function clipButton() {
                 if ($debug) {
-                    Debug.warn('Drawview.clipButton() is not currently supported in DHTML.');
+                    Debug.warn('lz.drawview.clipButton() is not currently supported in DHTML.');
                 }
             }
-    
+
             function stroke() {
                 this.__playPath();
                 this.context.stroke();
             }
-    
+
             function clear() {
                 if ($debug) this.__checkContext();
                 this.context.clearRect(0, 0, this.__canvaswidth, this.__canvasheight);
@@ -776,14 +778,14 @@
     
             function clearMask() {
                 if ($debug) {
-                    Debug.warn('Drawview.clearMask() is not currently supported in DHTML.');
+                    Debug.warn('lz.drawview.clearMask() is not currently supported in DHTML.');
                 }
             }
-    
+
             function createLinearGradient(x0, y0, x1, y1) {
                 return new LzCanvasGradient(this.context.createLinearGradient(x0, y0, x1, y1));
             }
-    
+
             function createRadialGradient(x0, y0, r0, x1, y1, r1) {
                 return new LzCanvasGradient(this.context.createRadialGradient(x0, y0, r0, x1, y1, r1));
             }
@@ -817,11 +819,11 @@
           * <p>
           * The <tagname>LzCanvasGradient</tagname> is used by drawviews to describe a gradient fill.
           * </p>
-          * 
+          *
           * @shortdesc An object for describing gradient fills
-          * @devnote LzCanvasGradient is an opaque object, which is used for assigning to 
+          * @devnote LzCanvasGradient is an opaque object, which is used for assigning to
           * other attributes, e.g. fillStyle.  It is also used to add color stops.
-          * An LzCanvasGradient is returned by drawview.createRadialGradient or  
+          * An LzCanvasGradient is returned by drawview.createLinearGradient or
           * drawview.createRadialGradient.
           */
         function LzCanvasGradient(g) {
@@ -857,80 +859,69 @@
         // tag->class mapping convention
         class $lzc$class_drawview extends LzView with DrawviewShared {
             if ($as3) {
-                #passthrough (toplevel:true) {  
+                #passthrough (toplevel:true) {
                 import flash.geom.Matrix;
                 import flash.geom.Rectangle;
                 import flash.display.BitmapData;
+                import flash.display.Graphics;
                 }#
             }
             // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
-            static var _colorcache = {};
-            
-            var globalAlpha = 1;
-            var lineWidth = 1;
-            var strokeStyle = '#000000';
-            var fillStyle = '#000000';
-            var context = null;
-            var __path = [];
-            var __pathisopen = false;
-            var __MOVETO_OP = 0;
-            var __LINETO_OP = 1;
-            var __QCURVE_OP = 2;
-            var __contexts = null;
-            var __bitmapmc = null;
-            var __bitmapdata = null;
-            var __drawing = null;
-            var __matrix = null;
-            var __measurewidth = true;
-            var __measureheight = true;
-            
-            var oncontext = LzDeclaredEvent;
-    
+            static var _colorcache :Object = {};
+
+            var globalAlpha :Number = 1;
+            var lineWidth :Number = 1;
+            var lineCap :String = 'round';
+            var lineJoin :String = 'round';
+            var miterLimit :Number = 3;
+            var strokeStyle :* = '#000000';
+            var fillStyle :* = '#000000';
+            if ($as3) {
+                var context :Graphics = null;
+            } else {
+                var context :MovieClip = null;
+            }
+            var __path :Array = [];
+            var __pathisopen :Boolean = false;
+            const __MOVETO_OP :int = 0;
+            const __LINETO_OP :int = 1;
+            const __QCURVE_OP :int = 2;
+
+            if ($as2) {
+                static var images :Object = {};
+
+                var __contexts :Array = null;
+                var __bitmapmc :MovieClip = null;
+                var __bitmapdata :BitmapData = null;
+                var __drawing :MovieClip = null;
+                var __measurewidth :Boolean = true;
+                var __measureheight :Boolean = true;
+            }
+
+            var oncontext :LzDeclaredEventClass = LzDeclaredEvent;
+
             function $lzc$class_drawview(parent, attrs, children, async) {
                 super(parent, attrs, children, async);
             }
 
             override function construct(parent,args) {
-                // default to bitmap caching on, unless clip = true    
+                // default to bitmap caching on, unless clip = true
                 if (args['cachebitmap'] == null && args['clip'] != true) args['cachebitmap'] = true;
                 super.construct(parent, args);
-                this.__contexts = [];
-
-                new LzDelegate( this , "_oninit" , this , "oninit" );
-                new LzDelegate( this , "rebuildBitmap" , this , "onwidth" );
-                new LzDelegate( this , "rebuildBitmap" , this , "onheight" );
+                if ($as2) { this.__contexts = []; }
             }
 
-            // Add bitmap data drawing layer
-            function rebuildBitmap (ignore) {
-                if ($as3) {
-                    return;
-                }
-                if (this['__bitmapmc']) {
-                    this.__bitmapmc.removeMovieClip();
-                }
-
+            override function init () {
+                super.init();
                 var context = this.sprite.getContext();
-                this.__bitmapmc = context.createEmptyMovieClip("__bitmapmc",1000);
-                if ($as3) {
-                    this.__bitmapdata = new BitmapData(this.width, this.height, true, 0x000000ff);
-                } else {
-                    this.__bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
-                }
-                // negative dimensions cause this to be null
-                if (this['__bitmapdata']) this.__bitmapmc.attachBitmap(this.__bitmapdata, 2, "auto", true);
-            }
-    
-            function _oninit(ignore) {
-                var context = this.sprite.getContext();
-                if ($swf8) {
+                if ($as2) {
                     this.rebuildBitmap();
-                    this.drawcontainer = context.createEmptyMovieClip("drawcontainer",1);
-                    this.__drawing = this.drawcontainer.createEmptyMovieClip("drawing",this.drawcontainer.getNextHighestDepth());
+                    var drawcontainer = context.createEmptyMovieClip("drawcontainer", 1);
+                    this.__drawing = drawcontainer.createEmptyMovieClip("drawing", drawcontainer.getNextHighestDepth());
 
-                    context = this.drawcontainer;
+                    context = drawcontainer;
                 }
                 this.context = context;
                 this.beginPath();
@@ -938,16 +929,14 @@
                 this.oncontext.sendEvent(context);
             }
 
-    
             function beginPath() {
-                //Debug.write('beginPath');
-                this.__path=[]
+                this.__path = [];
                 this.__pathisopen = true;
                 this.context.moveTo(0,0);
             }
-    
+
             function closePath() {
-                if (this.__pathisopen && this.__path.length > 1) {   
+                if (this.__pathisopen && this.__path.length > 1) {
                     var p = this.__path[0];
                     if (p[0] == this.__MOVETO_OP || p[0] == this.__LINETO_OP) {
                         var x = p[1];
@@ -963,21 +952,21 @@
                     this.__pathisopen = false;
                 }
             }
-    
+
             override function moveTo(x, y) {
                 if (this.__pathisopen) {
                     this.__path[this.__path.length] = [this.__MOVETO_OP, x, y];
                 }
                 //Debug.write('moveTo', this.__path);
             }
-    
+
             override function lineTo (x, y) {
                 if (this.__pathisopen) {
                     this.__path[this.__path.length] = [this.__LINETO_OP, x, y];
                 }
                 //Debug.write('lineTo', this.__path);
             }
-    
+
             override function quadraticCurveTo(cpx, cpy, x, y) {
                 if (this.__pathisopen) {
                     this.__path[this.__path.length] = [this.__QCURVE_OP, cpx, cpy, x, y];
@@ -985,66 +974,11 @@
                 //Debug.write('quadraticCurveTo', this.__path);
             }
 
-            static var images = {};
-
-            if ($swf8) {
-                function getImage(name) {
-                    var bitmap = lz.drawview.images[name];
-                    if (! bitmap) {
-                        var container = createEmptyMovieClip("loader",getNextHighestDepth());
-                        if ( name.indexOf('http:') == 0 || name.indexOf('https:') == 0 ) {
-                            var loader = container.createEmptyMovieClip("loader",container.getNextHighestDepth());
-                            loader.loadMovie(name);
-                            container.onEnterFrame = function() {
-                                if(loader._width>0) {
-                                    bitmap = this.copyBitmap(loader, loader._width, loader._height);
-                                    lz.drawview.images[name] = bitmap;
-                                    delete this.onEnterFrame;
-                                    container.removeMovieClip();
-                                }
-                            }
-                        } else {
-                            // measure size
-                            container.attachMovie( name, 'resc', container.getNextHighestDepth());
-                            bitmap = this.copyBitmap(container, container._width, container._height);
-                            lz.drawview.images[name] = bitmap;
-                            container.removeMovieClip();
-                        }
-                    }
-                    return bitmap;
-                }
-            }
-
-            function drawImage(image, x, y, w, h, r) {
-                if ($as3) {
-                    if ($debug) Debug.warn('Drawview.drawImage() is not yet supported in swf9.');
-                } else {
-                    if (typeof image == 'string') {
-                        image = this.getImage(image);
-                    }
-                    if (! image) return;
-
-                    var m = this.getIdentityMatrix();
-
-                    var tw = w ? w / image.width : 1;
-                    var th = h ? h / image.height : 1;
-                    m.scale(tw, th);
-
-                    if (r != null) m.rotate(r);
-
-                    var tx = x ? x : 0;
-                    var ty = y ? y : 0;
-                    m.translate(tx, ty);
-
-                    this.copyBitmap(image, this.width, this.height, this.__bitmapdata, m);
-                }
-            }
-    
-            var bezierCurveTo_error = 10;
+            const bezierCurveTo_error = 10;
 
             function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
                 var error = this.bezierCurveTo_error;
-                
+
                 // Start from the cursor position, or (0, 0)
                 var x0 = 0, y0 = 0;
                 if (this.__path.length) {
@@ -1063,7 +997,7 @@
                 //   }
                 // where the recursion has been replaced by an explicit
                 // work item queue.
-                
+
                 // To avoid recursion and undue temporary structure, the following
                 // loop has a funny control flow.  Each iteration either pops
                 // the next work item from queue, or creates two new work items
@@ -1071,9 +1005,9 @@
                 // The loop effectively exits from the *middle*, when the next
                 // work item is null.  (This continues to the loop test,
                 // which then exits.)
-                
+
                 // each item is a list of control points, with a sentinel of null
-                var work_items = [null]; 
+                var work_items = [null];
                 // the current work item
                 var points = [{x: x0, y: y0}, {x: cp1x, y: cp1y}, {x: cp2x, y: cp2y}, {x: x, y: y}];
                 while (points) {
@@ -1082,38 +1016,38 @@
                     var q1 = this.intersection.apply(null, points);
                     var q0 = points[0];
                     var q2 = points[3];
-                    
+
                     if (!q1 || q1 == -1) {
-                    var flush = true;
-                    var start_first = points[0].x == points[1].x && points[0].y == points[1].y;
-                    var second_end = points[2].x == points[3].x && points[2].y == points[3].y;
-                    if (start_first) {
-                        if (second_end) {
-                        this.lineTo(q2.x, q2.y);
+                        var flush = true;
+                        var start_first = points[0].x == points[1].x && points[0].y == points[1].y;
+                        var second_end = points[2].x == points[3].x && points[2].y == points[3].y;
+                        if (start_first) {
+                            if (second_end) {
+                                this.lineTo(q2.x, q2.y);
+                            } else {
+                                var q1 = points[2];
+                                this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
+                            }
+                        }
+                        else if (second_end) {
+                            var q1 = points[1];
+                            this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
                         } else {
-                        var q1 = points[2];
-                        this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
+                            //both straight lines are collinear
+                            //now we have to test whether they're identical or non-identical
+                            if (!q1) {
+                                q1 = {x:0,y:0};//default-value...
+                                flush = false;
+                            } else {
+                                this.lineTo(q2.x, q2.y);
+                            }
+                        }
+                        if (flush) {
+                            points = work_items.pop();
+                            continue;
                         }
                     }
-                    else if (second_end) {
-                        var q1 = points[1];
-                        this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
-                    } else {
-                        //both straight lines are collinear
-                        //now we have to test whether they're identical or non-identical
-                        if (!q1) {
-                        q1 = {x:0,y:0};//default-value...
-                        flush = false;
-                        } else {
-                        this.lineTo(q2.x, q2.y);
-                        }
-                    }
-                    if (flush) {
-                        points = work_items.pop();
-                        continue;
-                    }
-                    }
-                    
+
                     // Compute the triangle, since the fringe is the subdivision
                     // if we need that and the peak is the midpoint which we need
                     // in any case
@@ -1126,7 +1060,7 @@
                                     y: (c0.y + c1.y)/2};
                         }
                     }
-                    
+
                     var qa = this.midpoint(q0, q1);
                     var qb = this.midpoint(q1, q2);
                     var qm = this.midpoint(qa, qb);
@@ -1158,11 +1092,11 @@
                     var color = values[0];
                     var alpha = values.length > 1 ? Number('.' + values[1]) * 100 : null;
                     //Debug.write(color, alpha, val, cachedColor, values);
-                    cachedColor = ccache[val] = {c: color, a: alpha}; 
+                    cachedColor = ccache[val] = {c: color, a: alpha};
                 }
                 return cachedColor;
             }
-    
+
             function fill() {
                 if (this.fillStyle instanceof LzCanvasGradient) {
                     this.fillStyle.__applyTo(this.context);
@@ -1175,11 +1109,11 @@
                 this.closePath();
                 this.__playPath(this.context);
                 this.context.endFill();
-                this.__updateSize();
+                if ($as2) { this.__updateSize(); }
             }
-    
+
             function __playPath(m) {
-                if ($as2) this.context._visible = false;
+                if ($as2) { this.context._visible = false; }
                 var p = this.__path;
                 //Debug.write(p, m);
                 for (var i = 0; i < p.length; i++) {
@@ -1196,53 +1130,9 @@
                         m.curveTo(op[1], op[2], op[3], op[4]);
                     }
                 }
-                if ($as2) this.context._visible = this.visible;
+                if ($as2) { this.context._visible = this.visible; }
             }
-    
-            if ($as3) {    
-                function clipPath() {
-                    if ($debug) {
-                        Debug.warn('Drawview.clipPath() is not currently supported in swf9.');
-                    }
-                }
 
-                function clipButton() {
-                    if ($debug) {
-                        Debug.warn('Drawview.clipButton() is not currently supported in swf9.');
-                    }
-                }
-            } else {
-                function clip() {
-                    if ($debug) Debug.warn('drawview.clip() is deprecated.  Use clipPath() instead.');
-                    this.clipPath();
-                }
-                function clipPath() {
-                    this.sprite.applyMask(true);
-                    var __clipmc = this.sprite.__LZmaskClip;
-                    this.closePath();
-                    __clipmc.clear();
-                    __clipmc.beginFill(0xffffff, 100);
-                    this.__playPath(__clipmc);
-                    __clipmc.endFill();
-                    this.updateResourceSize();
-                }
-                function clipButton() {
-                    var mc = this.getMCRef();
-                    //Debug.write('clip', this, mc, this.sprite.__LZbuttonRef);
-                    if (! this['__clipmc']) {
-                        this.__clipmc = this.sprite.__LZmovieClipRef.createEmptyMovieClip("$lzclipmc", 6);
-                        this.sprite.__LZbuttonRef.setMask(this.__clipmc);
-                    }
-                    this.closePath();
-
-                    this.__clipmc.clear();
-                    this.__clipmc.beginFill(0xffffff, 100);
-                    this.__playPath(this.__clipmc);
-                    this.__clipmc.endFill();
-                    this.updateResourceSize();
-                }
-            }
-    
             function stroke() {
                 if (this.strokeStyle instanceof LzCanvasGradient) {
                     if ($debug) {
@@ -1255,33 +1145,9 @@
                 this.context.lineStyle(this.lineWidth, color.c, alpha * 100);
                 this.__playPath(this.context);
                 this.context.lineStyle(undefined);
-                this.__updateSize();
+                if ($as2) { this.__updateSize(); }
             }
 
-            if ($swf8) {
-                override function $lzc$set_width(w) {
-                    this.__measurewidth = w == null;
-                    super.setAttribute('width', w);
-                }
-
-                override function $lzc$set_height(h) {
-                    this.__measureheight = h == null;
-                    super.setAttribute('height', h);
-                }
-            }
-
-            function __updateSize() {
-                if ($swf8) {
-                    var mc = this.sprite.getContext();
-                    if (this.__measurewidth && this.width !== mc._width) {
-                      this.setAttribute('width', mc._width);
-                    }
-                    if (this.__measureheight && this.height !== mc._height) {
-                      this.setAttribute('height', mc._height);
-                    }
-                }
-            }
-    
             function clear() {
                 this.context.clear();
                 if ($as3) {
@@ -1290,11 +1156,7 @@
                     if (this['__bitmapdata']) this.__bitmapdata.fillRect(rect, 0x000000ff);
                 }
             }
-    
-            function clearMask() {
-                if (this.sprite.__LZmaskClip) this.sprite.__LZmaskClip.clear();
-            }
-    
+
             function createLinearGradient(x0, y0, x1, y1) {
                 var dx = x1-x0;
                 var dy = y1-y0;
@@ -1309,12 +1171,12 @@
                 if (x1 < x0) {
                     x = x1;
                 }
-                
+
                 var g = new LzCanvasGradient(this, {matrixType:"box", x:x, y:y, w:w, h:h, r:r}, false);
                 //Debug.write('createLinearGradient', {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r});
                 return g;
             }
-    
+
             function createRadialGradient(x0, y0, r0, x1, y1, r1) {
                 var w = x1-x0;
                 var h = y1-y0;
@@ -1339,72 +1201,222 @@
                 this._ty += y;
             }
 
-            function save() {
-                // Store this context.
-                this.__contexts.push(this.context);
+            if ($as3) {
+                function clearMask() {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.clearMask() is not currently supported in swf9.');
+                    }
+                }
 
-                // Create new context to draw in
-                var depth = this.__drawing.getNextHighestDepth();
-                this.context = this.__drawing.createEmptyMovieClip('draw' + depth, depth); 
-                // Offset to the center to ensure we can grab the whole thing 
-                this.context._x = this.width * .5;
-                this.context._y = this.height * .5;
-                this.__matrix = this.getIdentityMatrix()
-            }
+                function clipPath() {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.clipPath() is not currently supported in swf9.');
+                    }
+                }
 
-            function copyBitmap(from, w, h, to, m) {
-                if ($as3) {
-                    var tmp = new BitmapData(w, h, true, 0x000000ff);
-                } else {
+                function clipButton() {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.clipButton() is not currently supported in swf9.');
+                    }
+                }
+
+                function fillRect(x, y, w, h) {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.fillRect() is not currently supported in swf9.');
+                    }
+                }
+
+                function drawImage(image, x, y, w, h, r) {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.drawImage() is not currently supported in swf9.');
+                    }
+                }
+
+                function save() {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.save() is not currently supported in swf9.');
+                    }
+                }
+
+                function restore() {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.restore() is not currently supported in swf9.');
+                    }
+                }
+            } else {
+                function clearMask() {
+                    if (this.sprite.__LZmaskClip) {
+                        this.sprite.__LZmaskClip.clear();
+                    }
+                }
+
+                function clip() {
+                    if ($debug) Debug.warn('lz.drawview.clip() is deprecated.  Use clipPath() instead.');
+                    this.clipPath();
+                }
+
+                function clipPath() {
+                    this.sprite.applyMask(true);
+                    var __clipmc = this.sprite.__LZmaskClip;
+                    this.closePath();
+                    __clipmc.clear();
+                    __clipmc.beginFill(0xffffff, 100);
+                    this.__playPath(__clipmc);
+                    __clipmc.endFill();
+                    this.updateResourceSize();
+                }
+
+                function clipButton() {
+                    var mc = this.getMCRef();
+                    //Debug.write('clip', this, mc, this.sprite.__LZbuttonRef);
+                    if (! this['__clipmc']) {
+                        this.__clipmc = this.sprite.__LZmovieClipRef.createEmptyMovieClip("$lzclipmc", 6);
+                        this.sprite.__LZbuttonRef.setMask(this.__clipmc);
+                    }
+                    this.closePath();
+
+                    this.__clipmc.clear();
+                    this.__clipmc.beginFill(0xffffff, 100);
+                    this.__playPath(this.__clipmc);
+                    this.__clipmc.endFill();
+                    this.updateResourceSize();
+                }
+
+                // Add bitmap data drawing layer
+                function rebuildBitmap () {
+                    if (this['__bitmapmc']) {
+                        this.__bitmapmc.removeMovieClip();
+                    }
+
+                    var context = this.sprite.getContext();
+                    this.__bitmapmc = context.createEmptyMovieClip("__bitmapmc", 1000);
+                    this.__bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
+                    // negative dimensions cause this to be null
+                    if (this['__bitmapdata']) this.__bitmapmc.attachBitmap(this.__bitmapdata, 2, "auto", true);
+                }
+
+                override function $lzc$set_width(w) {
+                    this.__measurewidth = (w == null);
+                    super.$lzc$set_width(w);
+                    this.rebuildBitmap();
+                }
+
+                override function $lzc$set_height(h) {
+                    this.__measureheight = (h == null);
+                    super.$lzc$set_height(h);
+                    this.rebuildBitmap();
+                }
+
+                function __updateSize() {
+                    var mc = this.sprite.getContext();
+                    if (this.__measurewidth && this.width !== mc._width) {
+                      this.setAttribute('width', mc._width);
+                    }
+                    if (this.__measureheight && this.height !== mc._height) {
+                      this.setAttribute('height', mc._height);
+                    }
+                }
+
+                function drawImage(image, x, y, w, h, r) {
+                    if (typeof image == 'string') {
+                        image = this.getImage(image);
+                    }
+                    if (! image) return;
+
+                    var m = this.getIdentityMatrix();
+
+                    var tw = w ? w / image.width : 1;
+                    var th = h ? h / image.height : 1;
+                    m.scale(tw, th);
+
+                    if (r != null) m.rotate(r);
+
+                    var tx = x ? x : 0;
+                    var ty = y ? y : 0;
+                    m.translate(tx, ty);
+
+                    this.copyBitmap(image, this.width, this.height, this.__bitmapdata, m);
+                }
+
+                function getImage(name) {
+                    var bitmap = lz.drawview.images[name];
+                    if (! bitmap) {
+                        var container = createEmptyMovieClip("loader", getNextHighestDepth());
+                        if ( name.indexOf('http:') == 0 || name.indexOf('https:') == 0 ) {
+                            var loader = container.createEmptyMovieClip("loader", container.getNextHighestDepth());
+                            loader.loadMovie(name);
+                            container.onEnterFrame = function() {
+                                if(loader._width>0) {
+                                    bitmap = this.copyBitmap(loader, loader._width, loader._height);
+                                    lz.drawview.images[name] = bitmap;
+                                    delete this.onEnterFrame;
+                                    container.removeMovieClip();
+                                }
+                            }
+                        } else {
+                            // measure size
+                            container.attachMovie(name, 'resc', container.getNextHighestDepth());
+                            bitmap = this.copyBitmap(container, container._width, container._height);
+                            lz.drawview.images[name] = bitmap;
+                            container.removeMovieClip();
+                        }
+                    }
+                    return bitmap;
+                }
+
+                function save() {
+                    // Store this context.
+                    this.__contexts.push(this.context);
+
+                    // Create new context to draw in
+                    var depth = this.__drawing.getNextHighestDepth();
+                    this.context = this.__drawing.createEmptyMovieClip('draw' + depth, depth);
+                    // Offset to the center to ensure we can grab the whole thing
+                    this.context._x = this.width * .5;
+                    this.context._y = this.height * .5;
+                }
+
+                function copyBitmap(from, w, h, to, m) {
                     var tmp = new flash.display.BitmapData(w, h, true, 0x000000ff);
+
+                    tmp.draw(from);
+
+                    // If to wasn't supplied, return the bitmap as-is.
+                    if (! to) {
+                        return tmp;
+                    }
+                    to.draw(tmp, m, null, null, null, true);
+                    tmp.dispose();
                 }
 
-                tmp.draw(from);
+                function restore() {
+                    var m = this.getIdentityMatrix()
+                    // Move back
+                    m.translate(- this.context._x, - this.context._y);
 
-                // If to wasn't supplied, return the bitmap as-is.
-                if (! to) {
-                    return tmp;
+                    // apply accumulated translations
+                    m.rotate(this._tr);
+                    m.translate(this._tx, this._ty);
+                    this._tr = this._tx = this._ty = 0;
+
+                    //Debug.write(this.context._width, this.context._height);
+                    this.copyBitmap(this.__drawing, this.width * 2, this.height * 2, this.__bitmapdata, m)
+
+                    this.context.removeMovieClip();
+                    this.context = this.__contexts.pop();
                 }
-                to.draw(tmp, m, null, null, null, true);
-                tmp.dispose();
-            }
 
-            function restore() {
-                var m = this.getIdentityMatrix()
-                // Move back
-                m.translate(- this.context._x, - this.context._y);
+                function fillRect(x, y, w, h) {
+                    var color = this.__getColor(this.fillStyle);
+                    var alpha = color.a != null ? color.a : this.globalAlpha;
+                    var alpha = (color.a * 255) << 24;
+                    var colorval = color.c | alpha;
 
-                // apply accumulated translations
-                m.rotate(this._tr);
-                m.translate(this._tx, this._ty);
-                this._tr = this._tx = this._ty = 0;
-
-                //Debug.write(this.context._width, this.context._height);
-                this.copyBitmap(this.__drawing, this.width * 2, this.height * 2, this.__bitmapdata, m)
-
-                this.context.removeMovieClip();
-                this.context = this.__contexts.pop();
-            }
-
-            function fillRect(x, y, w, h) {
-                var color = this.__getColor(this.fillStyle);
-                var alpha = color.a != null ? color.a : this.globalAlpha;
-                var alpha = (color.a * 255) << 24;
-                var colorval = color.c | alpha;
-                //Debug.info(colorval, alpha, color, this.fillStyle)
-
-                if ($as3) {
-                    var rect = new Rectangle(x, y, w, h);
-                } else {
                     var rect = new flash.geom.Rectangle(x, y, w, h);
+                    this.__bitmapdata.fillRect(rect, colorval);
                 }
-                this.__bitmapdata.fillRect(rect, colorval);
-            }
 
-            function getIdentityMatrix() {
-                if ($as3) {
-                    return new Matrix();
-                } else {
+                function getIdentityMatrix() {
                     return new flash.geom.Matrix();
                 }
             }
@@ -1415,11 +1427,11 @@
           * <p>
           * The <tagname>LzCanvasGradient</tagname> is used by drawviews to describe a gradient fill.
           * </p>
-          * 
+          *
           * @shortdesc An object for describing gradient fills
-          * @devnote LzCanvasGradient is an opaque object, which is used for assigning to 
+          * @devnote LzCanvasGradient is an opaque object, which is used for assigning to
           * other attributes, e.g. fillStyle.  It is also used to add color stops.
-          * An LzCanvasGradient is returned by drawview.createRadialGradient or  
+          * An LzCanvasGradient is returned by drawview.createLinearGradient or
           * drawview.createRadialGradient.
           */
         class LzCanvasGradient {
@@ -1434,7 +1446,7 @@
             var _c = [];
             var _a = [];
             var _o = [];
-            
+
             function LzCanvasGradient(c, m, isradial) {
                 this._context = c;
                 if ($as3) {
