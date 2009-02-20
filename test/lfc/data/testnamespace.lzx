@@ -1,6 +1,6 @@
 <library>
   <include href="lzunit" />
-  <class name="TestNamespace" extends="TestCase">
+  <class name="TestNamespaceAttr" extends="TestCase">
     <method name="addTests" override="true" >
       this.addTest("testNamespace");
     </method>
