@@ -64,7 +64,7 @@
             @keywords private -->
 
         <handler name="onclick" method="doClick"/>
-        <method name="doClick">
+        <method name="doClick" args="ignore=null">
 
             // toggle it
             this.setActive(!this.isactive);
@@ -101,7 +101,7 @@
 
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

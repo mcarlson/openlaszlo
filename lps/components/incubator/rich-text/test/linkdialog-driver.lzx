@@ -20,7 +20,7 @@
     <richtexttoolbar name="toolbar" editor="${grte}" height="30" width="${parent.width-5}" x="2" y="0" bgcolor="0xD4D7E5">
         <formatbtn name="linkbtn" id="linkbtn" format="link" iconname="link" icony="3" y="2">
         link
-            <method name="doClick">
+            <method name="doClick" args="ignore=null">
                 editor.linkpanel.show();
             </method>
         </formatbtn>
@@ -48,7 +48,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2007, 2009 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

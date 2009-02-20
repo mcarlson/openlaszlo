@@ -66,7 +66,7 @@
                 this.esel = this.editor._esel; 
             }
         
-            var url = urlfield.getText();
+            var url = this.urlfield.getText();
             var fmt = this.editor.getTextFormat(this.ssel, this.esel); 
             fmt.url = url;
             fmt.color = 0x0000FF; 
@@ -112,7 +112,7 @@
     
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

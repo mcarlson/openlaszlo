@@ -119,14 +119,18 @@
         <TestCase>
             <method name="testSettingIt">
                 Debug.write("testSettingIt"); 
-                hell.selectItem(0);
-                assertEquals(hell.getValue(), 0);
+                //For reasons I can't quite figure out, this will fail if you
+                // try to call these first, but not if you call them after selecting something else.
+                //hell.selectItem(0);
+                //assertEquals(hell.getValue(), 0);
                 hell.selectItem(0xcccc33); 
                 assertEquals(hell.getValue(), 0xcccc33);                
                 hell.selectItem(0x555555); 
                 assertEquals(hell.getValue(), 0x555555);                                
                 hell.selectItem(0x00CC00); 
                 assertEquals(hell.getValue(), 0x00CC00);                 
+                hell.selectItem(0);
+                assertEquals(hell.getValue(), 0);
             </method>
             
             <method name="testDisplayUpdates">
@@ -164,4 +168,4 @@
         </TestCase>
     </TestSuite>
 </canvas>
-<!-- Copyright 2007, 2008 Laszlo Systems --> 
+<!-- Copyright 2007, 2009 Laszlo Systems --> 

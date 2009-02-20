@@ -74,8 +74,6 @@
             y="${parent.border}" 
             height="${parent.height-parent.border*2}"
             width="${parent.width - parent.vscrollwidth - parent.border*2 }">
-            <attribute name="lineheight"
-                       value="${this.getTextHeight()/this.maxscroll}"/>
             <attribute name="maxheight" 
                        value="${this.height + this.lineheight * (this.maxscroll - 1)}"/>
             <event name="onpos" />
@@ -96,7 +94,7 @@
             <method name="setPos" args="p">
                 
                 if (this.isinited) {
-                    this.setScroll(Math.ceil(1 - (p / this.lineheight)));
+                    this.setAttribute('scroll', Math.ceil(1 - (p / this.lineheight)));
                     this.pos = p;
                     if (this.onpos) this.onpos.sendEvent(p);
                 }
@@ -123,7 +121,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

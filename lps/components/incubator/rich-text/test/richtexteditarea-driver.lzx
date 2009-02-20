@@ -35,7 +35,7 @@
             // this.linkbtn.setAttribute("editor", ed);                                        
         
             // Set up delegate to watch for when the editor's format changes
-            this.del = new lz.Delegate(this, "currentformatchanged"); 
+            this.del = new lz.Delegate(this, "matcheditorformat"); 
             this.del.register( ed, "oncurrentformat" ); 
         </method>   
     

@@ -61,7 +61,7 @@
          
          <!--- method broadcast out by the toolbar for clearing tool's state -->
          <method name="reset">
-             rollback(false);
+             rollback();
          </method>
          
          <!--- method broadcast out by the toolbar for setting tool's state -->
@@ -78,7 +78,7 @@
  </library>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         --> 

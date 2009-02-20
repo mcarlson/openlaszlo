@@ -5,7 +5,7 @@
 <library >
     <class name="borderinput">
         <attribute name="changed" value="${this.txt.changed}" />
-        <attribute name="text" setter="this.setText(text)" />
+        <attribute name="text" setter="this.setText(text, false)" />
         <attribute name="labelwidth" type="number" value="80"/>
 
         <!-- label -->
@@ -69,7 +69,7 @@
 
         <!--- Get text from border input. -->
         <method name="getText" >
-            return this.txt.text;
+            return this.txt.value;
         </method>
         
         <!--- @keywords private -->
@@ -97,7 +97,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2007, 2009 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

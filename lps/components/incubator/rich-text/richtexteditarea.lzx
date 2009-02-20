@@ -343,7 +343,7 @@
             var esel = this._esel;
 
             // Debug.write("setFormatAttribute, sel is %d to %d", ssel, esel);             
-            if (this.currentformat)
+            if (this['currentformat'])
                 this.currentformat[attr] = val;
             this.isHTML = true;
                                     
@@ -393,7 +393,7 @@
                     // see [BUG ZIM-1268]
               @access private
         --> 
-        <method name="_caretmove">
+        <method name="_caretmove" args="ignore=null">
         // Don't do any of this if this field isn't already rich-text! 
         if (!this.isHTML) return; 
 
@@ -473,7 +473,7 @@
             select of everything, and instead just move the insertion point to the end
             and make sure the insertion point is formatted properly.
             @access private -->
-        <method name="_focussel">
+        <method name="_focussel" args="ignore=null">
             // We really should have focus now! 
             var havelzfocus =  (lz.Focus.getFocus() == this._field); 
             if (havelzfocus) {
@@ -491,12 +491,12 @@
         <method name="_formatAtInsertion" args="ip">
             if (this.isHTML) {
                 if (this.getText().length == ip){
-                    this.inp.setDefaultFormat(this.currentformat);
+                    this.inp.setDefaultFormat(this['currentformat']);
                 }else{
                     if (this.getText().charAt(ip) != ' ') {
                         this.replaceText(ip, ip,' ');    
                     }
-                    this.setTextFormat(this.currentformat, ip, ip+1);
+                    this.setTextFormat(this['currentformat'], ip, ip+1);
                }    
             }
         </method>
@@ -517,7 +517,7 @@
             *after* flash completes the "frame" in which the selection or focus
             changed. 
               @access private -->
-        <method name="_restoreSelection">
+        <method name="_restoreSelection" args="ignore=null">
             //------------------------------------------------------------
             // FIXME [2005-08-16 pkang]: Need to know in which direction
             // selection was done so as to not make scrollbar jump.

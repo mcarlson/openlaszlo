@@ -11,7 +11,7 @@
     <class name="richtexttoolbar" width="${parent.width}" onmouseover="this.onmouseover" y="4">
 
         <!--- The reference to the richtexteditor associated with this toolbar. -->
-        <attribute name="editor" value="null" required="true" />
+        <attribute name="editor" value="${null}" />
         
         <!--- Fonts can have different names so we provide different options to
               provide that mapping here.
@@ -49,11 +49,19 @@
             super.construct(parent,args);
         </method>
         
+        <!--- Ensures that the oncurrentformat method is referencing
+            the editor. -->
+        <handler name="oneditor">
+            if(this['editor']){
+                this.oncurrentformat.reference = this.editor;
+            }
+        </handler>
+        
         <!--- Handles the updating if the tool's state based on the format passed in.
             _passthruchanges flag avoids an infinite loop
             @param textformat fmt: TextFormat object
             -->
-        <handler name="oncurrentformat" reference="this.editor" args="fmt">
+        <handler name="oncurrentformat" args="fmt">
             this._passthruchanges = false; 
             this.matchformat(fmt); 
             this._passthruchanges = true;             
@@ -85,7 +93,7 @@
         </method>
         
         <!--- Update the GUI to match the format specified in the editor's currentformat -->
-        <method name="matcheditorformat">
+        <method name="matcheditorformat" args="ignore=null">
             this._passthruchanges = false; 
             var cfmt = this.editor.currentformat;
             this.matchformat(cfmt); 
@@ -108,7 +116,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->
