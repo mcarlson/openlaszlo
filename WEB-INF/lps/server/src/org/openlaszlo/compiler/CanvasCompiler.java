@@ -34,14 +34,11 @@ class CanvasCompiler extends ToplevelCompiler {
         return element.getName().equals("canvas");
     }
     
-    // Apps are proxied by default.
-    public static boolean APP_PROXIED_DEFAULT = true;
-
     public void compile(Element element) throws CompilationError
     {
         Canvas canvas = new Canvas();
-        // query arg
-        String lzproxied = mEnv.getProperty(mEnv.PROXIED_PROPERTY);
+        // explicitly supplied lzproxied query arg or command line arg
+        String lzproxied = mEnv.getCommandLineOption(mEnv.PROXIED_PROPERTY);
         // canvas attribute
         String cproxied = element.getAttributeValue("proxied");
 
@@ -65,12 +62,8 @@ class CanvasCompiler extends ToplevelCompiler {
             }
             canvas.setProxied(cproxied.equals("true"));
         } else {
-            // inherit from lzproxied arg, or default to APP_PROXIED_PROPERTY
-            if (lzproxied != null) {
-                canvas.setProxied(lzproxied.equals("true"));
-            } else {
-                canvas.setProxied(APP_PROXIED_DEFAULT);
-            }
+            // inherit from lzproxied arg, or system default
+            canvas.setProxied(mEnv.getBooleanProperty(mEnv.PROXIED_PROPERTY));
         }
 
         String versionNumber = element.getAttributeValue("version");
@@ -238,7 +231,7 @@ class CanvasCompiler extends ToplevelCompiler {
         inits.put("appbuilddate", ScriptCompiler.quote(org.openlaszlo.utils.DateUtils.getISO8601DateString(new Date())));
         inits.put("__LZproxied",
                   ScriptCompiler.quote(
-                      mEnv.getProperty(mEnv.PROXIED_PROPERTY, APP_PROXIED_DEFAULT ? "true" : "false")));
+                      mEnv.getProperty(mEnv.PROXIED_PROPERTY)));
         
         inits.put("embedfonts", Boolean.toString(mEnv.getEmbedFonts()));
         inits.put("bgcolor", new Integer(canvas.getBGColor()));

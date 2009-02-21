@@ -226,7 +226,7 @@ public class CompilationEnvironment {
         mProperties.put( LOGDEBUG_PROPERTY,           "false");
         mProperties.put( NAME_FUNCTIONS,              "false");
         mProperties.put( PROFILE_PROPERTY,            "false");
-        mProperties.put( PROXIED_PROPERTY,            "true");
+        mProperties.put( PROXIED_PROPERTY,             LPS.getProperty("compiler.proxied", "true"));
         mProperties.put( REMOTEDEBUG_PROPERTY,        "false");
         mProperties.put( RUNTIME_PROPERTY,             LPS.getRuntimeDefault());
         mProperties.put( SOURCELOCATOR_PROPERTY,      "false");
