@@ -857,7 +857,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           // Look for class prototypes
           // TODO: [2008-09-17 ptw] constructors are Class's in swf9,
           // not Function's.
-          if (thing.hasOwnProperty('_dbg_prototype_for')) {
+          if (thing['hasOwnProperty'] is Function && thing.hasOwnProperty('_dbg_prototype_for')) {
             debug_name = this.functionName(thing._dbg_prototype_for) + '.prototype';
           } else {
             // Have to use `in` here, because only our objects will have
@@ -976,8 +976,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           // No pretty for subclasses or non-objects or array-like objects
           // that are not Arrays.
           var notPretty = indices ?
-            (this.isArrayLike(thing) && (thing.constructor !== Array)) :
-            (this.isObjectLike(thing) && (thing.constructor !== Object));
+            (this.isArrayLike(thing) && (thing['constructor'] !== Array)) :
+            (this.isObjectLike(thing) && (thing['constructor'] !== Object));
           if (notPretty) {
             pretty = (! unique);
           }
