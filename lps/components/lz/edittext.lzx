@@ -190,6 +190,18 @@
         <view name="_face"
             x="2" y="2" width="${parent.width-3}" height="${parent.height-4}"/>
 
+        <setter name="font" args="f">
+            super.setAttribute('font', f);
+            if (this['field']) field.setAttribute('font', f);
+        </setter>
+        <setter name="fontsize" args="f">
+            super.setAttribute('fontsize', f);
+            if (this['field']) field.setAttribute('fontsize', f);
+        </setter>
+        <setter name="fontstyle" args="f">
+            super.setAttribute('fontstyle', f);
+            if (this['field']) field.setAttribute('fontstyle', f);
+        </setter>
 
         <_internalinputtext name="field"
             password="$once{parent.password}"

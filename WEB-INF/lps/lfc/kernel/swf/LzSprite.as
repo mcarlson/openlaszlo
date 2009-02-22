@@ -880,10 +880,6 @@ LzSprite.prototype.setRotation = function ( v ){
     return true;
 }
 
-LzSprite.prototype.setFontName = function ( val ,prop ){
-    this.fontname = val;
-}
-
 LzSprite.prototype.predestroy = function(){
     this.bringToFront();
 }

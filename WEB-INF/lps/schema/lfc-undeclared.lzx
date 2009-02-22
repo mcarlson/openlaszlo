@@ -230,11 +230,6 @@
         <element>node</element>
         <element>contextmenu</element>
       </containsElements>
-      <!-- TODO: [2008-10-21 dda]: we are missing some events from view,
-           they are declared private, but were added to lfc.lzx.  Why? -->
-      <event name="onmousetrackover"/>
-      <event name="onmousetrackup"/>
-      <event name="onmousetrackout"/>
     </insert>
   </interface>
   

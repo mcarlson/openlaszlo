@@ -141,7 +141,10 @@ var onblur = LzDeclaredEvent;
   * @access public
   */
 var onclick = LzDeclaredEvent;
-/** @access private */
+/** Event for changes to view's <attribute>clickable</attribute> property 
+  * @lzxtype event
+  * @access public
+  */
 var onclickable = LzDeclaredEvent;
 /** The onfocus event is sent when an element receives focus
   * either by the pointing device or by tabbing navigation.
@@ -160,10 +163,6 @@ var onframe = LzDeclaredEvent;
   * @access public
   */
 var onheight = LzDeclaredEvent;
-/** @lzxtype event
-  * @access private
-  */   
-var onimload = LzDeclaredEvent;
 
 /** The onkeyup event is sent when this view has the focus and a
   * key is released. This event is sent with the keycode for the key that 
@@ -241,17 +240,17 @@ var onmouseout = LzDeclaredEvent;
   */
 var onmouseover = LzDeclaredEvent;
 
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onmousetrackover = LzDeclaredEvent;
 
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onmousetrackup = LzDeclaredEvent;
 
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onmousetrackout = LzDeclaredEvent;
@@ -306,19 +305,19 @@ var onplay = LzDeclaredEvent;
   */ 
 var onremovesubview = LzDeclaredEvent;
 
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onresource = LzDeclaredEvent;
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onresourceheight = LzDeclaredEvent;
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onresourcewidth = LzDeclaredEvent;
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onrotation = LzDeclaredEvent;
@@ -330,15 +329,15 @@ var onrotation = LzDeclaredEvent;
   * @lzxtype event 
   */
 var onstop = LzDeclaredEvent;
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var ontotalframes = LzDeclaredEvent;
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onunstretchedheight = LzDeclaredEvent;
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onunstretchedwidth = LzDeclaredEvent;
@@ -349,7 +348,7 @@ var onunstretchedwidth = LzDeclaredEvent;
   */
 var onvisible = LzDeclaredEvent;
 
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onvisibility = LzDeclaredEvent;
@@ -365,7 +364,7 @@ var onwidth = LzDeclaredEvent;
   * @access public
  */
 var onx = LzDeclaredEvent;
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onxoffset = LzDeclaredEvent;
@@ -375,10 +374,25 @@ var onxoffset = LzDeclaredEvent;
   * @access public
   */
 var ony = LzDeclaredEvent;
-/** @access private 
+/** @access public 
   * @lzxtype event 
   */
 var onyoffset = LzDeclaredEvent;
+
+/** @access public 
+  * @lzxtype event 
+  */
+var onfont = LzDeclaredEvent;
+
+/** @access public 
+  * @lzxtype event 
+  */
+var onfontsize = LzDeclaredEvent;
+
+/** @access public 
+  * @lzxtype event 
+  */
+var onfontstyle = LzDeclaredEvent;
 
 /**
   * The ondblclick event is sent when the pointing device button
@@ -397,6 +411,12 @@ var ondblclick = LzDeclaredEvent;
 /** @access private */
 var DOUBLE_CLICK_TIME = 500;
 
+/** An object containing properties corresponding to the current runtime's 
+  * capabilities.  For example, capabilities.rotation is true in swf and 
+  * recent versions of Safari.
+  * @access public 
+  * @type Object
+  */
 var capabilities;
 
 /**
@@ -737,11 +757,9 @@ var fontname;
 function $lzc$set_font(val) {
     this.font = val;
     this.fontname = val ;
-    // Canvas has no sprite
-    if (! this.sprite) {
-      return;
+    if (this.onfont.ready) { 
+        this.onfont.sendEvent( this.font ); 
     }
-    this.sprite.setFontName(val, null);
 }
 
 /** The style to use to render text fields that appear inside of
@@ -751,12 +769,28 @@ function $lzc$set_font(val) {
   */
 var fontstyle;
 
+/** @access private */
+function $lzc$set_fontstyle(val) {
+    this.fontstyle = val;
+    if (this.onfontstyle.ready) { 
+        this.onfontstyle.sendEvent( this.fontstyle ); 
+    }
+}
+
 /** Pixel size to use to render text which appears inside this
   * view. The default is 8.
   * @type String
   * @lzxtype size
   */
 var fontsize;
+
+/** @access private */
+function $lzc$set_fontsize(val) {
+    this.fontsize = val;
+    if (this.onfontsize.ready) { 
+        this.onfontsize.sendEvent( this.fontsize ); 
+    }
+}
 
 /**
   * Setting <code>stretches</code> causes a view to change its

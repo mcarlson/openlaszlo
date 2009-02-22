@@ -741,14 +741,14 @@ dynamic class LzText extends LzView with LzFormatter {
   var onpattern:LzDeclaredEventClass = LzDeclaredEvent;
 
   /** @access private */
-  function $lzc$set_fontstyle(fstyle) {
-    this.fontstyle = fstyle;
+  override function $lzc$set_fontstyle(fstyle) {
+    super.$lzc$set_fontstyle(fstyle);
     this.tsprite.setFontStyle(fstyle);
   }
 
   /** @access private */
   override function $lzc$set_font(fname) {
-    this.fontname = fname;
+    super.$lzc$set_font(fname);
     this.tsprite.setFontName(fname);
     // force recompute of height if needed
     this._textrecompute = true;
@@ -756,8 +756,8 @@ dynamic class LzText extends LzView with LzFormatter {
   }
 
   /** @access private */
-  function $lzc$set_fontsize(fsize) {
-    this.fontsize = fsize;
+  override function $lzc$set_fontsize(fsize) {
+    super.$lzc$set_fontsize(fsize);
     this.tsprite.setFontSize(fsize);
     // force recompute of height if needed
     this._textrecompute = true;

@@ -926,12 +926,6 @@ dynamic public class LzSprite extends Sprite {
                                                              o.ab ? o.ab : 0);
       }
       
-
-
-      public function setFontName ( fname:String, prop=null ):void{
-          this.fontname = fname;
-      }
-
       /** setBGColor( String/Number:color )
           o Sets the background color of the sprite
           o Can be a number (0xff00ff):void or a string ('#ff00ff'):void 

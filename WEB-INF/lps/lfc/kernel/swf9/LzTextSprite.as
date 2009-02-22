@@ -297,7 +297,7 @@ public class LzTextSprite extends LzSprite {
            o Sets the name of the font
            o Can be a comma-separated list of font names 
         */
-        override public function setFontName ( fname:String , prop=null):void{
+        public function setFontName ( fname:String , prop=null):void{
             this.fontname = fname;
             this.__setFormat();
             // force recompute of height if needed

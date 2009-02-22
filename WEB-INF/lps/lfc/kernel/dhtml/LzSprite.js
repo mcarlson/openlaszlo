@@ -853,10 +853,6 @@ if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
     }
 }
 
-LzSprite.prototype.setFontName = function ( val ,prop ){
-    this.fontname = val;
-}
-
 LzSprite.prototype.setClickable = function(c) {
     c = c == true;
     if (this.clickable == c) return;
