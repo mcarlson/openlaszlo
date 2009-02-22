@@ -271,7 +271,7 @@ override function __LZadjustVisibleClones (lastnodes:Array, newnodes:Boolean) :v
     //no change
     if ( offset == 0 && newlength == oldlength ) return;
 
-    lz.Instantiator.enableDataReplicationQueuing( );
+    lz.Instantiator.enableDataReplicationQueuing(this);
     var oldclones:Array = this.clones;
     this.clones = [];
 
@@ -324,7 +324,7 @@ override function __LZadjustVisibleClones (lastnodes:Array, newnodes:Boolean) :v
     }
 
     this.__LZdataoffset = newstart;
-    lz.Instantiator.clearDataReplicationQueue( );
+    lz.Instantiator.clearDataReplicationQueue(this);
 }
 
 /**

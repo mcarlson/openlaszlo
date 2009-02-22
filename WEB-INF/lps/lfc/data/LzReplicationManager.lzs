@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -527,7 +527,7 @@ function __LZadjustVisibleClones( lastnodes:Array , newnodes:Boolean) :void {
 
     //this makes sure that children created as a result of data replication
     //init in order
-    lz.Instantiator.enableDataReplicationQueuing( );
+    lz.Instantiator.enableDataReplicationQueuing(this);
 
     while ( this.nodes && this.nodes.length > this.clones.length ){
         var cl:LzNode = this.getNewClone();
@@ -536,8 +536,7 @@ function __LZadjustVisibleClones( lastnodes:Array , newnodes:Boolean) :void {
         this.clones.push( cl );
     }
 
-    lz.Instantiator.clearDataReplicationQueue( );
-
+    lz.Instantiator.clearDataReplicationQueue(this);
 
     while ( this.nodes && this.nodes.length < this.clones.length ){
         //this condition can only be reached if pooling is turned on

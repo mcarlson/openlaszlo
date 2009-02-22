@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzinstantiator
@@ -89,7 +89,9 @@ public dynamic final class LzInstantiatorService extends LzEventable {
     /** @access private */
     var tricklingQ :Array = [];
     /** @access private */
-    var datareplQ :Array;
+    var datareplQ :Array = null;
+    /** @access private */
+    var dataQ :Array = [];
     /** @access private */
     var syncNew :Boolean = true;
     /**
@@ -126,7 +128,8 @@ public dynamic final class LzInstantiatorService extends LzEventable {
         } else {
             var c:Array = this.newReverseArray( children );
             if (this.isdatareplicating) {
-                this.datareplQ.push( v, c );
+                // add in reversed order
+                this.datareplQ.push( c, v );
             } else if (this.istrickling) {
                 this.tricklingQ.push( v, c );
             } else {
@@ -139,21 +142,63 @@ public dynamic final class LzInstantiatorService extends LzEventable {
     /**
      * @access private
      */
-    function enableDataReplicationQueuing () :void {
-        this.isdatareplicating = true;
+    function enableDataReplicationQueuing (rman:* /*LzReplicationManager*/) :void {
+        if (this.isdatareplicating) {
+            this.dataQ.push(this.datareplQ);
+        } else {
+            this.isdatareplicating = true;
+        }
         this.datareplQ = [];
+        if ($debug) {
+            // add replication-manager
+            this.datareplQ.push(rman);
+        }
     }
+
     /**
      * @access private
      */
-    function clearDataReplicationQueue () :void {
-        this.isdatareplicating = false;
+    function clearDataReplicationQueue (rman:* /*LzReplicationManager*/) :void {
         var drq:Array = this.datareplQ;
-        //now add them on backwards
-        for (var i:int = drq.length - 1; i > 0; i -= 2) {
-            this.makeQ.push( drq[ i-1 ], drq[ i ] );
+        if (this.dataQ.length > 0) {
+            this.datareplQ = this.dataQ.pop();
+        } else {
+            this.isdatareplicating = false;
+            this.datareplQ = null;
         }
-        this.datareplQ = null;
+
+        if ($debug) {
+            // check integrity in debug-mode
+            if (drq.shift() !== rman) {
+                Debug.error("%w.clearDataReplicationQueue: expected %w", this, rman);
+            }
+        }
+
+        // if ($debug) this.traceQ();
+
+        // Find offset where to add new nodes. This is only important
+        // when there are already pending nodes (of the same replication manager)
+        // in the makeQueue, or the new nodes will be initiated in the
+        // wrong order (LPP-495).
+        var cpar:LzNode = rman.cloneParent;
+        var mq:Array = this.makeQ;
+        var mqlen:int = mq.length;
+        var offset:int = mqlen;
+        for (var i:int = 0; i < mqlen; i += 2) {
+            if (mq[i].parent === cpar) {
+                // found match, add all nodes before this entry
+                offset = i;
+                break;
+            }
+        }
+        // (0, offset) are already the first two args of splice
+        drq.push(0, offset);
+        // datareplQ is a FIFO, but makeQ is a LIFO struct, so reverse
+        drq.reverse();
+        // NOTE: [20081226 anba] don't use Array.prototype.splice,
+        // the context will be wrong, see flash player bug (FP-1250)
+        mq.splice.apply(mq, drq);
+
         this.checkUpdate();
     }
 
@@ -169,6 +214,7 @@ public dynamic final class LzInstantiatorService extends LzEventable {
         }
         return a;
     }
+
     /**
      * @access private
      */
@@ -315,21 +361,25 @@ public dynamic final class LzInstantiatorService extends LzEventable {
         }
     }
 
+  if ($debug) {
     /**
      * @access private
      */
     function traceQ () :void {
-        var mql:int = this.makeQ.length;
-        trace( "****start trace" );
-        for (var i:int = 0; i < mql; i += 2) {
+        Debug.info( "****start trace" );
+        var mq:Array = this.makeQ;
+        for (var i:int = 0; i < mq.length; i += 2) {
+            var par:LzNode = mq[i];
+            var larr:Array = mq[i + 1];
             var s:String = "";
-            for (var k:int = 0; k < this.makeQ[ i + 1 ].length; k++) {
-                s += this.makeQ[ i + 1 ][ k ].name + " |";
+            for (var k:int = 0; k < larr.length; k++) {
+                s += larr[ k ]['class'].tagname + " |";
             }
-            trace( this.makeQ[ i ] + " : |" + s  + " >>> " + this.makeQ[ i ].getUID() );
+            Debug.write( "%w : |%s >>> %s", par, s, par.getUID() );
         }
-        trace( "****trace done" );
+        Debug.info( "****trace done" );
     }
+  }
 
     /**
      * Stops the instantiatior until <code>resume</code> is called.
