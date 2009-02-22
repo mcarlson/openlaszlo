@@ -26,8 +26,9 @@ public class LzTextSprite extends LzSprite {
 
         public var textfield:TextField = null;
 
-        public static var PAD_TEXTWIDTH:Number = 4;
-        public static var DEFAULT_SIZE = 11;
+        public static const PAD_TEXTWIDTH:Number = 4;
+        public static const PAD_TEXTHEIGHT:Number = 4;
+        public static const DEFAULT_SIZE:Number = 11;
 
         var font = null;
 
@@ -75,81 +76,80 @@ public class LzTextSprite extends LzSprite {
             this.textfield = createTextField(0,0,400,20);
         }
 
-        
         override public function setClickable( c:Boolean ):void {
-          if (this.clickable == c) return;
+            if (this.clickable == c) return;
 
-          this.textfield.mouseEnabled = c || this.textfield.selectable;
-          this.setCancelBubbling();
+            this.textfield.mouseEnabled = c || this.textfield.selectable;
+            this.setCancelBubbling();
 
-          this.clickable = c;
-          if (c) {
-              attachMouseEvents(this.textfield);
-          } else {
-              removeMouseEvents(this.textfield);
-          }
-      }
+            this.clickable = c;
+            if (c) {
+                attachMouseEvents(this.textfield);
+            } else {
+                removeMouseEvents(this.textfield);
+            }
+        }
 
         public function addScrollEventListener():void {
             this.textfield.addEventListener(flash.events.Event.SCROLL, __handleScrollEvent);
         }
 
-    function __handleScrollEvent(e:Event = null) {
-      if (scroll !== textfield.scrollV) {
-        scroll = textfield.scrollV;
-        //Debug.info('__handleScrollEvent', 'scrollTop', lineNoToPixel(textfield.scrollV));
-        owner.scrollevent('scrollTop', lineNoToPixel(textfield.scrollV));
-      }
-      if (maxscroll !== textfield.maxScrollV) {
-        maxscroll = textfield.maxScrollV;
-        //Debug.info('__handleScrollEvent', 'scrollHeight', lineNoToPixel(textfield.maxScrollV));
-        owner.scrollevent('scrollHeight', lineNoToPixel(textfield.maxScrollV) + height);
-      }
-      if (hscroll !== textfield.scrollH) {
-        hscroll = textfield.scrollH;
-        //Debug.info('__handleScrollEvent', 'scrollLeft', textfield.scrollH);
-        owner.scrollevent('scrollLeft', textfield.scrollH);
-      }
-      if (maxhscroll !== textfield.maxScrollH) {
-        maxhscroll = textfield.maxScrollH;
-        //Debug.info('__handleScrollEvent', 'scrollWidth', textfield.maxScrollH);
-        owner.scrollevent('scrollWidth', textfield.maxScrollH + width);
-      }
-    }
+        function __handleScrollEvent(e:Event = null) :void {
+            if (scroll !== textfield.scrollV) {
+                scroll = textfield.scrollV;
+                //Debug.info('__handleScrollEvent', 'scrollTop', lineNoToPixel(textfield.scrollV));
+                owner.scrollevent('scrollTop', lineNoToPixel(textfield.scrollV));
+            }
+            if (maxscroll !== textfield.maxScrollV) {
+                maxscroll = textfield.maxScrollV;
+                //Debug.info('__handleScrollEvent', 'scrollHeight', lineNoToPixel(textfield.maxScrollV));
+                owner.scrollevent('scrollHeight', lineNoToPixel(textfield.maxScrollV) + height);
+            }
+            if (hscroll !== textfield.scrollH) {
+                hscroll = textfield.scrollH;
+                //Debug.info('__handleScrollEvent', 'scrollLeft', textfield.scrollH);
+                owner.scrollevent('scrollLeft', textfield.scrollH);
+            }
+            if (maxhscroll !== textfield.maxScrollH) {
+                maxhscroll = textfield.maxScrollH;
+                //Debug.info('__handleScrollEvent', 'scrollWidth', textfield.maxScrollH);
+                owner.scrollevent('scrollWidth', textfield.maxScrollH + width);
+            }
+        }
 
 
-      // turn on/off canceling of mouse event bubbling
-      private function setCancelBubbling():void {
-          var dobj:DisplayObject = this.textfield;
+        // turn on/off canceling of mouse event bubbling
+        private function setCancelBubbling():void {
+            var dobj:DisplayObject = this.textfield;
 
-          // base on the displayobject's mouseenabled property - on for selectable
-          var prevent = this.textfield.mouseEnabled;
-          // if clickable is on, we don't want to cancel events
-          if (this.clickable) prevent = false;
+            // base on the displayobject's mouseenabled property - on for selectable
+            var prevent = this.textfield.mouseEnabled;
+            // if clickable is on, we don't want to cancel events
+            if (this.clickable) prevent = false;
 
-          if (prevent) {
-              dobj.addEventListener(MouseEvent.CLICK, __ignoreMouseEvent);
-              dobj.addEventListener(MouseEvent.DOUBLE_CLICK, __ignoreMouseEvent);
-              dobj.addEventListener(MouseEvent.MOUSE_DOWN, __ignoreMouseEvent);
-              dobj.addEventListener(MouseEvent.MOUSE_UP, __ignoreMouseEvent);
-              dobj.addEventListener(MouseEvent.MOUSE_OVER, __ignoreMouseEvent);
-              dobj.addEventListener(MouseEvent.MOUSE_OUT, __ignoreMouseEvent);
-          } else {
-              dobj.removeEventListener(MouseEvent.CLICK, __ignoreMouseEvent);
-              dobj.removeEventListener(MouseEvent.DOUBLE_CLICK, __ignoreMouseEvent);
-              dobj.removeEventListener(MouseEvent.MOUSE_DOWN, __ignoreMouseEvent);
-              dobj.removeEventListener(MouseEvent.MOUSE_UP, __ignoreMouseEvent);
-              dobj.removeEventListener(MouseEvent.MOUSE_OVER, __ignoreMouseEvent);
-              dobj.removeEventListener(MouseEvent.MOUSE_OUT, __ignoreMouseEvent);
-          }
-      }
+            if (prevent) {
+                dobj.addEventListener(MouseEvent.CLICK, __ignoreMouseEvent);
+                dobj.addEventListener(MouseEvent.DOUBLE_CLICK, __ignoreMouseEvent);
+                dobj.addEventListener(MouseEvent.MOUSE_DOWN, __ignoreMouseEvent);
+                dobj.addEventListener(MouseEvent.MOUSE_UP, __ignoreMouseEvent);
+                dobj.addEventListener(MouseEvent.MOUSE_OVER, __ignoreMouseEvent);
+                dobj.addEventListener(MouseEvent.MOUSE_OUT, __ignoreMouseEvent);
+            } else {
+                dobj.removeEventListener(MouseEvent.CLICK, __ignoreMouseEvent);
+                dobj.removeEventListener(MouseEvent.DOUBLE_CLICK, __ignoreMouseEvent);
+                dobj.removeEventListener(MouseEvent.MOUSE_DOWN, __ignoreMouseEvent);
+                dobj.removeEventListener(MouseEvent.MOUSE_UP, __ignoreMouseEvent);
+                dobj.removeEventListener(MouseEvent.MOUSE_OVER, __ignoreMouseEvent);
+                dobj.removeEventListener(MouseEvent.MOUSE_OUT, __ignoreMouseEvent);
+            }
+        }
 
-      private function __ignoreMouseEvent(e:MouseEvent) :void {
-          if (e.type != MouseEvent.MOUSE_UP || LzMouseKernel.__lastMouseDown == this) {
-              // don't cancel "onmouseup" if another sprite was selected
-              e.stopPropagation();
-          }
-      }
+        private function __ignoreMouseEvent(e:MouseEvent) :void {
+            if (e.type != MouseEvent.MOUSE_UP || LzMouseKernel.__lastMouseDown == this) {
+                // don't cancel "onmouseup" if another sprite was selected
+                e.stopPropagation();
+            }
+        }
 
         public function enableClickableLinks( enabled:Boolean):void {
             if (enabled) {
@@ -184,7 +184,7 @@ public class LzTextSprite extends LzSprite {
         }
 
         private function createTextField(nx:Number, ny:Number, w:Number, h:Number):TextField {
-        var tfield:TextField = new TextField();
+            var tfield:TextField = new TextField();
             tfield.antiAliasType = flash.text.AntiAliasType.ADVANCED;
             tfield.x = nx;
             tfield.y = ny;
@@ -251,7 +251,7 @@ public class LzTextSprite extends LzSprite {
             // out how to suppress the other calls from setters.
             this.__setFormat();
             this.setText((args['text'] != null) ? String(args.text) : '');
-            
+
             if (this.sizeToHeight) {
                 var h = this.lineheight;
                 //TODO [anba 20080602] is this ok for multiline? 
@@ -379,17 +379,9 @@ public class LzTextSprite extends LzSprite {
 
             //multiline resizable fields adjust their height
             if (this.sizeToHeight) {
-                //FIXME [20080602 anba] won't possibly work, example: 
-                //textfield.textHeight=100
-                //textfield.height=10
-                //=> setHeight(Math.max(100, 10)) == setHeight(100)
-                //setHeight sets textfield.height to 100
-                //next round:
-                //textfield.textHeight=10 (new text was entered)
-                //textfield.height=100 (set above!)
-                //=> setHeight(Math.max(10, 100)) == setHeight(100)
-                // => textfield.height still 100, sprite-height didn't change, but it should!
-                this.setHeight(Math.max(this.textfield.textHeight, this.textfield.height));
+                var theight:Number = this.textfield.textHeight;
+                if (theight == 0) theight = this.lineheight;
+                this.setHeight(theight + LzTextSprite.PAD_TEXTHEIGHT);
             }
 
             //this.textfield.cacheAsBitmap = true;
@@ -418,7 +410,7 @@ public class LzTextSprite extends LzSprite {
 
             // If there is no font found, assume a device font
             this.textfield.embedFonts = (this.font != null);
-            
+
             tf.bold = (this.fontstyle == "bold" || this.fontstyle =="bolditalic");
             tf.italic = (this.fontstyle == "italic" || this.fontstyle =="bolditalic");
             tf.underline = (this.underline || this.textdecoration == "underline");
@@ -433,7 +425,12 @@ public class LzTextSprite extends LzSprite {
 
             this.textfield.defaultTextFormat = tf;
 
+            // measure sample text
+            var text:String = this.textfield[this.html ? 'htmlText' : 'text'];
+            this.textfield.text = "__ypgSAMPLE__";
             var lm:TextLineMetrics = this.textfield.getLineMetrics(0);
+            this.textfield[this.html ? 'htmlText' : 'text'] = text;
+
             var lh = lm.ascent + lm.descent + lm.leading;
             if (lh !== this.lineheight) {
               this.lineheight = lh;
@@ -441,8 +438,8 @@ public class LzTextSprite extends LzSprite {
               this.owner.scrollevent('lineHeight', lh);
             }
         }
- 
-      
+
+
         public function setMultiline ( ml:Boolean ):void {
             this.multiline = (ml == true);
             if (this.multiline) {
@@ -481,9 +478,33 @@ public class LzTextSprite extends LzSprite {
         }
 
         public function getTextfieldHeight ( ) {
-            return this.textfield.height;
-        }
+            var textclip:TextField = this.textfield;
+            var tca:String = textclip.autoSize;
+            var tcw:Number = textclip.width;
+            var tch:Number = textclip.height;
 
+            // turn on autoSize temporarily
+            textclip.autoSize = TextFieldAutoSize.LEFT;
+            // measure height and reset to the original values
+            var h:Number = textclip.height;
+
+            // Measure test string if the field is empty
+            if (h == LzTextSprite.PAD_TEXTHEIGHT) {
+                var tcp:Boolean = textclip.wordWrap;
+                // Make sure the test text does not wrap!
+                textclip.wordWrap = false;
+                textclip.htmlText = "__ypgSAMPLE__";
+                h = textclip.height;
+                textclip.wordWrap = tcp;
+                textclip.htmlText = "";
+            }
+
+            textclip.autoSize = tca;
+            textclip.height = tch;
+            textclip.width = tcw;
+
+            return h;
+        }
 
 
 function setHScroll(s:Number) {
