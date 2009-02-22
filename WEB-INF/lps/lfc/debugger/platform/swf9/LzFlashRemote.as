@@ -8,7 +8,7 @@
   * @access private
   * @topic Kernel
   * @subtopic AS2
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   */
 
@@ -106,10 +106,11 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
         // Send EVAL request to LPS server
         // It doesn't matter what path/filename we use, as long as it has ".lzx" suffix, so it is
         // handled by the LPS. The lzt=eval causes the request to be served by the EVAL Responder.
-        var url = "hello.lzx?lzr=swf9&lz_load=false&lzt=eval&lz_script=" + encodeURIComponent(expr)+"&lzbc=" +(new Date()).getTime();
-        debugloader.load(new URLRequest(url),
-                         new LoaderContext(false,
-                                           new ApplicationDomain(ApplicationDomain.currentDomain)));
+      var appfile = lz.Browser.getBaseURL().file;
+      var url = appfile + "?lzr=swf9&lz_load=false&lzt=eval&lz_script=" + encodeURIComponent(expr)+"&lzbc=" +(new Date()).getTime();
+      debugloader.load(new URLRequest(url),
+                       new LoaderContext(false,
+                                         new ApplicationDomain(ApplicationDomain.currentDomain)));
   };
 
   /**

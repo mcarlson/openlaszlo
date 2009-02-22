@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -13,6 +13,7 @@ import java.io.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
+import org.openlaszlo.utils.LZHttpUtils;
 import org.openlaszlo.compiler.Compiler;
 import org.openlaszlo.compiler.CompilationEnvironment;
 import org.openlaszlo.media.MimeType;
@@ -79,7 +80,8 @@ public final class ResponderEVAL extends Responder
                     swfversion = "swf8";
                 }
                 if (Compiler.AS3_RUNTIMES.contains(swfversion)) {
-                    compiler.compileAndWriteToAS3(script, swfversion, seqnum, out);
+                    File appfile = new File(LZHttpUtils.getRealPath(mContext, req));
+                    compiler.compileAndWriteToAS3(script, swfversion, seqnum, appfile, out);
                 } else {
                     compiler.compileAndWriteToSWF(script, seqnum, out, swfversion);
                 }

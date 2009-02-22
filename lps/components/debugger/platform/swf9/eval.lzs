@@ -23,7 +23,8 @@ public class LzDebugEvalLoader {
     }
 
     public function doEval(expr:String, seq:int=0) {
-        var url = "hello.lzx?lzr=swf9&lz_load=false&lzt=eval&lz_script=" 
+      var appfile = lz.Browser.getBaseURL().file;
+        var url = appfile + "?lzr=swf9&lz_load=false&lzt=eval&lz_script=" 
          + encodeURIComponent(expr) 
         + "&lzbc=" + encodeURIComponent(String((new Date()).getTime())) 
         + "&lzrdbseq="+seq;
@@ -90,7 +91,7 @@ public class LzDebugEvalLoader {
 </script>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

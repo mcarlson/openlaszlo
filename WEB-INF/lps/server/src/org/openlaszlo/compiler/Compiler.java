@@ -16,6 +16,7 @@ import java.util.*;
 import org.jdom.*;
 import org.openlaszlo.css.CSSHandler;
 import org.openlaszlo.sc.ScriptCompiler;
+import org.openlaszlo.sc.ScriptCompilerInfo;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.utils.ListFormat;
@@ -521,7 +522,7 @@ public class Compiler {
     /*
      * Used by the debugger-evaluator. Compiles a standalone application which executes the javascript in SCRIPT.
      */
-    public void compileAndWriteToAS3 (String script, String runtime, String seqnum, OutputStream out) {
+    public void compileAndWriteToAS3 (String script, String runtime, String seqnum, File appfile, OutputStream out) {
         try {
             Properties props = new Properties();
             props.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, runtime);
@@ -551,6 +552,24 @@ public class Compiler {
                       "public class " + SWF9Writer.DEBUG_EVAL_CLASSNAME +
                       " extends " +  SWF9Writer.DEBUG_EVAL_SUPERCLASS + " {\n " + SWF9Writer.imports + "}\n");
 
+
+            // N.B.: this forces the swf9 compiler to keep all the
+            // files in the temporary app build directory, so we can
+            // link against globals there.
+            props.put(org.openlaszlo.sc.Compiler.INCREMENTAL_COMPILE, "true");
+
+
+            ScriptCompilerInfo compilerInfo = new ScriptCompilerInfo();
+            props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
+
+            CompilationEnvironment env = makeCompilationEnvironment(null);
+            env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, true);
+            env.setProperty(env.RUNTIME_PROPERTY, runtime);
+            // Working directory path to place intermediate .as3 files
+            env.setApplicationFile(appfile);
+            compilerInfo.buildDirPathPrefix = env.getLibPrefix();
+
+
             byte[] objcode;
             String prog = "public class DebugExec extends Sprite {\n" +
                 "#passthrough (toplevel:true) {  \n" +
@@ -572,7 +591,7 @@ public class Compiler {
                 "import flash.xml.*;\n";
 
             if ("swf10".equals(runtime)) {
-                // These it easier to debug SWF 10 Text Layout Framework code
+                // These make it easier to debug SWF 10 Text Layout Framework code
                 prog = prog +
                     "import flashx.textLayout.container.*;\n" +
                     "import flashx.textLayout.compose.*;\n" +
@@ -593,17 +612,17 @@ public class Compiler {
             // compile as sequence of statements.  If that fails too,
             // report the parse error.
             try {
-                String nprog = prog +  "(function () { with(global) { try {\n" 
+                String nprog = prog +  "(function () { try {\n" 
                     + "Debug.displayResult("+script +");\n"
                     + "} catch (e) { "
                     + " Debug.displayResult(e); \n"
                     + "}\n"
-                    + "} })();";
+                    + "})();";
                 objcode = ScriptCompiler.compileToByteArray(nprog, props);
-            } catch (org.openlaszlo.sc.parser.ParseException e) {
+            } catch (Exception e) {
                 try {
                     String nprog = prog + "var mycode = (function () {\n"+
-                        "with (global) { try {" + script  +"} catch(e) {Debug.displayResult(e);} }\n});\n"+"mycode();\n";
+                        " try {" + script  +"} catch(e) {Debug.displayResult(e);}\n});\n"+"mycode();\n";
                     objcode = ScriptCompiler.compileToByteArray(nprog, props);
                 } catch (Exception e2) {
                     mLogger.info("error compiling/writing script: " + e2.getMessage());
