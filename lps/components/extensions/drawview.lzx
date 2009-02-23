@@ -18,7 +18,7 @@
         <p><tagname>drawview</tagname> adds procedural drawing APIs to <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag></p>
 
         <p><tagname>drawview</tagname> implements a subset of the WHATWG drawing APIs, which can be found at:
-        <a href="http://www.whatwg.org/specs/web-apps/current-work/#graphics">http://www.whatwg.org/specs/web-apps/current-work/#graphics</a>
+        <a href="http://www.whatwg.org/specs/web-apps/current-work/#the-canvas-element">http://www.whatwg.org/specs/web-apps/current-work/#the-canvas-element</a>
         </p>
 
         <example><programlisting class="code">
@@ -57,7 +57,7 @@
                     this.lineTo(0, 0);
                     this.closePath();
 
-                    var g = this.createLinearGradient(0,0,75,75)
+                    var g = this.createLinearGradient(0, 0, 75, 75)
                     this.globalAlpha = 0;
                     g.addColorStop(0, 0x000000);
                     this.globalAlpha = 1;
@@ -81,33 +81,45 @@
           it is ignored. When the context is created, the globalAlpha
           attribute initially has the value 1.0.
           @type Number
+          @lzxtype number
+          @lzxdefault 1.0
           @access public
     -->
-    <attribute name="globalAlpha" value= "1" type="number"/>
+    <attribute name="globalAlpha" value="1" type="number"/>
 
     <!--- Gives the default width of lines, in coordinate space units.
           Negative values are ignored.  0 draws hairlines in swf - lines that
           are always 1 pixel wide even when scaled.
           @type Number
+          @lzxtype number
+          @lzxdefault 1
           @access public
     -->
-    <attribute name="lineWidth" value= "1" type="number"/>
+    <attribute name="lineWidth" value="1" type="number"/>
 
-    <!--- Gives the default lineCap value for lines.  Round for consistency between swf and dhtml.
-          @type string
+    <!--- Gives the default lineCap value for lines. Round for consistency between swf and dhtml.
+          @type String
+          @lzxtype "butt" | "round" | "square"
+          @lzxdefault "round"
           @access public
     -->
     <attribute name="lineCap" value="round" type="string"/>
 
     <!--- Represents the colour to use for the lines around shapes.  Specified as a hexadecimal number (0xffffff) or a CSS string ('#ff00ff' or '#f0f').
-      @access public
+        @type String
+        @lzxtype string
+        @lzxdefault "#000000"
+        @access public
     -->
-    <attribute name="strokeStyle" value= "#000000" type="string"/>
+    <attribute name="strokeStyle" value="#000000" type="string"/>
 
     <!--- Represents the colour or style to use for the fill inside the shapes. Can be either a hexadecimal number (0xffffff), a CSS string ('#ff00ff' or '#f0f'), or a CanvasGradient/LzCanvasGradient.
-      @access public
+        @type String
+        @lzxtype string
+        @lzxdefault "#000000"
+        @access public
     -->
-    <attribute name="fillStyle" value= "#000000" type="string"/>
+    <attribute name="fillStyle" value="#000000" type="string"/>
 
 
     <!--- Contains a reference to the raw drawview context.  oncontext is sent when the context is ready to use, which can take some time in IE.
@@ -257,7 +269,7 @@
   <!-- these methods are shared across runtimes -->
   <script when="immediate"><![CDATA[
     mixin DrawviewShared {
-        function DrawviewShared ( parent:LzView? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
+        function DrawviewShared (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
             super(parent, attrs, children, instcall);
         }
         function lineTo(x,y) { }
@@ -458,12 +470,12 @@
                 // returns -1 if they're collinear and identical
                 var u = (p3.x-p2.x)*(p0.y-p2.y) - (p3.y-p2.y)*(p0.x-p2.x);
                 var d = (p3.y-p2.y)*(p1.x-p0.x) - (p3.x-p2.x)*(p1.y-p0.y);
-                if (!d) {
-                if (!u) {
-                    return -1;//identical
-                } else {
-                    return null;//non-identical
-                }
+                if (d == 0) {
+                    if (u == 0) {
+                        return -1;//identical
+                    } else {
+                        return null;//non-identical
+                    }
                 }
                 u /= d;
                 return {x: p0.x + (p1.x-p0.x) * u,
@@ -488,7 +500,7 @@
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
             static var uid = 0;
-            static var _colorcache = {};
+            static var __colorcache = {};
 
             var globalAlpha = 1;
             var lineWidth = 1;
@@ -496,6 +508,13 @@
             var strokeStyle = '#000000';
             var fillStyle = '#000000';
             var context = null;
+
+            private var __LZcanvas = null;
+            private var __globalAlpha = null;
+            private var __lineWidth = null;
+            private var __lineCap = null;
+            private var __strokeStyle = null;
+            private var __fillStyle = null;
 
             var oncontext = LzDeclaredEvent;
 
@@ -520,11 +539,11 @@
                 this.beginPath();
 
                 if (this.__LZcanvas) {
-                    this._lineWidth = null;
-                    this._lineCap = null;
-                    this._fillStyle = null;
-                    this._strokeStyle = null;
-                    this._globalAlpha = null;
+                    this.__lineWidth = null;
+                    this.__lineCap = null;
+                    this.__fillStyle = null;
+                    this.__strokeStyle = null;
+                    this.__globalAlpha = null;
                     if (lz.embed.browser.isIE) {
                         LzSprite.prototype.__discardElement(this.__LZcanvas);
                     } else {
@@ -689,12 +708,11 @@
             }
 
             function __updateFillStyle() {
-                if (this._fillStyle != this.fillStyle) {
+                if (this.__fillStyle != this.fillStyle) {
                     if (this.fillStyle instanceof LzCanvasGradient) {
-                        //Debug.write('before apply');
-                        this.fillStyle.__applyTo(this.context);
+                        this.fillStyle.__applyFillTo(this.context);
                     } else {
-                        var ccache = lz.drawview._colorcache;
+                        var ccache = lz.drawview.__colorcache;
                         var fillStyleColor = ccache[this.fillStyle];
                         if (fillStyleColor == null) {
                             fillStyleColor = LzColorUtils.torgb(this.fillStyle);
@@ -702,39 +720,43 @@
                         }
                         this.context.fillStyle = fillStyleColor;
                     }
-                    this._fillStyle = this.fillStyle;
+                    this.__fillStyle = this.fillStyle;
+                }
+            }
+
+            function __updateStyles() {
+                var styleNames = { lineWidth : '__lineWidth',
+                                   lineCap : '__lineCap',
+                                   globalAlpha : '__globalAlpha' };
+                for (var name in styleNames) {
+                    var intern = styleNames[name];
+                    var style = this[name];
+                    if (this[intern] != style) {
+                        this.context[name] = style;
+                        this[intern] = style;
+                    }
+                }
+
+                if (this.__strokeStyle != this.strokeStyle) {
+                    if (this.strokeStyle instanceof LzCanvasGradient) {
+                    } else {
+                        var ccache = lz.drawview.__colorcache;
+                        var strokeStyleColor = ccache[this.strokeStyle];
+                        if (strokeStyleColor == null) {
+                            strokeStyleColor = LzColorUtils.torgb(this.strokeStyle);
+                            ccache[this.strokeStyle] = strokeStyleColor;
+                        }
+                        this.context.strokeStyle = strokeStyleColor;
+                    }
+                    this.__strokeStyle = this.strokeStyle;
                 }
             }
 
             function __playPath() {
                 if (this.__path.length == 0) return;
                 if ($debug) this.__checkContext();
-                if (this._lineWidth != this.lineWidth) {
-                    this.context.lineWidth = this.lineWidth;
-                    this._lineWidth = this.lineWidth;
-                }
-                if (this._lineCap != this.lineCap) {
-                    this.context.lineCap = this.lineCap;
-                    this._lineCap = this.lineCap;
-                }
-
-                if (this._globalAlpha != this.globalAlpha) {
-                    this.context.globalAlpha = this.globalAlpha;
-                    this._globalAlpha = this.globalAlpha;
-                }
-
+                this.__updateStyles();
                 this.__updateFillStyle();
-
-                if (this._strokeStyle != this.strokeStyle) {
-                    var ccache = lz.drawview._colorcache;
-                    var strokeStyleColor = ccache[this.strokeStyle];
-                    if (strokeStyleColor == null) {
-                        strokeStyleColor = LzColorUtils.torgb(this.strokeStyle);
-                        ccache[this.strokeStyle] = strokeStyleColor;
-                    }
-                    this.context.strokeStyle = strokeStyleColor;
-                    this._strokeStyle = this.strokeStyle;
-                }
 
                 this.context.beginPath();
                 for (var i = 0; i < this.__path.length; i += 1) {
@@ -775,7 +797,7 @@
                 if ($debug) this.__checkContext();
                 this.context.clearRect(0, 0, this.__canvaswidth, this.__canvasheight);
             }
-    
+
             function clearMask() {
                 if ($debug) {
                     Debug.warn('lz.drawview.clearMask() is not currently supported in DHTML.');
@@ -783,11 +805,11 @@
             }
 
             function createLinearGradient(x0, y0, x1, y1) {
-                return new LzCanvasGradient(this.context.createLinearGradient(x0, y0, x1, y1));
+                return new LzCanvasGradient(this, [x0, y0, x1, y1], false);
             }
 
             function createRadialGradient(x0, y0, r0, x1, y1, r1) {
-                return new LzCanvasGradient(this.context.createRadialGradient(x0, y0, r0, x1, y1, r1));
+                return new LzCanvasGradient(this, [x0, y0, r0, x1, y1, r1], true);
             }
 
             function rotate(r) {
@@ -799,12 +821,12 @@
             }
 
             function save() {
-                this._fillStyle = this._strokeStyle = null
+                this.__fillStyle = this.__strokeStyle = null
                 this.context.save();
             }
 
             function restore() {
-                this._fillStyle = this._strokeStyle = null
+                this.__fillStyle = this.__strokeStyle = null
                 this.context.restore();
             }
 
@@ -826,29 +848,43 @@
           * An LzCanvasGradient is returned by drawview.createLinearGradient or
           * drawview.createRadialGradient.
           */
-        function LzCanvasGradient(g) {
-            this._g = g;
-        }
+        class LzCanvasGradient {
+            /** @access private */
+            var __context = null;
+            /** @access private */
+            var __g = null;
 
-        /**
-          * Adds a new stop to a gradient. gradients are rendered such that at the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used.  globalAlpha is stored for each gradient step added.
-          * @param Number o: The offset this stop used for placement in the gradient.  Gradients are rendered such that for the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used and all colors between those offsets are blended.  Must be less than 0 or greater than 1.
-          * @param Number c: The color to be used at this color.  A hexadecimal value, e.g. 0xffffff
-          */
-        LzCanvasGradient.prototype.addColorStop = function(o, c) {
-            var ccache = lz.drawview._colorcache;
-            var cstopColor = ccache[c];
-            if (cstopColor == null) {
-                cstopColor = LzColorUtils.torgb(c);
-                ccache[c] = cstopColor;
+            function LzCanvasGradient(c, args, isradial) {
+                this.__context = c;
+                if (isradial) {
+                    this.__g = c.context.createRadialGradient.apply(c.context, args);
+                } else {
+                    this.__g = c.context.createLinearGradient.apply(c.context, args)
+                }
             }
-            this._g.addColorStop(o, cstopColor);
-        }
 
-        LzCanvasGradient.prototype.__applyTo = function(scope) {
-            scope.fillStyle = this._g;
-        }
+            /**
+              * Adds a new stop to a gradient. gradients are rendered such that at the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used.  globalAlpha is stored for each gradient step added.
+              * @param Number o: The offset this stop used for placement in the gradient.  Gradients are rendered such that for the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used and all colors between those offsets are blended.  Must be less than 0 or greater than 1.
+              * @param Number c: The color to be used at this color.  A hexadecimal value, e.g. 0xffffff
+              */
+            function addColorStop(o, c) {
+                var ccache = lz.drawview.__colorcache;
+                var cstopColor = ccache[c];
+                if (cstopColor == null) {
+                    cstopColor = LzColorUtils.torgb(c);
+                    ccache[c] = cstopColor;
+                }
+                this.__g.addColorStop(o, cstopColor);
+            }
 
+            /**
+            * @access private
+            */
+            function __applyFillTo(scope) {
+                scope.fillStyle = this.__g;
+            }
+        }
       ]]></script>
     </when>
     <otherwise>
@@ -869,7 +905,7 @@
             // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
-            static var _colorcache :Object = {};
+            static var __colorcache :Object = {};
 
             var globalAlpha :Number = 1;
             var lineWidth :Number = 1;
@@ -902,11 +938,11 @@
 
             var oncontext :LzDeclaredEventClass = LzDeclaredEvent;
 
-            function $lzc$class_drawview(parent, attrs, children, async) {
-                super(parent, attrs, children, async);
+            function $lzc$class_drawview (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
+                super(parent, attrs, children, instcall);
             }
 
-            override function construct(parent,args) {
+            override function construct(parent, args) {
                 // default to bitmap caching on, unless clip = true
                 if (args['cachebitmap'] == null && args['clip'] != true) args['cachebitmap'] = true;
                 super.construct(parent, args);
@@ -932,7 +968,7 @@
             function beginPath() {
                 this.__path = [];
                 this.__pathisopen = true;
-                this.context.moveTo(0,0);
+                this.context.moveTo(0, 0);
             }
 
             function closePath() {
@@ -948,7 +984,7 @@
                         return;
                     }
                     //Debug.write('closePath', x, y);
-                    this.lineTo(x,y);
+                    this.lineTo(x, y);
                     this.__pathisopen = false;
                 }
             }
@@ -957,21 +993,18 @@
                 if (this.__pathisopen) {
                     this.__path[this.__path.length] = [this.__MOVETO_OP, x, y];
                 }
-                //Debug.write('moveTo', this.__path);
             }
 
             override function lineTo (x, y) {
                 if (this.__pathisopen) {
                     this.__path[this.__path.length] = [this.__LINETO_OP, x, y];
                 }
-                //Debug.write('lineTo', this.__path);
             }
 
             override function quadraticCurveTo(cpx, cpy, x, y) {
                 if (this.__pathisopen) {
                     this.__path[this.__path.length] = [this.__QCURVE_OP, cpx, cpy, x, y];
                 }
-                //Debug.write('quadraticCurveTo', this.__path);
             }
 
             const bezierCurveTo_error = 10;
@@ -1028,14 +1061,13 @@
                                 var q1 = points[2];
                                 this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
                             }
-                        }
-                        else if (second_end) {
+                        } else if (second_end) {
                             var q1 = points[1];
                             this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
                         } else {
                             //both straight lines are collinear
                             //now we have to test whether they're identical or non-identical
-                            if (!q1) {
+                            if (q1 == null) {
                                 q1 = {x:0,y:0};//default-value...
                                 flush = false;
                             } else {
@@ -1084,27 +1116,26 @@
             }
 
             function __getColor(val) {
-                var ccache = lz.drawview._colorcache;
+                var ccache = lz.drawview.__colorcache;
                 var cachedColor = ccache[val];
                 if (cachedColor == null) {
-                    cachedColor = LzColorUtils.hextoint(val);
-                    var values = String(cachedColor).split('.');
-                    var color = values[0];
-                    var alpha = values.length > 1 ? Number('.' + values[1]) * 100 : null;
-                    //Debug.write(color, alpha, val, cachedColor, values);
-                    cachedColor = ccache[val] = {c: color, a: alpha};
+                    var rgba = LzColorUtils.hextoint(val);
+                    var color = (rgba | 0);
+                    var alpha = rgba - color;
+                    // FIXME [anba 20090216] explicit alpha of 0 is ignored
+                    cachedColor = ccache[val] = {c: color, a: (alpha != 0 ? alpha * 100 : null)};
                 }
                 return cachedColor;
             }
 
             function fill() {
                 if (this.fillStyle instanceof LzCanvasGradient) {
-                    this.fillStyle.__applyTo(this.context);
+                    this.fillStyle.__applyFillTo(this.context);
                 } else {
                     var color = this.__getColor(this.fillStyle);
                     var alpha = color.a != null ? color.a : this.globalAlpha;
-                    //Debug.info(this.fillStyle, color.c, alpha, color.a, this.globalAlpha);
-                    this.context.beginFill(color.c, alpha * 100);
+                    if ($as2) { alpha *= 100; }
+                    this.context.beginFill(color.c, alpha);
                 }
                 this.closePath();
                 this.__playPath(this.context);
@@ -1139,10 +1170,12 @@
                         Debug.warn ("Gradient line fills aren't supported.");
                     }
                     return;
+                } else {
+                    var color = this.__getColor(this.strokeStyle);
+                    var alpha = color.a != null ? color.a : this.globalAlpha;
+                    if ($as2) { alpha *= 100; }
+                    this.context.lineStyle(this.lineWidth, color.c, alpha);
                 }
-                var color = this.__getColor(this.strokeStyle);
-                var alpha = color.a != null ? color.a : this.globalAlpha;
-                this.context.lineStyle(this.lineWidth, color.c, alpha * 100);
                 this.__playPath(this.context);
                 this.context.lineStyle(undefined);
                 if ($as2) { this.__updateSize(); }
@@ -1150,10 +1183,11 @@
 
             function clear() {
                 this.context.clear();
-                if ($as3) {
-                } else {
-                    var rect = new flash.geom.Rectangle(0, 0, this.width, this.height);
-                    if (this['__bitmapdata']) this.__bitmapdata.fillRect(rect, 0x000000ff);
+                if ($as2) {
+                    if (this['__bitmapdata']) {
+                        var rect = new flash.geom.Rectangle(0, 0, this.width, this.height);
+                        this.__bitmapdata.fillRect(rect, 0x000000ff);
+                    }
                 }
             }
 
@@ -1173,7 +1207,6 @@
                 }
 
                 var g = new LzCanvasGradient(this, {matrixType:"box", x:x, y:y, w:w, h:h, r:r}, false);
-                //Debug.write('createLinearGradient', {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r});
                 return g;
             }
 
@@ -1183,22 +1216,21 @@
                 // Rotation doesn't seem to work
                 var r = r0 != null ? r0 : Math.atan2(h, w);
                 var g = new LzCanvasGradient(this, {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r}, true);
-                //Debug.write('createRadialGradient', {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r});
                 return g;
             }
 
             // accumulate rotation
-            var _tr = 0
+            var __tr = 0
             function rotate(r) {
-                this._tr += r;
+                this.__tr += r;
             }
 
             // accumulate translation
-            var _tx = 0;
-            var _ty = 0;
+            var __tx = 0;
+            var __ty = 0;
             function translate(x, y) {
-                this._tx += x;
-                this._ty += y;
+                this.__tx += x;
+                this.__ty += y;
             }
 
             if ($as3) {
@@ -1342,11 +1374,11 @@
                     var bitmap = lz.drawview.images[name];
                     if (! bitmap) {
                         var container = createEmptyMovieClip("loader", getNextHighestDepth());
-                        if ( name.indexOf('http:') == 0 || name.indexOf('https:') == 0 ) {
+                        if (name.indexOf('http:') == 0 || name.indexOf('https:') == 0) {
                             var loader = container.createEmptyMovieClip("loader", container.getNextHighestDepth());
                             loader.loadMovie(name);
                             container.onEnterFrame = function() {
-                                if(loader._width>0) {
+                                if (loader._width > 0) {
                                     bitmap = this.copyBitmap(loader, loader._width, loader._height);
                                     lz.drawview.images[name] = bitmap;
                                     delete this.onEnterFrame;
@@ -1395,9 +1427,9 @@
                     m.translate(- this.context._x, - this.context._y);
 
                     // apply accumulated translations
-                    m.rotate(this._tr);
-                    m.translate(this._tx, this._ty);
-                    this._tr = this._tx = this._ty = 0;
+                    m.rotate(this.__tr);
+                    m.translate(this.__tx, this.__ty);
+                    this.__tr = this.__tx = this.__ty = 0;
 
                     //Debug.write(this.context._width, this.context._height);
                     this.copyBitmap(this.__drawing, this.width * 2, this.height * 2, this.__bitmapdata, m)
@@ -1409,7 +1441,7 @@
                 function fillRect(x, y, w, h) {
                     var color = this.__getColor(this.fillStyle);
                     var alpha = color.a != null ? color.a : this.globalAlpha;
-                    var alpha = (color.a * 255) << 24;
+                    alpha = (alpha * 255) << 24;
                     var colorval = color.c | alpha;
 
                     var rect = new flash.geom.Rectangle(x, y, w, h);
@@ -1440,24 +1472,28 @@
                 import flash.geom.Matrix;
                 }#
             }
-            var _context = null;
-            var _m = null;
-            var _t = null;
-            var _c = [];
-            var _a = [];
-            var _o = [];
+            /** @access private */
+            var __context :* = null;
+            /** @access private */
+            var __matrix :Matrix = null;
+            /** @access private */
+            var __type :String = null;
+            /** @access private */
+            var __colors :Array = null;
+            /** @access private */
+            var __alphas :Array = null;
+            /** @access private */
+            var __offsets :Array = null;
 
-            function LzCanvasGradient(c, m, isradial) {
-                this._context = c;
-                if ($as3) {
-                    var matrix = new Matrix();
-                    m = matrix.createGradientBox(m.w,m.h,m.r,m.x,m.y);
-                }
-                this._m = m;
-                this._t = isradial ? 'radial' : 'linear';
-                this._c = [];
-                this._a = [];
-                this._o = [];
+            function LzCanvasGradient(c:*, m:Object, isradial:Boolean) {
+                this.__context = c;
+                var matrix:Matrix = new flash.geom.Matrix();
+                matrix.createGradientBox(m.w, m.h, m.r, m.x, m.y);
+                this.__matrix = matrix;
+                this.__type = isradial ? 'radial' : 'linear';
+                this.__colors = [];
+                this.__alphas = [];
+                this.__offsets = [];
             }
 
             /**
@@ -1465,21 +1501,22 @@
             * @param Number o: The offset this stop used for placement in the gradient.  Gradients are rendered such that for the starting point the colour at offset 0 is used, that at the ending point the color at offset 1 is used and all colors between those offsets are blended.  Must be less than 0 or greater than 1.
             * @param Number c: The color to be used at this color.  A hexadecimal value, e.g. 0xffffff
             */
-            function addColorStop(o, c) {
-                this._o[this._o.length] = o * 255;
-                var color = this._context.__getColor(c);
-                this._c[this._c.length] = color.c;
-                var alpha = color.a != null ? color.a : this._context.globalAlpha;
-                //Debug.info(c, color.c, alpha, color.a, this._context.globalAlpha);
-                this._a[this._a.length] = alpha * 100;
+            function addColorStop(o:Number, c:*) :void {
+                this.__offsets.push(o * 255);
+                var color:Object = this.__context.__getColor(c);
+                this.__colors.push(color.c);
+                var alpha:Number = color.a != null ? color.a : this.__context.globalAlpha;
+                if ($as2) { alpha *= 100; }
+                this.__alphas.push(alpha);
             }
 
             /**
             * @access private
             */
-            function __applyTo(m) {
-                //Debug.write('LzCanvasGradient.__applyTo', this._t, this._c, this._a, this._o, this._m);
-                m.beginGradientFill(this._t, this._c, this._a, this._o, this._m)
+            function __applyFillTo(m:*) :void {
+                // @devnote swf8: m instanceof MovieClip
+                // @devnote swf9: m instanceof flash.display.Graphics
+                m.beginGradientFill(this.__type, this.__colors, this.__alphas, this.__offsets, this.__matrix);
             }
         }
       ]]></script>
