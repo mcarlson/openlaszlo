@@ -173,6 +173,13 @@ public class SWF9External {
       String swf9tmpdirstr = tmpdirstr + File.separator + WORK_DIR_PARENT;
       (new File(swf9tmpdirstr)).mkdirs();
       String appDirPrefix = mInfo.buildDirPathPrefix;
+
+      // For Windows, we need to strip any "disk drive" prefix from
+      // the path. e.g., "C:"
+      if (appDirPrefix != null && appDirPrefix.matches("^[a-zA-Z]:.*")) {
+          appDirPrefix = appDirPrefix.substring(3);
+      }
+
       if (buildSharedLibrary) {
         // Compiling the LFC
         f = File.createTempFile(WORK_DIR_PREFIX, "", new File(swf9tmpdirstr));

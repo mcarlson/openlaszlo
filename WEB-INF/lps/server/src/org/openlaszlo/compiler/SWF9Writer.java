@@ -408,7 +408,6 @@ class SWF9Writer extends ObjectWriter {
 
         // Working directory path to place intermediate .as3 files
         compilerInfo.buildDirPathPrefix = mEnv.getLibPrefix();
-        System.err.println("compilerInfo.buildDirPathPrefix = "+mEnv.getLibPrefix());
 
         try { 
             scriptWriter.close();
