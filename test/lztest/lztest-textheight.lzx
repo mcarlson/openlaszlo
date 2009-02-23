@@ -95,6 +95,9 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
         <inputtext id="d" datapath="dstext:/text[1]/text()" multiline="true" resize="true" width="120" bgcolor="#eaeaea" />
         <inputtext id="g" datapath="dstext:/text[2]/text()" multiline="false" resize="false" width="120" height="40" bgcolor="#eaeaea" />
         <inputtext id="h" datapath="dstext:/text[2]/text()" multiline="false" resize="true" bgcolor="#eaeaea" />
+
+        <inputtext multiline="true" id="it8" width="50" bgcolor="#aeaeae"/>
+        <inputtext multiline="false" id="it9" width="50" bgcolor="#aeaeae"/>
     </view>    
 
 <script><![CDATA[
@@ -128,16 +131,16 @@ textSizeSuite.testTextHeight = function () {
     LzTestManager.assertWithin(225, t12.height, fudgefactor, "EXPECTED: see LPP-6545. text12 height");
 
     LzTestManager.assertWithin(40, a.sprite.getTextfieldHeight(), fudgefactor, "EXPECTED: see LPP-6543. text a getTextfieldHeight()");
-    LzTestManager.assertWithin(40, a.height, fudgefactor, "text a getTextfieldHeight()");
-    LzTestManager.assertWithin(13, a.sprite.getTextHeight(), fudgefactor, "text a getTextHeight()");
+    LzTestManager.assertWithin(40, a.height, fudgefactor, "text a height");
+    LzTestManager.assertWithin(13, a.getTextHeight(), fudgefactor, "text a getTextHeight()");
     LzTestManager.assertWithin(82, b.sprite.getTextfieldHeight(), fudgefactor, "text b getTextfieldHeight()");
-    LzTestManager.assertWithin(13, b.sprite.getTextHeight(), fudgefactor, "text b getTextHeight()");
+    LzTestManager.assertWithin(13, b.getTextHeight(), fudgefactor, "text b getTextHeight()");
     LzTestManager.assertWithin(82, b.height, fudgefactor, "text b getTextfieldHeight()");
     LzTestManager.assertWithin(40, e.sprite.getTextfieldHeight(), fudgefactor, "EXPECTED: see LPP-6543. text e getTextfieldHeight()");
-    LzTestManager.assertWithin(13, e.sprite.getTextHeight(), fudgefactor, "text e getTextHeight()");
+    LzTestManager.assertWithin(13, e.getTextHeight(), fudgefactor, "text e getTextHeight()");
     LzTestManager.assertWithin(40, e.height, fudgefactor, "text e getTextfieldHeight()");
     LzTestManager.assertWithin(17, f.sprite.getTextfieldHeight(), fudgefactor, "text f getTextfieldHeight()");
-    LzTestManager.assertWithin(13, f.sprite.getTextHeight(), fudgefactor, "text f getTextHeight()");
+    LzTestManager.assertWithin(13, f.getTextHeight(), fudgefactor, "text f getTextHeight()");
     LzTestManager.assertWithin(17, f.height, fudgefactor, "text f getTextfieldHeight()");
 
     LzTestManager.assertWithin(28, t13.height, fudgefactor, "text13 height");
@@ -168,17 +171,19 @@ textSizeSuite.testInputtextHeight = function () {
     LzTestManager.assertWithin(17, tempty.height, fudgefactor, "tempty.height");
     LzTestManager.assertWithin(30, thepost.height, fudgefactor, "thepost height");
     LzTestManager.assertWithin(40, c.sprite.getTextfieldHeight(), fudgefactor, "EXPECTED: see LPP-6543. inputtext c getTextfieldHeight()");
-    LzTestManager.assertWithin(13, c.sprite.getTextHeight(), fudgefactor, "inputtext c getTextHeight()");
+    LzTestManager.assertWithin(13, c.getTextHeight(), fudgefactor, "inputtext c getTextHeight()");
     LzTestManager.assertWithin(40, c.height, fudgefactor, "inputtext c height");
     LzTestManager.assertWithin(82, d.sprite.getTextfieldHeight(), fudgefactor, "inputtext d getTextfieldHeight()");
-    LzTestManager.assertWithin(13, d.sprite.getTextHeight(), fudgefactor, "inputtext d getTextHeight()");
+    LzTestManager.assertWithin(13, d.getTextHeight(), fudgefactor, "inputtext d getTextHeight()");
     LzTestManager.assertWithin(82, d.height, fudgefactor, "inputtext d height");
     LzTestManager.assertWithin(40, g.sprite.getTextfieldHeight(), fudgefactor, "EXPECTED: see LPP-6543. inputtext g getTextfieldHeight()");
-    LzTestManager.assertWithin(13, g.sprite.getTextHeight(), fudgefactor, "inputtext g getTextHeight()");
+    LzTestManager.assertWithin(13, g.getTextHeight(), fudgefactor, "inputtext g getTextHeight()");
     LzTestManager.assertWithin(40, g.height, fudgefactor, "inputtext g height");
     LzTestManager.assertWithin(17, h.sprite.getTextfieldHeight(), fudgefactor, "inputtext h getTextfieldHeight()");
-    LzTestManager.assertWithin(13, h.sprite.getTextHeight(), fudgefactor, "inputtext h getTextHeight()");
+    LzTestManager.assertWithin(13, h.getTextHeight(), fudgefactor, "inputtext h getTextHeight()");
     LzTestManager.assertWithin(17, h.height, fudgefactor, "inputtext h height");
+    LzTestManager.assertWithin(it8.height, it9.height, fudgefactor, "inputtext 8 height");
+    LzTestManager.assertWithin(t18.height, it9.height, fudgefactor, "inputtext 9 height != equivalent text height");
 }
 
 textSizeSuite.testTextWidth = function () {
@@ -207,7 +212,7 @@ textSizeSuite.testInputtextWidth = function () {
     LzTestManager.assertWithin(26, it4.width, fudgefactor, "inputtext4 width");
     LzTestManager.assertWithin(it5.width, 17, fudgefactor, "multiline inputtext5 width");
     LzTestManager.assertWithin(it5.parent.width, it5.width, fudgefactor, "multiline inputtext5 width");
-    LzTestManager.assertWithin(26, it6.width, fudgefactor, "inputtext6 width");
+    LzTestManager.assertWithin(70, it6.width, fudgefactor, "inputtext6 width");
 
     LzTestManager.assertWithin(350, it7.width, fudgefactor, "multiline7 inputtext width");
 }
