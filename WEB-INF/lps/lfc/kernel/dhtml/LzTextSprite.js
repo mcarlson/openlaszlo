@@ -202,7 +202,6 @@ LzTextSprite.prototype.setText = function(t, force) {
       t = t.replace(RegExp('&apos;', 'mg'), '&#39;');
     }
     this.__LZtextdiv.innerHTML = t;
-    this.fieldHeight = null;
     this.__updatefieldsize();
 }
 
@@ -227,7 +226,7 @@ LzTextSprite.prototype.setMultiline = function(m) {
         }
         this.__LZdiv.style.overflow = 'hidden';
     }
-    if (this.quirks['text_height_includes_margins']) {
+    if (this.quirks['text_height_includes_padding']) {
         this.__hpadding = m ? 3 : 4;
     }
     // To update height
@@ -252,7 +251,7 @@ LzTextSprite.prototype.getTextWidth = function () {
 }
 
 LzTextSprite.prototype.getTextHeight = function () {
-  var h = this.getTextSize(null, true).height;
+  var h = this.getTextSize(null).height;
   if (h > 0 && this.quirks.emulate_flash_font_metrics) {
     if (! this.multiline) { 
         h -= this.__hpadding;
@@ -262,13 +261,6 @@ LzTextSprite.prototype.getTextHeight = function () {
 }
 
 LzTextSprite.prototype.getTextfieldHeight = function () {
-    if (this._styledirty != true && this.fieldHeight != null) return this.fieldHeight
-    if (this.text == '') {
-        this.fieldHeight = this.getTextSize(null).height;
-        //Debug.debug('getTextfieldHeight: 0', this.fieldHeight);
-        return this.fieldHeight;
-    }
-
     if (this.multiline) {
         var oldheight = false;
         if (this.height) {
@@ -282,11 +274,11 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
                 h += this.__hpadding;
             }
         } else {
+            // catch text id="b" in test/lztext/lztext-testheight.lzx
             if (h == 2) h = this.getTextSize(this.text).height;
             if (h > 0 && this.quirks.emulate_flash_font_metrics) {
                 h += this.__hpadding;
             }
-            this.fieldHeight = h;
         }
         //Debug.info('LzTextSprite.getTextfieldHeight', h, this.height, this.owner);
         if (this.height) {
@@ -294,12 +286,6 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
         }
     } else {
         var h = this.getTextSize(null).height;
-        if (h != 0) {
-            this.fieldHeight = h;
-        }
-    // NOTE: [2006-09-30 ptw] Don't cache 0 as a value for non-empty text.  It breaks
-    // multi-line text for some reason -- I suspect because we ask for
-    // the height too early...
     }
 //     Debug.debug('getTextfieldHeight: %s', h);
     return h;
@@ -388,8 +374,10 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
                 _textsizecache['lzdiv~~~' + tagname] = mdiv;
             }
         } else {
-            if (this.__LzInputDiv == null) {
-                if (this.multiline && string && this.quirks['inner_html_strips_newlines']) {
+            if (this.multiline && string) {
+                if (this.quirks['inputtext_strips_newlines'] && this.__LzInputDiv) {
+                    // safari counts the br and the newline...
+                } else {
                     string = string.replace(this.inner_html_strips_newlines_re, '<br/>');
                 }
             }
@@ -425,6 +413,7 @@ LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
         _textsizecache[string] = size;
         LzTextSprite.prototype._sizecache.counter++;
     }
+    //Debug.info('getTextSize', this.owner, _textsizecache[string], string, style);
     return _textsizecache[string];
 }
 

@@ -251,7 +251,7 @@ dynamic class LzText extends LzView with LzFormatter {
     // recalculate height
     if (this.sizeToHeight) {
       var h = tsprite.getTextfieldHeight();
-      if (h > 0) {
+      if (h > 0 && h != this.height) {
         this.$lzc$set_height(h);
       }
     }
@@ -651,7 +651,7 @@ dynamic class LzText extends LzView with LzFormatter {
     // force to a string
     t = String(t);
 
-    if (this._textrecompute != true && t == this.getText()) {
+    if (t == this.getText()) {
       if (this.ontext.ready) this.ontext.sendEvent(t);
       return;
     }
@@ -662,7 +662,14 @@ dynamic class LzText extends LzView with LzFormatter {
     }
     tsprite.setText(t);
     this.text =  t;
+    this._updateSize();
 
+    if (this.ontext.ready) this.ontext.sendEvent(t);
+  }
+
+  /** Update the height/width if changed
+      @access private */
+  function _updateSize() {
     if (this.width == 0 || (this.resize && this.multiline == false)) {
       // single line resizable fields adjust their width to match the text
       var w = this.getTextWidth();
@@ -673,15 +680,13 @@ dynamic class LzText extends LzView with LzFormatter {
     }
     //resizable fields adjust their height
     if (this.sizeToHeight) {
-      var h = tsprite.getTextfieldHeight();
-      if (h > 0) {
+      var h = this.tsprite.getTextfieldHeight();
+      if (h > 0 && h != this.height) {
         this.$lzc$set_height (h);
       }
     }
-
-    if (this.ontext.ready) this.ontext.sendEvent(t);
-    this._textrecompute = false;
   }
+
   /** * @lzxtype event */
   var ontext:LzDeclaredEventClass = LzDeclaredEvent;
 
@@ -690,10 +695,6 @@ dynamic class LzText extends LzView with LzFormatter {
    * @lzxtype event
    */
   var ontextlink:LzDeclaredEventClass = LzDeclaredEvent;
-
-  /** true forces $lzc$set_text to do a full update
-      @access private */
-  var _textrecompute:Boolean = false;
 
   /**
    * Maximum number of characters allowed in this field
@@ -716,8 +717,7 @@ dynamic class LzText extends LzView with LzFormatter {
 
     var t = this.getText();
     if(t && t.length > this.maxlength){
-      this._textrecompute = true;
-      this.$lzc$set_text (t);
+      this._updateSize();
     }
   }
   /** @lzxtype event */
@@ -744,24 +744,21 @@ dynamic class LzText extends LzView with LzFormatter {
   override function $lzc$set_fontstyle(fstyle) {
     super.$lzc$set_fontstyle(fstyle);
     this.tsprite.setFontStyle(fstyle);
+    this._updateSize();
   }
 
   /** @access private */
   override function $lzc$set_font(fname) {
     super.$lzc$set_font(fname);
     this.tsprite.setFontName(fname);
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
+    this._updateSize();
   }
 
   /** @access private */
   override function $lzc$set_fontsize(fsize) {
     super.$lzc$set_fontsize(fsize);
     this.tsprite.setFontSize(fsize);
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
+    this._updateSize();
   }
 
   /** text-align for this text
@@ -781,9 +778,7 @@ dynamic class LzText extends LzView with LzFormatter {
     }
     this.textalign = align;
     this.tsprite.setTextAlign(align);
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
+    this._updateSize();
   }
 
   /** text-indent for this text
@@ -795,9 +790,7 @@ dynamic class LzText extends LzView with LzFormatter {
   function $lzc$set_textindent (indent:Number) :void {
     this.textindent = indent;
     this.tsprite.setTextIndent(indent);
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
+    this._updateSize();
   }
 
   /** letter-spacing for this text
@@ -809,9 +802,7 @@ dynamic class LzText extends LzView with LzFormatter {
   function $lzc$set_letterspacing (spacing:Number) :void {
     this.letterspacing = spacing;
     this.tsprite.setLetterSpacing(spacing);
-    // force recompute of height if needed
-    this._textrecompute = true;
-    this.$lzc$set_text(this.getText());
+    this._updateSize();
   }
 
   /** text-decoration for this text
@@ -968,14 +959,7 @@ dynamic class LzText extends LzView with LzFormatter {
   override function init () {
     super.init.apply(this, arguments);
 
-    // [max] had to do this because text fields don't have a height until they're attached into the DOM.
-    // multiline resizable fields adjust their height
-    if (this.sizeToHeight) {
-      var h = this.tsprite.getTextfieldHeight();
-      if (h > 0) {
-        this.$lzc$set_height(h);
-      }
-    }
+    this._updateSize();
   };
 
 

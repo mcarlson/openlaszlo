@@ -1,6 +1,6 @@
 <!--
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -273,7 +273,7 @@ function assertWithin (expected, actual, delta, message="") {
     var error = (actual <= expected) ? (expected - actual) : (actual - expected);
     // note NaN compares are always false
     if (! (error <= delta)) {
-        LzTestManager.failAssertion(message + "Within" + "" + expected + "\u00B1" + delta + " " + actual);
+        LzTestManager.failAssertion(message + " within " + expected + "\u00B1" + delta + " got " + actual);
     }
 }
 }

@@ -36,9 +36,9 @@ var LzInputTextSprite = function(owner) {
 
 LzInputTextSprite.prototype = new LzTextSprite(null);
 
-// Should reflect CSS defaults in LzSprite.js
+// Used to compute padding values.  Should reflect CSS defaults in LzSprite.lzswfinputtext/lzswfinputtextmultiline
 LzInputTextSprite.prototype.____hpadding = 2;
-LzInputTextSprite.prototype.____wpadding = 4;
+
 LzInputTextSprite.prototype.____crregexp = new RegExp('\\r\\n', 'g');
 
 LzInputTextSprite.prototype.__createInputText = function(t) {
@@ -101,7 +101,7 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
             this.____hpadding = 2;
             this.__LzInputDiv.className = 'lzswfinputtextmultiline';
         } else {
-            this.____hpadding = 1;
+            this.____hpadding = 0;
             this.__LzInputDiv.className = 'lzswfinputtext';
         }    
         if (this.quirks['inputtext_size_includes_margin']) {
@@ -115,6 +115,16 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
     }
     this.scrolldiv = this.__LzInputDiv;
     this.scrolldiv.owner = this;
+}
+
+LzInputTextSprite.prototype.getTextHeight = function() {
+    var h = LzTextSprite.prototype.getTextHeight.call(this);
+    var b = h;
+    if (this.multiline && this.quirks.emulate_flash_font_metrics) {
+        h -= (this.____hpadding * 2);
+    }
+    //Debug.write('getTextHeight', this.lineHeight, b, h, this.owner);
+    return h;
 }
 
 LzInputTextSprite.prototype.setMultiline = function(ml) {
@@ -335,7 +345,6 @@ LzInputTextSprite.prototype.setText = function(t) {
     this.text = t;
     this.__createInputText(t);
     this.__LzInputDiv.value = t;
-    this.fieldHeight = null;
     this.__updatefieldsize();
 }
 
@@ -1001,42 +1010,37 @@ LzInputTextSprite.prototype.getText = function () {
 }
 
 LzInputTextSprite.prototype.getTextfieldHeight = function () {
-    if (this._styledirty != true && this.fieldHeight != null) return this.fieldHeight
     if (this.text == '') {
-        this.fieldHeight = this.getTextSize(null).height;
+        return this.getTextSize(null).height;
 //       Debug.debug('getTextfieldHeight: 0');
-        return this.fieldHeight;
     }
 
     if (this.multiline) {
         var oldheight = false;
+        // force style recompute
+        if (this.resize && ! this.quirks['inputtext_strips_newlines']) this._styledirty = true;
         if (this.height) {
             oldheight = this.__LzInputDiv.style.height;
             this.__LzInputDiv.style.height = 'auto';
         }
         var h = this.__LzInputDiv.scrollHeight;
         if (h == 0 || h == null) {
-            h = this.getTextSize(this.text).height;
+            h = this.getTextSize(this.text, false).height;
             if (h > 0 && this.quirks.emulate_flash_font_metrics) {
                 h += this.__hpadding;
             }
         } else {
-            if (this.quirks['safari_textarea_subtract_scrollbar_height']) h += 24;
-            if (h == 2) h = this.getTextSize(this.text).height;
             if (h > 0 && this.quirks.emulate_flash_font_metrics) {
                 h += this.__hpadding;
             }
-            this.fieldHeight = h;
         }
+        if (this.quirks['safari_textarea_subtract_scrollbar_height']) h += 24;
         //Debug.info('LzInputTextSprite.getTextfieldHeight', h, this.height, this.owner, this.__LzInputDiv);
         if (this.height) {
             this.__LzInputDiv.style.height = oldheight;
         }
     } else {
         var h = this.getTextSize(null).height;
-        if (h != 0) {
-            this.fieldHeight = h;
-        }
     }
     // NOTE: [2006-09-30 ptw] Don't cache 0 as a value for non-empty text.  It breaks
     // multi-line text for some reason -- I suspect because we ask for

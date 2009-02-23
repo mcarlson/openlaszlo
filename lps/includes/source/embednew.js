@@ -468,6 +468,7 @@ lz.embed = {
                 || this.searchVersion(navigator.appVersion)
                 || "an unknown version";
             this.osversion = this.searchOSVersion(navigator.userAgent) || "an unknown osversion";
+            this.subversion = this.searchSubVersion(navigator.userAgent)
             this.OS = this.searchString(this.dataOS) || "an unknown OS";
             this.initted = true;
             this.isNetscape = this.isSafari = this.isOpera = this.isFirefox = this.isIE = this.isIphone = false;
@@ -506,6 +507,11 @@ lz.embed = {
             var index = dataString.indexOf(this.versionSearchString);
             if (index == -1) return;
             return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
+        },
+        searchSubVersion: function (dataString) {
+            var re = new RegExp(this.versionSearchString + '.\\d+\\.\\d+\\.([\\d.]+)');
+            var match = re.exec(dataString);
+            if (match && match.length > 1) return parseFloat(match[1]);
         },
         searchOSVersion: function (dataString) {
             var index = dataString.indexOf(this.osversionSearchString);

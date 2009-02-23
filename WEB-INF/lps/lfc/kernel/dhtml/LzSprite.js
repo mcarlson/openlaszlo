@@ -254,7 +254,7 @@ LzSprite.prototype.__defaultStyles = {
         height: '100%',
         borderWidth: 0,
         backgroundColor: 'transparent',
-        paddingTop: '2px',
+        paddingTop: '1px',
         paddingLeft: '1px',
         lineHeight: '120%',
         textAlign: 'left',
@@ -355,7 +355,7 @@ LzSprite.prototype.quirks = {
     ,activate_on_mouseover: true
     ,ie6_improve_memory_performance: false
     ,multiline_text_includes_overflow: false
-    ,text_height_includes_margins: false
+    ,text_height_includes_padding: false
     ,inputtext_size_includes_margin: false
     ,listen_for_mouseover_out: true
     ,focus_on_mouseover: true
@@ -363,6 +363,7 @@ LzSprite.prototype.quirks = {
     ,textdeco_on_textdiv: false
     ,use_css_sprites: true
     ,preload_images: true
+    ,inputtext_strips_newlines: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -392,11 +393,6 @@ LzSprite.prototype.__updateQuirks = function () {
         var quirks = this.quirks;
         var browser = lz.embed.browser;
 
-        if (quirks['inner_html_strips_newlines'] == true) {
-            LzSprite.prototype.inner_html_strips_newlines_re = RegExp('$', 'mg');
-        }
-
-        LzSprite.prototype.br_to_newline_re = RegExp('<br/>', 'mg');
         // Divs intercept clicks if physically placed on top of an element
         // that's not a parent. See LPP-2680.
         // off for now
@@ -477,7 +473,10 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['alt_key_sends_control'] = true;
 
             // Safari doesn't like clipped or placed input text fields.
-            quirks['safari_avoid_clip_position_input_text'] = true;
+            if (browser.version < 525.71) {
+                // seems good in Safari 3.2.1
+                quirks['safari_avoid_clip_position_input_text'] = true;
+            }
             // Safari won't show canvas tags whose parent is display: none
             quirks['safari_visibility_instead_of_display'] = true;
             quirks['absolute_position_accounts_for_offset'] = true;
@@ -493,7 +492,8 @@ LzSprite.prototype.__updateQuirks = function () {
             if (browser.version > 523.10) {
                 this.capabilities['rotation'] = true;
             }
-            
+
+
             // Safari has got a special event for pasting
             quirks['safari_paste_event'] = true;
             // Safari does not send onkeypress for function keys
@@ -507,6 +507,9 @@ LzSprite.prototype.__updateQuirks = function () {
                 //quirks['listen_for_mouseover_out'] = false;
                 quirks['canvas_div_cannot_be_clipped'] = true;
             }
+            
+            // required as of 3.2.1 to get test/lztest/lztest-textheight.lzx to show multiline inputtext properly
+            quirks['inputtext_strips_newlines'] = true;
         } else if (browser.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
@@ -528,7 +531,10 @@ LzSprite.prototype.__updateQuirks = function () {
                 LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.lineHeight = '119%';
             } else if (browser.version < 4) {
                 // Firefox 3.0 does not need padding added onto field height measurements
-                quirks['text_height_includes_margins'] = true;
+                if (browser.subversion < 6) {
+                    // no longer needed as of 3.0.6 (or maybe earlier...)
+                    quirks['text_height_includes_padding'] = true;
+                }
             }
         }
 
@@ -538,7 +544,7 @@ LzSprite.prototype.__updateQuirks = function () {
             LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '2px';
             LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingLeft = '0px';
         }
-        if (this.quirks['text_height_includes_margins']) {
+        if (this.quirks['text_height_includes_padding']) {
             LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '0px';
             LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '0px';
         }
@@ -564,6 +570,12 @@ LzSprite.prototype.__updateQuirks = function () {
         if (quirks['hand_pointer_for_clickable']) {
             LzSprite.prototype.__defaultStyles.lzclickdiv.cursor = 'pointer';
         }
+
+        if (quirks['inner_html_strips_newlines'] == true) {
+            LzSprite.prototype.inner_html_strips_newlines_re = RegExp('$', 'mg');
+        }
+
+        LzSprite.prototype.br_to_newline_re = RegExp('<br/>', 'mg');
     }
 };
 
