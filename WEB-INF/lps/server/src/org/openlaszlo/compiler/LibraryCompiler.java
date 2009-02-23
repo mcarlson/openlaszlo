@@ -121,16 +121,26 @@ class LibraryCompiler extends ToplevelCompiler {
     
     public void compile(Element element) throws CompilationError
     {
-        element = resolveLibraryElement(
-            element, mEnv, mEnv.getImportedLibraryFiles());
+        boolean toplevel = element.getParentElement() == null;
+        boolean linking = (! "false".equals(mEnv.getProperty(CompilationEnvironment.LINK_PROPERTY)));
+        element = resolveLibraryElement(element, mEnv, mEnv.getImportedLibraryFiles());
+        // NOTE: [2009-02-23 ptw] (LPP-7750) If we are not linking, we
+        // need to declare the global's in the binary library (as
+        // opposed to in the application when the canvas is compiled).
+        if (toplevel && (! linking)) {
+          ViewSchema schema = mEnv.getSchema();
+          NodeModel model = NodeModel.elementOnlyAsModel(element, schema, mEnv);
+          computePropertiesAndGlobals(element, model, schema);
+        }
+
         if (element != null) {
             super.compile(element);
         }
+
         // NOTE [2009-02-18 ptw] (LPP-7750) If we are not linking, we
         // need to dump the tag map into the binary library (as
         // opposed to dumping it when the canvas is compiled).
-        boolean linking = (! "false".equals(mEnv.getProperty(CompilationEnvironment.LINK_PROPERTY)));
-        if (! linking) {
+        if (toplevel && (! linking)) {
           outputTagMap(mEnv);
         }
     }

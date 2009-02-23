@@ -181,35 +181,6 @@ class CanvasCompiler extends ToplevelCompiler {
         outputTagMap(mEnv);
     }
         
-  void computePropertiesAndGlobals (Element element, NodeModel model, ViewSchema schema) {
-        Set visited = new HashSet();
-        for (Iterator iter = getLibraries(element).iterator();
-             iter.hasNext(); ) {
-            File file = (File) iter.next();
-            Element library = LibraryCompiler.resolveLibraryElement(file, mEnv, visited);
-            if (library != null) {
-              collectObjectProperties(library, model, schema, visited);
-            }
-        }
-        collectObjectProperties(element, model, schema, visited);
-        // Output declarations for all globals so they can be
-        // resolved at compile time.
-        String globals = "";
-        String globalPrefix = mEnv.getGlobalPrefix();
-        // TODO: [2008-04-16 ptw] The '= null' is to silence the
-        // swf7/swf8 debugger, it should be conditional
-        for (Iterator v = mEnv.getIds().keySet().iterator(); v.hasNext(); ) {
-          String id = (String)v.next();
-          if (!("".equals(globalPrefix))) {
-            // For SWF7,SWF8, we need to set a binding for the instance's ID in the main app's namespace
-            globals += (globalPrefix+id + " = null;\n");
-          } else {
-            globals += ("var " +id + " = null;\n");
-          }
-        }
-        mEnv.compileScript(globals);
-  }
-
     private Map createCanvasObject(Element element, Canvas canvas, NodeModel model) {
         // Cheating, but canvas needs to add inits, since the compiler
         // does not know that these are already properties of the
@@ -365,55 +336,4 @@ class CanvasCompiler extends ToplevelCompiler {
         canvas.setFontInfo(new FontInfo(font, fontsize, fontstyle));
         
     }
-    
-  void computeDeclarations(Element element, ViewSchema schema) {
-      // Gather and check id's and global names now, so declarations
-      // for them can be emitted.
-      String tagName = element.getName();
-      ClassModel classModel = schema.getClassModel(tagName);
-      if (classModel != null) {
-        // Only process nodes
-        if (classModel.isSubclassOf(schema.getClassModel("node"))) {
-          String id = element.getAttributeValue("id");
-          String globalName = null;
-          if (CompilerUtils.topLevelDeclaration(element)) {
-            if (! ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName))) {
-              globalName = element.getAttributeValue("name");
-            }
-          }
-          if (id != null) {
-            mEnv.addId(id, element);
-          }
-          if (globalName != null) {
-            mEnv.addId(globalName, element);
-          }
-        }
-        // Don't descend into datasets
-        if (! classModel.isSubclassOf(schema.getClassModel("dataset"))) {
-          Iterator iterator = element.getChildren().iterator();
-          while (iterator.hasNext()) {
-            Element child = (Element) iterator.next();
-            computeDeclarations(child, schema);
-          }
-        }
-      }
-    }
-
-  private void collectObjectProperties(Element element, NodeModel model, ViewSchema schema, Set visited) {
-    computeDeclarations(element, schema);
-    for (Iterator iter = element.getChildren().iterator();
-         iter.hasNext(); ) {
-      Element child = (Element) iter.next();
-      if (NodeModel.isPropertyElement(child)) {
-        model.addPropertyElement(child);
-      } else if ( (LibraryCompiler.isElement(child)) ||
-                  (ImportCompiler.isElement(child))){
-        Element libraryElement = LibraryCompiler.resolveLibraryElement(
-          child, mEnv, visited);
-        if (libraryElement != null) {
-          collectObjectProperties(libraryElement, model, schema, visited);
-        }
-      }
-    }
-  }
 }
