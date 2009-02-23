@@ -41,7 +41,11 @@
         <!--- the selector for this list (lz.listselector or lz.datalistselector)
               @keywords private -->
         <attribute name="_selector" value="null" />
-        
+
+        <!--- true when a list-item set focus to this list (only available during onfocus)
+              @keywords private -->
+        <attribute name="__focusfromchild" value="false" type="boolean" />
+
         <!--- This event is triggered whenever the user makes a selection it may
               used as a script in the tag or as an event method. -->
         <event name="onselect"/>

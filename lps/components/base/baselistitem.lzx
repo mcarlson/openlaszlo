@@ -72,9 +72,11 @@
               @keywords private -->
         <method name="_doMousedown" args="ignore">  <![CDATA[
             super._doMousedown(ignore);
-            if (!this.focusable && this._parentcomponent &&
-                 this._parentcomponent.focusable) {
-               lz.Focus.setFocus(this._parentcomponent, false); // false => focus from mouse
+            var parcomp = this._parentcomponent;
+            if (!this.focusable && parcomp && parcomp.focusable) {
+               parcomp.__focusfromchild = true;
+               lz.Focus.setFocus(parcomp, false); // false => focus from mouse
+               parcomp.__focusfromchild = false;
             }
         ]]> </method>
 

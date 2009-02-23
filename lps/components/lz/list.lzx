@@ -177,11 +177,13 @@
          <method name="_doFocus" args="ignore">
              <![CDATA[
                  super._doFocus(ignore);
-                 var sel = getSelection();
-                 if (this.multiselect) {
-                     sel = (sel.length == 0) ? null : sel[0];
-                 }
-                 ensureItemInView(sel);
+                 if (! this.__focusfromchild) {
+                    var sel = getSelection();
+                    if (this.multiselect) {
+                        sel = (sel.length == 0) ? null : sel[0];
+                    }
+                    ensureItemInView(sel);
+                }
              ]]>
          </method>
 
