@@ -192,8 +192,7 @@ You can use views with background colors when mocking up applications as shown a
 would best be positioned using a layout.
 </para>
 
-
-<para/><section id="layout-and-design.floatingviews"><title>Floating views</title>
+<section id="layout-and-design.floatingviews"><title>Floating views</title>
 <para>
 The view hierarchy could also be a constraint. Imagine that in the above example, you wanted to be able to drag an item from the list of image names from <varname>listOfImages</varname> to <varname>trash</varname>. 
 Frequently in drag-and-drop environments, the original item that was dragged is left in place (although some indication may be given that it is in a transient state, such as being faded out), while a copy of it is dragged. If each of the image titles was draggable, then not only might a dragged item disrupt the arrangement of its siblings, but you wouldn't be able to leave the original intact, in order to obtain the behavior described above. 
@@ -205,124 +204,12 @@ To get around this problem, you could use a floating view as the draggable view.
 <orderedlist spacing="compact"><listitem><para>User clicks and holds on a view.</para></listitem><listitem><para>Floating view made visible, and located over clicked view.</para></listitem><listitem><para>Any visual changes applied to clicked view (e.g. color/alpha transform).</para></listitem><listitem><para>As mouse moves around, the floating view follows the mouse.</para></listitem><listitem><para>Onmouseup the floating view disappears, any actions performed, original clicked view restored.</para></listitem></orderedlist>
 <para>
 To position the floating view over the clicked view, you can use the <indexterm><primary><literal>getAttributeRelative()</literal></primary></indexterm><methodname>getAttributeRelative()</methodname> method of view to obtain the x and y coordinates of the view relative to a view other than its parent. For example, consider the case below:</para>
-
-<informalexample role="live-example"><programlisting role="lzx-embednew"><filename>layout-and-design-$10.lzx</filename><parameter/><code>
-&lt;canvas width="800" &gt;
-  &lt;!-- An item that will get clicked and dragged --&gt;
-  &lt;class name="imageRow" bgcolor="0x93A5FF" width="$once{parent.width}" height="20"&gt;
-    &lt;attribute name="text" type="text"/&gt;
-    &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
-    &lt;handler name="onmousedown"&gt;
-      this.f = new lz.view(canvas, {width: this.width,
-                                   height: this.height,
-                                   bgcolor: this.bgcolor,
-                                   x: this.getAttributeRelative("x", canvas),
-                                   y: this.getAttributeRelative("y", canvas),
-                                   clickable: true
-                                   });
-      // Make view follow mouse around
-      this.x_offset = this.getMouse("x");
-      this.y_offset = this.getMouse("y");
-      this.startDraggingFloater();
-    &lt;/handler&gt;
-    
-    &lt;method name="startDraggingFloater"&gt;
-      this.d = new LzDelegate(this, "adjustFloaterPosition", lz.Idle, "onidle");
-      this.gm = new LzDelegate(this, "cancelFloater", lz.GlobalMouse, "onmouseup");
-    &lt;/method&gt;
-    
-    &lt;method name="adjustFloaterPosition"&gt;
-      this.f.setAttribute("x", canvas.getMouse("x")-this.x_offset);
-      this.f.setAttribute("y", canvas.getMouse("y")-this.y_offset);
-    &lt;/method&gt;
-    
-    &lt;method name="cancelFloater"&gt;
-      this.gm.unregisterAll();
-      this.d.unregisterAll();
-      this.f.destroy();
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
-    &lt;!-- Area for viewing images --&gt;
-    &lt;text&gt;Stage&lt;/text&gt;
-    &lt;!-- ... --&gt;
-  &lt;/view&gt;
-  
-  &lt;view name="listOfImages" width="200" height="300" x="500" bgcolor="0xffff00"&gt;
-    &lt;!-- Data-replicated list of images --&gt;
-    &lt;simplelayout axis="y" spacing="2"/&gt;
-    
-    &lt;imageRow&gt;One&lt;/imageRow&gt;
-    &lt;imageRow&gt;Two&lt;/imageRow&gt;
-    &lt;imageRow&gt;Three&lt;/imageRow&gt;
-  &lt;/view&gt;
-  
-  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
-    &lt;!-- Trash for disposing of images --&gt;
-    &lt;text&gt;Trash&lt;/text&gt;
-    &lt;!-- ... --&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</code></programlisting><programlisting>
-&lt;canvas width="800" &gt;
-  &lt;!-- An item that will get clicked and dragged --&gt;
-  &lt;class name="imageRow" bgcolor="0x93A5FF" width="$once{parent.width}" height="20"&gt;
-    &lt;attribute name="text" type="text"/&gt;
-    &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
-    &lt;handler name="onmousedown"&gt;
-      this.f = new lz.view(canvas, {width: this.width,
-                                   height: this.height,
-                                   bgcolor: this.bgcolor,
-                                   x: this.getAttributeRelative("x", canvas),
-                                   y: this.getAttributeRelative("y", canvas),
-                                   clickable: true
-                                   });
-      // Make view follow mouse around
-      this.x_offset = this.getMouse("x");
-      this.y_offset = this.getMouse("y");
-      this.startDraggingFloater();
-    &lt;/handler&gt;
-    
-    &lt;method name="startDraggingFloater"&gt;
-      this.d = new LzDelegate(this, "adjustFloaterPosition", lz.Idle, "onidle");
-      this.gm = new LzDelegate(this, "cancelFloater", lz.GlobalMouse, "onmouseup");
-    &lt;/method&gt;
-    
-    &lt;method name="adjustFloaterPosition"&gt;
-      this.f.setAttribute("x", canvas.getMouse("x")-this.x_offset);
-      this.f.setAttribute("y", canvas.getMouse("y")-this.y_offset);
-    &lt;/method&gt;
-    
-    &lt;method name="cancelFloater"&gt;
-      this.gm.unregisterAll();
-      this.d.unregisterAll();
-      this.f.destroy();
-    &lt;/method&gt;
-  &lt;/class&gt;
-  
-  &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
-    &lt;!-- Area for viewing images --&gt;
-    &lt;text&gt;Stage&lt;/text&gt;
-    &lt;!-- ... --&gt;
-  &lt;/view&gt;
-  
-  &lt;view name="listOfImages" width="200" height="300" x="500" bgcolor="0xffff00"&gt;
-    &lt;!-- Data-replicated list of images --&gt;
-    &lt;simplelayout axis="y" spacing="2"/&gt;
-    
-    &lt;imageRow&gt;One&lt;/imageRow&gt;
-    &lt;imageRow&gt;Two&lt;/imageRow&gt;
-    &lt;imageRow&gt;Three&lt;/imageRow&gt;
-  &lt;/view&gt;
-  
-  &lt;view name="trash" width="200" height="75" x="500" y="310" bgcolor="0xff0000"&gt;
-    &lt;!-- Trash for disposing of images --&gt;
-    &lt;text&gt;Trash&lt;/text&gt;
-    &lt;!-- ... --&gt;
-  &lt;/view&gt;
-&lt;/canvas&gt;
-</programlisting><?lzx-edit programs/layout-and-design-$10.lzx?></informalexample>
+  <example role="live-example">
+    <title>Positioning a "floating view"</title>
+    <programlisting language="lzx">
+      <textobject><textdata fileref="programs/layout-and-design-$10.lzx"/></textobject> 
+    </programlisting>
+  </example>
 
 
 <para>To achieve this, you could create a view from script when the mouse goes down over one of the views you want to drag:
