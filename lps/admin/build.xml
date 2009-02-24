@@ -13,6 +13,7 @@
         <arg value="dev-console.lzx" />
       </exec>
       <exec executable="../../WEB-INF/lps/server/bin/lzc" >
+        <arg value="--copy-resources" />
         <arg value="--runtime=dhtml" />
         <arg value="dev-console.lzx" />
       </exec>
