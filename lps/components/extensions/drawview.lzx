@@ -105,6 +105,22 @@
     -->
     <attribute name="lineCap" value="round" type="string"/>
 
+    <!--- Gives the default lineJoin value for lines. Round for consistency between swf and dhtml.
+          @type String
+          @lzxtype "round" | "bevel" | "miter"
+          @lzxdefault "round"
+          @access public
+    -->
+    <attribute name="lineJoin" value="round" type="string"/>
+
+    <!--- Gives the default miterLimit value for lines.
+          @type Number
+          @lzxtype number
+          @lzxdefault 3
+          @access public
+    -->
+    <attribute name="miterLimit" value="3" type="number"/>
+
     <!--- Represents the colour to use for the lines around shapes.  Specified as a hexadecimal number (0xffffff) or a CSS string ('#ff00ff' or '#f0f').
         @type String
         @lzxtype string
@@ -276,31 +292,29 @@
         function moveTo(x,y) { }
         function quadraticCurveTo(cx, cy, px, py) {}
 
-        function arc(x, y, radius, startAngle, endAngle,...args) {
-            var clockwise = args[0];
-            var sx = x + radius*Math.cos(startAngle);
-            var sy = y + radius*Math.sin(2 * Math.PI - startAngle);
+        function arc(x, y, radius, startAngle, endAngle, clockwise = false) {
+            var sx:Number = x + radius*Math.cos(startAngle);
+            var sy:Number = y + radius*Math.sin(2 * Math.PI - startAngle);
             startAngle *= 180/Math.PI;
             endAngle *= 180/Math.PI;
-            var arc = clockwise == true ? ((endAngle - startAngle) - 360): endAngle - startAngle;
+            var arc:Number = clockwise == true ? ((endAngle - startAngle) - 360): endAngle - startAngle;
             //move pen to the point along the circle at startAngle
             this.moveTo(sx, sy);
             //retain the center of the arc as the center point passed in.
             return this._drawArc(x, y, radius, arc, startAngle);
         }
 
-        function rect(x, y, w, h,...args) {
-            var cornerRadius = args[0];
+        function rect(x, y, w, h, cornerRadius = 0) {
             // if the user has defined cornerRadius our task is a bit more complex. :)
             if (cornerRadius>0) {
                 // init vars
-                var theta, angle, cx, cy, px, py;
+                var angle:Number, cx:Number, cy:Number, px:Number, py:Number;
                 // make sure that w + h are larger than 2*cornerRadius
                 if (cornerRadius>Math.min(w, h)/2) {
                     cornerRadius = Math.min(w, h)/2;
                 }
                 // theta = 45 degrees in radians
-                theta = Math.PI/4;
+                const theta:Number = Math.PI/4;
                 // draw top line
                 this.moveTo(x+cornerRadius, y);
                 this.lineTo(x+w-cornerRadius, y);
@@ -373,25 +387,23 @@
             }
         }
 
-        function oval(x, y, radius,...args) {
-            var yRadius = args[0];
-            // init variables
-            var theta, xrCtrl, yrCtrl, angle, angleMid, px, py, cx, cy;
+        function oval(x, y, radius, yRadius = NaN) {
             // if only yRadius is undefined, yRadius = radius
-            if (yRadius == undefined) {
+            if (isNaN(yRadius)) {
                 yRadius = radius;
             }
-            var s = (radius < 20 && yRadius < 20) ? 5 : 8;
+            const s:Number = (radius < 20 && yRadius < 20) ? 5 : 8;
             // covert to radians for our calculations
-            theta = Math.PI/ (s / 2);
+            const theta:Number = Math.PI/ (s / 2);
             // calculate the distance for the control point
-            xrCtrl = radius/Math.cos(theta/2);
-            yrCtrl = yRadius/Math.cos(theta/2);
+            const xrCtrl:Number = radius/Math.cos(theta/2);
+            const yrCtrl:Number = yRadius/Math.cos(theta/2);
             // start on the right side of the circle
-            angle = 0;
             this.moveTo(x+radius, y);
+            // init variables
+            var angle:Number = 0, angleMid:Number, px:Number, py:Number, cx:Number, cy:Number;
             // this loop draws the circle in n segments
-            for (var i = 0; i<s; i++) {
+            for (var i:int = 0; i<s; i++) {
                 // increment our angles
                 angle += theta;
                 angleMid = angle-(theta/2);
@@ -407,14 +419,11 @@
             return {x:px, y:py};
         }
 
-        function _drawArc(x, y, radius, arc, startAngle,...args) {
-            var yRadius = args[0];
+        function _drawArc(x:Number, y:Number, radius:Number, arc:Number, startAngle:Number, yRadius:Number = NaN) :Object {
             // if yRadius is undefined, yRadius = radius
-            if (yRadius == undefined) {
+            if (isNaN(yRadius)) {
                 yRadius = radius;
             }
-            // Init vars
-            var segAngle, theta, angle, angleMid, segs,bx, by, cx, cy;
             // no sense in drawing more than is needed :)
             if (Math.abs(arc)>360) {
                 arc = 360;
@@ -422,20 +431,22 @@
             // Flash uses 8 segments per circle, to match that, we draw in a maximum
             // of 45 degree segments. First we calculate how many segments are needed
             // for our arc.
-            segs = Math.ceil(Math.abs(arc)/45);
-            // Now calculate the sweep of each segment
-            segAngle = arc/segs;
-            // The math requires radians rather than degrees. To convert from degrees
-            // use the formula (degrees/180)*Math.PI to get radians.
-            theta = -(segAngle/180)*Math.PI;
-            // convert angle startAngle to radians
-            angle = -(startAngle/180)*Math.PI;
-
+            const segs:Number = Math.ceil(Math.abs(arc)/45);
+            // Init vars
+            var bx:Number, by:Number;
             // if our arc is larger than 45 degrees, draw as 45 degree segments
             // so that we match Flash's native circle routines.
-            if (segs>0) {
+            if (segs > 0) {
+                // Now calculate the sweep of each segment
+                const segAngle:Number = arc/segs;
+                // The math requires radians rather than degrees. To convert from degrees
+                // use the formula (degrees/180)*Math.PI to get radians.
+                const theta:Number = -(segAngle/180)*Math.PI;
+                // convert angle startAngle to radians
+                var angle:Number = -(startAngle/180)*Math.PI;
+                var angleMid:Number, cx:Number, cy:Number;
                 // Loop for drawing arc segments
-                for (var i = 0; i<segs; i++) {
+                for (var i:int = 0; i<segs; i++) {
                     // increment our angle
                     angle += theta;
                     // find the angle halfway between the last angle and the new
@@ -460,16 +471,16 @@
         function distance(p0, p1) {
             // These would be useful generally, but put them inside the
             // function so they don't pollute the general namespace.
-            var dx = p1.x - p0.x;
-            var dy = p1.y - p0.y;
+            var dx:Number = p1.x - p0.x;
+            var dy:Number = p1.y - p0.y;
             return Math.sqrt(dx*dx+dy*dy);
         }
 
         function intersection(p0, p1, p2, p3) {
                 // returns null if they're collinear and non-identical
                 // returns -1 if they're collinear and identical
-                var u = (p3.x-p2.x)*(p0.y-p2.y) - (p3.y-p2.y)*(p0.x-p2.x);
-                var d = (p3.y-p2.y)*(p1.x-p0.x) - (p3.x-p2.x)*(p1.y-p0.y);
+                var u:Number = (p3.x-p2.x)*(p0.y-p2.y) - (p3.y-p2.y)*(p0.x-p2.x);
+                var d:Number = (p3.y-p2.y)*(p1.x-p0.x) - (p3.x-p2.x)*(p1.y-p0.y);
                 if (d == 0) {
                     if (u == 0) {
                         return -1;//identical
@@ -505,6 +516,8 @@
             var globalAlpha = 1;
             var lineWidth = 1;
             var lineCap = 'round';
+            var lineJoin = 'round';
+            var miterLimit = 3;
             var strokeStyle = '#000000';
             var fillStyle = '#000000';
             var context = null;
@@ -513,6 +526,8 @@
             private var __globalAlpha = null;
             private var __lineWidth = null;
             private var __lineCap = null;
+            private var __lineJoin = null;
+            private var __miterLimit = null;
             private var __strokeStyle = null;
             private var __fillStyle = null;
 
@@ -541,6 +556,8 @@
                 if (this.__LZcanvas) {
                     this.__lineWidth = null;
                     this.__lineCap = null;
+                    this.__lineJoin = null;
+                    this.__miterLimit = null;
                     this.__fillStyle = null;
                     this.__strokeStyle = null;
                     this.__globalAlpha = null;
@@ -727,6 +744,8 @@
             function __updateStyles() {
                 var styleNames = { lineWidth : '__lineWidth',
                                    lineCap : '__lineCap',
+                                   lineJoin : '__lineJoin',
+                                   miterLimit : '__miterLimit',
                                    globalAlpha : '__globalAlpha' };
                 for (var name in styleNames) {
                     var intern = styleNames[name];
@@ -739,6 +758,7 @@
 
                 if (this.__strokeStyle != this.strokeStyle) {
                     if (this.strokeStyle instanceof LzCanvasGradient) {
+                        this.strokeStyle.__applyStrokeTo(this.context);
                     } else {
                         var ccache = lz.drawview.__colorcache;
                         var strokeStyleColor = ccache[this.strokeStyle];
@@ -884,6 +904,13 @@
             function __applyFillTo(scope) {
                 scope.fillStyle = this.__g;
             }
+
+            /**
+            * @access private
+            */
+            function __applyStrokeTo(scope) {
+                scope.strokeStyle = this.__g;
+            }
         }
       ]]></script>
     </when>
@@ -954,7 +981,7 @@
                 var context = this.sprite.getContext();
                 if ($as2) {
                     this.rebuildBitmap();
-                    var drawcontainer = context.createEmptyMovieClip("drawcontainer", 1);
+                    var drawcontainer:MovieClip = context.createEmptyMovieClip("drawcontainer", 1);
                     this.__drawing = drawcontainer.createEmptyMovieClip("drawing", drawcontainer.getNextHighestDepth());
 
                     context = drawcontainer;
@@ -975,11 +1002,11 @@
                 if (this.__pathisopen && this.__path.length > 1) {
                     var p = this.__path[0];
                     if (p[0] == this.__MOVETO_OP || p[0] == this.__LINETO_OP) {
-                        var x = p[1];
-                        var y = p[2];
+                        var x:Number = p[1];
+                        var y:Number = p[2];
                     } else if (p[0] == this.__QCURVE_OP) {
-                        var x = p[3];
-                        var y = p[4];
+                        var x:Number = p[3];
+                        var y:Number = p[4];
                     } else {
                         return;
                     }
@@ -991,31 +1018,31 @@
 
             override function moveTo(x, y) {
                 if (this.__pathisopen) {
-                    this.__path[this.__path.length] = [this.__MOVETO_OP, x, y];
+                    this.__path.push([this.__MOVETO_OP, x, y]);
                 }
             }
 
             override function lineTo (x, y) {
                 if (this.__pathisopen) {
-                    this.__path[this.__path.length] = [this.__LINETO_OP, x, y];
+                    this.__path.push([this.__LINETO_OP, x, y]);
                 }
             }
 
             override function quadraticCurveTo(cpx, cpy, x, y) {
                 if (this.__pathisopen) {
-                    this.__path[this.__path.length] = [this.__QCURVE_OP, cpx, cpy, x, y];
+                    this.__path.push([this.__QCURVE_OP, cpx, cpy, x, y]);
                 }
             }
 
-            const bezierCurveTo_error = 10;
+            const bezierCurveTo_error :Number = 10;
 
             function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
-                var error = this.bezierCurveTo_error;
+                var error:Number = this.bezierCurveTo_error;
 
                 // Start from the cursor position, or (0, 0)
-                var x0 = 0, y0 = 0;
+                var x0:Number = 0, y0:Number = 0;
                 if (this.__path.length) {
-                    var instr = this.__path[this.__path.length - 1];
+                    var instr:Array = this.__path[this.__path.length - 1];
                     x0 = instr[instr.length - 2];
                     y0 = instr[instr.length - 1];
                 }
@@ -1040,29 +1067,29 @@
                 // which then exits.)
 
                 // each item is a list of control points, with a sentinel of null
-                var work_items = [null];
+                var work_items:Array = [null];
                 // the current work item
-                var points = [{x: x0, y: y0}, {x: cp1x, y: cp1y}, {x: cp2x, y: cp2y}, {x: x, y: y}];
+                var points:Array = [{x: x0, y: y0}, {x: cp1x, y: cp1y}, {x: cp2x, y: cp2y}, {x: x, y: y}];
                 while (points) {
                     // Posit a quadratic.  For C1 continuity, control point has to
                     // be at the intersection of the tangents.
-                    var q1 = this.intersection.apply(null, points);
-                    var q0 = points[0];
-                    var q2 = points[3];
+                    var q1:* = this.intersection.apply(null, points);
+                    var q0:Object = points[0];
+                    var q2:Object = points[3];
 
-                    if (!q1 || q1 == -1) {
-                        var flush = true;
-                        var start_first = points[0].x == points[1].x && points[0].y == points[1].y;
-                        var second_end = points[2].x == points[3].x && points[2].y == points[3].y;
+                    if (q1 == null || q1 == -1) {
+                        var flush:Boolean = true;
+                        var start_first:Boolean = points[0].x == points[1].x && points[0].y == points[1].y;
+                        var second_end:Boolean = points[2].x == points[3].x && points[2].y == points[3].y;
                         if (start_first) {
                             if (second_end) {
                                 this.lineTo(q2.x, q2.y);
                             } else {
-                                var q1 = points[2];
+                                var q1:Object = points[2];
                                 this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
                             }
                         } else if (second_end) {
-                            var q1 = points[1];
+                            var q1:Object = points[1];
                             this.quadraticCurveTo(q1.x, q1.y, q2.x, q2.y);
                         } else {
                             //both straight lines are collinear
@@ -1083,19 +1110,19 @@
                     // Compute the triangle, since the fringe is the subdivision
                     // if we need that and the peak is the midpoint which we need
                     // in any case
-                    var m = [points, [], [], []];
-                    for (var i = 1; i < 4; i++) {
-                        for (var j = 0; j < 4 - i; j++) {
-                            var c0 = m[i-1][j];
-                            var c1 = m[i-1][j+1];
+                    var m:Array = [points, [], [], []];
+                    for (var i:int = 1; i < 4; i++) {
+                        for (var j:int = 0; j < 4 - i; j++) {
+                            var c0:Object = m[i-1][j];
+                            var c1:Object = m[i-1][j+1];
                             m[i][j] = {x: (c0.x + c1.x)/2,
                                     y: (c0.y + c1.y)/2};
                         }
                     }
 
-                    var qa = this.midpoint(q0, q1);
-                    var qb = this.midpoint(q1, q2);
-                    var qm = this.midpoint(qa, qb);
+                    var qa:Object = this.midpoint(q0, q1);
+                    var qb:Object = this.midpoint(q1, q2);
+                    var qm:Object = this.midpoint(qa, qb);
                     // Is the midpoint of the quadratic close to the midpoint of
                     // the cubic?  If so, use it as the approximation.
                     if (this.distance(qm, m[3][0]) < error) {
@@ -1105,8 +1132,8 @@
                     }
                     // Otherwise subdivide the cubic.  The first division is the
                     // next work item, and the second goes on the work queue.
-                    var left = new Array(4), right = new Array(4);
-                    for (i = 0; i < 4; i++) {
+                    var left:Array = new Array(4), right:Array = new Array(4);
+                    for (var i:int = 0; i < 4; i++) {
                         left[i]  = m[i][0];
                         right[i] = m[3-i][i];
                     }
@@ -1115,13 +1142,13 @@
                 }
             }
 
-            function __getColor(val) {
-                var ccache = lz.drawview.__colorcache;
-                var cachedColor = ccache[val];
+            function __getColor(val:*) :Object {
+                var ccache:Object = lz.drawview.__colorcache;
+                var cachedColor:Object = ccache[val];
                 if (cachedColor == null) {
-                    var rgba = LzColorUtils.hextoint(val);
-                    var color = (rgba | 0);
-                    var alpha = rgba - color;
+                    var rgba:Number = LzColorUtils.hextoint(val);
+                    var color:uint = (rgba | 0);
+                    var alpha:Number = rgba - color;
                     // FIXME [anba 20090216] explicit alpha of 0 is ignored
                     cachedColor = ccache[val] = {c: color, a: (alpha != 0 ? alpha * 100 : null)};
                 }
@@ -1132,8 +1159,8 @@
                 if (this.fillStyle instanceof LzCanvasGradient) {
                     this.fillStyle.__applyFillTo(this.context);
                 } else {
-                    var color = this.__getColor(this.fillStyle);
-                    var alpha = color.a != null ? color.a : this.globalAlpha;
+                    var color:Object = this.__getColor(this.fillStyle);
+                    var alpha:Number = color.a != null ? color.a : this.globalAlpha;
                     if ($as2) { alpha *= 100; }
                     this.context.beginFill(color.c, alpha);
                 }
@@ -1143,13 +1170,13 @@
                 if ($as2) { this.__updateSize(); }
             }
 
-            function __playPath(m) {
+            function __playPath(m:*) :void {
                 if ($as2) { this.context._visible = false; }
-                var p = this.__path;
+                var p:Array = this.__path;
                 //Debug.write(p, m);
-                for (var i = 0; i < p.length; i++) {
-                    var op = p[i];
-                    var optype = op[0];
+                for (var i:int = 0; i < p.length; i++) {
+                    var op:Array = p[i];
+                    var optype:int = op[0];
                     if (optype == this.__MOVETO_OP) {
                         //Debug.write(m, 'moveTo', op[1], op[2]);
                         m.moveTo(op[1], op[2]);
@@ -1166,15 +1193,13 @@
 
             function stroke() {
                 if (this.strokeStyle instanceof LzCanvasGradient) {
-                    if ($debug) {
-                        Debug.warn ("Gradient line fills aren't supported.");
-                    }
-                    return;
+                    this.strokeStyle.__applyStrokeTo(this.context);
                 } else {
-                    var color = this.__getColor(this.strokeStyle);
-                    var alpha = color.a != null ? color.a : this.globalAlpha;
+                    var color:Object = this.__getColor(this.strokeStyle);
+                    var alpha:Number = color.a != null ? color.a : this.globalAlpha;
                     if ($as2) { alpha *= 100; }
-                    this.context.lineStyle(this.lineWidth, color.c, alpha);
+                    this.context.lineStyle(this.lineWidth, color.c, alpha, false, 'normal',
+                        this.lineCap, this.lineJoin, this.miterLimit);
                 }
                 this.__playPath(this.context);
                 this.context.lineStyle(undefined);
@@ -1185,49 +1210,45 @@
                 this.context.clear();
                 if ($as2) {
                     if (this['__bitmapdata']) {
-                        var rect = new flash.geom.Rectangle(0, 0, this.width, this.height);
+                        var rect:Rectangle = new flash.geom.Rectangle(0, 0, this.width, this.height);
                         this.__bitmapdata.fillRect(rect, 0x000000ff);
                     }
                 }
             }
 
             function createLinearGradient(x0, y0, x1, y1) {
-                var dx = x1-x0;
-                var dy = y1-y0;
-                var r = Math.atan2(dy, dx);
-                var h = Math.sqrt(dx*dx + dy*dy);
-                var w = h;
-                var y = y0;
-                var x = x0;
-                if (y1 < y0) {
-                    y = y1;
-                }
-                if (x1 < x0) {
-                    x = x1;
-                }
+                var dx:Number = x1-x0;
+                var dy:Number = y1-y0;
+                var r:Number = Math.atan2(dy, dx);
+                var h:Number = Math.sqrt(dx*dx + dy*dy);
+                var w:Number = h;
+                var y:Number = Math.min(y0, y1);
+                var x:Number = Math.min(x0, x1);
 
-                var g = new LzCanvasGradient(this, {matrixType:"box", x:x, y:y, w:w, h:h, r:r}, false);
+                var g:LzCanvasGradient = new LzCanvasGradient(this, {matrixType:"box", x:x, y:y, w:w, h:h, r:r}, false);
+                //Debug.write('createLinearGradient', {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r});
                 return g;
             }
 
             function createRadialGradient(x0, y0, r0, x1, y1, r1) {
-                var w = x1-x0;
-                var h = y1-y0;
+                var w:Number = x1-x0;
+                var h:Number = y1-y0;
                 // Rotation doesn't seem to work
-                var r = r0 != null ? r0 : Math.atan2(h, w);
-                var g = new LzCanvasGradient(this, {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r}, true);
+                var r:Number = r0 != null ? r0 : Math.atan2(h, w);
+                var g:LzCanvasGradient = new LzCanvasGradient(this, {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r}, true);
+                //Debug.write('createRadialGradient', {matrixType:"box", x:x0, y:y0, w:w, h:h, r:r});
                 return g;
             }
 
             // accumulate rotation
-            var __tr = 0
+            var __tr :Number = 0;
             function rotate(r) {
                 this.__tr += r;
             }
 
             // accumulate translation
-            var __tx = 0;
-            var __ty = 0;
+            var __tx :Number = 0;
+            var __ty :Number = 0;
             function translate(x, y) {
                 this.__tx += x;
                 this.__ty += y;
@@ -1289,7 +1310,7 @@
 
                 function clipPath() {
                     this.sprite.applyMask(true);
-                    var __clipmc = this.sprite.__LZmaskClip;
+                    var __clipmc:MovieClip = this.sprite.__LZmaskClip;
                     this.closePath();
                     __clipmc.clear();
                     __clipmc.beginFill(0xffffff, 100);
@@ -1299,7 +1320,7 @@
                 }
 
                 function clipButton() {
-                    var mc = this.getMCRef();
+                    var mc:MovieClip = this.getMCRef();
                     //Debug.write('clip', this, mc, this.sprite.__LZbuttonRef);
                     if (! this['__clipmc']) {
                         this.__clipmc = this.sprite.__LZmovieClipRef.createEmptyMovieClip("$lzclipmc", 6);
@@ -1320,7 +1341,7 @@
                         this.__bitmapmc.removeMovieClip();
                     }
 
-                    var context = this.sprite.getContext();
+                    var context:MovieClip = this.sprite.getContext();
                     this.__bitmapmc = context.createEmptyMovieClip("__bitmapmc", 1000);
                     this.__bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
                     // negative dimensions cause this to be null
@@ -1340,7 +1361,7 @@
                 }
 
                 function __updateSize() {
-                    var mc = this.sprite.getContext();
+                    var mc:MovieClip = this.sprite.getContext();
                     if (this.__measurewidth && this.width !== mc._width) {
                       this.setAttribute('width', mc._width);
                     }
@@ -1355,27 +1376,27 @@
                     }
                     if (! image) return;
 
-                    var m = this.getIdentityMatrix();
+                    var m:Matrix = this.getIdentityMatrix();
 
-                    var tw = w ? w / image.width : 1;
-                    var th = h ? h / image.height : 1;
+                    var tw:Number = w ? w / image.width : 1;
+                    var th:Number = h ? h / image.height : 1;
                     m.scale(tw, th);
 
                     if (r != null) m.rotate(r);
 
-                    var tx = x ? x : 0;
-                    var ty = y ? y : 0;
+                    var tx:Number = x ? x : 0;
+                    var ty:Number = y ? y : 0;
                     m.translate(tx, ty);
 
                     this.copyBitmap(image, this.width, this.height, this.__bitmapdata, m);
                 }
 
-                function getImage(name) {
-                    var bitmap = lz.drawview.images[name];
+                function getImage(name) :BitmapData {
+                    var bitmap:BitmapData = lz.drawview.images[name];
                     if (! bitmap) {
-                        var container = createEmptyMovieClip("loader", getNextHighestDepth());
+                        var container:MovieClip = createEmptyMovieClip("loader", getNextHighestDepth());
                         if (name.indexOf('http:') == 0 || name.indexOf('https:') == 0) {
-                            var loader = container.createEmptyMovieClip("loader", container.getNextHighestDepth());
+                            var loader:MovieClip = container.createEmptyMovieClip("loader", container.getNextHighestDepth());
                             loader.loadMovie(name);
                             container.onEnterFrame = function() {
                                 if (loader._width > 0) {
@@ -1401,15 +1422,15 @@
                     this.__contexts.push(this.context);
 
                     // Create new context to draw in
-                    var depth = this.__drawing.getNextHighestDepth();
+                    var depth:Number = this.__drawing.getNextHighestDepth();
                     this.context = this.__drawing.createEmptyMovieClip('draw' + depth, depth);
                     // Offset to the center to ensure we can grab the whole thing
                     this.context._x = this.width * .5;
                     this.context._y = this.height * .5;
                 }
 
-                function copyBitmap(from, w, h, to, m) {
-                    var tmp = new flash.display.BitmapData(w, h, true, 0x000000ff);
+                function copyBitmap(from:*, w:Number, h:Number, to:BitmapData = null, m:Matrix = null) :BitmapData {
+                    var tmp:BitmapData = new flash.display.BitmapData(w, h, true, 0x000000ff);
 
                     tmp.draw(from);
 
@@ -1422,7 +1443,7 @@
                 }
 
                 function restore() {
-                    var m = this.getIdentityMatrix()
+                    var m:Matrix = this.getIdentityMatrix()
                     // Move back
                     m.translate(- this.context._x, - this.context._y);
 
@@ -1439,16 +1460,16 @@
                 }
 
                 function fillRect(x, y, w, h) {
-                    var color = this.__getColor(this.fillStyle);
-                    var alpha = color.a != null ? color.a : this.globalAlpha;
+                    var color:Object = this.__getColor(this.fillStyle);
+                    var alpha:Number = color.a != null ? color.a : this.globalAlpha;
                     alpha = (alpha * 255) << 24;
-                    var colorval = color.c | alpha;
+                    var colorval:uint = color.c | alpha;
 
-                    var rect = new flash.geom.Rectangle(x, y, w, h);
+                    var rect:Rectangle = new flash.geom.Rectangle(x, y, w, h);
                     this.__bitmapdata.fillRect(rect, colorval);
                 }
 
-                function getIdentityMatrix() {
+                function getIdentityMatrix() :Matrix {
                     return new flash.geom.Matrix();
                 }
             }
@@ -1517,6 +1538,15 @@
                 // @devnote swf8: m instanceof MovieClip
                 // @devnote swf9: m instanceof flash.display.Graphics
                 m.beginGradientFill(this.__type, this.__colors, this.__alphas, this.__offsets, this.__matrix);
+            }
+
+            /**
+            * @access private
+            */
+            function __applyStrokeTo(m:*) :void {
+                // @devnote swf8: m instanceof MovieClip
+                // @devnote swf9: m instanceof flash.display.Graphics
+                m.lineGradientStyle(this.__type, this.__colors, this.__alphas, this.__offsets, this.__matrix);
             }
         }
       ]]></script>
