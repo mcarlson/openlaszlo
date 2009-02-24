@@ -252,7 +252,7 @@
                 }
             </method>
 
-            <method name="_updatePos">
+            <method name="_updatePos" args="ignore=null">
                 <![CDATA[
                 var py = parent.getMouse( 'y' );
                 var czero = parent.nodeinst.clones[ 0 ];
@@ -321,7 +321,7 @@
         </method>
 
         <!--- @access private -->
-        <method name="_updateDragged">
+        <method name="_updateDragged" args="ignore=null">
             dragged.setAttribute('y', this.getMouse( 'y' ) - this._ydragoff );
         </method>
 
