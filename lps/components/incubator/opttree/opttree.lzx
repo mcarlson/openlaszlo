@@ -92,7 +92,11 @@
               be open. Open elements display their children; not open elements
               do not.-->
         <method name="select" args="el">
-            selman.select( el );
+            if (el != null) {
+                selman.select( el );
+            } else {
+                selman.clearSelection();
+            }
         </method>
 
         <!--- The keyboard nav highlighted baseopttreenode or null. This

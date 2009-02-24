@@ -31,13 +31,19 @@
 
         <view height="${ immediateparent.height - y }" width="100%" clip="true">
             <opttree id="gOptTree" datapath="dsTreeData:/root"
-                     nodepath="*" nodeclass="treenode"/>
+                     nodepath="*" nodeclass="treenode">
+                <attribute name="selection" value="null" />
+                <method name="select" args="el" override="true"><![CDATA[
+                    super.select(el);
+                    this.setAttribute("selection", el && el.datapath.p);
+                ]]></method>
+            </opttree>
             <scrollbar/>
         </view>
     </window>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008-2009 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

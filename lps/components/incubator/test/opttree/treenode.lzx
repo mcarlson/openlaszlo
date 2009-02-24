@@ -28,6 +28,7 @@
         <handler name="onclick">
             <![CDATA[ 
             parent.setOpen( datapath.p, !open );
+            parent.select( this );
             ]]>
         </handler>
 
@@ -37,7 +38,6 @@
             var p = datapath.p;
             if ( !p ) return;
             var cn = p.childNodes;
-            parent.select( this );
             if ( !cn || !cn.length ){
                 gDataMan.loadAdditionalTreeData( p );
             }
@@ -47,7 +47,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006, 2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2008-2009 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
