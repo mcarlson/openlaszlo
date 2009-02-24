@@ -69,14 +69,15 @@
     <!--- the line width used in those components that have a visual border,
         default: 1-->
     <attribute name="bordersize" value="1" when="once"
-        setter="setStyleAttr( bordersize, 'bordersize')"/>
+        setter="setStyleAttr( bordersize, 'bordersize')" type="number"/>
 
     <!--- background color for menu items, defaults to the 'textfieldcolor' -->
     <attribute name="menuitembgcolor" value="textfieldcolor"
-        when="once" />
+        when="once" type="color"/>
 
     <!--- if true, this style is the default style for components  -->
-    <attribute name="isdefault" value="false" setter="_setdefault(isdefault)"/>
+    <attribute name="isdefault" value="false" setter="_setdefault(isdefault)"
+        type="boolean"/>
 
     <!--- @keywords private  -->
     <event name="onisdefault"/>
