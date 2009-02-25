@@ -895,7 +895,27 @@
                     cstopColor = LzColorUtils.torgb(c);
                     ccache[c] = cstopColor;
                 }
+                var gAlpha = this.__context.globalAlpha;
+                if (gAlpha != 1) {
+                    // add globalAlpha (if there is no explicit alpha value)
+                    cstopColor = this.torgba(cstopColor, gAlpha);
+                }
                 this.__g.addColorStop(o, cstopColor);
+            }
+
+            /**
+            * @access private
+            */
+            function torgba (rgb, alpha) {
+                if (rgb.indexOf("rgba") == -1) {
+                    // remove "rgb(" and ")"
+                    var rgba = rgb.substring(4, rgb.length - 1).split(',');
+                    rgba.push(alpha);
+                    return "rgba(" + rgba.join(',') + ")";
+                } else {
+                    // already in rgba() format
+                    return rgb;
+                }
             }
 
             /**
@@ -961,6 +981,7 @@
                 var __drawing :MovieClip = null;
                 var __measurewidth :Boolean = true;
                 var __measureheight :Boolean = true;
+                var __norebuild :Boolean = false;
             }
 
             var oncontext :LzDeclaredEventClass = LzDeclaredEvent;
@@ -1336,7 +1357,10 @@
                 }
 
                 // Add bitmap data drawing layer
-                function rebuildBitmap () {
+                function rebuildBitmap () :void {
+                    if (this.__norebuild) {
+                        return;
+                    }
                     if (this['__bitmapmc']) {
                         this.__bitmapmc.removeMovieClip();
                     }
@@ -1360,13 +1384,30 @@
                     this.rebuildBitmap();
                 }
 
-                function __updateSize() {
+                function __updateSize() :void {
+                    var measureSize:Boolean = (this.__measurewidth || this.__measureheight);
+                    if (measureSize) {
+                        // __bitmapmc needs to be removed while measuring the context's size
+                        if (this['__bitmapmc']) {
+                            this.__bitmapmc.removeMovieClip();
+                            this.__bitmapmc = null;
+                        }
+                        // don't rebuild bitmap in width/height setter
+                        this.__norebuild = true;
+                    }
                     var mc:MovieClip = this.sprite.getContext();
                     if (this.__measurewidth && this.width !== mc._width) {
-                      this.setAttribute('width', mc._width);
+                        this.setAttribute('width', mc._width);
+                        this.__measurewidth = true;
                     }
                     if (this.__measureheight && this.height !== mc._height) {
-                      this.setAttribute('height', mc._height);
+                        this.setAttribute('height', mc._height);
+                        this.__measureheight = true;
+                    }
+                    if (measureSize) {
+                        // now rebuild bitmap again
+                        this.__norebuild = false;
+                        this.rebuildBitmap();
                     }
                 }
 
