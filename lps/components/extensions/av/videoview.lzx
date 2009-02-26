@@ -4,343 +4,330 @@
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
     <include href="mediastream.lzx" />
-
     <!--
-        Based on code by Raju Bitter
+        Originally written by Sarah Allen, with compiler support by hqm
+        Migrated to 4.1 by Max
+        Support for OL 4.2/SWF9 by Raju Bitter, Max and Sarah
     -->
-    <interface name="videoview" extends="view" width="160" height="120">
-      <doc>
-        <tag name="shortdesc"><text>Allows video playback.</text></tag>
-        <text>
-          <p><tagname>videoview</tagname> allows applications to play video from HTTP or RTMP servers.</p> 
 
-          <example><programlisting class="code">
-          &lt;canvas&gt;
-            &lt;videoview url="http://www.archive.org/download//JudgeMediaTestVideoFile_0/video.flv" type="http" autoplay="true" width="320" height="240"/&gt;
-          &lt;/canvas&gt;
-          </programlisting></example>
-        </text>
-      </doc>
-
-        <!--- The url of the mediastream, maybe a relative URL, 
-              for example: "http://localhost/myvideo.flv", or simply "myvideo.flv".
-              When type="rtmp", the url is always relative the the rtmpconnection.
-              (Use only when you are not explicitly declaring the mediastream.) -->
-        <attribute name="url" value="" type="string"/>
-
-        <!--- Protocol "rtmp" or "http". Default: http. -->
-        <attribute name="type" value="http" type="string"/>
-
-        <!--- If true, video will start playing as soon as url is set.
-              Default: false. -->
-        <attribute name="autoplay" value="false"/>
-
-        <!--- If true, Debug.write extra stuff (this may go away). -->
-        <attribute name="debug" value="false"/>
-
-        <!--- The camera object. 
-              @keywords readonly -->
-        <attribute name="cam" value="null"/>
-
-        <!--- The microphone object. 
-              @keywords readonly -->
-        <attribute name="mic" value="null"/>
-
-        <!--- The mediastream object.  A mediastream will be automatically generated if one is not specified at init time. -->
-        <attribute name="stream" value="false" when="once"/>
-
-        <!--- The volume for video playback, a float from 0 to 1. Default 1. -->
-        <attribute name="playvolume" value="1.0"/>
-
-        <!--- Flash Sound object to control volume of video playback.
-              @keywords private -->
-        <attribute name="_sound" value="null"/>
-
-        <!--- Flag to track if initialization is complete. 
-              @keywords private -->
-        <attribute name="_initcomplete" value="false"/>
-
-        <!--- Delegate to call _setPlayStream when stream starts playing. 
-              @keywords private -->
-        <attribute name="_urldel" value="null"/>
-
-        <!--- Event sent when url changes.
-              @keywords private -->
-        <event name="onurl"/>
-    </interface>
-  <!-- these methods are shared across runtimes -->
-  <script when="immediate"><![CDATA[
-    mixin NewvideoviewShared {
-        function NewvideoviewShared ( parent:LzView? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
-           if (attrs && attrs['type'] == null) attrs.type = 'http'
-           if (attrs && attrs['autoplay'] == null) attrs.autoplay = false;
-           if (attrs && attrs['cam'] == null) attrs.cam = null;
-           if (attrs && attrs['mic'] == null) attrs.mic = null;
-           if (attrs && attrs['width'] == null) attrs.width = 160;
-           if (attrs && attrs['height'] == null) attrs.height = 120;
-           if (attrs && attrs['playvolume'] == null) attrs.playvolume = 1.0;
-           if (attrs && attrs['url'] == null) attrs.url = "";
-           super(parent, attrs, children, instcall);
-        }
-    }
-  ]]></script>
-
-
-  <!-- runtime-specific implementations -->
-  <switch>
-    <when runtime="dhtml">
-        <!-- no support for videoview in DHTML runtime -->
-    </when>
-    <otherwise>
-        
-      <script when="immediate"><![CDATA[
-
-        // Classes that implement an interface must obey the LZX
-        // tag->class mapping convention
-        dynamic class $lzc$class_videoview extends LzView with NewvideoviewShared {
-            // Import statements
-            if ($as3) {
-                #passthrough (toplevel:true) {  
+<switch>
+<when runtime="dhtml">
+    <!-- no support for videoview in DHTML -->
+</when>
+<otherwise>
+<class name="videoview" extends="view" width="160" height="120">
+    <switch>
+        <when property="$as3">
+            <passthrough>
                 import flash.media.*;
                 import flash.net.NetConnection;
                 import flash.net.NetStream;                
-                }#
-            }
+            </passthrough>
+        </when>
+    </switch>
+    <doc>
+        <tag name="shortdesc"><text>Allows video playback.</text></tag>
+        <text>
+            <p><tagname>videoview</tagname> allows applications to play video from HTTP or RTMP servers.</p> 
+
+            <example><programlisting class="code">
+            &lt;canvas&gt;
+            &lt;videoview url="http://www.archive.org/download//JudgeMediaTestVideoFile_0/video.flv" type="http" autoplay="true" width="320" height="240"/&gt;
+            &lt;/canvas&gt;
+            </programlisting></example>
+        </text>
+    </doc>
+
+    <!--- The url of the mediastream, may be a relative URL, 
+            for example: "http://localhost/myvideo.flv", 
+            or simply "myvideo.flv".
+
+            When type="rtmp", the url is always relative the the rtmpconnection.
+            (Use only when you are not explicitly declaring the mediastream.)
+    -->
+    <attribute name="url" value="" type="string"/>
+
+    <!--- Protocol "rtmp" or "http". Default: http. -->
+    <attribute name="type" value="http" type="string"/>
+
+    <!--- If true, video will start playing as soon as url is set.
+            Default: false. -->
+    <attribute name="autoplay" value="false"/>
+
+    <!--- If true, Debug.write extra stuff (this may go away). -->
+    <attribute name="debug" value="false"/>
+
+    <!--- The camera object. 
+            @keywords readonly -->
+    <attribute name="cam" value="null"/>
+
+    <!--- The microphone object. 
+            @keywords readonly -->
+    <attribute name="mic" value="null"/>
+
+    <!--- The mediastream object.  A mediastream will be automatically generated if one is not specified at init time. -->
+    <attribute name="stream" value="false" when="once"/>
+
+    <!--- The volume for video playback, a float from 0 to 1. Default 1. -->
+    <attribute name="playvolume" value="1.0"/>
+
+    <!--- Flash Sound object to control volume of video playback.
+            @keywords private -->
+    <attribute name="_sound" value="null"/>
+
+    <!--- Flag to track if initialization is complete. 
+            @keywords private -->
+    <attribute name="_initcomplete" value="false"/>
+
+    <!--- Delegate to call _setPlayStream when stream starts playing. 
+            @keywords private -->
+    <attribute name="_urldel" value="null"/>
+
+    <!--- @keywords private -->
+    <event name="onurl"/>
+
+    <!--- @keywords private -->
+    <event name="onheight"/>
+
+    <!--- @keywords private -->
+    <event name="onwidth"/>
+
+    <!--- @keywords private -->
+    <event name="ontype"/>
+
+    <!--- @keywords private -->
+    <event name="onplayvolume"/>
+
+    <!--- @keywords private -->
+    <event name="onautoplay"/>
+
+    <!--- @keywords private -->
+    <event name="onmic"/>
+
+    <!--- @keywords private -->
+    <event name="oncam"/>
+
+    <method name="init"> <![CDATA[
+        super.init();
+        if (this.debug) {
+            if ($debug) Debug.write("videoview.init: width %d, height %d",
+                this.width, this.height);
+        }
+
+        //Debug.write("videoview init found stream", this, this.stream);
+        if (!this.stream) {
+            this.stream = 
+                new lz.mediastream(
+                    this, 
+                    {debug:this.debug, type:this.type, url:this.url, autoplay:this.autoplay}, 
+                    null, 
+                    true);
+            //Debug.write("videoview init made stream", this.stream);
+        }
         
-            // Next two are part of the required LFC tag class protocol
-            static var tagname = 'videoview';
-            static var attributes = new LzInheritedHash(LzView.attributes);
-            static var uid = 0;
-            
-            var cam = null;
-            var debug = false;
-            var mic = null;
-            var playvolume = 1.0;
-            var stream = false;
-            var autoplay = false;
-            var _initcomplete = false;
-            var url = '';
+        if ($as3) {
+            var width = 320
+            var height = 240
+            if (this.height > 0 && this.height < 1024) height = this.height;
+            if (this.width > 0 && this.width < 1024) width = this.width;
+            var mc = new Video(width, height);
+            this.sprite.__LZvideo = this.sprite.addChild(mc);
+        } else {
+            // no other subviews should be allowed (todo: schema)
+            var mc = this.immediateparent.sprite.attachResourceToChildView("__lzvideo", this.sprite);
+            this.sprite.setMovieClip(mc);
+            this.__LZmovieClipRef = mc;
+        }
 
-            var onurl = LzDeclaredEvent;
-            
-            function $lzc$class_videoview(parent, attrs, children, async) {
-                super(parent, attrs, children, async);
-            }
-            
-            override function init() {
-                super.init();
-                if (this.debug) {
-                    if ($debug) Debug.write("videoview.init()");
-                }
+        var vid = this._getflashvideo();
+        if ($as3) {
+            vid.x = 0;
+            vid.y = 0;
+            vid.width = this.width;
+            vid.height = this.height;
+        } else {
+            vid._x = 0;
+            vid._y = 0;
+            vid._width = this.width;
+            vid._height = this.height;
+        }
 
-                //Debug.write("videoview init found stream", this, this.stream);
-                if (!this.stream) {
-                    this.stream = 
-                        new lz.mediastream(
-                            this, 
-                            {debug:this.debug, type:this.type, url:this.url, autoplay:this.autoplay}, 
-                            null, 
-                            true);
-                    //Debug.write("videoview init made stream", this.stream);
-                }
-                
-                if ($as3) {
-                    var width = 320
-                    var height = 240
-                    if (this.height > 0 && this.height < 1024) height = this.height;
-                    if (this.width > 0 && this.width < 1024) width = this.width;
-                    var mc = new Video(width, height);
-                    this.sprite.__LZvideo = this.sprite.addChild(mc);
-                } else {
-                    // no other subviews should be allowed (todo: schema)
-                    var mc = this.immediateparent.sprite.attachResourceToChildView("__lzvideo", this.sprite);
-                    this.sprite.setMovieClip(mc);
-                    this.__LZmovieClipRef = mc;
-                }
-    
-                var vid = this._getflashvideo();
-                if ($as3) {
-                    vid.x = 0;
-                    vid.y = 0;
-                    vid.width = this.width;
-                    vid.height = this.height;
-                } else {
-                    vid._x = 0;
-                    vid._y = 0;
-                    vid._width = this.width;
-                    vid._height = this.height;
-                }
-    
-                this._urldel = new LzDelegate( this, "_setPlayStream", this.stream, "onplaying")
-                if (this.stream.playing) {
-                    // in case this stream is already playing...
-                    this._setPlayStream();
-                }
-                if (this.url) this.stream.setAttribute("url", this.url);
+        this._urldel = new LzDelegate( this, "_setPlayStream", this.stream, "onplaying")
+        if (this.stream.playing) {
+            // in case this stream is already playing...
+            this._setPlayStream();
+        }
+        if (this.url) this.stream.setAttribute("url", this.url);
 
-                if (this.cam) {
-                    this.stream.setAttribute('cam', this.cam);
-                }
+        if (this.cam) {
+            this.stream.setAttribute('cam', this.cam);
+        }
 
-                if (this.mic) {
-                    this.stream.setAttribute('mic', this.mic);
-                }
+        if (this.mic) {
+            this.stream.setAttribute('mic', this.mic);
+        }
 
-                this._initcomplete = true;
-                
-                // FIXME
-                // Camera needs to be displayed after _initcomplete = true
-                var cam = this.cam;
-                if (cam && 
-                    cam.show) {
-                    this.cam.setAttribute("show", true);
-                }
-    
-                //Debug.write("videoview init END", this);
-            }
-    
-            function _setPlayStream (ignore=null) {
-                if (this.stream.playing) {
-                    if (! this.stream._flashstream) return;
-                    //Debug.write("videoview _setPlayStream", this, "s", this.stream, "fs", this.stream._flashstream);
-                    this._attachStream(this.stream._flashstream);
-                    this.setAttribute("width", this.width);
-                    this.setAttribute("height", this.height);
-                }
-            }
-    
-            function _attachStream(fs) {
-                //Debug.write('_attachStream', fs);
-                var vid = this._getflashvideo();
-                if ($as3) {
-                    vid.attachNetStream(fs);
-                    this._sound = this.stream._flashstream.soundTransform;
-                } else {
-                    vid.attachVideo(fs);
-                    this.__LZmovieClipRef.attachAudio(fs); // Doing this so we can control volume.
-                    this._sound = new Sound(this.__LZmovieClipRef);
-                }
-                this.setAttribute('playvolume', this.playvolume);
-            }
-    
-            function _getflashvideo () {
-                //Debug.write("_getflashvideo()");
-                if ($as3) {
-                    return this.sprite.__LZvideo;
-                } else {
-                    return this.__LZmovieClipRef.__lzvideo;
-                }
-            }
-    
-            override function $lzc$set_width(w) {
-                super.$lzc$set_width(w);
-    
-                if (!this._initcomplete) { 
-                    return;
-                }
-    
-                var vid = this._getflashvideo();
-                if ($as3) {    
-                    vid.width = w;
-                } else {
-                    vid._width = w;
-                }
-            }
-    
-            override function $lzc$set_height(h) {
-                super.$lzc$set_height(h);
-    
-                if (!this._initcomplete) {
-                    return;
-                }
-    
-                var vid = this._getflashvideo();
-                if ($as3) {    
-                    vid.height = h;
-                } else {
-                    vid._height = h;
-                }
-            }
-    
-            function $lzc$set_playvolume(newplayvolume) {
-                //Debug.write("_setPlayVolume", this, newplayvolume, this._sound);
-                this.playvolume = newplayvolume;
-                if (this.isinited && 
-                    (this['_sound'] != null)) {
-                    if ($as3) {
-                        //Debug.write('setting volume to ', newplayvolume);
-                        this._sound.volume = newplayvolume;
-                        this.stream._flashstream.soundTransform = this._sound;
-                    } else {
-                        this._sound.setVolume(newplayvolume * 100.0);
-                    }
-                }
-            }
-    
-            function $lzc$set_url(newurl) {
-                //Debug.write("videoview $lzc$set_url", newurl, "old", this['url'], "isinited", this.isinited, "stream", this['stream']);
-    
-                this.url = newurl;
+        this._initcomplete = true;
+        
+        // FIXME
+        // Camera needs to be displayed after _initcomplete = true
+        var cam = this.cam;
+        if (cam && 
+            cam.show) {
+            this.cam.setAttribute("show", true);
+        }
 
-                // parse type
-                if (newurl.indexOf('http') != -1) {
-                    //this.setAttribute('type', 'http');
-                } else {
-                    //this.setAttribute('type', 'rtmp');
-                }
-    
-                //Debug.write("---------------------------------");
-                // setUrl called before init or stream is define, so tip-toe.
-                if (this['stream'] && newurl && newurl != '') {
-                    //Debug.write("::::::: stream is inited, now set URL");
-                    this.stream.setAttribute("url", newurl);
-                }
+    ]]> </method>
 
-                if (this.onurl.ready) {
-                    this.onurl.sendEvent(newurl);
-                }
-            }
-            
-            function $lzc$set_type(newtype) {
-                //Debug.write("videoview setType", newtype, "old", this['type'], "isinited", this.isinited, "stream", this['stream']);
-    
-                this.type = newtype;
-    
-                // _setType called before init or stream is define, so tip-toe.
-                if (this['stream']) {
-                    this.stream.setAttribute("type", newtype);
-                }
-            }
-    
-            function $lzc$set_autoplay(newautoplay) {
-                //Debug.write("videoview _setAutoplay", newautoplay, "old", this['autoplay'], "isinited", this.isinited, "stream", this['stream']);
-    
-                this.autoplay = newautoplay;
-    
-                // _setAutoplay called before init or stream is define, so tip-toe.
-                if (this['stream']) {
-                    this.stream.setAttribute("autoplay", this.autoplay);
-                }
-            }
-    
-            function $lzc$set_cam(cam) {
-                this.cam = cam;
+    <method name="_setPlayStream" args="ignore=null">
+        if (this.stream.playing) {
+            if (! this.stream._flashstream) return;
+            //Debug.write("videoview _setPlayStream", this, "s", this.stream, "fs", this.stream._flashstream);
+            this._attachStream(this.stream._flashstream);
+            this.setAttribute("width", this.width);
+            this.setAttribute("height", this.height);
+        }
+    </method>
 
-                if (this['stream']) {
-                    this.stream.setAttribute('cam', cam);
-                }
-            }
-    
-            function $lzc$set_mic(mic) {
-                this.mic = mic;
+    <method name="_attachStream" args="fs">
+        //Debug.write('_attachStream', fs);
+        var vid = this._getflashvideo();
+        if ($as3) {
+            vid.attachNetStream(fs);
+            this._sound = this.stream._flashstream.soundTransform;
+        } else {
+            vid.attachVideo(fs);
+            this.__LZmovieClipRef.attachAudio(fs); // Doing this so we can control volume.
+            this._sound = new Sound(this.__LZmovieClipRef);
+        }
+        this.setAttribute('playvolume', this.playvolume);
+    </method>
 
-                if (this['stream']) {
-                    this.stream.setAttribute('mic', mic);
-                }
+    <method name="_getflashvideo">
+        //Debug.write("_getflashvideo()");
+        if ($as3) {
+            return this.sprite.__LZvideo;
+        } else {
+            return this.__LZmovieClipRef.__lzvideo;
+        }
+    </method>
+
+    <setter name="width" args="w">
+        if ($debug) {
+            if (this.debug) Debug.write('videoview %d, setwidth w=%d',this, w);
+        }
+        this.width = w;
+        if (this._initcomplete) { 
+            var vid = this._getflashvideo();
+            if ($as3) {    
+                vid.width = w;
+            } else {
+                vid._width = w;
             }
-        } // End of videoview
-        lz[$lzc$class_videoview.tagname] = $lzc$class_videoview;
-      ]]></script>
-    </otherwise>
-  </switch>
+        }
+        if (this.onwidth) this.onwidth.sendEvent(this.width);
+    </setter>        
+
+    <setter name="height" args="h">
+        if ($debug) {
+            if (this.debug) Debug.write('videoview %d, setheight h=%d',this, h);
+        }
+        this.height = h;
+        if (this._initcomplete) {
+            var vid = this._getflashvideo();
+            if ($as3) {    
+                vid.height = h;
+            } else {
+                vid._height = h;
+            }
+        }
+        if (this.onheight) this.onheight.sendEvent(this.height);
+    </setter>
+
+    <setter name="playvolume" args="newplayvolume"> <![CDATA[
+        //Debug.write("_setPlayVolume", this, newplayvolume, this._sound);
+        this.playvolume = newplayvolume;
+        if (this.isinited && 
+            (this['_sound'] != null)) {
+            if ($as3) {
+                //Debug.write('setting volume to ', newplayvolume);
+                this._sound.volume = newplayvolume;
+                this.stream._flashstream.soundTransform = this._sound;
+            } else {
+                this._sound.setVolume(newplayvolume * 100.0);
+            }
+        }
+        if (this.onplayvolume) this.onplayvolume.sendEvent(this.playvolume);
+        ]]>
+    </setter>
+
+    <setter name="url" args="newurl"> <![CDATA[
+        //Debug.write("videoview $lzc$set_url", newurl, "old", this['url'], "isinited", this.isinited, "stream", this['stream']);
+
+        this.url = newurl;
+
+        // parse type
+        if (newurl.indexOf('http') != -1) {
+            //this.setAttribute('type', 'http');
+        } else {
+            //this.setAttribute('type', 'rtmp');
+        }
+
+        //Debug.write("---------------------------------");
+        // setUrl called before init or stream is define, so tip-toe.
+        if (this['stream'] && newurl && newurl != '') {
+            //Debug.write("::::::: stream is inited, now set URL");
+            this.stream.setAttribute("url", newurl);
+        }
+
+        if (this.onurl.ready) {
+            this.onurl.sendEvent(newurl);
+        }
+        ]]>
+   </setter>
+
+    <setter name="type" args="newtype">
+        //Debug.write("videoview setType", newtype, "old", this['type'], "isinited", this.isinited, "stream", this['stream']);
+
+        this.type = newtype;
+
+        // _setType called before init or stream is define, so tip-toe.
+        if (this['stream']) {
+            this.stream.setAttribute("type", newtype);
+        }
+        if (this.ontype) this.ontype.sendEvent(this.type);
+     </setter>
+
+    <setter name="autoplay" args="newautoplay">
+        //Debug.write("videoview _setAutoplay", newautoplay, "old", this['autoplay'], "isinited", this.isinited, "stream", this['stream']);
+
+        this.autoplay = newautoplay;
+
+        // _setAutoplay called before init or stream is define, so tip-toe.
+        if (this['stream']) {
+            this.stream.setAttribute("autoplay", this.autoplay);
+        }
+        if (this.onautoplay) this.onautoplay.sendEvent(this.autoplay);
+    </setter>
+
+    <setter name="cam" args="cam">
+        this.cam = cam;
+
+        if (this['stream']) {
+            this.stream.setAttribute('cam', cam);
+        }
+        if (this.oncam) this.oncam.sendEvent(this.cam);
+    </setter>
+
+    <setter name="mic" args="mic">
+        this.mic = mic;
+
+        if (this['stream']) {
+            this.stream.setAttribute('mic', mic);
+        }
+        if (this.onmic) this.onmic.sendEvent(this.mic);
+    </setter>
+</class>
+</otherwise>
+</switch>
 </library>

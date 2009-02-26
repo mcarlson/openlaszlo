@@ -12,7 +12,7 @@
 -->
 <switch>
 <when runtime="dhtml">
-    <!-- no support for RTMP in DHTML -->
+    <!-- no support for mediastream in DHTML -->
 </when>
 <otherwise>
 <class name="mediastream" extends="node">
