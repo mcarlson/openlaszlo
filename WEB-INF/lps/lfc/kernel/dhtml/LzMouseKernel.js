@@ -42,7 +42,7 @@ var LzMouseKernel = {
         if (e.button == 2 && eventname != 'oncontextmenu') return;
         if (eventname == 'oncontextmenu') {
             if (targ && targ.owner) {
-                return LzMouseKernel.__showContextMenu(targ.owner);
+                return LzMouseKernel.__showContextMenu(e);
             }
         } else {
             LzMouseKernel.__sendEvent(eventname);
@@ -188,24 +188,65 @@ var LzMouseKernel = {
         }
         LzMouseKernel.__sendEvent('onmousemove');
     }
-    ,__showContextMenu: function(sprite) {
+    ,__showContextMenu: function(e) {
         // show the default menu if not found...
         var cmenu = LzSprite.__rootSprite.__contextmenu;
-        // walk up the parent chain looking for a __contextmenu
-        while (sprite.__parent) {
-            if (sprite.__contextmenu) {
-                // check mouse bounds
-                var mpos = sprite.getMouse();
-                //Debug.write('pos', mpos, sprite.width, sprite.height);
-                if (mpos.x >= 0 && mpos.x < sprite.width &&
-                    mpos.y >= 0 && mpos.y < sprite.height) {
-                    cmenu = sprite.__contextmenu;
+        if (document.elementFromPoint) {
+            var swf8mode = LzSprite.prototype.quirks.swf8_contextmenu;
+            var x = (e.pageX || e.clientX || 0);
+            var y = (e.pageY || e.clientY || 0);
+            // update mouse position, required for Safari
+            LzMouseKernel.__x = x;
+            LzMouseKernel.__y = y;
+            var rootdiv = canvas.sprite.__LZdiv;
+            var arr = [];
+            do {
+                var elem = document.elementFromPoint(x, y);
+                var owner = elem.owner;
+                if (! owner) {
+                    // owner property is required
                     break;
+                } else if (owner.__contextmenu) {
+                    // found a contextmenu
+                    cmenu = owner.__contextmenu;
+                    break;
+                } else if (swf8mode && ((owner.__LZdiv === elem && owner.bgcolor != null)
+                                || owner instanceof LzTextSprite)) {
+                    // swf8 compatibility: movieclips with bgcolor and textfields
+                    // don't pass through context-menu
+                    break;
+                } else {
+                    // hide this element to get next layer
+                    arr.push(elem, elem.style.display);
+                    elem.style.display = 'none';
+                }
+            } while (elem !== rootdiv);
+
+            // restore display
+            for (var i = arr.length - 1; i >= 0; i -= 2) {
+                arr[i - 1].style.display = arr[i];
+            }
+        } else {
+            // this is less reliable compared to elementFromPoint..
+            var sprite = (e.srcElement || e.target).owner;
+            if (sprite) {
+                // walk up the parent chain looking for a __contextmenu
+                while (sprite.__parent) {
+                    if (sprite.__contextmenu) {
+                        // check mouse bounds
+                        var mpos = sprite.getMouse();
+                        //Debug.write('pos', mpos, sprite.width, sprite.height);
+                        if (mpos.x >= 0 && mpos.x < sprite.width &&
+                            mpos.y >= 0 && mpos.y < sprite.height) {
+                            cmenu = sprite.__contextmenu;
+                            break;
+                        }
+                    }
+                    sprite = sprite.__parent;
                 }
             }
-            sprite = sprite.__parent;
         }
-        //Debug.warn('__showContextMenu', sprite);
+
         if (cmenu) {
             cmenu.kernel.__show();
             return cmenu.kernel.showbuiltins;

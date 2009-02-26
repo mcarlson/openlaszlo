@@ -364,6 +364,7 @@ LzSprite.prototype.quirks = {
     ,use_css_sprites: true
     ,preload_images: true
     ,inputtext_strips_newlines: false
+    ,swf8_contextmenu: true
 }
 
 LzSprite.prototype.capabilities = {
@@ -1001,12 +1002,6 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
     if (window['LzInputTextSprite'] && eventname == 'onmouseover' && LzInputTextSprite.prototype.__lastshown != null) LzInputTextSprite.prototype.__hideIfNotFocused();
 
     if (eventname == 'onmousedown') {
-        if (e.button == 2) {
-            LzMouseKernel.__showContextMenu(this);
-            // setting cancelBubble doesn't help with window.oncontextmenu events not being sent for clickable sprites with a null default context menu - see LPP-7661
-            e.cancelBubble = false;
-            return true;
-        }
         // cancel mousedown event bubbling...
         e.cancelBubble = true;
         this.__mouseisdown = true;
@@ -1107,7 +1102,6 @@ LzSprite.prototype.setWidth = function ( w ){
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.width = w;
-        if (this.__contextmenu) this.__updateContextMenuDiv();
         return w;
     }
 }
@@ -1139,7 +1133,6 @@ LzSprite.prototype.setHeight = function ( h ){
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.height = h;
-        if (this.__contextmenu) this.__updateContextMenuDiv();
         return h;
     }
 }
@@ -2100,23 +2093,7 @@ LzSprite.prototype.setDefaultContextMenu = function( cmenu ){
   * @param LzContextMenu cmenu: LzContextMenu to install on this view
   */
 LzSprite.prototype.setContextMenu = function( cmenu ){
-    //this.setClickable(true);
-    this.__updateContextMenuDiv();
     this.__contextmenu = cmenu;
-}
-
-/**
-  * Update the size of the div that will catch context menu events. 
-  * @access private
-  */
-LzSprite.prototype.__updateContextMenuDiv = function() {
-    if (! this.isroot) {
-        // Use the the scrolldiv if present (text/inputtext) or the click div 
-        // container (__LZclickcontainerdiv)
-        var div = this.scrolldiv ? this.scrolldiv : this.__LZclickcontainerdiv;
-        div.style.width = this.__LZdiv.style.width;
-        div.style.height = this.__LZdiv.style.height;
-    }
 }
 
 /**

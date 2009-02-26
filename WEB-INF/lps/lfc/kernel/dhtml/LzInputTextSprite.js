@@ -530,9 +530,6 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             return;
         }
         if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = false;
-        if (evt.button == 2) {
-            LzMouseKernel.__showContextMenu(this);
-        }
     } else if (eventname == 'onblur') {
         if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = true;
         if (LzInputTextSprite.prototype.__focusedSprite === sprite) {
