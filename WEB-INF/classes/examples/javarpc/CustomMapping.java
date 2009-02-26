@@ -1,5 +1,5 @@
 /* ****************************************************************************
- * JavaDataSource.java
+ * CustomMapping.java
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
@@ -222,7 +222,7 @@ public class CustomMapping extends LaszloRPCAdapter implements ILaszloRPCAdapter
     
     public User setUserObject(User user) {
         try {
-            
+            mLogger.debug("Servlet Context "+this.servletRequest);
             mLogger.debug("User1: "+user);
             mLogger.debug("User2: "+user.getUserid());
             mLogger.debug("User3: "+user.getUsername());
@@ -270,8 +270,13 @@ public class CustomMapping extends LaszloRPCAdapter implements ILaszloRPCAdapter
     }
     
     
-     
-     
+    
+    public Map returnMapWithIntKey() {
+        Map myMap = new HashMap();
+        myMap.put(1, "one1");
+        myMap.put(2, "two2");
+        return myMap;
+    }
 
     
 }

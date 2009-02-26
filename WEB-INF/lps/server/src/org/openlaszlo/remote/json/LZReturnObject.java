@@ -208,12 +208,12 @@ public class LZReturnObject
 
         body.append("{");
         while (iter.hasNext()) {
-            String key = (String)iter.next();
+            Object key = iter.next();
             if (i++ > 0) {
                 body.append(", ");
             }
 
-            body.append(ScriptCompiler.JSONquote(key)+": ");
+            body.append(ScriptCompiler.JSONquote(""+key)+": ");
             createReturnValue(map.get(key));
         }
         body.append("}");

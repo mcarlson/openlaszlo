@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<canvas debug="true" width="100%" height="100%" >
+    
+    <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+    * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+    * Use is subject to license terms.                                            *
+    * X_LZ_COPYRIGHT_END ****************************************************** -->
+
+    <debug fontsize="12" oninit="Debug.showInternalProperties = true" />
+    
+    <security>
+        <allow>
+            <pattern>^examples.javarpc\.CustomMapping</pattern>
+        </allow>
+    </security>
+    
+    <!-- Objects to send around -->
+    <attribute name="myObject" value="null" />
+    <attribute name="myuserObject" value="null" />
+    
+    <!-- See WEB-INF/classes/TypesExample.java for java source. -->
+    <javarpc name="customMapping" scope="webapp" autoload="false" objectreturntype="javabean"
+             remoteclassname="examples.javarpc.CustomMapping">
+
+        <handler name="onload">
+            // Set buttons visible only after JavaRPC object loads
+            if ($debug) Debug.write('onload:', this);
+            
+        </handler>
+
+        <handler name="ondata" args="res">
+            //if ($debug) Debug.write('(types ondata) response is:', res);
+        </handler>
+
+        <handler name="onerror" args="errmsg">
+            if ($debug) Debug.write('(types onerror) error:', errmsg);
+        </handler>
+        
+        <remotecall name="doTestMethod" funcname="doTestMethod">
+            <param><method name="getValue">return 1</method></param>
+            <handler name="ondata" args="value">
+                if ($debug) Debug.write("doTestMethod/ondata: ",value);
+            </handler>
+        </remotecall>
+        
+        <remotecall name="passClientObject" funcname="passClientObject">
+            <param><method name="getValue">return canvas.myObject</method></param>
+            <handler name="ondata" args="value">
+                if ($debug) Debug.write("passClientObject/ondata: ",value);
+            </handler>
+        </remotecall>
+        
+        <remotecall name="passClientMap" funcname="passClientMap">
+            <param><method name="getValue">return canvas.myObject</method></param>
+            <handler name="ondata" args="value">
+                if ($debug) Debug.write("passClientMap/ondata: ",value);
+            </handler>
+        </remotecall>  
+        
+        <remotecall name="getUserObject" funcname="getUserObject">
+            <handler name="ondata" args="value">
+                canvas.myuserObject = value;
+                if ($debug) Debug.write("getUserObject/ondata: ",value);
+            </handler>
+        </remotecall>
+        
+        <remotecall name="setUserObject" funcname="setUserObject">
+            <param><method name="getValue">return canvas.myuserObject</method></param>
+            <handler name="ondata" args="value">
+                if ($debug) Debug.write("setUserObject/ondata: ",value);
+            </handler>
+        </remotecall>   
+        
+        <remotecall name="returnMapWithIntKey" funcname="returnMapWithIntKey">
+            <handler name="ondata" args="value">
+                if ($debug) Debug.write("returnMapWithIntKey/ondata: ",value);
+            </handler>
+        </remotecall>
+        
+    </javarpc>
+    
+    <simplelayout axis="y" spacing="2" />
+    
+    <button text="doLoad">
+        <handler name="onclick">
+            customMapping.load();
+        </handler>
+    </button>
+    
+    <button text="doInvoke">
+        <handler name="onclick">
+            customMapping.doTestMethod.invoke();
+        </handler>
+    </button>
+    
+    <button text="doInvoke simple object">
+        <handler name="onclick">
+            canvas.myObject = { a: 1, b: 3.14159, c: 'a string value', d: true};
+            customMapping.passClientObject.invoke();
+        </handler>
+    </button>
+    
+    
+    <button text="doInvoke nested object with table">
+        <handler name="onclick">
+            canvas.myObject = new Object();
+            canvas.myObject["hans"] = new Object();
+            canvas.myObject["hans"]["maurerer"] = "karl";
+            canvas.myObject["karl"] = new Object();
+            canvas.myObject["karl"][0] = 123;
+            canvas.myObject["karl"][1] = null;
+            canvas.myObject["karl"][3] = "hans";
+            canvas.myObject["karl"][4] = true;
+            
+            customMapping.passClientObject.invoke();
+        </handler>
+    </button>
+    
+    <button text="doInvoke nested object with Map">
+        <handler name="onclick">
+            canvas.myObject = new Object();
+            canvas.myObject["hans"] = new Object();
+            canvas.myObject["hans"]["maurerer"] = "karl";
+            canvas.myObject["karl"] = new Object();
+            canvas.myObject["karl"][0] = 123;
+            canvas.myObject["karl"][1] = null;
+            canvas.myObject["karl"][3] = "hans";
+            canvas.myObject["karl"][4] = true;
+            
+            customMapping.passClientMap.invoke();
+        </handler>
+    </button>
+    
+    <view layout="axis:x;spacing:2">
+        
+        <button text="invoke getUserObject">
+            <handler name="onclick">
+                canvas.customMapping.getUserObject.invoke();
+            </handler>
+        </button>
+        
+        <button text="invoke setUserObject">
+            <handler name="onclick">
+                canvas.customMapping.setUserObject.invoke();
+            </handler>
+        </button>
+        
+    </view>
+    
+    <button text="doInvoke nested object with Map">
+        <handler name="onclick">
+            customMapping.returnMapWithIntKey.invoke();
+        </handler>
+    </button>
+    
+    
+
+</canvas>
