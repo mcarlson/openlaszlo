@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -63,6 +63,8 @@
  */
 package org.openlaszlo.data;
 
+
+
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -74,6 +76,8 @@ import org.openlaszlo.server.Option;
 import org.openlaszlo.xml.*;
 import org.openlaszlo.xml.internal.*;
 import org.openlaszlo.utils.*;
+import org.openlaszlo.data.helpers.LaszloRPCAdapter;
+import org.openlaszlo.data.helpers.LaszloTypeMapping;
 import org.openlaszlo.remote.*;
 // LoadCount belongs in utils
 import org.openlaszlo.servlets.LoadCount;
@@ -152,13 +156,12 @@ public class JavaDataSource extends DataSource
                 (XMLRPCJSONCompiler.compileResponse(0, "void"));
         } catch (IOException e) {
             mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="exception: " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="exception: " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-161", new Object[] {e.getMessage()})
-, e);
+                                JavaDataSource.class.getName(),"051018-161", new Object[] {e.getMessage()}), e);
             throw new RuntimeException(e.getMessage()); 
         }
     }
@@ -181,91 +184,83 @@ public class JavaDataSource extends DataSource
                         HttpServletResponse res, long lastModifiedTime)
         throws DataSourceException {
         mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="getData"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="getData"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-190")
-);
+                                JavaDataSource.class.getName(),"051018-190"));
 
         if (! req.getMethod().equals("POST"))
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="request must be POST"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="request must be POST"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-202")
-                        );
+                                JavaDataSource.class.getName(),"051018-202"));
 
         String url;
         try {
             url = getURL(req);
         } catch (MalformedURLException e) {
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="malformed url"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="malformed url"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-215")
-                        , e);
+                                JavaDataSource.class.getName(),"051018-215"), e);
         }
 
         String cname = getClassName(url);
         if (cname == null)
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="invalid class or bad url: " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="invalid class or bad url: " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-227", new Object[] {url})
-                        );
+                                JavaDataSource.class.getName(),"051018-227", new Object[] {url}));
 
         if (! isClassOk(cname, req.getServletPath())) 
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="forbidden class: " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="forbidden class: " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-237", new Object[] {cname})
-                        );
+                                JavaDataSource.class.getName(),"051018-237", new Object[] {cname}));
 
         Class targetClass = getClass(cname);
         if (targetClass == null)
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="no such class " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="no such class " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-248", new Object[] {cname})
-);
+                                JavaDataSource.class.getName(),"051018-248", new Object[] {cname}));
 
         int scope = getScope(req);
         if (scope == SCOPE_UNKNOWN)
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="no scope request parameter"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="no scope request parameter"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-259")
-);
+                                JavaDataSource.class.getName(),"051018-259"));
 
         String postbody = req.getParameter("lzpostbody");
         if (postbody == null || postbody.equals(""))
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="no post body"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="no post body"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-270")
-);
+                                JavaDataSource.class.getName(),"051018-270"));
 
         // one of 'pojo' or 'javabean'
         String objectReturnType = req.getParameter("objectreturntype");
@@ -275,29 +270,26 @@ public class JavaDataSource extends DataSource
 
         if (mLogger.isDebugEnabled()) {
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="class name: " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="class name: " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-286", new Object[] {cname})
-);
+                                JavaDataSource.class.getName(),"051018-286", new Object[] {cname}));
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="object return type: " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="object return type: " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-294", new Object[] {objectReturnType})
-);
+                                JavaDataSource.class.getName(),"051018-294", new Object[] {objectReturnType}));
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="POST body:\n" + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="POST body:\n" + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-302", new Object[] {postbody})
-);
+                                JavaDataSource.class.getName(),"051018-302", new Object[] {postbody}));
         }
 
         /*        XmlRpcRequest xr = new LZXmlRpcRequestProcessor()
@@ -315,13 +307,12 @@ public class JavaDataSource extends DataSource
                            xr.getMethodName(), xr.getParameters());
         } catch (IOException e) {
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="exception executing " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="exception executing " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-322", new Object[] {xr.getMethodName()})
-, e);
+                                JavaDataSource.class.getName(),"051018-322", new Object[] {xr.getMethodName()}), e);
         } finally {
             t1 = System.currentTimeMillis();
             mJavaRPCLoad.decrement((int)(t1-t0));
@@ -350,13 +341,12 @@ public class JavaDataSource extends DataSource
                 p.append(params.get(i)).append(" ");
             }
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="execute(" + p[0] + ", [" + p[1] + "],context)"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="execute(" + p[0] + ", [" + p[1] + "],context)"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-358", new Object[] {methodName, p.toString()})
-            );
+                                JavaDataSource.class.getName(),"051018-358", new Object[] {methodName, p.toString()}));
         }
 
         Class[] argClasses = null;
@@ -377,13 +367,12 @@ public class JavaDataSource extends DataSource
         // if request exists, place request following the last parameter
         if (doreq) {
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="adding request to method"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="adding request to method"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-385")
-);
+                                JavaDataSource.class.getName(),"051018-385"));
             reqPos = paramCount;
             httpCount++;
         }
@@ -392,13 +381,12 @@ public class JavaDataSource extends DataSource
         // place it following the last parameter
         if (dores) {
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="adding response to method"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="adding response to method"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-400")
-);
+                                JavaDataSource.class.getName(),"051018-400"));
             resPos = (reqPos != -1 ? reqPos + 1 : paramCount);
             httpCount++;
         }
@@ -505,11 +493,11 @@ public class JavaDataSource extends DataSource
                         mInstanceGetInvokeTargetLoad.decrement((int)(t1-t0));
                     }
                     if (invokeTarget == null) {
-String errmsg =
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="could not find " + p[0] + " instance " + p[1]
- */
+                        String errmsg =
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="could not find " + p[0] + " instance " + p[1]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-516", new Object[] {getScopeName(scope), oname});
                         mLogger.error(errmsg);
@@ -532,20 +520,20 @@ String errmsg =
 
             if (mLogger.isDebugEnabled()) {
                 mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Searching for method: " + p[0] + " in class " + p[1]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="Searching for method: " + p[0] + " in class " + p[1]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-542", new Object[] {methodName, targetClass.getName()})
                                 );
                 if (argClasses.length != 0) {
                     for (int i = 0; i < argClasses.length; i++) {
                         mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Parameter " + p[0] + ": " + p[1] + " (" + p[2] + ")"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="Parameter " + p[0] + ": " + p[1] + " (" + p[2] + ")"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-551", new Object[] {new Integer(i), argValues[i], argClasses[i]})
                                 );
@@ -553,27 +541,165 @@ String errmsg =
                 }
             }
 
+            /*
+             * These are the important Bits
+             * Cause here you decide which method to choose
+             * swagner - 25.02.2008
+             * 
+             */
+            
+            
             try {
-                method = getMethod(targetClass, methodName, argClasses);
+                
+                //targetClass
+                mLogger.debug("Is This Class a related to the Adapter: "+LaszloRPCAdapter.class.isInstance(invokeTarget));
+                
+                //Indicates if the Method will be using the Custom Types, its true if the the 
+                //javaRPC class uses the OpenLaszloRPCAdapter
+                if (LaszloRPCAdapter.class.isInstance(invokeTarget)) {
+                    
+                    
+                    mLogger.debug("Is Method of RPC-Gateway");
+                    
+                    //OpenLaszloRPCAdapter openLaszloRPCAdapter = (OpenLaszloRPCAdapter) targetClass;
+                    
+                    //targetClass
+                    
+                    LaszloRPCAdapter openLaszloRPCAdapter = (LaszloRPCAdapter) invokeTarget;
+                    
+                    openLaszloRPCAdapter.servletRequest = req;
+                    
+                    List customMappings = openLaszloRPCAdapter.getCustomMappings();
+                    
+                    //This will only get the Method by the number of Arguments
+                    //We will try to cast each param to the correct value
+                    method = getMethodByMap(targetClass, methodName, argClasses);
+                    
+                    //No method Found Throw Error to Client
+                    if (method == null) {
+                        StringBuffer buf = new StringBuffer();
+                        for (int i=0; i < argClasses.length; i++) {
+                            if (i != 0) buf.append(", ");
+                            buf.append(argClasses[i].toString());
+                        } 
+                        throw new NoSuchMethodException(/* (non-Javadoc)
+                                 * @i18n.test
+                                 * @org-mes=p[0] + "(" + p[1] + "): no such method"
+                                 */
+                                org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                        JavaDataSource.class.getName(),"051018-999", new Object[] {methodName, buf.toString()}));
+                    }
+                    
+                    mLogger.debug("methodName: "+methodName);
+                    mLogger.debug("argClasses: "+argClasses);
+                    mLogger.debug("targetClass: "+targetClass);
+                    mLogger.debug("method: "+method);
+                    
+                    Class[] paramTypes = method.getParameterTypes();
+                    
+                    mLogger.debug("paramTypes: "+paramTypes);
+                    
+                    //make new Params Object to hold all Params
+                    Object[] argValuesCasted = new Object[argValues.length];
+                    
+                    //Cast Objects to needed values
+                    for (int i = 0;i<argValues.length;i++) {
+                        mLogger.debug("argValues: "+argValues[i]);
+                        mLogger.debug("argValues Given Class: "+argValues[i].getClass().getName());
+                        
+                        Class neededClass = paramTypes[i];
+                        mLogger.debug("Needed Class: "+neededClass.getName());
+                        mLogger.debug("Is Instance? "+neededClass.isInstance(argValues[i]));
+                        
+                        if (neededClass.isInstance(argValues[i])) {
+                            
+                            argValuesCasted[i] = neededClass.cast(argValues[i]);
+                            
+                        } else if (this.compareForPrimitives(neededClass.getName(), argValues[i].getClass().getName())) {
+                            
+                            mLogger.debug("Is Primitve Needed Cast automatically ");
+                            argValuesCasted[i] = argValues[i];
+                            
+                        } else {
+                            mLogger.debug("Could not cast Argument to needed Value, check for custom translator");
+                            
+                            //Get Value from Custom Object, check if there is a Custom Method for that Type
+                            Object obj = this.getCustomValueByMap(invokeTarget, customMappings, neededClass.getName(), argValues[i]);
+                            
+                            //Cast it now to the needed one
+                            argValuesCasted[i] = neededClass.cast(obj);
+                        }
+                        
+                    }
+                    
+                    //Call Handler in Adapter that a Function is Called
+                    openLaszloRPCAdapter.onCall(methodName, argClasses, argValuesCasted);
+                    
+                    returnValue = method.invoke(invokeTarget, argValuesCasted);
+                    
+                    
+                } else {
+                    
+                    
+                    method = getMethod(targetClass, methodName, argClasses);
+                    
+                    // invoke
+                    try {
+                        returnValue = method.invoke(invokeTarget, argValues);
+                    } catch (IllegalAccessException e) {
+                        mLogger.error("IllegalAccessException", e);
+                        return compileFault(e.getMessage(), e);
+                    } catch (IllegalArgumentException e) {
+                        mLogger.error("IllegalArgumentException", e);
+                        return compileFault(e.getMessage(), e);
+                    } catch (InvocationTargetException e) {
+                        mLogger.error("InvocationTargetException", e);
+                        Throwable cause = e.getCause();
+                        if (cause != null) return compileFault(cause);
+                        return compileFault(e.getMessage(), e);
+                    } catch (Exception e) {
+                        mLogger.error("Exception", e);
+                        return compileFault(e.getMessage(), e);
+                    } catch (Error e) {
+                        mLogger.error("Error", e);
+                        return compileFault(e.getMessage(), e);
+                    }
+                    
+                }
+                
             } catch(NoSuchMethodException e) {
                 mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="NoSuchMethodException"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="NoSuchMethodException"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-565")
-, e);
+                                JavaDataSource.class.getName(),"051018-565"), e);
                 return compileFault(e.getMessage(), e);
             } catch(SecurityException e) {
                 mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="SecurityException"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="SecurityException"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-575")
-, e);
+                                JavaDataSource.class.getName(),"051018-575"), e);
+                return compileFault(e.getMessage(), e);
+            } catch (IllegalArgumentException e) {
+                // TODO Check if this is the appropriate Return
+                mLogger.error("IOException", e);
+                return compileFault(e.getMessage(), e);
+            } catch (IllegalAccessException e) {
+                // TODO Check if this is the appropriate Return
+                mLogger.error("IOException", e);
+                return compileFault(e.getMessage(), e);
+            } catch (InvocationTargetException e) {
+                // TODO Check if this is the appropriate Return
+                mLogger.error("IOException", e);
+                return compileFault(e.getMessage(), e);
+            } catch (Exception e) {
+                // TODO Check if this is the appropriate Return
+                mLogger.error("IOException", e);
                 return compileFault(e.getMessage(), e);
             }
 
@@ -581,35 +707,15 @@ String errmsg =
             // java.lang.Object.
             if (method.getDeclaringClass() == Object.class) {
                 return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Can't call methods in java.lang.Object"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="Can't call methods in java.lang.Object"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-589"));
             }
 
-            // invoke
-            try {
-                returnValue = method.invoke(invokeTarget, argValues);
-            } catch (IllegalAccessException e) {
-                mLogger.error("IllegalAccessException", e);
-                return compileFault(e.getMessage(), e);
-            } catch (IllegalArgumentException e) {
-                mLogger.error("IllegalArgumentException", e);
-                return compileFault(e.getMessage(), e);
-            } catch (InvocationTargetException e) {
-                mLogger.error("InvocationTargetException", e);
-                Throwable cause = e.getCause();
-                if (cause != null) return compileFault(cause);
-                return compileFault(e.getMessage(), e);
-            } catch (Exception e) {
-                mLogger.error("Exception", e);
-                return compileFault(e.getMessage(), e);
-            } catch (Error e) {
-                mLogger.error("Error", e);
-                return compileFault(e.getMessage(), e);
-            }
+            
         } finally {
             t1 = System.currentTimeMillis();
             mInvokeLoad.decrement((int)(t1-t0));
@@ -648,13 +754,12 @@ String errmsg =
     Data getStaticPrototype(String cname) {
         if (mLogger.isDebugEnabled()) {
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="getStaticPrototype(" + p[0] + ")"
- */
+                    /* (non-Javadoc)
+                     * @i18n.test
+                     * @org-mes="getStaticPrototype(" + p[0] + ")"
+                     */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-681", new Object[] {cname})
-);
+                                JavaDataSource.class.getName(),"051018-681", new Object[] {cname}));
         }
         return getPrototype(cname, SCOPE_NONE);
     }
@@ -669,13 +774,12 @@ String errmsg =
 
         if (mLogger.isDebugEnabled()) {
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="getInstancePrototype(" + p[0] + "," + p[1] + ")"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="getInstancePrototype(" + p[0] + "," + p[1] + ")"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-702", new Object[] {cname, oname})
-);
+                                JavaDataSource.class.getName(),"051018-702", new Object[] {cname, oname}));
         }
 
         if (getJavaObject(req.getSession(false), scope, oname) != null) {
@@ -687,13 +791,12 @@ String errmsg =
         }
 
         String errmsg = 
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="couldn't find " + p[0] + " instance " + p[1]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="couldn't find " + p[0] + " instance " + p[1]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-721", new Object[] {getScopeName(scope), oname})
-;
+                                JavaDataSource.class.getName(),"051018-721", new Object[] {getScopeName(scope), oname});
         mLogger.error(errmsg);
         return compileFault(errmsg);
     }
@@ -709,13 +812,12 @@ String errmsg =
 
         if (mLogger.isDebugEnabled()) {
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="createInstancePrototype(" + p[0] + "," + p[1] + ")"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="createInstancePrototype(" + p[0] + "," + p[1] + ")"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-742", new Object[] {cname, oname})
-);
+                                JavaDataSource.class.getName(),"051018-742", new Object[] {cname, oname}));
         }
 
         // create session here, if it doesn't exist
@@ -730,10 +832,10 @@ String errmsg =
             if (o != null) {
                 if (mLogger.isDebugEnabled()) {
                     mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="not clobbering existing " + p[0] + " object " + p[1]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="not clobbering existing " + p[0] + " object " + p[1]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-763", new Object[] {getScopeName(scope), oname })
                                 );
@@ -748,18 +850,95 @@ String errmsg =
             setJavaObject(session, scope, oname, o);
         } catch (Exception e) {
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="could not create instance of " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="could not create instance of " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-780", new Object[] {cname})
-                        , e);
+                                JavaDataSource.class.getName(),"051018-780", new Object[] {cname}), e);
         }
 
         return getPrototype(cname, scope);
     }
 
+    /**
+     * there should be a check in this Function, sothat NULL does not work
+     * 
+     * @param neededClass
+     * @param providedClass
+     */
+    private boolean compareForPrimitives(String neededClass, String providedClass) {
+        try {
+            
+            if (neededClass == "int" && providedClass == "java.lang.Integer") {
+                return true;
+            } else if (neededClass == "long" && providedClass == "java.lang.Integer") {
+                return true;
+            } else if (neededClass == "boolean" && providedClass == "java.lang.Boolean") {
+                return true;
+            } else if (neededClass == "double" && providedClass == "java.lang.Double") {
+                return true;
+            } else if (neededClass == "float" && providedClass == "java.lang.Float") {
+                return true;
+            }
+            
+        } catch (Exception err) {
+            mLogger.error("[compareForPrimitives]",err);
+        }
+        return false;
+    }
+    
+    Object getCustomValueByMap(Object rpcInstance, List customTypes, String neededType, Object value) throws Exception {
+        
+        String customMethodName = "";
+        
+        for (int i=0;i<customTypes.size();i++) {
+            
+            LaszloTypeMapping typeMapping = (LaszloTypeMapping) customTypes.get(i);
+            
+            if (typeMapping.getType().equals(neededType)) {
+                
+                mLogger.debug("Found Needed Type Assign Method to the Custom Mapping");
+                customMethodName = typeMapping.getMethodName();
+            }
+            
+        }
+        
+        if (customMethodName.length()!=0) {
+            //Simulate one argument, as these Type Mapping-Methods always parse
+            //1:1 => one argument only always
+            Class[] params = new Class[1];
+            Method method = getMethodByMap(rpcInstance.getClass(),customMethodName,params);
+            
+            if (method != null) {
+                
+                Object[] argValuesCasted = new Object[1];
+                argValuesCasted[0] = value;
+                
+                mLogger.debug("Found Method to Map Object - Call it");
+                
+                return method.invoke(rpcInstance, argValuesCasted);
+                
+            } else {
+                
+                LaszloRPCAdapter openLaszloRPCAdapter = (LaszloRPCAdapter) rpcInstance;
+                
+                openLaszloRPCAdapter.onMappingNotFound(neededType,value);
+                
+                mLogger.error("Could not Find a Mapping Method "+customMethodName+" in Class: " 
+                        +rpcInstance.getClass().getName()+" this Type: "+neededType);
+                
+            }
+            
+        } else {
+            
+            mLogger.error("Could not Find a Mapping for this Type: "+neededType);
+            
+        }
+        
+        return null;
+        
+    }
 
     /**
      * Get client prototype.
@@ -777,13 +956,12 @@ String errmsg =
 
             if (data == null) {
                 mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="creating client prototype for " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="creating client prototype for " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-809", new Object[] {cname})
-);
+                                JavaDataSource.class.getName(),"051018-809", new Object[] {cname}));
 
 
                 byte[] b;
@@ -801,10 +979,10 @@ String errmsg =
             return data;
         } catch (Exception e) {
             return compileFault(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="could not get " + p[0] + " in scope " + p[1]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="could not get " + p[0] + " in scope " + p[1]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-831", new Object[] {cname, getScopeName(scope)})
                         , e);
@@ -823,13 +1001,12 @@ String errmsg =
 
         if (mLogger.isDebugEnabled()) {
             mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="destroyInstance(" + p[0] + ", " + p[1]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="destroyInstance(" + p[0] + ", " + p[1]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-858", new Object[] {oname, new Integer(scope)})
-);
+                                JavaDataSource.class.getName(),"051018-858", new Object[] {oname, new Integer(scope)}));
         }
         removeJavaObject(req.getSession(false), scope, oname);
         return getVoid();
@@ -853,13 +1030,12 @@ String errmsg =
             return Class.forName(cname);
         } catch (ClassNotFoundException e) {
             mLogger.error(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="class not found: " + p[0]
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes="class not found: " + p[0]
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-888", new Object[] {cname})
-);
+                                JavaDataSource.class.getName(),"051018-888", new Object[] {cname}));
         }
         return null;
     }
@@ -911,10 +1087,10 @@ String errmsg =
                 buf.append(argClasses[i].toString());
             }
             String msg = 
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="no such constructor found: " + p[0] + "(" + p[1] + ")"
- */
+                    /* (non-Javadoc)
+                     * @i18n.test
+                     * @org-mes="no such constructor found: " + p[0] + "(" + p[1] + ")"
+                     */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 JavaDataSource.class.getName(),"051018-946", new Object[] {classname, buf.toString()});
             mLogger.error(msg);
@@ -925,6 +1101,43 @@ String errmsg =
     }
 
 
+    /**
+     * Returns the Method but only compares the Number of params 
+     * 
+     * swagner 28.02.2009
+     * 
+     * @param cl
+     * @param methodName
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    Method getMethodByMap(Class cl, String methodName, Class[] params) throws Exception {
+
+        // targetClass.getMethod(methodName, argClasses);
+
+        Method[] classMethods = cl.getMethods();
+        for (int m=0; m < classMethods.length; m++) {
+
+            // find matching method
+            mLogger.debug("getMethod looking for "+methodName+" ==? "+classMethods[m].getName());
+
+            if ( ! methodName.equals(classMethods[m].getName()) ) continue;
+            mLogger.debug("getMethod match found "+methodName+" class="+cl.getName());
+
+            // make sure params match
+            Class[] classParams = classMethods[m].getParameterTypes();
+            mLogger.debug("[1] getMethod "+methodName+" classParams.length = "+classParams.length+" params.length="+ params.length);
+            if (classParams.length == 0 && params == null)
+                return classMethods[m];
+
+            if (classParams.length == params.length) {
+                return classMethods[m];
+            }
+            
+        }
+        return null;
+    }
 
     
     /**
@@ -969,13 +1182,12 @@ String errmsg =
             buf.append(params[i].toString());
         }
         throw new NoSuchMethodException(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes=p[0] + "(" + p[1] + "): no such method"
- */
+                        /* (non-Javadoc)
+                         * @i18n.test
+                         * @org-mes=p[0] + "(" + p[1] + "): no such method"
+                         */
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                JavaDataSource.class.getName(),"051018-999", new Object[] {methodName, buf.toString()})
-);
+                                JavaDataSource.class.getName(),"051018-999", new Object[] {methodName, buf.toString()}));
     }
 
 

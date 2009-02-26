@@ -5,7 +5,7 @@
 
 /* LZ_COPYRIGHT_BEGIN */
 /****************************************************************************
- * Copyright (c) 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.       *
+ * Copyright (c) 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.       *
  * Use is subject to license terms                                          *
  ****************************************************************************/
 /* LZ_COPYRIGHT_END */
@@ -181,8 +181,8 @@ class XMLRPCMessage {
 
     static function dateToISO8601(date){
         // wow I hate working with the Date object
-        var year = new String(date.getYear());
-        var month = XMLRPCMessage.leadingZero(new String(date.getMonth()));
+        var year = new String(date.getFullYear());
+        var month = XMLRPCMessage.leadingZero(new String(date.getMonth()+1));
         var day = XMLRPCMessage.leadingZero(new String(date.getDate()));
         var time = XMLRPCMessage.leadingZero(new String(date.getHours())) + ":" +
                                XMLRPCMessage.leadingZero(new String(date.getMinutes())) + ":" +
