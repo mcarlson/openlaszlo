@@ -72,6 +72,10 @@
       </containsElements>
     </interface>
 
+    <interface name="frame" extends="node">
+      <attribute name="src" type="string"/>
+    </interface>
+
     <interface name="splash" extends="Instance">
       <attribute name="hideafterinit" type= "boolean" />
       <attribute name="persistent" type= "boolean" />

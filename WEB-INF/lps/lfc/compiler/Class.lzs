@@ -1,7 +1,7 @@
 /***
  * Classes for Javascript with Mixins
  *
- * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.
  * Use is subject to license terms.
  *
  * @access private
@@ -478,6 +478,11 @@ var Class = {
         constructor.initialize.call(nc, prototype);
       }
     })(prototype, nc);
+    if ($debug) {
+      if (this.allClasses[classname]) {
+        Debug.error("Redefining %s from %w to %w", classname, this.allClasses[classname], nc);
+      }
+    }
     global[classname] = this.allClasses[classname] = nc;
     if ($profile) {
       Profiler.event('new Class(' + pcn + ')', 'returns');

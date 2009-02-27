@@ -53,7 +53,9 @@ public class NodeModel implements Cloneable {
     final Element element;
     String tagName;
     String id = null;
+    String localName = null;
     String globalName = null;
+    private String nodePath = null;
     LinkedHashMap attrs = new LinkedHashMap();
     List children = new Vector();
     /** A set {eventName: String -> True) of names of event handlers
@@ -144,11 +146,56 @@ public class NodeModel implements Cloneable {
         }
         // Get ID
         this.id = element.getAttributeValue("id");
+        this.localName = element.getAttributeValue("name");
         // Get global name, if applicable
         if (CompilerUtils.topLevelDeclaration(element) &&
             (! ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName)))) {
-          this.globalName = element.getAttributeValue("name");
+          this.globalName = localName;
         }
+    }
+
+    // Path of node from root.  This follows the same psuedo-xpath
+    // system used in LzNode._dbg_name.  It provides a basis for
+    // giving anonymous classes unuqu names.
+    private static String computeNodePath(NodeModel node, ViewSchema schema, CompilationEnvironment env) {
+        if (node.id != null) {
+            return "#" + node.id;
+        }
+        if (node.globalName != null) {
+            return "#" + node.globalName;
+        }
+        String nn = node.localName;
+        String path = "";
+        org.jdom.Parent parentElement = node.element.getParent();
+        if ((parentElement == null) || (! (parentElement instanceof ElementWithLocationInfo))) {
+            // Must be at the root
+            return path;
+        }
+        // Ensure parent modelled
+        NodeModel parent = elementAsModel((ElementWithLocationInfo)parentElement, schema, env);
+        if (node.localName != null) {
+            path = "@" + node.localName;
+        } else {
+            String tn = path = node.tagName;
+            int count = 0, index = -1;
+            for (Iterator iter = parent.children.iterator(); iter.hasNext(); ) {
+                NodeModel sibling = (NodeModel) iter.next();
+                if (tn.equals(sibling.tagName)) {
+                    count++;
+                    if (index != -1) break;
+                }
+                if (node.element == sibling.element) { index = count; }
+            }
+            if (count > 1) {
+                path += "[" + index + "]";
+            }
+        }
+        return computeNodePath(parent, schema, env) + "/" + path;
+    };
+
+    String getNodePath () {
+        if (nodePath != null) { return nodePath; }
+        return nodePath = computeNodePath(this, schema, env);
     }
 
     private static final String DEPRECATED_METHODS_PROPERTY_FILE = (
@@ -475,16 +522,17 @@ public class NodeModel implements Cloneable {
         Element elt, ViewSchema schema, 
         boolean includeChildren, CompilationEnvironment env)
     {
-        checkTagDeclared(elt, schema);
+        NodeModel model = ((ElementWithLocationInfo) elt).model;
+        if (model != null) { return model; }
 
-        NodeModel model = new NodeModel(elt, schema, env);
+        checkTagDeclared(elt, schema);
+        model = new NodeModel(elt, schema, env);
         LinkedHashMap attrs = model.attrs;
         Map delegates = model.delegates;
         model.addAttributes(env);
 
         // This emits a local dataset node, so only process
         // <dataset> tags that are not top level datasets.
-
         if (elt.getName().equals("dataset")) {
             boolean contentIsLiteralXMLData = true;
             String datafromchild = elt.getAttributeValue("datafromchild");
@@ -506,7 +554,6 @@ public class NodeModel implements Cloneable {
 
         if (includeChildren) {
             model.addChildren(env);
-
             // If any children are subclasses of <state>, recursively
             // hoist named children up in order to declare them so
             // they can be referenced as vars without a 'this.---" prefix.
@@ -523,7 +570,6 @@ public class NodeModel implements Cloneable {
         // Check that all attributes required by the class or it's superclasses are present
         checkRequiredAttributes(elt, model, schema);
 
-        // Record the model in the element for classes
         ((ElementWithLocationInfo) elt).model = model;
         return model;
     }
@@ -2166,7 +2212,7 @@ solution =
     void assignClassRoot(int depth) {
         if (! parentClassModel.isSubclassOf(schema.getClassModel("state"))) { depth++; }
         Integer d = new Integer(depth);
-        for (Iterator i = children.iterator(); i.hasNext(); ) {
+        for (Iterator i = children.iterator(); i.hasNext();) {
             NodeModel child = (NodeModel)i.next();
             child.addProperty("$classrootdepth", d, ALLOCATION_INSTANCE);
             child.assignClassRoot(depth);

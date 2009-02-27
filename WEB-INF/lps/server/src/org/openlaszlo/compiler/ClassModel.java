@@ -18,7 +18,7 @@ public class ClassModel implements Comparable {
     /** Classes that are created for single instances */
     public final boolean anonymous;
     /** And this is the actual class name */
-    public final String className;
+    public String className;
     final CompilationEnvironment env;
     protected boolean builtin = false;
     // This is null for the root class
@@ -78,11 +78,6 @@ public class ClassModel implements Comparable {
         this.modelOnly = ((!env.getBooleanProperty(env.LINK_PROPERTY)) ||
                           env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY));
         this.env = env;
-        if ((!anonymous) && (tagName != null)) {
-          this.className = LZXTag2JSClass(tagName);
-        } else {
-          this.className = LZXTag2JSClass(env.methodNameGenerator.next());
-        }
 
         this.superclass = superclass;
         this.definition = definition;
@@ -91,7 +86,10 @@ public class ClassModel implements Comparable {
           this.kind = definition.getName();
         }
         this.schema = schema;
-        this.sortkey = tagName != null ? tagName : className;
+        if ((!anonymous) && (tagName != null)) {
+          this.className = LZXTag2JSClass(tagName);
+        }
+        this.sortkey = tagName != null ? tagName : "anonymous";
         if (superclass != null) {
           this.sortkey = superclass.sortkey + "." + this.sortkey;
         }
@@ -172,8 +170,6 @@ public class ClassModel implements Comparable {
    */
   void emitClassDeclaration(CompilationEnvironment env) {
     declarationEmitted = true;
-    // className will be a global
-    env.addId(className, definition);
     // Should the package prefix be in the model?  Should the
     // model store class and tagname separately?
     ClassModel superclassModel = getSuperclassModel();
@@ -182,6 +178,11 @@ public class ClassModel implements Comparable {
       superclassModel.compile(env);
     }
     String superClassName = superclassModel.className;
+    if (className == null) {
+      className = LZXTag2JSClass(CompilerUtils.encodeJavaScriptIdentifier(nodeModel.getNodePath()));
+    }
+    // className will be a global
+    env.addId(className, definition);
 
     // TODO: [2008-06-02 ptw] This should be moved to the JS2 back-end
     // Build the constructor trampoline
