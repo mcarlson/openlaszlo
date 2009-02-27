@@ -533,16 +533,40 @@ public class NodeModel implements Cloneable {
     Map attrs = model.attrs;
 
     CompilationEnvironment env = schema.getCompilationEnvironment();
-    // Check that each required attribute is present in the list of supplied attributes
-    for (Iterator iter = classinfo.requiredAttributes.listIterator(); iter.hasNext(); ) {
-      String reqname = (String) iter.next();
-      if (!attrs.containsKey(reqname)) {
+    // Check that each required attribute has a value supplied by either this instance, class, or ancestor class
+    for (Iterator iter = classinfo.requiredAttributes.iterator(); iter.hasNext(); ) {
+      String reqAttrName = (String) iter.next();
+      boolean supplied = false;
+      // check if this node model declares a value
+      if (attrs.containsKey(reqAttrName)) {
+        supplied = true;
+      } else {
+        // check if the class or superclass models declares a value
+        supplied = attrHasDefaultValue(classinfo, reqAttrName,  NodeModel.ALLOCATION_INSTANCE);
+      }
+      
+      if (!supplied) {
         env.warn(
-            new CompilationError("Missing required attribute "+reqname+ " for tag "+element.getName() , element),
+            new CompilationError("Missing required attribute "+reqAttrName+ " for tag "+element.getName() , element),
             element);
       }
     }
   }
+
+  // Return true if a given attribute has a non-null value supplied by the class or ancestor class
+  static boolean attrHasDefaultValue(ClassModel classmodel, String attrName, String allocation) {
+    Map attrtable = allocation.equals(NodeModel.ALLOCATION_INSTANCE) ?
+                         classmodel.attributeSpecs : classmodel.classAttributeSpecs;
+    AttributeSpec attr = (AttributeSpec) attrtable.get(attrName);
+    if ((attr != null) && attr.defaultValue != null && !attr.defaultValue.equals("null")) {
+      return true;
+    } else if (classmodel.superclass != null) {
+      return(attrHasDefaultValue(classmodel.superclass, attrName, allocation));
+    } else {
+      return false;
+    }
+  }
+
 
   static void checkTagDeclared(Element element, ViewSchema schema) {
     ClassModel classinfo =  schema.getClassModel(element.getName());

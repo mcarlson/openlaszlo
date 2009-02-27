@@ -1,0 +1,29 @@
+<canvas>
+
+  <class name="first"> 
+    <attribute name="grid" value="null" required="true"/> 
+  </class> 
+
+  <class name="second" extends="first">
+    <attribute name="grid" value="259"/>
+  </class>
+
+  <class name="third" extends="second">
+    <attribute name="grid" />
+  </class>
+
+  
+
+  
+  <first/>
+
+  <second/>
+
+  <third/>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

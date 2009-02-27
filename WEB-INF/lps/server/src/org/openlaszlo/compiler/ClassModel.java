@@ -43,7 +43,7 @@ public class ClassModel implements Comparable {
         
     public Set mixinNames = new HashSet(2, 0.6f);
     
-    public List requiredAttributes = new ArrayList();
+    public Set requiredAttributes = new HashSet();
 
     /* Class or superclass has an <attribute type="text"/>  */
     protected boolean supportsTextAttribute = false;

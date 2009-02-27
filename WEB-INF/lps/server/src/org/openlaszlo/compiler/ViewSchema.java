@@ -335,7 +335,6 @@ public class ViewSchema extends Schema {
                             CompilationEnvironment env)
     {
         ClassModel superclass = getClassModel(superTagName);
-
         if (superclass == null) {
             throw new CompilationError(
 /* (non-Javadoc)
@@ -410,10 +409,12 @@ public class ViewSchema extends Schema {
             }
         }
 
-        // Add in the attribute declarations
-        addAttributeDefs(elt, tagName, attributeDefs, env);
-        // merge in superclass requiredAttributes list to make lookup more efficient
+        // merge in superclass requiredAttributes list to make scanning the set more efficient
         info.requiredAttributes.addAll(superclass.requiredAttributes);
+
+        // Add in the attribute declarations. 
+        addAttributeDefs(elt, tagName, attributeDefs, env);
+     
     }
 
     /**

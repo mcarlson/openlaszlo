@@ -228,11 +228,18 @@ class ClassCompiler extends ViewCompiler  {
                     }
                     
                     String attrTypeName = child.getAttributeValue("type");
-                    String attrDefault = child.getAttributeValue("default");
+                    String attrDefault = child.getAttributeValue("value");
                     String attrSetter = child.getAttributeValue("setter");
                     String attrRequired = child.getAttributeValue("required");
                     String allocation = getAllocation(child);
                     
+                    if (attrDefault != null && attrRequired != null &&
+                        attrRequired.equals("true") && !attrDefault.equals("null")) {
+                        mEnv.warn("An attribute cannot both be declared required and also have a non-null default value", child);
+                    }
+                       
+                        
+
                     ViewSchema.Type attrType;
                     if (attrTypeName == null) {
                         // Check if this attribute exists in ancestor classes,
