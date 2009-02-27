@@ -152,6 +152,10 @@ public class CompilationEnvironment {
     /** Used for compiling SWF loadable libraries to refer to _level0 */
     private String mGlobalPrefix = "";
 
+    /** Used to create a unique root for separately-compiled libraries */
+    // TODO: [2009-02-27 ptw] Replace with Java 1.5: UUID.randomUUID.toString();
+  private String mUUID = "U" + (new Random()).nextLong();
+
     private List mLibraryCompilations = new ArrayList();
 
     private Map mCompileTimeConstants = null;
@@ -297,6 +301,10 @@ public class CompilationEnvironment {
         return mGlobalPrefix;
     }
         
+    public String getUUID() {
+        return mUUID;
+    }
+
     public void setMediaCache(CompilerMediaCache cache) {
         this.mMediaCache = cache;
     }

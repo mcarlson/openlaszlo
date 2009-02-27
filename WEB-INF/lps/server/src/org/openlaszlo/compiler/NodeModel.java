@@ -168,8 +168,15 @@ public class NodeModel implements Cloneable {
         String path = "";
         org.jdom.Parent parentElement = node.element.getParent();
         if ((parentElement == null) || (! (parentElement instanceof ElementWithLocationInfo))) {
-            // Must be at the root
-            return path;
+            // Must be at the root, in not linking, create a UID
+            // placeholder for root
+          if (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
+            // linking, there is only one root
+            return "";
+          } else {
+            // Not linking, use a unique root
+            return env.getUUID();
+          }
         }
         // Ensure parent modelled
         NodeModel parent = elementAsModel((ElementWithLocationInfo)parentElement, schema, env);
