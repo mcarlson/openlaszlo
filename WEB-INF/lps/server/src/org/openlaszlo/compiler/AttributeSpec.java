@@ -62,7 +62,9 @@ public class AttributeSpec {
   public String toLZX(String indent, ClassModel superclass) {
     AttributeSpec superSpec = superclass.getAttribute(name, allocation);
     if (ViewSchema.METHOD_TYPE.equals(type)) {
-      return indent + "  <method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " />";
+      return indent + "  <method name='" + name + "'" +
+        (((arglist == null) || "".equals(arglist))?"":(" args='" + XMLUtils.escapeXml(arglist) +"'")) +
+        " />";
     }
 
     if (superSpec == null) {
@@ -70,7 +72,7 @@ public class AttributeSpec {
         return indent + "<event name='" + name + "' />";
       }
       return indent + "<attribute name='" + name + "'" +
-        ((defaultValue != null)?(" value='" + defaultValue + "'"):"") +
+        ((defaultValue != null)?(" value='" + XMLUtils.escapeXml(defaultValue) + "'"):"") +
         ((type != null)?(" type='" + typeToLZX() + "'"):"") +
         ((when != NodeModel.WHEN_IMMEDIATELY)?(" when='" + when + "'"):"") + 
         (required?(" required='true'"):"") +
@@ -79,7 +81,7 @@ public class AttributeSpec {
       String attrs = "";
       if (defaultValue != null &&
           (! defaultValue.equals(superSpec.defaultValue))) {
-        attrs += " value='" + defaultValue + "'";
+        attrs += " value='" + XMLUtils.escapeXml(defaultValue) + "'";
       }
       if (type != null &&
           (! type.equals(superclass.getAttributeType(name, allocation)))) {
@@ -151,6 +153,6 @@ public class AttributeSpec {
 }
 
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
