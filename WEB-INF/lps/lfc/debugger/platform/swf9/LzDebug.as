@@ -3,7 +3,7 @@
 /*
  * Platform-specific DebugService
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
 
  */
@@ -92,7 +92,7 @@ class LzAS3DebugService extends LzDebugService {
    * compiled expression, so we have to put the "previous value's" in
   * _level0
    */
-  override function displayResult (result=(void 0)) {
+  final override function displayResult (result=(void 0)) : void {
     if (typeof(result) != 'undefined') {
       // Advance saved results if you have a new one
       if (result !== global._) {

@@ -726,7 +726,7 @@ function destroyClone (v:LzNode) :void {
   * @deprecated Use setAttribute('datapath', ...) instead.
   * @access private
   */
-override function $lzc$set_datapath(xp) :void {
+override function $lzc$set_datapath(xp) /*:void*/ {
     this.setXPath(xp);
 }
 

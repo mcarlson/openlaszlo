@@ -601,7 +601,7 @@ var deferInit = true;
 /**
   * @access private
   */
-override function __LZinstantiationDone (){
+override function __LZinstantiationDone () : void {
 
     if (this.deferInit) {
         this.deferInit = false;

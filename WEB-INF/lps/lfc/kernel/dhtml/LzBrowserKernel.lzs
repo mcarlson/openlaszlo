@@ -56,7 +56,7 @@ static function loadJS ( js, target ){
   * @param Function callback: Optional callback function to receive the return value of the javascript call
   * @param Optional arguments to call
   */
-static function callJS (methodname, callback) {
+static function callJS (methodname, callback) :* {
     var scope = null;
 
     var method = eval(methodname);

@@ -1,7 +1,7 @@
 /**
   * LzDatapath.lzs
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LFC
@@ -254,7 +254,7 @@ function LzDatapath ( v , args:* = null, children:* = null, instcall:* = null ){
 }
 
 /** @access private */
-override function construct ( v , args ) :void {
+override function construct ( v , args ){
     this.rerunxpath = true; // Defined in LzDatapointer
 
     super.construct.apply(this, arguments);
@@ -669,7 +669,7 @@ function setClonePointer( p /*:LzDataNodeMixin*/ ) :void {
 /**
   * @access private
   */
-override function setSelected (torf) :void {
+override function setSelected (torf) /* :void */ {
     this.p.sel = torf;
     this.sel = torf;
 

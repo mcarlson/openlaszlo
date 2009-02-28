@@ -161,7 +161,7 @@ class LzAS2DebugService extends LzDebugService {
    * compiled expression, so we have to put the "previous value's" in
    * _level0
    */
-  override function displayResult (result=(void 0)) {
+  final override function displayResult (result=(void 0)) : void {
     if (typeof(result) != 'undefined') {
       // Advance saved results if you have a new one
       if (result !== _level0['_']) {
@@ -293,7 +293,7 @@ var __LzDebug = Debug;
 
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 

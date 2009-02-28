@@ -98,11 +98,12 @@ public final class LzBrowserService {
      * @param Function callback: Optional callback function to receive the return value of the javascript call
      * @param * arguments to call the method with
      */
-    function callJS (methodname:String, callback:Function = null, args:* = null) :void {
+  function callJS (methodname:String, callback:Function = null, args:* = null) :* {
         try {
             return LzBrowserKernel.callJS.apply(null, arguments);
         } catch (e) {
             if ($debug) Debug.error('lz.Browser.callJS() failed:', e);
+            return null;
         }
     }
 

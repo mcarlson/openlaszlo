@@ -158,7 +158,7 @@ public dynamic class LzSelectionManager extends LzNode {
       * Called with a new member to be selected.
       * @param LzView o: The new element that got selected.
       */
-    function select (o /*:LzView*/) :void {
+    function select (o /*:LzView*/) /*:void*/ {
         if (this.isSelected( o ) && (this.toggle || this.isMultiSelect( o ))) {
             this.unselect( o );
         } else {
@@ -201,7 +201,7 @@ public dynamic class LzSelectionManager extends LzNode {
       * Unselects the given object.
       * @param LzView o: The object to make unselected
       */
-    function unselect (o /*:LzView*/) :void {
+    function unselect (o /*:LzView*/) /*:void*/ {
         var selh:Object = this.selectedHash;
         var sela:Array = this.selected;
         if (selh[ o.__LZUID ]) {
@@ -219,7 +219,7 @@ public dynamic class LzSelectionManager extends LzNode {
     /**
       * Unselects any selected objects.
       */
-    function clearSelection () :void {
+    function clearSelection () /*:void*/ {
         var sela:Array = this.selected;
         this.selected = [];
         this.selectedHash = {};

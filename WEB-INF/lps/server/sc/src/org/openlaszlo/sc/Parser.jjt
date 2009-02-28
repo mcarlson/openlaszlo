@@ -1,7 +1,7 @@
 /* ****************************************************************************
  * Parser.jjt
  *
- * Copyright (c) 2002-2008 Laszlo Systems, Inc.
+ * Copyright (c) 2002-2009 Laszlo Systems, Inc.
  * All Rights Reserved.
  *
  * This software is the proprietary information of Laszlo Systems, Inc.
@@ -732,7 +732,10 @@ ASTIdentifier.Type TypeAndInitializer() #void : { ASTIdentifier.Type type = null
 ASTIdentifier.Type TypeIdentifierOrVoid() #void : { ASTIdentifier.Type type = null; }
 {
   (
-    "void" {type = null;}
+    "void" {
+      type = new ASTIdentifier.Type();
+      type.typeName = "void";
+    }
   | type = TypeIdentifier()
   ) {
     return type;

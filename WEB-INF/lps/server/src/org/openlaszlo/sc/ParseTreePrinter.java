@@ -1242,8 +1242,8 @@ public class ParseTreePrinter {
 
   public List makeTranslationUnits(String annotated, final SourceFileMap sources) {
     if (config.dumpLineAnnotationsFile != null) {
-      Compiler.emitFile(config.dumpLineAnnotationsFile, printableAnnotations(annotated));
-      System.err.println("Created " + config.dumpLineAnnotationsFile);
+      String newname = Compiler.emitFile(config.dumpLineAnnotationsFile, printableAnnotations(annotated));
+      System.err.println("Created " + newname);
     }
     if (Config.DEBUG_NODE_OUTPUT) {
       System.out.println("ANNOTATED OUTPUT:\n" + printableAnnotations(annotated));

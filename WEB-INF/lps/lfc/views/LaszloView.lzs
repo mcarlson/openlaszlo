@@ -549,7 +549,7 @@ function addSubview ( s ){
   * instantiating.
   * @access private
   */
-override function __LZinstantiationDone (){
+override function __LZinstantiationDone () : void {
     var vip:LzView = (this.immediateparent cast LzView);
     if (vip) {
         (vip).addSubview( this );

@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -48,7 +48,7 @@ static function loadJS ( js, target ){
   * @param Optional arguments to call
   */
 
-static function callJS (js, callback) {
+static function callJS (js, callback) :* {
     if (LzBrowserKernel.jsready != true) {
         LzBrowserKernel.__jslocked = true;
     }
@@ -61,7 +61,7 @@ static function callJS (js, callback) {
             LzBrowserKernel.__jscallq.push(o);
             //Debug.write('queued', LzBrowserKernel.__jscallq.length, o); 
         }
-        return;
+        return null;
     }
 
     if (callback instanceof Function) {
@@ -79,6 +79,7 @@ static function callJS (js, callback) {
     if (callback == false) {
         LzBrowserKernel._dequeueJS();
     }
+    return null;
 }
 
 /** @access private */ 
