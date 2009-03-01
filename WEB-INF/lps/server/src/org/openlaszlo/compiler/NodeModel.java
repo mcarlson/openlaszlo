@@ -156,7 +156,7 @@ public class NodeModel implements Cloneable {
 
     // Path of node from root.  This follows the same psuedo-xpath
     // system used in LzNode._dbg_name.  It provides a basis for
-    // giving anonymous classes unuqu names.
+    // giving anonymous classes unique names.
     private static String computeNodePath(NodeModel node, ViewSchema schema, CompilationEnvironment env) {
         if (node.id != null) {
             return "#" + node.id;
@@ -166,8 +166,14 @@ public class NodeModel implements Cloneable {
         }
         String nn = node.localName;
         String path = "";
-        org.jdom.Parent parentElement = node.element.getParent();
-        if ((parentElement == null) || (! (parentElement instanceof ElementWithLocationInfo))) {
+        org.jdom.Parent parentDOMNode = node.element.getParent();
+        Element parentElement;
+        if (parentDOMNode instanceof org.jdom.Document) {
+          parentElement = ((org.jdom.Document)parentDOMNode).getRootElement();
+        } else {
+          parentElement = (Element)parentDOMNode;
+        }
+        if (parentElement == node.element) {
             // Must be at the root, in not linking, create a UID
             // placeholder for root
           if (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
@@ -185,13 +191,11 @@ public class NodeModel implements Cloneable {
         } else {
             String tn = path = node.tagName;
             int count = 0, index = -1;
-            for (Iterator iter = parent.children.iterator(); iter.hasNext(); ) {
-                NodeModel sibling = (NodeModel) iter.next();
-                if (tn.equals(sibling.tagName)) {
-                    count++;
-                    if (index != -1) break;
-                }
-                if (node.element == sibling.element) { index = count; }
+            for (Iterator iter = parentElement.getChildren(tn, parentElement.getNamespace()).iterator(); iter.hasNext(); ) {
+                Element sibling = (Element) iter.next();
+                count++;
+                if (index != -1) break;
+                if (node.element == sibling) { index = count; }
             }
             if (count > 1) {
                 path += "[" + index + "]";
