@@ -252,7 +252,7 @@ override function construct ( odp , args ){
     //the real parent for this is datapaths view's (immediateparent) parent
     super.construct( view.parent, args);
 
-    if ( view.parent != view.immediateparent ){
+    if ( args.name != null && view.parent != view.immediateparent ){
         view.immediateparent[ args.name ] = this;
     }
 
