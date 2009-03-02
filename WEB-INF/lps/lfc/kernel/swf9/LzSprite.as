@@ -172,7 +172,8 @@ dynamic public class LzSprite extends Sprite {
               this.graphics.clear();
           } else {
               this.graphics.clear();
-              this.graphics.beginFill(this.bgcolor);
+              var alpha:Number = this.__bgcolorhidden ? 0 : 1;
+              this.graphics.beginFill(this.bgcolor, alpha);
               this.graphics.drawRect(0, 0, this.lzwidth, this.lzheight);
               this.graphics.endFill();
           }
@@ -925,14 +926,21 @@ dynamic public class LzSprite extends Sprite {
                                                              o.bb,
                                                              o.ab ? o.ab : 0);
       }
-      
+
       /** setBGColor( String/Number:color )
           o Sets the background color of the sprite
           o Can be a number (0xff00ff):void or a string ('#ff00ff'):void 
       */
       public function setBGColor( c:* ):void {
-          if (this.bgcolor == c) return;
-          this.bgcolor = c;
+          if (this.bgcolor == c && ! this.__bgcolorhidden) return;
+          if (c != null || this.__contextmenu == null) {
+              this.__bgcolorhidden = false;
+              this.bgcolor = c;
+          } else {
+              // create an invisible background
+              this.__bgcolorhidden = true;
+              this.bgcolor = 0xffffff;
+          }
           draw();
       }
 
@@ -1373,6 +1381,7 @@ dynamic public class LzSprite extends Sprite {
       }
 
       var __contextmenu;
+      var __bgcolorhidden:Boolean = false;
 
       /* LzSprite.setContextMenu
        * Install menu items for the right-mouse-button 
@@ -1388,7 +1397,12 @@ dynamic public class LzSprite extends Sprite {
               // TODO [hqm 2008-04] make this do the more complex stuff that swf8 LzSprite does now,
               // where it checks for a resource or bgcolor sprite, in order to make the clickable region
               // match what the user expects.
-
+              if (this.bgcolor == null) {
+                  // if not present, create an invisible background
+                  this.__bgcolorhidden = true;
+                  this.bgcolor = 0xffffff;
+                  this.draw();
+              }
 
               // "contextMenu" is a swf9 property on flash.display.Sprite
               this.contextMenu = cmenu;
