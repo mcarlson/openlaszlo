@@ -58,7 +58,7 @@
         <!--- @keywords private -->
         <method name="init">
             super.init();
-            if (this._hasSetHeight) setHeight(this.height);
+            if (this._hasSetHeight) this.setAttribute('height', this.height);
             adjustmyheight();
         </method>
 
