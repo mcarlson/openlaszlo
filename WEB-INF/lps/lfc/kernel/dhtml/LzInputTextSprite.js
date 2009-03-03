@@ -359,6 +359,7 @@ LzInputTextSprite.prototype.__setTextEvents = function(c) {
     } else {
         div.onmouseout = f;
     }
+    div.onmousemove = f;
     div.onfocus = f;
     div.onclick = f;
     div.onkeyup = f;
@@ -547,9 +548,10 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
         }
     } else if (eventname == 'onmouseout') {
         sprite.__setglobalclickable(true);
-    }
-
-    if (eventname == 'onkeypress') {
+    } else if (eventname == 'onmousemove') {
+        // don't forward 'onmousemove' to inputtextevent()
+        return;
+    } else if (eventname == 'onkeypress') {
         if (sprite.restrict || (sprite.multiline && view.maxlength > 0)) {
             sprite.__updatefieldsize();
             var keycode = evt.keyCode;
