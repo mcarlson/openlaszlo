@@ -82,6 +82,14 @@ class BooleanPresentationType extends PresentationType {
  */
 class NumberPresentationType extends PresentationType {
   static function accept(value) {
+    // NOTE [2009-03-02 ptw] Only required for swf8 whose Number
+    // does not understand Infinity
+    if ($swf8) {
+      switch (value) {
+        case "Infinity": return Infinity;
+        case "-Infinity": return (- Infinity);
+      }
+    }
     return Number(value);
   }
   static var present = PresentationType.present;
@@ -129,6 +137,10 @@ class ExpressionPresentationType extends PresentationType {
       case "false": return false;
       case "true": return true;
       case "NaN": return 0/0;
+      // NOTE [2009-03-02 ptw] Only required for swf8 whose Number
+      // does not understand Infinity
+      case "Infinity": return Infinity;
+      case "-Infinity": return (- Infinity);
       case "":
         // Should this return the empty string, or null?  The empty
         // string is more JSON-like, null is what Adam proposed in
