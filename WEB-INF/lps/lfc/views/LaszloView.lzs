@@ -967,6 +967,19 @@ function $lzc$set_aasilent(s) {
     }
 }
 
+/** Sends an event to the Microsoft Active Accessibility API. Microsoft Active Accessibility handles that event and sends the event to any active screen reader application, which in turn reports the change to the user. For example, when a user toggles a RadioButton instance, the RadioButton's Accessibility Implementation calls Accessibility.sendEvent() with the eventType EVENT_OBJECT_STATECHANGE/0x800a. 
+  * @param number childID: The child id of the accessibility interface element to which the event applies (for example, an individual list item in a list box). Use 0 to indicate that the event applies to the DisplayObject supplied in the source parameter. 
+  * @param number eventType: A constant indicating the event type. Event names and values are a subset of the MSAA event constants. 
+  * @param boolean nonHTML: A Boolean indication of whether or not the event is one of the standard event types that can be generated from an HTML form. When set to true, this parameter helps prevent some problems that may occur with screen readers that interperet Flash content as part of the HTML page. The default value is false.  
+  */
+function sendAAEvent(childID:Number, eventType:Number, nonHTML:Boolean = false) {
+    if (this.capabilities.accessibility) {
+        this.sprite.sendAAEvent(childID, eventType, nonHTML);
+    } else if ($debug) {
+        LzView.__warnCapability('view.sendAAEvent()', 'accessibility'); 
+    }
+}
+
 
 LzView.__LZdelayedSetters.layout = "$lzc$set_layout";
 LzView.earlySetters.clickregion = 7;

@@ -149,6 +149,14 @@ LzSprite.prototype.setAATabIndex = function( s, mc ){
     mc.tabIndex = s;
 }
 
+/**
+  * See view.sendAAEvent()
+  */
+LzSprite.prototype.sendAAEvent = function(childID, eventType, nonHTML){
+    var mc = this.getMCRef();
+    Accessibility.sendEvent(mc, childID, eventType, nonHTML);
+}
+
 
 // FIRST_SUBVIEW_DEPTH: This is so that default objects (such as
 // buttons, and in swf6 masks) can be attached above the view's

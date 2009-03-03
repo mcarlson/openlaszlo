@@ -103,6 +103,14 @@
        font="monospace" fontsize="11" fontstyle="plain"
        oninit="initEvalView()" pixellock="true">
 
+    <method name="init">
+        super.init();
+        // Hide from screen readers
+        if ($as2) {
+            var mc = this.getMCRef();
+            mc._accImpl = {stub: true};
+        }
+    </method>
     <!-- Will be applied in construct if no width specified -->
     <attribute name="default_width" value="false" />
     <state applied="${parent.default_width}">
