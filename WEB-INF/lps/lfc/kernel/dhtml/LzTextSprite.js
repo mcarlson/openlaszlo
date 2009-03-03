@@ -531,7 +531,7 @@ LzTextSprite.prototype.enableClickableLinks = function ( enabled) {
 LzTextSprite.prototype.makeTextLink = function (str, value) {
     LzTextSprite.addLinkID(this.owner);
     var uid = this.owner.getUID();
-    return "<span onclick=\"javascript:$modules.lz.__callTextLink('" + uid+"', '" + value +"')\">" + str +"</span>";
+    return "<span class=\"lztextlink\" onclick=\"javascript:$modules.lz.__callTextLink('" + uid+"', '" + value +"')\">" + str +"</span>";
 }
 
 // value is encoded as VIEWID:value

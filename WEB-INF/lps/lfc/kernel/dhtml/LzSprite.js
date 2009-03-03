@@ -262,6 +262,9 @@ LzSprite.prototype.__defaultStyles = {
         letterSpacing: '0px',
         textDecoration: 'none'
     },
+    lztextlink: {
+        cursor: 'pointer'
+    },
     writeCSS: function() {
         var css = '';
         for (var classname in this) {
