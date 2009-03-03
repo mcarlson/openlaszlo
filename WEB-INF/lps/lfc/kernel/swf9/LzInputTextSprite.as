@@ -165,10 +165,6 @@ public class LzInputTextSprite extends LzTextSprite {
         }
     }
 
-    override public function getTextfieldHeight () {
-        return this.textfield.height;
-    }
-
     /**
      * If a mouse event occurs in an input text field, find the focused view
      */

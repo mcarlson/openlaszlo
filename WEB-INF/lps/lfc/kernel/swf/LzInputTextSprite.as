@@ -1,7 +1,7 @@
 /**
   * LzInputTextSprite.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -274,10 +274,6 @@ LzInputTextSprite.prototype.setEnabled = function (enabled){
   */
 LzInputTextSprite.prototype.setHTML = function (htmlp) {
     this.__LZtextclip.html = htmlp;
-}
-
-LzInputTextSprite.prototype.getTextfieldHeight = function ( ){
-    return this.__LZtextclip._height
 }
 
 // This is the text without any formatting

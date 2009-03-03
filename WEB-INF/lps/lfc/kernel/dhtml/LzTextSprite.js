@@ -250,6 +250,7 @@ LzTextSprite.prototype.getTextWidth = function () {
   return this.getTextSize(this.text, this.resize).width;
 }
 
+// TODO [2009-02-27 ptw] (LPP-7832) Rename to get LineHeight
 LzTextSprite.prototype.getTextHeight = function () {
   var h = this.getTextSize(null).height;
   if (h > 0 && this.quirks.emulate_flash_font_metrics) {

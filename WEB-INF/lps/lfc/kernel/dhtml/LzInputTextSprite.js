@@ -117,6 +117,7 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
     this.scrolldiv.owner = this;
 }
 
+// TODO [2009-02-27 ptw] (LPP-7832) Rename to get LineHeight
 LzInputTextSprite.prototype.getTextHeight = function() {
     var h = LzTextSprite.prototype.getTextHeight.call(this);
     var b = h;

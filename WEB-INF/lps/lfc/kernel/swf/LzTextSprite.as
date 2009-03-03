@@ -332,6 +332,8 @@ LzTextSprite.prototype.getTextfieldHeight = function ( ){
  * a.bargull@intensis.de for finding this illustration, which shows
  * the relationship of textHeight and textfieldHeight:
  * http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/images/text-metrics.jpg
+ *
+ * TODO [2009-02-27 ptw] (LPP-7832) Rename to get LineHeight
  */
 LzTextSprite.prototype.getTextHeight = function ( ){
     if (! this.multiline) {

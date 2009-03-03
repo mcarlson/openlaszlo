@@ -1063,8 +1063,7 @@ dynamic class LzText extends LzView with LzFormatter {
    * Calculates the current height of the text held by the text field.
    */
   function getTextHeight ( ){
-    return this.tsprite.getTextHeight();
-    //return this.__LZtextclip.textHeight;
+    return this.tsprite.getTextfieldHeight();
   }
   /** @access private */
   function $lzc$getTextHeight_dependencies ( who , self){
