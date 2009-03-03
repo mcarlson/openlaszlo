@@ -472,6 +472,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['focus_on_mouseover'] = false;
             // required for text-align / text-indent to work
             quirks['textstyle_on_textdiv'] = true;
+            // CSS sprites conflict with ie_alpha_image_loader...
+            quirks['use_css_sprites'] = ! quirks['ie_alpha_image_loader'];
         } else if (browser.isSafari) {
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;
