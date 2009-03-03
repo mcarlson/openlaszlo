@@ -472,8 +472,8 @@ LzTextSprite.prototype.setYScroll = function ( n ){
   * @access private
   */
 LzTextSprite.prototype.annotateAAimg = function (txt) {
-    if (typeof(txt) == "undefined") { return; }
-    if (txt.length == 0) { return };
+    if (typeof(txt) == "undefined") { return ''; }
+    if (txt.length == 0) { return ''};
     
     var ntxt = "";
     // search for <img ...> strings
