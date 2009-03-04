@@ -1388,12 +1388,16 @@ dynamic public class LzSprite extends Sprite {
        * @param LzContextMenu cmenu: LzContextMenu to install on this view
        */
       function setContextMenu ( lzmenu ){
+          this.__contextmenu = lzmenu;
           if (lzmenu == null) {
-              this.__contextmenu = null;
+              if (this.__bgcolorhidden) {
+                  // remove invisible background
+                  this.__bgcolorhidden = false;
+                  this.bgcolor = null;
+                  this.draw();
+              }
+              this.contextMenu = null;
           } else {
-              this.__contextmenu = lzmenu;
-              var cmenu:ContextMenu = lzmenu.kernel.__LZcontextMenu();
-
               // TODO [hqm 2008-04] make this do the more complex stuff that swf8 LzSprite does now,
               // where it checks for a resource or bgcolor sprite, in order to make the clickable region
               // match what the user expects.
@@ -1404,6 +1408,7 @@ dynamic public class LzSprite extends Sprite {
                   this.draw();
               }
 
+              var cmenu:ContextMenu = lzmenu.kernel.__LZcontextMenu();
               // "contextMenu" is a swf9 property on flash.display.Sprite
               this.contextMenu = cmenu;
           }

@@ -492,6 +492,7 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
             // opacity setting should not work
             this._bgcolorhidden = true;
         } else {
+            this._bgcolorhidden = false;
             this.bgcolor = null;
             this.removeBG();
         }
@@ -1556,21 +1557,35 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
     if (! (this.isroot || this instanceof LzTextSprite)) {
         // normal views install the context-menu on their background-clip
         var mb = this.__LZbgRef;
-        if (mb == null) {
-            // if not present, create an invisible clip
-            this.setBGColor(0xffffff);
-            mb = this.__LZbgRef;
-            mb._alpha = 0;
-            this._bgcolorhidden = true;
+        if (cmenu == null) {
+            // remove menu from movieclip
+            if (this._bgcolorhidden) {
+                // remove invisible clip
+                this.setBGColor(null);
+            } else if (mb != null) {
+                delete mb.menu;
+            }
+        } else {
+            if (mb == null) {
+                // if not present, create an invisible clip
+                this.setBGColor(0xffffff);
+                mb = this.__LZbgRef;
+                mb._alpha = 0;
+                this._bgcolorhidden = true;
+            }
+            mb.menu = cmenu;
         }
-        mb.menu = cmenu;
     }
 
     // Install menu on foreground resource clip if there is one,
     // must use _root if canvas
     var mc = this.isroot ? _root : this.getMCRef();
     if (mc != null) {
-        mc.menu = cmenu;
+        if (cmenu == null) {
+            delete mc.menu;
+        } else {
+            mc.menu = cmenu;
+        }
     }
 }
 
