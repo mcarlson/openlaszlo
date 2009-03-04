@@ -33,8 +33,8 @@ public class Main {
         "  Action to take on compilation errors.  Defaults to warn.",
         "--help",
         "  Prints this message.",
-        "--flush-script-cache",
-        "  Doesn't flush script cache before compiling.",
+        "--flush-script-cache[=true|false]",
+        "  Flush script cache before compiling, boolean value optional. System default can be set in lps.properties ",
         "--script-cache-dir directory",
         "  Location of script cache directory (default <lps>/work/scache)",
         "--media-cache-dir directory",
@@ -125,7 +125,7 @@ public class Main {
         compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY,
                              LPS.getProperty("compiler.runtime.default",
                                              LPS.getRuntimeDefault()));
-        boolean flushScriptCache = true;
+        boolean flushScriptCache = "false".equals(LPS.getProperty("compiler.scache.persist", "true"));
         Boolean forceTransCode = null;
         String outFileArg = null;
         boolean saveScriptOption = false;
@@ -149,11 +149,11 @@ public class Main {
                     LPS.setHome(lhome);
                 } else if (arg == "--schema") {
                     compiler.SchemaLogger.setLevel(Level.ALL);
-                } else if (arg == "--keepscriptcache") {
-                    flushScriptCache = false;
-                    System.err.println("--keepscriptcache is deprecated.  This is now the default behavior.");
                 } else if (arg == "--flush-script-cache") {
                     flushScriptCache = true;
+                } else if (arg.startsWith("--flush-script-cache=")) {
+                    String value = arg.substring("--flush-script-cache=".length());
+                    flushScriptCache = "true".equals(value);
                 } else if (arg == "--copy-resources") {
                     compiler.setProperty(CompilationEnvironment.COPY_RESOURCES_LOCAL, "true");
                 } else if (arg == "-o" || arg == "--output") {
