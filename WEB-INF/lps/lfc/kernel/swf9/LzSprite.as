@@ -237,10 +237,6 @@ dynamic public class LzSprite extends Sprite {
           if (LzAsset.isBitmapAsset(r) 
                 || LzAsset.isMovieClipAsset(r) 
                 || LzAsset.isMovieClipLoaderAsset(r)) {
-              this.resourcewidth = res.width;
-              this.resourceheight = res.height;
-              this.totalframes = res.frames.length;
-
               if (imgLoader) {
                   // unload previous http image-resource
                   this.unload();
@@ -252,6 +248,9 @@ dynamic public class LzSprite extends Sprite {
                   this.resourceCache = null;
               }
 
+              this.resourcewidth = res.width;
+              this.resourceheight = res.height;
+              this.totalframes = res.frames.length;
               this.__isinternalresource = true;
               this.resource = r;
               // instantiate resource at frame 1
