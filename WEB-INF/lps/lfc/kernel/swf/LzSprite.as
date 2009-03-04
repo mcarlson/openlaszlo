@@ -1618,7 +1618,7 @@ LzSprite.prototype.__gotFocus = function ( oldfocus ){
     var v = this.myView || this._parent.myView;
     if (!(lz.Focus.getFocus() === v)) {
         //var tabdown = lz.Keys.isKeyDown('tab');
-        lz.Focus.setFocus(this.myView);
+        lz.Focus.setFocus(v);
     }
 }
 

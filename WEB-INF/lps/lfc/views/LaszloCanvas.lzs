@@ -211,8 +211,9 @@ dynamic class LzCanvas extends LzView {
                 this.sprite.setAAActive(true);
                 this.sprite.setAASilent(false);
             }
-        } else if (args.accessible && $debug) {
-            Debug.warn("This runtime doesn't support accessibility.");
+        } else if (args.accessible) {
+            if ($debug) Debug.warn("This runtime doesn't support accessibility.");
+            args.accessible = this.accessible = false;
         }
 
         if ((typeof(args.history) == "undefined") || args.history == null) {
