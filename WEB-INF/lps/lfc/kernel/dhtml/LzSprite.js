@@ -368,6 +368,7 @@ LzSprite.prototype.quirks = {
     ,preload_images: true
     ,inputtext_strips_newlines: false
     ,swf8_contextmenu: true
+    ,dom_breaks_focus: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -527,6 +528,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['text_event_charcode'] = false;
             quirks['textdeco_on_textdiv'] = true;
         } else if (browser.isFirefox) {
+            // DOM operations on blurring element break focus (LPP-7786)
+            quirks['dom_breaks_focus'] = true;
             if (browser.version < 2) {
                 // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
                 quirks['firefox_autocomplete_bug'] = true;

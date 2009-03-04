@@ -501,10 +501,11 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
         return;
     }
     var eventname = 'on' + evt.type;
+    var quirks = sprite.quirks;
 
     LzMouseKernel.__sendMouseMove(evt);
 
-    if (sprite.quirks.ie_mouse_events && eventname == 'onmouseleave') {
+    if (quirks.ie_mouse_events && eventname == 'onmouseleave') {
         eventname = 'onmouseout';
     }
     if (sprite.__shown != true) {
@@ -521,6 +522,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
     } else if (sprite.__shown == false) {
         return;
     }
+    var nextFocus = null;
     if (eventname == 'onfocus' || eventname == 'onmousedown') {
         if (eventname == 'onfocus') {
             LzInputTextSprite.prototype.__setglobalclickable(false);
@@ -542,7 +544,17 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             sprite.select();
             return;
         }
+        // check if __hide() was called
+        var shown = sprite.__shown;
         sprite.__hide();
+        if (quirks.dom_breaks_focus && (shown && ! sprite.__shown)) {
+            // workaround for Firefox bug (LPP-7786):
+            // DOM operations (appendChild, removeChild) on blurring element
+            // breaks the focus in Firefox, so we need to re-focus the
+            // element later again
+            var fsprite = LzInputTextSprite.prototype.__focusedSprite;
+            nextFocus = fsprite && fsprite.__LzInputDiv;
+        }
         if (sprite._cancelblur) {
             sprite._cancelblur = false;
             return;
@@ -556,7 +568,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
         if (sprite.restrict || (sprite.multiline && view.maxlength > 0)) {
             sprite.__updatefieldsize();
             var keycode = evt.keyCode;
-            var charcode = sprite.quirks.text_event_charcode ? evt.charCode : evt.keyCode;
+            var charcode = quirks.text_event_charcode ? evt.charCode : evt.keyCode;
             // only printable characters or carriage return (modifier keys must not be active)
             var validChar = (!(evt.ctrlKey || evt.altKey) && (charcode >= 32 || keycode == 13));
             //Debug.write("charCode = %s, keyCode = %s, ctrlKey = %s, altKey = %s, shiftKey = %s", charcode, keycode, evt.ctrlKey, evt.altKey, evt.shiftKey);
@@ -571,7 +583,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
                     var selsize = sprite.getSelectionSize();
                     //[TODO anba 2008-01-06] use selsize==0 when LPP-5330 is fixed
                     if (selsize <= 0) {
-                    if (sprite.quirks.text_ie_carriagereturn) {
+                    if (quirks.text_ie_carriagereturn) {
                             var val = sprite.__LzInputDiv.value.replace(sprite.____crregexp, '\n');
                         } else {
                             var val = sprite.__LzInputDiv.value;
@@ -592,7 +604,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             } else {
                 // IE and Safari do not send 'onkeypress' for function-keys,
                 // but Firefox and Opera!
-                if (sprite.quirks.keypress_function_keys) {
+                if (quirks.keypress_function_keys) {
                     var ispaste = false;
                     if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
                         var c = String.fromCharCode(charcode);
@@ -644,6 +656,11 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             }
             view.inputtextevent(eventname);
         }
+    }
+
+    if (nextFocus) {
+        // re-initiate focus, see above
+        nextFocus.focus();
     }
 }
 
