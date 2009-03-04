@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lztrack
@@ -194,6 +194,9 @@ public final class LzTrackService extends LzEventable {
         if (reglist) {
             for (var i:int = 0; i < reglist.length; i++) {
                 if (reglist[i] == v) {
+                    if (reglist.__LZlasthit == v) {
+                        reglist.__LZlasthit = null;
+                    }
                     reglist.splice(i, 1);
                 }
             }
@@ -255,6 +258,9 @@ public final class LzTrackService extends LzEventable {
                 this.__LZtrackDel.unregisterAll();
             }
             reglist.__LZactive = false;
+            if (this.__LZlastmouseup == reglist.__LZlasthit) {
+                this.__LZlastmouseup = null;
+            }
             reglist.__LZlasthit = null;// should send ontrackmouseout ?
         }
     }
