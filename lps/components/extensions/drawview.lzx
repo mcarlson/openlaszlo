@@ -576,6 +576,7 @@
                 //Debug.write('_buildcanvas', this.__id, width, height);
 
                 this.__LZcanvas = document.createElement('canvas');
+                this.__LZcanvas.owner = this.sprite;
                 this.__LZcanvas.setAttribute('id', this.__id);
                 this.__LZcanvas.setAttribute('width', width);
                 this.__LZcanvas.setAttribute('height', height);
@@ -1006,6 +1007,9 @@
                     this.__drawing = drawcontainer.createEmptyMovieClip("drawing", drawcontainer.getNextHighestDepth());
 
                     context = drawcontainer;
+                    // Install right-click context menu if there is one
+                    var cmenu:LzContextMenu = this.sprite['__contextmenu'];
+                    if (cmenu) context.menu = cmenu.kernel.__LZcontextMenu();
                 }
                 this.context = context;
                 this.beginPath();
@@ -1370,6 +1374,27 @@
                     this.__bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
                     // negative dimensions cause this to be null
                     if (this['__bitmapdata']) this.__bitmapmc.attachBitmap(this.__bitmapdata, 2, "auto", true);
+                    // Install right-click context menu if there is one
+                    var cmenu:LzContextMenu = this.sprite['__contextmenu'];
+                    if (cmenu) this.__bitmapmc.menu = cmenu.kernel.__LZcontextMenu();
+                }
+
+                override function $lzc$set_contextmenu (cmenu:LzContextMenu) :void {
+                    if (this['__bitmapmc']) {
+                        if (cmenu) {
+                            this.__bitmapmc.menu = cmenu.kernel.__LZcontextMenu();
+                        } else {
+                            delete this.__bitmapmc.menu;
+                        }
+                    }
+                    if (this.context) {
+                        if (cmenu) {
+                            this.context.menu = cmenu.kernel.__LZcontextMenu();
+                        } else {
+                            delete this.context.menu;
+                        }
+                    }
+                    super.$lzc$set_contextmenu(cmenu);
                 }
 
                 override function $lzc$set_width(w) {
