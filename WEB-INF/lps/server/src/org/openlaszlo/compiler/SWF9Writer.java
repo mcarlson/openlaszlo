@@ -521,8 +521,7 @@ class SWF9Writer extends ObjectWriter {
 
         Properties props = (Properties)mProperties.clone();
 
-        // TODO [hqm 2009-01] make this a compiler command line option
-        props.put(org.openlaszlo.sc.Compiler.INCREMENTAL_COMPILE, LPS.getProperty("compiler.swf9.incremental"));
+        props.put(org.openlaszlo.sc.Compiler.INCREMENTAL_COMPILE, "true");
 
         // Pass in the table of lzx class defs
         props.setProperty(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeLibraryPreamble());
