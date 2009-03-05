@@ -128,7 +128,7 @@
             <![CDATA[
             super.init();
 
-            if (canvas.accessible) {
+            if (canvas['accessible']) {
                 this.accessible.setAttribute('applied', true);
                 var mc = this.getMCRef();
                 mc._accImpl = {};
@@ -146,10 +146,10 @@
 
                 mc._accImpl.get_accState = function() {
                     if (this.master.selected) {
-                        // STATE_SYSTEM_CHECKED && STATE_SYSTEM_FOCUSED && STATE_SYSTEM_FOCUSABLE
+                        // STATE_SYSTEM_CHECKED | STATE_SYSTEM_FOCUSED | STATE_SYSTEM_FOCUSABLE
                         return 0x00100014
                     } else {
-                        // STATE_SYSTEM_FOCUSABLE && STATE_SYSTEM_FOCUSED
+                        // STATE_SYSTEM_FOCUSABLE | STATE_SYSTEM_FOCUSED
                         return 0x00100004
                     }
                 }
@@ -240,7 +240,7 @@
         <method name="setHilite" args="dohilite">
             _title.setAttribute('fgcolor',
                 dohilite ? style.texthilitecolor : style.textcolor);
-            if (canvas.accessible) this.updateFocus();
+            if (canvas['accessible']) this.updateFocus();
         </method>
 
         <!-- FIXME: [hqm 2006-09] LPP-2244 This used to be y="$once{classroot.text_y}"
