@@ -344,6 +344,11 @@ public class Compiler {
       }
       cg.setOptions(options);
       cg.setOriginalSource(source);
+      String srcDumpFile = (String)options.get(DUMP_SRC_INPUT);
+      if (srcDumpFile != null) {
+        String newname = emitFile(srcDumpFile, source);
+        System.err.println("Created " + newname);
+      }
 
       profiler.enter("parse");
       source = cg.preProcess(source);
@@ -471,6 +476,7 @@ public class Compiler {
   public static String DUMP_AST_INPUT = "dumpASTInput";
   public static String DUMP_AST_OUTPUT = "dumpASTOutput";
   public static String DUMP_LINE_ANNOTATIONS = "dumpLineAnnotations";
+  public static String DUMP_SRC_INPUT = "dumpSourceInput";
   public static String DISABLE_CONSTANT_POOL = "disableConstantPool";
   public static String DISABLE_TRACK_LINES = "disableTrackLines";
   public static String DISABLE_PUBLIC_FOR_DEBUG = "disablePublicForDebug";
@@ -544,16 +550,7 @@ public class Compiler {
       org.openlaszlo.sc.parser.Parser p =
         new org.openlaszlo.sc.parser.Parser(new StringReader(str));
       assert "Program".equals(type);
-      try {
-        return p.Program();
-      } catch (ParseException pe) {
-        // NOTE: [2007-03-27 ptw]
-        // The parser tracks #file declarations, but does not pass the
-        // file to the exception constructor, so we fix that up here.
-        // (This is really a limitation of javacc.)
-        pe.initPathname(p.token_source.pathname);
-        throw pe;
-      }
+      return p.Program();
     }
 
     public SimpleNode parse0(String str) {

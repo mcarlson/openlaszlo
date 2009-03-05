@@ -21,6 +21,7 @@ import org.openlaszlo.css.CSSParser;
 import org.openlaszlo.sc.Function;
 import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
+import org.openlaszlo.sc.CompilerException;
 import org.openlaszlo.sc.CompilerImplementationError;
 import org.openlaszlo.server.*;
 import org.openlaszlo.utils.ChainedException;
@@ -354,7 +355,12 @@ public class NodeModel implements Cloneable {
         return null;
       }
       String pragmas = "";
-      String body = "return (" + getCompiler().dependenciesForExpression(value) + ")";
+      String body = "";
+      try {
+        body = "return (" + getCompiler().dependenciesForExpression(srcloc + value) + ")";
+      } catch (CompilerException e) {
+        env.warn(e, source);
+      }
       Function dependencies;
       if (canHaveMethods) {
           // TODO: [2008-07-21 ptw] (LPP-5813) This should really be

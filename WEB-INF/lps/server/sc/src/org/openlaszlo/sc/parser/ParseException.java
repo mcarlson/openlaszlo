@@ -8,7 +8,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -120,14 +120,12 @@ public class ParseException extends CompilerException {
         }
     }
 
-    String pathname = null;
-
     public String getPathname() {
-        return pathname;
-    }
-
-    public void initPathname(String pathname) {
-        this.pathname = pathname;
+        if (currentToken.next != null) {
+            return currentToken.next.pathname;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -143,12 +141,24 @@ public class ParseException extends CompilerException {
     public String getMessage() {
         return getMessage(true);
     }
-    
+
+    /**
+     * returns message fragment ' at file XXX, line YYY, column ZZZ'
+     */
+    private String fileLineMessage(Token token) {
+        String retval = " at ";
+        if (token.pathname != null) {
+            retval += "file " + token.pathname + ", ";
+        }
+        retval += "line " + token.beginLine + ", column " + token.beginColumn;
+        return retval;
+    }
+
     public String getMessage(boolean includeSourceLocation) {
         if (!specialConstructor) {
             String retval = super.getMessage();
             if (currentToken != null && includeSourceLocation) {
-              retval += " at line " + currentToken.beginLine + ", column " + currentToken.beginColumn;
+              retval += fileLineMessage(currentToken);
             }
             return retval;
         }
@@ -202,7 +212,7 @@ public class ParseException extends CompilerException {
         }
         String retval = "Syntax error: " + msg;
         if (currentToken.next != null && includeSourceLocation) {
-            retval += " at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn;
+            retval += fileLineMessage(currentToken.next);
         }
         retval += ".";
         if  (expectedCount == 1) {

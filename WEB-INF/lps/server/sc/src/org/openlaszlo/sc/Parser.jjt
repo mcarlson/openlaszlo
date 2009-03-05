@@ -41,7 +41,7 @@ public class Parser {
         Token t = getToken(1);
         if (t!= null) {
             SimpleNode sn = (SimpleNode) n;
-            sn.setBeginLocation(token_source.pathname,
+            sn.setBeginLocation(t.pathname,
                                 t.beginLine, t.beginColumn);
             // See tokenmanager.html in the javacc documentation.
             if (t.specialToken != null) {
@@ -97,7 +97,6 @@ PARSER_END(Parser)
 
 TOKEN_MGR_DECLS :
 {
-   public String pathname;
    int beginLine;
 }
 
@@ -111,7 +110,7 @@ SKIP: {
 
 <FILENAME> SKIP: {
   < (~["\n","\r"])* >
-  {pathname = image.toString();} : DEFAULT
+  {Token.setCurrentPathname(image.toString());} : DEFAULT
 }
 
 <LINE_NUMBER> SKIP: {

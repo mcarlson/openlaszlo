@@ -321,6 +321,7 @@ public class Main {
                 }
                 compiler.setProperty(org.openlaszlo.sc.Compiler.DUMP_AST_INPUT, sourceNameNoExt + "-astin-*.txt");
                 compiler.setProperty(org.openlaszlo.sc.Compiler.DUMP_AST_OUTPUT, sourceNameNoExt + "-astout-*.txt");
+                compiler.setProperty(org.openlaszlo.sc.Compiler.DUMP_SRC_INPUT, sourceNameNoExt + "-src-*.txt");
                 compiler.setProperty(org.openlaszlo.sc.Compiler.DUMP_LINE_ANNOTATIONS, sourceNameNoExt + "-lineann-*.txt");
             }
             status += compile(compiler, logger, sourceName, intermediateName, outFileName, outDir);

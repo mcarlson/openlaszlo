@@ -67,13 +67,13 @@ public class CompilationError extends RuntimeException {
      * @param cause the chained cause of the error
      */
     public CompilationError(Element element, Throwable cause) {
-        this(getCauseMessage(cause));
+        this(cause);
         initElement(element, cause);
     }
 
     public CompilationError(Element element, String attribute,
                             Throwable cause) {
-        this(getCauseMessage(cause));
+        this(cause);
         initElement(element, attribute, cause);
     }
 
