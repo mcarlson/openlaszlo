@@ -141,9 +141,22 @@
         <method name="_dokeydown" args="kc">
             <![CDATA[
             /* select item on 'space' key */
-            if (kc == 32 && this._hiliteview is lz.view && this._hiliteview.enabled) {
-               this._hiliteview.setAttribute('selected', true);
-              // this._hiliteview.setHilite(false);
+            var s = this._hiliteview;
+
+            if (s == null) {
+                s = getSelection();
+                // [2009-03-05 ptw] If you lost the highlight because
+                // you extended the selection, you want to pick up from
+                // there
+                if (this.multiselect) s = s[s.length - 1];
+            }
+
+            if (kc == 32) {
+               if (s is lz.view && s.enabled) {
+                 s.setAttribute('selected', true);
+                 // [2009-03-05 ptw] Don't lose the hilite because you selected
+                 s.setHilite(true);
+               }
                return;
             }
 
@@ -153,13 +166,6 @@
             */
             if (kc >= 37 && kc <= 40) {
                 this.setAttribute( 'doesenter', true );
-                var s = this._hiliteview;
-
-                if (s == null) {
-                    s = getSelection();
-                    if (this.multiselect) s = s[0];
-                }
-
                 var next;
                 if (kc == 39  || kc == 40) {
                     next = _selector.getNextSubview(s);
@@ -167,8 +173,12 @@
                 if (kc == 37  || kc == 38) {
                     next = _selector.getNextSubview(s, -1);
                 }
-                if (  this._hiliteview != 0 && this._hiliteview is lz.view  ) {
-                    this._hiliteview.setHilite(false);
+                if ( s is lz.view  ) {
+                    s.setHilite(false);
+                }
+                // If shift is down, extend the selection
+                if (next.enabled && _selector.isRangeSelect(next)) {
+                  next.setAttribute('selected', true);
                 }
                 next.setHilite(true);
                 this._hiliteview = next;
