@@ -74,8 +74,13 @@ LzInputTextSprite.prototype.focusable = true;
 LzInputTextSprite.prototype.__initTextProperties = function (args) {
     var textclip = this.__LZtextclip;
 
-    // conditionalize this; set to false for inputtext for back compatibility with lps 2.1
-    textclip.html = true;
+    // NOTE [2009-03-05 ptw] Input text is NOT html by default.  We
+    // used to set this to true to fudge in the font styles as markup,
+    // but now we use the clip textFormat to do that directly.  Note
+    // that by setting this to false, the uses of htmlText below are
+    // equivalent to using text; whereas if you enable html with
+    // setHTML, then this should all magically work. :)
+    textclip.html = false;
 
     textclip.selectable = args.selectable;
     textclip.autoSize = false;
@@ -277,6 +282,10 @@ LzInputTextSprite.prototype.setHTML = function (htmlp) {
 }
 
 // This is the text without any formatting
+// NOTE [2009-03-05 ptw] Which is presumably what you want.  If you
+// enable html with setHTML, you still will get the text without
+// formatting.  But, how would you enter formatting in an input field
+// anyways?  This is not a rich-edit-text doo-dad.
 LzInputTextSprite.prototype.getText = function ( ){
   // We normalize swf's \r to \n
   return this.__LZtextclip.text.split('\r').join('\n');
