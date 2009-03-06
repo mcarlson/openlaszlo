@@ -1,7 +1,7 @@
 /**
   * LzSprite.as
   *
-  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * based on http://www.ghost23.de/blogarchive/2008/04/as3-application-1.html
@@ -18,7 +18,9 @@ package {
     import flash.events.ProgressEvent;
     import flash.net.navigateToURL;
     import flash.net.URLRequest;
+    import flash.external.ExternalInterface;
 
+    // WARNING: this file is not included automatically - be sure to keep server/src/org/openlaszlo/sc/SWF9External.java in sync!!!!
     public class LzPreloader extends MovieClip {
         public function LzPreloader() {
             stop();
@@ -46,8 +48,7 @@ package {
             var percload:Number = Math.floor(root.loaderInfo.bytesLoaded / root.loaderInfo.bytesTotal * 100);
             var id = stage.loaderInfo.parameters.id;
             if (id) {
-                var js = 'if (window.lz && lz.embed && lz.embed.applications && lz.embed.applications.' + id + ') lz.embed.applications.' + id + '._sendPercLoad(' + percload + ')';
-                navigateToURL(new URLRequest('javascript:' + js + ';void(0);'), '_self');
+                ExternalInterface.call('lz.embed.applications.' + id + '._sendPercLoad', percload);
             }
         }
     }
