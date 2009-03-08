@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -392,6 +392,19 @@ public abstract class Responder
         InputStream in = null;
         try {
             res.setContentType(MimeType.SWF);
+
+            // TODO [hqm 2009-03] See LPP-7494, in swf8, we are doing
+            // the trick of sending a swf movie back which when
+            // executed reports an error via the LzLoader.  We can't
+            // really do that in swf9, so we're just goint to send a
+            // 404 error and cause the flash flash.net.Loader throw an
+            // error that we can catch.
+            if (mSWFVersionNum > 8) {
+                res.sendError(404);
+                mLogger.info("respondWithErrorSWF sending 404");
+                return;
+            }
+
             if (mEmitErrorHeader) {
                 // Make sure not to put newlines in the header
                 res.setHeader("X-LPS", s.replace('\n', '_'));
@@ -658,7 +671,6 @@ public abstract class Responder
         // Successful response codes end up as an attribute of resultset. We
         // should standardize where the response code ends up.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" 
-            + "<!DOCTYPE laszlo-data>" 
             + "<resultset s=\"" + serial + "\">"
             + "<success code=\"" + status + "\" msg=\"" + _mesg + "\" />"
             + ( xmlBody!=null ? xmlBody : "" )
@@ -717,7 +729,6 @@ public abstract class Responder
     protected String xmlErrorMsg(int status, String msg)
     {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-            "<!DOCTYPE laszlo-data>" +
             "<resultset><error status=\"" + status + "\" msg=\"" +
             XMLUtils.escapeXml(msg) +
             "\"/></resultset>";

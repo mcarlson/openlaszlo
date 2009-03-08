@@ -1,7 +1,7 @@
 /**
   * LzLoader.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -169,9 +169,6 @@ function returnData ( loadobj , data ){
     }
 
     if ( err != null ){
-        if ($debug) {
-            Debug.error( err );
-        }
         if (this.onerror.ready) {
             /* we need to pass the data-object if our owner is a LzHTTPLoader, 
              * to conform to the new LzHTTPDataProvider class,

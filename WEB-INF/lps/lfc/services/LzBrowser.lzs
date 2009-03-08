@@ -429,6 +429,10 @@ public final class LzBrowserService {
             qargs.lzpostbody = postbody;
         }
 
+        // We need to pass the runtime, beause swf9 error responses are sent in a different
+        // way than swf8.
+        qargs.lzr = $runtime;
+
         // Set HTTP headers
         if (headers != null) {
             var headerString:String = "";

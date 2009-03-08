@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -99,9 +99,7 @@ public final class ResponderMEDIA extends Responder
                 FileUtils.close(instream);
             }
         } catch (Throwable e) { 
-            // Makes much easier to debug runtime exceptions
-            // but perhaps not strictly correct.
-            respondWithExceptionSWF(res, e);
+            respondWithErrorSWF(res, e.getMessage());
         } 
     }
 

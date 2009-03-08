@@ -1299,19 +1299,18 @@ function makeTextNode (text, par) :LzDataText {
     return tn;
 }
 
-/* commenting out for now
+
 if ($as2) {
 // FIXME: [2006-03-22 ptw] (LPP-1867) 
 // These are short aliases for routines used by the old data compiler.
-// They may still be used by the persistent connection service.
-// I will remove these after I get persistent connection and RPC services
-// working again -- hqm.
+// They are still used by the swf8 runtime, the errorSWF mechanism compiles
+// a block of code to return an error when a proxied media load fails on the server. 
 _root._finishndi  = prototype.finishRootNode;
 _root._rootndi    = prototype.makeRootNode;
 _root._m = prototype.makeElementNode;
 _root._t = prototype.makeTextNode;
 }
-*/
+
 
 ////////////////////////////////////////////////////////////////
 

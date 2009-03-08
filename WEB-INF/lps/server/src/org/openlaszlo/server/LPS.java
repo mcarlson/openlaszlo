@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -355,20 +355,16 @@ RuntimeException(
      * @return swf version number
      */
     public static int getSWFVersionNum(String swfversion) {
-        if (swfversion == null)        return mSWFVersionNumDefault;
-        if (swfversion.equals("swf8")) return 8;
-        if (swfversion.equals("swf7")) return 7;
-        if (swfversion.equals("swf6")) return 6;
-        if (swfversion.equals("swf5")) return 5;
+        try {
+            if (swfversion != null && swfversion.startsWith("swf")) {
+                return Integer.parseInt(swfversion.substring(3));
+            }
+        } catch (NumberFormatException e) { }
         return mSWFVersionNumDefault;
     }
 
     public static String getSWFVersion(int num) {
-        if (num == 8) return "swf8";
-        if (num == 7) return "swf7";
-        if (num == 6) return "swf6";
-        if (num == 5) return "swf5";
-        return mSWFVersionDefault;
+        return "swf"+num;
     }
 
     /**
