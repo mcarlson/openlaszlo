@@ -733,6 +733,7 @@ dynamic public class LzSprite extends Sprite {
           this.clickable = c;
           this.buttonMode = c;
           this.tabEnabled = false;
+          this.updateBackground();
           var cb:SimpleButton = this.clickbutton;
           //trace('sprite setClickable' , c, 'cb',cb);
           if (this.clickable) {
@@ -932,7 +933,7 @@ dynamic public class LzSprite extends Sprite {
       */
       public function setBGColor( c:* ):void {
           if (this.bgcolor == c && ! this.__bgcolorhidden) return;
-          if (c != null || this.__contextmenu == null) {
+          if (! (c == null && this.isBkgndRequired)) {
               this.__bgcolorhidden = false;
               this.bgcolor = c;
           } else {
@@ -1369,6 +1370,7 @@ dynamic public class LzSprite extends Sprite {
 
       public function setBitmapCache(cache) {
           this.cacheAsBitmap = cache;
+          this.updateBackground();
       }
 
       /**
@@ -1379,53 +1381,55 @@ dynamic public class LzSprite extends Sprite {
            return parent.getChildIndex(this);
       }
 
-      var __contextmenu;
+      var __contextmenu:LzContextMenu;
       var __bgcolorhidden:Boolean = false;
+
+      function get isBkgndRequired () :Boolean {
+          // background is required for:
+          // - LPP-7842 (SWF9: context-menu not shown for view without bgcolor/content)
+          // - LPP-7864 (SWF: cachebitmap interferes with mouse-events)
+          return this.__contextmenu != null || (this.clickable && this.cacheAsBitmap);
+      }
+
+      function updateBackground () :void {
+          if (this.__bgcolorhidden && ! this.isBkgndRequired) {
+              // remove invisible background
+              this.__bgcolorhidden = false;
+              this.bgcolor = null;
+              this.draw();
+          } else if (this.bgcolor == null && this.isBkgndRequired) {
+              // create an invisible background
+              this.__bgcolorhidden = true;
+              this.bgcolor = 0xffffff;
+              this.draw();
+          }
+      }
 
       /* LzSprite.setContextMenu
        * Install menu items for the right-mouse-button 
        * @param LzContextMenu cmenu: LzContextMenu to install on this view
        */
-      function setContextMenu ( lzmenu ){
+      function setContextMenu (lzmenu:LzContextMenu) :void {
           this.__contextmenu = lzmenu;
-          if (lzmenu == null) {
-              if (this.__bgcolorhidden) {
-                  // remove invisible background
-                  this.__bgcolorhidden = false;
-                  this.bgcolor = null;
-                  this.draw();
-              }
-              this.contextMenu = null;
-          } else {
-              // TODO [hqm 2008-04] make this do the more complex stuff that swf8 LzSprite does now,
-              // where it checks for a resource or bgcolor sprite, in order to make the clickable region
-              // match what the user expects.
-              if (this.bgcolor == null) {
-                  // if not present, create an invisible background
-                  this.__bgcolorhidden = true;
-                  this.bgcolor = 0xffffff;
-                  this.draw();
-              }
-
-              var cmenu:ContextMenu = lzmenu.kernel.__LZcontextMenu();
-              // "contextMenu" is a swf9 property on flash.display.Sprite
-              this.contextMenu = cmenu;
-          }
+          this.updateBackground();
+          // FIXME [anba 20090305] LPP-7847 (no context-menu for bitmap resource)
+          // "contextMenu" is a swf9 property on flash.display.Sprite
+          this.contextMenu = (lzmenu != null ? lzmenu.kernel.__LZcontextMenu() : null);
       }
 
-      function setDefaultContextMenu ( cmenu ){
+      function setDefaultContextMenu (lzmenu:LzContextMenu) :void {
           // TODO [hqm 2008-11] In SWF8, we can set the contextMenu
           // property of MovieClip.prototype, which puts the menu on
           // every MovieClip by default. Not sure if there's any way
           // to do that in swf9.
-          LzSprite.prototype.contextMenu = cmenu.kernel.__LZcontextMenu();
+          LzSprite.prototype.contextMenu = (lzmenu != null ? lzmenu.kernel.__LZcontextMenu() : null);
       }
 
       /**
        * LzView.getContextMenu
        * Return the current context menu
        */
-      function getContextMenu() {
+      function getContextMenu() :LzContextMenu {
           return this.__contextmenu;
       }
 
