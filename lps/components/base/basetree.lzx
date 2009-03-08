@@ -178,7 +178,7 @@
             var count = this.datapath.getNodeCount();
 
             // Since text nodes 'count', skip if has text and only one
-            if (this.datapath.getNodeText() != "" && count == 1 || count == 0) {
+            if (count == 0 || count == 1 && this.datapath.getNodeText() != "") {
                 return;
             }
 
