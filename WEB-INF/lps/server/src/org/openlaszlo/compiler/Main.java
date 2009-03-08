@@ -29,6 +29,8 @@ public class Main {
         "  Write progress information to standard output.",
         "--mcache on|off",
         "  Turns on/off media cache.  Default is off.",
+        "--scache on|off",
+        "  Turns on/off script cache.  Default is on.",
         "--onerror [throw|warn]",
         "  Action to take on compilation errors.  Defaults to warn.",
         "--help",
@@ -97,7 +99,7 @@ public class Main {
     /** This method implements the behavior described in main
      * but also returns an integer error code.
      */
-    public static int lzc(String args[], String logFile, 
+    public static int lzc(String args[], String logFile,
             String outFileName, String outDir)
         throws IOException
     {
@@ -112,7 +114,7 @@ public class Main {
         } else {
             logger.addAppender(new FileAppender(layout, logFile, false));
         }
-    
+
         Compiler compiler = new Compiler();
 
         String tmpdirstr = System.getProperty("java.io.tmpdir");
@@ -125,7 +127,8 @@ public class Main {
         compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY,
                              LPS.getProperty("compiler.runtime.default",
                                              LPS.getRuntimeDefault()));
-        boolean flushScriptCache = "false".equals(LPS.getProperty("compiler.scache.persist", "true"));
+        boolean flushScriptCache = true;
+        boolean enableScriptCache = "true".equals(LPS.getProperty("compiler.scache.enabled"));
         Boolean forceTransCode = null;
         String outFileArg = null;
         boolean saveScriptOption = false;
@@ -210,6 +213,19 @@ public class Main {
                         System.err.println(MORE_HELP);
                         return 1;
                     }
+                } else if (arg == "-scache" || arg == "--scache") {
+                    String value = safeArg("-scache", args, ++i);
+                    if (value == null) {
+                        return 1;
+                    } else if (value.equals("on")) {
+                        enableScriptCache = true;
+                    } else if (value.equals("off")) {
+                        enableScriptCache = false;
+                    } else {
+                        System.out.println("Invalid value for --scache");
+                        System.err.println(MORE_HELP);
+                        return 1;
+                    }
                 } else if (arg == "-log" || arg == "--log") {
                     String log = safeArg("-log or --log", args, ++i);
                     if (log == null) {
@@ -274,10 +290,12 @@ public class Main {
         }
         compiler.setMediaCache(cache);
 
-        ScriptCompiler.initScriptCompilerCache(new File(scriptCacheDir), new Properties());
+        if (enableScriptCache) {
+            ScriptCompiler.initScriptCompilerCache(new File(scriptCacheDir), new Properties());
 
-        if (flushScriptCache) {
-            ScriptCompiler.clearCacheStatic();
+            if (flushScriptCache) {
+                ScriptCompiler.clearCacheStatic();
+            }
         }
 
         LPS.initialize();
@@ -306,7 +324,7 @@ public class Main {
                 intermediateName = sourceNameNoExt + ".lzs";
             }
             if (saveStateOption) {
-                // remove old 
+                // remove old
                 File dir = new File(sourceName).getCanonicalFile().getParentFile();
                 final String pat = new File(sourceNameNoExt).getName() +
                     "-ast(?:in|out)-[0-9]*.txt";

@@ -62,10 +62,10 @@ class SWFWriter extends ObjectWriter {
 
     /** If true, wrap 'with (_level0) { ...} ' around code blocks */
     private boolean level0 = false;
-    
+
     /** Total number of frames in the movie **/
     private int mLastFrame = 0;
-    
+
     /** Input text fontinfo map */
     private final TreeMap mInputTextSet = new TreeMap();
 
@@ -89,10 +89,10 @@ class SWFWriter extends ObjectWriter {
     private int mFlashVersion = 6;
 
     /** frame rate of movie */
-    private int mFrameRate = 30; 
+    private int mFrameRate = 30;
 
     /** Leading for text and input text */
-    private int mTextLeading = 2; 
+    private int mTextLeading = 2;
 
     private Map mDeviceFontTable = new HashMap();
 
@@ -107,7 +107,7 @@ class SWFWriter extends ObjectWriter {
     /**
      * Initializes a SWFWriter with an OutputStream to which a new SWF
      * will be written when <code>SWFWriter.close()</code> is called.
-     * 
+     *
      * @param stream A <code>java.io.OutputStream</code> that the
      * movie will be written to.
      * @param props list of properties
@@ -154,10 +154,10 @@ class SWFWriter extends ObjectWriter {
             mFlashFile = new SWFFile(f.getAbsolutePath(), mProperties);
             mFlashFile.setVersion(mFlashVersion);
             // Set the frame rate (shifted)
-            mFlashFile.setFrameRate(mFrameRate << 8); 
-            
+            mFlashFile.setFrameRate(mFrameRate << 8);
+
             //            mFlashFile.printContent(System.out);
-            
+
             if (LPS.isInternalBuild()) {
                 long lfcModTime = f.lastModified();
                 List newerFiles = new Vector(); // List<File>
@@ -189,7 +189,7 @@ class SWFWriter extends ObjectWriter {
             throw new ChainedException(e);
         }
     }
-    
+
     FontManager getFontManager() {
         return mFontManager;
     }
@@ -219,7 +219,7 @@ class SWFWriter extends ObjectWriter {
 
         addScript(script, 0);
     }
-        
+
     void addPreloader(CompilationEnvironment env) {
         if (mPreloaderAdded == true) return;
 
@@ -241,7 +241,7 @@ class SWFWriter extends ObjectWriter {
      * Sets the canvas for the movie
      *
      * @param canvas
-     * 
+     *
      */
     void setCanvas(Canvas canvas, String canvasConstructor) {
         Rectangle2D r = new Rectangle2D.Double(
@@ -254,11 +254,11 @@ class SWFWriter extends ObjectWriter {
         int bgc = canvas.getBGColor();
         int red   = (bgc >> 16) & 0xff;
         int green = (bgc >> 8)  & 0xff;
-        int blue  = (bgc)       & 0xff; 
+        int blue  = (bgc)       & 0xff;
         Color c = new Color(red, green, blue);
         SetBackgroundColor setbgc = new SetBackgroundColor(c);
         mFlashFile.getMainScript().setBackgroundColor(setbgc);
-        
+
         // Write scriptlimits tag if requested
         if ((this.mRecursionLimit != 0) || (this.mExecutionTimeout != 0)) {
           // ScriptLimits tag, to set max recursion depth and timeout
@@ -274,14 +274,16 @@ class SWFWriter extends ObjectWriter {
         //scriptWriter.println(canvasConstructor);
         byte[] action = ScriptCompiler.compileToByteArray(canvasConstructor, props);
         Program program = new Program(action, 0, action.length);
-        mLogger.debug("    Adding a program of " + action.length + " bytes.");
+        if (mLogger.isDebugEnabled()) {
+        	mLogger.debug("    Adding a program of " + action.length + " bytes.");
+        }
         addProgram(program);
 
         // Set width and height properties for preloader...
         mWidth = canvas.getWidth();
         mHeight = canvas.getHeight();
 
-        // Get default font info 
+        // Get default font info
         FontInfo fontInfo = canvas.getFontInfo();
 
         mDefaultFontName = canvas.defaultFont;
@@ -299,7 +301,7 @@ class SWFWriter extends ObjectWriter {
         mResourceTableIndex = frame.size();
         frame.addFlashObject(new SetBackgroundColor(new Color(0, 0, 0)));
 
-        mEnv.getCanvas().addInfo(mInfo); 
+        mEnv.getCanvas().addInfo(mInfo);
 
         // always write out the preloader...
         ObjectWriter sw = mEnv.getGenerator();
@@ -318,7 +320,7 @@ class SWFWriter extends ObjectWriter {
         this.mCache = mc;
         mWidth = canvas.getWidth();
         mHeight = canvas.getHeight();
-        // Get default font info 
+        // Get default font info
         FontInfo fontInfo = canvas.getFontInfo();
         mDefaultFontName = canvas.defaultFont;
         mDefaultFontFileName = canvas.defaultFontFilename;
@@ -348,6 +350,7 @@ class SWFWriter extends ObjectWriter {
          byte[] action = ScriptCompiler.compileToByteArray(script, mProperties);
          //scriptWriter.println(script);
          Program program = new Program(action, 0, action.length);
+         if (mLogger.isDebugEnabled()) {
          mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -356,6 +359,7 @@ class SWFWriter extends ObjectWriter {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 SWFWriter.class.getName(),"051018-410", new Object[] {new Integer(action.length)})
 );
+         }
          addProgram(program);
          return action.length;
     }
@@ -373,6 +377,7 @@ class SWFWriter extends ObjectWriter {
          byte[] action = ScriptCompiler.compileToByteArray(script, mProperties);
          //scriptWriter.println(script);
          Program program = new Program(action, 0, action.length);
+         if (mLogger.isDebugEnabled()) {
          mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -381,6 +386,7 @@ class SWFWriter extends ObjectWriter {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 SWFWriter.class.getName(),"051018-410", new Object[] {new Integer(action.length)})
 );
+         }
          addProgram(program, offset);
     }
 
@@ -398,7 +404,7 @@ class SWFWriter extends ObjectWriter {
      * Adds the program to the specified frame
      *
      * @param program to be added
-     * @param offset of frame to add to 
+     * @param offset of frame to add to
      */
     private void addProgram(Program program, int offset) {
          Frame frame = mFlashFile.getMainScript().getFrameAt(offset);
@@ -436,7 +442,7 @@ class SWFWriter extends ObjectWriter {
      * @param name name of the MovieClip/Sprite
      * @throws CompilationError
      */
-    public void importPreloadResource(String fileName, String name) 
+    public void importPreloadResource(String fileName, String name)
         throws ImportResourceError
     {
         if (name.equals(""))
@@ -444,7 +450,7 @@ class SWFWriter extends ObjectWriter {
         importResource(fileName, name, 0, mPreloaderFontsCollector);
     }
 
-    public void importPreloadResource(File fFileName, String name) 
+    public void importPreloadResource(File fFileName, String name)
         throws ImportResourceError
     {
         if (name.equals(""))
@@ -458,7 +464,7 @@ class SWFWriter extends ObjectWriter {
     public void importPreloadResource(List sources, String name, File parent)
         throws ImportResourceError
     {
-        if (name.equals("")) 
+        if (name.equals(""))
             name = createName();
         importResource(sources, name, parent, 0, mPreloaderFontsCollector);
     }
@@ -470,7 +476,7 @@ class SWFWriter extends ObjectWriter {
      *
      * @param sources file names of the resources
      * @param name name of the MovieClip/Sprite
-     * @param parent parent's File object 
+     * @param parent parent's File object
      */
     public void importResource(List sources, String name, File parent)
     {
@@ -482,7 +488,7 @@ class SWFWriter extends ObjectWriter {
      *
      * @param sources file names of the resources
      * @param name name of the MovieClip/Sprite
-     * @param parent parent's File object 
+     * @param parent parent's File object
      * @param frameNum frame offset to add to
      */
     public void importResource(List sources, String name, File parent, int frameNum)
@@ -536,7 +542,7 @@ class SWFWriter extends ObjectWriter {
      * @param fontsCollector fonts collector for resource (used by preloader)
      * @throws CompilationError
      */
-    public void importResource(String fileName, String name, int frameNum, 
+    public void importResource(String fileName, String name, int frameNum,
                                FontsCollector fontsCollector)
         throws CompilationError
     {
@@ -545,14 +551,14 @@ class SWFWriter extends ObjectWriter {
             if (inputFile.isDirectory()) {
                 String[] sources = inputFile.list();
                 ArrayList outsources = new ArrayList();
-                
+
                 for (int i = 0; i < sources.length; i++) {
                     String fname = fileName + File.separator + sources[i];
                     File f = new File(fname);
-                    //mLogger.debug("SWFWriter file: " + f.isFile());    
+                    //mLogger.debug("SWFWriter file: " + f.isFile());
 
                     if (f.isFile()) {
-                        //mLogger.debug("SWFWriter adding: " + fname);    
+                        //mLogger.debug("SWFWriter adding: " + fname);
                         outsources.add(fname);
                     }
                 }
@@ -560,7 +566,9 @@ class SWFWriter extends ObjectWriter {
                 return;
             }
 
+        if (mLogger.isDebugEnabled()) {
         mLogger.debug("    Importing resource " + name);
+        }
         try {
             fileName = new File(fileName).getCanonicalPath();
         } catch (java.io.IOException e) {
@@ -579,7 +587,7 @@ class SWFWriter extends ObjectWriter {
             if (fontsCollector != null) def.collectFonts(fontsCollector);
             mFlashFile.addDefToLibrary(name, def);
             def.setName(name);
-        
+
         } else {
             def = res.getFlashDef();
             if (fontsCollector != null) def.collectFonts(fontsCollector);
@@ -587,12 +595,12 @@ class SWFWriter extends ObjectWriter {
             // Add an element with 0 size, since it's already there.
             Element elt = new Element("resource");
                 elt.setAttribute("name", name);
-                // elt.setAttribute("mime-type", MimeType.MP3); 
+                // elt.setAttribute("mime-type", MimeType.MP3);
                 elt.setAttribute("source", fileName);
                 elt.setAttribute("filesize", "0");
             mInfo.addContent(elt);
-        } 
-        
+        }
+
         ExportAssets ea = new ExportAssets();
         ea.addAsset(name, def);
         Timeline timeline = mFlashFile.getMainScript().getTimeline();
@@ -602,17 +610,17 @@ class SWFWriter extends ObjectWriter {
         Frame frame = timeline.getFrameAt(frameNum);
         frame.addFlashObject(ea);
     }
-    
+
     /** Import a multiframe resource into the current movie.  Using a
      * name that already exists clobbers the old resource (for now).
      *
      * @param sources file names of the resources
      * @param name name of the MovieClip/Sprite
-     * @param parent parent's File object 
+     * @param parent parent's File object
      * @param frameNum frame offset to add to
      * @param fontsCollector fonts collector for resource (used by preloader)
      */
-    public void importResource(List sources, String name, File parent, int frameNum, 
+    public void importResource(List sources, String name, File parent, int frameNum,
                                FontsCollector fontsCollector)
 
     {
@@ -624,34 +632,40 @@ class SWFWriter extends ObjectWriter {
      *
      * @param sources file names of the resources
      * @param name name of the MovieClip/Sprite
-     * @param parent parent's File object 
+     * @param parent parent's File object
      * @param frameNum frame offset to add to
      * @param fontsCollector fonts collector for resource (used by preloader)
-     * @param addStop if true, add a stop frame after each imported resource 
+     * @param addStop if true, add a stop frame after each imported resource
      */
-    public void importResource(List sources, String name, File parent, int frameNum, 
+    public void importResource(List sources, String name, File parent, int frameNum,
                                FontsCollector fontsCollector, boolean addStop)
     {
         Script out = new Script(1);
         String fileName = null;
-        mLogger.debug("Including multiple resources as " + name);
+        if (mLogger.isDebugEnabled()) {
+        	mLogger.debug("Including multiple resources as " + name);
+        }
         int width = 0;
         int height = 0;
         int fNum = 0;
         for (Iterator e = sources.iterator() ; e.hasNext() ;) {
             fileName = (String)e.next();
-            mLogger.debug("    Importing " + fileName);
+            if (mLogger.isDebugEnabled()) {
+            	mLogger.debug("    Importing " + fileName);
+            }
 
             // Definition to add to the library (without stop)
             Resource res = getMultiFrameResource(fileName, name, fNum);
-            Script scr = (Script)res.getFlashDef(); 
+            Script scr = (Script)res.getFlashDef();
             if (fontsCollector != null) scr.collectFonts(fontsCollector);
             int bc = out.getFrameCount();
             out.appendScript(scr);
             int fc = out.getFrameCount();
             Frame f = out.getFrameAt(fc - 1);
             if (addStop) f.addStopAction();
-            mLogger.debug("    Added " + (fc - bc) + " of " + fc + "frame(s)");
+            if (mLogger.isDebugEnabled()) {
+            	mLogger.debug("    Added " + (fc - bc) + " of " + fc + "frame(s)");
+            }
 
             int rw = res.getWidth();
             int rh = res.getHeight();
@@ -661,8 +675,8 @@ class SWFWriter extends ObjectWriter {
             if (rh > height) {
                 height = rh;
             }
-            // NOTE: add the ratio attribute to each frame here; this 
-            // appears to be required to make a multi-frame resource that has individual 
+            // NOTE: add the ratio attribute to each frame here; this
+            // appears to be required to make a multi-frame resource that has individual
             // frames that are swfs with nested movieclips work correctly.
             // This was "guessed" by dumping the contents
             // of a multi-frame SWF created by the Flash tool itself.
@@ -701,7 +715,7 @@ class SWFWriter extends ObjectWriter {
 
     /** Imports this resource, if it has not previously been imported, as
      * resource that can be used as a click region, and returns in any
-     * case the name of the clip that refers to it.  
+     * case the name of the clip that refers to it.
      */
     public String importClickResource(File file) throws ImportResourceError
     {
@@ -721,7 +735,7 @@ class SWFWriter extends ObjectWriter {
             FlashDef def;
             Rectangle2D bounds;
 
-            // FIXME: [2004-06-29 bloch] 
+            // FIXME: [2004-06-29 bloch]
             // For each instance in the first frame, add a button record.
             // Get bounds for entire clip; should only get bounds for first frame!
             // Should only allow swf resources as click resources.
@@ -741,7 +755,7 @@ class SWFWriter extends ObjectWriter {
                         if (matrix == null) {
                             matrix = new java.awt.geom.AffineTransform();
                         }
-                         
+
                         but.addButtonRecord(new ButtonRecord(ButtonRecord.HitTest,
                                                  inst.def, 1, matrix, cxform));
                     }
@@ -755,22 +769,22 @@ class SWFWriter extends ObjectWriter {
             but.addActionCondition(ActionCondition.onPress(program(
                 "_root.LzMouseKernel.handleMouseEvent( myView, 'onmousedown')")));
             but.addActionCondition(ActionCondition.onRelease(program(
-                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseup');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseup');" +
                 "_root.LzMouseKernel.handleMouseEvent( myView, 'onclick')")));
             but.addActionCondition(ActionCondition.onReleaseOutside(program(
-                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseup');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseup');" +
                 "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseupoutside')")));
             but.addActionCondition(ActionCondition.onRollOver(program(
                 "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseover')")));
             but.addActionCondition(ActionCondition.onRollOut(program(
                 "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseout')")));
             but.addActionCondition(ActionCondition.onDragOut(program(
-                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseout');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseout');" +
                 "_root.LzMouseKernel.handleMouseEvent( myView, 'onmousedragout')")));
             but.addActionCondition(ActionCondition.onDragOver(program(
-                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseover');" + 
+                "_root.LzMouseKernel.handleMouseEvent( myView, 'onmouseover');" +
                 "_root.LzMouseKernel.handleMouseEvent( myView, 'onmousedragin')")));
-            
+
             name = createName();
 
             // Scale the movieclip to 100x100 for use by LFC.
@@ -794,12 +808,12 @@ class SWFWriter extends ObjectWriter {
 
         return name;
     }
-    
+
     /**
-     * Recursively strips out the ActionScript from a 
+     * Recursively strips out the ActionScript from a
      * given movie Script (MovieClip)
      *
-     * Actually, it leaves the actionscript blocks in, 
+     * Actually, it leaves the actionscript blocks in,
      * but turns them into programs that do nothing.
      */
     private void stripActions(Script s) {
@@ -897,11 +911,11 @@ class SWFWriter extends ObjectWriter {
 
         // Always compress
         mFlashFile.setCompressed(true);
-     
-        try { 
+
+        try {
 
             InputStream input;
-            input = mFlashFile.generate(mEnv.getEmbedFonts() ? mFontsCollector : new FontsCollector(), 
+            input = mFlashFile.generate(mEnv.getEmbedFonts() ? mFontsCollector : new FontsCollector(),
                                             mEnv.getEmbedFonts() ? mPreloaderFontsCollector : new FontsCollector(),
                                             mPreloaderAdded).getInputStream();
 
@@ -916,7 +930,7 @@ class SWFWriter extends ObjectWriter {
     }
 
     public void openSnippet(String liburl) throws IOException {
-        // How do we make sure an initial frame exists?  Does this do it? 
+        // How do we make sure an initial frame exists?  Does this do it?
         Frame frame = mFlashFile.getMainScript().getFrameAt(mLastFrame);
         // if we don't have any frame, then code which adds resources gets
         // an error. This happens if you have a resource declared before any code.
@@ -941,7 +955,7 @@ class SWFWriter extends ObjectWriter {
         // unfortunately; we haven't figured out a way to make the
         // imported image assets be visible/attachable to the loading
         // movieclip.
-        
+
 
         if (mLibFontsDefined) {
             ImportAssets2 ia = new ImportAssets2();
@@ -964,7 +978,7 @@ class SWFWriter extends ObjectWriter {
                 FlashDef def = (FlashDef) enu.nextElement();
                 ia.addAsset(def.getName(), def);
             }
-        
+
             Timeline timeline = mFlashFile.getMainScript().getTimeline();
             Frame frame = timeline.getFrameAt(timeline.getFrameCount() - 1);
             frame.addFlashObject(ia);
@@ -980,9 +994,9 @@ class SWFWriter extends ObjectWriter {
         addProgram(program);
 
 
-        try { 
+        try {
             InputStream input;
-            input = mFlashFile.generate(mEnv.getEmbedFonts() ? mFontsCollector : new FontsCollector(), 
+            input = mFlashFile.generate(mEnv.getEmbedFonts() ? mFontsCollector : new FontsCollector(),
                                         mEnv.getEmbedFonts() ? mPreloaderFontsCollector : new FontsCollector(),
                                         mPreloaderAdded).getInputStream();
             FileUtils.send(input, mStream);
@@ -1016,6 +1030,7 @@ class SWFWriter extends ObjectWriter {
 
         int styleBits = FontInfo.styleBitsFromString(style);
 
+        if (mLogger.isDebugEnabled()) {
         mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -1024,8 +1039,9 @@ class SWFWriter extends ObjectWriter {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 SWFWriter.class.getName(),"051018-1225", new Object[] {face, style})
 );
+        }
 
-        FontInfo fontInfo = mEnv.getCanvas().getFontInfo(); 
+        FontInfo fontInfo = mEnv.getCanvas().getFontInfo();
         boolean isDefault = false;
 
         Font font = importFont(fileName, face, styleBits, false);
@@ -1035,16 +1051,16 @@ class SWFWriter extends ObjectWriter {
             if (styleBits == FontInfo.PLAIN) {
                 isDefault = true;
                 mDefaultFont = font;
-            } 
+            }
         }
 
         FontFamily family = mFontManager.getFontFamily(face, true);
 
         switch (styleBits) {
-            case FontInfo.PLAIN: 
+            case FontInfo.PLAIN:
                 if (family.plain != null) {
                     if (!isDefault || mDefaultFontUsedForMeasurement) {
-                        warn(env, 
+                        warn(env,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Redefined plain style of font: " + p[0]
@@ -1057,7 +1073,7 @@ class SWFWriter extends ObjectWriter {
                 family.plain = font; break;
             case FontInfo.BOLD:
                 if (family.bold != null) {
-                    warn(env, 
+                    warn(env,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Redefined bold style of font: " + p[0]
@@ -1069,7 +1085,7 @@ class SWFWriter extends ObjectWriter {
                 family.bold = font; break;
             case FontInfo.ITALIC:
                 if (family.italic != null) {
-                    warn(env, 
+                    warn(env,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Redefined italic style of font: " + p[0]
@@ -1081,7 +1097,7 @@ class SWFWriter extends ObjectWriter {
                 family.italic = font; break;
             case FontInfo.BOLDITALIC:
                 if (family.bitalic != null) {
-                    warn(env, 
+                    warn(env,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Redefined bold italic style of font: " + p[0]
@@ -1107,7 +1123,7 @@ class SWFWriter extends ObjectWriter {
     /**
      * Import a font into the SWF we are writing
      *
-     * @param fileName name of font file 
+     * @param fileName name of font file
      * @param face font name of font in LZX
      */
     private Font importFont(String fileName, String face, int styleBits,
@@ -1118,6 +1134,7 @@ class SWFWriter extends ObjectWriter {
             return Font.createDummyFont(face);
         }
 
+        if (mLogger.isDebugEnabled()) {
         mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -1126,11 +1143,12 @@ class SWFWriter extends ObjectWriter {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 SWFWriter.class.getName(),"051018-1327", new Object[] {face, fileName})
 );
+        }
 
         String fromType = FontType.fromName(fileName);
         String location = null;
         try {
-            File fontFile = mCache.transcode(new File(fileName), fromType, 
+            File fontFile = mCache.transcode(new File(fileName), fromType,
                     FontType.FFT);
             location = fontFile.getAbsolutePath();
         } catch (TranscoderException e) {
@@ -1158,7 +1176,8 @@ class SWFWriter extends ObjectWriter {
 
         try {
 
-            // Parse the font 
+            // Parse the font
+        	if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -1167,6 +1186,7 @@ class SWFWriter extends ObjectWriter {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 SWFWriter.class.getName(),"051018-1368", new Object[] {location})
 );
+        	}
             FlashFile fontFile = FlashFile.parse( location );
             Enumeration defs = fontFile.definitions();
             FontDef fontDef = (FontDef)defs.nextElement();
@@ -1185,7 +1205,7 @@ class SWFWriter extends ObjectWriter {
                                 SWFWriter.class.getName(),"051018-1385", new Object[] {fileName})
                                 );
             }
-            // Make sure font has LAYOUT info 
+            // Make sure font has LAYOUT info
             if ((font.flags & Font.HAS_LAYOUT) == 0) {
                 throw new CompilationError(
 /* (non-Javadoc)
@@ -1233,7 +1253,7 @@ class SWFWriter extends ObjectWriter {
     /**
      * Import all action script blocks
      */
-     void importActions(String fileName) 
+     void importActions(String fileName)
          throws FileNotFoundException, IVException {
 
          Timeline t = FlashFile.parse(fileName).getMainScript().getTimeline();
@@ -1253,7 +1273,7 @@ class SWFWriter extends ObjectWriter {
     /**
      * @return first action block
      */
-     DoAction getFirstDoAction(String fileName) 
+     DoAction getFirstDoAction(String fileName)
          throws FileNotFoundException, IVException {
 
          Timeline t = FlashFile.parse(fileName).getMainScript().getTimeline();
@@ -1293,6 +1313,7 @@ class SWFWriter extends ObjectWriter {
             // before this action script is added!
             String name = (String)fonts.nextElement();
             FontFamily family = mFontManager.getFontFamily(name);
+            if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -1301,9 +1322,10 @@ class SWFWriter extends ObjectWriter {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 SWFWriter.class.getName(),"051018-1502", new Object[] {name})
 );
+            }
 
             actions.append("_root.LzFontManager.addFont('" + name + "', " );
-                    
+
             appendFont(actions, family.plain, family.getBounds(FontInfo.PLAIN));
             actions.append(",");
             appendFont(actions, family.bold, family.getBounds(FontInfo.BOLD));
@@ -1314,7 +1336,7 @@ class SWFWriter extends ObjectWriter {
             actions.append("\n)\n");
         }
 
-        if (mProperties.getProperty("trace.fonts", "false").equals("true")) {
+        if (mLogger.isDebugEnabled() && mProperties.getProperty("trace.fonts", "false").equals("true")) {
             mLogger.debug(actions.toString());
         }
 
@@ -1338,8 +1360,8 @@ class SWFWriter extends ObjectWriter {
          Iterator resources = sset.iterator();
          while(resources.hasNext()) {
              Resource res = (Resource)resources.next();
-             String str = "canvas.resourcetable[\"" + res.getName() + 
-                    "\"]={ width : " + res.getWidth() + ", height :" + 
+             String str = "canvas.resourcetable[\"" + res.getName() +
+                    "\"]={ width : " + res.getWidth() + ", height :" +
                            res.getHeight() + "};\n";
              buf.append(str);
          }
@@ -1441,7 +1463,7 @@ class SWFWriter extends ObjectWriter {
         actions.append("advancetable:");
 
         int idx, adv;
-            
+
         actions.append(newline);
         actions.append("[");
 
@@ -1497,11 +1519,11 @@ class SWFWriter extends ObjectWriter {
                but is strictly wrong */
             /*max = max - adv;
             if (max < 0) max = 0;
-            
+
             if (max > adj) {
                 adj = max;
             }*/
-            
+
             // Convert to pixels rounded to nearest 100th
             double lsb = emUnitsToPixels(adj);
             actions.append(lsb);
@@ -1531,7 +1553,7 @@ class SWFWriter extends ObjectWriter {
             adv = font.getAdvanceValue(idx);
             adj = m - adv;
             if (adj < 0) adj = 0;
-            
+
             // Convert to pixels rounded to nearest 100th
             double rsb = emUnitsToPixels(adj);
             actions.append(rsb);
@@ -1561,7 +1583,7 @@ class SWFWriter extends ObjectWriter {
         if (family == null) {
             return null;
             /*
-            throw new CompilationError("Font '" + fontName + 
+            throw new CompilationError("Font '" + fontName +
                 "' used but not defined");
             */
         }
@@ -1582,7 +1604,7 @@ class SWFWriter extends ObjectWriter {
     /**
      * @return true if the font exists
      *
-     * If this is the default bold font and it hasn't been 
+     * If this is the default bold font and it hasn't been
      * declared, import it.
      */
     boolean checkFontExists(FontInfo fontInfo) {
@@ -1591,13 +1613,13 @@ class SWFWriter extends ObjectWriter {
         if (fontInfo.getName() == null) {
             return false;
         }
- 
+
         boolean a = mFontManager.checkFontExists(fontInfo);
         if (a) {
             return a;
         }
 
-        if (fontInfo.getName().equals(mDefaultFontName) && 
+        if (fontInfo.getName().equals(mDefaultFontName) &&
             fontInfo.styleBits == FontInfo.PLAIN) {
             try {
                     File f = mEnv.resolve(mDefaultFontFileName, null);
@@ -1631,7 +1653,7 @@ class SWFWriter extends ObjectWriter {
                                                 );
             }
             return true;
-        } 
+        }
 
         if (fontInfo.getName().equals(mDefaultFontName) &&
             fontInfo.styleBits == FontInfo.ITALIC) {
@@ -1649,7 +1671,7 @@ class SWFWriter extends ObjectWriter {
                                                 );
             }
             return true;
-        } 
+        }
 
         if (fontInfo.getName().equals(mDefaultFontName) &&
             fontInfo.styleBits == FontInfo.BOLDITALIC) {
@@ -1667,7 +1689,7 @@ class SWFWriter extends ObjectWriter {
                                                 );
             }
             return true;
-        } 
+        }
 
         return false;
     }

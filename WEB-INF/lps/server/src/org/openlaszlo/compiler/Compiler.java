@@ -35,7 +35,7 @@ import org.apache.log4j.*;
 public class Compiler {
     /** Set this to log the modified schema. */
     public static Logger SchemaLogger = Logger.getLogger("schema");
-    
+
     public static List KNOWN_RUNTIMES =
         Arrays.asList(new String[] {"swf7", "swf8", "swf9", "swf10", "dhtml", "j2me", "svg", "null"});
     public static List SCRIPT_RUNTIMES =
@@ -51,7 +51,7 @@ public class Compiler {
                 "$debug", "$profile", "$backtrace", "$runtime",
                 "$swf7", "$swf8", "$as2", "$swf9", "$swf10", "$as3", "$dhtml", "$j2me", "$svg", "$js1"
             });
-    
+
     /** Called to resolve file references (<code>src</code>
      * attributes).
      */
@@ -97,15 +97,15 @@ public class Compiler {
     public String getProperty(String key) {
         return mProperties.getProperty(key);
     }
-    
+
     public void setProperty(String key, String value) {
         mProperties.setProperty(key, value);
     }
-    
+
     public FileResolver getFileResolver() {
         return mFileResolver;
-    }    
-    
+    }
+
     /** Sets the file resolver for this compiler.  The file resolver
      * is used to resolve the names used in include directives to
      * files.
@@ -121,8 +121,8 @@ public class Compiler {
     public void setMediaCache(CompilerMediaCache cache) {
         this.mMediaCache = cache;
     }
-    
-    /** Create a CompilationEnvironment with the properties and 
+
+    /** Create a CompilationEnvironment with the properties and
      * FileResolver of this compiler.
      */
     public CompilationEnvironment makeCompilationEnvironment(Properties options) {
@@ -135,7 +135,7 @@ public class Compiler {
         }
         return new CompilationEnvironment(props, mFileResolver, mMediaCache);
     }
-    
+
     /** Compiles <var>sourceFile</var> to <var>objectFile</var>.  If
      * compilation fails, <var>objectFile</var> is deleted.
      *
@@ -183,7 +183,7 @@ public class Compiler {
     {
         FileUtils.makeFileAndParentDirs(objectFile);
 
-        // Compile to a byte-array, and write out to objectFile, and 
+        // Compile to a byte-array, and write out to objectFile, and
         // write a copy into sourceFile.[swf|js] if this is a serverless deployment.
         CompilationEnvironment env = makeCompilationEnvironment(props);
         ByteArrayOutputStream bstream = new ByteArrayOutputStream();
@@ -197,7 +197,7 @@ public class Compiler {
             ostream.close();
 
             // If the app is serverless, write out a .lzx.swf file when compiling
-            if (canvas != null && !canvas.isProxied()) {
+            if (canvas != null && !canvas.isProxied() && env.getProperty("nodeploy") == null) {
 
                 // Create a foo.lzx.[js|swf] serverless deployment file for sourcefile foo.lzx
                 String runtime = env.getRuntime();
@@ -242,7 +242,7 @@ public class Compiler {
             }
         }
     }
-    
+
     public Properties getProperties() {
         return (Properties)mProperties.clone();
     }
@@ -257,7 +257,7 @@ public class Compiler {
         if ("null".equals(runtime)) {
             return new NullWriter(props, ostr, mMediaCache, true, env);
         } else if (env.isAS3()) {
-            return new SWF9Writer(props, ostr, mMediaCache, true, env);            
+            return new SWF9Writer(props, ostr, mMediaCache, true, env);
         } else if (SCRIPT_RUNTIMES.contains(runtime)) {
             return new DHTMLWriter(props, ostr, mMediaCache, true, env);
         } else {
@@ -307,7 +307,9 @@ public class Compiler {
     public Canvas compile(File file, OutputStream ostr, CompilationEnvironment env)
         throws CompilationError, IOException
     {
-        mLogger.info("compiling " + file + "...");
+    	if (mLogger.isInfoEnabled()) {
+    		mLogger.info("compiling " + file + "...");
+    	}
 
         CompilationErrorHandler errors = env.getErrorHandler();
         env.setApplicationFile(file);
@@ -316,6 +318,7 @@ public class Compiler {
         boolean noCodeGeneration = "true".equals(env.getProperty(CompilationEnvironment.NO_CODE_GENERATION));
 
         try {
+        	if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -324,8 +327,10 @@ public class Compiler {
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 Compiler.class.getName(),"051018-303", new Object[] {file.getAbsolutePath()})
 );
+        	}
             // Initialize the schema from the base LFC interface file
-            try {
+
+        	try {
                 env.getSchema().loadSchema(env);
             } catch (org.jdom.JDOMException e) {
                 throw new ChainedException(e);
@@ -354,20 +359,24 @@ public class Compiler {
             // cssfile cannot be set in the canvas tag
             String cssfile = env.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
             if (cssfile != null) {
-                mLogger.info("Got cssfile named: " + cssfile);             
+            	if (mLogger.isInfoEnabled()) {
+            		mLogger.info("Got cssfile named: " + cssfile);
+            	}
                 cssfile = root.getAttributeValue("cssfile");
                  throw new CompilationError(
                         "cssfile attribute of canvas is no longer supported. Use <stylesheet> instead.");
-                       
-            } 
 
-            mLogger.debug("Making a writer...");
+            }
+
+            if (mLogger.isDebugEnabled()) {
+            	mLogger.debug("Making a writer...");
+            }
             ViewSchema schema = env.getSchema();
             Set externalLibraries = null;
             // If we are not linking, then we consider all external
             // files to have already been imported.
             if (! linking) { externalLibraries = env.getImportedLibraryFiles(); }
-            if (root.getName().intern() != 
+            if (root.getName().intern() !=
                 (linking ? "canvas" :  "library")) {
                 throw new CompilationError(
 /* (non-Javadoc)
@@ -395,17 +404,16 @@ public class Compiler {
             if (noCodeGeneration) {
                 return null;
             }
-            
 
-            mLogger.debug("new env..." + env.getProperties().toString());
-            
             processCompilerInstructions(root, env);
 
             compileElement(root, env);
             if (linking) {
               ViewCompiler.checkUnresolvedResourceReferences (env);
             }
-            mLogger.debug("done...");
+            if (mLogger.isDebugEnabled()) {
+            	mLogger.debug("done...");
+            }
             // This isn't in a finally clause, because it won't generally
             // succeed if an error occurs.
             writer.close();
@@ -426,7 +434,10 @@ public class Compiler {
               // set file path (relative to webapp) in canvas
               canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
             }
-            mLogger.info("done");
+
+            if (mLogger.isInfoEnabled()) {
+            	mLogger.info("done");
+            }
             return canvas;
         } catch (CompilationError e) {
             // TBD: e.initPathname(file.getPath());
@@ -473,7 +484,7 @@ public class Compiler {
                         "}());\n";
                 } else {
                     // it's a remote debug request, send a response to client
-                    prog = 
+                    prog =
                         "(function () {\n" +
                         "    #pragma 'scriptElement'\n" +
                         "_level0.Debug.displayResult(\n"+
@@ -490,7 +501,7 @@ public class Compiler {
                         "    #pragma 'scriptElement'\n" +
                              CompilerUtils.sourceLocationDirective(null, new Integer(0), new Integer(0)) +
                              script+"\n"+
-                        "    if (Debug.remoteDebug) { _level0.__LzDebug.sockWriteAsXML(true,"+seqnum+");};\n" + 
+                        "    if (Debug.remoteDebug) { _level0.__LzDebug.sockWriteAsXML(true,"+seqnum+");};\n" +
                         "  }());\n" +
                         "this._parent.loader.returnData( this._parent )";
                     action = ScriptCompiler.compileToByteArray(wrapper, props);
@@ -702,7 +713,9 @@ public class Compiler {
         }
         try {
             ElementCompiler compiler = getElementCompiler(element, env);
-            mLogger.debug("compiling element "+element.getName() + " with compiler "+compiler.getClass().toString());
+            if (mLogger.isDebugEnabled()) {
+            	mLogger.debug("compiling element "+element.getName() + " with compiler "+compiler.getClass().toString());
+            }
             compiler.compile(element);
         } catch (CompilationError e) {
             // todo: wrap instead
@@ -754,7 +767,7 @@ public class Compiler {
             compileElement(root, env);
         }
     }
-    
+
     static void updateSchemaFromLibrary(File file, CompilationEnvironment env,
                                         ViewSchema schema, Set visited, Set externalLibraries)
     {
@@ -792,7 +805,7 @@ public class Compiler {
                 processCompilerInstruction(env, pi);
         }
     }
-    
+
     protected void processCompilerInstruction(CompilationEnvironment env,
                                               ProcessingInstruction pi) {
         if (pi.getPseudoAttributeValue("class") != null)
@@ -803,7 +816,7 @@ public class Compiler {
             }
         }
     }
-    
+
     protected void processClassInstruction(CompilationEnvironment env,
                                            String className,
                                            ProcessingInstruction pi) {

@@ -38,14 +38,14 @@ public class CompilerMediaCache extends Cache {
 
     /** Properties */
     private static Properties mProperties = null;
-    
+
     /** See the constructor. */
     protected File mCacheDirectory;
 
     /**
      * Creates a new <code>CompilerMediaCache</code> instance.
      */
-    public CompilerMediaCache(File cacheDirectory, Properties props) 
+    public CompilerMediaCache(File cacheDirectory, Properties props)
         throws IOException {
         super("cmcache", cacheDirectory, props);
         this.mCacheDirectory = cacheDirectory;
@@ -75,13 +75,14 @@ public class CompilerMediaCache extends Cache {
      * @param toType type of file to transcode into
      */
     public synchronized File transcode(
-            File inputFile, 
-            String fromType, 
-            String toType) 
-        throws TranscoderException, 
-               FileNotFoundException, 
+            File inputFile,
+            String fromType,
+            String toType)
+        throws TranscoderException,
+               FileNotFoundException,
                IOException {
 
+    	if (mLogger.isDebugEnabled()) {
         mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -90,6 +91,7 @@ public class CompilerMediaCache extends Cache {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 CompilerMediaCache.class.getName(),"051018-90", new Object[] {fromType, toType})
 );
+    	}
         if (fromType.equalsIgnoreCase(toType)) {
             return inputFile;
         }
@@ -103,13 +105,14 @@ public class CompilerMediaCache extends Cache {
         String key = FileUtils.relativePath(inputFile, LPS.HOME()) + ":" + toType;
 
         /* we don't use the cache's encoding support; we do it ourselves */
-        String enc = null; 
+        String enc = null;
         boolean lockit = false;
         Item item = findItem(key, null, lockit);
 
         String inputFilePath = inputFile.getAbsolutePath();
         File cacheFile = item.getFile();
         String cacheFilePath = cacheFile.getAbsolutePath();
+        if (mLogger.isDebugEnabled()) {
         mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -118,6 +121,7 @@ public class CompilerMediaCache extends Cache {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 CompilerMediaCache.class.getName(),"051018-118", new Object[] {inputFilePath, cacheFilePath})
                                 );
+        }
 
         InputStream input = null;
         FileOutputStream output = null;
@@ -125,9 +129,10 @@ public class CompilerMediaCache extends Cache {
         if (!cacheFile.exists() || !inputFile.canRead() ||
             inputFile.lastModified() > cacheFile.lastModified() ||
             mProperties.getProperty("forcetranscode", "false") == "true") {
-    
+
             item.markDirty();
 
+            if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -136,10 +141,12 @@ public class CompilerMediaCache extends Cache {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 CompilerMediaCache.class.getName(),"051018-135")
 );
+            }
 
             CachedInfo info = item.getInfo();
             try {
                 input = Transcoder.transcode(inputFile, fromType, toType);
+                if (mLogger.isDebugEnabled()) {
                 mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -148,6 +155,7 @@ public class CompilerMediaCache extends Cache {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 CompilerMediaCache.class.getName(),"051018-147")
 );
+                }
                 item.update(input, null);
                 info.setLastModified(cacheFile.lastModified());
                 item.updateInfo();
@@ -155,7 +163,8 @@ public class CompilerMediaCache extends Cache {
             } finally {
                 FileUtils.close(input);
             }
-        } else { 
+        } else {
+        	if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -164,6 +173,7 @@ public class CompilerMediaCache extends Cache {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 CompilerMediaCache.class.getName(),"051018-163")
 );
+        	}
         }
 
         updateCache(item);

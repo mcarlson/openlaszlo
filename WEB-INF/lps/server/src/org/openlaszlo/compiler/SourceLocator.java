@@ -8,13 +8,14 @@
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.compiler;
+import java.io.Serializable;
 import org.jdom.Namespace;
 
 /**  Holds XML Element source meta-information; start and end line-number, source file
  *
  * @author Henry Minsky
  */
-public class SourceLocator {
+public class SourceLocator implements Serializable {
     String pathname;
     /** Name to use in user messages. */
     String messagePathname;
@@ -22,10 +23,10 @@ public class SourceLocator {
     int startColumnNumber;
     int endLineNumber;
     int endColumnNumber;
-    
+
     /** A string that shouldn't occur in a filename. */
     private static String serializationSeparator = "[]";
-    
+
     static SourceLocator fromString(String string) {
         SourceLocator locator = new SourceLocator();
         java.util.StringTokenizer st = new java.util.StringTokenizer(string, serializationSeparator);
@@ -37,7 +38,7 @@ public class SourceLocator {
         locator.endColumnNumber = Integer.parseInt(st.nextToken());
         return locator;
     }
-    
+
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append(pathname);

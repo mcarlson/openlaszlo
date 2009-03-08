@@ -24,7 +24,7 @@ import org.apache.log4j.*;
 class ImportCompiler extends ToplevelCompiler {
     final static String HREF_ANAME = "href";
     final static String NAME_ANAME = "name";
-    
+
     private static Logger mLogger  = Logger.getLogger(ImportCompiler.class);
 
     ImportCompiler(CompilationEnvironment env) {
@@ -50,7 +50,9 @@ class ImportCompiler extends ToplevelCompiler {
         String libname = XMLUtils.requireAttributeValue(element, NAME_ANAME);
         String stage = XMLUtils.requireAttributeValue(element, "stage");
 
+        if (mLogger.isDebugEnabled()) {
         mLogger.debug("ImportCompiler.compile libname="+libname+", href="+href+", stage="+stage);
+        }
 
         Element module = LibraryCompiler.resolveLibraryElement(
             element, mEnv, mEnv.getImportedLibraryFiles());
@@ -73,7 +75,7 @@ class ImportCompiler extends ToplevelCompiler {
                                 ImportCompiler.class.getName(),"051018-71", new Object[] {libproxied, importproxied})
                                 , element);
             }
-                
+
             // We're not compiling this into the current app, we're
             // building a separate binary library object file for it.
             File appdir = mEnv.getApplicationFile().getParentFile();
@@ -93,15 +95,16 @@ class ImportCompiler extends ToplevelCompiler {
             String libfile = libsrcfile.getName();
             String libprefix = mEnv.getLibPrefix();
             String runtime = mEnv.getProperty(mEnv.RUNTIME_PROPERTY);
-            String extension = ".lib";
-            if (mEnv.isAS3() || mEnv.isSWF()) {
-                extension = "." + runtime + ".swf";
+            String extension = ".swf";
+            if (mEnv.isAS3()) {
+                extension = ".swf";
             } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
                 extension = ".js";
-            } 
+            }
             String objfilename = libprefix + "/" + libfile + extension;
             String objpath = mEnv.getLibPrefixRelative() + "/" + libfile + extension;
 
+            if (mLogger.isInfoEnabled()) {
             mLogger.info(
 /* (non-Javadoc)
  * @i18n.test
@@ -110,6 +113,7 @@ class ImportCompiler extends ToplevelCompiler {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 ImportCompiler.class.getName(),"051018-103", new Object[] {libsrcfile, objfilename})
                                         );
+            }
 
             try {
                 FileUtils.makeFileAndParentDirs(new File(objfilename));
@@ -120,7 +124,9 @@ class ImportCompiler extends ToplevelCompiler {
             if (mEnv.isAS3()) {
                 // In Flash 9/10 we compile the main app first, then compile the libraries
                 // against that generated source tree.
+            	if (mLogger.isDebugEnabled()) {
                 mLogger.debug("... queueing import lib compilation" +libsrcfile+", " +objfilename  +", "+ objpath+", "+module);
+            	}
                 queueLibraryCompilation(libsrcfile, objfilename, objpath, module);
             } else {
                 compileLibrary(libsrcfile, objfilename, objpath, module);
@@ -194,7 +200,7 @@ class ImportCompiler extends ToplevelCompiler {
                 } else {
                     throw new CompilationError("runtime "+runtime+" not supported for generating an import library", element);
                 }
-                    
+
                 env.setObjectWriter(writer);
                 // Set the main SWFWriter so we can output resources
                 // to the main app
@@ -209,7 +215,7 @@ class ImportCompiler extends ToplevelCompiler {
                 // copy the fontmanager from old env to new one.
                 writer.setFontManager(mEnv.getGenerator().getFontManager());
                 writer.setCanvasDefaults(mEnv.getCanvas(), mEnv.getMediaCache());
-                
+
                 writer.openSnippet(liburl);
 
                 env.compileScript("// BEGIN compiling <IMPORT> Library "+liburl+"\n");
@@ -231,7 +237,7 @@ class ImportCompiler extends ToplevelCompiler {
                 // prefix. But this covers global var lookups inside
                 // of a library.
                 if (Compiler.SWF_RUNTIMES.contains(runtime)) {
-                    ((SWFWriter) env.getGenerator()).setLevel0(true);                    
+                    ((SWFWriter) env.getGenerator()).setLevel0(true);
                 }
 
 
@@ -251,7 +257,7 @@ class ImportCompiler extends ToplevelCompiler {
                 }
 
                 ViewCompiler.checkUnresolvedResourceReferences (env);
-                
+
                 writer.closeSnippet();
                 env.compileScript("// FINISH compiling <IMPORT> Library "+liburl+"\n");
             } finally {

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -30,15 +30,15 @@ public class ViewSchema extends Schema {
 
     /** The location of the Laszlo LFC bootstrap interface declarations file  */
     private final String SCHEMA_PATH = LPS.HOME() + File.separator +
-        "WEB-INF" + File.separator + 
-        "lps" + File.separator + 
+        "WEB-INF" + File.separator +
+        "lps" + File.separator +
         "schema"  + File.separator + "lfc.lzx";
 
     private Document schemaDOM = null;
 
     private static Document sCachedSchemaDOM;
     private static long sCachedSchemaLastModified;
-    
+
     /** Default table of attribute name -> typecode */
     private static final Map sAttributeTypes = new HashMap();
 
@@ -47,7 +47,7 @@ public class ViewSchema extends Schema {
 
     /** {String} */
     private static final Set sMouseEventAttributes;
-    
+
     /** Maps a class (name) to its ClassModel. Holds info about
      * attribute/types for each class, as well as pointer to the
      * superclass if any.
@@ -84,7 +84,7 @@ public class ViewSchema extends Schema {
     public static final Type XML_LITERAL              = newType("xmlLiteral");
     public static final Type METHOD_TYPE              = newType("method");
     public static final Type NODE_TYPE                = newType("node");
-    
+
     static {
 
         sHTMLContentElements.add("text");
@@ -98,7 +98,7 @@ public class ViewSchema extends Schema {
             "onkeypress", "onstart" , "onstop",
             "onfocus", "onblur",
             "onkeydown", "onkeyup", "onsubmit", "onreset", "onselect",
-            "onchange" , "oninit", "onerror", "ondata", "ontimeout", 
+            "onchange" , "oninit", "onerror", "ondata", "ontimeout",
             "oncommand" , "onapply" , "onremove"};
         setAttributeTypes(mouseEventAttributes, EVENT_HANDLER_TYPE);
         setAttributeTypes(eventAttributes, EVENT_HANDLER_TYPE);
@@ -109,7 +109,7 @@ public class ViewSchema extends Schema {
         LPS.getMiscDirectory() + File.separator +
         "lzx-autoincludes.properties";
     public static final Properties sAutoincludes = new Properties();
-    
+
     static {
         try {
             InputStream is = new FileInputStream(AUTOINCLUDES_PROPERTY_FILE);
@@ -122,7 +122,7 @@ public class ViewSchema extends Schema {
             throw new ChainedException(e);
         }
     }
-    
+
     public ViewSchema() {
 
     }
@@ -331,10 +331,11 @@ public class ViewSchema extends Schema {
      * @param attributeDefs list of attribute name/type defs
      */
     public void addElement (Element elt, String tagName,
-                            String superTagName, List attributeDefs, 
+                            String superTagName, List attributeDefs,
                             CompilationEnvironment env)
     {
         ClassModel superclass = getClassModel(superTagName);
+
         if (superclass == null) {
             throw new CompilationError(
 /* (non-Javadoc)
@@ -381,7 +382,7 @@ public class ViewSchema extends Schema {
         while (iterator.hasNext()) {
             Element child = (Element) iterator.next();
             if (child.getName().equals("containsElements")) {
-                    // look for <element>tagname</element> 
+                    // look for <element>tagname</element>
                 Iterator iter1 = child.getChildren().iterator();
                 while (iter1.hasNext()) {
                     Element etag = (Element) iter1.next();
@@ -392,9 +393,9 @@ public class ViewSchema extends Schema {
                         throw new CompilationError(
                             "containsElement block must only contain <element> tags", etag);
                     }
-                } 
+                }
             } else if (child.getName().equals("forbiddenElements")) {
-                    // look for <element>tagname</element> 
+                    // look for <element>tagname</element>
                 Iterator iter1 = child.getChildren().iterator();
                 while (iter1.hasNext()) {
                     Element etag = (Element) iter1.next();
@@ -405,7 +406,7 @@ public class ViewSchema extends Schema {
                         throw new CompilationError(
                             "containsElement block must only contain <element> tags", etag);
                     }
-                } 
+                }
             }
         }
 
@@ -414,13 +415,12 @@ public class ViewSchema extends Schema {
 
         // Add in the attribute declarations. 
         addAttributeDefs(elt, tagName, attributeDefs, env);
-     
     }
 
     /**
      * Add this list of attribute name/type info to the in-core model of the class definitions.
      *
-     * @param sourceElement the user's LZX source file element that holds class LZX definition 
+     * @param sourceElement the user's LZX source file element that holds class LZX definition
      * @param classname the class we are defining
      * @param attributeDefs list of AttributeSpec attribute info to add to the Schema
      *
@@ -457,7 +457,7 @@ public class ViewSchema extends Schema {
                                   * @org-mes="In class '" + p[0] + "' attribute '" + p[1] + "' with type '" + p[2] + "' is overriding superclass attribute with same name but different type: " + p[3]
                                   */
                             org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                ViewSchema.class.getName(),"051018-364", new Object[] {classname, attr.name, attr.type.toString(), parentType.toString()}), 
+                                ViewSchema.class.getName(),"051018-364", new Object[] {classname, attr.name, attr.type.toString(), parentType.toString()}),
                             sourceElement);
                     }
                 }
@@ -538,7 +538,7 @@ public class ViewSchema extends Schema {
 
         // Look up attribute in type map for this element
         ClassModel classModel = getClassModel(elementName);
-        
+
         if (classModel != null) {
             try {
                 type = classModel.getAttributeTypeOrException(attrName, allocation);
@@ -587,7 +587,7 @@ public class ViewSchema extends Schema {
 
         // Look up attribute in type map for this element
         ClassModel classModel = getClassModel(elementName);
-        
+
         if (classModel != null) {
             return classModel.getAttribute(attrName, allocation);
         } else {
@@ -674,7 +674,7 @@ public class ViewSchema extends Schema {
           ((ClassModel)i.next()).setIsBuiltin(true);
         }
     }
-    
+
 
 
     /** Check if a child element can legally be contained in a parent element.
@@ -689,13 +689,13 @@ public class ViewSchema extends Schema {
 
 
            + If not, ascend up the parent classmodel, and call canContainElement recursively
-          
+
      */
     public boolean canContainElement (String parentTag, String childTag) {
         // Get list of legally nestable tags
         ClassModel parent = getClassModel(parentTag);
 
-        // TODO [hqm 2007-09]: CHECK FOR NULL HERE 
+        // TODO [hqm 2007-09]: CHECK FOR NULL HERE
 
         Set tagset = parent.getContainsSet();
         Set forbidden = parent.getForbiddenSet();
@@ -710,7 +710,7 @@ public class ViewSchema extends Schema {
         // check all superclasses of the childTag
         ClassModel childclass = getClassModel(childTag);
 
-        // TODO [hqm 2007-09]: CHECK FOR NULL HERE         
+        // TODO [hqm 2007-09]: CHECK FOR NULL HERE
 
         while (childclass != null) {
             String superclassname = childclass.getSuperTagName();
@@ -728,7 +728,7 @@ public class ViewSchema extends Schema {
         return false;
     }
 
-    
+
     /** @return true if this element is an input text field */
     boolean isInputTextElement(Element e) {
         String classname = e.getName();
@@ -791,7 +791,7 @@ public class ViewSchema extends Schema {
         String name = e.getName();
         return name.equals("doc");
     }
-    
+
     /* Constants for parsing CSS colors. */
     static final PatternMatcher sMatcher = new Perl5Matcher();
     static final Pattern sRGBPattern;
@@ -976,7 +976,7 @@ public class ViewSchema extends Schema {
             super(message);
         }
     }
-     
+
     /** Parse according to http://www.w3.org/TR/2001/WD-css3-color-20010305,
      * but also allow 0xXXXXXX */
     public static int parseColor(String str) {
@@ -1037,7 +1037,7 @@ public class ViewSchema extends Schema {
         handlerAttributes.add("name");
         handlerAttributes.add("args");
         handlerAttributes.add("reference");
-        
+
         setterAttributes.add("name");
         setterAttributes.add("args");
         setterAttributes.add("allocation");

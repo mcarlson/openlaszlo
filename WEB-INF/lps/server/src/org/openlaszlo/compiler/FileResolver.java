@@ -54,7 +54,8 @@ public interface FileResolver {
  * supplies the context for partial pathnames.)
  */
 class DefaultFileResolver implements FileResolver {
-
+	private static Logger mLogger = Logger.getLogger(FileResolver.class);
+	
     public Set binaryIncludes = new HashSet();
 
     public Set getBinaryIncludes() { return binaryIncludes; }
@@ -100,8 +101,6 @@ class DefaultFileResolver implements FileResolver {
     }
 
     protected File resolveInternal(CompilationEnvironment env, String pathname, String base) {
-        Logger mLogger = Logger.getLogger(FileResolver.class);
-
         final String FILE_PROTOCOL = "file";
         String protocol = FILE_PROTOCOL;
 
@@ -145,7 +144,9 @@ class DefaultFileResolver implements FileResolver {
         v.add(base);
         if (SWFtoPNG) {
           String toAdd = FileUtils.insertSubdir(base + "/", "autoPng");
+          if (mLogger.isDebugEnabled()) {
           mLogger.debug("Default File Resolver Adding " + toAdd + '\n');
+          }
           v.add(toAdd);
         }
         if (!pathname.startsWith("./") && !pathname.startsWith("../")) {
@@ -161,16 +162,22 @@ class DefaultFileResolver implements FileResolver {
               File f = (new File(dir, pathname)).getCanonicalFile();
               if (f.exists() ||
                   ((binaryIncludes != null) && binaryIncludes.contains(f))) {
+            	if (mLogger.isDebugEnabled()) {
                 mLogger.debug("Resolved " + pathname + " to "  +
                               f.getAbsolutePath());
+            	}
                 return f;
               } else if (SWFtoPNG) {
                 String autoPngPath = FileUtils.insertSubdir(f.getPath(), "autoPng");
+                if (mLogger.isDebugEnabled()) {
                 mLogger.debug("Default File Resolver Looking for " + autoPngPath + '\n');
+                }
                 File autoPngFile = new File(autoPngPath);
                 if (autoPngFile.exists()) {
+                  if (mLogger.isDebugEnabled()) {
                   mLogger.debug("Default File Resolver " + pathname + " to "  +
                                 autoPngFile.getAbsolutePath() + '\n');
+                  }
                   return autoPngFile;
                 } else {
                   File [] pathArray = FileUtils.matchPlusSuffix(autoPngFile);

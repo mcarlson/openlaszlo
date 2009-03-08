@@ -79,7 +79,7 @@ abstract class ObjectWriter {
     /** media cache for transcoding */
     protected CompilerMediaCache mCache = null;
 
-    /** <String,Resource> maps resource files to the Resources 
+    /** <String,Resource> maps resource files to the Resources
      * definition in the swf file. */
     protected Map mResourceMap = new HashMap();
     protected Map mClickResourceMap = new HashMap();
@@ -108,7 +108,7 @@ abstract class ObjectWriter {
     /**
      * Initializes a ObjectWriter with an OutputStream to which a new object file
      * will be written when <code>ObjectWriter.close()</code> is called.
-     * 
+     *
      * @param stream A <code>java.io.OutputStream</code> that the
      * movie will be written to.
      * @param props list of properties
@@ -124,12 +124,12 @@ abstract class ObjectWriter {
         this.mStream       = stream;
         this.mEnv          = env;
     }
-    
+
     /**
      * Sets the canvas for the app
      *
      * @param canvas
-     * 
+     *
      */
     abstract void setCanvas(Canvas canvas, String canvasConstructor);
 
@@ -205,7 +205,7 @@ abstract class ObjectWriter {
     {
         try {
             String inputMimeType = MimeType.fromExtension(fileName);
-            if (!Transcoder.canTranscode(inputMimeType, MimeType.SWF) 
+            if (!Transcoder.canTranscode(inputMimeType, MimeType.SWF)
                 && !inputMimeType.equals(MimeType.SWF)) {
                 inputMimeType = Transcoder.guessSupportedMimeTypeFromContent(fileName);
                 if (inputMimeType == null || inputMimeType.equals("")) {
@@ -222,28 +222,29 @@ abstract class ObjectWriter {
             // No need to get these from the cache since they don't need to be
             // transcoded and we usually keep the cmcache on disk.
             if (inputMimeType.equals(MimeType.SWF)) {
-        
+
                 long fileSize =  FileUtils.getSize(new File(fileName));
-    
+
                 Element elt = new Element("resource");
                     elt.setAttribute("name", name);
                     elt.setAttribute("mime-type", inputMimeType);
                     elt.setAttribute("source", fileName);
                     elt.setAttribute("filesize", "" + fileSize);
                 mInfo.addContent(elt);
-    
+
                 return importSWF(fileName, name, false);
             }
 
-            // TODO: [2002-12-3 bloch] use cache for mp3s; for now we're skipping it 
+            // TODO: [2002-12-3 bloch] use cache for mp3s; for now we're skipping it
             // arguably, this is a fixme
-            if (inputMimeType.equals(MimeType.MP3) || 
+            if (inputMimeType.equals(MimeType.MP3) ||
                 inputMimeType.equals(MimeType.XMP3)) {
                 return importMP3(fileName, name);
             }
-    
+
             File inputFile = new File(fileName);
             File outputFile = mCache.transcode(inputFile, inputMimeType, MimeType.SWF);
+            if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -252,6 +253,7 @@ abstract class ObjectWriter {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 ObjectWriter.class.getName(),"051018-584", new Object[] {fileName, name, new Long(outputFile.length())})
                                         );
+            }
 
             long fileSize =  FileUtils.getSize(outputFile);
 
@@ -288,10 +290,10 @@ abstract class ObjectWriter {
      * @param name name of the MovieClip/Sprite
      * @throws CompilationError
      */
-    abstract public void importPreloadResource(String fileName, String name) 
+    abstract public void importPreloadResource(String fileName, String name)
       throws ImportResourceError;
 
-    abstract public void importPreloadResource(File fileName, String name) 
+    abstract public void importPreloadResource(File fileName, String name)
       throws ImportResourceError;
 
     /** Import a multiframe resource into the current movie.  Using a
@@ -307,7 +309,9 @@ abstract class ObjectWriter {
      * File should refer to a graphical asset. */
     public String importResource(File file)
     {
+    	if (mLogger.isDebugEnabled()) {
         mLogger.debug("ObjectResource:importResource(File) "+file.getPath());
+    	}
         Resource res;
 
         try {
@@ -346,7 +350,7 @@ abstract class ObjectWriter {
     String createName() {
         return mNameSupply.next();
     }
-    
+
 
     /**
      * collect fonts for later use
@@ -361,7 +365,7 @@ abstract class ObjectWriter {
             for( int k=0; k<frame.size(); k++ ) {
                 FlashObject fo = frame.getFlashObjectAt(k);
                 fo.collectFonts( mFontsCollector );
-                //mLogger.debug("FONTS size " 
+                //mLogger.debug("FONTS size "
                          //+ mFontsCollector.getFonts().size());
             }
         }
@@ -372,7 +376,7 @@ abstract class ObjectWriter {
      * @param name
      * @param addStop if true, add stop action to last frame
      */
-    protected Resource importSWF(String fileName, String name, boolean addStop) 
+    protected Resource importSWF(String fileName, String name, boolean addStop)
         throws IVException, FileNotFoundException  {
 
         FlashFile f = FlashFile.parse(fileName);
@@ -401,7 +405,7 @@ abstract class ObjectWriter {
                 mMultiFrameResourceSet.add(res);
             }
         }
- 
+
         return res;
     }
 
@@ -411,7 +415,7 @@ abstract class ObjectWriter {
      * @param fileName
      * @param name
      */
-    protected Resource importMP3(String fileName, String name) 
+    protected Resource importMP3(String fileName, String name)
         throws IVException, IOException {
 
         long fileSize =  FileUtils.getSize(new File(fileName));
@@ -469,7 +473,7 @@ abstract class ObjectWriter {
             mFlashDef = def;
         }
 
-        /** Create a resource 
+        /** Create a resource
          */
         public Resource(String name, FlashDef def, int width, int height) {
             mName = name;
@@ -505,7 +509,7 @@ abstract class ObjectWriter {
      * @param fileName file name of the resource
      * @param name name of the resource
      */
-    protected Resource getMultiFrameResource(String fileName, String name, int fNum) 
+    protected Resource getMultiFrameResource(String fileName, String name, int fNum)
         throws ImportResourceError
     {
         Resource res = (Resource)mMultiFrameResourceMap.get(fileName);
@@ -535,7 +539,7 @@ abstract class ObjectWriter {
       throws FileNotFoundException, CompilationError;
 
 
-    public void setScriptLimits(int recursion, int timeout) { 
+    public void setScriptLimits(int recursion, int timeout) {
         this.mRecursionLimit = recursion;
         this.mExecutionTimeout = timeout;
     }

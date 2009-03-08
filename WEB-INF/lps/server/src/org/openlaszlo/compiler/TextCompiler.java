@@ -64,7 +64,7 @@ abstract class TextCompiler {
     }
 
     /**
-     * Compute text width for a given font 
+     * Compute text width for a given font
      *
      * @param text text stringtext string
      * @param fontInfo font info for this text
@@ -79,6 +79,8 @@ abstract class TextCompiler {
         int    size     = fontInfo.getSize();
         int    style    = fontInfo.styleBits;
 
+
+        if (mTextLogger.isDebugEnabled()) {
         mTextLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -87,6 +89,7 @@ abstract class TextCompiler {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 TextCompiler.class.getName(),"051018-87", new Object[] {fontName, fontInfo.getStyle(), new Integer(fontInfo.getSize()), text})
                                 );
+        }
 
         if (text.length() == 0) {
             return 0;
@@ -150,28 +153,30 @@ abstract class TextCompiler {
                 if (i == length - 1) {
                     double m = 0;
                     try {
-                        m = bounds[idx].getMaxX(); 
+                        m = bounds[idx].getMaxX();
                     } catch (Exception e) {
                     }
                     if (m > adv) {
                         adv = m;
                     }
-                } 
+                }
 
                 if (i == 0) {
                     try {
                         double m = bounds[idx].getMinX();
                         if (m > 0) {
                             adv += m;
-                        } 
+                        }
                     } catch (Exception e) {
                     }
-                } 
+                }
 
                 last_charwidth = adv;
                 width += adv;
 
+                if (mLogger.isDebugEnabled()) {
                 mLogger.debug("adv " + adv);
+                }
             }
 
             if (i != length - 1) {
@@ -191,8 +196,9 @@ abstract class TextCompiler {
         // to trim the trailing space from the HTML formatted text
         if (c == ' ') {
             lm.last_spacewidth = (double)(last_charwidth  * fontInfo.getSize()) / 1024.0;
-        } 
+        }
 
+        if (mTextLogger.isDebugEnabled()) {
         mTextLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -201,6 +207,7 @@ abstract class TextCompiler {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 TextCompiler.class.getName(),"051018-201", new Object[] {text, fontInfo.getName(), new Integer(fontInfo.getSize()), fontInfo.getStyle(), new Double(w)})
                                 );
+        }
 
         // FIXME: [2003-09-26 bloch] handle empty string case? should it be w/out slop?
         // Match this in LzNewText.as
@@ -318,7 +325,7 @@ abstract class TextCompiler {
     }
 
 
-    /** 
+    /**
         Processes the text content of the element.  The element
         content may contain XHTML markup elements, which we will
         interpret as we map over the content. Normally, whitespace
@@ -326,7 +333,7 @@ abstract class TextCompiler {
         will cause the enclosed text to be treated as verbatim,
         meaning means that whitespace and linebreaks will be
         preserved.
-    
+
         Supported XHTML markup is currently:
         <ul>
         <li> P, BR cause linebreaks
@@ -418,7 +425,7 @@ abstract class TextCompiler {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 TextCompiler.class.getName(),"051018-418")
 );
-            } 
+            }
         }
     }
 }

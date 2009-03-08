@@ -48,12 +48,12 @@ public class ViewCompiler extends ElementCompiler {
     private static final String WHEN_ONCE = "once";
     private static final String WHEN_ALWAYS = "always";
     private static final String WHEN_PATH = "path";
-    
+
     private ViewSchema mSchema;
-    
+
     private static Logger mLogger  = Logger.getLogger(ViewCompiler.class);
     private static Logger mTraceLogger  = Logger.getLogger("trace.xml");
-    
+
     public ViewCompiler(CompilationEnvironment env) {
         super(env);
         mSchema = env.getSchema();
@@ -119,7 +119,7 @@ public class ViewCompiler extends ElementCompiler {
     static boolean isElement(Element element) {
         return true;
     }
-    
+
     /** Collect the names of classes that are referenced. */
     static void collectElementNames(Element element, Set names) {
         names.add(element.getName());
@@ -129,7 +129,7 @@ public class ViewCompiler extends ElementCompiler {
             collectElementNames((Element) iter.next(), names);
         }
     }
-    
+
     static void collectLayoutElement(Element element, Set names) {
         if (element.getAttributeValue("layout") != null) {
             try {
@@ -171,19 +171,19 @@ public class ViewCompiler extends ElementCompiler {
                 new org.jdom.output.XMLOutputter();
             mTraceLogger.info(outputter.outputString(element));
         }
-        
+
         NodeModel model = NodeModel.elementAsModel(element, mSchema, mEnv);
         model = model.expandClassDefinitions();
 
         String script = VIEW_INSTANTIATION_FNAME + "(" +
           model.asJavascript() + ", " + model.totalSubnodes() +
           ");";
-        
+
         // Don't keep non-class models around
         if (!element.getName().equals("class")) {
             ((ElementWithLocationInfo) element).model = null;
         }
-        
+
         if (tracexml) {
             mLogger.debug(
 /* (non-Javadoc)
@@ -202,7 +202,7 @@ public class ViewCompiler extends ElementCompiler {
             throw e;
         }
     }
-    
+
     /**
      * Modify the DOM in place, to what the runtime expects.  This
      * function encapsulates the behavior that is common to root
@@ -256,7 +256,7 @@ public class ViewCompiler extends ElementCompiler {
         sUnsupportedServerlessFiletypesSWF7.put("gif", "true");
 
     }
-    
+
     static void checkUnsupportedMediaTypes(CompilationEnvironment env, Element elt, String url) {
         String suffix = FileUtils.getExtension(url);
         if (env.isSWF()) {
@@ -322,7 +322,7 @@ public class ViewCompiler extends ElementCompiler {
                     // remove this <attribute name="resource" .../>
                     // child because we just copied the value to the
                     // parent elt.
-                    iter.remove(); 
+                    iter.remove();
                 }
             }
         }
@@ -402,7 +402,7 @@ public class ViewCompiler extends ElementCompiler {
                 }
             }
         }
-        
+
         // Recurse
         Iterator iter;
         for (iter = elt.getChildren().iterator();
@@ -415,7 +415,7 @@ public class ViewCompiler extends ElementCompiler {
                                       CompilationEnvironment env) {
         final String ATTR_NAME = "clickregion";
         String value = elt.getAttributeValue(ATTR_NAME);
-        
+
         if (value != null) {
             if (value.matches(sConstraintPatStr) ||
                 ScriptCompiler.isIdentifier(value) ||
@@ -439,7 +439,7 @@ public class ViewCompiler extends ElementCompiler {
                 elt.setAttribute(ATTR_NAME, value);
             }
         }
-        
+
         // Recurse
         Iterator iter;
         for (iter = elt.getChildren().iterator();
@@ -447,7 +447,7 @@ public class ViewCompiler extends ElementCompiler {
             compileClickResources((Element) iter.next(), env);
         }
     }
-    
+
     static void checkUnresolvedResourceReferences (CompilationEnvironment env) {
         Map refs = env.resourceReferences();
         Set resourceNames = env.getResourceNames();
@@ -487,10 +487,10 @@ public class ViewCompiler extends ElementCompiler {
             return;
         }
 
-        // Build a list of superclasses 
+        // Build a list of superclasses
         Vector parents = new Vector();
         ClassModel lzxclass = classinfo;
-        // walk 
+        // walk
         while (lzxclass != null) {
             parents.insertElementAt(lzxclass, 0);
             lzxclass = lzxclass.superclass;
@@ -529,8 +529,8 @@ public class ViewCompiler extends ElementCompiler {
      * for measuring text, since we have no way to pass those text
      * widths to the runtime, but we do need this to check if we need
      * to import the default bold or italic fonts.
-     * 
-     * 
+     *
+     *
      *
      * @param env
      * @param elt
@@ -541,7 +541,6 @@ public class ViewCompiler extends ElementCompiler {
                                              FontInfo fontInfo,
                                              Set classList) {
 
-        classList = new HashSet(classList);
 
         // Clone a copy of the font info
         fontInfo = new FontInfo(fontInfo);
@@ -550,24 +549,26 @@ public class ViewCompiler extends ElementCompiler {
         mergeClassFontInfo (elt, fontInfo, env);
         // Now override with any directly declared attributes
         mergeFontInfo(elt, fontInfo);
-        
+
         String fontName = fontInfo.getName();
 
         // If it inherits from text or inputttext, annotate it with font info
-        if ("text".equals(elt.getName()) ||
-            "text".equals(mSchema.getBaseClassname(elt.getName())) ||
-            "inputtext".equals(elt.getName()) ||
-            "inputtext".equals(mSchema.getBaseClassname(elt.getName()))) {
+        String eltName = elt.getName();
+        if ("text".equals(eltName) ||
+            "text".equals(mSchema.getBaseClassname(eltName)) ||
+            "inputtext".equals(eltName) ||
+            "inputtext".equals(mSchema.getBaseClassname(eltName))) {
             compileTextMetrics(elt, env, fontInfo);
         }
-        ClassModel classinfo =  env.getSchema().getClassModel(elt.getName());
+        ClassModel classinfo =  env.getSchema().getClassModel(eltName);
 
         // If this invokes a 'user-defined' class, let's walk that
         // class's source tree now
         if (classinfo != null && classinfo.definition != null) {
+            classList = new HashSet(classList);
             // check if we are in an instance of a class that we are
             // already descended into (loop detection)
-            if (classList.contains(elt.getName().intern())) {
+            if (classList.contains(eltName.intern())) {
                 return;
             }
             for (Iterator iter = classinfo.definition.getChildren().iterator(); iter.hasNext();
@@ -626,7 +627,7 @@ public class ViewCompiler extends ElementCompiler {
             }
         }
     }
-    
+
     /** Merge in font attribute info from an element into a FontInfo.
      *
      * @param elt the element to look for font attributes on
@@ -666,7 +667,7 @@ public class ViewCompiler extends ElementCompiler {
     }
 
     /** return true if element has an attribute named ATTRIBUTE in
-     * it's attribute list, or has a child lzx element 
+     * it's attribute list, or has a child lzx element
      * <attribute name="ATTRIBUTE"/>
      */
     protected static boolean hasAttribute(Element elt, String attrName) {
@@ -687,7 +688,7 @@ public class ViewCompiler extends ElementCompiler {
 
 
     /** return value if element has an attribute named ATTRNAME in
-     * it's attribute list, or has a child lzx element 
+     * it's attribute list, or has a child lzx element
      * <attribute name="ATTRNAME" value="VAL"/>
      */
     protected static String getAttributeValue(Element elt, String attrName) {
@@ -731,7 +732,7 @@ public class ViewCompiler extends ElementCompiler {
         if (fontInfo.getStyle() != null) {
             elt.setAttribute("fontstyle", fontInfo.getStyle());
         }
-            
+
     }
 
 

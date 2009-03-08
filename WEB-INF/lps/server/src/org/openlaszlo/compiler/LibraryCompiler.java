@@ -20,7 +20,7 @@ import org.apache.log4j.*;
 class LibraryCompiler extends ToplevelCompiler {
     final static String HREF_ANAME = "href";
     final static String INCLUDES_ANAME = "includes";
-  
+
     /** Logger
      */
     private static Logger mLogger  = Logger.getLogger(LibraryCompiler.class);
@@ -44,7 +44,9 @@ class LibraryCompiler extends ToplevelCompiler {
         try {
             File key = file.getCanonicalFile();
             if (!visited.contains(key)) {
-                mLogger.debug("Resolving: " + key);
+            	if (mLogger.isDebugEnabled()) {
+            		mLogger.debug("Resolving: " + key);
+            	}
                 visited.add(key);
 
                 // If we're compiling a loadable library, add this to
@@ -75,24 +77,64 @@ class LibraryCompiler extends ToplevelCompiler {
                 if (env.parsedLibraryCache.get(file) != null) {
                   root = (Element) env.parsedLibraryCache.get(file);
                 } else {
-                  Document doc = env.getParser().parse(file, env);
-                  root = doc.getRootElement();
+                  String keepParsedLibraries = env.getProperty("keepParsedLibraries");
+                  File serializedFile = new File(key.getParent(), "." + key.getName() + ".ser");
+                  if (keepParsedLibraries != null && serializedFile.exists() && serializedFile.lastModified() > file.lastModified()) {
+                      try {
+                          FileInputStream fis = new FileInputStream(serializedFile);
+                          ObjectInputStream in = new ObjectInputStream(fis);
+                          root = (Element)in.readObject();
+                          in.close();
+                          keepParsedLibraries = null;
+                      }
+                      catch(IOException ex) {
+                          if (mLogger.isDebugEnabled()) {
+                              mLogger.debug("Error loading " + serializedFile + " " + ex);
+                          }
+                      }
+                      catch(ClassNotFoundException ex) {
+                         if (mLogger.isDebugEnabled()) {
+                            mLogger.debug("Error loading " + serializedFile + " " + ex);
+                         }
+                      }
+                  }
+                  if (root == null) {
+                    Document doc = env.getParser().parse(file, env);
+                    root = doc.getRootElement();
+                  }
                   env.parsedLibraryCache.put(file, root);
-                  mLogger.debug("" + file + ": " + root + " attributes: " + root.getAttributes());
+                  if (mLogger.isDebugEnabled()) {
+                	  mLogger.debug("" + file + ": " + root + " attributes: " + root.getAttributes());
+                  }
                   // Look for and add any includes from a binary library
                   String includesAttr = root.getAttributeValue(INCLUDES_ANAME);
-                  File base = new File(Parser.getSourcePathname(root)).getParentFile();
                   if (includesAttr != null) {
-                    // This modularity sucks
-                    Set binaryIncludes = env.getFileResolver().getBinaryIncludes();
-                    for (StringTokenizer st = new StringTokenizer(includesAttr);
-                         st.hasMoreTokens();) {
-                      String name = FileUtils.fromURLPath((String)st.nextToken());
-                      File canon = new File(base, name).getCanonicalFile();
-                      mLogger.debug("binary include: " + canon);
-                      visited.add(canon);
-                      binaryIncludes.add(canon);
+                     File base = new File(Parser.getSourcePathname(root)).getParentFile();
+                     // This modularity sucks
+                     Set binaryIncludes = env.getFileResolver().getBinaryIncludes();
+                     for (StringTokenizer st = new StringTokenizer(includesAttr);
+                       st.hasMoreTokens();) {
+                       String name = FileUtils.fromURLPath((String)st.nextToken());
+                       File canon = new File(base, name).getCanonicalFile();
+                       if (mLogger.isDebugEnabled()) {
+                         mLogger.debug("binary include: " + canon);
+                       }
+                       visited.add(canon);
+                       binaryIncludes.add(canon);
                     }
+                  }
+                  if (keepParsedLibraries != null) {
+                      try {
+                   	      FileOutputStream fos = new FileOutputStream(serializedFile);
+                          ObjectOutputStream out = new ObjectOutputStream(fos);
+                          out.writeObject(root);
+                          out.close();
+                      }
+                      catch(IOException ex) {
+                          if (mLogger.isDebugEnabled()) {
+                              mLogger.debug("Error saving " + serializedFile + " " + ex);
+                          }
+                      }
                   }
                 }
                 return root;
@@ -103,7 +145,7 @@ class LibraryCompiler extends ToplevelCompiler {
             throw new CompilationError(e);
         }
     }
-    
+
     /** Return the resolved library element and add the library to visited.
      * If the library has already been visited, return null instead.
      */
@@ -118,7 +160,7 @@ class LibraryCompiler extends ToplevelCompiler {
         File file = env.resolveReference(element, HREF_ANAME, true);
         return resolveLibraryElement(file, env, visited);
     }
-    
+
     public void compile(Element element) throws CompilationError
     {
         boolean toplevel = element.getParentElement() == null;

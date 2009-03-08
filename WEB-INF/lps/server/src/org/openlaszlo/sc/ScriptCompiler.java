@@ -38,7 +38,7 @@ public class ScriptCompiler extends Cache {
     // TODO: [2002-11-28 ows] use org.apache.commons.util.BufferCache?
     // TODO: [2002-11-28 ows] wrap in Collections.synchronizedMap?
     private static ScriptCompiler mScriptCache = null;
-    
+
     public  ScriptCompiler(String name, File cacheDirectory, Properties props)
         throws IOException {
         super(name, cacheDirectory, props);
@@ -185,12 +185,6 @@ public class ScriptCompiler extends Cache {
         // so make a copy of properties that neutralizes that.
         properties = (Properties) properties.clone();
         properties.setProperty("filename", "");
-        // The key is a string representation of the arguments:
-        // properties, and the script.
-        StringWriter writer = new StringWriter();
-        writer.write(sortedPropertiesList(properties));
-        writer.getBuffer().append(script);
-        String key = writer.toString();
         // Check the cache.  clearCache may clear the cache at any
         // time, so use a copy of it so that it doesn't change state
         // between a test that it's null and a method call on it.
@@ -201,6 +195,12 @@ public class ScriptCompiler extends Cache {
             if (mScriptCache == null) {
                 return _compileToByteArray(script, properties);
             } else {
+                // The key is a string representation of the arguments:
+                // properties, and the script.
+                StringWriter writer = new StringWriter();
+                writer.write(sortedPropertiesList(properties));
+                writer.getBuffer().append(script);
+                String key = writer.toString();
                 synchronized (mScriptCache) {
                     item = mScriptCache.findItem(key, null, false);
                 }
@@ -218,7 +218,7 @@ public class ScriptCompiler extends Cache {
                     item.markClean();
                 }
             }
-            
+
             mScriptCache.updateCache(item);
 
             return (byte[]) code;
@@ -226,12 +226,12 @@ public class ScriptCompiler extends Cache {
             throw new CompilationError(e, "IOException in compilation/script-cache");
         }
     }
-    
+
     /**
      * @param action actionscript byte codes
      * @param ostream outputstream to write SWF
      */
-    public static void writeScriptToStream(byte[] action, 
+    public static void writeScriptToStream(byte[] action,
            OutputStream ostream, int swfversion) throws IOException {
         FlashFile file = FlashFile.newFlashFile();
         Script s = new Script(1);
@@ -324,7 +324,7 @@ public class ScriptCompiler extends Cache {
         }
         writer.write("}");
     }
-    
+
     /** Writes a LaszloScript array literal that evaluates to a
      * LaszloScript array whose elements are LaszloScript
      * representations of the arguments elements.
@@ -351,7 +351,7 @@ public class ScriptCompiler extends Cache {
         }
         writer.write("]");
     }
-    
+
     /** Returns true iff the string is a valid JavaScript identifier. */
     public static boolean isIdentifier(String s) {
         if (s.length() == 0)
@@ -368,7 +368,7 @@ public class ScriptCompiler extends Cache {
         }
         return true;
     }
-    
+
     /** Enclose the specified string in double-quotes, and character-quote
      * any characters that need it.
      * @param s a string
@@ -400,7 +400,7 @@ public class ScriptCompiler extends Cache {
                 switch (c) {
                 case '\n':
                     writer.write("\\n");
-                    break;                    
+                    break;
                 case '\r':
                     writer.write("\\r");
                     break;
@@ -484,7 +484,7 @@ public class ScriptCompiler extends Cache {
                 switch (c) {
                 case '\n':
                     writer.write("\\n");
-                    break;                    
+                    break;
                 case '\r':
                     writer.write("\\r");
                     break;

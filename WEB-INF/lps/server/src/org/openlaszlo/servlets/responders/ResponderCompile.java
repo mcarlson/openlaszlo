@@ -106,7 +106,10 @@ public abstract class ResponderCompile extends Responder
                     scacheDir = LPS.getWorkDirectory() + File.separator + "scache";
                 }
                 File scache = checkDirectory(scacheDir);
-                mScriptCache = ScriptCompiler.initScriptCompilerCache(scache, prop);
+                boolean enableScriptCache = "true".equals(LPS.getProperty("compiler.scache.enabled"));
+                if (enableScriptCache) {
+                    mScriptCache = ScriptCompiler.initScriptCompilerCache(scache, prop);
+                }
             }
 
             String cmOption = prop.getProperty("compMgrDependencyOption");

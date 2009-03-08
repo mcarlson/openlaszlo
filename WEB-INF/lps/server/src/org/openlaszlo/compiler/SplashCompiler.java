@@ -40,7 +40,7 @@ class SplashCompiler extends ElementCompiler {
 
     public void compile(Element element) throws CompilationError {
         if (mEnv.isDHTML()) return;
-        
+
         ViewCompiler viewCompiler = new ViewCompiler(mEnv);
         ResourceCompiler res = new ResourceCompiler(mEnv);
         StringBuffer script = new StringBuffer();
@@ -63,12 +63,12 @@ class SplashCompiler extends ElementCompiler {
                 child.setAttribute("resourcename", "lzprelresource");
                 element.addContent(child);
         }
-        
+
         ObjectWriter sw = mEnv.getGenerator();
         sw.addPreloader(mEnv);
-        
+
         for (Iterator iter = element.getChildren("view", element.getNamespace()).iterator();
-             iter.hasNext(); ) { 
+             iter.hasNext(); ) {
             Element child = (Element) iter.next();
             // Change the child into the format that the runtime expects
             // TODO: [2003-01-13 ows] change the runtime to expect the
@@ -98,7 +98,7 @@ class SplashCompiler extends ElementCompiler {
                     rname = child.getAttributeValue("name");
                     if (rname == null) {
                         rname = sw.createName();
-                    } 
+                    }
                     child.setAttribute("name", rname);
                 }
                 try {
@@ -118,7 +118,7 @@ class SplashCompiler extends ElementCompiler {
         script.append(VIEW_INSTANTIATION_FNAME + "(" +
                           model.asJavascript() +
                           ");" );
-        
+
         String scriptstr = script.toString();
         if (scriptstr != "") {
             try {
@@ -126,10 +126,12 @@ class SplashCompiler extends ElementCompiler {
             } catch (org.openlaszlo.sc.CompilerException e) {
                 throw new CompilationError(element, e);
             }
+            if (mLogger.isDebugEnabled()) {
             mLogger.debug("Adding preloader script: " + script);
+            }
         }
     }
-    
+
     private String[] getBlogList() {
         return new String[] {
             "http://wetmachine.com/",

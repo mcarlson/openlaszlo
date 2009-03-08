@@ -263,9 +263,9 @@
         {test: 'new Number', instance: new Number(1), constructor: Number},
         {test: 'Object Literal', instance: {}, constructor: Object},
         {test: 'new String', instance: new String(""), constructor: String},
-        {test: 'boolean Literal', instance: true, constructor: $swf9?Boolean:null },
-        {test: 'number Literal', instance: 0, constructor: $swf9?Number:null},
-        {test: 'string Literal', instance: "test", constructor: $swf9?String:null},
+        {test: 'boolean Literal', instance: true, constructor: $as3?Boolean:null },
+        {test: 'number Literal', instance: 0, constructor: $as3?Number:null},
+        {test: 'string Literal', instance: "test", constructor: $as3?String:null},
         {test: 'new lz.node', instance: new lz.node(), constructor: LzNode}
       ];
       var types = [Array, Boolean, Date, Number, String];
@@ -625,7 +625,7 @@
   </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
