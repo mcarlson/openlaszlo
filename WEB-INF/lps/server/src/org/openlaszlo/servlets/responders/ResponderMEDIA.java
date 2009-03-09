@@ -99,7 +99,18 @@ public final class ResponderMEDIA extends Responder
                 FileUtils.close(instream);
             }
         } catch (Throwable e) { 
-            respondWithErrorSWF(res, e.getMessage());
+            if (url.toLowerCase().endsWith(".mp3")) {
+                // See LPP-7880 We can only indicate an error to the
+                // Flash client sound loader by sending a HTTP 404
+                // error.
+                try {
+                    res.sendError(404);
+                } catch (Exception err) {
+                    mLogger.error(e.getMessage());
+                }
+            } else {
+                respondWithErrorSWF(res, e.getMessage());
+            }
         } 
     }
 
