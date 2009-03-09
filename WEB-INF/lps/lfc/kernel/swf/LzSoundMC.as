@@ -1,7 +1,7 @@
 /**
   * LzSoundMC.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -148,9 +148,10 @@ SoundMC.prototype.getVolume = function () {
   * @access private
   */
 SoundMC.prototype.loadDone = function (success) {
-    if (success != true) {
-        // LzLoader -> LzSprite -> LzView
-        this.loader.owner.owner.resourceloaderror();
+    // @devnote Loading invalid files still results in a successful load,
+    // therefore check duration to identify valid mp3-files (LPP-7880)
+    if (success != true || this._sound.duration == 0) {
+        this.loader.doError(this.loader.mc);
         if ($debug) {
             Debug.warn("failed to load %w", this.reqobj.url);
         }
