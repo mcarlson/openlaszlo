@@ -195,6 +195,9 @@ public final class LzTrackService extends LzEventable {
             for (var i:int = 0; i < reglist.length; i++) {
                 if (reglist[i] == v) {
                     if (reglist.__LZlasthit == v) {
+                        if (this.__LZlastmouseup == v) {
+                            this.__LZlastmouseup = null;
+                        }
                         reglist.__LZlasthit = null;
                     }
                     reglist.splice(i, 1);
