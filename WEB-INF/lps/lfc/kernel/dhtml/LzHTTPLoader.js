@@ -1,7 +1,7 @@
 /**
   * LzHTTPLoader.js
   *
-  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -42,10 +42,17 @@ LzHTTPLoader.prototype.loadContent = function (self, content) {
 
 /* Parse response into XML data. */ 
 LzHTTPLoader.prototype.translateXML = function () {
-    var lzxdata = null;
-    if (this.responseXML != null) {
+    var xml = this.responseXML;
+    if (xml == null || xml.childNodes.length == 0
+            || (lz.embed.browser.isFirefox && LzXMLParser.getParserError(xml) != null)) {
+        // in case of xml parser-errors:
+        // - Safari sets responseXML to null
+        // - IE, Opera don't generate childNodes
+        // - Firefox generates a <parsererror>-xml
+        this.loadError(this, null);
+    } else {
         var elt;
-        var nodes = this.responseXML.childNodes;
+        var nodes = xml.childNodes;
         // find first content (type == 1) child node
         for (var i = 0; i < nodes.length; i++) {
             var child = nodes.item(i);
@@ -54,12 +61,16 @@ LzHTTPLoader.prototype.translateXML = function () {
                 break;
             }
         }
-        lzxdata = LzXMLTranslator.copyXML(elt,
-                                          this.options.trimwhitespace,
-                                          this.options.nsprefix);
+        if (elt != null) {
+            var lzxdata = LzXMLTranslator.copyXML(elt,
+                                                this.options.trimwhitespace,
+                                                this.options.nsprefix);
+            this.loadSuccess(this, lzxdata);
+        } else {
+            // no element-node?
+            this.loadError(this, null);
+        }
     }
-
-    this.loadSuccess(this, lzxdata);
 }
 
 /* Returns the response as a string  */
@@ -148,7 +159,7 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
         }
         this.abort();
     }
-    
+
     {
         #pragma "passThrough=true" 
         this.req = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
@@ -157,7 +168,7 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
     this.responseHeaders = null;
     this.responseText = null;
     this.responseXML = null;
-    
+
     this.__abort = false;
     this.__timeout = false;
     this.requesturl = url;
@@ -271,13 +282,13 @@ LzHTTPLoader.prototype.__setRequestHeaders = function (xhr, headers) {
 LzHTTPLoader.prototype.__getAllResponseHeaders = function (xhr) {
     var re = new RegExp("^([-\\w]+):\\s*(\\S(?:.*\\S)?)\\s*$", "mg");
     var respheader = xhr.getAllResponseHeaders();
-    
+
     var allheaders = {};
     var header;
     while ((header = re.exec(respheader)) != null) {
         allheaders[header[1]] = header[2];
     }
-    
+
     return allheaders;
 }
 
@@ -300,7 +311,7 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
                 } else {
                     self.removeTimeout(self);
                     self.req = null;
-                    
+
                     var status = -1;
                     try {
                         status = xhr.status;
@@ -308,19 +319,19 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
                         //if you abort a request, readyState will be set to 4, 
                         //but reading status will result in an exception (at least in Firefox).
                     }
-                    
+
                     // only if "OK"
                     self.responseStatus = status;
                     if (status == 200 || status == 304) {
                         self.responseXML = xhr.responseXML;
                         self.responseText = xhr.responseText;
                         self.responseHeaders = self.__getAllResponseHeaders(xhr);
-                        
+
                         //DEBUGGING:
                         //var xmlSerializer = new XMLSerializer();
                         //var markup = xmlSerializer.serializeToString(self.responseXML);
                         //Debug.write("loadXMLDoc", markup);
-                        
+
                         // Callback with raw text string
                         self.loadContent(self, self.responseText);
                     } else {
@@ -329,8 +340,15 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
                 }
             }
         };
-        
-        this.req.open(method, url, true);
+
+        try {
+            this.req.open(method, url, true);
+        } catch (e) {
+            // crossdomain error in Firefox, Safari
+            this.req = null;
+            this.loadError(this, null);
+            return;
+        }
         // If no content-type for POST was explicitly specified,
         // use "application/x-www-form-urlencoded"
         if ((method == "POST") && headers['content-type'] == null) {
@@ -338,8 +356,15 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
         }
         this.__setRequestHeaders(this.req, headers);
         this.gstart = (new Date()).getTime();
-        this.req.send(postbody);
-        
+        try {
+            this.req.send(postbody);
+        } catch (e) {
+            // crossdomain error in Opera
+            this.req = null;
+            this.loadError(this, null);
+            return;
+        }
+
         // Set up the timeout
         if (isFinite(this.timeout)) {
             this.setupTimeout(this, this.timeout);

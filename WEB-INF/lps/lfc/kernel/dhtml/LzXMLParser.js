@@ -20,20 +20,28 @@ var LzXMLParser = {
         var parser = new DOMParser();
         var doc = parser.parseFromString(str, "text/xml");
         // check for parser-errors
+        var err = this.getParserError(doc);
+        if (err) {
+            throw new Error(err);
+        } else {
+            return doc.firstChild;
+        }
+    },
+    getParserError: function (doc) {
+        // returns a String with parser-error information or undefined
         var browser = lz.embed.browser;
         if (browser.isIE) {
-            this.__checkIE(doc);
+            return this.__checkIE(doc);
         } else if (browser.isFirefox || browser.isOpera) {
-            this.__checkFirefox(doc);
+            return this.__checkFirefox(doc);
         } else if (browser.isSafari) {
-            this.__checkSafari(doc);
+            return this.__checkSafari(doc);
         }
-        return doc.firstChild;
     },
     __checkIE: function (doc) {
         var perr = doc.parseError;
         if (perr.errorCode != 0) {
-            throw new Error(perr.reason);
+            return (perr.reason);
         }
     },
     __checkFirefox: function (doc) {
@@ -42,7 +50,7 @@ var LzXMLParser = {
             // get error information from textnode
             var msg = c.firstChild.nodeValue;
             // remove file and line information (does not provide useful info here)
-            throw new Error(msg.match(".*")[0]);
+            return (msg.match(".*")[0]);
         }
     },
     __checkSafari: function (doc) {
@@ -52,14 +60,14 @@ var LzXMLParser = {
             // html > body > parsererror > div (with error information)
             var msg = c.firstChild.firstChild.childNodes[1].textContent;
             // remove file and line information (does not provide useful info here)
-            throw new Error(msg.match("[^:]*: (.*)")[1]);
+            return (msg.match("[^:]*: (.*)")[1]);
         } else {
             c = c.firstChild;
             if (c && c.nodeName == "parsererror") {
                 // second childNodes provides error information
                 var msg = c.childNodes[1].textContent;
                 // remove file and line information (does not provide useful info here)
-                throw new Error(msg.match("[^:]*: (.*)")[1]);
+                return (msg.match("[^:]*: (.*)")[1]);
             }
         }
     }
