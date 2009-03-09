@@ -115,8 +115,6 @@ function getLoadMovie ( ){
   * @access private
   */
 function returnData ( loadobj , data ){
-    LzLoadQueue.unloadRequest(loadobj);
-
     // Check if returnData has already been called on this
     // object. This can happen if a serverless data load timed out in
     // the LFC, but eventually returned something via the
@@ -140,16 +138,14 @@ function returnData ( loadobj , data ){
         Debug.error("%w.returnData: unhandled loadobj %w", this, loadobj);
     }
 
-    // Ok, we have loaded this.  loadFinished changes state of loadobj
+    // Ok, we have loaded this. unloadRequest changes state of loadobj
     // from loading to loaded.
 
     // TODO [2005-08-11 ptw] If this were a multi-threaded system, we
     // would have to worry about getLoadMovie trying to reuse the
     // loadobj before we have finished with it.
 
-    // This is done in LzLoadQueue.XMLOnDataHandler now, in order
-    // to pipeline a new load request while the data copy task is happening.
-
+    LzLoadQueue.unloadRequest(loadobj);
 
     if ( ! loadobj.valid ) {
         return;
