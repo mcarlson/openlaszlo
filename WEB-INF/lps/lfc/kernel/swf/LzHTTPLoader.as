@@ -1,7 +1,7 @@
 /**
   * LzHTTPLoader.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -57,7 +57,8 @@ LzHTTPLoader.prototype.lzloader = null;
 LzHTTPLoader.prototype.loadContent = function (content) {
     if (this.options.parsexml) {
         // Parse and translate XML to LZX format
-        this.lzloader.translateXML(content);
+        // lzloader dispatches "ondata"-event when finished translation
+        this.lzloader.translateXML();
     } else {
         // Otherwise, return the raw content string
         this._loadSuccessHandler(content);

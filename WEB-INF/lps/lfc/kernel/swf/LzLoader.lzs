@@ -130,10 +130,7 @@ function returnData ( loadobj , data ){
     if (loadobj instanceof MovieClip) {
         // Nothing to do
     } else if (loadobj instanceof XMLNode) {
-        // The raw XML response string was stashed here by LzLoadQueue.XMLOnDataHandler
-        // TODO [2005-08-11 ptw] Is there not an issue that there
-        // could be multiple requests?
-        data.rawtext = this.rawtext;
+        // Nothing to do
     } else if ($debug) {
         Debug.error("%w.returnData: unhandled loadobj %w", this, loadobj);
     }

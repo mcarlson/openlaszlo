@@ -1,7 +1,7 @@
 /**
   * LzXMLLoader.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -30,6 +30,10 @@ class LzXMLLoader extends LzLoader {
     var copyQueue = null;
     var copyLoopsPerFrame = 1000;
     var maxLoopTime = 2000; // 2 seconds
+    var copyTaskDel = null;
+    var lfcrootnode = null;
+    var trimwhitespace;
+    var nsprefix;
 
     function LzXMLLoader (owner, args) {
         super(owner, args);
@@ -44,7 +48,8 @@ class LzXMLLoader extends LzLoader {
       * (not really, but the doc tools will complain
       */
     override function destroy () {
-        this.copyTaskDel.unregisterAll();
+        this.removeCopyTask();
+        this.copyTaskDel = null;
         super.destroy();
     }
 
@@ -69,18 +74,23 @@ class LzXMLLoader extends LzLoader {
     }
 
     /**
-     * @access private
-     * called by loader when raw data was arrived, but not yet been parsed
-     */
+      * @access private
+      * called by loader when raw data was arrived, but not yet been parsed
+      */
     function gotRawData(content:String, loadobj:XML) {
         this.rawtext = content;
         this.xmlloadobj = loadobj;
         if (this.oncontent.ready) this.oncontent.sendEvent(content);
     }
 
-    function translateXML (content) {
-        this.xmlloadobj.parseXML(content);
-        // Copy the Flash XML tree into  tree of LFC LzData classes
+    /**
+      * Translate loaded XML document to LFC data-nodes
+      * @access private
+      */
+    function translateXML () {
+        this.xmlloadobj.parseXML(this.rawtext);
+        // Copy the Flash XML tree into tree of LFC LzData classes,
+        // on finish returnData() will be called
         this.queuedCopyFlashXML(this.xmlloadobj);
     }
 
@@ -126,18 +136,18 @@ class LzXMLLoader extends LzLoader {
         }
     }
 
-    // Recursively copy a Flash XML(Node) tree into a LzDataElement
-    // tree. Used by LzDataNode.stringToLzData
     /**
+      * Recursively copy a Flash XML(Node) tree into a LzDataElement
+      * tree. Used by LzDataNode.stringToLzData
       * @param boolean trimwhitespace: trim whitespace from start and end of text nodes
       * @param boolean nsprefix: preserve namespace prefixes on node names and attribute names
       * @access private
       */
     function copyFlashXML (node, trimwhitespace, nsprefix) {
-        var nv = node.nodeValue;
         var lfcnode = null;
         // text node?
         if (node.nodeType == 3) {
+            var nv = node.nodeValue;
             if (trimwhitespace == true) {
                 nv = LzDataElement.trim(nv);
             }
@@ -173,15 +183,7 @@ class LzXMLLoader extends LzLoader {
                 ASSetPropFlags(cattrs, ['__proto__', 'constructor'], 1, 7);
             }
 
-            var nname = node.nodeName;
-            if (nname && !nsprefix) {
-                // strip namespace prefix
-                var npos = nname.indexOf(':');
-                if (npos >= 0) {
-                    nname = nname.substring(npos+1);
-                }
-            }
-
+            var nname = nsprefix ? node.nodeName : node.localName;
             lfcnode = new LzDataElement(nname, cattrs);
             var children = node.childNodes;
             var newchildren = [];
@@ -195,8 +197,8 @@ class LzXMLLoader extends LzLoader {
         return lfcnode;
     }
 
-    // Set up the work queue
     /**
+      * Set up the work queue
       * @access private
       */
     function queuedCopyFlashXML(xmlnode) {
@@ -216,10 +218,10 @@ class LzXMLLoader extends LzLoader {
         }
     }
 
-    // Task that is called periodically from Idle loop.
-    // This does the work of copying the Flash XML tree into a LzDataElement tree.
-    // Run the copy queue
     /**
+      * Task that is called periodically from Idle loop.
+      * This does the work of copying the Flash XML tree into a LzDataElement tree.
+      * Run the copy queue
       * @access private
       */
     function copyFlashData ( ignore ) {
@@ -248,13 +250,13 @@ class LzXMLLoader extends LzLoader {
         //    Debug.write("removing copy idle task ", this);
         this.copyTaskDel.unregisterAll();
         this.copyQueue = null;
+        this.lfcrootnode = null;
     }
 
-    // Iterative implementation, using a queue, to translate a XMLNode tree into
-    // a tree of LzDataElement.
-    //
-    // Queue contains list of XMLNodes to be copied
     /**
+      * Iterative implementation, using a queue, to translate a XMLNode tree into
+      * a tree of LzDataElement.
+      * Queue contains list of XMLNodes to be copied
       * @access private
       */
     function queuedCopyFlashXML_internal () {
@@ -280,11 +282,11 @@ class LzXMLLoader extends LzLoader {
             var node = q[ptr++];
             var lfcparent = node._lfcparent;
             delete node._lfcparent;
-            var nv = node.nodeValue;
             var lfcnode = null;
 
             // text node?
             if (node.nodeType == 3) {
+                var nv = node.nodeValue;
                 if (trimwhitespace == true) {
                     nv = LzDataElement.trim(nv);
                 }
@@ -327,16 +329,7 @@ class LzXMLLoader extends LzLoader {
 
                 //lfcnode = new LzDataElement(node.nodeName, cattrs);
 
-                ////////
-
-                var nodename = node.nodeName;
-                if (nodename && !nsprefix) {
-                    var npos = nodename.indexOf(':');
-                    if (npos >= 0) {
-                        nodename = nodename.substring(npos+1);
-                    }
-                }
-
+                var nodename = nsprefix ? node.nodeName : node.localName;
                 // FIXME: [2008-3-31 pbr] This bypasses initialization
                 lfcnode = { __proto__: LzDataElement.prototype,
                             nodeType: LzDataElement.ELEMENT_NODE,
@@ -369,9 +362,11 @@ class LzXMLLoader extends LzLoader {
             // If we get here, we're finished with the tree copy.
             // Unregister the idle loop handler
             var xmlobj = this.copyQueue.xmlobj;
+            // <body><null>DATA</null></body>
+            var data = this.lfcrootnode.childNodes[0].childNodes[0];
             this.removeCopyTask();
             // Proceed with getting this dataset returned to the customer
-            xmlobj.loader.returnData(xmlobj, this.lfcrootnode.childNodes[0].childNodes[0]);
+            xmlobj.loader.returnData(xmlobj, data);
             // Indicate that we finished it all in one go, no need to queue more copy tasks
             return true;
         } else {
