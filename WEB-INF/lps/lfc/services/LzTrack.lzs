@@ -380,7 +380,8 @@ public final class LzTrackService extends LzEventable {
       */
     function __LZmouseup (ignore:*) :void {
         //Debug.info('lz.Track.__LZmouseup');
-        var agroups:Array = this.__LZactivegroups;
+        // Use a copy of the groups in case an event listener changes it
+        var agroups:Array = this.__LZactivegroups.slice();
         for (var i:int = 0; i < agroups.length; ++i) {
             var lhit:LzView = agroups[i].__LZlasthit;
             if (lhit) {
@@ -389,8 +390,9 @@ public final class LzTrackService extends LzEventable {
                     if (this.__LZlastmouseup == lhit) {
                         this.__LZlastmouseup = null;
                     } else {
-                        onmtrackup.sendEvent(lhit);
+                        // Call event last. It might change the object state
                         this.__LZlastmouseup = lhit;
+                        onmtrackup.sendEvent(lhit);
                     }
                 }
             }
