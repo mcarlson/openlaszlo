@@ -374,7 +374,7 @@ function LzDataset (parent:* = null, args:* = null, children:* = null, instcall:
 override function construct (parent, args) {
     this.nodeType = LzDataElement.DOCUMENT_NODE;
     this.ownerDocument = this;
-    
+
     this.queuerequests = false; // default to false, to emulate browser default
 
     this.oncanvas = parent == canvas || parent == null;
@@ -383,7 +383,7 @@ override function construct (parent, args) {
     if (!('proxyurl' in args)) {
         this.proxyurl = canvas.getProxyURL();
     }
-    
+
     if ('timeout' in args && args.timeout) {
         this.timeout = args.timeout;
     } else {
@@ -413,21 +413,21 @@ override function $lzc$set_name(name:String) {
     if (name != null) {
         //for compatibility with dataNode API
         this.nodeName = name;
-        
+
         if (this.oncanvas) {
             canvas[ name ] = this;
         } else {
             // it's local - add the parent's UID
             name = this.parent.getUID() + '.' + name;
         }
-        
+
         if ($debug) {
             if (canvas.datasets[name] != null) {
                 Debug.warn("A dataset already exists with the name '%s': %w",
                            name, canvas.datasets[name]);
             }
         }
-        
+
         canvas.datasets[name] = this;
     }
 }
@@ -444,7 +444,7 @@ override function destroy () {
     if (this.dsloadDel) {
         this.dsloadDel.unregisterAll();
     }
-    
+
     var name:String = this.name;
     if (this.oncanvas) {
         if (canvas[ name ] === this) {
@@ -457,7 +457,7 @@ override function destroy () {
         delete canvas.datasets[ name ];
     }
 
-   super.destroy();
+    super.destroy();
 }
 
 /**
@@ -515,7 +515,7 @@ function getParams () :LzParam {
   * @param data a LzDataElement or list of Elements
   * @access private
   */
-override function $lzc$set_data (data:*) :void {
+override function $lzc$set_data (data:*) {
     if (data == null) {
         return;
     } else if (data instanceof Array) {
@@ -786,7 +786,7 @@ function abort () :void {
 function doRequest (ignore:* = null) :void {
     // src can be null if the dataset is loaded from initialdata
     if (! this.src) return
-    
+
     // We try to reuse the old datarequest object, unless
     // multirequest is true. If multirequest is true, we need
     // a separate datarequest obj for each request.
@@ -846,7 +846,7 @@ function doRequest (ignore:* = null) :void {
     dreq.getresponseheaders = this.getresponseheaders;
 
     dreq.secureport = this.secureport;
-    
+
     dreq.cacheable       =  this.cacheable;
     dreq.clientcacheable =  this.clientcacheable;
     dreq.trimwhitespace  =  this.trimwhitespace;
@@ -1013,7 +1013,7 @@ function recycle (dset:LzDataset) :void {
     dset.onerror.clearDelegates();
     // clear any data
     dset.$lzc$set_data([]);
-    
+
     this._p.push(dset);
 }
 

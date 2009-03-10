@@ -1777,7 +1777,7 @@ public dynamic class LzNode extends LzEventable {
   /**
     * @access private
     */
-  function $lzc$set_data (data:*) :void {
+  function $lzc$set_data (data:*) {
     this.data = data;
     if (data is LzDataNodeMixin) {
       var dp:LzDatapath = this.datapath || new LzDatapath(this);
@@ -1795,7 +1795,7 @@ public dynamic class LzNode extends LzEventable {
    * @deprecated Use setAttribute('data', ...) instead
    * @devnote Don't mark as final, or replicator/lazyreplicator won't compile anymore
    */
-  function setData (data:*, ignore=null) :void {
+  function setData (data:*, ignore=null) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_data(data);
   }
