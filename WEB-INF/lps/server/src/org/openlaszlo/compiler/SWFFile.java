@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -143,23 +143,6 @@ class SWFFile extends FlashFile {
             movieClip.getFrameAt(1).addInstance(but, 1, null, null);
             // NOTE: mimic old laszlolibrary.swf; put at depth 11
             frame.addInstance(movieClip, 11, offScreen, null, "entercontrol");
-
-            // 3. movieclip called "frameupdate" which has two frames and some clip actions:
-            movieClip = new Script(2);
-            // NOTE: depth=2 required in order for this to work in swf6 for some
-            // unknown reason!
-            inst = frame.addInstance(movieClip, 2, null, null, "frameupdate");
-            ca = new ClipActions();
-            ca.setMask(ClipAction.KEY_DOWN|ClipAction.KEY_UP|ClipAction.MOUSE_DOWN|ClipAction.MOUSE_UP);
-            s = "_root.LzKeyboardKernel.__keyboardEvent(Key.getCode(), 'onkeydown')";
-            ca.addAction(new ClipAction(ClipAction.KEY_DOWN, program(s)));
-            s = "_root.LzKeyboardKernel.__keyboardEvent(Key.getCode(), 'onkeyup')";
-            ca.addAction(new ClipAction(ClipAction.KEY_UP, program(s)));
-            s = "_root.LzMouseKernel.rawMouseEvent('onmousedown')";
-            ca.addAction(new ClipAction(ClipAction.MOUSE_DOWN, program(s)));
-            s = "_root.LzMouseKernel.rawMouseEvent('onmouseup')";
-            ca.addAction(new ClipAction(ClipAction.MOUSE_UP, program(s)));
-            inst.actions = ca;
 
             // 4. A movieclip with the export identifier "empty" that has 1 frame with nothing in it
             empty = movieClip = new Script(1);

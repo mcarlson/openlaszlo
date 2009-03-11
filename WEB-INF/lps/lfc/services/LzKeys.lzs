@@ -120,9 +120,16 @@ public final class LzKeysService extends LzEventable {
       * @access private */
     const codemap :Object = {shift: 16, control: 17, alt: 18};
 
+    /** Was the ctrl key set when the last key event came in
+      * @access private
+      */
+    var ctrlKey:Boolean = false;
+
     /** @access private */
-    function __keyEvent (delta:Object, k:Number, type:String) :void {
+    function __keyEvent (delta:Object, k:Number, type:String, ctrlKey:Boolean=false) :void {
+        //Debug.write('__keyEvent', delta, k, type);
         //for each key change, send the corresponding event
+        this.ctrlKey = ctrlKey;
         var cm:Object = this.codemap;
         for (var key:String in delta) {
             var down:Boolean = delta[key];
@@ -144,6 +151,7 @@ public final class LzKeysService extends LzEventable {
      * @param String info: if "extra" then ignore if you already got one
      */
     function gotKeyDown (kC:Number, info:String = null) :void {
+        //Debug.write('gotKeyDown', kC);
         var dkhash:Object = this.downKeysHash;
         var dkeys:Array = this.downKeysArray;
 
@@ -186,19 +194,39 @@ public final class LzKeysService extends LzEventable {
      * @param Number kC: The Flash keycode for the key that was released.
      */
     function gotKeyUp (kC:Number) :void {
+        //Debug.write('gotKeyUp', kC);
         var dkhash:Object = this.downKeysHash;
-        if (dkhash[229] != true && !dkhash[ kC ]) {
-            // in FP5 some keys don't get a keydown event, but do get a keyup
-            this.gotKeyDown( kC );
-        }
-
+        var dkeys:Array = this.downKeysArray = [];
+        var isDown:Boolean = dkhash[ kC ];
         delete dkhash[ kC ];
 
-        var dkeys:Array = this.downKeysArray = [];
+        if ($dhtml) {
+            // not necessary for DHTML
+        } else {
+            // LPP-7012 we don't get a key up from the 'v' in a command-v sequence on the mac.
+            // Workaround is to send all keys up when we see a 'command' (control) key-up event.
+            // (Only required for Flash)
+            if (kC == this.keyCodes.control) {
+                this.downKeysHash = {};
+                // Only send a key-up event if we know the key is already down
+                if (isDown && this.onkeyup.ready) this.onkeyup.sendEvent( kC );
+
+                // send all additional key-up events
+                for (var k:String in dkhash) {
+                    if (this.onkeyup.ready) {
+                        this.onkeyup.sendEvent( k );
+                    }
+                }
+                return;
+            }
+        }
+        // update downKeysArray before sending onkeyup-event
         for (var k:String in dkhash) {
             dkeys.push( k );
         }
-        if (this.onkeyup.ready) this.onkeyup.sendEvent( kC );
+
+        // Only send a key-up event if we know the key is already down
+        if (isDown && this.onkeyup.ready) this.onkeyup.sendEvent( kC );
     }
 
     /**

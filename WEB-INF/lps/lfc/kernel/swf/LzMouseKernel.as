@@ -1,7 +1,7 @@
 /**
   * LzMouseKernel.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -215,4 +215,10 @@ var LzMouseKernel = {
             lz.Idle.callOnIdle( this.__clstDel );
         }
     }
+    ,onMouseDown: function () { LzMouseKernel.rawMouseEvent('onmousedown'); }
+    ,onMouseUp: function () { LzMouseKernel.rawMouseEvent('onmouseup'); }
+
+
 }
+
+Mouse.addListener(LzMouseKernel);

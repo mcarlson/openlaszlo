@@ -9,24 +9,31 @@
   */
 
 // Receives keyboard events from the runtime
-class LzKeyboardKernel {
+class LzKeyboardKernel
+{
     #passthrough (toplevel:true) {  
     import flash.events.*;
+    import flash.ui.*;
     }#
 
-    static function __keyboardEvent (e){   
+    static function __keyboardEvent ( e:KeyboardEvent ){   
         var t = 'on' + e.type.toLowerCase();
         var delta = {};
         var s, k = e.keyCode;
         var keyisdown = t == 'onkeydown';
         s = String.fromCharCode(k).toLowerCase();
 
+
         // prevent duplicate onkeydown events - see LPP-7432 
         if (__keyState[k] == keyisdown) return;
         __keyState[k] = keyisdown;
         
         delta[s] = keyisdown;
-        if (__callback) __scope[__callback](delta, k, t);
+        var ctrl:Boolean = e.ctrlKey;
+
+        //Debug.info('__keyboardEvent', e, 'alt=', e.altKey, 'control', e.ctrlKey);
+
+        if (__callback) __scope[__callback](delta, k, t, ctrl);
     }
 
     static var __callback = null;
@@ -48,3 +55,5 @@ class LzKeyboardKernel {
     static function gotLastFocus() {
     }
 } // End of LzKeyboardKernel
+
+

@@ -1,7 +1,7 @@
 /**
   * LzKeyboardKernel.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -14,6 +14,10 @@ var LzKeyboardKernel = {
     ,__keyboardEvent: function ( k, t ){   
         var delta = {};
         var ascii = Key.getAscii();
+        // On MacOS, Ctrl-v gives k == -1
+        if (k <= 0) {
+            return;
+        }
         if (ascii != 0) {
             var s = String.fromCharCode(k).toLowerCase();
         } else {
@@ -25,8 +29,13 @@ var LzKeyboardKernel = {
                 // control keys map here on the mac - apple == control in flash
             }
         }
+
         var dh = LzKeyboardKernel.__downKeysHash;
         var dirty = false;
+        var ctrl = Key.isDown(Key.Control);
+
+        //Debug.info("__keyboardEvent k=%w s=%w %w ctrl=%w, delta=%w", k,s,t, ctrl,delta);
+
         if (t == 'onkeyup') {
             if (dh[s] != false) {
                 delta[s] = false;
@@ -39,10 +48,12 @@ var LzKeyboardKernel = {
                 dirty = true;
             }    
             dh[s] = true;
-        }    
+        }
 
         //Debug.write('downKeysHash', t, k, dh, delta);
-        if (dirty && LzKeyboardKernel.__callback) LzKeyboardKernel.__scope[LzKeyboardKernel.__callback](delta, k, t);
+        if (dirty && LzKeyboardKernel.__callback) {
+            LzKeyboardKernel.__scope[LzKeyboardKernel.__callback](delta, k, t, ctrl);
+        }
     }
     ,__codes: {16: 'shift', 17: 'control'}
     ,__callback: null
@@ -54,4 +65,14 @@ var LzKeyboardKernel = {
     // Called by lz.Keys when the last focusable element was reached.
     ,gotLastFocus: function () {
     }
+    ,onKeyDown: function () { LzKeyboardKernel.__keyboardEvent(Key.getCode(), 'onkeydown'); }
+    ,onKeyUp: function () { LzKeyboardKernel.__keyboardEvent(Key.getCode(), 'onkeyup'); }
+
+    
 }
+
+Key.addListener(LzKeyboardKernel);
+
+
+
+    
