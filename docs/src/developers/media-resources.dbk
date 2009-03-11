@@ -40,9 +40,9 @@
       Flash.</para>
       <section>
         <title>Flash 7 and Flash 8 limitations</title>
-        <para>Flash player version 7 it can only load a limited set
+        <para>Flash player version 7 can only load a limited set
         of jpegs encodings; it cannot do interleaved or progressive
-        jpeg. If you run Flash player 8 it can do more wide range
+        jpeg. Flash player 8 can do a wider range
         of jpeg encoding. Set the compiler to compile for Flash 8
         as a target runtime to get this expanded range of image
         formats (also PNG and GIF).</para>
@@ -145,7 +145,7 @@
           OpenLaszlo. (You can use the mtasc.org compiler to test
           this, using Flash's Sound class to load an play your
           mp3.) If your mp3 does not work in standalone
-          Flash, hen the problem is not OpenLaszlo.</para>
+          Flash, then the problem is not OpenLaszlo.</para>
               <!-- add missing para tags LI LPP-4639 9/4/2007-->
               <para>
               Mp3s are
