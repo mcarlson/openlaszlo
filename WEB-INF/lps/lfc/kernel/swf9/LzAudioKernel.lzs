@@ -1,11 +1,11 @@
 /**
-  * LzAudioKernel.as
+  * LzAudioKernel.lzs
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
-  * @subtopic AS2
+  * @subtopic swf9
   */
 
 /**
@@ -21,13 +21,13 @@ class LzAudioKernel {
       import flash.media.SoundMixer;
       import flash.media.SoundTransform;
     }#
-    
+
     /**
       * Sets the current sound resource and starts playing it. 
       * @param String snd: Name of a sound resource to play
       * @param LzSprite t: Sprite for sound to act upon (optional)
       */
-    static function playSound (snd:String, t:LzSprite = null){
+    static function playSound (snd:String, t:LzSprite = null) :void {
         if (t == null) {
             if (LzAsset.isSoundAsset(snd)) {
                 //TODO: check for swf8 compatibility
@@ -38,7 +38,7 @@ class LzAudioKernel {
             t.setResource(snd);
         }
     }
-    
+
     /**
       * Stop playing the current sound
       * @param LzSprite t: Sprite for sound to act upon (optional)
@@ -51,21 +51,21 @@ class LzAudioKernel {
             t.stop();
         }
     }
-    
+
     /**
       * Start playing the current sound
       * */
-    static function startSound (t:Sprite = null) {
+    static function startSound (t:Sprite = null) :void {
         //TODO: check for swf8 compatibility
     }
-    
+
     /**
       * @access private
       */
     static function getSoundObject (t:LzSprite) :* {
         return t ? t.soundChannel ? t.soundChannel : t : SoundMixer;
     }
-    
+
     /**
       * Get the global volume
       * @return Number: volume from 0 to 100 (0 is silent).
@@ -74,7 +74,7 @@ class LzAudioKernel {
     static function getVolume (t:LzSprite = null) :Number {
         return getSoundObject(t).soundTransform.volume * 100;
     }
-    
+
     /**
       * Set the global volume.
       * @param Number v: linear volume from 0 to 100 (0 is silent).
@@ -86,7 +86,7 @@ class LzAudioKernel {
         sndTransform.volume = (v < 0 ? 0 : v > 100 ? 100 : v) / 100;
         soundObj.soundTransform = sndTransform;
     }
-    
+
     /**
       * Get the global pan.
       * @return Number: linear pan from -100 to +100 (left to right)
@@ -95,7 +95,7 @@ class LzAudioKernel {
     static function getPan (t:LzSprite = null) :Number {
         return getSoundObject(t).soundTransform.pan * 100;
     }
-    
+
     /**
       * Set the global pan.
       * @param Number p: linear pan from -100 to +100 (left to right)

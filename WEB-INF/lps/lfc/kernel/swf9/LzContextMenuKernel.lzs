@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -14,13 +14,10 @@
   */
 class LzContextMenuKernel {
 
-    #passthrough (toplevel:true) {  
-    import flash.display.*;
-    import flash.events.*;
-    import flash.utils.*;
-    import flash.text.*;
-    import flash.system.*;
-    import flash.ui.*;
+    #passthrough (toplevel:true) {
+    import flash.events.ContextMenuEvent;
+    import flash.ui.ContextMenu;
+    import flash.ui.ContextMenuBuiltInItems;
     }#
 
 function LzContextMenuKernel (newowner:LzContextMenu) {
@@ -42,9 +39,9 @@ var cm:ContextMenu = null;
   * 
   * @access private
   */
-function setDelegate (delegate) :void {
-  var __litem__ = this.owner;
-  var callback = function (mc, cmitem) {
+function setDelegate (delegate:LzDelegate) :void {
+  var __litem__:LzContextMenu = this.owner;
+  var callback:Function = function (e:ContextMenuEvent) :void {
       if (delegate != null) delegate.execute(__litem__);
       if (__litem__.onmenuopen.ready) __litem__.onmenuopen.sendEvent(__litem__);
   };
@@ -57,7 +54,7 @@ function setDelegate (delegate) :void {
   * @param LzContextMenuItem item: LzContextMenuItem to install on this menu
   * @access private
   */
-function addItem (item) :void {
+function addItem (item:LzContextMenuItem) :void {
     this.cm.customItems.push(item.kernel.cmenuitem);
 }
 
@@ -109,16 +106,12 @@ function __LZcontextMenu () :ContextMenu {
   */
 class LzContextMenuItemKernel {
 
-    #passthrough (toplevel:true) {  
-    import flash.display.*;
-    import flash.events.*;
-    import flash.utils.*;
-    import flash.text.*;
-    import flash.system.*;
-    import flash.ui.*;
+    #passthrough (toplevel:true) {
+    import flash.events.ContextMenuEvent;
+    import flash.ui.ContextMenuItem;
     }#
 
-function LzContextMenuItemKernel (newowner:LzContextMenuItem, title, del) {
+function LzContextMenuItemKernel (newowner:LzContextMenuItem, title:String, del:*) {
     this.owner = newowner;
     this.cmenuitem = new ContextMenuItem(title);
     this.setDelegate(del);
@@ -137,8 +130,8 @@ var cmenuitem:ContextMenuItem = null;
   * @access private
   */
 function setDelegate (delegate:*) :void {
-  var __litem__ = this.owner;
-  var callback = function (mc, cmitem) {
+  var __litem__:LzContextMenuItem = this.owner;
+  var callback:Function = function (e:ContextMenuEvent) :void {
       if (delegate != null) {
           if (delegate is Function) {
               delegate();

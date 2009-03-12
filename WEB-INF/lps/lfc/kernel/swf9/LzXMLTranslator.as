@@ -1,11 +1,11 @@
 /**
-  * LzXMLTranslator.lzs
+  * LzXMLTranslator.as
   *
   * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
-  * @subtopic AS2
+  * @subtopic swf9
   */
 
 /**

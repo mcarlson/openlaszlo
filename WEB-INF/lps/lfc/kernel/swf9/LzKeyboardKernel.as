@@ -1,33 +1,31 @@
 /**
-  * LzKeyboardKernel.lzs
+  * LzKeyboardKernel.as
   *
   * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
-  * @subtopic AS2
+  * @subtopic swf9
   */
 
 // Receives keyboard events from the runtime
-class LzKeyboardKernel
-{
-    #passthrough (toplevel:true) {  
-    import flash.events.*;
-    import flash.ui.*;
+class LzKeyboardKernel {
+    #passthrough (toplevel:true) {
+    import flash.events.KeyboardEvent;
     }#
 
-    static function __keyboardEvent ( e:KeyboardEvent ){   
-        var t = 'on' + e.type.toLowerCase();
-        var delta = {};
-        var s, k = e.keyCode;
-        var keyisdown = t == 'onkeydown';
-        s = String.fromCharCode(k).toLowerCase();
+    static function __keyboardEvent (e:KeyboardEvent) :void {   
+        var t:String = 'on' + e.type.toLowerCase();
+        var delta:Object = {};
+        var k:uint = e.keyCode;
+        var keyisdown:Boolean = t == 'onkeydown';
+        var s:String = String.fromCharCode(k).toLowerCase();
 
 
         // prevent duplicate onkeydown events - see LPP-7432 
         if (__keyState[k] == keyisdown) return;
         __keyState[k] = keyisdown;
-        
+
         delta[s] = keyisdown;
         var ctrl:Boolean = e.ctrlKey;
 
@@ -36,12 +34,12 @@ class LzKeyboardKernel
         if (__callback) __scope[__callback](delta, k, t, ctrl);
     }
 
-    static var __callback = null;
-    static var __scope = null;
+    static var __callback:String = null;
+    static var __scope:* = null;
     static var __keyState:Object = {};
     static var __listeneradded:Boolean = false;
 
-    static function setCallback (scope, funcname) {
+    static function setCallback (scope:*, funcname:String) :void {
         if (__listeneradded == false) {
             __scope = scope;
             __callback = funcname;
@@ -52,8 +50,6 @@ class LzKeyboardKernel
     }    
 
     // Called by lz.Keys when the last focusable element was reached.
-    static function gotLastFocus() {
+    static function gotLastFocus() :void {
     }
 } // End of LzKeyboardKernel
-
-

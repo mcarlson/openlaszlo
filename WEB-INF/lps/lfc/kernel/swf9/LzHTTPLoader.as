@@ -1,7 +1,7 @@
 /**
   * LzHTTPLoader.as
   *
-  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -11,11 +11,19 @@
 
 public class LzHTTPLoader {
 
-    #passthrough (toplevel:true) {  
-        import flash.events.*;
-        import flash.net.*;
-        import flash.utils.*;
-        import flash.xml.*;  
+    #passthrough (toplevel:true) {
+        import flash.events.IEventDispatcher;
+        import flash.events.Event;
+        import flash.events.IOErrorEvent;
+        import flash.events.ProgressEvent;
+        import flash.events.SecurityErrorEvent;
+        import flash.net.URLLoader;
+        import flash.net.URLLoaderDataFormat;
+        import flash.net.URLRequest;
+        import flash.net.URLRequestHeader;
+        import flash.net.URLRequestMethod;
+        import flash.utils.clearTimeout;
+        import flash.utils.setTimeout;
     }#
 
     static const GET_METHOD:String    = "GET";
@@ -61,9 +69,9 @@ public class LzHTTPLoader {
     }
 
     // Default callback handlers
-    public var loadSuccess:Function = function (...data) { trace('loadSuccess callback not defined on', this); }
-    public var loadError:Function   = function (...data) { trace('loadError callback not defined on', this); };
-    public var loadTimeout:Function = function (...data) { trace('loadTimeout callback not defined on', this); };
+    public var loadSuccess:Function = function (...data) :void { trace('loadSuccess callback not defined on', this); }
+    public var loadError:Function   = function (...data) :void { trace('loadError callback not defined on', this); };
+    public var loadTimeout:Function = function (...data) :void { trace('loadTimeout callback not defined on', this); };
 
     /* Returns the response as a string  */
     public function getResponse () :String {
@@ -120,11 +128,11 @@ public class LzHTTPLoader {
     }
 
     /* @public */
-    public function setQueryParams (qparams) :void {
+    public function setQueryParams (qparams:Object) :void {
     }
 
     /* @public */
-    public function setQueryString (qstring) :void {
+    public function setQueryString (qstring:String) :void {
     }
 
     /*
@@ -214,7 +222,7 @@ public class LzHTTPLoader {
         var lid:uint = httploader.__loaderid;
     
         LzHTTPLoader.activeRequests[lid] = [httploader, endtime];
-        var callback:Function = function () {
+        var callback:Function = function () :void {
             LzHTTPLoader.__LZcheckXMLHTTPTimeouts(lid);
         }
         var timeoutid:uint = flash.utils.setTimeout(callback, duration);
@@ -249,7 +257,7 @@ public class LzHTTPLoader {
             } else {
                 // if it hasn't timed out, add it back to the list for the future
                 //Debug.write("recheck timeout");
-                var callback:Function = function () {
+                var callback:Function = function () :void {
                     LzHTTPLoader.__LZcheckXMLHTTPTimeouts(lid);
                 }
                 var timeoutid:uint = flash.utils.setTimeout(callback, now - dstimeout);
@@ -303,7 +311,7 @@ public class LzHTTPLoader {
                                                               options.trimwhitespace,
                                                               options.nsprefix);
                         }
-                    } catch (err) {
+                    } catch (err:Error) {
                         trace("caught error parsing xml", err);
                         loadError(this, null);
                         return;

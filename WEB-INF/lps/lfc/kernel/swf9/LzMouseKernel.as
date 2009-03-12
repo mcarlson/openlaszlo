@@ -5,27 +5,27 @@
   *            Use is subject to license terms.
   *
   * @topic Kernel
-  * @subtopic AS2
+  * @subtopic swf9
   */
 
 // Receives mouse events from the runtime
 class LzMouseKernel  {
-    #passthrough (toplevel:true) {  
-    import flash.display.*;
-    import flash.events.*;
-    import flash.utils.*;
-    import flash.ui.*;
+    #passthrough (toplevel:true) {
+    import flash.display.Sprite;
+    import flash.events.Event;
+    import flash.events.MouseEvent;
+    import flash.ui.Mouse;
     }#
 
 
     // sends mouse events to the callback
-    static function __sendEvent(view, eventname) {
+    static function __sendEvent(view:*, eventname:String) :void {
         if (__callback) __scope[__callback](eventname, view);
         //Debug.write('LzMouseKernel event', eventname);
     }
-    static var __callback = null;
-    static var __scope = null;
-    static var __lastMouseDown = null;
+    static var __callback:String = null;
+    static var __scope:* = null;
+    static var __lastMouseDown:LzSprite = null;
     static var __mouseLeft:Boolean = false;
     static var __listeneradded:Boolean = false;
 
@@ -34,7 +34,7 @@ class LzMouseKernel  {
      */
     static var showhandcursor:Boolean = true;
 
-    static function setCallback (scope, funcname) {
+    static function setCallback (scope:*, funcname:String) :void {
         __scope = scope;
         __callback = funcname;
         if (__listeneradded == false) {
@@ -54,7 +54,7 @@ class LzMouseKernel  {
 
     // Handles global mouse events
     static function __mouseHandler(event:MouseEvent):void {
-        var eventname = 'on' + event.type.toLowerCase();
+        var eventname:String = 'on' + event.type.toLowerCase();
         if (eventname == 'onmouseup' && __lastMouseDown != null) {
             // call mouseup on the sprite that got the last mouse down  
             __lastMouseDown.__globalmouseup(event);
@@ -71,7 +71,7 @@ class LzMouseKernel  {
     // sends mouseup and calls __globalmouseup when the mouse goes up outside the app - see LPP-7724
     static function __mouseUpOutsideHandler():void {
         if (__lastMouseDown != null) {
-            var ev = new MouseEvent('mouseup');
+            var ev:MouseEvent = new MouseEvent('mouseup');
             __lastMouseDown.__globalmouseup(ev);
             __lastMouseDown = null;
         }
@@ -91,7 +91,7 @@ class LzMouseKernel  {
     * Shows or hides the hand cursor for all clickable views.
     * @param Boolean show: true shows the hand cursor for buttons, false hides it
     */
-    static function showHandCursor (show) {
+    static function showHandCursor (show:Boolean) :void {
         showhandcursor = show;
     }
 
@@ -104,12 +104,12 @@ class LzMouseKernel  {
     * Sets the cursor to a resource
     * @param String what: The resource to use as the cursor. 
     */
-    static function setCursorGlobal ( what:String ){
+    static function setCursorGlobal (what:String) :void {
         globalCursorResource = what;
         setCursorLocal(what);
     }
 
-    static function setCursorLocal ( what:String ) {
+    static function setCursorLocal (what:String) :void {
         if ( __amLocked ) { return; }
         Mouse.hide();
         cursorSprite.x = LFCApplication.stage.mouseX;
@@ -119,7 +119,7 @@ class LzMouseKernel  {
             if (cursorSprite.numChildren > 0) {
                 cursorSprite.removeChildAt(0);
             }
-            var resourceSprite = getCursorResource(what);
+            var resourceSprite:Sprite = getCursorResource(what);
             cursorSprite.addChild( resourceSprite );
             lastCursorResource = what;
         }
@@ -135,9 +135,9 @@ class LzMouseKernel  {
 
 
     static function getCursorResource (resource:String):Sprite {
-          var resinfo = LzResourceLibrary[resource];
-          var assetclass;
-          var frames = resinfo.frames;
+          var resinfo:Object = LzResourceLibrary[resource];
+          var assetclass:Class;
+          var frames:Array = resinfo.frames;
           var asset:Sprite;
           // single frame resources get an entry in LzResourceLibrary which has
           // 'assetclass' pointing to the resource Class object.
@@ -162,7 +162,7 @@ class LzMouseKernel  {
     * 
     * @access private
     */
-    static function restoreCursor ( ){
+    static function restoreCursor () :void {
         if ( __amLocked ) { return; }
         cursorSprite.stopDrag();
         cursorSprite.visible = false;
@@ -172,7 +172,7 @@ class LzMouseKernel  {
 
     /** Called by LzSprite to restore cursor to global value.
      */
-    static function restoreCursorLocal ( ){
+    static function restoreCursorLocal () :void {
         if ( __amLocked ) { return; }
         if (globalCursorResource == null) {
             // Restore to system default pointer
@@ -187,7 +187,7 @@ class LzMouseKernel  {
     * Prevents the cursor from being changed until unlock is called.
     * 
     */
-    static function lock (){
+    static function lock () :void {
         __amLocked = true;
     }
 
@@ -195,12 +195,12 @@ class LzMouseKernel  {
     * Restores the default cursor.
     * 
     */
-    static function unlock (){
+    static function unlock () :void {
         __amLocked = false;
         restoreCursor(); 
     }
 
-    static function initCursor () {
+    static function initCursor () :void {
         cursorSprite = new Sprite();
         cursorSprite.mouseChildren = false;
         cursorSprite.mouseEnabled = false;

@@ -14,15 +14,15 @@ public class LFCApplication {
     // This serves as the superclass of DefaultApplication, currently that is where
     // the compiler puts top level code to run.
 
-    #passthrough (toplevel:true) {  
-    import flash.display.*;
-    import flash.events.*;
-    import flash.utils.*;
-    import flash.text.*;
-    import flash.system.*;
-    import flash.net.*;
-    import flash.ui.*;
-    import flash.text.Font;
+    #passthrough (toplevel:true) {
+    import flash.display.DisplayObject;
+    import flash.display.Sprite;
+    import flash.display.Stage;
+    import flash.display.StageAlign;
+    import flash.display.StageScaleMode;
+    import flash.events.Event;
+    import flash.events.FocusEvent;
+    import flash.system.Capabilities;
     }#
 
     // The application sprite
@@ -43,9 +43,6 @@ public class LFCApplication {
     // Allow anyone access to the stage object (see ctor below)
     public static var stage:Stage = null;
 
-    // Allow anyone access to write to the debugger
-    public static var write:Function;
-
     // global tabEnabled flag for TextField
     public static var textfieldTabEnabled:Boolean = false;
 
@@ -55,13 +52,13 @@ public class LFCApplication {
         LFCApplication._sprite.addEventListener(Event.ADDED_TO_STAGE, initLFC);
     }
 
-    private function initLFC(event:Event = null) {
+    private function initLFC(event:Event = null) :void {
         LFCApplication._sprite.removeEventListener(Event.ADDED_TO_STAGE, initLFC);
         // Allow anyone to access the stage object
         LFCApplication.stage = LFCApplication._sprite.stage;
         runToplevelDefinitions()
 
-        var idleTimerPeriod = 14; // msecs
+        var idleTimerPeriod:Number = 14; // msecs
 
         //trace('idle timer period = ', idleTimerPeriod , 'msecs');
         LzIdleKernel.startTimer( idleTimerPeriod );
@@ -85,7 +82,7 @@ public class LFCApplication {
         LzKeyboardKernel.setCallback(lz.Keys, '__keyEvent');
     }
 
-    function preventFocusChange(event:FocusEvent):void {
+    private function preventFocusChange(event:FocusEvent):void {
         if (event.keyCode == 9) {
             event.preventDefault();
         }
@@ -100,4 +97,4 @@ public class LFCApplication {
 // Resource library
 // contains {ptype, class, frames, width, height}
 // ptype is one of "ar" (app relative) or "sr" (system relative)
-var LzResourceLibrary = {};
+var LzResourceLibrary :Object = {};
