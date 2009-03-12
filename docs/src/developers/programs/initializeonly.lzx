@@ -1,5 +1,10 @@
-<canvas height="150" debug="true">
-    <view width="50" height="50" bgcolor="red" onclick="Debug.write('Hello, World!');"/>
+<canvas height="40">
+    <text id="myID">
+        Click me!
+        <handler name="onclick">
+            this.setAttribute('text', this.id);
+        </handler>
+    </text>
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

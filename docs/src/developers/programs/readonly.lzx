@@ -1,5 +1,11 @@
-<canvas height="150" debug="true">
-    <view width="50" height="50" bgcolor="red" onclick="Debug.write('Hello, World!');"/>
+<canvas height="130" debug="true">
+    <debug y="30"/>
+    <text id="myID">
+        Click me!
+        <handler name="onclick">
+            Debug.format("canvas.subviews: %w", canvas.subviews);
+        </handler>
+    </text>
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

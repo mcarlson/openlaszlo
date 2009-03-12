@@ -1,8 +1,9 @@
-
-<canvas height="200" width="100%">
-    <window height="50" width="200" title="My Window" onclick="this.setAttribute('title', 'Hello World');"/>
+<canvas height="20">
+    <view id="myView" onclick="setAttribute('opacity', 1.5 - this.opacity)" bgcolor="red">
+        <text text="${'My opacity is ' + myView.opacity + '. Click to change it.'}"/>
+    </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007 - 2009 Laszlo Systems, Inc.  All Rights Reserved.            *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--
@@ -566,7 +566,7 @@
     <xsl:variable name="visible-members" select="$members[contains($visibility.filter,@access)]"/>
     <xsl:if test="count($visible-members) > 0 or $hasinherited">
       <variablelist>
-        <title><link linkend="info-attributes"><xsl:value-of select="$title"/></link></title>
+        <title><link linkend="methods-events-attributes.attribute-tag"><xsl:value-of select="$title"/></link></title>
         <xsl:if test="count($visible-members) > 0">
           <informaltable frame="none" pgwide="1">
             <tgroup cols="5" colsep="0" rowsep="0">
@@ -1564,16 +1564,16 @@
           -->
         <xsl:choose>
           <xsl:when test="&final; and ($isinstancevar or $isinitarg)">
-            <para role="postprocess-xlink-info-attributes.html#final">initialize-only</para>
+            <link linkend="initializeonlyattributes">initialize-only</link>
           </xsl:when>
           <xsl:when test="&readonly;">
-            <para role="postprocess-xlink-info-attributes.html#readonly">readonly</para>
+            <link linkend="readonlyattributes">readonly</link>
           </xsl:when>
           <xsl:when test="not(&unwritable;) and $isinstancevar">
-            <para role="postprocess-xlink-info-attributes.html#setter">read/write</para>
+            <link linkend="readwriteattributes">read/write</link>
           </xsl:when>
           <xsl:when test="not(&unwritable;) and &virtual;">
-            <para role="postprocess-xlink-info-attributes.html#setter">read/write (virtual)</para>
+            <link linkend="readwriteattributes">read/write (virtual)</link>
           </xsl:when>
           <xsl:when test="not(&unwritable;) and not($isinstancevar) and not($issetter)">
             <!-- happens when an old style class is encountered -->

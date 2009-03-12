@@ -94,8 +94,7 @@ a complete discussion.
 </p>
 
 <p>
-    Also see the documentation for <sgmltag class="element" role="tag.class">&lt;class&gt;</sgmltag> and the general description of LZX <a
-    href="info-attributes.html">attributes</a>.  The <a
+    Also see the documentation for <sgmltag class="element" role="tag.class">&lt;class&gt;</sgmltag>. The <a
     href="${tutorials}classes-tutorial.html">Classes</a> tutorial describes how
     to use attributes to define a class.
 </p>
