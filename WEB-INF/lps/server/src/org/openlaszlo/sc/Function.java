@@ -46,18 +46,21 @@ public class Function {
   public String toString() {
 
     String retstr;
+    String loc = (sourceLocation != null?sourceLocation:"");
     if (returnType == null || returnType.trim().equals("")) {
       retstr = "";
     }
     else {
       retstr = ": " + returnType;
     }
-    return "function " + name + "(" + args + ") " + retstr + " {\n" +
+    // we need the source location to be set multiple times so that
+    // all nodes in the AST can produce accurate compilation errors
+    // and debugging code.
+    return loc + "function " + name + "(" + args + ") " + retstr + " {\n" +
       preface +
       // we do not inject a newline after sourceLocation, it was
       // carefully positioned to be at the right column
-      (sourceLocation != null?sourceLocation:"") +
-      body +
+      loc + body +
       // mark the end of the user sourceLocation
       (sourceLocation != null?org.openlaszlo.compiler.CompilerUtils.endSourceLocationDirective:"") +
       "\n}";
@@ -70,6 +73,6 @@ public class Function {
 }
 
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

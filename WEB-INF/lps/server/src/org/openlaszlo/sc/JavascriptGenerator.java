@@ -1255,15 +1255,18 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       }
 
       predecls.add(new Compiler.PassThroughNode(parseFragment("var $lzsc$ret:* = 0;")));
-      if (functionNameIdentifier != null && !functionNameIdentifier.isConstructor()) {
+      ASTIdentifier.Type returnType = ((ASTFormalParameterList)params).getReturnType();
+      if (functionNameIdentifier != null
+          && !functionNameIdentifier.isConstructor()
+          && (returnType == null || !"void".equals(returnType.typeName))) {
         suffix.add(parseFragment("return $lzsc$ret;"));
       }
 
       // For typed functions, make the closure require a return,
       // so the SWF9 compiler will be just as picky as without
       // the closure.
-      if (((ASTFormalParameterList)params).getReturnType() != null) {
-        tryType = ": " + ((ASTFormalParameterList)params).getReturnType();
+      if (returnType != null) {
+        tryType = ": " + returnType;
       }
       options.putBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS, false);
     }
