@@ -744,7 +744,22 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
 }
 
 LzSprite.prototype.CSSDimension = function (value, units) {
-    return Math.round(value) + (units ? units : 'px');
+    // Coerce +/- infinity, NaN
+    var result = value; 
+    if (isNaN(value)) { 
+        result = 0; 
+    } else if (value === Infinity) { 
+        result = (~0>>>1); 
+    } else if (value === -Infinity) { 
+        result = ~(~0>>>1); 
+    } 
+    if ($debug) { 
+        if (value !== result) { 
+            Debug.warn("%w: coerced %w to %w", arguments.callee, value, result); 
+        } 
+    } 
+
+    return Math.round(result) + (units ? units : 'px');
 }
 
 LzSprite.prototype.loading = false;
@@ -1085,7 +1100,7 @@ LzSprite.prototype.__globalmouseup = function ( e ){
 }
 
 LzSprite.prototype.setX = function ( x ){
-    if (x == null || x == this.x || isNaN(x)) return;
+    if (x == null || x == this.x) return;
     this.__poscachedirty = true;
     this.x = x;
     x = this.CSSDimension(x);
@@ -1099,7 +1114,7 @@ LzSprite.prototype.setX = function ( x ){
 }
 
 LzSprite.prototype.setWidth = function ( w ){
-    if (w == null || w < 0 || isNaN(w) || this.width == w) return;
+    if (w == null || w < 0 || this.width == w) return;
 
     //Debug.info('setWidth', w);
     this.width = w;
@@ -1116,7 +1131,7 @@ LzSprite.prototype.setWidth = function ( w ){
 
 LzSprite.prototype.setY = function ( y ){
     //Debug.info('setY', y);
-    if (y == null || y == this.y || isNaN(y)) return;
+    if (y == null || y == this.y) return;
     this.__poscachedirty = true;
     this.y = y;
     y = this.CSSDimension(y);
@@ -1130,7 +1145,7 @@ LzSprite.prototype.setY = function ( y ){
 }
 
 LzSprite.prototype.setHeight = function ( h ){
-    if (h == null || h < 0 || isNaN(h) || this.height == h) return;
+    if (h == null || h < 0 || this.height == h) return;
 
     this.height = h;
     //Debug.info('setHeight', h, this.height, this.owner);
