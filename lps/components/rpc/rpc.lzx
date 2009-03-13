@@ -127,12 +127,39 @@
         <!--- Register a remote function to a call member
               @keywords private -->
         <method name="_register" args="callcontext,funcname">
+            <![CDATA[
             if ( this.proxy == null ) {
                 this._registered.push( { c: callcontext, f: funcname } );
                 return;
             }
             
+            //If the remotecall is registered dynamically AFTER the remotecontext is already loaded 
+            //This part becomes active and the STUB is created swagner 12.03.2009
+            
+            if (!this.proxy[funcname]) {
+                this.proxy[funcname] = this.makeProxyStubFunction(funcname);
+            }
+
+            if (this._verifywithproxy && typeof(this.proxy[funcname]) != 'function') {
+                Debug.write(this.name, "warning: function", funcname, "not defined");
+                //continue;
+            }
+            
+            for (var k in this.proxy) {
+                var tpka = this.proxy[k]['args'];
+                if (tpka == null) {
+                    tpka = this.proxy[k].args = {};
+                }
+                tpka.secure = this.secure;
+                tpka.secureport = this.secureport;
+                tpka.scope = this.scope;
+                tpka.attributename = this.attributename;
+                tpka.objectreturntype = this.objectreturntype;
+            }
+            //c._funcref = this.proxy[funcname];
+            
             callcontext._funcref = this.proxy[funcname];
+            ]]>
         </method>
 
 

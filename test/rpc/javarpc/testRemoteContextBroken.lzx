@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<canvas debug="true" width="100%" height="100%" >
+    
+    <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+    * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+    * Use is subject to license terms.                                            *
+    * X_LZ_COPYRIGHT_END ****************************************************** -->
+
+    <debug fontsize="12" oninit="Debug.showInternalProperties = true" />
+    
+    <security>
+        <allow>
+            <pattern>^examples.javarpc\.CustomMapping</pattern>
+        </allow>
+    </security>
+    
+    <!-- See WEB-INF/classes/TypesExample.java for java source. -->
+    <javarpc name="customMapping" scope="webapp" autoload="false" objectreturntype="javabean"
+             remoteclassname="examples.javarpc.CustomMapping">
+
+        <handler name="onload">
+            // Set buttons visible only after JavaRPC object loads
+            if ($debug) Debug.write('onload:', this);
+            
+        </handler>
+
+        <handler name="ondata" args="res">
+            //if ($debug) Debug.write('(types ondata) response is:', res);
+        </handler>  
+
+        <handler name="onerror" args="errmsg">
+            if ($debug) Debug.write('(types onerror) error:', errmsg);
+        </handler>
+        
+    </javarpc>
+    
+    <simplelayout axis="y" spacing="2" />
+    
+    <button text="doLoad">
+        <handler name="onclick">
+            customMapping.load();
+        </handler>
+    </button>
+    
+    <button text="make dynamic Object for RPC Call">
+        <handler name="onclick">
+            new lz.myView(canvas);
+        </handler>
+    </button>
+    
+    <class name="myView" extends="view">
+        <button text="doInvoke nested object with remotecontext">
+            <handler name="onclick">
+                parent.doTestMethod.invoke();
+            </handler>
+        </button>
+        
+        <remotecall name="doTestMethod" funcname="doTestMethod" 
+            remotecontext="$once{ canvas.customMapping }">
+            <param><method name="getValue">return 1</method></param>
+            <handler name="ondata" args="value">
+                if ($debug) Debug.write("doTestMethod/ondata 2: ",value);
+            </handler>
+        </remotecall>
+    </class>
+
+</canvas>
