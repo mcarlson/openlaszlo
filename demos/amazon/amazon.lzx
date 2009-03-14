@@ -534,10 +534,12 @@
         </method>
 
         <method name="display" args="dragView, dragImage">
-            this.setAttribute("x", dragView.getAttributeRelative("x", canvas)-12);
-            this.setAttribute("y", dragView.getAttributeRelative("y", canvas)-5);
-            img.setSource(dragImage);
-            this.setAttribute("visible", true);
+            if (! this.dragging) {
+                this.setAttribute("x", dragView.getAttributeRelative("x", canvas)-12);
+                this.setAttribute("y", dragView.getAttributeRelative("y", canvas)-5);
+                img.setSource(dragImage);
+                this.setAttribute("visible", true);
+            }
         </method>
 
         <method name="hide">
@@ -575,7 +577,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
