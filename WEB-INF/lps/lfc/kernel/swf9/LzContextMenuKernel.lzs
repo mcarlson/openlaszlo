@@ -25,11 +25,21 @@ function LzContextMenuKernel (newowner:LzContextMenu) {
 
     this.cm = new ContextMenu();
     this.cm.hideBuiltInItems();
+    this.cm.addEventListener(ContextMenuEvent.MENU_SELECT, handleMenuSelect);
 }
 
 var owner:LzContextMenu = null;
 var cm:ContextMenu = null;
+var delegate:LzDelegate = null;
 
+private function handleMenuSelect (e:ContextMenuEvent) :void {
+    var lzmenu:LzContextMenu = this.owner;
+    var delegate:LzDelegate = this.delegate;
+    if (delegate != null) {
+        delegate.execute(lzmenu);
+    }
+    if (lzmenu.onmenuopen.ready) lzmenu.onmenuopen.sendEvent(lzmenu);
+}
 
 /**
   * LzContextMenu.setDelegate
@@ -40,12 +50,7 @@ var cm:ContextMenu = null;
   * @access private
   */
 function setDelegate (delegate:LzDelegate) :void {
-  var __litem__:LzContextMenu = this.owner;
-  var callback:Function = function (e:ContextMenuEvent) :void {
-      if (delegate != null) delegate.execute(__litem__);
-      if (__litem__.onmenuopen.ready) __litem__.onmenuopen.sendEvent(__litem__);
-  };
-  this.cm.addEventListener(ContextMenuEvent.MENU_SELECT, callback);
+    this.delegate = delegate;
 }
 
 /**
@@ -114,12 +119,28 @@ class LzContextMenuItemKernel {
 function LzContextMenuItemKernel (newowner:LzContextMenuItem, title:String, del:*) {
     this.owner = newowner;
     this.cmenuitem = new ContextMenuItem(title);
+    this.cmenuitem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, this.handleMenuItemSelect);
     this.setDelegate(del);
 }
 
 var owner:LzContextMenuItem = null;
 var cmenuitem:ContextMenuItem = null;
+var delegate:* = null;
 
+private function handleMenuItemSelect (e:ContextMenuEvent) :void {
+    var lzmenuitem:LzContextMenuItem = this.owner;
+    var delegate:* = this.delegate;
+    if (delegate != null) {
+        if (delegate is Function) {
+            delegate();
+        } else if (delegate is LzDelegate) {
+            delegate.execute(lzmenuitem);
+        } else if ($debug) {
+            Debug.error("LzContextMenuItem.setDelegate must be passed a delegate or function", lzmenuitem, delegate);
+        }
+    }
+    if (lzmenuitem.onselect.ready) lzmenuitem.onselect.sendEvent(lzmenuitem);
+}
 
 /**
   * LzContextMenuItem.setDelegate
@@ -130,20 +151,7 @@ var cmenuitem:ContextMenuItem = null;
   * @access private
   */
 function setDelegate (delegate:*) :void {
-  var __litem__:LzContextMenuItem = this.owner;
-  var callback:Function = function (e:ContextMenuEvent) :void {
-      if (delegate != null) {
-          if (delegate is Function) {
-              delegate();
-          } else if (delegate is LzDelegate) {
-              delegate.execute(__litem__);
-          } else if ($debug) {
-              Debug.error("LzContextMenuItem.setDelegate must be passed a delegate or function", __litem__, delegate);
-          }
-      }
-      if (__litem__.onselect.ready) __litem__.onselect.sendEvent(__litem__);
-  };
-  this.cmenuitem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, callback);
+    this.delegate = delegate;
 }
 
 /**
