@@ -15,6 +15,7 @@ class LzMouseKernel  {
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.ui.Mouse;
+    import flash.ui.MouseCursor;
     }#
 
 
@@ -50,13 +51,13 @@ class LzMouseKernel  {
             LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE, __mouseLeaveHandler);
             __listeneradded = true;
         }
-    }    
+    }
 
     // Handles global mouse events
     static function __mouseHandler(event:MouseEvent):void {
         var eventname:String = 'on' + event.type.toLowerCase();
         if (eventname == 'onmouseup' && __lastMouseDown != null) {
-            // call mouseup on the sprite that got the last mouse down  
+            // call mouseup on the sprite that got the last mouse down
             __lastMouseDown.__globalmouseup(event);
             __lastMouseDown = null;
         } else {
@@ -96,13 +97,30 @@ class LzMouseKernel  {
     }
 
     static var __amLocked:Boolean = false;
+    static var useBuiltinCursor:Boolean = false;
     static var cursorSprite:Sprite = null;
     static var globalCursorResource:String = null;
     static var lastCursorResource:String = null;
 
+    #passthrough {
+        private static var __builtinCursors:Object = null;
+        static function get builtinCursors () :Object {
+            if (__builtinCursors == null) {
+                var cursors:Object = {};
+                cursors[MouseCursor.ARROW] = true;
+                cursors[MouseCursor.AUTO] = true;
+                cursors[MouseCursor.BUTTON] = true;
+                cursors[MouseCursor.HAND] = true;
+                cursors[MouseCursor.IBEAM] = true;
+                __builtinCursors = cursors;
+            }
+            return __builtinCursors;
+        }
+    }#
+
     /**
     * Sets the cursor to a resource
-    * @param String what: The resource to use as the cursor. 
+    * @param String what: The resource to use as the cursor.
     */
     static function setCursorGlobal (what:String) :void {
         globalCursorResource = what;
@@ -111,45 +129,66 @@ class LzMouseKernel  {
 
     static function setCursorLocal (what:String) :void {
         if ( __amLocked ) { return; }
-        Mouse.hide();
-        cursorSprite.x = LFCApplication.stage.mouseX;
-        cursorSprite.y = LFCApplication.stage.mouseY;
-        LFCApplication.setChildIndex(cursorSprite, LFCApplication._sprite.numChildren-1);
-        if (lastCursorResource != what) {
-            if (cursorSprite.numChildren > 0) {
-                cursorSprite.removeChildAt(0);
-            }
+        if (what == null) {
+            // null is invalid, maybe call restoreCursor()?
+            return;
+        } else if (lastCursorResource != what) {
             var resourceSprite:Sprite = getCursorResource(what);
-            cursorSprite.addChild( resourceSprite );
+            if (resourceSprite != null) {
+                if (cursorSprite.numChildren > 0) {
+                    cursorSprite.removeChildAt(0);
+                }
+                cursorSprite.addChild( resourceSprite );
+                useBuiltinCursor = false;
+            } else if (builtinCursors[what] != null) {
+                useBuiltinCursor = true;
+            } else {
+                // invalid cursor?
+                return;
+            }
             lastCursorResource = what;
         }
-        // respond to mouse move events
-        cursorSprite.startDrag();
-        LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
-        cursorSprite.visible = true;
+        if (useBuiltinCursor) {
+            Mouse.cursor = what;
+            cursorSprite.stopDrag();
+            cursorSprite.visible = false;
+            LFCApplication.stage.removeEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
+            Mouse.show();
+        } else {
+            Mouse.hide();
+            cursorSprite.x = LFCApplication.stage.mouseX;
+            cursorSprite.y = LFCApplication.stage.mouseY;
+            LFCApplication.setChildIndex(cursorSprite, LFCApplication._sprite.numChildren-1);
+            // respond to mouse move events
+            cursorSprite.startDrag();
+            LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
+            cursorSprite.visible = true;
+        }
     }
 
     static function mouseLeaveHandler(evt:Event):void {
         cursorSprite.visible = false;
     }
 
-
     static function getCursorResource (resource:String):Sprite {
+          if (! (LzAsset.isMovieClipAsset(resource) || LzAsset.isMovieClipLoaderAsset(resource))) {
+              // only swf cursors are supported
+              return null;
+          }
+
           var resinfo:Object = LzResourceLibrary[resource];
           var assetclass:Class;
-          var frames:Array = resinfo.frames;
-          var asset:Sprite;
           // single frame resources get an entry in LzResourceLibrary which has
           // 'assetclass' pointing to the resource Class object.
           if (resinfo.assetclass is Class) {
               assetclass = resinfo.assetclass;
           } else {
               // Multiframe resources have an array of Class objects in frames[]
+              var frames:Array = resinfo.frames;
               assetclass = frames[0];
           }
 
-          if (! assetclass) return null;
-          asset = new assetclass();
+          var asset:Sprite = new assetclass();
           asset.scaleX = 1.0;
           asset.scaleY = 1.0;
           //Debug.write('cursor asset', asset);
@@ -159,14 +198,16 @@ class LzMouseKernel  {
     /**
     * This function restores the default cursor if there is no locked cursor on
     * the screen.
-    * 
+    *
     * @access private
     */
     static function restoreCursor () :void {
         if ( __amLocked ) { return; }
         cursorSprite.stopDrag();
         cursorSprite.visible = false;
+        LFCApplication.stage.removeEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
         globalCursorResource = null;
+        Mouse.cursor = MouseCursor.AUTO;
         Mouse.show();
     }
 
@@ -185,7 +226,7 @@ class LzMouseKernel  {
 
     /**
     * Prevents the cursor from being changed until unlock is called.
-    * 
+    *
     */
     static function lock () :void {
         __amLocked = true;
@@ -193,11 +234,11 @@ class LzMouseKernel  {
 
     /**
     * Restores the default cursor.
-    * 
+    *
     */
     static function unlock () :void {
         __amLocked = false;
-        restoreCursor(); 
+        restoreCursor();
     }
 
     static function initCursor () :void {
