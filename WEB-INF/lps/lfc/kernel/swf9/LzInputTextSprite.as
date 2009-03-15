@@ -5,7 +5,7 @@
   *            Use is subject to license terms.
   *
   * @topic Kernel
-  * @subtopic AS2
+  * @subtopic swf9
   */
 
 /**
@@ -15,10 +15,11 @@
 public class LzInputTextSprite extends LzTextSprite {
 
     #passthrough (toplevel:true) {  
-        import flash.display.*;
-        import flash.events.*;
-        import flash.text.*;
-        import flash.utils.setTimeout;
+        import flash.display.InteractiveObject;
+        import flash.events.Event;
+        import flash.events.FocusEvent;
+        import flash.text.TextField;
+        import flash.text.TextFieldType;
     }#
 
     #passthrough  {
@@ -118,7 +119,7 @@ public class LzInputTextSprite extends LzTextSprite {
      */
     function __lostFocus (event:FocusEvent) :void {
         // defer execution, see swf8 kernel
-        setTimeout(this.__handlelostFocus, 1, event);
+        LzTimeKernel.setTimeout(this.__handlelostFocus, 1, event);
     }
 
     /**

@@ -22,8 +22,6 @@ public class LzHTTPLoader {
         import flash.net.URLRequest;
         import flash.net.URLRequestHeader;
         import flash.net.URLRequestMethod;
-        import flash.utils.clearTimeout;
-        import flash.utils.setTimeout;
     }#
 
     static const GET_METHOD:String    = "GET";
@@ -225,7 +223,7 @@ public class LzHTTPLoader {
         var callback:Function = function () :void {
             LzHTTPLoader.__LZcheckXMLHTTPTimeouts(lid);
         }
-        var timeoutid:uint = flash.utils.setTimeout(callback, duration);
+        var timeoutid:uint = LzTimeKernel.setTimeout(callback, duration);
         LzHTTPLoader.activeRequests[lid][2] = timeoutid;
     }
     
@@ -235,7 +233,7 @@ public class LzHTTPLoader {
         //Debug.write("remove timeout for id=%s", lid);
         var reqarr:Array = LzHTTPLoader.activeRequests[lid];
         if (reqarr && reqarr[0] === httploader) {
-            clearTimeout(reqarr[2]);
+            LzTimeKernel.clearTimeout(reqarr[2]);
             delete LzHTTPLoader.activeRequests[lid];
         }
     }
@@ -260,7 +258,7 @@ public class LzHTTPLoader {
                 var callback:Function = function () :void {
                     LzHTTPLoader.__LZcheckXMLHTTPTimeouts(lid);
                 }
-                var timeoutid:uint = flash.utils.setTimeout(callback, now - dstimeout);
+                var timeoutid:uint = LzTimeKernel.setTimeout(callback, now - dstimeout);
                 req[2] = timeoutid;
             }
         }
