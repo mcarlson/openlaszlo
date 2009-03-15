@@ -14,7 +14,7 @@
   */
 public class LzInputTextSprite extends LzTextSprite {
 
-    #passthrough (toplevel:true) {  
+    #passthrough (toplevel:true) {
         import flash.display.InteractiveObject;
         import flash.events.Event;
         import flash.events.FocusEvent;
@@ -25,16 +25,15 @@ public class LzInputTextSprite extends LzTextSprite {
     #passthrough  {
 
 
-    function LzInputTextSprite (newowner = null, args = null) {
+    function LzInputTextSprite (newowner:LzView = null, args:Object = null) {
         super(newowner);
     }
 
-    var __handlelostFocusdel;
-    var enabled = true;
-    var focusable = true;
-    var hasFocus = false;
+    var enabled :Boolean = true;
+    var focusable :Boolean = true;
+    var hasFocus :Boolean = false;
 
-    override public function __initTextProperties (args:Object) {
+    override public function __initTextProperties (args:Object) :void {
         super.__initTextProperties(args);
         // We do not support html in input fields. 
         if (this.enabled) {
@@ -157,7 +156,7 @@ public class LzInputTextSprite extends LzTextSprite {
      * Sets whether user can modify input text field
      * @param Boolean enabled: true if the text field can be edited
      */
-    function setEnabled (enabled) :void {
+    function setEnabled (enabled:Boolean) :void {
         this.enabled = enabled;
         if (enabled) {
             textfield.type = 'input';

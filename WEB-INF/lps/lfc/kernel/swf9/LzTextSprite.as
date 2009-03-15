@@ -1,4 +1,3 @@
-
 /**
   * LzTextSprite.as
   *
@@ -9,20 +8,21 @@
   * @subtopic swf9
   * @author Henry Minsky &lt;hminsky@laszlosystems.com&gt;
   */
-
-
-
-
-
 public class LzTextSprite extends LzSprite {
-    #passthrough (toplevel:true) {  
-        import flash.display.*;
-        import flash.events.*;
-        import flash.text.*;
-        import flash.net.URLRequest;  
+    #passthrough (toplevel:true) {
+        import flash.display.DisplayObject;
+        import flash.events.Event;
+        import flash.events.MouseEvent;
+        import flash.events.TextEvent;
+        import flash.net.URLRequest;
+        import flash.text.AntiAliasType;
+        import flash.text.TextField;
+        import flash.text.TextFieldAutoSize;
+        import flash.text.TextFormat;
+        import flash.text.TextLineMetrics;
     }#
 
-        #passthrough  {  
+        #passthrough  {
 
         public var textfield:TextField = null;
 
@@ -30,7 +30,7 @@ public class LzTextSprite extends LzSprite {
         public static const PAD_TEXTHEIGHT:Number = 4;
         public static const DEFAULT_SIZE:Number = 11;
 
-        var font = null;
+        var font:LzFont = null;
 
         /**
         * @access private
@@ -53,7 +53,7 @@ public class LzTextSprite extends LzSprite {
         */
         public var lineheight:Number = 1;
 
-        public var textcolor = 0;
+        public var textcolor:Number = 0;
         public var text:String = "";
 
         public var resize:Boolean = true;
@@ -70,11 +70,11 @@ public class LzTextSprite extends LzSprite {
         public var scrollheight:Number = 0;
         public var html:Boolean = true;
 
-        public function LzTextSprite (newowner = null, args = null) {
+        public function LzTextSprite (newowner:LzView = null, args:Object = null) {
             super(newowner,false);
             // owner:*, isroot:Boolean
             this.textfield = createTextField(0,0,400,20);
-        }
+            }
 
         override public function setClickable( c:Boolean ):void {
             if (this.clickable == c) return;
@@ -85,13 +85,13 @@ public class LzTextSprite extends LzSprite {
             this.clickable = c;
             if (c) {
                 attachMouseEvents(this.textfield);
-            } else {
+                } else {
                 removeMouseEvents(this.textfield);
             }
         }
 
         public function addScrollEventListener():void {
-            this.textfield.addEventListener(flash.events.Event.SCROLL, __handleScrollEvent);
+            this.textfield.addEventListener(Event.SCROLL, __handleScrollEvent);
         }
 
         function __handleScrollEvent(e:Event = null) :void {
@@ -163,7 +163,7 @@ public class LzTextSprite extends LzSprite {
             this.owner.ontextlink.sendEvent(e.text);
         }
 
-        public function makeTextLink(str, value) {
+        public function makeTextLink(str:String, value:String) :String {
             return '<a href="event:'+value+'">'+str+'</a>';
         }
 
@@ -185,7 +185,7 @@ public class LzTextSprite extends LzSprite {
 
         private function createTextField(nx:Number, ny:Number, w:Number, h:Number):TextField {
             var tfield:TextField = new TextField();
-            tfield.antiAliasType = flash.text.AntiAliasType.ADVANCED;
+            tfield.antiAliasType = AntiAliasType.ADVANCED;
             tfield.x = nx;
             tfield.y = ny;
             tfield.width = w;
@@ -198,7 +198,7 @@ public class LzTextSprite extends LzSprite {
             return tfield;
         }
 
-        public  function __initTextProperties (args:Object) {
+        public function __initTextProperties (args:Object) :void {
             this.password = args.password  ? true : false;
             var textclip:TextField = this.textfield;
             textclip.displayAsPassword = this.password;
@@ -297,14 +297,14 @@ public class LzTextSprite extends LzSprite {
            o Sets the name of the font
            o Can be a comma-separated list of font names 
         */
-        public function setFontName ( fname:String , prop=null):void{
+        public function setFontName ( fname:String , prop:*=null):void{
             this.fontname = fname;
             this.__setFormat();
             // force recompute of height if needed
             this.setText( this.text );
         }
 
-        function setFontInfo () {
+        function setFontInfo () :void {
             this.font = LzFontManager.getFont( this.fontname , this.fontstyle );
             //Debug.write('setFontInfo this.font = ', this.font, 'this.fontname = ', this.fontname, this.fontstyle);
         }
@@ -393,7 +393,7 @@ public class LzTextSprite extends LzSprite {
          */
         public function __setFormat ():void {
             this.setFontInfo();
-            var cfontname = LzFontManager.__fontnameCacheMap[this.fontname];
+            var cfontname:String = LzFontManager.__fontnameCacheMap[this.fontname];
             if (cfontname == null) {
                 cfontname = LzFontManager.__findMatchingFont(this.fontname);
                 LzFontManager.__fontnameCacheMap[this.fontname] = cfontname;
@@ -431,7 +431,7 @@ public class LzTextSprite extends LzSprite {
             var lm:TextLineMetrics = this.textfield.getLineMetrics(0);
             this.textfield[this.html ? 'htmlText' : 'text'] = text;
 
-            var lh = lm.ascent + lm.descent + lm.leading;
+            var lh:Number = lm.ascent + lm.descent + lm.leading;
             if (lh !== this.lineheight) {
               this.lineheight = lh;
               // Tell the owner the linescale has changed
@@ -478,7 +478,7 @@ public class LzTextSprite extends LzSprite {
             return this.textfield.textHeight;
         }
 
-        public function getTextfieldHeight ( ) {
+        public function getTextfieldHeight ( ) :Number {
             var textclip:TextField = this.textfield;
             var tca:String = textclip.autoSize;
             var tcw:Number = textclip.width;
@@ -508,12 +508,12 @@ public class LzTextSprite extends LzSprite {
         }
 
 
-function setHScroll(s:Number) {
+function setHScroll(s:Number) :void {
     this.textfield.scrollH = this.hscroll = s;
 }
 
 function setAntiAliasType( aliasType:String ):void {
-    var atype:String = (aliasType == 'advanced') ? flash.text.AntiAliasType.ADVANCED : flash.text.AntiAliasType.NORMAL;
+    var atype:String = (aliasType == 'advanced') ? AntiAliasType.ADVANCED : AntiAliasType.NORMAL;
     this.textfield.antiAliasType = atype;
 }
 
@@ -561,27 +561,27 @@ function setPattern (val:String) :void {
     }
 }
 
-function setSelection(start:Number, end:Number) { 
+function setSelection(start:Number, end:Number) :void {
     this.textfield.setSelection(start, end);
     this.textfield.alwaysShowSelection = true;
 }
 
-function setResize ( val:Boolean ) {
+function setResize ( val:Boolean ) :void {
     this.resize = val;
 }
 
-function setScroll ( h:Number ) {
+function setScroll ( h:Number ) :void {
     this.textfield.scrollV = this.scroll = h;
 }
-function getScroll() {
+function getScroll() :Number {
     return this.textfield.scrollV;
 }
 
-function getMaxScroll() {
+function getMaxScroll() :Number {
     return this.textfield.maxScrollV;
 }
 
-function getBottomScroll() {
+function getBottomScroll() :Number {
     return this.textfield.bottomScrollV;
 }
 
@@ -593,22 +593,22 @@ function pixelToLineNo (n:Number):Number {
   return Math.floor((n / lineheight) + 1);
 }
 
-function setYScroll ( n ){
+function setYScroll (n:Number) :void {
   this.textfield.scrollV = this.scroll = this.pixelToLineNo((- n));
 }
 
-function setXScroll ( n ){
+function setXScroll (n:Number) :void {
   this.textfield.scrollH = this.hscroll = (- n);
 }
 
-function setWordWrap ( wrap ){
+function setWordWrap (wrap:Boolean) :void {
     Debug.warn("LzTextSprite.setWordWrap not yet implemented");
 }
 
-function getSelectionPosition() {
+function getSelectionPosition() :int {
     return this.textfield.selectionBeginIndex;
 }    
-function getSelectionSize() {
+function getSelectionSize() :int {
     return this.textfield.selectionEndIndex - this.textfield.selectionBeginIndex;
 }    
 

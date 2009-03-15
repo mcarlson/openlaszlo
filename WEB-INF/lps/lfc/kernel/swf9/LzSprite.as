@@ -12,24 +12,35 @@
 dynamic public class LzSprite extends Sprite {
 
 #passthrough (toplevel:true) {
-  import flash.display.*;
-  import flash.events.*;
-  import flash.ui.*;
-  import flash.geom.*;
-  import flash.utils.*;
-  import mx.controls.Button;
-  import flash.net.*;
-  import flash.utils.*;
-  import flash.system.Security;
-  import flash.system.SecurityDomain;
-  import flash.system.ApplicationDomain;
-  import flash.system.LoaderContext;
+  import flash.display.AVM1Movie;
+  import flash.display.Bitmap;
+  import flash.display.DisplayObject;
+  import flash.display.DisplayObjectContainer;
+  import flash.display.Graphics;
+  import flash.display.InteractiveObject;
+  import flash.display.Loader;
+  import flash.display.LoaderInfo;
+  import flash.display.MovieClip;
+  import flash.display.Shape;
+  import flash.display.SimpleButton;
+  import flash.display.Sprite;
+  import flash.display.SWFVersion;
+  import flash.events.Event;
+  import flash.events.ErrorEvent;
+  import flash.events.IOErrorEvent;
+  import flash.events.MouseEvent;
+  import flash.events.ProgressEvent;
+  import flash.events.SecurityErrorEvent;
+  import flash.geom.ColorTransform;
+  import flash.geom.Rectangle;
   import flash.media.Sound;
   import flash.media.SoundChannel;
   import flash.media.SoundMixer;
   import flash.media.SoundTransform;
   import flash.media.SoundLoaderContext;
   import flash.media.ID3Info;
+  import flash.net.URLRequest;
+  import flash.system.LoaderContext;
 }#
 
 #passthrough  {
@@ -125,7 +136,7 @@ dynamic public class LzSprite extends Sprite {
       };
       var capabilities = LzSprite.capabilities;
 
-      public function LzSprite (newowner = null, isroot = null) {
+      public function LzSprite (newowner:LzView = null, isroot:Object = null) {
           // owner:*, isroot:Boolean
           this.owner = newowner;
           if (owner == null) return;
@@ -163,7 +174,7 @@ dynamic public class LzSprite extends Sprite {
       }
 
 
-      public function predestroy(){
+      public function predestroy() :void {
           this.bringToFront();
       }
 
@@ -320,7 +331,7 @@ dynamic public class LzSprite extends Sprite {
               }
               this.__isinternalresource = false;
               this.resource = url;
-              var res = this.imgLoader;
+              var res:Loader = this.imgLoader;
               if (res) {
                   res.scaleX = res.scaleY = 1.0;
               }
@@ -670,27 +681,26 @@ dynamic public class LzSprite extends Sprite {
 
       public function __mouseEvent( e:MouseEvent ) :void {
             var skipevent:Boolean = false;
+            var stopevent:Boolean = true;
             var eventname:String = 'on' + e.type.toLowerCase();
 
             if (eventname == 'onmousedown') {
-                // cancel mousedown event bubbling...
-                e.stopPropagation();
-                this.__mousedown = true;
                 LzMouseKernel.__lastMouseDown = this;
+                this.__mousedown = true;
             } else if (eventname == 'onmouseup') {
                 if (LzMouseKernel.__lastMouseDown === this) {
-                    // cancel mousedown event bubbling...
                     LzMouseKernel.__lastMouseDown = null;
-                    e.stopPropagation();
                     this.__mousedown = false;
                 } else {
                     skipevent = true;
+                    stopevent = false;
                 }
             } else if (eventname == 'onmouseupoutside') {
                 this.__mousedown = false;
-            } else {
-                e.stopPropagation();
             }
+
+            // cancel mouse event bubbling...
+            if (stopevent) e.stopPropagation();
 
             //Debug.write('__mouseEvent', eventname, this.owner);
             if (skipevent == true || ! this.owner.mouseevent) return;
@@ -720,7 +730,6 @@ dynamic public class LzSprite extends Sprite {
             if (this.clickable && this.clickbutton) {
                 this.clickbutton.useHandCursor = (showhandcursor == null) ? LzMouseKernel.showhandcursor : showhandcursor;
             }
-
       }
 
       /** setClickable( Boolean:clickable )
@@ -747,7 +756,7 @@ dynamic public class LzSprite extends Sprite {
               }
               cb.useHandCursor = (showhandcursor == null) ? LzMouseKernel.showhandcursor : showhandcursor;
               cb.tabEnabled = false;
-              var cr = new Shape();
+              var cr:Shape = new Shape();
               this.clickregion = cr;
               cr.graphics.beginFill(0xffffff);
               cr.graphics.drawRect(0, 0, 1, 1);
@@ -875,7 +884,7 @@ dynamic public class LzSprite extends Sprite {
       /** Returns the foreground color of the sprite. This isn't known so
           0 is returned.
       */
-      public function getColor  (){
+      public function getColor () :Number {
           // Only applicable for text
           return 0;
       }
@@ -894,8 +903,8 @@ dynamic public class LzSprite extends Sprite {
        * o.aa: percentage overall alpha (-100 to 100);
        * o.ab: overall offset (-255 to 255);
        */
-      public function getColorTransform ():*{
-          var ct = this.transform.colorTransform;
+      public function getColorTransform ():Object {
+          var ct:ColorTransform = this.transform.colorTransform;
           return {ra: ct.redMultiplier * 100, rb: ct.redOffset,
                   ga: ct.greenMultiplier * 100, gb: ct.greenOffset,
                   ba: ct.blueMultiplier * 100 , bb: ct.blueOffset,
@@ -916,7 +925,7 @@ dynamic public class LzSprite extends Sprite {
        * o.aa: percentage overall alpha (-100 to 100);
        * o.ab: overall offset (-255 to 255);
        */
-      function setColorTransform ( o:* ){
+      function setColorTransform ( o:* ) :void {
           this.transform.colorTransform = new ColorTransform(o.ra / 100.0,
                                                              o.ga / 100.0,
                                                              o.ba / 100.0,
@@ -1111,7 +1120,7 @@ dynamic public class LzSprite extends Sprite {
       }
 
       /** Callback resets resources after they have loaded and displayed */
-      public function __resetframe(ignore=null):void {
+      public function __resetframe(ignore:*=null):void {
           LzIdleKernel.removeCallback(this, '__resetframe');
           this.stop(this.frame);
       }
@@ -1182,7 +1191,7 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function applyStretchResource():void {
-          var res = this.resourceContainer;
+          var res:DisplayObject = this.resourceContainer;
 
           // Don't try to do anything while an image is loading
           if (res == null) return;
@@ -1320,7 +1329,7 @@ dynamic public class LzSprite extends Sprite {
           }
       }
 
-      public function unload() {
+      public function unload() :void {
         if (this.owner != null) {
               this.owner.resourceevent('loadratio', 0);
               this.owner.resourceevent('framesloadratio', 0);
@@ -1356,19 +1365,19 @@ dynamic public class LzSprite extends Sprite {
         this.resourceCache = null;
       }
 
-      public function setAccessible(accessible:*) {
+      public function setAccessible(accessible:*) :void {
           trace('LzSprite.setAccessible not yet implemented');
       }
 
-      public function getMCRef () {
+      public function getMCRef () :LzSprite {
           return this; 
       }
 
-      public function getContext () {
+      public function getContext () :Graphics {
           return this.graphics; 
       }
 
-      public function setBitmapCache(cache) {
+      public function setBitmapCache(cache) :void {
           this.cacheAsBitmap = cache;
           this.updateBackground();
       }
@@ -1434,7 +1443,7 @@ dynamic public class LzSprite extends Sprite {
       }
 
 
-      function sendResourceLoad(skiponload = false) {
+      function sendResourceLoad(skiponload:Boolean = false) :void {
           // skiponload is true for resources/setResource() calls
           if (this.owner != null) {
               this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: skiponload});
@@ -1446,7 +1455,7 @@ dynamic public class LzSprite extends Sprite {
       /**
        * CURSOR is a string naming the resource to be used as the mouse pointer
        */
-      function setCursor ( cursor:String=null ){
+      function setCursor ( cursor:String=null ) :void {
           if (cursor == null) return;
           if (cursor != '') {
               this.cursorResource = cursor;
@@ -1463,13 +1472,13 @@ dynamic public class LzSprite extends Sprite {
       }
 
       /** @access private */
-      function cursorGotMouseover (event:MouseEvent) {
+      function cursorGotMouseover (event:MouseEvent) :void {
           LzMouseKernel.setCursorLocal(this.cursorResource);
       }
 
 
       /** @access private */
-      function cursorGotMouseout (event:MouseEvent) {
+      function cursorGotMouseout (event:MouseEvent) :void {
           // If we get a mouseout event, but the cursor is still on
           // top of this sprite, then that assume a "ghost event", due
           // to the addChild() call when cursor resource is being set.
@@ -1549,31 +1558,31 @@ dynamic public class LzSprite extends Sprite {
       /**
         *
         */
-      function setShowHandCursor ( s:* ){
+      function setShowHandCursor ( s:* ) :void {
           this.showhandcursor = s;
       }
 
-      function setAAActive(s) {
+      function setAAActive(s:*) :void {
           trace('LzSprite.setAAActive not yet implemented');
       }
 
-      function setAAName(s) {
+      function setAAName(s:*) :void {
           trace('LzSprite.setAAName not yet implemented');
       }
 
-      function setAADescription(s) {
+      function setAADescription(s:*) :void {
           trace('LzSprite.setAADescription not yet implemented');
       }
 
-      function setAATabIndex(s) {
+      function setAATabIndex(s:*) :void {
           trace('LzSprite.setAATabIndex not yet implemented');
       }
 
-      function setAASilent(s) {
+      function setAASilent(s:*) :void {
           trace('LzSprite.setAASilent not yet implemented');
       }
 
-      function updateResourceSize(skipsend = null){
+      function updateResourceSize(skipsend:* = null) :void {
         this.setWidth(this._setrescwidth?this.width:this.resourcewidth);
         this.setHeight(this._setrescheight?this.height:this.resourceheight);
 
@@ -1586,6 +1595,3 @@ dynamic public class LzSprite extends Sprite {
 
   }#
   }
-
-
-
