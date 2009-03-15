@@ -1,11 +1,11 @@
 /**
   * LzFontManager.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
-  * @subtopic AS2
+  * @subtopic swf9
   */
 
 /** Manages the font dictionary.
@@ -23,7 +23,7 @@ public class LzFontManager {
         import flash.text.Font;
     }#
 
-        static  var fonts = { };
+    static var fonts :Object = {};
 
     /** @devnote currently doesn't support sending variables...
      */
@@ -40,24 +40,24 @@ public class LzFontManager {
      * @param Object bi: The bold italic style of the font.
      * @access private
      */
-    public static function addFont(  fontname , n , b , i , bi ){
+    public static function addFont (fontname:String, n:Object, b:Object, i:Object, bi:Object) :void {
 
-        var ff = new Object;
+        var ff:Object = new Object;
         ff.name = fontname;
-    
+
         if ( n ){
-            new LzFont( ff , n, "plain");
+            new LzFont( ff, n, "plain");
         }
         if ( b ) { 
-            new LzFont( ff , b , "bold");
+            new LzFont( ff, b, "bold");
         }
         if ( i ){
-            new LzFont( ff , i, "italic" );
+            new LzFont( ff, i, "italic" );
         }
         if ( bi ){
-            new LzFont( ff , bi , "bolditalic");
+            new LzFont( ff, bi, "bolditalic");
         }
-    
+
         LzFontManager.fonts[ fontname ] = ff;
     }
 
@@ -69,26 +69,26 @@ public class LzFontManager {
      * @return any: An <class>LzFont</class> object, or undefined if not found
      * 
      */
-    public static function getFont ( fontname , style ){
+    public static function getFont (fontname:String, style:String) :LzFont {
         if ( style == null ) { style = "plain" }
-        var fns = fontname.split(',');
+        var fns:Array = fontname.split(',');
         if (fns.length > 0) {
-            for (var i = 0; i < fns.length; i++) {
+            for (var i:int = 0; i < fns.length; i++) {
                 fontname = fns[i];
-                var tfn = LzFontManager.fonts[ fontname ];
+                var tfn:LzFont = LzFontManager.fonts[ fontname ];
                 if (tfn) {
-                    return  tfn[ style ];
-                }    
+                    return tfn[ style ];
+                }
             }
             return null;
-        } else {   
-            var tfn = LzFontManager.fonts[ fontname ];
+        } else {
+            var tfn:LzFont = LzFontManager.fonts[ fontname ];
             if (tfn) {
-                return  tfn[ style ];
+                return tfn[ style ];
             } else {
                 return null;
             }
-        }    
+        }
     }
 
     /**
@@ -100,62 +100,61 @@ public class LzFontManager {
      * @return LzFont:  The new <class>LzFont</class>.
      * @access private
      */
-    public static  function addStyle ( f , s ){
+    public static function addStyle (f:LzFont, s:String) :LzFont {
         //not pretty -- especially if the complexity of styles grows -- but works
         //for now
 
         if ( f.style == "bolditalic") {
             return f;
         } else if ( s == "bold" ){
-            if ( f.style =="italic" ){
+            if ( f.style == "italic" ){
                 return f.fontobject.bolditalic;
             } else {
                 return f.fontobject.bold;
             }
         } else if ( s == "italic" ) {
-            if ( f.style =="bold" ){
+            if ( f.style == "bold" ){
                 return f.fontobject.bolditalic;
             } else {
                 return f.fontobject.italic;
             }
-        } else if ( s== "bolditalic" ){
+        } else if ( s == "bolditalic" ){
             return f.fontobject.bolditalic;
         }
 
         // no change
         return f;
-
     }
 
     // Map {font-name -> true} of client font names.  convertFontList
     // initializes this.
-    static var __clientFontNames;
+    static var __clientFontNames :Object;
 
     // A map from CSS generic font family names such as 'sans-serif' to
     // Flash names such as '_sans'.
-    static var __fontFamilyMap = {'monospace': '_typewriter', 'serif': '_serif', 'sans-serif': '_sans'};
+    static var __fontFamilyMap :Object = {'monospace': '_typewriter', 'serif': '_serif', 'sans-serif': '_sans'};
 
     // A hashset of device font family names.
-    static var __genericClientFontFamilyNames = {'_typewriter': true, '_serif': true, '_sans': true};
+    static var __genericClientFontFamilyNames :Object = {'_typewriter': true, '_serif': true, '_sans': true};
 
-    static public var __fontnameCacheMap = {};
+    static public var __fontnameCacheMap :Object = {};
 
-    static var __debugWarnedFonts = {};
+    static var __debugWarnedFonts :Object = {};
 
     /**
      * Convert an LZX font name to one that the Flash runtime can render.
      * This involves removing whitespace, and changing CSS generic font family
      * names such as 'sans-serif' to Flash names such as '_sans'.
      */
-    public static function __convertFontName (name) {
+    public static function __convertFontName (name:String) :String {
         // FIXME [2004-11-29 ows]: trim other types of whitespace too
         while (name.charAt(0) == ' ') name = name.slice(1);
         while (name.charAt(name.length - 1) == ' ') name = name.slice(0, name.length-1);
-        var map = LzFontManager.__fontFamilyMap;
+        var map:Object = LzFontManager.__fontFamilyMap;
         // Warn about uses of Flash-specific names.  These won't work on
         // other runtimes.
         if ($debug) {
-            for (var i in map)
+            for (var i:String in map)
                 if (name == map[i] && !LzFontManager.__debugWarnedFonts[name]) {
                     LzFontManager.__debugWarnedFonts[name] = true;
                     Debug.warn("Undefined font %w.  Use %w instead", name, i);
@@ -171,19 +170,19 @@ public class LzFontManager {
      * none of the names can be rendered. str is a comma-separated list
      * of font names.
      */
-    public static function __findMatchingFont (str) {
+    public static function __findMatchingFont (str:String) :String {
         if (LzFontManager.__clientFontNames == null) {
             LzFontManager.__clientFontNames = {};
-            var fonts = Font.enumerateFonts(true);
-                for (var i in fonts) {
-                    LzFontManager.__clientFontNames[fonts[i].fontName] = true;
-                }
+            var fonts:Array = Font.enumerateFonts(true);
+            for (var i:int = 0; i < fonts.length; ++i) {
+                LzFontManager.__clientFontNames[fonts[i].fontName] = true;
+            }
         }
-    
-        var name = null;
+
+        var name:String = null;
         if (str.indexOf(',') >= 0) {
-            var names = str.split(',');
-            for (var i = 0; i < names.length; i++) {
+            var names:Array = str.split(',');
+            for (var i:int = 0; i < names.length; i++) {
                 name = names[i] = LzFontManager.__convertFontName(names[i]);
                 if (LzFontManager.__clientFontNames[name] || LzFontManager.__genericClientFontFamilyNames[name]) {
                     return name;
@@ -204,7 +203,7 @@ public class LzFontManager {
     /**
      * @access private
      */
-    public static function __fontExists (str) {
+    public static function __fontExists (str:String) :Boolean {
         return (LzFontManager.fonts[ str ] != null ||
                 LzFontManager.__clientFontNames[str] != null ||
                 LzFontManager.__genericClientFontFamilyNames[str] != null ||

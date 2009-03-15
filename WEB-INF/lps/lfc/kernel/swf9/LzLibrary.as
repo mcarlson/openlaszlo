@@ -14,34 +14,25 @@
   */
 class LzLibrary extends LzNode {
 
-    #passthrough (toplevel:true) {  
-  import flash.display.*;
-  import flash.events.*;
-  import flash.text.*;
-  import flash.ui.*;
-  import flash.geom.*;
-  import flash.utils.*;
-  import mx.controls.Button;
-  import flash.net.*;
-  import flash.utils.*;
-  import flash.system.*;
-
-
+    #passthrough (toplevel:true) {
+    import flash.display.Loader;
+    import flash.display.LoaderInfo;
+    import flash.events.Event;
+    import flash.net.URLRequest;
+    import flash.net.URLRequestMethod;
     }#
 
 /** @access private
   * @modifiers override 
   */
-static var tagname = 'import';
+static var tagname :String = 'import';
 /** @access private */
-static var attributes = new LzInheritedHash(LzNode.attributes);
+static var attributes :Object = new LzInheritedHash(LzNode.attributes);
 
 /** @access private */
-var loaded = false;
+var loaded :Boolean = false;
 /** @access private */
-var loading = false;
-/** @access private */
-var sprite = null;
+var loading :Boolean = false;
 
 /**
  * A reference to a target file whose content is treated as a 
@@ -51,7 +42,7 @@ var sprite = null;
  * @type string
  * @access public 
  */
-var href;
+var href:String;
 
 /** 
  * When set to 'defer', the library will not be loaded until its 
@@ -63,12 +54,12 @@ var href;
  * @lzxdefault "late"
  * @access public 
  */
-var stage = "late";//"late|defer"
+var stage :String = "late";//"late|defer"
 
 /**
   * @access private
   */
-function $lzc$set_stage(val) {
+function $lzc$set_stage(val:String) :void {
     this.stage = val;
 }
 
@@ -80,19 +71,19 @@ function $lzc$set_stage(val) {
  * @lzxtype event
  * @access public
  */
-var onload = LzDeclaredEvent;
+var onload :LzDeclaredEventClass = LzDeclaredEvent;
 
 /** @access private
  * @modifiers override 
  */
-function LzLibrary ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
-    super(parent,attrs,children,instcall);
+function LzLibrary (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
+    super(parent, attrs, children, instcall);
 }
 
 /**
   * @access private
   */
-function $lzc$set_href(val) {
+function $lzc$set_href(val:String) :void {
     this.href = val;
 }
 
@@ -119,20 +110,16 @@ override function init( ) {
   * @access private
   */
 override function destroy () {
-    if (this.sprite) {
-        this.sprite.destroy();
-        this.sprite = null;
-    }
     super.destroy();
 }
 
 /** @access private */
-static var libraries = {};
+static var libraries :Object = {};
 
 /**
   * @access private
   */
-static function findLibrary (libname){
+static function findLibrary (libname:String) :LzLibrary {
     return LzLibrary.libraries[libname];
 }
 
@@ -151,7 +138,7 @@ public var loader:Loader = null;
   * 
   * @access public
   */
-function load () {
+function load () :void {
     if (this.loading || this.loaded) {
         return;
     }
@@ -172,14 +159,14 @@ public function handleLoadComplete(event:Event):void {
     this.libapp = library;
 }
 
-var libapp;
+var libapp:Object;
 
 /** 
  * Called by LzLibraryCleanup when this library has finished loading.
  * 
  * @access private 
  */
-function loadfinished (){
+function loadfinished () :void {
   this.loading = false;
   if (this.onload.ready) this.onload.sendEvent(true);
 }
@@ -197,20 +184,20 @@ static function stripQueryString(str:String):String {
   * Callback for runtime loaded libraries
   * @access private
   */
-static function __LZsnippetLoaded (url){
+static function __LZsnippetLoaded (url:String) :void {
     // find the lib with this url
     // Strip out query string
     url = LzLibrary.stripQueryString(url);
-    var lib = null;
-    var libs = LzLibrary.libraries;
-    for (var l in libs ) {
+    var lib:LzLibrary = null;
+    var libs:Object = LzLibrary.libraries;
+    for (var l:String in libs) {
         var libhref = LzLibrary.stripQueryString(libs[l].href);
         if (libhref == url) {
             lib = libs[l];
             break;
         }
     }
-    
+
     if (lib == null) {
         Debug.error("could not find library with href", url);
     } else {

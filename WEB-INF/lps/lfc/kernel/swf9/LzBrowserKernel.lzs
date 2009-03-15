@@ -14,8 +14,10 @@
   */
 class LzBrowserKernel {
 
-#passthrough (toplevel:true) {  
-  import flash.net.*;
+#passthrough (toplevel:true) {
+  import flash.net.navigateToURL;
+  import flash.net.SharedObject;
+  import flash.net.URLRequest;
   import flash.system.Capabilities;
   import flash.system.Security;
   import flash.system.System;
@@ -29,7 +31,7 @@ class LzBrowserKernel {
   * @param String target: Optionally specifies a named frame to display the contents of the URL.
   * The document specified by URL is loaded into the current browser frame by default.
   */
-static function loadURL ( url, target=null, features=null ){
+static function loadURL (url:String, target:String=null, features:String=null) :void {
   navigateToURL(new URLRequest(url), target);
 }
 
@@ -43,7 +45,7 @@ static function loadURL ( url, target=null, features=null ){
   * By default, the javascript specified in 'js' is executed in the current
   * browser frame .
   */
-static function loadJS ( js, target='_self'){
+static function loadJS (js:String, target:String='_self') :void {
   navigateToURL(new URLRequest('javascript:' + js + ';void(0);'), target);
 }
 
@@ -53,16 +55,16 @@ static function loadJS ( js, target='_self'){
   * @keywords flashspecific
   */
 static function callJS (...args) :* {
-    var js = args[0];// String js: Browser javascript to execute
-    var callback = args[1];
+    var js:String = args[0];// String js: Browser javascript to execute
+    var callback:* = args[1];
     //DojoExternalInterface.call.apply(null, args);
     if (LzBrowserKernel.jsready != true) {
         LzBrowserKernel.__jslocked = true;
     }
     if (LzBrowserKernel.__jslocked == true) {
         if (callback != false) {
-            var o = [];
-            for (var i = 0; i < args.length; i++) {
+            var o:Array = [];
+            for (var i:int = 0; i < args.length; i++) {
                 o[i] = args[i];
             }
             LzBrowserKernel.__jscallq.push(o);
@@ -86,23 +88,23 @@ static function callJS (...args) :* {
 }
 
 /** @access private */ 
-static var jsready = false;
+static var jsready :Boolean = false;
 /** @access private */ 
-static var __jscallback = null;
+static var __jscallback :* = null;
 /** @access private */ 
-static var __jslocked = false;
+static var __jslocked :Boolean = false;
 /** @access private */ 
-static var __jscallq = [];
+static var __jscallq :Array = [];
 
 // called from DojoExternalInterface
 /** @access private */ 
-static function __jsready () { 
+static function __jsready () :void { 
     //Debug.write('jsready', LzBrowserKernel.__jscallq);
-    LzBrowserKernel.jsready=true;
+    LzBrowserKernel.jsready = true;
     LzBrowserKernel._dequeueJS();
 }
 
-static function callJSReturn (a) {
+static function callJSReturn (a:*) :void {
     if (LzBrowserKernel.__jscallback) {
         //Debug.write('callJSReturn', a, LzBrowserKernel.__jscallback);
         LzBrowserKernel.__jscallback.call(null, a);
@@ -111,12 +113,12 @@ static function callJSReturn (a) {
 }
 
 /** @access private */ 
-static function _dequeueJS () {
+static function _dequeueJS () :void {
     //Debug.write('_dequeueJS');
     LzBrowserKernel.__jslocked = false;
     LzBrowserKernel.__jscallback = null;
     if (LzBrowserKernel.__jscallq.length > 0) {
-        var a = LzBrowserKernel.__jscallq.pop();
+        var a:Array = LzBrowserKernel.__jscallq.pop();
         //Debug.write('calling with args q', a);
         LzBrowserKernel.callJS.apply(LzBrowserKernel, a);
     }
@@ -126,24 +128,24 @@ static function _dequeueJS () {
   * Sets the browser history to a specified offset.
   * @access private
   */
-static function setHistory(n) {
+static function setHistory(n:*) :void {
     //Debug.write('__setHistory', n);
     LzBrowserKernel.callJS('lz.embed.history.set', null, n);
 }
 
-static function getPersistedObject(n) {
+static function getPersistedObject(n:String) :SharedObject {
     try {
         return SharedObject.getLocal(n);
-    } catch (err) {
-        return null;
+    } catch (err:Error) {
     }
+    return null;
 }
 
 /**
   * Invoked by browser JavaScript to call a method
   * @access private
   */
-static function callMethod(js) { 
+static function callMethod(js:*) :* { 
     return lz.Utils.safeEval(js);
 }
 
@@ -175,7 +177,7 @@ static function getOS () :String {
   * @return String : the URL the swf was loaded from
   * 
   */
-static function getLoadURL () {
+static function getLoadURL () :String {
   return LFCApplication.stage.loaderInfo.loaderURL;
 }
 
@@ -188,7 +190,7 @@ static function getLoadURL () {
   * @return String: The value for a key that appears in the request to the lps
   * server
   */
-static function getInitArg (name) {
+static function getInitArg (name:String) :* {
   var parameters = LFCApplication.stage.loaderInfo.parameters;
   if (parameters == null)
     return null;
@@ -201,7 +203,7 @@ static function getInitArg (name) {
   * 
   * @return String: The id the app was started with
   */
-static function getAppID() {
+static function getAppID() :* {
     return LzBrowserKernel.getInitArg('id');
 }
 
@@ -210,7 +212,7 @@ static function getAppID() {
   * @keywords flashspecific private
   * @param Boolean truefalse: boolean value - true for on, false for off.
   */
-static function showMenu (truefalse) {
+static function showMenu (truefalse:Boolean) :void {
   LFCApplication.stage.showDefaultContextMenu = truefalse;  
 }
 
@@ -220,7 +222,7 @@ static function showMenu (truefalse) {
   * 
   * @param String str: String to set the system clipboard to
   */
-static function setClipboard (str){
+static function setClipboard (str:String) :void {
   System.setClipboard(str);
 }
 
@@ -230,7 +232,7 @@ static function setClipboard (str){
   * 
   * @return: True if a screen reader is active and the Flash player is focused
   */
-static function isAAActive ():Boolean{
+static function isAAActive () :Boolean {
   return Capabilities.hasAccessibility && Accessibility.active;
 }
 
@@ -239,7 +241,7 @@ static function isAAActive ():Boolean{
   * @keywords flashspecific
   * @access private
   */
-static function updateAccessibility () {
+static function updateAccessibility () :void {
   Accessibility.updateProperties();
 }
 
@@ -248,7 +250,7 @@ static function updateAccessibility () {
   * @keywords flashspecific
   * @access private
   */
-static function loadProxyPolicy (url) {
+static function loadProxyPolicy (url:String) :void {
   Security.loadPolicyFile(url);
 }
 
