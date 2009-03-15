@@ -42,6 +42,7 @@ dynamic public class LzSprite extends Sprite {
   import flash.net.URLRequest;
   import flash.system.LoaderContext;
   import flash.text.TextField;
+  import flash.ui.ContextMenu;
 }#
 
 #passthrough  {
@@ -1430,7 +1431,7 @@ dynamic public class LzSprite extends Sprite {
 
       /* LzSprite.setContextMenu
        * Install menu items for the right-mouse-button 
-       * @param LzContextMenu cmenu: LzContextMenu to install on this view
+       * @param LzContextMenu lzmenu: LzContextMenu to install on this view
        */
       function setContextMenu (lzmenu:LzContextMenu) :void {
           this.__contextmenu = lzmenu;
@@ -1445,7 +1446,10 @@ dynamic public class LzSprite extends Sprite {
           // property of MovieClip.prototype, which puts the menu on
           // every MovieClip by default. Not sure if there's any way
           // to do that in swf9.
-          LzSprite.prototype.contextMenu = (lzmenu != null ? lzmenu.kernel.__LZcontextMenu() : null);
+          var cmenu:ContextMenu = (lzmenu != null ? lzmenu.kernel.__LZcontextMenu() : null);
+          LzSprite.prototype.contextMenu = cmenu;
+          // also show the default menu for the main sprite
+          LFCApplication._sprite.contextMenu = cmenu;
       }
 
       /**

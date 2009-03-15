@@ -14,16 +14,22 @@ class LzMouseKernel  {
     import flash.display.Sprite;
     import flash.events.Event;
     import flash.events.MouseEvent;
+    import flash.text.TextField;
     import flash.ui.Mouse;
     import flash.ui.MouseCursor;
     }#
 
 
+    //////////////////
+    // MOUSE EVENTS //
+    //////////////////
+
     // sends mouse events to the callback
-    static function __sendEvent(view:*, eventname:String) :void {
+    static function __sendEvent (view:*, eventname:String) :void {
         if (__callback) __scope[__callback](eventname, view);
         //Debug.write('LzMouseKernel event', eventname);
     }
+
     static var __callback:String = null;
     static var __scope:* = null;
     static var __lastMouseDown:LzSprite = null;
@@ -54,7 +60,7 @@ class LzMouseKernel  {
     }
 
     // Handles global mouse events
-    static function __mouseHandler(event:MouseEvent):void {
+    static function __mouseHandler (event:MouseEvent) :void {
         var eventname:String = 'on' + event.type.toLowerCase();
         if (eventname == 'onmouseup' && __lastMouseDown != null) {
             // call mouseup on the sprite that got the last mouse down
@@ -70,7 +76,7 @@ class LzMouseKernel  {
     }
 
     // sends mouseup and calls __globalmouseup when the mouse goes up outside the app - see LPP-7724
-    static function __mouseUpOutsideHandler():void {
+    static function __mouseUpOutsideHandler () :void {
         if (__lastMouseDown != null) {
             var ev:MouseEvent = new MouseEvent('mouseup');
             __lastMouseDown.__globalmouseup(ev);
@@ -79,14 +85,19 @@ class LzMouseKernel  {
     }
 
     // handles MOUSE_LEAVE event
-    static function __mouseLeaveHandler(event:Event = null):void {
+    static function __mouseLeaveHandler (event:Event = null) :void {
         __mouseLeft = true;
         __sendEvent(null, 'onmouseleave');
     }
 
-    static function __mouseWheelHandler(event:MouseEvent):void {
+    static function __mouseWheelHandler (event:MouseEvent) :void {
         lz.Keys.__mousewheelEvent(event.delta);
     }
+
+
+    //////////////////
+    // MOUSE CURSOR //
+    //////////////////
 
     /**
     * Shows or hides the hand cursor for all clickable views.
@@ -158,8 +169,11 @@ class LzMouseKernel  {
             cursorSprite.stopDrag();
             cursorSprite.visible = false;
             LFCApplication.stage.removeEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
+            LFCApplication.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
             Mouse.show();
         } else {
+            // you can only hide the Mouse when Mouse.cursor is AUTO
+            Mouse.cursor = MouseCursor.AUTO;
             Mouse.hide();
             cursorSprite.x = LFCApplication.stage.mouseX;
             cursorSprite.y = LFCApplication.stage.mouseY;
@@ -167,15 +181,47 @@ class LzMouseKernel  {
             // respond to mouse move events
             cursorSprite.startDrag();
             LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
+            LFCApplication.stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
             cursorSprite.visible = true;
         }
     }
 
-    static function mouseLeaveHandler(evt:Event):void {
+    /**
+     * Triggered when cursor leaves screen or context-menu is opened, in both
+     * cases we must display the system cursor
+     */
+    private static function mouseLeaveHandler (event:Event) :void {
         cursorSprite.visible = false;
+        Mouse.show();
+        // use capture-phase because most sprites call stopPropagation() for mouse-events
+        LFCApplication.stage.addEventListener(MouseEvent.MOUSE_OVER, mouseEnterHandler, true);
     }
 
-    static function getCursorResource (resource:String):Sprite {
+    /**
+     * Triggered when cursor enters screen or context-menu is closed
+     */
+    private static function mouseEnterHandler (event:Event) :void {
+        cursorSprite.visible = true;
+        Mouse.hide();
+        LFCApplication.stage.removeEventListener(MouseEvent.MOUSE_OVER, mouseEnterHandler, true);
+    }
+
+    /**
+     * Hide custom cursor over selectable TextFields otherwise both the ibeam-cursor
+     * and the custom cursor are displayed
+     */
+    private static function mouseMoveHandler (event:MouseEvent) :void {
+        var target:Object = event.target;
+        if (target is TextField && target.selectable) {
+            cursorSprite.visible = false;
+            Mouse.show();
+        } else {
+            Mouse.hide();
+            cursorSprite.visible = true;
+        }
+    }
+
+    private static function getCursorResource (resource:String) :Sprite {
           if (! (LzAsset.isMovieClipAsset(resource) || LzAsset.isMovieClipLoaderAsset(resource))) {
               // only swf cursors are supported
               return null;
@@ -196,7 +242,6 @@ class LzMouseKernel  {
           var asset:Sprite = new assetclass();
           asset.scaleX = 1.0;
           asset.scaleY = 1.0;
-          //Debug.write('cursor asset', asset);
           return asset;
     }
 
@@ -211,6 +256,7 @@ class LzMouseKernel  {
         cursorSprite.stopDrag();
         cursorSprite.visible = false;
         LFCApplication.stage.removeEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
+        LFCApplication.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
         globalCursorResource = null;
         Mouse.cursor = MouseCursor.AUTO;
         Mouse.show();
@@ -250,6 +296,7 @@ class LzMouseKernel  {
         cursorSprite = new Sprite();
         cursorSprite.mouseChildren = false;
         cursorSprite.mouseEnabled = false;
+        cursorSprite.visible = false;
         // Add the cursor DisplayObject to the root sprite
         LFCApplication.addChild(cursorSprite);
         cursorSprite.x = -10000;
