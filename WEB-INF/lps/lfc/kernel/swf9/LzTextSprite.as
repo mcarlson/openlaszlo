@@ -10,16 +10,24 @@
   */
 public class LzTextSprite extends LzSprite {
     #passthrough (toplevel:true) {
+        import flash.display.Bitmap;
         import flash.display.DisplayObject;
+        import flash.display.DisplayObjectContainer;
+        import flash.display.InteractiveObject;
+        import flash.display.SimpleButton;
+        import flash.display.Sprite;
+        import flash.display.Stage;
         import flash.events.Event;
         import flash.events.MouseEvent;
         import flash.events.TextEvent;
+        import flash.geom.Point;
         import flash.net.URLRequest;
         import flash.text.AntiAliasType;
         import flash.text.TextField;
         import flash.text.TextFieldAutoSize;
         import flash.text.TextFormat;
         import flash.text.TextLineMetrics;
+        import flash.ui.MouseCursor;
     }#
 
         #passthrough  {
@@ -73,21 +81,218 @@ public class LzTextSprite extends LzSprite {
         public function LzTextSprite (newowner:LzView = null, args:Object = null) {
             super(newowner,false);
             // owner:*, isroot:Boolean
-            this.textfield = createTextField(0,0,400,20);
+            var tfield:TextField = this.textfield = createTextField(0,0,400,20);
+            tfield.addEventListener(TextEvent.LINK, textLinkHandler);
+            tfield.addEventListener(MouseEvent.CLICK, handleTextfieldMouse);
+            tfield.addEventListener(MouseEvent.DOUBLE_CLICK, handleTextfieldMouse);
+            tfield.addEventListener(MouseEvent.MOUSE_DOWN, handleTextfieldMouse);
+            tfield.addEventListener(MouseEvent.MOUSE_UP, handleTextfieldMouse);
+            tfield.addEventListener(MouseEvent.MOUSE_OVER, handleTextfieldMouse);
+            tfield.addEventListener(MouseEvent.MOUSE_OUT, handleTextfieldMouse);
+        }
+
+        private var _ignoreclick:Boolean = false;
+        private var _usecursor:Boolean = true;
+        private var _lastobject:DisplayObject = null;
+
+        private function handleTextfieldMouse (e:MouseEvent) :void {
+            // FIXME: changes to clickable or selectable while cursor
+            // is over text may break mouse-events
+            var type:String = e.type;
+            if (type == MouseEvent.MOUSE_UP && this._ignoreclick) {
+                // first MOUSE_UP ...
+                e.stopPropagation();
+            } else if (type == MouseEvent.CLICK && this._ignoreclick) {
+                // ... then CLICK, now clear flag
+                // FIXME: click-event may not be dispatched
+                // (e.g. if textfield is made invisible after onmousedown)
+                this._ignoreclick = false;
+                e.stopPropagation();
+            } else if (this.clickable) {
+                // clickable -> handle mouse-event
+                if (type == MouseEvent.DOUBLE_CLICK) {
+                    this.handleMouse_DOUBLE_CLICK(e);
+                } else {
+                    this.__mouseEvent(e);
+                }
+            } else if (this.textfield.selectable) {
+                // ignore mouse-event for swf8 compatibility
+                this.__ignoreMouseEvent(e);
+            } else {
+                // forward mouse-event to next sprite
+                this.__forwardMouseEventToSprite(e);
             }
+
+            if (type == MouseEvent.MOUSE_OUT) {
+                if (this._usecursor) {
+                    // TODO: restore also necessary for other events?
+                    LzMouseKernel.restoreCursorLocal();
+                    this._usecursor = false;
+                }
+                // clear _lastobject
+                this._lastobject = null;
+            }
+        }
+
+        private function __ignoreMouseEvent (e:MouseEvent) :void {
+            if (e.type != MouseEvent.MOUSE_UP || LzMouseKernel.__lastMouseDown === this) {
+                // don't cancel "onmouseup" if another sprite was selected
+                e.stopPropagation();
+            }
+        }
+
+        private function __forwardMouseEventToSprite (e:MouseEvent) :void {
+            // find next object, default to last one
+            var obj:DisplayObject = this.getNextMouseObject(e) || this._lastobject;
+            if (obj != null) {
+                this._lastobject = obj;
+                if (obj is InteractiveObject) {
+                    var type:String = e.type;
+                    var forward:Boolean = true;
+                    if (type == MouseEvent.MOUSE_OVER || type == MouseEvent.MOUSE_OUT) {
+                        // don't report onmouseover/out events if object didn't change
+                        var relObj:InteractiveObject = e.relatedObject;
+                        if (relObj is TextField && relObj.parent is LzTextSprite) {
+                            // not again a textfield!
+                            var lztext:LzTextSprite = LzTextSprite(relObj.parent);
+                            if (lztext.forwardsMouse) {
+                                relObj = lztext.getNextMouseObject(e) as InteractiveObject;
+                            }
+                        }
+                        if (relObj === obj) {
+                            forward = false;
+                        } else if (relObj is SimpleButton) {
+                            var p:DisplayObjectContainer = relObj.parent;
+                            if (p is LzSprite && p === obj) {
+                                forward = false;
+                            }
+                        }
+                    }
+
+                    // display hand-cursor or custom cursor
+                    if (type == MouseEvent.MOUSE_OVER) {
+                        var cursor:String = null;
+                        if (obj is Sprite) {
+                            var sprite:Sprite = Sprite(obj);
+                            if (sprite.buttonMode && sprite.useHandCursor) {
+                                // need to respect global cursor setting
+                                if (! LzMouseKernel.hasGlobalCursor) {
+                                    cursor = MouseCursor.BUTTON;
+                                }
+                            }
+                            if (sprite is LzSprite) {
+                                var lzsprite:LzSprite = LzSprite(sprite);
+                                if (lzsprite.cursorResource != null) {
+                                    cursor = lzsprite.cursorResource;
+                                }
+                            }
+                        }
+                        if (cursor != null) {
+                            this._usecursor = true;
+                            LzMouseKernel.setCursorLocal(cursor);
+                        }
+                    }
+
+                    e.stopPropagation();
+                    if (forward) {
+                        obj.dispatchEvent(e);
+                    }
+                } else {
+                    // TODO: what else can this be? needs more testing!
+                    // Debug.debug("%s: not InteractiveObject = %w (%w)", e.type, obj, this.owner);
+                    e.stopPropagation();
+                    obj.dispatchEvent(e);
+                }
+            } else {
+                // TODO: when is this possible?
+                // Debug.warn("%s: no forwarding possible (%w)", e.type, this.owner);
+            }
+        }
+
+        function get forwardsMouse () :Boolean {
+            return ! (this.clickable || this.textfield.selectable);
+        }
+
+        private static const ZERO_POINT:Point = new Point(0, 0);
+
+        function getNextMouseObject (e:MouseEvent) :DisplayObject {
+            const FUDGE:int = 1;
+            const FUDGE_WIDTH:int = 4; // needs to be 4, flash bug?
+            var tfield:TextField = this.textfield;
+            var stage:Stage = LFCApplication.stage;
+            var x:Number = e.stageX, y:Number = e.stageY;
+            if (e.type == MouseEvent.MOUSE_OUT) {
+                if (x == -1 && y == -1) {
+                    // mouse left the screen, mouse-event values are invalid (-1, -1),
+                    // need to use values from stage instead
+                    x = stage.mouseX, y = stage.mouseY;
+                } else {
+                    // we need to determine/approximate the point the cursor
+                    // was before it left the textfield
+                    var zero:Point = tfield.localToGlobal(ZERO_POINT);
+                    x = Math.max(zero.x + FUDGE, Math.min(x, zero.x + tfield.width - FUDGE_WIDTH));
+                    y = Math.max(zero.y + FUDGE, Math.min(y, zero.y + tfield.height - FUDGE));
+                }
+            } else if (e.type == MouseEvent.MOUSE_OVER) {
+                // some mouse-over events are sent too early, in which case the mouse-cursor
+                // isn't yet over the textfield, therefore need to adjust values
+                var zero:Point = tfield.localToGlobal(ZERO_POINT);
+                x = Math.max(zero.x + FUDGE, Math.min(x, zero.x + tfield.width - FUDGE_WIDTH));
+                y = Math.max(zero.y + FUDGE, Math.min(y, zero.y + tfield.height - FUDGE));
+            }
+
+            var tindex:int = -1;
+            var objs:Array = stage.getObjectsUnderPoint(new Point(x, y));
+            for (var i:int = objs.length - 1; i >= 0; --i) {
+                var obj:DisplayObject = objs[i];
+                if (obj === tfield) {
+                    tindex = i;
+                    break;
+                }
+            }
+
+            if (tindex == -1) {
+                // can happen if invisible...
+                return null;
+            }
+
+            for (var i:int = tindex - 1; i >= 0; --i) {
+                var obj:DisplayObject = objs[i];
+                if (obj is Bitmap) {
+                    // need to use parent for Bitmap
+                    obj = obj.parent;
+                } else if (obj is TextField && obj.parent is LzTextSprite) {
+                    // skip all mouse-forwarding LzTextSprites
+                    if (LzTextSprite(obj.parent).forwardsMouse) {
+                        continue;
+                    }
+                }
+                if (obj is InteractiveObject) {
+                    var iobj:InteractiveObject = InteractiveObject(obj);
+                    if (iobj.mouseEnabled) {
+                        if (iobj is Sprite) {
+                            // need to test hitArea for Sprite
+                            var hitarea:Sprite = Sprite(iobj).hitArea;
+                            if (hitarea != null) {
+                                if (! hitarea.hitTestPoint(x, y)) {
+                                    continue;
+                                }
+                            }
+                        }
+                        return iobj;
+                    }
+                } else {
+                    // TODO: what else can this be? needs more testing!
+                    return obj;
+                }
+            }
+
+            return null;
+        }
 
         override public function setClickable( c:Boolean ):void {
             if (this.clickable == c) return;
-
-            this.textfield.mouseEnabled = c || this.textfield.selectable;
-            this.setCancelBubbling();
-
             this.clickable = c;
-            if (c) {
-                attachMouseEvents(this.textfield);
-                } else {
-                removeMouseEvents(this.textfield);
-            }
         }
 
         public function addScrollEventListener():void {
@@ -117,49 +322,10 @@ public class LzTextSprite extends LzSprite {
             }
         }
 
-
-        // turn on/off canceling of mouse event bubbling
-        private function setCancelBubbling():void {
-            var dobj:DisplayObject = this.textfield;
-
-            // base on the displayobject's mouseenabled property - on for selectable
-            var prevent = this.textfield.mouseEnabled;
-            // if clickable is on, we don't want to cancel events
-            if (this.clickable) prevent = false;
-
-            if (prevent) {
-                dobj.addEventListener(MouseEvent.CLICK, __ignoreMouseEvent);
-                dobj.addEventListener(MouseEvent.DOUBLE_CLICK, __ignoreMouseEvent);
-                dobj.addEventListener(MouseEvent.MOUSE_DOWN, __ignoreMouseEvent);
-                dobj.addEventListener(MouseEvent.MOUSE_UP, __ignoreMouseEvent);
-                dobj.addEventListener(MouseEvent.MOUSE_OVER, __ignoreMouseEvent);
-                dobj.addEventListener(MouseEvent.MOUSE_OUT, __ignoreMouseEvent);
-            } else {
-                dobj.removeEventListener(MouseEvent.CLICK, __ignoreMouseEvent);
-                dobj.removeEventListener(MouseEvent.DOUBLE_CLICK, __ignoreMouseEvent);
-                dobj.removeEventListener(MouseEvent.MOUSE_DOWN, __ignoreMouseEvent);
-                dobj.removeEventListener(MouseEvent.MOUSE_UP, __ignoreMouseEvent);
-                dobj.removeEventListener(MouseEvent.MOUSE_OVER, __ignoreMouseEvent);
-                dobj.removeEventListener(MouseEvent.MOUSE_OUT, __ignoreMouseEvent);
-            }
-        }
-
-        private function __ignoreMouseEvent(e:MouseEvent) :void {
-            if (e.type != MouseEvent.MOUSE_UP || LzMouseKernel.__lastMouseDown == this) {
-                // don't cancel "onmouseup" if another sprite was selected
-                e.stopPropagation();
-            }
-        }
-
-        public function enableClickableLinks( enabled:Boolean):void {
-            if (enabled) {
-                addEventListener(TextEvent.LINK, textLinkHandler);
-            } else {
-                removeEventListener(TextEvent.LINK, textLinkHandler);
-            }
-        }
-
-        public function textLinkHandler(e:TextEvent) {
+        public function textLinkHandler(e:TextEvent) :void {
+            // ignore the next onclick-event for swf8-compatibility
+            // Debug.write("textLinkHandler on %w", this);
+            this._ignoreclick = true;
             this.owner.ontextlink.sendEvent(e.text);
         }
 
@@ -191,7 +357,7 @@ public class LzTextSprite extends LzSprite {
             tfield.width = w;
             tfield.height = h;
             tfield.border = false;
-            tfield.mouseEnabled = false;
+            tfield.mouseEnabled = true;
             tfield.tabEnabled = LFCApplication.textfieldTabEnabled;
             //tfield.cacheAsBitmap = true;
             addChild(tfield);
@@ -457,8 +623,6 @@ public class LzTextSprite extends LzSprite {
          */
         public function setSelectable ( isSel:Boolean ):void {
             this.textfield.selectable = isSel;
-            this.textfield.mouseEnabled = isSel || this.clickable;
-            this.setCancelBubbling();
         }
       
         public function getTextWidth ( ):Number {

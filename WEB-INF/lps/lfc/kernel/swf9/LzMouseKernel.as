@@ -116,6 +116,11 @@ class LzMouseKernel  {
             }
             return __builtinCursors;
         }
+
+        static function get hasGlobalCursor () :Boolean {
+            var gcursor:String = globalCursorResource;
+            return ! (gcursor == null || (gcursor == MouseCursor.AUTO && useBuiltinCursor));
+        }
     }#
 
     /**

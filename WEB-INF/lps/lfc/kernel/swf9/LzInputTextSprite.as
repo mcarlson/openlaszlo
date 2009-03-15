@@ -41,7 +41,6 @@ public class LzInputTextSprite extends LzTextSprite {
         } else {
             textfield.type = TextFieldType.DYNAMIC;
         }
-        textfield.mouseEnabled = false;
 
         /*
           TODO [hqm 2008-01]

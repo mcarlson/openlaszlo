@@ -41,6 +41,7 @@ dynamic public class LzSprite extends Sprite {
   import flash.media.ID3Info;
   import flash.net.URLRequest;
   import flash.system.LoaderContext;
+  import flash.text.TextField;
 }#
 
 #passthrough  {
@@ -697,6 +698,18 @@ dynamic public class LzSprite extends Sprite {
                 }
             } else if (eventname == 'onmouseupoutside') {
                 this.__mousedown = false;
+            } else if (eventname == 'onmouseout' || eventname == 'onmouseover') {
+                var relObj:InteractiveObject = e.relatedObject;
+                if (relObj is TextField && relObj.parent is LzTextSprite) {
+                    var lztext:LzTextSprite = LzTextSprite(relObj.parent);
+                    if (lztext.forwardsMouse) {
+                        var nextMouse:DisplayObject = lztext.getNextMouseObject(e);
+                        if (nextMouse === this) {
+                            // don't report onmouseover/out events if object didn't change
+                            skipevent = true;
+                        }
+                    }
+                }
             }
 
             // cancel mouse event bubbling...
@@ -1397,7 +1410,8 @@ dynamic public class LzSprite extends Sprite {
           // background is required for:
           // - LPP-7842 (SWF9: context-menu not shown for view without bgcolor/content)
           // - LPP-7864 (SWF: cachebitmap interferes with mouse-events)
-          return this.__contextmenu != null || (this.clickable && this.cacheAsBitmap);
+          // - LPP-7551 (several text-link issues)
+          return this.__contextmenu != null || this.clickable;
       }
 
       function updateBackground () :void {
