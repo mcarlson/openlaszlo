@@ -778,8 +778,8 @@ LzSprite.prototype.CSSDimension = function (value, units) {
     if ($debug) { 
         if (value !== result) { 
             Debug.warn("%w: coerced %w to %w", arguments.callee, value, result); 
+        }
     }
-}
 
     return Math.round(result) + (units ? units : 'px');
 }
