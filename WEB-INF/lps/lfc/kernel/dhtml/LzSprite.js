@@ -692,8 +692,20 @@ LzSprite.prototype.setResource = function ( r ){
         return;
     }
 
-    var urls = this.getResourceUrls(r);
+    var res = LzResourceLibrary[r];
+    if (res) {
+        this.resourceWidth = res.width;
+        this.resourceHeight = res.height;
+        if (this.quirks.use_css_sprites && res.sprite) {
+            var baseurl = this.getBaseUrl(res);
+            this.__csssprite = baseurl + res.sprite;
+        } else {
+            this.__csssprite = null;
+            if (this.__bgimage) this.__setBGImage(null);
+        }
+    }
 
+    var urls = this.getResourceUrls(r);
     this.owner.resourceevent('totalframes', urls.length);
     this.frames = urls;
 
@@ -707,6 +719,7 @@ LzSprite.prototype.setResource = function ( r ){
     //if (urls.length > 1) this.play();
 }
 
+// @devnote also used in lz.drawview.getImage()
 LzSprite.prototype.getResourceUrls = function (resourcename) {
     var urls = [];
     // look up resource name in LzResourceLibrary
@@ -720,27 +733,19 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
         return urls;
     }
 
-    this.resourceWidth = res.width;
-    this.resourceHeight = res.height;
-
-    var baseurl;
-    if (res.ptype && res.ptype == 'sr') {
-        baseurl = lz.embed.options.serverroot;
-    } else {
-        baseurl = lz.embed.options.approot;
-    }
-
-    if (this.quirks.use_css_sprites && res.sprite) {
-        this.__csssprite = baseurl + res.sprite;
-    } else {
-        this.__csssprite = null;
-        if (this.__bgimage) this.__setBGImage(null);
-    }
-
+    var baseurl = this.getBaseUrl(res);
     for (var i = 0; i < res.frames.length; i++) {
         urls[i] = baseurl + res.frames[i];
     }
     return urls;
+}
+
+LzSprite.prototype.getBaseUrl = function (resource) {
+    if (resource.ptype == 'sr') {
+        return lz.embed.options.serverroot;
+    } else {
+        return lz.embed.options.approot;
+    }
 }
 
 LzSprite.prototype.CSSDimension = function (value, units) {
@@ -756,8 +761,8 @@ LzSprite.prototype.CSSDimension = function (value, units) {
     if ($debug) { 
         if (value !== result) { 
             Debug.warn("%w: coerced %w to %w", arguments.callee, value, result); 
-        } 
-    } 
+    }
+}
 
     return Math.round(result) + (units ? units : 'px');
 }

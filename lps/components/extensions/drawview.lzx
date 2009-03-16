@@ -629,19 +629,23 @@
             }
 
             static var images = {};
+            var __drawImageCnt = 0;
 
             function getImage(url) {
-                var i = lz.drawview.images[url];
-                if (! i) {
-                    if ( url.indexOf('http:') != 0 && url.indexOf('https:') != 0 ) {
-                        url = this.sprite.getResourceUrls(url);
-                        url = url[0];
+                var img = lz.drawview.images[url];
+                if (! img) {
+                    var loadurl = url;
+                    if (url.indexOf('http:') != 0 && url.indexOf('https:') != 0) {
+                        loadurl = this.sprite.getResourceUrls(url)[0];
                     }
-                    i = new Image();
-                    i.src = url;
-                    lz.drawview.images[url] = i;
+                    img = new Image();
+                    img.src = loadurl;
+                    lz.drawview.images[url] = img;
+                    if (loadurl != url) {
+                        lz.drawview.images[loadurl] = img;
+                    }
                 }
-                return i;
+                return img;
             }
 
             function drawImage(image, x, y, w, h, r) {
@@ -649,15 +653,34 @@
                 if (typeof image == 'string') {
                     image = this.getImage(image);
                 }
-                var tr = r ? r : 0;
-                this.context.save();
-                this.clear();
-                var tx = x ? x : 0;
-                var ty = y ? y : 0;
-                this.context.translate(tx, ty);
-                this.context.rotate(tr);
-                this.context.drawImage(image, 0, 0, w, h);
-                this.context.restore();
+                if (! (image && image.nodeType == 1 && image.nodeName == 'IMG')) {
+                    if ($debug) {
+                        Debug.warn("Invalid image for lz.drawview.drawImage(): %w", image);
+                    }
+                } else if (! image.complete) {
+                    // TODO [20090308 anba] drawImage needs to be defered,
+                    // maybe emit a debug-message to inform user
+                    var fname = '__drawImage' + (this.__drawImageCnt++);
+                    // create a closure to save arguments
+                    this[fname] = function () {
+                        // remove handler and delete closure
+                        lz.embed.removeEventHandler(image, 'load', this, fname);
+                        delete this[fname];
+                        this.drawImage(image, x, y, w, h, r);
+                    }
+                    // defer until image is completely loaded
+                    lz.embed.attachEventHandler(image, 'load', this, fname);
+                } else {
+                    var tr = r ? r : 0;
+                    this.context.save();
+                    this.clear();
+                    var tx = x ? x : 0;
+                    var ty = y ? y : 0;
+                    this.context.translate(tx, ty);
+                    this.context.rotate(tr);
+                    this.context.drawImage(image, 0, 0, w, h);
+                    this.context.restore();
+                }
             }
 
             function __initie() {
