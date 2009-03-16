@@ -102,11 +102,23 @@ var LzSprite = function(owner, isroot) {
                 } else {
                     var el = e.relatedTarget;
                 }
+                var quirks = LzSprite.prototype.quirks;
+                if (quirks.inputtext_anonymous_div) {
+                    try {
+                        // Only try to access parentNode to workaround a Firefox bug,
+                        // where relatedTarget may point to an anonymous div of an
+                        // input-element (in which case accessing parentNode throws
+                        // a security exception). (LPP-7796)
+                        el && el.parentNode;
+                    } catch (e) {
+                        return;
+                    }
+                }
                 if (el && el.owner && el.className.indexOf('lz') == 0) {
-                    if (LzSprite.prototype.quirks.fix_ie_clickable) {
+                    if (quirks.fix_ie_clickable) {
                         LzInputTextSprite.prototype.__setglobalclickable(true);
                     }
-                    if (LzSprite.prototype.quirks.focus_on_mouseover) {
+                    if (quirks.focus_on_mouseover) {
                         if (LzInputTextSprite.prototype.__lastshown == null) div.focus();
                     }
                     LzKeyboardKernel.setKeyboardControl(true);
@@ -114,7 +126,7 @@ var LzSprite = function(owner, isroot) {
                     LzMouseKernel.__resetMouse();
                     this.mouseisover = true;
                 } else {
-                    if (LzSprite.prototype.quirks.focus_on_mouseover) {
+                    if (quirks.focus_on_mouseover) {
                         if (LzInputTextSprite.prototype.__lastshown == null) div.blur();
                     }
                     LzKeyboardKernel.setKeyboardControl(false);
@@ -369,6 +381,7 @@ LzSprite.prototype.quirks = {
     ,inputtext_strips_newlines: false
     ,swf8_contextmenu: true
     ,dom_breaks_focus: false
+    ,inputtext_anonymous_div: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -529,7 +542,11 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['textdeco_on_textdiv'] = true;
         } else if (browser.isFirefox) {
             // DOM operations on blurring element break focus (LPP-7786)
+            // https://bugzilla.mozilla.org/show_bug.cgi?id=481468
             quirks['dom_breaks_focus'] = true;
+            // anonymous div bug on input-elements (LPP-7796)
+            // see https://bugzilla.mozilla.org/show_bug.cgi?id=208427
+            quirks['inputtext_anonymous_div'] = true;
             if (browser.version < 2) {
                 // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
                 quirks['firefox_autocomplete_bug'] = true;
