@@ -133,6 +133,28 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   var printLength:Number = 1024;
 
   /**
+   * Debug.write will abbreviate the printed representation of any object
+   * whose depth is greater than Debug.printDepth (default value
+   * 8).
+   *
+   * @type Number
+   * @see: Debug.inspectPrintDepth
+   */
+  var printDepth:Number = 8;
+
+  /**
+   * Debug.write will not normally recurse into self-referential
+   * objects, but instead abbreviate self-references.  The detection
+   * of circular objects requires some additional overhead.  Setting
+   * Debug.printDetectCircular to false will disable this detection and
+   * overhead (at the risk of a stack oveflow if a self-referential
+   * object is printed).
+   *
+   * @type Boolean
+   */
+  var printDetectCircular:Boolean = true;
+
+  /**
    * Possible values of Debug.messageLevel (q.v.)
    * @keywords readonly
    * @type Object
@@ -512,6 +534,16 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   var inspectPrintLength:Number = 256;
 
+  /**
+   * Debug.inspect will abbreviate the printed representation of any properties
+   * whose depth is greater than Debug.inspectPrintLength (default value
+   * 1).
+   *
+   * @type Number
+   * @see Debug.printDepth
+   */
+  var inspectPrintDepth:Number = 1;
+
 
   /**
    * Explain the style bindings of properties on a node
@@ -832,10 +864,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  function __StringDescription(thing:*, pretty:Boolean, limit:Number, unique:Boolean):Object {
+  function __StringDescription(thing:*, pretty:Boolean, limit:Number, unique:Boolean, depth:Number, circular:*):Object {
     try {
-      // Evade infinite recursion
-      if (limit <= 0) return {pretty: true, description: '\xABwhoops!\xBB'};
       // Return primitive types early, so you don't stumble on them in
       // unforgiving runtimes.
       if (thing === (void 0)) {
@@ -881,8 +911,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       if (this.isStringLike(debug_name)) {
         // If the debug name does not start with '#' (indicating that it
         // is a global ID), turn pretty off
-        if (debug_name.charAt(0) != '#') {
-          pretty = (! unique);
+        if ((debug_name.charAt(0) != '#') && unique) {
+          pretty = false;
         }
         // User method returned a valid answer
         // Sanitize it
@@ -896,14 +926,14 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       } else if (this.isStringLike(thing)) {
         // No pretty for subclasses
         if (thing is String && (thing['constructor'] !== String)) {
-          pretty = (! unique);
+          pretty = false;
         }
         // abbreviate rep if necessary
         s = this.abbreviate(thing, limit);
         // print/read consistency
         var prc = (s === thing);
         // if you abbreviate, don't be pretty
-        if (! prc) { pretty = (! unique); }
+        if ((! prc) && unique) { pretty = false; }
         // escape non-printing controls that otherwise are
         // indistinguishable
         s = this.stringEscape(s, true);
@@ -920,7 +950,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           s = n;
         } else {
           // not a global function, can't be pretty if you want unique
-          pretty = (! unique);
+          if (unique) { pretty = false; }
           s = this.functionName(thing, false);
           // unnamed function, will get type and uniquified below
           if (s == null) { s = ''; }
@@ -933,7 +963,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
             (! thing.constructor['prototype']) ||
             (! (thing.constructor.prototype['isPrototypeOf'] is Function)) ||
             (! thing.constructor.prototype.isPrototypeOf(thing))) {
-          pretty = (! unique);
+          pretty = false;
         }
         // Catch wrappers (but not subtypes of wrappers)
         if (thing['constructor'] &&
@@ -961,10 +991,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
                            (u != 'undefined')) {
                          return u;
                        }
-                     } catch (e) {} })())) {
+                     } catch (e) { return ''; } })())) {
           // No pretty for these, you don't know if the user
           // toString is uniquifying
-          pretty = (! unique);
+          if (unique) { pretty = false; }
         }
         // Print unidentified objects and arrays as abbreviated list of props
         else {
@@ -978,8 +1008,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           var notPretty = indices ?
             (this.isArrayLike(thing) && (thing['constructor'] !== Array)) :
             (this.isObjectLike(thing) && (thing['constructor'] !== Object));
-          if (notPretty) {
-            pretty = (! unique);
+          if (notPretty && unique) {
+            pretty = false;
           }
 
           if (indices) {
@@ -991,7 +1021,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
                 s += '\u2026, ';
               }
               // limit - 5 ensures room for "[..., ]"
-              s += this.__String(thing[key], true, limit - 5) + ', ';
+              s += this.__String(thing[key], true, limit - 5, false, depth - 1, circular) + ', ';
               next = key + 1;
             }
             if (s != '' && i == indices.length) { s = s.substring(0, s.length - 2); }
@@ -1015,7 +1045,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
                   (! this.internalProperty(dtv))) {
                 ellip = true;
                 // limit - 5 ensures room for "{..., }"
-                s += '' + e + ': ' + this.__String(v, true, limit - 5) + ', ';
+                s += '' + e + ': ' + this.__String(v, true, limit - 5, false, depth - 1, circular) + ', ';
               } else {
                 if (ellip) {
                   s += '\u2026, ';
@@ -1066,29 +1096,87 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * Debug.printLength
    * @param Boolean unique: disambiguate representations by attaching a
    * unique identifier, default (! pretty)
+   * @param Number depth: don't descend into structures deeper than
+   * this many levels, default Debug.printDepth
+   * @param Boolean circular: detect self-referential objects, default
+   * Debug.printDetectCircular
    * @return LzMessage: String representation of thing
    *
    * @access private
    */
-  function __String (thing:*, pretty:Boolean=true, limit=(void 0), unique=(void 0)):String {
-    if (limit === (void 0)) { limit = pretty?this.printLength:64; }
+  function __String (thing:*, pretty:Boolean=true, limit=(void 0), unique=(void 0), depth=(void 0), circular=(void 0)):String {
+    // Save (and cache) original defaults, which will be bound below
+    var origPrintLength = this.printLength;
+    var origPrintDepth = this.printDepth;
+    var origPrintDetectCircular = this.printDetectCircular;
+    // Default optional arguments
+    if (limit === (void 0)) { limit = pretty ? origPrintLength:64; }
     if (unique === (void 0)) { unique = (! pretty); }
-
-    var d  = this.__StringDescription(thing, pretty, limit, unique);
-    var s = d.description;
-    if (d.pretty &&
-        ((! unique) || (! this.isObjectLike(thing))) &&
-        (s != "") && (s.length < limit)) {
-      return s;
+    if (depth === (void 0)) { depth = origPrintDepth; }
+    if (circular === (void 0)) { circular = origPrintDetectCircular; }
+    // Enforce depth
+    if (depth < 0) {
+      return '\u2026';          // ellipsis
     }
-
-    // Compute id; force if you couldn't print pretty due to
+    var s = '';
+    var id = this.IDForObject(thing);
+    // Enforce length
+    if (limit > 0) {
+      try {
+        // Enforce circular
+        if ((id !== null) && (circular is Array) && (circular[id])) {
+          var cache = circular[id];
+          // If we have a pretty name for this already, it is stored
+          // in the circular table, instead of `true`
+          if (pretty && cache && (cache !== true)) {
+            s = cache;
+//             Debug.debug("circular[%d] => %s", id, s);
+          } else {
+            unique = true;
+          }
+        } else {
+          // Note circular
+          if (id !== null && circular) {
+            // Probably a premature optimization -- don't make the array
+            // until we have to
+            if (! (circular is Array)) { circular = []; }
+            circular[id] = true;
+          }
+          // Bind defaults
+          this.printLength = limit;
+          this.printDepth = depth;
+          this.printDetectCircular = circular;
+          // Descend
+          var d  = this.__StringDescription(thing, pretty, limit, unique, depth, circular);
+          s = d.description;
+          pretty = d.pretty;
+          // Cache description for circular && pretty
+          if (s && pretty && (id !== null) && (circular is Array)) {
+            circular[id] = s;
+          }
+        }
+        // Enforce pretty && (! unique)
+        if (pretty &&
+            ((! unique) || (! this.isObjectLike(thing))) &&
+            (s != "") && (s.length < limit)) {
+          return s;
+        }
+      } finally {
+        // Restore defaults
+        this.printLength = origPrintLength;
+        this.printDepth = origPrintDepth;
+        this.printDetectCircular = origPrintDetectCircular;
+      }
+    }
+    // Force id if you couldn't print pretty due to
     // abbreviating
-    var id = this.IDForObject(thing, s.length >= limit);
+    if ((s.length >= limit) && (id === null)) {
+      id = this.IDForObject(thing, true);
+    }
     // Build representation
     var r = '\u00AB';             // <<
     r += this.__typeof(thing);
-    if (unique && (id != null)) {r += ('#' + id);}
+    if (unique && (id !== null)) {r += ('#' + id);}
     // Only abbreviate the description, don't lose the type or ID
     if (s != '') {
       var room = limit - r.length - 4; // '| ' + '...' + '>>'
@@ -1123,27 +1211,33 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   function inspectInternal (obj, showInternalProperties:Boolean=(void 0)) {
     var si = (showInternalProperties === (void 0)) ? Debug.showInternalProperties : false;
-    var opl = this.printLength;
     var octx = this.inspectContext;
+    var opdc = this.printDetectCircular;
     try {
-      try {
-        // TODO: [2003-09-12 ptw] either bind or pass as option
         // Disable printLength for printing the name of a non-object in case
         // it was abbreviated, otherwise set it short
         if (! this.isObjectLike(obj)) {
-          this.printLength = Infinity;
+          var pl = Infinity;
         } else {
-          this.printLength = this.inspectPrintLength;
+          var pl = this.inspectPrintLength;
         }
         // Turn off pretty for name
         // Note: inspectInternal is expected to return the
         // HTML-encoded string
-        var name = LzMessage.xmlEscape(this.__String(obj, false));
+        var name = LzMessage.xmlEscape(this.__String(obj, false, pl, true, 0, true));
         if (! (this.isObjectLike(obj))) {
           return name;
         }
-        // Print properties with abbreviated length
-        this.printLength = this.inspectPrintLength;
+        // Print properties with abbreviated length/depth
+        // Note self for circular detection (creates a simpler output
+        // for objects that use their parent in their name).
+        var id = this.IDForObject(obj);
+        if (id !== null) {
+          var pdc = this.printDetectCircular = [];
+          // Cache the pretty name of ourselves, if available
+          var d = this.__StringDescription(obj, true, pl, false, 0, true);
+          pdc[id] = d.pretty? d.description : true;
+        }
         this.inspectContext = obj;
 
         var names = [];
@@ -1192,20 +1286,16 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
             description += '  ' + this.computeSlotDescription(obj, key, val, wid) + '\n';
           }
         }
-      } finally {
-        this.printLength = opl;
-        this.inspectContext = octx;
-      }
-      // Annotate 'weight' if available
-      if (('markGeneration' in this) && this.markGeneration > 0) {
-        var leaked = this.annotation.leaked;
-        if (this.isObjectLike(obj) &&
-            (obj['hasOwnProperty'] is Function) &&
-            obj.hasOwnProperty(leaked) &&
-            obj[leaked]) {
-          name += ' (\u00A3' + obj[leaked] + ')'; // 'Pounds'
+        // Annotate 'weight' if available
+        if (('markGeneration' in this) && this.markGeneration > 0) {
+          var leaked = this.annotation.leaked;
+          if (this.isObjectLike(obj) &&
+              (obj['hasOwnProperty'] is Function) &&
+              obj.hasOwnProperty(leaked) &&
+              obj[leaked]) {
+            name += ' (\u00A3' + obj[leaked] + ')'; // 'Pounds'
+          }
         }
-      }
     } catch (e) {
       try {
         // Use %s to prevent recursion
@@ -1216,6 +1306,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       catch (e) {
         description = "Recursive error computing inspectInternal";
       }
+    } finally {
+      this.printDetectCircular = opdc;
+      this.inspectContext = octx;
     }
     if (description != "") { description = ' {\n' + description + '}'; }
     return name + description;
@@ -1247,9 +1340,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           r += wf;
         }
       }
+      // Print properties with abbreviated length/depth
       // Note: inspectInternal is expected to return the
       // HTML-encoded string
-      var ostr = LzMessage.xmlEscape(this.__String(val));
+      var ostr = LzMessage.xmlEscape(this.__String(val, true, this.inspectPrintLength, false, this.inspectPrintDepth));
       // Second, in case __String interns an abbreviated object
       var id = this.IDForObject(val);
       r = this.pad(r, wid);

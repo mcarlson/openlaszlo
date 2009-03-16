@@ -225,7 +225,7 @@ class LzDHTMLDebugService extends LzDebugService {
    *
    * @access private
    */
-  override function __StringDescription (thing:*, pretty:Boolean, limit:Number, unique:Boolean):Object {
+  override function __StringDescription (thing:*, pretty:Boolean, limit:Number, unique:Boolean, depth:Number, circular:*):Object {
     try {
       if ((!!window.HTMLElement ? thing instanceof HTMLElement : typeof(thing) == 'object' && !thing.constructor) &&
           (! isNaN(Number(thing['nodeType'])))) {
@@ -272,7 +272,7 @@ class LzDHTMLDebugService extends LzDebugService {
         return {pretty: pretty, description: nodeToString(thing)};
       }
     } catch (e) {}
-    return super.__StringDescription(thing, pretty, limit, unique);
+    return super.__StringDescription(thing, pretty, limit, unique, depth, circular);
   };
 
   /**
