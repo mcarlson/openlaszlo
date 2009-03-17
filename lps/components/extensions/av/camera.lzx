@@ -92,6 +92,8 @@
             }
             
             this._dev = dev;
+            if ($debug && this.debug) 
+                Debug.write('%w flash device = %w', this, this._dev);
             this.setQuality(bandwidth,picturequality);
 
             return dev;
@@ -103,6 +105,7 @@
               @keywords private -->
         <method name="_setupDevice"><![CDATA[
             var dev = this._dev;
+            if (this.show) this._setShow(true);
 
             // TODO: 
             // Get camera mode and quality attributes that aren't 
@@ -155,9 +158,9 @@
               it's also allowed by the user. 
               @access private -->
         <method name="_setShow" args="show"><![CDATA[
-
-            //Debug.write("camera _setShow", this, show);
-
+            if ($debug && this.debug) {
+                Debug.write("%w show=%w", this, show );
+            }
             this.show = show;
 
             // Bail if we're not initialized, the device isn't
@@ -208,7 +211,11 @@
                     // which sets the new allowed value to
                     // all mediadevices. 
                     var dev = this._dev;
-                    //Debug.write("attaching", this, vid, dev);
+                    if ($debug && this.debug) {
+                        Debug.write("%w attaching flashdevice %w" +
+                                    "to flashvideoobject %w", 
+                                     this, dev, vid);
+                    }
                     if ($as3) {
                         vid.attachCamera(dev);
                     } else {

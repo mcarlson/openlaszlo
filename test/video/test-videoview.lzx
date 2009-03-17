@@ -6,11 +6,7 @@
 <canvas>
 
 
-    <simplelayout
-        axis="y"
-        inset="10"
-        spacing="10"
-    />
+    <simplelayout axis="y" inset="10" spacing="10" /> 
 
     <text>a video stream from your camera should be displayed
           in the rectangle below (it should be red before the
@@ -18,25 +14,13 @@
           video should display
     </text>
 
-    <button
-        text="shrink width then height" 
-        onclick="v.shrink.doStart()"
-    />
+    <button text="shrink width then height" onclick="v.shrink.doStart()" />
 
 
-    <button
-        text="grow"
-        onclick="v.grow.doStart()"
-    />
+    <button text="grow" onclick="v.grow.doStart()" />
 
 
-    <videoview id="v" 
-        bgcolor="red" 
-        width="200" 
-        height="200"
-    >
-
-
+    <videoview id="v" debug="true" bgcolor="red" width="200" height="200" >
         <animatorgroup name="grow" 
             duration="1000" 
             start="false"

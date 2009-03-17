@@ -24,7 +24,7 @@
     recorded streams will be saved in "instance1" in the test application on
     the server.
     </text>
-
+   
     <text multiline="true" width="280">
     Below you should see a shiny green dot and the word "connected" which
     indicated a successful connection to the rtmp server."

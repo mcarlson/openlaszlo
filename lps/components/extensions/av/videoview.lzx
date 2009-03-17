@@ -312,10 +312,15 @@
 
     <setter name="cam" args="cam">
         this.cam = cam;
-
+    
         if (this['stream']) {
             this.stream.setAttribute('cam', cam);
         }
+
+        // if there is a new camera we need to refresh the videoview, which 
+        // is done by the Camera's _setShow method
+        //if (this.cam) this.cam._setShow(this.cam.show);
+
         if (this.oncam) this.oncam.sendEvent(this.cam);
     </setter>
 

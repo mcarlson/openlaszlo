@@ -2,8 +2,8 @@
 * Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.         *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
-
-<canvas>
+ 
+<canvas> 
     <!-- an item in the list of cameras, clicking on it will set the 'show'
     attribute of the camera which displays it on its immediateparent -->
     <class name="camlistitem" extends="textlistitem" >
@@ -52,12 +52,16 @@
     ability to dynamically show a camera and switch cameras.  Of course to
     test switching cameras, you will need to have multiple deviced attached to
     your machine.<br/><br/>
+    Note: if you switch to a device where there is no camera plugged in, the
+    old image will remain, but it should appear "frozen." Unfortunately, we
+    cannot tell the difference between an installed camera driver and one
+    to which a camera is hooked up.<br/><br/>
     Below is the list of available cameras (click to show):</text>
 
     <cameralist id="clist"/>
 
     <videoview id="v">
-        <camera id="gCamera"/>
+        <camera id="gCamera" debug="true"/>
     </videoview>
 
 </canvas>

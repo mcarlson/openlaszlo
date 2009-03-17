@@ -817,7 +817,9 @@
 
             this._nc.connect(this._srcurl);
         } else {
-            this._addListeners( new NetStream(this._nc) );
+            this._flashstream = new NetStream(this._nc);
+            this._addListeners( this._flashstream  );
+            this._flashstream.setBufferTime(17);
         }
     </method> 
 

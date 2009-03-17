@@ -51,6 +51,9 @@
               @keywords private -->
         <attribute name="_targets" value="{}" allocation="class"/>
 
+        <!--- set to true for verbose debugging messages -->
+        <attribute name="debug" value="false"/>
+
         <!--- Reference to internal Flash device object.
               @keywords private -->
         <attribute name="_dev" value="null"/>
@@ -109,7 +112,8 @@
 
             lz.mediadevice._instances.push(this);
 
-            //Debug.write("mediadevice init", this, "allowed", this["allowed"], "starting device");
+            if ($debug && this.debug) 
+                Debug.write("%w init, allowed=%w", this, this["allowed"]);
 
             this.startDevice();
 
@@ -159,6 +163,8 @@
 
             if (dev == null) {
                 this.setAttribute("devicename", "");
+                if ($debug && this.debug) 
+                    Debug.write("%w null device, devicename = %w", this, this.devicename);
             } else {
 
                 // Add ourself to the device's list of targets,
@@ -228,6 +234,9 @@
                 // Set the devicename attribute from the Flash 
                 // device name. 
                 this.setAttribute("devicename", dev.name);
+                if ($debug && this.debug) {
+                    Debug.write("%w devicename = %w", this, this.devicename);
+                }
 
                 this._setupDevice();
 
