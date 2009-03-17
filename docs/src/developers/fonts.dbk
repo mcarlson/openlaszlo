@@ -61,7 +61,7 @@ are resident on the client machine (DHTML and SWF).
        fonts or device fonts), applications are smaller and start faster, but there is no guarantee that the rendering of that font, or the font definitions themselves,
        will be the same from computer to computer.  Embedded fonts provide higher fidelity.
 </para>
-<para/><section><title>Embedded fonts cannot be rotated or change opacity</title>
+<para/><section><title>Client fonts cannot be rotated or change opacity</title>
 <para>
  In addition, because of limitations of
 the Flash Player, there are certain things you cannot do with client fonts.  For example, client fonts cannot be rotated, nor can
