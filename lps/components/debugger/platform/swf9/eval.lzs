@@ -23,12 +23,10 @@ public class LzDebugEvalLoader {
     }
 
     public function doEval(expr:String, seq:int=0) {
-      var appfile = lz.Browser.getBaseURL().file;
-        var url = appfile + "?lzr=swf9&lz_load=false&lzt=eval&lz_script=" 
-         + encodeURIComponent(expr) 
-        + "&lzbc=" + encodeURIComponent(String((new Date()).getTime())) 
-        + "&lzrdbseq="+seq;
-        this.loader.load(new URLRequest(url),
+      var appfile = lz.Browser.getBaseURL().toString();
+      var url = appfile + "?lzr=swf9&lz_load=false&lzt=eval&lz_script=" 
+      + encodeURIComponent(expr) ;
+      this.loader.load(new URLRequest(url),
                          new LoaderContext(false,
                                            new ApplicationDomain(ApplicationDomain.currentDomain)));
     }
@@ -44,31 +42,6 @@ public class LzDebugEvalLoader {
             Debug.console.window.setAttribute('solo_mode', true);
         }
     }
-
-    private function configureProbeListeners(dispatcher:IEventDispatcher):void {
-        dispatcher.addEventListener(Event.COMPLETE, checkServerResponseHandler);
-        dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, checkServerResponseHandler);
-        dispatcher.addEventListener(IOErrorEvent.IO_ERROR, checkServerResponseHandler);
-    }
-
-    public function checkServerResponse () {
-        var probe = new URLLoader();
-        configureProbeListeners(probe);
-        var reqstr = "__dbgprobe__.lzx?lzt=stat";
-        probe.load(new URLRequest(reqstr));
-    }
-
-    public function checkServerResponseHandler (event:Event) {
-        var data = ((URLLoader)(event.target)).data;
-      // NB: This is a callback handler, and 'this' will be bound to some LoadVars object, not to Debug
-      if (data == null) {
-          Debug.warn('Debugger cannot contact LPS server, switching to SOLO mode.');
-          if (Debug.console is LzDebuggerWindowConsoleBridge) {
-              Debug.console.window.setAttribute('solo_mode', true);
-          }
-      }
-    }
-    
 
     public function addTextLinkCallback(lztext:LzText) {
         var textfield:TextField = (lztext.sprite cast LzTextSprite).textfield;

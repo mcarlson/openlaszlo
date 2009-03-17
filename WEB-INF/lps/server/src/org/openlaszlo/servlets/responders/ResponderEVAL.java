@@ -19,11 +19,25 @@ import org.openlaszlo.compiler.CompilationEnvironment;
 import org.openlaszlo.media.MimeType;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.utils.FileUtils;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
 import org.apache.log4j.Logger;
+
 
 public final class ResponderEVAL extends Responder
 {
     private static Logger mLogger = Logger.getLogger(ResponderEVAL.class);
+
+
+    public static SimpleDateFormat RFC822DATEFORMAT 
+        = new SimpleDateFormat( "EEE, d MMM yyyy HH:mm:ss Z");
+
+    public static String getDateAsRFC822String(Date date)
+    {
+        return RFC822DATEFORMAT.format(date);
+    }
 
     protected void respondImpl(HttpServletRequest req, HttpServletResponse res)
         throws IOException
@@ -40,6 +54,12 @@ public final class ResponderEVAL extends Responder
         if ((lz_log != null) && lz_log.equals("true")) {
             logmsg = true;
         }
+
+        // try and make the browser cache this compiled code
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.add(Calendar.YEAR, 10);
+        Date expires = cal.getTime();
+        res.setHeader("Expires", getDateAsRFC822String(expires));
 
         if (logmsg) {
           String message =

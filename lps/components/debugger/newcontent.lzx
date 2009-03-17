@@ -191,7 +191,9 @@
 
 <method name="setWrapLines" args="val">
         this.textpane.setAttribute("multiline", val);
-     </method>
+        // force update of content
+        this.setAttribute('width', this.width);
+</method>
 
      <text name="textpane"
              multiline="false"  

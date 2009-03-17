@@ -294,6 +294,10 @@ dynamic class LzBootstrapDebugService {
   var console:LzDebugConsole;
 
   /** @access private */
+  var window:*;
+
+
+  /** @access private */
   function LzBootstrapDebugService (logger:LzBootstrapDebugLogger=null,
                                     console:LzDebugConsole=null) {
     if (logger == null) {

@@ -15,6 +15,12 @@
 <include href="utils/states/dragstate.lzx" />
 <include href="newcontent.lzx" />
 
+<!-- for prefs window -->
+<include href="lz/checkbox.lzx"/>
+<include href="lz/window.lzx"/>
+<include href="lz/slider.lzx"/>
+
+
  <!-- IMAGE RESOURCES -->
 
  <!-- Buttons --> 
@@ -176,7 +182,6 @@
     <attribute name="lineheight" value="13" />
     <attribute name="options" value="ignorelayout" />
 
-    <attribute name="solo_mode" value="false" />
     <attribute name="isLoaded" value="false" />
 
     <attribute name="evalloader" value="null"/>
@@ -345,15 +350,13 @@
        }
        if (simple) {
          Debug.displayResult(val);
-       } else if (! this.solo_mode) {
+       } else {
          // Will try to compile as 'Debug.displayResult(expr);' and if
          // that fails, will try to compile as a series of statements
          // (with no display).  Finally, will compile
          // 'Debug.__write(<error message>)' if both of those fail.
          this.evalloader.doEval(expr, this.commandhistory.length);
-       } else {
-         Debug.warn('Expression too complex to evaluate in SOLO mode.');
-       }
+       } 
        // Clear the input text field
        if (!this.bottom.center.input.multiline) {
            this.bottom.center.input.clearText();
@@ -693,6 +696,10 @@
                   x="${parent.min.x - this.width}"
                   onclick="classroot.clear()"
                   resource="clear1_rsc" />
+          <basebutton name="prefs" pixellock="true"
+                  x="${parent.clear.x - this.width}"
+                  onclick="classroot.showprefs()"
+                  resource="prefsBtn_rsc" />
        </view>
 
        <view name="logo" resource="title_rsc" x="9" y="8"/>
@@ -731,8 +738,37 @@
    </view> 
    <!-- END MIDDLE -->
 
-<method name="showprefs">
-   </method>
+   <!-- preferences dialog -->
+   <modaldialog name="debugprefs" title="Debugger Options" width="350" initstage="late">
+        <simplelayout spacing="10"/>
+        <checkbox align="left" onvalue="classroot.setWrapLines(this.value)">Wrap lines</checkbox>
+        <checkbox align="left" onvalue="Debug.showInternalProperties = this.value">Show Internal Properties</checkbox>
+
+        <view>
+          <text>printLength</text>
+          <slider x="100" value="Debug.printLength"
+                  onvalue="Debug.printLength = this.value"
+                  minvalue="64" maxvalue="65536" showvalue="true"/>
+        </view>
+
+        <view >
+          <text>Opacity</text>
+          <slider x="100" onvalue="Debug.window.setAttribute('opacity', this.value/100)"
+                  value="100" minvalue="10" maxvalue="100" showvalue="true"/>
+        </view>
+
+        <view >
+            <button onclick="Debug.bugReport()">Make Bug Report</button>
+        </view>
+
+        <view align="right" layout="axis:x; spacing:10">
+            <button onclick="parent.parent.close()" isdefault="true">OK</button>
+        </view>
+    </modaldialog>
+
+    <method name="showprefs">
+      this.debugprefs.open();
+    </method>
 
 <method name="adjustMultiline">
      <![CDATA[
@@ -974,8 +1010,7 @@
 
         this.scrollToEnd();
 
-        // See if the LPS server is present; if not fall back to simpler eval()
-        this.evalloader.checkServerResponse();
+        Debug.window = this;
 
       ]]>
   </method>
