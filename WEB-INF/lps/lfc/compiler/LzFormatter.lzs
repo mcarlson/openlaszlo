@@ -272,12 +272,16 @@ mixin LzFormatter {
     var maxarg = 0;
     function getarg(i) {
       if (i >= al) {
-        if ($debug) {
-          Debug.warn("%#0.48w: insufficient arguments", control);
-        }
         return null;
       }
       return args[i];
+    }
+    function consumearg (i) {
+      if ($debug) {
+        if (i >= al) {
+          Debug.warn("%#0.48w: insufficient arguments", control);
+        }
+      }
     }
     var base = 0, limit = ctrl.length;
     var start = 0, end = 0;
@@ -341,10 +345,10 @@ mixin LzFormatter {
           case '*':
             if (precision !== null) {
               precision = getarg(argno);
-              argno++;
+              consumearg(argno++);
             } else {
               length = getarg(argno);
-              argno++;
+              consumearg(argno++);
             }
             break;
           case '.':
@@ -355,7 +359,7 @@ mixin LzFormatter {
           case '=':
             // Take the next argument to be the object represented
             object = getarg(argno);
-            argno++;
+            consumearg(argno++);
             break;
 //           case '{':
 //             // Look for a match
@@ -438,7 +442,7 @@ mixin LzFormatter {
         case 'D': case 'U': case 'I': case 'O': case 'X': case 'F': case 'E': case 'G':
           value = Number(value);
           out.appendInternal(this.pad(value, length, decimals, pad, sign, radix, force).toUpperCase(), object);
-          argno++;                  // consume value
+          consumearg(argno++);               // consume value
           break;
         case 'c':
           value = String.fromCharCode(value);
@@ -451,7 +455,7 @@ mixin LzFormatter {
             out.appendInternal(this.pad(Debug.__String(value, true, width, alternate),
                                         length, null, pad, sign, radix, force),
                                object);
-            argno++;                  // consume value
+            consumearg(argno++);               // consume value
             break;
           }
         case 's':
@@ -481,12 +485,12 @@ mixin LzFormatter {
           }
           out.appendInternal(this.pad(str, length, decimals, pad, sign, radix, force),
                              object);
-          argno++;                  // consume value
+          consumearg(argno++);               // consume value
           break;
         case 'd': case 'u': case 'i': case 'o': case 'x': case 'f': case 'e': case 'g':
           value = Number(value);
           out.appendInternal(this.pad(value, length, decimals, pad, sign, radix, force), object);
-          argno++;                  // consume value
+          consumearg(argno++);               // consume value
           break;
         case '%':
           out.append('%');
