@@ -156,14 +156,14 @@ class LzAS3DebugService extends LzDebugService {
    *
    * @access private
    */
-  override function __StringDescription (thing:*, pretty:Boolean, limit:Number, unique:Boolean, depth:Number, circular:*):Object {
+  override function __StringDescription (thing:*, pretty:Boolean, limit:Number, unique:Boolean, depth:Number):Object {
     if (thing is Class) {
       var s = this.functionName(thing);
       if (s) {
         return {pretty: pretty, description: s}
       }
     }
-    return super.__StringDescription(thing, pretty, limit, unique, depth, circular);
+    return super.__StringDescription(thing, pretty, limit, unique, depth);
   }
 
   /** 

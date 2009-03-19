@@ -7,7 +7,8 @@
  *            Use is subject to license terms.
  */
 
-
+{
+#pragma "warnUndefinedReferences=true"
 
 /**
  * <p>See <xref linkend="LzText" /> and <xref linkend="LzDebugService+debug"
@@ -86,6 +87,28 @@
  */
 mixin LzFormatter {
 
+  if ($as2) {
+    /** @access private */
+    static var cleanNumberPattern = null;
+    /** @access private */
+    function toNumber(s) {
+      // NOTE [2009-03-16 ptw] In swf8 we have to remove any 0 that
+      // would make the number be parsed as Octal, because the swf8
+      // implementors did not pay attention to the encouragement in
+      // section 15.1.2.2 of ECMAScript 262-3
+      var cnp = LzFormatter.cleanNumberPattern;
+      if (! cnp) {
+        cnp = LzFormatter.cleanNumberPattern = new RegExp("^([\\s+-]*)(?:0(?!0x))*(.*)$", 'i');
+      }
+      if (typeof(s) == 'string') {
+        s = s.replace(cnp, "$1$2");
+        if (s == '') { s = 0; }
+      }
+      return Number(s);
+    }
+  } else {
+    function toNumber(s) { return Number(s); }
+  }
 
   /**
    * <p>Pad or trim a string to a specified length</p>
@@ -424,9 +447,9 @@ mixin LzFormatter {
             value = (- value);
             // NOTE: [2006-11-17 ptw] Number('') -> NaN in swf, 0 in
             // ECMA, hence use parseInt
-            var wid = Math.abs(parseInt(length));
+            var wid = Math.abs(parseInt(length, 10));
             if (isNaN(wid)) {
-              wid = Number(value).toString(radix).length;
+              wid = this.toNumber(value).toString(radix).length;
             }
             var max = Math.pow(radix, wid);
             value = max - value;
@@ -440,7 +463,7 @@ mixin LzFormatter {
       // toPrecision if they existed in the runtime.
       switch (directive) {
         case 'D': case 'U': case 'I': case 'O': case 'X': case 'F': case 'E': case 'G':
-          value = Number(value);
+          value = this.toNumber(value);
           out.appendInternal(this.pad(value, length, decimals, pad, sign, radix, force).toUpperCase(), object);
           consumearg(argno++);               // consume value
           break;
@@ -488,7 +511,7 @@ mixin LzFormatter {
           consumearg(argno++);               // consume value
           break;
         case 'd': case 'u': case 'i': case 'o': case 'x': case 'f': case 'e': case 'g':
-          value = Number(value);
+          value = this.toNumber(value);
           out.appendInternal(this.pad(value, length, decimals, pad, sign, radix, force), object);
           consumearg(argno++);               // consume value
           break;
@@ -524,3 +547,4 @@ mixin LzFormatter {
 
 };
 // cannot publish lz.Formatter here
+};

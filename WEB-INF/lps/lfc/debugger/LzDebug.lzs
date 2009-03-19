@@ -123,67 +123,101 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
 
   /**
-   * Debug.write will truncate the printed representation of any object
-   * whose length is greater than Debug.printLength (default value
-   * 1024).
+   * <xref linkend="LzDebugService+debug.prototype.write"/> will truncate the printed
+   * representation of any object whose length is greater than
+   * <literal>Debug.printLength</literal>.
    *
    * @type Number
-   * @see: Debug.inspectPrintLength
+   * @lzxdefault 1024
+   * @see Debug.inspectPrintLength
    */
   var printLength:Number = 1024;
 
   /**
-   * Debug.write will abbreviate the printed representation of any object
-   * whose depth is greater than Debug.printDepth (default value
-   * 8).
+   * <xref linkend="LzDebugService+debug.prototype.write"/> will abbreviate the printed
+   * representation of any object whose depth is greater than
+   * <literal>Debug.printDepth</literal>.
    *
    * @type Number
-   * @see: Debug.inspectPrintDepth
+   * @lzxdefault 8
+   * @see Debug.inspectPrintDepth
    */
   var printDepth:Number = 8;
 
   /**
-   * Debug.write will not normally recurse into self-referential
-   * objects, but instead abbreviate self-references.  The detection
-   * of circular objects requires some additional overhead.  Setting
-   * Debug.printDetectCircular to false will disable this detection and
-   * overhead (at the risk of a stack oveflow if a self-referential
-   * object is printed).
+   * <xref linkend="LzDebugService+debug.prototype.inspect"/> will truncate the printed
+   * representation of any properties whose length is greater than
+   * <literal>Debug.inspectPrintLength</literal>.
    *
-   * @type Boolean
+   * @type Number
+   * @lzxdefault 128
+   * @see Debug.printLength
    */
-  var printDetectCircular:Boolean = true;
+  var inspectPrintLength:Number = 128;
 
   /**
-   * Possible values of Debug.messageLevel (q.v.)
+   * <xref linkend="LzDebugService+debug.prototype.inspect"/> will abbreviate the printed
+   * representation of any properties whose depth is greater than
+   * <literal>Debug.inspectPrintDepth</literal>.
+   *
+   * @type Number
+   * @lzxdefault 1
+   * @see Debug.printDepth
+   */
+  var inspectPrintDepth:Number = 1;
+
+  /**
+   * Used to prevent <xref
+   *  linkend="LzDebugService+debug.prototype.write"/> from recursing
+   *  into self-referential objects, but instead abbreviate
+   *  self-references.  The detection of circular objects requires
+   *  some additional overhead, but there seems no reason to make this
+   *  configurable, since the alternative is a stack overflow.
+   *
+   * @type Array
+   * @access private
+   *
+   * @devnote The actual array is created the first time you enter
+   * __String with an object as an argument
+   */
+  var printDetectCircular:Array = null;
+
+  /**
+   * Possible values of <literal>Debug.messageLevel</literal> (q.v.)
+   *
    * @keywords readonly
    * @type Object
    */
   static var messageLevels = {ALL: 0, MONITOR: 1, TRACE: 2, DEBUG: 3, INFO: 4, WARNING: 5, ERROR: 6, NONE: 7};
 
   /**
-   * Debug messages are enabled/disabled by the
-   * setting of Debug.messageLevel.  The valid levels are one of the
-   * keys of Debug.messageLevels.  All messages of a lower level than
-   * the current setting will be suppressed
+   * Debug messages are enabled/disabled by the setting of
+   * <literal>Debug.messageLevel</literal>.  The valid levels are one
+   * of the keys of <literal>lz.DebugService.messageLevels</literal>.  All
+   * messages of a lower level than the current setting will be
+   * suppressed
    *
    * @type String
+   * @lzxdefault 'ALL'
    */
   var messageLevel:String = 'ALL';
 
   /**
    * Array of prefixes that indicate internal properties to the
-   * inspector.  If Debug.showInternalProperties is false, any properties
-   * with a prefix in this set will not be displayed.
+   * inspector.  If <literal>Debug.showInternalProperties</literal> is
+   * false, any properties with a prefix in this set will not be
+   * displayed.
+   *
    * @access private
    */
   static var internalPropertyPrefixes = [ '$', '__', '_dbg_' ];
 
   /**
-   * Debug.inspect will show internal properties if this is true
-   * (default is false).
+   * <xref linkend="LzDebugService+debug.prototype.inspect"/> will show internal properties
+   * if this is true.
    *
    * @type Boolean
+   * @lzxdefault false
    */
   var showInternalProperties:Boolean = false;
 
@@ -363,13 +397,17 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * over displaying multiple objects. Use it instead of
    * Debug.write.
    *
-   * <code>Debug.write</code> displays objects on the debug console in
-   * an informative format.  Simple objects are represented as
-   * themselves.  Printed Complex objects are represented by their type
-   * and a concise description.  Long representations (and long Strings)
-   * are abbreviated if they are longer than <link linkend="LzDebugService+debug.__ivars__.printLength">Debug.printLength</link>.  Complex
-   * objects and abbreviated objects presented as links.  Clicking on
-   * the link will invoke <xref linkend="LzDebugService+debug.prototype.inspect"/> on the object,
+   * <literal>Debug.write()</literal> displays objects on the debug
+   * console in an informative format.  Simple objects are represented
+   * as themselves.  Complex objects are represented by their type and
+   * a concise description.  Long representations (and long Strings)
+   * are abbreviated if they are longer than <link
+   * linkend="LzDebugService+debug.__ivars__.printLength">Debug.printLength</link>,
+   * or deeper than <link
+   * linkend="LzDebugService+debug.__ivars__.printDepth">Debug.printDepth</link>.
+   * Complex objects and abbreviated objects are presented as links.
+   * Clicking on the link will invoke <xref
+   * linkend="LzDebugService+debug.prototype.inspect"/> on the object,
    * giving more detail.
    *
    * @param [*] any: One or more values to display.  Multiple
@@ -500,14 +538,19 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   };
 
 
-
   /**
    * Display the properties of an object on the debug console.
-   * <code>Debug.inspect</code> displays each of the properties of its
-   * argument object using <code>Debug.write</code>.  Properties that
-   * have complex values (or long representations that are abbreviated)
-   * are displayed as links.  Clicking on the link will invoke
-   * <code>Debug.inspect</code> on that object.
+   * <literal>Debug.inspect()</literal> displays each of the
+   * properties of its argument object using
+   * <xref linkend="LzDebugService+debug.prototype.write"/>.
+   * Long representations (and long Strings)
+   * are abbreviated if they are longer than <link
+   * linkend="LzDebugService+debug.__ivars__.inspectPrintLength">Debug.inspectPrintLength</link>,
+   * or deeper than <link
+   * linkend="LzDebugService+debug.__ivars__.inspectPrintDepth">Debug.inspectPrintDepth</link>.
+   * Properties that  are abbreviated are
+   * displayed as links.  Clicking on the link will invoke
+   * <literal>Debug.inspect()</literal> on that object.
    *
    * @param Object obj: the object to inspect
    * @return Object: the inspected object
@@ -524,37 +567,18 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     return obj;
   };
 
-  /**
-   * Debug.inspect will truncate the printed representation of any properties
-   * whose length is greater than Debug.inspectPrintLength (default value
-   * 256).
-   *
-   * @type Number
-   * @see Debug.printLength
-   */
-  var inspectPrintLength:Number = 256;
-
-  /**
-   * Debug.inspect will abbreviate the printed representation of any properties
-   * whose depth is greater than Debug.inspectPrintLength (default value
-   * 1).
-   *
-   * @type Number
-   * @see Debug.printDepth
-   */
-  var inspectPrintDepth:Number = 1;
-
 
   /**
    * Explain the style bindings of properties on a node
    *
-   * For each attribute of the node that has a $style binding, the CSS
-   * rules that apply to the node that could affect that binding are
-   * displayed.  The rules are displayed (with their source) from the
-   * most-specific to the least specific, and the style names and
-   * values of the rule that apply to this node are displayed.  Values
-   * that are superceded by more specific rules are displayed in <i
-   * style="text-decoration: line-through">italics</i>.
+   * For each attribute of the node that has a
+   * <literal>$style</literal> binding, the CSS rules that apply to
+   * the node that could affect that binding are displayed.  The rules
+   * are displayed (with their source) from the most-specific to the
+   * least specific, and the style names and values of the rule that
+   * apply to this node are displayed.  Values that are superceded by
+   * more specific rules are displayed in <i style="text-decoration:
+   * line-through">italics</i>.
    *
    * @param LzNode node: the node of interest
    * @param showInherited: whether to show inherited bindings
@@ -864,7 +888,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  function __StringDescription(thing:*, pretty:Boolean, limit:Number, unique:Boolean, depth:Number, circular:*):Object {
+  function __StringDescription(thing:*, pretty:Boolean, limit:Number, unique:Boolean, depth:Number):Object {
     try {
       // Return primitive types early, so you don't stumble on them in
       // unforgiving runtimes.
@@ -1021,7 +1045,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
                 s += '\u2026, ';
               }
               // limit - 5 ensures room for "[..., ]"
-              s += this.__String(thing[key], true, limit - 5, false, depth - 1, circular) + ', ';
+              s += this.__String(thing[key], true, limit - 5, false, depth - 1) + ', ';
               next = key + 1;
             }
             if (s != '' && i == indices.length) { s = s.substring(0, s.length - 2); }
@@ -1045,7 +1069,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
                   (! this.internalProperty(dtv))) {
                 ellip = true;
                 // limit - 5 ensures room for "{..., }"
-                s += '' + e + ': ' + this.__String(v, true, limit - 5, false, depth - 1, circular) + ', ';
+                s += '' + e + ': ' + this.__String(v, true, limit - 5, false, depth - 1) + ', ';
               } else {
                 if (ellip) {
                   s += '\u2026, ';
@@ -1098,22 +1122,20 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * unique identifier, default (! pretty)
    * @param Number depth: don't descend into structures deeper than
    * this many levels, default Debug.printDepth
-   * @param Boolean circular: detect self-referential objects, default
-   * Debug.printDetectCircular
    * @return LzMessage: String representation of thing
    *
    * @access private
    */
-  function __String (thing:*, pretty:Boolean=true, limit=(void 0), unique=(void 0), depth=(void 0), circular=(void 0)):String {
+  function __String (thing:*, pretty:Boolean=true, limit=(void 0), unique=(void 0), depth=(void 0)):String {
     // Save (and cache) original defaults, which will be bound below
-    var origPrintLength = this.printLength;
-    var origPrintDepth = this.printDepth;
-    var origPrintDetectCircular = this.printDetectCircular;
+    var origPrintLength:Number = this.printLength;
+    var origPrintDepth:Number = this.printDepth;
+    var origPrintDetectCircular:Array = this.printDetectCircular;
     // Default optional arguments
     if (limit === (void 0)) { limit = pretty ? origPrintLength:64; }
     if (unique === (void 0)) { unique = (! pretty); }
     if (depth === (void 0)) { depth = origPrintDepth; }
-    if (circular === (void 0)) { circular = origPrintDetectCircular; }
+    var circular = origPrintDetectCircular;
     // Enforce depth
     if (depth < 0) {
       return '\u2026';          // ellipsis
@@ -1136,7 +1158,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           }
         } else {
           // Note circular
-          if (id !== null && circular) {
+          if (id !== null) {
             // Probably a premature optimization -- don't make the array
             // until we have to
             if (! (circular is Array)) { circular = []; }
@@ -1147,7 +1169,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           this.printDepth = depth;
           this.printDetectCircular = circular;
           // Descend
-          var d  = this.__StringDescription(thing, pretty, limit, unique, depth, circular);
+          var d  = this.__StringDescription(thing, pretty, limit, unique, depth);
           s = d.description;
           pretty = d.pretty;
           // Cache description for circular && pretty
@@ -1221,24 +1243,24 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         } else {
           var pl = this.inspectPrintLength;
         }
-        // Turn off pretty for name
-        // Note: inspectInternal is expected to return the
-        // HTML-encoded string
-        var name = LzMessage.xmlEscape(this.__String(obj, false, pl, true, 0, true));
-        if (! (this.isObjectLike(obj))) {
-          return name;
-        }
-        // Print properties with abbreviated length/depth
+        // Set context before calling any __String* methods
+        this.inspectContext = obj;
         // Note self for circular detection (creates a simpler output
         // for objects that use their parent in their name).
         var id = this.IDForObject(obj);
         if (id !== null) {
           var pdc = this.printDetectCircular = [];
           // Cache the pretty name of ourselves, if available
-          var d = this.__StringDescription(obj, true, pl, false, 0, true);
+          var d = this.__StringDescription(obj, true, pl, false, 0);
           pdc[id] = d.pretty? d.description : true;
         }
-        this.inspectContext = obj;
+        // Turn off pretty, shallow depth for name
+        // Note: inspectInternal is expected to return the
+        // HTML-encoded string
+        var name = LzMessage.xmlEscape(this.__String(obj, false, pl, true, 0));
+        if (! (this.isObjectLike(obj))) {
+          return name;
+        }
 
         var names = [];
         var indices = (this.isArrayLike(obj) && (! this.isStringLike(obj)))?[]:null;

@@ -151,7 +151,7 @@ dynamic class LzState extends LzNode {
    *
    * @type Boolean
    * @lzxtype boolean
-   * @default false
+   * @lzxdefault false
    */
   var applied = false;
   /** @access private */
@@ -198,7 +198,7 @@ dynamic class LzState extends LzNode {
    *
    * @type Boolean
    * @lzxtype boolean
-   * @default false
+   * @lzxdefault false
    */
   var pooling = false;
 
