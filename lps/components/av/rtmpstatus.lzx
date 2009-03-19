@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -30,7 +30,7 @@
         // rtmpconnection, but default to the global one, and it should
         // also clean up properly.
         if (! this.rtmpc) {
-            if (canvas.rtmpconnections) this.setAttribute('rtmpc', canvas.rtmpconnections._default);
+            if (lz.rtmpconnection.connections) this.setAttribute('rtmpc', lz.rtmpconnection.connections._default);
             if (this.rtmpc == null) {
                 if ($debug) Debug.warn("rtmpconnection not found for %w", this);
                 return;

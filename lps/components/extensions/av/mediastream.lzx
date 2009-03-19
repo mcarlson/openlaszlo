@@ -124,7 +124,7 @@
           @type Boolean
           @access public
     -->
-    <attribute name="paused" value="false"/>
+    <attribute name="paused" value="false" type="boolean"/>
         
     <!--- True if playing right now.
           @type Boolean   
@@ -399,13 +399,22 @@
 
         // unload 
         if (this._flashstream) {
-            if ($as3) {
-                // TODO
-                //this._flashstream.play(false);
+            if (this.paused) {
+                // unpause
+                this.setAttribute('paused', false);
+                return;
             } else {
-                this._flashstream.play(false);
+                // clear, reset
+                if ($as3) {
+                    // TODO
+                    //this._flashstream.play(false);
+                    //this._flashstream.close();
+                } else {
+                    this._flashstream.play(false);
+                    this._flashstream.close();
+                    this._flashstream = null;
+                }
             }
-            //this._flashstream.close();
         }
 
 
@@ -413,7 +422,6 @@
         this._basetime = ((start == undefined) || (start < 0)) ? 0 : start;
         this.setAttribute("time", 0);
         this.setAttribute("progress", 0.0);
-        this.setAttribute("mode", "playing");
 
         var isnew = false;
         if (!this._flashstream) {
@@ -660,13 +668,18 @@
 
     <method name="pause" args="p=null">
         //Debug.write("pause", this, "p", p, "p == null", p == null, "this['paused']", this['paused']);
-        this.setAttribute("paused",  (p == null) ? !this['paused'] : p)
+        var val = (p == null) ? !this['paused'] : p;
+        if (val != this.paused) this.setAttribute("paused", val)
     </method>            
 
     <method name="stop">
-        //Debug.write("mediastream.stop()");
+        if (this.paused) {
+            // can't be paused and stopped at the same time...
+            setAttribute('paused', false);
+        }
+    
         if (this._flashstream == null) {
-                return;
+            return;
         }
 
         switch (this.mode) {
@@ -746,9 +759,9 @@
 
                 // If we don't define our own connection, then use
                 // the default one (the first rtmpconnection created).
-                //Debug.write("_findnc type rtmp, rtmpconnection", this.rtmpconnection, "_nc", canvas.rtmpconnections._default._nc);
-                if (! this.rtmp && canvas.rtmpconnections) {
-                    this.rtmp = canvas.rtmpconnections._default;
+                //Debug.write("_findnc type rtmp, rtmpconnection", this.rtmpconnection, "_nc", lz.rtmpconnection.connections._default._nc);
+                if (! this.rtmp && lz.rtmpconnection.connections) {
+                    this.rtmp = lz.rtmpconnection.connections._default;
                 }
                 
                 if (! this.rtmp) {
@@ -908,7 +921,8 @@
             }
 
             case "NetStream.Play.Stop": {
-                this._onStop(info);
+                // don't call _onStop because some servers sent this event when they're done streaming (red5, wowza) - see LPP-7708
+                //this._onStop();
                 break;
             }
 
@@ -923,7 +937,7 @@
             }
 
             case "NetStream.Record.Stop": {
-                this._onStop(info);
+                this.stop();
                 break;
             }
 
@@ -1058,6 +1072,7 @@
                 //    this._flashstream.bufferTime - 1;
                 //this._flashstream.setBufferTime(newbuftime);
                 //Debug.write("newbuffertime=",newbuftime);
+                this.stop();
                 break;
             }
 
@@ -1209,6 +1224,8 @@
         if ((this.type == "rtmp") &&
             (this.url != null) &&
             (this.url != "")) {
+            //this breaks red5 and depends on Flash Media Server - see LPP-4785
+            /** TODO: when to do this? 
             // rtmp server appends the .flv (so we need to remove it)
             var sname = this._namefromurl(this.url);
             // call function in server-side main.asc
@@ -1217,6 +1234,7 @@
                 //_root.Debug.write("onresult=", streamLength);
                 t.setAttribute("totaltime", streamLength || 0);
             };
+            */
         }
     ]]>
     </method>

@@ -81,6 +81,12 @@
                 @access public
             -->
             <attribute name="debug" value="false"/>
+
+            <!--- A shared hash of connections
+                @type Object
+                @access private
+            -->
+            <attribute name="connections" value="{}" type="expression" allocation="class"/>
             
             <!--- Event sent when connection established. 
                 @access private -->
@@ -92,27 +98,24 @@
             <method name="init">
                 super.init();
 
-                // Store new RTMP connections in canvas.rtmpconnections. If no
+                // Store new RTMP connections in lz.rtmpconnection.connections. If no
                 // name is set for an rtmpconnection use "_default". Other real-time
-                // objects will use the canvas.rtmpconnections["_default"] NetConnection
+                // objects will use the lz.rtmpconnection.connections["_default"] NetConnection
                 if (this.name == null) {
                     this.name = "_default";
                 }
-                if (!canvas['rtmpconnections'] || null == canvas.rtmpconnections ) {
-                    canvas.rtmpconnections = new Array();
-                }
                 
-                if (canvas.rtmpconnections[this.name] != null) {
+                if (lz.rtmpconnection.connections[this.name] != null) {
                     if ($debug) {
                         if (this.name == "_default") {
-                            Debug.warn("A default RTMP connection already exists, please name rtmpconnections if you use more than one");
+                            Debug.warn("A default RTMP connection already exists, please name connections if you use more than one");
                         } else {
-                            Debug.warn("An RTMP connection already exists with the name '%s': %w", this.name, canvas.rtmpconnections[this.name]);
+                            Debug.warn("An RTMP connection already exists with the name '%s': %w", this.name, lz.rtmpconnection.connections[this.name]);
                         }
                     }
                 }
                 
-                canvas.rtmpconnections[this.name] = this;
+                lz.rtmpconnection.connections[this.name] = this;
 
                 // Local reference to rtmpconnection.
                 this._nc = new NetConnection();
