@@ -154,9 +154,14 @@ class LzEventable {
   // public, remove this.  For now, this acts to trampoline `String(...)`
   // and `'' + ...` to our private toString methods
   if ($as3) {
-    /** @access private */
-    prototype.toString = function () { return this.toString(); }
+      /** @access private */
+      prototype.toString = function () {
+          if (arguments.callee !== this.toString) {
+              return this.toString();
+          } else {
+              return Object.prototype.toString.call(this);
+          }
+      }
   }
-
 } // End of LzEventable
 lz.Eventable = LzEventable;  // publish

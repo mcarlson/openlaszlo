@@ -1146,7 +1146,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     if (limit > 0) {
       try {
         // Enforce circular
-        if ((id !== null) && (circular is Array) && (circular[id])) {
+        if ((id !== null) && (circular != null) && (circular[id])) {
           var cache = circular[id];
           // If we have a pretty name for this already, it is stored
           // in the circular table, instead of `true`
@@ -1173,7 +1173,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           s = d.description;
           pretty = d.pretty;
           // Cache description for circular && pretty
-          if (s && pretty && (id !== null) && (circular is Array)) {
+          if (s && pretty && (id !== null)) {
             circular[id] = s;
           }
         }

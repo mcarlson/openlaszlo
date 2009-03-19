@@ -98,7 +98,7 @@ mixin LzFormatter {
       // section 15.1.2.2 of ECMAScript 262-3
       var cnp = LzFormatter.cleanNumberPattern;
       if (! cnp) {
-        cnp = LzFormatter.cleanNumberPattern = new RegExp("^([\\s+-]*)(?:0(?!0x))*(.*)$", 'i');
+        cnp = LzFormatter.cleanNumberPattern = new RegExp("^([\\s+-]*)(?:0+(?=[1-9]))(.*)$");
       }
       if (typeof(s) == 'string') {
         s = s.replace(cnp, "$1$2");
