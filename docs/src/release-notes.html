@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8" ?> 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
   <head>
     <title>OpenLaszlo @VERSIONID@ Release Notes</title>
     <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
@@ -10,72 +8,117 @@
     * X_LZ_COPYRIGHT_END ****************************************************** -->
     <style type="text/css">
       body, th, td {
-      font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-      font-size : 12px;
-      line-height : 18px;
-      margin-left : 25px;
-      margin-right : 25px;
-      color: #333333;
+          font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+          font-size : 12px;
+          line-height : 18px;
+          margin-left : 25px;
+          margin-right : 25px;
+          color: #333333;
       }
-      
       h1, h2, h3, h4 {
-      font-weight : bold;
-      margin-top : 20px;
+          font-weight : bold;
+          margin-top : 20px;
       }
-      
       h1 {
-      font-size : 20px;
+          font-size : 20px;
       }
-      
       h2 {
-      font-size : 18px;
-      margin-bottom: 20px;
+          font-size : 18px;
+          margin-bottom: 20px;
       }
-      
       h3 {
-      font-size : 14px;
+          font-size : 14px;
       }
-      
       h4 {
-      font-size: 12px;
-      }
-    </style>
-    
+          font-size: 12px;
+      }</style>
+
   </head>
   <body class="release-notes">
     <hr />
     <h1>Release Notes for OpenLaszlo @VERSIONID@</h1>
     <hr />
-    <p>OpenLaszlo @VERSIONID@ is the next fully-qualified release since OpenLaszlo 4.2, and is the
-      recommended platform for all application development in the SWF8, SWF9, and DHTML runtimes.
-      This release addresses critical user-reported bugs primarily in the swf9 runtime, but also in
-      DHTML.</p>
+    <p>OpenLaszlo @VERSIONID@ is the next fully-qualified release since OpenLaszlo 4.2.0.2, and is
+      the recommended platform for all application development in the SWF8, SWF9, and DHTML
+      runtimes. This release addresses critical user-reported bugs primarily in the swf9 runtime,
+      but also in DHTML.</p>
 
     <p>For those of you who have already upgraded your applications to OpenLaszlo 4.2, no further
       work is needed. You should just start using OpenLaszlo @VERSIONID@.</p>
 
     <p>For those of you who have 4.0.x or 4.1.1 applications, we strongly suggest that you refer to
       this wiki page: <a
-        href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2" target="_blank"
-        >Runtime_Differences</a>. This page discusses the changes required by SWF9 and also provides
-      a methodology for upgrading your application. It is very important that you run the automated
-      conversion scripts in the recommended order, should you choose to take advantage of them.</p>
+        href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2"
+        target="_blank">Runtime_Differences</a>. This page discusses the changes required by SWF9
+      and also provides a methodology for upgrading your application. It is very important that you
+      run the automated conversion scripts in the recommended order, should you choose to take
+      advantage of them.</p>
+
+    <p>To migrate your 4.0.X or 4.1.1 applications, we strongly suggest that you refer to this wiki
+      page: <a href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2"
+        target="_blank">Runtime_Differences</a>. This page discusses the changes required by SWF9
+      and also provides a methodology for upgrading your application. It is very important that you
+      run the automated conversion scripts in the recommended order, should you choose to take
+      advantage of them. </p>
+
+    <p>This release has been fully tested on the following operating systems/browser/runtime
+      platforms:</p>
+    <ul>
+      <li>Windows XP, Internet Explorer 7: SWF8, SWF9, DHTML</li>
+      <li>Windows XP, Firefox 3: SWF8, SWF9, DHTML</li>
+      <li>Linux 2.6 kernel, Firefox 3: SWF8, SWF9, DHTML</li>
+      <li>Mac OS X, Firefox 3: SWF8, SWF9, DHTML</li>
+      <li>Mac OS X, Safari 3: SWF8, SWF9, DHTML</li>
+    </ul>
+    <p>Please note that although we have also done some testing with Windows Vista, OpenLaszlo 4.2
+      has not been fully qualified against that operating system at this time. Please see the
+      section below, <i>Running OpenLaszlo Server on Windows Vista</i>, for more information.</p>
+
+    <p>As with any initial release of a new runtime platform, there will be edge cases that have
+      problems. For OpenLaszlo 4.2, incubator components have not yet been updated to run; the same
+      is true for the charting and graphing utilities, which continue to remain at a beta level.
+      SOAP support is another area that is still very rough. These are straightforward tasks that
+      would welcome community involvement. If you are interested in contributing to the project,
+      please send us an <a href="mailto:laszlo-dev@openlaszlo.org">email</a> for more information.</p>
+
+    <p>For every release, we rely on the OpenLaszlo community to help ensure the quality of the
+      platform release and to determine its future direction. To propose or participate in
+      discussion of new features, see the <a href="http://wiki.openlaszlo.org/Enhancement_Proposals"
+        target="_blank">Wiki</a>. We encourage you to report any problems, and to make suggestions
+      for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP"> bug
+        tracking system</a>. We'd also like to hear from you on the <a
+        href="http://www.openlaszlo.org/lists" target="_blank">mailing lists</a> and in the <a
+        href="http://forum.openlaszlo.org/" target="_blank">forums</a>.</p>
+
+    <h2>Improved Debugger to deal with deep and circular objects when printing</h2>
+    <p>The @VERSIONID@ release adds two new properties of Debug: <code>printDepth:Number</code>
+      (default 8) limits how deep the debug printer will go into an object when printing it;
+        <code>printDetectCircular:Boolean</code> (default true) will cause the debug printer to
+      detect circular objects (rather than causing a stack overflow), at small cost in overhead.
+      When an object refers to itself (however indirectly), it will be printed just as its type and
+      ID.</p>
 
     <h2>New Documentation Comments Feature</h2>
-    <p>The @VERSIONID@ release adds a section at the end of every documentation page where you can add an example or 
-      comment that expands upon the existing documentation or shows a non-obvious usage of a feature 
-      (or work-around for a bug that you have already filed) in OpenLaszlo. Documentation bugs or feature 
-      requests should be filed in our <a href="http://www.openlaszlo.org/jira/browse/LPP">bug
-        tracking system</a> as in previous releases.</p>
-    
+    <p>The @VERSIONID@ release adds a section at the end of every documentation page where you can
+      add an example or comment that expands upon the existing documentation or shows a non-obvious
+      usage of a feature (or work-around for a bug that you have already filed) in OpenLaszlo.
+      Documentation bugs or feature requests should be filed in our <a
+        href="http://www.openlaszlo.org/jira/browse/LPP">bug tracking system</a> as in previous
+      releases.</p>
+
     <h2>Bugs Fixed in OpenLaszlo @VERSIONID@</h2>
-    <p>The @VERSIONID@ release includes more than 30 bug fixes since 4.2; we have provided links to our
-      JIRA bug tracking system where you can view the details:</p>
+    <p>The @VERSIONID@ release includes more than 300 bug fixes since 4.2; we have provided links to
+      our JIRA bug tracking system where you can view the details:</p>
     <ul>
       <li>
         <a
-          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10911"
+          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10930"
           target="_blank">Fixed bugs in @VERSIONID@</a>
+      </li>
+      <li>
+        <a
+          href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10911"
+          target="_blank">Fixed bugs in 4.2.0.2</a>
       </li>
       <li>
         <a
@@ -95,47 +138,8 @@
       offers. To assist you in upgrading your applications to OpenLaszlo 4.2, we have provided
       various conversion scripts depending on your application goals.</p>
 
-    <p>To migrate your 4.0.X or 4.1.1 applications, we strongly suggest that you refer to this wiki
-      page: <a href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2"
-        target="_blank">Runtime_Differences</a>. This page discusses the changes required by SWF9
-      and also provides a methodology for upgrading your application. It is very important that you
-      run the automated conversion scripts in the recommended order, should you choose to take
-      advantage of them. </p>
-
-    <p>This release has been fully tested on the following operating systems/browser/runtime
-      platforms:</p>
-    <ul>
-      <li>Windows XP IE7 SWF8, SWF9, DHTML</li>
-      <li>Windows XP FF3 SWF8, SWF9, DHTML</li>
-      <li>Linux 2.6 kernel FF3 SWF8, SWF9, DHTML</li>
-      <li>Mac OS X FF3 SWF8, SWF9, DHTML</li>
-      <li>Mac OS X SAF3 SWF8, SWF9, DHTML</li>
-    </ul>
-    <p>where: IE7 is Internet Explorer 7; FF3 is Firefox 3; and SAF3 is Safari 3. Please note that
-      although we have also done some testing with Windows Vista, OpenLaszlo 4.2 has not been fully
-      qualified against that operating system at this time. Please see the section below, <i>Running
-        OpenLaszlo Server on Windows Vista</i>, for more information.</p>
-
-    <p>As with any initial release of a new runtime platform, there will be edge cases that have
-      problems. For OpenLaszlo 4.2, incubator components have not yet been updated to run; the same
-      is true for the charting and graphing utilities, which continue to remain at a beta level.
-      SOAP support is another area that is still very rough. These are straightforward tasks that
-      would welcome community involvement. If you are interested in contributing to the project,
-      please send us an <a href="mailto:laszlo-dev@openlaszlo.org">email</a> for more information.</p>
-
-    <p>For every release, we rely on the OpenLaszlo community to help ensure the quality of the
-      platform release and to determine its future direction. To propose or participate in
-      discussion of new features, see the <a href="http://wiki.openlaszlo.org/Enhancement_Proposals"
-        target="_blank">Wiki</a>. We encourage you to report any problems, and to make suggestions
-      for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP"> bug
-        tracking system</a>. We'd also like to hear from you on the <a
-        href="http://www.openlaszlo.org/lists" target="_blank">mailing lists</a> and in the <a
-        href="http://forum.openlaszlo.org/" target="_blank">forums</a>.</p>
-
-
     <h2>New SWF9 Compiler Switch</h2>
     <p>There is a new compiler switch in <code>WEB-INF/lps/config/lps.properties</code>:</p>
-
 
     <p>
       <code>compiler.swf9.execflex=false</code>
