@@ -109,6 +109,7 @@ public class BuildAutoincludes {
 
         try {
             for (int i = 0; i < files.size(); i++) {
+                System.err.println("scanning file "+files.get(i));
                 checkFile(new File( (String) files.get(i)) );
             }
 
@@ -148,11 +149,16 @@ public class BuildAutoincludes {
         }
 
         /* Create a DOM for the LZX file  */
-        Document root = parse(infile);
-        NodeList classes = root.getElementsByTagName("class");
-        listDefs(classes, filename);
-        NodeList interfaces = root.getElementsByTagName("interface");
-        listDefs(interfaces, filename);
+        try {
+            Document root = parse(infile);
+            NodeList classes = root.getElementsByTagName("class");
+            listDefs(classes, filename);
+            NodeList interfaces = root.getElementsByTagName("interface");
+            listDefs(interfaces, filename);
+        } catch (Exception e) {
+            System.err.println("could not parse lzx file "+infile);
+        }
+
     }
     
     static void listDefs(NodeList nlist, String filename) {

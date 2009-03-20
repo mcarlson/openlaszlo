@@ -32,7 +32,7 @@
       </condition>
     </fail>
     <exec executable="bash" failonerror="true">
-      <arg line="-c '${LPS_HOME}/build-tools/build-autoincludes.sh ${autoincludes.path}'" />
+      <arg line="-c '${LPS_HOME}/build-tools/build-autoincludes.sh --output ${autoincludes.path}'" />
     </exec>
   </target>
 
