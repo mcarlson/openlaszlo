@@ -130,14 +130,14 @@
 <example role="live-example">
    <title>UI for adding new contact</title>
    <programlisting language="lzx">
-   <textobject><textdata fileref="programs/data_app-$1.lzx"/></textobject> 
+   <textobject><textdata fileref="programs/data_app-$6.lzx"/></textobject> 
      <parameter role="canvas">bgcolor: '#D4D0C8'</parameter>
    </programlisting>
 </example>
 
-<para>When the user clicks the "New Entry" text at the top of the contact list (comment 1), the newContact view (comments 2 to 3) is displayed. The newContact view is similar to the updateContact view except that its datapath attribute is set to "new:/contact". This creates a new temporary dataset with an empty contact node. </para>
+<para>When the user clicks the <literal>New Entry</literal> text at the top of the contact list, the <literal>newContact</literal> view is displayed. The <literal>newContact</literal> view is similar to the <literal>updateContact</literal> view except that its <literal>datapath</literal> attribute is set to <literal>new:/contact</literal>. This creates a new temporary dataset with an empty contact node. </para>
 
-<para>If you run the application, you will notice that when you click the Add button, the new contact is not added to the list of contacts: we still have to add the new contact node defined in the temporary dataset to the main dataset (dset). We use a datapointer to perform this operation.</para>
+<para>If you run the application, you will notice that when you click the <literal>Add</literal> button, the new contact is not added to the list of contacts: we still have to add the new contact node defined in the temporary dataset to the main dataset (<literal>dset</literal>). We use a datapointer to perform this operation.</para>
 
 
 <para/></section><section><title>Using a datapointer</title>
