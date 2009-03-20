@@ -1688,7 +1688,7 @@ solution =
                     when = WHEN_ALWAYS;
                 }
             } else if (type == ViewSchema.XML_LITERAL) {
-                value = "LzDataNode.stringToLzData("+value+")";
+                value = "LzDataElement.stringToLzData("+value+")";
             } else if (type == ViewSchema.COLOR_TYPE) {
                 if (when.equals(WHEN_IMMEDIATELY)) {
                     try {

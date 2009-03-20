@@ -273,6 +273,7 @@
     <insert>
       <!-- TODO: this is marked *private* in the javadoc! -->
       <attribute name="queuerequests" type="boolean"  value="false"/>
+      <attribute name="datafromchild" type="boolean"  value="false"/>
       <containsElements>
         <element>data</element>
       </containsElements>
