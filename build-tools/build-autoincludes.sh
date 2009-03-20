@@ -21,6 +21,10 @@ fi
                                       -not -path '*/utils/performance/*' \
                                       -not -path '*/utils/diagnostic/inspector/*' \
                                       -not -path '*/debugger/*' \
+                                      -not -path '*/extensions/views/*' \
+                                      -not -path '*/extensions/av/videoslider.lzx' \
+                                      -not -path '*/rpc/ajax.lzx' \
+                                      -not -path '*/debugger/*' \
                                       -not -path '*/lzunit/*' \
                                       -print | \
 "${JAVA_HOME}/bin/java" ${JAVA_OPTS} -DLPS_HOME="${LPS_HOME}" -cp "$LZCP" org.openlaszlo.utils.BuildAutoincludes "$@" 
