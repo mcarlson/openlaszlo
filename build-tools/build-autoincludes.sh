@@ -18,6 +18,8 @@ fi
 
 (cd ${LPS_HOME}/lps/components; find . -name '*.lzx' -not -path '*/incubator/*' \
                                       -not -path '*/queens-charts/*' \
+                                      -not -path '*/utils/performance/*' \
+                                      -not -path '*/utils/diagnostic/inspector/*' \
                                       -not -path '*/debugger/*' \
                                       -not -path '*/lzunit/*' \
                                       -print | \
