@@ -76,6 +76,18 @@
             -->
             <attribute name="src" value="" type="string"/>
 
+            <!--- Alternate application url, used if the connection for src 
+                  fails for example : "rtmp:/appname" or 
+                  "rtmp://myserver.com/myapp/". -->
+            <attribute name="altsrc" value="" type="string"/>
+
+            <!--- If true, use altsrc to connect @keywords private -->
+            <attribute name="_usealtsrc" value="false" type="boolean"/>
+
+            <!--- Number of milliseconds to wait for connection at src before 
+                  using altsrc URL -->
+            <attribute name="connectiontimeout" value="3000" type="number"/>
+    `
             <!--- Turn on for verbose debugger output.
                 @type Boolean
                 @access public
@@ -88,8 +100,7 @@
             -->
             <attribute name="connections" value="{}" type="expression" allocation="class"/>
             
-            <!--- Event sent when connection established. 
-                @access private -->
+            <!--- Event sent when connection established. -->
             <event name="onconnect"/>
             <!--- Event sent when an error occurs
                 @access private -->
@@ -117,22 +128,6 @@
                 
                 lz.rtmpconnection.connections[this.name] = this;
 
-                // Local reference to rtmpconnection.
-                this._nc = new NetConnection();
-                if ($as3) {
-                    this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onStatus);
-                    this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
-
-                } else {
-                    // $swf8 or $swf7
-                    // For some reason this cannot be done as a closure (in FP7).
-                    // See bug lpp-2197.
-                    this._nc.t = this;
-                    this._nc.onStatus = function(info) {
-                        this.t._onStatus(info);
-                    };
-                }
-                
                 if (this.debug) {
                     // This is the way a function is called by the remote Interface has
                     // to be implemented ...
@@ -169,37 +164,90 @@
                 }
             </method>
                 
+            <!--- Create connection
+                @keywords private -->
+            <method name="_createconnection"><![CDATA[
+                this.setAttribute('_nc', new NetConnection());
+                if ($as3) {
+                    this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onStatus);
+                    this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
+
+                } else {
+                    // $swf8 or $swf7
+                    // For some reason this cannot be done as a closure (in FP7).
+                    // See bug lpp-2197.
+                    this._nc.t = this;
+                    this._nc.onStatus = function(info) {
+                        this.t._onStatus(info);
+                    };
+                }
+                ]]>
+            </method>
+
+            <!--- Connect to the rtmp server. -->
             <method name="connect">
                 //Debug.write("rtmpconnection.connect, stage", this.stage);
                 if (this.stage > 0) {
                     return; // already connected or connecting
                 }
 
+                var src = this._usealtsrc ? this.altsrc : this.src;
+                if (src == 'null') src = null;
+
+                if (this.debug) {
+                    if ($debug) Debug.write("attempting connection to ", src);
+                }
+
                 if ($debug) {
-                    if (this.src == "") {
+                    if (src == "") {
                         Debug.write("no src url defined for", this);
                         return;
-                    } else if (typeof(this.src) != "string") {
-                        Debug.write("src", this.src, "must be a string in", this);
+                    } else if (typeof(src) != "string") {
+                        Debug.write("src", src, "must be a string in", this);
                         return;
                     }
                 }
 
-                if ($as3) {
-                    //Debug.write('connecting', this._nc, this.src == "null" ? null : this.src)
-                    this._nc.connect(this.src == "null" ? null : this.src);
-                } else {
-                    var ok = this._nc.connect(this.src == "null" ? null : this.src); 
-                    if (!ok) {
-                        if ($debug) Debug.warn("Tried to use src:", this.src, "connection failed bad url");
-                        this.setAttribute("status", "disconnected");
-                        this.setAttribute("stage", 0);
-                        return;
-                    }
-                }
+                this._connecturl = src;
+
+                this._createconnection();
+                this._nc.connect(src);
                 
                 this.setAttribute("status", "connecting");
                 this.setAttribute("stage", 1);
+                if (! this['_connectionTimeoutDel']) this._connectionTimeoutDel = new LzDelegate(this, '_handleConnectionTimeout');
+                lz.Timer.addTimer( this._connectionTimeoutDel, this.connectiontimeout );
+            </method>
+
+            <!--- Handle connection timeouts
+                @keywords private -->
+            <method name="_handleConnectionTimeout" args="ignore=null"><![CDATA[
+                if (this.stage < 2) {
+                    this.setAttribute("status", "timed out");
+                    this.setAttribute("stage", 0);
+                    this._handleConnectionFailure("timed out");
+                }
+            ]]>
+            </method>
+
+            <!--- Handle connection failure, attempt to reconnect using altsrc
+                @keywords private -->
+            <method name="_handleConnectionFailure" args="msg"><![CDATA[
+                this._nc.close();
+                if (this.debug) {
+                    if ($debug) Debug.warn("error connecting to", this._connecturl, ":", msg);
+                }
+
+                if (! this._usealtsrc && this.altsrc != '') {
+                    // attempt connection to altsrc
+                    this._usealtsrc = true;
+
+                    this.connect();
+                } else if (this._connecturl == altsrc) {
+                    // reset so subsequent calls to connect() will try again.
+                    this._usealtsrc = false;
+                }
+            ]]>
             </method>
 
             <method name="_onStatus" args="evt">
@@ -273,20 +321,18 @@
                 this.setAttribute("status", msg);
                 this.setAttribute("stage", s);
 
-                if (this.debug) {
-                    if ($debug) {
-                        if (s == 2) {
-                            Debug.write("connected to " + this.src);
-                        } else {
-                            Debug.write("connection failed to", this.src, ":", msg);
-                        }
-                    }
-                }
+                lz.Timer.removeTimer(this._connectionTimeoutDel);
 
                 if (s == 2) {
+                    if (this.debug) {
+                        if ($debug) Debug.write("connected to " + this._connecturl);
+                    }
                     if (this.onconnect.ready) {
                         this.onconnect.sendEvent();
                     }
+                } else if (msg != 'disconnected') {
+                    // disconnection isn't a failure.
+                    this._handleConnectionFailure(msg);
                 }
             </method>
 

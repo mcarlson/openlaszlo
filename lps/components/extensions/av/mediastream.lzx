@@ -490,7 +490,7 @@
         }
     </method> 
 
-    <method name="_handleAutoplay"> 
+    <method name="_handleAutoplay" args="ignore=null"> 
         //Debug.write("mediastream._handleAutoplay()");
         if ((this.url == "") ||
             (!this.autoplay)) {
@@ -768,6 +768,12 @@
                     if ($debug) Debug.warn("No rtmpconnection found for %w.", this);
                     return
                 }
+
+                // register for connection
+                new LzDelegate(this, '_handleAutoplay', this.rtmp, 'onconnect');
+                // register for reconnection
+                new LzDelegate(this, '_recreateStream', this.rtmp, 'on_nc');
+
                 this._nc = this.rtmp._nc;
                 this._srcurl = this.rtmp.src;
 
@@ -789,6 +795,14 @@
         }
     ]]>
     </method> <!-- _findnc -->
+
+    <!--- Recreate a stream that was destroyed
+            @keywords private -->
+    <method name="_recreateStream" args="ignore=null"><![CDATA[
+        this._nc = this.rtmp._nc;
+        this._flashstream = null;
+    ]]>
+    </method>
 
     <method name="_flushnc">
         //Debug.write("mediastream._flushnc()");
@@ -1155,6 +1169,7 @@
     </method> 
 
     <method name="init"> <![CDATA[
+        this.paused = false;
         if ($debug && this.debug) 
             Debug.write("mediastream %w init immediateparent=%w, url=%w" +
                 "called by %w",
