@@ -691,10 +691,17 @@ public class NodeModel implements Cloneable {
         throws UnknownAttributeException
     {
         Element parent = elt.getParentElement();
+        String parentName = parent.getName();
+        // If the parent is a class definition, we want to get the
+        // attributes of the class that it defines
+        if ("class".equals(parentName) || "interface".equals(parentName) || "mixin".equals(parentName)) {
+          parentName = parent.getAttributeValue("name");
+        }
+
         // TODO: [2008-05-05 ptw] Schema needs to learn about
         // allocation
         assert ALLOCATION_INSTANCE.equals(allocation);
-        return schema.getAttributeType(parent, attrname, allocation);
+        return schema.getAttributeType(parentName, attrname, allocation);
     }
 
     ViewSchema.Type getAttributeTypeInfoFromParent(
@@ -933,11 +940,11 @@ public class NodeModel implements Cloneable {
                     type = getAttributeTypeInfoFromSuperclass(element, name);
                 } else if ("state".equals(tagName)) {
                     // Special case for "state", it can have any attribute
-                    // which belongs to the parent. 
+                    // which belongs to the parent.
                     try {
                       type = schema.getAttributeType(element, name, ALLOCATION_INSTANCE);
                     } catch (UnknownAttributeException e) {
-                        type = getAttributeTypeInfoFromParent(element, name);
+                      type = getAttributeTypeInfoFromParent(element, name);
                     }
                 } else {
                     // NOTE: [2007-06-14 ptw] Querying the classModel
