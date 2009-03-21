@@ -31,7 +31,7 @@ LzMakeLoadSprite.transform = function (v, src, cache, headers, filetype) {
         //the view doesn't have the empty resource. We need to try and replace it
         v.makeContainerResource();
     }
-    
+
     v.createLoader(src, cache, headers, filetype);
 }
 
@@ -40,7 +40,7 @@ LzMakeLoadSprite.transform = function (v, src, cache, headers, filetype) {
   */
 LzMakeLoadSprite.createLoader = function (src, cache, headers, filetype) {
     this.loader = new LzMediaLoader(this, {});
-    
+
     this.updateDel = new LzDelegate(this, "updateAfterLoad", this.loader, "onloaddone");
     this.errorDel = new LzDelegate(this, "__LZsendError", this.loader, "onerror");
     this.timeoutDel = new LzDelegate(this, "__LZsendTimeout", this.loader, "ontimeout");
@@ -63,7 +63,7 @@ LzMakeLoadSprite.setSource = function (src, cache, headers, filetype) {
     if (this.loader.mc.loading == true) {
         LzLoadQueue.unloadRequest(this.loader.mc);
     }
-    
+
     if (src == '' || src == ' ' || src == null) {
         if ($debug) Debug.error('setSource called with an empty url');
         return;
@@ -103,6 +103,7 @@ LzMakeLoadSprite.setResource = function (nresc) {
     } else if (nresc.indexOf('http:') == 0 || nresc.indexOf('https:') == 0) {
         this.setSource(nresc);
     } else {
+        this.resource = nresc;
         this.loader.attachLoadMovie(nresc);
         if (this.queuedplayaction == null) {
             this.queuePlayAction("checkPlayStatus");
