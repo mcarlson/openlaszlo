@@ -62,6 +62,15 @@
     -->
     <attribute name="autoplay" value="false" type="boolean" />
 
+    <!--- If true, video will automatically rewind to the beginning
+          (and remain in a paused state) when playback ends.
+          Default: false.
+          @type Boolean
+          @access public
+    -->
+    <attribute name="autorewind" value="true" type="boolean" />
+
+
     <!--- Autoplay start argument passed to mediastream.play().
           See the mediastream.play documentation for its values. 
           Default: 'either'.
@@ -106,6 +115,13 @@
     -->
     <attribute name="time" value="0" type="number"/>
 
+    <!--- amount of time (in seconds) to buffer the video before sending to
+          the server
+          @type Number
+          @access Public
+    -->
+    <attribute name="bufferTime" value="0" type="number"/>
+
     <!--- Progress of mediastream currently downloading.
           (from 0 for none to 1 for all).
           @type Number
@@ -132,7 +148,7 @@
           @keywords readonly
     -->
     <attribute name="playing" 
-               value="${(this.mode == 'playing') &amp;&amp; (!this['paused'])}"/>
+               value="${(this.mode == 'playing') &amp;&amp; (!this.paused)}"/>
 
     <!--- True if recording right now.
           @type Boolean 
@@ -243,6 +259,12 @@
     -->
     <attribute name="_basetime" value="0" type="number"/>
 
+    <!--- used by _createStream.
+          @type Object 
+          @access private
+    -->
+    <attribute name="_creationCallback" value="null"/>
+
     <!--- Event sent when url changes.
     -->
     <event name="onurl"/>
@@ -278,73 +300,14 @@
      -->
      <event name="onmode"/>
    
-     <!-- need this?
-            // Next two are part of the required LFC tag class protocol
-            static var tagname = 'mediastream';
-            static var attributes = new LzInheritedHash(LzNode.attributes);
-            static var uid = 0;
-            static var _nullnc = 0;
-
-            // mediastream attributes
-            var url = "";
-            var type = "http";
-            var autoplay = false;
-            var autoplayStart = false;
-            var autoplayPause = false;
-            var autoplayLength = "end";
-            var autoplayReset = true;
-            var totaltime = 0;
-            var time = 0;
-            var progress = 0;
-            var fps = 0;
-            var paused = false;
-            // TODO: create the delegates for the following 3 attributes
-            var playing = false;
-            var recording = false;
-            var broadcasting = false;
-            
-            var mode = "";
-            var debug = false;
-            var cam = null;
-            var mic = null;
-            var streamname = "";
-            var rtmp = null;
-            var muteaudio = false;
-            var mutevideo = false;
-            var _nc = null;
-            var _flashstream = null;
-            var _timedel = null;
-            var _pendingstreamname = "";
-            var _basetime = 0;
-            var _playargcache = null;
-            
-            var onurl = LzDeclaredEvent;
-            var ontype = LzDeclaredEvent;
-            var oncuepoint = LzDeclaredEvent;
-            var onstart = LzDeclaredEvent;
-            var onstop = LzDeclaredEvent;
-            var oninsufficientbandwidth = LzDeclaredEvent;
-            var onmetadata = LzDeclaredEvent;
-            var onmode = LzDeclaredEvent;
-            var onplaying = LzDeclaredEvent;           
-            
-            override function construct(parent,args) {
-                //Debug.write("mediastream.construct()");
-                super.construct(parent, args);
-                new LzDelegate( this, "_onCuePoint", this, "oncuepoint");
-                new LzDelegate( this, "_onStart", this, "onstart");
-                new LzDelegate( this, "_onStop", this, "onstop");
-                new LzDelegate( this, "_onInsufficientBandwidth", this, "oninsufficientbandwidth");
-                new LzDelegate( this, "_onMetaData", this, "onmetadata");
-            }
--->
-
+    <!--- play -->
     <method name="play" args="start='either', pause=false, 
                                    length='end', reset=true"> <![CDATA[
-        //Debug.write("mediastream %w play url=%w" +
-        //    "start=%w pause=%w length=%w reset=%w",
-        //    this, this.url, start, pause, length, reset);
-        
+        if ($debug && this.debug)
+            Debug.write("mediastream %w play url=%w" +
+                "start=%w pause=%w length=%w reset=%w",
+                this, this.url, start, pause, length, reset);
+
         // Map symbolic start values to Flash integers.
         switch (start) {
             case "recorded":
@@ -420,36 +383,39 @@
 
         // Start must be undefined for a live mediastream.
         this._basetime = ((start == undefined) || (start < 0)) ? 0 : start;
+
         this.setAttribute("time", 0);
         this.setAttribute("progress", 0.0);
+        // note the mode 'playing' means playing, as opposed to recording or
+        // broadcasting.  It also includes the 'paused' state
+        this.setAttribute("mode", "playing");
+        
+        // call internal play method after start, length, and reset params 
+        // have been translated into confusing flash player values
+        this._play(pause, start, length, reset);
 
-        var isnew = false;
-        if (!this._flashstream) {
-            isnew = true;
-            //Debug.write("mediastream creating stream");
-            this._createStream();
-            //Debug.write("mediastream created stream", this._flashstream);
-            if (!this._flashstream) {
-                this._playargcache = [start, pause, length, reset];
-                return;
-            }
-        }
-
-        // if we have a _flashstream, play now.  Otherwise call when we do.
-        this._finishPlay(start, pause, length, reset);
     ]]>
     </method>
 
 
-    <!-- TODO: finish play is a terrible name, it mean start playing
-         on readin this again, I thout it meant prepare to stop or something
-         -->
-    <method name="_finishPlay" args="start='either', pause=false, 
-                                            length='end', reset=true">
+    <!-- internal play which creates the flash stream if it needs to
+         and is called again in swf9 once the stream is created
+         @keywords private -->
+    <method name="_play" args="pause, start, length, reset"> <![CDATA[
+        var isnew = false;
+        if (!this._flashstream) {
+            isnew = true;
+            this._createStream("_play", [pause, start, length, reset]);
+            if (!this._flashstream) {
+                return;
+            }
+        }                            
+        if ($debug && !this._flashstream) {
+            Debug.warn('mediastream %w unexpected _flashstream=%w', 
+                this, this._flashstream); 
+        }
         // set up delegate to update the time, progress and fps attributes.
         this._activateTimeDel();
-
-        //Debug.write("_flashstream=", this._flashstream);
 
         //var sname = this._namefromurl(this.url);
         var sname = this.url;
@@ -458,14 +424,12 @@
         //Debug.write("pause=", pause);
         
         if (pause) {
-            //Debug.write("mediastream play PAUSE",  this, "start", start, "pause", pause, "length", length, "reset", reset);
+            Debug.write("mediastream play PAUSE",  this, "start", start, "pause", pause, "length", length, "reset", reset);
+            //seems like overkill, but all of the following seemed to be
+            //required
             this._flashstream.play(sname, start, length, reset);
-
-            //if (this.type == "http") {
-                // *** this doesn't work
-                this._flashstream.pause(true);
-            //}
             this.setAttribute("paused", true);
+            this._flashstream.seek(0);
 
         } else {
             //Debug.write("mediastream play PLAY %w sname=%w start=%w length=%w reset=%w ",  
@@ -475,21 +439,21 @@
             this._flashstream.play(sname, start, length, reset);
 
             this.setAttribute("paused", false);
-
-            //Debug.write("mediastream setting playing", this);
         }
 
         if (this.type == "rtmp") {
             this._pendingstreamname = sname;
         }
 
-        this.setAttribute("mode", "playing");
 
-        if (this.debug) {
-            if ($debug) Debug.write("mediastream play", this, sname, typeof(sname), start);
+        if ($debug && this.debug) {
+            Debug.write("mediastream %w play initiated sname=%w"
+                +" mode=%w", this, sname, this.mode);
         }
+        ]]>
     </method> 
 
+    <!--- @keywords private -->
     <method name="_handleAutoplay" args="ignore=null"> 
         //Debug.write("mediastream._handleAutoplay()");
         if ((this.url == "") ||
@@ -504,6 +468,7 @@
             this.autoplayReset);
     </method> 
         
+    <!--- @keywords private -->
     <method name="_activateTimeDel">
         //Debug.write("mediastream._activeTimeDel()", this);
         if (!this._timedel) {
@@ -514,6 +479,7 @@
         this._timedel.register(lz.Idle, "onidle");
     </method>
 
+    <!--- @keywords private -->
     <method name="_deactivateTimeDel">
         //Debug.write("mediastream._deactiveTimeDel()", this);
         if (this._timedel) {
@@ -521,8 +487,13 @@
         }
     </method>  
 
-    <method name="_updateTime" args="v"> <![CDATA[     
-        //Debug.write("mediastream._updateTime()");
+
+    <!--- internal callback for updating the stream time attributes bases on
+          flashstream properties 
+            @keywords private -->
+    <method name="_updateTime" args="ignore"> <![CDATA[     
+        //Debug.write("mediastream._updateTime time=%w mode=%w", 
+        //   this.time, this.mode);
 
         /* seems to work better without this
         // don't update if new lz.mediastream about to start
@@ -547,7 +518,6 @@
             case "playing": {
                 time = 
                     this._flashstream.time + this._basetime;
-
                 var bytesTotal = this._flashstream.bytesTotal;
                 var bytesLoaded = this._flashstream.bytesLoaded;
                 if ((bytesTotal != null) && (bytesTotal > 0)) {
@@ -614,10 +584,6 @@
                 return;
         }
 
-        if (!this._flashstream) {
-            this._createStream();
-        }
-
         if (this.cam) {
             this.setAttribute("mutevideo", false);
         }
@@ -631,7 +597,7 @@
         } else if (this.url != "") {
             this.streamname = this._namefromurl(this.url);
         } else {
-            // make up temporary name
+            // TODO? make up temporary name
         }
         ]]>
     </method>
@@ -639,6 +605,9 @@
 
     <!--- start sending a live mediastream to the server. -->
     <method name="broadcast"><![CDATA[
+        if (!this._flashstream) {
+            this._createStream("broadcast");
+        }
         this._publishSetup();
         //Debug.write("publish", this.streamname);
         this._flashstream.publish(this.streamname);
@@ -649,7 +618,14 @@
 
     <!--- Start recording. -->
     <method name="record"><![CDATA[
-        //Debug.write("mediastream record", this, "_flashstream", this._flashstream, "streamname", this.streamname, "url", this.url);
+        if ($debug && this.debug) {
+            Debug.write("mediastream %w record: "+
+                "fs=%w streamname=%w url=%w", 
+                this, this._flashstream, this.streamname, this.url);
+        }
+        if (!this._flashstream) {
+            this._createStream("record");
+        }
         this._publishSetup();
         //Debug.write("mediastream record", this, "done with setup, streamname", this.streamname);
         this._flashstream.publish(this.streamname, "record");
@@ -666,12 +642,18 @@
 
 
 
+    <!--- Pause playback. If no argument is given, then this toggles the 
+          pause/play state.  To explicitly pause, call pause(true) 
+          to explicitly resume, call pause(false)    
+    -->
     <method name="pause" args="p=null">
         //Debug.write("pause", this, "p", p, "p == null", p == null, "this['paused']", this['paused']);
         var val = (p == null) ? !this['paused'] : p;
         if (val != this.paused) this.setAttribute("paused", val)
     </method>            
 
+    <!--- stop will stop everything: playback, recording and broadcasting.
+          It also resets the time to the beginning and the mode to "" -->
     <method name="stop">
         if (this.paused) {
             // can't be paused and stopped at the same time...
@@ -728,8 +710,10 @@
         //this._flushnc()
     </method>
 
+    <!--- @keywords private -->
     <method name="_findnc"> <![CDATA[
         //Debug.write("_findnc", this, this._nc, this.type, this.url, "isinited", this.isinited);
+        if (this.type == undefined) return;  // called too early 
 
         if (this._nc) {
             return;
@@ -815,9 +799,19 @@
         this._nc = null;
     </method>  
 
-    <method name="_createStream">
-        //Debug.write("mediastream _createStream", this, "_nc", this._nc, "_flashstream", this._flashstream, "type", this.type, "url", this.url);
+    <!-- this is a little peculiar due to the swf8/swf9 differences and the
+         stupid swf9 inability to call anything on a stream before it is
+         created asynchronously.  You pass in the methods and args to call
+         back and if the stream is created async, then those are called back
 
+         @keywords private -->
+    <method name="_createStream" args="callbackName='', callbackArgs=null"> <![CDATA[     
+        if ($debug && this.debug) {
+            Debug.write("mediastream %w type=%w creating internal flash stream, "
+                + "_nc=%w _flashstream=%w url=%w callback=%w", 
+                this, this.type, this._nc, this._flashstream, this.url,
+                callbackName);
+        }
         if (!this.url || this.url == '') {
             if (this.debug) {
                 if ($debug) Debug.warn(
@@ -833,48 +827,65 @@
             return;
         }
         if (! this._nc) {
+            // note: null nc is creted when setting the type for 'http'
             if ($debug) Debug.warn("No netconnection defined for %w.", this);
             return;
         }
         if ($as3) {
             // TODO: why aren't we already connected?
+            //       what if we are already connected?
             //Debug.warn('Must connect before creating stream', this._nc, this._srcurl, this._nc.connected);
             this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatus);
             this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
-
+            this._creationCallback = {};
+            this._creationCallback.methodName = callbackName;
+            this._creationCallback.args = callbackArgs;
             this._nc.connect(this._srcurl);
         } else {
             this._flashstream = new NetStream(this._nc);
-            this._addListeners( this._flashstream  );
-            this._flashstream.setBufferTime(17);
+            this._flashstreamSetup( this._flashstream  );
         }
+        ]]>
     </method> 
 
+    <!--- flash callback
+          @keywords private -->
     <method name="_onSecurityError">
         //the following does not compile in swf9 since error is undefined
         //not sure where that used to come from
         //if ($debug) Debug.warn("mediastream _onSecurityError() " + error);
     </method> 
 
+    <!--- flash callback
+          @keywords private -->
     <method name="_onAsyncError">
         //the following does not compile in swf9 since error is undefined
         //not sure where that used to come from
         //if ($debug) Debug.warn("mediastream _onAsyncError() " + error);
     </method> 
 
+    <!--- flash callback
+          @keywords private -->
     <method name="_onNetStatus" args="evt"> <![CDATA[
-        //Debug.info("mediastream _onNetStatus() " + evt.info.code);
+        if ($debug && this.debug) Debug.info("mediastream _onNetStatus() " + evt.info.code);
         if (evt && evt.info && evt.info.code == 'NetConnection.Connect.Success') {
-            this._addListeners(new NetStream(this._nc));
-            this._finishPlay.apply(this, this._playargcache);
+            var fs = new NetStream(this._nc);
+            this._flashstreamSetup(fs);
+            //Debug.write("...calling %w with args %w",
+            //            this._creationCallback.methodName, this._creationCallback.args); 
+            this[this._creationCallback.methodName].apply(this, this._creationCallback.args);
+            this._creationCallback = null;
         }
     ]]>
     </method> 
 
-    <method name="_addListeners" args="netstream">
-        //Debug.write("MAKING _FLASHSTREAM", this._nc);
+    <!--- setup flash callbacks and other properties for the flash NetStream
+          object, also set _flashstream internal <attribute name="
+            @keywords private -->
+    <method name="_flashstreamSetup" args="netstream">
+        //Debug.debug("_flashstreamSetup netstream=%w", netstream);
         this.setAttribute("_flashstream", netstream);
-        //Debug.write("MADE _FLASHSTREAM", this._flashstream);
+        //this._flashstream.setBufferTime(this.bufferTime);
 
         if ($as3) {
             this._flashstream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, this._onAsyncError);
@@ -904,10 +915,15 @@
         if ($as3) {
             this._flashstream.client = attachPoint;
         }
+        //Debug.debug("_flashstreamSetup end");
     </method>
 
+    <!--- flash callback
+         @keywords private -->
     <method name="_onStatus" args="info"> <![CDATA[
-        //Debug.write("mediastream _onStatus", this, info.code, info);
+        if ($debug && this.debug)
+            Debug.write("mediastream %w _onStatus %w %w time=%w",
+              this, info.code, info, this._flashstream.time);
 
         switch (info.code) {
 
@@ -994,7 +1010,7 @@
             }
 
             case "NetStream.Seek.Notify": {
-        // Sent after seeking.
+                // Sent after seeking.
                 break;
             }
 
@@ -1009,6 +1025,7 @@
     ]]>
     </method> 
 
+    <!--- @keywords private -->
     <setter name="type" args="newtype"> <![CDATA[
         if ($debug && this.debug)
             Debug.write("mediastream %w set type=%w called by %w",
@@ -1030,14 +1047,12 @@
     ]]> 
     </setter>
 
+    <!--- @keywords private -->
     <setter name="mode" args="newMode"> <![CDATA[
         if ($debug && this.debug)
-            Debug.write("mediastream %w set mode=%w called by %w",
-                this, newMode, arguments.caller);
+            Debug.write("mediastream %w set mode=%w playing=%w paused=%w",
+                this, newMode, this.playing, this.paused);
         this.mode = newMode;
-        //Debug.write("mediastream._onMode()", newMode);
-        var result = (newMode == 'playing' && !this['paused']);
-        this.setAttribute("playing", result) ;
 
         if (this.onmode.ready) {
             this.onmode.sendEvent(newMode);
@@ -1045,6 +1060,7 @@
     ]]>
     </setter>
     
+    <!--- @keywords private -->
     <method name="_onCuePoint" args="info">
         //Debug.write("mediastream._onCuePoint()");
         //Debug.write("ms onCuePoint", this, info);
@@ -1054,24 +1070,37 @@
         }
     </method> 
 
+    <!--- called from Flash callback
+            @keywords private -->
     <method name="_onStart" args="info">
         // TODO: should be conditionally compiled for debug
         //       but I forget the syntax for that
         //Debug.write("mediastream._onstart()");
+        if (this.onstart) this.onstart.sendEvent(this);
     </method> 
 
+    <!--- called from Flash callback when stream is done
+            @keywords private -->
     <method name="_onStop" args="info">
-        //Debug.write("mediastream._onstop()");
-        //this.stop(); // TODO: is this necessary?
+        //Debug.write("mediastream._onstop before mode=%w",this.mode);
+        // TODO: this isn't actually called! 
+        if (!this.paused) this.setAttribute('paused', true);
+        if (this.autorewind && this.time == this.totaltime) {
+            this.seek(0);
+        }
+        if (this.onstop) this.onstop.sendEvent(this);
+        //Debug.write("mediastream._onstop after mode=%w",this.mode);
     </method>
 
+    <!--- @keywords private -->
     <method name="_onInsufficientBandwidth" args="info">
         Debug.write("mediastream.oninsufficientbandwidth()");
         if (this.oninsufficientbandwidth) {
-            this.oninsufficientbandwidth.sendEvent();
+            this.oninsufficientbandwidth.sendEvent(this);
         }
     </method>
 
+    <!--- @keywords private -->
     <method name="_onPlayStatus" args="info"> <![CDATA[
         if ($debug && this.debug) {
             Debug.write("mediastream %w onPlayStatus %w %w", 
@@ -1101,6 +1130,7 @@
     ]]>
     </method>
 
+    <!--- @keywords private -->
     <method name="_onMetaData" args="info"> <![CDATA[
         //Debug.write("mediastream %w _onMetaData", this);
         var propName;
@@ -1116,14 +1146,15 @@
     ]]>
     </method>
 
+    <!--- @keywords private -->
     <setter name="paused" args="paused"> <![CDATA[
         if ($debug && this.debug)
-            Debug.write("mediastream %w set paused=%w called by %w", 
-                this, paused, arguments.caller);
-    
+            Debug.write("mediastream %w set paused=%w", 
+                this, paused);
+
         if ((this.mode != "playing")  || !this._flashstream) {
             if (paused) {
-                if ($debug) Debug.warn("mediastream %w: trying to pause a stream that is not playing", this);
+                this.play('either', true); 
             }
             return;
         }
@@ -1155,19 +1186,34 @@
     
     ]]>
     </setter>
-
+    
+    <!--- seek to a particular time (t) in seconds.  If the stream is
+          playing when seek is called, it will not pause playback but rather
+          start playing from the given time.  If the stream is paused or not
+          yet playing, then the frame at the given time will be displayed and
+          the stream will be in a paused state.
+    -->
     <method name="seek" args="t"> <![CDATA[
+
+        if (!this._flashstream) {
+            this._createStream("seek", [t]);
+        } 
+        
         if (this._flashstream) {
             this._flashstream.seek(t);
-        } else {
-            // TODO: Remember seek time for when we start?
-            // That might cause unexpected behavior. 
-            // Just ignore and warn for now. 
-            if ($debug) Debug.warn("mediastream %w seek with no _flashstream: %w", this, t);
+            if (!this.playing) {
+                // just in case we have never displayed the video
+                this.pause(true);
+            }
+        }
+        if ($debug && this.debug) {
+            Debug.write("mediastream %w seek %w fs=%w", 
+                this, t, this._flashstream);
         }
     ]]>
     </method> 
 
+    <!--- @keywords private -->
     <method name="init"> <![CDATA[
         this.paused = false;
         if ($debug && this.debug) 
@@ -1185,6 +1231,8 @@
     ]]>
     </method>
 
+
+    <!--- @keywords private -->
     <method name="_namefromurl" args="fromurl"> <![CDATA[
         var sname = fromurl;
 
@@ -1201,6 +1249,7 @@
     ]]>
     </method>  
 
+    <!--- @keywords private -->
     <setter name="url" args="newurl"> <![CDATA[
         if ($debug && this.debug)
             Debug.write("mediastream %w set url=%w called by %w", 
@@ -1230,8 +1279,9 @@
             this.onurl.sendEvent(this.url);
         }
     ]]>
-    </setter> 
+    </setter>
 
+    <!--- @keywords private -->
     <method name="_updateUrl"> <![CDATA[
         // Debug.write("   _updateUrl", this, this.type, this.url, "isinited", this.isinited);
         this._findnc();
@@ -1256,16 +1306,19 @@
 
       <!-- TODO: do we need these setters, they appear to have default
     implementations -->
+    <!--- @keywords private -->
     <setter name="cam" args="cam">
         this.cam = cam;
         if (this["oncam"]) this.oncam.sendEvent();
     </setter>
 
+    <!--- @keywords private -->
     <setter name="mic" args="mic">
         this.mic = mic;
         if (this["onmic"]) this.onmic.sendEvent();
     </setter>
         
+    <!--- @keywords private -->
     <setter name="muteaudio" args="muteaudio"> <![CDATA[
         if ($debug && this.debug)
             Debug.write("mediastream %w set muteaudio=%w called by %w",
@@ -1278,6 +1331,7 @@
     ]]>
     </setter> 
     
+    <!--- @keywords private -->
     <setter name="mutevideo" args="mutevideo"> <![CDATA[
         if ($debug && this.debug)
             Debug.write("mediastream %w set mutevideo=%w called by %w",
@@ -1291,13 +1345,21 @@
     ]]>
     </setter> 
 
+    <!--- @keywords private -->
     <method name="_setupStreamAudio">
-        this._flashstream.attachAudio(muteaudio ? false : this.mic._dev);
+        this._flashstream.attachAudio(this.muteaudio ? false : this.mic._dev);
     </method>
 
+    <!--- @keywords private -->
     <method name="_setupStreamVideo">
-        Debug.write("===_setupStreamVideo", this, this._flashstream, this.cam);
-        this._flashstream.attachVideo(mutevideo ? false : this.cam._dev);
+        Debug.write("mediastream %w _setupStreamVideo: " +
+                    "fs=%w, cam=%w, mutevideo=%w", 
+                    this, this._flashstream, this.cam, this.mutevideo);
+        if ($as3) {
+            this._flashstream.attachCamera(this.mutevideo ? false : this.cam._dev);
+        } else {
+            this._flashstream.attachVideo(this.mutevideo ? false : this.cam._dev);
+        }
     </method>
 
 </class>        
