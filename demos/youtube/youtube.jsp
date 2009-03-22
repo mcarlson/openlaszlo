@@ -11,7 +11,7 @@
 <%!
 
 /* X_LZ_COPYRIGHT_BEGIN ****************************************************
- * Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+ * Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
  * Use is subject to license terms.                                        *
  * X_LZ_COPYRIGHT_END ******************************************************/
 
@@ -222,16 +222,21 @@
 
         String tId = "";
         // Extract the token field
-        Pattern tpat = Pattern.compile("token=([\\w\\d\\-]+)");
+        Pattern tpat = Pattern.compile("token=([^&]*)&");
         Matcher tmatcher = tpat.matcher(vidInfo);
         if (tmatcher.find()) {
-            tId = vidInfo.substring(tmatcher.start(1), tmatcher.end(1));
+            try {
+                tId = URLDecoder.decode(tmatcher.group(1), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                reportError("cannot url-decode token argument: " + vidInfo, result);
+                return;
+            }
         } else {
             reportError("token argument not found in video-info: " + vidInfo, result);
             return;
         }
 
-        String url = "http://youtube.com/get_video.php?video_id=" + id + "&t=" + tId;
+        String url = "http://www.youtube.com/get_video?video_id=" + id + "&t=" + tId;
         if (HIRES) {
             url += "&fmt=6";
         } else if (MP4) {
