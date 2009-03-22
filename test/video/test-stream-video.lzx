@@ -1,50 +1,47 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
-
-<canvas>
-
-
+<canvas>  
+<simplelayout/>
+<view layout="axis:x; spacing:10">
+<view>
     <simplelayout axis="y" inset="10" spacing="5"/>
-
     <constantlayout axis="x" value="10"/>
-
-    <videoview>
-
-        <mediastream id="s" 
-            url="http:videos/good-dog.flv"
-            debug="true"
-        />
-
+    <text>v1: show first frame (default behavior)</text> 
+    <videoview id="v1"> 
+        <mediastream id="s1" debug="true"
+            url="http:videos/good-dog.flv"/>
     </videoview>
+    <button text="play" onclick="s1.play()" />
+    <button text="pause" onclick="s1.pause()" />
+    <text text="${'time: ' + s1.time}" />
+    <text text="${'totaltime: ' + s1.totaltime}" />
+</view> 
+<view>
+    <simplelayout axis="y" inset="10" spacing="5"/>
+    <constantlayout axis="x" value="10"/>
+    <text>v2: don't show first frame initially</text>
+    <videoview id="v2" showframe="-1">
+        <mediastream id="s2" 
+            url="http:videos/good-dog.flv"/>
+    </videoview>  
+    <button text="play" onclick="s2.play()" />
+    <button text="pause" onclick="s2.pause()" />
+    <text text="${'time: ' + s2.time}" /> 
+    <text text="${'totaltime: ' + s2.totaltime}" />
+</view>
+</view>
 
-    <button
-        text="play" 
-        onclick="s.play()"
-    />
-
-    <button
-        text="pause" 
-        onclick="s.pause()"
-    />
-
-    <text
-        text="${'time: ' + s.time}"
-    />
-
-    <text
-        text="${'totaltime: ' + s.totaltime}"
-    />
-
-    <text
-        width="300" 
-        multiline="true"
-    >
+<text width="300" multiline="true" >
+Play always starts from the beginning, but you should be able to click the 
+pause buttons multiple times to pause and start playing again from the point
+where you were paused. 
+<br/><br/>
 Note: Total time is only defined for FLV's delivered over http
 if they have "metaData" defined, and we don't know the stream
 length until it starts playing.
-    </text>
+</text>
 
 
 </canvas>
