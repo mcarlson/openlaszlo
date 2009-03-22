@@ -3,7 +3,7 @@
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 <canvas>
-
+  
     <rtmpconnection id="rtc" autoconnect="true" 
         debug="true"
         src="rtmp://localhost/test/instance1"
