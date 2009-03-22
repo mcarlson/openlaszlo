@@ -1,15 +1,20 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
 <canvas>
-
-    
-    <videoview 
-        autoplay="true"
+<simplelayout axis="x" inset="10" spacing="10"/>
+<view layout="axis:y">
+    <text>v1: default params</text>
+    <videoview id="v1" 
         url="http:videos/good-dog.flv"
     />
-
-
+</view>
+<view layout="axis:y">
+<text>v2: autoplay="true"</text>
+    <videoview id="v2" autoplay="true" 
+        url="http:videos/good-dog.flv"
+    />
+</view>
 </canvas>
