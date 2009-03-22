@@ -1,0 +1,60 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+<canvas>
+    <rtmpconnection altsrc="rtmp://localhost/test" src="rtmpt://localhost:8822/badurl" name="rtmp" debug="true" connectiontimeout="3000"/>
+    <mediastream name="zstream" type="rtmp" rtmp="${canvas.rtmp}" url="recording" debug="true"/>
+
+    <simplelayout/>
+    <text text="${'status:' + rtmp.status}"/>
+    <text text="${'stage:' + rtmp.stage}"/>
+    <microphone name="mic" capturing="true" stream="${canvas.zstream}" /> 
+
+    <simplelayout/>
+
+    <hbox>
+        <rtmpstatus rtmpc="${canvas.rtmp}"/>
+        <view width="102" height="12" bgcolor="black">
+            <view x="1" y="1" bgcolor="yellow" width="${mic.level * (parent.width - 2) * .01}" height="10"/>
+        </view>
+    </hbox>
+
+    <view>
+        <videoview width="320" height="240" stream="canvas.zstream"/>
+        <hbox>
+            <button onclick="canvas.zstream.record()">Record</button>
+            <button>Stop
+                <handler name="onclick">
+                    if (canvas.zstream.mode == 'recording') {
+                        // workaround to get accurate duration after ending recording - must come from server
+                        this.wasrecording = true;
+                        canvas.zstream.stop()
+                        new LzDelegate(this, 'dostop', canvas.zstream, 'ontotaltime');
+                        canvas.zstream.play();
+                    } else {
+                        canvas.zstream.stop()
+                    }
+                </handler>
+                <method name="dostop" args="ignore=null">
+                    if (this.wasrecording) {
+                        this.wasrecording = false;
+                        canvas.zstream.stop()
+                    }
+                </method>
+            </button>
+            <button onclick="canvas.zstream.play(0)">Play</button>
+            <button onclick="canvas.zstream.pause(true)">Pause </button>
+            <vbox>
+                <text text="${'paused: ' + canvas.zstream.paused}" fgcolor="red"/>
+                <text text="${'time: ' + canvas.zstream.time}" fgcolor="red"/>
+                <text text="${'totaltime: ' + canvas.zstream.totaltime}" fgcolor="red"/>
+                <text text="${'progress: ' + canvas.zstream.progress}" fgcolor="red"/>
+                <text text="${'mode: ' + canvas.zstream.mode}" fgcolor="red"/>
+            </vbox>
+        </hbox>
+        <handler name="onmode" reference="zstream">
+            Debug.write("mode :" , zstream.mode);
+        </handler>
+    </view>
+</canvas>
