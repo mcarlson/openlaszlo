@@ -2,7 +2,7 @@
 * Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-
+ 
 <!--
     Requires Flash Media Server or red5.
     Create applications directories: test/streams/instance1
@@ -11,7 +11,7 @@
 
 <canvas width="100%" height="100%" debug="true">
 
-    <debug x="300" y="30" height="100%" width="$once{canvas.width-this.x}"/>
+    <debug x="300" y="30" height="$once{canvas.height-this.y}" width="$once{canvas.width-this.x}"/>
     <simplelayout spacing="10"/>
     <constantlayout axis="x" value="10"/>
 
