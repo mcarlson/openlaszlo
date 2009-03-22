@@ -135,32 +135,29 @@ LzTextSprite.prototype.scrollLeft;
 LzTextSprite.prototype.scrollWidth;
 LzTextSprite.prototype.lineHeight;
 
+LzTextSprite.prototype.scrollevents = false;
+LzTextSprite.prototype.setScrollEvents = function (on) {
+    this.scrollevents = on;
+}
+
 LzTextSprite.prototype.__updatefieldsize = function ( ){
   var lzv = this.owner;
-  var scrolldiv = this.scrolldiv;
 
   if (this._styledirty) {
     this.__updatelineheight();
   }
-  var scrollHeight = scrolldiv.scrollHeight;
-  if (this.scrollHeight !== scrollHeight) {
-    this.scrollHeight = scrollHeight;
-    lzv.scrollevent('scrollHeight', scrollHeight);
-  }
-  var scrollTop = scrolldiv.scrollTop;
-  if (this.scrollTop !== scrollTop) {
-    this.scrollTop = scrollTop;
-    lzv.scrollevent('scrollTop', scrollTop);
-  }
-  var scrollWidth = scrolldiv.scrollWidth;
-  if (this.scrollWidth !== scrollWidth) {
-    this.scrollWidth = scrollWidth;
-    lzv.scrollevent('scrollWidth', scrollWidth);
-  }
-  var scrollLeft = scrolldiv.scrollLeft;
-  if (this.scrollLeft !== scrollLeft) {
-    this.scrollLeft = scrollLeft;
-    lzv.scrollevent('scrollLeft', scrollLeft);
+  if (! this.scrollevents) return;
+  this.__updatefieldprop('scrollHeight');
+  this.__updatefieldprop('scrollTop');
+  this.__updatefieldprop('scrollWidth');
+  this.__updatefieldprop('scrollLeft');
+}
+
+LzTextSprite.prototype.__updatefieldprop = function(name){
+  var val = this.scrolldiv[name];
+  if (this[name] !== val) {
+    this[name] = val;
+    this.owner.scrollevent(name, val);
   }
 }
 
@@ -620,3 +617,5 @@ LzTextSprite.prototype.setTextDecoration = function (decoration) {
         // note: don't need to mark style as dirty here
     }
 }
+
+

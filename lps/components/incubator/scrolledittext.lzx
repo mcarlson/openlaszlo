@@ -18,7 +18,8 @@
             x="${parent.border}" 
             y="${parent.border}" 
             height="${parent.height - parent.border * 2}" 
-            width="${parent.width - parent.vscrollwidth - parent.border*2}">
+            width="${parent.width - parent.vscrollwidth - parent.border*2}"
+            scrollevents="true">
             <!-- Supplied by lztext now
                 attribute name="lineheight"
                        value="${this.getTextHeight()/this.getMaxScroll()}"/-->

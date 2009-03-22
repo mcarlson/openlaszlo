@@ -889,6 +889,12 @@ LzTextSprite.prototype.__LZforceScrollAttrs = function ( ignore ) {
   lz.Idle.callOnIdle(scrolldel);
 }
 
+
+LzTextSprite.prototype.scrollevents = false;
+LzTextSprite.prototype.setScrollEvents = function (on) {
+    this.scrollevents = on;
+}
+
 /**
   * @access private
   * Note: When this is called, "this" will be the Flash TextField
@@ -896,6 +902,7 @@ LzTextSprite.prototype.__LZforceScrollAttrs = function ( ignore ) {
   * __LZtextclip from __LZforceScrollAttrs
   */
 LzTextSprite.prototype.__updatefieldsize = function ( ){
+  if (! this.scrollevents) return;
   var lzv = this.__lzview;
   var tsprite = lzv.tsprite;
   var scroll = this.scroll;

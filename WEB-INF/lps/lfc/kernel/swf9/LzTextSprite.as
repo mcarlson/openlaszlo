@@ -299,7 +299,13 @@ public class LzTextSprite extends LzSprite {
             this.textfield.addEventListener(Event.SCROLL, __handleScrollEvent);
         }
 
+        var scrollevents = false;
+        function setScrollEvents(on) {
+            this.scrollevents = on;
+        }
+
         function __handleScrollEvent(e:Event = null) :void {
+            if (! this.scrollevents) return;
             if (scroll !== textfield.scrollV) {
                 scroll = textfield.scrollV;
                 //Debug.info('__handleScrollEvent', 'scrollTop', lineNoToPixel(textfield.scrollV));

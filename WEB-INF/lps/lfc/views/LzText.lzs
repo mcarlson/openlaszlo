@@ -334,9 +334,27 @@ dynamic class LzText extends LzView with LzFormatter {
   var onlineheight:LzDeclaredEventClass = LzDeclaredEvent;
 
   /**
+   * You must use setAttribute('scrollevents', true) to cause scroll events 
+   * to be sent.
+   *
+   * @lzxtype Boolean
+   * @type Boolean
+   */
+  var scrollevents:Boolean = false;
+    /** @access private */
+  function $lzc$set_scrollevents(on:Boolean):void {
+    this.scrollevents = on;
+    this.tsprite.setScrollEvents(on);
+    if (this.onscrollevents.ready) this.onscrollevents.sendEvent(on);
+  }
+  /** @lzxtype event */
+  var onscrollevents:LzDeclaredEventClass = LzDeclaredEvent;
+
+  /**
    * The y scroll offset of the content in pixels (a negative number
    * specifying how many pixels the content should be scrolled
-   * vertically).  Default 0.
+   * vertically).  Default 0.  You must use setAttribute('scrollevents', true) 
+   * to cause this property to change.
    *
    * @lzxtype Number
    * @type Number
@@ -370,7 +388,8 @@ dynamic class LzText extends LzView with LzFormatter {
    * this.height</code>, <code>this.setAttribute('yscroll',
    * this.height - this.scrollheight)</code> will scroll the content
    * so that the bottom of the content appears in the bottom of the
-   * view.
+   * view. You must use setAttribute('scrollevents', true) 
+   * to cause this property to change.
    *
    * @lzxtype Number
    * @type number
@@ -387,7 +406,8 @@ dynamic class LzText extends LzView with LzFormatter {
   /**
    * The x scroll offset of the content in pixels (a negative number
    * specifying how many pixels the content should be scrolled
-   * horizontally). Default 0.
+   * horizontally). Default 0. You must use setAttribute('scrollevents', true) 
+   * to cause this property to change.
    *
    * @lzxtype Number
    * @type Number
@@ -421,7 +441,8 @@ dynamic class LzText extends LzView with LzFormatter {
    * this.width</code>, <code>this.setAttribute('yscroll', this.width
    * - this.scrollwidth)</code> will cause the end of content to be
    * visible at the edge of the view.  (The rightmost content will
-   * appear at the right edge of the view for left-to-right scripts.)
+   * appear at the right edge of the view for left-to-right scripts.) You must 
+   * use setAttribute('scrollevents', true) to cause this property to change.
    *
    * @lzxtype Number
    * @type number
@@ -447,7 +468,8 @@ dynamic class LzText extends LzView with LzFormatter {
    * @devnote NOTE: [2009-01-31 ptw] Some sprites support accurate
    * conversion of pixel values to line numbers, considering interior
    * styling of the content.  If this is not supported, default to
-   * converting assuming a uniform line height.
+   * converting assuming a uniform line height. You must 
+   * use setAttribute('scrollevents', true) to cause this property to change.
    */
   var scroll:Number = 1;
   /** @access private */
@@ -478,7 +500,8 @@ dynamic class LzText extends LzView with LzFormatter {
    * cause the last line of the content to be visible at the bottom of
    * the view (hence this is the line number of the line that will
    * appear at the top of the view when scrolled all the way to the
-   * bottom).
+   * bottom). You must use setAttribute('scrollevents', true) to cause this 
+   * event to be sent.
    *
    * @lzxtype Number
    * @type Number
@@ -493,7 +516,9 @@ dynamic class LzText extends LzView with LzFormatter {
   var onmaxscroll:LzDeclaredEventClass = LzDeclaredEvent;
 
   /**
-   * The horizontal scroll position in pixels.  Default 0.
+   * The horizontal scroll position in pixels.  Default 0. You must use 
+   * setAttribute('scrollevents', true) to cause this property to change.
+   *
    * @lzxtype Number
    * @type Number
    */
@@ -520,7 +545,8 @@ dynamic class LzText extends LzView with LzFormatter {
    * the view.  (The rightmost content will appear at the right edge
    * of the view for left-to-right scripts, hence this is the pixel
    * position of the leftmost pixel that will appear in the view when
-   * scrolled all the way to the right.)
+   * scrolled all the way to the right.) You must use 
+   * setAttribute('scrollevents', true) to cause this property to change.
    *
    * @lzxtype Number
    * @type Number
@@ -580,7 +606,6 @@ dynamic class LzText extends LzView with LzFormatter {
         }
     }
   }
-
 
   /*
    * Resizing interface
