@@ -43,7 +43,14 @@ var LzMouseKernel = {
     */
     ,setCursorGlobal: function ( what ){
         if ( LzMouseKernel.__amLocked ) { return; }
-        _root.attachMovie (what , "cCursor" , 5555 );
+        var cr = _root.attachMovie (what , "cCursor" , 5555 );
+        if ($debug) {
+            if (typeof(cr) != 'movieclip') {
+                Debug.warn('Could not find cursor-resource', what);
+            }
+        }
+        // @devnote Intentionally not used local variable cr below:
+        // if attachMovie failed, the previous movieclip remains intact
         _root.cCursor._x = _root._xmouse;
         _root.cCursor._y = _root._ymouse;
         _root.cCursor.startDrag( true );

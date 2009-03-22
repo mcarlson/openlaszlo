@@ -421,6 +421,11 @@ LzSprite.prototype.attachResourceToChildView = function ( resourceName,
       this.FOREGROUND_DEPTH_OFFSET;
 
     var newmc = this.__LZmovieClipRef.attachMovie( resourceName, instName, depth);
+    if ($debug) {
+        if (typeof(newmc) != 'movieclip') {
+            Debug.warn('Could not find resource', resourceName);
+        }
+    }
     // Install right-click context menu if there is one
     if (childsprite.__contextmenu) newmc.menu = childsprite.__contextmenu.kernel.__LZcontextMenu();
 
@@ -609,14 +614,13 @@ LzSprite.prototype.setWidth = function ( v ){
             this.__LZmaskClip._xscale = v;
         }
     }
-    
+
     this.hassetwidth = true;
-    
+
     if (this.setButtonSize)
         this.setButtonSize( "width", v );
 
-    if (typeof(this.__LZbgRef._xscale) != 'undefined') 
-        this.__LZbgRef._xscale = v;
+    this.__LZbgRef._xscale = v;
 }
 
 /**
@@ -662,12 +666,11 @@ LzSprite.prototype.setHeight = function ( v ){
         }
     }
     this.hassetheight = true;
-    
+
     if (this.setButtonSize)
         this.setButtonSize( "height", v );
 
-    if (typeof(this.__LZbgRef._yscale) != 'undefined')
-        this.__LZbgRef._yscale = v;
+    this.__LZbgRef._yscale = v;
 }
 
 LzSprite.prototype.setOpacity = function ( v ){
@@ -678,7 +681,7 @@ LzSprite.prototype.setOpacity = function ( v ){
         this.__LZmovieClipRef._alpha = 100 * v;
 
     // set the bgcolor alpha if not set by the context menu and overridden by the context menu
-    if (this.__LZbgRef && this._bgcolorhidden != true)
+    if (this._bgcolorhidden != true)
         this.__LZbgRef._alpha = 100 * v;
 }
 
@@ -943,6 +946,16 @@ LzSprite.prototype.getMouse = function() {
 
 /**
   * Get a reference to the control mc - may be overridden by loader
+  *
+  * Unless LzMakeLoadSprite.transform() has been called, the following
+  * assertion always yields true: sprite.getMCRef() === sprite.__LZmovieClipRef
+  * The overridden definition of getMCRef() in LzMakeLoadSprite will change
+  * this contract, now we need to distinguish four cases:
+  * a) loading image: sprite.getMCRef() === null
+  * b) loaded image: sprite.getMCRef()._parent === sprite.__LZmovieClipRef
+  * c) unloaded image: sprite.getMCRef() === undefined
+  * d) audio: sprite.getMCRef() instanceof SoundMC
+  *
   */
 LzSprite.prototype.getMCRef = function () {
     if (this.__LZmovieClipRef == null){

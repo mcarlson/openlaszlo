@@ -77,7 +77,7 @@ override function getLoadMovie () {
     this.unload( this.mc );
     if (this.isaudio != true && this._oldmc != null) {
         // restore regular loader if audio was used before.
-        this.mc.unload();
+        this.mc.unload(); // this.mc instanceof SoundMC
         var m = this._oldmc;
         this._oldmc = null;
         this.mc = m;
@@ -109,7 +109,12 @@ function attachLoadMovie (resc) {
         mc = m;
     }
     if (resc) {
-        mc.attachMovie( resc, "lmc", this.LOADERDEPTH );
+        var lmc = mc.attachMovie( resc, "lmc", this.LOADERDEPTH );
+        if ($debug) {
+            if (typeof(lmc) != 'movieclip') {
+                Debug.warn('Could not find resource', resc);
+            }
+        }
         if (this.mc.loading == true) {
             if ($debug) {
                 Debug.error('already loading', this.mc);
@@ -171,7 +176,7 @@ override function request (req, cache, headers, filetype) {
             suffix = req.substring(si + 1).toLowerCase();
         }
     } else {
-        suffix = filetype;
+        suffix = filetype.toLowerCase();
     }
 
     this.isjpeg = (suffix == 'jpeg' || suffix == 'jpg');

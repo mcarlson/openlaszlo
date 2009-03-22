@@ -25,6 +25,7 @@ dynamic public class LzSprite extends Sprite {
   import flash.display.SimpleButton;
   import flash.display.Sprite;
   import flash.display.SWFVersion;
+  import flash.errors.IOError;
   import flash.events.Event;
   import flash.events.ErrorEvent;
   import flash.events.IOErrorEvent;
@@ -498,6 +499,7 @@ dynamic public class LzSprite extends Sprite {
           this.sound.addEventListener(ProgressEvent.PROGRESS, soundLoadHandler);
           this.sound.addEventListener(IOErrorEvent.IO_ERROR, soundLoadHandler);
 
+          this.soundLoading = true;
           this.sound.load(new URLRequest(url), LzSprite.soundLoaderContext);
 
           // TODO: add condition on this
@@ -515,7 +517,11 @@ dynamic public class LzSprite extends Sprite {
           if (this.sound) {
               if (this.soundLoading) {
                   // stop streaming sound
-                  this.sound.close();
+                  try {
+                      this.sound.close();
+                  } catch (e:IOError) {
+                      // ignore for now
+                  }
                   this.soundLoading = false;
               }
               this.sound = null;
@@ -535,7 +541,7 @@ dynamic public class LzSprite extends Sprite {
           this.addEventListener(Event.ENTER_FRAME, soundFrameHandler);
           this.soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
       }
-      
+
       /** 
         * Stop sound playback and tracking
         * @return Number: the current frame when playback was stopped

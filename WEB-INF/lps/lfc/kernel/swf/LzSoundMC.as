@@ -10,7 +10,7 @@
 
 /**
   * Wraps the streaming MP3 loader in a movieclip-like API. 
-  * Used for proxyless mp3 audio loading.
+  * Used for mp3 audio loading.
   * 
   * @access private
   */
@@ -87,10 +87,30 @@ SoundMC.prototype.gotoAndStop = function (f) {
 /**
   * @access private
   */
-SoundMC.prototype.loadMovie = function (reqstr) {
+SoundMC.prototype.loadMovie = function (url, method) {
+    if ($debug) {
+        if (method == "POST") {
+            Debug.warn("You cannot use POST for audio loading ('%s')", url);
+        }
+    }
     this.init();
-    this._sound.loadSound(reqstr, true);
+    this._sound.loadSound(url, true);
     this.loadstate = 1;
+}
+
+/**
+  * @access private
+  */
+SoundMC.prototype.unloadMovie = function () {
+    this._sound.stop();
+    delete this._sound.onLoad;
+    // try to cancel streaming, don't use loadSound(null) although it's often
+    // suggested for this purpose, it'll start a download from "%APP_URL%/null".
+    // using the empty string stops the current download and won't create a new
+    // one (at least according to firebug's network control).
+    this._sound.loadSound("");
+    delete this._sound;
+    this.loadstate = 0;
 }
 
 /**
@@ -108,13 +128,10 @@ SoundMC.prototype.getBytesTotal = function () {
 }
 
 /**
+  * Alias for unloadMovie
   * @access private
   */
-SoundMC.prototype.unload = function () {
-    this.stop();
-    delete this._sound;
-    this.loadstate = 0;
-}
+SoundMC.prototype.unload = SoundMC.prototype.unloadMovie;
 
 /**
   * @access private
@@ -164,8 +181,8 @@ SoundMC.prototype.loadDone = function (success) {
   * @access private
   */
 SoundMC.prototype.init = function (mc) {
-    this._sound.stop();
-    delete this._sound;
+    // clear previous _sound
+    this.unloadMovie();
     if (mc != null) {
         this._sound = new Sound(mc);
     } else {
