@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzprofile
@@ -267,15 +267,17 @@
                 this.write('\n');
             } else if ($js1) {
                 var sock = this.socket;
+                var url = this.url.dupe();
+                url.query = 'lzt=profile&command=open';
+                sock.open('GET', url, true);
                 sock.onreadystatechange = function () {
                   if (Profiler.processSocketChange()) {
 //                     if ($debug) console.log('open--', 'socket:', Profiler.socketState, 'data:', Profiler.dataState);
                     Profiler.socketState = 'open';
                   }
                 };
-                var url = this.url.dupe();
-                url.query = 'lzt=profile&command=open';
-                sock.open('GET', url, false);
+
+
                 // Prime
                 sock.send('');
                 this.openTag('xml');
@@ -442,6 +444,9 @@
                     //fconsole.write('sent data '+seq);
                 } else if ($js1) {
                     var sock = this.socket;
+                    var url = this.url.dupe();
+                    url.query = 'lzt=profile&command=data&seqnum='+(this.seqnum++);
+                    sock.open('POST', url, true);
                     sock.onreadystatechange = function () {
                       if (Profiler.processSocketChange()) {
 //                         if ($debug) console.log('data--', 'socket:', Profiler.socketState, 'data:', Profiler.dataState);
@@ -463,9 +468,8 @@
                         }
                       }
                     };
-                    var url = this.url.dupe();
-                    url.query = 'lzt=profile&command=data&seqnum='+(this.seqnum++);
-                    sock.open('POST', url, false);
+
+
                     sock.setRequestHeader(
                         'Content-Type',
                         'application/x-www-form-urlencoded'
@@ -516,6 +520,9 @@
             lv.sendAndLoad(nurl, this.returnval, "POST");
         } else if ($js1) {
             var sock = this.socket;
+            var url = this.url.dupe();
+            url.query = 'lzt=profile&command=close&nchunks='+this.seqnum;
+            sock.open('GET', url, true);
             sock.onreadystatechange = function () {
               if (Profiler.processSocketChange()) {
 //               if ($debug) console.log('closed--', 'socket:', Profiler.socketState, 'data:', Profiler.dataState);
@@ -523,9 +530,6 @@
                 delete Profiler.socket;
               }
             };
-            var url = this.url.dupe();
-            url.query = 'lzt=profile&command=close&nchunks='+this.seqnum;
-            sock.open('GET', url, false);
             sock.send('');
         }
       }
