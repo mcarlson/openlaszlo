@@ -1,7 +1,7 @@
 /**
   * LzScreenKernel.js
   *
-  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -14,6 +14,7 @@ var LzScreenKernel = {
     width: null
     ,height: null
     ,__resizeEvent: function() {
+        /*
         // thanks quirksmode!  http://www.quirksmode.org/viewport/compatibility.html
         // Also see http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
         var q = LzSprite.prototype.quirks;
@@ -45,6 +46,12 @@ var LzScreenKernel = {
             LzScreenKernel.width = scope.clientWidth;
             LzScreenKernel.height = scope.clientHeight;
         }
+        */
+
+        // base size off of canvas' parent div
+        var rootdiv = LzSprite.__rootSprite.__LZdiv.parentNode;
+        LzScreenKernel.width = rootdiv.offsetWidth;
+        LzScreenKernel.height = rootdiv.offsetHeight;
 
         if (LzScreenKernel.__callback) LzScreenKernel.__scope[LzScreenKernel.__callback]({width: LzScreenKernel.width, height: LzScreenKernel.height});
         //Debug.write('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});

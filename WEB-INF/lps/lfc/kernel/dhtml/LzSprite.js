@@ -387,7 +387,7 @@ LzSprite.prototype.quirks = {
 LzSprite.prototype.capabilities = {
     rotation: false
     // Scale canvas to percentage values
-    ,scalecanvastopercentage: true
+    ,scalecanvastopercentage: false
     ,readcanvassizefromsprite: true
     ,opacity: true
     ,colortransform: false
