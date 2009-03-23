@@ -415,6 +415,12 @@ lz.embed = {
     ,/** @access private called on canvas init */
     _ready: function (cref) {
         this.loaded = true;
+        if (this._callmethod) {
+            for (var i = 0; i < this._callmethod.length; i++) {
+                this.callMethod(this._callmethod[i]);
+            }
+            this._callmethod = null;
+        }
         if (this._setCanvasAttributeQ) {
             this._setCanvasAttributeDequeue();
         }
@@ -610,11 +616,9 @@ lz.embed = {
         if (this.loaded) {
             return lz.embed.dojo.comm[this._id].callMethod(js);
         } else {
-            var f = function() {
-                lz.embed.dojo.comm[this._id].callMethod(js);
-            };
-            lz.embed.dojo.addLoadedListener(f, this);
-            //console.log('addlistener', this, f);
+            // add to a private queue
+            if (! this._callmethod) this._callmethod = [];
+            this._callmethod.push(js);
         }
     }
     ,/** @access private */
