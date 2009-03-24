@@ -27,7 +27,8 @@ public class LzTextSprite extends LzSprite {
         import flash.text.TextFieldAutoSize;
         import flash.text.TextFormat;
         import flash.text.TextLineMetrics;
-        import flash.ui.MouseCursor;
+        import flash.ui.*;
+        import flash.utils.getDefinitionByName;
     }#
 
         #passthrough  {
@@ -177,7 +178,7 @@ public class LzTextSprite extends LzSprite {
                             if (sprite.buttonMode && sprite.useHandCursor) {
                                 // need to respect global cursor setting
                                 if (! LzMouseKernel.hasGlobalCursor) {
-                                    cursor = MouseCursor.BUTTON;
+                                    if ($swf10) { cursor = MouseCursor.BUTTON; }
                                 }
                             }
                             if (sprite is LzSprite) {
@@ -207,6 +208,14 @@ public class LzTextSprite extends LzSprite {
                 // TODO: when is this possible?
                 // Debug.warn("%s: no forwarding possible (%w)", e.type, this.owner);
             }
+        }
+
+        private static var __MouseCursor:Object = null;
+        private static function get MouseCursor () :Object {
+            if (__MouseCursor == null) {
+                __MouseCursor = getDefinitionByName('flash.ui.MouseCursor');
+            }
+            return __MouseCursor;
         }
 
         function get forwardsMouse () :Boolean {

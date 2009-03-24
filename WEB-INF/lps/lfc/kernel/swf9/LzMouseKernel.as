@@ -15,8 +15,8 @@ class LzMouseKernel  {
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.text.TextField;
-    import flash.ui.Mouse;
-    import flash.ui.MouseCursor;
+    import flash.ui.*;
+    import flash.utils.getDefinitionByName;
     }#
 
 
@@ -114,15 +114,25 @@ class LzMouseKernel  {
     static var lastCursorResource:String = null;
 
     #passthrough {
+        private static var __MouseCursor:Object = null;
+        private static function get MouseCursor () :Object {
+            if (__MouseCursor == null) {
+                __MouseCursor = getDefinitionByName('flash.ui.MouseCursor');
+            }
+            return __MouseCursor;
+        }
+
         private static var __builtinCursors:Object = null;
         static function get builtinCursors () :Object {
             if (__builtinCursors == null) {
                 var cursors:Object = {};
-                cursors[MouseCursor.ARROW] = true;
-                cursors[MouseCursor.AUTO] = true;
-                cursors[MouseCursor.BUTTON] = true;
-                cursors[MouseCursor.HAND] = true;
-                cursors[MouseCursor.IBEAM] = true;
+                if ($swf10) {
+                    cursors[MouseCursor.ARROW] = true;
+                    cursors[MouseCursor.AUTO] = true;
+                    cursors[MouseCursor.BUTTON] = true;
+                    cursors[MouseCursor.HAND] = true;
+                    cursors[MouseCursor.IBEAM] = true;
+                }
                 __builtinCursors = cursors;
             }
             return __builtinCursors;
@@ -130,7 +140,11 @@ class LzMouseKernel  {
 
         static function get hasGlobalCursor () :Boolean {
             var gcursor:String = globalCursorResource;
-            return ! (gcursor == null || (gcursor == MouseCursor.AUTO && useBuiltinCursor));
+            if ($swf10) {
+                return ! (gcursor == null || (gcursor == MouseCursor.AUTO && useBuiltinCursor));
+            } else {
+                return ! (gcursor == null);
+            }
         }
     }#
 
@@ -165,7 +179,7 @@ class LzMouseKernel  {
             lastCursorResource = what;
         }
         if (useBuiltinCursor) {
-            Mouse.cursor = what;
+            if ($swf10) { Mouse['cursor'] = what; }
             cursorSprite.stopDrag();
             cursorSprite.visible = false;
             LFCApplication.stage.removeEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
@@ -173,7 +187,7 @@ class LzMouseKernel  {
             Mouse.show();
         } else {
             // you can only hide the Mouse when Mouse.cursor is AUTO
-            Mouse.cursor = MouseCursor.AUTO;
+            if ($swf10) { Mouse['cursor'] = MouseCursor.AUTO; }
             Mouse.hide();
             cursorSprite.x = LFCApplication.stage.mouseX;
             cursorSprite.y = LFCApplication.stage.mouseY;
@@ -258,7 +272,7 @@ class LzMouseKernel  {
         LFCApplication.stage.removeEventListener(Event.MOUSE_LEAVE, mouseLeaveHandler);
         LFCApplication.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
         globalCursorResource = null;
-        Mouse.cursor = MouseCursor.AUTO;
+        if ($swf10) { Mouse['cursor'] = MouseCursor.AUTO; }
         Mouse.show();
     }
 
