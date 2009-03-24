@@ -41,18 +41,26 @@ var LzSprite = function(owner, isroot) {
             root.style.width = width; 
             div.style.width = width; 
             var widthispercentage = width.indexOf('%') != -1;
-            var w = widthispercentage ? width : parseInt(width);
-            this.width = w;
-            this._w = this.CSSDimension(w);
+            if (widthispercentage) {
+                this._w = this.width = width;
+            }
+            else {
+                this.width = parseInt(width);
+                this._w = this.CSSDimension(this.width);
+            }
         }
         var height = p.height;
         if (height) {
             root.style.height = height; 
             div.style.height = height; 
             var heightispercentage = height.indexOf('%') != -1;
-            var h = heightispercentage ? height : parseInt(height);
-            this.height = h;
-            this._h = this.CSSDimension(h);
+            if (heightispercentage) {
+                this._h = this.height = height;
+            }
+            else {
+                this.height = parseInt(height);
+                this._h = this.CSSDimension(this.height);
+            }
         }
         if (p.id) {
             this._id = p.id;
