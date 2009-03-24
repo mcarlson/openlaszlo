@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -61,11 +61,13 @@ class DataCompiler extends ElementCompiler {
       String dsetname = XMLUtils.requireAttributeValue(element, "name");
       boolean trimwhitespace = "true".equals(element.getAttributeValue("trimwhitespace"));
       String content = NodeModel.getDatasetContent(element, mEnv, trimwhitespace);
+      boolean nsprefix = "true".equals(element.getAttributeValue("nsprefix"));
       // Initialize the global declaration
       mEnv.compileScript(dsetname+" = "+
                          LOCAL_DATA_FNAME+"("+ScriptCompiler.quote(dsetname) +
                          ", " +content+
-                         "," + trimwhitespace+");\n");
+                         "," + trimwhitespace+
+                         "," + nsprefix + ");\n");
       // For swf9, make sure the global variable is referenced or the
       // Flash class loader won't load it.
       // 

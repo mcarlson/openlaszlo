@@ -842,8 +842,8 @@ public function LzInstantiateView(e, tn = 1) {
    canvas.initiatorAddNode( e , tn );
 }
 
-public function lzAddLocalData(name, d, trimwhitespace) {
-    return new LzDataset(canvas, {name: name, initialdata: d, trimwhitespace: trimwhitespace });
+public function lzAddLocalData(name, d, trimwhitespace, nsprefix = false) {
+        return new LzDataset(canvas, {name: name, initialdata: d, trimwhitespace: trimwhitespace, nsprefix: nsprefix });
 }
 
 } // End of LzCanvas
