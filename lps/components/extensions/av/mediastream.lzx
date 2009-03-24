@@ -952,7 +952,7 @@
 
             case "NetStream.Play.Stop": {
                 // don't call _onStop because some servers sent this event when they're done streaming (red5, wowza) - see LPP-7708
-                //this._onStop();
+                if (this.type == 'http') this._onStop();
                 break;
             }
 
@@ -1081,11 +1081,13 @@
 
     <!--- called from Flash callback when stream is done
             @keywords private -->
-    <method name="_onStop" args="info"> <![CDATA[
+    <method name="_onStop" args="info=ignore"> <![CDATA[
         //Debug.write("mediastream._onstop before mode=%w",this.mode);
         // TODO: this isn't actually called! 
         if (!this.paused) this.setAttribute('paused', true);
-        if (this.autorewind && this.time == this.totaltime) {
+        if (this.autorewind) {
+            // TODO: time != totaltime here, so the test failed - seek anyhow.:
+            // Debug.info('times', this.time == this.totaltime, this.time, this.totaltime);
             this.seek(0);
         }
         if (this.onstop) this.onstop.sendEvent(this);
