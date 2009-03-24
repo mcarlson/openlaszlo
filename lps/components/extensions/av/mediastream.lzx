@@ -1081,7 +1081,7 @@
 
     <!--- called from Flash callback when stream is done
             @keywords private -->
-    <method name="_onStop" args="info=ignore"> <![CDATA[
+    <method name="_onStop" args="info=null"> <![CDATA[
         //Debug.write("mediastream._onstop before mode=%w",this.mode);
         // TODO: this isn't actually called! 
         if (!this.paused) this.setAttribute('paused', true);
