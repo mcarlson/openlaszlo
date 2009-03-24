@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -98,6 +98,8 @@ public class Canvas implements java.io.Serializable {
     private int mHeight = DEFAULT_HEIGHT;
     /** Background color of the canvas. */
     private int mBGColor = DEFAULT_BGCOLOR;
+    /** Framerate for this app. See SWFWriter.mFrameRate for defaults in Flash. */
+    private int mFrameRate = 30;
 
     // Dimension strings
     private String mWidthString = "100%";
@@ -281,6 +283,11 @@ public class Canvas implements java.io.Serializable {
         return mBGColor;
     }
 
+    /** @return Frame rate */
+    public int getFrameRate() {
+        return mFrameRate;
+    }
+
     /** @return Returns bgcolor as a hexadecimal string */
     // TODO: [12-21-2002 ows] This belongs in a utility library.
     public String getBGColorString() {
@@ -299,6 +306,11 @@ public class Canvas implements java.io.Serializable {
     /** @param BGColor  Background color */
     public void setBGColor(int BGColor) {
         mBGColor = BGColor;
+    }
+
+    /** @param Framerate */
+    public void setFrameRate(int framerate) {
+        mFrameRate = framerate;
     }
 
     /** @return Title */

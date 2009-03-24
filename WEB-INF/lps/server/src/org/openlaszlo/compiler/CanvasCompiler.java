@@ -256,6 +256,7 @@ class CanvasCompiler extends ToplevelCompiler {
         String id = elt.getAttributeValue("id");
         String accessible = elt.getAttributeValue("accessible");
         String history = elt.getAttributeValue("history");
+        String framerate = elt.getAttributeValue("framerate");
         
         if (width != null) {
             if (isPercentageDimension(width)) {
@@ -300,6 +301,13 @@ class CanvasCompiler extends ToplevelCompiler {
         }
         if (history != null) {
             canvas.setHistory(history.equals("true"));
+        }
+        if (framerate != null) {
+            try {
+                canvas.setFrameRate(Integer.parseInt(framerate));
+            } catch (NumberFormatException e) {
+                throw new CompilationError(elt, "framerate", e);
+            }
         }
         
         // Persistent connection parameters

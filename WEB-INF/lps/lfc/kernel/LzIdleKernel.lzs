@@ -1,7 +1,7 @@
 /**
   * LzIdleKernel.js
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -16,6 +16,7 @@
 // Receives idle events and sends them into the runtime
 var LzIdleKernel = {
     __callbacks: []
+    ,__intervalID: null
     ,addCallback: function (scope, funcname) {
         LzIdleKernel.__callbacks.push([scope, funcname]);
     }    
@@ -32,6 +33,9 @@ var LzIdleKernel = {
             s[LzIdleKernel.__callbacks[i][1]]( LzTimeKernel.getTimer() );
         }
     }
+    ,setFrameRate: function(fps) {
+        if (LzIdleKernel.__intervalID != null) clearInterval(LzIdleKernel.__intervalID);
+        LzIdleKernel.__intervalID = setInterval( LzIdleKernel.__update, 1000 / fps );
+    }
 }
-setInterval( LzIdleKernel.__update, 33 );
 }

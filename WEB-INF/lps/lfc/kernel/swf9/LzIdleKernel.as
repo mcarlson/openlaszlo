@@ -38,9 +38,8 @@ public class LzIdleKernel  {
             }
         }
 
-        public static function startTimer(msecs:uint):void {
-            LFCApplication.stage.addEventListener(Event.ENTER_FRAME, LzIdleKernel.__update);
-            //setInterval( LzIdleKernel.__update, msecs );
+        public static function setFrameRate(fps:int):void {
+            LFCApplication.stage.frameRate = fps;
         }
 
     }#

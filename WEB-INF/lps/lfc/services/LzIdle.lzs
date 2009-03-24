@@ -1,6 +1,6 @@
 /**
  *
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzidle
@@ -120,6 +120,15 @@ public final class LzIdleService extends LzEventable {
             this.onidle.sendEvent(t);
         }
     }
+
+    /**
+     * Sets the frame rate (FPS) used for the idle update.
+     * @param Number fps: The number of frames per second to use for idle events
+     */
+    function setFrameRate(fps:Number = 30) :void {
+        LzIdleKernel.setFrameRate(fps);
+    }
+
 }
 lz.IdleService = LzIdleService;  // publish
 

@@ -58,10 +58,7 @@ public class LFCApplication {
         LFCApplication.stage = LFCApplication._sprite.stage;
         runToplevelDefinitions()
 
-        var idleTimerPeriod:Number = 14; // msecs
-
-        //trace('idle timer period = ', idleTimerPeriod , 'msecs');
-        LzIdleKernel.startTimer( idleTimerPeriod );
+        stage.addEventListener(Event.ENTER_FRAME, LzIdleKernel.__update);
 
         if (Capabilities.playerType == "ActiveX") {
             // workaround for flash player bug FP-1355

@@ -67,10 +67,18 @@ dynamic class LzCanvas extends LzView {
       * @access private
       */
     var totalnodes:*;
-    /**
-      * @access private
+    /** The framerate that should be used for this application
+      * @type Number
+      * @lzxtype number
+      * @lzxdefault "1.1"
+      * @keywords final
       */
-    var framerate:*;
+    var framerate:Number = 30;
+    /** Sent whenever the framerate changes
+      * @access public
+      * @lzxtype event
+      */
+    var onframerate = LzDeclaredEvent;
     /**
       * @access private
       */
@@ -240,7 +248,9 @@ dynamic class LzCanvas extends LzView {
         this.creatednodes = 0;
         this.percentcreated = 0;
 
-        this.framerate = 30;
+        if (! args.framerate) {
+            args.framerate = 30;
+        }
 
         if ((typeof(args.proxied) == "undefined") || args.proxied == null) {
             // Default to the 'baked in' value set by the compiler
@@ -542,6 +552,21 @@ override function $lzc$set_resource( v ) {
   */
 override function toString (){
     return "This is the canvas";
+}
+
+/** Sets the canvas framerate
+  * @access private
+  */
+function $lzc$set_framerate( fps:Number ) {
+    fps *= 1;
+    if (fps < 1) {
+        fps = 1;
+    } else if (fps > 1000) {
+        fps = 1000;
+    }
+    this.framerate = fps;
+    lz.Idle.setFrameRate(fps);
+    if (this.onframerate.ready) this.onframerate.sendEvent(fps);
 }
 
 /**

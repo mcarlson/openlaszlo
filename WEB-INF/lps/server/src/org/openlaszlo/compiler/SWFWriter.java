@@ -122,8 +122,10 @@ class SWFWriter extends ObjectWriter {
 
         String s;
 
+        /* deprecated
         s = mProperties.getProperty("swf.frame.rate", "30");
         mFrameRate = Integer.parseInt(s);
+        */ 
 
         s = mProperties.getProperty("swf.text.leading", "2");
         mTextLeading = Integer.parseInt(s);
@@ -267,6 +269,9 @@ class SWFWriter extends ObjectWriter {
           frame.addFlashObject(slimit);
         }
 
+        mFrameRate = canvas.getFrameRate();
+        mFlashFile.setFrameRate(mFrameRate << 8); 
+
         // NOTE: disable constant pool when compiling canvas constructor
         // so that build id etc... are easy for qa to pick out.
         Properties props = (Properties)mProperties.clone();
@@ -275,7 +280,7 @@ class SWFWriter extends ObjectWriter {
         byte[] action = ScriptCompiler.compileToByteArray(canvasConstructor, props);
         Program program = new Program(action, 0, action.length);
         if (mLogger.isDebugEnabled()) {
-        	mLogger.debug("    Adding a program of " + action.length + " bytes.");
+          mLogger.debug("    Adding a program of " + action.length + " bytes.");
         }
         addProgram(program);
 
@@ -643,7 +648,7 @@ class SWFWriter extends ObjectWriter {
         Script out = new Script(1);
         String fileName = null;
         if (mLogger.isDebugEnabled()) {
-        	mLogger.debug("Including multiple resources as " + name);
+            mLogger.debug("Including multiple resources as " + name);
         }
         int width = 0;
         int height = 0;
@@ -651,7 +656,7 @@ class SWFWriter extends ObjectWriter {
         for (Iterator e = sources.iterator() ; e.hasNext() ;) {
             fileName = (String)e.next();
             if (mLogger.isDebugEnabled()) {
-            	mLogger.debug("    Importing " + fileName);
+                mLogger.debug("    Importing " + fileName);
             }
 
             // Definition to add to the library (without stop)
@@ -664,7 +669,7 @@ class SWFWriter extends ObjectWriter {
             Frame f = out.getFrameAt(fc - 1);
             if (addStop) f.addStopAction();
             if (mLogger.isDebugEnabled()) {
-            	mLogger.debug("    Added " + (fc - bc) + " of " + fc + "frame(s)");
+                mLogger.debug("    Added " + (fc - bc) + " of " + fc + "frame(s)");
             }
 
             int rw = res.getWidth();
@@ -1177,7 +1182,7 @@ class SWFWriter extends ObjectWriter {
         try {
 
             // Parse the font
-        	if (mLogger.isDebugEnabled()) {
+            if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -1186,7 +1191,7 @@ class SWFWriter extends ObjectWriter {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 SWFWriter.class.getName(),"051018-1368", new Object[] {location})
 );
-        	}
+            }
             FlashFile fontFile = FlashFile.parse( location );
             Enumeration defs = fontFile.definitions();
             FontDef fontDef = (FontDef)defs.nextElement();
