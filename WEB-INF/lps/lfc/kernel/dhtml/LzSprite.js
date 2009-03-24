@@ -42,7 +42,8 @@ var LzSprite = function(owner, isroot) {
             div.style.width = width; 
             var widthispercentage = width.indexOf('%') != -1;
             var w = widthispercentage ? width : parseInt(width);
-            this._w = this.width = w;
+            this.width = w;
+            this._w = this.CSSDimension(w);
         }
         var height = p.height;
         if (height) {
@@ -50,7 +51,8 @@ var LzSprite = function(owner, isroot) {
             div.style.height = height; 
             var heightispercentage = height.indexOf('%') != -1;
             var h = heightispercentage ? height : parseInt(height);
-            this._h = this.height = h;
+            this.height = h;
+            this._h = this.CSSDimension(h);
         }
         if (p.id) {
             this._id = p.id;
