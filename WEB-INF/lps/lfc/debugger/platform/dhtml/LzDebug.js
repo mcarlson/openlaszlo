@@ -175,10 +175,11 @@ class LzDHTMLDebugService extends LzDebugService {
    */
   function createDebugIframe() {
     var debugurl =  lz.embed.options.serverroot + 'lps/includes/laszlo-debugger.html';
+    var form = '<form id="dhtml-debugger-input" onsubmit="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" action="#">'
     var iframe = '<iframe id="LaszloDebugger" name="LaszloDebugger" src="' + debugurl + '" width="100%" height="200"></iframe>';
-    var inputdiv = '<form id="dhtml-debugger-input" onsubmit="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" action="#"><div><input id="LaszloDebuggerInput" style="width:78%;" type="text"/><input type="button" onclick="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" value="eval"/><input type="button" onclick="$modules.lz.Debug.clear(); return false" value="clear"/><input type="button" onclick="$modules.lz.Debug.bugReport(); return false" value="bug report"/></div></form>';
+    var inputdiv = '<div><input id="LaszloDebuggerInput" style="width:78%;" type="text"/><input type="button" onclick="$modules.lz.Debug.doEval(document.getElementById(\'LaszloDebuggerInput\').value); return false" value="eval"/><input type="button" onclick="$modules.lz.Debug.clear(); return false" value="clear"/><input type="button" onclick="$modules.lz.Debug.bugReport(); return false" value="bug report"/></div></form>';
     var debugdiv = document.createElement('div');
-    debugdiv.innerHTML = iframe + inputdiv;
+    debugdiv.innerHTML = form + iframe + inputdiv;
     debugdiv.onmouseover = function (e) { 
         if (!e) e = window.event;
         e.cancelBubble = true;
@@ -186,8 +187,15 @@ class LzDHTMLDebugService extends LzDebugService {
         return false;
     }
     var y = canvas.height - 230;
+    // firefox likes the style applied this way
     lz.embed.__setAttr(debugdiv, 'style', 'position:absolute;z-index:10000000;top:' + y + 'px;width:100%;');
     canvas.sprite.__LZdiv.appendChild(debugdiv);
+    // IE insists the style be applied this way
+    var style = debugdiv.style;
+    style.position = 'absolute';
+    style.top = y;
+    style.zIndex = 10000000;
+    style.width = '100%';
     return window.frames['LaszloDebugger'];
   };
 
