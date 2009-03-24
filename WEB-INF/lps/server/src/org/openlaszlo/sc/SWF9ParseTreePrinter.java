@@ -1,7 +1,7 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -311,9 +311,6 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     }
   }
   
-  public String visitPragmaDirective(SimpleNode node, String[] children) {
-    return "// (ignored) pragma " + children[0];
-  }
   public String visitPassthroughDirective(SimpleNode node, String[] children) {
     ASTPassthroughDirective passthrough = (ASTPassthroughDirective)node;
     String text = passthrough.getText();

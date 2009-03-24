@@ -529,8 +529,11 @@ public class ParseTreePrinter {
     children[0] = maybeAddParens(thisPrec, c, children[0]);
     return "new " + children[0] + "(" + children[1] + ")";
   }
+  // TODO: [2009-03-23 dda] Should not need to comment the #pragma as they
+  // should not normally appear in emitted code.  But LPP-7824 requires it
+  // for now.
   public String visitPragmaDirective(SimpleNode node, String[] children) {
-    return "#pragma " + children[0];
+    return "// #pragma " + children[0] + "\n";
   }
   public String visitPassthroughDirective(SimpleNode node, String[] children) {
     return ((ASTPassthroughDirective)node).getText();

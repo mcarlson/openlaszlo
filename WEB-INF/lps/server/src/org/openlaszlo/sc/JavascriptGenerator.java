@@ -1249,9 +1249,17 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     String tryType = "";
     if (tryAll) {
       if (options.getBoolean(Compiler.DEBUG) || options.getBoolean(Compiler.DEBUG_SWF9)) {
-        error.add(parseFragment("$lzsc$runtime.reportException(" +
-                                ScriptCompiler.quote(filename) + ", " +
-                                functionNameIdentifier.beginLine + ", $lzsc$e);"));
+        // TODO: [2009-03-20 dda] In DHTML, having trouble successfully defining
+        // the $lzsc$runtime class, so we'll report the warning more directly.
+        if (this instanceof SWF9Generator) {
+          error.add(parseFragment("$lzsc$runtime.reportException(" +
+                                  ScriptCompiler.quote(filename) + ", " +
+                                  functionNameIdentifier.beginLine + ", $lzsc$e);"));
+        } else {
+          error.add(parseFragment("$reportSourceWarning(" +
+                                  ScriptCompiler.quote(filename) + ", " +
+                                  functionNameIdentifier.beginLine + ", $lzsc$e.name + \": \" + $lzsc$e.message, true);"));
+        }
       }
 
       predecls.add(new Compiler.PassThroughNode(parseFragment("var $lzsc$ret:* = 0;")));
@@ -1595,7 +1603,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       if (includeThis && matchClass.equals(node.getClass())) {
         return node;
       }
-      includeThis = false;
+      includeThis = true;
       node = node.getParent();
     }
     return null;
