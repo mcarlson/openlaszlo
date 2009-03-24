@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.         *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -8,44 +8,100 @@
     <include href="av/videoscreen.lzx"/>
     <include href="av/videoslider.lzx"/>
 
+    <!--- provides standard UI controls for video playback
+    -->
     <class name="videoplayer">
+        <!--- true for verbose debug logging -->
+        <attribute name="debug" value="false"/>
 
-
+        <!--- a reference to the stream to enable direct control,
+              such as vp.steam.play or vp.stream.seek(20)
+        </canvas>-->
+        <attribute name="stream" value="${vscreen.ms}"/>
+       
+        <!--- type of stream: 'http' or 'rtmp', 
+              see mediastream for details -->
         <attribute name="type" type="string" value="http"/>
 
+        <!--- url of the stream to play
+              see mediastream for details -->
         <attribute name="url" type="string" value=""/>
+        
+        <!--- Show this frame when the url is set. 
+              Use -1 to show no frame.
+              Default: 0 -->
+        <attribute name="showframe" type="number" value="0"/>
 
+        <!--- when true, playback will start automatically
+              without user action -->
         <attribute name="autoplay" value="false"/>
 
+        <!--- why would you want this? no test case, marking private 
+              @access private -->    
         <attribute name="showscreen" value="true"/>
 
+        <!--- why would you want this? no test case, marking private 
+              @access private -->    
         <attribute name="showslider" value="true"/>
 
-        <attribute name="borderLeft" value="5"/>
+        <!--- the border around the video image.  Default: 5 -->
+        <attribute name="border" value="5"/>
 
-        <attribute name="borderRight" value="5"/>
+        <!--- the left border on the video image.  Default: this.border -->
+        <attribute name="borderLeft" value="${this.border}"/>
 
-        <attribute name="borderTop" value="5"/>
+        <!--- the right border on the video image.  Default: this.border -->
+        <attribute name="borderRight" value="${this.border}"/>
 
+        <!--- the top border on the video image.  Default: this.border -->
+        <attribute name="borderTop" value="${this.border}"/>
+
+        <!--- the bottom border on the video image.  Default: this.border -->
+        <attribute name="borderBottom" value="${this.border}"/>
+
+        <!--- if non-zero, then this will be used to maintain the
+              aspect ratio based on the width of the videoscreen.
+              Default: 4/3
+        -->
+        <attribute name="aspectRatio" value="$once{4/3}"/>
+
+        <!--- the vertical space between the video image and the controls -->
         <attribute name="sliderGap" value="5"/>
 
+        <!--- the controls stretch to this height, but I don't see a test
+              for this and I can't imagine it looks good so I'm marking
+              this private
+          @access private
+        -->
         <attribute name="sliderHeight" value="${
             this.showslider ? this.sliderHeightVal : 0}"/>
 
+        <!--- see note above 
+          @access private
+        -->
         <attribute name="sliderHeightVal" value="16"/>
 
-        <attribute name="borderBottom" value="5"/>
-
+        <!--- internal: derived from public attributes 
+              @access private -->
         <attribute name="screenWidth" value="${
             this.width - (this.borderLeft + this.borderRight)}"/>
 
+        <!--- internal: derived from public attributes 
+              @access private -->
         <attribute name="sliderTop" value="${
             this.height - (this.borderBottom + this.sliderHeight)}"/>
 
-        <attribute name="videoBottom" value="${
-            this.sliderTop - (this.showslider ? this.sliderGap : 0)}"/>
+        <!--- if true, display the current and total time -->
+        <attribute name="showTimeDisplay" value="true"/>
 
-
+        <!--- if true, display a volume control -->
+        <attribute name="showVolumeControl" value="true"/>
+        
+        <!--- color of the progress bar -->
+        <attribute name="progressColor" value="0x00ff00"/>
+ 
+        <!--- starts playing audio/video from the giving URL,
+              which may be http or rtmp -->
         <method name="playVideo" args="url, type"><![CDATA[
             var ms = 
                 this.vscreen.ms;
@@ -57,30 +113,32 @@
           ]]>
         </method>
 
-
-        <videoscreen name="vscreen"
-            x="${parent.borderLeft}"
-            y="${parent.borderTop}"
+       <simplelayout axis="y" spacing="${parent.sliderGap}"/>  
+       <videoscreen name="vscreen" debug="${parent.debug}" 
             width="${parent.screenWidth}"
-            height="${parent.videoBottom - parent.borderTop}"
             visible="${parent.showscreen}"
             type="${classroot.type}"
             autoplay="${classroot.autoplay}"
             url="${classroot.url}"
             volume="${parent.vslider.volume}"
-        />
-
+            showframe="${parent.showframe}"
+            borderTop="${parent.borderTop}"
+            borderLeft="${parent.borderLeft}"
+            borderBottom="${parent.borderBottom}"
+            borderRight="${parent.borderRight}"
+            aspectRatio="${parent.aspectRatio}"
+            />
         <videoslider name="vslider"
-            x="${parent.borderLeft}"
-            y="${parent.height - (parent.borderBottom + parent.sliderHeight)}"
             width="${parent.screenWidth}"
             height="${parent.sliderHeight}"
             visible="${parent.showslider}"
             ms="${classroot.vscreen.ms}"
             time="${classroot.vscreen.ms.time}"
             totaltime="${classroot.vscreen.ms.totaltime}"
+            showTimeDisplay="${parent.showTimeDisplay}"
+            showVolumeControl="${parent.showVolumeControl}"
+            color="${parent.progressColor}"
         />
-
 
     </class>
 

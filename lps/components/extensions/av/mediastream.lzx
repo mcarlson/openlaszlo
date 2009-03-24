@@ -654,7 +654,11 @@
 
     <!--- stop will stop everything: playback, recording and broadcasting.
           It also resets the time to the beginning and the mode to "" -->
-    <method name="stop">
+    <method name="stop"> <![CDATA[
+        if ($debug && this.debug)
+            Debug.write('mediastream %w stop fs=%w', 
+                        this, this._flashstream);
+            
         if (this.paused) {
             // can't be paused and stopped at the same time...
             setAttribute('paused', false);
@@ -692,6 +696,7 @@
         this.setAttribute("time", 0);
         this.setAttribute("progress", 0);
         this.setAttribute("mode", "");
+        ]]>
     </method> 
 
     <method name="close">
@@ -1210,8 +1215,8 @@
             }
         }
         if ($debug && this.debug) {
-            Debug.write("mediastream %w seek %w fs=%w", 
-                this, t, this._flashstream);
+            Debug.write("mediastream %w seek(%w %w) fs=%w", 
+                this, typeof(t), t, this._flashstream);
         }
     ]]>
     </method> 

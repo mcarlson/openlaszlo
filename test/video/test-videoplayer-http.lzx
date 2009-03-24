@@ -1,0 +1,44 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+<canvas>   
+<simplelayout/>
+<view>   
+    <simplelayout axis="x" spacing="10"/> 
+    <view layout="axis:y">    
+        <text multiline="true"> 
+            v1: showframe="1"<br/> 
+            showTimeDisplay="false" showVolumeControl="false"<br/>
+            progressColor="0x0000cc" border="1" sliderGap="0"
+        </text>
+        <videoplayer id="v1" showframe="1" 
+            showTimeDisplay="false" showVolumeControl="false"
+            progressColor="0x0000cc"
+            border="1" sliderGap="0"
+            url="http:videos/good-dog.flv"
+            type="http"    
+            width="302"/>     
+        <text text="${'playing='+v1.stream.playing}"/>
+        <text text="${'paused='+v1.stream.paused}"/>
+        <text></text>
+        <text text="${'mode='+v1.stream.mode}"/>
+    </view>  
+    <view layout="axis:y">
+        <text multiline="true">
+              v2: autoplay=true<br/>
+              defaults for visual layout
+        </text>
+        <videoplayer id="v2" debug="true"
+        url="http:videos/good-dog.flv"
+        type="http" autoplay="true"
+        width="320" />
+        <text text="${'playing='+v2.stream.playing}"/>
+        <text text="${'paused='+v2.stream.paused}"/>
+        <text></text>
+        <text text="${'mode='+v2.stream.mode}"/>
+    </view>
+</view>
+<text>playing should always equal !paused, true if the playhead is moving</text>
+<text>For a video player the mode should always be "playing"</text>
+</canvas>
