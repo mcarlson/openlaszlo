@@ -872,17 +872,21 @@ public class SWF9External {
   /**
    * Get the file name of the LFC shared library for SWF9.
    */
-  public static String getLFCLibrary(boolean useDebug) {
+  public static String getLFCLibrary(boolean useDebug, String runtime) {
     String dbgext = useDebug ? "-debug" : "";
-    return LPS.getLFCDirectory() + File.separator + "LFC9" + dbgext + ".swc";
+    // Strip off "swf" prefix from runtime name (e.g., 'swf10')
+    String LFCVersion = "LFC" + runtime.substring("swf".length());
+    return LPS.getLFCDirectory() + File.separator + LFCVersion + dbgext + ".swc";
   }
 
   /**
    * Get the relative URL of the LFC shared library for SWF9.
    */
-  public static String getLFCLibraryRelativeURL(boolean useDebug) {
+  public static String getLFCLibraryRelativeURL(boolean useDebug, String runtime) {
     String dbgext = useDebug ? "-debug" : "";
-    return "LFC9" + dbgext + ".swf";
+    // Strip off "swf" prefix from runtime name (e.g., 'swf10')
+    String LFCVersion = "LFC" + runtime.substring("swf".length());
+    return LFCVersion + dbgext + ".swf";
   }
 
   public static boolean isWindows() {
@@ -952,6 +956,8 @@ public class SWF9External {
     cmd.add(outfilename);
     
 
+    String runtime = ((String)options.get(Compiler.RUNTIME));
+
     if (buildSharedLibrary) {
       // must be last before list of classes to follow.
       cmd.add("-include-classes");
@@ -967,18 +973,18 @@ public class SWF9External {
       if (options.getBoolean(Compiler.SWF9_USE_RUNTIME_SHARED_LIB)) { // 
       // TODO [hqm 2008-11] This usage of the Flash
       // "runtime-shared-library" feature does not work yet. See LPP-7387
-        cmd.add("-runtime-shared-library-path="+ getLFCLibrary(debug) + "," + 
-                "lib" + File.separator +  getLFCLibraryRelativeURL(debug) +
+        cmd.add("-runtime-shared-library-path="+ getLFCLibrary(debug, runtime) + "," + 
+                "lib" + File.separator +  getLFCLibraryRelativeURL(debug, runtime) +
                 ",," // specifies explicitly empty policy file arg
                 ); 
       } else {
-        cmd.add("-compiler.library-path+=" + getLFCLibrary(debug));
+        cmd.add("-compiler.library-path+=" + getLFCLibrary(debug, runtime));
       }
 
       if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB) ||
           options.getBoolean(Compiler.DEBUG_EVAL)) {
         // Don't include the LFC in this app
-        cmd.add("-external-library-path+="+getLFCLibrary(debug));
+        cmd.add("-external-library-path+="+getLFCLibrary(debug, runtime));
       }
 
       if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB)) {
@@ -1012,9 +1018,10 @@ public class SWF9External {
       }
     }
     
-
     if ("swf10".equals((String)options.get(Compiler.RUNTIME))) {
       cmd.add("-target-player=10.0.0");
+    } else  if ("swf9".equals((String)options.get(Compiler.RUNTIME))) {
+      cmd.add("-target-player=9.0.0");
     }
 
     if (options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
