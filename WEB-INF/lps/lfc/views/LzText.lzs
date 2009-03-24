@@ -310,7 +310,7 @@ dynamic class LzText extends LzView with LzFormatter {
     this.updateAttribute(name, lineNo);
     if ($dhtml) {
       // DHTML sprites do not have line attributes
-    } else if ($debug) {
+    } else if ($debug && this.scrollevents) {
       // Max's assertion that line attributes match the sprite
       if (this[name] != this.sprite[name]) {
         Debug.warn("%w.%s: %d != %d", this, name, this[name], this.sprite[name]);

@@ -902,9 +902,9 @@ LzTextSprite.prototype.setScrollEvents = function (on) {
   * __LZtextclip from __LZforceScrollAttrs
   */
 LzTextSprite.prototype.__updatefieldsize = function ( ){
-  if (! this.scrollevents) return;
   var lzv = this.__lzview;
   var tsprite = lzv.tsprite;
+  if (! tsprite.scrollevents) return;
   var scroll = this.scroll;
   if ( tsprite.scroll !== scroll) {
     tsprite.scroll = scroll;
