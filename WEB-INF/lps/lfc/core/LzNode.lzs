@@ -247,7 +247,7 @@ public dynamic class LzNode extends LzEventable {
           var setr = '$lzc$set_' + key;
           if (! this[setr]) {
             if (val instanceof Function) {
-              this.addProperty(a, val);
+              this.addProperty(key, val);
             } else if (val !== void 0) {
               this[key] = val;
             } else if ($as3) {
