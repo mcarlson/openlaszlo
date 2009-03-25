@@ -241,17 +241,20 @@ public dynamic class LzNode extends LzEventable {
     if (! (this is LzState)) {
       for (var key in iargs) {
         var val = iargs[key];
-        
-        if (! (val instanceof Function)) {
-            if ((val !== void 0) || (! (key in this))) {
-                this[key] = val;
-            }
-        } else if (! (val is LzInitExpr)) {
+        if (! (val is LzInitExpr)) {
           // If there is no setter for this attr the value
           // should just be installed as a declaration
           var setr = '$lzc$set_' + key;
           if (! this[setr]) {
-            this.addProperty(key, val);
+            if (val instanceof Function) {
+              this.addProperty(a, val);
+            } else if (val !== void 0) {
+              this[key] = val;
+            } else if ($as3) {
+              // not for ActionScript3
+            } else if (! (key in this)) {
+              this[key] = val;
+            }
             delete iargs[key];
           } else {
             // NOTE: [2008-03-18 ptw] this is for
@@ -259,7 +262,7 @@ public dynamic class LzNode extends LzEventable {
             // attribute with a setter is expected to be
             // initially `null` not undefined
             if (this[key] === void 0) {
-              this.addProperty(key, null);
+              this[key] = null;
             }
           }
         }
@@ -1070,9 +1073,13 @@ public dynamic class LzNode extends LzEventable {
         // able to set it, but that doesn't work if this is a
         // method
         if (val instanceof Function) { 
-            this.addProperty(a, val);
-        } else {
-            this[a] = val;
+          this.addProperty(a, val);
+        } else if (val !== void 0) {
+          this[a] = val;
+        } else if ($as3) {
+          // not for ActionScript3
+        } else if (! (a in this)) {
+          this[a] = val;
         }
         if (! constcall) {
           //then we need to notify the rest of the system that this
