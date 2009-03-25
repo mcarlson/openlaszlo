@@ -715,8 +715,11 @@ dynamic class LzText extends LzView with LzFormatter {
   /** * @lzxtype event */
   var ontext:LzDeclaredEventClass = LzDeclaredEvent;
 
-  /** Sent when a clickable HTML link in the text field is clicked.
-   *  Event data is a string with the link value.
+  /**
+   * Sent when a clickable HTML link in the text field is clicked.
+   * Event data is a string with the link value.
+   * See the <code>makeTextLink</code> method.
+   * @access public
    * @lzxtype event
    */
   var ontextlink:LzDeclaredEventClass = LzDeclaredEvent;
@@ -1540,13 +1543,14 @@ dynamic class LzText extends LzView with LzFormatter {
 
   /**
    * Return a string which can be used to insert a hyperlink in a text field.
+   * The text returned by makeTextLink can be appended to the text of a
+   * text field. It will make an HTML-style anchor, and will have a
+   * displayed representation of the string STR. When clicked, the link will
+   * send an ontextlink event to the text view, with a value of VALUE.
    * @param String str: The text displayed in the hyperlink.
    * @param String value: The value returned when the link is clicked.
    * @access public
-   The text returned by makeTextLink can be appended to the text of a
-   text field. It will make an HTML-style anchor, and will have a
-   displayed representation of the string STR. When clicked, the link will
-   send an ontextlink event to the text view, with a value of VALUE.
+
   */
   public function makeTextLink(str, value) {
     return this.tsprite.makeTextLink(str,value);
