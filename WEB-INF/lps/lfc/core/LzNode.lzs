@@ -241,7 +241,12 @@ public dynamic class LzNode extends LzEventable {
     if (! (this is LzState)) {
       for (var key in iargs) {
         var val = iargs[key];
-        if (! (val is LzInitExpr)) {
+        
+        if (! (val instanceof Function)) {
+            if ((val !== void 0) || (! (key in this))) {
+                this[key] = val;
+            }
+        } else if (! (val is LzInitExpr)) {
           // If there is no setter for this attr the value
           // should just be installed as a declaration
           var setr = '$lzc$set_' + key;
@@ -1064,7 +1069,11 @@ public dynamic class LzNode extends LzEventable {
         // TODO: should already be declared, so we should just be
         // able to set it, but that doesn't work if this is a
         // method
-        this.addProperty(a, val);
+        if (val instanceof Function) { 
+            this.addProperty(a, val);
+        } else {
+            this[a] = val;
+        }
         if (! constcall) {
           //then we need to notify the rest of the system that this
           //value changed.
@@ -1074,6 +1083,7 @@ public dynamic class LzNode extends LzEventable {
           }
         }
       } else if (this[setr] is Function) {
+        // TODO: simplify test above - can this[setr] ever not be a Function?
         if (a in this.earlySetters) {
           if (hasearly == null) { hasearly = []; }
           hasearly[this.earlySetters[a]] = a;
