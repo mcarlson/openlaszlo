@@ -38,6 +38,7 @@
                         import flash.events.IOErrorEvent;
                         import flash.events.NetStatusEvent;
                         import flash.events.SecurityErrorEvent;
+                        import flash.events.AsyncErrorEvent;
                     </passthrough>
                 </when>
             </switch>
@@ -171,6 +172,8 @@
                 if ($as3) {
                     this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onStatus);
                     this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
+                    this._nc.addEventListener(AsyncErrorEvent.ASYNC_ERROR, this._onSecurityError);
+                    this._nc.client = this;
 
                 } else {
                     // $swf8 or $swf7
@@ -183,6 +186,10 @@
                 }
                 ]]>
             </method>
+
+            <!--- Handle missing callback - stoopid AS3....
+                @keywords private -->
+            <method name="onBWDone"></method>
 
             <!--- Connect to the rtmp server. -->
             <method name="connect">

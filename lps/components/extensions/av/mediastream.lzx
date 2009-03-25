@@ -368,15 +368,9 @@
                 return;
             } else {
                 // clear, reset
-                if ($as3) {
-                    // TODO
-                    //this._flashstream.play(false);
-                    //this._flashstream.close();
-                } else {
-                    this._flashstream.play(false);
-                    this._flashstream.close();
-                    this._flashstream = null;
-                }
+                this._flashstream.play(false);
+                this._flashstream.close();
+                this._flashstream = null;
             }
         }
 
@@ -607,7 +601,9 @@
     <method name="broadcast"><![CDATA[
         if (!this._flashstream) {
             this._createStream("broadcast");
-        }
+        } 
+        // rely on callback for as3
+        if (! this._flashstream) return;
         this._publishSetup();
         //Debug.write("publish", this.streamname);
         this._flashstream.publish(this.streamname);
@@ -626,6 +622,9 @@
         if (!this._flashstream) {
             this._createStream("record");
         }
+        // rely on callback for as3
+        if (! this._flashstream) return;
+
         this._publishSetup();
         //Debug.write("mediastream record", this, "done with setup, streamname", this.streamname);
         this._flashstream.publish(this.streamname, "record");
@@ -656,8 +655,8 @@
           It also resets the time to the beginning and the mode to "" -->
     <method name="stop"> <![CDATA[
         if ($debug && this.debug)
-            Debug.write('mediastream %w stop fs=%w', 
-                        this, this._flashstream);
+            Debug.write('mediastream %w stop fs=%w mode=%w', 
+                        this, this._flashstream, this.mode);
             
         if (this.paused) {
             // can't be paused and stopped at the same time...
@@ -672,7 +671,7 @@
 
             case "recording":
                 this._deactivateTimeDel();
-                // fall through
+                // fall through to broadcasting
 
             case "broadcasting":
                 this._flashstream.publish(false);
@@ -840,7 +839,7 @@
             // TODO: why aren't we already connected?
             //       what if we are already connected?
             //Debug.warn('Must connect before creating stream', this._nc, this._srcurl, this._nc.connected);
-            this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatus);
+            this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatusAS3);
             this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
             this._creationCallback = {};
             this._creationCallback.methodName = callbackName;
@@ -871,8 +870,8 @@
 
     <!--- flash callback
           @keywords private -->
-    <method name="_onNetStatus" args="evt"> <![CDATA[
-        if ($debug && this.debug) Debug.info("mediastream _onNetStatus() " + evt.info.code);
+    <method name="_onNetStatusAS3" args="evt"> <![CDATA[
+        if ($debug && this.debug) Debug.info("mediastream _onNetStatusAS3() " + evt.info.code);
         if (evt && evt.info && evt.info.code == 'NetConnection.Connect.Success') {
             var fs = new NetStream(this._nc);
             this._flashstreamSetup(fs);
@@ -880,6 +879,8 @@
             //            this._creationCallback.methodName, this._creationCallback.args); 
             this[this._creationCallback.methodName].apply(this, this._creationCallback.args);
             this._creationCallback = null;
+        } else {
+            if (evt && evt.info && evt.info.code) this._onStatus(evt.info);
         }
     ]]>
     </method> 
@@ -894,7 +895,7 @@
 
         if ($as3) {
             this._flashstream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, this._onAsyncError);
-            this._flashstream.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatus);
+            this._flashstream.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatusAS3);
             var attachPoint = {};
         } else {
             var attachPoint = this._flashstream;
@@ -926,6 +927,7 @@
     <!--- flash callback
          @keywords private -->
     <method name="_onStatus" args="info"> <![CDATA[
+        if (! this._flashstream) return;
         if ($debug && this.debug)
             Debug.write("mediastream %w _onStatus %w %w time=%w",
               this, info.code, info, this._flashstream.time);
@@ -956,7 +958,7 @@
             }
 
             case "NetStream.Play.Stop": {
-                // don't call _onStop because some servers sent this event when they're done streaming (red5, wowza) - see LPP-7708
+                // don't call _onStop for rtmp streams because some servers sent this event when they're done streaming (red5, wowza) - see LPP-7708
                 if (this.type == 'http') this._onStop();
                 break;
             }
@@ -1209,6 +1211,7 @@
         
         if (this._flashstream) {
             this._flashstream.seek(t);
+            this.setAttribute('time', t);
             if (!this.playing) {
                 // just in case we have never displayed the video
                 this.pause(true);
