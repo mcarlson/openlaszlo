@@ -300,6 +300,7 @@ LzTextSprite.prototype.getTextfieldHeight = function ( ){
     var tca = textclip.autoSize;
     var tcw = textclip._width;
     var tch = textclip._height;
+    var tcs = textclip.scroll;
 
     // turn on autoSize temporarily
     textclip.autoSize = true;
@@ -321,6 +322,7 @@ LzTextSprite.prototype.getTextfieldHeight = function ( ){
     textclip.autoSize = tca;
     textclip._height = tch;
     textclip._width = tcw;
+    textclip.scroll = tcs;
 
     return h;
 }
