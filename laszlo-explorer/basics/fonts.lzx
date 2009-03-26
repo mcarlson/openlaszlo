@@ -1,11 +1,16 @@
 <canvas>
-  <font name="helmet" style="bold" src="helmetb.ttf"/>
-  
+  <font name="helmet">
+    <face src="helmetb.ttf" style="bold"/>
+  </font>
   <simplelayout axis="y" spacing="8"/>
-  
-  <text font="helmet" 
-        fontsize="20" 
-        fgcolor="#175DDE">Where to Begin</text>
-  
+  <text fgcolor="#175DDE">
+    <font face="helmet" size="24">
+      <b>Where to Begin</b>
+    </font>
+  </text>
   <view resource="cd_cover.jpg"/>
 </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+  * Copyright 2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.           *
+  * Use is subject to license terms.                                          *
+  * X_LZ_COPYRIGHT_END ****************************************************** -->
