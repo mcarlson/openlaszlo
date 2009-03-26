@@ -46,7 +46,7 @@
 
         <!--- the y position of the text. default: centered, unless it is mutltiline -->
         <attribute name="text_y"
-            value="${Math.round(multiline ? 2:this.height/2 - this.field.getTextHeight()/2 - 3)}" type="number"/>
+            value="${multiline ? 2 : Math.round(((this.height - this.field.getTextHeight())/2))} " type="number"/>
 
         <!--- The maximum number of chars that can be entered. -->
         <attribute name="maxlength" value="null" type="number"/>
