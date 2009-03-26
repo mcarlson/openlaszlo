@@ -156,6 +156,7 @@
                  s.setAttribute('selected', true);
                  // [2009-03-05 ptw] Don't lose the hilite because you selected
                  s.setHilite(true);
+                 this._hiliteview = s;
                }
                return;
             }
