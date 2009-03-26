@@ -246,7 +246,7 @@ public dynamic class LzNode extends LzEventable {
           // should just be installed as a declaration
           var setr = '$lzc$set_' + key;
           if (! this[setr]) {
-            if (val instanceof Function) {
+            if (val is Function) {
               this.addProperty(key, val);
             } else if (val !== void 0) {
               this[key] = val;
@@ -1059,7 +1059,7 @@ public dynamic class LzNode extends LzEventable {
         // TODO: should already be declared, so we should just be
         // able to set it, but that doesn't work if this is a
         // method
-        if (val instanceof Function) { 
+        if (val is Function) {
           this.addProperty(a, val);
         } else if (val !== void 0) {
           this[a] = val;
@@ -1115,8 +1115,8 @@ public dynamic class LzNode extends LzEventable {
     // now, we just collect the inits and constraints (once their
     // inheritance has been computed correctly above) and use the
     // existing $refs-like mechanism to install them.
-    this.__LZstoreAttr(inits, '$inits');
-    this.__LZstoreAttr(constraints, '$constraints');
+    if (inits != null) { this.__LZstoreAttr(inits, '$inits'); }
+    if (constraints != null) { this.__LZstoreAttr(constraints, '$constraints'); }
   }
 
   /**
