@@ -174,7 +174,11 @@ override  function construct ( view , args) {
 /**
   * @access private
   */
-override function constructWithArgs ( args ) {
+override function __LZapplyArgs ( args , constcall = null ){
+    super.__LZapplyArgs(args, constcall);
+    // If a replicator was made, we're deleted, if pooling is off.
+    if (this.__LZdeleted) { return; }
+
     //all layouts need to know when their view adds/deletes a subview
     this.delegates.push( new LzDelegate (  this, "gotNewSubview",
                                         this.immediateparent,"onaddsubview" ));

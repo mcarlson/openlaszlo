@@ -325,18 +325,10 @@ public dynamic class LzNode extends LzEventable {
     }
     this.__LzValueExprs = null;
 
-    //        this.setClassEvents( this.constructor );
-
     this.__LZapplyArgs( iargs , true );
 
     // If a replicator was made, we're deleted, if pooling is off.
     if (this.__LZdeleted) { return; }
-
-    /**
-     * TODO: [2006-05-24 ptw] Adam says this is a hack that we should get
-     * rid of. [2008-12-05 ptw] Some day!
-     */
-    this.constructWithArgs( iargs );
 
     this.__LZdeferDelegates = false;
     var evq = this.__LZdelegatesQueue;
@@ -367,11 +359,6 @@ public dynamic class LzNode extends LzEventable {
       }
     }
   }
-
-  /**
-   * @access private
-   */
-  function constructWithArgs(args:*) { }
 
   /**
    * This event is sent after the <varname>node</varname>'s
