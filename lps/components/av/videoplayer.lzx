@@ -7,6 +7,7 @@
 <library>
     <include href="av/videoscreen.lzx"/>
     <include href="av/videoslider.lzx"/>
+    <include href="utils/layouts/simplelayout.lzx"/>
 
     <!--- provides standard UI controls for video playback
     -->
