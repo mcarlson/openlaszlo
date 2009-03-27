@@ -301,7 +301,10 @@ LzSprite.prototype.__defaultStyles = {
             }
             css += '}';
         }
-        document.write('<style type="text/css">' + css + '</style>');
+        var o = document.createElement('style');
+        lz.embed.__setAttr(o, 'type', 'text/css');
+        document.getElementsByTagName("head")[0].appendChild(o);
+        o.innerHTML = css;
     },
     __re: new RegExp("[A-Z]"),
     hyphenate: function(n) {

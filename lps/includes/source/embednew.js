@@ -260,7 +260,7 @@ lz.embed = {
             lz.embed.history.active = false;
         }
 
-        this.__dhtmlLoadScript(url)
+        this.__dhtmlLoadLibrary(url)
     }
     ,/** A hash of applications installed on the page keyed by id */
     applications: {}
