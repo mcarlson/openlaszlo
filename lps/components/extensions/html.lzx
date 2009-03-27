@@ -206,7 +206,6 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
     </method>
     <!--- @access private -->
     <method name="__gotload">
-        if (! this['src']) return;
         this.setAttribute('loading', false);
         this.__updatepos(null);
         this.onload.sendEvent();

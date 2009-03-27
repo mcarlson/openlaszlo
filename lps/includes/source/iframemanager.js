@@ -7,39 +7,8 @@ lz.embed.iframemanager = {
     ,__frames: {}
     ,__namebyid: {}
     ,create: function(owner, name, scrollbars, appendto, defaultz, canvasref) {
-        var id = '__lz' + lz.embed.iframemanager.__counter++;
-        if (name == null || name == 'null' || name == '') name = id;
-        this.__namebyid[id] = name;
-        var src = 'javascript:""';
-        var onload = 'lz.embed.iframemanager.__gotload("' + id + '")';
-        if (appendto == null || appendto == "undefined") {
-            appendto = document.body;
-        }
-
-        //alert(owner + ', ' + name + ', ' + appendto)
-        if (document.all) {
-            // IE
-            var html = "<iframe name='" + name + "' id='" + id + "' src='" + src + "' onload='" + onload + "' ";
-            if (scrollbars != true) html += "scrolling='no' ";
-            html += " frameBorder='0' allowtransparency='true'></iframe>";
-            //alert(html);
-            var div = document.createElement('div');
-            lz.embed.__setAttr(div, 'id', id + 'Container');
-            appendto.appendChild(div);
-            div.innerHTML = html
-            var i = document.getElementById(id);
-        } else {
-            var i = document.createElement('iframe');
-            lz.embed.__setAttr(i, 'name', name);
-            lz.embed.__setAttr(i, 'src', src);
-            lz.embed.__setAttr(i, 'id', id);
-            lz.embed.__setAttr(i, 'onload', onload);
-            if (scrollbars != true) lz.embed.__setAttr(i, 'scrolling', 'no');
-
-            this.appendTo(id, appendto);
-            //appendto.appendChild(i);
-        }
-
+        //console.log(owner + ', ' + name + ', ' + scrollbars + ', ' + appendto + ', ' + defaultz)
+        var i = document.createElement('iframe');
         // Find owner div
         if (typeof owner == 'string') {
             i.appcontainer = lz.embed.applications[owner]._getSWFDiv();
@@ -47,9 +16,28 @@ lz.embed.iframemanager = {
             i.appcontainer = canvasref.sprite.__LZdiv;
         }
         i.owner = owner;
+        i.skiponload = true;
+
+        var id = '__lz' + lz.embed.iframemanager.__counter++;
         lz.embed.iframemanager.__frames[id] = i;
 
+        if (name == null || name == 'null' || name == '') name = id;
+        if (name != "") lz.embed.__setAttr(i, 'name', name);
+        //console.log('using name', name);
+        lz.embed.iframemanager.__namebyid[id] = name;
+
+        lz.embed.__setAttr(i, 'src', 'javascript:""');
+
+        if (appendto == null || appendto == "undefined") {
+            appendto = document.body;
+        }
+        lz.embed.__setAttr(i, 'id', id);
+        if (scrollbars != true) lz.embed.__setAttr(i, 'scrolling', 'no');
+        if (document.all) lz.embed.__setAttr(i, 'frameBorder', '0');
+        this.appendTo(id, appendto);
+
         var iframe = lz.embed.iframemanager.getFrame(id);
+        lz.embed.__setAttr(iframe, 'onload', 'lz.embed.iframemanager.__gotload("' + id + '")');
         iframe.__gotload = lz.embed.iframemanager.__gotload;
         iframe._defaultz = defaultz ? defaultz : 99900;
         this.setZ(id, iframe._defaultz);
@@ -61,6 +49,7 @@ lz.embed.iframemanager = {
             // IE
             // must be set before the iframe is appended to the document (LPP-7310)
             // lz.embed.__setAttr(iframe, 'frameBorder', '0');
+            lz.embed.__setAttr(iframe, 'allowtransparency', 'true');
 
             var metadata = lz.embed[iframe.owner]
             if (metadata && metadata.runtime == 'swf') { 
@@ -156,8 +145,12 @@ lz.embed.iframemanager = {
     }
     ,__gotload: function(id) { 
         var iframe = lz.embed.iframemanager.getFrame(id);
-        //console.log('__gotload', iframe;
+        //console.log('__gotload', iframe, iframe.skiponload);
         if (! iframe) return;
+        if (iframe.skiponload) {
+            iframe.skiponload = false;
+            return;
+        }
 
         if (iframe.owner && iframe.owner.__gotload) {
             iframe.owner.__gotload();
