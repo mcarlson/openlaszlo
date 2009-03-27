@@ -43,6 +43,9 @@ var navigator = {userAgent: "lztest",
 lz.embed.attachEventHandler = function () {
   // Just a stub
 }                
+lz.embed.__setAttr = function () {
+  // Just a stub
+}                
 
 // Load the LFC!
 load("lps/includes/lfc/LFCdhtml-debug.js"); 
