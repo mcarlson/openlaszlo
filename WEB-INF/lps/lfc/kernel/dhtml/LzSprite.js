@@ -303,8 +303,9 @@ LzSprite.prototype.__defaultStyles = {
         }
         var o = document.createElement('style');
         lz.embed.__setAttr(o, 'type', 'text/css');
-        document.getElementsByTagName("head")[0].appendChild(o);
-        o.innerHTML = css;
+        o.appendChild( document.createTextNode( css ) );
+        var heads = document.getElementsByTagName("head");
+        heads[0].appendChild(o);
     },
     __re: new RegExp("[A-Z]"),
     hyphenate: function(n) {
