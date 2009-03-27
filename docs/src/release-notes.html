@@ -38,28 +38,19 @@
     <hr />
     <h1>Release Notes for OpenLaszlo @VERSIONID@</h1>
     <hr />
-    <p>OpenLaszlo @VERSIONID@ is the next fully-qualified release since OpenLaszlo 4.2.0.2, and is
-      the recommended platform for all application development in the SWF8, SWF9, and DHTML
-      runtimes. This release addresses critical user-reported bugs primarily in the swf9 runtime,
-      but also in DHTML.</p>
+    <p>OpenLaszlo @VERSIONID@ is a major release, with almost 300 bugs fixed since OpenLaszlo 4.2
+      introduced the SWF9 runtime. It is the recommended platform for all application development in
+      the SWF8, SWF9, and DHTML runtimes.</p>
 
     <p>For those of you who have already upgraded your applications to OpenLaszlo 4.2, no further
       work is needed. You should just start using OpenLaszlo @VERSIONID@.</p>
-
-    <p>For those of you who have 4.0.x or 4.1.1 applications, we strongly suggest that you refer to
-      this wiki page: <a
-        href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2"
-        target="_blank">Runtime_Differences</a>. This page discusses the changes required by SWF9
-      and also provides a methodology for upgrading your application. It is very important that you
-      run the automated conversion scripts in the recommended order, should you choose to take
-      advantage of them.</p>
 
     <p>To migrate your 4.0.X or 4.1.1 applications, we strongly suggest that you refer to this wiki
       page: <a href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2"
         target="_blank">Runtime_Differences</a>. This page discusses the changes required by SWF9
       and also provides a methodology for upgrading your application. It is very important that you
       run the automated conversion scripts in the recommended order, should you choose to take
-      advantage of them. </p>
+      advantage of them.</p>
 
     <p>This release has been fully tested on the following operating systems/browser/runtime
       platforms:</p>
@@ -71,15 +62,18 @@
       <li>Mac OS X, Safari 3: SWF8, SWF9, DHTML</li>
     </ul>
     <p>Please note that although we have also done some testing with Windows Vista, OpenLaszlo 4.2
-      has not been fully qualified against that operating system at this time. Please see the
-      section below, <i>Running OpenLaszlo Server on Windows Vista</i>, for more information.</p>
+      has not been fully qualified against that operating system at this time. Please see <a
+        href="#windowsvista">
+        <i>Running OpenLaszlo Server on Windows Vista</i>
+      </a> for more information.</p>
 
-    <p>As with any initial release of a new runtime platform, there will be edge cases that have
-      problems. For OpenLaszlo 4.2, incubator components have not yet been updated to run; the same
-      is true for the charting and graphing utilities, which continue to remain at a beta level.
-      SOAP support is another area that is still very rough. These are straightforward tasks that
-      would welcome community involvement. If you are interested in contributing to the project,
-      please send us an <a href="mailto:laszlo-dev@openlaszlo.org">email</a> for more information.</p>
+    <p>The current charting and graphing remain at a beta level, while the new charting and graphing
+      API is out for review - see: <a href="http://wiki.openlaszlo.org/Charting_API_Change_Proposal"
+         target="_blank">http://wiki.openlaszlo.org/Charting_API_Change_Proposal</a>. Please email <a
+        href="mailto:laszlo-dev@openlaszlo.org">laszlo-dev@openlaszlo.org</a> with your comments. In
+      addition, SOAP support is still incomplete and would be a welcome task for community
+      involvement. If you are interested in contributing to the project, please send us an <a
+        href="mailto:contributions@openlaszlo.org">email</a> for more information.</p>
 
     <p>For every release, we rely on the OpenLaszlo community to help ensure the quality of the
       platform release and to determine its future direction. To propose or participate in
@@ -97,6 +91,23 @@
       detect circular objects (rather than causing a stack overflow), at small cost in overhead.
       When an object refers to itself (however indirectly), it will be printed just as its type and
       ID.</p>
+    <h2>Change to <code>this</code> behavior</h2>
+    <p>Before the 4.2.1 release, attributes created in code were allowed to be freely used without a
+        <code>this</code> qualifier. For example this code was allowed:</p>
+    <code> this.myattr = "hello";<br /> var something = myattr; // 'this.myattr' is implied</code>
+
+    <p>In 4.2.1, this is no longer supported, and will cause an error in SWF9. There are now two
+      choices. The preferred approach is to declare the attribute in question using
+        <code>&lt;attribute/&gt;</code>, like this:</p>
+
+    <code>&lt;attribute name="myattr" type="string" /&gt;</code>
+
+    <p>An alternative would be to explicitly use 'this' in all usages:</p>
+
+    <code> this.myattr = "hello";<br /> var something = this.myattr;</code>
+
+    <p>The old behavior is still allowed for SWF8 and DHTML runtimes, but may be marked deprecated
+      in a future release.</p>
 
     <h2>New Documentation Comments Feature</h2>
     <p>The @VERSIONID@ release adds a section at the end of every documentation page where you can
@@ -105,6 +116,8 @@
       Documentation bugs or feature requests should be filed in our <a
         href="http://www.openlaszlo.org/jira/browse/LPP">bug tracking system</a> as in previous
       releases.</p>
+    <h2>Incubator components</h2>
+    <p>The @VERSIONID@ release updates incubator components to work with 4.2.</p>
 
     <h2>Bugs Fixed in OpenLaszlo @VERSIONID@</h2>
     <p>The @VERSIONID@ release includes more than 300 bug fixes since 4.2; we have provided links to
@@ -165,7 +178,7 @@
     <p>See the <a href="developers/text.html#textformat">Text Views</a> chapter of the Developer's
       Guide for a description and example.</p>
 
-    <h2>Running OpenLaszlo Server on Windows Vista</h2>
+    <h2><a name="windowsvista" />Running OpenLaszlo Server on Windows Vista</h2>
 
     <p>There are two options. The first option is to manually ask for administrator privileges
       whenever you want to start or stop the OpenLaszlo Server.</p>
