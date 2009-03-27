@@ -1010,10 +1010,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       String pattern;
       if ((a instanceof ASTIdentifier ||
            a instanceof ASTPropertyValueReference ||
-           a instanceof ASTPropertyIdentifierReference) &&
+           a instanceof ASTPropertyIdentifierReference ||
+           a instanceof ASTThisReference) &&
           (b instanceof ASTIdentifier ||
            b instanceof ASTPropertyValueReference ||
-           b instanceof ASTPropertyIdentifierReference)) {
+           b instanceof ASTPropertyIdentifierReference ||
+           b instanceof ASTThisReference)) {
         pattern = "(_2['$lzsc$isa'] ? _2.$lzsc$isa(_1) : (_1 instanceof _2))";
       } else {
         pattern = "((function (a, b) {return b['$lzsc$isa'] ? b.$lzsc$isa(a) : (a instanceof b)})(_1, _2))";
