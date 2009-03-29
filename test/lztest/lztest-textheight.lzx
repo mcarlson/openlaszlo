@@ -137,7 +137,7 @@ textSizeSuite.testTextHeight = function () {
     // multiline/resize: all values should reflect the size of the content (which wraps)
     LzTestManager.assertWithin(82, b.sprite.getTextfieldHeight(), fudgefactor, "text b sprite.getTextfieldHeight()");
     LzTestManager.assertWithin(82, b.getTextHeight(), fudgefactor, "text b getTextHeight()");
-    LzTestManager.assertWithin(82, b.height, fudgefactor, "text b getTextfieldHeight()");
+    LzTestManager.assertWithin(82, b.height, fudgefactor, "text b height");
     // single line/fixed: content should be 1 line high, because it does not wrap
     LzTestManager.assertWithin(17, e.sprite.getTextfieldHeight(), fudgefactor, "text e sprite.getTextfieldHeight()");
     LzTestManager.assertWithin(17, e.getTextHeight(), fudgefactor, "text e getTextHeight()");
@@ -218,7 +218,7 @@ textSizeSuite.testInputtextWidth = function () {
     LzTestManager.assertWithin(200, it2.width, fudgefactor, "inputtext2 width");
     LzTestManager.assertWithin(200, it3.width, fudgefactor, "inputtext3 width");
     LzTestManager.assertWithin(26, it4.width, fudgefactor, "inputtext4 width");
-    LzTestManager.assertWithin(it5.width, 17, fudgefactor, "multiline inputtext5 width");
+    LzTestManager.assertWithin(17, it5.width, fudgefactor, "multiline inputtext5 width");
     LzTestManager.assertWithin(it5.parent.width, it5.width, fudgefactor, "multiline inputtext5 width");
     LzTestManager.assertWithin(70, it6.width, fudgefactor, "inputtext6 width");
 

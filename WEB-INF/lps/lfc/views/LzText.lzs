@@ -305,7 +305,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if (this.capabilities.linescrolling) {
       lineNo = tsprite.pixelToLineNo(value);
     } else {
-      lineNo = Math.floor((value / this.lineheight) + 1);
+      lineNo = Math.round(value / this.lineheight) + 1;
     }
     this.updateAttribute(name, lineNo);
     if ($dhtml) {
@@ -584,12 +584,12 @@ dynamic class LzText extends LzView with LzFormatter {
       case 'scrollHeight':
         this.updateAttribute('scrollheight', value);
         // This can't be negative
-        this.updateLineAttribute('maxscroll', Math.max(0, value - this.tsprite.height));
+        this.updateLineAttribute('maxscroll', Math.max(0, value - this.height));
         break;
       case 'scrollWidth':
         this.updateAttribute('scrollwidth', value);
         // This can't be negative
-        this.updateAttribute('maxhscroll', Math.max(0, value - this.tsprite.width));
+        this.updateAttribute('maxhscroll', Math.max(0, value - this.width));
         break;
       case 'lineHeight':
         this.updateAttribute('lineheight', value);
@@ -597,7 +597,7 @@ dynamic class LzText extends LzView with LzFormatter {
         if (this.inited) {
           this.updateLineAttribute('scroll', (- this.yscroll));
           // This can't be negative
-          this.updateLineAttribute('maxscroll', Math.max(0, this.scrollheight - this.tsprite.height));
+          this.updateLineAttribute('maxscroll', Math.max(0, this.scrollheight - this.height));
         }
         break;
       default:
@@ -640,6 +640,7 @@ dynamic class LzText extends LzView with LzFormatter {
   function $lzc$set_multiline(ml) :void {
     this.multiline = (ml = (!! ml));
     this.tsprite.setMultiline(ml);
+    this._updateSize();
   }
 
   /**
@@ -655,6 +656,7 @@ dynamic class LzText extends LzView with LzFormatter {
   function $lzc$set_resize(val) {
     this.resize = val;
     this.tsprite.setResize(val);
+    this._updateSize();
   }
 
 
@@ -695,6 +697,8 @@ dynamic class LzText extends LzView with LzFormatter {
   /** Update the height/width if changed
       @access private */
   function _updateSize() {
+    // Defer updates while constructing
+    if (! this.isinited) { return; }
     if (this.width == 0 || (this.resize && this.multiline == false)) {
       // single line resizable fields adjust their width to match the text
       var w = this.getTextWidth();
@@ -851,6 +855,7 @@ dynamic class LzText extends LzView with LzFormatter {
     }
     this.textdecoration = decoration;
     this.tsprite.setTextDecoration(decoration);
+    this._updateSize();
   }
 
 
@@ -976,6 +981,7 @@ dynamic class LzText extends LzView with LzFormatter {
         this.$lzc$set_gridFit ("subpixel");
       }
     }
+    this._updateSize();
   }
 
 

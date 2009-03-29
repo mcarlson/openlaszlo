@@ -8,27 +8,28 @@
   * @subtopic DHTML
   * @author Max Carlson &lt;max@openlaszlo.org&gt;
   */
+{
+#pragma "warnUndefinedReferences=true"
 
 var LzTextSprite = function(owner) {
     if (owner == null) return;
+    this.constructor = arguments.callee;
     this.owner = owner;
     this.uid = LzSprite.prototype.uid++;
 
     this.__LZdiv = document.createElement('div');
-    this.__LZdiv.className = 'lzdiv';
+    this.__LZdiv.className = 'lztextcontainer';
     this.scrolldiv = this.__LZtextdiv = document.createElement('div');
     this.scrolldiv.owner = this;
-    this.__LZtextdiv.className = 'lzdiv';
-    this.__LZdiv.appendChild(this.__LZtextdiv);  
+    this.scrolldiv.className = 'lztext';
+    this.__LZdiv.appendChild(this.scrolldiv);  
     if (this.quirks.emulate_flash_font_metrics) {
-        this.__LZdiv.className = 'lzswftext';
-    } else {    
-        this.__LZdiv.className = 'lztext';
+        this.scrolldiv.className = 'lzswftext';
     }    
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
         this.__LZclickcontainerdiv = document.createElement('div');
-        this.__LZclickcontainerdiv.className = 'lzdiv';
+        this.__LZclickcontainerdiv.className = 'lztextcontainer';
         this.__LZclickcontainerdiv.owner = this;
     }    
     if ($debug) {
@@ -77,13 +78,19 @@ LzTextSprite.prototype.restrict = null;
 LzTextSprite.prototype.setFontSize = function (fsize) {
     if (fsize == null || fsize < 0) return;
     // In standard-compliance mode, all dimensions must have units
-    fsize = this.CSSDimension(fsize);
-    if (this._fontSize != fsize) {
-        this._fontSize = fsize;
-        this.__LZdiv.style.fontSize = fsize;
-        this._styledirty = true;
-        this.__updatelineheight();
-    }    
+    var fp = this.CSSDimension(fsize);
+    if (this._fontSize != fp) {
+        this._fontSize = fp;
+        this.scrolldiv.style.fontSize = fp;
+        // You have to set line-height if you set font-size.
+        // Otherwise the browser will treat the inherited line-height
+        // as a _minimum_
+        if (this.quirks['emulate_flash_font_metrics']) {
+          var lh = Math.round(fsize * 1.2);
+          this.scrolldiv.style.lineHeight = this.CSSDimension(lh);
+        }
+        this.__updatefieldsize();
+    }
 }
 
 LzTextSprite.prototype.setFontStyle = function (fstyle) {
@@ -105,35 +112,31 @@ LzTextSprite.prototype.setFontStyle = function (fstyle) {
 
     if (fweight != this._fontWeight) {
         this._fontWeight = fweight;
-        this.__LZdiv.style.fontWeight = fweight;
-        this._styledirty = true;
-        this.__updatelineheight();
+        this.scrolldiv.style.fontWeight = fweight;
+        this.__updatefieldsize();
     }
 
     if (fstyle != this._fontStyle) {
         this._fontStyle = fstyle;
-        this.__LZdiv.style.fontStyle = fstyle;
-        this._styledirty = true;
-        this.__updatelineheight();
+        this.scrolldiv.style.fontStyle = fstyle;
+        this.__updatefieldsize();
     }
 }
 
 LzTextSprite.prototype.setFontName = function (fname) {
     if (fname != this._fontFamily) {
         this._fontFamily = fname;
-        this.__LZdiv.style.fontFamily = fname;
-        this._styledirty = true;
-        this.__updatelineheight();
+        this.scrolldiv.style.fontFamily = fname;
+        this.__updatefieldsize();
     }
 }
 
 LzTextSprite.prototype.setTextColor = LzSprite.prototype.setColor;
 
-LzTextSprite.prototype.scrollTop;
-LzTextSprite.prototype.scrollHeight;
-LzTextSprite.prototype.scrollLeft;
-LzTextSprite.prototype.scrollWidth;
-LzTextSprite.prototype.lineHeight;
+LzTextSprite.prototype.scrollTop = null;
+LzTextSprite.prototype.scrollHeight = null;
+LzTextSprite.prototype.scrollLeft = null;
+LzTextSprite.prototype.scrollWidth = null;
 
 LzTextSprite.prototype.scrollevents = false;
 LzTextSprite.prototype.setScrollEvents = function (on) {
@@ -142,10 +145,11 @@ LzTextSprite.prototype.setScrollEvents = function (on) {
 
 LzTextSprite.prototype.__updatefieldsize = function ( ){
   var lzv = this.owner;
-
-  if (this._styledirty) {
-    this.__updatelineheight();
-  }
+  // Validate lineHeight
+  this.__updatelineheight();
+  // Measure the total height of the text, including any clipped
+  // (scrollable) text
+  // Debug.debug('scrollHeight %d, last char %w', scrolldiv.scrollHeight, scrolldiv['value'] && scrolldiv.value.charAt(scrolldiv.value.length - 1));
   if (! this.scrollevents) return;
   this.__updatefieldprop('scrollHeight');
   this.__updatefieldprop('scrollTop');
@@ -161,12 +165,12 @@ LzTextSprite.prototype.__updatefieldprop = function(name){
   }
 }
 
-LzTextSprite.prototype.lineHeight;
+LzTextSprite.prototype.lineHeight = null;
 
 LzTextSprite.prototype.__updatelineheight = function ( ){
   var lzv = this.owner;
   var scrolldiv = this.scrolldiv;
-  var lineHeight = this.getTextHeight();
+  var lineHeight = this.getTextDimension('lineheight');
   if (this.lineHeight !== lineHeight) {
     this.lineHeight = lineHeight;
     lzv.scrollevent('lineHeight', lineHeight);
@@ -175,11 +179,6 @@ LzTextSprite.prototype.__updatelineheight = function ( ){
 
 
 LzTextSprite.prototype.setText = function(t, force) {
-    if (force != true && this.text == t) return;
-    //Debug.write('LzTextSprite.setText', t);
-
-    this.text = t;
-
     // For SWF compatibility, we preserve newlines in text.  We'd
     // like to use pre-line, but that appears not to work for any
     // browser.  As a compromise, if the content contains newlines, we
@@ -195,7 +194,15 @@ LzTextSprite.prototype.setText = function(t, force) {
     if (t && this.quirks['inner_html_no_entity_apos']) {
       t = t.replace(RegExp('&apos;', 'mg'), '&#39;');
     }
-    this.__LZtextdiv.innerHTML = t;
+    if (force != true && this.text == t) return;
+    //Debug.write('LzTextSprite.setText', t);
+
+    // NOTE: [2009-03-28 ptw] We have to capture the actual text we
+    // are going to set so we can get accurate measurements in
+    // getTextDimension
+    this.text = t;
+
+    this.scrolldiv.innerHTML = t;
     this.__updatefieldsize();
     if (this.resize && this.multiline == false) {
         this.setWidth(this.getTextWidth());
@@ -211,17 +218,13 @@ LzTextSprite.prototype.setMultiline = function(m) {
         // remove the pre/normal hack in setText.
         if (this._whiteSpace != 'normal') {
             this._whiteSpace = 'normal';
-            this.__LZdiv.style.whiteSpace = 'normal';
-            this._styledirty = true;
+            this.scrolldiv.style.whiteSpace = 'normal';
         }
-        this.__LZdiv.style.overflow = 'visible';
     } else {
         if (this._whiteSpace != 'nowrap') {
             this._whiteSpace = 'nowrap';
-            this.__LZdiv.style.whiteSpace = 'nowrap';
-            this._styledirty = true;
+            this.scrolldiv.style.whiteSpace = 'nowrap';
         }
-        this.__LZdiv.style.overflow = 'hidden';
     }
     if (this.quirks['text_height_includes_padding']) {
         this.__hpadding = m ? 3 : 4;
@@ -241,178 +244,191 @@ LzTextSprite.prototype.setPattern = function ( val ){
     }
 }
 
+/**
+  * Calculates the current width of the text held by the text field.
+  *
+  * @devnot NOTE: [2009-02-27 ptw] Perhaps this API should be
+  * obsoleted in favor of the scrolling API?
+  */
 LzTextSprite.prototype.getTextWidth = function () {
   //Debug.write('LzTextSprite.getTextWidth', this.text, this._textsizecache[this.text]);
-  if (this.text == '') return 0;
-  return this.getTextSize(this.text, this.resize).width;
+  //if (this.text == '') return 0;
+  var w = this.getTextDimension('width');
+  if (w != 0 && this.quirks['emulate_flash_font_metrics']) {
+    w += this.__wpadding;
+  }
+  return w;
 }
 
 // TODO [2009-02-27 ptw] (LPP-7832) Rename to get LineHeight
 LzTextSprite.prototype.getTextHeight = function () {
-  var h = this.getTextSize(null).height;
-  if (h > 0 && this.quirks.emulate_flash_font_metrics) {
-    if (! this.multiline) { 
-        h -= this.__hpadding;
-    }
-  }
-  return h;
+  // Line height does _not_ include padding
+  return this.getTextDimension('lineheight');
 }
 
 LzTextSprite.prototype.getTextfieldHeight = function () {
-    if (this.multiline) {
-        var oldheight = false;
-        if (this.height) {
-            oldheight = this.__LZdiv.style.height;
-            this.__LZdiv.style.height = 'auto';
-        }
-        var h = this.__LZdiv.clientHeight;
-        if (h == 0 || h == null) {
-            h = this.getTextSize(this.text).height;
-            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
-                h += this.__hpadding;
-            }
-        } else {
-            // catch text id="b" in test/lztext/lztext-testheight.lzx
-            if (h == 2) h = this.getTextSize(this.text).height;
-            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
-                h += this.__hpadding;
-            }
-        }
-        //Debug.info('LzTextSprite.getTextfieldHeight', h, this.height, this.owner);
-        if (this.height) {
-            this.__LZdiv.style.height = oldheight;
-        }
+    var fieldHeight = null;
+    if (this.multiline && this.text != '') {
+      // NOTE: [2009-03-27 ptw] You might think you could use
+      // scrollHeight, but that does not get updated if you change the
+      // text and ask for it in the same breath (without pausing for
+      // the div to be re-laid out).  Note, the actual text in the
+      // scrolldiv may not be eq to this.text because of quirks, but
+      // that is what we want to measure.
+      fieldHeight = this.getTextDimension('height');
+      if (this.quirks['safari_textarea_subtract_scrollbar_height']) { fieldHeight += 24 };
     } else {
-        var h = this.getTextSize(null).height;
+      fieldHeight = this.getTextDimension('lineheight');
     }
-//     Debug.debug('getTextfieldHeight: %s', h);
-    return h;
+    if (this.quirks['emulate_flash_font_metrics']) {
+      // NOTE [2009-01-29 ptw] You might think you could just read
+      // this from scrolldiv.offsetTop, but it seems that is not ready
+      // when we need to know this.
+      fieldHeight += this.__hpadding;
+      //Debug.debug('%w.fieldHeight = %d', this, fieldHeight);
+    }
+//     Debug.debug("%w.getTextfieldHeight: %d", this, fieldHeight);
+    return fieldHeight;
 }
 
 LzTextSprite.prototype._sizecache = {counter: 0}
 if (LzSprite.prototype.quirks.ie_leak_prevention) {
     LzTextSprite.prototype._sizedomcache = {}
 }
-LzTextSprite.prototype._styledirty = true;
-LzTextSprite.prototype.getTextSize = function (string, ignorewidth) {
-    // Measure a single line
-    if (string == null || string == '') string = 'Yq_gy"9;';
-    if (this._styledirty != true) {
-        var style = this._stylecache;
-    } else {
-        var style = 'position: absolute';
-        style += ';visibility: hidden';
-        style += ';font-size: ' + this._fontSize;
-        style += ';font-style: ' + this._fontStyle;
-        style += ';font-weight: ' + this._fontWeight;
-        style += ';font-family: ' + this._fontFamily;
-        style += ';line-height: ' + LzSprite.prototype.__defaultStyles.lzswftext.lineHeight;
-        style += ';letter-spacing: ' + this._letterSpacing;
-        style += ';text-indent: ' + this._textIndent;
-        style += ';text-align: ' + this._textAlign;
 
-        if (this.multiline && ignorewidth != true) {
-            var w = this.width;
-            if (w) {
-                if (this.__LZtextIndent < 0) w += this.__LZtextIndent;
-                style += ';width: ' + w + 'px';
-            }
-        }
-        style += ';white-space: ' + this._whiteSpace;
-
-        this._stylecache = style;
-        this._styledirty = false;
+// key is the div class plus local style
+LzTextSprite.prototype._cachevalid = null;
+// values are height for the test string or widths for specific strings
+LzTextSprite.prototype._cachevalue = null;
+// We do all our measurement 'off screen'.  For some reason, this
+// seems to work without having to wait for a redisplay.  We are
+// careful to clone the actual node that is being used for scrolldiv,
+// so we get accurate measurements...
+LzTextSprite.prototype.getTextDimension = function (dimension) {
+  // For 'lineheight' we measure a standard string, otherwise we are
+  // measuring the content of the scrolldiv
+  var string = this.text;
+  // Ignore the width if we are measuring width, or lineheight
+  var width = 'auto';
+  var scrolldiv = this.scrolldiv;
+  var sds = scrolldiv.style;
+  switch (dimension) {
+    case 'lineheight':
+      string = 'Yq_gy"9;';
+      break;
+    case 'height':
+      width = this.CSSDimension(this.width);
+      break;
+    case 'width':
+      if (this.text == '') { return 0; }
+      break;
+    default:
+      if ($debug) {
+        Debug.error("Unknown dimesion: %w", dimension);
+      }
+  }
+  // Quick check
+  var className = scrolldiv.className;
+  var style = scrolldiv.style.cssText;
+  var quickKey = className + "/" + style + "{" + string + "}";
+  var cv = this._cachevalue;
+  if ((this._cachevalid == quickKey &&
+       (dimension in cv))) {
+    return cv[dimension];
+  }
+  // Update quick key
+  this._cachevalid = quickKey;
+  // Now create a cache key limited to the styles that can affect the
+  // height/width
+  // Turn off `overflow: scroll; width: 100%; height:100%` so that does not interfere with measurements
+  style = ("overflow: visible; width: " + width + "; height: auto; " +
+           ((sds.fontSize) ? ("font-size: " + sds.fontSize + "; ") : "") +
+           ((sds.fontWeight) ? ("font-weight: " + sds.fontWeight + "; ") : "") +
+           ((sds.fontStyle) ? ("font-style: " + sds.fontStyle + "; ") : "") +
+           ((sds.fontFamily) ? ("font-family: " + sds.fontFamily + "; ") : "") +
+           ((sds.lineHeight) ? ("line-height: " + sds.lineHeight + "; ") : "") +
+           ((sds.letterSpacing) ? ("letter-spacing: " + sds.letterSpacing + "; ") : "") +
+           ((sds.whiteSpace) ? ("white-space: " + sds.whiteSpace + "; ") : ""));
+  var cacheKey = className + "/" + style + "{" + string + "}";
+  var ltsp = LzTextSprite.prototype;
+  var _sizecache = ltsp._sizecache;
+  var cv = this._cachevalue = _sizecache[cacheKey];
+  if (cv && (dimension in cv)) {
+    return cv[dimension];
+  }
+  // Otherwise, compute from scratch
+  var root = document.getElementById('lzTextSizeCache');
+  if ((_sizecache.counter > 0) && ((_sizecache.counter % this.__sizecacheupperbound) == 0)) {
+    _sizecache = {counter: 0};
+    cv = null;
+    if (LzSprite.prototype.quirks.ie_leak_prevention) {
+      var obj = ltsp._sizedomcache;
+      var f = LzSprite.prototype.__discardElement;
+      for (var i in obj) { f( obj[i] ); }
+      ltsp._sizedomcache = {}
     }
-
-    //Debug.write('getTextSize', this._stylecache, this.dirty);
-
-    var root = document.getElementById('lzTextSizeCache');
-
-    if (LzTextSprite.prototype._sizecache.counter > 0 && LzTextSprite.prototype._sizecache.counter % LzTextSprite.prototype.__sizecacheupperbound == 0) {
-        LzTextSprite.prototype._sizecache = {counter: 0};
-        if (LzSprite.prototype.quirks.ie_leak_prevention) {
-            var obj = LzTextSprite.prototype._sizedomcache;
-            var f = LzSprite.prototype.__discardElement;
-            for( var i in obj ) {
-                f( obj[i] );
-            }
-            LzTextSprite.prototype._sizedomcache = {}
-        }
-        if (root) {
-            root.innerHTML = '';
-        }
-    }
-    if (LzTextSprite.prototype._sizecache[style] == null) LzTextSprite.prototype._sizecache[style] = {};
-
-    if (! root) {
-        root = document.createElement('div');
-        lz.embed.__setAttr(root, 'id', 'lzTextSizeCache');
-        lz.embed.__setAttr(root, 'style', 'top: 4000px;');
-        document.body.appendChild(root);
-    }
-
-    var _textsizecache = LzTextSprite.prototype._sizecache[style];
-    if (! _textsizecache[string]) {
-        var size = {};
-
-        if (this.quirks['text_measurement_use_insertadjacenthtml']) {
-            if (this.multiline && string && this.quirks['inner_html_strips_newlines']) {
-                string = string.replace(this.inner_html_strips_newlines_re, '<br/>');
-            }
-            var tagname = 'span';
-            var mdiv = _textsizecache['lzdiv~~~' + tagname];
-            if (mdiv == null) {
-                var html = '<' + tagname + ' id="testSpan' + LzTextSprite.prototype._sizecache.counter + '"';
-                html += ' style="' + style + '">';
-                html += string;
-                html += '</' + tagname + '>';
-                root.insertAdjacentHTML('beforeEnd', html);
-
-                mdiv = document.all['testSpan' + LzTextSprite.prototype._sizecache.counter];
-                _textsizecache['lzdiv~~~' + tagname] = mdiv;
-            }
-        } else {
-            if (this.multiline && string) {
-                if (this.quirks['inputtext_strips_newlines'] && this.__LzInputDiv) {
-                    // safari counts the br and the newline...
-                } else {
-                    string = string.replace(this.inner_html_strips_newlines_re, '<br/>');
-                }
-            }
-            var tagname = this.multiline ? 'div' : 'span';
-            var mdiv = _textsizecache['lzdiv~~~' + tagname];
-            if (mdiv == null) {
-                mdiv = document.createElement(tagname);
-                lz.embed.__setAttr(mdiv, 'style', style);
-                root.appendChild(mdiv);
-                _textsizecache['lzdiv~~~' + tagname] = mdiv;
-            }
-        } 
-        if (this.quirks.ie_leak_prevention) {
-            LzTextSprite.prototype._sizedomcache['lzdiv~~~' + tagname + style] = mdiv;
-        }
-
+    if (root) { root.innerHTML = ''; }
+  }
+  if (! cv) {
+    cv = this._cachevalue = _sizecache[cacheKey] = {};
+  }
+  if (! root) {
+    root = document.createElement('div');
+    lz.embed.__setAttr(root, 'id', 'lzTextSizeCache');
+    lz.embed.__setAttr(root, 'style', 'top: 4000px;');
+    document.body.appendChild(root);
+  }
+  // TODO: [2009-03-29 ptw] Should we use the scrolldiv.tagName so we
+  // get the actual node type for measurment?  But if we do, we have
+  // to conditionalize setting the text into the node (because there
+  // seems to be no generic method for setting the content of nodes?)
+  var tagname = 'div';
+  if (this.quirks['text_measurement_use_insertadjacenthtml']) {
+    var html = '<' + tagname + ' id="testSpan' + ltsp._sizecache.counter + '"';
+    html += ' class="' + className + '"';
+    html += ' style="' + style + '">';
+    html += string;
+    html += '</' + tagname + '>';
+    root.insertAdjacentHTML('beforeEnd', html);
+    var mdiv = document.all['testSpan' + ltsp._sizecache.counter];
+  } else {
+    var mdiv = document.createElement(tagname)
+    // NOTE: [2009-03-25 ptw] setAttribute needs the real attribute
+    // name, i.e., `class` not `classname`!
+    lz.embed.__setAttr(mdiv, 'class', className);
+    lz.embed.__setAttr(mdiv, 'style', style);
+    // NOTE: [2009-03-29 ptw] For now, DHTML does not support HTML in
+    // input text, so we must measure accordingly
+    switch (scrolldiv.tagName) {
+      case 'DIV':
         mdiv.innerHTML = string;
-        mdiv.style.display = 'block';
-        size.width = mdiv.offsetWidth;
-        size.height = mdiv.offsetHeight;
-        mdiv.style.display = 'none';
-
-        if (this.quirks.emulate_flash_font_metrics) {
-            // Fix to make equivalent across swf and DHTML
-            size.height = Math.floor(size.height * 1.0000002) + (this.multiline ? 0 : this.__hpadding);
-            size.width = size.width + (this.multiline ? 0 : this.__wpadding);
-            if (this._whiteSpace == 'normal') {
-                if (this.multiline) {
-                    size.width += this.__wpadding;
-                }
-            }
-        }    
-        _textsizecache[string] = size;
-        LzTextSprite.prototype._sizecache.counter++;
+        break;
+      case 'INPUT': case 'TEXTAREA':
+        // IE only supports innerText, FF only supports textContent.
+        if (this.quirks['text_content_use_inner_text']) {
+          mdiv.innerText = string;
+        } else {
+          mdiv.textContent = string;
+        }
+        break;
+      default:
+        if ($debug) {
+          Debug.error("Unknown tagname: %w", tagname);
+        }
     }
-    //Debug.info('getTextSize', this.owner, _textsizecache[string], string, style);
-    return _textsizecache[string];
+    root.appendChild(mdiv);
+  } 
+  if (this.quirks.ie_leak_prevention) {
+    ltsp._sizedomcache['lzdiv~~~' + cacheKey] = mdiv;
+  }
+  // inline to measure width
+  mdiv.style.display = 'inline';
+  // NOTE: clientHeight for both height and lineheight
+  cv[dimension] = (dimension == 'width') ? mdiv.clientWidth : mdiv.clientHeight;
+  mdiv.style.display = 'none';
+  LzTextSprite.prototype._sizecache.counter++;
+//   Debug.debug("%w %w %d", this, cacheKey, lineHeight);
+  return cv[dimension];
 }
 
 LzTextSprite.prototype.setSelectable = function (s) {
@@ -490,32 +506,70 @@ LzTextSprite.prototype.setXScroll = function (n){
   this.scrolldiv.scrollLeft = this.scrollLeft = (- n);
 }
 
-LzTextSprite.prototype.__setWidth = LzSprite.prototype.setWidth;
 LzTextSprite.prototype.setWidth = function (w, force){
-    if (w == null || w < 0 || isNaN(w) || (this.width == w && !force)) return;
-    var wt = (w >= - this.__wpadding ? w - this.__wpadding : 0);
+    if (w == null || w < 0 || isNaN(w)) return;
+    // Call the super method (to set width of container)
+    var nw = LzSprite.prototype.setWidth.call(this, w);
+    // Calculate the width of the scrolldiv
+    var wt = w; // (w >= - this.__wpadding ? w - this.__wpadding : 0);
+    // Calculate a clip mask to hide the scrollbar
+    var scrolldiv = this.scrolldiv;
+    var style = scrolldiv.style;
+    var cdim = this.CSSDimension;
+    var wp = cdim(wt);
+    var hp = cdim(this.height);
+    var clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
+    // The scrollbar invades the width, so push the scrollbar out of
+    // the way
+    // NOTE: [2009-03-29 ptw] There are no scroll bars on input
+    // elements
+    if (scrolldiv.tagName != 'INPUT') {
+      wt += this.quirks.scrollbar_width;
+    }
     // need to substract (negative) text-indent from width (but not from clip!),
     // because we've added a left-padding in setTextAlign()
     var wtInd = (this.__LZtextIndent < 0 ? -1*this.__LZtextIndent : 0);
-    this.__LZtextdiv.style.width = this.CSSDimension(wt >= wtInd ? wt - wtInd : 0);
-    var wp = this.CSSDimension(wt);
-    var hp = this.CSSDimension(this.height >= this.__hpadding ? this.height - this.__hpadding : 0);
-    this.__LZtextdiv.style.clip = 'rect(0px ' + wp + ' ' + hp + ' 0px)';
-    this.__setWidth(w);
-    this.__updatefieldsize();
-    this._styledirty = true;
+    if (wt >= wtInd) { wt -= wtInd; }
+    wp = cdim(wt);
+    if (style.width != wp) {
+      // Debug.debug('%w.style.width = %s', this.scrolldiv, this.CSSDimension(wt));
+      style.width = wp;
+      // Hide the scrollbar
+      style.clip = clip;
+      this.__updatefieldsize();
+    }
+    return nw;
 }
 
-LzTextSprite.prototype.__setHeight = LzSprite.prototype.setHeight;
-LzTextSprite.prototype.setHeight = function (h){
-    if (h == null || h < 0 || isNaN(h) || this.height == h) return;
-    var wp = this.CSSDimension(this.width >= this.__wpadding ? this.width - this.__wpadding : 0);
-    var hp = this.CSSDimension(h >= this.__hpadding ? h - this.__hpadding : 0);
-    this.__LZtextdiv.style.height = hp;
-    this.__LZtextdiv.style.clip = 'rect(0px ' + wp + ' ' + hp + ' 0px)';
-    this.__setHeight(h);
-    this.__updatefieldsize();
-    if (this.multiline) this._styledirty = true;
+LzTextSprite.prototype.setHeight = function (h) {
+    if (h == null || h < 0 || isNaN(h)) return;
+    // Call the super method
+    var nh = LzSprite.prototype.setHeight.call(this, h);
+    // Calculate the height of the scrolldiv
+    var ht = h; // (h >= this.__hpadding ? h - this.__hpadding : 0);
+    // Calculate a clip mask to hide the scrollbar
+    var scrolldiv = this.scrolldiv;
+    var style = scrolldiv.style;
+    var cdim = this.CSSDimension;
+    var wp = cdim(this.width);
+    var hp = cdim(ht);
+    var clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
+    // The scrollbar invades the height, so push the scrollbars out of
+    // the way
+    // NOTE: [2009-03-29 ptw] There are no scroll bars on input
+    // elements
+    if (scrolldiv.tagName != 'INPUT') {
+      ht += this.quirks.scrollbar_width;
+    }
+    hp = cdim(ht);
+    if (style.height != hp) {
+      // Debug.debug('%w.style.height = %s', this.scrolldiv, cdim(ht));
+      style.height = cdim(ht);
+      // Hide the scrollbar
+      style.clip = clip;
+      this.__updatefieldsize();
+    }
+    return nh;
 }
 
 
@@ -565,12 +619,7 @@ LzTextSprite.prototype.destroy = function(){
 LzTextSprite.prototype.setTextAlign = function (align) {
     if (this._textAlign != align) {
         this._textAlign = align;
-        if (this.quirks.textstyle_on_textdiv) {
-            this.__LZtextdiv.style.textAlign = align;
-        } else {
-            this.__LZdiv.style.textAlign = align;
-        }
-        this._styledirty = true;
+        this.scrolldiv.style.textAlign = align;
     }
 }
 
@@ -581,15 +630,10 @@ LzTextSprite.prototype.setTextIndent = function (indent) {
         var negInd = (indent < 0) || (this.__LZtextIndent < 0);
         this._textIndent = indentPx;
         this.__LZtextIndent = indent;
-        if (this.quirks.textstyle_on_textdiv) {
-            this.__LZtextdiv.style.textIndent = indentPx;
-        } else {
-            this.__LZdiv.style.textIndent = indentPx;
-        }
-        this._styledirty = true;
+        this.scrolldiv.style.textIndent = indentPx;
         if (negInd) {
             // only add padding for negative indent, but remove minus sign
-            this.__LZtextdiv.style.paddingLeft = (indent >= 0) ? "" : indentPx.substr(1);
+            this.scrolldiv.style.paddingLeft = (indent >= 0) ? "" : indentPx.substr(1);
             // reset width
             this.setWidth(this.width, true);
         }
@@ -601,21 +645,16 @@ LzTextSprite.prototype.setLetterSpacing = function (spacing) {
     spacing = this.CSSDimension(spacing);
     if (this._letterSpacing != spacing) {
         this._letterSpacing = spacing;
-        this.__LZdiv.style.letterSpacing = spacing;
-        this._styledirty = true;
+        this.scrolldiv.style.letterSpacing = spacing;
     }
 }
 
 LzTextSprite.prototype.setTextDecoration = function (decoration) {
     if (this._textDecoration != decoration) {
         this._textDecoration = decoration;
-        if (this.quirks.textdeco_on_textdiv) {
-            this.__LZtextdiv.style.textDecoration = decoration;
-        } else {
-            this.__LZdiv.style.textDecoration = decoration;
-        }
-        // note: don't need to mark style as dirty here
+        this.scrolldiv.style.textDecoration = decoration;
     }
 }
 
 
+}

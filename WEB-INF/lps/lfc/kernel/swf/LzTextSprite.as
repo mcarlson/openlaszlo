@@ -219,7 +219,16 @@ LzTextSprite.prototype.setResize = function ( val ){
   */
 LzTextSprite.prototype.setWidth = function ( val ){
     if (this['__LZtextclip']) {
-      this.__LZtextclip._width = val;
+      if (this.resize) {
+        // NOTE: [2009-03-01 ptw] swf seems to have a bug that if you
+        // set a text field exactly to the size measured, it may
+        // trigger word-wrapping (and cause another resize!) So we add
+        // a fudge-factor here, since we know a resizable text field
+        // is supposed to size to its content
+        this.__LZtextclip._width = val + 1;
+      } else {
+        this.__LZtextclip._width = val;
+      }
       this.__LZforceScrollAttrs();
     }
     this._viewsetWidth( val );
@@ -271,18 +280,39 @@ LzTextSprite.prototype.setPattern = function ( val ){
 }
 
 /**
-  * Calculates the current width of the text held by the text field.
-  */
+ * Calculates the current width of the text held by the text field.
+ *
+ * @devnote NOTE: [2009-03-01 ptw] this is _not_ the clip textWidth, which
+ * "when autoSize is true is always 4 pixels less than _width" (which
+ * is why we have to add 4 pixels for emulate_flash_font_metrics
+ * in the DHTML version of this method, and why Henry used to add
+ * PAD_TEXTWIDTH to the textWidth!)
+ *
+ * @devnote NOTE: [2009-03-28 ptw] But if the text is empty, we return
+ * 0.  <sigh />
+ */
 LzTextSprite.prototype.getTextWidth = function ( ){
-    var mc = this.__LZtextclip;
-    var ml = mc.multiline;
-    var mw = mc.wordWrap;
-    mc.multiline = false;
-    mc.wordWrap = false;
-    var twidth = (mc.textWidth == 0) ? 0 : mc.textWidth + this.PAD_TEXTWIDTH;
-    mc.multiline = ml;
-    mc.wordWrap = mw;
-    return twidth;
+    if (this.text == '') { return 0; }
+    var textclip = this.__LZtextclip;
+    var tca = textclip.autoSize;
+    var tcw = textclip._width;
+    var tch = textclip._height;
+    var tcm = textclip.multiline;
+    var tcp = textclip.wordWrap;
+    // turn on autoSize/off wordWrap temporarily
+    textclip.autoSize = true;
+    textclip.multiline = false;
+    textclip.wordWrap = false;
+
+    var w = textclip._width;
+
+    textclip.autoSize = tca;
+    textclip._height = tch;
+    textclip._width = tcw;
+    textclip.multiline = tcm;
+    textclip.wordWrap = tcp;
+
+    return w;
 }
 
 
@@ -424,7 +454,7 @@ LzTextSprite.prototype.lineNoToPixel = function (n:Number):Number {
 }
 
 LzTextSprite.prototype.pixelToLineNo = function (n:Number):Number {
-  return Math.floor((n / this.lineheight) + 1);
+  return Math.round(n / this.lineheight) + 1;
 }
 
 /**
@@ -915,7 +945,7 @@ LzTextSprite.prototype.__updatefieldsize = function ( ){
   var maxscroll = this.maxscroll;
   if (tsprite.maxscroll !== maxscroll) {
     tsprite.maxscroll = maxscroll;
-    lzv.scrollevent('scrollHeight', tsprite.lineNoToPixel(maxscroll) + tsprite.height);
+    lzv.scrollevent('scrollHeight', tsprite.lineNoToPixel(maxscroll) + lzv.height);
   }
   var hscroll = this.hscroll;
   if (tsprite.hscroll !== hscroll) {
@@ -925,7 +955,7 @@ LzTextSprite.prototype.__updatefieldsize = function ( ){
   var maxhscroll = this.maxhscroll;
   if (tsprite.maxhscroll !== maxhscroll) {
     tsprite.maxhscroll = maxhscroll;
-    lzv.scrollevent('scrollWidth', maxhscroll + tsprite.width);
+    lzv.scrollevent('scrollWidth', maxhscroll + lzv.width);
   }
 }
 

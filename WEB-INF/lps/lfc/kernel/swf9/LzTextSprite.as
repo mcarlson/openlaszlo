@@ -323,7 +323,7 @@ public class LzTextSprite extends LzSprite {
             if (maxscroll !== textfield.maxScrollV) {
                 maxscroll = textfield.maxScrollV;
                 //Debug.info('__handleScrollEvent', 'scrollHeight', lineNoToPixel(textfield.maxScrollV));
-                owner.scrollevent('scrollHeight', lineNoToPixel(textfield.maxScrollV) + height);
+                owner.scrollevent('scrollHeight', lineNoToPixel(textfield.maxScrollV) + owner.height);
             }
             if (hscroll !== textfield.scrollH) {
                 hscroll = textfield.scrollH;
@@ -333,7 +333,7 @@ public class LzTextSprite extends LzSprite {
             if (maxhscroll !== textfield.maxScrollH) {
                 maxhscroll = textfield.maxScrollH;
                 //Debug.info('__handleScrollEvent', 'scrollWidth', textfield.maxScrollH);
-                owner.scrollevent('scrollWidth', textfield.maxScrollH + width);
+                owner.scrollevent('scrollWidth', textfield.maxScrollH + owner.width);
             }
         }
 
@@ -769,7 +769,7 @@ function lineNoToPixel (n:Number):Number {
 }
 
 function pixelToLineNo (n:Number):Number {
-  return Math.floor((n / lineheight) + 1);
+  return Math.ceil(n / lineheight) + 1;
 }
 
 function setYScroll (n:Number) :void {

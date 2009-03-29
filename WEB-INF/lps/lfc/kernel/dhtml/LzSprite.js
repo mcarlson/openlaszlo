@@ -14,6 +14,7 @@
 
 var LzSprite = function(owner, isroot) {
     if (owner == null) return;
+    this.constructor = arguments.callee;
     this.owner = owner;
     this.uid = LzSprite.prototype.uid++;
 
@@ -177,12 +178,21 @@ var LzSprite = function(owner, isroot) {
         LzSprite.prototype._dbg_typename = 'LzSprite';
         /** @access private */
         LzSprite.prototype._dbg_name = function () {
-            var div = this.__LZdiv.style;
+            // Tip 'o the pin to
+            // http://www.quirksmode.org/js/findpos.html
+            var d = div = this.__LZdiv;
+            var x = y = 0;
+            if (d.offsetParent) {
+                do {
+                    x += d.offsetLeft;
+                    y += d.offsetTop;
+                } while (d = d.offsetParent);
+            }
             return Debug.formatToString("%w/@sprite [%s x %s]*[1 0 %s, 0 1 %s, 0 0 1]",
                                         this.owner.sprite === this ? this.owner : '(orphan)',
-                                        div['width'] || 0, div['height'] || 0,
-                                        div['top'] || 0,
-                                        div['left'] || 0);
+                                        div.offsetWidth || 0, div.offsetHeight || 0,
+                                        x || 0,
+                                        y || 0);
         };
     }
 
@@ -208,7 +218,34 @@ LzSprite.prototype.__defaultStyles = {
         zIndex: 100000,
         position: 'absolute'
     },
-    // LzTextSprite.js and LzInputTextSprite.js defaults should reflect these
+    // This container implements the swf 'gutter'
+    lztextcontainer: {
+        position: 'absolute',
+        overflow: 'hidden',
+        // To create swf textfield 'gutter'
+        paddingTop: '2px',
+        paddingRight: '2px',
+        paddingBottom: '2px',
+        paddingLeft: '2px'
+    },
+    lzinputtextcontainer: {
+        position: 'absolute',
+        overflow: 'hidden',
+        // To create swf textfield 'gutter' and position input element correctly
+        paddingTop: '0px',
+        paddingRight: '3px',
+        paddingBottom: '4px',
+        paddingLeft: '1px'
+    },
+    lzinputtextmultilinecontainer: {
+        position: 'absolute',
+        overflow: 'hidden',
+        // To create swf textfield 'gutter' and position input element correctly
+        paddingTop: '1px',
+        paddingRight: '3px',
+        paddingBottom: '3px',
+        paddingLeft: '1px'
+    },
     lztext: {
         fontFamily: 'Verdana,Vera,sans-serif',
         fontStyle: 'normal',
@@ -216,6 +253,7 @@ LzSprite.prototype.__defaultStyles = {
         fontSize: '11px',
         whiteSpace: 'normal',
         position: 'absolute',
+        overflow: 'scroll',
         textAlign: 'left',
         textIndent: '0px',
         letterSpacing: '0px',
@@ -228,12 +266,13 @@ LzSprite.prototype.__defaultStyles = {
         fontSize: '11px',
         whiteSpace: 'normal',
         position: 'absolute',
-        paddingTop: '2px',
-        paddingLeft: '2px',
-        lineHeight: '120%',
+        overflow: 'scroll',
+        // To match swf font metrics
+        lineHeight: '1.2em',
         textAlign: 'left',
         textIndent: '0px',
-        letterSpacing: '0px',
+        // To match swf font metrics
+        letterSpacing: '0.025em',
         textDecoration: 'none'
     },
     lzinputtext: {
@@ -245,6 +284,8 @@ LzSprite.prototype.__defaultStyles = {
         height: '100%',
         borderWidth: 0,
         backgroundColor: 'transparent',
+        position: 'absolute',
+        // There is no scrolling of input elements
         textAlign: 'left',
         textIndent: '0px',
         letterSpacing: '0px',
@@ -259,12 +300,14 @@ LzSprite.prototype.__defaultStyles = {
         height: '100%',
         borderWidth: 0,
         backgroundColor: 'transparent',
-        paddingTop: '1px',
-        paddingLeft: '1px',
-        lineHeight: '120%',
+        position: 'absolute',
+        // There is no scrolling of input elements
+        // To match swf font metrics
+        lineHeight: '1.2em',
         textAlign: 'left',
         textIndent: '0px',
-        letterSpacing: '0px',
+        // To match swf font metrics
+        letterSpacing: '0.025em',
         textDecoration: 'none'
     },
     lzswfinputtextmultiline: {
@@ -276,12 +319,14 @@ LzSprite.prototype.__defaultStyles = {
         height: '100%',
         borderWidth: 0,
         backgroundColor: 'transparent',
-        paddingTop: '1px',
-        paddingLeft: '1px',
-        lineHeight: '120%',
+        position: 'absolute',
+        overflow: 'scroll',
+        // To match swf font metrics
+        lineHeight: '1.2em',
         textAlign: 'left',
         textIndent: '0px',
-        letterSpacing: '0px',
+        // To match swf font metrics
+        letterSpacing: '0.025em',
         textDecoration: 'none'
     },
     lztextlink: {
@@ -369,6 +414,7 @@ LzSprite.prototype.quirks = {
     ,set_height_for_multiline_inputtext: false
     ,ie_opacity: false
     ,text_measurement_use_insertadjacenthtml: false
+    ,text_content_use_inner_text: false
     ,text_selection_use_range: false
     ,document_size_use_offsetheight: false
     ,text_ie_carriagereturn: false
@@ -383,7 +429,6 @@ LzSprite.prototype.quirks = {
     ,fix_inputtext_with_parent_resource: false
     ,activate_on_mouseover: true
     ,ie6_improve_memory_performance: false
-    ,multiline_text_includes_overflow: false
     ,text_height_includes_padding: false
     ,inputtext_size_includes_margin: false
     ,listen_for_mouseover_out: true
@@ -392,6 +437,7 @@ LzSprite.prototype.quirks = {
     ,textdeco_on_textdiv: false
     ,use_css_sprites: true
     ,preload_images: true
+    ,scrollbar_width: 15
     ,inputtext_strips_newlines: false
     ,swf8_contextmenu: true
     ,dom_breaks_focus: false
@@ -477,6 +523,7 @@ LzSprite.prototype.__updateQuirks = function () {
 
             // text size measurement uses insertAdjacentHTML()
             quirks['text_measurement_use_insertadjacenthtml'] = true;
+            quirks['text_content_use_inner_text'] = true;
             quirks['text_selection_use_range'] = true;
             
             // IE uses "\r\n" for newlines, which gives different text-lengths compared to SWF and
@@ -494,12 +541,17 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['fix_inputtext_with_parent_resource'] = true;
             // IE already includes margins for inputtexts
             quirks['inputtext_size_includes_margin'] = true;
-            // LPP-3409 - IE needs overflow: 'auto' to remove unused scrollbar
-            quirks['multiline_text_includes_overflow'] = true;
             // LPP-7229 - IE 'helpfully' scrolls focused/blurred divs into view
             quirks['focus_on_mouseover'] = false;
             // required for text-align / text-indent to work
             quirks['textstyle_on_textdiv'] = true;
+            // IE scrollbar is 16px
+            quirks['scrollbar_width'] = 16;
+            var defaultStyles = LzSprite.prototype.__defaultStyles;
+            var st = defaultStyles.lzswftext;
+            st.marginRight = st.marginBottom = '-16px';
+            var sitm = defaultStyles.lzswfinputtextmultiline;
+            sitm.marginRight = sitm.marginBottom = '-16px';
             // CSS sprites conflict with ie_alpha_image_loader...
             quirks['use_css_sprites'] = ! quirks['ie_alpha_image_loader'];
         } else if (browser.isSafari) {
@@ -578,37 +630,45 @@ LzSprite.prototype.__updateQuirks = function () {
             }
         }
 
+        // Adjust styles for quirks
+        var defaultStyles = LzSprite.prototype.__defaultStyles;
+        var tc = defaultStyles.lztextcontainer;
+        var itc = defaultStyles.lzinputtextcontainer;
+        var itmc = defaultStyles.lzinputtextmultilinecontainer;
         if (quirks['safari_avoid_clip_position_input_text']) {
-            LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '-1px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingLeft = '-1px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '2px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingLeft = '0px';
+            // TODO: [2009-02-25 ptw] This is what was here, but
+            // perhaps is unneeded in the new scheme where the
+            // container has the padding, not the input text itself.
+// Commenting out for now
+//             itc.paddingTop = itc.PaddingRight = itc.paddingBottom = itc.paddingLeft = '-1px';
+//             itmc.paddingTop = itmc.paddingBottom = '2px';
+//             itmc.paddingRight = itmc.paddingLeft = '0px';
         }
         if (this.quirks['text_height_includes_padding']) {
-            LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '0px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '0px';
-        }
-
-        if (quirks['inputtext_size_includes_margin']) {
-            LzSprite.prototype.__defaultStyles.lzswfinputtext.paddingTop = '0px';
-            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.paddingTop = '0px';
-        }
-
-        if (quirks['multiline_text_includes_overflow']) {
-            LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.overflow = 'auto';
+            // TODO: [2009-02-14 ptw] This is what was there, but it
+            // makes no sense to me.  It this quirk is about text
+            // height, why is it only fiddling with input text?
+            // TODO: [2009-02-16 ptw] Is this really right anyways?  I
+            // think this was to compensate for the fact that when you
+            // measured the div, it included the padding; but now that
+            // we are putting the padding in the enclosing div, that
+            // should not be a problem, right?
+// Commenting out for now
+//             itc.paddingTop = itc.paddingBottom = '0px';
+//             itmc.paddingTop = itmc.paddingBottom = '0px';
         }
 
         if (quirks['css_hide_canvas_during_init']) {
             if (quirks['safari_visibility_instead_of_display']) {
-                LzSprite.prototype.__defaultStyles.lzcanvasdiv.visibility = 'hidden';
+                defaultStyles.lzcanvasdiv.visibility = 'hidden';
             } else {
-                LzSprite.prototype.__defaultStyles.lzcanvasdiv.display = 'none';
+                defaultStyles.lzcanvasdiv.display = 'none';
             }
-            LzSprite.prototype.__defaultStyles.lzcanvasclickdiv.display = 'none';
+            defaultStyles.lzcanvasclickdiv.display = 'none';
         }
 
         if (quirks['hand_pointer_for_clickable']) {
-            LzSprite.prototype.__defaultStyles.lzclickdiv.cursor = 'pointer';
+            defaultStyles.lzclickdiv.cursor = 'pointer';
         }
 
         if (quirks['inner_html_strips_newlines'] == true) {

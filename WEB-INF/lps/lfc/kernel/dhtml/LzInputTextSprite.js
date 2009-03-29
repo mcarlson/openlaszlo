@@ -11,14 +11,15 @@
 
 var LzInputTextSprite = function(owner) {
     if (owner == null) return;
+    this.constructor = arguments.callee;
     this.owner = owner;
     this.uid = LzSprite.prototype.uid++;
     this.__LZdiv = document.createElement('div');
-    this.__LZdiv.className = 'lzdiv';
+    this.__LZdiv.className = 'lzinputtextcontainer';
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
         this.__LZclickcontainerdiv = document.createElement('div');
-        this.__LZclickcontainerdiv.className = 'lzdiv';
+        this.__LZclickcontainerdiv.className = 'lzinputtextcontainer';
         this.__LZclickcontainerdiv.owner = this;
     }    
     if ($debug) {
@@ -36,8 +37,10 @@ var LzInputTextSprite = function(owner) {
 
 LzInputTextSprite.prototype = new LzTextSprite(null);
 
-// Used to compute padding values.  Should reflect CSS defaults in LzSprite.lzswfinputtext/lzswfinputtextmultiline
-LzInputTextSprite.prototype.____hpadding = 2;
+if ($debug) {
+/** @access private */
+LzInputTextSprite.prototype._dbg_typename = 'LzInputTextSprite';
+}
 
 LzInputTextSprite.prototype.____crregexp = new RegExp('\\r\\n', 'g');
 
@@ -83,13 +86,23 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
 
 LzInputTextSprite.prototype.__createInputDiv = function(type) {
     if (type === 'password') {
+        this.multiline = false;
         this.__LzInputDiv = document.createElement('input');
+        this.__LZdiv.className = 'lzinputtextcontainer';
         lz.embed.__setAttr(this.__LzInputDiv, 'type', 'password');
     } else if (type === 'multiline') {
+        this.multiline = true;
         this.__LzInputDiv = document.createElement('textarea');
+        this.__LZdiv.className = 'lzinputtextmultilinecontainer';
     } else {    
+        this.multiline = false;
         this.__LzInputDiv = document.createElement('input');
+        this.__LZdiv.className = 'lzinputtextcontainer';
         lz.embed.__setAttr(this.__LzInputDiv, 'type', 'text');
+    }
+    if (this.quirks.fix_clickable) {
+        // The click container has to match the div style
+        this.__LZclickcontainerdiv.className = this.__LZdiv.className;
     }
     if (this.quirks.firefox_autocomplete_bug) {
         lz.embed.__setAttr(this.__LzInputDiv, 'autocomplete', 'off');
@@ -97,15 +110,9 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
     this.__LzInputDiv.owner = this;
     if (this.quirks.emulate_flash_font_metrics) {
         if (this.owner && this.owner.multiline) {
-            // Should reflect CSS defaults in LzSprite.js
-            this.____hpadding = 2;
             this.__LzInputDiv.className = 'lzswfinputtextmultiline';
         } else {
-            this.____hpadding = 0;
             this.__LzInputDiv.className = 'lzswfinputtext';
-        }    
-        if (this.quirks['inputtext_size_includes_margin']) {
-            this.____hpadding = 0;
         }
     } else {    
         this.__LzInputDiv.className = 'lzinputtext';
@@ -117,42 +124,41 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
     this.scrolldiv.owner = this;
 }
 
-// TODO [2009-02-27 ptw] (LPP-7832) Rename to get LineHeight
-LzInputTextSprite.prototype.getTextHeight = function() {
-    var h = LzTextSprite.prototype.getTextHeight.call(this);
-    var b = h;
-    if (this.multiline && this.quirks.emulate_flash_font_metrics) {
-        h -= (this.____hpadding * 2);
-    }
-    //Debug.write('getTextHeight', this.lineHeight, b, h, this.owner);
-    return h;
-}
-
 LzInputTextSprite.prototype.setMultiline = function(ml) {
     var oldval = this.multiline;
     this.multiline = ml == true;
     if (oldval != null && this.multiline != oldval) {
         // cache original values
-        var style = this.__LzInputDiv.style;
-        var scrollleft = this.__LzInputDiv.scrollLeft;
-        var scrolltop = this.__LzInputDiv.scrollTop;
-
-        // destroy old element
+        var olddiv = this.__LzInputDiv;
+        // remove text events
         this.__setTextEvents(false);
-        this.__discardElement(this.__LzInputDiv);
-
+        // make new div
         this.__createInputDiv(ml ? 'multiline' : '');
-
         // must set before appending
-        lz.embed.__setAttr(this.__LzInputDiv, 'style', style);
-        this.__LZdiv.appendChild(this.__LzInputDiv);
-        this.__LzInputDiv.style.overflow = ml ? 'hidden' : 'visible';
-        this.__LzInputDiv.scrollLeft = scrollleft;
-        this.__LzInputDiv.scrollTop = scrolltop;
-
+        var newdiv = this.__LzInputDiv;
+        // NOTE: [2009-02-13 ptw] I don't know of a better way to do
+        // this.  You can't just copy over the style declaration, that
+        // does not work.
+        lz.embed.__setAttr(newdiv, 'style', olddiv.style.cssText);
+        // input elements do not have scrollbars, textarea does, so we
+        // need to adjust our width and height
+        var cdim = this.CSSDimension;
+        if (ml) {
+          newdiv.style.height = cdim(this.height + this.quirks.scrollbar_width);
+          newdiv.style.width = cdim(this.width + this.quirks.scrollbar_width);
+        } else {
+          newdiv.style.height = cdim(this.height);
+          newdiv.style.width = cdim(this.width);
+        }
+        //Debug.debug('replacing %w with %w', olddiv, newdiv);
+        newdiv.scrollLeft = olddiv.scrollLeft;
+        newdiv.scrollTop = olddiv.scrollTop;
+        // destroy old
+        this.__discardElement(olddiv);
+        // put in place
+        this.__LZdiv.appendChild(newdiv);
         // restore text events
         this.__setTextEvents(true);
-
         // restore text content
         this.setText(this.text, true);
     }
@@ -339,9 +345,15 @@ LzInputTextSprite.prototype.gotFocus = function() {
 }
 
 LzInputTextSprite.prototype.setText = function(t) {
-    if (t.indexOf('<br/>') != -1) {
-        t = t.replace(this.br_to_newline_re, '\r') 
-        //Debug.write('new text %w', t)
+    // NOTE: [2009-0-28 ptw]  Wonder why _here_ we translate <br> to
+    // carriage returns, yet in LzTextSprite/setText we translate
+    // newlines to <br>?  Since we don't support htmlinputtext, I
+    // claim we should not be doing this
+    if (this.capabilities['htmlinputtext']) {
+      if (t.indexOf('<br/>') != -1) {
+          t = t.replace(this.br_to_newline_re, '\r') 
+          //Debug.write('new text %w', t)
+      }
     }
     this.text = t;
     this.__createInputText(t);
@@ -565,8 +577,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
         // don't forward 'onmousemove' to inputtextevent()
         return;
     } else if (eventname == 'onkeypress') {
-        if (sprite.restrict || (sprite.multiline && view.maxlength > 0)) {
-            sprite.__updatefieldsize();
+        if (sprite.restrict || (sprite.multiline && view.maxlength && view.maxlength < Infinity)) {
             var keycode = evt.keyCode;
             var charcode = quirks.text_event_charcode ? evt.charCode : evt.keyCode;
             // only printable characters or carriage return (modifier keys must not be active)
@@ -634,6 +645,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
                     }
                 }
             }
+            sprite.__updatefieldsize();
         }
         // don't forward 'onkeypress' to inputtextevent()
         return;
@@ -646,6 +658,8 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             var v = sprite.__LzInputDiv.value;
             if (v != sprite.text) {
                 sprite.text = v;
+                // Text changed, clear this cache!!!
+                sprite.__updatefieldsize();
                 view.inputtextevent('onchange', v);
             }
         } else {
@@ -983,32 +997,23 @@ LzInputTextSprite.prototype.setFontName = function (fname) {
 }
 
 LzInputTextSprite.prototype.setWidth = function (w) {
-    if (w == null || w < 0 || isNaN(w) || this.width == w) return;
-    // call LzSprite.setWidth();
-    var nw = this.__setWidth(w);
+    if (w == null || w < 0 || isNaN(w)) return;
+    // call the super method
+    var nw = LzTextSprite.prototype.setWidth.call(this, w);
     if (this.quirks.fix_clickable && nw != null) {
         this.__LZclickcontainerdiv.style.width = nw;
         this.__LZinputclickdiv.style.width = nw;
     }   
-    this.__updatefieldsize();
 }
 
 LzInputTextSprite.prototype.setHeight = function (h) {
-    if (h == null || h < 0 || isNaN(h) || this.height == h) return;
-    // call LzSprite.setHeight();
-    var nh = this.__setHeight(h);
+    if (h == null || h < 0 || isNaN(h)) return;
+    // call the super method
+    var nh = LzTextSprite.prototype.setHeight.call(this, h);
     if (this.quirks.fix_clickable && nh != null) {
         this.__LZclickcontainerdiv.style.height = nh;
         this.__LZinputclickdiv.style.height = nh;
-        if (this.multiline && this.quirks.set_height_for_multiline_inputtext) {
-            h = this.CSSDimension(h - (this.____hpadding * 2));
-            if (h != this._multilineheight) {
-                this._multilineheight = h;
-                this.__LzInputDiv.style.height = h
-            }
-        }
-    }   
-    this.__updatefieldsize();
+    }
 }   
 
 // Must match LzSprite implementation
@@ -1024,46 +1029,6 @@ LzInputTextSprite.prototype.getText = function () {
     } else {
         return this.__LzInputDiv.value;
     }
-}
-
-LzInputTextSprite.prototype.getTextfieldHeight = function () {
-    if (this.text == '') {
-        return this.getTextSize(null).height;
-//       Debug.debug('getTextfieldHeight: 0');
-    }
-
-    if (this.multiline) {
-        var oldheight = false;
-        // force style recompute
-        if (this.resize && ! this.quirks['inputtext_strips_newlines']) this._styledirty = true;
-        if (this.height) {
-            oldheight = this.__LzInputDiv.style.height;
-            this.__LzInputDiv.style.height = 'auto';
-        }
-        var h = this.__LzInputDiv.scrollHeight;
-        if (h == 0 || h == null) {
-            h = this.getTextSize(this.text, false).height;
-            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
-                h += this.__hpadding;
-            }
-        } else {
-            if (h > 0 && this.quirks.emulate_flash_font_metrics) {
-                h += this.__hpadding;
-            }
-        }
-        if (this.quirks['safari_textarea_subtract_scrollbar_height']) h += 24;
-        //Debug.info('LzInputTextSprite.getTextfieldHeight', h, this.height, this.owner, this.__LzInputDiv);
-        if (this.height) {
-            this.__LzInputDiv.style.height = oldheight;
-        }
-    } else {
-        var h = this.getTextSize(null).height;
-    }
-    // NOTE: [2006-09-30 ptw] Don't cache 0 as a value for non-empty text.  It breaks
-    // multi-line text for some reason -- I suspect because we ask for
-    // the height too early...
-//     Debug.debug('getTextfieldHeight: %s', h);
-    return h;
 }
 
 /**

@@ -235,12 +235,11 @@ class LzDHTMLDebugService extends LzDebugService {
    */
   override function __StringDescription (thing:*, pretty:Boolean, limit:Number, unique:Boolean, depth:Number):Object {
     try {
+      // test for HTMLElement if avaliable, second expression helps to filter IE-HTMLElements
+      // NOTE: IE does not provide a HTMLElement-class, but we know their HTMLElements return 'object' for typeof,
+      // but as they're not proper JS-Objects (no 'constructor' property), we use this info as a hint.
       if ((!!window.HTMLElement ? thing instanceof HTMLElement : typeof(thing) == 'object' && !thing.constructor) &&
           (! isNaN(Number(thing['nodeType'])))) {
-        // test for HTMLElement if avaliable, second expression helps to filter IE-HTMLElements
-        // NOTE: IE does not provide a HTMLElement-class, but we know their HTMLElements return 'object' for typeof,
-        // but as they're no proper JS-Objects (no 'constructor' property), we use this info as a hint.
-
         // tip o' the pin to osteele.com for the notation format
         function nodeToString(node) {
           var tn = node.nodeName || '';
@@ -277,7 +276,10 @@ class LzDHTMLDebugService extends LzDebugService {
           }
           return path;
         };
-        return {pretty: pretty, description: nodeToString(thing)};
+        // If this has local style, add that
+        var style = thing.style.cssText;
+        if (style != '') { style = ' {' + style + '}'; }
+        return {pretty: pretty, description: nodeToString(thing) + style};
       }
     } catch (e) {}
     return super.__StringDescription(thing, pretty, limit, unique, depth);

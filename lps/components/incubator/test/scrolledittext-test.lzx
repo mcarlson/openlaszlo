@@ -8,35 +8,37 @@
 
     <simplelayout axis="x" spacing="6"/>
     
-    <method name="showMeasurements" args="atextfield">
-        var o = 'Measurements for ' + atextfield;
-        with (atextfield) {
-            o += '\nscroll: ' + scroll + ' sprite ' + sprite.scroll;
-            o += '\nmaxscroll: ' + maxscroll + ' sprite ' + sprite.maxscroll;
-            o += '\nhscroll: ' + hscroll + ' sprite ' + sprite.hscroll;
-            o += '\nmaxhscroll: ' + maxhscroll + ' sprite ' + sprite.maxhscroll;
-        }
-        Debug.write(o);
-    </method>
-
-    <view bgcolor="papayawhip">
-        <simplelayout axis="y" spacing="6"/>
-        <scrolledittext name="set1" x="20" y="20" width="300" height="100" vscrollbarclassname="newvscrollbar">this is the fun scrolledittext</scrolledittext>
-        <button>Wider
-            <handler name="onclick">this.parent.set1.setAttribute("width", this.parent.set1.width + 20);</handler>
-        </button>
-        <button>Taller
-            <handler name="onclick">this.parent.set1.setAttribute("height", this.parent.set1.height + 20);</handler>
-        </button>
-        <button>Change style
-            <handler name="onclick">this.parent.set1.inp.setAttribute("fontsize", this.parent.set1.inp.fontsize != 9 ? 9 : 11);</handler>
-        </button>
-        <button>Show measurements
-            <handler name="onclick">canvas.showMeasurements(this.parent.set1);</handler>
-        </button>
+    <view bgcolor="papayawhip" width="240">
+      <view y="20"  layout="axis: y; spacing: 20">
+      <scrolledittext id="set1" x="20" width="200" height="100" vscrollbarclassname="newvscrollbar">this is the fun scrolledittext</scrolledittext>
+      <view layout="axis: x; spacing: 20">
+        <view layout="axis: y; spacing: 6">
+          <button>Wider
+          <handler name="onclick">set1.setAttribute("width", set1.width + 20);</handler>
+          </button>
+          <button>Taller
+          <handler name="onclick">set1.setAttribute("height", set1.height + 20);</handler>
+          </button>
+          <button>Change style
+          <handler name="onclick">set1.inp.setAttribute("fontsize", set1.inp.fontsize != 9 ? 9 : 11);</handler>
+          </button>
+        </view>
+        <view layout="axis: y; spacing: 1">
+          <text text="${'lineheight: ' + set1.inp.lineheight}" />
+          <text text="${'scroll: ' + set1.inp.scroll}" />
+          <text text="${'maxscroll: ' + set1.inp.maxscroll}" />
+          <text text="${'maxhscroll: ' + set1.inp.maxhscroll}" />
+          <text text="${'hscroll: ' + set1.inp.hscroll}" />
+          <text text="${'yscroll: ' + set1.inp.yscroll}" />
+          <text text="${'scrollheight: ' + set1.inp.scrollheight}" />
+          <text text="${'xscroll: ' + set1.inp.xscroll}" />
+          <text text="${'scrollwidth: ' + set1.inp.scrollwidth}" />
+        </view>
+      </view>
+      </view>
     </view>
 
-    <scrolledittext x="20" y="20" width="300" height="200">this is the fun scrolledittext with a default scrollbar</scrolledittext>
+    <scrolledittext x="20" y="20" width="200" height="200">this is the fun scrolledittext with a default scrollbar</scrolledittext>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2006-2007, 2009 Laszlo Systems, Inc. All Rights Reserved.               *

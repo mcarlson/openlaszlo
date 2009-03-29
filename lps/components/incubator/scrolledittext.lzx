@@ -31,7 +31,7 @@
             
             <setter name="pos" args="p">
                 if (this.inited) {
-                    var scroll = Math.ceil(1 - (p / this.lineheight));
+                    var scroll = 1 - Math.floor(p / this.lineheight);
                     if (scroll !== this.scroll) {
                         this.setAttribute('scroll', scroll);
                         //Debug.info('pos', p, this.scroll)
@@ -119,7 +119,7 @@
         
         <method name="updateScrollMax" args="IGNORE_THIS_ARG = null">
             if(this['_vs']){
-                this._vs.setAttribute("scrollmax", this.inp.maxheight);
+                this._vs.setAttribute("scrollmax", this.inp.scrollheight);
             }
         </method>
         
