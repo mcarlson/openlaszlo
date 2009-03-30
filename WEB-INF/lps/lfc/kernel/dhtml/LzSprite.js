@@ -333,6 +333,7 @@ LzSprite.prototype.__defaultStyles = {
         cursor: 'pointer'
     },
     writeCSS: function() {
+        var rules = [];
         var css = '';
         for (var classname in this) {
             if (classname == 'writeCSS' || 
@@ -346,11 +347,7 @@ LzSprite.prototype.__defaultStyles = {
             }
             css += '}';
         }
-        var o = document.createElement('style');
-        lz.embed.__setAttr(o, 'type', 'text/css');
-        o.appendChild( document.createTextNode( css ) );
-        var heads = document.getElementsByTagName("head");
-        heads[0].appendChild(o);
+        document.write('<style type="text/css">' + css + '</style>');
     },
     __re: new RegExp("[A-Z]"),
     hyphenate: function(n) {
