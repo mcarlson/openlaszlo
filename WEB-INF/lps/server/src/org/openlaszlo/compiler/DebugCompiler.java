@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -52,7 +52,6 @@ class DebugCompiler extends ViewCompiler {
         } else {
             mEnv.setProperty(mEnv.USER_DEBUG_WINDOW, true);
             // inlined from ViewCompiler.compile()
-            preprocess(element, mEnv);
             NodeModel model = NodeModel.elementAsModel(element, mEnv.getSchema(), mEnv);
             model = model.expandClassDefinitions();
             Map map = model.asMap();

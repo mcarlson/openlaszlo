@@ -333,7 +333,6 @@ public class ClassModel implements Comparable {
       // We compile a class declaration just like a view, and then
       // add attribute declarations and perhaps some other stuff that
       // the runtime wants.
-      ViewCompiler.preprocess(definition, env);
       NodeModel model = NodeModel.elementAsModel(definition, schema, env);
       model = model.expandClassDefinitions();
       // Establish class root

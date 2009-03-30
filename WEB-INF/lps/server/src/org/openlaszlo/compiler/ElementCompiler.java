@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -65,5 +65,8 @@ abstract class ElementCompiler {
     }
     
 
+    void preprocess(Element elt, CompilationEnvironment env) {
+        // no-op, only ViewCompiler needs this method
+    }
 
 }

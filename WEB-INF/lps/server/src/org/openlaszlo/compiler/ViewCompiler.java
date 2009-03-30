@@ -81,7 +81,6 @@ public class ViewCompiler extends ElementCompiler {
 
     public void compile(Element element) throws CompilationError
     {
-        preprocess(element, mEnv);
         FontInfo fontInfo = null;
 
         String name = element.getName();
@@ -214,10 +213,10 @@ public class ViewCompiler extends ElementCompiler {
      * @param elt an <code>Element</code> value
      * @param env a <code>CompilationEnvironment</code> value
      */
-    static void preprocess(Element elt, CompilationEnvironment env) {
-        compileResources(elt, env);
-        compileClickResources(elt, env);
-        compileAttributes(elt, env);
+  void preprocess(Element elt, CompilationEnvironment env) {
+      compileResources(elt, env);
+      compileClickResources(elt, env);
+      compileAttributes(elt, env);
     }
 
     /**
@@ -747,9 +746,10 @@ public class ViewCompiler extends ElementCompiler {
             info.setSize(size);
         }
     }
+
 }
 
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

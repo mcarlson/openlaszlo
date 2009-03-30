@@ -307,9 +307,9 @@ public class Compiler {
     public Canvas compile(File file, OutputStream ostr, CompilationEnvironment env)
         throws CompilationError, IOException
     {
-    	if (mLogger.isInfoEnabled()) {
-    		mLogger.info("compiling " + file + "...");
-    	}
+        if (mLogger.isInfoEnabled()) {
+            mLogger.info("compiling " + file + "...");
+        }
 
         CompilationErrorHandler errors = env.getErrorHandler();
         env.setApplicationFile(file);
@@ -318,7 +318,7 @@ public class Compiler {
         boolean noCodeGeneration = "true".equals(env.getProperty(CompilationEnvironment.NO_CODE_GENERATION));
 
         try {
-        	if (mLogger.isDebugEnabled()) {
+            if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -327,10 +327,10 @@ public class Compiler {
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 Compiler.class.getName(),"051018-303", new Object[] {file.getAbsolutePath()})
 );
-        	}
+            }
             // Initialize the schema from the base LFC interface file
 
-        	try {
+            try {
                 env.getSchema().loadSchema(env);
             } catch (org.jdom.JDOMException e) {
                 throw new ChainedException(e);
@@ -359,9 +359,9 @@ public class Compiler {
             // cssfile cannot be set in the canvas tag
             String cssfile = env.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
             if (cssfile != null) {
-            	if (mLogger.isInfoEnabled()) {
-            		mLogger.info("Got cssfile named: " + cssfile);
-            	}
+                if (mLogger.isInfoEnabled()) {
+                    mLogger.info("Got cssfile named: " + cssfile);
+                }
                 cssfile = root.getAttributeValue("cssfile");
                  throw new CompilationError(
                         "cssfile attribute of canvas is no longer supported. Use <stylesheet> instead.");
@@ -369,7 +369,7 @@ public class Compiler {
             }
 
             if (mLogger.isDebugEnabled()) {
-            	mLogger.debug("Making a writer...");
+                mLogger.debug("Making a writer...");
             }
             ViewSchema schema = env.getSchema();
             Set externalLibraries = null;
@@ -408,11 +408,9 @@ public class Compiler {
             processCompilerInstructions(root, env);
 
             compileElement(root, env);
-            if (linking) {
-              ViewCompiler.checkUnresolvedResourceReferences (env);
-            }
+
             if (mLogger.isDebugEnabled()) {
-            	mLogger.debug("done...");
+                mLogger.debug("done...");
             }
             // This isn't in a finally clause, because it won't generally
             // succeed if an error occurs.
@@ -435,8 +433,12 @@ public class Compiler {
               canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
             }
 
+            if (linking) {
+              ViewCompiler.checkUnresolvedResourceReferences (env);
+            }
+
             if (mLogger.isInfoEnabled()) {
-            	mLogger.info("done");
+                mLogger.info("done");
             }
             return canvas;
         } catch (CompilationError e) {
@@ -714,7 +716,7 @@ public class Compiler {
         try {
             ElementCompiler compiler = getElementCompiler(element, env);
             if (mLogger.isDebugEnabled()) {
-            	mLogger.debug("compiling element "+element.getName() + " with compiler "+compiler.getClass().toString());
+                mLogger.debug("compiling element "+element.getName() + " with compiler "+compiler.getClass().toString());
             }
             compiler.compile(element);
         } catch (CompilationError e) {

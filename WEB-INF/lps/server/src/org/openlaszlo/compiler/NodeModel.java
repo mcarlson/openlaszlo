@@ -542,6 +542,9 @@ public class NodeModel implements Cloneable {
         NodeModel model = ((ElementWithLocationInfo) elt).model;
         if (model != null) { return model; }
 
+        ElementCompiler compiler = Compiler.getElementCompiler(elt, env);
+        compiler.preprocess(elt, env);
+
         checkTagDeclared(elt, schema);
         model = new NodeModel(elt, schema, env);
         LinkedHashMap attrs = model.attrs;
