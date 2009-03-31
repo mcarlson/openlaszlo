@@ -140,16 +140,6 @@ LzInputTextSprite.prototype.setMultiline = function(ml) {
         // this.  You can't just copy over the style declaration, that
         // does not work.
         lz.embed.__setAttr(newdiv, 'style', olddiv.style.cssText);
-        // input elements do not have scrollbars, textarea does, so we
-        // need to adjust our width and height
-        var cdim = this.CSSDimension;
-        if (ml) {
-          newdiv.style.height = cdim(this.height + this.quirks.scrollbar_width);
-          newdiv.style.width = cdim(this.width + this.quirks.scrollbar_width);
-        } else {
-          newdiv.style.height = cdim(this.height);
-          newdiv.style.width = cdim(this.width);
-        }
         //Debug.debug('replacing %w with %w', olddiv, newdiv);
         var oldleft = olddiv.scrollLeft;
         var oldtop = olddiv.scrollTop;
@@ -157,6 +147,9 @@ LzInputTextSprite.prototype.setMultiline = function(ml) {
         this.__discardElement(olddiv);
         // put in place
         this.__LZdiv.appendChild(newdiv);
+        // input elements do not scroll but multiline does, so we need
+        // to update scrollevents
+        this.setScrollEvents(this.owner.scrollevents);
         newdiv.scrollLeft = oldleft;
         newdiv.scrollTop = oldtop;
         // restore text events

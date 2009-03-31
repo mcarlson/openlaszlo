@@ -253,7 +253,8 @@ LzSprite.prototype.__defaultStyles = {
         fontSize: '11px',
         whiteSpace: 'normal',
         position: 'absolute',
-        overflow: 'scroll',
+        // When scrollevents are on, this will be overridden
+        overflow: 'hidden',
         textAlign: 'left',
         textIndent: '0px',
         letterSpacing: '0px',
@@ -266,7 +267,8 @@ LzSprite.prototype.__defaultStyles = {
         fontSize: '11px',
         whiteSpace: 'normal',
         position: 'absolute',
-        overflow: 'scroll',
+        // When scrollevents are on, this will be overridden
+        overflow: 'hidden',
         // To match swf font metrics
         lineHeight: '1.2em',
         textAlign: 'left',
@@ -320,7 +322,8 @@ LzSprite.prototype.__defaultStyles = {
         borderWidth: 0,
         backgroundColor: 'transparent',
         position: 'absolute',
-        overflow: 'scroll',
+        // When scrollevents are on, this will be overridden
+        overflow: 'hidden',
         // To match swf font metrics
         lineHeight: '1.2em',
         textAlign: 'left',
@@ -439,6 +442,7 @@ LzSprite.prototype.quirks = {
     ,swf8_contextmenu: true
     ,dom_breaks_focus: false
     ,inputtext_anonymous_div: false
+    ,clipped_scrollbar_causes_display_turd: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -544,11 +548,6 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['textstyle_on_textdiv'] = true;
             // IE scrollbar is 16px
             quirks['scrollbar_width'] = 16;
-            var defaultStyles = LzSprite.prototype.__defaultStyles;
-            var st = defaultStyles.lzswftext;
-            st.marginRight = st.marginBottom = '-16px';
-            var sitm = defaultStyles.lzswfinputtextmultiline;
-            sitm.marginRight = sitm.marginBottom = '-16px';
             // CSS sprites conflict with ie_alpha_image_loader...
             quirks['use_css_sprites'] = ! quirks['ie_alpha_image_loader'];
         } else if (browser.isSafari) {
@@ -610,6 +609,12 @@ LzSprite.prototype.__updateQuirks = function () {
             // anonymous div bug on input-elements (LPP-7796)
             // see https://bugzilla.mozilla.org/show_bug.cgi?id=208427
             quirks['inputtext_anonymous_div'] = true;
+            // In FF/Windows clipped scroll bars cause display turds
+            // when moving
+            // TODO [2009-03-30 ptw] file bug with Mozilla
+            if (browser.OS == 'Windows') {
+                quirks['clipped_scrollbar_causes_display_turd'] = true;
+            }
             if (browser.version < 2) {
                 // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
                 quirks['firefox_autocomplete_bug'] = true;
