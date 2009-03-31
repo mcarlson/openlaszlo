@@ -16,7 +16,7 @@
 
         <!--- true for verbose debug logging -->
         <attribute name="debug" value="false"/>
-        <attribute name="showframe" value="0"/>
+        <attribute name="starttime" value="0" type="number"/>
         <attribute name="type" type="string" value="http"/>
 
         <attribute name="url" type="string" value=""/>
@@ -75,6 +75,7 @@
             stream="$once{classroot.ms}"
             visible="${parent.visible &amp;&amp; (this.width &gt; 1) &amp;&amp; (this.height &gt; 1)}"
             playvolume="${classroot.volume}"
+            starttime="${classroot.starttime}"
             debug="${parent.debug}"
         >
 

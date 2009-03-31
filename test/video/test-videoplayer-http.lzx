@@ -8,11 +8,11 @@
     <simplelayout axis="x" spacing="10"/> 
     <view layout="axis:y">    
         <text multiline="true"> 
-            v1: showframe="1"<br/> 
+            v1: starttime="1"<br/> 
             showTimeDisplay="false" showVolumeControl="false"<br/>
             progressColor="0x0000cc" border="1" sliderGap="0"
         </text>
-        <videoplayer id="v1" showframe="1" 
+        <videoplayer id="v1" starttime="1" 
             showTimeDisplay="false" showVolumeControl="false"
             progressColor="0x0000cc"
             border="1" sliderGap="0"

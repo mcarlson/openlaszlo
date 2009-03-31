@@ -28,14 +28,16 @@
               see mediastream for details -->
         <attribute name="url" type="string" value=""/>
         
-        <!--- Show this frame when the url is set. 
-              Use -1 to show no frame.
-              Default: 0 -->
-        <attribute name="showframe" type="number" value="0"/>
 
         <!--- when true, playback will start automatically
               without user action -->
         <attribute name="autoplay" value="false"/>
+
+        <!--- Show the frame from this time (in seconds) whenever the url 
+            is set for video playback.
+            Use -1 to show no frame (which will leave the image as it
+            was when switching videos) -->
+        <attribute name="starttime" value="0" type="number"/>
 
         <!--- why would you want this? no test case, marking private 
               @access private -->    
@@ -122,7 +124,7 @@
             autoplay="${classroot.autoplay}"
             url="${classroot.url}"
             volume="${parent.vslider.volume}"
-            showframe="${parent.showframe}"
+            starttime="${parent.starttime}"
             borderTop="${parent.borderTop}"
             borderLeft="${parent.borderLeft}"
             borderBottom="${parent.borderBottom}"

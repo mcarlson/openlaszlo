@@ -54,9 +54,11 @@
             Default: false. -->
     <attribute name="autoplay" value="false"/>
 
-    <!--- Show this frame when the url is set for recorded video.
-          Use -1 to show no frame-->
-    <attribute name="showframe" value="0"/>
+    <!--- Show the frame from this time (in seconds) whenever the url 
+          is set for video playback.
+          Use -1 to show no frame (which will leave the image as it
+          was when switching videos) -->
+    <attribute name="starttime" value="0" type="number"/>
 
     <!--- If true, Debug.write extra stuff (this may go away). -->
     <attribute name="debug" value="false"/>
@@ -164,8 +166,8 @@
                                         this.stream, "onplaying")
         if (this.stream.playing || this.stream.type == 'http') {
             // show poster frame now for http streams
-            if (!this.stream.playing && this.showframe != -1) {
-                this.stream.seek(this.showframe);
+            if (!this.stream.playing && this.starttime != -1) {
+                this.stream.seek(this.starttime);
             }
             this._setPlayStream();
         }
@@ -286,7 +288,7 @@
 
     <method name="_updateStreamUrl"> <![CDATA[
         //Debug.write("%w _updateStreamUrl %w %w", 
-        //    this, this.url, this.showframe);
+        //    this, this.url, this.starttime);
         this.stream.setAttribute("url", this.url);
 
         ]]>

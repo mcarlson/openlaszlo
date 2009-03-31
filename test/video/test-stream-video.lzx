@@ -22,7 +22,7 @@
     <simplelayout axis="y" inset="10" spacing="5"/>
     <constantlayout axis="x" value="10"/>
     <text>v2: don't show first frame initially</text>
-    <videoview id="v2" showframe="-1">
+    <videoview id="v2" starttime="-1">
         <mediastream id="s2" 
             url="http:videos/good-dog.flv"/>
     </videoview>  
