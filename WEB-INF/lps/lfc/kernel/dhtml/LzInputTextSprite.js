@@ -151,12 +151,14 @@ LzInputTextSprite.prototype.setMultiline = function(ml) {
           newdiv.style.width = cdim(this.width);
         }
         //Debug.debug('replacing %w with %w', olddiv, newdiv);
-        newdiv.scrollLeft = olddiv.scrollLeft;
-        newdiv.scrollTop = olddiv.scrollTop;
+        var oldleft = olddiv.scrollLeft;
+        var oldtop = olddiv.scrollTop;
         // destroy old
         this.__discardElement(olddiv);
         // put in place
         this.__LZdiv.appendChild(newdiv);
+        newdiv.scrollLeft = oldleft;
+        newdiv.scrollTop = oldtop;
         // restore text events
         this.__setTextEvents(true);
         // restore text content
