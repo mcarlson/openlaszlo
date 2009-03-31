@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -309,9 +309,9 @@ abstract class ObjectWriter {
      * File should refer to a graphical asset. */
     public String importResource(File file)
     {
-    	if (mLogger.isDebugEnabled()) {
+        if (mLogger.isDebugEnabled()) {
         mLogger.debug("ObjectResource:importResource(File) "+file.getPath());
-    	}
+        }
         Resource res;
 
         try {
@@ -547,6 +547,23 @@ abstract class ObjectWriter {
 
     public CompilationEnvironment getCompilationEnvironment () {
         return mEnv;
+    }
+
+    /** Validate a given filename is good for importing
+     *
+     * @param fileName file name of the resource
+     * @return true if it is valid
+     */ 
+    public boolean isFileValidForImport(String fileName) { 
+        // skip auto-generated CSS sprites
+        if (fileName.indexOf(mEnv.IMAGEMONTAGE_STRING) > -1) {
+            //mLogger.debug("skipping css sprite: "+fileName);
+            return false;
+        }
+
+        File f = new File(fileName);
+        //mLogger.debug("file: " + fileName + " is a file? " + f.isFile());
+        return f.isFile();
     }
 }
 

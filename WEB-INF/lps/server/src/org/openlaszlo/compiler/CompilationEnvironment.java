@@ -74,6 +74,9 @@ public class CompilationEnvironment {
     // build the ViewSchema only.
     public static final String NO_CODE_GENERATION = "nocodegeneration";
     
+    // String inserted to image montages - see DHTMLWriter.java
+    public static final String IMAGEMONTAGE_STRING = ".sprite.";
+
     /** Cache for holding DOM tree from parsing library file */
     public HashMap parsedLibraryCache = new HashMap();
 

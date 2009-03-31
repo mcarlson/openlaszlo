@@ -165,7 +165,7 @@ class SWF9Writer extends ObjectWriter {
                 String sFname = inputFile.toString() + File.separator + sources[i].getName();
                 File f = new File(sFname);
                 //mLogger.debug("SWF9Writer file: " + sFname + " is a file? " + f.isFile());
-                if (f.isFile()) {
+                if (isFileValidForImport(sFname)) {
                     outsources.add(sFname);
                 }
             }

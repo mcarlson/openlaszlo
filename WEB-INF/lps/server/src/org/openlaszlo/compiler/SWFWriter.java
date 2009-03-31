@@ -562,7 +562,7 @@ class SWFWriter extends ObjectWriter {
                     File f = new File(fname);
                     //mLogger.debug("SWFWriter file: " + f.isFile());
 
-                    if (f.isFile()) {
+                    if (isFileValidForImport(fname)) {
                         //mLogger.debug("SWFWriter adding: " + fname);
                         outsources.add(fname);
                     }

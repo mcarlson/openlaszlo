@@ -298,7 +298,7 @@ class DHTMLWriter extends ObjectWriter {
         // create a montage for multiframe resources
         if (sources.size() > 1) {
             String montageFile = (String)sources.get(0);
-            montageFile = montageFile.substring(0, montageFile.indexOf('.')) + ".sprite" + montageFile.substring(montageFile.indexOf('.'));
+            montageFile = montageFile.substring(0, montageFile.indexOf('.')) + mEnv.IMAGEMONTAGE_STRING + montageFile.substring(montageFile.indexOf('.') + 1);
             try {
                 ImageMontageMaker.assemble(sources, montageFile);
                 String[] fileInfo = getRelPath(new File(montageFile));
@@ -317,23 +317,6 @@ class DHTMLWriter extends ObjectWriter {
         }
         sbuf.append("};");
         mResourceDefs.append(sbuf.toString());
-    }
-
-    /** Validate a given filename is good for importing
-     *
-     * @param fileName file name of the resource
-     * @return true if it is valid
-     */ 
-    private boolean isFileValidForImport(String fileName) { 
-        // skip auto-generated CSS sprites
-        if (fileName.indexOf(".sprite.") > -1) {
-            //mLogger.debug("skipping css sprite: "+fileName);
-            return false;
-        }
-
-        File f = new File(fileName);
-        //mLogger.debug("file: " + fileName + " is a file? " + f.isFile());
-        return f.isFile();
     }
 
     private String[] getRelPath(File fFile) { 
