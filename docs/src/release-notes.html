@@ -89,25 +89,25 @@
     <p>
       Before 4.3 you could dynamically add attributes to an instance by saying: 
     </p>
-    <code><pre>
-    &lt;method &#x2026;&gt;
-    &nbsp;&nbsp;this.myattr = "hello";
+    <code>
+    &lt;method &#x2026;&gt;<br>
+    &nbsp;&nbsp;this.myattr = "hello";<br>
     &lt;/method&gt;
-    </pre></code> 
+    </code> 
     <p>
       and reference that dynamically-added attribute as if it were a declared attribute: 
     </p>
-    <code><pre>
-    &lt;method &#x2026;&gt;
-    &nbsp;&nbsp;return myattr;
+    <code>
+    &lt;method &#x2026;&gt;<br>
+    &nbsp;&nbsp;return myattr;<br>
     &lt;/method&gt;
-    </pre></code> 
+    </code> 
     <p>
       In 4.2 and later, only declared attributes, i.e.: 
     </p>
-    <code><pre>
+    <code>
     &lt;attribute name="myattr" &#x2026; /&gt;
-    </pre></code> 
+    </code> 
     <p>
       can be referenced lexically (without saying <code>this.</code>).  The swf9 runtime will generate an error at compile time if you make a lexical reference to an undeclared attribute.  For the swf8 and DHTML runtimes, the old behavior is supported but deprecated and may cause a compiler warning or error in future releases. 
     </p>
@@ -241,7 +241,8 @@
 
     <hr>
     <p>OpenLaszlo @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@</p>
-    <p>Copyright © 2002-2009 Laszlo Systems, Inc. All Rights Reserved. Unauthorized use,
+    <!-- Dear Editor, Please do NOT insert a Unicode copyright symbol below.  It will get eaten by the intermediate processors and not display correctly in browsers.  Hence the &#A9;, which is proper XML for the copyright character -->
+    <p>Copyright &#xA9; 2002-2009 Laszlo Systems, Inc. All Rights Reserved. Unauthorized use,
       duplication or distribution is strictly prohibited. This is the proprietary information of
       Laszlo Systems, Inc. Use is subject to license terms. </p>
     <hr>
