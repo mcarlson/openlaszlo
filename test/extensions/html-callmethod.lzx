@@ -1,0 +1,75 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<canvas debug="true" height="300">
+    <debug x="250" y="0" width="800" height="300" />
+    
+    <class name="DHTMLComponent" extends="view">
+    
+        <!--- The iframe component -->
+        <html name="html" visible="false" 
+              src="html-test.html" />
+                
+        <method name="func1">
+            var del = new LzDelegate(this, 'handleFunc1');
+            html.callJavascript('func1', del); 
+        </method>
+        
+        <method name="handleFunc1" args="retVal">
+            Debug.write('DHTMLComponent handleFunc1: ', retVal);
+        </method>
+                
+        <method name="func2">
+            var del = new LzDelegate(this, 'handleFunc2');
+            html.callJavascript('anObject.func2', del); 
+        </method>
+        
+        <method name="handleFunc2" args="retVal">
+            Debug.write('DHTMLComponent handleFunc2: ', retVal);
+        </method>
+                
+        <method name="func3">
+            var del = new LzDelegate(this, 'handleFunc3');
+            html.callJavascript('func3', del, "argument 1", "argument 2", "argument 3"); 
+        </method>
+        
+        <method name="handleFunc3" args="retVal">
+            Debug.write('DHTMLComponent handleFunc3: ', retVal);
+        </method>
+        
+        <method name="func4">
+            html.callJavascript('func4');
+        </method>
+    </class>
+    
+    <DHTMLComponent name="comp" width="500" height="500" y="120" />
+    
+    <button>
+        Call global func1
+        <handler name="onclick">
+            parent.comp.func1();
+        </handler>
+    </button>
+    
+    <button y="30">
+        Call anObject.func2
+        <handler name="onclick">
+            parent.comp.func2();
+        </handler>
+    </button>
+    
+    <button y="60">
+        Call func3 with parameters
+        <handler name="onclick">
+            parent.comp.func3();
+        </handler>
+    </button>
+    
+    <button y="90">
+        Call func4 with no callback
+        <handler name="onclick">
+            parent.comp.func4();
+        </handler>
+    </button>
+</canvas>

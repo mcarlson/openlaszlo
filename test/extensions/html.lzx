@@ -1,14 +1,68 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <canvas width="100%" height="100%">
     <include href="extensions/html.lzx"/>
 
     <class name="browser" extends="window" resizable="true" bgcolor="silver">
-        <edittext name="txt" text="http://openlaszlo.org/" width="300"/> 
-        <button x="310" onclick="parent.htmlview.setSrc(parent.txt.getText()); parent.htmlview.setAttribute('visible', true)">Load</button> 
-        <html name="htmlview"/>
+        <simplelayout axis="y" spacing="2"/>
+        <hbox width="100%">
+            <edittext name="txt" text="html-test.html" width="300"/> 
+            <button>Load
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.setAttribute('src', parent.txt.getText()); 
+                        classroot.main.setAttribute('visible', true); 
+                    }
+                </handler>
+            </button> 
+            <button>Clear
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.setAttribute('visible', false);
+                        classroot.main.setAttribute('src', ''); 
+                    }
+                </handler>
+            </button> 
+            <button>Destroy
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.destroy();
+                    }
+                </handler>
+            </button> 
+            <button>Scroll
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.scrollBy(10, 10); 
+                    }
+                </handler>
+            </button> 
+            <button>Call a method
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.callJavascript('setBGColor', null, '#ff0000'); 
+                    }
+                </handler>
+            </button> 
+            <text name="status" y="3" fontstyle="bold" visible="${classroot.main.loading}">Loading...</text>
+        </hbox>    
+        <html name="main" history="false" width="100%" height="${classroot.height - this.y - 44}">
+            <handler name="oninit">
+                Debug.write('this.src', this.src);
+                this.bringToFront();
+            </handler>
+            <handler name="oniframe">
+                Debug.write('oniframe');
+            </handler>
+            <handler name="onsrc" args="s">
+                Debug.write('onsrc', s);
+            </handler>
+            <handler name="onload">
+                Debug.write('onload');
+            </handler>
+        </html>
     </class>
 
     <browser width="100%" height="100%"/>
