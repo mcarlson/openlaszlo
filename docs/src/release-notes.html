@@ -78,30 +78,39 @@
         tracking system</a>. We'd also like to hear from you on the <a href="http://www.openlaszlo.org/lists" target="_blank">mailing lists</a> and in the <a href="http://forum.openlaszlo.org/" target="_blank">forums</a>.</p>
 
     <h2>Improved Debugger to deal with deep and circular objects when printing</h2>
-    <p>The @VERSIONID@ release adds two new properties of Debug: <code>printDepth:Number</code>
+    <p>The 4.3 release adds two new properties of Debug: <code>printDepth:Number</code>
       (default 8) limits how deep the debug printer will go into an object when printing it;
-        <code>printDetectCircular:Boolean</code> (default true) will cause the debug printer to
+        <code>inspectPrintDepth:Number</code> (default 1) limits how deep the debug printer will go into an object that is a property of an object when inspecting.
+        The debug printer will also
       detect circular objects (rather than causing a stack overflow), at small cost in overhead.
       When an object refers to itself (however indirectly), it will be printed just as its type and
       ID.</p>
     <h2>Change to <code>this</code> behavior</h2>
-    <p>Before the 4.2.1 release, attributes created in code were allowed to be freely used without a
-        <code>this</code> qualifier. For example this code was allowed:</p>
-    <code> this.myattr = "hello";<br> var something = myattr; // 'this.myattr' is implied</code>
-
-    <p>In 4.2.1, this is no longer supported, and will cause an error in SWF9. There are now two
-      choices. The preferred approach is to declare the attribute in question using
-        <code>&lt;attribute/&gt;</code>, like this:</p>
-
-    <code>&lt;attribute name="myattr" type="string" /&gt;</code>
-
-    <p>An alternative would be to explicitly use 'this' in all usages:</p>
-
-    <code> this.myattr = "hello";<br> var something = this.myattr;</code>
-
-    <p>The old behavior is still allowed for SWF8 and DHTML runtimes, but may be marked deprecated
-      in a future release.</p>
-
+    <p>
+      Before 4.3 you could dynamically add attributes to an instance by saying: 
+    </p>
+    <code><pre>
+    &lt;method &#x2026;&gt;
+    &nbsp;&nbsp;this.myattr = "hello";
+    &lt;/method&gt;
+    </pre></code> 
+    <p>
+      and reference that dynamically-added attribute as if it were a declared attribute: 
+    </p>
+    <code><pre>
+    &lt;method &#x2026;&gt;
+    &nbsp;&nbsp;return myattr;
+    &lt;/method&gt;
+    </pre></code> 
+    <p>
+      In 4.2 and later, only declared attributes, i.e.: 
+    </p>
+    <code><pre>
+    &lt;attribute name="myattr" &#x2026; /&gt;
+    </pre></code> 
+    <p>
+      can be referenced lexically (without saying <code>this.</code>).  The swf9 runtime will generate an error at compile time if you make a lexical reference to an undeclared attribute.  For the swf8 and DHTML runtimes, the old behavior is supported but deprecated and may cause a compiler warning or error in future releases. 
+    </p>
     <h2>New Documentation Comments Feature</h2>
     <p>The @VERSIONID@ release adds a section at the end of every documentation page where you can
       add an example or comment that expands upon the existing documentation or shows a non-obvious
@@ -223,7 +232,7 @@
       </li>
     </ul>
 
-    <h2>OpenLaszlo 4.2 Credits</h2>
+    <h2>OpenLaszlo @VERSIONID@ Credits</h2>
 
     <p> We would like to thank the entire OpenLaszlo community for submitting bug fixes and
       participating in discussions to help make OpenLaszlo a better platform. We'd also like to
