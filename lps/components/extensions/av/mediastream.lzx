@@ -23,6 +23,7 @@
                 import flash.events.*;
                 import flash.net.NetConnection;
                 import flash.net.NetStream;                
+                import flash.utils.setTimeout;
             </passthrough>
         </when>
     </switch>
@@ -841,10 +842,8 @@
             //Debug.warn('Must connect before creating stream', this._nc, this._srcurl, this._nc.connected);
             this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatusAS3);
             this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
-            this._creationCallback = {};
-            this._creationCallback.methodName = callbackName;
-            this._creationCallback.args = callbackArgs;
-            this._nc.connect(this._srcurl);
+            this._creationCallback = {methodName: callbackName, args: callbackArgs};
+            setTimeout(this._doconnect, 1);
         } else {
             this._flashstream = new NetStream(this._nc);
             this._flashstreamSetup( this._flashstream  );
@@ -858,6 +857,12 @@
         //the following does not compile in swf9 since error is undefined
         //not sure where that used to come from
         //if ($debug) Debug.warn("mediastream _onSecurityError() " + error);
+    </method> 
+
+    <!--- flash callback used by swf9 to connect - called by setTimeout - see LPP-7999
+          @keywords private -->
+    <method name="_doconnect">
+        this._nc.connect(this._srcurl);
     </method> 
 
     <!--- flash callback
@@ -877,8 +882,9 @@
             this._flashstreamSetup(fs);
             //Debug.write("...calling %w with args %w",
             //            this._creationCallback.methodName, this._creationCallback.args); 
-            this[this._creationCallback.methodName].apply(this, this._creationCallback.args);
-            this._creationCallback = null;
+            if (this._creationCallback) {
+                this[this._creationCallback.methodName].apply(this, this._creationCallback.args);
+            }
         } else {
             if (evt && evt.info && evt.info.code) this._onStatus(evt.info);
         }
