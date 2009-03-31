@@ -360,7 +360,7 @@ class LzUtilsClass {
         var s = js.indexOf('(')
         var argstr = null;
         if (s != -1) {
-            var e = js.indexOf(')')
+            var e = js.lastIndexOf(')')
             argstr = (js.substring(s + 1, e))
             js = js.substring(0, s);
         }
