@@ -1232,7 +1232,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       suffix.add((meterFunctionEvent(node, "returns", meterFunctionName)));
     }
 
-    // catchFunctionExceptions (AKA catcherrors) forces a catch of any exceptions.
+    // catchFunctionExceptions forces a catch of any exceptions.
     // In debug mode the exception is reported, and in any case it is
     // not propogated to our caller.
     // To preserve return types, we implement this with a closure,
@@ -1248,6 +1248,39 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       && matchingIdentifier(node, "arguments") == null
       && functionName != null;
       
+    String tryType = "";
+    if (tryAll) {
+      if (options.getBoolean(Compiler.DEBUG) || options.getBoolean(Compiler.DEBUG_SWF9)) {
+        // TODO: [2009-03-20 dda] In DHTML, having trouble successfully defining
+        // the $lzsc$runtime class, so we'll report the warning more directly.
+        if (this instanceof SWF9Generator) {
+          error.add(parseFragment("$lzsc$runtime.reportException(" +
+                                  ScriptCompiler.quote(filename) + ", " +
+                                  functionNameIdentifier.beginLine + ", $lzsc$e);"));
+        } else {
+          error.add(parseFragment("$reportSourceWarning(" +
+                                  ScriptCompiler.quote(filename) + ", " +
+                                  functionNameIdentifier.beginLine + ", $lzsc$e.name + \": \" + $lzsc$e.message, true);"));
+        }
+      }
+
+      predecls.add(new Compiler.PassThroughNode(parseFragment("var $lzsc$ret:* = 0;")));
+      ASTIdentifier.Type returnType = ((ASTFormalParameterList)params).getReturnType();
+      if (functionNameIdentifier != null
+          && !functionNameIdentifier.isConstructor()
+          && (returnType == null || !"void".equals(returnType.typeName))) {
+        suffix.add(parseFragment("return $lzsc$ret;"));
+      }
+
+      // For typed functions, make the closure require a return,
+      // so the SWF9 compiler will be just as picky as without
+      // the closure.
+      if (returnType != null) {
+        tryType = ": " + returnType;
+      }
+      options.putBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS, false);
+    }
+
     // Analyze local variables (and functions)
     VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY));
     for (Iterator i = predecls.iterator(); i.hasNext(); ) {
@@ -1283,12 +1316,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       if (withThis) {
         analyzer.incrementUsed("this");
       }
-    }
-    else {
-      // If there are no free references, we remove any catcherrors processing
-      // for this function.  It is far less likely to produce an error,
-      // and we'll eliminate unneeded code bloat for simple functions.
-      tryAll = false;
     }
     Map used = analyzer.used;
     // If this is a closure, annotate the Username for metering
@@ -1387,46 +1414,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       }
     }
     translateFormalParameters(params);
-
-    // Insert the catcherrors code into the try block.
-    // This must happen after computation of free references, so
-    // we know whether to do it.  So inserted code only uses
-    // variables we declare or known classes or global functions.
-    String tryType = "";
-    if (tryAll) {
-      if (options.getBoolean(Compiler.DEBUG) || options.getBoolean(Compiler.DEBUG_SWF9)) {
-        // TODO: [2009-03-20 dda] In DHTML, having trouble successfully defining
-        // the $lzsc$runtime class, so we'll report the warning more directly.
-        String fragment;
-        if (this instanceof SWF9Generator) {
-          fragment = "$lzsc$runtime.reportException(" +
-            ScriptCompiler.quote(filename) + ", " +
-            functionNameIdentifier.beginLine + ", $lzsc$e);";
-        } else {
-          fragment = "$reportSourceWarning(" +
-            ScriptCompiler.quote(filename) + ", " +
-            functionNameIdentifier.beginLine +
-            ", $lzsc$e.name + \": \" + $lzsc$e.message, true);";
-        }
-        error.add(parseFragment(fragment));
-      }
-
-      predecls.add(new Compiler.PassThroughNode(parseFragment("var $lzsc$ret:* = 0;")));
-      ASTIdentifier.Type returnType = ((ASTFormalParameterList)params).getReturnType();
-      if (functionNameIdentifier != null
-          && !functionNameIdentifier.isConstructor()
-          && (returnType == null || !"void".equals(returnType.typeName))) {
-        suffix.add(new Compiler.PassThroughNode(parseFragment("return $lzsc$ret;")));
-      }
-
-      // For typed functions, make the closure require a return,
-      // so the SWF9 compiler will be just as picky as without
-      // the closure.
-      if (returnType != null) {
-        tryType = ": " + returnType;
-      }
-      options.putBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS, false);
-    }
 
     List newBody = new ArrayList();
 
