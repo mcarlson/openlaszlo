@@ -436,13 +436,9 @@ dynamic public class LzSprite extends Sprite {
                   }
 
                   try {
-                      // accessing LoaderInfo.loader may throw security exceptions
-                      // TODO [20090203 anba] why can't we use LoaderInfo.width/height,
-                      // which won't generate security exceptions?
-                      var loader:Loader = Loader(info.loader);
-                      this.resourcewidth = loader.width;
-                      this.resourceheight = loader.height;
-                  } catch (error:SecurityError) {
+                      this.resourcewidth = info.width;
+                      this.resourceheight = info.height;
+                  } catch (error:Error) {
                       // TODO [20090203 anba] install default values?
                   }
                   // Apply stretch if needed, now that we know the asset dimensions.
