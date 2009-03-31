@@ -609,9 +609,11 @@ LzSprite.prototype.__updateQuirks = function () {
             // anonymous div bug on input-elements (LPP-7796)
             // see https://bugzilla.mozilla.org/show_bug.cgi?id=208427
             quirks['inputtext_anonymous_div'] = true;
-            // In FF/Windows clipped scroll bars cause display turds
-            // when moving
-            // TODO [2009-03-30 ptw] file bug with Mozilla
+            //  Display artifacts in DHTML/Windows/FF when dragging
+            // scrollable text (LPP-8000)
+            // see https://bugzilla.mozilla.org/show_bug.cgi?id421866
+            // - unvisible fixed elements with overflow:auto or
+            // overflow:scroll flicker when scrolling
             if (browser.OS == 'Windows') {
                 quirks['clipped_scrollbar_causes_display_turd'] = true;
             }
