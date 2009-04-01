@@ -12,8 +12,6 @@
 <!--=======================================================================-->
 
 <canvas width="800" height="300" bgcolor="#EAEAEA">
-    <!-- [2006-9-25 jgrandy] (LPP-2755) commented out <splash/> -->
-    <font src="helmetr.ttf" name="Helvetica" />
 
     <!-- BUTTONS FOR OPERATING ON THE WINDOW -->
     <view  name="wd_buttons">
@@ -46,9 +44,9 @@
     <!-- THE WINDOW -->
     <window title="My Window" name="childWindow" x="30" y="30"
         width="265" height="160" resizable="true" opacity="0"
-        closeable="true" bgcolor="#ccc" oninit="this.open();" font="Helvetica">
+        closeable="true" bgcolor="#ccc" oninit="this.open();">
 
-         <menubar width="100%" placement="menubar" font="Helvetica">
+         <menubar width="100%" placement="menubar" >
              <menu text="File" width="180">
                 <menuitem text="New" />
                 <menuitem text="open..."/>
@@ -81,7 +79,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
