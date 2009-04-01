@@ -19,7 +19,7 @@ var LzInputTextSprite = function(owner) {
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
         this.__LZclickcontainerdiv = document.createElement('div');
-        this.__LZclickcontainerdiv.className = 'lzinputtextcontainer';
+        this.__LZclickcontainerdiv.className = 'lzinputtextcontainer_click';
         this.__LZclickcontainerdiv.owner = this;
     }    
     if ($debug) {
@@ -102,7 +102,7 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
     }
     if (this.quirks.fix_clickable) {
         // The click container has to match the div style
-        this.__LZclickcontainerdiv.className = this.__LZdiv.className;
+        this.__LZclickcontainerdiv.className = this.__LZdiv.className+"_click";
     }
     if (this.quirks.firefox_autocomplete_bug) {
         lz.embed.__setAttr(this.__LzInputDiv, 'autocomplete', 'off');

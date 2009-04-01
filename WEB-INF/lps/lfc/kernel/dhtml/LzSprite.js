@@ -228,6 +228,20 @@ LzSprite.prototype.__defaultStyles = {
         paddingBottom: '2px',
         paddingLeft: '2px'
     },
+    // TODO [hqm 2009-04] This is a duplicate of lztextcontainer
+    // above, but without overflow='hidden', as a fix for
+    // LPP-8007. Question, why did we need overflow='hidden' in
+    // lztextcontainer in the first place?  would it be safe to just
+    // remove it there, and not have to have this parallel
+    // lztextcontainer style?
+    lztextcontainer_click: {
+        position: 'absolute',
+        // To create swf textfield 'gutter'
+        paddingTop: '2px',
+        paddingRight: '2px',
+        paddingBottom: '2px',
+        paddingLeft: '2px'
+    },
     lzinputtextcontainer: {
         position: 'absolute',
         overflow: 'hidden',
@@ -237,10 +251,26 @@ LzSprite.prototype.__defaultStyles = {
         paddingBottom: '4px',
         paddingLeft: '1px'
     },
+    // TODO [hqm 2009-04] This is a duplicate of lzinputtextcontainer (see above)
+    lzinputtextcontainer_click: {
+        position: 'absolute',
+        paddingTop: '0px',
+        paddingRight: '3px',
+        paddingBottom: '4px',
+        paddingLeft: '1px'
+    },
     lzinputtextmultilinecontainer: {
         position: 'absolute',
         overflow: 'hidden',
         // To create swf textfield 'gutter' and position input element correctly
+        paddingTop: '1px',
+        paddingRight: '3px',
+        paddingBottom: '3px',
+        paddingLeft: '1px'
+    },
+    // TODO [hqm 2009-04] This is a duplicate of lzinputtextmultilinecontainer (see above)
+    lzinputtextmultilinecontainer_click: {
+        position: 'absolute',
         paddingTop: '1px',
         paddingRight: '3px',
         paddingBottom: '3px',

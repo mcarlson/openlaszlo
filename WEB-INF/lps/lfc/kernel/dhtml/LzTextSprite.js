@@ -29,7 +29,7 @@ var LzTextSprite = function(owner) {
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
         this.__LZclickcontainerdiv = document.createElement('div');
-        this.__LZclickcontainerdiv.className = 'lztextcontainer';
+        this.__LZclickcontainerdiv.className = 'lztextcontainer_click';
         this.__LZclickcontainerdiv.owner = this;
     }    
     if ($debug) {
