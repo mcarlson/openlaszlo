@@ -75,14 +75,14 @@ public class LzFontManager {
         if (fns.length > 0) {
             for (var i:int = 0; i < fns.length; i++) {
                 fontname = fns[i];
-                var tfn:LzFont = LzFontManager.fonts[ fontname ];
+                var tfn:Object = LzFontManager.fonts[ fontname ];
                 if (tfn) {
                     return tfn[ style ];
                 }
             }
             return null;
         } else {
-            var tfn:LzFont = LzFontManager.fonts[ fontname ];
+            var tfn:Object = LzFontManager.fonts[ fontname ];
             if (tfn) {
                 return tfn[ style ];
             } else {
