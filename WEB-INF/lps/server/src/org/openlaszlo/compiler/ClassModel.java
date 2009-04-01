@@ -218,19 +218,24 @@ public class ClassModel implements Comparable {
     //
     // Before you output this, see if it is necessary:  will this node
     // end up with children at all?
-    if (getMergedChildren().size() > 0) {
-      // TODO: [2008-05-30 ptw] We don't output the merged children,
-      // on the belief that is is more efficient to build the merged
-      // list at runtime, but this should be measured.
+    boolean hasChildren = (! nodeModel.getChildren().isEmpty());
+    boolean inheritsChildren = inheritsChildren();
+    if (hasChildren || inheritsChildren) {
       String children = ScriptCompiler.objectAsJavascript(nodeModel.childrenMaps());
-      // class#classChildren now class.children
-      nodeModel.setClassAttribute("children", "LzNode.mergeChildren(" + children + ", " + superClassName + "['children'])");
+      if (inheritsChildren) {
+        // NOTE: [2009-04-01 ptw] We don't compute the merged children
+        // at compile time, because we may not know them (superclass
+        // may be loaded from a library).  It might be possible to
+        // optimize this when we know the superclass.
+        nodeModel.setClassAttribute("children", "LzNode.mergeChildren(" + children + ", " + superClassName + "['children'])");
+      } else {
+        nodeModel.setClassAttribute("children", children);
+      }
     }
 
     // Declare all instance vars and methods, save initialization
     // in <class>.attributes
-    Map attrs = nodeModel.getAttrs(); // classModel.getMergedAttributes();
-    Map setters = getMergedSetters();
+    Map attrs = nodeModel.getAttrs();
     Map decls = new LinkedHashMap();
     Map inits = new LinkedHashMap();
     boolean isstate = isSubclassOf(schema.getClassModel("state"));
@@ -258,11 +263,11 @@ public class ClassModel implements Comparable {
         // magic merging, the value has to be installed as an init,
         // otherwise it should be installed as a decl
         //
-        // TODO: [2008-03-15 ptw] This won't work until we know
-        // (in the classModel) the setters for the built-in
-        // classes, so we install as an init for now and this is
-        // fixed up in LzNode by installing inits that have no
-        // setters when the arguments are merged
+        // TODO: [2008-03-15 ptw] This won't work until we know (in
+        // the classModel) the setters for all the superclasses
+        // (built-in and in libraries), so we install as an init for
+        // now and this is fixed up in LzNode by installing inits that
+        // have no setters when the arguments are merged
         if (true) { // (! (value instanceof String))  || setters.containsKey(key) || isstate) {
           // If this is a re-declared attribute, we just init it,
           // don't re-declare it
@@ -376,38 +381,25 @@ public class ClassModel implements Comparable {
       return superclass;
   }
 
-  private List mergedChildren;
-
-  List getMergedChildren() {
-    if (mergedChildren != null) { return mergedChildren; }
-    if (nodeModel == null) { return mergedChildren = new Vector(); }
-    List merged = mergedChildren = new Vector(superclass.getMergedChildren());
-    merged.addAll(nodeModel.getChildren());
-    return merged;
-  }
-
-  private Map mergedAttributes;
-
-  Map getMergedAttributes() {
-    if (mergedAttributes != null) { return mergedAttributes; }
-    if (nodeModel == null) { return mergedAttributes = new LinkedHashMap(); }
-    Map merged = mergedAttributes = new LinkedHashMap(superclass.getMergedAttributes());
-    // Merge in the our attributes, omitting methods
-    for (Iterator i = nodeModel.getAttrs().entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      String key = (String) entry.getKey();
-      Object value = entry.getValue();
-      if ("LzNode._ignoreAttribute".equals(value)) {
-        merged.remove(key);
-      } else if (! (value instanceof Method)) {
-        merged.put(key, value);
-      }
-    }
-    return merged;
+  // A class needs to merge its children if its superclass has
+  // children, or its superclass is in a library (in which case, we
+  // just don't know)
+  boolean inheritsChildren() {
+    // No LFC class has children
+    if (superclass.builtin) { return false; }
+    // If we don't know, we have to assume true
+    if (superclass.nodeModel == null) { return true; }
+    // Otherwise ask them
+    return ((! superclass.nodeModel.getChildren().isEmpty()) ||
+            superclass.inheritsChildren());
   }
 
   private Map mergedMethods;
 
+  // NOTE: [2009-03-31 ptw] This information is incomplete.  It only
+  // knows the methods the tag compiler has added.  It does _not_ know
+  // methods that may have come from a library (only the schema knows
+  // those, assuming it has parsed the interface).
   Map getMergedMethods() {
     if (mergedMethods != null) { return mergedMethods; }
     if (nodeModel == null) { return mergedMethods = new LinkedHashMap(); }
@@ -420,22 +412,6 @@ public class ClassModel implements Comparable {
       if (value instanceof Method) {
         merged.put(key, value);
       }
-    }
-    return merged;
-  }
-
-  private Map mergedSetters;
-
-  Map getMergedSetters() {
-    if (mergedSetters != null) { return mergedSetters; }
-    if (nodeModel == null) { return mergedSetters = new LinkedHashMap(); }
-    Map merged = mergedSetters = new LinkedHashMap(superclass.getMergedSetters());
-    // Merge in the our setters
-    for (Iterator i = nodeModel.getSetters().entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      String key = (String) entry.getKey();
-      Object value = entry.getValue();
-      merged.put(key, value);
     }
     return merged;
   }
