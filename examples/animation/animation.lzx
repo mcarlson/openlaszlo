@@ -12,6 +12,8 @@
 <!--=======================================================================-->
 
 <canvas width="800" height="300" bgcolor="#EAEAEA">
+    <!-- [2006-9-25 jgrandy] (LPP-2755) commented out <splash/> -->
+    <font src="helmetr.ttf" name="Helvetica" />
 
     <!-- BUTTONS FOR OPERATING ON THE WINDOW -->
     <view  name="wd_buttons">
@@ -44,9 +46,9 @@
     <!-- THE WINDOW -->
     <window title="My Window" name="childWindow" x="30" y="30"
         width="265" height="160" resizable="true" opacity="0"
-        closeable="true" bgcolor="#ccc" oninit="this.open();">
+        closeable="true" bgcolor="#ccc" oninit="this.open();" font="Helvetica">
 
-         <menubar width="100%" placement="menubar" >
+         <menubar width="100%" placement="menubar" font="Helvetica">
              <menu text="File" width="180">
                 <menuitem text="New" />
                 <menuitem text="open..."/>
