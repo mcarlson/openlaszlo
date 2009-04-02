@@ -70,7 +70,7 @@ dynamic class LzCanvas extends LzView {
     /** The framerate that should be used for this application
       * @type Number
       * @lzxtype number
-      * @lzxdefault "1.1"
+      * @lzxdefault "30"
       * @keywords final
       */
     var framerate:Number = 30;
