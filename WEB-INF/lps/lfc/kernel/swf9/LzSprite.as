@@ -1279,7 +1279,10 @@ dynamic public class LzSprite extends Sprite {
       */
       public function sendToBack():void {
           if (!this.isroot) {
-              parent.setChildIndex(this, 0);
+              var pos:int = 0;
+              // skip all non-LzSprites (clickbutton, resourceContainer, etc.)
+              for (; ! (parent.getChildAt(pos) is LzSprite); ++pos) {}
+              parent.setChildIndex(this, pos);
           }
       }
 
