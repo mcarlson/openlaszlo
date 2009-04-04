@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 <library>
@@ -20,7 +20,7 @@
             new LzDelegate(this, 'updatecolor', obj, 'onbgcolor');
             updatecolor();
         </handler>
-        <method name="updatecolor">
+        <method name="updatecolor" args="ignore=null">
             setAttribute('color', this.obj.bgcolor);
         </method>
 
@@ -96,11 +96,17 @@
         <attribute name="open" value="false"/>
         <attribute name="opendefaultplacement" value="true"/>
         <attribute name="showcomponenthelpers" value="false"/>
+        <attribute name="isview" value="true" type="boolean"/>
         <simplelayout/>
         <view layout="axis:x; spacing:4">
             <text text="..." onclick="Debug.write(classroot.reference)"/>
-            <text text="${classroot.reference.visible ? 'o ' : 'x '}" resize="true"
-                onclick="classroot.reference.setAttribute('visible', !classroot.reference['visible'])"/>
+            <text text="${classroot.isview ? 
+                        (classroot.reference.visible ? 'o ' : 'x ')
+                        : '  '}" 
+                        resize="true"
+                onclick="classroot.isview ?
+                         classroot.reference.setAttribute('visible', !classroot.reference['visible'])
+                         : false"/>
             <text text="${classroot.reference.name == null ?
                     classroot.reference.constructor.tagname : classroot.reference.name}"
                 onclick="classroot.toggle()"
@@ -112,7 +118,6 @@
                 <propedit text="${classroot.reference.y}" obj="classroot.reference" prop="y"/>
                 <propedit text="${classroot.reference.width}" obj="classroot.reference" prop="width"/>
                 <propedit text="${classroot.reference.height}" obj="classroot.reference" prop="height"/>
-                <text text="D" onclick="Debug.write(classroot.reference)"/>
             </state>
         </view>
         <view name="children" layout="class:simplelayout"/>
@@ -139,7 +144,10 @@
                             show = false;
                        }
                     }
-                    if (show) new lz.item(this.children, {reference: nodes[i], root:this.root});
+                    if (show) new lz.item(this.children, 
+                                           {reference: nodes[i],
+                                            root:this.root,
+                                            isview: nodes[i] instanceof(LzView)});
                 }
                 setAttribute('open', true);
             } else {
