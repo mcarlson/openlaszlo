@@ -61,6 +61,7 @@
                                                   "onmousedown" );
                 </handler>
                 <handler name="onblur">
+                    this.globalMouseDel.unregisterAll();
                     parent.setAttribute( 'editing' , false );
                 </handler>
                 <method name="checkMouse" args="who">
@@ -96,7 +97,7 @@
         <attribute name="open" value="false"/>
         <attribute name="opendefaultplacement" value="true"/>
         <attribute name="showcomponenthelpers" value="false"/>
-        <attribute name="isview" value="true" type="boolean"/>
+        <attribute name="isview" value="false" type="boolean"/>
         <simplelayout/>
         <view layout="axis:x; spacing:4">
             <text text="..." onclick="Debug.write(classroot.reference)"/>
@@ -107,12 +108,40 @@
                 onclick="classroot.isview ?
                          classroot.reference.setAttribute('visible', !classroot.reference['visible'])
                          : false"/>
-            <text text="${classroot.reference.name == null ?
-                    classroot.reference.constructor.tagname : classroot.reference.name}"
+            <text
                 onclick="classroot.toggle()"
                 onmouseover="parent.setAttribute('bgcolor', 0xddddff)"
-                onmouseout="parent.setAttribute('bgcolor', null)"/>
-            <state applied="${classroot.reference instanceof lz.view}">
+                onmouseout="parent.setAttribute('bgcolor', null)">
+                <handler name="oninit" ><![CDATA[
+                    var ref = classroot.reference;
+                    var idname = '';
+                    if (ref.id != null) {
+                        idname = '#' + ref.id;
+                    } else if (ref.name != null) {
+                        idname = ref.name;
+                    }
+                    if (ref.constructor.hasOwnProperty('tagname')) {
+                        var text = '&lt;' + ref.constructor.tagname + '&gt;';
+                    } else {
+                        if ($as3) {
+                            // '[class xxx]'
+                            var cname = ref.constructor.toString();
+                            cname = cname.substring('[class '.length, cname.length - 1);
+                        } else {
+                            var cname = ref.constructor['classname'] || '';
+                        }
+                        if (cname.indexOf('Lz') == 0) {
+                            if (lz[cname.substring(2)] === ref.constructor) {
+                                // c.f. lz.ReplicationManager
+                                cname = 'lz.' + cname.substring(2);
+                            }
+                        }
+                        var text = cname;
+                    }
+                    this.setAttribute('text', idname ? text + ' (' + idname + ')' : text);
+                ]]></handler>
+            </text>
+            <state applied="${classroot.isview}">
                 <colorbox y="1" obj="classroot.reference"/>
                 <propedit text="${classroot.reference.x}" obj="classroot.reference" prop="x"/>
                 <propedit text="${classroot.reference.y}" obj="classroot.reference" prop="y"/>
@@ -123,7 +152,7 @@
         <view name="children" layout="class:simplelayout"/>
         <method name="toggle"> <![CDATA[
             if (!open) {
-                var nodes = this.reference.subnodes;
+                var nodes = this.reference.subnodes || [];
 
                 if (this.root.opendefaultplacement) {
                      if (this.reference.defaultplacement != null) {
@@ -147,12 +176,13 @@
                     if (show) new lz.item(this.children, 
                                            {reference: nodes[i],
                                             root:this.root,
-                                            isview: nodes[i] instanceof(LzView)});
+                                            isview: nodes[i] is lz.view});
                 }
                 setAttribute('open', true);
             } else {
-                for (var i=0, len=this.children.subviews.length; i<len; i++) {
-                    this.children.subviews[i].destroy();
+                var sviews = this.children.subviews || [];
+                while (sviews.length) {
+                    sviews[0].destroy();
                 }
                 setAttribute('open', false);
             }
@@ -176,6 +206,6 @@
         </view>
     </class>
 
-    <inspector id="i"/>
+    <inspector />
 
 </library>
