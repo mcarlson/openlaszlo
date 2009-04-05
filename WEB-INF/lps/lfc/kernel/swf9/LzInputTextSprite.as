@@ -35,7 +35,9 @@ public class LzInputTextSprite extends LzTextSprite {
 
     override public function __initTextProperties (args:Object) :void {
         super.__initTextProperties(args);
-        // We do not support html in input fields. 
+        // We do not support html in input fields.
+        this.html = false;
+
         if (this.enabled) {
             textfield.type = TextFieldType.INPUT;
         } else {
