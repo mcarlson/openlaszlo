@@ -23,6 +23,7 @@ public class LzTextSprite extends LzSprite {
         import flash.geom.Point;
         import flash.net.URLRequest;
         import flash.text.AntiAliasType;
+        import flash.text.StyleSheet;
         import flash.text.TextField;
         import flash.text.TextFieldAutoSize;
         import flash.text.TextFormat;
@@ -512,13 +513,18 @@ public class LzTextSprite extends LzSprite {
 
         public function appendText( t:String ):void {
             this.text += t;
+
+            var tfield:TextField = this.textfield;
             if (! this.html) {
-                this.textfield.appendText(t);
-            } else {
-                var df:TextFormat = this.textfield.defaultTextFormat;
+                tfield.appendText(t);
+            } else if (tfield.styleSheet == null) {
+                var df:TextFormat = tfield.defaultTextFormat;
                 // reset textformat to workaround flash player bug (FP-77)
-                this.textfield.defaultTextFormat = df;
-                this.textfield.htmlText = this.text;
+                tfield.defaultTextFormat = df;
+                tfield.htmlText = this.text;
+            } else {
+                // you can't set defaultTextFormat if a style sheet is applied
+                tfield.htmlText = this.text;
             }
         }
 
@@ -538,21 +544,24 @@ public class LzTextSprite extends LzSprite {
          * @param String t: the string to which to set the text
          */
         public function setText ( t:String ):void {
-            //this.textfield.cacheAsBitmap = false;
             this.text = t;
-            if (this.html) {
-                var df:TextFormat = this.textfield.defaultTextFormat;
+
+            var tfield:TextField = this.textfield;
+            if (! this.html) {
+                tfield.text = t;
+            } else if (tfield.styleSheet == null) {
+                var df:TextFormat = tfield.defaultTextFormat;
                 // reset textformat to workaround flash player bug (FP-77)
-                this.textfield.defaultTextFormat = df;
-                this.textfield.htmlText = t;
+                tfield.defaultTextFormat = df;
+                tfield.htmlText = t;
             } else {
-                this.textfield.text = t;
+                // you can't set defaultTextFormat if a style sheet is applied
+                tfield.htmlText = t;
             }
 
             if (this.resize && (this.multiline == false)) {
                 // single line resizable fields adjust their width to match the text
                 var w:Number = this.getTextWidth();
-                //Debug.write('lztextsprite resize setwidth ', w, this.lzheight );
                 if (w != this.lzwidth) {
                     this.setWidth(w);
                 }
@@ -560,12 +569,10 @@ public class LzTextSprite extends LzSprite {
 
             //multiline resizable fields adjust their height
             if (this.sizeToHeight) {
-                var theight:Number = this.textfield.textHeight;
+                var theight:Number = tfield.textHeight;
                 if (theight == 0) theight = this.lineheight;
                 this.setHeight(theight + LzTextSprite.PAD_TEXTHEIGHT);
             }
-
-            //this.textfield.cacheAsBitmap = true;
         }
 
         /**
@@ -583,6 +590,7 @@ public class LzTextSprite extends LzSprite {
             //            Debug.write("__setFormat this.font=", this.font, 'this.fontname = ',this.fontname,
             //'cfontname=', cfontname);
 
+            var tfield:TextField = this.textfield;
             var tf:TextFormat = new TextFormat();
             tf.kerning = true;
             tf.size = this.fontsize;
@@ -590,7 +598,7 @@ public class LzTextSprite extends LzSprite {
             tf.color = this.textcolor;
 
             // If there is no font found, assume a device font
-            this.textfield.embedFonts = (this.font != null);
+            tfield.embedFonts = (this.font != null);
 
             tf.bold = (this.fontstyle == "bold" || this.fontstyle =="bolditalic");
             tf.italic = (this.fontstyle == "italic" || this.fontstyle =="bolditalic");
@@ -604,13 +612,17 @@ public class LzTextSprite extends LzSprite {
             }
             tf.letterSpacing = this.letterspacing;
 
-            this.textfield.defaultTextFormat = tf;
+            // you can't set defaultTextFormat if a style sheet is applied
+            var stylesheet:StyleSheet = tfield.styleSheet;
+            tfield.styleSheet = null;
+            tfield.defaultTextFormat = tf;
 
             // measure sample text
-            var text:String = this.textfield[this.html ? 'htmlText' : 'text'];
-            this.textfield.text = "__ypgSAMPLE__";
-            var lm:TextLineMetrics = this.textfield.getLineMetrics(0);
-            this.textfield[this.html ? 'htmlText' : 'text'] = text;
+            var text:String = tfield[this.html ? 'htmlText' : 'text'];
+            tfield.text = "__ypgSAMPLE__";
+            var lm:TextLineMetrics = tfield.getLineMetrics(0);
+            tfield.styleSheet = stylesheet;
+            tfield[this.html ? 'htmlText' : 'text'] = text;
 
             var lh:Number = lm.ascent + lm.descent + lm.leading;
             if (lh !== this.lineheight) {
