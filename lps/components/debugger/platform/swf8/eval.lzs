@@ -9,7 +9,7 @@ class LzDebugEvalLoader {
 
     function LzDebugEvalLoader (view) {
         this.loader = new LzLoader(view.sprite, { attachname: 'debugloader' });
-        errorDel = new LzDelegate(this, 'evalError', this.loader, 'onerror');
+        this.errorDel = new LzDelegate(this, 'evalError', this.loader, 'onerror');
     }
 
     function doEval(expr:String, seq:int=0) {
