@@ -9,12 +9,11 @@
         src="rtmp://localhost/test/instance1"
     />
 
-    <simplelayout/>
+<simplelayout axis="x" inset="5" spacing="10"/>
+
+<view layout="inset:10;spacing:2">
     <rtmpstatus/>
-    <text>You should see 'TEST CASE: onstart' and 'TEST CASE: onstop' events
-    in the debugger (not working LPP-7955)</text>
-    <text>s.playing should be true when video is in motion, 
-          false when you click pause or the video ends</text>
+
     <videoview id="v" debug="true" stream="${s}" />
 
     <mediastream id ="s" debug="true" 
@@ -41,6 +40,30 @@
     <text resize="true" text="${'time: ' + s.time}" />
     <text resize="true" text="${'totaltime: ' + s.totaltime}" />
     <text resize="true" text="${'s.playing = ' + s.playing}" />
+
+    <text width="350" multiline="true">
+    You should see 'TEST CASE: onstart' and 'TEST CASE: onstop' events
+    in the debugger (not working LPP-7955)<br/>
+    s.playing should be true when video is in motion, 
+    false when you click pause or the video ends</text>
+</view>
+
+<view layout="inset:10;spacing:5">
+<edittext id="t1" width="400">temp</edittext>
+<button text="set URL">
+    <handler name="onclick">
+        s.setAttribute('url',t1.text); 
+    </handler>
+</button>
+<edittext id="t2" width="400">good-dog</edittext>
+<button text="set URL">
+    <handler name="onclick">
+        s.setAttribute('url',t2.text); 
+    </handler>
+</button>
+</view>
+
+
 
 </canvas>
 

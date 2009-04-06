@@ -300,7 +300,17 @@
      <!--- Event sent when mode is changed.
      -->
      <event name="onmode"/>
-   
+ 
+    <!--- reset the internal flash stream 
+         @keywords private -->
+    <method name="_resetStream">
+        if (this._flashstream != null) {
+            this._flashstream.play(false);
+            this._flashstream.close();
+            this._flashstream = null;
+        }
+    </method> 
+    
     <!--- play -->
     <method name="play" args="start='either', pause=false, 
                                    length='end', reset=true"> <![CDATA[
@@ -369,9 +379,7 @@
                 return;
             } else {
                 // clear, reset
-                this._flashstream.play(false);
-                this._flashstream.close();
-                this._flashstream = null;
+                this._resetStream();
             }
         }
 
@@ -419,7 +427,7 @@
         //Debug.write("pause=", pause);
         
         if (pause) {
-            Debug.write("mediastream play PAUSE",  this, "start", start, "pause", pause, "length", length, "reset", reset);
+            //Debug.write("mediastream play PAUSE",  this, "start", start, "pause", pause, "length", length, "reset", reset);
             //seems like overkill, but all of the following seemed to be
             //required
             this._flashstream.play(sname, start, length, reset);
@@ -500,7 +508,8 @@
             }
         }
         */
-    
+        if (!this._flashstream) return;
+
         var time = 0;
         var progress = 1.0;
         if ($as3) {
@@ -1287,7 +1296,6 @@
         this._updateUrl();
 
         if (this.url != "") { // changing the url
-            // TODO: if another URL is playing, maybe clear it?
             this._handleAutoplay();
         }
 
@@ -1301,6 +1309,9 @@
     <!--- @keywords private -->
     <method name="_updateUrl"> <![CDATA[
         // Debug.write("   _updateUrl", this, this.type, this.url, "isinited", this.isinited);
+        
+        this._resetStream();
+
         this._findnc();
 
         if ((this.type == "rtmp") &&

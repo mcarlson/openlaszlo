@@ -103,8 +103,9 @@
         <!--- color of the progress bar -->
         <attribute name="progressColor" value="0x00ff00"/>
  
-        <!--- starts playing audio/video from the giving URL,
-              which may be http or rtmp -->
+        <!--- starts playing audio/video from the given URL,
+              which may be http or rtmp.  If you want to 
+              play the current url, use this.stream.play() -->
         <method name="playVideo" args="url, type"><![CDATA[
             var ms = 
                 this.vscreen.ms;
