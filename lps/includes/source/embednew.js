@@ -626,7 +626,6 @@ lz.embed = {
         var args = [].slice.call(arguments, 1);
         for (var i in lz.embed.applications) {
             var app = lz.embed.applications[i];
-            if (! app.loaded) continue;
             if (app[methodname]) {
                 //console.log(methodname, app, arguments);
                 app[methodname].apply(app, args);
