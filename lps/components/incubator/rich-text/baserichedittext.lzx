@@ -1,7 +1,7 @@
 <library>
     <!-- temp removed to integrate platform and emerald-->
     <!--include href="../emerald-contrib/baseedittext.lzx"/-->
-    
+    <include href="extensions/views/richinputtext.lzx" />
     <!-- _richinternalinputtext
          class for use in windowtext takes its parent's arguments
          when it constructs 
@@ -20,6 +20,10 @@
             parent._field = this;
             super.construct(  parent, args );
         </method>
+        
+        <handler name="oninit">
+            this.setHTML(true);
+        </handler>        
 
         <!--- Sent if whenever the focus moves into _internalinputtext. 
             @param Object s: view that is losing focus -->

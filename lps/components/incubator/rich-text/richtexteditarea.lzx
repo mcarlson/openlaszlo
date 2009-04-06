@@ -84,6 +84,8 @@
         <!--- True if the next onfocus should be ignored.
               @access private -->
         <attribute name="_ignorenextfocus" value="false" />
+        
+        <event name="oncurrentformat" />
 
 <!-- CONSTRUCTOR    .........................................................-->
 
@@ -318,9 +320,7 @@
             }
         
             // Inform listeners that the format has changed. 
-            if (this.oncurrentformat) {
-                this.oncurrentformat.sendEvent(this.currentformat);
-            }
+            this.oncurrentformat.sendEvent(this.currentformat);
             
        </method>
        

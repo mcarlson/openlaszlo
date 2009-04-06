@@ -34,7 +34,7 @@
          itemclassname="colorswatch" itemdatapath="fontcolors:/clr"
          focusable="false" listwidth="${this.bkgnd.mid.width}">
          
-         <attribute name="editor" />
+         <attribute name="editor" value="$once{this.parent.editor}" />
          <attribute name="toolbar" value="$once{this.parent}" />
          
          <tooltip>Choose font color</tooltip>      
