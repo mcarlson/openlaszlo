@@ -1213,12 +1213,13 @@ dynamic public class LzSprite extends Sprite {
           if (res == null) return;
 
           var scaleX:Number = 1.0;
-          if (this.lzwidth && this._setrescwidth && this.resourcewidth) {
+
+          if (this.lzwidth != null && this._setrescwidth && this.resourcewidth) {
               scaleX = this.lzwidth / this.resourcewidth;
           }
 
           var scaleY:Number = 1.0;
-          if (this.lzheight && this._setrescheight && this.resourceheight) {
+          if (this.lzheight != null && this._setrescheight && this.resourceheight) {
               scaleY = this.lzheight / this.resourceheight;
           }
 

@@ -599,10 +599,10 @@ LzSprite.prototype.setWidth = function ( v ){
         // <scale as fraction> = ( <desired dim in px> / <resource dim
         // in px> ) Note the empty resource is a 100x100px clip
         var xscale = ((this.resourcewidth == 0) ? (v/100) : (v/this.resourcewidth));
+        this.__LZmovieClipRef._xscale = xscale * 100;
         if (xscale == 0) xscale = 1;
         this._xscale = xscale;
         // clip scale is in percent
-        this.__LZmovieClipRef._xscale = xscale * 100;
     } else {
         // If the view does not stretch, we have to resize the mask
         // NOTE: [2008-01-24 ptw] This seems wrong.  If the view is
@@ -650,10 +650,10 @@ LzSprite.prototype.setHeight = function ( v ){
         // <scale as fraction> = ( <desired dim in px> / <resource dim
         // in px> ) Note the empty resource is a 100x100px clip
         var yscale = ((this.resourceheight == 0) ? (v/100) : (v/this.resourceheight));
+        this.__LZmovieClipRef._yscale = yscale * 100;
         if (yscale == 0) yscale = 1;
         this._yscale = yscale;
         // clip scale is in percent
-        this.__LZmovieClipRef._yscale = yscale * 100;
     } else {
         // If the view does not stretch, we have to resize the mask
         // NOTE: [2008-01-24 ptw] This seems wrong.  If the view is
@@ -700,6 +700,7 @@ LzSprite.prototype.setOpacity = function ( v ){
   * the loaded resource.
   */
 LzSprite.prototype.updateResourceSize = function (skipsend){
+
     var mc = this.getMCRef();
     this.setWidth(this.hassetwidth?this.width:null);
     this.setHeight(this.hassetheight?this.height:null);
@@ -709,8 +710,22 @@ LzSprite.prototype.updateResourceSize = function (skipsend){
         this.resourceheight = rt.height;
     } else {
         // Get the true size by unscaling. Note: clip scale is in percent
-        this.resourcewidth = Math.round(mc._width/(mc._xscale/100));
-        this.resourceheight = Math.round(mc._height/(mc._yscale/100));
+        if (mc._xscale == 0) {
+            // special case if _xscale is zero, need to make it 100% to make measurement of resource width
+            mc._xscale = 100;
+            this.resourcewidth = Math.round(mc._width);
+            mc._xscale = 0;
+        } else {
+            this.resourcewidth = Math.round(mc._width/(mc._xscale/100));
+        }
+        if (mc._yscale == 0) {
+            // special case if _yscale is zero, need to make it 100% to make measurement of resource height
+            mc._yscale = 100;
+            this.resourcewidth = Math.round(mc._width);
+            mc._yscale = 0;
+        } else {
+            this.resourceheight = Math.round(mc._height/(mc._yscale/100));
+        }
     }
 
     if (! skipsend && ! this.__LZhaser) {
