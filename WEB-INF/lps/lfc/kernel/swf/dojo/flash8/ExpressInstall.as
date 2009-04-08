@@ -51,6 +51,7 @@ class ExpressInstall {
 
 	function loadUpdater(){
 		System.security.allowDomain("fpdownload.macromedia.com");
+		System.security.allowInsecureDomain("fpdownload.macromedia.com");
 
 		// hope that nothing is at a depth of 10000000, you can change this depth if needed, but you want
 		// it to be on top of your content if you have any stuff on the first frame
@@ -86,6 +87,6 @@ class ExpressInstall {
 }
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
