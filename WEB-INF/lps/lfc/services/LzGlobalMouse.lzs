@@ -1,6 +1,6 @@
 /**
  *
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzglobalmouse
@@ -158,6 +158,13 @@ public final class LzGlobalMouseService extends LzEventable {
      */
     var onmouseleave :LzDeclaredEventClass = LzDeclaredEvent;
 
+    /** Sent whenever the mouse is dragged in the application window
+     * @access public
+     * @lzxtype event
+     */
+    var onmouseenter :LzDeclaredEventClass = LzDeclaredEvent;
+
+
     /** Sent whenever the mouse button is clicked
      * @access public
      * @lzxtype event
@@ -175,8 +182,11 @@ public final class LzGlobalMouseService extends LzEventable {
 
     /** @access private */
     function __mouseEvent (eventname:String, view:*) :void {
-        if (eventname == 'onmouseleave') { canvas.onmouseleave.sendEvent(); }
-        else if (eventname == 'onmousemove') { this.__movecounter++; }
+        if (eventname == 'onmouseleave') {
+            canvas.onmouseleave.sendEvent();
+        } else if (eventname == 'onmousemove') {
+            this.__movecounter++;
+        }
         var ev:LzDeclaredEventClass = this[eventname];
         if (ev) {
             if (ev.ready) { ev.sendEvent(view); }

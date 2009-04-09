@@ -422,6 +422,12 @@ override function __makeSprite(args) {
   */
 var onmouseleave = LzDeclaredEvent;
 
+/** Sent whenever the mouse is dragged into the application window
+  * @access public
+  * @lzxtype event
+  */
+var onmouseenter = LzDeclaredEvent;
+
 /** Sent whenever the number of created nodes changes 
   * @lzxtype event
   */
