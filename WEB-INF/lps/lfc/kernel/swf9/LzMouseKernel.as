@@ -69,11 +69,25 @@ class LzMouseKernel  {
         } else {
             if (__mouseLeft) {
                 __mouseLeft = false;
+                // Mouse reentered the app.
                 if (event.buttonDown) __mouseUpOutsideHandler();
+
+                // TODO [hqm 2009-04] LPP-7957 -- this works
+                // around Firefox bug; if you are making a text
+                // selection, and then drag the mouse outside of
+                // the app while the left button is down, and then
+                // release it. When you bring the mouse back into
+                // the app, the selection is stuck dragging
+                // because Flash plugin never gets the mouse up.
+                LFCApplication.stage.focus = null;
+
+                // generate a 'onmouseenter' event
+                __sendEvent(null, 'onmouseenter');
             }
             __sendEvent(null, eventname);
         }
     }
+
 
     // sends mouseup and calls __globalmouseup when the mouse goes up outside the app - see LPP-7724
     static function __mouseUpOutsideHandler () :void {
