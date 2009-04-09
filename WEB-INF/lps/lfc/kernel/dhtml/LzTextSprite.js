@@ -133,6 +133,7 @@ LzTextSprite.prototype.setFontName = function (fname) {
 
 LzTextSprite.prototype.setTextColor = LzSprite.prototype.setColor;
 
+LzTextSprite.prototype.lineHeight = null;
 LzTextSprite.prototype.scrollTop = null;
 LzTextSprite.prototype.scrollHeight = null;
 LzTextSprite.prototype.scrollLeft = null;
@@ -167,9 +168,15 @@ LzTextSprite.prototype.setScrollEvents = function (on) {
 }
 
 LzTextSprite.prototype.__updatefieldsize = function ( ){
-  var lzv = this.owner;
+  var lineHeight = this.getLineHeight();
   // Validate lineHeight
-  this.__updatelineheight();
+  if (this.lineHeight !== lineHeight) {
+    this.lineHeight = lineHeight;
+    // NOTE [2009-04-08 ptw] We always send lineHeight events, even if
+    // scrollevents are not requested.  scrollevent should probably be
+    // renamed to spriteevent or something
+    this.owner.scrollevent('lineHeight', lineHeight);
+  }
   // Measure the total height of the text, including any clipped
   // (scrollable) text
   // Debug.debug('scrollHeight %d, last char %w', scrolldiv.scrollHeight, scrolldiv['value'] && scrolldiv.value.charAt(scrolldiv.value.length - 1));
@@ -187,19 +194,6 @@ LzTextSprite.prototype.__updatefieldprop = function(name){
     this.owner.scrollevent(name, val);
   }
 }
-
-LzTextSprite.prototype.lineHeight = null;
-
-LzTextSprite.prototype.__updatelineheight = function ( ){
-  var lzv = this.owner;
-  var scrolldiv = this.scrolldiv;
-  var lineHeight = this.getTextDimension('lineheight');
-  if (this.lineHeight !== lineHeight) {
-    this.lineHeight = lineHeight;
-    lzv.scrollevent('lineHeight', lineHeight);
-  }
-}
-
 
 LzTextSprite.prototype.setText = function(t, force) {
     // For SWF compatibility, we preserve newlines in text.  We'd
@@ -276,17 +270,47 @@ LzTextSprite.prototype.setPattern = function ( val ){
 LzTextSprite.prototype.getTextWidth = function () {
   //Debug.write('LzTextSprite.getTextWidth', this.text, this._textsizecache[this.text]);
   //if (this.text == '') return 0;
-  var w = this.getTextDimension('width');
-  if (w != 0 && this.quirks['emulate_flash_font_metrics']) {
-    w += this.__wpadding;
+  var width;
+  ////
+  // NOTE: Quick cache check, inlined from getTextDimension
+  ////
+  var scrolldiv = this.scrolldiv;
+  var className = scrolldiv.className;
+  var style = scrolldiv.style.cssText;
+  var styleKey = className + "/" + style;
+  var cv = this._cachevalue;
+  if ((this._cacheStyleKey == styleKey) &&
+      (this._cacheTextKey == this.text) &&
+      ('width' in cv)) {
+    width = cv.width;
+  } else {
+    width = this.getTextDimension('width');
   }
-  return w;
+  if (width != 0 && this.quirks['emulate_flash_font_metrics']) {
+    width += this.__wpadding;
+  }
+  return width;
 }
 
-// TODO [2009-02-27 ptw] (LPP-7832) Rename to get LineHeight
-LzTextSprite.prototype.getTextHeight = function () {
+// TODO [2009-02-27 ptw] (LPP-7832) Deprecate getTextHeight
+LzTextSprite.prototype.getTextHeight = LzTextSprite.prototype.getLineHeight = function () {
   // Line height does _not_ include padding
-  return this.getTextDimension('lineheight');
+  ////
+  // NOTE: Quick cache check, inlined from getTextDimension
+  ////
+  var scrolldiv = this.scrolldiv;
+  var className = scrolldiv.className;
+  var style = scrolldiv.style.cssText;
+  var styleKey = className + "/" + style;
+  var cv = this._cachevalue;
+  if ((this._cacheStyleKey == styleKey) &&
+      // lineheight does not depend on the contents
+      ('lineheight' in cv)) {
+    lineheight = cv.lineheight;
+  } else {
+    lineheight = this.getTextDimension('lineheight');
+  }
+  return lineheight;
 }
 
 LzTextSprite.prototype.getTextfieldHeight = function () {
@@ -298,10 +322,24 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
       // the div to be re-laid out).  Note, the actual text in the
       // scrolldiv may not be eq to this.text because of quirks, but
       // that is what we want to measure.
-      fieldHeight = this.getTextDimension('height');
+      ////
+      // NOTE: Quick cache check, inlined from getTextDimension
+      ////
+      var scrolldiv = this.scrolldiv;
+      var className = scrolldiv.className;
+      var style = scrolldiv.style.cssText;
+      var styleKey = className + "/" + style;
+      var cv = this._cachevalue;
+      if ((this._cacheStyleKey == styleKey) &&
+          (this._cacheTextKey == this.text) &&
+          ('height' in cv)) {
+        fieldHeight = cv.height;
+      } else {
+        fieldHeight = this.getTextDimension('height');
+      }
       if (this.quirks['safari_textarea_subtract_scrollbar_height']) { fieldHeight += 24 };
     } else {
-      fieldHeight = this.getTextDimension('lineheight');
+      fieldHeight = this.getLineHeight();
     }
     if (this.quirks['emulate_flash_font_metrics']) {
       // NOTE [2009-01-29 ptw] You might think you could just read
@@ -320,8 +358,10 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
 }
 
 // key is the div class plus local style
-LzTextSprite.prototype._cachevalid = null;
-// values are height for the test string or widths for specific strings
+LzTextSprite.prototype._cacheStyleKey = null;
+// key is the text that was measured (only for height and width)
+LzTextSprite.prototype._cacheTextKey = null;
+// height, width, lineheight values corresponding to _cacheStyleKey and _cacheTextKey
 LzTextSprite.prototype._cachevalue = null;
 // We do all our measurement 'off screen'.  For some reason, this
 // seems to work without having to wait for a redisplay.  We are
@@ -350,17 +390,22 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
         Debug.error("Unknown dimesion: %w", dimension);
       }
   }
-  // Quick check
+  ////
+  // NOTE: Quick check inlined at getTextWidth, getLineHeight,
+  // getTextfieldHeight
+  ////
   var className = scrolldiv.className;
   var style = scrolldiv.style.cssText;
-  var quickKey = className + "/" + style + "{" + string + "}";
+  var styleKey = className + "/" + style;
   var cv = this._cachevalue;
-  if ((this._cachevalid == quickKey &&
-       (dimension in cv))) {
+  if ((this._cacheStyleKey == styleKey) &&
+      (this._cacheTextKey == string) &&
+      (dimension in cv)) {
     return cv[dimension];
   }
-  // Update quick key
-  this._cachevalid = quickKey;
+  // Update quick keys
+  this._cacheStyleKey = styleKey;
+  this._cacheTextKey = string;
   // Now create a cache key limited to the styles that can affect the
   // height/width
   // Turn off `overflow: scroll; width: 100%; height:100%` so that does not interfere with measurements
@@ -372,10 +417,10 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
            ((sds.lineHeight) ? ("line-height: " + sds.lineHeight + "; ") : "") +
            ((sds.letterSpacing) ? ("letter-spacing: " + sds.letterSpacing + "; ") : "") +
            ((sds.whiteSpace) ? ("white-space: " + sds.whiteSpace + "; ") : ""));
-  var cacheKey = className + "/" + style + "{" + string + "}";
+  var cacheFullKey = className + "/" + style + "{" + string + "}";
   var ltsp = LzTextSprite.prototype;
   var _sizecache = ltsp._sizecache;
-  var cv = this._cachevalue = _sizecache[cacheKey];
+  var cv = this._cachevalue = _sizecache[cacheFullKey];
   if (cv && (dimension in cv)) {
     return cv[dimension];
   }
@@ -393,7 +438,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
     if (root) { root.innerHTML = ''; }
   }
   if (! cv) {
-    cv = this._cachevalue = _sizecache[cacheKey] = {};
+    cv = this._cachevalue = _sizecache[cacheFullKey] = {};
   }
   if (! root) {
     root = document.createElement('div');
@@ -442,7 +487,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
     root.appendChild(mdiv);
   } 
   if (this.quirks.ie_leak_prevention) {
-    ltsp._sizedomcache['lzdiv~~~' + cacheKey] = mdiv;
+    ltsp._sizedomcache['lzdiv~~~' + cacheFullKey] = mdiv;
   }
   // inline to measure width
   mdiv.style.display = 'inline';
@@ -450,7 +495,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   cv[dimension] = (dimension == 'width') ? mdiv.clientWidth : mdiv.clientHeight;
   mdiv.style.display = 'none';
   LzTextSprite.prototype._sizecache.counter++;
-//   Debug.debug("%w %w %d", this, cacheKey, lineHeight);
+//   Debug.debug("%w %w %d", this, cacheFullKey, lineHeight);
   return cv[dimension];
 }
 
