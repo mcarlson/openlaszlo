@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -142,6 +142,7 @@ class LzHTTPDataProvider extends LzDataProvider {
         if (postbody == null && qparams != null) {
             // Convert queryparams table into a URL-encoded query-style string
             postbody = qparams.serialize('=', '&', true);
+
         } else {
             //We are asking the swf8 runtime to treat this as raw data, as best it can
             hasquerydata = false;

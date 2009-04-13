@@ -816,24 +816,24 @@ function doRequest (ignore:* = null) :void {
     // Support for 'lzpostbody'.  If this is a POST, set
     // the DataRequest.postbody field to the lzpostbody value.
     if (this.querytype.toUpperCase() == "POST") {
-        var lzpostbody:String = this.postbody;
-        if (dreq.queryparams) {
-            // a "lzpostbody" arg overrides postbody, for back compatibility
-            lzpostbody = dreq.queryparams.getValue('lzpostbody');
-            if (lzpostbody != null) {
-                dreq.queryparams.remove('lzpostbody');
-            }
-        }
-        // If there is a lzpostbody query arg, we are going to remove
-        // it from the query args, and set it as the dreq.postbody
-        // arg.  Note: In SOLO mode, the DHTML runtime can actually
-        // support raw POST via the XMLHTTPRequest API.
+        dreq.postbody = this.postbody;
+
+        // Dev Note: If there is a lzpostbody query arg, we are going
+        // to remove it from the query args, and set it as the
+        // dreq.postbody arg.  Note: In SOLO mode, the DHTML runtime
+        // can actually support raw POST via the XMLHTTPRequest API.
         //
-        // The Flash swf8 native API has no way to support POST of
+        // NB: The Flash swf8 native API has no way to support POST of
         // arbitrary raw data in SOLO mode; the best we can do is to
         // send a list of url-encoded key=value pairs.
-        if (lzpostbody != null) {
-            dreq.postbody = lzpostbody;
+        if (dreq.queryparams) {
+            // a "lzpostbody" arg overrides postbody, for back
+            // compatibility
+            var lzpostbody = dreq.queryparams.getValue('lzpostbody');
+            if (lzpostbody != null) {
+                dreq.queryparams.remove('lzpostbody');
+                dreq.postbody = lzpostbody;
+            }
         }
     }
 
