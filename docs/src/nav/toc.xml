@@ -136,6 +136,7 @@
         <item title="&amp;lt;httpdatarequest&amp;gt;" href="lz.httpdatarequest.html" />
         <item title="lz.Param" href="lz.params.html" />
         <item title="lz.DataElement" href="lz.DataElement.html" />
+        <item title="lz.DataElementMixin" href="lz.DataElementMixin.html" />
         <item title="lz.DataNode" href="lz.DataNode.html" />
         <item title="lz.DataNodeMixin" href="lz.DataNodeMixin.html" />
         <item title="lz.DataText" href="lz.DataText.html" />
@@ -297,5 +298,5 @@
  <!--    <category title="Appendices">
         <item title="Reserved Words [TODO LPP-4937]" />
     </category> -->
-    <!-- Copyright 2008 Laszlo Systems -->     
+    <!-- Copyright 2008, 2009 Laszlo Systems -->     
 </toc>
