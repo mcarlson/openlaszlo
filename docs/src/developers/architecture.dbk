@@ -69,7 +69,7 @@ The OpenLaszlo Server executes within a standard J2EE application server or Java
 These application server environments scale well, as does the OpenLaszlo Server itself. OpenLaszlo applications can run on any OS 
 supported by these server products. OpenLaszlo supports Windows, Solaris, Linux and Mac OS X server environments.</para>
 
-<para>The OpenLaszlo Server consists of five main subsystems: </para>
+<para>The OpenLaszlo Server consists of four main subsystems: </para>
 
 <itemizedlist spacing="compact"><listitem><para>the <glossterm>Interface Compiler</glossterm></para></listitem><listitem><para>the <glossterm>Media Transcoder</glossterm></para></listitem><listitem><para>the <glossterm>Data Manager</glossterm></para></listitem>
 <!-- fix LPP-4978 IORIO 13 nov 2007 -->
