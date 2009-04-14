@@ -292,8 +292,7 @@ LzTextSprite.prototype.getTextWidth = function () {
   return width;
 }
 
-// TODO [2009-02-27 ptw] (LPP-7832) Deprecate getTextHeight
-LzTextSprite.prototype.getTextHeight = LzTextSprite.prototype.getLineHeight = function () {
+LzTextSprite.prototype.getLineHeight = function () {
   // Line height does _not_ include padding
   ////
   // NOTE: Quick cache check, inlined from getTextDimension
@@ -306,12 +305,16 @@ LzTextSprite.prototype.getTextHeight = LzTextSprite.prototype.getLineHeight = fu
   if ((this._cacheStyleKey == styleKey) &&
       // lineheight does not depend on the contents
       ('lineheight' in cv)) {
-    lineheight = cv.lineheight;
+    var lineheight = cv.lineheight;
   } else {
-    lineheight = this.getTextDimension('lineheight');
+    var lineheight = this.getTextDimension('lineheight');
   }
   return lineheight;
 }
+
+// TODO [2009-02-27 ptw] (LPP-7832) Deprecate getTextHeight
+LzTextSprite.prototype.getTextHeight = LzTextSprite.prototype.getLineHeight;
+
 
 LzTextSprite.prototype.getTextfieldHeight = function () {
     var fieldHeight = null;
@@ -399,13 +402,18 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   var styleKey = className + "/" + style;
   var cv = this._cachevalue;
   if ((this._cacheStyleKey == styleKey) &&
-      (this._cacheTextKey == string) &&
+      // lineheight does not depend on the contents
+      ((dimension == 'lineheight') ||
+       (this._cacheTextKey == string)) &&
       (dimension in cv)) {
     return cv[dimension];
   }
-  // Update quick keys
+  // Update quick keys for the result we are about to compute
   this._cacheStyleKey = styleKey;
-  this._cacheTextKey = string;
+  // Text key is only for width and height
+  if (dimension != 'lineheight') {
+    this._cacheTextKey = string;
+  }
   // Now create a cache key limited to the styles that can affect the
   // height/width
   // Turn off `overflow: scroll; width: 100%; height:100%` so that does not interfere with measurements
@@ -417,6 +425,8 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
            ((sds.lineHeight) ? ("line-height: " + sds.lineHeight + "; ") : "") +
            ((sds.letterSpacing) ? ("letter-spacing: " + sds.letterSpacing + "; ") : "") +
            ((sds.whiteSpace) ? ("white-space: " + sds.whiteSpace + "; ") : ""));
+  // Full key always includes style and text, even the sample text
+  // used to measure line height
   var cacheFullKey = className + "/" + style + "{" + string + "}";
   var ltsp = LzTextSprite.prototype;
   var _sizecache = ltsp._sizecache;

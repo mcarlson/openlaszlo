@@ -180,13 +180,13 @@ public class NodeModel implements Cloneable {
             // <library> is only permitted at the root and is elided
             // by the compiler
             "library".equals(parentElement.getName())) {
-          // Must be at the root, in not linking, create a UID
+          // Must be at the root, when not linking, create a UID
           // placeholder for root
           if (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
             // linking, there is only one root
             pn = "";
           } else {
-            // Not linking, use a unique root
+            // not linking, use a unique root
             pn = env.getUUID();
           }
         } else {
