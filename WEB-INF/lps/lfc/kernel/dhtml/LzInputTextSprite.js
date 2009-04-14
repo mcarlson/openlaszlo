@@ -564,6 +564,10 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
         }
         if (sprite._cancelblur) {
             sprite._cancelblur = false;
+            if (nextFocus) {
+                // re-initiate focus
+                nextFocus.focus();
+            }
             return;
         }
     } else if (eventname == 'onmouseout') {
@@ -669,6 +673,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
 
     if (nextFocus) {
         // re-initiate focus, see above
+        // do this late to preserve correct event order
         nextFocus.focus();
     }
 }
