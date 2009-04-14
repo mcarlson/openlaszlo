@@ -165,7 +165,6 @@ public class NodeModel implements Cloneable {
         if (node.globalName != null) {
             return "#" + node.globalName;
         }
-        String nn = node.localName;
         String path = "";
         org.jdom.Parent parentDOMNode = node.element.getParent();
         Element parentElement;
@@ -174,35 +173,43 @@ public class NodeModel implements Cloneable {
         } else {
           parentElement = (Element)parentDOMNode;
         }
-        if (parentElement == node.element) {
-            // Must be at the root, in not linking, create a UID
-            // placeholder for root
-          if (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
-            // linking, there is only one root
-            return "";
-          } else {
-            // Not linking, use a unique root
-            return env.getUUID();
-          }
-        }
         // Ensure parent modelled
         NodeModel parent = elementAsModel((ElementWithLocationInfo)parentElement, schema, env);
-        if (node.localName != null) {
-            path = "@" + node.localName;
+        String pn;
+        if ((parentElement == node.element) ||
+            // <library> is only permitted at the root and is elided
+            // by the compiler
+            "library".equals(parentElement.getName())) {
+          // Must be at the root, in not linking, create a UID
+          // placeholder for root
+          if (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
+            // linking, there is only one root
+            pn = "";
+          } else {
+            // Not linking, use a unique root
+            pn = env.getUUID();
+          }
         } else {
-            String tn = path = node.tagName;
-            int count = 0, index = -1;
-            for (Iterator iter = parentElement.getChildren(tn, parentElement.getNamespace()).iterator(); iter.hasNext(); ) {
-                Element sibling = (Element) iter.next();
-                count++;
-                if (index != -1) break;
-                if (node.element == sibling) { index = count; }
-            }
-            if (count > 1) {
-                path += "[" + index + "]";
-            }
+          pn = computeNodePath(parent, schema, env);
         }
-        return computeNodePath(parent, schema, env) + "/" + path;
+        String nn = node.localName;
+        if (nn != null) {
+          path = "@" + nn;
+        } else {
+          String tn = path = node.tagName;
+          int count = 0, index = -1;
+          for (Iterator iter = parentElement.getChildren(tn, parentElement.getNamespace()).iterator();
+               iter.hasNext(); ) {
+            Element sibling = (Element) iter.next();
+            count++;
+            if (index != -1) break;
+            if (node.element == sibling) { index = count; }
+          }
+          if (count > 1) {
+            path += "[" + index + "]";
+          }
+        }
+        return pn + "/" + path;
     };
 
     String getNodePath () {
