@@ -58,7 +58,11 @@ public function insertBefore (newChild /*:LzDataNodeMixin*/, refChild /*:LzDataN
             if (newChild.parentNode != null) {
                 if (newChild.parentNode === this) {
                     if (! samenode) {
-                        this.__LZremoveChild( newChild );
+                        var nchildoff:int = this.__LZremoveChild( newChild );
+                        if (nchildoff != -1 && nchildoff < off) {
+                            // removeChild shifted children, need to adjust offset
+                            off -= 1;
+                        }
                     }
                 } else {
                     newChild.parentNode.removeChild( newChild );
@@ -105,7 +109,11 @@ public function replaceChild (newChild /*:LzDataNodeMixin*/, oldChild /*:LzDataN
             if (newChild.parentNode != null) {
                 if (newChild.parentNode === this) {
                     if (! samenode) {
-                        this.__LZremoveChild( newChild );
+                        var nchildoff:int = this.__LZremoveChild( newChild );
+                        if (nchildoff != -1 && nchildoff < off) {
+                            // removeChild shifted children, need to adjust offset
+                            off -= 1;
+                        }
                     }
                 } else {
                     newChild.parentNode.removeChild( newChild );
@@ -178,7 +186,6 @@ public function appendChild (newChild /*:LzDataNodeMixin*/) :LzDataNodeMixin {
     } */ else {
         if (newChild.parentNode != null) {
             if (newChild.parentNode === this) {
-                this.__LZcoDirty = true;
                 this.__LZremoveChild( newChild );
             } else {
                 newChild.parentNode.removeChild( newChild );
@@ -346,12 +353,15 @@ function __LZgetCO (child /*:LzDataNodeMixin*/) :int {
   * - setting parentNode to null 
   * - setting ownerDocument to null 
   * @access private
+  * @return index of the removed child, -1 if child not found
   */
-function __LZremoveChild (oldChild /*:LzDataNodeMixin*/) :void {
+function __LZremoveChild (oldChild /*:LzDataNodeMixin*/) :int {
     var off:int = this.__LZgetCO(oldChild);
     if (off >= 0) {
+        this.__LZcoDirty = true;
         this.childNodes.splice(off, 1);
     }
+    return off;
 }
 
 /**
