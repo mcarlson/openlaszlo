@@ -873,7 +873,7 @@ dynamic class LzText extends LzView with LzFormatter {
     // be set at init time
     this.multiline = ('multiline' in args) ? args.multiline : null;
 
-    super.construct.apply(this, arguments);
+    super.construct(parent, args);
 
     this.sizeToHeight = false;
 
@@ -991,7 +991,7 @@ dynamic class LzText extends LzView with LzFormatter {
 
   /** @access private */
   override function init () {
-    super.init.apply(this, arguments);
+    super.init();
 
     this._updateSize();
   };

@@ -555,8 +555,7 @@ override function __LZinstantiationDone () : void {
         (vip).addSubview( this );
     } 
 
-    //this.callInherited( '__LZinstantiationDone' , arguments.callee );
-    super.__LZinstantiationDone.apply(this, arguments);
+    super.__LZinstantiationDone();
 }
 
 /** Reference to closest masked view in the hierarchy at or above
@@ -1883,7 +1882,7 @@ override function destroy( ){
         }
     }
 
-    super.destroy.apply(this);
+    super.destroy();
 
     if (this.sprite) { this.sprite.destroy() }
 

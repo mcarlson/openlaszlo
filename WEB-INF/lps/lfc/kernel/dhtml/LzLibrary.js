@@ -1,7 +1,7 @@
 /**
   * LzLibrary.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LZX
@@ -63,7 +63,7 @@ var onload = LzDeclaredEvent;
   */
 function construct (parent, args) {
     this.stage = args.stage;
-    super.construct.apply(this, arguments);
+    super.construct(parent, args);
     this.sprite = new LzSprite(this, false, args);
     LzLibrary.libraries[args.name] = this;
 }
@@ -72,7 +72,7 @@ function construct (parent, args) {
   * @access private
   */
 function init( ) {
-    super.init.apply(this, arguments);
+    super.init();
     if (this.stage == "late") {
         this.load();
     }
@@ -86,7 +86,7 @@ function destroy () {
         this.sprite.destroy();
         this.sprite = null;
     }
-    super.destroy.apply(this, arguments);
+    super.destroy();
 }
 
 /** @access private */

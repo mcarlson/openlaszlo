@@ -232,7 +232,7 @@ dynamic class LzState extends LzNode {
    * @access private
    */
   override function construct ( parent , args ){
-    super.construct.apply(this, arguments);
+    super.construct(parent, args);
     this.heldArgs = {};
     this.handlerMethodNames = {};
     this.appliedChildren = [];

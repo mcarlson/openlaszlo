@@ -92,7 +92,7 @@ function $lzc$set_href(val:String) :void {
   */
 override function construct (parent, args) {
     this.stage = args.stage;
-    super.construct.apply(this, arguments);
+    super.construct(parent, args);
     LzLibrary.libraries[args.name] = this;
 }
 
@@ -100,7 +100,7 @@ override function construct (parent, args) {
   * @access private
   */
 override function init( ) {
-    super.init.apply(this, arguments);
+    super.init();
     if (this.stage == "late") {
         this.load();
     }
