@@ -12,6 +12,8 @@
   * @shortdesc A node of hierarchical data.
   * @see LzDataNodeMixin LzDataText LzDataPointer
   * @access public
+  *
+  * @devnote W3C-DOM Element interface: http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-745549614
   */
 mixin LzDataElementMixin {
     // N.B.: LzDataElementMixin may or may not be an LzNode, so
@@ -215,7 +217,7 @@ override public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
     var n:LzDataElement = new LzDataElement(this.nodeName);
     n.$lzc$set_attributes( this.attributes );
     if ( deep ){
-        for ( var i:int = 0 ; i < this.childNodes.length; i++ ){
+        for ( var i:int = 0; i < this.childNodes.length; i++ ){
             n.appendChild( this.childNodes[ i ].cloneNode( true ) );
         }
     }
@@ -684,7 +686,10 @@ lz.DataElementMixin = LzDataElementMixin;  // publish
 
 /**
   * <p>
-  * An <code>lz.DataElement</code> represents a node a in a hierarchical dataset. An <code>lz.DataElement</code> can contain other <code>lz.DataElements</code>, or <sgmltag class="element" role="LzDataText">lz.DataText</sgmltag>, which represents a text node. See the example on <sgmltag class="element" role="LzDataNodeMixin">lz.DataNodeMixin</sgmltag>. 
+  * An <code>lz.DataElement</code> represents a node a in a hierarchical dataset.
+  * An <code>lz.DataElement</code> can contain other <code>lz.DataElements</code>,
+  * or <sgmltag class="element" role="LzDataText">lz.DataText</sgmltag>, which
+  * represents a text node. See the example on <sgmltag class="element" role="LzDataNodeMixin">lz.DataNodeMixin</sgmltag>. 
   * </p>
   *
   * @shortdesc A node of hierarchical data.
@@ -775,19 +780,19 @@ static function __LZv2E ( o:* ) :Array {
 
 /** constant for LZX DOM data element node type 
   * @type int
-  * @lzxdefault "1"
+  * @lzxdefault 1
   * @keywords read-only
   */
 static const ELEMENT_NODE :int = 1;
 /** constant for LZX DOM data text node type 
   * @type int
-  * @lzxdefault "3"
+  * @lzxdefault 3
   * @keywords read-only
   */
 static const TEXT_NODE :int = 3;
 /** constant for LZX DOM document root node type  
   * @type int
-  * @lzxdefault "9"
+  * @lzxdefault 9
   * @keywords read-only
   */
 static const DOCUMENT_NODE :int = 9;
@@ -796,7 +801,7 @@ static const DOCUMENT_NODE :int = 9;
   * since flash it's just for escaping &gt;&lt;
   * @access private
   */
-static const __LZescapechars :Object = 
+static const __LZescapechars :Object =
 { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'};
 
 
@@ -851,9 +856,10 @@ static function stringToLzData( str:String, trimwhitespace:Boolean=false, nspref
     return null;
 }
 
-/** @type Dictionary 
-  * @keywords read-only 
-  * @access private */
+/** @type Dictionary
+  * @keywords read-only
+  * @access private
+  */
 static const whitespaceChars :Object = {' ': true, '\r': true, '\n': true, '\t': true};
 
 

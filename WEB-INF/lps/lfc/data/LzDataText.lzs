@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -9,10 +9,15 @@
   */
 
 /**
-  * An <code>lz.DataText</code> represents a text node a in a hierarchical dataset. An <code>lz.DataText</code> can only contain text data. It can be a child a of an <sgmltag class="element" role="LzDataElement">lz.DataElement</sgmltag>. See the example on <sgmltag class="element" role="LzDataNodeMixin">lz.DataNodeMixin</sgmltag>. 
+  * An <code>lz.DataText</code> represents a text node a in a hierarchical
+  * dataset. An <code>lz.DataText</code> can only contain text data. It can be
+  * a child a of an <sgmltag class="element" role="LzDataElement">lz.DataElement</sgmltag>.
+  * See the example on <sgmltag class="element" role="LzDataNodeMixin">lz.DataNodeMixin</sgmltag>.
   *
   * @shortdesc Represents a text node in a set of data.
   * @see lzdatanodemixin, lzdataelement, datapointer
+  *
+  * @devnote W3C-DOM Text interface: http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-1312295772
   */
 class LzDataText extends LzDataNode with LzDataNodeMixin {
 
@@ -29,19 +34,24 @@ function LzDataText ( text:String ){
 /** @lzxtype event */
 var ondata :LzDeclaredEventClass = LzDeclaredEvent;
 
-/** This property is of type String, can raise a DOMException object on setting
-  * and can raise a DOMException object on retrieval. */
+/** This property is of type int, can raise a DOMException object on setting
+  * and can raise a DOMException object on retrieval.
+  */
 //var nodeType = LzDataElement.TEXT_NODE;
 
 /** The name of this node.
- * According to <a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-1841493061">W3C-specs</a>, nodeName for LzDataText should return
- * "#text".
+  * According to <a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-1841493061">W3C-specs</a>,
+  * nodeName for LzDataText should return "#text".
   * @type String
+  * @lzxdefault "#text"
+  * @keywords read-only
   */
 var nodeName :String = '#text';
 
 /** The data held by this node.
-  * @type String */
+  * @type String
+  * @lzxdefault ""
+  */
 var data :String = "";
 
 /** @access private */
@@ -75,8 +85,7 @@ public function setData ( newdata:String ) {
   * @access private
   */
 override public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
-    var n = new LzDataText(this.data);
-    return n;
+    return new LzDataText(this.data);
 }
 
 /**

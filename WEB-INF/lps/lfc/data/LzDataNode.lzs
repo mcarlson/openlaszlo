@@ -11,49 +11,46 @@
 /**
   * <p><classname>lz.DataNode</classname> is the base class for the classes
   * that represent OpenLaszlo's hierarchical data format.</p>
-  * 
+  *
   * <example>
   * &lt;canvas height="300"&gt;
   *   &lt;simplelayout axis="y"/&gt;
-  * 
-  *   &lt;text width="300" height="250" bgcolor="silver" 
+  *
+  *   &lt;text width="300" height="250" bgcolor="silver"
   *         multiline="true" name="display"/&gt;
   *   &lt;button&gt;Make some data
   *     &lt;attribute name="currentstep" value="0"/&gt;
   * 
   *     &lt;handler name="onclick"&gt;
-  *       &lt;![CDATA[ 
-  *       switch(currentstep ++){
+  *       &lt;![CDATA[
+  *       switch (this.currentstep++) {
   *         case 0:
-  *           this.n = <em>new LzDataElement('numbers');</em>
-  *           setAttribute('text', 'Add some children');
+  *           this.n = <em>new lz.DataElement('numbers');</em>
+  *           this.setAttribute('text', 'Add some children');
   *           break;
   *         case 1:
-  *           for (var i = 1; i &lt; 11 ; i++){
-  *             <em>this.n.appendChild(new LzDataElement('number' , 
-  *                                                      {value : i}));</em>
-  * 
+  *           for (var i = 1; i &lt; 11; i++) {
+  *             <em>this.n.appendChild(new lz.DataElement('number', {value : i}));</em>
   *           }
-  *           setAttribute('text', 'Add linebreaks');
+  *           this.setAttribute('text', 'Add linebreaks');
   *           break;
   *         case 2:
-  *           var dp = new LzDatapointer();
+  *           var dp = new lz.datapointer();
   *           dp.setPointer(this.n.getFirstChild());
   *           do {
-  *             <em>dp.p.parentNode.insertBefore(new LzDataText('\n'), 
-  *                                              dp.p);</em>
+  *             <em>dp.p.parentNode.insertBefore(new lz.DataText('\n'), dp.p);</em>
   *           } while (dp.selectNext())
-  *           dp.p.parentNode.appendChild(new LzDataText('\n')); 
-  *           setAttribute('visible', false);
+  *           dp.p.parentNode.appendChild(new lz.DataText('\n'));
+  *           this.setAttribute('visible', false);
   *           break;
   *       }
-  *       display.setText(display.escapeText(n.serialize()));
+  *       canvas.display.setAttribute('text', canvas.display.escapeText(n.serialize()));
   *       ]]&gt;
   *     &lt;/handler&gt;
   *   &lt;/button&gt;
   * &lt;/canvas&gt;
   * </example>
-  * 
+  *
   * @shortdesc The base class for a node of hierarchical data.
   * @devnote LzDataNodeMixin is the abstract baseclass for LzDataElement and LzDataText.
   * N.B.: LzDataNodeMixin may or may not be an LzNode, so _if_ it were
@@ -63,8 +60,9 @@
   * @devnote Also N.B.: If this _does_ descend from LzNode and has initial
   * data, childNodes will have already been set by applyArgs, so
   * don't set it here!
+  *
+  * @devnote W3C-DOM Node interface: http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-1950641247
   */
-
 mixin LzDataNodeMixin {
 /** @lzxtype event */
 var onownerDocument :LzDeclaredEventClass = LzDeclaredEvent;
@@ -81,28 +79,51 @@ var onattributes :LzDeclaredEventClass = LzDeclaredEvent;
 /** @lzxtype event */
 var onnodeName :LzDeclaredEventClass = LzDeclaredEvent;
 
-/** The type of this node -- ELEMENT_NODE or TEXT_NODE
+/**
+  * The type of this node -- one of <code>lz.DataElement.DOCUMENT_NODE</code>,
+  * <code>lz.DataElement.ELEMENT_NODE</code> or <code>lz.DataElement.TEXT_NODE</code>
   * @type int
-  * @keywords abstract
+  * @keywords read-only
   */
 var nodeType :int; // This is undefined. Set elsewhere
 
-var parentNode :* = null;
+/**
+  * The parent of this node
+  * @type LzDataElementMixin
+  * @keywords read-only
+  */
+var parentNode /*:LzDataElementMixin*/ = null;
 
+/**
+  * The document object of this node
+  * @type LzDataElementMixin
+  * @keywords read-only
+  */
 var ownerDocument :LzDataElementMixin;
 
-/** @access private */
-var __LZo :int = -1;
-/** @access private */
-var sel :Boolean = false;
-
-/** An array of children of this node
-  * @type LzDataNodeMixin
+/**
+  * An array of children of this node
+  * @type [LzDataNodeMixin]
   */
 var childNodes :Array = null;
 
-/** @access private */
+/**
+  * The offset of this node in the parentNode's childNodes array
+  * @access private
+  */
+var __LZo :int = -1;
+
+/**
+  * Quick check for __LZo, see getOffset()
+  * @access private
+  */
 var __LZcoDirty :Boolean = true;
+
+/**
+  * Selection state of this node, see LzDataSelectionManager
+  * @access private
+  */
+var sel :Boolean = false;
 
 /** 
   * @devnote: used to track view-sizes, see LzResizeReplicationManager
@@ -119,7 +140,7 @@ public function getParent () /*:LzDataElementMixin*/ {
 }
 
 /**
-  * gets offset of node in parent's childNodes array
+  * Gets offset of node in parent's childNodes array
   * @return int
   */
 public function getOffset () :int {
@@ -130,8 +151,8 @@ public function getOffset () :int {
 }
 
 /**
-  * Returns the sibling before this one this node's parentNodes List of children
-  * @return LzDataNodeMixin: The node preceeding this one in this node's childNodes
+  * Returns the sibling before this one in this node's parentNodes list of children
+  * @return LzDataNodeMixin: The node immediately preceeding this node
   */
 public function getPreviousSibling () /*:LzDataNodeMixin*/ {
     if (!this.parentNode) return null;
@@ -145,8 +166,8 @@ function $lzc$getPreviousSibling_dependencies( who, self ) :Array {
 }
 
 /**
-  * Returns the sibling after this one this node's parentNodes List of children
-  * @return LzDataNodeMixin: The node succeeding this one in this node's childNodes
+  * Returns the sibling after this one in this node's parentNodes list of children
+  * @return LzDataNodeMixin: The node immediately succeeding this node
   */
 public function getNextSibling () /*:LzDataNodeMixin*/ {
     if (!this.parentNode) return null;
@@ -158,8 +179,6 @@ public function getNextSibling () /*:LzDataNodeMixin*/ {
 function $lzc$getNextSibling_dependencies( who, self ) :Array {
     return [ this.parentNode , "childNodes" , this , "parentNode" ];
 }
-
-
 
 /** @access private
   * Renamed from childOf to avoid conflict with LzNode.childOf.
@@ -200,9 +219,9 @@ function $lzc$set_ownerDocument (ownerDoc:LzDataElementMixin) :void {
 }
 
 /**
-  * Sets the LzDataNodeMixin which is the ownerDocument for this node.
-  * @param LzDataNodeMixin ownerDoc: The LzDataNodeMixin to act as the ownerDocument for
-  * this node.
+  * Sets the lz.DataElementMixin which is the ownerDocument for this node.
+  * @param LzDataElementMixin ownerDoc: The lz.DataElementMixin to act as the
+  * ownerDocument for this node.
   * @deprecated Use setAttribute('ownerDocument', ...) instead.
   */
 public final function setOwnerDocument (ownerDoc) :void {
@@ -232,6 +251,7 @@ public function serialize (len:Number = Infinity) :String {
 
 /**
   * @access private
+  * @see LzDatapath
   */
 function __LZlockFromUpdate (locker:LzDatapath) :void {
     this.ownerDocument.__LZdoLock( locker );
@@ -239,6 +259,7 @@ function __LZlockFromUpdate (locker:LzDatapath) :void {
 
 /**
   * @access private
+  * @see LzDatapath
   */
 function __LZunlockFromUpdate (locker:LzDatapath) :void {
     this.ownerDocument.__LZdoUnlock( locker );
@@ -288,21 +309,21 @@ class LzDataNode extends LzEventable {
 
 /** @deprecated Use <code>LzDataElement.ELEMENT_NODE</code> instead
   * @type int
-  * @lzxdefault "1"
+  * @lzxdefault 1
   * @keywords read-only
   */
 static const ELEMENT_NODE :int = 1;
 
 /** @deprecated Use <code>LzDataElement.TEXT_NODE</code> instead
   * @type int
-  * @lzxdefault "3"
+  * @lzxdefault 3
   * @keywords read-only
   */
 static const TEXT_NODE :int = 3;
 
 /** @deprecated Use <code>LzDataElement.DOCUMENT_NODE</code> instead
   * @type int
-  * @lzxdefault "9"
+  * @lzxdefault 9
   * @keywords read-only
   */
 static const DOCUMENT_NODE :int = 9;
