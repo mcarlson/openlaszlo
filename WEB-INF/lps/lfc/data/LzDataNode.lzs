@@ -62,6 +62,8 @@
   * don't set it here!
   *
   * @devnote W3C-DOM Node interface: http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-1950641247
+  *
+  * @devnote uncomment typing when LPP-5840 is implemented
   */
 mixin LzDataNodeMixin {
 /** @lzxtype event */
@@ -144,7 +146,7 @@ public function getParent () /*:LzDataElementMixin*/ {
   * @return int
   */
 public function getOffset () :int {
-    if (!this.parentNode) return 0;
+    if (! this.parentNode) return 0;
     if (this.parentNode.__LZcoDirty) this.parentNode.__LZupdateCO();
 
     return this.__LZo;
@@ -155,13 +157,13 @@ public function getOffset () :int {
   * @return LzDataNodeMixin: The node immediately preceeding this node
   */
 public function getPreviousSibling () /*:LzDataNodeMixin*/ {
-    if (!this.parentNode) return null;
-    if ( this.parentNode.__LZcoDirty ) this.parentNode.__LZupdateCO();
+    if (! this.parentNode) return null;
+    if (this.parentNode.__LZcoDirty) this.parentNode.__LZupdateCO();
     return this.parentNode.childNodes[ this.__LZo - 1 ];
 }
 
 /** @access private */
-function $lzc$getPreviousSibling_dependencies( who, self ) :Array {
+function $lzc$getPreviousSibling_dependencies (who:*, self:*) :Array {
     return [ this.parentNode , "childNodes" , this , "parentNode" ];
 }
 
@@ -170,13 +172,13 @@ function $lzc$getPreviousSibling_dependencies( who, self ) :Array {
   * @return LzDataNodeMixin: The node immediately succeeding this node
   */
 public function getNextSibling () /*:LzDataNodeMixin*/ {
-    if (!this.parentNode) return null;
-    if ( this.parentNode.__LZcoDirty ) this.parentNode.__LZupdateCO();
+    if (! this.parentNode) return null;
+    if (this.parentNode.__LZcoDirty) this.parentNode.__LZupdateCO();
     return this.parentNode.childNodes[ this.__LZo + 1 ];
 }
 
 /** @access private */
-function $lzc$getNextSibling_dependencies( who, self ) :Array {
+function $lzc$getNextSibling_dependencies (who:*, self:*) :Array {
     return [ this.parentNode , "childNodes" , this , "parentNode" ];
 }
 
@@ -184,10 +186,10 @@ function $lzc$getNextSibling_dependencies( who, self ) :Array {
   * Renamed from childOf to avoid conflict with LzNode.childOf.
   * childOf still exists because it is part of the public API.
   */
-function childOfNode ( el, allowself:Boolean = false ) :Boolean {
-    var p = allowself ? this : this.parentNode
-    while ( p ){
-        if ( p == el ) return true;
+function childOfNode (el/*:LzDataNodeMixin*/, allowself:Boolean = false) :Boolean {
+    var p /*:LzDataNodeMixin*/ = allowself ? this : this.parentNode;
+    while (p) {
+        if (p === el) return true;
         p = p.parentNode;
     }
     return false;
@@ -200,7 +202,7 @@ function childOfNode ( el, allowself:Boolean = false ) :Boolean {
   * @param Boolean allowself: If true, this function returns true if the given
   * node is the same as this node.
   */
-override function childOf ( el, allowself=false ) {
+override function childOf (el, allowself = false) {
   return this.childOfNode(el, allowself);
 }
 
@@ -235,7 +237,7 @@ public final function setOwnerDocument (ownerDoc) :void {
   * new node
   * @return LzDataNodeMixin: A copy of this node.
   */
-public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
+public function cloneNode (deep:Boolean = false) :LzDataNodeMixin {
     /* not implemented here */
     return undefined;
 }
@@ -244,7 +246,7 @@ public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
   * Returns this node as a string of xml.
   * @return String: The string serialization of this node.
   */
-public function serialize (len:Number = Infinity) :String {
+public function serialize () :String {
     /* not implemented here */
     return undefined;
 }
@@ -341,9 +343,9 @@ static const DOCUMENT_NODE :int = 9;
   * generated from the string
   * @deprecated Use <code>LzDataElement.stringToLzData</code> 
   */
-static function stringToLzData( str:String, trimwhitespace:Boolean = false, nsprefix:Boolean = false ) :LzDataElement {
-    if ( $debug ){
-        Debug.info("LzDataNode.stringToLzData is deprecated.  Use `LzDataElement.stringToLzData` instead.");
+static function stringToLzData (str:String, trimwhitespace:Boolean = false, nsprefix:Boolean = false) :LzDataElement {
+    if ($debug) {
+        Debug.info("lz.DataNode.stringToLzData is deprecated.  Use `lz.DataElement.stringToLzData` instead.");
     }
     return LzDataElement.stringToLzData(str, trimwhitespace, nsprefix);
 
@@ -356,7 +358,7 @@ static function stringToLzData( str:String, trimwhitespace:Boolean = false, nspr
  * @access private
  */
 function toString () /*:String*/ { 
-    return "LzDataNode";
+    return "lz.DataNode";
 }
 
 } // End of LzDataNode

@@ -390,6 +390,8 @@ function LzDataset (parent:* = null, args:* = null, children:* = null, instcall:
 override function construct (parent, args) {
     this.nodeType = LzDataElement.DOCUMENT_NODE;
     this.ownerDocument = this;
+    this.attributes = {};
+    this.childNodes = [];
 
     this.queuerequests = false; // default to false, to emulate browser default
 
@@ -412,7 +414,7 @@ override function construct (parent, args) {
         this.dataprovider = canvas.defaultdataprovider;
     }
 
-    super.construct.apply(this, arguments);
+    super.construct(parent, args);
 }
 
 /**
@@ -420,7 +422,7 @@ override function construct (parent, args) {
   * @access private
   */
 override function $lzc$set_name(name:String) {
-    super.$lzc$set_name.apply(this, arguments);
+    super.$lzc$set_name(name);
 
     // @devnote: Name is permitted to be null or undefined, meaning
     // "don't name me", see LzNode#$lzc$set_name(..).

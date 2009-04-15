@@ -18,6 +18,8 @@
   * @see lzdatanodemixin, lzdataelement, datapointer
   *
   * @devnote W3C-DOM Text interface: http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-1312295772
+  *
+  * @devnote uncomment typing when LPP-5840 is implemented
   */
 class LzDataText extends LzDataNode with LzDataNodeMixin {
 
@@ -25,7 +27,7 @@ class LzDataText extends LzDataNode with LzDataNodeMixin {
  * This object represents a text node in a set of data.
  * @param String text: The text that this node holds.
  */
-function LzDataText ( text:String ){
+function LzDataText (text:String) {
     super();
     this.nodeType = LzDataElement.TEXT_NODE;
     this.data = text;
@@ -55,7 +57,7 @@ var nodeName :String = '#text';
 var data :String = "";
 
 /** @access private */
-function $lzc$set_data(newdata:String) :void {
+function $lzc$set_data (newdata:String) :void {
     this.data = newdata;
     if (this.ondata.ready) {
         this.ondata.sendEvent( newdata );
@@ -65,18 +67,12 @@ function $lzc$set_data(newdata:String) :void {
     }
 }
 
-
-/** @type Number
-  * @keywords read-only 
-  */
-var length :Number = 0;
-
 /**
   * Sets the string that this node holds.
   * @param String newdata: The new string for this node.
   * @deprecated Use setAttribute('data', ...) instead.
   */
-public function setData ( newdata:String ) {
+public function setData (newdata:String) {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     this.$lzc$set_data(newdata);
 }
@@ -84,14 +80,14 @@ public function setData ( newdata:String ) {
 /**
   * @access private
   */
-override public function cloneNode ( deep:Boolean = false ) :LzDataNodeMixin {
+override public function cloneNode (deep:Boolean = false) :LzDataNodeMixin {
     return new LzDataText(this.data);
 }
 
 /**
   * @access private
   */
-override public function serialize (len:Number = Infinity) :String {
+override public function serialize () :String {
     return LzDataElement.__LZXMLescape( this.data );
 }
 
