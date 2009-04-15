@@ -166,7 +166,23 @@ var timeout :Number = 60000;
 /** @access private */
 function $lzc$set_timeout (t:Number) :void { this.timeout = t; }
 
-/** @access private */
+/** Used to send a string as the entire body of a POST request.
+ *
+ * For a POST request, setting postbody to a non-null string value
+ * will send that string as the complete body of the POST request. In
+ * this case any other query parameters that have been set via
+ * setQueryParam dataset will be ignored.
+ *
+ * The behavior of a GET request with a non-null postbody is not
+ * defined.
+ *
+ * Note, the swf8 runtime is forced to XML-quote the postbody, due to
+ * limitations in the Flash 8 player API. This restriction is not
+ * present in later swf runtimes, or in the DHTML runtime.
+ *
+ * @lzxtype String
+ * @type String
+*/
 var postbody :String = null;
 
 /** @access private */
