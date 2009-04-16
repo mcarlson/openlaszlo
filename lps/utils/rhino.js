@@ -11,6 +11,12 @@ lz = {};
 lz.embed = {__propcache: { appenddiv: document.createElement() },
             options: {}};
 
+
+//set up canvas width/height
+lz.embed.__propcache.appenddiv.offsetWidth = 800;
+lz.embed.__propcache.appenddiv.offsetHeight = 600;
+
+
 // Fake the browser DOM
 // Laszlo app expects to run in an iframe
 window = this;
