@@ -460,7 +460,7 @@ public class NodeModel implements Cloneable {
         String name = elt.getName();
         return "attribute".equals(name) || "method".equals(name)
           || "handler".equals(name) || "setter".equals(name)
-          || "event".equals(name);
+          || "event".equals(name) || "passthrough".equals(name);
     }
 
     /** Returns a name that is used to report this element in warning
@@ -1280,12 +1280,6 @@ solution =
                     checkChildNameConflict(element.getName(), child, env);
                     NodeModel dpnode = elementAsModel(child, schema, env);
                     this.datapath = dpnode;
-                } else if (child.getName().equals("passthrough")) {
-                  if (env.isAS3()) {
-                    passthroughBlock = child.getText();
-                  } else {
-                    env.warn("The passthrough tag can only be used in an as3 runtime, perhaps you could put this in a switch tag?",child);
-                  }
                 } else {
                     checkChildNameConflict(element.getName(), child, env);
                     NodeModel childModel = elementAsModel(child, schema, env);
@@ -1392,6 +1386,21 @@ solution =
         addAttributeElement(element);
       } else if ("setter".equals(tagName)) {
         addSetterElement(element);
+      } else if ("passthrough".equals(tagName)) {
+        addPassthroughElement(element);
+      }
+    }
+
+    /** Compile a <passthrough> block for a node.
+     *
+     * Transforms to a #passthrough compiler pragma in the script output
+     */
+    void addPassthroughElement(Element element) {
+      if (env.isAS3()) {
+        passthroughBlock = element.getText();
+      } else {
+        env.warn("The passthrough tag can only be used in an as3 runtime, "
+                 + "perhaps you could put this in a switch tag?",element);
       }
     }
 
