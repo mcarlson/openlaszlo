@@ -1,7 +1,7 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -25,15 +25,18 @@ public class VariableAnalyzer {
   public LinkedHashMap fundefs;
   // Order unimportant for the rest
   public Map used;
+  Set innerFree;
   public Set closed;
   public Set free;
+  // Contains `.`, `[]`, or `()` expression(s)
+  public boolean dereferenced = false;
 
   boolean ignoreFlasm;
   Set locals;
 
   public VariableAnalyzer(SimpleNode params, boolean ignoreFlasm) {
     // Parameter order is significant
-    this.parameters = new LinkedHashSet();
+    parameters = new LinkedHashSet();
     for (int i = 0, len = params.size(); i < len; i++) {
       SimpleNode param = params.get(i);
       // might also be an initializer
@@ -43,8 +46,8 @@ public class VariableAnalyzer {
         parameters.add(((ASTIdentifier)param).getName());
       }
     }
-    this.locals = new LinkedHashSet(parameters);
-    closed = new HashSet();
+    locals = new LinkedHashSet(parameters);
+    innerFree = new HashSet();
     fundefs = new LinkedHashMap();
     used = new HashMap();
     this.ignoreFlasm = ignoreFlasm;
@@ -69,10 +72,11 @@ public class VariableAnalyzer {
     Set available = new HashSet(locals);
     available.addAll(AVAILABLE);
     // Closing over a variable counts as a use
-    for (Iterator i = closed.iterator(); i.hasNext(); ) {
+    for (Iterator i = innerFree.iterator(); i.hasNext(); ) {
       incrementUsed((String)i.next());
     }
-    // Calculate actual closed (closed & available)
+    // Calculate actual closed (innerFree & available)
+    closed = new HashSet(innerFree);
     closed.retainAll(available);
     // Calculate free references (used - available)
     free = new HashSet(used.keySet());
@@ -81,8 +85,10 @@ public class VariableAnalyzer {
 
   public void visit(SimpleNode node) {
     SimpleNode[] children;
+    // Calculate children for recursive visiting
     if (node instanceof ASTPropertyIdentifierReference) {
-      // Only the base is a reference
+      // For `a.b`, only `a` is a reference, not `b`.  (Cf., `a[b]`,
+      // where _both_ are references).
       SimpleNode[] c = {node.get(0)};
       children = c;
     } else if (node instanceof ASTIfStatement) {
@@ -99,8 +105,9 @@ public class VariableAnalyzer {
     } else {
       children = node.getChildren();
     }
-    // ForVar has a VariableDeclaration as a child, so we don"t
-    // need to handle it specially, but ForVarIn does not.
+    // Calculate locals, fundefs, and used
+    // (ForVar has a VariableDeclaration as a child, so we don"t
+    // need to handle it specially, but ForVarIn does not.)
     if (node instanceof ASTVariableDeclaration ||
         node instanceof ASTForVarInStatement) {
       String v = ((ASTIdentifier)children[0]).getName();
@@ -123,6 +130,13 @@ public class VariableAnalyzer {
         incrementUsed(((ASTIdentifier)node).getName());
       }
     }
+    // Calculate dereferenced
+    if ((node instanceof ASTPropertyIdentifierReference) ||
+        (node instanceof ASTPropertyValueReference) ||
+        (node instanceof ASTCallExpression)) {
+      dereferenced = true;
+    }
+    // Now descend into children.  Closures get special treatment.
     if (node instanceof ASTFunctionDeclaration ||
         node instanceof ASTFunctionExpression) {
       SimpleNode params = children[children.length - 2];
@@ -135,21 +149,14 @@ public class VariableAnalyzer {
       analyzer.computeReferences();
       for (Iterator i = analyzer.free.iterator(); i.hasNext(); ) {
         String v = (String)i.next();
-        if (! closed.contains(v)) {
-          closed.add(v);
+        if (! innerFree.contains(v)) {
+          innerFree.add(v);
         }
       }
-      return;
-    }
-    // TODO: [2005-03-09 ptw] Don't need this when callInherited
-    // goes away.  For now add implicit reference to this and
-    // arguments.
-    if (node instanceof ASTSuperCallExpression) {
-      incrementUsed("this");
-      incrementUsed("arguments");
-    }
-    for (int i = 0; i < children.length; i++) {
-      visit(children[i]);
+    } else {
+      for (int i = 0; i < children.length; i++) {
+        visit(children[i]);
+      }
     }
   }
 }

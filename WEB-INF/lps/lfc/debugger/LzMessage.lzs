@@ -284,10 +284,12 @@ class LzSourceMessage {
         skip = 3;
         for (var i = btsl - 1; i > skip; i--) {
           var callee = bts[i].callee;
-          if (callee === $reportSourceWarning ||
-              callee === Debug.warnInternal) {
-            // Skip the caller and the constructor frames too
-            skip = btsl - i + 3;
+          if (callee === $reportSourceWarning) {
+            // Skip backtrace() constructor frames too
+            skip = btsl - i + 2;
+          } else if (callee === Debug.warnInternal) {
+            // Skip warnInternal() caller and backtrace() constructor frames too
+            skip = btsl - i + 1 + 2;
             break;
           }
         }

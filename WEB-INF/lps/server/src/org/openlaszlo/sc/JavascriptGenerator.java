@@ -827,7 +827,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   SimpleNode noteCallSite(SimpleNode node) {
     // Note current call-site in a function context and backtracing
-    if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine != 0)) &&
+    if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine > 0)) &&
         (context.findFunctionContext() != null)) {
       SimpleNode newNode = new ASTExpressionList(0);
       newNode.set(0, (new Compiler.Parser()).parse("$lzsc$a.lineno = " + node.beginLine).get(0).get(0));
@@ -1201,12 +1201,14 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       }
     }
     // If either of error or suffix are set, a try block is created.
-    // predecls is only used if error/suffix are set, and are
-    // declarations that must appear before (outside of) try block
-    List predecls = new ArrayList();
+    // postfix is only used if error is set, to insert a dummy return
+    // value to keep the Flex compiler happy (See:
+    // https://bugs.adobe.com/jira/browse/FCM-12)
     List prefix = new ArrayList();
     List error = new ArrayList();
     List suffix = new ArrayList();
+    List postfix = new ArrayList();
+    // If backtrace is on, we maintain a call stack for debugging
     if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
       prefix.add(parseFragment(
                    "var $lzsc$d = Debug, $lzsc$s = $lzsc$d.backtraceStack;" +
@@ -1217,82 +1219,92 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
                    "  $lzsc$s.push($lzsc$a);" +
                    "  if ($lzsc$s.length > $lzsc$s.maxDepth) {$lzsc$d.stackOverflow()};" +
                    "}"));
-      error.add(parseFragment(
-                  "if ($lzsc$s && (! $lzsc$d.uncaughtBacktraceStack)) {" +
-                  "  $lzsc$d.uncaughtBacktraceStack = $lzsc$s.slice(0);" +
-                  "}" +
-                  "throw($lzsc$e);"));
       suffix.add(parseFragment(
                     "if ($lzsc$s) {" +
                     "  $lzsc$s.pop();" +
                     "}"));
     }
+    // If profile is on, we meter function enter/exit
     if (options.getBoolean(Compiler.PROFILE)) {
       prefix.add((meterFunctionEvent(node, "calls", meterFunctionName)));
-      suffix.add((meterFunctionEvent(node, "returns", meterFunctionName)));
+      // put the function end before other annotations
+      suffix.add(0, (meterFunctionEvent(node, "returns", meterFunctionName)));
     }
-
-    // catchFunctionExceptions forces a catch of any exceptions.
-    // In debug mode the exception is reported, and in any case it is
-    // not propogated to our caller.
-    // To preserve return types, we implement this with a closure,
-    // but that introduces restrictions:
-    // - We cannot put a super call in a closure.
-    // - Having another function closure within a closure apparently
-    //   causes problems accessing certain variables for the flex compiler.
-    // - We cannot put code that references 'arguments' into a closure.
-    boolean tryAll = options.getBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS)
-      && matchingAncestor(node, ASTFunctionExpression.class, false) == null
-      && matchingDescendant(node, ASTSuperCallExpression.class, false) == null
-      && matchingDescendant(node, ASTFunctionExpression.class, false) == null
-      && matchingIdentifier(node, "arguments") == null
-      && functionName != null;
-      
+    // If backtrace or catch-exceptions is on, we create an error
+    // handler to catch the error and return a type-safe null value
+    // (to emulate the behavior of as2).
+    boolean catchExceptions = (options.getBoolean(Compiler.DEBUG_BACKTRACE) ||
+                               options.getBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS));
+    // Analyze local variables (and functions)
+    VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY));
+    // We only insert the error handler if the variable analysis shows
+    // that there is a dereference in the original body of the function.
+    for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
+      analyzer.visit((SimpleNode)i.next());
+    }
+    if (catchExceptions) {
+      analyzer.computeReferences();
+      catchExceptions = analyzer.dereferenced;
+    }
     String tryType = "";
-    if (tryAll) {
+    if (catchExceptions) {
+      // If debugging is on, we report the caught error
       if (options.getBoolean(Compiler.DEBUG) || options.getBoolean(Compiler.DEBUG_SWF9)) {
         // TODO: [2009-03-20 dda] In DHTML, having trouble successfully defining
         // the $lzsc$runtime class, so we'll report the warning more directly.
         if (this instanceof SWF9Generator) {
           error.add(parseFragment("$lzsc$runtime.reportException(" +
                                   ScriptCompiler.quote(filename) + ", " +
-                                  functionNameIdentifier.beginLine + ", $lzsc$e);"));
+                                  lineno + ", $lzsc$e);"));
         } else {
           error.add(parseFragment("$reportSourceWarning(" +
                                   ScriptCompiler.quote(filename) + ", " +
-                                  functionNameIdentifier.beginLine + ", $lzsc$e.name + \": \" + $lzsc$e.message, true);"));
+                                  lineno + ", $lzsc$e.name + \": \" + $lzsc$e.message, true);"));
         }
       }
-
-      predecls.add(new Compiler.PassThroughNode(parseFragment("var $lzsc$ret:* = 0;")));
-      ASTIdentifier.Type returnType = ((ASTFormalParameterList)params).getReturnType();
-      if (functionNameIdentifier != null
-          && !functionNameIdentifier.isConstructor()
-          && (returnType == null || !"void".equals(returnType.typeName))) {
-        suffix.add(parseFragment("return $lzsc$ret;"));
+      // Currently we only do this for the back-end that enforces types
+      if (this instanceof SWF9Generator) {
+        // In either case, we return a type-safe null value that is as
+        // close to the default value as2 would have returned
+        ASTIdentifier.Type returnType = ((ASTFormalParameterList)params).getReturnType();
+        if (returnType != null) {
+          String returnValue = "null";
+          String typeName = returnType.typeName;
+          // How handy that Java does not allow you to write switch on
+          // String...
+          // I think this covers all the types that won't accept null
+          // (the types that are not sub-types of Object)
+          if ("Boolean".equals(typeName)) {
+            returnValue = "false";
+          } else if ("Number".equals(typeName) ||
+                     // NOTE: [2009-04-16 ptw] These are as3-only
+                     // types, included for completeness but not
+                     // really legal in LZX
+                     "int".equals(typeName) ||
+                     "uint".equals(typeName)) {
+            returnValue = "0";
+          } else if ("void".equals(typeName)) {
+            returnValue = "";
+          }
+          // This _should_ be able to be in the error clause, but see
+          // the note where postfix is declared
+          postfix.add(parseFragment("return " + returnValue + ";"));
+        }
       }
-
-      // For typed functions, make the closure require a return,
-      // so the SWF9 compiler will be just as picky as without
-      // the closure.
-      if (returnType != null) {
-        tryType = ": " + returnType;
-      }
+      // Not sure why we turn this off now...  Some suspicion we will recurse?
       options.putBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS, false);
     }
-
-    // Analyze local variables (and functions)
-    VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY));
-    for (Iterator i = predecls.iterator(); i.hasNext(); ) {
-      analyzer.visit((SimpleNode)i.next());
-    }
+    // Now we visit all the wrapper code and recompute the references
     for (Iterator i = prefix.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
-    for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
+    for (Iterator i = error.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
     for (Iterator i = suffix.iterator(); i.hasNext(); ) {
+      analyzer.visit((SimpleNode)i.next());
+    }
+    for (Iterator i = postfix.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
     analyzer.computeReferences();
@@ -1444,9 +1456,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
 
     // Cf. LPP-4850: Prefix has to come after declarations (above).
-    // FIXME: (LPP-2075) [2006-05-19 ptw] Wrap body in try and make
-    // suffix be a finally clause, so suffix will not be skipped by
-    // inner returns.
     newBody.addAll(prefix);
 
     // Now emit functions in the activation context
@@ -1478,58 +1487,13 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     } else {
       newBody.addAll(stmtList);
     }
-    // FIXME: (LPP-2075) [2006-05-19 ptw] Wrap body in try and make
-    // suffix be a finally clause, so suffix will not be skipped by
-    // inner returns.
+    // Wrap body in try and make suffix be a finally clause, so suffix
+    // will not be skipped by inner returns (but postfix _will_ be skipped).
     if (! suffix.isEmpty() || ! error.isEmpty()) {
       int i = 0;
       SimpleNode newStmts = new ASTStatementList(0);
       newStmts.setChildren((SimpleNode[])newBody.toArray(new SimpleNode[0]));
       SimpleNode tryNode = new ASTTryStatement(0);
-      if (tryAll) {
-        Map map = new HashMap();
-        newStmts = visitStatement(newStmts);
-        map.put("_1", newStmts);
-
-        // build a typed parameter list for the function closure, which
-        // we will normally invoke using apply(this, arguments).
-        // When rest args (i.e. variable args) are present then 'arguments'
-        // is not available, so we must use the rest arg.  If there are fixed
-        // args in addition to rest args (e.g. function foo(a, b, ...rest))
-        // we'll need to assemble the new arg list array.
-        String paramlist = "";
-        String arglist = "";    // only used when fixed args mixed with ...rest
-        String applyarg = "arguments";
-        ParseTreePrinter ptp = new ParseTreePrinter();
-        for (int pcnt = 0, len = params.size(); pcnt < len; pcnt++) {
-          SimpleNode param = passThrough(params.get(pcnt));
-          // Must keep initializers, as apply honors them
-          if (param instanceof ASTIdentifier) {
-            ASTIdentifier paramid = (ASTIdentifier)param;
-            if (paramid.getEllipsis()) {
-              if (pcnt == 0) {
-                applyarg = paramid.getName();
-              }
-              else {
-                applyarg = "[" + arglist + "].concat(" + paramid.getName() + ")";
-              }
-              assert (pcnt + 1 == len) : "ellipsis param must be last";
-            }
-            if (pcnt > 0) {
-              paramlist += ",";
-              arglist += ",";
-            }
-            paramlist += paramid.toJavascriptString();
-            arglist += paramid.getName();
-          }
-          else if (param instanceof ASTFormalInitializer) {
-            paramlist += "=(" + ptp.text(param.get(0)) + ")";
-          }
-        }
-        String frag = "$lzsc$ret = (function(" + paramlist + ")" + tryType +
-          " { _1 }).apply(" + (isStatic ? "null" : "this") + ", " + applyarg + ");";
-        newStmts = new Compiler.PassThroughNode((new Compiler.Parser()).substitute(newStmts, frag, map));
-      }
       tryNode.set(i++, newStmts);
       if (! error.isEmpty()) {
         SimpleNode catchNode = new ASTCatchClause(0);
@@ -1548,7 +1512,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       }
       newBody = new ArrayList();
       newBody.add(tryNode);
-      newBody.addAll(0, predecls);
+      newBody.addAll(postfix);
     }
     // Process amended body
     SimpleNode newStmts = new ASTStatementList(0);
@@ -1593,7 +1557,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {
       return new SimpleNode[] { node, depExpr };
     }
-    if (tryAll) {
+    if (catchExceptions) {
       options.putBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS, true);
     }
     return new SimpleNode[] { node, null };
