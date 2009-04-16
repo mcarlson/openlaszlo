@@ -1651,7 +1651,8 @@ solution =
         body = body + "\n#endContent";
         if (canHaveMethods) {
             String adjectives = "";
-            if (override) { adjectives += " override"; }
+            // LPP-8062 script compiler will give an error if you declare 'override' on a static method
+            if (override && ALLOCATION_INSTANCE.equals(allocation)) { adjectives += " override"; }
             if (isfinal) { adjectives += " final"; }
             if (ALLOCATION_INSTANCE.equals(allocation) &&
                 // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
