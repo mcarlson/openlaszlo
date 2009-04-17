@@ -1236,7 +1236,10 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     boolean catchExceptions = (options.getBoolean(Compiler.DEBUG_BACKTRACE) ||
                                options.getBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS));
     // Analyze local variables (and functions)
-    VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY));
+    VariableAnalyzer analyzer = 
+      new VariableAnalyzer(params, 
+                           options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY),
+                           (this instanceof SWF9Generator));
     // We only insert the error handler if the variable analysis shows
     // that there is a dereference in the original body of the function.
     for (Iterator i = stmtList.iterator(); i.hasNext(); ) {

@@ -32,9 +32,10 @@ public class VariableAnalyzer {
   public boolean dereferenced = false;
 
   boolean ignoreFlasm;
+  boolean hasSuper;
   Set locals;
 
-  public VariableAnalyzer(SimpleNode params, boolean ignoreFlasm) {
+  public VariableAnalyzer(SimpleNode params, boolean ignoreFlasm, boolean hasSuper) {
     // Parameter order is significant
     parameters = new LinkedHashSet();
     for (int i = 0, len = params.size(); i < len; i++) {
@@ -51,6 +52,10 @@ public class VariableAnalyzer {
     fundefs = new LinkedHashMap();
     used = new HashMap();
     this.ignoreFlasm = ignoreFlasm;
+  }
+
+  public VariableAnalyzer(SimpleNode params, boolean ignoreFlasm) {
+    this(params, ignoreFlasm, false);
   }
 
   public void incrementUsed(String variable) {
@@ -135,6 +140,15 @@ public class VariableAnalyzer {
         (node instanceof ASTPropertyValueReference) ||
         (node instanceof ASTCallExpression)) {
       dereferenced = true;
+    }
+    // For JS1 runtimes, super calls are translated into runtime calls
+    // that reference `this` and `arguments`.  Chicken/egg problem --
+    // we'd like to translate before analyzing, but translation uses
+    // analysis.  We need a separate transformer phase...
+    if ((node instanceof ASTSuperCallExpression) &&
+         (! hasSuper)) {
+      incrementUsed("this");
+      incrementUsed("arguments");
     }
     // Now descend into children.  Closures get special treatment.
     if (node instanceof ASTFunctionDeclaration ||
