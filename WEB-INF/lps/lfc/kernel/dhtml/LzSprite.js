@@ -632,6 +632,9 @@ LzSprite.prototype.__updateQuirks = function () {
             // Opera does not use charCode for onkeypress
             quirks['text_event_charcode'] = false;
             quirks['textdeco_on_textdiv'] = true;
+            // Opera uses "\r\n" for newlines, which gives different text-lengths
+            // compared to SWF and to other browsers
+            quirks['text_ie_carriagereturn'] = true;
         } else if (browser.isFirefox) {
             // DOM operations on blurring element break focus (LPP-7786)
             // https://bugzilla.mozilla.org/show_bug.cgi?id=481468
