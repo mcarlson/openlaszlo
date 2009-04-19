@@ -57,18 +57,20 @@ var LzXMLParser = {
         var c = doc.firstChild;
         if (c instanceof HTMLElement) {
             // Safari returns a HTMLElement for a plain string
-            // html > body > parsererror > div (with error information)
-            var msg = c.firstChild.firstChild.childNodes[1].textContent;
+            // NOTE: but also returns a HTMLElement if the xml-string defines
+            // a xhtml-document (LPP-8069)
+            // <html><body><parsererror>[...]</parsererror></body></html>
+            (c = c.firstChild) && (c = c.firstChild);
+        } else {
+            // <*><parsererror>[...]</parsererror></*>
+            (c = c.firstChild);
+        }
+        // <parsererror><h3/><div>[info]</div></parsererror>
+        if (c && c.nodeName == "parsererror") {
+            // second childNode provides error information
+            var msg = c.childNodes[1].textContent;
             // remove file and line information (does not provide useful info here)
             return (msg.match("[^:]*: (.*)")[1]);
-        } else {
-            c = c.firstChild;
-            if (c && c.nodeName == "parsererror") {
-                // second childNodes provides error information
-                var msg = c.childNodes[1].textContent;
-                // remove file and line information (does not provide useful info here)
-                return (msg.match("[^:]*: (.*)")[1]);
-            }
         }
     }
 } // end of LzXMLParser
