@@ -772,15 +772,19 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       options.putBoolean(Compiler.WARN_GLOBAL_ASSIGNMENTS, true);
       visitStatement(init);
       options.putBoolean(Compiler.WARN_GLOBAL_ASSIGNMENTS, false);
-      Object[] code = {new Integer(0),
-                       new ForValue(test),
-                       Instructions.BranchIfFalse.make(breakLabel),
-                       body,
-                       Instructions.LABEL.make(continueLabel),
-                       step,
-                       Instructions.BRANCH.make(0),
-                       Instructions.LABEL.make(breakLabel)};
-      translateControlStructure(node, code);
+      ArrayList code = new ArrayList();
+      code.add(new Integer(0));
+      // LPP-8068: Don't evaluate an empty expression
+      if (! (test instanceof ASTEmptyExpression)) {
+        code.add(new ForValue(test));
+        code.add(Instructions.BranchIfFalse.make(breakLabel));
+      }
+      code.add(body);
+      code.add(Instructions.LABEL.make(continueLabel));
+      code.add(step);
+      code.add(Instructions.BRANCH.make(0));
+      code.add(Instructions.LABEL.make(breakLabel));
+      translateControlStructure(node, code.toArray());
       return node;
     }
     finally {
