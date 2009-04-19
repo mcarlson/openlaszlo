@@ -24,10 +24,17 @@ var LzXMLParser = new Object;
   */
 LzXMLParser.parseXML = function( str, trimwhitespace, nsprefix ){
         var xmlobj = new XML();
+        // always ignore full whitespace nodes
         xmlobj.ignoreWhite = true;
         xmlobj.parseXML( str );
         if (xmlobj.status == 0) {
-            return xmlobj;
+            var fc = xmlobj.firstChild;
+            if (xmlobj.childNodes.length == 1 && fc.nodeType == 1) {
+                return fc;
+            } else {
+                // no single root element or string is simple text
+                return null;
+            }
         } else {
             // error descriptions from flash docs
             var errors = ["A CDATA section was not properly terminated.", 

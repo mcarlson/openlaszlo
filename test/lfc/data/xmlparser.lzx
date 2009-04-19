@@ -3,9 +3,17 @@
   <include href="lzunit" />
 
   <class name="TestXmlParser" extends="TestCase" >
-    <method name="addTests" >this.addTest("testXmlParser");</method>
+    <method name="addTests" >
+        // test LzDataElement.stringToLzData
+        this.addTest("testXmlParser");
+        // test native xml-parser
+        this.addTest("testValidXml");
+        this.addTest("testInvalidXml");
+        // test whitespace handling in parser
+        this.addTest("testWhitespace");
+    </method>
     <method name="testXmlParser" ><![CDATA[
-        Debug.info("debug-warnings are intended for this test");
+        Debug.info("BEGIN :: debug-warnings are intended for this test");
         assertNull(LzDataElement.stringToLzData(null));
         assertNull(LzDataElement.stringToLzData(""));
         assertNull(LzDataElement.stringToLzData("a"));
@@ -48,6 +56,57 @@
             }
             assertNull(LzDataElement.stringToLzData("<?xml version=\"1.0\" ?>"));
             assertNull(LzDataElement.stringToLzData("<?xml version=\"1.0\" ?><?xml version=\"1.0\" ?>"));
+        }
+        Debug.info("END :: debug-warnings are intended for this test");
+    ]]></method>
+    <method name="testValidXml" ><![CDATA[
+        var valid:Array = ["<a/>"];
+        for (var i:int = 0; i < valid.length; ++i) {
+            var s:String = valid[i];
+            try {
+                var parsed:* = LzXMLParser.parseXML(s, true, true);
+                assertNotNull(parsed);
+            } catch (e) {
+                // some runtimes throw exceptions
+                Debug.warn("runtime error %w for '%s'", e, s);
+                assertTrue(false);
+            }
+        }
+    ]]></method>
+    <method name="testInvalidXml"><![CDATA[
+        Debug.info("BEGIN :: debug-infos are intended for this test");
+        var invalid:Array = [null, "", "simple string", "<a/><a/>"];
+        for (var i:int = 0; i < invalid.length; ++i) {
+            var s:String = invalid[i];
+            try {
+                var parsed:* = LzXMLParser.parseXML(s, true, true);
+                assertNull(parsed);
+            } catch (e) {
+                // some runtimes throw exceptions
+                Debug.info("runtime error %w for '%s'", e, s);
+                assertTrue(true);
+            }
+        }
+        Debug.info("END :: debug-infos are intended for this test");
+    ]]></method>
+    <method name="testWhitespace"><![CDATA[
+        for (var i:int = 0; i < 2; ++i) {
+            var s:String = "<a> content </a>";
+            var trimwhite:Boolean = (i != 0);
+            var node:LzDataElement = lz.DataElement.stringToLzData(s, trimwhite);
+            assertNotNull(node);
+            var text:LzDataText = node.getFirstChild() cast LzDataText;
+            assertNotNull(text);
+            assertEquals([" content ", "content"][i], text.data);
+        }
+
+        for (var i:int = 0; i < 2; ++i) {
+            var s:String = "<a>  </a>";
+            var trimwhite:Boolean = (i != 0);
+            var node:LzDataElement = lz.DataElement.stringToLzData(s, trimwhite);
+            assertNotNull(node);
+            // full whitespace text nodes are always ignored
+            assertEquals(0, node.childNodes.length);
         }
     ]]></method>
   </class>

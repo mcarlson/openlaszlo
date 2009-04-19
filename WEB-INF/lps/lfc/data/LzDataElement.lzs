@@ -855,15 +855,17 @@ static function __LZXMLescape (t:*) :* {
   */
 static function stringToLzData (str:String, trimwhitespace:Boolean = false, nsprefix:Boolean = false) :LzDataElement {
     if (str != null && str != "") {
+        var nativexml:*;
         try {
-            var nativexml:* = LzXMLParser.parseXML(str, trimwhitespace, nsprefix);
-            var lfcnode:LzDataElement = LzXMLTranslator.copyXML(nativexml, trimwhitespace, nsprefix);
-            return lfcnode;
+            nativexml = LzXMLParser.parseXML(str, trimwhitespace, nsprefix);
         } catch (e) {
             if ($debug) {
                 Debug.warn("Cannot parse xml-string '%s': %w", str, e);
             }
-            return null;
+        }
+        if (nativexml != null) {
+            var lfcnode:LzDataElement = LzXMLTranslator.copyXML(nativexml, trimwhitespace, nsprefix);
+            return lfcnode;
         }
     }
     return null;

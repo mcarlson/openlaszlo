@@ -11,7 +11,6 @@
 /**
   * @shortdesc Utility for parsing text into native XML DOM object
   */
-
 public class LzXMLParser {
 
 /**
@@ -24,10 +23,17 @@ public class LzXMLParser {
   * @return nativeXMLObject: An XML DOM object native to the runtime platform
   */
 public static function parseXML (str:String, trimwhitespace:Boolean, nsprefix:Boolean) :XML {
+    // if true : trims whitespace and ignores full whitespace nodes
+    // otherwise : leaves whitespace unaffected
     XML.ignoreWhitespace = trimwhitespace;
     var xmlobj:XML = XML(str);
+    // always remove full whitespace nodes
     xmlobj.normalize();
-    return xmlobj;
+    if (xmlobj.nodeKind() == "element") {
+        return xmlobj;
+    } else {
+        return null;
+    }
 }
 
 } // End of LzXMLParser

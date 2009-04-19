@@ -13,7 +13,7 @@
         <datapointer xpath="loadme2:/data" name="dp2" 
                      ondata="parent.dp2ready = true"/>
 
-        <method name="test2">
+        <method name="test2" args="ignore=null">
             if ( ! this.dp2ready ){
                 if ( ! this.t2del ){
                     Debug.write( "test isn't done until async test runs" );
@@ -47,6 +47,7 @@
             assertEquals( 'data' , dp.getNodeName() );
             assertFalse( dp.setXPath  ( dsname + ":/ff"  ) );
             assertTrue( dp.setXPath  ( dsname+ ":/data"  ) );
+            Debug.info("debug-error '[...] matched 2 nodes' is intended");
             assertFalse( dp.setXPath  ( "match2"  ) );
             assertTrue( dp.setXPath  ( dsname+ ":/data" ) );
             assertTrue( dp.setXPath  ( "match2[2]"  ) );
@@ -60,11 +61,12 @@
             assertEquals( canvas.datasets[ dsname ], dp.getDataset( ) );
             dp.setNodeName ("bunny");
             assertEquals( '<bunny x="22"><ee/><ff/><bb>otherbb</bb><bb last="true"/></bunny>' ,  dp.serialize() );
-            //broken;
 
             assertTrue( dp.isValid  ( ) );
+            assertSame( dp.p.parentNode.getLastChild(), dp.p);
             dp.deleteNode();
-            assertFalse( dp.isValid  ( ) );
+            assertTrue( dp.isValid  ( ) );
+            assertSame( dp.p.parentNode.getLastChild(), dp.p);
             assertTrue( dp.setXPath( dsname +":/" ) );
             assertTrue( dp.setXPath( "data/match2" ) );
             var ndp = dp.dupePointer  ();
@@ -117,6 +119,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
