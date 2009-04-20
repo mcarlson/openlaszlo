@@ -179,7 +179,7 @@
         </method> 
     </class>
 
-    <script>
+    <script when="immediate">
     // Function defs for bug 535
         function Foo (name) { this.name = name};
         Foo.prototype.setUp = function () {

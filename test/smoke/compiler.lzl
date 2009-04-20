@@ -123,10 +123,23 @@
              if (query.hasOwnProperty('lzr')) {
                  assertEquals($runtime, query.lzr, "$runtime matches query arg");
              }
+
+             var globalHasOwnProperty = function (name) {
+                if (typeof global.hasOwnProperty == 'function') {
+                    return global.hasOwnProperty(name);
+                } else {
+                    try {
+                        // the global object may not have hasOwnProperty (LPP-8070)
+                        return Object.prototype.hasOwnProperty.call(global, name);
+                    } catch (e) {
+                        return name in global;
+                    }
+                }
+             }
              // Verify runtime copies of compile-time conditionals are consistent.
              for (var runtime = 5; runtime < 10; runtime++) {
                  runtime = 'swf' + runtime;
-                 if (global.hasOwnProperty('$' + runtime)) {
+                 if (globalHasOwnProperty('$' + runtime)) {
                      assertEquals(global['$' + runtime], $runtime == runtime, "Runtime copies of compile-time constants");
                  }
              }
