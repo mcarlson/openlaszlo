@@ -721,7 +721,7 @@ LzSprite.prototype.updateResourceSize = function (skipsend){
         if (mc._yscale == 0) {
             // special case if _yscale is zero, need to make it 100% to make measurement of resource height
             mc._yscale = 100;
-            this.resourcewidth = Math.round(mc._width);
+            this.resourceheight = Math.round(mc._height);
             mc._yscale = 0;
         } else {
             this.resourceheight = Math.round(mc._height/(mc._yscale/100));
