@@ -257,12 +257,14 @@ public dynamic class LzNode extends LzEventable {
             }
             delete iargs[key];
           } else {
-            // NOTE: [2008-03-18 ptw] this is for
-            // back-compatibility: it appears that an
-            // attribute with a setter is expected to be
-            // initially `null` not undefined
-            if (this[key] === void 0) {
-              this[key] = null;
+            // NOTE: [2009-04-21 ptw] An attribute with a setter will
+            // have its initial value installed by the setter, but
+            // we need to create the attribute in the instance for
+            // implicit this to work correctly
+            if ($as3) {
+              // AS3 handles this at compile time
+            } else if (! (key in this)) {
+              this[key] = void 0;
             }
           }
         }
@@ -1054,7 +1056,11 @@ public dynamic class LzNode extends LzEventable {
         // implemented by a setter, so it never clobbers the
         // method... er, unless you set the attribute to a
         // function.  YOW!
-        if (this[a] === void(0)) {this[a] = null;}
+        if ($as3) {
+          // AS3 handles this at compile time
+        } else if (! (a in this)) {
+          this[a] = void 0;
+        }
       } else if (! this[setr]) {
         // TODO: should already be declared, so we should just be
         // able to set it, but that doesn't work if this is a

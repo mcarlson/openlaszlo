@@ -1,7 +1,7 @@
 /**
  * Private class used to create the binder for `LzStyleAttr` bindings.
  *
- * @copyright Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @param lz.node target: The target node
@@ -27,7 +27,14 @@ class LzStyleAttrBinder extends LzEventable {
 
   function bind(ignore=null) {
     var target = this.target;
-    target.setAttribute(this.dest, target[this.source]);
+    var dest = this.dest;
+    var oldvalue = target[dest];
+    var newvalue = target[this.source];
+    // We only propagate the update if it is different, to minimize
+    // event cascades
+    if (newvalue !== oldvalue) {
+      target.setAttribute(dest, newvalue);
+    }
   }
 }
 
