@@ -673,16 +673,43 @@ lz.embed = {
      * @param callbackname:String Method name to receive callback in callbackscope
      */
     attachEventHandler: function(eventscope, eventname, callbackscope, callbackname) {
-        if (! callbackscope || !callbackname || !callbackscope[callbackname]) {
+        if (! (callbackscope && callbackname
+                && typeof callbackscope[callbackname] == 'function')) {
             return;
         }
         var s = eventscope + eventname + callbackscope + callbackname;
+        var h = this._handlers[s];
+        if (h != null) {
+            if (h instanceof Array) {
+                for (var i = h.length - 1; i >= 0; --i) {
+                    if (h[i].$e === eventscope && h[i].$c === callbackscope) {
+                        // handler is already attached
+                        return;
+                    }
+                }
+            } else {
+                if (h.$e === eventscope && h.$c === callbackscope) {
+                    // handler is already attached
+                    return;
+                }
+            }
+        }
         var handler = function() {
             var a = window.event ? [window.event] : arguments;
             callbackscope[callbackname].apply(callbackscope, a);
         }
-        this._handlers[s] = handler;
-        //alert('add '+ s);
+        handler.$e = eventscope;
+        handler.$c = callbackscope;
+        if (h != null) {
+            if (h instanceof Array) {
+                h.push(handler);
+            } else {
+                h = [h, handler];
+            }
+        } else {
+            h = handler;
+        }
+        this._handlers[s] = h;
         if(eventscope['addEventListener']) {
             eventscope.addEventListener(eventname, handler, false);
             return true;
@@ -700,10 +727,27 @@ lz.embed = {
      */
     removeEventHandler: function(eventscope, eventname, callbackscope, callbackname) {
         var s = eventscope + eventname + callbackscope + callbackname;
-        var handler = this._handlers[s];
-        //console.log('remove', this._handlers);
-        this._handlers[s] = null;
-        if (! handler) return;
+        var handler, h = this._handlers[s];
+        if (h != null) {
+            if (h instanceof Array) {
+                for (var i = h.length - 1; i >= 0; --i) {
+                    if (h[i].$e === eventscope && h[i].$c === callbackscope) {
+                        handler = h[i];
+                        h.splice(i, 1);
+                        if (h.length == 0) {
+                            delete this._handlers[s];
+                        }
+                    }
+                }
+            } else if (h.$e === eventscope && h.$c === callbackscope) {
+                handler = h;
+                delete this._handlers[s];
+            }
+        }
+        if (! handler) {
+            // handler not found
+            return;
+        }
         if(eventscope['removeEventListener']) {
             eventscope.removeEventListener(eventname, handler, false);
             return true;
