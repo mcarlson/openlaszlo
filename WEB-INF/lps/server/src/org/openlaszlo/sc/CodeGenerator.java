@@ -1609,9 +1609,10 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     return translateBinaryExpression(node, isReferenced, (ASTOperator)op, a, b);
   }
 
-  SimpleNode translateBinaryExpression(SimpleNode node, boolean isReferenced, ASTOperator op, SimpleNode a, SimpleNode b) {
-    if (ParserConstants.CAST ==  ((ASTOperator)op).getOperator()) {
-      // Approximate a cast b as a
+  SimpleNode translateBinaryExpression(SimpleNode node, boolean isReferenced, ASTOperator operator, SimpleNode a, SimpleNode b) {
+    int op =  operator.getOperator();
+    if (ParserConstants.CAST == op) {
+      // Approximate `a cast b` as `a`
       // TODO: [2008-01-08 ptw] We could typecheck and throw an error
       // in debug mode
       visitExpression(a);
@@ -1619,25 +1620,49 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     }
     visitExpression(a);
     visitExpression(b);
-    if (ParserConstants.IS ==  ((ASTOperator)op).getOperator()) {
-      // Approximate a is b as b['$lzsc$isa'] ? b.$lzsc$isa(a) : (a
-      // instanceof b)
-      ArrayList code = new ArrayList();
-      code.add(Instructions.DUP); // a b b
-      code.add(Instructions.PUSH.make("$lzsc$isa"));
-      code.add(Instructions.GetMember);   // a b b.$lzsc$isa
-      code.add(Instructions.BranchIfTrue.make(1)); // a b
-      code.add(Instructions.InstanceOf);           // (a instanceof b)
-      code.add(Instructions.BRANCH.make(2));
-      code.add(new Integer(1));             // a b
-      code.add(Instructions.PUSH.make(1));  // a b 1
-      code.add(Instructions.SWAP);          // a 1 b
-      code.add(Instructions.PUSH.make("$lzsc$isa")); // a 1 b '$lzsc$isa'
-      code.add(Instructions.CallMethod);             // b.$lzsc$isa(a)
-      code.add(new Integer(2));
-      translateControlStructure(node, code.toArray());
+    if (ParserConstants.IS == op) {
+      // Approximate `a is b` as `b['$lzsc$isa'] ? b.$lzsc$isa(a) : (a
+      // instanceof b)`
+      Object[] code = {
+        Instructions.DUP,                    // a b b
+        Instructions.PUSH.make("$lzsc$isa"), // a b b $lzsc$isa
+        Instructions.GetMember,              // a b b.$lzsc$isa
+        Instructions.BranchIfTrue.make(1),   // a b
+        Instructions.InstanceOf,             // (a instanceof b)
+        Instructions.BRANCH.make(2),
+        new Integer(1),                      // a b
+        Instructions.PUSH.make(1),           // a b 1
+        Instructions.SWAP,                   // a 1 b
+        Instructions.PUSH.make("$lzsc$isa"), // a 1 b '$lzsc$isa'
+        Instructions.CallMethod,             // b.$lzsc$isa(a)
+        new Integer(2)};
+      translateControlStructure(node, code);
+      // NOTE: [2009-04-20 ptw] Too costly to do this for every `in`,
+      // just use this logic for checkUndefinedProperty
+//     } else if (ParserConstants.IN == op) {
+//       // Approximate `a in b` as `b[a] !== void 0 || b.hasOwnProperty(a)`
+//       Object[] code = {
+//         Instructions.SetRegister.make(0),           // a b
+//         Instructions.POP,                           // a
+//         Instructions.DUP,                           // a a
+//         Instructions.PUSH.make(Values.Register(0)), // a a b
+//         Instructions.SWAP,                          // a b a
+//         Instructions.GetMember,                     // a b[a]
+//         Instructions.PUSH.make(Values.Undefined),   // a b[a] undefined
+//         Instructions.StrictEquals,                  // a b[a]===undefined
+//         Instructions.BranchIfTrue.make(1),          // a
+//         Instructions.POP,                           //
+//         Instructions.PUSH.make(Values.True),        // true
+//         Instructions.BRANCH.make(2),                // true
+//         new Integer(1),                             // a
+//         Instructions.PUSH.make(1),                  // a 1
+//         Instructions.PUSH.make(Values.Register(0)), // a 1 b
+//         Instructions.PUSH.make("hasOwnProperty"),   // a 1 b 'hasOwnProperty'
+//         Instructions.CallMethod,                    // b.hasOwnProperty(a)
+//         new Integer(2)};
+//       translateControlStructure(node, code);
     } else {
-      Instruction[] instrs = (Instruction[])BinopInstrs.get(op.getOperator());
+      Instruction[] instrs = (Instruction[])BinopInstrs.get(op);
       for (int i = 0, len = instrs.length; i < len; i++) {
         collector.emit(instrs[i]);
       }
@@ -2366,9 +2391,8 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
         String label = translator.newLabel(node);
         collector.emit(Instructions.DUP);
-        collector.emit(Instructions.TypeOf);
-        collector.push("undefined");
-        collector.emit(Instructions.EQUALS);
+        collector.push(Values.Undefined);
+        collector.emit(Instructions.StrictEquals);
         collector.emit(Instructions.NOT);
         collector.emit(Instructions.BranchIfTrue.make(label));
         report("$reportUndefinedObjectProperty", propertyName);
@@ -2394,20 +2418,43 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       }
     }
 
-    // Emits code to check that an object property is defined.
-    // Expects the object member to be at the top of stack when
-    // called.
+    // Emits code to check that an object property exists
+    // Expects the object and property to get to be at the top of stack when
+    // called, leaves the member value on the stack if it exists, otherwise UNDEF
     protected void checkUndefinedProperty(String propertyName) {
       if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
-        String label = translator.newLabel(node);
-        collector.emit(Instructions.DUP);
-        collector.emit(Instructions.TypeOf);
-        collector.push("undefined");
-        collector.emit(Instructions.EQUALS);
-        collector.emit(Instructions.NOT);
-        collector.emit(Instructions.BranchIfTrue.make(label));
-        report("$reportUndefinedProperty", propertyName);
-        collector.emit(Instructions.LABEL.make(label));
+        Object[] code = {
+          Instructions.SetRegister.make(0),           // o p
+          Instructions.SWAP,                          // p o
+          Instructions.DUP,                           // p o o
+          Instructions.PUSH.make(Values.Register(0)), // p o o p
+          Instructions.GetMember,                     // p o o[p]
+          Instructions.PUSH.make(Values.Undefined),   // p o o[p] undefined
+          Instructions.StrictEquals,                  // p o o[p]===undefined
+          Instructions.BranchIfTrue.make(1),          // p o
+          Instructions.SWAP,                          // o p
+          Instructions.GetMember,                     // o[p]
+          Instructions.BRANCH.make(2),                // o[p]
+          new Integer(1),                             // p o
+          Instructions.PUSH.make(1),                  // p o 1
+          Instructions.SWAP,                          // p 1 o
+          Instructions.PUSH.make("hasOwnProperty"),   // p 1 o 'hasOwnProperty'
+          Instructions.CallMethod,                    // p.hasOwnProperty(p)
+          Instructions.BranchIfTrue.make(3),          //
+          // Cf., report("$reportUndefinedProperty", propertyName)
+          Instructions.PUSH.make(propertyName),       // n
+          Instructions.PUSH.make(node.beginLine),     // n #
+          Instructions.PUSH.make(node.filename),      // n # ""
+          Instructions.PUSH.make(3),                  // n # "" 3
+          Instructions.PUSH.make("$reportUndefinedProperty"),
+          Instructions.CallFunction,                  // ?
+          Instructions.POP,                           //
+          new Integer(3),                             //
+          Instructions.PUSH.make(Values.Undefined),   // undefined
+          new Integer(2)};                            // o[p] || undefined
+        translator.translateControlStructure(node, code);
+      } else {
+        collector.emit(Instructions.GetMember);
       }
     }
 
@@ -2457,9 +2504,8 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
         String label = translator.newLabel(node);
         collector.emit(Instructions.DUP);
-        collector.emit(Instructions.TypeOf);
-        collector.push("undefined");
-        collector.emit(Instructions.EQUALS);
+        collector.push(Values.Undefined);
+        collector.emit(Instructions.StrictEquals);
         collector.emit(Instructions.NOT);
 
         collector.emit(Instructions.BranchIfTrue.make(label));
@@ -2558,9 +2604,10 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     public Reference get(boolean checkUndefined) {
       _pop();
       pushObject(checkUndefined);
-      collector.emit(Instructions.GetMember);
       if (checkUndefined) {
         checkUndefinedProperty(propertyName);
+      } else {
+        collector.emit(Instructions.GetMember);
       }
       return this;
     }
@@ -2593,10 +2640,11 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     public Reference get(boolean checkUndefined) {
       _pop();
       pushObject(checkUndefined);
-      collector.emit(Instructions.GetMember);
       // TODO: [2003-05-14 ptw] checkUndefined
       if (false) {                // (checkUndefined) {
         checkUndefinedProperty("[]");
+      } else {
+        collector.emit(Instructions.GetMember);
       }
       return this;
     }
