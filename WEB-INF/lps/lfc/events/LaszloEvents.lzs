@@ -433,8 +433,12 @@ lz.Delegate = LzDelegate;  // publish
   * @shortdesc The sender in Laszlo's point-to-point event system.
   * @lzxname event
   * @see LzDelegate
+  *
+  * @devnote NOTE: [2009-04-23 ptw]  This really wants to be final, we
+  * don't expect user programs to subclass it; but it is subclassed in
+  * LzIdle to create an auto-registering event and Flex lacks `sealed`.
   */
-public final class LzEvent extends LzDeclaredEventClass {
+public class LzEvent extends LzDeclaredEventClass {
     /** @access private */
     var delegateList:Array = null;
     if ($debug) {

@@ -1,5 +1,5 @@
 /**
-  * LzIdleKernel.js
+  * LzIdleKernel.lzs
   *
   * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
@@ -9,33 +9,57 @@
   * @author Max Carlson &lt;max@openlaszlo.org&gt;
   */
 
-{
-// Avoid idle noise in the profiler
-#pragma "profile=false"
-
 // Receives idle events and sends them into the runtime
 var LzIdleKernel = {
     __callbacks: []
-    ,__intervalID: null
-    ,addCallback: function (scope, funcname) {
-        LzIdleKernel.__callbacks.push([scope, funcname]);
-    }    
-    ,removeCallback: function (scope, funcname) {
-        for (var i = LzIdleKernel.__callbacks.length - 1; i >= 0; i--) {
-            if (LzIdleKernel.__callbacks[i][0] == scope && LzIdleKernel.__callbacks[i][1] == funcname) {
-                return LzIdleKernel.__callbacks.splice(i, 1)        
-            }    
-        }    
-    }    
     ,__update: function (){
-        for (var i = LzIdleKernel.__callbacks.length - 1; i >= 0; i--) {
-            var s = LzIdleKernel.__callbacks[i][0];
-            s[LzIdleKernel.__callbacks[i][1]]( LzTimeKernel.getTimer() );
+        var kernel = LzIdleKernel;
+        var callbacks = kernel.__callbacks;
+        var now = LzTimeKernel.getTimer();
+        // NOTE: [2009-04-23 ptw] We are careful to process from the
+        // end, because a callback may remove itself.
+        for (var i:int = callbacks.length - 2; i >= 0; i -= 2) {
+          var scope = callbacks[i];
+          var funcname = callbacks[i + 1];
+          scope[funcname](now);
         }
     }
+    ,__intervalID: null
+    ,addCallback: function (scope, funcname) {
+        var kernel = LzIdleKernel;
+        var callbacks = kernel.__callbacks;
+        for (var i:int = callbacks.length - 2; i >= 0; i -= 2) {
+          if (callbacks[i] === scope && callbacks[i + 1] == funcname) {
+            return;
+          }
+        }
+        callbacks.push(scope, funcname);
+        if ((callbacks.length > 0) && (kernel.__intervalID == null)) {
+          kernel.__intervalID = setInterval( LzIdleKernel.__update, 1000 / kernel.__fps );
+        }
+    }    
+    ,removeCallback: function (scope, funcname) {
+        var kernel = LzIdleKernel;
+        var callbacks = kernel.__callbacks;
+        // Process from the end on the assumption the most likely
+        // callback to be removed is the one that is running
+        for (var i:int = callbacks.length - 2; i >= 0; i -= 2) {
+          if (callbacks[i] === scope && callbacks[i + 1] == funcname) {
+            var removed:Array = callbacks.splice(i, 2);
+          }
+        }
+        if ((callbacks.length == 0) && (kernel.__intervalID != null)) {
+          clearInterval( kernel.__intervalID );
+          kernel.__intervalID = null;
+        }
+        return removed;
+    }    
+    ,__fps: 30
     ,setFrameRate: function(fps) {
-        if (LzIdleKernel.__intervalID != null) clearInterval(LzIdleKernel.__intervalID);
-        LzIdleKernel.__intervalID = setInterval( LzIdleKernel.__update, 1000 / fps );
+        LzIdleKernel.__fps = fps;
+        if (LzIdleKernel.__intervalID != null) {
+          clearInterval(LzIdleKernel.__intervalID);
+          LzIdleKernel.__intervalID = setInterval( LzIdleKernel.__update, 1000 / fps );
+        }
     }
-}
 }

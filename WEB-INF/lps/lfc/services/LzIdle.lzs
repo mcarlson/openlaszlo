@@ -10,6 +10,49 @@
  */
 
 /**
+ * The idle event is a special event that enables/disables the idle
+ * kernel callback, depending on whether the event is ready or not
+ *
+ * @access private
+ */
+class LzIdleEvent extends LzEvent {
+  var registered:Boolean = false;
+
+  function LzIdleEvent(eventSender:LzEventable, eventName:String, d:* = null) {
+    super(eventSender, eventName, d);
+    if (this.ready && (! this.registered)) {
+      this.registered = true;
+      LzIdleKernel.addCallback( this, 'sendEvent' );
+    }
+  }
+
+  public override function addDelegate (d:LzDelegate) :void {
+    super.addDelegate(d);
+    if (this.ready && (! this.registered)) {
+      this.registered = true;
+      LzIdleKernel.addCallback( this, 'sendEvent' );
+    }
+  }
+
+  public override function removeDelegate (d:LzDelegate = null) :void {
+    super.removeDelegate(d);
+    if ((! this.ready) && this.registered) {
+      LzIdleKernel.removeCallback( this, 'sendEvent' );
+      this.registered = false;
+    }
+  }
+
+  public override function clearDelegates () :void {
+    super.clearDelegates();
+    if ((! this.ready) && this.registered) {
+      LzIdleKernel.removeCallback( this, 'sendEvent' );
+      this.registered = false;
+    }
+  }
+}
+
+
+/**
  * <p><code>lz.Idle</code> is the single instance of the class
  * <code>lz.IdleService</code>.</p>
  *
@@ -40,6 +83,11 @@ public final class LzIdleService extends LzEventable {
     /** @access private */
     var removeCOI :LzDelegate = null;
 
+    /** This is the idle event for the system, sent by this service
+     * @lzxtype event
+     */
+    var onidle :LzEvent;
+
     /**
      * The idle service.  Also available as the global
      * <code>lz.Idle</code>.
@@ -62,15 +110,10 @@ public final class LzIdleService extends LzEventable {
         // Create array on instance, not prototype
         this.coi = new Array;
         this.removeCOI = new LzDelegate( this, "removeCallIdleDelegates" );
-        LzIdleKernel.addCallback( this, '__idleupdate' );
+        this.onidle = new LzIdleEvent(this, 'onidle');
     }
 
-/* Avoid idle noise in the profiler */
-{
-#pragma "profile=false"
-    // Create the singleton
     LzIdleService.LzIdle = new LzIdleService();
-}
 
     /**
      * Calls the given delegate at the next idle event. This can be used
@@ -103,21 +146,6 @@ public final class LzIdleService extends LzEventable {
             // coi queue, only unregister if the queue is empty
             this.removeCOI.unregisterFrom(this.onidle);
             this.regNext = false;
-        }
-    }
-
-    /** This is the idle event for the system, sent by this service
-     * @lzxtype event
-     */
-    var onidle :LzDeclaredEventClass = LzDeclaredEvent;
-
-    /**
-     * __idleupdate is a callback function from LzIdleKernel.
-     * @access private
-     */
-    function __idleupdate (t:*) :void {
-        if (this.onidle.ready) {
-            this.onidle.sendEvent(t);
         }
     }
 

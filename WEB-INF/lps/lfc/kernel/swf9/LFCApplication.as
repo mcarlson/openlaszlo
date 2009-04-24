@@ -58,8 +58,6 @@ public class LFCApplication {
         LFCApplication.stage = LFCApplication._sprite.stage;
         runToplevelDefinitions()
 
-        stage.addEventListener(Event.ENTER_FRAME, LzIdleKernel.__update);
-
         if (Capabilities.playerType == "ActiveX") {
             // workaround for flash player bug FP-1355
             LFCApplication.textfieldTabEnabled = true;
