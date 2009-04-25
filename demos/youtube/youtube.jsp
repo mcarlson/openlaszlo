@@ -236,7 +236,7 @@
             return;
         }
 
-        String url = "http://www.youtube.com/get_video?video_id=" + id + "&t=" + tId;
+        String url = "http://www.youtube.com/get_video?video_id=" + id + "&t=" + tId + "&el=detailpage&ps=&fmt=34";
         if (HIRES) {
             url += "&fmt=6";
         } else if (MP4) {
