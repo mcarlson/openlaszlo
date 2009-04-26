@@ -14,6 +14,7 @@
                     if (classroot.main) {
                         classroot.main.setAttribute('src', parent.txt.getText()); 
                         classroot.main.setAttribute('visible', true); 
+                        classroot.main.callJavascript('setBGColor', null, '#ddddff'); 
                     }
                 </handler>
             </button> 
@@ -21,7 +22,7 @@
                 <handler name="onclick">
                     if (classroot.main) {
                         classroot.main.setAttribute('visible', false);
-                        classroot.main.setAttribute('src', ''); 
+                        classroot.main.setAttribute('src', 'javascript:""'); 
                     }
                 </handler>
             </button> 

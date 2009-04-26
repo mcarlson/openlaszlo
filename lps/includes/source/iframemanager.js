@@ -6,6 +6,9 @@ lz.embed.iframemanager = {
     __counter: 0
     ,__frames: {}
     ,__namebyid: {}
+    ,__loading: {}
+    ,__callqueue: {}
+    ,__calljsqueue: {}
     ,create: function(owner, name, scrollbars, appendto, defaultz, canvasref) {
         //console.log(owner + ', ' + name + ', ' + scrollbars + ', ' + appendto + ', ' + defaultz)
         var id = '__lz' + lz.embed.iframemanager.__counter++;
@@ -43,6 +46,39 @@ lz.embed.iframemanager = {
             this.appendTo(i, appendto);
         }
 
+        if (i) {
+            this.__finishCreate(id, owner, name, scrollbars, appendto, defaultz, canvasref);
+        } else {
+            // init call queue and set timeout to finish startup after the element can be found..
+            this.__callqueue[id] = [ ['__finishCreate', id, owner, name, scrollbars, appendto, defaultz, canvasref] ];
+            setTimeout('lz.embed.iframemanager.__checkiframe("' + id + '")', 10); 
+        }
+        return id + '';
+    }
+    // check to see if the iframe is available yet...
+    ,__checkiframe: function(id) {
+        var iframe = document.getElementById(id);
+        if (iframe) {
+            var queue = lz.embed.iframemanager.__callqueue[id];
+            delete lz.embed.iframemanager.__callqueue[id];
+            lz.embed.iframemanager.__playQueue(queue);
+        } else {
+            // try again in a little while
+            setTimeout('lz.embed.iframemanager.__checkiframe("' + id + '")', 10); 
+        }
+    }
+    // generic function for playing back queues
+    ,__playQueue: function(queue) {
+        var scope = lz.embed.iframemanager;
+        for (var i = 0; i < queue.length; i++) {
+            var callback = queue[i];
+            var methodName = callback.splice(0,1);
+            scope[methodName].apply(scope, callback);
+        }
+    }
+    // needed to break this out into a separate method to deal with IE
+    ,__finishCreate: function(id, owner, name, scrollbars, appendto, defaultz, canvasref) {
+        var i = document.getElementById(id);
         // Find owner div
         if (typeof owner == 'string') {
             i.appcontainer = lz.embed.applications[owner]._getSWFDiv();
@@ -76,7 +112,6 @@ lz.embed.iframemanager = {
             }
         }
         iframe.style.position = 'absolute';
-        return id + '';
     }
     ,appendTo: function(iframe, div) { 
         //console.log('appendTo', iframe, div, iframe.__appended);
@@ -106,6 +141,10 @@ lz.embed.iframemanager = {
         return this.framesColl[id];
     }
     ,setSrc: function(id, s, history) { 
+        if (this.__callqueue[id]) { 
+            this.__callqueue[id].push(['setSrc', id, s, history]);
+            return;
+        }
         //console.log('setSrc', id, s, history)
         if (history) {
             var iframe = lz.embed.iframemanager.getFrame(id);
@@ -117,17 +156,22 @@ lz.embed.iframemanager = {
             if (! iframe) return;
             iframe.location.replace(s);
         }
+        this.__loading[id] = true;
     }
     ,setPosition: function(id, x, y, width, height, visible, z) { 
+        if (this.__callqueue[id]) { 
+            this.__callqueue[id].push(['setPosition', id, x, y, width, height, visible, z]);
+            return;
+        }
         //Debug.write('setPosition', id);
         //console.log('setPosition', id, x, y, width, height, visible)
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
         var pos = lz.embed.getAbsolutePosition(iframe.appcontainer);
-        if (x != null) iframe.style.left = (x + pos.x) + 'px';
-        if (y != null) iframe.style.top = (y + pos.y) + 'px';
-        if (width != null) iframe.style.width = width + 'px';
-        if (height != null) iframe.style.height = height + 'px';
+        if (x != null && ! isNaN(x)) iframe.style.left = (x + pos.x) + 'px';
+        if (y != null && ! isNaN(y)) iframe.style.top = (y + pos.y) + 'px';
+        if (width != null && ! isNaN(width)) iframe.style.width = width + 'px';
+        if (height != null && ! isNaN(height)) iframe.style.height = height + 'px';
         if (visible != null) {
             if (typeof visible == 'string') {
                 visible = visible == 'true';
@@ -137,6 +181,10 @@ lz.embed.iframemanager = {
         if (z != null) this.setZ(id, z + iframe._defaultz);
     }
     ,setVisible: function(id, v) { 
+        if (this.__callqueue[id]) { 
+            this.__callqueue[id].push(['setVisible', id, v]);
+            return;
+        }
         if (typeof v == 'string') {
             v = v == 'true';
         }
@@ -147,6 +195,10 @@ lz.embed.iframemanager = {
         iframe.style.display = v ? 'block' : 'none';
     }
     ,bringToFront: function(id) { 
+        if (this.__callqueue[id]) { 
+            this.__callqueue[id].push(['bringToFront', id]);
+            return;
+        }
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
         iframe._defaultz = 100000;
@@ -154,6 +206,10 @@ lz.embed.iframemanager = {
         lz.embed.iframemanager.__topiframe = id;
     }
     ,sendToBack: function(id) { 
+        if (this.__callqueue[id]) { 
+            this.__callqueue[id].push(['sendToBack', id]);
+            return;
+        }
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
         iframe._defaultz = 99900;
@@ -170,6 +226,11 @@ lz.embed.iframemanager = {
             //console.log('calling method', 'lz.embed.iframemanager.__gotload(\'' + id + '\')');
             lz.embed[iframe.owner].callMethod('lz.embed.iframemanager.__gotload(\'' + id + '\')');
         }
+        this.__loading[id] = false;
+        if (this.__calljsqueue[id]) {
+            this.__playQueue(this.__calljsqueue[id]);
+            delete this.__calljsqueue[id];
+        }
     }
     ,__refresh: function() { 
         // called in IE for onfocus event in swf - see LPP-5482 
@@ -182,12 +243,20 @@ lz.embed.iframemanager = {
         }
     }
     ,setZ: function(id, z) { 
+        if (this.__callqueue[id]) { 
+            this.__callqueue[id].push(['setZ', id, z]);
+            return;
+        }
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
         //console.log('setZ', z, iframe); 
         iframe.style.zIndex = z;
     }
     ,scrollBy: function(id, x, y) { 
+        if (this.__callqueue[id]) { 
+            this.__callqueue[id].push(['scrollBy', id, x, y]);
+            return;
+        }
         var id = lz.embed.iframemanager.__namebyid[id];
         var iframe = window.frames[id];
         if (! iframe) return;
@@ -195,6 +264,10 @@ lz.embed.iframemanager = {
         iframe.scrollBy(x, y);
     }
     ,__destroy: function(id) { 
+        if (this.__callqueue[id]) { 
+            this.__callqueue[id].push(['__destroy', id]);
+            return;
+        }
         var iframe = lz.embed.iframemanager.__frames[id];
         if (iframe) {
             iframe.owner = null;
@@ -205,6 +278,18 @@ lz.embed.iframemanager = {
         }
     }
     ,callJavascript: function(id, methodName, callbackDel, args) {
+        if (this.__callqueue[id]) { 
+            this.__callqueue[id].push(['callJavascript', id, methodName, callbackDel, args]);
+            return;
+        }
+        if (this.__loading[id]) {
+            // queue call for later
+            if (! this.__calljsqueue[id]) {
+                this.__calljsqueue[id] = [];
+            }
+            this.__calljsqueue[id].push(['callJavascript', id, methodName, callbackDel, args]);
+            return;
+        }
         var iframe = lz.embed.iframemanager.getFrameWindow(id);
         if (!args) args = [];
         var method = iframe.eval(methodName);
