@@ -378,16 +378,14 @@ function __LZupdateCO () :void {
 /** @access private */
 function $lzc$set_attributes (attrs:Object) :void {
     var a:Object = {};
-    // Enforce string coercion. This is consistent with other DOM's which
-    // only permit string attributes.
     for (var k:String in attrs) {
         if ($debug) {
-            var val = attrs[k];
+            var val:* = attrs[k];
             if (typeof val != 'string') {
-                Debug.warn('LzDataElement is coercing a non-string value %w for the attribute %w', k, val);
+                Debug.info('In a future release, lz.DataElement will coerce the non-string value %w to a String for the attribute %w.  You may safely ignore this as long as you expect to get a String value back.', val, k);
             }
         }
-        a[ k ] = String(attrs[ k ]);
+        a[ k ] = attrs[ k ];
     }
 
     this.attributes = a;
