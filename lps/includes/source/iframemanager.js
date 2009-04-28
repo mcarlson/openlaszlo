@@ -81,9 +81,8 @@ lz.embed.iframemanager = {
         var i = document.getElementById(id);
         // Find owner div
         if (typeof owner == 'string') {
+            // only required for swf - dhtml iframes are positioned by being attached into the div heirarchy...
             i.appcontainer = lz.embed.applications[owner]._getSWFDiv();
-        } else {
-            i.appcontainer = canvasref.sprite.__LZdiv;
         }
 
         i.owner = owner;
@@ -167,7 +166,11 @@ lz.embed.iframemanager = {
         //console.log('setPosition', id, x, y, width, height, visible)
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
-        var pos = lz.embed.getAbsolutePosition(iframe.appcontainer);
+        if (ifame.appcontainer) {
+            var pos = lz.embed.getAbsolutePosition(iframe.appcontainer);
+        } else {
+            var pos = {x:0,y:0};
+        }
         if (x != null && ! isNaN(x)) iframe.style.left = (x + pos.x) + 'px';
         if (y != null && ! isNaN(y)) iframe.style.top = (y + pos.y) + 'px';
         if (width != null && ! isNaN(width)) iframe.style.width = width + 'px';
