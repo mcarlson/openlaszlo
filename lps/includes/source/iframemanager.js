@@ -166,7 +166,7 @@ lz.embed.iframemanager = {
         //console.log('setPosition', id, x, y, width, height, visible)
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
-        if (ifame.appcontainer) {
+        if (iframe.appcontainer) {
             var pos = lz.embed.getAbsolutePosition(iframe.appcontainer);
         } else {
             var pos = {x:0,y:0};
