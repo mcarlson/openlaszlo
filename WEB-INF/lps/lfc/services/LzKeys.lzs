@@ -432,6 +432,13 @@ public final class LzKeysService extends LzEventable {
         LzKeyboardKernel.gotLastFocus();
     }
 
+    /** Called to set/unset global focus trapping
+     * @access private
+     */
+    function setGlobalFocusTrap(istrapped:Boolean) :void {
+        LzKeyboardKernel.setGlobalFocusTrap(istrapped);
+    }
+
     /**
      * A hash that maps key names to key codes.
      * @type Object

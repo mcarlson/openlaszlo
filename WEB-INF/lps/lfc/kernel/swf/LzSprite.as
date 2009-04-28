@@ -71,6 +71,7 @@ LzSprite.prototype.capabilities = {
     ,setclipboard: true
     ,proxypolicy: true
     ,linescrolling: true
+    ,disableglobalfocustrap: false
 }
 
 /** Turns accessibility on/off if accessible == true and a screen reader is active 

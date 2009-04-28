@@ -183,7 +183,7 @@ class LzDHTMLDebugService extends LzDebugService {
     debugdiv.onmouseover = function (e) { 
         if (!e) e = window.event;
         e.cancelBubble = true;
-        LzKeyboardKernel.setKeyboardControl(false); 
+        LzKeyboardKernel.setKeyboardControl(false, true); 
         return false;
     }
     var y = canvas.height - 230;

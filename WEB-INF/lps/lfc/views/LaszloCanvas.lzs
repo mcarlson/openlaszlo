@@ -340,6 +340,14 @@ dynamic class LzCanvas extends LzView {
                 this.height = 400;
             }
         }
+        if (args.focustrap) {
+            if (capabilities.disableglobalfocustrap != true) {
+                if ($debug) {
+                    Debug.warn('This runtime does not support disabling global focus trapping');
+                }
+                delete args.focustrap;
+            }
+        }
 
         if ($as3) {
             // Set the canvas width/height to good initial values.
@@ -552,6 +560,14 @@ override function $lzc$set_resource( v ) {
     }
 }
 
+/**
+  * The canvas setResource function is redefined to throw an error when
+  * called.
+  * @access private
+  */
+function $lzc$set_focustrap(istrapped:Boolean) {
+    lz.Keys.setGlobalFocusTrap(istrapped);
+}
 
 /**
   * @access private

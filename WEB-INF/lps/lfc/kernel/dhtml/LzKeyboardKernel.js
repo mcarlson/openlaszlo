@@ -1,7 +1,7 @@
 /**
   * LzKeyboardKernel.js
   *
-  * @copyright Copyright 2007,2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -82,11 +82,15 @@ var LzKeyboardKernel = {
     ,__callback: null
     ,__scope: null
     ,__cancelKeys: true
+    ,__lockFocus: null
     ,setCallback: function (scope, keyboardcallback) {
         this.__scope = scope;
         this.__callback = keyboardcallback;
     }    
-    ,setKeyboardControl: function (dhtmlKeyboardControl) {
+    ,setKeyboardControl: function (dhtmlKeyboardControl, force) {
+        if (! force && LzKeyboardKernel.__lockFocus) {
+            dhtmlKeyboardControl = true;
+        }
         var handler = null;
         var setcontrol = (lz && lz.embed && lz.embed.options && lz.embed.options.cancelkeyboardcontrol != true) || true;
         if (setcontrol && dhtmlKeyboardControl) {
@@ -111,5 +115,9 @@ var LzKeyboardKernel = {
     ,gotLastFocus: function () {
         //console.log('gotLastFocus', canvas.sprite.__LZdiv.mouseisover);
         if (! canvas.sprite.__LZdiv.mouseisover) LzKeyboardKernel.setKeyboardControl(false);
+    }
+    // Called to turn on/off restriction of focus to this application
+    ,setGlobalFocusTrap: function (istrapped) {
+        LzKeyboardKernel.__lockFocus = istrapped;
     }
 }

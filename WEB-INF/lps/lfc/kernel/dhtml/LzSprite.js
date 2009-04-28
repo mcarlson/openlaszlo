@@ -495,6 +495,7 @@ LzSprite.prototype.capabilities = {
     ,setclipboard: false
     ,proxypolicy: false
     ,linescrolling: false
+    ,disableglobalfocustrap: true
 }
 
 LzSprite.prototype.__updateQuirks = function () {

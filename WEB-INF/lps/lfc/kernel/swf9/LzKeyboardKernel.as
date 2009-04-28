@@ -52,4 +52,7 @@ class LzKeyboardKernel {
     // Called by lz.Keys when the last focusable element was reached.
     static function gotLastFocus() :void {
     }
+    // Called to turn on/off restriction of focus to this application
+    static function setGlobalFocusTrap(ignore) :void {
+    }
 } // End of LzKeyboardKernel
