@@ -137,33 +137,31 @@ class LzXMLLoader extends LzLoader {
     }
 
     /**
-      * Recursively copy a Flash XML(Node) tree into a LzDataElement
-      * tree. Used by LzDataNode.stringToLzData
-      * @param boolean trimwhitespace: trim whitespace from start and end of text nodes
-      * @param boolean nsprefix: preserve namespace prefixes on node names and attribute names
-      * @access private
+      * Translate a single Flash XML(Node) into a LzDataNode.
+      * This function is inlined in copyFlashXML
       */
-    function copyFlashXML (node, trimwhitespace, nsprefix) {
-        var lfcnode = null;
-        // text node?
+    function copyFlashNode (node, trimwhitespace, nsprefix) {
         if (node.nodeType == 3) {
             var nv = node.nodeValue;
             if (trimwhitespace == true) {
                 nv = LzDataElement.trim(nv);
             }
-            lfcnode = new LzDataText(nv);
+            return new LzDataText(nv);
         } else {
+           var nname = nsprefix ? node.nodeName : node.localName;
+
             if (! nsprefix) {
                 // slow but sure way to copy attributes
                 var nattrs = node.attributes;
                 var cattrs = {};
                 var attrlist = [];
                 for (var key in nattrs) {
-                    var nkey = key;
                     // strip namespace prefixes
                     var colpos = key.indexOf(':');
                     if (colpos >= 0) {
-                        nkey = key.substring(colpos + 1);
+                        var nkey = key.substring(colpos + 1);
+                    } else {
+                        var nkey = key;
                     }
                     //cattrs[nkey] = nattrs[key];
                     attrlist.push(nkey, nattrs[key]);
@@ -183,18 +181,117 @@ class LzXMLLoader extends LzLoader {
                 ASSetPropFlags(cattrs, ['__proto__', 'constructor'], 1, 7);
             }
 
-            var nname = nsprefix ? node.nodeName : node.localName;
-            lfcnode = new LzDataElement(nname, cattrs);
-            var children = node.childNodes;
-            var newchildren = [];
-            for (var i  = 0; i < children.length; i++ ) {
-                var child = children[i];
-                var lfcchild = LzXMLLoader.prototype.copyFlashXML(child, trimwhitespace, nsprefix);
-                newchildren[i] = lfcchild;
-            }
-            lfcnode.$lzc$set_childNodes(newchildren);
+            var lfcnode = new LzDataElement(nname);
+            // avoid copy of cattrs (see LzDataElement ctor)
+            lfcnode.attributes = cattrs;
+            return lfcnode;
         }
-        return lfcnode;
+    }
+
+    /**
+      * Copy a Flash XML(Node) tree into a LzDataElement tree. Used by LzDataElement.stringToLzData
+      *
+      * @param boolean trimwhitespace: trim whitespace from start and end of text nodes
+      * @param boolean nsprefix: preserve namespace prefixes on node names and attribute names
+      * @access private
+      */
+    function copyFlashXML (xmlnode, trimwhitespace, nsprefix) {
+        // create a new, empty ownerDocument (LPP-7537)
+        var document = new LzDataElement(null);
+        // handle this separately so you don't need to worry about the
+        // case when xmlnode has got siblings
+        if (! xmlnode.firstChild) {
+            return document.appendChild(this.copyFlashNode(xmlnode, trimwhitespace, nsprefix));
+        }
+        var lfcparent = document;
+        var next, node = xmlnode;
+        // traverse DOM tree
+        for (;;) {
+            if (node.nodeType == 3) {
+                // text node (3: TEXT_NODE)
+
+                // this is inlined:
+                // var lfcnode = this.copyFlashNode(node);
+                // lfcparent.appendChild(lfcnode);
+
+                var nv = node.nodeValue;
+                if (trimwhitespace == true) {
+                    nv = LzDataElement.trim(nv);
+                }
+
+                var lfcnode = new LzDataText(nv);
+                // inlined lfcparent.appendChild(lfcnode)
+                lfcnode.parentNode = lfcparent;
+                lfcnode.ownerDocument = document;
+                lfcnode.__LZo = (lfcparent.childNodes.push(lfcnode) - 1);
+            } else {
+                // element node (1: ELEMENT_NODE)
+
+                // this is inlined:
+                // var lfcnode = this.copyFlashNode(node);
+                // lfcparent.appendChild(lfcnode);
+
+                var nname = nsprefix ? node.nodeName : node.localName;
+
+                if (! nsprefix) {
+                    // slow but sure way to copy attributes
+                    var nattrs = node.attributes;
+                    var cattrs = {};
+                    var attrlist = [];
+                    for (var key in nattrs) {
+                        // strip namespace prefixes
+                        var colpos = key.indexOf(':');
+                        if (colpos >= 0) {
+                            var nkey = key.substring(colpos + 1);
+                        } else {
+                            var nkey = key;
+                        }
+                        //cattrs[nkey] = nattrs[key];
+                        attrlist.push(nkey, nattrs[key]);
+                    }
+
+                    // Flash iterates over an object in reversed insertion order.
+                    // But as we want to preserve the original xml-attribute order,
+                    // we need to insert the attributes also in reversed order.
+                    for (var i = attrlist.length - 1; i >= 0; i -= 2) {
+                        cattrs[attrlist[i - 1]] = attrlist[i];
+                    }
+                } else {
+                    // this is the fast path
+                    var cattrs = node.attributes;
+                    cattrs.__proto__ = Object.prototype;
+                    cattrs.constructor = Object;
+                    ASSetPropFlags(cattrs, ['__proto__', 'constructor'], 1, 7);
+                }
+
+                var lfcnode = new LzDataElement(nname);
+                // avoid copy of cattrs (see LzDataElement ctor)
+                lfcnode.attributes = cattrs;
+                // inlined lfcparent.appendChild(lfcnode)
+                lfcnode.parentNode = lfcparent;
+                lfcnode.ownerDocument = document;
+                lfcnode.__LZo = (lfcparent.childNodes.push(lfcnode) - 1);
+
+                // traverse down first
+                if ((next = node.firstChild)) {
+                    // this node is the new context
+                    lfcparent = lfcnode;
+                    node = next;
+                    continue;
+                }
+            }
+            // select next node
+            while (! (next = node.nextSibling)) {
+                // no nextSibling, go back in DOM
+                node = node.parentNode;
+                lfcparent = lfcparent.parentNode;
+                if (node === xmlnode) {
+                    // reached top element, copy finished
+                    return document.childNodes[0];
+                }
+            }
+            node = next;
+        }
     }
 
     /**
@@ -335,16 +432,13 @@ class LzXMLLoader extends LzLoader {
                             nodeType: LzDataElement.ELEMENT_NODE,
                             nodeName: nodename,
                             attributes: cattrs,
+                            childNodes: [],
                             ownerDocument: lfcparent.ownerDocument,
                             parentNode: lfcparent};
             }
 
             // Add to the parent's childnodes.
-            if (lfcparent.childNodes == null) {
-                lfcparent.childNodes = [lfcnode];
-            } else {
-                lfcparent.childNodes.push(lfcnode);
-            }
+            lfcparent.childNodes.push(lfcnode);
 
             // queue the XMLNode children for processing
             var children = node.childNodes;

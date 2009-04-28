@@ -13,11 +13,12 @@
   */
 var LzXMLTranslator = new Object;
 
+/**
+  * LzXMLTranslator interface
+  */
 LzXMLTranslator.copyXML = function (xmlobj, trimwhitespace, nsprefix) {
     var lfcnode = LzXMLLoader.prototype.copyFlashXML(xmlobj, trimwhitespace, nsprefix);
     if (lfcnode instanceof LzDataElement) {
-        // create a new, empty ownerDocument (LPP-7537)
-        new LzDataElement(null, {}, [lfcnode]);
         return lfcnode;
     } else {
         return null;
