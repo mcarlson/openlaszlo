@@ -846,13 +846,16 @@
             return;
         }
         if ($as3) {
-            // TODO: why aren't we already connected?
-            //       what if we are already connected?
-            //Debug.warn('Must connect before creating stream', this._nc, this._srcurl, this._nc.connected);
-            this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatusAS3);
-            this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
-            this._creationCallback = {methodName: callbackName, args: callbackArgs};
-            setTimeout(this._doconnect, 1);
+            if(this._nc.connected) {
+                _AS3createStream();
+            } else {
+                // TODO: why aren't we already connected?
+                //Debug.warn('Must connect before creating stream', this._nc, this._srcurl, this._nc.connected);
+                this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatusAS3);
+                this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
+                this._creationCallback = {methodName: callbackName, args: callbackArgs};
+                setTimeout(this._doconnect, 1);
+            }
         } else {
             this._flashstream = new NetStream(this._nc);
             this._flashstreamSetup( this._flashstream  );
@@ -887,18 +890,23 @@
     <method name="_onNetStatusAS3" args="evt"> <![CDATA[
         if ($debug && this.debug) Debug.info("mediastream _onNetStatusAS3() " + evt.info.code);
         if (evt && evt.info && evt.info.code == 'NetConnection.Connect.Success') {
-            var fs = new NetStream(this._nc);
-            this._flashstreamSetup(fs);
-            //Debug.write("...calling %w with args %w",
-            //            this._creationCallback.methodName, this._creationCallback.args); 
-            if (this._creationCallback) {
-                this[this._creationCallback.methodName].apply(this, this._creationCallback.args);
-            }
+            _AS3createStream();
         } else {
             if (evt && evt.info && evt.info.code) this._onStatus(evt.info);
         }
     ]]>
     </method> 
+    
+    <!--- Method to create a netstream.  Called after the NetConnection is 
+          connected.
+          @keywords private -->
+    <method name="_AS3createStream"><![CDATA[
+        var fs = new NetStream(this._nc);
+        this._flashstreamSetup(fs);
+        if (this._creationCallback) {
+            this[this._creationCallback.methodName].apply(this, this._creationCallback.args);
+        }
+    ]]></method>
 
     <!--- setup flash callbacks and other properties for the flash NetStream
           object, also set _flashstream internal <attribute name="
