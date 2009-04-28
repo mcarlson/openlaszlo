@@ -342,9 +342,7 @@ dynamic class LzCanvas extends LzView {
         }
         if (args.focustrap) {
             if (capabilities.disableglobalfocustrap != true) {
-                if ($debug) {
-                    Debug.warn('This runtime does not support disabling global focus trapping');
-                }
+                // ignore for runtimes that already have a global focus trap
                 delete args.focustrap;
             }
         }
