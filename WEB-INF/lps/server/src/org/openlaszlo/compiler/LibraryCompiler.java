@@ -44,9 +44,9 @@ class LibraryCompiler extends ToplevelCompiler {
         try {
             File key = file.getCanonicalFile();
             if (!visited.contains(key)) {
-            	if (mLogger.isDebugEnabled()) {
-            		mLogger.debug("Resolving: " + key);
-            	}
+                if (mLogger.isDebugEnabled()) {
+                        mLogger.debug("Resolving: " + key);
+                }
                 visited.add(key);
 
                 // If we're compiling a loadable library, add this to
@@ -83,9 +83,12 @@ class LibraryCompiler extends ToplevelCompiler {
                       try {
                           FileInputStream fis = new FileInputStream(serializedFile);
                           ObjectInputStream in = new ObjectInputStream(fis);
-                          root = (Element)in.readObject();
+                          ElementWithLocationInfo serializedRoot = (ElementWithLocationInfo)in.readObject();
                           in.close();
-                          keepParsedLibraries = null;
+                          if (key.toString().equals(serializedRoot.locator.pathname)) {
+                              root = serializedRoot;
+                              keepParsedLibraries = null;
+                          }
                       }
                       catch(IOException ex) {
                           if (mLogger.isDebugEnabled()) {
@@ -104,7 +107,7 @@ class LibraryCompiler extends ToplevelCompiler {
                   }
                   env.parsedLibraryCache.put(file, root);
                   if (mLogger.isDebugEnabled()) {
-                	  mLogger.debug("" + file + ": " + root + " attributes: " + root.getAttributes());
+                          mLogger.debug("" + file + ": " + root + " attributes: " + root.getAttributes());
                   }
                   // Look for and add any includes from a binary library
                   String includesAttr = root.getAttributeValue(INCLUDES_ANAME);
@@ -125,7 +128,7 @@ class LibraryCompiler extends ToplevelCompiler {
                   }
                   if (keepParsedLibraries != null) {
                       try {
-                   	      FileOutputStream fos = new FileOutputStream(serializedFile);
+                              FileOutputStream fos = new FileOutputStream(serializedFile);
                           ObjectOutputStream out = new ObjectOutputStream(fos);
                           out.writeObject(root);
                           out.close();
