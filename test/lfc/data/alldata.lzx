@@ -9,6 +9,7 @@
     <include href="datapointerServerless.lzx"/>
     <include href="datapointerdependencies.lzx"/>
     <include href="datapath.lzx"/>
+    <include href="userdata.lzx"/>
     <include href="specialop.lzx"/>
     <include href="xpspace.lzx"/>
     <include href="datadollarpath.lzx"/>
@@ -40,6 +41,7 @@
         <TestDPDepend/>
         <TestDatapath/>
         <TestDatapathSpecialOp/>
+        <TestUserData/>
         <TestXPParse/>
         <TestPathBinding/>
         <TestNamespace/>

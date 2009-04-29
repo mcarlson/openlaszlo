@@ -1,0 +1,71 @@
+<library>
+  <!-- test DOM 3 UserData API -->
+    <include href="lzunit/lzunit.lzx" />
+
+    <dataset name="udata1" src="testdata.xml"/>
+    <dataset name="udata2" src="http:testdata.xml" type="http" request="true"/>
+
+    <class name="TestUserData" extends="TestCase">
+
+      <!-- to collect data from handler callbacks -->
+      <attribute name="callbacks" value="{}"/>
+
+        <method name="test1">
+            assertTrue( true );
+
+            // Set and retrieve user data
+
+            var node1 = udata1.getFirstChild();
+            var val1 = [1,2,3,4,5];
+            var me = this;
+            var myhandler = {handle: function (op, key, data, src, dst) {
+                                      // record that this handler has been called, and with what args
+                                      me.callbacks[op] = [key, data, src, dst];
+                                      }
+                             };
+        
+            node1.setUserData('key1', val1, myhandler);
+                   
+            assertEquals(val1, node1.getUserData('key1'), 'getUserData key1');
+
+
+            var node2 = node1.childNodes[0];
+            var val2 = {a: 259};
+
+            var prev =  node2.setUserData('key2', val2, myhandler);
+            assertEquals(null, prev, 'first setUserData returns prev value null');
+
+            var val3 = {b: 17};
+            prev = node2.setUserData('key2', val3, myhandler);
+            assertEquals(val2, prev, 'second setUserData returns prev value');
+
+            assertEquals(val3, node2.getUserData('key2'), 'node2 getUserData key2');
+
+            /* Not Yet implemented 
+
+            // test callback handler on clone
+            node1.cloneNode();
+            assertEquals('key1', this.callbacks[LzDataElement.NODE_CLONED][0], 'data on cloned node');
+            // need other tests for handler callbacks on 
+
+            node2.setNodeName('foobar');
+            assertEquals('key2', this.callbacks[LzDataElement.NODE_RENAMED][0], "data on renamed node");
+
+            // Still need tests to see if handlers get run for these operations
+            //NODE_IMPORTED ==>
+            //NODE_DELETED ==> removeChild?
+            //NODE_ADOPTED ==> appendChild, replaceChild ?
+            */
+
+
+        </method>
+        <method name="addTests"> 
+            this.addTest("test1");
+        </method> 
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
