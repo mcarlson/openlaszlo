@@ -2276,6 +2276,7 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
             f(obj[i]);
         }
         LzTextSprite.prototype._sizedomcache = {};
+        LzTextSprite.prototype._sizecache = {};
 
         var obj = LzSprite.prototype.__sprites;
         for (var i in obj) {

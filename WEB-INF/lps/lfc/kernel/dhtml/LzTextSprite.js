@@ -88,6 +88,7 @@ LzTextSprite.prototype.setFontSize = function (fsize) {
         if (this.quirks['emulate_flash_font_metrics']) {
           var lh = Math.round(fsize * 1.2);
           this.scrolldiv.style.lineHeight = this.CSSDimension(lh);
+          this._lineHeight = lh;
         }
         this.__updatefieldsize();
     }
@@ -293,6 +294,8 @@ LzTextSprite.prototype.getTextWidth = function () {
 }
 
 LzTextSprite.prototype.getLineHeight = function () {
+  // If the font size has been set, we already know the line height 
+  if (this._lineHeight) return this._lineHeight;
   // Line height does _not_ include padding
   ////
   // NOTE: Quick cache check, inlined from getTextDimension
@@ -380,6 +383,10 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   var sds = scrolldiv.style;
   switch (dimension) {
     case 'lineheight':
+      // no need to measure if we've set the lineHeight directly...
+      if (this._lineHeight) {
+        return this._lineHeight;
+      }
       string = 'Yq_gy"9;';
       break;
     case 'height':
@@ -390,7 +397,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
       break;
     default:
       if ($debug) {
-        Debug.error("Unknown dimesion: %w", dimension);
+        Debug.error("Unknown dimension: %w", dimension);
       }
   }
   ////
@@ -451,6 +458,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
     cv = this._cachevalue = _sizecache[cacheFullKey] = {};
   }
   if (! root) {
+    // create container for size cache
     root = document.createElement('div');
     lz.embed.__setAttr(root, 'id', 'lzTextSizeCache');
     lz.embed.__setAttr(root, 'style', 'top: 4000px;');
@@ -461,45 +469,37 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // to conditionalize setting the text into the node (because there
   // seems to be no generic method for setting the content of nodes?)
   var tagname = 'div';
-  if (this.quirks['text_measurement_use_insertadjacenthtml']) {
-    var html = '<' + tagname + ' id="testSpan' + ltsp._sizecache.counter + '"';
-    html += ' class="' + className + '"';
-    html += ' style="' + style + '">';
-    html += string;
-    html += '</' + tagname + '>';
-    root.insertAdjacentHTML('beforeEnd', html);
-    var mdiv = document.all['testSpan' + ltsp._sizecache.counter];
+  mdivKey = className + "/" + style + 'div';
+  var mdiv = _sizecache[mdivKey];
+  if (mdiv) {
+    // reuse existing div
+    this.__setTextContent(mdiv, scrolldiv.tagName, string);
+    //console.log('reused', mdivKey, string);
   } else {
-    var mdiv = document.createElement(tagname)
-    // NOTE: [2009-03-25 ptw] setAttribute needs the real attribute
-    // name, i.e., `class` not `classname`!
-    lz.embed.__setAttr(mdiv, 'class', className);
-    lz.embed.__setAttr(mdiv, 'style', style);
-    // NOTE: [2009-03-29 ptw] For now, DHTML does not support HTML in
-    // input text, so we must measure accordingly
-    switch (scrolldiv.tagName) {
-      case 'DIV':
-        mdiv.innerHTML = string;
-        break;
-      case 'INPUT': case 'TEXTAREA':
-        // IE only supports innerText, FF only supports textContent.
-        if (this.quirks['text_content_use_inner_text']) {
-          mdiv.innerText = string;
-        } else {
-          mdiv.textContent = string;
-        }
-        break;
-      default:
-        if ($debug) {
-          Debug.error("Unknown tagname: %w", tagname);
-        }
-    }
-    root.appendChild(mdiv);
-  } 
-  if (this.quirks.ie_leak_prevention) {
-    ltsp._sizedomcache['lzdiv~~~' + cacheFullKey] = mdiv;
+    // create new div
+    if (this.quirks['text_measurement_use_insertadjacenthtml']) {
+      var html = '<' + tagname + ' id="testSpan' + ltsp._sizecache.counter + '"';
+      html += ' class="' + className + '"';
+      html += ' style="' + style + '">';
+      html += string;
+      html += '</' + tagname + '>';
+      root.insertAdjacentHTML('beforeEnd', html);
+      var mdiv = document.all['testSpan' + ltsp._sizecache.counter];
+      if (this.quirks.ie_leak_prevention) {
+        ltsp._sizedomcache['lzdiv~~~' + cacheFullKey] = mdiv;
+      }
+    } else {
+      var mdiv = document.createElement(tagname)
+      // NOTE: [2009-03-25 ptw] setAttribute needs the real attribute
+      // name, i.e., `class` not `classname`!
+      lz.embed.__setAttr(mdiv, 'class', className);
+      lz.embed.__setAttr(mdiv, 'style', style);
+      this.__setTextContent(mdiv, scrolldiv.tagName, string);
+      root.appendChild(mdiv);
+    } 
+    // store measurement div to reuse later...
+    _sizecache[mdivKey] = mdiv;
   }
-  // inline to measure width
   mdiv.style.display = 'inline';
   // NOTE: clientHeight for both height and lineheight
   cv[dimension] = (dimension == 'width') ? mdiv.clientWidth : mdiv.clientHeight;
@@ -507,6 +507,28 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   LzTextSprite.prototype._sizecache.counter++;
 //   Debug.debug("%w %w %d", this, cacheFullKey, lineHeight);
   return cv[dimension];
+}
+
+LzTextSprite.prototype.__setTextContent = function(mdiv, tagname, string) {
+  // NOTE: [2009-03-29 ptw] For now, DHTML does not support HTML in
+  // input text, so we must measure accordingly
+  switch (tagname) {
+    case 'DIV':
+      mdiv.innerHTML = string;
+      break;
+    case 'INPUT': case 'TEXTAREA':
+      // IE only supports innerText, FF only supports textContent.
+      if (this.quirks['text_content_use_inner_text']) {
+        mdiv.innerText = string;
+      } else {
+        mdiv.textContent = string;
+      }
+      break;
+    default:
+      if ($debug) {
+        Debug.error("Unknown tagname: %w", tagname);
+      }
+  }
 }
 
 LzTextSprite.prototype.setSelectable = function (s) {
