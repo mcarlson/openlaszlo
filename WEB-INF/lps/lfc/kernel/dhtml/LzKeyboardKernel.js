@@ -119,5 +119,12 @@ var LzKeyboardKernel = {
     // Called to turn on/off restriction of focus to this application
     ,setGlobalFocusTrap: function (istrapped) {
         LzKeyboardKernel.__lockFocus = istrapped;
+        if (LzSprite.prototype.quirks.activate_on_mouseover) {
+            if (istrapped) {
+                LzSprite.__rootSprite.__LZdiv.onmouseover();
+            } else {
+                LzSprite.__rootSprite.__LZdiv.onmouseout();
+            }
+        }
     }
 }
