@@ -295,12 +295,15 @@ lz.embed.iframemanager = {
         }
         var iframe = lz.embed.iframemanager.getFrameWindow(id);
         if (!args) args = [];
-        var method = iframe.eval(methodName);
-        if (method) {
-            var retVal = method.apply(iframe, args);
-            //console.log('callJavascript', methodName, args, 'in', iframe, 'result', retVal);
-            if (callbackDel) callbackDel.execute(retVal);
-            return retVal;
+        try {
+            var method = iframe.eval(methodName);
+            if (method) {
+                var retVal = method.apply(iframe, args);
+                //console.log('callJavascript', methodName, args, 'in', iframe, 'result', retVal);
+                if (callbackDel) callbackDel.execute(retVal);
+                return retVal;
+            }
+        } catch (e) {
         }
     }
 }

@@ -47,6 +47,21 @@
                     }
                 </handler>
             </button> 
+            <button>Invalid size
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.setWidth(-100);
+                    }
+                </handler>
+            </button> 
+            <button>Bad method
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.setAttribute('src', ''); 
+                        classroot.main.callJavascript('nomethodwiththisname', null, '#ff0000'); 
+                    }
+                </handler>
+            </button> 
             <text name="status" y="3" fontstyle="bold" visible="${classroot.main.loading}">Loading...</text>
         </hbox>    
         <html name="main" history="false" width="100%" height="${classroot.height - this.y - 44}">
