@@ -67,6 +67,7 @@ var LzSprite = function(owner, isroot) {
             this._id = p.id;
         }
         if (p.url) {
+            //also see LzBrowserKernel.getLoadURL()
             this._url = p.url;
         }
         if (p.cancelkeyboardcontrol) {

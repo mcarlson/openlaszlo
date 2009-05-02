@@ -113,7 +113,12 @@ static function getOS () {
   */
 static function getLoadURL () {
     // get url app was loaded from
-    var url = LzSprite.__rootSprite._url;
+    if (LzSprite.__rootSprite && LzSprite.__rootSprite._url) {
+        var url = LzSprite.__rootSprite._url;
+    } else {
+        // if the canvas sprite is not initted yet.
+        var url = lz.embed.__propcache.url;
+    }
     if (! url) url = new String(window.location);
     var colon = url.indexOf(':');
     var slash = url.indexOf('/');
