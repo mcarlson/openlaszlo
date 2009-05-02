@@ -2271,12 +2271,7 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
 
     // Make sure all references to code inside DIVs are cleaned up to prevent leaks in IE
     function __cleanUpForIE() {
-        var obj = LzTextSprite.prototype._sizedomcache;
-        var f = LzSprite.prototype.__discardElement;
-        for (var i in obj) {
-            f(obj[i]);
-        }
-        LzTextSprite.prototype._sizedomcache = {};
+        LzTextSprite.prototype.__cleanupdivs();
         LzTextSprite.prototype._sizecache = {};
 
         var obj = LzSprite.prototype.__sprites;

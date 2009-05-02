@@ -360,7 +360,16 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
 
 LzTextSprite.prototype._sizecache = {counter: 0}
 if (LzSprite.prototype.quirks.ie_leak_prevention) {
-    LzTextSprite.prototype._sizedomcache = {}
+    LzTextSprite.prototype.__divstocleanup = [];
+    LzTextSprite.prototype.__cleanupdivs = function() {
+        var obj = LzTextSprite.prototype.__divstocleanup;
+        var func = LzSprite.prototype.__discardElement;
+        var l = obj.length;
+        for (var i = 0; i < l; i++) {
+            func( obj[i] ); 
+        }
+        LzTextSprite.prototype.__divstocleanup = []
+    }
 }
 
 // key is the div class plus local style
@@ -447,10 +456,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
     _sizecache = {counter: 0};
     cv = null;
     if (LzSprite.prototype.quirks.ie_leak_prevention) {
-      var obj = ltsp._sizedomcache;
-      var f = LzSprite.prototype.__discardElement;
-      for (var i in obj) { f( obj[i] ); }
-      ltsp._sizedomcache = {}
+      LzTextSprite.prototype.__cleanupdivs();
     }
     if (root) { root.innerHTML = ''; }
   }
@@ -469,7 +475,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // to conditionalize setting the text into the node (because there
   // seems to be no generic method for setting the content of nodes?)
   var tagname = 'div';
-  mdivKey = className + "/" + style + 'div';
+  var mdivKey = className + "/" + style + 'div';
   var mdiv = _sizecache[mdivKey];
   if (mdiv) {
     // reuse existing div
@@ -486,7 +492,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
       root.insertAdjacentHTML('beforeEnd', html);
       var mdiv = document.all['testSpan' + ltsp._sizecache.counter];
       if (this.quirks.ie_leak_prevention) {
-        ltsp._sizedomcache['lzdiv~~~' + cacheFullKey] = mdiv;
+        ltsp.__divstocleanup.push(mdiv);
       }
     } else {
       var mdiv = document.createElement(tagname)
