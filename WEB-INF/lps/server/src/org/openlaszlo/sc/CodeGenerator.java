@@ -244,14 +244,15 @@ public class CodeGenerator extends CommonGenerator implements Translator {
          "if ($lzsc$lzp) {" +
          // Array keys are strings
          "  var $lzsc$now = '' + ((new Date).getTime() - $lzsc$lzp.base);" +
+         "  var $lzsc$name = " + getname + ";" +
          // If the clock has not ticked (or the ms->String conversion
          // makes it appear so), we log explicitly to the event buffer,
          // otherwise we use the optimization of logging calls and
          // returns to separate buffers
          "  if ($lzsc$lzp.last == $lzsc$now) {" +
-         "    $lzsc$lzp.events[$lzsc$now] += ('," + event + ":' + " + getname + ");" +
+         "    $lzsc$lzp.events[$lzsc$now] += ('," + event + ":' + $lzsc$name);" +
          "  } else {" +
-         "    $lzsc$lzp." + event + "[$lzsc$now] = " + getname + ";" +
+         "    $lzsc$lzp." + event + "[$lzsc$now] = $lzsc$name;" +
          "  }" +
          "  $lzsc$lzp.last = $lzsc$now;" +
          "}" +

@@ -104,14 +104,15 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       "if ($lzsc$lzp) {" +
       // Array keys are strings
       "  var $lzsc$now = '' + ((new Date).getTime() - $lzsc$lzp.base);" +
+      "  var $lzsc$name = " + getname + ";" +
       // If the clock has not ticked (or the ms->String conversion
       // makes it appear so), we log explicitly to the event buffer,
       // otherwise we use the optimization of logging calls and
       // returns to separate buffers
       "  if ($lzsc$lzp.last == $lzsc$now) {" +
-      "    $lzsc$lzp.events[$lzsc$now] += ('," + event + ":' + " + getname + ");" +
+      "    $lzsc$lzp.events[$lzsc$now] += ('," + event + ":' + $lzsc$name);" +
       "  } else {" +
-      "    $lzsc$lzp." + event + "[$lzsc$now] = " + getname + ";" +
+      "    $lzsc$lzp." + event + "[$lzsc$now] = $lzsc$name;" +
       "  }" +
       "  $lzsc$lzp.last = $lzsc$now;" +
       "}");
@@ -1152,7 +1153,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // Tell metering to look up the name at runtime if it is not a
     // global name (this allows us to name closures more
     // mnemonically at runtime
-    String meterFunctionName = userFunctionName;
+    String meterFunctionName = useName ? functionName : null;
     SimpleNode[] paramIds = params.getChildren();
     // Pull all the pragmas from the list: process them, and remove
     // them
@@ -1529,15 +1530,24 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       // lfc/debugger/LzBactrace
       String fn = (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ? "lfc/" : "") + filename;
       if (functionName != null &&
-          // Either it is a declaration or we are not doing
-          // backtraces, so the name will be available from the
-          // runtime
-          (useName || (! (options.getBoolean(Compiler.DEBUG_BACKTRACE))))) {
-        if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
+          // Either it is a declaration or we are not doing backtraces
+          // or profiling, so the name will be available for debugging
+          // from the runtime
+          (useName ||
+           (! (options.getBoolean(Compiler.PROFILE) ||
+               options.getBoolean(Compiler.DEBUG_BACKTRACE))))) {
+        if (options.getBoolean(Compiler.PROFILE) ||
+            options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
           SimpleNode newNode = new ASTStatementList(0);
-          newNode.set(0, new Compiler.PassThroughNode(node));
-          newNode.set(1, parseFragment(functionName + "._dbg_filename = " + ScriptCompiler.quote(fn)));
-          newNode.set(2, parseFragment(functionName + "._dbg_lineno = " + lineno));
+          int nn = 0;
+          newNode.set(nn++, new Compiler.PassThroughNode(node));
+          if (options.getBoolean(Compiler.PROFILE)) {
+            newNode.set(nn++, parseFragment(functionName + "._dbg_name = " + ScriptCompiler.quote(functionName)));
+          }
+          if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
+            newNode.set(nn++, parseFragment(functionName + "._dbg_filename = " + ScriptCompiler.quote(fn)));
+            newNode.set(nn++, parseFragment(functionName + "._dbg_lineno = " + lineno));
+          }
           node = visitStatement(newNode);
         }
       } else {

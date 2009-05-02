@@ -449,7 +449,7 @@ public class LzEvent extends LzDeclaredEventClass {
     }
     if ($profile) {
       /** @access private */
-      var _dbg_profileName:String;
+      var _profile_name:String;
     }
 
   /**
@@ -478,7 +478,7 @@ public class LzEvent extends LzDeclaredEventClass {
       this._dbg_eventName = eventName;
     }
     if ($profile) {
-      this._dbg_profileName = eventName;
+      this._profile_name = eventSender._profile_typename + '/' + eventName;
     }
   }
 
@@ -519,7 +519,7 @@ public override function sendEvent (eventValue:* = null) :void {
     this.ready = false;
 
     if ($profile) {
-        var nm:* = this._dbg_profileName;
+        var nm:* = this._profile_name;
         if (nm) {
             Profiler.event(nm, 'calls');
         }
@@ -556,7 +556,7 @@ public override function sendEvent (eventValue:* = null) :void {
     }
 
     if ($profile) {
-        var nm:* = this._dbg_profileName;
+        var nm:* = this._profile_name;
         if (nm) {
             Profiler.event(nm, 'returns');
         }
