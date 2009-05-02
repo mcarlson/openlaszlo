@@ -100,6 +100,16 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
           @access public
     -->
     <attribute name="history" value="true"/>
+    <!--- The minimum height of the iframe: embedded swfs won't load with a size less than 1
+          @type Number
+          @access number
+    -->
+    <attribute name="minimumheight" type="number" value="0"/>
+    <!--- The minimum width of the iframe: embedded swfs won't load with a size less than 1
+          @type Number
+          @access number
+    -->
+    <attribute name="minimumwidth" type="number" value="0"/>
 
     <!--- Sets the view to listen to for x/y/width/height change events.
           @type LzView
@@ -193,8 +203,8 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
             var y = this.getAttributeRelative("y", canvas);
             var z = this.target.sprite.getZ();
         }
-        var width = Math.max(this.width, 0);
-        var height = Math.max(this.height, 0);
+        var width = Math.max(this.width, this.minimumwidth);
+        var height = Math.max(this.height, this.minimumheight);
         lz.embed.iframemanager.setPosition(this.iframeid, x, y, width, height, this.visible, z);
     </method>
     <!--- @access private -->
