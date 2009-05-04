@@ -298,7 +298,9 @@ class DHTMLWriter extends ObjectWriter {
         // create a montage for multiframe resources
         if (sources.size() > 1) {
             String montageFile = (String)sources.get(0);
-            montageFile = montageFile.substring(0, montageFile.indexOf('.')) + mEnv.IMAGEMONTAGE_STRING + montageFile.substring(montageFile.indexOf('.') + 1);
+            // offset of one character to the left of the extension, e.g. '.png'
+            int extoffset = montageFile.lastIndexOf(FileUtils.getExtension(montageFile)) - 1;
+            montageFile = montageFile.substring(0, extoffset) + mEnv.IMAGEMONTAGE_STRING + montageFile.substring(extoffset + 1);
             try {
                 ImageMontageMaker.assemble(sources, montageFile);
                 String[] fileInfo = getRelPath(new File(montageFile));
