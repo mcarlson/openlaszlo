@@ -230,6 +230,21 @@ lz.embed.iframemanager = {
             lz.embed[iframe.owner].callMethod('lz.embed.iframemanager.__gotload(\'' + id + '\')');
         }
         this.__loading[id] = false;
+        var iframe = lz.embed.iframemanager.getFrameWindow(id);
+        // bind into global events.
+        try {
+            lz.embed.attachEventHandler(iframe.document, 'mousedown', lz.embed.iframemanager, '__mouseEvent', id);
+            lz.embed.attachEventHandler(iframe.document, 'mouseup', lz.embed.iframemanager, '__mouseEvent', id);
+            //lz.embed.attachEventHandler(iframe.document, 'mousemove', lz.embed.iframemanager, '__mouseEvent', id);
+            if (lz.embed.browser.isIE) {
+                lz.embed.attachEventHandler(iframe.document, 'mouseenter', lz.embed.iframemanager, '__mouseEvent', id);
+                lz.embed.attachEventHandler(iframe.document, 'mouseleave', lz.embed.iframemanager, '__mouseEvent', id);
+            } else {
+                lz.embed.attachEventHandler(iframe.document, 'mouseover', lz.embed.iframemanager, '__mouseEvent', id);
+                lz.embed.attachEventHandler(iframe.document, 'mouseout', lz.embed.iframemanager, '__mouseEvent', id);
+            }
+        } catch(e) {
+        }
         if (this.__calljsqueue[id]) {
             this.__playQueue(this.__calljsqueue[id]);
             delete this.__calljsqueue[id];
@@ -273,6 +288,20 @@ lz.embed.iframemanager = {
         }
         var iframe = lz.embed.iframemanager.__frames[id];
         if (iframe) {
+            // remove event listeners
+            try {
+                lz.embed.removeEventHandler(iframe.document, 'mousedown', lz.embed.iframemanager, '__mouseEvent');
+                lz.embed.removeEventHandler(iframe.document, 'mouseup', lz.embed.iframemanager, '__mouseEvent');
+                //lz.embed.removeEventHandler(iframe.document, 'mousemove', lz.embed.iframemanager, '__mouseEvent');
+                if (lz.embed.browser.isIE) {
+                    lz.embed.removeEventHandler(iframe.document, 'mouseenter', lz.embed.iframemanager, '__mouseEvent');
+                    lz.embed.removeEventHandler(iframe.document, 'mouseleave', lz.embed.iframemanager, '__mouseEvent');
+                } else {
+                    lz.embed.removeEventHandler(iframe.document, 'mouseover', lz.embed.iframemanager, '__mouseEvent');
+                    lz.embed.removeEventHandler(iframe.document, 'mouseout', lz.embed.iframemanager, '__mouseEvent');
+                }
+            } catch(e) {
+            }
             iframe.owner = null;
             iframe.appcontainer = null;
             LzSprite.prototype.__discardElement(iframe);
@@ -304,6 +333,29 @@ lz.embed.iframemanager = {
                 return retVal;
             }
         } catch (e) {
+        }
+    }
+    ,__mouseEvent: function(e, id) {
+        var iframe = lz.embed.iframemanager.getFrame(id);
+        //console.log('__gotload', iframe;
+        if (! iframe) return;
+
+        if (!e) {
+            e = window.event;
+        }
+
+        if (iframe.owner && iframe.owner.sprite && iframe.owner.sprite.__mouseEvent) {
+            // dhtml
+            iframe.owner.sprite.__mouseEvent(e);
+        } else {
+            var eventname = 'on' + e.type;
+            // deal with IE event names
+            if (eventname == 'onmouseleave') {
+                eventname = 'onmouseout';
+            } else if (eventname == 'onmouseenter') {
+                eventname = 'onmouseover';
+            }
+            lz.embed[iframe.owner].callMethod('lz.embed.iframemanager.__gotMouseEvent(\'' + id + '\',\'' + eventname + '\')');
         }
     }
 }

@@ -78,6 +78,10 @@
             <handler name="onload">
                 Debug.write('onload');
             </handler>
+            <method name="mouseevent" args="ename">
+                super.mouseevent(ename);
+                Debug.warn('mouseevent', ename);
+            </method>
         </html>
     </class>
 

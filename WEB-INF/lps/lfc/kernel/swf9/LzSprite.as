@@ -662,7 +662,7 @@ dynamic public class LzSprite extends Sprite {
       }
 
       public function handleMouse_DOUBLE_CLICK (event:MouseEvent) :void {
-          LzMouseKernel.__sendEvent( owner, 'ondblclick');
+          LzMouseKernel.handleMouseEvent( owner, 'ondblclick');
           event.stopPropagation();
       }
 
@@ -678,7 +678,7 @@ dynamic public class LzSprite extends Sprite {
               this.__mouseEvent(new MouseEvent('mouseupoutside'));
               if (mouseOverSprite != null) {
                   // send after onmouseup(outside) (LPP-7335)
-                  LzMouseKernel.__sendEvent(mouseOverSprite.owner, 'onmouseover');
+                  LzMouseKernel.handleMouseEvent(mouseOverSprite.owner, 'onmouseover');
               }
           }
           LzMouseKernel.__lastMouseDown = null;
@@ -727,10 +727,10 @@ dynamic public class LzSprite extends Sprite {
                 (eventname == 'onmouseover' || eventname == 'onmouseout')) {
                     // only send mouseover/out/dragin/dragout if the mouse went down on this sprite (LPP-6677, LPP-7335)
                     if (LzMouseKernel.__lastMouseDown === this) {
-                        LzMouseKernel.__sendEvent(this.owner, eventname);
+                        LzMouseKernel.handleMouseEvent(this.owner, eventname);
 
                         var dragname:String = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
-                        LzMouseKernel.__sendEvent(this.owner, dragname);
+                        LzMouseKernel.handleMouseEvent(this.owner, dragname);
                     } else {
                         // defer mouse-events until mouse is released (LPP-7300, LPP-7335)
                         if (eventname == 'onmouseover') {
@@ -740,7 +740,7 @@ dynamic public class LzSprite extends Sprite {
                         }
                     }
             } else {
-                LzMouseKernel.__sendEvent(this.owner, eventname);
+                LzMouseKernel.handleMouseEvent(this.owner, eventname);
             }
 
             // If this.showhandcursor is null, inherit value from LzMouseKernel.showhandcursor

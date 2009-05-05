@@ -672,7 +672,7 @@ lz.embed = {
      * @param callbackscope:Object Scope to receive the callback
      * @param callbackname:String Method name to receive callback in callbackscope
      */
-    attachEventHandler: function(eventscope, eventname, callbackscope, callbackname) {
+    attachEventHandler: function(eventscope, eventname, callbackscope, callbackname, closure) {
         if (! (callbackscope && callbackname
                 && typeof callbackscope[callbackname] == 'function')) {
             return;
@@ -695,7 +695,8 @@ lz.embed = {
             }
         }
         var handler = function() {
-            var a = window.event ? [window.event] : arguments;
+            var a = window.event ? [window.event] : [].slice.call(arguments, 0);;
+            if (closure) a.push(closure);
             callbackscope[callbackname].apply(callbackscope, a);
         }
         handler.$e = eventscope;

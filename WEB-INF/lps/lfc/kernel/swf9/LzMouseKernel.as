@@ -25,7 +25,7 @@ class LzMouseKernel  {
     //////////////////
 
     // sends mouse events to the callback
-    static function __sendEvent (view:*, eventname:String) :void {
+    static function handleMouseEvent (view:*, eventname:String) :void {
         if (__callback) __scope[__callback](eventname, view);
         //Debug.write('LzMouseKernel event', eventname);
     }
@@ -82,9 +82,9 @@ class LzMouseKernel  {
                 LFCApplication.stage.focus = null;
 
                 // generate a 'onmouseenter' event
-                __sendEvent(null, 'onmouseenter');
+                handleMouseEvent(null, 'onmouseenter');
             }
-            __sendEvent(null, eventname);
+            handleMouseEvent(null, eventname);
         }
     }
 
@@ -101,7 +101,7 @@ class LzMouseKernel  {
     // handles MOUSE_LEAVE event
     static function __mouseLeaveHandler (event:Event = null) :void {
         __mouseLeft = true;
-        __sendEvent(null, 'onmouseleave');
+        handleMouseEvent(null, 'onmouseleave');
     }
 
     static function __mouseWheelHandler (event:MouseEvent) :void {

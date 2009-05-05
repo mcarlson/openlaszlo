@@ -38,7 +38,12 @@ lz.embed.iframemanager.scrollBy = function(id, x, y) {
     lz.Browser.callJS('lz.embed.iframemanager.scrollBy', null, id, x, y);
 }
 lz.embed.iframemanager.__gotload = function(id) {
-    if (lz.embed.iframemanager.owners[id]) lz.embed.iframemanager.owners[id].__gotload();
+    var view = lz.embed.iframemanager.owners[id];
+    if (view) view.__gotload();
+}
+lz.embed.iframemanager.__gotMouseEvent = function(id, eventname) {
+    var view = lz.embed.iframemanager.owners[id];
+    if (view) LzMouseKernel.handleMouseEvent(view, eventname);
 }
 lz.embed.iframemanager.__destroy = function(id) {
     lz.Browser.callJS('lz.embed.iframemanager.__destroy', null, id);
