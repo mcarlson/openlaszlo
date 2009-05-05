@@ -205,26 +205,6 @@ public dynamic class LzNode extends LzEventable {
     var bindname = this.$lzc$bind_name;
     if (bindname) { bindname.call(null, this) };
 
-    // Node node start
-    if ($profile) {
-      var nm = null;
-      // Have to extract name from attrs
-      if (attrs) {
-        if (attrs['id'] && (attrs.id != LzNode._ignoreAttribute)) {
-          nm = '#' + attrs.id;
-        } else if (attrs['name'] && (attrs.name != LzNode._ignoreAttribute)) {
-          nm = ((parent === canvas)?'#':'.') + attrs.name;
-        } else if (attrs['_profile_name']) {
-          nm = attrs._profile_name;
-        }
-      }
-      if (nm) {
-        this._profile_name = nm;
-        Profiler.event('start: ' + nm);
-        Profiler.event(nm, 'calls');
-      }
-    }
-
     // Squirrel away instance attributes and children for cloning...
     this._instanceAttrs = attrs;
     this._instanceChildren = children;
@@ -346,19 +326,6 @@ public dynamic class LzNode extends LzEventable {
       this.createChildren( children );
     } else {
       this.__LZinstantiationDone( );
-    }
-
-    if ($profile) {
-      var nm = this['_profile_name'];
-      if (nm) {
-        Profiler.event(nm, 'returns');
-        this._profile_instantiator_name = nm;
-      }
-      // Set _profile_instantiator_name to constructor._dbg_name for
-      // annotation in lz.Instantiator.makeSomeViews
-      else {
-        this._profile_instantiator_name = this['constructor']._dbg_name;
-      }
     }
   }
 
@@ -482,7 +449,7 @@ public dynamic class LzNode extends LzEventable {
    * @access private
    */
   function $lzc$set_datapath (dp) {
-    if (null != this.datapath && dp != LzNode._ignoreAttribute) {
+    if (null != this.datapath && dp !== LzNode._ignoreAttribute) {
       this.datapath.setXPath(dp);
     } else {
       // LzDatapath will set datapath of its immediateparent
@@ -2304,7 +2271,7 @@ public dynamic class LzNode extends LzEventable {
    * setter for $datapath
    */
   function $lzc$set_$datapath( dpobj ){
-    if (dpobj == LzNode._ignoreAttribute) {
+    if (dpobj === LzNode._ignoreAttribute) {
       // a 'datapath' attribute overrode our $datapath
       return;
     } else if (! (dpobj instanceof Object)) {

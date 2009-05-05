@@ -287,24 +287,8 @@ public class NodeModel implements Cloneable {
       this.source = source;
       this.env = env;
       this.srcloc = CompilerUtils.sourceLocationDirective(source, true);
-      // --- Temp solution for overriding binders in subclasses or
-      // --- instances, we just make all binders have unique names
-      String parent_name = source.getAttributeValue("id");
-      if (parent_name == null) {
-          parent_name = CompilerUtils.attributeUniqueName(source, "binder");
-      }
-      if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
-        String unique = "$" + parent_name + "_"  + env.methodNameGenerator.next();
-        if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
-          this.bindername = "$lzc$bind_" + name + unique;
-        }
-        if (when.equals(WHEN_ALWAYS)) {
-          this.dependenciesname = "$lzc$dependencies_" + name + unique;
-        }
-      } else {
-        if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
-          this.bindername =  env.methodNameGenerator.next();
-        }
+      if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+        this.bindername =  env.methodNameGenerator.next();
         if (when.equals(WHEN_ALWAYS)) {
           this.dependenciesname =  env.methodNameGenerator.next();
         }
@@ -319,12 +303,13 @@ public class NodeModel implements Cloneable {
       String prefix ="";
       String body = "\n#beginAttribute\n" + srcloc + value + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n";
       String suffix = "";
-      String pragmas = "";
+      String prettyBinderName = name + "='$";
 
       // All constraint methods need ignore args for swf9
       String args="$lzc$ignore";
       if (when.equals(WHEN_ONCE)) {
         // default
+        prettyBinderName += "once";
       } else if (when.equals(WHEN_ALWAYS)) {
         // Only call the installer if the value will change, to
         // minimize event cascades (data and style binding have to
@@ -336,6 +321,7 @@ public class NodeModel implements Cloneable {
       } else if (when.equals(WHEN_PATH)) {
         installer = "dataBindAttribute";
         body = body + ",'" + type + "'";
+        prettyBinderName += "path";
       } else if (when.equals(WHEN_STYLE)) {
         // Styles are processed at the same time as constraints.
         // Whether a style actually results in a constraint or not
@@ -343,11 +329,14 @@ public class NodeModel implements Cloneable {
         // derived (at run time)
         installer = "__LZstyleBindAttribute";
         body = body + ",'" + type + "'";
+        prettyBinderName += "style";
       }
       body = prefix + "this." + installer + "(" +
           ScriptCompiler.quote(name) + "," +
           body + ")" + suffix;
       Function binder;
+      prettyBinderName += "{...}'";
+      String pragmas = "#pragma " + ScriptCompiler.quote("userFunctionName=" + prettyBinderName);
       // Binders are called by LzDelegate.execute, which passes the
       // value sent by sendEvent, so we have to accept it, but we
       // ignore it
@@ -369,7 +358,7 @@ public class NodeModel implements Cloneable {
       if (! when.equals(WHEN_ALWAYS)) {
         return null;
       }
-      String pragmas = "";
+      String pragmas = "#pragma " + ScriptCompiler.quote("userFunctionName=" + name + " dependencies");
       String body = "";
       try {
         body = "return (" + getCompiler().dependenciesForExpression(srcloc + value) + ")";
@@ -825,6 +814,7 @@ public class NodeModel implements Cloneable {
      */
     private static String buildIdBinderBody (String symbol, boolean setId, boolean debug) {
         return
+            "#pragma " + ScriptCompiler.quote("userFunctionName=bind #" + symbol) + "\n" +
             "if ($lzc$bind) {\n" +
             (debug ?
              "    if (" + symbol + " && (" + symbol + " !== $lzc$node)) {\n" +
@@ -1500,7 +1490,7 @@ solution =
             referencename = debug ?
               ("$lzc$" + "handle_" + event + "_reference" + unique) :
               env.methodNameGenerator.next();
-            String pragmas = "";
+            String pragmas = "#pragma " + ScriptCompiler.quote("userFunctionName=get " + reference);
             String refbody = "var $lzc$reference = (" +
                 "#beginAttribute\n" +
                 reference + "\n#endAttribute\n);\n" +
@@ -1531,24 +1521,27 @@ solution =
         }
 
         if (body != null) {
+            String pragmas = "#beginContent\n";
             if (method == null) {
                 method = debug ?
                   ("$lzc$" + "handle_" + event + unique) :
                   env.methodNameGenerator.next();
+                pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=handle " +
+                                                             ((reference != null) ? (reference + ".") : "") +
+                                                             event) +"\n";
             }
-            String pragmas = "\n#beginContent\n" +
-                "\n#pragma 'methodName=" + method + "'\n";
-            body = body + "\n#endContent";
+            pragmas += "#pragma 'methodName=" + method + "'\n";
+            body = body + "\n#endContent\n";
             Function fndef;
             if (canHaveMethods) {
                 // TODO: [2008-07-21 ptw] (LPP-5813) This should really
                 // be in the script-compiler back-end
                 if (! (env.isAS3())) {
-                  pragmas += "\n#pragma 'withThis'\n";
+                  pragmas += "#pragma 'withThis'\n";
                 }
                 fndef = new Method(method, args, "", pragmas, body, srcloc, null);
             } else {
-                pragmas += "\n#pragma 'withThis'\n";
+                pragmas += "#pragma 'withThis'\n";
                 fndef = new Function(method, args, "", pragmas, body, srcloc);
             }
             // Add handler as a method
@@ -2076,7 +2069,8 @@ solution =
       // the name set_<property name> NOTE: LzNode#applyArgs and
       // #setAttribute depend on this convention to find setters
       String settername = "$lzc$" + "set_" + attribute;
-      addMethodInternal(settername, args, "", body, element, allocation);
+      String pragmas = "#pragma " + ScriptCompiler.quote("userFunctionName=set " + attribute) + "\n";
+      addMethodInternal(settername, args, "", pragmas + body, element, allocation);
       // This is just for nice error messages
       if (setters.get(attribute) != null) {
         env.warn(

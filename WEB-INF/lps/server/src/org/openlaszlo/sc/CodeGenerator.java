@@ -230,7 +230,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     if (name != null) {
       getname = "'" + name + "'";
     } else {
-      getname = "arguments.callee.name";
+      getname = "arguments.callee._dbg_name";
     }
 
     // Note _root.$lzprofiler can be undedefined to disable profiling
@@ -1805,7 +1805,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // Tell metering to look up the name at runtime if it is not a
     // global name (this allows us to name closures more
     // mnemonically at runtime
-    String meterFunctionName = functionName;
+    String meterFunctionName = useName ? functionName : null;
     // Pull all the pragmas from the statement list: process them, and
     // remove them
     assert stmts instanceof ASTStatementList;
@@ -1818,6 +1818,11 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           stmtList.set(i, newNode);
         }
       }
+    }
+    // Allows the tag compiler to pass through a pretty name for debugging
+    String explicitUserFunctionName = (String)options.get("userFunctionName");
+    if (explicitUserFunctionName != null) {
+      userFunctionName = explicitUserFunctionName;
     }
     if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {
 //       assert (functionName != null);
@@ -1916,7 +1921,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       // Is there any other way to construct a closure in js
       // other than a function returning a function?
       if (context.findFunctionContext().parent.findFunctionContext() != null) {
-        userFunctionName = "" + closed + "." + userFunctionName;
+        userFunctionName = userFunctionName + " closure";
       }
     }
     if (false) {
@@ -2212,7 +2217,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         collector.emit(Instructions.DUP);
         collector.emit(Instructions.DUP);
       }
-      collector.push("name");
+      collector.push("_dbg_name");
       collector.push(userFunctionName);
       collector.emit(Instructions.SetMember);
       collector.push("length");

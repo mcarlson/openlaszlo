@@ -1168,6 +1168,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         }
       }
     }
+    // Allows the tag compiler to pass through a pretty name for debugging
+    String explicitUserFunctionName = (String)options.get("userFunctionName");
+    if (explicitUserFunctionName != null) {
+      userFunctionName = explicitUserFunctionName;
+    }
     String methodName = (String)options.get(Compiler.METHOD_NAME);
     // Backwards compatibility with tag compiler
     if (methodName != null && functionNameIdentifier != null) {
@@ -1339,7 +1344,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       // Is there any other way to construct a closure in js
       // other than a function returning a function?
       if (context.findFunctionContext().parent.findFunctionContext() != null) {
-        userFunctionName = "" + closed + "." + userFunctionName;
+        userFunctionName = userFunctionName + " closure";
       }
     }
     if (false) {

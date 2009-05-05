@@ -112,11 +112,15 @@ class LzOnceExpr extends LzInitExpr {
   var methodName:String;
   if ($debug) {
     var _dbg_name;
+  } else if ($profile) {
+    var _dbg_name;
   }
 
   function LzOnceExpr(initMethod:String, description=null) {
     this.methodName = initMethod;
     if ($debug) {
+      this._dbg_name = description;
+    } else if ($profile) {
       this._dbg_name = description;
     }
   }
@@ -151,6 +155,12 @@ class LzAlwaysExpr extends LzConstraintExpr {
  * @access private
  */
 class LzStyleExpr extends LzValueExpr {
+  if ($debug) {
+    var _dbg_name;
+  } else if ($profile) {
+    var _dbg_name;
+  }
+
   function LzStyleExpr() {
   }
 }
@@ -164,10 +174,10 @@ class LzStyleAttr extends LzStyleExpr {
   function LzStyleAttr(sourceAttributeName:String) {
     super();
     this.sourceAttributeName = sourceAttributeName;
-  }
-  if ($debug) {
-    var _dbg_name = function () {
-      return "attr(" + this.sourceAttributeName + ")";
+    if ($debug) {
+      this._dbg_name = "attr(" + this.sourceAttributeName + ")";
+    } else if ($profile) {
+      this._dbg_name = "attr(" + this.sourceAttributeName + ")";
     }
   }
 };
@@ -181,10 +191,10 @@ class LzStyleIdent extends LzStyleExpr {
   function LzStyleIdent(sourceValueID:String) {
     super();
     this.sourceValueID = sourceValueID;
-  }
-  if ($debug) {
-    var _dbg_name = function () {
-      return this.sourceValueID;
+    if ($debug) {
+      this._dbg_name = sourceValueID;
+    } else if ($profile) {
+      this._dbg_name = sourceValueID;
     }
   }
 };

@@ -98,6 +98,9 @@ if ($profile) {
           // `this` is the prototype of the class here, not the class
           var o = this['_profile_typename'];
           if (o) {
+            if (value.hasOwnProperty('_dbg_name')) {
+              name = value._dbg_name;
+            }
             // Give the initializer an intelligible name for profiling
             if (name == '$lzsc$initialize') {
               var pn = o;
@@ -224,7 +227,7 @@ var Class = {
         // Here `this` is the class
         var o = this.prototype['_profile_typename'];
         if (o) {
-          value._profile_name = value._dbg_name = value.name = (o + '.' + value.name);
+          value._profile_name = value._dbg_name = value.name = (o + '.' + value._dbg_name);
         }
       }
     }
@@ -290,9 +293,9 @@ var Class = {
             // Have to extract name from attrs
             var attrs = arguments[1];
             if (attrs) {
-                if (attrs['id'] && (attrs.id != lzn._ignoreAttribute)) {
+                if (attrs['id'] && (attrs.id !== lzn._ignoreAttribute)) {
                     nm = '#' + attrs.id;
-                } else if (attrs['name'] && (attrs.name != lzn._ignoreAttribute)) {
+                } else if (attrs['name'] && (attrs.name !== lzn._ignoreAttribute)) {
                     nm = ((parent === canvas)?'#':'.') + attrs.name;
                 } else if (attrs['_profile_name']) {
                     nm = attrs._profile_name;
