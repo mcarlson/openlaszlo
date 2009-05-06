@@ -167,10 +167,17 @@ var LzMouseKernel = {
         }
     }
     ,setGlobalClickable: function (isclickable){
+        //Debug.error('setGlobalClickable', isclickable, LzInputTextSprite.__lastfocus, LzInputTextSprite.prototype.__focusedSprite, LzInputTextSprite.prototype.__lastshown);
         if (! isclickable) {
             // reset any inputtexts that are showing so they don't disappear - see LPP-7190
             if (LzInputTextSprite.prototype.__lastshown) {
                 LzInputTextSprite.prototype.__lastshown.__hide();
+            }
+            if (LzInputTextSprite.prototype.__focusedSprite) {
+                LzInputTextSprite.prototype.__focusedSprite.deselect();
+            }
+            if (LzInputTextSprite.__lastfocus) {
+                LzInputTextSprite.__lastfocus.deselect();
             }
         }
         var el = document.getElementById('lzcanvasclickdiv');
