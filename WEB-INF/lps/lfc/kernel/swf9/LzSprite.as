@@ -1087,7 +1087,7 @@ dynamic public class LzSprite extends Sprite {
                         this.__isinternalresource = false;
                         this.loaderMC = MovieClip(loader.content);
                         this.totalframes = this.loaderMC.totalFrames;
-                        this.loaderMC.gotoAndStop(fn);
+                        this.loaderMC.gotoAndStop(origfn);
                     }
                   } else {
                     // Set later, to prevent movieclip resources from being forced to frame 1 - see LPP-7534
