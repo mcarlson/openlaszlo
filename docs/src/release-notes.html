@@ -39,9 +39,11 @@
     <hr>
     <h1>Release Notes for OpenLaszlo @VERSIONID@</h1>
     <hr>
-    <p>OpenLaszlo @VERSIONID@ is a major release, with almost 300 bugs fixed since OpenLaszlo 4.2
-      introduced the SWF9 runtime. It is the recommended platform for all application development in
-      the SWF8, SWF9, and DHTML runtimes.</p>
+    <p>OpenLaszlo @VERSIONID@ is a bug fix release, with more than 60
+      bugs fixed primarily in the area of DHTML since OpenLaszlo
+      4.3. OpenLaszlo @VERSIONID@ is the recommended platform for all
+      application development in the SWF8, SWF9, and DHTML
+      runtimes.</p>
 
     <p>For those of you who have already upgraded your applications to OpenLaszlo 4.2, no further
       work is needed. You should just start using OpenLaszlo @VERSIONID@.</p>
@@ -77,7 +79,66 @@
       for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP"> bug
         tracking system</a>. We'd also like to hear from you on the <a href="http://www.openlaszlo.org/lists" target="_blank">mailing lists</a> and in the <a href="http://forum.openlaszlo.org/" target="_blank">forums</a>.</p>
         
-    <h2>Audio/Video Improvements</h2>
+<h2>Workaround for Input Text Unexpected Behavior with onfocus Handler</h2>
+<p>In some cases, the onfucus event fires too early, causing unexpected input text characters to be selected as it does in this example:<br>
+<code style="white-space: pre">
+&lt;canvas&gt;
+&lt;simplelayout axis="y"/&gt;
+&lt;inputtext text="abcd" width="100" bgcolor="0xcccccc"/&gt;
+&lt;inputtext text="abcd" width="100" bgcolor="0xffcccc" onfocus="this.setSelection(0, 1)"/&gt;
+&lt;/canvas&gt;
+</code>
+</p>
+
+<p>To work around this issue, you can create a cover view that handles initial clicks, as shown here for the above example:<br>
+<code style="white-space: pre">
+&lt;canvas&gt;
+&lt;simplelayout axis="y"/&gt;
+
+&lt;inputtext text="abcd" width="100" bgcolor="0xcccccc"/&gt;
+
+&lt;view bgcolor="0xffcccc"&gt;
+    &lt;inputtext name="field" text="abcd" width="100"
+        onfocus="parent.cover.setVisible(false); this.setSelection(0, this.getText().length);"
+        onblur="parent.cover.setVisible(true)"
+    /&gt;
+    &lt;view name="cover" width="100%" height="100%"
+        onclick="LzFocus.setFocus(parent.field)"
+    /&gt;
+&lt;/view&gt;
+&lt;/canvas&gt; 
+</code>
+</p>
+
+<h2>Deprecation Notice: Attribute Values on Data Element Will Be Coerced to String in OpenLaszlo 4.5</h2>
+<p>Currently, if you set an attribute value for a data element, the value is stored as it is set. This will no longer be true in OpenLaszlo 4.5, where the value will be coerced to a String value.  If you need to set non-String values for data elements, you should use the <code>setUserData</code> method as shown in this example where <code>node</code> is an <code>LzDataElement</code>:<br>
+<code style="white-space: pre">
+node1.setUserData('key1', val1);
+assertEquals(val1, node1.getUserData('key1'), 'getUserData key1');
+</code>
+</p>
+
+    <h2>Bugs Fixed in OpenLaszlo @VERSIONID@</h2>
+    <p>The @VERSIONID@ release includes over 60 bug fixes since 4.3; we have provided links to
+      our JIRA bug tracking system where you can view the details:</p>
+    <ul>
+      <li>
+        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10972" target="_blank">Fixed bugs in @VERSIONID@</a>
+      </li>
+      <li>
+        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10950" target="_blank">Fixed bugs in 4.3.0</a>
+      </li>
+      <li>
+        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10911" target="_blank">Fixed bugs in 4.2.0.2</a>
+      </li>
+      <li>
+        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10880" target="_blank">Fixed bugs in 4.2.0.1</a>
+      </li>
+    </ul>
+<hr>
+    <h1>Notes from OpenLaszlo 4.3</h1>
+</hr>    
+<h2>Audio/Video Improvements</h2>
     <p>
     Audio/Video APIs are working well in this release.  Videoplayer and videoview now show the first frame of the video by default when they appear, if a URL has been set.  (You can control this behavior with new starttime API.)  Live broadcast and recording APIs are working in both swf8 and swf9.  We have also added a new <a href="http://forum.openlaszlo.org/forumdisplay.php?f=40">Audio & Video Programming forum</a></p>
 
@@ -238,10 +299,18 @@
 
     <h2>OpenLaszlo @VERSIONID@ Credits</h2>
 
-    <p> We would like to thank the entire OpenLaszlo community for submitting bug fixes and
-      participating in discussions to help make OpenLaszlo a better platform. We'd also like to
-      thank the incredible engineering team at <a href="http://g.ho.st/">G.ho.st</a>, who have worked
-      with us as a sponsor to bring SWF9 and many other improvements to the community. Special thanks to Andr&#xE9; Bargull and Raju Bitter for their continued and amazing support of the project. Special recognition goes to community contributors: Sebastian Wagner, Justin Clift, Ryan Maslar, Sarah Allen, and Wolfgang St&#xF6;cher. And heartfelt thanks to Phil Romanik, Don Anderson, Josh Crowley, and Lou Iorio for their tireless efforts and significant contributions. </p>
+    <p> We would like to thank the entire OpenLaszlo community for
+      submitting bug fixes and participating in discussions to help
+      make OpenLaszlo a better platform. We'd also like to thank the
+      incredible engineering team at <a
+      href="http://g.ho.st/">G.ho.st</a>, who have worked with us as a
+      sponsor to bring SWF9 and many other improvements to the
+      community. Special thanks to Andr&#xE9; Bargull and Raju Bitter
+      for their continued and amazing support of the project. Special
+      recognition goes to community contributors: Sarah Allen,
+      Ildefonso Gomariz Abril, and Mao YingZhuo. And heartfelt thanks
+      to Phil Romanik, Don Anderson, Josh Crowley, and Lou Iorio for
+      their tireless efforts and significant contributions. </p>
 
     <hr>
     <p>OpenLaszlo @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@</p>
