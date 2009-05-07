@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -118,7 +118,7 @@ function __show (send=true) {
     
     LzMouseKernel.__showncontextmenu = this;
 
-    s.innerHTML = o;
+    s.innerHTML = "<table><tr><td>"+o+"</td></tr></table>";
     if (send) {
         s.style.left = LzMouseKernel.__x + 'px';
         s.style.top = LzMouseKernel.__y + 'px';
