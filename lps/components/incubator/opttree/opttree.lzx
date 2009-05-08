@@ -70,8 +70,10 @@
             opttreecontroller.lock( p );
             this.setOpen( p , val );
             var c = opttreecontroller.getChildNodes( p );
-            for ( var k=0, len=c.length; k<len; k++){
-                this.recursiveOpen( c[ k ] , val );
+            if (c != null) {
+                for ( var k=0, len=c.length; k<len; k++){
+                    this.recursiveOpen( c[ k ] , val );
+                }
             }
             opttreecontroller.unlock( p );
             ]]>
@@ -80,11 +82,13 @@
         <method name="setAllOpen" args="val">
             <![CDATA[ 
             var ilist = opttreecontroller.getChildNodes( datapath.p );
-            opttreecontroller.lock( "ao" );
-            for ( var k=0, len=ilist.length; k<len; k++ ){
-                this.recursiveOpen( ilist[ k ], val );
+            if (ilist != null) {
+                opttreecontroller.lock( "ao" );
+                for ( var k=0, len=ilist.length; k<len; k++ ){
+                    this.recursiveOpen( ilist[ k ], val );
+                }
+                opttreecontroller.unlock( "ao" );
             }
-            opttreecontroller.unlock( "ao" );
             ]]>
         </method>
 
