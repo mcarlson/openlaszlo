@@ -34,12 +34,17 @@
         <attribute name="borderTop" value="5"/>
 
         <attribute name="borderBottom" value="5"/>
-        
-        <!--- if non-zero, then this will be used to maintain the
-              aspect ratio based on the width of the videoscreen.
-              Default: 4/3
-        -->
-        <attribute name="aspectRatio" value="$once{4/3}"/>
+
+        <attribute name="aspectRatio" value="$once{
+            4 / 3}"/>
+
+        <attribute name="videoWidth" value="${
+            Math.min(this.innerWidth,
+                     this.innerHeight * this.aspectRatio)}"/>
+
+        <attribute name="videoHeight" value="${
+            Math.min(this.innerHeight,
+                     this.innerWidth / this.aspectRatio)}"/>
 
         <!--- the actual width of the videoview 
             @access private
@@ -51,12 +56,8 @@
             @access private
         -->
         <attribute name="innerHeight" value="${
-            aspectRatio &gt; 0 ?
-            Math.round(this.innerWidth * 1 / this.aspectRatio)
-            : this.height - (this.borderTop + this.borderBottom)}"/>
+            this.height - (this.borderTop + this.borderBottom)}"/>
 
-        <attribute name="height" value="${this.borderTop + this.borderLeft +
-                   this.innerHeight}"/>
         <mediastream 
             name="ms"
             autoplay="${classroot.autoplay}"
@@ -65,13 +66,12 @@
             debug="${parent.debug}" 
         />
 
-
         <videoview 
             name="vv"
-            x="${parent.borderLeft}"
-            y="${parent.borderTop}"
-            width="${parent.innerWidth}"
-            height="${parent.innerHeight}"
+            x="${parent.borderLeft + (parent.innerWidth-parent.videoWidth)/2}"
+            y="${parent.borderTop + (parent.innerHeight-parent.videoHeight)/2}"
+            width="${parent.videoWidth}"
+            height="${parent.videoHeight}"
             stream="$once{classroot.ms}"
             visible="${parent.visible &amp;&amp; (this.width &gt; 1) &amp;&amp; (this.height &gt; 1)}"
             playvolume="${classroot.volume}"

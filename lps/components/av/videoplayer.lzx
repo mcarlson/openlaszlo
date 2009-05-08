@@ -119,7 +119,8 @@
 
        <simplelayout axis="y" spacing="${parent.sliderGap}"/>  
        <videoscreen name="vscreen" debug="${parent.debug}" 
-            width="${parent.screenWidth}"
+            width="${parent.width}"
+            height="${parent.height - parent.sliderGap - parent.sliderHeight}"
             visible="${parent.showscreen}"
             type="${classroot.type}"
             autoplay="${classroot.autoplay}"
@@ -133,7 +134,7 @@
             aspectRatio="${parent.aspectRatio}"
             />
         <videoslider name="vslider"
-            width="${parent.screenWidth}"
+            width="${parent.width}"
             height="${parent.sliderHeight}"
             visible="${parent.showslider}"
             ms="${classroot.vscreen.ms}"

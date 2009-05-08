@@ -18,7 +18,7 @@
             border="1" sliderGap="0"
             url="http:videos/good-dog.flv"
             type="http"    
-            width="302"/>     
+            width="320" height="256"/>
         <text text="${'playing='+v1.stream.playing}"/>
         <text text="${'paused='+v1.stream.paused}"/>
         <text></text>
@@ -29,10 +29,10 @@
               v2: autoplay=true<br/>
               defaults for visual layout
         </text>
-        <videoplayer id="v2" debug="true"
+        <videoplayer id="v2" 
         url="http:videos/good-dog.flv"
         type="http" autoplay="true"
-        width="320" />
+        width="320" height="261"/>
         <text text="${'playing='+v2.stream.playing}"/>
         <text text="${'paused='+v2.stream.paused}"/>
         <text></text>

@@ -389,9 +389,6 @@
 
         this.setAttribute("time", 0);
         this.setAttribute("progress", 0.0);
-        // note the mode 'playing' means playing, as opposed to recording or
-        // broadcasting.  It also includes the 'paused' state
-        this.setAttribute("mode", "playing");
         
         // call internal play method after start, length, and reset params 
         // have been translated into confusing flash player values
@@ -413,6 +410,10 @@
                 return;
             }
         }                            
+        // note the mode 'playing' means playing, as opposed to recording or
+        // broadcasting.  It also includes the 'paused' state
+        this.setAttribute("mode", "playing");
+
         if ($debug && !this._flashstream) {
             Debug.warn('mediastream %w unexpected _flashstream=%w', 
                 this, this._flashstream); 
@@ -1227,6 +1228,7 @@
           the stream will be in a paused state.
     -->
     <method name="seek" args="t"> <![CDATA[
+        if (url == "") return;
 
         if (!this._flashstream) {
             this._createStream("seek", [t]);

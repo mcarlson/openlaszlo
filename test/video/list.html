@@ -3,118 +3,142 @@
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 <html>
-<p><a href="readme.txt" target="display">readme.txt</a></p>
+<head>
+<script>
+function runtest(url) {
+    var div = document.getElementById("current");
+    div.innerHTML = "Now playing:<br/>" + url
+    window.top.frames.display.location = url;
+    return void(0);
+}
+</script>
+</head>
+<body style="font-size:11px">
+<div id="current">
+</div>
+<p><a href="javascript:runtest('readme.txt')">readme.txt</a></p>
 <hr/>
 <p>doc examples: worked in 4.2, still work</p>
 <p>example-mediastream.lzx
 <br/>
-<a href="example-mediastream.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="example-mediastream.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('example-mediastream.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('example-mediastream.lzx?debug=true&lzr=swf9')">swf9</a>,
 </p>
 <p>
 example-rtmpconnection.lzx
 <br/>
-<a href="example-rtmpconnection.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="example-rtmpconnection.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('example-rtmpconnection.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('example-rtmpconnection.lzx?debug=true&lzr=swf9')">swf9</a>,
 </p>
 <p>
 example-videoview.lzx
 <br/>
-<a href="example-videoview.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="example-videoview.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('example-videoview.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('example-videoview.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <hr/>
 <p>these work in swf8 and swf9</p>
 <p>
 test-videoplayer-http.lzx
 <br/>
-<a href="test-videoplayer-http.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-videoplayer-http.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-videoplayer-http.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-videoplayer-http.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
-
+<p>
+test-videoplayer-setargs.lzx
+<br/>
+<a href="javascript:runtest('test-videoplayer-setargs.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-videoplayer-setargs.lzx?debug=true&lzr=swf9')">swf9</a>
+</p
+<p>
+test-videoplayer-resize.lzx
+<br/>
+<a href="javascript:runtest('test-videoplayer-resize.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-videoplayer-resize.lzx?debug=true&lzr=swf9')">swf9</a>
+</p
 <p>
 test-rtmpconnection.lzx
 <br/>
-<a href="test-rtmpconnection.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-rtmpconnection.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-rtmpconnection.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-rtmpconnection.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-videoview.lzx
 <br/>
-<a href="test-videoview.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-videoview.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-videoview.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-videoview.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-camera.lzx
 <br/>
-<a href="test-camera.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-camera.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-camera.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-camera.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-multiple-videos.lzx
 <br/>
-<a href="test-multiple-videos.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-multiple-videos.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-multiple-videos.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-multiple-videos.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-stream-video-rtmp-sep.lzx
 <br/>
-<a href="test-stream-video-rtmp-sep.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-stream-video-rtmp-sep.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-stream-video-rtmp-sep.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-stream-video-rtmp-sep.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-stream-video-sep.lzx
 <br/>
-<a href="test-stream-video-sep.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-stream-video-sep.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-stream-video-sep.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-stream-video-sep.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-video-rtmp.lzx
 <br/>
-<a href="test-video-rtmp.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-video-rtmp.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-video-rtmp.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-video-rtmp.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-video.lzx
 <br/>
-<a href="test-video.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-video.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-video.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-video.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-stream-video.lzx
 <br/>
-<a href="test-stream-video.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-stream-video.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-stream-video.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-stream-video.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <hr/>
 <p> these work in swf8, not in swf9
 <p>
 test-recording.lzx 
 <br/>
-<a href="test-recording.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-recording.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-recording.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-recording.lzx?debug=true&lzr=swf9')">swf9</a>,
 </p>
 <hr/>
 <p>tested in swf8, untestedin swf9</p>
 <p>
 test-record-audio.lzx
 <br/>
-<a href="test-record-audio.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-record-audio.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-record-audio.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-record-audio.lzx?debug=true&lzr=swf9')">swf9</a>,
 </p>
 <hr/>
 <p>untested</p>
 <p>
 test-live-echo.lzx
 <br/>
-<a href="test-live-echo.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-live-echo.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-live-echo.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-live-echo.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-muting-and-playing.lzx (broadcast)
 <br/>
-<a href="test-muting-and-playing.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-muting-and-playing.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-muting-and-playing.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-muting-and-playing.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 
 <hr/>
@@ -122,31 +146,32 @@ test-muting-and-playing.lzx (broadcast)
 <p>
 test-camera-mute-multiple.lzx
 <br/>
-<a href="test-camera-mute-multiple.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-camera-mute-multiple.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-camera-mute-multiple.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-camera-mute-multiple.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-live
 <br/>
-<a href="test-live.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-live.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-live.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-live.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-live-echo
 <br/>
-<a href="test-live-echo.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-live-echo-multiple.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-live-echo.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-live-echo-multiple.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-live-sep.lzx
 <br/>
-<a href="test-live-sep.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-live-sep.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-live-sep.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-live-sep.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
 <p>
 test-microphone-recording.lzx
 <br/>
-<a href="test-microphone-recording.lzx?debug=true&lzr=swf8" target="display">swf8</a>,
-<a href="test-microphone-recording.lzx?debug=true&lzr=swf9" target="display">swf9</a>
+<a href="javascript:runtest('test-microphone-recording.lzx?debug=true&lzr=swf8')">swf8</a>,
+<a href="javascript:runtest('test-microphone-recording.lzx?debug=true&lzr=swf9')">swf9</a>
 </p>
+</body>
 </html>

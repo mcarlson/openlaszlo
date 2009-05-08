@@ -1,0 +1,29 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+<canvas>   
+<simplelayout/>
+<view>   
+    <simplelayout axis="x" spacing="10"/> 
+    <view layout="axis:y">
+        <text multiline="true">
+              defaults for visual layout, blue box resizes
+        </text>
+        <videoplayer id="v3" debug="true"
+            url="http:videos/good-dog.flv"
+            type="http" 
+            width="300" height="300">
+            <resizestate name="sizer"/>    
+        </videoplayer>
+        <view bgcolor="blue" 
+                width="20" height="20"
+                align="right" y="${v3.height}"
+                options="ignorelayout:true"
+                onmousedown="v3.sizer.apply(); this.dragger.apply()"
+                onmouseup="v3.sizer.remove(); this.dragger.remove()">
+            <dragstate name="dragger"/>
+        </view>
+    </view>
+</view>
+</canvas>

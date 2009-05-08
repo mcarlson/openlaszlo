@@ -5,8 +5,11 @@
 <!-- this is the example from the mediastream doc -->
 <canvas>
           <mediastream name="ms" autoplay="true" type="http"
-          url="http://www.archive.org/download/JudgeMediaTestVideoFile_0/video.flv"
+            url="http:videos/good-dog.flv"
           debug="true" />
+          <!--
+          url="http://www.archive.org/download/JudgeMediaTestVideoFile_0/video.flv"
+          -->
            <videoview type="http" autoplay="true" width="320" height="240" 
                 stream="canvas.ms" debug="true"/>
 </canvas>

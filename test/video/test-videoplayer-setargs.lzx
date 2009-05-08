@@ -1,0 +1,46 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+<canvas>
+<simplelayout spacing="4"/>
+<text>test a videoplayer that  
+     starts with no url set and then the http url is 
+         set dynamically (using stream APIs)
+</text>
+<class name="editfield" layout="axis:x; spacing:4" width="250">
+    <attribute name="label" type="string" value=""/>
+    <attribute name="text" type="text" value=""/>
+    <text name="title" text="${parent.label}"/>
+    <edittext name="field" text="${parent.text}"
+              width="${parent.width-parent.title.width}">
+        <handler name="ontext">
+            parent.setAttribute('text', this.text);
+        </handler>
+    </edittext>
+</class>
+
+<view>   
+    <simplelayout axis="x" spacing="10"/> 
+    <view layout="axis:y;spacing:4">
+        <text multiline="true">
+              defaults for visual layout
+        </text>
+        <videoplayer id="v3" type="http" debug="true"
+            width="300" height="300">
+        </videoplayer>
+
+        <editfield id="gUrl" label="url:" text="http:videos/good-dog.flv"
+                   width="400"/> 
+        <editfield id="gType" label="type:" text="http"/>
+        <button text="Play">
+            <handler name="onclick">
+                v3.stream.stop();
+                v3.stream.setAttribute('type', gType.text);
+                v3.stream.setAttribute('url', gUrl.text);
+                v3.stream.play();
+            </handler>
+        </button>
+    </view>
+</view>
+</canvas>
