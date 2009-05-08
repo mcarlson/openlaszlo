@@ -879,20 +879,26 @@ LzSprite.prototype.getBaseUrl = function (resource) {
 }
 
 LzSprite.prototype.CSSDimension = function (value, units) {
-    // Coerce +/- infinity, NaN
-    var result = value; 
-    if (isNaN(value)) { 
-        result = 0; 
-    } else if (value === Infinity) { 
-        result = (~0>>>1); 
-    } else if (value === -Infinity) { 
-        result = ~(~0>>>1); 
-    } 
-    if ($debug) { 
-        if (value !== result) { 
-            Debug.warn("%w: coerced %w to %w", arguments.callee, value, result); 
-        }
+    // Coerce +/- infinity, NaN.  For compatibility with swf runtimes,
+    // NaN is treated as 0.  For compatibility with DHTML runtimes,
+    // Infinity is treated as the largest possible integer value (as
+    // implied by the bit operators).
+    var result = value;
+    if (isNaN(value)) {
+        result = 0;
+    } else if (value === Infinity) {
+        result = (~0>>>1);
+    } else if (value === -Infinity) {
+        result = ~(~0>>>1);
     }
+    // NOTE: [2009-05-08 ptw] Triggers too many warnings due to
+    // contraints running in random order and picking up `undefined`
+    // as a value in a numeric expression, which casts to NaN
+//     if ($debug) {
+//         if (value !== result) {
+//             Debug.warn("%w: coerced %w to %w", arguments.callee, value, result);
+//         }
+//     }
 
     return Math.round(result) + (units ? units : 'px');
 }
