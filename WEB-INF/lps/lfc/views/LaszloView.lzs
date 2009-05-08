@@ -770,9 +770,13 @@ var fontstyle;
 
 /** @access private */
 function $lzc$set_fontstyle(val) {
-    this.fontstyle = val;
-    if (this.onfontstyle.ready) { 
-        this.onfontstyle.sendEvent( this.fontstyle ); 
+    if (val == 'plain' || val == 'bold' || val == 'italic' || val == 'bolditalic') {
+        this.fontstyle = val;
+        if (this.onfontstyle.ready) { 
+            this.onfontstyle.sendEvent( this.fontstyle ); 
+        }
+    } else {
+        if ($debug) Debug.warn('invalid font style', val);
     }
 }
 
@@ -785,9 +789,13 @@ var fontsize;
 
 /** @access private */
 function $lzc$set_fontsize(val) {
-    this.fontsize = val;
-    if (this.onfontsize.ready) { 
-        this.onfontsize.sendEvent( this.fontsize ); 
+    if (val <= 0 || isNaN(val)) {
+        if ($debug) Debug.warn('invalid font size', val);
+    } else {
+        this.fontsize = val;
+        if (this.onfontsize.ready) { 
+            this.onfontsize.sendEvent( this.fontsize ); 
+        }
     }
 }
 

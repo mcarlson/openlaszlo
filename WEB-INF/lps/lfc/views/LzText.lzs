@@ -774,9 +774,13 @@ dynamic class LzText extends LzView with LzFormatter {
 
   /** @access private */
   override function $lzc$set_fontstyle(fstyle) {
-    super.$lzc$set_fontstyle(fstyle);
-    this.tsprite.setFontStyle(fstyle);
-    this._updateSize();
+    if (fstyle == 'plain' || fstyle == 'bold' || fstyle == 'italic' || fstyle == 'bolditalic') {
+      super.$lzc$set_fontstyle(fstyle);
+      this.tsprite.setFontStyle(fstyle);
+      this._updateSize();
+    } else {
+      if ($debug) Debug.warn('invalid font style', fstyle);
+    }
   }
 
   /** @access private */
@@ -788,9 +792,13 @@ dynamic class LzText extends LzView with LzFormatter {
 
   /** @access private */
   override function $lzc$set_fontsize(fsize) {
-    super.$lzc$set_fontsize(fsize);
-    this.tsprite.setFontSize(fsize);
-    this._updateSize();
+    if (fsize <= 0 || isNaN(fsize)) {
+      if ($debug) Debug.warn('invalid font size', fsize);
+    } else {
+      super.$lzc$set_fontsize(fsize);
+      this.tsprite.setFontSize(fsize);
+      this._updateSize();
+    }
   }
 
   /** text-align for this text
@@ -820,9 +828,13 @@ dynamic class LzText extends LzView with LzFormatter {
   var textindent :Number = 0;
   /** @access private */
   function $lzc$set_textindent (indent:Number) :void {
-    this.textindent = indent;
-    this.tsprite.setTextIndent(indent);
-    this._updateSize();
+    if (indent < 0 || isNaN(indent)) {
+      if ($debug) Debug.warn('invalid text indent', indent);
+    } else {
+      this.textindent = indent;
+      this.tsprite.setTextIndent(indent);
+      this._updateSize();
+    }
   }
 
   /** letter-spacing for this text
@@ -832,9 +844,13 @@ dynamic class LzText extends LzView with LzFormatter {
   var letterspacing :Number = 0;
   /** @access private */
   function $lzc$set_letterspacing (spacing:Number) :void {
-    this.letterspacing = spacing;
-    this.tsprite.setLetterSpacing(spacing);
-    this._updateSize();
+    if (spacing < 0 || isNaN(spacing)) {
+      if ($debug) Debug.warn('invalid letter spacing', spacing);
+    } else {
+      this.letterspacing = spacing;
+      this.tsprite.setLetterSpacing(spacing);
+      this._updateSize();
+    }
   }
 
   /** text-decoration for this text
