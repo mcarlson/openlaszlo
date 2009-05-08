@@ -230,10 +230,11 @@ public dynamic class LzNode extends LzEventable {
               this.addProperty(key, val);
             } else if (val !== void 0) {
               this[key] = val;
-            } else if ($as3) {
-              // not for ActionScript3
-            } else if (! (key in this)) {
-              this[key] = val;
+            } else if (this[key] === void 0) {
+              // Ensure dynamic properties exist (for `with(this)`),
+              // above test works in all runtimes to detect missing
+              // properties
+              this[key] = void 0;
             }
             delete iargs[key];
           } else {
@@ -241,9 +242,10 @@ public dynamic class LzNode extends LzEventable {
             // have its initial value installed by the setter, but
             // we need to create the attribute in the instance for
             // implicit this to work correctly
-            if ($as3) {
-              // AS3 handles this at compile time
-            } else if (! (key in this)) {
+            if (this[key] === void 0) {
+              // Ensure dynamic properties exist (for `with(this)`),
+              // above test works in all runtimes to detect missing
+              // properties
               this[key] = void 0;
             }
           }
@@ -992,13 +994,13 @@ public dynamic class LzNode extends LzEventable {
     var inits = null;
     var constraints = null;
 
-    for ( var a in args ){
-      var val = args[a];
-      /* To see if it has a setter.  Cf., setAttribute */
-      var setr = '$lzc$set_' + a;
+    for ( var key in args ){
+      var val = args[key];
+      /* To see if it has key setter.  Cf., setAttribute */
+      var setr = '$lzc$set_' + key;
       //handle flash bug where objects slots are enumerated multiple times
-      if ( oset[a] || args[a] === LzNode._ignoreAttribute ) continue;
-      oset[ a ] = true;
+      if ( oset[key] || args[key] === LzNode._ignoreAttribute ) continue;
+      oset[ key ] = true;
 
       if (val is LzInitExpr) {
         // Ordering is important, constraint is a subclass of once
@@ -1023,40 +1025,42 @@ public dynamic class LzNode extends LzEventable {
         // implemented by a setter, so it never clobbers the
         // method... er, unless you set the attribute to a
         // function.  YOW!
-        if ($as3) {
-          // AS3 handles this at compile time
-        } else if (! (a in this)) {
-          this[a] = void 0;
+        if (this[key] === void 0) {
+          // Ensure dynamic properties exist (for `with(this)`),
+          // above test works in all runtimes to detect missing
+          // properties
+          this[key] = void 0;
         }
       } else if (! this[setr]) {
         // TODO: should already be declared, so we should just be
         // able to set it, but that doesn't work if this is a
         // method
         if (val is Function) {
-          this.addProperty(a, val);
+          this.addProperty(key, val);
         } else if (val !== void 0) {
-          this[a] = val;
-        } else if ($as3) {
-          // not for ActionScript3
-        } else if (! (a in this)) {
-          this[a] = val;
+          this[key] = val;
+        } else if (this[key] === void 0) {
+          // Ensure dynamic properties exist (for `with(this)`),
+          // above test works in all runtimes to detect missing
+          // properties
+          this[key] = void 0;
         }
         if (! constcall) {
           //then we need to notify the rest of the system that this
           //value changed.
-          var evt = ("on" + a);
+          var evt = ("on" + key);
           if (this[evt] is LzEvent) {
-            if (this[evt].ready) this[ evt ].sendEvent( args[ a ] );
+            if (this[evt].ready) this[ evt ].sendEvent( args[ key ] );
           }
         }
       } else if (this[setr] is Function) {
         // TODO: simplify test above - can this[setr] ever not be a Function?
-        if (a in this.earlySetters) {
+        if (key in this.earlySetters) {
           if (hasearly == null) { hasearly = []; }
-          hasearly[this.earlySetters[a]] = a;
+          hasearly[this.earlySetters[key]] = key;
         } else {
           if (hasset == null) { hasset = []; }
-          hasset.push(a);
+          hasset.push(key);
         }
       }
     }
@@ -1066,9 +1070,9 @@ public dynamic class LzNode extends LzEventable {
         if (i in hasearly) {
           // bail if deleted, e.g. by setDatapath causing replication
           if (this.__LZdeleted) return;
-          var a = hasearly[i];
-          var setr = '$lzc$set_' + a;
-          this[setr]( args[a] );
+          var key = hasearly[i];
+          var setr = '$lzc$set_' + key;
+          this[setr]( args[key] );
         }
       }
     }
@@ -1077,9 +1081,9 @@ public dynamic class LzNode extends LzEventable {
       for (var i = hasset.length - 1; i >= 0; i--) {
         // bail if deleted, e.g. by setDatapath causing replication
         if (this.__LZdeleted) return;
-        var a = hasset[i];
-        var setr = '$lzc$set_' + a;
-        this[setr]( args[a] );
+        var key = hasset[i];
+        var setr = '$lzc$set_' + key;
+        this[setr]( args[key] );
       }
     }
 
