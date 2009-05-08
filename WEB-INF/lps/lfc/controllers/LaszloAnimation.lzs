@@ -1,7 +1,7 @@
 /**
   * LaszloAnimations.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   * @affects animation lzanimator
   * @access public
@@ -288,7 +288,7 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
         if (! this.isactive) return;
 
         var targ:LzNode = this.target;
-        var e_prop:String = "e_" + this.attribute;
+        var e_prop:String = "e_" + (this.attribute cast String);
         if (! targ[e_prop].c) {
             targ[e_prop].c = 0;
         }
@@ -308,14 +308,15 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
       */
     override function __LZfinalizeAnim () :void {
         var targ:LzNode = this.target;
-        var e_prop:String = "e_" + this.attribute;
+        var attr:String = this.attribute;
+        var e_prop:String = "e_" + attr;
         if (! targ[e_prop].c) {
             targ[e_prop].c = 0;
         }
         targ[e_prop].c -= 1; //decrement animation counter for prop
         if (targ[e_prop].c <= 0) {
             targ[e_prop].c = 0;
-            targ.setAttribute(this.attribute, targ[e_prop].v);
+            targ.setAttribute(attr, targ[e_prop].v);
             targ[e_prop].v = null;
         }
 
@@ -410,8 +411,9 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
         // All animators are now relative at the core so add the difference
         // of this value - the current value to the view's attribute.
         var targ:LzNode = this.target;
+        var attr:String = this.attribute;
         var aDiff:Number = value - this.currentValue;
-        targ.setAttribute(this.attribute, targ[this.attribute] + aDiff);
+        targ.setAttribute(attr, targ[attr] + aDiff);
         this.currentValue = value;
     }
 
