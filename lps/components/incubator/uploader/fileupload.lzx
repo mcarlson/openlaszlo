@@ -91,63 +91,63 @@
         <switch>
           <when property="$as3">
            <method name="cancelHandler" args="event:Event">
-             if ($debug) {
-                 Debug.write(this, "got onCancel", event);
-             }
+             // if ($debug) {
+             //     Debug.write(this, "got onCancel", event);
+             // }
              this.onCancel();
            </method>
 
            <method name="progressHandler" args="event:ProgressEvent">
-             if ($debug) {
-                 var file:FileReference = event.target cast FileReference;
-                 Debug.write(this, "got onProgress name=", file.name,
-                             "bytesLoaded=", event.bytesLoaded, "bytesTotal=", event.bytesTotal);
-             }
+             var file:FileReference = event.target cast FileReference;
+             // if ($debug) {
+             //     Debug.write(this, "got onProgress name=", file.name,
+             //                 "bytesLoaded=", event.bytesLoaded, "bytesTotal=", event.bytesTotal);
+             // }
              this.onProgress(file, event.bytesLoaded, event.bytesTotal);
            </method>
 
            <method name="openHandler" args="event:Event">
-             if ($debug) {
-                 Debug.write(this, "got onOpen");
-             }
+             // if ($debug) {
+             //     Debug.write(this, "got onOpen");
+             // }
              this.onOpen();
            </method>
 
            <method name="completeHandler" args="event:Event">
-             if ($debug) {
-                 Debug.write(this, "got onComplete");
-             }
+             // if ($debug) {
+             //     Debug.write(this, "got onComplete");
+             // }
              this.onComplete(event.target);
            </method>
 
            <method name="securityErrorHandler" args="event:SecurityErrorEvent">
-             if ($debug) {
-                 Debug.write(this, "got onSecurityError");
-             }
+             // if ($debug) {
+             //     Debug.write(this, "got onSecurityError");
+             // }
              this.onSecurityError();
            </method>
 
            <method name="ioErrorHandler" args="event:IOErrorEvent">
-             if ($debug) {
-                 Debug.write(this, "got onIOError");
-             }
+             // if ($debug) {
+             //     Debug.write(this, "got onIOError");
+             // }
              this.onIOError();
            </method>
 
            <method name="selectHandler" args="event:Event">
-             if ($debug) {
-                 var file:FileReference = FileReference(event.target);
-                 Debug.write(this, "got onSelect", "name=", file.name);
-             }
+             var file:FileReference = FileReference(event.target);
+             // if ($debug) {
+             //     Debug.write(this, "got onSelect", "name=", file.name);
+             // }
              this.onSelect(file);
            </method>
 
 
            <method name="httpStatusHandler" args="event:HTTPStatusEvent">
              <![CDATA[
-             if ($debug) {
-                 Debug.write(this, "got onHTTPError");
-             }
+             // if ($debug) {
+             //     Debug.write(this, "got onHTTPError");
+             // }
              if (event.status >= 400 && event.status < 500) {
                this.onHTTPError();
              }
