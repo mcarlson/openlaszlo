@@ -467,7 +467,7 @@
                 var sv = svs[0];
                 if (sv) {
                     var cl = sv.cloneManager;
-                    if (cl['clones']) {
+                    if (cl && cl['clones']) {
                         var pos = cl.clones[0].datapath.xpathQuery( 'position()' ) - 1;
                         item = cl.clones[ index - pos ];
                     } else {
