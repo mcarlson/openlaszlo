@@ -420,6 +420,7 @@ LzSprite.prototype.__defaultStyles['#lzcontextmenu'] = {
     padding: '4px',
     fontFamily: 'Verdana,Vera,sans-serif',
     fontSize: '13px',
+    float: 'left',
     margin: '2px',
     color: '#999',
     minWidth: '100px'

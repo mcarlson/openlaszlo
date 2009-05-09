@@ -85,7 +85,7 @@ function __show (send=true) {
     if (! s) {
         s = document.createElement('div');
         lz.embed.__setAttr(s, 'id', 'lzcontextmenu');
-        lz.embed.__setAttr(s, 'style', 'display: none;float: left');
+        lz.embed.__setAttr(s, 'style', 'display: none');
         document.body.appendChild(s);
     }
     var owner = this.owner;
