@@ -393,6 +393,14 @@ LzSprite.prototype.__defaultStyles = {
         return n;
     }
 }
+LzSprite.prototype.__defaultStyles['#lzcontextmenu div.separator'] = {
+    "border-top": '1px solid #808080',
+    "border-left": 'none',
+    "border-right": 'none',
+    "border-bottom": '1px solid #d4d0c8',
+    "margin": '7px 0px'
+};
+
 LzSprite.prototype.__defaultStyles['#lzcontextmenu a'] = {
    color: '#000',
    display: 'block',
@@ -403,6 +411,7 @@ LzSprite.prototype.__defaultStyles['#lzcontextmenu a:hover'] = {
    color: '#FFF',
    backgroundColor: '#333'
 };
+
 LzSprite.prototype.__defaultStyles['#lzcontextmenu'] = {
     position: 'absolute',
     zIndex: 10000000,

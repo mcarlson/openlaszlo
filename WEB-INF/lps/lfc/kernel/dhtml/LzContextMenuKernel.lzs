@@ -85,7 +85,7 @@ function __show (send=true) {
     if (! s) {
         s = document.createElement('div');
         lz.embed.__setAttr(s, 'id', 'lzcontextmenu');
-        lz.embed.__setAttr(s, 'style', 'display: none');
+        lz.embed.__setAttr(s, 'style', 'display: none;float: left');
         document.body.appendChild(s);
     }
     var owner = this.owner;
@@ -99,7 +99,7 @@ function __show (send=true) {
         var cm = items[i].kernel;
         var v = cm.cmenuitem;
         if (v.visible != true) continue; 
-        if (v.separatorBefore) o += '<hr/>';
+        if (v.separatorBefore) o += '<div class="separator"></div>';
 
         var caption = v.caption;
         // Don't display the same item twice (matches swf behavior)
@@ -118,7 +118,7 @@ function __show (send=true) {
     
     LzMouseKernel.__showncontextmenu = this;
 
-    s.innerHTML = "<table><tr><td>"+o+"</td></tr></table>";
+    s.innerHTML = o;
     if (send) {
         s.style.left = LzMouseKernel.__x + 'px';
         s.style.top = LzMouseKernel.__y + 'px';
