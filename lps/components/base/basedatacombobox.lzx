@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -55,7 +55,7 @@
 
         <!--- Width of popup list, defaults to width of combobox view. During
               setup, the width of the floating list view might not yet be set,
-              so this returns the expected width. If not set, -->
+              so this returns the expected width. -->
         <attribute name="listwidth" value="null" />
 
         <!--- If true, the combobox will behave like a menu. "value" is
@@ -121,8 +121,8 @@
             if (this._datacatchdel != null) {
                 this._datacatchdel.unregisterAll();
             }
-            
-            super.destroy.apply(this, arguments);
+
+            super.destroy();
         ]]></method>
         
         <!--- This catches the initial ondata, since there is no datapath
@@ -134,13 +134,13 @@
               @keywords private -->
         <method name="_updateSelectionOnData" args="ignore=null" ><![CDATA[
             var dp = new lz.datapointer(this);
-            
+
             var arr = dp.xpathQuery(this.itemdatapath);
             if (arr != null) {
                 if (this._datacatchdel != null) {
                     this._datacatchdel.unregisterAll();
                 }
-                
+
                 if (this.value == null && this.selectfirst) {
                     // set first to be the initvalue
                     this._updateSelectionByIndex(0, false, true);
@@ -233,11 +233,11 @@
                     this.doSetValue(v, true, true);
                 }
                 this.setAttribute('text', t);
-                
+
                 if (this.ismenu) {
                     //FIXME: [20080412 anba] datapointer leaks memory, but we cannot destroy 
                     //it because it is passed to the "onselect"/"onselected" event!
-                    
+
                     // Clear the selection
                     this._selectedIndex = -1;
                     if (this['_cblist'] && this._cblist['_selector']) {
@@ -249,7 +249,7 @@
                     }
                     this.selected = dp;
                 }
-                
+
                 if ( this['onselected'] ) this.onselected.sendEvent(dp);
                 if ( this['onselect'] )   this.onselect.sendEvent(dp);
             } else {
@@ -271,7 +271,7 @@
                     }
                     return;
                 }
-                
+
                 var flcn = this.menuclassname;
                 if (!(flcn && lz[flcn])) {
                     if ($debug) {
@@ -338,7 +338,7 @@
                 cbl.destroy();
             }
         ]]></method>
-        
+
         <!--- Toggles the open/close state of the popup list. -->
         <method name="toggle"><![CDATA[
             this.setAttribute("isopen", !this.isopen)
@@ -353,23 +353,23 @@
             } else {
                 if (open) { // open combox
                     if (this.isopen) return; // tends to get called more than once
-                
+
                     lz.ModeManager.makeModal( this );
-                
+
                     this._setupcblist(false);
-                
+
                     this._cblist.bringToFront();
                     this._cblist.setAttribute('visible', true);
-                
+
                     lz.Focus.setFocus( this._cblist, false );
-                
+
                     this.isopen = true;
                     if (this['onisopen']) this.onisopen.sendEvent(true);
                 } else { // close combox
                     if (!this.isopen) return;
                     lz.ModeManager.release( this );
                     if (!this['isopen']) return;
-                    
+
                     this._cblist.setAttribute("visible", false);
                     this.isopen = false;
                     if (this['onisopen']) this.onisopen.sendEvent(false);
@@ -513,18 +513,24 @@
             this._setupcblist(false);
         ]]></method>
 
+        <!--- @access private -->
+        <method name="setValue" args="v, isinitvalue=null" override="true"><![CDATA[
+            this.doSetValue(v, isinitvalue, false);
+        ]]></method>
+
         <!--- Set value of combobox.
               @param String|Number value: value to set.
-              @param Boolean isinitvalue: true if value is an init value. -->
+              @param Boolean isinitvalue: true if value is an init value. 
+              @param Boolean ignoreselection: if true, selection won't be updated -->
         <method name="doSetValue" args="value, isinitvalue, ignoreselection"><![CDATA[
             if (this['value'] != value) {
                 var i = this.getItemIndex(value);
                 this._selectedIndex = i;
-                
+
                 if (! this.ismenu) { // Ignore value if we're a menu
                     super.setValue(value, isinitvalue);
                 }
-                
+
                 if ( i != -1 && !ignoreselection) {
                     this._updateSelectionByIndex(i, true, false);
                 }
