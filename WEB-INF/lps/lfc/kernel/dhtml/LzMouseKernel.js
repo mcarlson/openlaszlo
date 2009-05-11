@@ -183,7 +183,7 @@ var LzMouseKernel = {
         var el = document.getElementById('lzcanvasclickdiv');
         el.style.display = isclickable ? 'block' : 'none';
     }
-    ,__sendMouseMove: function(e) {
+    ,__sendMouseMove: function(e, offsetx, offsety) {
         // see http://www.quirksmode.org/js/events_properties.html#position
         if (e.pageX || e.pageY) {
             LzMouseKernel.__x = e.pageX;
@@ -194,6 +194,12 @@ var LzMouseKernel = {
             var body = document.body, docElem = document.documentElement;
             LzMouseKernel.__x = e.clientX + body.scrollLeft + docElem.scrollLeft;
             LzMouseKernel.__y = e.clientY + body.scrollTop + docElem.scrollTop;
+        }
+        if (offsetx) {
+            LzMouseKernel.__x += offsety;
+        }
+        if (offsety) {
+            LzMouseKernel.__y += offsety;
         }
         if (e.type == 'mousemove') {
             LzMouseKernel.__sendEvent('onmousemove');

@@ -239,6 +239,9 @@ lz.embed.iframemanager = {
             lz.embed.attachEventHandler(iframe.document, 'mousedown', lz.embed.iframemanager, '__mouseEvent', id);
             lz.embed.attachEventHandler(iframe.document, 'mouseup', lz.embed.iframemanager, '__mouseEvent', id);
             //lz.embed.attachEventHandler(iframe.document, 'mousemove', lz.embed.iframemanager, '__mouseEvent', id);
+            iframe.document.oncontextmenu = function(e) {
+                return lz.embed.iframemanager.__mouseEvent(e, id);
+            }
             if (lz.embed.browser.isIE) {
                 lz.embed.attachEventHandler(iframe.document, 'mouseenter', lz.embed.iframemanager, '__mouseEvent', id);
                 lz.embed.attachEventHandler(iframe.document, 'mouseleave', lz.embed.iframemanager, '__mouseEvent', id);
@@ -299,6 +302,7 @@ lz.embed.iframemanager = {
                 lz.embed.removeEventHandler(iframe.document, 'mousedown', lz.embed.iframemanager, '__mouseEvent');
                 lz.embed.removeEventHandler(iframe.document, 'mouseup', lz.embed.iframemanager, '__mouseEvent');
                 //lz.embed.removeEventHandler(iframe.document, 'mousemove', lz.embed.iframemanager, '__mouseEvent');
+                iframe.document.oncontextmenu = null;
                 if (lz.embed.browser.isIE) {
                     lz.embed.removeEventHandler(iframe.document, 'mouseenter', lz.embed.iframemanager, '__mouseEvent');
                     lz.embed.removeEventHandler(iframe.document, 'mouseleave', lz.embed.iframemanager, '__mouseEvent');
@@ -362,11 +366,17 @@ lz.embed.iframemanager = {
             e = window.event;
         }
 
+        var eventname = 'on' + e.type;
         if (iframe.owner && iframe.owner.sprite && iframe.owner.sprite.__mouseEvent) {
             // dhtml
-            iframe.owner.sprite.__mouseEvent(e);
+            if (eventname == 'oncontextmenu') {
+                var pos = lz.embed.getAbsolutePosition(iframe); 
+                LzMouseKernel.__sendMouseMove(e, pos.x, pos.y)
+                return LzMouseKernel.__showContextMenu(e);
+            } else {
+                iframe.owner.sprite.__mouseEvent(e);
+            }
         } else {
-            var eventname = 'on' + e.type;
             // deal with IE event names
             if (eventname == 'onmouseleave') {
                 eventname = 'onmouseout';
