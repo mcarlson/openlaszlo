@@ -562,6 +562,13 @@
         <!--- @keywords private -->
         <attribute name="_menuitems" value="null" />
 
+        <setter name="width" args="w"><![CDATA[
+            super.setAttribute("width", w);
+            if (this.flist != null) {
+                this.flist.setAttribute("width", w);
+            }
+        ]]></setter>
+
         <!--- @keywords private -->
         <method name="init" >
             // create a floating list. Though the parent for this floating
