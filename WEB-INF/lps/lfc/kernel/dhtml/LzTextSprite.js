@@ -388,8 +388,6 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   var string = this.text;
   // Ignore the width if we are measuring width, or lineheight
   var width = 'auto';
-  var scrolldiv = this.scrolldiv;
-  var sds = scrolldiv.style;
   switch (dimension) {
     case 'lineheight':
       // no need to measure if we've set the lineHeight directly...
@@ -413,6 +411,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // NOTE: Quick check inlined at getTextWidth, getLineHeight,
   // getTextfieldHeight
   ////
+  var scrolldiv = this.scrolldiv;
   var className = scrolldiv.className;
   var style = scrolldiv.style.cssText;
   var styleKey = className + "/" + style;
@@ -433,6 +432,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // Now create a cache key limited to the styles that can affect the
   // height/width
   // Turn off `overflow: scroll; width: 100%; height:100%` so that does not interfere with measurements
+  var sds = scrolldiv.style;
   style = ("overflow: visible; width: " + width + "; height: auto; " +
            ((sds.fontSize) ? ("font-size: " + sds.fontSize + "; ") : "") +
            ((sds.fontWeight) ? ("font-weight: " + sds.fontWeight + "; ") : "") +
@@ -453,10 +453,10 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // Otherwise, compute from scratch
   var root = document.getElementById('lzTextSizeCache');
   if ((_sizecache.counter > 0) && ((_sizecache.counter % this.__sizecacheupperbound) == 0)) {
-    _sizecache = {counter: 0};
+    ltsp._sizecache = _sizecache = {counter: 0};
     cv = null;
     if (LzSprite.prototype.quirks.ie_leak_prevention) {
-      LzTextSprite.prototype.__cleanupdivs();
+      ltsp.__cleanupdivs();
     }
     if (root) { root.innerHTML = ''; }
   }
@@ -484,13 +484,13 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   } else {
     // create new div
     if (this.quirks['text_measurement_use_insertadjacenthtml']) {
-      var html = '<' + tagname + ' id="testSpan' + ltsp._sizecache.counter + '"';
+      var html = '<' + tagname + ' id="testSpan' + _sizecache.counter + '"';
       html += ' class="' + className + '"';
       html += ' style="' + style + '">';
       html += string;
       html += '</' + tagname + '>';
       root.insertAdjacentHTML('beforeEnd', html);
-      var mdiv = document.all['testSpan' + ltsp._sizecache.counter];
+      var mdiv = document.all['testSpan' + _sizecache.counter];
       if (this.quirks.ie_leak_prevention) {
         ltsp.__divstocleanup.push(mdiv);
       }
@@ -510,7 +510,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // NOTE: clientHeight for both height and lineheight
   cv[dimension] = (dimension == 'width') ? mdiv.clientWidth : mdiv.clientHeight;
   mdiv.style.display = 'none';
-  LzTextSprite.prototype._sizecache.counter++;
+  _sizecache.counter++;
 //   Debug.debug("%w %w %d", this, cacheFullKey, lineHeight);
   return cv[dimension];
 }
