@@ -1252,7 +1252,7 @@ LzSprite.prototype.__globalmouseup = function ( e ){
 
 LzSprite.prototype.setX = function ( x ){
     if (x == null || x == this.x) return;
-    this.__poscachedirty = true;
+    this.__poscacheid = -1;
     this.x = x;
     x = this.CSSDimension(x);
     if (this._x != x) {
@@ -1283,7 +1283,7 @@ LzSprite.prototype.setWidth = function ( w ){
 LzSprite.prototype.setY = function ( y ){
     //Debug.info('setY', y);
     if (y == null || y == this.y) return;
-    this.__poscachedirty = true;
+    this.__poscacheid = -1;
     this.y = y;
     y = this.CSSDimension(y);
     if (this._y != y) {
@@ -1456,14 +1456,11 @@ LzSprite.prototype.__preloadFrames = function() {
   */
 LzSprite.prototype.__findParents = function ( prop ){
     var out = [];
-    var sprite = this;
-    if (sprite[prop] != null) out.push(sprite);
-    do {
-        sprite = sprite.__parent;
-        if (! sprite) return out;
+    var root = LzSprite.__rootSprite;
+    for (var sprite = this; sprite; sprite = sprite.__parent) {
         if (sprite[prop] != null) out.push(sprite);
-        //alert(sprite);
-    } while (sprite != LzSprite.__rootSprite)
+        if (sprite === root) break;
+    }
     return out;
 }
 
@@ -1932,10 +1929,10 @@ LzSprite.prototype.getMouse = function() {
     //Debug.debug('LzSprite.getMouse', this.owner.classname, LzSprite.__rootSprite.getMouse('x'), LzSprite.__rootSprite.getMouse('y'));
     var p = this.__getPos();
     if (this.isroot) {
-        return {x: LzMouseKernel.__x - p.x, y: LzMouseKernel.__y - p.y}
+        return {x: LzMouseKernel.__x - p.x, y: LzMouseKernel.__y - p.y};
     } else {
-        var m = LzSprite.__rootSprite.getMouse()
-        return {x: m.x - p.x, y: m.y - p.y}
+        var m = LzSprite.__rootSprite.getMouse();
+        return {x: m.x - p.x, y: m.y - p.y};
     }
 }
 
@@ -1946,38 +1943,58 @@ LzSprite.prototype.__poscache = null;
 /**
   * @access private
   */
-LzSprite.prototype.__poscachedirty = true;
+LzSprite.prototype.__poscacheid = 0;
+/**
+  * @access private
+  */
+LzSprite.__poscachecnt = 0;
 /**
   * @access private
   */
 LzSprite.prototype.__getPos = function() {
-    // Handle lpp-4357
+    // Handle LPP-4357
     if (! LzSprite.__rootSprite.__initdone) {
         return lz.embed.getAbsolutePosition(this.__LZdiv);
     }
 
     // check if any this sprite or any parents are dirty 
     var dirty = false;
-    var p = this;
-    while (p != LzSprite.__rootSprite) {
-        if (p.__poscachedirty) {
-            dirty = true;
+    var attached = true;
+    var root = LzSprite.__rootSprite;
+    var pp, ppmax;
+    for (var p = this; p !== root; p = pp) {
+        pp = p.__parent;
+        if (pp) {
+            if (p.__poscacheid < pp.__poscacheid) {
+                // cache is too old or invalid
+                dirty = true;
+                ppmax = pp;
+            }
+        } else {
+            // not yet attached to the DOM
+            attached = false;
             break;
         }
-        p = p.__parent;
     }
-    if (dirty == false && this.__poscache) return this.__poscache;
 
-    // compute position, temporarily showing hidden parents so they can be measured
-    var pos = this.__processHiddenParents(lz.embed.getAbsolutePosition, this.__LZdiv);
-
-    // set this and parents' __poscachedirty to false
-    var p = this;
-    while (p && p != LzSprite.__rootSprite) {
-        if (p.__parent) p.__poscachedirty = false;
-        p = p.__parent;
+    if (dirty && attached) {
+        var next = ++LzSprite.__poscachecnt;
+        for (var p = this; p !== ppmax; p = p.__parent) {
+            // invalidate all bad caches
+            p.__poscache = null;
+            p.__poscacheid = next;
+        }
     }
-    this.__poscache = pos;
+
+    var pos = this.__poscache;
+    if (! pos) {
+        // compute position, temporarily showing hidden parents so they can be measured
+        pos = this.__processHiddenParents(lz.embed.getAbsolutePosition, this.__LZdiv);
+        if (attached) {
+            // only cache position if the sprite is attached to the DOM (LPP-4357)
+            this.__poscache = pos;
+        }
+    }
     return pos;
 }
 
