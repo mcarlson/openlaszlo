@@ -4,7 +4,7 @@
     <include href="lz/list.lzx" />
     <include href="lz/textlistitem.lzx" />
     <include href="lz/floatinglist.lzx" />
-    
+
     <!-- resources for menuarrow class -->
     <resource name="menuarrow_rsrc" >
         <frame src="resources/menu/menu_arrow_rt.swf"/>
@@ -34,7 +34,7 @@
         <attribute name="_clickcounter" value="0" />
         <!--- @access private -->
         <attribute name="_openedmenu" value="0" />
-        
+
 
         <!-- background views  -->
             <view name="_outerbezel"
@@ -58,22 +58,21 @@
                         layout="axis:x; spacing:-2"
                         deactivateevents="[]" height="100%"/> 
 
-        
+
         <!--- opens ( or closes ) requested menu and closes any other menus that are currently opened
               @param Menu menuref: the menu to be opened or closed
               @param Boolean openit: true to open menu, false to close it -->
         <method name="openMenu" args="menuref,openit"> <![CDATA[
-                
             if ( menuref == this._openedmenu ){
                 if ( openit ) return; // don't reopen menu if already opened
                 else {
                     this._openedmenu._menubutton.showUp();
                     this._openedmenu.setOpen( false );
                     this._openedmenu = 0;
-                    
+
                     // deactiavte basetracker
                     this.mbarcontent.deactivateTrackgroup(null);
-                    
+
                     // set clickcounter back to zero
                     this._clickcounter = 0;
                     this._openedmenu = 0;
@@ -85,7 +84,7 @@
                     this._openedmenu._menubutton.showUp();
                     this._openedmenu.close();
                 }
-            
+
                 // now open/close requested menu
                 if ( menuref != null) {
                     menuref.setOpen( openit );
@@ -163,11 +162,11 @@
     <class name="menubutton" extends="button" 
            respondtomouseout="false" text="${this._menuref.text}" 
            height="${parent.height}" doesenter="false" focusable="false">
-        
+
         <!--- Reference to menu that created this button.
               @keywords private -->
         <attribute name="_menuref" value="null"/>
-        
+
         <!--- this method is called to override the default event handling inherited
              from button @keywords private -->          
         <method name="registerEventHandlers"> <![CDATA[
@@ -191,7 +190,7 @@
             if ( this._menuref ) 
                 parent.openMenu(this._menuref,true);
         </method>
-        
+
         <!--- @keywords private -->
         <handler name="onmousetrackup" >
             // on first click keep the button down
@@ -245,7 +244,7 @@
     <!-- A beveled line used to visually separate menu items -->
     <class name="menuseparator" width="100%"
            opacity="1" height="6" extends="basecomponent" focusable="false">
-        
+
         <!--- the number of pixels to inset the menuseparartor from the sides of the menu -->
         <attribute name="xinset" value="3" type="number" />
 
@@ -289,39 +288,39 @@
         </doc>
 
     </class>
-    
-    
+
+
     <class name="menuitem" extends="textlistitem" 
             focusable="false">
 
         <!--- @keywords private-->
         <attribute name="delaytime" value="300" />
-        
+
         <!--- the command object assigned to be executed when this menuitem is selected -->
         <attribute name="command" value="null" type="expression"
                    setter="this.setCommand( command )"   when="once" />
-                           
+
         <!--- this event is sent to the menuitem when it is selected -->
         <event name="onselect" />
 
         <!---  @keywords private -->
         <attribute name="_doshowsubmenu"   value="false" />
-        
+
         <!---  @keywords private -->
         <attribute name="_submenu"         value="null" />
-        
+
         <!---  @keywords private -->
         <attribute name="showsubmenu_del"  value="null" />
-        
+
         <!---  @keywords private -->         
         <attribute name="hidesubmenu_del"  value="null" />
-                                           
+
         <state name="commandstate" applied="false">
             <text name="cmdkeys" 
                   x="${parent.width - 90}"
                   y="${classroot.text_y}" width="90" />
         </state>
-                         
+
         <!---  @keywords private -->         
         <method name="init">
             super.init();
@@ -329,7 +328,7 @@
             // constraints are updated by resetting the attachtarget
             if ( this._submenu ) this._submenu.flist.setAttribute('attachtarget',this);
         </method>
-        
+
          <!---  @keywords private -->
         <handler name="onmouseover" >
             // listitem ( that menuitem extends) is resposible for the visual
@@ -350,7 +349,7 @@
             }
             ]]>
         </handler>
-        
+
          <!---  @keywords private -->
         <handler name="onmousetrackover" >
             // listitem ( that menuitem extends) is resposible for the visual
@@ -366,7 +365,7 @@
             // this is needed for menus
             //_ipclassroot.setHilite( null );
         </handler>
-                
+
          <!---  @keywords private -->
          <handler name="onmousetrackup">
         <![CDATA[
@@ -381,7 +380,7 @@
             // has already opened the submenu if there is one       
         ]]>
         </handler>
-        
+
          <!---  Called automatically by the menu. The default action uses the colors
                 defined in a styles object to change the colors of the background and text. 
                 @param boolean ishilite: true shows the hilite and false restores it back-->
@@ -397,7 +396,7 @@
                 }
             }
         </method>
-                
+
         <!--- if a menuitem is hilited and has a submenu then this method is 
              called by a delegate after a period of time specified by delaytime 
              @keywords private -->
@@ -414,7 +413,7 @@
         <method name="hideSubmenu" args="ignore" >
             if ( !_doshowsubmenu ) this._submenu.setOpen(false);
         </method>
-        
+
         <!--- @keywords private -->
         <method name="_opensubmenu" args="doopen" >
             if ( doopen ) {
@@ -427,7 +426,7 @@
                 lz.Timer.addTimer( this.hidesubmenu_del, delaytime );
             }
         </method>
-                        
+
         <!--- @keywords private -->
         <method name="setSelected" args="isSelected" >
             // menus don't keep a selection in this version
@@ -435,7 +434,7 @@
             // selection manager.
             // super.setSelected( isSelected );
         </method>
-                    
+
         <!--- call this method to set the command associated with a menuitem 
              @param LzCommand cmd: the command object to be executed when this menuitem is selected 
              -->
@@ -449,7 +448,7 @@
                 this.cmdkeys.setAttribute('text', t);
             }
         </method>       
-                    
+
         <!--- @keywords private -->
         <method name="toString" >
             return "menuitem text =" + this.text; 
@@ -485,18 +484,18 @@
         </method>
 
    </class> <!-- menuitem -->
-   
+
    <!--- @access private -->
    <class name="menufloatinglist" extends="floatinglist"
           bgcolor="0x445566" autoscrollbar="false"
           visible="false" focusable="false">
-          
+
         <!--- @keywords private -->
         <attribute name="issubmenu" value="false" />
-        
+
         <!--- @keywords:  private -->
         <attribute name="_updateifsubmenu" value="true" />
-                    
+
         <!--- setHilite is called by the list class, and it overridden here to support 
               heirarchical menus -->
         <method name="setHilite" args="v" >
@@ -531,14 +530,14 @@
         <handler name="onmousetrackout" reference="this.interior" >
             this.setHilite(null);
         </handler>
-        
+
         <!--- @keywords private -->
         <handler name="ontracking" >
             // TODO: this is causing problems?
             // Debug.write('ontracking');
         </handler>               
     </class>
-   
+
 
     <!-- class: menu -->
     <class name="menu" width="150" extends="basecomponent" focusable="false">
@@ -547,16 +546,16 @@
 
         <!--- a boolean indicating whether or not the menu is in opened -->
         <attribute name="opened"   value="false" setter="this.setOpen( opened )" />
-        
-          <!--- @keywords private -->
-          <event name="onopened" />
-          
-          <!--- @keywords private - need to deprecate-->        
+
+        <!--- @keywords private -->
+        <event name="onopened" />
+
+        <!--- @keywords private - need to deprecate-->        
         <attribute name="menu_ref" value="false" />
 
         <!--- @keywords private -->
         <attribute name="flist" value="null" />
-        
+
         <!--- a string to indicate how the floating part of the menu attaches to 
               the menubutton or menuitem. Possible values are: 'top', 'bottom', 'left', and 'right' -->
         <attribute name="attach"   value="bottom" type="string" />
@@ -565,10 +564,10 @@
             if (this.flist != null)
                 this.flist.setAttribute("attach", this.attach);
         </handler>
-        
+
         <!--- @keywords private -->
         <attribute name="_menuitems" value="null" />
-        
+
         <!--- @keywords private -->
          <method name="init" >
             // create a floating list. Though the parent for this floating
@@ -606,37 +605,36 @@
                                width:w, 
                                shadowcrn:1 }, this._menuitems);
             }
-            
+
             // By default the floating list's target will be constrained to the
             // menu's parent. This  private variable wil be change if necessary
             this._flisttarget = this.parent;
-                        
+
             if ( parent instanceof lz.menubar ) {
                 // Since the parent is a menubar ...
-                          
+
                 // Create a menubutton and have the menu keep a reference to it.
                 // Likewise, have the menubutton keep a reference to this menu
                 this._menubutton = new lz.menubutton(parent, {_menuref:this}, null, false);
-                
+
                 // Have the floating list constrain to the menubutton and not
                 // the parent of the menu ( which would have been menubar in
                 // this case )
                 this._flisttarget = this._menubutton;
-                                
             } else if ( parent instanceof  lz.menuitem ) {
                 // insert an arrow into the target
                 new lz.menuarrow( this._flisttarget, { name:'_menuarrow' } );
-                
+
                 // have the menuitem keep a reference to its submenu
                 this.parent._submenu = this;
             } 
-            
+
             // need to wait until here when the width and heights of the target
             // set before I activate the constraints
             super.init.apply( this, arguments );
             this.flist.setAttachTarget(this._flisttarget);
         </method>
-        
+
         <!-- old: instantiate children of menu in its floatinglist instead of itself.
              new: save childrenarray in the private field _menuitems
              this method is called autmatically.
@@ -646,12 +644,12 @@
             this._menuitems = childrenarray;
             //this.flist.createChildren(childrenarray);
         ]]></method>
-        
+
         <!--- @keywords private -->
          <method name="childOfMenuHierarchy" args="v">
             var result = v.childOf( this ) || v.childOf( flist );
             if ( result ) return true; //don't need to check any further
-            
+
             // Now check to make sure that mousedown has not occurred in another
             // part of the menu hierarchy
 
@@ -677,7 +675,7 @@
                     // view is not LITERALLY part of the class hierarchy but
                     // it maybe part of the floatingview of this menu, or part
                     // of the parent view that contains this menu 
-                                            
+
                     var inMenu = this.childOfMenuHierarchy( view ) || 
                                  view.childOf( parent );
                     if ( !inMenu ) {
@@ -710,7 +708,7 @@
             // return this or another menu that own's this one
             return mc;
         ]]></method>
-        
+
         <!--- The general method to open/close a menu starting with itself
              and then moving 'up' the hierarchy to open/close the other
              menus in the hierarchy. 
@@ -762,7 +760,7 @@
                 this.opened = isopened;
                 if ( isopened ){
                     lz.ModeManager.makeModal( this );
-                                
+
                     this.flist.bringToFront();
                     this.flist.setHilite(null);
                     this.flist.setAttribute('tracking',true);
