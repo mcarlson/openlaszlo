@@ -179,21 +179,46 @@
         </method> 
     </class>
 
-    <script when="immediate">
-    // Function defs for bug 535
-        function Foo (name) { this.name = name};
-        Foo.prototype.setUp = function () {
-            this.f = function () { return function () { return 19 }};
+<switch>
+    <when property="$as3">
+        <!-- FIXME: [20090511 anba] functions aren't emitted in global scope
+             if when="immediate" is set (LPP-8092)
+        -->
+        <script>
+        // Function defs for bug 535
+            function Foo (name) { this.name = name};
+            Foo.prototype.setUp = function () {
+                this.f = function () { return function () { return 19 }};
             }
-        Foo.prototype.run = function () {
-            return this.f()();
+            Foo.prototype.run = function () {
+                return this.f()();
             }
-
+        
             function eff () { return function () { return 37 } };
-        var ohh = { g: function(){return 9}, f: function(){return this.g} }
-            var g = function g () { return 42 }
-
-    </script>
+            var ohh = { g: function(){return 9}, f: function(){return this.g} };
+            var g = function g () { return 42 };
+        </script>
+    </when>
+    <otherwise>
+        <!-- FIXME: [20090511 anba] global functions must be declared with
+             when="immediate" for IE (LPP-5058)
+        -->
+        <script when="immediate">
+        // Function defs for bug 535
+            function Foo (name) { this.name = name};
+            Foo.prototype.setUp = function () {
+                this.f = function () { return function () { return 19 }};
+            }
+            Foo.prototype.run = function () {
+                return this.f()();
+            }
+        
+            function eff () { return function () { return 37 } };
+            var ohh = { g: function(){return 9}, f: function(){return this.g} };
+            var g = function g () { return 42 };
+        </script>
+    </otherwise>
+</switch>
 
     <class name="bug_535" extends="TestCase">
         <method name="setUp">

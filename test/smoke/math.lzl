@@ -6,13 +6,13 @@
 
   <script when="immediate">
     <![CDATA[
-    function randTest(it){
+    var randTest = function (it) {
       // 'it' is iterations to check
       // returns pass if 'it' iterations do not match
-    
+
       var stack=[it]; // for holding numbers
       // fill stack
-    
+
       for(var j=0;j<it;j++){
         stack[j]=Math.random();
       }
