@@ -231,7 +231,7 @@
 
        this.loaded();
        var text = this.bottom.center.input;
-       this.lineheight = text.getTextHeight()+4;
+       this.lineheight = text.getTextHeight();
        this.setAttribute("smallInputAreaHeight", this.lineheight + 16);
        this.inspectDel = new lz.Delegate(this, "inspectObject");
        this.inspectDel.register(lz.GlobalMouse, "onmousedown");
@@ -856,7 +856,7 @@
                     stretches="width" width="${parent.width}" options="releasetolayout"
                     resource="bottom_rsc" y="0" />
 
-               <inputtext name="input"
+               <inputtext name="input" height="18" resize="false"
                      width="${parent.width}" multiline="false"
                      options="releasetolayout" />
 
