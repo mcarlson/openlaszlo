@@ -901,14 +901,11 @@ LzSprite.prototype.CSSDimension = function (value, units) {
     } else if (value === -Infinity) {
         result = ~(~0>>>1);
     }
-    // NOTE: [2009-05-08 ptw] Triggers too many warnings due to
-    // contraints running in random order and picking up `undefined`
-    // as a value in a numeric expression, which casts to NaN
-//     if ($debug) {
-//         if (value !== result) {
-//             Debug.warn("%w: coerced %w to %w", arguments.callee, value, result);
-//         }
-//     }
+    if ($debug) {
+        if (value !== result) {
+            Debug.warn("%w: coerced %w to %w", arguments.callee, value, result);
+        }
+    }
 
     return Math.round(result) + (units ? units : 'px');
 }

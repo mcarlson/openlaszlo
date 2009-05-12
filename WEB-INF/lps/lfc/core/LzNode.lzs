@@ -246,7 +246,10 @@ public dynamic class LzNode extends LzEventable {
               // Ensure dynamic properties exist (for `with(this)`),
               // above test works in all runtimes to detect missing
               // properties
-              this[key] = void 0;
+              // NOTE: [2009-05-11 ptw] (LPP-8088) We use `null`
+              // rather than `void 0` so we don't inject `NaN`s into
+              // numeric attributes
+              this[key] = null;
             }
           }
         }
@@ -1029,7 +1032,10 @@ public dynamic class LzNode extends LzEventable {
           // Ensure dynamic properties exist (for `with(this)`),
           // above test works in all runtimes to detect missing
           // properties
-          this[key] = void 0;
+          // NOTE: [2009-05-11 ptw] (LPP-8088) We use `null`
+          // rather than `void 0` so we don't inject `NaN`s into
+          // numeric attributes
+          this[key] = null;
         }
       } else if (! this[setr]) {
         // TODO: should already be declared, so we should just be
