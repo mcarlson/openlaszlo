@@ -238,6 +238,7 @@ lz.embed.iframemanager = {
         try {
             lz.embed.attachEventHandler(iframe.document, 'mousedown', lz.embed.iframemanager, '__mouseEvent', id);
             lz.embed.attachEventHandler(iframe.document, 'mouseup', lz.embed.iframemanager, '__mouseEvent', id);
+            lz.embed.attachEventHandler(iframe.document, 'click', lz.embed.iframemanager, '__mouseEvent', id);
             //lz.embed.attachEventHandler(iframe.document, 'mousemove', lz.embed.iframemanager, '__mouseEvent', id);
             iframe.document.oncontextmenu = function(e) {
                 return lz.embed.iframemanager.__mouseEvent(e, id);
@@ -301,6 +302,7 @@ lz.embed.iframemanager = {
             try {
                 lz.embed.removeEventHandler(iframe.document, 'mousedown', lz.embed.iframemanager, '__mouseEvent');
                 lz.embed.removeEventHandler(iframe.document, 'mouseup', lz.embed.iframemanager, '__mouseEvent');
+                lz.embed.removeEventHandler(iframe.document, 'click', lz.embed.iframemanager, '__mouseEvent');
                 //lz.embed.removeEventHandler(iframe.document, 'mousemove', lz.embed.iframemanager, '__mouseEvent');
                 iframe.document.oncontextmenu = null;
                 if (lz.embed.browser.isIE) {
@@ -373,8 +375,14 @@ lz.embed.iframemanager = {
                 var pos = lz.embed.getAbsolutePosition(iframe); 
                 LzMouseKernel.__sendMouseMove(e, pos.x, pos.y)
                 return LzMouseKernel.__showContextMenu(e);
-            } else {
-                iframe.owner.sprite.__mouseEvent(e);
+            }
+            iframe.owner.sprite.__mouseEvent(e);
+
+            // clear __lastMouseDown to prevent mouseover/out events being sent as dragin/out events - see LzSprite.js and LzMouseKernel.js - there will be no global mouseup sent from window.document to clear this...
+            if (eventname == 'onmouseup') {
+                if (LzMouseKernel.__lastMouseDown = iframe.owner.sprite) {
+                    LzMouseKernel.__lastMouseDown = null;
+                }
             }
         } else {
             // deal with IE event names
