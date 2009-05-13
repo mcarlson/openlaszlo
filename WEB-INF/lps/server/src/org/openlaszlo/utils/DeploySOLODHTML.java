@@ -242,6 +242,9 @@ public class DeploySOLODHTML {
         filenames.add("lps/includes/embed-compressed.js");
         filenames.add("lps/includes/blank.gif");
         filenames.add("lps/includes/spinner.gif");
+        filenames.add("lps/includes/excanvas.js");
+        filenames.add("lps/includes/laszlo-debugger.css");
+        filenames.add("lps/includes/laszlo-debugger.html");
 
 
         ArrayList appfiles = new ArrayList();
