@@ -66,8 +66,8 @@ if ($profile) {
       var xtor = this.constructor;
       if (value.hasOwnProperty('superclasses')) {
         var os = value.superclasses, found = false;
-        for (var i = os.length - 1; i >= 0; i--) {
-          if (os[i] === xtor) {
+        for (var j = os.length - 1; j >= 0; j--) {
+          if (os[j] === xtor) {
             found = true;
             break;
           }
