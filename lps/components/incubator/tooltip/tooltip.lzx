@@ -9,7 +9,7 @@
     view.  To use it you make it a child of a view.  The parent view has
     to be clickable for the tooltip to work.  Setting clickable to false
     will disable the tooltip.
-    
+
     For example:
 
     <example executable="false">
@@ -18,123 +18,35 @@
         &lt;/button&gt;
     </example>
 
-    The appearance of the tooltip is determined by a view on the canvas
-    which must be named "tooltipview" and have a setText method and
-    options="ignorelayout"
+    The appearance of the tooltip is determined by the canvas.tooltipview element
+
+    @devnote Individual tooltips are very lightweight, they contain
+    only their text, a few parameters, and a handler for their
+    parent's mouseover that causes the tooltipview to start thinking
+    about displaying it.
 -->
 <class name="tooltip" extends="node" initstage="late">
     <!--- text that appears in the tooltip.  null or empty string means tooltip will not show. -->
-    <attribute name="text" type="text"/>
-    <!--- @keywords private -->
-    <attribute name="_mousein" value="false" type="boolean"/>
-    <!--- @keywords private -->
-    <attribute name="_checkdel" value="null"/>
-    <!--- @keywords private -->
-    <attribute name="_lastmousex" value="0"/>
-    <!--- @keywords private -->
-    <attribute name="_lastmousey" value="0"/>
+    <attribute name="text" type="text" />
     <!--- offset of tooltip from parent view-->
     <attribute name="p_yoffset" value="15" />
-    <!--- values = "'right',''" 
-          attribute to align a tooltip 'right' so that it's right edge is flush 
+    <!--- values = "'right',''"
+          attribute to align a tooltip 'right' so that it's right edge is flush
           with it's parent's right edge ( minus 10 pixel inset ).   -->
     <attribute name="tipalign" value="" type="string" />
-    <!--- values = "'above','below',''"     
+    <!--- values = "'above','below',''"
           attribute to control if the tooltip shows up above or below the
           mouse position. Leaving this value empty indicates a best guess
           will be made by the component. '-->
     <attribute name="tipvalign" value="" type="string"/>
-    
-    <!--- @keywords private -->
-    <handler name="oninit">
-        this.overdel = new lz.Delegate(this, "startCheck",parent,"onmouseover");
-        this.outdel = new lz.Delegate(this, "hideTip",parent,"onmouseout");
-        this.outdel.register(parent, "onclick");
-    </handler>
 
     <!--- @keywords private -->
-    <method name="startCheck" args="v">
-        <![CDATA[
-        if (this.text != null && this.text != "") {
-            this._mousein = true;
-            if (!this._checkdel) this._checkdel = new lz.Delegate(this, "checkTip");
-            this._lastmousex = canvas.getMouse('x');
-            this._lastmousey = canvas.getMouse('y');
-            this.lasttime = new Date();
-
-            lz.Idle.callOnIdle(this._checkdel);
+    <handler name="onmouseover" args="ignore" reference="this.parent"><![CDATA[
+        if (this.text && (this.text != "")) {
+          canvas.tooltipview.setAttribute('tooltip', this);
         }
-        ]]>
-    </method>
+    ]]></handler>
 
-    <!--- @keywords private -->
-    <method name="checkTip" args="ignore=null">
-        if (!this._mousein) return;
-        var now = new Date();
-        var newmousex = canvas.getMouse('x');
-        var newmousey = canvas.getMouse('y');
-        var timediff = now.getTime() - this.lasttime.getTime();
-
-        if ((this._lastmousex != newmousex) || (this._lastmousey != newmousey)) {
-            this._lastmousex = newmousex;
-            this._lastmousey = newmousey;
-            this.lasttime = now;
-        }
-        if (timediff > 500) {
-            this.showTip();
-        } else {
-            lz.Idle.callOnIdle(this._checkdel);
-        }
-    </method>
-
-    <!--- @keywords private -->
-    <method name="showTip"> <![CDATA[
-        canvas.tooltipview.setAttribute('text', this.text);
-        
-        var py = parent.getAttributeRelative( 'y', canvas )
-        var tipx = canvas.width;
-        if ( tipalign == 'right' ) {
-            tipx = parent.getAttributeRelative( 'x', canvas ) + parent.width;
-        }
-
-        tipx = Math.min(tipx - canvas.tooltipview.width - 10, this._lastmousex - 5);
-
-        var tipy = this._lastmousey + 25;
-        var pointerontop;
-        switch (this.tipvalign) {
-          case "above":
-            tipy = this._lastmousey - 25;
-            pointerontop = false;
-            break;
-
-          case "below":
-            tipy = this._lastmousey + 25;
-            pointerontop = true;
-            break;
-
-          default:
-            if (tipy > canvas.height - 30) {
-                tipy = this._lastmousey - 25;
-                pointerontop = false;
-            } else {
-                tipy = this._lastmousey + 25;
-                pointerontop = true;
-            }
-
-        }
-
-        canvas.tooltipview.setAttribute('x', tipx );
-        canvas.tooltipview.setAttribute('y', tipy );
-        canvas.tooltipview.setPointerX( this._lastmousex, pointerontop );
-        canvas.tooltipview.bringToFront( );
-        canvas.tooltipview.setAttribute('visible',  true );
-    ]]></method>
-
-    <!--- @keywords private -->
-    <method name="hideTip" args="v">
-        this._mousein = false;
-        canvas.tooltipview.setAttribute('visible',  false );
-    </method>
 </class>
 
 </library>

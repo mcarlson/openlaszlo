@@ -1,0 +1,28 @@
+<canvas layout="axis: y; spacing: 5">
+  <include href="incubator/tooltip/tooltip.lzx" />
+
+  <text width="33%" multiline="true">
+    Wave the mouse around.  You should see a tooltip over the pink
+    views if you let the mouse rest there.  Moving the mouse out of
+    the view should make it go away.  Waving the mouse over the pink
+    views and letting it rest in the blank part of the canvas should
+    _not_ cause a tooltip to show up near the mouse.
+  </text>
+
+  <view clickable="true" width="50" height="20" bgcolor="pink">
+    <tooltip text="one tip" />
+  </view>
+  <view clickable="true" width="50" height="20" bgcolor="pink">
+    <tooltip text="two tip" />
+  </view>
+  <view clickable="true" width="50" height="20" bgcolor="pink">
+    <tooltip text="three tip" />
+  </view>
+  <view clickable="true" width="50" height="20" bgcolor="pink">
+    <tooltip text="four tip" />
+  </view>
+  <view clickable="true" width="50" height="20" bgcolor="pink">
+    <tooltip text="five tip" />
+  </view>
+</canvas>
+<!-- Copyright 2009 Laszlo Systems, Inc. All Rights Reserved. Use is subject to license terms. -->
