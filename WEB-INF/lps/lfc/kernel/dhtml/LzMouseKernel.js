@@ -175,17 +175,20 @@ var LzMouseKernel = {
         }
     }
     ,setGlobalClickable: function (isclickable){
-        //Debug.error('setGlobalClickable', isclickable, LzInputTextSprite.__lastfocus, LzInputTextSprite.prototype.__focusedSprite, LzInputTextSprite.prototype.__lastshown);
+        //Debug.error('setGlobalClickable', isclickable, LzInputTextSprite.prototype.__lastfocus, LzInputTextSprite.prototype.__focusedSprite, LzInputTextSprite.prototype.__lastshown);
         if (! isclickable) {
             // reset any inputtexts that are showing so they don't disappear - see LPP-7190
             if (LzInputTextSprite.prototype.__lastshown) {
                 LzInputTextSprite.prototype.__lastshown.__hide();
+                LzInputTextSprite.prototype.__lastshown = null;
             }
             if (LzInputTextSprite.prototype.__focusedSprite) {
                 LzInputTextSprite.prototype.__focusedSprite.deselect();
+                LzInputTextSprite.prototype.__focusedSprite = null;
             }
-            if (LzInputTextSprite.__lastfocus) {
-                LzInputTextSprite.__lastfocus.deselect();
+            if (LzInputTextSprite.prototype.__lastfocus) {
+                LzInputTextSprite.prototype.__lastfocus.deselect();
+                LzInputTextSprite.prototype.__lastfocus = null;
             }
         }
         var el = document.getElementById('lzcanvasclickdiv');

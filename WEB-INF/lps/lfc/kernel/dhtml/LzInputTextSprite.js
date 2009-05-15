@@ -42,6 +42,10 @@ if ($debug) {
 LzInputTextSprite.prototype._dbg_typename = 'LzInputTextSprite';
 }
 
+LzInputTextSprite.prototype.__lastshown = null;
+LzInputTextSprite.prototype.__focusedSprite = null;
+LzInputTextSprite.prototype.__lastfocus = null;
+
 LzInputTextSprite.prototype.____crregexp = new RegExp('\\r\\n', 'g');
 
 LzInputTextSprite.prototype.__createInputText = function(t) {
@@ -522,7 +526,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             //sprite.select()
             sprite.__show();
             sprite.__LzInputDiv.blur();
-            LzInputTextSprite.__lastfocus = sprite;
+            LzInputTextSprite.prototype.__lastfocus = sprite;
             LzKeyboardKernel.setKeyboardControl(true);
         }
         return; 
@@ -698,7 +702,7 @@ LzInputTextSprite.prototype.select = function (){
     try {
         this.__LzInputDiv.focus();
     } catch (err) {}
-    LzInputTextSprite.__lastfocus = this;
+    LzInputTextSprite.prototype.__lastfocus = this;
     setTimeout('LzInputTextSprite.__lastfocus.__LzInputDiv.select()', 50);
     //this.__LzInputDiv.select();
     if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = false;
@@ -709,7 +713,7 @@ LzInputTextSprite.prototype.setSelection = function (start, end=null){
     if (end == null) { end = start; }
     this._cancelblur = true;
     this.__show();
-    LzInputTextSprite.__lastfocus = this;
+    LzInputTextSprite.prototype.__lastfocus = this;
 
     if (this.quirks['text_selection_use_range']) {
         var range = this.__LzInputDiv.createTextRange(); 
@@ -760,7 +764,7 @@ LzInputTextSprite.prototype.setSelection = function (start, end=null){
         range.moveEnd("character", ed);
         range.select();
         //this.__LzInputDiv.range = range;
-        //setTimeout('LzInputTextSprite.__lastfocus.__LzInputDiv.range.select()', 50);
+        //setTimeout('LzInputTextSprite.prototype.__lastfocus.__LzInputDiv.range.select()', 50);
         //this.__LzInputDiv.focus(); 
     } else {
         this.__LzInputDiv.setSelectionRange(start, end);
