@@ -100,7 +100,7 @@
         }
     ]]></method>
 
-    <method name="hideTip" args="ignore">
+    <method name="hideTip" args="ignore=null">
         // Cancel any mousein event handler
         if (this.checkdel) { this.checkdel.unregisterAll(); }
         // Hide the tip
