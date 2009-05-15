@@ -17,14 +17,11 @@ class LzContextMenuKernel {
 function LzContextMenuKernel (newowner:LzContextMenu) {
     this.owner = newowner;
 
-    this.__LZmousedowndel = new LzDelegate(this, "__hide");
 }
 
 var owner:LzContextMenu = null;
 var showbuiltins = false;
 var _delegate = null;
-var __LZmousedowndel = null;
-
 
 /**
   * LzContextMenu.setDelegate
@@ -129,8 +126,6 @@ function __show (send=true) {
         s.style.display = 'block';
     }
 
-    this.__LZmousedowndel.register(lz.GlobalMouse, 'onmousedown');
-
     var del = this._delegate;
     if (send && del != null) del.execute(owner);
 }
@@ -140,7 +135,6 @@ function __hide (ignore) {
     var s = document.getElementById('lzcontextmenu')
     if (! s) return;
     s.style.display = 'none';
-    this.__LZmousedowndel.unregisterAll();
     LzMouseKernel.__showncontextmenu = null;
 }
 
