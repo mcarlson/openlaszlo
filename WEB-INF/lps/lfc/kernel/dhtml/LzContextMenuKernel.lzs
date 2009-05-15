@@ -86,7 +86,11 @@ function __show (send=true) {
         document.body.appendChild(s);
     }
     var owner = this.owner;
-    if (send && owner.onmenuopen.ready) owner.onmenuopen.sendEvent(owner);
+    if (send) {
+        var del = this._delegate;
+        if (del != null) del.execute(owner);
+        if (owner.onmenuopen.ready) owner.onmenuopen.sendEvent(owner);
+    }
 
     var o = '';
     var shownItems = 0;
@@ -105,14 +109,15 @@ function __show (send=true) {
         _items[caption] = true;
         shownItems += 1;
 
+        o += '<a href="" onclick="return false;" ';
         if (v.enabled) {
-            o += '<a href="" onmousedown="javascript:LzMouseKernel.__showncontextmenu.__select(' + i + ');return false;">'
-                    + caption + '</a>';
+            o += 'onmouseup="LzMouseKernel.__showncontextmenu.__select(' + i + ');return false;"';
         } else {
-            o += caption;
+            o += 'class="disabled"';
         }
+        o += '>' + caption + '</a>';
     }
-    
+
     LzMouseKernel.__showncontextmenu = this;
 
     s.innerHTML = o;
@@ -120,14 +125,11 @@ function __show (send=true) {
         s.style.left = LzMouseKernel.__x + 'px';
         s.style.top = LzMouseKernel.__y + 'px';
     }
-    
+
     // Only show menu if there are any visible items
     if (shownItems) {
         s.style.display = 'block';
     }
-
-    var del = this._delegate;
-    if (send && del != null) del.execute(owner);
 }
 
 /** @access private */

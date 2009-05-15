@@ -411,6 +411,9 @@ LzSprite.prototype.__defaultStyles['#lzcontextmenu a:hover'] = {
    color: '#FFF',
    backgroundColor: '#333'
 };
+LzSprite.prototype.__defaultStyles['#lzcontextmenu a.disabled'] = {
+   color: '#999 !important'
+};
 
 LzSprite.prototype.__defaultStyles['#lzcontextmenu'] = {
     position: 'absolute',
@@ -422,7 +425,6 @@ LzSprite.prototype.__defaultStyles['#lzcontextmenu'] = {
     fontSize: '13px',
     'float': 'left',
     margin: '2px',
-    color: '#999',
     minWidth: '100px'
 };
 
