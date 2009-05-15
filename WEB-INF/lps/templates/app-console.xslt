@@ -73,6 +73,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
   <xsl:template match="/">
     <html>
       <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
         <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico"/>
         <link rel="stylesheet" href="{$lps}/lps/includes/console.css" type="text/css"/>
         <title>
