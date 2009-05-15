@@ -90,13 +90,21 @@ var LzMouseKernel = {
             lz.embed.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
             lz.embed.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
             lz.embed.attachEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
-            if (window.top != window) lz.embed.attachEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+            // Correct possible cross-domain issues - see LPP-8093
+            try {
+                if (window.top != window) lz.embed.attachEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+            } catch (e) {
+            }
         } else {
             lz.embed.removeEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
             lz.embed.removeEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
             lz.embed.removeEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
             lz.embed.removeEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
-            if (window.top != window) lz.embed.removeEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+            // Correct possible cross-domain issues - see LPP-8093
+            try {
+                if (window.top != window) lz.embed.removeEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+            } catch (e) {
+            }
         }
         // Prevent context menus in Firefox 1.5 - see LPP-2678
         document.oncontextmenu = ison ? LzMouseKernel.__mouseEvent : null;
