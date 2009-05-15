@@ -279,7 +279,9 @@ LzInputTextSprite.prototype.__setglobalclickable = function(c) {
 
 LzInputTextSprite.prototype.__hide = function(ignore) {
     if (this.__shown != true || this.disabled == true) return;
-    LzInputTextSprite.prototype.__lastshown = null;
+    if (LzInputTextSprite.prototype.__lastshown == this) {
+        LzInputTextSprite.prototype.__lastshown = null;
+    }
     this.__shown = false;
     if (this.quirks['inputtext_parents_cannot_contain_clip']) {
         if (this._shownclipvals != null) {
@@ -328,7 +330,9 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
     }
     // turn off text selection in IE
     // can't use lz.embed.attachEventHandler because we need to cancel events selectively
-    document.onselectstart = LzTextSprite.prototype.__cancelhandler;
+    if (LzInputTextSprite.prototype.__lastshown == null) {
+        document.onselectstart = LzTextSprite.prototype.__cancelhandler;
+    }
 }
 
 LzInputTextSprite.prototype.gotBlur = function() {
