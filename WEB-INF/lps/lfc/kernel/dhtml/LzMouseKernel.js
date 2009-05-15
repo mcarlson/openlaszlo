@@ -39,14 +39,13 @@ var LzMouseKernel = {
             return;
         }    
 
-        if (e.button == 2 && eventname != 'oncontextmenu') return;
-        if (eventname == 'oncontextmenu') {
+        if (eventname == 'oncontextmenu' || (e.button == 2 && eventname == 'onmouseup') ) {
             if (targ) {
                 // update mouse position, required for Safari
                 LzMouseKernel.__sendMouseMove(e);
                 return LzMouseKernel.__showContextMenu(e);
             }
-        } else {
+        } else if (e.button != 2) {
             LzMouseKernel.__sendEvent(eventname);
         }
         //Debug.write('LzMouseKernel event', eventname);

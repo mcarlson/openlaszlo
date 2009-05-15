@@ -1172,6 +1172,7 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
 
     if (window['LzInputTextSprite'] && eventname == 'onmouseover' && LzInputTextSprite.prototype.__lastshown != null) LzInputTextSprite.prototype.__hideIfNotFocused();
 
+    if (e.button == 2 && eventname != 'oncontextmenu') return;
     if (eventname == 'onmousedown') {
         // cancel mousedown event bubbling...
         e.cancelBubble = true;
