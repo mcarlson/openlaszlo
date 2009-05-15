@@ -102,7 +102,7 @@ public dynamic class LzDataSelectionManager extends LzSelectionManager {
         if (this.manager == null) this.manager = o.cloneManager;//try to get a cloneManager
 
         var so /*:LzDataNodeMixin*/ = o.datapath.p;
-        if (! so.sel) {
+        if (so && ! so.sel) {
             so.sel = true;
             this.selected.push( so );
             if (this.manager == null) {
@@ -211,7 +211,8 @@ public dynamic class LzDataSelectionManager extends LzSelectionManager {
     override function isSelected (o /*:LzView*/) :Boolean {
         if (this.manager == null) this.manager = o.cloneManager;//try to get a cloneManager
 
-        return o.datapath.p.sel;
+        var so = o.datapath.p;
+        return so && so.sel;
     }
 
     /**
