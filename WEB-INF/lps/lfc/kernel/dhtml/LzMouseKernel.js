@@ -53,11 +53,14 @@ var LzMouseKernel = {
     // sends mouse events to the callback
     ,__sendEvent: function(eventname, view) {
         // hide context menus and skip events - see LPP-8189
-        if (LzMouseKernel.__showncontextmenu) {
-            if (eventname == 'onclick') {
+        if (eventname == 'onclick') {
+            if (LzMouseKernel.__showncontextmenu) {
                 LzMouseKernel.__showncontextmenu.__hide();
             }
-            return;
+            if (! view) {
+                // don't send global onclick events
+                return;
+            }
         }
         if (LzMouseKernel.__callback) {
             LzMouseKernel.__scope[LzMouseKernel.__callback](eventname, view);

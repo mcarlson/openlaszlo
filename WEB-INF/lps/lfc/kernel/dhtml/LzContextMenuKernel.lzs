@@ -22,6 +22,7 @@ function LzContextMenuKernel (newowner:LzContextMenu) {
 var owner:LzContextMenu = null;
 var showbuiltins = false;
 var _delegate = null;
+var __sentshowevent = false;
 
 /**
   * LzContextMenu.setDelegate
@@ -86,7 +87,9 @@ function __show (send=true) {
         document.body.appendChild(s);
     }
     var owner = this.owner;
-    if (send) {
+    if (send && this.__sentshowevent == false) {
+        // Avoid sending onmenuopen events more than once - see LPP-8189
+        this.__sentshowevent = true;
         var del = this._delegate;
         if (del != null) del.execute(owner);
         if (owner.onmenuopen.ready) owner.onmenuopen.sendEvent(owner);
@@ -109,11 +112,11 @@ function __show (send=true) {
         _items[caption] = true;
         shownItems += 1;
 
-        o += '<a href="" onclick="return false;" ';
+        o += '<a href="" onclick="LzContextMenuKernel.prototype.__cancelevent();return false;" onmousedown="LzContextMenuKernel.prototype.__cancelevent();return false;" ';
         if (v.enabled) {
             o += 'onmouseup="LzMouseKernel.__showncontextmenu.__select(' + i + ');return false;"';
         } else {
-            o += 'class="disabled"';
+            o += 'onmouseup="LzContextMenuKernel.prototype.__cancelevent();return false;" class="disabled"';
         }
         o += '>' + caption + '</a>';
     }
@@ -132,19 +135,32 @@ function __show (send=true) {
     }
 }
 
+/** Cancels event bubbling for Safari and IE
+    @access private */
+function __cancelevent() {
+    var e = window.event;
+    if (e) {
+        e.cancelBubble = true;
+    }
+    return false;
+}
+
 /** @access private */
 function __hide (ignore) {
     var s = document.getElementById('lzcontextmenu')
     if (! s) return;
     s.style.display = 'none';
+    this.__sentshowevent = false;
     LzMouseKernel.__showncontextmenu = null;
 }
 
 /** @access private */
 function __select (i) {
     this.__hide();
+    this.__cancelevent();
     var items = this.owner.getItems();
     if (items[i]) items[i].kernel.__select();
+    return false;
 }
 
 }; // End of LzContextMenuKernel
