@@ -1390,14 +1390,18 @@
 
     <!--- @keywords private -->
     <method name="_setupStreamVideo">
-        Debug.write("mediastream %w _setupStreamVideo: " +
-                    "fs=%w, cam=%w, mutevideo=%w", 
+        <![CDATA[
+        if ($debug && this.debug) {
+             Debug.write("mediastream %w _setupStreamVideo: " +
+                    "fs=%w, cam=%w, mutevideo=%w",
                     this, this._flashstream, this.cam, this.mutevideo);
+        }
         if ($as3) {
-            this._flashstream.attachCamera(this.mutevideo ? false : this.cam._dev);
+            this._flashstream.attachCamera(this.mutevideo ? null : this.cam._dev);
         } else {
             this._flashstream.attachVideo(this.mutevideo ? false : this.cam._dev);
         }
+        ]]>
     </method>
 
 </class>        
