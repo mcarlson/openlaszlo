@@ -25,7 +25,10 @@
                            setter="this.setAttachTarget(attachtarget)" />
         <!--- The distance from the attachtarget. -->
         <attribute name="attachoffset"  value="0" />
-        
+
+        <!-- @keywords private -->
+        <attribute name="_updateAttachPosDel" value="null" />
+
         <!--- Number of items originally requested to display.
               @keywords private -->
         <attribute name="_origshownitems" value="-2" type="number" />
@@ -43,6 +46,17 @@
         <method name="setAttachTarget" args="target" >
             this.attachtarget = target;
             if (visible) updateAttachLocation();
+            // track attachtarget position
+            var del = this._updateAttachPosDel;
+            if (del) {
+                del.unregisterAll();
+                if (target) {
+                    for (var p = target; p !== canvas; p = p.immediateparent) {
+                        del.register(p, 'onx');
+                        del.register(p, 'ony');
+                    }
+                }
+            }
         </method>
 
         <!--- @keywords private -->
@@ -63,7 +77,7 @@
  
             // reset _parentcomponent
             var p = this.owner;
-            while (p != canvas) {
+            while (p !== canvas) {
                 if (p instanceof lz.basecomponent) {
                     this._parentcomponent = p;
                     break;
@@ -74,7 +88,8 @@
             // Since we are constructed on the canvas, we need to
             // listen for out parent being destroyed and clean up after
             // ourselves.
-            new LzDelegate(this, '_handledestroy', parent, 'ondestroy');
+            new lz.Delegate(this, '_handledestroy', parent, 'ondestroy');
+            this._updateAttachPosDel = new lz.Delegate(this, '_doUpdateAttachLocation');
         </method>
         
         <!--- @keywords private -->
@@ -92,7 +107,8 @@
               this.owner = null;
           }
           this.setAttachTarget(null);
-          
+          this._updateAttachPosDel = null;
+
           // Have to remove ourselves from the canvas
           var svs = canvas.subviews;
           for (var i = svs.length -1; i >= 0; i--) {
@@ -109,7 +125,7 @@
               break;
             }
           }
-          super.destroy.apply(this, arguments);
+          super.destroy();
         </method>
 
         <!--- @keywords private -->
@@ -190,6 +206,11 @@
             }
         ]]>
         </method>
+
+        <!-- @keywords private -->
+        <method name="_doUpdateAttachLocation" args="ignore" ><![CDATA[
+            this.updateAttachLocation();
+        ]]></method>
 
         <!--- Adjusts the location of the floatinglist relative to its
               attachtarget, taking into account the attach location and the
