@@ -311,11 +311,15 @@ public class NodeModel implements Cloneable {
         // default
         prettyBinderName += "once";
       } else if (when.equals(WHEN_ALWAYS)) {
-        // Only call the installer if the value will change, to
-        // minimize event cascades (data and style binding have to
-        // handle this in their installers).
+        // NOTE: [2009-05-18 ptw] Only call the installer if the value
+        // will change, to minimize event cascades (data and style
+        // binding have to handle this in their installers).  We
+        // always call the installer if the target is not inited.
+        // This ensures that the value is set correctly (and events
+        // propagated) if the constraint is being called to initialize
+        // the target
         prefix = "var $lzc$newvalue = " + body + ";\n" +
-          "if ($lzc$newvalue !== this[" + ScriptCompiler.quote(name) + "]) {\n";
+          "if ($lzc$newvalue !== this[" + ScriptCompiler.quote(name) + "] || (! this.inited)) {\n";
         body = "$lzc$newvalue";
         suffix = "\n}";
       } else if (when.equals(WHEN_PATH)) {

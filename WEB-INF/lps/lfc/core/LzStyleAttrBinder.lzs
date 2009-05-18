@@ -26,13 +26,15 @@ class LzStyleAttrBinder extends LzEventable {
   }
 
   function bind(ignore=null) {
-    var target = this.target;
-    var dest = this.dest;
+    var target:LzNode = this.target;
+    var dest:String = this.dest;
     var oldvalue = target[dest];
     var newvalue = target[this.source];
     // We only propagate the update if it is different, to minimize
-    // event cascades
-    if (newvalue !== oldvalue) {
+    // event cascades, but we always do if the target is being inited,
+    // to make sure the value is set correctly (and events propagated)
+    // if the binding is being called to initialize the target
+    if (newvalue !== oldvalue || (! target.inited)) {
       target.setAttribute(dest, newvalue);
     }
   }
