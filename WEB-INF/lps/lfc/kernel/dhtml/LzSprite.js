@@ -96,7 +96,7 @@ var LzSprite = function(owner, isroot) {
         }
 
         if (this.quirks.activate_on_mouseover) {
-            // Mouse detection for activiation/deactivation of keyboard events
+            // Mouse detection for activation/deactivation of keyboard/mouse events
             div.mouseisover = false;
             div.onmouseover = function(e) {
                 if (LzSprite.prototype.quirks.focus_on_mouseover) {
@@ -110,7 +110,7 @@ var LzSprite = function(owner, isroot) {
             div.onmouseout = function(e) {
                 if (! e) {
                     e = window.event;
-                    var el = e.fromElement;
+                    var el = e.toElement;
                 } else {
                     var el = e.relatedTarget;
                 }
@@ -126,7 +126,18 @@ var LzSprite = function(owner, isroot) {
                         return;
                     }
                 }
-                if (el && el.owner && el.className.indexOf('lz') == 0) {
+                var mousein = false;
+                if (el) {
+                    var cm = LzContextMenuKernel.lzcontextmenu;
+                    if (el.owner && el.className.indexOf('lz') == 0) {
+                        // lzdiv, lzclickdiv, etc.
+                        mousein = true;
+                    } else if (cm && (el === cm || el.parentNode === cm)) {
+                        // context-menu resp. context-menu item
+                        mousein = true;
+                    }
+                }
+                if (mousein) {
                     if (quirks.fix_ie_clickable) {
                         LzInputTextSprite.prototype.__setglobalclickable(true);
                     }
@@ -1172,20 +1183,20 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
 
     LzMouseKernel.__sendMouseMove(e);
 
-    if (window['LzInputTextSprite'] && eventname == 'onmouseover' && LzInputTextSprite.prototype.__lastshown != null) LzInputTextSprite.prototype.__hideIfNotFocused();
-
     if (e.button == 2 && eventname != 'oncontextmenu') return;
-    if (eventname == 'onmousedown') {
+    if (eventname == 'onmousemove') {
+        return;   
+    } else if (eventname == 'onmousedown') {
         // cancel mousedown event bubbling...
         e.cancelBubble = true;
         this.__mouseisdown = true;
-        if (window['LzMouseKernel']) {
-            LzMouseKernel.__lastMouseDown = this;
-        }
+        LzMouseKernel.__lastMouseDown = this;
+
     } else if (eventname == 'onmouseup') {
         e.cancelBubble = false;
         // only send the event if this is same sprite the mouse button went down on
-        if (window['LzMouseKernel'] && LzMouseKernel.__lastMouseDown == this) {
+        if (LzMouseKernel.__lastMouseDown === this) {
+            LzMouseKernel.__lastMouseDown = null;
             if (this.quirks.ie_mouse_events) {
                 // Must be done for onmouseupoutside to work
                 if (this.__isMouseOver()) {
@@ -1200,12 +1211,22 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         }
     } else if (eventname == 'onmouseupoutside') {
         this.__mouseisdown = false;
-    } else if (eventname == 'onmousemove') {
-        return;
+    } else if (eventname == 'onmouseover') {
+        if (this.quirks.activate_on_mouseover) {
+            var rootdiv = LzSprite.__rootSprite.__LZdiv;
+            if (! rootdiv.mouseisover) {
+                // enable keyboard/mouse events
+                rootdiv.onmouseover();
+            }
+        }
+        var lzinputproto = window['LzInputTextSprite'] && LzInputTextSprite.prototype;
+        if (lzinputproto && lzinputproto.__lastshown != null) {
+            lzinputproto.__hideIfNotFocused();
+        }
     }
 
     //Debug.write('__mouseEvent', eventname, this.owner);
-    if (this.owner.mouseevent && LzMouseKernel && LzMouseKernel['__sendEvent']) {
+    if (this.owner.mouseevent) {
         // send dragin/out events if the mouse is currently down
         if (LzMouseKernel.__lastMouseDown) {
             if (eventname == 'onmouseover' || eventname == 'onmouseout') {
@@ -1216,7 +1237,7 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
                     }
                 } else {
                     // only send mouseover/out if the mouse went down on this sprite
-                    if (LzMouseKernel.__lastMouseDown == this) {
+                    if (LzMouseKernel.__lastMouseDown === this) {
                         LzMouseKernel.__sendEvent(eventname, this.owner);
                     }
                 }
@@ -1235,8 +1256,8 @@ LzSprite.prototype.__isMouseOver = function ( e ){
     return p.x >= 0 && p.y >= 0 && p.x <= this.width && p.y <= this.height;
 }
 
-// called by LzMouseKernel when mouse goes up on another sprite
 /**
+  * Called by LzMouseKernel when mouse goes up on another sprite
   * @access private
   */
 LzSprite.prototype.__globalmouseup = function ( e ){

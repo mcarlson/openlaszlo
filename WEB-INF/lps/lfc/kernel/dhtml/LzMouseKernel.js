@@ -189,17 +189,21 @@ var LzMouseKernel = {
         //Debug.error('setGlobalClickable', isclickable, LzInputTextSprite.prototype.__lastfocus, LzInputTextSprite.prototype.__focusedSprite, LzInputTextSprite.prototype.__lastshown);
         if (! isclickable) {
             // reset any inputtexts that are showing so they don't disappear - see LPP-7190
-            if (LzInputTextSprite.prototype.__lastshown) {
-                LzInputTextSprite.prototype.__lastshown.__hide();
-                LzInputTextSprite.prototype.__lastshown = null;
+            var lzinputproto = LzInputTextSprite.prototype;
+            var lastshown = lzinputproto.__lastshown;
+            if (lastshown) {
+                lastshown.__hide();
+                lzinputproto.__lastshown = null;
             }
-            if (LzInputTextSprite.prototype.__focusedSprite) {
-                LzInputTextSprite.prototype.__focusedSprite.deselect();
-                LzInputTextSprite.prototype.__focusedSprite = null;
+            var focused = lzinputproto.__focusedSprite;
+            if (focused) {
+                focused.deselect();
+                lzinputproto.__focusedSprite = null;
             }
-            if (LzInputTextSprite.prototype.__lastfocus) {
-                LzInputTextSprite.prototype.__lastfocus.deselect();
-                LzInputTextSprite.prototype.__lastfocus = null;
+            var lastfocus = lzinputproto.__lastfocus;
+            if (lastfocus) {
+                lastfocus.deselect();
+                lzinputproto.__lastfocus = null;
             }
         }
         var el = document.getElementById('lzcanvasclickdiv');

@@ -16,7 +16,6 @@ class LzContextMenuKernel {
 
 function LzContextMenuKernel (newowner:LzContextMenu) {
     this.owner = newowner;
-
 }
 
 var owner:LzContextMenu = null;
@@ -43,10 +42,7 @@ function setDelegate (delegate) {
   * @access private
   */
 function addItem (item) {
-    if (LzMouseKernel.__showncontextmenu === this) {
-        this.__hide();
-        this.__show(false);
-    }
+    // nothing to do
 }
 
 /**
@@ -71,23 +67,44 @@ function showBuiltInItems () {
   * @access private
   */
 function clearItems () {
-    if (LzMouseKernel.__showncontextmenu === this) {
-        this.__hide();
-        this.__show(false);
-    }
+    // nothing to do
 }
 
 /** @access private */
-function __show (send=true) {
-    var s = document.getElementById('lzcontextmenu')
+static var lzcontextmenu = null;
+
+/** @access private */
+static function __create () {
+    var s = document.getElementById('lzcontextmenu');
     if (! s) {
         s = document.createElement('div');
         lz.embed.__setAttr(s, 'id', 'lzcontextmenu');
         lz.embed.__setAttr(s, 'style', 'display: none');
+        var stopevent = function (e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            } else {
+                e = window.event;
+                e.returnValue = false;
+                e.cancelBubble = true;
+            }
+            return false;
+        }
+        s.onmousedown = stopevent;
+        s.onmouseup = stopevent;
+        s.onclick = stopevent;
         document.body.appendChild(s);
+
+        LzContextMenuKernel.lzcontextmenu = s;
     }
+    return s;
+}
+
+/** @access private */
+function __show () {
     var owner = this.owner;
-    if (send && this.__sentshowevent == false) {
+    if (this.__sentshowevent == false) {
         // Avoid sending onmenuopen events more than once - see LPP-8189
         this.__sentshowevent = true;
         var del = this._delegate;
@@ -100,67 +117,60 @@ function __show (send=true) {
     var items = owner.getItems();
     var _items = {};
     for (var i = 0; i < items.length; i++) {
-        var cm = items[i].kernel;
-        var v = cm.cmenuitem;
-        if (v.visible != true) continue; 
-        if (v.separatorBefore) o += '<div class="separator"></div>';
-
+        var v = items[i].kernel.cmenuitem;
         var caption = v.caption;
         // Don't display the same item twice (matches swf behavior)
-        if (caption in _items) continue;
+        if (v.visible != true || caption in _items) {
+            continue; 
+        }
         // Mark as displayed
         _items[caption] = true;
         shownItems += 1;
 
-        o += '<a href="" onclick="LzContextMenuKernel.prototype.__cancelevent();return false;" onmousedown="LzContextMenuKernel.prototype.__cancelevent();return false;" ';
-        if (v.enabled) {
-            o += 'onmouseup="LzMouseKernel.__showncontextmenu.__select(' + i + ');return false;"';
-        } else {
-            o += 'onmouseup="LzContextMenuKernel.prototype.__cancelevent();return false;" class="disabled"';
+        if (v.separatorBefore) {
+            o += '<div class="separator"></div>';
         }
-        o += '>' + caption + '</a>';
+
+        if (v.enabled) {
+            o += '<a href="" onmouseup="LzMouseKernel.__showncontextmenu.__select(arguments[0],' + i + ');">';
+        } else {
+            o += '<a href="" class="disabled">';
+        }
+        o += caption + '</a>';
     }
 
     LzMouseKernel.__showncontextmenu = this;
 
+    var s = LzContextMenuKernel.lzcontextmenu || LzContextMenuKernel.__create();
     s.innerHTML = o;
-    if (send) {
-        s.style.left = LzMouseKernel.__x + 'px';
-        s.style.top = LzMouseKernel.__y + 'px';
-    }
+    s.style.left = LzMouseKernel.__x + 'px';
+    s.style.top = LzMouseKernel.__y + 'px';
 
-    // Only show menu if there are any visible items
-    if (shownItems) {
+    // Only show menu if there are any visible items and builtin items are hidden
+    if (shownItems && ! this.showbuiltins) {
         s.style.display = 'block';
     }
 }
 
-/** Cancels event bubbling for Safari and IE
-    @access private */
-function __cancelevent() {
-    var e = window.event;
-    if (e) {
-        e.cancelBubble = true;
-    }
-    return false;
-}
-
 /** @access private */
-function __hide (ignore) {
-    var s = document.getElementById('lzcontextmenu')
-    if (! s) return;
-    s.style.display = 'none';
+function __hide () {
+    var s = LzContextMenuKernel.lzcontextmenu;
+    if (s) {
+        s.style.display = 'none';
+    }
     this.__sentshowevent = false;
     LzMouseKernel.__showncontextmenu = null;
 }
 
 /** @access private */
-function __select (i) {
-    this.__hide();
-    this.__cancelevent();
-    var items = this.owner.getItems();
-    if (items[i]) items[i].kernel.__select();
-    return false;
+function __select (e, i) {
+    e = e || window.event;
+    var leftbutton = (LzSprite.prototype.quirks.ie_mouse_events ? 1 : 0);
+    if (e.button == leftbutton) {
+        this.__hide();
+        var items = this.owner.getItems();
+        if (items[i]) items[i].kernel.__select();
+    }
 }
 
 }; // End of LzContextMenuKernel
