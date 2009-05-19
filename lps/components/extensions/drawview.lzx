@@ -971,6 +971,7 @@
                 import flash.geom.Rectangle;
                 import flash.display.BitmapData;
                 import flash.display.Graphics;
+                import flash.display.Sprite;
                 }#
             }
             // Next two are part of the required LFC tag class protocol
@@ -992,6 +993,8 @@
             }
             var __path :Array = [];
             var __pathisopen :Boolean = false;
+            var __measurewidth :Boolean = true;
+            var __measureheight :Boolean = true;
             const __MOVETO_OP :int = 0;
             const __LINETO_OP :int = 1;
             const __QCURVE_OP :int = 2;
@@ -1003,9 +1006,9 @@
                 var __bitmapmc :MovieClip = null;
                 var __bitmapdata :BitmapData = null;
                 var __drawing :MovieClip = null;
-                var __measurewidth :Boolean = true;
-                var __measureheight :Boolean = true;
                 var __norebuild :Boolean = false;
+            } else {
+                var __drawcontainer :Sprite = null;
             }
 
             var oncontext :LzDeclaredEventClass = LzDeclaredEvent;
@@ -1023,16 +1026,22 @@
 
             override function init () {
                 super.init();
-                var context = this.sprite.getContext();
                 if ($as2) {
                     this.rebuildBitmap();
-                    var drawcontainer:MovieClip = context.createEmptyMovieClip("drawcontainer", 1);
+                    var drawcontainer:MovieClip = this.getMCRef().createEmptyMovieClip("drawcontainer", 1);
                     this.__drawing = drawcontainer.createEmptyMovieClip("drawing", drawcontainer.getNextHighestDepth());
 
-                    context = drawcontainer;
+                    var context:MovieClip = drawcontainer;
                     // Install right-click context menu if there is one
                     var cmenu:LzContextMenu = this.sprite['__contextmenu'];
                     if (cmenu) context.menu = cmenu.kernel.__LZcontextMenu();
+                } else {
+                    var drawcontainer:Sprite = new Sprite();
+                    drawcontainer.mouseEnabled = false;
+                    this.getMCRef().addChildAt(drawcontainer, 0);
+
+                    this.__drawcontainer = drawcontainer;
+                    var context:Graphics = drawcontainer.graphics;
                 }
                 this.context = context;
                 this.beginPath();
@@ -1215,7 +1224,7 @@
                 this.closePath();
                 this.__playPath(this.context);
                 this.context.endFill();
-                if ($as2) { this.__updateSize(); }
+                this.__updateSize();
             }
 
             function __playPath(m:*) :void {
@@ -1251,7 +1260,7 @@
                 }
                 this.__playPath(this.context);
                 this.context.lineStyle(undefined);
-                if ($as2) { this.__updateSize(); }
+                this.__updateSize();
             }
 
             function clear() {
@@ -1303,6 +1312,28 @@
             }
 
             if ($as3) {
+                override function $lzc$set_width(w) {
+                    this.__measurewidth = (w == null);
+                    super.$lzc$set_width(w);
+                }
+
+                override function $lzc$set_height(h) {
+                    this.__measureheight = (h == null);
+                    super.$lzc$set_height(h);
+                }
+
+                function __updateSize() :void {
+                    var dc:Sprite = this.__drawcontainer;
+                    if (this.__measurewidth && this.width !== dc.width) {
+                        this.setAttribute('width', dc.width);
+                        this.__measurewidth = true;
+                    }
+                    if (this.__measureheight && this.height !== dc.height) {
+                        this.setAttribute('height', dc.height);
+                        this.__measureheight = true;
+                    }
+                }
+
                 function clearMask() {
                     if ($debug) {
                         Debug.warn('lz.drawview.clearMask() is not currently supported in swf9.');
