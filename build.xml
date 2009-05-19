@@ -1287,7 +1287,7 @@
                <include name="WEB-INF/bin/mxmlc*" />
                <include name="WEB-INF/bin/fdb*" />
                <include name="WEB-INF/bin/compc*" />
-	   </zipfileset>
+       </zipfileset>
       </war>
 
       <property name="done.dist.core" value="1" />
@@ -1375,7 +1375,7 @@
              username="${tom.username}"
              password="${tom.password}"
              path="/${build.branch}"
-             localWar="file://${LPS_HOME} " />
+             localWar="file://${LPS_HOME}" />
      </target>
 
     <target name="webapp.undeploy" description="Undeploy LPS from tomcat" unless="no.tomcat"
