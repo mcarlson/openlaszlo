@@ -45,8 +45,6 @@ class DebugCompiler extends ViewCompiler {
         // a remote connection instead. 
         if (!mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY)
             || mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW)
-            // No debug window in DHTML -- it is in its own iframe.
-            || mEnv.isDHTML()
             || mEnv.getBooleanProperty(mEnv.CONSOLEDEBUG_PROPERTY)) {
             return;
         } else {

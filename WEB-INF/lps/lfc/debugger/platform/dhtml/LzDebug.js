@@ -152,19 +152,6 @@ class LzDHTMLDebugService extends LzDebugService {
     for (var k in copy) {
       this[k] = base[k];
     }
-
-    // Make the real console.  In DHTML we can do this in the
-    // constructor, rather than in makeDebugWindow, because the
-    // console is implemented as an HTML iframe that exists before the
-    // app is loaded
-    var debugFrame;
-    try {
-      debugFrame = window.parent.frames['LaszloDebugger'];
-    }
-    catch (e) {};
-    if (debugFrame) {
-      this.attachDebugConsole(new LzDHTMLDebugConsole(debugFrame));
-    }
   };
 
   /**
@@ -205,12 +192,6 @@ class LzDHTMLDebugService extends LzDebugService {
    * Called last thing by the compiler when the app is completely loaded.
    */
   function makeDebugWindow () {
-    // If we didn't succeed in attaching the debug console in
-    // construct, try now
-    if ((! (this.console is LzDHTMLDebugConsole)) &&
-        (navigator.platform != 'rhino')) {
-      this.attachDebugConsole(new LzDHTMLDebugConsole(this.createDebugIframe()));
-    }
     for (var n in __ES3Globals) {
       var p = __ES3Globals[n];
       try {
@@ -222,6 +203,21 @@ class LzDHTMLDebugService extends LzDebugService {
         //        Debug.debug("Can't name %w", name);
       }
     }
+    // Make the real console.  This is only called if the user code
+    // did not actually instantiate a <debug /> tag
+    if (global['lzconsoledebug'] == 'true') {
+      // Open the remote debugger socket
+      this.attachDebugConsole(new LzFlashRemoteDebugConsole());
+    } else {
+      // This will attach itself, once it is fully initialized.
+      new lz.LzDebugWindow();
+    }
+//     // If we didn't succeed in attaching the debug console in
+//     // construct, try now
+//     if ((! (this.console is LzDHTMLDebugConsole)) &&
+//         (navigator.platform != 'rhino')) {
+//       this.attachDebugConsole(new LzDHTMLDebugConsole(this.createDebugIframe()));
+//     }
   };
 
   /**

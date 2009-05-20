@@ -119,45 +119,10 @@ If you edit this file, please validate your work using http://validator.w3.org/
       <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="@runtime = 'dhtml'">
-              <xsl:choose>
-                <xsl:when test="$debug = 'true'" >
-                    <iframe id="dhtml-application"
-                            frameborder="0"
-                            src="{/canvas/request/@url}?lzt=html{/canvas/request/@query_args}"
-                            style="width: {$canvaswidth}; height: {$canvasheight}" />
-                    <!-- bootstrap debugger window -->
-                  <div id="dhtml-debugger">
-                    <div title="OpenLaszlo Debugger" id="dhtml-debugger-label">
-                      <span></span>OpenLaszlo Debugger
-                    </div>
-                    <div id="dhtml-debugger-output">
-                      <!-- Opera barfs if there is no src property -->
-                      <iframe name="LaszloDebugger" id="LaszloDebugger"
-                              src='{/canvas/request/@lps}/lps/includes/laszlo-debugger.html'>
-                      </iframe>
-                    </div>
-                    <form id="dhtml-debugger-input"
-                          action="#"
-                          onsubmit="$modules.lz.Debug.doEval(document.getElementById('LaszloDebuggerInput').value); return false">
-                        <div>
-                          <input id="LaszloDebuggerInput" type="text" />
-                          <input type="button" value="eval" onclick="$modules.lz.Debug.doEval(document.getElementById('LaszloDebuggerInput').value); return false"/>
-                          <input type="button" value="clear" onclick="$modules.lz.Debug.clear(); return false"/>
-                          <input type="button" value="bug report" onclick="$modules.lz.Debug.bugReport(); return false"/>
-                        </div>
-                      </form>
-                  </div>
-                </xsl:when>
-
-                <xsl:otherwise>
-                  <!-- just the application -->
-                  <iframe id="dhtml-application"
-                          frameborder="0"
-                          src="{/canvas/request/@url}?lzt=html{/canvas/request/@query_args}"
-                          style="width: {$canvaswidth}; height: {$canvasheight}" />
-                </xsl:otherwise>
-              </xsl:choose>
-
+              <iframe id="dhtml-application"
+                      frameborder="0"
+                      src="{/canvas/request/@url}?lzt=html{/canvas/request/@query_args}"
+                      style="width: {$canvaswidth}; height: {$canvasheight}" />
             </xsl:when>
             <xsl:otherwise>
               <script type="text/javascript">

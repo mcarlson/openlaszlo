@@ -258,6 +258,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     for (var i = 0; i < sml; i++) {
       this.console.addText(sm[i]);
     }
+    // Returns the debugger bridge for calling from the server back to
+    // the client
+    return this;
   }
 
   /**

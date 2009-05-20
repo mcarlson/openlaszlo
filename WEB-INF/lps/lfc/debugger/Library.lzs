@@ -9,7 +9,7 @@
   * In some runtimes the Debug object is subclassed for added
   * functionality by the component/debug library
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -31,8 +31,10 @@
   // Platform-specific debugger
   if ($dhtml) {
     #include "debugger/platform/dhtml/LzDebug.js"
+    #include "debugger/platform/dhtml/LzDebuggerWindowConsoleBridge.js"
   } else if ($as2) {
     #include "debugger/platform/swf/LzDebug.as"
+    #include "debugger/platform/swf/LzDebuggerWindowConsoleBridge.as"
   } else if ($as3) {
     #include "debugger/platform/swf9/LzDebug.as"
     #include "debugger/platform/swf9/LzFlashRemote.as"

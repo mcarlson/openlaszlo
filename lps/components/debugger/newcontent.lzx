@@ -255,15 +255,26 @@
                    resource="scrollDragDimples_rsc" 
                    y="6" x="4" />
 
-<method name="higlight_dragger" args="n">
+           <method name="higlight_dragger" args="n">
               this.stretch.setAttribute('frame', n);
               this.top.setAttribute('frame', n);
               this.bottom.setAttribute('frame', n);
               this.dimples.setAttribute('frame', n)
            </method>
 
-           <setter name="y" args="y" > 
-              super.setAttribute('y', Math.max(parent.arrowbuttonheight-1 , Math.min( y , parent.height - (parent.thumbheight + parent.arrowbuttonheight)))); 
+           <attribute name="_warned" value="false" />
+           <setter name="y" args="y" >
+             var newy = Math.max(parent.arrowbuttonheight-1 , Math.min( y , parent.height - (parent.thumbheight + parent.arrowbuttonheight))); 
+             if ((!this._warned) &amp;&amp; isNaN(newy)) {
+              this._warned = true;
+              Debug.debug("pabh: %w, y: %w, ph: %w, pth: %w",
+                parent.arrowbuttonheight,
+                y,
+                parent.height,
+                parent.thumbheight);
+             } else {
+              super.setAttribute('y', newy);
+             }
            </setter>
 
           <!-- this gets called every time the y value changes -->
@@ -349,6 +360,7 @@
        var scroll = tpane.getScroll();
        var ypos = 0;
        ypos = Math.floor( ((scroll-1)  / (mscroll-1)) * real_scroll_height);
+       if (isNaN(ypos)) { return 0; }
        return bh -1  + ypos;
      </method>
 

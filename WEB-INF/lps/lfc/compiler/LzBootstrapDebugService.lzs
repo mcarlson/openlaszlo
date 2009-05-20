@@ -13,11 +13,9 @@
 /**
  * The Debug Console interface
  *
- * This interface defines the protocol between the debugger and the console
+ * This abstract class defines the protocol between the debugger and the console
  *
  * @access private
- *
- * @devnote [2008-11-25 ptw] Should really just be an interface
  */
 class LzDebugConsole {
 
@@ -36,12 +34,28 @@ class LzDebugConsole {
    *
    * @access private
    */
-  function addText (msg) {};
+  /** @access private */
+  function addText (msg) {
+    var str;
+    try {
+      if (msg && msg['toHTML'] is Function) {
+        str = msg.toHTML();
+      } else {
+        str = String(msg)['toHTML']();
+      }
+    } catch (e) {
+      Debug.log('ERROR: ' + e + ' in addText(' + msg + ')');
+      str = '' + msg;
+    };
+    this.addHTMLText(str);
+  };
+
   /**
    * Clears the console
    * @access private
    */
   function clear () {};
+
   /**
    * Adds output to the console, potentially marking it with a font or
    * color to indicate that it is input, not output.
@@ -53,6 +67,7 @@ class LzDebugConsole {
    * @access private
    */
   function echo (str, newLine:Boolean=true) {};
+
   /**
    * Add HTML output to the console
    *
@@ -61,6 +76,7 @@ class LzDebugConsole {
    * escaped.
    */
   function addHTMLText (msg) {};
+
   /**
    * Make a 'presentation' of an object
    *
@@ -80,18 +96,65 @@ class LzDebugConsole {
    * @access private
    */
   function makeObjectLink (rep:String, id, attrs=null):String { return undefined; };
+
+  /**
+   * Simple "path" expressions will only have symbols, `.`, or `[numbers]`
+   * @access private
+   */
+  const SimpleExprPattern = new RegExp('^\\s*([$_A-Za-z][$\\w]*)((\\s*\\.\\s*[$_A-Za-z][$\\w]*)|(\\s*\\[\\s*\\d+\\s*\\]))*\\s*$');
+  /**
+   * Now pull out just the element 'selectors', so you can walk down them
+   * @access private
+   */
+  const ElementPattern = new RegExp('([$_A-Za-z][$\\w]*)|(\\d+)', 'g');
+
+  /** @access private */
+  function isSimpleExpr(expr:String):Boolean {
+    return (expr.match(this.SimpleExprPattern));
+  }
+
+  /** @access private */
+  function evalSimpleExpr(expr:String) {
+    var parts = expr.match(this.ElementPattern);
+    var val = globalValue(parts[0]);
+    for (var i = 1, l = parts.length; i < l; i++) {
+      val = val[parts[i]];
+    }
+    return val;
+  }
+
   /**
    * Evaluate an expression and call Debug.displayResult on the result
    * (or Debug.error if the evaluation causes an error).
    *
-   * This is part of the console protocol because it may require using
-   * the console link to compile the expression to be evaluated, which
-   * is then loaded and executed.  The result is then displayed by
-   * calling back to the debugger `displayResult` method
+   * The bootstrap version assumes the platform does not have an
+   * evaluator.  It evaluates simple member/index paths 'by hand',
+   * otherwise it punts.  Platform-specific bridges override this
+   * method to use either the platform evaluator, or, if tethered,
+   * the remote server to compile/load/eval the expression.
    *
    * @access private
    */
-  function doEval (expr:String) {};
+  function doEval (expr:String) {
+    if (this.isSimpleExpr(expr)) {
+      var simple = true;
+      try {
+        var val = this.evalSimpleExpr(expr);
+        // If we got no value, maybe the expression was not simple
+        if (val === void 0) {
+          simple = false;
+        }
+      } catch (e) {
+        // If we get an error, surely the expression must not be simple
+        simple = false;
+      }
+    }
+    if (simple) {
+      Debug.displayResult(val);
+    } else {
+      Debug.warn("Unable to evaluate %s", expr);
+    } 
+  }
 };
 
 
@@ -105,7 +168,7 @@ class LzDebugConsole {
  *
  * @access private
  */
-class LzBootstrapDebugConsole extends LzDebugConsole /* implements  LzDebugConsole */ {
+class LzBootstrapDebugConsole extends LzDebugConsole {
 
   function LzBootstrapDebugConsole () {
     this.saved_msgs = new Array;
@@ -127,27 +190,22 @@ class LzBootstrapDebugConsole extends LzDebugConsole /* implements  LzDebugConso
         str = String(msg)['toHTML']();
       }
     } catch (e) {
+      Debug.log('ERROR: ' + e + ' in addText(' + msg + ')');
       str = '' + msg;
     };
     if ($dhtml) {
-      try {
-        if (navigator.platform == 'rhino') {
+      // `ant lztest` depends on rhino output
+      if (navigator.platform == 'rhino') {
+        try {
           print(str);
           return;
-        }
-      } catch (e) {};
+        } catch (e) {};
+      }
     }
     // We know this is just going to capture the raw message for
     // replay later
     this.addHTMLText(str);
   };
-
-  /**
-   * Doc'd on interface
-   * Bootstrap version
-   * @access private
-   */
-  override function clear () { };
 
   /**
    * Doc'd on interface
@@ -190,7 +248,7 @@ class LzBootstrapDebugConsole extends LzDebugConsole /* implements  LzDebugConso
   override function doEval (expr:String) {
     // Bootstrap implementation
     try {
-      Debug.displayResult(globalValue(expr));
+      super.doEval(expr);
     } catch (e) {
       Debug.error(e);
     }

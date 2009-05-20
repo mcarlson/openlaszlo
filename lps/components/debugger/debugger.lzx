@@ -168,6 +168,7 @@
 
     <attribute name="remoteDebug"   value="false"/>
     <attribute name="consoleRemote" value="false"/> 
+    <attribute name="clientBridge" />
 
     <attribute name="minimized" value="false" />
     <attribute name="autoscroll" value="true" />
@@ -220,13 +221,14 @@
 <method name="initEvalView">
       <![CDATA[
        global._ = null;
-       //TODO: This uses Flash-specific APIs
-       this.evalloader = new LzDebugEvalLoader(this);
-
-       // To support clickable links in swf9, we need to add an as3 event listener
-       // on the output LzText's flash textfield object.
-       if ($as3) {
-           this.evalloader.addTextLinkCallback(this.middle.content.textpane);
+       if ($dhtml) {
+       } else {
+           this.evalloader = new LzDebugEvalLoader(this);
+           // To support clickable links in swf9, we need to add an as3 event listener
+           // on the output LzText's flash textfield object.
+           if ($as3) {
+               this.evalloader.addTextLinkCallback(this.middle.content.textpane);
+           }
        }
 
        this.loaded();
@@ -327,36 +329,7 @@
        if (this.persistedData) {
             this.persistedData.data.commandhistory = this.commandhistory;
        }
-       // Echo input to output
-       Debug.freshPrompt();
-       this.echo(String(expr)['toHTML']());
-       // try to avoid calling the compiler if you can
-       var simple, val;
-       if (expr.match(this.SimpleExprPattern)) {
-         simple = true;
-         try {
-           var parts = expr.match(this.ElementPattern)
-           val = globalValue(parts[0]);
-           for (var i = 1, l = parts.length; i < l; i++) {
-             val = val[parts[i]];
-           }
-           if (val === void 0) {
-               simple = false;
-           }
-         } catch (e) {
-           // If we get an error, the expression must not be simple
-           simple = false;
-         }
-       }
-       if (simple) {
-         Debug.displayResult(val);
-       } else {
-         // Will try to compile as 'Debug.displayResult(expr);' and if
-         // that fails, will try to compile as a series of statements
-         // (with no display).  Finally, will compile
-         // 'Debug.__write(<error message>)' if both of those fail.
-         this.evalloader.doEval(expr, this.commandhistory.length);
-       } 
+       this.clientBridge.doEval(expr);
        // Clear the input text field
        if (!this.bottom.center.input.multiline) {
            this.bottom.center.input.clearText();
@@ -364,9 +337,13 @@
        ]]>
     </method>
 
-<method name="evalString" args="expr">
-      this.evalloader.doEval(expr, this.commandhistory.length);
-    </method>
+    <method name="remoteEval" args="expr, count"><![CDATA[
+      // Will try to compile as 'Debug.displayResult(expr);' and if
+      // that fails, will try to compile as a series of statements
+      // (with no display).  Finally, will compile
+      // 'Debug.__write(<error message>)' if both of those fail.
+      this.evalloader.doEval(expr, count);
+    ]]></method>
 
     <!--- Clear the output from the debug window -->
 <method name="clearWindow">
@@ -624,6 +601,8 @@
 
 <method name="restoreDebuggerState" >
   <![CDATA[
+     if ($dhtml) {
+     } else {
        // restore persistedDataed data
        this.persistedData = LzBrowserKernel.getPersistedObject('__lzdebugger');
        if (this.persistedData && this.persistedData.data['commandhistory']) {
@@ -653,6 +632,7 @@
                this.setAttribute('y', this.persistedData.data._pdbgy);
            }
        }
+     }
        ]]>
     </method>
 
@@ -999,12 +979,9 @@
         this.isLoaded = true;
         this.remoteDebug = false;
 
-        if ($as3) {
-            var bridge:LzDebugConsole = new LzDebuggerWindowConsoleBridge(this);
-            Debug.attachDebugConsole(bridge);
-         } else {
-           Debug.attachDebugConsole(this);
-        }
+        var bridge:LzDebugConsole = new LzDebuggerWindowConsoleBridge(this);
+        this.clientBridge = Debug.attachDebugConsole(bridge);
+
         this.setAttribute('visible', true );
         this.bringToFront();
 

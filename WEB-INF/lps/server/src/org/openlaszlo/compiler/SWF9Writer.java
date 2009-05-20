@@ -377,7 +377,7 @@ class SWF9Writer extends ObjectWriter {
                 addScript(mEnv.getProperty(mEnv.DEBUGGER_WINDOW_SCRIPT));
             } else {
                 // Create debugger window with default init options
-                addScript("__LzDebug.makeDebugWindow()");
+                addScript("Debug.makeDebugWindow()");
             }
         }
 
