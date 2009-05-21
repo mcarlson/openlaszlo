@@ -269,11 +269,13 @@ var trimwhitespace :Boolean = false;
   */
 var cacheable :Boolean = false;
 
-/** When true, an argument will be added to the request string in the format 
-  * '__lzbc__=1204685840777'.  This is to prevent client caching.
+/** When true, data responses can be cached by the client (browser).
+  * When false, a unique valued argument will be added to the request string in the format 
+  * '__lzbc__=1204685840777' to defeat the browser's cache.
   * @type Boolean
+  * @lzxdefault false
   */
-var clientcacheable :Boolean = true;
+var clientcacheable :Boolean = false;
 
 /** A string to be appended to the request that
   * the dataset makes. 
