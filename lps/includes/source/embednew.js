@@ -533,9 +533,19 @@ lz.embed = {
             },
             {
                 string: navigator.userAgent,
+                subString: "Chrome",
+                identity: "Chrome"
+            },
+            {   string: navigator.userAgent,
+                subString: "OmniWeb",
+                versionSearch: "OmniWeb/",
+                identity: "OmniWeb"
+            },
+            {
+                string: navigator.vendor,
                 subString: "Apple",
                 identity: "Safari",
-                versionSearch: "WebKit"
+                versionSearch: "Version"
             },
             {
                 prop: window.opera,
@@ -561,6 +571,11 @@ lz.embed = {
                 subString: "Iceweasel",
                 versionSearch: "Iceweasel", 
                 identity: "Firefox"
+            },
+            {
+                string: navigator.vendor,
+                subString: "Camino",
+                identity: "Camino"
             },
             {    // for newer Netscapes (6+)
                 string: navigator.userAgent,
@@ -597,6 +612,11 @@ lz.embed = {
                 string: navigator.platform,
                 subString: "Mac",
                 identity: "Mac"
+            },
+            {
+                   string: navigator.userAgent,
+                   subString: "iPhone",
+                   identity: "iPhone/iPod"
             },
             {
                 string: navigator.platform,
