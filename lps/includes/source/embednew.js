@@ -545,7 +545,10 @@ lz.embed = {
                 string: navigator.vendor,
                 subString: "Apple",
                 identity: "Safari",
-                versionSearch: "Version"
+                // NOTE: [20090522 anba] quirksmode uses here "Version" to get
+                // the Safari version number, but we want to have the WebKit
+                // version number
+                versionSearch: "WebKit"
             },
             {
                 prop: window.opera,
