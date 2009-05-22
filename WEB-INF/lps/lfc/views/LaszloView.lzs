@@ -770,7 +770,7 @@ var fontstyle;
 
 /** @access private */
 function $lzc$set_fontstyle(val) {
-    if (val == 'plain' || val == 'bold' || val == 'italic' || val == 'bolditalic') {
+    if (val == 'plain' || val == 'bold' || val == 'italic' || val == 'bolditalic' || val == 'bold italic') {
         this.fontstyle = val;
         if (this.onfontstyle.ready) { 
             this.onfontstyle.sendEvent( this.fontstyle ); 

@@ -774,7 +774,7 @@ dynamic class LzText extends LzView with LzFormatter {
 
   /** @access private */
   override function $lzc$set_fontstyle(fstyle) {
-    if (fstyle == 'plain' || fstyle == 'bold' || fstyle == 'italic' || fstyle == 'bolditalic') {
+    if (fstyle == 'plain' || fstyle == 'bold' || fstyle == 'italic' || fstyle == 'bolditalic' || fstyle == 'bold italic') {
       super.$lzc$set_fontstyle(fstyle);
       this.tsprite.setFontStyle(fstyle);
       this._updateSize();
