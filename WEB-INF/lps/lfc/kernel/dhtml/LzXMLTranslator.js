@@ -95,7 +95,11 @@ copyBrowserXML: function (xmlnode, ignorewhite, trimwhite, nsprefix) {
 
             // this is inlined:
             // var lfcnode = this.copyBrowserNode(node);
-            // lfcparent.appendChild(lfcnode);
+            // if (lfcparent.getLastChild() instanceof LzDataText) {
+            //   lfcparent.getLastChild().data += lfcnode.data;
+            // } else {
+            //   lfcparent.appendChild(lfcnode);
+            // }
 
             var nv = node.nodeValue;
             // If ignorewhite is true, discard a text node which is all whitespace
@@ -103,11 +107,18 @@ copyBrowserXML: function (xmlnode, ignorewhite, trimwhite, nsprefix) {
                 if (trimwhite) {
                     nv = nv.replace(trimPat, "");
                 }
-                var lfcnode = new LzDataText(nv);
-                // inlined lfcparent.appendChild(lfcnode)
-                lfcnode.parentNode = lfcparent;
-                lfcnode.ownerDocument = document;
-                lfcnode.__LZo = (lfcparent.childNodes.push(lfcnode) - 1);
+                var cnodes = lfcparent.childNodes;
+                var last = cnodes[cnodes.length - 1];
+                if (last instanceof LzDataText) {
+                    // merge adjacent text nodes (LPP-8214)
+                    last.data += nv;
+                } else {
+                    var lfcnode = new LzDataText(nv);
+                    // inlined lfcparent.appendChild(lfcnode)
+                    lfcnode.parentNode = lfcparent;
+                    lfcnode.ownerDocument = document;
+                    lfcnode.__LZo = (cnodes.push(lfcnode) - 1);
+                }
             }
         } else if (type == 1 || type == 9) {
             // element or document node (1: ELEMENT_NODE, 9: DOCUMENT_NODE)

@@ -1,0 +1,126 @@
+<library>
+  <include href="lzunit"/>
+  <class name="TestTextNodeLength" extends="TestCase">
+    <attribute name="repeatchar" value="a" type="string"/>
+    <attribute name="times" value="8192" type="number"/>
+
+    <attribute name="MAX_WAIT" value="2000" type="number"/>
+    <attribute name="dsetProxiedCounter" value="0" type="number"/>
+    <attribute name="dsetNonProxiedCounter" value="0" type="number"/>
+    <attribute name="dsetProxiedDel" value="null" type="expression"/>
+    <attribute name="dsetNonProxiedDel" value="null" type="expression"/>
+
+    <dataset name="dsetProxied" src="http:testtextnodelength.jsp" proxied="true" request="false"/>
+    <dataset name="dsetNonProxied" src="http:testtextnodelength.jsp" proxied="false" request="false"/>
+
+    <handler name="oninit">
+        this.dsetProxied.setQueryParams({'times': this.times, 'char': this.repeatchar});
+        this.dsetProxied.doRequest();
+        this.dsetNonProxied.setQueryParams({'times': this.times, 'char': this.repeatchar});
+        this.dsetNonProxied.doRequest();
+    </handler>
+
+    <method name="addTests" override="true">
+      this.addTest("testLength_Parser");
+      this.addTest("testLength_Proxied");
+      this.addTest("testLength_NonProxied");
+    </method>
+
+    <method name="repeatString" args="c:String, times:int" returns="String" ><![CDATA[
+      if (times <= 0) return "";
+      var s:String = "";
+      var tmp:String = c;
+      for (var i:int = 0;;) {
+        if (((times >> i) & 1) == 1) {
+          s += tmp;
+        }
+        if ((1 << ++i) <= times) {
+          tmp += tmp
+        } else break;
+      }
+      return s;
+    ]]></method>
+
+    <method name="verifyData" args="who:String, fname:String" returns="String"><![CDATA[
+      if (! this[who].data) {
+        if (! this[who + 'Del']) {
+          Debug.write("%s: test isn't done until async test runs", this.constructor.tagname);
+          this[who + 'Del'] = new lz.Delegate(this, fname);
+        }
+
+        if (this[who + 'Counter']++ > this.MAX_WAIT) {
+          return 'TIMEOUT';
+        } else {
+          lz.Idle.callOnIdle(this[who + 'Del']);
+          return 'LOADING';
+        }
+      } else {
+        return 'LOADED';
+      }
+    ]]></method>
+
+    <method name="testLength_Parser"><![CDATA[
+      var txt = this.repeatString(this.repeatchar, this.times);
+      var xml = "<b>" + txt + "</b>";
+      var node = lz.DataElement.stringToLzData(xml);
+
+      assertEquals(this.times, txt.length);
+      assertNotNull(node);
+      assertEquals("b", node.nodeName);
+      // exactly one child node
+      assertEquals(1, node.childNodes.length);
+      // which is a text node
+      assertTrue(node.getFirstChild() is lz.DataText);
+      // and now verify the text node's data
+      assertEquals(txt.length, node.getFirstChild().data.length);
+    ]]></method>
+
+    <method name="testLength_Proxied" args="ignore=null"><![CDATA[
+      switch (this.verifyData("dsetProxied", "testLength_Proxied")) {
+        case 'LOADED': Debug.write("%s: running async test for loaded data '%s'", this.constructor.tagname, "dsetProxied"); break;
+        case 'TIMEOUT': fail("TestTextNodeLength: Didn't get async data for 'dsetProxied'");
+        case 'LOADING':
+        default: return;
+      }
+
+      var txt = this.repeatString(this.repeatchar, this.times);
+      var node = this.dsetProxied.getFirstChild();
+
+      assertEquals(this.times, txt.length);
+      assertNotNull(node);
+      assertEquals("b", node.nodeName);
+      // exactly one child node
+      assertEquals(1, node.childNodes.length);
+      // which is a text node
+      assertTrue(node.getFirstChild() is lz.DataText);
+      // and now verify the text node's data
+      assertEquals(txt.length, node.getFirstChild().data.length);
+    ]]></method>
+
+    <method name="testLength_NonProxied" args="ignore=null"><![CDATA[
+      switch (this.verifyData("dsetNonProxied", "testLength_NonProxied")) {
+        case 'LOADED': Debug.write("%s: running async test for loaded data '%s'", this.constructor.tagname, "dsetNonProxied"); break;
+        case 'TIMEOUT': fail("TestTextNodeLength: Didn't get async data for 'dsetNonProxied'");
+        case 'LOADING':
+        default: return;
+      }
+
+      var txt = this.repeatString(this.repeatchar, this.times);
+      var node = this.dsetNonProxied.getFirstChild();
+
+      assertEquals(this.times, txt.length);
+      assertNotNull(node);
+      assertEquals("b", node.nodeName);
+      // exactly one child node
+      assertEquals(1, node.childNodes.length);
+      // which is a text node
+      assertTrue(node.getFirstChild() is lz.DataText);
+      // and now verify the text node's data
+      assertEquals(txt.length, node.getFirstChild().data.length);
+    ]]></method>
+  </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

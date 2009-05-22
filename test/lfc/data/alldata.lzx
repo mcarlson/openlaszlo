@@ -32,10 +32,12 @@
     <include href="sendheaders.lzx"/>
     <include href="testclientcachebreaker.lzx"/>
     <include href="xmlparser.lzx"/>
+    <include href="testtextnodelength.lzx"/>
 
     <TestSuite>
         <TestDatanode/>
         <TestXmlParser/>
+        <TestTextNodeLength/>
         <TestDatapointer/>
         <TestDatapointerServerless/>
         <TestDPDepend/>

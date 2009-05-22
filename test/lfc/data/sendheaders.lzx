@@ -13,7 +13,7 @@
 
         <datapointer xpath="ds_head:/data" name="dp2" ondata="parent.dp2ready = true"/>
 
-        <method name="test2" args="...ignore">
+        <method name="test2" args="ignore=null">
             if ( ! this.dp2ready ){
                 if ( ! this.t2del ){
                     Debug.write( "test isn't done until async test runs" );
@@ -52,6 +52,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

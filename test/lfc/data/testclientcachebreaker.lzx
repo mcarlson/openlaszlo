@@ -48,9 +48,9 @@
         <method name="doIt" args="dp">
             <![CDATA[
               assertFalse( (Number(dp.xpathQuery("ds1:/response/text()"))) == 
-                            Number(dp.xpathQuery("ds2:/response/text()")) );
+                            Number(dp.xpathQuery("ds2:/response/text()")), "client cache breaker (proxied)" );
               assertFalse( (Number(dp.xpathQuery("ds3:/response/text()"))) == 
-                            Number(dp.xpathQuery("ds4:/response/text()")) );
+                            Number(dp.xpathQuery("ds4:/response/text()")), "client cache breaker (non-proxied)"  );
             ]]>
         </method>
         <method name="addTests"> 
@@ -60,7 +60,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

@@ -25,7 +25,7 @@
       dsget.doRequest();
     </method>
 
-    <method name="test1" args="...ignore">
+    <method name="test1" args="ignore=null">
 //          Debug.write("this.dpready = ",this.dpready);
       if ( ! this.dpready ){
           if ( ! this.t2del ){
@@ -41,7 +41,7 @@
 
           return;
       } 
-      Debug.write( 'running testsetheaders test on loaded data' );
+      Debug.write( 'running testgetmethod test on loaded data' );
       this.doIt(dp);
     </method>
 
@@ -61,7 +61,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

@@ -19,7 +19,7 @@
     </handler>
 
     <method name="sendit">
-      Debug.write("testsetheaders.lzx sending edata_solo");
+      Debug.write("testsetheaders-solo.lzx sending edata_solo");
       edata_solo.setQueryParam("flash", "has some bugs");
       edata_solo.setAttribute("querytype", "POST");
 
@@ -29,22 +29,22 @@
       edata_solo.doRequest();
     </method>
 
-    <method name="test1" args="...ignore">
+    <method name="test1" args="ignore=null">
       if ( ! this.dpready ){
           if ( ! this.t2del ){
               Debug.write( "test isn't done until async test runs" );
               this.t2del = new LzDelegate( this , 'test1' );
           }
 
-          if ( this.waitcnt++ > 100 ){
-              fail( "testsetheaders: Didn't get async data" );
+          if ( this.waitcnt++ > 2000 ){
+              fail( "testsetheaderssolo: Didn't get async data" );
           } else {
               lz.Idle.callOnIdle( this.t2del );
           }
 
           return;
       } 
-      Debug.write( 'running testsetheaders test on loaded data' );
+      Debug.write( 'running testsetheaderssolo test on loaded data' );
       this.doIt(dp);
     </method>
 
@@ -66,7 +66,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
