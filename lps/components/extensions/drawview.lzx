@@ -591,9 +591,25 @@
                     this._hidden = false;
                     this.maxTries = 10;
                     this.__initie();
+                    // add to list of 'sprites' so we are cleaned up
+                    LzSprite.prototype.__sprites[this.sprite.uid + 'canvas'] = this;
                 } else {
                     this.setAttribute('context', this.__LZcanvas.getContext("2d"));
                 }
+            }
+
+            override function destroy() {
+                if (lz.embed.browser.isIE) {
+                    if (this.__LZcanvas) {
+                        // http://blogs.msdn.com/gpde/pages/javascript-memory-leak-detector.aspx complains about these properties
+                        this.__LZcanvas.owner = null;
+                        this.__LZcanvas.getContext = null;
+                        var lzsp = LzSprite.prototype;
+                        lzsp.__discardElement(this.__LZcanvas);
+                        delete lzsp.__sprites[this.sprite.uid + 'canvas'];
+                    }
+                }
+                super.destroy();
             }
 
             override function $lzc$set_width(w) {
