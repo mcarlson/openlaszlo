@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Copyright 2008 Laszlo Systems.  Use according to license terms.
+# Copyright 2008-2009 Laszlo Systems.  Use according to license terms.
 #
 # convert_setters.pl
 # Convert deprecated setX calls to setAttribute('X',...) calls
@@ -99,11 +99,15 @@ my %settername = (
     'setAATabIndex' => 'aatabindex',
     'setAASilent' => 'aasilent',
     'setProxyURL' => 'proxyurl',
+    'setContextMenu' => 'contextmenu',
 # lz.text
     'setResize' => 'resize',
     'setMaxLength' => 'maxlength',
     'setPattern' => 'pattern',
+    'setScroll' => 'scroll',
     'setXScroll' => 'xscroll',
+    'setYScroll' => 'yscroll',
+    'setHScroll' => 'hscroll',
     'setText' => 'text',
     'setSelectable' => 'selectable',
     'setFontSize' => 'fontsize',
@@ -125,10 +129,32 @@ my %settername = (
 # lz.dataset
     # 'setData' => 'data',  # Used in dataset/datatext but 2 args in dataset
     'setSrc' => 'src',
+    'setProxyRequests' => 'proxied',
     'setRequest' => 'request',
     'setAutorequest' => 'autorequest',
+    'setPostBody' => 'postbody',
+    'setQueryType' => 'querytype',
+    'setInitialData' => 'initialdata',
 # lz.command
-    'setKeys' => 'key'
+    'setKeys' => 'key',
+# lz.DataElementMixin
+    'setAttrs' => 'attributes',
+    'setChildNodes' => 'childNodes',
+    'setNodeName' => 'nodeName',
+# lz.DataNodeMixin
+    'setOwnerDocument' => 'ownerDocument',
+# lz.DataText
+    # 'setData' => 'data', # see lz.dataset
+# lz.state
+    'setApply' => 'applied',
+# lz.contextmenu
+    'setDelegate' => 'delegate',
+# lz.contextmenuitem
+    # 'setDelegate' => 'delegate', # see lz.contextmenu
+    # 'setEnabled' => 'enabled', # see lz.inputtext
+    # 'setVisible' => 'visible', # see lz.view
+    'setCaption' => 'caption',
+    'setSeparatorBefore' => 'separatorbefore'
 );
 
 
