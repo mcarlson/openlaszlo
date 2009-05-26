@@ -44,9 +44,17 @@ class LzDebugConsole {
         str = String(msg)['toHTML']();
       }
     } catch (e) {
-      Debug.log('ERROR: ' + e + ' in addText(' + msg + ')');
       str = '' + msg;
     };
+    if ($dhtml) {
+      // `ant lztest` depends on rhino output
+      if (navigator.platform == 'rhino') {
+        try {
+          print(str);
+          return;
+        } catch (e) {};
+      }
+    }
     this.addHTMLText(str);
   };
 
@@ -173,39 +181,6 @@ class LzBootstrapDebugConsole extends LzDebugConsole {
   function LzBootstrapDebugConsole () {
     this.saved_msgs = new Array;
   }
-
-  /**
-   * Doc'd on interface
-   * Bootstrap version
-   * @access private
-   *
-   * @devnote Should probably be called addMessage
-   */
-  override function addText (msg) {
-    var str;
-    try {
-      if (msg && msg['toHTML'] is Function) {
-        str = msg.toHTML();
-      } else {
-        str = String(msg)['toHTML']();
-      }
-    } catch (e) {
-      Debug.log('ERROR: ' + e + ' in addText(' + msg + ')');
-      str = '' + msg;
-    };
-    if ($dhtml) {
-      // `ant lztest` depends on rhino output
-      if (navigator.platform == 'rhino') {
-        try {
-          print(str);
-          return;
-        } catch (e) {};
-      }
-    }
-    // We know this is just going to capture the raw message for
-    // replay later
-    this.addHTMLText(str);
-  };
 
   /**
    * Doc'd on interface

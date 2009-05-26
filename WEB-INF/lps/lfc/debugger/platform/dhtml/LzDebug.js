@@ -43,32 +43,6 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
   };
 
   /**
-   * @access private
-   */
-  override function addText (msg) {
-    var str;
-    try {
-      if (msg && msg['toHTML'] is Function) {
-        str = msg.toHTML();
-      } else {
-        str = String(msg).toHTML();
-      }
-    } catch (e) {
-      str = '' + msg;
-    };
-    try {
-      this.addHTMLText(str);
-    } catch (e) {
-      try {
-        if (navigator.platform == 'rhino') {
-          print(str);
-          return;
-        }
-      } catch (e) {};
-    }
-  };
-
-  /**
    * Echo to the console in the debugger font
    *
    * @param String str: what to echo
