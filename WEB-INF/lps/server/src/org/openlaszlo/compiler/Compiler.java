@@ -186,6 +186,7 @@ public class Compiler {
         // Compile to a byte-array, and write out to objectFile, and
         // write a copy into sourceFile.[swf|js] if this is a serverless deployment.
         CompilationEnvironment env = makeCompilationEnvironment(props);
+
         ByteArrayOutputStream bstream = new ByteArrayOutputStream();
         OutputStream ostream = new FileOutputStream(objectFile);
         env.setObjectFile(objectFile);
@@ -337,14 +338,13 @@ public class Compiler {
             }
 
 
-            Map compileTimeConstants = new HashMap();
-            env.setCompileTimeConstants(compileTimeConstants);
+            Map props = env.getProperties();
 
-            compileTimeConstants.put("$debug", new Boolean(
+            props.put("$debug", new Boolean(
                                          env.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY)));
-            compileTimeConstants.put("$profile", new Boolean(
+            props.put("$profile", new Boolean(
                                          env.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY)));
-            compileTimeConstants.put("$backtrace", new Boolean(
+            props.put("$backtrace", new Boolean(
                                          env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY)));
 
             String runtime = env.getProperty(env.RUNTIME_PROPERTY);
@@ -393,7 +393,7 @@ public class Compiler {
             // at compile time, but they won't be emitted into the object code for user apps. Only
             // the compiled LFC emits code which defines these constants. We need to have some
             // better way to ensure that the LFC's constants values match the app code's.
-            nprops.put("compileTimeConstants", compileTimeConstants);
+            nprops.put("compileTimeConstants", env.getCompileTimeConstants());
 
             ObjectWriter writer = createObjectWriter(nprops, ostr, env, root);
 

@@ -400,7 +400,7 @@ public class Parser {
         Document doc = read(file);
         Element root = doc.getRootElement();
 
-        Map cc = env.getCompileTimeConstants();
+        Map cprops = env.getProperties();
         // Override passed in runtime target properties 'debug' and 'profile' with 
         // canvas values, if any.
         if (root.getName().equals("canvas")) {
@@ -415,13 +415,13 @@ public class Parser {
             // options is compileroptions="debug: true;backtrace: true"
             String dbg = root.getAttributeValue("debug");
             if (dbg != null) {
-                cc.put("$debug", new Boolean(dbg));
+                cprops.put("$debug", new Boolean(dbg));
                 env.setProperty(CompilationEnvironment.DEBUG_PROPERTY,  dbg.equals("true"));
             }
 
             String prof = root.getAttributeValue("profile");
             if (prof != null) {
-                cc.put("$profile", new Boolean(prof));
+                cprops.put("$profile", new Boolean(prof));
                 env.setProperty(CompilationEnvironment.PROFILE_PROPERTY,  prof.equals("true"));
             }
         }
@@ -436,7 +436,7 @@ public class Parser {
 
     // Set compiler options
     void parseCompilerOptions(Element element, CompilationEnvironment env) {
-        Map cc = env.getCompileTimeConstants();
+        Map cprops = env.getProperties();
 
         try {
             Map properties = new CSSParser
@@ -453,19 +453,19 @@ public class Parser {
                     if (! (value instanceof Boolean)) {
                         throw new CompilationError("value of compileroptions.debug must be a boolean", element);
                     }
-                    cc.put("$debug", value);
+                    cprops.put("$debug", value);
                     env.setProperty(env.DEBUG_PROPERTY, ((Boolean) value).booleanValue());
                 } else if (key.equals("profile")) {
                     if (! (value instanceof Boolean)) {
                         throw new CompilationError("value of compileroptions.profile must be a boolean", element);
                     }
-                    cc.put("$profile", value);
+                    cprops.put("$profile", value);
                     env.setProperty(env.PROFILE_PROPERTY, ((Boolean) value).booleanValue());
                 } else if (key.equals("backtrace")) {
                     if (! (value instanceof Boolean)) {
                         throw new CompilationError("value of compileroptions.backtrace must be a boolean", element);
                     }
-                    cc.put("$backtrace", value);
+                    cprops.put("$backtrace", value);
                     env.setProperty(env.BACKTRACE_PROPERTY, ((Boolean) value).booleanValue());
                 } else if (key.equals("runtime")) {
                     env.setProperty(env.RUNTIME_PROPERTY, (String)value);
@@ -495,8 +495,8 @@ public class Parser {
     protected boolean evaluateConditions(Element element, CompilationEnvironment env) {
         String propname = element.getAttributeValue("property");
         if ( propname != null) {
-            Map cc = env.getCompileTimeConstants();
-            Object prop = cc.get(propname);
+            Map cprops = env.getProperties();
+            Object prop = cprops.get(propname);
             if (prop == null) {
                 return false;
             } else if (prop instanceof Boolean) {

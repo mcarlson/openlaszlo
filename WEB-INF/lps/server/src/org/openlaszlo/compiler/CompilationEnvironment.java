@@ -161,8 +161,6 @@ public class CompilationEnvironment {
 
     private List mLibraryCompilations = new ArrayList();
 
-    private Map mCompileTimeConstants = null;
-
     /** Information about where the ScriptCompiler put intermediate
      * working files. This is used for linking loadable libraries for
      * as3 runtime */
@@ -208,8 +206,6 @@ public class CompilationEnvironment {
         // Default property values
         this.mSchema = srcEnv.getSchema();
         this.mCanvas = srcEnv.getCanvas();
-        this.mCompileTimeConstants = srcEnv.getCompileTimeConstants();
-
         this.mImportedLibraryFiles = new HashSet(srcEnv.getImportedLibraryFiles());
         this.mLoadableImportedLibraryFiles = srcEnv.getLoadableImportedLibraryFiles();
         this.mResourceNames = srcEnv.getResourceNames();
@@ -808,27 +804,38 @@ public class CompilationEnvironment {
         return mMainCompilationEnv != null ? mMainCompilationEnv : this;
     }
 
-    public void setCompileTimeConstants(Map map) {
-        mCompileTimeConstants = map;
-    }
-
     public Map getCompileTimeConstants() {
-        return mCompileTimeConstants;
+        HashMap cc = new HashMap();
+        cc.put("$runtime",   mProperties.get("$runtime"));
+        cc.put("$swf7",      mProperties.get("$swf7"));
+        cc.put("$swf8",      mProperties.get("$swf8"));
+        cc.put("$as2",       mProperties.get("$as2"));
+        cc.put("$swf9",      mProperties.get("$swf9"));
+        cc.put("$swf10",     mProperties.get("$swf10"));
+        cc.put("$as3",       mProperties.get("$as3"));
+        cc.put("$dhtml",     mProperties.get("$dhtml"));
+        cc.put("$j2me",      mProperties.get("$j2me"));
+        cc.put("$svg",       mProperties.get("$svg"));
+        cc.put("$js1",       mProperties.get("$js1"));
+        cc.put("$debug",     mProperties.get("$debug"));
+        cc.put("$profile",   mProperties.get("$profile"));
+        cc.put("$backtrace", mProperties.get("$backtrace"));
+        return cc;
     }
 
     // Set up runtime-related compile-time constants 
     public void setRuntimeConstants(String runtime) {
-        mCompileTimeConstants.put("$runtime", runtime);
-        mCompileTimeConstants.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
-        mCompileTimeConstants.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
-        mCompileTimeConstants.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
-        mCompileTimeConstants.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
-        mCompileTimeConstants.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
-        mCompileTimeConstants.put("$as3", Boolean.valueOf(this.isAS3()));
-        mCompileTimeConstants.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
-        mCompileTimeConstants.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
-        mCompileTimeConstants.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
-        mCompileTimeConstants.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
+        mProperties.put("$runtime", runtime);
+        mProperties.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
+        mProperties.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
+        mProperties.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
+        mProperties.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
+        mProperties.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
+        mProperties.put("$as3", Boolean.valueOf(this.isAS3()));
+        mProperties.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
+        mProperties.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
+        mProperties.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
+        mProperties.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
     }
 
 }
