@@ -520,6 +520,7 @@ LzSprite.prototype.capabilities = {
     ,proxypolicy: false
     ,linescrolling: false
     ,disableglobalfocustrap: true
+    ,detectstuckkeys: false
 }
 
 LzSprite.prototype.__updateQuirks = function () {
@@ -690,6 +691,11 @@ LzSprite.prototype.__updateQuirks = function () {
                     quirks['text_height_includes_padding'] = true;
                 }
             }
+        }
+
+        if (browser.OS == 'Mac') {
+            // see LPP-8210
+            quirks['detectstuckkeys'] = true;
         }
 
         // Adjust styles for quirks

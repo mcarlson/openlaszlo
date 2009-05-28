@@ -11,7 +11,8 @@
 
 // Receives keyboard events from the runtime
 var LzKeyboardKernel = { 
-    __downKeysHash: {alt: false, control: false, shift: false}
+    __downKeysHash: {alt: false, control: false, shift: false, meta: false}
+    ,__keyCodes: {}
     ,__keyboardEvent: function ( e ){   
         if (!e) e = window.event;
         var delta = {};
@@ -19,11 +20,14 @@ var LzKeyboardKernel = {
         var k = e['keyCode'];
         var t = e.type; 
         var dh = LzKeyboardKernel.__downKeysHash;
+        var kcodes = LzKeyboardKernel.__keyCodes;
+        var quirks = LzSprite.prototype.quirks;
         // TODO: really, all control characters should be skipped...
         // skip shift, ctrl, option keys to prevent duplicate sending - see LPP-4267
-        if (k >= 0 && k != 16 && k != 17 && k != 18) {
+        if (k >= 0 && k != 16 && k != 17 && k != 18 && k != 224) {
             // TODO: add mapping to flash character codes?
             var s = String.fromCharCode(k).toLowerCase();
+            kcodes[s] = k;
             if (t == 'keyup') {
                 if (dh[s] != false) {
                     delta[s] = false;
@@ -38,26 +42,55 @@ var LzKeyboardKernel = {
                 dh[s] = true;
             }    
         }    
-        if (dh['alt'] != e['altKey']) {
-            delta['alt'] = e['altKey'];
+        var alt = e['altKey'];
+        if (dh['alt'] != alt) {
+            delta['alt'] = alt;
             dirty = true;
-            if (LzSprite.prototype.quirks['alt_key_sends_control']) {
+            if (quirks['alt_key_sends_control']) {
                 delta['control'] = delta['alt'];
             }
         }    
-        if (dh['control'] != e['ctrlKey']) {
-            delta['control'] = e['ctrlKey'];
+        var ctrl = e['ctrlKey']// || e['metaKey'];
+        if (dh['control'] != ctrl) {
+            delta['control'] = ctrl;
             dirty = true;
         }    
-        if (dh['shift'] != e['shiftKey']) {
-            delta['shift'] = e['shiftKey'];
+        var shift = e['shiftKey'];
+        if (dh['shift'] != shift) {
+            delta['shift'] = shift;
             dirty = true;
         }    
+        var stuck;
+        var meta = e['metaKey'];
+        if (quirks['detectstuckkeys']) {
+            // see LPP-8210
+            if (dh['meta'] != meta) {
+                // look for stuck keys
+                delta['control'] = meta;
+                dirty = true;
+                if (! meta) {
+                    for (var key in dh) {
+                        if (key == 'control' || key == 'shift' || key == 'alt' || key == 'meta') continue;
+                        stuck = key;
+                        delete dh[key];
+                    }
+                }
+            }
+        }
 
-        dh['alt'] = e['altKey'] 
-        dh['control'] = e['ctrlKey'] 
-        dh['shift'] = e['shiftKey']
+        dh['alt'] = alt;
+        dh['control'] = ctrl;
+        dh['shift'] = shift;
+        dh['meta'] = meta;
         if (dirty && LzKeyboardKernel.__scope && LzKeyboardKernel.__scope[LzKeyboardKernel.__callback]) {
+            //console.log(t, s, k, delta, e.metaKey, e.ctrlKey, dh);
+            if (stuck) {
+                //console.log('stuck key', key, keycode);
+                var keycode = kcodes[stuck];
+                var fakedelta = {}
+                fakedelta[key] = false;
+                LzKeyboardKernel.__scope[LzKeyboardKernel.__callback](fakedelta, keycode, 'onkeyup');
+            }
             LzKeyboardKernel.__scope[LzKeyboardKernel.__callback](delta, k, 'on' + t);
         } 
         
