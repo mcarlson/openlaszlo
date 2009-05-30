@@ -115,6 +115,22 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
           @access number
     -->
     <attribute name="minimumwidth" type="number" value="0"/>
+    <!--- If true, attempt to listen for mouse events on the iframe
+          @type Boolean
+          @access boolean
+    -->
+    <attribute name="mouseevents" type="boolean" value="true"/>
+    <setter name="mouseevents" args="send">
+    <![CDATA[
+        this.mouseevents = send;
+        if (this['iframeid']) {
+            lz.embed.iframemanager.setSendMouseEvents(this.iframeid, send);
+        } else {
+            this.__mouseevents = send;
+        }
+        if (this['onmouseevents'] && this.onmouseevents.ready) this.onmouseevents.sendEvent(send);
+    ]]>
+    </setter>
 
     <!--- Sets the view to listen to for x/y/width/height change events.
           @type LzView
@@ -176,7 +192,7 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
         if (this['iframeid']) {
             lz.embed.iframemanager.setSrc(this.iframeid, s, this.history);
         } else {
-            this.srcset = s;
+            this.__srcset = s;
         }
         this.onsrc.sendEvent(s);
     </setter>
@@ -217,12 +233,13 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
         //Debug.write('setiframeid', id, this)
         this.iframeid = id;
         if (this['isfront']) this.bringToFront();
-        if (this['srcset']) lz.embed.iframemanager.setSrc(id, this.srcset, this.history);
+        if (this['__srcset']) lz.embed.iframemanager.setSrc(id, this.__srcset, this.history);
         this.__updatepos(null);
         if ($dhtml) {
             this.setAttribute('clickable', true);
         }
         this.setAttribute('ready', true);
+        if (this['__mouseevents']) lz.embed.iframemanager.setSendMouseEvents(id, this.__mouseevents);
     </method>
     <!--- @access private -->
     <method name="__gotload">
