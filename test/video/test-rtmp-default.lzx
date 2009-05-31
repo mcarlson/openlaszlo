@@ -1,0 +1,33 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<canvas>
+    <simplelayout inset="10" spacing="10"/>
+
+    <rtmpconnection name="rtc" 
+        autoconnect="false"
+        debug="true"
+        src="rtmp://localhost/test"
+    />
+
+    <view
+        layout="axis: x; spacing: 4"
+    >
+
+        <rtmpstatus/>
+
+        <text
+            text="${rtc.status}"
+            resize="true"
+        />
+
+    </view>
+
+    <button
+        onclick="rtc.connect()"
+    >Click to Connect</button>
+
+
+</canvas>
+
