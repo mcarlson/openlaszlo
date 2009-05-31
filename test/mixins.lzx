@@ -61,6 +61,14 @@
       </method>
     </class>
 
+    <!--- test for LPP-8234-->
+    <class name="sundae2" extends="icecream" with="toppings">
+      <method name="toString">
+        return super.toString() + " sundae";
+      </method>
+    </class>
+    <sundae2 visible="false"/>
+
     <attribute name="sauces" value="['chocolate', 'lavender', 'olive', 'orange', 'plum', 'snow', 'thistle', 'violet']" />
     <attribute name="icecreams" value="['bisque', 'honeydew', 'lemonchiffon', 'lime', 'mintcream', 'papayawhip', 'peachpuff', 'salmon', 'tomato', 'wheat']"  />
 
@@ -115,7 +123,7 @@
     <text name="description" x="5%" width="90%" multiline="true" />
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

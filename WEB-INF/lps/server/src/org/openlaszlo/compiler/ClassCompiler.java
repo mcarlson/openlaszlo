@@ -139,22 +139,29 @@ class ClassCompiler extends ViewCompiler  {
                          "Undefined mixin " + mixinName + " for class " + classname,
                          element);
                 }
-                // We duplicate the mixin definition, but turn it into
-                // a class definition, inheriting from the previous
-                // superName and implementing the mixin
-                Element interstitial = (Element)mixinModel.definition.clone();
-                interstitial.setName("class");
                 String interstitialName = mixinName + "$" + superName;
-                interstitial.setAttribute("name", interstitialName);
-                interstitial.setAttribute("extends", superName);
-                // TODO: [2008-11-10 ptw] Add "implements"
-//                 interstitial.setAttribute("implements", mixinName);
-                // Insert this element into the DOM before us
-                Element parent = (Element)((org.jdom.Parent)element).getParent();
-                int index = parent.indexOf(element);
-                parent.addContent(index, interstitial);
-                // Add it to the schema
-                updateSchema(interstitial, schema, visited);
+
+                // Avoid adding the same mixin to the schema twice - LPP-8234
+                if (schema.getClassModel(interstitialName) == null) {
+                    // We duplicate the mixin definition, but turn it into
+                    // a class definition, inheriting from the previous
+                    // superName and implementing the mixin
+                    Element interstitial = (Element)mixinModel.definition.clone();
+                    interstitial.setName("class");
+                    interstitial.setAttribute("name", interstitialName);
+                    interstitial.setAttribute("extends", superName);
+
+                    // TODO: [2008-11-10 ptw] Add "implements"
+                    // interstitial.setAttribute("implements", mixinName);
+                    // Insert this element into the DOM before us
+                    Element parent = (Element)((org.jdom.Parent)element).getParent();
+                    int index = parent.indexOf(element);
+                    parent.addContent(index, interstitial);
+
+                    // Add it to the schema
+                    updateSchema(interstitial, schema, visited);
+                }
+
                 // Update the superName
                 superName = interstitialName;
             }
