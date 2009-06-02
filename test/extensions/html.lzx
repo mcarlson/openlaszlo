@@ -66,7 +66,6 @@
         </hbox>    
         <html name="main" history="false" width="100%" height="${classroot.height - this.y - 44}">
             <handler name="oninit">
-                Debug.write('this.src', this.src);
                 this.bringToFront();
             </handler>
             <handler name="oniframe">
@@ -80,7 +79,6 @@
             </handler>
             <method name="mouseevent" args="ename">
                 super.mouseevent(ename);
-                Debug.warn('mouseevent', ename);
             </method>
         </html>
     </class>

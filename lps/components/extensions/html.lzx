@@ -55,6 +55,12 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
                                 };
     lz.Browser.callJS('lz.embed.iframemanager.callJavascript', callback, id, methodName, null, args);
 }
+
+lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
+    lz.Browser.callJS('lz.embed.iframemanager.setSendMouseEvents', null, id, send);
+}
+
+
 </script>
 </otherwise>
 </switch>
