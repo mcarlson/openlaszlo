@@ -45,39 +45,10 @@ var LzKeyboardKernel = {
             dirty = true;
         }
 
-        var stuck;
-        var meta = e['metaKey'];
-        if (LzSprite.prototype.quirks['detectstuckkeys']) {
-            // see LPP-8210
-            if (dh['meta'] != meta) {
-                // look for stuck keys
-                delta['control'] = meta;
-                dirty = true;
-                if (! meta) {
-                    for (var key in dh) {
-                        if (key == 'control' || key == 'shift' || key == 'alt' || key == 'meta') continue;
-                        stuck = key;
-                        delete dh[key];
-                    }
-                }
-            }
-        }
-        dh['meta'] = meta;
-
         if (dirty) {
             var scope = LzKeyboardKernel.__scope;
             var callback = LzKeyboardKernel.__callback;
             if (scope && scope[callback]) {
-                //console.log(t, s, k, delta, e.metaKey, e.ctrlKey, dh);
-                if (stuck) {
-                    // console.log('stuck key', key, keycode);
-                    var keycode = LzKeyboardKernel.__keyCodes[stuck];
-                    var fakedelta = {};
-                    // FIXME: [20090602 anba] 'key' seems to be a typo, should it be 'stuck'?
-                    fakedelta[key] = false;
-                    scope[callback](fakedelta, keycode, 'onkeyup');
-                }
-
                 scope[callback](delta, k, 'on' + t);
             }
         }
@@ -100,6 +71,7 @@ var LzKeyboardKernel = {
         //Debug.write('downKeysHash', t, k, dh, delta);
     }
     ,__updateControlKeys: function (e, delta) {
+        var quirks = LzSprite.prototype.quirks;
         var dh = LzKeyboardKernel.__downKeysHash;
         var dirty = false;
         if (delta) {
@@ -113,7 +85,7 @@ var LzKeyboardKernel = {
         if (dh['alt'] != alt) {
             delta['alt'] = alt;
             dirty = true;
-            if (LzSprite.prototype.quirks['alt_key_sends_control']) {
+            if (quirks['alt_key_sends_control']) {
                 delta['control'] = delta['alt'];
             }
         }
@@ -127,16 +99,46 @@ var LzKeyboardKernel = {
             delta['shift'] = shift;
             dirty = true;
         }
+        var stuck;
+        var meta = e['metaKey'];
+        if (quirks['detectstuckkeys']) {
+            // see LPP-8210
+            if (dh['meta'] != meta) {
+                // look for stuck keys
+                delta['control'] = meta;
+                dirty = true;
+                if (! meta) {
+                    for (var key in dh) {
+                        if (key == 'control' || key == 'shift' || key == 'alt' || key == 'meta') continue;
+                        stuck = key;
+                        delete dh[key];
+                    }
+                }
+            }
+        }
 
         dh['alt'] = alt;
         dh['control'] = ctrl;
         dh['shift'] = shift;
+        dh['meta'] = meta;
 
-        if (send && dirty) {
+        if (dirty && (send || stuck)) {
             var scope = LzKeyboardKernel.__scope;
             var callback = LzKeyboardKernel.__callback;
             if (scope && scope[callback]) {
-                scope[callback](delta, 0, 'on' + e.type);
+                //console.log(t, s, k, delta, e.metaKey, e.ctrlKey, dh);
+                if (stuck) {
+                    // console.log('stuck key', key, keycode);
+                    var keycode = LzKeyboardKernel.__keyCodes[stuck];
+                    var fakedelta = {};
+                    // FIXME: [20090602 anba] 'key' seems to be a typo, should it be 'stuck'?
+                    fakedelta[key] = false;
+                    scope[callback](fakedelta, keycode, 'onkeyup');
+                }
+
+                if (send) {
+                    scope[callback](delta, 0, 'on' + e.type);
+                }
             }
         }
 
