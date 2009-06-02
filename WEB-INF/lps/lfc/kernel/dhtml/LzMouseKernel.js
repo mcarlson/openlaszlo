@@ -26,20 +26,30 @@ var LzMouseKernel = {
             var targ = e.target; 
         }
         var eventname = 'on' + e.type;
-        if (window['LzKeyboardKernel'] && LzKeyboardKernel['__keyboardEvent']) LzKeyboardKernel.__keyboardEvent(e);
-        if (window['LzInputTextSprite'] && LzInputTextSprite.prototype.__lastshown != null) {
-            if (LzSprite.prototype.quirks.fix_ie_clickable) {
-                LzInputTextSprite.prototype.__lastshown.__hideIfNotFocused(eventname, targ);
-            } else if (eventname != 'onmousemove') {
-                LzInputTextSprite.prototype.__lastshown.__hideIfNotFocused();
+
+        // send option/shift/ctrl key events
+        if (window['LzKeyboardKernel'] && LzKeyboardKernel['__updateControlKeys']) {
+            LzKeyboardKernel.__updateControlKeys(e);
+
+            // FIXME: [20090602 anba] this prevents text selection, see LPP-8200
+            if (LzKeyboardKernel.__cancelKeys && e.keyCode == 0) {
+                e.cancelBubble = true;
+                e.returnValue = false;
             }
         }
+
+        var lzinputproto = window['LzInputTextSprite'] && LzInputTextSprite.prototype;
+        if (lzinputproto && lzinputproto.__lastshown != null) {
+            if (LzSprite.prototype.quirks.fix_ie_clickable) {
+                lzinputproto.__hideIfNotFocused(eventname, targ);
+            } else if (eventname != 'onmousemove') {
+                lzinputproto.__hideIfNotFocused();
+            }
+        }
+
         if (eventname == 'onmousemove') {
             LzMouseKernel.__sendMouseMove(e);
-            return;
-        }    
-
-        if (eventname == 'oncontextmenu' || (e.button == 2 && eventname == 'onmouseup') ) {
+        } else if (eventname == 'oncontextmenu' || (e.button == 2 && eventname == 'onmouseup') ) {
             if (targ) {
                 // update mouse position, required for Safari
                 LzMouseKernel.__sendMouseMove(e);
@@ -72,7 +82,7 @@ var LzMouseKernel = {
     // handles global mouseup events
     ,__mouseupEvent: function (e) {
         if (LzMouseKernel.__lastMouseDown != null) {
-            // call mouseup on the sprite that got the last mouse down  
+            // call mouseup on the sprite that got the last mouse down
             LzMouseKernel.__lastMouseDown.__globalmouseup(e);
         } else {
             LzMouseKernel.__mouseEvent(e);

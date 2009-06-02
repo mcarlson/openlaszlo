@@ -497,6 +497,7 @@ LzSprite.prototype.quirks = {
     ,dom_breaks_focus: false
     ,inputtext_anonymous_div: false
     ,clipped_scrollbar_causes_display_turd: false
+    ,detectstuckkeys: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -520,7 +521,6 @@ LzSprite.prototype.capabilities = {
     ,proxypolicy: false
     ,linescrolling: false
     ,disableglobalfocustrap: true
-    ,detectstuckkeys: false
 }
 
 LzSprite.prototype.__updateQuirks = function () {
@@ -1164,9 +1164,17 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         var eventname = e;
         e = {};
     } else {
-        // send option/shift/ctrl key events
         var eventname = 'on' + e.type;
-        if (LzKeyboardKernel && LzKeyboardKernel['__keyboardEvent']) LzKeyboardKernel.__keyboardEvent(e);
+        // send option/shift/ctrl key events
+        if (LzKeyboardKernel && LzKeyboardKernel['__updateControlKeys']) {
+            LzKeyboardKernel.__updateControlKeys(e);
+
+            // FIXME: [20090602 anba] this prevents text selection, see LPP-8200
+            if (LzKeyboardKernel.__cancelKeys && e.keyCode == 0) {
+                e.cancelBubble = true;
+                e.returnValue = false;
+            }
+        }
     }
 
     if (this.quirks.ie_mouse_events) {
