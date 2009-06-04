@@ -498,6 +498,7 @@ LzSprite.prototype.quirks = {
     ,inputtext_anonymous_div: false
     ,clipped_scrollbar_causes_display_turd: false
     ,detectstuckkeys: false
+    ,textgrabsinputtextfocus: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -606,6 +607,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['scrollbar_width'] = 16;
             // CSS sprites conflict with ie_alpha_image_loader...
             quirks['use_css_sprites'] = ! quirks['ie_alpha_image_loader'];
+            // IE needs help focusing when an lztext is in the same area - LPP-8219
+            quirks['textgrabsinputtextfocus'] = true;
         } else if (browser.isSafari) {
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;

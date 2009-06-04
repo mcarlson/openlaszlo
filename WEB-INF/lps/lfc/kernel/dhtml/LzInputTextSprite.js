@@ -248,27 +248,39 @@ LzInputTextSprite.prototype.__show = function() {
 }
 
 LzInputTextSprite.prototype.__hideIfNotFocused = function(eventname, target) {
-    if (LzInputTextSprite.prototype.__lastshown == null) return;
-    if (LzSprite.prototype.quirks.fix_ie_clickable) {
+    var lzinppr = LzInputTextSprite.prototype;
+    if (lzinppr.__lastshown == null) return;
+    var quirks = LzSprite.prototype.quirks;
+    if (quirks.fix_ie_clickable) {
         if (eventname == 'onmousemove') {
             // track mouse position for inputtext when global clickable is false
-            if (LzInputTextSprite.prototype.__globalclickable == false && LzInputTextSprite.prototype.__focusedSprite && target) {
-                if (target.owner != LzInputTextSprite.prototype.__focusedSprite) {
-                    LzInputTextSprite.prototype.__setglobalclickable(true);
+            if (lzinppr.__globalclickable == false && lzinppr.__focusedSprite && target) {
+                if (target.owner != lzinppr.__focusedSprite) {
+                    lzinppr.__setglobalclickable(true);
                 } else {
-                    LzInputTextSprite.prototype.__setglobalclickable(false);
+                    lzinppr.__setglobalclickable(false);
                 }
             }
             return;
-        } else if (eventname != null && LzInputTextSprite.prototype.__globalclickable == true) {
-            LzInputTextSprite.prototype.__setglobalclickable(false);
+        } else if (eventname != null && lzinppr.__globalclickable == true) {
+            lzinppr.__setglobalclickable(false);
+        }
+        if (quirks.textgrabsinputtextfocus) {
+            var s = window.event;
+            if (s && s.srcElement && s.srcElement.owner && s.srcElement.owner instanceof LzTextSprite) {
+                //Debug.write('text intercepting focus', eventname, s.owner instanceof LzTextSprite);
+                if (eventname == 'onmousedown') {
+                    lzinppr.__lastshown.gotFocus();
+                }
+                return;
+            }
         }
     }
-    if (LzInputTextSprite.prototype.__focusedSprite != LzInputTextSprite.prototype.__lastshown) {
-        LzInputTextSprite.prototype.__lastshown.__hide();
+    if (lzinppr.__focusedSprite != lzinppr.__lastshown) {
+        lzinppr.__lastshown.__hide();
     }
-
 }
+
 LzInputTextSprite.prototype.__setglobalclickable = function(c) {
     if (! LzSprite.prototype.quirks.fix_ie_clickable) return;
     if (c != LzInputTextSprite.prototype.__globalclickable) {
