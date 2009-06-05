@@ -99,7 +99,7 @@
                 @type Object
                 @access private
             -->
-            <attribute name="connections" value="{}" type="expression" allocation="class"/>
+            <attribute name="connections" value="null" type="expression" allocation="class"/>
             
             <!--- Event sent when connection established. -->
             <event name="onconnect"/>
@@ -107,7 +107,7 @@
                 @access private -->
             <event name="onerror"/>
             
-            <method name="init">
+            <method name="init"> <![CDATA[
                 super.init();
 
                 // Store new RTMP connections in lz.rtmpconnection.connections. If no
@@ -117,7 +117,7 @@
                     this.name = "_default";
                 }
                 
-                if (lz.rtmpconnection.connections[this.name] != null) {
+                if (lz.rtmpconnection.connections != null && lz.rtmpconnection.connections[this.name] != null) {
                     if ($debug) {
                         if (this.name == "_default") {
                             Debug.warn("A default RTMP connection already exists, please name connections if you use more than one");
@@ -126,7 +126,13 @@
                         }
                     }
                 }
+              
                 
+                if (lz.rtmpconnection.connections == null) {
+                    lz.rtmpconnection.connections = {};
+                    if (this.name != "_default")
+                        lz.rtmpconnection.connections._default = this;
+                }
                 lz.rtmpconnection.connections[this.name] = this;
 
                 if (this.debug) {
@@ -155,6 +161,7 @@
                 if (this.autoconnect) {
                     this.connect();
                 }
+            ]]>
             </method>
 
             <method name="_onSecurityError" args="error">
