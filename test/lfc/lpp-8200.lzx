@@ -1,0 +1,15 @@
+<canvas width="100%" height="80%" >
+
+<simplelayout spacing="6"/>
+  <inputtext id="itext"  y="170" width="200">This is LzInputText</inputtext>
+  <edittext width="200">This is edittext</edittext>
+  <edittext width="200">This is also edittext</edittext>
+  <text selectable="true">This is selectable text</text>
+  <text selectable="false">This is nonselectable text</text>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+

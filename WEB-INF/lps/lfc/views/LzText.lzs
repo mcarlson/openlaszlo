@@ -142,10 +142,15 @@ dynamic class LzText extends LzView with LzFormatter {
    * @type Boolean
    */
   var selectable = false;
+
+  /** @lzxtype event */
+  var onselectable:LzDeclaredEventClass = LzDeclaredEvent;
+
   /** @access private */
   function $lzc$set_selectable(isSel) {
     this.selectable = isSel;
     this.tsprite.setSelectable(isSel);
+    if (this.onselectable.ready) this.onselectable.sendEvent(isSel);
   }
 
   /*

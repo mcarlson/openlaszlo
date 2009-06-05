@@ -100,7 +100,9 @@ var LzSprite = function(owner, isroot) {
             div.mouseisover = false;
             div.onmouseover = function(e) {
                 if (LzSprite.prototype.quirks.focus_on_mouseover) {
-                    div.focus();
+                    if (LzSprite.prototype.getSelectedText() == null) {
+                        div.focus();
+                    }
                 }
                 if (LzInputTextSprite.prototype.__focusedSprite == null) LzKeyboardKernel.setKeyboardControl(true);
                 LzMouseKernel.setMouseControl(true);
@@ -142,7 +144,11 @@ var LzSprite = function(owner, isroot) {
                         LzInputTextSprite.prototype.__setglobalclickable(true);
                     }
                     if (quirks.focus_on_mouseover) {
-                        if (LzInputTextSprite.prototype.__lastshown == null) div.focus();
+                        if (LzInputTextSprite.prototype.__lastshown == null) {
+                            if (LzSprite.prototype.getSelectedText() == null) {
+                                div.focus();
+                            }
+                        }
                     }
                     LzKeyboardKernel.setKeyboardControl(true);
                     LzMouseKernel.setMouseControl(true);
@@ -150,7 +156,11 @@ var LzSprite = function(owner, isroot) {
                     this.mouseisover = true;
                 } else {
                     if (quirks.focus_on_mouseover) {
-                        if (LzInputTextSprite.prototype.__lastshown == null) div.blur();
+                        if (LzInputTextSprite.prototype.__lastshown == null) {
+                            if (LzSprite.prototype.getSelectedText() == null) {
+                                div.blur();
+                            }
+                        }
                     }
                     LzKeyboardKernel.setKeyboardControl(false);
                     LzMouseKernel.setMouseControl(false);
@@ -2353,4 +2363,18 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
         LzSprite.prototype.__sprites = {};
     }
     lz.embed.attachEventHandler(window, 'beforeunload', window, '__cleanUpForIE');
+}
+
+// Get any selected text
+LzSprite.prototype.getSelectedText = function () {
+    var txt = '';
+    if (window.getSelection) { // FF/Safari/Opera/Chrome
+        return window.getSelection();
+    } else if (document.selection) { // IE7
+        return document.selection.createRange().text;
+    } else if (document.getSelection) { // others
+        return document.getSelection();
+    } else {
+        return null;
+    }
 }

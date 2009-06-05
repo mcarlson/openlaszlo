@@ -30,13 +30,9 @@ var LzMouseKernel = {
         // send option/shift/ctrl key events
         if (window['LzKeyboardKernel'] && LzKeyboardKernel['__updateControlKeys']) {
             LzKeyboardKernel.__updateControlKeys(e);
-
-            // FIXME: [20090602 anba] this prevents text selection, see LPP-8200
-            if (LzKeyboardKernel.__cancelKeys && e.keyCode == 0) {
-                e.cancelBubble = true;
-                e.returnValue = false;
-            }
         }
+
+        // check source.owner of event, see if textfield and selectable, then don't cancel event
 
         var lzinputproto = window['LzInputTextSprite'] && LzInputTextSprite.prototype;
         if (lzinputproto && lzinputproto.__lastshown != null) {

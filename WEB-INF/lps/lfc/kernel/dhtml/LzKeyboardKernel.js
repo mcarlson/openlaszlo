@@ -58,13 +58,11 @@ var LzKeyboardKernel = {
             if (k == 9) {
                 //Debug.write('canceling tab');
                 e.cancelBubble = true;
-                e.returnValue = false;
                 return false;
             } else if (LzKeyboardKernel.__cancelKeys && (k == 13 || k == 0 || k == 37 || k == 38 || k == 39 || k == 40) ) {
                 //Debug.write('canceling key', k, t);
                 // cancel event bubbling for enter, space(scroll) and arrow keys
                 e.cancelBubble = true;
-                e.returnValue = false;
                 return false;
             }
         }

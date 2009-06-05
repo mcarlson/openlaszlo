@@ -540,16 +540,28 @@ LzTextSprite.prototype.__setTextContent = function(mdiv, tagname, string) {
 LzTextSprite.prototype.setSelectable = function (s) {
     this.selectable = s;
     //Debug.write('setSelectable', s, this.__LZdiv.style);
+    var browser = lz.embed.browser;
+
     if (s) {
-        this.__LZdiv.onselectstart = null;
-        this.__LZdiv.style['MozUserSelect'] = 'normal';
-        this.__LZdiv.style['KHTMLUserSelect'] = 'normal';
-        this.__LZdiv.style['UserSelect'] = 'normal';
+        if (browser.isIE) {
+            this.__LZdiv.onselectstart = null;
+        } else if (browser.isFirefox) {
+            this.__LZdiv.style['MozUserSelect'] = 'text';
+        } else if (browser.isSafari) {
+            this.__LZdiv.style['WebkitUserSelect'] = 'text';
+        } else {
+            this.__LZdiv.style['UserSelect'] = 'text';
+        }
     } else {    
-        this.__LZdiv.onselectstart = LzTextSprite.prototype.__cancelhandler;
-        this.__LZdiv.style['MozUserSelect'] = 'none';
-        this.__LZdiv.style['KHTMLUserSelect'] = 'none';
-        this.__LZdiv.style['UserSelect'] = 'none';
+        if (browser.isIE) {
+            this.__LZdiv.onselectstart = LzTextSprite.prototype.__cancelhandler;
+        } else if (browser.isFirefox) {
+            this.__LZdiv.style['MozUserSelect'] = 'none';
+        } else if (browser.isSafari) {
+            this.__LZdiv.style['WebkitUserSelect'] = 'none';
+        } else {
+            this.__LZdiv.style['UserSelect'] = 'none';
+        }
     }
 }
 
