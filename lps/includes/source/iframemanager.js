@@ -386,6 +386,7 @@ lz.embed.iframemanager = {
                 lz.embed.attachEventHandler(iframe.document, 'click', lz.embed.iframemanager, '__mouseEvent', id);
                 //lz.embed.attachEventHandler(iframe.document, 'mousemove', lz.embed.iframemanager, '__mouseEvent', id);
                 iframe.document.oncontextmenu = function(e) {
+                    if (! e) e = iframe.event;
                     return lz.embed.iframemanager.__mouseEvent(e, id);
                 }
                 if (lz.embed.browser.isIE) {
