@@ -348,7 +348,7 @@ lz.embed.iframemanager = {
 
             // clear __lastMouseDown to prevent mouseover/out events being sent as dragin/out events - see LzSprite.js and LzMouseKernel.js - there will be no global mouseup sent from window.document to clear this...
             if (eventname == 'onmouseup') {
-                if (LzMouseKernel.__lastMouseDown = iframe.owner.sprite) {
+                if (LzMouseKernel.__lastMouseDown == iframe.owner.sprite) {
                     LzMouseKernel.__lastMouseDown = null;
                 }
             }
