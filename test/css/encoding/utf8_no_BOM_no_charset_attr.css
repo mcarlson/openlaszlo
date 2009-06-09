@@ -1,0 +1,17 @@
+/*  Copyright 2001-2009 Laszlo Systems, Inc. All Rights Reserved.              *
+ *  Use is subject to license terms.
+ */
+text[name='german'] {
+    backgroundColor: #ffcc00;
+    buttonText: "öäüÖÄÜ§";
+}
+
+text[name='korean'] {
+    backgroundColor: #ff00cc;
+    buttonText: "물 아래 그림자 지니 다리 위에 중이 간다";
+}
+
+text[name='chinese'] {
+    backgroundColor: #00ffcc;
+    buttonText: "这是一个考验。这只是一个测试。";
+}

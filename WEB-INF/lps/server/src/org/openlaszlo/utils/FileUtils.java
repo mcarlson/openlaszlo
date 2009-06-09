@@ -151,7 +151,7 @@ public abstract class FileUtils {
         }
         pattern = tmp;
     }
-        
+
 
     /** Attempt to deduce the encoding of an XML file, by looking for the "encoding" attribute in the
      * XML declaration.
@@ -165,7 +165,7 @@ public abstract class FileUtils {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         send(input, bout);
         Perl5Matcher matcher = new Perl5Matcher();
-        
+
         byte [] array = bout.toByteArray();
         // We will ignore the byte order mark encoding for now,
         // hopefully no one is going to be using UTF16. I don't want
@@ -173,13 +173,78 @@ public abstract class FileUtils {
         // directive conflicts with the byte order mark.
         int skip = stripByteOrderMark( array );
         ByteArrayInputStream bais = new ByteArrayInputStream( array, skip, array.length );
-        
+
         if (matcher.contains(new String(array, 0, Math.min( 1024, array.length )), pattern)) {
             MatchResult result = matcher.getMatch();
             String encoding = result.group(1);
-            return new InputStreamReader( bais, encoding ); 
+            return new InputStreamReader( bais, encoding );
         } else {
-            return new InputStreamReader( bais, defaultEncoding ); 
+            return new InputStreamReader( bais, defaultEncoding );
+        }
+    }
+
+    /**
+     * Retrieve the encoding of a text file based on a possibly existing
+     * Byte Order Marker (BOM) within the leading bytes of the file.
+     *
+     * see http://www.w3.org/TR/CSS21/syndata.html#charset.
+     *
+     * @param in BufferedInputStream, must be positioned at the first byte of the file
+     * @return the encoding if a BOM is found (UTF-8,UTF-16BE,UTF-16LE)
+     * @throws IOException
+     */
+    public static String detectBOMEncoding(BufferedInputStream in) throws IOException {
+        // The Byte Order Marker (BOM) is contained within the leading bytes of a
+        // if present. For UTF encoding there are 3 BOMs we need to check.
+        byte[][] utfBOMList = {
+                { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF },     // UTF-8
+                { (byte) 0xFE, (byte) 0xFF },                 // UTF-16BE
+                { (byte) 0xFF, (byte) 0xFE }                // UTF-16LE
+            };
+        String[] encodings = { "UTF-8", "UTF-16BE", "UTF-16LE" };
+
+        int maxBytesToRead = 100; // maximum number of bytes which need to be read
+        in.mark(maxBytesToRead + 1);
+        int found = -1; // index into leadingBytes if there is a match
+        byte[] buffer = new byte[maxBytesToRead];
+
+        // Read bytes that might contain BOM
+        int results = in.read(buffer); // max number of bytes read to determine
+        if (results == -1) {
+            mLogger.error("Reading bytes was unsuccessful!");
+            throw new IOException();
+        } else if (mLogger.isDebugEnabled()) {
+            mLogger.debug("Read the following bytes: " + new String(buffer));
+        }
+
+        // find a match
+        for (int i = 0; i < utfBOMList.length; i++) {
+            byte[] bytes = utfBOMList[i];
+            found = i;
+            if (mLogger.isDebugEnabled()) {
+            mLogger.debug("Testing for " + encodings[i] + " BOM!");
+            }
+            for (int j = 0; j < bytes.length; j++) {
+                if (bytes[j] != buffer[j]) {
+                    found = -1;
+                    break;
+                }
+            }
+            if (found != -1) {
+                if (mLogger.isDebugEnabled()) {
+                mLogger.debug("Found BOM on file, encoding is " + encodings[found]);
+                }
+                break;
+            }
+        }
+
+        if (found != -1) {
+            return encodings[found];
+        } else {
+            if (mLogger.isDebugEnabled()) {
+            mLogger.debug("no BOM found in file!");
+            }
+            return null;
         }
     }
 
@@ -243,7 +308,7 @@ public abstract class FileUtils {
         try {
             // We need to peek at the stream and if the first three chars
             // are a UTF-8 or UTF-16 encoded BOM (byte order mark) we will
-            // discard them. 
+            // discard them.
             int c1 = ((int) raw[0]) & 0xff;
             int c2 = ((int) raw[1]) & 0xff;
             int c3 = ((int) raw[2]) & 0xff;
@@ -736,7 +801,7 @@ mLogger.warn(
         }
     }
 
-    
+
 
     /**
        Find maximum common prefix of path1 and path2
@@ -756,7 +821,7 @@ mLogger.warn(
         } else {
             return path1.substring(0, i);
         }
-        
+
     }
 
 

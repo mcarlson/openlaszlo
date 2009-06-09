@@ -1,0 +1,15 @@
+<canvas proxied="true" height="500">
+
+    <stylesheet src="utf16BE_with_BOM.css" />
+
+    <simplelayout axis="y" spacing="60" />
+
+    <text name="german" text="$style{'buttonText'}" bgcolor="$style{'backgroundColor'}" fontsize="40"/>
+    <text name="korean" text="$style{'buttonText'}" bgcolor="$style{'backgroundColor'}" fontsize="40"/>
+    <text name="chinese" text="$style{'buttonText'}" bgcolor="$style{'backgroundColor'}" fontsize="40"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

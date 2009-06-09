@@ -1,0 +1,15 @@
+<canvas proxied="true" height="500">
+
+    <stylesheet src="iso8859-1_with_charset_attr.css" charset="ISO-8859-1" />
+
+    <simplelayout axis="y" spacing="20"/>
+
+    <text text="You should see the following characters below: öäüÖÄÜ§" fontsize="20"/>
+
+    <text name="german" text="$style{'buttonText'}" bgcolor="$style{'backgroundColor'}" fontsize="40"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

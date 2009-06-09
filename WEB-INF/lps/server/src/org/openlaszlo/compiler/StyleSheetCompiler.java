@@ -1,9 +1,9 @@
 /* *****************************************************************************
- * StyleSheetCompiler.java
+* StyleSheetCompiler.java
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -29,6 +29,7 @@ class StyleSheetCompiler extends LibraryCompiler {
     private static Logger mLogger = Logger.getLogger(StyleSheetCompiler.class);
 
     private static final String SRC_ATTR_NAME = "src";
+    private static final String CHARSET_ATTR_NAME = "charset";
 
     StyleSheetCompiler(CompilationEnvironment env) {
         super(env);
@@ -44,9 +45,9 @@ class StyleSheetCompiler extends LibraryCompiler {
 
     public void compile(Element element) {
         try {
-        	if (mLogger.isInfoEnabled()) {
+            if (mLogger.isInfoEnabled()) {
             mLogger.info("StyleSheetCompiler.compile called!");
-        	}
+            }
 
             if (!element.getChildren().isEmpty()) {
                 throw new CompilationError("<stylesheet> elements can't have children",
@@ -56,11 +57,21 @@ class StyleSheetCompiler extends LibraryCompiler {
             String pathname = null;
             String stylesheetText = element.getText();
             String src = element.getAttributeValue(SRC_ATTR_NAME);
+            String encoding = element.getAttributeValue(CHARSET_ATTR_NAME);
+            if (encoding != null) {
+                if (mLogger.isDebugEnabled()) {
+                mLogger.info("@charset=" + encoding + " found on stylesheet tag");
+                }
+            } else {
+                if (mLogger.isDebugEnabled()) {
+                mLogger.info("no attribute @charset found on stylesheet tag, using default value " + encoding);
+                }
+           }
 
             if (src != null) {
-            	if (mLogger.isInfoEnabled()) {
-                mLogger.info("reading in stylesheet from src=" + src);
-            	}
+                if (mLogger.isInfoEnabled()) {
+                mLogger.info("reading in stylesheet from src=\"" + src + "\"");
+                }
                 // Find the css file
                 // Using the FileResolver accomplishes two nice things:
                 // 1, it searches the standard directory include paths
@@ -83,9 +94,9 @@ class StyleSheetCompiler extends LibraryCompiler {
                 if (! resolvedFile.exists() ) {
                     resolvedFile = mEnv.resolve(src, base);
                     if (resolvedFile.exists()) {
-                    	if (mLogger.isInfoEnabled()) {
+                        if (mLogger.isInfoEnabled()) {
                         mLogger.info("Resolved css file to a file that exists!");
-                    	}
+                        }
                     } else {
                         mLogger.error("Could not resolve css file to a file that exists.");
                         throw new CompilationError("Could not find css file " + src);
@@ -93,14 +104,14 @@ class StyleSheetCompiler extends LibraryCompiler {
                 }
 
                 // Actually parse and compile the stylesheet! W00t!
-                CSSHandler fileHandler = CSSHandler.parse( resolvedFile );
+                CSSHandler fileHandler = CSSHandler.parse( resolvedFile, encoding );
                 this.compile(fileHandler, element);
 
 
             } else if (stylesheetText != null && (!"".equals(stylesheetText))) {
-            	if (mLogger.isInfoEnabled()) {
+                if (mLogger.isInfoEnabled()) {
                 mLogger.info("inline stylesheet");
-            	}
+                }
                 CSSHandler inlineHandler = CSSHandler.parse(stylesheetText);
                 this.compile(inlineHandler, element);
                 //
@@ -156,9 +167,9 @@ class StyleSheetCompiler extends LibraryCompiler {
     }
 
     void compile(CSSHandler handler, Element element) throws CompilationError {
-    	if (mLogger.isDebugEnabled()) {
+        if (mLogger.isDebugEnabled()) {
         mLogger.debug("compiling CSSHandler using new unique names");
-    	}
+        }
         String script = "";
         for (int i=0; i < handler.mRuleList.size(); i++) {
             Rule rule = (Rule)handler.mRuleList.get(i);
@@ -223,9 +234,9 @@ class StyleSheetCompiler extends LibraryCompiler {
     }
 
     String buildConditionalSelectorJS(Condition cond, SimpleSelector simpleSelector) {
-    	if (mLogger.isDebugEnabled()) {
+        if (mLogger.isDebugEnabled()) {
         mLogger.debug("Conditional selector: " + cond.toString());
-    	}
+        }
         String condString = "no_match";
         switch (cond.getConditionType()) {
             case Condition.SAC_ID_CONDITION: /* #id */
@@ -234,9 +245,9 @@ class StyleSheetCompiler extends LibraryCompiler {
                 break;
 
              case Condition.SAC_ATTRIBUTE_CONDITION: // [attr] or [attr="val"] or elem[attr="val"]
-            	 if (mLogger.isDebugEnabled()) {
+                 if (mLogger.isDebugEnabled()) {
                 mLogger.debug("Attribute condition");
-            	 }
+                 }
                 AttributeCondition attrCond = (AttributeCondition) cond;
                 String name  = attrCond.getLocalName();
                 String value = attrCond.getValue();
@@ -247,9 +258,9 @@ class StyleSheetCompiler extends LibraryCompiler {
                 // localName of the null string. We don't write out the simple selector if
                 // it's not specified.
                 if (simpleSelector != null) {
-                	if (mLogger.isDebugEnabled()) {
+                    if (mLogger.isDebugEnabled()) {
                     mLogger.debug("simple selector:" + simpleSelector.toString());
-                	}
+                    }
                     if (simpleSelector.getSelectorType() == Selector.SAC_ELEMENT_NODE_SELECTOR) {
 
                         ElementSelector es = (ElementSelector)simpleSelector;

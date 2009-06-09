@@ -1,0 +1,9 @@
+/*  Copyright 2001-2009 Laszlo Systems, Inc. All Rights Reserved.
+    Unauthorized use, duplication or distribution is strictly prohibited.
+    This software is the proprietary information of Laszlo Systems, Inc.
+    Use is subject to license terms.
+*/
+text[name='german'] {
+    backgroundColor: #ffcc00;
+    buttonText: "öäüÖÄÜ§";
+}

@@ -3,18 +3,22 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.css;
 
 import java.io.*;
+import java.nio.CharBuffer;
 import java.util.*;
 import java.util.regex.*;
 import org.w3c.css.sac.*;
 import org.apache.log4j.*;
 import org.jdom.*;
+
+import org.openlaszlo.utils.FileUtils;
+import org.openlaszlo.compiler.CompilationError;
 
 /**
  * Handler used to parse CSS file and process style rules on a document element.
@@ -30,9 +34,9 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
     /** Logger. */
     private static Logger mLogger = Logger.getLogger(CSSHandler.class);
 
-    /** CSS parser factory. */ 
+    /** CSS parser factory. */
     private static org.w3c.css.sac.helpers.ParserFactory mCSSParserFactory = null;
-    
+
     static {
         // This system property is required for the SAC ParserFactory.
         if (System.getProperty("org.w3c.css.sac.parser") == null) {
@@ -45,10 +49,10 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
    /**
      * Entry point to creating a CSSHandler to read from an external
      *    stylesheet file
-     * @param rootDir the directory where cssFile exists.
-     * @param cssFile the css file to read.
+     * @param file the css file to read.
+     * @param String value of an optional charset attribute on the stylesheet tag
      */
-    public static CSSHandler parse(File file)
+    public static CSSHandler parse(File file, String charsetAttrValue)
            throws CSSException {
        try {
            mLogger.info("creating CSSHandler");
@@ -56,7 +60,8 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
            Parser parser = mCSSParserFactory.makeParser();
            parser.setDocumentHandler(handler);
            parser.setErrorHandler(handler);
-           parser.parseStyleSheet(handler.getInputSource());
+           mLogger.info("Trying to parse CSS with charset setting of " + charsetAttrValue);
+           parser.parseStyleSheet(handler.getInputSource(charsetAttrValue,file.getPath()));
            return handler;
        } catch (CSSParseException e) {
            mLogger.error("got css parse exception");
@@ -123,14 +128,14 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
         mRuleList = new Vector();
         mFileDependencies = getFullPath();
     }
-    
+
     /** protected constructor */
     CSSHandler(String cssString) {
         mFile = null; // No file associated with inline css
         mRuleList = new Vector();
         mFileDependencies = ""; // inline css doesn't add any file dependencies
     }
-    
+
 
     /** Helper function to log and throw an error. */
     void throwCSSException(String errMsg) throws CSSException {
@@ -144,19 +149,93 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
             return mFile.getCanonicalPath();
         } catch (IOException e) {
             mLogger.error("Exception getting canonical path of: " + mFile + ", " + e.getMessage());
-            return ""; 
+            return "";
         }
     }
 
-    /** @return InputSource object pointing to the CSS file. */
-    InputSource getInputSource() throws FileNotFoundException {
-        InputSource is =
-            new InputSource(new FileReader(mFile));
-//         is.setEncoding("ISO-8859-1");
-        return is;                                         
+    /** @param charsetAttrValue charset value from the stylesheet tag in LZX
+     *  @param the name of the CSS file we need to parse
+     *  @return InputSource object pointing to the CSS file. */
+    InputSource getInputSource(String charsetAttrValue, String fileName) throws FileNotFoundException  {
+        // Detect if there's a BOM with encoding information on the file.
+        // If there's a BOM that shouldn't conflict with a possible @charset
+        // attribute of the stylesheet tag in LZX, e.g. <stylesheet charset="iso-8859-15" />
+        BufferedInputStream bis = null;
+        InputSource inputSource = null;
+        InputStreamReader isr = null;
+        // Encoding read from BOM in CSS file
+        String bomEncoding = null;
+        // Encoding used for opening CSS file
+        String encoding = "utf-8";
+        try {
+            bis = new BufferedInputStream(new FileInputStream(mFile));
+            bomEncoding =  FileUtils.detectBOMEncoding(bis);
+        } catch (IOException e) {
+            mLogger.error("IOException during BOM detection:\n" + e.getMessage());
+            throw new CompilationError("IO Exception while trying to open file");
+        }
+
+        // If we got a BOM encoding value, check if there no conflicting declaration
+        // on the stylesheet tag
+        if (bomEncoding != null) {
+            if (charsetAttrValue != null && !charsetAttrValue.toUpperCase().equals(bomEncoding.toUpperCase())) {
+                throw new CompilationError("<stylesheet charset=\"" + charsetAttrValue + "\"> conflicts with BOM "
+                        + bomEncoding + " for CSS file " + fileName + ".");
+            }
+            encoding = bomEncoding;
+        } else if (charsetAttrValue != null) {
+            encoding = charsetAttrValue;
+            if (mLogger.isDebugEnabled()) {
+            mLogger.debug("Using encoding from LZX <stylesheet charset=\"" + encoding + "\">");
+            }
+        }
+
+        // Parse CSS file now
+        /* New code for reading stream */
+
+        try {
+            if (mLogger.isDebugEnabled()) {
+             mLogger.debug("Opening CSS file " + fileName + " using encoding " + encoding);
+            }
+            if (bomEncoding != null && bomEncoding.toUpperCase().equals("UTF-8")) {
+                // TODO: Check what the 2nd parameter on the PushBackInputStream constructor means
+                PushbackInputStream internalIn = new PushbackInputStream(new FileInputStream(mFile), 3);
+                // skip the first 3 bytes
+                internalIn.skip(3);
+                isr = new InputStreamReader(internalIn, encoding);
+                inputSource = new InputSource(isr);
+                if (mLogger.isDebugEnabled()) {
+                mLogger.debug("Skip first 3 bytes containing UTF-8 BOM");
+                }
+            } else if (bomEncoding != null &&
+                       (bomEncoding.toUpperCase().equals("UTF-16LE") || bomEncoding.toUpperCase().equals("UTF-16BE"))) {
+                // BOM for UTF-16
+                PushbackInputStream internalIn = new PushbackInputStream(new FileInputStream(mFile), 3);
+                // skip the first 2 bytes
+                internalIn.skip(2);
+                isr = new InputStreamReader(internalIn, encoding);
+                inputSource = new InputSource(isr);
+                if (mLogger.isDebugEnabled()) {
+                mLogger.debug("Skip first 3 bytes containing UTF-16 BOM");
+                }
+            } else {
+                if (mLogger.isDebugEnabled()) {
+                mLogger.debug("No need to skip bytes");
+                }
+                // no BOM, just use the normal InputStreamStreader
+                inputSource = new InputSource(new InputStreamReader(new FileInputStream(mFile), encoding));
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            mLogger.error("Unsupported encoding in file: " + mFile + ", " + e.getMessage());
+        } catch (IOException e) {
+            mLogger.error("Error skipping BOM for InputStreamReader: " + e.getMessage());
+        }
+
+        return inputSource;
     }
 
-    /** 
+    /**
      * Get a string containing a list CSS files required by the parse. Includes
      * imported CSS files.
      * @return a list of CSS files separated by two file separators characters.
@@ -219,7 +298,7 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
             CSSHandler handler = new CSSHandler(new File(uri));
             Parser parser = mCSSParserFactory.makeParser();
             parser.setDocumentHandler(handler);
-            parser.parseStyleSheet(handler.getInputSource());
+            parser.parseStyleSheet(handler.getInputSource(null,uri));
         } catch (Exception e) {
             mLogger.error("Exception", e);
             throw new CSSException(e.getMessage());
@@ -268,7 +347,7 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
     //--------------------------------------------------------------------------
     // helper methods
     //--------------------------------------------------------------------------
-    
+
     /** @return an RGB formatted hex string like #FFFFFF. */
     String getRGBString(LexicalUnit lu) {
       int rr = lu.getLexicalUnitType() == LexicalUnit.SAC_PERCENTAGE ?
@@ -288,7 +367,7 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
         + (gg < 16 ? "0" : "") + Integer.toHexString(gg).toUpperCase()
         + (bb < 16 ? "0" : "") + Integer.toHexString(bb).toUpperCase();
     }
-    
+
     /**
       * Convert LexicalUnit to a Javascript value (represented
       * as a String).
