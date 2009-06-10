@@ -80,8 +80,28 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
         } else {
             this.__LZinputclickdiv.onmouseover = this.__handlemouse; 
         }
+
+    if (this.quirks.input_highlight_bug) {
+        // TODO [hqm 2009-06-09] LPP-8121 I discovered that if an
+        // input field is contained within a div which has a white
+        // background color, then it selected text will highlight with
+        // a dark blue color. The div can have zero width,
+        // Windows/Firefox only seems to look at the bgcolor of the
+        // containing div when deciding what color to use for input
+        // text highlight. So this adds an extra div, with zero width,
+        // in which the actual clickable/selectable input text element
+        // is placed.
+        var ffoxdiv = document.createElement('div');
+        ffoxdiv.style.backgroundColor = 'white';
+        ffoxdiv.style.width = '0px';
+        this.__LZclickcontainerdiv.appendChild(ffoxdiv);        
+        ffoxdiv.appendChild(this.__LZinputclickdiv);
+    } else {
         this.__LZclickcontainerdiv.appendChild(this.__LZinputclickdiv);
+    }
+
     }    
+
     this.__LZdiv.appendChild(this.__LzInputDiv);
 
     //Debug.write(this.__LzInputDiv.style);

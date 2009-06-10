@@ -509,6 +509,8 @@ LzSprite.prototype.quirks = {
     ,clipped_scrollbar_causes_display_turd: false
     ,detectstuckkeys: false
     ,textgrabsinputtextfocus: false
+    ,input_highlight_bug: false
+
 }
 
 LzSprite.prototype.capabilities = {
@@ -688,6 +690,8 @@ LzSprite.prototype.__updateQuirks = function () {
             // overflow:scroll flicker when scrolling
             if (browser.OS == 'Windows') {
                 quirks['clipped_scrollbar_causes_display_turd'] = true;
+                // LPP-8121 inputtext selection highlight color depends on underlying div bgcolor
+                quirks['input_highlight_bug'] = true;
             }
             if (browser.version < 2) {
                 // see http://groups.google.ca/group/netscape.public.mozilla.dom/browse_thread/thread/821271ca11a1bdbf/46c87b49c026246f?lnk=st&q=+focus+nsIAutoCompletePopup+selectedIndex&rnum=1
