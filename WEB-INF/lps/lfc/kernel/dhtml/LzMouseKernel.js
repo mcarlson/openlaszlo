@@ -228,7 +228,7 @@ var LzMouseKernel = {
             LzMouseKernel.__y = e.clientY + body.scrollTop + docElem.scrollTop;
         }
         if (offsetx) {
-            LzMouseKernel.__x += offsety;
+            LzMouseKernel.__x += offsetx;
         }
         if (offsety) {
             LzMouseKernel.__y += offsety;
