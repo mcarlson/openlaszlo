@@ -221,12 +221,6 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   var showInternalProperties:Boolean = false;
 
-  /** Any amendments to the environment for debug evaluator, initially
-   * just _, __, and ___.  Could put things like write, format, inspect.
-   * @access private
-   */
-  var environment = {};
-
   /**
    * Output state
    * @access private

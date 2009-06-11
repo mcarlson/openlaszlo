@@ -124,7 +124,7 @@ class LzDebugConsole {
   /** @access private */
   function evalSimpleExpr(expr:String) {
     var parts = expr.match(this.ElementPattern);
-    var val = globalValue(parts[0]);
+    var val = globalValue(parts[0]) || Debug.environment[parts[0]];
     for (var i = 1, l = parts.length; i < l; i++) {
       val = val[parts[i]];
     }
@@ -329,6 +329,11 @@ dynamic class LzBootstrapDebugService {
   /** @access private */
   var window:*;
 
+  /** Any amendments to the environment for debug evaluator, initially
+   * just _, __, and ___.  Could put things like write, format, inspect.
+   * @access private
+   */
+  var environment = {};
 
   /** @access private */
   function LzBootstrapDebugService (logger:LzBootstrapDebugLogger=null,

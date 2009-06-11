@@ -220,7 +220,6 @@
 
 <method name="initEvalView">
       <![CDATA[
-       global._ = null;
        if ($dhtml) {
        } else {
            this.evalloader = new LzDebugEvalLoader(this);
@@ -314,12 +313,6 @@
        ]]>
     </method>
 
-    <!-- Simple "path" expressions will only have symbols, `.`, or `[numbers]` -->
-    <!-- @keywords private readonly -->
-    <attribute name="SimpleExprPattern" value="$once{new RegExp('^\\s*([$_A-Za-z][$\\w]*)((\\s*\\.\\s*[$_A-Za-z][$\\w]*)|(\\s*\\[\\s*\\d+\\s*\\]))*\\s*$')}" />
-    <!-- Now pull out just the element 'selectors', so you can walk down them -->
-    <!-- @keywords private readonly -->
-    <attribute name="ElementPattern" value="$once{new RegExp('([$_A-Za-z][$\\w]*)|(\\d+)', 'g')}" />
     <!-- send the input text field to server for compile/eval -->
     <method name="doEval">
       <![CDATA[
