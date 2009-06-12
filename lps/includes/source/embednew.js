@@ -261,6 +261,8 @@ lz.embed = {
         }
 
         this.__dhtmlLoadScript(url)
+        // Make sure we have focus (see LPP-8242)
+        if (lz.embed.browser.OS == 'Windows' && lz.embed.browser.isFirefox) { window.focus(); }
     }
     ,/** A hash of applications installed on the page keyed by id */
     applications: {}

@@ -179,14 +179,8 @@ public final class LzModeManagerService extends LzEventable {
                         this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
                     }
                 }
-                if ($as2) {
-                    if (!this.remotedebug && view.childOf(Debug.console))
-                        break;
-                } else if ($as3) {
-                    if (!this.remotedebug && view.childOf(Debug.console.window))
-                        break;
-                } else if ($dhtml) {
-                    // DHTML-Debugger is not part of the lzx-application
+                if (!this.remotedebug && view.childOf(Debug.console.window)) {
+                  break;
                 }
             }
 
@@ -229,14 +223,8 @@ public final class LzModeManagerService extends LzEventable {
                     this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
                 }
             }
-            if ($as2) {
-                if (!this.remotedebug && input.childOf(Debug.console))
-                    return true;
-            } else if ($as3) {
-                if (!this.remotedebug && input.childOf(Debug.console.window))
-                    return true;
-            } else if ($dhtml) {
-                // DHTML-Debugger is not part of the lzx-application
+            if (!this.remotedebug && input.childOf(Debug.console.window)) {
+              return true;
             }
         }
 
