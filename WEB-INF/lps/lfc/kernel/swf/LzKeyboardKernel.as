@@ -37,17 +37,17 @@ var LzKeyboardKernel = {
         //Debug.info("__keyboardEvent k=%w s=%w %w ctrl=%w, delta=%w", k,s,t, ctrl,delta);
 
         if (t == 'onkeyup') {
-            if (dh[s] != false) {
+            if (dh[s] != null) {
                 delta[s] = false;
                 dirty = true;
             }    
-            dh[s] = false;
+            dh[s] = null;
         } else if (t == 'onkeydown') {
-            if (dh[s] != true) {
+            if (dh[s] == null) {
                 delta[s] = true;    
                 dirty = true;
             }    
-            dh[s] = true;
+            dh[s] = k;
         }
 
         //Debug.write('downKeysHash', t, k, dh, delta);
@@ -55,13 +55,41 @@ var LzKeyboardKernel = {
             LzKeyboardKernel.__scope[LzKeyboardKernel.__callback](delta, k, t, ctrl);
         }
     }
-    ,__codes: {16: 'shift', 17: 'control'}
+    ,__codes: {16: 'shift', 17: 'control', 18: 'alt'}
     ,__callback: null
     ,__scope: null
     ,setCallback: function (scope, funcname) {
         this.__scope = scope;
         this.__callback = funcname;
     }    
+    // Called by lz.embed when the browser window regains focus
+    ,__allKeysUp: function () {
+        var delta = {};
+        var stuck = false;
+        var keys;
+        var dh = LzKeyboardKernel.__downKeysHash;
+        for (var key in dh) {
+          if (dh[key] != null) {
+            stuck = true;
+            delta[key] = false;
+            if (key.length == 1) {
+              if (! keys) { keys = []; }
+              keys.push(dh[key]);
+            }
+          }
+        }
+//         Debug.info("[%6.2f] All keys up: %w, %w", (new Date).getTime() % 1000000, delta, keys);
+        var scope = LzKeyboardKernel.__scope;
+        var callback = LzKeyboardKernel.__callback;
+        if (stuck && scope && scope[callback]) {
+          if (!keys) {
+            scope[callback](delta, 0, 'onkeyup');
+          } else for (var i = 0, l = keys.length; i < l; i++) {
+            scope[callback](delta, keys[i], 'onkeyup');
+          }
+        }
+        LzKeyboardKernel.__downKeysHash = {};
+    }
     // Called by lz.Keys when the last focusable element was reached.
     ,gotLastFocus: function () {
     }

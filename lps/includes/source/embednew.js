@@ -136,6 +136,7 @@ lz.embed = {
             ,_getSWFDiv: lz.embed._getSWFDiv
             ,loaded: false
             ,_sendMouseWheel: lz.embed._sendMouseWheel
+            ,_sendAllKeysUp: lz.embed._sendAllKeysUpSWF
             ,_setCanvasAttributeDequeue: lz.embed._setCanvasAttributeDequeue
             ,_sendPercLoad: lz.embed._sendPercLoad
         }
@@ -254,6 +255,7 @@ lz.embed = {
             ,loaded: false
             ,setCanvasAttribute: lz.embed._setCanvasAttributeDHTML
             ,getCanvasAttribute: lz.embed._getCanvasAttributeDHTML
+            ,_sendAllKeysUp: lz.embed._sendAllKeysUpDHTML
         }
         // listen for history unless properties.history == false
         if (properties.history == false) {
@@ -682,6 +684,21 @@ lz.embed = {
         if (d != null) this.callMethod("lz.Keys.__mousewheelEvent(" + d + ")"); 
     }
     ,/** @access private */
+    _gotFocus: function() {
+        lz.embed._broadcastMethod('_sendAllKeysUp');
+    }
+    ,/** @access private */
+    _sendAllKeysUpSWF: function () {
+        this.callMethod("lz.Keys.__allKeysUp()");
+    }
+    ,/** @access private */
+    _sendAllKeysUpDHTML: function () {
+        // How to deal with multiple DHTML apps on a page?
+        if (LzKeyboardKernel && LzKeyboardKernel['__allKeysUp']) {
+            LzKeyboardKernel.__allKeysUp();
+        }
+    }
+    ,/** @access private */
     _sendPercLoad: function(p) {
         //alert('onpercload' + p);
         if (this.onloadstatus && typeof this.onloadstatus == 'function') {
@@ -854,6 +871,12 @@ lz.embed.browser.init();
 
 // Clean up global handlers
 lz.embed.attachEventHandler(window, 'beforeunload', lz.embed, '_cleanupHandlers');
+
+// Notice that you got focus
+lz.embed.attachEventHandler(window, 'focus', lz.embed, '_gotFocus');
+if (lz.embed.browser.isIE) {
+  lz.embed.attachEventHandler(window, 'activate', lz.embed, '_gotFocus');
+}
 
 // for backward compatibility
 #pragma "passThrough=true"

@@ -51,11 +51,14 @@ public final class LzKeysService extends LzEventable {
 
     /** @access private */
     function LzKeysService() {
-        super();
         //    if (LzKeysService.LzKeys) {
         //      throw new Error("There can be only one LzKeys");
         //    }
+        super();
+
         if ($as3) {
+            // NOTE: [2009-06-04 ptw] Apparently handled in
+            // LFCApplication, I don't know why...
         } else {
             LzKeyboardKernel.setCallback(this, '__keyEvent');
         }
@@ -140,6 +143,14 @@ public final class LzKeysService extends LzEventable {
                 this.gotKeyUp(k);
             }
         }
+    }
+
+    /**
+     * Trampoline so we can call from lz.embed
+     * @access private
+     */
+    function __allKeysUp ():void {
+      LzKeyboardKernel.__allKeysUp();
     }
 
     /**

@@ -23,8 +23,8 @@ class LzKeyboardKernel {
 
 
         // prevent duplicate onkeydown events - see LPP-7432 
-        if (__keyState[k] == keyisdown) return;
-        __keyState[k] = keyisdown;
+        if ((__keyState[k] != null) == keyisdown) return;
+        __keyState[k] = keyisdown?k:null;
 
         delta[s] = keyisdown;
         var ctrl:Boolean = e.ctrlKey;
@@ -48,6 +48,30 @@ class LzKeyboardKernel {
             __listeneradded = true;
         }
     }    
+
+    // Called by lz.embed when the browser window regains focus
+    static function __allKeysUp () {
+        var delta = {};
+        var stuck = false;
+        var keys;
+        for (var key in __keyState) {
+          if (__keyState[key] != null) {
+            stuck = true;
+            delta[key] = false;
+            if (! keys) { keys = []; }
+            keys.push(__keyState[key]);
+          }
+        }
+//         Debug.info("[%6.2f] All keys up: %w", (new Date).getTime() % 1000000, delta);
+        if (stuck && __scope && __scope[__callback]) {
+          if (!keys) {
+            __scope[__callback](delta, 0, 'onkeyup');
+          } else for (var i = 0, l = keys.length; i < l; i++) {
+            __scope[__callback](delta, keys[i], 'onkeyup');
+          }
+        }
+        __keyState = {};
+    }
 
     // Called by lz.Keys when the last focusable element was reached.
     static function gotLastFocus() :void {

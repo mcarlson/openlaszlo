@@ -11,8 +11,8 @@
 
 // Receives keyboard events from the runtime
 var LzKeyboardKernel = {
-    __downKeysHash: {alt: false, control: false, shift: false, meta: false}
-    ,__keyCodes: {}
+    // Key is the character (or a name for shift keys), value is the keycode
+    __downKeysHash: {}
     ,__keyboardEvent: function ( e ){
         if (!e) e = window.event;
         var delta = {};
@@ -25,19 +25,18 @@ var LzKeyboardKernel = {
         if (k >= 0 && k != 16 && k != 17 && k != 18 && k != 224) {
             // TODO: add mapping to flash character codes?
             var s = String.fromCharCode(k).toLowerCase();
-            LzKeyboardKernel.__keyCodes[s] = k;
             if (t == 'keyup') {
-                if (dh[s] != false) {
+                if (dh[s] != null) {
                     delta[s] = false;
                     dirty = true;
                 }
-                dh[s] = false;
+                dh[s] = null;
             } else if (t == 'keydown') {
-                if (dh[s] != true) {
+                if (dh[s] == null) {
                     delta[s] = true;
                     dirty = true;
                 }
-                dh[s] = true;
+                dh[s] = k;
             }
         }
 
@@ -59,7 +58,8 @@ var LzKeyboardKernel = {
                 //Debug.write('canceling tab');
                 e.cancelBubble = true;
                 return false;
-            } else if (LzKeyboardKernel.__cancelKeys && (k == 13 || k == 0 || k == 37 || k == 38 || k == 39 || k == 40) ) {
+            } else if (LzKeyboardKernel.__cancelKeys &&
+                       (k == 13 || k == 0 || k == 37 || k == 38 || k == 39 || k == 40) ) {
                 //Debug.write('canceling key', k, t);
                 // cancel event bubbling for enter, space(scroll) and arrow keys
                 e.cancelBubble = true;
@@ -80,67 +80,83 @@ var LzKeyboardKernel = {
             var send = true;
         }
         var alt = e['altKey'];
-        if (dh['alt'] != alt) {
+        if ((dh['alt'] != null) != alt) {
+            dh['alt'] = alt?18:null;
             delta['alt'] = alt;
-            dirty = true;
+            dirty = send;
             if (quirks['alt_key_sends_control']) {
                 delta['control'] = delta['alt'];
             }
         }
+
         var ctrl = e['ctrlKey'];
-        if (dh['control'] != ctrl) {
+        if ((dh['control'] != null) != ctrl) {
+            dh['control'] = ctrl?17:null;
             delta['control'] = ctrl;
-            dirty = true;
+            dirty = send;
         }
+
         var shift = e['shiftKey'];
-        if (dh['shift'] != shift) {
+        if ((dh['shift'] != null) != shift) {
+            dh['shift'] = shift?16:null;
             delta['shift'] = shift;
-            dirty = true;
+            dirty = send;
         }
-        var stuck;
+    
         var meta = e['metaKey'];
-        if (quirks['detectstuckkeys']) {
-            // see LPP-8210
-            if (dh['meta'] != meta) {
-                // look for stuck keys
-                delta['control'] = meta;
-                dirty = true;
+        if ((dh['meta'] != null) != meta) {
+            dh['meta'] = meta?224:null;
+            delta['meta'] = meta;
+            dirty = send;
+            // Is this a quirk?
+            delta['control'] = meta;
+            // look for stuck keys (see LPP-8210)
+            if (quirks['detectstuckkeys']) {
                 if (! meta) {
-                    for (var key in dh) {
-                        if (key == 'control' || key == 'shift' || key == 'alt' || key == 'meta') continue;
-                        stuck = key;
-                        delete dh[key];
-                    }
+                    // If meta goes up, clear all the other keys
+                    LzKeyboardKernel.__allKeysUp();
+                    dirty = false;
                 }
-            }
+              }
         }
 
-        dh['alt'] = alt;
-        dh['control'] = ctrl;
-        dh['shift'] = shift;
-        dh['meta'] = meta;
-
-        if (dirty && (send || stuck)) {
+        if (dirty) {
             var scope = LzKeyboardKernel.__scope;
             var callback = LzKeyboardKernel.__callback;
             if (scope && scope[callback]) {
-                //console.log(t, s, k, delta, e.metaKey, e.ctrlKey, dh);
-                if (stuck) {
-                    // console.log('stuck key', key, keycode);
-                    var keycode = LzKeyboardKernel.__keyCodes[stuck];
-                    var fakedelta = {};
-                    // FIXME: [20090602 anba] 'key' seems to be a typo, should it be 'stuck'?
-                    fakedelta[key] = false;
-                    scope[callback](fakedelta, keycode, 'onkeyup');
-                }
-
-                if (send) {
-                    scope[callback](delta, 0, 'on' + e.type);
-                }
+                scope[callback](delta, 0, 'on' + e.type);
             }
         }
 
         return dirty;
+    }
+    // Called by lz.embed when the browser window regains focus
+    ,__allKeysUp: function () {
+        var delta = {};
+        var stuck = false;
+        var keys;
+        var dh = LzKeyboardKernel.__downKeysHash;
+        for (var key in dh) {
+          if (dh[key] != null) {
+            stuck = true;
+            delta[key] = false;
+            if (key.length == 1) {
+              if (! keys) { keys = []; }
+              keys.push(dh[key]);
+            }
+          }
+        }
+//         Debug.info("[%6.2f] All keys up: %w, %w", (new Date).getTime() % 1000000, delta, keys);
+        var scope = LzKeyboardKernel.__scope;
+        var callback = LzKeyboardKernel.__callback;
+        if (stuck && scope && scope[callback]) {
+          if (!keys) {
+            scope[callback](delta, 0, 'onkeyup');
+          } else for (var i = 0, l = keys.length; i < l; i++) {
+            scope[callback](delta, keys[i], 'onkeyup');
+          }
+        }
+        LzKeyboardKernel.__downKeysHash = {};
     }
     ,__callback: null
     ,__scope: null
