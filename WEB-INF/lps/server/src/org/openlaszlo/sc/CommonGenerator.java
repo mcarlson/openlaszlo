@@ -1006,7 +1006,7 @@ public abstract class CommonGenerator implements ASTVisitor {
     SimpleNode args = children[2];
     String name;
     String ca = null;
-    String pattern = "(arguments.callee.superclass?arguments.callee.superclass.prototype[_1]:this.nextMethod(arguments.callee, _1)).call(this, _2)";
+    String pattern = "((arguments.callee['$superclass']&&arguments.callee.$superclass.prototype[_1])||this.nextMethod(arguments.callee, _1)).call(this, _2)";
     if (fname instanceof ASTEmptyExpression) {
       // super with no selector is the constructor, which will be
       // renamed to $lzsc$initialize in translateClassDirective to
@@ -1049,9 +1049,9 @@ public abstract class CommonGenerator implements ASTVisitor {
     if (ca == null) {
       ;
     } else if ("call".equals(ca)) {
-      pattern = "(arguments.callee.superclass?arguments.callee.superclass.prototype[_1]:this.nextMethod(arguments.callee, _1)).call(_2)";
+      pattern = "((arguments.callee['$superclass']&&arguments.callee.$superclass.prototype[_1])||this.nextMethod(arguments.callee, _1)).call(_2)";
     } else if ("apply".equals(ca)) {
-      pattern = "(arguments.callee.superclass?arguments.callee.superclass.prototype[_1]:this.nextMethod(arguments.callee, _1)).apply(_2)";
+      pattern = "((arguments.callee['$superclass']&&arguments.callee.$superclass.prototype[_1])||this.nextMethod(arguments.callee, _1)).apply(_2)";
     } else {
       assert false: "Unhandled super call " + ca;
     }

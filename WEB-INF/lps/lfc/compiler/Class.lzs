@@ -64,8 +64,8 @@ if ($profile) {
       if (! (value instanceof Function)) continue;
 
       var xtor = this.constructor;
-      if (value.hasOwnProperty('superclasses')) {
-        var os = value.superclasses, found = false;
+      if (value.hasOwnProperty('$superclasses')) {
+        var os = value.$superclasses, found = false;
         for (var j = os.length - 1; j >= 0; j--) {
           if (os[j] === xtor) {
             found = true;
@@ -73,14 +73,14 @@ if ($profile) {
           }
         }
         if (! found) {
-          value.superclasses.push(xtor);
+          value.$superclasses.push(xtor);
         }
-      } else if (value.hasOwnProperty('superclass') && value.superclass !== xtor) {
-        var superclass = value.superclass;
-        delete value.superclass;
-        value.superclasses = [ superclass, xtor ];
+      } else if (value.hasOwnProperty('$superclass') && value.$superclass !== xtor) {
+        var $superclass = value.$superclass;
+        delete value.$superclass;
+        value.$superclasses = [ $superclass, xtor ];
       } else {
-        value.superclass = xtor;
+        value.$superclass = xtor;
       }
       if ($debug) {
         if (! value._dbg_typename) {
@@ -149,12 +149,12 @@ Instance.prototype.addProperties(['addProperty', function addProperty(name, valu
   */
 Instance.prototype.addProperty('nextMethod', function nextMethod (currentMethod, nextMethodName) {
   var next;
-  if (currentMethod.hasOwnProperty('superclass')) {
-    next = currentMethod.superclass.prototype[nextMethodName];
-  } else {
-    var superclasses = currentMethod.superclasses;
-    for (var i = superclasses.length - 1; i >= 0; i--) {
-      var sc = superclasses[i];
+  if (currentMethod.hasOwnProperty('$superclass')) {
+    next = currentMethod.$superclass.prototype[nextMethodName];
+  } else if (currentMethod.hasOwnProperty('$superclasses')) {
+    var $superclasses = currentMethod.$superclasses;
+    for (var i = $superclasses.length - 1; i >= 0; i--) {
+      var sc = $superclasses[i];
       if (this instanceof sc) {
         next = sc.prototype[nextMethodName];
         break;
@@ -162,9 +162,11 @@ Instance.prototype.addProperty('nextMethod', function nextMethod (currentMethod,
     }
   }
   // TODO: [2006-05-21 ptw] Call this.noNextMethod(nextMethodName, currentMethod)
-  if ($debug) {
-    if (! next) {
-      Debug.error('No next method %s in %w', nextMethodName, currentMethod);
+  if (! next) {
+    next = function () {
+      if ($debug) {
+        Debug.error('super.%s is undefined in %w', nextMethodName, currentMethod);
+      }
     }
   }
   return next;

@@ -1,0 +1,14 @@
+<canvas debug="true">
+  <text>Expect an error in the debugger</text>
+  <class name ="Foo">
+    <method name="foo">
+      super.bar();
+    </method>
+  </class>
+  <Foo oninit="this.foo['superclass']?
+               (delete this.foo.superclass):
+               (delete this.foo.$superclass);
+               this.foo()" />
+</canvas>
+<!-- Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->
+
