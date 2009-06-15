@@ -98,6 +98,16 @@ function handleResponse (dreq:LzRPCDataRequest) {
 }
 
 
+/**
+   timeout of requests, in millseconds
+*/
+
+var timeout:Number = canvas.dataloadtimeout;
+
+function setTimeout (msec) {
+    this.timeout = msec;
+}
+
 function handleJSONRPCresponse (dreq:LzRPCDataRequest) {
     var data = JSON.parse(dreq.rawdata);
     var delegate = null;
@@ -352,6 +362,7 @@ function __LZloadHook (stubinfo:*) { }
 
     dreq.proxyurl = canvas.getProxyURL();
 
+    dreq.timeout = this.timeout;
     dreq.queuerequests      = true;
     dreq.getresponseheaders = true;
     dreq.secureport = secureport;

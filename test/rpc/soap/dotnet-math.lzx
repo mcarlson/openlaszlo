@@ -20,6 +20,10 @@
     <soap name="maths" 
           wsdl="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/mathservice/cs/mathservice.asmx?WSDL">
 
+      <handler name="oninit">
+        LzSOAPService.setTimeout(60000);
+      </handler>
+
         <attribute name="loaded" type="boolean" value="false" />
 
         <!-- Method to make a document for SOAP message requests -->
@@ -80,6 +84,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
