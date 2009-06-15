@@ -259,6 +259,8 @@ var LzMouseKernel = {
                         // found a contextmenu
                         cmenu = owner.__contextmenu;
                         break;
+                    } else if (LzSprite.prototype.quirks.ie_elementfrompoint && owner.scrolldiv === elem) {
+                        // IE returns this first for text div. See LPP-8254
                     } else if (swf8mode && ((owner.__LZdiv === elem && owner.bgcolor != null)
                                     || owner instanceof LzTextSprite)) {
                         // swf8 compatibility: movieclips with bgcolor and textfields
