@@ -195,6 +195,7 @@ dynamic class LzCanvas extends LzView {
     override function construct (parent , args) {
         this.__makeSprite(null);
         var capabilities = this.sprite.capabilities;
+        this.capabilities = capabilities;
 
         // TODO: [2006-05-19 ptw] The original did not do this, should we?
         // super(null, args);
