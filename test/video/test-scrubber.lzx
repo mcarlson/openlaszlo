@@ -1,0 +1,47 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<canvas>
+ 
+<view layout="axis:y;spacing:4">
+    <text multiline="true" width="500">What to expect below<br/>
+    The two gray bars on the bottom should
+    display stream progress after you click play/pause. The top (light gray)
+    bar has a blue box which tracks progress and may be dragged in the pause
+    or play state to change the stream time.  Also you may click on the top
+    bar to change stream time (which is not a feature of the components but a
+    common use case which is reflected in the test file).
+    </text>
+    <videoview id="v1" width="400" height="300" debug="true"
+        url="http:videos/good-dog.flv" 
+    />
+
+    <view name="timeline1" width="${v1.width}" height="16" bgcolor="silver" >
+
+        <streamprogress id="p1" name="progress" stream="${v1.stream}"
+            x="1" y="1" height="14" maxwidth="${parent.width-2}">
+        </streamprogress>
+        <streamscrubber x="0" y="-1" width="10" height="18" bgcolor="blue"
+            stream="${v1.stream}"/>
+
+        <handler name="onclick">
+            var mousex = this.getMouse('x');
+            var newtime = mousex / this.width * v1.stream.totaltime;
+            v1.stream.seek(newtime);
+        </handler>    
+      
+    </view>
+
+    <view name="timeline2" width="${v1.width}" height="16" bgcolor="#444444">
+        <streamprogress id="p2" name="progress" stream="${v1.stream}"
+            resource="resources/gradient.png" stretches="both"
+            x="1" y="1" height="14" maxwidth="${parent.width-2}"/>
+    
+    </view>
+
+    <button text="play" onclick="v1.stream.play()" />
+    <button text="pause" onclick="v1.stream.pause()" />
+</view>
+
+</canvas>

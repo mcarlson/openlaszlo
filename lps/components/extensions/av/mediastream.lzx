@@ -204,7 +204,7 @@
     -->
     <attribute name="streamname" value="" type="string"/>
         
-    <!--- The rtmp to use (defaults to the first one created).
+    <!--- The rtmp connection to use (defaults to the first one created).
           @type lz.rtmpconnection
           @access public
     -->
@@ -496,8 +496,8 @@
           flashstream properties 
             @keywords private -->
     <method name="_updateTime" args="ignore"> <![CDATA[     
-        //Debug.write("mediastream._updateTime time=%w mode=%w", 
-        //   this.time, this.mode);
+        //Debug.write("mediastream._updateTime time=%w mode=%w paused=%w", 
+        //   this.time, this.mode, this.paused);
 
         /* seems to work better without this
         // don't update if new lz.mediastream about to start
@@ -1114,7 +1114,11 @@
             @keywords private -->
     <method name="_onStop" args="info=null"> <![CDATA[
         //Debug.write("mediastream._onstop before mode=%w",this.mode);
-        // TODO: this isn't actually called! 
+
+        // I don't know why this is sometimes called when
+        // seeking while paused, but it is 
+        if (this.paused) return; 
+
         if (!this.paused) this.setAttribute('paused', true);
         if (this.autorewind) {
             // TODO: time != totaltime here, so the test failed - seek anyhow.:
@@ -1208,9 +1212,8 @@
                 this.onpaused.sendEvent(paused);
         }
 
-        // Stop the timer if we're paused and we're done downloading. 
-        if (this.paused &&
-            (this.progress == 1.0)) {
+        // Stop the timer if we're paused 
+        if (this.paused) {
             this._deactivateTimeDel();
         } else {
             this._activateTimeDel();
@@ -1228,6 +1231,10 @@
           the stream will be in a paused state.
     -->
     <method name="seek" args="t"> <![CDATA[
+        if ($debug && this.debug) 
+            Debug.write("mediastream %w seek %w",
+                        this, t);
+
         if (url == "") return;
 
         if (!this._flashstream) {
@@ -1236,6 +1243,10 @@
         
         if (this._flashstream) {
             this._flashstream.seek(t);
+            // DON'T call _updateTime since the flashstream's time
+            // will be wrong for a while and later it will show the closest
+            // keyframe's time, which is arguably correct but screws up
+            // the displays of scrubbers and whatnot
             this.setAttribute('time', t);
             if (!this.playing) {
                 // just in case we have never displayed the video

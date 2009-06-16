@@ -117,6 +117,10 @@
     <!--- @keywords private -->
     <event name="oncam"/>
 
+    <!--- @keywords private -->
+    <event name="onstream"/>
+
+    <!--- @keywords private -->
     <method name="init"> <![CDATA[
         super.init();
         if (this.debug) {
@@ -132,6 +136,7 @@
                     {debug:this.debug, type:this.type, url:this.url, autoplay:this.autoplay}, 
                     null, 
                     true);
+            if (this.onstream) this.onstream.sendEvent(this);
             if ($debug && this.debug) Debug.write("videoview %w init created stream", this.stream);
         }
         
