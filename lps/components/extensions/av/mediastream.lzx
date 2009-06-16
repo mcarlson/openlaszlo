@@ -910,7 +910,7 @@
     ]]></method>
 
     <!--- setup flash callbacks and other properties for the flash NetStream
-          object, also set _flashstream internal <attribute name="
+          object, also set _flashstream internal attribute
             @keywords private -->
     <method name="_flashstreamSetup" args="netstream">
         //Debug.debug("_flashstreamSetup netstream=%w", netstream);

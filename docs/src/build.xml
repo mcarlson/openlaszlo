@@ -736,7 +736,7 @@ All Rights Reserved. Use is subject to license terms.</p>
 
     <copy todir="${reference.build.dir}/programs">
       <fileset dir="${reference.build.dir}/programs" includes="*.in"/>
-      <filterset begintoken="&amp;" endtoken=";">
+      <filterset begintoken="&amp;" endtoken=";" recurse="false">
         <filtersfile file="entities.properties"/>
       </filterset>
       <mapper type="glob" from="*.in" to="*"/>

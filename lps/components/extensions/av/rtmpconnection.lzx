@@ -107,14 +107,7 @@
                 @access private -->
             <event name="onerror"/>
             
-<<<<<<< .mine
             <method name="init"> <![CDATA[
-                if ($debug && this.debug)
-                    Debug.write('rtmpconnection %w init', this);
-
-=======
-            <method name="init"> <![CDATA[
->>>>>>> .r14072
                 super.init();
 
                 // Store new RTMP connections in lz.rtmpconnection.connections. If no
@@ -168,11 +161,7 @@
                 if (this.autoconnect) {
                     this.connect();
                 }
-<<<<<<< .mine
-                ]]>
-=======
             ]]>
->>>>>>> .r14072
             </method>
 
             <method name="_onSecurityError" args="error">

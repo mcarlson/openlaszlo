@@ -16,8 +16,7 @@
         <attribute name="debug" value="false"/>
 
         <!--- a reference to the stream to enable direct control,
-              such as vp.steam.play or vp.stream.seek(20)
-        </canvas>-->
+              such as vp.steam.play or vp.stream.seek(20) -->
         <attribute name="stream" value="${vscreen.ms}"/>
        
         <!--- type of stream: 'http' or 'rtmp', 
