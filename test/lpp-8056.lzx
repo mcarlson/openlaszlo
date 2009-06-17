@@ -1,0 +1,24 @@
+<canvas layout="axis: y; spacing: 10" height="500" debug="true">
+  <text multiline="true" width="80%" x="10%">Click me to make sure I have focus! and then press spacebar to launch a new window, go back to this window and press any key, if the bug is still present, you will see the Downkeys Array still has spacebar (32) in it.  If the bug is fixed, you should see an empty Downkeys Array when you return to the window.</text>
+  <text x="10%">
+    <handler name="onidle" reference="lz.Idle">
+      this.format("Downkeys Array: %w", lz.Keys.downKeysArray);
+    </handler>
+  </text>
+  <handler name="oninit">
+    var del = new LzDelegate(this, "openLink");
+    lz.Keys.callOnKeyCombo(del, ["spacebar"]);
+  </handler>
+  <handler name="onkeydown" reference="lz.Keys" args="k">
+    Debug.info("onkeydown: %w, keys: %w",k,lz.Keys.downKeysArray);
+  </handler>
+  <handler name="onkeyup" reference="lz.Keys" args="k">
+    Debug.info("onkeyup :%w, keys: %w",k,lz.Keys.downKeysArray);
+  </handler>
+  <method name="openLink" args="ignore">
+    <![CDATA[
+             lz.Browser.loadURL('http://www.laszlosystems.com/', '_blank');
+    ]]>
+  </method>
+</canvas>
+<!-- Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->
