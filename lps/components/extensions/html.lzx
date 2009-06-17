@@ -304,20 +304,11 @@ lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
     <switch>
         <when runtime="dhtml">
         <!--- @access private -->
-        <attribute name="_mouseisdown" value="false"/>
-        <handler name="onmouseover" reference="lz.GlobalMouse" args="e">
+        <handler name="onmouseover">
             <![CDATA[
             if (! this['iframeid']) return;
-            if (e == this && this._mouseisdown == false) {
-                LzMouseKernel.disableMouseTemporarily();
-            }
+            LzMouseKernel.disableMouseTemporarily();
             ]]>
-        </handler>
-        <handler name="onmousedown" reference="lz.GlobalMouse" args="e">
-            if (e == this) this._mouseisdown = true;
-        </handler>
-        <handler name="onmouseup" reference="lz.GlobalMouse" args="e">
-            if (e == this) this._mouseisdown = false;
         </handler>
         </when>
     </switch>
