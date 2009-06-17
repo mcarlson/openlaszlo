@@ -17,6 +17,7 @@ var LzSprite = function(owner, isroot) {
     this.constructor = arguments.callee;
     this.owner = owner;
     this.uid = LzSprite.prototype.uid++;
+    this.aadescriptionDiv = null;
 
     if (isroot) {
         this.isroot = true;
@@ -522,7 +523,7 @@ LzSprite.prototype.capabilities = {
     ,opacity: true
     ,colortransform: false
     ,audio: false
-    ,accessibility: false
+    ,accessibility: true
     ,htmlinputtext: false
     ,advancedfonts: false
     ,bitmapcaching: false
@@ -2384,4 +2385,48 @@ LzSprite.prototype.getSelectedText = function () {
     } else {
         return null;
     }
+}
+
+/**
+  * Set accessibility description
+  * @param string s: Sets the accessibility name for this view
+  */
+LzSprite.prototype.setAADescription = function( s ) {
+    var aadiv = this.aadescriptionDiv;
+    if (aadiv == null) {
+        // If not already created, create a <label> element, nested in
+        // a <div style='display:none'> to make it invisible
+        this.aadescriptionDiv = aadiv = document.createElement('LABEL');
+        aadiv.style.display = "none";
+        // Safari reader only speaks labels which have a 'for' attribute
+        aadiv.setAttribute('for', this.__LZdiv.id);
+        this.__LZdiv.appendChild(aadiv);
+    }
+    aadiv.innerHTML = s;
+}
+
+
+/** Turns accessibility on/off if accessible == true and a screen reader is active 
+  * @param Boolean accessible
+  */
+LzSprite.prototype.setAccessible = function(accessible) {
+    // Not yet implemented
+}
+
+
+/**
+ * Activate/inactivate children for accessibility
+ * @param Boolean s: If true, activate the current view and all of its children
+ */
+LzSprite.prototype.setAAActive = function( s ){
+    // Not yet implemented
+}
+
+/**
+  * Set accessibility silencing/unsilencing
+  * @param string s: If true, this view is made silent to the screen reader.  
+  * If false, it is active to the screen reader.
+  */
+LzSprite.prototype.setAASilent = function( s ){
+    // Not yet implemented
 }
