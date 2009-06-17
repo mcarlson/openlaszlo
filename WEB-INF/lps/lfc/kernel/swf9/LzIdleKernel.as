@@ -21,8 +21,9 @@ public class LzIdleKernel  {
 
     private static function __update(event:Event):void{
       var now = getTimer();
-      // NOTE: [2009-04-23 ptw] We are careful to process from the
-      // end, because a callback may remove itself.
+      // NOTE: [2009-06-16 ptw] (LPP-8269) The handler can work
+      // directly on the callback array because it knows that
+      // add/remove work on copies
       for (var i:int = __callbacks.length - 2; i >= 0; i -= 2) {
         var scope:* = __callbacks[i];
         var funcname:String = __callbacks[i + 1];
@@ -33,13 +34,17 @@ public class LzIdleKernel  {
     private static var __listening:Boolean = false;
 
     public static function addCallback (scope:*, funcname:String):void {
-      for (var i:int = __callbacks.length - 2; i >= 0; i -= 2) {
-        if (__callbacks[i] === scope && __callbacks[i + 1] == funcname) {
+      // NOTE: [2009-06-16 ptw] (LPP-8269) Manipulate a copy and
+      // then atomically update
+      var callbacks = __callbacks.slice(0);
+      for (var i:int = callbacks.length - 2; i >= 0; i -= 2) {
+        if (callbacks[i] === scope && callbacks[i + 1] == funcname) {
           return;
         }
       }
-      __callbacks.push(scope, funcname);
-      if ((__callbacks.length > 0) && (! __listening)) {
+      callbacks.push(scope, funcname);
+      __callbacks = callbacks;
+      if ((callbacks.length > 0) && (! __listening)) {
         __listening = true;
         LFCApplication.stage.addEventListener(Event.ENTER_FRAME, __update);
       }
@@ -48,14 +53,16 @@ public class LzIdleKernel  {
     // TODO: [2009-04-23 ptw] Does this really need to return the
     // spliced out callback?
     public static function removeCallback (scope:*, funcname:String):* {
-      // Process from the end on the assumption the most likely
-      // callback to be removed is the one that is running
-      for (var i:int = __callbacks.length - 2; i >= 0; i -= 2) {
-        if (__callbacks[i] === scope && __callbacks[i + 1] == funcname) {
-          var removed:Array = __callbacks.splice(i, 2);
+      // NOTE: [2009-06-16 ptw] (LPP-8269) Manipulate a copy and
+      // then atomically update
+      var callbacks = __callbacks.slice(0);
+      for (var i:int = callbacks.length - 2; i >= 0; i -= 2) {
+        if (callbacks[i] === scope && callbacks[i + 1] == funcname) {
+          var removed:Array = callbacks.splice(i, 2);
         }
       }
-      if ((__callbacks.length == 0) && __listening) {
+      __callbacks = callbacks;
+      if ((callbacks.length == 0) && __listening) {
         LFCApplication.stage.removeEventListener(Event.ENTER_FRAME, __update);
         __listening = false;
       }

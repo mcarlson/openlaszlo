@@ -14,10 +14,11 @@ var LzIdleKernel = {
     __callbacks: []
     ,__update: function (){
         var kernel = LzIdleKernel;
+        // NOTE: [2009-06-16 ptw] (LPP-8269) The handler can work
+        // directly on the callback array because it knows that
+        // add/remove work on copies
         var callbacks = kernel.__callbacks;
         var now = LzTimeKernel.getTimer();
-        // NOTE: [2009-04-23 ptw] We are careful to process from the
-        // end, because a callback may remove itself.
         for (var i:int = callbacks.length - 2; i >= 0; i -= 2) {
           var scope = callbacks[i];
           var funcname = callbacks[i + 1];
@@ -27,20 +28,25 @@ var LzIdleKernel = {
     ,__intervalID: null
     ,addCallback: function (scope, funcname) {
         var kernel = LzIdleKernel;
-        var callbacks = kernel.__callbacks;
+        // NOTE: [2009-06-16 ptw] (LPP-8269) Manipulate a copy and
+        // then atomically update
+        var callbacks = kernel.__callbacks.slice(0);
         for (var i:int = callbacks.length - 2; i >= 0; i -= 2) {
           if (callbacks[i] === scope && callbacks[i + 1] == funcname) {
             return;
           }
         }
         callbacks.push(scope, funcname);
+        kernel.__callbacks = callbacks;
         if ((callbacks.length > 0) && (kernel.__intervalID == null)) {
           kernel.__intervalID = setInterval( LzIdleKernel.__update, 1000 / kernel.__fps );
         }
     }    
     ,removeCallback: function (scope, funcname) {
         var kernel = LzIdleKernel;
-        var callbacks = kernel.__callbacks;
+        // NOTE: [2009-06-16 ptw] (LPP-8269) Manipulate a copy and
+        // then atomically update
+        var callbacks = kernel.__callbacks.slice(0);
         // Process from the end on the assumption the most likely
         // callback to be removed is the one that is running
         for (var i:int = callbacks.length - 2; i >= 0; i -= 2) {
@@ -48,6 +54,7 @@ var LzIdleKernel = {
             var removed:Array = callbacks.splice(i, 2);
           }
         }
+        kernel.__callbacks = callbacks;
         if ((callbacks.length == 0) && (kernel.__intervalID != null)) {
           clearInterval( kernel.__intervalID );
           kernel.__intervalID = null;

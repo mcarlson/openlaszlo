@@ -1,0 +1,24 @@
+<canvas>
+  <method name="test1" args="ignore">
+    Debug.debug("%w removed %w", arguments.callee, LzIdleKernel.removeCallback(canvas, 'test2'));
+  </method>
+  <method name="test2" args="ignore">
+    Debug.debug("%w removed %w", arguments.callee, LzIdleKernel.removeCallback(canvas, 'test3'));
+  </method>
+  <method name="test3" args="ignore">
+    Debug.debug("%w removed %w", arguments.callee, LzIdleKernel.removeCallback(canvas, 'test1'));
+  </method>
+  <method name="cleanup" args="ignore">
+    Debug.debug("%w removed %w", arguments.callee, LzIdleKernel.removeCallback(canvas, 'test1'));
+    Debug.debug("%w removed %w", arguments.callee, LzIdleKernel.removeCallback(canvas, 'test2'));
+    Debug.debug("%w removed %w", arguments.callee, LzIdleKernel.removeCallback(canvas, 'test3'));
+    Debug.debug("%w removed %w", arguments.callee, LzIdleKernel.removeCallback(canvas, 'cleanup'));
+  </method>
+  <script>
+    LzIdleKernel.addCallback(canvas, 'test2');
+    LzIdleKernel.addCallback(canvas, 'test1');
+    LzIdleKernel.addCallback(canvas, 'test3');
+    LzIdleKernel.addCallback(canvas, 'cleanup');
+  </script>
+</canvas>
+<!-- Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->
