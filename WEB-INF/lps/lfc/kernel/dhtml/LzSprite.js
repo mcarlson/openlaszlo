@@ -388,6 +388,9 @@ LzSprite.prototype.__defaultStyles = {
     lztextlink: {
         cursor: 'pointer'
     },
+    lzaccessibilitydiv: {
+       display: 'none'
+    },
     writeCSS: function() {
         var rules = [];
         var css = '';
@@ -2397,7 +2400,7 @@ LzSprite.prototype.setAADescription = function( s ) {
         // If not already created, create a <label> element, nested in
         // a <div style='display:none'> to make it invisible
         this.aadescriptionDiv = aadiv = document.createElement('LABEL');
-        aadiv.style.display = "none";
+        aadiv.className = 'lzaccessibilitydiv';
         // Safari reader only speaks labels which have a 'for' attribute
         aadiv.setAttribute('for', this.__LZdiv.id);
         this.__LZdiv.appendChild(aadiv);
@@ -2428,5 +2431,23 @@ LzSprite.prototype.setAAActive = function( s ){
   * If false, it is active to the screen reader.
   */
 LzSprite.prototype.setAASilent = function( s ){
+    // Not yet implemented
+}
+
+
+/**
+  * Set accessibility name
+  * @param string s: Sets the accessibility name for this view
+  */
+LzSprite.prototype.setAAName = function( s ){
+    // Not yet implemented
+}
+
+
+/**
+ * Set accessibility tab order
+ * @param number s: The tab order index for this view.  Must be a unique number.
+ */
+LzSprite.prototype.setAATabIndex = function( s ){
     // Not yet implemented
 }
