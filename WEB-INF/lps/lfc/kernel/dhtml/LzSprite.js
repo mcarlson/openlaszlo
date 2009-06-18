@@ -294,6 +294,7 @@ LzSprite.prototype.__defaultStyles = {
     // TODO [hqm 2009-04] This is a duplicate of lzinputtextmultilinecontainer (see above)
     lzinputtextmultilinecontainer_click: {
         position: 'absolute',
+        overflow: 'hidden',
         paddingTop: '1px',
         paddingRight: '3px',
         paddingBottom: '3px',
@@ -590,7 +591,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['inner_html_no_entity_apos'] = true;
 
             // workaround for IE not supporting clip in divs containing inputtext
-            quirks['inputtext_parents_cannot_contain_clip'] = true;
+            // Turning this off fixes LPP-8257
+            //quirks['inputtext_parents_cannot_contain_clip'] = true;
 
             // flag for components (basefocusview for now) to minimize opacity changes
             this.capabilities['minimize_opacity_changes'] = true;
@@ -622,8 +624,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['focus_on_mouseover'] = false;
             // required for text-align / text-indent to work
             quirks['textstyle_on_textdiv'] = true;
-            // IE scrollbar is 16px
-            quirks['scrollbar_width'] = 16;
+            // IE scrollbar is 17px
+            quirks['scrollbar_width'] = 17;
             // CSS sprites conflict with ie_alpha_image_loader...
             quirks['use_css_sprites'] = ! quirks['ie_alpha_image_loader'];
             // IE needs help focusing when an lztext is in the same area - LPP-8219
