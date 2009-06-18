@@ -32,8 +32,6 @@ var LzMouseKernel = {
             LzKeyboardKernel.__updateControlKeys(e);
         }
 
-        // check source.owner of event, see if textfield and selectable, then don't cancel event
-
         var lzinputproto = window['LzInputTextSprite'] && LzInputTextSprite.prototype;
         if (lzinputproto && lzinputproto.__lastshown != null) {
             if (LzSprite.prototype.quirks.fix_ie_clickable) {

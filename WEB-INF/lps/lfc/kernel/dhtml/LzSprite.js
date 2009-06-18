@@ -101,7 +101,7 @@ var LzSprite = function(owner, isroot) {
             div.mouseisover = false;
             div.onmouseover = function(e) {
                 if (LzSprite.prototype.quirks.focus_on_mouseover) {
-                    if (LzSprite.prototype.getSelectedText() == null) {
+                    if (LzSprite.prototype.getSelectedText() != "") {
                         div.focus();
                     }
                 }
@@ -146,7 +146,7 @@ var LzSprite = function(owner, isroot) {
                     }
                     if (quirks.focus_on_mouseover) {
                         if (LzInputTextSprite.prototype.__lastshown == null) {
-                            if (LzSprite.prototype.getSelectedText() == null) {
+                            if (LzSprite.prototype.getSelectedText() == "") {
                                 div.focus();
                             }
                         }
@@ -158,7 +158,7 @@ var LzSprite = function(owner, isroot) {
                 } else {
                     if (quirks.focus_on_mouseover) {
                         if (LzInputTextSprite.prototype.__lastshown == null) {
-                            if (LzSprite.prototype.getSelectedText() == null) {
+                            if (LzSprite.prototype.getSelectedText() == "") {
                                 div.blur();
                             }
                         }
@@ -462,6 +462,7 @@ LzSprite.prototype.quirks = {
     ,fix_ie_clickable: false
     ,ie_alpha_image_loader: false
     ,ie_leak_prevention: false
+    ,ie_prevent_selection: false
     ,ie_elementfrompoint: false
     ,invisible_parent_image_sizing_fix: false
     ,emulate_flash_font_metrics: true
@@ -559,6 +560,7 @@ LzSprite.prototype.__updateQuirks = function () {
                 // prevent duplicate image loads - see http://support.microsoft.com/?scid=kb;en-us;823727&spid=2073&sid=global and http://misterpixel.blogspot.com/2006/09/forensic-analysis-of-ie6.html
                 quirks['ie6_improve_memory_performance'] = true;
             } else {
+                quirks['ie_prevent_selection'] = true;
                 quirks['invisible_parent_image_sizing_fix'] = true;
                 if (browser.osversion >= 6) {
                     // IE7 on Vista (osversion=6) needs the alpha image loader
@@ -2380,9 +2382,9 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
 LzSprite.prototype.getSelectedText = function () {
     var txt = '';
     if (window.getSelection) { // FF/Safari/Opera/Chrome
-        return window.getSelection();
+        return window.getSelection().toString();
     } else if (document.selection) { // IE7
-        return document.selection.createRange().text;
+        return document.selection.createRange().text.toString();
     } else if (document.getSelection) { // others
         return document.getSelection();
     } else {

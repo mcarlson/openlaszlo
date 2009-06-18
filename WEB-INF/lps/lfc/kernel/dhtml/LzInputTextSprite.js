@@ -1087,3 +1087,21 @@ LzInputTextSprite.findSelection = function ( ){
     }
 }
 
+// prevent text selection in IE
+// can't use lz.embed.attachEventHandler because we need to cancel events
+
+if (LzSprite.prototype.quirks.ie_prevent_selection) {
+    document.onselectstart = function () {
+        var src = window.event.srcElement;
+        if (src.owner instanceof LzTextSprite) {
+            if (! src.owner.selectable) {
+                //Debug.write("prevent selection on non-selectable text")
+                return false;
+            }
+        } else {
+            //Debug.write("prevent selection on non-text")
+            return false;
+        }
+    }
+}
+
