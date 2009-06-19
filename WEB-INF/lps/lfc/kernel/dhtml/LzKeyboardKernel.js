@@ -83,7 +83,7 @@ var LzKeyboardKernel = {
         if ((dh['alt'] != null) != alt) {
             dh['alt'] = alt?18:null;
             delta['alt'] = alt;
-            dirty = send;
+            dirty = true;
             if (quirks['alt_key_sends_control']) {
                 delta['control'] = delta['alt'];
             }
@@ -93,21 +93,21 @@ var LzKeyboardKernel = {
         if ((dh['control'] != null) != ctrl) {
             dh['control'] = ctrl?17:null;
             delta['control'] = ctrl;
-            dirty = send;
+            dirty = true;
         }
 
         var shift = e['shiftKey'];
         if ((dh['shift'] != null) != shift) {
             dh['shift'] = shift?16:null;
             delta['shift'] = shift;
-            dirty = send;
+            dirty = true;
         }
     
         var meta = e['metaKey'];
         if ((dh['meta'] != null) != meta) {
             dh['meta'] = meta?224:null;
             delta['meta'] = meta;
-            dirty = send;
+            dirty = true;
             // Is this a quirk?
             delta['control'] = meta;
             // look for stuck keys (see LPP-8210)
@@ -120,7 +120,7 @@ var LzKeyboardKernel = {
               }
         }
 
-        if (dirty) {
+        if (dirty && send) {
             var scope = LzKeyboardKernel.__scope;
             var callback = LzKeyboardKernel.__callback;
             if (scope && scope[callback]) {
