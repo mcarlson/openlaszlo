@@ -1991,12 +1991,7 @@ LzSprite.prototype.getMouse = function() {
     // TODO: don't base these metrics on the mouse position
     //Debug.debug('LzSprite.getMouse', this.owner.classname, LzSprite.__rootSprite.getMouse('x'), LzSprite.__rootSprite.getMouse('y'));
     var p = this.__getPos();
-    if (this.isroot) {
-        return {x: LzMouseKernel.__x - p.x, y: LzMouseKernel.__y - p.y};
-    } else {
-        var m = LzSprite.__rootSprite.getMouse();
-        return {x: m.x - p.x, y: m.y - p.y};
-    }
+    return {x: LzMouseKernel.__x - p.x, y: LzMouseKernel.__y - p.y};
 }
 
 /**
