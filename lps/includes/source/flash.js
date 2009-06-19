@@ -291,6 +291,7 @@ lz.embed.dojo = {
         width: 500,
         height: 400,
         bgcolor: '#ffffff',
+        allowfullscreen: false,
         wmode: 'window',
         flashvars: '',
         minimumVersion: 8,
@@ -789,12 +790,14 @@ lz.embed.dojo.Embed.prototype = {
                   + '<param name="FlashVars" value="' + swflocObjectVars + '" /> '
                   + '<param name="bgcolor" value="' + this.properties.bgcolor + '" /> '
                   + '<param name="wmode" value="' + this.properties.wmode + '" /> '
+                  + '<param name="allowFullScreen" value="' + this.properties.allowfullscreen + '" /> '
                   + '</object>';
             } else {          
                 objectHTML = '<embed src="' + swfloc+ '" '
                   + 'quality="high" '
                   + 'bgcolor="' + this.properties.bgcolor + '" '
                   + 'wmode="' + this.properties.wmode + '" '
+                  + 'allowFullScreen="' + this.properties.allowfullscreen + '" '
                   + 'width="' + this.properties.width + '" '
                   + 'height="' + this.properties.height + '" '
                   + 'id="' + this.properties.id + '" '
@@ -1369,6 +1372,6 @@ lz.embed.dojo.Install.prototype = {
 lz.embed.dojo.info = new lz.embed.dojo.Info();
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/

@@ -56,6 +56,8 @@ public class Canvas implements java.io.Serializable {
     /** Default canvas history */
     private static final boolean DEFAULT_HISTORY = false;
 
+    /** Default fullscreen support */
+    private static final boolean DEFAULT_ALLOW_FULL_SCREEN = false;
     /** Default canvas font info */
     // TODO: [2003-10-25 bloch] this should come from the build system
     public static final String DEFAULT_VERSION = "1.1";
@@ -107,7 +109,9 @@ public class Canvas implements java.io.Serializable {
 
     // Default to proxied deployment
     private boolean mProxied = true;
-    
+
+    /** Fullscreen setting for canvas */
+    private boolean mAllowFullScreen = DEFAULT_ALLOW_FULL_SCREEN;
     /** FontInfo for the canvas. */
     private FontInfo mFontInfo = null;
     
@@ -412,6 +416,16 @@ public class Canvas implements java.io.Serializable {
         return mProxied;
     }
 
+    /** @param val */
+    public void setAllowFullScreen(boolean val) {
+        mAllowFullScreen = val;
+    }
+
+    /** @return does this app support fullscreen for the SWFx runtime */
+    public boolean isAllowFullScreen() {
+        return mAllowFullScreen;
+    }
+    
     /** @return is connected */
     public boolean isConnected() {
         return mIsConnected;
@@ -459,6 +473,7 @@ public class Canvas implements java.io.Serializable {
             "width='" + getWidthXML() + "' " +
             "height='" + getHeightXML() + "' " +
             "proxied='" + isProxied() + "' " +
+            "allowfullscreen='" + isAllowFullScreen() + "' " +
             "runtime='" + getRuntime() +"' " +
             "lfc='" + LPS.getLFCname(getRuntime(), mDebug, mProfile, mBacktrace, mSourceAnnotations) + "' " +
             "debug='" + mDebug + "' " +

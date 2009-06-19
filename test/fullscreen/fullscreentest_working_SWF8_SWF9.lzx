@@ -1,0 +1,20 @@
+<canvas debug="true" allowfullscreen="true" height="100%">
+
+    <button onclick="canvas.setAttribute('fullscreen', canvas.fullscreen != true)" text="Toggle fullscreen" />
+
+    <button x="150" onclick="Debug.write(canvas.fullscreen)" text="Dump canvas.fullscreen" />
+
+    <handler name="onfullscreen" args="result">
+        Debug.write("canvas.onfullscreen event received");
+        if (result == true) {
+            Debug.write("succeeded in switching display state");
+        } else {
+            Debug.write("failed at switching display state");
+        }
+    </handler>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

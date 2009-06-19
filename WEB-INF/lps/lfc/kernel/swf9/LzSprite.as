@@ -137,6 +137,7 @@ dynamic public class LzSprite extends Sprite {
       ,proxypolicy: true
       ,linescrolling: true
       ,disableglobalfocustrap: false
+      ,allowfullscreen: true
       };
       var capabilities = LzSprite.capabilities;
 

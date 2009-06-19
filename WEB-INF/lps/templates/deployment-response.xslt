@@ -101,6 +101,7 @@
   &lt;param name="scale" value="noscale" />
   &lt;param name="salign" value="LT" />
   &lt;param name="menu" value="false" />
+  &lt;param name="allowFullScreen" value="<xsl:value-of select='canvas/@allowfullscreen' />" />
 &lt;/object></pre>
       
       <h2>Deployment with the <code>embed-compressed.js</code> Library</h2>
@@ -116,7 +117,7 @@
       application should appear:</p>
       
       <pre>&lt;script type="text/javascript"&gt;
-    lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
+    lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', allowfullscreen: '<xsl:value-of select="/canvas/@allowfullscreen"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
 &lt;/script></pre>
 
       <xsl:call-template name="exampledeployment"/>

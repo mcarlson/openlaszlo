@@ -102,21 +102,21 @@ If you edit this file, please validate your work using http://validator.w3.org/
           </xsl:when>
         </xsl:choose>
         <style type="text/css">
-        	html, body
-        	{
-        		/* http://www.quirksmode.org/css/100percheight.html */
-        		height: 100%;
-        		/* prevent scrollbars */
-        		margin: 0;
-        		padding: 0;
-        		border: 0 none;
-        		overflow: hidden;
-        	}
-        	body {
+          html, body
+          {
+            /* http://www.quirksmode.org/css/100percheight.html */
+            height: 100%;
+            /* prevent scrollbars */
+            margin: 0;
+            padding: 0;
+            border: 0 none;
+            overflow: hidden;
+          }
+          body {
                 background-color: <xsl:value-of select="/canvas/@bgcolor"/>;
             }
-        	
-        	img { border: 0 none; }
+          
+          img { border: 0 none; }
         </style>
       </head>
       <body>
@@ -143,7 +143,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
               </xsl:when>
               <xsl:otherwise>
                 <script type="text/javascript">
-                  lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
+                  lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', allowfullscreen: '<xsl:value-of select="/canvas/@allowfullscreen"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
 
                   lz.embed.<xsl:value-of select="/canvas/@id"/>.onloadstatus = function loadstatus(p) {
                     // called with a percentage (0-100) indicating load progress

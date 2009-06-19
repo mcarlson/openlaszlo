@@ -117,6 +117,7 @@ lz.embed = {
             ,bgcolor: properties.bgcolor
             ,wmode: properties.wmode
             ,flashvars: queryvals.flashvars
+            ,allowfullscreen: properties.allowfullscreen
             //,flash6: url
             ,flash8: url
             ,appenddiv: lz.embed._getAppendDiv(properties.id, properties.appenddivid)

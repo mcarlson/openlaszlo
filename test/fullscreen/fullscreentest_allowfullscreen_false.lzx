@@ -1,0 +1,21 @@
+<canvas debug="true" allowfullscreen="false" height="100%">
+
+    <simplelayout axis="y" />
+    
+    <text fontsize="24" fontstyle="bold" text='canvas allowfullscreen="false"' />
+    <button onclick="canvas.setAttribute('fullscreen', canvas.fullscreen != true)" text="Setting fullscreen will output warning!" />
+
+    <handler name="onfullscreen" args="result">
+        Debug.write("canvas.onfullscreen event received");
+        if (result == true) {
+            Debug.write("succeeded in switching display state");
+        } else {
+            Debug.write("failed at switching display state");
+        }
+    </handler>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

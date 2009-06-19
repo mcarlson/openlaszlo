@@ -257,7 +257,11 @@ class CanvasCompiler extends ToplevelCompiler {
         String accessible = elt.getAttributeValue("accessible");
         String history = elt.getAttributeValue("history");
         String framerate = elt.getAttributeValue("framerate");
-        
+        String allowfullscreen = elt.getAttributeValue("allowfullscreen");
+
+        if (allowfullscreen != null) {
+            canvas.setAllowFullScreen(allowfullscreen.equals("true"));
+        }
         if (width != null) {
             if (isPercentageDimension(width)) {
                 resizable = true;

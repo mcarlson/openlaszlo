@@ -1,7 +1,7 @@
 /**
   * LzScreenKernel.as
   *
-  * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -38,5 +38,28 @@ var LzScreenKernel = {
         this.__callback = funcname;
         this.__init();
         LzScreenKernel.__resizeEvent();
-    }    
+    }
+    // Listener for fullScreen event
+    ,fullScreenListener: new Object()
+    // Switch to Flash fullscreen mode
+    ,showFullScreen: function (fullscreen) {
+        if(Stage["displayState"]=="normal"){
+            Stage["displayState"]="fullScreen";
+            Stage.addListener(LzScreenKernel.fullScreenListener);
+            LzScreenKernel.fullScreenListener.onFullScreen = LzScreenKernel.fullScreenEventHandler;
+            // Callback to the send an onfullscreen event
+            var isFullScreen = Stage["displayState"] != "normal";
+            canvas.__fullscreenEventCallback(fullscreen == isFullScreen, isFullScreen); 
+            if (Stage["displayState"] != "fullScreen") {
+                canvas.__fullscreenErrorCallback(null)
+            }
+        } else {
+            Stage["displayState"]="normal";
+        }
+    }
+    ,fullScreenEventHandler: function(isFullScreen:Boolean){
+        Stage.removeListener(LzScreenKernel.fullScreenListener);
+        // Callback to the send an onfullscreen event
+        canvas.__fullscreenEventCallback(true, isFullScreen);        
+    }
 }
