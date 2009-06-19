@@ -695,8 +695,8 @@ lz.embed = {
     ,/** @access private */
     _sendAllKeysUpDHTML: function () {
         // How to deal with multiple DHTML apps on a page?
-        if (LzKeyboardKernel && LzKeyboardKernel['__allKeysUp']) {
-            LzKeyboardKernel.__allKeysUp();
+        if (lz.Keys && lz.Keys['__allKeysUp']) {
+            lz.Keys.__allKeysUp();
         }
     }
     ,/** @access private */
