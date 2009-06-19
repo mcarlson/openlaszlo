@@ -35,7 +35,7 @@
 
     <view name="timeline2" width="${v1.width}" height="16" bgcolor="#444444">
         <streamprogress id="p2" name="progress" stream="${v1.stream}"
-            resource="resources/gradient.png" stretches="both"
+            resource="../resources/png/gradient.png" stretches="both"
             x="1" y="1" height="14" maxwidth="${parent.width-2}"/>
     
     </view>
