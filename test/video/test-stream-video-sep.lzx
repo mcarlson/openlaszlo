@@ -8,6 +8,9 @@
 <simplelayout axis="x" inset="10" spacing="10"/>
 
 <view layout="inset:10;spacing:5">
+    <text text="${'mode = ' + s.mode}"/>
+    <text text="${'playing = ' + s.playing}"/>
+
     <videoview id="v" debug="true" 
         stream="$once{s}"
     />
@@ -41,11 +44,13 @@
         text="${'totaltime: ' + s.totaltime}"
     />
 
-    <text width="300" multiline="true"> 
+    <text width="400" multiline="true"> 
 Note: Total time is only defined for FLV's delivered over http
 if they have "metaData" defined, and we don't know the stream
 length until it starts playing.  
     </text>
+    <text multiline="true" width="400" text="mode should always be 'playing' for this test after the
+initial seek or play (e.g. not recording or broadcasting"/>
 </view>
 
 <view layout="inset:10;spacing:5">
