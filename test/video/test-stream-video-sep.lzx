@@ -7,7 +7,6 @@
 
 <simplelayout axis="x" inset="10" spacing="10"/>
 
-
 <view layout="inset:10;spacing:5">
     <videoview id="v" debug="true" 
         stream="$once{s}"
@@ -20,6 +19,11 @@
     <button
         text="play" 
         onclick="s.play()"
+    />
+
+    <button
+        text="seek(0)" 
+        onclick="s.seek(0)"
     />
 
     <button 
@@ -45,6 +49,8 @@ length until it starts playing.
 </view>
 
 <view layout="inset:10;spacing:5">
+<text>note: setting the URL is not expected to change the display, you need to
+either seek or play to update the video image.</text>
 <edittext id="t1" width="600">http://www.archive.org/download/JudgeMediaTestVideoFile_0/video.flv</edittext>
 <button text="set URL">
     <handler name="onclick">
