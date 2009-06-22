@@ -623,7 +623,7 @@ function $lzc$set_framerate( fps:Number ) {
 
 
   /** Switches to full screen mode in SWFx runtime
-   * @access public
+   * @access private
    */
  function $lzc$set_fullscreen(fullscreen=true) {
      if (this.sprite.capabilities.allowfullscreen == true) {
