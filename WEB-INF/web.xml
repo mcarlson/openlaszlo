@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!DOCTYPE web-app 
-    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
-    "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
-
-<web-app>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
+<!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+<!--
+@!@!@!@!@ ATTENTION EDITORS OF THIS FILE @!@!@!@!@
+
+If you edit this file, please validate your work using http://validator.w3.org/, using this link
+http://www.validome.org/xml/validate/
+
+-->  
+<web-app>
 
     <display-name>OpenLaszlo Server</display-name>
     <description/>
+
+    <!-- lzproject servlet filters -->
+    <filter>
+        <filter-name>I18NFilter</filter-name>
+        <display-name>Filter loading I18N message bundle</display-name>
+        <filter-class>org.openlaszlo.lzproject.i18n.I18NFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>SecurityFilter</filter-name>
+        <display-name>This filter checks if the request is made to one of the protected web services, making sure, only authorized requests get through</display-name>
+        <filter-class>org.openlaszlo.lzproject.security.SecurityFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>I18NFilter</filter-name>
+        <url-pattern>/demos/lzproject/lzx/lzproject/rest/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SecurityFilter</filter-name>
+        <url-pattern>/demos/lzproject/lzx/lzproject/rest/*</url-pattern>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>LPS</servlet-name>
@@ -29,11 +54,38 @@
     </servlet>
 
     <servlet>
-      <servlet-name>AxisServlet</servlet-name>
-      <servlet-class>
+        <servlet-name>AxisServlet</servlet-name>
+        <servlet-class>
           org.apache.axis.transport.http.AxisServlet
-      </servlet-class>
+        </servlet-class>
     </servlet>
+
+    <!-- lzproject servlet -->
+    <servlet>
+        <servlet-name>UserRest</servlet-name>
+        <display-name>REST web service for user data</display-name>
+        <servlet-class>org.openlaszlo.lzproject.rest.UserRestController</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>ProjectRestController</servlet-name>
+        <display-name>REST web service for user data</display-name>
+        <servlet-class>org.openlaszlo.lzproject.rest.ProjectRestController</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>TaskRestController</servlet-name>
+        <display-name>REST web service for user data</display-name>
+        <servlet-class>org.openlaszlo.lzproject.rest.TaskRestController</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+       <servlet-name>ApplicationXMLRest</servlet-name>
+       <display-name>REST web service for application i18n</display-name>
+       <servlet-class>org.openlaszlo.lzproject.rest.ApplicationI18NController</servlet-class>
+       <load-on-startup>1</load-on-startup>
+    </servlet>
+
 
     <servlet-mapping>
         <servlet-name>LPS</servlet-name>
@@ -56,142 +108,58 @@
     </servlet-mapping>
 
     <servlet-mapping>
-      <servlet-name>AxisServlet</servlet-name>
-      <url-pattern>*.jws</url-pattern>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>*.jws</url-pattern>
     </servlet-mapping>
 
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
+    <!-- lzproject servlet mappings-->
+    <servlet-mapping>
+        <servlet-name>UserRest</servlet-name>
+        <url-pattern>/demos/lzproject/lzx/lzproject/rest/user/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProjectRestController</servlet-name>
+        <url-pattern>/demos/lzproject/lzx/lzproject/rest/project/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TaskRestController</servlet-name>
+        <url-pattern>/demos/lzproject/lzx/lzproject/rest/task/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApplicationXMLRest</servlet-name>
+       <url-pattern>/demos/lzproject/lzx/lzproject/rest/application/*</url-pattern>
+    </servlet-mapping>
 
+    <!-- Axis Mime Mappings -->
+    <!-- currently the W3C havent settled on a media type for WSDL;
+         http://www.w3.org/TR/2003/WD-wsdl12-20030303/#ietf-draft
+         for now we go with the basic 'it's XML' response -->
+    <mime-mapping>
+         <extension>wsdl</extension>
+         <mime-type>text/xml</mime-type>
+     </mime-mapping>
 
-<!-- The rest of this file is lzproject-specific entries -->
+     <mime-mapping>
+         <extension>xsd</extension>
+         <mime-type>text/xml</mime-type>
+     </mime-mapping>
 
-<!-- lzproject mappings -->
-   <filter>
-      <filter-name>I18NFilter</filter-name>
-      <display-name>Filter loading I18N message bundle</display-name>
-      <filter-class>org.openlaszlo.lzproject.i18n.I18NFilter</filter-class>
-   </filter>
-   <filter>
-      <filter-name>SecurityFilter</filter-name>
-      <display-name>This filter checks if the request is made to one of the protected web services, making sure, only authorized requests get through</display-name>
-      <filter-class>org.openlaszlo.lzproject.security.SecurityFilter</filter-class>
-   </filter>
+     <welcome-file-list>
+         <welcome-file>index.jsp</welcome-file>
+         <welcome-file>index.html</welcome-file>
+     </welcome-file-list>
 
-    <!--
-    To use non XDoclet filter-mappings, create a filter-mappings.xml file that
-    contains the additional filter-mappings and place it in your
-    project's merge dir.
-    -->
-   <filter-mapping>
-      <filter-name>I18NFilter</filter-name>
-      <url-pattern>/demos/lzproject/lzx/lzproject/rest/*</url-pattern>
-   </filter-mapping>
-   <filter-mapping>
-      <filter-name>SecurityFilter</filter-name>
-      <url-pattern>/demos/lzproject/lzx/lzproject/rest/*</url-pattern>
-   </filter-mapping>
+     <!-- To specify error pages, create a file named error-pages.xml, put it in your project's mergedir.
+          Organize error-pages.xml following this DTD slice:
+          <!ELEMENT error-page ((error-code | exception-type), location)>
+     -->
 
-    <!--
-    To use non XDoclet listeners, create a listeners.xml file that
-    contains the additional listeners and place it in your
-    project's merge dir.
-    -->
-
-   <servlet>
-      <servlet-name>UserRest</servlet-name>
-      <display-name>REST web service for user data</display-name>
-      <servlet-class>org.openlaszlo.lzproject.rest.UserRestController</servlet-class>
-
-      <load-on-startup>1</load-on-startup>
-
-   </servlet>
-   <servlet>
-      <servlet-name>ProjectRestController</servlet-name>
-      <display-name>REST web service for user data</display-name>
-      <servlet-class>org.openlaszlo.lzproject.rest.ProjectRestController</servlet-class>
-
-      <load-on-startup>1</load-on-startup>
-
-   </servlet>
-   <servlet>
-      <servlet-name>TaskRestController</servlet-name>
-      <display-name>REST web service for user data</display-name>
-      <servlet-class>org.openlaszlo.lzproject.rest.TaskRestController</servlet-class>
-
-      <load-on-startup>1</load-on-startup>
-
-   </servlet>
-   <servlet>
-      <servlet-name>ApplicationXMLRest</servlet-name>
-      <display-name>REST web service for application i18n</display-name>
-      <servlet-class>org.openlaszlo.lzproject.rest.ApplicationI18NController</servlet-class>
-
-      <load-on-startup>1</load-on-startup>
-
-   </servlet>
-
-   <servlet-mapping>
-      <servlet-name>UserRest</servlet-name>
-      <url-pattern>/demos/lzproject/lzx/lzproject/rest/user/*</url-pattern>
-   </servlet-mapping>
-   <servlet-mapping>
-      <servlet-name>ProjectRestController</servlet-name>
-      <url-pattern>/demos/lzproject/lzx/lzproject/rest/project/*</url-pattern>
-   </servlet-mapping>
-   <servlet-mapping>
-      <servlet-name>TaskRestController</servlet-name>
-      <url-pattern>/demos/lzproject/lzx/lzproject/rest/task/*</url-pattern>
-   </servlet-mapping>
-   <servlet-mapping>
-      <servlet-name>ApplicationXMLRest</servlet-name>
-      <url-pattern>/demos/lzproject/lzx/lzproject/rest/application/*</url-pattern>
-   </servlet-mapping>
-
-  <!-- Axis Mime Mappings -->
-
-  <!-- currently the W3C havent settled on a media type for WSDL;
-  http://www.w3.org/TR/2003/WD-wsdl12-20030303/#ietf-draft
-  for now we go with the basic 'it's XML' response -->
-  <mime-mapping>
-    <extension>wsdl</extension>
-    <mime-type>text/xml</mime-type>
-  </mime-mapping>
-
-  <mime-mapping>
-    <extension>xsd</extension>
-    <mime-type>text/xml</mime-type>
-  </mime-mapping>
-<!--
-* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
-* Use is subject to license terms.                                       *
-* X_LZ_COPYRIGHT_END *****************************************************
--->
-
-   <welcome-file-list>
-      <welcome-file>index.jsp</welcome-file>
-   </welcome-file-list>
-
-   <!--
-   To specify error pages, create a file named error-pages.xml, put it in your project's mergedir.
-   Organize error-pages.xml following this DTD slice:
-
-   <!ELEMENT error-page ((error-code | exception-type), location)>
-   -->
-
-    <taglib>
-    <taglib-uri>http://jakarta.apache.org/taglibs/i18n-1.0</taglib-uri>
-    <taglib-location>/WEB-INF/taglibs-i18n.tld</taglib-location>
-  </taglib>
-<!--
-* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
-* Use is subject to license terms.                                       *
-* X_LZ_COPYRIGHT_END *****************************************************
--->
+      
+     <!-- lzproject Apache I18N taglib -->
+     <taglib>
+         <taglib-uri>http://jakarta.apache.org/taglibs/i18n-1.0</taglib-uri>
+         <taglib-location>/WEB-INF/taglibs-i18n.tld</taglib-location>
+     </taglib>
 
    <!--
    To set up security settings for your web app, create a file named web-security.xml, put it in your project's mergedir.
@@ -215,3 +183,9 @@
 
 
 </web-app>
+<!--
+* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.         *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END *****************************************************
+-->
