@@ -103,21 +103,21 @@ var LzKeyboardKernel = {
             dirty = true;
         }
     
-        var meta = e['metaKey'];
-        if ((dh['meta'] != null) != meta) {
-            dh['meta'] = meta?224:null;
-            delta['meta'] = meta;
-            dirty = true;
-            // Is this a quirk?
-            delta['control'] = meta;
-            // look for stuck keys (see LPP-8210)
-            if (quirks['detectstuckkeys']) {
+        // look for stuck keys (see LPP-8210)
+        if (quirks['hasmetakey']) {
+            var meta = e['metaKey'];
+            if ((dh['meta'] != null) != meta) {
+                dh['meta'] = meta?224:null;
+                delta['meta'] = meta;
+                dirty = true;
+                // Is this a quirk?
+                delta['control'] = meta;
                 if (! meta) {
                     // If meta goes up, clear all the other keys
                     LzKeyboardKernel.__allKeysUp();
                     dirty = false;
                 }
-              }
+            }
         }
 
         if (dirty && send) {

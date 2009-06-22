@@ -514,7 +514,7 @@ LzSprite.prototype.quirks = {
     ,dom_breaks_focus: false
     ,inputtext_anonymous_div: false
     ,clipped_scrollbar_causes_display_turd: false
-    ,detectstuckkeys: false
+    ,hasmetakey: false
     ,textgrabsinputtextfocus: false
     ,input_highlight_bug: false
 
@@ -724,7 +724,7 @@ LzSprite.prototype.__updateQuirks = function () {
 
         if (browser.OS == 'Mac') {
             // see LPP-8210
-            quirks['detectstuckkeys'] = true;
+            quirks['hasmetakey'] = true;
         }
 
         // Adjust styles for quirks
