@@ -71,7 +71,7 @@ lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
       <text>
         <p><tagname>html</tagname> is a <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag> that displays HTML pages.</p> 
         
-        <p>For best results in Flash, set the wmode attribute to 'transparent' when embedding the application.  See lps/components/extensions/test/html-swf.jsp for an example.  See lps/components/extensions/test/html.lzx for an example of embedding <tagname>html</tagname> in a window.</p>
+        <p>For best results in Flash, set the wmode attribute to 'transparent' when embedding the application.  See examples/extensions/html-swf.jsp for an example.  See examples/extensions/html.lzx for an example of embedding <tagname>html</tagname> in a window.</p>
         
         <example><programlisting class="code">
 &lt;canvas&gt; 
