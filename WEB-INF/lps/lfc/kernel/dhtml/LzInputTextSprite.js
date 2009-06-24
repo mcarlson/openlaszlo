@@ -745,11 +745,18 @@ LzInputTextSprite.prototype.select = function (){
         this.__LzInputDiv.focus();
     } catch (err) {}
     LzInputTextSprite.prototype.__lastfocus = this;
-    setTimeout('LzInputTextSprite.prototype.__lastfocus.__LzInputDiv.select()', 50);
+    setTimeout(LzInputTextSprite.prototype.__selectLastFocused, 50);
     //this.__LzInputDiv.select();
     if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = false;
     //Debug.write('select', this.uid, LzKeyboardKernel.__cancelKeys);
 }
+
+LzInputTextSprite.prototype.__selectLastFocused = function () {
+    if (LzInputTextSprite.prototype.__lastfocus != null) {
+        LzInputTextSprite.prototype.__lastfocus.__LzInputDiv.select()
+    }
+}
+
 
 LzInputTextSprite.prototype.setSelection = function (start, end=null){
     if (end == null) { end = start; }
