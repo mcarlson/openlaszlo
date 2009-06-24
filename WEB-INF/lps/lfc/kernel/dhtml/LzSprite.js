@@ -517,7 +517,7 @@ LzSprite.prototype.quirks = {
     ,hasmetakey: false
     ,textgrabsinputtextfocus: false
     ,input_highlight_bug: false
-
+    ,autoscroll_textarea: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -720,11 +720,12 @@ LzSprite.prototype.__updateQuirks = function () {
                     quirks['text_height_includes_padding'] = true;
                 }
             }
+            quirks['autoscroll_textarea'] = true;
         }
 
         if (browser.OS == 'Mac') {
             // see LPP-8210
-            quirks['hasmetakey'] = true;
+            quirks['detectstuckkeys'] = true;
         }
 
         // Adjust styles for quirks

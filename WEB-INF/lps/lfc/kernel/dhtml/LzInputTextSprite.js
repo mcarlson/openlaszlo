@@ -17,6 +17,7 @@ var LzInputTextSprite = function(owner) {
     this.__LZdiv = document.createElement('div');
     this.__LZdiv.className = 'lzinputtextcontainer';
     this.__LZdiv.owner = this;
+    this.dragging = false;
     if (this.quirks.fix_clickable) {
         this.__LZclickcontainerdiv = document.createElement('div');
         this.__LZclickcontainerdiv.className = 'lzinputtextcontainer_click';
@@ -558,6 +559,16 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
 
     LzMouseKernel.__sendMouseMove(evt);
 
+    if (quirks.autoscroll_textarea) {
+      // Keep track of left button state for autoscrolling (LPP-8277)
+      if (eventname == 'onmousedown') {
+          sprite.dragging = true;
+      }
+      else if (eventname == 'onmouseup' || eventname == 'onmouseout') {
+          sprite.dragging = false;
+      }
+    }
+
     if (quirks.ie_mouse_events && eventname == 'onmouseleave') {
         eventname = 'onmouseout';
     }
@@ -619,6 +630,18 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
     } else if (eventname == 'onmouseout') {
         sprite.__setglobalclickable(true);
     } else if (eventname == 'onmousemove') {
+        if (quirks.autoscroll_textarea && sprite.dragging) {
+            // Simulate mouse scrolling naer the top and bottom (LPP-8277)
+            // (this is Firefox specific code)
+            var d = sprite.__LzInputDiv;
+            var y = evt.pageY - d.offsetTop;
+            if (y <= 3) {
+                d.scrollTop -= sprite.lineHeight ? sprite.lineHeight : 10;
+            }
+            if (y >= d.clientHeight-3) {
+                d.scrollTop += sprite.lineHeight ? sprite.lineHeight : 10;
+            }
+        }
         // don't forward 'onmousemove' to inputtextevent()
         return;
     } else if (eventname == 'onkeypress') {
@@ -700,12 +723,18 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
     if (view) {
         // Generate the event. onkeyup/onkeydown sent by lz.Keys.js
         if (eventname == 'onkeydown' || eventname == 'onkeyup') {
-            var v = sprite.__LzInputDiv.value;
+            var d = sprite.__LzInputDiv;
+            var v = d.value;
             if (v != sprite.text) {
                 sprite.text = v;
                 // Text changed, clear this cache!!!
                 sprite.__updatefieldsize();
                 view.inputtextevent('onchange', v);
+            }
+            if (quirks.autoscroll_textarea && eventname=='onkeydown' && d.selectionStart == v.length) {
+                // Text added at end. Make sure the text is shown. (LPP-8277)
+                // (The +20 is to make sure the last line is shown)
+                d.scrollTop = d.scrollHeight - d.clientHeight + 20;
             }
         } else {
             if (eventname == 'onmousedown') {
