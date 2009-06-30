@@ -194,7 +194,9 @@
             <method name="updateFocus">
                 this.sendAAEvent(0, EVENT_OBJECT_SELECTION);
                 this.sendAAEvent(0, EVENT_OBJECT_FOCUS);
-                Selection.setFocus(parent.getMCRef());
+                if ($as2) {
+                   Selection.setFocus(parent.getMCRef());
+                }
             </method>
         </state>
 

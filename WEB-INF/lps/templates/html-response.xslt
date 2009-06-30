@@ -134,7 +134,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
               <xsl:when test="/canvas/@runtime = 'dhtml'">
                 <div id="lzsplash" style="z-index: 10000000; top: 0; left: 0; width: {$canvaswidth}; height: {$canvasheight}; position: fixed; display: table"><p style="display: table-cell; vertical-align: middle;"><img src="{/canvas/request/@lps}/lps/includes/spinner.gif" style="display: block; margin: 20% auto"/></p></div>
                 <script type="text/javascript">
-                  lz.embed.dhtml({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=object<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>'});
+                  lz.embed.dhtml({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=object<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
                   lz.embed.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
                     var s = document.getElementById('lzsplash');
                     if (s) LzSprite.prototype.__discardElement(s);

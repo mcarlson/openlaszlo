@@ -180,7 +180,7 @@ var LzSprite = function(owner, isroot) {
         }
     }
 
-    if ($debug) {
+    if ($debug || this.capabilities.accessibility) {
         // annotate divs with sprite IDs, but don't override existing IDs!
         if (!this.__LZdiv.id) this.__LZdiv.id = 'sprite_' + this.uid;
         if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click_' + this.__LZdiv.id;
@@ -2414,17 +2414,26 @@ LzSprite.prototype.setAADescription = function( s ) {
   * @param Boolean accessible
   */
 LzSprite.prototype.setAccessible = function(accessible) {
-    // Not yet implemented
+    var a = LzBrowserKernel.isAAActive() && accessible;
+    LzSprite.__rootSprite.accessible = accessible;
 }
 
-
+    
 /**
- * Activate/inactivate children for accessibility
- * @param Boolean s: If true, activate the current view and all of its children
+ * @access private
+ * A cache of accessibility properties
  */
+LzSprite.prototype._accProps = null;
+    
+    
+/**
+* Activate/inactivate children for accessibility
+* @param Boolean s: If true, activate the current view and all of its children
+*/
 LzSprite.prototype.setAAActive = function( s ){
-    // Not yet implemented
+    this.__LzAccessibilityActive = s;
 }
+
 
 /**
   * Set accessibility silencing/unsilencing
@@ -2446,9 +2455,34 @@ LzSprite.prototype.setAAName = function( s ){
 
 
 /**
+  * Set the main sprite's div focus() so a screen reader will read it.
+  */
+LzSprite.prototype.aafocus = function( ){
+    try {
+        if  (this.__LZdiv != null) {
+            this.__LZdiv.focus();
+        }
+    } catch (e) {
+    }
+}
+
+/**
  * Set accessibility tab order
  * @param number s: The tab order index for this view.  Must be a unique number.
  */
 LzSprite.prototype.setAATabIndex = function( s ){
     // Not yet implemented
 }
+
+/**
+  * See view.sendAAEvent()
+  */
+LzSprite.prototype.sendAAEvent = function(childID, eventType, nonHTML){
+    try {
+        if  (this.__LZdiv != null) {
+            this.__LZdiv.focus();
+        }
+    } catch (e) {
+    }
+}
+
