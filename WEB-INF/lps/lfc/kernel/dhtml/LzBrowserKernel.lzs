@@ -181,7 +181,9 @@ static function getAppID() {
   * @return: True if a screen reader is active and the Flash player is focused
   */
 static function isAAActive (){
-    return (canvas.sprite.capabilities.accessibility);
+    // Not yet implemented;
+    Debug.warn("LzBrowserKernel.isAAActive not yet fully implemented");
+    return false;
 }
 
 

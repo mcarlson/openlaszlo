@@ -2414,7 +2414,8 @@ LzSprite.prototype.setAADescription = function( s ) {
   * @param Boolean accessible
   */
 LzSprite.prototype.setAccessible = function(accessible) {
-    var a = LzBrowserKernel.isAAActive() && accessible;
+    // TODO [hqm 2009-06] also need to check LzBrowserKernel.isAAActive() when it is working
+    var a = accessible;
     LzSprite.__rootSprite.accessible = accessible;
 }
 
