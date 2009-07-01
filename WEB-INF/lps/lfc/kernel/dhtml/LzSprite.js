@@ -329,7 +329,10 @@ LzSprite.prototype.__defaultStyles = {
         textIndent: '0px',
         // To match swf font metrics
         letterSpacing: '0.025em',
-        textDecoration: 'none'
+        textDecoration: 'none',
+        // CSS3 browsers, for swf compatibilty
+        wordWrap: 'break-word',
+        MsWordBreak: 'break-all'
     },
     lzinputtext: {
         fontFamily: 'Verdana,Vera,sans-serif',
@@ -364,7 +367,12 @@ LzSprite.prototype.__defaultStyles = {
         textIndent: '0px',
         // To match swf font metrics
         letterSpacing: '0.025em',
-        textDecoration: 'none'
+        textDecoration: 'none',
+        // CSS3 browsers, for swf compatibilty
+        wordWrap: 'break-word',
+        MsWordBreak: 'break-all',
+        outline: 'none',
+        resize: 'none'
     },
     lzswfinputtextmultiline: {
         fontFamily: 'Verdana,Vera,sans-serif',
@@ -384,7 +392,12 @@ LzSprite.prototype.__defaultStyles = {
         textIndent: '0px',
         // To match swf font metrics
         letterSpacing: '0.025em',
-        textDecoration: 'none'
+        textDecoration: 'none',
+        // CSS3 browsers, for swf compatibilty
+        wordWrap: 'break-word',
+        MsWordBreak: 'break-all',
+        outline: 'none',
+        resize: 'none'
     },
     lztextlink: {
         cursor: 'pointer'
