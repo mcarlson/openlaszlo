@@ -146,7 +146,8 @@
         
         <!--- @keywords private -->
         <method name="_setScroll"  > <![CDATA[
-            var svHeight = this.interior.content.subviews[0].height;
+            var sv0 = this.interior.content.subviews[0];
+            var svHeight = sv0 ? sv0.height : 20;
             var own_y = attachtarget.getAttributeRelative('y',canvas);
 
             var menuCapHeight = getMenuCapHeight();
