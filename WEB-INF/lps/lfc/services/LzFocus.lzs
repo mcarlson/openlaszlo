@@ -226,7 +226,9 @@ public dynamic final class LzFocusService extends LzEventable {
 
         // canvas.accessible && dhtml
         if ($dhtml && canvas.accessible) {
-            newsel.sprite.aafocus();
+            if (newsel && newsel.sprite != null) {
+                newsel.sprite.aafocus();
+            }
         }
 
         if (newsel && newsel.onfocus.ready) {
