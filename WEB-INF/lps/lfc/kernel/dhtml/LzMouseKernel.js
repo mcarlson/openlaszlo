@@ -187,8 +187,15 @@ var LzMouseKernel = {
         if (this.__resetonmouseover) {
             this.__resetonmouseover = false;
             this.setGlobalClickable(true);
+            var cs = this.__cachedSelection;
+            if (cs) {
+                var sprite = cs.s;
+                sprite.setSelection(cs.st, cs.st + cs.sz);
+                cs = null;
+            }
         }
     }
+    ,__cachedSelection: null
     ,setGlobalClickable: function (isclickable){
         //Debug.error('setGlobalClickable', isclickable, LzInputTextSprite.prototype.__lastfocus, LzInputTextSprite.prototype.__focusedSprite, LzInputTextSprite.prototype.__lastshown);
         if (! isclickable) {
@@ -196,6 +203,7 @@ var LzMouseKernel = {
             var lzinputproto = LzInputTextSprite.prototype;
             var lastshown = lzinputproto.__lastshown;
             if (lastshown) {
+                LzMouseKernel.__cachedSelection = {s: lastshown, st: lastshown.getSelectionPosition(), sz: lastshown.getSelectionSize()};
                 lastshown.__hide();
                 lzinputproto.__lastshown = null;
             }
