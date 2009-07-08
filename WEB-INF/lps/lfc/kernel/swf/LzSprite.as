@@ -24,7 +24,14 @@ var LzSprite = function(newowner, isroot) {
             is = _root.attachMovie('empty', 'spriteroot', 1000);
         }
         this.__LZmovieClipRef = is;
-        
+        if (LzSprite.prototype.quirks.swf_swallows_focus_events) {
+          is.attachMovie( LzSprite.prototype.__LZclickregion, "$mcB",
+                                        LzSprite.prototype.BUTTON_DEPTH, {_width: 0, _height: 0} );
+          if (debug) {
+              is.$mcB._dbg_name = 'default focus';
+          }
+          Selection.setFocus(is.$mcB);
+        }
         this.__LZsvdepth = 1;
     } else {
         this.__LZdepth = newowner.immediateparent.sprite.__LZsvdepth++;
@@ -49,6 +56,19 @@ LzSprite.prototype._dbg_name = function () {
                               ys, this.y)
 };
 }
+
+LzSprite.prototype.quirks = {
+    swf_swallows_focus_events: false
+}
+
+LzSprite.prototype.__updateQuirks = function () {
+    var quirks = this.quirks;
+    if (System.capabilities.os.indexOf('Win') == 0) {
+        quirks.swf_swallows_focus_events = true;
+    }
+}
+
+LzSprite.prototype.__updateQuirks();
 
 LzSprite.prototype.capabilities = {
     rotation: true

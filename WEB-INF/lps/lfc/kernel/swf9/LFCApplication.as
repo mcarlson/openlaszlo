@@ -59,6 +59,9 @@ public class LFCApplication {
         runToplevelDefinitions()
 
         if (Capabilities.playerType == "ActiveX") {
+            // Workaround for ActiveX control swallowing browser focus events
+            stage.addEventListener(Event.ACTIVATE, allKeysUp);
+
             // workaround for flash player bug FP-1355
             LFCApplication.textfieldTabEnabled = true;
             stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, preventFocusChange);
@@ -75,6 +78,10 @@ public class LFCApplication {
         LzMouseKernel.initCursor();
 
         LzKeyboardKernel.setCallback(lz.Keys, '__keyEvent');
+    }
+
+    private function allKeysUp(event:Event):void {
+        lz.Keys.__allKeysUp('flash activate');
     }
 
     private function preventFocusChange(event:FocusEvent):void {

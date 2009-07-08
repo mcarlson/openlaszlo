@@ -58,10 +58,32 @@ var LzKeyboardKernel = {
     ,__codes: {16: 'shift', 17: 'control', 18: 'alt'}
     ,__callback: null
     ,__scope: null
+    ,__listeneradded: false
     ,setCallback: function (scope, funcname) {
         this.__scope = scope;
         this.__callback = funcname;
-    }    
+        if (LzSprite.prototype.quirks.swf_swallows_focus_events) {
+          // Enable focus on sprite root so we can receive onfocus
+          // events in IE when the browser window does
+          if (this.__listeneradded == false) {
+            var listener = {
+            onSetFocus: function (o, n) {
+                if ((o == null) || (n == null)) {
+                  var how = '';
+//                   if ($debug) {
+//                     how = Debug.formatToString("focus %#w -> %#w", o, n);
+//                   }
+                  lz.Keys.__allKeysUp(how);
+//                 } else if ($debug) {
+//                   Debug.debug("focus %#w -> %#w", o, n);
+                }
+              }
+            }
+            Selection.addListener(listener);
+            this.__listeneradded = true;
+          }
+        }
+    }
     // Called by lz.embed when the browser window regains focus
     ,__allKeysUp: function () {
         var delta = {};

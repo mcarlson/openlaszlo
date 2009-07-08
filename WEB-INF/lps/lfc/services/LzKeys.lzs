@@ -149,7 +149,10 @@ public final class LzKeysService extends LzEventable {
      * Trampoline so we can call from lz.embed
      * @access private
      */
-    function __allKeysUp ():void {
+    function __allKeysUp (how='unknown'):void {
+//       if ($debug) {
+//         Debug.debug("[%6.2f] __allKeysUp: %s", (new Date).getTime() % 1000000, how);
+//       }
       LzKeyboardKernel.__allKeysUp();
     }
 
