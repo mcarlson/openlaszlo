@@ -690,7 +690,9 @@ lz.embed = {
     }
     ,/** @access private */
     _sendAllKeysUpSWF: function (how='unknown') {
-        this.callMethod("lz.Keys.__allKeysUp(" + how + ")");
+//         if (how is Event) { how = 'event'; }
+//         this.callMethod("lz.Keys.__allKeysUp(" + how + ")");
+        this.callMethod("lz.Keys.__allKeysUp()");
     }
     ,/** @access private */
     _sendAllKeysUpDHTML: function (how='unknown') {
