@@ -1,0 +1,11 @@
+<canvas>
+    <html src="select.html" width="500" height="500" 
+          onclick="Debug.write('got click on html component')"
+          onmousedown="Debug.write('got mousedown on html component')"
+          />
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -476,7 +476,7 @@ LzSprite.prototype.quirks = {
     ,fix_ie_clickable: false
     ,ie_alpha_image_loader: false
     ,ie_leak_prevention: false
-    ,ie_prevent_selection: false
+    ,prevent_selection: false
     ,ie_elementfrompoint: false
     ,invisible_parent_image_sizing_fix: false
     ,emulate_flash_font_metrics: true
@@ -575,7 +575,7 @@ LzSprite.prototype.__updateQuirks = function () {
                 // prevent duplicate image loads - see http://support.microsoft.com/?scid=kb;en-us;823727&spid=2073&sid=global and http://misterpixel.blogspot.com/2006/09/forensic-analysis-of-ie6.html
                 quirks['ie6_improve_memory_performance'] = true;
             } else {
-                quirks['ie_prevent_selection'] = true;
+                quirks['prevent_selection'] = true;
                 quirks['invisible_parent_image_sizing_fix'] = true;
                 if (browser.osversion >= 6) {
                     // IE7 on Vista (osversion=6) needs the alpha image loader
@@ -1195,6 +1195,7 @@ LzSprite.prototype.__setClickable = function(c, div) {
 LzSprite.prototype.__clickDispatcher = function(e) {
     // capture events in IE
     if (!e) e = window.event;
+
     this.owner.__mouseEvent(e);
     return false;
 }
@@ -1212,10 +1213,8 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         if (LzKeyboardKernel && LzKeyboardKernel['__updateControlKeys']) {
             LzKeyboardKernel.__updateControlKeys(e);
 
-            // FIXME: [20090602 anba] this prevents text selection, see LPP-8200
             if (LzKeyboardKernel.__cancelKeys && e.keyCode == 0) {
-                e.cancelBubble = true;
-                e.returnValue = false;
+                  e.cancelBubble = true;
             }
         }
     }
@@ -1248,7 +1247,6 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         e.cancelBubble = true;
         this.__mouseisdown = true;
         LzMouseKernel.__lastMouseDown = this;
-
     } else if (eventname == 'onmouseup') {
         e.cancelBubble = false;
         // only send the event if this is same sprite the mouse button went down on
@@ -2474,6 +2472,7 @@ LzSprite.prototype.setAAName = function( s ){
 LzSprite.prototype.aafocus = function( ){
     try {
         if  (this.__LZdiv != null) {
+            this.__LZdiv.blur();
             this.__LZdiv.focus();
         }
     } catch (e) {

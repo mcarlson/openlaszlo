@@ -265,7 +265,7 @@ LzInputTextSprite.prototype.__show = function() {
     //Debug.warn('__show', this.owner);
     // turn on text selection in IE
     // can't use lz.embed.attachEventHandler because we need to cancel events selectively
-    if (lz.embed.browser.isIE) {
+    if (LzSprite.prototype.quirks.prevent_selection) {
         //this.__LZdiv.onselectstart = null;
         this.__LZdiv.onselectstart = null;
     }
@@ -368,7 +368,7 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
     // turn off text selection in IE
     // can't use lz.embed.attachEventHandler because we need to cancel events selectively
     if (LzInputTextSprite.prototype.__lastshown == null) {
-        if (lz.embed.browser.isIE) {
+        if (LzSprite.prototype.quirks.prevent_selection) {
             this.__LZdiv.onselectstart = LzTextSprite.prototype.__cancelhandler
         }
     }
@@ -1126,7 +1126,7 @@ LzInputTextSprite.findSelection = function ( ){
 // prevent text selection in IE
 // can't use lz.embed.attachEventHandler because we need to cancel events
 
-if (LzSprite.prototype.quirks.ie_prevent_selection) {
+if (LzSprite.prototype.quirks.prevent_selection) {
     document.onselectstart = function () {
         var src = window.event.srcElement;
         if (src.owner instanceof LzTextSprite) {
