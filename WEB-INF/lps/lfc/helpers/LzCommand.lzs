@@ -53,8 +53,20 @@ var active = true;
 var keys = null;
 /** @access private */
 function $lzc$set_key(k) {
+    var oldKeys = this.keys;
+    if (oldKeys) {
+      lz.Keys.removeKeyComboCall(this, oldKeys);
+    }
     this.keys = k;
     lz.Keys.callOnKeyCombo( this , k );
+}
+
+override function destroy () {
+    var oldKeys = this.keys;
+    if (oldKeys) {
+      lz.Keys.removeKeyComboCall(this, oldKeys);
+    }
+    super.destroy();
 }
 
 /**
