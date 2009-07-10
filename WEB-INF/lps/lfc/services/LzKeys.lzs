@@ -212,10 +212,15 @@ public final class LzKeysService extends LzEventable {
         var dkhash:Object = this.downKeysHash;
         var isDown:Boolean = dkhash[ kC ];
         delete dkhash[ kC ];
+        var dkeys:Array = this.downKeysArray;
+        // Avoid allocating a new array for each keystroke
+        dkeys.length = 0;
 
         if ($dhtml) {
             // not necessary for DHTML
         } else {
+            // TODO: [2009-07-10 ptw] This should be in the kernel,
+            // controlled by a quirk, not here in the generic code
             // LPP-7012 we don't get a key up from the 'v' in a command-v sequence on the mac.
             // Workaround is to send all keys up when we see a 'command' (control) key-up event.
             // (Only required for Flash)
@@ -233,9 +238,7 @@ public final class LzKeysService extends LzEventable {
                 return;
             }
         }
-        var dkeys:Array = this.downKeysArray;
-        // Avoid allocating a new array for each keystroke
-        dkeys.length = 0;
+
         // update downKeysArray before sending onkeyup-event
         for (var k:String in dkhash) {
             dkeys.push( k );
