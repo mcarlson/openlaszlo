@@ -134,16 +134,17 @@ public final class LzIdleService extends LzEventable {
      * @access private
      */
     function removeCallIdleDelegates (t:*) :void {
-        var arr:Array = this.coi;
-        this.coi = new Array;
-        //call in order
+        // Work on a copy so this is not seen as a leak
+        var arr:Array = this.coi.slice(0);
+        this.coi.length = 0;
+        // Call in order after emptying array, since delegates may add
+        // to array
         for (var i:int = 0; i < arr.length; i++) {
             arr[i].execute( t );
         }
-
+        // Note that the executed items may have added to the (new)
+        // coi queue, only unregister if the queue is empty
         if (this.coi.length == 0) {
-            // Note that the executed items may have added to the (new)
-            // coi queue, only unregister if the queue is empty
             this.removeCOI.unregisterFrom(this.onidle);
             this.regNext = false;
         }

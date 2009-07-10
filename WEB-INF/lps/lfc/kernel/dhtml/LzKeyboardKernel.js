@@ -132,18 +132,20 @@ var LzKeyboardKernel = {
     }
     // Called by lz.embed when the browser window regains focus
     ,__allKeysUp: function () {
-        var delta = {};
+        var delta = null;
         var stuck = false;
-        var keys;
+        var keys = null;
         var dh = LzKeyboardKernel.__downKeysHash;
         for (var key in dh) {
           if (dh[key] != null) {
             stuck = true;
+            if (! delta) { delta = {}; }
             delta[key] = false;
             if (key.length == 1) {
               if (! keys) { keys = []; }
               keys.push(dh[key]);
             }
+            dh[key] = null;
           }
         }
 //         Debug.info("[%6.2f] All keys up: %w, %w", (new Date).getTime() % 1000000, delta, keys);

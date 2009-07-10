@@ -210,7 +210,6 @@ public final class LzKeysService extends LzEventable {
     function gotKeyUp (kC:Number) :void {
         //Debug.write('gotKeyUp', kC);
         var dkhash:Object = this.downKeysHash;
-        var dkeys:Array = this.downKeysArray = [];
         var isDown:Boolean = dkhash[ kC ];
         delete dkhash[ kC ];
 
@@ -234,6 +233,9 @@ public final class LzKeysService extends LzEventable {
                 return;
             }
         }
+        var dkeys:Array = this.downKeysArray;
+        // Avoid allocating a new array for each keystroke
+        dkeys.length = 0;
         // update downKeysArray before sending onkeyup-event
         for (var k:String in dkhash) {
             dkeys.push( k );

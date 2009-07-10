@@ -51,15 +51,17 @@ class LzKeyboardKernel {
 
     // Called by lz.embed when the browser window regains focus
     static function __allKeysUp () {
-        var delta = {};
+        var delta = null;
         var stuck = false;
-        var keys;
+        var keys = null;
         for (var key in __keyState) {
           if (__keyState[key] != null) {
             stuck = true;
+            if (! delta) { delta = {}; }
             delta[key] = false;
             if (! keys) { keys = []; }
             keys.push(__keyState[key]);
+            __keyState[key] = null;
           }
         }
 //         Debug.info("[%6.2f] All keys up: %w", (new Date).getTime() % 1000000, delta);
@@ -70,7 +72,6 @@ class LzKeyboardKernel {
             __scope[__callback](delta, keys[i], 'onkeyup');
           }
         }
-        __keyState = {};
     }
 
     // Called by lz.Keys when the last focusable element was reached.

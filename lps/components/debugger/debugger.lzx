@@ -245,47 +245,47 @@
       <![CDATA[
       this.bringToFront();
       if (this.bottom.center.input.height > this.smallInputAreaHeight) {
-        _dbg_cmd_eval.active = false;
-        _dbg_cmd_hist_prev.active = false;
-        _dbg_cmd_hist_next.active = false;
-        _dbg_cmd_complete_tab.active = false;
-//         _dbg_cmd_complete_dot.active = false;
-//         _dbg_cmd_complete_bracket.active = false;
-//         _dbg_cmd_complete_paren.active = false;
+        this._cmd_eval.active = false;
+        this._cmd_hist_prev.active = false;
+        this._cmd_hist_next.active = false;
+        this._cmd_complete_tab.active = false;
+//         this._cmd_complete_dot.active = false;
+//         this._cmd_complete_bracket.active = false;
+//         this._cmd_complete_paren.active = false;
       } else {
-        _dbg_cmd_eval.active = true;
-        _dbg_cmd_hist_prev.active = true;
-        _dbg_cmd_hist_next.active = true;
-        _dbg_cmd_complete_tab.active = true;
-//         _dbg_cmd_complete_dot.active = true;
-//         _dbg_cmd_complete_bracket.active = true;
-//         _dbg_cmd_complete_paren.active = true;
+        this._cmd_eval.active = true;
+        this._cmd_hist_prev.active = true;
+        this._cmd_hist_next.active = true;
+        this._cmd_complete_tab.active = true;
+//         this._cmd_complete_dot.active = true;
+//         this._cmd_complete_bracket.active = true;
+//         this._cmd_complete_paren.active = true;
       }
       ]]>
     </method>
 
 <method name="handleBlur">
        <![CDATA[
-       _dbg_cmd_eval.active = false;
-       _dbg_cmd_hist_prev.active = false;
-       _dbg_cmd_hist_next.active = false;
-       _dbg_cmd_complete_tab.active = false;
-//        _dbg_cmd_complete_dot.active = false;
-//        _dbg_cmd_complete_bracket.active = false;
-//        _dbg_cmd_complete_paren.active = false;
+       this._cmd_eval.active = false;
+       this._cmd_hist_prev.active = false;
+       this._cmd_hist_next.active = false;
+       this._cmd_complete_tab.active = false;
+//        this._cmd_complete_dot.active = false;
+//        this._cmd_complete_bracket.active = false;
+//        this._cmd_complete_paren.active = false;
        ]]>
     </method>
 
 
     <!-- *** Commands *** -->
-    <command id="_dbg_cmd_eval" onselect="parent.doEval()"  key="['Enter']" active="false"/>
-    <command id="_dbg_cmd_hist_prev" onselect="parent.doCommandHistory(-1)"  key="['uparrow']" active="false"/>
-    <command id="_dbg_cmd_hist_next" onselect="parent.doCommandHistory(1)"  key="['downarrow']" active="false"/>        
-    <command id="_dbg_cmd_complete_tab" onselect="parent.doCommandCompletion('\t')"  key="['tab']" active="false"/>        
+    <command name="_cmd_eval" onselect="parent.doEval()"  key="['Enter']" active="false"/>
+    <command name="_cmd_hist_prev" onselect="parent.doCommandHistory(-1)"  key="['uparrow']" active="false"/>
+    <command name="_cmd_hist_next" onselect="parent.doCommandHistory(1)"  key="['downarrow']" active="false"/>
+    <command name="_cmd_complete_tab" onselect="parent.doCommandCompletion('\t')"  key="['tab']" active="false"/>
     <?broken
-    <command id="_dbg_cmd_complete_dot" onselect="parent.doCommandCompletion('.')"  key="['.']" active="false"/>        
-    <command id="_dbg_cmd_complete_bracket" onselect="parent.doCommandCompletion('[')"  key="['[']" active="false"/>        
-    <command id="_dbg_cmd_complete_paren" onselect="parent.doCommandCompletion('(')"  key="['(']" active="false"/>        
+    <command name="_cmd_complete_dot" onselect="parent.doCommandCompletion('.')"  key="['.']" active="false"/>
+    <command name="_cmd_complete_bracket" onselect="parent.doCommandCompletion('[')"  key="['[']" active="false"/>
+    <command name="_cmd_complete_paren" onselect="parent.doCommandCompletion('(')"  key="['(']" active="false"/>
     ?>
     <!--- Substitute entity character escapes for HTML meta-characters  -->
 <method name="escapeText" args="ts" >

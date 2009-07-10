@@ -2,7 +2,7 @@
 
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -55,7 +55,8 @@ Debug.loopElapsed = 0;
 Debug.mark = function (o) {
   // We can't trace things that don't support hasOwnProperty
   if  ((! o) ||
-      (! (typeof o == 'object')) ||
+       // 'movieclip' is for as2
+       (! ((typeof o == 'object') || (typeof o == 'movieclip'))) || 
       (! (typeof o['hasOwnProperty'] == 'function'))) {
     if (this.debugTrace) {
       console.log('Not marking %s\n', o);
@@ -87,7 +88,8 @@ Debug.mark = function (o) {
 Debug.isMarked = function (o) {
   // We can't trace things that don't support hasOwnProperty
   if ((! o) ||
-      (! (typeof o == 'object')) ||
+      // 'movieclip' is for as2
+      (! ((typeof o == 'object') || (typeof o == 'movieclip'))) ||
       (! (typeof o['hasOwnProperty'] == 'function'))) {
     if (this.debugTrace) {
       console.log('Not tracing %s\n', o);
@@ -421,6 +423,10 @@ Debug.initTrace = function (findLeaks=false, noteWhy=false) {
   }
   if ('___' in global) {
     this.mark(global.___);
+  }
+  // If the browser has a console, don't trace it
+  if ('console' in global) {
+    this.mark(global.console);
   }
 
   // Create the initial obstack element: global
