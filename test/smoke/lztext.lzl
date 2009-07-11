@@ -181,16 +181,20 @@
                assertEquals(this.dateString, (textFormatTest.format('%w', this.date), textFormatTest.text));
                assertEquals(this.dateString.substring(0, 5), (textFormatTest.format('%.5s', this.date), textFormatTest.text));
 //                assertEquals(this.dateString.substring(0, 5), (textFormatTest.format('%.5w', this.date), textFormatTest.text));
-               assertEquals(this.dateString, (textFormatTest.format('%30s', this.date), textFormatTest.text));
-               assertEquals(this.dateString, (textFormatTest.format('%30w', this.date), textFormatTest.text));
+               assertEquals('                                        '.substring(0,40-this.dateString.length) + this.dateString,
+                            (textFormatTest.format('%40s', this.date), textFormatTest.text));
+               assertEquals('                                        '.substring(0,40-this.dateString.length) + this.dateString,
+                            (textFormatTest.format('%40w', this.date), textFormatTest.text));
                assertEquals('                         '+this.dateString.substring(0, 5), (textFormatTest.format('%30.5s', this.date), textFormatTest.text));
 //                assertEquals('                         '+this.dateString.substring(0, 5), (textFormatTest.format('%30.5w', this.date), textFormatTest.text));
                assertEquals(this.dateString, (textFormatTest.format('%-s', this.date), textFormatTest.text));
                assertEquals(this.dateString, (textFormatTest.format('%-w', this.date), textFormatTest.text));
                assertEquals(this.dateString.substring(0, 5), (textFormatTest.format('%-.5s', this.date), textFormatTest.text));
 //                assertEquals(this.dateString.substring(0, 5), (textFormatTest.format('%-.5w', this.date), textFormatTest.text));
-               assertEquals(this.dateString, (textFormatTest.format('%-30s', this.date), textFormatTest.text));
-               assertEquals(this.dateString, (textFormatTest.format('%-30w', this.date), textFormatTest.text));
+               assertEquals(this.dateString + '                                        '.substring(0,40-this.dateString.length),
+                            (textFormatTest.format('%-40s', this.date), textFormatTest.text));
+               assertEquals(this.dateString + '                                        '.substring(0,40-this.dateString.length),
+                            (textFormatTest.format('%-40w', this.date), textFormatTest.text));
                assertEquals(this.dateString.substring(0, 5)+'                         ', (textFormatTest.format('%-30.5s', this.date), textFormatTest.text));
 //                assertEquals(this.dateString.substring(0, 5)+'                         ', (textFormatTest.format('%-30.5w', this.date), textFormatTest.text));
                assertEquals('3.141592653589', (textFormatTest.format('%.14s', Math.PI), textFormatTest.text));

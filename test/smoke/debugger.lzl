@@ -3,12 +3,7 @@
   <class name="TestDebugger" extends="TestCase">
     <method name="setUp">
       <![CDATA[
-             // SWF6 can't handle a date this far in the past.
-             if (canvas.runtime < "swf7") {
-                 this.date = new Date();
-             } else {
-                 this.date = new Date(Date.UTC(1969, 6, 20, 20, 17, 40, 0));
-             }
+             this.date = new Date(Date.UTC(1969, 6, 20, 20, 17, 40, 0));
              this.dateString = this.date.toString();
              this.array = [1, 2, 3];
              this.object = {one: 1, two: 'too', 3: 'three'};
@@ -168,16 +163,20 @@
                assertEquals(this.dateString, Debug.formatToString('%w', this.date));
                assertEquals(this.dateString.substring(0, 5), Debug.formatToString('%.5s', this.date));
 //                assertEquals(this.dateString.substring(0, 5), Debug.formatToString('%.5w', this.date));
-               assertEquals(this.dateString, Debug.formatToString('%30s', this.date));
-               assertEquals(this.dateString, Debug.formatToString('%30w', this.date));
+               assertEquals('                                        '.substring(0,40-this.dateString.length) + this.dateString,
+                            Debug.formatToString('%40s', this.date));
+               assertEquals('                                        '.substring(0,40-this.dateString.length) + this.dateString,
+                            Debug.formatToString('%40w', this.date));
                assertEquals('                         '+this.dateString.substring(0, 5), Debug.formatToString('%30.5s', this.date));
 //                assertEquals('                         '+this.dateString.substring(0, 5), Debug.formatToString('%30.5w', this.date));
                assertEquals(this.dateString, Debug.formatToString('%-s', this.date));
                assertEquals(this.dateString, Debug.formatToString('%-w', this.date));
                assertEquals(this.dateString.substring(0, 5), Debug.formatToString('%-.5s', this.date));
 //                assertEquals(this.dateString.substring(0, 5), Debug.formatToString('%-.5w', this.date));
-               assertEquals(this.dateString, Debug.formatToString('%-30s', this.date));
-               assertEquals(this.dateString, Debug.formatToString('%-30w', this.date));
+               assertEquals(this.dateString + '                                        '.substring(0,40-this.dateString.length),
+                            Debug.formatToString('%-40s', this.date));
+               assertEquals(this.dateString + '                                        '.substring(0,40-this.dateString.length),
+                            Debug.formatToString('%-40w', this.date));
                assertEquals(this.dateString.substring(0, 5)+'                         ', Debug.formatToString('%-30.5s', this.date));
 //                assertEquals(this.dateString.substring(0, 5)+'                         ', Debug.formatToString('%-30.5w', this.date));
                assertEquals('3.141592653589', Debug.formatToString('%.14s', Math.PI));
