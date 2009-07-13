@@ -685,20 +685,18 @@ lz.embed = {
         if (d != null) this.callMethod("lz.Keys.__mousewheelEvent(" + d + ")"); 
     }
     ,/** @access private */
-    _gotFocus: function(how='unknown') {
-        lz.embed._broadcastMethod('_sendAllKeysUp', how);
+    _gotFocus: function() {
+        lz.embed._broadcastMethod('_sendAllKeysUp');
     }
     ,/** @access private */
-    _sendAllKeysUpSWF: function (how='unknown') {
-//         if (how is Event) { how = 'event'; }
-//         this.callMethod("lz.Keys.__allKeysUp(" + how + ")");
+    _sendAllKeysUpSWF: function () {
         this.callMethod("lz.Keys.__allKeysUp()");
     }
     ,/** @access private */
-    _sendAllKeysUpDHTML: function (how='unknown') {
+    _sendAllKeysUpDHTML: function () {
         // How to deal with multiple DHTML apps on a page?
         if (lz['Keys'] && lz.Keys['__allKeysUp']) {
-            lz.Keys.__allKeysUp(how);
+            lz.Keys.__allKeysUp();
         }
     }
     ,/** @access private */
@@ -876,11 +874,9 @@ lz.embed.browser.init();
 lz.embed.attachEventHandler(window, 'beforeunload', lz.embed, '_cleanupHandlers');
 
 // Notice that you got focus
+lz.embed.attachEventHandler(window, 'focus', lz.embed, '_gotFocus');
 if (lz.embed.browser.isIE) {
-  // attachEventHandler does not work for IE?
-  document.onfocusin = function () { lz.embed._gotFocus('document focusin'); }
-} else {
-  lz.embed.attachEventHandler(window, 'focus', lz.embed, '_gotFocus');
+  lz.embed.attachEventHandler(window, 'activate', lz.embed, '_gotFocus');
 }
 
 // for backward compatibility
