@@ -169,15 +169,15 @@
 
         this._urldel = new LzDelegate( this, "_setPlayStream", 
                                         this.stream, "onplaying")
+        if (this.url) {
+            this._updateStreamUrl();
+        }
         if (this.stream.playing || this.stream.type == 'http') {
             // show poster frame now for http streams
             if (!this.stream.playing && this.starttime != -1) {
                 this.stream.seek(this.starttime);
             }
             this._setPlayStream();
-        }
-        if (this.url) {
-            this._updateStreamUrl();
         }
 
         if (this.cam) {
