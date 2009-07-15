@@ -231,9 +231,6 @@ LzSprite.prototype.__defaultStyles = {
     lzclickdiv: {
         position: 'absolute'
     },
-    lzinputclickdiv: {
-        position: 'absolute'
-    },
     lzcanvasdiv: {
         position: 'absolute'
     },
@@ -249,7 +246,10 @@ LzSprite.prototype.__defaultStyles = {
         paddingTop: '2px',
         paddingRight: '2px',
         paddingBottom: '2px',
-        paddingLeft: '2px'
+        paddingLeft: '2px',
+        // By default our text is not selectable, so we don't want an
+        // 'auto' cursor
+        cursor: 'default'
     },
     // TODO [hqm 2009-04] This is a duplicate of lztextcontainer
     // above, but without overflow='hidden', as a fix for
@@ -263,7 +263,10 @@ LzSprite.prototype.__defaultStyles = {
         paddingTop: '2px',
         paddingRight: '2px',
         paddingBottom: '2px',
-        paddingLeft: '2px'
+        paddingLeft: '2px',
+        // By default our text is not selectable, so we don't want an
+        // 'auto' cursor
+        cursor: 'default'
     },
     lzinputtextcontainer: {
         position: 'absolute',

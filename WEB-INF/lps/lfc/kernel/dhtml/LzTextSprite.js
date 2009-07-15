@@ -543,6 +543,7 @@ LzTextSprite.prototype.setSelectable = function (s) {
     var browser = lz.embed.browser;
 
     if (s) {
+        this.__LZdiv.style['cursor'] = 'auto';
         if (browser.isIE) {
             this.__LZdiv.onselectstart = null;
         } else if (browser.isFirefox) {
@@ -552,7 +553,8 @@ LzTextSprite.prototype.setSelectable = function (s) {
         } else {
             this.__LZdiv.style['UserSelect'] = 'text';
         }
-    } else {    
+    } else {
+        delete this.__LZdiv.style['cursor'];
         if (browser.isIE) {
             this.__LZdiv.onselectstart = LzTextSprite.prototype.__cancelhandler;
         } else if (browser.isFirefox) {
