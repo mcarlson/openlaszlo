@@ -138,11 +138,11 @@ lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
     ]]>
     </setter>
 
-    <!--- Sets the view to listen to for x/y/width/height change events.
+    <!--- Sets the view to listen to for x/y/width/height change events.  Defaults to this.parent.
           @type LzView
           @access public
     -->
-    <attribute name="target" value="null"/>
+    <attribute name="target" value="${this.parent}"/>
     <!--- Sets the name/target of the html iframe.
           @type String
           @access public
@@ -205,9 +205,6 @@ lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
 
     <!--- @access private -->
     <handler name="oninit">
-        if (this['target'] == null) {
-            this.setAttribute('target', this.parent);
-        }
         if ($dhtml) {
             var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars, this.sprite.__LZdiv, 0, canvas);
         } else {
