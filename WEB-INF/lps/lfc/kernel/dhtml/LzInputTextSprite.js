@@ -46,6 +46,7 @@ LzInputTextSprite.prototype._dbg_typename = 'LzInputTextSprite';
 LzInputTextSprite.prototype.__lastshown = null;
 LzInputTextSprite.prototype.__focusedSprite = null;
 LzInputTextSprite.prototype.__lastfocus = null;
+LzInputTextSprite.prototype._cancelfocus = LzInputTextSprite.prototype._cancelblur = false;
 
 LzInputTextSprite.prototype.____crregexp = new RegExp('\\r\\n', 'g');
 
@@ -374,13 +375,21 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
     }
 }
 
+// called by the LFC focus manager
 LzInputTextSprite.prototype.gotBlur = function() {
+    if (this.quirks.dom_breaks_focus) {
+        this._cancelfocus = this._cancelblur = false;
+    }
     if (LzInputTextSprite.prototype.__focusedSprite != this) return;
     //Debug.write('blur', this.uid, LzKeyboardKernel.__cancelKeys);
     this.deselect();
 }
 
+// called by the LFC focus manager
 LzInputTextSprite.prototype.gotFocus = function() {
+    if (this.quirks.dom_breaks_focus) {
+        this._cancelfocus = this._cancelblur = false;
+    }
     if (LzInputTextSprite.prototype.__focusedSprite == this) return;
     //Debug.write('focus', this.uid, LzKeyboardKernel.__cancelKeys);
     this.select();
