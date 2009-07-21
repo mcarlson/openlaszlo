@@ -554,7 +554,7 @@ LzTextSprite.prototype.setSelectable = function (s) {
             this.__LZdiv.style['UserSelect'] = 'text';
         }
     } else {
-        delete this.__LZdiv.style['cursor'];
+        this.__LZdiv.style['cursor'] = '';
         if (browser.isIE) {
             this.__LZdiv.onselectstart = LzTextSprite.prototype.__cancelhandler;
         } else if (browser.isFirefox) {
