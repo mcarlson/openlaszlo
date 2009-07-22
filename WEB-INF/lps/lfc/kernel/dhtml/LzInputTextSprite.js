@@ -343,9 +343,13 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
         // be a child of the clickable view.
 
         this.__setglobalclickable(true);
-        this.__LzInputDiv = this.__LZclickcontainerdiv.removeChild(this.__LzInputDiv);
+        if (this.__LzInputDiv.parentNode == this.__LZclickcontainerdiv) {
+            this.__LzInputDiv = this.__LZclickcontainerdiv.removeChild(this.__LzInputDiv);
+        }
     } else {
-        this.__LzInputDiv = this.__LZinputclickdiv.removeChild(this.__LzInputDiv);
+        if (this.__LzInputDiv.parentNode == this.__LZinputclickdiv) {
+            this.__LzInputDiv = this.__LZinputclickdiv.removeChild(this.__LzInputDiv);
+        }
     }
     this.__LZdiv.appendChild(this.__LzInputDiv);
     //Debug.warn('__hide', this.owner);
