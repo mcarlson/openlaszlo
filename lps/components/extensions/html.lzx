@@ -60,7 +60,13 @@ lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
     lz.Browser.callJS('lz.embed.iframemanager.setSendMouseEvents', null, id, send);
 }
 
-
+lz.embed.iframemanager.setShowNativeContextMenu = function(id, show, showwarning) {
+    <![CDATA[
+    if ($debug && showwarning) {
+        Debug.warn("The shownativecontextmenu attribute won't work in runtimes other than dhtml.");
+    }
+    ]]>
+}
 </script>
 </otherwise>
 </switch>
@@ -121,7 +127,7 @@ lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
           @access number
     -->
     <attribute name="minimumwidth" type="number" value="0"/>
-    <!--- If true, attempt to listen for mouse events on the iframe
+    <!--- If true, attempt to listen for mouse events on the iframe.  Cross-domain security restrictions apply, so if the content loaded in the iframe is from a different domain, mouse events won't be sent.
           @type Boolean
           @access boolean
     -->
@@ -137,7 +143,22 @@ lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
         if (this['onmouseevents'] && this.onmouseevents.ready) this.onmouseevents.sendEvent(send);
     ]]>
     </setter>
-
+    <!--- If true, show native context menus in the iframe.  Otherwise, show OpenLaszlo context menus.  Note that this only works in DHTML because it's not possible to programatically display a context menu in Flash.
+          @type Boolean
+          @access boolean
+    -->
+    <attribute name="shownativecontextmenu" type="boolean" value="true"/>
+    <setter name="shownativecontextmenu" args="show">
+    <![CDATA[
+        this.shownativecontextmenu = show;
+        if (this['iframeid']) {
+            lz.embed.iframemanager.setShowNativeContextMenu(this.iframeid, show, true);
+        } else {
+            this.__shownativecontextmenu = show;
+        }
+        if (this['onshownativecontextmenu'] && this.onshownativecontextmenu.ready) this.onshownativecontextmenu.sendEvent(show);
+    ]]>
+    </setter>
     <!--- Sets the view to listen to for x/y/width/height change events.  Defaults to this.parent.
           @type LzView
           @access public
@@ -243,6 +264,7 @@ lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
         }
         this.setAttribute('ready', true);
         if (this['__mouseevents']) lz.embed.iframemanager.setSendMouseEvents(id, this.__mouseevents);
+        if (this['__shownativecontextmenu']) lz.embed.iframemanager.setShowNativeContextMenu(id, this.__shownativecontextmenu);
     </method>
     <!--- @access private -->
     <method name="__gotload">

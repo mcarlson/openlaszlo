@@ -62,6 +62,13 @@
                     }
                 </handler>
             </button> 
+            <button>Toggle native context menus (DHTML only)
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.setAttribute('shownativecontextmenu', ! classroot.main.shownativecontextmenu); 
+                    }
+                </handler>
+            </button> 
             <text name="status" y="3" fontstyle="bold" visible="${classroot.main.loading}">Loading...</text>
         </hbox>    
         <html name="main" history="false" width="100%" height="${classroot.height - this.y - 44}">

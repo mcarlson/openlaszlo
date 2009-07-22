@@ -10,6 +10,7 @@ lz.embed.iframemanager = {
     ,__callqueue: {}
     ,__calljsqueue: {}
     ,__sendmouseevents: {}
+    ,__hidenativecontextmenu: {}
     ,create: function(owner, name, scrollbars, appendto, defaultz, canvasref) {
         //console.log(owner + ', ' + name + ', ' + scrollbars + ', ' + appendto + ', ' + defaultz)
         var id = '__lz' + lz.embed.iframemanager.__counter++;
@@ -329,7 +330,8 @@ lz.embed.iframemanager = {
         }
     }
     ,__mouseEvent: function(e, id) {
-        var iframe = lz.embed.iframemanager.getFrame(id);
+        var lze = lz.embed;
+        var iframe = lze.iframemanager.getFrame(id);
         if (! iframe) return;
 
         if (!e) {
@@ -340,9 +342,13 @@ lz.embed.iframemanager = {
         if (iframe.owner && iframe.owner.sprite && iframe.owner.sprite.__mouseEvent) {
             // dhtml
             if (eventname == 'oncontextmenu') {
-                var pos = lz.embed.getAbsolutePosition(iframe); 
-                LzMouseKernel.__sendMouseMove(e, pos.x, pos.y)
-                return LzMouseKernel.__showContextMenu(e);
+                if (! lze.iframemanager.__hidenativecontextmenu[id]) {
+                    return;
+                } else {
+                    var pos = lze.getAbsolutePosition(iframe); 
+                    LzMouseKernel.__sendMouseMove(e, pos.x, pos.y)
+                    return LzMouseKernel.__showContextMenu(e);
+                }
             }
             iframe.owner.sprite.__mouseEvent(e);
 
@@ -358,8 +364,10 @@ lz.embed.iframemanager = {
                 eventname = 'onmouseout';
             } else if (eventname == 'onmouseenter') {
                 eventname = 'onmouseover';
+            } else if (eventname == 'oncontextmenu') {
+                return;
             }
-            lz.embed[iframe.owner].callMethod('lz.embed.iframemanager.__gotMouseEvent(\'' + id + '\',\'' + eventname + '\')');
+            lze[iframe.owner].callMethod('lz.embed.iframemanager.__gotMouseEvent(\'' + id + '\',\'' + eventname + '\')');
         }
     }
     ,setSendMouseEvents: function(id, send) {
@@ -419,5 +427,8 @@ lz.embed.iframemanager = {
             } catch(e) {
             }
         }
+    }
+    ,setShowNativeContextMenu: function(id, show) {
+        this.__hidenativecontextmenu[id] = ! show;
     }
 }
