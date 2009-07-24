@@ -36,13 +36,12 @@ var dsloadDel:LzDelegate = null;
 // @param Number num: number to pass down to explicitly cast to a double
 //------------------------------------------------------------------------------
 
-
-    #passthrough {
-        static function DoubleWrapper (num) {
-            return new LzRPCDoubleWrapper(num);
-        };
-    }#
+    
+static function DoubleWrapper (num) {
+  return new LzRPCDoubleWrapper(num);
+};
        
+
 //------------------------------------------------------------
 // Global RPC sequence number for server requests.
 //------------------------------------------------------------
