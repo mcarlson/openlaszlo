@@ -180,11 +180,6 @@ var LzSprite = function(owner, isroot) {
         }
     }
 
-    if ($debug || this.capabilities.accessibility) {
-        // annotate divs with sprite IDs, but don't override existing IDs!
-        if (!this.__LZdiv.id) this.__LZdiv.id = 'sprite_' + this.uid;
-        if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click_' + this.__LZdiv.id;
-    }
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
         this.__LZclickcontainerdiv.owner = this;
@@ -558,6 +553,7 @@ LzSprite.prototype.capabilities = {
     ,linescrolling: false
     ,disableglobalfocustrap: true
     ,allowfullscreen: false
+    ,setid: true
 }
 
 LzSprite.prototype.__updateQuirks = function () {
@@ -2416,6 +2412,8 @@ LzSprite.prototype.setAADescription = function( s ) {
         // a <div style='display:none'> to make it invisible
         this.aadescriptionDiv = aadiv = document.createElement('LABEL');
         aadiv.className = 'lzaccessibilitydiv';
+        // annotate divs with sprite IDs, but don't override existing IDs!
+        if (!this.__LZdiv.id) this.__LZdiv.id = 'sprite_' + this.uid;
         // Safari reader only speaks labels which have a 'for' attribute
         aadiv.setAttribute('for', this.__LZdiv.id);
         this.__LZdiv.appendChild(aadiv);
@@ -2429,7 +2427,6 @@ LzSprite.prototype.setAADescription = function( s ) {
   */
 LzSprite.prototype.setAccessible = function(accessible) {
     // TODO [hqm 2009-06] also need to check LzBrowserKernel.isAAActive() when it is working
-    var a = accessible;
     LzSprite.__rootSprite.accessible = accessible;
 }
 
@@ -2502,3 +2499,7 @@ LzSprite.prototype.sendAAEvent = function(childID, eventType, nonHTML){
     }
 }
 
+LzSprite.prototype.setID = function(id){
+    if (!this.__LZdiv.id) this.__LZdiv.id = 'sprite' + id;
+    if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click' + id;
+}

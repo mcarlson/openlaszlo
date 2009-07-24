@@ -445,6 +445,10 @@ override function construct ( parent , args) {
     // Cache capabilities
     this.capabilities = this.sprite.capabilities;
 
+    if ($debug && this.capabilities.setid) {
+        this.sprite.setID(this._dbg_name());
+    }
+
     if (args['width'] != null || this.__LZhasConstraint('width')) {
         this.hassetwidth = true;
         this.__LZcheckwidth = false;

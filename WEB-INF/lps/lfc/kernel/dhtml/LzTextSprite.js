@@ -32,11 +32,6 @@ var LzTextSprite = function(owner) {
         this.__LZclickcontainerdiv.className = 'lztextcontainer_click';
         this.__LZclickcontainerdiv.owner = this;
     }    
-    if ($debug) {
-        // annotate divs with sprite IDs
-        this.__LZdiv.id = 'textsprite_' + this.uid;
-        this.__LZclickcontainerdiv.id = 'click_' + this.__LZdiv.id;
-    }
     if (this.quirks.ie_leak_prevention) {
         this.__sprites[this.uid] = this;
     }
@@ -821,5 +816,9 @@ LzTextSprite.prototype.setTextDecoration = function (decoration) {
     }
 }
 
+LzTextSprite.prototype.setID = function(id){
+    if (!this.__LZdiv.id) this.__LZdiv.id = 'textsprite' + id;
+    if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click' + id;
+}
 
 }

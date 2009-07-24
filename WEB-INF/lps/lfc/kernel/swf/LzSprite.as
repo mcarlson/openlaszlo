@@ -73,6 +73,7 @@ LzSprite.prototype.capabilities = {
     ,linescrolling: true
     ,disableglobalfocustrap: false
     ,allowfullscreen: true
+    ,setid: false
 }
 
 /** Turns accessibility on/off if accessible == true and a screen reader is active 
