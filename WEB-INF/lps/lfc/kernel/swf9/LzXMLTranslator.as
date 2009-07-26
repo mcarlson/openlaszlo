@@ -106,8 +106,16 @@ public class LzXMLTranslator {
         if (! firstChild(xmlnode)) {
             return document.appendChild(copyFlashNode(xmlnode, trimwhitespace, nsprefix));
         }
+        // @devnote Flash's E4X implementation has got major performance issues
+        // when using children() and childIndex(), so we cannot use the nextSibling()
+        // function defined in this class. As a workaround we memorize the children()
+        // XMLList and index-position for each node. (LPP-8350)
+        var stack:Array = [];
+        var last:int = -1;
         var lfcparent:LzDataElement = document;
         var next:XML, node:XML = xmlnode;
+        var children:XMLList = node.children();
+        var idx:int = 0;
         // traverse DOM tree
         for (;;) {
             var kind:String = node.nodeKind();
@@ -125,17 +133,29 @@ public class LzXMLTranslator {
                 lfcnode.__LZo = (lfcparent.childNodes.push(lfcnode) - 1);
 
                 // traverse down first
-                if ((next = firstChild(node))) {
+                // if ((next = firstChild(node))) {
+                if ((next = children[0])) {
+                    // save current node, index-position and its children
+                    // @devnote need explicit cast because of flash-bug ASC-2904
+                    stack[int(++last)] = node;
+                    stack[int(++last)] = idx;
+                    stack[int(++last)] = children;
                     // this node is the new context
                     lfcparent = lfcnode;
                     node = next;
+                    children = next.children();
+                    idx = 0;
                     continue;
                 }
             }
             // select next node
-            while (! (next = nextSibling(node))) {
+            // while (! (next = nextSibling(node))) {
+            while (! (next = stack[last][++idx])) {
                 // no nextSibling, go back in DOM
-                node = node.parent();
+                // node = node.parent();
+                children = stack[last--];
+                idx = stack[last--];
+                node = stack[last--];
                 lfcparent = lfcparent.parentNode;
                 if (node === xmlnode) {
                     // reached top element, copy finished
@@ -143,6 +163,7 @@ public class LzXMLTranslator {
                 }
             }
             node = next;
+            children = next.children();
         }
         // add return to make flash compiler happy
         return null;
