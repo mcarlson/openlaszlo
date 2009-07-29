@@ -856,6 +856,14 @@ LzSprite.prototype.stretches = null;
 LzSprite.prototype.resourceWidth = null;
 LzSprite.prototype.resourceHeight = null;
 LzSprite.prototype.cursor = null;
+/** Set to a value that won't match the cache but is still a sensible default
+  * @access private
+  */
+LzSprite.prototype._w = '0pt';
+/** Set to a value that won't match the cache but is still a sensible default
+  * @access private
+  */
+LzSprite.prototype._h = '0pt';
 /**
   * @access private
   */

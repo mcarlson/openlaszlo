@@ -45,7 +45,7 @@ var LzMouseKernel = {
             LzMouseKernel.__sendMouseMove(e);
             // hide any active inputtexts to allow clickable to work - see LPP-5447...
             if (lzinputproto && lzinputproto.__lastshown != null) {
-                if (! (targ.owner instanceof LzInputTextSprite)) {
+                if (targ && targ.owner && ! (targ.owner instanceof LzInputTextSprite)) {
                     if (! lzinputproto.__lastshown.__isMouseOver()) {
                         lzinputproto.__lastshown.__hide();
                     }
