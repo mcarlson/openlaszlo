@@ -243,7 +243,6 @@ var LzSprite = function(owner, isroot) {
 LzSprite.prototype.__defaultStyles = {
     lzdiv: {
         position: 'absolute'
-        ,backgroundRepeat: 'no-repeat'
     },
     lzclickdiv: {
         position: 'absolute'
@@ -431,12 +430,17 @@ LzSprite.prototype.__defaultStyles = {
     lzcontext: {
         position: 'absolute'
     },
+    lzimg: {
+        position: 'absolute',
+        backgroundRepeat: 'no-repeat'
+    },
     writeCSS: function() {
         var rules = [];
         var css = '';
         for (var classname in this) {
             if (classname == 'writeCSS' || 
                 classname == 'hyphenate' || 
+                classname == '__replace' || 
                 classname == '__re') continue;
             css += classname.indexOf('#') == -1 ? '.' : '';
             css += classname + '{';
@@ -448,14 +452,12 @@ LzSprite.prototype.__defaultStyles = {
         }
         document.write('<style type="text/css">' + css + '</style>');
     },
-    __re: new RegExp("[A-Z]"),
+    __re: new RegExp('[A-Z]', 'g'),
     hyphenate: function(n) {
-        var i = n.search(this.__re);
-        if (i != -1) {
-            var c = n.substring(i, i + 1);
-            n = n.substring(0, i) + '-' + c.toLowerCase() + n.substring(i + 1, n.length);
-        }
-        return n;
+        return n.replace(this.__re, this.__replace);
+    },
+    __replace: function(found) {
+        return '-' + found.toLowerCase();
     }
 }
 LzSprite.prototype.__defaultStyles['#lzcontextmenu div.separator'] = {
@@ -717,6 +719,7 @@ LzSprite.prototype.__updateQuirks = function () {
             
             // required as of 3.2.1 to get test/lztest/lztest-textheight.lzx to show multiline inputtext properly
             quirks['inputtext_strips_newlines'] = true;
+            quirks['prevent_selection'] = true;
         } else if (browser.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
@@ -804,6 +807,15 @@ LzSprite.prototype.__updateQuirks = function () {
 
         if (quirks['inner_html_strips_newlines'] == true) {
             LzSprite.prototype.inner_html_strips_newlines_re = RegExp('$', 'mg');
+        }
+
+        // Turn off image selection - see LPP-8311
+        if (browser.isFirefox) {
+            defaultStyles.lzimg['MozUserSelect'] = 'none';
+        } else if (browser.isSafari) {
+            defaultStyles.lzimg['WebkitUserSelect'] = 'none';
+        } else {
+            defaultStyles.lzimg['UserSelect'] = 'none';
         }
 
         LzSprite.prototype.br_to_newline_re = RegExp('<br/>', 'mg');
@@ -1047,7 +1059,7 @@ LzSprite.prototype.setSource = function (url, usecache){
     if (this.stretches == null && this.__csssprite) {
         if (! this.__LZimg) {
             var im = document.createElement('img');
-            im.className = 'lzdiv';
+            im.className = 'lzimg';
             im.owner = this;
             im.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
             this.__bindImage(im);
@@ -1907,7 +1919,7 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
         }
     } else {
         var im = document.createElement('img');
-        im.className = 'lzdiv';
+        im.className = 'lzimg';
         // show again in onload
         if (! skiploader) im.style.display = 'none'
         if (this.owner && skiploader != true) {
