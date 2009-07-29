@@ -18,6 +18,7 @@ var LzSprite = function(owner, isroot) {
     this.owner = owner;
     this.uid = LzSprite.prototype.uid++;
     this.aadescriptionDiv = null;
+    var quirks = this.quirks;
 
     if (isroot) {
         this.isroot = true;
@@ -26,13 +27,22 @@ var LzSprite = function(owner, isroot) {
         var div = document.createElement('div');
         div.className = 'lzcanvasdiv';
 
-        if (this.quirks.ie6_improve_memory_performance) {
+        if (quirks.ie6_improve_memory_performance) {
             try { document.execCommand("BackgroundImageCache", false, true); } catch(err) {}
         }
 
         // grab values stored by lz.embed.dhtml()
         var p = lz.embed.__propcache;
         var root = p.appenddiv;
+
+        if (quirks.fix_contextmenu) {
+            var cxdiv = document.createElement('div');
+            cxdiv.className = 'lzcanvascontextdiv';
+            cxdiv.id = 'lzcanvascontextdiv';
+            root.appendChild(cxdiv);
+            this.__LZcontextcontainerdiv = cxdiv;
+            this.__LZcontextcontainerdiv.owner = this;
+        }
 
         if (p.bgcolor) {
             div.style.backgroundColor = p.bgcolor; 
@@ -81,14 +91,14 @@ var LzSprite = function(owner, isroot) {
 
         lz.embed.options.approot = (typeof(p.approot) == "string") ? p.approot : '';
 
-        if (! this.quirks.canvas_div_cannot_be_clipped && width && ! widthispercentage && height && ! heightispercentage) {
+        if (! quirks.canvas_div_cannot_be_clipped && width && ! widthispercentage && height && ! heightispercentage) {
             div.style.clip = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
             div.style.overflow = 'hidden';
         }
         root.appendChild(div);
         this.__LZdiv = div;
 
-        if (this.quirks.fix_clickable) {
+        if (quirks.fix_clickable) {
             var cdiv = document.createElement('div');
             cdiv.className = 'lzcanvasclickdiv';
             cdiv.id = 'lzcanvasclickdiv';
@@ -96,7 +106,19 @@ var LzSprite = function(owner, isroot) {
             this.__LZclickcontainerdiv = cdiv;
         }
 
-        if (this.quirks.activate_on_mouseover) {
+        if (quirks['css_hide_canvas_during_init']) {
+            var cssname = 'display';
+            var cssval = 'none';
+            if (this.quirks['safari_visibility_instead_of_display']) {
+                cssname = 'visibility';
+                cssval = 'hidden';
+            }
+            this.__LZdiv.style[cssname] = cssval;
+            this.__LZclickcontainerdiv.style[cssname] = cssval;
+            this.__LZcontextcontainerdiv.style[cssname] = cssval;
+        }
+
+        if (quirks.activate_on_mouseover) {
             // Mouse detection for activation/deactivation of keyboard/mouse events
             div.mouseisover = false;
             div.onmouseover = function(e) {
@@ -174,18 +196,18 @@ var LzSprite = function(owner, isroot) {
     } else {
         this.__LZdiv = document.createElement('div');
         this.__LZdiv.className = 'lzdiv';
-        if (this.quirks.fix_clickable) {
+        if (quirks.fix_clickable) {
             this.__LZclickcontainerdiv = document.createElement('div');
             this.__LZclickcontainerdiv.className = 'lzdiv';
         }
     }
 
     this.__LZdiv.owner = this;
-    if (this.quirks.fix_clickable) {
+    if (quirks.fix_clickable) {
         this.__LZclickcontainerdiv.owner = this;
     }
 
-    if (this.quirks.ie_leak_prevention) {
+    if (quirks.ie_leak_prevention) {
         this.__sprites[this.uid] = this;
     }
     //Debug.debug('new LzSprite', this.__LZdiv, this.owner);
@@ -231,6 +253,9 @@ LzSprite.prototype.__defaultStyles = {
     },
     lzcanvasclickdiv: {
         zIndex: 100000,
+        position: 'absolute'
+    },
+    lzcanvascontextdiv: {
         position: 'absolute'
     },
     // This container implements the swf 'gutter'
@@ -403,6 +428,9 @@ LzSprite.prototype.__defaultStyles = {
     lzaccessibilitydiv: {
        display: 'none'
     },
+    lzcontext: {
+        position: 'absolute'
+    },
     writeCSS: function() {
         var rules = [];
         var css = '';
@@ -529,6 +557,8 @@ LzSprite.prototype.quirks = {
     ,textgrabsinputtextfocus: false
     ,input_highlight_bug: false
     ,autoscroll_textarea: false
+    ,fix_contextmenu: true
+    ,size_blank_to_zero: true
 }
 
 LzSprite.prototype.capabilities = {
@@ -768,15 +798,6 @@ LzSprite.prototype.__updateQuirks = function () {
 //             itmc.paddingTop = itmc.paddingBottom = '0px';
         }
 
-        if (quirks['css_hide_canvas_during_init']) {
-            if (quirks['safari_visibility_instead_of_display']) {
-                defaultStyles.lzcanvasdiv.visibility = 'hidden';
-            } else {
-                defaultStyles.lzcanvasdiv.display = 'none';
-            }
-            defaultStyles.lzcanvasclickdiv.display = 'none';
-        }
-
         if (quirks['hand_pointer_for_clickable']) {
             defaultStyles.lzclickdiv.cursor = 'pointer';
         }
@@ -823,6 +844,10 @@ LzSprite.prototype.stretches = null;
 LzSprite.prototype.resourceWidth = null;
 LzSprite.prototype.resourceHeight = null;
 LzSprite.prototype.cursor = null;
+/**
+  * @access private
+  */
+LzSprite.prototype.__LZcontext = null;
 
 /** Must be called when the sprite should show itself, usually after the 
   * owner is done initializing 
@@ -831,9 +856,16 @@ LzSprite.prototype.init = function(v) {
     //Debug.write('init', this.visible, this.owner.getUID());
     this.setVisible(v);
     if (this.isroot) {
-        if (this.quirks['safari_visibility_instead_of_display']) {
-            this.__LZdiv.style.visibility = 'visible';
+        if (this.quirks['css_hide_canvas_during_init']) {
+            var cssname = 'display';
+            if (this.quirks['safari_visibility_instead_of_display']) {
+                cssname = 'visibility';
+            }
+            this.__LZdiv.style[cssname] = '';
+            this.__LZclickcontainerdiv.style[cssname] = '';
+            this.__LZcontextcontainerdiv.style[cssname] = '';
         }
+
         // Register the canvas for callbacks
         if (this._id) {
             lz.embed[this._id]._ready(this.owner);
@@ -977,6 +1009,14 @@ LzSprite.prototype.setSource = function (url, usecache){
         this.unload();
         return;
     }
+    if (this.quirks.size_blank_to_zero) {
+        if (this.__sizedtozero && url != null) {
+            // restore size of div
+            this.__sizedtozero = false;
+            this.__LZdiv.style.width = this._w;
+            this.__LZdiv.style.height = this._h;
+        }
+    }
     if (usecache != true){
         // called by a user
         this.skiponload = false;
@@ -1115,8 +1155,8 @@ LzSprite.prototype.setClickable = function(c) {
             }
             this.__LZclick.owner = this;
             this.__LZclick.className = 'lzclickdiv';
-            this.__LZclick.style.width = this.__LZdiv.style.width;
-            this.__LZclick.style.height = this.__LZdiv.style.height;
+            this.__LZclick.style.width = this._w;
+            this.__LZclick.style.height = this._h;
             if (this.quirks.fix_clickable) {
                 this.__LZclickcontainerdiv.appendChild(this.__LZclick);
             } else {
@@ -1131,7 +1171,7 @@ LzSprite.prototype.setClickable = function(c) {
                 this.__LZclickcontainerdiv.style.display = c && this.visible ? '' : 'none';
                 this.__LZclick.style.display = c && this.visible ? '' : 'none';
             } else {
-                this.__LZclick.style.display = c ? 'block' : 'none';
+                this.__LZclick.style.display = c ? '' : 'none';
             }
         }
     } else {
@@ -1145,8 +1185,8 @@ LzSprite.prototype.setClickable = function(c) {
                 }
                 this.__LZclick.owner = this;
                 this.__LZclick.className = 'lzclickdiv';
-                this.__LZclick.style.width = this.__LZdiv.style.width;
-                this.__LZclick.style.height = this.__LZdiv.style.height;
+                this.__LZclick.style.width = this._w;
+                this.__LZclick.style.height = this._h;
                 //this.__LZclick.style.backgroundColor = '#ff00ff';
                 //this.__LZclick.style.opacity = .2;
                 this.__LZclickcontainerdiv.appendChild(this.__LZclick);
@@ -1155,7 +1195,7 @@ LzSprite.prototype.setClickable = function(c) {
             if (this.quirks.fix_ie_clickable) {
                 this.__LZclick.style.display = c && this.visible ? '' : 'none';
             } else {
-                this.__LZclick.style.display = c ? 'block' : 'none';
+                this.__LZclick.style.display = c ? '' : 'none';
             }
         } else {
             this.__setClickable(c, this.__LZdiv);
@@ -1336,6 +1376,9 @@ LzSprite.prototype.setX = function ( x ){
         if (this.quirks.fix_clickable) {
             this.__LZclickcontainerdiv.style.left = x;
         }
+        if (this.quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
+            this.__LZcontextcontainerdiv.style.left = x;
+        }
     }
 }
 
@@ -1347,10 +1390,19 @@ LzSprite.prototype.setWidth = function ( w ){
     w = this.CSSDimension(w);
     if (this._w != w) {
         this._w = w;
-        this.__LZdiv.style.width = w;
+        var size = w;
+        // set size to zero if we don't have either of these
+        if (this.quirks.size_blank_to_zero) {
+            if (this.bgcolor == null && this.source == null && ! this instanceof LzTextSprite) {
+                this.__sizedtozero = true;
+                size = '0px';
+            }
+        }
+        this.__LZdiv.style.width = size;
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.width = w;
+        if (this.__LZcontext) this.__LZcontext.style.width = w;
         return w;
     }
 }
@@ -1367,6 +1419,9 @@ LzSprite.prototype.setY = function ( y ){
         if (this.quirks.fix_clickable) {
             this.__LZclickcontainerdiv.style.top = y;
         }
+        if (this.quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
+            this.__LZcontextcontainerdiv.style.top = y;
+        }
     }
 }
 
@@ -1378,10 +1433,19 @@ LzSprite.prototype.setHeight = function ( h ){
     h = this.CSSDimension(h);
     if (this._h != h) {
         this._h = h;
-        this.__LZdiv.style.height = h; 
+        var size = h;
+        // set size to zero if we don't have either of these
+        if (this.quirks.size_blank_to_zero) {
+            if (this.bgcolor == null && this.source == null && ! this instanceof LzTextSprite) {
+                this.__sizedtozero = true;
+                size = '0px';
+            }
+        }
+        this.__LZdiv.style.height = size;
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.height = h;
+        if (this.__LZcontext) this.__LZcontext.style.height = h;
         return h;
     }
 }
@@ -1404,12 +1468,16 @@ LzSprite.prototype.setVisible = function ( v ){
     if (this.visible == v) return;
     //Debug.info('setVisible', v, this.owner.getUID());
     this.visible = v;
-    this.__LZdiv.style.display = (v && this.opacity != 0) ? 'block' : 'none';
+    this.__LZdiv.style.display = (v && this.opacity != 0) ? '' : 'none';
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable && this.__LZclick) {
             this.__LZclick.style.display = v && this.clickable ? '' : 'none';
         }
-        this.__LZclickcontainerdiv.style.display = v ? 'block' : 'none';
+        var vis = v ? '' : 'none';
+        this.__LZclickcontainerdiv.style.display = vis;
+        if (this.quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
+            this.__LZcontextcontainerdiv.style.display = vis;
+        }
     }
 }
 
@@ -1422,6 +1490,14 @@ LzSprite.prototype.setColor = function ( c ){
 LzSprite.prototype.setBGColor = function ( c ){
     if (this.bgcolor == c) return;
     this.bgcolor = c;
+    if (this.quirks.size_blank_to_zero) {
+        if (this.__sizedtozero && c != null) {
+            // restore size of div
+            this.__sizedtozero = false;
+            this.__LZdiv.style.width = this._w;
+            this.__LZdiv.style.height = this._h;
+        }
+    }
     this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzColorUtils.inttohex(c);
     if (this.quirks.fix_ie_background_height) {
         if (this.height != null && this.height < 2) {
@@ -1445,7 +1521,7 @@ LzSprite.prototype.setOpacity = function ( o ){
     if (o != this._opacity) { 
         //Debug.info('setOpacity', o);
         this._opacity = o;
-        this.__LZdiv.style.display = (this.visible && o != 0) ? 'block' : 'none';
+        this.__LZdiv.style.display = (this.visible && o != 0) ? '' : 'none';
 
         if (this.quirks.ie_opacity) {
             if (o == 1) {
@@ -1526,14 +1602,18 @@ LzSprite.prototype.__preloadFrames = function() {
     }
 }
 
-/**
+/** Find parent sprites with a null or non-null property - nearest parents are first in the array
   * @access private
   */
-LzSprite.prototype.__findParents = function ( prop ){
+LzSprite.prototype.__findParents = function ( prop, isnull ){
     var out = [];
     var root = LzSprite.__rootSprite;
     for (var sprite = this; sprite; sprite = sprite.__parent) {
-        if (sprite[prop] != null) out.push(sprite);
+        if (isnull) {
+            if (sprite[prop] == null) out.push(sprite);
+        } else {
+            if (sprite[prop] != null) out.push(sprite);
+        }
         if (sprite === root) break;
     }
     return out;
@@ -1619,7 +1699,7 @@ LzSprite.prototype.__processHiddenParents = function(method) {
     for (var n = 0; n < l; n++) {
         var v = sprites[n];
         vals[n] = v.__LZdiv.style.display;
-        v.__LZdiv.style.display = 'block';
+        v.__LZdiv.style.display = '';
     }
 
     // call passed-in method with optional args
@@ -1860,14 +1940,19 @@ LzSprite.prototype.__updateClip = function() {
     if (this.clip && this.width != null && this.width >= 0 && this.height != null && this.height >= 0) {
         var s = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
         this.__LZdiv.style.clip = s
-        if (this.quirks.fix_clickable) {
-            this.__LZclickcontainerdiv.style.clip = s
-        }
     } else if (this.__LZdiv.style.clip) {
-        this.__LZdiv.style.clip = 'rect(auto auto auto auto)';
-        if (this.quirks.fix_clickable) {
-            this.__LZclickcontainerdiv.style.clip = 'rect(auto auto auto auto)';
-        }
+        var s = '';
+        this.__LZdiv.style.clip = s;
+    } else {
+        // return so we don't set the containers
+        return;
+    }
+    var quirks = this.quirks;
+    if (quirks.fix_clickable) {
+        this.__LZclickcontainerdiv.style.clip = s;
+    }
+    if (quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
+        this.__LZcontextcontainerdiv.style.clip = s;
     }
 }
 
@@ -1977,6 +2062,12 @@ LzSprite.prototype.destroy = function() {
     }
     if (this.__LZclickcontainerdiv) {
         this.__discardElement(this.__LZclickcontainerdiv);
+    }
+    if (this.__LZcontextcontainerdiv) {
+        this.__discardElement(this.__LZcontextcontainerdiv);
+    }
+    if (this.__LZcontext) {
+        this.__discardElement(this.__LZcontext);
     }
     if (this.__LZtextdiv) {
         this.__discardElement(this.__LZtextdiv);
@@ -2139,8 +2230,12 @@ LzSprite.prototype.bringToFront = function() {
   */
 LzSprite.prototype.__setZ = function(z) {
     this.__LZdiv.style.zIndex = z;
-    if (this.quirks.fix_clickable) {
+    var quirks = this.quirks;
+    if (quirks.fix_clickable) {
         this.__LZclickcontainerdiv.style.zIndex = z;
+    }
+    if (quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
+        this.__LZcontextcontainerdiv.style.zIndex = z;
     }
     this.__z = z;
 }
@@ -2355,12 +2450,58 @@ LzSprite.prototype.setDefaultContextMenu = function( cmenu ){
   */
 LzSprite.prototype.setContextMenu = function( cmenu ){
     this.__contextmenu = cmenu;
+    if (! this.quirks.fix_contextmenu || this.__LZcontext) return;
+    // build up context menu tree lazily
+
+    // find parents without a __LZcontextcontainerdiv property
+    var sprites = this.__findParents('__LZcontextcontainerdiv', true);
+    //console.log('found sprites', sprites, 'for', this);
+
+    // create containers root first
+    for (var i = sprites.length - 1; i >= 0; i--) {
+        var sprite = sprites[i];
+        //console.log('found sprite', sprite);
+        // the parent must have a container div
+        var parentcontainer = sprite.__parent.__LZcontextcontainerdiv;
+        // create contextmenu container
+        var cxdiv = document.createElement('div');
+        cxdiv.className = 'lzdiv';
+        parentcontainer.appendChild(cxdiv);
+
+        this.__copystyles(sprite.__LZdiv, cxdiv);
+        // set id, if we have one...
+        if (sprite._id && !cxdiv.id) {
+            cxdiv.id = 'context' + sprite._id;
+        }
+        cxdiv.owner = sprite;
+        sprite.__LZcontextcontainerdiv = cxdiv;
+    }
+    // create contextmenu div
+    var cxdiv = document.createElement('div');
+    cxdiv.className = 'lzcontext';
+    this.__LZcontextcontainerdiv.appendChild(cxdiv);
+    this.__LZcontext = cxdiv;
+    cxdiv.style.width = this._w;
+    cxdiv.style.height = this._h;
+    cxdiv.owner = this;
 }
 
 /**
-  * LzView.getContextMenu
-  * Return the current context menu
+  * Copies relevant styles from a sprite to a container div
+  * @access private
   */
+LzSprite.prototype.__copystyles = function(from, to) {
+    to.style.left = from.style.left;
+    to.style.top = from.style.top;
+    to.style.display = from.style.display;
+    to.style.clip = from.style.clip;
+    to.style.zIndex = from.style.zIndex;
+}
+
+/**
+* LzView.getContextMenu
+* Return the current context menu
+*/
 LzSprite.prototype.getContextMenu = function() {
     return this.__contextmenu;
 }
@@ -2500,6 +2641,8 @@ LzSprite.prototype.sendAAEvent = function(childID, eventType, nonHTML){
 }
 
 LzSprite.prototype.setID = function(id){
+    if (!this._id) this._id = id;
     if (!this.__LZdiv.id) this.__LZdiv.id = 'sprite' + id;
     if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click' + id;
+    if (this.__LZcontextcontainerdiv && ! this.__LZcontextcontainerdiv.id) this.__LZcontextcontainerdiv.id = this.__LZcontextcontainerdiv.id = 'context' + id;
 }

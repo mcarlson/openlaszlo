@@ -246,12 +246,21 @@ var LzMouseKernel = {
     ,__showContextMenu: function(e) {
         // show the default menu if not found...
         var cmenu = LzSprite.__rootSprite.__contextmenu;
+        var quirks = LzSprite.prototype.quirks;
         if (document.elementFromPoint) {
-            var swf8mode = LzSprite.prototype.quirks.swf8_contextmenu;
+            var swf8mode = quirks.swf8_contextmenu;
             var x = LzMouseKernel.__x;
             var y = LzMouseKernel.__y;
             var rootdiv = canvas.sprite.__LZdiv;
             var arr = [];
+            if (quirks.fix_contextmenu) {
+                // hide root divs
+                arr.push(rootdiv, rootdiv.style.display);
+                rootdiv.style.display = 'none';
+                var rootclickdiv = canvas.sprite.__LZclickcontainerdiv;
+                arr.push(rootclickdiv, rootclickdiv.style.display);
+                rootclickdiv.style.display = 'none';
+            }
             do {
                 var elem = document.elementFromPoint(x, y);
                 if (! elem) {
@@ -265,7 +274,7 @@ var LzMouseKernel = {
                         // found a contextmenu
                         cmenu = owner.__contextmenu;
                         break;
-                    } else if (LzSprite.prototype.quirks.ie_elementfrompoint && owner.scrolldiv === elem) {
+                    } else if (quirks.ie_elementfrompoint && owner.scrolldiv === elem) {
                         // IE returns this first for text div. See LPP-8254
                     } else if (swf8mode && ((owner.__LZdiv === elem && owner.bgcolor != null)
                                     || owner instanceof LzTextSprite)) {
