@@ -1,0 +1,100 @@
+<canvas height="200">
+<view width="100" height="100" bgcolor="red">
+    <!-- view that completely covers the parent view but has no bgcolor. In swf
+         this allows the context menu to still work. In DHTML it doesn't come
+         up. -->
+    <view width="100" height="100"/>
+
+    <method name="init">
+        super.init();
+        
+        var cm = new lz.contextmenu(this, {name: 'contextMenu'});
+        cm.addItem(new lz.contextmenuitem("foo", new lz.Delegate(this, "_test")));
+    </method>
+    <view x="100" width="100" height="100" bgcolor="blue" onmouseover="setAttribute('bgcolor', 'yellow')" onmouseout="setAttribute('bgcolor', 'blue')"/>
+
+    <method name="_test" args="IGNORE_THIS_ARG"/>
+</view>
+<view x="200" width="100" height="100" bgcolor="red">
+    <method name="init">
+        super.init();
+        
+        var cm = new lz.contextmenu(this, {name: 'contextMenu'});
+        cm.addItem(new lz.contextmenuitem("foo", new lz.Delegate(this, "_test")));
+    </method>
+
+    <method name="_test" args="IGNORE_THIS_ARG"/>
+</view>
+<view x="200" width="100" height="100"/>
+<view x="300" width="100" height="100" bgcolor="green"/>
+<text x="400" width="100" height="100" bgcolor="yellow">Text</text>
+<text x="500" width="100" height="100" bgcolor="red">Text
+    <method name="init">
+        super.init();
+        
+        var cm = new lz.contextmenu(this, {name: 'contextMenu'});
+        cm.addItem(new lz.contextmenuitem("foo", new lz.Delegate(this, "_test")));
+    </method>
+
+    <method name="_test" args="IGNORE_THIS_ARG"/>
+</text>
+<inputtext x="600" width="100" height="100" bgcolor="purple">Inputtext</inputtext>
+<inputtext x="700" width="100" height="100" bgcolor="red">Inputtext
+    <method name="init">
+        super.init();
+        
+        var cm = new lz.contextmenu(this, {name: 'contextMenu'});
+        cm.addItem(new lz.contextmenuitem("foo", new lz.Delegate(this, "_test")));
+    </method>
+
+    <method name="_test" args="IGNORE_THIS_ARG"/>
+</inputtext>
+
+<view x="800" width="100" height="100" bgcolor="0xcccccc">
+    <method name="init">
+        super.init();
+        
+        var cm = new lz.contextmenu(this.menuview, {name: 'contextMenu'});
+        cm.addItem(new lz.contextmenuitem("foo", new lz.Delegate(this, "_test")));
+    </method>
+    
+    <method name="_test" args="IGNORE_THIS_ARG"/>
+    
+    <view width="100" height="20" bgcolor="0xffcccc">
+        <handler name="onmouseover">
+            this.setAttribute('bgcolor', 0xff9999);
+        </handler>
+        <handler name="onmouseout">
+            this.setAttribute('bgcolor', 0xffcccc);
+        </handler>
+    </view>
+
+    <text multiline="true" width="100">Only the left half has custom context menu. Mouseover should work for pink area above...</text>
+    
+    <view name="menuview" width="50" height="100"/>
+</view>
+
+
+<text y="110">Red boxes have a custom context menu, others have the default context menu.</text>
+
+<button y="140">Change default context menu
+    <handler name="onclick">
+        var cm = new lz.contextmenu();
+        cm.addItem(new lz.contextmenuitem("default", new lz.Delegate(this, "_test")));
+        canvas.setDefaultContextMenu(cm);
+    </handler>
+    <method name="_test" args="IGNORE_THIS_ARG"/>
+</button>
+
+<button y="165">Clear default context menu
+    <handler name="onclick">
+        canvas.setDefaultContextMenu(null);
+    </handler>
+    <method name="_test" args="IGNORE_THIS_ARG"/>
+</button>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
