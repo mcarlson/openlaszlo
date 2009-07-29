@@ -38,11 +38,36 @@ if ($debug) {
 LzInputTextSprite.prototype._dbg_typename = 'LzInputTextSprite';
 }
 
+/**
+ * __lastshown tracks the last inputtext to be shown by __show(), and
+ * is used to hide the currently showing inputtext.
+ *
+ * @access private
+ */
 LzInputTextSprite.prototype.__lastshown = null;
+/**
+ * __focusedSprite tracks the last inputtext to be focused, and is
+ * used to work around bugs in firefox's focus management and prevent
+ * spurious/extra onfocus/blur events from being sent.
+ *
+ * @access private
+ */
 LzInputTextSprite.prototype.__focusedSprite = null;
+/**
+ * __lastfocus holds a reference to the last inputtext to be selected
+ * - by select() or setSelection().  It's used as a callback (see
+ * setTimout()) to work around a bug in IE where a field can't be
+ * selected immediately after it's focused.
+ *
+ * @access private
+ */
 LzInputTextSprite.prototype.__lastfocus = null;
-LzInputTextSprite.prototype._cancelfocus = LzInputTextSprite.prototype._cancelblur = false;
+/** @access private */
+LzInputTextSprite.prototype._cancelfocus = false;
+/** @access private */
+LzInputTextSprite.prototype._cancelblur = false;
 
+/** @access private */
 LzInputTextSprite.prototype.____crregexp = new RegExp('\\r\\n', 'g');
 
 LzInputTextSprite.prototype.__createInputText = function(t) {
@@ -182,18 +207,18 @@ LzInputTextSprite.prototype.setMultiline = function(ml) {
 
 // called from the scope of __LZinputclickdiv
 LzInputTextSprite.prototype.__handlemouse = function(e) {
-    if (this.owner.selectable != true) return;
-    LzInputTextSprite.prototype.__setglobalclickable(false);
-    if (this.owner.__fix_inputtext_with_parent_resource) {
+    var sprite = this.owner;
+    if (sprite.selectable != true) return;
+    if (sprite.__fix_inputtext_with_parent_resource) {
         //if (!e) e = window.event;
         //Debug.warn(e.type);
         if (! this.__shown) {
-            this.owner.setClickable(true);
-            //this.owner.__show();
-            this.owner.select();
+            sprite.setClickable(true);
+            //sprite.__show();
+            sprite.select();
         }
     } else {
-        this.owner.__show();
+        sprite.__show();
     }
 }
 
@@ -232,8 +257,6 @@ LzInputTextSprite.prototype.__show = function() {
     this.__hideIfNotFocused();
     LzInputTextSprite.prototype.__lastshown = this;
     this.__shown = true;
-    // bring to front of click divs
-    this.__LzInputDiv = this.__LZdiv.removeChild(this.__LzInputDiv);
 
     if (this.quirks['inputtext_parents_cannot_contain_clip']) {
         var sprites = this.__findParents('clip');
@@ -252,12 +275,8 @@ LzInputTextSprite.prototype.__show = function() {
             }
         }
     }
-    if (this.quirks.fix_ie_clickable) {
-        this.__LZclickcontainerdiv.appendChild(this.__LzInputDiv);
-        this.__setglobalclickable(false);
-    } else {
-        this.__LZinputclickdiv.appendChild(this.__LzInputDiv);
-    }
+    // Hide the clickdivs, so we can interact with the mouse
+    LzMouseKernel.setGlobalClickable(false);
     //Debug.warn('__show', this.owner);
     // turn on text selection in IE
     // can't use lz.embed.attachEventHandler because we need to cancel events selectively
@@ -277,14 +296,14 @@ LzInputTextSprite.prototype.__hideIfNotFocused = function(eventname, target) {
             // track mouse position for inputtext when global clickable is false
             if (lzinppr.__globalclickable == false && lzinppr.__focusedSprite && target) {
                 if (target.owner != lzinppr.__focusedSprite) {
-                    lzinppr.__setglobalclickable(true);
+                    LzMouseKernel.setGlobalClickable(true);
                 } else {
-                    lzinppr.__setglobalclickable(false);
+                    LzMouseKernel.setGlobalClickable(false);
                 }
             }
             return;
         } else if (eventname != null && lzinppr.__globalclickable == true) {
-            lzinppr.__setglobalclickable(false);
+            LzMouseKernel.setGlobalClickable(false);
         }
         if (quirks.textgrabsinputtextfocus) {
             var s = window.event;
@@ -299,14 +318,6 @@ LzInputTextSprite.prototype.__hideIfNotFocused = function(eventname, target) {
     }
     if (lzinppr.__focusedSprite != lzinppr.__lastshown) {
         lzinppr.__lastshown.__hide();
-    }
-}
-
-LzInputTextSprite.prototype.__setglobalclickable = function(c) {
-    if (! LzSprite.prototype.quirks.fix_ie_clickable) return;
-    if (c != LzInputTextSprite.prototype.__globalclickable) {
-        LzInputTextSprite.prototype.__globalclickable = c;
-        LzInputTextSprite.prototype.__setCSSClassProperty('.lzclickdiv', 'display', c ? '' : 'none');
     }
 }
 
@@ -327,26 +338,9 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
             this._shownclippedsprites = null;
         }
     }
-    // send to __LZdiv
-    if (this.quirks.fix_ie_clickable) {
-        // [TODO ptw 1-18-2007] rather than twiddling the style or style sheet you could just have a rule
-        // like (assuming you used multiple classes): .lzdiv + .lzclick { display: none; }
-        // and make the click be displayed or not by whether it is before or after the (input) div? 
-        // [max 1-18-2007] IE requires different nesting rules for inputtext.  Also, if there are _any_
-        // clickable divs behind the inputtext they'll grab clicks.  This is the reason I temporarily
-        // hide all clickable divs when the inputtext is selected -  and the reason the inputtext can't
-        // be a child of the clickable view.
-
-        this.__setglobalclickable(true);
-        if (this.__LzInputDiv.parentNode == this.__LZclickcontainerdiv) {
-            this.__LzInputDiv = this.__LZclickcontainerdiv.removeChild(this.__LzInputDiv);
-        }
-    } else {
-        if (this.__LzInputDiv.parentNode == this.__LZinputclickdiv) {
-            this.__LzInputDiv = this.__LZinputclickdiv.removeChild(this.__LzInputDiv);
-        }
-    }
-    this.__LZdiv.appendChild(this.__LzInputDiv);
+    // Put the clickdivs back in place, we are done interacting with
+    // the mouse
+    LzMouseKernel.setGlobalClickable(true);
     //Debug.warn('__hide', this.owner);
     if (this.__fix_inputtext_with_parent_resource) {
         //Debug.write('forcing blur', this.__LzInputDiv);
@@ -354,8 +348,8 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
         this.setClickable(false);
         //good.sprite.gotFocus();
         /* none of these seem to allow mousedown events, so we show onmouseenter
-        this.__setglobalclickable(false);
-        this.__setglobalclickable(true);
+        LzMouseKernel.setGlobalClickable(false);
+        LzMouseKernel.setGlobalClickable(true);
         this.__dummyinputtext.style.display = '';
         this.__dummyinputtext.focus();
         this.__dummyinputtext.blur();
@@ -597,7 +591,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
     var nextFocus = null;
     if (eventname == 'onfocus' || eventname == 'onmousedown') {
         if (eventname == 'onfocus') {
-            LzInputTextSprite.prototype.__setglobalclickable(false);
+            LzMouseKernel.setGlobalClickable(false);
         }
         LzInputTextSprite.prototype.__focusedSprite = sprite;
         sprite.__show();
@@ -636,7 +630,16 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             return;
         }
     } else if (eventname == 'onmouseout') {
-        sprite.__setglobalclickable(true);
+      // Only re-enable clickable if the mouse actually leaves our
+      // bounding box (i.e., not just because it enters another sprite
+      // that overlaps us)
+//       if ($debug) {
+//         var m = sprite.getMouse(null);
+//         Debug.info("%w: 0 <= %d < %d; 0 <= %d < %d", sprite, m.x, sprite.width, m.y, sprite.height);
+//       }
+      if (! sprite.__isMouseOver()) {
+        sprite.__hide();
+      }
     } else if (eventname == 'onmousemove') {
         if (quirks.autoscroll_textarea && sprite.dragging) {
             // Simulate mouse scrolling naer the top and bottom (LPP-8277)

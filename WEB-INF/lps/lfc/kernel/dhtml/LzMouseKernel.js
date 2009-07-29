@@ -43,6 +43,14 @@ var LzMouseKernel = {
 
         if (eventname == 'onmousemove') {
             LzMouseKernel.__sendMouseMove(e);
+            // hide any active inputtexts to allow clickable to work - see LPP-5447...
+            if (lzinputproto && lzinputproto.__lastshown != null) {
+                if (! (targ.owner instanceof LzInputTextSprite)) {
+                    if (! lzinputproto.__lastshown.__isMouseOver()) {
+                        lzinputproto.__lastshown.__hide();
+                    }
+                }
+            }
         } else if (eventname == 'oncontextmenu' || (e.button == 2 && eventname == 'onmouseup') ) {
             if (targ) {
                 // update mouse position, required for Safari
@@ -197,29 +205,8 @@ var LzMouseKernel = {
     }
     ,__cachedSelection: null
     ,setGlobalClickable: function (isclickable){
-        //Debug.error('setGlobalClickable', isclickable, LzInputTextSprite.prototype.__lastfocus, LzInputTextSprite.prototype.__focusedSprite, LzInputTextSprite.prototype.__lastshown);
-        if (! isclickable) {
-            // reset any inputtexts that are showing so they don't disappear - see LPP-7190
-            var lzinputproto = LzInputTextSprite.prototype;
-            var lastshown = lzinputproto.__lastshown;
-            if (lastshown) {
-                LzMouseKernel.__cachedSelection = {s: lastshown, st: lastshown.getSelectionPosition(), sz: lastshown.getSelectionSize()};
-                lastshown.__hide();
-                lzinputproto.__lastshown = null;
-            }
-            var focused = lzinputproto.__focusedSprite;
-            if (focused) {
-                focused.deselect();
-                lzinputproto.__focusedSprite = null;
-            }
-            var lastfocus = lzinputproto.__lastfocus;
-            if (lastfocus) {
-                lastfocus.deselect();
-                lzinputproto.__lastfocus = null;
-            }
-        }
         var el = document.getElementById('lzcanvasclickdiv');
-        el.style.display = isclickable ? 'block' : 'none';
+        el.style.display = isclickable ? '' : 'none';
     }
     ,__sendMouseMove: function(e, offsetx, offsety) {
         // see http://www.quirksmode.org/js/events_properties.html#position

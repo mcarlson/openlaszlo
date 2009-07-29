@@ -164,7 +164,7 @@ var LzSprite = function(owner, isroot) {
                 }
                 if (mousein) {
                     if (quirks.fix_ie_clickable) {
-                        LzInputTextSprite.prototype.__setglobalclickable(true);
+                        LzMouseKernel.setGlobalClickable(true);
                     }
                     if (quirks.focus_on_mouseover) {
                         if (LzInputTextSprite.prototype.__lastshown == null) {
@@ -736,7 +736,7 @@ LzSprite.prototype.__updateQuirks = function () {
         } else if (browser.isFirefox) {
             // DOM operations on blurring element break focus (LPP-7786)
             // https://bugzilla.mozilla.org/show_bug.cgi?id=481468
-            quirks['dom_breaks_focus'] = true;
+            //quirks['dom_breaks_focus'] = true;
             // anonymous div bug on input-elements (LPP-7796)
             // see https://bugzilla.mozilla.org/show_bug.cgi?id=208427
             quirks['inputtext_anonymous_div'] = true;
@@ -1359,7 +1359,8 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
 
 LzSprite.prototype.__isMouseOver = function ( e ){
     var p = this.getMouse();
-    return p.x >= 0 && p.y >= 0 && p.x <= this.width && p.y <= this.height;
+    // Note pixels are 0-based, so width and height are exclusive limits
+    return p.x >= 0 && p.y >= 0 && p.x < this.width && p.y < this.height;
 }
 
 /**
@@ -1405,7 +1406,7 @@ LzSprite.prototype.setWidth = function ( w ){
         var size = w;
         // set size to zero if we don't have either of these
         if (this.quirks.size_blank_to_zero) {
-            if (this.bgcolor == null && this.source == null && ! this instanceof LzTextSprite) {
+            if (this.bgcolor == null && this.source == null && ! (this instanceof LzTextSprite)) {
                 this.__sizedtozero = true;
                 size = '0px';
             }
@@ -1448,7 +1449,7 @@ LzSprite.prototype.setHeight = function ( h ){
         var size = h;
         // set size to zero if we don't have either of these
         if (this.quirks.size_blank_to_zero) {
-            if (this.bgcolor == null && this.source == null && ! this instanceof LzTextSprite) {
+            if (this.bgcolor == null && this.source == null && ! (this instanceof LzTextSprite)) {
                 this.__sizedtozero = true;
                 size = '0px';
             }
