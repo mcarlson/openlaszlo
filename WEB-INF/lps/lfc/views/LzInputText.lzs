@@ -165,10 +165,6 @@ function _gotBlurEvent(e=null){
     isprite.gotBlur();
 }
 
-if ($dhtml) {
-private static const __LZinputmouse = {onclick: true, onmousedown: true, onmouseout: true};
-}
-
 /** @access private 
  * Receive input text events from sprite: onblur, onfocus, onchange
  * Additionally for dhtml: onmousedown, onmouseout, onclick
@@ -199,17 +195,6 @@ function inputtextevent (eventname:String, value:* = null) :void {
             lz.Focus.clearFocus();
         }
     } else {
-        if ($dhtml) {
-            if (LzInputText.__LZinputmouse[eventname]) {
-                // must use lz.ModeManager to propagate mouse-events
-                // TODO: [20081031 anba] I don't know why the dhtml-kernel sends
-                // mouse-events through inputtextevent(). This code wasn't
-                // even executed when I ran simple testcases. Maybe it's just
-                // redundant now and we can remove it..
-                lz.ModeManager.handleMouseEvent(this, eventname);
-                return;
-            }
-        }
         if ($debug) {
             Debug.warn("unhandled inputtextevent='%s' in %#w", eventname, this);
         }

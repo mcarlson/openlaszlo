@@ -87,43 +87,35 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
 
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable) {
-            this.__LZinputclickdiv = document.createElement('img');
-            this.__LZinputclickdiv.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
-        } else {
-            this.__LZinputclickdiv = document.createElement('div');
+            this.__LZclickcontainerdiv = document.createElement('img');
+            this.__LZclickcontainerdiv.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
+            this.__LZclickcontainerdiv.className = 'lzclickdiv';
+            this.__LZclickcontainerdiv.owner = this;
         }
-        this.__LZinputclickdiv.className = 'lzclickdiv';
-        this.__LZinputclickdiv.owner = this;
         // keep LzSprite.destroy() in sync to prevent leaks
         if (this.quirks.ie_mouse_events) {
-            this.__LZinputclickdiv.onmouseenter = this.__handlemouse; 
-            //can't get this to work - see LPP-5435. 
-            // this.__LZinputclickdiv.onmousedown = this.__handlemouse; 
+            this.__LZclickcontainerdiv.onmouseenter = this.__handlemouse; 
         } else {
-            this.__LZinputclickdiv.onmouseover = this.__handlemouse; 
+            this.__LZclickcontainerdiv.onmouseover = this.__handlemouse; 
         }
 
-    if (this.quirks.input_highlight_bug) {
-        // TODO [hqm 2009-06-09] LPP-8121 I discovered that if an
-        // input field is contained within a div which has a white
-        // background color, then it selected text will highlight with
-        // a dark blue color. The div can have zero width,
-        // Windows/Firefox only seems to look at the bgcolor of the
-        // containing div when deciding what color to use for input
-        // text highlight. So this adds an extra div, with zero width,
-        // in which the actual clickable/selectable input text element
-        // is placed.
-        var ffoxdiv = document.createElement('div');
-        ffoxdiv.style.backgroundColor = 'white';
-        ffoxdiv.style.width = '0px';
-        this.__LZclickcontainerdiv.appendChild(ffoxdiv);        
-        ffoxdiv.appendChild(this.__LZinputclickdiv);
-    } else {
-        this.__LZclickcontainerdiv.appendChild(this.__LZinputclickdiv);
-    }
-
-    }    
-
+        if (this.quirks.input_highlight_bug) {
+            // TODO [hqm 2009-06-09] LPP-8121 I discovered that if an
+            // input field is contained within a div which has a white
+            // background color, then it selected text will highlight with
+            // a dark blue color. The div can have zero width,
+            // Windows/Firefox only seems to look at the bgcolor of the
+            // containing div when deciding what color to use for input
+            // text highlight. So this adds an extra div, with zero width,
+            // in which the actual clickable/selectable input text element
+            // is placed.
+            var ffoxdiv = document.createElement('div');
+            ffoxdiv.style.backgroundColor = 'white';
+            ffoxdiv.style.width = '0px';
+            this.__LZclickcontainerdiv.appendChild(ffoxdiv);        
+            //ffoxdiv.appendChild(this.__LZinputclickdiv);
+        }
+    } 
     this.__LZdiv.appendChild(this.__LzInputDiv);
 
     //Debug.write(this.__LzInputDiv.style);
@@ -208,7 +200,8 @@ LzInputTextSprite.prototype.setMultiline = function(ml) {
 // called from the scope of __LZinputclickdiv
 LzInputTextSprite.prototype.__handlemouse = function(e) {
     var sprite = this.owner;
-    if (sprite.selectable != true) return;
+    // make sure we have a sprite and view
+    if (! sprite || ! sprite.owner || sprite.selectable != true) return;
     if (sprite.__fix_inputtext_with_parent_resource) {
         //if (!e) e = window.event;
         //Debug.warn(e.type);
@@ -284,36 +277,20 @@ LzInputTextSprite.prototype.__show = function() {
         //this.__LZdiv.onselectstart = null;
         this.__LZdiv.onselectstart = null;
     }
-
 }
 
 LzInputTextSprite.prototype.__hideIfNotFocused = function(eventname, target) {
     var lzinppr = LzInputTextSprite.prototype;
     if (lzinppr.__lastshown == null) return;
     var quirks = LzSprite.prototype.quirks;
-    if (quirks.fix_ie_clickable) {
-        if (eventname == 'onmousemove') {
-            // track mouse position for inputtext when global clickable is false
-            if (lzinppr.__globalclickable == false && lzinppr.__focusedSprite && target) {
-                if (target.owner != lzinppr.__focusedSprite) {
-                    LzMouseKernel.setGlobalClickable(true);
-                } else {
-                    LzMouseKernel.setGlobalClickable(false);
-                }
+    if (quirks.textgrabsinputtextfocus) {
+        var s = window.event;
+        if (s && s.srcElement && s.srcElement.owner && s.srcElement.owner instanceof LzTextSprite) {
+            //Debug.write('text intercepting focus', eventname, s.owner instanceof LzTextSprite);
+            if (eventname == 'onmousedown') {
+                lzinppr.__lastshown.gotFocus();
             }
             return;
-        } else if (eventname != null && lzinppr.__globalclickable == true) {
-            LzMouseKernel.setGlobalClickable(false);
-        }
-        if (quirks.textgrabsinputtextfocus) {
-            var s = window.event;
-            if (s && s.srcElement && s.srcElement.owner && s.srcElement.owner instanceof LzTextSprite) {
-                //Debug.write('text intercepting focus', eventname, s.owner instanceof LzTextSprite);
-                if (eventname == 'onmousedown') {
-                    lzinppr.__lastshown.gotFocus();
-                }
-                return;
-            }
         }
     }
     if (lzinppr.__focusedSprite != lzinppr.__lastshown) {
@@ -370,9 +347,6 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
 
 // called by the LFC focus manager
 LzInputTextSprite.prototype.gotBlur = function() {
-    if (this.quirks.dom_breaks_focus) {
-        this._cancelfocus = this._cancelblur = false;
-    }
     if (LzInputTextSprite.prototype.__focusedSprite != this) return;
     //Debug.write('blur', this.uid, LzKeyboardKernel.__cancelKeys);
     this.deselect();
@@ -380,9 +354,6 @@ LzInputTextSprite.prototype.gotBlur = function() {
 
 // called by the LFC focus manager
 LzInputTextSprite.prototype.gotFocus = function() {
-    if (this.quirks.dom_breaks_focus) {
-        this._cancelfocus = this._cancelblur = false;
-    }
     if (LzInputTextSprite.prototype.__focusedSprite == this) return;
     //Debug.write('focus', this.uid, LzKeyboardKernel.__cancelKeys);
     this.select();
@@ -410,14 +381,19 @@ LzInputTextSprite.prototype.__setTextEvents = function(c) {
     var div = this.__LzInputDiv;
     var f = c ? this.__textEvent : null;
     div.onblur = f;
-    div.onmousedown = f;
+    div.onfocus = f;
     if (this.quirks.ie_mouse_events) {
+        div.ondrag = f;
+        div.ondblclick = f;
+        div.onmouseenter = f;
         div.onmouseleave = f;
     } else {
+        div.onmouseover = f;
         div.onmouseout = f;
     }
     div.onmousemove = f;
-    div.onfocus = f;
+    div.onmousedown = f;
+    div.onmouseup = f;
     div.onclick = f;
     div.onkeyup = f;
     div.onkeydown = f;
@@ -561,19 +537,35 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
 
     LzMouseKernel.__sendMouseMove(evt);
 
+    // rename ie-specific events to be compatible
+    if (quirks.ie_mouse_events) {
+        if (eventname == 'onmouseenter') {
+            eventname = 'onmouseover';
+        } else if (eventname == 'onmouseleave') {
+            eventname = 'onmouseout';
+        } else if (eventname == 'ondblclick') {
+            // Send artificial events to mimic other browsers
+            if (sprite.clickable) {
+                sprite.__mouseEvent('onmousedown', true);
+                sprite.__mouseEvent('onmouseup', true);
+                sprite.__mouseEvent('onclick', true);
+            }
+            return false;
+        } else if (eventname == 'ondrag') {
+            // ignore these
+            return false;
+        }
+    }
+
     if (quirks.autoscroll_textarea) {
       // Keep track of left button state for autoscrolling (LPP-8277)
       if (eventname == 'onmousedown') {
           sprite.dragging = true;
-      }
-      else if (eventname == 'onmouseup' || eventname == 'onmouseout') {
+      } else if (eventname == 'onmouseup' || eventname == 'onmouseout') {
           sprite.dragging = false;
       }
     }
 
-    if (quirks.ie_mouse_events && eventname == 'onmouseleave') {
-        eventname = 'onmouseout';
-    }
     if (sprite.__shown != true) {
         // this only happens when tabbing in from outside the app
         if (eventname == 'onfocus') {
@@ -584,11 +576,10 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             LzInputTextSprite.prototype.__lastfocus = sprite;
             LzKeyboardKernel.setKeyboardControl(true);
         }
-        return; 
+        if (eventname != 'onblur') return; 
     } else if (sprite.__shown == false) {
         return;
     }
-    var nextFocus = null;
     if (eventname == 'onfocus' || eventname == 'onmousedown') {
         if (eventname == 'onfocus') {
             LzMouseKernel.setGlobalClickable(false);
@@ -610,36 +601,11 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             sprite.select();
             return;
         }
-        // check if __hide() was called
-        var shown = sprite.__shown;
         sprite.__hide();
-        if (quirks.dom_breaks_focus && (shown && ! sprite.__shown)) {
-            // workaround for Firefox bug (LPP-7786):
-            // DOM operations (appendChild, removeChild) on blurring element
-            // breaks the focus in Firefox, so we need to re-focus the
-            // element later again
-            var fsprite = LzInputTextSprite.prototype.__focusedSprite;
-            nextFocus = fsprite && fsprite.__LzInputDiv;
-        }
         if (sprite._cancelblur) {
             sprite._cancelblur = false;
-            if (nextFocus) {
-                // re-initiate focus
-                nextFocus.focus();
-            }
             return;
         }
-    } else if (eventname == 'onmouseout') {
-      // Only re-enable clickable if the mouse actually leaves our
-      // bounding box (i.e., not just because it enters another sprite
-      // that overlaps us)
-//       if ($debug) {
-//         var m = sprite.getMouse(null);
-//         Debug.info("%w: 0 <= %d < %d; 0 <= %d < %d", sprite, m.x, sprite.width, m.y, sprite.height);
-//       }
-      if (! sprite.__isMouseOver()) {
-        sprite.__hide();
-      }
     } else if (eventname == 'onmousemove') {
         if (quirks.autoscroll_textarea && sprite.dragging) {
             // Simulate mouse scrolling naer the top and bottom (LPP-8277)
@@ -748,20 +714,32 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
                 d.scrollTop = d.scrollHeight - d.clientHeight + 20;
             }
         } else {
-            if (eventname == 'onmousedown') {
-                view.inputtextevent(eventname);
-                // also send an artifial 'onfocus' event
-                eventname = 'onfocus';
+            if (eventname == 'onmousedown' || eventname == 'onmouseup' || eventname == 'onmouseover' || eventname == 'onmouseout' || eventname == 'onclick') {
+                sprite.__mouseEvent(evt);
+                // prevent bubbling
+                evt.cancelBubble = true;
+
+                if (eventname == 'onmouseout') {
+                    // Only re-enable clickable if the mouse actually leaves our
+                    // bounding box (i.e., not just because it enters another sprite
+                    // that overlaps us)
+                    //       if ($debug) {
+                    //         var m = sprite.getMouse(null);
+                    //         Debug.info("%w: 0 <= %d < %d; 0 <= %d < %d", sprite, m.x, sprite.width, m.y, sprite.height);
+                    //       }
+                    if (! sprite.__isMouseOver()) {
+                        sprite.__hide();
+                    }
+                }
+                return;
             }
             view.inputtextevent(eventname);
         }
     }
+}
 
-    if (nextFocus) {
-        // re-initiate focus, see above
-        // do this late to preserve correct event order
-        nextFocus.focus();
-    }
+LzInputTextSprite.prototype.setClickable = function ( val ){
+    this.clickable = val;
 }
 
 LzInputTextSprite.prototype.setEnabled = function ( val ){
@@ -778,7 +756,7 @@ LzInputTextSprite.prototype.setMaxLength = function ( val ){
 }
 
 LzInputTextSprite.prototype.select = function (){
-    this._cancelblur = true;
+    //this._cancelblur = true;
     this.__show();
     // Setting focus can generate an error in IE7/dhtml (LPP-6142)
     try {
@@ -1045,7 +1023,7 @@ LzInputTextSprite.prototype._getTextareaSelection = function (){
 }
 
 LzInputTextSprite.prototype.deselect = function (){
-    this._cancelfocus = true;
+    //this._cancelfocus = true;
     this.__hide();
     if (this.__LzInputDiv && this.__LzInputDiv.blur) this.__LzInputDiv.blur();
     if (window['LzKeyboardKernel']) LzKeyboardKernel.__cancelKeys = true;
@@ -1095,7 +1073,6 @@ LzInputTextSprite.prototype.setWidth = function (w) {
     var nw = LzTextSprite.prototype.setWidth.call(this, w);
     if (this.quirks.fix_clickable && nw != null) {
         this.__LZclickcontainerdiv.style.width = nw;
-        this.__LZinputclickdiv.style.width = nw;
     }   
 }
 
@@ -1105,7 +1082,6 @@ LzInputTextSprite.prototype.setHeight = function (h) {
     var nh = LzTextSprite.prototype.setHeight.call(this, h);
     if (this.quirks.fix_clickable && nh != null) {
         this.__LZclickcontainerdiv.style.height = nh;
-        this.__LZinputclickdiv.style.height = nh;
     }
 }   
 
@@ -1150,9 +1126,4 @@ if (LzSprite.prototype.quirks.prevent_selection) {
             return false;
         }
     }
-}
-
-LzInputTextSprite.prototype.setID = function(id){
-    if (!this.__LZdiv.id) this.__LZdiv.id = 'inputtextsprite' + id;
-    if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click' + id;
 }

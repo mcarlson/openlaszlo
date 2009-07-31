@@ -178,11 +178,6 @@ var LzKeyboardKernel = {
             //console.log('setKeyboardControl' + dhtmlKeyboardControl);
             handler = LzKeyboardKernel.__keyboardEvent;
         }
-        var lzinputproto = LzInputTextSprite.prototype;
-        if (lzinputproto.__focusedSprite) {
-            // hide any focused inputtexts
-            lzinputproto.__hideIfNotFocused();
-        }
         // can't use lz.embed.attachEventHandler because we need to cancel events selectively
         if (LzSprite.prototype.quirks.keyboardlistentotop) {
             var doc = window.top.document;

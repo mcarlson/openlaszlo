@@ -816,9 +816,4 @@ LzTextSprite.prototype.setTextDecoration = function (decoration) {
     }
 }
 
-LzTextSprite.prototype.setID = function(id){
-    if (!this.__LZdiv.id) this.__LZdiv.id = 'textsprite' + id;
-    if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click' + id;
-}
-
 }

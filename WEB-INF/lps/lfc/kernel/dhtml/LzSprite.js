@@ -552,7 +552,7 @@ LzSprite.prototype.quirks = {
     ,scrollbar_width: 15
     ,inputtext_strips_newlines: false
     ,swf8_contextmenu: true
-    ,dom_breaks_focus: false
+    //,dom_breaks_focus: false // no longer needed
     ,inputtext_anonymous_div: false
     ,clipped_scrollbar_causes_display_turd: false
     ,hasmetakey: false
@@ -1332,10 +1332,6 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
                 // enable keyboard/mouse events
                 rootdiv.onmouseover();
             }
-        }
-        var lzinputproto = window['LzInputTextSprite'] && LzInputTextSprite.prototype;
-        if (lzinputproto && lzinputproto.__lastshown != null) {
-            lzinputproto.__hideIfNotFocused();
         }
     }
 
@@ -2663,7 +2659,7 @@ LzSprite.prototype.sendAAEvent = function(childID, eventType, nonHTML){
 
 LzSprite.prototype.setID = function(id){
     if (!this._id) this._id = id;
-    if (!this.__LZdiv.id) this.__LZdiv.id = 'sprite' + id;
+    if (!this.__LZdiv.id) this.__LZdiv.id = this._dbg_typename + id;
     if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click' + id;
     if (this.__LZcontextcontainerdiv && ! this.__LZcontextcontainerdiv.id) this.__LZcontextcontainerdiv.id = this.__LZcontextcontainerdiv.id = 'context' + id;
 }
