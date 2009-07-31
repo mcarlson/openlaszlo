@@ -21,17 +21,22 @@ Last Changed Date: 2008-12-16 22:19:16 -0500 (Tue, 16 Dec 2008)
 
 svn export trunk /tmp/flex
 
-cp -r /tmp/flex/lib/*.jar $LPS_HOME/WEB-INF/lib
-
-# NOTE: I removed these XML parsers, they cause doc
+# NOTE: [2009-07-30] we decided to not use the copies of the batik
+# .jars from the Flex SDK, and just use some selected batik jar files
+# direct from the apache release. So don't copy over any of batik jar files
+# NOTE: We also don't copy the  XML parser .jars, they cause doc
 # build to fail.  flex seems happy without them, maybe only needed for
 # compiling MXML?  
 
-rm $LPS_HOME/WEB-INF/lib/xalan.jar
-rm $LPS_HOME/WEB-INF/lib/xercesImpl.jar
-rm $LPS_HOME/WEB-INF/lib/xercesImpl_ja.jar
-rm $LPS_HOME/WEB-INF/lib/xercesPatch.jar
-rm $LPS_HOME/WEB-INF/lib/xmlParserAPIs.jar
+for i in adt.jar afe.jar aglj32.jar asc.jar asdoc.jar \
+ commons-collections.jar commons-discovery.jar commons-logging.jar compc.jar copylocale.jar \
+ digest.jar fcsh.jar fdb.jar flex-compiler-oem.jar flex-fontkit.jar \
+ flex-messaging-common.jar flexTasks.jar fxgutils.jar javacc.jar license.jar \
+ mxmlc.jar mxmlc_ja.jar optimizer.jar rideau.jar saxon9.jar \
+ swfdump.jar swfutils.jar velocity-dep-1.4-flex.jar 
+do
+  cp /tmp/flex/lib/$i $LPS_HOME/WEB-INF/lib
+done;
 
 
 
