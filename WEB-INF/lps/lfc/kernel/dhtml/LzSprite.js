@@ -123,7 +123,7 @@ var LzSprite = function(owner, isroot) {
             div.mouseisover = false;
             div.onmouseover = function(e) {
                 if (LzSprite.prototype.quirks.focus_on_mouseover) {
-                    if (LzSprite.prototype.getSelectedText() != "") {
+                    if (LzSprite.prototype.getSelectedText() == "") {
                         div.focus();
                     }
                 }
@@ -2547,15 +2547,12 @@ if (LzSprite.prototype.quirks.ie_leak_prevention) {
 
 // Get any selected text
 LzSprite.prototype.getSelectedText = function () {
-    var txt = '';
     if (window.getSelection) { // FF/Safari/Opera/Chrome
         return window.getSelection().toString();
     } else if (document.selection) { // IE7
         return document.selection.createRange().text.toString();
     } else if (document.getSelection) { // others
         return document.getSelection();
-    } else {
-        return null;
     }
 }
 

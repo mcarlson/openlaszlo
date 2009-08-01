@@ -1114,10 +1114,16 @@ LzInputTextSprite.findSelection = function ( ){
 // can't use lz.embed.attachEventHandler because we need to cancel events
 
 if (LzSprite.prototype.quirks.prevent_selection) {
-    document.onselectstart = function () {
-        var src = window.event.srcElement;
-        if (src.owner instanceof LzTextSprite) {
-            if (! src.owner.selectable) {
+    document.onselectstart = function (e) {
+        if (!e) {
+            e = window.event;
+            var targ = e.srcElement; 
+        } else {
+            // Safari gives the text node as the srcElement
+            var targ = e.srcElement.parentNode; 
+        }
+        if (targ.owner instanceof LzTextSprite) {
+            if (! targ.owner.selectable) {
                 //Debug.write("prevent selection on non-selectable text")
                 return false;
             }
