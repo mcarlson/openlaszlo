@@ -11,6 +11,7 @@ lz.embed.iframemanager = {
     ,__calljsqueue: {}
     ,__sendmouseevents: {}
     ,__hidenativecontextmenu: {}
+    ,__selectionbookmarks: {}
     ,create: function(owner, name, scrollbars, appendto, defaultz, canvasref) {
         //console.log(owner + ', ' + name + ', ' + scrollbars + ', ' + appendto + ', ' + defaultz)
         var id = '__lz' + lz.embed.iframemanager.__counter++;
@@ -430,5 +431,22 @@ lz.embed.iframemanager = {
     }
     ,setShowNativeContextMenu: function(id, show) {
         this.__hidenativecontextmenu[id] = ! show;
+    }
+    ,storeSelection: function(id) {
+        var ifm = lz.embed.iframemanager;
+        var win = ifm.getFrameWindow(id);
+        if (win && win.document && win.document.selection && win.document.selection.type=="Text"){
+            ifm.__selectionbookmarks[id] = win.document.selection.createRange().getBookmark();
+        }
+    }
+    ,restoreSelection: function(id) {
+        var ifm = lz.embed.iframemanager;
+        var win = ifm.getFrameWindow(id);
+        if (ifm.__selectionbookmarks[id] && win) {
+            var bookmark = ifm.__selectionbookmarks[id];
+            var range = win.document.body.createTextRange();
+            range.moveToBookmark(bookmark);
+            range.select();
+        }
     }
 }
