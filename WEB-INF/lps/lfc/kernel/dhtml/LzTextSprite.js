@@ -572,23 +572,173 @@ LzTextSprite.prototype.setResize = function (r){
 
 LzTextSprite.prototype.setSelection = function ( start , end=null){
     if (end == null) { end = start; }
-// TODO: not implemented
-    if ($debug) {
-        Debug.warn('LzTextSprite.setSelection is not implemented yet.');
+
+    if (this.quirks['text_selection_use_range']) {
+        var range = document.body.createTextRange();
+
+        range.moveToElementText(this.scrolldiv);
+        if (start > end){
+            var st = start;
+            start = end;
+            end = st;
+        }
+
+        var st = start;
+        var ed = end - range.text.length;
+
+        range.moveStart("character", st);
+        range.moveEnd("character", ed);
+        range.select();
+    } else {
+        var range = document.createRange();
+
+        var offset = 0;
+
+        range.setStart(this.scrolldiv.childNodes[0], start);
+        range.setEnd(this.scrolldiv.childNodes[0], end);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }     
+}
+
+/** @access private */
+LzTextSprite.prototype.__findNodeByOffset = function(offset) {
+    var node = this.scrolldiv.childNodes[0];
+    var curroffset = 0;
+    while (node) {
+        if (node.nodeType == 3) {
+            offset += node.textContent.length;
+        } else if (node.nodeType == 1 && node.nodeName == 'BR') {
+            offset += 1;
+        }
+        if (curroffset >= offset) {
+            return node;
+        }
+        node = node.nextSibling;
     }
 }
 
+/** @access private */
+LzTextSprite.prototype.__getGlobalRange = function (){
+    var browser = lz.embed.browser;
+// from http://www.quirksmode.org/dom/range_intro.html
+    var userSelection;
+    if (this.quirks['text_selection_use_range']) {
+        userSelection = document.selection.createRange();
+    } else if (window.getSelection) {
+        userSelection = window.getSelection();
+    }
+
+    try {
+        if (userSelection) {
+            if (this.quirks['text_selection_use_range']) {
+                return userSelection;
+            } else if (userSelection.getRangeAt) {
+                return userSelection.getRangeAt(0);
+            } else { // Safari!
+                var range = document.createRange();
+                range.setStart(userSelection.anchorNode,userSelection.anchorOffset);
+                range.setEnd(userSelection.focusNode,userSelection.focusOffset);
+                return range;
+            }
+        }
+    } catch (e) {
+    }
+}
+
+/** @access private */
+LzTextSprite.prototype.__textareaToRange = function (textarea) {
+    var bookmark = textarea.getBookmark();
+    var contents, originalContents;
+    originalContents = contents = this.scrolldiv.innerHTML;
+
+    var owner = this.__getRangeOwner(textarea);
+
+    if (! (owner instanceof LzTextSprite)) {
+        return;
+    }
+
+    do {
+        var marker = "~~~" + Math.random() + "~~~";
+    } while (contents.indexOf(marker) != -1)
+
+    textarea.text = marker + textarea.text + marker;
+    contents = this.scrolldiv.innerHTML;
+
+    // remove BR tags...
+    contents = contents.replace("<BR>", " ");
+    var range = {};
+    range.startOffset = contents.indexOf(marker);
+    contents = contents.replace(marker, "");
+    range.endOffset = contents.indexOf(marker);
+
+    this.scrolldiv.innerHTML = originalContents;
+    textarea.moveToBookmark(bookmark);
+    textarea.select();
+
+    return range;
+}
+
+/** @access private */
+LzTextSprite.prototype.__getRangeOwner = function (range){
+    if (! range) return;
+    if (this.quirks['text_selection_use_range']) {
+        var range = range.duplicate();
+        range.collapse();
+        return range.parentElement().owner;
+    } else {
+        if (range.startContainer.parentNode == range.endContainer.parentNode) return range.startContainer.parentNode.owner;
+    }
+}
+
+/** @access private */
+LzTextSprite.prototype.__getOffset = function (node){
+    var offset = 0;
+    // walk backwards counting text and br nodes
+    while (node = node.previousSibling) {
+        if (node.nodeType == 3) {
+            offset += node.textContent.length;
+        } else if (node.nodeType == 1 && node.nodeName == 'BR') {
+            offset += 1;
+        }
+    }
+    return offset;
+}
+
 LzTextSprite.prototype.getSelectionPosition = function ( ){
-// TODO: not implemented
-    if ($debug) {
-        Debug.warn('LzTextSprite.getSelectionPosition is not implemented yet.');
+    var range = this.__getGlobalRange();
+    if (this.__getRangeOwner(range) === this) {
+        if (this.quirks['text_selection_use_range']) {
+            range = this.__textareaToRange(range);
+            return range.startOffset;
+        } else {
+            var offset = 0;
+            if (this.multiline) {
+                offset = this.__getOffset(range.startContainer);
+            }
+            return range.startOffset + offset;
+        }
+    } else {
+        return -1;
     }
 }
 
 LzTextSprite.prototype.getSelectionSize = function ( ){
-// TODO: not implemented
-    if ($debug) {
-        Debug.warn('LzTextSprite.getSelectionSize is not implemented yet.');
+    var range = this.__getGlobalRange();
+    if (this.__getRangeOwner(range) === this) {
+        if (this.quirks['text_selection_use_range']) {
+            range = this.__textareaToRange(range);
+        } else {
+            if (this.multiline) {
+                var startoffset = this.__getOffset(range.startContainer);
+                var endoffset = this.__getOffset(range.endContainer);
+                return (range.endOffset + endoffset) - (range.startOffset + startoffset);
+            }
+        }
+        return range.endOffset - range.startOffset;
+    } else {
+        return -1;
     }
 }
 
