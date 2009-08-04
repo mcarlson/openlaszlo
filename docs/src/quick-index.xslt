@@ -21,14 +21,37 @@
         <body>
         <div style="float:right"><img border="0" src="lps/includes/logo_web_sm.gif" alt="OpenLaszlo logo" /></div>
         <h1>OpenLaszlo Quick Index</h1>
-        
-        <p><a href="release-notes.html">Release Notes</a></p>
-        <p>If this is the first time you've run OpenLaszlo
-            or you are looking for an introduction, please try 
-            Laszlo Explorer (<a href="laszlo-explorer/index.jsp?lzr=swf8">Flash</a>) (<a href="laszlo-explorer/index.jsp?lzr=dhtml">DHTML</a>).
+
+        <p>
+          If this is the first time you've run OpenLaszlo or you are
+          looking for an introduction, please try the OpenLaszlo Explorer in <a
+          href="laszlo-explorer/index.jsp?lzr=swf8">Flash</a> or <a
+          href="laszlo-explorer/index.jsp?lzr=dhtml">DHTML</a>.
         </p>
+
+        <p>
+          Documentation for OpenLaszlo can be found here:
+        </p>
+
         <ul>
-            <xsl:apply-templates select="*[not(@name='Laszlo in 10 Minutes')]"/> 
+            <xsl:apply-templates select="*[@name='Documentation']"/>
+        </ul>
+
+        <p>
+          If you cannot find answers here, please ask your question
+          on the <a href="http://www.openlaszlo.org/lists">mailing list</a> or
+                 <a href="http://forum.openlaszlo.org/">forums</a>.
+          If you find a bug in OpenLaszlo, please file a report
+          in the OpenLaszlo <a href="http://jira.openlaszlo.org/">bug
+          database</a>.
+        </p>
+
+        <p>
+          Direct links to the examples used in the OpenLaszlo Explorer are also provided below, for demonstration and testing purposes.
+        </p>
+
+        <ul>
+            <xsl:apply-templates select="*[not(@name='Laszlo in 10 Minutes' or @name='Documentation')]"/>
         </ul>
         <hr/>
         <p>OpenLaszlo @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@</p>

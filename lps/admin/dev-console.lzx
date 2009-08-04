@@ -8,6 +8,9 @@
 
 
 <canvas width="100%"  height="370" proxied="false" bgcolor="#858599">
+ <!-- Make sure there is a copyright in the Javascript 'binary' -->
+ <attribute name="copyright" type="string"
+            value="Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms." />
  <switch>
     <when runtime="dhtml">
     </when>
@@ -119,17 +122,17 @@
    </method>
 
    <method name="viewDocs">
-     var url = app_lps_root + "/docs/index.html";
+     var url = app_lps_root + "/index.html";
      this.loadURL(url);
    </method>
    
    <method name="viewDev">
-     var url = "http://www.laszlosystems.com/developers";
+     var url = "http://www.openlaszlo.org/community";
      this.loadURL(url);
    </method>
    
    <method name="viewForums">
-     var url = "http://www.laszlosystems.com/developers/community/forums/";
+     var url = "http://forum.openlaszlo.org/";
      this.loadURL(url);
    </method>
 
@@ -194,10 +197,10 @@
           <button x="65" onclick="canvas.viewWrapper()">Server</button>
           <button x="134" onclick="canvas.deploySOLO()">SOLO</button>
 
-          <view fgcolor="0x15159b" y="3" options="ignorelayout" align="right">
+          <view fgcolor="0x15159b" y="3" options="ignorelayout" align="right" layout="axis: x; spacing: 3">
             <text onclick="canvas.viewDocs()"><u>Documentation</u></text>
-            <text x="92" onclick="canvas.viewDev()"><u>Developer Network</u></text>
-            <text x="208" onclick="canvas.viewForums()"><u>Developer Forums</u></text>
+            <text onclick="canvas.viewDev()"><u>Developer Community</u></text>
+            <text onclick="canvas.viewForums()"><u>Developer Forums</u></text>
           </view>
           
         </view>
