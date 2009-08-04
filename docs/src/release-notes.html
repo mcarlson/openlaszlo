@@ -35,24 +35,21 @@
           font-size: 12px;
       }</style>
 
-  </head><body class="release-notes">
-    <hr>
-    <h1>Release Notes for OpenLaszlo @VERSIONID@</h1>
-    <hr>
-    <p>OpenLaszlo @VERSIONID@ is a bug fix release, with more than 60
-      bugs fixed primarily in the area of DHTML since OpenLaszlo
-      4.3. OpenLaszlo @VERSIONID@ is the recommended platform for all
-      application development in the SWF8, SWF9, and DHTML
-      runtimes.</p>
+  </head><body class="release-notes"> <hr> <h1>Release Notes for
+  OpenLaszlo @VERSIONID@</h1> <hr> <p>OpenLaszlo @VERSIONID@ is a bug
+  fix release, with more than 35 bugs fixed primarily in the area of
+  inputtext selection and focus in DHTML, and in some cases, in SWF8 and
+  SWF9 as well. OpenLaszlo @VERSIONID@ is the recommended platform for
+  all application development in the SWF8, SWF9, and DHTML runtimes.</p>
 
-    <p>For those of you who have already upgraded your applications to OpenLaszlo 4.2, no further
+    <p>For those of you who have already upgraded your applications to OpenLaszlo 4.2 or higher, no further
       work is needed. You should just start using OpenLaszlo @VERSIONID@.</p>
 
     <p>To migrate your 4.0.X or 4.1.1 applications, we strongly suggest that you refer to this wiki
       page: <a href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2" target="_blank">Runtime_Differences</a>. This page discusses the changes required by SWF9
       and also provides a methodology for upgrading your application. It is very important that you
       run the automated conversion scripts in the recommended order, should you choose to take
-      advantage of them.</p>
+      advantage of them. To review the changes in incremental releases, please refer to the <a href="http://www.openlaszlo.org/archive" target="_blank">OpenLaszlo Archive</a></p>
 
     <p>This release has been fully tested on the following operating systems/browser/runtime
       platforms:</p>
@@ -63,7 +60,7 @@
       <li>Mac OS X, Firefox 3: SWF8, SWF9, DHTML</li>
       <li>Mac OS X, Safari 3: SWF8, SWF9, DHTML</li>
     </ul>
-    <p>Please note that although we have also done some testing with Windows Vista, OpenLaszlo 4.2
+    <p>Please note that although we have also done some testing with Windows Vista, OpenLaszlo @VERSIONID@
       has not been fully qualified against that operating system at this time. Please see <a href="#windowsvista">
         <i>Running OpenLaszlo Server on Windows Vista</i>
       </a> for more information.</p>
@@ -110,8 +107,8 @@
 </code>
 </p>
 
-<h2>Deprecation Notice: Attribute Values on Data Element Will Be Coerced to String in OpenLaszlo 4.5</h2>
-<p>Currently, if you set an attribute value for a data element, the value is stored as it is set. This will no longer be true in OpenLaszlo 4.5, where the value will be coerced to a String value.  If you need to set non-String values for data elements, you should use the <code>setUserData</code> method as shown in this example where <code>node</code> is an <code>LzDataElement</code>:<br>
+<h2>Deprecation Notice: Attribute Values on Data Element Will Be Coerced to String in a Future OpenLaszlo Release</h2>
+<p>Currently, if you set an attribute value for a data element, the value is stored as it is set. This will no longer be true in future OpenLaszlo releases, where the value will be coerced to a String value.  If you need to set non-String values for data elements, you should use the <code>setUserData</code> method as shown in this example where <code>node</code> is an <code>LzDataElement</code>:<br>
 <code style="white-space: pre">
 node1.setUserData('key1', val1);
 assertEquals(val1, node1.getUserData('key1'), 'getUserData key1');
@@ -119,11 +116,14 @@ assertEquals(val1, node1.getUserData('key1'), 'getUserData key1');
 </p>
 
     <h2>Bugs Fixed in OpenLaszlo @VERSIONID@</h2>
-    <p>The @VERSIONID@ release includes over 60 bug fixes since 4.3; we have provided links to
+    <p>The @VERSIONID@ release includes over 35 bug fixes since OpenLaszlo 4.4; we have provided links to
       our JIRA bug tracking system where you can view the details:</p>
     <ul>
       <li>
-        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10972" target="_blank">Fixed bugs in @VERSIONID@</a>
+        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=11011" target="_blank">Fixed bugs in @VERSIONID@</a>
+        </li>
+        <li>
+        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10972" target="_blank">Fixed bugs in 4.4.0</a>
       </li>
       <li>
         <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10950" target="_blank">Fixed bugs in 4.3.0</a>
@@ -135,182 +135,18 @@ assertEquals(val1, node1.getUserData('key1'), 'getUserData key1');
         <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10880" target="_blank">Fixed bugs in 4.2.0.1</a>
       </li>
     </ul>
-<hr>
-    <h1>Notes from OpenLaszlo 4.3</h1>
-</hr>    
-<h2>Audio/Video Improvements</h2>
-    <p>
-    Audio/Video APIs are working well in this release.  Videoplayer and videoview now show the first frame of the video by default when they appear, if a URL has been set.  (You can control this behavior with new starttime API.)  Live broadcast and recording APIs are working in both swf8 and swf9.  We have also added a new <a href="http://forum.openlaszlo.org/forumdisplay.php?f=40">Audio & Video Programming forum</a></p>
-
-    <h2>Improved Debugger to deal with deep and circular objects when printing</h2>
-    <p>The 4.3 release adds two new properties of Debug: <code>printDepth:Number</code>
-      (default 8) limits how deep the debug printer will go into an object when printing it;
-        <code>inspectPrintDepth:Number</code> (default 1) limits how deep the debug printer will go into an object that is a property of an object when inspecting.
-        The debug printer will also
-      detect circular objects (rather than causing a stack overflow), at small cost in overhead.
-      When an object refers to itself (however indirectly), it will be printed just as its type and
-      ID.</p>
-    <h2>Change to <code>this</code> behavior</h2>
-    <p>
-      Before 4.3 you could dynamically add attributes to an instance by saying: 
-    </p>
-    <code>
-    &lt;method &#x2026;&gt;<br>
-    &nbsp;&nbsp;this.myattr = "hello";<br>
-    &lt;/method&gt;
-    </code> 
-    <p>
-      and reference that dynamically-added attribute as if it were a declared attribute: 
-    </p>
-    <code>
-    &lt;method &#x2026;&gt;<br>
-    &nbsp;&nbsp;return myattr;<br>
-    &lt;/method&gt;
-    </code> 
-    <p>
-      In 4.2 and later, only declared attributes, i.e.: 
-    </p>
-    <code>
-    &lt;attribute name="myattr" &#x2026; /&gt;
-    </code> 
-    <p>
-      can be referenced lexically (without saying <code>this.</code>). The swf9 runtime will generate an error at compile time if you make a lexical reference to an undeclared attribute. For the swf8 and DHTML runtimes, the old behavior is supported but deprecated and may cause a compiler warning or error in future releases. 
-    </p>
-    <h2>New Documentation Comments Feature</h2>
-    <p>The @VERSIONID@ release adds a section at the end of every documentation page where you can
-      add an example or comment that expands upon the existing documentation or shows a non-obvious
-      usage of a feature (or work-around for a bug that you have already filed) in OpenLaszlo.
-      Documentation bugs or feature requests should be filed in our <a href="http://www.openlaszlo.org/jira/browse/LPP">bug tracking system</a> as in previous
-      releases.</p>
-    <h2>Incubator components</h2>
-    <p>The @VERSIONID@ release updates incubator components to work with 4.2.</p>
-
-    <h2>Bugs Fixed in OpenLaszlo @VERSIONID@</h2>
-    <p>The @VERSIONID@ release includes almost 300 bug fixes since 4.2; we have provided links to
-      our JIRA bug tracking system where you can view the details:</p>
-    <ul>
-      <li>
-        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10950" target="_blank">Fixed bugs in @VERSIONID@</a>
-      </li>
-      <li>
-        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10911" target="_blank">Fixed bugs in 4.2.0.2</a>
-      </li>
-      <li>
-        <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10880" target="_blank">Fixed bugs in 4.2.0.1</a>
-      </li>
-    </ul>
-    <hr>
-    <h1>Release Notes for OpenLaszlo 4.2</h1>
-    <hr>
-    <p>OpenLaszlo 4.2 is the next fully-qualified release since OpenLaszlo 4.1.1, and is the
-      recommended platform for all application development in the SWF8, SWF9, and DHTML runtimes.
-      This release follows the interim OpenLaszlo 4.2 Beta 3 release. The major new feature in
-      OpenLaszlo 4.2 is the introduction of the SWF9 runtime, which can offer significant
-      performance gains. Unlike previous versions of the Flash player, SWF9 has much stronger typing
-      requirements and you must modify your code to take advantage of the performance gains it
-      offers. To assist you in upgrading your applications to OpenLaszlo 4.2, we have provided
-      various conversion scripts depending on your application goals.</p>
-
-    <h2>New SWF9 Compiler Switch</h2>
-    <p>There is a new compiler switch in <code>WEB-INF/lps/config/lps.properties</code>:</p>
-
-    <p>
-      <code>compiler.swf9.execflex=false</code>
-    </p>
-
-
-    <p>This switch controls whether the flex swf9 compiler is invoked in the same Java thread as the
-      LPS Server, or using a separate exec'ed process. Setting <code>execflex=false</code> will be
-      more portable, as it doesn't depend on the shell and execution of a subprocess, however it
-      will require more max heap memory for the LPS Server. A minimum of 1024MB is recommended for
-      the <code>Java -Xmx</code> max heap memory init option.</p>
-
-    <p>If <code>execflex</code> is set to true, the flex compiler will be invoked in a separate
-      process. This will use less heap memory from the main LPS server or servlet process. On Unix
-      and OSX systems, the files in <code>WEB-INF/bin/mxmlc</code> and
-      <code>WEB-INF/bin/compc</code> will need to be set to executable permissions in the
-      filesystem. This should happen automatically in the release, but may not be set correctly when
-      deploying a WAR file using Tomcat's servlet manager; in that case those file permissions may
-      need to be set by hand.</p>
-    <h2>New <code>addFormat()</code> Method for <code>&lt;text&gt;</code></h2>
-    <p>There is a new method on <code>&lt;text&gt;</code>, <code>addFormat()</code>, that
-      does the same as format, but appends to any existing text.</p>
-    <p>See the <a href="http://svn.openlaszlo.org/openlaszlo/trunk/docs/src/developers/text.html#textformat">Text Views</a> chapter of the Developer's
-      Guide for a description and example.</p>
-
-    <h2><a name="windowsvista">Running OpenLaszlo Server on Windows Vista</a></h2>
-
-<p>There are two options. The first option is to manually ask for administrator privileges
-      whenever you want to start or stop the OpenLaszlo Server.</p>
-
-<ol>
-<li>
-
-<p>Navigate to <b>Start-&gt;All Programs-&gt;OpenLaszlo Server-&gt;Start OpenLaszlo Server</b>.</p>
-</li>
-<li>
-<p>Right click and select <b>Run as administrator</b>.</p>
-</li>
-<li>
-<p>Click <b>Continue</b> when Vista displays a dialog box asking for permission.</p>
-</li>
-</ol>
-
-<p>Use the same procedure to select <b>Stop OpenLaszlo Server</b> or <b>OpenLaszlo Explorer</b>.</p>
-
-<p>The second option is to modify the application shortcuts to run as administrator whenever
-      they are selected.</p>
-
-<ol>
-<li>
-<p>Navigate to <b>Start-&gt;All Programs-&gt;OpenLaszlo Server-&gt;Start OpenLaszlo Server</b>. Right
-          click and select <b>Properties</b>.</p>
-</li>
-<li>
-<p>The properties dialog box should open in the <b>Shortcut</b> tab. Click on the
-            <b>Advanced...</b> button.</p>
-</li>
-<li>
-<p>Click on the checkbox to <b>Run as administrator</b> and click the <b>OK</b> button.</p>
-</li>
-<li>
-<p>Click the <b>OK</b> button on the <b>Shortcut</b> tab. Vista will display a dialog box
-          asking for permission to change the shortcut settings.</p>
-</li>
-</ol>
-
-<p>Follow the same procedure for the <b>Stop OpenLaszlo Server</b> or <b>OpenLaszlo Explorer</b>
-      shortcuts.</p>
-
-<p>Note: Microsoft Vista will still ask for permission to run as an administrator. However, you
-      do not have to remember to run as an administrator each time.</p>
-
-
-
-<h2>Bugs Fixed in OpenLaszlo 4.2</h2>
-<p>The 4.2 release includes more than 600 bug fixes since the last fully-qualified release since
-      release 4.1.1; we have provided a link to our JIRA bug tracking system where you can view the
-      details:</p>
-<ul>
-<li>
-<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10840" target="_blank">Fixed bugs</a>
-      </li>
-    </ul>
 
     <h2>OpenLaszlo @VERSIONID@ Credits</h2>
 
     <p> We would like to thank the entire OpenLaszlo community for
-      submitting bug fixes and participating in discussions to help
-      make OpenLaszlo a better platform. We'd also like to thank the
-      incredible engineering team at <a
-      href="http://g.ho.st/">G.ho.st</a>, who have worked with us as a
-      sponsor to bring SWF9 and many other improvements to the
-      community. Special thanks to Andr&#xE9; Bargull and Raju Bitter
-      for their continued and amazing support of the project. Special
-      recognition goes to community contributors: Sarah Allen,
-      Ildefonso Gomariz Abril, and Mao YingZhuo. And heartfelt thanks
-      to Phil Romanik, Don Anderson, Josh Crowley, and Lou Iorio for
-      their tireless efforts and significant contributions. </p>
+    submitting bug fixes and participating in discussions to help make
+    OpenLaszlo a better platform. Special thanks to Andr&#xE9; Bargull
+    and Raju Bitter for their continued and amazing support of the
+    project.  We'd also like to thank the incredible engineering team at
+    <a href="http://g.ho.st/">G.ho.st</a>, who have worked with us as a
+    sponsor to bring SWF9 and many other improvements to the community.
+    Special recognition is also due to community contributors: Philip
+    Romanik, Sarah Allen, and Jason Gratt. </p>
 
     <hr>
     <p>OpenLaszlo @VERSIONID@ @RELEASE@ @BUILDID@ @BUILDDATE@</p>
