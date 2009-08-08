@@ -109,13 +109,13 @@ var LzSprite = function(owner, isroot) {
         if (quirks['css_hide_canvas_during_init']) {
             var cssname = 'display';
             var cssval = 'none';
-            if (this.quirks['safari_visibility_instead_of_display']) {
+            if (quirks['safari_visibility_instead_of_display']) {
                 cssname = 'visibility';
                 cssval = 'hidden';
             }
             this.__LZdiv.style[cssname] = cssval;
-            this.__LZclickcontainerdiv.style[cssname] = cssval;
-            this.__LZcontextcontainerdiv.style[cssname] = cssval;
+            if (quirks['fix_clickable']) this.__LZclickcontainerdiv.style[cssname] = cssval;
+            if (quirks['fix_contextmenu']) this.__LZcontextcontainerdiv.style[cssname] = cssval;
         }
 
         if (quirks.activate_on_mouseover) {
@@ -882,8 +882,8 @@ LzSprite.prototype.init = function(v) {
                 cssname = 'visibility';
             }
             this.__LZdiv.style[cssname] = '';
-            this.__LZclickcontainerdiv.style[cssname] = '';
-            this.__LZcontextcontainerdiv.style[cssname] = '';
+            if (this.quirks['fix_clickable']) this.__LZclickcontainerdiv.style[cssname] = '';
+            if (this.quirks['fix_contextmenu']) this.__LZcontextcontainerdiv.style[cssname] = '';
         }
 
         // Register the canvas for callbacks
@@ -1410,7 +1410,7 @@ LzSprite.prototype.setWidth = function ( w ){
         var size = w;
         // set size to zero if we don't have either of these
         if (this.quirks.size_blank_to_zero) {
-            if (this.bgcolor == null && this.source == null && ! (this instanceof LzTextSprite)) {
+            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite)) {
                 this.__sizedtozero = true;
                 size = '0px';
             }
@@ -1453,7 +1453,7 @@ LzSprite.prototype.setHeight = function ( h ){
         var size = h;
         // set size to zero if we don't have either of these
         if (this.quirks.size_blank_to_zero) {
-            if (this.bgcolor == null && this.source == null && ! (this instanceof LzTextSprite)) {
+            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite)) {
                 this.__sizedtozero = true;
                 size = '0px';
             }
@@ -1946,6 +1946,14 @@ LzSprite.prototype.setClip = function(c) {
     if (this.clip == c) return;
     //Debug.info('setClip', c);
     this.clip = c;
+    if (this.quirks.size_blank_to_zero) {
+        if (this.__sizedtozero && c) {
+            // restore size of div
+            this.__sizedtozero = false;
+            this.__LZdiv.style.width = this._w;
+            this.__LZdiv.style.height = this._h;
+        }
+    }
     this.__updateClip();
 }
 
