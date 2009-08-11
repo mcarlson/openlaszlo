@@ -202,7 +202,7 @@ override function construct ( odp , args ){
 
     // replace the view with us,
     // fixing up any name or id
-    var name:String =  view.name;
+    var name:String = view.name;
     if (name != null) {
       args.name = name;
       // remove view we replace to avoid warning in LzNode.$lzc$set_name
@@ -210,7 +210,7 @@ override function construct ( odp , args ){
       view.parent[name] = null;
     }
     // ditto with global binders
-    var idbinder:Function =  view.$lzc$bind_id;
+    var idbinder:Function = view.$lzc$bind_id;
     if (idbinder != null) {
       // remove view binding
       idbinder.call(null, view, false);
@@ -218,7 +218,7 @@ override function construct ( odp , args ){
       this.$lzc$bind_id = idbinder;
       idbinder.call(null, this);
     }
-    var namebinder:Function =  view.$lzc$bind_name;
+    var namebinder:Function = view.$lzc$bind_name;
     if (namebinder != null) {
       // remove view binding
       namebinder.call(null, view, false);
@@ -507,11 +507,11 @@ override function __LZHandleMultiNodes ( n:Array ) :LzReplicationManager {
         if (cl.onclonenumber.ready) cl.onclonenumber.sendEvent( iplusoffset );
     }
     if (this.onclones.ready) this.onclones.sendEvent( this.clones );
-    
+
     for (var i:int = 0; i < layouts.length; ++i) {
         layouts[i].unlock();
     }
-    
+
     return null;
 
 }
@@ -601,8 +601,8 @@ function orderf ( a /*:LzDataNodeMixin*/, b /*:LzDataNodeMixin*/ ) :int {
 
     //this is lame, but comparison with null and "" doens't work right
     //so use newline
-    if ( aa == null || aa == "" ) aa ="\n";
-    if ( bb == null || bb == "" ) bb ="\n";
+    if ( aa == null || aa == "" ) aa = "\n";
+    if ( bb == null || bb == "" ) bb = "\n";
 
     return this.comparator( aa , bb )
 }
@@ -677,7 +677,7 @@ override function setComparator( comparator:* ) :void {
     } else if ($debug) {
         Debug.error("Invalid comparator: %s", comparator);
     }
-    
+
     this.comparator = comparator;
     if ( this.orderpath != null && this.nodes && this.nodes.length ){
         //reset nodes in order now
@@ -831,7 +831,7 @@ override function __LZcheckChange (chgpkg:Object) :Boolean {
             }
         }
     }
-    
+
     return false;
 }
 
@@ -936,14 +936,19 @@ class LzRefNode extends LzNode {
       * @access private 
       */
     var __LZxpathdepend: Function = null;
-    
+    /** Must also define xpath, otherwise the optimized constraint-function
+      * from LPP-8058 generates errors in swf9 (see LPP-8383)
+      * @access private
+      */
+    var xpath :String = null;
+
     /**
       * @access private
       */
     function LzRefNode (parent:LzNode, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
         super(parent, attrs, children, instcall);
     }
-    
+
     /**
       * @access private
       */
