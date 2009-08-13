@@ -43,7 +43,7 @@ var attributes:Object = null;
   * @param LzDataNodeMixin refChild: the LzDataNodeMixin to insert newChild before
   * @return LzDataNodeMixin: The new child, or null if the refChild wasn't found
   */
-public function insertBefore (newChild /*:LzDataNodeMixin*/, refChild /*:LzDataNodeMixin*/) :LzDataNodeMixin {
+public function insertBefore (newChild /*:LzDataNodeMixin*/, refChild /*:LzDataNodeMixin*/) /*:LzDataNodeMixin*/ {
     if (newChild == null) {
         return null;
     } else if (refChild == null) {
@@ -96,7 +96,7 @@ public function insertBefore (newChild /*:LzDataNodeMixin*/, refChild /*:LzDataN
   * @return LzDataNodeMixin: The new child, or null if the oldChild wasn't found
   * @dev-note: DOM-Spec (Level2, Level3) says we need to return the oldChild instead of the newChild
   */
-public function replaceChild (newChild /*:LzDataNodeMixin*/, oldChild /*:LzDataNodeMixin*/) :LzDataNodeMixin {
+public function replaceChild (newChild /*:LzDataNodeMixin*/, oldChild /*:LzDataNodeMixin*/) /*:LzDataNodeMixin*/ {
     if (newChild == null) {
         return null;
     } /* else if (newChild === this) {
@@ -150,7 +150,7 @@ public function replaceChild (newChild /*:LzDataNodeMixin*/, oldChild /*:LzDataN
   * @param LzDataNodeMixin oldChild: The LzDataNodeMixin to remove
   * @return LzDataNodeMixin: The removed child, or null if the oldChild was not found
   */
-public function removeChild (oldChild /*:LzDataNodeMixin*/) :LzDataNodeMixin {
+public function removeChild (oldChild /*:LzDataNodeMixin*/) /*:LzDataNodeMixin*/ {
     var off:int = this.__LZgetCO(oldChild);
     if (off >= 0) {
         // @devnote parentNode needs to be set to null, but that breaks smoke-check.
@@ -177,7 +177,7 @@ public function removeChild (oldChild /*:LzDataNodeMixin*/) :LzDataNodeMixin {
   * @param LzDataNodeMixin newChild: The LzDataNodeMixin to add.
   * @return LzDataNodeMixin: The newChild.
   */
-public function appendChild (newChild /*:LzDataNodeMixin*/) :LzDataNodeMixin {
+public function appendChild (newChild /*:LzDataNodeMixin*/) /*:LzDataNodeMixin*/ {
     if (newChild == null) {
         return null;
     } /* else if (newChild === this) {
@@ -217,7 +217,7 @@ public function hasChildNodes () :Boolean {
 /**
   * @access private
   */
-override public function cloneNode (deep:Boolean = false) :LzDataNodeMixin {
+override public function cloneNode (deep:Boolean = false) /*:LzDataNodeMixin*/ {
     var n:LzDataElement = new LzDataElement(this.nodeName, this.attributes);
     if (deep) {
         var cn:Array = this.childNodes;
@@ -306,7 +306,7 @@ function $lzc$hasAttr_dependencies (who:*, self:*) :Array {
   * Returns the first child of this node.
   * @return LzDataNodeMixin: The first child of this node
   */
-public function getFirstChild () :LzDataNodeMixin {
+public function getFirstChild () /*:LzDataNodeMixin*/ {
     return this.childNodes[ 0 ];
 }
 /** @access private */
@@ -318,7 +318,7 @@ function $lzc$getFirstChild_dependencies (who:*, self:*) :Array {
   * Returns the last child of this node.
   * @return LzDataNodeMixin: The last child of this node
   */
-public function getLastChild () :LzDataNodeMixin {
+public function getLastChild () /*:LzDataNodeMixin*/ {
     return this.childNodes[ this.childNodes.length-1 ];
 }
 /** @access private */

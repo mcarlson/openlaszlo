@@ -80,7 +80,7 @@ public function setData (newdata:String) {
 /**
   * @access private
   */
-override public function cloneNode (deep:Boolean = false) :LzDataNodeMixin {
+override public function cloneNode (deep:Boolean = false) /*:LzDataNodeMixin*/ {
     return new LzDataText(this.data);
 }
 

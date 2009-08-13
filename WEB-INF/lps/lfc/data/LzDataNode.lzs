@@ -237,7 +237,7 @@ public final function setOwnerDocument (ownerDoc) :void {
   * new node
   * @return LzDataNodeMixin: A copy of this node.
   */
-public function cloneNode (deep:Boolean = false) :LzDataNodeMixin {
+public function cloneNode (deep:Boolean = false) /*:LzDataNodeMixin*/ {
     /* not implemented here */
     return undefined;
 }
