@@ -576,9 +576,6 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             LzInputTextSprite.prototype.__lastfocus = sprite;
             LzKeyboardKernel.setKeyboardControl(true);
         }
-        if (eventname != 'onblur') return; 
-    } else if (sprite.__shown == false) {
-        return;
     }
     if (eventname == 'onfocus' || eventname == 'onmousedown') {
         if (eventname == 'onfocus') {
