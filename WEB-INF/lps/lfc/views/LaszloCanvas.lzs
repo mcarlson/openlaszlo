@@ -582,17 +582,12 @@ function compareVersion ( ver , over = null ){
   * @access private
   */
 override function $lzc$set_resource( v ) {
-
-    if ($as3) {
-        //
-    } else {
-        Object.error("You can't set a resource for the canvas.");
+    if ($debug) {
+        Debug.error( "You cannot set a resource on the canvas." );
     }
 }
 
 /**
-  * The canvas setResource function is redefined to throw an error when
-  * called.
   * @access private
   */
 function $lzc$set_focustrap(istrapped:Boolean) {
@@ -683,29 +678,24 @@ function $lzc$set_allowfullscreen( fs:Boolean ) {
   */
 function initDone (){
     //reorder initial subviews so preloaded stuff is first
-    var sva = new Array;
-    var isv = this._lzinitialsubviews;
+    var sva:Array = [];
+    var svb:Array = [];
 
-    for ( var i = 0; i < isv.length; i++ ){
+    var isv:Array = this._lzinitialsubviews;
+    for (var i:int = 0, len:int = isv.length; i < len; ++i) {
         var isi = isv[i];
-        if ( isi['attrs'] && isi.attrs['initimmediate'] ){
+        if (isi['attrs'] && isi.attrs['initimmediate']) {
             sva.push( isi );
+        } else {
+            svb.push( isi );
         }
     }
-
-    for ( var i = 0; i < isv.length; i++ ){
-        var isi = isv[i];
-        if ( ! ( isi['attrs'] && isi.attrs['initimmediate'] ) ){
-            sva.push( isi );
-        }
-    }
+    sva.push.apply(sva, svb);
 
     // Done with that
     this._lzinitialsubviews = [];
 
-    //this.isinited = false;
-    //Debug.write('LzCanvas.initDone');
-    lz.Instantiator.requestInstantiation(  this, sva );
+    lz.Instantiator.requestInstantiation( this, sva );
 }
 
 
@@ -736,6 +726,7 @@ var deferInit = true;
   * @access private
   */
 override function __LZinstantiationDone () : void {
+    this.__LZinstantiated = true;
 
     if (this.deferInit) {
         this.deferInit = false;
@@ -745,7 +736,7 @@ override function __LZinstantiationDone () : void {
     this.percentcreated = 1;
     this.updatePercentCreatedEnabled = false;
     if (this.onpercentcreated.ready) this.onpercentcreated.sendEvent( this.percentcreated ); 
-   lz.Instantiator.resume();
+    lz.Instantiator.resume();
     this.__LZcallInit();
 }
 
@@ -785,19 +776,20 @@ override function __LZcallInit ( an = null ){
     // Install computed initializations
     var sl = this.subnodes;
     if (sl) {
-        var i = 0;
-        var l = sl.length;
-        while(i < l){
+        // @devnote don't store 'sl.length', subnodes array may change (LPP-8386)
+        for (var i = 0; i < sl.length;) {
             var s = sl[ i++ ];
             //remember next one too
-            var t = sl[ i ]
-                if ( s.isinited || s.__LZlateinit ) continue;
+            var t = sl[ i ];
+            if ( s.isinited || (! s.__LZinstantiated) ) continue;
             s.__LZcallInit( );
             //if the next one is not where it was, back up till we find it or to
             //the beginning of the array
             if ( t != sl[ i ] ){
                 // When does this ever happen?
-                //             Debug.warn('subnodes array changed after %w -> sl[%d]: %w', t, i, sl[i]);
+                // [20090812 anba] it may happen when subnodes are destroyed as a
+                // side-effect of calling __LZcallInit()
+                // Debug.warn('subnodes array changed after %w -> sl[%d]: %w', t, i, sl[i]);
                 while ( i > 0 ){
                     if ( t == sl[ --i ] ) break;
                 }
@@ -970,13 +962,17 @@ function __windowResize(size) {
 }
 
 
-// Utility functions used by the instantiator process
+/**
+  * Utility functions used by the instantiator process
+  * @access private
+  */
 public function LzInstantiateView(e, tn = 1) {
-   canvas.initiatorAddNode( e , tn );
+    canvas.initiatorAddNode( e , tn );
 }
 
+/** @access private */
 public function lzAddLocalData(name, d, trimwhitespace, nsprefix = false) {
-        return new LzDataset(canvas, {name: name, initialdata: d, trimwhitespace: trimwhitespace, nsprefix: nsprefix });
+    return new LzDataset(canvas, {name: name, initialdata: d, trimwhitespace: trimwhitespace, nsprefix: nsprefix });
 }
 
 } // End of LzCanvas

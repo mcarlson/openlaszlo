@@ -137,7 +137,7 @@ public dynamic class LzNode extends LzEventable {
    * @return Array?: the merged result
    * @access private
    */
-  static function  mergeChildren(children, superclasschildren) {
+  static function mergeChildren(children, superclasschildren) {
     if (superclasschildren is Array) {
       children = superclasschildren.concat(children is Array ? children : []);
     }
@@ -178,7 +178,7 @@ public dynamic class LzNode extends LzEventable {
    * @param Boolean instcall
    * @access private
    */
-  function LzNode ( parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean  = false){
+  function LzNode (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false){
     super();
     this.__LZUID = "__U" + ++LzNode.__UIDs;
     this.__LZdeferDelegates = true;
@@ -369,8 +369,14 @@ public dynamic class LzNode extends LzEventable {
    */
   var onclonenumber = LzDeclaredEvent;
 
-  /** @access private */
-  var __LZlateinit = null;
+  /**
+   * Set to <code>true</code> when this node finished instantiating
+   * and is ready to be initiated.
+   * @access private
+   * @type Boolean
+   */
+  var __LZinstantiated = false;
+
   /** @access private */
   var __LZpreventSubInit = null;
   /** @access private */
@@ -698,7 +704,7 @@ public dynamic class LzNode extends LzEventable {
     } else {
       this.setAttribute(attr, styleValue);
     }
-  };
+  }
 
   /**
    * The <code>construct</code> method of a node is called as part of
@@ -807,23 +813,27 @@ public dynamic class LzNode extends LzEventable {
         }
         this.placement = thisplacement;
       }
-      var ip_subnodes = ip.subnodes;
-      if (ip_subnodes == null) {
-        ip_subnodes = new Array;
-        ip.subnodes = ip_subnodes;
-      }
 
-      ip_subnodes[ip_subnodes.length] = this;
+      // @devnote only add to subnodes if this node is not deleted which
+      // may happen as a side-effect of calling determinePlacement().
+      // We still need to set 'immediateparent' because legacy constructors
+      // expect to see this property.
+      if (! this.__LZdeleted) {
+        var ip_subnodes = ip.subnodes;
+        if (ip_subnodes == null) {
+          ip.subnodes = [this];
+        } else {
+          ip_subnodes[ip_subnodes.length] = this;
+        }
+      }
 
       var nl = ip.nodeLevel; // nl == nodeLevel
       this.nodeLevel = nl ? nl + 1 : 1;
 
       this.immediateparent = ip;
-
     } else {
       this.nodeLevel = 1;
     }
-
   }
 
   /**
@@ -837,7 +847,6 @@ public dynamic class LzNode extends LzEventable {
    * @see oninit
    */
   function init ( ){
-
     return;
   }
 
@@ -849,6 +858,7 @@ public dynamic class LzNode extends LzEventable {
    * @access private
    */
   function __LZinstantiationDone () :void {
+    this.__LZinstantiated = true;
     if (!this.__LZdeleted && (!this.immediateparent ||
             this.immediateparent.isinited ||
             (this.initstage == "early") ||
@@ -894,20 +904,26 @@ public dynamic class LzNode extends LzEventable {
     // Install computed initializations
     this.__LZresolveReferences();
 
+    // bail if deleted, e.g. by datapath-constraint causing replication
+    if (this.__LZdeleted) return;
+
     var sl = this.subnodes;
     if (sl) {
-      var i = 0;
-      var l = sl.length;
-      while(i < l){
+      // @devnote don't store 'sl.length', subnodes array may change (LPP-8386)
+      for (var i = 0; i < sl.length;) {
         var s = sl[ i++ ];
         //remember next one too
         var t = sl[ i ];
-        if ( s.isinited || s.__LZlateinit ) continue;
+        if ( s.isinited || (! s.__LZinstantiated) ) continue;
         s.__LZcallInit( );
+        // bail if deleted, e.g. when subnode calls setDatapath causing replication
+        if (this.__LZdeleted) return;
         //if the next one is not where it was, back up till we find it or to
         //the beginning of the array
         if ( t != sl[ i ] ){
           // When does this ever happen?
+          // [20090812 anba] it may happen when subnodes are destroyed as a
+          // side-effect of calling __LZcallInit()
           // Debug.warn('subnodes array changed after %w -> sl[%d]: %w', t, i, sl[i]);
           while ( i > 0 ){
             if ( t == sl[ --i ] ) break;
@@ -1061,6 +1077,8 @@ public dynamic class LzNode extends LzEventable {
         }
       } else if (this[setr] is Function) {
         // TODO: simplify test above - can this[setr] ever not be a Function?
+        // [20090812 anba] yes, some "setters" are set to -1 to indicate
+        // read-only properties, cf. $lzc$set_clip in LzView
         if (key in this.earlySetters) {
           if (hasearly == null) { hasearly = []; }
           hasearly[this.earlySetters[key]] = key;
@@ -1122,10 +1140,8 @@ public dynamic class LzNode extends LzEventable {
     if ( this.__LZdeleted ) return;
 
     if ( "defer" == this.initstage ){
-      this.__LZlateinit = true;
       this.__LZdeferredcarr = carr;
     } else if ( "late" == this.initstage ){
-      this.__LZlateinit = true;
       lz.Instantiator.trickleInstantiate( this , carr );
     } else if ( ( this.__LZisnew && lz.Instantiator.syncNew ) ||
                 "immediate" == this.initstage ){
@@ -1134,23 +1150,6 @@ public dynamic class LzNode extends LzEventable {
       lz.Instantiator.requestInstantiation( this , carr );
     }
   }
-  /**
-   * Returns the value for a property. <method>getAttribute()</method> is deprecated.
-   *
-   * @param String prop: a string specifying the key of attribute to return.
-   * @return any: value of named property
-   * @deprecated
-   */
-  function getAttribute(prop) {
-    if ($debug) Debug.info("%w.%s(%#w) is deprecated.  Use %w[%#w] instead.", this, arguments.callee, prop, this, prop);
-    return this[ prop ];
-  }
-
-
-  /*
-    setAttribute moved to LzEventable.lzs
-    function setAttribute(prop, val, ifchanged = null)
-  */
 
   /**
    * returns the expected value for the specified property, which is the value of
@@ -1167,7 +1166,7 @@ public dynamic class LzNode extends LzEventable {
    */
   function getExpectedAttribute(prop) {
     var e_prop = "e_" + prop;
-    if ( !this[ e_prop ] ) this[ e_prop ] = {}
+    if ( !this[ e_prop ] ) this[ e_prop ] = {};
     if ( this[e_prop].v == null ) return this[prop];
     return this[ e_prop ].v;
   }
@@ -1179,7 +1178,7 @@ public dynamic class LzNode extends LzEventable {
    */
   function setExpectedAttribute(prop, val) {
     var e_prop = "e_" + prop;
-    if ( !this[e_prop] ) this[e_prop] = {}
+    if ( !this[e_prop] ) this[e_prop] = {};
     this[ e_prop ].v = val;
   }
 
@@ -1190,7 +1189,7 @@ public dynamic class LzNode extends LzEventable {
    */
   function addToExpectedAttribute(prop, val) {
     var e_prop = "e_" + prop;
-    if ( !this[e_prop] ) this[e_prop] = {}
+    if ( !this[e_prop] ) this[e_prop] = {};
     if ( this[e_prop].v == null ) this[e_prop].v = this[prop];
     this[ e_prop ].v += val;
   }
@@ -1203,7 +1202,7 @@ public dynamic class LzNode extends LzEventable {
     var e_prop = "e_" + prop;
     var tep = this[e_prop];
     if (!tep) {
-      tep = this[e_prop] = {}
+      tep = this[e_prop] = {};
     }
     if (!tep.c) {
       tep.c = 0;
@@ -1314,28 +1313,6 @@ public dynamic class LzNode extends LzEventable {
     this.classroot = p;
   }
 
-  if ($debug) {
-    /**
-     * @deprecated
-     * @devnote remove after 4.1
-     * @access private
-     */
-    function __LZsetSetters ( o ) {
-      Debug.error("%w.%s is no longer supported", this, arguments.callee);
-    }
-  }
-
-  if ($debug) {
-    /**
-     * @deprecated
-     * @devnote remove after 4.1
-     * @access private
-     */
-    function __LZaddSetter ( key , val ) {
-      Debug.error("%w.%s is no longer supported", this, arguments.callee);
-    }
-  }
-
   /**
    * Binds the named attribute to the given path, relative to this node's
    * datapath. This is the method that is called when the $path{} constraint
@@ -1365,9 +1342,7 @@ public dynamic class LzNode extends LzEventable {
   }
 
   /** @access private */
-  static var __LZdelayedSetters = new LzInheritedHash({
-    $refs : "$lzc$set_$refs"
-    });
+  static var __LZdelayedSetters = new LzInheritedHash();
   /** @access private */
   var __LZdelayedSetters;
 
@@ -1411,17 +1386,6 @@ public dynamic class LzNode extends LzEventable {
 
   }
 
-  if ($debug) {
-    /**
-     * @deprecated
-     * @devnote remove after 4.1
-     * @access private
-     */
-    function __LZstoreRefs ( val , prop ){
-      Debug.error("%w.%s is no longer supported", this, arguments.callee);
-    }
-  }
-
   /**
    * @access private
    */
@@ -1431,7 +1395,7 @@ public dynamic class LzNode extends LzEventable {
     }
 
     this.__LZresolveDict[ prop ] = val;
-  };
+  }
 
   /**
    * @access private
@@ -1445,6 +1409,8 @@ public dynamic class LzNode extends LzEventable {
         for (var i = 0, l = inits.length; i < l; i++) {
           // invoke the init method
           this[inits[i].methodName](null);
+          // bail if deleted, e.g. by datapath-constraint causing replication
+          if (this.__LZdeleted) return;
         }
       }
       // Install constraints
@@ -1453,9 +1419,12 @@ public dynamic class LzNode extends LzEventable {
       if (constraints != null) {
         for (var i = 0, l = constraints.length; i < l; i++) {
           this.applyConstraintExpr(constraints[i]);
+          // bail if deleted, e.g. by datapath-constraint causing replication
+          if (this.__LZdeleted) return;
         }
       }
       // Backward compatibility -- are there any other delayed setters?
+      // [20090812 anba] only the setter for "layout" in LzView?
       for ( var r in rdict ){
         if ( r == "$inits" || r == "$constraints" || r == "$delegates" ) continue;
         if (r in this.__LZdelayedSetters) {
@@ -1468,16 +1437,6 @@ public dynamic class LzNode extends LzEventable {
       // $delegates : "__LZsetDelegates"
       if (rdict['$delegates']) this.__LZsetDelegates( rdict.$delegates );
     }
-  }
-
-  // TODO: [2008-02-14 ptw] Remove at 4.1 or later
-  if ($debug) {
-    /** @access private */
-    function __LZresolveRefs ( refs ){
-      Debug.error("$refs: %s is no longer supported", refs);
-    }
-    /** @access private */
-    function $lzc$set_$refs(v) { this.__LZresolveRefs(v); }
   }
 
   /**
@@ -1497,7 +1456,7 @@ public dynamic class LzNode extends LzEventable {
       this.__LZdelegates.push( new LzDelegate( this , meth ,sender , delarr[i] ) );
     }
 
-  };
+  }
 
   // TODO: [2008-02-12 ptw] Backwards compatibility, remove in next
   // release
@@ -2287,13 +2246,22 @@ public dynamic class LzNode extends LzEventable {
     } else if (! (dpobj instanceof Object)) {
       if ($debug) {
         Debug.debug('%s on non-object %w?', arguments.callee, dpobj)
-          }
+      }
     }
     this.makeChild( dpobj , true);
   }
 
   /** @access private */
-  static var presentationtypes = {string: StringPresentationType, number: NumberPresentationType, numberExpression: NumberPresentationType, color: ColorPresentationType, 'boolean': BooleanPresentationType, inheritableBoolean: BooleanPresentationType, expression: ExpressionPresentationType, size: SizePresentationType}
+  static var presentationtypes = {
+    string: StringPresentationType,
+    number: NumberPresentationType,
+    numberExpression: NumberPresentationType,
+    color: ColorPresentationType,
+    'boolean': BooleanPresentationType,
+    inheritableBoolean: BooleanPresentationType,
+    expression: ExpressionPresentationType,
+    size: SizePresentationType
+  };
  // TODO?: add css: CSSPresentationType, token: TokenPresentationType, script: ScriptPresentationType
 
  /**
@@ -2366,7 +2334,7 @@ public dynamic class LzNode extends LzEventable {
    */
  function presentAttribute(name, type) {
    return this.presentTypeValue(type, this[name]);
- };
+ }
 
  /** @access private */
  function $lzc$presentAttribute_dependencies(who , self, name, type) :Array {
@@ -2396,5 +2364,5 @@ public class $lzc$class_userClassPlacement {
                                                   ignore = null,
                                                   ignoremetoo = null){
     parent.defaultplacement = placement;
-  };
+  }
 }
