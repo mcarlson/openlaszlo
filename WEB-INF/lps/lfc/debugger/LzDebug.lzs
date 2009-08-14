@@ -380,7 +380,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @access private
    */
   override function __write (msg) {
-    if (this.log_all_writes) {
+    if (this.log_all_writes || (!! globalValue('logdebug'))) {
       this.logger.log(msg);
     }
     this.console.addText(msg);
@@ -1688,12 +1688,15 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           // a native prototype that will fail when called on the
           // prototype itself)
           isown = obj.hasOwnProperty(key);
-        } catch (e) {
+        } catch (e) {};
+        if (! isown) {
+          var pk;
           try {
             // Be careful poking at prototypes (consider getters that
             // may fail when called on the prototype)
-            isown = (obj[key] !== proto[key]);
+            pk = proto[key];
           } catch (e) {};
+          isown = (obj[key] !== pk);
         }
       }
       if (isown) {

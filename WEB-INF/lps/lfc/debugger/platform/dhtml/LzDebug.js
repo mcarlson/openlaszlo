@@ -197,6 +197,11 @@ class LzDHTMLDebugService extends LzDebugService {
   /**
    ** Platform-specific extensions to presentation and inspection
    **/
+  function hasFeature(feature:String, level:String) {
+    return (document.implementation &&
+            document.implementation.hasFeature &&
+            document.implementation.hasFeature(feature, level));
+  }
 
   /**
    * Adds handling of DOM nodes to describer for DHTML
@@ -214,16 +219,32 @@ class LzDHTMLDebugService extends LzDebugService {
         function nodeToString(node) {
           var tn = node.nodeName || '';
           var path = tn.toLowerCase();
-          if (node.nodeType == 1) { //Node.ELEMENT_NODE
+          // If this is a sprite implementation node, use the sprite's
+          // LZX path rather than the DOM path
+          var sprite = node.owner;
+          var spritedivpath;
+          if ((sprite instanceof LzSprite) && (sprite.owner.sprite === sprite)) {
+            for (var key in sprite) {
+              if (sprite[key] === node) {
+                spritedivpath = Debug.formatToString("%w/@sprite/@%s", sprite.owner, key);
+              }
+            }
+          }
+          if (node.nodeType == 1) { // Node.ELEMENT_NODE
             var id = node.id;
             var cn = node.className;
-            if (id) {
-              path += '#' + id;
+            // Sprite div id's are redundant here, they are really for
+            // browser debuggers
+            if (id && (! spritedivpath)) {
+              path += '#' + encodeURIComponent(id);
             } else if (cn) {
               var more = cn.indexOf(' ');
               if (more == -1) { more = cn.length; }
               path += '.' + cn.substring(0, more);
             }
+          }
+          if (spritedivpath) {
+            return spritedivpath + ((path.length > 0) ? ('/' + path) : '');
           }
           var parent = node.parentNode;
           if (parent) {
@@ -248,8 +269,31 @@ class LzDHTMLDebugService extends LzDebugService {
         };
         // If this has local style, add that
         var style = thing.style.cssText;
-        if (style != '') { style = ' {' + style + '}'; }
+        if (style != '') { style = '[@style="' + style + '"]'; }
         return {pretty: pretty, description: nodeToString(thing) + style};
+      } else if (this.hasFeature('mouseevents', '2.0') && (thing is global['MouseEvent'])) {
+        var desc = thing.type;
+        if (thing.shiftKey) {
+          desc = 'shift-' + desc;
+        }
+        if (thing.ctrlKey) {
+          desc = 'ctrl-' + desc;
+        }
+        if (thing.metaKey) {
+          desc = 'meta-' + desc;
+        }
+        if (thing.altKey) {
+          desc = 'alt-' + desc;
+        }
+        switch (thing.detail) {
+          case 2: desc = 'double-' + desc; break;
+          case 3: desc = 'triple-' + desc; break;
+        }
+        switch (thing.button) {
+          case 1: desc += '-middle'; break;
+          case 2: desc += '-right'; break;
+        }
+        return {pretty: pretty, description: desc};
       }
     } catch (e) {}
     return super.__StringDescription(thing, pretty, limit, unique, depth);
@@ -291,34 +335,42 @@ class LzDHTMLDebugService extends LzDebugService {
    * @access private
    */
   override function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
+    super.objectOwnProperties(obj, names, indices, limit, nonEnumerable);
 
-    var hasProto = obj && obj['hasOwnProperty'];
-    if (names && nonEnumerable && hasProto) {
-      // Unenumerable properties of ECMA objects
+    var proto = false;
+    try {
+      proto = ((obj['constructor'] && (typeof obj.constructor['prototype'] == 'object')) ?
+               obj.constructor.prototype : false);
+    } catch (e) {};
+    if (names && nonEnumerable && proto) {
+      // Unenumerable properties of some ECMA objects
       // TODO: [2006-04-11 ptw] enumerate Global/Number/Math/Regexp
       // object properties
-      for (var p in {callee: true, length: true, constructor: true, prototype: true}) {
-        try {
-          if (obj.hasOwnProperty(p)) {
-            names.push(p);
-          }
-        } catch (e) {};
-      }
-    }
+      var unenumerated = {callee: true, length: true, constructor: true, prototype: true};
 
-    if (hasProto && indices) {
-      // Function.arguments is not a proper Array in JS1
-      try {
-        if (obj.hasOwnProperty('callee')) {
-          for (var i = 0, len = obj.length; i < len; ++i) {
-            indices.push(i);
-            if (--limit == 0) { return; }
+      for (var key in unenumerated) {
+        var isown = false;
+        try {
+          isown = obj.hasOwnProperty(key);
+        } catch (e) {};
+        if (! isown) {
+          var pk;
+          try {
+            pk = proto[key];
+          } catch (e) {};
+          isown = (obj[key] !== pk);
+        }
+        if (isown) {
+          for (var i = 0, l = names.length; i < l; i++) {
+            if (names[i] == key) {
+              isown = false;
+              break;
+            }
           }
         }
-      } catch (e) {};
+        if (isown) { names.push(key); }
+      }
     }
-
-    super.objectOwnProperties(obj, names, indices, limit, nonEnumerable);
   }
 
   /**
