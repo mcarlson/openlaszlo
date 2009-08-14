@@ -10,7 +10,7 @@
 
         <!--- the y position of the text label. default: centered -->
         <attribute name="text_y"
-            value="${this.height/2 - this['_title'] ? this['_title'].height/2 : 0}" />
+            value="${this.height/2 - this._title.height/2}" />
 
 
         <text name="_title"
@@ -20,26 +20,28 @@
               text="${parent.text}" />
 
         <!--- @keywords private -->
-        <method name="_applystyle" args="s">
-            if (this['style'] != null) {
+        <method name="_applystyle" args="s"><![CDATA[
+            // TODO [20090814 anba] I wonder why 'this.style' 
+            // is used instead of 's'
+            var style = this['style'];
+            if (style != null) {
                 super._applystyle(s);
                 // set text color
-                if(this['_title'] != null){
-                    if (_enabled) {
-                         if (hilited) {
-                             this._title.setAttribute('fgcolor', style.texthilitecolor);
-                         }
-                         else if (selected) {
-                             this._title.setAttribute('fgcolor', style.textselectedcolor);
-                         } else {
-                             this._title.setAttribute('fgcolor', style.textcolor);
-                         }
+                var textcolor;
+                if (this._enabled) {
+                    if (this.hilited) {
+                        textcolor = style.texthilitecolor;
+                    } else if (this.selected) {
+                        textcolor = style.textselectedcolor;
                     } else {
-                        this._title.setAttribute( "fgcolor", style.textdisabledcolor );
+                        textcolor = style.textcolor;
                     }
+                } else {
+                    textcolor = style.textdisabledcolor;
                 }
+                this._title.setAttribute('fgcolor', textcolor);
             }
-        </method>
+        ]]></method>
 
          <!--- @keywords private -->
          <method name="_showEnabled">  <![CDATA[
@@ -77,7 +79,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
