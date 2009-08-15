@@ -1,4 +1,4 @@
-<!-- Copyright 2007-2008 Laszlo Systems -->
+<!-- Copyright 2007-2009 Laszlo Systems -->
 <library>
     
     <stylesheet>
@@ -24,8 +24,8 @@
     
     </stylesheet> 
     
-    <designerview name="Canyon" id="gCanyon" initstage="late"/>
-    <designerview name="Jareth" id="gJareth" initstage="late" />
+    <designerview name="Canyon" id="gCanyon" />
+    <designerview name="Jareth" id="gJareth" />
 
     <designerview id="gEverest" group="everest" />
     <designerview id="gDouggie" group="dougy" />    
