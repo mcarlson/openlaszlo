@@ -163,6 +163,7 @@ var LzSprite = function(owner, isroot) {
                     }
                 }
                 if (mousein) {
+                    var wasClickable = LzMouseKernel.__globalClickable;
                     if (quirks.fix_ie_clickable) {
                         LzMouseKernel.setGlobalClickable(true);
                     }
@@ -177,6 +178,13 @@ var LzSprite = function(owner, isroot) {
                     LzMouseKernel.setMouseControl(true);
                     LzMouseKernel.__resetMouse();
                     this.mouseisover = true;
+                    if (quirks.fix_clickable && (! wasClickable) && LzMouseKernel.__globalClickable) {
+                        // NOTE: [2008-08-17 ptw] (LPP-8375) Forward
+                        // the event to the view, if it would have
+                        // gotten it without the quirk clickability
+                        // diddling
+                        LzMouseKernel.__sendEvent('onmouseout', e.target.owner);
+                    }
                 } else {
                     if (quirks.focus_on_mouseover) {
                         if (LzInputTextSprite.prototype.__lastshown == null) {
@@ -1366,6 +1374,21 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
                 }
                 var dragname = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
                 LzMouseKernel.__sendEvent(dragname, this.owner);
+                return;
+            }
+        }
+
+        if (this.quirks.fix_clickable && (! LzMouseKernel.__globalClickable)) {
+            // NOTE: [2008-08-17 ptw] (LPP-8375) When the mouse goes
+            // over an html clickdiv, globalClickable gets disabled,
+            // which generates a mouseout -- we want to ignore that.
+            // Simlutaneously, the mouse enters the associated iframe,
+            // which will forward a mouseover to us, but we already
+            // got one, so, we want to ignore that too.  The global
+            // mouseout handler will synthesize a mouseout event for
+            // the html sprite when the mouse leaves the iframe and
+            // re-enables the clickdiv.
+            if ((eventname == 'onmouseout') || (eventname == 'onmouseover')) {
                 return;
             }
         }

@@ -204,8 +204,10 @@ var LzMouseKernel = {
         }
     }
     ,__cachedSelection: null
+    ,__globalClickable: true
     ,setGlobalClickable: function (isclickable){
         var el = document.getElementById('lzcanvasclickdiv');
+        this.__globalClickable = isclickable;
         el.style.display = isclickable ? '' : 'none';
     }
     ,__sendMouseMove: function(e, offsetx, offsety) {
