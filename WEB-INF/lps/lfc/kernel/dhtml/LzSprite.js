@@ -700,6 +700,8 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['document_size_use_offsetheight'] = true;
             if (browser.version > 523.10) {
                 this.capabilities['rotation'] = true;
+                // Rotation's origin in CSS is width/2 and height/2 as default
+                LzSprite.prototype.__defaultStyles.lzdiv.WebkitTransformOrigin = '0 0';
             }
 
 
@@ -709,6 +711,11 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['keypress_function_keys'] = false;
             // Safari 3.x does not send global key events to apps embedded in an iframe
             quirks['keyboardlistentotop'] = true;
+            
+            // If Webkit starting with 530.19.2 or Safari 530.19, 3d transforms supported
+            if (browser.version >= 530.19) {
+              this.capabilities["threedtransform"] = true;
+            }
 
             // turn off mouseover activation for iphone
             if (browser.isIphone) {
@@ -766,6 +773,12 @@ LzSprite.prototype.__updateQuirks = function () {
                 }
             }
             quirks['autoscroll_textarea'] = true;
+            if (browser.version >= 3.5) {
+                this.capabilities['rotation'] = true;
+                // Rotation's origin in CSS is width/2 and height/2 as default
+                LzSprite.prototype.__defaultStyles.lzdiv.MozTransformOrigin = '0 0';
+            }
+            
         }
 
         if (browser.OS == 'Mac') {
@@ -808,7 +821,7 @@ LzSprite.prototype.__updateQuirks = function () {
         if (quirks['inner_html_strips_newlines'] == true) {
             LzSprite.prototype.inner_html_strips_newlines_re = RegExp('$', 'mg');
         }
-
+        
         // Turn off image selection - see LPP-8311
         if (browser.isFirefox) {
             defaultStyles.lzimg['MozUserSelect'] = 'none';
@@ -2531,8 +2544,14 @@ LzSprite.prototype.getContextMenu = function() {
     return this.__contextmenu;
 }
 
-LzSprite.prototype.setRotation = function(r) {
-    this.__LZdiv.style['-webkit-transform'] = 'rotate(' + r + 'deg)';
+LzSprite.prototype.setRotation = function(r) {    
+    var browser = lz.embed.browser;
+    if (browser.isSafari) {
+        this.__LZdiv.style['WebkitTransform'] = 'rotate(' + r + 'deg)';
+    } else if (browser.isFirefox) {
+        // https://developer.mozilla.org/en/CSS/-moz-transform
+        this.__LZdiv.style['MozTransform'] = 'rotate(' + r + 'deg)';
+    }
 }
 
 if (LzSprite.prototype.quirks.ie_leak_prevention) {
