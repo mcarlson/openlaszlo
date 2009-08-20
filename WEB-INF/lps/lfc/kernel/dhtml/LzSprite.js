@@ -178,12 +178,30 @@ var LzSprite = function(owner, isroot) {
                     LzMouseKernel.setMouseControl(true);
                     LzMouseKernel.__resetMouse();
                     this.mouseisover = true;
+                    // NOTE: [2008-08-17 ptw] (LPP-8375) Forward the
+                    // event to the associated view (if any), if it
+                    // would have gotten it without the quirk
+                    // clickability diddling
                     if (quirks.fix_clickable && (! wasClickable) && LzMouseKernel.__globalClickable) {
-                        // NOTE: [2008-08-17 ptw] (LPP-8375) Forward
-                        // the event to the view, if it would have
-                        // gotten it without the quirk clickability
-                        // diddling
-                        LzMouseKernel.__sendEvent('onmouseout', e.target.owner);
+                        // IE calls `target` `srcElement`
+                        var target = e['target'] ? e.target : e['srcElement'];
+                        // Was there a target?
+                        if (target) {
+                            var owner = target['owner'];
+                            // In the kernel, a div's owner is
+                            // typically the sprite, and the sprite's
+                            // owner is the view.  The <html> element,
+                            // though creates its own <iframe> and
+                            // sets itself as the owner, hence this
+                            // little two-step
+                            if (owner is LzSprite) {
+                                owner = owner['owner'];
+                            }
+                            // Was the target associated with a <view>?
+                            if (owner is LzView) {
+                                LzMouseKernel.__sendEvent('onmouseout', owner);
+                            }
+                        }
                     }
                 } else {
                     if (quirks.focus_on_mouseover) {
