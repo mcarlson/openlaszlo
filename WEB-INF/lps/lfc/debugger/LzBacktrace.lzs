@@ -42,11 +42,10 @@ var __LzStackFrame = function (args) {
   if (args instanceof Array) {
     this['this'] = args['this'];
     this['function'] = args.callee;
-    delete args.callee;
     this.__lineno = ('lineno' in args) ? args.lineno : this['function']._dbg_lineno;
-    delete args.lineno;
   }
-  this.arguments = args;
+  // Copy out the numbered arguments, omitting the above properties
+  this.arguments = args.concat();
 }
 
 /**
