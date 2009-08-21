@@ -21,7 +21,6 @@ function LzContextMenuKernel (newowner:LzContextMenu) {
 var owner:LzContextMenu = null;
 var showbuiltins = false;
 var _delegate = null;
-var __sentshowevent = false;
 
 /**
   * LzContextMenu.setDelegate
@@ -104,13 +103,11 @@ static function __create () {
 /** @access private */
 function __show () {
     var owner = this.owner;
-    if (this.__sentshowevent == false) {
-        // Avoid sending onmenuopen events more than once - see LPP-8189
-        this.__sentshowevent = true;
-        var del = this._delegate;
-        if (del != null) del.execute(owner);
-        if (owner.onmenuopen.ready) owner.onmenuopen.sendEvent(owner);
-    }
+
+    var del = this._delegate;
+    if (del != null) del.execute(owner);
+    if (owner.onmenuopen.ready) owner.onmenuopen.sendEvent(owner);
+    
 
     var o = '';
     var shownItems = 0;
@@ -158,7 +155,6 @@ function __hide () {
     if (s) {
         s.style.display = 'none';
     }
-    this.__sentshowevent = false;
     LzMouseKernel.__showncontextmenu = null;
 }
 

@@ -51,12 +51,31 @@ var LzMouseKernel = {
                     }
                 }
             }
-        } else if (eventname == 'oncontextmenu' || (e.button == 2 && eventname == 'onmouseup') ) {
-            if (targ) {
-                // update mouse position, required for Safari
-                LzMouseKernel.__sendMouseMove(e);
-                return LzMouseKernel.__showContextMenu(e);
-            }
+
+        } else if (eventname == 'oncontextmenu' || (eventname == 'onmousedown' && e.button == 2)) {
+            // If browser supports DOM mouse events level 2 feature,
+            // trigger menu on mousedown-right, and suppress the
+            // system builtin menu when the oncontextmenu event comes.
+            if (LzSprite.prototype.quirks.has_dom2_mouseevents) {
+                if (eventname == 'onmousedown') {
+                    if (targ) {
+                    // update mouse position, required for Safari
+                        LzMouseKernel.__sendMouseMove(e);
+                        return LzMouseKernel.__showContextMenu(e);
+                    }
+                } else if (eventname == 'oncontextmenu') {
+                    // Suppress display of browser's builtin menu
+                    return false;
+                }
+            } else if (eventname == 'oncontextmenu') {
+                // If there is no DOM level 2 mouse event support,
+                // then use the oncontextmenu event to display context menu
+                if (targ) {
+                    // update mouse position, required for Safari
+                    LzMouseKernel.__sendMouseMove(e);
+                    return LzMouseKernel.__showContextMenu(e);
+                }
+            } 
         } else if (e.button != 2) {
             LzMouseKernel.__sendEvent(eventname);
         }

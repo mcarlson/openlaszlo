@@ -3,7 +3,7 @@
 /**
   * LzBrowserUtils.js
   *
-  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -61,4 +61,11 @@ lz.BrowserUtils = {
             delete scope.__callbacks;
         }
     }
+
+    ,hasFeature: function (feature:String, level:String) {
+        return (document.implementation &&
+                document.implementation.hasFeature &&
+                document.implementation.hasFeature(feature, level));
+    }
+
 }
