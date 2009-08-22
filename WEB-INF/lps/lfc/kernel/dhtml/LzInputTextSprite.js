@@ -86,36 +86,41 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
     lz.embed.__setAttr(this.__LzInputDiv, 'value', t);
 
     if (this.quirks.fix_clickable) {
-        if (this.quirks.fix_ie_clickable) {
-            this.__LZclickcontainerdiv = document.createElement('img');
-            this.__LZclickcontainerdiv.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
-            this.__LZclickcontainerdiv.className = 'lzclickdiv';
-            this.__LZclickcontainerdiv.owner = this;
-        }
-        // keep LzSprite.destroy() in sync to prevent leaks
-        if (this.quirks.ie_mouse_events) {
-            this.__LZclickcontainerdiv.onmouseenter = this.__handlemouse; 
-        } else {
-            this.__LZclickcontainerdiv.onmouseover = this.__handlemouse; 
-        }
+      if (this.quirks.fix_ie_clickable) {
+        this.__LZinputclickdiv = document.createElement('img');
+        this.__LZinputclickdiv.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
+      } else {
+        this.__LZinputclickdiv = document.createElement('div');
+      }
+      this.__LZinputclickdiv.className = 'lzclickdiv';
+      this.__LZinputclickdiv.owner = this;
+      // keep LzSprite.destroy() in sync to prevent leaks
+      if (this.quirks.ie_mouse_events) {
+        this.__LZinputclickdiv.onmouseenter = this.__handlemouse;
+      } else {
+        this.__LZinputclickdiv.onmouseover = this.__handlemouse;
+      }
 
-        if (this.quirks.input_highlight_bug) {
-            // TODO [hqm 2009-06-09] LPP-8121 I discovered that if an
-            // input field is contained within a div which has a white
-            // background color, then it selected text will highlight with
-            // a dark blue color. The div can have zero width,
-            // Windows/Firefox only seems to look at the bgcolor of the
-            // containing div when deciding what color to use for input
-            // text highlight. So this adds an extra div, with zero width,
-            // in which the actual clickable/selectable input text element
-            // is placed.
-            var ffoxdiv = document.createElement('div');
-            ffoxdiv.style.backgroundColor = 'white';
-            ffoxdiv.style.width = '0px';
-            this.__LZclickcontainerdiv.appendChild(ffoxdiv);        
-            //ffoxdiv.appendChild(this.__LZinputclickdiv);
-        }
-    } 
+      if (this.quirks.input_highlight_bug) {
+        // TODO [hqm 2009-06-09] LPP-8121 I discovered that if an
+        // input field is contained within a div which has a white
+        // background color, then it selected text will highlight with
+        // a dark blue color. The div can have zero width,
+        // Windows/Firefox only seems to look at the bgcolor of the
+        // containing div when deciding what color to use for input
+        // text highlight. So this adds an extra div, with zero width,
+        // in which the actual clickable/selectable input text element
+        // is placed.
+        var ffoxdiv = document.createElement('div');
+        ffoxdiv.style.backgroundColor = 'white';
+        ffoxdiv.style.width = '0px';
+        this.__LZclickcontainerdiv.appendChild(ffoxdiv);
+        ffoxdiv.appendChild(this.__LZinputclickdiv);
+      } else {
+        this.__LZclickcontainerdiv.appendChild(this.__LZinputclickdiv);
+      }
+    }
+
     this.__LZdiv.appendChild(this.__LzInputDiv);
 
     //Debug.write(this.__LzInputDiv.style);
@@ -1069,7 +1074,7 @@ LzInputTextSprite.prototype.setWidth = function (w) {
     // call the super method
     var nw = LzTextSprite.prototype.setWidth.call(this, w);
     if (this.quirks.fix_clickable && nw != null) {
-        this.__LZclickcontainerdiv.style.width = nw;
+        this.__LZinputclickdiv.style.width = nw;
     }   
 }
 
@@ -1078,7 +1083,7 @@ LzInputTextSprite.prototype.setHeight = function (h) {
     // call the super method
     var nh = LzTextSprite.prototype.setHeight.call(this, h);
     if (this.quirks.fix_clickable && nh != null) {
-        this.__LZclickcontainerdiv.style.height = nh;
+        this.__LZinputclickdiv.style.height = nh;
     }
 }   
 
