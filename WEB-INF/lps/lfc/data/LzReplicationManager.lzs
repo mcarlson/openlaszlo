@@ -239,7 +239,7 @@ override function construct ( odp , args ){
         args.sortorder = odp.sortorder;
     }
 
-    //store nodes for constructWithArgs
+    //store nodes for __LZapplyArgs
     this.initialnodes = odp.storednodes;
     if ( odp.__LZspecialDotDot ){
         this.__LZspecialDotDot = true;
@@ -787,7 +787,7 @@ override function toString () /*:String*/ {
   * @param Boolean vis: The value to set the visibility to.
   * @access private
   * @devnote TODO: [2008-05-07 ptw] This should probably just be a
-  * setter rather than being handled specially by construcWithArgs,
+  * setter rather than being handled specially by __LZapplyArgs,
   * but I didn't want to mess with that now.  In any case, there is no
   * reason for this to be a public method.
   * @deprecated Use setAttribute('visible', ...) instead.

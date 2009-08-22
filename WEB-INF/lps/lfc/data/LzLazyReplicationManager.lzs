@@ -26,7 +26,7 @@
   *
   * <p>The lazy replicator implicitly includes a simple layout (since
   * it needs to calculate how many replications will fit), hence it
-  * has two additional parameters (that are spedified in the datapath)
+  * has two additional parameters (that are specified in the datapath)
   * <attribute>axis</attribute>, and
   * <attribute>spacing</attribute>.</p>
   *
@@ -47,15 +47,6 @@
   */
 dynamic class LzLazyReplicationManager extends LzReplicationManager {
 
-/**
- *  The direction in which the replicated elements will be layed out.
- *
- * @type String
- * @lzxtype 'x'|'y'
- * @lzxdefault 'y'
- * @keywords final
- */
-var axis :String = "y"
 /** @access private */
 var sizeAxis :String;
 /** @access private */
@@ -64,16 +55,6 @@ var cloneimmediateparent :LzView;
 var updateDel :LzDelegate;
 /** @access private */
 var __LZoldnodelen :int;
-
-/**
- * The spacing (in pixels) between replicated views.
- *
- * @type Number
- * @lzxtype number
- * @lzxdefault 0
- * @keywords final
- */
-var spacing :Number = 0;
 /** @access private */
 var viewsize :Number = 0;
 /** @access private */
@@ -110,7 +91,7 @@ override function construct ( odp , args ){
 
     this.sizeAxis = this.axis == "x" ? "width" : "height" ;
 
-    super.construct.apply(this, arguments);
+    super.construct(odp, args);
 
 
     this.mask = odp.immediateparent.immediateparent.mask;

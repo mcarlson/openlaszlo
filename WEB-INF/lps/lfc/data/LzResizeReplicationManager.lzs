@@ -107,7 +107,7 @@ override protected function getDefaultPooling () :Boolean {
 
 /** @access private */
 override function construct ( odp , args ){
-    super.construct.apply(this, arguments);
+    super.construct(odp, args);
 
     this.datasizevar = '$' + this.getUID() + 'track';
 }
