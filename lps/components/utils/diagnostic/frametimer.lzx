@@ -2,42 +2,38 @@
     <!-- This little bit of code puts a white box in the top left corner
          that gives time to app init in milliseconds.-->
     <class name="frametimer" visible="true" initstage="late" options="ignorelayout"
-        bgcolor="black" height="${fps_text.height+2}"
-        x="100" width="122"
-        onmousedown="this.mouseisdown=true"
-        onmouseup="this.mouseisdown=false">
+        bgcolor="black" height="${this.fps_text.height+2}"
+        width="143">
         <attribute name="fps" value="0" type="number"/>
-        <attribute name="starttime" value="0" type="number"/>
-        <attribute name="numframes" value="0" type="number"/>
-
-        <!--- @keywords private : internal flag -->
-        <attribute name="mouseisdown" value="0"/>
-
+        <attribute name="delta" value="0" type="number"/>
         <!--- @keywords private : internal -->
-        <attribute name="lasttime" value="0"/>
+        <attribute name="__times" value="[]"/>
 
-        <handler name="oninit">
-            var d = new LzDelegate( this , "tellTime", lz.Idle, "onidle" );
+        <handler name="oninit" reference="canvas">
             this.bringToFront();
         </handler>
-        <method name="tellTime" args="t">
-            this.numframes++;
-            if (this.starttime = 0) this.starttime = t;
-            var duration = (t - this.starttime) / 1000;;   // in secs
-            this.fps = this.numframes / duration;
-            fps_text.setAttribute('text', 'fps: '+ this.fps );
-            var delta = t - this.lasttime;
-            if (!this.mouseisdown) time_text.setAttribute('text', 'ms/frame: '+ delta );
-            this.lasttime = t;
-        </method>
+        <handler name="onidle" reference="lz.Idle" args="t">
+            // number of timestamps to keep
+            var maxsize = 31;
+            this.__times.push(t);
 
-        <text y="1" id="fps_text" width="50" bgcolor="white"/>
-        <text y="1" name="time_text" width="70" bgcolor="white"/>
-        <simplelayout axis="x" spacing="1" inset="1"/>
+            var numframes = this.__times.length;
+            if (numframes > maxsize) {
+                numframes = maxsize;
+                this.__times.shift();
+            }
+            var duration = t - this.__times[0];   
+
+            this.setAttribute('fps', numframes / (duration / 1000));  // in secs
+            this.setAttribute('delta', duration / numframes);
+        </handler>
+
+        <text y="1" x="1" name="fps_text" text="${'fps: '+ Math.round(classroot.fps)}" width="50" bgcolor="white"/>
+        <text y="1" x="52" text="${'ms/frame: ' + Math.round(classroot.delta)}" width="90" bgcolor="white"/>
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008-2009 Laszlo Systems, Inc.  All Rights Reserved.   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
