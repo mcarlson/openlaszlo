@@ -64,8 +64,15 @@ var LzMouseKernel = {
                         return LzMouseKernel.__showContextMenu(e);
                     }
                 } else if (eventname == 'oncontextmenu') {
-                    // Suppress display of browser's builtin menu
-                    return false;
+                    var cmenu = LzMouseKernel.__findContextMenu(e);
+                    if (cmenu != null) {
+                        // If there is an LZX menu defined,
+                        // suppress display of browser's builtin menu
+                        return false;
+                    } else {
+                        // display system builtin menu
+                        return true; 
+                    }
                 }
             } else if (eventname == 'oncontextmenu') {
                 // If there is no DOM level 2 mouse event support,
@@ -253,6 +260,14 @@ var LzMouseKernel = {
     }
     ,__showContextMenu: function(e) {
         // show the default menu if not found...
+        var cmenu = LzMouseKernel.__findContextMenu(e);
+        if (cmenu) {
+            cmenu.kernel.__show();
+            return cmenu.kernel.showbuiltins;
+        } 
+    }
+    ,__findContextMenu: function(e) {
+        // show the default menu if not found...
         var cmenu = LzSprite.__rootSprite.__contextmenu;
         var quirks = LzSprite.prototype.quirks;
         if (document.elementFromPoint) {
@@ -320,10 +335,6 @@ var LzMouseKernel = {
                 }
             }
         }
-
-        if (cmenu) {
-            cmenu.kernel.__show();
-            return cmenu.kernel.showbuiltins;
-        }
+        return cmenu;
     }
 }

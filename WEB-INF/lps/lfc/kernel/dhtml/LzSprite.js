@@ -587,6 +587,7 @@ LzSprite.prototype.quirks = {
     ,autoscroll_textarea: false
     ,fix_contextmenu: true
     ,size_blank_to_zero: true
+    ,has_dom2_mouseevents: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -858,6 +859,11 @@ LzSprite.prototype.__updateQuirks = function () {
         }
 
         LzSprite.prototype.br_to_newline_re = RegExp('<br/>', 'mg');
+
+        if (lz.BrowserUtils.hasFeature('mouseevents', '2.0')) {
+            quirks['has_dom2_mouseevents'] = true;
+        }
+
     }
 };
 
