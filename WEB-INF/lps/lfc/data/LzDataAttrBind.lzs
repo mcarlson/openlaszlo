@@ -44,7 +44,8 @@ var type :String;
 /**
   * @access private
   */
-override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boolean { 
+override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boolean {
+    var pchg:Boolean = this.__LZpchanged;
     var result:Boolean = super.__LZsendUpdate(upd, upp);
     if ( result ) {
         var data:* = this.data;
@@ -58,26 +59,21 @@ override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boo
         // sketchy, because most presentation types expect strings
         // here...
         var newvalue = node.acceptTypeValue(this.type, data);
-        if (this.__LZpchanged ||
-            // Avoid updating if the value is not changing, to
-            // minimize event cascades
-            (node[ attr ] !== newvalue) ||
-            // But we always update if the target is being inited, to
-            // make sure the value is set correctly (and events
-            // propagated) if the binding is being called to
-            // initialize the target
-            (! node.inited) ||
-            // NOTE: [2009-04-22 ptw] (per a.bargull) this is
-            // necessary if the $path is constrained to the
-            // data-node's attributes (xpath @*), because you can't
-            // use a simple identity test in that case.
-            (this.parsedPath.operator == "attributes")) {
-          node.setAttribute(attr, newvalue);
-          // reset visibility a la datapaths for views
-          if (node.visibility == 'collapse') {
-            node.__LZvizDat = (newvalue != null);
-            node.__LZupdateShown();
-          }
+        if (pchg ||
+                // Avoid updating if the value is not changing, to
+                // minimize event cascades
+                (node[ attr ] !== newvalue) ||
+                // But we always update if the target is being inited, to
+                // make sure the value is set correctly (and events
+                // propagated) if the binding is being called to
+                // initialize the target
+                (! node.inited) ||
+                // NOTE: [2009-04-22 ptw] (per a.bargull) this is
+                // necessary if the $path is constrained to the
+                // data-node's attributes (xpath @*), because you can't
+                // use a simple identity test in that case.
+                (this.parsedPath.operator == "attributes")) {
+            node.setAttribute(attr, newvalue);
         }
     }
     return result;
