@@ -606,6 +606,9 @@ var align = "left";
 /** @access private */
 function $lzc$set_align(align) {
   if (this.align == align) return;
+  if ($debug) {
+    var view = this;
+  }
   function map (align) {
     switch (align) {
       case "center": return "__LZalignCenter";
@@ -613,8 +616,8 @@ function $lzc$set_align(align) {
       case "left": return null;
       default:
         if ($debug) {
-          Debug.error("%w.%s(%w): Invalid argument.  Valid choices are: 'left', 'center', or 'right'.",
-                      this, arguments.callee, align);
+          Debug.error("%w.setAttribute(%w, %w): Invalid argument.  Valid choices are: 'left', 'center', or 'right'.",
+                      view, 'align', align);
         }
     }
   }
@@ -644,6 +647,9 @@ var valign = "top";
 /** @access private */
 function $lzc$set_valign(valign) {
   if (this.valign == valign) return;
+  if ($debug) {
+    var view = this;
+  }
   function map (align) {
     switch (align) {
       case "middle": return "__LZvalignMiddle";
@@ -651,8 +657,8 @@ function $lzc$set_valign(valign) {
       case "top": return null;
       default:
         if ($debug) {
-          Debug.error("%w.%s(%w): Invalid argument.  Valid choices are: 'top', 'middle', or 'bottom'.",
-                      this, arguments.callee, valign);
+          Debug.error("%w.setAttribute(%w, %w): Invalid argument.  Valid choices are: 'top', 'middle', or 'bottom'.",
+                      view, 'valign', valign);
         }
     }
   }
