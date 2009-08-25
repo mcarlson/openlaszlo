@@ -227,27 +227,37 @@ dynamic class LzCanvas extends LzView {
 
         this.mask = null;
 
+        function getQueryArg (name:String, initname:String) :* {
+            var arg:* = args[name];
+            // don't handle again in __LZapplyArgs()
+            delete args[name];
+            if (arg != null) {
+                return (!! arg); // coerce to boolean
+            } else if (initname != null) {
+                var initarg:* = lz.Browser.getInitArg(initname);
+                if (initarg != null) {
+                    return (initarg == "true"); // convert string to boolean
+                }
+            }
+            return (void 0);
+        }
+
+        // TODO: [20090824 anba] 'accessible' must be set at compile-time?
+        // It's not possible to change it with a query arg?
+        this.accessible = getQueryArg('accessible', null);
         if (capabilities.accessibility == true) {
             // set accessible flags to true/false
-            this.sprite.setAccessible(args.accessible);
-            if (args.accessible) {
+            this.sprite.setAccessible(this.accessible);
+            if (this.accessible) {
                 this.sprite.setAAActive(true);
                 this.sprite.setAASilent(false);
             }
-        } else if (args.accessible) {
+        } else if (this.accessible) {
             if ($debug) Debug.warn("This runtime doesn't support accessibility.");
-            args.accessible = this.accessible = false;
+            this.accessible = false;
         }
 
-        if ((typeof(args.history) == "undefined") || args.history == null) {
-            var historyarg = lz.Browser.getInitArg('history');
-            if (historyarg != null) {
-                this.history = (historyarg == "true"); // convert string to boolean
-            }
-        } else if (args.history) {
-            this.history = true;
-        }
-
+        this.history = getQueryArg('history', 'history');
         if (this.history && capabilities.history != true) {
             if ($debug) {
                 Debug.warn("This runtime doesn't support history.");
@@ -255,15 +265,7 @@ dynamic class LzCanvas extends LzView {
             this.history = false;
         }
 
-        if ((typeof(args.allowfullscreen) == "undefined") || args.allowfullscreen == null) {
-            var allowfullscreenarg = lz.Browser.getInitArg('allowfullscreen');
-            if (allowfullscreenarg != null) {
-              this.allowfullscreen = (allowfullscreenarg == "true"); // convert string to boolean
-            }
-        } else if (args.allowfullscreen) {
-            this.allowfullscreen = true;
-        }
-
+        this.allowfullscreen = getQueryArg('allowfullscreen', 'allowfullscreen');
         if (this.allowfullscreen && capabilities.allowfullscreen != true) {
             if ($debug) {
                 Debug.warn("This runtime doesn't support full screen mode.");
@@ -284,25 +286,17 @@ dynamic class LzCanvas extends LzView {
             args.framerate = 30;
         }
 
-        if ((typeof(args.proxied) == "undefined") || args.proxied == null) {
+        // Override with the lzproxied query arg supplied at runtime, if present.
+        this.proxied = getQueryArg('proxied', 'lzproxied');
+        if (this.proxied == null) {
             // Default to the 'baked in' value set by the compiler
-            var lzproxied_query_arg = (args.__LZproxied == "true");
-            // Override with the lzproxied query arg supplied at runtime, if present.
-            var proxyarg = lz.Browser.getInitArg('lzproxied');
-            if (proxyarg != null) {
-                lzproxied_query_arg = (proxyarg == "true"); // convert string to boolean
-            }
-            this.proxied = lzproxied_query_arg;
-        } else {
-            this.proxied = (args.proxied == true);
+            this.proxied = (args.__LZproxied == "true");
         }
 
         // If no explicit proxyurl defined, set the default proxyurl to our app baseurl
         if (typeof(args.proxyurl) == "undefined") {
             this.proxyurl = lz.Browser.getBaseURL( ).toString();
-        } 
-
-        delete args.proxied;
+        }
 
         // Default to arg values
         var width = args.width;
@@ -324,16 +318,19 @@ dynamic class LzCanvas extends LzView {
             }
         } else {
             // read from init args
-            if (lz.Browser.getInitArg('width') != null) {
-                width = lz.Browser.getInitArg('width');
+            var widtharg:* = lz.Browser.getInitArg('width');
+            if (widtharg != null) {
+                width = widtharg;
             }
 
-            if (lz.Browser.getInitArg('height') != null) {
-                height = lz.Browser.getInitArg('height');
+            var heightarg:* = lz.Browser.getInitArg('height');
+            if (heightarg != null) {
+                height = heightarg;
             }
 
-            if (lz.Browser.getInitArg('bgcolor') != null) {
-                bgcolor = lz.Browser.getInitArg('bgcolor');
+            var bgcolorarg:* = lz.Browser.getInitArg('bgcolor');
+            if (bgcolorarg != null) {
+                bgcolor = bgcolorarg;
             }
         }
 
@@ -390,8 +387,13 @@ dynamic class LzCanvas extends LzView {
             LzScreenKernel.setCallback(this, '__windowResize');
         }
 
+        // TODO: [20090824 anba] why is it necessary to set 'this.bgcolor' here?
         this.bgcolor = LzColorUtils.hextoint(bgcolor);
-        this.setAttribute('bgcolor', bgcolor);
+        this.$lzc$set_bgcolor(bgcolor);
+
+        if (args['fgcolor'] != null) {
+            this.hasfgcolor = true;
+        }
 
         this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;
         delete args.lpsversion;
@@ -703,7 +705,7 @@ function initDone (){
   * @access private
   */
 override function init (){
-    // Canvas-only: This is so the canvas sprite knows when to show its children and 
+    // Canvas-only: This is so the canvas sprite knows when to show its children 
     this.sprite.init(true);
 
     // start up history
