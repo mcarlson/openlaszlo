@@ -21,6 +21,7 @@
             assertTrue( dp.setXPath( "  nps  :/ record[ 1 ]  /   text()  " ) );
             assertEquals( "first" , dp.getNodeText() );
             assertEquals( 2 ,dp.xpathQuery( "  * [ 1 -  ]" ).length );
+            Debug.info("debug-error '[...] matched 4 nodes' is intended");
             assertFalse( dp.setXPath( "  nps  :/ record[ 1 - ]  /   text()  " ) );
             assertTrue( dp.setXPath( "  nps  :/ *  / a [ @foo  =  'var' ] / .. / text ( )  " ) );
             assertEquals( "fourth" , dp.data );
@@ -35,6 +36,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

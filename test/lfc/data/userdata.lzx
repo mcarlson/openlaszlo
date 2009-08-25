@@ -23,18 +23,21 @@
                                       me.callbacks[op] = [key, data, src, dst];
                                       }
                              };
-        
+
+            Debug.info("debug-warning 'use of the handler ...' is intended");
             node1.setUserData('key1', val1, myhandler);
-                   
+
             assertEquals(val1, node1.getUserData('key1'), 'getUserData key1');
 
 
             var node2 = node1.childNodes[0];
             var val2 = {a: 259};
 
+            Debug.info("debug-warning 'use of the handler ...' is intended");
             var prev =  node2.setUserData('key2', val2, myhandler);
             assertEquals(null, prev, 'first setUserData returns prev value null');
 
+            Debug.info("debug-warning 'use of the handler ...' is intended");
             var val3 = {b: 17};
             prev = node2.setUserData('key2', val3, myhandler);
             assertEquals(val2, prev, 'second setUserData returns prev value');

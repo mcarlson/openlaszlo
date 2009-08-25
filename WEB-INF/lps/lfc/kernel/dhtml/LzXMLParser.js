@@ -45,7 +45,7 @@ var LzXMLParser = {
         }
     },
     __checkFirefox: function (doc) {
-        var c = doc.firstChild;
+        var c = doc.documentElement;
         if (c && c.nodeName == "parsererror") {
             // get error information from textnode
             var msg = c.firstChild.nodeValue;
@@ -54,7 +54,7 @@ var LzXMLParser = {
         }
     },
     __checkSafari: function (doc) {
-        var c = doc.firstChild;
+        var c = doc.documentElement;
         if (c instanceof HTMLElement) {
             // Safari returns a HTMLElement for a plain string
             // NOTE: but also returns a HTMLElement if the xml-string defines
