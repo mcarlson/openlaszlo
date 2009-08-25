@@ -112,11 +112,6 @@
             return "TestError: " + this.test + " failed: " + this.reason;
         }
     }
-
-
-
-
-
 ]]></script>
 
 <script><![CDATA[
@@ -141,7 +136,7 @@
 -->
 <class name="DebugObject">
     <!--- whether or not to emit debugging statements -->
-    <attribute name="debugWrite" />
+    <attribute name="debugWrite" value="false" type="boolean"/>
 
     // compare two XML objects for lisp-style EQUAL
     // this takes two string
@@ -300,9 +295,8 @@
     <method name="setResult" args="theTestResult">
         if (typeof(theTestResult) == "undefined") {
             theTestResult = new lz.TestResult();
-        } else {
-          this.result = theTestResult;
         }
+        this.result = theTestResult;
     </method>
 
     <!---
@@ -385,7 +379,7 @@
         ]]>
     </method>
 
-    <!-- @devnote TODO: [2007-10-23 ptw] Use LzFormatter as a mixin instead -->
+    <!-- @devnote TODO: [2007-10-23 ptw] Use LzFormatter as a mixin instead (LPP-7793) -->
     <attribute name="formatter" value="new lz.text()" />
     <!---
       Format a failure message from a message, expected and actual
@@ -738,51 +732,6 @@
     <method name="tearDown">
     </method>
 
-    <method name="xmlstringequals" args="str1,str2">
-    var nxml1 = LzXMLParser.parseXML(str1, null, null);
-    var xml1 = LzXMLTranslator.copyXML(nxml1, null, null);
-
-    var nxml2 = LzXMLParser.parseXML(str2, null, null);
-    var xml2 = LzXMLTranslator.copyXML(nxml2, null, null);
-    return xmlequals(xml1, xml2);
-    </method>
-
-    <method name="xmlequals" args="x1, x2">
-      <![CDATA[
-    if (x1.nodeType != x2.nodeType) return false;
-    // text node
-    if (x1.nodeType == 3) {
-        if (x1.data != x2.data) return false;
-    } else if  (x1.nodeType ==  1){
-
-        // shouldn't ever happen, childNodes should always be non-null
-        if ( ((x1.childNodes == null) && (x2.childNodes != null)) ||
-             ((x1.childNodes != null) && (x2.childNodes == null))) return false;
-
-        if (x1.childNodes.length != x2.childNodes.length) return false;
-
-
-        // compare attributes
-        for (var attr in x1.attributes) {
-            var v1 = x1.attributes[attr];
-            var v2 = x2.attributes[attr];
-            if (v1 != v2) return false;
-        }
-        // recurse
-        var val  = false;       // 
-        for (var i = 0; i < x1.childNodes.length; i++) {
-            if (!xmlequals(x1.childNodes[i], x2.childNodes[i])) {
-                return false;
-            }
-        }
-    } else {
-        return false;
-    }
-    return true;
-    ]]>
-  </method>
-
-
 </class>
 
 
@@ -994,18 +943,18 @@
         update();
     </method>
 
-    <method name="toString">
+    <method name="toString"><![CDATA[
         var s = "Tests: " + this.totalTests +
                  " Failures: " + failedTests +
                  " Errors: " + erroredTests;
-        for (var i in failures)
+        for (var i = 0, len = failures.length; i < len; ++i)
             s += "\n" + failures[i];
-        for (var i in errors)
+        for (var i = 0, len = errors.length; i < len; ++i)
             s += "\n" + errors[i];
-        for (var i in messages)
+        for (var i = 0, len = messages.length; i < len; ++i)
             s += "\n" + messages[i];
         return s;
-    </method>
+    ]]></method>
 
     <!---
       Number of failures or errors
@@ -1226,10 +1175,10 @@
 
       @keywords private
     -->
-    <method name="run">
+    <method name="run"><![CDATA[
         this.controlPanel.bringToFront(); // make sure we can see the control panel
         dw("TestSuite.run()");
-        <!-- bleah -->
+        // bleah
         this.setResult(controlPanel.theTestResult);
         dw("TestSuite.result = ", this.result);
         dw("tests.length = ", tests.length);
@@ -1239,11 +1188,11 @@
         if (asynchronousTests) {
             runNextTest();
         } else {
-            for (var v in this.tests) {
+            for (var v = 0; v < this.tests.length; ++v) {
                 var tc = this.tests[v];
                 if (typeof(tc) != "undefined") {
                     dw("tc.length = ", tc.length);
-                    for (var i in tc) {
+                    for (var i = 0; i < tc.length; ++i) {
                         dw("subviews[", v, "].run(", this.result, ", ", tc[i], ");");
                         subviews[v].run(this.result, tc[i]);
                     }
@@ -1252,7 +1201,7 @@
         }
         dw("TestSuite.result = ", this.result);
         return this.result;
-    </method>
+    ]]></method>
 
     <!---
       Run the next test.
