@@ -1244,11 +1244,11 @@ function __LZprocessOperator (p /*:LzDataNodeMixin*/, pp:LzParsedPath) :* {
         case "serialize": 
             //operator: "serialize()"
             return p.serialize();
-        case "__LZgetText": 
-            //operator: "text()" [__LZgetText()]
+        case "text": 
+            //operator: "text()"
             return p.nodeType != LzDataElement.TEXT_NODE ? p.__LZgetText() : void(0);
-        case "nodeName":
-            //operator: "name()" [nodeName]
+        case "name":
+            //operator: "name()"
             return p.nodeName;
         default:
             if (pp.hasAttrOper) {
@@ -1415,7 +1415,7 @@ function __LZneedsOpUpdate ( chgpkg:Object? = null ) :Boolean {
     if (ppath != null && ppath.operator != null) {
         var who /*:LzDataNodeMixin*/ = chgpkg.who;
         var type:int = chgpkg.type;
-        if (ppath.operator != "__LZgetText") {
+        if (ppath.operator != "text") {
             //case 1 -- normal operator and node changed
             return (type == 1 && who == this.p);
         } else {

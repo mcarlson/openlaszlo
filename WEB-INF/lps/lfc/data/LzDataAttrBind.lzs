@@ -124,9 +124,9 @@ function __LZupdateData (recursive:Boolean = false) :void {
         var dat = this.node.presentAttribute(this.setAttr, this.type)
         //Debug.write('__LZupdateData', this.node, this.setAttr, this.type, dat, this.data);
         if (this.data != dat) {
-            if (ppdo == "nodeName") {
+            if (ppdo == "name") {
                 this.setNodeName( dat );
-            } else if (ppdo == "__LZgetText") {
+            } else if (ppdo == "text") {
                 this.setNodeText( dat );
             } else if (ppdo == "attributes") {
                 this.p.$lzc$set_attributes( dat );

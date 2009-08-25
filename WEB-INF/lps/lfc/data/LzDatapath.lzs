@@ -562,9 +562,9 @@ function __LZupdateData (recursive:Boolean = false) :void {
     if (ppdo != null) {
         var dat = this.immediateparent.updateData();
         if (dat !== void(0)) {
-            if (ppdo == "nodeName") {
+            if (ppdo == "name") {
                 this.setNodeName( dat );
-            } else if (ppdo == "__LZgetText") {
+            } else if (ppdo == "text") {
                 this.setNodeText( dat );
             } else if (ppdo == "attributes") {
                 this.p.$lzc$set_attributes( dat );

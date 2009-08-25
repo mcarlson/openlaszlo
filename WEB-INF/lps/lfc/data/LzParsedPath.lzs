@@ -60,7 +60,7 @@ class LzParsedPath {
   /* Parsing information */
   
   /** 
-    * One of: "nodeName", "__LZgetText", "serialize", "attributes" 
+    * One of: "name", "text", "serialize", "attributes" 
     * or "attributes.xxx" with 'xxx' as an attribute-name
     * 
     * @access private
@@ -224,9 +224,9 @@ function LzParsedPath (pa:String, node:*) {
                     } else if ( cnode.indexOf( "position" ) > -1 ){
                         this.aggOperator = "position";
                     } else if ( cnode.indexOf( "name" ) > -1 ){
-                        this.operator = "nodeName";
+                        this.operator = "name";
                     } else if ( cnode.indexOf( "text" ) > -1 ){
-                        this.operator = "__LZgetText";
+                        this.operator = "text";
                     } else if ( cnode.indexOf( "serialize" ) > -1 ){
                         this.operator = "serialize";
                     } else if ($debug) {
