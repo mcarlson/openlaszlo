@@ -40,8 +40,10 @@ var LzSprite = function(owner, isroot) {
             cxdiv.className = 'lzcanvascontextdiv';
             cxdiv.id = 'lzcanvascontextdiv';
             root.appendChild(cxdiv);
+            cxdiv.owner = this;
+            cxdiv.style.width = this._w;
+            cxdiv.style.height = this._h;
             this.__LZcontextcontainerdiv = cxdiv;
-            this.__LZcontextcontainerdiv.owner = this;
         }
 
         if (p.bgcolor) {
@@ -103,6 +105,8 @@ var LzSprite = function(owner, isroot) {
             cdiv.className = 'lzcanvasclickdiv';
             cdiv.id = 'lzcanvasclickdiv';
             root.appendChild(cdiv);
+            cdiv.style.width = this._w;
+            cdiv.style.height = this._h;
             this.__LZclickcontainerdiv = cdiv;
         }
 
@@ -274,14 +278,17 @@ LzSprite.prototype.__defaultStyles = {
         position: 'absolute'
     },
     lzcanvasdiv: {
-        position: 'absolute'
+        position: 'absolute',
+        overflow: 'hidden'
     },
     lzcanvasclickdiv: {
         zIndex: 100000,
-        position: 'absolute'
+        position: 'absolute',
+        overflow: 'hidden'
     },
     lzcanvascontextdiv: {
-        position: 'absolute'
+        position: 'absolute',
+        overflow: 'hidden'
     },
     // This container implements the swf 'gutter'
     lztextcontainer: {
@@ -1480,6 +1487,14 @@ LzSprite.prototype.setWidth = function ( w ){
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.width = w;
         if (this.__LZcontext) this.__LZcontext.style.width = w;
+        if (this.isroot) {
+            if (this.quirks.fix_clickable) {
+                this.__LZclickcontainerdiv.style.width = w;
+            }
+            if (this.quirks.fix_contextmenu) {
+                this.__LZcontextcontainerdiv.style.width = w;
+            }
+        }
         return w;
     }
 }
@@ -1523,6 +1538,14 @@ LzSprite.prototype.setHeight = function ( h ){
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.height = h;
         if (this.__LZcontext) this.__LZcontext.style.height = h;
+        if (this.isroot) {
+            if (this.quirks.fix_clickable) {
+                this.__LZclickcontainerdiv.style.height = h;
+            }
+            if (this.quirks.fix_contextmenu) {
+                this.__LZcontextcontainerdiv.style.height = h;
+            }
+        }
         return h;
     }
 }

@@ -110,7 +110,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
                 margin: 0;
                 padding: 0;
                 border: 0 none;
-                overflow: hidden;
             }
             body {
                 background-color: <xsl:value-of select="/canvas/@bgcolor"/>;
