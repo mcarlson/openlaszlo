@@ -1472,7 +1472,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     '\\b', '\b',
     '\\t', '\t',
     '\\n', '\n',
-    '\\v', '\x0B', // @devnote IE doesn't implement '\v', use hexcode instead (LPP-3623)
+    // @devnote IE doesn't implement '\v', use hexcode instead, but cannot
+    // use '\x0B' because compiler replaces it back to '\v' (LPP-3623)
+    '\\v', String.fromCharCode(0x0B),
     '\\f', '\f',
     '\\r', '\r',
     '\\"', '\"',
