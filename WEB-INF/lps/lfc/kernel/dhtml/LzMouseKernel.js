@@ -276,13 +276,18 @@ var LzMouseKernel = {
             var y = LzMouseKernel.__y;
             var rootdiv = canvas.sprite.__LZdiv;
             var arr = [];
+
             if (quirks.fix_contextmenu) {
-                // hide root divs
+                // get root div to back, so contextmenudiv will be at the front
                 arr.push(rootdiv, rootdiv.style.display);
-                rootdiv.style.display = 'none';
+                var rootprevZ = rootdiv.style.zIndex; // save current zindex
+                rootdiv.style.zIndex = -1000;
+
+                // get click div to back, so contextmenudiv will be at the front
                 var rootclickdiv = canvas.sprite.__LZclickcontainerdiv;
+                var clickprevZ = rootclickdiv.style.zIndex;
                 arr.push(rootclickdiv, rootclickdiv.style.display);
-                rootclickdiv.style.display = 'none';
+                rootclickdiv.style.zIndex = -9999;
             }
             do {
                 var elem = document.elementFromPoint(x, y);
@@ -315,6 +320,12 @@ var LzMouseKernel = {
             for (var i = arr.length - 1; i >= 0; i -= 2) {
                 arr[i - 1].style.display = arr[i];
             }
+
+            if (quirks.fix_contextmenu) {
+                rootdiv.style.zIndex = rootprevZ;;
+                rootclickdiv.style.zIndex = clickprevZ ;
+            }
+
         } else {
             // this is less reliable compared to elementFromPoint..
             var sprite = (e.srcElement || e.target).owner;
