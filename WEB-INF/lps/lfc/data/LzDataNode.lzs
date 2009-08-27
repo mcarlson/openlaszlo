@@ -134,6 +134,13 @@ var sel :Boolean = false;
 var __LZsize :Object;
 
 /**
+ * Table to store user data objects.
+ * Stores pairs of {key := [data, handler]}
+ * @access private
+ */
+var __LZuserData :Object = null;
+
+/**
  * Returns the parent of this node
  * @return LzDataElementMixin: the parent of this node
  */
@@ -284,6 +291,78 @@ function __LZsetSize (k:String, v:*) :void {
     this.__LZsize[k] = v;
 }
 
+/**
+  * Associate an object to a key on this node. The object can later be
+  * retrieved from this node by calling getUserData with the same key.
+  * (See <a href="http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-setUserData">setUserData (DOM Level 3)</a>)
+  * @param String key: The key to associate the object to.
+  * @param Object data: The object to associate to the given key, or null to remove any existing association to that key.
+  * @param Object handler: (optional) The handler to associate to that key, or null.
+  * @return Object: the user data previously associated to the given key on this node, or null if there was none.
+  *
+  * @access public
+  *
+  */
+public function setUserData (key:String, data:*, handler:* = null) :* {
+    if (this.__LZuserData == null) {
+        this.__LZuserData = {};
+    }
+
+    if ($debug) {
+        if (handler != null) {
+            Debug.warn("use of the handler arg to setUserData is not currently implemented");
+        }
+    }
+
+    // If there is previous data stored, our API is to return it
+    var prevdata:* = this.__LZuserData[key];
+    if (prevdata != null) {
+        prevdata = prevdata[0];
+    }
+
+    if (data != null) {
+        this.__LZuserData[key] = [data, handler];
+    } else {
+        delete this.__LZuserData[key];
+    }
+
+    return (prevdata != null ? prevdata : null);
+}
+
+/**
+  * Retrieves the object associated to a key on a this node. The object
+  * must first have been set to this node by calling setUserData with the
+  * same key.
+  * (See <a href="http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-getUserData">getUserData (DOM Level 3)</a>)
+  * @param String key: The key the object is associated to.
+  * @return Object: the user data associated to the given key on this node, or null if there was none.
+  *
+  * @access public
+  *
+  */
+public function getUserData (key:String) :* {
+    if (this.__LZuserData == null) {
+        return null;
+    } else {
+        var udata:Array = this.__LZuserData[key];
+        return (udata != null ? udata[0] : null);
+    }
+}
+
+// TODO: [20090826 anba] enable when LPP-8425 is finished
+// /**
+//   * @access private
+//   */
+// function __LZhandleUserData (operation:uint, src:LzDataNodeMixin, dst:LzDataNodeMixin) :void {
+//     var userData:Object = this.__LZuserData;
+//     for (var key:String in userData) {
+//         var udata:Array = userData[key];
+//         var handler:* = udata[1];
+//         if (handler != null) {
+//         }
+//     }
+// }
+
 } // End of LzDataNodeMixin
 lz.DataNodeMixin = LzDataNodeMixin;  // publish
 
@@ -348,7 +427,6 @@ static function stringToLzData (str:String, trimwhitespace:Boolean = false, nspr
         Debug.info("lz.DataNode.stringToLzData is deprecated.  Use `lz.DataElement.stringToLzData` instead.");
     }
     return LzDataElement.stringToLzData(str, trimwhitespace, nsprefix);
-
 }
 
 /**
@@ -357,7 +435,7 @@ static function stringToLzData (str:String, trimwhitespace:Boolean = false, nspr
  * have to define it too.
  * @access private
  */
-function toString () /*:String*/ { 
+function toString () /*:String*/ {
     return "lz.DataNode";
 }
 

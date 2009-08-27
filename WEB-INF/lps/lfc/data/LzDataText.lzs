@@ -81,7 +81,14 @@ public function setData (newdata:String) {
   * @access private
   */
 override public function cloneNode (deep:Boolean = false) /*:LzDataNodeMixin*/ {
-    return new LzDataText(this.data);
+    var n:LzDataText = new LzDataText(this.data);
+
+    // TODO: [20090826 anba] enable when LPP-8425 is finished
+    // if (this.__LZuserData) {
+    //     this.__LZhandleUserData(LzDataElement.NODE_CLONED, this, n);
+    // }
+
+    return n;
 }
 
 /**

@@ -229,6 +229,11 @@ override public function cloneNode (deep:Boolean = false) /*:LzDataNodeMixin*/ {
         n.$lzc$set_childNodes(copy);
     }
 
+    // TODO: [20090826 anba] enable when LPP-8425 is finished
+    // if (this.__LZuserData) {
+    //     this.__LZhandleUserData(LzDataElement.NODE_CLONED, this, n);
+    // }
+
     return n;
 }
 
@@ -454,8 +459,8 @@ function $lzc$set_childNodes (children:Array) :void {
 /**
   * Sets the children of this node to the given array.
   * @param [LzDataNodeMixin] children: An array of LzDataNodeMixins to be the new children
-  * @deprecated Use setAttribute('childNodes', ...) instead.
   * of this node
+  * @deprecated Use setAttribute('childNodes', ...) instead.
   */
 public final function setChildNodes (children:Array) :void {
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
@@ -473,6 +478,11 @@ function $lzc$set_nodeName (name:String) :void {
     }
     this.ownerDocument.handleDocumentChange( "childNodeName", this.parentNode, 0 );
     this.ownerDocument.handleDocumentChange( "nodeName", this, 1 );
+
+    // TODO: [20090826 anba] enable when LPP-8425 is finished
+    // if (this.__LZuserData) {
+    //     this.__LZhandleUserData(LzDataElement.NODE_RENAMED, this, null);
+    // }
 }
 
 /**
@@ -696,68 +706,6 @@ public function __LZdoUnlock (locker:LzDatapath) :void {
     }
 }
 
-
-/**
- * Table to store user data objects.
- * Stores pairs of {key := [data, handler]}
- * @access private
- */
-var userData:Object = null;
-
-/**
- * Associate an object to a key on this node. The object can later be
- * retrieved from this node by calling getUserData with the same key.
- * (See http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-setUserData)
-
-  * @param String key: The key to associate the object to.
-  * @param Object data: The object to associate to the given key, or null to remove any existing association to that key.
-  * @param Function handler: (optional) The handler to associate to that key, or null.
-  * @return Object: the user data previously associated to the given key on this node, or null if there was none.
-  *
-  * @access public
-  * 
-  */
-public function setUserData(key:String, data:*, handler:Object = null):* {
-    if (this.userData == null) {
-        this.userData = {};
-    }
-
-    if ($debug && handler != null) {
-        Debug.warn("use of the handler arg to setUserData is not currently implemented");
-    }
-
-
-    // If there is previous data stored, our API is to return it
-    var prevdata:* = this.userData[key];
-    if (prevdata != null) {
-        prevdata = prevdata[0];
-    }
-
-    this.userData[key] = [data, handler];
-    return prevdata;
-}
-
-/**
- * Retrieves the object associated to a key on a this node. The object
- * must first have been set to this node by calling setUserData with the
- * same key.
- * (See http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-getUserData)
-  * @param String key: The key the object is associated to.
-  * @return Object: the user data associated to the given key on this node, or null if there was none.
-  *
-  * @access public
-  * 
-  */
-public function getUserData(key:String):* {
-    if (this.userData == null) {
-        return null;
-    }
-
-    var udata = this.userData[key];
-    return udata[0];
-}
-
-
 } // End of LzDataElementMixin
 lz.DataElementMixin = LzDataElementMixin;  // publish
 
@@ -824,7 +772,7 @@ public static var NODE_ADOPTED:int = 5;
 static function makeNodeList (count:int, name:String) :Array {
     var a:Array = [];
     for (var i:int = 0; i < count; i++) {
-        a[i] = new LzDataElement(name, {}, null);
+        a[i] = new LzDataElement(name);
     }
     return a;
 }
@@ -876,19 +824,19 @@ static function __LZv2E (o:*) :Array {
   * @lzxdefault 1
   * @keywords read-only
   */
-static const ELEMENT_NODE :int = 1;
+public static const ELEMENT_NODE :int = 1;
 /** constant for LZX DOM data text node type 
   * @type int
   * @lzxdefault 3
   * @keywords read-only
   */
-static const TEXT_NODE :int = 3;
+public static const TEXT_NODE :int = 3;
 /** constant for LZX DOM document root node type  
   * @type int
   * @lzxdefault 9
   * @keywords read-only
   */
-static const DOCUMENT_NODE :int = 9;
+public static const DOCUMENT_NODE :int = 9;
 
 /** this is similar to the escape routine in LzText, but that one's shorter
   * since flash it's just for escaping &gt;&lt;
