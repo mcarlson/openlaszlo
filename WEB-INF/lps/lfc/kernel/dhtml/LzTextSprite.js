@@ -158,6 +158,11 @@ LzTextSprite.prototype.setScrollEvents = function (on) {
     }
     var hp = cdim(ht);
     var wp = cdim(wt);
+    if (on) {
+      scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
+    } else {
+      scrolldiv.style.clip = '';
+    }
     scrolldiv.style.height = hp;
     scrolldiv.style.width = wp;
   }
@@ -830,7 +835,6 @@ LzTextSprite.prototype.setWidth = function (w, force){
     var cdim = this.CSSDimension;
     var wp = cdim(wt);
     var hp = cdim(this.height);
-    var clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
     // The scrollbar invades the width, so push the scrollbar out of
     // the way
     if (this.scrollevents) {
@@ -845,7 +849,9 @@ LzTextSprite.prototype.setWidth = function (w, force){
       // Debug.debug('%w.style.width = %s', this.scrolldiv, this.CSSDimension(wt));
       scrolldiv.style.width = wp;
       // Hide the scrollbar
-      scrolldiv.style.clip = clip;
+      if (this.scrollevents) {
+        scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
+      }
       this.__updatefieldsize();
     }
     return nw;
@@ -863,7 +869,6 @@ LzTextSprite.prototype.setHeight = function (h) {
     var cdim = this.CSSDimension;
     var wp = cdim(this.width);
     var hp = cdim(ht);
-    var clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
     // The scrollbar invades the height, so push the scrollbars out of
     // the way
     // NOTE: [2009-03-29 ptw] There are no scroll bars on input
@@ -876,7 +881,9 @@ LzTextSprite.prototype.setHeight = function (h) {
       // Debug.debug('%w.style.height = %s', this.scrolldiv, cdim(ht));
       scrolldiv.style.height = cdim(ht);
       // Hide the scrollbar
-      scrolldiv.style.clip = clip;
+      if (this.scrollevents) {
+        scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
+      }
       this.__updatefieldsize();
     }
     return nh;
