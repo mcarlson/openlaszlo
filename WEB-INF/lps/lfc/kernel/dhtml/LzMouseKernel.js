@@ -100,6 +100,13 @@ var LzMouseKernel = {
                 return;
             }
         }
+        // Make context menus go away when you mouse up or down outside of
+        // them, to behave more like swf - see LPP-8218
+        if ((eventname == 'onmousedown') || (eventname == 'onmouseup')) {
+            if (LzMouseKernel.__showncontextmenu) {
+                LzMouseKernel.__showncontextmenu.__hide();
+            }
+        }
         if (LzMouseKernel.__callback) {
             LzMouseKernel.__scope[LzMouseKernel.__callback](eventname, view);
         }
