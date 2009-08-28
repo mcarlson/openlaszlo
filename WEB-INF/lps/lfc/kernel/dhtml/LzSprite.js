@@ -33,13 +33,13 @@ var LzSprite = function(owner, isroot) {
 
         // grab values stored by lz.embed.dhtml()
         var p = lz.embed.__propcache;
-        var root = p.appenddiv;
+        var rootcontainer = LzSprite.__rootSpriteContainer = p.appenddiv;
 
         if (quirks.fix_contextmenu) {
             var cxdiv = document.createElement('div');
             cxdiv.className = 'lzcanvascontextdiv';
             cxdiv.id = 'lzcanvascontextdiv';
-            root.appendChild(cxdiv);
+            rootcontainer.appendChild(cxdiv);
             cxdiv.owner = this;
             cxdiv.style.width = this._w;
             cxdiv.style.height = this._h;
@@ -52,7 +52,7 @@ var LzSprite = function(owner, isroot) {
         }
         var width = p.width;
         if (width) {
-            root.style.width = width; 
+            rootcontainer.style.width = width; 
             div.style.width = width; 
             var widthispercentage = width.indexOf('%') != -1;
             if (widthispercentage) {
@@ -65,7 +65,7 @@ var LzSprite = function(owner, isroot) {
         }
         var height = p.height;
         if (height) {
-            root.style.height = height; 
+            rootcontainer.style.height = height; 
             div.style.height = height; 
             var heightispercentage = height.indexOf('%') != -1;
             if (heightispercentage) {
@@ -95,16 +95,15 @@ var LzSprite = function(owner, isroot) {
 
         if (! quirks.canvas_div_cannot_be_clipped && width && ! widthispercentage && height && ! heightispercentage) {
             div.style.clip = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
-            div.style.overflow = 'hidden';
         }
-        root.appendChild(div);
+        rootcontainer.appendChild(div);
         this.__LZdiv = div;
 
         if (quirks.fix_clickable) {
             var cdiv = document.createElement('div');
             cdiv.className = 'lzcanvasclickdiv';
             cdiv.id = 'lzcanvasclickdiv';
-            root.appendChild(cdiv);
+            rootcontainer.appendChild(cdiv);
             cdiv.style.width = this._w;
             cdiv.style.height = this._h;
             this.__LZclickcontainerdiv = cdiv;
@@ -124,8 +123,8 @@ var LzSprite = function(owner, isroot) {
 
         if (quirks.activate_on_mouseover) {
             // Mouse detection for activation/deactivation of keyboard/mouse events
-            div.mouseisover = false;
-            div.onmouseover = function(e) {
+            rootcontainer.mouseisover = false;
+            rootcontainer.onmouseover = function(e) {
                 if (LzSprite.prototype.quirks.focus_on_mouseover) {
                     if (LzSprite.prototype.getSelectedText() == "") {
                         div.focus();
@@ -136,7 +135,7 @@ var LzSprite = function(owner, isroot) {
                 this.mouseisover = true;
                 //console.log('onmouseover', e, this.mouseisover);
             }
-            div.onmouseout = function(e) {
+            rootcontainer.onmouseout = function(e) {
                 if (! e) {
                     e = window.event;
                     var el = e.toElement;
@@ -1379,10 +1378,10 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         this.__mouseisdown = false;
     } else if (eventname == 'onmouseover') {
         if (this.quirks.activate_on_mouseover) {
-            var rootdiv = LzSprite.__rootSprite.__LZdiv;
-            if (! rootdiv.mouseisover) {
+            var rootcontainer = LzSprite.__rootSpriteContainer;
+            if (! rootcontainer.mouseisover) {
                 // enable keyboard/mouse events
-                rootdiv.onmouseover();
+                rootcontainer.onmouseover();
             }
         }
     }

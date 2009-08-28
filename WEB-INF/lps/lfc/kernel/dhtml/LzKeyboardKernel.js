@@ -190,17 +190,18 @@ var LzKeyboardKernel = {
     }
     // Called by lz.Keys when the last focusable element was reached.
     ,gotLastFocus: function () {
-        //console.log('gotLastFocus', canvas.sprite.__LZdiv.mouseisover);
-        if (! canvas.sprite.__LZdiv.mouseisover) LzKeyboardKernel.setKeyboardControl(false);
+        //console.log('gotLastFocus', LzSprite.__rootSpriteContainer.mouseisover);
+        if (!  LzSprite.__rootSpriteContainer.mouseisover) LzKeyboardKernel.setKeyboardControl(false);
     }
     // Called to turn on/off restriction of focus to this application
     ,setGlobalFocusTrap: function (istrapped) {
         LzKeyboardKernel.__lockFocus = istrapped;
         if (LzSprite.prototype.quirks.activate_on_mouseover) {
+            var rootcontainer = LzSprite.__rootSpriteContainer;
             if (istrapped) {
-                LzSprite.__rootSprite.__LZdiv.onmouseover();
+                rootcontainer.onmouseover();
             } else {
-                LzSprite.__rootSprite.__LZdiv.onmouseout();
+                rootcontainer.onmouseout();
             }
         }
     }
