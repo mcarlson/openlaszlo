@@ -742,8 +742,12 @@ LzSprite.prototype.__updateQuirks = function () {
             quirks['safari_paste_event'] = true;
             // Safari does not send onkeypress for function keys
             quirks['keypress_function_keys'] = false;
+
             // Safari 3.x does not send global key events to apps embedded in an iframe
-            quirks['keyboardlistentotop'] = true;
+            // no longer true for 3.0.4 - see LPP-8355
+            if (browser.version < 523.15) {
+                quirks['keyboardlistentotop'] = true;
+            }
             
             // If Webkit starting with 530.19.2 or Safari 530.19, 3d transforms supported
             if (browser.version >= 530.19) {
