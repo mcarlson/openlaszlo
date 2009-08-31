@@ -110,9 +110,13 @@ lz.embed = {
 
         var url = queryvals.url + '?' + queryvals.query;
 
-        var swfargs = { 
-            width: properties.width + ''
-            ,height: properties.height + ''
+        var appenddiv = lz.embed._getAppendDiv(properties.id, properties.appenddivid);
+        // NOTE: [2009-08-24 ptw] We set the embed width/height to
+        // 100% and the appenddiv to the desired size, so the platform
+        // can adjust the appenddiv size to effect a dynamic canvas
+        var swfargs = {
+            width: '100%'
+            ,height: '100%'
             ,id: properties.id
             ,bgcolor: properties.bgcolor
             ,wmode: properties.wmode
@@ -120,7 +124,7 @@ lz.embed = {
             ,allowfullscreen: properties.allowfullscreen
             //,flash6: url
             ,flash8: url
-            ,appenddiv: lz.embed._getAppendDiv(properties.id, properties.appenddivid)
+            ,appenddiv: appenddiv
         };
 
         // Add entry for this application 
@@ -128,6 +132,7 @@ lz.embed = {
         var app = lz.embed[properties.id] = lz.embed.applications[properties.id] = { 
             runtime: 'swf'
             ,_id: properties.id
+            ,appenddiv: appenddiv
             ,setCanvasAttribute: lz.embed._setCanvasAttributeSWF
             ,getCanvasAttribute: lz.embed._getCanvasAttributeSWF
             ,callMethod: lz.embed._callMethodSWF
@@ -148,6 +153,8 @@ lz.embed = {
         // for callbacks onload
         lz.embed.dojo.addLoadedListener(lz.embed._loaded, app);
         lz.embed.dojo.setSwf(swfargs, minimumVersion);
+        appenddiv.style.height = lz.embed.CSSDimension(properties.height);
+        appenddiv.style.width = lz.embed.CSSDimension(properties.width);
         if (properties.cancelmousewheel != true && 
             (lz.embed.browser.OS == 'Mac' || 
             // fix for LPP-5393
@@ -174,6 +181,12 @@ lz.embed = {
                 }
             }
         }
+    }
+
+    ,__swfSetAppAppendDivStyle: function (appid, property, value) {
+      // Get the enclosing div
+      var appenddiv = lz.embed.applications[appid].appenddiv;
+      return appenddiv.style[property] = value;
     }
 
     ,/**
@@ -233,11 +246,18 @@ lz.embed = {
         var queryvals = this.__getqueryurl(properties.url, true);
         var url = queryvals.url + '?lzt=object&' + queryvals.query;
 
+        var appenddiv = lz.embed._getAppendDiv(properties.id, properties.appenddivid);
+        // NOTE: [2009-08-24 ptw] We set the embed width/height to
+        // 100% and the appenddiv to the desired size, so the platform
+        // can adjust the appenddiv size to effect a dynamic canvas
+        appenddiv.style.height = lz.embed.CSSDimension(properties.height);
+        appenddiv.style.width = lz.embed.CSSDimension(properties.width);
+
         // properties read by root sprite
         lz.embed.__propcache = {
             bgcolor: properties.bgcolor
-            ,width: properties.width.indexOf('%') == -1 ? properties.width + 'px' : properties.width
-            ,height: properties.height.indexOf('%') == -1 ? properties.height + 'px' : properties.height
+            ,width: properties.width
+            ,height: properties.height
             ,id: properties.id
             ,appenddiv: lz.embed._getAppendDiv(properties.id, properties.appenddivid)
             ,url: url
@@ -638,7 +658,7 @@ lz.embed = {
      * Calls a method with optional arguments in an embedded SWF application 
      * and returns the result.   
      *
-     * @param js:String javascript to call in the form 'foo.bar.methodcall(arg1,arg2,...)'
+       * @param js:String javascript to call in the form 'foo.bar.methodcall(arg1,arg2,...)'
      */
     _callMethodSWF: function (js) {
         if (this.loaded) {
@@ -865,6 +885,28 @@ lz.embed = {
         } 
         return pos;
     }
+    ,/**
+      * Utility method for creating CSS dimensions with appropriate
+      * units.  See lfc/kernel/LzKernelUtils#LZCSSDimension
+      */
+    CSSDimension: function (value, units) {
+        var result = value;
+        if (isNaN(value)) {
+            // Don't perturb % values
+            if (value.indexOf('%') == (value.length - 1) &&
+                (! isNaN(value.substring(0, value.length - 1)))) {
+                return value;
+            } else {
+                result = 0;
+            }
+        } else if (value === Infinity) {
+            result = (~0>>>1);
+        } else if (value === -Infinity) {
+            result = ~(~0>>>1);
+        }
+        return result + (units ? units : 'px');
+    }
+
 };
 
 // init browser detection

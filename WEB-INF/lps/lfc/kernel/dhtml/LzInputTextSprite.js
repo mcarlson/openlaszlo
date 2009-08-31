@@ -278,7 +278,7 @@ LzInputTextSprite.prototype.__show = function() {
     //Debug.warn('__show', this.owner);
     // turn on text selection in IE
     // can't use lz.embed.attachEventHandler because we need to cancel events selectively
-    if (LzSprite.prototype.quirks.prevent_selection) {
+    if (LzSprite.quirks.prevent_selection) {
         //this.__LZdiv.onselectstart = null;
         this.__LZdiv.onselectstart = null;
     }
@@ -287,7 +287,7 @@ LzInputTextSprite.prototype.__show = function() {
 LzInputTextSprite.prototype.__hideIfNotFocused = function(eventname, target) {
     var lzinppr = LzInputTextSprite.prototype;
     if (lzinppr.__lastshown == null) return;
-    var quirks = LzSprite.prototype.quirks;
+    var quirks = LzSprite.quirks;
     if (quirks.textgrabsinputtextfocus) {
         var s = window.event;
         if (s && s.srcElement && s.srcElement.owner && s.srcElement.owner instanceof LzTextSprite) {
@@ -344,7 +344,7 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
     // turn off text selection in IE
     // can't use lz.embed.attachEventHandler because we need to cancel events selectively
     if (LzInputTextSprite.prototype.__lastshown == null) {
-        if (LzSprite.prototype.quirks.prevent_selection) {
+        if (LzSprite.quirks.prevent_selection) {
             this.__LZdiv.onselectstart = LzTextSprite.prototype.__cancelhandler
         }
     }
@@ -880,7 +880,7 @@ LzInputTextSprite.prototype.getSelectionSize = function (){
     }
 }
 
-if (LzSprite.prototype.quirks['text_selection_use_range']) {
+if (LzSprite.quirks['text_selection_use_range']) {
 LzInputTextSprite.prototype._getTextSelection = function (){
     this.__LzInputDiv.focus();
 
@@ -1115,7 +1115,7 @@ LzInputTextSprite.findSelection = function ( ){
 // prevent text selection in IE
 // can't use lz.embed.attachEventHandler because we need to cancel events
 
-if (LzSprite.prototype.quirks.prevent_selection) {
+if (LzSprite.quirks.prevent_selection) {
     document.onselectstart = function (e) {
         if (!e) {
             e = window.event;

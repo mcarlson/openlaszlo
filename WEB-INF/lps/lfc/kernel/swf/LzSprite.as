@@ -24,7 +24,6 @@ var LzSprite = function(newowner, isroot) {
             is = _root.attachMovie('empty', 'spriteroot', 1000);
         }
         this.__LZmovieClipRef = is;
-        
         this.__LZsvdepth = 1;
     } else {
         this.__LZdepth = newowner.immediateparent.sprite.__LZsvdepth++;
@@ -75,6 +74,49 @@ LzSprite.prototype.capabilities = {
     ,allowfullscreen: true
     ,setid: false
 }
+
+/**
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
+LzSprite.setRootX = function (v) {
+    DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, _root.id, 'position', 'absolute')
+    DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, _root.id, 'left', LzKernelUtils.CSSDimension(v))
+}
+
+/**
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
+LzSprite.setRootWidth = function (v) {
+    DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, _root.id, 'width', LzKernelUtils.CSSDimension(v))
+}
+
+/**
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
+LzSprite.setRootY = function (v) {
+    DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, _root.id, 'position', 'absolute')
+    DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, _root.id, 'top', LzKernelUtils.CSSDimension(v))
+}
+
+/**
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
+LzSprite.setRootHeight = function (v) {
+    DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, _root.id, 'height', LzKernelUtils.CSSDimension(v))
+}
+
 
 /** Turns accessibility on/off if accessible == true and a screen reader is active 
   * @param Boolean accessible

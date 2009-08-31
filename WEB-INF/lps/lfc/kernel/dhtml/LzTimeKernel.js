@@ -1,7 +1,7 @@
 /**
   * LzTimeKernel.lzs
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -14,7 +14,7 @@
 // apply(). A workaround can be found here:
 // http://webreflection.blogspot.com/2007/06/simple-settimeout-setinterval-extra.html
 
-if (LzSprite.prototype.quirks.ie_timer_closure) {
+if (LzSprite.quirks.ie_timer_closure) {
   (function(f){
     window.setTimeout = f(window.setTimeout);
     window.setInterval = f(window.setInterval);

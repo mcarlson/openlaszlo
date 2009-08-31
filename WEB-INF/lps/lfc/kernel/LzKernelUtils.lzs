@@ -1,0 +1,43 @@
+/**
+ * Utilities that are shared by all kernels
+ *
+ * @copyright Copyright 2009 Laszlo Systems, Inc.  All Rights
+ * Reserved.  Use is subject to license terms.
+ */
+
+class LzKernelUtils {
+
+    /**
+     * Converts a number to a string with unit designator.  The default
+     * unit is `px`.  If the passed-in value is a percentage, it is not
+     * modified.  For compatibility with swf runtimes, NaN is coerced to
+     * 0; for compatibility with DHTML runtimes, Infinity is coerced to
+     * the largest possible integer value (as implied by the Javascript
+     * bit operators).  Any othe non-numeric value will be coerced to 0,
+     * and if debugging is on, a warning will be issued.
+     */
+      public static function CSSDimension (value, units:String='px') {
+        var result = value;
+        if (isNaN(value)) {
+            // Don't perturb % values
+            if (value.indexOf('%') == (value.length - 1) &&
+                (! isNaN(value.substring(0, value.length - 1)))) {
+                return value;
+            } else {
+                result = 0;
+                if ($debug) {
+                    Debug.warn("%w: coerced %w to %w", arguments.callee, value, result);
+                }
+            }
+        } else if (value === Infinity) {
+            result = (~0>>>1);
+        } else if (value === -Infinity) {
+            result = ~(~0>>>1);
+        }
+
+        // Not sure why we are rounding here.  Most browsers allow
+        // fractional pixels.
+        return Math.round(result) + units;
+    }
+
+}

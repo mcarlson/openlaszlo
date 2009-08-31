@@ -14,8 +14,9 @@ If you edit this file, please validate your work using http://validator.w3.org/
               doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
   <xsl:param name="lps"><xsl:value-of select="/*/request/@lps"/></xsl:param>
+  <xsl:param name="lfc"><xsl:value-of select="/*/request/@lfc"/></xsl:param>
   <xsl:param name="debug"><xsl:value-of select="(/*/info/@debug = 'true') or (/canvas/@debug = 'true')"/></xsl:param>
-  <xsl:param name="lzruntime" select="@runtime"/>
+  <xsl:param name="lzruntime" select="/*/@runtime"/>
   <xsl:param name="appinfo"><xsl:value-of select="/*/console_appinfo/text()"/></xsl:param>
   <xsl:param name="assets"><xsl:value-of select="/*/request/@lps"/>/lps/assets</xsl:param>
   <xsl:param name="console-floating-window"><xsl:value-of select="/*/request/@console-floating-window"/></xsl:param>
@@ -34,6 +35,9 @@ If you edit this file, please validate your work using http://validator.w3.org/
   <xsl:param name="opturl" select="/*/request/@opt-url"/>
   <xsl:param name="unopturl" select="/*/request/@unopt-url"/>
 
+  <!-- shared body template for embedding -->
+  <xsl:include href="WEB-INF/lps/templates/embed-body_jp.xslt"/>
+
   <!--
       In standards mode, your dimensions must have explicit units
   -->
@@ -44,7 +48,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
         <xsl:value-of select="concat($value, 'px')"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="'100%'"/>
+        <xsl:value-of select="$value"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -52,30 +56,18 @@ If you edit this file, please validate your work using http://validator.w3.org/
   <xsl:param name="canvasheight"><xsl:call-template name="dimension"><xsl:with-param name="value" select="/canvas/@height" /></xsl:call-template></xsl:param>
   <xsl:param name="canvaswidth"><xsl:call-template name="dimension"><xsl:with-param name="value" select="/canvas/@width" /></xsl:call-template></xsl:param>
 
-  <!--
-      embed.js strikes again: We should be able to have the div's
-      around the application auto size to their content, and the
-      application should be the size of the canvas.  But in some
-      browsers (Firefox at least), dynamically creating an object does
-      not cause the DOM to update its size calculations, so we
-      explicitly set the size of the div's surrounding the application
-      to 100%.
-  -->
-  <xsl:param name="containerheight">
-  <xsl:choose>
-    <xsl:when test="$debug = 'true' and /canvas/@runtime = 'dhtml'">auto</xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="$canvasheight"/>
-    </xsl:otherwise>
-  </xsl:choose>
-  </xsl:param>
-
   <xsl:template match="/">
     <html>
       <head>
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
         <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico"/>
         <link rel="stylesheet" href="{$lps}/lps/includes/console.css" type="text/css"/>
+        <xsl:comment>[if IE]&gt;
+        &lt;style type="text/css"&gt;
+            /* Fix IE scrollbar braindeath */
+            html { overflow: auto; overflow-x: hidden; }
+        &lt;/style&gt;
+        &lt;![endif]</xsl:comment>
         <title>
           <xsl:choose>
             <xsl:when test="canvas">
@@ -87,6 +79,13 @@ If you edit this file, please validate your work using http://validator.w3.org/
           </xsl:choose>
         </title>
         <script src="{/canvas/request/@lps}/lps/includes/embed-compressed.js" type="text/javascript"/>
+        <xsl:choose>
+          <xsl:when test="/canvas/@runtime = 'dhtml'">
+            <script type="text/javascript">
+              lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/lfc/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>/');
+            </script>
+          </xsl:when>
+        </xsl:choose>
       </head>
       <body>
         <xsl:if test="/canvas/warnings">
@@ -104,83 +103,8 @@ If you edit this file, please validate your work using http://validator.w3.org/
   </xsl:template>
 
   <xsl:template match="canvas">
-    <xsl:param name="url" select="request/@url"/>
-    <xsl:param name="query_args" select="request/@query_args"/>
-    <xsl:choose>
-      <!-- In the case of an lzt=html request, ResponderHTML uses string
-           concatenation to create the <OBJECT>, <object>, and <embed>
-           elements. See the comment in ResponderHTML for an explanation. -->
-      <xsl:when test="@pocketpc">
-        <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-                width="{@width}" height="{@height}" id="lzx">
-          <PARAM NAME="movie" VALUE="{$url}?lzt=swf"/>
-        </OBJECT>
-      </xsl:when>
-      <xsl:otherwise>
-          <xsl:choose>
-            <xsl:when test="@runtime = 'dhtml'">
-              <xsl:choose>
-                <xsl:when test="$debug = 'true'" >
-                    <iframe id="dhtml-application"
-                            frameborder="0"
-                            src="{/canvas/request/@url}?lzt=html{/canvas/request/@query_args}"
-                            style="width: {$canvaswidth}; height: {$canvasheight}" />
-                    <!-- bootstrap debugger window -->
-                  <div id="dhtml-debugger">
-                    <div title="OpenLaszlo Debugger" id="dhtml-debugger-label">
-                      <span></span>OpenLaszloデバッガー
-                    </div>
-                    <div id="dhtml-debugger-output">
-                      <!-- Opera barfs if there is no src property -->
-                      <iframe name="LaszloDebugger" id="LaszloDebugger"
-                              src='{/canvas/request/@lps}/lps/includes/laszlo-debugger.html'>
-                      </iframe>
-                    </div>
-                    <form id="dhtml-debugger-input"
-                          action="#"
-                          onsubmit="$modules.lz.Debug.doEval(document.getElementById('LaszloDebuggerInput').value); return false">
-                        <div>
-                          <input id="LaszloDebuggerInput" type="text" />
-                          <input type="button" value="eval" onclick="$modules.lz.Debug.doEval(document.getElementById('LaszloDebuggerInput').value); return false"/>
-                          <input type="button" value="clear" onclick="$modules.lz.Debug.clear(); return false"/>
-                          <input type="button" value="bug report" onclick="$modules.lz.Debug.bugReport(); return false"/>
-                        </div>
-                      </form>
-                  </div>
-                </xsl:when>
-
-                <xsl:otherwise>
-                  <!-- just the application -->
-                  <iframe id="dhtml-application"
-                          frameborder="0"
-                          src="{/canvas/request/@url}?lzt=html{/canvas/request/@query_args}"
-                          style="width: {$canvaswidth}; height: {$canvasheight}" />
-                </xsl:otherwise>
-              </xsl:choose>
-
-            </xsl:when>
-            <xsl:otherwise>
-              <script type="text/javascript">
-                lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', allowfullscreen: '<xsl:value-of select="/canvas/@allowfullscreen"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
-              </script>
-            </xsl:otherwise>
-          </xsl:choose>
-
-          <noscript>
-            アプリケーションを利用するにはJavaScriptを有効にする必要があります。
-          </noscript>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="body"/>
     <xsl:call-template name="footer"/>
-    <xsl:if test="not(//param[@name='showTaskBar'])">
-    <xsl:choose>
-    <xsl:when test="@runtime = 'dhtml'">
-        <script type="text/javascript">
-        lz.embed.dhtml({url: '<xsl:value-of select="$lps"/>/lps/admin/dev-console.lzx.js?lzappuid=<xsl:value-of select="$appuid"/>&amp;lzt=dhtml&amp;appinfo=<xsl:value-of select="$appinfo"/>', bgcolor: '#858599', width: '100%', height: '<xsl:value-of select="$consoleheight"/>', appenddivid: 'console', cancelkeyboardcontrol: true, serverroot: '<xsl:value-of select="$lps"/>/lps/admin/lps/resources/', history: false});
-        </script>
-    </xsl:when>
-    </xsl:choose>
-    </xsl:if>
   </xsl:template>
 
   <xsl:template name="footer">
@@ -202,15 +126,9 @@ If you edit this file, please validate your work using http://validator.w3.org/
 
     <div id="{$consolefooter}">
       <!-- an embedded SOLO console app to replace the HTML console -->
-      <xsl:choose>
-        <xsl:when test="@runtime = 'dhtml'">
-        </xsl:when>
-        <xsl:otherwise>
-            <iframe id="dhtml-application"
-                    src="{$lps}/lps/admin/dev-console.html?lzappuid={$appuid}&amp;appinfo={$appinfo}"
-                    style="width: 100%; height: {$consoleheight}px" width="100%" height="{$consoleheight}"/>
-        </xsl:otherwise>
-      </xsl:choose>
+      <iframe src="{$lps}/lps/admin/dev-console.html?lzr={$lzruntime}&amp;lzappuid={$appuid}&amp;appinfo={$appinfo}"
+              style="width: 100%; height: {$consoleheight}px; border: 0 none;"
+              width="100%" height="{$consoleheight}" frameborder="0"/>
 
       <!-- pop up console debugger window -->
       <!--

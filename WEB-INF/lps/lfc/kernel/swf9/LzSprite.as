@@ -142,6 +142,8 @@ dynamic public class LzSprite extends Sprite {
       };
       var capabilities = LzSprite.capabilities;
 
+      static var id:String;
+
       public function LzSprite (newowner:LzView = null, isroot:Object = null) {
           // owner:*, isroot:Boolean
           this.owner = newowner;
@@ -156,18 +158,68 @@ dynamic public class LzSprite extends Sprite {
           }
       }
 
+      /**
+       * The canvas fills the root container.  To resize the canvas, we
+       * resize the root container.
+       *
+       * @access private
+       */
+      public static function setRootX (v) {
+          DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'position', 'absolute')
+          DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'left', LzKernelUtils.CSSDimension(v))
+      }
+
+      /**
+       * The canvas fills the root container.  To resize the canvas, we
+       * resize the root container.
+       *
+       * @access private
+       */
+      public static function setRootWidth (v) {
+          DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'width', LzKernelUtils.CSSDimension(v))
+      }
+
+      /**
+       * The canvas fills the root container.  To resize the canvas, we
+       * resize the root container.
+       *
+       * @access private
+       */
+      public static function setRootY (v) {
+          DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'position', 'absolute')
+          DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'top', LzKernelUtils.CSSDimension(v))
+      }
+
+      /**
+       * The canvas fills the root container.  To resize the canvas, we
+       * resize the root container.
+       *
+       * @access private
+       */
+      public static function setRootHeight (v) {
+          DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'height', LzKernelUtils.CSSDimension(v))
+      }
+
       public function init (v:Boolean = true):void {
           this.setVisible(v);
 
-          if (this.isroot && DojoExternalInterface.available) {
-            // Expose your methods
-            DojoExternalInterface.addCallback("getCanvasAttribute", lz.History, lz.History.getCanvasAttribute);
-            DojoExternalInterface.addCallback("setCanvasAttribute", lz.History, lz.History.setCanvasAttribute);
-            DojoExternalInterface.addCallback("callMethod", lz.History, lz.History.callMethod);
-            DojoExternalInterface.addCallback("receiveHistory", lz.History, lz.History.receiveHistory);
+          if (this.isroot) {
+              // Initialize this
+              id = LFCApplication.stage.loaderInfo.parameters['id'];
+              // The canvas should be as big as the stage
+              this.setWidth(LFCApplication.stage.stageWidth);
+              this.setHeight(LFCApplication.stage.stageHeight);
 
-            // Tell JavaScript that you are ready to have method calls
-            DojoExternalInterface.loaded();
+              if (DojoExternalInterface.available) {
+                  // Expose your methods
+                  DojoExternalInterface.addCallback("getCanvasAttribute", lz.History, lz.History.getCanvasAttribute);
+                  DojoExternalInterface.addCallback("setCanvasAttribute", lz.History, lz.History.setCanvasAttribute);
+                  DojoExternalInterface.addCallback("callMethod", lz.History, lz.History.callMethod);
+                  DojoExternalInterface.addCallback("receiveHistory", lz.History, lz.History.receiveHistory);
+                  
+                  // Tell JavaScript that you are ready to have method calls
+                  DojoExternalInterface.loaded();
+              }
           }
       }
 

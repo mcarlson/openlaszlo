@@ -161,7 +161,7 @@ function __hide () {
 /** @access private */
 function __select (e, i) {
     e = e || window.event;
-    var leftbutton = (LzSprite.prototype.quirks.ie_mouse_events ? 1 : 0);
+    var leftbutton = (LzSprite.quirks.ie_mouse_events ? 1 : 0);
     if (e.button == leftbutton) {
         this.__hide();
         var items = this.owner.getItems();

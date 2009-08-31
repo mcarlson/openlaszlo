@@ -34,7 +34,7 @@ var LzMouseKernel = {
 
         var lzinputproto = window['LzInputTextSprite'] && LzInputTextSprite.prototype;
         if (lzinputproto && lzinputproto.__lastshown != null) {
-            if (LzSprite.prototype.quirks.fix_ie_clickable) {
+            if (LzSprite.quirks.fix_ie_clickable) {
                 lzinputproto.__hideIfNotFocused(eventname, targ);
             } else if (eventname != 'onmousemove') {
                 lzinputproto.__hideIfNotFocused();
@@ -171,14 +171,14 @@ var LzMouseKernel = {
 
     /**
     * Sets the cursor to a resource
-    * @param String c: cursor ID to use, or '' for default.  See 
+    * @param String n: cursor ID to use, or '' for default.  See 
     * http://www.quirksmode.org/css/cursor.html for valid IDs
     */
     ,setCursorGlobal: function ( n ){
-        if (LzSprite.prototype.quirks.no_cursor_colresize) {
+        if (LzSprite.quirks.no_cursor_colresize) {
             return;
         }
-        var n = LzSprite.prototype.__defaultStyles.hyphenate(n);
+        var n = LzSprite.__defaultStyles.hyphenate(n);
         LzSprite.prototype.__setCSSClassProperty('.lzclickdiv', 'cursor', n);
         LzSprite.prototype.__setCSSClassProperty('.lzdiv', 'cursor', n);
         LzSprite.prototype.__setCSSClassProperty('.lzcanvasdiv', 'cursor', n);
@@ -192,7 +192,7 @@ var LzMouseKernel = {
     * @access private
     */
     ,restoreCursor: function ( ){
-        if (LzSprite.prototype.quirks.no_cursor_colresize) {
+        if (LzSprite.quirks.no_cursor_colresize) {
             return;
         }
         if ( LzMouseKernel.__amLocked ) return;
@@ -276,7 +276,7 @@ var LzMouseKernel = {
     ,__findContextMenu: function(e) {
         // show the default menu if not found...
         var cmenu = LzSprite.__rootSprite.__contextmenu;
-        var quirks = LzSprite.prototype.quirks;
+        var quirks = LzSprite.quirks;
         if (document.elementFromPoint) {
             var swf8mode = quirks.swf8_contextmenu;
             var x = LzMouseKernel.__x;

@@ -17,7 +17,7 @@ var LzScreenKernel = {
         /*
         // thanks quirksmode!  http://www.quirksmode.org/viewport/compatibility.html
         // Also see http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
-        var q = LzSprite.prototype.quirks;
+        var q = LzSprite.quirks;
         if (q.document_size_use_offsetheight) {
             var scope = window.document.body;
             LzScreenKernel.width = scope.offsetWidth; 
@@ -49,9 +49,9 @@ var LzScreenKernel = {
         */
 
         // base size off of canvas' parent div
-        var rootdiv = LzSprite.__rootSprite.__LZdiv.parentNode;
-        LzScreenKernel.width = rootdiv.offsetWidth;
-        LzScreenKernel.height = rootdiv.offsetHeight;
+        var rootcontainerdiv = LzSprite.__rootSpriteContainer;
+        LzScreenKernel.width = rootcontainerdiv.offsetWidth;
+        LzScreenKernel.height = rootcontainerdiv.offsetHeight;
 
         if (LzScreenKernel.__callback) LzScreenKernel.__scope[LzScreenKernel.__callback]({width: LzScreenKernel.width, height: LzScreenKernel.height});
         //Debug.write('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});

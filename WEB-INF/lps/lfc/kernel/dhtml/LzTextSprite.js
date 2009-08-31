@@ -359,7 +359,7 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
 }
 
 LzTextSprite.prototype._sizecache = {counter: 0}
-if (LzSprite.prototype.quirks.ie_leak_prevention) {
+if (LzSprite.quirks.ie_leak_prevention) {
     LzTextSprite.prototype.__divstocleanup = [];
     LzTextSprite.prototype.__cleanupdivs = function() {
         var obj = LzTextSprite.prototype.__divstocleanup;
@@ -455,7 +455,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   if ((_sizecache.counter > 0) && ((_sizecache.counter % this.__sizecacheupperbound) == 0)) {
     ltsp._sizecache = _sizecache = {counter: 0};
     cv = null;
-    if (LzSprite.prototype.quirks.ie_leak_prevention) {
+    if (LzSprite.quirks.ie_leak_prevention) {
       ltsp.__cleanupdivs();
     }
     if (root) { root.innerHTML = ''; }
@@ -467,7 +467,6 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
     // create container for size cache
     root = document.createElement('div');
     lz.embed.__setAttr(root, 'id', 'lzTextSizeCache');
-    lz.embed.__setAttr(root, 'style', 'top: 4000px;');
     document.body.appendChild(root);
   }
   // TODO: [2009-03-29 ptw] Should we use the scrolldiv.tagName so we

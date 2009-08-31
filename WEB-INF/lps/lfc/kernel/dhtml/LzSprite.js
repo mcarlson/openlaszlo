@@ -35,46 +35,24 @@ var LzSprite = function(owner, isroot) {
         var p = lz.embed.__propcache;
         var rootcontainer = LzSprite.__rootSpriteContainer = p.appenddiv;
 
+        // Ensure we do not hang out of the container div
+        rootcontainer.style.margin = 0;
+        rootcontainer.style.padding = 0;
+        rootcontainer.style.border = "0 none";
+        rootcontainer.style.overflow = "hidden";
+
         if (quirks.fix_contextmenu) {
             var cxdiv = document.createElement('div');
             cxdiv.className = 'lzcanvascontextdiv';
             cxdiv.id = 'lzcanvascontextdiv';
             rootcontainer.appendChild(cxdiv);
             cxdiv.owner = this;
-            cxdiv.style.width = this._w;
-            cxdiv.style.height = this._h;
             this.__LZcontextcontainerdiv = cxdiv;
         }
 
         if (p.bgcolor) {
             div.style.backgroundColor = p.bgcolor; 
             this.bgcolor = p.bgcolor; 
-        }
-        var width = p.width;
-        if (width) {
-            rootcontainer.style.width = width; 
-            div.style.width = width; 
-            var widthispercentage = width.indexOf('%') != -1;
-            if (widthispercentage) {
-                this._w = this.width = width;
-            }
-            else {
-                this.width = parseInt(width);
-                this._w = this.CSSDimension(this.width);
-            }
-        }
-        var height = p.height;
-        if (height) {
-            rootcontainer.style.height = height; 
-            div.style.height = height; 
-            var heightispercentage = height.indexOf('%') != -1;
-            if (heightispercentage) {
-                this._h = this.height = height;
-            }
-            else {
-                this.height = parseInt(height);
-                this._h = this.CSSDimension(this.height);
-            }
         }
         if (p.id) {
             this._id = p.id;
@@ -93,9 +71,6 @@ var LzSprite = function(owner, isroot) {
 
         lz.embed.options.approot = (typeof(p.approot) == "string") ? p.approot : '';
 
-        if (! quirks.canvas_div_cannot_be_clipped && width && ! widthispercentage && height && ! heightispercentage) {
-            div.style.clip = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
-        }
         rootcontainer.appendChild(div);
         this.__LZdiv = div;
 
@@ -104,8 +79,6 @@ var LzSprite = function(owner, isroot) {
             cdiv.className = 'lzcanvasclickdiv';
             cdiv.id = 'lzcanvasclickdiv';
             rootcontainer.appendChild(cdiv);
-            cdiv.style.width = this._w;
-            cdiv.style.height = this._h;
             this.__LZclickcontainerdiv = cdiv;
         }
 
@@ -125,7 +98,7 @@ var LzSprite = function(owner, isroot) {
             // Mouse detection for activation/deactivation of keyboard/mouse events
             rootcontainer.mouseisover = false;
             rootcontainer.onmouseover = function(e) {
-                if (LzSprite.prototype.quirks.focus_on_mouseover) {
+                if (LzSprite.quirks.focus_on_mouseover) {
                     if (LzSprite.prototype.getSelectedText() == "") {
                         div.focus();
                     }
@@ -142,7 +115,7 @@ var LzSprite = function(owner, isroot) {
                 } else {
                     var el = e.relatedTarget;
                 }
-                var quirks = LzSprite.prototype.quirks;
+                var quirks = LzSprite.quirks;
                 if (quirks.inputtext_anonymous_div) {
                     try {
                         // Only try to access parentNode to workaround a Firefox bug,
@@ -242,34 +215,39 @@ var LzSprite = function(owner, isroot) {
     //Debug.debug('new LzSprite', this.__LZdiv, this.owner);
 }
 
-    if ($debug) {
-        /** @access private */
-        LzSprite.prototype._dbg_typename = 'LzSprite';
-        /** @access private */
-        LzSprite.prototype._dbg_name = function () {
-            // Tip 'o the pin to
-            // http://www.quirksmode.org/js/findpos.html
-            var d = div = this.__LZdiv;
-            var x = y = 0;
-            if (d.offsetParent) {
-                do {
-                    x += d.offsetLeft;
-                    y += d.offsetTop;
-                } while (d = d.offsetParent);
-            }
-            return Debug.formatToString("%w/@sprite [%s x %s]*[1 0 %s, 0 1 %s, 0 0 1]",
-                                        this.owner.sprite === this ? this.owner : '(orphan)',
-                                        div.offsetWidth || 0, div.offsetHeight || 0,
-                                        x || 0,
-                                        y || 0);
-        };
-    }
+/* Debug-only annotation */
+if ($debug) {
+    /** @access private */
+    LzSprite.prototype._dbg_typename = 'LzSprite';
+    /** @access private */
+    LzSprite.prototype._dbg_name = function () {
+        // Tip 'o the pin to
+        // http://www.quirksmode.org/js/findpos.html
+        var div = this.__LZdiv;
+        var d = div;
+        var x = 0, y = 0;
+        if (d.offsetParent) {
+            do {
+                x += d.offsetLeft;
+                y += d.offsetTop;
+            } while (d = d.offsetParent);
+        }
+        return Debug.formatToString("%w/@sprite [%s x %s]*[1 0 %s, 0 1 %s, 0 0 1]",
+                                    this.owner.sprite === this ? this.owner : '(orphan)',
+                                    div.offsetWidth || 0, div.offsetHeight || 0,
+                                    x || 0,
+                                    y || 0);
+    };
+}
 
 
 /**
-  * @access private
-  */
-LzSprite.prototype.__defaultStyles = {
+ * Static sprite property:  Template of default CSS styles that will
+ * be written to DOM once the quirks are evaluated and adjusted
+ *
+ * @access private
+ */
+LzSprite.__defaultStyles = {
     lzdiv: {
         position: 'absolute'
     },
@@ -277,17 +255,14 @@ LzSprite.prototype.__defaultStyles = {
         position: 'absolute'
     },
     lzcanvasdiv: {
-        position: 'absolute',
-        overflow: 'hidden'
+        position: 'absolute'
     },
     lzcanvasclickdiv: {
         zIndex: 100000,
-        position: 'absolute',
-        overflow: 'hidden'
+        position: 'absolute'
     },
     lzcanvascontextdiv: {
-        position: 'absolute',
-        overflow: 'hidden'
+        position: 'absolute'
     },
     // This container implements the swf 'gutter'
     lztextcontainer: {
@@ -466,13 +441,50 @@ LzSprite.prototype.__defaultStyles = {
         position: 'absolute',
         backgroundRepeat: 'no-repeat'
     },
+    '#lzcontextmenu div.separator': {
+        borderTop: '1px solid #808080',
+        borderLeft: 'none',
+        borderRight: 'none',
+        borderBottom: '1px solid #d4d0c8',
+        margin: '7px 0px'
+    },
+    '#lzTextSizeCache': {
+        // Force hasLayout in IE
+        zoom: 1
+    },
+    '#lzcontextmenu a': {
+        color: '#000',
+        display: 'block',
+        textDecoration: 'none',
+        cursor: 'default'
+    },
+    '#lzcontextmenu a:hover': {
+        color: '#FFF',
+        backgroundColor: '#333'
+    },
+    '#lzcontextmenu a.disabled': {
+        color: '#999 !important'
+    },
+    '#lzcontextmenu': {
+        position: 'absolute',
+        zIndex: 10000000,
+        backgroundColor: '#CCC',
+        border: '1px outset #999',
+        padding: '4px',
+        fontFamily: 'Verdana,Vera,sans-serif',
+        fontSize: '13px',
+        'float': 'left',
+        margin: '2px',
+        minWidth: '100px'
+    },
+    // Blarg.  Why do we have these in here?
     writeCSS: function() {
         var rules = [];
         var css = '';
         for (var classname in this) {
-            if (classname == 'writeCSS' || 
-                classname == 'hyphenate' || 
-                classname == '__replace' || 
+            if (classname == 'writeCSS' ||
+                classname == 'hyphenate' ||
+                classname == '__replace' ||
                 classname == '__re') continue;
             css += classname.indexOf('#') == -1 ? '.' : '';
             css += classname + '{';
@@ -492,44 +504,18 @@ LzSprite.prototype.__defaultStyles = {
         return '-' + found.toLowerCase();
     }
 }
-LzSprite.prototype.__defaultStyles['#lzcontextmenu div.separator'] = {
-    "border-top": '1px solid #808080',
-    "border-left": 'none',
-    "border-right": 'none',
-    "border-bottom": '1px solid #d4d0c8',
-    "margin": '7px 0px'
-};
 
-LzSprite.prototype.__defaultStyles['#lzcontextmenu a'] = {
-   color: '#000',
-   display: 'block',
-   textDecoration: 'none',
-   cursor: 'default'
-};
-LzSprite.prototype.__defaultStyles['#lzcontextmenu a:hover'] = {
-   color: '#FFF',
-   backgroundColor: '#333'
-};
-LzSprite.prototype.__defaultStyles['#lzcontextmenu a.disabled'] = {
-   color: '#999 !important'
-};
-
-LzSprite.prototype.__defaultStyles['#lzcontextmenu'] = {
-    position: 'absolute',
-    zIndex: 10000000,
-    backgroundColor: '#CCC',
-    border: '1px outset #999',
-    padding: '4px',
-    fontFamily: 'Verdana,Vera,sans-serif',
-    fontSize: '13px',
-    'float': 'left',
-    margin: '2px',
-    minWidth: '100px'
-};
-
+/** @access private */
 LzSprite.prototype.uid = 0;
 
-LzSprite.prototype.quirks = {
+/**
+ * Static sprite property:  Quirks that compensate for browser
+ * peculiarities.  Quirks will be copied to the sprite prototype once
+ * they are computed by __updateQuirks, for easy access from sprites
+ *
+ * @access private
+ */
+LzSprite.quirks = {
     // Creates a separate tree of divs for handling mouse events.
     fix_clickable: true
     ,fix_ie_background_height: false
@@ -548,7 +534,6 @@ LzSprite.prototype.quirks = {
     ,hand_pointer_for_clickable: true
     ,alt_key_sends_control: false
     ,safari_textarea_subtract_scrollbar_height: false
-    ,safari_avoid_clip_position_input_text: false
     ,no_cursor_colresize: false
     ,safari_visibility_instead_of_display: false
     ,preload_images_only_once: false
@@ -621,9 +606,15 @@ LzSprite.prototype.capabilities = {
     ,setid: true
 }
 
-LzSprite.prototype.__updateQuirks = function () {
+/**
+ * Static function executed once at load time to initialize quirks for
+ * the browser we are loaded into
+ *
+ * @access private
+ */
+LzSprite.__updateQuirks = function () {
     if (window['lz'] && lz.embed && lz.embed.browser) {
-        var quirks = this.quirks;
+        var quirks = LzSprite.quirks;
         var browser = lz.embed.browser;
 
         // Divs intercept clicks if physically placed on top of an element
@@ -673,7 +664,7 @@ LzSprite.prototype.__updateQuirks = function () {
             //quirks['inputtext_parents_cannot_contain_clip'] = true;
 
             // flag for components (basefocusview for now) to minimize opacity changes
-            this.capabilities['minimize_opacity_changes'] = true;
+            LzSprite.prototype.capabilities['minimize_opacity_changes'] = true;
 
             // multiline inputtext height must be set directly - height: 100% does not work.  See LPP-4119
             quirks['set_height_for_multiline_inputtext'] = true;
@@ -714,11 +705,6 @@ LzSprite.prototype.__updateQuirks = function () {
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;
 
-            // Safari doesn't like clipped or placed input text fields.
-            if (browser.version < 525.71) {
-                // seems good in Safari 3.2.1
-                quirks['safari_avoid_clip_position_input_text'] = true;
-            }
             // Safari won't show canvas tags whose parent is display: none
             quirks['safari_visibility_instead_of_display'] = true;
             quirks['absolute_position_accounts_for_offset'] = true;
@@ -732,9 +718,9 @@ LzSprite.prototype.__updateQuirks = function () {
             }
             quirks['document_size_use_offsetheight'] = true;
             if (browser.version > 523.10) {
-                this.capabilities['rotation'] = true;
+                LzSprite.prototype.capabilities['rotation'] = true;
                 // Rotation's origin in CSS is width/2 and height/2 as default
-                LzSprite.prototype.__defaultStyles.lzdiv.WebkitTransformOrigin = '0 0';
+                LzSprite.__defaultStyles.lzdiv.WebkitTransformOrigin = '0 0';
             }
 
 
@@ -751,7 +737,7 @@ LzSprite.prototype.__updateQuirks = function () {
             
             // If Webkit starting with 530.19.2 or Safari 530.19, 3d transforms supported
             if (browser.version >= 530.19) {
-              this.capabilities["threedtransform"] = true;
+                LzSprite.prototype.capabilities["threedtransform"] = true;
             }
 
             // turn off mouseover activation for iphone
@@ -799,9 +785,9 @@ LzSprite.prototype.__updateQuirks = function () {
                 quirks['firefox_autocomplete_bug'] = true;
             } else if (browser.version < 3) {
                 // Firefox 2.0.14 doesn't work with the correct line height of 120%
-                LzSprite.prototype.__defaultStyles.lzswftext.lineHeight = '119%';
-                LzSprite.prototype.__defaultStyles.lzswfinputtext.lineHeight = '119%';
-                LzSprite.prototype.__defaultStyles.lzswfinputtextmultiline.lineHeight = '119%';
+                LzSprite.__defaultStyles.lzswftext.lineHeight = '119%';
+                LzSprite.__defaultStyles.lzswfinputtext.lineHeight = '119%';
+                LzSprite.__defaultStyles.lzswfinputtextmultiline.lineHeight = '119%';
             } else if (browser.version < 4) {
                 // Firefox 3.0 does not need padding added onto field height measurements
                 if (browser.subversion < 6) {
@@ -811,9 +797,9 @@ LzSprite.prototype.__updateQuirks = function () {
             }
             quirks['autoscroll_textarea'] = true;
             if (browser.version >= 3.5) {
-                this.capabilities['rotation'] = true;
+                LzSprite.prototype.capabilities['rotation'] = true;
                 // Rotation's origin in CSS is width/2 and height/2 as default
-                LzSprite.prototype.__defaultStyles.lzdiv.MozTransformOrigin = '0 0';
+                LzSprite.__defaultStyles.lzdiv.MozTransformOrigin = '0 0';
             }
             
         }
@@ -824,32 +810,10 @@ LzSprite.prototype.__updateQuirks = function () {
         }
 
         // Adjust styles for quirks
-        var defaultStyles = LzSprite.prototype.__defaultStyles;
+        var defaultStyles = LzSprite.__defaultStyles;
         var tc = defaultStyles.lztextcontainer;
         var itc = defaultStyles.lzinputtextcontainer;
         var itmc = defaultStyles.lzinputtextmultilinecontainer;
-        if (quirks['safari_avoid_clip_position_input_text']) {
-            // TODO: [2009-02-25 ptw] This is what was here, but
-            // perhaps is unneeded in the new scheme where the
-            // container has the padding, not the input text itself.
-// Commenting out for now
-//             itc.paddingTop = itc.PaddingRight = itc.paddingBottom = itc.paddingLeft = '-1px';
-//             itmc.paddingTop = itmc.paddingBottom = '2px';
-//             itmc.paddingRight = itmc.paddingLeft = '0px';
-        }
-        if (this.quirks['text_height_includes_padding']) {
-            // TODO: [2009-02-14 ptw] This is what was there, but it
-            // makes no sense to me.  It this quirk is about text
-            // height, why is it only fiddling with input text?
-            // TODO: [2009-02-16 ptw] Is this really right anyways?  I
-            // think this was to compensate for the fact that when you
-            // measured the div, it included the padding; but now that
-            // we are putting the padding in the enclosing div, that
-            // should not be a problem, right?
-// Commenting out for now
-//             itc.paddingTop = itc.paddingBottom = '0px';
-//             itmc.paddingTop = itmc.paddingBottom = '0px';
-        }
 
         if (quirks['hand_pointer_for_clickable']) {
             defaultStyles.lzclickdiv.cursor = 'pointer';
@@ -875,10 +839,66 @@ LzSprite.prototype.__updateQuirks = function () {
         }
 
     }
+    // Make quirks available as a sprite property
+    LzSprite.prototype.quirks = quirks;
 };
 
-LzSprite.prototype.__updateQuirks();
-LzSprite.prototype.__defaultStyles.writeCSS();
+/* Update the quirks on load */
+LzSprite.__updateQuirks();
+/* Install the styles, now that quirks have been accounted for */
+LzSprite.__defaultStyles.writeCSS();
+
+/**
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
+LzSprite.setRootX = function (v) {
+    var rootcontainer = LzSprite.__rootSpriteContainer;
+    rootcontainer.style.position = 'absolute';
+    rootcontainer.style.left = LzSprite.prototype.CSSDimension(v);
+    // Simulate a resize event so canvas sprite size gets updated
+    LzScreenKernel.__resizeEvent();
+}
+
+/**
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
+LzSprite.setRootWidth = function (v) {
+    LzSprite.__rootSpriteContainer.style.width = LzSprite.prototype.CSSDimension(v);
+    // Simulate a resize event so canvas sprite size gets updated
+    LzScreenKernel.__resizeEvent();
+}
+
+/**
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
+LzSprite.setRootY = function (v) {
+    var rootcontainer = LzSprite.__rootSpriteContainer;
+    rootcontainer.style.position = 'absolute';
+    rootcontainer.style.top = LzSprite.prototype.CSSDimension(v);
+    // Simulate a resize event so canvas sprite size gets updated
+    LzScreenKernel.__resizeEvent();
+}
+
+/**
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
+LzSprite.setRootHeight = function (v) {
+    LzSprite.__rootSpriteContainer.style.height = LzSprite.prototype.CSSDimension(v);
+    // Simulate a resize event so canvas sprite size gets updated
+    LzScreenKernel.__resizeEvent();
+}
 
 /**
   * @access private
@@ -1056,27 +1076,11 @@ LzSprite.prototype.getBaseUrl = function (resource) {
     }
 }
 
-LzSprite.prototype.CSSDimension = function (value, units) {
-    // Coerce +/- infinity, NaN.  For compatibility with swf runtimes,
-    // NaN is treated as 0.  For compatibility with DHTML runtimes,
-    // Infinity is treated as the largest possible integer value (as
-    // implied by the bit operators).
-    var result = value;
-    if (isNaN(value)) {
-        result = 0;
-    } else if (value === Infinity) {
-        result = (~0>>>1);
-    } else if (value === -Infinity) {
-        result = ~(~0>>>1);
-    }
-    if ($debug) {
-        if (value !== result) {
-            Debug.warn("%w: coerced %w to %w", arguments.callee, value, result);
-        }
-    }
-
-    return Math.round(result) + (units ? units : 'px');
-}
+/**
+ * Handy alias
+ * @access private
+ */
+LzSprite.prototype.CSSDimension = LzKernelUtils.CSSDimension;
 
 LzSprite.prototype.loading = false;
 LzSprite.prototype.setSource = function (url, usecache){
@@ -1186,7 +1190,7 @@ LzSprite.prototype.__setBGImage = function (url){
 /**
   * @access private
   */
-if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
+if (LzSprite.quirks.ie_alpha_image_loader) {
 /**
   * @access private
   */
@@ -1490,14 +1494,6 @@ LzSprite.prototype.setWidth = function ( w ){
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.width = w;
         if (this.__LZcontext) this.__LZcontext.style.width = w;
-        if (this.isroot) {
-            if (this.quirks.fix_clickable) {
-                this.__LZclickcontainerdiv.style.width = w;
-            }
-            if (this.quirks.fix_contextmenu) {
-                this.__LZcontextcontainerdiv.style.width = w;
-            }
-        }
         return w;
     }
 }
@@ -1541,14 +1537,6 @@ LzSprite.prototype.setHeight = function ( h ){
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.height = h;
         if (this.__LZcontext) this.__LZcontext.style.height = h;
-        if (this.isroot) {
-            if (this.quirks.fix_clickable) {
-                this.__LZclickcontainerdiv.style.height = h;
-            }
-            if (this.quirks.fix_contextmenu) {
-                this.__LZcontextcontainerdiv.style.height = h;
-            }
-        }
         return h;
     }
 }
@@ -1678,7 +1666,7 @@ LzSprite.prototype.__incrementFrame = function() {
     this.__setFrame(newframe);
 }
 
-if (LzSprite.prototype.quirks.preload_images_only_once) {
+if (LzSprite.quirks.preload_images_only_once) {
     LzSprite.prototype.__preloadurls = {};
 }
 /**
@@ -1925,7 +1913,7 @@ LzSprite.prototype.__destroyImage = function (url, img) {
         LzSprite.prototype.__clearImageEvents(img);
         LzSprite.prototype.__discardElement(img);
     }
-    if (LzSprite.prototype.quirks.preload_images_only_once) {
+    if (LzSprite.quirks.preload_images_only_once) {
         LzSprite.prototype.__preloadurls[url] = null;
     }
 }
@@ -1936,7 +1924,7 @@ LzSprite.prototype.__destroyImage = function (url, img) {
   */
 LzSprite.prototype.__clearImageEvents = function (img) {
     if (! img || img.__cleared) return;
-    if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
+    if (LzSprite.quirks.ie_alpha_image_loader) {
         var sizer = img.sizer;
         if (sizer) {
             //Debug.write('__clearImageEvents'+ sizer.src);
@@ -1967,7 +1955,7 @@ LzSprite.prototype.__gotImage = function(url, obj, skiploader) {
         //loading a resource (non-http)
         this.owner[obj.__lastcondition]({width: this.owner.resourceWidth, height: this.owner.resourceHeight}, true);
     } else {
-        if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
+        if (LzSprite.quirks.ie_alpha_image_loader) {
             this.owner[obj.__lastcondition](obj.sizer, true);
         } else {
             this.owner[obj.__lastcondition](obj, true);
@@ -1979,7 +1967,7 @@ LzSprite.prototype.__gotImage = function(url, obj, skiploader) {
   * @access private
   */
 LzSprite.prototype.__getImage = function(url, skiploader) {
-    if (LzSprite.prototype.quirks.ie_alpha_image_loader) {
+    if (LzSprite.quirks.ie_alpha_image_loader) {
         var im = document.createElement('div');
         //im.className = 'lzdiv';//FIXME: LPP-5422
         im.style.overflow = 'hidden';
@@ -2297,7 +2285,7 @@ LzSprite.prototype.setCursor = function ( c ){
     if (this.clickable != true) this.setClickable(true);
     this.cursor = c;
     //Debug.write('setting cursor to', c, 'on', this.__LZclick.style); 
-    var c = LzSprite.prototype.__defaultStyles.hyphenate(c);
+    var c = LzSprite.__defaultStyles.hyphenate(c);
     this.__LZclick.style.cursor = c;
 }
 
@@ -2474,7 +2462,7 @@ LzSprite.prototype.__setFrame = function (f, force){
   * @access private
   */
 LzSprite.prototype.__discardElement = function (element) {
-    if (LzSprite.prototype.quirks.ie_leak_prevention) {
+    if (LzSprite.quirks.ie_leak_prevention) {
         // Used instead of node.removeChild to eliminate 'pseudo-leaks' in IE - see http://outofhanwell.com/ieleak/index.php?title=Fixing_Leaks
         //alert('__discardElement' + element.nodeType);
         if (! element || ! element.nodeType) return;
@@ -2627,7 +2615,7 @@ LzSprite.prototype.setRotation = function(r) {
     }
 }
 
-if (LzSprite.prototype.quirks.ie_leak_prevention) {
+if (LzSprite.quirks.ie_leak_prevention) {
     LzSprite.prototype.__sprites = {};
 
     // Make sure all references to code inside DIVs are cleaned up to prevent leaks in IE

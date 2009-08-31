@@ -69,7 +69,7 @@ var LzKeyboardKernel = {
         //Debug.write('downKeysHash', t, k, dh, delta);
     }
     ,__updateControlKeys: function (e, delta) {
-        var quirks = LzSprite.prototype.quirks;
+        var quirks = LzSprite.quirks;
         var dh = LzKeyboardKernel.__downKeysHash;
         var dirty = false;
         if (delta) {
@@ -179,7 +179,7 @@ var LzKeyboardKernel = {
             handler = LzKeyboardKernel.__keyboardEvent;
         }
         // can't use lz.embed.attachEventHandler because we need to cancel events selectively
-        if (LzSprite.prototype.quirks.keyboardlistentotop) {
+        if (LzSprite.quirks.keyboardlistentotop) {
             var doc = window.top.document;
         } else {
             var doc = document;
@@ -196,7 +196,7 @@ var LzKeyboardKernel = {
     // Called to turn on/off restriction of focus to this application
     ,setGlobalFocusTrap: function (istrapped) {
         LzKeyboardKernel.__lockFocus = istrapped;
-        if (LzSprite.prototype.quirks.activate_on_mouseover) {
+        if (LzSprite.quirks.activate_on_mouseover) {
             var rootcontainer = LzSprite.__rootSpriteContainer;
             if (istrapped) {
                 rootcontainer.onmouseover();

@@ -298,77 +298,6 @@ dynamic class LzCanvas extends LzView {
             this.proxyurl = lz.Browser.getBaseURL( ).toString();
         }
 
-        // Default to arg values
-        var width = args.width;
-        var height = args.height;
-        var bgcolor = args.bgcolor;
-        delete args.width;
-        delete args.height;
-        delete args.bgcolor;
-
-        if (capabilities.readcanvassizefromsprite == true) {
-            if (this.sprite.width) {
-                width = this.sprite.width;
-            }
-            if (this.sprite.height) {
-                height = this.sprite.height;
-            }
-            if (this.sprite.bgcolor) {
-                bgcolor = this.sprite.bgcolor;
-            }
-        } else {
-            // read from init args
-            var widtharg:* = lz.Browser.getInitArg('width');
-            if (widtharg != null) {
-                width = widtharg;
-            }
-
-            var heightarg:* = lz.Browser.getInitArg('height');
-            if (heightarg != null) {
-                height = heightarg;
-            }
-
-            var bgcolorarg:* = lz.Browser.getInitArg('bgcolor');
-            if (bgcolorarg != null) {
-                bgcolor = bgcolorarg;
-            }
-        }
-
-        this.__canvaswidthratio = null;
-        this.width = Number(width);
-        if (isNaN(this.width)) {
-            if (width.charAt(width.length-1) == '%') {
-                var percent = Number(width.substr(0, width.length-1));
-                this.__canvaswidthratio = percent/100;
-                if (capabilities.scalecanvastopercentage != true) {
-                    // some runtimes already scale the viewport size, so take the reported size literally to avoid scaling twice
-                    this.__canvaswidthratio = 1;
-                }
-            } else {
-                if ( $debug ){
-                    Debug.warn('ignored bad value %#w for canvas width', width);
-                }
-                this.width = 400;
-            }
-        }
-
-        this.__canvasheightratio = null;
-        this.height = Number(height);
-        if (isNaN(this.height)) {
-            if (height.charAt(height.length-1) == '%') {
-                var percent = Number(height.substr(0, height.length-1));
-                this.__canvasheightratio = percent/100;
-                if (capabilities.scalecanvastopercentage != true) {
-                    // some runtimes already scale the viewport size, so take the reported size literally to avoid scaling twice
-                    this.__canvasheightratio = 1;
-                }
-            } else {
-                if ( $debug ){
-                    Debug.warn('ignored bad value %#w for canvas height', height);
-                }
-                this.height = 400;
-            }
-        }
         if (args.focustrap) {
             if (capabilities.disableglobalfocustrap != true) {
                 // ignore for runtimes that already have a global focus trap
@@ -376,20 +305,14 @@ dynamic class LzCanvas extends LzView {
             }
         }
 
-        if ($as3) {
-            // Set the canvas width/height to good initial values.
-            // TODO: ensure these can be read correctly from the embed tag
-            this.sprite.setWidth(this.width);
-            this.sprite.setHeight(this.height);
-        }
-        if (this.__canvasheightratio != null || this.__canvaswidthratio != null) {
-            // register for window resize events
-            LzScreenKernel.setCallback(this, '__windowResize');
-        }
-
-        // TODO: [20090824 anba] why is it necessary to set 'this.bgcolor' here?
-        this.bgcolor = LzColorUtils.hextoint(bgcolor);
-        this.$lzc$set_bgcolor(bgcolor);
+        // Register for window resize events -- this is how the canvas
+        // will learn its actual width and height from the root
+        // sprite (the canvas dimensions are passed directly to the
+        // root sprite by lz.embed, so the app container can be sized
+        // correctly before the app is actually loaded).
+        LzScreenKernel.setCallback(this, '__windowResize');
+        delete args.width;
+        delete args.height;
 
         if (args['fgcolor'] != null) {
             this.hasfgcolor = true;
@@ -830,17 +753,6 @@ override function __LZcallInit ( an = null ){
     }
 }
 
-
-
-/**
-  * @access private
-  */
-override function $lzc$set_width(v) {
-    if ( $debug ){
-        Debug.error( "You cannot set the width on the canvas." );
-    }
-}
-
 /**
   * @access private
   */
@@ -849,30 +761,43 @@ function isProxied ( ){
 }
 
 /**
-  * @access private
-  */
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
+override function $lzc$set_width(v) {
+  LzSprite.setRootWidth(v);
+}
+
+/**
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
 override function $lzc$set_x(v) {
-    if ( $debug ){
-        Debug.error( "You cannot set the X coordinate on the canvas." );
-    }
+  LzSprite.setRootX(v);
 }
 
 /**
-  * @access private
-  */
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
 override function $lzc$set_height(v) {
-    if ( $debug ){
-        Debug.error( "You cannot set the height on the canvas." );
-    }
+  LzSprite.setRootHeight(v);
 }
 
 /**
-  * @access private
-  */
+ * The canvas fills the root container.  To resize the canvas, we
+ * resize the root container.
+ *
+ * @access private
+ */
 override function $lzc$set_y(v) {
-    if ( $debug ){
-        Debug.error( "You cannot set the Y coordinate on the canvas." );
-    }
+  LzSprite.setRootY(v);
 }
 
 /**
@@ -944,23 +869,23 @@ static function versionInfoString () :String {
 }
 
 /**
-  * Callback for LzScreenKernel window resize events
+  * Callback for LzScreenKernel window resize events.  When the canvas
+  * container changes size (whether by being tied to the browser
+  * screen size, or because the LZX app has requested a size change),
+  * we call back here to update the sprite size.
+  *
+  * TODO: [2009-08-25 ptw] Should we track x/y too?
+  *
   * @access private
   */
 function __windowResize(size) {
-    if (this.__canvaswidthratio != null) {
-        this.width = Math.floor(size.width * this.__canvaswidthratio);
-        if (this.onwidth.ready) this.onwidth.sendEvent(this.width);
-        this.sprite.setWidth(this.width);
-        //trace('new width', this.width, 'height', this.height);
-    }
+  this.width = size.width;
+  if (this.onwidth.ready) this.onwidth.sendEvent(this.width);
+  this.sprite.setWidth(this.width);
 
-    if (this.__canvasheightratio != null) {
-        this.height = Math.floor(size.height * this.__canvasheightratio);
-        if (this.onheight.ready) this.onheight.sendEvent(this.height);
-        this.sprite.setHeight(this.height);
-        //trace('new height', this.height, 'width', this.width);
-    }
+  this.height = size.height;
+  if (this.onheight.ready) this.onheight.sendEvent(this.height);
+  this.sprite.setHeight(this.height);
 }
 
 

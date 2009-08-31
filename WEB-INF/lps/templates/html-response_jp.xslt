@@ -30,6 +30,9 @@ If you edit this file, please validate your work using http://validator.w3.org/
   <xsl:param name="canvasheight"><xsl:call-template name="canvasdimension"><xsl:with-param name="value" select="/canvas/@height" /></xsl:call-template></xsl:param>
   <xsl:param name="canvaswidth"><xsl:call-template name="canvasdimension"><xsl:with-param name="value" select="/canvas/@width" /></xsl:call-template></xsl:param>
 
+  <!-- shared body template for embedding -->
+  <xsl:include href="WEB-INF/lps/templates/embed-body_jp.xslt"/>
+
   <xsl:template name="windowdimension">
     <xsl:param name="value" />
     <xsl:param name="default" />
@@ -98,68 +101,33 @@ If you edit this file, please validate your work using http://validator.w3.org/
           <xsl:when test="/canvas/@runtime = 'dhtml'">
             <script type="text/javascript">
               lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/lfc/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>/');
-            </script>  
+            </script>
           </xsl:when>
         </xsl:choose>
         <style type="text/css">
-          html, body
-          {
-            /* http://www.quirksmode.org/css/100percheight.html */
-            height: 100%;
-            /* prevent scrollbars */
-            margin: 0;
-            padding: 0;
-            border: 0 none;
-            overflow: hidden;
-          }
-          body {
+            html, body
+            {
+                /* http://www.quirksmode.org/css/100percheight.html */
+                height: 100%;
+                /* prevent browser decorations */
+                margin: 0;
+                padding: 0;
+                border: 0 none;
+            }
+            body {
                 background-color: <xsl:value-of select="/canvas/@bgcolor"/>;
             }
-          
-          img { border: 0 none; }
+            img { border: 0 none; }
         </style>
+        <xsl:comment>[if IE]&gt;
+        &lt;style type="text/css"&gt;
+            /* Fix IE scrollbar braindeath */
+            html { overflow: auto; overflow-x: hidden; }
+        &lt;/style&gt;
+        &lt;![endif]</xsl:comment>
       </head>
       <body>
-        <xsl:choose>
-          <xsl:when test="/canvas/request/@pocketpc = 'true'">
-            <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-                    width="{/canvas/@width}"
-                    height="{/canvas/@height}"
-                    id="{/canvas/@id}">
-              <PARAM NAME="movie" VALUE="{/canvas/request/@url}?lzt=swf{/canvas/request/@query_args}"/>
-            </OBJECT>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:choose>
-              <xsl:when test="/canvas/@runtime = 'dhtml'">
-                <div id="lzsplash" style="z-index: 10000000; top: 0; left: 0; width: {$canvaswidth}; height: {$canvasheight}; position: fixed; display: table"><p style="display: table-cell; vertical-align: middle;"><img src="{/canvas/request/@lps}/lps/includes/spinner.gif" style="display: block; margin: 20% auto"/></p></div>
-                <script type="text/javascript">
-                  lz.embed.dhtml({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=object<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>'});
-                  lz.embed.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
-                    var s = document.getElementById('lzsplash');
-                    if (s) LzSprite.prototype.__discardElement(s);
-                  }
-                </script>
-              </xsl:when>
-              <xsl:otherwise>
-                <script type="text/javascript">
-                  lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', allowfullscreen: '<xsl:value-of select="/canvas/@allowfullscreen"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>'});
-
-                  lz.embed.<xsl:value-of select="/canvas/@id"/>.onloadstatus = function loadstatus(p) {
-                    // called with a percentage (0-100) indicating load progress
-                  }
-
-                  lz.embed.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
-                    // called when this application is done loading
-                  }
-                </script>
-              </xsl:otherwise>
-            </xsl:choose>
-            <noscript>
-                アプリケーションを利用するにはJavaScriptを有効にする必要があります。
-            </noscript>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:call-template name="body"/>
       </body>
     </html>
   </xsl:template>

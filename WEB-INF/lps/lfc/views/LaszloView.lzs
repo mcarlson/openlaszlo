@@ -2719,8 +2719,9 @@ function $lzc$getMouse_dependencies(...ignore ) {
   * @return Boolean: boolean indicating whether or not the point lies within the view
   */
 function containsPt( x,y ) {
-   return (((this.height >= y) && (y >= 0)) &&
-                ((this.width >= x) && (x >= 0)));
+  // NOTE: [2009-08-24 ptw] Pixels are 0-based, so the comparison with
+  // width and height is exclusive.
+  return (((this.height > y) && (y >= 0)) && ((this.width > x) && (x >= 0)));
 }
 
 /**

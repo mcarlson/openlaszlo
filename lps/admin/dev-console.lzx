@@ -65,7 +65,7 @@
     <dataset name="appdata"/>
     <script>
       <![CDATA[
-       appdata.setInitialData(global.appinfo);
+       appdata.setAttribute('initialdata', global.appinfo);
 
        var app_runtime = appdata.getPointer().xpathQuery("/info/@runtime");
        if (app_runtime == null) {
