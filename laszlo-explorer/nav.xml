@@ -341,26 +341,11 @@
   </section>
 
   <section name="Documentation" title="Documentation" src="/laszlo-explorer/coverpages/documentation_cover.html" text="Overviews, tutorials, and details on OpenLaszlo application development">
-    <topic src="/release-notes.html" name="Release Notes"
-           text="What's new in the release; changes to LZX syntax."/>
-    <topic src="/docs/installation/index.html" name="Installation Instructions"
-           text="How to install and upgrade the OpenLaszlo Development System."/>
-    <topic popup="/docs/reference/index.html" name="OpenLaszlo Reference"
-           text="A complete listing of every public LZX tag and API, including tag attributes and API methods and parameters."
-           action="popup" target="laszlolzxreference"/>
-    <topic popup="/docs/developers/index.html" name="OpenLaszlo Application Developer's Guide"
-           text="In depth explanations of OpenLaszlo concepts."
-           action="popup" target="laszlodevguide"/>
-    <topic popup="/docs/deployers/index.html" name="OpenLaszlo System Administrator's Guide"
-           text="How to make OpenLaszlo applications available on the web."
-           action="popup" target="laszloadminguide"/>
-    <!--topic popup="/docs/design/index.html" name="UI Designer's Guide" action="popup" target="laszlouiguide" /-->
-<!--    <topic popup="/docs/component-design/index.html" name="Components Guide" action="popup" target="laszlocomponentguide" />-->
-    <topic src="/tools/index.html" name="Developer's Tools" title="OpenLaszlo Development Tools"  text="Tips for IDEs"/>
+    <topic src="/docs/installation/index.html" name="Installation" />
+    <topic src="/release-notes.html" name="Release Notes" />
+    <topic popup="/docs/reference/index.html" name="LZX Reference" action="popup" target="laszlolzxreference"/>    
+    <topic popup="/docs/developers/index.html" name="Developer's Guide" action="popup" target="laszlodevguide" />
+    <topic popup="/docs/deployers/index.html" name="Administrator's Guide" action="popup" target="laszloadminguide" />
+    <topic src="/tools/index.html" name="Developer's Tools" title="Development Tools"  text="Tips for IDEs"/>
   </section>
-
-  <!--<section name="Server Admin" src="/laszlo-explorer/coverpages/server_admin_cover.html">
-      <item src="/lps/admin/console.lzx" name="Admin Console" title="Administration" text="Set server parameters">
-      </item>
-  </section>-->
 </menu>
