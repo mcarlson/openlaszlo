@@ -81,7 +81,7 @@ public class LFCApplication {
     }
 
     private function allKeysUp(event:Event):void {
-        lz.Keys.__allKeysUp('flash activate');
+        lz.Keys.__allKeysUp();
     }
 
     private function preventFocusChange(event:FocusEvent):void {
