@@ -613,8 +613,8 @@ LzSprite.prototype.capabilities = {
  * @access private
  */
 LzSprite.__updateQuirks = function () {
+    var quirks = LzSprite.quirks;
     if (window['lz'] && lz.embed && lz.embed.browser) {
-        var quirks = LzSprite.quirks;
         var browser = lz.embed.browser;
 
         // Divs intercept clicks if physically placed on top of an element
@@ -837,7 +837,6 @@ LzSprite.__updateQuirks = function () {
         if (lz.BrowserUtils.hasFeature('mouseevents', '2.0')) {
             quirks['has_dom2_mouseevents'] = true;
         }
-
     }
     // Make quirks available as a sprite property
     LzSprite.prototype.quirks = quirks;

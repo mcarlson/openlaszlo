@@ -278,30 +278,32 @@ if ($as3) {
       // Log to runtime console, if it exists
       if (('console' in global) && (typeof console.log == 'function')) {
         var fn = 'log';
-        if (msg instanceof LzError) {
-          fn = 'error';
-        } else if (msg instanceof LzWarning) {
-          fn = 'warn';
-        } else if (msg instanceof LzInfo) {
-          fn = 'info';
-        } else if (msg instanceof LzDebug) {
-          fn = 'debug';
-        }
-        if (typeof console[fn] != 'function') {
-          fn = 'log';
-        }
-        if ((console[fn].length == 0) && ((msg instanceof LzMessage) || (msg instanceof LzSourceMessage))) {
-          // Firebug console takes multiple arguments and knows how to
-          // present arguments that are objects properly
-          console[fn].apply(console, msg.toArray());
-        } else {
-          // Other consoles are not so smart...
-          console[fn](msg.toString());
-        }
+        try {
+          if (msg instanceof LzError) {
+            fn = 'error';
+          } else if (msg instanceof LzWarning) {
+            fn = 'warn';
+          } else if (msg instanceof LzInfo) {
+            fn = 'info';
+          } else if (msg instanceof LzDebug) {
+            fn = 'debug';
+          }
+          if (typeof console[fn] != 'function') {
+            fn = 'log';
+          }
+          if ((console[fn].length == 0) && ((msg instanceof LzMessage) || (msg instanceof LzSourceMessage))) {
+            // Firebug console takes multiple arguments and knows how to
+            // present arguments that are objects properly
+            console[fn].apply(console, msg.toArray());
+            return;
+          } 
+        } catch (e) {}
+        // Other consoles are not so smart...
+        console[fn](msg.toString());
       }
     }
-  };
-}
+  }
+};
 
 };
 
