@@ -1330,7 +1330,7 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         if (LzKeyboardKernel && LzKeyboardKernel['__updateControlKeys']) {
             LzKeyboardKernel.__updateControlKeys(e);
 
-            if (LzKeyboardKernel.__cancelKeys && e.keyCode == 0) {
+            if (LzKeyboardKernel.__cancelKeys) {
                   e.cancelBubble = true;
             }
         }
@@ -1360,12 +1360,9 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
     if (eventname == 'onmousemove') {
         return;   
     } else if (eventname == 'onmousedown') {
-        // cancel mousedown event bubbling...
-        e.cancelBubble = true;
         this.__mouseisdown = true;
         LzMouseKernel.__lastMouseDown = this;
     } else if (eventname == 'onmouseup') {
-        e.cancelBubble = false;
         // only send the event if this is same sprite the mouse button went down on
         if (LzMouseKernel.__lastMouseDown === this) {
             LzMouseKernel.__lastMouseDown = null;
