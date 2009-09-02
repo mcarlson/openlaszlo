@@ -36,7 +36,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
   <xsl:param name="unopturl" select="/*/request/@unopt-url"/>
 
   <!-- shared body template for embedding -->
-  <xsl:include href="WEB-INF/lps/templates/embed-body_jp.xslt"/>
+  <xsl:include href="embed-body_jp.xslt"/>
 
   <!--
       In standards mode, your dimensions must have explicit units

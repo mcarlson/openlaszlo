@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -11,6 +11,8 @@ package org.openlaszlo.utils;
 import java.io.*;
 import java.util.*;
 import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamSource;
+import org.openlaszlo.server.LPS;
 
 public abstract class TransformUtils {
     /** {Pathname -> Templates} */
@@ -35,6 +37,7 @@ public abstract class TransformUtils {
                 // get saxon and thereby work around bug 3924
                 TransformerFactory factory =
                     new com.icl.saxon.TransformerFactoryImpl();
+                factory.setURIResolver(new TemplateResolver());
                 factory.setErrorListener(errorListener);
                 java.io.InputStream xslInput = 
                     new java.net.URL("file", "", styleSheetPathname).openStream();
@@ -139,3 +142,21 @@ class CollectingErrorListener implements javax.xml.transform.ErrorListener {
         return messageBuffer.toString();
     }
 }
+
+class TemplateResolver implements URIResolver {
+  String base_path;
+  public TemplateResolver() {
+    this.base_path = LPS.getTemplateDirectory();
+  }
+
+  public Source resolve(String href,String base) {
+    StringBuffer path = new StringBuffer(this.base_path);
+    path.append(File.separator);
+    path.append(href);
+    //System.out.println("resolving " + href + ", " + base + " to: " + path.toString());
+    File file = new File(path.toString());
+    if(file.exists()) return new StreamSource(file);
+    return null;
+  }
+}
+

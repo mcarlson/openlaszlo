@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -83,25 +83,21 @@ respondWithInitError(req, res,
             return false;
         }
 
-        // Check for LPS_HOME
-        String lhome = getInitParameter("LPS_HOME");
-        if (lhome == null) {
-            // Default to webapp
-            lhome = LZHttpUtils.getRealPath(ctxt, "/");
+        // Default to webapp root
+        String lhome = LZHttpUtils.getRealPath(ctxt, "/");
 
-            // FIXME: [2003-04-28 bloch] remove this code when
-            // we fix bug 540.   Safety check for now
-            if (lhome == null) {
+        // FIXME: [2003-04-28 bloch] remove this code when
+        // we fix bug 540.   Safety check for now
+        if (lhome == null) {
 respondWithInitError(req, res,
 /* (non-Javadoc)
- * @i18n.test
- * @org-mes="LPS requires a servlet container" + " that can implements ServletContent.getRealPath()"
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                LZServlet.class.getName(),"051018-100")
-                );
-                return false;
-            }
+* @i18n.test
+* @org-mes="LPS requires a servlet container" + " that can implements ServletContent.getRealPath()"
+*/
+                    org.openlaszlo.i18n.LaszloMessages.getMessage(
+                            LZServlet.class.getName(),"051018-100")
+            );
+            return false;
         }
 
         log("LPS_HOME is " + lhome);
