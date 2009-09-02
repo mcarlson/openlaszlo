@@ -491,8 +491,15 @@ dynamic public class LzSprite extends Sprite {
                   }
 
                   try {
-                      this.resourcewidth = info.width;
-                      this.resourceheight = info.height;
+                      var res:DisplayObject = this.resourceContainer;
+                      var scaleX:Number = res.scaleX;
+                      var scaleY:Number = res.scaleY;
+                      res.scaleX = 1.0;
+                      res.scaleY = 1.0;
+                      this.resourcewidth = this.resourceContainer.width;
+                      this.resourceheight = this.resourceContainer.height;
+                      res.scaleX = scaleX;
+                      res.scaleY = scaleY;
                   } catch (error:Error) {
                       // TODO [20090203 anba] install default values?
                   }
