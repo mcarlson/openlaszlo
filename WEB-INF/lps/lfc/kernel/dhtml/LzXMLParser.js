@@ -75,16 +75,31 @@ var LzXMLParser = {
     }
 } // end of LzXMLParser
 
+
+
 // DOMParser for IE and Safari2
 // http://erik.eae.net/archives/2005/07/03/20.19.18/
 if (typeof DOMParser == "undefined") {
     var DOMParser = function () {}
-
     DOMParser.prototype.parseFromString = function (str, contentType) {
         if (typeof window.ActiveXObject != "undefined") {
-            var d = new ActiveXObject("MSXML.DomDocument");
-            d.loadXML(str);
-            return d;
+            // See
+            // http://blogs.msdn.com/xmlteam/archive/2006/10/23/using-the-right-version-of-msxml-in-internet-explorer.aspx
+            var progIDs = [ 'Msxml2.DOMDocument.6.0', 'Msxml2.DOMDocument.3.0', 'MSXML.DomDocument']; 
+            var xmlDOM = null;
+            for (var i = 0; i < progIDs.length; i++) {
+                try {
+                    xmlDOM = new ActiveXObject(progIDs[i]);
+                    break;
+                }
+                catch (ex) {
+                }
+            }
+            if ($debug && xmlDom == null) {
+                Debug.error('Could not instantiate a XML DOM ActiveXObject');
+            }
+            xmlDOM.loadXML(str);
+            return xmlDOM;
         } else if (typeof XMLHttpRequest != "undefined") {
             contentType = (contentType || "application/xml");
             var req = new XMLHttpRequest;
