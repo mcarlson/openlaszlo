@@ -209,7 +209,7 @@ lz.embed = {
             var scripturl = serverroot + 'lps/includes/excanvas.js';
             this.__dhtmlLoadScript(scripturl)
         }
-        if ((lz.embed.browser.isIE && lz.embed.browser.version < 7) || (lz.embed.browser.isSafari && lz.embed.browser.version <= 419.3)) {
+        if (lz.embed.browser.isIE || (lz.embed.browser.isSafari && lz.embed.browser.version <= 419.3)) {
             // use the 'simple' version of the LFC: LFCdhtml-{debug,backtrace}-simple.js for Safari 2 and IE 6
             var i = url.indexOf('debug.js') || url.indexOf('backtrace.js')
             if (i != -1) {
