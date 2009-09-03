@@ -169,8 +169,12 @@ class LzDHTMLDebugService extends LzDebugService {
     for (var n in __ES3Globals) {
       var p = __ES3Globals[n];
       try {
-        if (! Debug.functionName(p)) {
-          p._dbg_name = n;
+        if (! (p is Function)) {
+          if (! p._dbg_name) {
+            p._dbg_name = n;
+          }
+        } else if (! Debug.functionName(p)) {
+          p[Debug.FUNCTION_NAME] = n;
         }
       }
       catch (e) {

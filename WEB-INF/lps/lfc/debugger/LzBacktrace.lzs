@@ -42,7 +42,7 @@ var __LzStackFrame = function (args) {
   if (args instanceof Array) {
     this['this'] = args['this'];
     this['function'] = args.callee;
-    this.__lineno = ('lineno' in args) ? args.lineno : this['function']._dbg_lineno;
+    this.__lineno = ('lineno' in args) ? args.lineno : this['function'][Debug.FUNCTION_LINENO];
   }
   // Copy out the numbered arguments, omitting the above properties
   this.arguments = args.concat();
@@ -53,7 +53,7 @@ var __LzStackFrame = function (args) {
  * @access private
  */
   __LzStackFrame.prototype.isUserFrame = function () {
-    return this['function']._dbg_filename.indexOf('lfc') != 0;
+    return this['function'][Debug.FUNCTION_FILENAME].indexOf('lfc') != 0;
   }
 
 /**
@@ -61,7 +61,7 @@ var __LzStackFrame = function (args) {
  * @access private
  */
   __LzStackFrame.prototype.filename = function () {
-    return this['function']._dbg_filename;
+    return this['function'][Debug.FUNCTION_FILENAME];
   }
 
 /**
@@ -78,7 +78,7 @@ var __LzStackFrame = function (args) {
   */
 __LzStackFrame.prototype._dbg_name = function () {
   var callee = this['function'];
-  var filename = callee._dbg_filename;
+  var filename = callee[Debug.FUNCTION_FILENAME];
   var lineno = this.__lineno;
   return Debug.formatToString('%0.64w @%s#%d', callee, filename, lineno);
 }

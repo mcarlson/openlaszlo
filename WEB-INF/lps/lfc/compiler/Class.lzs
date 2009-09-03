@@ -35,7 +35,7 @@ if ($debug) {
   Instance._dbg_typename = 'Class';
 }
 if ($profile) {
-  Instance._dbg_name = Instance.name = 'new Instance';
+  Instance[Debug.FUNCTION_NAME] = 'new Instance';
   Instance.prototype._profile_typename = 'Instance';
 }
 
@@ -98,8 +98,8 @@ if ($profile) {
           // `this` is the prototype of the class here, not the class
           var o = this['_profile_typename'];
           if (o) {
-            if (value.hasOwnProperty('_dbg_name')) {
-              name = value._dbg_name;
+            if (value.hasOwnProperty(Debug.FUNCTION_NAME)) {
+              name = value[Debug.FUNCTION_NAME];
             }
             // Give the initializer an intelligible name for profiling
             if (name == '$lzsc$initialize') {
@@ -107,7 +107,7 @@ if ($profile) {
             } else {
               var pn = (o + '/' + name);
             }
-            value._profile_name = value._dbg_name = value.name = pn;
+            value._profile_name = value[Debug.FUNCTION_NAME] =  pn;
           }
         }
       }
@@ -190,7 +190,7 @@ Instance.prototype.addProperty('nextMethod', function nextMethod (currentMethod,
   */
 Instance.prototype.addProperty('$lzsc$initialize', function $lzsc$initialize () {});
 if ($profile) {
-  Instance.prototype.$lzsc$initialize._dbg_name = Instance.prototype.$lzsc$initialize.name = 'Instance';
+  Instance.prototype.$lzsc$initialize[Debug.FUNCTION_NAME] = 'Instance';
 }
 
 /**
@@ -229,7 +229,7 @@ var Class = {
         // Here `this` is the class
         var o = this.prototype['_profile_typename'];
         if (o) {
-          value._profile_name = value._dbg_name = value.name = (o + '.' + value._dbg_name);
+          value._profile_name = value[Debug.FUNCTION_NAME] = (o + '.' + value[Debug.FUNCTION_NAME]);
         }
       }
     }
@@ -309,14 +309,14 @@ var Class = {
               // Named or not, set _profile_instantiator_name for
               // annotation in LzInstantiator.makeSomeViews
               if (nm) {
-                nm = this.constructor._dbg_name + '(' + nm + ')';
+                nm = this.constructor[Debug.FUNCTION_NAME] + '(' + nm + ')';
                 this._profile_name = nm;
                 // done: event in __LZcallInit
                 Profiler.event('start: ' + nm);
                 Profiler.event(nm, 'calls');
                 this._profile_instantiator_name = nm;
               } else {
-                this._profile_instantiator_name = this.constructor._dbg_name;
+                this._profile_instantiator_name = this.constructor[Debug.FUNCTION_NAME];
               }
               this.$lzsc$initialize.apply(this, arguments);
             } finally {
@@ -334,12 +334,12 @@ var Class = {
     nc.constructor = this;
     nc.classname = classname;
     if ($debug) {
-      nc._dbg_typename = this._dbg_name;
-      nc._dbg_name = classname;
+      nc._dbg_typename = 'Class constructor';
+      nc[Debug.FUNCTION_NAME] = classname;
     }
     if ($profile) {
       // Give the constructor an intelligible name for profiling
-      nc._dbg_name = nc.name = 'new ' + pcn;
+      nc[Debug.FUNCTION_NAME] = 'new ' + pcn;
     }
     // The prototype is an instance of our super, which causes us to
     // inherit our super's instanceProperties
@@ -348,7 +348,7 @@ var Class = {
       // class instance initializer
       var xtor = function prototype () { this.constructor = superclass; };
       if ($profile) {
-        xtor._dbg_name = xtor.name = pcn + '.prototype';
+        xtor[Debug.FUNCTION_NAME] = pcn + '.prototype';
       }
       xtor.prototype = superclass.prototype;
       var prototype = new xtor(); // --- superclass.make();
@@ -409,16 +409,16 @@ if ($debug) {
   Class.make._dbg_typename = 'Class static function';
 }
 if ($profile) {
-  Class.addProperties._profile_name = Class.addProperties._dbg_name = Class.addProperties.name = 'Class.addProperties';
-  Class.addStaticProperty._profile_name = Class.addStaticProperty._dbg_name = Class.addStaticProperty.name = 'Class.addStaticProperty'
-  Class.make._profile_name = Class.make._dbg_name = Class.make.name = 'Class.make';
+  Class.addProperties._profile_name = Class.addProperties[Debug.FUNCTION_NAME] = 'Class.addProperties';
+  Class.addStaticProperty._profile_name = Class.addStaticProperty[Debug.FUNCTION_NAME] = 'Class.addStaticProperty'
+  Class.make._profile_name = Class.make[Debug.FUNCTION_NAME] = 'Class.make';
 }
 
 /** Bootstrap Mixin class */
 var Mixin = {
   prototype: new Instance(),
   allMixins: {},
-  _dbg_typename: Class._dbg_name,
+  _dbg_typename: Class[Debug.FUNCTION_NAME],
   _dbg_name: 'Mixin',
   // Adds a property to the Mixin, and to all implementations
   addProperty: function addProperty (name, value) {
@@ -473,8 +473,12 @@ var Mixin = {
     // added for debugging
     xtor.classname = interstitialname;
     if ($debug) {
-      xtor._dbg_typename = 'Interstitial Constructor';
-      xtor._dbg_name = xtor.classname;
+      xtor._dbg_typename = 'Interstitial constructor';
+      xtor[Debug.FUNCTION_NAME] = xtor.classname;
+    }
+    if ($profile) {
+      // Give the constructor an intelligible name for profiling
+      xtor[Debug.FUNCTION_NAME] = 'new ' + xtor.classname;
     }
     #pragma "passThrough=true"
     var t = new xtor();
@@ -545,8 +549,8 @@ if ($debug) {
   Mixin.make._dbg_typename = 'Mixin static function';
 }
 if ($profile) {
-  Mixin.addProperty._profile_name = Mixin.addProperty._dbg_name = Mixin.addProperty.name = 'Mixin.addProperty';
-  Mixin.addStaticProperty._profile_name = Mixin.addStaticProperty._dbg_name = Mixin.addStaticProperty.name = 'Mixin.addStaticProperty'
-  Mixin.makeInterstitial._profile_name = Mixin.makeInterstitial._dbg_name = Mixin.makeInterstitial.name = 'Mixin.makeInterstitial'
-  Mixin.make._profile_name = Mixin.make._dbg_name = Mixin.make.name = 'Mixin.make';
+  Mixin.addProperty._profile_name = Mixin.addProperty[Debug.FUNCTION_NAME] = 'Mixin.addProperty';
+  Mixin.addStaticProperty._profile_name = Mixin.addStaticProperty[Debug.FUNCTION_NAME] = 'Mixin.addStaticProperty'
+  Mixin.makeInterstitial._profile_name = Mixin.makeInterstitial[Debug.FUNCTION_NAME] = 'Mixin.makeInterstitial'
+  Mixin.make._profile_name = Mixin.make[Debug.FUNCTION_NAME] = 'Mixin.make';
 }

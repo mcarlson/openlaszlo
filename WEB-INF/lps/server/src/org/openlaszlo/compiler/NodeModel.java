@@ -860,12 +860,12 @@ public class NodeModel implements Cloneable {
         // Add file/line information if debugging
         if (debug && !(env.isAS3())) {
           // File/line stored separately for string sharing
-          String name = "_dbg_filename";
+          String name = Function.FUNCTION_FILENAME;
           String filename = Parser.getSourceMessagePathname(element);
           CompiledAttribute cattr =
             compileAttribute(element, name, filename, ViewSchema.STRING_TYPE, WHEN_IMMEDIATELY);
           addProperty(name, cattr, ALLOCATION_INSTANCE);
-          name = "_dbg_lineno";
+          name = Function.FUNCTION_LINENO;
           Integer lineno = Parser.getSourceLocation(element, Parser.LINENO);
           cattr = compileAttribute(element, name, lineno.toString(), ViewSchema.NUMBER_TYPE, WHEN_IMMEDIATELY);
           addProperty(name, cattr, ALLOCATION_INSTANCE);

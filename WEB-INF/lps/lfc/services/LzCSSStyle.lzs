@@ -1,6 +1,6 @@
 /**
  *
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzcssstyle lzcssstylerule
@@ -20,19 +20,19 @@ class LzCSSStyleRule {
   var selector;
   /** @access private */
   var properties;
+
   if ($debug) {
-  /** @access private */
-  var _dbg_filename;
-  /** @access private */
-  var _dbg_lineno;
+    // In debug mode, the constructor fills these in
+    LzCSSStyleRule.prototype[Debug.FUNCTION_FILENAME] = null;
+    LzCSSStyleRule.prototype[Debug.FUNCTION_LINENO] = null;
   }
 
   function LzCSSStyleRule(selector, properties, source=null, line=null) {
     this.selector = selector;
     this.properties = properties;
     if ($debug) {
-      this._dbg_filename = source;
-      this._dbg_lineno = line;
+      this[Debug.FUNCTION_FILENAME] = source;
+      this[Debug.FUNCTION_LINENO] = line;
     }
   };
 

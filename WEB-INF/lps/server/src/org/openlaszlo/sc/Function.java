@@ -15,6 +15,19 @@ public class Function {
   final String body;
   final String sourceLocation;
 
+  // NOTE: [2009-09-02 ptw] These constants must be kept in sync with
+  // constants in LzBootstrapDebugService
+  
+  // Javascript implementors haven't settled on the property to use
+  // for giving a "pretty" name to a Function, for debugging and
+  // profiling.  This seems to be the most popular right now, so we go
+  // along with the crowd.
+  public static String FUNCTION_NAME = "displayName";
+  // These are our own invention, maybe some day they will be more
+  // universal
+  public static String FUNCTION_FILENAME = "_dbg_filename";
+  public static String FUNCTION_LINENO = "_dbg_lineno";
+
   public Function(String body) {
     this("", body);
   }

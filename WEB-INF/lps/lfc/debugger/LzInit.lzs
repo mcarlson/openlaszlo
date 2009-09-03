@@ -11,11 +11,11 @@
   (function () {
     for (var k in lz) {
       var v = lz[k];
-      if (v['_dbg_name'] == null) {
+      if ((! (v is Function)) &&
+          (v['_dbg_name'] == null)) {
         try {
           v._dbg_name = 'lz.' + k;
-        } catch (e) {
-        }
+        } catch (e) {}
       }
     }
   })();

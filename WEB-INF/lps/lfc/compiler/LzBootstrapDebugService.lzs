@@ -312,6 +312,15 @@ if ($as3) {
  * @access private
  */
 dynamic class LzBootstrapDebugService {
+  /**
+   * Configurable names for debug annotations.  See
+   * org.openlaszlo.sc.Function.  NOTE:  These values are duplicated
+   * in LzRuntime because Class.lzs needs them before this is loaded.
+   */
+  public const FUNCTION_NAME = 'displayName';
+  public const FUNCTION_FILENAME = '_dbg_filename';
+  public const FUNCTION_LINENO = '_dbg_lineno';
+
   /** Backtrace stack
    * @access private
    */

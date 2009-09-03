@@ -86,14 +86,14 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // In-line version of Profiler#event (q.v.).
   //
   // If name is set, uses that, otherwise uses
-  // arguments.callee._dbg_name.  This code must be appended to the
+  // function pretty name.  This code must be appended to the
   // function prefix or suffix, as appropriate.
   SimpleNode meterFunctionEvent(SimpleNode node, String event, String name) {
     String getname;
     if (name != null) {
       getname = "'" + name + "'";
     } else {
-      getname = "arguments.callee._dbg_name";
+      getname = "arguments.callee['" + Function.FUNCTION_NAME + "']";
     }
 
     // Note _root.$lzprofiler can be undedefined to disable profiling
@@ -1137,15 +1137,27 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     if (functionName != null) {
       userFunctionName = functionName;
       if (! useName) {
-        if ((! identifierPattern.matcher(functionName).matches())
-            // Some JS engines die if you name function expressions
-            || options.getBoolean(Compiler.DEBUG_SIMPLE)) {
-          // This is a function-expression that has been annotated
-          // with a non-legal function name, so remove that and put it
-          // in _dbg_name (below)
+        // NOTE: [2009-09-01 ptw] (LPP-8431) IE ruins naming function
+        // expressions for everyone because it has a retarded
+        // implementation of Javascript that no one in their right
+        // mind could conceive of.  See:
+        // http://yura.thinkweb2.com/named-function-expressions/ for
+        // full details.
+        //
+        // NOTE: [2009-09-01 ptw] The swf9 JIT seems to have a similar
+        // lossage, so we don't ever use named function expressions
+//         if (
+//               // This is a function-expression that has been annotated
+//               // with a non-legal function name
+//               (! identifierPattern.matcher(functionName).matches()) ||
+//               (! (this instanceof SWF9Generator))
+//             )
+//         {
+          // Remove the function name, it will be emitted as the
+          // function's pretty name below instead.
           functionName = null;
           children[0] = new ASTEmptyExpression(0);
-        }
+//         }
       }
     } else {
       userFunctionName = "" + filename + "#" +  lineno + "/" + node.beginColumn;
@@ -1547,11 +1559,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           int nn = 0;
           newNode.set(nn++, new Compiler.PassThroughNode(node));
           if (options.getBoolean(Compiler.PROFILE)) {
-            newNode.set(nn++, parseFragment(functionName + "._dbg_name = " + ScriptCompiler.quote(functionName)));
+            newNode.set(nn++, parseFragment(functionName + "['" + Function.FUNCTION_NAME + "'] = " + ScriptCompiler.quote(functionName)));
           }
           if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
-            newNode.set(nn++, parseFragment(functionName + "._dbg_filename = " + ScriptCompiler.quote(fn)));
-            newNode.set(nn++, parseFragment(functionName + "._dbg_lineno = " + lineno));
+            newNode.set(nn++, parseFragment(functionName + "['" + Function.FUNCTION_FILENAME + "'] = " + ScriptCompiler.quote(fn)));
+            newNode.set(nn++, parseFragment(functionName + "['" + Function.FUNCTION_LINENO + "'] = " + lineno));
           }
           node = visitStatement(newNode);
         }
@@ -1562,10 +1574,10 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           node,
           "(function () {" +
           "   var $lzsc$temp = _1;" +
-          "   $lzsc$temp._dbg_name = " + ScriptCompiler.quote(userFunctionName) + ";" +
+          "   $lzsc$temp['" + Function.FUNCTION_NAME + "'] = " + ScriptCompiler.quote(userFunctionName) + ";" +
           ((options.getBoolean(Compiler.DEBUG_BACKTRACE)) ?
-           ("   $lzsc$temp._dbg_filename = " + ScriptCompiler.quote(fn) + ";" +
-            "   $lzsc$temp._dbg_lineno = " + lineno + ";") : 
+           ("   $lzsc$temp['" + Function.FUNCTION_FILENAME + "'] = " + ScriptCompiler.quote(fn) + ";" +
+            "   $lzsc$temp['" + Function.FUNCTION_LINENO + "'] = " + lineno + ";") : 
            "") +
           "   return $lzsc$temp})()",
           map));

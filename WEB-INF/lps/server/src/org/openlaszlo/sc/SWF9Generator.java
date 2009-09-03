@@ -121,10 +121,6 @@ public class SWF9Generator extends JavascriptGenerator {
 
   public void setGeneratorOptions() {
     options.putBoolean(Compiler.PASSTHROUGH_FORMAL_INITIALIZERS, true);
-    // Inhibit function names because swf9 JIT seems to choke on them
-    // with a verify error the second time a named function is called
-    // dynamically
-    options.putBoolean(Compiler.DEBUG_SIMPLE, true);
   }
 
   /**

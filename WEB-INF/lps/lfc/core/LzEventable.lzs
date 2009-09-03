@@ -143,11 +143,11 @@ class LzEventable {
 
   if ($debug) {
     // In debug mode, the compiler fills these in
-    LzEventable.prototype._dbg_filename = null;
-    LzEventable.prototype._dbg_lineno = null;
+    LzEventable.prototype[Debug.FUNCTION_FILENAME] = null;
+    LzEventable.prototype[Debug.FUNCTION_LINENO] = null;
     // Subclasses can define these to be either strings or functions
     LzEventable.prototype._dbg_typename = null;
-    LzEventable.prototype._dbg_name = null;
+    LzEventable.prototype[Debug.FUNCTION_NAME] = null;
   }
 
   // TODO: [2008-05-08 ptw] (LPP-5934) When toString is declared

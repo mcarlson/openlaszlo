@@ -158,7 +158,6 @@
 
     var buildDebug = lfc.getProperty("build.lfc.runtime.debug");
     var buildProfile = lfc.getProperty("build.lfc.runtime.profile");
-    var buildDebugSimple = lfc.getProperty("build.lfc.runtime.debug.simple");
     var LFCdir = lfc.getProperty("LFCdir") + '/';
 
     importPackage(java.io);
@@ -177,16 +176,6 @@
                   "dhtml",
                   "--option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
         }
-        if (buildDebugSimple) {
-          var dest = LFCdir + "LFCdhtml-debug-simple.js";
-          if (!(new File(dest)).exists()) {
-            // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
-            // warnings, the options can be changed to simply --debug
-            dobuild(dest,
-                    "dhtml",
-                    "--option debugSimple --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
-          }
-        }
         var dest = LFCdir + "LFCdhtml-backtrace.js";
         if (!(new File(dest)).exists()) {
           // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
@@ -194,16 +183,6 @@
           dobuild(dest,
                   "dhtml",
                   "--option debugBacktrace --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
-        }
-        if (buildDebugSimple) {
-          var dest = LFCdir + "LFCdhtml-backtrace-simple.js";
-          if (!(new File(dest)).exists()) {
-            // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
-            // warnings, the options can be changed to simply -g3
-            dobuild(dest,
-                    "dhtml",
-                    "--option debugSimple --option debugBacktrace --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
-          }
         }
       }
       if (buildProfile) {

@@ -81,16 +81,20 @@ class LzAS2DebugService extends LzDebugService {
     XMLSocket: true
     };
     function fixupNativeObject (name, obj) {
-      // name it
-      obj._dbg_name = String(name);
+      name = String(name);
       // fix constructors
       if (typeof(obj) == 'function') {
+        obj[Debug.FUNCTION_NAME] = name;
         if (obj.hasOwnProperty('prototype')) {
           if (! obj.prototype.hasOwnProperty('constructor')) {
             obj.prototype.constructor = obj;
           }
         }
+      } else {
+        // name it
+        obj._dbg_name = name;
       }
+
       // name class and prototype methods
       var what = [obj];
       if (obj['prototype']) { what.push(obj.prototype); }
@@ -112,8 +116,8 @@ class LzAS2DebugService extends LzDebugService {
             // Name native methods
             if (val instanceof Function) {
               // Don't rename yourself (the constructor)
-              if (! val.hasOwnProperty('_dbg_name')) {
-                val._dbg_name = name + '.' + key;
+              if (! val.hasOwnProperty(Debug.FUNCTION_NAME)) {
+                val[Debug.FUNCTION_NAME] = name + '.' + key;
               }
             }
           }

@@ -611,7 +611,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     for (var j = 0, m = rs.length; j < m; j++) {
       var r = rs[j];
       var rp = r.properties;
-      msg += (this.formatToString("/* @%s#%d (specificity %d, order %d) */\n", r._dbg_filename, r._dbg_lineno,  r.specificity, r._lexorder)).toHTML();
+      msg += (this.formatToString("/* @%s#%d (specificity %d, order %d) */\n", r[Debug.FUNCTION_FILENAME], r[Debug.FUNCTION_LINENO],  r.specificity, r._lexorder)).toHTML();
       msg += (this.formatToString("%w {\n", r)).toHTML();
       for (var i = 0, l = ps.length; i < l; i++) {
         var p = ps[i];
@@ -854,9 +854,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   public function functionName (fn, mustBeUnique:Boolean=false) {
     if (fn is Function) {
-      // _dbg_name takes precedence over the actual function name
-      if (fn.hasOwnProperty('_dbg_name')) {
-        var n = fn['_dbg_name'];
+      // Display name takes precedence over the actual function name
+      var dn = Debug.FUNCTION_NAME;
+      if (fn.hasOwnProperty(dn)) {
+        var n = fn[dn];
       } else {
         // tip o' the pin to osteele.com
         var fstring = fn['toString']();

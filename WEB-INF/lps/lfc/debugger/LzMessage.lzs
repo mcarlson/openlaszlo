@@ -338,8 +338,8 @@ class LzSourceMessage {
       for (var i = 0; i < args.length; i++) {
         var arg = args[i];
         if (arg is LzNode) {
-          file = arg['_dbg_filename'] || null;
-          line = arg['_dbg_lineno'] || 0;
+          file = arg[Debug.FUNCTION_FILENAME] || null;
+          line = arg[Debug.FUNCTION_LINENO] || 0;
         }
       }
     }

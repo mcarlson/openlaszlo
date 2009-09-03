@@ -302,9 +302,6 @@ public class Compiler {
       if (! options.containsKey(DEBUG_BACKTRACE)) {
         options.putBoolean(DEBUG_BACKTRACE, false);
       }
-      if (! options.containsKey(DEBUG_SIMPLE)) {
-        options.putBoolean(DEBUG_SIMPLE, false);
-      }
     }
     if (! options.containsKey(PROFILE)) {
       options.putBoolean(PROFILE, false);
@@ -471,7 +468,6 @@ public class Compiler {
   public static String DEBUG = "debug";
   public static String DEBUG_BACKTRACE = "debugBacktrace";
   public static String DEBUG_SWF9 = "debugSWF9";
-  public static String DEBUG_SIMPLE = "debugSimple";
   public static String DEBUG_EVAL = "debugEval";
   public static String DUMP_AST_INPUT = "dumpASTInput";
   public static String DUMP_AST_OUTPUT = "dumpASTOutput";

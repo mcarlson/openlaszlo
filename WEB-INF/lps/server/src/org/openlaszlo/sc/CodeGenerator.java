@@ -224,13 +224,12 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   // This code must be appended to the function prefix or suffix, as
   // appropriate
   //
-  // TODO: [2008-08-22 ptw] Replace name with _dbg_name
   SimpleNode[] meterFunctionEvent(SimpleNode node, String event, String name) {
     String getname;
     if (name != null) {
       getname = "'" + name + "'";
     } else {
-      getname = "arguments.callee._dbg_name";
+      getname = "arguments.callee['" + Function.FUNCTION_NAME + "']";
     }
 
     // Note _root.$lzprofiler can be undedefined to disable profiling
@@ -2217,7 +2216,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         collector.emit(Instructions.DUP);
         collector.emit(Instructions.DUP);
       }
-      collector.push("_dbg_name");
+      collector.push(Function.FUNCTION_NAME);
       collector.push(userFunctionName);
       collector.emit(Instructions.SetMember);
       collector.push("length");
@@ -2228,10 +2227,10 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         // distinguish LFC from user stack frames.  See
         // lfc/debugger/LzBactrace
         String fn = (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ? "lfc/" : "") + filename;
-        collector.push("_dbg_filename");
+        collector.push(Function.FUNCTION_FILENAME);
         collector.push(fn);
         collector.emit(Instructions.SetMember);
-        collector.push("_dbg_lineno");
+        collector.push(Function.FUNCTION_LINENO);
         collector.push(lineno);
         collector.emit(Instructions.SetMember);
       }
