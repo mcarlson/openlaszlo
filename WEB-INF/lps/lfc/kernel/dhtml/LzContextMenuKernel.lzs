@@ -140,8 +140,22 @@ function __show () {
 
     var s = LzContextMenuKernel.lzcontextmenu || LzContextMenuKernel.__create();
     s.innerHTML = o;
-    s.style.left = LzMouseKernel.__x + 'px';
-    s.style.top = LzMouseKernel.__y + 'px';
+
+    var width = s.offsetWidth;
+    var x = LzMouseKernel.__x;
+    if (x + width > LzScreenKernel.width) {
+        x += LzScreenKernel.width - (x + width);
+    }
+
+    var height = s.offsetHeight;
+    var y = LzMouseKernel.__y;
+    if (y + height > LzScreenKernel.height) {
+        y += LzScreenKernel.height - (y + height);
+    }
+
+    s.style.left = x + 'px';
+    s.style.top = y + 'px';
+
 
     // Only show menu if there are any visible items and builtin items are hidden
     if (shownItems && ! this.showbuiltins) {
