@@ -182,7 +182,7 @@ static function getAppID() {
   */
 static function isAAActive (){
     // Not yet implemented;
-    Debug.warn("LzBrowserKernel.isAAActive not yet fully implemented");
+    if ($debug) Debug.warn("LzBrowserKernel.isAAActive not yet fully implemented");
     return false;
 }
 

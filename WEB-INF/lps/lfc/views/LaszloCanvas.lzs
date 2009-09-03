@@ -571,21 +571,23 @@ function __fullscreenEventCallback (result:Boolean, isFullscreen) : void {
   * only called from LzScreenKernel.as#showFullScreen
   */
 function __fullscreenErrorCallback(errorMessage) : void {
-    if (this.allowfullscreen == false) {
-        Debug.error("Please set <canvas allowfullscreen=\"true\" /> for fullscreen support");
-    } else {
-        var message = "Usage of fullscreen feature is supported starting with Flash Player 9.0.28 (Windows & OS X) and 9.0.115.0 (Linux).\n" +
-                      "You are currently using Flash Player " + lz.Browser.getVersion();
-        // Only SWF9+ will provide an error message
-        if (errorMessage != null) {
-            message = "Flash Player Security Error " + errorMessage + "\n" + message;
+    if ($debug) {
+        if (this.allowfullscreen == false) {
+            Debug.error("Please set <canvas allowfullscreen=\"true\" /> for fullscreen support");
+        } else {
+            var message = "Usage of fullscreen feature is supported starting with Flash Player 9.0.28 (Windows & OS X) and 9.0.115.0 (Linux).\n" +
+                        "You are currently using Flash Player " + lz.Browser.getVersion();
+            // Only SWF9+ will provide an error message
+            if (errorMessage != null) {
+                message = "Flash Player Security Error " + errorMessage + "\n" + message;
+            }
+            Debug.error(message);
+            // Show hints to what might have gone wrong
+            Debug.error('Check your SWF embed code for missing param tag ' +
+                    '<param name="allowFullScreen" value="true" /> inside the <object> tag,\n or ' +
+                    'missing attribute allowFullScreen="true" in <embed> tag.\n' +
+                    'canvas.setAttribute("fullscreen", true) can be called only in response to a mouse click or keypress.\n');
         }
-        Debug.error(message);
-        // Show hints to what might have gone wrong
-        Debug.error('Check your SWF embed code for missing param tag ' +
-                '<param name="allowFullScreen" value="true" /> inside the <object> tag,\n or ' +
-                'missing attribute allowFullScreen="true" in <embed> tag.\n' +
-                'canvas.setAttribute("fullscreen", true) can be called only in response to a mouse click or keypress.\n');
     }
 }
  

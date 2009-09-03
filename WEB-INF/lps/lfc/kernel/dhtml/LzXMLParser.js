@@ -95,8 +95,10 @@ if (typeof DOMParser == "undefined") {
                 catch (ex) {
                 }
             }
-            if ($debug && xmlDom == null) {
-                Debug.error('Could not instantiate a XML DOM ActiveXObject');
+            if ($debug) {
+                if (xmlDom == null) {
+                    Debug.error('Could not instantiate a XML DOM ActiveXObject');
+                }
             }
             xmlDOM.loadXML(str);
             return xmlDOM;

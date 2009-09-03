@@ -158,7 +158,7 @@ static function __LZsnippetLoaded (url){
     }
     
     if (lib == null) {
-        Debug.error("could not find library with href", url);
+        if ($debug) Debug.error("could not find library with href", url);
     } else {
         lib.loaded = true;
         canvas.initiatorAddNode({attrs: {libname: lib.name}, "class": LzLibraryCleanup}, 1);

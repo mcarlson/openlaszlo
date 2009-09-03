@@ -421,8 +421,10 @@ class LzCSSStyleClass {
 
   /** @access private */
   function _printRuleArray (arr) {
-    for (var i = 0; i < arr.length; i++) {
-      Debug.write(i, arr[i]);
+    if ($debug) {
+      for (var i = 0; i < arr.length; i++) {
+        Debug.write(i, arr[i]);
+      }
     }
   };
 
