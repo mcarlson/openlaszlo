@@ -165,11 +165,13 @@
 
             var nodelist = immediateparent.subviews[0].cloneManager.nodes;
             var found_index = -1;
-            for (var i=0; i < nodelist.length; i++) {
-               if (nodelist[i] == target_element) {
-                  found_index = i;
-                  break;
-               }
+            if (nodelist != null) {
+                for (var i=0; i < nodelist.length; i++) {
+                    if (nodelist[i] == target_element) {
+                        found_index = i;
+                        break;
+                    }
+                }
             }
             return found_index;
             ]]>
