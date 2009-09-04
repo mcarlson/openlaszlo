@@ -127,9 +127,9 @@ var __LZHandleCloneResize = function ( s:Number ) :void {
     if (p) {
         var cloneManager:LzResizeReplicationManager = this.cloneManager cast LzResizeReplicationManager;
         var datasizevar:String = cloneManager.datasizevar;
-        var osize:Number = p.__LZgetSize(datasizevar) || cloneManager.viewsize;
+        var osize:Number = p.getUserData(datasizevar) || cloneManager.viewsize;
         if (s != osize) {
-            p.__LZsetSize(datasizevar, s);
+            p.setUserData(datasizevar, s);
             cloneManager.__LZadjustVisibleClones(null, false);
         }
     }
@@ -165,7 +165,7 @@ function getPositionByNode ( n ) :Number? {
                 return pos + this.spacing;
             }
 
-            pos += this.spacing + ( cnode.__LZgetSize(this.datasizevar) || this.viewsize );
+            pos += this.spacing + ( cnode.getUserData(this.datasizevar) || this.viewsize );
         }
     }
     return undefined;
@@ -224,7 +224,7 @@ override function __LZadjustVisibleClones(lastnodes:Array, newnodes:Boolean) :vo
     var notfirst:Boolean = true;
     for ( var i:int = 0; i < nodelen; i++ ){
         var cnode /*:LzDataNodeMixin*/ = this.nodes[ i ];
-        var ds:* = cnode.__LZgetSize(this.datasizevar);
+        var ds:* = cnode.getUserData(this.datasizevar);
         var csiz:Number = ( ds == null ) ? this.viewsize : ds;
 
         cpos += this.spacing;
@@ -300,7 +300,7 @@ override function __LZadjustVisibleClones(lastnodes:Array, newnodes:Boolean) :vo
 
         this.clones[ i ] = cl;
         cl.setAttribute( this.axis , clpos );
-        var ds:* = cnode.__LZgetSize(this.datasizevar);
+        var ds:* = cnode.getUserData(this.datasizevar);
         var csiz:Number = ( ds == null ) ? this.viewsize : ds;
         if ( cl[ this.sizeAxis ] != csiz ){
             cl.setAttribute( this.sizeAxis, csiz );

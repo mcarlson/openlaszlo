@@ -230,7 +230,7 @@ override public function cloneNode (deep:Boolean = false) /*:LzDataNodeMixin*/ {
     }
 
     // TODO: [20090826 anba] enable when LPP-8425 is finished
-    // if (this.__LZuserData) {
+    // if (this.__LZuserHandler) {
     //     this.__LZhandleUserData(LzDataElement.NODE_CLONED, this, n);
     // }
 
@@ -480,7 +480,7 @@ function $lzc$set_nodeName (name:String) :void {
     this.ownerDocument.handleDocumentChange( "nodeName", this, 1 );
 
     // TODO: [20090826 anba] enable when LPP-8425 is finished
-    // if (this.__LZuserData) {
+    // if (this.__LZuserHandler) {
     //     this.__LZhandleUserData(LzDataElement.NODE_RENAMED, this, null);
     // }
 }

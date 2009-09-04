@@ -127,18 +127,19 @@ var __LZcoDirty :Boolean = true;
   */
 var sel :Boolean = false;
 
-/** 
-  * @devnote: used to track view-sizes, see LzResizeReplicationManager
-  * @access private
-  */
-var __LZsize :Object;
-
 /**
  * Table to store user data objects.
- * Stores pairs of {key := [data, handler]}
+ * Stores pairs of {key := data}
  * @access private
  */
 var __LZuserData :Object = null;
+
+/**
+ * Table to store user data handlers.
+ * Stores pairs of {key := handler}
+ * @access private
+ */
+var __LZuserHandler :Object = null;
 
 /**
  * Returns the parent of this node
@@ -275,23 +276,6 @@ function __LZunlockFromUpdate (locker:LzDatapath) :void {
 }
 
 /**
-  * @access private
-  * @see LzResizeReplicationManager
-  */
-function __LZgetSize (k:String) :* {
-    return this.__LZsize && this.__LZsize[k];
-}
-
-/**
-  * @access private
-  * @see LzResizeReplicationManager
-  */
-function __LZsetSize (k:String, v:*) :void {
-    if (! this.__LZsize) this.__LZsize = {};
-    this.__LZsize[k] = v;
-}
-
-/**
   * Associate an object to a key on this node. The object can later be
   * retrieved from this node by calling getUserData with the same key.
   * (See <a href="http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-setUserData">setUserData (DOM Level 3)</a>)
@@ -316,16 +300,25 @@ public function setUserData (key:String, data:*, handler:* = null) :* {
 
     // If there is previous data stored, our API is to return it
     var prevdata:* = this.__LZuserData[key];
-    if (prevdata != null) {
-        prevdata = prevdata[0];
-    }
 
     if (data != null) {
-        this.__LZuserData[key] = [data, handler];
-    } else {
+        this.__LZuserData[key] = data;
+        // TODO: [20090826 anba] enable when LPP-8425 is finished
+        // if (handler != null) {
+        //     if (this.__LZuserHandler == null) {
+        //         this.__LZuserHandler = {};
+        //     }
+        //     this.__LZuserHandler[key] = handler;
+        // }
+    } else if (prevdata != null) {
         delete this.__LZuserData[key];
+        // TODO: [20090826 anba] enable when LPP-8425 is finished
+        // if (this.__LZuserHandler != null) {
+        //     delete this.__LZuserHandler[key];
+        // }
     }
 
+    // must return 'null' instead of 'undefined'
     return (prevdata != null ? prevdata : null);
 }
 
@@ -344,8 +337,9 @@ public function getUserData (key:String) :* {
     if (this.__LZuserData == null) {
         return null;
     } else {
-        var udata:Array = this.__LZuserData[key];
-        return (udata != null ? udata[0] : null);
+        var udata:* = this.__LZuserData[key];
+        // must return 'null' instead of 'undefined'
+        return (udata != null ? udata : null);
     }
 }
 
@@ -355,11 +349,10 @@ public function getUserData (key:String) :* {
 //   */
 // function __LZhandleUserData (operation:uint, src:LzDataNodeMixin, dst:LzDataNodeMixin) :void {
 //     var userData:Object = this.__LZuserData;
-//     for (var key:String in userData) {
-//         var udata:Array = userData[key];
-//         var handler:* = udata[1];
-//         if (handler != null) {
-//         }
+//     var userHandler:Object = this.__LZuserHandler;
+//     for (var key:String in userHandler) {
+//         var handler:* = userHandler[key];
+//         handler.handle(operation, key, userData[key], src, dst);
 //     }
 // }
 

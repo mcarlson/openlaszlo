@@ -84,7 +84,7 @@ override public function cloneNode (deep:Boolean = false) /*:LzDataNodeMixin*/ {
     var n:LzDataText = new LzDataText(this.data);
 
     // TODO: [20090826 anba] enable when LPP-8425 is finished
-    // if (this.__LZuserData) {
+    // if (this.__LZuserHandler) {
     //     this.__LZhandleUserData(LzDataElement.NODE_CLONED, this, n);
     // }
 
