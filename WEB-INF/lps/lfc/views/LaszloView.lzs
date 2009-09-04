@@ -2715,7 +2715,7 @@ function $lzc$getMouse_dependencies(...ignore ) {
 
 
 /**
-  * returns true if the point is contained within the view.
+  * returns true if the point is contained within the view.  Considers visibility and clipping.
   * @param Number x: an x value relative to the this view's coordinates
   * @param Number y: an y value relative to the this view's coordinates
   * @return Boolean: boolean indicating whether or not the point lies within the view
@@ -2723,7 +2723,33 @@ function $lzc$getMouse_dependencies(...ignore ) {
 function containsPt( x,y ) {
   // NOTE: [2009-08-24 ptw] Pixels are 0-based, so the comparison with
   // width and height is exclusive.
-  return (((this.height > y) && (y >= 0)) && ((this.width > x) && (x >= 0)));
+  var offsetx = 0;
+  var offsety = 0;
+  var view = this;
+  do {
+    // if any view is invisible, we don't contain the point.
+    if (!view.visible) return false;
+
+    if (view.masked) {
+      // since we're walking up the chain looking for visible parents...
+      // convert x/y to the clip parents' coordinate space
+      var vx = x - offsetx;
+      var vy = y - offsety;
+
+      // the point is not on the view if it is not on the clipping parent
+      if (vx < 0 || vx >= view.width // outside width
+        || vy < 0 || vy >= view.height) { // outside height
+        return false;
+      }
+    }
+    // adjust the offsets
+    offsetx -= view.x;
+    offsety -= view.y;
+
+    view = view.immediateparent;
+  } while (view !== canvas)
+
+  return true;
 }
 
 /**

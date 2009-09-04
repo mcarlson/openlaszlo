@@ -322,10 +322,7 @@ public final class LzTrackService extends LzEventable {
             var v:LzView = group[i];
             if (v.visible) { // dont check mouse if not visible
                 var vpos:Object = v.getMouse(null);
-                var vx:Number = vpos.x;
-                var vy:Number = vpos.y;
-                if (vx > 0 && vx < v.width  // inside width
-                        && vy > 0 && vy < v.height) { // inside height
+                if (v.containsPt(vpos.x, vpos.y)) {
                     hitlist.push(v);
                 }
             }
