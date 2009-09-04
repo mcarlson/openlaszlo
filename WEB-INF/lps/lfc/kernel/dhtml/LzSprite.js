@@ -1313,14 +1313,24 @@ LzSprite.prototype.__clickDispatcher = function(e) {
     // capture events in IE
     if (!e) e = window.event;
 
+    // Skip context menu events. They should be handled by LzMouseKernel
+    if (e.button == 2) return false;
+
     this.owner.__mouseEvent(e);
     return false;
 }
 
 /**
   * @access private
+  * tracks whether the mouse is currently down on this sprite for onmouseupoutside events
   */
-LzSprite.prototype.__mouseEvent = function ( e , artificial){
+LzSprite.__mouseisdown = false;
+
+/**
+  * Processes mouse events and forwards into the view system
+  * @access private
+  */
+LzSprite.prototype.__mouseEvent = function(e , artificial){
     if (artificial) {
         var eventname = e;
         e = {};
@@ -1354,16 +1364,21 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
         }
     }
 
+    // Update coordinates
     LzMouseKernel.__sendMouseMove(e);
 
-    if (e.button == 2 && eventname != 'oncontextmenu') return;
     if (eventname == 'onmousemove') {
+        // already sent by __sendMouseMove
         return;   
     } else if (eventname == 'onmousedown') {
+        // track which sprite the mouse went down on
         this.__mouseisdown = true;
         LzMouseKernel.__lastMouseDown = this;
     } else if (eventname == 'onmouseup') {
-        // only send the event if this is same sprite the mouse button went down on
+        // allow bubbling to LzMouseKernel so LzSprite__globalmouseup() can find out about onmouseupoutside
+        e.cancelBubble = false;
+
+        // only send onmouseup if this is sprite the mouse button went down on
         if (LzMouseKernel.__lastMouseDown === this) {
             LzMouseKernel.__lastMouseDown = null;
             if (this.quirks.ie_mouse_events) {
@@ -1375,7 +1390,7 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
                 this.__mouseisdown = false;
             }
         } else {
-            // skip sending the event
+            // the mouse went up on a different sprite
             return;
         }
     } else if (eventname == 'onmouseupoutside') {
@@ -1427,6 +1442,7 @@ LzSprite.prototype.__mouseEvent = function ( e , artificial){
             }
         }
 
+        // Send the event
         LzMouseKernel.__sendEvent(eventname, this.owner);
     }
 }
@@ -1443,10 +1459,11 @@ LzSprite.prototype.__isMouseOver = function ( e ){
   */
 LzSprite.prototype.__globalmouseup = function ( e ){
     if (this.__mouseisdown) {
-        // the event is already sent in IE
+        // the onmouseup event was already sent in IE
         if (! this.quirks.ie_mouse_events) {
             this.__mouseEvent(e);
         }
+        // send artificial onmouseupoutside event
         this.__mouseEvent('onmouseupoutside', true);
     }
     LzMouseKernel.__lastMouseDown = null;

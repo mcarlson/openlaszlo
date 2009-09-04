@@ -11,20 +11,19 @@
 
 // Receives mouse events from the runtime
 var LzMouseKernel = {
-    // the last view to receive the mouse down event
+    // the last view to receive onmousedown event
     __lastMouseDown: null
     ,__x: 0
     ,__y: 0
     ,owner: null
     ,__showncontextmenu: null
-    // handles global mousedown, move events
+    // handles global mouse events
     ,__mouseEvent: function(e) {
         if (!e) {
             e = window.event;
-            var targ = e.srcElement; 
-        } else {
-            var targ = e.target; 
         }
+        // IE calls `target` `srcElement`
+        var target = e['target'] ? e.target : e['srcElement'];
         var eventname = 'on' + e.type;
 
         // send option/shift/ctrl key events
@@ -35,7 +34,7 @@ var LzMouseKernel = {
         var lzinputproto = window['LzInputTextSprite'] && LzInputTextSprite.prototype;
         if (lzinputproto && lzinputproto.__lastshown != null) {
             if (LzSprite.quirks.fix_ie_clickable) {
-                lzinputproto.__hideIfNotFocused(eventname, targ);
+                lzinputproto.__hideIfNotFocused(eventname, target);
             } else if (eventname != 'onmousemove') {
                 lzinputproto.__hideIfNotFocused();
             }
@@ -45,25 +44,24 @@ var LzMouseKernel = {
             LzMouseKernel.__sendMouseMove(e);
             // hide any active inputtexts to allow clickable to work - see LPP-5447...
             if (lzinputproto && lzinputproto.__lastshown != null) {
-                if (targ && targ.owner && ! (targ.owner instanceof LzInputTextSprite)) {
+                if (target && target.owner && ! (target.owner instanceof LzInputTextSprite)) {
                     if (! lzinputproto.__lastshown.__isMouseOver()) {
                         lzinputproto.__lastshown.__hide();
                     }
                 }
             }
 
-        } else if (eventname == 'oncontextmenu' || (eventname == 'onmousedown' && e.button == 2)) {
+        } else if (eventname == 'oncontextmenu' || e.button == 2) {
+            // handle context menu events
+
+            // update mouse position, required for Safari
+            LzMouseKernel.__sendMouseMove(e);
+
             // If browser supports DOM mouse events level 2 feature,
             // trigger menu on mousedown-right, and suppress the
             // system builtin menu when the oncontextmenu event comes.
             if (LzSprite.prototype.quirks.has_dom2_mouseevents) {
-                if (eventname == 'onmousedown') {
-                    if (targ) {
-                    // update mouse position, required for Safari
-                        LzMouseKernel.__sendMouseMove(e);
-                        return LzMouseKernel.__showContextMenu(e);
-                    }
-                } else if (eventname == 'oncontextmenu') {
+                if (eventname == 'oncontextmenu') {
                     var cmenu = LzMouseKernel.__findContextMenu(e);
                     if (cmenu != null) {
                         // If there is an LZX menu defined,
@@ -73,40 +71,40 @@ var LzMouseKernel = {
                         // display system builtin menu
                         return true; 
                     }
+                } else if (eventname == 'onmousedown') {
+                    if (target) {
+                        return LzMouseKernel.__showContextMenu(e);
+                    }
                 }
             } else if (eventname == 'oncontextmenu') {
                 // If there is no DOM level 2 mouse event support,
                 // then use the oncontextmenu event to display context menu
-                if (targ) {
-                    // update mouse position, required for Safari
-                    LzMouseKernel.__sendMouseMove(e);
+                if (target) {
                     return LzMouseKernel.__showContextMenu(e);
                 }
             } 
-        } else if (e.button != 2) {
+        } else {
             LzMouseKernel.__sendEvent(eventname);
         }
         //Debug.write('LzMouseKernel event', eventname);
     }
-    // sends mouse events to the callback
+    // sends mouse events to the callback.  
+    // Also called by sprites since most events don't bubble
     ,__sendEvent: function(eventname, view) {
-        // hide context menus and skip events - see LPP-8189
-        if (eventname == 'onclick') {
-            if (LzMouseKernel.__showncontextmenu) {
-                LzMouseKernel.__showncontextmenu.__hide();
-            }
-            if (! view) {
-                // don't send global onclick events
-                return;
-            }
-        }
+        // hide context menus - see LPP-8189
         // Make context menus go away when you mouse up or down outside of
         // them, to behave more like swf - see LPP-8218
-        if ((eventname == 'onmousedown') || (eventname == 'onmouseup')) {
+        if (eventname == 'onclick' || eventname == 'onmousedown' || eventname == 'onmouseup') {
             if (LzMouseKernel.__showncontextmenu) {
                 LzMouseKernel.__showncontextmenu.__hide();
             }
         }
+
+        if (eventname == 'onclick' && view == null) {
+            // don't send global onclick events
+            return;
+        }
+
         if (LzMouseKernel.__callback) {
             LzMouseKernel.__scope[LzMouseKernel.__callback](eventname, view);
         }
@@ -117,9 +115,19 @@ var LzMouseKernel = {
     // handles global mouseup events
     ,__mouseupEvent: function (e) {
         if (LzMouseKernel.__lastMouseDown != null) {
-            // call mouseup on the sprite that got the last mouse down
+            // tell sprite that got the last mouse down about onmouseup
+            // allows sprites to send onmouseupoutside
             LzMouseKernel.__lastMouseDown.__globalmouseup(e);
         } else {
+            if (!e) {
+                e = window.event;
+            }
+            // IE calls `target` `srcElement`
+            var target = e['target'] ? e.target : e['srcElement'];
+
+            // Skip bubbled sprite onmouseup, only send for global events
+            if (target && target.owner !== LzSprite.__rootSprite) return;
+
             LzMouseKernel.__mouseEvent(e);
         }
     }
@@ -281,7 +289,7 @@ var LzMouseKernel = {
             var swf8mode = quirks.swf8_contextmenu;
             var x = LzMouseKernel.__x;
             var y = LzMouseKernel.__y;
-            var rootdiv = canvas.sprite.__LZdiv;
+            var rootdiv = LzSprite.__rootSprite.__LZdiv;
             var arr = [];
 
             if (quirks.fix_contextmenu) {
@@ -291,7 +299,7 @@ var LzMouseKernel = {
                 rootdiv.style.zIndex = -1000;
 
                 // get click div to back, so contextmenudiv will be at the front
-                var rootclickdiv = canvas.sprite.__LZclickcontainerdiv;
+                var rootclickdiv = LzSprite.__rootSprite.__LZclickcontainerdiv;
                 var clickprevZ = rootclickdiv.style.zIndex;
                 arr.push(rootclickdiv, rootclickdiv.style.display);
                 rootclickdiv.style.zIndex = -9999;
