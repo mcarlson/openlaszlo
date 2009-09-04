@@ -2730,7 +2730,7 @@ function containsPt( x,y ) {
     // if any view is invisible, we don't contain the point.
     if (!view.visible) return false;
 
-    if (view.masked) {
+    if (view.masked || view === this) {
       // since we're walking up the chain looking for visible parents...
       // convert x/y to the clip parents' coordinate space
       var vx = x - offsetx;
