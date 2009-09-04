@@ -3,7 +3,7 @@
 /**
   * Compiler runtime support
   *
-  * @copyright Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -15,6 +15,14 @@
  */
 
 // Basic runtime and stubs
+// Debugger stub required for debugging and profiling, must be loaded
+// before anything else
+if ($debug) {
+#include "compiler/LzDebugStub.lzs"
+} else if ($profile) {
+#include "compiler/LzDebugStub.lzs"
+}
+// Compiler runtime support
 #include "compiler/LzRuntime.lzs"
 if ($as3) {
 } else {
@@ -23,6 +31,7 @@ if ($as3) {
 #include "compiler/Class.lzs"
 }
 
+// Now the boostrap debugger can be loaded
 if ($debug) {
    #include "compiler/LzBootstrapDebugService.lzs"
 }

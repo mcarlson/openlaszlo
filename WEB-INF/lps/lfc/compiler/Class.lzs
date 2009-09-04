@@ -234,7 +234,6 @@ var Class = {
       }
     }
   },
-  _dbg_name: 'Class',
   allClasses: {Instance: Instance},
   // Class class factory. This is how you make a new class. Arguments
   // are classname:String (required); mixinsAndSuperclass:(Null ||
@@ -334,7 +333,7 @@ var Class = {
     nc.constructor = this;
     nc.classname = classname;
     if ($debug) {
-      nc._dbg_typename = 'Class constructor';
+      nc._dbg_typename = this._dbg_name;
       nc[Debug.FUNCTION_NAME] = classname;
     }
     if ($profile) {
@@ -404,6 +403,8 @@ var Class = {
 };
 
 if ($debug) {
+  Class._dbg_typename = 'Metaclass';
+  Class._dbg_name = 'Class';
   Class.addProperties._dbg_typename = 'Class static function';
   Class.addStaticProperty._dbg_typename = 'Class static function';
   Class.make._dbg_typename = 'Class static function';
@@ -418,8 +419,6 @@ if ($profile) {
 var Mixin = {
   prototype: new Instance(),
   allMixins: {},
-  _dbg_typename: Class[Debug.FUNCTION_NAME],
-  _dbg_name: 'Mixin',
   // Adds a property to the Mixin, and to all implementations
   addProperty: function addProperty (name, value) {
     // Add to prototype
@@ -473,7 +472,7 @@ var Mixin = {
     // added for debugging
     xtor.classname = interstitialname;
     if ($debug) {
-      xtor._dbg_typename = 'Interstitial constructor';
+      xtor._dbg_typename = 'Interstitial';
       xtor[Debug.FUNCTION_NAME] = xtor.classname;
     }
     if ($profile) {
@@ -543,6 +542,8 @@ var Mixin = {
 };
 
 if ($debug) {
+  Mixin._dbg_typename = 'Metaclass';
+  Mixin._dbg_name = 'Mixin';
   Mixin.addStaticProperty._dbg_typename = 'Mixin static function';
   Mixin.addProperty._dbg_typename = 'Mixin static function';
   Mixin.makeInterstitial._dbg_typename = 'Mixin static function';

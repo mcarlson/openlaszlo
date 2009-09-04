@@ -53,82 +53,12 @@ if ($as3) {
   // figure out the appropriate incantation
   var global = {};
 } else {
-var global = $modules.user;
-if ($debug) {
-  // Define a debug placeholder with minimal definitions because Class
-  // needs it, but the actual debugger cannot be loaded until Class is
-  // loaded.
-  var Debug = {
-    // Compiler-generated backtracing code needs these values
-    backtraceStack: []
-    ,uncaughtBacktraceStack: null
-    // Configurable names for debug annotations.  See
-    // org.openlaszlo.sc.Function.  These values are duplicated in
-    // LzBootstrapDebugService
-    ,FUNCTION_NAME: 'displayName'
-    ,FUNCTION_FILENAME: '_dbg_filename'
-    ,FUNCTION_LINENO: '_dbg_lineno'
-  };
-  /** Max depth allowed
-   * @access private
-   */
-  Debug.backtraceStack.maxDepth = 100;
-  /**
-    * Expose this to the DHTML debugger
-    * The application and debugger share their parent.
-    */
-  window.parent.$modules = $modules;
-}
+  var global = $modules.user;
 }
 
 if ($as3) {
   if ($debug) {
-    /**
-     * Class used for as3-only runtime support
-     *
-     * @access private
-     */
-    class $lzsc$runtime {
-      /**
-       * Copied from debug/LzCompiler because I don't know how to make
-       * that accessible in swf9
-       *
-       * @access private
-       */
-      static var sourceWarningHistory = [];
-
-      /**
-       * Copied from debug/LzCompiler because I don't know how to make
-       * that accessible in swf9
-       *
-       * @access private
-       */
-      static function $reportSourceWarning (filename, lineNumber, msg, fatal) {
-        var warning = new (fatal?LzError:LzWarning)(filename, lineNumber, msg);
-        var warningString = warning.toString();
-        if (sourceWarningHistory[warningString]) {
-          return;
-        }
-        sourceWarningHistory [warningString] = true;
-
-        Debug.freshLine();
-        // Logs and adds
-        Debug.__write(warning);
-      }
-
-      /**
-       * Report an exception to the debug window
-       *
-       * @param String fileName: The source file
-       * @param Number lineNumber: The source line
-       * @param Object e: exception received
-       *
-       * @access private
-       */
-      static function reportException (fileName, lineNumber, e) {
-        $reportSourceWarning(fileName, lineNumber, e.name + ": " + e.message, true);
-      }
-    }
+    
   }
 }
 
