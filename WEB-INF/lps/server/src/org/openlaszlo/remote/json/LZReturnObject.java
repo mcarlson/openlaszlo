@@ -10,6 +10,7 @@
 package org.openlaszlo.remote.json;
 
 import java.io.*;
+import java.sql.Timestamp;
 import java.lang.reflect.*;
 import java.util.*;
 import java.lang.reflect.*;
@@ -32,11 +33,10 @@ public class LZReturnObject
     public static final int RETTYPE_POJO = 0;
     public static final int RETTYPE_JAVA_BEAN = 1;
 
-
     StringBuffer body;
     int mObjRetType;
 
-    public LZReturnObject(String objectReturnType) {
+    public LZReturnObject(String objectReturnType) throws Exception {
         body = new StringBuffer();
         if (objectReturnType == null) {
             mObjRetType = RETTYPE_POJO;
@@ -47,28 +47,28 @@ public class LZReturnObject
         }
     }
 
-    void pushInteger(int i) {
+    void pushInteger(int i) throws Exception {
         body.append(i);
     }
 
-    void pushFloat(float f) {
+    void pushFloat(float f) throws Exception {
         body.append(f);
     }
 
-    void pushString(String s) {
+    void pushString(String s) throws Exception {
         body.append(ScriptCompiler.JSONquote(s));
     }
 
-    void pushDouble(double d) {
+    void pushDouble(double d) throws Exception {
         body.append(d);
     }
 
 
-    void pushBoolean(boolean b) {
+    void pushBoolean(boolean b) throws Exception {
         body.append(b ? "true" : "false");
     }
 
-    void pushArray(Object object) {
+    void pushArray(Object object) throws Exception {
         body.append("[");
         int length = Array.getLength(object);
         for (int i = 0; i < length; i++) {
@@ -80,10 +80,11 @@ public class LZReturnObject
         body.append("]");
     }
 
-    void pushList(Object object) {
+    void pushList(Object object) throws Exception {
         body.append("[");
         List list = (List)object;
         int length = list.size();
+        //mLogger.warn(length);
         for (int i = 0; i < length; i++) {
             if (i > 0) {
                 body.append(",");
@@ -93,7 +94,7 @@ public class LZReturnObject
         body.append("]");
     }
 
-    void pushSet(Object object) {
+    void pushSet(Object object) throws Exception {
         Set set = (Set)object;
         int length = set.size();
         int i = 0;
@@ -107,36 +108,44 @@ public class LZReturnObject
         body.append("]");
     }
 
-    void pushNull() {
+    void pushNull() throws Exception {
         body.append("null");
     }
 
 
-    void pushObject(Object object) {
-        Class cl = object.getClass();
-        String classname = cl.getName();
-
-        //------------------------------------------------------------
-        //  {class: classname, key1: val1, key2: val2, ...}
-        //------------------------------------------------------------
-        // varname.class = classname
-        body.append("{");
-        body.append("\"class\": "+ScriptCompiler.JSONquote(classname));
-
-        if (mObjRetType == RETTYPE_JAVA_BEAN) {
-            pushObjectJavaBean(object);
-        } else {
-            pushObjectPOJO(object);
+    void pushObject(Object object) throws Exception {
+        try {
+            Class cl = object.getClass();
+            String classname = cl.getName();
+    
+            //------------------------------------------------------------
+            //  {class: classname, key1: val1, key2: val2, ...}
+            //------------------------------------------------------------
+            // varname.class = classname
+            body.append("{");
+            body.append("\"class\": "+ScriptCompiler.JSONquote(classname));
+    
+            if (mObjRetType == RETTYPE_JAVA_BEAN) {
+                pushObjectJavaBean(object);
+            } else {
+                pushObjectPOJO(object);
+            }
+         
+            body.append("}");
+        } catch (Exception err) {
+            
+            if (object != null) {
+                mLogger.error("[pushObject]"+object.getClass().getName());
+                mLogger.error("[pushObject]"+object.toString());
+            }
+            mLogger.error("[pushObject]",err);
         }
-     
-        body.append("}");
-
     }
 
     /**
      * Create JSON for an instance
      */
-    void pushObjectPOJO(Object object) {
+    void pushObjectPOJO(Object object) throws Exception {
         Class cl = object.getClass();
         Field[] fields = cl.getFields();
         for (int i=0; i < fields.length; i++) {
@@ -164,44 +173,68 @@ public class LZReturnObject
     /**
      * Create JSON for an object that conforms to JavaBean spec.
      */
-    void pushObjectJavaBean(Object object) {
+    void pushObjectJavaBean(Object object) throws Exception {
         //------------------------------------------------------------
         // Just get the fields from the objects and add it to this object
         Map beanProps = null;
         try {
             //Use jakarta-commons beanutils to inspect the object
             beanProps = PropertyUtils.describe(object);
+                    
+            if (beanProps != null) {
+                Set keys = beanProps.keySet();
+                Iterator iter = keys.iterator();
+                while(iter.hasNext()){
+                    Object obj = iter.next();
+                    
+                    mLogger.warn("serialize "+obj);
+                    String fieldName  = (String) obj;
+                    //Don't add the class property as it is already set by the method
+                    //mLogger.debug("fieldName equals Class ??");
+                    if(!fieldName.equals("class")) {
+                        //mLogger.debug("fieldName equals Class !!");
+                        Object value = beanProps.get(fieldName);
+                        //if (mLogger.isDebugEnabled()) {
+                        mLogger.debug("add field name " + fieldName + ", " + 
+                                          ((value!=null)?value.getClass():null));
+                        //}
+                        if (value != null) {
+                            mLogger.debug("VC NAME: "+value.getClass().getName());
+                        }
+                        
+                        if (Timestamp.class.isInstance(value)) {
+                            mLogger.warn("Found Timestamp");
+                            value = value.toString();
+                            body.append(", ");
+                            body.append(ScriptCompiler.JSONquote(fieldName)+": ");
+                            createReturnValue(value);
+                        } else {
+                            body.append(", ");
+                            body.append(ScriptCompiler.JSONquote(fieldName)+": ");
+                            createReturnValue(value);
+                        }
+                    }
+                }
+            }
+        
         } catch (IllegalAccessException e) {
             mLogger.error("IllegalAccessException",e);
         } catch (InvocationTargetException e) {
             mLogger.error("InvocationTargetException",e);
         } catch (NoSuchMethodException e) {
             mLogger.error("NoSuchMethodException",e);
-        }
-                    
-        if (beanProps != null) {
-            Set keys = beanProps.keySet();
-            Iterator iter = keys.iterator();
-            while(iter.hasNext()){
-                String fieldName  = (String)iter.next();
-                //Don't add the class property as it is already set by the method
-                if(!"class".equals(fieldName)) {
-                    Object value = beanProps.get(fieldName);
-                    if (mLogger.isDebugEnabled()) {
-                        mLogger.debug("add field name " + fieldName + ", " + 
-                                      ((value!=null)?value.getClass():null));
-                    }
-                    body.append(", ");
-                    body.append(ScriptCompiler.JSONquote(fieldName)+": ");
-                    createReturnValue(value);
-
-                }
+        } catch (Exception err) {
+            
+            if (object != null) {
+                mLogger.error("[pushObjectJavaBean]"+object.getClass().getName());
+                mLogger.error("[pushObjectJavaBean]"+object.toString());
             }
+            mLogger.error("[pushObjectJavaBean]",err);
         }
     }
 
 
-    void pushMap(Map map) {
+    void pushMap(Map map) throws Exception {
 
         Iterator iter = map.keySet().iterator();
         int i = 0;
@@ -223,7 +256,7 @@ public class LZReturnObject
     /**
      * Recurse through this function to create return value
      */
-    void createReturnValue(Object object) {
+    void createReturnValue(Object object) throws Exception {
         if (object == null) {
             pushNull();
             return;
@@ -288,32 +321,9 @@ public class LZReturnObject
     }
 
 
-    /**
-     *
-     */
-    public String createObjectProgram(Object object) {
+    public String createObjectProgram(Object object) throws Exception{
         createReturnValue(object);
         return body.toString();
     }
-
-    /**
-     * @param objectReturnType One of 'pojo' (returns public member values) or
-     * 'javabean' (returns members that have associated getters). Will default
-     * to 'pojo'.
-     */
-    public static byte[] createObject(Object object, String objectReturnType)
-        throws IOException {
-
-        try {
-            String buf = new LZReturnObject(objectReturnType)
-                .createObjectProgram(object);
-            mLogger.debug("LZReturnObject:");
-            mLogger.debug(buf);
-            return buf.getBytes("UTF-8");
-        } catch (IOException e) {
-            mLogger.error("io error creating object JSON: " + e.getMessage());
-            throw e;
-        }
-    }
-
+    
 }

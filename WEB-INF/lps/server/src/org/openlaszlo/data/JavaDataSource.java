@@ -687,19 +687,19 @@ public class JavaDataSource extends DataSource
                 return compileFault(e.getMessage(), e);
             } catch (IllegalArgumentException e) {
                 // TODO Check if this is the appropriate Return
-                mLogger.error("IOException", e);
+                mLogger.error("IllegalArgumentException", e);
                 return compileFault(e.getMessage(), e);
             } catch (IllegalAccessException e) {
                 // TODO Check if this is the appropriate Return
-                mLogger.error("IOException", e);
+                mLogger.error("IllegalAccessException", e);
                 return compileFault(e.getMessage(), e);
             } catch (InvocationTargetException e) {
                 // TODO Check if this is the appropriate Return
-                mLogger.error("IOException", e);
+                mLogger.error("InvocationTargetException", e);
                 return compileFault(e.getMessage(), e);
             } catch (Exception e) {
                 // TODO Check if this is the appropriate Return
-                mLogger.error("IOException", e);
+                mLogger.error("Exception", e);
                 return compileFault(e.getMessage(), e);
             }
 
@@ -731,9 +731,11 @@ public class JavaDataSource extends DataSource
                 return new EncoderData((DataEncoder)returnValue);
             }
 
-            return new ObjectData
-                (org.openlaszlo.remote.json.LZReturnObject.createObject(returnValue, objectReturnType));
+//            return new ObjectData
+//                (org.openlaszlo.remote.json.LZReturnObject.createObject(returnValue, objectReturnType));
 
+            return new ObjectData(org.openlaszlo.remote.json.LZJsonFactory.getJsonBuilderInstance().createObject(returnValue, objectReturnType));
+            
         } catch (IOException e) {
             mLogger.error("IOException", e);
             return compileFault(e.getMessage(), e);
@@ -1350,6 +1352,10 @@ public class JavaDataSource extends DataSource
                                 JavaDataSource.class.getName(),"051018-1159", new Object[] {mesg})
 );
         } else {
+            if (e.getCause() != null) {
+                mesg += " "+e.getCause().toString();
+                mLogger.error(e.getCause().toString());
+            }
             mLogger.error(
 /* (non-Javadoc)
  * @i18n.test
