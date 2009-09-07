@@ -29,11 +29,11 @@
   *   &lt;/view&gt; 
   * &lt;/canvas&gt;</example>
   * 
-  * <p><classname>LzView</classname> extends <sgmltag class="element" role="LzNode">&lt;node&gt;</sgmltag>,
+  * <p><tagname>view</tagname> extends <sgmltag class="element" role="LzNode">&lt;node&gt;</sgmltag>,
   * which is the fundamental abstract class of LZX.</p>
   * 
   * <p>For an introduction to views see the <a
-  * href="${dguide}developers.tutorials.html">Laszlo tutorials</a>, particularly <a
+  * href="${dguide}developers.tutorials.html">OpenLaszlo tutorials</a>, particularly <a
   * href="${tutorials}laszlo_basics.html">OpenLaszlo Basics</a> and <a
   * href="${tutorials}views-tutorial.html">Introduction to Views</a>. For a more
   * rigorous explanation of views see the <a href="${dguide}">Application Developer's Guide</a>, particularly the <a
@@ -41,18 +41,7 @@
   * 
   * @shortdesc The most basic viewable element.
   * @lzxname view
-  *
-  * @initarg public Boolean clip: A boolean indicating that the view is masked
-  * if true, the view applies setClip(true) to itself
-  * @initarg public String stretches: A string specifying whether or not the view
-  * should stretch its contents.  Values are <code>"width"</code>, <code>"height"</code> or <code>"both"</code>.
-  * When stretching, the coordinate system of the contents is modified
-  * so that the whole view will fit in the given dimensions.
-  * If <code>stretches</code> is applied, <code>clip</code> would not be necessary.
-  * @initarg public String resource: A string denoting the library resource to use for
-  * this view. The default is usually 'theEmptyResource'
-  *
-
+  * 
   */
 dynamic class LzView extends LzNode {
 
@@ -63,23 +52,22 @@ dynamic class LzView extends LzNode {
         super(parent,attrs,children,instcall);
     }
 
-//static var tabindexcounter = 1000;
 
 /** @access private
   * @modifiers override 
   */
 static var tagname = 'view';
-/** @access private */
+  /** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
   // We add some more kludges to those in LzNode.  See #construct
   // where we override the LzNode setting
-/** @access private */
+  /** @access private */
   static var __LZdelayedSetters = new LzInheritedHash(LzNode.__LZdelayedSetters);
-/** @access private */
+  /** @access private */
   static var earlySetters = new LzInheritedHash(LzNode.earlySetters);
 
     /** @access private */
-    var __LZlayout
+    var __LZlayout;
 
     /** @access private */
     var __LZstoredbounds;
@@ -93,6 +81,7 @@ static var tagname = 'view';
       * @type Boolean
       * @lzxtype boolean
       * @keywords readonly
+      * @lzxdefault false
       */
     var playing = false;
 
@@ -324,7 +313,7 @@ var onrotation = LzDeclaredEvent;
 /**
   * Sent when a view's resource that is capable of playing is
   * stopped. This is only called if stop is called directly; when a resource
-  * hits its last frame, the LzView event onlastframe is called.
+  * hits its last frame, the lz.view event onlastframe is called.
   * @access public
   * @lzxtype event 
   */
@@ -413,9 +402,10 @@ var DOUBLE_CLICK_TIME = 500;
 
 /** An object containing properties corresponding to the current runtime's 
   * capabilities.  For example, capabilities.rotation is true in swf and 
-  * recent versions of Safari.
+  * recent versions of Safari and Firefox.
   * @access public 
   * @type Object
+  * @keywords read-only
   */
 var capabilities;
 
@@ -427,26 +417,22 @@ var capabilities;
   * @access private
   */
 override function construct ( parent , args) {
-    //this.callInherited( "construct" , arguments.callee , parent ,args );
     super.construct( (parent ? parent : canvas), args );
 
     // Set applyArgs ordering kludges.  Overriding those of LzNode
     this.__LZdelayedSetters = LzView.__LZdelayedSetters;
     this.earlySetters = LzView.earlySetters;
 
-  
-    var ip = this.immediateparent;
-
-    var vip:LzView = (this.immediateparent cast LzView);
-
-    this.mask = ip.mask;
+    this.mask = this.immediateparent.mask;
 
     this.__makeSprite(args);
     // Cache capabilities
     this.capabilities = this.sprite.capabilities;
 
-    if ($debug && this.capabilities.setid) {
-        this.sprite.setID(this._dbg_name());
+    if ($debug) {
+        if (this.capabilities.setid) {
+            this.sprite.setID(this._dbg_name());
+        }
     }
 
     if (args['width'] != null || this.__LZhasConstraint('width')) {
@@ -506,7 +492,7 @@ function __makeSprite(args) {
 
 /**
   * Called right before the view is shown. See <method
-  * ><link linkend="LzNode.prototype.init">LzNode.init()</link></method> for more.
+  * ><link linkend="LzNode.prototype.init">lz.node.init()</link></method> for more.
   * 
   * @access public
   */
@@ -570,14 +556,15 @@ override function __LZinstantiationDone () : void {
 var mask;
 
 /** If true, this view will receive focus events.
-  * See focus manager (LzFocus) for more details.
+  * See focus manager (lz.Focus) for more details.
   * @type Boolean
   * @lzxtype boolean
+  * @lzxdefault false
   */
 var focusable = false;
 
 /** If true, this view "traps" the focus, for example in a window or dialog.
-  * See focus manager (LzFocus) for more details.
+  * See focus manager (lz.Focus) for more details.
   * @type Boolean
   * @lzxtype boolean
   */
@@ -599,7 +586,6 @@ var $lzc$set_clip =  -1;
   * @type String
   * @lzxtype "left" | "center" | "right" | constraint
   * @lzxdefault "left"
-  * @keywords final
   */
 var align = "left";
 
@@ -614,11 +600,10 @@ function $lzc$set_align(align) {
       case "center": return "__LZalignCenter";
       case "right": return "__LZalignRight";
       case "left": return null;
-      default:
-        if ($debug) {
-          Debug.error("%w.setAttribute(%w, %w): Invalid argument.  Valid choices are: 'left', 'center', or 'right'.",
-                      view, 'align', align);
-        }
+    }
+    if ($debug) {
+      Debug.error("%w.setAttribute(%w, %w): Invalid argument.  Valid choices are: 'left', 'center', or 'right'.",
+                    view, 'align', align);
     }
   }
   var from = map(this.align);
@@ -655,11 +640,10 @@ function $lzc$set_valign(valign) {
       case "middle": return "__LZvalignMiddle";
       case "bottom": return "__LZvalignBottom";
       case "top": return null;
-      default:
-        if ($debug) {
-          Debug.error("%w.setAttribute(%w, %w): Invalid argument.  Valid choices are: 'top', 'middle', or 'bottom'.",
-                      view, 'valign', valign);
-        }
+    }
+    if ($debug) {
+      Debug.error("%w.setAttribute(%w, %w): Invalid argument.  Valid choices are: 'top', 'middle', or 'bottom'.",
+                    view, 'valign', valign);
     }
   }
   var from = map(this.valign);
@@ -692,10 +676,13 @@ var source;
   */ 
 function $lzc$set_source(v) { this.setSource(v); }
 
-/** Setting to a vector-based resource changes the clickable hotspot for the mouse.  Check capabilities.clickregion before using to avoid debugger warnings.
+/** Setting to a vector-based resource changes the clickable hotspot for the mouse.
+  * Check capabilities.clickregion before using to avoid debugger warnings.
   * @access public
   * @type String
   * @lzxtype string
+  * @keywords final
+  * @runtimes as2
   */
 var clickregion;   
 /** @access private */
@@ -703,7 +690,7 @@ function $lzc$set_clickregion(cr) {
     if (this.capabilities.clickregion) {
         this.sprite.setClickRegion(cr);
     } else if ($debug) {
-        LzView.__warnCapability('view.setClickRegion()', 'clickregion'); 
+        LzView.__warnCapability('view.clickregion', 'clickregion'); 
     }
     this.clickregion = cr;
 }
@@ -716,7 +703,7 @@ function $lzc$set_clickregion(cr) {
 var cursor;  
 
 /**
- * The forground color of the view (and any views contained in it).
+ * The foreground color of the view (and any views contained in it).
  * This is the color of the ink that text and other drawing (such as
  * vector or bitmap art) will be done in.
  *
@@ -727,6 +714,7 @@ var cursor;
  *
  * @lzxtype color
  * @type Number
+ * @lzxdefault 0
  */
 var fgcolor = 0;
 /** true if the view specified a fgcolor
@@ -785,8 +773,8 @@ function $lzc$set_fontstyle(val) {
         if (this.onfontstyle.ready) { 
             this.onfontstyle.sendEvent( this.fontstyle ); 
         }
-    } else {
-        if ($debug) Debug.warn('invalid font style', val);
+    } else if ($debug) {
+        Debug.warn('invalid font style "%s" on %w', val, this);
     }
 }
 
@@ -799,13 +787,13 @@ var fontsize;
 
 /** @access private */
 function $lzc$set_fontsize(val) {
-    if (val <= 0 || isNaN(val)) {
-        if ($debug) Debug.warn('invalid font size', val);
-    } else {
+    if (! (val <= 0 || isNaN(val))) {
         this.fontsize = val;
         if (this.onfontsize.ready) { 
             this.onfontsize.sendEvent( this.fontsize ); 
         }
+    } else if ($debug) {
+        Debug.warn('invalid font size', val);
     }
 }
 
@@ -874,7 +862,6 @@ function $lzc$set_layout(layoutobj) {
         return;
     }
 
-
     var classname = layoutobj['class'];
     
     if ( classname == null) {
@@ -917,7 +904,7 @@ function $lzc$set_aaactive(s) {
         this.aaactive = s;
         this.sprite.setAAActive(s);
     } else if ($debug) {
-        LzView.__warnCapability('view.setAAActive()', 'accessibility'); 
+        LzView.__warnCapability('view.aaactive', 'accessibility'); 
     }
 }
 
@@ -933,7 +920,7 @@ function $lzc$set_aaname(s) {
         this.aaname = s;
         this.sprite.setAAName(s);
     } else if ($debug) {
-        LzView.__warnCapability('view.setAAName()', 'accessibility'); 
+        LzView.__warnCapability('view.aaname', 'accessibility'); 
     }
 }
 
@@ -949,7 +936,7 @@ function $lzc$set_aadescription(s) {
         this.aadescription = s;
         this.sprite.setAADescription(s);
     } else if ($debug) {
-        LzView.__warnCapability('view.setAADescription()', 'accessibility'); 
+        LzView.__warnCapability('view.aadescription', 'accessibility'); 
     }
 }
 
@@ -965,7 +952,7 @@ function $lzc$set_aatabindex(s) {
         this.aatabindex = s;
         this.sprite.setAATabIndex(s);
     } else if ($debug) {
-        LzView.__warnCapability('view.setAATabIndex()', 'accessibility'); 
+        LzView.__warnCapability('view.aatabindex', 'accessibility'); 
     }
 }
 
@@ -982,7 +969,7 @@ function $lzc$set_aasilent(s) {
         this.aasilent = s;
         this.sprite.setAASilent(s);
     } else if ($debug) {
-        LzView.__warnCapability('view.setAASilent()', 'accessibility'); 
+        LzView.__warnCapability('view.aasilent', 'accessibility'); 
     }
 }
 
@@ -1063,12 +1050,11 @@ var __LZvizDat:Boolean = true;
 var opacity =   1;
 
 /** @access private */
-function $lzc$set_opacity(v) 
-{
+function $lzc$set_opacity(v) {
     if (this.capabilities.opacity) {
         this.sprite.setOpacity(v);
     } else if ($debug) {
-        LzView.__warnCapability('view.setOpacity()', 'opacity'); 
+        LzView.__warnCapability('view.opacity', 'opacity'); 
     }
     this.opacity = v;
     if (this.onopacity.ready) this.onopacity.sendEvent( v );
@@ -1094,7 +1080,8 @@ function $lzc$set_alpha(v) { this.$lzc$set_opacity(v); }
  *
  * @lzxtype color
  * @type Number
-  */
+ * @lzxdefault null
+ */
 var bgcolor = null;
 /** @access private */
 var onbgcolor = LzDeclaredEvent;
@@ -1228,7 +1215,7 @@ function $lzc$set_rotation(v) {
     if (this.capabilities.rotation) {
         this.sprite.setRotation(v)
     } else if ($debug) {
-        LzView.__warnCapability('view.setRotation()', 'rotation'); 
+        LzView.__warnCapability('view.rotation', 'rotation'); 
     }
     this.rotation = v;
     var rrad = Math.PI /180 * this.rotation;
@@ -1431,8 +1418,6 @@ var unstretchedheight =   0;
   * @keywords readonly
   */
 var subviews =   [];
-/** @access private */
-var __LZclickregion =  "LzMouseEvents";
 
 /**
   * Specifies a translation point for drawing of this view. If the xoffset
@@ -1490,8 +1475,6 @@ function $lzc$set_yoffset(o) {
 var __LZrsin = 0;
 /** @access private */
 var __LZrcos = 1;
-/** @access private */
-var __LZcaloffset = false;
 
 /** @access private */
 var _xscale =   1;
@@ -1521,8 +1504,6 @@ var frame = 1;
 
 /** @access private */
 function $lzc$set_frame(n) {
-    //Debug.write('$lzc$set_frame', n, this, this.playing)
-
     // prevent play status tracking from running if the frame was set oninit, like in windowframe class
     this.frame = n;
     this.stop( n );
@@ -1561,22 +1542,8 @@ var hassetheight = false;
  */
 var hassetwidth = false;
 
-/** need quick check for viewness
-  * @access private 
-  */
-var __LZisView = true;
-
-//
-// field selected: Setting this attribute calls the abstract method
-// <method>setSelected</method>.  See
-// <classname>LzSelectionManager</classname>.
-// @access private
-//
-//============================================================================
 /** @access private */
 var addedToParent = null;
-/** @access private */
-var checkPlayStatusDel = null;
 /** @access private */
 var masked = false;
 
@@ -1586,27 +1553,20 @@ var masked = false;
   * pixel boundary by setting pixellock to true.
   * @type Boolean
   * @lzxtype booleanLiteral
-  * @modifiers final
+  * @keywords final
   */
 var pixellock = null;
-/** @access private */
-var setButtonSize = null;
 
 /** If true, this view intercepts click events; otherwise they are passed
   * to its container.  This defaults to true if the view defines a mouse
   * event handler or a cursor.
   * @type Boolean
   * @lzxtype boolean
+  * @lzxdefault false
   */ 
 var clickable = false;
 
-/** If true, this view intercepts click events; otherwise they are passed
-  * to its container.  This defaults to true if the view defines a mouse
-  * event handler or a cursor.
-  * @type Boolean
-  * @lzxtype boolean
-  * @access private
-  */
+/** @access private */
 function $lzc$set_clickable(amclickable) {
     this.sprite.setClickable(amclickable);
     this.clickable = amclickable;
@@ -1627,8 +1587,6 @@ function $lzc$set_showhandcursor(s) {
     this.sprite.setShowHandCursor(s);
 }
 
-/** @access private */
-var updatePlayDel = null;
 /**
   * A resource that is presented in the background of this view.  The
   * value can be either the name of a resource defined with the
@@ -1663,18 +1621,11 @@ var resourcewidth:Number = 0;
   */
 var resourceheight:Number = 0;
 
-/** @access private */ var __LZbgColorO = null;
-/** @access private */ var __LZbgRef = null;
-/** @access private */ var __LZbuttonRef = null;
 /** @access private */ var __LZcheckwidth = true;
 /** @access private */ var __LZcheckheight = true;
 /** @access private */ var __LZhasoffset = null;
-/** @access private */ var __LZisBackgrounded = null;
-/** @access private */ var __LZmaskClip = null;
-/** @access private */ var __LZmovieClipRef = null;
 /** @access private */ var __LZoutlieheight = null;
 /** @access private */ var __LZoutliewidth = null;
-/** @access private */ var __LZsubUniqueNum = null;
 
 
 
@@ -1730,8 +1681,8 @@ var _setrescheight = false;
   * first one. This is a width first search.
   * 
   * @param String prop: named property
-  * @param val: value for that property
-  * @return LzView: the first subview whose property <param>prop</param> is set to val 'val' or null
+  * @param any val: value for that property
+  * @return LzView: the first subview whose property <param>prop</param> is set to value <param>val</param> or null
   * if none is found
   */
 function searchSubviews ( prop , val) {
@@ -1906,8 +1857,6 @@ override function destroy( ){
 
     if (this.sprite) { this.sprite.destroy() }
 
-    //this.__LZFinishDestroyOnIdle();
-
     this.$lzc$set_visible ( false );
 
     var vip:LzView = (this.immediateparent cast LzView);
@@ -1942,8 +1891,7 @@ final function setVisible(v) {
   * This method sets the <attribute>visibility</attribute> attribute of the view
   * and also disables or re-enables any click region associated with the view.
   * 
-  * The argument is a string which can be "visible", "hidden", or "collapse". This
-  * corresponds somewhat with the 
+  * The argument is a string which can be "visible", "hidden", or "collapse".
   *
   * Setting the value to "collapse" will cause the view to become hidden when it has
   * a datapath and there are no matching data nodes in its dataset.
@@ -2055,7 +2003,7 @@ final function setRotation ( v ){
 /**
   * Sets the <attribute>alignment</attribute> for the view to the
   * given value. The alignment is based on the size of this view as
-  * compared to the size of the view's immediate parenbgRef.
+  * compared to the size of the view's immediate parent.
   *
   * @param String align: The <attribute>alignment</attribute> for the
   * view. This is one of "left", "center", and "right"
@@ -2112,7 +2060,7 @@ static var __LZlastmtrix = [ 0,0,0,0,0,0,0,0,0,0,0 ];
 /**
   * Returns an Object with x, y, width, and height properties that are the
   * coordinates of the view's bounding box in its immediateparent's coordinate
-  * system. The Laszlo view object uses a relatively simple notion for its
+  * system. The OpenLaszlo view object uses a relatively simple notion for its
   * coordinate system. Note that this function doesn't necessarily return the
   * true bounding box of the view, but a box surrounding the view, since this
   * method respects a set width and/or height and ignores subviews that appear
@@ -2332,14 +2280,12 @@ function __LZcheckSize ( sview, axis , xory ){
   *                   supporting inline. 
   * @access private
   */
-function __LZcheckwidthFunction ( sview )
-{
+function __LZcheckwidthFunction ( sview ) {
     this.__LZcheckSize (sview, "width", "x");
 }
   
 /** @access private */
-function __LZcheckheightFunction ( sview )
-{
+function __LZcheckheightFunction ( sview ) {
     this.__LZcheckSize (sview, "height", "y");
 }
 
@@ -2385,8 +2331,7 @@ function measureSize ( axis ) {
   *
   * (Note: this method is not supported in a constraint expression.)
   */
-function measureWidth ()
-{
+function measureWidth () {
     return this.measureSize ("width");
 }
 
@@ -2397,8 +2342,7 @@ function measureWidth ()
   *
   * (Note: this method is not supported in a constraint expression.)
   */
-function measureHeight ()
-{
+function measureHeight () {
     return this.measureSize ("height");
 }
 
@@ -2510,7 +2454,6 @@ function reevaluateSize ( ia = null){
   * taking into account the current size of its resource. 
   */
 function updateResourceSize ( ){
-    //Debug.write('updateResourceSize');
     this.sprite.updateResourceSize();
     this.reevaluateSize();
 }
@@ -2551,7 +2494,6 @@ function setAttributeRelative(prop, refView) {
  */
 function $lzc$setAttributeRelative_dependencies ( who,self, prop ,
                                                          refView ){
-    // Debug.write("here i am, about to call getLinkage");
     var tLink = who.getLinkage( refView );
     var pass = 2;
     var d = [] ;
@@ -2771,13 +2713,7 @@ function bringToFront ( ){
   * @return [LzView]: An array of this view's subviews in depth order
   */
 function getDepthList (){
-    var o = [];
-
-    var s = this.subviews;
-    for (var i = 0; i < s.length; i++) {
-        o[i] = s[i];
-    }
-
+    var o = this.subviews.concat();
     o.sort(this.__zCompare);
 
     return o;
@@ -2896,7 +2832,6 @@ function setSource ( source , cache = null, headers = null, filetype = null){
   * */
 function unload ( ){
     this._resource = null;
-    //this function formerly lived on the LzMakeLoad transformer
     this.sprite.unload();
 }
 
@@ -2967,7 +2902,7 @@ final function setPlay (b:Boolean) :void {
 }
 
 /**
-  * Get a reference to the control mc - may be overridden by loader
+  * Get a reference to the control mc
   * @access private
   */
 function getMCRef () :* {
@@ -3232,10 +3167,8 @@ function getProxyURL ( url = null ){
         return proxy;
     } else if (typeof(proxy) == "function") {
         return proxy(url);
-    } else {
-        if ($debug) {
-            Debug.error("Unknown value for proxyurl expression %w on %w", proxy, this);
-        }
+    } else if ($debug) {
+        Debug.error("Unknown value for proxyurl expression %w on %w", proxy, this);
     }
 }
 
@@ -3275,7 +3208,7 @@ static function addProxyPolicy ( f ){
 
 /**
   * Removes a proxy policy function that has been added using
-  * LzView.addProxyPolicy
+  * lz.view.addProxyPolicy
   * 
   * @param Function f: The function to remove from the policy list
   * @return Boolean: Returns true if the function was found and removed, false
@@ -3360,7 +3293,7 @@ function $lzc$set_contextmenu (cmenu:LzContextMenu) :void {
 
 /**
   * Install menu items for the right-mouse-button 
-  * @param LzContextMenu cmenu: LzContextMenu to install on this view
+  * @param LzContextMenu cmenu: lz.contextmenu to install on this view
   * @deprecated Use setAttribute('contextmenu', ...) instead.
   */
 final function setContextMenu ( cmenu ){
@@ -3371,8 +3304,10 @@ final function setContextMenu ( cmenu ){
 /**
   * Returns the current context menu object
   * @access public
+  * @deprecated Use 'view.contextmenu' instead
   */
 function getContextMenu ( ){
+    if ($debug) Debug.deprecated(this, arguments.callee, 'contextmenu');
     return this.contextmenu;
 }
 
