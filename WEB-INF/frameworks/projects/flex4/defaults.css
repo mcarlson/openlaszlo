@@ -11,145 +11,149 @@
 ////////////////////////////////////////////////////////////////////////////////
 */
 
+@namespace "library://ns.adobe.com/flex/spark";
+
 /* Default Skins */
 
-FxApplication
+Application
 {
-    skinClass: ClassReference("mx.skins.spark.FxApplicationSkin");
-    backgroundColor: #FFFFFF;
+    skinClass: ClassReference("spark.skins.default.ApplicationSkin");
 }
 
-FxButton
+Button
 {
-    lineBreak: "explicit";
-	skinClass: ClassReference("mx.skins.spark.FxButtonSkin");
-	textAlign: "center";
-	verticalAlign: "middle";
+    skinClass: ClassReference("spark.skins.default.ButtonSkin");
 }
 
-FxButtonBar
+Button.emphasized
 {
-	skinClass: ClassReference("mx.skins.spark.FxButtonBarSkin");
+    skinClass: ClassReference("spark.skins.default.DefaultButtonSkin");
 }
 
-FxCheckBox
+ButtonBar
 {
-	skinClass: ClassReference("mx.skins.spark.FxCheckBoxSkin");
-    textAlign: "start";
+    skinClass: ClassReference("spark.skins.default.ButtonBarSkin");
 }
 
-FxComponent
+CheckBox
 {
-    focusSkin: ClassReference("mx.skins.spark.FxFocusSkin");
+    skinClass: ClassReference("spark.skins.default.CheckBoxSkin");
 }
 
-FxContainer
+DropDownList
 {
-    skinClass: ClassReference("mx.skins.spark.FxContainerSkin");
+    skinClass: ClassReference("spark.skins.default.DropDownListSkin");
 }
 
-FxDataContainer
+SkinnableComponent
 {
-	skinClass: ClassReference("mx.skins.spark.FxDataContainerSkin");
+    errorSkin: ClassReference("spark.skins.default.ErrorSkin");
+    focusSkin: ClassReference("spark.skins.default.FocusSkin");
 }
 
-FxHScrollBar
+SkinnableContainer
 {
-    skinClass: ClassReference("mx.skins.spark.FxHScrollBarSkin");
+    skinClass: ClassReference("spark.skins.default.SkinnableContainerSkin");
 }
 
-FxHSlider
+SkinnableDataContainer
 {
-    skinClass: ClassReference("mx.skins.spark.FxHSliderSkin");
+	skinClass: ClassReference("spark.skins.default.SkinnableDataContainerSkin");
 }
 
-FxList
+HScrollBar
 {
-	skinClass: ClassReference("mx.skins.spark.FxListSkin");
+    skinClass: ClassReference("spark.skins.default.HScrollBarSkin");
 }
 
-FxNumericStepper
+HSlider
 {
-    skinClass: ClassReference("mx.skins.spark.FxNumericStepperSkin");
+    skinClass: ClassReference("spark.skins.default.HSliderSkin");
 }
 
-FxPanel
+List
 {
-	skinClass: ClassReference("mx.skins.spark.FxPanelSkin");
+	skinClass: ClassReference("spark.skins.default.ListSkin");
 }
 
-FxRadioButton
+NumericStepper
 {
-	skinClass: ClassReference("mx.skins.spark.FxRadioButtonSkin");
-    textAlign: "start";
+    skinClass: ClassReference("spark.skins.default.NumericStepperSkin");
 }
 
-FxScroller
+Panel
 {
-    skinClass: ClassReference("mx.skins.spark.FxScrollerSkin");
+	skinClass: ClassReference("spark.skins.default.PanelSkin");
 }
 
-FxSpinner
+RadioButton
 {
-    skinClass: ClassReference("mx.skins.spark.FxSpinnerSkin");    
+	skinClass: ClassReference("spark.skins.default.RadioButtonSkin");
 }
 
-FxTextArea
+Scroller
 {
-	skinClass: ClassReference("mx.skins.spark.FxTextAreaSkin");
+    skinClass: ClassReference("spark.skins.default.ScrollerSkin");
 }
 
-FxTextInput
+Spinner
 {
-	skinClass: ClassReference("mx.skins.spark.FxTextInputSkin");
+    skinClass: ClassReference("spark.skins.default.SpinnerSkin");    
 }
 
-FxToggleButton
+TextArea
 {
-	skinClass: ClassReference("mx.skins.spark.FxToggleButtonSkin");
-	textAlign: "center";
-	verticalAlign: "middle";
+	skinClass: ClassReference("spark.skins.default.TextAreaSkin");
 }
 
-FxVScrollBar
+TextInput
 {
-	skinClass: ClassReference("mx.skins.spark.FxVScrollBarSkin");
+	skinClass: ClassReference("spark.skins.default.TextInputSkin");
 }
 
-FxVSlider
+ToggleButton
 {
-    skinClass: ClassReference("mx.skins.spark.FxVSliderSkin");
+	skinClass: ClassReference("spark.skins.default.ToggleButtonSkin");
 }
 
-/* Default text styles for the Gumbo components. Eventually these
-   will be moved into the global selector, but to avoid collision
-   with the Halo defaults, they are currently defined here.
-   
-   The default font settings for Gumbo components are defined in
-   two selectors: TextGraphicElement, and TextView. */
-TextGraphicElement
+VideoPlayer
 {
-    color: 0;
-    fontFamily: "Arial";
-    fontSize: 12;
-    textAlign: "start";
+    skinClass: ClassReference("spark.skins.default.VideoPlayerSkin");
 }
 
-TextView
+VideoPlayerScrubBar
 {
-    color: 0;
-    fontFamily: "Arial";
-    fontSize: 12;
-    textAlign: "start";
+    skinClass: ClassReference("spark.skins.default.VideoPlayerScrubBarSkin");
+}
+
+VideoPlayerVolumeBar
+{
+    skinClass: ClassReference("spark.skins.default.VideoPlayerVolumeBarSkin");
+}
+
+VideoPlayerVolumeBarMuteButton
+{
+    skinClass: ClassReference("spark.skins.default.VideoPlayerVolumeBarMuteButtonSkin");
+}
+
+VScrollBar
+{
+    skinClass: ClassReference("spark.skins.default.VScrollBarSkin");
+}
+
+VSlider
+{
+    skinClass: ClassReference("spark.skins.default.VSliderSkin");
 }
 
 global
 {
     /* color: #000000; */
     baseColor: #CCCCCC;
-    contentColor: #FFFFFF;
+    contentBackgroundColor: #FFFFFF;
     rollOverColor: #CEDBEF;
     selectionColor: #A8C6EE;
     focusColor: #70B2EE;
     symbolColor: #000000;
+    slideDuration: 300;
 }

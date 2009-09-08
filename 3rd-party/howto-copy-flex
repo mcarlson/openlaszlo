@@ -1,25 +1,29 @@
+# These are instructions to build flex from source and then copy needed files
+# to the LPS tree.
 # 
-# version of flex checked in
-URL: http://opensource.adobe.com/svn/opensource/flex/sdk/trunk
-Repository Root: http://opensource.adobe.com/svn/opensource
-Repository UUID: a9308255-753e-0410-a2e9-80b3fbc4fff6
-Revision: 4341
-Node Kind: directory
-Schedule: normal
-Last Changed Author: dloverin@adobe.com
-Last Changed Rev: 4338
-Last Changed Date: 2008-12-16 22:19:16 -0500 (Tue, 16 Dec 2008)
-
+# The current installed flex compiler is flex_sdk_4.0.0.6898 May 14, which is 
+# the most recent 'stable build'
+#
+# If a pre-built release from adobe is being used, skip the step where 
+# you do "svn export" and "ant", below, and just copy the files as specified.
+#
+# The approach I take below is to copy chunks of the Flex tree, and then
+# prune away the files we don't need, such as source to components, etc.
+#
 ================================================================
 
-# assumes adobe flex tree is at ~/openlaszlo/adobe/trunk
+# Build from source, (assumes adobe flex tree is at ~/openlaszlo/adobe/trunk,
+# and we build a staging area for the flex tree in /tmp/flex)
 
-
-
-# Need to copy without taking the svn files. First do an export from 
-# the adobe svn tree, to get a tree which has no .svn info in it
+# We need to get files without taking the .svn files. So first do an
+# export from the adobe svn tree, to get a tree which has no .svn info
+# in it
 
 svn export trunk /tmp/flex
+
+
+# do "ant" in the flex dir to build the compiler and various libs
+cd /tmp/flex; ant
 
 # NOTE: [2009-07-30] we decided to not use the copies of the batik
 # .jars from the Flex SDK, and just use some selected batik jar files
@@ -28,17 +32,50 @@ svn export trunk /tmp/flex
 # build to fail.  flex seems happy without them, maybe only needed for
 # compiling MXML?  
 
-for i in adt.jar afe.jar aglj32.jar asc.jar asdoc.jar \
- commons-collections.jar commons-discovery.jar commons-logging.jar compc.jar copylocale.jar \
- digest.jar fcsh.jar fdb.jar flex-compiler-oem.jar flex-fontkit.jar \
- flex-messaging-common.jar flexTasks.jar fxgutils.jar javacc.jar license.jar \
- mxmlc.jar mxmlc_ja.jar optimizer.jar rideau.jar saxon9.jar \
- swfdump.jar swfutils.jar velocity-dep-1.4-flex.jar 
-do
+# skip saxon9.jar, because it conflicts with the js2doc tools
+
+for i in \
+adt.jar \
+afe.jar \
+aglj32.jar \
+asc.jar \
+asdoc.jar \
+commons-collections.jar \
+commons-discovery.jar \
+commons-logging.jar \
+compc.jar \
+copylocale.jar \
+digest.jar \
+fcsh.jar \
+fdb.jar \
+flex-compiler-oem.jar \
+flex-fontkit.jar \
+flex-messaging-common.jar \
+fxgutils.jar \
+license.jar \
+mxmlc.jar \
+mxmlc_da.jar \
+mxmlc_de.jar \
+mxmlc_es.jar \
+mxmlc_fi.jar \
+mxmlc_fr.jar \
+mxmlc_it.jar \
+mxmlc_ja.jar \
+mxmlc_ko.jar \
+mxmlc_nb.jar \
+mxmlc_nl.jar \
+mxmlc_pt.jar \
+mxmlc_ru.jar \
+mxmlc_sv.jar \
+mxmlc_zh_cn.jar \
+mxmlc_zh_tw.jar \
+optimizer.jar \
+rideau.jar \
+swfutils.jar \
+velocity-dep-1.4-flex.jar 
+do 
   cp /tmp/flex/lib/$i $LPS_HOME/WEB-INF/lib
 done;
-
-
 
 cp -r /tmp/flex/frameworks $LPS_HOME/WEB-INF
 cp -r /tmp/flex/bin $LPS_HOME/WEB-INF

@@ -14,20 +14,20 @@
 <componentPackage>
 
 <!-- Graphics -->
-    <component id="BitmapGraphic" class="mx.graphics.BitmapGraphic"/>
-    <component id="CloseSegment" class="mx.graphics.CloseSegment"/>
-    <component id="CubicBezierSegment" class="mx.graphics.CubicBezierSegment"/>
-    <component id="Ellipse" class="mx.graphics.Ellipse"/>
-    <component id="Graphic" class="mx.graphics.Graphic"/>
-    <component id="Group" class="mx.components.Group"/>
-    <component id="Line" class="mx.graphics.Line"/>
-    <component id="LineSegment" class="mx.graphics.LineSegment"/>
+    <component id="BitmapGraphic" class="spark.primitives.BitmapImage"/>
+    <component id="CloseSegment" class="spark.primitives.pathSegments.CloseSegment"/>
+    <component id="CubicBezierSegment" class="spark.primitives.pathSegments.CubicBezierSegment"/>
+    <component id="Ellipse" class="spark.primitives.Ellipse"/>
+    <component id="Graphic" class="spark.primitives.Graphic"/>
+    <component id="Group" class="spark.components.Group"/>
+    <component id="Line" class="spark.primitives.Line"/>
+    <component id="LineSegment" class="spark.primitives.pathSegments.LineSegment"/>
     <component id="Matrix" class="flash.geom.Matrix" lookupOnly="true"/>
-    <component id="MoveSegment" class="mx.graphics.MoveSegment"/>
-    <component id="Path" class="mx.graphics.Path"/>
-    <component id="QuadraticBezierSegment" class="mx.graphics.QuadraticBezierSegment"/>
-    <component id="Rect" class="mx.graphics.Rect"/>
-    <component id="TextGraphic" class="mx.graphics.TextGraphic"/>
+    <component id="MoveSegment" class="spark.primitives.pathSegments.MoveSegment"/>
+    <component id="Path" class="spark.primitives.Path"/>
+    <component id="QuadraticBezierSegment" class="spark.primitives.pathSegments.QuadraticBezierSegment"/>
+    <component id="Rect" class="spark.primitives.Rect"/>
+    <component id="TextGraphic" class="spark.primitives.RichText"/>
     <component id="Transform" class="mx.geom.Transform"/>
 
 <!--Fills and Strokes -->
@@ -42,13 +42,13 @@
     <component id="Stroke" class="mx.graphics.Stroke"/>
 
 <!-- Filters -->
-    <component id="BevelFilter" class="mx.filters.BevelFilter"/>
-    <component id="BlurFilter" class="mx.filters.BlurFilter"/>
-    <component id="ColorMatrixFilter" class="mx.filters.ColorMatrixFilter"/>
-    <component id="DropShadowFilter" class="mx.filters.DropShadowFilter"/>
-    <component id="GlowFilter" class="mx.filters.GlowFilter"/>
-    <component id="GradientBevelFilter" class="mx.filters.GradientBevelFilter"/>
-    <component id="GradientGlowFilter" class="mx.filters.GradientGlowFilter"/>
+    <component id="BevelFilter" class="spark.filters.BevelFilter"/>
+    <component id="BlurFilter" class="spark.filters.BlurFilter"/>
+    <component id="ColorMatrixFilter" class="spark.filters.ColorMatrixFilter"/>
+    <component id="DropShadowFilter" class="spark.filters.DropShadowFilter"/>
+    <component id="GlowFilter" class="spark.filters.GlowFilter"/>
+    <component id="GradientBevelFilter" class="spark.filters.GradientBevelFilter"/>
+    <component id="GradientGlowFilter" class="spark.filters.GradientGlowFilter"/>
 
 <!-- Text -->
     <component id="a" class="flashx.textLayout.elements.LinkElement"/>
