@@ -7,6 +7,7 @@
 <!--- contains style attributes which are applied to components to modify their look -->
 <class name="style" extends="node">
     <!--- this is a style object
+          @access private
           @keywords readonly -->
     <attribute name="isstyle" value="true"/>
 
@@ -15,59 +16,57 @@
     <attribute name="canvascolor" value="null" when="once"
         setter="setCanvasColor( canvascolor )" type="color"/>
 
-    <!--- color for text, default: black -->
+    <!--- color for text -->
     <attribute name="textcolor" value="gray10" when="once"
         setter="setStyleAttr( textcolor, 'textcolor')"  type="color"/>
 
-    <!--- background color for text areas, default: white -->
+    <!--- background color for text areas -->
     <attribute name="textfieldcolor" value="white" when="once"
         setter="setStyleAttr( textfieldcolor, 'textfieldcolor' )" type="color"/>
 
     <!--- used as the text color with 'hilitecolor' to highlight an item,
-        such as when mouse is over a menu item  default: iceblue1 -->
+        such as when mouse is over a menu item -->
     <attribute name="texthilitecolor" value="iceblue1" when="once"
         setter="setStyleAttr( texthilitecolor, 'texthilitecolor')" type="color"/>
 
     <!--- used as the text color with 'selectedcolor' to color the
-        selected item default: iceblue1 -->
+        selected item -->
     <attribute name="textselectedcolor" value="black" when="once"
         setter="setStyleAttr( textselectedcolor, 'textselectedcolor')" type="color"/>
 
-    <!--- used as the text color when a component is disabled default: gray60 -->
+    <!--- used as the text color when a component is disabled -->
     <attribute name="textdisabledcolor" value="gray60" when="once"
         setter="setStyleAttr( textdisabledcolor, 'textdisabledcolor')" type="color"/>
 
     <!--- used for colorizing a component, components will typically use
-        varying shades of this color. Default: offwhite -->
+        varying shades of this color -->
     <attribute name="basecolor" value="offwhite" when="once"
         setter="setStyleAttr( basecolor, 'basecolor')" type="color"/>
 
     <!--- used for colorizing the backgrounds of content areas, such
-          as the background in tabslider's content, and window's content
-          default: white -->
+          as the background in tabslider's content, and window's content -->
     <attribute name="bgcolor" value="white" when="once"
         setter="setStyleAttr( bgcolor, 'bgcolor')" type="color"/>
 
     <!--- used when the background color changes to highlight an item,
-        such as when mouse is over a menu item  default: iceblue3 -->
+        such as when mouse is over a menu item -->
     <attribute name="hilitecolor" value="iceblue4" when="once"
          setter="setStyleAttr( hilitecolor, 'hilitecolor')" type="color"/>
 
-    <!--- used when an item is selected, such as in a list  default: iceblue4 -->
+    <!--- used when an item is selected, such as in a list -->
     <attribute name="selectedcolor" value="iceblue3" when="once"
          setter="setStyleAttr( selectedcolor, 'selectedcolor')" type="color"/>
 
-    <!--- used when an item is disabled default: gray30 -->
+    <!--- used when an item is disabled -->
     <attribute name="disabledcolor" value="gray30" when="once"
          setter="setStyleAttr( disabledcolor, 'disabledcolor')" type="color"/>
 
     <!--- used to color the frame of a component for those that have a visual
-        border.  Default: gray40 (a medium dark gray) -->
+        border -->
     <attribute name="bordercolor" value="gray40" when="once"
         setter="setStyleAttr( bordercolor, 'bordercolor')" type="color"/>
 
-    <!--- the line width used in those components that have a visual border,
-        default: 1-->
+    <!--- the line width used in those components that have a visual border -->
     <attribute name="bordersize" value="1" when="once"
         setter="setStyleAttr( bordersize, 'bordersize')" type="number"/>
 

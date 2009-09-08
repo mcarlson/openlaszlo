@@ -12,6 +12,7 @@
               the datacontext of the grid. -->
         <attribute name="contentdatapath" value="*" type="string" setter="setContentdatapath(contentdatapath)" />
 
+        <!--- @access private -->
         <attribute name="_selector" value="null"/>
 
         <!--- Optional height for the rows contained by the grid. If no
@@ -33,7 +34,7 @@
         <!--- An array holding the basegridcolumns used by this grid -->
         <attribute name="columns" value="null"/>
 
-        <!--- If false, the rows are not clickable and the grid does not support              selection. -->
+        <!--- If false, the rows are not clickable and the grid does not support selection. -->
         <attribute name="selectable" value="true"/>
 
         <!--- @keywords private -->
@@ -135,7 +136,7 @@
                 return this._initialselection;
             }
         </method>
-        
+
         <method name="setContentdatapath" args="cdp" >
             if (this.isinited) {
                 this._getReplicator().setAttribute('datapath', cdp );

@@ -41,8 +41,7 @@
         <!--- Make the text field of this combobox editable. -->
         <attribute name="editable"     value="true" setter="this.setEditable(editable)" />
 
-        <!--- The class that is used to create an item in the list when
-              itemdatapath is assigned. -->
+        <!--- The class that is used to create an item in the list. -->
         <attribute name="itemclassname" setter="this.setItemclassname(itemclassname)"  value="" type="string" />
 
         <!--- Sets the height of the combobox to show 'n' items. -->
@@ -73,17 +72,16 @@
               combobox. -->
         <attribute name="attachoffset" value="-1" type="number"/>
 
-        <!--- the x position of the text. default: 2 -->
+        <!--- the x position of the text. -->
         <attribute name="text_x" value="2" type="number"/>
 
-        <!--- the y position of the text. default: 2 -->
+        <!--- the y position of the text. -->
         <attribute name="text_y" value="2" type="number"/>
 
-        <!--- the width the text. default: combowidth - 19 -->
+        <!--- the width the text. -->
         <attribute name="text_width" value="${this.width - 19}" type="number"/>
 
         <!--- The minimum width this component is allowed to be.
-              Defaults to 50 pixels.
               @keywords defaultsetter -->
         <attribute name="min_width" value="50" type="number" />
 
@@ -672,6 +670,7 @@
             }
         </method>
 
+        <!--- @keywords private -->
         <setter name="width" args="w">
             super.setAttribute('width', (Math.max(w,this.min_width)));
         </setter>

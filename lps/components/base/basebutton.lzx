@@ -3,28 +3,27 @@
 
     <class name="basebutton" extends="basecomponent" styleable="false">
 
-        <!--- Since basebutton is frequently used as part of another component,
-              default is false. -->
+        <!--- Since basebutton is frequently used as part of another component. -->
         <attribute name="focusable" value="false"/>
 
         <!--- The resource for the mouse up state, and initial state of the
-              button. Default: 1.
+              button.
               @keywords final -->
         <attribute name="normalResourceNumber" type="number" value="1"/>
 
-        <!--- The resource for the mouse over state, default: 2. 
+        <!--- The resource for the mouse over state. 
               Use 0 if the resource has at least 2 frames, but there is no over
               state.
               @keywords final -->
         <attribute name="overResourceNumber" type="number" value="2"/>
 
-        <!--- The resource for the mouse down state, default: 3.
+        <!--- The resource for the mouse down state.
               Use 0 if the resources has at least 3 frames, but there is no down
               state.
               @keywords final -->
         <attribute name="downResourceNumber" type="number" value="3"/>
 
-        <!--- The resource for the disabled state, default: 4.
+        <!--- The resource for the disabled state.
               Use 0 if the resource has at least 4 frames, but there
               is no disabled state.
               @keywords final -->
@@ -32,8 +31,7 @@
 
         <!--- The maximum number of frames to use, defaults to the number of
               frames for the resource associated with this view. This is useful
-              for a subclass that has no resource for this view. Default is the total
-              frames of basebutton.
+              for a subclass that has no resource for this view.
               @keywords final -->
         <attribute name="maxframes" value="$once{this.totalframes}" type="number"/>
 
@@ -43,10 +41,10 @@
                    value="0" setter="this.setResourceViewCount(resourceviewcount)"/>
 
         <!--- If this button does not respond to onmouseout or onmousedragout
-              events, set this flag to false. Default: true. -->
+              events, set this flag to false. -->
         <attribute name="respondtomouseout" value="true" />
 
-        <!--- Where to send mouse events (the view that will be "clickable"), default: this.
+        <!--- Where to send mouse events (the view that will be "clickable").
               @keywords final -->
         <attribute name="reference" value="this" when="once" setter="setreference(reference)"/>
 
@@ -75,7 +73,7 @@
                     }
                 }
             }
-        ]]> </method>
+        ]]></method>
 
         <!--- @access private -->
         <method name="_callShow"><![CDATA[
@@ -84,8 +82,9 @@
             else if ( this._msin && 
                       this.maxframes >= this.overResourceNumber) this.showOver();
             else this.showUp();
-        ]]> </method>
+        ]]></method>
 
+        <!--- @access private -->
         <handler args="m" name="onmode" reference="lz.ModeManager">
             <![CDATA[ 
             if ( m && ( this._msdown || this._msin ) &&
@@ -108,7 +107,7 @@
             } else {
                 super.setAttribute('frame', r);
             }
-       ]]> </setter>
+        ]]></setter>
 
         <!--- When the space bar is down, basebutton shows its down state. -->
         <method name="doSpaceDown" >
@@ -135,7 +134,7 @@
                 this.showDown( );
             }
         </method>
-    
+
         <!--- Called by the button manager when this button is the default-->
         <method name="doEnterUp" >
             if ( this._enabled ){
@@ -161,22 +160,26 @@
             this.setResourceViewCount(this.resourceviewcount);
             this._callShow();
         </method>
-        
+
+        <!--- @access private -->
         <handler name="onmouseover">
             this.setAttribute( '_msin' , true );
             this._callShow();
         </handler>
 
+        <!--- @access private -->
         <handler name="onmouseout">
             this.setAttribute( '_msin' , false );
             this._callShow();
         </handler>
 
+        <!--- @access private -->
         <handler name="onmousedown">
             this.setAttribute( '_msdown' , true );
             this._callShow();
         </handler>
 
+        <!--- @access private -->
         <handler name="onmouseup">
             this.setAttribute( '_msdown' , false );
             this._callShow();
@@ -226,7 +229,7 @@
         <method name="_applystyle" args="s">
             setTint(this, s.basecolor);
         </method>
-        
+
         <doc>
           <tag name="shortdesc"><text>Abstract class for making buttons with up-over-down states.</text></tag>
           <text>
@@ -316,7 +319,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

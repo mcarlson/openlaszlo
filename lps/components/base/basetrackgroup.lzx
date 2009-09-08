@@ -12,7 +12,7 @@
         <!--- The periodic rate in milliseconds to track the mouse-->
         <attribute name="trackingrate"  value="150" />
 
-        <!--- indicates if this trackgroup is currently tracking or not.
+        <!--- Indicates if this trackgroup is currently tracking or not.
               It can bet set to turn tracking on or off, or use the methods
               activatetrackgroup and deactivatetrackgroup -->
         <attribute name="tracking"      value="true"
@@ -27,16 +27,14 @@
         <!--- @keywords private -->
         <attribute name="_boundstrackgroup" />
 
-        <!--- an array of events which will activate tracking.  By default:
-           ['onmousedown'].  To override, you must declare as once.  For
-           example:
+        <!--- an array of events which will activate tracking. 
+           To override, you must declare as once. For example:
            <programlisting>&lt;attribute name="activateevents" value="['onmouseover']" when="once"/&gt;</programlisting>
         -->
         <attribute name="activateevents"   value="['onmousedown']" />
 
-        <!--- an array of events which will deactivate tracking.  By default:
-           ['onmouseup'].  To override, you must declare as once.  For
-           example:
+        <!--- an array of events which will deactivate tracking. 
+           To override, you must declare as once. For example:
            <programlisting>&lt;attribute name="deactivateevents" value="['onmouseover']" when="once"/&gt;</programlisting>
         -->
         <attribute name="deactivateevents" value="['onmouseup']" />
@@ -286,7 +284,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -19,12 +19,11 @@
               with the form.  By default, submit is true when enabled.  -->
         <attribute name="submit" value="${enabled}" type="boolean"/>
 
-        <!--- Boolean to determine whether the baseformitem was changed. Default
-              is false. -->
+        <!--- Boolean to determine whether the baseformitem was changed. -->
         <attribute name="changed" value="false" 
                    setter="this.setChanged(changed)" />
 
-        <!--- The value of the baseformitem. Default is null. -->
+        <!--- The value of the baseformitem. -->
         <attribute name="value" value="null" 
                    setter="this.setValue(value,false)" />
 
@@ -35,10 +34,10 @@
         <!--- Event sent whenever checkbox value changes. -->
         <event name="onvalue" />
 
-        <!-- Rollback value for the baseformitem. -->
+        <!--- Rollback value for the baseformitem. -->
         <attribute name="rollbackvalue" value="null" />
 
-        <!-- If true, the component will not inform its parent form
+        <!--- If true, the component will not inform its parent form
              that it has changed. Useful in conjunction with submit=false -->
         <attribute name="ignoreform" value="false" />
 
@@ -208,7 +207,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

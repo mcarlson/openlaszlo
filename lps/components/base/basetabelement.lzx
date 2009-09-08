@@ -10,7 +10,7 @@
            clickable="false" >
 
         <!--- Content is automatically hidden when tabelement is closed. To
-              override, set this attribute to false. Default is true. -->
+              override, set this attribute to false. -->
         <attribute name="hideonclose" value="true" />
         <!--- This is set to true when a basetabelement begins to open and is
               set to false when it finishes its close. Default is the inverse of
@@ -22,14 +22,14 @@
         <attribute name="itemclassname"  value="" type="string"/>
         <!--- @keywords private -->
         <attribute name="isopening"      value="0" />
-        <!--- The height the tab will close to. Default is 22. -->
+        <!--- The height the tab will close to. -->
         <attribute name="minheight" value="22" type="number" />
-        <!--- The height of the header. Default is minheight.-->
+        <!--- The height of the header. -->
         <attribute name="headerheight" value="$once{minheight}" type="number" />
 
         <!-- TODO [2003-12-01 bret]: special setter to avoid setting height 
              independent of tabslider -->
-        <!--- The height of the tabelement. Default is minheight. -->
+        <!--- The height of the tabelement. -->
         <attribute name="height"    value="$once{minheight}" />
         
         <!-- events -->
@@ -177,7 +177,7 @@
 
  </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

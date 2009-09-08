@@ -20,7 +20,7 @@
               @keywords readonly -->
         <attribute name="text" value="${this.tabpane.text}" type="text"/>
 
-        <!-- @keywords private -->
+        <!--- @keywords private -->
         <method name="handletpdestroy" args="ignore">
           this.destroy();
         </method>
@@ -339,7 +339,7 @@
               inset_left. -->
         <attribute name="inset_left" value="${parent.inset_left}" type="number" />
 
-        <!--- Text value for tab. Default is 'tab'. -->
+        <!--- Text value for tab. -->
         <attribute name="text" value="tab" type="text" />
 
         <!--- DO NOT OVERRIDE THIS VARIABLE.
@@ -596,31 +596,26 @@
           within which there are a basetabsbar and the basetabscontent. -->
     <class name="basetabs" extends="basecomponent" focusable="false">
 
-        <!--- The size of the border surrounding a basetabpane. Default is
-              0. -->
+        <!--- The size of the border surrounding a basetabpane. -->
         <attribute name="bordersize" value="0" type="number" />
         
         <!-- ================ -->
         <!--  content insets  -->
         <!-- ================ -->
-        <!--- The top inset for content appearing within a basetabpane. Default
-              is 8. -->
+        <!--- The top inset for content appearing within a basetabpane. -->
         <attribute name="inset_top" value="8" type="number" when="immediately" />
-        <!--- The left inset for content appearing within a basetabpane. Default
-              is 8. -->
+        <!--- The left inset for content appearing within a basetabpane. -->
         <attribute name="inset_left" value="8" type="number" />
-        <!--- The bottom inset for content appearing within a basetabpane. 
-              Default is 8. -->
+        <!--- The bottom inset for content appearing within a basetabpane. -->
         <attribute name="inset_bottom" value="8" type="number" />
-        <!--- The right inset for content appearing within a basetabpane. 
-              Default is 8. -->
+        <!--- The right inset for content appearing within a basetabpane. -->
         <attribute name="inset_right" value="8" type="number" />
 
         <!-- ========== -->
         <!--  tabclass  -->
         <!-- ========== -->
         <!--- Class to instantiate tab items for basetabsbar. Can be
-              overridden by basetabpane. Default is 'basetab'. 
+              overridden by basetabpane.
               @keywords final -->
         <attribute name="tabclass" value="basetab" type="string" />
 
@@ -630,8 +625,7 @@
         <!--- This is a reference to its basetabsbar. 
               @keywords readonly -->
         <attribute name="bar" value="null" type="expression" />
-        <!--- Class to instantiate to contain tab items. Default is
-              'basetabsbar'.
+        <!--- Class to instantiate to contain tab items.
               @keywords final -->
         <attribute name="barclass" value="basetabsbar" type="string" />
 
@@ -647,7 +641,7 @@
         <attribute name="contentclass" value="basetabscontent" type="string" />
 
         <!--- Basetab's layout for its basetabsbar and basetabscontent
-              area. Default is "class: simplelayout; axis: y; spacing: 0". -->
+              area. -->
         <attribute name="layout"
             value="class: simplelayout; axis: y; spacing: 0"/>
 

@@ -10,10 +10,10 @@
            layout="class: simplelayout" 
            oninit="_setSpacing(spacing)"> <!-- so layout gets spacing oninit -->
 
-        <!--- The duration of the tabs openning and closing. Default is 300. -->
+        <!--- The duration of the tabs openning and closing. -->
         <attribute name="slideduration"   value="300" />
 
-        <!--- The spacing of the tabs. Default is 0. -->
+        <!--- The spacing of the tabs. -->
         <attribute name="spacing" value="0" setter="_setSpacing(spacing)"/>
 
         <!--- resetHeight() should only get called from setSpacing not during
@@ -21,27 +21,22 @@
               @keywords private -->
         <attribute name="_spacinginitdone" value="false" />
 
-        <!--- The default height of every tab when closed. Default is
-              22. -->
+        <!--- The default height of every tab when closed. -->
         <attribute name="mintabheight"    value="22" />
 
         <!--- @keywords private -->
         <attribute name="opennedtab"      value="null" />
         
-        <!--- The top inset for content appearing within a tabelement. Default
-              is 8. -->
+        <!--- The top inset for content appearing within a tabelement. -->
         <attribute name="inset_top" value="8"/>
         
-        <!--- The left inset for content appearing within a tabelement. Default
-              is 8. -->
+        <!--- The left inset for content appearing within a tabelement. -->
         <attribute name="inset_left" value="8"/>
         
-        <!--- The bottom inset for content appearing within a tabelement.
-              Default is 8. -->
+        <!--- The bottom inset for content appearing within a tabelement. -->
         <attribute name="inset_bottom" value="8"/>
         
-        <!--- The right inset for content appearing within a tabelement. Default
-              is 8. -->
+        <!--- The right inset for content appearing within a tabelement. -->
         <attribute name="inset_right" value="8"/>
 
         <!--- @keywords private -->
@@ -143,9 +138,11 @@
         ]]>
         </method>
 
+        <!--- @access private -->
+        <handler name="onaddsubview" method="doAddSubview"/>
+
         <!--- Called when an item is added to the tabslider.
               @param LzView v: view to be added. -->
-        <handler name="onaddsubview" method="doAddSubview"/>
         <method name="doAddSubview" args="v" >
             if ( this.itemclassname == "" ){
                 this.itemclassname = v.constructor.tagname;
@@ -168,9 +165,9 @@
             }
         </method>
 
-        <!--- Deprecated: use this.select(atabview) instead.
-              @param basetabelement tabelement: tabelement to open. 
-              @param boolean withAnimation: unused. -->
+        <!--- @param basetabelement tabelement: tabelement to open. 
+              @param boolean withAnimation: unused.
+              @deprecated use this.select(atabview) instead -->
         <method name="openTab" args="tabelement,withAnimation=false" > <![CDATA[
             var didopen = false;
             var ot = this._selector.getSelection()[0];
@@ -287,7 +284,7 @@
    </class> <!-- END: basetabslider -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

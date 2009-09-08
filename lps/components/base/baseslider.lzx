@@ -21,7 +21,7 @@
         <!--- The maximum value. -->
         <attribute name="maxvalue" value="100" type="number" setter="setMaxValue(maxvalue)"/>
         
-        <!--- Turns on / off the slider''s filled area. -->
+        <!--- Turns on / off the slider's filled area. -->
         <attribute name="showfill" value="true"/>
         
         <!--- Turns on / off the floating value text when the user
@@ -334,7 +334,7 @@
     </class><!-- end basesliderthumb class -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

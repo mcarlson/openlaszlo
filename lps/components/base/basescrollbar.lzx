@@ -14,7 +14,7 @@
         <attribute name="scrolltarget" value="null" type="expression" when="always"/>
 
         <!--- Axis may be "x" or "y", controls the orientation and default
-              scrollattr, default: "y"
+              scrollattr
               @keywords final -->
         <attribute name="axis" value="y" type="string"/>
 
@@ -42,8 +42,7 @@
         <attribute name="pagesize" type="number" value="null"/>
 
         <!--- The amount that the scrolltarget is moved when the user clicks on
-              the scrolltrack or when the step method is called, default:
-              10. -->
+              the scrolltrack or when the step method is called. -->
         <attribute name="stepsize" value="10"/>
 
         <!--- True if the scrolltarget is bigger than the containing view
@@ -80,7 +79,7 @@
                (this._parentcomponent ? this._parentcomponent._enabled : true)}"/>
 
         <!--- If scrollmax is not defined and this is true, use the target
-              height or width to determine scrollmax, default: false.
+              height or width to determine scrollmax.
               @keywords private  -->
         <attribute name="usetargetsize" value="false"/>
 
@@ -630,7 +629,7 @@
     <!-- Provides non-visual aspects of scrollbar's arrow. -->
     <class name="basescrollarrow" extends="basebuttonrepeater">
             <!--- The direction in which the scroll should move. Use -1 to go
-                  back. Default: 1. -->
+                  back. -->
             <attribute name="direction" value="1"/>
             <!--- @keywords private -->
             <handler name="onmousedown">
@@ -657,7 +656,7 @@
     <!-- Provides non-visual aspects of a scrollbar track. -->
     <class name="basescrolltrack" extends="basebuttonrepeater">
         <!--- The direction in which the scroll should move. Set to -1 for back,
-             1 for forward, default: 1. -->
+             1 for forward. -->
         <attribute name="direction" value="1"/>
         <!--- @keywords private -->
         <handler name="onmousedown">

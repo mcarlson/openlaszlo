@@ -10,10 +10,10 @@
        <attribute name="stillDownDelegate" value="null" type="expression" />
        <!---  @keywords private -->
        <attribute name="isMouseDown" value="false" type="boolean" />
-       
+
        <!--- @keywords public -->
        <event name="onmousestilldown" />
-       
+
        <!---  @keywords private -->
        <method name="stillDownEventGenerator" args="ignore" >
             var now = (new Date()).getTime();
@@ -21,7 +21,7 @@
             this._lasttime = now;
 
             if (this.isMouseDown) {
-                var next; 
+                var next;
                 if (diff > 600) {
                     next = 500;
                 } else {
@@ -41,13 +41,13 @@
             }
             lz.Timer.addTimer( this.stillDownDelegate, 500 );
         </handler>
-        
+
         <!--- @keywords private -->
         <handler name="onmouseup">
             this.isMouseDown = false;
             lz.Timer.removeTimer( this.stillDownDelegate );
         </handler>
-        
+
         <doc>
           <tag name="shortdesc"><text>a basebutton that sends an event if the mouse is held down.</text></tag>
           <text>
@@ -63,7 +63,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -9,21 +9,20 @@
     <!--- An abstract base class to build tree controls. -->
     <class name="basetree" extends="basecomponent" focusable="false">
 
+        <!--- @access private -->
         <attribute name="defaultplacement" value="children" type="string"/>
 
-        <!--- Check to see if this tree is open. Default is false. -->
+        <!--- Check to see if this tree is open. -->
         <attribute name="open" value="false" type="boolean" 
                    setter="_setOpen(open)"/>
 
-        <!--- Flag to close other siblings when this tree is open. Default 
-              is false. -->
+        <!--- Flag to close other siblings when this tree is open. -->
         <attribute name="closesiblings" value="false" type="boolean" />
 
-        <!--- Close all immediate children when this tree is closed. Default is
-              false.-->
+        <!--- Close all immediate children when this tree is closed. -->
         <attribute name="closechildren" value="false" type="boolean" />
 
-        <!--- Auto scroll if tree is clipped. Default is false. -->
+        <!--- Auto scroll if tree is clipped. -->
         <attribute name="autoscroll" value="false" type="boolean" />
 
         <!--- Check to see if this tree is selected. Default is false, except
@@ -32,51 +31,47 @@
         <attribute name="selected" value="false" type="boolean"
                    setter="_setSelected(selected)" />
 
-        <!--- Spacing to indent trees on the x-axis. Default is 10. -->
+        <!--- Spacing to indent trees on the x-axis. -->
         <attribute name="xindent" value="10" type="number" />
 
-        <!--- Spacing to indent trees on the y-axis. Default is 20. -->
+        <!--- Spacing to indent trees on the y-axis. -->
         <attribute name="yindent" value="20" type="number" />
 
         <!--- Meaningful only with data replication. If true, it will
-              recursively follow the datapath's children. Default is true. 
+              recursively follow the datapath's children.
               @keywords final -->
         <attribute name="recurse" value="true" type="boolean" />
 
         <!--- Meaningful only in root tree. If false, the root item is invisible
-              and its children are displayed. Default is true.
+              and its children are displayed.
               @keywords final -->
         <attribute name="showroot" value="true" type="boolean" />
 
-        <!--- Meaningful only in root. Whether to multiselect items. Default is
-              false.
+        <!--- Meaningful only in root. Whether to multiselect items.
               @keywords final -->
         <attribute name="multiselect" value="false" type="boolean" />
 
-        <!--- Meaningful only in root. Flag to toggle selected nodes. Default is
-              false. 
+        <!--- Meaningful only in root. Flag to toggle selected nodes.
               @keywords final -->
         <attribute name="toggleselected" value="false" type="boolean" />
 
-        <!--- Meaningful only in root. Flag to select a tree on focus. Default
-              is false.
+        <!--- Meaningful only in root. Flag to select a tree on focus.
               @keywords final -->
         <attribute name="focusselect" value="false" type="boolean" />
 
-        <!--- If true, this tree is focused. Default is false.
+        <!--- If true, this tree is focused.
               @keywords readonly -->
         <attribute name="focused" value="false" type="boolean" />
 
         <!--- Meaningful only in root. If focusselect is false and focusoverlay
               is true, then focus has a visual bracket overlay over the focused
-              tree. Default is false. -->
+              tree. -->
         <attribute name="focusoverlay" value="false" type="boolean" />
 
-        <!--- Layout for children. Default is "class: simplelayout; axis: y;
-              spacing: 0". -->
+        <!--- Layout for children. -->
         <attribute name="layout" value="class: simplelayout; axis: y; spacing: 0" />
         
-        <!--- If true, this basetree is a leaf node. Default is false.-->
+        <!--- If true, this basetree is a leaf node. -->
         <attribute name="isleaf" value="false" type="boolean" 
                    setter="_setIsLeaf(isleaf)" />
 
@@ -114,9 +109,9 @@
               receives this event.-->
         <event name="onfocus" />
 
-        <!--- @keywords private : reference to the defaultplacement view
-              by default this is 'children' but it could be modified by
-              subclass -->
+        <!--- reference to the defaultplacement view by default this is
+              'children' but it could be modified by subclass 
+              @keywords private -->
         <attribute name="_children" value="null"/>
         <!--- @keywords private -->
         <method name="init">

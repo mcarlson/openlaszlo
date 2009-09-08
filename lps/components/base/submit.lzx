@@ -5,10 +5,10 @@
               the result of the query. Note: This replaces the "data"-attribute on the submit-component. -->
         <attribute name="dataset" value="null" />
         <!--- Read-only status of data request. Possible values are 'ok',
-              'requesting', and 'error'. Default: 'ok'. -->
+              'requesting', and 'error'. -->
         <attribute name="status" type="string" value="ok" />
         <!--- Error from most recent response or empty string; cleared to empty
-              string each time a request on the dataset is made. Default: ''-->
+              string each time a request on the dataset is made. -->
         <attribute name="error" type="string" value="" />
 
 
@@ -141,6 +141,6 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

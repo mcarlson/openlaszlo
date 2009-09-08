@@ -13,15 +13,15 @@
       subclasses.-->
 <class name="basewindow" extends="basecomponent"  options="ignorelayout"
        pixellock="true" focusable="false" clickable="true">
-        <!--- Minimum width for the windowy, default: 60.
+        <!--- Minimum width for the window.
               @keywords final -->
         <attribute name="minwidth" value="60"/>
 
-        <!--- Minimum height for the window, default: 50.
+        <!--- Minimum height for the window.
               @keywords final -->
         <attribute name="minheight" value="50"/>
 
-        <!--- True if the window is frontmost, default: false. Set this
+        <!--- True if the window is frontmost. Set this
               attribute to bring the window to the fore of its sibling
               windows, and bring window focus.
               @keywords defaultsetter -->
@@ -33,16 +33,14 @@
 
         <!--- The state of the window: 1=selected (frontmost) window,
               2=not-selected window, 3=dragging, 4=disabled, 5=resizing.
-              Default: 1
               @keywords readonly -->
         <attribute name="state" value="1"/>
 
         <!--- @keywords private -->
         <attribute name="defaultbuttongroup" value="true"/>
 
-    <!--- Attribute handles whether window can be dragged or not @keywords public -->
-
-       <attribute name="allowdrag"
+        <!--- Attribute handles whether window can be dragged or not -->
+        <attribute name="allowdrag"
            value="true"
            type="boolean" />
 
@@ -58,6 +56,7 @@
                        value="${this.state != 3 ? setDragPos('x', this.immediateparent.getMouse( 'x' )) : this.immediateparent.getMouse( 'x' ) - this.xdoffset}"/>
         </state>
 
+        <!--- @access private -->
         <method name="setDragPos" args="xory, mousepos">   <![CDATA[
             var newpos = mousepos - this[xory + 'doffset'];
             var diff = this[xory] - this['start' + xory];
@@ -112,7 +111,8 @@
           }
           super.destroy();
         </method>
-        
+
+        <!--- @access private -->
         <method name="sendInFrontOf" args="v"> <![CDATA[
             var wlist = parent.options['windowlist'];
             if (this.visible) {
@@ -131,6 +131,7 @@
             ]]>
         </method>
 
+        <!--- @access private -->
         <method name="sendBehind" args="v"> <![CDATA[
             var wlist = parent.options['windowlist'];
             if (this.visible) {
@@ -149,6 +150,7 @@
             ]]>
         </method>
 
+        <!--- @access private -->
         <method name="bringToFront"> <![CDATA[
             var wlist = parent.options['windowlist'];
             if (this.visible && wlist.length > 0) {
@@ -164,6 +166,7 @@
             ]]>
         </method>
 
+        <!--- @access private -->
         <method name="sendToBack"> <![CDATA[
             var wlist = parent.options['windowlist'];
             if (this.visible) {
