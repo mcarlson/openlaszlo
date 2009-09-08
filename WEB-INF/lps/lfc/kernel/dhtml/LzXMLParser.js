@@ -91,12 +91,11 @@ if (typeof DOMParser == "undefined") {
                 try {
                     xmlDOM = new ActiveXObject(progIDs[i]);
                     break;
-                }
-                catch (ex) {
+                } catch (ex) {
                 }
             }
             if ($debug) {
-                if (xmlDom == null) {
+                if (xmlDOM == null) {
                     Debug.error('Could not instantiate a XML DOM ActiveXObject');
                 }
             }
