@@ -2,7 +2,7 @@
     <!--- Associates a form with a dataset. -->
     <class name="submit" extends="node">
         <!--- The dataset that specifies the request url, which will also hold
-              the result of the query. Note: This replaces the "data"-attribute on the submit-component. -->
+              the result of the query. -->
         <attribute name="dataset" value="null" />
         <!--- Read-only status of data request. Possible values are 'ok',
               'requesting', and 'error'. -->
@@ -11,7 +11,6 @@
               string each time a request on the dataset is made. -->
         <attribute name="error" type="string" value="" />
 
-
         <!--- @access private -->
         <attribute name="_timeoutDel" value="null" />
         <!--- @access private -->
@@ -19,23 +18,11 @@
         <!--- @access private -->
         <attribute name="_dataDel" value="null" />
 
-        <!--- 
-            @access private 
-            @deprecated Use setAttribute('dataset', ...) instead.
-            @devnote This overrides the setter defined on LzNode only for bwcomp, remove in 4.3+
-        -->
-        <setter name="data" args="dset" >
-            if ($debug) Debug.info("%w.setAttribute('data') is deprecated. Use %w.setAttribute('dataset') instead", this, this);
-            this.setAttribute("dataset", dset);
-        </setter>
-
         <!--- @access private -->
         <setter name="dataset" args="dset" >
             this._clearDels();
 
             this.dataset = dset;
-            // TODO: [20080918 anba] for bwcomp set also "data"-property, remove in 4.3+
-            this.data = dset;
 
             if (dset == null) {
                 return;
@@ -79,7 +66,7 @@
         </method>
 
         <!--- Data from all sibling components and their children will send as a
-              request to the server using 'data' dataset. -->
+              request to the server using <attribute>dataset</attribute>. -->
         <method name="submit"> <![CDATA[
             if (! this.dataset) {
                 return;
