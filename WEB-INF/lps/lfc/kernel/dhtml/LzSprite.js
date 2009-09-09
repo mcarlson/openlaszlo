@@ -35,17 +35,33 @@ var LzSprite = function(owner, isroot) {
         var p = lz.embed.__propcache;
         var rootcontainer = LzSprite.__rootSpriteContainer = p.appenddiv;
 
+        // appcontainer is the root container for lzcanvascontextdiv, lzcanvasdiv and lzcanvasclickdiv 
+        var appcontainer = rootcontainer;
+
         // Ensure we do not hang out of the container div
         rootcontainer.style.margin = 0;
         rootcontainer.style.padding = 0;
         rootcontainer.style.border = "0 none";
         rootcontainer.style.overflow = "hidden";
 
+        if (quirks['container_divs_require_overflow']) {
+            // create a container div that has overflow: hidden and a physical pixel size that lives inside the app container div. 
+            // append lzcanvascontextdiv, lzcanvasdiv and lzcanvasclickdiv to the overflowdiv
+            // See LPP-8402
+            appcontainer = document.createElement('div');
+            appcontainer.className = 'lzappoverflow';
+            rootcontainer.appendChild(appcontainer);
+            appcontainer.owner = this;
+
+            // so the height and width can be set later
+            LzSprite.__rootSpriteOverflowContainer = appcontainer;
+        }
+
         if (quirks.fix_contextmenu) {
             var cxdiv = document.createElement('div');
             cxdiv.className = 'lzcanvascontextdiv';
             cxdiv.id = 'lzcanvascontextdiv';
-            rootcontainer.appendChild(cxdiv);
+            appcontainer.appendChild(cxdiv);
             cxdiv.owner = this;
             this.__LZcontextcontainerdiv = cxdiv;
         }
@@ -71,14 +87,14 @@ var LzSprite = function(owner, isroot) {
 
         lz.embed.options.approot = (typeof(p.approot) == "string") ? p.approot : '';
 
-        rootcontainer.appendChild(div);
+        appcontainer.appendChild(div);
         this.__LZdiv = div;
 
         if (quirks.fix_clickable) {
             var cdiv = document.createElement('div');
             cdiv.className = 'lzcanvasclickdiv';
             cdiv.id = 'lzcanvasclickdiv';
-            rootcontainer.appendChild(cdiv);
+            appcontainer.appendChild(cdiv);
             this.__LZclickcontainerdiv = cdiv;
         }
 
@@ -263,6 +279,10 @@ LzSprite.__defaultStyles = {
     },
     lzcanvascontextdiv: {
         position: 'absolute'
+    },
+    lzappoverflow: {
+        position: 'absolute',
+        overflow: 'hidden'
     },
     // This container implements the swf 'gutter'
     lztextcontainer: {
@@ -579,6 +599,7 @@ LzSprite.quirks = {
     ,fix_contextmenu: true
     ,size_blank_to_zero: true
     ,has_dom2_mouseevents: false
+    ,container_divs_require_overflow: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -750,6 +771,8 @@ LzSprite.__updateQuirks = function () {
             // required as of 3.2.1 to get test/lztest/lztest-textheight.lzx to show multiline inputtext properly
             quirks['inputtext_strips_newlines'] = true;
             quirks['prevent_selection'] = true;
+            // See LPP-8402
+            quirks['container_divs_require_overflow'] = true;
         } else if (browser.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
@@ -793,6 +816,10 @@ LzSprite.__updateQuirks = function () {
                 if (browser.subversion < 6) {
                     // no longer needed as of 3.0.6 (or maybe earlier...)
                     quirks['text_height_includes_padding'] = true;
+                }
+                if (browser.version < 3.5) {
+                    // See LPP-8402
+                    quirks['container_divs_require_overflow'] = true;
                 }
             }
             quirks['autoscroll_textarea'] = true;
@@ -1495,8 +1522,9 @@ LzSprite.prototype.setWidth = function ( w ){
     if (this._w != w) {
         this._w = w;
         var size = w;
+        var quirks = this.quirks;
         // set size to zero if we don't have either of these
-        if (this.quirks.size_blank_to_zero) {
+        if (quirks.size_blank_to_zero) {
             if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite)) {
                 this.__sizedtozero = true;
                 size = '0px';
@@ -1507,6 +1535,9 @@ LzSprite.prototype.setWidth = function ( w ){
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.width = w;
         if (this.__LZcontext) this.__LZcontext.style.width = w;
+        if (this.isroot && quirks.container_divs_require_overflow) {
+            LzSprite.__rootSpriteOverflowContainer.style.width = w;
+        }
         return w;
     }
 }
@@ -1538,8 +1569,9 @@ LzSprite.prototype.setHeight = function ( h ){
     if (this._h != h) {
         this._h = h;
         var size = h;
+        var quirks = this.quirks;
         // set size to zero if we don't have either of these
-        if (this.quirks.size_blank_to_zero) {
+        if (quirks.size_blank_to_zero) {
             if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite)) {
                 this.__sizedtozero = true;
                 size = '0px';
@@ -1550,6 +1582,9 @@ LzSprite.prototype.setHeight = function ( h ){
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.height = h;
         if (this.__LZcontext) this.__LZcontext.style.height = h;
+        if (this.isroot && quirks.container_divs_require_overflow) {
+            LzSprite.__rootSpriteOverflowContainer.style.height = h;
+        }
         return h;
     }
 }
