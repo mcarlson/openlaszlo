@@ -13,9 +13,10 @@
 
     <!-- LPP-3399 -->
     <class name="menutrackgroup" extends="basetrackgroup" >
+      <!--- @access private -->
       <method name="addSubview" args="sv" >
         if( !(sv instanceof lz.menu) ){
-          super.addSubview.apply( this, arguments );
+          super.addSubview( sv );
         }
       </method>
     </class>
@@ -383,7 +384,7 @@
 
          <!---  Called automatically by the menu. The default action uses the colors
                 defined in a styles object to change the colors of the background and text. 
-                @param boolean ishilite: true shows the hilite and false restores it back-->
+                @param Boolean ishilite: true shows the hilite and false restores it back-->
          <method name="setHilite" args="ishilite" >
             super.setHilite( ishilite );
             if ( !_initcomplete ) return;
@@ -539,12 +540,13 @@
         <attribute name="text"     value="menutitle" type="html" />
 
         <!--- a boolean indicating whether or not the menu is in opened -->
-        <attribute name="opened"   value="false" setter="this.setOpen( opened )" />
+        <attribute name="opened"   value="false" setter="this.setOpen( opened )" type="boolean" />
 
         <!--- @keywords private -->
         <event name="onopened" />
 
-        <!--- @keywords private - need to deprecate-->
+        <!--- @keywords private
+              @deprecated the attribute is deprecated -->
         <attribute name="menu_ref" value="false" />
 
         <!--- @keywords private -->
@@ -554,6 +556,7 @@
               the menubutton or menuitem. Possible values are: 'top', 'bottom', 'left', and 'right' -->
         <attribute name="attach"   value="bottom" type="string" />
 
+        <!--- @keywords private -->
         <handler name="onattach">
             if (this.flist != null)
                 this.flist.setAttribute("attach", this.attach);
@@ -562,6 +565,7 @@
         <!--- @keywords private -->
         <attribute name="_menuitems" value="null" />
 
+        <!--- @keywords private -->
         <setter name="width" args="w"><![CDATA[
             super.setAttribute("width", w);
             if (this.flist != null) {
@@ -632,18 +636,16 @@
 
             // need to wait until here when the width and heights of the target
             // set before I activate the constraints
-            super.init.apply( this, arguments );
+            super.init();
             this.flist.setAttachTarget(this._flisttarget);
         </method>
 
-        <!-- old: instantiate children of menu in its floatinglist instead of itself.
-             new: save childrenarray in the private field _menuitems
-             this method is called autmatically.
-             @param array childrenarray: an array of nodes to be created-->
+        <!--- this method is called autmatically.
+              @param array childrenarray: an array of nodes to be created
+              @access private -->
         <method name="createChildren" args="childrenarray" ><![CDATA[
             super.createChildren( [] );
             this._menuitems = childrenarray;
-            //this.flist.createChildren(childrenarray);
         ]]></method>
 
         <!--- @keywords private -->
@@ -692,13 +694,15 @@
             return true;
         ]]> </method>
 
-        <!--- finds the top most menu in the heirarchy associated with this menu -->
+        <!--- Finds the top most menu in the heirarchy associated with this menu
+              @return Object: top most menu
+        -->
         <method name="getTopMenu"  ><![CDATA[
             // this is called by a menu so start with this
             var mc = this;
             // iterate up the parent chain starting with this menu's parent
             var mcp = mc;
-            while ( mcp != canvas ){
+            while ( mcp !== canvas ){
                 if ( mcp instanceof lz.menu ){
                     mc = mcp;
                 }
@@ -711,9 +715,9 @@
         ]]></method>
 
         <!--- The general method to open/close a menu starting with itself
-             and then moving 'up' the hierarchy to open/close the other
-             menus in the hierarchy.
-             @param boolean openit: true opens menu, false closes it-->
+              and then moving 'up' the hierarchy to open/close the other
+              menus in the hierarchy.
+              @param Boolean openit: true opens menu, false closes it-->
         <method name="open"  args="openit"> <![CDATA[
             // this is called by a menu so start with this
             var mc = this;
@@ -731,14 +735,12 @@
                 if ( mcp['owner'] ) mcp = mcp.owner;
                 else mcp = mcp.parent;
             }
-            // return this or another menu that own's this one
-            // return mc;
         ]]></method>
 
 
         <!--- The general method to close a menu starting with itself
-             and then moving 'down' the hierarchy to close all the other
-             menus in the hierarchy. -->
+              and then moving 'down' the hierarchy to close all the other
+              menus in the hierarchy. -->
         <method name="close" > <![CDATA[
             var mi;
             for (var k=0; k < this.flist.interior.content.subviews.length ; k++) {
@@ -753,8 +755,8 @@
 
         <!--- Only Hides and shows the floating list associated with the menu.
               It does not effect any other part of the menu's heirarchy.
-              to open a menu within a heirarchy use open() instead of setOpen()
-             @param boolean isopened: true opens menu, false closes it-->
+              To open a menu within a heirarchy use open() instead of setOpen()
+              @param Boolean isopened: true opens menu, false closes it-->
         <method name="setOpen" args="isopened" >
             if ( _initcomplete ){
                 if ( this.opened == isopened ) return;
@@ -790,7 +792,7 @@
            <text>
              <p>The <tagname>menu</tagname> tag creates a menu that floats above
                all other views when activated.  If a menu is a subview of a
-               <classname>menubar</classname>, then it will create a
+               <tagname>menubar</tagname>, then it will create a
                "menubutton" in the menubar with the its
                <attribute>text</attribute> attribute equal to that of the menu's. This "menubutton"
                inherits its properties from <tagname>button</tagname>.
