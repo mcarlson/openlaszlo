@@ -1,0 +1,50 @@
+<library>
+
+  <!-- usage example:  lz.ISO8601Date.stringFromDate(new Date()) -->
+
+  <class name="ISO8601Date" >
+
+    <method name="stringFromDate" args="d" allocation="class">
+     <![CDATA[
+         return ( (d.getUTCFullYear()) + "-" +
+                  lz.ISO8601Date.leadingZero(d.getUTCMonth()+1)+ "-" +
+                  lz.ISO8601Date.leadingZero(d.getUTCDate()) + "T" +
+                  lz.ISO8601Date.leadingZero(d.getUTCHours()) + ":" + 
+                  lz.ISO8601Date.leadingZero(d.getUTCMinutes()) + ":" +
+                  lz.ISO8601Date.leadingZero(d.getUTCSeconds())+ "Z");
+        ]]>
+  </method>
+
+  <method name="URIEncodedDate" args="d" allocation="class">
+     <![CDATA[
+         return ( (d.getUTCFullYear()) + "-" +
+                  lz.ISO8601Date.leadingZero(d.getUTCMonth()+1)+ "-" +
+                  lz.ISO8601Date.leadingZero(d.getUTCDate()) + "T" +
+                  lz.ISO8601Date.leadingZero(d.getUTCHours()) + "%3A" + 
+                  lz.ISO8601Date.leadingZero(d.getUTCMinutes()) + "%3A" +
+                  lz.ISO8601Date.leadingZero(d.getUTCSeconds())+ "Z");
+        ]]>
+  </method>
+
+
+
+  <method name="leadingZero" args="n" allocation="class">
+    <![CDATA[
+        // pads a single number with a leading zero. 
+        if (n <= 9) {
+            return new String("0"+n);
+        } else {
+            return new String(n);
+        }
+   ]]>
+  </method>
+
+</class>
+
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

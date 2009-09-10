@@ -58,8 +58,8 @@
             <![CDATA[
                 infoLoader.show();
                 var asin = this.datapath.xpathQuery("ASIN/text()");
-                var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=" + asin + "&ResponseGroup=ItemAttributes,OfferFull,Images,Tracks,Reviews,EditorialReview";
-                dsAsin.setAttribute('src', url);
+                var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=" + asin + "&ResponseGroup=ItemAttributes%2COfferFull%2CImages%2CTracks%2CReviews%2CEditorialReview&Timestamp="+lz.ISO8601Date.URIEncodedDate(new Date());
+                dsAsin.setAttribute('src', canvas.sign_AWS_request(url));
                 dsAsin.doRequest();
             ]]>
 
@@ -74,8 +74,8 @@
 
         <method name="getRecommendations">
             <![CDATA[
-                var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=B00005YW4H,B00006IX86,B000005J56,B00006AAJF,B0002RUPH4,B00006IX6E,B000069HKH,B00006JP29,B000000QFU,B000002L2Z&ResponseGroup=ItemAttributes,OfferFull,Images";
-                dsRecommend.setAttribute('src', url);
+                     var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=B00005YW4H%2CB00006IX86%2CB000005J56%2CB00006AAJF%2CB0002RUPH4%2CB00006IX6E%2CB000069HKH%2CB00006JP29%2CB000000QFU%2CB000002L2Z&ResponseGroup=ItemAttributes%2COfferFull%2CImages&Timestamp="+lz.ISO8601Date.URIEncodedDate(new Date());
+                dsRecommend.setAttribute('src', canvas.sign_AWS_request(url));
                 dsRecommend.doRequest();
             ]]>
         </method>
@@ -101,7 +101,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

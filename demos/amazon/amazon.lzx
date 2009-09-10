@@ -9,13 +9,18 @@
     <include href="address.lzx"/>
     <include href="creditcard.lzx"/>
     <include href="recommendation.lzx"/>
-    <attribute name="baseURL" value="http://webservices.amazon.com/onca/xml?Service=AWSECommerceService&amp;SubscriptionId=1ZJXY3M2VMFG0W1ZF1R2&amp;AssociateTag=webservices" type="string" />
+    <include href="iso8601.lzx"/>
+    <include href="sha256.lzx"/>
+
+    <attribute name="awsSecretKey" value="8xUODoQkvAO19z//Qay0BwO+0kCvKCUkoZ4fcGm0" type="string"/>
+
+    <attribute name="baseURL" value="http://ecs.amazonaws.com/onca/xml?Service=AWSECommerceService&amp;AWSAccessKeyId=AKIAJVPPEGZPSANIU53Q&amp;Version=2009-01-06" type="string" />
 
     <!-- dataset holding customer's recommendations -->
-    <dataset name="dsRecommend" request="false" type="http"/>
+    <dataset name="dsRecommend" request="false" type="http" clientcacheable="true"/>
 
     <!-- dataset to search items by keywoard -->
-    <dataset name="dsKeyword" type="http" request="false"/>
+    <dataset name="dsKeyword" type="http" request="false" clientcacheable="true"/>
 
     <datapointer xpath="dsKeyword:/*">
         <handler name="ondata">
@@ -31,7 +36,7 @@
     </datapointer>
 
     <!-- dataset to retrieve one item identified by its ASIN (ASIN = Amazon's unique identifier -->
-    <dataset name="dsAsin" type="http" request="false" src="http://xml.amazon.com/onca/xml3" />
+    <dataset name="dsAsin" type="http" request="false"  clientcacheable="true"/>
 
     <datapointer xpath="dsAsin:/*">
         <handler name="ondata">
@@ -139,8 +144,8 @@
                                     <![CDATA[
                                         infoLoader.show();
                                         var asin = parent.datapath.xpathQuery("ASIN/text()");
-                                        var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=" + asin + "&ResponseGroup=ItemAttributes,OfferFull,Images,Tracks,Reviews,EditorialReview";
-                                        dsAsin.setAttribute('src', url);
+                                        var url = canvas.baseURL + "&Operation=ItemLookup&ItemId=" + asin + "&ResponseGroup=ItemAttributes%2COfferFull%2CImages%2CTracks%2CReviews%2CEditorialReview&Timestamp="+lz.ISO8601Date.URIEncodedDate(new Date());
+                                        dsAsin.setAttribute('src', canvas.sign_AWS_request(url));
                                         dsAsin.doRequest();
                                     ]]>
                                 </handler>
@@ -353,12 +358,12 @@
                 </inputtext>
                 <method name="search">
                     <![CDATA[
-                    var search = escape(searchKey.getText());
+                    var search = canvas.amazonURLEncode(searchKey.getText());
                     if(search != null && search != ''){
                         searchLoader.show();
                         main.animate("x", main.open_posX, 0, false);
-                        var url = canvas.baseURL + "&Operation=ItemSearch&Keywords=" + search + "&SearchIndex=Music&ResponseGroup=ItemAttributes";
-                        dsKeyword.setAttribute('src', url);
+                        var url = canvas.baseURL + "&Operation=ItemSearch&Keywords=" + search + "&SearchIndex=Music&ResponseGroup=ItemAttributes&Timestamp="+lz.ISO8601Date.URIEncodedDate(new Date());
+                        dsKeyword.setAttribute('src', canvas.sign_AWS_request(url));
                         dsKeyword.doRequest();
                     }
                     ]]>
@@ -574,6 +579,71 @@
 
 
     </view>
+
+    <method name="sign_AWS_request" args="url">
+      <![CDATA[
+        // Take a url request, add accessKeyId, timestamp, and sha256 signature,
+        // returns a canonicalized and signed URL string for AWS. 
+        // See http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/index.html?ViewingCredentials.html
+        // Programming Guide » Requests » Request Authentication » Authenticating REST Requests » Example REST Requests
+        var lzurl = new lz.URL(url); // parse using lz.URL
+        var request_method = "GET";
+        var endpoint = lzurl.host;
+        var request_uri = lzurl.path + lzurl.file;
+        var entries = lzurl.query.split('&');
+        entries.sort();
+        var canonicalQS:String = entries.join('&');
+        var toSign:String = request_method + "\n" + endpoint + "\n" + request_uri + "\n" + canonicalQS;
+        var signer = new lz.SHA256SecureHash();
+        var hmac:String = signer.b64_hmac_sha256(this.awsSecretKey, toSign);
+        var sig:String = canvas.amazonURLEncode(hmac);
+        var signed_url = "http://" + endpoint + request_uri + "?" + canonicalQS + "&Signature=" + sig;
+        return signed_url;
+        ]]>
+     </method>
+
+
+     <!-- Amazon server is strict about what it wants to see for URL encoding:
+
+     Do not URL encode any of the unreserved characters that RFC 3986 defines.
+      These unreserved characters are A-Z, a-z, 0-9, hyphen ( - ), underscore ( _ ), period ( . ), and tilde ( ~ ).
+
+      Percent encode extended UTF-8 characters in the form %XY%ZA....
+
+      Percent encode the space character as %20 (and not +, as common encoding schemes do).
+
+      Percent encode all other characters with %XY, where X and Y are hex characters 0-9 and uppercase A-F.
+      -->
+
+     <attribute name="unreservedChars" value="{
+     'A': true, 'B': true, 'C': true, 'D': true, 'E': true, 'F': true, 'G': true, 'H': true, 'J': true, 'K': true,
+     'L': true, 'M': true, 'N': true, 'O': true, 'P': true, 'Q': true, 'R': true, 'S': true, 'T': true, 'U': true, 'V': true,
+     'W': true, 'X': true, 'Y': true, 'Z': true, 'a': true, 'b': true, 'c': true, 'd': true, 'e': true, 'f': true, 'g': true,
+     'h': true, 'i': true, 'j': true, 'k': true, 'l': true, 'm': true, 'n': true, 'o': true, 'p': true, 'q': true, 'r': true,
+     's': true, 't': true, 'u': true, 'v': true, 'w': true, 'x': true, 'y': true, 'z': true, '0': true, '1': true, '2': true,
+     '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true, '-': true, '_': true, '.': true, '~': true
+     }" />
+
+
+     <method name="amazonURLEncode" args="str">
+       <![CDATA[
+             var enc = "";
+             var strlen = str.length;
+             var urc = canvas.unreservedChars;
+
+             for (var i = 0; i < strlen; i++) {
+                 var c = str.substr(i, 1);
+                 if (urc[c] == true) {
+                     enc += c;
+                 } else {
+                     enc += encodeURIComponent(c);
+                 }
+             }
+                
+             return enc;
+       ]]>
+     </method>
+
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
