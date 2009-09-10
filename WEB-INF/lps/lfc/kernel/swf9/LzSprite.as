@@ -9,7 +9,7 @@
   * @author Henry Minsky &lt;hminsky@laszlosystems.com&gt;
   */
 
-dynamic public class LzSprite extends Sprite {
+public class LzSprite extends Sprite {
 
 #passthrough (toplevel:true) {
   import flash.display.AVM1Movie;
@@ -1677,6 +1677,18 @@ dynamic public class LzSprite extends Sprite {
 
       function setClickRegion (cr:*) :void {
           trace('LzSprite.setClickRegion not yet implemented');
+      }
+
+      function sendAAEvent(childID:Number, eventType:Number, nonHTML:Boolean = false) {
+          trace('LzSprite.sendAAEvent not yet implemented');
+      }
+      
+      function aafocus() {
+          trace('LzSprite.aafocus not yet implemented');
+      }
+      
+      function setID(id) {
+          trace('LzSprite.setID not yet implemented');
       }
 
   }#

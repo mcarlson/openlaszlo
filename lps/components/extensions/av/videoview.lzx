@@ -146,7 +146,7 @@
             if (this.height > 0 && this.height < 1024) height = this.height;
             if (this.width > 0 && this.width < 1024) width = this.width;
             var mc = new Video(width, height);
-            this.sprite.__LZvideo = this.sprite.addChild(mc);
+            this.__LZvideo = this.sprite.addChild(mc);
         } else {
             // no other subviews should be allowed (todo: schema)
             var mc = this.immediateparent.sprite.attachResourceToChildView("__lzvideo", this.sprite);
@@ -238,7 +238,7 @@
     <method name="_getflashvideo">
         //Debug.write("_getflashvideo()");
         if ($as3) {
-            return this.sprite.__LZvideo;
+            return this.__LZvideo;
         } else {
             return this.__LZmovieClipRef.__lzvideo;
         }
