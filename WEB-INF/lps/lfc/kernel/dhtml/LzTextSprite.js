@@ -833,7 +833,9 @@ LzTextSprite.prototype.setWidth = function (w, force){
     var style = scrolldiv.style;
     var cdim = this.CSSDimension;
     var wp = cdim(wt);
-    var hp = cdim(this.height);
+    var h = this.height;
+    // initial value for 'height' is null
+    var hp = cdim(h != null ? h : 0);
     // The scrollbar invades the width, so push the scrollbar out of
     // the way
     if (this.scrollevents) {
@@ -866,7 +868,9 @@ LzTextSprite.prototype.setHeight = function (h) {
     var scrolldiv = this.scrolldiv;
     var style = scrolldiv.style;
     var cdim = this.CSSDimension;
-    var wp = cdim(this.width);
+    var w = this.width;
+    // initial value for 'width' is null
+    var wp = cdim(w != null ? w : 0);
     var hp = cdim(ht);
     // The scrollbar invades the height, so push the scrollbars out of
     // the way

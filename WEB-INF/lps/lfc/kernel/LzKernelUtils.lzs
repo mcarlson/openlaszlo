@@ -13,14 +13,15 @@ class LzKernelUtils {
      * modified.  For compatibility with swf runtimes, NaN is coerced to
      * 0; for compatibility with DHTML runtimes, Infinity is coerced to
      * the largest possible integer value (as implied by the Javascript
-     * bit operators).  Any othe non-numeric value will be coerced to 0,
+     * bit operators).  Any other non-numeric value will be coerced to 0,
      * and if debugging is on, a warning will be issued.
      */
       public static function CSSDimension (value, units:String='px') {
         var result = value;
         if (isNaN(value)) {
             // Don't perturb % values
-            if (value.indexOf('%') == (value.length - 1) &&
+            if (typeof value == 'string' &&
+                value.indexOf('%') == (value.length - 1) &&
                 (! isNaN(value.substring(0, value.length - 1)))) {
                 return value;
             } else {
