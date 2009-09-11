@@ -11,8 +11,10 @@
 
 // Receives mouse events from the runtime
 var LzMouseKernel = {
-    // the last view to receive onmousedown event
+    // the last sprite to receive onmousedown
     __lastMouseDown: null
+    // the last sprite to receive onmouseover
+    ,__lastMouseOver: null
     ,__x: 0
     ,__y: 0
     ,owner: null

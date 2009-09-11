@@ -1324,8 +1324,8 @@ LzSprite.prototype.__setClickable = function(c, div) {
     if (this.quirks.ie_mouse_events) {
         div.ondrag = f;
         div.ondblclick = f;
-        div.onmouseenter = f;
-        div.onmouseleave = f;
+        div.onmouseover = f;
+        div.onmouseout = f;
     } else if (this.quirks.listen_for_mouseover_out) {
         div.onmouseover = f;
         div.onmouseout = f;
@@ -1351,7 +1351,7 @@ LzSprite.prototype.__clickDispatcher = function(e) {
   * @access private
   * tracks whether the mouse is currently down on this sprite for onmouseupoutside events
   */
-LzSprite.__mouseisdown = false;
+LzSprite.prototype.__mouseisdown = false;
 
 /**
   * Processes mouse events and forwards into the view system
@@ -1405,9 +1405,11 @@ LzSprite.prototype.__mouseEvent = function(e , artificial){
         // allow bubbling to LzMouseKernel so LzSprite__globalmouseup() can find out about onmouseupoutside
         e.cancelBubble = false;
 
-        // only send onmouseup if this is sprite the mouse button went down on
-        if (LzMouseKernel.__lastMouseDown === this) {
-            LzMouseKernel.__lastMouseDown = null;
+        // Skip onmouseup if mouse button didn't go down on this sprite
+        if (LzMouseKernel.__lastMouseDown !== this) {
+            return;
+        } else {
+            // the mouse went up on this sprite
             if (this.quirks.ie_mouse_events) {
                 // Must be done for onmouseupoutside to work
                 if (this.__isMouseOver()) {
@@ -1416,13 +1418,15 @@ LzSprite.prototype.__mouseEvent = function(e , artificial){
             } else {
                 this.__mouseisdown = false;
             }
-        } else {
-            // the mouse went up on a different sprite
-            return;
+            if (this.__mouseisdown == false) {
+                LzMouseKernel.__lastMouseDown = null;
+            }
         }
     } else if (eventname == 'onmouseupoutside') {
         this.__mouseisdown = false;
     } else if (eventname == 'onmouseover') {
+        LzMouseKernel.__lastMouseOver = this;
+
         if (this.quirks.activate_on_mouseover) {
             var rootcontainer = LzSprite.__rootSpriteContainer;
             if (! rootcontainer.mouseisover) {
@@ -1434,22 +1438,35 @@ LzSprite.prototype.__mouseEvent = function(e , artificial){
 
     //Debug.write('__mouseEvent', eventname, this.owner);
     if (this.owner.mouseevent) {
-        // send dragin/out events if the mouse is currently down
+        // handle onmouseover/out/dragin/dragout events differently if the mouse button is currently down
         if (LzMouseKernel.__lastMouseDown) {
             if (eventname == 'onmouseover' || eventname == 'onmouseout') {
+                var sendevents = false;
                 if (this.quirks.ie_mouse_events) {
-                    // only send mouseover/out events if the mouse is over this sprite
-                    if (this.__isMouseOver()) {
-                        LzMouseKernel.__sendEvent(eventname, this.owner);
+                    // send events if the mouse is over this sprite
+                    var over = this.__isMouseOver();
+                    if ((over && eventname == 'onmouseover') || (! over && eventname == 'onmouseout')) {
+                        sendevents = true;
                     }
                 } else {
-                    // only send mouseover/out if the mouse went down on this sprite
+                    // send events if the mouse went down on this sprite
                     if (LzMouseKernel.__lastMouseDown === this) {
-                        LzMouseKernel.__sendEvent(eventname, this.owner);
+                        sendevents = true;
                     }
                 }
-                var dragname = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
-                LzMouseKernel.__sendEvent(dragname, this.owner);
+
+                // stored so we can send onmouseover after the mouse button goes up - see LPP-8445
+                if (eventname == 'onmouseover') {
+                    LzMouseKernel.__lastMouseOver = this;
+                } else if (sendevents && LzMouseKernel.__lastMouseOver === this) {
+                    LzMouseKernel.__lastMouseOver = null;
+                }
+
+                if (sendevents) {
+                    LzMouseKernel.__sendEvent(eventname, this.owner);
+                    var dragname = eventname == 'onmouseover' ? 'onmousedragin' : 'onmousedragout';
+                    LzMouseKernel.__sendEvent(dragname, this.owner);
+                }
                 return;
             }
         }
@@ -1477,6 +1494,8 @@ LzSprite.prototype.__mouseEvent = function(e , artificial){
 LzSprite.prototype.__isMouseOver = function ( e ){
     var p = this.getMouse();
     // Note pixels are 0-based, so width and height are exclusive limits
+    var visible = this.__findParents('visible', false);
+    if (visible.length) return false;
     return p.x >= 0 && p.y >= 0 && p.x < this.width && p.y < this.height;
 }
 
@@ -1494,6 +1513,13 @@ LzSprite.prototype.__globalmouseup = function ( e ){
         this.__mouseEvent('onmouseupoutside', true);
     }
     LzMouseKernel.__lastMouseDown = null;
+
+    //Debug.info('__globalmouseup', LzMouseKernel.__lastMouseOver, e);
+    if (LzMouseKernel.__lastMouseOver) {
+        // send artificial onmouseover event - see LPP-8445
+        LzMouseKernel.__lastMouseOver.__mouseEvent('onmouseover', true);
+        LzMouseKernel.__lastMouseOver = null;
+    }
 }
 
 LzSprite.prototype.setX = function ( x ){
@@ -1741,21 +1767,18 @@ LzSprite.prototype.__preloadFrames = function() {
     }
 }
 
-/** Find parent sprites with a null or non-null property - nearest parents are first in the array
+/** Find parent sprites with a set value - nearest parents are first in the array
   * @access private
   */
-LzSprite.prototype.__findParents = function ( prop, isnull ){
-    var out = [];
+LzSprite.prototype.__findParents = function(prop, value) {
+    var parents = [];
     var root = LzSprite.__rootSprite;
-    for (var sprite = this; sprite; sprite = sprite.__parent) {
-        if (isnull) {
-            if (sprite[prop] == null) out.push(sprite);
-        } else {
-            if (sprite[prop] != null) out.push(sprite);
-        }
-        if (sprite === root) break;
+    var sprite = this;
+    while (sprite !== root) {
+        if (sprite[prop] == value) parents.push(sprite);
+        sprite = sprite.__parent;
     }
-    return out;
+    return parents;
 }
 
 /**
@@ -1830,7 +1853,7 @@ LzSprite.prototype.__imgonload = function(i, cacheHit) {
   * @access private
   */
 LzSprite.prototype.__processHiddenParents = function(method) {
-    var sprites = this.__findParents('visible');
+    var sprites = this.__findParents('visible', false);
     //Debug.info('LzSprite.onload', i, i.width, i.height, sprites);
     var vals = [];
     var l = sprites.length;
@@ -2600,8 +2623,8 @@ LzSprite.prototype.setContextMenu = function( cmenu ){
     if (! this.quirks.fix_contextmenu || this.__LZcontext) return;
     // build up context menu tree lazily
 
-    // find parents without a __LZcontextcontainerdiv property
-    var sprites = this.__findParents('__LZcontextcontainerdiv', true);
+    // find parents with __LZcontextcontainerdiv == null
+    var sprites = this.__findParents('__LZcontextcontainerdiv', null);
     //console.log('found sprites', sprites, 'for', this);
 
     // create containers root first

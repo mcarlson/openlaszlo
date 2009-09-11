@@ -223,7 +223,7 @@ LzInputTextSprite.prototype.__handlemouse = function(e) {
 LzInputTextSprite.prototype.init = function(v) {
     this.setVisible(v);
     if (this.quirks['fix_inputtext_with_parent_resource']) {
-        var sprites = this.__findParents('clickable');
+        var sprites = this.__findParents('clickable', true);
         var l = sprites.length;
         if (l) {
             for (var n = 0; n < l; n++) {
@@ -257,7 +257,7 @@ LzInputTextSprite.prototype.__show = function() {
     this.__shown = true;
 
     if (this.quirks['inputtext_parents_cannot_contain_clip']) {
-        var sprites = this.__findParents('clip');
+        var sprites = this.__findParents('clip', true);
         var l = sprites.length;
         if (l > 1) {
             if (this._shownclipvals == null) {
