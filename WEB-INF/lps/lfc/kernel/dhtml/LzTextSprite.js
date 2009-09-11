@@ -160,7 +160,7 @@ LzTextSprite.prototype.setScrollEvents = function (on) {
     var wp = cdim(wt);
     if (on) {
       scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
-    } else {
+    } else if (scrolldiv.style.clip) {
       scrolldiv.style.clip = '';
     }
     scrolldiv.style.height = hp;
