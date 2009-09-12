@@ -112,8 +112,8 @@ var LzSprite = function(owner, isroot) {
 
         if (quirks.activate_on_mouseover) {
             // Mouse detection for activation/deactivation of keyboard/mouse events
-            rootcontainer.mouseisover = false;
-            rootcontainer.onmouseover = function(e) {
+            div.mouseisover = false;
+            div.onmouseover = function(e) {
                 if (LzSprite.quirks.focus_on_mouseover) {
                     if (LzSprite.prototype.getSelectedText() == "") {
                         div.focus();
@@ -124,7 +124,7 @@ var LzSprite = function(owner, isroot) {
                 this.mouseisover = true;
                 //console.log('onmouseover', e, this.mouseisover);
             }
-            rootcontainer.onmouseout = function(e) {
+            div.onmouseout = function(e) {
                 if (! e) {
                     e = window.event;
                     var el = e.toElement;
@@ -209,6 +209,9 @@ var LzSprite = function(owner, isroot) {
                 }
                 //Debug.write('onmouseout', this.mouseisover, el.className, e);
             }
+
+            // Store a reference to the div that handles mouse activation
+            LzSprite.__mouseActivationDiv = div;
         }
 
     } else {
@@ -1428,10 +1431,10 @@ LzSprite.prototype.__mouseEvent = function(e , artificial){
         LzMouseKernel.__lastMouseOver = this;
 
         if (this.quirks.activate_on_mouseover) {
-            var rootcontainer = LzSprite.__rootSpriteContainer;
-            if (! rootcontainer.mouseisover) {
+            var activationdiv = LzSprite.__mouseActivationDiv;
+            if (! activationdiv.mouseisover) {
                 // enable keyboard/mouse events
-                rootcontainer.onmouseover();
+                activationdiv.onmouseover();
             }
         }
     }
