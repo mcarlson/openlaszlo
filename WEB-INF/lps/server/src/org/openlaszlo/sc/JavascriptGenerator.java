@@ -1248,11 +1248,21 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       // put the function end before other annotations
       suffix.add(0, (meterFunctionEvent(node, "returns", meterFunctionName)));
     }
-    // If backtrace or catch-exceptions is on, we create an error
+    // If debug or compiler.catcherrors is on, we create an error
     // handler to catch the error and return a type-safe null value
     // (to emulate the behavior of as2).
-    boolean catchExceptions = (options.getBoolean(Compiler.DEBUG_BACKTRACE) ||
-                               options.getBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS));
+    // Non-errors will simply be re-thrown by the catch logic.
+    boolean catchExceptions = options.getBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS);
+    // NOTE: [2009-09-14 ptw] `#pragma "throwsError=true"` can be used
+    // to selectively disable the catching of errors when it is
+    // intentional on the part of the user program, but better
+    // practice would be for user programs to use non-Error object as
+    // the value to be thrown.
+    boolean throwExceptions = options.getBoolean(Compiler.THROWS_ERROR);
+    // If debugging is on and the user has not explicitly declared
+    // their intention to throw an error, report Errors
+    boolean debugExceptions = (options.getBoolean(Compiler.DEBUG) ||
+                               options.getBoolean(Compiler.DEBUG_SWF9));
     // Analyze local variables (and functions)
     VariableAnalyzer analyzer = 
       new VariableAnalyzer(params, 
@@ -1268,21 +1278,38 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       catchExceptions = analyzer.dereferenced;
     }
     String tryType = "";
-    if (catchExceptions) {
-      // If debugging is on, we report the caught error
-      if (options.getBoolean(Compiler.DEBUG) || options.getBoolean(Compiler.DEBUG_SWF9)) {
-        // TODO: [2009-03-20 dda] In DHTML, having trouble successfully defining
-        // the $lzsc$runtime class, so we'll report the warning more directly.
-        if (this instanceof SWF9Generator) {
-          error.add(parseFragment("$lzsc$runtime.reportException(" +
-                                  ScriptCompiler.quote(filename) + ", " +
-                                  lineno + ", $lzsc$e);"));
-        } else {
-          error.add(parseFragment("$reportSourceWarning(" +
-                                  ScriptCompiler.quote(filename) + ", " +
-                                  lineno + ", $lzsc$e.name + \": \" + $lzsc$e.message, true);"));
+    if (catchExceptions || throwExceptions || debugExceptions) {
+      String fragment = "";
+      fragment += "if ($lzsc$e is Error) {";
+      if (throwExceptions) {
+        fragment += "  lz.$lzsc$thrownError = $lzsc$e";
+      } else {
+        // Don't process errors declared to be thrown
+        fragment += "  if (lz['$lzsc$thrownError'] === $lzsc$e) { throw $lzsc$e; }";
+        if (debugExceptions) {
+          // TODO: [2009-03-20 dda] In DHTML, having trouble
+          // successfully defining the $lzsc$runtime class, so we'll
+          // report the warning more directly.
+          if (this instanceof SWF9Generator) {
+            fragment += "  $lzsc$runtime.reportException(";
+          } else {
+            fragment += "  $reportException(";
+          }
+          fragment += ScriptCompiler.quote(filename) + ", " + lineno + ", $lzsc$e);";
         }
       }
+      // Only neuter Errors if catcherrors is on
+      if (! catchExceptions) {
+        fragment += "}" +
+          "throw $lzsc$e;";
+      } else {
+        fragment +=
+          "} else {" +
+          "  throw $lzsc$e;" +
+          "}";
+      }
+      error.add(parseFragment(fragment));
+
       // Currently we only do this for the back-end that enforces types
       if (this instanceof SWF9Generator) {
         // In either case, we return a type-safe null value that is as

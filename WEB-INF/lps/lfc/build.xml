@@ -161,42 +161,12 @@
     var LFCdir = lfc.getProperty("LFCdir") + '/';
 
     importPackage(java.io);
-    // build the dhtml lfc if we're supposed to
-    if (lfc.getProperty("build.lfc.runtime.dhtml")) {
-      var plain = LFCdir + "LFCdhtml.js";
-      if (!(new File(plain)).exists()) {
-        dobuild(plain, "dhtml", "");
-      }
-      if (buildDebug) {
-        var dest = LFCdir + "LFCdhtml-debug.js";
-        if (!(new File(dest)).exists()) {
-          // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
-          // warnings, the options can be changed to simply --debug
-          dobuild(dest,
-                  "dhtml",
-                  "--option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
-        }
-        var dest = LFCdir + "LFCdhtml-backtrace.js";
-        if (!(new File(dest)).exists()) {
-          // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
-          // warnings, the options can be changed to simply -g3
-          dobuild(dest,
-                  "dhtml",
-                  "--option debugBacktrace --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
-        }
-      }
-      if (buildProfile) {
-        var profile = LFCdir + "LFCdhtml-profile.js";
-        if  (!(new File(profile)).exists()) {
-          dobuild(profile, "dhtml", "--profile");
-        }
-      }
-    }
 
-    var swfruntimes = [7, 8, 9, 10];
+    var swfruntimes = [ 10, 9, 8 ];
 
-    for (var s in swfruntimes) {
-      var v = swfruntimes[s];
+    // Build the strictest first, so we fail early
+    for (var i = 0, l = swfruntimes.length; i < l; i++) {
+      var v = swfruntimes[i];
 
       var ext = (v >= 9) ? ".swc" : ".lzl";
       var shlibopt = "--option buildSharedLibrary=true ";
@@ -238,6 +208,39 @@
           if (!(new File(profile)).exists()) {
             dobuild(profile, "swf" + v, shlibopt + "--profile");
           }
+        }
+      }
+    }
+
+
+    // build the dhtml lfc if we're supposed to
+    if (lfc.getProperty("build.lfc.runtime.dhtml")) {
+      var plain = LFCdir + "LFCdhtml.js";
+      if (!(new File(plain)).exists()) {
+        dobuild(plain, "dhtml", "");
+      }
+      if (buildDebug) {
+        var dest = LFCdir + "LFCdhtml-debug.js";
+        if (!(new File(dest)).exists()) {
+          // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
+          // warnings, the options can be changed to simply --debug
+          dobuild(dest,
+                  "dhtml",
+                  "--option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
+        }
+        var dest = LFCdir + "LFCdhtml-backtrace.js";
+        if (!(new File(dest)).exists()) {
+          // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
+          // warnings, the options can be changed to simply -g3
+          dobuild(dest,
+                  "dhtml",
+                  "--option debugBacktrace --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
+        }
+      }
+      if (buildProfile) {
+        var profile = LFCdir + "LFCdhtml-profile.js";
+        if  (!(new File(profile)).exists()) {
+          dobuild(profile, "dhtml", "--profile");
         }
       }
     }

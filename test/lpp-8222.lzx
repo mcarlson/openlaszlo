@@ -1,0 +1,130 @@
+<canvas layout="axis: x; spacing:20" bgcolor="#dddddd">
+  <debug x="270" width="${parent.width - 290}" />
+  <attribute name="catcherrors" value="true" />
+  <view id="mytest" bgcolor="#eeeeee" width="250" layout="axis: y; spacing: 10">
+    <text multiline="true" width="90%" x="5%">
+      This is a test of the interaction of lps.properties
+      `compiler.catcherrors` and debug mode.  There are 4 cases to
+      check: debug mode on and off crossed with compiler.catcherrors
+      on and off.  NOTE 1: You must create a clean build when changing
+      the setting of compiler.catcherrors.  NOTE 2: The description of
+      what each button should do is updated according to the case you
+      are testing.  NOTE 3: This test is only valid for the DHTML and
+      swf9 (or later) runtimes.
+    </text>
+    <method name="testCatchErrors">
+      if ($debug) { Debug.info("Ignore the next error"); }
+      throw new Error("Testing, please ignore");
+      return canvas['kolodney']();
+    </method>
+    <text id="mode" multiline="true" width="90%" x="5%" />
+    <handler name="oninit"><![CDATA[
+      if ($swf8) {
+        // SWF8 does not implement catcherrors or debugerrors
+        mode.format("This test is not valid for SWF8");
+      } else {
+        try {
+          this.testCatchErrors();
+        } catch (e) {
+          canvas.catcherrors = false;
+        }
+        mode.format("MODE: %s, catcherrors=%w", $debug?"debug":"normal", canvas.catcherrors);
+      }
+      if ($debug) {
+        if (canvas.catcherrors) {
+          instruction1.setAttribute('text',
+          'The first button should display the message "caught Random Object".');
+          instruction2.setAttribute('text',
+          'The second button should cause the debugger to print  "Error: Uncaught"');
+          instruction3.setAttribute('text',
+          'The third button should cause the debugger to print "Error: Intercepted"');
+          instruction4.setAttribute('text',
+          'The fourth button should display the message "caught Error: Caught".');
+        } else {
+          instruction1.setAttribute('text',
+          'The first button should display the message "caught Random Object".');
+          instruction2.setAttribute('text',
+          'The second button should cause the debugger to print "Error: Uncaught" and display an error in the platform debugger (if present)');
+          instruction3.setAttribute('text',
+          'The third button should cause the debugger to print "Error: Intercepted" and display the message "caught Error: Intercepted"');
+          instruction4.setAttribute('text',
+          'The fourth button should display the message "caught Error: Caught".');
+        }
+      } else {
+        if (canvas.catcherrors) {
+          instruction1.setAttribute('text',
+          'The first button should display the message "caught Random Object".');
+          instruction2.setAttribute('text',
+          'The second button should do nothing');
+          instruction3.setAttribute('text',
+          'The third button should do nothing');
+          instruction4.setAttribute('text',
+          'The fourth button should display the message "caught Error: Caught".');
+        } else {
+          instruction1.setAttribute('text',
+          'The first button should display the message "caught Random Object".');
+          instruction2.setAttribute('text',
+          'The second button should display an error in the platform debugger (if present)');
+          instruction3.setAttribute('text',
+          'The third button should display the message "caught Error: Intercepted"');
+          instruction4.setAttribute('text',
+          'The fourth button should display the message "caught Error: Caught".');
+        }
+      }
+    ]]></handler>
+    <text id="instruction1" multiline="true" width="90%" x="5%" />
+    <button align="center" text="throw object">
+      <handler name="onclick">
+        try {
+          var thing = {toString: function () { return "Random Object"; }};
+          mytest.throwHow('throwValue', thing);
+        } catch (e) {
+          myoutput.addFormat("\ncaught %w", e);
+        }
+      </handler>
+    </button>
+    <text id="instruction2" multiline="true" width="90%" x="5%" />
+    <button align="center" text="throw uncaught error">
+      <handler name="onclick">
+        var thing = new Error("Uncaught");
+        mytest.throwHow('throwValue', thing);
+      </handler>
+    </button>
+    <text id="instruction3" multiline="true" width="90%" x="5%" />
+    <button align="center" text="throw caught, intercepted error">
+      <handler name="onclick">
+        try {
+          var thing = new Error("Intercepted");
+          mytest.throwHow('throwValue', thing);
+        } catch (e) {
+          myoutput.addFormat("\ncaught %w", e);
+        }
+      </handler>
+    </button>
+    <text id="instruction4" multiline="true" width="90%" x="5%" />
+    <button align="center" text="throw caught, unintercepted error">
+      <handler name="onclick">
+        try {
+          var thing = new Error("Caught");
+          mytest.throwHow('throwValueIntentional', thing);
+        } catch (e) {
+          myoutput.addFormat("\ncaught %w", e);
+        }
+      </handler>
+    </button>
+    <method name="throwHow" args="how, what" >
+      this[how](what);
+    </method>
+    <method name="throwValue" args="arg" >
+      throw arg;
+    </method>
+    <method name="throwValueIntentional" args="arg" >
+      #pragma "throwsError=true"
+      throw arg;
+    </method>
+  </view>
+  <text id="myoutput" multiline="true" width="250" bgcolor="#fefefe">
+    MESSAGES:
+  </text>
+</canvas>
+<!-- Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->

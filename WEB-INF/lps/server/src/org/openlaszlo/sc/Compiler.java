@@ -503,11 +503,12 @@ public class Compiler {
   public static String SWF9_APPLICATION_PREAMBLE = "SWF9applicationPreamble";
   public static String SWF9_APP_CLASSNAME = "SWF9MainClassName";
   public static String SWF9_WRAPPER_CLASSNAME = "SWF9WrapperClassName";
-  public static String SWF9_LFC_CLASSNAME = "SWF9LFCClassName";  
+  public static String SWF9_LFC_CLASSNAME = "SWF9LFCClassName";
   public static String SWF9_LOADABLE_LIB = "SWF9LoadableLib";
   public static String SWF9_USE_RUNTIME_SHARED_LIB = "SWF9RuntimeSharedLib";
   public static String SWF8_LOADABLE_LIB = "SWF8LoadableLib";
   public static String TRACK_LINES = "trackLines";
+  public static String THROWS_ERROR = "throwsError";
   public static String VALIDATE_CACHES = "validateCaches";
   public static String WARN_UNDEFINED_REFERENCES = "warnUndefinedReferences";
   public static String WARN_GLOBAL_ASSIGNMENTS = "warnGlobalAssignments";

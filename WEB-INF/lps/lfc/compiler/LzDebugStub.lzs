@@ -44,6 +44,13 @@ if ($as3) {
     }
 
     /**
+     * Avoid reporting the same exception when re-thrown
+     *
+     * @access private
+     */
+    static var reportedError = null;
+
+    /**
      * Report an exception to the debug window
      *
      * @param String fileName: The source file
@@ -53,7 +60,10 @@ if ($as3) {
      * @access private
      */
     static function reportException (fileName, lineNumber, e) {
-      $reportSourceWarning(fileName, lineNumber, e.name + ": " + e.message, true);
+      if (e !== reportedError) {
+        reportedError = e;
+        $reportSourceWarning(fileName, lineNumber, e.name + ": " + e.message, true);
+      }
     }
   };
 } else {
