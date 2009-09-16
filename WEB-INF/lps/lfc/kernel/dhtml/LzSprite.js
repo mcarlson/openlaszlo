@@ -326,7 +326,6 @@ LzSprite.__defaultStyles = {
         paddingBottom: '4px',
         paddingLeft: '1px'
     },
-    // TODO [hqm 2009-04] This is a duplicate of lzinputtextcontainer (see above)
     lzinputtextcontainer_click: {
         position: 'absolute',
         paddingTop: '0px',
@@ -343,10 +342,8 @@ LzSprite.__defaultStyles = {
         paddingBottom: '3px',
         paddingLeft: '1px'
     },
-    // TODO [hqm 2009-04] This is a duplicate of lzinputtextmultilinecontainer (see above)
     lzinputtextmultilinecontainer_click: {
         position: 'absolute',
-        overflow: 'hidden',
         paddingTop: '1px',
         paddingRight: '3px',
         paddingBottom: '3px',
