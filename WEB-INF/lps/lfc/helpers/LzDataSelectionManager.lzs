@@ -10,62 +10,62 @@
   */
 
 /**
-  * <p>If a datapath's <classname>datapath.replication</classname> attribute is set to "lazy", then a match to
-  * multiple nodes will create an <sgmltag class="element" role="LzLazyReplicationManager">lz.LazyReplicationManager</sgmltag>
-    instead of an <sgmltag class="element" role="LzReplicationManager">lz.ReplicationManager</sgmltag>.
-  * The lazy replication manager creates only enough replicated views in order to display the data,
-  * so there is not a view for each data node. This enables the display of very large datasets.
-  * </p>
-  * <p>
-  * With lazy replication you must use a <classname>lz.dataselectionmanager </classname>instead of a <sgmltag class="element" role="LzSelectionManager">lz.selectionmanager</sgmltag>.
-  * The <classname>lz.dataselectionmanager</classname> will operate on the data itself, instead of on the views (which
-  * may not be present if the data has scrolled out of view). For each dataset you are controlling,
-  * you can have only one <classname>lz.dataselectionmanager</classname> operating on it.
-  * </p>
+  * <p>If a datapath's <attribute>replication</attribute> attribute is set to
+  * "lazy", then a match to multiple nodes will create an
+  * <sgmltag class="element" role="LzLazyReplicationManager">lz.LazyReplicationManager</sgmltag>
+  * instead of an <sgmltag class="element" role="LzReplicationManager">lz.ReplicationManager</sgmltag>.
+  * The lazy replication manager creates only enough replicated views in order
+  * to display the data, so there is not a view for each data node. This
+  * enables the display of very large datasets.</p>
+  * <p>With lazy replication you must use a <classname>lz.dataselectionmanager</classname>
+  * instead of a <sgmltag class="element" role="LzSelectionManager">lz.selectionmanager</sgmltag>.
+  * The <classname>lz.dataselectionmanager</classname> will operate on the data
+  * itself, instead of on the views (which may not be present if the data has
+  * scrolled out of view). For each dataset you are controlling, you can have
+  * only one <classname>lz.dataselectionmanager</classname> operating on it.</p>
   * <p>As with a lz.selectionmanager, ctrl-click will select multiple items and shift-click will
-  * select a range. To modify this behavior, you can extend the <classname>lz.dataselectionmanager</classname> and implement
-  * <method>isRangeSelect</method> and <method>isMultiSelect</method>.</p>
-  * <example class="program" id="datasenectionmgr">
-  * &lt;canvas height="200"&gt;
-  *   &lt;dataset name="mydata"&gt;
-  *     &lt;list&gt;
-  *       &lt;item&gt;tricycle&lt;/item&gt;
-  *       &lt;item&gt;train&lt;/item&gt;
-  *       &lt;item&gt;racecar&lt;/item&gt;
-  *       &lt;item&gt;scooter&lt;/item&gt;
-  *       &lt;item&gt;bicycle&lt;/item&gt;
-  *       &lt;item&gt;rollerblades&lt;/item&gt;
-  *       &lt;item&gt;iceskates&lt;/item&gt;
-  *       &lt;item&gt;minivan&lt;/item&gt;
-  *       &lt;item&gt;sailboat&lt;/item&gt;
-  *       &lt;item&gt;motorboat&lt;/item&gt;
-  *     &lt;/list&gt;
-  *   &lt;/dataset&gt;
-
-  *   &lt;class name="selectme" onclick="immediateparent.selector.select(this)"
-        height="17" width="100" bgcolor="white"&gt;
-  *     &lt;text datapath="text()"/&gt;
-  *     &lt;method name="setSelected" args="isselected"&gt;
-        if (isselected) setAttribute('bgcolor', yellow);
-        else setAttribute('bgcolor', white);
-  *     &lt;/method&gt;
-  *   &lt;/class&gt;
-
-  *   &lt;view height="70" clip="true"&gt;
-  *     &lt;view&gt;
-  *       &lt;dataselectionmanager name="selector"/&gt;
-  *       &lt;selectme&gt;
-  *         &lt;datapath xpath="mydata:/list/item/" replication="lazy"/&gt;
-  *       &lt;/selectme&gt;
-  *       &lt;simplelayout/&gt;
-  *     &lt;/view&gt;
-  *     &lt;scrollbar/&gt;
-  *     &lt;/view&gt;
-  * &lt;/canvas&gt;
-  * </example>
+  * select a range. To modify this behavior, you can extend the <classname>lz.dataselectionmanager</classname>
+  * and implement <method>isRangeSelect</method> and <method>isMultiSelect</method>.</p>
+  * <example class="program" id="datasenectionmgr"><![CDATA[
+  * <canvas height="200">
+  *   <dataset name="mydata">
+  *     <list>
+  *       <item>tricycle</item>
+  *       <item>train</item>
+  *       <item>racecar</item>
+  *       <item>scooter</item>
+  *       <item>bicycle</item>
+  *       <item>rollerblades</item>
+  *       <item>iceskates</item>
+  *       <item>minivan</item>
+  *       <item>sailboat</item>
+  *       <item>motorboat</item>
+  *     </list>
+  *   </dataset>
+  *
+  *   <class name="selectme" onclick="immediateparent.selector.select(this)"
+  *     height="17" width="100" bgcolor="white">
+  *     <text datapath="text()"/>
+  *     <method name="setSelected" args="isselected">
+  *       this.setAttribute('bgcolor', isselected ? 'yellow' : 'white');
+  *     </method>
+  *   </class>
+  *
+  *   <view height="70" clip="true">
+  *     <view>
+  *       <dataselectionmanager name="selector"/>
+  *       <selectme>
+  *         <datapath xpath="mydata:/list/item" replication="lazy"/>
+  *       </selectme>
+  *     </view>
+  *     <scrollbar/>
+  *   </view>
+  * </canvas>
+  * ]]></example>
   *
   * @shortdesc A selection manager for views generated by a lazily-replicated datapath
   * @lzxname dataselectionmanager
+  *
   * @devnote TODO: [20080930 anba] (LPP-6080) uncomment typing in method signatures
   */
 public dynamic class LzDataSelectionManager extends LzSelectionManager {
@@ -85,161 +85,112 @@ public dynamic class LzDataSelectionManager extends LzSelectionManager {
 
     /** @access private */
     var manager :*;
-    // FIXME [20081215 anba] lz.replicator wants to be a fake 
-    // replication-manager, so I cannot use the proper type here; we 
+    // FIXME [20081215 anba] lz.replicator wants to be a fake
+    // replication-manager, so I cannot use the proper type here; we
     // should add a mixin for lz.replicator and LzReplicationManager.
     //var manager :LzReplicationManager;
 
     /** @access private */
-    var singleClone :LzView;
+    var __LZsingleClone:LzView;
 
-    /**
-      * Makes the given view selected
-      * @access private
-      * @param LzView o: The view to be selected
-      */
-    override function makeSelected (o:LzView) :void {
-        if (this.manager == null) this.manager = o.cloneManager;//try to get a cloneManager
+    /** @access private */
+    override function destroy () {
+        this.manager = null;
+        this.__LZsingleClone = null;
+        super.destroy();
+    }
 
-        var so /*:LzDataNodeMixin*/ = o.datapath.p;
-        if (so && ! so.sel) {
-            so.sel = true;
-            this.selected.push( so );
-            if (this.manager == null) {
-                //just one "clone", mark it!
-                this.singleClone = o;
+    /** @access private */
+    override function __LZgetObject (o:LzView) :* {
+        return o.datapath.p;
+    }
+
+    /** @access private */
+    override function __LZgetView (d:*) :LzView {
+        if (this.manager != null) {
+            return this.manager.getCloneForNode(d, true);
+        } else {
+            var scl:LzView = this.__LZsingleClone;
+            if (scl && scl.datapath.p === d) {
+                return scl;
+            } else {
+                return null;
             }
-            o.datapath.setSelected( true );
         }
     }
 
-    /**
-      * Unselect the given view
-      * @param LzView o: The view to be unselected
-      */
-    override function unselect (o /*:LzView*/) /*:void*/ {
-        if (this.manager == null) this.manager = o.cloneManager;//try to get a cloneManager
+    /** @access private */
+    override function __LZsetSelection (sela:Array) :void {
+        this.selected = sela;
+        this.lastRangeStart = null;
+    }
 
+    /** @access private */
+    override function __LZisSelected (d:*) :Boolean {
+        return (d && d.sel || false);
+    }
+
+    /** @access private */
+    override function __LZsetSelected (d:*, o:LzView, sel:Boolean) :void {
+        if (this.manager == null && o != null) {
+            this.manager = o.cloneManager;
+            this.__LZsingleClone = (sel && this.manager == null ? o : null);
+        }
+        d.sel = sel;
+        if (o != null) {
+            // only if clone on screen
+            o.datapath.setSelected(sel);
+        }
+    }
+
+    /** @access private */
+    override function __LZsplitRange (range:Array) :Object {
+        var tmpkey:String = "$lzselkey";
         var sela:Array = this.selected;
-        var so /*:LzDataNodeMixin*/ = o.datapath.p;
-        for (var i:int = sela.length - 1; i >= 0; i--) {
-            if (sela[ i ] === so) {
-                so.sel = false;
-                sela.splice( i, 1 );
-                if (o == this.singleClone) this.singleClone = null;//clear "singleClone"
-                o.datapath.setSelected( false );
-                return;
+        var unchanged:Array = [], added:Array = [], removed:Array = [];
+        for (var i:int = range.length - 1; i >= 0; --i) {
+            var d /*:LzDataNodeMixin*/ = range[i];
+            if (d.sel) {
+                unchanged.push(d);
+                d.setUserData(tmpkey, true);
+            } else {
+                added.push(d);
             }
         }
+        for (var i:int = sela.length - 1; i >= 0; --i) {
+            var d /*:LzDataNodeMixin*/ = sela[i];
+            if (! d.setUserData(tmpkey, null)) {
+                removed.push(d);
+            }
+        }
+        return {unchanged: unchanged, added: added, removed: removed};
     }
 
-    /**
-      * Selects the range between the datapath that was lastselected and the newly
-      * selected view
-      * @access private
-      * @param LzDataNodeMixin s: The datanode that was at top of the selection stack
-      * @param LzView e: The newly selected view
-      */
-    override function selectRange (s:*, e:LzView) :void {
+    /** @access private */
+    override function createRange (s:*, e:LzView) :Array {
         if (this.manager == null) {
             this.manager = e.cloneManager;
-
-            //maybe we've got now clones
             if (this.manager == null) {
-                //still no clones - so it's nothing to do
-                return;
+                return null; // no range possible without cloneManager
+            } else {
+                this.__LZsingleClone = null; // so we don't leak
             }
         }
-
-        var nodes:Array = this.manager.nodes;
-        var st:int = -1;
-        var en:int = -1;
-        var ennode /*:LzDataNodeMixin*/ = e.datapath.p;
-        //find the start and end in the sort array of parents
-        for (var i:int = 0; i < nodes.length && (st == -1 || en == -1); i++) {
-            if (nodes[ i ] === s) st = i;
-            if (nodes[ i ] === ennode) en = i;
-        }
-
-        var dir:int = st > en ? -1 : 1;
-        this.clearSelection();
-        this.lastRangeStart = s;
-
-        if (st != -1 && en != -1) {
-            for (var i:int = st; i != en + dir; i += dir) {
-                var p /*:LzDataNodeMixin*/ = nodes[ i ];
-                p.sel = true;
-                this.selected.push( p );
-                this.__LZsetSelected( p, true );
-            }
-        }
+        return this.__LZgetSubList(this.manager.nodes, s, e.datapath.p);
     }
 
     /**
       * Returns a list of datapointers, which point to the selected records
       * @return Array: A list of datapointers
+      * @devnote TODO: [20090914 anba] LPP-865 proposes to remove this override
       */
-    override function getSelection () :Array {
+    /*public*/ override function getSelection () :Array {
         var sela:Array = this.selected;
         var r:Array = [];
-        for (var i:int = 0; i < sela.length; i++) {
-            r.push( new LzDatapointer( null, {pointer : sela[i]} ) );
+        for (var i:int = 0, len:int = sela.length; i < len; ++i) {
+            r[i] = new LzDatapointer(null, {p: sela[i]});
         }
         return r;
     }
-
-    /**
-      * Unselects everything that is currently selected and clears the selection
-      * list
-      */
-    override function clearSelection () /*:void*/ {
-        var sela:Array = this.selected;
-        this.selected = [];
-        this.lastRangeStart = null;
-        var p /*:LzDataNodeMixin*/;
-        while (p = sela.pop()) {
-            p.sel = false;
-            this.__LZsetSelected( p, false );
-        }
-    }
-
-    /**
-      * Tests whether the given view is selected
-      * @param LzView o: The view to test for selectedness
-      * @return Boolean: The selectedness of the input object.
-      */
-    override function isSelected (o /*:LzView*/) :Boolean {
-        if (this.manager == null) this.manager = o.cloneManager;//try to get a cloneManager
-
-        var so = o.datapath.p;
-        return so && so.sel;
-    }
-
-    /**
-      * sets the selected attribute of the data, if there is a clone, it will
-      * call <method>setSelected(Boolean)</method> on the clone's datapath
-      * @param LzDataNodeMixin p: the node we want to set
-      * @param Boolean val: new value for selected
-      * @access private
-      */
-    function __LZsetSelected (p /*:LzDataNodeMixin*/, val:Boolean) :void {
-        if (this.manager != null) {
-            var cl:LzNode = this.manager.getCloneForNode( p, true );
-            if (cl) {
-                cl.datapath.setSelected( val );
-            } else {
-                // no clone on screen
-            }
-        } else if (! val) {//no clones
-            // the if-condition only yields true for clearSelection(), 
-            // in which case we need to check the singleClone property
-            var scl:LzView = this.singleClone;
-            if (scl != null && scl.datapath.p === p) {
-                this.singleClone = null;
-                scl.datapath.setSelected( val );
-            }
-        }
-    }
-
-} // End of LzDataselectionmanager
+} // End of LzDataSelectionManager
 lz[LzDataSelectionManager.tagname] = LzDataSelectionManager;  // publish
