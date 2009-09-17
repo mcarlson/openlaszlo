@@ -1,0 +1,112 @@
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
+<canvas width="100%" height="80%">
+  <!-- This tests for the ability to enter text into input text views which are children
+  of clickable views -->
+    
+  <view id='view1'  onclick="Debug.write('clicked on view1')" 
+        bgcolor="#cccccc"
+        width="${this.foo.width + 10}"
+        height="${this.foo.height + 10}"
+        >
+    <inputtext name="foo" bgcolor="yellow" x="5" y="5">
+        Some input text
+        <handler name="onblur">
+            bar.setAttribute('text', this.getText());
+            Debug.write('blur');
+        </handler>
+        <handler name="onfocus">
+            Debug.write('focus')
+        </handler>
+        <handler name="onkeyup" args="k">
+            Debug.write('keyup', k)
+        </handler>
+        <handler name="onkeydown" args="k">
+            Debug.write('keydown', k)
+        </handler>
+        <handler name="onselect">
+            Debug.write('select')
+        </handler>
+    </inputtext>
+  </view>
+
+  <view id='view2'  onclick="Debug.write('clicked on view2')" 
+        bgcolor="#cccc00"
+        width="${this.foo.width + 10}"
+        height="${this.foo.height + 10}"
+        >
+    <inputtext name="foo" width="100" bgcolor="yellow" x="5" y="5">
+        Some input text
+        <handler name="onblur">
+            bar.setAttribute('text', this.getText());
+            Debug.write('blur');
+        </handler>
+        <handler name="onfocus">
+            Debug.write('focus')
+        </handler>
+        <handler name="onkeyup" args="k">
+            Debug.write('keyup', k)
+        </handler>
+        <handler name="onkeydown" args="k">
+            Debug.write('keydown', k)
+        </handler>
+        <handler name="onselect">
+            Debug.write('select')
+        </handler>
+    </inputtext>
+  </view>
+
+
+  <view id='view3'  onclick="Debug.write('clicked on view3')" 
+        bgcolor="#cccccc"
+        width="${this.foo.width + 10}"
+        height="${this.foo.height + 10}"
+        >
+
+    <inputtext name="foo" width="200" height="200" multiline="true" bgcolor="green" x="5" y="5">
+        Some input text
+        <handler name="onblur">
+            bar.setAttribute('text', this.getText());
+            Debug.write('blur');
+        </handler>
+        <handler name="onfocus">
+            Debug.write('focus')
+        </handler>
+        <handler name="onkeyup" args="k">
+            Debug.write('keyup', k)
+        </handler>
+        <handler name="onkeydown" args="k">
+            Debug.write('keydown', k)
+        </handler>
+        <handler name="onselect">
+            Debug.write('select')
+        </handler>
+    </inputtext>
+  </view>
+
+
+    <view width="50" height="50" bgcolor="red">
+        <handler name="onmousedown">
+            this.setAttribute('bgcolor', 0xffff00);
+        </handler>
+        <handler name="onmouseup">
+            this.setAttribute('bgcolor', 0xff9900);
+        </handler>
+        <handler name="onmouseover">
+            this.setAttribute('bgcolor', 0xff9900);
+        </handler>
+        <handler name="onmouseout">
+            this.setAttribute('bgcolor', 0xff0000);
+        </handler>
+        <handler name="onclick">
+            Debug.write('text is ' + canvas.foo.getText());
+        </handler>
+    </view>
+    <simplelayout axis="x"/>
+
+    <text id="bar" y="40" width="200"/>
+</canvas>
