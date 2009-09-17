@@ -1401,6 +1401,11 @@ LzSprite.prototype.__mouseEvent = function(e , artificial){
         // track which sprite the mouse went down on
         this.__mouseisdown = true;
         LzMouseKernel.__lastMouseDown = this;
+        // blur any focused inputtexts - see LPP-8475
+        var focusedsprite = LzInputTextSprite.prototype.__focusedSprite;
+        if (focusedsprite && focusedsprite != this) {
+            focusedsprite.deselect();
+        }
     } else if (eventname == 'onmouseup') {
         // allow bubbling to LzMouseKernel so LzSprite__globalmouseup() can find out about onmouseupoutside
         e.cancelBubble = false;
@@ -2378,10 +2383,10 @@ LzSprite.prototype.getMCRef = function ( ){
     return this.__LZdiv;
 }
 
-LzSprite.prototype.getContext = function ( ){
+LzSprite.prototype.getContext = function (){
     //TODO: move from drawview
     return this.getMCRef();
-}
+    }
 
 LzSprite.prototype.bringToFront = function() {
     if (! this.__parent) {
