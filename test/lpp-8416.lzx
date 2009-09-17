@@ -1,0 +1,22 @@
+<canvas bgcolor="0xcccccc">
+  <include href="incubator/scrolledittext.lzx"/>
+
+  <view x="5%" y="5%" height="95%" width="95%" layout="axis: y; spacing: 20">
+
+    <scrolledittext width="100" height="100" bgcolor="white"
+                    font="Verdana" fontsize="11" multiline="true"
+                    >
+      Enter some text here
+    </scrolledittext>
+
+    <text width="210" multiline="true">
+      Enter multiple lines in the edit box above.  As you enter each new
+      line, notice whether the text scrolls and whether the cursor stays
+      visible (even when the cursor is on a line by itself).  Use the
+      cursor-up key to move up through the text you have entered and
+      notice whether the text scrollsa and whether the cursor stays
+      visible.
+    </text>
+  </view>
+</canvas>
+<!-- Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->
