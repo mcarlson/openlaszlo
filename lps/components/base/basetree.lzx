@@ -122,6 +122,10 @@
 
             super.init();
 
+            if (canvas['accessible']) {
+                this._accessibleState.setAttribute('applied', true);
+            }
+
             if ( this._children == null ) {
                 this._children = this.searchSubnodes( "name" , this.defaultplacement );
             }
@@ -145,14 +149,153 @@
                     { multiselect: this.multiselect,
                       toggle: this.toggleselected });
 
+
+                if (canvas['accessible']) {
+                    this.getChildIds();
+                    //this.setAAActive();
+
+                    var mc = this.getMCRef();
+                    mc._accImpl = {};
+                    mc._accImpl.stub = false;
+                    mc._accImpl.master = this;
+
+                    mc._accImpl.get_accRole = function(childId) {
+                        return childId == 0 ? 
+                        // ROLE_SYSTEM_OUTLINE
+                                0x23:
+                        // ROLE_SYSTEM_OUTLINEITEM
+                                0x24;
+                    }
+
+                    mc._accImpl.get_accName = function(childId) {
+                        var r = this.master.getRoot();
+                        var item = r.nodebychildid[childId];
+                        if (! item) return '';
+
+                        var desc = item.text + r.getLocationDescription(item);
+                        // Debug.debug('get_accName', childId, desc);
+
+                        return desc;
+                    }
+
+                    mc._accImpl.get_accState = function(childId) {
+                        // STATE_SYSTEM_NORMAL
+                        var state = 0x00000000;
+                        if (! this.master.enabled) {
+                            //STATE_SYSTEM_UNAVAILABLE
+                            state |= 0x00000001;
+                        } else {
+                            //STATE_SYSTEM_FOCUSABLE
+                            state |= 0x00100000;
+                            if (this.master.focused) {
+                                //STATE_SYSTEM_FOCUSED
+                                state |= 0x00000004;
+                            }
+                        }
+                        
+                        // root elements are regular components, return early
+                        if (childId == 0) return state;
+
+                        // STATE_SYSTEM_SELECTABLE
+                        state |= 0x00200000
+
+                        var r = this.master.getRoot();
+                        var item = r.nodebychildid[childId];
+                        if (! item) return;
+
+                        if (! item.isleaf) {
+                            if (item.open) {
+                                //STATE_SYSTEM_EXPANDED;
+                                state |= 0x00000200;
+                            } else {
+                                //STATE_SYSTEM_COLLAPSED;
+                                state |= 0x00000400;
+                            }
+                        }
+
+                        if (item.focused) {
+                            state |= 
+                                //STATE_SYSTEM_SELECTED
+                                0x00000002 | 
+                                //STATE_SYSTEM_FOCUSED
+                                0x00000004;
+                        }
+                        // Debug.debug('get_accState', childId, state);
+                        return state;
+                    }
+
+                    mc._accImpl.get_accDefaultAction = function(childId) {
+                        if (childId <= 0) return;
+
+                        var r = this.master.getRoot();
+                        var item = r.nodebychildid[childId];
+                        if (! item) return '';
+
+                        // Debug.debug('get_accDefaultAction', childId);
+                        if (! item.isleaf) {
+                            return item.open ? "Collapse" : "Expand";
+                        }
+
+                        return '';
+                    }
+
+                    mc._accImpl.accDoDefaultAction = function(childId) {
+                        if (childId <= 0) return;
+
+                        var r = this.master.getRoot();
+                        var item = r.nodebychildid[childId];
+                        if (! item) return;
+
+                        if (! item.isleaf) {
+                            var val = ! item.open;
+                            for (var i = childId; i > 0; i--) { 
+                                var parent = r.nodebychildid[i];
+                                //Debug.info('opening', r.nodebychildid[i]);
+                
+                                if (! parent.open) parent.setAttribute('open', true);
+                            }
+                            item.setAttribute('open', val);
+                        }
+                    }
+
+                    mc._accImpl.getChildIdArray = function() {
+                        //this.master.getChildIds();
+                        var l = this.master.getLength();
+                        var a = new Array(l);
+                        for (var i:int = 0; i < l; i++) {
+                            a[i] = i + 1;
+                        }
+                        return a;
+                    }
+
+                    /**  A Tree item reports its depth as its value.
+                     *   The Tree itself reports no value.
+                     */
+                    mc._accImpl.get_accValue = function(childId) {
+                        if (childId < 0) return;
+                        var r = this.master.getRoot();
+                        if (childId > 0) {
+                            var item = r.nodebychildid[childId];
+                            //Debug.write('get_accValue', childId, item.getDepth(item), item);
+                            if (item) return item.getDepth(item) + '';
+                        } else {
+                            var focused = r._selected;
+                            var desc = focused.text + r.getLocationDescription(focused);
+                            // Debug.warn('get_accValue', desc);
+                            return desc;
+                        }
+                        return '';
+                    }
+
+                }
+
+
                 // Call this only after selector is created
                 this.changeFocus(focusItem.parent);
             }
 
             // Make sure selector knows about me being selected
             if (this.selected) this._setSelected(true);
-
-
         ]]>
         </method>
 
@@ -373,6 +516,7 @@
         <![CDATA[
             this.selected = s;
             var root = this.getRoot();
+            root._selected = this;
             if (root.onselect) root.onselect.sendEvent(this);
             if (this != root && this.onselect) this.onselect.sendEvent(this);
             if (this.onselected) this.onselected.sendEvent(s);
@@ -403,6 +547,7 @@
                 }
             }
 
+            ftRoot.setAttribute("_lastfocused", focusedTree);
             // See lastfocus to new focused tree
             focusedTree.setTreeFocus(true,ftRoot);
 
@@ -412,7 +557,6 @@
                 useFocusOverlay = false;
             }
             lz.Focus.setFocus(focusedTree.item, useFocusOverlay);
-            ftRoot.setAttribute("_lastfocused", focusedTree);
             if (ftRoot.focusselect) focusedTree.setAttribute("selected", true);
             if (ftRoot.autoscroll) focusedTree.doAutoScroll(ftRoot);
         ]]>
@@ -453,7 +597,7 @@
             if (root == null) root = this.getRoot();
             if (root.onfocus) root.onfocus.sendEvent(this);
             if (this != root && this.onfocus) this.onfocus.sendEvent(this);
-            //if (this.onfocused) this.onfocused.sendEvent(focus);
+            if (this.onfocused) this.onfocused.sendEvent(focus);
         ]]>
         </method>
 
@@ -463,8 +607,9 @@
               returns -1.  -->
         <method name="getChildIndex" args="child">
         <![CDATA[
-            if (children.subviews != null) {
-                for (var i=0; i < children.subviews.length; i++) {
+            var l = this.children.subviews
+            if (l != null) {
+                for (var i=0; i < l; i++) {
                     if (children.subviews[i] == child) {
                         return i;
                     }
@@ -623,6 +768,79 @@
             ]]>
         </method>
 
+        <!-- accessibility support begins here -->
+        <method name="getChildIds">
+            <![CDATA[
+            var nodebychildid = [0, this];
+            var childidfromnodeid = {};
+            childidfromnodeid[this.getUID()] = 1;
+
+            var children = [].concat(this.children.subviews);
+            while (children.length) {
+                var n = children.shift();
+                if (n.visible && n instanceof lz.basetree) {
+                    childidfromnodeid[n.getUID()] = nodebychildid.length;
+                    nodebychildid.push(n);
+                    if (n.children.subviews.length) {
+                        children = children.concat(n.children.subviews);
+                    }
+                }
+            }
+            this.nodebychildid = nodebychildid;
+            this.childidfromnodeid = childidfromnodeid;
+            //Debug.warn('getChildIds', nodebychildid, childidfromnodeid);
+            ]]>
+        </method>
+
+        <method name="getLength">
+            var r = this.getRoot();
+            var length = r.nodebychildid.length;
+            //Debug.warn('getLength', length);
+            // compute number of items in tree
+            return length;
+        </method>
+
+        <method name="getDepth" args="treenode">
+            <![CDATA[
+            // 1-based offset
+            var count = 2;
+            var p = treenode.parent;
+            var root = treenode.getRoot();
+            if (treenode === root) return 1;
+            while (p && p != root && p != canvas) {
+                if (p instanceof lz.basetree) count++;
+                p = p.parent
+            }
+            //Debug.warn('getDepth', count, treenode);
+            return count;
+            ]]>
+        </method>
+
+        <method name="getLocationDescription" args="treenode">
+            <![CDATA[
+            var siblings = treenode.immediateparent.subviews;
+            //Debug.warn('getLocationDescription', treenode, siblings);
+            var offset = 1;
+            var size = 0;
+            if (siblings) {
+                var len = siblings.length;
+                for (var i = 0; i < len; i++) {
+                    var child = siblings[i];
+                    if (child instanceof lz.basetree) {
+                        size++;
+                        if (child === treenode) {
+                            offset = size;
+                        }
+                    }
+                }
+            }
+
+            //Debug.info('getLocationDescription', offset + ' of ' + size, this);
+
+            return ', ' + offset + ' of ' + size;
+            ]]>
+        </method>
+
         <!-- View to place child trees. -->
         <view name="children" x="${parent.xindent}" y="${parent.yindent}">
             <method name="init"> <![CDATA[
@@ -640,6 +858,54 @@
             </handler>
 
         </view>
+
+        <state name="_accessibleState">
+            <!--- @keywords private -->
+            <attribute name="EVENT_OBJECT_NAMECHANGE" type="number" value="0x800c"/>
+            <!--- @keywords private -->
+            <attribute name="EVENT_OBJECT_SELECTION" type="number" value="0x8006"/>
+            <!--- @keywords private -->
+            <attribute name="EVENT_OBJECT_STATECHANGE" type="number" value="0x800a"/>
+            <!--- @keywords private -->
+            <attribute name="EVENT_OBJECT_FOCUS" type="number" value="0x8005"/>
+            <!--- @keywords private -->
+            <handler name="onfocused" args="f">
+                <![CDATA[
+                var r = this.getRoot();
+                if (! r || ! r.childidfromnodeid) return;
+                var childId = r.childidfromnodeid[this.getUID()];
+                // Debug.info('onfocused', f, childId);
+                if (f && childId >= 0) {
+                    r.sendAAEvent(childId, EVENT_OBJECT_FOCUS);
+                    r.sendAAEvent(childId, EVENT_OBJECT_SELECTION);
+                    if ($as2) {
+                        Selection.setFocus(this.getMCRef());
+                    }
+                }
+                ]]>
+            </handler>
+
+            <!--- @keywords private -->
+            <handler name="onopen" args="isopen">
+                //if (isopen) return;
+                // only send when being closed...
+                var r = this.getRoot();
+                    var childId = r.childidfromnodeid[this.getUID()];
+                    //if (childId >= 0) {
+                        r.sendAAEvent(childId, EVENT_OBJECT_STATECHANGE);
+                        // Debug.debug('onopen', isopen, childId);
+                    //}
+            </handler>
+
+            <!--- @keywords private -->
+            <handler name="ontext" args="l">
+                var r = this.getRoot();
+                var childId = r.childidfromnodeid[this.getUID()];
+                r.sendAAEvent(childId, EVENT_OBJECT_NAMECHANGE);
+                lz.Browser.updateAccessibility();
+            </handler>
+        </state>
+
         <doc>
           <tag name="shortdesc"><text>An abstract base class to build tree controls.</text></tag>
           <text>
