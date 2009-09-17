@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -9,7 +9,7 @@
     <inputtext name="foo" bgcolor="yellow">
         Some input text
         <handler name="onblur">
-            bar.setText(this.getText());
+            bar.setAttribute('text', this.getText());
             Debug.write('blur');
         </handler>
         <handler name="onfocus">
@@ -28,7 +28,7 @@
     <inputtext name="foo2" width="100" bgcolor="yellow">
         Some input text
         <handler name="onblur">
-            bar.setText(this.getText());
+            bar.setAttribute('text', this.getText());
             Debug.write('blur');
         </handler>
         <handler name="onfocus">
@@ -48,7 +48,7 @@
     <inputtext name="fubar" width="200" height="200" multiline="true" bgcolor="green">
         Some input text
         <handler name="onblur">
-            bar.setText(this.getText());
+            bar.setAttribute('text', this.getText());
             Debug.write('blur');
         </handler>
         <handler name="onfocus">
