@@ -136,9 +136,9 @@ public class LzSprite extends Sprite {
       ,setclipboard: true
       ,proxypolicy: true
       ,linescrolling: true
-      ,disableglobalfocustrap: false
       ,allowfullscreen: true
       ,setid: false
+      ,globalfocustrap: false
       };
       var capabilities = LzSprite.capabilities;
 

@@ -449,10 +449,13 @@ public final class LzKeysService extends LzEventable {
     }
 
     /** Called to set/unset global focus trapping
-     * @access private
      */
     function setGlobalFocusTrap(istrapped:Boolean) :void {
-        LzKeyboardKernel.setGlobalFocusTrap(istrapped);
+        if (canvas.capabilities.globalfocustrap) {
+            LzKeyboardKernel.setGlobalFocusTrap(istrapped);
+        } else if ($debug) {
+            LzView.__warnCapability("lz.Keys.setGlobalFocusTrap(" + istrapped + ")", "globalfocustrap"); 
+        }
     }
 
     /**

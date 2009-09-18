@@ -298,9 +298,9 @@ dynamic class LzCanvas extends LzView {
             this.proxyurl = lz.Browser.getBaseURL( ).toString();
         }
 
-        if (args.focustrap) {
-            if (capabilities.disableglobalfocustrap != true) {
-                // ignore for runtimes that already have a global focus trap
+        if (args.focustrap != null) {
+            if (capabilities.globalfocustrap != true) {
+                // ignore for runtimes that don't support global focus trap
                 delete args.focustrap;
             }
         }

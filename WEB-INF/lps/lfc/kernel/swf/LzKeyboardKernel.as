@@ -94,11 +94,12 @@ var LzKeyboardKernel = {
     // Called by lz.Keys when the last focusable element was reached.
     ,gotLastFocus: function () {
     }
-    // Called to turn on/off restriction of focus to this application
-    ,setGlobalFocusTrap: function () {
-    }
     ,onKeyDown: function () { LzKeyboardKernel.__keyboardEvent(Key.getCode(), 'onkeydown'); }
     ,onKeyUp: function () { LzKeyboardKernel.__keyboardEvent(Key.getCode(), 'onkeyup'); }
+    // Called to turn on/off restriction of focus to this application
+    ,setGlobalFocusTrap: function (istrapped) {
+        LzBrowserKernel.callJS('lz.embed.applications.' + LzBrowserKernel.getAppID() + '.setGlobalFocusTrap', null, istrapped);
+    }
 }
 
 Key.addListener(LzKeyboardKernel);

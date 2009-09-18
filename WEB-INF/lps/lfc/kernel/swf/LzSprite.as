@@ -70,9 +70,9 @@ LzSprite.prototype.capabilities = {
     ,setclipboard: true
     ,proxypolicy: true
     ,linescrolling: true
-    ,disableglobalfocustrap: false
     ,allowfullscreen: true
     ,setid: false
+    ,globalfocustrap: true
 }
 
 /**

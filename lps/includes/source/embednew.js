@@ -145,6 +145,7 @@ lz.embed = {
             ,_sendAllKeysUp: lz.embed._sendAllKeysUpSWF
             ,_setCanvasAttributeDequeue: lz.embed._setCanvasAttributeDequeue
             ,_sendPercLoad: lz.embed._sendPercLoad
+            ,setGlobalFocusTrap: lz.embed.__setGlobalFocusTrapSWF
         }
         // listen for history unless properties.history == false
         if (properties.history == false) {
@@ -898,6 +899,18 @@ lz.embed = {
         return result + (units ? units : 'px');
     }
 
+    ,/** @access private 
+         called by LzKeyboardKernel.setGlobalFocusTrap() to keep the swf 
+         focused.  Generally only needed when accessibility is on.  */
+    __setGlobalFocusTrapSWF: function(isfocused) {
+        //LPP-7593
+        var div = this._getSWFDiv();
+        if (isfocused) {
+            div.onblur = function() { div.focus() }
+        } else {
+            div.onblur = null;
+        }
+    }
 };
 
 // init browser detection
