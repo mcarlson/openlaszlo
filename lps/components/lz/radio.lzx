@@ -30,6 +30,24 @@
         <event name="onvalue"/>
 
         <!--- @keywords private -->
+        <handler name="oninit">
+        <![CDATA[
+            // Define radiobutton aadescription and aaactive if not specified
+            if (canvas['accessible']) {
+                var items = this.getNumItems();
+                for (var i=1; i<=items; i++) {
+                    var rb = this.getItemAt(i-1);
+                    if (!rb['aaactive']) {
+                        var aad = i + " of " + items;
+                        rb.setAttribute('aadescription', aad);
+                        rb.setAttribute('aaactive', 'true');
+                    }
+                }
+            }
+        ]]>
+        </handler>
+
+        <!--- @keywords private -->
         <method name="acceptValue" args="d, type=null">
             if (type == null) type = this.type;
             var val = this.acceptTypeValue(type, d);
@@ -145,22 +163,20 @@
                 }
 
                 mc._accImpl.get_accState = function() {
-                    if (this.master.selected) {
-                        // STATE_SYSTEM_CHECKED | STATE_SYSTEM_FOCUSED | STATE_SYSTEM_FOCUSABLE
-                        return 0x00100014
-                    } else {
-                        // STATE_SYSTEM_FOCUSABLE | STATE_SYSTEM_FOCUSED
-                        return 0x00100004
-                    }
+                    //Debug.warn("get_accState", this.master, this.master.selected);
+                    var state = 0x00; // STATE_SYSTEM_NORMAL
+                    if (this.master.parent.focusable)
+                        state |= 0x100000; // STATE_SYSTEM_FOCUSABLE
+                    if (this.master.parent == lz.Focus.getFocus())
+                        state |= 0x04; // STATE_SYSTEM_FOCUSED
+                    if (this.master.selected)
+                        state |= 0x10; // STATE_SYSTEM_CHECKED
+                    return state;
                 }
 
                 mc._accImpl.get_accDefaultAction = function(childId) {
                     //Debug.info('get_accDefaultAction', childId);
-                    if (this.master.selected){
-                        return "UnCheck";
-                    }else{
-                        return "Check";
-                    }
+                    return "Check";
                 }
 
                 mc._accImpl.accDoDefaultAction = function(childId) {
@@ -183,20 +199,37 @@
             <attribute name="EVENT_OBJECT_STATECHANGE" type="number" value="0x800a"/>
             <!--- @keywords private -->
             <handler name="onselected" args="s">
-                this.sendAAEvent(0, EVENT_OBJECT_FOCUS);
-                this.sendAAEvent( 0, EVENT_OBJECT_STATECHANGE,true );
+            <![CDATA[
+                if (!this.isinited) { return;}
+
+                // onselected is called when item is selected or deselected
+                if (this.selected) {
+                    this.sendAAEvent(0, EVENT_OBJECT_FOCUS);
+                }
+                this.sendAAEvent( 0, EVENT_OBJECT_STATECHANGE, true);
+            ]]>
+
             </handler>
             <!--- @keywords private -->
             <handler name="ontext" args="l">
                 this.sendAAEvent( 0, EVENT_OBJECT_NAMECHANGE);
             </handler>
+
             <!--- @keywords private -->
-            <method name="updateFocus">
-                this.sendAAEvent(0, EVENT_OBJECT_SELECTION);
-                this.sendAAEvent(0, EVENT_OBJECT_FOCUS);
-                if ($as2) {
-                   Selection.setFocus(parent.getMCRef());
+            <method name="updateFocus" args="hilite">
+            <![CDATA[
+                // [2009-08-17 pbr] This method does not change
+                // what the screen reader announces.
+                if (hilite) {
+                    this.sendAAEvent(0, EVENT_OBJECT_SELECTION);
+                    this.sendAAEvent(0, EVENT_OBJECT_FOCUS);
+                    if ($as2) {
+                        Selection.setFocus(parent.getMCRef());
+                    }
                 }
+
+                this.sendAAEvent( 0, EVENT_OBJECT_STATECHANGE, true);
+            ]]>
             </method>
         </state>
 
@@ -242,7 +275,8 @@
         <method name="setHilite" args="dohilite">
             _title.setAttribute('fgcolor',
                 dohilite ? style.texthilitecolor : style.textcolor);
-            if (canvas['accessible']) this.updateFocus();
+            if (dohilite) this.setAttribute('selected', true);
+            if (canvas['accessible']) this.updateFocus(dohilite);
         </method>
 
         <!-- FIXME: [hqm 2006-09] LPP-2244 This used to be y="$once{classroot.text_y}"

@@ -103,6 +103,7 @@
                     if (sel && sel.length > 0) {
                         if (sel[0] is lz.view) {
                             this._hiliteview = sel[0];
+                            this._hiliteview.setHilite(true);
                         }
                     }
                 }
@@ -151,7 +152,7 @@
                 if (this.multiselect) s = s[s.length - 1];
             }
 
-            if (kc == 32) {
+            if (this.focusable && kc == 32) {
                if (s is lz.view && s.enabled) {
                  s.setAttribute('selected', true);
                  // [2009-03-05 ptw] Don't lose the hilite because you selected
@@ -165,7 +166,7 @@
                 37 = left arrow, 38 = up arrow
                 39 = right arrow, 40 = down arrow
             */
-            if (kc >= 37 && kc <= 40) {
+            if (this.focusable && kc >= 37 && kc <= 40) {
                 this.setAttribute( 'doesenter', true );
                 var next;
                 if (kc == 39  || kc == 40) {
