@@ -168,10 +168,7 @@ SoundMC.prototype.loadDone = function (success) {
     // @devnote Loading invalid files still results in a successful load,
     // therefore check duration to identify valid mp3-files (LPP-7880)
     if (success != true || this._sound.duration == 0) {
-        this.loader.doError(this.loader.mc);
-        if ($debug) {
-            Debug.warn("failed to load %w", this.reqobj.url);
-        }
+        this.loader.doError(this.loader.mc, "failed to load " + this.reqobj.url);
     } else {
         this.loadstate = 2;
     }

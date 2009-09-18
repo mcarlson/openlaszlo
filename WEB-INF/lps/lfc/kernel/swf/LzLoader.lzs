@@ -366,12 +366,16 @@ function doTimeOut ( loadobj ){
 /**
   * @access private
   * @param MovieClip loadobj: the LoadMovie that had an error
+  * @param String msg: The error message returned in onerror event
   */
-function doError ( loadobj ){
+function doError ( loadobj, msg ){
     if (loadobj) {
         this.returnData(loadobj);
         this.unload(loadobj);
-        if (this.onerror.ready) this.onerror.sendEvent();
+        if ($debug) {
+            Debug.warn('Loader error', msg);
+        }
+        if (this.onerror.ready) this.onerror.sendEvent(msg);
     }
 }
 

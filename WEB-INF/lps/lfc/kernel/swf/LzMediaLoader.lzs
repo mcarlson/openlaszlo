@@ -212,7 +212,7 @@ function testError (ignore) {
                   lmc.getBytesTotal() <= 0 && lmc.getBytesLoaded() >= lmc.getBytesTotal();
     if (iserror) {
         //Debug.error(this.owner.resource, lmc.getBytesLoaded(), lmc.getBytesTotal())
-        this.doError(this.mc);
+        this.doError(this.mc, "canvas.mediaerrortimeout exceeded for " + this.owner.resource);
     }
 }
 
