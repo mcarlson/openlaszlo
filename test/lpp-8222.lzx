@@ -15,6 +15,7 @@
     <method name="testCatchErrors">
       if ($debug) { Debug.info("Ignore the next error"); }
       throw new Error("Testing, please ignore");
+      // Force catcherrors not to be optimized away
       return canvas['kolodney']();
     </method>
     <text id="mode" multiline="true" width="90%" x="5%" />
@@ -30,6 +31,12 @@
         }
         mode.format("MODE: %s, catcherrors=%w", $debug?"debug":"normal", canvas.catcherrors);
       }
+      var runtimeErrorObject = '<runtime-specific error>';
+      try {
+        this.uninterceptedRuntimeError(null);
+      } catch (e) {
+        runtimeErrorObject = e;
+      } 
       if ($debug) {
         if (canvas.catcherrors) {
           instruction1.setAttribute('text',
@@ -40,6 +47,8 @@
           'The third button should cause the debugger to print "Error: Intercepted"');
           instruction4.setAttribute('text',
           'The fourth button should display the message "caught Error: Caught".');
+          instruction5.format('The fifth button should cause the debugger to print "Error: %0.24#s".', runtimeErrorObject);
+          instruction6.format('The sixth button should display the message "caught: %0.24#s".', runtimeErrorObject);
         } else {
           instruction1.setAttribute('text',
           'The first button should display the message "caught Random Object".');
@@ -49,6 +58,8 @@
           'The third button should cause the debugger to print "Error: Intercepted" and display the message "caught Error: Intercepted"');
           instruction4.setAttribute('text',
           'The fourth button should display the message "caught Error: Caught".');
+          instruction5.format('The fifth button should cause the debugger to print "Error: %0.24#s" and display the message "caught %0.24#s".', runtimeErrorObject, runtimeErrorObject);
+          instruction6.format('The sixth button should display the message "caught: %0.24#s".', runtimeErrorObject);
         }
       } else {
         if (canvas.catcherrors) {
@@ -60,6 +71,9 @@
           'The third button should do nothing');
           instruction4.setAttribute('text',
           'The fourth button should display the message "caught Error: Caught".');
+          instruction5.setAttribute('text',
+          'The fifth button should do nothing.');
+          instruction6.format('The sixth button should display the message "caught: %0.24#s".', runtimeErrorObject);
         } else {
           instruction1.setAttribute('text',
           'The first button should display the message "caught Random Object".');
@@ -69,6 +83,8 @@
           'The third button should display the message "caught Error: Intercepted"');
           instruction4.setAttribute('text',
           'The fourth button should display the message "caught Error: Caught".');
+          instruction5.format('The fifth button should display the message "caught: %0.24#s".', runtimeErrorObject);
+          instruction6.format('The sixth button should display the message "caught: %0.24#s".', runtimeErrorObject);
         }
       }
     ]]></handler>
@@ -112,15 +128,44 @@
         }
       </handler>
     </button>
+    <text id="instruction5" multiline="true" width="90%" x="5%" />
+    <button align="center" text="caught, intercepted runtime error">
+      <handler name="onclick">
+        try {
+          var thing = new Error("Caught");
+          mytest.throwHow('runtimeError', thing);
+        } catch (e) {
+          myoutput.addFormat("\ncaught %w", e);
+        }
+      </handler>
+    </button>
+    <text id="instruction6" multiline="true" width="90%" x="5%" />
+    <button align="center" text="caught, unintercepted runtime error">
+      <handler name="onclick">
+        try {
+          var thing = new Error("Caught");
+          mytest.throwHow('uninterceptedRuntimeError', thing);
+        } catch (e) {
+          myoutput.addFormat("\ncaught %w", e);
+        }
+      </handler>
+    </button>
     <method name="throwHow" args="how, what" >
       this[how](what);
     </method>
     <method name="throwValue" args="arg" >
       throw arg;
     </method>
+    <method name="runtimeError" args="arg" >
+      return canvas['kolodney']();
+    </method>
     <method name="throwValueIntentional" args="arg" >
       #pragma "throwsError=true"
       throw arg;
+    </method>
+    <method name="uninterceptedRuntimeError" args="arg" >
+      #pragma "throwsError=true"
+      return canvas['kolodney']();
     </method>
   </view>
   <text id="myoutput" multiline="true" width="250" bgcolor="#fefefe">

@@ -1499,13 +1499,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @return String: the abbreviated string
    * @access private
    */
-  function abbreviate(s:String, l=null):String {
-    if (!l) { l = Debug.printLength; }
-    var ellipsis = '\u2026';
-    if (s.length > (l - ellipsis.length)) {
-      s = s.substring(0, l - ellipsis.length) + ellipsis;
-    }
-    return s;
+  override function abbreviate(s:String, l=NaN):String {
+    // swf9 does not permit this as a parameter default
+    if (isNaN(l)) { l = Debug.printLength; }
+    return super.abbreviate(s, l);
   };
 
   /**

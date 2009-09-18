@@ -208,6 +208,27 @@ mixin LzFormatter {
   }
 
   /**
+   * <p>Abbreviate a string</p>
+   *
+   * <p>This is a support method <xref
+   * linkend="LzFormatter.prototype.formatToString" />, which is the
+   * preferred interface.</p>
+   *
+   * @param String s: the string to abbreviate
+   * @param Number l: the desired length, defaults to Infinity
+   *
+   * @return String: the abbreviated string
+   */
+  function abbreviate(s:String, l=Infinity):String {
+    var ellipsis = '\u2026';
+    if (s.length > (l - ellipsis.length)) {
+      s = s.substring(0, l - ellipsis.length) + ellipsis;
+    }
+    return s;
+  };
+
+
+  /**
    * <p>Formatted output to string</p>
    *
    * <p>Formats its arguments according to the control string.</p>
@@ -498,11 +519,15 @@ mixin LzFormatter {
           } else {
             str = '' + value;
           }
-          if ($debug) {
-            // alternate => show abbreviation
-            if (alternate) {
+          // alternate => show abbreviation
+          if (alternate) {
+            if ($debug) {
               var width = decimals || Debug.printLength;
-              str = Debug.abbreviate(str, width);
+            } else {
+              var width = decimals;
+            }
+            if (width) {
+              str = this.abbreviate(str, width);
               decimals = null;
             }
           }

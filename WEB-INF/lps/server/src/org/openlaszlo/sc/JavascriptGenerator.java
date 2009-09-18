@@ -152,7 +152,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       String om = newTemp();
       return parseFragment(
         "var " + o + " = " + reference.get() + ";" +
-        "if (typeof(" + o + ") == undefined) {" +
+        "if (typeof(" + o + ") == 'undefined') {" +
         "  " + report("$reportUndefinedObjectProperty", node, methodName) +
         "}" +
         "var " + om + " = " + o + "[" + methodName + "];" + 
@@ -1298,15 +1298,15 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           fragment += ScriptCompiler.quote(filename) + ", " + lineno + ", $lzsc$e);";
         }
       }
-      // Only neuter Errors if catcherrors is on
-      if (! catchExceptions) {
-        fragment += "}" +
-          "throw $lzsc$e;";
-      } else {
+      // Only neuter Errors if catcherrors is on and throwsError is off
+      if (catchExceptions && (! throwExceptions)) {
         fragment +=
           "} else {" +
           "  throw $lzsc$e;" +
           "}";
+      } else {
+        fragment += "}" +
+          "throw $lzsc$e;";
       }
       error.add(parseFragment(fragment));
 
