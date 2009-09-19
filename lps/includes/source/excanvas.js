@@ -95,43 +95,17 @@ if (!document.createElement('canvas').getContext) {
         // recognized.
         doc.createElement('canvas');
         doc.attachEvent('onreadystatechange', bind(this.init_, this, doc));
+
+        if (lz.embed.browser.version >= 8) {
+          addDeclarations(doc);
+        }
       }
     },
 
     init_: function(doc) {
-      var ver = lz.embed.browser.version;
-      // create xmlns
-      if (!doc.namespaces['g_vml_']) {
-        if (ver < 8) { 
-          doc.namespaces.add('g_vml_', 'urn:schemas-microsoft-com:vml');
-        } else {
-          doc.namespaces.add('g_vml_', 'urn:schemas-microsoft-com:vml',
-                             '#default#VML');
-        }
+      if (lz.embed.browser.version < 8) {
+        addDeclarations(doc);
       }
-      if (!doc.namespaces['g_o_']) {
-        if (ver < 8) { 
-          doc.namespaces.add('g_o_', 'urn:schemas-microsoft-com:office:office');
-        } else {
-          doc.namespaces.add('g_o_', 'urn:schemas-microsoft-com:office:office',
-                             '#default#VML');
-        }
-      }
-
-      // Setup default CSS.  Only add one style sheet per document
-      if (!doc.styleSheets['ex_canvas_']) {
-        var ss = doc.createStyleSheet();
-        ss.owningElement.id = 'ex_canvas_';
-        ss.cssText = 'canvas{display:inline-block;overflow:hidden;' +
-            // set to use absolute positioning
-            'position:absolute;' + 
-            // default size is 300x150 in Gecko and Opera
-            'text-align:left;width:300px;height:150px}' +
-            'g_vml_\\:*{behavior:url(#default#VML)}' +
-            'g_o_\\:*{behavior:url(#default#VML)}';
-
-      }
-
       // find all canvas elements
       var els = doc.getElementsByTagName('canvas');
       for (var i = 0; i < els.length; i++) {
@@ -181,6 +155,41 @@ if (!document.createElement('canvas').getContext) {
       return el;
     }
   };
+
+  function addDeclarations (doc) {
+    var ver = lz.embed.browser.version;
+    // create xmlns
+    if (!doc.namespaces['g_vml_']) {
+      if (ver < 8) { 
+        doc.namespaces.add('g_vml_', 'urn:schemas-microsoft-com:vml');
+      } else {
+        doc.namespaces.add('g_vml_', 'urn:schemas-microsoft-com:vml',
+                           '#default#VML');
+      }
+    }
+    if (!doc.namespaces['g_o_']) {
+      if (ver < 8) { 
+        doc.namespaces.add('g_o_', 'urn:schemas-microsoft-com:office:office');
+      } else {
+        doc.namespaces.add('g_o_', 'urn:schemas-microsoft-com:office:office',
+                           '#default#VML');
+      }
+    }
+
+    // Setup default CSS.  Only add one style sheet per document
+    if (!doc.styleSheets['ex_canvas_']) {
+      var ss = doc.createStyleSheet();
+      ss.owningElement.id = 'ex_canvas_';
+      ss.cssText = 'canvas{display:inline-block;overflow:hidden;' +
+          // set to use absolute positioning
+          'position:absolute;' + 
+          // default size is 300x150 in Gecko and Opera
+          'text-align:left;width:300px;height:150px}' +
+          'g_vml_\\:*{behavior:url(#default#VML)}' +
+          'g_o_\\:*{behavior:url(#default#VML)}';
+    
+    }
+  }
 
   function onPropertyChange(e) {
     var el = e.srcElement;

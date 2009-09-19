@@ -137,21 +137,10 @@
     -->
     <attribute name="fillStyle" value="#000000" type="string"/>
 
-
-    <!--- Contains a reference to the raw drawview context.  oncontext is sent when the context is ready to use, which can take some time in IE.
-      @access public
-    -->
-    <attribute name="context" value="null"/>
-
     <!--- If true, the bitmap result will be cached where possible.
       @access public
     -->
     <attribute name="cachebitmap" value="true" type="boolean"/>
-
-    <!--- Sent when the context is ready to use, which can take some time in IE.
-      @access public
-    -->
-    <event name="oncontext"/>
 
     <!---
       Resets the list of subpaths to an empty list, and calls moveTo() with the point (0,0).
@@ -520,9 +509,7 @@
             var miterLimit = 3;
             var strokeStyle = '#000000';
             var fillStyle = '#000000';
-            var context = null;
 
-            private var __LZcanvas = null;
             private var __globalAlpha = null;
             private var __lineWidth = null;
             private var __lineCap = null;
@@ -531,29 +518,15 @@
             private var __strokeStyle = null;
             private var __fillStyle = null;
 
-            var oncontext = LzDeclaredEvent;
-
-            function getContext(type) {
-                return this.context;
+            function init() {
+                super.init();
+                this.createContext();
             }
 
-            function construct(parent,args) {
-                super.construct(parent, args);
-                new LzDelegate( this , "_onconstruct" , this , "onconstruct" );
-            }
-
-            function _onconstruct(args) {
-                var w = Math.floor(args ? args['width'] : this.width);
-                var h = Math.floor(args ? args['height'] : this.height);
-                if (this['__id'] == null && w > 0 && h > 0) {
-                    this._buildcanvas(w, h);
-                }
-            }
-
-            function _buildcanvas(width, height) {
+            // called when the context has been created
+            override function $lzc$set_context(context) {
                 this.beginPath();
-
-                if (this.__LZcanvas) {
+                if (this.context) {
                     this.__lineWidth = null;
                     this.__lineCap = null;
                     this.__lineJoin = null;
@@ -561,87 +534,8 @@
                     this.__fillStyle = null;
                     this.__strokeStyle = null;
                     this.__globalAlpha = null;
-                    if (lz.embed.browser.isIE) {
-                        LzSprite.prototype.__discardElement(this.__LZcanvas);
-                    } else {
-                        this.__LZcanvas.setAttribute('width', width);
-                        this.__LZcanvas.setAttribute('height', height);
-                        this.__canvaswidth = width;
-                        this.__canvasheight = height;
-                        this.setAttribute('context', this.__LZcanvas.getContext("2d"));
-                        return;
-                    }
                 }
-                this.__id = 'canvas-' + (lz.drawview.uid++);
-                //Debug.write('_buildcanvas', this.__id, width, height);
-
-                this.__LZcanvas = document.createElement('canvas');
-                this.__LZcanvas.owner = this.sprite;
-                this.__LZcanvas.setAttribute('id', this.__id);
-                this.__LZcanvas.setAttribute('width', width);
-                this.__LZcanvas.setAttribute('height', height);
-                this.__LZcanvas.setAttribute('style', 'position: absolute');
-                this.__canvaswidth = width;
-                this.__canvasheight = height;
-                var div = this.getMCRef();
-                div.appendChild(this.__LZcanvas);
-
-                if (lz.embed.browser.isIE) {
-                    // IE can take a while to start up.
-                    this._hidden = false;
-                    this.maxTries = 10;
-                    this.__initie();
-                    // add to list of 'sprites' so we are cleaned up
-                    LzSprite.prototype.__sprites[this.sprite.uid + 'canvas'] = this;
-                } else {
-                    this.setAttribute('context', this.__LZcanvas.getContext("2d"));
-                }
-            }
-
-            override function destroy() {
-                if (lz.embed.browser.isIE) {
-                    if (this.__LZcanvas) {
-                        // http://blogs.msdn.com/gpde/pages/javascript-memory-leak-detector.aspx complains about these properties
-                        this.__LZcanvas.owner = null;
-                        this.__LZcanvas.getContext = null;
-                        var lzsp = LzSprite.prototype;
-                        lzsp.__discardElement(this.__LZcanvas);
-                        delete lzsp.__sprites[this.sprite.uid + 'canvas'];
-                    }
-                }
-                super.destroy();
-            }
-
-            override function $lzc$set_width(w) {
-                super.$lzc$set_width(w);
-                w = Math.floor(w);
-                var h = Math.floor(this.height);
-                if (h > 0 && w > 0) {
-                    this._buildcanvas(w, h);
-                    if (this.__LZcanvas && this['_hidden']) {
-                        this._hidden = false;
-                        this.__LZcanvas.style.visibility = null;
-                    }
-                } else if (this.__LZcanvas && this['_hidden'] != true) {
-                    this._hidden = true;
-                    this.__LZcanvas.style.visibility = "hidden";
-                }
-            }
-
-            override function $lzc$set_height(h) {
-                super.$lzc$set_height(h);
-                var w = Math.floor(this.width);
-                h = Math.floor(h);
-                if (w > 0 && h > 0) {
-                    this._buildcanvas(w, h);
-                    if (this.__LZcanvas && this['_hidden']) {
-                        this._hidden = false;
-                        this.__LZcanvas.style.visibility = null;
-                    }
-                } else if (this.__LZcanvas && this['_hidden'] != true) {
-                    this._hidden = true;
-                    this.__LZcanvas.style.visibility = "hidden";
-                }
+                super.$lzc$set_context(context);
             }
 
             static var images = {};
@@ -696,24 +590,6 @@
                     this.context.rotate(tr);
                     this.context.drawImage(image, 0, 0, w, h);
                     this.context.restore();
-                }
-            }
-
-            function __initie() {
-                try {
-                    if (this.__LZcanvas && this.__LZcanvas.parentNode != null) {
-                        this.__LZcanvas = G_vmlCanvasManager.initElement(this.__LZcanvas);
-                        if (this.tId) clearTimeout(this.tId);
-                        this.setAttribute('context', this.__LZcanvas.getContext("2d"));
-                    } else {
-                        var callback = lz.BrowserUtils.getcallbackstr(this, '__initie');
-                        this.tId = setTimeout(callback, 50);
-                    }
-                } catch (e) {
-                    if (this.maxTries-- > 0) {
-                        var callback = lz.BrowserUtils.getcallbackstr(this, '__initie');
-                        this.tId = setTimeout(callback, 50);
-                    }
                 }
             }
 
@@ -855,7 +731,7 @@
 
             function clear() {
                 if ($debug) this.__checkContext();
-                this.context.clearRect(0, 0, this.__canvaswidth, this.__canvasheight);
+                this.context.clearRect(0, 0, this.width, this.height);
             }
 
             function clearMask() {
@@ -1002,11 +878,6 @@
             var miterLimit :Number = 3;
             var strokeStyle :* = '#000000';
             var fillStyle :* = '#000000';
-            if ($as3) {
-                var context :Graphics = null;
-            } else {
-                var context :MovieClip = null;
-            }
             var __path :Array = [];
             var __pathisopen :Boolean = false;
             var __measurewidth :Boolean = true;
@@ -1027,8 +898,6 @@
                 var __drawcontainer :Sprite = null;
             }
 
-            var oncontext :LzDeclaredEventClass = LzDeclaredEvent;
-
             function $lzc$class_drawview (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
                 super(parent, attrs, children, instcall);
             }
@@ -1044,7 +913,7 @@
                 super.init();
                 if ($as2) {
                     this.rebuildBitmap();
-                    var drawcontainer:MovieClip = this.getMCRef().createEmptyMovieClip("drawcontainer", 1);
+                    var drawcontainer:MovieClip = this.getDisplayObject().createEmptyMovieClip("drawcontainer", 1);
                     this.__drawing = drawcontainer.createEmptyMovieClip("drawing", drawcontainer.getNextHighestDepth());
 
                     var context:MovieClip = drawcontainer;
@@ -1054,15 +923,14 @@
                 } else {
                     var drawcontainer:Sprite = new Sprite();
                     drawcontainer.mouseEnabled = false;
-                    this.getMCRef().addChildAt(drawcontainer, 0);
+                    this.getDisplayObject().addChildAt(drawcontainer, 0);
 
                     this.__drawcontainer = drawcontainer;
                     var context:Graphics = drawcontainer.graphics;
                 }
                 this.context = context;
                 this.beginPath();
-
-                this.oncontext.sendEvent(context);
+                this.$lzc$set_context(context);
             }
 
             function beginPath() {
@@ -1415,7 +1283,7 @@
                 }
 
                 function clipButton() {
-                    var mc:MovieClip = this.getMCRef();
+                    var mc:MovieClip = this.getDisplayObject();
                     //Debug.write('clip', this, mc, this.sprite.__LZbuttonRef);
                     if (! this['__clipmc']) {
                         this.__clipmc = this.sprite.__LZmovieClipRef.createEmptyMovieClip("$lzclipmc", 6);

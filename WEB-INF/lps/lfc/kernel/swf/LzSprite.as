@@ -73,6 +73,7 @@ LzSprite.prototype.capabilities = {
     ,allowfullscreen: true
     ,setid: false
     ,globalfocustrap: true
+    ,'2dcanvas': true
 }
 
 /**
@@ -1418,7 +1419,7 @@ LzSprite.prototype.checkPlayStatus = function (){
     this.__lzchecktotalframes = this.totalframes;
     this.__lzskipplaycheck = 0;
     // skip more frames for mp3 audio resources to allow tracking to work correctly
-    if (this.getMCRef().isaudio == true) {
+    if (this.isaudio == true) {
         this.__lzskipplaychecklimit = LzSprite.prototype.__lzskipplaychecklimitmax;
     } else {
         this.__lzskipplaychecklimit = 4;
@@ -1426,6 +1427,16 @@ LzSprite.prototype.checkPlayStatus = function (){
     //Debug.warn('checkPlayStatus %w %w %w %w', this.__lzcheckframe, this.frame, this.totalframes, this.__lzskipplaychecklimit);
     this.checkPlayStatusDel.register( lz.Idle, "onidle" );
 }
+
+/**
+  * @access private
+  * Adds a getter for isaudio
+  */
+LzSprite.prototype.addProperty("isaudio", function () {
+    var m = this.getMCRef();
+    return (m && m.isaudio || false);
+}, null);
+
 
 /**
   * @access private
@@ -1610,6 +1621,34 @@ LzSprite.prototype.getPan = function() {
     }
 }
 
+LzSprite.prototype.seek = function (secs, doplay ){
+    var m = this.getMCRef();
+    if (m.isaudio == true) {
+        m.seek(secs, doplay);
+    }
+}
+
+LzSprite.prototype.getCurrentTime = function (){
+    var m = this.getMCRef();
+    if (m.isaudio == true) {
+        return m.getCurrentTime();
+    }
+}
+
+LzSprite.prototype.getTotalTime = function (){
+    var m = this.getMCRef();
+    if (m.isaudio == true) {
+        return m.getTotalTime();
+    }
+}
+
+LzSprite.prototype.getID3 = function (){
+    var m = this.getMCRef();
+    if (m.isaudio == true) {
+        return m.getID3();
+    }
+}
+
 /**
   * Get the current z order of the sprite
   * @return Integer: A number representing z orderin
@@ -1689,9 +1728,21 @@ LzSprite.prototype.setBitmapCache = function(cache) {
 }
 
 /**
+  * Get a reference to the display object
+  */
+LzSprite.prototype.getDisplayObject = LzSprite.prototype.getMCRef;
+
+/**
   * Get a reference to the graphics context
   */
 LzSprite.prototype.getContext = LzSprite.prototype.getMCRef;
+
+/**
+  * Set callback for context update events
+  * Unused in swf
+  */
+LzSprite.prototype.setContextCallback = function(callbackscope, callbackname){
+}
 
 /**
   * Register for update when the button gets the focus.

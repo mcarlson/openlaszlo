@@ -497,6 +497,9 @@ LzSprite.__defaultStyles = {
         margin: '2px',
         minWidth: '100px'
     },
+    lzgraphicscanvas: {
+        position: 'absolute'
+    },
     // Blarg.  Why do we have these in here?
     writeCSS: function() {
         var rules = [];
@@ -625,6 +628,7 @@ LzSprite.prototype.capabilities = {
     ,allowfullscreen: false
     ,setid: true
     ,globalfocustrap: false
+    ,'2dcanvas': true
 }
 
 /**
@@ -1566,6 +1570,7 @@ LzSprite.prototype.setWidth = function ( w ){
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.width = w;
         if (this.__LZcontext) this.__LZcontext.style.width = w;
+        if (this.__LZcanvas) this.__resizecanvas();
         if (this.isroot && quirks.container_divs_require_overflow) {
             LzSprite.__rootSpriteOverflowContainer.style.width = w;
         }
@@ -1613,6 +1618,7 @@ LzSprite.prototype.setHeight = function ( h ){
         if (this.stretches) this.__updateStretches();
         if (this.__LZclick) this.__LZclick.style.height = h;
         if (this.__LZcontext) this.__LZcontext.style.height = h;
+        if (this.__LZcanvas) this.__resizecanvas();
         if (this.isroot && quirks.container_divs_require_overflow) {
             LzSprite.__rootSpriteOverflowContainer.style.height = h;
         }
@@ -2248,6 +2254,11 @@ LzSprite.prototype.destroy = function() {
         this.__discardElement(this.__LZtextdiv);
     }
     if (this.__LZcanvas) {
+        if (this.quirks.ie_leak_prevention) {
+            // http://blogs.msdn.com/gpde/pages/javascript-memory-leak-detector.aspx complains about these properties
+            this.__LZcanvas.owner = null;
+            this.__LZcanvas.getContext = null;
+        }
         this.__discardElement(this.__LZcanvas);
     }
     this.__ImgPool = null;
@@ -2378,15 +2389,44 @@ LzSprite.prototype.setShowHandCursor = function ( s ){
     }
 }
 
-LzSprite.prototype.getMCRef = function ( ){
-    //TODO: implement
+LzSprite.prototype.getDisplayObject = function ( ){
     return this.__LZdiv;
 }
 
+// A reference to the html 5 canvas object
+LzSprite.prototype.__LZcanvas = null;
+
 LzSprite.prototype.getContext = function (){
-    //TODO: move from drawview
-    return this.getMCRef();
+    if (this.__LZcanvas && this.__LZcanvas.getContext) {
+        return this.__LZcanvas.getContext("2d");
     }
+
+    var canvas = document.createElement('canvas');
+    canvas.owner = this;
+    // do we need to do this?
+    //canvas.setAttribute('id', canvasuid);
+
+    this.__LZcanvas = canvas;
+    canvas.className = 'lzgraphicscanvas';
+    this.__LZdiv.appendChild(canvas);
+    lz.embed.__setAttr(this.__LZcanvas, 'width', this.width);
+    lz.embed.__setAttr(this.__LZcanvas, 'height', this.height);
+
+    if (lz.embed.browser.isIE) {
+        // IE can take a while to init
+        this.__maxTries = 10;
+        this.__initcanvasie();
+    } else {
+        return this.__LZcanvas.getContext("2d");
+    }
+  }
+  
+// Set the callback for canvas initialization
+LzSprite.prototype.setContextCallback = function (callbackscope, callbackname){
+    this.__canvascallbackscope = callbackscope;
+    this.__canvascallbackname = callbackname;
+}
+
 
 LzSprite.prototype.bringToFront = function() {
     if (! this.__parent) {
@@ -2734,7 +2774,7 @@ LzSprite.prototype.setAADescription = function( s ) {
         // annotate divs with sprite IDs, but don't override existing IDs!
         if (!this.__LZdiv.id) this.__LZdiv.id = 'sprite_' + this.uid;
         // Safari reader only speaks labels which have a 'for' attribute
-        aadiv.setAttribute('for', this.__LZdiv.id);
+        lz.embed.__setAttr(aadiv, 'for', this.__LZdiv.id);
         this.__LZdiv.appendChild(aadiv);
     }
     aadiv.innerHTML = s;
@@ -2823,4 +2863,47 @@ LzSprite.prototype.setID = function(id){
     if (!this.__LZdiv.id) this.__LZdiv.id = this._dbg_typename + id;
     if (!this.__LZclickcontainerdiv.id) this.__LZclickcontainerdiv.id = 'click' + id;
     if (this.__LZcontextcontainerdiv && ! this.__LZcontextcontainerdiv.id) this.__LZcontextcontainerdiv.id = this.__LZcontextcontainerdiv.id = 'context' + id;
+}
+
+LzSprite.prototype.__resizecanvas = function() {
+    if (this.width > 0 && this.height > 0) {
+        if (this.__LZcanvas) {
+            lz.embed.__setAttr(this.__LZcanvas, 'width', this.width);
+            lz.embed.__setAttr(this.__LZcanvas, 'height', this.height);
+            // resize, which will clear the canvas
+            this.__docanvascallback();
+        }
+        if (this.__LZcanvas && this['_canvashidden']) {
+            this._canvashidden = false;
+            this.__LZcanvas.style.display = '';
+        }
+    } else if (this.__LZcanvas && this['_canvashidden'] != true) {
+        this._canvashidden = true;
+        this.__LZcanvas.style.display = "none";
+    }
+}
+
+LzSprite.prototype.__docanvascallback = function() {
+    var callback = this.__canvascallbackscope[this.__canvascallbackname];
+    if (callback) {
+        callback.call(this.__canvascallbackscope, this.__LZcanvas.getContext("2d"));
+    }
+}
+
+// IE can take a while to init...
+LzSprite.prototype.__initcanvasie = function() {
+    // IE can take a while to start up.
+    if (this.__canvasTId) clearTimeout(this.__canvasTId);
+    try {
+        if (this.__LZcanvas && this.__LZcanvas.parentNode != null) {
+            this.__LZcanvas = G_vmlCanvasManager.initElement(this.__LZcanvas);
+            this.__docanvascallback();
+            return;
+        }
+    } catch (e) {
+    }
+    if (--this.__maxTries > 0) {
+        var callback = lz.BrowserUtils.getcallbackstr(this, '__initcanvasie');
+        this.__canvasTId = setTimeout(callback, 50);
+    }
 }

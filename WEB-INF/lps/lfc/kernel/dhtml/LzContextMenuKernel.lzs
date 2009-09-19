@@ -74,28 +74,9 @@ static var lzcontextmenu = null;
 
 /** @access private */
 static function __create () {
-    var s = document.getElementById('lzcontextmenu');
+    var s = LzContextMenuKernel.lzcontextmenu;
     if (! s) {
-        s = document.createElement('div');
-        lz.embed.__setAttr(s, 'id', 'lzcontextmenu');
-        lz.embed.__setAttr(s, 'style', 'display: none');
-        var stopevent = function (e) {
-            if (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            } else {
-                e = window.event;
-                e.returnValue = false;
-                e.cancelBubble = true;
-            }
-            return false;
-        }
-        s.onmousedown = stopevent;
-        s.onmouseup = stopevent;
-        s.onclick = stopevent;
-        document.body.appendChild(s);
-
-        LzContextMenuKernel.lzcontextmenu = s;
+        LzContextMenuKernel.lzcontextmenu = s = new lz.lzcontextmenu(canvas);
     }
     return s;
 }
@@ -108,9 +89,7 @@ function __show () {
     if (del != null) del.execute(owner);
     if (owner.onmenuopen.ready) owner.onmenuopen.sendEvent(owner);
     
-
-    var o = '';
-    var shownItems = 0;
+    var classlist = [];
     var items = owner.getItems();
     var _items = {};
     for (var i = 0; i < items.length; i++) {
@@ -122,65 +101,40 @@ function __show () {
         }
         // Mark as displayed
         _items[caption] = true;
-        shownItems += 1;
 
         if (v.separatorBefore) {
-            o += '<div class="separator"></div>';
+            classlist.push({type: 'separator'});
+            //o += '<div class="separator"></div>';
         }
 
         if (v.enabled) {
-            o += '<a href="" onmouseup="LzMouseKernel.__showncontextmenu.__select(arguments[0],' + i + ');">';
+            classlist.push({type: 'text', label: caption, offset: i});
+            //o += '<a href="" onmouseup="LzMouseKernel.__showncontextmenu.__select(arguments[0],' + i + ');">';
         } else {
-            o += '<a href="" class="disabled">';
+            classlist.push({type: 'disabled', label: caption, offset: i});
+            //o += '<a href="" class="disabled">';
         }
-        o += caption + '</a>';
+        //o += caption + '</a>';
     }
 
     LzMouseKernel.__showncontextmenu = this;
 
     var s = LzContextMenuKernel.lzcontextmenu || LzContextMenuKernel.__create();
-    s.innerHTML = o;
-
-    var width = s.offsetWidth;
-    var x = LzMouseKernel.__x;
-    if (x + width > LzScreenKernel.width) {
-        x += LzScreenKernel.width - (x + width);
-    }
-
-    var height = s.offsetHeight;
-    var y = LzMouseKernel.__y;
-    if (y + height > LzScreenKernel.height) {
-        y += LzScreenKernel.height - (y + height);
-    }
-
-    s.style.left = x + 'px';
-    s.style.top = y + 'px';
-
-
-    // Only show menu if there are any visible items and builtin items are hidden
-    if (shownItems && ! this.showbuiltins) {
-        s.style.display = 'block';
-    }
+    s.setItems(classlist);
+    s.show();
 }
 
 /** @access private */
 function __hide () {
-    var s = LzContextMenuKernel.lzcontextmenu;
-    if (s) {
-        s.style.display = 'none';
-    }
+    Debug.warn('__hide');
     LzMouseKernel.__showncontextmenu = null;
 }
 
 /** @access private */
-function __select (e, i) {
-    e = e || window.event;
-    var leftbutton = (LzSprite.quirks.ie_mouse_events ? 1 : 0);
-    if (e.button == leftbutton) {
-        this.__hide();
-        var items = this.owner.getItems();
-        if (items[i]) items[i].kernel.__select();
-    }
+function __select (i) {
+    var items = this.owner.getItems();
+    Debug.info('__select', i, items[i], items[i].kernel);
+    if (items && items[i]) items[i].kernel.__select();
 }
 
 }; // End of LzContextMenuKernel

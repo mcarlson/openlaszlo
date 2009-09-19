@@ -2904,9 +2904,18 @@ final function setPlay (b:Boolean) :void {
 /**
   * Get a reference to the control mc
   * @access private
+  * @deprecated Use getDisplayObject() instead.
   */
-function getMCRef () :* {
-    return this.sprite.getMCRef();
+function getMCRef() :* {
+    if ($debug) Debug.deprecated(this, arguments.callee, this.getDisplayObject);
+    return this.getDisplayObject();
+}
+
+/**
+  * Get a reference to the underlying display object for this view.  For as2 this is a MovieClip, as3 an LzSprite and in dhtml it's a <div/>
+  */
+function getDisplayObject():* {
+    return this.sprite.getDisplayObject();
 }
 
 /**
@@ -3001,16 +3010,17 @@ function getZ () {
   * @param Integer secs: Number of seconds to skip forward or backward (if negative)
   */
 function seek (secs:Number) :void {
-    var m:* = this.getMCRef();
-    if (m.isaudio == true) {
-        m.seek(secs, this.playing)
-    } else {
-        var f:Number = secs * canvas.framerate;
-        if (this.playing) {
-            this.play(f, true);
-        } else {
-            this.stop(f, true);
+    if (this.capabilities.audio) {
+        if (this.sprite.isaudio) {
+            this.sprite.seek(secs, this.playing);
+            return;
         }
+    }
+    var frames:Number = secs * canvas.framerate;
+    if (this.playing) {
+        this.play(frames, true);
+    } else {
+        this.stop(frames, true);
     }
 }
 
@@ -3020,12 +3030,12 @@ function seek (secs:Number) :void {
   * first frame
   */
 function getCurrentTime () :Number {
-    var m:* = this.getMCRef();
-    if (m.isaudio == true) {
-        return m.getCurrentTime();
-    } else {
-        return this.frame / canvas.framerate;
+    if (this.capabilities.audio) {
+        if (this.sprite.isaudio) {
+            return this.sprite.getCurrentTime();
+        }
     }
+    return this.frame / canvas.framerate;
 }
 
 /** @access private */
@@ -3033,19 +3043,19 @@ function $lzc$getCurrentTime_dependencies ( who, self ) :Array {
     return [ self, "frame" ];
 }
 
-
 /**
   * Returns the total amount of time the resource would take to play.
   * @return Number: Seconds of media controlled by this view.
   */
 function getTotalTime () :Number {
-    var m:* = this.getMCRef();
-    if (m.isaudio == true) {
-        return m.getTotalTime();
-    } else {
-        return this.totalframes / canvas.framerate;
+    if (this.capabilities.audio) {
+        if (this.sprite.isaudio) {
+            return this.sprite.getTotalTime();
+        }
     }
+    return this.totalframes / canvas.framerate;
 }
+
 /** @access private */
 function $lzc$getTotalTime_dependencies ( who, self ) :Array {
     return [ self, "load" ];
@@ -3057,9 +3067,12 @@ function $lzc$getTotalTime_dependencies ( who, self ) :Array {
   * @return Object: Object containind id3 tag data, if available.
   */
 function getID3 () :Object {
-    var m:* = this.getMCRef();
-    if (m.isaudio == true) {
-        return m.getID3();
+    if (this.capabilities.audio) {
+        if (this.sprite.isaudio) {
+            return this.sprite.getID3();
+        }
+    } else if ($debug) {
+        LzView.__warnCapability('view.getID3()', 'audio'); 
     }
     return null;
 }
@@ -3350,6 +3363,46 @@ function $lzc$set_cachebitmap( cache ) {
         } else if ($debug) {
             LzView.__warnCapability('view.cachebitmap', 'bitmapcaching'); 
         }
+    }
+}
+
+/** Sent when the context is ready to use, which can take some time in IE DHTML.
+ * @lzxtype event 
+ * @access public
+ */
+var oncontext = LzDeclaredEvent;
+
+/** Contains a reference to the raw drawview context.  The oncontext event is sent when the context is ready to use, which can take some time in IE DHTML.
+ * @access public
+ */
+var context = null;
+
+/**
+  * @param 2dcontext context: The 2d context for drawing
+  * @access private 
+  */
+function $lzc$set_context(context) {
+    this.context = context;
+    if (this.oncontext.ready) {
+        this.oncontext.sendEvent(context);
+    }
+}
+
+/**
+  * Creates a 2d graphics context. Sets the context attribute when it's ready.
+  * @access private 
+  */
+function createContext(){
+    if (this.capabilities['2dcanvas']) {
+        // Set the callback to use when the context has been created
+        this.sprite.setContextCallback(this, '$lzc$set_context');
+        // some runtimes need to use the callback
+        var context = this.sprite.getContext();
+        if (context) {
+            this.setAttribute('context', context);
+        }
+    } else if ($debug) {
+        LzView.__warnCapability('view.createContext', '2dcanvas'); 
     }
 }
 

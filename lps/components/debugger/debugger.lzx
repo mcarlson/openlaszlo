@@ -113,7 +113,7 @@
         super.init();
         // Hide from screen readers
         if ($as2) {
-            var mc = this.getMCRef();
+            var mc = this.getDisplayObject();
             mc._accImpl = {stub: true};
         }
     </method>

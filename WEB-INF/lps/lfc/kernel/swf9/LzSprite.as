@@ -139,6 +139,7 @@ public class LzSprite extends Sprite {
       ,allowfullscreen: true
       ,setid: false
       ,globalfocustrap: false
+      ,'2dcanvas': true
       };
       var capabilities = LzSprite.capabilities;
 
@@ -1451,12 +1452,25 @@ public class LzSprite extends Sprite {
           trace('LzSprite.setAccessible not yet implemented');
       }
 
-      public function getMCRef () :LzSprite {
+      /**
+        * Get a reference to the display object
+        */
+      public function getDisplayObject():LzSprite {
           return this; 
       }
 
-      public function getContext () :Graphics {
+      /**
+        * Get a reference to the graphics context
+        */
+      public function getContext():Graphics {
           return this.graphics; 
+      }
+
+      /**
+        * Set callback for context update events
+        * Unused in swf
+        */
+      public function setContextCallback(callbackscope, callbackname):void {
       }
 
       public function setBitmapCache(cache) :void {

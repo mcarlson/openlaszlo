@@ -1034,16 +1034,6 @@ dynamic class LzText extends LzView with LzFormatter {
     this.sprite = this.tsprite = new LzTextSprite(this, args);
   }
 
-
-  /**
-   * Get a reference to the control mc (overridden from LzView)
-   * @access private
-   */
-  override function getMCRef () {
-    return this.tsprite.getMCRef();
-  }
-
-
   /*
    * Methods
    */
