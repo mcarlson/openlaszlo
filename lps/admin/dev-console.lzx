@@ -154,17 +154,11 @@
               <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:12" x="10" y="9">
                     <radiobutton id="rb8" value="'swf8'"
                                  selected="${app_runtime == 'swf8'}">swf8</radiobutton >
-                    <radiobutton id="rbdhtml" value="'dhtml'"
-                                 selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
-
-                    <radiobutton id="rb9" value="'swf9'" 
-                                 selected="${app_runtime == 'swf9'}">swf9</radiobutton >
-
                     <radiobutton id="rb10" value="'swf10'" 
                                  enabled="true"
                                  selected="${app_runtime == 'swf10'}">swf10</radiobutton >
-
-
+                    <radiobutton id="rbdhtml" value="'dhtml'"
+                                 selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
                 </radiogroup>
                 <view x="$once{rg_runtime.x + rg_runtime.width + 14}">
                     <view height="14" width="1" bgcolor="black" y="9" />
