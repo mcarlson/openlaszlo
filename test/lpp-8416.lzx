@@ -1,13 +1,13 @@
 <canvas bgcolor="0xcccccc">
   <include href="incubator/scrolledittext.lzx"/>
 
-  <view x="5%" y="5%" height="95%" width="95%" layout="axis: y; spacing: 20">
+  <view x="5%" y="5%" height="95%" width="95%" layout="axis: x; spacing: 20">
 
-    <scrolledittext width="100" height="100" bgcolor="white"
+    <edittext width="100" height="100" bgcolor="white"
                     font="Verdana" fontsize="11" multiline="true"
                     >
       Enter some text here
-    </scrolledittext>
+    </edittext>
 
     <text width="210" multiline="true">
       Enter multiple lines in the edit box above.  As you enter each new
