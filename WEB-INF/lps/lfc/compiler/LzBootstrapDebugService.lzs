@@ -123,6 +123,7 @@ class LzDebugConsole {
 
   /** @access private */
   function evalSimpleExpr(expr:String) {
+    #pragma "throwsError=true"
     var parts = expr.match(this.ElementPattern);
     var val = globalValue(parts[0]) || Debug.environment[parts[0]];
     for (var i = 1, l = parts.length; i < l; i++) {
@@ -535,15 +536,19 @@ function trace (...args) { Debug.info.apply(Debug, args); }
 /**
  * Compiler support for debugger warnings.  These presently pollute
  * the global environment, because you need a toe-hold somewhere.
+ * N.B. we need to declare the functions as function expressions, 
+ * because that's the only way right now to get the script compiler to
+ * put them at the top level in the as3 intermediate .as files, outside
+ * of the LFCApplication.
  */
 
 /** Bootstrap version of base warning function
  * @access private
  */
-function $reportSourceWarning (filename, lineNumber, msg, fatal) {
+var $reportSourceWarning = function (filename, lineNumber, msg, fatal) {
 #pragma "warnUndefinedReferences=false"
   var warning = filename + '@' + lineNumber + ': ' + msg + '\n';
-  Debug[fatal?'error':'warning'](warning);
+  Debug[fatal?'error':'warn'](warning);
 };
 
 // Each of the warnings that the compile may call maintains a flag to
@@ -556,7 +561,9 @@ function $reportSourceWarning (filename, lineNumber, msg, fatal) {
 var $reportedError = null;
 
 /** @access private */
-function $reportException (fileName, lineNumber, e) {
+var $reportException = function (fileName, lineNumber, e) {
+// prevent compiler from reporting global assignment warning for $reportedError
+#pragma "warnGlobalAssignments=false"
   if (e !== $reportedError) {
     $reportedError = e;
     $reportSourceWarning(fileName, lineNumber, e.name + ": " + e.message, true);
@@ -564,7 +571,7 @@ function $reportException (fileName, lineNumber, e) {
 }
 
 /** @access private */
-function $reportUndefinedObjectProperty (filename, lineNumber, propertyName) {
+var $reportUndefinedObjectProperty = function (filename, lineNumber, propertyName) {
 #pragma "warnUndefinedReferences=false"
   if (! arguments.callee._dbg_recursive_call) {
     arguments.callee._dbg_recursive_call = true;
@@ -575,7 +582,7 @@ function $reportUndefinedObjectProperty (filename, lineNumber, propertyName) {
 $reportUndefinedObjectProperty._dbg_recursive_call = false;
 
 /** @access private */
-function $reportUndefinedProperty (filename, lineNumber, propertyName) {
+var $reportUndefinedProperty = function (filename, lineNumber, propertyName) {
 #pragma "warnUndefinedReferences=false"
   if (! arguments.callee._dbg_recursive_call) {
     arguments.callee._dbg_recursive_call = true;
@@ -586,7 +593,7 @@ function $reportUndefinedProperty (filename, lineNumber, propertyName) {
 $reportUndefinedProperty._dbg_recursive_call = false;
 
 /** @access private */
-function $reportUndefinedVariable (filename, lineNumber, variableName) {
+var $reportUndefinedVariable = function (filename, lineNumber, variableName) {
 #pragma "warnUndefinedReferences=false"
   if (! arguments.callee._dbg_recursive_call) {
     arguments.callee._dbg_recursive_call = true;
@@ -597,7 +604,7 @@ function $reportUndefinedVariable (filename, lineNumber, variableName) {
 $reportUndefinedVariable._dbg_recursive_call = false;
 
 /** @access private */
-function $reportNotFunction(filename, lineNumber, name, value) {
+var $reportNotFunction = function (filename, lineNumber, name, value) {
 #pragma "warnUndefinedReferences=false"
   if (! arguments.callee._dbg_recursive_call) {
     arguments.callee._dbg_recursive_call = true;
@@ -617,7 +624,7 @@ function $reportNotFunction(filename, lineNumber, name, value) {
 $reportNotFunction._dbg_recursive_call = false;
 
 /** @access private */
-function $reportUndefinedMethod(filename, lineNumber, name, value) {
+var $reportUndefinedMethod = function (filename, lineNumber, name, value) {
 #pragma "warnUndefinedReferences=false"
   if (! arguments.callee._dbg_recursive_call) {
     {
@@ -640,5 +647,3 @@ function $reportUndefinedMethod(filename, lineNumber, name, value) {
   }
 };
 $reportUndefinedMethod._dbg_recursive_call = false;
-
-

@@ -22,7 +22,7 @@ if ($as3) {
      *
      * @access private
      */
-    static var sourceWarningHistory = [];
+    static var sourceWarningHistory = {};
 
     /**
      * Copied from debug/LzCompiler because I don't know how to make

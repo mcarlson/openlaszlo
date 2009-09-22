@@ -1,5 +1,10 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
+//* A_LZ_COPYRIGHT_BEGIN ******************************************************
+//* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Use is subject to license terms.                                          *
+//* A_LZ_COPYRIGHT_END ********************************************************
+
 /**
  ** Platform-specific implementation of debug I/O
  **/
@@ -122,7 +127,7 @@ class LzDHTMLDebugService extends LzDebugService {
    */
   function LzDHTMLDebugService(base:LzDebugService) {
     super(base);
-    var copy = {backtraceStack: true, uncaughtBacktraceStack: true, sourceWarningHistory: true, logger: true, console: true};
+    var copy = {backtraceStack: true, uncaughtBacktraceStack: true, logger: true, console: true};
     for (var k in copy) {
       this[k] = base[k];
     }
@@ -445,9 +450,3 @@ var Debug = new LzDHTMLDebugService(Debug);
   * @access private
   */
 var __LzDebug = Debug;
-
-
-//* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.            *
-//* Use is subject to license terms.                                          *
-//* A_LZ_COPYRIGHT_END ********************************************************

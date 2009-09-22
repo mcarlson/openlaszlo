@@ -191,7 +191,7 @@ class LzAS3DebugService extends LzDebugService {
       }
       var n = getQualifiedClassName(fn);
       if (! mustBeUnique) {
-          return n;
+        return n;
       } else {
         try {
           if (fn == getDefinitionByName(n)) {
@@ -206,9 +206,6 @@ class LzAS3DebugService extends LzDebugService {
 }#
 
   /**
-   * @access private
-   */
-  /**
    * Adds unenumerable object properties for DHMTL runtime
    *
    * @access private
@@ -216,13 +213,13 @@ class LzAS3DebugService extends LzDebugService {
   #passthrough {
   // all methods are coerced to public when compiling for debug
   public override function objectOwnProperties (obj:*, names:Array=null, indices:Array=null, limit:Number=Infinity, nonEnumerable:Boolean=false) {
-    // TODO [2008-09-11 hqm] not sure what to do here, maybe we can use the introspection API
-    // flash.utils.describeType() to at least enumerate public properties... 
-    var description:XML = describeType(obj);
+    // TODO [2008-09-11 hqm] not sure what to do here, we use the introspection API
+    // flash.utils.describeType() to at least enumerate public properties...
     if (names != null) {
+      var description:XML = describeType(obj);
       for each(var a:XML in description.variable) {
-          names.push(a.@name);
-        }
+        names.push(a.@name);
+      }
     }
     return super.objectOwnProperties(obj, names, indices, limit,nonEnumerable);
   }
@@ -231,5 +228,3 @@ class LzAS3DebugService extends LzDebugService {
 
 var Debug = new LzAS3DebugService(null);
 var __LzDebug = Debug;
-
-

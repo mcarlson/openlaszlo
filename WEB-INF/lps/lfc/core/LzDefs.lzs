@@ -250,6 +250,8 @@ var lz;
     if (lz is Object) {
       // In some runtimes, lz is already defined by the embedding script
     } else if (!lz) {
+      // prevent compiler from reporting global assignment warning for lz
+      #pragma "warnGlobalAssignments=false"
       lz = new LzInheritedHash();
     } else if ($debug) {
       Debug.error("Can't create `lz` namespace, already bound to %w", lz);

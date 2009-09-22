@@ -2,23 +2,28 @@
  * stubs.lzs
  *****************************************************************************/
 
-//* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.            *
-//* Use is subject to license terms.                                          *
-//* A_LZ_COPYRIGHT_END ********************************************************
+//* A_LZ_COPYRIGHT_BEGIN *******************************************************
+//* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved. *
+//* Use is subject to license terms.                                           *
+//* A_LZ_COPYRIGHT_END *********************************************************
 
-// This file implements the debugger stubs, so that DHTML apps can make refernces to
+// This file implements the debugger stubs, so that DHTML apps can make references to
 // Debug.write, etc, when the full debugger is not compiled/linked in.
 
 // Don't clobber the runtime debug stub which may be included for profiling
 Debug = global['Debug'] || {};
-Debug.write = function (args) { }
-Debug.trace = function (args) { }
-Debug.monitor = function (args) { }
-Debug.warn = function (args) { }
-Debug.error = function (args) { }
-Debug.info = function (args) { }
-Debug.debug = function (args) { }
+(function () {
+    function emptyFunction () {}
+    Debug.write = emptyFunction;
+    Debug.trace = emptyFunction;
+    Debug.monitor = emptyFunction;
+    Debug.warn = emptyFunction;
+    Debug.error = emptyFunction;
+    Debug.info = emptyFunction;
+    Debug.debug = emptyFunction;
+    Debug.deprecated = emptyFunction;
+    Debug.inspect = emptyFunction;
+})();
 
 // To catch swf9 'trace()' calls
 trace = function () { console.info.apply(console,arguments);}

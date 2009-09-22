@@ -656,11 +656,11 @@
           var inrsw = false;
           var rsw = $reportSourceWarning;
           var testcase = this;
-          var wrapper = function (fn, ln, msg) {
+          var wrapper = function (filename, lineNumber, msg, fatal) {
             if (! inrsw) {
               try {
                 inrsw = true;
-                rsw.call(rsw, fn, ln, msg);
+                rsw.call(this, filename, lineNumber, msg, fatal);
                 testcase.error(msg);
               } finally {
                 inrsw = false;

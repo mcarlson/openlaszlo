@@ -3,14 +3,14 @@
 /**
   * Definition of the basic LFC Library 
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
   */
 
 /** @access private */
-var _Copyright = "Portions of this file are copyright (c) 2001-2008 by Laszlo Systems, Inc.  All rights reserved.";
+var _Copyright = "Portions of this file are copyright (c) 2001-2009 by Laszlo Systems, Inc.  All rights reserved.";
 
 // If profiling, we need to define this early, because the class
 // runtime will attempt to use it
@@ -26,10 +26,11 @@ if ($profile) {
 
 if ($debug) {
   #include "debugger/Library.lzs"
-} else {
-  if ($dhtml) {
-    #include "debugger/stubs.lzs"
-  }
+} else if ($dhtml) {
+  #include "debugger/stubs.lzs"
+} else if ($as3) {
+  //Debugger placeholder
+  #include "debugger/swf9stubs.lzs"
 }
 
 if ($profile) {
@@ -56,16 +57,12 @@ if ($profile) {
 #include "services/Library.lzs"
 
 if ($as3) {
-  //Debugger placeholder
-  #include "debugger/swf9stubs.lzs"
     // Initialize the DojoExternalInterface class
     var DojoExternalInterface = new DojoExternalInterfaceClass( LzBrowserKernel.getInitArg('id') );
-
 } else {
   if ($as2) {
     // Initialize the DojoExternalInterface class
-    var id = LzBrowserKernel.getInitArg('id');
-    DojoExternalInterface = new DojoExternalInterfaceClass(id);
+    var DojoExternalInterface = new DojoExternalInterfaceClass( LzBrowserKernel.getInitArg('id') );
   }
   if ($debug) {
     // Must be loaded last -- tells the core debugger loading is done

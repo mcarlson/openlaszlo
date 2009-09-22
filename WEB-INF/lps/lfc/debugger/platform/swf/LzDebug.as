@@ -1,5 +1,10 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
+//* A_LZ_COPYRIGHT_BEGIN ******************************************************
+//* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Use is subject to license terms.                                          *
+//* A_LZ_COPYRIGHT_END ********************************************************
+
 /*
  * Platform-specific DebugService
  */
@@ -12,7 +17,7 @@ class LzAS2DebugService extends LzDebugService {
   function LzAS2DebugService (base:LzBootstrapDebugService) {
     super(base);
     // Preserve any state created in the base service
-    var copy = {backtraceStack: true, uncaughtBacktraceStack: true, sourceWarningHistory: true};
+    var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
     for (var k in copy) {
       this[k] = base[k];
     }
@@ -293,11 +298,3 @@ var Debug = new LzAS2DebugService(Debug);
   * @access private
   */
 var __LzDebug = Debug;
-
-
-
-//* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.            *
-//* Use is subject to license terms.                                          *
-//* A_LZ_COPYRIGHT_END ********************************************************
-

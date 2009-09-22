@@ -2,7 +2,7 @@
 
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -10,9 +10,17 @@
   * @subtopic Debugging
   */
 
+// replace previous definition of $reportSourceWarning from LzBootstrapDebugService.lzs
+if ($as3) {
+{ // scope #pragma
+  #pragma "warnGlobalAssignments=false"
+  // must not use 'var' here
+  $reportSourceWarning = $lzsc$runtime.$reportSourceWarning;
+}
+} else {
 // Hash to avoid printing duplicate warnings (e.g., when a warning is
 // in a loop)
-Debug.sourceWarningHistory = [];
+Debug.sourceWarningHistory = {};
 
 // Replace the bootstrap warning function with one that hooks into
 // LzWarning
@@ -38,3 +46,4 @@ var $reportSourceWarning = function (filename, lineNumber, msg, fatal) {
   }
 }
 
+}

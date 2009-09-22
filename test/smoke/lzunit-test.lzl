@@ -135,7 +135,7 @@
 
       /* Henry's checks */
       if (canvas.runtime.indexOf("swf") == -1 ||
-          (canvas.runtime.indexOf("swf") == 0 && canvas.runtime >= "swf7")) {
+          (canvas.runtime.indexOf("swf") == 0 && Number(canvas.runtime.substr(3)) >= 7)) {
           assertSame(false, undefined < 1, "undefined < 1");
           assertSame(false, undefined > -1, "undefined > -1");
           assertSame(true, isNaN(Math.min(undefined, 1)), "isNaN(Math.min(undefined, 1))");
@@ -149,9 +149,12 @@
       }
 
       assertSame(true, isNaN(Infinity * 0), "Infinity * 0 isNaN");
-      /* FIXME: [2002-11-16 ptw] (coercion string) broken in Flash? */
-//       assertEquals("foo", {toString: function() {return "foo"}},
-//           "coercion to string");
+      if ($as2) {
+          // FIXME: [2002-11-16 ptw] (coercion string) broken in Flash?
+          // NOTE: [20090922 anba] it's only broken in as2
+      } else {
+          assertEquals("foo", {toString: function() {return "foo"}}, "coercion to string");
+      }
 
       assertSame(foo, foo, "object === itself");
 
@@ -566,13 +569,9 @@
       error(msg);
       assertEquals(1, expectedErrors, "Total number of expected errors");
 
-      if ($swf9) {
-        // not yet
-      } else {
-        expectedError.expectedMatch = "This is a";
-        $reportSourceWarning(0, 0, "This is a test", true);
-        assertEquals(2, expectedErrors, "Total number of expected errors");
-      }
+      expectedError.expectedMatch = "This is a";
+      $reportSourceWarning(0, 0, "This is a test", true);
+      assertEquals(2, expectedErrors, "Total number of expected errors");
 
       // Only test errors that are caught by the debug compiler for each runtime
       if ($dhtml) {

@@ -2,29 +2,37 @@
  * stubs.lzs
  *****************************************************************************/
 
-//* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.            *
-//* Use is subject to license terms.                                          *
-//* A_LZ_COPYRIGHT_END ********************************************************
+//* A_LZ_COPYRIGHT_BEGIN *******************************************************
+//* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved. *
+//* Use is subject to license terms.                                           *
+//* A_LZ_COPYRIGHT_END *********************************************************
 
-// This file implements the debugger stubs, so that DHTML apps can make refernces to
+// This file implements the debugger stubs, so that AS3 apps can make references to
 // Debug.write, etc, when the full debugger is not compiled/linked in.
 
+dynamic class LzDebugService with LzFormatter {
+  #passthrough (toplevel:true) {
+    import flash.utils.getDefinitionByName;
+  }#
 
+  #passthrough {
+    /*** @access private */
+    private var __trace:Function;
+    /*** @access private */
+    private function get _trace () :Function {
+      if (this.__trace == null) {
+        // TODO: [20090920 anba] couldn't figure out a better way to access
+        // global trace, can't simply call trace() because that points to the
+        // method with the same name defined locally (see below)
+        this.__trace = Function(getDefinitionByName("trace"));
+      }
+      return this.__trace;
+    }
+  }#
 
-var  $reportSourceWarning = function (...ignore) { };
-var  $reportUndefinedObjectProperty = function (...ignore) { };
-var  $reportUndefinedProperty = function (...ignore) { };
-var  $reportUndefinedVariable = function (...ignore) { };
-var  $reportNotFunction = function (...ignore) { };
-var  $reportUndefinedMethod = function (...ignore) { };
-
-if ($debug) {
-} else {
-    dynamic class LzDebugService with LzFormatter {
     public function write(...args):void {
-        var str = this.formatToString.apply(this, args);
-        trace(str);
+      var str = this.formatToString.apply(this, args);
+      this._trace(str);  
     }
     public function inspect(...args):void {
       this.write('INSPECT: ' + this.formatToString.apply(this, args));
@@ -47,18 +55,14 @@ if ($debug) {
     public function monitor(...args):void {
       this.write('MONITOR: ' + this.formatToString.apply(this, args));
     }
-    // This prevents write from calling trace
-//     public function trace(...args):void {
-//       this.write('TRACE: ' + this.formatToString.apply(this, args));
-//     }
+    public function trace(...args):void {
+      this.write('TRACE: ' + this.formatToString.apply(this, args));
+    }
     public function __typeof (thing) { return typeof thing; }
     public function functionName (fn, isGlobal=false) { return String(fn); }
     public function __String (thing, pretty=null, limit=null, unique=null) { return String(thing); }
 
 }
+
 // Just enough substrate for non-debug mode to work
-    var Debug = new LzDebugService();
-}
-
-
-
+var Debug = new LzDebugService();
