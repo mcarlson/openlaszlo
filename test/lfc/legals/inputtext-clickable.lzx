@@ -103,7 +103,7 @@
             this.setAttribute('bgcolor', 0xff0000);
         </handler>
         <handler name="onclick">
-            Debug.write('text is ' + canvas.foo.getText());
+            Debug.write('text is ' + bar.getText());
         </handler>
     </view>
     <simplelayout axis="x"/>
