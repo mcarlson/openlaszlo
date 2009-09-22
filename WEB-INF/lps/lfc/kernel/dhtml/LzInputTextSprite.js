@@ -152,7 +152,7 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
     }
     this.__LzInputDiv.owner = this;
     if (this.quirks.emulate_flash_font_metrics) {
-        if (this.owner && this.owner.multiline) {
+        if (this.multiline) {
             this.__LzInputDiv.className = 'lzswfinputtextmultiline';
         } else {
             this.__LzInputDiv.className = 'lzswfinputtext';
@@ -165,6 +165,10 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
     }
     this.scrolldiv = this.__LzInputDiv;
     this.scrolldiv.owner = this;
+    // NOTE [2009-09-21 ptw] (LPP-8246) Multiline input texts must
+    // always have scrolling on
+    this.setScrolling(this.multiline);
+    // scrollevents will be updated later, if it is explicitly set
 }
 
 LzInputTextSprite.prototype.setMultiline = function(ml) {
@@ -191,7 +195,7 @@ LzInputTextSprite.prototype.setMultiline = function(ml) {
         // put in place
         this.__LZdiv.appendChild(newdiv);
         // input elements do not scroll but multiline does, so we need
-        // to update scrollevents
+        // to update scrollevents per the owner
         this.setScrollEvents(this.owner.scrollevents);
         newdiv.scrollLeft = oldleft;
         newdiv.scrollTop = oldtop;

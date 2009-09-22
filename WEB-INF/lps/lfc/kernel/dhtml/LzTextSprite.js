@@ -135,10 +135,12 @@ LzTextSprite.prototype.scrollHeight = null;
 LzTextSprite.prototype.scrollLeft = null;
 LzTextSprite.prototype.scrollWidth = null;
 
-// The sprite copy of this will only be on if the underlying div
-// actually is scrollable
-LzTextSprite.prototype.scrollevents = false;
-LzTextSprite.prototype.setScrollEvents = function (on) {
+// This reflects whether the sprite will scroll or not.  For text
+// sprites, this only happens if scrollevents are enabled, but for
+// inputtext, this happens if the input text is multiline, so that the
+// browser will keep the cursor in the visible portion of the sprite.
+LzTextSprite.prototype.scrolling = false;
+LzTextSprite.prototype.setScrolling = function (on) {
   var scrolldiv = this.scrolldiv;
   var sdc = scrolldiv.className;
   if (sdc == 'lzswftext' || sdc == 'lzswfinputtextmultiline') {
@@ -147,25 +149,38 @@ LzTextSprite.prototype.setScrollEvents = function (on) {
     var ht = this.height;
     var wt = this.width;
     var cdim = this.CSSDimension;
-    if (on) {
-      this.scrollevents = true;
+    // NOTE [2009-09-21 ptw] (LPP-8246) Multiline input texts must
+    // always have scrolling on
+    if (on || sdc == 'lzswfinputtextmultiline') {
+      this.scrolling = on;
       scrolldiv.style.overflow = 'scroll';
       ht += this.quirks.scrollbar_width;
       wt += this.quirks.scrollbar_width;
     } else {
-      this.scrollevents = false;
-      scrolldiv.style.overflow = 'hidden';
+      this.scrolling = false;
+      // default is hidden
+      scrolldiv.style.overflow = '';
     }
     var hp = cdim(ht);
     var wp = cdim(wt);
     if (on) {
       scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
     } else if (scrolldiv.style.clip) {
+      // no clip needed, overflow is hidden
       scrolldiv.style.clip = '';
     }
     scrolldiv.style.height = hp;
     scrolldiv.style.width = wp;
   }
+  // Scrolling was requested, and granted!
+  return on && this.scrolling;
+}
+
+// The sprite copy of this will only be on if the underlying div
+// actually is scrollable
+LzTextSprite.prototype.scrollevents = false;
+LzTextSprite.prototype.setScrollEvents = function (on) {
+  this.scrollevents = this.setScrolling(on);
 }
 
 LzTextSprite.prototype.__updatefieldsize = function ( ){
@@ -777,7 +792,7 @@ LzTextSprite.prototype.setXScroll = function (n){
 
 
 LzTextSprite.prototype.setX = function (x) {
-  var scrolling = (this.scrollevents);
+  var scrolling = (this.scrolling);
   var turd = (scrolling && this.quirks['clipped_scrollbar_causes_display_turd']);
   if (scrolling) {
     var scrolldiv = this.scrolldiv;
@@ -800,7 +815,7 @@ LzTextSprite.prototype.setX = function (x) {
 }
 
 LzTextSprite.prototype.setY = function (y) {
-  var scrolling = (this.scrollevents);
+  var scrolling = (this.scrolling);
   var turd = (scrolling && this.quirks['clipped_scrollbar_causes_display_turd']);
   if (scrolling) {
     var scrolldiv = this.scrolldiv;
@@ -838,7 +853,7 @@ LzTextSprite.prototype.setWidth = function (w, force){
     var hp = cdim(h != null ? h : 0);
     // The scrollbar invades the width, so push the scrollbar out of
     // the way
-    if (this.scrollevents) {
+    if (this.scrolling) {
       wt += this.quirks.scrollbar_width;
     }
     // need to substract (negative) text-indent from width (but not from clip!),
@@ -850,7 +865,7 @@ LzTextSprite.prototype.setWidth = function (w, force){
       // Debug.debug('%w.style.width = %s', this.scrolldiv, this.CSSDimension(wt));
       scrolldiv.style.width = wp;
       // Hide the scrollbar
-      if (this.scrollevents) {
+      if (this.scrolling) {
         scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
       }
       this.__updatefieldsize();
@@ -876,7 +891,7 @@ LzTextSprite.prototype.setHeight = function (h) {
     // the way
     // NOTE: [2009-03-29 ptw] There are no scroll bars on input
     // elements
-    if (this.scrollevents) {
+    if (this.scrolling) {
       ht += this.quirks.scrollbar_width;
     }
     hp = cdim(ht);
@@ -884,7 +899,7 @@ LzTextSprite.prototype.setHeight = function (h) {
       // Debug.debug('%w.style.height = %s', this.scrolldiv, cdim(ht));
       scrolldiv.style.height = cdim(ht);
       // Hide the scrollbar
-      if (this.scrollevents) {
+      if (this.scrolling) {
         scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
       }
       this.__updatefieldsize();
