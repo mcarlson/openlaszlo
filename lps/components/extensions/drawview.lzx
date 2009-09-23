@@ -293,79 +293,131 @@
             return this._drawArc(x, y, radius, arc, startAngle);
         }
 
+        // @devnote mixins can't have static members (at least in AS3),
+        // so the definition of '__rrfactors' is moved to lz.drawview
+        // static var __rrfactors:Array = null;
+        function __getRoundRectFactors () :Array {
+            var factors:Array = lz.drawview.__rrfactors;
+            if (factors == null) {
+                // only compute one time
+                factors = this.__roundrectFactors();
+                lz.drawview.__rrfactors = factors;
+            }
+            return factors;
+        }
+
+        function __roundrectFactors() :Array {
+            // the corners are drawn in 45° steps by quadraticCurveTo, so
+            // for every single corner we call quadraticCurveTo two times,
+            // since 45° + 45° = 90° ;-)
+            // The original implementation used this code:
+            //   angle = -Math.PI/2; // = 90°
+            //   theta = Math.PI/4; // = 45°
+            // For every corner part, therefore eight times:
+            //   cx = _x + (Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            //   cy = _y + (Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+            //   px = _x + (Math.cos(angle+theta)*cornerRadius);
+            //   py = _y + (Math.sin(angle+theta)*cornerRadius);
+            //   this.quadraticCurveTo(cx, cy, px, py);
+            //   angle += theta;
+            // Since angle is always increased by a constant, this can be rewritten as:
+            //   f_cx(x) = Math.cos(angle + x * theta + theta/2)
+            //   f_cy(x) = Math.sin(angle + x * theta + theta/2)
+            //   f_px(x) = Math.cos(angle + x * theta + theta)
+            //   f_py(x) = Math.sin(angle + x * theta + theta)
+            //   i <- [0..7]
+            //   cx = _x + (f_cx(i)*cornerRadius/Math.cos(theta/2));
+            //   cy = _y + (f_cy(i)*cornerRadius/Math.cos(theta/2));
+            //   px = _x + (f_px(i)*cornerRadius);
+            //   py = _y + (f_py(i)*cornerRadius);
+            //   this.quadraticCurveTo(cx, cy, px, py);
+            // Because of 'cos(a - PI/2) = sin(a)' resp. 'sin(a - PI/2) = -cos(a)' we get:
+            //   f_cx(x) =  Math.sin(x * theta + theta/2)
+            //   f_cy(x) = -Math.cos(x * theta + theta/2)
+            //   f_px(x) =  Math.sin(x * theta + theta)
+            //   f_py(x) = -Math.cos(x * theta + theta)
+            // By applying the sum and difference formulas:
+            //   'sin(a + b) = sin(a) * cos(b) + cos(a) * sin(b)'
+            //   'cos(a + b) = cos(a) * cos(b) - sin(a) * sin(b)'
+            // We get substantial faster code because half of all factors are constant,
+            // so we only need to compute sin [0°..360°[ in steps of 45° (and cos [0°..360°[).
+            // But that's really easy now, because these values are well known!
+
+            // theta = 45 degrees in radians
+            const theta:Number = Math.PI / 4;
+            const theta2:Number = theta / 2;
+            const sqrt2_2:Number = Math.SQRT2 / 2;
+            const sinTheta:Number = sqrt2_2; // Math.sin(theta);
+            const cosTheta:Number = sqrt2_2; // Math.cos(theta);
+            const sinTheta2:Number = Math.sin(theta2);
+            const cosTheta2:Number = Math.cos(theta2);
+            // sin [0°..180°[ in steps of 45°
+            var sinTable:Array = [0, sqrt2_2, 1, sqrt2_2];
+            // cos [0°..180°[ in steps of 45°
+            var cosTable:Array = [1, sqrt2_2, 0, -sqrt2_2];
+
+            // compute all factors from [0°..360°[
+            var factors:Array = [];
+            // compute first half [0°..180°[
+            for (var i:int = 0; i < 4; ++i) {
+                var sin:Number = sinTable[i];
+                var cos:Number = cosTable[i];
+                factors.push(
+                    ( sin * cosTheta2 + cos * sinTheta2) / cosTheta2,
+                    (-cos * cosTheta2 + sin * sinTheta2) / cosTheta2,
+                    ( sin * cosTheta  + cos * sinTheta),
+                    (-cos * cosTheta  + sin * sinTheta)
+                );
+            }
+            // negate [0°..180°[ to get [180°..360°[
+            for (var i:int = 0; i < 4 * 4; ++i) {
+                factors[4 * 4 + i] = -factors[i];
+            }
+            return factors;
+        }
+
         function rect(x, y, w, h, cornerRadius = 0) {
             // if the user has defined cornerRadius our task is a bit more complex. :)
-            if (cornerRadius>0) {
-                // init vars
-                var angle:Number, cx:Number, cy:Number, px:Number, py:Number;
+            if (cornerRadius > 0) {
                 // make sure that w + h are larger than 2*cornerRadius
-                if (cornerRadius>Math.min(w, h)/2) {
-                    cornerRadius = Math.min(w, h)/2;
+                if (cornerRadius > Math.min(w, h) / 2) {
+                    cornerRadius = Math.min(w, h) / 2;
                 }
-                // theta = 45 degrees in radians
-                const theta:Number = Math.PI/4;
+
+                var factors:Array = this.__getRoundRectFactors();
+                var dview = this;
+                function drawCorner (i:int, _x:Number, _y:Number) :void {
+                    var cx:Number = _x + (factors[4 * i + 0] * cornerRadius);
+                    var cy:Number = _y + (factors[4 * i + 1] * cornerRadius);
+                    var px:Number = _x + (factors[4 * i + 2] * cornerRadius);
+                    var py:Number = _y + (factors[4 * i + 3] * cornerRadius);
+                    dview.quadraticCurveTo(cx, cy, px, py);
+                }
+
                 // draw top line
-                this.moveTo(x+cornerRadius, y);
-                this.lineTo(x+w-cornerRadius, y);
-                //angle is currently 90 degrees
-                angle = -Math.PI/2;
+                this.moveTo(x + cornerRadius, y);
+                this.lineTo(x + w - cornerRadius, y);
                 // draw tr corner in two parts
-                cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                this.quadraticCurveTo(cx, cy, px, py);
-                angle += theta;
-                cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                this.quadraticCurveTo(cx, cy, px, py);
+                drawCorner(0, x + w - cornerRadius, y + cornerRadius);
+                drawCorner(1, x + w - cornerRadius, y + cornerRadius);
+
                 // draw right line
-                this.lineTo(x+w, y+h-cornerRadius);
+                this.lineTo(x + w, y + h - cornerRadius);
                 // draw br corner
-                angle += theta;
-                cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                this.quadraticCurveTo(cx, cy, px, py);
-                angle += theta;
-                cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                this.quadraticCurveTo(cx, cy, px, py);
+                drawCorner(2, x + w - cornerRadius, y + h - cornerRadius);
+                drawCorner(3, x + w - cornerRadius, y + h - cornerRadius);
+
                 // draw bottom line
-                this.lineTo(x+cornerRadius, y+h);
+                this.lineTo(x + cornerRadius, y + h);
                 // draw bl corner
-                angle += theta;
-                cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                this.quadraticCurveTo(cx, cy, px, py);
-                angle += theta;
-                cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                this.quadraticCurveTo(cx, cy, px, py);
+                drawCorner(4, x + cornerRadius, y + h - cornerRadius);
+                drawCorner(5, x + cornerRadius, y + h - cornerRadius);
+
                 // draw left line
-                this.lineTo(x, y+cornerRadius);
+                this.lineTo(x, y + cornerRadius);
                 // draw tl corner
-                angle += theta;
-                cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                this.quadraticCurveTo(cx, cy, px, py);
-                angle += theta;
-                cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                this.quadraticCurveTo(cx, cy, px, py);
+                drawCorner(6, x + cornerRadius, y + cornerRadius);
+                drawCorner(7, x + cornerRadius, y + cornerRadius);
             } else {
                 // cornerRadius was not defined or = 0. This makes it easy.
                 this.moveTo(x, y);
@@ -499,8 +551,8 @@
             // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
-            static var uid = 0;
             static var __colorcache = {};
+            static var __rrfactors:Array = null;
 
             var globalAlpha = 1;
             var lineWidth = 1;
@@ -870,6 +922,7 @@
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
             static var __colorcache :Object = {};
+            static var __rrfactors:Array = null;
 
             var globalAlpha :Number = 1;
             var lineWidth :Number = 1;
