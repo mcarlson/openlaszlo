@@ -964,6 +964,15 @@
      this.middle.content.scrollToEnd();
   </method>
 
+<!-- Ensures the debugger window is visible, in front, and last output displayed. -->
+<method name="ensureVisible">
+    if (! this.visible) {
+        this.setAttribute('visible', true );
+        this.bringToFront();
+        this.scrollToEnd();
+    }
+</method>
+
 <method name="loaded" >
      <![CDATA[
         //------------------------------------------------------------------------------
@@ -975,13 +984,10 @@
         var bridge:LzDebugConsole = new LzDebuggerWindowConsoleBridge(this);
         this.clientBridge = Debug.attachDebugConsole(bridge);
 
-        this.setAttribute('visible', true );
         this.bringToFront();
-
         this.scrollToEnd();
 
         Debug.window = this;
-
       ]]>
   </method>
 

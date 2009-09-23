@@ -37,6 +37,13 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
     };
 
     /**
+     * @access private
+     */
+    override function ensureVisible () {
+      this.window.ensureVisible();
+    };
+
+    /**
      * Doc'd on interface
      * Bootstrap version
      * @access private

@@ -37,6 +37,13 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
   /**
    * @access private
    */
+  override function ensureVisible () {
+    this.DebugWindow.ensureVisible();
+  };
+
+  /**
+   * @access private
+   */
   override function echo (str, newLine:Boolean=true) {
     // This color should be a debugger constant -- maybe there should
     // be LzEcho extends LzSourceMessage

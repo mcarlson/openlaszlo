@@ -346,7 +346,11 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function updateOutputState (msg) {
     var str = String(msg);
     this.atFreshLine = (str.charAt(str.length-1) == '\n');
-    if (str.length) { this.atPrompt = false; }
+    if (str.length) {
+      this.atPrompt = false;
+      // Make sure the output is seen
+      this.console.ensureVisible();
+    }
   }
 
 

@@ -65,6 +65,12 @@ class LzDebugConsole {
   function clear () {};
 
   /**
+   * Ensures the console output is visible
+   * @access private
+   */
+  function ensureVisible () {};
+
+  /**
    * Adds output to the console, potentially marking it with a font or
    * color to indicate that it is input, not output.
    *
