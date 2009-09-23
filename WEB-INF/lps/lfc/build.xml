@@ -156,8 +156,10 @@
       myant.execute();
     };
 
+    var buildPlain = lfc.getProperty("build.lfc.runtime.plain");
     var buildDebug = lfc.getProperty("build.lfc.runtime.debug");
     var buildProfile = lfc.getProperty("build.lfc.runtime.profile");
+    var buildBacktrace = lfc.getProperty("build.lfc.runtime.backtrace");
     var LFCdir = lfc.getProperty("LFCdir") + '/';
 
     importPackage(java.io);
@@ -178,9 +180,11 @@
       var buildThisRuntime = lfc.getProperty("build.lfc.runtime.swf" + v);
 
       if (buildThisRuntime != null && buildThisRuntime != "false") {
-        var plain = LFCdir + "LFC" + v + ext;
-        if (!(new File(plain)).exists()) {
-          dobuild(plain, "swf" + v, shlibopt);
+        if (buildPlain) {
+          var plain = LFCdir + "LFC" + v + ext;
+          if (!(new File(plain)).exists()) {
+            dobuild(plain, "swf" + v, shlibopt);
+          }
         }
         if (buildDebug) {
           var dest = LFCdir + "LFC" + v + "-debug" + ext;
@@ -193,13 +197,15 @@
                     platformopt +
                     shlibopt + "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
           }
-          var dest = LFCdir + "LFC" + v + "-backtrace" + ext;
-          if ((v < 9) && !(new File(dest)).exists()) {
-            // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
-            // warnings, the options can be changed to simply -g3
-            dobuild(dest,
-                    "swf" + v,
-                    shlibopt + "--option debugBacktrace --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+          if (buildBacktrace) {
+            var dest = LFCdir + "LFC" + v + "-backtrace" + ext;
+            if ((v < 9) && !(new File(dest)).exists()) {
+              // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
+              // warnings, the options can be changed to simply -g3
+              dobuild(dest,
+                      "swf" + v,
+                      shlibopt + "--option debugBacktrace --option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+            }
           }
         }
         // TODO: [2008-01-11 dda] when ready, add extra builds for SWF9
@@ -215,9 +221,11 @@
 
     // build the dhtml lfc if we're supposed to
     if (lfc.getProperty("build.lfc.runtime.dhtml")) {
-      var plain = LFCdir + "LFCdhtml.js";
-      if (!(new File(plain)).exists()) {
-        dobuild(plain, "dhtml", "");
+      if (buildPlain) {
+        var plain = LFCdir + "LFCdhtml.js";
+        if (!(new File(plain)).exists()) {
+          dobuild(plain, "dhtml", "");
+        }
       }
       if (buildDebug) {
         var dest = LFCdir + "LFCdhtml-debug.js";
@@ -228,13 +236,15 @@
                   "dhtml",
                   "--option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
         }
-        var dest = LFCdir + "LFCdhtml-backtrace.js";
-        if (!(new File(dest)).exists()) {
-          // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
-          // warnings, the options can be changed to simply -g3
-          dobuild(dest,
-                  "dhtml",
-                  "--option debugBacktrace --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
+        if (buildBacktrace) {
+          var dest = LFCdir + "LFCdhtml-backtrace.js";
+          if (!(new File(dest)).exists()) {
+            // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
+            // warnings, the options can be changed to simply -g3
+            dobuild(dest,
+                    "dhtml",
+                    "--option debugBacktrace --option nameFunctions --option disableTrackLines --option warnGlobalAssignments '-D$debug=true'");
+          }
         }
       }
       if (buildProfile) {
