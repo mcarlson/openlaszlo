@@ -69,3 +69,8 @@ if ($as3) {
 #include "debugger/LzInit.lzs"
   }
 }
+
+if ($dhtml) {
+  // include late to ensure rest of LFC is defined
+  #include "contextmenu.js"
+}

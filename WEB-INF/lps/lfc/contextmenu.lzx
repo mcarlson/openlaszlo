@@ -1,0 +1,258 @@
+<canvas> 
+    <!-- NOTE: this file is manually compiled to a .js include
+         $ cd WEB-INF/lps/lfc/
+         $ lzc -runtime=dhtml contextmenu.lzx
+         edit contextmenu.js to remove everything on the first line up to Class.make("$lzc$class_lzcontextmenuseparator...
+         and canvas.initDone(); on last line.
+    -->
+         
+    <class name="lzcontextmenuseparator" height="10">
+        <handler name="oninit">
+            this.parent.registerRedraw(this);
+        </handler>
+        <handler name="ondestroy">
+            this.parent.unregisterRedraw(this);
+        </handler>
+        <method name="redraw" args="context">
+            context.moveTo(0,this.y + 9)
+            context.lineTo(this.parent.width - 3, this.y + 9); 
+            context.strokeStyle = '#E5E5E5';
+            context.stroke();
+        </method>
+    </class>
+
+    <class name="lzcontextmenutext" extends="text">
+        <handler name="onmouseover">
+            this.parent.registerRedraw(this);
+        </handler>
+        <handler name="onmouseout">
+            this.parent.unregisterRedraw(this);
+        </handler>
+        <handler name="onmousedown">
+            this.parent.select(this);
+            this.parent.unregisterRedraw(this);
+        </handler>
+        <method name="redraw" args="context">
+            // draw highlight
+            context.rect(this.x,this.y + 3, this.parent.width - 3, this.height);
+            context.fillStyle = '#CCCCCC';
+            context.fill();
+        </method>
+    </class>
+
+    <class name="lzcontextmenudisabled" extends="text" fgcolor="0xCCCCCC"/>
+
+    <class name="lzcontextmenu" visible="false" options="ignorelayout">
+        <attribute name="defaultplacement" value="container" type="string"/>
+        <attribute name="inset" value="5" type="number"/>
+        <attribute name="__drawnitems" value="{}"/>
+        <handler name="oninit">
+            this.__globalmousedel = new lz.Delegate(this, '__handlemouse');
+        </handler>
+        <method name="select" args="item">
+            var offset = item.data;
+            var cmenu = LzMouseKernel.__showncontextmenu;
+            if (cmenu) cmenu.__select(offset);
+            //Debug.debug('select', cmenu, offset);
+            this.hide();
+        </method>
+        <method name="show">
+            var pos = canvas.getMouse();
+            if (pos.x > canvas.width - this.width) pos.x = canvas.width - this.width;
+            if (pos.y > canvas.height - this.height) pos.y = canvas.height - this.height;
+            this.bringToFront();
+            this.setAttribute('x', pos.x);
+            this.setAttribute('y', pos.y);
+            this.setAttribute('visible', true);
+            this.__globalmousedel.register(lz.GlobalMouse, 'onmousedown');
+            //Debug.info('show', LzMouseKernel.__showncontextmenu);
+        </method>
+        <method name="hide">
+            this.__globalmousedel.unregisterAll();
+            var cmenu = LzMouseKernel.__showncontextmenu;
+            if (cmenu) cmenu.__hide();
+            this.setAttribute('visible', false);
+        </method>
+        <method name="setItems" args="newitems">
+            <![CDATA[
+            var subviews = this.container.subviews;
+            // clear items
+            for (var i = subviews.length; i >= 0; i--) {
+                var subview = subviews[i];
+                if (! subview || subview is LzLayout) continue;
+                subview.destroy();
+            }
+
+            var l = newitems.length;
+            var ypos = 0;
+            for (var i = 0; i < l; i++) {
+                var item = newitems[i];
+                var classref = lz['lzcontextmenu' + item.type];
+                if (classref) {
+                    var newview = new classref(this, {data: item.offset, text: item.label});
+                    newview.setAttribute('y', ypos);
+                    ypos += newview.height;
+                }
+            }
+            this.items = newitems;
+            this.background.redraw();
+            ]]>
+        </method>
+        <method name="registerRedraw" args="who">
+            this.__drawnitems[who.getUID()] = who;
+            this.background.redraw();
+        </method>
+        <method name="unregisterRedraw" args="who">
+            delete this.__drawnitems[who.getUID()];
+            this.background.redraw();
+        </method>
+        <method name="__handlemouse" args="view">
+            if (! view) {
+                this.hide();
+                return;
+            }
+            do {
+                if (view is lz.lzcontextmenu) {
+                    return;
+                }
+                view = view.immediateparent;
+            } while (view !== canvas)
+            this.hide();
+        </method>
+
+        <view name="background" width="${parent.container.width + 9}" height="${parent.container.height + 9}">
+            <handler name="oninit">
+                this.createContext();
+            </handler>
+            <!--- @keywords private -->
+            <handler name="onwidth" method="__doredraw"/>
+            <!--- @keywords private -->
+            <handler name="onheight" method="__doredraw"/>
+            <!--- @keywords private -->
+            <handler name="oncontext" method="__doredraw"/>
+            <!--- @keywords private -->
+            <handler name="onvisible" method="__doredraw"/>
+            <!--- @keywords private -->
+            <method name="__doredraw" args="ignore=null">
+                <![CDATA[
+                if (this.visible && this.width && this.height && this.context) this.redraw(this.context);
+                ]]>
+            </method>
+
+            <method name="redraw" args="context=this.context">
+                context.beginPath();
+                context.clearRect(0, 0, this.width, this.height);
+
+                this.rect(2.5,3.5,this.width - 3,this.height - 3, classroot.inset);
+                context.fillStyle= '#000000';
+                context.globalAlpha = .2;
+                context.fill();
+
+                context.beginPath();
+                this.rect(0,0, this.width - 3, this.height - 3, classroot.inset);
+                context.globalAlpha = .9;
+                context.fillStyle= '#FFFFFF';
+                context.fill();
+
+                context.globalAlpha = 1;
+                context.strokeStyle = '#CCCCCC';
+                context.stroke();
+
+                for (var uid in parent.__drawnitems) {
+                    context.beginPath();
+                    parent.__drawnitems[uid].redraw(context);
+                }
+            </method>
+            <method name="rect" args="x, y, w, h, cornerRadius = 0">
+                // from drawview.lzx
+                // if the user has defined cornerRadius our task is a bit more complex. :)
+                if (cornerRadius>0) {
+                    // init vars
+                    var angle:Number, cx:Number, cy:Number, px:Number, py:Number;
+                    // make sure that w + h are larger than 2*cornerRadius
+                    if (cornerRadius>Math.min(w, h)/2) {
+                        cornerRadius = Math.min(w, h)/2;
+                    }
+                    // theta = 45 degrees in radians
+                    const theta:Number = Math.PI/4;
+                    // draw top line
+                    this.context.moveTo(x+cornerRadius, y);
+                    this.context.lineTo(x+w-cornerRadius, y);
+                    //angle is currently 90 degrees
+                    angle = -Math.PI/2;
+                    // draw tr corner in two parts
+                    cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                    py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                    this.context.quadraticCurveTo(cx, cy, px, py);
+                    angle += theta;
+                    cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                    py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                    this.context.quadraticCurveTo(cx, cy, px, py);
+                    // draw right line
+                    this.context.lineTo(x+w, y+h-cornerRadius);
+                    // draw br corner
+                    angle += theta;
+                    cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                    py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                    this.context.quadraticCurveTo(cx, cy, px, py);
+                    angle += theta;
+                    cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                    py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                    this.context.quadraticCurveTo(cx, cy, px, py);
+                    // draw bottom line
+                    this.context.lineTo(x+cornerRadius, y+h);
+                    // draw bl corner
+                    angle += theta;
+                    cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                    py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                    this.context.quadraticCurveTo(cx, cy, px, py);
+                    angle += theta;
+                    cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                    py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                    this.context.quadraticCurveTo(cx, cy, px, py);
+                    // draw left line
+                    this.context.lineTo(x, y+cornerRadius);
+                    // draw tl corner
+                    angle += theta;
+                    cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                    py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                    this.context.quadraticCurveTo(cx, cy, px, py);
+                    angle += theta;
+                    cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
+                    px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
+                    py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
+                    this.context.quadraticCurveTo(cx, cy, px, py);
+                } else {
+                    // cornerRadius was not defined or = 0. This makes it easy.
+                    this.context.moveTo(x, y);
+                    this.context.lineTo(x+w, y);
+                    this.context.lineTo(x+w, y+h);
+                    this.context.lineTo(x, y+h);
+                    this.context.lineTo(x, y);
+                }
+            </method>
+        </view>
+
+        <view name="container" x="3" y="3">
+        </view>
+    </class>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

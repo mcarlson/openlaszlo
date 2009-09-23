@@ -461,41 +461,9 @@ LzSprite.__defaultStyles = {
         position: 'absolute',
         backgroundRepeat: 'no-repeat'
     },
-    '#lzcontextmenu div.separator': {
-        borderTop: '1px solid #808080',
-        borderLeft: 'none',
-        borderRight: 'none',
-        borderBottom: '1px solid #d4d0c8',
-        margin: '7px 0px'
-    },
     '#lzTextSizeCache': {
         // Force hasLayout in IE
         zoom: 1
-    },
-    '#lzcontextmenu a': {
-        color: '#000',
-        display: 'block',
-        textDecoration: 'none',
-        cursor: 'default'
-    },
-    '#lzcontextmenu a:hover': {
-        color: '#FFF',
-        backgroundColor: '#333'
-    },
-    '#lzcontextmenu a.disabled': {
-        color: '#999 !important'
-    },
-    '#lzcontextmenu': {
-        position: 'absolute',
-        zIndex: 10000000,
-        backgroundColor: '#CCC',
-        border: '1px outset #999',
-        padding: '4px',
-        fontFamily: 'Verdana,Vera,sans-serif',
-        fontSize: '13px',
-        'float': 'left',
-        margin: '2px',
-        minWidth: '100px'
     },
     lzgraphicscanvas: {
         position: 'absolute'

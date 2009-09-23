@@ -93,15 +93,6 @@ var LzMouseKernel = {
     // sends mouse events to the callback.  
     // Also called by sprites since most events don't bubble
     ,__sendEvent: function(eventname, view) {
-        // hide context menus - see LPP-8189
-        // Make context menus go away when you mouse up or down outside of
-        // them, to behave more like swf - see LPP-8218
-        if (eventname == 'onclick' || eventname == 'onmousedown' || eventname == 'onmouseup') {
-            if (LzMouseKernel.__showncontextmenu) {
-                LzMouseKernel.__showncontextmenu.__hide();
-            }
-        }
-
         if (eventname == 'onclick' && view == null) {
             // don't send global onclick events
             return;
