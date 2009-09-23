@@ -526,10 +526,9 @@ public override function sendEvent (eventValue:* = null) :void {
     }
 
     var dlist:Array = this.delegateList;
-    var dll:int = dlist.length;
     var calledDelegates:Array = new Array;
     var d:LzDelegate;
-    for (var i:int = dll; i >= 0; i--) {
+    for (var i:int = dlist.length - 1; i >= 0; i--) {
         d = dlist[ i ];
         //pointer may be bad due to deletions
         if (d && d.enabled && (! d.event_called)) {
