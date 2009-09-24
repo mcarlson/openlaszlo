@@ -33,9 +33,11 @@
     <include href="testclientcachebreaker.lzx"/>
     <include href="xmlparser.lzx"/>
     <include href="testtextnodelength.lzx"/>
+    <include href="testvaluetoelement.lzx"/>
 
     <TestSuite>
         <TestDatanode/>
+        <TestValueToElement/>
         <TestXmlParser/>
         <TestTextNodeLength/>
         <TestDatapointer/>

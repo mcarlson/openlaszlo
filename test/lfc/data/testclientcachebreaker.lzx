@@ -26,7 +26,7 @@
     <datapointer name="dp" />
 
 
-    <method name="test1">
+    <method name="test1" args="ignore=null">
         if ( ! this.dpready ){
           if ( ! this.t2del ){
               Debug.write( "test isn't done until async test runs" );

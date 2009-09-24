@@ -13,6 +13,7 @@
   */
 var LzXMLParser = {
     parseXML: function (str, trimwhitespace, nsprefix) {
+      #pragma "throwsError=true"
         // TODO [hqm 05-2006] need to add third arg, NSPREFIX, to
         // this method, and to the node copy routine , see the SWF
         // version below. Eventually the copyXML routine should be common

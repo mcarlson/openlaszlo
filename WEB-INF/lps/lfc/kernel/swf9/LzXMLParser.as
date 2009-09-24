@@ -23,6 +23,7 @@ public class LzXMLParser {
   * @return nativeXMLObject: An XML DOM object native to the runtime platform
   */
 public static function parseXML (str:String, trimwhitespace:Boolean, nsprefix:Boolean) :XML {
+  #pragma "throwsError=true"
     // if true : trims whitespace and ignores full whitespace nodes
     // otherwise : leaves whitespace unaffected
     XML.ignoreWhitespace = trimwhitespace;

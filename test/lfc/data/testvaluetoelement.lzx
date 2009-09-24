@@ -1,0 +1,185 @@
+<library>
+  <include href="lzunit/lzunit.lzx" />
+
+  <class name="TestValueToElement" extends="TestCase">
+    <attribute name="data_nodeName" value="element" type="string" />
+    <attribute name="item_nodeName" value="item" type="string" />
+    <method name="hasAttrs" args="d"><![CDATA[
+        for (var k in d.attributes) {
+            return true;
+        }
+        return false;
+    ]]></method>
+    <!---
+      Serializes a <code>Date</code> object as a JSON-String
+      as specified in ECMAScript5, chapter 15.9.5.44
+      (this is a copy of LzDataElement.__LZdateToJSON)
+    -->
+    <method name="dateToJSON" args="d"><![CDATA[
+        if (isFinite(d.valueOf())) {
+            function pad2 (n:Number) :String {
+                return (n < 10 ? '0' : '') + n;
+            }
+            function pad3 (n:Number) :String {
+                return (n < 10 ? '00' : n < 100 ? '0' : '') + n;
+            }
+            // ISO 8601: YYYY-MM-DDTHH:mm:ss.sssZ
+            return d.getUTCFullYear()           + '-' +
+                   pad2(d.getUTCMonth() + 1)    + '-' +
+                   pad2(d.getUTCDate())         + 'T' +
+                   pad2(d.getUTCHours())        + ':' +
+                   pad2(d.getUTCMinutes())      + ':' +
+                   pad2(d.getUTCSeconds())      + '.' +
+                   pad3(d.getUTCMilliseconds()) + 'Z';
+        } else {
+            return null;
+        }
+    ]]></method>
+    <method name="testNull"><![CDATA[
+        var values = [void 0, null];
+        for (var i = 0; i < values.length; ++i) {
+            var value = values[i];
+            var d = lz.DataElement.valueToElement(value);
+            assertEquals(lz.DataElement.ELEMENT_NODE, d.nodeType);
+            assertEquals(this.data_nodeName, d.nodeName);
+            assertNull(d.parentNode);
+            assertFalse(this.hasAttrs(d));
+            assertFalse(d.hasChildNodes());
+        }
+    ]]></method>
+    <method name="testDataElement" ><![CDATA[
+        // lz.DataElement and lz.DataText will be used as childnodes
+        var values = [new lz.DataElement("foo"), new lz.DataText("bar")];
+        for (var i = 0; i < values.length; ++i) {
+            var value = values[i];
+            var d = lz.DataElement.valueToElement(value);
+            assertEquals(1, d.childNodes.length);
+            assertSame(value, d.getFirstChild());
+        }
+    ]]></method>
+    <method name="testDate" ><![CDATA[
+        var invalidDate = new Date(NaN);
+        var date = new Date();
+
+        var d = lz.DataElement.valueToElement(invalidDate);
+        assertFalse(d.hasChildNodes());
+
+        var d = lz.DataElement.valueToElement(date);
+        assertEquals(1, d.childNodes.length);
+        assertEquals(lz.DataElement.TEXT_NODE, d.getFirstChild().nodeType);
+        assertEquals(this.dateToJSON(date), d.getFirstChild().data);
+    ]]></method>
+    <method name="testString" ><![CDATA[
+        var values = ["", "foo"];
+        for (var i = 0; i < values.length; ++i) {
+            var value = values[i];
+            var d = lz.DataElement.valueToElement(value);
+            assertEquals(1, d.childNodes.length);
+            assertEquals(lz.DataElement.TEXT_NODE, d.getFirstChild().nodeType);
+            assertEquals(value, d.getFirstChild().data);
+        }
+    ]]></method>
+    <method name="testNumber" ><![CDATA[
+        var values = [NaN, Infinity, 0, 10];
+        for (var i = 0; i < values.length; ++i) {
+            var value = values[i];
+            var d = lz.DataElement.valueToElement(value);
+            assertEquals(1, d.childNodes.length);
+            assertEquals(lz.DataElement.TEXT_NODE, d.getFirstChild().nodeType);
+            assertEquals(String(value), d.getFirstChild().data);
+        }
+    ]]></method>
+    <method name="testBoolean" ><![CDATA[
+        var values = [false, true];
+        for (var i = 0; i < values.length; ++i) {
+            var value = values[i];
+            var d = lz.DataElement.valueToElement(value);
+            assertEquals(1, d.childNodes.length);
+            assertEquals(lz.DataElement.TEXT_NODE, d.getFirstChild().nodeType);
+            assertEquals(String(value), d.getFirstChild().data);
+        }
+    ]]></method>
+    <method name="testArray" ><![CDATA[
+        var a = [];
+        var d = lz.DataElement.valueToElement(a);
+        assertFalse(d.hasChildNodes());
+
+        var a = [null];
+        var d = lz.DataElement.valueToElement(a);
+        assertEquals(1, d.childNodes.length);
+        assertEquals(lz.DataElement.ELEMENT_NODE, d.getFirstChild().nodeType);
+        assertEquals(this.item_nodeName, d.getFirstChild().nodeName);
+        assertSame(d, d.getFirstChild().parentNode);
+        assertFalse(this.hasAttrs(d.getFirstChild()));
+        assertFalse(d.getFirstChild().hasChildNodes());
+
+        // '__LZtag' is a special identifier to use custom nodeNames
+        var a = [null];
+        var customTag = "customname";
+        a.__LZtag = customTag;
+        var d = lz.DataElement.valueToElement(a);
+        assertEquals(customTag, d.getFirstChild().nodeName);
+
+        var a = [null, null];
+        var d = lz.DataElement.valueToElement(a);
+        assertEquals(2, d.childNodes.length);
+        assertEquals(this.item_nodeName, d.childNodes[0].nodeName);
+        assertEquals(this.item_nodeName, d.childNodes[1].nodeName);
+
+        var a = [null, new lz.DataElement("foo"), [null]];
+        var d = lz.DataElement.valueToElement(a);
+        assertEquals(3, d.childNodes.length);
+        assertSame(a[1], d.childNodes[1].getFirstChild());
+        assertEquals(1, d.childNodes[2].childNodes.length);
+        assertEquals(this.item_nodeName, d.childNodes[2].getFirstChild().nodeName);
+    ]]></method>
+    <method name="testObject" ><![CDATA[
+        var o = {};
+        var d = lz.DataElement.valueToElement(o);
+        assertFalse(d.hasChildNodes());
+
+        var o = {'foo': null};
+        var d = lz.DataElement.valueToElement(o);
+        assertEquals(1, d.childNodes.length);
+        assertEquals(lz.DataElement.ELEMENT_NODE, d.getFirstChild().nodeType);
+        assertEquals("foo", d.getFirstChild().nodeName);
+        assertSame(d, d.getFirstChild().parentNode);
+        assertFalse(this.hasAttrs(d.getFirstChild()));
+        assertFalse(d.getFirstChild().hasChildNodes());
+
+        // properties starting with '__LZ' are omitted
+        var o = {'__LZhidden': ""};
+        var d = lz.DataElement.valueToElement(o);
+        assertFalse(d.hasChildNodes());
+
+        var o = {'foo': null, 'bar': null};
+        var names = [];
+        for (var k in o) names.push(k);
+        var d = lz.DataElement.valueToElement(o);
+        assertEquals(2, d.childNodes.length);
+        assertEquals(names[0], d.childNodes[0].nodeName);
+        assertEquals(names[1], d.childNodes[1].nodeName);
+
+        var o = {'foo': null, 'bar': new lz.DataElement("foo"), 'baz': [null]};
+        var d = lz.DataElement.valueToElement(o);
+        assertEquals(3, d.childNodes.length);
+        assertSame(o['bar'], d.getElementsByTagName('bar')[0].getFirstChild());
+        assertEquals(1, d.getElementsByTagName('baz')[0].childNodes.length);
+        assertEquals(this.item_nodeName, d.getElementsByTagName('baz')[0].getFirstChild().nodeName);
+    ]]></method>
+    <method name="addTests"><![CDATA[
+        this.addTest("testNull");
+        this.addTest("testDataElement");
+        this.addTest("testDate");
+        this.addTest("testString");
+        this.addTest("testNumber");
+        this.addTest("testBoolean");
+        this.addTest("testArray");
+        this.addTest("testObject");
+    ]]></method>
+  </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

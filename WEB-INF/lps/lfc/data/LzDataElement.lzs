@@ -785,6 +785,31 @@ static function valueToElement (o:*) :LzDataElement {
 }
 
 /**
+  * Serializes a <code>Date</code> object as a JSON-String
+  * as specified in ECMAScript5, chapter 15.9.5.44
+  */
+static function __LZdateToJSON (d:Date) :String {
+    if (isFinite(d.valueOf())) {
+        function pad2 (n:Number) :String {
+            return (n < 10 ? '0' : '') + n;
+        }
+        function pad3 (n:Number) :String {
+            return (n < 10 ? '00' : n < 100 ? '0' : '') + n;
+        }
+        // ISO 8601: YYYY-MM-DDTHH:mm:ss.sssZ
+        return d.getUTCFullYear()           + '-' +
+               pad2(d.getUTCMonth() + 1)    + '-' +
+               pad2(d.getUTCDate())         + 'T' +
+               pad2(d.getUTCHours())        + ':' +
+               pad2(d.getUTCMinutes())      + ':' +
+               pad2(d.getUTCSeconds())      + '.' +
+               pad3(d.getUTCMilliseconds()) + 'Z';
+    } else {
+        return null;
+    }
+}
+
+/**
   * @param Type o: primitive type, array, or object value.
   * @return array of LzDataElements
   * @access private
@@ -796,7 +821,11 @@ static function __LZv2E (o:*) :Array {
              o is LzDataText ) {
             c[0] = o;
         } else if (o is Date) {
-            // FIXME: [2004-04-10 pkang] what should we do with dates?
+            // serialize Dates as JSON strings
+            var d:String = LzDataElement.__LZdateToJSON(o);
+            if (d != null) {
+                c[0] = new LzDataText( d );
+            }
         } else if (o is Array) {
             var tag:String = (o.__LZtag != null ? o.__LZtag : 'item');
             for (var i:int = 0; i < o.length; i++) {
@@ -812,7 +841,7 @@ static function __LZv2E (o:*) :Array {
             }
         }
     } else if (o != null) {
-        c[0] = new LzDataText( o );
+        c[0] = new LzDataText( String( o ) );
     }
 
     return (c.length != 0 ? c : null);
