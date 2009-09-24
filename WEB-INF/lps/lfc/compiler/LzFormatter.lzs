@@ -107,6 +107,7 @@ mixin LzFormatter {
       return Number(s);
     }
   } else {
+    /** @access private */
     function toNumber(s) { return Number(s); }
   }
 
