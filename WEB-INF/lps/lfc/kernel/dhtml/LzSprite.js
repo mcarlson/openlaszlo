@@ -27,6 +27,8 @@ var LzSprite = function(owner, isroot) {
         var div = document.createElement('div');
         div.className = 'lzcanvasdiv';
 
+        quirks['scrollbar_width'] = LzSprite._getScrollbarWidth();
+
         if (quirks.ie6_improve_memory_performance) {
             try { document.execCommand("BackgroundImageCache", false, true); } catch(err) {}
         }
@@ -686,8 +688,6 @@ LzSprite.__updateQuirks = function () {
             quirks['focus_on_mouseover'] = false;
             // required for text-align / text-indent to work
             quirks['textstyle_on_textdiv'] = true;
-            // IE scrollbar is 17px
-            quirks['scrollbar_width'] = 17;
             // CSS sprites conflict with ie_alpha_image_loader...
             quirks['use_css_sprites'] = ! quirks['ie_alpha_image_loader'];
             // IE needs help focusing when an lztext is in the same area - LPP-8219
@@ -715,7 +715,6 @@ LzSprite.__updateQuirks = function () {
                 // Rotation's origin in CSS is width/2 and height/2 as default
                 LzSprite.__defaultStyles.lzdiv.WebkitTransformOrigin = '0 0';
             }
-
 
             // Safari has got a special event for pasting
             quirks['safari_paste_event'] = true;
@@ -840,6 +839,35 @@ LzSprite.__updateQuirks = function () {
     // Make quirks available as a sprite property
     LzSprite.prototype.quirks = quirks;
 };
+
+/* Calculates width of browser scrollbar */
+LzSprite._getScrollbarWidth = function () {
+    // Create an offscreen div
+   var div = document.createElement('div');
+   div.style.width = "50px";
+   div.style.height = "50px";
+   div.style.overflow = "hidden";
+   div.style.position = "absolute";
+   div.style.top = "-200px";
+   div.style.left = "-200px";
+
+   var div2 = document.createElement('div')
+   div2.style.height = '100px';
+   div.appendChild(div2);
+
+   var body = document.body;
+   body.appendChild(div);
+   // Compute width
+   var w1 = div.clientWidth;
+   // Turn on overflowY = scroll
+   div.style.overflowY = 'scroll';
+   // Compute new width with scrollbar visible
+   var w2 = div.clientWidth;
+   LzSprite.prototype.__discardElement(div);
+   // return the difference
+   return (w1 - w2);
+}
+
 
 /* Update the quirks on load */
 LzSprite.__updateQuirks();
