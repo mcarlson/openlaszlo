@@ -45,7 +45,6 @@
 
             <!--- Connect automatically during init. If false, you need to explicitly
                 call connect().
-                Default is true.
                 @type Boolean
                 @access public
             -->
@@ -82,7 +81,8 @@
                   "rtmp://myserver.com/myapp/". -->
             <attribute name="altsrc" value="" type="string"/>
 
-            <!--- If true, use altsrc to connect @keywords private -->
+            <!--- If true, use altsrc to connect
+                  @keywords private -->
             <attribute name="_usealtsrc" value="false" type="boolean"/>
 
             <!--- Number of milliseconds to wait for connection at src before 

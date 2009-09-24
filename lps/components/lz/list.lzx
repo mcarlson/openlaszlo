@@ -19,13 +19,13 @@
         <!--- The size in pixels for this list. -->
         <attribute name="bordersize"  value="1" />
 
-        <!--- The size of the top border which defaults to bordersize. -->
+        <!--- The size of the top border. -->
         <attribute name="border_top"     value="${this.bordersize}" />
-        <!--- The size of the left border which defaults to bordersize. -->
+        <!--- The size of the left border. -->
         <attribute name="border_left"    value="${this.bordersize}" />
-        <!--- The size of the right border which defaults to bordersize. -->
+        <!--- The size of the right border. -->
         <attribute name="border_right"   value="${this.bordersize}" />
-        <!--- The size of the bottom border which defaults to bordersize. -->
+        <!--- The size of the bottom border. -->
         <attribute name="border_bottom"  value="${this.bordersize}" />
 
         <!--- Toggles the mousedown tracking. -->
@@ -34,7 +34,7 @@
         <!--- The number of pixels that items should be spaced from one another. -->
         <attribute name="spacing" value="0"/>
 
-         <!--- minumum height of the list, default: 24 -->
+         <!--- minumum height of the list -->
          <attribute name="minheight" value="24" type="number"/>
 
         <!--- The number of items that are displayed. This value will ignored if

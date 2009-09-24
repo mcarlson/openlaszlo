@@ -18,9 +18,8 @@
     <class name="radiogroup" extends="baselist"
         itemclassname="radiobutton" defaultselection="0">
 
-        <!--- The layout to use for the radiogroup. The default is simplelayout
-              with spacing 5. Note: if you use another layout, be sure to
-              include the layout library file. -->
+        <!--- The layout to use for the radiogroup. Note: if you use a different layout,
+              be sure to include the layout library file. -->
         <attribute name="layout"
             value="class: simplelayout; axis: y; spacing:5"/>
 

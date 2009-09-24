@@ -90,12 +90,11 @@
               same. -->
         <attribute name="value" value="null" setter="this.doSetValue(value, false, false)"/>
 
-        <!--- Set to true for multiple lines. Default is false. -->
+        <!--- Set to true for multiple lines. -->
         <attribute name="multiline" value="false"/>
 
         <!--- Set to true for a password field. Text will appear as ****. 
               This attribute cannot be changed at runtime.
-              Default: false.
               @keywords final -->
         <attribute name="password" value="false" />
 
@@ -109,13 +108,13 @@
               maxlength. Default is any character. -->
         <attribute name="pattern" value="$once{null}" type="string" />
 
-        <!--- The height of the edit text box, default: 20. -->
+        <!--- The height of the edit text box. -->
         <attribute name="height" value="20"/>
 
-        <!--- The width of the edit text box, default: 106. -->
+        <!--- The width of the edit text box. -->
         <attribute name="width" value="106"/>
 
-        <!--- Font size of the text. Default is 13. -->
+        <!--- Font size of the text. -->
         <attribute name="fontsize" value="13"/>
 
         <!--- Sent when the value of the text changes. -->
@@ -173,8 +172,7 @@
                 if (this.multiline) {
                     this._field.setAttribute('y', 2);
                 } else {
-                    this._field.setAttribute('y',                         (this.height - this._field.fontsize) / 2 - 3 
-                    );
+                    this._field.setAttribute('y', (this.height - this._field.fontsize) / 2 - 3);
                 }
             }
         </method>

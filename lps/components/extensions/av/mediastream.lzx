@@ -50,14 +50,13 @@
     -->
     <attribute name="url" value="" type="string"/>
     
-    <!--- Protocol "rtmp" or "http" (default: "http").
+    <!--- Protocol "rtmp" or "http".
           @type String
           @access public
     -->
     <attribute name="type" value="http" type="string"/>
 
     <!--- If true, video will start playing as soon as url is set.
-          Default: false.
           @type Boolean
           @access public
     -->
@@ -65,7 +64,6 @@
 
     <!--- If true, video will automatically rewind to the beginning
           (and remain in a paused state) when playback ends.
-          Default: false.
           @type Boolean
           @access public
     -->
@@ -74,7 +72,6 @@
 
     <!--- Autoplay start argument passed to mediastream.play().
           See the mediastream.play documentation for its values. 
-          Default: 'either'.
           @type String
           @accesss public
     -->
@@ -82,7 +79,6 @@
 
     <!--- Autoplay pause argument passed to mediastream.play().
           See the mediastream.play documentation for its values. 
-          Default: false.
           @type Boolean
           @access public
      -->
@@ -90,7 +86,6 @@
 
     <!--- Autoplay length argument passed to mediastream.play(). 
           See the mediastream.play documentation for its values. 
-          Default: 'end'.
           @type String
           @access public
     -->
@@ -98,7 +93,6 @@
 
     <!--- Autoplay reset argument passed to mediastream.play(). 
           See the mediastream.play documentation for its values. 
-          Default: true.
           @type Boolean
           @access public
     -->

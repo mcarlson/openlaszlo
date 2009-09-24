@@ -34,18 +34,17 @@
               is the containing tabslider's inset_left value. -->
         <attribute name="inset_left" value="${parent.inset_left}"/>
 
-        <!--- The x position of the text field in the header area. Default is
-              4. -->
+        <!--- The x position of the text field in the header area. -->
         <attribute name="text_x" value="4"/>
 
         <!--- The y position of the text field in the header area. Default is centered. -->
         <attribute name="text_y"
             value="${this.top.header.height/2 - this.top.header.txt.height/2}"/>
 
-        <!--- The height of the shadow. Default is 4. -->
+        <!--- The height of the shadow. -->
         <attribute name="shadowheight" value="4"/>
 
-        <!--- Boolean to set the shadow of this tabelement. Default is true. -->
+        <!--- Boolean to set the shadow of this tabelement. -->
         <attribute name="shadowvisible" value="true"/>
 
         <!--- This is not being used.
@@ -56,7 +55,7 @@
               @keywords private -->
         <attribute name="_mdoffset" value="2"/>
 
-        <!--- Insets the header art on the x-axis. Default is 0. -->
+        <!--- Insets the header art on the x-axis. -->
         <attribute name="headerpadding"   value="0" />
 
         <view name="top" width="100%" height="${parent.headerheight}"
@@ -180,7 +179,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

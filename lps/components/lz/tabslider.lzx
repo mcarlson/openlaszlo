@@ -10,7 +10,7 @@
               @keywords private -->
         <attribute name="defaultplacement" value="content" type="string"/>
 
-        <!--- Item class elements to use as children. Default is tabelement. -->
+        <!--- Item class elements to use as children. -->
         <attribute name="itemclassname" value="tabelement"/>
 
         <!--- The border color. Default is constrained to the 
@@ -19,7 +19,7 @@
         <attribute name="bordercolor"  value="${this.style != null ? this.style.bordercolor : null}"
                    setter="this.setBorderColor( bordercolor )" type="color" />
 
-        <!--- The size of the border. Default is 1 pixel. -->
+        <!--- The size of the border. -->
         <attribute name="bordersize"  value="1" setter="this.setBordersize(bordersize)" />
 
         <view name="content"

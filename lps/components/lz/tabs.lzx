@@ -41,7 +41,7 @@
           attribute of basetabpane, tabpane, basetabs, and tabs classes. Tabs
           uses this class as its default 'tabclass'. -->
     <class name="tab" extends="basetab">
-        <!--- Text padding. Default is 20. -->
+        <!--- Text padding. -->
         <attribute name="padding" value="20" />
 
         <!--- @keywords private -->
@@ -162,7 +162,7 @@
         layout="class: simplelayout; axis: x; spacing: -15">
         <!-- x="-5" to account for corner shadow of the asset -->
 
-        <!--- Spacing between tab items. Default is 0. -->
+        <!--- Spacing between tab items. -->
         <attribute name="spacing" value="0" type="number" 
                    setter="_setTabSpacing(spacing)" />
 
@@ -447,25 +447,24 @@
     <class name="tabs" extends="basetabs" clip="true">
 
         <!--- Align the set of tabs within the dimensions of the "tabs"
-             container ("left", "center", "right").  Defaults to "left". -->
+             container ("left", "center", "right"). -->
         <attribute name="tabalign" value="left" type="string" 
                    setter="_setTabAlign(tabalign)"/>
         <!--- Spacing between the tabs. Defaults to -15 so tabs overlap. -->
         <attribute name="tabspacing" value="-15" type="number" 
                    setter="_setTabSpacing(tabspacing)"/>
-        <!--- Content's border size (see tabscontent). Default is 1. -->
+        <!--- Content's border size (see tabscontent). -->
         <attribute name="bordersize" value="1" type="number" />
-        <!--- Class to use for tab items in tabsbar. Default is tab. 
+        <!--- Class to use for tab items in tabsbar.
               @keywords final -->
         <attribute name="tabclass" value="tab" type="string" />
-        <!--- Class to use for tabs bar. Default is tabsbar.
+        <!--- Class to use for tabs bar.
               @keywords final -->
         <attribute name="barclass" value="tabsbar" type="string" />
-        <!--- Class to use for tabs content area. Default is tabscontent. 
+        <!--- Class to use for tabs content area.
               @keywords final -->
         <attribute name="contentclass" value="tabscontent" type="string" />
-        <!--- Layout to use between tabsbar and tabscontent. Default is
-              "class: simplelayout; axis: y; spacing: -2". -->
+        <!--- Layout to use between tabsbar and tabscontent. -->
         <attribute name="layout"
             value="class: simplelayout; axis: y; spacing: -2" />
 

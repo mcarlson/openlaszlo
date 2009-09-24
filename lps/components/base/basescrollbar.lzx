@@ -67,7 +67,8 @@
         <!--- The event that deactivates the mousewhen when sent from the focusview -->
         <attribute name="mousewheelevent_off" value="onblur" type="string"/>
 
-        <!--- If true, the mousewheel is active for the focusview.  read-only-->
+        <!--- If true, the mousewheel is active for the focusview.
+              @keywords read-only -->
         <attribute name="mousewheelactive" value="false" type="boolean"/>
 
         <!--- @keywords private -->

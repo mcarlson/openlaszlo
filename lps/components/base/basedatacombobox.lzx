@@ -47,7 +47,7 @@
         <attribute name="selected" value="null"/>
 
         <!--- Sets the height to the number of items to show in combobox
-              popup list. Default is 4, must be greater than 0. -->
+              popup list. Must be greater than 0. -->
         <attribute name="shownitems" value="4" />
 
         <!--- Indicates whether or not the popup list is showing.  -->
@@ -66,8 +66,7 @@
         <!--- Where the floatinglist should attach to its owner. Possible
               values: bottom, top, left, right.  In the event of a canvas
               out-of-bounds, the floating list will attach in a visible
-              location.
-              default: bottom -->
+              location. -->
         <attribute name="listattach" value="bottom" type="string"/>    
 
         <!--- Event sent when an item is selected. Sends selected item. -->

@@ -14,7 +14,7 @@
     <class name="window" extends="windowpanel">
         <attribute name="defaultplacement" value="wcontent" type="string"/>
         <!--- If true, a resize control will appear in the lower-right corner,
-              allowing the user to resize the window.  Default: false. -->
+              allowing the user to resize the window. -->
         <attribute name="resizable" value="false"/>
 
         <!--- may be called by subclasses to control resizing of the window
@@ -108,12 +108,9 @@
             </text>
         </doc>
     </class>
-
- 
-
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

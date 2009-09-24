@@ -47,11 +47,10 @@
     -->
     <attribute name="url" value="" type="string"/>
 
-    <!--- Protocol "rtmp" or "http". Default: http. -->
+    <!--- Protocol "rtmp" or "http". -->
     <attribute name="type" value="http" type="string"/>
 
-    <!--- If true, video will start playing as soon as url is set.
-            Default: false. -->
+    <!--- If true, video will start playing as soon as url is set. -->
     <attribute name="autoplay" value="false"/>
 
     <!--- Show the frame from this time (in seconds) whenever the url 
@@ -74,7 +73,7 @@
     <!--- The mediastream object.  A mediastream will be automatically generated if one is not specified at init time. -->
     <attribute name="stream" value="false" when="once"/>
 
-    <!--- The volume for video playback, a float from 0 to 1. Default 1. -->
+    <!--- The volume for video playback, a float from 0 to 1. -->
     <attribute name="playvolume" value="1.0"/>
 
     <!--- Flash Sound object to control volume of video playback.

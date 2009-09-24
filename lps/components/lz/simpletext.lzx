@@ -1,20 +1,20 @@
 <library>
     
-    <!-- Note: Simpleinputtext is deprecated. Please use edittext instead.
+    <!-- Note: simpleinputtext is deprecated. Please use edittext instead.
           @keywords deprecated -->
     <class name="simpleinputtext">
     
-        <!--- The text for input. Defaults to empty string. -->
+        <!--- The text for input. -->
         <attribute name="text"                 value="" type="html"/>
-        <!--- The text opacity. Default is 1. -->
+        <!--- The text opacity. -->
         <attribute name="textOpacity"          value="1" />
-        <!--- The opacity for the input background. Default is 1. -->
+        <!--- The opacity for the input background. -->
         <attribute name="bgOpacity"            value="1" />
-        <!--- The opacity for the border on focus. Default is 1. -->
+        <!--- The opacity for the border on focus. -->
         <attribute name="focusborderOpacity"   value="1" />
-        <!--- The opacity for the border on blur. Default is 1. -->
+        <!--- The opacity for the border on blur. -->
         <attribute name="blurborderOpacity"    value="1" />
-        <!--- The width of the input box. Default is 100. -->
+        <!--- The width of the input box. -->
         <attribute name="width"                value="100" />
         
         <!-- VIEWS -->
@@ -108,7 +108,7 @@
         
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

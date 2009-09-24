@@ -1,10 +1,10 @@
 <library>
     <class name="simpleboundslayout" extends="layout">
-        <!--- The axis in which this layout operates, 'x' or 'y'. Default value is 'y' -->
+        <!--- The axis in which this layout operates, 'x' or 'y'. -->
         <attribute name="axis" value="y" setter="this.setAxis( axis )" 
                 type="string" />
                 
-        <!--- A pixel amount to use between each view in the layout. Default value is 0 -->
+        <!--- A pixel amount to use between each view in the layout. -->
         <attribute name="spacing" value="0" 
                 setter="this.spacing = spacing; 
                         if( this.subviews.length ) this.update()"/>
@@ -82,7 +82,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.  *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

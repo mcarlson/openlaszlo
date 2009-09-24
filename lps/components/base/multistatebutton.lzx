@@ -1,11 +1,11 @@
 <library>
     <include href="basebutton.lzx"/>
     <class name="multistatebutton" extends="basebutton" clickable="true">
-        <!--- the current state, default: 0 -->
+        <!--- the current state -->
         <attribute name="statenum" type="number" value="0" setter="this.setStateNum(statenum)"/>
-        <!--- the number of frames in a state, default: 3 -->
+        <!--- the number of frames in a state -->
         <attribute name="statelength" type="number" value="3" setter="this.setStateLength(statelength)"/>
-        <!--- the largest number allowed for the value of statenum, default: 0 -->
+        <!--- the largest number allowed for the value of statenum -->
         <attribute name="maxstate" type="number" value="0"/>
        
         <!--- @keywords private -->
@@ -152,7 +152,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

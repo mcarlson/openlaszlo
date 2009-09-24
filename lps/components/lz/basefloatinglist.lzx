@@ -26,7 +26,7 @@
         <!--- The distance from the attachtarget. -->
         <attribute name="attachoffset"  value="0" />
 
-        <!-- @keywords private -->
+        <!--- @keywords private -->
         <attribute name="_updateAttachPosDel" value="null" />
 
         <!--- Number of items originally requested to display.

@@ -99,20 +99,21 @@
 
     <class name="windowpanel" extends="basewindow">
         <!--- the title of a window : this string appears at the top
-              of the window.  Default: none -->
+              of the window. -->
         <attribute name="title" value="" type="string"/>
-        <!--- If true, the window will have a close control.  Default: false -->
+        <!--- If true, the window will have a close control. -->
         <attribute name="closeable" value="false"/>
-        <!--- The left inset for the window content area.  Default: 6 -->
+        <!--- The left inset for the window content area. -->
         <attribute name="inset_left" value="6"/>
-        <!--- The top inset for the window content area.  Default: 22 -->
+        <!--- The top inset for the window content area. -->
         <attribute name="inset_top" value="22"/>
-        <!--- The right inset for the window content area.  Default: 11 -->
+        <!--- The right inset for the window content area. -->
         <attribute name="inset_right" value="11"/>
-        <!--- The bottom inset for the window content area.  Default: 20 -->
+        <!--- The bottom inset for the window content area. -->
         <attribute name="inset_bottom" value="20"/>
-        <!--- The top inset for the window title area.  Default: 6 -->
+        <!--- The top inset for the window title area. -->
         <attribute name="titlearea_inset_top" value="6"/>
+        <!--- @access private -->
         <attribute name="defaultplacement" value="content" type="string"/>
 
         <state applied="${parent._usecontentwidth}">

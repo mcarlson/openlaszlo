@@ -7,8 +7,8 @@
               is displayed in the rows. -->
         <attribute name="datapath" 
                    setter="this.setAttribute( 'rowdp', datapath )"/>
-        <!--- type of content''s alignment. Default: left
-              possible values are: left, center, right     -->
+        <!--- Type of content's alignment.
+              Possible values are: left, center, right -->
         <attribute name="textalign" type="string" value="left"/>
         <!--- Whether one is able to select the text.  (Only applies
             if the grid isn't editable, because when it's editable,
@@ -169,7 +169,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

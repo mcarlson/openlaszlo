@@ -24,12 +24,14 @@
     <!-- class: menubar -->
     <class name="menubar"
            extends="basecomponent" focusable="false">
-         <attribute name="defaultplacement" value="mbarcontent" type="string" />
-        <!--- the default height is 20 pixels -->
+        <!--- @access private -->
+        <attribute name="defaultplacement" value="mbarcontent" type="string" />
+        <!--- @access private -->
         <attribute name="height" value="20" />
         <!--- in a window, the menubar's width  needs to extend one more pixel 
              past its container ( which has the same width as the content ) so
-             it's default width is immediateparent.width + 1 -->
+             it's default width is immediateparent.width + 1
+             @access private -->
         <attribute name="width"  value="${immediateparent.width + 1}"/>
         <!--- @access private -->
         <attribute name="_clickcounter" value="0" />

@@ -97,7 +97,8 @@
          visible="false" >
     <!--- the group that drop targets will register with -->
     <attribute name="dropgroup" value="droptarget" type="string"/>
-    <!--- the view where the drag was initiated (read-only)-->
+    <!--- the view where the drag was initiated
+          @keywords read-only -->
     <attribute name="source" value="null"/>
     
     <!--- @keywords private -->

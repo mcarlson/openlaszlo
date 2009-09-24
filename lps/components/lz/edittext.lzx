@@ -11,7 +11,7 @@
             super.construct(  parent, args );
         </method>
         <doc>
-          <text>Class for use in windowtext takes its parent's arguments
+          <text>Class for use in edittext, takes its parent's arguments
                 when it constructs.</text>
           <tag name="access"><text>private</text></tag>
         </doc>
@@ -25,23 +25,22 @@
         <!--- The text that appears in the component. -->
         <attribute name="text" type="text"/>
 
-        <!--- Set to true for multiple lines, default: false.
+        <!--- Set to true for multiple lines.
               @keywords final -->
         <attribute name="multiline" value="false"/>
 
-        <!--- Set to true for a password field. Text will appear as ****,
-              default: false.
+        <!--- Set to true for a password field. Text will appear as ****.
               @keywords final -->
-        <attribute name="password" value="false" />
+        <attribute name="password" value="false"/>
 
         <!--- Set to true if you plan to change the width or height of the
-              component at run-time, default: false.
+              component at run-time.
               @keywords final -->
-        <attribute name="resizable"/>
+        <attribute name="resizable" value="false"/>
 
-        <!--- The height of the edit text box, default: 24. -->
+        <!--- The height of the edit text box. -->
         <attribute name="height" value="26"/>
-        <!--- The width of the edit text box, default: 106. -->
+        <!--- The width of the edit text box. -->
         <attribute name="width" value="106"/>
 
         <!--- the y position of the text. default: centered, unless it is mutltiline -->
@@ -93,7 +92,7 @@
         <!--- @deprecated Use setAttribute('text', ...) instead.
               @keywords private -->
         <method name="setText" args="t">
-            Debug.warn("edittext.setText is deprecated. Use setAttribute instead");
+            if ($debug) Debug.warn("edittext.setText is deprecated. Use setAttribute instead");
             this.setAttribute('text', t);
         </method>
 
@@ -117,7 +116,7 @@
         <!--- @deprecated Use setAttribute('maxlength', ...) instead.
               @keywords private -->
         <method name="setMaxlength" args="n">
-          Debug.warn("edittext.setMaxlength is deprecated. Use setAttribute instead");
+          if ($debug) Debug.warn("edittext.setMaxlength is deprecated. Use setAttribute instead");
           this.setAttribute('maxlength', n);
         </method>
 
@@ -125,7 +124,7 @@
         <!--- @deprecated Use setAttribute('pattern', ...) instead.
               @keywords private -->
         <method name="setPattern" args="r">
-          Debug.warn("edittext.setPattern is deprecated. Use setAttribute instead");
+          if ($debug) Debug.warn("edittext.setPattern is deprecated. Use setAttribute instead");
           this.setAttribute('pattern', r);
         </method>
 

@@ -39,10 +39,10 @@
     <attribute name="focusable" value="true"/>
 
     <!--- the amount of space to add horizontally when sizing button to its
-        text. default: 11 -->
+        text. -->
     <attribute name="text_padding_x" value="11" type="number"/>
     <!--- the amount of space to add vertically  when sizing button to its
-        text.  default: 4 -->
+        text. -->
     <attribute name="text_padding_y" value="4" type="number"/>
 
     <!--- the x position of the button text. default: centered -->
@@ -226,7 +226,7 @@ object tags such as <tagname>attribute</tagname> and
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
