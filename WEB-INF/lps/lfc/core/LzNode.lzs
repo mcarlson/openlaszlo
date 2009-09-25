@@ -188,11 +188,9 @@ public dynamic class LzNode extends LzEventable {
     if (attrs) {
       if (attrs['$lzc$bind_id']) {
         this.$lzc$bind_id = attrs.$lzc$bind_id;
-        delete attrs.$lzc$bind_id;
       }
       if (attrs['$lzc$bind_name']) {
         this.$lzc$bind_name = attrs.$lzc$bind_name;
-        delete attrs.$lzc$bind_name;
       }
     }
     // The binders are intentionally called with this as a
@@ -264,6 +262,12 @@ public dynamic class LzNode extends LzEventable {
     if (attrs) {
       LzNode.mergeAttributes(attrs, iargs);
     }
+
+    // NOTE: [2009-09-24 ptw] (LPP-6592) Hide the name and id binders
+    // from construct/applyArgs, as they have already been handled
+    // above (but need to remain in _instanceAttrs for cloning.
+    if (bindid) { iargs.$lzc$bind_id = LzNode._ignoreAttribute; }
+    if (bindname) { iargs.$lzc$bind_name = LzNode._ignoreAttribute; }
 
     //Flag if this was newed by the instantiator
     this.__LZisnew = !instcall;
