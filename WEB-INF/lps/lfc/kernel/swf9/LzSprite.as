@@ -44,6 +44,7 @@ public class LzSprite extends Sprite {
   import flash.system.LoaderContext;
   import flash.text.TextField;
   import flash.ui.ContextMenu;
+  import flash.filters.DropShadowFilter;
 }#
 
 #passthrough  {
@@ -140,6 +141,7 @@ public class LzSprite extends Sprite {
       ,setid: false
       ,globalfocustrap: false
       ,'2dcanvas': true
+      ,dropshadows: true
       };
       var capabilities = LzSprite.capabilities;
 
@@ -1705,5 +1707,29 @@ public class LzSprite extends Sprite {
           trace('LzSprite.setID not yet implemented');
       }
 
+      var shadowfilter = new DropShadowFilter(0, 0, 0, 1, 4, 4, 1, 2, false, false, false);
+
+      function updateShadow(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
+        /* DropShadowFilter attributes
+         *  [distance:Number]
+         *  [angle:Number]
+         *  [color:Number]
+         *  [alpha:Number]
+         *  [blurX:Number]
+         *  [blurY:Number]
+         *  [strength:Number]
+         *  [quality:Number]
+         *  [inner:Boolean]
+         *  [knockout:Boolean]
+         *  [hideObject:Boolean]) 
+         */
+        this.shadowfilter.angle = shadowangle;
+        this.shadowfilter.distance = shadowdistance;
+        this.shadowfilter.color = shadowcolor;
+        this.shadowfilter.blurX = shadowblurradius;
+        this.shadowfilter.blurY = shadowblurradius;
+        var mc = this.getDisplayObject();
+        mc.filters = [shadowfilter];
+      }
   }#
   }

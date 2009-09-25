@@ -991,4 +991,16 @@ LzTextSprite.prototype.setTextDecoration = function (decoration) {
     }
 }
 
+LzTextSprite.prototype.getDisplayObject = function ( ){
+    return this.scrolldiv;
+}
+
+LzTextSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
+    var cssString = this.__getShadowCSS(shadowcolor, shadowdistance, shadowangle, shadowblurradius);
+
+    this.scrolldiv.style.textShadow = cssString;
+
+    this.shadow = cssString;
+}
+
 }

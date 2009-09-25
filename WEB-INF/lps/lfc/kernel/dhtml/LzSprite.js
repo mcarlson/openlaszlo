@@ -599,6 +599,7 @@ LzSprite.prototype.capabilities = {
     ,setid: true
     ,globalfocustrap: false
     ,'2dcanvas': true
+    ,dropshadows: false
 }
 
 /**
@@ -609,6 +610,9 @@ LzSprite.prototype.capabilities = {
  */
 LzSprite.__updateQuirks = function () {
     var quirks = LzSprite.quirks;
+    var capabilities = LzSprite.prototype.capabilities;
+    var defaultStyles = LzSprite.__defaultStyles;
+
     if (window['lz'] && lz.embed && lz.embed.browser) {
         var browser = lz.embed.browser;
 
@@ -659,7 +663,7 @@ LzSprite.__updateQuirks = function () {
             //quirks['inputtext_parents_cannot_contain_clip'] = true;
 
             // flag for components (basefocusview for now) to minimize opacity changes
-            LzSprite.prototype.capabilities['minimize_opacity_changes'] = true;
+            capabilities['minimize_opacity_changes'] = true;
 
             // multiline inputtext height must be set directly - height: 100% does not work.  See LPP-4119
             quirks['set_height_for_multiline_inputtext'] = true;
@@ -710,10 +714,13 @@ LzSprite.__updateQuirks = function () {
                 quirks['safari_textarea_subtract_scrollbar_height'] = true;
             }
             quirks['document_size_use_offsetheight'] = true;
+
+            // Safari 3.0.4 supports these
             if (browser.version > 523.10) {
-                LzSprite.prototype.capabilities['rotation'] = true;
+                capabilities['rotation'] = true;
                 // Rotation's origin in CSS is width/2 and height/2 as default
-                LzSprite.__defaultStyles.lzdiv.WebkitTransformOrigin = '0 0';
+                defaultStyles.lzdiv.WebkitTransformOrigin = '0 0';
+                capabilities['dropshadows'] = true;
             }
 
             // Safari has got a special event for pasting
@@ -729,7 +736,7 @@ LzSprite.__updateQuirks = function () {
             
             // If Webkit starting with 530.19.2 or Safari 530.19, 3d transforms supported
             if (browser.version >= 530.19) {
-                LzSprite.prototype.capabilities["threedtransform"] = true;
+                capabilities["threedtransform"] = true;
             }
 
             // turn off mouseover activation for iphone
@@ -779,9 +786,9 @@ LzSprite.__updateQuirks = function () {
                 quirks['firefox_autocomplete_bug'] = true;
             } else if (browser.version < 3) {
                 // Firefox 2.0.14 doesn't work with the correct line height of 120%
-                LzSprite.__defaultStyles.lzswftext.lineHeight = '119%';
-                LzSprite.__defaultStyles.lzswfinputtext.lineHeight = '119%';
-                LzSprite.__defaultStyles.lzswfinputtextmultiline.lineHeight = '119%';
+                defaultStyles.lzswftext.lineHeight = '119%';
+                defaultStyles.lzswfinputtext.lineHeight = '119%';
+                defaultStyles.lzswfinputtextmultiline.lineHeight = '119%';
             } else if (browser.version < 4) {
                 // Firefox 3.0 does not need padding added onto field height measurements
                 if (browser.subversion < 6) {
@@ -795,11 +802,14 @@ LzSprite.__updateQuirks = function () {
             }
             quirks['autoscroll_textarea'] = true;
             if (browser.version >= 3.5) {
-                LzSprite.prototype.capabilities['rotation'] = true;
+                capabilities['rotation'] = true;
                 // Rotation's origin in CSS is width/2 and height/2 as default
-                LzSprite.__defaultStyles.lzdiv.MozTransformOrigin = '0 0';
+                defaultStyles.lzdiv.MozTransformOrigin = '0 0';
             }
             
+            if (browser.version >= 3.1) {
+                capabilities['dropshadows'] = true;
+            }
         }
 
         if (browser.OS == 'Mac') {
@@ -808,7 +818,6 @@ LzSprite.__updateQuirks = function () {
         }
 
         // Adjust styles for quirks
-        var defaultStyles = LzSprite.__defaultStyles;
         var tc = defaultStyles.lztextcontainer;
         var itc = defaultStyles.lzinputtextcontainer;
         var itmc = defaultStyles.lzinputtextmultilinecontainer;
@@ -1116,10 +1125,7 @@ LzSprite.prototype.setSource = function (url, usecache){
     }
     if (this.quirks.size_blank_to_zero) {
         if (this.__sizedtozero && url != null) {
-            // restore size of div
-            this.__sizedtozero = false;
-            this.__LZdiv.style.width = this._w;
-            this.__LZdiv.style.height = this._h;
+            this.__restoreSize();
         }
     }
     if (usecache != true){
@@ -1556,7 +1562,7 @@ LzSprite.prototype.setWidth = function ( w ){
         var quirks = this.quirks;
         // set size to zero if we don't have either of these
         if (quirks.size_blank_to_zero) {
-            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite)) {
+            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite) && ! this.shadow) {
                 this.__sizedtozero = true;
                 size = '0px';
             }
@@ -1604,7 +1610,7 @@ LzSprite.prototype.setHeight = function ( h ){
         var quirks = this.quirks;
         // set size to zero if we don't have either of these
         if (quirks.size_blank_to_zero) {
-            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite)) {
+            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite) && ! this.shadow) {
                 this.__sizedtozero = true;
                 size = '0px';
             }
@@ -1664,10 +1670,7 @@ LzSprite.prototype.setBGColor = function ( c ){
     this.bgcolor = c;
     if (this.quirks.size_blank_to_zero) {
         if (this.__sizedtozero && c != null) {
-            // restore size of div
-            this.__sizedtozero = false;
-            this.__LZdiv.style.width = this._w;
-            this.__LZdiv.style.height = this._h;
+            this.__restoreSize();
         }
     }
     this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzColorUtils.inttohex(c);
@@ -1679,6 +1682,15 @@ LzSprite.prototype.setBGColor = function ( c ){
         }
     }
     //Debug.info('setBGColor ' + c);
+}
+
+LzSprite.prototype.__restoreSize = function() {
+    if (this.__sizedtozero) {
+        // restore size of div
+        this.__sizedtozero = false;
+        this.__LZdiv.style.width = this._w;
+        this.__LZdiv.style.height = this._h;
+    }
 }
 
 LzSprite.prototype.setOpacity = function ( o ){
@@ -2100,10 +2112,7 @@ LzSprite.prototype.setClip = function(c) {
     this.clip = c;
     if (this.quirks.size_blank_to_zero) {
         if (this.__sizedtozero && c) {
-            // restore size of div
-            this.__sizedtozero = false;
-            this.__LZdiv.style.width = this._w;
-            this.__LZdiv.style.height = this._h;
+            this.__restoreSize();
         }
     }
     this.__updateClip();
@@ -2901,5 +2910,32 @@ LzSprite.prototype.__initcanvasie = function() {
     if (--this.__maxTries > 0) {
         var callback = lz.BrowserUtils.getcallbackstr(this, '__initcanvasie');
         this.__canvasTId = setTimeout(callback, 50);
+    }
+}
+
+LzSprite.prototype.__getShadowCSS = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
+    // CSS3 doesn't use angle, but x/y offset. So we need to
+    // translate from angle and distance to x and y offset for CSS3.
+    // Math.cos and Math.cos are based on radians, not degrees
+    var radians = shadowangle * Math.PI/180;
+    var xoffset = Math.round(Math.cos(radians) * shadowdistance);
+    var yoffset = Math.round(Math.sin(radians) * shadowdistance);
+    // convert to rgb(x,x,x);
+    var rgbcolor = LzColorUtils.torgb(shadowcolor);
+    
+    return rgbcolor + " " + xoffset + "px " + yoffset + "px " + shadowblurradius + "px";
+}
+
+LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
+    this.shadow = this.__getShadowCSS(shadowcolor, shadowdistance, shadowangle, shadowblurradius);
+
+    var displayobj = this.__LZdiv;
+
+    displayobj.style.webkitBoxShadow = displayobj.style.MozBoxShadow = displayobj.style.boxShadow = this.shadow;
+
+    if (this.quirks.size_blank_to_zero) {
+        if (this.__sizedtozero) {
+            this.__restoreSize();
+        }
     }
 }

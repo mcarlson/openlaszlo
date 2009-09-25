@@ -74,6 +74,7 @@ LzSprite.prototype.capabilities = {
     ,setid: false
     ,globalfocustrap: true
     ,'2dcanvas': true
+    ,dropshadows: true
 }
 
 /**
@@ -1768,5 +1769,32 @@ LzSprite.prototype.__lostFocus = function ( ){
     if (_root.spriteroot.accessible != true) return;
     var v = this.myView || this._parent.myView;
     if (v.hasFocus) lz.Focus.clearFocus();
+}
+
+LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
+    if (! this.shadowfilter) {
+        this.shadowfilter = new flash.filters.DropShadowFilter(10, 60, 5, 1, 4, 4, 1, 2, false, false, false);
+    }
+
+    /* DropShadowFilter attributes
+     *  [distance:Number]
+     *  [angle:Number]
+     *  [color:Number]
+     *  [alpha:Number]
+     *  [blurX:Number]
+     *  [blurY:Number]
+     *  [strength:Number]
+     *  [quality:Number]
+     *  [inner:Boolean]
+     *  [knockout:Boolean]
+     *  [hideObject:Boolean]) 
+     */
+    this.shadowfilter.angle = shadowangle;
+    this.shadowfilter.distance = shadowdistance;
+    this.shadowfilter.color = shadowcolor;
+    this.shadowfilter.blurX = shadowblurradius;
+    this.shadowfilter.blurY = shadowblurradius;
+    var mc = this.getDisplayObject();
+    mc.filters = [this.shadowfilter];
 }
 }
