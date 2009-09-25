@@ -307,12 +307,15 @@
         }
 
         function __roundrectFactors() :Array {
-            // the corners are drawn in 45° steps by quadraticCurveTo, so
+            // I can't use the degree symbol otherwise the docs fail,
+            // so just imagine the symbol in the following text
+
+            // the corners are drawn in 45 steps by quadraticCurveTo, so
             // for every single corner we call quadraticCurveTo two times,
-            // since 45° + 45° = 90° ;-)
+            // since 45 + 45 = 90 ;-)
             // The original implementation used this code:
-            //   angle = -Math.PI/2; // = 90°
-            //   theta = Math.PI/4; // = 45°
+            //   angle = -Math.PI/2; // = 90
+            //   theta = Math.PI/4; // = 45
             // For every corner part, therefore eight times:
             //   cx = _x + (Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
             //   cy = _y + (Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
@@ -340,7 +343,7 @@
             //   'sin(a + b) = sin(a) * cos(b) + cos(a) * sin(b)'
             //   'cos(a + b) = cos(a) * cos(b) - sin(a) * sin(b)'
             // We get substantial faster code because half of all factors are constant,
-            // so we only need to compute sin [0°..360°[ in steps of 45° (and cos [0°..360°[).
+            // so we only need to compute sin [0..360[ in steps of 45 (and cos [0..360[).
             // But that's really easy now, because these values are well known!
 
             // theta = 45 degrees in radians
@@ -351,14 +354,14 @@
             const cosTheta:Number = sqrt2_2; // Math.cos(theta);
             const sinTheta2:Number = Math.sin(theta2);
             const cosTheta2:Number = Math.cos(theta2);
-            // sin [0°..180°[ in steps of 45°
+            // sin [0..180[ in steps of 45
             var sinTable:Array = [0, sqrt2_2, 1, sqrt2_2];
-            // cos [0°..180°[ in steps of 45°
+            // cos [0..180[ in steps of 45
             var cosTable:Array = [1, sqrt2_2, 0, -sqrt2_2];
 
-            // compute all factors from [0°..360°[
+            // compute all factors from [0..360[
             var factors:Array = [];
-            // compute first half [0°..180°[
+            // compute first half [0..180[
             for (var i:int = 0; i < 4; ++i) {
                 var sin:Number = sinTable[i];
                 var cos:Number = cosTable[i];
@@ -369,7 +372,7 @@
                     (-cos * cosTheta  + sin * sinTheta)
                 );
             }
-            // negate [0°..180°[ to get [180°..360°[
+            // negate [0..180[ to get [180..360[
             for (var i:int = 0; i < 4 * 4; ++i) {
                 factors[4 * 4 + i] = -factors[i];
             }
