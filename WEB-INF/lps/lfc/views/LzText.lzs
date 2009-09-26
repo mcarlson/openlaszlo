@@ -115,7 +115,7 @@ dynamic class LzText extends LzView with LzFormatter {
   /** @access private */
   static var attributes = new LzInheritedHash(LzView.attributes);
   LzText.attributes.pixellock = true;
-  LzText.attributes.clip = true;
+
   /**
    * If true, the text is selectable
    *

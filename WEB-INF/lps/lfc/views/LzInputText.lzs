@@ -75,7 +75,7 @@ dynamic public class LzInputText extends LzText {
 static var tagname = 'inputtext';
 /** @access private */
   static var attributes = new LzInheritedHash(LzText.attributes);
-  LzNode.mergeAttributes({selectable: true, enabled: true}, LzInputText.attributes);
+  LzNode.mergeAttributes({selectable: true, enabled: true, clip: true}, LzInputText.attributes);
 
 
 /** Sent whenever the text field is enabled.

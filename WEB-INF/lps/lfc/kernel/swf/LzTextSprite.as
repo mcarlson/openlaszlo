@@ -33,7 +33,6 @@ var LzTextSprite = function(newowner, args) {
 
     ////////////////////////////////////////////////////////////////
 
-    this.masked = true;
     this.makeContainerResource();
     var mc = this.__LZmovieClipRef;
 
