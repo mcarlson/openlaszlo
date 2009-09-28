@@ -3,15 +3,15 @@
 <![CDATA[
 
 public class LzDebugEvalLoader {
-    #passthrough (toplevel:true) {  
-    import flash.display.*;
-    import flash.events.*;
-    import flash.utils.*;
-    import flash.text.*;
-    import flash.system.*;
-    import flash.net.*;
-    import flash.ui.*;
-    import flash.text.Font;
+    #passthrough (toplevel:true) {
+    import flash.display.Loader;
+    import flash.events.Event;
+    import flash.events.IOErrorEvent;
+    import flash.events.TextEvent;
+    import flash.net.URLRequest;
+    import flash.system.ApplicationDomain;
+    import flash.system.LoaderContext;
+    import flash.text.TextField;
     }#
 
     var loader:Loader;
@@ -23,9 +23,9 @@ public class LzDebugEvalLoader {
     }
 
     public function doEval(expr:String, seq:int=0) {
-      var appfile = lz.Browser.getBaseURL().toString();
-      var url = appfile + "?lzr=swf9&lz_load=false&lzt=eval&lz_script=" 
-      + encodeURIComponent(expr) ;
+      var appfile:String = lz.Browser.getBaseURL().toString();
+      var url:String = appfile + "?lzr=" + $runtime + "&lz_load=false&lzt=eval&lz_script="
+      + encodeURIComponent(expr);
       this.loader.load(new URLRequest(url),
                          new LoaderContext(false,
                                            new ApplicationDomain(ApplicationDomain.currentDomain)));
@@ -43,20 +43,19 @@ public class LzDebugEvalLoader {
         }
     }
 
-    public function addTextLinkCallback(lztext:LzText) {
+    public function addTextLinkCallback(lztext:LzText):void {
         var textfield:TextField = (lztext.sprite cast LzTextSprite).textfield;
         textfield.addEventListener(TextEvent.LINK, textLinkCallback);
     }
 
-    public function textLinkCallback (e:TextEvent) {
-        var obj = e.text;
+    public function textLinkCallback (e:TextEvent):void {
+        var obj:String = e.text;
         if (obj.indexOf("objid=") == 0) {
             var objid = obj.substr(6);
-            trace('textLinkCallback object id = ', objid);
+            // trace('textLinkCallback object id = ', objid);
             Debug.displayObj(Number(objid));
         }
     }
-
 
 }
 

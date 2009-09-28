@@ -13,15 +13,16 @@
   */
 
 class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
-    #passthrough (toplevel:true) {  
-    import flash.net.*;
-    import flash.events.*;
-    import flash.display.*;
-    import flash.utils.*;
-    import flash.system.*;
+    #passthrough (toplevel:true) {
+    import flash.display.Loader;
+    import flash.events.Event;
+    import flash.net.LocalConnection;
+    import flash.net.URLRequest;
+    import flash.system.ApplicationDomain;
+    import flash.system.LoaderContext;
     }#
 
-  var consoleConnected = false;
+  var consoleConnected:Boolean = false;
 
   function LzFlashRemoteDebugConsole () {
     super();
@@ -63,7 +64,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
       this.saved_msgs.push(msg);
       return;
     }
-    var str;
+    var str:String;
     try {
       if (msg && msg['toHTML'] is Function) {
         str = msg['toHTML']();
@@ -71,7 +72,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
         str = String(msg)['toHTML']();
       }
     } catch (e) {
-      str  = '' + msg;
+      str = '' + msg;
     };
     this.addHTMLText(str);
   };
@@ -86,8 +87,8 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
   /**
    * @access private
    */
-    override function makeObjectLink (rep:String, id:*, attrs=null):String {
-    var color = (attrs && attrs['color']) ? attrs.color : '#0000ff';
+  override function makeObjectLink (rep:String, id:*, attrs=null):String {
+    var color:String = (attrs && attrs['color']) ? attrs.color : '#0000ff';
     if (id != null) {
       // Note this is invoking a trampoline in the console that will
       // call back to us to display the object
@@ -106,8 +107,9 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
         // Send EVAL request to LPS server
         // It doesn't matter what path/filename we use, as long as it has ".lzx" suffix, so it is
         // handled by the LPS. The lzt=eval causes the request to be served by the EVAL Responder.
-      var appfile = lz.Browser.getBaseURL().file;
-      var url = appfile + "?lzr=swf9&lz_load=false&lzt=eval&lz_script=" + encodeURIComponent(expr)+"&lzbc=" +(new Date()).getTime();
+      var appfile:String = lz.Browser.getBaseURL().file;
+      var url:String = appfile + "?lzr=" + $runtime + "&lz_load=false&lzt=eval&lz_script="
+                    + encodeURIComponent(expr)+"&lzbc=" +(new Date()).getTime();
       debugloader.load(new URLRequest(url),
                        new LoaderContext(false,
                                          new ApplicationDomain(ApplicationDomain.currentDomain)));
@@ -123,7 +125,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
   /**
    * @access private
    */
-  function makeConsoleRDBLoader () {
+  function makeConsoleRDBLoader ():void {
       debugloader = new Loader();
       debugloader.contentLoaderInfo.addEventListener(Event.INIT, debugEvalListener);
   };
@@ -139,7 +141,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
    * The console sends to indicate it is alive and listening.
    * must be public for LocalConnection to use it.
    */
-  public function consoleAlive (val) {
+  public function consoleAlive (val):void {
     this.consoleConnected = true;
     // Replay saved messages
     var sm = this.saved_msgs;
@@ -150,18 +152,18 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
   };
 
   /** @access private */
-  var listenername;
+  var listenername:String;
   /** @access private */
-  var consolename;
+  var consolename:String;
 
   /**
    * @access private
    */
-  function createLocalConnections () {
+  function createLocalConnections ():void {
     //var appname = lz.Browser.getBaseURL().file;
     // [TODO hqm 2006-05: use a constant app name of "XXX", while we debug
     // the remote debugger]
-    var appname = "XXX";
+    var appname:String = "XXX";
     this.listenername = "lc_appdebug"+appname;
     this.consolename = "lc_consoledebug"+appname;
   };
@@ -169,7 +171,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
   /**
    * @access private
    */
-  function writeConsoleInitMessage () {
+  function writeConsoleInitMessage ():void {
     if (typeof(LzCanvas) != 'undefined') {
       this.addText("connection from app: \n" + LzCanvas.versionInfoString());
     } else {
@@ -179,23 +181,20 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
     }
   };
 
-  /** RPC handler function for eval(); must be public
-   */
-  public function evalExpr(...args) {
+  /** RPC handler function for eval(); must be public */
+  public function evalExpr (...args):void {
       Debug.doEval.apply(this, args);
   }
 
   /** RPC handler to display a value; must be public */
-  public function displayObj(...args) {
+  public function displayObj (...args):void {
       Debug.displayObj.apply(Debug, args);
   }
-
-
 
   /**
    * @access private
    */
-  function openConsoleConnection () {
+  function openConsoleConnection ():void {
     //this.write("Application: "+lz.Browser.getLoadURLAsLzURL()+" connected to debug console.");
     this.receivingLC = new LocalConnection();
     receivingLC.client = this;
