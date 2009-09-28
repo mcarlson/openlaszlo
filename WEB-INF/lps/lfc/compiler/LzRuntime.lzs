@@ -56,12 +56,6 @@ if ($as3) {
   var global = $modules.user;
 }
 
-if ($as3) {
-  if ($debug) {
-    
-  }
-}
-
 if ($as2) {
 var encodeURIComponent = escape;
 var decodeURIComponent = unescape;
@@ -99,14 +93,26 @@ var __ES3Globals = {
  * of the LFCApplication.
  */
 var globalValue = function (name:String) {
-  // remove these when LPP-7574 is fixed
-  if (name == 'lz') return lz;
-  if (name == 'LzMouseKernel') return LzMouseKernel;
+  if ($as3) {
+    #passthrough {
+      import flash.utils.getDefinitionByName;
+    }#
+  }
   // Semi-kludge:  We name our tag classes <tagname>.  Since <> are
   // not valid symbol constituents, there is no confusion here
   if (name.charAt(0) == '<' && name.charAt(name.length-1) == '>') {
     return lz[name.substring(1, name.length-1)];
+  } else if (name in this) {
+    return this[name];
+  } else if (name in global) {
+    return global[name];
+  } else if (name in __ES3Globals) {
+    return __ES3Globals[name];
+  } else if ($as3) {
+    try {
+      return getDefinitionByName(name);
+    } catch (e:ReferenceError) {
+    }
   }
-  return this[name] || global[name] || __ES3Globals[name];
+  return void 0;
 };
-
