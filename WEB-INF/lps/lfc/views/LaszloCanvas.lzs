@@ -111,7 +111,7 @@ dynamic class LzCanvas extends LzView {
       * @keywords final
       */
     public var appbuilddate;
-    /** A String describing the target runtime. "dhtml" | "swf8" | "swf9" are currently supported. Others are in development.
+    /** A String describing the target runtime. "dhtml" | "swf8" | "swf9" | "swf10" are currently supported. Others are in development.
       * @type String
       * @keywords final
       */

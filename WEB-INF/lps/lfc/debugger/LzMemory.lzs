@@ -415,14 +415,14 @@ Debug.initTrace = function (findLeaks=false, noteWhy=false) {
     this.mark(global.frameElement);
   }
   // Don't trace debugger history
-  if ('_' in global) {
-    this.mark(global._);
+  if ('_' in Debug.environment) {
+    this.mark(Debug.environment._);
   }
-  if ('__' in global) {
-    this.mark(global.__);
+  if ('__' in Debug.environment) {
+    this.mark(Debug.environment.__);
   }
-  if ('___' in global) {
-    this.mark(global.___);
+  if ('___' in Debug.environment) {
+    this.mark(Debug.environment.___);
   }
   // If the browser has a console, don't trace it
   if ('console' in global) {

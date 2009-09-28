@@ -8,20 +8,12 @@
 
  */
 
-// The last three debugger eval values
-var _;
-var __;
-var ___;
-
 class LzAS3DebugService extends LzDebugService {
-    #passthrough (toplevel:true) {  
-    import flash.net.*;
-    import flash.events.*;
-    import flash.external.*;
-    import flash.display.*;
-    import flash.utils.*;
-    import flash.system.*;
-    import mx.core.Application;
+    #passthrough (toplevel:true) {
+    import flash.utils.describeType;
+    import flash.utils.Dictionary;
+    import flash.utils.getDefinitionByName
+    import flash.utils.getQualifiedClassName
     }#
 
   /**
@@ -61,9 +53,9 @@ class LzAS3DebugService extends LzDebugService {
 
   override function IDForObject (obj:*, force:Boolean=false):* {
     var id:Number;
-    // TODO [hqm 2008-09-11] in swf9 we can use the flash.utils.Dictionary object
-    // to do hash table lookups using === object equality, so we don't need to
-    // iterate over the id_to_object_table to see if an object has been interned.
+    // in swf9 we can use the flash.utils.Dictionary object to do hash table
+    // lookups using === object equality, so we don't need to iterate over the
+    // id_to_object_table to see if an object has been interned.
     var ot = this.swf9_object_table;
     if (ot[obj] != null) {
       return ot[obj];
@@ -83,36 +75,6 @@ class LzAS3DebugService extends LzDebugService {
   override function ObjectForID (id) {
     return this.swf9_id_table[id];
   };
-
-
-   /**
-    * @access private
-   * @devnote The only reason this is here is because the SWF eval
-   * compiler does not (yet) wrap `with (Debug.environment)` around the
-   * compiled expression, so we have to put the "previous value's" in
-  * _level0
-   */
-  final override function displayResult (result=(void 0)) : void {
-    if (typeof(result) != 'undefined') {
-      // Advance saved results if you have a new one
-      if (result !== global._) {
-        if (typeof(global.__) != 'undefined') {
-          global.___ = global.__;
-        }
-        if (typeof(global._) != 'undefined') {
-          global.__ = global._;
-        }
-        global._ = result;
-      }
-    }
-    this.freshLine();
-    // Output any result from the evalloader
-    if (typeof(result) != 'undefined') {
-      this.format("%#w", result);
-    }
-    this.freshPrompt();
-  };
-
 
   /**
    * Predicate for deciding if an object is 'Object-like' (has
@@ -134,7 +96,7 @@ class LzAS3DebugService extends LzDebugService {
    * @access private
    */
   #passthrough {
-    public override function isArrayLike (obj:*):Boolean {
+  public override function isArrayLike (obj:*):Boolean {
     // Efficiency
     if (! obj) { return false; }
     if (obj is Array) { return true; }
@@ -147,7 +109,7 @@ class LzAS3DebugService extends LzDebugService {
         (description.variable.(@name == 'length').length() != 0)) {
       return super.isArrayLike(obj);
     }
-    return  false;
+    return false;
   };
   }#
 

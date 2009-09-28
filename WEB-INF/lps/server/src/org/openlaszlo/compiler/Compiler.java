@@ -464,58 +464,110 @@ public class Compiler {
         }
     }
 
+    /**
+     * Compiles a script first as an expression. If that fails, compiles as
+     * a sequence of statements. If that fails too, reports the parse error.
+     *
+     * @param script    the script to be evaluated
+     * @param seqnum    only set for remote debug requests
+     * @param runtime   target runtime
+     * @param props     script compiler properties
+     * @return          the compiled eval script
+     */
+    private byte[] compileEvalScript (String script, String seqnum, String runtime, Properties props) {
+        boolean toplevel;
+        String start = "", end = "";
+        if (SWF_RUNTIMES.contains(runtime)) {
+            // declarations are made global in swf8, so they're available in subsequent calls
+            toplevel = true;
+            // this must be the last instruction, so the loading movieclip is properly unloaded.
+            // 'this._parent' point the loadobj movieclip (see kernel/swf/LzLoader.as)
+            end = "this._parent.loader.returnData( this._parent );";
+        } else if (AS3_RUNTIMES.contains(runtime)) {
+            // you can't add global variables dynamically in AS3
+            toplevel = false;
+            start = "public class " + SWF9Writer.DEBUG_EVAL_SUPERCLASS + " extends Sprite {\n" +
+                "#passthrough (toplevel:true) {\n" +
+                "import flash.display.Sprite;\n" +
+                "}#\n" +
+                "public function " + SWF9Writer.DEBUG_EVAL_SUPERCLASS + " (...ignore) {runToplevelDefinitions();}\n" +
+                "public function runToplevelDefinitions() {}\n" +
+                "}\n";
+        } else {
+            throw new CompilationError("invalid runtime: " + runtime);
+        }
+
+        // some extra newlines, so e.g. a single-line comment won't break the compilation
+        script = "\n" + script + "\n";
+
+        byte[] action;
+        try {
+            String prog =
+                    "(function () {\n" +
+                        (toplevel
+                        ? "    #pragma 'scriptElement'\n"
+                        : "") +
+                    "try{with(Debug.environment){\n" +
+                        ((seqnum == null)
+                        ? ("Debug.displayResult(" + script + ");\n")
+                        // it's a remote debug request, send a response to client
+                        : ("Debug.displayResult(Debug.sockWriteAsXML(" + script + "," + seqnum + "));\n")) +
+                    "}}\n" +
+                    "catch(e){\n" +
+                        ((seqnum == null)
+                        ? ("Debug.displayResult(e);\n")
+                        : ("Debug.displayResult(Debug.sockWriteAsXML(e," + seqnum + "));\n")) +
+                    "}}());\n";
+            action = ScriptCompiler.compileToByteArray(start + prog + end, props);
+        } catch (Exception e) {
+            try {
+                String prog =
+                        "(function () {\n" +
+                            (toplevel
+                            ? "    #pragma 'scriptElement'\n"
+                            : "") +
+                        CompilerUtils.sourceLocationDirective(null, new Integer(0), new Integer(0)) +
+                        "try{with(Debug.environment){\n" +
+                        // intentionally wrapped script in block, so it doesn't interfere with next statements
+                        "{" + script + "}\n" +
+                            ((seqnum == null)
+                            ? ""
+                            : ("Debug.sockWriteAsXML(true," + seqnum + ");\n")) +
+                        // call 'displayResult()' to ensure fresh line and prompt
+                        "Debug.displayResult();\n" +
+                        "}}\n" +
+                        "catch(e){\n" +
+                            ((seqnum == null)
+                            ? ("Debug.displayResult(e);\n")
+                            : ("Debug.displayResult(Debug.sockWriteAsXML(e," + seqnum + "));\n")) +
+                        "}}());\n";
+                action = ScriptCompiler.compileToByteArray(start + prog + end, props);
+            } catch (Exception e2) {
+                // mLogger.info("error compiling/writing script: " + e2.getMessage());
+                String msg = ScriptCompiler.quote("Parse error: "+ e2.getMessage());
+                String prog =
+                            "(function () {\n" +
+                                ((seqnum == null)
+                                ? ("Debug.displayResult(" + msg + ");\n")
+                                : ("Debug.displayResult(Debug.sockWriteAsXML(" + msg + "," + seqnum + "));\n")) +
+                            "})();\n";
+                action = ScriptCompiler.compileToByteArray(start + prog + end, props);
+            }
+        }
+
+        return action;
+    }
+
+    /*
+     * Used by the debugger-evaluator.
+     */
     public void compileAndWriteToSWF (String script, String seqnum, OutputStream out, String runtime) {
         try {
             CompilationEnvironment env = makeCompilationEnvironment(null);
             env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, true);
             Properties props = (Properties) env.getProperties().clone();
             env.setProperty(env.RUNTIME_PROPERTY, runtime);
-            byte[] action;
-
-            // Try compiling as an expression first.  If that fails,
-            // compile as sequence of statements.  If that fails too,
-            // report the parse error.
-            try {
-                String prog;
-                if (seqnum == null) {
-                    prog = "(function () {\n" +
-                        "    #pragma 'scriptElement'\n" +
-                        "_level0.Debug.displayResult(\n"+
-                        script + "\n" +
-                        ");\n" +
-                        "}());\n";
-                } else {
-                    // it's a remote debug request, send a response to client
-                    prog =
-                        "(function () {\n" +
-                        "    #pragma 'scriptElement'\n" +
-                        "_level0.Debug.displayResult(\n"+
-                        "  _level0.__LzDebug.sockWriteAsXML(\n"+script+","+seqnum+");\n" +
-                        " );\n" +
-                        "}());\n";
-                }
-                prog += "this._parent.loader.returnData( this._parent );";
-                action = ScriptCompiler.compileToByteArray(prog, props);
-            } catch (org.openlaszlo.sc.parser.ParseException e) {
-                try {
-                    String wrapper =
-                        "  (function () {\n" +
-                        "    #pragma 'scriptElement'\n" +
-                             CompilerUtils.sourceLocationDirective(null, new Integer(0), new Integer(0)) +
-                             script+"\n"+
-                        "    if (Debug.remoteDebug) { _level0.__LzDebug.sockWriteAsXML(true,"+seqnum+");};\n" +
-                        "  }());\n" +
-                        "this._parent.loader.returnData( this._parent )";
-                    action = ScriptCompiler.compileToByteArray(wrapper, props);
-                } catch (org.openlaszlo.sc.parser.ParseException e2) {
-                    //mLogger.info("not stmt: " + e);
-                    action = ScriptCompiler.compileToByteArray(
-                        "with(_level0) {Debug.__write(" +
-                        ScriptCompiler.quote("Parse error: "+ e2.getMessage()) + ")}\n"
-                        + "this._parent.loader.returnData( this._parent )", props);
-                }
-            }
-
+            byte[] action = this.compileEvalScript(script, seqnum, runtime, props);
             ScriptCompiler.writeScriptToStream(action, out, LPS.getSWFVersionNum(runtime));
             out.flush();
             out.close();
@@ -530,7 +582,6 @@ public class Compiler {
 );
         }
     }
-
 
     /*
      * Used by the debugger-evaluator. Compiles a standalone application which executes the javascript in SCRIPT.
@@ -582,71 +633,7 @@ public class Compiler {
             env.setApplicationFile(appfile);
             compilerInfo.buildDirPathPrefix = env.getLibPrefix();
 
-
-            byte[] objcode;
-            String prog = "public class DebugExec extends Sprite {\n" +
-                "#passthrough (toplevel:true) {  \n" +
-                "import flash.display.*;\n" +
-                "import flash.errors.*;\n" +
-                "import flash.events.*;\n" +
-                "import flash.external.*;\n" +
-                "import flash.filters.*;\n" +
-                "import flash.geom.*;\n" +
-                "import flash.media.*;\n" +
-                "import flash.net.*;\n" +
-                "import flash.printing.*;\n" +
-                "import flash.profiler.*;\n" +
-                "import flash.sampler.*;\n" +
-                "import flash.system.*;\n" +
-                "import flash.text.*;\n" +
-                "import flash.ui.*;\n" +
-                "import flash.utils.*;\n" +
-                "import flash.xml.*;\n";
-
-            if ("swf10".equals(runtime)) {
-                // These make it easier to debug SWF 10 Text Layout Framework code
-                prog = prog +
-                    "import flashx.textLayout.container.*;\n" +
-                    "import flashx.textLayout.compose.*;\n" +
-                    "import flashx.textLayout.elements.*;\n" +
-                    "import flashx.textLayout.conversion.*;\n" +
-                    "import flashx.textLayout.formats.*;\n" +
-                    "import flashx.textLayout.formats.Direction;\n" +
-                    "import flashx.textLayout.edit.*;\n" +
-                    "import flashx.textLayout.events.*;\n";
-            }
-            prog = prog + 
-                "}#\n" +
-                "public function DebugExec (...ignore) {runToplevelDefinitions();}\n" +
-                "public function runToplevelDefinitions() {}\n" +
-                "}\n";
-
-            // Try compiling as an expression first.  If that fails,
-            // compile as sequence of statements.  If that fails too,
-            // report the parse error.
-            try {
-                String nprog = prog +  "(function () { try {\n" 
-                    + "Debug.displayResult("+script +");\n"
-                    + "} catch (e) { "
-                    + " Debug.displayResult(e); \n"
-                    + "}\n"
-                    + "})();";
-                objcode = ScriptCompiler.compileToByteArray(nprog, props);
-            } catch (Exception e) {
-                try {
-                    String nprog = prog + "var mycode = (function () {\n"+
-                        " try {" + script  +"} catch(e) {Debug.displayResult(e);}\n});\n"+"mycode();\n";
-                    objcode = ScriptCompiler.compileToByteArray(nprog, props);
-                } catch (Exception e2) {
-                    mLogger.info("error compiling/writing script: " + e2.getMessage());
-                    objcode = ScriptCompiler.compileToByteArray( prog + 
-                        "(function () { \n"
-                        + "Debug.displayResult(" + ScriptCompiler.quote("Parse error: "+ e2.getMessage()) + ");\n"
-                        + "})();",
-                        props);
-                }
-            }
-
+            byte[] objcode = this.compileEvalScript(script, null, runtime, props);
             int total = FileUtils.sendToStream(new ByteArrayInputStream(objcode), out);
             out.flush();
             out.close();

@@ -165,35 +165,6 @@ class LzAS2DebugService extends LzDebugService {
 
   /**
    * @access private
-   * @devnote The only reason this is here is because the SWF eval
-   * compiler does not (yet) wrap `with (Debug.environment)` around the
-   * compiled expression, so we have to put the "previous value's" in
-   * _level0
-   */
-  final override function displayResult (result=(void 0)) : void {
-    if (typeof(result) != 'undefined') {
-      // Advance saved results if you have a new one
-      if (result !== _level0['_']) {
-        if (typeof(_level0.__) != 'undefined') {
-          _level0.___ = _level0.__;
-        }
-        if (typeof(_level0._) != 'undefined') {
-          _level0.__ = _level0._;
-        }
-        _level0._ = result;
-      }
-    }
-    this.freshLine();
-    // Output any result from the evalloader
-    if (typeof(result) != 'undefined') {
-      this.format("%#w", result);
-    }
-    this.freshPrompt();
-  }
-
-
-  /**
-   * @access private
    * @devnote This is carefully constructed so that if there is a
    * preferred name but mustBeUnique cannot be satisfied, we return
    * null (because the debugger may re-call us without the unique
