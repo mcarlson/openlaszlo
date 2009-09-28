@@ -894,6 +894,18 @@ public class Compiler {
     }
   }
 
+  public static class AnnotatedNode extends PassThroughNode {
+    private AnnotatedNode() { }
+
+    public AnnotatedNode(SimpleNode realNode) {
+      this.realNode = realNode;
+    }
+
+    public AnnotatedNode(PassThroughNode passNode) {
+      this.realNode = passNode.realNode;
+    }
+  }
+
   //
   // Profiler for hand-instrumentation of Compiler
   //

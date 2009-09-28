@@ -28,18 +28,32 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   // Make Javascript globals 'known'
   Set globals = new HashSet(Arrays.asList(new String[] {
-    "NaN", "Infinity", "undefined",
-    "eval", "parseInt", "parseFloat", "isNaN", "isFinite",
-    "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent",
-    "Object", "Function", "Array", "String", "Boolean", "Number", "Date",
-    "RegExp", "Error", "EvalError", "RangeError", "ReferenceError",
-    "SyntaxError", "TypeError", "URIError",
-    "Math"}));
+        "NaN", "Infinity", "undefined",
+        "eval", "parseInt", "parseFloat", "isNaN", "isFinite",
+        "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent",
+        "Object", "Function", "Array", "String", "Boolean", "Number", "Date",
+        "RegExp", "Error", "EvalError", "RangeError", "ReferenceError",
+        "SyntaxError", "TypeError", "URIError",
+        "Math",
+        // And our global namespace
+        "lz"
+      }));
 
   public SimpleNode translate(SimpleNode program) {
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
       context = new TranslationContext(ASTProgram.class, context);
+      if (options.getBoolean(Compiler.DEBUG) || options.getBoolean(Compiler.DEBUG_SWF9)) {
+        // Add debugger globals
+        globals.add("Debug");
+        globals.add("$reportNotFunction");
+        globals.add("$reportUndefinedObjectProperty");
+        globals.add("$reportUndefinedMethod");
+        globals.add("$reportException");
+        globals.add("$reportUndefinedProperty");
+        globals.add("$reportUndefinedVariable");
+        globals.add("$reportSourceWarning");
+      }
       context.setProperty(TranslationContext.VARIABLES, globals);
       return translateInternal(program, "b", true);
     }
@@ -808,32 +822,26 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   }
 
   public SimpleNode makeCheckedNode(SimpleNode node) {
+    // Now that debugging automatically catches errors, we don't need
+    // evalCarefully.  All a checked node needs to do is update the
+    // lineno in the backtrace (if it is on).
     if (options.getBoolean(Compiler.DEBUG) && options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)
         // Only check this where 'this' is available
         && (context.findFunctionContext() != null)) {
-      String file = "null";
-      String line = "null";
-      if (node.filename != null) {
-        file = ScriptCompiler.quote(node.filename);
-        line = "" + node.beginLine;
-      }
-      Map map = new HashMap();
-      map.put("_1", node);
-      return new Compiler.PassThroughNode((new Compiler.Parser()).substitute(
-        node,
-        "(Debug.evalCarefully(" + file + ", " + line + ", function () { return _1; }, this))", map));
+      return noteCallSite(node);
     }
     return node;
   }
 
   SimpleNode noteCallSite(SimpleNode node) {
     // Note current call-site in a function context and backtracing
+    if (node instanceof Compiler.AnnotatedNode) { return node; }
     if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine > 0)) &&
         (context.findFunctionContext() != null)) {
       SimpleNode newNode = new ASTExpressionList(0);
-      newNode.set(0, (new Compiler.Parser()).parse("$lzsc$a.lineno = " + node.beginLine).get(0).get(0));
-      newNode.set(1, new Compiler.PassThroughNode(node));
-      return visitExpression(newNode);
+      newNode.set(0, visitExpression((new Compiler.Parser()).parse("$lzsc$a.lineno = " + node.beginLine).get(0).get(0)));
+      newNode.set(1, node);
+      return new Compiler.AnnotatedNode(newNode);
     }
     return node;
   }
@@ -1227,7 +1235,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     List suffix = new ArrayList();
     List postfix = new ArrayList();
     // If backtrace is on, we maintain a call stack for debugging
-    if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
+    boolean debugBacktrace = options.getBoolean(Compiler.DEBUG_BACKTRACE);
+    if (debugBacktrace) {
       prefix.add(parseFragment(
                    "var $lzsc$d = Debug, $lzsc$s = $lzsc$d.backtraceStack;" +
                    "if ($lzsc$s) {" +
@@ -1259,8 +1268,9 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // practice would be for user programs to use non-Error object as
     // the value to be thrown.
     boolean throwExceptions = options.getBoolean(Compiler.THROWS_ERROR);
-    // If debugging is on and the user has not explicitly declared
-    // their intention to throw an error, report Errors
+    // If debugging is on we create an error handler to catch the
+    // error, report it, and unless the error is declared, neuter it
+    // as we would for compiler.catcherrors
     boolean debugExceptions = (options.getBoolean(Compiler.DEBUG) ||
                                options.getBoolean(Compiler.DEBUG_SWF9));
     // Analyze local variables (and functions)
@@ -1268,24 +1278,37 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       new VariableAnalyzer(params, 
                            options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY),
                            (this instanceof SWF9Generator));
-    // We only insert the error handler if the variable analysis shows
-    // that there is a dereference in the original body of the function.
     for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
-    if (catchExceptions) {
-      analyzer.computeReferences();
-      catchExceptions = analyzer.dereferenced;
-    }
-    String tryType = "";
-    if (catchExceptions || throwExceptions || debugExceptions) {
+    // We only want to compute these analysis components on the
+    // original body of code, not on the annotations, since these are
+    // used to enforce LZX semantics in Javascript
+    analyzer.computeReferences();
+    // Parameter _must_ be in order
+    LinkedHashSet parameters = analyzer.parameters;
+    // Linked for determinism for regression testing
+    LinkedHashMap fundefs = analyzer.fundefs;
+    Set closed = analyzer.closed;
+    Set free = analyzer.free;
+    // For efficiency, We only insert the error handler if the
+    // variable analysis shows that there is a dereference in the
+    // original body of the function, or we are recording a declared
+    // exception
+    if ((analyzer.dereferenced && (catchExceptions || debugExceptions)) || throwExceptions) {
       String fragment = "";
-      fragment += "if ($lzsc$e is Error) {";
       if (throwExceptions) {
-        fragment += "  lz.$lzsc$thrownError = $lzsc$e";
+        // Just record declared errors and always rethrow
+        fragment +=
+          "if ($lzsc$e is Error) {" +
+          "  lz.$lzsc$thrownError = $lzsc$e" +
+          "}" +
+          "throw $lzsc$e;";
       } else {
         // Don't process errors declared to be thrown
-        fragment += "  if (lz['$lzsc$thrownError'] === $lzsc$e) { throw $lzsc$e; }";
+        fragment +=
+          "if ($lzsc$e is Error && ($lzsc$e !== lz['$lzsc$thrownError'])) {";
+        // Report all errors when debugging
         if (debugExceptions) {
           // TODO: [2009-03-20 dda] In DHTML, having trouble
           // successfully defining the $lzsc$runtime class, so we'll
@@ -1295,18 +1318,15 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           } else {
             fragment += "  $reportException(";
           }
-          fragment += ScriptCompiler.quote(filename) + ", " + lineno + ", $lzsc$e);";
+          fragment += ScriptCompiler.quote(filename) + ", " + (debugBacktrace ? "$lzsc$a.lineno" : lineno) + ", $lzsc$e);";
         }
-      }
-      // Only neuter Errors if catcherrors is on and throwsError is off
-      if (catchExceptions && (! throwExceptions)) {
+        // Neuter errors:  either compiler.catcherrors is true, or we
+        // are debugging and don't want undeclared errors to halt the
+        // program.  But re-throw declared and non-errors
         fragment +=
           "} else {" +
           "  throw $lzsc$e;" +
           "}";
-      } else {
-        fragment += "}" +
-          "throw $lzsc$e;";
       }
       error.add(parseFragment(fragment));
 
@@ -1342,7 +1362,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       // Not sure why we turn this off now...  Some suspicion we will recurse?
       options.putBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS, false);
     }
-    // Now we visit all the wrapper code and recompute the references
+    // Now we visit all the wrapper code and recompute the variables
+    // (so they can be properly renamed)
     for (Iterator i = prefix.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
@@ -1356,13 +1377,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       analyzer.visit((SimpleNode)i.next());
     }
     analyzer.computeReferences();
-    // Parameter _must_ be in order
-    LinkedHashSet parameters = analyzer.parameters;
     // Linked for determinism for regression testing
     Set variables = analyzer.variables;
-    LinkedHashMap fundefs = analyzer.fundefs;
-    Set closed = analyzer.closed;
-    Set free = analyzer.free;
     boolean isStatic = isStatic(node);
     boolean withThis = options.getBoolean(Compiler.WITH_THIS) && !isStatic;
     // Note usage due to activation object and withThis

@@ -4,13 +4,13 @@
   <view id="mytest" bgcolor="#eeeeee" width="250" layout="axis: y; spacing: 10">
     <text multiline="true" width="90%" x="5%">
       This is a test of the interaction of lps.properties
-      `compiler.catcherrors` and debug mode.  There are 4 cases to
-      check: debug mode on and off crossed with compiler.catcherrors
-      on and off.  NOTE 1: You must create a clean build when changing
-      the setting of compiler.catcherrors.  NOTE 2: The description of
-      what each button should do is updated according to the case you
-      are testing.  NOTE 3: This test is only valid for the DHTML and
-      swf9 (or later) runtimes.
+      `compiler.catcherrors` and debug mode.  There are 3 cases to
+      check: debug mode on, and debug mode off crossed with
+      compiler.catcherrors on and off.  NOTE 1: You must create a
+      clean build when changing the setting of compiler.catcherrors.
+      NOTE 2: The description of what each button should do is updated
+      according to the case you are testing.  NOTE 3: This test is
+      only valid for the DHTML and swf9 (or later) runtimes.
     </text>
     <method name="testCatchErrors">
       if ($debug) { Debug.info("Ignore the next error"); }
@@ -29,7 +29,11 @@
         } catch (e) {
           canvas.catcherrors = false;
         }
-        mode.format("MODE: %s, catcherrors=%w", $debug?"debug":"normal", canvas.catcherrors);
+        if (debug) {
+          mode.format("MODE: debug");
+        } else {
+          mode.format("MODE: catcherrors=%s", canvas.catcherrors);
+        }
       }
       var runtimeErrorObject = '<runtime-specific error>';
       try {
@@ -38,29 +42,17 @@
         runtimeErrorObject = e;
       } 
       if ($debug) {
-        if (canvas.catcherrors) {
+        // Debug mode does not distinguish between catcherrors or not
           instruction1.setAttribute('text',
-          'The first button should display the message "caught Random Object".');
-          instruction2.setAttribute('text',
-          'The second button should cause the debugger to print  "Error: Uncaught"');
-          instruction3.setAttribute('text',
-          'The third button should cause the debugger to print "Error: Intercepted"');
-          instruction4.setAttribute('text',
-          'The fourth button should display the message "caught Error: Caught".');
-          instruction5.format('The fifth button should cause the debugger to print "Error: %0.24#s".', runtimeErrorObject);
-          instruction6.format('The sixth button should display the message "caught: %0.24#s".', runtimeErrorObject);
-        } else {
-          instruction1.setAttribute('text',
-          'The first button should display the message "caught Random Object".');
-          instruction2.setAttribute('text',
-          'The second button should cause the debugger to print "Error: Uncaught" and display an error in the platform debugger (if present)');
-          instruction3.setAttribute('text',
-          'The third button should cause the debugger to print "Error: Intercepted" and display the message "caught Error: Intercepted"');
-          instruction4.setAttribute('text',
-          'The fourth button should display the message "caught Error: Caught".');
-          instruction5.format('The fifth button should cause the debugger to print "Error: %0.24#s" and display the message "caught %0.24#s".', runtimeErrorObject, runtimeErrorObject);
-          instruction6.format('The sixth button should display the message "caught: %0.24#s".', runtimeErrorObject);
-        }
+        'The first button should display the message "caught Random Object".');
+        instruction2.setAttribute('text',
+        'The second button should cause the debugger to print  "Error: Uncaught"');
+        instruction3.setAttribute('text',
+        'The third button should cause the debugger to print "Error: Intercepted"');
+        instruction4.setAttribute('text',
+        'The fourth button should display the message "caught Error: Caught".');
+        instruction5.format('The fifth button should cause the debugger to print "Error: %0.24#s".', runtimeErrorObject);
+        instruction6.format('The sixth button should display the message "caught: %0.24#s".', runtimeErrorObject);
       } else {
         if (canvas.catcherrors) {
           instruction1.setAttribute('text',
