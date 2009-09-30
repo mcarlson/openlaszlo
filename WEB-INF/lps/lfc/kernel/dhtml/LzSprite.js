@@ -88,6 +88,8 @@ var LzSprite = function(owner, isroot) {
         }
 
         lz.embed.options.approot = (typeof(p.approot) == "string") ? p.approot : '';
+        /* Install the styles, now that quirks have been accounted for */
+        LzSprite.__defaultStyles.writeCSS();
 
         appcontainer.appendChild(div);
         this.__LZdiv = div;
@@ -216,6 +218,10 @@ var LzSprite = function(owner, isroot) {
             LzSprite.__mouseActivationDiv = div;
         }
 
+        // create container for text size cache
+        var textsizecache = document.createElement('div');
+        lz.embed.__setAttr(textsizecache, 'id', 'lzTextSizeCache');
+        document.body.appendChild(textsizecache);
     } else {
         this.__LZdiv = document.createElement('div');
         this.__LZdiv.className = 'lzdiv';
@@ -487,6 +493,7 @@ LzSprite.__defaultStyles = {
             }
             css += '}';
         }
+        css += LzFontManager.generateCSS();
         document.write('<style type="text/css">' + css + '</style>');
     },
     __re: new RegExp('[A-Z]', 'g'),
@@ -880,8 +887,6 @@ LzSprite._getScrollbarWidth = function () {
 
 /* Update the quirks on load */
 LzSprite.__updateQuirks();
-/* Install the styles, now that quirks have been accounted for */
-LzSprite.__defaultStyles.writeCSS();
 
 /**
  * The canvas fills the root container.  To resize the canvas, we
@@ -1104,11 +1109,7 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
 }
 
 LzSprite.prototype.getBaseUrl = function (resource) {
-    if (resource.ptype == 'sr') {
-        return lz.embed.options.serverroot;
-    } else {
-        return lz.embed.options.approot;
-    }
+    return lz.embed.options[resource.ptype == 'sr' ? 'serverroot' : 'approot']
 }
 
 /**

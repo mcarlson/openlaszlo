@@ -44,8 +44,7 @@ class DHTMLWriter extends ObjectWriter {
     static final String localResourceDir = "lps/resources";
 
     // Accumulate script here, to pass to script compiler
-    protected PrintWriter scriptWriter = null;
-    protected StringWriter scriptBuffer = null;
+    protected StringBuffer scriptBuffer = null;
 
     // List of declarations of resources
     protected StringBuffer mResourceDefs = new StringBuffer();
@@ -60,9 +59,7 @@ class DHTMLWriter extends ObjectWriter {
 
         super(props, stream, cache, importLibrary, env);
 
-        scriptBuffer = new StringWriter();
-        scriptWriter= new PrintWriter(scriptBuffer);
-
+        scriptBuffer = new StringBuffer();
     }
 
 
@@ -73,18 +70,22 @@ class DHTMLWriter extends ObjectWriter {
      * 
      */
     void setCanvas(Canvas canvas, String canvasConstructor) {
-        scriptWriter.println(canvasConstructor);
+        addScript(canvasConstructor);
     }
 
     void setCanvasDefaults(Canvas canvas, CompilerMediaCache mc) { };
 
-
-
     public int addScript(String script) {
-        scriptWriter.println(script);
+        scriptBuffer.append(script);
+        scriptBuffer.append("\n");
         return script.length();
     }
 
+    public int addScript(StringBuffer script) {
+        scriptBuffer.append(script);
+        scriptBuffer.append("\n");
+        return script.length();
+    }
 
     public void importPreloadResource(File fileName, String name) 
         throws ImportResourceError
@@ -226,11 +227,11 @@ class DHTMLWriter extends ObjectWriter {
             sbuf.append("]");
         }
         sbuf.append("};");
-        mResourceDefs.append(sbuf.toString());
+        mResourceDefs.append(sbuf);
     }
 
     public void addResourceDefs () {
-        addScript(mResourceDefs.toString());
+        scriptBuffer.insert(0, mResourceDefs);
     }
     public void importResource(List sources, String sResourceName, File parent)
     {
@@ -318,7 +319,7 @@ class DHTMLWriter extends ObjectWriter {
             }
         }
         sbuf.append("};");
-        mResourceDefs.append(sbuf.toString());
+        mResourceDefs.append(sbuf);
     }
 
     private String[] getRelPath(File fFile) { 
@@ -399,7 +400,6 @@ class DHTMLWriter extends ObjectWriter {
 
         try { 
             Properties props = (Properties)mProperties.clone();
-            scriptWriter.close();
             byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
             InputStream input = new ByteArrayInputStream(objcode);
             mLogger.debug("compiled DHTML code is "+new String(objcode));
@@ -429,7 +429,6 @@ class DHTMLWriter extends ObjectWriter {
 
         try { 
             Properties props = (Properties)mProperties.clone();
-            scriptWriter.close();
             byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
             InputStream input = new ByteArrayInputStream(objcode);
             mLogger.debug("compiled DHTML code is "+new String(objcode));
@@ -462,7 +461,52 @@ class DHTMLWriter extends ObjectWriter {
     public void importFontStyle(String fileName, String face, String style,
                                 CompilationEnvironment env)
         throws FileNotFoundException, CompilationError {
-        env.warn("DHTMLWriter does not support importing fonts");
+        mLogger.debug("DHTMLWriter: Importing font: " + fileName + ", face: " + face + ", style: " + style);
+
+        if (style == null || style.equals("")) {
+            style = "plain";
+        }
+
+        File inputFile = mEnv.resolve(fileName, null);
+
+        File dirfile = mEnv.getApplicationFile().getParentFile();
+        String[] fileInfo = getRelPath(inputFile);
+        String pType = fileInfo[0];
+        String relPath = fileInfo[1];
+
+        // make it relative and watch out, it comes back canonicalized with forward slashes.
+        // Comparing to file.separator is wrong on the pc.
+        if (relPath.charAt(0) == '/') {
+            relPath = relPath.substring(1);
+        }
+
+        // If this is a "external" resource and copy-resources flag
+        // is set, make a copy of the resource file to bundle with the app.
+        // (Note: the SOLO DHTML deploy script used to be responsible or this).
+        if (pType.equals("sr") && mEnv.getBooleanProperty(mEnv.COPY_RESOURCES_LOCAL)) {
+            // If this is a "sr" (server-root-relative) path, make a local copy in the
+            // localResourceDir
+            copyResourceFile(inputFile, dirfile, relPath);
+        }
+
+        // Convert to the CSS style/weight
+        String weight = "normal";
+        if (style.equals("plain")) {
+            weight = "normal";
+            style = "normal";
+        } else if (style.equals("bold")) {
+            weight = "bold";
+            style = "normal";
+        } else if (style.equals("italic")) {
+            weight = "normal";
+            style = "italic";        
+        } else if (style.equals("bold italic") || style.equals("bolditalic")) {
+            weight = "bold";
+            style = "italic";        
+        }
+
+        String fontresource = "LzFontManager.addFont('" + face + "','" + style + "','" + weight + "','" + relPath + "','" + pType + "');";
+        mResourceDefs.append(fontresource);
     }
 
 
@@ -588,5 +632,5 @@ class DHTMLWriter extends ObjectWriter {
         }
     }
 
-}
+        }
 

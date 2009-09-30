@@ -1,7 +1,7 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   */
@@ -23,3 +23,4 @@
 #include "kernel/dhtml/LzScreenKernel.js"
 #include "kernel/dhtml/LzContextMenuKernel.lzs"
 #include "kernel/dhtml/LzTimeKernel.js"
+#include "kernel/dhtml/LzFontManager.js"

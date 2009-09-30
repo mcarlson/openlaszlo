@@ -49,6 +49,7 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
     this.setFontName(args.font);
     this.setFontStyle(args.fontstyle);
     this.setFontSize(args.fontsize);
+    this.initted = true;
 }
 
 // Should reflect CSS defaults in LzSprite.js
@@ -183,7 +184,71 @@ LzTextSprite.prototype.setScrollEvents = function (on) {
   this.scrollevents = this.setScrolling(on);
 }
 
+LzTextSprite.prototype.initted = false;
+LzTextSprite.prototype.__loadedfonts = {counter: 0};
+LzTextSprite.prototype.__loadedfontscallback = {};
+LzTextSprite.prototype.__isExternalFontLoaded = function (url){
+  var font = LzFontManager.getFont(this._fontFamily, this._fontStyle, this._fontWeight);
+  if (! font || ! this.initted) return true;
+  var url = LzFontManager.getURL(font);
+  var loadingstatus = this.__loadedfonts[url];
+  if (loadingstatus == 2) {
+    // done loading
+    return true;
+  } else if (loadingstatus == 1) {
+    var lfc = this.__loadedfontscallback;
+    lfc[this.uid] = this;
+    // already loading the font
+    return false;
+  }
+  // loading
+  this.__loadedfonts[url] = 1;
+  this.__loadedfonts.counter++;
+
+  // set up loader to call back and re-measure when the font has loaded
+  var style = 'font-family:' + this._fontFamily + ';font-style:' + this._fontStyle + ';font-weight:' + this._fontWeight + ';width:auto;height:auto;';
+  var mdiv = this.__createMeasureDiv('lzswftext', style, 'Yq_gy"9;ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789-=abcdefghijklmnopqrstuvwxyz');
+  mdiv.style.display = 'inline';
+  var width = mdiv.clientWidth;
+  var height = mdiv.clientHeight;
+  mdiv.style.display = 'none';
+  this.__measurefontdiv(mdiv, width, height, url);
+}
+
+LzTextSprite.prototype.__measurefontdiv = function(mdiv, width, height, url){
+  mdiv.style.display = 'inline';
+  var newwidth = mdiv.clientWidth;
+  var newheight = mdiv.clientHeight;
+  mdiv.style.display = 'none';
+  if (newwidth == width && newheight == height) {
+    // give the browser a little more time...
+    var cstr = lz.BrowserUtils.getcallbackfunc(this, '__measurefontdiv', [mdiv, width, height, url]);
+    setTimeout(cstr, 200);
+  } else {
+    //Debug.warn('comparing', width, newwidth, height, newheight, mdiv);
+    this.__loadedfonts.counter--;
+    this.__loadedfonts[url] = 2;
+
+    if (this.__loadedfonts.counter == 0) {
+      var loadedfontscallback = this.__loadedfontscallback;
+      this.__clearMeasureCache();
+
+      for (var i in loadedfontscallback) {
+        var sprite = loadedfontscallback[i];
+        sprite._cachevalue = sprite._cacheStyleKey = sprite._cacheTextKey = null;
+        sprite.setWidth(sprite.getTextWidth());
+        sprite.setHeight(sprite.getTextHeight());
+        sprite.__updatefieldsize();
+        //Debug.warn('callback', sprite.uid);
+      }
+      delete loadedfontscallback[i];
+    }
+  }
+}
+
 LzTextSprite.prototype.__updatefieldsize = function ( ){
+  if (! this.__isExternalFontLoaded()) return;
+
   var lineHeight = this.getLineHeight();
   // Validate lineHeight
   if (this.lineHeight !== lineHeight) {
@@ -468,27 +533,16 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // Otherwise, compute from scratch
   var root = document.getElementById('lzTextSizeCache');
   if ((_sizecache.counter > 0) && ((_sizecache.counter % this.__sizecacheupperbound) == 0)) {
-    ltsp._sizecache = _sizecache = {counter: 0};
+    this.__clearMeasureCache();
     cv = null;
-    if (LzSprite.quirks.ie_leak_prevention) {
-      ltsp.__cleanupdivs();
-    }
-    if (root) { root.innerHTML = ''; }
   }
   if (! cv) {
     cv = this._cachevalue = _sizecache[cacheFullKey] = {};
-  }
-  if (! root) {
-    // create container for size cache
-    root = document.createElement('div');
-    lz.embed.__setAttr(root, 'id', 'lzTextSizeCache');
-    document.body.appendChild(root);
   }
   // TODO: [2009-03-29 ptw] Should we use the scrolldiv.tagName so we
   // get the actual node type for measurment?  But if we do, we have
   // to conditionalize setting the text into the node (because there
   // seems to be no generic method for setting the content of nodes?)
-  var tagname = 'div';
   var mdivKey = className + "/" + style + 'div';
   var mdiv = _sizecache[mdivKey];
   if (mdiv) {
@@ -496,27 +550,7 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
     this.__setTextContent(mdiv, scrolldiv.tagName, string);
     //console.log('reused', mdivKey, string);
   } else {
-    // create new div
-    if (this.quirks['text_measurement_use_insertadjacenthtml']) {
-      var html = '<' + tagname + ' id="testSpan' + _sizecache.counter + '"';
-      html += ' class="' + className + '"';
-      html += ' style="' + style + '">';
-      html += string;
-      html += '</' + tagname + '>';
-      root.insertAdjacentHTML('beforeEnd', html);
-      var mdiv = document.all['testSpan' + _sizecache.counter];
-      if (this.quirks.ie_leak_prevention) {
-        ltsp.__divstocleanup.push(mdiv);
-      }
-    } else {
-      var mdiv = document.createElement(tagname)
-      // NOTE: [2009-03-25 ptw] setAttribute needs the real attribute
-      // name, i.e., `class` not `classname`!
-      lz.embed.__setAttr(mdiv, 'class', className);
-      lz.embed.__setAttr(mdiv, 'style', style);
-      this.__setTextContent(mdiv, scrolldiv.tagName, string);
-      root.appendChild(mdiv);
-    } 
+    var mdiv = this.__createMeasureDiv(className, style, string);
     // store measurement div to reuse later...
     _sizecache[mdivKey] = mdiv;
   }
@@ -524,9 +558,46 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // NOTE: clientHeight for both height and lineheight
   cv[dimension] = (dimension == 'width') ? mdiv.clientWidth : mdiv.clientHeight;
   mdiv.style.display = 'none';
-  _sizecache.counter++;
 //   Debug.debug("%w %w %d", this, cacheFullKey, lineHeight);
   return cv[dimension];
+}
+
+LzTextSprite.prototype.__clearMeasureCache = function() {
+  var root = document.getElementById('lzTextSizeCache');
+  LzTextSprite.prototype._sizecache = {counter: 0}
+  if (LzSprite.quirks.ie_leak_prevention) {
+    LzTextSprite.prototype.__cleanupdivs();
+  }
+  if (root) { root.innerHTML = ''; }
+}
+
+LzTextSprite.prototype.__createMeasureDiv = function(className, style, string) {
+  var root = document.getElementById('lzTextSizeCache');
+  var tagname = 'div';
+  var ltsp = LzTextSprite.prototype;
+  var _sizecache = ltsp._sizecache;
+  if (this.quirks['text_measurement_use_insertadjacenthtml']) {
+    var html = '<' + tagname + ' id="testSpan' + _sizecache.counter + '"';
+    html += ' class="' + className + '"';
+    html += ' style="' + style + '">';
+    html += string;
+    html += '</' + tagname + '>';
+    root.insertAdjacentHTML('beforeEnd', html);
+    var mdiv = document.all['testSpan' + _sizecache.counter];
+    if (this.quirks.ie_leak_prevention) {
+      ltsp.__divstocleanup.push(mdiv);
+    }
+  } else {
+    var mdiv = document.createElement(tagname)
+    // NOTE: [2009-03-25 ptw] setAttribute needs the real attribute
+    // name, i.e., `class` not `classname`!
+    lz.embed.__setAttr(mdiv, 'class', className);
+    lz.embed.__setAttr(mdiv, 'style', style);
+    this.__setTextContent(mdiv, this.scrolldiv.tagName, string);
+    root.appendChild(mdiv);
+  } 
+  _sizecache.counter++;
+  return mdiv;
 }
 
 LzTextSprite.prototype.__setTextContent = function(mdiv, tagname, string) {
@@ -917,15 +988,15 @@ LzTextSprite.prototype.enableClickableLinks = function ( enabled) {
 
 LzTextSprite.prototype.makeTextLink = function (str, value) {
     LzTextSprite.addLinkID(this.owner);
-    var uid = this.owner.getUID();
+    var uid = this.uid;
     return "<span class=\"lztextlink\" onclick=\"javascript:$modules.lz.__callTextLink('" + uid+"', '" + value +"')\">" + str +"</span>";
 }
 
 // value is encoded as VIEWID:value
-$modules.lz.__callTextLink = function (viewID, val) {
-    var view = LzTextSprite.linkIDMap[viewID];
-    if (view != null) {
-        view.ontextlink.sendEvent(val);
+$modules.lz.__callTextLink = function (spriteID, val) {
+    var sprite = LzTextSprite.linkIDMap[spriteID];
+    if (sprite != null) {
+        sprite.owner.ontextlink.sendEvent(val);
     }
 }
 
@@ -934,8 +1005,8 @@ $modules.lz.__callTextLink = function (viewID, val) {
 // hyperlink in text, via an "actionscript:" routine
 LzTextSprite.linkIDMap = [];
 
-LzTextSprite.addLinkID = function (view) {
-    LzTextSprite.linkIDMap[view.getUID()] = view;
+LzTextSprite.addLinkID = function (sprite) {
+    LzTextSprite.linkIDMap[sprite.uid] = sprite;
 }
 
 
@@ -943,12 +1014,9 @@ LzTextSprite.deleteLinkID = function (UID) {
     delete LzTextSprite.linkIDMap[UID];
 }
 
-// Clean up the link ID table if this view is destroyed
-LzTextSprite.prototype._viewdestroy = LzSprite.prototype.destroy;
-
 LzTextSprite.prototype.destroy = function(){
     LzTextSprite.deleteLinkID(this.owner.getUID());
-    this._viewdestroy( );
+    LzSprite.prototype.destroy.call(this);
 }
 
 LzTextSprite.prototype.setTextAlign = function (align) {
