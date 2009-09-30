@@ -236,7 +236,6 @@ public class LzSprite extends Sprite {
 
 
       public function predestroy() :void {
-          this.bringToFront();
       }
 
       public function draw():void {
