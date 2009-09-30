@@ -33,16 +33,15 @@
             if (lz.rtmpconnection.connections) this.setAttribute('rtmpc', lz.rtmpconnection.connections._default);
             if (this.rtmpc == null) {
                 if ($debug) Debug.warn("rtmpconnection not found for %w", this);
-                return;
             }
         }
         ]]>
         </handler>
 
-        <handler name="ondestroy"><![CDATA[
+        <method name="destroy"><![CDATA[
             this._updateStageDelegate.unregisterAll();
-        ]]>
-        </handler>
+            super.destroy();
+        ]]></method>
 
         <setter name="rtmpc" args="conn = null">
             this.rtmpc = conn;

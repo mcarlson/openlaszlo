@@ -89,7 +89,7 @@
             } else if ( p == "gridcontent" ){
                 return parent.content;
             } else {
-                return super.determinePlacement.apply(this, arguments);
+                return super.determinePlacement(v, p, args);
             }
         </method>
 

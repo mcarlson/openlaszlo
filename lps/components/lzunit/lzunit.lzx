@@ -633,9 +633,10 @@
     </method>
 
 
-    <handler name="oninit">
+    <method name="init">
+      super.init();
       this.addTests();
-    </handler>
+    </method>
 
     <!---
       Run the setUp, execute the named test case, run tearDown

@@ -51,7 +51,7 @@
             this.clones = [];
             this._cloneprops = [];
             this._clonepool = [];
-            super.construct.apply(this, arguments);
+            super.construct(p, a);
             this.container = this.immediateparent;
             this.mask = this.container.immediateparent;
         </method>

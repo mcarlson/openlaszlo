@@ -191,9 +191,10 @@
             x="${classroot.inset_left}" y="${classroot.titlearea_inset_top}"
             width="${classroot.width-classroot.inset_left-classroot.inset_right}">
             <layout name="titlelayout">
-                <handler name="oninit">
+                <method name="init">
+                    super.init();
                     this.updateDelegate.register( parent,  "onwidth");
-                </handler>
+                </method>
                 <method name="addSubview" args="newsub">
                     if (newsub.name == "title") {
                         this.updateDelegate.register( newsub,  "ontext");

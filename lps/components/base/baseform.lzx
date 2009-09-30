@@ -20,9 +20,10 @@
 
         <!--- Formdata object is made early for child components.
               @keywords private -->
-        <handler name="onconstruct">
+        <method name="construct" args="parent, args">
+            super.construct(parent, args);
             this.formdata = {};
-        </handler>
+        </method>
 
         <method name="addFormItem" args="item">
             var base = item.name;

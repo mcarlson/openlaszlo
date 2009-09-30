@@ -25,9 +25,10 @@
         </method>
 
         <!--- @keywords private -->
-        <handler name="oninit">
+        <method name="init">
+            super.init();
             this.updateDelegate.register( this.parent, "on" + this.sizeAxis );
-        </handler>
+        </method>
     
         <!--- @keywords private -->
         <handler name="onend">
@@ -123,7 +124,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.  *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

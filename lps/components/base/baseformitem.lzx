@@ -41,31 +41,27 @@
              that it has changed. Useful in conjunction with submit=false -->
         <attribute name="ignoreform" value="false" />
 
-        <method name="init">
+        <method name="init"><![CDATA[
             // set up submitname before baseclasses have a chance to see ""
             if (this.submitname == "") this.submitname = this.name;
             if (this.submitname == "") {
                 if ($debug) {
                     Debug.error('name required for form submit', this);
                 }
-                return;
             }
             super.init();
-        </method>
-
-        <method name="destroy">
-            if (this._parentform)
-                this._parentform.removeFormItem(this);
-            super.destroy.apply(this, arguments);
-        </method>
-        
-        <handler name="oninit"><![CDATA[
             var fp = this.findForm();
             if (fp != null) {
                 fp.addFormItem(this);
                 this._parentform = fp;
             }
-        ]]></handler>
+        ]]></method>
+
+        <method name="destroy">
+            if (this._parentform)
+                this._parentform.removeFormItem(this);
+            super.destroy();
+        </method>
 
         <!--- Setter to set baseformitem to changed. Should be called by
               subclasses whenever a value is set. The first time this is called,

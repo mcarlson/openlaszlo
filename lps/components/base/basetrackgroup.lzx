@@ -38,7 +38,7 @@
            <programlisting>&lt;attribute name="deactivateevents" value="['onmouseover']" when="once"/&gt;</programlisting>
         -->
         <attribute name="deactivateevents" value="['onmouseup']" />
-        
+
         <!--- @keywords private -->
         <attribute name="_activateDL" value="null" />
         <!--- @keywords private -->
@@ -47,7 +47,7 @@
         <attribute name="_repeattrackDL" value="null" />
         <!--- @keywords private -->
         <attribute name="_destroyDL" value="null" />
-        
+
         <!--- @keywords private -->
         <event name="onmousetrackoutbottom" />
 
@@ -62,8 +62,8 @@
 
         <!--- @keywords private -->
         <method name="construct" args="parent, args">
-            super.construct.apply(this, arguments);
-            
+            super.construct(parent, args);
+
             this._activateDL    = new LzDelegate(this,'activateTrackgroup');
             this._deactivateDL  = new LzDelegate(this,'deactivateTrackgroup');
             this._repeattrackDL = new LzDelegate(this,'trackingout');
@@ -74,8 +74,7 @@
         
         <!--- @keywords private -->
         <method name="init" >
-            super.init.apply(this, arguments);
-            
+            super.init();
             lz.Track.register( this.boundsref, this._boundstrackgroup );
         </method>
         
@@ -85,17 +84,17 @@
 
             //lz.Track.unregisterAll(this._trackgroup);//LPP-4429: we would call this if it was implemented
             lz.Track.unregister(this.boundsref, this._boundstrackgroup);
-            
+
             if (this._destroyDL) {
                 this._destroyDL.unregisterAll();
                 this._destroyDL = null;
             }
-            
+
             if (this._activateDL) {
                 this._activateDL.unregisterAll();
                 this._activateDL = null;
             }
-            
+
             if (this._deactivateDL) {
                 this._deactivateDL.unregisterAll();
                 this._deactivateDL = null;
@@ -105,12 +104,12 @@
                 this._repeattrackDL.unregisterAll();
                 this._repeattrackDL = null;
             }
-            
+
             //so we won't run extra code in "onremovesubview"
             this.activateevents = null;
             this.deactivateevents = null;
-            
-            super.destroy.apply(this, arguments);
+
+            super.destroy();
         ]]></method>
 
         <!--- sets the view that will act as the bounds for this trackgroup -->
@@ -196,7 +195,7 @@
         ]]></handler>
 
         <handler name="onmousetrackout" reference="this.boundsref" method="trackingout" />
-        
+
         <!--- Called when the mouse is down and tracked
               outside the bounding rect defined by boundsref. this method
               generates the onmousetrackoutleft, onmousetrackoutright,

@@ -75,7 +75,7 @@
 
         <!--- @keywords private -->
         <method name="construct" args="parent,args">
-            super.construct.apply(this, arguments);
+            super.construct(parent, args);
 
             var wlist = this.parent.options['windowlist'];
             if (wlist == null || typeof wlist == "undefined") {

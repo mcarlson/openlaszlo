@@ -155,13 +155,13 @@
                 this.dlo.unregisterAll();
                 this.dlo = null;
             }
-            
+
             if (this.dlc) {
                 this.dlc.unregisterAll();
                 this.dlc = null;
             }
-            
-            super.destroy.apply(this, arguments);
+
+            super.destroy();
         ]]></method> 
 
         <doc>

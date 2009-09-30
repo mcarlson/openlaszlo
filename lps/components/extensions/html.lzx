@@ -233,14 +233,15 @@ lz.embed.iframemanager.restoreSelection = function(id) {
     </setter>
 
     <!--- @access private -->
-    <handler name="oninit">
+    <method name="init">
+        super.init();
         if ($dhtml) {
             var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars, this.sprite.__LZdiv, 0, canvas);
         } else {
             var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars);
         }
         if (i) this.setiframeid(i);
-    </handler>
+    </method>
 
     <!--- @access private -->
     <method name="__updatepos" args="ignore">

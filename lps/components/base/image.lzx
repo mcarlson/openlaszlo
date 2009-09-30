@@ -13,34 +13,36 @@
 
         <!--- @keywords private -->
         <method name="applyData" args="d" >
-            if (d == null) return;
-            this.setAttribute('src', d);
+            if (d != null) this.setAttribute('src', d);
         </method>
 
         <event name="onsrc" />
-        
+
         <handler name="onsrc" method="loadNow" />
-        
+
         <!--- Loads an image in response to the src attribute being set.  Should not be called directly - setAttribute('src' ...) should be used instead. 
               @keywords private -->
         <method name="loadNow" args="img">
         <![CDATA[ 
             // don't reload the same thing unless we're told to
-            if (this.forcereload == false && this.lastloaded == this.prefix + img) return;
-            this.lastloaded = this.prefix + img;
-            this.setSource( this.lastloaded );
+            var url = this.prefix + img;
+            if (this.forcereload || this.lastloaded != url) {
+                this.lastloaded = url;
+                this.setSource( url );
+            }
         ]]>
         </method>
 
         <!--- Loads the image on init.
               @keywords private -->
-        <handler name="oninit">
-        <![CDATA[  
-            if (this.src != '' && this.src != null) 
+        <method name="init">
+        <![CDATA[
+            super.init();
+            if (this.src != '' && this.src != null)
                 this.loadNow(this.src);
         ]]>
-        </handler>
-        
+        </method>
+
         <doc>
           <tag name="shortdesc"><text>A way to import images</text></tag>
           <text>
@@ -74,6 +76,6 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2005-2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -29,8 +29,9 @@
         <event name="onvalue"/>
 
         <!--- @keywords private -->
-        <handler name="oninit">
+        <method name="init">
         <![CDATA[
+            super.init();
             // Define radiobutton aadescription and aaactive if not specified
             if (canvas['accessible']) {
                 var items = this.getNumItems();
@@ -44,7 +45,7 @@
                 }
             }
         ]]>
-        </handler>
+        </method>
 
         <!--- @keywords private -->
         <method name="acceptValue" args="d, type=null">
@@ -147,7 +148,7 @@
 
             if (canvas['accessible']) {
                 this.accessible.setAttribute('applied', true);
-                var mc = this.getMCRef();
+                var mc = this.getDisplayObject();
                 mc._accImpl = {};
                 mc._accImpl.stub = false;
                 mc._accImpl.master = this;
@@ -223,7 +224,7 @@
                     this.sendAAEvent(0, EVENT_OBJECT_SELECTION);
                     this.sendAAEvent(0, EVENT_OBJECT_FOCUS);
                     if ($as2) {
-                        Selection.setFocus(parent.getMCRef());
+                        Selection.setFocus(parent.getDisplayObject());
                     }
                 }
 

@@ -249,9 +249,10 @@
     <!--- Baseslidertrack expects to be within a baseslider (or its
           subclass). In other words, its "classroot" should be a slider. -->
     <class name="baseslidertrack" width="100%" height="${this.classroot.trackheight}" bgcolor="0x333333" >
-        <handler name="oninit"><![CDATA[
+        <method name="init"><![CDATA[
+            super.init();
             this.classroot.track = this;
-        ]]></handler>
+        ]]></method>
     </class>
     
     <!--- Basesliderthumb expects to be within a baseslidertrack (or its

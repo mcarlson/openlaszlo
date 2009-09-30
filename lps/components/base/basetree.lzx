@@ -306,7 +306,7 @@
                 this.openChildren (false);
                 this.children.destroy();
             }
-            super.destroy.apply(this, arguments);
+            super.destroy();
         </method>
 
         <!--- Method to recurse and create subtrees when replicating data. 

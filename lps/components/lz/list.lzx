@@ -326,8 +326,8 @@
                 this.setAttribute("autoscrollbar", false);
             if (this.shownitems != -1)
                 this.setAttribute("shownitems", -1);
-                    
-            super.destroy.apply(this, arguments);
+
+            super.destroy();
         ]]></method> 
         <doc>
           <tag name="shortdesc"><text>
