@@ -134,24 +134,25 @@ var LzMouseKernel = {
         if (ison == LzMouseKernel.__mousecontrol) return;
         //Debug.write('mousecontrol', ison);
         LzMouseKernel.__mousecontrol = ison;
+        var lzembed = lz.embed;
         if (ison) {
-            lz.embed.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
-            lz.embed.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
-            lz.embed.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
-            lz.embed.attachEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
+            lzembed.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
+            lzembed.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
+            lzembed.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+            lzembed.attachEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
             // Correct possible cross-domain issues - see LPP-8093
             try {
-                if (window.top != window) lz.embed.attachEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+                if (window.top != window) lzembed.attachEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
             } catch (e) {
             }
         } else {
-            lz.embed.removeEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
-            lz.embed.removeEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
-            lz.embed.removeEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
-            lz.embed.removeEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
+            lzembed.removeEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
+            lzembed.removeEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
+            lzembed.removeEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+            lzembed.removeEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
             // Correct possible cross-domain issues - see LPP-8093
             try {
-                if (window.top != window) lz.embed.removeEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+                if (window.top != window) lzembed.removeEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
             } catch (e) {
             }
         }
@@ -229,19 +230,15 @@ var LzMouseKernel = {
         if (this.__resetonmouseover) {
             this.__resetonmouseover = false;
             this.setGlobalClickable(true);
-            var cs = this.__cachedSelection;
-            if (cs) {
-                var sprite = cs.s;
-                sprite.setSelection(cs.st, cs.st + cs.sz);
-                cs = null;
-            }
         }
     }
-    ,__cachedSelection: null
     ,__globalClickable: true
     ,setGlobalClickable: function (isclickable){
         var el = document.getElementById('lzcanvasclickdiv');
         this.__globalClickable = isclickable;
+        if (LzSprite.quirks.fix_ie_clickable) {
+            LzSprite.prototype.__setCSSClassProperty('.lzclickdiv', 'display', isclickable ? '' : 'none');
+        }
         el.style.display = isclickable ? '' : 'none';
     }
     ,__sendMouseMove: function(e, offsetx, offsety) {
