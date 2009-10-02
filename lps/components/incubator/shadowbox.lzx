@@ -1,6 +1,7 @@
 <library>
       
-    <resource name="shadow_rsc" src="resources/shadowbox/shadow_inset.swf" />
+    <resource name="shadow_rsc" src="resources/shadowbox/shadow_inset.png" />
+    <resource name="shadow_rsc_vert" src="resources/shadowbox/shadow_inset_vert.png" />
       
     <!--- A basic container view with an inner dropshadow effect.
         <example executable="false">
@@ -45,13 +46,13 @@
         
         <!-- shadows on left and top -->
         <view resource="shadow_rsc" x="0" width="${parent.width}" stretches="width" />
-        <view resource="shadow_rsc" y="${width + 1}"
-              width="${parent.height - 1}" stretches="width" rotation="-90" visible="${classroot.shadowleft}"/> 
+        <view resource="shadow_rsc_vert" y="0"
+              height="${parent.height}" stretches="height" visible="${classroot.shadowleft}"/> 
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2007, 2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
