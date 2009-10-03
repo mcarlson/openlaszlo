@@ -131,7 +131,7 @@
             // initialize internal _parentcomponent attribute
             var p = this.immediateparent;
             while (p != canvas) {
-                if (p instanceof lz.basecomponent) {
+                if (p is lz.basecomponent) {
                     this._parentcomponent = p;
                     break;
                 }

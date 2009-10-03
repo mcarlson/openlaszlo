@@ -140,7 +140,7 @@
                     this.children.setAttribute("x", 0);
                     this.children.setAttribute("y", 0);
                     var sv = this.children.subviews;
-                    if (sv && (sv[0])  instanceof lz.basetree) {
+                    if (sv && (sv[0])  is lz.basetree) {
                         focusItem = sv[0].item;
                     }
                 }
@@ -472,7 +472,7 @@
               @return Boolean: true if this tree is the root, otherwise
               false. -->
         <method name="isRoot">
-            return ! (parent instanceof lz.basetree);
+            return ! (parent is lz.basetree);
         </method>
 
         <!--- Get the root of this tree. 
@@ -480,7 +480,7 @@
         <method name="getRoot">
             var v = this;
             var p = v.parent;
-            while (p instanceof lz.basetree) {
+            while (p is lz.basetree) {
                 v = v.parent;
                 p = v.parent;
             }
@@ -639,7 +639,7 @@
         <![CDATA[
             var n = 0;
             if (children.subviews && 
-                (children.subviews[n]) instanceof lz.basetree) {
+                (children.subviews[n]) is lz.basetree) {
                 this.setAttribute("_currentChild", n);
                 this.changeFocus(children.subviews[n]);
             }
@@ -653,11 +653,11 @@
         <![CDATA[
             var n = children.subviews.length - 1;
             if (children.subviews &&
-                (children.subviews[n]) instanceof lz.basetree) {
+                (children.subviews[n]) is lz.basetree) {
                 var last = children.subviews[n];
                 if (last.open && last.children.subviews) {
                     var next = last.children.subviews.length -1;
-                    if ((last.children.subviews[next]) instanceof lz.basetree) {
+                    if ((last.children.subviews[next]) is lz.basetree) {
                         last._focusLastChild();
                         return;
                     }
@@ -689,7 +689,7 @@
             // If previous sibling is open, select last child of that sibling
             var sibling = parent.children.subviews[prev]
             if (sibling.open && sibling.children.subviews && 
-                (sibling.children.subviews[0]) instanceof lz.basetree) {
+                (sibling.children.subviews[0]) is lz.basetree) {
                 sibling._focusLastChild();
             } else {
                 this.changeFocus(sibling);
@@ -744,7 +744,7 @@
             } else if (kc == 40) { // down
                 if (this.open && 
                     this.children.subviews &&
-                    (this.children.subviews[0]) instanceof lz.basetree) {
+                    (this.children.subviews[0]) is lz.basetree) {
                     this._focusFirstChild();
                 } else {
                     this._focusNextSibling();
@@ -778,7 +778,7 @@
             var children = [].concat(this.children.subviews);
             while (children.length) {
                 var n = children.shift();
-                if (n.visible && n instanceof lz.basetree) {
+                if (n.visible && n is lz.basetree) {
                     childidfromnodeid[n.getUID()] = nodebychildid.length;
                     nodebychildid.push(n);
                     if (n.children.subviews.length) {
@@ -808,7 +808,7 @@
             var root = treenode.getRoot();
             if (treenode === root) return 1;
             while (p && p != root && p != canvas) {
-                if (p instanceof lz.basetree) count++;
+                if (p is lz.basetree) count++;
                 p = p.parent
             }
             //Debug.warn('getDepth', count, treenode);
@@ -826,7 +826,7 @@
                 var len = siblings.length;
                 for (var i = 0; i < len; i++) {
                     var child = siblings[i];
-                    if (child instanceof lz.basetree) {
+                    if (child is lz.basetree) {
                         size++;
                         if (child === treenode) {
                             offset = size;
