@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -1057,6 +1057,7 @@ public class ViewSchema extends Schema {
         attributeAttributes.add("name");
         attributeAttributes.add("setter");
         attributeAttributes.add("required");
+        attributeAttributes.add("style");
 
     }
 

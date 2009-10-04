@@ -271,6 +271,7 @@ public class NodeModel implements Cloneable {
     String srcloc;
     String bindername;
     String dependenciesname;
+    String fallbackexpression;
 
     static org.openlaszlo.sc.Compiler compiler;
 
@@ -293,6 +294,10 @@ public class NodeModel implements Cloneable {
           this.dependenciesname =  env.methodNameGenerator.next();
         }
       }
+    }
+
+    public void setFallbackExpression(String fallback) {
+      this.fallbackexpression = fallback;
     }
 
     public Function getBinderMethod(boolean canHaveMethods) {
@@ -333,6 +338,9 @@ public class NodeModel implements Cloneable {
         // derived (at run time)
         installer = "__LZstyleBindAttribute";
         body = body + ",'" + type + "'";
+        if (this.fallbackexpression != null) {
+          body += "," + this.fallbackexpression;
+        }
         prettyBinderName += "style";
       }
       body = prefix + "this." + installer + "(" +
@@ -1905,6 +1913,7 @@ solution =
         String when = element.getAttributeValue("when");
         String typestr = element.getAttributeValue("type");
         String allocation = XMLUtils.getAttributeValue(element, "allocation", ALLOCATION_INSTANCE);
+        String style = element.getAttributeValue("style");
         Element parent = element.getParentElement();
         String parent_name = parent.getAttributeValue("id");
 
@@ -2005,9 +2014,40 @@ solution =
         CompiledAttribute cattr;
         // Value may be null if attribute is only declared
         if (value != null) {
-          cattr = compileAttribute(element, name, value, type, when);
+            cattr = compileAttribute(element, name, value, type, when);
         } else {
             cattr = new CompiledAttribute(name, type, null, WHEN_IMMEDIATELY, element, env);
+        }
+
+        if (style != null) {
+            // style attributes take precedent over value attributes
+            value = "$style{" + ScriptCompiler.quote(style) + "}";
+
+            // preserve the original value in case the style match fails...
+            Object origvalue = cattr.getInitialValue();
+            String origvalueexpression;
+            if (origvalue instanceof NodeModel.BindingExpr) {
+                // add dependancy methods
+                if (ALLOCATION_INSTANCE.equals(allocation)) {
+                    attrs = this.attrs;
+                } else if (ALLOCATION_CLASS.equals(allocation)) {
+                    attrs = this.classAttrs;
+                }
+                if (cattr.bindername != null) {
+                    attrs.put(cattr.bindername, cattr.getBinderMethod(false));
+                }
+                if (cattr.dependenciesname != null) {
+                    attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(false));
+                }
+
+                origvalueexpression = ((NodeModel.BindingExpr)origvalue).getExpr();
+            } else {
+                origvalueexpression = (String)origvalue;
+            }
+
+            // replace compiled attr with the new style expression
+            cattr = compileAttribute(element, name, value, type, when);
+            cattr.setFallbackExpression(origvalueexpression);
         }
         addProperty(name, cattr, allocation, element);
 

@@ -651,10 +651,11 @@ public dynamic class LzNode extends LzEventable {
    * @param String prop: The name of the CSS property whose value the
    * attribute will be bound to
    * @param String type: The type of the attribute to bind
-   *
+   * @param * fallback: A default value or LzInitExpr to be used if
+   * the style property cannot be found.
    * @access private
    */
-  function __LZstyleBindAttribute(attr, prop, type) {
+  function __LZstyleBindAttribute(attr, prop, type, fallback=(void 0)) {
     // Inlined version of LzCSSStyle.getPropertyValueFor
     // Get the property cache for this node
     var pc = this['__LZPropertyCache'] || LzCSSStyle.getPropertyCache(this);
@@ -705,8 +706,16 @@ public dynamic class LzNode extends LzEventable {
       } else if ($debug) {
         Debug.error("Unknown style expression %w", styleValue);
       }
-    } else {
+    } else if (styleValue !== (void 0)) {
+      // (void 0) is the marker for 'no style property'
       this.setAttribute(attr, styleValue);
+    } else if (fallback !== (void 0)) {
+      // (void 0) is the marker for 'no fallback'
+      if (fallback is LzInitExpr) {
+        this.applyConstraintExpr(fallback);
+      } else {
+        this.setAttribute(attr, styleValue);
+      }
     }
   }
 

@@ -798,6 +798,7 @@ attributeElement =
 element attribute { 
         [lza:modifiers="final"]
         attribute name {token} 
+     &  attribute style {string} ?
      & (attribute value {string} ?
            & [lza:since="1.1"]
              ([a:defaultValue="immediately"]
