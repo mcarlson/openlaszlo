@@ -2,7 +2,7 @@
   * @topic Browser
   * @subtopic Integration
   * @access public
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   * Use is subject to license terms.
   */
 
@@ -20,7 +20,9 @@ lz.embed.history = {
         //console.log('init', _this._apps);
         _this._title = top.document.title;
         var currstate = _this.get();
-        if (lz.embed.browser.isSafari) {
+        var browser = lz.embed.browser;
+        // fine in Safari 3.0.4
+        if (browser.isSafari && browser.version < 523.10) {
             // must track state ourselves...
             _this._historylength = history.length;
             _this._history = [];
@@ -41,7 +43,7 @@ lz.embed.history = {
             if (currstate != '') {
                 _this.set(currstate)
             }
-        } else if (lz.embed.browser.isIE) {
+        } else if (browser.isIE) {
             var currstate = top.location.hash;
             if (currstate) currstate = currstate.substring(1);
             // use an iframe;
@@ -103,8 +105,10 @@ lz.embed.history = {
     }
     ,/** @access private */
     _checklocationhash: function() {
-        if (lz.embed.dojo && lz.embed.dojo.info && lz.embed.dojo.info.installing) return;
-        if (lz.embed.browser.isSafari) {
+        var lzembed = lz.embed;
+        if (lzembed.dojo && lzembed.dojo.info && lzembed.dojo.info.installing) return;
+        if (lzembed.browser.isSafari && lzembed.browser.version < 523.10) {
+            // fine in Safari 3.0.4
             var h = this._history[this._historylength - 1];
             if (h == '' || h == '#') h = '#0';
             if (!this._skip && this._historylength != history.length) {
@@ -119,11 +123,11 @@ lz.embed.history = {
                 this._parse(h.substring(1));
             }
         } else {
-            var h = lz.embed.history.get();
+            var h = lzembed.history.get();
             // Make sure initial history event is sent even if the hash is empty
             if (h == '') h = '0';
 
-            if (lz.embed.browser.isIE) {
+            if (lzembed.browser.isIE) {
                 if (h != this._currentstate) {
                     top.location.hash = h == '0' ? '' : '#' + h;
                     this._currentstate = h;
@@ -140,31 +144,33 @@ lz.embed.history = {
     }
     ,/** */
     set: function(s) {
-        if (lz.embed.history.active == false) return;
+        var lzembed = lz.embed;
+        if (lzembed.history.active == false) return;
         if (s == null) s = '';
-        if (lz.embed.history._currentstate == s) return;
-        lz.embed.history._currentstate = s;
+        if (lzembed.history._currentstate == s) return;
+        lzembed.history._currentstate = s;
 
         var hash = '#' + s;
 
-        if (lz.embed.browser.isIE) {
+        if (lzembed.browser.isIE) {
             top.location.hash = hash == '#0' ? '' : hash;
-            var doc = lz.embed.history._iframe.contentDocument || lz.embed.history._iframe.contentWindow.document;
+            var doc = lzembed.history._iframe.contentDocument || lzembed.history._iframe.contentWindow.document;
             doc.open();
             doc.close();
             doc.location.hash = hash;
-            lz.embed.history._parse(s + '');
-        } else if (lz.embed.browser.isSafari) {
-            lz.embed.history._history[history.length] = hash;
-            lz.embed.history._historylength = history.length + 1;
-            if (lz.embed.browser.version < 412) {
+            lzembed.history._parse(s + '');
+        } else if (lzembed.browser.isSafari && lzembed.browser.version < 523.10) {
+            // fine in Safari 3.0.4
+            lzembed.history._history[history.length] = hash;
+            lzembed.history._historylength = history.length + 1;
+            if (lzembed.browser.version < 412) {
                 // can't preserve query strings :( do nothing if there is one.
                 if (top.location.search == '') {
-                    lz.embed.history._form.action = hash;
-                    top.document.location.lzaddr.history = lz.embed.history._history.toString();
-                    lz.embed.history._skip = true;
-                    lz.embed.history._form.submit()
-                    lz.embed.history._skip = false;
+                    lzembed.history._form.action = hash;
+                    top.document.location.lzaddr.history = lzembed.history._history.toString();
+                    lzembed.history._skip = true;
+                    lzembed.history._form.submit()
+                    lzembed.history._skip = false;
                 }
             } else {
                 var evt = document.createEvent('MouseEvents');
@@ -175,7 +181,7 @@ lz.embed.history = {
             }
         } else {
             top.location.hash = hash;
-            lz.embed.history._parse(s + '');
+            lzembed.history._parse(s + '');
         }
         return true;
     }
