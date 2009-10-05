@@ -627,7 +627,10 @@ public class SWF9Generator extends JavascriptGenerator {
     config.islib = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
     config.trackLines = options.getBoolean(Compiler.TRACK_LINES);
     config.dumpLineAnnotationsFile = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
-    config.forcePublicMembers = options.getBoolean(Compiler.DEBUG_SWF9) && !options.getBoolean(Compiler.DISABLE_PUBLIC_FOR_DEBUG);
+    config.forcePublicMembers = (options.getBoolean(Compiler.DEBUG) ||
+                                 options.getBoolean(Compiler.NAME_FUNCTIONS) ||
+                                 options.getBoolean(Compiler.DEBUG_SWF9))
+      && !options.getBoolean(Compiler.DISABLE_PUBLIC_FOR_DEBUG);
 
     config.mainClassName = (String) options.get(Compiler.SWF9_APP_CLASSNAME);
     //System.err.println("mainClassName = "+config.mainClassName);

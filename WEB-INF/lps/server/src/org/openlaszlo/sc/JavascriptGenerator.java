@@ -270,15 +270,32 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           // TBD: different type; change to CONDITIONALS
           throw new CompilerError("`if` at top level");
         }
+        // NOTE: [2009-10-03 ptw] (LPP-1933) People expect the
+        // branches of a compile-time conditional to establish a
+        // directive block
         Boolean value = evaluateCompileTimeConditional(directive.get(0));
         if (value == null) {
           newDirective = visitIfStatement(directive, children);
         } else if (value.booleanValue()) {
           SimpleNode clause = directive.get(1);
-          newDirective = visitProgram(clause, clause.getChildren(), cpass);
+          Compiler.OptionMap savedOptions = options;
+          try {
+            options = options.copy();
+            newDirective = visitProgram(clause, clause.getChildren(), cpass);
+          }
+          finally {
+            options = savedOptions;
+          }
         } else if (directive.size() > 2) {
           SimpleNode clause = directive.get(2);
-          newDirective = visitProgram(clause, clause.getChildren(), cpass);
+          Compiler.OptionMap savedOptions = options;
+          try {
+            options = options.copy();
+            newDirective = visitProgram(clause, clause.getChildren(), cpass);
+          }
+          finally {
+            options = savedOptions;
+          }
         } else {
           newDirective = new ASTEmptyExpression(0);
         }
@@ -404,48 +421,21 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   //
 
   public SimpleNode visitVariableStatement(SimpleNode node, SimpleNode[] children) {
-    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
-    if (scriptElement) {
-      assert children.length == 1;
-      // In script, variables are declared at the top of the function
-      // so we convert the variableStatement into a Statement here.
-      node = new ASTStatement(0);
-      node.set(0, children[0]);
-    }
     return visitChildren(node);
   }
 
   public SimpleNode visitVariableDeclaration(SimpleNode node, SimpleNode[] children) {
     ASTIdentifier id = (ASTIdentifier)children[0];
-    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
-    if (scriptElement) {
-      if (children.length > 1) {
-        // In script, variables are declared at the top of the
-        // function so we convert the declaration into an assignment
-        // here.
-        SimpleNode newNode = new ASTAssignmentExpression(0);
-        newNode.set(0, children[0]);
-        ASTOperator assign = new ASTOperator(0);
-        assign.setOperator(ParserConstants.ASSIGN);
-        newNode.set(1, assign);
-        newNode.set(2, children[1]);
-        return visitExpression(newNode);
-      } else {
-        // Declarations already handled in a script
-        return new ASTEmptyExpression(0);
-      }
+    if (children.length > 1) {
+      SimpleNode initValue = children[1];
+      JavascriptReference ref = translateReference(id);
+      children[1] = visitExpression(initValue);
+      children[0] = ref.init();
+      return node;
     } else {
-      if (children.length > 1) {
-        SimpleNode initValue = children[1];
-        JavascriptReference ref = translateReference(id);
-        children[1] = visitExpression(initValue);
-        children[0] = ref.init();
-        return node;
-      } else {
-        JavascriptReference ref = translateReference(id);
-        children[0] = ref.declare();
-        return node;
-      }
+      JavascriptReference ref = translateReference(id);
+      children[0] = ref.declare();
+      return node;
     }
   }
 
@@ -1106,6 +1096,32 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
+  SimpleNode rewriteScriptVars(SimpleNode node) {
+    // Convert the variable declarations to assignments.  This is
+    // a little sneaky, by replacing the VariableStatement with a
+    // Statement, we magically remove the `var` and all is well...
+    if (node instanceof ASTVariableStatement) {
+      SimpleNode newNode = new ASTStatement(0);
+      newNode.set(0, node.get(0));
+      return newNode;
+    }
+    // Don't descend into inner functions
+    if (node instanceof ASTFunctionDeclaration ||
+        node instanceof ASTFunctionExpression) {
+      return node;
+    }
+    SimpleNode[] children = node.getChildren();
+    for (int i = 0, ilim = children.length; i < ilim; i++) {
+      SimpleNode oldNode = children[i];
+      SimpleNode newNode = rewriteScriptVars(oldNode);
+      if (! newNode.equals(oldNode)) {
+        children[i] = newNode;
+      }
+    }
+    return node;
+  }
+
+
   static java.util.regex.Pattern identifierPattern = java.util.regex.Pattern.compile("[\\w$_]+");
 
   // Internal helper function for above
@@ -1142,6 +1158,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     String userFunctionName = null;
     String filename = node.filename != null? node.filename : "unknown file";
     String lineno = "" + node.beginLine;
+    String methodName = (String)options.get(Compiler.METHOD_NAME);
+    // Backwards compatibility with tag compiler
+    if (methodName != null && functionNameIdentifier != null) {
+        functionNameIdentifier.setName(functionName = methodName);
+    }
     if (functionName != null) {
       userFunctionName = functionName;
       if (! useName) {
@@ -1179,6 +1200,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // them
     assert stmts instanceof ASTStatementList;
     List stmtList = new ArrayList(Arrays.asList(stmts.getChildren()));
+    // Parse out the pragmas of the function body
     for (int i = 0, len = stmtList.size(); i < len; i++) {
       SimpleNode stmt = (SimpleNode)stmtList.get(i);
       if (stmt instanceof ASTPragmaDirective) {
@@ -1192,11 +1214,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     String explicitUserFunctionName = (String)options.get("userFunctionName");
     if (explicitUserFunctionName != null) {
       userFunctionName = explicitUserFunctionName;
-    }
-    String methodName = (String)options.get(Compiler.METHOD_NAME);
-    // Backwards compatibility with tag compiler
-    if (methodName != null && functionNameIdentifier != null) {
-        functionNameIdentifier.setName(functionName = methodName);
     }
     if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {
 //       assert (functionName != null);
@@ -1226,29 +1243,113 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         (new ParseTreePrinter()).print(depExpr);
       }
     }
+    boolean isStatic = isStatic(node);
+    // Analyze local variables (and functions)
+    VariableAnalyzer analyzer = 
+      new VariableAnalyzer(params, 
+                           options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY),
+                           (this instanceof SWF9Generator));
+    for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
+      analyzer.visit((SimpleNode)i.next());
+    }
+    // We only want to compute these analysis components on the
+    // original body of code, not on the annotations, since these are
+    // used to enforce LZX semantics in Javascript
+    analyzer.computeReferences();
+    // Parameter _must_ be in order
+    LinkedHashSet parameters = analyzer.parameters;
+    // Linked for determinism for regression testing
+    Set variables = analyzer.variables;
+    // Linked for determinism for regression testing
+    LinkedHashMap fundefs = analyzer.fundefs;
+    Set closed = analyzer.closed;
+    Set free = analyzer.free;
+
+    // Look for #pragma
+    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
+    List newBody = new ArrayList();
+    if (scriptElement) {
+      // Create all variables (including inner functions) in global scope
+      if (! variables.isEmpty()) {
+        String code = "";
+        for (Iterator i = variables.iterator(); i.hasNext(); ) {
+          String name = (String)i.next();
+          // TODO: [2008-04-16 ptw] Retain type information through
+          // analyzer so it can be passed on here
+          addGlobalVar(name, null, "void 0");
+          code +=  name + "= void 0;";
+        }
+        newBody.add(parseFragment(code));
+
+        for (int i = 0, ilim = stmtList.size(); i < ilim; i++) {
+          SimpleNode stmt = (SimpleNode)stmtList.get(i);
+          SimpleNode newNode = rewriteScriptVars(stmt);
+          if (! newNode.equals(stmt)) {
+            stmtList.set(i, newNode);
+          }
+        }
+      }
+    } else {
+      // Leave var declarations as is
+      // Emit function declarations here
+      if (! fundefs.isEmpty()) {
+        String code = "";
+        for (Iterator i = fundefs.keySet().iterator(); i.hasNext(); ) {
+          code += "var " + (String)i.next() + ";";
+        }
+        newBody.add(parseFragment(code));
+      }
+    }
+
     // If either of error or suffix are set, a try block is created.
-    // postfix is only used if error is set, to insert a dummy return
+    // postlude is only used if error is set, to insert a dummy return
     // value to keep the Flex compiler happy (See:
     // https://bugs.adobe.com/jira/browse/FCM-12)
-    List prefix = new ArrayList();
-    List error = new ArrayList();
-    List suffix = new ArrayList();
-    List postfix = new ArrayList();
+    List prelude = new ArrayList();  // before try
+    List prefix = new ArrayList();   // before body
+    List error = new ArrayList();    // error body
+    List suffix = new ArrayList();   // finally body
+    List postlude = new ArrayList(); // after try
     // If backtrace is on, we maintain a call stack for debugging
     boolean debugBacktrace = options.getBoolean(Compiler.DEBUG_BACKTRACE);
     if (debugBacktrace) {
+      // TODO: [2007-09-04 ptw] Come up with a better way to
+      // distinguish LFC from user stack frames.  See
+      // lfc/debugger/LzBacktrace
+      String fn = (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ? "lfc/" : "") + filename;
+      String args = "";
+      // AS3 does not have `arguments` if you have a rest arg, so we
+      // capture the actual arguments instead
+      if ((this instanceof SWF9Generator)) {
+        args = "[";
+        for (Iterator i = parameters.iterator(); i.hasNext(); ) {
+          args += i.next();
+          if (i.hasNext()) { args += ","; }
+        }
+        args += "]";
+      } else {
+        args = "Array.prototype.slice.call(arguments, 0)";
+      }
+      prelude.add(parseFragment(
+                    "var $lzsc$d = Debug; var $lzsc$s = $lzsc$d.backtraceStack;"));
       prefix.add(parseFragment(
-                   "var $lzsc$d = Debug, $lzsc$s = $lzsc$d.backtraceStack;" +
                    "if ($lzsc$s) {" +
-                   "  var $lzsc$a = Array.prototype.slice.call(arguments, 0);" +
-                   "  $lzsc$a.callee = arguments.callee;" +
-                   "  $lzsc$a['this'] = this;" +
+                   "  var $lzsc$a = " + args + ";" +
+                   "  $lzsc$a.callee = " +
+                   // For now, we don't try to reference the
+                   // function/method object
+                   ((this instanceof SWF9Generator) ?
+                    ScriptCompiler.quote(userFunctionName) :
+                    "arguments.callee") + ";" +
+                   (isStatic ? "" : "  $lzsc$a['this'] = this;") +
+                   "  $lzsc$a.filename = " + ScriptCompiler.quote(fn) + ";" +
+                   "  $lzsc$a.lineno = " + lineno + ";" +
                    "  $lzsc$s.push($lzsc$a);" +
                    "  if ($lzsc$s.length > $lzsc$s.maxDepth) {$lzsc$d.stackOverflow()};" +
                    "}"));
       suffix.add(parseFragment(
                     "if ($lzsc$s) {" +
-                    "  $lzsc$s.pop();" +
+                    "  $lzsc$s.length--;" +
                     "}"));
     }
     // If profile is on, we meter function enter/exit
@@ -1273,29 +1374,16 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // as we would for compiler.catcherrors
     boolean debugExceptions = (options.getBoolean(Compiler.DEBUG) ||
                                options.getBoolean(Compiler.DEBUG_SWF9));
-    // Analyze local variables (and functions)
-    VariableAnalyzer analyzer = 
-      new VariableAnalyzer(params, 
-                           options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY),
-                           (this instanceof SWF9Generator));
-    for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
-      analyzer.visit((SimpleNode)i.next());
-    }
-    // We only want to compute these analysis components on the
-    // original body of code, not on the annotations, since these are
-    // used to enforce LZX semantics in Javascript
-    analyzer.computeReferences();
-    // Parameter _must_ be in order
-    LinkedHashSet parameters = analyzer.parameters;
-    // Linked for determinism for regression testing
-    LinkedHashMap fundefs = analyzer.fundefs;
-    Set closed = analyzer.closed;
-    Set free = analyzer.free;
-    // For efficiency, We only insert the error handler if the
-    // variable analysis shows that there is a dereference in the
-    // original body of the function, or we are recording a declared
-    // exception
-    if ((analyzer.dereferenced && (catchExceptions || debugExceptions)) || throwExceptions) {
+    // For efficiency, we only insert the error handler if the
+    // variable analysis shows that there is a dereference or free
+    // reference in the original body of the function, or if we are
+    // recording a declared exception.  We will always establish the
+    // error handler if backtracing is on, since that establishes a
+    // try block anyways.  Enabling backtracing is thus the way to get
+    // the most accurate error reporting, at the cost of additional
+    // overhead.
+    if (((catchExceptions || debugExceptions) && (debugBacktrace || analyzer.dereferenced || (! free.isEmpty()))) ||
+        throwExceptions) {
       String fragment = "";
       if (throwExceptions) {
         // Just record declared errors and always rethrow
@@ -1307,7 +1395,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       } else {
         // Don't process errors declared to be thrown
         fragment +=
-          "if ($lzsc$e is Error && ($lzsc$e !== lz['$lzsc$thrownError'])) {";
+          "if (($lzsc$e is Error) && ($lzsc$e !== lz['$lzsc$thrownError'])) {";
         // Report all errors when debugging
         if (debugExceptions) {
           // TODO: [2009-03-20 dda] In DHTML, having trouble
@@ -1355,15 +1443,18 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
             returnValue = "";
           }
           // This _should_ be able to be in the error clause, but see
-          // the note where postfix is declared
-          postfix.add(parseFragment("return " + returnValue + ";"));
+          // the note where postlude is declared
+          postlude.add(parseFragment("return " + returnValue + ";"));
         }
       }
       // Not sure why we turn this off now...  Some suspicion we will recurse?
       options.putBoolean(Compiler.CATCH_FUNCTION_EXCEPTIONS, false);
     }
-    // Now we visit all the wrapper code and recompute the variables
-    // (so they can be properly renamed)
+    // Now we visit all the wrapper code and add the variables
+    // declared there (so they can be renamed properly)
+    for (Iterator i = prelude.iterator(); i.hasNext(); ) {
+      analyzer.visit((SimpleNode)i.next());
+    }
     for (Iterator i = prefix.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
@@ -1373,13 +1464,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     for (Iterator i = suffix.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
-    for (Iterator i = postfix.iterator(); i.hasNext(); ) {
+    for (Iterator i = postlude.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
     analyzer.computeReferences();
-    // Linked for determinism for regression testing
-    Set variables = analyzer.variables;
-    boolean isStatic = isStatic(node);
+    variables.addAll(analyzer.variables);
     boolean withThis = options.getBoolean(Compiler.WITH_THIS) && !isStatic;
     // Note usage due to activation object and withThis
     if (! free.isEmpty()) {
@@ -1440,10 +1529,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // for now, ensure that super has a value
     known.remove("super");
 
-    // Look for #pragma
-    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
     Map registerMap = new HashMap();
-    if (remapLocals()) {
+    if (! scriptElement) {
       // All parameters and locals are remapped to 'registers' of the
       // form `$n`.  This prevents them from colliding with member
       // slots due to implicit `with (this)` added below, and also makes
@@ -1491,34 +1578,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
     translateFormalParameters(params);
 
-    List newBody = new ArrayList();
-
-    int activationObjectSize = 0;
-    if (scriptElement) {
-      // Create all variables (including inner functions) in global scope
-      if (! variables.isEmpty()) {
-        String code = "";
-        for (Iterator i = variables.iterator(); i.hasNext(); ) {
-          String name = (String)i.next();
-          // TODO: [2008-04-16 ptw] Retain type information through
-          // analyzer so it can be passed on here
-          addGlobalVar(name, null, "void 0");
-          code +=  name + "= void 0;";
-        }
-        newBody.add(parseFragment(code));
-      }
-    } else {
-      // Leave var declarations as is
-      // Emit function declarations here
-      if (! fundefs.isEmpty()) {
-        String code = "";
-        for (Iterator i = fundefs.keySet().iterator(); i.hasNext(); ) {
-          code += "var " + (String)i.next() + ";";
-        }
-        newBody.add(parseFragment(code));
-      }
-    }
-
     // Cf. LPP-4850: Prefix has to come after declarations (above).
     newBody.addAll(prefix);
 
@@ -1538,21 +1597,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         newBody.add((new Compiler.Parser()).substitute(fundecl, name + " = _1;", map));
       }
     }
-    // If the locals are not remapped, we assume we are in a runtime
-    // that already does implicit this in methods...
-    if ((! free.isEmpty()) && withThis && remapLocals()) {
-      SimpleNode newStmts = new ASTStatementList(0);
-      newStmts.setChildren((SimpleNode[])stmtList.toArray(new SimpleNode[0]));
-      SimpleNode withNode = new ASTWithStatement(0);
-      SimpleNode id = new ASTThisReference(0);
-      withNode.set(0, id);
-      withNode.set(1, newStmts);
-      newBody.add(withNode);
-    } else {
-      newBody.addAll(stmtList);
-    }
+
+    // The actual body of the function
+    newBody.addAll(stmtList);
+
     // Wrap body in try and make suffix be a finally clause, so suffix
-    // will not be skipped by inner returns (but postfix _will_ be skipped).
+    // will not be skipped by inner returns (but postlude _will_ be skipped).
     if (! suffix.isEmpty() || ! error.isEmpty()) {
       int i = 0;
       SimpleNode newStmts = new ASTStatementList(0);
@@ -1575,9 +1625,30 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         tryNode.set(i, finallyNode);
       }
       newBody = new ArrayList();
+      newBody.addAll(prelude);
       newBody.add(tryNode);
-      newBody.addAll(postfix);
+      newBody.addAll(postlude);
     }
+
+    // NOTE: [2009-09-30 ptw] This properly belongs inside any try
+    // block, but the AS3 compiler chokes if we do that
+    // https://bugs.adobe.com/jira/browse/ASC-3849
+
+    // If we have free references and are not a script, we have to
+    // obey withThis.  NOTE: [2009-09-30 ptw] See NodeModel where it
+    // only inserts withThis for as3 if the method will by dynamically
+    // attached, as in a <state>
+    if ((! free.isEmpty()) && withThis && (! scriptElement)) {
+      SimpleNode newStmts = new ASTStatementList(0);
+      newStmts.setChildren((SimpleNode[])newBody.toArray(new SimpleNode[0]));
+      SimpleNode withNode = new ASTWithStatement(0);
+      SimpleNode id = new ASTThisReference(0);
+      withNode.set(0, id);
+      withNode.set(1, newStmts);
+      newBody = new ArrayList();
+      newBody.add(withNode);
+    }
+
     // Process amended body
     SimpleNode newStmts = new ASTStatementList(0);
     newStmts.setChildren((SimpleNode[])newBody.toArray(new SimpleNode[0]));
@@ -1587,7 +1658,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     if ( options.getBoolean(Compiler.NAME_FUNCTIONS) && (! options.getBoolean(Compiler.DEBUG_SWF9))) {
       // TODO: [2007-09-04 ptw] Come up with a better way to
       // distinguish LFC from user stack frames.  See
-      // lfc/debugger/LzBactrace
+      // lfc/debugger/LzBacktrace
       String fn = (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ? "lfc/" : "") + filename;
       if (functionName != null &&
           // Either it is a declaration or we are not doing backtraces
@@ -1933,18 +2004,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return new JavascriptReference(this, node, referenceCount);
   }
 
-  /**
-   * Returns true if local variables and parameters
-   * should have remapped names (like $1, $2, ...) to prevent
-   * them from colliding with member names that may be exposed
-   * by implicit insertion of with(this).
-   *
-   * This method can be overridden when subclassed.
-   */
-  public boolean remapLocals() {
-    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
-    return !scriptElement;
-  }
 }
 
 /**

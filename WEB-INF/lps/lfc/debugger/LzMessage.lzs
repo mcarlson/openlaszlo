@@ -248,7 +248,9 @@ var LzMessage = LzDebugMessage;
  */
 class LzSourceMessage {
   var file:String;
+  var __filePrefix:String = '@';
   var line:Number;
+  var __linePrefix:String = '\u2248'; // approximately equal to
   var message:LzMessage;
   public var length:Number;
   var backtrace;
@@ -256,65 +258,59 @@ class LzSourceMessage {
   static var color = '#000000';
 
 
-  if ($as3) {
-    function LzSourceMessage (file:String=null, line:Number=0, message='') {
-      this.file = file;
-      this.line = line;
-      if (message is LzMessage) {
-        this.message = message cast LzMessage;
-      } else {
-        this.message = new LzMessage(message cast String);
-      }
-    }
-  } else {
-
-  function LzSourceMessage (file:String=null, line:Number=0, message='') {
+  function LzSourceMessage (file:String=null, line:Number=0, message='', node=null) {
     // Append a backtrace if there is one -- skip back to the
     // $reportSourceWarning or warnInternal frames.
-    if ('backtraceStack' in Debug) {
-      var skip;
-      if ((message is String) && (message['$lzsc$b'])) {
-        // An uncaught error reported by the window.onerror handler will
-        // have a captured stack
-        Debug.backtraceStack = message.$lzsc$b;
-        skip = 2;
-      } else {
-        var bts = Debug.backtraceStack;
-        var btsl = bts.length;
-        skip = 3;
-        for (var i = btsl - 1; i > skip; i--) {
-          var callee = bts[i].callee;
-          if (callee === $reportSourceWarning) {
-            // Skip backtrace() constructor frames too
-            skip = btsl - i + 2;
-          } else if (callee === Debug.warnInternal) {
-            // Skip warnInternal() caller and backtrace() constructor frames too
-            skip = btsl - i + 1 + 2;
-            break;
-          }
+    if (Debug.backtraceStack != null) {
+      var skip:Number = 3;      // SourceMessage->backtrace->LzBacktrace
+      var bts = Debug.backtraceStack;
+      var btsl:Number = bts.length;
+      for (var i = btsl - 1; i > 0; i--) {
+        var callee = bts[i].callee;
+        // TODO: [2009-10-03 ptw] Improve mechanism for determining what internal frames to skip
+        if (callee === $reportSourceWarning || ($as3 && (callee == '$reportSourceWarning'))) {
+          // Skip backtrace() constructor frames too
+          skip = btsl - i + 2;
+          break;
+        } else if (callee === Debug.warnInternal || ($as3 && (callee == 'warnInternal'))) {
+          // Skip warnInternal() caller and backtrace() constructor frames too
+          skip = btsl - i + 1 + 2;
+          break;
         }
       }
       if (Debug.backtraceStack.length > skip) {
         this.backtrace = Debug.backtrace(skip);
         // Heuristicate file/line from backtrace if available
         if (file == null && this.backtrace) {
-          var top = this.backtrace.userStackFrame();
+          var top:__LzStackFrame = this.backtrace.userStackFrame();
           if (top) {
             file = top.filename();
             line = top.lineno();
+            // Show increased confidence in line
+            this.__linePrefix = '#';
           }
         }
       }
     }
+    // Heuristicate file/line from args
+    if (file == null && node != null) {
+      file = node[Debug.FUNCTION_FILENAME];
+      // Note that file is from a node argument
+      this.__filePrefix = '%';    // % as in 'care of', or 'this error brought to you by...'
+      if (node[Debug.FUNCTION_LINENO]) {
+        line = node[Debug.FUNCTION_LINENO];
+        // Show increased confidence in line
+        this.__linePrefix = '#';
+      }
+    }
     this.file = file;
     this.line = line;
-    if (message instanceof LzMessage) {
-      this.message = message;
+    if (message is LzMessage) {
+      this.message = message cast LzMessage;
     } else {
-      this.message = new LzMessage(message);
+      this.message = new LzMessage(message cast String);
     }
     this.length = this.toString().length;
-  }
   }
 
   /* Limit recursion */
@@ -333,17 +329,18 @@ class LzSourceMessage {
   static var format = function format (file:String=null, line:Number=0, control:String='', ...args) {
     var debug = Debug;
     var message = debug.formatToString.apply(debug, [control].concat(args));
+    var node = null;
     // Heuristicate file/line from args
     if (file == null) {
       for (var i = 0; i < args.length; i++) {
         var arg = args[i];
-        if (arg is LzNode) {
-          file = arg[Debug.FUNCTION_FILENAME] || null;
-          line = arg[Debug.FUNCTION_LINENO] || 0;
+        if ((arg is LzNode) && arg[Debug.FUNCTION_FILENAME]) {
+          node = arg;
+          break;
         }
       }
     }
-    return new this(file, line, message);
+    return new this(file, line, message, node);
   }
 
   /**
@@ -354,10 +351,10 @@ class LzSourceMessage {
       var str = prefix;
       if (this.file) {
         if (str.length) { str += ' '; }
-        str += '@';
+        str += this.__filePrefix;
         str += this.file;
         if (this.line) {
-          str += '#';
+          str += this.__linePrefix;
           str += this.line;
         }
       }
@@ -425,8 +422,8 @@ class LzWarning extends LzSourceMessage {
   static var type = 'WARNING';
   static var color = '#ff9900';
 
-  function LzWarning (file:String=null, line:Number=0, message='') {
-    super(file, line, message);
+  function LzWarning (file:String=null, line:Number=0, message='', node=null) {
+    super(file, line, message, node);
   }
 
   static var format = LzSourceMessage.format;
@@ -440,8 +437,8 @@ class LzError extends LzSourceMessage {
   static var type = 'ERROR';
   static var color = '#ff0000';
 
-  function LzError (file:String=null, line:Number=0, message='') {
-    super(file, line, message);
+  function LzError (file:String=null, line:Number=0, message='', node=null) {
+    super(file, line, message, node);
   }
 
   static var format = LzSourceMessage.format;
@@ -455,8 +452,8 @@ class LzInfo extends LzSourceMessage {
   static var type = 'INFO';
   static var color = '#0066cc';
 
-  function LzInfo  (file:String=null, line:Number=0, message='') {
-    super(file, line, message);
+  function LzInfo (file:String=null, line:Number=0, message='', node=null) {
+    super(file, line, message, node);
   }
 
   static var format = LzSourceMessage.format;
@@ -470,8 +467,8 @@ class LzDebug extends LzSourceMessage {
   static var type = 'DEBUG';
   static var color = '#00cc00';
 
-  function LzDebug  (file:String=null, line:Number=0, message='') {
-    super(file, line, message);
+  function LzDebug (file:String=null, line:Number=0, message='', node=null) {
+    super(file, line, message, node);
   }
 
   static var format = LzSourceMessage.format;

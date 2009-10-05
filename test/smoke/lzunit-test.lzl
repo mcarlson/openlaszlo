@@ -1,3 +1,4 @@
+
 <!--
   $Id$
 
@@ -570,7 +571,7 @@
       assertEquals(1, expectedErrors, "Total number of expected errors");
 
       expectedError.expectedMatch = "This is a";
-      $reportSourceWarning(0, 0, "This is a test", true);
+      $reportSourceWarning(null, 0, "This is a test", true);
       assertEquals(2, expectedErrors, "Total number of expected errors");
 
       // Only test errors that are caught by the debug compiler for each runtime

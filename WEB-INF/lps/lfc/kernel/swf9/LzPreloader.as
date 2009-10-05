@@ -11,6 +11,11 @@
   * @subtopic swf9
   * @author Max Carlson &lt;max@laszlosystems.com&gt;
   */
+{
+        #pragma "debug=false"
+        #pragma "debugSWF9=false"
+        #pragma "debugBacktrace=false"
+
 package {
     import flash.display.DisplayObject;
     import flash.display.MovieClip;
@@ -20,7 +25,7 @@ package {
     import flash.net.URLRequest;
     import flash.external.ExternalInterface;
 
-    // WARNING: this file is not included automatically - be sure to keep server/src/org/openlaszlo/sc/SWF9External.java in sync!!!!
+    // WARNING: this file is not included automatically - be sure to keep server/src/org/openlaszlo/sc/SWF9Writer.java in sync!!!!
     public class LzPreloader extends MovieClip {
         public function LzPreloader() {
             stop();
@@ -53,3 +58,4 @@ package {
         }
     }
 }
+} // end #pragma block

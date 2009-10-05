@@ -423,14 +423,31 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           // TBD: different type; change to CONDITIONALS
           throw new CompilerError("`if` at top level");
         }
+        // NOTE: [2009-10-03 ptw] (LPP-1933) People expect the
+        // branches of a compile-time conditional to establish a
+        // directive block
         Boolean value = evaluateCompileTimeConditional(directive.get(0));
         if (value == null) {
           throw new CompilerError("undefined compile-time conditional " + Compiler.nodeString(directive.get(0)));
         }
         if (value.booleanValue()) {
-          visitProgram(directive, directive.get(1).getChildren(), cpass);
+          Compiler.OptionMap savedOptions = options;
+          try {
+            options = options.copy();
+            visitProgram(directive, directive.get(1).getChildren(), cpass);
+          }
+          finally {
+            options = savedOptions;
+          }
         } else if (directive.size() > 2) {
-          visitProgram(directive, directive.get(2).getChildren(), cpass);
+          Compiler.OptionMap savedOptions = options;
+          try {
+            options = options.copy();
+            visitProgram(directive, directive.get(2).getChildren(), cpass);
+          }
+          finally {
+            options = savedOptions;
+          }
         }
         continue;
       } else if (directive instanceof ASTIncludeDirective) {
@@ -1854,16 +1871,21 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     List prefix = new ArrayList();
     List postfix = new ArrayList();
     if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
+      // TODO: [2007-09-04 ptw] Come up with a better way to
+      // distinguish LFC from user stack frames.  See
+      // lfc/debugger/LzBacktrace
+      String fn = (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ? "lfc/" : "") + filename;
       prefix.addAll(Arrays.asList((new Compiler.Parser()).parse("" +
              "{" +
                "\n#pragma 'warnUndefinedReferences=false'\n" +
-               "var $lzsc$s = Debug['backtraceStack'];" +
+               "var $lzsc$d = Debug; var $lzsc$s = $lzsc$d['backtraceStack'];" +
                "if ($lzsc$s) {" +
-                 "var $lzsc$l = $lzsc$s.length;" +
-                 "$lzsc$s.length = $lzsc$l + 1;" +
-                 "arguments['this'] = this;" +
-                 "$lzsc$s[$lzsc$l] = arguments;" +
-                 "if ($lzsc$l > $lzsc$s.maxDepth) {Debug.stackOverflow()};" +
+               "  var $lzsc$a = arguments;" +
+               "  $lzsc$a['this'] = this;" +
+               "  $lzsc$a.filename = " + ScriptCompiler.quote(fn) + ";" +
+               "  $lzsc$a.lineno = " + lineno + ";" +
+               "  $lzsc$s.push($lzsc$a);" +
+               "  if ($lzsc$s.length > $lzsc$s.maxDepth) {$lzsc$d.stackOverflow()};" +
                "}" +
              "}" +
              "").getChildren()));

@@ -522,13 +522,14 @@
             onblur="trace = trace.concat('onblur')">
             <attribute name="trace" value="[]"/>
         </view>
-        <method name="assertArrayEquals" args="a, b">
-            if (a.length != b.length) return false;
-            for (var i in a)
-            if (a[i] != b[i])
-            return false;
+        <method name="assertArrayEquals" args="a, b" returns="Boolean"><![CDATA[
+            var limit = a.length;
+            if (limit != b.length) { return false; }
+            for (var i = 0; i < limit; i++) {
+              if (a[i] != b[i]) { return false; }
+            }
             return true;
-        </method>
+        ]]></method>
         <method name="testNode">
             lz.Focus.setFocus(view1)
             lz.Focus.setFocus(view2)

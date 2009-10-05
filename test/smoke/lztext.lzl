@@ -33,7 +33,7 @@
     </text>
 
     <!-- Note this duplicates the debugger format tests, but ensures formatting works correctly in text -->
-    <method name="testTextFormat">
+    <method name="testTextFormatPart1">
       <![CDATA[
                // The commented out tests can't be run because they
                // print object ID's which can't be compared easily.
@@ -143,6 +143,10 @@
 //                assertEquals('{one:', (textFormatTest.format('%-.5w', this.object), textFormatTest.text));
                assertEquals('[object Object]               ', (textFormatTest.format('%-30s', this.object), textFormatTest.text));
                assertEquals("{3: 'three', one: 1, two: 'too'}  ", (textFormatTest.format('%-34w', this.object), textFormatTest.text));
+      ]]>
+    </method>
+    <method name="testTextFormatPart2">
+      <![CDATA[
                assertEquals('[obje                         ', (textFormatTest.format('%-30.5s', this.object), textFormatTest.text));
 //                assertEquals('{one:                         ', (textFormatTest.format('%-30.5w', this.object), textFormatTest.text));
                assertEquals('true', (textFormatTest.format('%s', true), textFormatTest.text));
@@ -226,7 +230,8 @@
     </method>
     <method name="addTests"> 
         this.addTest("testInputText");
-        this.addTest("testTextFormat");
+        this.addTest("testTextFormatPart1");
+        this.addTest("testTextFormatPart2");
     </method> 
   </class>
 </library>

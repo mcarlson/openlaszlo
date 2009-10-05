@@ -331,11 +331,11 @@ dynamic class LzBootstrapDebugService {
   /** Backtrace stack
    * @access private
    */
-  var backtraceStack:*;
+  var backtraceStack:Array = [];
   /** Backtrace for uncaught errors
    * @access private
    */
-  var uncaughtBacktraceStack:*;
+  var uncaughtBacktraceStack:Array = null;
 
   /** @access private */
   var log_all_writes:Boolean = false;
@@ -363,12 +363,10 @@ dynamic class LzBootstrapDebugService {
     if (console == null) {
       console = new LzBootstrapDebugConsole();
     }
-    if (!$as3) {
-      // Copy these from the initial Debug object
-      var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
-      for (var k in copy) {
-        this[k] = Debug[k];
-      }
+    // Copy these from the initial Debug object
+    var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
+    for (var k in copy) {
+      this[k] = Debug[k];
     }
 
     // `logdebug` is set by the server to tell Debug.__write to log
@@ -523,12 +521,7 @@ dynamic class LzBootstrapDebugService {
  *
  * @access private
  */
-if ($as3) {
-  // We don't do the bootstrapping rebinding in as3
-} else {
-  /** @access private */
-  var Debug = new LzBootstrapDebugService();
-}
+Debug = new LzBootstrapDebugService();
 
 if ($as3) {
 } else {
@@ -539,6 +532,7 @@ if ($as3) {
 function trace (...args) { Debug.info.apply(Debug, args); }
 
 }
+
 /**
  * Compiler support for debugger warnings.  These presently pollute
  * the global environment, because you need a toe-hold somewhere.

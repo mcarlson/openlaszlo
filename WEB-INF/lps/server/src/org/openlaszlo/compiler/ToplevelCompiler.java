@@ -398,7 +398,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
         
         Element info;
         // canvas info += <include name= explanation= [size=]/> for LFC
-        if (env.isSWF()) {
+        if (env.isSWF() || env.isAS3()) {
           String baseLibraryName = getBaseLibraryName(env);
           String baseLibraryBecause = "Required for all applications";
           info = new Element("include");

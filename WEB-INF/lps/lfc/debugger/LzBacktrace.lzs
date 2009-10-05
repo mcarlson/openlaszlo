@@ -11,201 +11,190 @@
   * @subtopic Debugging
   */
 
-// Support for backtraces in the debugger
-// -- Declared in LzRuntime
-// Debug.backtraceStack = new Array();
-// Debug.backtraceStack.maxDepth = 100;
-
-{
-#pragma "debugBacktrace=false"
-  /** @access private */
-  Debug.stackOverflow = function () {
-    var bs = this.backtraceStack;
-    try {
-      var old = bs.maxDepth;
-      // Auto grow the stack.  If error handling does not work,
-      // eventually the runtime will blow you away...
-      bs.maxDepth *= 1.25;
-      throw new Error(Debug.error("Stack overflow: %s", Debug.backtrace(bs.length - 50)));
-    } finally {
-      bs.maxDepth = old;
-    }
-  };
-}
 
 /**
   * What we'd like an `arguments` array to be.  Really just a hook to
   * hang a debug printer on
   * @access private
   */
-var __LzStackFrame = function (args) {
-  if (args instanceof Array) {
-    this['this'] = args['this'];
-    this['function'] = args.callee;
-    this.__lineno = ('lineno' in args) ? args.lineno : this['function'][Debug.FUNCTION_LINENO];
-  }
-  // Copy out the numbered arguments, omitting the above properties
-  this.arguments = args.concat();
-}
+class __LzStackFrame {
+  // Private, so they are not displayed on inspection
+  var __filename:String;
+  var __lineno:Number;
+  // Public, so they are...
+  var arguments:Array;
+  // I would have liked to call these 'function' and 'this', but you
+  // can't do that.  We need custom _dbg_inspect routines...
+  var context:*;
+  var callee:*;
 
-/**
- * Is this a user stack frame?
- * @access private
- */
-  __LzStackFrame.prototype.isUserFrame = function () {
-    return this['function'][Debug.FUNCTION_FILENAME].indexOf('lfc') != 0;
-  }
-
-/**
- * Filename associated with a stack frame
- * @access private
- */
-  __LzStackFrame.prototype.filename = function () {
-    return this['function'][Debug.FUNCTION_FILENAME];
+  function __LzStackFrame (args:Array) {
+    if (args['this']) {
+      this.context = args['this'];
+    }
+    this.callee = args.callee;
+    this.__filename = args.filename;
+    this.__lineno = args.lineno;
+    // Copy out the numbered arguments, omitting the other properties
+    this.arguments = args.concat();
   }
 
-/**
- * Lineno associated with a stack frame
- * @access private
- */
-  __LzStackFrame.prototype.lineno = function () {
+  /**
+   * Is this a user stack frame?
+   * @access private
+   */
+  function isUserFrame ():Boolean {
+    return this.__filename.indexOf('lfc') != 0;
+  }
+
+  /**
+   * Filename associated with a stack frame
+   * @access private
+   */
+  function filename ():String {
+    return this.__filename;
+  }
+
+  /**
+   * Lineno associated with a stack frame
+   * @access private
+   */
+  function lineno ():Number {
     return this.__lineno;
   }
 
-/**
-  * Debug printer
-  * @access private
-  */
-__LzStackFrame.prototype._dbg_name = function () {
-  var callee = this['function'];
-  var filename = callee[Debug.FUNCTION_FILENAME];
-  var lineno = this.__lineno;
-  return Debug.formatToString('%0.64w @%s#%d', callee, filename, lineno);
-}
-
-/**
-  * Debug printer
-  * @access private
-  */
-__LzStackFrame.prototype._dbg_typename = "StackFrame";
-
-/**
-  * Snapshot of the current backtrace.  Relies on compiler support that
-  * inserts code at the top of each function in debug mode that records
-  * the function's arguments in Debug.backtraceStack
-  * 
-  * @param skip:Number number of frames to omit from the backtrace.
-  * Defaults to 0.
-  *
-  * @access private
-  */
-var LzBacktrace = function (skip=0) {
-  var bs = Debug.backtraceStack;
-  var l = bs.length - skip;
-  this.length = l;
-  for (var i = 0; i < l; i++) {
-    var fr = bs[i];
-    // Reuse stack frames so they are unique
-    if ((! fr.hasOwnProperty('__LzStackFrame')) ||
-        // Bad modularity
-        (fr['lineno'] != fr.__LzStackFrame.__lineno)) {
-      fr.__LzStackFrame = new __LzStackFrame(fr);
+  /**
+   * 'Pretty' printer
+   */
+  function toString ():String {
+    var callee = this.callee;
+    if (callee is Function) {
+      return Debug.functionName(callee, false);
     }
-    this[i] = fr.__LzStackFrame;
+    return '' + callee;
   }
-}
 
-// An LzBacktrace would like to be an Array, but JScript does not
-// support subclassing Array
-// LzBacktrace.prototype = new Array();
-// Work around Flash deficiency...
-// LzBacktrace.prototype.constructor = LzBacktrace;
+  /**
+   * Debug printer
+   * @access private
+   */
+  __LzStackFrame.prototype._dbg_name = function () {
+    return Debug.formatToString('%0.64s @%s#%d', this.callee, this.__filename, this.__lineno);
+  };
+
+  /**
+   * Debug printer
+   * @access private
+   */
+  __LzStackFrame.prototype._dbg_typename = "StackFrame";
+};
 
 /**
- * Find the topmost user stack frame
+ * Snapshot of the current backtrace.  Relies on compiler support that
+ * inserts code at the top of each function in debug mode that records
+ * the function's arguments in Debug.backtraceStack
+ * 
+ * @param skip:Number number of frames to omit from the backtrace.
+ * Defaults to 0.
+ *
+ * @devnote dynamic so it can have arbitrary numbered members.  Really
+ * wants to be a subclass of Array
+ *
  * @access private
  */
-  LzBacktrace.prototype.userStackFrame = function () {
+dynamic class LzBacktrace {
+  var length:Number;
+
+  function LzBacktrace(skip=0) {
+    var bs = Debug.backtraceStack;
+    var l = bs.length - skip;
+    this.length = l;
+    for (var i = 0; i < l; i++) {
+      var fr = bs[i];
+      // Reuse stack frames so they are unique
+      if ((! fr.hasOwnProperty('__LzStackFrame')) ||
+          // Bad modularity
+          (fr['lineno'] != fr.__LzStackFrame.lineno())) {
+        fr.__LzStackFrame = new __LzStackFrame(fr);
+      }
+      this[i] = fr.__LzStackFrame;
+    }
+  }
+
+  /**
+   * Find the topmost user stack frame
+   * @access private
+   */
+  function userStackFrame():__LzStackFrame {
     for (var i = this.length - 1; i >= 0; i--) {
       var fr = this[i];
       if (fr.isUserFrame()) {
         return fr;
       }
     }
+    return null;
   }
 
-/**
-  * Map over a backtraces frames
-  * @param fn:Function the function to call on each frame
-  * @param limit:Maximum number of frames to map
-  * 
-  * @access private
-  */
-LzBacktrace.prototype.map = function(fn, limit) {
-  if (! (fn instanceof Function)) { return; }
-  if (! limit) { limit = this.length; }
-  for (var i = this.length - 1; (i >= 0) && (limit > 0); i--, limit--) {
-    fn(this[i]);
+  /**
+   * Map over a backtraces frames
+   * @param fn:Function the function to call on each frame
+   * @param limit:Maximum number of frames to map
+   * 
+   * @access private
+   */
+  function map(fn:Function, limit:Number=NaN):void {
+    if (fn is Function) {
+      if (isNaN(limit)) { limit = this.length; }
+      for (var i = this.length - 1; (i >= 0) && (limit > 0); i--, limit--) {
+        fn(this[i]);
+      }
+    }
   }
-}
 
-/**
-  * Convert a backtrace to a string
-  * @param printer:Function the function to print the backtrace
-  * functions with.  Defaults to Debug.__String
-  * @param length:Number the length to abbreviate the string to
-  * 
-  * @access private
-  */
-LzBacktrace.prototype.toStringInternal = function(printer=function (o) { return Debug.__String(o['function']); }, length=Debug.printLength) {
-  var backtrace = "";
-  var sep = " <- ";
-  for (var i = this.length - 1; (i >= 0) && (backtrace.length < length); i--) {
-    backtrace += printer(this[i]) + sep;
+  /**
+   * Convert a backtrace to a string
+   * @param printer:Function the function to print the backtrace
+   * functions with.  Defaults to Debug.__String
+   * @param length:Number the length to abbreviate the string to
+   * 
+   * @access private
+   */
+  function toStringInternal(length:Number=NaN):String {
+    if (isNaN(length)) { length = Debug.printLength; };
+
+    var backtrace:String = "";
+    var sep:String = " <- ";
+    for (var i:Number = this.length - 1; (i >= 0) && (backtrace.length < length); i--) {
+      backtrace += this[i] + sep;
+    }
+    // Trim trailing sep
+    if (backtrace != '' && i < 0) {
+      backtrace = backtrace.substring(0, backtrace.length - sep.length);
+    }
+    backtrace = Debug.abbreviate(backtrace, length);
+    return backtrace;
   }
-  // Trim trailing sep
-  if (backtrace != '' && i < 0) {
-    backtrace = backtrace.substring(0, backtrace.length - sep.length);
+
+  /** Backtrace printer
+   * @access private
+   */
+  function toString():String {
+    return this.toStringInternal();
   }
-  backtrace = Debug.abbreviate(backtrace, length);
-  return backtrace;
-}
 
-/** Backtrace printer
-  * @access private
-  */
-LzBacktrace.prototype.toString = function () {
-  return this.toStringInternal();
-}
+  /**
+   * TODO: [2005-03-30 ptw] Doc tool should not bitch about inherited
+   * override
+   * @access private
+   */
+  LzBacktrace.prototype._dbg_name = function () {
+    return this.toStringInternal(Debug.inspectPrintLength);
+  };
 
-/**
-  * TODO: [2005-03-30 ptw] Doc tool should not bitch about inherited
-  * override
-  * @access private
-  */
-LzBacktrace.prototype._dbg_name = function () {
-  return this.toStringInternal(function(o) { return Debug.functionName(o['function'], false); }, 75);
-}
-
-/**
-  * Debug printer
-  * @access private
-  */
-LzBacktrace.prototype._dbg_typename = "Backtrace";
-
-/**
-  * Snapshot the current call stack into a LzBacktrace object which
-  * can be printed or inspected
-  * 
-  * Only available if lfc is compiled with --option debugBacktrace=true
-  * @param Number skip: Number number of frames to omit from the
-  * backtrace.  Defaults to 1.
-  * @access private
-  */
-Debug.backtrace = function (skip=1) {
-  if (Debug.backtraceStack.length > skip) {
-#pragma "passThrough=true"
-    return new LzBacktrace(skip);
-  }
+  /**
+   * Debug printer
+   * @access private
+   */
+  LzBacktrace.prototype._dbg_typename = "Backtrace";
 }
 

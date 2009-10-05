@@ -20,7 +20,7 @@ class LzAS3DebugService extends LzDebugService {
    * @access private
    */
   function LzAS3DebugService (base:LzBootstrapDebugService) {
-    super(null);
+    super(base);
   }
 
   /**
@@ -188,5 +188,6 @@ class LzAS3DebugService extends LzDebugService {
   }#
 }
 
-var Debug = new LzAS3DebugService(null);
+// In AS3, we just build the whole debugger right now
+Debug = new LzAS3DebugService(null);
 var __LzDebug = Debug;

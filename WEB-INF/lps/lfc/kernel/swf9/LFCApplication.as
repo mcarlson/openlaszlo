@@ -9,6 +9,11 @@
   * @author Henry Minsky &lt;hminsky@laszlosystems.com&gt;
   */
 
+{
+        #pragma "debug=false"
+        #pragma "debugSWF9=false"
+        #pragma "debugBacktrace=false"
+
 public class LFCApplication {
 
     // This serves as the superclass of DefaultApplication, currently that is where
@@ -100,3 +105,5 @@ public class LFCApplication {
 // contains {ptype, class, frames, width, height}
 // ptype is one of "ar" (app relative) or "sr" (system relative)
 var LzResourceLibrary :Object = {};
+
+} // end #pragma block

@@ -114,10 +114,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @access private
    */
   function LzDebugService(base:LzBootstrapDebugService) {
-    super(base ? base.logger : null, base ? base.console : null);
-    this.base = base;
-    // Preserve any state created in the base service
-    if (!$as3) {
+    super(base != null ? base.logger : null, base != null ? base.console : null);
+    if (base != null) {
+      this.base = base;
       var copy = {backtraceStack: true, uncaughtBacktraceStack: true};
       for (var k in copy) {
         this[k] = base[k];
@@ -238,6 +237,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @access private
    */
   var atPrompt = false;
+
+  // Support for backtraces in the debugger
+  // -- Declared in LzBootstrapDebugService
+  // var backtraceStack:*
 
   /**
    ** Generic debug I/O
@@ -937,6 +940,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
               debug_name = dn;
             }
           }
+          if ($swf8) {
+            // finally not working in swf8+backtrace?
+            this.printLength = opl;
+          }
         } finally {
           this.printLength = opl;
         }
@@ -1190,6 +1197,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         if (pretty &&
             ((! unique) || (! this.isObjectLike(thing))) &&
             (s != "") && (s.length < limit)) {
+          if ($swf8) {
+            // finally not working in swf8+backtrace?
+            this.printLength = origPrintLength;
+            this.printDepth = origPrintDepth;
+            this.printDetectCircular = origPrintDetectCircular;
+          }
           return s;
         }
       } finally {
@@ -1718,16 +1731,47 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           if (indices) {
             // Ensure indices are numbers, not strings
             indices.push(Number(key));
-            if (--limit == 0) { return; }
+            if (--limit == 0) { break; }
           }
         } else {
           if (names) {
             names.push(key);
-            if (--limit == 0) { return; }
+            if (--limit == 0) { break; }
           }
         }
       }
     }
+  };
+
+  /** @access private */
+  function stackOverflow ():void {
+#pragma "debugBacktrace=false"
+    var bs:* = this.backtraceStack;
+    try {
+      var old:Number = bs.maxDepth;
+      // Auto grow the stack.  If error handling does not work,
+      // eventually the runtime will blow you away...
+      bs.maxDepth *= 1.25;
+      throw new Error(Debug.error("Stack overflow: %s", Debug.backtrace(bs.length - 50)));
+    } finally {
+      bs.maxDepth = old;
+    }
+  };
+
+  /**
+   * Snapshot the current call stack into a LzBacktrace object which
+   * can be printed or inspected
+   * 
+   * Only available if lfc is compiled with --option debugBacktrace=true
+   * @param Number skip: Number number of frames to omit from the
+   * backtrace.  Defaults to 1.
+   * @access private
+   */
+  function backtrace (skip:Number=1):LzBacktrace {
+    if (Debug.backtraceStack.length > skip) {
+      return new LzBacktrace(skip);
+    }
+    return null;
   };
 
 }

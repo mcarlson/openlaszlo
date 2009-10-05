@@ -2,6 +2,11 @@
 <script when="immediate">
 <![CDATA[
 
+{
+#pragma "debug=false"
+#pragma "debugSWF9=false"
+#pragma "debugBacktrace=false"
+
 public class LzDebugEvalLoader {
     #passthrough (toplevel:true) {
     import flash.display.Loader;
@@ -58,6 +63,7 @@ public class LzDebugEvalLoader {
     }
 
 }
+} // end #pragma block
 
 ]]>
 </script>

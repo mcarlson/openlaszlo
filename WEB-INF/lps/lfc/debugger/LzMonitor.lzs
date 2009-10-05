@@ -3,7 +3,7 @@
 /**
   * Support for monitoring properties in the debugger
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -21,8 +21,8 @@ class LzMonitor extends LzSourceMessage {
   // Same color as Debug.debug
   static var color = '#00cc00';
 
-  function LzMonitor (file:String=null, line:Number=0, message:String='') {
-    super(file, line, message);
+  function LzMonitor (file:String=null, line:Number=0, message:String='', node=null) {
+    super(file, line, message, node);
   };
 
   static var format = LzSourceMessage.format;

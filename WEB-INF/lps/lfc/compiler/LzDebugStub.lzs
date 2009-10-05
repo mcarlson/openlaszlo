@@ -10,6 +10,10 @@
  */
 
 if ($as3) {
+#pragma "debug=false"
+#pragma "debugSWF9=false"
+#pragma "debugBacktrace=false"
+
   /**
    * Class used for as3-only runtime support
    *
@@ -66,24 +70,26 @@ if ($as3) {
       }
     }
   };
-} else {
-  // Define a debug placeholder with minimal definitions because Class
-  // needs it for profile or debug mode, but the actual debugger cannot be loaded until Class is
-  // loaded.
-  var Debug = {
-    // Compiler-generated backtracing code needs these values
-    backtraceStack: []
-    ,uncaughtBacktraceStack: null
-    // Configurable names for debug annotations.  See
-    // org.openlaszlo.sc.Function.  These values are duplicated in
-    // LzBootstrapDebugService
-    ,FUNCTION_NAME: 'displayName'
-    ,FUNCTION_FILENAME: '_dbg_filename'
-    ,FUNCTION_LINENO: '_dbg_lineno'
-  };
-
-  /** Max depth allowed
-   * @access private
-   */
-  Debug.backtraceStack.maxDepth = 100;
 }
+
+
+// Define a debug placeholder with minimal definitions because Class
+// needs it for profile or debug mode, but the actual debugger cannot be loaded until Class is
+// loaded.
+var Debug = {
+  // Compiler-generated backtracing code needs these values
+  backtraceStack: []
+  ,uncaughtBacktraceStack: null
+  // Configurable names for debug annotations.  See
+  // org.openlaszlo.sc.Function.  These values are duplicated in
+  // LzBootstrapDebugService
+  ,FUNCTION_NAME: 'displayName'
+  ,FUNCTION_FILENAME: '_dbg_filename'
+  ,FUNCTION_LINENO: '_dbg_lineno'
+};
+
+/** Max depth allowed
+ * @access private
+ */
+Debug.backtraceStack.maxDepth = 100;
+

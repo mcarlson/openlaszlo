@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -68,6 +68,7 @@ public class CompilationManager extends Cache {
     protected File mLPSJarFile = null;
 
     private int[] lfcsizes = null;
+    private String lfcsizeskey = "";
 
     public static final String RECOMPILE = "lzrecompile";
 
@@ -310,7 +311,7 @@ public class CompilationManager extends Cache {
 
         boolean isDebug = "true".equals(props.getProperty("debug"));
         boolean isProfile = "true".equals(props.getProperty("profile"));
-        boolean isBacktrace = "true".equals(props.getProperty("backtrace"));
+        boolean isBacktrace = "true".equals(props.getProperty("lzbacktrace"));
         boolean isSourceAnnotations = "true".equals(props.getProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY));
         String runtime = props.getProperty(CompilationEnvironment.RUNTIME_PROPERTY);
 
@@ -319,12 +320,25 @@ public class CompilationManager extends Cache {
 
         File lfcfile = new File(path, lfc);
 
-        // TODO: update to cache correct size for debug, profiled LFC
-        if (lfcsizes == null) lfcsizes = getLFCSizes(new FileInputStream(lfcfile));
+        if (lfcsizes == null || (! lfc.equals(lfcsizeskey))) {
+          try {
+            lfcsizes = getLFCSizes(new FileInputStream(lfcfile));
+            lfcsizeskey = lfc;
+          } catch (FileNotFoundException e) {
+            mLogger.error(e.getMessage());
+            lfcsizes = new int[] {0, 0};
+          }
+        }
         int lfcsize = lfcsizes[0];
         int gzlfcsize = lfcsizes[1];
 
-        int[] sizes = getLFCSizes(getObjectStream(pathname, props));
+        int[] sizes;
+        try {
+          sizes = getLFCSizes(getObjectStream(pathname, props));
+        } catch (FileNotFoundException e) {
+          mLogger.error(e.getMessage());
+          sizes = new int[] {0, 0};
+        }
         int size = sizes[0];
         int gzsize = sizes[1];
 

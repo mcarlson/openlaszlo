@@ -265,9 +265,12 @@ public class Compiler {
 
     // Disable debug compilation for swf9/swf10
     if ("swf9".equals((String)options.get(RUNTIME)) || "swf10".equals((String)options.get(RUNTIME))) {
-      options.putBoolean(DEBUG_SWF9, options.getBoolean(DEBUG));
+      // TODO: [2005-04-15 ptw] This pretty much sucks, but the debug
+      // lfc only sets nameFunctions, not debug.  This can go away
+      // when we can turn on debug for the lfc.
+      options.putBoolean(DEBUG_SWF9, (options.getBoolean(DEBUG) ||
+                                      options.getBoolean(NAME_FUNCTIONS)));
       options.putBoolean(DEBUG, false);
-      options.putBoolean(DEBUG_BACKTRACE, false);
     }
     if (! options.containsKey(CATCH_FUNCTION_EXCEPTIONS)) {
       options.put(CATCH_FUNCTION_EXCEPTIONS,
@@ -294,6 +297,10 @@ public class Compiler {
       options.putBoolean(NAME_FUNCTIONS, true);
     }
 
+    if (options.getBoolean(DEBUG_SWF9)) {
+      options.putBoolean(NAME_FUNCTIONS, true);
+    }
+
     // TODO: [2005-04-15 ptw] This pretty much sucks, but the debug
     // lfc only sets nameFunctions, not debug.  This can go away
     // when we can turn on debug for the lfc.
@@ -315,10 +322,6 @@ public class Compiler {
     }
     options.putBoolean(GENERATE_FUNCTION_2, true);
     options.putBoolean(GENERATE_FUNCTION_2_FOR_LZX, true);
-
-    if (options.getBoolean(DEBUG_SWF9)) {
-      options.putBoolean(NAME_FUNCTIONS, true);
-    }
   }
 
   public byte[] compile(String source) {

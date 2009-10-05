@@ -47,7 +47,7 @@
   if ($as3) {
     // we're not doing backtrace, trace, or monitor in swf9 yet
     // Make backtraces placeholder
-    #include "debugger/platform/swf9/LzBacktrace.as"
+    #include "debugger/LzBacktrace.lzs"
   } else {
     // Make backtraces work
     #include "debugger/LzBacktrace.lzs"

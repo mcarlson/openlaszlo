@@ -471,7 +471,9 @@ class SWF9Writer extends ObjectWriter {
     /** Create application boilerplate preamble as3 code 
      */
     public String makeApplicationPreamble() {
-        String source = "public class " + MAIN_APP_CLASSNAME +
+        // Turn off all annotation for the preamble
+        String source = "{\n#pragma 'debug=false'\n#pragma 'debugSWF9=false'\n#pragma 'debugBacktrace=false'\n";
+        source += "public class " + MAIN_APP_CLASSNAME +
             " extends " +  LFC_CLASSNAME + " {\n " + imports + "\n" + 
             "public function " + MAIN_APP_CLASSNAME + "(sprite:Sprite=null) {\n" +
             "super(sprite);\n" +
@@ -488,6 +490,8 @@ class SWF9Writer extends ObjectWriter {
         // preloader code from kernel/swf9/LzPreloader.as
         // BE SURE TO KEEP THIS IN SYNC
         source += "// based on http://www.ghost23.de/blogarchive/2008/04/as3-application-1.html\n public class LzPreloader extends MovieClip {" + imports + "public function LzPreloader() { stop(); root.loaderInfo.addEventListener(ProgressEvent.PROGRESS,loadProgress); addEventListener(Event.ENTER_FRAME, enterFrame); } public function enterFrame(event:Event):void { if (framesLoaded == totalFrames) { root.loaderInfo.removeEventListener(ProgressEvent.PROGRESS,loadProgress); nextFrame(); var mainClass:Class = Class(loaderInfo.applicationDomain.getDefinition('LzSpriteApplication')); if(mainClass) { var main:DisplayObject = DisplayObject(new mainClass()); if (main) { removeEventListener(Event.ENTER_FRAME, enterFrame); stage.addChild(main); stage.removeChild(this); } } } } private function loadProgress(event:Event):void { var percload:Number = Math.floor(root.loaderInfo.bytesLoaded / root.loaderInfo.bytesTotal * 100); var id = stage.loaderInfo.parameters.id; if (id) { ExternalInterface.call('lz.embed.applications.' + id + '._sendPercLoad', percload); } } } // end of preloader\n";
+        // Close pragma block
+        source += "\n}\n";
         return source;
     }
 

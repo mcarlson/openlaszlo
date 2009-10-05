@@ -160,13 +160,26 @@
             if (x1.childNodes.length != x2.childNodes.length) return false;
 
             // compare attributes
-            for (var attr in x1.attributes) {
-                var v1 = x1.attributes[attr];
-                var v2 = x2.attributes[attr];
-                if (v1 != v2) return false;
+            var x1attrs = x1.attributes;
+            var x1keys = [];
+            var x2attrs = x2.attributes;
+            var x2keys = [];
+            for (var attr in x1attrs) {
+              x1keys.push(attr);
+            }
+            for (var attr in x2attrs) {
+              x2keys.push(attr);
+            }
+            var limit = x1keys.length;
+            if (limit != x2keys.length) { return false; }
+            x1keys.sort();
+            x2keys.sort();
+            for (var i = 0; i < limit; i++) {
+              var key = x1keys[i];
+              if (key != x2keys[i]) { return false; }
+              if (x1attrs[key] != x2attrs[key]) { return false; }
             }
             // recurse
-            var val = false;
             for (var i = 0; i < x1.childNodes.length; i++) {
                 if (!xmlequals(x1.childNodes[i], x2.childNodes[i])) {
                     return false;

@@ -872,21 +872,15 @@ public class SWF9External {
   /**
    * Get the file name of the LFC shared library for SWF9.
    */
-  public static String getLFCLibrary(boolean useDebug, String runtime) {
-    String dbgext = useDebug ? "-debug" : "";
-    // Strip off "swf" prefix from runtime name (e.g., 'swf10')
-    String LFCVersion = "LFC" + runtime.substring("swf".length());
-    return LPS.getLFCDirectory() + File.separator + LFCVersion + dbgext + ".swc";
+  public static String getLFCLibrary(String runtime, boolean debug, boolean backtrace) {
+    return LPS.getLFCDirectory() + File.separator + LPS.getLFCname(runtime, debug, false, backtrace, false);
   }
 
   /**
    * Get the relative URL of the LFC shared library for SWF9.
    */
-  public static String getLFCLibraryRelativeURL(boolean useDebug, String runtime) {
-    String dbgext = useDebug ? "-debug" : "";
-    // Strip off "swf" prefix from runtime name (e.g., 'swf10')
-    String LFCVersion = "LFC" + runtime.substring("swf".length());
-    return LFCVersion + dbgext + ".swf";
+  public static String getLFCLibraryRelativeURL(String runtime, boolean debug, boolean backtrace) {
+    return LPS.getLFCname(runtime, debug, false, backtrace, false).replaceFirst("swc$", "swf");
   }
 
   public static boolean isWindows() {
@@ -906,6 +900,7 @@ public class SWF9External {
     String exeSuffix = isWindows() ? ".exe" : "";
 
     boolean debug = options.getBoolean(Compiler.DEBUG_SWF9);
+    boolean backtrace = options.getBoolean(Compiler.DEBUG_BACKTRACE);
     
     // NB: this code used to call execCompileCommand, and pass in the pathname of
     // a shell script to invoke the flex compiler. It now calls callJavaCompileCommand
@@ -973,18 +968,18 @@ public class SWF9External {
       if (options.getBoolean(Compiler.SWF9_USE_RUNTIME_SHARED_LIB)) { // 
       // TODO [hqm 2008-11] This usage of the Flash
       // "runtime-shared-library" feature does not work yet. See LPP-7387
-        cmd.add("-runtime-shared-library-path="+ getLFCLibrary(debug, runtime) + "," + 
-                "lib" + File.separator +  getLFCLibraryRelativeURL(debug, runtime) +
+        cmd.add("-runtime-shared-library-path="+ getLFCLibrary(runtime, debug, backtrace) + "," + 
+                "lib" + File.separator +  getLFCLibraryRelativeURL(runtime, debug, backtrace) +
                 ",," // specifies explicitly empty policy file arg
                 ); 
       } else {
-        cmd.add("-compiler.library-path+=" + getLFCLibrary(debug, runtime));
+        cmd.add("-compiler.library-path+=" + getLFCLibrary(runtime, debug, backtrace));
       }
 
       if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB) ||
           options.getBoolean(Compiler.DEBUG_EVAL)) {
         // Don't include the LFC in this app
-        cmd.add("-external-library-path+="+getLFCLibrary(debug, runtime));
+        cmd.add("-external-library-path+="+getLFCLibrary(runtime, debug, backtrace));
       }
 
       if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB)) {
