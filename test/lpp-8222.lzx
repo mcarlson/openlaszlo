@@ -29,7 +29,7 @@
         } catch (e) {
           canvas.catcherrors = false;
         }
-        if (debug) {
+        if ($debug) {
           mode.format("MODE: debug");
         } else {
           mode.format("MODE: catcherrors=%s", canvas.catcherrors);
