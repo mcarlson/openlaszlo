@@ -15,24 +15,13 @@ dynamic class LzDebugService with LzFormatter {
     import flash.utils.getDefinitionByName;
   }#
 
-  #passthrough {
-    /*** @access private */
-    private var __trace:Function;
-    /*** @access private */
-    private function get _trace () :Function {
-      if (this.__trace == null) {
-        // TODO: [20090920 anba] couldn't figure out a better way to access
-        // global trace, can't simply call trace() because that points to the
-        // method with the same name defined locally (see below)
-        this.__trace = Function(getDefinitionByName("trace"));
-      }
-      return this.__trace;
-    }
-  }#
+      public static function _trace(str):void {
+      trace(str);
+  }
 
     public function write(...args):void {
       var str = this.formatToString.apply(this, args);
-      this._trace(str);  
+      LzDebugService._trace(str);  
     }
     public function inspect(...args):void {
       this.write('INSPECT: ' + this.formatToString.apply(this, args));
