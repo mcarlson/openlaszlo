@@ -209,6 +209,10 @@ lz.embed = {
         if (lz.embed.browser.isIE) {
             var scripturl = serverroot + 'lps/includes/excanvas.js';
             this.__dhtmlLoadScript(scripturl)
+            if (lz.embed.browser.version < 7) {
+              // load chrome frame
+              this.__dhtmlLoadScript('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');
+            }
         }
         this.__dhtmlLoadScript(url)
     }
@@ -239,6 +243,10 @@ lz.embed = {
         var url = queryvals.url + '?lzt=object&' + queryvals.query;
 
         var appenddiv = lz.embed._getAppendDiv(properties.id, properties.appenddivid);
+        if (lz.embed.browser.isIE && lz.embed.browser.version < 7) {
+          // detect and install chrome frame
+          CFInstall.check({onmissing:function(){appenddiv.style.display = 'none'},oninstall:function(){window.location=window.location}});
+        }
         // NOTE: [2009-08-24 ptw] We set the embed width/height to
         // 100% and the appenddiv to the desired size, so the platform
         // can adjust the appenddiv size to effect a dynamic canvas
