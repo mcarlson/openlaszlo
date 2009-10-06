@@ -901,6 +901,7 @@ public class SWF9External {
 
     boolean debug = options.getBoolean(Compiler.DEBUG_SWF9);
     boolean backtrace = options.getBoolean(Compiler.DEBUG_BACKTRACE);
+    boolean nameFunctions = options.getBoolean(Compiler.NAME_FUNCTIONS);
     
     // NB: this code used to call execCompileCommand, and pass in the pathname of
     // a shell script to invoke the flex compiler. It now calls callJavaCompileCommand
@@ -942,7 +943,9 @@ public class SWF9External {
     for (int i=1; i<=maxSubdirnum; i++) {
       cmd.add("-compiler.source-path+=" + workdir.getPath() + File.separator + i);
     }
-    if (debug) {
+    if (nameFunctions) {
+      // Ensure function names and source location information is in
+      // the binary for debugging
       cmd.add("-debug=true");
     }
     cmd.add("-compiler.headless-server=true");

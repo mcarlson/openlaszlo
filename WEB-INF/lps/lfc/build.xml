@@ -188,19 +188,16 @@
         }
         if (buildDebug) {
           var dest = LFCdir + "LFC" + v + "-debug" + ext;
-          var platformopt = ((v >= 9) ? "--option debug=true " : "");
           if (!(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply --debug
             dobuild(dest,
                     "swf" + v,
-                    platformopt +
                     shlibopt + "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
           }
         }
         if (buildBacktrace) {
           var dest = LFCdir + "LFC" + v + "-backtrace" + ext;
-          var platformopt = ((v >= 9) ? "--option debug=true " : "");
           if (!(new File(dest)).exists()) {
             // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
             // warnings, the options can be changed to simply -g3

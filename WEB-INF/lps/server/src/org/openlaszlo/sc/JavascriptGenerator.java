@@ -1317,19 +1317,13 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       // distinguish LFC from user stack frames.  See
       // lfc/debugger/LzBacktrace
       String fn = (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ? "lfc/" : "") + filename;
-      String args = "";
-      // AS3 does not have `arguments` if you have a rest arg, so we
-      // capture the actual arguments instead
-      if ((this instanceof SWF9Generator)) {
-        args = "[";
-        for (Iterator i = parameters.iterator(); i.hasNext(); ) {
-          args += i.next();
-          if (i.hasNext()) { args += ","; }
-        }
-        args += "]";
-      } else {
-        args = "Array.prototype.slice.call(arguments, 0)";
+      String args = "[";
+      for (Iterator i = parameters.iterator(); i.hasNext(); ) {
+        String arg = (String)i.next();
+        args += ScriptCompiler.quote(arg) + "," + arg;
+        if (i.hasNext()) { args += ","; }
       }
+      args += "]";
       prelude.add(parseFragment(
                     "var $lzsc$d = Debug; var $lzsc$s = $lzsc$d.backtraceStack;"));
       prefix.add(parseFragment(
@@ -1402,7 +1396,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           // successfully defining the $lzsc$runtime class, so we'll
           // report the warning more directly.
           if (this instanceof SWF9Generator) {
-            fragment += "  $lzsc$runtime.reportException(";
+            fragment += "  $lzsc$runtime.$reportException(";
           } else {
             fragment += "  $reportException(";
           }

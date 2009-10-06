@@ -545,7 +545,7 @@ function trace (...args) { Debug.info.apply(Debug, args); }
 /** Bootstrap version of base warning function
  * @access private
  */
-var $reportSourceWarning = function (filename, lineNumber, msg, fatal) {
+var $reportSourceWarning = function $reportSourceWarning (filename, lineNumber, msg, fatal) {
 #pragma "warnUndefinedReferences=false"
   var warning = filename + '@' + lineNumber + ': ' + msg + '\n';
   Debug[fatal?'error':'warn'](warning);
@@ -561,12 +561,12 @@ var $reportSourceWarning = function (filename, lineNumber, msg, fatal) {
 var $reportedError = null;
 
 /** @access private */
-var $reportException = function (fileName, lineNumber, e) {
+var $reportException = function $reportException (fileName, lineNumber, e) {
 // prevent compiler from reporting global assignment warning for $reportedError
 #pragma "warnGlobalAssignments=false"
   if (e !== $reportedError) {
     $reportedError = e;
-    $reportSourceWarning(fileName, lineNumber, e.name + ": " + e.message, true);
+    $reportSourceWarning(fileName, lineNumber, e, true);
   }
 }
 

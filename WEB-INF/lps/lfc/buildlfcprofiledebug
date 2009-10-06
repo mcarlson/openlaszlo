@@ -18,8 +18,11 @@ if [ "$runtime" == "dhtml" ]; then
     suffix="js"
 fi
 if [ "$runtime" == "swf9" -o "$runtime" == "swf10" ]; then
-    options="${options} --option buildSharedLibrary=true  --option SWF9MainClassName=LFCApplication \
-     --option SWF9WrapperClassName=LzSpriteApplication"
+    options="${options} \
+     --option buildSharedLibrary=true \
+     --option SWF9MainClassName=LFCApplication \
+     --option SWF9WrapperClassName=LzSpriteApplication \
+     --option catchFunctionExceptions=false"
     suffix="swc"
 fi
 ant -Dlfc.output=${output:-LFC${runtime#swf}-profile-debug.${suffix:-"lzl"}} -Dlfc.runtime=${runtime} -Dlfc.source=LaszloLibrary.lzs \

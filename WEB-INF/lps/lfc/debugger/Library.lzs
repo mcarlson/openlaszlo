@@ -44,13 +44,12 @@
   // Now we can install a better $reportSourceWarning
   #include "debugger/LzCompiler.lzs"
 
+  // Make backtraces work
+  #include "debugger/LzBacktrace.lzs"
+
   if ($as3) {
-    // we're not doing backtrace, trace, or monitor in swf9 yet
-    // Make backtraces placeholder
-    #include "debugger/LzBacktrace.lzs"
+    // we're not doing trace, monitor, or leak-detection in swf9 yet
   } else {
-    // Make backtraces work
-    #include "debugger/LzBacktrace.lzs"
     #include "debugger/LzTrace.lzs"
     #include "debugger/LzMonitor.lzs"
     // Add memory tracing

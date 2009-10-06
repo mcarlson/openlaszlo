@@ -16,6 +16,7 @@ if ($as3) {
   #pragma "warnGlobalAssignments=false"
   // must not use 'var' here
   $reportSourceWarning = $lzsc$runtime.$reportSourceWarning;
+  $reportException = $lzsc$runtime.$reportException;
 }
 } else {
 // Hash to avoid printing duplicate warnings (e.g., when a warning is

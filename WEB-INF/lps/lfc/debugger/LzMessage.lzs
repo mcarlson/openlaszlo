@@ -262,30 +262,55 @@ class LzSourceMessage {
     // Append a backtrace if there is one -- skip back to the
     // $reportSourceWarning or warnInternal frames.
     if (Debug.backtraceStack != null) {
-      var skip:Number = 3;      // SourceMessage->backtrace->LzBacktrace
-      var bts = Debug.backtraceStack;
+      var bts = Debug.backtrace();
       var btsl:Number = bts.length;
-      for (var i = btsl - 1; i > 0; i--) {
+      var limit:Number = btsl;
+      for (var i:Number = btsl - 1; i > 0; i--) {
         var callee = bts[i].callee;
         // TODO: [2009-10-03 ptw] Improve mechanism for determining what internal frames to skip
-        if (callee === $reportSourceWarning || ($as3 && (callee == '$reportSourceWarning'))) {
-          // Skip backtrace() constructor frames too
-          skip = btsl - i + 2;
-          break;
-        } else if (callee === Debug.warnInternal || ($as3 && (callee == 'warnInternal'))) {
-          // Skip warnInternal() caller and backtrace() constructor frames too
-          skip = btsl - i + 1 + 2;
-          break;
+        if ($as3) {
+          // AS3 only stores function names
+          if (callee == '$reportException') {
+            limit = i;
+            break;
+          } else if (callee == '$reportSourceWarning') {
+            limit = i;
+          } else if (callee == 'warnInternal') {
+            limit = i - 1;
+          }
+        } else {
+          if (callee === $reportException) {
+            limit = i;
+            break;
+          } else if (callee === $reportSourceWarning) {
+            limit = i;
+            // NOTE: [2009-10-06 ptw] No break, because $reportException may call this
+          } else if (callee === Debug.warnInternal) {
+            // Elide caller too
+            limit = i - 1;
+            // NOTE: [2009-10-06 ptw] No break, because $reportSourceWarning may call this
+          }
         }
       }
-      if (Debug.backtraceStack.length > skip) {
-        this.backtrace = Debug.backtrace(skip);
+      if (btsl >= limit) {
+        // Make stack frames beyond limit internal (for debugging)
+        for (var i:Number = btsl - 1; i >= limit; i--) {
+          var frame = bts[i];
+          delete bts[i];
+          bts['__' + i] = frame;
+        }
+        bts.length = limit;
+        this.backtrace = bts;
         // Heuristicate file/line from backtrace if available
-        if (file == null && this.backtrace) {
-          var top:__LzStackFrame = this.backtrace.userStackFrame();
-          if (top) {
+        var top:__LzStackFrame = this.backtrace.userStackFrame();
+        if (top) {
+          if (file == null) {
             file = top.filename();
             line = top.lineno();
+            // Show increased confidence in line
+            this.__linePrefix = '#';
+          } else if (file == top.filename() &&
+                     line == top.lineno()) {
             // Show increased confidence in line
             this.__linePrefix = '#';
           }
@@ -308,7 +333,7 @@ class LzSourceMessage {
     if (message is LzMessage) {
       this.message = message cast LzMessage;
     } else {
-      this.message = new LzMessage(message cast String);
+      this.message = new LzMessage(message);
     }
     this.length = this.toString().length;
   }

@@ -216,7 +216,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    *
    * @access private
    */
-  static var internalPropertyPrefixes = [ '$', '__', '_dbg_' ];
+  static var internalPropertyPrefixes = [ '$', '__', '_dbg_', 'LzDeclared' ];
 
   /**
    * <xref linkend="LzDebugService+debug.prototype.inspect"/> will show internal properties
@@ -941,7 +941,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
             }
           }
           if ($swf8) {
-            // finally not working in swf8+backtrace?
+            // FIXME [2009-10-05 ptw] (LPP-8533) finally not working
+            // in swf8+backtrace?
             this.printLength = opl;
           }
         } finally {
@@ -1198,7 +1199,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
             ((! unique) || (! this.isObjectLike(thing))) &&
             (s != "") && (s.length < limit)) {
           if ($swf8) {
-            // finally not working in swf8+backtrace?
+            // FIXME [2009-10-05 ptw] (LPP-8533) finally not working
+            // in swf8+backtrace?
             this.printLength = origPrintLength;
             this.printDepth = origPrintDepth;
             this.printDetectCircular = origPrintDetectCircular;
@@ -1614,7 +1616,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       this.error("You must provide a debugger message to report.  Please inspect a debugger message and try again.")
         return;
     }
-    // TODO [hqm 2008-09-11] LzBacktrace not yet working in swf9
+
     if (! (error.backtrace is LzBacktrace)) {
       this.error("Backtraces must be on to report a bug.  Please enable backtracing and try again.");
       return;
@@ -1638,7 +1640,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     error.backtrace.map(
       function (frame) {
         that.format("\n%w", frame);
-        that.format("\n  this: %#w", inspect(frame['this'], true));
+        if (frame.context) {
+          that.format("\n  this: %#w", inspect(frame.context, true));
+        }
         var args = frame.arguments;
         for (var i = 0; i < args.length; i++) {
           that.format("\n  arg %2d: %#w", i, inspect(args[i], verbose));

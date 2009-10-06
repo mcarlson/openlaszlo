@@ -10,9 +10,6 @@
  */
 
 if ($as3) {
-#pragma "debug=false"
-#pragma "debugSWF9=false"
-#pragma "debugBacktrace=false"
 
   /**
    * Class used for as3-only runtime support
@@ -63,10 +60,10 @@ if ($as3) {
      *
      * @access private
      */
-    static function reportException (fileName, lineNumber, e) {
+    static function $reportException (fileName, lineNumber, e) {
       if (e !== reportedError) {
         reportedError = e;
-        $reportSourceWarning(fileName, lineNumber, e.name + ": " + e.message, true);
+        $reportSourceWarning(fileName, lineNumber, e, true);
       }
     }
   };

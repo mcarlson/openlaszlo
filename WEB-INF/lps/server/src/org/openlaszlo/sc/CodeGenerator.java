@@ -1868,6 +1868,25 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         (new ParseTreePrinter()).print(depExpr);
       }
     }
+    boolean isStatic = isStatic(node);
+    // Analyze local variables (and functions)
+    VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY));
+    for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
+      analyzer.visit((SimpleNode)i.next());
+    }
+    // We only want to compute these analysis components on the
+    // original body of code, not on the annotations, since these are
+    // used to enforce LZX semantics in Javascript
+    analyzer.computeReferences();
+    // Parameter _must_ be in order
+    LinkedHashSet parameters = analyzer.parameters;
+    // Linked for determinism for regression testing
+    Set variables = analyzer.variables;
+    // Linked for determinism for regression testing
+    LinkedHashMap fundefs = analyzer.fundefs;
+    Set closed = analyzer.closed;
+    Set free = analyzer.free;
+
     List prefix = new ArrayList();
     List postfix = new ArrayList();
     if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
@@ -1875,13 +1894,21 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       // distinguish LFC from user stack frames.  See
       // lfc/debugger/LzBacktrace
       String fn = (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ? "lfc/" : "") + filename;
+      String args = "[";
+      for (Iterator i = parameters.iterator(); i.hasNext(); ) {
+        String arg = (String)i.next();
+        args += ScriptCompiler.quote(arg) + "," + arg;
+        if (i.hasNext()) { args += ","; }
+      }
+      args += "]";
       prefix.addAll(Arrays.asList((new Compiler.Parser()).parse("" +
              "{" +
                "\n#pragma 'warnUndefinedReferences=false'\n" +
                "var $lzsc$d = Debug; var $lzsc$s = $lzsc$d['backtraceStack'];" +
                "if ($lzsc$s) {" +
-               "  var $lzsc$a = arguments;" +
-               "  $lzsc$a['this'] = this;" +
+               "  var $lzsc$a = " + args + ";" +
+               "  $lzsc$a.callee = arguments.callee;" +
+               (isStatic ? "" : "  $lzsc$a['this'] = this;") +
                "  $lzsc$a.filename = " + ScriptCompiler.quote(fn) + ";" +
                "  $lzsc$a.lineno = " + lineno + ";" +
                "  $lzsc$s.push($lzsc$a);" +
@@ -1903,26 +1930,16 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       postfix.addAll(Arrays.asList(meterFunctionEvent(node, "returns", meterFunctionName)));
     }
 
-    // Analyze local variables (and functions)
-    VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY));
+    // Now we visit all the wrapper code and add the variables
+    // declared there (so they can be renamed properly)
     for (Iterator i = prefix.iterator(); i.hasNext(); ) {
-      analyzer.visit((SimpleNode)i.next());
-    }
-    for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
     for (Iterator i = postfix.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
     analyzer.computeReferences();
-    // Parameter _must_ be in order
-    LinkedHashSet parameters = analyzer.parameters;
-    // Linked for determinism for regression testing
-    Set variables = analyzer.variables;
-    LinkedHashMap fundefs = analyzer.fundefs;
-    Set closed = analyzer.closed;
-    Set free = analyzer.free;
-    boolean isStatic = isStatic(node);
+    variables.addAll(analyzer.variables);
     boolean withThis = options.getBoolean(Compiler.WITH_THIS) && !isStatic;
     // Note usage due to activation object and withThis
     if (! free.isEmpty()) {
