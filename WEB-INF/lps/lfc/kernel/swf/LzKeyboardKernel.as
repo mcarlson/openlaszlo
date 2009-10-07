@@ -32,7 +32,7 @@ var LzKeyboardKernel = {
 
         var dh = LzKeyboardKernel.__downKeysHash;
         var dirty = false;
-        var ctrl = Key.isDown(Key.Control);
+        var ctrl = Key.isDown(Key.CONTROL);
 
         //Debug.info("__keyboardEvent k=%w s=%w %w ctrl=%w, delta=%w", k,s,t, ctrl,delta);
 

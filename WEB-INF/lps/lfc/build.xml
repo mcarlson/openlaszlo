@@ -93,7 +93,7 @@
           unless="preloader.uptodate">
     <ant target="lzl">
       <property name="library" value="${LFCdir}/lzpreloader.lzl" />
-      <property name="runtime" value="swf7" />
+      <property name="runtime" value="swf8" />
       <property name="source" value="lzpreloader.as" />
       <property name="options" value="" />
     </ant>

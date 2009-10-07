@@ -123,6 +123,8 @@ function init () {
   }
 }
 
+// TODO: [20091005 anba] I don't think this additional movieclip is necessary,
+// because _heartbeat already exists, cf. SWFFile#addPreloaderFrame
 this.createEmptyMovieClip("_heartbeat", 1000);
 this._heartbeat.onEnterFrame = function() {
     this._parent.heartbeat();
@@ -164,8 +166,16 @@ function heartbeat (p) {
 // animation.
 function done() {
   //this.mydebug('done');
+  lzpreloader._heartbeat.onEnterFrame = null;
+  // swap depths otherwise removeMovieClip() doesn't work (movieclip's depth
+  // must not be negative for removeMovieClip to work, but movieclips created
+  // in the authoring tool are assigned negative depth values by default).
+  lzpreloader._heartbeat.swapDepths(0);
   lzpreloader._heartbeat.removeMovieClip();
-  delete this.heartbeat;
+  // well, there are two _heartbeat movieclips, so call removeMovieClip() twice
+  // (always remember that movieclip references are 'soft references')
+  lzpreloader._heartbeat.removeMovieClip();
+  // delete this.heartbeat;
 
   if (this.iobj) this.init();
   for (var i = 0; i < this.synctoloads.length; i++) {
