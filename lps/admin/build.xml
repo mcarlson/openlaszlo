@@ -9,7 +9,7 @@
   <target name="build" description="Recompile the SOLO dev-console app">
     <sequential>
       <exec executable="../../WEB-INF/lps/server/bin/lzc" >
-        <arg value="--runtime=swf8" />
+        <arg value="--runtime=swf10" />
         <arg value="dev-console.lzx" />
       </exec>
       <exec executable="../../WEB-INF/lps/server/bin/lzc" >
@@ -17,7 +17,7 @@
         <arg value="--runtime=dhtml" />
         <arg value="dev-console.lzx" />
       </exec>
-      <move file="dev-console.swf8.swf" tofile="dev-console.lzx.swf" overwrite="yes"/>
+      <move file="dev-console.swf10.swf" tofile="dev-console.lzx.swf" overwrite="yes"/>
       <concat destfile="dev-console.lzx.js" force="yes">
         <filelist dir="."  files="../includes/lfc/LFCdhtml.js,dev-console.js"/>
       </concat>

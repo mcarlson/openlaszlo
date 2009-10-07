@@ -34,17 +34,10 @@ var $reportSourceWarning = function (filename, lineNumber, msg, fatal) {
   }
   Debug.sourceWarningHistory [warningString] = true;
 
-  if (Debug.remoteDebug) {
-    if (Debug.inEvalRequest) {
-      Debug.xmlwarnings.push([filename, lineNumber, msg]);
-    } else {
-      Debug.sockWriteWarning(filename, lineNumber, msg);
-    }
-  } else {
-    Debug.freshLine();
-    // Logs and adds
-    Debug.__write(warning);
+  Debug.freshLine();
+  // Logs and adds
+  Debug.__write(warning);
   }
 }
 
-}
+

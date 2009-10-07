@@ -8,7 +8,7 @@
   * @access private
   * @topic Kernel
   * @subtopic AS2
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   */
 
@@ -83,8 +83,9 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
     var color = (attrs && attrs['color']) ? attrs.color : '#0000ff';
     if (id != null) {
       // Note this is invoking a trampoline in the console that will
-      // call back to us to display the object
-      return '<a href="asfunction:_root.canvas.displayObjectByID,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
+      // call back to us to display the object. We're talking to an as3/swf10 console app now
+      // so we need to format this as an as3 style textlink event hyperlink.
+      return '<a href="event:' + id + '"><font color="' + color + '">' + rep +"</font></a>";
     }
     return rep;
   };
@@ -140,10 +141,8 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
    * @access private
    */
   function createLocalConnections () {
-    //var appname = lz.Browser.getBaseURL().file;
-    // [TODO hqm 2006-05: use a constant app name of "XXX", while we debug
-    // the remote debugger]
-    var appname = "XXX";
+    var url = lz.Browser.getBaseURL();
+    var appname = url.path + url.file;
     this.listenername = "lc_appdebug"+appname;
     this.consolename = "lc_consoledebug"+appname;
   };

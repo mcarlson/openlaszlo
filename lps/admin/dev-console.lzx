@@ -23,15 +23,53 @@
             height="80"/>
     </otherwise>
   </switch>
-  <!-- flashvar named 'appinfo' will be supplied, it is XML data -->
-  <script> 
-    function escapeXML (str) {
-    return ((new XML()).createTextNode(str)).toString();
-    }
-  </script>
 
+  <attribute name="app_runtime"/>
+  <attribute name="app_debug" />
+  <attribute name="app_backtrace" />
+  <attribute name="app_console_debug" />
+  <attribute name="app_floating_window" />
+  <attribute name="app_fullpath" />
+  <attribute name="app_query" />
+  <attribute name="app_opt_url" />
+  <attribute name="app_unopt_url" />
+  <attribute name="app_url" />
+  <attribute name="app_opt_exists" />
+  <attribute name="app_lps_root" />
+  <attribute name="app_lzt" />
+  <attribute name="app_uid" />
 
+  <handler name="oninit">
+      <![CDATA[
+       appdata.setAttribute('initialdata', lz.Browser.getInitArg('appinfo'));
+       setAttribute('app_runtime', appdata.getPointer().xpathQuery("/info/@runtime"));
+       if (app_runtime == null) {
+           setAttribute('app_runtime', appdata.getPointer().xpathQuery("/request/param[@name = 'lzr']/@value"));
+       }
+       setAttribute('app_debug', appdata.getPointer().xpathQuery("/request/param[@name = 'debug']/@value"));
+       setAttribute('app_backtrace', appdata.getPointer().xpathQuery("/request/param[@name = 'lzbacktrace']/@value"));
+       if (app_debug == 'y') app_debug = 'true';
+       setAttribute('app_console_debug', 
+                    appdata.getPointer().xpathQuery("/request/@console-remote-debug") == 'true');
+       setAttribute('app_floating_window',
+                    appdata.getPointer().xpathQuery("/request/@console-floating-window") == 'true');
+       setAttribute('app_fullpath', appdata.getPointer().xpathQuery("/request/@fullpath"));
+       setAttribute('app_query', appdata.getPointer().xpathQuery("/request/@query_args"));
+       setAttribute('app_opt_url', appdata.getPointer().xpathQuery("/request/@opt-url"));
+       setAttribute('app_unopt_url', appdata.getPointer().xpathQuery("/request/@unopt-url"));
+       setAttribute('app_url', appdata.getPointer().xpathQuery("/request/@url"));
+       setAttribute('app_opt_exists', appdata.getPointer().xpathQuery("/request/@opt-exists"));
+       setAttribute('app_lps_root', appdata.getPointer().xpathQuery("/request/@lps"));
+       setAttribute('app_lzt', null);
+       // Use the url pathname as the uid to rendevouz with the app, the app will be listening on
+       // a LocalConnection there.
+       setAttribute('app_uid', app_fullpath);
 
+       if ($dhtml) {
+           canvas.width = document.body.clientWidth;
+       }
+       ]]>
+  </handler>
 
   <!-- info we get is of the form 
   <appdata>
@@ -62,35 +100,7 @@
   -->
 
 
-    <dataset name="appdata"/>
-    <script>
-      <![CDATA[
-       appdata.setAttribute('initialdata', global.appinfo);
-
-       var app_runtime = appdata.getPointer().xpathQuery("/info/@runtime");
-       if (app_runtime == null) {
-         app_runtime = appdata.getPointer().xpathQuery("/request/param[@name = 'lzr']/@value");
-       }
-       var app_debug = appdata.getPointer().xpathQuery("/request/param[@name = 'debug']/@value");
-       var app_backtrace = appdata.getPointer().xpathQuery("/request/param[@name = 'lzbacktrace']/@value");
-       if (app_debug == 'y') app_debug = 'true';
-       var app_console_debug = 
-              appdata.getPointer().xpathQuery("/request/@console-remote-debug") == 'true';
-       var app_floating_window = 
-              appdata.getPointer().xpathQuery("/request/@console-floating-window") == 'true';
-       var app_fullpath = appdata.getPointer().xpathQuery("/request/@fullpath");
-       var app_query = appdata.getPointer().xpathQuery("/request/@query_args");
-       var app_opt_url = appdata.getPointer().xpathQuery("/request/@opt-url");
-       var app_unopt_url = appdata.getPointer().xpathQuery("/request/@unopt-url");
-       var app_url = appdata.getPointer().xpathQuery("/request/@url");
-       var app_opt_exists = appdata.getPointer().xpathQuery("/request/@opt-exists")
-       var app_lps_root = appdata.getPointer().xpathQuery("/request/@lps")
-       var app_lzt = null;
-       var app_uid = (typeof(global.lzappuid) != 'undefined') ? global.lzappuid : '';
-       app_uid = "XXX";
-
-       ]]>
-    </script>
+  <dataset name="appdata"/>
 
   <method name="deploySOLO">
     <![CDATA[
@@ -112,12 +122,12 @@
    </method>
 
    <method name="viewSource">
-     app_lzt = 'source';
+         setAttribute('app_lzt', 'source');
      canvas.reloadApp();
    </method>
 
    <method name="viewWrapper">
-     app_lzt = 'deployment';
+         setAttribute('app_lzt', 'deployment');
      canvas.reloadApp();
    </method>
 
@@ -143,7 +153,7 @@
   <resource name="footer_logo" src="../assets/logo_laszlo_footer.gif"/>
 
   <view name="main" width="${parent.width}">
-      <view name="logo" resource="footer_logo" bgcolor="0x4c4c4c" height="${app_console_debug ? 370 : 71}"/>
+      <view name="logo" resource="footer_logo" bgcolor="0x4c4c4c" height="${canvas.app_console_debug ? 370 : 71}"/>
       <view name="controls" x="70">
         <view name="firstrow" y="4">
             <text fontsize="11" x="8" y="7"><b>Compile Options:</b></text>
@@ -153,19 +163,19 @@
             <view x="125" name="compilecontrols">
               <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:12" x="10" y="9">
                     <radiobutton id="rb8" value="'swf8'"
-                                 selected="${app_runtime == 'swf8'}">swf8</radiobutton >
+                                 selected="${canvas.app_runtime == 'swf8'}">swf8</radiobutton >
                     <radiobutton id="rb10" value="'swf10'" 
                                  enabled="true"
-                                 selected="${app_runtime == 'swf10'}">swf10</radiobutton >
+                                 selected="${canvas.app_runtime == 'swf10'}">swf10</radiobutton >
                     <radiobutton id="rbdhtml" value="'dhtml'"
-                                 selected="${app_runtime == 'dhtml'}">DHTML</radiobutton >
+                                 selected="${canvas.app_runtime == 'dhtml'}">DHTML</radiobutton >
                 </radiogroup>
                 <view x="$once{rg_runtime.x + rg_runtime.width + 14}">
                     <view height="14" width="1" bgcolor="black" y="9" />
-                    <checkbox id="cb_debug" value="${app_debug == 'true'}"
+                    <checkbox id="cb_debug" value="${canvas.app_debug == 'true'}"
                             x="16" y="8">Debug</checkbox>
                     <checkbox id="cb_backtrace" 
-                            value="${app_backtrace == 'true'}" x="82" y="8">Backtrace</checkbox>
+                            value="${canvas.app_backtrace == 'true'}" x="82" y="8">Backtrace</checkbox>
                     <button onclick="canvas.gotoApp()" x="168" y="3">Compile</button>
                     <handler name="onvalue" reference="cb_backtrace">
                     if (cb_backtrace.value) {
@@ -211,7 +221,9 @@
 
           -->
 
-          <checkbox y="10" x="800" id="cb_remotedebug" visible="${app_runtime != 'dhtml'}" value="${app_console_debug}">Console Remote Debug</checkbox>
+          <checkbox y="10" x="800" id="cb_remotedebug"
+                    visible="${canvas.app_runtime != 'dhtml'}"
+                    value="${canvas.app_console_debug}">Console Remote Debug</checkbox>
 
 
           <!-- <checkbox id="cb_popup" value="${app_floating_window}">in separate window</checkbox> -->
@@ -223,12 +235,12 @@
     <when runtime="dhtml">
     </when>
     <otherwise>
-        <state name="consoledebugstate" applied="${app_console_debug}">
+        <state name="consoledebugstate" applied="${canvas.app_console_debug}">
             <view y="90" layout="axis:x;spacing:4">
 
             <!-- enter expression to be sent to app under debug -->
 
-            <text resize="true" text="${'Evaluate in '+app_url}"/>
+            <text resize="true" text="${'Evaluate in '+canvas.app_url}"/>
             <edittext  doesenter="true" id="expr2" width="300">
                 <method name="doEnterDown">
                 canvas.remoteEval(expr2.getText());
@@ -237,7 +249,7 @@
             <button enabled="false" bgcolor="white" id="app_eval_btn"
                     onclick="canvas.remoteEval(expr2.getText())">Eval</button>
             <button onclick="app_eval_btn.setAttribute('enabled', true);
-                            canvas.sendConsoleAlive()">Connect To App</button>
+                             canvas.sendConsoleAlive()">Connect To App</button>
             </view>
 
             <window title="console" id="console"
@@ -250,7 +262,7 @@
                 for (var i = 0; i < n; i++) {
                 var v = arguments[i];
                 var s = ((i == (n-1)) ? '\n' : ' ');
-                this.content.addText(escapeXML(v)+s);
+                this.output.addText(lz.Browser.xmlEscape(v)+s);
                 sbar.page(sbar.scrollmax);
                 }
                 ]]>
@@ -260,12 +272,18 @@
                 <![CDATA[
                 // Funky thing that Henry discovered you have to do to make newlines
                 // why wouldn't <br/> work?
-                this.content.addText(str.split('\n').join('&#32;\n'));
+                this.output.addText(str.split('\n').join('&#32;\n'));
                 sbar.page(sbar.scrollmax);
                 ]]>
             </method>
-            <text name="content" multiline='true' resize="true" selectable="true"
-                    width="${parent.width}" />
+            <text name="output" multiline='true' resize="true" selectable="true"
+                    width="${parent.width}">
+         
+             <handler name="ontextlink" args="oid:String">
+                canvas.displayObjectByID(oid);
+             </handler>
+
+            </text>
             <scrollbar name="sbar" id="sb"/>
             </window>
         </state>
@@ -279,11 +297,11 @@
   <method name="gotoApp">              
     // reload the page with the .lzx path
     var p = app_fullpath.substring(0,app_fullpath.length -4)+".lzx";
-    app_fullpath = p;
+    setAttribute('app_fullpath', p);
     this.reloadApp();
   </method>
   
-  <method name="reloadApp" args="source">
+  <method name="reloadApp" >
     <![CDATA[
     var qruntime = rg_runtime.value;
     var qdebug = cb_debug.value;
@@ -292,7 +310,7 @@
     
     // parse original app query string, override with user settings
     // for debug, runtime, etc
-    var params = new LzParam(this);
+    var params = new LzParam();
     
     var qitems = LzParam.parseQueryString(app_query);
     // override debug,runtime args
@@ -362,14 +380,14 @@
   <method name="displayObjectByID" args="uid">
     <![CDATA[
     // Not very abstract, but it works for now
-    receivingLC.send("lc_appdebug"+app_uid, "displayObj", uid);
+    receivingLC.send(appListenerName, "displayObj", uid);
     ]]>
   </method>
 
 
   <method name="showLogMessage" args="msg">
       <![CDATA[
-      console.writeRaw(escapeXML(msg)+"<br>");
+      console.writeRaw(lz.Browser.xmlEscape(msg)+"<br>");
       ]]>
   </method>
 
@@ -382,47 +400,76 @@
 
   <method name="sendConsoleAlive">
     <![CDATA[                
-      receivingLC.send("lc_appdebug"+app_uid, "consoleAlive", true);
+      // sets up the LocalConnection
+     if (receivingLC == null) {
+      var rcl = new remoteConnectionListener();
+      canvas.setAttribute('consoleListenerName', "lc_consoledebug"+app_uid);
+      canvas.setAttribute('appListenerName', "lc_appdebug"+app_uid);
+      canvas.setAttribute('receivingLC', rcl.setupConnection());
+      receivingLC.send(appListenerName, "consoleAlive", true);
+     } else {
+      console.writeRaw('<font color="#FF0000">Connection is already open to app.</font><br/>');
+     }
     ]]>
   </method>
 
   <method name="remoteEval" args="expr">
     <![CDATA[
-    receivingLC.send("lc_appdebug"+app_uid, "evalExpr", expr);
+    receivingLC.send(appListenerName, "evalExpr", expr);
     ]]>
   </method>
 
+  <!-- pointer to the LocalConnection we receive commands on -->
+  <attribute name="receivingLC"/>
 
-  <script>
-    <![CDATA[
-    if ($dhtml) {
-        canvas.width = document.body.clientWidth;
-    } else {
-    var receivingLC = new LocalConnection();
-    // receives remote app debug message
-    receivingLC.debugResult = function(msg, oid) 
-    { 
-        if (oid != null) {
-            console.writeRaw('<a href="asfunction:_root.canvas.displayObjectByID,' + oid + '"><font color="#0000FF">' + msg +"</font></a>");
-        } else {
-            console.writeRaw(msg);
+  <!-- console listens on this name for messages from app -->
+  <attribute name="consolelistenerName" />
+
+  <!-- app listens on this name for messages from console -->
+  <attribute name="appListenerName" />
+
+ <switch>
+    <when runtime="swf10">
+      <!-- create an object to handle our LocalConnection listener requests -->
+      <script when="immediate"><![CDATA[
+        public class remoteConnectionListener {
+            #passthrough (toplevel:true) {
+                import flash.net.LocalConnection;
+            }#
+
+            // display a debug string (with optionally clickable object id) in the console output window.
+            // N.B. must be public to allow LocalConnection to dispatch to this method
+            public function debugResult(msg,oid) {
+                if (oid != null) {
+                    var link = console.output.makeTextLink(msg, oid);
+                    console.writeRaw('<font color="#0000FF">' + link +"</font>");
+
+
+                } else {
+                    console.writeRaw(msg);
+                }
+            }
+
+            // N.B. must be public to allow LocalConnection to dispatch to this method
+            public  function debugWarning(filename,lineNumber,msg) {
+                canvas.showWarning(filename,lineNumber,msg);
+            }
+
+            // returns the LocalConnection which talks to the app 
+            public function setupConnection() {
+                var conn = new flash.net.LocalConnection();
+                // receives remote app debug message
+                // display warnings
+                conn.client = this;
+                conn.connect(canvas.consoleListenerName);
+                return conn;
+            }
         }
-    }
+        ]]>
+        </script>
+     </when>
+</switch>
 
-    // display warnings
-    receivingLC.debugWarning = canvas.showWarning;
-    
-    console.write("listening on lc_consoledebug "+app_uid);
-    receivingLC.connect("lc_consoledebug"+app_uid);
-
-    var sendingLC = new LocalConnection();
-
-    // sequence numbers for eval requests
-    canvas.evalseqnum = 0;
-    }
-    
-    ]]>
-  </script>
 
 
 </canvas>

@@ -58,7 +58,6 @@
 
   if ($as2) {
     // Order beyond here has not been thought about (yet)
-    #include "debugger/platform/swf/LzRemote.as"
     #include "debugger/platform/swf/LzFlashRemote.as"
   }
 

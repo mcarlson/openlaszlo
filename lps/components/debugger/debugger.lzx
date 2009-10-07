@@ -166,7 +166,6 @@
     <attribute name="savedWidth" value="340" />
     <attribute name="savedHeight" value="125" />
 
-    <attribute name="remoteDebug"   value="false"/>
     <attribute name="consoleRemote" value="false"/> 
     <attribute name="clientBridge" />
 
@@ -948,8 +947,9 @@
       var color = '#0000ff';
       if (attrs && attrs.color) { color = attrs.color };
       if (id != null) {
-          // TODO hqm 2008-09-15 Make this use new lz.text.makeTextLink API when it is working
-          if ($as3) {
+          if ($as3 || (lz.Browser.getInitArg('lzconsoledebug') == 'true')) {
+              // If we're running in swf10, or talking to the remote dev console, we need to format hyperlinks
+              // using the as3 textlink event API
               return '<a href="event:objid=' + id + '"><font color="' + color + '">' + rep +"</font></a>";
           } else {
               return '<a href="asfunction:_root.$modules.lz.Debug.displayObj,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
@@ -979,7 +979,6 @@
         // This is called when the application is loaded.
         //------------------------------------------------------------------------------
         this.isLoaded = true;
-        this.remoteDebug = false;
 
         var bridge:LzDebugConsole = new LzDebuggerWindowConsoleBridge(this);
         this.clientBridge = Debug.attachDebugConsole(bridge);

@@ -92,7 +92,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
     if (id != null) {
       // Note this is invoking a trampoline in the console that will
       // call back to us to display the object
-      return '<a href="asfunction:_root.canvas.displayObjectByID,' + id + '"><font color="' + color + '">' + rep +"</font></a>";
+      return '<a href="event:' + id + '"><font color="' + color + '">' + rep +"</font></a>";
     }
     return rep;
   };
@@ -160,10 +160,8 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
    * @access private
    */
   function createLocalConnections ():void {
-    //var appname = lz.Browser.getBaseURL().file;
-    // [TODO hqm 2006-05: use a constant app name of "XXX", while we debug
-    // the remote debugger]
-    var appname:String = "XXX";
+    var url = lz.Browser.getBaseURL();
+    var appname = url.path + url.file;
     this.listenername = "lc_appdebug"+appname;
     this.consolename = "lc_consoledebug"+appname;
   };

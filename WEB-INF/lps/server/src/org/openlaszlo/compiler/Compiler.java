@@ -508,15 +508,10 @@ public class Compiler {
                         ? "    #pragma 'scriptElement'\n"
                         : "") +
                     "try{with(Debug.environment){\n" +
-                        ((seqnum == null)
-                        ? ("Debug.displayResult(" + script + ");\n")
-                        // it's a remote debug request, send a response to client
-                        : ("Debug.displayResult(Debug.sockWriteAsXML(" + script + "," + seqnum + "));\n")) +
+                    "Debug.displayResult(" + script + ");\n" +
                     "}}\n" +
                     "catch(e){\n" +
-                        ((seqnum == null)
-                        ? ("Debug.displayResult(e);\n")
-                        : ("Debug.displayResult(Debug.sockWriteAsXML(e," + seqnum + "));\n")) +
+                    "Debug.displayResult(e);\n" +
                     "}}());\n";
             action = ScriptCompiler.compileToByteArray(start + prog + end, props);
         } catch (Exception e) {
@@ -530,16 +525,10 @@ public class Compiler {
                         "try{with(Debug.environment){\n" +
                         // intentionally wrapped script in block, so it doesn't interfere with next statements
                         "{" + script + "}\n" +
-                            ((seqnum == null)
-                            ? ""
-                            : ("Debug.sockWriteAsXML(true," + seqnum + ");\n")) +
                         // call 'displayResult()' to ensure fresh line and prompt
                         "Debug.displayResult();\n" +
                         "}}\n" +
-                        "catch(e){\n" +
-                            ((seqnum == null)
-                            ? ("Debug.displayResult(e);\n")
-                            : ("Debug.displayResult(Debug.sockWriteAsXML(e," + seqnum + "));\n")) +
+                        "catch(e){\n" + "Debug.displayResult(e);\n" +
                         "}}());\n";
                 action = ScriptCompiler.compileToByteArray(start + prog + end, props);
             } catch (Exception e2) {
@@ -547,9 +536,7 @@ public class Compiler {
                 String msg = ScriptCompiler.quote("Parse error: "+ e2.getMessage());
                 String prog =
                             "(function () {\n" +
-                                ((seqnum == null)
-                                ? ("Debug.displayResult(" + msg + ");\n")
-                                : ("Debug.displayResult(Debug.sockWriteAsXML(" + msg + "," + seqnum + "));\n")) +
+                            "Debug.displayResult(" + msg + ");\n" +
                             "})();\n";
                 action = ScriptCompiler.compileToByteArray(start + prog + end, props);
             }
