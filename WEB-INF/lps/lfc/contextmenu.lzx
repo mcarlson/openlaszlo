@@ -23,13 +23,15 @@
 
     <class name="lzcontextmenutext" extends="text">
         <handler name="onmouseover">
+            this.parent.__overnow = this.data;
             this.parent.registerRedraw(this);
         </handler>
         <handler name="onmouseout">
+            this.parent.__overnow = null;
             this.parent.unregisterRedraw(this);
         </handler>
         <handler name="onmousedown">
-            this.parent.select(this);
+            this.parent.select(this.data);
             this.parent.unregisterRedraw(this);
         </handler>
         <method name="redraw" args="context">
@@ -46,17 +48,25 @@
         <attribute name="defaultplacement" value="container" type="string"/>
         <attribute name="inset" value="5" type="number"/>
         <attribute name="__drawnitems" value="{}"/>
+        <attribute name="__overnow" value="null"/>
         <handler name="oninit">
             this.__globalmousedel = new lz.Delegate(this, '__handlemouse');
         </handler>
-        <method name="select" args="item">
-            var offset = item.data;
+        <method name="select" args="offset">
             var cmenu = LzMouseKernel.__showncontextmenu;
             if (cmenu) cmenu.__select(offset);
             //Debug.debug('select', cmenu, offset);
             this.hide();
         </method>
         <method name="show">
+            <![CDATA[
+            if (this.visible && this.__overnow != null) {
+                // check to see if an item was under the mouse
+                this.select(this.__overnow);
+                this.__overnow = null;
+                return;
+            }
+            this.__overnow = null;
             var pos = canvas.getMouse();
             if (pos.x > canvas.width - this.width) pos.x = canvas.width - this.width;
             if (pos.y > canvas.height - this.height) pos.y = canvas.height - this.height;
@@ -66,6 +76,7 @@
             this.setAttribute('visible', true);
             this.__globalmousedel.register(lz.GlobalMouse, 'onmousedown');
             //Debug.info('show', LzMouseKernel.__showncontextmenu);
+            ]]>
         </method>
         <method name="hide">
             this.__globalmousedel.unregisterAll();
@@ -75,6 +86,7 @@
         </method>
         <method name="setItems" args="newitems">
             <![CDATA[
+            this.__drawnitems = {};
             var subviews = this.container.subviews;
             // clear items
             for (var i = subviews.length; i >= 0; i--) {

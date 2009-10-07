@@ -17,11 +17,11 @@ with($1){
 with($1.prototype){
 LzNode.mergeAttributes({$delegates:["oninit","$m2",null,"ondestroy","$m4",null],height:10},$lzc$class_lzcontextmenuseparator.attributes)
 }}})($lzc$class_lzcontextmenuseparator);Class.make("$lzc$class_lzcontextmenutext",LzText,["$m6",function($1){
-this.parent.registerRedraw(this)
+this.parent.__overnow=this.data;this.parent.registerRedraw(this)
 },"$m8",function($1){
-this.parent.unregisterRedraw(this)
+this.parent.__overnow=null;this.parent.unregisterRedraw(this)
 },"$m10",function($1){
-this.parent.select(this);this.parent.unregisterRedraw(this)
+this.parent.select(this.data);this.parent.unregisterRedraw(this)
 },"redraw",function($1){
 $1.rect(this.x,this.y+3,this.parent.width-3,this.height);$1.fillStyle="#CCCCCC";$1.fill()
 }],["tagname","lzcontextmenutext","attributes",new LzInheritedHash(LzText.attributes)]);(function($1){
@@ -75,17 +75,19 @@ $5=Math.min($3,$4)/2
 };var $11=Math.PI/4;this.context.moveTo($1+$5,$2);this.context.lineTo($1+$3-$5,$2);$6=-Math.PI/2;$7=$1+$3-$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$3-$5+Math.cos($6+$11)*$5;$10=$2+$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);$6+=$11;$7=$1+$3-$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$3-$5+Math.cos($6+$11)*$5;$10=$2+$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);this.context.lineTo($1+$3,$2+$4-$5);$6+=$11;$7=$1+$3-$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$4-$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$3-$5+Math.cos($6+$11)*$5;$10=$2+$4-$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);$6+=$11;$7=$1+$3-$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$4-$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$3-$5+Math.cos($6+$11)*$5;$10=$2+$4-$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);this.context.lineTo($1+$5,$2+$4);$6+=$11;$7=$1+$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$4-$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$5+Math.cos($6+$11)*$5;$10=$2+$4-$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);$6+=$11;$7=$1+$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$4-$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$5+Math.cos($6+$11)*$5;$10=$2+$4-$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);this.context.lineTo($1,$2+$5);$6+=$11;$7=$1+$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$5+Math.cos($6+$11)*$5;$10=$2+$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);$6+=$11;$7=$1+$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$5+Math.cos($6+$11)*$5;$10=$2+$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10)
 }else{
 this.context.moveTo($1,$2);this.context.lineTo($1+$3,$2);this.context.lineTo($1+$3,$2+$4);this.context.lineTo($1,$2+$4);this.context.lineTo($1,$2)
-}}},"$classrootdepth",void 0],["tagname","view","attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_lzcontextmenu",LzView,["inset",void 0,"__drawnitems",void 0,"$m12",function($1){
+}}},"$classrootdepth",void 0],["tagname","view","attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_lzcontextmenu",LzView,["inset",void 0,"__drawnitems",void 0,"__overnow",void 0,"$m12",function($1){
 with(this){
 this.__globalmousedel=new (lz.Delegate)(this,"__handlemouse")
 }},"select",function($1){
 with(this){
-var $2=$1.data;var $3=LzMouseKernel.__showncontextmenu;if($3){
-$3.__select($2)
+var $2=LzMouseKernel.__showncontextmenu;if($2){
+$2.__select($1)
 };this.hide()
 }},"show",function(){
 with(this){
-var $1=canvas.getMouse();if($1.x>canvas.width-this.width){
+if(this.visible&&this.__overnow!=null){
+this.select(this.__overnow);this.__overnow=null;return
+};this.__overnow=null;var $1=canvas.getMouse();if($1.x>canvas.width-this.width){
 $1.x=canvas.width-this.width
 };if($1.y>canvas.height-this.height){
 $1.y=canvas.height-this.height
@@ -97,7 +99,7 @@ $1.__hide()
 };this.setAttribute("visible",false)
 }},"setItems",function($1){
 with(this){
-var $2=this.container.subviews;for(var $3=$2.length;$3>=0;$3--){
+this.__drawnitems={};var $2=this.container.subviews;for(var $3=$2.length;$3>=0;$3--){
 var $4=$2[$3];if(!$4||(LzLayout["$lzsc$isa"]?LzLayout.$lzsc$isa($4):$4 instanceof LzLayout)){
 continue
 };$4.destroy()
@@ -121,5 +123,5 @@ return
 }},"background",void 0,"container",void 0],["tagname","lzcontextmenu","children",[{attrs:{$classrootdepth:1,$delegates:["oninit","$m18",null,"onwidth","__doredraw",null,"onheight","__doredraw",null,"oncontext","__doredraw",null,"onvisible","__doredraw",null],height:new LzAlwaysExpr("$m15","$m16"),name:"background",width:new LzAlwaysExpr("$m13","$m14")},"class":$lzc$class_$2Fcanvas$2F$40lzcontextmenu$2F$40background},{attrs:{$classrootdepth:1,name:"container",x:3,y:3},"class":LzView},{attrs:"container","class":$lzc$class_userClassPlacement}],"attributes",new LzInheritedHash(LzView.attributes)]);(function($1){
 with($1){
 with($1.prototype){
-LzNode.mergeAttributes({$delegates:["oninit","$m12",null],__drawnitems:{},inset:5,options:{ignorelayout:true},visible:false},$lzc$class_lzcontextmenu.attributes)
+LzNode.mergeAttributes({$delegates:["oninit","$m12",null],__drawnitems:{},__overnow:null,inset:5,options:{ignorelayout:true},visible:false},$lzc$class_lzcontextmenu.attributes)
 }}})($lzc$class_lzcontextmenu);lz["lzcontextmenuseparator"]=$lzc$class_lzcontextmenuseparator;lz["lzcontextmenutext"]=$lzc$class_lzcontextmenutext;lz["lzcontextmenudisabled"]=$lzc$class_lzcontextmenudisabled;lz["lzcontextmenu"]=$lzc$class_lzcontextmenu;
