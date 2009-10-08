@@ -549,8 +549,8 @@
       <script when="immediate"><![CDATA[
 
         // Classes that implement an interface must obey the LZX
-        // tag->class mapping convention
-        class $lzc$class_drawview extends LzView with DrawviewShared {
+        // tag->class mapping convention and must be dynamic
+        dynamic class $lzc$class_drawview extends LzView with DrawviewShared {
             // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
@@ -910,8 +910,8 @@
       <script when="immediate"><![CDATA[
 
         // Classes that implement an interface must obey the LZX
-        // tag->class mapping convention
-        class $lzc$class_drawview extends LzView with DrawviewShared {
+        // tag->class mapping convention and must be dynamic
+        dynamic class $lzc$class_drawview extends LzView with DrawviewShared {
             if ($as3) {
                 #passthrough (toplevel:true) {
                 import flash.geom.Matrix;
