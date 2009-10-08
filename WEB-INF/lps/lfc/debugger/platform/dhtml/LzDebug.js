@@ -450,3 +450,9 @@ var Debug = new LzDHTMLDebugService(Debug);
   * @access private
   */
 var __LzDebug = Debug;
+
+if (lz.embed.browser.isIE) {
+  Error.prototype.toString = function() { return (this.name +": "+this.message); }
+}
+
+
