@@ -265,6 +265,7 @@ public class NodeModel implements Cloneable {
     String name;
     Schema.Type type;
     private String value;
+    boolean constantValue = false;
     String when;
     Element source;
     CompilationEnvironment env;
@@ -284,11 +285,13 @@ public class NodeModel implements Cloneable {
       this.name = name;
       this.type = type;
       this.value = value;
+      // Only approximate.  Current only used for WHEN_STYLE
+      this.constantValue = (value != null && value.matches("\\s*['\"]\\S*['\"]\\s*"));
       this.when = when;
       this.source = source;
       this.env = env;
       this.srcloc = CompilerUtils.sourceLocationDirective(source, true);
-      if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+      if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE) && (!constantValue)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
         this.bindername =  env.methodNameGenerator.next();
         if (when.equals(WHEN_ALWAYS)) {
           this.dependenciesname =  env.methodNameGenerator.next();
@@ -412,6 +415,17 @@ public class NodeModel implements Cloneable {
           // cannot be determined until the style property value is
           // derived (at run time)
           kind = "LzConstraintExpr";
+          // Style constraints on constant properties have a special
+          // compact mechanism
+          if (constantValue) {
+            kind = "LzStyleConstraintExpr";
+            return new BindingExpr("new " + kind + "(" +
+                                   ScriptCompiler.quote(name) + ", " +
+                                   value + ", " +
+                                   ScriptCompiler.quote("" + type) +
+                                   (fallbackexpression != null ? (", " + fallbackexpression) : "")  +
+                                   ")");
+          }
         } else if (when.equals(WHEN_ALWAYS)) {
           kind = "LzAlwaysExpr";
           // Always constraints have a second value, the dependencies method

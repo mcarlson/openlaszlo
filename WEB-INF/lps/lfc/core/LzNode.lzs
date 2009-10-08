@@ -1554,6 +1554,12 @@ public dynamic class LzNode extends LzEventable {
 
   /** @access private */
   function applyConstraintExpr(expr:LzOnceExpr) {
+    // Look for special style constraints
+    if (expr instanceof LzStyleConstraintExpr) {
+      var se:LzStyleConstraintExpr = (expr cast LzStyleConstraintExpr);
+      this.__LZstyleBindAttribute(se.attribute, se.property, se.type, se.fallback);
+      return;
+    }
     // Apply the constraint method
     var constraintMethodName:String = expr.methodName;
     if ($debug) {

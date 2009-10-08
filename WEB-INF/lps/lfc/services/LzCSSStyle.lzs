@@ -521,7 +521,7 @@ class LzCSSStyleClass {
 
   function _sortRules () {
     function deleteDuplicates (sortedRules) {
-      for (var i = sortedRules.length - 2; i >= 0; i--) {
+      for (var i:Number = sortedRules.length - 2; i >= 0; i--) {
         if (sortedRules[i].equal(sortedRules[i + 1])) {
           //           if ($debug) {
           //             Debug.debug("Removing duplicate: %w == %w",
