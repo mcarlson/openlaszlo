@@ -29,7 +29,7 @@ var LzTextSprite = function(owner) {
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
         this.__LZclickcontainerdiv = document.createElement('div');
-        this.__LZclickcontainerdiv.className = 'lztextcontainer_click';
+        this.__LZclickcontainerdiv.className = 'lztextcontainer';
         this.__LZclickcontainerdiv.owner = this;
     }    
     if (this.quirks.ie_leak_prevention) {
@@ -159,7 +159,6 @@ LzTextSprite.prototype.setScrolling = function (on) {
       wt += this.quirks.scrollbar_width;
     } else {
       this.scrolling = false;
-      // default is hidden
       scrolldiv.style.overflow = '';
     }
     var hp = cdim(ht);
@@ -167,7 +166,6 @@ LzTextSprite.prototype.setScrolling = function (on) {
     if (on) {
       scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
     } else if (scrolldiv.style.clip) {
-      // no clip needed, overflow is hidden
       scrolldiv.style.clip = '';
     }
     scrolldiv.style.height = hp;
@@ -318,11 +316,13 @@ LzTextSprite.prototype.setMultiline = function(m) {
             this._whiteSpace = 'normal';
             this.scrolldiv.style.whiteSpace = 'normal';
         }
+        this.scrolldiv.style.overflow = 'hidden';
     } else {
         if (this._whiteSpace != 'nowrap') {
             this._whiteSpace = 'nowrap';
             this.scrolldiv.style.whiteSpace = 'nowrap';
         }
+        this.scrolldiv.style.overflow = '';
     }
     if (this.quirks['text_height_includes_padding']) {
         this.__hpadding = m ? 3 : 4;
