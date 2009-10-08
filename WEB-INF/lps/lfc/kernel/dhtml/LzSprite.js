@@ -298,6 +298,24 @@ LzSprite.__defaultStyles = {
     // This container implements the swf 'gutter'
     lztextcontainer: {
         position: 'absolute',
+        overflow: 'hidden',
+        // To create swf textfield 'gutter'
+        paddingTop: '2px',
+        paddingRight: '2px',
+        paddingBottom: '2px',
+        paddingLeft: '2px',
+        // By default our text is not selectable, so we don't want an
+        // 'auto' cursor
+        cursor: 'default'
+    },
+    // TODO [hqm 2009-04] This is a duplicate of lztextcontainer
+    // above, but without overflow='hidden', as a fix for
+    // LPP-8007. Question, why did we need overflow='hidden' in
+    // lztextcontainer in the first place?  would it be safe to just
+    // remove it there, and not have to have this parallel
+    // lztextcontainer style?
+    lztextcontainer_click: {
+        position: 'absolute',
         // To create swf textfield 'gutter'
         paddingTop: '2px',
         paddingRight: '2px',
@@ -346,6 +364,8 @@ LzSprite.__defaultStyles = {
         fontSize: '11px',
         whiteSpace: 'normal',
         position: 'absolute',
+        // When scrollevents are on, this will be overridden
+        overflow: 'hidden',
         textAlign: 'left',
         textIndent: '0px',
         letterSpacing: '0px',
@@ -358,6 +378,8 @@ LzSprite.__defaultStyles = {
         fontSize: '11px',
         whiteSpace: 'normal',
         position: 'absolute',
+        // When scrollevents are on, this will be overridden
+        overflow: 'hidden',
         // To match swf font metrics
         lineHeight: '1.2em',
         textAlign: 'left',
