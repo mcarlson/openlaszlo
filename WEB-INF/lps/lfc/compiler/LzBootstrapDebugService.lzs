@@ -515,17 +515,18 @@ dynamic class LzBootstrapDebugService {
   }
 };
 
+if ($as3) {
+  // In AS3, Debug is constructed once at load time in debugger/platform/swf9/LzDebug.as
+} else {
 /***
  * @devnote As soon as we have the LzBootstrapDebugService, we install it.
  * This will get overridden by the full debugger when it loads
  *
  * @access private
  */
-Debug = new LzBootstrapDebugService();
+var Debug = new LzBootstrapDebugService();
 
-if ($as3) {
-} else {
-  /**
+/**
  * @access private
  * To catch swf 'trace()' calls
  */
