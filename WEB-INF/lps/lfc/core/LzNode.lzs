@@ -660,14 +660,15 @@ public dynamic class LzNode extends LzEventable {
     // Get the property cache for this node
     var pc = this['__LZPropertyCache'] || LzCSSStyle.getPropertyCache(this);
 
-    // Fix for LPP-3024: if we're in debug mode, warn when CSS lookup
-    // fail
     if ($debug) {
-      if (! (prop in pc)) {
-        Debug.warn("No CSS value found for node %#w for property name %s", this, prop);
-        // Cache negative values lazily
+      // Fix for LPP-3024: if we're in debug mode, warn when CSS
+      // lookup fails and there is no fallback
+      if ((! (prop in pc)) && (fallback === (void 0))) {
+        Debug.warn("%w.%s: No applicable value for CSS property %w and there is no default.", this, attr, prop);
+        // Cache negative values lazily to avoid excessive warnings
         pc[prop] = (void 0);
       }
+      // Note property for explainStyleBindings
       var sp = this.__LZStyledProperties;
       if (sp == null) { sp = this.__LZStyledProperties = []; }
       sp.push(prop);
@@ -680,7 +681,7 @@ public dynamic class LzNode extends LzEventable {
     // They really should be using #...
     if ((typeof styleValue == 'string') && (styleValue.length > 2) && (styleValue.indexOf('0x') == 0) && (! isNaN(styleValue))) {
       if ($debug) {
-        Debug.warn("Invalid CSS value for %w.%s: `%#w`.  Use: `#%06x`.", this, prop, styleValue, Number(styleValue));
+        Debug.warn("%w.%s: Invalid value for CSS property %w: `%#w`.  Use: `#%06x`.", this, attr, prop, styleValue, Number(styleValue));
       }
       styleValue = Number(styleValue);
     }
