@@ -12,6 +12,8 @@ lz.embed = {__propcache: { appenddiv: document.createElement() },
             options: {}};
 
 
+lz.embed.browser = {};
+
 //set up canvas width/height
 lz.embed.__propcache.appenddiv.offsetWidth = 800;
 lz.embed.__propcache.appenddiv.offsetHeight = 600;
