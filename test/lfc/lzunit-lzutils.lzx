@@ -17,6 +17,7 @@
             assertEquals('#000001', LzColorUtils.inttohex(1), "Convert to hex");
             assertEquals('#800080', LzColorUtils.inttohex('purple'), "Convert to hex");
             assertEquals('#ff00ff', LzColorUtils.inttohex('rgba(255,0,255)'), "Convert to hex");
+            assertEquals('#ff00ffcc', LzColorUtils.inttohex(LzColorUtils.hextoint('#ff00ffcc')), "Hextoint -> Inttohex round trip with alpha");
 
             assertEquals(1523, LzColorUtils.hextoint('#0005F3'), "Convert to decimal");
             assertEquals(14540253, LzColorUtils.hextoint('#DdD'), "Convert to decimal");
@@ -48,6 +49,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

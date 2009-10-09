@@ -107,7 +107,7 @@ class LzColorUtils {
         ')';
     }
 
-    /** @acess public
+    /** @access public
      * Converts a 24-bit rgb value to HSV
      * See http://en.wikipedia.org/wiki/HSL_color_space
      */
@@ -135,7 +135,7 @@ class LzColorUtils {
       return {h: h, s: s, v: v};
     }
 
-    /** @acess public
+    /** @access public
      * Converts HSV to a 24-bit rbg value
      * See http://en.wikipedia.org/wiki/HSL_color_space
      */
@@ -213,11 +213,21 @@ class LzColorUtils {
       * appropriate) or #RRGGBBAA string
       */
     static function inttohex(n:*, p:int = 6) {
+        // default to 6 characters of padding
         var s = LzColorUtils.stringToColor(n);
         if (typeof s != 'number') return s;
 
-        // default to 6 characters of padding
-        return '#' + LzColorUtils.dectohex(s, p);
+        // handle alpha component, if present
+        var alpha = s - Math.floor(s);
+        var alphastring = '';
+        if (alpha != 0) {
+            alpha = alpha * 25600;
+            alphastring = alpha.toString(16);
+            if (alphastring.length == 1) {
+                alphastring = '0' + alphastring;
+            }
+        }
+        return '#' + LzColorUtils.dectohex(s, p) + alphastring;
     }
 }
 
