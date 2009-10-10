@@ -106,5 +106,18 @@ override function toString () /*:String*/ {
     return this.data;
 }
 
+if ($debug) {
+/**
+  * Same as serialize, but will abbreviate at printLength.
+  * @access private
+  */
+function _dbg_name () :String {
+    var s:String = this.serialize();
+    var len:Number = Debug.printLength;
+    if (s.length > len) { s = Debug.abbreviate(s, len); }
+    return s;
+}
+}
+
 } // End of LzDataText
 lz.DataText = LzDataText;  //publish

@@ -419,8 +419,6 @@ function runXPath () :Boolean {
         //no node found
         this.__LZHandleNoNodes();
         return false;
-// [2008-03-12 pbr] Use 'is' to see if it's an array, not n.length
-//    }else if ( n.length ) {
     } else if ( n is Array ) {
         this.__LZHandleMultiNodes( n );
         return false;
@@ -824,7 +822,7 @@ function $lzc$set_rerunxpath (rrx:Boolean) :void {
   * null <literal>xpath</literal> and a
   * false <literal>rerunxpath</literal> attribute.
   * @return LzDatapointer: A new datapointer that points to the same spot as this
-  * one, but 
+  * one
   */
 function dupePointer () :LzDatapointer {
     var dp:LzDatapointer = new LzDatapointer();
@@ -1463,7 +1461,7 @@ override function destroy () {
     this.context = null;
     this.__LZtracking = null;
 
-    super.destroy.apply(this, arguments);
+    super.destroy();
 }
 
 /**
