@@ -155,13 +155,13 @@
                 context.beginPath();
                 context.clearRect(0, 0, this.width, this.height);
 
-                this.rect(2.5,3.5,this.width - 3,this.height - 3, classroot.inset);
+                LzKernelUtils.rect(context,2.5,3.5,this.width - 3,this.height - 3, classroot.inset);
                 context.fillStyle= '#000000';
                 context.globalAlpha = .2;
                 context.fill();
 
                 context.beginPath();
-                this.rect(0,0, this.width - 3, this.height - 3, classroot.inset);
+                LzKernelUtils.rect(context,0,0, this.width - 3, this.height - 3, classroot.inset);
                 context.globalAlpha = .9;
                 context.fillStyle= '#FFFFFF';
                 context.fill();
@@ -173,89 +173,6 @@
                 for (var uid in parent.__drawnitems) {
                     context.beginPath();
                     parent.__drawnitems[uid].redraw(context);
-                }
-            </method>
-            <method name="rect" args="x, y, w, h, cornerRadius = 0">
-                // from drawview.lzx
-                // if the user has defined cornerRadius our task is a bit more complex. :)
-                if (cornerRadius>0) {
-                    // init vars
-                    var angle:Number, cx:Number, cy:Number, px:Number, py:Number;
-                    // make sure that w + h are larger than 2*cornerRadius
-                    if (cornerRadius>Math.min(w, h)/2) {
-                        cornerRadius = Math.min(w, h)/2;
-                    }
-                    // theta = 45 degrees in radians
-                    const theta:Number = Math.PI/4;
-                    // draw top line
-                    this.context.moveTo(x+cornerRadius, y);
-                    this.context.lineTo(x+w-cornerRadius, y);
-                    //angle is currently 90 degrees
-                    angle = -Math.PI/2;
-                    // draw tr corner in two parts
-                    cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                    py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                    this.context.quadraticCurveTo(cx, cy, px, py);
-                    angle += theta;
-                    cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                    py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                    this.context.quadraticCurveTo(cx, cy, px, py);
-                    // draw right line
-                    this.context.lineTo(x+w, y+h-cornerRadius);
-                    // draw br corner
-                    angle += theta;
-                    cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                    py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                    this.context.quadraticCurveTo(cx, cy, px, py);
-                    angle += theta;
-                    cx = x+w-cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    px = x+w-cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                    py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                    this.context.quadraticCurveTo(cx, cy, px, py);
-                    // draw bottom line
-                    this.context.lineTo(x+cornerRadius, y+h);
-                    // draw bl corner
-                    angle += theta;
-                    cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                    py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                    this.context.quadraticCurveTo(cx, cy, px, py);
-                    angle += theta;
-                    cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    cy = y+h-cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                    py = y+h-cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                    this.context.quadraticCurveTo(cx, cy, px, py);
-                    // draw left line
-                    this.context.lineTo(x, y+cornerRadius);
-                    // draw tl corner
-                    angle += theta;
-                    cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                    py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                    this.context.quadraticCurveTo(cx, cy, px, py);
-                    angle += theta;
-                    cx = x+cornerRadius+(Math.cos(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    cy = y+cornerRadius+(Math.sin(angle+(theta/2))*cornerRadius/Math.cos(theta/2));
-                    px = x+cornerRadius+(Math.cos(angle+theta)*cornerRadius);
-                    py = y+cornerRadius+(Math.sin(angle+theta)*cornerRadius);
-                    this.context.quadraticCurveTo(cx, cy, px, py);
-                } else {
-                    // cornerRadius was not defined or = 0. This makes it easy.
-                    this.context.moveTo(x, y);
-                    this.context.lineTo(x+w, y);
-                    this.context.lineTo(x+w, y+h);
-                    this.context.lineTo(x, y+h);
-                    this.context.lineTo(x, y);
                 }
             </method>
         </view>

@@ -607,6 +607,7 @@ LzSprite.prototype.capabilities = {
     ,globalfocustrap: false
     ,'2dcanvas': true
     ,dropshadows: false
+    ,cornerradius: false
 }
 
 /**
@@ -728,6 +729,7 @@ LzSprite.__updateQuirks = function () {
                 // Rotation's origin in CSS is width/2 and height/2 as default
                 defaultStyles.lzdiv.WebkitTransformOrigin = '0 0';
                 capabilities['dropshadows'] = true;
+                capabilities['cornerradius'] = true;
             }
 
             // Safari has got a special event for pasting
@@ -816,6 +818,7 @@ LzSprite.__updateQuirks = function () {
             
             if (browser.version >= 3.1) {
                 capabilities['dropshadows'] = true;
+                capabilities['cornerradius'] = true;
             }
         }
 
@@ -2939,4 +2942,8 @@ LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowan
             this.__restoreSize();
         }
     }
+}
+
+LzSprite.prototype.setCornerRadius = function(radius) {
+    this.__LZdiv.style.MozBorderRadius = this.__LZdiv.style.webkitBorderRadius = this.__LZdiv.style.borderRadius = this.CSSDimension(radius);
 }

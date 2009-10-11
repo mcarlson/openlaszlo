@@ -3588,6 +3588,34 @@ function $lzc$set_tintcolor(color) {
     if (this.ontintcolor.ready) this.ontintcolor.sendEvent(color);
 }
 
+/** Sent when cornerradius changes
+ * @lzxtype event 
+ * @access public
+ */
+var oncornerradius = LzDeclaredEvent;
+
+/** The corner radius for the background
+ * @access public
+ * @lzxtype number
+ * @type Number
+ * @lzxdefault 0
+ */
+var cornerradius = 4;
+
+/**
+  * @param number radius: The corner radius for this view's background
+  * @access private 
+  */
+function $lzc$set_cornerradius(radius) {
+    if (this.capabilities['cornerradius']) {
+        this.sprite.setCornerRadius(radius);
+    } else if ($debug) {
+        LzView.__warnCapability('view.cornerradius', 'cornerradius'); 
+    }
+    this.cornerradius = radius;
+    if (this.oncornerradius.ready) this.oncornerradius.sendEvent(radius);
+}
+
 } // End of LzView
 
 lz[LzView.tagname] = LzView;  //publish

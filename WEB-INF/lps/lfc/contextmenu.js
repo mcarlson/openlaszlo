@@ -61,20 +61,8 @@ switch(arguments.length){
 case 0:
 $1=this.context;
 
-};$1.beginPath();$1.clearRect(0,0,this.width,this.height);this.rect(2.5,3.5,this.width-3,this.height-3,classroot.inset);$1.fillStyle="#000000";$1.globalAlpha=0.2;$1.fill();$1.beginPath();this.rect(0,0,this.width-3,this.height-3,classroot.inset);$1.globalAlpha=0.9;$1.fillStyle="#FFFFFF";$1.fill();$1.globalAlpha=1;$1.strokeStyle="#CCCCCC";$1.stroke();for(var $2 in parent.__drawnitems){
+};$1.beginPath();$1.clearRect(0,0,this.width,this.height);LzKernelUtils.rect($1,2.5,3.5,this.width-3,this.height-3,classroot.inset);$1.fillStyle="#000000";$1.globalAlpha=0.2;$1.fill();$1.beginPath();LzKernelUtils.rect($1,0,0,this.width-3,this.height-3,classroot.inset);$1.globalAlpha=0.9;$1.fillStyle="#FFFFFF";$1.fill();$1.globalAlpha=1;$1.strokeStyle="#CCCCCC";$1.stroke();for(var $2 in parent.__drawnitems){
 $1.beginPath();parent.__drawnitems[$2].redraw($1)
-}}},"rect",function($1,$2,$3,$4,$5){
-with(this){
-switch(arguments.length){
-case 4:
-$5=0;
-
-};if($5>0){
-var $6,$7,$8,$9,$10;if($5>Math.min($3,$4)/2){
-$5=Math.min($3,$4)/2
-};var $11=Math.PI/4;this.context.moveTo($1+$5,$2);this.context.lineTo($1+$3-$5,$2);$6=-Math.PI/2;$7=$1+$3-$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$3-$5+Math.cos($6+$11)*$5;$10=$2+$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);$6+=$11;$7=$1+$3-$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$3-$5+Math.cos($6+$11)*$5;$10=$2+$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);this.context.lineTo($1+$3,$2+$4-$5);$6+=$11;$7=$1+$3-$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$4-$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$3-$5+Math.cos($6+$11)*$5;$10=$2+$4-$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);$6+=$11;$7=$1+$3-$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$4-$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$3-$5+Math.cos($6+$11)*$5;$10=$2+$4-$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);this.context.lineTo($1+$5,$2+$4);$6+=$11;$7=$1+$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$4-$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$5+Math.cos($6+$11)*$5;$10=$2+$4-$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);$6+=$11;$7=$1+$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$4-$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$5+Math.cos($6+$11)*$5;$10=$2+$4-$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);this.context.lineTo($1,$2+$5);$6+=$11;$7=$1+$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$5+Math.cos($6+$11)*$5;$10=$2+$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10);$6+=$11;$7=$1+$5+Math.cos($6+$11/2)*$5/Math.cos($11/2);$8=$2+$5+Math.sin($6+$11/2)*$5/Math.cos($11/2);$9=$1+$5+Math.cos($6+$11)*$5;$10=$2+$5+Math.sin($6+$11)*$5;this.context.quadraticCurveTo($7,$8,$9,$10)
-}else{
-this.context.moveTo($1,$2);this.context.lineTo($1+$3,$2);this.context.lineTo($1+$3,$2+$4);this.context.lineTo($1,$2+$4);this.context.lineTo($1,$2)
 }}},"$classrootdepth",void 0],["tagname","view","attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_lzcontextmenu",LzView,["inset",void 0,"__drawnitems",void 0,"__overnow",void 0,"$m12",function($1){
 with(this){
 this.__globalmousedel=new (lz.Delegate)(this,"__handlemouse")

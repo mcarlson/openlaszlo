@@ -142,6 +142,7 @@ public class LzSprite extends Sprite {
       ,globalfocustrap: false
       ,'2dcanvas': true
       ,dropshadows: true
+      ,cornerradius: true
       };
       var capabilities = LzSprite.capabilities;
 
@@ -239,14 +240,17 @@ public class LzSprite extends Sprite {
       }
 
       public function draw():void {
-          if (this.bgcolor == null){
-              this.graphics.clear();
-          } else {
-              this.graphics.clear();
+          var context = this.graphics;
+          context.clear();
+          if (this.bgcolor != null){
               var alpha:Number = this.__bgcolorhidden ? 0 : 1;
-              this.graphics.beginFill(this.bgcolor, alpha);
-              this.graphics.drawRect(0, 0, this.lzwidth, this.lzheight);
-              this.graphics.endFill();
+              context.beginFill(this.bgcolor, alpha);
+              if (this.cornerradius == 0) {
+                context.drawRect(0, 0, this.lzwidth, this.lzheight);
+              } else {
+                LzKernelUtils.rect(context,0,0,this.lzwidth,this.lzheight,this.cornerradius);
+              }
+              context.endFill();
           }
       }
 
@@ -1731,4 +1735,11 @@ public class LzSprite extends Sprite {
         mc.filters = [shadowfilter];
       }
   }#
+
+  var cornerradius = 0;
+  function setCornerRadius(radius) {
+    this.cornerradius = radius;
+    this.draw();
+  }
+  
   }
