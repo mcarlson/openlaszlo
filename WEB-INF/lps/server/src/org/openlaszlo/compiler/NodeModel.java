@@ -112,6 +112,10 @@ public class NodeModel implements Cloneable {
         this.tagName = element.getName();
         // Cache ClassModel for parent
         this.parentClassModel = this.getParentClassModel();
+        if (this.parentClassModel == null) {
+          throw new CompilationError("invalid superclass value in 'extends' attribute, '" +
+                                     element.getAttributeValue("extends") + "'", element);
+        }
         if (parentClassModel.isSubclassOf(schema.getClassModel("state")) ||
             parentClassModel.isSubclassOf(schema.getClassModel("datapath"))) {
             this.canHaveMethods = false;
