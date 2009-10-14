@@ -706,7 +706,7 @@ LzSprite.__updateQuirks = function () {
             quirks['textgrabsinputtextfocus'] = true;
             // IE document.elementFromPoint() returns scrollbar div
             quirks['ie_elementfrompoint'] = true;
-        } else if (browser.isSafari) {
+        } else if (browser.isSafari || browser.isChrome) {
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;
 

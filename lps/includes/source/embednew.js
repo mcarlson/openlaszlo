@@ -488,7 +488,7 @@ lz.embed = {
     }
 
     ,/** 
-       * Browser detection object, with flags set for most browsers.  Includes the boolean properties isFirefox, isOpera, isSafari and isIE.  The version property contains the version number of the browser.
+       * Browser detection object, with flags set for most browsers.  Includes the boolean properties isFirefox, isOpera, isSafari, isChrome isIphone and isIE.  The version property contains the version number of the browser.
        * @devnote adapted from http://www.quirksmode.org/js/detect.html 
        */
     browser: {
@@ -502,7 +502,8 @@ lz.embed = {
             this.subversion = this.searchSubVersion(navigator.userAgent)
             this.OS = this.searchString(this.dataOS) || "an unknown OS";
             this.initted = true;
-            this.isNetscape = this.isSafari = this.isOpera = this.isFirefox = this.isIE = this.isIphone = false;
+            // set defaults
+            this.isNetscape = this.isSafari = this.isOpera = this.isFirefox = this.isIE = this.isIphone = this.isChrome = false;
             if (this.browser == 'Netscape') {
                 // currently only used for IE spoofing NS8
                 this.isNetscape = true;
@@ -518,6 +519,8 @@ lz.embed = {
             } else if (this.browser == 'iPhone') {
                 this.isSafari = true;
                 this.isIphone = true;
+            } else if (this.browser == 'Chrome') {
+                this.isChrome = true;
             }
         },
         searchString: function (data) {
@@ -559,7 +562,8 @@ lz.embed = {
             {
                 string: navigator.userAgent,
                 subString: "Chrome",
-                identity: "Chrome"
+                identity: "Chrome",
+                versionSearch: "WebKit"
             },
             {   string: navigator.userAgent,
                 subString: "OmniWeb",
