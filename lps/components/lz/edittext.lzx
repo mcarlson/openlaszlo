@@ -21,7 +21,7 @@
     <!--- This component provides the look and feel for user editable text, data
           binding, and focus events. -->
     <class name="edittext" extends="baseformitem"
-           focusable="false">
+           focusable="false" defaultplacement="content">
         <!--- The text that appears in the component. -->
         <attribute name="text" type="text"/>
 
@@ -99,12 +99,12 @@
         <!--- @keywords private -->
         <setter name="text" args="t">
             <![CDATA[
-            this.text = t;
+            // text value and event sent by this.field.ontext handler
             if (this._initcomplete) {
                 this.setValue(t, true);
-                this.field.setAttribute('text', this.value);
-                if (this['ontext'] && this.ontext.ready) this.ontext.sendEvent(t);
+                this.field.setAttribute('text', t);
             } else {
+                this.text = t;
                 this._initialtext = t;
             }
             ]]>
@@ -204,6 +204,10 @@
             if (this['field']) field.setAttribute('fontstyle', f);
         </setter>
 
+        <view name="content" x="3" y="${this.classroot.text_y}"
+            width="${parent.width - 4}"
+            height="${parent.height - y - 2}" /> <!-- -2 to account for border of edittext -->
+
         <_internalinputtext name="field"
             password="$once{parent.password}"
             x="3" y="${this.classroot.text_y}"
@@ -211,32 +215,32 @@
             height="${parent.height - y - 2}" > <!-- -2 to account for border of edittext -->
             
             <handler name="onfocus" args="s">
-                 if (parent['onfocus']) parent.onfocus.sendEvent(s);
+                if (parent['onfocus']) parent.onfocus.sendEvent(s);
             </handler>
             <handler name="onblur" args="s">
-                 if (parent['onblur']) parent.onblur.sendEvent(s);
+                if (parent['onblur']) parent.onblur.sendEvent(s);
             </handler>
             <handler name="onkeyup" args="kc"> <![CDATA[
-                  if (parent['onkeyup']) parent.onkeyup.sendEvent(kc);
-                  if (kc == 13 && parent.doesenter) parent.doEnterUp();
-                  ]]>
+                if (parent['onkeyup']) parent.onkeyup.sendEvent(kc);
+                if (kc == 13 && parent.doesenter) parent.doEnterUp();
+            ]]>
             </handler>
             <handler name="onkeydown" args="kc"> <![CDATA[
-                  if (parent['onkeydown']) parent.onkeydown.sendEvent(kc);
-                  if (kc == 13 && parent.doesenter) parent.doEnterDown();
-                  ]]>
+                if (parent['onkeydown']) parent.onkeydown.sendEvent(kc);
+                if (kc == 13 && parent.doesenter) parent.doEnterDown();
+            ]]>
             </handler>
 
             <method name="getFocusRect" >
                 return parent.getFocusRect();
             </method>
             <handler name="ontext">
-                <![CDATA[
+            <![CDATA[
                 // Don't use parent.updateData() or parent.setAttribute('text') because they call the text setter - which will call this method or clobber _initialtext
                 parent.text = this.getText();
                 if (parent['ontext'] && parent.ontext.ready) parent.ontext.sendEvent(parent.text);
                 parent.setValue(parent.text, false);
-                ]]>
+            ]]>
             </handler>
 
          </_internalinputtext>
