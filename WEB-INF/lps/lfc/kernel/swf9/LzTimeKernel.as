@@ -15,15 +15,13 @@ final class LzTimeKernelClass {
     import flash.events.TimerEvent;
     }#
 
-    private const MAX_POOL :int = 10;
-    private var timerPool :Array = [];
     private var timers :Object = {};
 
     /**
       * Creates a new timer and returns an unique identifier which can be used to remove the timer.
       */
     private function createTimer (delay:Number, repeatCount:int, closure:Function, args:Array) :uint {
-        var timer:LzKernelTimer = this.timerPool.pop() || new LzKernelTimer();
+        var timer:LzKernelTimer = LzKernelTimer.create();
         this.timers[timer.timerID] = timer;
         timer.delay = delay;
         timer.repeatCount = repeatCount;
@@ -47,9 +45,7 @@ final class LzTimeKernelClass {
             timer.removeEventListener(TimerEvent.TIMER_COMPLETE, this.timerCompleteHandler);
             timer.reset();
             delete this.timers[id];
-            if (this.timerPool.length < this.MAX_POOL) {
-                this.timerPool.push(timer);
-            }
+            LzKernelTimer.remove(timer);
         }
     }
 
@@ -106,10 +102,29 @@ final class LzKernelTimer extends Timer {
 
   #passthrough {
     private static var idCounter :uint = 0;
+    private static const MAX_POOL :int = 10;
+    private static var timerPool :Array = [];
+
+    /**
+     * Use this method instead of the constructor to create an instance
+     */
+    public static function create () :LzKernelTimer {
+        var timer:LzKernelTimer = timerPool.pop() || new LzKernelTimer();
+        timer._timerID = idCounter++;
+        return timer;
+    }
+
+    /**
+     * Allow timers to be pooled and reused later
+     */
+    public static function remove (timer:LzKernelTimer) :void {
+        if (timerPool.length < MAX_POOL) {
+            timerPool.push(timer);
+        }
+    }
 
     public function LzKernelTimer () {
         super(0);
-        this._timerID = LzKernelTimer.idCounter++;
     }
 
     private var _timerID :uint;
