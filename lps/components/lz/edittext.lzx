@@ -98,14 +98,16 @@
 
         <!--- @keywords private -->
         <setter name="text" args="t">
+            <![CDATA[
             this.text = t;
             if (this._initcomplete) {
                 this.setValue(t, true);
                 this.field.setAttribute('text', this.value);
-                if (this['ontext']) this.ontext.sendEvent();
+                if (this['ontext'] && this.ontext.ready) this.ontext.sendEvent(t);
             } else {
                 this._initialtext = t;
             }
+            ]]>
         </setter>
 
         <!--- Clears the text field. -->
@@ -229,8 +231,12 @@
                 return parent.getFocusRect();
             </method>
             <handler name="ontext">
-                parent.updateText();
+                <![CDATA[
+                // Don't use parent.updateData() or parent.setAttribute('text') because they call the text setter - which will call this method or clobber _initialtext
+                parent.text = this.getText();
+                if (parent['ontext'] && parent.ontext.ready) parent.ontext.sendEvent(parent.text);
                 parent.setValue(parent.text, false);
+                ]]>
             </handler>
 
          </_internalinputtext>
