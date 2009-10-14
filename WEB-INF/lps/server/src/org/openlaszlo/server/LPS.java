@@ -205,7 +205,8 @@ RuntimeException(
      * @return the location of the lfc directory
      */
     public static String getLFCDirectory()  {
-      return HOME() + File.separator + LPS.getProperty("compiler.runtime.dir").replace('/', File.separatorChar);
+        return HOME() + File.separator +
+            LPS.getProperty("compiler.runtime.dir", "lps/includes/lfc").replace('/', File.separatorChar);
     }
 
     public static String getLFCname(String runtime, boolean debug, boolean profile, boolean backtrace, boolean sourceAnnotations) {
