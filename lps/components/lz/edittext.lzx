@@ -229,7 +229,7 @@
                 return parent.getFocusRect();
             </method>
             <handler name="ontext">
-                parent.text = this.getText();
+                parent.updateText();
                 parent.setValue(parent.text, false);
             </handler>
 
