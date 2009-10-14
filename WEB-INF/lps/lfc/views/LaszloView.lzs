@@ -229,18 +229,24 @@ var onmouseout = LzDeclaredEvent;
   */
 var onmouseover = LzDeclaredEvent;
 
-/** @access public 
-  * @lzxtype event 
+/** Sent when the mouse is over a view that is registered to
+  * an active track group.
+  * @access public
+  * @lzxtype event
   */
 var onmousetrackover = LzDeclaredEvent;
 
-/** @access public 
-  * @lzxtype event 
+/** Sent when the mouse button is released over a view that
+  * is registered to an active track group.
+  * @access public
+  * @lzxtype event
   */
 var onmousetrackup = LzDeclaredEvent;
 
-/** @access public 
-  * @lzxtype event 
+/** Sent when the mouse leaves the visible area of a view
+  * that previously sent an 'ontrackover' event.
+  * @access public
+  * @lzxtype event
   */
 var onmousetrackout = LzDeclaredEvent;
 

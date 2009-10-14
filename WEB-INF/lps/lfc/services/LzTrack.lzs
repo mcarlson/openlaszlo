@@ -104,16 +104,6 @@
   */
 
 public final class LzTrackService extends LzEventable {
-
-    /**
-      * @event onmousetrackover:  sent when the mouse is over a view that is registered to
-      * an active track group
-      * @event onmousetrackout:  sent when the mouse is leaves the visible area of a view
-      * that was previously sent an 'ontrackover' event
-      * @event onmousetrackup:  sent when the mouse button is released over a view that
-      * is registered to an active track group
-      */
-
     /** @access private */
     var __LZreg :Object = new Object; // list of registered views (that will be tracked)
     /** @access private */
