@@ -184,7 +184,7 @@ function inputtextevent (eventname:String, value:* = null) :void {
         var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
         this.text = isprite.getText();
         if ( this.multiline && 
-             this.sizeToHeight && 
+             !this.hassetheight && 
              this.height != isprite.getTextfieldHeight() ) {
             this.$lzc$set_height(isprite.getTextfieldHeight());
         }

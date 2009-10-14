@@ -243,9 +243,6 @@ dynamic class LzText extends LzView with LzFormatter {
    */
 
   /** @access private */
-  var sizeToHeight;
-
-  /** @access private */
   override function $lzc$set_width(val) {
     var tsprite = this.tsprite;
     tsprite.setWidth(val);
@@ -254,7 +251,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if (this.scrollwidth < this.width) { this.scrollwidth = this.width; }
     this.updateAttribute('maxhscroll', this.scrollwidth - this.width);
     // recalculate height
-    if (this.sizeToHeight) {
+    if (!this.hassetheight) {
       var h = tsprite.getTextfieldHeight();
       if (h > 0 && h != this.height) {
         this.$lzc$set_height(h);
@@ -713,7 +710,7 @@ dynamic class LzText extends LzView with LzFormatter {
       }
     }
     //resizable fields adjust their height
-    if (this.sizeToHeight) {
+    if (!this.hassetheight) {
       var h = this.tsprite.getTextfieldHeight();
       if (h > 0 && h != this.height) {
         this.$lzc$set_height (h);
@@ -896,8 +893,6 @@ dynamic class LzText extends LzView with LzFormatter {
 
     super.construct(parent, args);
 
-    this.sizeToHeight = false;
-
     // Install constant/default font attributes
     for (var arg:String in LzText.fontArgToAttr) {
       var attr:String = LzText.fontArgToAttr[arg];
@@ -983,10 +978,10 @@ dynamic class LzText extends LzView with LzFormatter {
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight
     //
-    if (!this.hassetheight) {
-      this.sizeToHeight = true;
-    } else if (args['height'] != null) {
-      this.$lzc$set_height(args.height);
+    if (this.hassetheight) {
+        if (args['height'] != null) {
+            this.$lzc$set_height(args.height);
+        }
     }
 
     if (args['pattern'] != null) {

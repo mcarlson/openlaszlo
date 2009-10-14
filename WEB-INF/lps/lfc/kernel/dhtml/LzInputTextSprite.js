@@ -187,6 +187,12 @@ LzInputTextSprite.prototype.setMultiline = function(ml) {
         // this.  You can't just copy over the style declaration, that
         // does not work.
         lz.embed.__setAttr(newdiv, 'style', olddiv.style.cssText);
+        if (this.quirks['fix_ie_css_syntax']) {
+            newdiv.style.fontStyle = olddiv.style.fontStyle;
+            newdiv.style.fontWeight = olddiv.style.fontWeight;
+            newdiv.style.fontSize = olddiv.style.fontSize;
+            newdiv.style.fontFamily = olddiv.style.fontFamily;
+        }
         //Debug.debug('replacing %w with %w', olddiv, newdiv);
         var oldleft = olddiv.scrollLeft;
         var oldtop = olddiv.scrollTop;
@@ -272,7 +278,8 @@ LzInputTextSprite.prototype.__show = function() {
                 for (var n = 0; n < l; n++) {
                     var v = sprites[n];
                     this._shownclipvals[n] = v.__LZclickcontainerdiv.style.clip;
-                    v.__LZclickcontainerdiv.style.clip = 'rect(auto auto auto auto)';
+                    var noclip = this.quirks['fix_ie_css_syntax'] ? 'rect(auto auto auto auto)' : '';
+                    v.__LZclickcontainerdiv.style.clip = noclip;
                 }
             }
         }

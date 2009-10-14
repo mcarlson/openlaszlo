@@ -580,6 +580,7 @@ LzSprite.quirks = {
     ,size_blank_to_zero: true
     ,has_dom2_mouseevents: false
     ,container_divs_require_overflow: false
+    ,fix_ie_css_syntax: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -706,6 +707,8 @@ LzSprite.__updateQuirks = function () {
             quirks['textgrabsinputtextfocus'] = true;
             // IE document.elementFromPoint() returns scrollbar div
             quirks['ie_elementfrompoint'] = true;
+            quirks['fix_ie_css_syntax'] = true;
+
         } else if (browser.isSafari || browser.isChrome) {
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;
@@ -2126,18 +2129,19 @@ LzSprite.prototype.setClip = function(c) {
   * @access private
   */
 LzSprite.prototype.__updateClip = function() {
+    var quirks = this.quirks;
     if (this.isroot && this.quirks.canvas_div_cannot_be_clipped) return;
     if (this.clip && this.width != null && this.width >= 0 && this.height != null && this.height >= 0) {
         var s = 'rect(0px ' + this._w + ' ' + this._h + ' 0px)';
         this.__LZdiv.style.clip = s
     } else if (this.__LZdiv.style.clip) {
-        var s = '';
+        var s = quirks.fix_ie_css_syntax ? 'rect(auto auto auto auto)' : '';
         this.__LZdiv.style.clip = s;
     } else {
         // return so we don't set the containers
         return;
     }
-    var quirks = this.quirks;
+
     if (quirks.fix_clickable) {
         this.__LZclickcontainerdiv.style.clip = s;
     }
