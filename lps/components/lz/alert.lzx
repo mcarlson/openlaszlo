@@ -58,6 +58,7 @@
                     }
                     this.setAttribute('width', twidth);
                 }
+                parent.checkMinSize();
             </setter>
         </text>
 

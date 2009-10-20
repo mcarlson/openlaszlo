@@ -149,8 +149,14 @@
         ]]> </method>
 
         <!--- @keywords private -->
-        <method name="init"> <![CDATA[
+        <method name="init"> 
             super.init();
+            checkMinSize();
+        </method>
+
+        <!--- @keywords private -->
+        <method name="checkMinSize">
+          <![CDATA[
             // need to check minwidth/height after subviews have inited
             // just in case the window is sized by content, yet too small
             if (this.width <  this.minwidth ) {
@@ -159,17 +165,16 @@
                                  " ignored: "+ this);
                 }
                 this.setAttribute('width', this.minwidth);
-                setAttribute('_usecontentwidth', false );
             }
-            if (this.height <  this.minheight && !this._usecontentheight ) {
+            if (this.height <  this.minheight) {
                 if ( !this._usecontentheight ){
                     Debug.write( "requested height smaller than minheight," +
                                 " ignored: "+ this );
                 }
                 this.setAttribute('height', this.minheight);
-                setAttribute('_usecontentheight', false );
             }
-        ]]> </method>
+           ]]> 
+        </method>
 
         <resizeview_x name="top" width="100%" frame="${parent.state}" height="13.9"
             left="window_TL_rsc" middle="window_TM_rsc" right="window_TR_rsc">
