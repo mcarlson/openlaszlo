@@ -24,7 +24,6 @@ var LzTextSprite = function(newowner, args) {
     this.sizeToHeight = false;
 
     this.yscroll = 0;
-    this.xscroll = 0;
 
     //@field Boolean resize:  text width automatically resizes when text is set.
     // default: false
@@ -444,8 +443,6 @@ LzTextSprite.prototype.getBottomScroll = function ( ){
   */
 LzTextSprite.prototype.setXScroll = function ( n ){
     this.__LZtextclip._x = Math.floor(Math.min(0, n));
-    this.xscroll = this.__LZtextclip._x;
-    if (this.onxscroll.ready) this.onxscroll.sendEvent(this.__LZtextclip._x);
 }
 
 LzTextSprite.prototype.lineNoToPixel = function (n:Number):Number {

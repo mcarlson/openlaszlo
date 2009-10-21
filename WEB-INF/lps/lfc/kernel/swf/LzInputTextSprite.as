@@ -27,9 +27,6 @@ var LzInputTextSprite = function(newowner, args) {
     this.fontstyle = args.fontstyle;
     this.sizeToHeight = false;
 
-    this.yscroll = 0;
-    this.xscroll = 0;
-
     //@field Boolean resize:  text width automatically resizes when text is set.
     // default: false
     // 

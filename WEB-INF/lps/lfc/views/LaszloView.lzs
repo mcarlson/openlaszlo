@@ -406,6 +406,14 @@ var ondblclick = LzDeclaredEvent;
 /** @access private */
 var DOUBLE_CLICK_TIME = 500;
 
+
+/** The onclip event is sent when the clip attribute of 
+  * a view is changed
+  * @lzxtype event  
+  * @access public
+  */
+var onclip = LzDeclaredEvent;
+
 /** An object containing properties corresponding to the current runtime's 
   * capabilities.  For example, capabilities.rotation is true in swf and 
   * recent versions of Safari and Firefox.
@@ -584,9 +592,15 @@ var focustrap;
   */
 var clip = false;
 /** @access private */
-var $lzc$set_clip =  -1;
-
-
+function $lzc$set_clip (c:Boolean) {
+    this.clip = c;
+    if (c) {
+        this.makeMasked();
+    } else {
+        this.removeMask();
+    }
+    if (this.onclip.ready) this.onclip.sendEvent( this.clip );
+}
 
 /**
   * @type String

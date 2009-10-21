@@ -199,7 +199,7 @@
              multiline="false"  
              selectable="true" 
              width="${this.multiline ? parent.width - 12 : 4096}"
-             height="${parent.height-11}" scrollevents="true"/>
+             height="${parent.height-11}" scrollevents="true" clip="true"/>
             
      <!-- TODO [hqm 2008-09] sending of the ontextlink event for
           hyperlinks currently only is implemented in swf9.

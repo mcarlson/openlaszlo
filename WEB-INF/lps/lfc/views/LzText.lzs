@@ -107,6 +107,7 @@ dynamic class LzText extends LzView with LzFormatter {
   /** @access private */
   function LzText ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
     super(parent,attrs,children,instcall);
+
   }
   /** @access private
    * @modifiers override
@@ -237,6 +238,15 @@ dynamic class LzText extends LzView with LzFormatter {
     }
   }
 
+  override function $lzc$set_clip(c:Boolean) {
+      super.$lzc$set_clip(c);
+      if (this.isinited && this.scrollevents && !this.clip ) {
+          if ($debug) {
+              Debug.warn("You have set 'clip' to false on text view ", this, ", 'scrollevents' will be set to false as well");
+          }
+          this.$lzc$set_scrollevents(false);
+      }
+  }
 
   /*
    * Height/width interface
@@ -348,6 +358,12 @@ dynamic class LzText extends LzView with LzFormatter {
     /** @access private */
   function $lzc$set_scrollevents(on:Boolean):void {
     this.scrollevents = on;
+    if (this.isinited &&  this.scrollevents && !this.clip) {
+        if ($debug) {
+            // Warn if user has <text> view with scrollevents=true, but which does not have clipping enabled (LPP-8562)
+            Debug.warn("You have set scrollevents to true on text view ", this, ", but you must also set clip='true' on this view to have scrolling work correctly");
+        }
+    }
     this.tsprite.setScrollEvents(on);
     if (this.onscrollevents.ready) this.onscrollevents.sendEvent(on);
   }
@@ -1013,6 +1029,11 @@ dynamic class LzText extends LzView with LzFormatter {
   override function init () {
     super.init();
 
+    if (this.scrollevents && !this.clip) {
+        if ($debug) {
+            Debug.warn("You have set scrollevents to true on text view ", this, ", but you must also set clip='true' on this view to have scrolling work correctly");
+        }
+    }
     this._updateSize();
   };
 
