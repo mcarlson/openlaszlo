@@ -255,6 +255,8 @@ dynamic class LzText extends LzView with LzFormatter {
       var h = tsprite.getTextfieldHeight();
       if (h > 0 && h != this.height) {
         this.$lzc$set_height(h);
+        // This shouldn't change whether we measure later
+        this.hassetheight = false;
       }
     }
   }
@@ -713,7 +715,9 @@ dynamic class LzText extends LzView with LzFormatter {
     if (!this.hassetheight) {
       var h = this.tsprite.getTextfieldHeight();
       if (h > 0 && h != this.height) {
-        this.$lzc$set_height (h);
+        this.$lzc$set_height(h);
+        // This shouldn't change whether we measure later
+        this.hassetheight = false;
       }
     }
   }
@@ -980,8 +984,8 @@ dynamic class LzText extends LzView with LzFormatter {
     //
     if (this.hassetheight) {
         if (args['height'] != null) {
-            this.$lzc$set_height(args.height);
-        }
+      this.$lzc$set_height(args.height);
+    }
     }
 
     if (args['pattern'] != null) {
