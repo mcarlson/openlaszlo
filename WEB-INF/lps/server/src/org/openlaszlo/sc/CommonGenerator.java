@@ -90,6 +90,19 @@ public abstract class CommonGenerator implements ASTVisitor {
   InstructionCollector collector = null;
   SourceFileMap sources = new SourceFileMap();
 
+  // Make Javascript globals 'known'
+  Set globals = new HashSet(Arrays.asList(new String[] {
+        "NaN", "Infinity", "undefined",
+        "eval", "parseInt", "parseFloat", "isNaN", "isFinite",
+        "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent",
+        "Object", "Function", "Array", "String", "Boolean", "Number", "Date",
+        "RegExp", "Error", "EvalError", "RangeError", "ReferenceError",
+        "SyntaxError", "TypeError", "URIError",
+        "Math",
+        // And our global namespace
+        "lz"
+      }));
+
   // Used for swf8 loadable libraries, to put stuff into _level0 namespace
   String globalprefix = "";
 
@@ -112,6 +125,18 @@ public abstract class CommonGenerator implements ASTVisitor {
     this.runtime = ((String)options.get(Compiler.RUNTIME)).intern();
     setRuntime(this.runtime);
     setGeneratorOptions();
+
+    if (options.getBoolean(Compiler.DEBUG) || options.getBoolean(Compiler.DEBUG_SWF9)) {
+      // Add debugger globals
+      globals.add("Debug");
+      globals.add("$reportNotFunction");
+      globals.add("$reportUndefinedObjectProperty");
+      globals.add("$reportUndefinedMethod");
+      globals.add("$reportException");
+      globals.add("$reportUndefinedProperty");
+      globals.add("$reportUndefinedVariable");
+      globals.add("$reportSourceWarning");
+    }
   }
 
   // does nothing here - may be overridden to set options
@@ -208,7 +233,7 @@ public abstract class CommonGenerator implements ASTVisitor {
     return node;
   }
 
-  Boolean evaluateCompileTimeConditional(SimpleNode node) {
+  public Boolean evaluateCompileTimeConditional(SimpleNode node) {
     Object value = null;
     if (node instanceof ASTIdentifier) {
       String name = ((ASTIdentifier)node).getName();
@@ -364,12 +389,70 @@ public abstract class CommonGenerator implements ASTVisitor {
     return dst;
   }
 
+  public class ClassDescriptor {
+    boolean complete = false;
+    String name;
+    String[] superclasses;
+    Set instanceprops = new HashSet();
+
+    public ClassDescriptor (String name, SimpleNode superclasses, List instanceprops) {
+      this.name = name;
+      SimpleNode[] propArray = (SimpleNode[])(instanceprops.toArray(new SimpleNode[0]));
+      // Only add prop names
+      for (int i = 0, len = propArray.length; i < len; i += 2) {
+        this.instanceprops.add(((ASTLiteral)propArray[i]).getValue());
+      }
+      if (superclasses instanceof ASTIdentifier) {
+        String[] sc = { ((ASTIdentifier)superclasses).getName() };
+        this.superclasses = sc;
+      } else if (superclasses instanceof ASTArrayLiteral) {
+        List classlist = new ArrayList();
+        SimpleNode[] supernodes = superclasses.getChildren();
+        for (int i = 0, len = supernodes.length; i < len; i++) {
+          String supername =  ((ASTIdentifier)supernodes[i]).getName();
+          classlist.add(supername);
+        }
+        this.superclasses = (String[])classlist.toArray(new String[0]);
+      } else {
+        assert ((superclasses instanceof ASTLiteral) && ((ASTLiteral)superclasses).getValue() == null) : "Invalid superclasses list";
+//         System.err.println(name + " complete: "); // + this.instanceprops);
+        complete = true;
+      }
+    }
+
+    public Set getInstanceProperties () {
+      if (complete) {
+        return instanceprops;
+      }
+      // From least-specific to most-
+      for (int i = superclasses.length - 1; i >= 0; i--) {
+        ClassDescriptor superdesc =  (ClassDescriptor)(classDescriptors.get(superclasses[i]));
+        if (superdesc == null) {
+//           System.err.println("Forward reference: " + name + " -> " + superclasses[i]);
+          return null;
+        }
+        Set superprops = superdesc.getInstanceProperties();
+        // superclass may be defined, but not complete...
+        if (superprops == null) { return null; }
+        instanceprops.addAll(superprops);
+      }
+//       System.err.println(name + " complete: "); // + instanceprops);
+      complete = true;
+      return instanceprops;
+    }
+  }
+
+  Map classDescriptors = new HashMap();
+
+  // NOTE [2009-10-06 ptw]  This really belongs in JS1Generator,
+  // shared by CodeGenerator(swf8) and DHTMLGenerator.
   public SimpleNode visitClassDefinition(SimpleNode node, SimpleNode[] children) {
 //     System.err.println("enter visitClassDefinition: " +  (new ParseTreePrinter()).text(node));
 
     ASTIdentifier classormixin = (ASTIdentifier)children[0];
     ASTIdentifier classname = (ASTIdentifier)children[1];
     String classnameString = classname.getName();
+    globals.add(classnameString);
     SimpleNode superclass = children[2];
     SimpleNode mixins = children[3];
     SimpleNode mixinsandsuper;
@@ -391,6 +474,11 @@ public abstract class CommonGenerator implements ASTVisitor {
     List props = new ArrayList();
     List classProps = new ArrayList();
     List stmts = new ArrayList();
+    // TODO: [2009-10-09 ptw] (LPP-5813) This context would be where
+    // we would accumulate the class member names so that implicit
+    // class references from methods can be resovled explicitly
+    context = new TranslationContext(ASTClassDefinition.class, context);
+    try {
     translateClassDirectivesBlock(dirs, classnameString, props, classProps, stmts, TranslateHow.AS_PROPERTY_LIST);
 
     SimpleNode instanceProperties;
@@ -409,6 +497,12 @@ public abstract class CommonGenerator implements ASTVisitor {
     }
     instanceProperties.setLocation(node);
     classProperties.setLocation(node);
+
+    ClassDescriptor classdesc = new ClassDescriptor(classnameString, mixinsandsuper, props);
+    // Store class descriptor
+    classDescriptors.put(classnameString, classdesc);
+    // Note class description in context
+    context.setProperty(TranslationContext.CLASS_DESCRIPTION, classdesc);
 
     Map map = new HashMap();
     String xtor = "class".equals(classormixin.getName())?"Class":"Mixin";
@@ -445,6 +539,9 @@ public abstract class CommonGenerator implements ASTVisitor {
       replNode = listNode;
     }
     return visitStatement(replNode);
+    } finally {
+      context = context.parent;
+    }
   }
 
   /**
@@ -625,7 +722,7 @@ public abstract class CommonGenerator implements ASTVisitor {
           n = n.get(0);
           mod.verifyClassLevel(n);
         }
-        if (n instanceof ASTFunctionDeclaration) {
+        if (n instanceof ASTMethodDeclaration) {
           SimpleNode[] c = n.getChildren();
           assert c.length == 3;
           ASTIdentifier fid = (ASTIdentifier)c[0];
@@ -640,20 +737,7 @@ public abstract class CommonGenerator implements ASTVisitor {
               c[0] = new ASTIdentifier(fname);
             }
             p.add(new ASTLiteral(fname));
-            SimpleNode funexpr = new ASTFunctionExpression(0);
-            funexpr.setBeginLocation(n.filename, n.beginLine, n.beginColumn);
-            funexpr.setChildren(c);
-
-            if (mod != null) {
-              mod = (ASTModifiedDefinition)mod.shallowCopy();
-              SimpleNode[] newchildren = new SimpleNode[1];
-              newchildren[0] = funexpr;
-              mod.setChildren(newchildren);
-              p.add(mod);
-            }
-            else {
-              p.add(funexpr);
-            }
+            p.add((mod != null) ? mod : n);
           } else if (how == TranslateHow.AS_INTERFACE) {
             if (!isconstructor && ispublic) {
               stmts.add(n);
@@ -781,6 +865,9 @@ public abstract class CommonGenerator implements ASTVisitor {
     }
     else if (node instanceof ASTFunctionDeclaration) {
       newNode = visitFunctionDeclaration(node, children);
+    }
+    else if (node instanceof ASTMethodDeclaration) {
+      newNode = visitMethodDeclaration(node, children);
     }
     else if (node instanceof ASTStatement) {
       // an empty statement, introduced by an extra ";", has no children
@@ -1066,22 +1153,7 @@ public abstract class CommonGenerator implements ASTVisitor {
   // Hook for any special processing of globals, like noting them in
   // the known list, or emitting a declaration
   void addGlobalVar(String name, String type, String initializer) {
-  }
-
-  boolean isExpressionType(SimpleNode node) {
-    // There are several AST types that end with each of the names that
-    // endsWith tests for.
-    if (node instanceof ASTModifiedDefinition) {
-      node = node.get(0);
-    }
-    String name = node.getClass().getName();
-    return name.endsWith("Expression") ||
-      name.endsWith("FunctionCallParameters") ||
-      name.endsWith("ExpressionList") ||
-      name.endsWith("ExpressionSequence") ||
-      name.endsWith("Identifier") ||
-      name.endsWith("Literal") ||
-      name.endsWith("Reference");
+    globals.add(name);
   }
 
   public SimpleNode dispatchExpression(SimpleNode node, boolean isReferenced) {
@@ -1112,6 +1184,11 @@ public abstract class CommonGenerator implements ASTVisitor {
     }
     else if (node instanceof ASTFunctionExpression) {
       newNode = visitFunctionExpression(node, isReferenced, children);
+    }
+    else if (node instanceof ASTMethodDeclaration) {
+      // When a class is transformed to a plist, it's methods appear
+      // in an expression context
+      newNode = visitMethodExpression(node, isReferenced, children);
     }
     else if (node instanceof ASTFunctionCallParameters) {
       newNode = visitFunctionCallParameters(node, isReferenced, children);

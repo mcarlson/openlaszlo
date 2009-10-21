@@ -355,7 +355,8 @@ public class ParseTreePrinter {
     if (node instanceof ASTOrExpressionSequence) {
       return lnum(node, visitAndOrExpressionSequence(false, node, children));
     }
-    if (node instanceof ASTFunctionDeclaration) {
+    if ((node instanceof ASTFunctionDeclaration) ||
+        (node instanceof ASTMethodDeclaration)) {
       return lnum(node, visitFunctionDeclaration(node, children));
     }
     if (node instanceof ASTFunctionExpression) {
@@ -684,6 +685,7 @@ public class ParseTreePrinter {
                // in an expression, it had to have been in an
                // expression list initially
                node instanceof ASTFunctionExpression ||
+               node instanceof ASTMethodDeclaration ||
                node instanceof ASTFunctionDeclaration) {
       thisPrec = prec(Ops.ASSIGN, false);
     } else if (node instanceof ASTObjectLiteral ||
@@ -772,6 +774,11 @@ public class ParseTreePrinter {
   }
   
   public String visitFunctionExpression(SimpleNode node, String[] children) {
+    // Elide optional name if compressing, otherwise leave it for debugging
+    return doFunctionDeclaration(node, children, config.compress ? false : true, false);
+  }
+
+  public String visitMethodExpression(SimpleNode node, String[] children) {
     // Elide optional name if compressing, otherwise leave it for debugging
     return doFunctionDeclaration(node, children, config.compress ? false : true, false);
   }

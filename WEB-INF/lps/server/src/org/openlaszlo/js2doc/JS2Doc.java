@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -414,7 +414,7 @@ public class JS2Doc {
                 }
             } else if (parseNode instanceof ASTVariableStatement) {
                 visitFieldStatement(parseNode, docNode, moddef, null);
-            } else if (parseNode instanceof ASTFunctionDeclaration) {
+            } else if (parseNode instanceof ASTMethodDeclaration) {
                 visitMethodDeclaration(parseNode, docNode, moddef, null);
             } else if (parseNode instanceof ASTCallExpression) {
                 visitCallExpression(parseNode, docNode);
@@ -529,12 +529,13 @@ public class JS2Doc {
             SimpleNode child = children[0];
             if (child instanceof ASTVariableStatement)
                 this.visitFieldStatement(child, docNode, moddef, comment);
-            else if (child instanceof ASTFunctionDeclaration)
+            else if ((child instanceof ASTFunctionDeclaration) ||
+                     (child instanceof ASTMethodDeclaration))
                 this.visitMethodDeclaration(child, docNode, moddef, comment);
             else if (child instanceof ASTClassDefinition)
                 this.visitClassDeclaration(child, docNode, moddef);
             else
-                throw new InternalError("Unexpected node type " + parseNode.getClass().getName(), parseNode);
+                throw new InternalError("Unexpected node type " + child.getClass().getName(), child);
         }
         
         protected void visitClassAssignmentExpression(SimpleNode parseNode, org.w3c.dom.Element docNode) {

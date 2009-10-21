@@ -167,7 +167,10 @@ public class ASTModifiedDefinition extends SimpleNode {
     public void verifyTopLevel(SimpleNode subnode) {
         if (subnode instanceof ASTVariableStatement)
             verifyVariable(subnode);
-        else if (subnode instanceof ASTFunctionDeclaration)
+        // The compiler apparently calls verifyTopLevel even if it is
+        // inside a class declaration...
+        else if ((subnode instanceof ASTFunctionDeclaration) ||
+                 (subnode instanceof ASTMethodDeclaration))
             verifyFunction(subnode);
         else if (subnode instanceof ASTFunctionExpression)
             verifyFunction(subnode);
@@ -183,7 +186,8 @@ public class ASTModifiedDefinition extends SimpleNode {
     public void verifyClassLevel(SimpleNode subnode) {
         if (subnode instanceof ASTVariableStatement)
             verifyVariable(subnode);
-        else if (subnode instanceof ASTFunctionDeclaration)
+        else if ((subnode instanceof ASTFunctionDeclaration) ||
+                 (subnode instanceof ASTMethodDeclaration))
             verifyFunction(subnode);
         else if (subnode instanceof ASTFunctionExpression)
             verifyFunction(subnode);

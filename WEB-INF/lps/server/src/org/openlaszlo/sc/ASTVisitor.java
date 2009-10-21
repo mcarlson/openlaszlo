@@ -46,7 +46,9 @@ public interface ASTVisitor {
   SimpleNode visitForVarStatement(SimpleNode node, SimpleNode[] children);
   SimpleNode visitFunctionCallParameters(SimpleNode node, boolean isReferenced, SimpleNode[] children);
   SimpleNode visitFunctionDeclaration(SimpleNode node, SimpleNode[] ast);
+  SimpleNode visitMethodDeclaration(SimpleNode node, SimpleNode[] ast);
   SimpleNode visitFunctionExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children);
+  SimpleNode visitMethodExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children);
   SimpleNode visitIdentifier(SimpleNode node, boolean isReferenced, SimpleNode[] children);
   SimpleNode visitIfStatement(SimpleNode node, SimpleNode[] children);
   SimpleNode visitLiteral(SimpleNode node, boolean isReferenced, SimpleNode[] children);
@@ -74,7 +76,7 @@ public interface ASTVisitor {
 }
 
 /**
- * @copyright Copyright 2006-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

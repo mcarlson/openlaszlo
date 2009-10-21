@@ -241,6 +241,7 @@ public class PropertyReference {
                 setPropertyValueFromNewExpression((ASTIdentifier) classExprNode.getChildren()[0]);
             }
         } else if (valueNode instanceof ASTFunctionExpression ||
+                   valueNode instanceof ASTMethodDeclaration ||
                    valueNode instanceof ASTFunctionDeclaration) {
             JS2DocUtils.checkChildrenLowerBounds(valueNode, 3, 3, "visitVariableDeclaration");
 

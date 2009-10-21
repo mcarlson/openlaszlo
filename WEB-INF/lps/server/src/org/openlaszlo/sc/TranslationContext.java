@@ -23,7 +23,7 @@
  */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -36,6 +36,7 @@ public class TranslationContext extends HashMap {
   public static String FLASM = "flasm";
   public static String VARIABLES = "variables";
   public static String REGISTERS = "registers";
+  public static String CLASS_DESCRIPTION = "class description";
 
   public Object type;                  // Class or String
   public TranslationContext parent;
@@ -50,7 +51,8 @@ public class TranslationContext extends HashMap {
 
   public TranslationContext(Object type, TranslationContext parent, String label) {
     super();
-    if (ASTFunctionDeclaration.class.equals(type)) {
+    if ((ASTFunctionDeclaration.class.equals(type)) ||
+        (ASTMethodDeclaration.class.equals(type))) {
       type = ASTFunctionExpression.class;
     }
     this.type = type;
@@ -91,6 +93,10 @@ public class TranslationContext extends HashMap {
 
   public boolean isFunctionBoundary() {
     return ASTFunctionExpression.class.equals(type);
+  }
+
+  public boolean isClassBoundary() {
+    return ASTClassDefinition.class.equals(type);
   }
 
   public boolean inLabelSet(String label) {
@@ -141,6 +147,17 @@ public class TranslationContext extends HashMap {
     return parent.findFunctionContext();
   }
 
+  // Returns the next enclosing class context
+  public TranslationContext findClassContext() {
+    if (isClassBoundary()) {
+      return this;
+    }
+    if (parent == null) {
+      return null;
+    }
+    return parent.findClassContext();
+  }
+
   public void setTarget(Object type, Object instrs) {
     assert "break".equals(type) || "continue".equals(type);
     targets.put(type, instrs);
@@ -158,6 +175,10 @@ public class TranslationContext extends HashMap {
     if (isEnumeration) {
       translator.unwindEnumeration(node);
     }
+  }
+
+  public String toString() {
+    return "" + this.type + ": " + super.toString();
   }
 }
 

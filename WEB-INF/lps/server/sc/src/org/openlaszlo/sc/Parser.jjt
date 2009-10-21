@@ -929,6 +929,14 @@ void FunctionDeclaration() #FunctionDeclaration : {ASTFormalParameterList formal
     Block()
 }
 
+void MethodDeclaration() #MethodDeclaration : {ASTFormalParameterList formals; ASTIdentifier.Type type;}
+{
+    "function" Identifier()
+    formals = FormalParameterList()
+    [":" type = TypeIdentifierOrVoid() { formals.setReturnType(type); }]
+    Block()
+}
+
 void FunctionExpression() #FunctionExpression : {ASTFormalParameterList formals; ASTIdentifier.Type type;}
 {
     "function" (Identifier())?
@@ -1083,7 +1091,7 @@ JAVACODE void NoLineBreak()
 
 SimpleNode ClassProperty() #ModifiedDefinition : {}
 {
-  Modifiers(jjtThis) (FunctionDeclaration() | VariableStatement())
+  Modifiers(jjtThis) (MethodDeclaration() | VariableStatement())
   {return jjtThis; }
 }
 

@@ -147,7 +147,7 @@ class LzDHTMLDebugService extends LzDebugService {
     var debugdiv = document.createElement('div');
     debugdiv.innerHTML = form + iframe + inputdiv;
     debugdiv.onmouseover = function (e) { 
-        if (!e) e = window.event;
+        if (!e) e = global.window.event;
         e.cancelBubble = true;
         LzKeyboardKernel.setKeyboardControl(false, true); 
         return false;
@@ -162,7 +162,7 @@ class LzDHTMLDebugService extends LzDebugService {
     style.top = y;
     style.zIndex = 10000000;
     style.width = '100%';
-    return window.frames['LaszloDebugger'];
+    return global.window.frames['LaszloDebugger'];
   };
 
   /**
@@ -222,7 +222,7 @@ class LzDHTMLDebugService extends LzDebugService {
       // test for HTMLElement if avaliable, second expression helps to filter IE-HTMLElements
       // NOTE: IE does not provide a HTMLElement-class, but we know their HTMLElements return 'object' for typeof,
       // but as they're not proper JS-Objects (no 'constructor' property), we use this info as a hint.
-      if ((!!window.HTMLElement ? thing instanceof HTMLElement : typeof(thing) == 'object' && !thing.constructor) &&
+      if ((!!global.window.HTMLElement ? thing instanceof HTMLElement : typeof(thing) == 'object' && !thing.constructor) &&
           (! isNaN(Number(thing['nodeType'])))) {
         // tip o' the pin to osteele.com for the notation format
         function nodeToString(node) {

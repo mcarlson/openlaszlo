@@ -188,6 +188,10 @@ public class SWF9Generator extends JavascriptGenerator {
     }
     boolean savedInDefault = inDefaultClass;
     inDefaultClass = false;
+    // TODO: [2009-10-09 ptw] (LPP-5813) This context would be where
+    // we would accumulate the class member names so that implicit
+    // class references from methods can be resovled explicitly
+    context = new TranslationContext(ASTClassDefinition.class, context);
     try {
       // Both classes and mixins are translated to create a normal
       // 'implementation' class.  A mixin's implementation is stashed
@@ -213,6 +217,7 @@ public class SWF9Generator extends JavascriptGenerator {
       }
     }
     finally {
+      context = context.parent;
       inDefaultClass = savedInDefault;
     }
     return node;
@@ -397,7 +402,7 @@ public class SWF9Generator extends JavascriptGenerator {
         if (n instanceof ASTModifiedDefinition) {
           n = n.get(0);
         }
-        if (n instanceof ASTFunctionDeclaration) {
+        if (n instanceof ASTMethodDeclaration) {
           ASTIdentifier fid = (ASTIdentifier)n.get(0);
           if (fid.isConstructor()) {
             if (result != null) {
@@ -435,7 +440,7 @@ public class SWF9Generator extends JavascriptGenerator {
     mirchildren[2] = new ASTStatementList(0);
     SimpleNode[] listch = {stmt};
     mirchildren[2].setChildren(listch);
-    SimpleNode tramp = new ASTFunctionDeclaration(0);
+    SimpleNode tramp = new ASTMethodDeclaration(0);
     tramp.setChildren(mirchildren);
     SimpleNode f = new ASTModifiedDefinition(0);
     SimpleNode[] fch = {tramp};
@@ -548,12 +553,12 @@ public class SWF9Generator extends JavascriptGenerator {
    * Intercept JavascriptGenerator version, just to
    * track that we are within a function.
    */
-  SimpleNode translateFunction(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
+  SimpleNode translateFunction(SimpleNode node, boolean isReferenced, SimpleNode[] children, boolean isMethod) {
 
     boolean savedInMethod = inMethod;
     inMethod = true;
     try {
-      return super.translateFunction(node, isReferenced, children);
+      return super.translateFunction(node, isReferenced, children, isMethod);
     }
     finally {
       inMethod = savedInMethod;
@@ -602,6 +607,7 @@ public class SWF9Generator extends JavascriptGenerator {
    */
   void addGlobalVar(String name, String type, String initializer)
   {
+    super.addGlobalVar(name, type, initializer);
     GlobalVariable glovar = (GlobalVariable)programVars.get(name);
     if (glovar == null) {
       glovar = new GlobalVariable();

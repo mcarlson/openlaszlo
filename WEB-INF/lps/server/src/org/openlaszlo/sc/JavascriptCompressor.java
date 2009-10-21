@@ -30,7 +30,7 @@ public class JavascriptCompressor extends JavascriptGenerator {
   }
 
   // Don't evaluate for compression
-  Boolean evaluateCompileTimeConditional(SimpleNode node) {
+  public Boolean evaluateCompileTimeConditional(SimpleNode node) {
     Object value = null;
     return (Boolean)value;
   }
@@ -48,7 +48,7 @@ public class JavascriptCompressor extends JavascriptGenerator {
 }
 
 /**
- * @copyright Copyright 2006-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2007, 2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

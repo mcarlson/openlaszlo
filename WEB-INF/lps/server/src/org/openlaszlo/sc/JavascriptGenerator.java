@@ -26,34 +26,10 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     assert org.openlaszlo.compiler.Compiler.SCRIPT_RUNTIMES.contains(runtime) : "unknown runtime " + runtime;
   }
 
-  // Make Javascript globals 'known'
-  Set globals = new HashSet(Arrays.asList(new String[] {
-        "NaN", "Infinity", "undefined",
-        "eval", "parseInt", "parseFloat", "isNaN", "isFinite",
-        "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent",
-        "Object", "Function", "Array", "String", "Boolean", "Number", "Date",
-        "RegExp", "Error", "EvalError", "RangeError", "ReferenceError",
-        "SyntaxError", "TypeError", "URIError",
-        "Math",
-        // And our global namespace
-        "lz"
-      }));
-
   public SimpleNode translate(SimpleNode program) {
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
       context = new TranslationContext(ASTProgram.class, context);
-      if (options.getBoolean(Compiler.DEBUG) || options.getBoolean(Compiler.DEBUG_SWF9)) {
-        // Add debugger globals
-        globals.add("Debug");
-        globals.add("$reportNotFunction");
-        globals.add("$reportUndefinedObjectProperty");
-        globals.add("$reportUndefinedMethod");
-        globals.add("$reportException");
-        globals.add("$reportUndefinedProperty");
-        globals.add("$reportUndefinedVariable");
-        globals.add("$reportSourceWarning");
-      }
       context.setProperty(TranslationContext.VARIABLES, globals);
       return translateInternal(program, "b", true);
     }
@@ -242,7 +218,9 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           } else if ((new Integer(1)).equals(value)) {
             value = "true";
           }
-          code += "var " + entry.getKey() + " = " + value + ";";
+          String name = (String)entry.getKey();
+          addGlobalVar(name, null, value.toString());
+          code += "var " + name + " = " + value + ";";
         }
         List c = new ArrayList();
         c.add(parseFragment(code));
@@ -273,11 +251,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         // NOTE: [2009-10-03 ptw] (LPP-1933) People expect the
         // branches of a compile-time conditional to establish a
         // directive block
-        Boolean value = evaluateCompileTimeConditional(directive.get(0));
+        Boolean value = evaluateCompileTimeConditional(children[0]);
         if (value == null) {
           newDirective = visitIfStatement(directive, children);
         } else if (value.booleanValue()) {
-          SimpleNode clause = directive.get(1);
+          SimpleNode clause = children[1];
           Compiler.OptionMap savedOptions = options;
           try {
             options = options.copy();
@@ -286,8 +264,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           finally {
             options = savedOptions;
           }
-        } else if (directive.size() > 2) {
-          SimpleNode clause = directive.get(2);
+        } else if (children.length > 2) {
+          SimpleNode clause = children[2];
           Compiler.OptionMap savedOptions = options;
           try {
             options = options.copy();
@@ -306,15 +284,15 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         if (! options.getBoolean(Compiler.INCLUDES)) {
           throw new UnimplementedError("unimplemented: #include", directive);
         }
-        String userfname = (String)((ASTLiteral)directive.get(0)).getValue();
+        String userfname = (String)((ASTLiteral)children[0]).getValue();
         newDirective = translateInclude(userfname, cpass);
       } else if (directive instanceof ASTProgram) {
         // This is what an include looks like in pass 2
         newDirective = visitProgram(directive, children, cpass);
       } else if (directive instanceof ASTPragmaDirective) {
-        newDirective = visitPragmaDirective(directive, directive.getChildren());
+        newDirective = visitPragmaDirective(directive, children);
       } else if (directive instanceof ASTPassthroughDirective) {
-        newDirective = visitPassthroughDirective(directive, directive.getChildren());
+        newDirective = visitPassthroughDirective(directive, children);
       } else {
         if ("1".equals(cpass)) {
           // Function, class, and top-level expressions are processed in pass 1
@@ -404,16 +382,14 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       return null;
     } else {
       assert (! options.getBoolean(Compiler.CONSTRAINT_FUNCTION));
-      // Make sure all our top-level functions have root context
-      if (false && ASTProgram.class.equals(context.type)) {
-        Map map = new HashMap();
-        map.put("_1", new Compiler.Splice(ast));
-        SimpleNode newNode = (new Compiler.Parser()).substitute(node, "with (_root) { _1 }", map);
-        return visitStatement(newNode);
-      } else {
-        return translateFunction(node, true, ast);
-      }
+      return translateFunction(node, true, ast);
     }
+  }
+
+  // A method declaration is simply a function in a class
+  public SimpleNode visitMethodDeclaration(SimpleNode node, SimpleNode[] ast) {
+    assert context.isClassBoundary() : ("Method not in class context? " + context);
+    return translateMethod(node, true, ast);
   }
 
   //
@@ -426,14 +402,17 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   public SimpleNode visitVariableDeclaration(SimpleNode node, SimpleNode[] children) {
     ASTIdentifier id = (ASTIdentifier)children[0];
+    JavascriptReference ref = translateReference(id);
+    if (ASTProgram.class.equals(context.type)) {
+      // Initial value not used in this runtime
+      addGlobalVar(id.getName(), null, null);
+    }
     if (children.length > 1) {
       SimpleNode initValue = children[1];
-      JavascriptReference ref = translateReference(id);
       children[1] = visitExpression(initValue);
       children[0] = ref.init();
       return node;
     } else {
-      JavascriptReference ref = translateReference(id);
       children[0] = ref.declare();
       return node;
     }
@@ -662,13 +641,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // Expressions
   //
 
-  boolean isExpressionType(SimpleNode node) {
-    if (node instanceof Compiler.PassThroughNode) {
-      node = ((Compiler.PassThroughNode)node).realNode;
-    }
-    return super.isExpressionType(node);
-  }
-
   public SimpleNode visitExpression(SimpleNode node) {
     return visitExpression(node, true);
   }
@@ -677,8 +649,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
      applied to any expression node, so it dispatches based on the
      node's class. */
   public SimpleNode visitExpression(SimpleNode node, boolean isReferenced) {
-    assert isExpressionType(node) : "" + node + ": " + (new ParseTreePrinter()).text(node) + " is not an expression";
-
     if (this.debugVisit) {
       System.err.println("visitExpression: " + node.getClass());
     }
@@ -776,15 +746,24 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     try {
       options = options.copy();
       options.putBoolean(Compiler.CONSTRAINT_FUNCTION, false);
-      // Make sure all our top-level functions have root context
-//       if (ASTProgram.class.equals(context.type)) {
-//         Map map = new HashMap();
-//         map.put("_1", new Compiler.Splice(children));
-//         SimpleNode newNode = (new Compiler.Parser()).substitute(node, "with (_root) { _1 }", map);
-//         visitStatement(newNode);
-//       } else {
-        return translateFunction(node, false, children);
-//       }
+      return translateFunction(node, false, children);
+    }
+    finally {
+      options = savedOptions;
+    }
+  }
+
+  // A method declaration may appear in an expression context (when it
+  // is in the Class.make plist)
+  public SimpleNode visitMethodExpression(SimpleNode node,  boolean isReferenced, SimpleNode[] ast) {
+    assert context.isClassBoundary() : ("Method not in class context? " + context);
+    assert (! (this instanceof SWF9Generator)) : "Method expressions should not happen in swf9";
+    Compiler.OptionMap savedOptions = options;
+    try {
+      options = options.copy();
+      options.putBoolean(Compiler.CONSTRAINT_FUNCTION, false);
+      // When a method declaration is an expression, don't use the name
+      return translateMethod(node, false, ast);
     }
     finally {
       options = savedOptions;
@@ -1065,8 +1044,16 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
-  // useName => declaration not expression
   SimpleNode translateFunction(SimpleNode node, boolean useName, SimpleNode[] children) {
+    return translateFunction(node, useName, children, false);
+  }
+
+  SimpleNode translateMethod(SimpleNode node, boolean useName, SimpleNode[] children) {
+    return translateFunction(node, useName, children, true);
+  }
+
+  // useName => declaration not expression
+  SimpleNode translateFunction(SimpleNode node, boolean useName, SimpleNode[] children, boolean isMethod) {
     // TODO: [2003-04-15 ptw] bind context slot macro
     SimpleNode[] result;
     // methodName and scriptElement
@@ -1076,7 +1063,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       context = new TranslationContext(ASTFunctionExpression.class, context);
       node = formalArgumentsTransformations(node);
       children = node.getChildren();
-      result = translateFunctionInternal(node, useName, children);
+      result = translateFunctionInternal(node, useName, children, isMethod);
     }
     finally {
       options = savedOptions;
@@ -1126,7 +1113,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   // Internal helper function for above
   // useName => declaration not expression
-  SimpleNode[] translateFunctionInternal(SimpleNode node, boolean useName, SimpleNode[] children) {
+  SimpleNode[] translateFunctionInternal(SimpleNode node, boolean useName, SimpleNode[] children, boolean isMethod) {
     // ast can be any of:
     //   FunctionDefinition(name, args, body)
     //   FunctionDeclaration(name, args, body)
@@ -1248,7 +1235,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     VariableAnalyzer analyzer = 
       new VariableAnalyzer(params, 
                            options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY),
-                           (this instanceof SWF9Generator));
+                           (this instanceof SWF9Generator),
+                           this);
     for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
@@ -1264,6 +1252,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     LinkedHashMap fundefs = analyzer.fundefs;
     Set closed = analyzer.closed;
     Set free = analyzer.free;
+    Set possibleInstance = new HashSet(free);
 
     // Look for #pragma
     boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
@@ -1463,16 +1452,34 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
     analyzer.computeReferences();
     variables.addAll(analyzer.variables);
-    boolean withThis = options.getBoolean(Compiler.WITH_THIS) && !isStatic;
-    // Note usage due to activation object and withThis
-    if (! free.isEmpty()) {
-      // TODO: [2005-06-29 ptw] with (_root) should not be
-      // necessary for the activation object case now that it is
-      // done at top level to get [[scope]] right.
-      if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
-        analyzer.incrementUsed("_root");
+    // Whether to insert with (this) ...
+    boolean withThis = false;
+    // Never in static methods
+    if (! isStatic) {
+      // Look for explicit #pragma, e.g., for 'dynamic' methods
+      if (options.getBoolean(Compiler.WITH_THIS)) {
+        withThis = true;
+      } else if (! (this instanceof SWF9Generator)) {
+        // In JS1 back-ends, need `with (this) ...` for implicit
+        // instance references.
+        // TODO: [2009-10-09 ptw] Someday store the instance variables
+        // in the class translation context and fix up the free
+        // references directly
+        withThis = isMethod;
       }
-      if (withThis) {
+    }
+    // Note usage due to activation object and withThis
+    if (withThis) {
+      ClassDescriptor classdesc = (ClassDescriptor)context.getProperty(TranslationContext.CLASS_DESCRIPTION);
+      if (classdesc != null) {
+        Set instanceprops = classdesc.getInstanceProperties();
+        if (instanceprops != null) {
+          // If you know the class's instance properties, you can refine
+          // this set
+          possibleInstance.retainAll(instanceprops);
+        }
+      }
+      if (! possibleInstance.isEmpty()) {
         analyzer.incrementUsed("this");
       }
     }
@@ -1630,9 +1637,18 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
     // If we have free references and are not a script, we have to
     // obey withThis.  NOTE: [2009-09-30 ptw] See NodeModel where it
-    // only inserts withThis for as3 if the method will by dynamically
+    // only inserts withThis if the method will by dynamically
     // attached, as in a <state>
-    if ((! free.isEmpty()) && withThis && (! scriptElement)) {
+    if (withThis && (! scriptElement) && (! possibleInstance.isEmpty())) {
+      // NOTE: [2009-10-20 ptw] Now that we are doing this analysis in
+      // the script compiler, we may insert a withThis into LFC code
+      // where previously we would not have.  For now, we warn if we
+      // are doing this, because it is a new policy for the LFC
+      //
+      // Here FLASH_COMPILER_COMPATABILITY means 'compiling the lfc'
+      if (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY)) {
+        System.err.println("Warning: " + userFunctionName + " free reference(s) converted to instance reference(s): " + possibleInstance);
+      }
       SimpleNode newStmts = new ASTStatementList(0);
       newStmts.setChildren((SimpleNode[])newBody.toArray(new SimpleNode[0]));
       SimpleNode withNode = new ASTWithStatement(0);

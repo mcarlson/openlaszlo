@@ -396,7 +396,10 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       if (constants != null) {
         for (Iterator i = constants.entrySet().iterator(); i.hasNext(); ) {
           Map.Entry entry = (Map.Entry)i.next();
-          collector.push(entry.getKey());
+          String name = (String)entry.getKey();
+          // Value is unused in this runtime
+          addGlobalVar(name, null, null);
+          collector.push(name);
           collector.push(entry.getValue());
           collector.emit(Instructions.VarEquals);
         }
@@ -666,18 +669,30 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
+  // A method declaration is simply a function in a class
+  public SimpleNode visitMethodDeclaration(SimpleNode node, SimpleNode[] ast) {
+    assert context.isClassBoundary() : ("Method not in class context? " + context);
+    translateMethod(node, true, ast);
+    return node;
+  }
+
   //
   // Statements
   //
 
   public SimpleNode visitVariableDeclaration(SimpleNode node, SimpleNode[] children) {
     ASTIdentifier id = (ASTIdentifier)children[0];
+    boolean isGlobal = (ASTProgram.class.equals(context.type));
+    if (isGlobal) {
+      // Initial value not used in this runtime
+      addGlobalVar(id.getName(), null, null);
+    }
     if (children.length > 1) {
       SimpleNode initValue = children[1];
       Reference ref = translateReference(id).preset();
       visitExpression(initValue);
       ref.init();
-    } else if (ASTProgram.class.equals(context.type)) {
+    } else if (isGlobal) {
       // In a function, variable declarations will already be done
       Reference ref = translateReference(id).preset();
       ref.declare();
@@ -1110,8 +1125,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
      applied to any expression node, so it dispatches based on the
      node's class. */
   public SimpleNode visitExpression(SimpleNode node, boolean isReferenced) {
-    assert isExpressionType(node) : "" + node + ": " + (new ParseTreePrinter()).text(node) + " is not an expression";
-
     if (this.debugVisit) {
       System.err.println("visitExpression: " + node.getClass());
     }
@@ -1272,6 +1285,15 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     finally {
       options = savedOptions;
     }
+    return node;
+  }
+
+  // A method declaration may appear in an expression context (when it
+  // is in the Class.make plist)
+  public SimpleNode visitMethodExpression(SimpleNode node,  boolean isReferenced, SimpleNode[] ast) {
+    assert context.isClassBoundary() : ("Method not in class context? " + context);
+    // When a method declaration is an expression, don't use the name
+    translateMethod(node, false, ast);
     return node;
   }
 
@@ -1747,8 +1769,16 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     return null;
   }
 
-  // useName => declaration not expression
   void translateFunction(SimpleNode node, boolean useName, SimpleNode[] children) {
+    translateFunction(node, useName, children, false);
+  }
+
+  void translateMethod(SimpleNode node, boolean useName, SimpleNode[] children) {
+    translateFunction(node, useName, children, true);
+  }
+
+  // useName => declaration not expression
+  void translateFunction(SimpleNode node, boolean useName, SimpleNode[] children, boolean isMethod) {
     // label for profiling return
     String label = newLabel(node);
     // TODO: [2003-04-15 ptw] bind context slot macro
@@ -1760,7 +1790,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       context = new TranslationContext(ASTFunctionExpression.class, context, label);
       node = formalArgumentsTransformations(node);
       children = node.getChildren();
-      dependencies = translateFunctionInternal(node, useName, children);
+      dependencies = translateFunctionInternal(node, useName, children, isMethod);
     }
     finally {
       options = savedOptions;
@@ -1777,7 +1807,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
 
   // Internal helper function for above
   // useName => declaration not expression
-  SimpleNode translateFunctionInternal(SimpleNode node, boolean useName, SimpleNode[] children) {
+  SimpleNode translateFunctionInternal(SimpleNode node, boolean useName, SimpleNode[] children, boolean isMethod) {
     // ast can be any of:
     //   FunctionDefinition(name, args, body)
     //   FunctionDeclaration(name, args, body)
@@ -1870,7 +1900,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     }
     boolean isStatic = isStatic(node);
     // Analyze local variables (and functions)
-    VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY));
+    VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY), false, this);
     for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
     }
@@ -1886,6 +1916,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     LinkedHashMap fundefs = analyzer.fundefs;
     Set closed = analyzer.closed;
     Set free = analyzer.free;
+    Set possibleInstance = new HashSet(free);
 
     List prefix = new ArrayList();
     List postfix = new ArrayList();
@@ -1940,7 +1971,22 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     }
     analyzer.computeReferences();
     variables.addAll(analyzer.variables);
-    boolean withThis = options.getBoolean(Compiler.WITH_THIS) && !isStatic;
+    // Whether to insert with (this) ...
+    boolean withThis = false;
+    // Never in static methods
+    if (! isStatic) {
+      // Look for explicit #pragma, e.g., for 'dynamic' methods
+      if (options.getBoolean(Compiler.WITH_THIS)) {
+        withThis = true;
+      } else {
+        // In JS1 back-ends, need `with (this) ...` for implicit
+        // instance references.
+        // TODO: [2009-10-09 ptw] Someday store the instance variables
+        // in the class translation context and fix up the free
+        // references directly
+        withThis = isMethod;
+      }
+    }
     // Note usage due to activation object and withThis
     if (! free.isEmpty()) {
       // TODO: [2005-06-29 ptw] with (_root) should not be
@@ -1949,7 +1995,18 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
         analyzer.incrementUsed("_root");
       }
-      if (withThis) {
+    }
+    if (withThis) {
+      ClassDescriptor classdesc = (ClassDescriptor)context.getProperty(TranslationContext.CLASS_DESCRIPTION);
+      if (classdesc != null) {
+        Set instanceprops = classdesc.getInstanceProperties();
+        if (instanceprops != null) {
+          // If you know the class's instance properties, you can refine
+          // this set
+          possibleInstance.retainAll(instanceprops);
+        }
+      }
+      if (! possibleInstance.isEmpty()) {
         analyzer.incrementUsed("this");
       }
     }
@@ -2112,7 +2169,11 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           if (j < len) {
             collector.emit(Instructions.DUP);
           }
-          collector.push((String)i.next());
+          String name = (String)i.next();
+          // TODO: [2008-04-16 ptw] Retain type information through
+          // analyzer so it can be passed on here
+          addGlobalVar(name, null, "void 0");
+          collector.push(name);
           collector.push(Values.Undefined);
           collector.emit(Instructions.SetMember);
         }
@@ -2172,7 +2233,20 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       }
       collector.emit(Instructions.WITH.make(block));
     }
-    if ((! free.isEmpty()) && withThis) {
+    // If we have free references and are not a script, we have to
+    // obey withThis.  NOTE: [2009-09-30 ptw] See NodeModel where it
+    // only inserts withThis if the method will by dynamically
+    // attached, as in a <state>
+    if (withThis && (! scriptElement) && (! possibleInstance.isEmpty())) {
+      // NOTE: [2009-10-20 ptw] Now that we are doing this analysis in
+      // the script compiler, we may insert a withThis into LFC code
+      // where previously we would not have.  For now, we warn if we
+      // are doing this, because it is a new policy for the LFC
+      //
+      // Here FLASH_COMPILER_COMPATABILITY means 'compiling the lfc'
+      if (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY)) {
+        System.err.println("Warning: " + userFunctionName + " free reference(s) converted to instance reference(s): " + possibleInstance);
+      }
       if (registerMap.containsKey("this")) {
         collector.push(Values.Register(((Instructions.Register)registerMap.get("this")).regno));
       } else {

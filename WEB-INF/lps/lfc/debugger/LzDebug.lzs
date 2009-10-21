@@ -601,10 +601,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     var rc = style.getRulesCache(node);
     var ps = [];
     var sp = node.__LZStyledProperties;
-    for (var i = 0, l = sp.length; i < l; i++) {
-      var p = sp[i];
-      if (showInherited || (pc[p] !== ppc[p])) {
-        ps.push(p);
+    if (sp) {
+      for (var i = 0, l = sp.length; i < l; i++) {
+        var p = sp[i];
+        if (showInherited || (pc[p] !== ppc[p])) {
+          ps.push(p);
+        }
       }
     }
     ps.sort(this.caseInsensitiveOrdering);

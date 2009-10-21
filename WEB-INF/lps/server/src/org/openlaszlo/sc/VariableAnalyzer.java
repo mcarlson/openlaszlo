@@ -9,6 +9,7 @@ package org.openlaszlo.sc;
 import java.util.*;
 import org.openlaszlo.sc.parser.SimpleNode;
 import org.openlaszlo.sc.parser.*;
+import org.openlaszlo.sc.CommonGenerator;
 
 public class VariableAnalyzer {
   // A ref will cause an auto_reg to be declared
@@ -35,7 +36,9 @@ public class VariableAnalyzer {
   boolean hasSuper;
   Set locals;
 
-  public VariableAnalyzer(SimpleNode params, boolean ignoreFlasm, boolean hasSuper) {
+  CommonGenerator generator;
+
+  public VariableAnalyzer(SimpleNode params, boolean ignoreFlasm, boolean hasSuper, CommonGenerator generator) {
     // Parameter order is significant
     parameters = new LinkedHashSet();
     for (int i = 0, len = params.size(); i < len; i++) {
@@ -52,10 +55,7 @@ public class VariableAnalyzer {
     fundefs = new LinkedHashMap();
     used = new HashMap();
     this.ignoreFlasm = ignoreFlasm;
-  }
-
-  public VariableAnalyzer(SimpleNode params, boolean ignoreFlasm) {
-    this(params, ignoreFlasm, false);
+    this.generator = generator;
   }
 
   public void incrementUsed(String variable) {
@@ -97,24 +97,42 @@ public class VariableAnalyzer {
       SimpleNode[] c = {node.get(0)};
       children = c;
     } else if (node instanceof ASTIfStatement) {
-      // Don't analyze flasm
+      children = node.getChildren();
+      // Look for $flasm or compile-time conditional
       SimpleNode test = node.get(0);
-      if (test instanceof ASTIdentifier &&
-          ("$flasm".equals(((ASTIdentifier)test).getName())) &&
-          ignoreFlasm) {
-        SimpleNode[] c = {test};
-        children = c;
-      } else {
-        children = node.getChildren();
+      if (test instanceof ASTIdentifier) {
+        if (ignoreFlasm && ("$flasm".equals(((ASTIdentifier)test).getName()))) {
+          SimpleNode[] c = {test};
+          children = c;
+        } else {
+          // Look for compile-time conditionals
+          Boolean value = generator.evaluateCompileTimeConditional(test);
+          if (value == null) {
+            // default
+          } else if (value.booleanValue()) {
+            children = node.get(1).getChildren();
+          } else if (node.size() > 2) {
+            children = node.get(2).getChildren();
+          } else {
+            SimpleNode[] c = {};
+            children = c;
+          }
+        }
       }
+    } else if (node instanceof ASTSuperCallExpression) {
+      // For a super call, only the parameters are references
+      SimpleNode[] c = {node.get(2)};
+      children = c;
     } else {
       children = node.getChildren();
     }
     // Calculate locals, fundefs, and used
     // (ForVar has a VariableDeclaration as a child, so we don"t
     // need to handle it specially, but ForVarIn does not.)
+    // catch has a variable declaration as a child
     if (node instanceof ASTVariableDeclaration ||
-        node instanceof ASTForVarInStatement) {
+        node instanceof ASTForVarInStatement ||
+        node instanceof ASTCatchClause) {
       String v = ((ASTIdentifier)children[0]).getName();
       // In ECMAscript you can re-declare variables and
       // parameters and not shadow them
@@ -155,7 +173,7 @@ public class VariableAnalyzer {
         node instanceof ASTFunctionExpression) {
       SimpleNode params = children[children.length - 2];
       SimpleNode stmts = children[children.length - 1];
-      VariableAnalyzer analyzer = new VariableAnalyzer(params, ignoreFlasm);
+      VariableAnalyzer analyzer = new VariableAnalyzer(params, ignoreFlasm, hasSuper, generator);
       for (int i = 0, len = stmts.size(); i < len; i++) {
         SimpleNode stmt = stmts.get(i);
         analyzer.visit(stmt);
@@ -167,8 +185,14 @@ public class VariableAnalyzer {
           innerFree.add(v);
         }
       }
+    } else if (node instanceof ASTObjectLiteral) {
+      // Only the values of an object literal are references, the keys
+      // are constants
+      for (int i = 1, len = children.length; i < len; i += 2) {
+        visit(children[i]);
+      }
     } else {
-      for (int i = 0; i < children.length; i++) {
+      for (int i = 0, len = children.length; i < len; i++) {
         visit(children[i]);
       }
     }

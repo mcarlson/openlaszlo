@@ -360,11 +360,6 @@ public class NodeModel implements Cloneable {
       // value sent by sendEvent, so we have to accept it, but we
       // ignore it
       if (canHaveMethods) {
-          // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
-          // in the script-compiler back-end
-          if (! (env.isAS3())) {
-            pragmas += "\n#pragma 'withThis'\n";
-          }
           binder = new Method(bindername, args, "", pragmas, body, srcloc, null);
       } else {
           pragmas += "\n#pragma 'withThis'\n";
@@ -386,11 +381,6 @@ public class NodeModel implements Cloneable {
       }
       Function dependencies;
       if (canHaveMethods) {
-          // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
-          // in the script-compiler back-end
-          if (! (env.isAS3())) {
-            pragmas += "\n#pragma 'withThis'\n";
-          }
           dependencies = new Method(dependenciesname, "", "", pragmas, body, srcloc, null);
       } else {
           pragmas += "\n#pragma 'withThis'\n";
@@ -1535,11 +1525,6 @@ solution =
                  "");
             Function referencefn;
             if (canHaveMethods) {
-                // TODO: [2008-07-21 ptw] (LPP-5813) This should really
-                // be in the script-compiler back-end
-                if (! (env.isAS3())) {
-                  pragmas += "\n#pragma 'withThis'\n";
-                }
                 referencefn = new Method(referencename, "", "", pragmas, refbody, srcloc, null);
             } else {
                 pragmas += "\n#pragma 'withThis'\n";
@@ -1564,11 +1549,6 @@ solution =
             body = body + "\n#endContent\n";
             Function fndef;
             if (canHaveMethods) {
-                // TODO: [2008-07-21 ptw] (LPP-5813) This should really
-                // be in the script-compiler back-end
-                if (! (env.isAS3())) {
-                  pragmas += "#pragma 'withThis'\n";
-                }
                 fndef = new Method(method, args, "", pragmas, body, srcloc, null);
             } else {
                 pragmas += "#pragma 'withThis'\n";
@@ -1685,12 +1665,6 @@ solution =
             // LPP-8062 script compiler will give an error if you declare 'override' on a static method
             if (override && ALLOCATION_INSTANCE.equals(allocation)) { adjectives += " override"; }
             if (isfinal) { adjectives += " final"; }
-            if (ALLOCATION_INSTANCE.equals(allocation) &&
-                // TODO: [2008-07-21 ptw] (LPP-5813) This should really be
-                // in the script-compiler back-end
-                (! (env.isAS3()))) {
-              pragmas += "\n#pragma 'withThis'\n";
-            }
             fndef = new Method(name, args, returnType, pragmas, body, name_loc, adjectives);
         } else {
             if (ALLOCATION_INSTANCE.equals(allocation)) {
