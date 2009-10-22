@@ -29,7 +29,7 @@ var LzTextSprite = function(owner) {
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
         this.__LZclickcontainerdiv = document.createElement('div');
-        this.__LZclickcontainerdiv.className = 'lztextcontainer_click';
+        this.__LZclickcontainerdiv.className = 'lztextcontainer';
         this.__LZclickcontainerdiv.owner = this;
     }    
     if (this.quirks.ie_leak_prevention) {
@@ -159,7 +159,6 @@ LzTextSprite.prototype.setScrolling = function (on) {
       wt += this.quirks.scrollbar_width;
     } else {
       this.scrolling = false;
-      // default is hidden
       scrolldiv.style.overflow = '';
     }
     var hp = cdim(ht);
@@ -167,7 +166,6 @@ LzTextSprite.prototype.setScrolling = function (on) {
     if (on) {
         scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
     } else if (scrolldiv.style.clip) {
-        // no clip needed, overflow is hidden
         scrolldiv.style.clip = this.quirks['fix_ie_css_syntax'] ? 'rect(auto auto auto auto)' : '';
     }
     scrolldiv.style.height = hp;
@@ -318,11 +316,13 @@ LzTextSprite.prototype.setMultiline = function(m) {
             this._whiteSpace = 'normal';
             this.scrolldiv.style.whiteSpace = 'normal';
         }
+        this.scrolldiv.style.overflow = 'hidden';
     } else {
         if (this._whiteSpace != 'nowrap') {
             this._whiteSpace = 'nowrap';
             this.scrolldiv.style.whiteSpace = 'nowrap';
         }
+        this.scrolldiv.style.overflow = '';
     }
     if (this.quirks['text_height_includes_padding']) {
         this.__hpadding = m ? 3 : 4;
@@ -658,6 +658,7 @@ LzTextSprite.prototype.__cancelhandler = function () {
 
 LzTextSprite.prototype.setResize = function (r){
     this.resize = r == true;
+    this.scrolldiv.style.overflow = this.resize ? '' : 'hidden';
 }
 
 LzTextSprite.prototype.setSelection = function ( start , end=null){
@@ -913,7 +914,7 @@ LzTextSprite.prototype.setWidth = function (w, force){
     // Call the super method (to set width of container)
     var nw = LzSprite.prototype.setWidth.call(this, w);
     // Calculate the width of the scrolldiv
-    var wt = w; // (w >= - this.__wpadding ? w - this.__wpadding : 0);
+    var wt = (w >= this.__wpadding ? w - this.__wpadding : 0);
     // Calculate a clip mask to hide the scrollbar
     var scrolldiv = this.scrolldiv;
     var style = scrolldiv.style;
@@ -1071,6 +1072,7 @@ LzTextSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shad
     this.scrolldiv.style.textShadow = cssString;
 
     this.shadow = cssString;
+    this.scrolldiv.style.overflow = '';
 }
 
 }
