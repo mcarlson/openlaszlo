@@ -167,7 +167,7 @@ public dynamic class LzNode extends LzEventable {
    *
    * @access private */
   function __LZhasConstraint(attr:String) {
-    return attr in this.__LzValueExprs;
+    return (attr in this.__LzValueExprs) && (! (this.__LzValueExprs[attr] is LzStyleConstraintExpr));
   }
   /**
    * @param LzNode parent: a node above this one in the hierarchy -- not
@@ -655,15 +655,15 @@ public dynamic class LzNode extends LzEventable {
    * the style property cannot be found.
    * @access private
    */
-  function __LZstyleBindAttribute(attr, prop, type, fallback=(void 0)) {
+  function __LZstyleBindAttribute(attr, prop, type, fallback=(void 0), warn=true) {
     // Inlined version of LzCSSStyle.getPropertyValueFor
     // Get the property cache for this node
     var pc = this['__LZPropertyCache'] || LzCSSStyle.getPropertyCache(this);
 
     if ($debug) {
       // Fix for LPP-3024: if we're in debug mode, warn when CSS
-      // lookup fails and there is no fallback
-      if ((! (prop in pc)) && (fallback === (void 0))) {
+      // lookup fails
+      if ((! (prop in pc)) && (warn != false)) {
         Debug.warn("%w.%s: No applicable value for CSS property %w and there is no default.", this, attr, prop);
         // Cache negative values lazily to avoid excessive warnings
         pc[prop] = (void 0);
@@ -715,7 +715,7 @@ public dynamic class LzNode extends LzEventable {
       if (fallback is LzInitExpr) {
         this.applyConstraintExpr(fallback);
       } else {
-        this.setAttribute(attr, styleValue);
+        this.setAttribute(attr, fallback);
       }
     }
   }
@@ -1558,7 +1558,7 @@ public dynamic class LzNode extends LzEventable {
     // Look for special style constraints
     if (expr instanceof LzStyleConstraintExpr) {
       var se:LzStyleConstraintExpr = (expr cast LzStyleConstraintExpr);
-      this.__LZstyleBindAttribute(se.attribute, se.property, se.type, se.fallback);
+      this.__LZstyleBindAttribute(se.attribute, se.property, se.type, se.fallback, se.warn);
       return;
     }
     // Apply the constraint method

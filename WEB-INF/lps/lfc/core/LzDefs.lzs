@@ -145,13 +145,15 @@ class LzStyleConstraintExpr extends LzConstraintExpr {
   var property:String;
   var type:String;
   var fallback:*;
+  var warn:Boolean;
 
-  function LzStyleConstraintExpr(attribute:String, property:String, type:String, fallback=(void 0)) {
+  function LzStyleConstraintExpr(attribute:String, property:String, type:String, fallback=(void 0), warn=true) {
     super(null);
     this.attribute = attribute;
     this.property = property;
     this.type = type;
     this.fallback = fallback;
+    this.warn = warn;
     if ($debug) {
       this._dbg_name = attribute + "\"=$style{'" + property + "'}\"";
     } else if ($profile) {
