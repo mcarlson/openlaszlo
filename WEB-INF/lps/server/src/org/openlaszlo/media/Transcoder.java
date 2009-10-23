@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.awt.geom.Rectangle2D;
@@ -262,6 +263,27 @@ public class Transcoder {
     }
 
     /**
+     * @return true if the InputStream contains an animated GIF.
+     */
+    private static boolean isAnimatedGIF( BufferedInputStream is ) throws IOException {
+        is.mark(is.available());
+        DataInputStream dis = new DataInputStream(is);
+        int b0 = dis.readUnsignedByte();
+        int b1 = dis.readUnsignedByte();
+        int b2 = dis.readUnsignedByte();
+        int b3 = dis.readUnsignedByte();
+        int b4 = dis.readUnsignedByte();
+        int b5 = dis.readUnsignedByte();
+        is.reset();
+
+        if( b0 == 'G' && b1 == 'I' && b2 == 'F' && b3 == '8' && b4 == '9' && b5 == 'a' ) {  // animated gif: 'GIF89a'
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @param stream image input stream
      */
     private static final InputStream convertImageToSWF(InputStream stream) 
@@ -269,8 +291,15 @@ public class Transcoder {
 
         try {
             mLogger.debug("converting image to SWF");
-    
-            Bitmap bitmap = Bitmap.newBitmap(new FlashBuffer(stream));
+            FlashBuffer fb = new FlashBuffer(stream);
+            BufferedInputStream bis = new BufferedInputStream(fb.getInputStream());
+            if (isAnimatedGIF(bis)) {
+                // TODO: set the actual framerate from a compiler constant?
+                GIF89a.setFrameRate(30);
+                return GIF89a.gifToSwf(bis);
+            }
+
+            Bitmap bitmap = Bitmap.newBitmap(fb);
             if (bitmap == null) {
                 String msg = "corrupt image or unknown image type";
                 throw new TranscoderException(msg);
