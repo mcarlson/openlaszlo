@@ -491,4 +491,9 @@ if ($dhtml) {
   lz.embed.callMethod = function (js) {
     lz.Browser.callJS('lz.embed.callMethod', false, js);
   }
+  lz.embed.__updatebrowserprops = function(obj) {
+    lz.embed.browser = obj;
+  }
+  // Read in lz.embed.browser hash from browser
+  LzBrowserKernel.callJS('window.eval', lz.embed.__updatebrowserprops, 'lz.embed.browser');
 }
