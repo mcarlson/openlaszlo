@@ -78,6 +78,11 @@ class ResourceCompiler extends ElementCompiler {
                 String name = element.getAttributeValue("name");
                 String src = element.getAttributeValue("src");
 
+                String offx = element.getAttributeValue("offsetx");
+                String offy = element.getAttributeValue("offsety");
+                String width = element.getAttributeValue("width");
+                String height = element.getAttributeValue("height");
+                
                 if (name == null) {
                     throw new CompilationError(
 /* (non-Javadoc)
@@ -131,7 +136,7 @@ class ResourceCompiler extends ElementCompiler {
                 // Check if children are valid tags to be contained 
                 mEnv.checkValidChildContainment(element);
 
-                // N.B.: Resources are always imported into the main
+                // N.B.: For swf8 runtime, resources are always imported into the main
                 // program for the Flash target, hence the use of
                 // getResourceGenerator below
                 if (src == null) {
@@ -155,9 +160,10 @@ class ResourceCompiler extends ElementCompiler {
                     }
                     if (!sources.isEmpty()) {
                         if (tagName.equals("preloadresource")) {
-                            mEnv.getResourceGenerator().importPreloadResource(sources, name, file);
+                          mEnv.getResourceGenerator().importPreloadResource(sources, name, file);
                         } else {
-                            mEnv.getResourceGenerator().importResource(sources, name, file);
+                          mEnv.getResourceGenerator().importResource(sources, name, file,
+                                                                     new Offset2D(offx, offy));
                         }
                     } else {
                         throw new CompilationError(
@@ -172,10 +178,10 @@ class ResourceCompiler extends ElementCompiler {
                 } else {
                     if (tagName.equals("preloadresource")) {
                         mEnv.getResourceGenerator().importPreloadResource(file.getAbsolutePath(), 
-                                                           name);
+                                                                          name);
                     } else {
                         mEnv.getResourceGenerator().importResource(file.getAbsolutePath(), 
-                                                           name);
+                                                                   name, new Offset2D(offx, offy));
                     }
                 }
                 return;
@@ -200,9 +206,21 @@ class ResourceCompiler extends ElementCompiler {
             return;
         }
     }
+
+  // Utility class to specify an offset, used to set a cursor resource's hotspot
+  class Offset2D {
+    String offsetx = null;
+    String offsety = null;
+
+    Offset2D(String ox, String oy) {
+      offsetx = ox;
+      offsety = oy;
+    }
+  }
+
 }
 
 /**
- * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2007, 2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

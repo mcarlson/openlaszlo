@@ -67,6 +67,8 @@
     <interface name="resource" extends="Instance">
       <attribute name="src" type="string"/>
       <attribute name="name" type="token"/>
+      <attribute name="offsetx" type="number" value="0"/>
+      <attribute name="offsety" type="number" value="0"/>
       <containsElements>
         <element>frame</element>
       </containsElements>

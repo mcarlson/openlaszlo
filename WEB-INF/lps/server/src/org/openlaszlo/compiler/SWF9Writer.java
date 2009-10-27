@@ -131,10 +131,21 @@ class SWF9Writer extends ObjectWriter {
     public void importResource(String fileName, String name) 
         throws ImportResourceError
     {
-        importResource(new File(fileName), name);
+        importResource(new File(fileName), name, null);
     }
 
     public void importResource(File inputFile, String name)
+      throws ImportResourceError {
+        importResource(inputFile, name, null);
+    }
+
+    public void importResource(String fileName, String name, ResourceCompiler.Offset2D offset)
+      throws ImportResourceError
+    {
+        importResource(new File(fileName), name, offset);
+    }
+
+    public void importResource(File inputFile, String name, ResourceCompiler.Offset2D offset)
         throws ImportResourceError
     {
         // Moved this conversion from below.
@@ -153,14 +164,16 @@ class SWF9Writer extends ObjectWriter {
             //mLogger.debug("SWF9Writer: "+inputFile.toString()+" is a directory containing "+ sources.length +" files.");    
             for (int i = 0; i < sources.length; i++) {
                 // Construct path from directory and file names.
-                /* TODO: In theory, file resolution might get files that come from somewhere on the file system that doesn't match where
-                        things will be on the server. Part of the root path may differ, and this File doesn't actually have to correspond 
-                        to a file on the server disk. Thus the path is reconstructed here.
-                        That said, the current code isn't actually abstracting the path here.
-                        This will actually come into play when the '2 phase' file resolution currently occuring is
-                        compacted to a single phase. To do this, more resource and file descriptor information will have
-                        to be maintained, either in a global table or using a more abstract path structure, or both.
-                        For now I'll leave this as it is. [pga]
+                /* TODO: In theory, file resolution might get files that come from somewhere on the file system
+                   that doesn't match where things will be on the server. Part of the root path may differ,
+                   and this File doesn't actually have to correspond to a file on the server disk. Thus the path
+                   is reconstructed here.
+
+                   That said, the current code isn't actually abstracting the path here.
+                   This will actually come into play when the '2 phase' file resolution currently occuring is
+                   compacted to a single phase. To do this, more resource and file descriptor information will have
+                   to be maintained, either in a global table or using a more abstract path structure, or both.
+                   For now I'll leave this as it is. [pga]
                 */
                 String sFname = inputFile.toString() + File.separator + sources[i].getName();
                 File f = new File(sFname);
@@ -237,7 +250,17 @@ class SWF9Writer extends ObjectWriter {
         sbuf.append("}#\n");
 
         sbuf.append("LzResourceLibrary." + 
-                    name + "={ptype: \"" + pType + "\", assetclass: "+assetClassname +", frames:[");
+                    name + "={ptype: \"" + pType + "\", assetclass: "+assetClassname +",");
+
+        if (offset != null && offset.offsetx != null) {
+            sbuf.append("offsetx: "+offset.offsetx+",");
+        }
+
+        if (offset != null && offset.offsety != null) {
+            sbuf.append("offsety: "+offset.offsety+",");
+        }
+
+        sbuf.append("frames:[");
         sbuf.append("'"+relPath+"'");
 
         Resource res =  (Resource)mResourceMap.get(inputFile.toString());
@@ -268,8 +291,8 @@ class SWF9Writer extends ObjectWriter {
         Rectangle2D b = def.getBounds();
             
         if (b != null) {
-            sbuf.append("],width:" + (b.getWidth() / 20));
-            sbuf.append(",height:" + (b.getHeight() / 20));
+            sbuf.append("],width:" + Double.toString((b.getWidth() / 20)));
+            sbuf.append(",height:" + Double.toString((b.getHeight() / 20)));
         } else { 
             // could be an mp3 resource
             sbuf.append("]");
@@ -280,11 +303,18 @@ class SWF9Writer extends ObjectWriter {
 
     public void importResource(List sources, String sResourceName, File parent)
     {
-        writeResourceLibraryDescriptor(sources, sResourceName, parent);
+        writeResourceLibraryDescriptor(sources, sResourceName, parent, null);
+    }
+
+
+    public void importResource(List sources, String sResourceName, File parent, ResourceCompiler.Offset2D offset)
+    {
+        writeResourceLibraryDescriptor(sources, sResourceName, parent, offset);
     }
     
     /* Write resource descriptor library */
-    public void writeResourceLibraryDescriptor(List sources, String sResourceName, File parent)
+    public void writeResourceLibraryDescriptor(List sources, String sResourceName, File parent,
+                                               ResourceCompiler.Offset2D offset)
     {
         mLogger.debug("Constructing resource library: " + sResourceName);
         int width = 0;
@@ -338,7 +368,17 @@ class SWF9Writer extends ObjectWriter {
         }
         sbuf.append("}#\n");
 
-        sbuf.append("LzResourceLibrary." + sResourceName + "={frames: ");
+        sbuf.append("LzResourceLibrary." + sResourceName + "={");
+
+        if (offset != null && offset.offsetx != null) {
+            sbuf.append("offsetx: "+offset.offsetx+",");
+        }
+
+        if (offset != null && offset.offsety != null) {
+            sbuf.append("offsety: "+offset.offsety+",");
+        }
+
+        sbuf.append("frames: ");
         
         // enumerate the asset classes for each frame
         sbuf.append("[");
@@ -351,8 +391,8 @@ class SWF9Writer extends ObjectWriter {
         sbuf.append("]");
 
         mMultiFrameResourceSet.add(new Resource(sResourceName, width, height));
-        sbuf.append(",width:" + width);
-        sbuf.append(",height:" + height);
+        sbuf.append(",width:" + Double.toString(width));
+        sbuf.append(",height:" + Double.toString(height));
         sbuf.append("};");
         addScript(sbuf.toString());
     }
@@ -1133,93 +1173,6 @@ class SWF9Writer extends ObjectWriter {
     public String importClickResource(File file) throws ImportResourceError {
         mEnv.warn( "clickregion not implemented by SWF9Writer");
         return("SWF9Writer clickregions not implemented");
-    }
-
-
-
-/** Get a resource descriptor without resource content.
-*
-* @param name name of the resource
-* @param fileName file name of the resource
-* @param stop include stop action if true
-* 
-*/
-//  TODO: Required for performance improvement. So far not differentiated from ObjectWriter version.
-    protected Resource getResource(String fileName, String name, boolean stop)
-        throws ImportResourceError
-    {
-        try {
-                String inputMimeType = MimeType.fromExtension(fileName);
-                if (!Transcoder.canTranscode(inputMimeType, MimeType.SWF) 
-                                && !inputMimeType.equals(MimeType.SWF)) {
-                        inputMimeType = Transcoder.guessSupportedMimeTypeFromContent(fileName);
-                        if (inputMimeType == null || inputMimeType.equals("")) {
-                                throw new ImportResourceError(fileName, new Exception(
-                                                /* (non-Javadoc)
-                                                 * @i18n.test
-                                                 * @org-mes="bad mime type"
-                                                 */
-                                                org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                                                ObjectWriter.class.getName(),"051018-549")
-                                ), mEnv);
-                        }
-                }
-                // No need to get these from the cache since they don't need to be
-                // transcoded and we usually keep the cmcache on disk.
-                if (inputMimeType.equals(MimeType.SWF)) {
-
-                        long fileSize =  FileUtils.getSize(new File(fileName));
-
-                        Element elt = new Element("resource");
-                        elt.setAttribute("name", name);
-                        elt.setAttribute("mime-type", inputMimeType);
-                        elt.setAttribute("source", fileName);
-                        elt.setAttribute("filesize", "" + fileSize);
-                        mInfo.addContent(elt);
-
-                        return importSWF(fileName, name, false);
-                }
-
-                // TODO: [2002-12-3 bloch] use cache for mp3s; for now we're skipping it 
-                // arguably, this is a fixme
-                if (inputMimeType.equals(MimeType.MP3) || 
-                                inputMimeType.equals(MimeType.XMP3)) {
-                        return importMP3(fileName, name);
-                }
-
-                File inputFile = new File(fileName);
-                File outputFile = mCache.transcode(inputFile, inputMimeType, MimeType.SWF);
-                mLogger.debug(
-                                /* (non-Javadoc)
-                                 * @i18n.test
-                                 * @org-mes="importing: " + p[0] + " as " + p[1] + " from cache; size: " + p[2]
-                                 */
-                                org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                                ObjectWriter.class.getName(),"051018-584", new Object[] {fileName, name, new Long(outputFile.length())})
-                );
-
-                long fileSize =  FileUtils.getSize(outputFile);
-
-                Element elt = new Element("resource");
-                elt.setAttribute("name", name);
-                elt.setAttribute("mime-type", inputMimeType);
-                elt.setAttribute("source", fileName);
-                elt.setAttribute("filesize", "" + fileSize);
-                mInfo.addContent(elt);
-
-                return importSWF(outputFile.getPath(), name, stop);
-        } catch (Exception e) {
-                mLogger.error(
-                                /* (non-Javadoc)
-                                 * @i18n.test
-                                 * @org-mes="Can't get resource " + p[0]
-                                 */
-                                org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                                ObjectWriter.class.getName(),"051018-604", new Object[] {fileName})
-                );
-                throw new ImportResourceError(fileName, e, mEnv);
-        }
-
     }
 
 }

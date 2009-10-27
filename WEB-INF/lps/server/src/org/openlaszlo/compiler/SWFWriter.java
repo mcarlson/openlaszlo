@@ -452,7 +452,7 @@ class SWFWriter extends ObjectWriter {
     {
         if (name.equals(""))
             name = createName();
-        importResource(fileName, name, 0, mPreloaderFontsCollector);
+        importResource(fileName, name, 0, mPreloaderFontsCollector, null);
     }
 
     public void importPreloadResource(File fFileName, String name)
@@ -460,7 +460,7 @@ class SWFWriter extends ObjectWriter {
     {
         if (name.equals(""))
             name = createName();
-        importResource(fFileName.toString(), name, 0, mPreloaderFontsCollector);
+        importResource(fFileName.toString(), name, 0, mPreloaderFontsCollector, null);
     }
 
     /** Import a multiframe resource into the current movie.  Using a
@@ -487,6 +487,15 @@ class SWFWriter extends ObjectWriter {
     {
         importResource(sources, name, parent, -1);
     }
+
+
+    public void importResource(List sources, String name, File parent, ResourceCompiler.Offset2D offset)
+    {
+        // TODO
+        importResource(sources, name, parent, -1 /*, offset */);
+    }
+
+
 
     /** Import a multiframe resource into the current movie.  Using a
      * name that already exists clobbers the old resource (for now).
@@ -515,6 +524,14 @@ class SWFWriter extends ObjectWriter {
         importResource(fileName, name, -1);
     }
 
+    public void importResource(String fileName, String name, ResourceCompiler.Offset2D offset)
+        throws ImportResourceError
+    {
+        importResource(fileName, name, -1, null, offset);
+    }
+
+
+
     public void importResource(File fFile, String name)
         throws ImportResourceError
     {
@@ -533,7 +550,7 @@ class SWFWriter extends ObjectWriter {
     public void importResource(String fileName, String name, int frameNum)
         throws CompilationError
     {
-        importResource(fileName, name, frameNum, null);
+        importResource(fileName, name, frameNum, null, null);
     }
 
 
@@ -548,7 +565,7 @@ class SWFWriter extends ObjectWriter {
      * @throws CompilationError
      */
     public void importResource(String fileName, String name, int frameNum,
-                               FontsCollector fontsCollector)
+                               FontsCollector fontsCollector, ResourceCompiler.Offset2D offset)
         throws CompilationError
     {
 

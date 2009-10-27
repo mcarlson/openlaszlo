@@ -732,6 +732,31 @@ public class LzSprite extends Sprite {
           event.stopPropagation();
       }
 
+      // To avoid an artifact in SWF10, if we want to turn off the
+      // handCursor on buttons, we have to set the flag before we are
+      // inside of an onmouseover event handler. This maps over the
+      // app display list setting the handcursor flag on all
+      // clickbuttons to a global value.  Call this from
+      // LzMouseKernel when global hand cursor is enabled/disabled.
+      public function setGlobalHandCursor (val:Boolean ):void {
+          for (var i:int = 0; i < numChildren; i++) {
+              var child:DisplayObject = getChildAt(i);
+              if (child is SimpleButton) {
+                  var cs:SimpleButton = child as SimpleButton;
+                  if (val == true) {
+                      var psprite:LzSprite = (cs.parent as LzSprite);
+                      cs.useHandCursor = (psprite.showhandcursor == null) ?
+                          LzMouseKernel.showhandcursor : psprite.showhandcursor;
+                  } else {
+                      cs.useHandCursor = false;
+                  }
+              } 
+              if (child is LzSprite) {
+                  (child as LzSprite).setGlobalHandCursor(val);
+              }
+          }
+      }
+
       // called by LzMouseKernel when mouse goes up on another sprite
       public function __globalmouseup( e:MouseEvent ) :void {
           if (this.__mousedown) {
@@ -1567,6 +1592,9 @@ public class LzSprite extends Sprite {
               // to addChild of a swf resource
               addEventListener(MouseEvent.MOUSE_OUT, cursorGotMouseout, true);
               addEventListener(MouseEvent.MOUSE_OVER, cursorGotMouseover, true);
+              if (!this.clickable) {
+                  this.setClickable(true);
+              }
           } else {
               LzMouseKernel.restoreCursorLocal();
               removeEventListener(MouseEvent.MOUSE_OVER, cursorGotMouseover, true);

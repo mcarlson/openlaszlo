@@ -176,12 +176,19 @@ public class LzTextSprite extends LzSprite {
                         var cursor:String = null;
                         if (obj is Sprite) {
                             var sprite:Sprite = Sprite(obj);
-                            if (sprite.buttonMode && sprite.useHandCursor) {
-                                // need to respect global cursor setting
-                                if (! LzMouseKernel.hasGlobalCursor) {
-                                    if ($swf10) { cursor = MouseCursor.BUTTON; }
+                            if (sprite.buttonMode) {
+                                var usehand:Boolean = false;
+                                if (sprite is LzSprite) {
+                                    var lzsprite = sprite as LzSprite;
+                                    usehand = (lzsprite.showhandcursor == null) ?
+                                        LzMouseKernel.showhandcursor : lzsprite.showhandcursor;
+                                    // need to respect global cursor setting
+                                    if (usehand && ! LzMouseKernel.hasGlobalCursor) {
+                                        if ($swf10) { cursor = MouseCursor.BUTTON; }
+                                    }
                                 }
                             }
+
                             if (sprite is LzSprite) {
                                 var lzsprite:LzSprite = LzSprite(sprite);
                                 if (lzsprite.cursorResource != null) {
@@ -302,6 +309,7 @@ public class LzTextSprite extends LzSprite {
 
         override public function setClickable( c:Boolean ):void {
             if (this.clickable == c) return;
+            setShowHandCursor(c);
             this.clickable = c;
         }
 

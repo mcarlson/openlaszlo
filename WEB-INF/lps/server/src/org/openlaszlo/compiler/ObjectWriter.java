@@ -346,6 +346,18 @@ abstract class ObjectWriter {
 
     abstract public void importResource(List sources, String name, File parent);
 
+
+
+      abstract public void importResource(String fileName, String name, ResourceCompiler.Offset2D offset)
+      throws ImportResourceError;
+    /*
+    abstract public void importResource(File fFile, String name, ResourceCompiler.Offset2D offset)
+      throws ImportResourceError;
+    */
+
+    abstract public void importResource(List sources, String name, File parent, ResourceCompiler.Offset2D offset);
+
+
     /** Returns a new unique js name. */
     String createName() {
         return mNameSupply.next();

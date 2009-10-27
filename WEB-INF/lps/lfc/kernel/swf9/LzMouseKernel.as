@@ -12,6 +12,7 @@
 class LzMouseKernel  {
     #passthrough (toplevel:true) {
     import flash.display.Sprite;
+    import flash.display.DisplayObject;
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.text.TextField;
@@ -119,11 +120,14 @@ class LzMouseKernel  {
     */
     static function showHandCursor (show:Boolean) :void {
         showhandcursor = show;
+        LzSprite.rootSprite.setGlobalHandCursor(show);
     }
 
     static var __amLocked:Boolean = false;
     static var useBuiltinCursor:Boolean = false;
     static var cursorSprite:Sprite = null;
+    static var cursorOffsetX:int = 0;
+    static var cursorOffsetY:int = 0;
     static var globalCursorResource:String = null;
     static var lastCursorResource:String = null;
 
@@ -177,7 +181,7 @@ class LzMouseKernel  {
             // null is invalid, maybe call restoreCursor()?
             return;
         } else if (lastCursorResource != what) {
-            var resourceSprite:Sprite = getCursorResource(what);
+            var resourceSprite:DisplayObject = getCursorResource(what);
             if (resourceSprite != null) {
                 if (cursorSprite.numChildren > 0) {
                     cursorSprite.removeChildAt(0);
@@ -203,8 +207,8 @@ class LzMouseKernel  {
             // you can only hide the Mouse when Mouse.cursor is AUTO
             if ($swf10) { Mouse['cursor'] = MouseCursor.AUTO; }
             Mouse.hide();
-            cursorSprite.x = LFCApplication.stage.mouseX;
-            cursorSprite.y = LFCApplication.stage.mouseY;
+            cursorSprite.x = LFCApplication.stage.mouseX + cursorOffsetX;
+            cursorSprite.y = LFCApplication.stage.mouseY + cursorOffsetY;
             LFCApplication.setChildIndex(cursorSprite, LFCApplication._sprite.numChildren-1);
             // respond to mouse move events
             cursorSprite.startDrag();
@@ -249,28 +253,30 @@ class LzMouseKernel  {
         }
     }
 
-    private static function getCursorResource (resource:String) :Sprite {
-          if (! (LzAsset.isMovieClipAsset(resource) || LzAsset.isMovieClipLoaderAsset(resource))) {
-              // only swf cursors are supported
-              return null;
-          }
+    private static function getCursorResource (resource:String) :DisplayObject {
+        var resinfo:Object = LzResourceLibrary[resource];
+        var assetclass:Class;
+        if (resinfo == null) {
+            return null;
+        }
+        // single frame resources get an entry in LzResourceLibrary which has
+        // 'assetclass' pointing to the resource Class object.
+        if (resinfo.assetclass is Class) {
+            assetclass = resinfo.assetclass;
+        } else {
+            // Multiframe resources have an array of Class objects in frames[]
+            var frames:Array = resinfo.frames;
+            assetclass = frames[0];
+        }
 
-          var resinfo:Object = LzResourceLibrary[resource];
-          var assetclass:Class;
-          // single frame resources get an entry in LzResourceLibrary which has
-          // 'assetclass' pointing to the resource Class object.
-          if (resinfo.assetclass is Class) {
-              assetclass = resinfo.assetclass;
-          } else {
-              // Multiframe resources have an array of Class objects in frames[]
-              var frames:Array = resinfo.frames;
-              assetclass = frames[0];
-          }
+        var asset:DisplayObject = new assetclass();
+        asset.scaleX = 1.0;
+        asset.scaleY = 1.0;
 
-          var asset:Sprite = new assetclass();
-          asset.scaleX = 1.0;
-          asset.scaleY = 1.0;
-          return asset;
+        if (resinfo['offsetx'] != null) { cursorOffsetX = resinfo['offsetx']; }
+        if (resinfo['offsety'] != null) { cursorOffsetY = resinfo['offsety']; }
+
+        return asset;
     }
 
     /**
