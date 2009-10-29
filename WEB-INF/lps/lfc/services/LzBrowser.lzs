@@ -495,5 +495,5 @@ if ($dhtml) {
     lz.embed.browser = obj;
   }
   // Read in lz.embed.browser hash from browser
-  LzBrowserKernel.callJS('window.eval', lz.embed.__updatebrowserprops, 'lz.embed.browser');
+  LzBrowserKernel.callJS('eval', lz.embed.__updatebrowserprops, 'lz.embed.browser');
 }
