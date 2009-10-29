@@ -108,7 +108,7 @@ class LzFlashRemoteDebugConsole extends LzBootstrapDebugConsole {
         // It doesn't matter what path/filename we use, as long as it has ".lzx" suffix, so it is
         // handled by the LPS. The lzt=eval causes the request to be served by the EVAL Responder.
       var appfile:String = lz.Browser.getBaseURL().file;
-      var url:String = appfile + "?lzr=" + $runtime + "&lz_load=false&lzt=eval&lz_script="
+      var url:String = appfile + ".lzx?lzr=" + $runtime + "&lz_load=false&lzt=eval&lz_script="
                     + encodeURIComponent(expr)+"&lzbc=" +(new Date()).getTime();
       debugloader.load(new URLRequest(url),
                        new LoaderContext(false,

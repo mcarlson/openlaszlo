@@ -29,7 +29,7 @@ public class LzDebugEvalLoader {
 
     public function doEval(expr:String, seq:int=0) {
       var appfile:String = lz.Browser.getBaseURL().toString();
-      var url:String = appfile + "?lzr=" + $runtime + "&lz_load=false&lzt=eval&lz_script="
+      var url:String = appfile + ".lzx?lzr=" + $runtime + "&lz_load=false&lzt=eval&lz_script="
       + encodeURIComponent(expr);
       this.loader.load(new URLRequest(url),
                          new LoaderContext(false,
