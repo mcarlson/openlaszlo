@@ -19,6 +19,7 @@ public class LzInputTextSprite extends LzTextSprite {
         import flash.events.Event;
         import flash.events.FocusEvent;
         import flash.text.TextField;
+        import flash.text.TextFormat;
         import flash.text.TextFieldType;
     }#
 
@@ -160,10 +161,14 @@ public class LzInputTextSprite extends LzTextSprite {
     function setEnabled (enabled:Boolean) :void {
         this.enabled = enabled;
         if (enabled) {
-            textfield.type = 'input';
+            textfield.type = TextFieldType.INPUT;
         } else {
-            textfield.type = 'dynamic';
+            textfield.type = TextFieldType.DYNAMIC;
         }
+
+        var df:TextFormat = textfield.defaultTextFormat;
+        // reset textformat to workaround flash player bug (FP-77)
+        textfield.defaultTextFormat = df;
     }
 
     /**
