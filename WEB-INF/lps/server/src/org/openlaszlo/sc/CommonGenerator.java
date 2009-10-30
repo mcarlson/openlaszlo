@@ -81,13 +81,12 @@ import org.openlaszlo.cache.PersistentMap;
 //     return instrsOut;
 // }
 
-public abstract class CommonGenerator implements ASTVisitor {
+public abstract class CommonGenerator extends GenericVisitor {
 
   Compiler.OptionMap options = new Compiler.OptionMap();
   String runtime;
   TranslationContext context = null;
   boolean debugVisit = false;
-  InstructionCollector collector = null;
   SourceFileMap sources = new SourceFileMap();
 
   // Make Javascript globals 'known'
@@ -146,13 +145,8 @@ public abstract class CommonGenerator implements ASTVisitor {
 
   // Give the generators an option to save the original
   // input source for debugging.
-
   public void setOriginalSource(String source) {
     // no action by default
-  }
-
-  public InstructionCollector getCollector() {
-    return collector;
   }
 
   // Options that don't affect code generation.  This is used to decide
@@ -251,60 +245,6 @@ public abstract class CommonGenerator implements ASTVisitor {
 //       System.err.println(" => " + value + "(" + value.getClass() + ")");
 //     }
     return (Boolean)value;
-  }
-
-  static class ParseResult {
-    SimpleNode parse;
-    boolean hasIncludes;
-
-    ParseResult(SimpleNode parse, boolean hasIncludes) {
-      this.parse = parse;
-      this.hasIncludes = hasIncludes;
-    }
-
-    public boolean equals(Object o) {
-      if (o != null && o instanceof ParseResult) {
-        ParseResult pr = (ParseResult)o;
-        return parse.equals(pr.parse) && hasIncludes == pr.hasIncludes;
-      }
-      return false;
-    }
-  }
-
-  static java.util.regex.Pattern includePattern =
-  java.util.regex.Pattern.compile(".*#\\s*include\\s*\".*", java.util.regex.Pattern.DOTALL);
-
-  ParseResult parseFile(File file, String userfname, String source) {
-    if (Compiler.CachedParses == null) {
-      Compiler.CachedParses = new ScriptCompilerCache();
-    }
-    String sourceKey = file.getAbsolutePath();
-    String sourceChecksum = "" + file.lastModified(); // source;
-    ParseResult entry = (ParseResult)Compiler.CachedParses.get(sourceKey, sourceChecksum);
-    if ((entry == null) || options.getBoolean(Compiler.VALIDATE_CACHES)) {
-      boolean hasIncludes = includePattern.matcher(source).matches();
-      if (options.getBoolean(Compiler.PROGRESS)) {
-        // Even though code generation is re-run
-        // for every file, just print this for
-        // files that are re-parsed, to indicate
-        // what's being changed.
-        System.err.println("Compiling " + userfname + "...");
-      }
-      SimpleNode program = (new Compiler.Parser()).parse(source);
-      // Always cache the parse tree, since this
-      // helps even when the compilation is only one
-      // once.  This is because each pass processes
-      // the #include again.
-      ParseResult realentry = new ParseResult(program, hasIncludes);
-      Compiler.CachedParses.put(sourceKey, sourceChecksum, realentry);
-      if ((entry != null) && options.getBoolean(Compiler.VALIDATE_CACHES)) {
-        if (! realentry.equals(entry)) {
-          System.err.println("Bad parse cache for " + sourceKey + ": " + entry + " != " + realentry);
-        }
-      }
-      entry = realentry;
-    }
-    return entry;
   }
 
   private String mapToString(Map map) {
@@ -975,17 +915,6 @@ public abstract class CommonGenerator implements ASTVisitor {
     return node;
   }
 
-  public SimpleNode visitVariableDeclarationList(SimpleNode node, SimpleNode[] children) {
-    for (int i = 0, len = children.length ; i < len; i++) {
-      children[i] = visitStatement(children[i]);
-    }
-    return node;
-  }
-
-  // for function prefix/suffix parsing
-  public SimpleNode visitDirectiveBlock(SimpleNode node, SimpleNode[] children) {
-    return visitStatementList(node, children);
-  }
 
   // An ASTModifiedDefinition can appear as a statement (modifying
   // class and function definitions) or as an expression (modifying
@@ -1000,18 +929,6 @@ public abstract class CommonGenerator implements ASTVisitor {
     ((ASTModifiedDefinition)node).verifyTopLevel(child);
 
     return visitStatement(child);
-  }
-
-  public SimpleNode visitModifiedDefinitionExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    // Modifiers, like 'final', are ignored unless this is handled
-    // by the runtime.
-
-    assert children.length == 1;
-    SimpleNode child = children[0];
-
-    ((ASTModifiedDefinition)node).verifyTopLevel(child);
-
-    return visitExpression(child, isReferenced);
   }
 
   public SimpleNode visitLabeledStatement(SimpleNode node, SimpleNode[] children) {
@@ -1029,44 +946,6 @@ public abstract class CommonGenerator implements ASTVisitor {
     }
   }
 
-  // for function prefix/suffix parsing
-  public SimpleNode visitIfDirective(SimpleNode node, SimpleNode[] children) {
-    return visitIfStatement(node, children);
-  }
-
-  public SimpleNode visitForVarInStatement(SimpleNode node, SimpleNode[] children) {
-    SimpleNode var = children[0];
-    // SimpleNode _ = children[1];
-    SimpleNode obj = children[2];
-    SimpleNode body = children[3];
-    if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
-      return translateForInStatement(node, var, Instructions.SetVariable, obj, body);
-    }
-    return translateForInStatement(node, var, Instructions.VarEquals, obj, body);
-  }
-
-  public SimpleNode visitContinueStatement(SimpleNode node, SimpleNode[] children) {
-    SimpleNode label = children.length > 0 ? children[0] : null;
-    return translateAbruptCompletion(node, "continue", (ASTIdentifier)label);
-  }
-
-  public SimpleNode visitBreakStatement(SimpleNode node, SimpleNode[] children) {
-    SimpleNode label = children.length > 0 ? children[0] : null;
-    return translateAbruptCompletion(node, "break", (ASTIdentifier)label);
-  }
-
-  public SimpleNode visitAndExpressionSequence(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    SimpleNode a = children[0];
-    SimpleNode b = children[1];
-    return translateAndOrExpression(node, true, a, b);
-  }
-
-  public SimpleNode visitOrExpressionSequence(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    SimpleNode a = children[0];
-    SimpleNode b = children[1];
-    return translateAndOrExpression(node, false, a, b);
-  }
-
   static class DoubleCollator implements Comparator {
     public boolean equals(Object o1, Object o2) {
       return ((Double)o1).equals((Double)o2);
@@ -1075,15 +954,6 @@ public abstract class CommonGenerator implements ASTVisitor {
     public int compare(Object o1, Object o2) {
       return ((Double)o1).compareTo((Double)o2);
     }
-  }
-
-  public SimpleNode visitChildren(SimpleNode node) {
-    SimpleNode[] children = node.getChildren();
-    for (int i = 0, len = children.length; i < len; i++) {
-      SimpleNode child = children[i];
-      children[i] = visitStatement(child);
-    }
-    return node;
   }
 
   public SimpleNode translateSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
@@ -1146,154 +1016,39 @@ public abstract class CommonGenerator implements ASTVisitor {
     return n;
   }
 
-  public SimpleNode visitVariableStatement(SimpleNode node, SimpleNode[] children) {
-    return visitChildren(node);
-  }
-
   // Hook for any special processing of globals, like noting them in
   // the known list, or emitting a declaration
   void addGlobalVar(String name, String type, String initializer) {
     globals.add(name);
   }
 
-  public SimpleNode dispatchExpression(SimpleNode node, boolean isReferenced) {
+  public SimpleNode visitExpression(SimpleNode node, boolean isReferenced) {
     // Are we doing OO programming yet?
     SimpleNode[] children = node.getChildren();
     SimpleNode newNode = null;
 
-    if (node instanceof ASTIdentifier) {
-      newNode = visitIdentifier(node, isReferenced, children);
-    }
-    else if (node instanceof ASTLiteral) {
-      newNode = visitLiteral(node, isReferenced, children);
-    }
-    else if (node instanceof ASTExpressionList) {
-      newNode = visitExpressionList(node, isReferenced, children);
-    }
-    else if (node instanceof ASTEmptyExpression) {
-      newNode = visitEmptyExpression(node, isReferenced, children);
-    }
-    else if (node instanceof ASTThisReference) {
-      newNode = visitThisReference(node, isReferenced, children);
-    }
-    else if (node instanceof ASTArrayLiteral) {
-      newNode = visitArrayLiteral(node, isReferenced, children);
-    }
-    else if (node instanceof ASTObjectLiteral) {
-      newNode = visitObjectLiteral(node, isReferenced, children);
-    }
-    else if (node instanceof ASTFunctionExpression) {
-      newNode = visitFunctionExpression(node, isReferenced, children);
-    }
-    else if (node instanceof ASTMethodDeclaration) {
+    // These should really only be in JS1-based platforms...
+    if (node instanceof ASTMethodDeclaration) {
       // When a class is transformed to a plist, it's methods appear
       // in an expression context
-      newNode = visitMethodExpression(node, isReferenced, children);
-    }
-    else if (node instanceof ASTFunctionCallParameters) {
-      newNode = visitFunctionCallParameters(node, isReferenced, children);
-    }
-    else if (node instanceof ASTPropertyIdentifierReference) {
-      newNode = visitPropertyIdentifierReference(node, isReferenced, children);
-    }
-    else if (node instanceof ASTPropertyValueReference) {
-      newNode = visitPropertyValueReference(node, isReferenced, children);
-    }
-    else if (node instanceof ASTCallExpression) {
-      newNode = visitCallExpression(node, isReferenced, children);
-    }
-    else if (node instanceof ASTSuperCallExpression) {
-      newNode = visitSuperCallExpression(node, isReferenced, children);
-    }
-    else if (node instanceof ASTNewExpression) {
-      newNode = visitNewExpression(node, isReferenced, children);
-    }
-    else if (node instanceof ASTPostfixExpression) {
-      newNode = visitPostfixExpression(node, isReferenced, children);
-    }
-    else if (node instanceof ASTUnaryExpression) {
-      newNode = visitUnaryExpression(node, isReferenced, children);
-    }
-    else if (node instanceof ASTBinaryExpressionSequence) {
-      newNode = visitBinaryExpressionSequence(node, isReferenced, children);
-    }
-    else if (node instanceof ASTAndExpressionSequence) {
-      newNode = visitAndExpressionSequence(node, isReferenced, children);
-    }
-    else if (node instanceof ASTOrExpressionSequence) {
-      newNode = visitOrExpressionSequence(node, isReferenced, children);
-    }
-    else if (node instanceof ASTConditionalExpression) {
-      newNode = visitConditionalExpression(node, isReferenced, children);
-    }
-    else if (node instanceof ASTAssignmentExpression) {
-      newNode = visitAssignmentExpression(node, isReferenced, children);
+      return visitMethodDeclarationAsExpression(node, isReferenced, children);
     }
     else if (node instanceof ASTModifiedDefinition) {
-      newNode = visitModifiedDefinitionExpression(node, isReferenced, children);
+      return visitModifiedDefinitionAsExpression(node, isReferenced, children);
     }
     else if (node instanceof Compiler.PassThroughNode) {
-      newNode = node;
+      return node;
     }
-    else {
-      throw new CompilerImplementationError("unknown expression " + node, node);
-    }
-    return newNode;
+    return super.visitExpression(node, isReferenced);
   }
 
-  abstract SimpleNode translateForInStatement(SimpleNode node, SimpleNode var,
-                                              Instructions.Instruction varset,
-                                              SimpleNode obj,
-                                              SimpleNode body);
-  abstract SimpleNode translateAbruptCompletion(SimpleNode node, String type,
-                                                ASTIdentifier label);
-  abstract SimpleNode translateAndOrExpression(SimpleNode node, boolean isand,
-                                               SimpleNode a, SimpleNode b);
+  // These should really only be in JS1-based platforms...
+  abstract SimpleNode visitMethodDeclarationAsExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children);
+  abstract SimpleNode visitModifiedDefinitionAsExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children);
 
   /** Collect runtime statistics at this point in the program if asked for.
    */
   abstract void showStats(SimpleNode node);
-
-
-  File includeNameToFile(String userfname) {
-    try {
-      String fname = userfname;
-
-      if (options.containsKey(Compiler.RESOLVER)) {
-        fname = ((lzsc.Resolver)options.get(Compiler.RESOLVER)).resolve(userfname);
-      }
-      return new File(new File(fname).getCanonicalPath());
-    }
-    catch (IOException e) {
-      throw new CompilerError("error reading include: " + e);
-    }
-  }
-
-  String includeFileToSourceString(File file, String userfname) {
-    String source;
-    try {
-      FileInputStream stream = new FileInputStream(file);
-      try {
-        int n = stream.available();
-        byte[] b = new byte[n];
-        stream.read(b);
-        source = "#file " + userfname + "\n#line 1\n" + new String(b, "UTF-8");
-      }
-      finally {
-        stream.close();
-      }
-    }
-    catch (FileNotFoundException e) {
-      throw new CompilerError("error reading include: " + e);
-    }
-    catch (UnsupportedEncodingException e) {
-      throw new CompilerError("error reading include: " + e);
-    }
-    catch (IOException e) {
-      throw new CompilerError("error reading include: " + e);
-    }
-    return source;
-  }
 
   boolean isStatic(SimpleNode node) {
     SimpleNode parent = node.getParent();

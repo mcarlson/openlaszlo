@@ -695,11 +695,12 @@ void Statement() #Statement : {}
 
 void Block() #void : {}
 {
-   LOOKAHEAD(3)
-   "{" "}" #StatementList
- | LOOKAHEAD(2) "{" "#beginContent" [StatementList()] "#endContent" "}"
- | LOOKAHEAD(2) "{" "#beginAttributeStatements" [StatementList()] "#endAttributeStatements" "}"
- | "{" [StatementList()] "}"
+   LOOKAHEAD(2) "{" "}" #StatementList
+ | LOOKAHEAD(3) "{" "#beginContent" "#endContent" "}" #StatementList
+ | LOOKAHEAD(2) "{" "#beginContent" StatementList() "#endContent" "}"
+ | LOOKAHEAD(3) "{" "#beginAttributeStatements" "#endAttributeStatements" "}" #StatementList
+ | LOOKAHEAD(2) "{" "#beginAttributeStatements" StatementList() "#endAttributeStatements" "}"
+ | "{" StatementList() "}"
 }
 
 void VariableStatement() #VariableStatement : {}

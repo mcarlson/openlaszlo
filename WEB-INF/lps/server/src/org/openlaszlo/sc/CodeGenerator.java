@@ -77,6 +77,11 @@ import org.openlaszlo.cache.PersistentMap;
 // }
 
 public class CodeGenerator extends CommonGenerator implements Translator {
+  InstructionCollector collector = null;
+
+  public InstructionCollector getCollector() {
+    return collector;
+  }
 
   protected void setRuntime(String runtime) {
     assert org.openlaszlo.compiler.Compiler.SWF_RUNTIMES.contains(runtime) : "unknown runtime " + runtime;
@@ -341,9 +346,30 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     }
   }
 
+  class SWFTranslationContext extends TranslationContext {
+
+    public SWFTranslationContext(Object type, TranslationContext parent) {
+      super(type, parent);
+    }
+
+    public SWFTranslationContext(Object type, TranslationContext parent, String label) {
+      super(type, parent, label);
+    }
+
+    // Emit the code necessary to abruptly leave a context (not
+    // including the jump statement itself).
+    void emitBreakPreamble(SimpleNode node, CodeGenerator translator) {
+      if (isEnumeration) {
+        translator.unwindEnumeration(node);
+      }
+    }
+  }
+
+    
+
   void translateInternal(SimpleNode program, String cpass, boolean top) {
     assert program instanceof ASTProgram;
-    this.context = new TranslationContext(ASTProgram.class, null);
+    this.context = new SWFTranslationContext(ASTProgram.class, null);
     visitProgram(program, program.getChildren(), cpass, top);
   }
 
@@ -737,7 +763,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     SimpleNode body = children[1];
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTWhileStatement.class, context);
+      context = new SWFTranslationContext(ASTWhileStatement.class, context);
       String continueLabel = newLabel(node);
       String breakLabel = newLabel(node);
       context.setTarget("break", breakLabel);
@@ -761,7 +787,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     SimpleNode test = children[1];
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTDoWhileStatement.class, context);
+      context = new SWFTranslationContext(ASTDoWhileStatement.class, context);
       String continueLabel = newLabel(node);
       String breakLabel = newLabel(node);
       context.setTarget("break", breakLabel);
@@ -796,7 +822,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     Compiler.OptionMap savedOptions = options;
     try {
       options = options.copy();
-      context = new TranslationContext(ASTForStatement.class, context);
+      context = new SWFTranslationContext(ASTForStatement.class, context);
       String continueLabel = newLabel(node);
       String breakLabel = newLabel(node);
       context.setTarget("break", breakLabel);
@@ -833,6 +859,17 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
+  public SimpleNode visitForVarInStatement(SimpleNode node, SimpleNode[] children) {
+    SimpleNode var = children[0];
+    // SimpleNode _ = children[1];
+    SimpleNode obj = children[2];
+    SimpleNode body = children[3];
+    if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
+      return translateForInStatement(node, var, Instructions.SetVariable, obj, body);
+    }
+    return translateForInStatement(node, var, Instructions.VarEquals, obj, body);
+  }
+
   // This works because keys are always strings, and enumerate pushes
   // a null before all the keys
   public void unwindEnumeration(SimpleNode node) {
@@ -851,7 +888,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     try {
       String continueLabel = newLabel(node);
       String breakLabel = newLabel(node);
-      context = new TranslationContext(ASTForInStatement.class, context);
+      context = new SWFTranslationContext(ASTForInStatement.class, context);
       context.setTarget("break", breakLabel);
       context.setTarget("continue", continueLabel);
       context.isEnumeration = true;
@@ -882,6 +919,16 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     }
   }
 
+  public SimpleNode visitContinueStatement(SimpleNode node, SimpleNode[] children) {
+    SimpleNode label = children.length > 0 ? children[0] : null;
+    return translateAbruptCompletion(node, "continue", (ASTIdentifier)label);
+  }
+
+  public SimpleNode visitBreakStatement(SimpleNode node, SimpleNode[] children) {
+    SimpleNode label = children.length > 0 ? children[0] : null;
+    return translateAbruptCompletion(node, "break", (ASTIdentifier)label);
+  }
+
   SimpleNode translateAbruptCompletion(SimpleNode node, String type, ASTIdentifier label) {
     TranslationContext targetContext =
       context.findLabeledContext(label != null ? label.getName() : null);
@@ -899,13 +946,39 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // For each intervening enumeration, pop the stack
     TranslationContext c = context;
     while (! targetContext.equals(c)) {
-      c.emitBreakPreamble(node, this);
+      ((SWFTranslationContext)c).emitBreakPreamble(node, this);
       c = c.getParentStatement();
     }
     if ("break".equals(type)) {
-      targetContext.emitBreakPreamble(node, this);
+      ((SWFTranslationContext)targetContext).emitBreakPreamble(node, this);
     }
     collector.emit(Instructions.BRANCH.make(targetLabel));
+    return node;
+  }
+
+  public SimpleNode visitAndExpressionSequence(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
+    SimpleNode a = children[0];
+    SimpleNode b = children[1];
+    return translateAndOrExpression(node, true, a, b);
+  }
+
+  public SimpleNode visitOrExpressionSequence(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
+    SimpleNode a = children[0];
+    SimpleNode b = children[1];
+    return translateAndOrExpression(node, false, a, b);
+  }
+
+  SimpleNode translateAndOrExpression(SimpleNode node, boolean isand, SimpleNode a, SimpleNode b) {
+    visitExpression(a);
+    collector.emit(Instructions.DUP);
+    if (isand) {
+      collector.emit(Instructions.NOT);
+    }
+    String label = newLabel(node);
+    collector.emit(Instructions.BranchIfTrue.make(label));
+    collector.emit(Instructions.POP);
+    visitExpression(b);
+    collector.emit(Instructions.LABEL.make(label));
     return node;
   }
 
@@ -913,7 +986,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     SimpleNode value = children[0];
     TranslationContext c = context;
     while ((! c.isFunctionBoundary())) {
-      c.emitBreakPreamble(node, this);
+      ((SWFTranslationContext)c).emitBreakPreamble(node, this);
       c = c.getParentStatement();
       if (c == null) {
         throw new SemanticError("return not within a function body");
@@ -969,7 +1042,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     String finalLabel = newLabel(node, "finalLabel");
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTSwitchStatement.class, context);
+      context = new SWFTranslationContext(ASTSwitchStatement.class, context);
       context.setTarget("break", finalLabel);
       visitExpression(expr);
       // TODO: [2002 ows] warn on duplicate tests
@@ -1028,9 +1101,9 @@ public class CodeGenerator extends CommonGenerator implements Translator {
   static class LabelMap {
     Map labels = new HashMap();
     SimpleNode node;
-    Translator translator;
+    CodeGenerator translator;
 
-    LabelMap(SimpleNode node, Translator translator) {
+    LabelMap(SimpleNode node, CodeGenerator translator) {
       this.node = node;
       this.translator = translator;
     }
@@ -1129,7 +1202,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       System.err.println("visitExpression: " + node.getClass());
     }
 
-    SimpleNode newNode = dispatchExpression(node, isReferenced);
+    SimpleNode newNode = super.visitExpression(node, isReferenced);
 
     if ((! isReferenced) && (newNode != null)) {
       collector.emit(Instructions.POP);
@@ -1290,11 +1363,23 @@ public class CodeGenerator extends CommonGenerator implements Translator {
 
   // A method declaration may appear in an expression context (when it
   // is in the Class.make plist)
-  public SimpleNode visitMethodExpression(SimpleNode node,  boolean isReferenced, SimpleNode[] ast) {
+  public SimpleNode visitMethodDeclarationAsExpression(SimpleNode node,  boolean isReferenced, SimpleNode[] ast) {
     assert context.isClassBoundary() : ("Method not in class context? " + context);
     // When a method declaration is an expression, don't use the name
     translateMethod(node, false, ast);
     return node;
+  }
+
+  public SimpleNode visitModifiedDefinitionAsExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
+    // Modifiers, like 'final', are ignored unless this is handled
+    // by the runtime.
+
+    assert children.length == 1;
+    SimpleNode child = children[0];
+
+    ((ASTModifiedDefinition)node).verifyTopLevel(child);
+
+    return visitExpression(child, isReferenced);
   }
 
   public SimpleNode visitFunctionCallParameters(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
@@ -1325,7 +1410,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     return translateReference(node).get().node;
   }
 
-  void noteCallSite (SimpleNode node) {
+  public SimpleNode noteCallSite (SimpleNode node) {
       // Note current call-site in a function context and backtracing
     if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine != 0)) &&
         (context.findFunctionContext() != null)) {
@@ -1340,6 +1425,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         collector.emit(Instructions.SetMember);
       }
     }
+    return node;
   }
 
   public SimpleNode visitCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
@@ -1709,20 +1795,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
-  SimpleNode translateAndOrExpression(SimpleNode node, boolean isand, SimpleNode a, SimpleNode b) {
-    visitExpression(a);
-    collector.emit(Instructions.DUP);
-    if (isand) {
-      collector.emit(Instructions.NOT);
-    }
-    String label = newLabel(node);
-    collector.emit(Instructions.BranchIfTrue.make(label));
-    collector.emit(Instructions.POP);
-    visitExpression(b);
-    collector.emit(Instructions.LABEL.make(label));
-    return node;
-  }
-
   public SimpleNode visitConditionalExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode test = children[0];
     SimpleNode a = children[1];
@@ -1769,16 +1841,16 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     return null;
   }
 
-  void translateFunction(SimpleNode node, boolean useName, SimpleNode[] children) {
-    translateFunction(node, useName, children, false);
+  SimpleNode translateFunction(SimpleNode node, boolean useName, SimpleNode[] children) {
+    return translateFunction(node, useName, children, false);
   }
 
-  void translateMethod(SimpleNode node, boolean useName, SimpleNode[] children) {
-    translateFunction(node, useName, children, true);
+  SimpleNode translateMethod(SimpleNode node, boolean useName, SimpleNode[] children) {
+    return translateFunction(node, useName, children, true);
   }
 
   // useName => declaration not expression
-  void translateFunction(SimpleNode node, boolean useName, SimpleNode[] children, boolean isMethod) {
+  SimpleNode translateFunction(SimpleNode node, boolean useName, SimpleNode[] children, boolean isMethod) {
     // label for profiling return
     String label = newLabel(node);
     // TODO: [2003-04-15 ptw] bind context slot macro
@@ -1787,7 +1859,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     Compiler.OptionMap savedOptions = options;
     try {
       options = options.copy();
-      context = new TranslationContext(ASTFunctionExpression.class, context, label);
+      context = new SWFTranslationContext(ASTFunctionExpression.class, context, label);
       node = formalArgumentsTransformations(node);
       children = node.getChildren();
       dependencies = translateFunctionInternal(node, useName, children, isMethod);
@@ -1803,6 +1875,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       visitExpression(dependencies);
       collector.emit(Instructions.SetMember);
     }
+    return node;
   }
 
   // Internal helper function for above

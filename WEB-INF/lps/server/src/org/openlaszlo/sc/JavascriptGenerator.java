@@ -38,10 +38,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
   }
 
-  public String newLabel(SimpleNode node) {
-    throw new CompilerImplementationError("nyi: newLabel");
-  }
-
   int tempNum = 0;
 
   String newTemp() {
@@ -173,6 +169,43 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return source;
   }
 
+  class JavascriptParseTreePrinter extends ParseTreePrinter {
+
+    public JavascriptParseTreePrinter(ParseTreePrinter.Config config) {
+      super(config);
+    }
+
+    // TODO: [2009-03-23 dda] Should not need to comment the #pragma as they
+    // should not normally appear in emitted code.  But LPP-7824 requires it
+    // for now.
+    public String visitPragmaDirective(SimpleNode node, String[] children) {
+      return "// #pragma " + children[0] + "\n";
+    }
+    public String visitModifiedDefinition(SimpleNode node, String[] children) {
+      // In JavascriptGenerator 'static' is handled elsewhere.  This is
+      // just for debugging.
+      String mods = config.compress ? "" : ("/* " + ((ASTModifiedDefinition)node).toJavascriptString(false) + " */ ");
+      return mods + children[0];
+    }
+    // No types or ellipsis in Javascript
+    public String visitIdentifier(SimpleNode node, String[] children) {
+      ASTIdentifier id = (ASTIdentifier)node;
+      String name = id.getName();
+      if (id.isConstructor()) {
+        name = currentClassName;
+      }
+      return name;
+    }
+    // No return types in Javascript
+    public String functionReturnType(SimpleNode node) {
+      return "";
+    }
+    public String visitClassDefinition(SimpleNode node, String[] children) {
+      // Should never be called for plain Javascript, these are stripped out
+      throw new CompilerException("ClassDefinition found in printing Javascript AST");
+    }
+  }
+
   public List makeTranslationUnits(SimpleNode translatedNode, boolean compress, boolean obfuscate)
   {
     ParseTreePrinter.Config config = new ParseTreePrinter.Config();
@@ -180,7 +213,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     config.obfuscate = obfuscate;
     config.trackLines = options.getBoolean(Compiler.TRACK_LINES);
     config.dumpLineAnnotationsFile = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
-    return (new ParseTreePrinter(config)).makeTranslationUnits(translatedNode, sources);
+    return (new JavascriptParseTreePrinter(config)).makeTranslationUnits(translatedNode, sources);
   }
 
   public byte[] postProcess(List tunits) {
@@ -396,10 +429,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // Statements
   //
 
-  public SimpleNode visitVariableStatement(SimpleNode node, SimpleNode[] children) {
-    return visitChildren(node);
-  }
-
   public SimpleNode visitVariableDeclaration(SimpleNode node, SimpleNode[] children) {
     ASTIdentifier id = (ASTIdentifier)children[0];
     JavascriptReference ref = translateReference(id);
@@ -525,51 +554,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
   }
 
-  // This works because keys are always strings, and enumerate pushes
-  // a null before all the keys
-  public void unwindEnumeration(SimpleNode node) {
-  }
-
-  SimpleNode translateForInStatement(SimpleNode node, SimpleNode var,
-                               Instructions.Instruction varset, SimpleNode obj,
-                               SimpleNode body) {
-    // TODO: [2003-04-15 ptw] bind context slot macro
-    try {
-      SimpleNode[] children = node.getChildren();
-      context = new TranslationContext(ASTForInStatement.class, context);
-      children[2] = visitExpression(obj);
-      JavascriptReference ref = translateReference(var);
-      if (varset == Instructions.VarEquals) {
-        children[0] = ref.init();
-      } else {
-        children[0] = ref.set(true);
-      }
-      children[3] = visitStatement(body);
-      return node;
-    }
-    finally {
-      context = context.parent;
-    }
-  }
-
-  SimpleNode translateAbruptCompletion(SimpleNode node, String type, ASTIdentifier label) {
-    return node;
-  }
-
-  public SimpleNode visitReturnStatement(SimpleNode node, SimpleNode[] children) {
-    SimpleNode value = children[0];
-    children[0] = visitExpression(value);
-    return node;
-  }
-
-  public SimpleNode visitWithStatement(SimpleNode node, SimpleNode[] children) {
-    SimpleNode expr = children[0];
-    SimpleNode stmt = children[1];
-    children[0] = visitExpression(expr);
-    children[1] = visitStatement(stmt);
-    return node;
-  }
-
   public SimpleNode visitTryStatement(SimpleNode node, SimpleNode[] children) {
     SimpleNode block = children[0];
     int len = children.length;
@@ -604,11 +588,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
     return node;
   }
-  public SimpleNode visitThrowStatement(SimpleNode node, SimpleNode[] children) {
-    SimpleNode expr = children[0];
-    children[0] = visitExpression(expr);
-    return node;
-  }
 
   public SimpleNode visitSwitchStatement(SimpleNode node, SimpleNode[] children) {
     SimpleNode expr = children[0];
@@ -641,19 +620,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // Expressions
   //
 
-  public SimpleNode visitExpression(SimpleNode node) {
-    return visitExpression(node, true);
-  }
-
-  /* This function, unlike the other expression visitors, can be
-     applied to any expression node, so it dispatches based on the
-     node's class. */
   public SimpleNode visitExpression(SimpleNode node, boolean isReferenced) {
     if (this.debugVisit) {
       System.err.println("visitExpression: " + node.getClass());
     }
 
-    SimpleNode newNode = dispatchExpression(node, isReferenced);
+    SimpleNode newNode = super.visitExpression(node, isReferenced);
 
     if ((! isReferenced) && (newNode == null)) {
       newNode = new ASTEmptyExpression(0);
@@ -689,15 +661,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return translateLiteralNode(node);
   }
 
-  public SimpleNode visitExpressionList(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    // all but last expression will not be referenced, so
-    // visitExpression will pop it.  If the list is not referenced,
-    // then the last will be popped too
-    int i = 0, len = children.length - 1;
-    for ( ; i < len; i++) {
-      children[i] = visitExpression(children[i], false);
-    }
-    children[len] = visitExpression(children[len], isReferenced);
+  SimpleNode translateLiteralNode(SimpleNode node) {
     return node;
   }
 
@@ -717,30 +681,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return translateReference(node).get();
   }
 
-  public SimpleNode visitArrayLiteral(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    boolean suppressed = (! isReferenced);
-    for (int i = 0, len = children.length; i <len; i++) {
-      children[i] = visitExpression(children[i], isReferenced);
-    }
-    return node;
-  }
-
-  public SimpleNode visitObjectLiteral(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    boolean isKey = true;
-    for (int i = 0, len = children.length; i < len; i++) {
-      SimpleNode item = children[i];
-      if (isKey && item instanceof ASTIdentifier) {
-        // Identifiers are a shorthand for a literal string, should
-        // not be evaluated (or remapped).
-        ;
-      } else {
-        children[i] = visitExpression(item);
-      }
-      isKey = (! isKey);
-    }
-    return node;
-  }
-
   public SimpleNode visitFunctionExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     Compiler.OptionMap savedOptions = options;
     try {
@@ -755,7 +695,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   // A method declaration may appear in an expression context (when it
   // is in the Class.make plist)
-  public SimpleNode visitMethodExpression(SimpleNode node,  boolean isReferenced, SimpleNode[] ast) {
+  public SimpleNode visitMethodDeclarationAsExpression(SimpleNode node,  boolean isReferenced, SimpleNode[] ast) {
     assert context.isClassBoundary() : ("Method not in class context? " + context);
     assert (! (this instanceof SWF9Generator)) : "Method expressions should not happen in swf9";
     Compiler.OptionMap savedOptions = options;
@@ -770,16 +710,17 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
   }
 
-  public SimpleNode visitFunctionCallParameters(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    translateFunctionCallParameters(node, isReferenced, children);
-    return node;
-  }
+  public SimpleNode visitModifiedDefinitionAsExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
+    assert (! (this instanceof SWF9Generator)) : "Modified expressions should not happen in swf9";
+    // Modifiers, like 'final', are ignored unless this is handled
+    // by the runtime.
 
-  public SimpleNode[] translateFunctionCallParameters(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    for (int i = 0, len = children.length; i < len; i++) {
-      children[i] = visitExpression(children[i]);
-    }
-    return children;
+    assert children.length == 1;
+    SimpleNode child = children[0];
+
+    ((ASTModifiedDefinition)node).verifyTopLevel(child);
+
+    return visitExpression(child, isReferenced);
   }
 
   public SimpleNode visitPropertyIdentifierReference(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
@@ -802,7 +743,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
-  SimpleNode noteCallSite(SimpleNode node) {
+  public SimpleNode noteCallSite(SimpleNode node) {
     // Note current call-site in a function context and backtracing
     if (node instanceof Compiler.AnnotatedNode) { return node; }
     if ((options.getBoolean(Compiler.DEBUG_BACKTRACE) && (node.beginLine > 0)) &&
@@ -818,9 +759,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   // Could do inline expansions here, like setAttribute
   public SimpleNode visitCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode fnexpr = children[0];
-    SimpleNode[] args = children[1].getChildren();
-    int arglen = args.length;
-
     // TODO: [2002-12-03 ptw] There should be a more general
     // mechanism for matching patterns against AST's and replacing
     // them.
@@ -832,6 +770,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) &&
       (! options.getBoolean("passThrough")) &&
       (fnexpr instanceof ASTPropertyIdentifierReference)) {
+      SimpleNode[] args = children[1].getChildren();
+      int arglen = args.length;
       SimpleNode[] fnchildren = fnexpr.getChildren();
       String name = ((ASTIdentifier)fnchildren[1]).getName();
       // We can't expand this if an expression value is expected,
@@ -892,7 +832,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       }
     }
 
-    children[1].setChildren(translateFunctionCallParameters(node, isReferenced, args));
+    SimpleNode params = children[1];
+    children[1] = visitFunctionCallParameters(params, isReferenced, params.getChildren());
     children[0] = translateReferenceForCall(fnexpr, true, node);
 //     if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {
 //       return makeCheckedNode(node);
@@ -900,26 +841,23 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return noteCallSite(node);
   }
 
+  // TODO: [2009-10-29 ptw] If we obfuscate private methods, this
+  // needs to translate the method identifier.  Maybe that will be
+  // correctly handled by visitIdentifier?
   public SimpleNode visitSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode n = translateSuperCallExpression(node, isReferenced, children);
     children = n.getChildren();
     for (int i = 0, len = children.length ; i < len; i++) {
       children[i] = visitExpression(children[i], isReferenced);
     }
+    // FIXME: [2009-10-29 ptw] Why no noteCallSite here?
     return n;
-  }
-
-  public SimpleNode visitNewExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    for (int i = 0, len = children.length; i < len; i++) {
-      SimpleNode child = children[i];
-      children[i] = visitExpression(child, isReferenced);
-    }
-    return noteCallSite(node);
   }
 
   public SimpleNode visitPrefixExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     int op = ((ASTOperator)children[0]).getOperator();
     SimpleNode ref = children[1];
+    // TODO: [2009-10-29 ptw] Is this still necessary, now that we do catch-errors?
     if (translateReference(ref).isChecked()) {
       // The undefined reference checker needs to have this expanded
       // to work
@@ -936,6 +874,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   public SimpleNode visitPostfixExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     SimpleNode ref = children[0];
     int op = ((ASTOperator)children[1]).getOperator();
+    // TODO: [2009-10-29 ptw] Is this still necessary, now that we do catch-errors?
     if (translateReference(ref).isChecked()) {
       // The undefined reference checker needs to have this expanded
       // to work
@@ -1006,27 +945,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
-  SimpleNode translateAndOrExpression(SimpleNode node, boolean isand, SimpleNode a, SimpleNode b) {
-    SimpleNode[] children = node.getChildren();
-    children[0] = visitExpression(a);
-    children[1] = visitExpression(b);
-    return node;
-  }
-
-  public SimpleNode visitConditionalExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    SimpleNode test = children[0];
-    SimpleNode a = children[1];
-    SimpleNode b = children[2];
-    children[0] = visitExpression(test);
-    children[1] = visitExpression(a);
-    children[2] = visitExpression(b);
-    return node;
-  }
-
   public SimpleNode visitAssignmentExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     JavascriptReference lhs = translateReference(children[0]);
     int op = ((ASTOperator)children[1]).getOperator();
     SimpleNode rhs = visitExpression(children[2]);
+    // TODO: [2009-10-29 ptw] Is this still necessary, now that we do catch-errors?
     if (op != ParserConstants.ASSIGN &&
         lhs.isChecked()) {
       // The undefined reference checker needs to have this expanded
@@ -1063,7 +986,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       context = new TranslationContext(ASTFunctionExpression.class, context);
       node = formalArgumentsTransformations(node);
       children = node.getChildren();
-      result = translateFunctionInternal(node, useName, children, isMethod);
+      result = translateFunctionInternalJavascript(node, useName, children, isMethod);
     }
     finally {
       options = savedOptions;
@@ -1113,7 +1036,10 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   // Internal helper function for above
   // useName => declaration not expression
-  SimpleNode[] translateFunctionInternal(SimpleNode node, boolean useName, SimpleNode[] children, boolean isMethod) {
+  // This is a dumb way to do this.  The caller should use the new
+  // interface for computing dependencies rather that this having to
+  // return multiple values.
+  SimpleNode[] translateFunctionInternalJavascript(SimpleNode node, boolean useName, SimpleNode[] children, boolean isMethod) {
     // ast can be any of:
     //   FunctionDefinition(name, args, body)
     //   FunctionDeclaration(name, args, body)
@@ -1769,10 +1695,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return null;
   }
 
-  SimpleNode translateLiteralNode(SimpleNode node) {
-    return node;
-  }
-
   SimpleNode translateReferenceForCall(SimpleNode ast) {
     return translateReferenceForCall(ast, false, null);
   }
@@ -1829,8 +1751,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     SimpleNode node;
     SimpleNode checkedNode = null;
 
-    public JavascriptReference(Translator translator, SimpleNode node, int referenceCount) {
-      this.options = translator.getOptions();
+    public JavascriptReference(ASTVisitor visitor, SimpleNode node, int referenceCount) {
+      this.options = visitor.getOptions();
       this.node = node;
     }
 
@@ -1877,9 +1799,9 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   static public abstract class MemberReference extends JavascriptReference {
     protected SimpleNode object;
 
-    public MemberReference(Translator translator, SimpleNode node, int referenceCount, 
+    public MemberReference(ASTVisitor visitor, SimpleNode node, int referenceCount, 
                           SimpleNode object) {
-      super(translator, node, referenceCount);
+      super(visitor, node, referenceCount);
       this.object = object;
     }
   }
@@ -1888,10 +1810,10 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     TranslationContext context;
     public final String name;
 
-    public VariableReference(Translator translator, SimpleNode node, int referenceCount, String name) {
-      super(translator, node, referenceCount);
+    public VariableReference(JavascriptGenerator generator, SimpleNode node, int referenceCount, String name) {
+      super(generator, node, referenceCount);
       this.name = name;
-      this.context = (TranslationContext)translator.getContext();
+      this.context = (TranslationContext)generator.getContext();
       Map registers = (Map)context.get(TranslationContext.REGISTERS);
       // Replace identifiers with their 'register' (i.e. rename them)
       if (registers != null && registers.containsKey(name)) {
@@ -1914,7 +1836,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
           // Ensure undefined is "defined"
           known |= "undefined".equals(name);
           if (! known) {
-            this.checkedNode = ((JavascriptGenerator)translator).makeCheckedNode(node);
+            this.checkedNode = generator.makeCheckedNode(node);
           }
         }
       }
@@ -1965,16 +1887,16 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   static public class PropertyReference extends MemberReference {
     String propertyName;
 
-    public PropertyReference(Translator translator, SimpleNode node, int referenceCount, 
+    public PropertyReference(ASTVisitor visitor, SimpleNode node, int referenceCount, 
                                SimpleNode object, ASTIdentifier propertyName) {
-      super(translator, node, referenceCount, object);
+      super(visitor, node, referenceCount, object);
       this.propertyName = (String)propertyName.getName();
       // TODO: [2006-04-24 ptw] Don't make checkedNode when you know
       // that the member exists
       // This is not right, but Opera does not support [[Call]] on
       // call or apply, so we can't check for them
 //       if (! uncheckedProperties.contains(this.propertyName)) {
-//         this.checkedNode = ((JavascriptGenerator)translator).makeCheckedNode(node);
+//         this.checkedNode = ((JavascriptGenerator)visitor).makeCheckedNode(node);
 //       }
     }
   }
@@ -1982,9 +1904,9 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   static public class IndexReference extends MemberReference {
     SimpleNode indexExpr;
 
-    public IndexReference(Translator translator, SimpleNode node, int referenceCount, 
+    public IndexReference(ASTVisitor visitor, SimpleNode node, int referenceCount, 
                           SimpleNode object, SimpleNode indexExpr) {
-      super(translator, node, referenceCount, object);
+      super(visitor, node, referenceCount, object);
       this.indexExpr = indexExpr;
       // We don't check index references for compatibility with SWF compiler
     }

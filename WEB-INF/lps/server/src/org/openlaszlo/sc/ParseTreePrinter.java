@@ -79,7 +79,7 @@ public class ParseTreePrinter {
   String OPENCURLY;
   String CLOSECURLY;
 
-  private String currentClassName = null;
+  protected String currentClassName = null;
   
   public ParseTreePrinter() {
     this(new Config());
@@ -530,11 +530,8 @@ public class ParseTreePrinter {
     children[0] = maybeAddParens(thisPrec, c, children[0]);
     return "new " + children[0] + "(" + children[1] + ")";
   }
-  // TODO: [2009-03-23 dda] Should not need to comment the #pragma as they
-  // should not normally appear in emitted code.  But LPP-7824 requires it
-  // for now.
   public String visitPragmaDirective(SimpleNode node, String[] children) {
-    return "// #pragma " + children[0] + "\n";
+    return "\n#pragma " + children[0] + "\n";
   }
   public String visitPassthroughDirective(SimpleNode node, String[] children) {
     return ((ASTPassthroughDirective)node).getText();
@@ -753,16 +750,15 @@ public class ParseTreePrinter {
       String child = children[x];
       sb.append(space);
       sb.append(op);
-      // Disambiguate `a + ++b`, `a++ + b` etc.
+      // Disambiguate `a - -b`, `a + ++b`, `a++ + b` etc.
       sb.append(delimit(child, required || opChar == unannotate(child).charAt(0), false));
     }
     return(sb.toString());
   }
   
-  // This is overridden for SWF9
   public String visitModifiedDefinition(SimpleNode node, String[] children) {
-    // In JavascriptGenerator 'static' is handled elsewhere.
-    return children[0];
+    String mods = ((ASTModifiedDefinition)node).toJavascriptString(false);
+    return mods + children[0];
   }
   
   public String visitFormalInitializer(SimpleNode node, String[] children) {
@@ -778,7 +774,7 @@ public class ParseTreePrinter {
     return doFunctionDeclaration(node, children, config.compress ? false : true, false);
   }
 
-  public String visitMethodExpression(SimpleNode node, String[] children) {
+  public String visitMethodDeclarationAsExpression(SimpleNode node, String[] children) {
     // Elide optional name if compressing, otherwise leave it for debugging
     return doFunctionDeclaration(node, children, config.compress ? false : true, false);
   }
@@ -810,23 +806,50 @@ public class ParseTreePrinter {
     return txt + forceBlankLnum();
   }
 
-  // By default, return types are ignored
+  // return type is attached to the formal parameter list (which is really
+  // a signature)
   public String functionReturnType(SimpleNode node) {
-    return "";
+    SimpleNode[] children = node.getChildren();
+    int pos = children.length-2;
+    ASTFormalParameterList signature = (ASTFormalParameterList)children[pos];
+    ASTIdentifier.Type returnType = signature.getReturnType();
+    if (returnType == null)
+      return "";
+    else
+      return ":" + returnType.toString();
   }
 
   public String visitClassDefinition(SimpleNode node, String[] children) {
-    // Should never be called for plain Javascript, these are stripped out
-    throw new CompilerException("ClassDefinition found in printing Javascript AST");
+    String kindName = unannotate(children[0]);
+    StringBuffer sb = new StringBuffer(kindName);
+    String className = unannotate(children[1]);
+    sb.append(" " + className);
+    String superclassName = unannotate(children[2]);
+    if (superclassName.length() > 0) {
+      sb.append(" extends " + superclassName);
+    }
+    String mixinNames = unannotate(children[3]);
+    if (mixinNames.length() > 0) {
+      sb.append(" with " + mixinNames);
+    }
+    sb.append(SPACE + "{" + NEWLINE);
+    for (int i = 4, len = children.length; i < len; i++) {
+      sb.append(children[i]);
+    }
+    sb.append(NEWLINE + "}\n");
+    return sb.toString();
   }
   
   public String visitIdentifier(SimpleNode node, String[] children) {
     ASTIdentifier id = (ASTIdentifier)node;
+    String name = id.getName();
     if (id.isConstructor()) {
-      return currentClassName;
-    } else {
-      return id.getName();
+      name = currentClassName;
     }
+    String type = id.getType() == null ? "" : (":" + id.getType());
+    String ellipsis = id.getEllipsis() ? "..." : "";
+
+    return ellipsis + name + type;
   }
   
   static Double zero = new Double(0);

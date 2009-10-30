@@ -9,7 +9,7 @@ package org.openlaszlo.sc;
 import java.util.*;
 import org.openlaszlo.sc.parser.SimpleNode;
 import org.openlaszlo.sc.parser.*;
-import org.openlaszlo.sc.CommonGenerator;
+import org.openlaszlo.sc.ASTVisitor;
 
 public class VariableAnalyzer {
   // A ref will cause an auto_reg to be declared
@@ -36,9 +36,9 @@ public class VariableAnalyzer {
   boolean hasSuper;
   Set locals;
 
-  CommonGenerator generator;
+  ASTVisitor visitor;
 
-  public VariableAnalyzer(SimpleNode params, boolean ignoreFlasm, boolean hasSuper, CommonGenerator generator) {
+  public VariableAnalyzer(SimpleNode params, boolean ignoreFlasm, boolean hasSuper, ASTVisitor visitor) {
     // Parameter order is significant
     parameters = new LinkedHashSet();
     for (int i = 0, len = params.size(); i < len; i++) {
@@ -55,7 +55,7 @@ public class VariableAnalyzer {
     fundefs = new LinkedHashMap();
     used = new HashMap();
     this.ignoreFlasm = ignoreFlasm;
-    this.generator = generator;
+    this.visitor = visitor;
   }
 
   public void incrementUsed(String variable) {
@@ -106,7 +106,7 @@ public class VariableAnalyzer {
           children = c;
         } else {
           // Look for compile-time conditionals
-          Boolean value = generator.evaluateCompileTimeConditional(test);
+          Boolean value = visitor.evaluateCompileTimeConditional(test);
           if (value == null) {
             // default
           } else if (value.booleanValue()) {
@@ -173,7 +173,7 @@ public class VariableAnalyzer {
         node instanceof ASTFunctionExpression) {
       SimpleNode params = children[children.length - 2];
       SimpleNode stmts = children[children.length - 1];
-      VariableAnalyzer analyzer = new VariableAnalyzer(params, ignoreFlasm, hasSuper, generator);
+      VariableAnalyzer analyzer = new VariableAnalyzer(params, ignoreFlasm, hasSuper, visitor);
       for (int i = 0, len = stmts.size(); i < len; i++) {
         SimpleNode stmt = stmts.get(i);
         analyzer.visit(stmt);

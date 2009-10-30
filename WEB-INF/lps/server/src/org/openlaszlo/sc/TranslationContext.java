@@ -168,15 +168,6 @@ public class TranslationContext extends HashMap {
     return targets.get(type);
   }
 
-  // Emit the code necessary to abruptly leave a context (not
-  // including the jump statement itself).
-  // TODO: [2005-12-13 ptw] CodeGenerator translator -> Translator translator
-  public void emitBreakPreamble(SimpleNode node, CodeGenerator translator) {
-    if (isEnumeration) {
-      translator.unwindEnumeration(node);
-    }
-  }
-
   public String toString() {
     return "" + this.type + ": " + super.toString();
   }

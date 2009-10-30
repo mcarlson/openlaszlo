@@ -307,7 +307,7 @@ public class NodeModel implements Cloneable {
       this.fallbackexpression = fallback;
     }
 
-    public Function getBinderMethod(boolean canHaveMethods) {
+    public Function getBinderMethod(boolean canHaveMethods, boolean debug) {
       if (! (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS))) {
         return null;
       }
@@ -355,7 +355,10 @@ public class NodeModel implements Cloneable {
           body + ")" + suffix;
       Function binder;
       prettyBinderName += "{...}'";
-      String pragmas = "#pragma " + ScriptCompiler.quote("userFunctionName=" + prettyBinderName);
+      String pragmas = "";
+      if (debug) {
+        pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=" + prettyBinderName);
+      }
       // Binders are called by LzDelegate.execute, which passes the
       // value sent by sendEvent, so we have to accept it, but we
       // ignore it
@@ -368,11 +371,14 @@ public class NodeModel implements Cloneable {
       return binder;
     }
 
-    public Function getDependenciesMethod(boolean canHaveMethods) {
+    public Function getDependenciesMethod(boolean canHaveMethods, boolean debug) {
       if (! when.equals(WHEN_ALWAYS)) {
         return null;
       }
-      String pragmas = "#pragma " + ScriptCompiler.quote("userFunctionName=" + name + " dependencies");
+      String pragmas = "";
+      if (debug) {
+        pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=" + name + " dependencies");
+      }
       String body = "";
       try {
         body = "return (" + getCompiler().dependenciesForExpression(srcloc + value) + ")";
@@ -834,7 +840,9 @@ public class NodeModel implements Cloneable {
      */
     private static String buildIdBinderBody (String symbol, boolean setId, boolean debug) {
         return
-            "#pragma " + ScriptCompiler.quote("userFunctionName=bind #" + symbol) + "\n" +
+            (debug ?
+             "#pragma " + ScriptCompiler.quote("userFunctionName=bind #" + symbol) + "\n" :
+             "") +
             "if ($lzc$bind) {\n" +
             (debug ?
              "    if (" + symbol + " && (" + symbol + " !== $lzc$node)) {\n" +
@@ -1112,10 +1120,10 @@ solution =
       // replicator, so must be compiled as closures
       boolean chm = "datapath".equals(name) ? false : canHaveMethods;
       if (cattr.bindername != null) {
-        attrs.put(cattr.bindername, cattr.getBinderMethod(chm));
+        attrs.put(cattr.bindername, cattr.getBinderMethod(chm, debug));
       }
       if (cattr.dependenciesname != null) {
-        attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(chm));
+        attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(chm, debug));
       }
       attrs.put(name, cattr.getInitialValue());
     } else {
@@ -1510,7 +1518,10 @@ solution =
             referencename = debug ?
               ("$lzc$" + "handle_" + event + "_reference" + unique) :
               env.methodNameGenerator.next();
-            String pragmas = "#pragma " + ScriptCompiler.quote("userFunctionName=get " + reference);
+            String pragmas = "";
+            if (debug) {
+              pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=get " + reference);
+            }
             String refbody = "var $lzc$reference = (" +
                 "#beginAttribute\n" +
                 reference + "\n#endAttribute\n);\n" +
@@ -1541,11 +1552,12 @@ solution =
                 method = debug ?
                   ("$lzc$" + "handle_" + event + unique) :
                   env.methodNameGenerator.next();
-                pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=handle " +
-                                                             ((reference != null) ? (reference + ".") : "") +
-                                                             event) +"\n";
+                if (debug) {
+                  pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=handle " +
+                                                               ((reference != null) ? (reference + ".") : "") +
+                                                               event) +"\n";
+                }
             }
-            pragmas += "#pragma 'methodName=" + method + "'\n";
             body = body + "\n#endContent\n";
             Function fndef;
             if (canHaveMethods) {
@@ -1657,8 +1669,7 @@ solution =
              CompilerUtils.attributeLocationDirective(element, "handler") :
              CompilerUtils.attributeLocationDirective(element, "name"));
         Function fndef;
-        String pragmas = "\n#beginContent\n" +
-                "\n#pragma 'methodName=" + name + "'\n";
+        String pragmas = "\n#beginContent\n";
         body = body + "\n#endContent";
         if (canHaveMethods) {
             String adjectives = "";
@@ -2026,10 +2037,10 @@ solution =
                     attrs = this.classAttrs;
                 }
                 if (cattr.bindername != null) {
-                    attrs.put(cattr.bindername, cattr.getBinderMethod(false));
+                  attrs.put(cattr.bindername, cattr.getBinderMethod(false, debug));
                 }
                 if (cattr.dependenciesname != null) {
-                    attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(false));
+                  attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(false, debug));
                 }
 
                 origvalueexpression = ((NodeModel.BindingExpr)origvalue).getExpr();
@@ -2105,7 +2116,10 @@ solution =
       // the name set_<property name> NOTE: LzNode#applyArgs and
       // #setAttribute depend on this convention to find setters
       String settername = "$lzc$" + "set_" + attribute;
-      String pragmas = "#pragma " + ScriptCompiler.quote("userFunctionName=set " + attribute) + "\n";
+      String pragmas = "";
+      if (debug) {
+        pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=set " + attribute) + "\n";
+      }
       addMethodInternal(settername, args, "", pragmas + body, element, allocation);
       // This is just for nice error messages
       if (setters.get(attribute) != null) {

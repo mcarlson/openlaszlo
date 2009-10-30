@@ -286,20 +286,6 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     return annotateClass(classnm, sb.toString());
   }
 
-  // override - emit function return type,
-  // it is attached to the formal parameter list (which is really
-  // a signature)
-  public String functionReturnType(SimpleNode node) {
-    SimpleNode[] children = node.getChildren();
-    int pos = children.length-2;
-    ASTFormalParameterList signature = (ASTFormalParameterList)children[pos];
-    ASTIdentifier.Type returnType = signature.getReturnType();
-    if (returnType == null)
-      return "";
-    else
-      return ":" + returnType.toString();
-  }
-
   // override - don't emit body of methods for mixins
   public String visitFunctionDeclaration(SimpleNode node, String[] children) {
     inmethod = true;
@@ -310,22 +296,20 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
       inmethod = false;
     }
   }
-  
+
+  // TODO: [2009-03-23 dda] Should not need to comment the #pragma as they
+  // should not normally appear in emitted code.  But LPP-7824 requires it
+  // for now.
+  public String visitPragmaDirective(SimpleNode node, String[] children) {
+    return "// #pragma " + children[0] + "\n";
+  }
+
   public String visitPassthroughDirective(SimpleNode node, String[] children) {
     ASTPassthroughDirective passthrough = (ASTPassthroughDirective)node;
     String text = passthrough.getText();
     if (passthrough.getBoolean(SWF9Generator.PASSTHROUGH_TOPLEVEL))
       text = annotateStream(TOP_LEVEL_STREAM, text);
     return text;
-  }
-
-  public String visitIdentifier(SimpleNode node, String[] children) {
-    ASTIdentifier ident = (ASTIdentifier)node;
-    String name = super.visitIdentifier(node, children);
-    String type = ident.getType() == null ? "" : (":" + ident.getType());
-    String ellipsis = ident.getEllipsis() ? "..." : "";
-
-    return ellipsis + name + type;
   }
 
   public String visitPropertyValueReference(SimpleNode node, String[] children) {

@@ -48,10 +48,6 @@ public class Compiler {
   //
   public Compiler (Map initialOptions) {
     this.options = new OptionMap(initialOptions);
-    if (! options.containsKey(ACTIVATION_OBJECT)) {
-      options.putBoolean(ACTIVATION_OBJECT,
-                         ! options.getBoolean(FLASH_COMPILER_COMPATABILITY));
-    }
     if (! options.containsKey(COMPILE_TIME_CONSTANTS)) {
       options.put(COMPILE_TIME_CONSTANTS, new HashMap());
     }
@@ -377,7 +373,7 @@ public class Compiler {
           System.err.println("Assembling...");
         }
         profiler.phase("collect");
-        List instrs = ((InstructionCollector)cg.getCollector()).getInstructions(true);
+        List instrs = ((InstructionCollector)((CodeGenerator)cg).getCollector()).getInstructions(true);
         if (options.getBoolean(PRINT_INSTRUCTIONS)) {
           new Optimizer(new InstructionPrinter()).assemble(instrs);
         }
