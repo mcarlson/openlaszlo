@@ -710,13 +710,15 @@ public dynamic class LzNode extends LzEventable {
     } else if (styleValue !== (void 0)) {
       // (void 0) is the marker for 'no style property'
       this.setAttribute(attr, styleValue);
-    } else if (fallback !== (void 0)) {
-      // (void 0) is the marker for 'no fallback'
-      if (fallback is LzInitExpr) {
-        this.applyConstraintExpr(fallback);
-      } else {
-        this.setAttribute(attr, fallback);
-      }
+    } else if (fallback is LzInitExpr) {
+      this.applyConstraintExpr(fallback);
+    } else {
+      // If there is no fallback (fallback is `void 0`) that is what
+      // we set the value to.  applyArgs will have set the value
+      // initially to `null`, because it has a constraint, but
+      // LPP-4182 wants an attribute with no fallback and no style to
+      // be undefined.
+      this.setAttribute(attr, fallback);
     }
   }
 

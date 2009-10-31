@@ -23,18 +23,28 @@ class LzCSSStyleRule {
 
   if ($debug) {
     // In debug mode, the constructor fills these in
-    LzCSSStyleRule.prototype[Debug.FUNCTION_FILENAME] = null;
-    LzCSSStyleRule.prototype[Debug.FUNCTION_LINENO] = null;
-  }
+//     LzCSSStyleRule.prototype[Debug.FUNCTION_FILENAME] = null;
+//     LzCSSStyleRule.prototype[Debug.FUNCTION_LINENO] = null;
+    // Don't really want to have to make this class dynamic just for
+    // that...  So, we cheat.
+    var _dbg_filename:String = null;
+    var _dbg_lineno:Number = 0;
 
-  function LzCSSStyleRule(selector, properties, source=null, line=null) {
-    this.selector = selector;
-    this.properties = properties;
-    if ($debug) {
+    function LzCSSStyleRule(selector, properties, source:String, line:Number) {
+      this.selector = selector;
+      this.properties = properties;
+      // You will find out if these are the wrong names
       this[Debug.FUNCTION_FILENAME] = source;
       this[Debug.FUNCTION_LINENO] = line;
-    }
-  };
+    };
+  } else {
+    function LzCSSStyleRule(selector, properties) {
+    this.selector = selector;
+    this.properties = properties;
+    };
+  }
+
+
 
   //No rule has a specificity of zero
   /** @access private */
