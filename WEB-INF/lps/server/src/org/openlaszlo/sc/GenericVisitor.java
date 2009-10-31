@@ -378,8 +378,8 @@ public class GenericVisitor implements ASTVisitor {
 
   public SimpleNode visitForStatement(SimpleNode node, SimpleNode[] children) {
     assert children.length == 4;
-    ASTIdentifier id = (ASTIdentifier)children[0];
-    children[0] = translateIdentifier(id, AccessMode.MODIFY);
+    SimpleNode init = children[0];
+    children[0] = visitExpression(init);
     SimpleNode test = children[1];
     children[1] = visitExpression(test);
     SimpleNode step = children[2];
@@ -475,7 +475,7 @@ public class GenericVisitor implements ASTVisitor {
     // extent.
     children[0] = translateIdentifier(id, AccessMode.DECLARE);
     SimpleNode body = children[1];
-    children[2] = visitStatement(body);
+    children[1] = visitStatement(body);
     return node;
   }
 
