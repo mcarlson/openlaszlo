@@ -246,16 +246,22 @@ public class ParseTreePrinter {
       return(lnum(node, sb.toString()));
     }
     if (node instanceof ASTStatement) {
-      assert children.length == 1;
-      String child = children[0];
-        String childRaw = unannotate(child);
-      // Ensure an expression becomes a statement by appending an
-      // explicit semicolon
-      if ((! "".equals(childRaw)) &&
-          (! childRaw.endsWith(SEMI))) {
-        return lnum(node, child + SEMI);
+      int len = children.length;
+      assert len == 0 || len == 1;
+      // an empty statement, introduced by an extra ";", has no children
+      if (len == 0) {
+        return "";
       } else {
-        return lnum(node, child);
+        String child = children[0];
+        String childRaw = unannotate(child);
+        // Ensure an expression becomes a statement by appending an
+        // explicit semicolon
+        if ((! "".equals(childRaw)) &&
+            (! childRaw.endsWith(SEMI))) {
+          return lnum(node, child + SEMI);
+        } else {
+          return lnum(node, child);
+        }
       }
     }
     if (node instanceof ASTAssignmentExpression) {
@@ -758,7 +764,11 @@ public class ParseTreePrinter {
   
   public String visitModifiedDefinition(SimpleNode node, String[] children) {
     String mods = ((ASTModifiedDefinition)node).toJavascriptString(false);
-    return mods + children[0];
+    if (mods.length() > 0) {
+      return mods + " " + children[0];
+    } else {
+      return children[0];
+    }
   }
   
   public String visitFormalInitializer(SimpleNode node, String[] children) {
