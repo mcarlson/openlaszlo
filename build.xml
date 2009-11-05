@@ -1262,6 +1262,14 @@
       <war destfile="${dev-war-file}"
            webxml="${builddir}/lps-${version.id}/WEB-INF/web.xml"
            basedir="${builddir}/lps-${version.id}" compress="true">
+           <manifest>
+             <attribute name="Built-By" value="${user.name}"/>
+             <attribute name="Specification-Vendor" value="laszlosystems.com"/>
+             <attribute name="Specification-Version" value="${version.id}"/>
+             <attribute name="Implementation-Vendor" value="org.openlaszlo"/>
+             <attribute name="Implementation-Title" value="org.openlaszlo.server"/>
+             <attribute name="Implementation-Version" value="${release} ${build.id} ${build.date}"/>
+           </manifest>
            <zipfileset dir="${builddir}">
                <exclude name="lps-${version.id}/**" />
            </zipfileset>
@@ -1269,6 +1277,14 @@
       <war destfile="${servlet-war-file}"
            webxml="${builddir}/lps-${version.id}/WEB-INF/web.xml"
            basedir="${builddir}/lps-${version.id}" compress="true">
+           <manifest>
+             <attribute name="Built-By" value="${user.name}"/>
+             <attribute name="Specification-Vendor" value="laszlosystems.com"/>
+             <attribute name="Specification-Version" value="${version.id}"/>
+             <attribute name="Implementation-Vendor" value="org.openlaszlo"/>
+             <attribute name="Implementation-Title" value="org.openlaszlo.server"/>
+             <attribute name="Implementation-Version" value="${release} ${build.id} ${build.date}"/>
+           </manifest>
            <zipfileset dir="${builddir}">
                <exclude name="lps-${version.id}/**" />
            </zipfileset>
