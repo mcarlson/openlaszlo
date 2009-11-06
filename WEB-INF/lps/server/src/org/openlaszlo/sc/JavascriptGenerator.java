@@ -29,9 +29,9 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   public SimpleNode translate(SimpleNode program) {
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTProgram.class, context);
+      context = makeTranslationContext(ASTProgram.class, context);
       context.setProperty(TranslationContext.VARIABLES, globals);
-      return translateInternal(program, "b", true);
+      return translateInternal(program, true);
     }
     finally {
       context = context.parent;
@@ -149,12 +149,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return null;
   }
 
-  SimpleNode translateInternal(SimpleNode program, String cpass, boolean top) {
+  SimpleNode translateInternal(SimpleNode program, boolean top) {
     assert program instanceof ASTProgram;
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTProgram.class, context);
-      return visitProgram(program, program.getChildren(), cpass, top);
+      context = makeTranslationContext(ASTProgram.class, context);
+      return visitProgram(program, program.getChildren(), top);
     }
     finally {
       context = context.parent;
@@ -190,7 +190,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // No types or ellipsis in Javascript
     public String visitIdentifier(SimpleNode node, String[] children) {
       ASTIdentifier id = (ASTIdentifier)node;
-      String name = id.getName();
+      String name = id.getRegister();
       if (id.isConstructor()) {
         name = currentClassName;
       }
@@ -221,21 +221,19 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return ((TranslationUnit)tunits.get(0)).getContents().getBytes();
   }
 
-  public SimpleNode visitProgram(SimpleNode node, SimpleNode[] directives, String cpass) {
-    return visitProgram(node, directives, cpass, false);
+  public SimpleNode visitProgram(SimpleNode node, SimpleNode[] directives) {
+    return visitProgram(node, directives, false);
   }
 
-  public SimpleNode visitProgram(SimpleNode node, SimpleNode[] directives, String cpass, boolean top) {
-    // cpass is "b"oth, 1, or 2
-    assert "b".equals(cpass) || "1".equals(cpass) || "2".equals(cpass) : "bad pass: " + cpass;
-    if ("b".equals(cpass)) {
-      node = visitProgram(node, directives, "1", top);
-      // Everything is done in one pass for now.
-//       directives = node.getChildren();
-//       node = visitProgram(node, directives, "2", top);
-      return node;
-    }
-    if ("1".equals(cpass) && top) {
+  public SimpleNode visitProgram(SimpleNode node, SimpleNode[] directives, boolean top) {
+    assert node instanceof ASTProgram || node instanceof ASTDirectiveBlock : node.getClass().getName();
+    if (top &&
+        // Here this means 'compiling the LFC' we only want to emit
+        // the constants into the LFC
+        // FIXME: There needs to be a way that the object writer
+        // ensures that the constants the LZX is compiled with are the
+        // same ones as are set in the LFC it is linked to
+        options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY)) {
       // emit compile-time contants to runtime
       Map constants = (Map)options.get(Compiler.COMPILE_TIME_CONSTANTS);
       if (constants != null) {
@@ -243,17 +241,16 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         for (Iterator i = constants.entrySet().iterator(); i.hasNext(); ) {
           Map.Entry entry = (Map.Entry)i.next();
           Object value = entry.getValue();
-          // Python cruft
+          String type = null;
           if (value instanceof String) {
+            type = "String";
             value = "\"" + value + "\"";
-          } else if ((new Integer(0)).equals(value)) {
-            value = "false";
-          } else if ((new Integer(1)).equals(value)) {
-            value = "true";
+          } else if (value instanceof Boolean) {
+            type = "Boolean ";
+            value = value.toString();
           }
           String name = (String)entry.getKey();
-          addGlobalVar(name, null, value.toString());
-          code += "var " + name + " = " + value + ";";
+          code += "var " + name + ((type != null) ? (":" + type) : "") + " = " + value + ";";
         }
         List c = new ArrayList();
         c.add(parseFragment(code));
@@ -262,94 +259,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         node.setChildren(directives);
       }
     }
-//     System.err.println("visitProgram: " + cpass);
     for (int index = 0, len = directives.length; index < len; index++) {
       SimpleNode directive = directives[index];
       SimpleNode newDirective = directive;
       SimpleNode[] children = directive.getChildren();
-      if (directive instanceof ASTDirectiveBlock) {
-        Compiler.OptionMap savedOptions = options;
-        try {
-          options = options.copy();
-          newDirective = visitProgram(directive, children, cpass);
-        }
-        finally {
-          options = savedOptions;
-        }
-      } else if (directive instanceof ASTIfDirective) {
-        if (! options.getBoolean(Compiler.CONDITIONAL_COMPILATION)) {
-          // TBD: different type; change to CONDITIONALS
-          throw new CompilerError("`if` at top level");
-        }
-        // NOTE: [2009-10-03 ptw] (LPP-1933) People expect the
-        // branches of a compile-time conditional to establish a
-        // directive block
-        Boolean value = evaluateCompileTimeConditional(children[0]);
-        if (value == null) {
-          newDirective = visitIfStatement(directive, children);
-        } else if (value.booleanValue()) {
-          SimpleNode clause = children[1];
-          Compiler.OptionMap savedOptions = options;
-          try {
-            options = options.copy();
-            newDirective = visitProgram(clause, clause.getChildren(), cpass);
-          }
-          finally {
-            options = savedOptions;
-          }
-        } else if (children.length > 2) {
-          SimpleNode clause = children[2];
-          Compiler.OptionMap savedOptions = options;
-          try {
-            options = options.copy();
-            newDirective = visitProgram(clause, clause.getChildren(), cpass);
-          }
-          finally {
-            options = savedOptions;
-          }
-        } else {
-          newDirective = new ASTEmptyExpression(0);
-        }
-      } else if (directive instanceof ASTIncludeDirective) {
-        // Disabled by default, since it isn't supported in the
-        // product.  (It doesn't go through the compilation
-        // manager for dependency tracking.)
-        if (! options.getBoolean(Compiler.INCLUDES)) {
-          throw new UnimplementedError("unimplemented: #include", directive);
-        }
-        String userfname = (String)((ASTLiteral)children[0]).getValue();
-        newDirective = translateInclude(userfname, cpass);
-      } else if (directive instanceof ASTProgram) {
-        // This is what an include looks like in pass 2
-        newDirective = visitProgram(directive, children, cpass);
-      } else if (directive instanceof ASTPragmaDirective) {
-        newDirective = visitPragmaDirective(directive, children);
-      } else if (directive instanceof ASTPassthroughDirective) {
-        newDirective = visitPassthroughDirective(directive, children);
-      } else {
-        if ("1".equals(cpass)) {
-          // Function, class, and top-level expressions are processed in pass 1
-          if (directive instanceof ASTFunctionDeclaration) {
-            newDirective = visitStatement(directive);
-          } else if (directive instanceof ASTClassDefinition) {
-            newDirective = visitStatement(directive);
-          } else if (directive instanceof ASTModifiedDefinition) {
-            newDirective = visitModifiedDefinition(directive, directive.getChildren());
-          } else if (directive instanceof ASTStatement) {
-            // Statements are processed in pass 1 for now
-            newDirective = visitStatement(directive);
-            ;
-          } else {
-            newDirective = visitExpression(directive, false);
-          }
-        }
-        if ("2".equals(cpass)) {
-          // There is no pass 2 any more
-          assert false : "bad pass " + cpass;
-        }
-      }
+      newDirective = visitDirective(directive, children);
       if (! newDirective.equals(directive)) {
-//         System.err.println("directive: " + directive + " -> " + newDirective);
         directives[index] = newDirective;
       }
     }
@@ -357,7 +272,77 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
-  SimpleNode translateInclude(String userfname, String cpass) {
+  SimpleNode visitDirective (SimpleNode directive, SimpleNode[] children) {
+    if (directive instanceof ASTDirectiveBlock) {
+      Compiler.OptionMap savedOptions = options;
+      try {
+        options = options.copy();
+        return visitProgram(directive, children);
+      }
+      finally {
+        options = savedOptions;
+      }
+    } else if (directive instanceof ASTIfDirective) {
+      if (! options.getBoolean(Compiler.CONDITIONAL_COMPILATION)) {
+        // TBD: different type; change to CONDITIONALS
+        throw new CompilerError("`if` at top level");
+      }
+      return visitIfDirective(directive, children);
+    } else if (directive instanceof ASTIncludeDirective) {
+      // Disabled by default, since it isn't supported in the
+      // product.  (It doesn't go through the compilation
+      // manager for dependency tracking.)
+      if (! options.getBoolean(Compiler.INCLUDES)) {
+        throw new UnimplementedError("unimplemented: #include", directive);
+      }
+      String userfname = (String)((ASTLiteral)children[0]).getValue();
+      return translateInclude(userfname);
+    } else if (directive instanceof ASTProgram) {
+      // This is what an include looks like in pass 2
+      return visitProgram(directive, children);
+    } else if (directive instanceof ASTPragmaDirective) {
+      return visitPragmaDirective(directive, children);
+    } else if (directive instanceof ASTPassthroughDirective) {
+      return visitPassthroughDirective(directive, children);
+    } else {
+      return visitStatement(directive, children);
+    }
+  }
+
+  // Somehow we can have IfDirective's that are not at the top level?
+  public SimpleNode visitIfDirective (SimpleNode directive, SimpleNode[] children) {
+    // NOTE: [2009-10-03 ptw] (LPP-1933) People expect the
+    // branches of a compile-time conditional to establish a
+    // directive block
+    Boolean value = evaluateCompileTimeConditional(children[0]);
+    if (value == null) {
+      return visitIfStatement(directive, children);
+    } else if (value.booleanValue()) {
+      SimpleNode clause = children[1];
+      Compiler.OptionMap savedOptions = options;
+      try {
+        options = options.copy();
+        return visitDirective(clause, clause.getChildren());
+      }
+      finally {
+        options = savedOptions;
+      }
+    } else if (children.length > 2) {
+      SimpleNode clause = children[2];
+      Compiler.OptionMap savedOptions = options;
+      try {
+        options = options.copy();
+        return visitDirective(clause, clause.getChildren());
+      }
+      finally {
+        options = savedOptions;
+      }
+    } else {
+      return new ASTEmptyExpression(0);
+    }
+  }
+
+  SimpleNode translateInclude(String userfname) {
 
     if (Compiler.CachedInstructions == null) {
       Compiler.CachedInstructions = new ScriptCompilerCache();
@@ -382,22 +367,14 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       // but check against optionsKey
       String instrsChecksum = "" + file.lastModified() + optionsKey; // source;
       // Use previously modified parse tree if it exists
-      SimpleNode instrs = (SimpleNode)Compiler.CachedInstructions.get(instrsKey + cpass, instrsChecksum);
+      SimpleNode instrs = (SimpleNode)Compiler.CachedInstructions.get(instrsKey, instrsChecksum);
       if (instrs == null) {
         ParseResult result = parseFile(file, userfname, source);
-        if ("1".equals(cpass)) {
-          instrs = result.parse;
-          instrs = translateInternal(instrs, cpass, false);
-        } else if ("2".equals(cpass)) {
-          instrs = (SimpleNode)Compiler.CachedInstructions.get(instrsKey + "1", instrsChecksum);
-          assert instrs != null : "pass 2 before pass 1?";
-          instrs = translateInternal(instrs, cpass, false);
-        } else {
-          assert false : "bad pass " + cpass;
-        }
+        instrs = result.parse;
+        instrs = translateInternal(instrs, false);
         if (! result.hasIncludes) {
           if (options.getBoolean(Compiler.CACHE_COMPILES)) {
-            Compiler.CachedInstructions.put(instrsKey + cpass, instrsChecksum, instrs);
+            Compiler.CachedInstructions.put(instrsKey, instrsChecksum, instrs);
           }
         }
       }
@@ -452,10 +429,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     SimpleNode a = children[1];
     SimpleNode b = (children.length > 2) ? children[2] : null;
     // Compile-time conditional evaluations
-//     System.err.println("visitIfStatement: " +  (new ParseTreePrinter()).text(node));
     Boolean value = evaluateCompileTimeConditional(test);
+//     if (test instanceof ASTIdentifier) {
+//       System.err.println("visitIfStatement: " +  (new ParseTreePrinter()).annotatedText(test) +" == " + value);
+//     }
     if (value != null) {
-//       System.err.println("" + test + " == " + value);
       if (value.booleanValue()) {
         return visitStatement(a);
       } else if (b != null) {
@@ -479,7 +457,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     SimpleNode body = children[1];
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTWhileStatement.class, context);
+      context = makeTranslationContext(ASTWhileStatement.class, context);
       children[0] = visitExpression(test);
       children[1] = visitStatement(body);
       return node;
@@ -494,7 +472,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     SimpleNode test = children[1];
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTDoWhileStatement.class, context);
+      context = makeTranslationContext(ASTDoWhileStatement.class, context);
       children[0] = visitStatement(body);
       children[1] = visitExpression(test);
       return node;
@@ -521,7 +499,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     Compiler.OptionMap savedOptions = options;
     try {
       options = options.copy();
-      context = new TranslationContext(ASTForStatement.class, context);
+      context = makeTranslationContext(ASTForStatement.class, context);
       options.putBoolean(Compiler.WARN_GLOBAL_ASSIGNMENTS, true);
       children[0] = visitStatement(init);
       options.putBoolean(Compiler.WARN_GLOBAL_ASSIGNMENTS, false);
@@ -542,11 +520,31 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     SimpleNode body = children[2];
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTForInStatement.class, context);
+      context = makeTranslationContext(ASTForInStatement.class, context);
       children[1] = visitExpression(obj);
       JavascriptReference ref = translateReference(var);
       children[0] = ref.set(true);
       children[2] = visitStatement(body);
+      return node;
+    }
+    finally {
+      context = context.parent;
+    }
+  }
+
+  public SimpleNode visitForVarInStatement(SimpleNode node, SimpleNode[] children) {
+    assert children.length == 4;
+    SimpleNode var = children[0];
+//     SimpleNode _ = children[1]; // Parser incorrectly accepts an init value
+    SimpleNode obj = children[2];
+    SimpleNode body = children[3];
+    // TODO: [2003-04-15 ptw] bind context slot macro
+    try {
+      context = makeTranslationContext(ASTForInStatement.class, context);
+      // visitStatement should translate this as a variable declaration
+      children[0] = visitStatement(var);
+      children[2] = visitExpression(obj);
+      children[3] = visitStatement(body);
       return node;
     }
     finally {
@@ -590,26 +588,9 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
   }
 
   public SimpleNode visitSwitchStatement(SimpleNode node, SimpleNode[] children) {
-    SimpleNode expr = children[0];
-    // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTSwitchStatement.class, context);
-      children[0] = visitExpression(expr);
-      for (int i = 1, len = children.length; i < len; i++) {
-        SimpleNode clause = children[i];
-        if (clause instanceof ASTDefaultClause) {
-          if (clause.size() > 0) {
-            clause.set(0, visitStatement(clause.get(0)));
-          }
-        } else {
-          assert clause instanceof ASTCaseClause : "case clause expected";
-          clause.set(0, visitExpression(clause.get(0)));
-          if (clause.size() > 1) {
-            clause.set(1, visitStatement(clause.get(1)));
-          }
-        }
-      }
-      return node;
+      context = makeTranslationContext(ASTSwitchStatement.class, context);
+      return super.visitSwitchStatement(node, children);
     }
     finally {
       context = context.parent;
@@ -983,7 +964,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     Compiler.OptionMap savedOptions = options;
     try {
       options = options.copy();
-      context = new TranslationContext(ASTFunctionExpression.class, context);
+      context = makeTranslationContext(ASTFunctionExpression.class, context);
       node = formalArgumentsTransformations(node);
       children = node.getChildren();
       result = translateFunctionInternalJavascript(node, useName, children, isMethod);
@@ -1067,6 +1048,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     options.putBoolean(Compiler.SCRIPT_ELEMENT, false);
     // or the magic with(this) treatment
     options.putBoolean(Compiler.WITH_THIS, false);
+    if (this instanceof SWF9Generator) {
+      // Used to work around Adobe bug
+      // http://bugs.adobe.com/jira/browse/ASC-3852
+      context.put("returnType", ((ASTFormalParameterList)params).getReturnType());
+    }
     // function block
     String userFunctionName = null;
     String filename = node.filename != null? node.filename : "unknown file";
@@ -1815,18 +1801,10 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       this.name = name;
       this.context = (TranslationContext)generator.getContext();
       Map registers = (Map)context.get(TranslationContext.REGISTERS);
-      // Replace identifiers with their 'register' (i.e. rename them)
-      if (registers != null && registers.containsKey(name)) {
+      // Set identifier 'register' (i.e. rename them)
+      if ((registers != null) && (node instanceof ASTIdentifier) && registers.containsKey(name)) {
         String register = (String)registers.get(name);
-        ASTIdentifier newNode = new ASTIdentifier(0);
-        newNode.setLocation(node);
-        if (node instanceof ASTIdentifier) {
-          ASTIdentifier oldid = (ASTIdentifier)node;
-          newNode.setEllipsis(oldid.getEllipsis());
-          newNode.setType(oldid.getType());
-        }
-        newNode.setName(register);
-        this.node = new Compiler.PassThroughNode(newNode);
+        ((ASTIdentifier)node).setRegister(register);
         return;
       }
       if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES)) {

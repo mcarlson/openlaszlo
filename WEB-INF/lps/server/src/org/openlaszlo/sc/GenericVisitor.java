@@ -57,14 +57,8 @@ public class GenericVisitor implements ASTVisitor {
         directives[i] = visitPragmaDirective(directive, children);
       } else if (directive instanceof ASTPassthroughDirective) {
         directives[i] = visitPassthroughDirective(directive, children);
-      } else if ((directive instanceof ASTFunctionDeclaration) ||
-                 (directive instanceof ASTClassDefinition) ||
-                 (directive instanceof ASTStatement)) {
-        directives[i] = visitStatement(directive);
-      } else if (directive instanceof ASTModifiedDefinition) {
-        directives[i] = visitModifiedDefinition(directive, directive.getChildren());
       } else {
-        directives[i] = visitExpression(directive, false);
+        directives[i] = visitStatement(directive, children);
       }
     }
     return node;
@@ -292,16 +286,15 @@ public class GenericVisitor implements ASTVisitor {
     return node;
   }
 
-  public SimpleNode visitVariableDeclarationList(SimpleNode node, SimpleNode[] children) {
-    for (int i = 0, len = children.length ; i < len; i++) {
-      SimpleNode child = children[i];
-      children[i] = visitStatement(child);
-    }
+  public SimpleNode visitVariableStatement(SimpleNode node, SimpleNode[] children) {
+    assert children.length == 1;
+    SimpleNode declOrList = children[0];
+    children[0] = visitStatement(declOrList);
     return node;
   }
 
-  public SimpleNode visitVariableStatement(SimpleNode node, SimpleNode[] children) {
-    for (int i = 0, len = children.length; i < len; i++) {
+  public SimpleNode visitVariableDeclarationList(SimpleNode node, SimpleNode[] children) {
+    for (int i = 0, len = children.length ; i < len; i++) {
       SimpleNode child = children[i];
       children[i] = visitStatement(child);
     }
@@ -494,38 +487,41 @@ public class GenericVisitor implements ASTVisitor {
   }
 
   public SimpleNode visitSwitchStatement(SimpleNode node, SimpleNode[] children) {
+    assert node instanceof ASTSwitchStatement;
+    int len = children.length;
+    assert len >= 1;
     SimpleNode expr = children[0];
     children[0] = visitExpression(expr);
-    for (int i = 1, len = children.length; i < len; i++) {
+    for (int i = 1; i < len; i++) {
       SimpleNode clause = children[i];
-      if (clause instanceof ASTDefaultClause) {
-        children[i] = visitDefaultClause(clause, clause.getChildren());
-      } else {
-        assert clause instanceof ASTCaseClause : "case clause expected";
+      if (clause instanceof ASTCaseClause) {
         children[i] = visitCaseClause(clause, clause.getChildren());
+      } else {
+        children[i] = visitDefaultClause(clause, clause.getChildren());
       }
     }
     return node;
   }
 
   public SimpleNode visitDefaultClause(SimpleNode node, SimpleNode[] children) {
+    assert node instanceof ASTDefaultClause;
     int len = children.length;
-    assert len == 0 || len == 1;
-    if (len == 1) {
-      SimpleNode body = children[0];
-      children[0] = visitStatement(body);
+    for (int i = 0; i < len; i++) {
+      SimpleNode stmt = children[i];
+      children[i] = visitStatement(stmt);
     }
     return node;
   }
 
   public SimpleNode visitCaseClause(SimpleNode node, SimpleNode[] children) {
+    assert node instanceof ASTCaseClause;
     int len = children.length;
-    assert len == 1 || len == 2;
+    assert len >= 1;
     SimpleNode caseExpr = children[0];
     children[0] = visitExpression(caseExpr);
-    if (len == 2) {
-      SimpleNode body = children[1];
-      children[1] = visitStatement(body);
+    for (int i = 1; i < len; i++) {
+      SimpleNode stmt = children[i];
+      children[i] = visitStatement(stmt);
     }
     return node;
   }
@@ -610,7 +606,7 @@ public class GenericVisitor implements ASTVisitor {
       newNode = visitAssignmentExpression(node, isReferenced, children);
     }
     else {
-      throw new CompilerImplementationError("unknown expression: \"" + (new ParseTreePrinter()).text(node) + "\"", node);
+      throw new CompilerImplementationError("unknown expression type " + node.getClass().getName() + ": \"" + (new ParseTreePrinter()).text(node) + "\"", node);
     }
     return newNode;
   }

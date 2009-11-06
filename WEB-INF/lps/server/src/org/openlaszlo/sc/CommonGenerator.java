@@ -89,6 +89,13 @@ public abstract class CommonGenerator extends GenericVisitor {
   boolean debugVisit = false;
   SourceFileMap sources = new SourceFileMap();
 
+  public TranslationContext makeTranslationContext(Object type, TranslationContext parent, String label) {
+    return new TranslationContext(type, parent, label);
+  }
+  public TranslationContext makeTranslationContext(Object type, TranslationContext parent){
+    return new TranslationContext(type, parent);
+  }
+
   // Make Javascript globals 'known'
   Set globals = new HashSet(Arrays.asList(new String[] {
         "NaN", "Infinity", "undefined",
@@ -184,19 +191,24 @@ public abstract class CommonGenerator extends GenericVisitor {
     }
   }
 
+  static Compiler.Parser fragmentParser = (new Compiler.Parser());
+
   static SimpleNode parseFragment(String code) {
     if (code.equals("\"\"") || code == null) {
         code = "";
     }
+    // Put the statements in a function body, so they are not parsed
+    // as top-level directives.
     code =
-      "{" +
+      "(function () {" +
       "\n#pragma 'warnUndefinedReferences=false'\n" +
       "\n#file [CommonGenerator.parseFragment]\n#line 0\n" +
       code +
-      "}";
-    // Extract the statement list from the program
+      "})()";
+    // Extract Body from Statement(CallExpression(FunctionExpression(Arguments, Body)))
     try {
-      return (new Compiler.Parser()).parse(code).get(0);
+      SimpleNode parse = (new Compiler.Parser()).parse(code);
+      return fragmentParser.parse(code).get(0).get(0).get(0).get(1);
     } catch (ParseException e) {
       System.err.println("while compiling " + code);
       throw e;
@@ -417,7 +429,7 @@ public abstract class CommonGenerator extends GenericVisitor {
     // TODO: [2009-10-09 ptw] (LPP-5813) This context would be where
     // we would accumulate the class member names so that implicit
     // class references from methods can be resovled explicitly
-    context = new TranslationContext(ASTClassDefinition.class, context);
+    context = makeTranslationContext(ASTClassDefinition.class, context);
     try {
     translateClassDirectivesBlock(dirs, classnameString, props, classProps, stmts, TranslateHow.AS_PROPERTY_LIST);
 
@@ -936,7 +948,7 @@ public abstract class CommonGenerator extends GenericVisitor {
     SimpleNode stmt = children[1];
     // TODO: [2003-04-15 ptw] bind context slot macro
     try {
-      context = new TranslationContext(ASTLabeledStatement.class, context, name.getName());
+      context = makeTranslationContext(ASTLabeledStatement.class, context, name.getName());
       // TODO: [2002 ows] throw semantic error for duplicate label
       children[1] = visitStatement(stmt);
       return node;

@@ -684,12 +684,12 @@ void ToplevelStatement() #void : {}
  |  PassthroughDirective()
 }
 
-void Statement() #Statement : {}
+void Statement() #void : {}
 {
     // Lookahead so that "{" starts a Block, not an ObjectLiteral
     LOOKAHEAD("{") Block()
  |  LOOKAHEAD(Identifier() ":") LabeledStatement()
- |  ToplevelStatement()
+ |  ToplevelStatement() #Statement
  |  IfStatement()
 }
 
@@ -887,12 +887,12 @@ void SwitchStatement() #SwitchStatement : {}
 
 void CaseClause() #CaseClause : {}
 {
-   "case" Expression() ":" [StatementList()]
+   "case" Expression() ":" (Statement())*
 }
 
 void DefaultClause() #DefaultClause : {}
 {
-   "default" ":" [StatementList()]
+   "default" ":" (Statement())*
 }
 
 void LabeledStatement() #LabeledStatement : {}
@@ -1008,8 +1008,7 @@ void Directive() #void : {}
 {
   // Lookahead so that 'function' begins a function declaration,
   // not a function expression.
-  LOOKAHEAD(ModifiedDefinition())
-  ModifiedDefinition()
+  LOOKAHEAD(ModifiedDefinition()) ModifiedDefinition()
 | LOOKAHEAD("{") DirectiveBlock()
 | (ToplevelStatement()) #Statement
 | LOOKAHEAD(2) IncludeDirective() Sc()
@@ -1081,7 +1080,7 @@ void PassthroughProperty(ASTPassthroughDirective pt) : {SimpleNode key; SimpleNo
 SimpleNode IfDirective() #IfDirective : { Token t;}
 {
   "if" "(" Expression() ")" DirectiveBlock()
-  [LOOKAHEAD(1) "else" ( DirectiveBlock() | IfDirective() # DirectiveBlock(1) )]
+  [LOOKAHEAD(1) "else" ( DirectiveBlock() | IfDirective() )]
   {return jjtThis;}
 }
 

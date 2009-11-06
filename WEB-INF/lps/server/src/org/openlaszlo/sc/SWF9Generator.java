@@ -123,6 +123,130 @@ public class SWF9Generator extends JavascriptGenerator {
     options.putBoolean(Compiler.PASSTHROUGH_FORMAL_INITIALIZERS, true);
   }
 
+  // Override Javascript version to work around Adobe bug
+  // http://bugs.adobe.com/jira/browse/ASC-3852
+  public SimpleNode visitForInStatement(SimpleNode node, SimpleNode[] children) {
+    SimpleNode var = children[0];
+    SimpleNode obj = children[1];
+    SimpleNode body = children[2];
+    // TODO: [2003-04-15 ptw] bind context slot macro
+    try {
+      context = makeTranslationContext(ASTForInStatement.class, context);
+      children[1] = visitExpression(obj);
+      JavascriptReference ref = translateReference(var);
+      children[0] = ref.set(true);
+      children[2] = visitStatement(body);
+      if (context.label != null) {
+        return rewriteForInStatement(node, context.label);
+      }
+      return node;
+    }
+    finally {
+      context = context.parent;
+    }
+  }
+
+  // Override Javascript version to work around Adobe bug
+  // http://bugs.adobe.com/jira/browse/ASC-3852
+  public SimpleNode visitForVarInStatement(SimpleNode node, SimpleNode[] children) {
+    assert children.length == 4;
+    SimpleNode var = children[0];
+//     SimpleNode _ = children[1]; // Parser incorrectly accepts an init value
+    SimpleNode obj = children[2];
+    SimpleNode body = children[3];
+    TranslationContext forInContext = makeTranslationContext(ASTForInStatement.class, context);
+    try {
+      // Intentionally using the same context type as ForIn
+      context = forInContext;
+      // visitStatement should translate this as a variable declaration
+      children[0] = visitStatement(var);
+      children[2] = visitExpression(obj);
+      children[3] = visitStatement(body);
+    }
+    finally {
+      context = context.parent;
+    }
+    // Rewrite has to happen outside of forInContext
+    if (forInContext.label != null) {
+      return rewriteForInStatement(node, forInContext.label);
+    }
+    return node;
+  }
+
+  SimpleNode rewriteForInStatement(SimpleNode node, String label) {
+      ASTIdentifier.Type returnType = (ASTIdentifier.Type)context.get("returnType");
+      Map map = new HashMap();
+      // Don't re-visit the for-in node, just the wrapper we create
+      map.put("_1", new Compiler.PassThroughNode(node));
+      String pattern = "var " + label + "$return:Boolean = false;" +
+        label + ": _1;" +
+        "if (" + label + "$return) { return";
+      if ((returnType == null) || (! "void".equals(returnType.toString()))) {
+        pattern += " " + label + "$value";
+      }
+      pattern += "; }";
+      // StatementList is a block, ensuring that the single statement
+      // is replaced by a single statement.
+      SimpleNode replNode = new ASTStatementList(0);
+      replNode.setChildren((new Compiler.Parser()).substituteStmts(node, pattern, map));
+      return visitStatement(replNode);
+  }
+
+  // Override Javascript version to work around Adobe bug
+  // http://bugs.adobe.com/jira/browse/ASC-3852
+  public SimpleNode visitTryStatement(SimpleNode node, SimpleNode[] children) {
+    try {
+      context = makeTranslationContext(ASTTryStatement.class, context);
+      return super.visitTryStatement(node, children);
+    }
+    finally {
+      context = context.parent;
+    }
+  }
+
+  // Override Javascript version to work around Adobe bug
+  // http://bugs.adobe.com/jira/browse/ASC-3852
+  // We turn a return from a for-in inside a try to a break and some flags...
+  public SimpleNode visitReturnStatement(SimpleNode node, SimpleNode[] children) {
+    SimpleNode value = children[0];
+    TranslationContext c = context;
+    TranslationContext forInContext = null;
+    boolean inTry = false;
+    while ((! c.isFunctionBoundary())) {
+      if (ASTForInStatement.class.equals(c.type)) {
+        forInContext = c;
+      } else if (ASTTryStatement.class.equals(c.type)) {
+        inTry = true;
+      }
+      c = c.getParentStatement();
+      if (c == null) {
+        throw new SemanticError("return not within a function body");
+      }
+    }
+    if (inTry && (forInContext != null)) {
+      String label = forInContext.label = newTemp();
+      // StatementList is a block, ensuring that the single statement
+      // is replaced by a single statement.
+      SimpleNode replNode = new ASTStatementList(0);
+      ASTIdentifier.Type returnType = (ASTIdentifier.Type)context.get("returnType");
+      String pattern = label + "$return = true";
+      Map map = new HashMap();
+      if ((returnType == null) || (! "void".equals(returnType.toString()))) {
+        pattern += "; var " + label + "$value";
+        if (! (value instanceof ASTEmptyExpression)) {
+          map.put("_1", value);
+          pattern += " = _1";
+        }
+      }
+      pattern += "; break " + label + ";";
+      replNode.setChildren((new Compiler.Parser()).substituteStmts(node, pattern, map));
+      return visitStatement(replNode);
+    }
+    children[0] = visitExpression(value);
+    return node;
+  }
+
+
   /**
    * The script compiler reserves parts of the name space for
    * its own use.  All of our generated names start with "$lzsc$",
@@ -191,7 +315,7 @@ public class SWF9Generator extends JavascriptGenerator {
     // TODO: [2009-10-09 ptw] (LPP-5813) This context would be where
     // we would accumulate the class member names so that implicit
     // class references from methods can be resovled explicitly
-    context = new TranslationContext(ASTClassDefinition.class, context);
+    context = makeTranslationContext(ASTClassDefinition.class, context);
     try {
       // Both classes and mixins are translated to create a normal
       // 'implementation' class.  A mixin's implementation is stashed
@@ -304,6 +428,11 @@ public class SWF9Generator extends JavascriptGenerator {
    * We keep track of variables that are implicitly global.
    */
   public SimpleNode visitVariableStatement(SimpleNode node, SimpleNode[] children) {
+    // Make any transformations the superclass would first.  (Like
+    // evaluateCompileTimeConditional!)
+    node = super.visitVariableStatement(node, children);
+    // TODO: [2009-11-01 ptw] Why do we not allow
+    // variableDeclarationList at top level?
     if (inDefaultClass && !inMethod &&
         children.length == 1 &&
         children[0] instanceof ASTVariableDeclaration) {
@@ -317,13 +446,13 @@ public class SWF9Generator extends JavascriptGenerator {
       if (varchildren.length > 0) {
         ASTIdentifier id = (ASTIdentifier)varchildren[0];
         ASTIdentifier.Type type = id.getType();
-        addGlobalVar(id.getName(), type == null ? null : type.toString(), initializer);
+        addGlobalVar(id.getName(), type == null ? null : type.toString(), initializer, node);
       }
       node = new ASTStatement(0);
       node.set(0, new ASTEmptyExpression(0));
       return node;
     }
-    return super.visitVariableStatement(node, children);
+    return node;
   }
 
   public void setOriginalSource(String source) {
@@ -482,7 +611,11 @@ public class SWF9Generator extends JavascriptGenerator {
             // if it's worth the effort.
             throw new CompilerError(newname + ": cannot have variable args in constructor used as parent class of mixin");
           }
-          actuals.add(newIdentifier(id.getName()));
+          // Share the id, so we get register renaming correct
+          ASTIdentifier actual = (ASTIdentifier)id.deepCopy();
+          // Remove the type
+          actual.setType(null);
+          actuals.add(actual);
         }
       }
       SimpleNode[] actualsArray = (SimpleNode[])actuals.toArray(new SimpleNode[0]);
@@ -586,16 +719,20 @@ public class SWF9Generator extends JavascriptGenerator {
     String name;
     String type;
     String initializer;
+    SimpleNode source;
   }
 
   /** If a global has already been seen, make sure
    * that we don't have a conflict of initialization values.
    */
-  private String checkGlobalValue(String valueName, String curval, String newval, String emsg) {
+  private String checkGlobalValue(String valueName, String curval, String newval, String emsg, SimpleNode curSource, SimpleNode newSource) {
     if (curval != null && newval != null && !curval.equals(newval))
         throw new CompilerError(valueName + ": variable declared twice with " +
                                 emsg + ": \"" +
-                                curval + "\" and \"" + newval + "\"");
+                                curval + "\"" +
+                                (curSource != null ? (" (" + Compiler.getLocationString(curSource) + ")") : "") +
+                                " and \"" + newval + "\"" +
+                                (newSource != null ? (" (" + Compiler.getLocationString(newSource) + ")") : ""));
     if (curval != null)
       return curval;
     else
@@ -605,7 +742,11 @@ public class SWF9Generator extends JavascriptGenerator {
   /**
    * Add this global variable to our private list.
    */
-  void addGlobalVar(String name, String type, String initializer)
+  void addGlobalVar(String name, String type, String initializer) {
+    addGlobalVar(name, type, initializer, null);
+  }
+
+  void addGlobalVar(String name, String type, String initializer, SimpleNode source)
   {
     super.addGlobalVar(name, type, initializer);
     GlobalVariable glovar = (GlobalVariable)programVars.get(name);
@@ -614,11 +755,12 @@ public class SWF9Generator extends JavascriptGenerator {
       glovar.name = name;
       glovar.type = type;
       glovar.initializer = initializer;
+      glovar.source = source;
       programVars.put(name, glovar);
     }
     else {
-      glovar.type = checkGlobalValue(name, glovar.type, type, "different types");
-      glovar.initializer = checkGlobalValue(name, glovar.initializer, initializer, "different initializers");
+      glovar.type = checkGlobalValue(name, glovar.type, type, "different types", glovar.source, source);
+      glovar.initializer = checkGlobalValue(name, glovar.initializer, initializer, "different initializers", glovar.source, source);
     }
   }
 

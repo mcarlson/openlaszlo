@@ -11,6 +11,7 @@ package org.openlaszlo.sc.parser;
 
 public class ASTIdentifier extends SimpleNode {
     private String name = null;
+    private String register = null;
     private Type type = null;
     private int hash = 0;
     private boolean ellipsis = false;
@@ -19,6 +20,7 @@ public class ASTIdentifier extends SimpleNode {
     public SimpleNode deepCopy() {
         ASTIdentifier result = (ASTIdentifier)super.deepCopy();
         result.name = this.name;
+        result.register = this.register;
         result.type = this.type;
         result.hash = this.hash;
         result.ellipsis = this.ellipsis;
@@ -68,13 +70,21 @@ public class ASTIdentifier extends SimpleNode {
         this.name = name.intern(); // to lower number of strings
         this.hash = name.hashCode();
     }
-  
+
+    public void setRegister(String name) {
+        this.register = name;
+    }
+
     public int hashCode() {
         return hash;
     }
   
     public String getName() {
         return name;
+    }
+
+    public String getRegister() {
+        return (register != null) ? register : name;
     }
 
     public Type getType() {
@@ -104,7 +114,8 @@ public class ASTIdentifier extends SimpleNode {
     public String toJavascriptString() {
         String dots = ellipsis ? "..." : "";
         String typesuffix = (type == null) ? "" : (": " + type.toString());
-        return dots + name + typesuffix;
+        // Use the register name if there is one
+        return dots + ((register != null) ? register : name) + typesuffix;
     }
 
     public String toString() {

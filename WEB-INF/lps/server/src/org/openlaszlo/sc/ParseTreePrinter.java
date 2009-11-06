@@ -62,6 +62,7 @@ public class ParseTreePrinter {
     // For debugging, for now, must be set by hand
     public static final boolean DEBUG_NODE_OUTPUT = false;
     public static final boolean DEBUG_LINE_NUMBER = false;
+    public static final boolean DEBUG_MAKE_BLOCK = false;
   }
   Config config;
 
@@ -76,8 +77,6 @@ public class ParseTreePrinter {
   String CLOSEPAREN;
   String SEMI;
   String OPTIONAL_SEMI;
-  String OPENCURLY;
-  String CLOSECURLY;
 
   protected String currentClassName = null;
   
@@ -123,7 +122,7 @@ public class ParseTreePrinter {
   }
   
   public void print(SimpleNode node, PrintStream where) {
-    where.println(visit(node));
+    where.println(visit(node, null));
   }
   
   public String delimit(String phrase, boolean force, boolean parenMultiline) {
@@ -157,11 +156,21 @@ public class ParseTreePrinter {
     return phrase;
   }
 
-  public String makeBlock(String body) {
+  public String makeBlock(SimpleNode node, String body) {
     body = elideSemi(body);
     // NEWLINE is for debug/readability, so our code is not _all_ on
     // one line
-    return "{" + NEWLINE + elideSemi(body) + (unannotate(body).endsWith("}") ? "" : NEWLINE) + "}";
+    return  (Config.DEBUG_MAKE_BLOCK ? (" /* " + node.getClass().getName() + " */ ") : "") +
+      "{" + NEWLINE + elideSemi(body) + (unannotate(body).endsWith("}") ? "" : NEWLINE) + "}";
+  }
+
+  public String ensureBlock(SimpleNode node, String body) {
+//     assert node instanceof ASTStatementList : node.getClass().getName() + ": \"" + body + "\"";
+    if (unannotate(body).length() == 0) {
+      return (Config.DEBUG_MAKE_BLOCK ? (" /* " + node.getClass().getName() + " */ ") : "") + "{}";
+    } else {
+      return body;
+    }
   }
 
   public static String join(String token, String[] strings) {
@@ -192,6 +201,36 @@ public class ParseTreePrinter {
   }
 
   /**
+   * Flatten nested blocks
+   *
+   * This is more complex than it should have to be.  Perhaps the
+   * parser could be smarter in the first place?
+   */
+  private SimpleNode[] flatten(SimpleNode[] children) {
+    int i, len = children.length;
+    for (i = 0; i < len; i++) {
+      SimpleNode child = children[i];
+      if ((child instanceof ASTProgram) ||
+          (child instanceof ASTStatementList) ||
+          (child instanceof ASTDirectiveBlock)) {
+        List newChildren = new ArrayList();
+        for (i = 0; i < len; i++) {
+          child = children[i];
+          if ((child instanceof ASTProgram) ||
+              (child instanceof ASTStatementList) ||
+              (child instanceof ASTDirectiveBlock)) {
+            newChildren.addAll(Arrays.asList(flatten(child.getChildren())));
+          } else {
+            newChildren.add(child);
+          }
+        }
+        return (SimpleNode[])(newChildren.toArray(new SimpleNode[0]));
+      }
+    }
+    return children;
+  }
+
+  /**
    * Perform any actions that need to happen before
    * children are visited.  May be overridden.
    */
@@ -203,10 +242,15 @@ public class ParseTreePrinter {
       // classname is needed when emitting constructors for interstitials.
       currentClassName = ((ASTIdentifier)(node.getChildren()[1])).getName();
     }
+    else if ((node instanceof ASTProgram) ||
+             (node instanceof ASTStatementList) ||
+             (node instanceof ASTDirectiveBlock)) {
+      node.setChildren(flatten(node.getChildren()));
+    }
     return node;
   }
 
-  private String visit(SimpleNode node) {
+  private String visit(SimpleNode node, SimpleNode parent) {
     node = previsit(node);
     int size = node.size();
     SimpleNode[] childnodes = node.getChildren();
@@ -216,7 +260,7 @@ public class ParseTreePrinter {
       if (n instanceof PassThroughNode) {
         n = childnodes[i] = ((PassThroughNode)n).realNode;
       }
-      children[i] = visit(n) ;
+      children[i] = visit(n, node) ;
     }
     
     Class nt = node.getClass();
@@ -229,11 +273,13 @@ public class ParseTreePrinter {
       StringBuffer sb = new StringBuffer();
       String sep = "";
       int l = children.length;
+      int n = 0;
       for (int x = 0; x < l; x++) {
         String child = children[x];
         // Elide empty nodes
         String childRaw = unannotate(child);
         if (! "".equals(childRaw)) {
+          n++;
           sb.append(sep);
           sb.append(child);
           if (! childRaw.endsWith(SEMI)) {
@@ -243,7 +289,15 @@ public class ParseTreePrinter {
           }
         }
       }
-      return(lnum(node, sb.toString()));
+      if ((n == 0) || (sb.length() == 0)) {
+        // Don't annotate an empty block
+        return "";
+      } else if (node instanceof ASTProgram) {
+        return(lnum(node, sb.toString()));
+      } else {
+        // Maintain the block
+        return(lnum(node, makeBlock(node, sb.toString())));
+      }
     }
     if (node instanceof ASTStatement) {
       int len = children.length;
@@ -512,23 +566,37 @@ public class ParseTreePrinter {
     return "";
   }
   public String visitForVarInStatement(SimpleNode node, String[] children) {
-    return "for" + OPENPAREN + "var " + children[0] + " in " + children[2] + CLOSEPAREN + makeBlock(children[3]);
+    return "for" + OPENPAREN + "var " + children[0] + " in " + children[2] + CLOSEPAREN + ensureBlock(node.get(3), children[3]);
   }
   public String visitForInStatement(SimpleNode node, String[] children) {
-    return "for" + OPENPAREN + children[0] + " in " + children[1] + CLOSEPAREN + makeBlock(children[2]);
+    return "for" + OPENPAREN + children[0] + " in " + children[1] + CLOSEPAREN + ensureBlock(node.get(2), children[2]);
   }
   public String visitForVarStatement(SimpleNode node, String[] children) {
-    // Need explicit semi because init clause may be empty
-    return "for" + OPENPAREN + elideSemi(children[0]) + SEMI + children[1] + SEMI + children[2] + CLOSEPAREN + makeBlock(children[3]);
+    // Need explicit semi because any clause may be empty
+    return "for" + OPENPAREN + elideSemi(children[0]) + SEMI + elideSemi(children[1]) + SEMI + children[2] + CLOSEPAREN +
+      ensureBlock(node.get(3), children[3]);
   }
   public String visitIfStatement(SimpleNode node, String[] children) {
-    if (children.length == 2) {
-      return "if" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]);
-    } else if (children.length == 3) {
-      return "if" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]) +
-        SPACE + "else" + SPACE + makeBlock(children[2]);
+    int len = children.length;
+    assert len == 2 || len == 3;
+    if ((children.length == 2) || (unannotate(children[2]).length() == 0)) {
+      return "if" + OPENPAREN + children[0] + CLOSEPAREN + ensureBlock(node.get(1), children[1]);
+    } else {
+      // It's too hard to figure out which statements will parse
+      // ambiguously here, so we always insert a block
+      String thenBlock = children[1];
+      SimpleNode thenNode = node.get(1);
+      if ((thenNode instanceof ASTStatementList) &&
+          (unannotate(thenBlock).length() > 0)) {
+        thenBlock = elideSemi(thenBlock);
+      } else {
+        thenBlock = makeBlock(thenNode, thenBlock);
+      }
+      // We need to delimit non-blocks from the `else`
+      String elseBlock = ((node.get(2) instanceof ASTStatementList) ? SPACE : " ") + children[2];
+      return "if" + OPENPAREN + children[0] + CLOSEPAREN + thenBlock +
+        SPACE + "else" + elseBlock;
     }
-    return defaultVisitor(node, children);
   }
   public String visitNewExpression(SimpleNode node, String[] children) {
     int thisPrec = prec(Ops.NEW, true);
@@ -575,7 +643,7 @@ public class ParseTreePrinter {
     return "break" + (children.length > 0 ? delimit(children[0]) : "");
   }
   public String visitLabeledStatement(SimpleNode node, String[] children) {
-    return children[0] + ":" + delimit(children[1]);
+    return children[0] + ":" + SPACE + children[1];
   }
   public String visitUnaryExpression(SimpleNode node, String[] children) {
     // Prefix and Unary are the same node
@@ -586,28 +654,50 @@ public class ParseTreePrinter {
     return children[0] + (letter ? " " : "") + children[1];
   }
   public String visitWithStatement(SimpleNode node, String[] children) {
-    return "with" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]);
+    return "with" + OPENPAREN + children[0] + CLOSEPAREN + ensureBlock(node.get(1), children[1]);
   }
   public String visitWhileStatement(SimpleNode node, String[] children) {
-    return "while" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]);
+    return "while" + OPENPAREN + children[0] + CLOSEPAREN + ensureBlock(node.get(1), children[1]);
   }
   public String visitDoWhileStatement(SimpleNode node, String[] children) {
-    return "do" + makeBlock(children[0]) + SPACE + "while" + OPENPAREN + children[1] + ")";
+    // It's too hard to figure out which statements will parse
+    // ambiguously here, so we always insert a block
+    String doBlock = children[0];
+    SimpleNode doNode = node.get(0);
+    if ((doNode instanceof ASTStatementList) &&
+        (unannotate(doBlock).length() > 0)) {
+      doBlock = elideSemi(doBlock);
+    } else {
+      doBlock =  makeBlock(doNode, doBlock);
+    }
+    return "do" + SPACE + doBlock + SPACE + "while" + OPENPAREN + children[1] + ")";
   }
   
   public String visitDefaultClause(SimpleNode node, String[] children) {
-    return "default:" + NEWLINE + (children.length > 0 ? (children[0] + OPTIONAL_SEMI) : "");
+    int len = children.length;
+    String body = "";
+    for (int i = 0; i < len; i++) {
+      body += children[i];
+    }
+    return "default:" + NEWLINE + (len > 0 ? (body + OPTIONAL_SEMI) : "");
   }
   public String visitCaseClause(SimpleNode node, String[] children) {
+    int len = children.length;
+    String body = "";
+    for (int i = 1; i < len; i++) {
+      body += children[i];
+    }
     return "case" + delimit(children[0]) + ":" + NEWLINE +
-      (children.length > 1 ? (children[1] + OPTIONAL_SEMI) : "");
+      (len > 1 ? (body + OPTIONAL_SEMI) : "");
   }
   public String visitSwitchStatement(SimpleNode node, String[] children) {
     String body = "";
     for (int i = 1, len = children.length; i < len; i++) {
       body += children[i];
     }
-    return "switch" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(body);
+    // The body of a switch is not parsed as a block, so we have to
+    // make it so
+    return "switch" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(node, body);
   }
   
   
@@ -791,21 +881,24 @@ public class ParseTreePrinter {
   
   String doFunctionDeclaration(SimpleNode node, String[] children, boolean useName, boolean inmixin) {
     String name, args, body;
+    SimpleNode bodyNode;
     if (children.length == 2) {
       name = "";
       args = children[0];
       body = children[1];
+      bodyNode = node.get(1);
     } else if (children.length == 3) {
       name = children[0];
       args = children[1];
       body = children[2];
+      bodyNode = node.get(2);
     } else {
       return defaultVisitor(node, children);
     }
-    String txt = "function" + (useName ? (" " + name) : "") + OPENPAREN + args + CLOSEPAREN;
-    txt += functionReturnType(node);
+    String txt = "function" + ((useName && (name.length() > 0)) ? (" " + name) : "") + OPENPAREN + args + ")";
+    txt += functionReturnType(node) + SPACE;
     if (!inmixin) {
-      txt += makeBlock(body);
+      txt += ensureBlock(bodyNode, body);
     }
     else {
       // This is an interface - no body needed
@@ -852,7 +945,8 @@ public class ParseTreePrinter {
   
   public String visitIdentifier(SimpleNode node, String[] children) {
     ASTIdentifier id = (ASTIdentifier)node;
-    String name = id.getName();
+    // Get 'register' name, if it has one
+    String name = id.getRegister();
     if (id.isConstructor()) {
       name = currentClassName;
     }
@@ -945,24 +1039,24 @@ public class ParseTreePrinter {
 
   public String visitTryStatement(SimpleNode node, String[] children) {
     if (children.length == 2) {
-      return "try" + SPACE + makeBlock(children[0]) + NEWLINE + children[1];
+      return "try" + SPACE + ensureBlock(node.get(0), children[0]) + NEWLINE + children[1];
     } else if (children.length == 3) {
-      return "try" + SPACE + makeBlock(children[0]) + NEWLINE + children[1] + NEWLINE + children[2];
+      return "try" + SPACE + ensureBlock(node.get(0), children[0]) + NEWLINE + children[1] + NEWLINE + children[2];
     }
     return defaultVisitor(node, children);
   }
   public String visitCatchClause(SimpleNode node, String[] children) {
-    return "catch" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(children[1]);
+    return "catch" + OPENPAREN + children[0] + CLOSEPAREN + ensureBlock(node.get(1), children[1]);
   }
   public String visitFinallyClause(SimpleNode node, String[] children) {
-    return "finally" + SPACE + makeBlock(children[0]);
+    return "finally" + SPACE + ensureBlock(node.get(0), children[0]);
   }
   public String visitThrowStatement(SimpleNode node, String[] children) {
     return "throw" + delimit(children[0]);
   }
   
   public List makeTranslationUnits(SimpleNode node, SourceFileMap sources) {
-    return makeTranslationUnits(visit(node), sources);
+    return makeTranslationUnits(visit(node, null), sources);
   }
 
   public static String unparse(SimpleNode node) {
@@ -970,11 +1064,11 @@ public class ParseTreePrinter {
   }
   
   public String text(SimpleNode node) {
-    return unannotate(visit(node));
+    return unannotate(visit(node, null));
   }
   
   public String annotatedText(SimpleNode node) {
-    return printableAnnotations(visit(node));
+    return printableAnnotations(visit(node, null));
   }
   
   public static final char ANNOTATE_MARKER = '\u0001';

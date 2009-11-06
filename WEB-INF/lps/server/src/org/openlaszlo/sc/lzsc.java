@@ -210,6 +210,7 @@ public class lzsc  {
     // default constants
     compileTimeConstants.put("$debug", Boolean.FALSE);
     compileTimeConstants.put("$profile", Boolean.FALSE);
+    compileTimeConstants.put("$backtrace", Boolean.FALSE);
 
     // default options
     compilerOptions.put(Compiler.CONDITIONAL_COMPILATION, Boolean.TRUE);
@@ -291,9 +292,15 @@ public class lzsc  {
             compilerOptions.put(key, value);
           }
         }
-      } else if ("-g".equals(opt) || "--debug".equals(opt)) {
+      } else if ("-g1".equals(opt) || "--debug".equals(opt)) {
         compilerOptions.put("debug", Boolean.TRUE);
         compileTimeConstants.put("$debug", Boolean.TRUE);
+      } else if (arg == "-g" || arg == "-g2" || arg == "--backtrace") {
+        compilerOptions.put("debug", Boolean.TRUE);
+        compileTimeConstants.put("$debug", Boolean.TRUE);
+        compilerOptions.put("backtrace", Boolean.TRUE);
+        compileTimeConstants.put("$backtrace", Boolean.TRUE);
+      
       } else if ("-p".equals(opt) || "--profile".equals(opt)) {
         compilerOptions.put("profile", Boolean.TRUE);
         compileTimeConstants.put("$profile", Boolean.TRUE);
@@ -366,6 +373,6 @@ public class lzsc  {
 }
 
 /**
- * @copyright Copyright 2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2008, 2009 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

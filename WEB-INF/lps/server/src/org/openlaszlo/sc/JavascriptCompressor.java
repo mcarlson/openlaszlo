@@ -52,9 +52,16 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
   // when calculating local/free/closed.
   //
 
+  public TranslationContext makeTranslationContext(Object type, TranslationContext parent, String label) {
+    return new TranslationContext(type, parent, label);
+  }
+  public TranslationContext makeTranslationContext(Object type, TranslationContext parent){
+    return new TranslationContext(type, parent);
+  }
+
   // Holds registers.  Create a default one for the top-level, just
   // for uniformity
-  TranslationContext context = new TranslationContext(ASTProgram.class, null);
+  TranslationContext context = makeTranslationContext(ASTProgram.class, null);
 
   public TranslationContext getContext() {
     return this.context;
@@ -139,7 +146,7 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
     Compiler.OptionMap savedOptions = options;
     try {
       options = savedOptions.copy();
-      context = new TranslationContext(ASTFunctionExpression.class, context);
+      context = makeTranslationContext(ASTFunctionExpression.class, context);
 
       // We have to look for #pragma "scriptElement", so peek into the
       // statement list

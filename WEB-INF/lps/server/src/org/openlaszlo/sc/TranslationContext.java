@@ -41,9 +41,7 @@ public class TranslationContext extends HashMap {
   public Object type;                  // Class or String
   public TranslationContext parent;
   public String label;
-  public boolean isEnumeration;
-  public HashMap targets;
-  // properties are stored in this
+  // properties are stored in self (we _are_ a HashMap).
 
   public TranslationContext(Object type, TranslationContext parent) {
     this(type, parent, null);
@@ -57,18 +55,7 @@ public class TranslationContext extends HashMap {
     }
     this.type = type;
     this.parent = parent;
-    this.label = label;
-    // if isEnumeration is true, this context represents a
-    // "for...in", and unused values need to be popped from the
-    // stack during an abrupt completion
-    this.isEnumeration = false;
-    this.targets = new HashMap();
-  }
-
-  public Object clone() {
-    TranslationContext copy = (TranslationContext)super.clone();
-    copy.targets = (HashMap)targets.clone();
-    return copy;
+    this.label = (label != null) ? label.intern() : null;
   }
 
   public Object get(Object key) {
@@ -100,6 +87,7 @@ public class TranslationContext extends HashMap {
   }
 
   public boolean inLabelSet(String label) {
+    label = label.intern();
     for (TranslationContext context = this;
          context != null && ASTLabeledStatement.class.equals(context.type);
          context = context.parent) {
@@ -111,11 +99,14 @@ public class TranslationContext extends HashMap {
   }
 
   public TranslationContext getParentStatement() {
-    TranslationContext context;
-    for (context = parent;
-         context != null && ASTLabeledStatement.class.equals(context.type);
-         context = context.parent) {
-      ;
+    TranslationContext context = parent;
+    // If we are not _in_ a label context, just return our parent
+    if (! (ASTLabeledStatement.class.equals(type))) {
+      return context;
+    }
+    // Otherwise skip all contiguous nested label contexts
+    while ((context != null) && ASTLabeledStatement.class.equals(context.type)) {
+      context = context.parent;
     }
     return context;
   }
@@ -158,18 +149,8 @@ public class TranslationContext extends HashMap {
     return parent.findClassContext();
   }
 
-  public void setTarget(Object type, Object instrs) {
-    assert "break".equals(type) || "continue".equals(type);
-    targets.put(type, instrs);
-  }
-
-  public Object getTarget(Object type) {
-    assert "break".equals(type) || "continue".equals(type);
-    return targets.get(type);
-  }
-
   public String toString() {
-    return "" + this.type + ": " + super.toString();
+    return this.getClass().getName() + " (" + type + ") " + ((label != null) ? (label + ": ") : "") + super.toString();
   }
 }
 

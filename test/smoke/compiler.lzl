@@ -162,10 +162,60 @@
       argScope();
     </method>
 
+    <!-- Test LPP-8534 -->
+    <method name="returnVoid" args="o" returns="void">
+      for (var s in o) {
+        if (1) return;
+      }
+    </method>
+
+    <method name="returnFunction" args="o" returns="Function">
+      for (var s in o) {
+        if (1) return (function () {});
+      }
+      return null;
+    </method>
+
+    <method name="labeledFor" args="o" >
+      foo: for (var s in o) {
+        if (1) return 1; else break foo;
+      }
+    </method>
+
+    <method name="forInLabeledBlock" args="o">
+      foo: {
+        for (var s in o) if (1) return 1; else break foo;
+      }
+    </method>
+
+    <method name="forInLabeledBlock2" args="o">
+      foo: {
+        if (0) {}
+        for (var s in o) if (1) return 1; else break foo;
+        if (0) {}
+      }
+    </method>
+
+    <method name="testForInReturn">
+      <![CDATA[
+      assertUndefined(returnVoid({}));
+      assertUndefined(returnVoid({a: 2}));
+      assertNull(returnFunction({}));
+      assertTrue(returnFunction({a: 2}) is Function);
+      assertUndefined(labeledFor({}));
+      assertEquals(1, labeledFor({a: 2}));
+      assertUndefined(forInLabeledBlock({}));
+      assertEquals(1, forInLabeledBlock({a: 2}));
+      assertUndefined(forInLabeledBlock2({}));
+      assertEquals(1, forInLabeledBlock2({a: 2}));
+      ]]>
+    </method>
+
     <method name="addTests"> 
         this.addTest("testOptionalArguments");
         this.addTest("testMiscellaneousCompilation");
         this.addTest("testConditionalCompilation");
+        this.addTest("testForInReturn");
     </method> 
   </class>
 </library>

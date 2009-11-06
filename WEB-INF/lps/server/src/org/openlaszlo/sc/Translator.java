@@ -16,6 +16,10 @@ import java.util.*;
 
 public interface Translator extends ASTVisitor {
 
+  public TranslationContext makeTranslationContext(Object type, TranslationContext parent, String label);
+
+  public TranslationContext makeTranslationContext(Object type, TranslationContext parent);
+
   public TranslationContext getContext();
 
   public void setOriginalSource(String source);
