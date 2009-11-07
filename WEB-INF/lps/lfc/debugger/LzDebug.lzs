@@ -1646,8 +1646,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           that.format("\n  this: %#w", inspect(frame.context, true));
         }
         var args = frame.arguments;
-        for (var i = 0; i < args.length; i++) {
-          that.format("\n  arg %2d: %#w", i, inspect(args[i], verbose));
+        for (var i = 0; i < args.length; i += 2) {
+          that.format("\n  %s: %#w", args[i], inspect(args[i + 1], verbose));
         }
       });
     var keys = [];
