@@ -213,7 +213,24 @@ class ClassCompiler extends ViewCompiler  {
                         attrSpec.allocation = allocation;
                         attributeDefs.add(attrSpec);
                     }
-                    
+                } else if (child.getName().equals("setter")) {
+                    String attrName = child.getAttributeValue("name");
+                    if (schema.enforceValidIdentifier) {
+                        try {
+                            attrName = requireIdentifierAttributeValue(child, "name");
+                        } catch (MissingAttributeException e) {
+                            throw new CompilationError(
+                                "'name' is a required attribute of <" + child.getName() + "> and must be a valid identifier", child);
+                        }
+                    }
+                    // Setter is shorthand for a specially-named method
+                    attrName = "$lzc$set_" + attrName;
+                    String allocation = getAllocation(child);
+                    ViewSchema.Type attrType = ViewSchema.METHOD_TYPE;
+                    AttributeSpec attrSpec =
+                        new AttributeSpec(attrName, attrType, null, null, child);
+                    attrSpec.allocation = allocation;
+                    attributeDefs.add(attrSpec);
                 } else if (child.getName().equals("attribute")) {
                 // Is this an element named ATTRIBUTE which is a
                 // direct child of this CLASS or INTERFACE tag?
@@ -301,7 +318,10 @@ class ClassCompiler extends ViewCompiler  {
                     attributeDefs.add(attrSpec);
                 } else if (child.getName().equals("doc")) {
                     // Ignore documentation nodes
-                } 
+                } else {
+                  // We'd like to warn about unknown attributes, but
+                  // we can't tell if a child is a view here...
+                }
             }
         }
         

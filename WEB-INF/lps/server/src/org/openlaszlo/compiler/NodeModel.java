@@ -1640,19 +1640,35 @@ solution =
         addMethodInternal(name, args, returnType, body, element, allocation);
     }
 
+  static String setterPrefix = "$lzc$set_";
   void addMethodInternal(String name, String args, String returnType, String body, Element element, String allocation) {
         ClassModel superclassModel = getParentClassModel();
         // Override will be required if there is an inherited method
-        // of the same name
-        boolean override =
-          // This gets methods from the schema, in particular, the
-          // LFC interface
-          superclassModel.getAttribute(name, allocation) != null ||
-          // This gets methods the compiler has added, in
-          // particular, setter methods
-          superclassModel.getMergedMethods().containsKey(name) ||
-          // And the user may know better than any of us
-          "true".equals(element.getAttributeValue("override"));
+        // of the same name.
+        boolean override = false;
+        // This gets methods from the schema, in particular, the
+        // LFC interface
+        if (superclassModel.getAttribute(name, allocation) != null) {
+          override = true;
+        }
+        // This gets methods the compiler has added, in
+        // particular, setter methods
+        else if (superclassModel.getMergedMethods().containsKey(name)) {
+          override = true;
+        }
+        // And the user may know better than any of us
+        else if ("true".equals(element.getAttributeValue("override"))) {
+          override = true;
+        }
+        // We have to be a little tricky to find potential setters
+        // from <interface><attribute setter="..."></interface>
+        else if (name.startsWith(setterPrefix)) {
+          String baseName = name.substring(setterPrefix.length());
+          AttributeSpec superAttr = superclassModel.getAttribute(name, allocation);
+          if ((superAttr != null) && (superAttr.setter != null)) {
+            override = true;
+          }
+        }
         boolean isfinal = "true".equals(element.getAttributeValue("final"));
 
         if (!override) {
@@ -2005,7 +2021,6 @@ solution =
         if (!forceOverride &&
             (parenttype == schema.METHOD_TYPE ||
              parenttype == schema.EVENT_HANDLER_TYPE ||
-             parenttype == schema.SETTER_TYPE ||
              parenttype == schema.REFERENCE_TYPE)) {
             env.warn( "In element '" + parent.getName() 
                       + "' attribute '" +  name 

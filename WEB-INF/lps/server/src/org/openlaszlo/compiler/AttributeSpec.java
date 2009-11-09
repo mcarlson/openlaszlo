@@ -20,7 +20,7 @@ public class AttributeSpec {
     /** The default value */
     public String defaultValue = null;
     /** The setter function */
-    String setter;
+    public String setter;
     /** The type of the attribute value*/ 
     public Type type;
     /** Is this attribute required to instantiate an instance of this class? */
@@ -61,44 +61,57 @@ public class AttributeSpec {
 
   public String toLZX(String indent, ClassModel superclass) {
     AttributeSpec superSpec = superclass.getAttribute(name, allocation);
-    if (ViewSchema.METHOD_TYPE.equals(type)) {
-      return indent + "  <method name='" + name + "'" +
-        (((arglist == null) || "".equals(arglist))?"":(" args='" + XMLUtils.escapeXml(arglist) +"'")) +
-        " />";
-    }
-
+    String value = null;
     if (superSpec == null) {
-      if (ViewSchema.EVENT_HANDLER_TYPE.equals(type)) {
+      // Anything not in the superclass needs to be declared
+      if (ViewSchema.METHOD_TYPE.equals(type)) {
+        return indent + "<method name='" + name + "'" +
+          (((arglist == null) || "".equals(arglist))?"":(" args='" + XMLUtils.escapeXml(arglist) +"'")) +
+          " />";
+      } else if (ViewSchema.EVENT_HANDLER_TYPE.equals(type)) {
         return indent + "<event name='" + name + "' />";
       }
-      return indent + "<attribute name='" + name + "'" +
+      value = indent + "<attribute name='" + name + "'" +
         ((defaultValue != null)?(" value='" + XMLUtils.escapeXml(defaultValue) + "'"):"") +
         ((type != null)?(" type='" + typeToLZX() + "'"):"") +
-        ((when != NodeModel.WHEN_IMMEDIATELY)?(" when='" + when + "'"):"") + 
+        ((when != NodeModel.WHEN_IMMEDIATELY)?(" when='" + when + "'"):"") +
         (required?(" required='true'"):"") +
         " />";
-    } else if (! ViewSchema.EVENT_HANDLER_TYPE.equals(type)) {
-      String attrs = "";
+      if (setter != null) {
+        // We don't need the body of the setter in the interface, just
+        // note that there is one.
+        value += "\n" + indent +"<setter name='" + name + "' />";
+      }
+    } else if (! (ViewSchema.METHOD_TYPE.equals(type) ||
+                  ViewSchema.EVENT_HANDLER_TYPE.equals(type))) {
+      // Methods, events (obsolete) must be congruent, so don't need
+      // to redeclared, but properties of attributes can be
+      // overridden, and hence need to be redeclared.
+      String props = "";
       if (defaultValue != null &&
           (! defaultValue.equals(superSpec.defaultValue))) {
-        attrs += " value='" + XMLUtils.escapeXml(defaultValue) + "'";
+        props += " value='" + XMLUtils.escapeXml(defaultValue) + "'";
       }
       if (type != null &&
           (! type.equals(superclass.getAttributeType(name, allocation)))) {
-        attrs += " type='" + typeToLZX() + "'";
+        props += " type='" + typeToLZX() + "'";
       }
       if (when != null &&
           (! when.equals(superSpec.when))) {
-        attrs += " when='" + when + "'";
+        props += " when='" + when + "'";
       }
       if (required != superSpec.required) {
-        attrs += " required='" + required + "'";
+        props += " required='" + required + "'";
       }
-      if (attrs.length() > 0) {
-        return  indent + "<attribute name='" + name + "'" + attrs + " />";
+      if (props.length() > 0) {
+         value = indent + "<attribute name='" + name + "'" + props + " />";
+      }
+      if ((setter != null) && (superSpec.setter == null)) {
+        if (value == null) { value = ""; } else { value += "\n"; }
+        value += indent +"<setter name='" + name + "' />";
       }
     }
-    return null;
+    return value;
   }
 
   public String toString() {
