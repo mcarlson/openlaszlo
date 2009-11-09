@@ -80,6 +80,7 @@ class ResourceCompiler extends ElementCompiler {
 
                 String offx = element.getAttributeValue("offsetx");
                 String offy = element.getAttributeValue("offsety");
+                // These appear to be unused?
                 String width = element.getAttributeValue("width");
                 String height = element.getAttributeValue("height");
                 
@@ -161,6 +162,8 @@ class ResourceCompiler extends ElementCompiler {
                     if (!sources.isEmpty()) {
                         if (tagName.equals("preloadresource")) {
                           mEnv.getResourceGenerator().importPreloadResource(sources, name, file);
+                        } else if ((offx == null) && (offx == null)) {
+                          mEnv.getResourceGenerator().importResource(sources, name, file);
                         } else {
                           mEnv.getResourceGenerator().importResource(sources, name, file,
                                                                      new Offset2D(offx, offy));
@@ -179,6 +182,8 @@ class ResourceCompiler extends ElementCompiler {
                     if (tagName.equals("preloadresource")) {
                         mEnv.getResourceGenerator().importPreloadResource(file.getAbsolutePath(), 
                                                                           name);
+                    } else if ((offx == null) && (offx == null)) {
+                        mEnv.getResourceGenerator().importResource(file.getAbsolutePath(), name);
                     } else {
                         mEnv.getResourceGenerator().importResource(file.getAbsolutePath(), 
                                                                    name, new Offset2D(offx, offy));
