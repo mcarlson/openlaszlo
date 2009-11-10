@@ -22,7 +22,7 @@ var LzTextSprite = function(owner) {
     this.scrolldiv = this.__LZtextdiv = document.createElement('div');
     this.scrolldiv.owner = this;
     this.scrolldiv.className = 'lztext';
-    this.__LZdiv.appendChild(this.scrolldiv);  
+    this.__LZdiv.appendChild(this.scrolldiv);
     if (this.quirks.emulate_flash_font_metrics) {
         this.scrolldiv.className = 'lzswftext';
     }    
@@ -180,6 +180,7 @@ LzTextSprite.prototype.setScrolling = function (on) {
 LzTextSprite.prototype.scrollevents = false;
 LzTextSprite.prototype.setScrollEvents = function (on) {
   this.scrollevents = this.setScrolling(on);
+  this.__updatefieldsize();
 }
 
 LzTextSprite.prototype.initted = false;
@@ -219,9 +220,10 @@ LzTextSprite.prototype.__measurefontdiv = function(mdiv, width, height, url){
   var newheight = mdiv.clientHeight;
   mdiv.style.display = 'none';
   if (newwidth == width && newheight == height) {
-    // give the browser a little more time...
+    // Give the browser layout engine a chance to recompute the layout, by
+    // calling back from the browser's timer queue. (FFOX needs this, not sure about other browsers)
     var cstr = lz.BrowserUtils.getcallbackfunc(this, '__measurefontdiv', [mdiv, width, height, url]);
-    setTimeout(cstr, 200);
+    setTimeout(cstr, 0);
   } else {
     //Debug.warn('comparing', width, newwidth, height, newheight, mdiv);
     this.__loadedfonts.counter--;
@@ -244,9 +246,15 @@ LzTextSprite.prototype.__measurefontdiv = function(mdiv, width, height, url){
   }
 }
 
+// This uses a timer callback to actually call the routines which measure text,
+// so that the browser has a chance to re-layout the div if something changed.
 LzTextSprite.prototype.__updatefieldsize = function ( ){
   if (! this.__isExternalFontLoaded()) return;
+  var cstr = lz.BrowserUtils.getcallbackfunc(this, '__updatefieldsizeCallback', []);
+  setTimeout(cstr, 0);
+}
 
+LzTextSprite.prototype.__updatefieldsizeCallback = function () {
   var lineHeight = this.getLineHeight();
   // Validate lineHeight
   if (this.lineHeight !== lineHeight) {
@@ -266,12 +274,18 @@ LzTextSprite.prototype.__updatefieldsize = function ( ){
   this.__updatefieldprop('scrollLeft');
 }
 
-LzTextSprite.prototype.__updatefieldprop = function(name){
-  var val = this.scrolldiv[name];
-  if (this[name] !== val) {
-    this[name] = val;
-    this.owner.scrollevent(name, val);
-  }
+LzTextSprite.prototype.__updatefieldprop = function(name) {
+    var val = this.scrolldiv[name];
+    // TODO [hqm 2009-11] See LPP-8591. For Firefox, there is some
+    // weirdness, whereby the scrollHeight value will *appear* to be
+    // unchanged, but when you run a test app, you see the LFC never
+    // gets notified of a change in scrollHeight. The workaround is to
+    // always update the LFC value, regardless of whether we think it
+    // has changed.
+    if (this[name] !== val || name == 'scrollHeight') {
+        this[name] = val;
+        this.owner.scrollevent(name, val);
+    }
 }
 
 LzTextSprite.prototype.setText = function(t, force) {
@@ -978,6 +992,7 @@ LzTextSprite.prototype.setHeight = function (h) {
       }
       this.__updatefieldsize();
     }
+
     return nh;
 }
 
@@ -990,7 +1005,7 @@ LzTextSprite.prototype.enableClickableLinks = function ( enabled) {
 }
 
 LzTextSprite.prototype.makeTextLink = function (str, value) {
-    LzTextSprite.addLinkID(this.owner);
+    LzTextSprite.addLinkID(this);
     var uid = this.uid;
     return "<span class=\"lztextlink\" onclick=\"javascript:$modules.lz.__callTextLink('" + uid+"', '" + value +"')\">" + str +"</span>";
 }

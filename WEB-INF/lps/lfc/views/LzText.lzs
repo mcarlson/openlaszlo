@@ -319,7 +319,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if (this.capabilities.linescrolling) {
       lineNo = tsprite.pixelToLineNo(value);
     } else {
-      lineNo = Math.round(value / this.lineheight) + 1;
+        lineNo = Math.ceil(value / this.lineheight) + 1;
     }
     this.updateAttribute(name, lineNo);
     if ($dhtml) {
@@ -616,8 +616,6 @@ dynamic class LzText extends LzView with LzFormatter {
         // Update all the line-based values...
         if (this.inited) {
           this.updateLineAttribute('scroll', (- this.yscroll));
-          // This can't be negative
-          this.updateLineAttribute('maxscroll', Math.max(0, this.scrollheight - this.height));
         }
         break;
       default:
