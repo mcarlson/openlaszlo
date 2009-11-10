@@ -305,16 +305,9 @@ suite.test5 = function() {
 
   ztest ("ztest initial", view5.getDepthList(), [view5.v1, view5.v2, view5.v3]);
 
-  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v1), true, "view5.v2.isInFrontOf(view5.v1)");
-  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v2), false, "view5.v2.isInFrontOf(view5.v2)");
-  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v3), false, "view5.v2.isInFrontOf(view5.v3)");
-
   view5.v2.bringToFront();
   ztest ("ztest v2 to front", [view5.v1, view5.v3, view5.v2], view5.getDepthList());
 
-  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v1), true, "view5.v2.isInFrontOf(view5.v1)");
-  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v3), true, "view5.v2.isInFrontOf(view5.v3)");
- 
   view5.v2.sendToBack();
   ztest ("ztest v2 to back", [view5.v2, view5.v1, view5.v3], view5.getDepthList());
 
