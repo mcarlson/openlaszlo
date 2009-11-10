@@ -40,6 +40,8 @@ var pathparent :LzDatapath;
 var node :LzNode;
 /** @access private */
 var type :String;
+/** @access private */
+var __LZlast:int = -1;
 
 /**
   * @access private
@@ -137,6 +139,32 @@ function __LZupdateData (recursive:Boolean = false) :void {
         }
     }
 }
+
+
+/** @access private */
+override function __LZHandleMultiNodes ( n:Array ) :LzReplicationManager { 
+     var pp:LzParsedPath = this.parsedPath;
+     if (pp && pp.aggOperator == 'last') {
+       this.__LZlast = n.length;
+       // you must provide a datacontext
+       this.__LZHandleSingleNode( n[0] );
+       return null;
+     } else {
+         return super.__LZHandleMultiNodes( n );
+     }
+}
+
+/** @access private */
+override function __LZgetLast () :int { 
+    return this.__LZlast != -1 ? this.__LZlast : super.__LZgetLast();
+}
+
+/** @access private */
+override function runXPath () :Boolean {
+     this.__LZlast = -1;//don't forget clear value!
+     return super.runXPath();
+}
+
 
 override function toString () /*:String*/ { 
     return 'binder ' + this.xpath;
