@@ -185,20 +185,6 @@ function loctest(msg,view,exp)
   LzTestManager.assertWithin (exp[3], view.sprite.height, .1, msg + ": height failure");  
 }
 
-
-// Wait for a specified condition
-function waitfordel()
-{
-
-}
-
-function waitfor(condition)
-{
-  var del = new LzDelegate (null,  condition, 'waitfordel');
-  lz.Timer.addTimer (del, 100);  
-}
-
-
 // 
 // LzView
 // 
@@ -253,8 +239,8 @@ suite.test2 = function() {
   LzTestManager.assertEquals (false, view2.hassetheight, "view2.hassetheight failure");  
 
   // There is an image associated with this view
-  LzTestManager.assertEquals (0,  view2.getAttribute('frame'), 'view2.frame failure');
-  LzTestManager.assertEquals (1,  view2.getAttribute('totalframes'), 'view2.totalframes failure');
+  LzTestManager.assertEquals (1,  view2.frame, 'view2.frame failure');
+  LzTestManager.assertEquals (1,  view2.totalframes, 'view2.totalframes failure');
 
   // Turn off the v1
   view2.v1.setAttribute('visible', false);
@@ -285,12 +271,12 @@ suite.test3 = function() {
   LzTestManager.assertEquals (1, view3.v1.unstretchedwidth, "view3.v1.unstretchedwidth failure");
   LzTestManager.assertEquals (1, view3.v1.unstretchedheight, "view3.v1.unstretchedheight failure");
 
-  view3.v1.stretchResource ('width');
+  view3.v1.setAttribute('stretches', 'width');
   loctest("view3.v1 (2)", view3.v1, [0,0,10,20]);
   LzTestManager.assertEquals (1, view3.v1.unstretchedwidth, "view3.v1.unstretchedwidth failure (2)");
   LzTestManager.assertEquals (0, view3.v1.unstretchedheight, "(BUG: LPP-2161) view3.v1.unstretchedheight failure (2)");
 
-  view3.v1.stretchResource ('height');
+  view3.v1.setAttribute('stretches', 'height');
   loctest("view3.v1 (3)", view3.v1, [0,0,10,20]);
   LzTestManager.assertEquals (0, view3.v1.unstretchedwidth, "(BUG: LPP-2161) view3.v1.unstretchedwidth failure (3)");
   LzTestManager.assertEquals (1, view3.v1.unstretchedheight, "view3.v1.unstretchedheight failure (3)");
@@ -319,8 +305,15 @@ suite.test5 = function() {
 
   ztest ("ztest initial", view5.getDepthList(), [view5.v1, view5.v2, view5.v3]);
 
+  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v1), true, "view5.v2.isInFrontOf(view5.v1)");
+  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v2), false, "view5.v2.isInFrontOf(view5.v2)");
+  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v3), false, "view5.v2.isInFrontOf(view5.v3)");
+
   view5.v2.bringToFront();
   ztest ("ztest v2 to front", [view5.v1, view5.v3, view5.v2], view5.getDepthList());
+
+  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v1), true, "view5.v2.isInFrontOf(view5.v1)");
+  LzTestManager.assertEquals(view5.v2.isInFrontOf(view5.v3), true, "view5.v2.isInFrontOf(view5.v3)");
  
   view5.v2.sendToBack();
   ztest ("ztest v2 to back", [view5.v2, view5.v1, view5.v3], view5.getDepthList());
@@ -372,7 +365,7 @@ suite.test7 = function() {
   LzTestManager.assertEquals (view7.height+1, view7.rotation, "view7.rotation failure (3)");
 
   // Change the constraint
-  var c1 = function () {
+  var c1 = function (height) {
     this.setAttribute('height', this.width+2);
   }
   var ref = [view7, 'height'];
@@ -436,7 +429,7 @@ suite.test10 = function() {
 suite.test11 = function() {
   LzTestManager.assertEquals (100, view11.width, "view11.width failure");
   LzTestManager.assertEquals (100, view11.height, "view11.height failure");
-  LzTestManager.assertTrue (view11.v2.getAttribute('visible'), "view11.v2.visible");
+  LzTestManager.assertTrue (view11.v2.visible, "view11.v2.visible");
   loctest ('view11.v1', view11.v1, [0,0,10,20]);
   loctest ('view11.v2', view11.v2, [90,80,10,20]);
 
@@ -444,7 +437,7 @@ suite.test11 = function() {
 
   LzTestManager.assertEquals (10, view11.width, "view11.width failure (2)");
   LzTestManager.assertEquals (20, view11.height, "view11.height failure (2)");
-  LzTestManager.assertFalse (view11.v2.getAttribute('visible'), "view11.v2.visible (2)");
+  LzTestManager.assertFalse (view11.v2.visible, "view11.v2.visible (2)");
   loctest ('view11.v1 (2)', view11.v1, [0,0,10,20]);
   loctest ('view11.v2 (2)', view11.v2, [90,80,10,20]);
 }
@@ -500,7 +493,7 @@ suite.addTest(suite.test14);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
