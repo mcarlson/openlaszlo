@@ -52,7 +52,7 @@
               @keywords readonly -->
         <attribute name="scrollable" value="true"/>
 
-        <!--- The view to which the scrollbar should listen for mousewheel activation
+        <!--- The view to which the scrollbar should listen for focus 
             events. If not set, it will be set to the scrolltarget
             or the immediateparent of the scrollbar,
             whichever is focusable -->
@@ -60,6 +60,15 @@
 
         <!--- If true, this scrollbar listens for mousewheel events -->
         <attribute name="usemousewheel" value="true"/>
+        <setter name="usemousewheel" args="use">
+            if (use == this.usemousewheel) return;
+            this.usemousewheel = use;
+            if (this._mwUpdateDel) this._mwUpdateDel.unregisterAll();
+            if (use) {
+                this._mwUpdateDel = new LzDelegate( this , "mousewheelUpdate",
+                    lz.Keys, "onmousewheeldelta");
+            }
+        </setter>
 
         <!--- The event that activates the mousewhen when sent from the focusview -->
         <attribute name="mousewheelevent_on" value="onfocus" type="string"/>
@@ -172,17 +181,13 @@
                     this.focusview = this.immediateparent;
                 }
             }
+            // activate/deactivate when the focusview focuses/blurs
             if (this.focusview) {
                 this._mwActivateDel = new LzDelegate( this , "activateMouseWheel",
                     this.focusview, this.mousewheelevent_on);
                 this._mwDeactivateDel = new LzDelegate( this , "deactivateMouseWheel",
                     this.focusview, this.mousewheelevent_off);
-
-                if (this.usemousewheel && lz.Keys["mousewheeldelta"] != null) {
-                    this._mwUpdateDel = new LzDelegate( this , "mousewheelUpdate",
-                        lz.Keys, "onmousewheeldelta");
-                }
-               }
+            }
 
             // set width or height if not defined for sizeAxis
             if (this.sizeAxis == 'width') {
@@ -293,8 +298,9 @@
 
         <!---  @keywords private -->
         <method name="mousewheelUpdate" args="d"> <![CDATA[
-            if (this.mousewheelactive) {
-                this.step(d * -1);
+            // check if the mouse is over the view
+            if (this.mousewheelactive || (this.scrolltarget && this.scrolltarget.immediateparent && this.scrolltarget.immediateparent.isMouseOver()) ) {
+                this.step(-d);
             }
             ]]>
         </method>

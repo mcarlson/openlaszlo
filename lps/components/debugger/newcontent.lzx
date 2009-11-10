@@ -103,7 +103,7 @@
     parent.scrollx(-n)
     this.adjustDraggerXpos();
   </method>
-  
+
   
   <stableborderlayout axis="x" />
   
@@ -385,6 +385,13 @@
      <method name="scrollx" args="nx">
        this.textpane.setAttribute('x', Math.min(0, Math.max(-(this.textpane.width), this.textpane.x + nx)));
      </method>
+
+     <handler name="onmousewheeldelta" reference="lz.Keys" args="d">
+         // classroot is the debugger window
+         if (classroot.isMouseOver()) {
+             this.incScroll(Math.floor(-d));
+         }
+     </handler>
 
      <!-- set the x offset of the text output content area -->
 <method name="setXScroll" args="x">

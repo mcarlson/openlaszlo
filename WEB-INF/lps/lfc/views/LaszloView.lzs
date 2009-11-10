@@ -3642,6 +3642,17 @@ function $lzc$set_cornerradius(radius) {
     if (this.oncornerradius.ready) this.oncornerradius.sendEvent(radius);
 }
 
+/** Returns true if the mouse is over this view */
+function isMouseOver() {
+    var mousepos = this.getMouse();
+    return this.containsPt(mousepos.x, mousepos.y);
+}
+
+/** @access private */
+function $lzc$isMouseOver_dependencies(...ignore ) {
+    return [ lz.Idle, "idle" ];
+}
+
 } // End of LzView
 
 lz[LzView.tagname] = LzView;  //publish

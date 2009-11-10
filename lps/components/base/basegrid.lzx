@@ -279,15 +279,14 @@
         <!--- @keywords private -->
         <method name="_setHiliteview" args="who, ismouse">
             <![CDATA[
-            var lmx = this.getMouse( 'x' );
-            var lmy = this.getMouse( 'y' );
-            if (ismouse && this._lastmousex == lmx && this._lastmousey == lmy){
+            var mousepos = this.getMouse();
+            if (ismouse && this._lastmousex == mousepos.x && this._lastmousey == mousepos.y){
                 //the mouse hasn't moved -- we're getting mouseup because the
                 //grid moved
                 return;
             }
-            this._lastmousex = lmx;
-            this._lastmousey = lmy;
+            this._lastmousex = mousepos.x;
+            this._lastmousey = mousepos.y;
             if (this.hilite) { this.hilite.setAttribute( "highlighted" , false ); }
             this.setAttribute( "hilite" , who );
             if (who) { who.setAttribute( "highlighted" , true ); }
