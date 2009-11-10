@@ -221,7 +221,8 @@ class LzColorUtils {
         var alpha = s - Math.floor(s);
         var alphastring = '';
         if (alpha != 0) {
-            alpha = alpha * 25600;
+            // convert to a number between 0 and 255
+            alpha = Math.floor(alpha * 25600);
             alphastring = alpha.toString(16);
             if (alphastring.length == 1) {
                 alphastring = '0' + alphastring;

@@ -57,7 +57,7 @@
              blue = blue * ctransform['ba']/100 + ctransform['bb'];
              blue = Math.min(blue, 255);
 
-             c = blue + (green << 8) + (red << 16);
+             c = Math.floor(blue + (green << 8) + (red << 16));
 
         }
         super.setAttribute('bgcolor', c);

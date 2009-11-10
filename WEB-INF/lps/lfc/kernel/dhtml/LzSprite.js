@@ -588,6 +588,7 @@ LzSprite.prototype.capabilities = {
     ,'2dcanvas': true
     ,dropshadows: false
     ,cornerradius: false
+    ,rgba: false
 }
 
 /**
@@ -712,6 +713,7 @@ LzSprite.__updateQuirks = function () {
                 defaultStyles.lzdiv.WebkitTransformOrigin = '0 0';
                 capabilities['dropshadows'] = true;
                 capabilities['cornerradius'] = true;
+                capabilities['rgba'] = true;
             }
 
             // Safari has got a special event for pasting
@@ -801,6 +803,7 @@ LzSprite.__updateQuirks = function () {
             if (browser.version >= 3.1) {
                 capabilities['dropshadows'] = true;
                 capabilities['cornerradius'] = true;
+                capabilities['rgba'] = true;
             }
         }
 
@@ -1652,6 +1655,9 @@ LzSprite.prototype.setColor = function ( c ){
 }
 
 LzSprite.prototype.setBGColor = function ( c ){
+    if (c != null && ! this.capabilities.rgba) {
+        c = Math.floor(c);
+    }
     if (this.bgcolor == c) return;
     this.bgcolor = c;
     if (this.quirks.size_blank_to_zero) {
@@ -1659,7 +1665,7 @@ LzSprite.prototype.setBGColor = function ( c ){
             this.__restoreSize();
         }
     }
-    this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzColorUtils.inttohex(c);
+    this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzColorUtils.torgb(c);
     if (this.quirks.fix_ie_background_height) {
         if (this.height != null && this.height < 2) {
             this.setSource(lz.embed.options.serverroot + LzSprite.prototype.blankimage, true);
