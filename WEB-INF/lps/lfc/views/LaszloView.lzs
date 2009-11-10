@@ -1158,6 +1158,9 @@ function $lzc$set_x(v) {
     // memoize
     this.__set_x_memo = v;
 
+    // reset __mousecache
+    this.__mousecache = null;
+
     if ( this.__LZhasoffset ){
         if (this.capabilities.rotation) {
             v -= ( this.xoffset * this.__LZrcos  -
@@ -1209,6 +1212,9 @@ function $lzc$set_y(v) {
     }
     // memoize
     this.__set_y_memo = v;
+
+    // reset __mousecache
+    this.__mousecache = null;
 
     if ( this.__LZhasoffset ){
         if (this.capabilities.rotation) {
@@ -2671,10 +2677,10 @@ function mouseevent(eventname) {
   * view along the specified axis. If both axes are requsted returns
   * <code>{x: Number, y: Number}</code>.
   */
-function getMouse( xory : String ) {
-    if (this.__movecounter != lz.GlobalMouse.__movecounter || this.__mousecache == null) {
+function getMouse( xory : String=null ) {
+    if (this.__mousecache == null || this.__movecounter !== lz.GlobalMouse.__movecounter) {
         this.__movecounter = lz.GlobalMouse.__movecounter;
-        this.__mousecache = this.sprite.getMouse(xory);
+        this.__mousecache = this.sprite.getMouse();
     }
     if (xory == null) return this.__mousecache;
     return this.__mousecache[xory];

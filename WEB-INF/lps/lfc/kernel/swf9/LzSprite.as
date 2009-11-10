@@ -1333,10 +1333,10 @@ public class LzSprite extends Sprite {
       }
 
 
-      /** getMouse( String:xory )
-          o Returns the mouse position for this sprite, for either 'x' or 'y' 
+      /** getMouse()
+          o Returns the mouse position for this sprite as an object with 'x' and 'y' properties
       */
-      public function getMouse( xory:String ):Object {
+      public function getMouse():Object {
           return {x: Math.round(this.mouseX), y: Math.round(this.mouseY)};
       }
 
