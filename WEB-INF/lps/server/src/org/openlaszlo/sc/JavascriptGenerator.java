@@ -1395,6 +1395,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         analyzer.incrementUsed("this");
       }
     }
+    // Scripts do not get withThis.  If there are no possible instance
+    // refs, we don't need withThis.
+    if (scriptElement || possibleInstance.isEmpty()) {
+      withThis = false;
+    }
     Map used = analyzer.used;
     // If this is a closure, annotate the Username for metering
     if ((! closed.isEmpty()) && (userFunctionName != null) && options.getBoolean(Compiler.PROFILE)) {
@@ -1411,7 +1416,8 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
                          ", fundefs: " + fundefs +
                          ", used: " + used +
                          ", closed: " + closed +
-                         ", free: " + free);
+                         ", free: " + free +
+                         ", possible: " + possibleInstance);
     }
     // Deal with warnings
     if (options.getBoolean(Compiler.WARN_UNUSED_PARAMETERS)) {
@@ -1453,7 +1459,14 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       for (Iterator i = (new LinkedHashSet(known)).iterator(); i.hasNext(); ) {
         String k = (String)i.next();
         String r;
-        if (auto.contains(k) || closed.contains(k)) {
+        // Can't rename the "auto" variables.  If we are not using
+        // withThis, don't rename closed variables either.  (If we
+        // _are_ using withThis, we _have_ to rename closed over
+        // parameters and copy them inside the with block to their
+        // original name.)
+        if (auto.contains(k) ||
+            ((! withThis) && closed.contains(k)) ||
+            (withThis && closed.contains(k) && (! parameters.contains(k)))) {
           ;
         } else {
           if (debug) {
@@ -1480,8 +1493,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       knownSet.addAll(parentKnown);
     }
     context.setProperty(TranslationContext.VARIABLES, knownSet);
-
-    // Replace params
+    // Replace params with their registers
     for (int i = 0, len = paramIds.length; i < len; i++) {
       if (paramIds[i] instanceof ASTIdentifier) {
         ASTIdentifier oldParam = (ASTIdentifier)paramIds[i];
@@ -1490,8 +1502,31 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       }
     }
     translateFormalParameters(params);
+    if (withThis) {
+      // create closed parameters inside the with context: inner
+      // functions refer to the unregistered parameter name, we have
+      // to create that name inside the with context to avoid the
+      // parameter name incorrectly getting shadowed by an instance
+      // property.
+      LinkedHashSet toCreate = new LinkedHashSet(parameters);
+      toCreate.retainAll(closed);
+      if (! toCreate.isEmpty()) {
+        String code = "";
+        for (Iterator i = toCreate.iterator(); i.hasNext(); ) {
+          String var = (String)i.next();
+          code += "var " + var + " = " + registerMap.get(var) + ";";
+          // Remove from the map, so the value cell is shared between
+          // the function body and the closures
+          registerMap.remove(var);
+        }
+        // Insert these declarations at the front of the body
+        newBody.add(0, parseFragment(code));
+      }
+    }
 
-    // Cf. LPP-4850: Prefix has to come after declarations (above).
+    // Cf. LPP-4850: Prefix has to come after declarations (above),
+    // which means they are stuck inside the withThis (if any),
+    // unfortunately.
     newBody.addAll(prefix);
 
     // Now emit functions in the activation context
@@ -1551,7 +1586,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     // obey withThis.  NOTE: [2009-09-30 ptw] See NodeModel where it
     // only inserts withThis if the method will by dynamically
     // attached, as in a <state>
-    if (withThis && (! scriptElement) && (! possibleInstance.isEmpty())) {
+    if (withThis) {
       // NOTE: [2009-10-20 ptw] Now that we are doing this analysis in
       // the script compiler, we may insert a withThis into LFC code
       // where previously we would not have.  For now, we warn if we

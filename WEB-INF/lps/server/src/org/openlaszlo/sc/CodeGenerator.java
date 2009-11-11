@@ -892,9 +892,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // SimpleNode _ = children[1];
     SimpleNode obj = children[2];
     SimpleNode body = children[3];
-    if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
-      return translateForInStatement(node, var, Instructions.SetVariable, obj, body);
-    }
     return translateForInStatement(node, var, Instructions.VarEquals, obj, body);
   }
 
@@ -2100,15 +2097,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         withThis = isMethod;
       }
     }
-    // Note usage due to activation object and withThis
-    if (! free.isEmpty()) {
-      // TODO: [2005-06-29 ptw] with (_root) should not be
-      // necessary for the activation object case now that it is
-      // done at top level to get [[scope]] right.
-      if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
-        analyzer.incrementUsed("_root");
-      }
-    }
+    // Note usage due to withThis
     if (withThis) {
       ClassDescriptor classdesc = (ClassDescriptor)context.getProperty(TranslationContext.CLASS_DESCRIPTION);
       if (classdesc != null) {
@@ -2122,6 +2111,12 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       if (! possibleInstance.isEmpty()) {
         analyzer.incrementUsed("this");
       }
+    }
+    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
+    // Scripts do not get withThis.  If there are no possible instance
+    // refs, we don't need withThis.
+    if (scriptElement || possibleInstance.isEmpty()) {
+      withThis = false;
     }
     Map used = analyzer.used;
     // If this is a closure, annotate the Username for metering
@@ -2139,7 +2134,8 @@ public class CodeGenerator extends CommonGenerator implements Translator {
                          ", fundefs: " + fundefs +
                          ", used: " + used +
                          ", closed: " + closed +
-                         ", free: " + free);
+                         ", free: " + free +
+                         ", possible: " + possibleInstance);
     }
     // Deal with warnings
     if (options.getBoolean(Compiler.WARN_UNUSED_PARAMETERS)) {
@@ -2171,7 +2167,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     Set knownSet = new LinkedHashSet(known);
     context.setProperty(TranslationContext.VARIABLES, knownSet);
 
-    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
     Map registerMap = new HashMap();
     // Always set register map.  Inner functions should not see
     // parent registers (which they would if the setting of the
@@ -2194,13 +2189,13 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       Set fnArgs = new LinkedHashSet(autoRegisters);
       SortedMap paramRegisters = new TreeMap();
       SortedMap varRegisters = new TreeMap(new DoubleCollator());
-      // TODO: [2004-03-27 ptw] Should use threshold for
-      // parameters be 0 or 1?  Presumably there is a getVariable
-      // cost to loading the register.
       int j = parameters.size();
       for (Iterator i = parameters.iterator(); i.hasNext(); j--) {
         String v = (String)i.next();
-        if (used.containsKey(v) && (! closed.contains(v))) {
+        // Parameters that are closed over but will not be moved to an
+        // activation block (because of withThis) must not be
+        // registered
+        if (used.containsKey(v) && (withThis || (! closed.contains(v)))) {
           Instructions.Register reg = Instructions.Register.make(v);
           fnArgs.add(reg);
           paramRegisters.put("" + j, reg);
@@ -2214,6 +2209,9 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       variables = new TreeSet(variables);
       for (Iterator i = variables.iterator(); i.hasNext(); j++) {
         String v = (String)i.next();
+        // Variables that are closed over must not be registered.  If
+        // withThis, they will be created in the activation block,
+        // otherwise just declared.
         if (used.containsKey(v) && (! closed.contains(v))) {
           Instructions.Register reg = Instructions.Register.make(v);
           // Most used first, original order disambiguates
@@ -2291,53 +2289,10 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           collector.emit(Instructions.SetMember);
         }
       }
-    } else {
-      // create unregistered, used variables in activation context
-      LinkedHashSet toCreate = new LinkedHashSet(variables);
-      toCreate.retainAll(used.keySet());
-      toCreate.removeAll(registerMap.keySet());
-      if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
-        for (Iterator i = toCreate.iterator(); i.hasNext(); ) {
-          Object var = i.next();
-          collector.push(var);
-          collector.push(Values.Undefined);
-          activationObjectSize += 1;
-        }
-      } else {
-        for (Iterator i = toCreate.iterator(); i.hasNext(); ) {
-          Object var = i.next();
-          collector.push(var);
-          collector.emit(Instructions.VAR);
-        }
-      }
-    }
-    // create unregistered, used parameters in activation context
-    // (only needed for activation object, they are already in context)
-    if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
-      LinkedHashSet toCreate = new LinkedHashSet(parameters);
-      toCreate.retainAll(used.keySet());
-      toCreate.removeAll(registerMap.keySet());
-      for (Iterator i = toCreate.iterator(); i.hasNext(); ) {
-        Object param = i.next();
-        collector.push(param);
-        collector.push(param);
-        collector.emit(Instructions.GetVariable);
-        activationObjectSize += 1;
-      }
-    }
-    if (activationObjectSize > 0) {
-      collector.push(activationObjectSize);
-      collector.emit(Instructions.InitObject);
-    }
-    // scriptElements must be compiled inside with(_root) -- that
-    // is their required environment because all their local
-    // bindings are transformed to _root bindings (and will not be
-    // if they are loaded as snippets)
-    // TODO: [2005-06-29 ptw] with (_root) should not be necessary
-    // for the activation object case now that it is done at top
-    // level to get [[scope]] right.
-    if (((! free.isEmpty()) && activationObjectSize > 0)  ||
-        scriptElement) {
+      // scriptElements must be compiled inside with(_root) -- that is
+      // their required environment because all their local bindings
+      // are transformed to _root bindings (and will not be if they
+      // are loaded as snippets)
       if (registerMap.containsKey("_root")) {
         collector.push(Values.Register(((Instructions.Register)registerMap.get("_root")).regno));
       } else {
@@ -2350,7 +2305,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     // obey withThis.  NOTE: [2009-09-30 ptw] See NodeModel where it
     // only inserts withThis if the method will by dynamically
     // attached, as in a <state>
-    if (withThis && (! scriptElement) && (! possibleInstance.isEmpty())) {
+    if (withThis) {
       // NOTE: [2009-10-20 ptw] Now that we are doing this analysis in
       // the script compiler, we may insert a withThis into LFC code
       // where previously we would not have.  For now, we warn if we
@@ -2367,9 +2322,49 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         collector.emit(Instructions.GetVariable);
       }
       collector.emit(Instructions.WITH.make(block));
-    }
-    if (activationObjectSize > 0) {
-      collector.emit(Instructions.WITH.make(block));
+      // create closed parameters in an activation context: inner
+      // functions refer to the unregistered parameter name, we have
+      // to create that name in a context to avoid the parameter name
+      // incorrectly getting shadowed by an instance property.
+      LinkedHashSet toCreate = new LinkedHashSet(parameters);
+      toCreate.retainAll(closed);
+      for (Iterator i = toCreate.iterator(); i.hasNext(); ) {
+        Object var = i.next();
+        collector.push(var);
+        collector.push(Values.Register(((Instructions.Register)registerMap.get(var)).regno));
+        activationObjectSize += 1;
+        // Now 'unregister' the parameter, so the function body shares
+        // the closed value.
+        registerMap.remove(var);
+      }
+      // Now create unregistered, used variables in the activation
+      // context (in general, these will be closed variables);
+      toCreate = new LinkedHashSet(variables);
+      toCreate.retainAll(used.keySet());
+      toCreate.removeAll(registerMap.keySet());
+      for (Iterator i = toCreate.iterator(); i.hasNext(); ) {
+        Object var = i.next();
+        collector.push(var);
+        collector.push(Values.Undefined);
+        activationObjectSize += 1;
+      }
+      if (activationObjectSize > 0) {
+        collector.push(activationObjectSize);
+        collector.emit(Instructions.InitObject);
+        collector.emit(Instructions.WITH.make(block));
+      }
+    } else if (! scriptElement) {
+      // create unregistered, used variable declarations (because
+      // Reference#init does a set for known).  Parameters are already
+      // declared.
+      LinkedHashSet toCreate = new LinkedHashSet(variables);
+      toCreate.retainAll(used.keySet());
+      toCreate.removeAll(registerMap.keySet());
+      for (Iterator i = toCreate.iterator(); i.hasNext(); ) {
+        Object var = i.next();
+        collector.push(var);
+        collector.emit(Instructions.VAR);
+      }
     }
     // inner functions do not get scriptElement treatment
     options.putBoolean(Compiler.SCRIPT_ELEMENT, false);

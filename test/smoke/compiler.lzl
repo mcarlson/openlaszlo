@@ -211,11 +211,28 @@
       ]]>
     </method>
 
+    <attribute name="shadowedValue" value="WRONG VALUE" type="string" />
+
+    <method name="closureOverShadowedValue" args="shadowedValue">
+      // Ensure there is a free reference
+      var x = global;
+
+      return function inner () {
+        return shadowedValue;
+      }
+    </method>
+
+   <method name="testClosureOverShadowedValue"><![CDATA[
+     // Verify that the closure returns the passed in parameter, not the instance variable value
+     assertEquals("correct", this.closureOverShadowedValue("correct")());
+   ]]></method>
+
     <method name="addTests"> 
         this.addTest("testOptionalArguments");
         this.addTest("testMiscellaneousCompilation");
         this.addTest("testConditionalCompilation");
         this.addTest("testForInReturn");
+        this.addTest("testClosureOverShadowedValue");
     </method> 
   </class>
 </library>

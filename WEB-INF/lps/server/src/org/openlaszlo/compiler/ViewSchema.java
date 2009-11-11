@@ -71,9 +71,6 @@ public class ViewSchema extends Schema {
     /** Type of event handler bodies. */
     public static final Type EVENT_HANDLER_TYPE       = newType("script");
 
-    /** Type of attribute setter function */
-    public static final Type SETTER_TYPE              = newType("setter");
-
     /** Type of tokens. */
     public static final Type TOKEN_TYPE               = newType("token");
     public static final Type COLOR_TYPE               =  newType("color");

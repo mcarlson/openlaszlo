@@ -451,7 +451,6 @@ public class Compiler {
   // TODO [2004-03-11 ptw] share with CompilationEnvironment.java
   public static String CANVAS_WIDTH = "canvasWidth";
   public static String CANVAS_HEIGHT = "canvasHeight";
-  public static String ACTIVATION_OBJECT = "createActivationObject";
   public static String BUILD_SHARED_LIBRARY = "buildSharedLibrary";
   public static String COMPUTE_METAREFERENCES = "computeMetaReferences";
   public static String CONDITIONAL_COMPILATION = "conditionalCompilation";
