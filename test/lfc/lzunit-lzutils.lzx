@@ -26,11 +26,12 @@
             assertEquals(0x800080, LzColorUtils.hextoint('purple'), "Convert to decimal");
             assertEquals(0xff00ff, LzColorUtils.hextoint('rgb(255,0,255)'), "Convert to decimal");
             assertEquals(16776960.002, LzColorUtils.hextoint('#ffff0033'), "Convert to decimal");
+            assertEquals(16711935.008, LzColorUtils.hextoint(LzColorUtils.inttohex(16711935.008)), "Inttohex -> Hextoint round trip with alpha");
 
             assertEquals('rgb(221,221,221)', LzColorUtils.torgb('#DDD'), "Convert to RGB");
             assertEquals('rgb(221,221,221)', LzColorUtils.torgb('#DDDDDD'), "Convert to RGB");
-            assertEquals('rgba(221,221,221,221)', LzColorUtils.torgb('#DDDD'), "Convert to RGB");
-            assertEquals('rgba(221,221,221,221)', LzColorUtils.torgb('#DDDDDDDD'), "Convert to RGB");
+            assertEquals('rgba(204,204,204,0.8)', LzColorUtils.torgb('#CCCC'), "Convert to RGB");
+            assertEquals('rgba(204,204,204,0.8)', LzColorUtils.torgb('#CCCCCCCC'), "Convert to RGB");
             assertEquals('rgb(128,0,128)', LzColorUtils.torgb('purple'), "Convert to RGB");
             assertEquals('rgb(255,0,255)', LzColorUtils.torgb('rgb(255,0,255)'), "Convert to RGB");
 
