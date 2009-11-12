@@ -1,6 +1,7 @@
 <canvas>
     <resource name="alphapng" src="../resources/png/alphagrad.png"/>
     <wrappinglayout axis="x"/>
+
     <drawview width="205" height="230" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()" bgcolor="green">
         <dragstate name="dragger"/>
         <handler name="oncontext">
@@ -77,41 +78,62 @@
             this.fill();
         </handler>
     </drawview>
+
+    <class name="resizedrawview" extends="drawview" onmousedown="this.resizer.apply()" onmouseup="this.resizer.remove()">
+        <resizestate name="resizer"/>
+        <handler name="oncontext" method="redraw"/>
+        <handler name="onwidth" method="redraw"/>
+        <handler name="onheight" method="redraw"/>
+        <!-- Override redraw() -->
+        <method name="redraw" args="ignore=null">
+            if (! this.context) return;
+        </method>
+    </class>
     
-    <drawview width="200" height="200" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()">
-        <dragstate name="dragger"/>
-        <handler name="oncontext"><![CDATA[
+    <resizedrawview width="200" height="200">
+        <method name="redraw" args="ignore=null">
+            if (! this.context) return;
+            var width = this.width;
+            var height = this.height;
+
+            this.clear();
             this.beginPath();
-            this.rect(0,0,200,200, null);
+            this.rect(0,0,width,height, null);
             this.fillStyle = 0xff0000;
             this.fill();
 
             this.beginPath();
             this.moveTo(0,0);
-            this.lineTo(200, 100);
-            this.lineTo(0, 200);
+            this.lineTo(width, height * .5);
+            this.lineTo(0, height);
+            this.lineTo(0, 0);
             this.fillStyle = 0;
             this.fill();
             this.clipButton();
-        ]]></handler>
-    </drawview>
+        </method>
+    </resizedrawview>
 
-    <drawview width="200" height="200" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()">
-        <dragstate name="dragger"/>
-        <handler name="oncontext"><![CDATA[
+    <resizedrawview clip="true">
+        <text>clip="true" must be set on the class for mouse events to work in swf9/10...</text>
+        <method name="redraw" args="ignore=null">
+            if (! this.context) return;
+            var width = this.width;
+            var height = this.height;
+
+            this.clear();
             this.beginPath();
             this.moveTo(0,0);
-            this.lineTo(200, 100);
-            this.lineTo(0, 200);
+            this.lineTo(width, height * .5);
+            this.lineTo(0, height);
             this.lineTo(0, 0);
             this.clipPath();
 
             this.beginPath();
-            this.rect(0,0,200,200, null);
+            this.rect(0,0,width,height, null);
             this.fillStyle = 0xff0000;
             this.fill();
-        ]]></handler>
-    </drawview>
+        </method>
+    </resizedrawview>
 
     <drawview width="200" height="200" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()">
         <dragstate name="dragger"/>
