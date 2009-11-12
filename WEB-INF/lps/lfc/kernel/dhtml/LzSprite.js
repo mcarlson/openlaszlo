@@ -2907,16 +2907,19 @@ LzSprite.prototype.__initcanvasie = function() {
 }
 
 LzSprite.prototype.__getShadowCSS = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
+    if (shadowcolor == null) {
+        return null;
+    }
+
     // CSS3 doesn't use angle, but x/y offset. So we need to
     // translate from angle and distance to x and y offset for CSS3.
     // Math.cos and Math.cos are based on radians, not degrees
     var radians = shadowangle * Math.PI/180;
-    var xoffset = Math.round(Math.cos(radians) * shadowdistance);
-    var yoffset = Math.round(Math.sin(radians) * shadowdistance);
+    var xoffset = this.CSSDimension(Math.cos(radians) * shadowdistance);
+    var yoffset = this.CSSDimension(Math.sin(radians) * shadowdistance);
     // convert to rgb(x,x,x);
     var rgbcolor = LzColorUtils.torgb(shadowcolor);
-    
-    return rgbcolor + " " + xoffset + "px " + yoffset + "px " + shadowblurradius + "px";
+    return rgbcolor + " " + xoffset + " " + yoffset + " " + this.CSSDimension(shadowblurradius);
 }
 
 LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {

@@ -511,6 +511,10 @@ function __makeSprite(args) {
   * @access public
   */
 override function init( ) {
+    if (this.__updateshadowoninit) {
+        delete this.__updateshadowoninit;
+        this.__updateShadow();
+    }
     if (this.sprite) {
         this.sprite.init(this.visible);
     }
@@ -3456,7 +3460,7 @@ function createContext(){
  */
 var onshadowangle = LzDeclaredEvent;
 
-/** The angle for the drop shadow
+/** The angle for the drop shadow, in degrees
  * @access public
  * @type Number
  * @lzxtype number
@@ -3471,7 +3475,7 @@ var shadowangle = 0;
 function $lzc$set_shadowangle(angle) {
     if (this.capabilities['dropshadows']) {
         this.shadowangle = angle;
-        this.sprite.updateShadow(this.shadowcolor, this.shadowdistance, this.shadowangle, this.shadowblurradius);
+        this.__updateShadow();
         if (this.onshadowangle.ready) {
             this.onshadowangle.sendEvent(angle);
         }
@@ -3486,7 +3490,7 @@ function $lzc$set_shadowangle(angle) {
  */
 var onshadowdistance = LzDeclaredEvent;
 
-/** The distance for the drop shadow
+/** The distance for the drop shadow, in pixels
  * @access public
  * @type Number
  * @lzxtype number
@@ -3501,7 +3505,7 @@ var shadowdistance = 10;
 function $lzc$set_shadowdistance(distance) {
     if (this.capabilities['dropshadows']) {
         this.shadowdistance = distance;
-        this.sprite.updateShadow(this.shadowcolor, this.shadowdistance, this.shadowangle, this.shadowblurradius);
+        this.__updateShadow();
         if (this.onshadowdistance.ready) {
             this.onshadowdistance.sendEvent(distance);
         }
@@ -3530,8 +3534,8 @@ var shadowcolor = 0;
   */
 function $lzc$set_shadowcolor(color) {
     if (this.capabilities['dropshadows']) {
-        this.shadowcolor = color;
-        this.sprite.updateShadow(this.shadowcolor, this.shadowdistance, this.shadowangle, this.shadowblurradius);
+        this.shadowcolor = LzColorUtils.torgb(color);
+        this.__updateShadow();
         if (this.onshadowcolor.ready) {
             this.onshadowcolor.sendEvent(color);
         }
@@ -3546,7 +3550,7 @@ function $lzc$set_shadowcolor(color) {
  */
 var onshadowblurradius = LzDeclaredEvent;
 
-/** The blur radius for the drop shadow
+/** The blur radius for the drop shadow, in pixels
  * @access public
  * @lzxtype number
  * @type Number
@@ -3561,12 +3565,23 @@ var shadowblurradius = 4;
 function $lzc$set_shadowblurradius(blurradius) {
     if (this.capabilities['dropshadows']) {
         this.shadowblurradius = blurradius;
-        this.sprite.updateShadow(this.shadowcolor, this.shadowdistance, this.shadowangle, this.shadowblurradius);
+        this.__updateShadow();
         if (this.onshadowblurradius.ready) {
             this.onshadowblurradius.sendEvent(blurradius);
         }
     } else if ($debug) {
         LzView.__warnCapability('view.shadowblurradius', 'dropshadows'); 
+    }
+}
+
+/** Called to update the sprite's shadow.  Stores all updates and gets called back at init time.
+  * @access private 
+  */
+function __updateShadow() {
+    if (! this.isinited) {
+        this.__updateshadowoninit = true;
+    } else {
+        this.sprite.updateShadow(this.shadowcolor, this.shadowdistance, this.shadowangle, this.shadowblurradius);
     }
 }
 

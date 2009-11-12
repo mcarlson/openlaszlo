@@ -1789,12 +1789,18 @@ LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowan
      *  [knockout:Boolean]
      *  [hideObject:Boolean]) 
      */
-    this.shadowfilter.angle = shadowangle;
-    this.shadowfilter.distance = shadowdistance;
-    this.shadowfilter.color = shadowcolor;
-    this.shadowfilter.blurX = shadowblurradius;
-    this.shadowfilter.blurY = shadowblurradius;
+    var filters = [];
+    if (shadowcolor != null) {
+        this.shadowfilter.angle = shadowangle;
+        this.shadowfilter.distance = shadowdistance;
+        var colorobj = LzColorUtils.inttocolorobj(shadowcolor);
+        this.shadowfilter.color = colorobj.color;
+        this.shadowfilter.alpha = colorobj.alpha != null ? colorobj.alpha : 1;
+        this.shadowfilter.blurX = shadowblurradius;
+        this.shadowfilter.blurY = shadowblurradius;
+        filters = [this.shadowfilter];
+    }
     var mc = this.getDisplayObject();
-    mc.filters = [this.shadowfilter];
+    mc.filters = filters;
 }
 }

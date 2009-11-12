@@ -12,9 +12,9 @@
     </items>
   </dataset>
   
-  <button text="hello" shadowangle="60" shadowdistance="10" shadowcolor="#aaaaaa"/>
+  <button text="hello" shadowangle="60" shadowdistance="10" shadowcolor="#00000033" onclick="this.setAttribute('shadowcolor', null)"/>
   
-  <text y="40" shadowangle="60" shadowdistance="10" shadowcolor="#aaaaaa" fontsize="24">Hey there!</text>
+  <text y="40" shadowangle="60" shadowdistance="10" shadowcolor="#00000066" fontsize="24" onclick="this.setAttribute('shadowcolor', null)">Hey there!</text>
   
   <view y="100" height="140" datapath="demoViews:/items" align="center" focusable="true"
           onfocus="this.selector.select(this.items.clones[0])" onblur="this.selector.clearSelection()">
