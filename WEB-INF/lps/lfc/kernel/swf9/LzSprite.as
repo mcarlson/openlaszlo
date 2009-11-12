@@ -322,8 +322,8 @@ public class LzSprite extends Sprite {
                   this.resourceCache = null;
               }
 
-              this.resourcewidth = res.width;
-              this.resourceheight = res.height;
+              this.resourcewidth = Math.round(res.width);
+              this.resourceheight = Math.round(res.height);
               this.totalframes = res.frames.length;
               this.__isinternalresource = true;
               this.resource = r;

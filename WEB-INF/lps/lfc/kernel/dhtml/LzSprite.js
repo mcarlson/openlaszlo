@@ -1050,8 +1050,8 @@ LzSprite.prototype.setResource = function ( r ){
 
     var res = LzResourceLibrary[r];
     if (res) {
-        this.resourceWidth = res.width;
-        this.resourceHeight = res.height;
+        this.resourceWidth = Math.round(res.width);
+        this.resourceHeight = Math.round(res.height);
         if (this.quirks.use_css_sprites && res.sprite) {
             var baseurl = this.getBaseUrl(res);
             this.__csssprite = baseurl + res.sprite;
@@ -2480,7 +2480,7 @@ LzSprite.prototype.sendToBack = function() {
 }
 
 LzSprite.prototype.sendBehind = function ( behindSprite ){
-    if (! behindSprite) return;
+    if (! behindSprite || behindSprite === this) return;
     if (! this.__parent) {
         if ($debug) {
             Debug.warn('sendBehind with no parent');
@@ -2506,7 +2506,7 @@ LzSprite.prototype.sendBehind = function ( behindSprite ){
 }
 
 LzSprite.prototype.sendInFrontOf = function ( frontSprite ){
-    if (! frontSprite) return;
+    if (! frontSprite || frontSprite === this) return;
     if (! this.__parent) {
         if ($debug) {
             Debug.warn('sendInFrontOf with no parent');

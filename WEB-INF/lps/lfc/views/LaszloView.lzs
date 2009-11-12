@@ -2780,6 +2780,9 @@ function __zCompare(a, b) {
   * @return Boolean: Method returns true if the operation is successful.
   */
 function sendBehind ( v ){
+    // noop
+    if (v === this) return;
+
     return (v ? this.sprite.sendBehind(v.sprite) : false);
 }
 
@@ -2793,6 +2796,9 @@ function sendBehind ( v ){
   * @return Boolean: Method returns true if the operation is successful.
   */
 function sendInFrontOf ( v ){
+    // noop
+    if (v === this) return;
+
     return (v ? this.sprite.sendInFrontOf(v.sprite) : false);
 }
 
@@ -3651,6 +3657,18 @@ function isMouseOver() {
 /** @access private */
 function $lzc$isMouseOver_dependencies(...ignore ) {
     return [ lz.Idle, "idle" ];
+}
+
+/** Returns true if this view is in front of a sibling view */
+function isInFrontOf(sibling:LzView) {
+    if (! sibling || sibling.parent !== this.parent) return null;
+    return this.sprite.getZ() > sibling.sprite.getZ();
+}
+
+/** Returns true if this view is behind a sibling view */
+function isBehind(sibling:LzView) {
+    if (! sibling || sibling.parent !== this.parent) return null;
+    return this.sprite.getZ() < sibling.sprite.getZ();
 }
 
 } // End of LzView
