@@ -21,7 +21,6 @@ public class LzSprite extends Sprite {
   import flash.display.Loader;
   import flash.display.LoaderInfo;
   import flash.display.MovieClip;
-  import flash.display.Shape;
   import flash.display.SimpleButton;
   import flash.display.Sprite;
   import flash.display.SWFVersion;
@@ -60,7 +59,7 @@ public class LzSprite extends Sprite {
       public var playing:Boolean = false;
       public var clickable:Boolean = false;
       public var clickbutton:SimpleButton = null;
-      public var clickregion:Shape = null;
+      public var clickregion:Sprite = null;
       public var masksprite:Sprite = null;
       public var resource:String = null;
       public var clip:Boolean = false;
@@ -864,11 +863,13 @@ public class LzSprite extends Sprite {
               }
               cb.useHandCursor = (showhandcursor == null) ? LzMouseKernel.showhandcursor : showhandcursor;
               cb.tabEnabled = false;
-              var cr:Shape = new Shape();
+              var cr:Sprite = new Sprite();
               this.clickregion = cr;
+              // draw a 1px by 1px white rectangle
               cr.graphics.beginFill(0xffffff);
               cr.graphics.drawRect(0, 0, 1, 1);
               cr.graphics.endFill();
+              // then scale it to fit...
               cr.scaleX = this.lzwidth;
               cr.scaleY = this.lzheight;
               // for debugging: make button visible

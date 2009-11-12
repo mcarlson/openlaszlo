@@ -1118,6 +1118,15 @@
                 this.__ty += y;
             }
 
+            // shared by clip/button masking routines
+            private function __drawPath(context) {
+                this.closePath();
+                context.clear();
+                context.beginFill(0xff00ff, 100);
+                this.__playPath(context);
+                context.endFill();
+            }
+
             if ($as3) {
                 override function $lzc$set_width(w) {
                     this.__measurewidth = (w == null);
@@ -1142,50 +1151,73 @@
                 }
 
                 function clearMask() {
-                    if ($debug) {
-                        Debug.warn('lz.drawview.clearMask() is not currently supported in swf9.');
+                    if (this.clipcontext) {
+                        this.clipcontext.clear();
+                        this.clipcontext = null;
+                    }
+                    if (this.clickcontext) {
+                        this.clickcontext.clear();
+                        this.clickcontext = null;
                     }
                 }
 
                 function clipPath() {
-                    if ($debug) {
-                        Debug.warn('lz.drawview.clipPath() is not currently supported in swf9.');
+                    var masksprite = this.sprite.masksprite;
+                    if (! masksprite) {
+                        this.sprite.applyMask();
+                        masksprite = this.sprite.masksprite;
                     }
+                    if (! this.clipcontext) {
+                        this.clipcontext = masksprite.graphics;
+                    }
+                    this.__drawPath(this.clipcontext);
+                    // reset scale of mask
+                    masksprite.scaleX = 1;
+                    masksprite.scaleY = 1;
                 }
 
                 function clipButton() {
-                    if ($debug) {
-                        Debug.warn('lz.drawview.clipButton() is not currently supported in swf9.');
+                    if (! this.clickable) this.sprite.setClickable(true);
+                    var clickregion = this.sprite.clickregion
+                    if (! this.clickcontext) {
+                        this.sprite.hitArea = clickregion;
+                        this.sprite.clickbutton.hitTestState = clickregion;
+                        this.clickcontext = clickregion.graphics;
                     }
+                    this.__drawPath(this.clickcontext);
+                    // reset scale of clickregion 
+                    clickregion.scaleX = 1;
+                    clickregion.scaleY = 1;
                 }
 
                 function fillRect(x, y, w, h) {
                     if ($debug) {
-                        Debug.warn('lz.drawview.fillRect() is not currently supported in swf9.');
+                        Debug.warn('lz.drawview.fillRect() is not currently supported in ' + canvas.runtime);
                     }
                 }
 
                 function drawImage(image, x, y, w, h, r) {
                     if ($debug) {
-                        Debug.warn('lz.drawview.drawImage() is not currently supported in swf9.');
+                        Debug.warn('lz.drawview.drawImage() is not currently supported in ' + canvas.runtime);
                     }
                 }
 
                 function save() {
                     if ($debug) {
-                        Debug.warn('lz.drawview.save() is not currently supported in swf9.');
+                        Debug.warn('lz.drawview.save() is not currently supported in ' + canvas.runtime);
                     }
                 }
 
                 function restore() {
                     if ($debug) {
-                        Debug.warn('lz.drawview.restore() is not currently supported in swf9.');
+                        Debug.warn('lz.drawview.restore() is not currently supported in ' + canvas.runtime);
                     }
                 }
             } else {
                 function clearMask() {
-                    if (this.sprite.__LZmaskClip) {
-                        this.sprite.__LZmaskClip.clear();
+                    var maskclip = this.sprite.__LZmaskClip;
+                    if (maskclip) {
+                        maskclip.clear();
                     }
                 }
 
@@ -1196,13 +1228,12 @@
 
                 function clipPath() {
                     this.sprite.applyMask(true);
-                    var __clipmc:MovieClip = this.sprite.__LZmaskClip;
-                    this.closePath();
-                    __clipmc.clear();
-                    __clipmc.beginFill(0xffffff, 100);
-                    this.__playPath(__clipmc);
-                    __clipmc.endFill();
+                    var maskclip = this.sprite.__LZmaskClip;
+                    this.__drawPath(maskclip);
                     this.updateResourceSize();
+                    // reset scale of mask
+                    maskclip._xscale = 100;
+                    maskclip._yscale = 100;
                 }
 
                 function clipButton() {
@@ -1212,12 +1243,7 @@
                         this.__clipmc = this.sprite.__LZmovieClipRef.createEmptyMovieClip("$lzclipmc", 6);
                         this.sprite.__LZbuttonRef.setMask(this.__clipmc);
                     }
-                    this.closePath();
-
-                    this.__clipmc.clear();
-                    this.__clipmc.beginFill(0xffffff, 100);
-                    this.__playPath(this.__clipmc);
-                    this.__clipmc.endFill();
+                    this.__drawPath(this.__clipmc);
                     this.updateResourceSize();
                 }
 
