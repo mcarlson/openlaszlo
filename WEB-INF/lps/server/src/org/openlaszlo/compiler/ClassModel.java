@@ -10,6 +10,7 @@ import org.jdom.Element;
 import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.ScriptClass;
+import org.openlaszlo.xml.internal.MissingAttributeException;
 
 public class ClassModel implements Comparable {
     protected final ViewSchema schema;
@@ -22,7 +23,7 @@ public class ClassModel implements Comparable {
     final CompilationEnvironment env;
     protected boolean builtin = false;
     // This is null for the root class
-    protected ClassModel superclass;
+    protected ClassModel superModel;
     
     // This is null for the root class
     public final Element definition;
@@ -38,11 +39,9 @@ public class ClassModel implements Comparable {
 
     /* If superclass is a predefined system class, just store its name. */
     protected String superTagName = null;
+    protected String mixinNames[] = null;
     protected boolean hasInputText = false;
     protected boolean isInputText = false;
-        
-    public Set mixinNames = new HashSet(2, 0.6f);
-    
     public Set requiredAttributes = new HashSet();
 
     /* Class or superclass has an <attribute type="text"/>  */
@@ -54,18 +53,57 @@ public class ClassModel implements Comparable {
     public boolean inline = false;
     protected String sortkey = null;
 
+    // True when the super and mixin names have been resolved to class
+    // models
+    protected boolean resolved = false;
+
     public String toString() {
         return "ClassModel: tagName="+tagName + ", " + 
-            "superclass=" + superclass + ", " + 
+            "superclass=" + superModel + ", " + 
             "superTagName=" + superTagName + ", " + 
             "hasInputText=" + hasInputText + ", " + 
             "isInputText=" + isInputText + ", " + 
             "definition=" + definition;
     }
 
+    static final String DEFAULT_SUPERCLASS_NAME = "view";
+
+    // Construct a builtin class
+    public ClassModel(String tagName, ViewSchema schema, CompilationEnvironment env) {
+        this(tagName, true, schema, null, env);
+    }
+
     // Construct a user-defined class
-    public ClassModel(String tagName, ClassModel superclass, boolean publish,
+    public ClassModel(String tagName, boolean publish,
                       ViewSchema schema, Element definition, CompilationEnvironment env) {
+        if (definition != null) {
+          // class, interface, mixin; OR anonymous instance class
+          kind = definition.getName();
+          if ("class".equals(kind) || "interface".equals(kind) || "mixin".equals(kind)) {
+            assert tagName.equals(definition.getAttributeValue("name"));
+            superTagName = definition.getAttributeValue("extends");
+            if (superTagName == null) {
+                superTagName = DEFAULT_SUPERCLASS_NAME;
+            }
+            String mixinSpec = definition.getAttributeValue("with");
+            if (mixinSpec != null) {
+                mixinNames = mixinSpec.trim().split("\\s*,\\s*");
+            }
+          } else {
+            // Instance classes are not published
+            assert (! publish);
+            assert tagName.equals(definition.getName());
+            kind = "instance class";
+            // The superclass of an instance class is the tag that
+            // creates the instance
+            superTagName = tagName;
+            // Invalid name, just for debugging
+            tagName = "anonymous " + superTagName;
+          }
+        } else {
+          // The root class
+          resolved = true;
+        }
         this.tagName = tagName;
         this.anonymous = (! publish);
         // NOTE: [2009-01-31 ptw] If the class is in an import, or you
@@ -79,32 +117,292 @@ public class ClassModel implements Comparable {
                           env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY));
         this.env = env;
 
-        this.superclass = superclass;
         this.definition = definition;
-        if (definition != null) {
-          // class, interface, mixin
-          this.kind = definition.getName();
-        }
         this.schema = schema;
         if ((!anonymous) && (tagName != null)) {
           this.className = LZXTag2JSClass(tagName);
         }
+
+        // Create a sort key for putting classes in dependency order
+        if (mixinNames != null) {
+            for (int i = mixinNames.length - 1; i >= 0; i--) {
+                String mixinName = mixinNames[i];
+                superTagName = mixinName + "$" + superTagName;
+            }
+        }
         this.sortkey = tagName != null ? tagName : "anonymous";
-        if (superclass != null) {
-          this.sortkey = superclass.sortkey + "." + this.sortkey;
+        if (superTagName != null) {
+            this.sortkey = superTagName + "." + this.sortkey;
         }
     }
 
-  // Construct a builtin class
-  public ClassModel(String tagName, ViewSchema schema, CompilationEnvironment env) {
-      this(tagName, null, true, schema, null, env);
-  }
 
-  public int compareTo(Object other) throws ClassCastException {
-    ClassModel o = (ClassModel)other;
-    int order = this.sortkey.startsWith(o.sortkey) ? +1 : this.sortkey.compareTo(o.sortkey);
-    return order;
-  }
+    public int compareTo(Object other) throws ClassCastException {
+      ClassModel o = (ClassModel)other;
+      int order = this.sortkey.startsWith(o.sortkey) ? +1 : this.sortkey.compareTo(o.sortkey);
+      return order;
+    }
+
+    /**
+     * Check that the 'allocation' attribute of a tag is either "instance" or "class".
+     * The return value defaults to "instance".
+     * @param element a method or attribute element
+     * @return an AttributeSpec allocation type (either 'instance' or 'class')
+     */
+    String getAllocation(Element element) {
+        // allocation type defaults to 'instance'
+        String allocation = element.getAttributeValue("allocation");
+        if (allocation == null) {
+            allocation = NodeModel.ALLOCATION_INSTANCE;
+        } else if (!(allocation.equals(NodeModel.ALLOCATION_INSTANCE) ||
+                     allocation.equals(NodeModel.ALLOCATION_CLASS))) {
+          throw new CompilationError(
+              "the value of the 'allocation' attribute must be either 'instance', or 'class'" , element);
+        }
+        return allocation;
+
+    }
+
+    public ClassModel resolve() {
+        if (resolved) { return this; }
+
+        // Find superclass and mixins
+        if (superTagName != null) {
+            superModel = schema.getClassModel(superTagName);
+            if (superModel == null) {
+                throw new CompilationError(
+                    /* (non-Javadoc)
+                     * @i18n.test
+                     * @org-mes="undefined superclass " + p[0] + " for class " + p[1]
+                     */
+                    org.openlaszlo.i18n.LaszloMessages.getMessage(
+                        ViewSchema.class.getName(),"051018-417", new Object[] {superTagName, tagName})
+                                           );
+            }
+            isInputText = superModel.isInputText;
+            hasInputText = superModel.hasInputText;
+            supportsTextAttribute = superModel.supportsTextAttribute;
+            // merge in superclass requiredAttributes list to make scanning the set more efficient
+            requiredAttributes.addAll(superModel.requiredAttributes);
+        }
+
+        // Create interstitials
+        if (mixinNames != null) {
+            for (int i = mixinNames.length - 1; i >= 0; i--) {
+                String mixinName = mixinNames[i];
+                ClassModel mixinModel =  schema.getClassModel(mixinName);
+                if (mixinModel == null) {
+                     throw new CompilationError(
+                         "Undefined mixin " + mixinName + " for class " + tagName,
+                         definition);
+                }
+                String interstitialName = mixinName + "$" + superTagName;
+
+                // Avoid adding the same mixin to the schema twice - LPP-8234
+                if (schema.getClassModel(interstitialName) == null) {
+                    // We duplicate the mixin definition, but turn it into
+                    // a class definition, inheriting from the previous
+                    // superTagName and implementing the mixin
+                    Element interstitial = (Element)mixinModel.definition.clone();
+                    interstitial.setName("class");
+                    interstitial.setAttribute("name", interstitialName);
+                    interstitial.setAttribute("extends", superTagName);
+
+                    // TODO: [2008-11-10 ptw] Add "implements"
+                    // interstitial.setAttribute("implements", mixinName);
+                    // Insert this element into the DOM before us
+                    Element parent = (Element)((org.jdom.Parent)definition).getParent();
+                    int index = parent.indexOf(definition);
+                    parent.addContent(index, interstitial);
+
+                    // Add it to the schema
+                    schema.addElement(interstitial, interstitialName, env);
+                }
+
+                // Update the superTagName
+                superTagName = interstitialName;
+            }
+            // Now adjust this DOM element to refer to the
+            // interstitial superclass
+            definition.removeAttribute("with");
+            definition.setAttribute("extends", superTagName);
+        }
+
+        // Process the definition if it is to be published (Note that
+        // the root class does not have a definition).
+        if ((! anonymous) && (definition != null)) {
+          // Loop over containsElements tags, adding to containment table in classmodel
+          for (Iterator iterator = definition.getChildren().iterator(); iterator.hasNext(); ) {
+            Element child = (Element) iterator.next();
+            if (child.getName().equals("containsElements")) {
+              // look for <element>tagname</element>
+              Iterator iter1 = child.getChildren().iterator();
+              while (iter1.hasNext()) {
+                Element etag = (Element) iter1.next();
+                if (etag.getName().equals("element")) {
+                  String tagname = etag.getText();
+                  addContainsElement(tagname);
+                } else {
+                  throw new CompilationError(
+                    "containsElement block must only contain <element> tags", etag);
+                }
+              }
+            } else if (child.getName().equals("forbiddenElements")) {
+              // look for <element>tagname</element>
+              Iterator iter1 = child.getChildren().iterator();
+              while (iter1.hasNext()) {
+                Element etag = (Element) iter1.next();
+                if (etag.getName().equals("element")) {
+                  String tagname = etag.getText();
+                  addForbiddenElement(tagname);
+                } else {
+                  throw new CompilationError(
+                    "containsElement block must only contain <element> tags", etag);
+                }
+              }
+            }
+          }
+
+          // Collect up the attribute defs, if any, of this class
+          List attributeDefs = new ArrayList();
+          for (Iterator iterator = definition.getContent().iterator(); iterator.hasNext(); ) {
+            Object o = iterator.next();
+            if (o instanceof Element) {
+              Element child = (Element) o;
+              if (child.getName().equals("method")) {
+                String attrName = child.getAttributeValue("name");
+                String attrEvent = child.getAttributeValue("event");
+                if (attrEvent == null) {
+                  if (schema.enforceValidIdentifier) {
+                    try {
+                      attrName = ElementCompiler.requireIdentifierAttributeValue(child, "name");
+                    } catch (MissingAttributeException e) {
+                      throw new CompilationError(
+                        "'name' is a required attribute of <" + child.getName() + "> and must be a valid identifier", child);
+                    }
+                  }
+                  String allocation = getAllocation(child);
+                  ViewSchema.Type attrType = ViewSchema.METHOD_TYPE;
+                  AttributeSpec attrSpec = 
+                    new AttributeSpec(attrName, attrType, null, null, child);
+                  attrSpec.isfinal = child.getAttributeValue("final");
+                  attrSpec.allocation = allocation;
+                  attributeDefs.add(attrSpec);
+                }
+              } else if (child.getName().equals("setter")) {
+                String attrName = child.getAttributeValue("name");
+                if (schema.enforceValidIdentifier) {
+                  try {
+                    attrName = ElementCompiler.requireIdentifierAttributeValue(child, "name");
+                  } catch (MissingAttributeException e) {
+                    throw new CompilationError(
+                      "'name' is a required attribute of <" + child.getName() + "> and must be a valid identifier", child);
+                  }
+                }
+                // Setter is shorthand for a specially-named method
+                attrName = "$lzc$set_" + attrName;
+                String allocation = getAllocation(child);
+                ViewSchema.Type attrType = ViewSchema.METHOD_TYPE;
+                AttributeSpec attrSpec =
+                  new AttributeSpec(attrName, attrType, null, null, child);
+                attrSpec.allocation = allocation;
+                attributeDefs.add(attrSpec);
+              } else if (child.getName().equals("attribute")) {
+                // Is this an element named ATTRIBUTE which is a
+                // direct child of this CLASS or INTERFACE tag?
+
+                String attrName = child.getAttributeValue("name");
+                if (schema.enforceValidIdentifier) {
+                  try {
+                    attrName = ElementCompiler.requireIdentifierAttributeValue(child, "name");
+                  } catch (MissingAttributeException e) {
+                    throw new CompilationError(
+                      /* (non-Javadoc)
+                       * @i18n.test
+                       * @org-mes="'name' is a required attribute of <" + p[0] + "> and must be a valid identifier"
+                       */
+                      org.openlaszlo.i18n.LaszloMessages.getMessage(
+                        ClassCompiler.class.getName(),"051018-131", new Object[] {child.getName()})
+                      , child);
+                  }
+                }
+
+                String attrTypeName = child.getAttributeValue("type");
+                String attrDefault = child.getAttributeValue("value");
+                String attrSetter = child.getAttributeValue("setter");
+                String attrRequired = child.getAttributeValue("required");
+                String allocation = getAllocation(child);
+
+                if (attrDefault != null && attrRequired != null &&
+                    attrRequired.equals("true") && !attrDefault.equals("null")) {
+                  env.warn("An attribute cannot both be declared required and also have a non-null default value", child);
+                }
+
+                ViewSchema.Type attrType;
+                if (attrTypeName == null) {
+                  // Check if this attribute exists in ancestor classes,
+                  // and if so, default to that type.
+                  attrType = superModel.getAttributeType(attrName, allocation);
+                  if (attrType == null) {
+                    // The default attribute type
+                    attrType = ViewSchema.EXPRESSION_TYPE;
+                  }
+                } else {
+                  attrType = schema.getTypeForName(attrTypeName);
+                }
+
+                if (attrType == null) {
+                  throw new CompilationError(
+                    /* (non-Javadoc)
+                     * @i18n.test
+                     * @org-mes="In class " + p[0] + " type '" + p[1] + "', declared for attribute '" + p[2] + "' is not a known data type."
+                     */
+                    org.openlaszlo.i18n.LaszloMessages.getMessage(
+                      ClassCompiler.class.getName(),"051018-160", new Object[] {tagName, attrTypeName, attrName})
+                    , definition);
+                }
+
+                AttributeSpec attrSpec =
+                  new AttributeSpec(attrName, attrType, attrDefault,
+                                    attrSetter, "true".equals(attrRequired), child);
+                attrSpec.allocation = allocation;
+                attrSpec.isfinal = child.getAttributeValue("final");
+                if (attrName.equals("text") && attrTypeName != null) {
+                  if ("text".equals(attrTypeName))
+                    attrSpec.contentType = attrSpec.TEXT_CONTENT;
+                  else if ("html".equals(attrTypeName))
+                    attrSpec.contentType = attrSpec.HTML_CONTENT;
+                }
+                attributeDefs.add(attrSpec);
+              } else if (child.getName().equals("event")) {
+                String attrName = child.getAttributeValue("name");
+                if (schema.enforceValidIdentifier) {
+                  try {
+                    attrName = ElementCompiler.requireIdentifierAttributeValue(child, "name");
+                  } catch (MissingAttributeException e) {
+                    throw new CompilationError(
+                      "'name' is a required attribute of <" + child.getName() + "> and must be a valid identifier", child);
+                  }
+                }
+
+                ViewSchema.Type attrType = ViewSchema.EVENT_HANDLER_TYPE;
+                AttributeSpec attrSpec =
+                  new AttributeSpec(attrName, attrType, null, null, child);
+                attributeDefs.add(attrSpec);
+              } else if (child.getName().equals("doc")) {
+                // Ignore documentation nodes
+              } else {
+                // We'd like to warn about unknown attributes, but
+                // we can't tell if a child is a view here...
+              }
+            }
+          }
+          // Add in the attribute declarations.
+          schema.addAttributeDefs(definition, tagName, attributeDefs, env);
+        }
+        resolved = true;
+        return this;
+    }
 
   public String toLZX() {
     return toLZX("");
@@ -112,10 +410,10 @@ public class ClassModel implements Comparable {
 
   public String toLZX(String indent) {
     String lzx = indent + "<interface name='" + tagName + "'" +
-      ((superclass != null)?(" extends='" + superclass.tagName +"'"):"") + ">";
+      ((superModel != null)?(" extends='" + superModel.tagName +"'"):"") + ">";
     for (Iterator i = attributeSpecs.values().iterator(); i.hasNext(); ) {
       AttributeSpec spec = (AttributeSpec)i.next();
-      String specLZX = spec.toLZX(indent + "  ", superclass);
+      String specLZX = spec.toLZX(indent + "  ", superModel);
       if (specLZX != null) {
         lzx += "\n";
         lzx += specLZX;
@@ -169,15 +467,17 @@ public class ClassModel implements Comparable {
    * instance has methods, either explicit or implicit).
    */
   void emitClassDeclaration(CompilationEnvironment env) {
+    // Last chance for resolution
+    resolve();
     declarationEmitted = true;
     // Should the package prefix be in the model?  Should the
     // model store class and tagname separately?
-    ClassModel superclassModel = getSuperclassModel();
+    assert superModel != null : "Unknown superclass " + superTagName + " for " + kind + " " + tagName;
     // Allow forward references.
-    if (! superclassModel.isCompiled()) {
-      superclassModel.compile(env);
+    if (! superModel.isCompiled()) {
+      superModel.compile(env);
     }
-    String superClassName = superclassModel.className;
+    String superClassName = superModel.className;
     if (className == null) {
       className = LZXTag2JSClass(CompilerUtils.encodeJavaScriptIdentifier(nodeModel.getNodePath()));
     }
@@ -243,7 +543,7 @@ public class ClassModel implements Comparable {
       Map.Entry entry = (Map.Entry) i.next();
       String key = (String) entry.getKey();
       Object value = entry.getValue();
-      boolean redeclared = (superclassModel.getAttribute(key, NodeModel.ALLOCATION_INSTANCE) != null);
+      boolean redeclared = (superModel.getAttribute(key, NodeModel.ALLOCATION_INSTANCE) != null);
       if ((value instanceof NodeModel.BindingExpr)) {
         // Bindings always have to be installed as an init
         if (! redeclared) {
@@ -353,8 +653,8 @@ public class ClassModel implements Comparable {
      * superclass. */
     boolean isSubclassOf(ClassModel superclass) {
         if (this == superclass) return true;
-        if (this.superclass == null) return false;
-        return this.superclass.isSubclassOf(superclass);
+        if (this.superModel == null) return false;
+        return this.superModel.isSubclassOf(superclass);
     }
     
   void setIsBuiltin(boolean value) {
@@ -378,7 +678,7 @@ public class ClassModel implements Comparable {
   }
 
   public ClassModel getSuperclassModel() {
-      return superclass;
+      return superModel;
   }
 
   // A class needs to merge its children if its superclass has
@@ -386,12 +686,12 @@ public class ClassModel implements Comparable {
   // just don't know)
   boolean inheritsChildren() {
     // No LFC class has children
-    if (superclass.builtin) { return false; }
+    if (superModel.builtin) { return false; }
     // If we don't know, we have to assume true
-    if (superclass.nodeModel == null) { return true; }
+    if (superModel.nodeModel == null) { return true; }
     // Otherwise ask them
-    return ((! superclass.nodeModel.getChildren().isEmpty()) ||
-            superclass.inheritsChildren());
+    return ((! superModel.nodeModel.getChildren().isEmpty()) ||
+            superModel.inheritsChildren());
   }
 
   private Map mergedMethods;
@@ -403,7 +703,7 @@ public class ClassModel implements Comparable {
   Map getMergedMethods() {
     if (mergedMethods != null) { return mergedMethods; }
     if (nodeModel == null) { return mergedMethods = new LinkedHashMap(); }
-    Map merged = mergedMethods = new LinkedHashMap(superclass.getMergedMethods());
+    Map merged = mergedMethods = new LinkedHashMap(superModel.getMergedMethods());
     // Merge in the our methods
     for (Iterator i = nodeModel.getAttrs().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
@@ -425,10 +725,10 @@ public class ClassModel implements Comparable {
     public String getSuperTagName() {
         if (superTagName != null) {
             return superTagName; 
-        } else if (superclass == null) {
+        } else if (superModel == null) {
             return null;
         }  else {
-            return superclass.tagName;
+            return superModel.tagName;
         }
     }
     
@@ -437,7 +737,7 @@ public class ClassModel implements Comparable {
     }
     
     void setSuperclassModel(ClassModel superclass) {
-        this.superclass = superclass;
+        this.superModel = superclass;
     }
     
     /** Return the AttributeSpec for the attribute named attrName.
@@ -462,8 +762,8 @@ public class ClassModel implements Comparable {
         AttributeSpec attr = (AttributeSpec) attrtable.get(attrName);
         if (attr != null) {
             return attr;
-        } else if (superclass != null) {
-          return(superclass.getAttribute(attrName, allocation));
+        } else if (superModel != null) {
+          return(superModel.getAttribute(attrName, allocation));
         } else {
             return null;
         }
@@ -483,10 +783,10 @@ public class ClassModel implements Comparable {
             }
         }
         // if that didn't work, try the supeclass
-        if (superclass == null) {
+        if (superModel == null) {
             return null;
         } else {
-            return superclass.findSimilarAttribute(attrName);
+            return superModel.findSimilarAttribute(attrName);
         }
     }
 

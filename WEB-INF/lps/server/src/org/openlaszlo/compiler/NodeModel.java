@@ -656,8 +656,8 @@ public class NodeModel implements Cloneable {
     AttributeSpec attr = (AttributeSpec) attrtable.get(attrName);
     if ((attr != null) && attr.defaultValue != null && !attr.defaultValue.equals("null")) {
       return true;
-    } else if (classmodel.superclass != null) {
-      return(attrHasDefaultValue(classmodel.superclass, attrName, allocation));
+    } else if (classmodel.superModel != null) {
+      return(attrHasDefaultValue(classmodel.superModel, attrName, allocation));
     } else {
       return false;
     }
@@ -710,7 +710,7 @@ public class NodeModel implements Cloneable {
         String parentName = this.tagName;
         return
             ("class".equals(parentName) || "interface".equals(parentName) || "mixin".equals(parentName)) ?
-            schema.getClassModel(element.getAttributeValue("extends", ClassCompiler.DEFAULT_SUPERCLASS_NAME)) :
+            schema.getClassModel(element.getAttributeValue("extends", ClassModel.DEFAULT_SUPERCLASS_NAME)) :
             schema.getClassModel(parentName);
     }
 
@@ -752,7 +752,7 @@ public class NodeModel implements Cloneable {
         // TODO: [2008-05-05 ptw] Schema needs to learn about
         // allocation
         assert ALLOCATION_INSTANCE.equals(allocation);
-        String superclassname = classDefElement.getAttributeValue("extends", ClassCompiler.DEFAULT_SUPERCLASS_NAME);
+        String superclassname = classDefElement.getAttributeValue("extends", ClassModel.DEFAULT_SUPERCLASS_NAME);
         ClassModel superclassModel = schema.getClassModel(superclassname);
 
         if (superclassModel == null) {
@@ -2290,7 +2290,7 @@ solution =
         }
         if (hasMethods) {
             // If there are methods, make a class (but don't publish it)
-            classModel = new ClassModel(tagName, parentClassModel, false, schema, element, env);
+            classModel = new ClassModel(tagName, false, schema, element, env);
             classModel.setNodeModel(this);
             classModel.emitClassDeclaration(env);
         } else {

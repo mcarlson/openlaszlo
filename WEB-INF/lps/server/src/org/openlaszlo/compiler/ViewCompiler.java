@@ -492,7 +492,7 @@ public class ViewCompiler extends ElementCompiler {
         // walk
         while (lzxclass != null) {
             parents.insertElementAt(lzxclass, 0);
-            lzxclass = lzxclass.superclass;
+            lzxclass = lzxclass.superModel;
         }
 
         // A blank FontInfo with all empty slots

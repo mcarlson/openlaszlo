@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -79,75 +79,77 @@ public class ViewSchema_Test extends TestCase {
 
     public void testSetAttributes () {
 
-        ViewSchema schema = new ViewSchema();
-        CompilationEnvironment env = new CompilationEnvironment();
-        try {
-            schema.loadSchema(env);
-        } catch (JDOMException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+      /* Obsolete */
 
-        String class1 = "mynewclass";
-        String subclass = "mynewsubclass";
+//         ViewSchema schema = new ViewSchema();
+//         CompilationEnvironment env = new CompilationEnvironment();
+//         try {
+//             schema.loadSchema(env);
+//         } catch (JDOMException e) {
+//             throw new RuntimeException(e.getMessage());
+//         } catch (IOException e) {
+//             throw new RuntimeException(e.getMessage());
+//         }
 
-        Element elt1 = new Element("classdef1");
-        Element elt2 = new Element("classdef2");
+//         String class1 = "mynewclass";
+//         String subclass = "mynewsubclass";
 
-        schema.addElement(elt1, "mynewclass", "view", new ArrayList(), env);
-        schema.addElement(elt2, "mynewsubclass", "mynewclass", new ArrayList(), env);
+//         Element elt1 = new Element("classdef1");
+//         Element elt2 = new Element("classdef2");
 
-        assertEquals("undefined class superclass",
-                     "Object",
-                     schema.getBaseClassname("view"));
+//         schema.addElement(elt1, "mynewclass", "view", new ArrayList(), env);
+//         schema.addElement(elt2, "mynewsubclass", "mynewclass", new ArrayList(), env);
 
-        assertEquals(" superclass",
-                     "view",
-                     schema.getSuperTagName("mynewclass"));
+//         assertEquals("undefined class superclass",
+//                      "Object",
+//                      schema.getBaseClassname("view"));
 
-        assertEquals(" superclass",
-                     "mynewclass",
-                     schema.getSuperTagName("mynewsubclass"));
+//         assertEquals(" superclass",
+//                      "view",
+//                      schema.getSuperTagName("mynewclass"));
 
-        assertEquals("mynewclass superclass",
-                     "Object",
-                     schema.getBaseClassname("mynewclass"));
+//         assertEquals(" superclass",
+//                      "mynewclass",
+//                      schema.getSuperTagName("mynewsubclass"));
 
-        assertEquals("mynewsubclass superclass",
-                     "Object",
-                     schema.getBaseClassname("mynewsubclass"));
+//         assertEquals("mynewclass superclass",
+//                      "Object",
+//                      schema.getBaseClassname("mynewclass"));
+
+//         assertEquals("mynewsubclass superclass",
+//                      "Object",
+//                      schema.getBaseClassname("mynewsubclass"));
 
 
-        schema.setAttributeType(elt1, "mynewclass", "foo-width", new AttributeSpec("foo-width", schema.SIZE_EXPRESSION_TYPE, null, null));
-        schema.setAttributeType(elt1, "mynewclass", "barbaz", new AttributeSpec("barbaz", schema.STRING_TYPE, null, null));
+//         schema.setAttributeType(elt1, "mynewclass", "foo-width", new AttributeSpec("foo-width", schema.SIZE_EXPRESSION_TYPE, null, null));
+//         schema.setAttributeType(elt1, "mynewclass", "barbaz", new AttributeSpec("barbaz", schema.STRING_TYPE, null, null));
 
-        schema.setAttributeType(elt1, "mynewsubclass", "baz-width", new AttributeSpec("baz-width", schema.SIZE_EXPRESSION_TYPE, null, null));
-        schema.setAttributeType(elt1, "mynewsubclass", "barbaz", new AttributeSpec("barbaz", schema.EVENT_HANDLER_TYPE, null, null));
+//         schema.setAttributeType(elt1, "mynewsubclass", "baz-width", new AttributeSpec("baz-width", schema.SIZE_EXPRESSION_TYPE, null, null));
+//         schema.setAttributeType(elt1, "mynewsubclass", "barbaz", new AttributeSpec("barbaz", schema.EVENT_HANDLER_TYPE, null, null));
 
-        assertEquals("mynewclass foo-width type",
-                     schema.SIZE_EXPRESSION_TYPE,
-                     schema.getAttributeType(class1, "foo-width", NodeModel.ALLOCATION_INSTANCE));
+//         assertEquals("mynewclass foo-width type",
+//                      schema.SIZE_EXPRESSION_TYPE,
+//                      schema.getAttributeType(class1, "foo-width", NodeModel.ALLOCATION_INSTANCE));
 
-        assertEquals("mynewclass barbaz type",
-                     schema.STRING_TYPE,
-                     schema.getAttributeType(class1, "barbaz", NodeModel.ALLOCATION_INSTANCE));
+//         assertEquals("mynewclass barbaz type",
+//                      schema.STRING_TYPE,
+//                      schema.getAttributeType(class1, "barbaz", NodeModel.ALLOCATION_INSTANCE));
 
-        // Check subclass attribute types
-        assertEquals("mynewsubclass foo-width type",
-                     schema.SIZE_EXPRESSION_TYPE,
-                     schema.getAttributeType(subclass, "foo-width", NodeModel.ALLOCATION_INSTANCE));
+//         // Check subclass attribute types
+//         assertEquals("mynewsubclass foo-width type",
+//                      schema.SIZE_EXPRESSION_TYPE,
+//                      schema.getAttributeType(subclass, "foo-width", NodeModel.ALLOCATION_INSTANCE));
 
-        assertEquals("mynewsubclass baz-width type",
-                     schema.SIZE_EXPRESSION_TYPE,
-                     schema.getAttributeType(subclass, "baz-width", NodeModel.ALLOCATION_INSTANCE));
+//         assertEquals("mynewsubclass baz-width type",
+//                      schema.SIZE_EXPRESSION_TYPE,
+//                      schema.getAttributeType(subclass, "baz-width", NodeModel.ALLOCATION_INSTANCE));
 
-        // Attribute type of subclass should override superclass type
-        assertEquals("mynewsubclass barbaz type",
-                     schema.EVENT_HANDLER_TYPE,
-                     schema.getAttributeType(subclass, "barbaz", NodeModel.ALLOCATION_INSTANCE));
+//         // Attribute type of subclass should override superclass type
+//         assertEquals("mynewsubclass barbaz type",
+//                      schema.EVENT_HANDLER_TYPE,
+//                      schema.getAttributeType(subclass, "barbaz", NodeModel.ALLOCATION_INSTANCE));
 
-        // test for duplicate attributes, undefined superclass, redefined class, attr inheritance
+//         // test for duplicate attributes, undefined superclass, redefined class, attr inheritance
 
 
     }

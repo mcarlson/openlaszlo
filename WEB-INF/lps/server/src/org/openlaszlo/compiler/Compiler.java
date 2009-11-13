@@ -728,6 +728,8 @@ public class Compiler {
             Compiler.updateSchemaFromLibrary(library, env, schema, visited, externalLibraries);
         }
         tlc.updateSchema(root, schema, visited);
+        // Now sort and resolve the classes
+        schema.resolveClasses();
     }
 
     static void updateSchema(Element element, CompilationEnvironment env,

@@ -157,7 +157,7 @@ public class ViewSchema extends Schema {
 
     /** Set the attribute to the given type, for a specific element */
     public void setAttributeType (Element elt, String classname, String attrName, AttributeSpec attrspec) {
-        ClassModel classModel = getClassModel(classname);
+        ClassModel classModel = getClassModelUnresolved(classname);
         if (classModel == null) {
             throw new RuntimeException(
 /* (non-Javadoc)
@@ -202,7 +202,7 @@ public class ViewSchema extends Schema {
     public void checkMethodDeclaration (Element elt, String classname, String methodName,
                                         String allocation,
                                         CompilationEnvironment env) {
-        ClassModel classModel = getClassModel(classname);
+        ClassModel classModel = getClassModelUnresolved(classname);
         if (classModel == null) {
             throw new RuntimeException(
 /* (non-Javadoc)
@@ -246,7 +246,7 @@ public class ViewSchema extends Schema {
      */
     public void checkInstanceMethodDeclaration (Element elt, String classname, String methodName,
                                         CompilationEnvironment env) {
-        ClassModel classModel = getClassModel(classname);
+        ClassModel classModel = getClassModelUnresolved(classname);
         if (classModel == null) {
             throw new RuntimeException(
 /* (non-Javadoc)
@@ -274,7 +274,7 @@ public class ViewSchema extends Schema {
     }
 
     public String getSuperTagName(String tagName) {
-        ClassModel model = getClassModel(tagName);
+        ClassModel model = getClassModelUnresolved(tagName);
         if (model == null)
             return null;
         return model.getSuperTagName();
@@ -312,7 +312,7 @@ public class ViewSchema extends Schema {
      */
     AttributeSpec getClassAttribute (String classname, String attrName, String allocation) {
         // OK, walk up the superclasses, checking for existence of this attribute
-        ClassModel info = getClassModel(classname);
+        ClassModel info = getClassModelUnresolved(classname);
         if (info == null) {
             return null;
         } else {
@@ -324,30 +324,14 @@ public class ViewSchema extends Schema {
      * Add a new element to the attribute type map.
      *
      * @param elt the element to add to the map
-     * @param superTagName an element to inherit attribute to type info from. May be null.
-     * @param attributeDefs list of attribute name/type defs
+     * @param tagName the name of the element
      */
-    public void addElement (Element elt, String tagName,
-                            String superTagName, List attributeDefs,
-                            CompilationEnvironment env)
+    public void addElement (Element elt, String tagName, CompilationEnvironment env)
     {
-        ClassModel superclass = getClassModel(superTagName);
-
-        if (superclass == null) {
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="undefined superclass " + p[0] + " for class " + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ViewSchema.class.getName(),"051018-417", new Object[] {superTagName, tagName})
-);
-        }
-
         if (mClassMap.get(tagName) != null) {
             String builtin = "builtin ";
             String also = "";
-            Element other = getClassModel(tagName).definition;
+            Element other = getClassModelUnresolved(tagName).definition;
             if (other != null) {
                 builtin = "";
                 also = "; also defined at " + Parser.getSourceMessagePathname(other) + ":" + Parser.getSourceLocation(other, Parser.LINENO);
@@ -361,57 +345,8 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-435", new Object[] {builtin, tagName, also})
 , elt);
         }
-        ClassModel info = new ClassModel(tagName, superclass, true, this, elt, env);
+        ClassModel info = new ClassModel(tagName, true, this, elt, env);
         mClassMap.put(tagName, info);
-
-        if (sInputTextElements.contains(superTagName)) {
-            info.isInputText = true;
-            info.hasInputText = true;
-        } else {
-            info.isInputText = superclass.isInputText;
-            info.hasInputText = superclass.hasInputText;
-        }
-
-        info.supportsTextAttribute = superclass.supportsTextAttribute;
-
-        // Loop over containsElements tags, adding to containment table in classmodel
-        Iterator iterator = elt.getChildren().iterator();
-        while (iterator.hasNext()) {
-            Element child = (Element) iterator.next();
-            if (child.getName().equals("containsElements")) {
-                    // look for <element>tagname</element>
-                Iterator iter1 = child.getChildren().iterator();
-                while (iter1.hasNext()) {
-                    Element etag = (Element) iter1.next();
-                    if (etag.getName().equals("element")) {
-                        String tagname = etag.getText();
-                        info.addContainsElement(tagname);
-                    } else {
-                        throw new CompilationError(
-                            "containsElement block must only contain <element> tags", etag);
-                    }
-                }
-            } else if (child.getName().equals("forbiddenElements")) {
-                    // look for <element>tagname</element>
-                Iterator iter1 = child.getChildren().iterator();
-                while (iter1.hasNext()) {
-                    Element etag = (Element) iter1.next();
-                    if (etag.getName().equals("element")) {
-                        String tagname = etag.getText();
-                        info.addForbiddenElement(tagname);
-                    } else {
-                        throw new CompilationError(
-                            "containsElement block must only contain <element> tags", etag);
-                    }
-                }
-            }
-        }
-
-        // merge in superclass requiredAttributes list to make scanning the set more efficient
-        info.requiredAttributes.addAll(superclass.requiredAttributes);
-
-        // Add in the attribute declarations. 
-        addAttributeDefs(elt, tagName, attributeDefs, env);
     }
 
     /**
@@ -428,41 +363,35 @@ public class ViewSchema extends Schema {
         if (!attributeDefs.isEmpty()) {
             for (Iterator iter = attributeDefs.iterator(); iter.hasNext();) {
                 AttributeSpec attr = (AttributeSpec) iter.next();
-
                 // If this attribute does not already occur someplace
                 // in an ancestor, then let's add it to the schema.
                 //
                 // While we're here, we need to check that we aren't
                 // redefining an attribute of a parent class with a
                 // different type.
-
-                Type parentType = null;
                 if (getClassAttribute(classname, attr.name, attr.allocation) != null) {
-                    // Check that the overriding type is the same as the superclass' type
-                    parentType = getAttributeType(classname, attr.name, attr.allocation);
-
-                    // Does the parent attribute definition have final=false or final=null?
-                    // If not, we're not going to warn if the types mismatch.
-                    AttributeSpec parentAttrSpec = getAttributeSpec(classname, attr.name, attr.allocation);
-                    boolean forceOverride = parentAttrSpec != null && (! "true".equals(parentAttrSpec.isfinal));
-
-                    if (!forceOverride &&  (parentType != attr.type)) {
-                        // get the parent attribute, so we can see if it says override is allowed
-
-                        env.warn(/* (non-Javadoc)
-                                  * @i18n.test
-                                  * @org-mes="In class '" + p[0] + "' attribute '" + p[1] + "' with type '" + p[2] + "' is overriding superclass attribute with same name but different type: " + p[3]
-                                  */
-                            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                ViewSchema.class.getName(),"051018-364", new Object[] {classname, attr.name, attr.type.toString(), parentType.toString()}),
-                            sourceElement);
+                  String superTagName = getSuperTagName(classname);
+                  // Does the parent attribute definition have final=false or final=null?
+                  // If not, we're not going to warn if the types mismatch.
+                  AttributeSpec parentAttrSpec = getAttributeSpec(superTagName, attr.name, attr.allocation);
+                  if (parentAttrSpec != null) {
+                    Type parentType = getAttributeType(superTagName, attr.name, attr.allocation);
+                    boolean forceOverride = (! "true".equals(parentAttrSpec.isfinal));
+                    if (parentType != attr.type) {
+                      // get the parent attribute, so we can see if it says override is allowed
+                      env.warn(/* (non-Javadoc)
+                                * @i18n.test
+                                * @org-mes="In class '" + p[0] + "' attribute '" + p[1] + "' with type '" + p[2] + "' is overriding superclass attribute with same name but different type: " + p[3]
+                                */
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                          ViewSchema.class.getName(),"051018-364", new Object[] {classname, attr.name, attr.type.toString(), parentType.toString()}),
+                        sourceElement);
                     }
+                  }
                 }
-
                 if (attr.type == ViewSchema.METHOD_TYPE && !("false".equals(attr.isfinal))) {
                     checkMethodDeclaration(sourceElement, classname, attr.name, attr.allocation, env);
                 }
-
                 // Update the in-memory attribute type table
                 setAttributeType(sourceElement, classname, attr.name, attr);
             }
@@ -614,7 +543,23 @@ public class ViewSchema extends Schema {
     }
 
     ClassModel getClassModel (String elementName) {
-        return (ClassModel) mClassMap.get(elementName);
+      // Ensure the class model is resolved
+      ClassModel model = (ClassModel)mClassMap.get(elementName);
+      if (model != null) {
+        return model.resolve();
+      }
+      return model;
+    }
+
+    ClassModel getClassModelUnresolved (String elementName) {
+      return (ClassModel)mClassMap.get(elementName);
+    }
+
+    public void resolveClasses () {
+      TreeMap classMap = new TreeMap(mClassMap);
+      for (Iterator i = classMap.keySet().iterator(); i.hasNext(); ) {
+        ((ClassModel)classMap.get(i.next())).resolve();
+      }
     }
 
     /**
@@ -664,12 +609,15 @@ public class ViewSchema extends Schema {
         ToplevelCompiler ec = (ToplevelCompiler) Compiler.getElementCompiler(docroot, env);
         Set visited = new HashSet();
         ec.updateSchema(docroot, this, visited);
-        /** From here on, user-defined classes must not use reserved javascript identifiers */
-        this.enforceValidIdentifier = true;
         // Note that these classes are all built in
         for (Iterator i = mClassMap.values().iterator(); i.hasNext(); ) {
-          ((ClassModel)i.next()).setIsBuiltin(true);
+          ClassModel model = (ClassModel)i.next();
+          model.setIsBuiltin(true);
         }
+        // Resolve the built-ins
+        resolveClasses();
+        /** From here on, user-defined classes must not use reserved javascript identifiers */
+        this.enforceValidIdentifier = true;
     }
 
 
