@@ -88,6 +88,44 @@ public class ClassModel implements Comparable {
             String mixinSpec = definition.getAttributeValue("with");
             if (mixinSpec != null) {
                 mixinNames = mixinSpec.trim().split("\\s*,\\s*");
+                for (int i = mixinNames.length - 1; i >= 0; i--) {
+                    String mixinName = mixinNames[i];
+                    ClassModel mixinModel =  schema.getClassModelUnresolved(mixinName);
+                    if (mixinModel == null) {
+                         throw new CompilationError(
+                             "Undefined mixin " + mixinName + " for class " + tagName,
+                             definition);
+                    }
+                    String interstitialName = mixinName + "$" + superTagName;
+
+                    // Avoid adding the same mixin to the schema twice - LPP-8234
+                    if (schema.getClassModelUnresolved(interstitialName) == null) {
+                        // We duplicate the mixin definition, but turn it into
+                        // a class definition, inheriting from the previous
+                        // superTagName and implementing the mixin
+                        Element interstitial = (Element)mixinModel.definition.clone();
+                        interstitial.setName("class");
+                        interstitial.setAttribute("name", interstitialName);
+                        interstitial.setAttribute("extends", superTagName);
+
+                        // TODO: [2008-11-10 ptw] Add "implements"
+                        // interstitial.setAttribute("implements", mixinName);
+                        // Insert this element into the DOM before us
+                        Element parent = (Element)((org.jdom.Parent)definition).getParent();
+                        int index = parent.indexOf(definition);
+                        parent.addContent(index, interstitial);
+
+                        // Add it to the schema
+                        schema.addElement(interstitial, interstitialName, env);
+                    }
+
+                    // Update the superTagName
+                    superTagName = interstitialName;
+                }
+                // Now adjust this DOM element to refer to the
+                // interstitial superclass
+                definition.removeAttribute("with");
+                definition.setAttribute("extends", superTagName);
             }
           } else {
             // Instance classes are not published
@@ -123,13 +161,6 @@ public class ClassModel implements Comparable {
           this.className = LZXTag2JSClass(tagName);
         }
 
-        // Create a sort key for putting classes in dependency order
-        if (mixinNames != null) {
-            for (int i = mixinNames.length - 1; i >= 0; i--) {
-                String mixinName = mixinNames[i];
-                superTagName = mixinName + "$" + superTagName;
-            }
-        }
         this.sortkey = tagName != null ? tagName : "anonymous";
         if (superTagName != null) {
             this.sortkey = superTagName + "." + this.sortkey;
@@ -184,48 +215,6 @@ public class ClassModel implements Comparable {
             supportsTextAttribute = superModel.supportsTextAttribute;
             // merge in superclass requiredAttributes list to make scanning the set more efficient
             requiredAttributes.addAll(superModel.requiredAttributes);
-        }
-
-        // Create interstitials
-        if (mixinNames != null) {
-            for (int i = mixinNames.length - 1; i >= 0; i--) {
-                String mixinName = mixinNames[i];
-                ClassModel mixinModel =  schema.getClassModel(mixinName);
-                if (mixinModel == null) {
-                     throw new CompilationError(
-                         "Undefined mixin " + mixinName + " for class " + tagName,
-                         definition);
-                }
-                String interstitialName = mixinName + "$" + superTagName;
-
-                // Avoid adding the same mixin to the schema twice - LPP-8234
-                if (schema.getClassModel(interstitialName) == null) {
-                    // We duplicate the mixin definition, but turn it into
-                    // a class definition, inheriting from the previous
-                    // superTagName and implementing the mixin
-                    Element interstitial = (Element)mixinModel.definition.clone();
-                    interstitial.setName("class");
-                    interstitial.setAttribute("name", interstitialName);
-                    interstitial.setAttribute("extends", superTagName);
-
-                    // TODO: [2008-11-10 ptw] Add "implements"
-                    // interstitial.setAttribute("implements", mixinName);
-                    // Insert this element into the DOM before us
-                    Element parent = (Element)((org.jdom.Parent)definition).getParent();
-                    int index = parent.indexOf(definition);
-                    parent.addContent(index, interstitial);
-
-                    // Add it to the schema
-                    schema.addElement(interstitial, interstitialName, env);
-                }
-
-                // Update the superTagName
-                superTagName = interstitialName;
-            }
-            // Now adjust this DOM element to refer to the
-            // interstitial superclass
-            definition.removeAttribute("with");
-            definition.setAttribute("extends", superTagName);
         }
 
         // Process the definition if it is to be published (Note that
