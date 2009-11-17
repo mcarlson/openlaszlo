@@ -34,7 +34,9 @@
       {
         font-weight: bold;
       }
-      dd { margin-left: 1em; }
+      dd {
+        margin-left: 1em;
+      }
       pre.code
       {
       	font-family: monospace;
@@ -50,7 +52,7 @@
 	OpenLaszlo @VERSIONID@ is a bug fix release, containing more than 90 bug fixes in areas such as context menus, scrollbars, tab panes, mouse events, multiline text views, inputtext, DHTML/IE7 anomalies, iframes, and the history mechanism (which now works in SWF9 and SWF10). For details, see the <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11050" target="_blank">JIRA report for Fixed Bugs in OpenLaszlo @VERSIONID@</a>. 
 </p>
 <p>
-	In addition, OpenLaszlo @VERSIONID@ contains new features: preliminary support for HTML 5 shadow across runtimes, compilation support for binary libraries across runtimes, support for the Google Chrome plug-in for DHTML/IE6, a simple mechanism for making &lt;attribute&gt;s CSS styleable, and Flash Player 10 support (SWF10). More details are provided below. 
+	In addition, OpenLaszlo @VERSIONID@ contains new features: preliminary support for HTML 5 shadow across runtimes, compilation support for binary libraries across runtimes, support for the Google Chrome plug-in for DHTML/IE6, a simple mechanism for making <code>&lt;attribute&gt;</code>s CSS styleable, and Flash Player 10 support (SWF10). More details are provided below. 
 </p>
 <dl>
 	<dt>
@@ -298,7 +300,7 @@
 <p>
 	In some cases, the onfocus event fires too early, causing unexpected input text characters to be selected as it does in this example: 
 </p>
-<pre>
+<pre class="code">
   &lt;canvas layout="axis: y"&gt;
     &lt;inputtext text="abcd" width="100" bgcolor="0xcccccc"/&gt;
     &lt;inputtext text="abcd" width="100" bgcolor="0xffcccc" onfocus="this.setSelection(0, 1)"/&gt;
@@ -307,7 +309,7 @@
 <p>
 	To work around this issue, you can create a cover view that handles initial clicks, as shown here for the above example: 
 </p>
-<pre>
+<pre class="code">
   &lt;canvas layout="axis: y"&gt;
     &lt;inputtext text="abcd" width="100" bgcolor="0xcccccc"/&gt;
     &lt;view bgcolor="0xffcccc"&gt; &lt;inputtext name="field" text="abcd" width="100"&gt;
