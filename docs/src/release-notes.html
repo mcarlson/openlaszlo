@@ -29,19 +29,38 @@
       }
       h4 {
           font-size: 12px;
-      }</style> 
+      }
+      dt
+      {
+        font-weight: bold;
+      }
+      dd { margin-left: 1em; }
+      pre.code
+      {
+      	font-family: monospace;
+      }
+
+</style> 
 </head>
 <body class="release-notes">
 <hr>
 <h1>Release Notes for OpenLaszlo @VERSIONID@</h1> 
 <hr>
 <p>
-	OpenLaszlo @VERSIONID@ is a bug fix release, containing more than 90 bug fixes in areas such as context menus, scrollbars, tab panes, mouse events, multiline text views, inputtext, DHTML/IE7 anomalies, iframes, and the history mechanism. For details, see the <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11050" target="_blank">JIRA report for Fixed Bugs in OpenLaszlo @VERSIONID@</a>. 
+	OpenLaszlo @VERSIONID@ is a bug fix release, containing more than 90 bug fixes in areas such as context menus, scrollbars, tab panes, mouse events, multiline text views, inputtext, DHTML/IE7 anomalies, iframes, and the history mechanism (which now works in SWF9 and SWF10). For details, see the <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11050" target="_blank">JIRA report for Fixed Bugs in OpenLaszlo @VERSIONID@</a>. 
 </p>
 <p>
-	In addition, OpenLaszlo @VERSIONID@ contains new features: preliminary support for HTML 5 shadow across runtimes (see the <a href="http://openlaszlo.org/misc/OpenLaszloView103109.pdf" target="_blank">OpenLaszlo &lt;view&gt;</a> for details), compilation support for binary libraries across runtimes, support for the Google Chrome plug-in for DHTML/IE6, and Flash Player 10 support (SWF10). More details are provided below. 
+	In addition, OpenLaszlo @VERSIONID@ contains new features: preliminary support for HTML 5 shadow across runtimes, compilation support for binary libraries across runtimes, support for the Google Chrome plug-in for DHTML/IE6, a simple mechanism for making &lt;attribute&gt;s CSS styleable, and Flash Player 10 support (SWF10). More details are provided below. 
 </p>
 <dl>
+	<dt>
+		HTML 5 Shadow Across Runtimes 
+	</dt>
+	<dd>
+		<p>
+			Preliminary support has been added for HTML 5 shadow across runtimes. See the <a href="http://openlaszlo.org/misc/OpenLaszloView103109.pdf" target="_blank">OpenLaszlo &lt;view&gt;</a> for details. 
+		</p>
+	</dd>
 	<dt>
 		Binary Library Support 
 	</dt>
@@ -49,9 +68,7 @@
 		<p>
 			A binary library is a partially-compiled smaller library (an .lzo) that your application can link against. Because the binary library is smaller and partially compiled, linking and compilation are faster. To create a binary library, you compile the library as follows: 
 		</p>
-<pre>
-<code>lzc -c library.lzx</code>
-</pre> 
+<pre class="code">lzc -c library.lzx</pre> 
 		<p>
 			This creates a <code>library.lzo</code> file in the same directory. Any program that includes the <code>library.lzx</code> will prefer the <code>.lzo</code> if that is found. Your build process needs to ensure that the .lzo file is kept current. 
 		</p>
@@ -65,11 +82,50 @@
 		</p>
 	</dd>
 	<dt>
+		<code>&lt;attribute&gt;</code> now CSS Styleable 
+	</dt>
+	<dd>
+		<p>
+			In OpenLaszlo @VERSIONID@, there is a new <code>style</code> property of &lt;attribute&gt;, which is a string that can be used to associate a CSS property name with an attribute to make it easy to style your views with CSS. For example: 
+		</p>
+<pre class="code">
+  &lt;view id="myView"&gt;
+     &lt;attribute name="bgcolor" ... style="background-color"/&gt;
+  &lt;/view&gt;
+</pre> 
+		<p>
+			This code associates the CSS <code>background-color</code> property with the view's <code>bgcolor</code> attribute. Thus the following CSS could be used to style the view's <code>bgcolor</code>: 
+		</p>
+<pre class="code">
+  &lt;stylesheet&gt;
+    #myView { background-color: blue; }
+  &lt;/stylesheet&gt;
+</pre> 
+		<p>
+			This mechanism is a more streamlined way of saying: 
+		</p>
+<pre class="code">
+  &lt;attribute name="bgcolor" value="$style{'background-color}" /&gt;
+</pre> 
+		<p>
+			But also allows you to define a fallback default for when there is no CSS style: 
+		</p>
+<pre class="code">
+  &lt;attribute name="bgcolor" style="background-color" value="null" /&gt;
+</pre> 
+		<p>
+			if there is no matching CSS specification, the <code>bgcolor</code> will take on the default value of <code>null</code> (meaning transparent). 
+		</p>
+	</dd>
+	<dt>
 		SWF10 Support 
 	</dt>
 	<dd>
 		<p>
-			The Dev Console now provides runtime target choices of SWF8, DHTML, and SWF10 (instead of SWF9). We strongly recommend using SWF10 because of the large number of improvements made to the AS3 libraries. If you need to do so, you can still compile your application to SWF9 via the LPS server with explicit <code>lzr=swf9</code> in the query string, or from the command line as <code>lzc --runtime=swf9</code>. 
+			The Dev Console now provides runtime target choices of SWF8, DHTML, and SWF10 (instead of SWF9). We strongly recommend using SWF10 because of the large number of improvements made to the AS3 libraries. 
+		</p>
+		<p>
+			If you need to do so, you can still compile your application to SWF9 via the LPS server with explicit <code>lzr=swf9</code> in the query string, or from the command line as <code>lzc --runtime=swf9</code>. 
 		</p>
 	</dd>
 </dl>
@@ -96,6 +152,13 @@
 </ul>
 <p>
 	Please note that although we have also done some testing with Windows Vista, OpenLaszlo @VERSIONID@ has not been fully qualified against that operating system at this time. Please see <a href="#windowsvista"> <i>Running OpenLaszlo Server on Windows Vista</i> </a> for more information. 
+</p>
+<h2>Migrating your Applications to OpenLaszlo @VERSIONID@</h2> 
+<p>
+	For those of you who have already upgraded your applications to OpenLaszlo 4.2 or higher, no further work is needed. You should just start using OpenLaszlo @VERSIONID@. 
+</p>
+<p>
+	To migrate your 4.0.X or 4.1.1 applications, we strongly suggest that you refer to this wiki page: <a href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2" target="_blank">Runtime_Differences</a>. This page discusses the changes required by SWF9 and also provides a methodology for upgrading your application. It is very important that you run the automated conversion scripts in the recommended order, should you choose to take advantage of them. To review the changes in incremental releases, please refer to the <a href="http://www.openlaszlo.org/archive" target="_blank">OpenLaszlo Archive</a> 
 </p>
 <h2>Bugs Fixed in OpenLaszlo @VERSIONID@</h2> 
 <p>
@@ -124,64 +187,150 @@
 		<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10880" target="_blank">Fixed bugs in 4.2.0.1</a> 
 	</li>
 </ul>
-<h2>OpenLaszlo Credits</h2> 
-<p>
-	OpenLaszlo continues to be grateful for the significant contributions by André Bargull, Raju Bitter, and Sebastian Wagner. You guys are amazing - thank you! In addition, OpenLaszlo @VERSIONID@ contains a number of fixes that were made possible by the community contributors: Rami Ojares, Qian Jing, Stephane Mikaty, Wolfgang Stocher, Ryan Maslar, Wladyslaw Lorek Dacewicz, and Johannes Boesl. We would like to thank the entire OpenLaszlo community for submitting bug fixes and participating in discussions to help make OpenLaszlo a better platform. 
-</p>
-<h2>Migrating your Applications to OpenLaszlo @VERSIONID@</h2> 
-<p>
-	For those of you who have already upgraded your applications to OpenLaszlo 4.2 or higher, no further work is needed. You should just start using OpenLaszlo @VERSIONID@. 
-</p>
-<p>
-	To migrate your 4.0.X or 4.1.1 applications, we strongly suggest that you refer to this wiki page: <a href="http://wiki.openlaszlo.org/Runtime_Differences#Upgrading_to_OpenLaszlo_4.2" target="_blank">Runtime_Differences</a>. This page discusses the changes required by SWF9 and also provides a methodology for upgrading your application. It is very important that you run the automated conversion scripts in the recommended order, should you choose to take advantage of them. To review the changes in incremental releases, please refer to the <a href="http://www.openlaszlo.org/archive" target="_blank">OpenLaszlo Archive</a> 
-</p>
 <h2>Additional Notes</h2> 
 <p>
-	The current charting and graphing remain at a beta level, while the new charting and graphing API is out for review - see: <a href="http://wiki.openlaszlo.org/Charting_API_Change_Proposal" target="_blank">http://wiki.openlaszlo.org/Charting_API_Change_Proposal</a>. Please email <a href="mailto:laszlo-dev@openlaszlo.org">laszlo-dev@openlaszlo.org</a> with your comments. In addition, SOAP support is still incomplete and would be a welcome task for community involvement. If you are interested in contributing to the project, please send us an <a href="mailto:contributions@openlaszlo.org">email</a> for more information. 
+	Some of the notable bug fixes in OpenLaszlo @VERSIONID@ are described below. 
 </p>
-<p>
-	For every release, we rely on the OpenLaszlo community to help ensure the quality of the platform release and to determine its future direction. To propose or participate in discussion of new features, see the <a href="http://wiki.openlaszlo.org/Enhancement_Proposals" target="_blank">Wiki</a>. We encourage you to report any problems, and to make suggestions for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP"> bug tracking system</a>. We'd also like to hear from you on the <a href="http://www.openlaszlo.org/lists" target="_blank">mailing lists</a> and in the <a href="http://forum.openlaszlo.org/" target="_blank">forums</a>. 
-</p>
+<dl>
+	<dt>
+		<a href="http://www.openlaszlo.org/jira/browse/LPP-8372" target="_blank">LPP-8372</a> Cursor attribute does not work 
+	</dt>
+	<dd>
+		<p>
+			A pair of attributes has been added to the <code>&lt;resource&gt;</code> tag, <code>offsetx</code> and <code>offsety</code>. The purpose is to allow you to specify an offset of a bitmap resource used for a custom cursor, so that the mouse will align with the proper 'hotspot' in the cursor image. 
+		</p>
+		<p>
+			Example: set a custom crosshair cursor from a bitmap resource, with an offset of (-8,-8) as follows: 
+		</p>
+<pre class="code">
+  &lt;resource name="crosshair" src="cursor_crosshair.png" offsetx="-8" offsety="-8" /&gt;
+  &lt;view height="40" bgcolor="#cccccc" width="100" cursor="crosshair" /&gt;
+</pre> 
+		<p>
+			The cursor offset feature currently only works in the SWF10 runtime, but will eventually work in DHTML and SWF8. 
+		</p>
+	</dd>
+	<dt>
+		<a href="http://www.openlaszlo.org/jira/browse/LPP-8479" target="_blank">LPP-8479</a> Debug.evalCarefully not necessary after LPP-8222 
+	</dt>
+	<dd>
+		<p>
+			When debugging is on, OpenLaszlo @VERSIONID@ catches, reports, and ignores errors that are not specifically declared with <code>#pragma "throwsError=true"</code>. NOTE: If backtracing is off, the line numbers reported with errors are only accurate to the function that caused the error. For more accurate line numbers you must enable backtracing. 
+		</p>
+		<p>
+			The debugger now indicates when its file/line information is only approximate. If the location information is derived from a view associated with the error, rather than <code>@file...</code> it will print <code>%file...</code> If the line number is only approximate (backtracing is not enabled), rather than <code>#line</code> it will print <code>~line</code>. 
+		</p>
+		<p>
+			Backtracing must be enabled in the developer console to get the most accurate file/line information in debugger messages, warnings, and errors. 
+		</p>
+	</dd>
+	<dt>
+		<a href="http://www.openlaszlo.org/jira/browse/LPP-8481" target="_blank">LPP-8481</a> Debug.foo() should show the debugger window again once it's been closed 
+	</dt>
+	<dd>
+		<p>
+			It is now possible to specify the following in your application to hide the debugger window until there is actually debugger output: 
+		</p>
+<pre class="code">
+  &lt;debug visible="false" /&gt;
+</pre> 
+		<p>
+			The debugger window will automatically make itself visible when there is any output to the debugger (including any runtime warnings or errors). 
+		</p>
+		<p>
+			If you close the debugger window, it will re-open the next time there is output. 
+		</p>
+	</dd>
+	<dt>
+		<a href="http://www.openlaszlo.org/jira/browse/LPP-2207" target="_blank">LPP-2207</a> Problems in Setup SOLO Application Deployment and Preview SOLO Application in Browser 
+	</dt>
+	<dd>
+		<p>
+			"Setup SOLO Application Deployment" and "Preview SOLO Application in Browser" exhibit some minor cosmetic defects that we will not be fixing. 
+		</p>
+	</dd>
+	<dt>
+		<a href="http://www.openlaszlo.org/jira/browse/LPP-7070" target="_blank">LPP-7070</a> Methods to determine if a view is in front of or behind another view 
+	</dt>
+	<dd>
+		<p>
+			OpenLaszlo @VERSIONID@ adds these methods to check if one view is in front of or behind another view with the same parent: 
+		</p>
+<pre class="code">
+  LzView.isInFrontOf(sibling:View):boolean
+  LzView.isBehind(sibling:View):boolean
+</pre> 
+	</dd>
+	<dt>
+		<a href="http://www.openlaszlo.org/jira/browse/LPP-8313" target="_blank">LPP-8313</a> Support for downloadable fonts in DHTML (@font-face inclusion of OpenType or TTF fonts) 
+	</dt>
+	<dd>
+		<p>
+			DHTML now supports font embedding for browsers that support it, including Firefox 3.5, Safari 3.1 and IE 7 and higher. Be sure to include an .otf version of the font alongside the .ttf for support in IE. 
+		</p>
+	</dd>
+	<dt>
+		<a href="http://www.openlaszlo.org/jira/browse/LPP-7176" target="_blank">LPP-7176</a> SWF9: Make Debug.bugReport work in SWF9 
+	</dt>
+	<dd>
+		<p>
+			Debug.bugReport now works correctly for AS3 platforms (SWF9 and SWF10). 
+		</p>
+	</dd>
+	<dt>
+		<a href="http://www.openlaszlo.org/jira/browse/LPP-8596" target="_blank">LPP-8596</a> Add clipPath() support for drawviews in SWF9 and SWF10 
+	</dt>
+	<dd>
+		<p>
+			<code>drawview.clipPath()</code> and <code>clipButton()</code> are now supported in SWF8 and SWF10. 
+		</p>
+	</dd>
+	<dt>
+		<a href="http://www.openlaszlo.org/jira/browse/LPP-8550" target="_blank">LPP-8550</a> Standardized cross-runtime API to access in-detail browser information 
+	</dt>
+	<dd>
+		<p>
+			<code>lz.embed.browser</code> is now available in the Flash runtimes. 
+		</p>
+	</dd>
+</dl>
 <h3>Workaround for Input Text Unexpected Behavior with onfocus Handler</h3> 
 <p>
 	In some cases, the onfocus event fires too early, causing unexpected input text characters to be selected as it does in this example: 
-	<br>
-	<code style="white-space: pre;">
+</p>
+<pre>
   &lt;canvas layout="axis: y"&gt;
     &lt;inputtext text="abcd" width="100" bgcolor="0xcccccc"/&gt;
-    &lt;inputtext text="abcd" width="100" bgcolor="0xffcccc"
-      onfocus="this.setSelection(0, 1)"/&gt;
-  &lt;/canvas&gt; </code> 
-</p>
+    &lt;inputtext text="abcd" width="100" bgcolor="0xffcccc" onfocus="this.setSelection(0, 1)"/&gt;
+   &lt;/canvas&gt;
+</pre> 
 <p>
 	To work around this issue, you can create a cover view that handles initial clicks, as shown here for the above example: 
-	<br>
-	<code style="white-space: pre;">
+</p>
+<pre>
   &lt;canvas layout="axis: y"&gt;
     &lt;inputtext text="abcd" width="100" bgcolor="0xcccccc"/&gt;
-    &lt;view bgcolor="0xffcccc"&gt;
-      &lt;inputtext name="field" text="abcd" width="100"&gt;
-        &lt;handler name="onfocus"&lt;
-          parent.cover.setVisible(false);
-          this.setSelection(0, this.getText().length);
-        &lt;/handler&gt;
-        &lt;handler name="onblur"&gt;
-          parent.cover.setVisible(true);
-        &lt;/handler&gt;
-       &lt;/inputtext&gt;
-       &lt;view name="cover" width="100%" height="100%"
-        onclick="LzFocus.setFocus(parent.field)" /&gt;
+    &lt;view bgcolor="0xffcccc"&gt; &lt;inputtext name="field" text="abcd" width="100"&gt;
+      &lt;handler name="onfocus"&lt;
+        parent.cover.setVisible(false);
+        this.setSelection(0, this.getText().length);
+      &lt;/handler&gt;
+      &lt;handler name="onblur"&gt;
+        parent.cover.setVisible(true);
+      &lt;/handler&gt;
+      &lt;/inputtext&gt;
+      &lt;view name="cover" width="100%" height="100%" onclick="LzFocus.setFocus(parent.field)" /&gt;
     &lt;/view&gt;
-  &lt;/canvas&gt; </code> 
-</p>
-<h3>Deprecation Notice: Attribute Values on Data Element Will Be Coerced to String in a Future OpenLaszlo Release</h3> 
+  &lt;/canvas&gt;
+</pre> <h3>Deprecation Notice: Attribute Values on Data Element Will Be Coerced to String in a Future OpenLaszlo Release</h3> 
 <p>
 	Currently, if you set an attribute value for a data element, the value is stored as it is set. This will no longer be true in future OpenLaszlo releases, where the value will be coerced to a String value. If you need to set non-String values for data elements, you should use the <code>setUserData</code> method as shown in this example where <code>node</code> is an <code>LzDataElement</code>: 
 	<br>
-	<code style="white-space: pre;">
-	node1.setUserData('key1', val1);
-	assertEquals(val1, node1.getUserData('key1'), 'getUserData key1')
-</code> 
+	<code style="white-space: pre;"> node1.setUserData('key1', val1); assertEquals(val1, node1.getUserData('key1'), 'getUserData key1') </code> 
+</p>
+<h2>OpenLaszlo Credits</h2> 
+<p>
+	OpenLaszlo continues to be grateful for the significant contributions by André Bargull, Raju Bitter, and Sebastian Wagner. You guys are amazing - thank you! In addition, OpenLaszlo @VERSIONID@ contains a number of fixes that were made possible by the community contributors: Rami Ojares, Qian Jing, Stephane Mikaty, Wolfgang Stocher, Ryan Maslar, Wladyslaw Lorek Dacewicz, and Johannes Boesl. We would like to thank the entire OpenLaszlo community for submitting bug fixes and participating in discussions to help make OpenLaszlo a better platform. 
 </p>
 <hr>
 <p>
