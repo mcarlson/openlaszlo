@@ -40,28 +40,27 @@ public class GenericVisitor implements ASTVisitor {
   public SimpleNode visitProgram(SimpleNode node, SimpleNode[] directives) {
     for (int i = 0, len = directives.length; i < len; i++) {
       SimpleNode directive = directives[i];
-      SimpleNode[] children = directive.getChildren();
-      if (directive instanceof ASTDirectiveBlock) {
-        // Not sure why this isn't just a statement list
-        directives[i] = visitDirectiveBlock(directive, children);
-      } else if (directive instanceof ASTProgram) {
-        // This happens if we visit an AST that has already had its
-        // includes expanded
-        directives[i] = visitProgram(directive, children);
-      } else if (directive instanceof ASTIfDirective) {
-        directives[i] = visitIfStatement(directive, children);
-      } else if (directive instanceof ASTIncludeDirective) {
-        String userfname = (String)((ASTLiteral)children[0]).getValue();
-        directives[i] = translateInclude(userfname);
-      } else if (directive instanceof ASTPragmaDirective) {
-        directives[i] = visitPragmaDirective(directive, children);
-      } else if (directive instanceof ASTPassthroughDirective) {
-        directives[i] = visitPassthroughDirective(directive, children);
-      } else {
-        directives[i] = visitStatement(directive, children);
-      }
+      directives[i] = visitDirective(directive, directive.getChildren());
     }
     return node;
+  }
+
+  public SimpleNode visitDirective(SimpleNode directive, SimpleNode[] children) {
+    // Not sure why we only permit these at the top level of a
+    // program, when everything else is allowed anywhere there can be
+    // a statement
+    if (directive instanceof ASTProgram) {
+      // This happens if we visit an AST that has already had its
+      // includes expanded
+      return visitProgram(directive, children);
+    } else {
+      return visitStatement(directive, children);
+    }
+  }
+
+  public SimpleNode visitIncludeDirective(SimpleNode directive, SimpleNode[] children) {
+    String userfname = (String)((ASTLiteral)children[0]).getValue();
+    return translateInclude(userfname);
   }
 
   // Include translation is not handled in the parser so we can track
@@ -183,12 +182,9 @@ public class GenericVisitor implements ASTVisitor {
   }
 
   public SimpleNode visitStatement(SimpleNode node, SimpleNode[] children) {
-    // Are we doing OO programming yet?
-    if (node instanceof ASTPragmaDirective) {
-      return visitPragmaDirective(node, children);
-    } else if (node instanceof ASTPassthroughDirective) {
-      return visitPassthroughDirective(node, children);
-    } else if (node instanceof ASTClassDefinition) {
+    // Are we doing OO programming yet?  Someday sort these by
+    // frequency, or get Java to implement type-switch
+    if (node instanceof ASTClassDefinition) {
       return visitClassDefinition(node, children);
     } else if (node instanceof ASTStatementList) {
       return visitStatementList(node, children);
@@ -214,8 +210,6 @@ public class GenericVisitor implements ASTVisitor {
       return visitVariableStatement(node, children);
     } else if (node instanceof ASTIfStatement) {
       return visitIfStatement(node, children);
-    } else if (node instanceof ASTIfDirective) {
-      return visitIfDirective(node, children);
     } else if (node instanceof ASTWhileStatement) {
       return visitWhileStatement(node, children);
     } else if (node instanceof ASTDoWhileStatement) {
@@ -244,8 +238,19 @@ public class GenericVisitor implements ASTVisitor {
       return visitSwitchStatement(node, children);
     } else if (node instanceof ASTModifiedDefinition) {
       return visitModifiedDefinition(node, children);
+    } else if (node instanceof ASTIfDirective) {
+      return visitIfDirective(node, children);
+    } else if (node instanceof ASTIncludeDirective) {
+      return visitIncludeDirective(node, children);
     } else if (node instanceof Compiler.PassThroughNode) {
       return node;
+    } else if (node instanceof ASTPragmaDirective) {
+      return visitPragmaDirective(node, children);
+    } else if (node instanceof ASTDirectiveBlock) {
+      // Not sure why this isn't just a statement list
+      return visitDirectiveBlock(node, children);
+    } else if (node instanceof ASTPassthroughDirective) {
+      return visitPassthroughDirective(node, children);
     } else {
       // Not a statement, must be an expression
       return visitExpression(node, false);
@@ -891,11 +896,11 @@ public class GenericVisitor implements ASTVisitor {
     for (int i = 0, len = children.length; i < len; ) {
       ASTIdentifier param = (ASTIdentifier)children[i];
       children[i] = translateIdentifier(param, AccessMode.DECLARE);
-      if (i++ < len) {
+      if (++i < len) {
         SimpleNode init = children[i];
         if (init instanceof ASTFormalInitializer) {
           children[i] = visitFormalInitializer(init, init.getChildren());
-          i++;
+          ++i;
         }
       }
     }

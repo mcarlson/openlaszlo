@@ -260,7 +260,9 @@ abstract class ToplevelCompiler extends ElementCompiler {
             Set additionalLibraries = new TreeSet();
             Map autoincludes = env.getSchema().sAutoincludes;
             Map canonicalAuto = new HashMap();
+            String basePrefix = null;
             try {
+              basePrefix = (new File((base != null) ? base : ".")).getCanonicalPath();
               for (Iterator iter = autoincludes.keySet().iterator(); iter.hasNext(); ) {
                 String key = (String) iter.next();
                 canonicalAuto.put(key, env.resolveLibrary((String)autoincludes.get(key), base).getCanonicalFile());
@@ -283,8 +285,12 @@ abstract class ToplevelCompiler extends ElementCompiler {
                             if (explanations != null) {
                                 explanations.put(value, "explicit include");
                             }
-                            // but include as auto
-                            additionalLibraries.add(value);
+                            // but include as auto (unless you are
+                            // library-compiling _that_ auto-include!)
+                            if ((autoIncluded == null) ||
+                                (! canonical.getPath().startsWith(basePrefix))) {
+                              additionalLibraries.add(value);
+                            }
                         }
                     } else {
                         if (explanations != null) {
@@ -297,18 +303,18 @@ abstract class ToplevelCompiler extends ElementCompiler {
             // If not linking, consider all external libraries as
             // 'auto'
             if (autoIncluded != null) {
-            try {
-              String basePrefix = (new File((base != null) ? base : ".")).getCanonicalPath();
-              for (Iterator i = visited.keySet().iterator(); i.hasNext(); ) {
-                File file = (File)i.next();
-                String path = file.getCanonicalPath();
-                if (! path.startsWith(basePrefix)) {
-                  autoIncluded.put(file, visited.get(file));
+              try {
+                for (Iterator i = visited.keySet().iterator(); i.hasNext(); ) {
+                  File file = (File)i.next();
+                  String path = file.getCanonicalPath();
+                  if (! path.startsWith(basePrefix)) {
+                    autoIncluded.put(file, visited.get(file));
+                    additionalLibraries.add(path);
+                  }
                 }
+              } catch (IOException e) {
+                throw new CompilationError(element, e);
               }
-            } catch (IOException e) {
-              throw new CompilationError(element, e);
-            }
             }
             libraryNames.addAll(additionalLibraries);
         }

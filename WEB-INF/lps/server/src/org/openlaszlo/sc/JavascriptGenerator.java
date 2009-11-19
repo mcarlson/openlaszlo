@@ -272,7 +272,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
-  SimpleNode visitDirective (SimpleNode directive, SimpleNode[] children) {
+  public SimpleNode visitDirective (SimpleNode directive, SimpleNode[] children) {
     if (directive instanceof ASTDirectiveBlock) {
       Compiler.OptionMap savedOptions = options;
       try {
@@ -283,10 +283,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         options = savedOptions;
       }
     } else if (directive instanceof ASTIfDirective) {
-      if (! options.getBoolean(Compiler.CONDITIONAL_COMPILATION)) {
-        // TBD: different type; change to CONDITIONALS
-        throw new CompilerError("`if` at top level");
-      }
       return visitIfDirective(directive, children);
     } else if (directive instanceof ASTIncludeDirective) {
       // Disabled by default, since it isn't supported in the

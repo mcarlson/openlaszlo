@@ -559,22 +559,31 @@ public class Parser {
                 throw new CompilationError("unknown clause for a switch statement: "+child.getName(), child);
             }
         }
-        for (Iterator iter = elt.getChildren(WHEN, elt.getNamespace()).iterator();
-             iter.hasNext(); ) {
+        if ((! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY)))) {
+          for (Iterator iter = elt.getChildren(WHEN, elt.getNamespace()).iterator();
+               iter.hasNext(); ) {
             Element when = (Element) iter.next();
             if (evaluateConditions(when, env)) {
-                selected = when;
-                break;
+              selected = when;
+              break;
             }
-        }
-        for (Iterator iter = elt.getChildren(UNLESS, elt.getNamespace()).iterator();
-             iter.hasNext(); ) {
+          }
+          for (Iterator iter = elt.getChildren(UNLESS, elt.getNamespace()).iterator();
+               iter.hasNext(); ) {
             Element when = (Element) iter.next();
             if (!evaluateConditions(when, env)) {
-                selected = when;
-                break;
+              selected = when;
+              break;
             }
+          }
+        } else {
+          // You can't library-compile a <switch> block, since it will
+          // not necessarily be platform-neutral
+          env.warn("<switch> not allowed in binary libraries", elt);
+          // Fall through to take the otherwise clause, so you have
+          // some chance of continuing the compile.
         }
+
 
         if (selected == null) {
             for (Iterator iter = elt.getChildren(OTHERWISE, elt.getNamespace()).iterator();

@@ -136,7 +136,7 @@ public class ClassModel implements Comparable {
             // creates the instance
             superTagName = tagName;
             // Invalid name, just for debugging
-            tagName = "anonymous " + superTagName;
+            tagName = "anonymous extends='" + superTagName + "'";
           }
         } else {
           // The root class
@@ -144,15 +144,15 @@ public class ClassModel implements Comparable {
         }
         this.tagName = tagName;
         this.anonymous = (! publish);
-        // NOTE: [2009-01-31 ptw] If the class is in an import, or you
-        // are not linking, modelOnly is set to true to prevent class
+        // NOTE: [2009-01-31 ptw] If the class is in an import, or
+        // external to the library you are linking, modelOnly is set to true to prevent class
         // models that were created to compute the schema and
         // inheritance from being emitted.  Classes that are actually
         // in the library or application being compiled will be
         // emitted because the are compiled with the `force` option,
         // which overrides `modelOnly`.  See ClassCompiler.compile
-        this.modelOnly = ((!env.getBooleanProperty(env.LINK_PROPERTY)) ||
-                          env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY));
+        this.modelOnly = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
+        assert ("_plainfloatshadow".equals(tagName) ? modelOnly : true) : "Missing external: " + env.getImportedLibraryFiles();
         this.env = env;
 
         this.definition = definition;
@@ -161,7 +161,7 @@ public class ClassModel implements Comparable {
           this.className = LZXTag2JSClass(tagName);
         }
 
-        this.sortkey = tagName != null ? tagName : "anonymous";
+        this.sortkey = ((!anonymous) && (tagName != null)) ? tagName : "anonymous";
         if (superTagName != null) {
             this.sortkey = superTagName + "." + this.sortkey;
         }
@@ -497,7 +497,7 @@ public class ClassModel implements Comparable {
                    "\n}#\n";
     }
 
-    if (tagName != null) {
+    if (nodeModel.debug && (tagName != null)) {
       // Set the tag name
       nodeModel.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
     }
@@ -633,6 +633,7 @@ public class ClassModel implements Comparable {
       model.assignClassRoot(0);
       setNodeModel(model);
     }
+    assert (force ? (! modelOnly) : true) : "Forcing compile of model-only class " + tagName;
     if (force || ((! isCompiled()) && (! modelOnly))) {
       emitClassDeclaration(env);
     }

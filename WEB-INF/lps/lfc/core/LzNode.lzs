@@ -2214,22 +2214,26 @@ public dynamic class LzNode extends LzEventable {
             // support css classes, we should use a css class (with
             // '.' prefix, over tagname, as it will be more specific.
             var nct = node.constructor.tagname;
-            path = nct;
-            var sn = parent.subnodes;
-            var index, count = 0;
-            for (var i = 0, len = sn.length; i < len; i++) {
-              var sibling = sn[i];
-              if (nct == sibling.constructor.tagname) {
-                count ++;
-                if (index) break;
+            if (!nct) {
+              path = 'anonymous';
+            } else {
+              path = nct;
+              var sn = parent.subnodes;
+              var index, count = 0;
+              for (var i = 0, len = sn.length; i < len; i++) {
+                var sibling = sn[i];
+                if (nct == sibling.constructor.tagname) {
+                  count ++;
+                  if (index) break;
+                }
+                // xpath indices are 1-based, but we want to emit an
+                // index any time there is more than one match, hence
+                // this whacky order...
+                if (node === sibling) { index = count; }
               }
-              // xpath indices are 1-based, but we want to emit an
-              // index any time there is more than one match, hence
-              // this whacky order...
-              if (node === sibling) { index = count; }
-            }
-            if (count > 1) {
-              path += '[' + index + ']';
+              if (count > 1) {
+                path += '[' + index + ']';
+              }
             }
           }
           if (path.length >= limit) { return '\u2026'; }

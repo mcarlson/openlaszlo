@@ -326,6 +326,8 @@ public class Compiler {
       boolean compress = (! options.getBoolean(NAME_FUNCTIONS));
       boolean obfuscate = options.getBoolean(OBFUSCATE);
       boolean isScript = org.openlaszlo.compiler.Compiler.SCRIPT_RUNTIMES.contains(runtime);
+//       Transformer xformer = new Transformer();
+//       xformer.setOptions(options);
       Translator cg;
       if (runtime.equals("swf9") || runtime.equals("swf10")) {
         cg = new SWF9Generator();
@@ -353,8 +355,10 @@ public class Compiler {
         String newname = emitFile(astInputFile, program);
         System.err.println("Created " + newname);
       }
+//       profiler.phase("transform");
+//       SimpleNode transformed = xformer.transform(program);
       profiler.phase("generate");
-      SimpleNode translated = cg.translate(program);
+      SimpleNode translated = cg.translate(program /* transformed */);
       String astOutputFile = (String)options.get(DUMP_AST_OUTPUT);
       if (astOutputFile != null) {
         String newname = emitFile(astOutputFile, translated);

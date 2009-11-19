@@ -452,29 +452,25 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     int len = directives.length;
     while (index < len) {
       SimpleNode directive = directives[index];
-      index += 1;
       SimpleNode[] children = directive.getChildren();
-      visitDirective(directive, children);
+      directives[index] = visitDirective(directive, children);
+      index += 1;
     }
     showStats(node);
     return node;
   }
 
-  void visitDirective(SimpleNode directive, SimpleNode[] children) {
+  public SimpleNode visitDirective(SimpleNode directive, SimpleNode[] children) {
       if (directive instanceof ASTDirectiveBlock) {
         Compiler.OptionMap savedOptions = options;
         try {
           options = options.copy();
-          visitProgram(directive, children);
+          return visitProgram(directive, children);
         }
         finally {
           options = savedOptions;
         }
       } else if (directive instanceof ASTIfDirective) {
-        if (! options.getBoolean(Compiler.CONDITIONAL_COMPILATION)) {
-          // TBD: different type; change to CONDITIONALS
-          throw new CompilerError("`if` at top level");
-        }
         // NOTE: [2009-10-03 ptw] (LPP-1933) People expect the
         // branches of a compile-time conditional to establish a
         // directive block
@@ -487,7 +483,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           Compiler.OptionMap savedOptions = options;
           try {
             options = options.copy();
-            visitDirective(clause, clause.getChildren());
+            return visitDirective(clause, clause.getChildren());
           }
           finally {
             options = savedOptions;
@@ -497,7 +493,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           Compiler.OptionMap savedOptions = options;
           try {
             options = options.copy();
-            visitDirective(clause, clause.getChildren());
+            return visitDirective(clause, clause.getChildren());
           }
           finally {
             options = savedOptions;
@@ -511,20 +507,21 @@ public class CodeGenerator extends CommonGenerator implements Translator {
           throw new UnimplementedError("unimplemented: #include", directive);
         }
         String userfname = (String)((ASTLiteral)directive.get(0)).getValue();
-        translateInclude(userfname);
+        return translateInclude(userfname);
+      } else if (directive instanceof ASTProgram) {
+        // This is what an include looks like in pass 2
+        return visitProgram(directive, children);
       } else if (directive instanceof ASTPragmaDirective) {
-        visitPragmaDirective(directive, children);
+        return visitPragmaDirective(directive, children);
       } else if (directive instanceof ASTPassthroughDirective) {
-        visitPassthroughDirective(directive, children);
-      } else if (directive instanceof ASTFunctionDeclaration) {
-        visitStatement(directive);
+        return visitPassthroughDirective(directive, children);
       } else if (directive instanceof ASTClassDefinition) {
-        visitClassDefinition(directive, children);
+        return visitClassDefinition(directive, children);
       } else if (directive instanceof ASTModifiedDefinition) {
-        visitModifiedDefinition(directive, children);
-      } else {
-        visitStatement(directive, children);
+        return visitModifiedDefinition(directive, children);
       }
+
+      return visitStatement(directive, children);
   }
 
   public SimpleNode visitTryStatement(SimpleNode node, SimpleNode[] children) {
