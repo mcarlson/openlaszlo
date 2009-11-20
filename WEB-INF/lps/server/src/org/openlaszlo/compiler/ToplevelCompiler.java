@@ -248,21 +248,19 @@ abstract class ToplevelCompiler extends ElementCompiler {
         String librariesAttr = element.getAttributeValue("libraries");
         assert librariesAttr == null : "unsupported attribute `libraries`";
         List libraryNames = new ArrayList();
-        String base = new File(Parser.getSourcePathname(element)).getParent();
+        File library = new File(Parser.getSourcePathname(element));
+        String base = library.getParent();
 
         // figure out which tags are referenced but not defined, and
         // look up their libraries in the autoincludes file
         {
             Set defined = new HashSet();
             Set referenced = new HashSet();
-            collectReferences(env, element, defined, referenced, visited);
             // keep the keys sorted so the order is deterministic for qa
             Set additionalLibraries = new TreeSet();
             Map autoincludes = env.getSchema().sAutoincludes;
             Map canonicalAuto = new HashMap();
-            String basePrefix = null;
             try {
-              basePrefix = (new File((base != null) ? base : ".")).getCanonicalPath();
               for (Iterator iter = autoincludes.keySet().iterator(); iter.hasNext(); ) {
                 String key = (String) iter.next();
                 canonicalAuto.put(key, env.resolveLibrary((String)autoincludes.get(key), base).getCanonicalFile());
@@ -270,6 +268,9 @@ abstract class ToplevelCompiler extends ElementCompiler {
             } catch (IOException e) {
               throw new CompilationError(element, e);
             }
+            // Tell the parser when we are parsing an external library
+            boolean old = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
+            collectReferences(env, element, defined, referenced, visited);
             // iterate undefined references
             for (Iterator iter = referenced.iterator(); iter.hasNext(); ) {
                 String key = (String) iter.next();
@@ -287,8 +288,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
                             }
                             // but include as auto (unless you are
                             // library-compiling _that_ auto-include!)
-                            if ((autoIncluded == null) ||
-                                (! canonical.getPath().startsWith(basePrefix))) {
+                            if ((autoIncluded == null) || env.isExternal(canonical)) {
                               additionalLibraries.add(value);
                             }
                         }
@@ -306,9 +306,9 @@ abstract class ToplevelCompiler extends ElementCompiler {
               try {
                 for (Iterator i = visited.keySet().iterator(); i.hasNext(); ) {
                   File file = (File)i.next();
-                  String path = file.getCanonicalPath();
-                  if (! path.startsWith(basePrefix)) {
+                  if (env.isExternal(file)) {
                     autoIncluded.put(file, visited.get(file));
+                    String path = file.getCanonicalPath();
                     additionalLibraries.add(path);
                   }
                 }

@@ -16,6 +16,7 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.filter.ElementFilter;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.JDOMFactory;
@@ -534,7 +535,17 @@ public class Parser {
         }
     }
 
-    
+  private class NotAllowedInBinarySwitch extends ElementFilter {
+    public boolean matches (Object o) {
+      if (! (o instanceof Element)) return false;
+      String name = ((Element)(o)).getName();
+      // This list of names ought to be centralized, say in the
+      // schema, as the list of tags that can extend the schema
+      return "include".equals(name) || "class".equals(name) || "mixin".equals(name) || "interface".equals(name);
+    }
+  }
+
+  private final ElementFilter FILTER = new NotAllowedInBinarySwitch();
     /*
       <switch>  
          <when runtime="swf8">
@@ -577,13 +588,20 @@ public class Parser {
             }
           }
         } else {
+          if (env.isExternal(new File(getSourcePathname(elt)))) {
+            
+            // Classes in switch blocks will not be parsed when not
+            // linking (compiling a binary library).
+            if (elt.getDescendants(FILTER).hasNext()) {
+              env.warn("Compile may fail due to conditional class definitions in <switch>", elt);
+            }
+            return new ArrayList();
+          }
           // You can't library-compile a <switch> block, since it will
           // not necessarily be platform-neutral
           env.warn("<switch> not allowed in binary libraries", elt);
-          // Fall through to take the otherwise clause, so you have
-          // some chance of continuing the compile.
+          return new ArrayList();
         }
-
 
         if (selected == null) {
             for (Iterator iter = elt.getChildren(OTHERWISE, elt.getNamespace()).iterator();

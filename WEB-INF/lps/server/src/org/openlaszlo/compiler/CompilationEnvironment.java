@@ -513,6 +513,22 @@ public class CompilationEnvironment {
         mSnippet = v;
     }
 
+  private String basePrefix = null;
+  /**
+   * Returns true if a path is external to the main application
+   */
+  public boolean isExternal(File file) {
+    try {
+      if (basePrefix == null) {
+        String base = mApplicationFile.getParent();
+        basePrefix = (new File((base != null) ? base : ".")).getCanonicalPath();
+      }
+      return (! file.getCanonicalPath().startsWith(basePrefix));
+    } catch (IOException e) {
+      throw new CompilationError(e);
+    }
+  }
+
     /** Returns the file resolver used in this environment.
      * @return the object writer
      */
