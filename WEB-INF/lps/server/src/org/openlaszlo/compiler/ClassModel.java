@@ -152,7 +152,6 @@ public class ClassModel implements Comparable {
         // emitted because the are compiled with the `force` option,
         // which overrides `modelOnly`.  See ClassCompiler.compile
         this.modelOnly = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
-        assert ("_plainfloatshadow".equals(tagName) ? modelOnly : true) : "Missing external: " + env.getImportedLibraryFiles();
         this.env = env;
 
         this.definition = definition;
