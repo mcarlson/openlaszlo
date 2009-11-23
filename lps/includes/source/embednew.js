@@ -47,11 +47,11 @@ lz.embed = {
      * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600', id: 'lzapp', accessible: true, history: true/false}
      *
      * @param minimumVersion:Number the version the flash player should 
-     * upgrade to if necessary.  Defaults to 8.
+     * upgrade to if necessary.  Defaults to 10 for security reasons.
      */
     ,swf: function (properties, minimumVersion) {
-        // don't upgrade flash unless asked
-        if (minimumVersion == null) minimumVersion = 8;
+        // Upgrade to flash player 10 for security reasons
+        if (minimumVersion == null) minimumVersion = 10;
 
 
         var url = properties.url;
@@ -235,6 +235,9 @@ lz.embed = {
      * application from grabbing keyboard events for tab, arrow and
      * enter keys, and disables application activation.
      * 
+     * Set skipchromeinstall property to skip prompts to install the chrome 
+     * frame in IE 6.
+     * 
      * Note: lz.embed.lfc() must have already been called to load the
      * LFC.
      */
@@ -243,7 +246,7 @@ lz.embed = {
         var url = queryvals.url + '?lzt=object&' + queryvals.query;
 
         var appenddiv = lz.embed._getAppendDiv(properties.id, properties.appenddivid);
-        if (lz.embed.browser.isIE && lz.embed.browser.version < 7) {
+        if (! properties.skipchromeinstall && lz.embed.browser.isIE && lz.embed.browser.version < 7) {
           // detect and install chrome frame
           CFInstall.check({onmissing:function(){appenddiv.style.display = 'none'},oninstall:function(){window.location=window.location}});
         }
