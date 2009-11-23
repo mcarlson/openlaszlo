@@ -6,6 +6,10 @@
   * Use is subject to license terms.
   */
   
+
+// this seems to be required at least as of trunk/r15165
+#pragma "passThrough=true"
+
 /**
  *
  * <para>In the <code>&lt;html&gt;&lt;head&gt;</code> of an HTML document that embeds a Flash Laszlo application,
@@ -33,12 +37,15 @@
  */
 
 lz.embed = {
-    /** A hash of options used by the embedding system.  Must be set 
-     * serverroot: the root url to load resources from
-     * cancelkeyboardcontrol: if true, dhtml keyboard control is canceled
+    /** A hash of options used by the embedding system.
      * @access private 
      */
-    options: {}
+    options: {
+                cancelkeyboardcontrol: false, // if true, dhtml keyboard and mousewheel control is canceled.  For versions of Flash that don't support mousewheel events natively (flash on os x) browser-based mousewheel control is canceled.
+                serverroot: null, // for DHTML, the root url to load server resources from.  Set by lz.embed.lfc();
+                approot: '' // for DHTML, the root url to load app resources from 
+             }
+
     /**
      * Writes the necessary HTML to embed a swf file in the document where the 
      * function is called.  
@@ -55,41 +62,6 @@ lz.embed = {
 
 
         var url = properties.url;
-
-        /*
-        var requestVersion;
-
-        var sp = url.split('?');
-        if (sp.length == 1)  {
-            // No lzr runtime arg supplied. 
-            // add default version if missing
-            url += '&lzr=swf8';
-        } else {
-            var queryvals = this.__parseQuery(sp[1]);
-            requestVersion = queryvals['lzr'];
-            if (requestVersion == null) {
-                requestVersion = 'swf8';
-                url += '&lzr=swf8';
-            }
-        }
-            
-        // Check flash comm version
-        if (lz.embed.dojo.info.commVersion > requestVersion) {
-            // This should no longer be needed in a world without swf7
-            url = url.substring(0, i) + lz.embed.dojo.info.commVersion + url.substring(i + 1, url.length);
-            //alert('updated version ' + url);
-            minimumVersion = lz.embed.dojo.info.commVersion;
-        } else if (lz.embed.dojo.info.commVersion <= 7 && requestVersion > 7) {
-            // if requested lzr=swf8, set dojo comm version to 8
-            lz.embed.dojo.info.commVersion = 8;
-        }
-
-        if (requestVersion > minimumVersion) {
-            minimumVersion = requestVersion;
-        }    
-
-        //alert(requestVersion + ', ' + minimumVersion);
-        */
 
         var queryvals = this.__getqueryurl(url);
 
@@ -229,11 +201,9 @@ lz.embed = {
      * HTML wrapper page comes from a different directory than the
      * application.
      *
-     *
-     * DHTML adds support for the cancelkeyboardcontrol option.
-     * Setting cancelkeyboardcontrol to true will prevent the
-     * application from grabbing keyboard events for tab, arrow and
-     * enter keys, and disables application activation.
+     * Setting cancelkeyboardcontrol to true disables application activation to
+     * prevent the application from grabbing mousewheel events and keyboard 
+     * events for tab, arrow and enter keys.
      * 
      * Set skipchromeinstall property to skip prompts to install the chrome 
      * frame in IE 6.
@@ -286,6 +256,9 @@ lz.embed = {
             lz.embed.history.active = false;
         }
 
+        if (properties.cancelmousewheel == true) {
+            lz.embed.mousewheel.setEnabled(false);
+        }
         this.__dhtmlLoadScript(url)
         // Make sure we have focus (see LPP-8242)
         if (lz.embed.browser.OS == 'Windows' && lz.embed.browser.isFirefox) { window.focus(); }
@@ -418,6 +391,7 @@ lz.embed = {
         if (hist) {
             lz.embed.history._store(name, value);
         } else if (canvas) {
+#pragma "passThrough=true"
             canvas.setAttribute(name, value);
         }
     }
@@ -938,14 +912,4 @@ lz.embed.attachEventHandler(window, 'beforeunload', lz.embed, '_cleanupHandlers'
 lz.embed.attachEventHandler(window, 'focus', lz.embed, '_gotFocus');
 if (lz.embed.browser.isIE) {
   lz.embed.attachEventHandler(window, 'activate', lz.embed, '_gotFocus');
-}
-
-// for backward compatibility
-#pragma "passThrough=true"
-try {
-    if (lzOptions) {
-        if (lzOptions.dhtmlKeyboardControl) alert('WARNING: this page uses lzOptions.dhtmlKeyboardControl.  Please use the cancelkeyboardcontrol embed argument for lz.embed.dhtml() instead.'); 
-        if (lzOptions.ServerRoot) alert('WARNING: this page uses lzOptions.ServerRoot.  Please use the second argument of lz.embed.lfc() instead.'); 
-    }
-} catch (e) {
 }
