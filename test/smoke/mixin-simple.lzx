@@ -1,0 +1,42 @@
+<canvas>
+  <simplelayout spacing="4"/>
+
+  <class name="colored_square" bgcolor="#ccffcc" width="200" height="100">
+    <simplelayout/>
+    <text name="statustext" visible="false">colored_square mixin click handler</text>
+    <handler name="onclick">
+      this.statustext.setAttribute('visible', true);
+    </handler>
+  </class>
+
+  <class name="black_line">
+    <view width="100" height="2" bgcolor="black"/>
+  </class>
+
+  <!-- instance which has no methods so would not normally make an anon class, except that it it uses a mixin-->
+  <view name="simplemixin" with="black_line,colored_square" bgcolor="#ff0000" >
+    <text>instance with mixin but no methods</text>
+  </view>
+
+
+  <view name="foo" bgcolor="#abcdef">
+    <text>this is just a plain old instance named foo, no mixins</text>
+  </view>
+
+<!-- instance which uses mixins and has a handler so it makes an anon class -->
+  <view name="mymixin" with="colored_square" >
+    <text>instance with colored_square mixin</text>
+    <text name="text3" visible="false">instance click handler</text>
+    <handler name="onclick">
+      this.text3.setAttribute('visible', true);
+      this.setAttribute('bgcolor', 0x00ff00);
+    </handler>
+  </view>
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

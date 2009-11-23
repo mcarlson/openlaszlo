@@ -47,8 +47,6 @@
 
     <interface name="class" extends="node">
       <attribute name="extends" type="token" value="view"/>
-      <!-- The comma-separated list of mixins, applied in order -->
-      <attribute name="with" type="string"/>
     </interface>
 
     <interface name="interface" extends="node">
@@ -149,6 +147,8 @@
         -->
       <attribute name="$delegates" type="expression"/>
       <attribute name="$lzc$bind_name" type="expression" />
+      <!-- The comma-separated list of mixins, applied in order -->
+      <attribute name="with" type="string"/>
       <containsElements>
         <element>attribute</element>
         <element>event</element>
@@ -161,7 +161,7 @@
       </containsElements>
     </insert>
   </interface>
-  
+
   <interface name="font" extends="Instance">
     <insert>
       <containsElements>
@@ -334,5 +334,5 @@ element attribute "
       <attribute name="when" type="string" enum="normal|immediate" value="normal"/>
     </insert>
   </interface>
-  
+
 </library>

@@ -50,7 +50,6 @@ public class ClassModel implements Comparable {
     public final Map attributeSpecs = new LinkedHashMap();
     protected final Map classAttributeSpecs = new LinkedHashMap();
 
-    public boolean inline = false;
     protected String sortkey = null;
 
     // True when the super and mixin names have been resolved to class
@@ -76,96 +75,95 @@ public class ClassModel implements Comparable {
     // Construct a user-defined class
     public ClassModel(String tagName, boolean publish,
                       ViewSchema schema, Element definition, CompilationEnvironment env) {
-        if (definition != null) {
-          // class, interface, mixin; OR anonymous instance class
-          kind = definition.getName();
-          if ("class".equals(kind) || "interface".equals(kind) || "mixin".equals(kind)) {
-            assert tagName.equals(definition.getAttributeValue("name"));
-            superTagName = definition.getAttributeValue("extends");
-            if (superTagName == null) {
-                superTagName = DEFAULT_SUPERCLASS_NAME;
+
+      if (definition != null) {
+        // class, interface, mixin; OR anonymous instance class
+        kind = definition.getName();
+        String mixinSpec = definition.getAttributeValue("with");
+        boolean isclassdef = ("class".equals(kind) || "interface".equals(kind) || "mixin".equals(kind));
+        if (isclassdef || "anonymous".equals(tagName)) {
+          superTagName = definition.getAttributeValue("extends");
+          if (superTagName == null) {
+            superTagName = DEFAULT_SUPERCLASS_NAME;
+          }
+          if (mixinSpec != null) {
+            mixinNames = mixinSpec.trim().split("\\s*,\\s*");
+            for (int i = mixinNames.length - 1; i >= 0; i--) {
+              String mixinName = mixinNames[i];
+              ClassModel mixinModel =  schema.getClassModelUnresolved(mixinName);
+              if (mixinModel == null) {
+                throw new CompilationError(
+                    "Undefined mixin " + mixinName + " for class " + tagName,
+                    definition);
+              }
+              String interstitialName = mixinName + "$" + superTagName;
+              // Avoid adding the same mixin to the schema twice - LPP-8234
+              if (schema.getClassModelUnresolved(interstitialName) == null) {
+                // We duplicate the mixin definition, but turn it into
+                // a class definition, inheriting from the previous
+                // superTagName and implementing the mixin
+                Element interstitial = (Element)mixinModel.definition.clone();
+                interstitial.setName("class");
+                interstitial.setAttribute("name", interstitialName);
+                interstitial.setAttribute("extends", superTagName);
+
+                // TODO: [2008-11-10 ptw] Add "implements"
+                // interstitial.setAttribute("implements", mixinName);
+                // Insert this element into the DOM before us
+                Element parent = (Element)((org.jdom.Parent)definition).getParent();
+                int index = parent.indexOf(definition);
+                parent.addContent(index, interstitial);
+
+                // Add it to the schema
+                schema.addElement(interstitial, interstitialName, env);
+              }
+
+              // Update the superTagName
+              superTagName = interstitialName;
             }
-            String mixinSpec = definition.getAttributeValue("with");
-            if (mixinSpec != null) {
-                mixinNames = mixinSpec.trim().split("\\s*,\\s*");
-                for (int i = mixinNames.length - 1; i >= 0; i--) {
-                    String mixinName = mixinNames[i];
-                    ClassModel mixinModel =  schema.getClassModelUnresolved(mixinName);
-                    if (mixinModel == null) {
-                         throw new CompilationError(
-                             "Undefined mixin " + mixinName + " for class " + tagName,
-                             definition);
-                    }
-                    String interstitialName = mixinName + "$" + superTagName;
-
-                    // Avoid adding the same mixin to the schema twice - LPP-8234
-                    if (schema.getClassModelUnresolved(interstitialName) == null) {
-                        // We duplicate the mixin definition, but turn it into
-                        // a class definition, inheriting from the previous
-                        // superTagName and implementing the mixin
-                        Element interstitial = (Element)mixinModel.definition.clone();
-                        interstitial.setName("class");
-                        interstitial.setAttribute("name", interstitialName);
-                        interstitial.setAttribute("extends", superTagName);
-
-                        // TODO: [2008-11-10 ptw] Add "implements"
-                        // interstitial.setAttribute("implements", mixinName);
-                        // Insert this element into the DOM before us
-                        Element parent = (Element)((org.jdom.Parent)definition).getParent();
-                        int index = parent.indexOf(definition);
-                        parent.addContent(index, interstitial);
-
-                        // Add it to the schema
-                        schema.addElement(interstitial, interstitialName, env);
-                    }
-
-                    // Update the superTagName
-                    superTagName = interstitialName;
-                }
-                // Now adjust this DOM element to refer to the
-                // interstitial superclass
-                definition.removeAttribute("with");
-                definition.setAttribute("extends", superTagName);
-            }
-          } else {
-            // Instance classes are not published
-            assert (! publish);
-            assert tagName.equals(definition.getName());
-            kind = "instance class";
-            // The superclass of an instance class is the tag that
-            // creates the instance
-            superTagName = tagName;
-            // Invalid name, just for debugging
-            tagName = "anonymous extends='" + superTagName + "'";
+            // Now adjust this DOM element to refer to the
+            // interstitial superclass
+            definition.removeAttribute("with");
+            definition.setAttribute("extends", superTagName);
           }
         } else {
-          // The root class
-          resolved = true;
+          // Instance classes are not published
+          assert (! publish);
+          assert tagName.equals(definition.getName());
+          kind = "instance class";
+          // The superclass of an instance class is the tag that
+          // creates the instance
+          superTagName = tagName;
+          // Invalid name, just for debugging
+          tagName = "anonymous extends='" + superTagName + "'";
         }
-        this.tagName = tagName;
-        this.anonymous = (! publish);
-        // NOTE: [2009-01-31 ptw] If the class is in an import, or
-        // external to the library you are linking, modelOnly is set to true to prevent class
-        // models that were created to compute the schema and
-        // inheritance from being emitted.  Classes that are actually
-        // in the library or application being compiled will be
-        // emitted because the are compiled with the `force` option,
-        // which overrides `modelOnly`.  See ClassCompiler.compile
-        this.modelOnly = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
-        this.env = env;
+      } else {
+        // The root class
+        resolved = true;
+      }
 
-        this.definition = definition;
-        this.schema = schema;
-        if ((!anonymous) && (tagName != null)) {
-          this.className = LZXTag2JSClass(tagName);
-        }
+      this.tagName = tagName;
+      this.anonymous = (! publish);
+      // NOTE: [2009-01-31 ptw] If the class is in an import, or
+      // external to the library you are linking, modelOnly is set to true to prevent class
+      // models that were created to compute the schema and
+      // inheritance from being emitted.  Classes that are actually
+      // in the library or application being compiled will be
+      // emitted because the are compiled with the `force` option,
+      // which overrides `modelOnly`.  See ClassCompiler.compile
+      this.modelOnly = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
+      this.env = env;
+      this.definition = definition;
+      this.schema = schema;
+      if ((!anonymous) && (tagName != null)) {
+        this.className = LZXTag2JSClass(tagName);
+      }
 
-        this.sortkey = ((!anonymous) && (tagName != null)) ? tagName : "anonymous";
-        if (superTagName != null) {
-            this.sortkey = superTagName + "." + this.sortkey;
-        }
+      this.sortkey = ((!anonymous) && (tagName != null)) ? tagName : "anonymous";
+      if (superTagName != null) {
+        this.sortkey = superTagName + "." + this.sortkey;
+      }
     }
-
 
     public int compareTo(Object other) throws ClassCastException {
       ClassModel o = (ClassModel)other;
@@ -627,7 +625,6 @@ public class ClassModel implements Comparable {
       // add attribute declarations and perhaps some other stuff that
       // the runtime wants.
       NodeModel model = NodeModel.elementAsModel(definition, schema, env);
-      model = model.expandClassDefinitions();
       // Establish class root
       model.assignClassRoot(0);
       setNodeModel(model);
@@ -815,26 +812,6 @@ public class ClassModel implements Comparable {
         this.nodeModel = model;
     }
 
-    boolean getInline() {
-        return inline && nodeModel != null;
-    }
-    
-    void setInline(boolean inline) {
-        this.inline = inline;
-    }
-    
-    public static class InlineClassError extends CompilationError {
-        public InlineClassError(ClassModel cm, NodeModel im, String message) {
-            super(
-                "The class " + cm.tagName + " has been declared " +
-                "inline-only but cannot be inlined.  " + message + ". " +
-                "Remove " + cm.tagName + " from the <?lzc class=\"" +
-                cm.tagName + "\"> or " + "<?lzc classes=\"" + cm.tagName
-                + "\"> processing instruction to remove this error.",
-                im.element);
-        }
-    }
-    
     protected boolean descendantDefinesAttribute(NodeModel model, String name) {
         for (Iterator iter = model.getChildren().iterator(); iter.hasNext(); ) {
             NodeModel child = (NodeModel) iter.next();
@@ -846,52 +823,6 @@ public class ClassModel implements Comparable {
         
     public Collection getLocalAttributes () {
         return Collections.unmodifiableCollection(attributeSpecs.values());
-    }
-    
-    NodeModel applyClass(NodeModel instance) {
-        final String DEFAULTPLACEMENT_ATTR_NAME = "defaultPlacement";
-        final String PLACEMENT_ATTR_NAME = "placement";
-        if (nodeModel == null) throw new RuntimeException("no nodeModel for " + tagName);
-        if (nodeModel.hasAttribute(DEFAULTPLACEMENT_ATTR_NAME))
-            throw new InlineClassError(this, instance, 
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="The class has a " + p[0] + " attribute"
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                ClassModel.class.getName(),"051018-196", new Object[] {DEFAULTPLACEMENT_ATTR_NAME})
-);
-        if (instance.hasAttribute(DEFAULTPLACEMENT_ATTR_NAME))
-            throw new InlineClassError(this, instance, 
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="The instance has a " + p[0] + " attribute"
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                ClassModel.class.getName(),"051018-205", new Object[] {DEFAULTPLACEMENT_ATTR_NAME})
-);
-        if (descendantDefinesAttribute(instance, PLACEMENT_ATTR_NAME))
-            throw new InlineClassError(this, instance, 
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="An element within the instance has a " + p[0] + " attribute"
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                ClassModel.class.getName(),"051018-214", new Object[] {PLACEMENT_ATTR_NAME})
-);
-        
-        try {
-            // Replace this node by the class model.
-            NodeModel model = (NodeModel) nodeModel.clone();
-            // Set $classrootdepth on children of the class (but not the
-            // instance that it's applied to)
-            setChildrenClassRootDepth(model, 1);
-            model.updateMembers(instance);
-            model.setClassName(getSuperTagName());
-            return model;
-        } catch (CompilationError e) {
-            throw new InlineClassError(this, instance, e.getMessage());
-        }
     }
     
     protected void setChildrenClassRootDepth(NodeModel model, int depth) {
@@ -906,7 +837,7 @@ public class ClassModel implements Comparable {
             child.setAttribute(CLASSROOTDEPTH_ATTRIBUTE_NAME,
                                new Integer(depth));
             int childDepth = depth;
-            ClassModel childModel = child.getClassModel();
+            ClassModel childModel = child.getParentClassModel();
             // If this is an undefined class, childModel will be null.
             // This is an error, and other code signals a compiler
             // warning. This test keeps it from resulting in a stack

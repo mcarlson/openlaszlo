@@ -112,10 +112,7 @@ public class NodeModel implements Cloneable {
         this.tagName = element.getName();
         // Cache ClassModel for parent
         this.parentClassModel = this.getParentClassModel();
-        if (this.parentClassModel == null) {
-          throw new CompilationError("invalid superclass value in 'extends' attribute, '" +
-                                     element.getAttributeValue("extends") + "'", element);
-        }
+
         if (parentClassModel.isSubclassOf(schema.getClassModel("state")) ||
             parentClassModel.isSubclassOf(schema.getClassModel("datapath"))) {
             this.canHaveMethods = false;
@@ -575,7 +572,6 @@ public class NodeModel implements Cloneable {
         ElementCompiler compiler = Compiler.getElementCompiler(elt, env);
         compiler.preprocess(elt, env);
 
-        checkTagDeclared(elt, schema);
         model = new NodeModel(elt, schema, env);
         LinkedHashMap attrs = model.attrs;
         Map delegates = model.delegates;
@@ -624,8 +620,14 @@ public class NodeModel implements Cloneable {
         return model;
     }
 
+  // Return the value of 'extends' if it exists, otherwise return the tag name
+  public static String tagOrClassName(Element elt) {
+    String extclass = elt.getAttributeValue("extends");
+    return (extclass != null) ? extclass : elt.getName();
+  }
+
   private static void checkRequiredAttributes(Element element, NodeModel model, ViewSchema schema) {
-    ClassModel classinfo =  schema.getClassModel(element.getName());
+    ClassModel classinfo =  model.getParentClassModel();
     Map attrs = model.attrs;
 
     CompilationEnvironment env = schema.getCompilationEnvironment();
@@ -663,14 +665,6 @@ public class NodeModel implements Cloneable {
     }
   }
 
-
-  static void checkTagDeclared(Element element, ViewSchema schema) {
-    ClassModel classinfo =  schema.getClassModel(element.getName());
-    if (classinfo == null || classinfo.definition == null) {
-      throw new CompilationError("Unknown tag: "+element.getName(), element);
-    }
-  }
-
     // Calculate how many nodes this object will put on the
     // instantiation queue.
     int totalSubnodes() {
@@ -699,19 +693,32 @@ public class NodeModel implements Cloneable {
         return 0;
     }
 
-    ClassModel getClassModel() {
-        return schema.getClassModel(this.tagName);
+    ClassModel getParentClassModel( ) {
+      String parentName = this.tagName;
+      return getParentClassModel(parentName, element, schema);
     }
 
     /** Gets the ClassModel for this element's parent class.  If this
      * element is a <class> definition, the superclass; otherwise the
      * class of the tag of this element. */
-    ClassModel getParentClassModel() {
-        String parentName = this.tagName;
-        return
-            ("class".equals(parentName) || "interface".equals(parentName) || "mixin".equals(parentName)) ?
-            schema.getClassModel(element.getAttributeValue("extends", ClassModel.DEFAULT_SUPERCLASS_NAME)) :
-            schema.getClassModel(parentName);
+    static ClassModel getParentClassModel(String parentName, Element element, ViewSchema schema) {
+      assert ("anonymous".equals(parentName) ? element.getAttributeValue("extends") != null : true);
+      boolean isclassdef = ("class".equals(parentName) || "interface".equals(parentName)
+                            || "mixin".equals(parentName) || "anonymous".equals(parentName));
+      ClassModel model = 
+        isclassdef ?
+        schema.getClassModel(element.getAttributeValue("extends", ClassModel.DEFAULT_SUPERCLASS_NAME)) :
+        schema.getClassModel(parentName);
+
+      if (model == null) {
+        if (isclassdef) {
+          throw new CompilationError("invalid superclass value in 'extends' attribute, '" +
+                                     element.getAttributeValue("extends") + "'", element);
+        } else {
+          throw new CompilationError("Unknown tag '" + parentName + "'", element);
+        }
+      }
+      return model;
     }
 
     void setClassName(String name) {
@@ -895,16 +902,18 @@ public class NodeModel implements Cloneable {
           addProperty(name, cattr, ALLOCATION_INSTANCE);
         }
 
-        ClassModel classModel = getClassModel();
-        if (classModel == null) {
-          throw new CompilationError("Could not find class definition for tag `" + tagName + "`", element);
-        }
         // Encode the attributes
         for (Iterator iter = element.getAttributes().iterator(); iter.hasNext(); ) {
             Attribute attr = (Attribute) iter.next();
             Namespace ns = attr.getNamespace();
             String name = attr.getName();
             String value = element.getAttributeValue(name, ns);
+
+            // If there is an 'extends' attribute of an instance
+            // class, it was just for the compiler to track the type internally,
+            // we don't want to emit it to the runtime.
+
+            if (name.equals("extends")) { continue; }
 
             if (name.equals(FONTSTYLE_ATTRIBUTE)) {
                 // "bold italic", "italic bold" -> "bolditalic"
@@ -969,7 +978,8 @@ public class NodeModel implements Cloneable {
 
             Schema.Type type;
             try {
-                if ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName)) {
+                if ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName)
+                    || "anonymous".equals(tagName)) {
                     // Special case, if we are compiling a "class"
                     // tag, then get the type of attributes from the
                     // superclass.
@@ -1280,7 +1290,9 @@ solution =
         // Encode the children
         for (Iterator iter = element.getChildren().iterator(); iter.hasNext(); ) {
             ElementWithLocationInfo child = (ElementWithLocationInfo) iter.next();
-            if (!schema.canContainElement(element.getName(), child.getName())) {
+            String parentTagName = tagOrClassName(element);
+            String childTagName = tagOrClassName(child);
+            if (!schema.canContainElement(parentTagName, childTagName)) {
                 // If this element is allowed to contain  HTML content, then
                 // we don't want to warn about encountering an HTML child element.
                 if (!( schema.hasTextContent(element) && schema.isHTMLElement(child))) {
@@ -1339,7 +1351,7 @@ solution =
 
   /** Is this NodeModel a <state> or subclass of <state> ? */
   static boolean isState(NodeModel model, ViewSchema schema) {
-    ClassModel classModel = model.getClassModel();
+    ClassModel classModel = model.getParentClassModel();
     boolean isstate = classModel.isSubclassOf(schema.getClassModel("state"));
     return isstate;
   }
@@ -1380,7 +1392,7 @@ solution =
       }
     }
     // Then recurse over superclasses, up to <state>
-    ClassModel classModel = model.getClassModel();
+    ClassModel classModel = model.getParentClassModel();
      if (classModel.hasNodeModel()) {
          List supernames = collectNamedChildren(classModel.nodeModel);
          // merge in returned list with names
@@ -2262,7 +2274,7 @@ solution =
         }
         updateAttrs();
         assert classAttrs.isEmpty();
-        ClassModel classModel = schema.getClassModel(tagName);
+        ClassModel classModel = getParentClassModel();
         Map map = new LinkedHashMap();
         Map inits = new LinkedHashMap();
         boolean hasMethods = false;
@@ -2278,6 +2290,7 @@ solution =
             Map.Entry entry = (Map.Entry) i.next();
             String key = (String) entry.getKey();
             Object value = entry.getValue();
+
             if (value instanceof Method) {
               hasMethods = true;
             } else if (! (value instanceof NodeModel.BindingExpr)) {
@@ -2308,7 +2321,7 @@ solution =
         if (! classModel.isCompiled()) {
           classModel.compile(env);
         }
-        if (classModel.anonymous || classModel.builtin || env.tagDefined(tagName)) {
+        if (classModel.anonymous || classModel.builtin || env.tagDefined(tagName) || "anonymous".equals(tagName)) {
           // The class to instantiate
           map.put("class", classModel.className);
         } else {
@@ -2353,99 +2366,4 @@ solution =
         return childMaps;
     }
 
-    /** Expand eligible instances by replacing the instance by the
-     * merge of its class definition with the instance content
-     * (attributes and children).  An eligible instance is an instance
-     * of a compile-time class, that doesn't contain any merge
-     * stoppers.  If the class and the instance contain a member with
-     * the same name, this is a merge stopper.  In the future, this
-     * restriction may be relaxed, but will probably always include
-     * the case where a class and instance have a member with the same
-     * name and the instance name calls a superclass method. */
-    NodeModel expandClassDefinitions() {
-        NodeModel model = this;
-        while (true) {
-            ClassModel classModel = schema.getClassModel(model.tagName);
-            if (classModel == null)
-                break;
-            if (classModel.getSuperTagName() == null)
-                break;
-            if (!classModel.getInline())
-                break;
-            model = classModel.applyClass(model);
-            // Iterate to allow for the original classes superclass to
-            // be expanded as well.
-        }
-        // Recurse. Make a copy so we can replace the child list.
-        // TODO [2004-0604]: As an optimization, only do this if one
-        // of the children changed.
-        model = (NodeModel) model.clone();
-        for (ListIterator iter = model.children.listIterator();
-             iter.hasNext(); ) {
-            NodeModel child = (NodeModel) iter.next();
-            iter.set(child.expandClassDefinitions());
-        }
-        return model;
-    }
-
-    /** Replace members of this with like-named members of source. */
-    void updateMembers(NodeModel source) {
-        final String OPTIONS_ATTR_NAME = "options";
-
-        // Check for duplicate methods.  Collect all the keys that name
-        // a Method in both the source and target.
-        List sharedMethods = new Vector();
-        for (Iterator iter = attrs.keySet().iterator();
-             iter.hasNext(); ) {
-            String key = (String) iter.next();
-            if (attrs.get(key) instanceof Method &&
-                source.attrs.get(key) instanceof Method)
-                sharedMethods.add(key);
-        }
-        if (!sharedMethods.isEmpty())
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Both the class and the instance or subclass define the method" + p[0] + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-1409", new Object[] {new ChoiceFormat("1# |1<s ").format(sharedMethods.size()), new ListFormat("and").format(sharedMethods)})
-                );
-
-        // Check for attributes that have a value in this and
-        // a setter in the source.  These can't be merged.
-        Collection overriddenAttributes = CollectionUtils.intersection(
-            attrs.keySet(), source.setters.keySet());
-        if (!overriddenAttributes.isEmpty())
-            throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="A class that defines a value can't be inlined against a " + "subclass or instance that defines a setter.  The following " + p[0] + " this condition: " + p[1]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-1422", new Object[] {new ChoiceFormat("1#attribute violates|1<attributes violate").format(overriddenAttributes.size()), new ListFormat("and").format(overriddenAttributes)})
-                );
-
-        // Do the actual merge.
-        id = source.id;
-        if (source.initstage != null)
-            initstage = source.initstage;
-        Object options = attrs.get(OPTIONS_ATTR_NAME);
-        Object sourceOptions = source.attrs.get(OPTIONS_ATTR_NAME);
-        attrs.putAll(source.attrs);
-        if (options instanceof Map && sourceOptions instanceof Map) {
-//             System.err.println(options);
-//             System.err.println(sourceOptions);
-            Map newOptions = new HashMap((Map) options);
-            newOptions.putAll((Map) sourceOptions);
-            attrs.put(OPTIONS_ATTR_NAME, newOptions);
-        }
-        delegates.putAll(source.delegates);
-        classAttrs.putAll(source.classAttrs);
-        setters.putAll(source.setters);
-        delegateList.addAll(source.delegateList);
-        // TBD: warn on children that share a name?
-        // TBD: update the node count
-        children.addAll(source.children);
-    }
 }

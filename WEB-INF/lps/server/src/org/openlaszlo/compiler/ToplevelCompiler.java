@@ -105,7 +105,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
   void computeDeclarations(Element element, ViewSchema schema) {
     // Gather and check id's and global names now, so declarations
     // for them can be emitted.
-    String tagName = element.getName();
+    String tagName = NodeModel.tagOrClassName(element);
     ClassModel classModel = schema.getClassModel(tagName);
     if (classModel != null) {
       // Only process nodes

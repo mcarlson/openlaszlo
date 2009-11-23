@@ -1,0 +1,70 @@
+<canvas>
+<!--
+  covers-tags : lznode smoketest
+-->
+
+  <include href="lztest/lztestmanager.lzx" />
+
+  <!-- mixin with attribute -->
+    <mixin name="testmixin">
+        <attribute name="foo" value="bar" type="string"/>
+    </mixin>
+
+    <!-- mixin with method -->
+    <mixin name="testmixin2">
+       <method name="sum" args="a,b">
+         return a+b;
+       </method>
+    </mixin>
+
+    <class name="mixclass" extends="node" with="testmixin">
+        <attribute name="myvalue" value="${this.foo}"/>
+    </class>
+    
+    <mixclass name="normal"/>
+
+    <class name="bothmixclass" extends="node" with="testmixin,testmixin2">
+       <method name="myval">
+         return this.foo + this.sum(2,3); // returns 'bar5'
+       </method>
+    </class>
+
+    <bothmixclass name="normal2"/>
+
+    <node name="mixinstance" with="testmixin">
+      <attribute name="myvalue" value="${this.foo}"/>
+    </node>
+
+
+    <node name="methodinstance" with="testmixin,testmixin2">
+      <attribute name="myvalue" value="${this.foo}"/>
+      <attribute name="myvalue2" value="${this.sum(2,5)}"/>
+    </node>
+
+
+
+  <script>
+    <![CDATA[
+    var suiteTestOptions = new LzTestSuite("LzNode Mixins");
+
+    suiteTestOptions.testOptions = function () {
+      LzTestManager.assertEquals(normal.myvalue, 'bar');
+      LzTestManager.assertEquals(normal.foo, 'bar');
+
+      LzTestManager.assertEquals(normal2.foo, 'bar');
+      LzTestManager.assertEquals(normal2.myval(), 'bar5');
+
+      LzTestManager.assertEquals(mixinstance.myvalue, 'bar');
+      LzTestManager.assertEquals(mixinstance.foo, 'bar');
+
+      LzTestManager.assertEquals(methodinstance.foo, 'bar');
+      LzTestManager.assertEquals(methodinstance.myvalue, 'bar');
+      LzTestManager.assertEquals(methodinstance.myvalue2, 7);
+
+    }
+
+    suiteTestOptions.addTest(suiteTestOptions.testOptions);
+    ]]>
+  </script>
+</canvas>
+<!-- Copyright 2006, 2009 Laszlo Systems, Inc.  All Rights Reserved.  Use subject to license terms. -->

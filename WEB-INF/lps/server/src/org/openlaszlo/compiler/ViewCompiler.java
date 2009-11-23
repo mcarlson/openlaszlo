@@ -79,6 +79,42 @@ public class ViewCompiler extends ElementCompiler {
         }
     }
 
+
+  /** An instance may have mixins, we use this opportunity to declare
+   * the interstitial classes here if needed, and rewrite the element
+   * to have a base class being the most-specific class of the
+   * interstitials.
+   *
+   * <bar name="foo" with="bletch, crud">...</bar>
+   *
+   * becomes:
+   * 
+   * <class name="$crud$bar" extends="bar">...crud body...</class>
+   * <class name="$bletch$crud$bar" extends="crud$bar">...bletch body</class>
+   * <$bletch$crud$bar name="foo">...foo body...</$bletch$crud$bar>
+   *
+   */
+    void updateSchema(Element element, ViewSchema schema, Set visited) {
+      super.updateSchema(element, schema, visited);
+      // If there's a non-null value for 'with', the schema builder will
+      // create the needed interstitial classes for us. 
+      String mixinSpec = element.getAttributeValue("with");
+      String tagname = element.getName();
+      boolean isclassdef = ("class".equals(tagname) || "interface".equals(tagname) || "mixin".equals(tagname));
+      // We only need to invoke the schema builder if we are an
+      // instance, and we have mixins.
+      //
+      // If ELEMENT is a <class>,<interface>, or <mixin>, then
+      // ClassCompiler.updateSchema method will already have called
+      // schema.addElement to declare the class.
+      //
+      if (!isclassdef && mixinSpec != null) {
+        element.setAttribute("extends", element.getName());
+        element.setName("anonymous");
+        schema.addElement(element, "anonymous", mEnv, false);
+      }
+    }
+
     public void compile(Element element) throws CompilationError
     {
         FontInfo fontInfo = null;
@@ -172,8 +208,6 @@ public class ViewCompiler extends ElementCompiler {
         }
 
         NodeModel model = NodeModel.elementAsModel(element, mSchema, mEnv);
-        model = model.expandClassDefinitions();
-
         String script = VIEW_INSTANTIATION_FNAME + "(" +
           model.asJavascript() + ", " + model.totalSubnodes() +
           ");";

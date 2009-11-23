@@ -320,15 +320,26 @@ public class ViewSchema extends Schema {
         }
     }
 
+
     /**
      * Add a new element to the attribute type map.
      *
      * @param elt the element to add to the map
      * @param tagName the name of the element
      */
-    public void addElement (Element elt, String tagName, CompilationEnvironment env)
+    public void addElement (Element elt, String tagName, CompilationEnvironment env) {
+        addElement(elt, tagName, env, true);
+    }
+
+    /**
+     * Add a new element to the attribute type map.
+     *
+     * @param elt the element to add to the map
+     * @param tagName the name of the element
+     */
+    public void addElement (Element elt, String tagName, CompilationEnvironment env, boolean classdef)
     {
-        if (mClassMap.get(tagName) != null) {
+        if (classdef && mClassMap.get(tagName) != null) {
             String builtin = "builtin ";
             String also = "";
             Element other = getClassModelUnresolved(tagName).definition;
@@ -345,8 +356,10 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-435", new Object[] {builtin, tagName, also})
 , elt);
         }
-        ClassModel info = new ClassModel(tagName, true, this, elt, env);
-        mClassMap.put(tagName, info);
+        ClassModel info = new ClassModel(tagName, classdef, this, elt, env);
+        if (classdef) {
+            mClassMap.put(tagName, info);
+        }
     }
 
     /**

@@ -798,22 +798,5 @@ public class Compiler {
     protected void processClassInstruction(CompilationEnvironment env,
                                            String className,
                                            ProcessingInstruction pi) {
-        String inlineString = pi.getPseudoAttributeValue("inline-only");
-        if (inlineString != null) {
-            boolean inline = Boolean.valueOf(inlineString).booleanValue();
-            ClassModel classModel = env.getSchema().getClassModel(className);
-            if (classModel == null) {
-env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="A processor instruction refers to a class named \"" + p[0] + "\".  No class with this name exists."
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                Compiler.class.getName(),"051018-603", new Object[] {className})
-                );
-                return;
-            }
-            classModel.setInline(inline);
-        }
     }
 }

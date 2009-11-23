@@ -51,7 +51,6 @@ class DebugCompiler extends ViewCompiler {
             mEnv.setProperty(mEnv.USER_DEBUG_WINDOW, true);
             // inlined from ViewCompiler.compile()
             NodeModel model = NodeModel.elementAsModel(element, mEnv.getSchema(), mEnv);
-            model = model.expandClassDefinitions();
             Map map = model.asMap();
             String classname = (String) map.get("class");
             try {
