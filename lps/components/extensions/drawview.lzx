@@ -460,24 +460,25 @@
                 super.$lzc$set_context(context);
             }
 
+            // hash of image resources for drawImage
             static var images = {};
             var __drawImageCnt = 0;
 
             function getImage(url) {
-                var img = lz.drawview.images[url];
-                if (! img) {
+                var cache = lz.drawview.images;
+                if (! cache[url]) {
                     var loadurl = url;
                     if (url.indexOf('http:') != 0 && url.indexOf('https:') != 0) {
                         loadurl = this.sprite.getResourceUrls(url)[0];
                     }
-                    img = new Image();
+                    var img = new Image();
                     img.src = loadurl;
-                    lz.drawview.images[url] = img;
+                    cache[url] = img;
                     if (loadurl != url) {
-                        lz.drawview.images[loadurl] = img;
+                        cache[loadurl] = img;
                     }
                 }
-                return img;
+                return cache[url];
             }
 
             function drawImage(image, x, y, w, h, r) {
@@ -783,6 +784,7 @@
                 #passthrough (toplevel:true) {
                 import flash.geom.Matrix;
                 import flash.geom.Rectangle;
+                import flash.display.Bitmap;
                 import flash.display.BitmapData;
                 import flash.display.Graphics;
                 import flash.display.Sprite;
@@ -803,23 +805,21 @@
             var fillStyle :* = '#000000';
             var __path :Array = [];
             var __pathisopen :Boolean = false;
+            // whether to measure the width/height dimensions after redrawing
             var __measurewidth :Boolean = true;
             var __measureheight :Boolean = true;
             const __MOVETO_OP :int = 0;
             const __LINETO_OP :int = 1;
             const __QCURVE_OP :int = 2;
 
-            if ($as2) {
-                static var images :Object = {};
+            var __drawcontainer = null;
+            var __bitmapdata:BitmapData = null;
+            var __bitmapcontainer = null;
+            var __norebuild:Boolean = false;
+            var __contexts :Array = null;
 
-                var __contexts :Array = null;
-                var __bitmapmc :MovieClip = null;
-                var __bitmapdata :BitmapData = null;
-                var __drawing :MovieClip = null;
-                var __norebuild :Boolean = false;
-            } else {
-                var __drawcontainer :Sprite = null;
-            }
+            // hash of image resources for drawImage
+            static var images:Object = {};
 
             function $lzc$class_drawview (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
                 super(parent, attrs, children, instcall);
@@ -829,31 +829,15 @@
                 // default to bitmap caching on, unless clip = true
                 if (args['cachebitmap'] == null && args['clip'] != true) args['cachebitmap'] = true;
                 super.construct(parent, args);
-                if ($as2) { this.__contexts = []; }
+                this.__contexts = [];
             }
 
             override function init () {
                 super.init();
-                if ($as2) {
-                    this.rebuildBitmap();
-                    var drawcontainer:MovieClip = this.getDisplayObject().createEmptyMovieClip("drawcontainer", 1);
-                    this.__drawing = drawcontainer.createEmptyMovieClip("drawing", drawcontainer.getNextHighestDepth());
-
-                    var context:MovieClip = drawcontainer;
-                    // Install right-click context menu if there is one
-                    var cmenu:LzContextMenu = this.sprite['__contextmenu'];
-                    if (cmenu) context.menu = cmenu.kernel.__LZcontextMenu();
-                } else {
-                    var drawcontainer:Sprite = new Sprite();
-                    drawcontainer.mouseEnabled = false;
-                    this.getDisplayObject().addChildAt(drawcontainer, 0);
-
-                    this.__drawcontainer = drawcontainer;
-                    var context:Graphics = drawcontainer.graphics;
-                }
-                this.context = context;
+                this.rebuildBitmap();
+                this.context = this.createContainer();
                 this.beginPath();
-                this.$lzc$set_context(context);
+                this.$lzc$set_context(this.context);
             }
 
             function beginPath() {
@@ -1072,11 +1056,9 @@
 
             function clear() {
                 this.context.clear();
-                if ($as2) {
-                    if (this['__bitmapdata']) {
-                        var rect:Rectangle = new flash.geom.Rectangle(0, 0, this.width, this.height);
-                        this.__bitmapdata.fillRect(rect, 0x000000ff);
-                    }
+                if (this['__bitmapdata']) {
+                    var rect:Rectangle = new flash.geom.Rectangle(0, 0, this.width, this.height);
+                    this.__bitmapdata.fillRect(rect, 0x000000ff);
                 }
             }
 
@@ -1127,29 +1109,56 @@
                 context.endFill();
             }
 
+            override function $lzc$set_width(w) {
+                this.__measurewidth = (w == null);
+                super.$lzc$set_width(w);
+                this.rebuildBitmap();
+            }
+
+            override function $lzc$set_height(h) {
+                this.__measureheight = (h == null);
+                super.$lzc$set_height(h);
+                this.rebuildBitmap();
+            }
+
+            private function __updateSize() :void {
+                var measureSize:Boolean = (this.__measurewidth || this.__measureheight);
+                if (measureSize) {
+                    // __bitmapcontainer needs to be removed while measuring the context's size
+                    this.clearBitmap();
+
+                    // don't rebuild bitmap in width/height setter
+                    this.__norebuild = true;
+                }
+
+                var width, height;
+                if ($as2) {
+                    var mc = this.sprite.getContext();
+                    width = mc._width;
+                    height = mc._height;
+                } else {
+                    var mc = this.sprite;
+                    width = mc.width;
+                    height = mc.height;
+                }
+
+                if (this.__measurewidth && this.width !== width) {
+                    this.setAttribute('width', width);
+                    this.__measurewidth = true;
+                }
+                if (this.__measureheight && this.height !== height) {
+                    this.setAttribute('height', height);
+                    this.__measureheight = true;
+                }
+
+                if (measureSize) {
+                    // now rebuild bitmap again
+                    this.__norebuild = false;
+                    this.rebuildBitmap();
+                }
+            }
+
             if ($as3) {
-                override function $lzc$set_width(w) {
-                    this.__measurewidth = (w == null);
-                    super.$lzc$set_width(w);
-                }
-
-                override function $lzc$set_height(h) {
-                    this.__measureheight = (h == null);
-                    super.$lzc$set_height(h);
-                }
-
-                function __updateSize() :void {
-                    var dc:Sprite = this.__drawcontainer;
-                    if (this.__measurewidth && this.width !== dc.width) {
-                        this.setAttribute('width', dc.width);
-                        this.__measurewidth = true;
-                    }
-                    if (this.__measureheight && this.height !== dc.height) {
-                        this.setAttribute('height', dc.height);
-                        this.__measureheight = true;
-                    }
-                }
-
                 function clearMask() {
                     if (this.clipcontext) {
                         this.clipcontext.clear();
@@ -1190,16 +1199,79 @@
                     clickregion.scaleY = 1;
                 }
 
-                function fillRect(x, y, w, h) {
-                    if ($debug) {
-                        Debug.warn('lz.drawview.fillRect() is not currently supported in ' + canvas.runtime);
+
+                // Rebuild bitmap drawing layer
+                private function rebuildBitmap () :void {
+                    if (this.__norebuild) return;
+                    if (this.width < 1 || this.height < 1) return;
+                    if (this.__bitmapdata && this.width == this.__bitmapdata.width && this.height == this.__bitmapdata.height) return;
+
+                    var bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
+                    if (bitmapdata) {
+                        // clear any old data first
+                        this.clearBitmap();
+                        this.__bitmapdata = bitmapdata;
+                        this.__bitmapcontainer = new flash.display.Bitmap(bitmapdata);
+                        this.sprite.addChild(this.__bitmapcontainer);
                     }
                 }
 
-                function drawImage(image, x, y, w, h, r) {
-                    if ($debug) {
-                        Debug.warn('lz.drawview.drawImage() is not currently supported in ' + canvas.runtime);
+                // destroy old bitmap data
+                private function clearBitmap() :void {
+                    if (this.__bitmapdata) {
+                        this.__bitmapdata.dispose();
+                        this.__bitmapdata = null;
                     }
+                    if (this.__bitmapcontainer) {
+                        this.sprite.removeChild(this.__bitmapcontainer);
+                        this.__bitmapcontainer = null;
+                    }
+                }
+
+                function getImage(name):BitmapData {
+                    var cache = lz.drawview.images;
+                    if (! cache[name]) {
+                        var resinfo:Object = LzResourceLibrary[name];
+                        var assetclass:Class;
+                        // single frame resources get an entry in LzResourceLibrary which has
+                        // 'assetclass' pointing to the resource Class object.
+                        if (resinfo.assetclass is Class) {
+                            assetclass = resinfo.assetclass;
+                        } else {
+                            // Multiframe resources have an array of Class objects in frames[]
+                            assetclass = resinfo.frames[0];
+                        }
+
+                        if (this.resourceCache == null) {
+                            this.resourceCache = [];
+                        }
+                        var asset = this.resourceCache[name];
+                        if (asset == null) {
+                            //Debug.write('CACHE MISS, new ',assetclass);
+                            asset = new assetclass();
+                            asset.scaleX = 1.0;
+                            asset.scaleY = 1.0;
+                            this.resourceCache[name] = asset;
+                        }
+
+                        var bounds:Rectangle = asset.getBounds(asset);
+
+                        var assetsprite = this.sprite.addChild(asset);
+                        cache[name] = copyBitmap(assetsprite, bounds.width, bounds.height);
+                        this.sprite.removeChild(asset);
+                    }
+
+                    return cache[name];
+                }
+
+                // create a new container, only used at init time
+                private function createContainer() {
+                    var drawcontainer:Sprite = new Sprite();
+                    drawcontainer.mouseEnabled = false;
+                    this.getDisplayObject().addChild(drawcontainer);
+                    this.__drawcontainer = drawcontainer;
+
+                    return drawcontainer.graphics;
                 }
 
                 function save() {
@@ -1213,7 +1285,9 @@
                         Debug.warn('lz.drawview.restore() is not currently supported in ' + canvas.runtime);
                     }
                 }
+                // end as3
             } else {
+                // as2
                 function clearMask() {
                     var maskclip = this.sprite.__LZmaskClip;
                     if (maskclip) {
@@ -1247,31 +1321,43 @@
                     this.updateResourceSize();
                 }
 
-                // Add bitmap data drawing layer
-                function rebuildBitmap () :void {
-                    if (this.__norebuild) {
-                        return;
-                    }
-                    if (this['__bitmapmc']) {
-                        this.__bitmapmc.removeMovieClip();
-                    }
+                // Rebuild bitmap drawing layer
+                private function rebuildBitmap () :void {
+                    if (this.__norebuild) return;
 
-                    var context:MovieClip = this.sprite.getContext();
-                    this.__bitmapmc = context.createEmptyMovieClip("__bitmapmc", 1000);
-                    this.__bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
-                    // negative dimensions cause this to be null
-                    if (this['__bitmapdata']) this.__bitmapmc.attachBitmap(this.__bitmapdata, 2, "auto", true);
+                    var bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
+                    if (bitmapdata) {
+                        // clear any old data first
+                        this.clearBitmap();
+
+                        this.__bitmapdata = bitmapdata;
+                        var context:MovieClip = this.sprite.getContext();
+                        this.__bitmapcontainer = context.createEmptyMovieClip("__bitmapcontainer", 1000);
+                        this.__bitmapcontainer.attachBitmap(bitmapdata, 2, "auto", true);
+                    }
                     // Install right-click context menu if there is one
                     var cmenu:LzContextMenu = this.sprite['__contextmenu'];
-                    if (cmenu) this.__bitmapmc.menu = cmenu.kernel.__LZcontextMenu();
+                    if (cmenu) this.__bitmapcontainer.menu = cmenu.kernel.__LZcontextMenu();
+                }
+
+                // destroy old bitmap data
+                private function clearBitmap() :void {
+                    if (this.__bitmapdata) {
+                        this.__bitmapdata.dispose();
+                        this.__bitmapdata = null;
+                    }
+                    if (this.__bitmapcontainer) {
+                        this.__bitmapcontainer.removeMovieClip();
+                        this.__bitmapcontainer = null;
+                    }
                 }
 
                 override function $lzc$set_contextmenu (cmenu:LzContextMenu) :void {
-                    if (this['__bitmapmc']) {
+                    if (this['__bitmapcontainer']) {
                         if (cmenu) {
-                            this.__bitmapmc.menu = cmenu.kernel.__LZcontextMenu();
+                            this.__bitmapcontainer.menu = cmenu.kernel.__LZcontextMenu();
                         } else {
-                            delete this.__bitmapmc.menu;
+                            delete this.__bitmapcontainer.menu;
                         }
                     }
                     if (this.context) {
@@ -1284,77 +1370,16 @@
                     super.$lzc$set_contextmenu(cmenu);
                 }
 
-                override function $lzc$set_width(w) {
-                    this.__measurewidth = (w == null);
-                    super.$lzc$set_width(w);
-                    this.rebuildBitmap();
-                }
-
-                override function $lzc$set_height(h) {
-                    this.__measureheight = (h == null);
-                    super.$lzc$set_height(h);
-                    this.rebuildBitmap();
-                }
-
-                function __updateSize() :void {
-                    var measureSize:Boolean = (this.__measurewidth || this.__measureheight);
-                    if (measureSize) {
-                        // __bitmapmc needs to be removed while measuring the context's size
-                        if (this['__bitmapmc']) {
-                            this.__bitmapmc.removeMovieClip();
-                            this.__bitmapmc = null;
-                        }
-                        // don't rebuild bitmap in width/height setter
-                        this.__norebuild = true;
-                    }
-                    var mc:MovieClip = this.sprite.getContext();
-                    if (this.__measurewidth && this.width !== mc._width) {
-                        this.setAttribute('width', mc._width);
-                        this.__measurewidth = true;
-                    }
-                    if (this.__measureheight && this.height !== mc._height) {
-                        this.setAttribute('height', mc._height);
-                        this.__measureheight = true;
-                    }
-                    if (measureSize) {
-                        // now rebuild bitmap again
-                        this.__norebuild = false;
-                        this.rebuildBitmap();
-                    }
-                }
-
-                function drawImage(image, x, y, w, h, r) {
-                    if (typeof image == 'string') {
-                        image = this.getImage(image);
-                    }
-                    if (! image) return;
-
-                    var m:Matrix = this.getIdentityMatrix();
-
-                    var tw:Number = w ? w / image.width : 1;
-                    var th:Number = h ? h / image.height : 1;
-                    m.scale(tw, th);
-
-                    if (r != null) m.rotate(r);
-
-                    var tx:Number = x ? x : 0;
-                    var ty:Number = y ? y : 0;
-                    m.translate(tx, ty);
-
-                    this.copyBitmap(image, this.width, this.height, this.__bitmapdata, m);
-                }
-
-                function getImage(name) :BitmapData {
-                    var bitmap:BitmapData = lz.drawview.images[name];
-                    if (! bitmap) {
+                function getImage(name):BitmapData {
+                    var cache = lz.drawview.images;
+                    if (! cache[name]) {
                         var container:MovieClip = createEmptyMovieClip("loader", getNextHighestDepth());
                         if (name.indexOf('http:') == 0 || name.indexOf('https:') == 0) {
                             var loader:MovieClip = container.createEmptyMovieClip("loader", container.getNextHighestDepth());
                             loader.loadMovie(name);
                             container.onEnterFrame = function() {
                                 if (loader._width > 0) {
-                                    bitmap = this.copyBitmap(loader, loader._width, loader._height);
-                                    lz.drawview.images[name] = bitmap;
+                                    cache[name] = this.copyBitmap(loader, loader._width, loader._height);
                                     delete this.onEnterFrame;
                                     container.removeMovieClip();
                                 }
@@ -1362,37 +1387,35 @@
                         } else {
                             // measure size
                             container.attachMovie(name, 'resc', container.getNextHighestDepth());
-                            bitmap = this.copyBitmap(container, container._width, container._height);
-                            lz.drawview.images[name] = bitmap;
+                            cache[name] = this.copyBitmap(container, container._width, container._height);
                             container.removeMovieClip();
                         }
                     }
-                    return bitmap;
+                    return cache[name];
+                }
+
+                // create a new container, only used at init time
+                private function createContainer() {
+                    var drawcontainer:MovieClip = this.getDisplayObject().createEmptyMovieClip("drawcontainer", 1);
+                    this.__drawcontainer = drawcontainer.createEmptyMovieClip("drawing", drawcontainer.getNextHighestDepth());
+
+                    // Install right-click context menu if there is one
+                    var cmenu:LzContextMenu = this.sprite['__contextmenu'];
+                    if (cmenu) context.menu = cmenu.kernel.__LZcontextMenu();
+
+                    return drawcontainer;
                 }
 
                 function save() {
-                    // Store this context.
+                    // Store this.context:MovieClip
                     this.__contexts.push(this.context);
 
                     // Create new context to draw in
-                    var depth:Number = this.__drawing.getNextHighestDepth();
-                    this.context = this.__drawing.createEmptyMovieClip('draw' + depth, depth);
+                    var depth:Number = this.__drawcontainer.getNextHighestDepth();
+                    this.context = this.__drawcontainer.createEmptyMovieClip('draw' + depth, depth);
                     // Offset to the center to ensure we can grab the whole thing
                     this.context._x = this.width * .5;
                     this.context._y = this.height * .5;
-                }
-
-                function copyBitmap(from:*, w:Number, h:Number, to:BitmapData = null, m:Matrix = null) :BitmapData {
-                    var tmp:BitmapData = new flash.display.BitmapData(w, h, true, 0x000000ff);
-
-                    tmp.draw(from);
-
-                    // If to wasn't supplied, return the bitmap as-is.
-                    if (! to) {
-                        return tmp;
-                    }
-                    to.draw(tmp, m, null, null, null, true);
-                    tmp.dispose();
                 }
 
                 function restore() {
@@ -1406,27 +1429,63 @@
                     this.__tr = this.__tx = this.__ty = 0;
 
                     //Debug.write(this.context._width, this.context._height);
-                    this.copyBitmap(this.__drawing, this.width * 2, this.height * 2, this.__bitmapdata, m)
+                    this.copyBitmap(this.__drawcontainer, this.width * 2, this.height * 2, this.__bitmapdata, m)
 
                     this.context.removeMovieClip();
                     this.context = this.__contexts.pop();
                 }
+            } // End of as2/as3 conditionals
 
-                function fillRect(x, y, w, h) {
-                    var color:Object = this.__getColor(this.fillStyle);
-                    var alpha:Number = color.a != null ? color.a : this.globalAlpha;
-                    alpha = (alpha * 255) << 24;
-                    var colorval:uint = color.c | alpha;
+            function fillRect(x, y, w, h) {
+                var color:Object = this.__getColor(this.fillStyle);
+                var alpha:Number = color.a != null ? color.a : this.globalAlpha;
+                alpha = (alpha * 255) << 24;
+                var colorval:uint = color.c | alpha;
 
-                    var rect:Rectangle = new flash.geom.Rectangle(x, y, w, h);
-                    this.__bitmapdata.fillRect(rect, colorval);
+                var rect:Rectangle = new flash.geom.Rectangle(x, y, w, h);
+                this.__bitmapdata.fillRect(rect, colorval);
+            }
+
+            private function getIdentityMatrix():Matrix {
+                return new flash.geom.Matrix();
+            }
+
+            function drawImage(image, x, y, w, h, r) {
+                // TODO: deal with runtime-loaded images
+                if (typeof image == 'string') {
+                    image = this.getImage(image);
                 }
+                if (! image) return;
 
-                function getIdentityMatrix() :Matrix {
-                    return new flash.geom.Matrix();
+                var matrix:Matrix = this.getIdentityMatrix();
+
+                var tw:Number = w ? w / image.width : 1;
+                var th:Number = h ? h / image.height : 1;
+                matrix.scale(tw, th);
+
+                if (r != null) matrix.rotate(r);
+
+                var tx:Number = x ? x : 0;
+                var ty:Number = y ? y : 0;
+                matrix.translate(tx, ty);
+
+                this.copyBitmap(image, this.width, this.height, this.__bitmapdata, matrix);
+            }
+            
+            private function copyBitmap(from:*, w:Number, h:Number, to:BitmapData = null, m:Matrix = null) {
+                var tmp:BitmapData = new flash.display.BitmapData(w, h, true, 0x000000ff);
+
+                tmp.draw(from);
+
+                // If to wasn't supplied, return the bitmap as-is.
+                if (! to) {
+                    return tmp;
                 }
+                to.draw(tmp, m, null, null, null, true);
+                tmp.dispose();
             }
         } // End of drawview
+
         lz[$lzc$class_drawview.tagname] = $lzc$class_drawview;
 
         /**
