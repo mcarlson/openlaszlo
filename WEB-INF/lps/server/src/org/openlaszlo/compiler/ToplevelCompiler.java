@@ -112,8 +112,9 @@ abstract class ToplevelCompiler extends ElementCompiler {
       if (classModel.isSubclassOf(schema.getClassModel("node"))) {
         String id = element.getAttributeValue("id");
         String globalName = null;
+        String eltname = element.getName();
         if (CompilerUtils.topLevelDeclaration(element)) {
-          if (! ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName))) {
+          if (! ("class".equals(eltname) || "interface".equals(eltname) || "mixin".equals(eltname))) {
             globalName = element.getAttributeValue("name");
           }
         }
