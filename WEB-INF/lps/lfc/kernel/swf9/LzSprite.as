@@ -1349,10 +1349,9 @@ public class LzSprite extends Sprite {
     /** destroy()
         o Causes the sprite to destroy itself
     */
-    public function destroy( ):void {
-        //PBR
+    public function destroy( parentvalid = true ):void {
         this.unload();
-        if (parent) {
+        if (parentvalid && parent) {
             parent.removeChild(this);
         }
     }

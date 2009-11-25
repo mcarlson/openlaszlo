@@ -1872,17 +1872,20 @@ function resourceevent(name, value, eventonly = false, force = false) {
   */
 override function destroy( ){
     if ( this.__LZdeleted ) return;
-    
-    if (this.sprite) this.sprite.predestroy();
-
     var vip:LzView = (this.immediateparent cast LzView);
-    if ( this.addedToParent ){
-        var svs =  vip.subviews;
-        if (svs != null) {
-            for( var i = svs.length - 1; i >= 0; i-- ){
-                if ( svs[ i ] == this ){
-                    svs.splice( i , 1 );
-                    break;
+    var parentvalid = ! vip.__LZdeleted;
+    
+    if (parentvalid) {
+        if (this.sprite) this.sprite.predestroy();
+
+        if (this.addedToParent) {
+            var svs =  vip.subviews;
+            if (svs != null) {
+                for( var i = svs.length - 1; i >= 0; i-- ){
+                    if ( svs[ i ] == this ){
+                        svs.splice( i , 1 );
+                        break;
+                    }
                 }
             }
         }
@@ -1890,21 +1893,23 @@ override function destroy( ){
 
     super.destroy();
 
-    if (this.sprite) { this.sprite.destroy() }
+    // always call sprite.destroy()
+    if (this.sprite) { this.sprite.destroy(parentvalid) }
 
-    this.$lzc$set_visible ( false );
+    if (parentvalid) { 
+        this.$lzc$set_visible ( false );
 
-    var vip:LzView = (this.immediateparent cast LzView);
-    if ( this.addedToParent ) {
-        if ( vip['__LZoutliewidth'] == this) {
-            vip.__LZoutliewidth = null;
+        if (this.addedToParent) {
+            if ( vip['__LZoutliewidth'] == this) {
+                vip.__LZoutliewidth = null;
+            }
+
+            if ( vip['__LZoutlieheight'] == this) {
+                vip.__LZoutlieheight=null;
+            }
+
+            if (vip.onremovesubview.ready) vip.onremovesubview.sendEvent( this );
         }
-
-        if ( vip['__LZoutlieheight'] == this) {
-            vip.__LZoutlieheight=null;
-        }
-
-        if (vip.onremovesubview.ready) vip.onremovesubview.sendEvent( this );
     }
 }
 

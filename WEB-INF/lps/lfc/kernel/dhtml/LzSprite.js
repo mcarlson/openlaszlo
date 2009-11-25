@@ -2193,24 +2193,31 @@ LzSprite.prototype.__updateStretches = function() {
 LzSprite.prototype.predestroy = function() {
 }
 
-LzSprite.prototype.destroy = function() {
+LzSprite.prototype.destroy = function( parentvalid = true ) {
     if (this.__LZdeleted == true) return;
     // To keep delegates from resurrecting us.  See LzDelegate#execute
     this.__LZdeleted = true;
 
-    // Remove from parent if the parent is not going to be GC-ed
-    if ((this.__parent) && (! this.__parent.__LZdeleted)) {
-      var pc = this.__parent.__children;
-      for (var i = pc.length - 1; i >= 0; i--) {
-        if (pc[i] === this) {
-          pc.splice(i, 1);
-          break;
+    if (parentvalid) {
+      // Remove from parent if the parent is not going to be GC-ed
+      if (this.__parent) {
+        var pc = this.__parent.__children;
+        for (var i = pc.length - 1; i >= 0; i--) {
+          if (pc[i] === this) {
+            pc.splice(i, 1);
+            break;
+          }
         }
       }
     }
 
+    // images are big...
     if (this.__ImgPool) this.__ImgPool.destroy();
     if (this.__LZimg) this.__discardElement(this.__LZimg);
+
+    // skip discards if the parent isn't valid
+    this.__skipdiscards = parentvalid != true;
+
     if (this.__LZclick) {
         this.__setClickable(false, this.__LZclick);
         this.__discardElement(this.__LZclick);
@@ -2572,33 +2579,12 @@ LzSprite.prototype.__setFrame = function (f, force){
         this.owner.resourceevent('lastframe', null, true);
 }
 
-/**
+/** Overridden when LzSprite.quirks.ie_leak_prevention == true
   * @access private
   */
 LzSprite.prototype.__discardElement = function (element) {
-    if (LzSprite.quirks.ie_leak_prevention) {
-        // Used instead of node.removeChild to eliminate 'pseudo-leaks' in IE - see http://outofhanwell.com/ieleak/index.php?title=Fixing_Leaks
-        //alert('__discardElement' + element.nodeType);
-        if (! element || ! element.nodeType) return;
-        if( ( element.nodeType >= 1 ) && ( element.nodeType < 13 ) )  {
-            // ensures element is valid node 
-            if (element.owner) element.owner = null;
-            var garbageBin = document.getElementById('__LZIELeakGarbageBin');
-            if (!garbageBin) {
-                garbageBin = document.createElement('DIV');
-                garbageBin.id = '__LZIELeakGarbageBin';
-                garbageBin.style.display = 'none';
-                document.body.appendChild(garbageBin);
-            }
-
-            // move the element to the garbage bin
-            garbageBin.appendChild(element);
-            garbageBin.innerHTML = '';
-            //garbageBin.outerHTML = '';
-        }
-    } else {
-        if (element.parentNode) element.parentNode.removeChild(element);
-    }
+    if (this.__skipdiscards) return;
+    if (element.parentNode) element.parentNode.removeChild(element);
 }
 
 /**
@@ -2745,6 +2731,29 @@ if (LzSprite.quirks.ie_leak_prevention) {
         LzSprite.prototype.__sprites = {};
     }
     lz.embed.attachEventHandler(window, 'beforeunload', window, '__cleanUpForIE');
+
+    // Overridden 'specially ie_leak_prevention
+    LzSprite.prototype.__discardElement = function (element) {
+        // Used instead of node.removeChild to eliminate 'pseudo-leaks' in IE - see http://outofhanwell.com/ieleak/index.php?title=Fixing_Leaks
+        //alert('__discardElement' + element.nodeType);
+        if (! element || ! element.nodeType) return;
+        if( ( element.nodeType >= 1 ) && ( element.nodeType < 13 ) )  {
+            // ensures element is valid node 
+            if (element.owner) element.owner = null;
+            var garbageBin = document.getElementById('__LZIELeakGarbageBin');
+            if (!garbageBin) {
+                garbageBin = document.createElement('DIV');
+                garbageBin.id = '__LZIELeakGarbageBin';
+                garbageBin.style.display = 'none';
+                document.body.appendChild(garbageBin);
+            }
+
+            // move the element to the garbage bin
+            garbageBin.appendChild(element);
+            garbageBin.innerHTML = '';
+            //garbageBin.outerHTML = '';
+        }
+    }
 }
 
 // Get any selected text

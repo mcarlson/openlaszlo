@@ -964,7 +964,7 @@ LzSprite.prototype.predestroy = function(){
   * @access private
   * 
   */
-LzSprite.prototype.destroy = function(){
+LzSprite.prototype.destroy = function( parentvalid = true ) {
     if (this.__LZdeleted == true) return;
     // To keep delegates from resurrecting us.  See LzDelegate#execute
     this.__LZdeleted = true;
@@ -973,17 +973,20 @@ LzSprite.prototype.destroy = function(){
     delete this.updatePlayDel;
     delete this.checkPlayStatusDel;
 
-    if (this.doQueuedDel) {
+    if (this.doQueuedDel.lastevent) {
         this.doQueuedDel.unregisterAll();
         delete this.doQueuedDel;
     }
-
-    if (this._moDel) {
+    if (this._moDel.lastevent) {
         this._moDel.unregisterAll();
         delete this._moDel;
+    }
+    if (this._muDel.lastevent) {
         this._muDel.unregisterAll();
         delete this._muDel;
     }
+
+    if (! parentvalid) return;
 
     if ( this.__LZmovieClipRef != null ){
         removeMovieClip( this.__LZmovieClipRef );
@@ -1373,10 +1376,16 @@ LzSprite.prototype.trackPlay = function() {
 LzSprite.prototype.stopTrackPlay = function() {
     this.playing = false;
     this.owner.playing = false;
-    this.updatePlayStatus();
-    this.__LZtracking = false;
-    this.updatePlayDel.unregisterAll();
-    this.checkPlayStatusDel.unregisterAll();
+    if (this.__LZtracking) {
+        this.updatePlayStatus();
+        this.__LZtracking = false;
+        if (this.updatePlayDel.lastevent) {
+            this.updatePlayDel.unregisterAll();
+        }
+        if (this.checkPlayStatusDel.lastevent) {
+            this.checkPlayStatusDel.unregisterAll();
+        }
+    }
 }
 
 /**
