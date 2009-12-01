@@ -305,7 +305,7 @@ mixin LzFormatter {
         var arg = args[i];
         var sep = ((i == (al-1)) ? '\n' : ' ');
         out.append(arg);
-        // separator is always pretty
+        // separator is not escaped
         out.appendInternal(sep);
       }
       return out;
@@ -494,7 +494,7 @@ mixin LzFormatter {
         case 'w':
           if ($debug) {
             var width = decimals || Debug.printLength;
-            // alternate => Debug.write => pretty but unique (see
+            // alternate => Debug.write => escape _and_ readable (see
             // LzMessage.append)
             // We let __String abbreviate, for best legibility
             out.appendInternal(this.pad(Debug.__String(value, true, width, alternate),

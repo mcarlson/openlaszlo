@@ -217,7 +217,7 @@ class LzDHTMLDebugService extends LzDebugService {
    *
    * @access private
    */
-  override function __StringDescription (thing:*, pretty:Boolean, limit:Number, unique:Boolean, depth:Number):Object {
+  override function __StringDescription (thing:*, escape:Boolean, limit:Number, readable:Boolean, depth:Number):Object {
     try {
       // test for HTMLElement if avaliable, second expression helps to filter IE-HTMLElements
       // NOTE: IE does not provide a HTMLElement-class, but we know their HTMLElements return 'object' for typeof,
@@ -279,7 +279,7 @@ class LzDHTMLDebugService extends LzDebugService {
         // If this has local style, add that
         var style = thing.style.cssText;
         if (style != '') { style = '[@style="' + style + '"]'; }
-        return {pretty: pretty, description: nodeToString(thing) + style};
+        return {readable: false, description: nodeToString(thing) + style};
       } else if (this.hasFeature('mouseevents', '2.0') && (thing is global['MouseEvent'])) {
         var desc = thing.type;
         if (thing.shiftKey) {
@@ -302,10 +302,10 @@ class LzDHTMLDebugService extends LzDebugService {
           case 1: desc += '-middle'; break;
           case 2: desc += '-right'; break;
         }
-        return {pretty: pretty, description: desc};
+        return {readable: false, description: desc};
       }
     } catch (e) {}
-    return super.__StringDescription(thing, pretty, limit, unique, depth);
+    return super.__StringDescription(thing, escape, limit, readable, depth);
   };
 
   /**

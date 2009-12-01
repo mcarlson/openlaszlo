@@ -152,7 +152,7 @@ class LzDebugMessage extends LzBootstrapMessage {
       // Don't treat String's as Objects (in as3, all strings are Strings!)
       if ((! ((arg is String) && (arg['constructor'] === String))) &&
           ((arg is Object) || Debug.isObjectLike(arg) || (Debug.IDForObject(arg) != null))) {
-        // pretty, no limit, but unique; for write-compatibility
+        // escape, no limit, but readable; for write-compatibility
         var str = Debug.__String(arg, true, Infinity, true);
         this.appendInternal(str, arg);
       } else {

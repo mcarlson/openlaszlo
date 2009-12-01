@@ -900,20 +900,28 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * May be overridden in subclasses to add descriptions for
    * platform-dependent types
    *
+   * @param thing:* The object to describe
+   * @param escape:Boolean Whether to escape special characters
+   * @param limit:Number Max length of the description
+   * @param readable:Boolean ignored
+   * @param depth:Number Max recursion computing description
+   *
    * @access private
    */
-  function __StringDescription(thing:*, pretty:Boolean, limit:Number, unique:Boolean, depth:Number):Object {
+  function __StringDescription(thing:*, escape:Boolean, limit:Number, readable:Boolean, depth:Number):Object {
     try {
       // Return primitive types early, so you don't stumble on them in
       // unforgiving runtimes.
       if (thing === (void 0)) {
-        return {pretty: true, description: '(void 0)'};
+        return {readable: true, description: '(void 0)'};
       }
       if (thing === null) {
-        return {pretty: true, description: 'null'};
+        return {readable: true, description: 'null'};
       }
 
       var t = typeof(thing);
+      // Nothing is readable by default.  We note the things that are.
+      var isreadable = false;
       var debug_name = null;
       var s = '';
 
@@ -952,62 +960,44 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         }
       }
       if (this.isStringLike(debug_name)) {
-        // If the debug name does not start with '#' (indicating that it
-        // is a global ID), turn pretty off
-        if ((debug_name.charAt(0) != '#') && unique) {
-          pretty = false;
+        // If the debug name starts with '#' (indicating that it is a
+        // global ID), turn isreadable on
+        if (debug_name.charAt(0) == '#') {
+          // TODO: Verify that the global value of debug_name is thing
+          isreadable = true;
         }
         // User method returned a valid answer
         // Sanitize it
         s = this.stringEscape(debug_name);
       } else if ((t == 'null') || (t == 'number') || (t == 'boolean')) {
-        // Primitive types with print/read consistency print as pretty,
+        // Primitive types with print/read consistency are readable,
         // unless abbreviated below
-        pretty = true;
+        isreadable = true;
         s = String(thing);
-        // TODO: [2008-08-17 ptw] return now?
       } else if (this.isStringLike(thing)) {
-        // No pretty for subclasses
-        if (thing is String && (thing['constructor'] !== String)) {
-          pretty = false;
-        }
         // abbreviate rep if necessary
         s = this.abbreviate(thing, limit);
-        // print/read consistency
-        var prc = (s === thing);
-        // if you abbreviate, don't be pretty
-        if ((! prc) && unique) { pretty = false; }
+        // No isreadable for anything other than primitive strings
+        // that have been escaped and will obey print/read consistency
+        isreadable = (escape && (t == 'string') && (s === thing));
         // escape non-printing controls that otherwise are
         // indistinguishable
-        s = this.stringEscape(s, true);
-        // If you still have print/read consistency, stop here
-        if ((t == 'string') && prc) {
-          return {pretty: pretty, description: s};
+        if (escape) {
+          s = this.stringEscape(s, true);
         }
-        // Long strings and String objects get an ID so they can be
-        // inspected
-        this.IDForObject(thing, true);
       } else if ((t == 'function') || (thing is Function)) {
-        var n = this.functionName(thing, unique);
+        var n = this.functionName(thing, true);
         if (n != null) {
+          // Global function name, note readable
+          isreadable = true;
           s = n;
         } else {
-          // not a global function, can't be pretty if you want unique
-          if (unique) { pretty = false; }
+          // not a global function
           s = this.functionName(thing, false);
           // unnamed function, will get type and uniquified below
           if (s == null) { s = ''; }
         }
       } else if (this.isObjectLike(thing)) {
-        // No pretty if thing.constructor.prototype is not
-        // thing's prototype, as this indicates some sort of
-        // bizarre object
-        if ((! thing['constructor']) ||
-            (! thing.constructor['prototype']) ||
-            (! (thing.constructor.prototype['isPrototypeOf'] is Function)) ||
-            (! thing.constructor.prototype.isPrototypeOf(thing))) {
-          pretty = false;
-        }
         // Catch wrappers (but not subtypes of wrappers)
         if (thing['constructor'] &&
             (thing.constructor === Date ||
@@ -1035,9 +1025,6 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
                          return u;
                        }
                      } catch (e) { return ''; } })())) {
-          // No pretty for these, you don't know if the user
-          // toString is uniquifying
-          if (unique) { pretty = false; }
         }
         // Print unidentified objects and arrays as abbreviated list of props
         else {
@@ -1046,14 +1033,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           this.objectOwnProperties(thing, names, indices, limit);
           if (indices) { indices.sort(this.numericOrdering); }
 
-          // No pretty for subclasses or non-objects or array-like objects
-          // that are not Arrays.
-          var notPretty = indices ?
-            (this.isArrayLike(thing) && (thing['constructor'] !== Array)) :
-            (this.isObjectLike(thing) && (thing['constructor'] !== Object));
-          if (notPretty && unique) {
-            pretty = false;
-          }
+          // Only straight-up Array's or Object's could be readable,
+          // but to do this right, we would have to accumulate
+          // isreadable of each element.
+//           isreadable = indices ?
+//             (this.isArrayLike(thing) && (thing['constructor'] === Array)) :
+//             (this.isObjectLike(thing) && (thing['constructor'] === Object));
 
           if (indices) {
             // Present as an array, Don't accumulate beyond limit
@@ -1102,12 +1087,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         }
       } else {
         // Shouldn't ever get here
-        pretty = (! unique);
         s = String(thing);
       }
     }
     catch (e) {
-      pretty = false;
       try {
         // Use %s to prevent recursion
         s = this.formatToString("Error: %0.24#s computing __String", e);
@@ -1117,42 +1100,49 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       }
     }
 
-    return {pretty: pretty, description: s};
+    return {readable: isreadable, description: s};
   }
 
   /**
-   * Coerce to an informative string for debugging
-   * Singleton types and atomic types are represented by
-   * themselves.  Strings are quoted.  Other types are printed as a type
-   * followed by a description.  By default an object is described by
-   * its properties, a function by its name (if available).  Objects are
-   * given an id that can be used to distinguish and inspect them.
+   * Coerce to an informative string for debugging.
+   *
+   * If possible, the string will be a string that when passed to
+   * `eval` will return an object that is === to the object being
+   * described.
    *
    * Classes and instances may define their own _dbg_name property
    * (which may be a Function returning a String or a String) to
    * override the default description.
    *
-   * @param * thing: The object to coerce to a string
-   * @param Boolean pretty: return a 'prettier' (but possibly ambiguous)
-   * representation, default true.
-   * @param Number limit: don't return a string longer than, default
+   * @param * thing: The object to describe
+   *
+   * @param Boolean escape: Escape non-printing characters in
+   * strings.  Default: true.
+   *
+   * @param Number limit: Limit on the length of the description.  Default:
    * Debug.printLength
-   * @param Boolean unique: disambiguate representations by attaching a
-   * unique identifier, default (! pretty)
+   *
+   * @param Boolean readable: Indicate when the description will not
+   * evaluate to an object === to the thing being described (will
+   * return a description in a stylized format:
+   *   `<<type #uid| description>>`
+   * ).  Default: (! escape).
+   *
    * @param Number depth: don't descend into structures deeper than
-   * this many levels, default Debug.printDepth
+   * this many levels. Default: Debug.printDepth
+   *
    * @return LzMessage: String representation of thing
    *
    * @access private
    */
-  function __String (thing:*, pretty:Boolean=true, limit=(void 0), unique=(void 0), depth=(void 0)):String {
+  function __String (thing:*, escape:Boolean=true, limit=(void 0), readable=(void 0), depth=(void 0)):String {
     // Save (and cache) original defaults, which will be bound below
     var origPrintLength:Number = this.printLength;
     var origPrintDepth:Number = this.printDepth;
     var origPrintDetectCircular:Array = this.printDetectCircular;
     // Default optional arguments
-    if (limit === (void 0)) { limit = pretty ? origPrintLength:64; }
-    if (unique === (void 0)) { unique = (! pretty); }
+    if (limit === (void 0)) { limit = origPrintLength; }
+    if (readable === (void 0)) { readable = (! escape); }
     if (depth === (void 0)) { depth = origPrintDepth; }
     var circular = origPrintDetectCircular;
     // Enforce depth
@@ -1160,6 +1150,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
       return '\u2026';          // ellipsis
     }
     var s = '';
+    var isreadable = false;
     var id = this.IDForObject(thing);
     // Enforce length
     if (limit > 0) {
@@ -1167,13 +1158,15 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         // Enforce circular
         if ((id !== null) && (circular != null) && (circular[id])) {
           var cache = circular[id];
-          // If we have a pretty name for this already, it is stored
-          // in the circular table, instead of `true`
-          if (pretty && cache && (cache !== true)) {
+          // If we have a readable description for this already, it is
+          // stored in the circular table, instead of `true`
+          if (cache && (cache !== true)) {
             s = cache;
+            isreadable = true;
 //             Debug.debug("circular[%d] => %s", id, s);
           } else {
-            unique = true;
+            // Force printing of ID
+            readable = true;
           }
         } else {
           // Note circular
@@ -1188,26 +1181,13 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           this.printDepth = depth;
           this.printDetectCircular = circular;
           // Descend
-          var d  = this.__StringDescription(thing, pretty, limit, unique, depth);
+          var d  = this.__StringDescription(thing, escape, limit, readable, depth);
           s = d.description;
-          pretty = d.pretty;
-          // Cache description for circular && pretty
-          if (s && pretty && (id !== null)) {
+          isreadable = d.readable;
+          // Cache description for circular
+          if (s && isreadable && (id !== null)) {
             circular[id] = s;
           }
-        }
-        // Enforce pretty && (! unique)
-        if (pretty &&
-            ((! unique) || (! this.isObjectLike(thing))) &&
-            (s != "") && (s.length < limit)) {
-          if ($swf8) {
-            // FIXME [2009-10-05 ptw] (LPP-8533) finally not working
-            // in swf8+backtrace?
-            this.printLength = origPrintLength;
-            this.printDepth = origPrintDepth;
-            this.printDetectCircular = origPrintDetectCircular;
-          }
-          return s;
         }
       } finally {
         // Restore defaults
@@ -1216,18 +1196,24 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         this.printDetectCircular = origPrintDetectCircular;
       }
     }
-    // Force id if you couldn't print pretty due to
-    // abbreviating
-    if ((s.length >= limit) && (id === null)) {
-      id = this.IDForObject(thing, true);
+    // If it is readable, or you don't need readable, and you have a
+    // description that will not be abbreviated, you are done.
+    if ((isreadable || (! readable)) &&
+        (s != "") && (s.length < limit)) {
+      return s;
     }
-    // Build representation
+    // Build an "unreadable" representation
     var r = '\u00AB';             // <<
     r += this.__typeof(thing);
-    if (unique && (id !== null)) {r += ('#' + id);}
+    var room = limit - r.length - 4; // '| ' + '...' + '>>'
+    // If you couldn't satisfy readably (or won't because of
+    // abbreviating), force the object to have an ID
+    if (readable && ((! isreadable) || (s.length >= room)) && (id === null)) {
+      id = this.IDForObject(thing, true);
+    }
+    if (readable && (id !== null)) {r += ('#' + id);}
     // Only abbreviate the description, don't lose the type or ID
     if (s != '') {
-      var room = limit - r.length - 4; // '| ' + '...' + '>>'
       if (room > 0) {
         r += '| ';
         r += this.abbreviate(s, room);
@@ -1262,29 +1248,35 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     var octx = this.inspectContext;
     var opdc = this.printDetectCircular;
     try {
-        // Disable printLength for printing the name of a non-object in case
-        // it was abbreviated, otherwise set it short
-        if (! this.isObjectLike(obj)) {
+        // Disable printLength, escape, and readable for printing the
+        // "name" of a non-object in case it was abbreviated,
+        // otherwise use inspectPrintLength, escape, and readable.
+        var isobj = this.isObjectLike(obj);
+        if (! isobj) {
+          var esc = false;
           var pl = Infinity;
+          var pr = false;
         } else {
+          var esc = true;
           var pl = this.inspectPrintLength;
+          var pr = true;
         }
         // Set context before calling any __String* methods
         this.inspectContext = obj;
         // Note self for circular detection (creates a simpler output
         // for objects that use their parent in their name).
         var id = this.IDForObject(obj);
-        if (id !== null) {
+        if (isobj && (id !== null)) {
           var pdc = this.printDetectCircular = [];
-          // Cache the pretty name of ourselves, if available
-          var d = this.__StringDescription(obj, true, pl, false, 0);
-          pdc[id] = d.pretty? d.description : true;
+          // Cache the readable name of ourselves, if available
+          var d = this.__StringDescription(obj, true, pl, true, 0);
+          pdc[id] = d.readable ? d.description : true;
         }
-        // Turn off pretty, shallow depth for name
         // Note: inspectInternal is expected to return the
         // HTML-encoded string
-        var name = LzMessage.xmlEscape(this.__String(obj, false, pl, true, 0));
-        if (! (this.isObjectLike(obj))) {
+        var name = LzMessage.xmlEscape(this.__String(obj, esc, pl, pr, 0));
+        // If it's not an object, you're done
+        if (! isobj) {
           return name;
         }
 
@@ -1492,7 +1484,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   };
 
   /**
-   * Characters to escape in strings when printPretty is false.
+   * Characters to escape in strings when escape is true.
    * (These are the ECMAScript SingleEscapeCharacter's for String
    * Literals (7.8.4).
    * @access private
