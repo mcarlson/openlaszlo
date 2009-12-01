@@ -551,7 +551,7 @@ LzSprite.quirks = {
     //,dom_breaks_focus: false // no longer needed
     ,inputtext_anonymous_div: false
     ,clipped_scrollbar_causes_display_turd: false
-    ,hasmetakey: false
+    ,hasmetakey: true
     ,textgrabsinputtextfocus: false
     ,input_highlight_bug: false
     ,autoscroll_textarea: false
@@ -690,9 +690,6 @@ LzSprite.__updateQuirks = function () {
             quirks['fix_ie_css_syntax'] = true;
 
         } else if (browser.isSafari || browser.isChrome) {
-            // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
-            quirks['alt_key_sends_control'] = true;
-
             // Safari won't show canvas tags whose parent is display: none
             quirks['safari_visibility_instead_of_display'] = true;
             quirks['absolute_position_accounts_for_offset'] = true;
@@ -810,6 +807,8 @@ LzSprite.__updateQuirks = function () {
         if (browser.OS == 'Mac') {
             // see LPP-8210
             quirks['detectstuckkeys'] = true;
+            // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
+            quirks['alt_key_sends_control'] = true;
         }
 
         // Adjust styles for quirks

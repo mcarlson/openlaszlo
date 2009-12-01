@@ -112,11 +112,13 @@ var LzKeyboardKernel = {
                 dirty = true;
                 // Is this a quirk?
                 delta['control'] = meta;
+                /* quirks.hasmetakey was always false before - so ignore this
                 if (! meta) {
                     // If meta goes up, clear all the other keys
                     LzKeyboardKernel.__allKeysUp();
                     dirty = false;
                 }
+                */
             }
         }
 
