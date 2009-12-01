@@ -54,7 +54,7 @@ class LzMouseKernel  {
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_MOVE, __mouseHandler);
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_UP,   __mouseHandler);
             LFCApplication.stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseHandler);
-            LFCApplication.stage.addEventListener(MouseEvent.MOUSE_WHEEL, __mouseWheelHandler);
+            // handled by lz.embed.mousewheel for Windows LFCApplication.stage.addEventListener(MouseEvent.MOUSE_WHEEL, __mouseWheelHandler);
             LFCApplication.stage.addEventListener(Event.MOUSE_LEAVE, __mouseLeaveHandler);
             __listeneradded = true;
         }

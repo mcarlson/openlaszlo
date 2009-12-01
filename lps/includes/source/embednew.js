@@ -57,6 +57,7 @@ lz.embed = {
      * upgrade to if necessary.  Defaults to 10 for security reasons.
      */
     ,swf: function (properties, minimumVersion) {
+        var embed = lz.embed;
         // Upgrade to flash player 10 for security reasons
         if (minimumVersion == null) minimumVersion = 10;
 
@@ -82,7 +83,7 @@ lz.embed = {
 
         var url = queryvals.url + '?' + queryvals.query;
 
-        var appenddiv = lz.embed._getAppendDiv(properties.id, properties.appenddivid);
+        var appenddiv = embed._getAppendDiv(properties.id, properties.appenddivid);
         // NOTE: [2009-08-24 ptw] We set the embed width/height to
         // 100% and the appenddiv to the desired size, so the platform
         // can adjust the appenddiv size to effect a dynamic canvas
@@ -100,43 +101,45 @@ lz.embed = {
         };
 
         // Add entry for this application 
-        if (lz.embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
-        var app = lz.embed[properties.id] = lz.embed.applications[properties.id] = { 
+        if (embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
+        var app = embed[properties.id] = embed.applications[properties.id] = { 
             runtime: 'swf'
             ,_id: properties.id
             ,appenddiv: appenddiv
-            ,setCanvasAttribute: lz.embed._setCanvasAttributeSWF
-            ,getCanvasAttribute: lz.embed._getCanvasAttributeSWF
-            ,callMethod: lz.embed._callMethodSWF
-            ,_ready: lz.embed._ready
+            ,setCanvasAttribute: embed._setCanvasAttributeSWF
+            ,getCanvasAttribute: embed._getCanvasAttributeSWF
+            ,callMethod: embed._callMethodSWF
+            ,_ready: embed._ready
             // List of functions to call when the app is loaded
             ,_onload: []
-            ,_getSWFDiv: lz.embed._getSWFDiv
+            ,_getSWFDiv: embed._getSWFDiv
             ,loaded: false
-            ,_sendMouseWheel: lz.embed._sendMouseWheel
-            ,_sendAllKeysUp: lz.embed._sendAllKeysUpSWF
-            ,_setCanvasAttributeDequeue: lz.embed._setCanvasAttributeDequeue
-            ,_sendPercLoad: lz.embed._sendPercLoad
-            ,setGlobalFocusTrap: lz.embed.__setGlobalFocusTrapSWF
+            ,_sendMouseWheel: embed._sendMouseWheel
+            ,_sendAllKeysUp: embed._sendAllKeysUpSWF
+            ,_setCanvasAttributeDequeue: embed._setCanvasAttributeDequeue
+            ,_sendPercLoad: embed._sendPercLoad
+            ,setGlobalFocusTrap: embed.__setGlobalFocusTrapSWF
         }
         // listen for history unless properties.history == false
         if (properties.history == false) {
-            lz.embed.history.active = false;
+            embed.history.active = false;
         }
         // for callbacks onload
-        lz.embed.dojo.addLoadedListener(lz.embed._loaded, app);
-        lz.embed.dojo.setSwf(swfargs, minimumVersion);
-        appenddiv.style.height = lz.embed.CSSDimension(properties.height);
-        appenddiv.style.width = lz.embed.CSSDimension(properties.width);
+        embed.dojo.addLoadedListener(embed._loaded, app);
+        embed.dojo.setSwf(swfargs, minimumVersion);
+        appenddiv.style.height = embed.CSSDimension(properties.height);
+        appenddiv.style.width = embed.CSSDimension(properties.width);
         if (properties.cancelmousewheel != true && 
-            (lz.embed.browser.OS == 'Mac' || 
-            // fix for LPP-5393
-            ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && lz.embed.browser.OS == 'Windows' && (lz.embed.browser.isOpera || lz.embed.browser.isFirefox)))) {
-            if (lz.embed['mousewheel']) {
-                lz.embed.mousewheel.setCallback(app, '_sendMouseWheel');
+            (embed.browser.OS == 'Mac' || 
+            // fix for LPP-7677
+            embed.browser.OS == 'Windows')) {
+            // fix for LPP-5393, commented out because we're always on for Windows
+            // ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && embed.browser.OS == 'Windows' && (embed.browser.isOpera || embed.browser.isFirefox)))) {
+            if (embed['mousewheel']) {
+                embed.mousewheel.setCallback(app, '_sendMouseWheel');
             }
         }
-        if ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && lz.embed.browser.OS == 'Windows' && (lz.embed.browser.isOpera || lz.embed.browser.isFirefox)) {
+        if ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && embed.browser.OS == 'Windows' && (embed.browser.isOpera || embed.browser.isFirefox)) {
             // fix for LPP-7724
             var div = swfargs.appenddiv;
             div.onmouseout = function(e) {
@@ -145,12 +148,12 @@ lz.embed = {
             div.onmouseover = function(e) {
                 div.mouseisoutside = false;
             }
-            //lz.embed.attachEventHandler(document, 'mouseup', div, '_gotmouseup');
+            //embed.attachEventHandler(document, 'mouseup', div, '_gotmouseup');
             div._gotmouseup = document.onmouseup = function(e) {
                 if (div.mouseisoutside) {
                     // tell flash that the button went up outside
                     app.callMethod('LzMouseKernel.__mouseUpOutsideHandler()');
-                    //console.log('mouseup ', lz.embed[app._id]);
+                    //console.log('mouseup ', embed[app._id]);
                 }
             }
         }
