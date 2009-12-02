@@ -256,7 +256,6 @@ public class Compiler {
 
   // Set internal flags that depend on external flags
   public void defaultOptions() {
-
     // Disable debug compilation for swf9/swf10
     if ("swf9".equals((String)options.get(RUNTIME)) || "swf10".equals((String)options.get(RUNTIME))) {
       // TODO: [2005-04-15 ptw] This pretty much sucks, but the debug
@@ -710,25 +709,7 @@ public class Compiler {
           return node.get(0);
         }
       }
-      // After refactoring, assure each function has a name
-      // for debugging and profiling
-      if (node instanceof ASTAssignmentExpression) {
-        SimpleNode rhs = node.get(2);
-        if (rhs instanceof ASTFunctionExpression) {
-          // fn children are [(name), arglist, body]
-          if (rhs.size() == 2) {
-            String name = ptp.text(node.get(0));
-            SimpleNode child = rhs;
-            int size = child.size();
-            SimpleNode children[] = new SimpleNode[size + 1];
-            children[0] = new ASTIdentifier(name);
-            for (int i = 0, j = 1; i < size; i++, j++) {
-              children[j] = child.get(i);
-            }
-            child.setChildren(children);
-          }
-        }
-      }
+
       return node;
     }
 

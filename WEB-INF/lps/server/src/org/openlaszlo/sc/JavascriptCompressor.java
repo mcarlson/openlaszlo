@@ -15,6 +15,7 @@ import java.io.*;
 import java.util.*;
 
 import org.openlaszlo.sc.parser.*;
+import org.openlaszlo.sc.Compiler;
 
 public class JavascriptCompressor extends GenericVisitor implements Translator {
   // TODO: [2009-10-30 ptw]
@@ -52,6 +53,25 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
   // when calculating local/free/closed.
   //
 
+  public JavascriptCompressor (Map initialOptions) {
+    super();
+    this.setOptions(new Compiler.OptionMap(initialOptions));
+  }
+
+  // Cf., sc.Compiler.defaultOptions  We set some internal options for
+  // compatibility with the script compiler
+  public void setOptions(Compiler.OptionMap options) {
+    this.options = options;
+
+    if (options.getBoolean(Compiler.DEBUG)) {
+      options.putBoolean(Compiler.NAME_FUNCTIONS, true);
+    }
+    if (!options.containsKey(Compiler.DISABLE_TRACK_LINES) &&
+        options.getBoolean(Compiler.NAME_FUNCTIONS)) {
+      options.putBoolean(Compiler.TRACK_LINES, true);
+    }
+  }
+
   public TranslationContext makeTranslationContext(Object type, TranslationContext parent, String label) {
     return new TranslationContext(type, parent, label);
   }
@@ -67,10 +87,16 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
     return this.context;
   }
 
-  public SimpleNode compress(SimpleNode program) {
+  public void compress(SimpleNode program, OutputStream out) {
     // Here is your opportunity to set any sort of flags you might
     // want to to neuter translations that are not needed.
-    return translate(program);
+    ParseTreePrinter.Config config = new ParseTreePrinter.Config();
+    boolean compress = (! options.getBoolean(Compiler.NAME_FUNCTIONS));
+    config.setCompress(compress);
+    config.setObfuscate(compress || options.getBoolean(Compiler.OBFUSCATE));
+    config.setTrackLines(options.getBoolean(Compiler.TRACK_LINES));
+    // One small step towards a stream compiler...
+    (new ParseTreePrinter(config)).print(translate(program), out);
   }
 
   public SimpleNode translate(SimpleNode program) {
@@ -229,9 +255,14 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
           ASTIdentifier oldParam = (ASTIdentifier)paramIds[i];
           SimpleNode newParam = translateIdentifier(oldParam, AccessMode.DECLARE);
           formals.set(i, newParam);
+        } else {
+          assert paramIds[i] instanceof ASTFormalInitializer;
         }
       }
 
+      // inner functions do not get scriptElement treatment, shadow any
+      // outer declaration
+      options.putBoolean(Compiler.SCRIPT_ELEMENT, false);
       // Rewrite the body using the renamed locals
       for (int i = 0, ilim = statements.length; i < ilim; i++) {
         SimpleNode stmt = statements[i];

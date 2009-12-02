@@ -19,6 +19,7 @@ import org.jdom.Element;
 import org.openlaszlo.sc.ParseTreePrinter;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.JavascriptCompressor;
+import org.openlaszlo.sc.Compiler;
 import org.openlaszlo.utils.*;
 
 /** Accumulates code, XML, and assets to a Library object file.
@@ -171,11 +172,9 @@ class LibraryWriter extends DHTMLWriter {
     // Write 'compressed' output
     org.openlaszlo.sc.parser.SimpleNode program =
       (new org.openlaszlo.sc.Compiler.Parser()).parse(scriptBuffer.toString());
-    JavascriptCompressor compressor = new JavascriptCompressor();
-    program = compressor.compress(program);
-    boolean compress = (! mEnv.getProperty(org.openlaszlo.sc.Compiler.NAME_FUNCTIONS, "false").equals("true"));
-    boolean obfuscate = compress || mEnv.getProperty(org.openlaszlo.sc.Compiler.OBFUSCATE, "false").equals("true");
-    (new ParseTreePrinter(compress, obfuscate)).print(program, out);
+    // Cf., ScriptCompiler _compileToByteArray
+    JavascriptCompressor compressor = new JavascriptCompressor(mProperties);
+    compressor.compress(program, out);
     out.println("\n]]>\n</script>");
   } 
   

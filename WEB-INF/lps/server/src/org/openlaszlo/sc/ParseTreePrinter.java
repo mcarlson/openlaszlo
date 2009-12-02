@@ -122,7 +122,7 @@ public class ParseTreePrinter {
   }
   
   public void print(SimpleNode node, PrintStream where) {
-    where.println(visit(node, null));
+    where.println(translatedAnnotations(visit(node, null)));
   }
   
   public String delimit(String phrase, boolean force, boolean parenMultiline) {
@@ -605,6 +605,7 @@ public class ParseTreePrinter {
     return "new " + children[0] + "(" + children[1] + ")";
   }
   public String visitPragmaDirective(SimpleNode node, String[] children) {
+    // TODO:  Need a way to only emit a newline when we need it
     return "\n#pragma " + children[0] + "\n";
   }
   public String visitPassthroughDirective(SimpleNode node, String[] children) {
@@ -1377,6 +1378,180 @@ public class ParseTreePrinter {
     return lnstate;
   }
 
+  /** source locations are recorded to show error messages.
+   * We want to err on the side of recording more, not less.
+   */
+  public boolean shouldRecordSourceLocation(LineNumberState state) {
+    return (state.hasfile && state.linenum != Integer.MIN_VALUE);
+  }
+
+  /** source locations that are shown are used by the debugger.
+   */
+  public boolean shouldShowSourceLocation(LineNumberState os,
+                                          LineNumberState ns,
+                                          char op,
+                                          boolean atBol,
+                                          TranslationUnit curtu) {
+    boolean fileSame = os.filename.equals(ns.filename);
+    boolean lineSame = (os.linediff == ns.linediff);
+
+    boolean showSrcloc = false;
+
+    // Show source location if we are tracing linenums and the
+    // file is the same and we're either at the beginning of a
+    // line or we have a real filename or we're at the beginning
+    // of line.  There are many compiler substitutions within
+    // statements, and we don't want to break up output lines
+    // with pointless srclocs.
+
+    if (!fileSame && config.trackLines) {
+
+      // We need to emit at the beginning of the line,
+      // even if the file has changed.  If we break up lines,
+      // we may alter the meaning of the javascript -
+      // 'return foo' can become 
+      //    return
+      //    foo
+      // (two separate statements).
+
+      if (atBol && (ns.hasfile || os.hasfile)) {
+        showSrcloc = true;
+      }
+    }
+    // Show source location if we are 'forced' to and have a name
+    // No check for atBol here, a LINENUM_FORCE should only be used
+    // in cases where it is safe to break lines.
+
+    else if (op == ANNOTATE_OP_FILE_LINENUM_FORCE &&
+             ns.filename.length() > 0) {
+      showSrcloc = true;
+    }
+    // Otherwise, at the beginning of a line, show it if it has changed.
+    else if (atBol && config.trackLines && ns.linenum > 0 &&
+             (!lineSame || !fileSame)) {
+      showSrcloc = true;
+    }
+
+    // If debugging, indicate the reasons we are or are not showing loc
+    if (Config.DEBUG_LINE_NUMBER && config.trackLines) {
+
+      String shorthand = showSrcloc ? "L: " : "!L: ";
+      if (!ns.hasfile) {
+        shorthand += "!file ";
+      }
+      if (!fileSame) {
+        shorthand += "!fsame ";
+      }
+      if (!lineSame) {
+        shorthand += "!lsame ";
+      }
+      if (op == ANNOTATE_OP_FILE_LINENUM_FORCE) {
+        shorthand += "force ";
+      }
+      curtu.addText("/* " + shorthand + "*/");
+    }
+
+    return showSrcloc;
+  }
+
+  public String translatedAnnotations(String annotated) {
+    final TranslationUnit curtu = new TranslationUnit(true);
+
+    // Some of this logic should be shared with makeTranslationUnits,
+    // but for binary libraries the annotation is in a different
+    // format
+    AnnotationProcessor ap = new AnnotationProcessor() {
+        boolean atBol = true;
+        LineNumberState curLstate = new LineNumberState();
+        LineNumberState newLstate;
+        SourceFileMap sources = new SourceFileMap();
+        String srcloc = null;
+        int diff = 0;
+
+        public String notify(char op, String operand) {
+          switch (op) {
+          case ANNOTATE_OP_TEXT:
+            if (Config.DEBUG_LINE_NUMBER) {
+              int nl = operand.indexOf('\n');
+              if (nl >= 0) {
+                int curline = curtu.getTextLineNumber();
+                operand = operand.substring(0, nl) +
+                  "   /* #" + curline + " */" +
+                  operand.substring(nl);
+              }
+            }
+            if (operand.length() > 0) {
+              if (srcloc != null && srcloc.length() > 0) {
+                curtu.addText(srcloc);
+                newLstate.linediff += diff; // compensate for lines just added
+                curLstate = newLstate;
+                srcloc = null;
+              }
+              curtu.addText(operand);
+              if (operand.endsWith("\n")) {
+                atBol = true;
+              }
+              else {
+                atBol = false;
+              }
+            }
+            return "";
+          case ANNOTATE_OP_FILE_LINENUM:
+          case ANNOTATE_OP_FILE_LINENUM_FORCE:
+            newLstate = getLineNumberState(curtu, operand);
+            if (shouldRecordSourceLocation(newLstate)) {
+              curtu.setInputLineNumber(newLstate.linenum, sources.byName(newLstate.filename));
+            }
+            if (shouldShowSourceLocation(curLstate, newLstate, op, atBol, curtu)) {
+              int offset = (curLstate.linediff - newLstate.linediff);
+              if (atBol) {
+                srcloc = "";
+                diff = 0;
+              } else {
+                srcloc = "\n";
+                diff = 1;
+              }
+              if (newLstate.filename.length() == 0) {
+                srcloc += "#file\n";
+                diff += 1;
+              } else if ((op == ANNOTATE_OP_FILE_LINENUM_FORCE) ||
+                         (! (curLstate.filename.equals(newLstate.filename)))) {
+                srcloc += "#file " + newLstate.filename + "\n";
+                srcloc += "#line " + newLstate.linenum + "\n";
+                diff += 2;
+              } else {
+                String update = "#line " + newLstate.linenum + "\n";
+                if (atBol && (offset > 0) && (offset < update.length())) {
+                  for (int i = 0; i < offset; i++) { srcloc += "\n"; }
+                  diff += offset;
+                } else {
+                  srcloc += update;
+                  diff += 1;
+                }
+              }
+            }
+            return "";
+          case ANNOTATE_OP_CLASSNAME:
+            return "";
+          case ANNOTATE_OP_CLASSEND:
+            return "";
+          case ANNOTATE_OP_INSERTSTREAM:
+            assert false : "#insertstream " + operand + ": ";
+          case ANNOTATE_OP_NODENAME:
+            return "";
+          case ANNOTATE_OP_NODEEND:
+            return "";
+          case '0': case '1': case '2': case '3': case '4':
+          case '5': case '6': case '7': case '8': case '9':
+            assert false : "#stream " + op + ": " + operand;
+          }
+          return "";
+        }
+      };
+    ap.process(annotated);
+    return curtu.getContents();
+  }
+
   public List makeTranslationUnits(String annotated, final SourceFileMap sources) {
     if (config.dumpLineAnnotationsFile != null) {
       String newname = Compiler.emitFile(config.dumpLineAnnotationsFile, printableAnnotations(annotated));
@@ -1396,80 +1571,6 @@ public class ParseTreePrinter {
         boolean atBol = true;
         LineNumberState curLstate = new LineNumberState();
 
-        /** source locations are recorded to show error messages.
-         * We want to err on the side of recording more, not less.
-         */
-        public boolean shouldRecordSourceLocation(LineNumberState state) {
-          return (state.hasfile && state.linenum != Integer.MIN_VALUE);
-        }
-
-        /** source locations that are shown are used by the debugger.
-         */
-        public boolean shouldShowSourceLocation(LineNumberState os,
-                                                LineNumberState ns,
-                                                char op,
-                                                boolean atBol) {
-          boolean fileSame = os.filename.equals(ns.filename);
-          boolean lineSame = (os.linediff == ns.linediff);
-
-          boolean showSrcloc = false;
-
-          // Show source location if we are tracing linenums and the
-          // file is the same and we're either at the beginning of a
-          // line or we have a real filename or we're at the beginning
-          // of line.  There are many compiler substitutions within
-          // statements, and we don't want to break up output lines
-          // with pointless srclocs.
-
-          if (!fileSame && config.trackLines) {
-
-            // We need to emit at the beginning of the line,
-            // even if the file has changed.  If we break up lines,
-            // we may alter the meaning of the javascript -
-            // 'return foo' can become 
-            //    return
-            //    foo
-            // (two separate statements).
-
-            if (atBol && (ns.hasfile || os.hasfile)) {
-              showSrcloc = true;
-            }
-          }
-          // Show source location if we are 'forced' to and have a name
-          // No check for atBol here, a LINENUM_FORCE should only be used
-          // in cases where it is safe to break lines.
-
-          else if (op == ANNOTATE_OP_FILE_LINENUM_FORCE &&
-                   ns.filename.length() > 0) {
-            showSrcloc = true;
-          }
-          // Otherwise, at the beginning of a line, show it if it has changed.
-          else if (atBol && config.trackLines && ns.linenum > 0 &&
-                   (!lineSame || !fileSame)) {
-            showSrcloc = true;
-          }
-
-          // If debugging, indicate the reasons we are or are not showing loc
-          if (Config.DEBUG_LINE_NUMBER && config.trackLines) {
-
-            String shorthand = showSrcloc ? "L: " : "!L: ";
-            if (!ns.hasfile) {
-              shorthand += "!file ";
-            }
-            if (!fileSame) {
-              shorthand += "!fsame ";
-            }
-            if (!lineSame) {
-              shorthand += "!lsame ";
-            }
-            if (op == ANNOTATE_OP_FILE_LINENUM_FORCE) {
-              shorthand += "force ";
-            }
-            curtu.addText("/* " + shorthand + "*/");
-          }
-
-          return showSrcloc;
-        }
 
         public String notify(char op, String operand) {
           switch (op) {
@@ -1509,7 +1610,7 @@ public class ParseTreePrinter {
             if (shouldRecordSourceLocation(newLstate)) {
               curtu.setInputLineNumber(newLstate.linenum, sources.byName(newLstate.filename));
             }
-            if (shouldShowSourceLocation(curLstate, newLstate, op, atBol)) {
+            if (shouldShowSourceLocation(curLstate, newLstate, op, atBol, curtu)) {
               String srcloc = atBol ? "" : "\n";
               if (op == ANNOTATE_OP_FILE_LINENUM_FORCE) {
                 srcloc += "/* -*- file: " + operand + " -*- */\n";

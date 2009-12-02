@@ -1536,7 +1536,7 @@ solution =
             }
             String refbody = "var $lzc$reference = (" +
                 "#beginAttribute\n" +
-                reference + "\n#endAttribute\n);\n" +
+                reference + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n);\n" +
                 (debug ?
                  "if ($lzc$reference is LzEventable) {\n" :
                  "") +

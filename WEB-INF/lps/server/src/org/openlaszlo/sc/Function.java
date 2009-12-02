@@ -70,6 +70,8 @@ public class Function {
     // all nodes in the AST can produce accurate compilation errors
     // and debugging code.
     return loc + "function " + name + "(" + args + ") " + retstr + " {\n" +
+      // mark the end of the user sourceLocation
+      (sourceLocation != null?org.openlaszlo.compiler.CompilerUtils.endSourceLocationDirective:"") +
       preface +
       // we do not inject a newline after sourceLocation, it was
       // carefully positioned to be at the right column

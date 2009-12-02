@@ -1053,11 +1053,6 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     String userFunctionName = null;
     String filename = node.filename != null? node.filename : "unknown file";
     String lineno = "" + node.beginLine;
-    String methodName = (String)options.get(Compiler.METHOD_NAME);
-    // Backwards compatibility with tag compiler
-    if (methodName != null && functionNameIdentifier != null) {
-        functionNameIdentifier.setName(functionName = methodName);
-    }
     if (functionName != null) {
       userFunctionName = functionName;
       if (! useName) {

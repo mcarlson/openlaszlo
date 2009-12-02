@@ -334,9 +334,10 @@ abstract class ToplevelCompiler extends ElementCompiler {
             }
         }
         
-        // If canvas debug=true, and we're not running a remote
-        // debugger, add the debugger-window component library
-        if (includesDebuggerWindow(env)) {
+        // If linking and canvas debug=true, and we're not running a
+        // remote debugger, add the debugger-window component library
+        if ((! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY))) &&
+             (includesDebuggerWindow(env))) {
             if (explanations != null) {
                 explanations.put("debugger", "the canvas debug attribute is true");
             }
