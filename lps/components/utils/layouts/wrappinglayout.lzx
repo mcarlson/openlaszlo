@@ -46,49 +46,63 @@
           controlled by the layout change their size , or when the size of
           layout's immediateparent changes. However it can be called directly
           to force the layout to update -->
-   <method name="update" args="v=null">
+    <method name="update" args="ignore=null">
         <![CDATA[
         if ( this.locked ) return;
-        var l = this.subviews.length;
+        var subviews = this.subviews;
 
         // Only consider views that are visible
-        var inuse = 0;
+        var l = subviews.length;
+        var visiblesubviews = [];
         for (var i = 0; i < l; i++ ) {
             var s = this.subviews[i];
-            if (s.visible) inuse++;
+            if (s.visible) {
+                visiblesubviews.push(s);
+            }
         }
 
-        var limit = this.immediateparent[this.sizeAxis];
+        var parent = this.immediateparent;
+        if (parent.usegetbounds) {
+            parent = parent.getBounds();
+        }
+        var limit = parent[this.sizeAxis];
 
         // position along this.axis
         var pos = this[this.axis + 'inset'];
         // position along this.otherAxis
         var otherpos = this[this.otherAxis + 'inset'];
+        // maximum dimension of otherSizeAxis
         var maxdimension = 0;
         var space = this[this.axis + 'spacing'];    // spacing in axis dimension
         var otherspace = this[this.otherAxis + 'spacing'];    // spacing in other axis dimension
 
-        // i is the view counter, j = visible view counter
-        var j = 0;
+        var l = visiblesubviews.length;
         for (var i = 0; i < l; i++ ) {
-            var s = this.subviews[i];
-            if ( !s.visible ) continue;
+            var s = visiblesubviews[i];
             s.animate(this.axis, pos, this.duration,false);
             s.animate(this.otherAxis, otherpos, this.duration,false);
-            pos += s[this.sizeAxis];
-            if ( j < (inuse - 1)) {
-                pos += space;
-                maxdimension = Math.max(maxdimension,s[this.otherSizeAxis]);
-                var next = i + 1;
-                while (this.subviews[next] && !this.subviews[next].visible) next++;
-                if ((pos + this.subviews[next][this.sizeAxis] > limit)) { 
-                    pos = this[this.axis + 'inset'];
-                    otherpos += maxdimension + otherspace;
-                    maxdimension = 0;   // Reset the height/width after every row/column                    
-                }
+
+            if (i == l - 1) break;
+
+            // use computed bounds when necessary
+            if (s.usegetbounds) {
+                s = s.getBounds();
             }
 
-            j++;
+            pos += s[this.sizeAxis] + space;
+            maxdimension = Math.max(maxdimension,s[this.otherSizeAxis]);
+
+            var nextsubview = subviews[i + 1];
+            // use computed bounds when necessary
+            if (nextsubview.usegetbounds) {
+                nextsubview = nextsubview.getBounds();
+            }
+
+            if ((pos + nextsubview[this.sizeAxis] > limit)) { 
+                pos = this[this.axis + 'inset'];
+                otherpos += maxdimension + otherspace;
+                maxdimension = 0;   // Reset the height/width after every row/column                    
+            }
         }
         ]]>
     </method>
@@ -141,7 +155,7 @@
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

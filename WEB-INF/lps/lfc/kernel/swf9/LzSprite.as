@@ -141,6 +141,7 @@ public class LzSprite extends Sprite {
     ,'2dcanvas': true
     ,dropshadows: true
     ,cornerradius: true
+    ,css2boxmodel: true
     };
     var capabilities = LzSprite.capabilities;
 
@@ -237,17 +238,20 @@ public class LzSprite extends Sprite {
     public function predestroy() :void {
     }
 
-    public function draw():void {
+    public function drawBackground():void {
         var context = this.graphics;
         context.clear();
-        if (this.bgcolor != null){
-            var alpha:Number = this.__bgcolorhidden ? 0 : 1;
+        var alpha:Number = this.__bgcolorhidden ? 0 : 1;
+        if (this.borderWidth) {
+            var colorobj = LzColorUtils.inttocolorobj(borderColor);
+            context.beginFill(colorobj.color, alpha);
+            var offset = this.padding + this.borderWidth;
+            LzKernelUtils.rect(context, 0 - offset, 0 - offset, this.lzwidth + (offset * 2), this.lzheight + (offset * 2), this.cornerradius);
+            context.endFill();
+        }
+        if (bgcolor != null) {
             context.beginFill(this.bgcolor, alpha);
-            if (this.cornerradius == 0) {
-              context.drawRect(0, 0, this.lzwidth, this.lzheight);
-            } else {
-              LzKernelUtils.rect(context,0,0,this.lzwidth,this.lzheight,this.cornerradius);
-            }
+            LzKernelUtils.rect(context, 0 - this.padding, 0 - this.padding, this.lzwidth + (this.padding * 2), this.lzheight + (this.padding * 2), this.cornerradius);
             context.endFill();
         }
     }
@@ -916,19 +920,24 @@ public class LzSprite extends Sprite {
         trace("debugClick "+event + " " +event.target);
     }
 
+    // used to get the 'true' x or y position
+    private var _x:Number = 0;
     /** setX( Number:x )
         o Moves the sprite to the specified x coordinate 
     */
     public function setX ( x:Number ):void {
-        this.x = x;
+        this._x = x;
+        this.x = x + this.margin + this.borderWidth + this.padding;
     }
 
 
+    private var _y:Number = 0;
     /** setY( Number:y )
         o Moves the sprite to the specified y coordinate 
     */
     public function setY ( y:Number ):void {
-        this.y = y;
+        this._y = y;
+        this.y = y + this.margin + this.borderWidth + this.padding;
     }
 
 
@@ -952,7 +961,7 @@ public class LzSprite extends Sprite {
             this.masksprite.scaleY = this.lzheight;
         }
 
-        draw();
+        drawBackground();
     }
 
 
@@ -975,7 +984,7 @@ public class LzSprite extends Sprite {
             this.masksprite.scaleX = this.lzwidth;
             this.masksprite.scaleY = this.lzheight;
         }
-        draw();
+        drawBackground();
     }
 
     /** @field Number rotation: The rotation value for the view (in degrees)
@@ -1083,7 +1092,7 @@ public class LzSprite extends Sprite {
             this.__bgcolorhidden = true;
             this.bgcolor = 0xffffff;
         }
-        draw();
+        drawBackground();
     }
 
 
@@ -1555,12 +1564,12 @@ public class LzSprite extends Sprite {
             // remove invisible background
             this.__bgcolorhidden = false;
             this.bgcolor = null;
-            this.draw();
+            this.drawBackground();
         } else if (this.bgcolor == null && this.isBkgndRequired) {
             // create an invisible background
             this.__bgcolorhidden = true;
             this.bgcolor = 0xffffff;
-            this.draw();
+            this.drawBackground();
         }
     }
 
@@ -1796,7 +1805,29 @@ public class LzSprite extends Sprite {
     var cornerradius = 0;
     function setCornerRadius(radius) {
         this.cornerradius = radius;
-        this.draw();
+        this.drawBackground();
+    }
+
+    var margin = 0;
+    var borderWidth = 0;
+    var padding = 0;
+    var borderColor = null;
+
+    var __csscache = null;
+    function setCSS(name, value, isdimension) {
+        if (this.__csscache == null) {
+            this.__csscache = {};
+        } else {
+            if (this.__csscache[name] === value) return;
+        }
+        this.__csscache[name] = value;
+
+        this[name] = value;
+        var offset = this.margin + this.borderWidth + this.padding;
+        this.x = this._x + offset;
+        this.y = this._y + offset;
+        //Debug.warn('setCSS', name, value, this._x, this._y, this.margin, this.borderWidth, this.padding, this.x, this.y);
+        this.drawBackground();
     }
 
   }#

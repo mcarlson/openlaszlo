@@ -52,24 +52,35 @@
             <![CDATA[
             if ( this.locked ) return;
 
+            var parentsize = this.parent[ this.sizeAxis ];
             if (this.end) {
                 var total = this.inset;
                 var l = this.subviews.length;
                 for(var i=0; i < l; i++) {
                     var s = this.subviews[i]; 
                     if ( !s.visible ) continue;
+                    // use computed bounds when necessary
+                    if (s.usegetbounds){
+                        s = s.getBounds();
+                    }
                     total += s[ this.sizeAxis ] + spacing;
                 }
-                
-                if (total < this.parent[ this.sizeAxis ]) {
-                    total = this.parent[ this.sizeAxis ];
+               
+                if (total < parentsize) {
+                    total = parentsize;
                 }
         
                 var c = total - this.inset;
                 for(var i=0; i < l; i++) {
                     var s = this.subviews[i]; 
                     if ( !s.visible ) continue;
-                    c -= s[ this.sizeAxis ];
+                    // use computed bounds when necessary
+                    if (s.usegetbounds){
+                        var bounds = s.getBounds();
+                    } else {
+                        var bounds = s;
+                    }
+                    c -= bounds[ this.sizeAxis ];
                     if (c) s.setAttribute( this.axis , c );
                     c -= this.spacing;
                 }
@@ -83,6 +94,10 @@
                     if ( !s.visible ) continue;
                     if ( s[ this.axis ] != c ){
                         s.setAttribute( this.axis , c );
+                    }
+                    // use computed bounds when necessary
+                    if (s.usegetbounds){
+                        s = s.getBounds();
                     }
                     c += this.spacing + s[ this.sizeAxis ];
                }

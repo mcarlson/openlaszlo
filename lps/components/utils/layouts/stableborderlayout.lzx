@@ -2,8 +2,6 @@
 <class name="stableborderlayout" extends="layout" >
     <!--- The axis in which this layout operates. One of 'x' or 'y'. -->
     <attribute name="axis" setter="this.setAxis( axis )" type="string" />
-    <!--- @keywords private -->
-    <attribute name="dontupdate" value="true" />
 
     <!--- @keywords private -->
     <method name="reset" args="e=null">
@@ -18,18 +16,29 @@
           for use in situations where the size of the views controlled by the
           layout changes after init time. However, this method may be called
           directly to force the layout to update. 
-          @param Number n: unknown - check in review -->
-    <method name="update" args="n=null">
-        if ( this.locked || this.dontupdate ) { return; }
-        var newsize = n > 0 ? n : this.immediateparent[( this.sizeAxis )];
-        //this is the function for when the parent size changes
-        if ( this.locked || this.subviews.length &lt; 3 ) { return; }
+          @param Number forcesize: size to use to update-->
+    <method name="update" args="newsize=null">
+        if ( this.locked || this.subviews.length &lt; 3 ) { 
+            return; 
+        }
+        if (newsize == null) {
+            var parent = this.immediateparent;
+            if (parent.usegetbounds) {
+                parent = parent.getBounds();
+            }
+            newsize = parent[this.sizeAxis];
+        }
         this.lock();
-        var re = this.subviews[ 2 ][( this.sizeAxis )];
+        var middleview = this.subviews[1];
+        var lastview = this.subviews[2];
+        
+        // use computed bounds when necessary
+        var lastviewbounds = lastview.usegetbounds ? lastview.getBounds() : lastview;
+        var middleviewbounds = middleview.usegetbounds ? middleview.getBounds() : middleview;
         // add/subtract .1 pixel fudge factor to prevent gaps - see LPP-6681
-        this.subviews[ 2 ].setAttribute( this.axis , newsize - re - .1);
-        this.subviews[ 1 ].setAttribute( this.sizeAxis , newsize - re -
-                                    this.subviews[ 1 ] [ this.axis ]  + .1);
+        lastview.setAttribute( this.axis , newsize - lastviewbounds[this.sizeAxis] - .1);
+        middleview.setAttribute( this.sizeAxis , newsize - lastviewbounds[this.sizeAxis] -
+                                    middleviewbounds[ this.axis ]  + .1);
         this.locked = false;
     </method>
 
@@ -38,12 +47,14 @@
         super.addSubview( sd );
         if (this.subviews.length == 2 ){
             // this is the second subview
-            this.subviews[ 1 ].setAttribute(this.axis ,
-                                this.subviews[ 0 ][(this.sizeAxis )] );
+            var firstsubview = this.subviews[0];
+            if (firstsubview.usegetbounds) {
+                firstsubview = firstsubview.getBounds();
+            }
+            this.subviews[ 1 ].setAttribute(this.axis, firstsubview[this.sizeAxis] );
             // sd['hasset'+this.sizeAxis] = true;
             sd.setAttribute(this.sizeAxis,0);
         }else if ( this.subviews.length > 2 ){
-            this.dontupdate = false;
             this.update();
         }
     </method>

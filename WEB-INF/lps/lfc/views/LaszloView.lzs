@@ -1253,6 +1253,7 @@ function $lzc$set_rotation(v) {
         LzView.__warnCapability('view.rotation', 'rotation'); 
     }
     this.rotation = v;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0  || this.__boxmodel;
     var rrad = Math.PI /180 * this.rotation;
     this.__LZrsin = Math.sin( rrad )
     this.__LZrcos = Math.cos( rrad )
@@ -1469,8 +1470,9 @@ var xoffset =   0;
   * @access private 
   */
 function $lzc$set_xoffset(o) {
-    this.__LZhasoffset = o != 0;
     this.xoffset = o;
+    this.__LZhasoffset = this.xoffset != 0 && this.yoffset != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0  || this.__boxmodel;
     // Clear the memo cache to force a recompute
     this.__set_x_memo = void 0;
     this.$lzc$set_x(this.x);
@@ -1495,8 +1497,9 @@ var yoffset =   0;
   * @type Number
   */
 function $lzc$set_yoffset(o) {
-    this.__LZhasoffset = o != 0;
     this.yoffset = o;
+    this.__LZhasoffset = this.xoffset != 0 && this.yoffset != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0  || this.__boxmodel;
     // Clear the memo cache to force a recompute
     this.__set_x_memo = void 0;
     this.$lzc$set_x(this.x);
@@ -1511,7 +1514,8 @@ var __LZrsin = 0;
 /** @access private */
 var __LZrcos = 1;
 
-/** @access private */
+/** TODO: are these used?
+    @access private */
 var _xscale =   1;
 /** @access private */
 var _yscale =   1;
@@ -2112,10 +2116,17 @@ static var __LZlastmtrix = [ 0,0,0,0,0,0,0,0,0,0,0 ];
   * properties that describes the bounding box of the view.
   */
 function getBounds (  ){
+    // account for box model values
+    var offset = 0
+    if (this.__boxmodel) {
+        offset = (this.margin * 2) + (this.borderwidth * 2) + (this.padding * 2);
+    }
+    var width = this.width + offset;
+    var height = this.height + offset;
     var mtrix = [ -this.xoffset, -this.yoffset,
-                   this.width-this.xoffset , -this.yoffset ,
-                  -this.xoffset, this.height - this.yoffset ,
-                   this.width - this.xoffset, this.height - this.yoffset ,
+                   width-this.xoffset , -this.yoffset ,
+                  -this.xoffset, height - this.yoffset ,
+                   width - this.xoffset, height - this.yoffset ,
                    this.rotation , this.x , this.y] ;
                    //last three entries are just to track staleness
 
@@ -2284,7 +2295,7 @@ function getColorTransform (){
 function __LZcheckSize ( sview, axis , xory ){
 
         if ( sview.addedToParent ) {
-            if ( sview.__LZhasoffset || sview.rotation != 0 ){
+            if ( sview.usegetbounds ){
                 var bobj = sview.getBounds();
             } else {
                 var bobj = sview;
@@ -2355,7 +2366,7 @@ function measureSize ( axis ) {
   for ( var i= this.subviews.length-1; i >= 0; i-- ){
     var sview = this.subviews[ i ];
     if (sview.visible) {
-      if ( sview.__LZhasoffset || sview.rotation != 0 ){
+      if ( sview.usegetbounds ){
         var bobj = sview.getBounds();
       } else {
         var bobj = sview;
@@ -2473,7 +2484,7 @@ function reevaluateSize ( ia = null){
     for ( var i= this.subviews.length-1; i >= 0; i-- ){
         var sv = this.subviews[ i ];
 
-        if ( sv.__LZhasoffset || sv.rotation != 0 ){
+        if ( sv.usegetbounds ){
             var b = sv.getBounds();
             var svs = b[ axis == "width" ? "x" : "y" ] + b[ axis ];
         } else {
@@ -3690,6 +3701,174 @@ function isBehind(sibling:LzView) {
     if (! sibling || sibling.parent !== this.parent) return null;
     return this.sprite.getZ() < sibling.sprite.getZ();
 }
+
+/** Tracks whether this view has margins applied
+  * @access private */
+var __boxmodel = false
+
+/** Sent when margin changes
+ * @lzxtype event 
+ * @access public
+ */
+var onmargin = LzDeclaredEvent;
+
+/** The margin of the view, in pixels
+ * @access public
+ * @lzxtype number
+ * @type Number
+ * @lzxdefault 0
+ */
+var margin = 0;
+
+/**
+  * @param number margin: The margin for this view
+  * @access private 
+  */
+function $lzc$set_margin(margin) {
+    var updatesize = margin != this.margin;
+    this.setCSS('margin', 'margin', margin);
+    this.__boxmodel = this.margin != 0 || this.borderwidth != 0 || this.padding != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0  || this.__boxmodel;
+    if (updatesize) {
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip.__LZcheckwidth)
+            vip.__LZcheckwidthFunction( this );
+        if (vip.__LZcheckheight)
+            vip.__LZcheckheightFunction( this );
+    }
+}
+
+/** Sent when borderwidth changes
+ * @lzxtype event 
+ * @access public
+ */
+var onborderwidth = LzDeclaredEvent;
+
+/** The borderwidth of the view, in pixels
+ * @access public
+ * @lzxtype number
+ * @type Number
+ * @lzxdefault 0
+ */
+var borderwidth = 0;
+
+/**
+  * @param number borderwidth: The borderwidth for this view
+  * @access private 
+  */
+function $lzc$set_borderwidth(borderwidth) {
+    var updatesize = borderwidth != this.borderwidth;
+    this.setCSS('borderwidth', 'borderWidth', borderwidth);
+    this.__boxmodel = this.margin != 0 || this.borderwidth != 0 || this.padding != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0  || this.__boxmodel;
+    if (updatesize) {
+        this.reevaluateSize();
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip.__LZcheckwidth)
+            vip.__LZcheckwidthFunction( this );
+        if (vip.__LZcheckheight)
+            vip.__LZcheckheightFunction( this );
+    }
+}
+
+/** Sent when bordercolor changes
+ * @lzxtype event 
+ * @access public
+ */
+var onbordercolor = LzDeclaredEvent;
+
+/** The bordercolor of the view
+ * @access public
+ * @lzxtype color
+ * @type Number
+ * @lzxdefault 0
+ */
+var bordercolor = 0;
+
+/**
+  * @param number bordercolor: The bordercolor for this view
+  * @access private 
+  */
+function $lzc$set_bordercolor(bordercolor) {
+    this.setCSS('bordercolor', 'borderColor', bordercolor);
+}
+
+/** Sent when padding changes
+ * @lzxtype event 
+ * @access public
+ */
+var onpadding = LzDeclaredEvent;
+
+/** The padding of the view, in pixels
+ * @access public
+ * @lzxtype number
+ * @type Number
+ * @lzxdefault 0
+ */
+var padding = 0;
+
+/**
+  * @param number padding: The padding for this view
+  * @access private 
+  */
+function $lzc$set_padding(padding) {
+    var updatesize = padding != this.padding;
+    this.setCSS('padding', 'padding', padding);
+    this.__boxmodel = this.margin != 0 || this.borderwidth != 0 || this.padding != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0  || this.__boxmodel;
+    if (updatesize) {
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip.__LZcheckwidth)
+            vip.__LZcheckwidthFunction( this );
+        if (vip.__LZcheckheight)
+            vip.__LZcheckheightFunction( this );
+    }
+}
+
+/**
+  * Maps style names to capability ids
+  * @access private 
+  */
+static var __stylecapability = {
+    margin: 'css2boxmodel' 
+    ,borderwidth: 'css2boxmodel' 
+    ,bordercolor: 'css2boxmodel' 
+    ,padding: 'css2boxmodel'
+}
+
+/**
+  * Sets a CSS style, when a capability is found
+  * @access private 
+  */
+function setCSS(name:String, stylename:String, value) {
+    var capability = lz.view.__stylecapability[name];
+    if (! capability) {
+        if ($debug) {
+            Debug.warn('Unknown CSS property', name);
+        }
+        return;
+    }
+
+    if (this.capabilities[capability]) {
+        // TOOD: this will need to be enhanced for other properties
+        var isdimension = stylename != 'borderColor';
+        if (stylename == 'borderColor') {
+            value = LzColorUtils.torgb(value);
+        }
+        this.sprite.setCSS(stylename, value, isdimension);
+    } else if ($debug) {
+        LzView.__warnCapability('view.' + name, capability); 
+    }
+    this[name] = value;
+    var eventname = 'on' + name;
+    var event = this[eventname];
+    if (event && event.ready) event.sendEvent(eventname, value);
+}
+
+/**
+  * True if this view requires a call to getBounds() for accurate width and height measurement. This may be necessary when an offset, rotation, margin, borderwidth or padding are applied.
+  */
+var usegetbounds = false;
 
 } // End of LzView
 
