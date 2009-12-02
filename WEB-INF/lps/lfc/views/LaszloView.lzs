@@ -1877,7 +1877,7 @@ function resourceevent(name, value, eventonly = false, force = false) {
 override function destroy( ){
     if ( this.__LZdeleted ) return;
     var vip:LzView = (this.immediateparent cast LzView);
-    var parentvalid = ! vip.__LZdeleted;
+    var parentvalid = vip && (! vip.__LZdeleted);
     
     if (parentvalid) {
         if (this.sprite) this.sprite.predestroy();
