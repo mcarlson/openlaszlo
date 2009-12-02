@@ -1143,12 +1143,10 @@
                 }
 
                 if (this.__measurewidth && this.width !== width) {
-                    this.setAttribute('width', width);
-                    this.__measurewidth = true;
+                    this.updateWidth(width);
                 }
                 if (this.__measureheight && this.height !== height) {
-                    this.setAttribute('height', height);
-                    this.__measureheight = true;
+                    this.updateHeight(height);
                 }
 
                 if (measureSize) {
@@ -1215,9 +1213,9 @@
                             var dc:Sprite = this.__drawcontainer;
                             if (! dc) return;
                             dc.scaleX = 1;
-                            var unscaledwidth = dc.width;
-                            dc.scaleX = (this.width / unscaledwidth)
-                            //Debug.warn('set_width', w, dc.width, dc.scaleX);
+                            this.updateWidth(dc.width);
+                            dc.scaleX = (this.width / this.unstretchedwidth)
+                            //Debug.warn('set_width', this.unstretchedwidth, dc.width, dc.scaleX);
                         }
 
                         if (this._setrescheight) {
@@ -1225,9 +1223,9 @@
                             var dc:Sprite = this.__drawcontainer;
                             if (! dc) return;
                             dc.scaleY = 1;
-                            var unscaledheight = dc.height;
-                            dc.scaleY = (this.height / unscaledheight)
-                            //Debug.warn('set_width', h, dc.height, dc.scaleY);
+                            this.updateHeight(dc.height);
+                            dc.scaleY = (this.height / this.unstretchedheight)
+                            //Debug.warn('set_height', this.unstretchedheight, dc.height, dc.scaleY);
                         }
 
                         this.__bitmapdata = bitmapdata;
