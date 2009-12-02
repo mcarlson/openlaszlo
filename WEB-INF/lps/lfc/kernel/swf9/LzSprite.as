@@ -349,7 +349,7 @@ public class LzSprite extends Sprite {
             // send events, but skip onload
             this.sendResourceLoad(true);
         } else if ($debug) {
-            Debug.warn('Unhandled asset: ', LzAsset.getAssetType(r) + " " + r);
+            Debug.warn('Unhandled asset in setResource %w: %w', LzAsset.getAssetType(r), r);
         }
     }
 
@@ -533,6 +533,7 @@ public class LzSprite extends Sprite {
                 // look for frame properties
                 try {
                     // accessing LoaderInfo.content may throw security exceptions
+                    var info:LoaderInfo = event.target as LoaderInfo;
                     var content:DisplayObject = info.content;
                     if (content is MovieClip) {
                         var loaderMC = MovieClip(content);
@@ -553,7 +554,7 @@ public class LzSprite extends Sprite {
             } else if (event.type == Event.UNLOAD) {
             }
         } catch (error:Error) {
-            if ($debug) Debug.warn(event.type + " " + error);
+            if ($debug) Debug.warn("loaderEventHandler(%w): %w", event, error);
         }
     }
 
@@ -705,7 +706,7 @@ public class LzSprite extends Sprite {
                 this.owner.resourceloaderror( (event as IOErrorEvent).text );
             }
         } catch (error:Error) {
-            if ($debug) Debug.warn(event.type + " " + error);
+            if ($debug) Debug.warn("soundLoadHandler(%w): %w", event.type, error);
         }
     }
 
