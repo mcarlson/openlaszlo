@@ -20,21 +20,27 @@ import org.apache.log4j.*;
 public class ImageMontageMaker {
     protected static Logger mLogger = org.apache.log4j.Logger.getLogger(ImageMontageMaker.class);
 
-    public static void assemble(List files, String outfile) throws FileNotFoundException, IOException {
-        int numfiles = files.size();
-        // build up across - columns only...
-        int columnTotal = numfiles, rowTotal = 1;
-        int index = 0, col = 0, row  = 0;
+    public static int writeStrip(List files, String outfile) throws FileNotFoundException, IOException {
+        return ImageMontageMaker.writeStrip(files, outfile, true);
+    }
 
-        Image[] images = new Image[numfiles];
+    public static int writeStrip(List files, String outfile, boolean isHorizontal) throws FileNotFoundException, IOException {
+        return ImageMontageMaker.writeStrip(files, outfile, isHorizontal, false);
+    }
 
+    public static int writeStrip(List files, String outfile, boolean isHorizontal, boolean collapse) throws FileNotFoundException, IOException {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
+        int index = 0;
 
-        // maximum size of all images
+        int numfiles = files.size();
+
+        // read all files into images array
+        Image[] images = new Image[numfiles];
+        // maximum size for all images
         int maxwidth = 0, maxheight = 0;
-
-        // read all files into images array, detemine extants
-        while(index<numfiles){
+        // cumulative total size for all images
+        int totalwidth = 0, totalheight = 0;
+        while (index<numfiles) {
             //System.out.println(index + ":" + files.get(index));
             String infile = (String)files.get(index);
             mLogger.debug("Adding to sprite: " + infile);
@@ -51,30 +57,55 @@ public class ImageMontageMaker {
             
             int width = img.getWidth(null);
             int height = img.getHeight(null);
+            totalwidth += width;
+            totalheight += height;
             if (width > maxwidth) maxwidth = width;
             if (height > maxheight) maxheight = height;
 
             images[index] = img;
             index++;
+
+            mLogger.debug("size: " + width + "," + height + "," + maxwidth + "," + maxheight + "," + totalwidth + "," + totalheight);
         }
 
-        // combine into one large sprite
-        BufferedImage finalImage = new BufferedImage(maxwidth * numfiles, maxheight, BufferedImage.TYPE_INT_ARGB);
+        //use width/height to write images
+        int outputwidth = maxwidth;
+        int outputheight = maxheight;
+        if (isHorizontal) {
+            outputwidth = collapse ? totalwidth : maxwidth * numfiles;
+        } else {
+            outputheight = collapse ? totalheight : maxheight * numfiles;
+        }
+
+        mLogger.debug("Output size " + outputwidth + "," + outputheight );
+        // combine into one large image
+        BufferedImage finalImage = new BufferedImage(outputwidth, outputheight, BufferedImage.TYPE_INT_ARGB);
         Graphics g = finalImage.createGraphics();
 
-        // translate each image
         index = 0;
-        while(col<columnTotal){
-            row=0;
-            while(row<rowTotal){
-                g.drawImage((Image)images[index], maxwidth * col, maxheight * row, maxwidth, maxheight, null);
-                row++;
-                index++;
+        int x = 0, y = 0; 
+        while (index<numfiles) {
+            Image img = (Image)images[index++];
+            //g.drawImage(img, maxwidth * col, maxheight * row, maxwidth, maxheight, null);
+            g.drawImage(img, x, y, null);
+            if (isHorizontal) {
+                if (collapse) {
+                    x += img.getWidth(null);
+                } else {
+                    x += maxwidth;
+                }
+            } else {
+                if (collapse) {
+                    y += img.getHeight(null);
+                } else {
+                    y += maxheight;
+                }
             }
-            col++;
         }
 
-        mLogger.debug("writing css sprite to: " + outfile);
+        mLogger.debug("Writing css sprite to: " + outfile);
         ImageIO.write(finalImage, "png", new File(outfile));
+        // return the size used to compute the offset of the image in master sprites
+        return isHorizontal ? outputheight : outputwidth;
     }
 }

@@ -43,7 +43,8 @@ lz.embed = {
     options: {
                 cancelkeyboardcontrol: false, // if true, dhtml keyboard and mousewheel control is canceled.  For versions of Flash that don't support mousewheel events natively (flash on os x) browser-based mousewheel control is canceled.
                 serverroot: null, // for DHTML, the root url to load server resources from.  Set by lz.embed.lfc();
-                approot: '' // for DHTML, the root url to load app resources from 
+                approot: '', // for DHTML, the root url to load app resources from 
+                usemastersprite: true // if true, dhtml use a single 'master sprite' where possible
              }
 
     /**
@@ -211,10 +212,18 @@ lz.embed = {
      * Set skipchromeinstall property to skip prompts to install the chrome 
      * frame in IE 6.
      * 
+     * Set usemastersprite property true to use a single sprite resource when 
+     * possible
+     * 
      * Note: lz.embed.lfc() must have already been called to load the
      * LFC.
      */
     dhtml: function (properties) {
+        /* This breaks backward compatibility with the dev console.
+        if (lz.embed.options.serverroot == null) {
+            alert('Warning: lz.embed.lfc() must be called to load the LFC.');
+            return;
+        }*/
         var queryvals = this.__getqueryurl(properties.url, true);
         var url = queryvals.url + '?lzt=object&' + queryvals.query;
 
@@ -229,6 +238,21 @@ lz.embed = {
         appenddiv.style.height = lz.embed.CSSDimension(properties.height);
         appenddiv.style.width = lz.embed.CSSDimension(properties.width);
 
+        // use global default options hash for now
+        var options = lz.embed.options;
+        if (properties.cancelkeyboardcontrol) {
+            options.cancelkeyboardcontrol = properties.cancelkeyboardcontrol;
+        }
+        if (properties.serverroot) {
+            options.serverroot = properties.serverroot;
+        }
+        if (properties.approot != null && typeof(p.approot) == "string") {
+            options.approot = properties.approot;
+        }
+        if (properties.usemastersprite != null) {
+            options.usemastersprite = properties.usemastersprite;
+        }
+
         // properties read by root sprite
         lz.embed.__propcache = {
             bgcolor: properties.bgcolor
@@ -237,9 +261,7 @@ lz.embed = {
             ,id: properties.id
             ,appenddiv: lz.embed._getAppendDiv(properties.id, properties.appenddivid)
             ,url: url
-            ,cancelkeyboardcontrol: properties.cancelkeyboardcontrol
-            ,serverroot: properties.serverroot
-            ,approot: (properties.approot != null ? properties.approot : '')
+            ,options: options
         };
 
         if (lz.embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 

@@ -816,7 +816,7 @@ mLogger.warn(
             }
             i++;
         }
-        if (path1.charAt(i-1) == '/') {
+        if (i > 1 && path1.charAt(i-1) == '/') {
             return path1.substring(0, i-1);
         } else {
             return path1.substring(0, i);

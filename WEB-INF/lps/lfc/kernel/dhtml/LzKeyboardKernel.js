@@ -175,7 +175,7 @@ var LzKeyboardKernel = {
             dhtmlKeyboardControl = true;
         }
         var handler = null;
-        var setcontrol = (lz && lz.embed && lz.embed.options && lz.embed.options.cancelkeyboardcontrol != true) || true;
+        var setcontrol = (LzSprite.__rootSprite.options.cancelkeyboardcontrol != true) || true;
         if (setcontrol && dhtmlKeyboardControl) {
             //console.log('setKeyboardControl' + dhtmlKeyboardControl);
             handler = LzKeyboardKernel.__keyboardEvent;

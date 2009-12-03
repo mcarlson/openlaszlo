@@ -79,15 +79,31 @@ var LzSprite = function(owner, isroot) {
             //also see LzBrowserKernel.getLoadURL()
             this._url = p.url;
         }
-        if (p.cancelkeyboardcontrol) {
-            lz.embed.options.cancelkeyboardcontrol = p.cancelkeyboardcontrol;
+
+        // Store a reference to this app's options hash
+        var options = p.options;
+        if (options) {
+            this.options = options;
         }
-        // Needed by debugger which has an embedded LFC.
-        if (p.serverroot) {
-            lz.embed.options.serverroot = p.serverroot;
+        // concatenate the serverroot
+        LzSprite.blankimage = options.serverroot + LzSprite.blankimage;
+
+        // process master sprites
+        if (quirks.use_css_sprites && quirks.use_css_master_sprite && options.usemastersprite) {
+            var mastersprite = LzResourceLibrary && LzResourceLibrary.__allcss && LzResourceLibrary.__allcss.path;
+            if (mastersprite) {
+                LzSprite.__masterspriteurl = mastersprite;
+                //precache
+                var masterspriteimg = new Image();
+                masterspriteimg.src = mastersprite;
+                if ($debug) {
+                    masterspriteimg.onerror = function() {
+                        Debug.warn('Error loading master sprite:', mastersprite);
+                    }
+                }
+            }
         }
 
-        lz.embed.options.approot = (typeof(p.approot) == "string") ? p.approot : '';
         /* Install the styles, now that quirks have been accounted for */
         LzSprite.__defaultStyles.writeCSS();
 
@@ -560,6 +576,7 @@ LzSprite.quirks = {
     ,has_dom2_mouseevents: false
     ,container_divs_require_overflow: false
     ,fix_ie_css_syntax: false
+    ,use_css_master_sprite: true
 }
 
 LzSprite.prototype.capabilities = {
@@ -949,7 +966,7 @@ LzSprite.prototype.playing = false;
 LzSprite.prototype.clickable = false;
 LzSprite.prototype.frame = 1;
 LzSprite.prototype.frames = null;
-LzSprite.prototype.blankimage = 'lps/includes/blank.gif';
+LzSprite.blankimage = 'lps/includes/blank.gif';
 LzSprite.prototype.resource = null;
 LzSprite.prototype.source = null;
 LzSprite.prototype.visible = null;
@@ -1050,11 +1067,16 @@ LzSprite.prototype.setResource = function ( r ){
 
     var res = LzResourceLibrary[r];
     if (res) {
-        this.resourceWidth = Math.round(res.width);
-        this.resourceHeight = Math.round(res.height);
-        if (this.quirks.use_css_sprites && res.sprite) {
-            var baseurl = this.getBaseUrl(res);
-            this.__csssprite = baseurl + res.sprite;
+        this.resourceWidth = res.width;
+        this.resourceHeight = res.height;
+        if (this.quirks.use_css_sprites) {
+            if (this.quirks.use_css_master_sprite && res.spriteoffset) {
+                this.__csssprite = LzSprite.__masterspriteurl;
+                this.__cssspriteoffset = res.spriteoffset;
+            } else if (res.sprite) {
+                this.__csssprite = this.getBaseUrl(res) + res.sprite;
+                this.__cssspriteoffset = 0;
+            }
         } else {
             this.__csssprite = null;
             if (this.__bgimage) this.__setBGImage(null);
@@ -1097,7 +1119,7 @@ LzSprite.prototype.getResourceUrls = function (resourcename) {
 }
 
 LzSprite.prototype.getBaseUrl = function (resource) {
-    return lz.embed.options[resource.ptype == 'sr' ? 'serverroot' : 'approot']
+    return LzSprite.__rootSprite.options[resource.ptype == 'sr' ? 'serverroot' : 'approot']
 }
 
 /**
@@ -1149,7 +1171,7 @@ LzSprite.prototype.setSource = function (url, usecache){
             var im = document.createElement('img');
             im.className = 'lzimg';
             im.owner = this;
-            im.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
+            im.src = LzSprite.blankimage;
             this.__bindImage(im);
         }
         this.__updateStretches();
@@ -1206,6 +1228,10 @@ LzSprite.prototype.__bindImage = function (im){
 LzSprite.prototype.__setBGImage = function (url){
     var bgurl = url ? "url('" + url + "')" : null;
     this.__bgimage = this.__LZimg.style.backgroundImage = bgurl
+    if (bgurl != null) {
+        var y = -this.__cssspriteoffset || 0; 
+        this.__LZimg.style.backgroundPosition = '0px ' + y + 'px';
+    }
 }
 
 /**
@@ -1249,7 +1275,7 @@ LzSprite.prototype.setClickable = function(c) {
         if (! this.__LZclick) {
             if (this.quirks.fix_ie_clickable) {
                 this.__LZclick = document.createElement('img');
-                this.__LZclick.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
+                this.__LZclick.src = LzSprite.blankimage;
             } else {
                 this.__LZclick = document.createElement('div');
             }
@@ -1279,7 +1305,7 @@ LzSprite.prototype.setClickable = function(c) {
             if (! this.__LZclick) {
                 if (this.quirks.fix_ie_clickable) {
                     this.__LZclick = document.createElement('img');
-                    this.__LZclick.src = lz.embed.options.serverroot + LzSprite.prototype.blankimage;
+                    this.__LZclick.src = LzSprite.blankimage;
                 } else {
                     this.__LZclick = document.createElement('div');
                 }
@@ -1668,7 +1694,7 @@ LzSprite.prototype.setBGColor = function ( c ){
     this.__LZdiv.style.backgroundColor = c == null ? 'transparent' : LzColorUtils.torgb(c);
     if (this.quirks.fix_ie_background_height) {
         if (this.height != null && this.height < 2) {
-            this.setSource(lz.embed.options.serverroot + LzSprite.prototype.blankimage, true);
+            this.setSource(LzSprite.blankimage, true);
         } else if (! this._fontSize) {
             this.__LZdiv.style.fontSize = '0px';
         }
@@ -2561,13 +2587,13 @@ LzSprite.prototype.__setFrame = function (f, force){
     if (this.stretches == null && this.__csssprite) {
         // use x axis for now...
         if (! this.__bgimage) {
-            this.__LZimg.src = lz.embed.options.resourceroot + LzSprite.prototype.blankimage;
+            this.__LZimg.src = LzSprite.blankimage;
             this.__setBGImage(this.__csssprite);
         }
         var x = (this.frame - 1) * (- this.resourceWidth);
-        var y = 0;
+        var y = -this.__cssspriteoffset || 0; 
         this.__LZimg.style.backgroundPosition = x + 'px ' + y + 'px';
-        //Debug.write('frame', f, x, this.__LZdiv.style.backgroundPosition)
+        //Debug.write('frame', f, x, y, this.__LZdiv.style.backgroundPosition)
     } else {
         // from __updateFrame()    
         var url = this.frames[this.frame - 1];

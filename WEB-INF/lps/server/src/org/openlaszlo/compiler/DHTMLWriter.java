@@ -29,7 +29,6 @@ import java.lang.Character;
 
 import org.jdom.Element;
 
-// jgen 1.4
 import java.awt.geom.Rectangle2D;
 
 import org.apache.log4j.*;
@@ -39,8 +38,6 @@ import org.apache.log4j.*;
  * Properties documented in Compiler.getProperties.
  */
 class DHTMLWriter extends ObjectWriter {
-
-
     static final String localResourceDir = "lps/resources";
 
     // Accumulate script here, to pass to script compiler
@@ -48,6 +45,12 @@ class DHTMLWriter extends ObjectWriter {
 
     // List of declarations of resources
     protected StringBuffer mResourceDefs = new StringBuffer();
+
+    // List of image montage paths, used to write out master CSS sprite
+    private Vector mImageMontages = new Vector();
+
+    // Current offset in master CSS sprite
+    private int mImageMontageOffset = 0;
 
     /** Logger */
     protected static Logger mLogger = org.apache.log4j.Logger.getLogger(DHTMLWriter.class);
@@ -235,6 +238,11 @@ class DHTMLWriter extends ObjectWriter {
         if (b != null) {
             sbuf.append("],width:" + (b.getWidth() / 20));
             sbuf.append(",height:" + (b.getHeight() / 20));
+
+            int spriteoffset = addToMasterSprite(inputFile.toString(), new Float(Math.round(b.getHeight() / 20)).intValue());
+            sbuf.append(",spriteoffset:" + spriteoffset);
+            //mImageMontageOffset += Math.round(b.getHeight() / 20);
+            //mImageMontages.add(inputFile.toString());
         } else { 
             // could be an mp3 resource
             sbuf.append("]");
@@ -261,6 +269,10 @@ class DHTMLWriter extends ObjectWriter {
     public void writeResourceLibraryDescriptor(List sources, String sResourceName, File parent,
                                                ResourceCompiler.Offset2D offset)
     {
+        if (sources.isEmpty()) {
+            mLogger.debug("Skipping empty source list: " + sResourceName);
+            return;
+        }
         mLogger.debug("Constructing resource library: " + sResourceName);
         int width = 0;
         int height = 0;
@@ -269,9 +281,6 @@ class DHTMLWriter extends ObjectWriter {
         boolean first = true;
         // Initialize the temporary buffer.
         StringBuffer sbuf= new StringBuffer("");
-        if (sources.isEmpty()) {
-            return;
-        }
         String pType;
         String relPath;
         File dirfile = mEnv.getApplicationFile().getParentFile();
@@ -318,28 +327,66 @@ class DHTMLWriter extends ObjectWriter {
 
         // create a montage for multiframe resources
         if (sources.size() > 1) {
-            String montageFile = (String)sources.get(0);
-            // offset of one character to the left of the extension, e.g. '.png'
-            int extoffset = montageFile.lastIndexOf(FileUtils.getExtension(montageFile)) - 1;
-            montageFile = montageFile.substring(0, extoffset) + mEnv.IMAGEMONTAGE_STRING + montageFile.substring(extoffset + 1);
+            // use first resource to generate filename
+            String filename = getSpritePath((String)sources.get(0));
             try {
-                ImageMontageMaker.assemble(sources, montageFile);
-                String[] fileInfo = getRelPath(new File(montageFile));
+                // build across horizontal axis
+                int size = ImageMontageMaker.writeStrip(sources, filename, true, false);
+                String[] fileInfo = getRelPath(new File(filename));
                 relPath = fileInfo[1];
                 pType = fileInfo[0];
 
                 if (pType.equals("sr") && mEnv.getBooleanProperty(mEnv.COPY_RESOURCES_LOCAL)) {
                     // If this is a "sr" (server-root-relative) path, make a local copy in the
                     // localResourceDir
-                    copyResourceFile(new File(montageFile), dirfile, relPath);
+                    copyResourceFile(new File(filename), dirfile, relPath);
                 }
-                sbuf.append(",sprite:'" + relPath + "'");
+                sbuf.append(",sprite:'" + relPath);
+
+                int spriteoffset = addToMasterSprite(filename, size);
+                sbuf.append("',spriteoffset:" + spriteoffset);
+                //mImageMontageOffset += size;
+                //mImageMontages.add(filename);
             } catch (Exception e) {
-                mLogger.error("Assembling css sprite: " + sources + ", " + e);
+                mLogger.error("Assembling CSS sprite: " + sources + ", " + e);
             }
+        } else if (sources.size() == 0) {
+            int spriteoffset = addToMasterSprite((String)sources.get(0), height);
+            sbuf.append(",spriteoffset:" + spriteoffset);
+            //mImageMontageOffset += height;
+            //mImageMontages.add((String)sources.get(0));
         }
         sbuf.append("};");
         mResourceDefs.append(sbuf);
+    }
+
+    // compute sprite path, e.g. rightbtn0001.png -> rightbtn0001.sprite.png 
+    private String getSpritePath(String path) { 
+        // offset of one character to the left of the extension, e.g. '.png'
+        int extoffset = path.lastIndexOf(FileUtils.getExtension(path)) - 1;
+        return path.substring(0, extoffset) + mEnv.IMAGEMONTAGE_STRING + "png";
+    }
+
+    // Add resource to the master sprite and return its offset
+    private int addToMasterSprite(String resourcepath, int size) { 
+        int offset = mImageMontageOffset;
+        mImageMontageOffset += size;
+        mImageMontages.add(resourcepath);
+        return offset;
+    }
+
+    // create master sprite based on all resources collected
+    private void writeMasterSprite(String filename) { 
+        if (mImageMontages.size() == 0) return;
+        try {
+            // build horizontally, collapsing height
+            ImageMontageMaker.writeStrip(mImageMontages, filename, false, true);
+            String[] fileInfo = getRelPath(new File(filename));
+            String relPath = fileInfo[1];
+            mResourceDefs.append("LzResourceLibrary.__allcss={path:'" + relPath + "'};");
+        } catch (Exception e) {
+            mLogger.error("Exception in writeMasterSprite() master CSS sprite: " + e + ", " + mImageMontages);
+        }
     }
 
     private String[] getRelPath(File fFile) { 
@@ -397,6 +444,8 @@ class DHTMLWriter extends ObjectWriter {
             copyResourceFile(inputFile, dirfile, "lps/includes/blank.gif");
         }
 
+        String filename = getSpritePath(mEnv.getApplicationFile().toString());
+        writeMasterSprite(filename);
         addResourceDefs();
 
         boolean debug = mProperties.getProperty("debug", "false").equals("true");
