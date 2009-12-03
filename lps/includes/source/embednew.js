@@ -6,6 +6,12 @@
   * Use is subject to license terms.
   */
   
+// *** NOTE TO ANYONE WHO MODIFIES THE LZ.EMBED OBJECT HERE: please
+// run "ant lztest" and make sure that it does not cause an error in
+// the rhino test harness. If it does, edit lps/utils/rhino.js and
+// make the mocked up lz.embed object match your changes as much as
+// possible to make the 'rhino runtime' able to execute the "ant lztest"
+// smoke-test without errors. ***
 
 // this seems to be required at least as of trunk/r15165
 #pragma "passThrough=true"

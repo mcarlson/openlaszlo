@@ -9,14 +9,18 @@ load("3rd-party/tools/BUFakeDom.js");
 // some setup to fake what the html embed does 
 lz = {};
 lz.embed = {__propcache: { appenddiv: document.createElement() },
-            options: {}};
-
+            options: {serverroot: "RHINO_SERVERROOT", 
+                      cancelkeyboardcontrol: false,
+                      approot: '', // for DHTML, the root url to load app resources from 
+                      usemastersprite: true // if true, dhtml use a single 'master sprite' where possible
+            }};
 
 lz.embed.browser = {};
 
 //set up canvas width/height
 lz.embed.__propcache.appenddiv.offsetWidth = 800;
 lz.embed.__propcache.appenddiv.offsetHeight = 600;
+lz.embed.__propcache.options = lz.embed.options;
 
 
 // Fake the browser DOM
