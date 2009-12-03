@@ -195,6 +195,7 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
       // Linked for determinism for regression testing
       Set variables = analyzer.variables;
       Set closed = analyzer.closed;
+      Set free = analyzer.free;
       Map used = analyzer.used;
 
       boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
@@ -215,7 +216,9 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
       if (! scriptElement) {
         // All parameters and locals are remapped to 'registers' of the
         // form `$n` to make the code more compact
-        int regno = 1;
+        // We start the 'compressed' registers at 10 so they are less
+        // likely to collide with final output registers
+        int regno = 10;
         boolean debug = options.getBoolean(Compiler.NAME_FUNCTIONS);
         // Have to make a copy to iterate over because we destructively
         // modify `known`
@@ -225,11 +228,12 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
           if (auto.contains(k) || closed.contains(k)) {
             ;
           } else {
-            if (debug) {
-              r =  k + "_$" + regno++ ;
-            } else {
-              r = "$" + regno++;
-            }
+            // Find a valid 'register' name (repeat until you don't
+            // collide with the known or free sets)
+            do {
+              // When debugging prepend non-$ names for legibility
+              r = ((debug && (! k.startsWith("$"))) ? (k + "_$") : "$") + Integer.toString(regno++, Character.MAX_RADIX) ;
+            } while (known.contains(r) || free.contains(r));
             registerMap.put(k, r);
             // remove from known map
             known.remove(k);

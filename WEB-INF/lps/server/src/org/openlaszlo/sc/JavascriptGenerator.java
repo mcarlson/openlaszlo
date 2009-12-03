@@ -1445,7 +1445,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       // form `$n`.  This prevents them from colliding with member
       // slots due to implicit `with (this)` added below, and also makes
       // the emitted code more compact.
-      int regno = 1;
+      int regno = 0;
       boolean debug = options.getBoolean(Compiler.NAME_FUNCTIONS);
       for (Iterator i = (new LinkedHashSet(known)).iterator(); i.hasNext(); ) {
         String k = (String)i.next();
@@ -1460,11 +1460,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
             (withThis && closed.contains(k) && (! parameters.contains(k)))) {
           ;
         } else {
-          if (debug) {
-            r =  k + "_$" + regno++ ;
-          } else {
-            r = "$" + regno++;
-          }
+          // Find a valid 'register' name (repeat until you don't
+          // collide with the known or free sets)
+          do {
+            // When debugging prepend non-$ names for legibility
+            r = ((debug && (! k.startsWith("$"))) ? (k + "_$") : "$") + Integer.toString(regno++, Character.MAX_RADIX) ;
+          } while (known.contains(r) || free.contains(r));
           registerMap.put(k, r);
           // remove from known map
           known.remove(k);
