@@ -239,11 +239,18 @@ public class CompilationEnvironment {
 
     void setApplicationFile(File file) {
         mApplicationFile = file;
-        mCompilerErrors.setFileBase(file.getParent());
-        if (file.getParent() == null) {
+        try {
+          file = file.getCanonicalFile();
+          assert file.getParent() != null;
+          if (file.getParent() == null) {
+            mCompilerErrors.setFileBase(null);
             mParser.basePathnames.add(0, "");
-        } else {
-            mParser.basePathnames.add(0, file.getParent());
+          } else {
+            mCompilerErrors.setFileBase(file.getParentFile().getCanonicalPath());
+            mParser.basePathnames.add(0, file.getParentFile().getCanonicalPath());
+          }
+        } catch (IOException e) {
+          throw new CompilationError(e);
         }
         // It appears that basePathnames is only used for error reporting.
         // TODO: [12-26-2002 ows] Consolidate this list with the one

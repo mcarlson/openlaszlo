@@ -269,36 +269,35 @@ abstract class ToplevelCompiler extends ElementCompiler {
             } catch (IOException e) {
               throw new CompilationError(element, e);
             }
-            // Tell the parser when we are parsing an external library
-            boolean old = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
             collectReferences(env, element, defined, referenced, visited);
             // iterate undefined references
             for (Iterator iter = referenced.iterator(); iter.hasNext(); ) {
                 String key = (String) iter.next();
                 if (autoincludes.containsKey(key)) {
-                    String value = (String) autoincludes.get(key);
-                    // Ensure that a library that was explicitly
-                    // included that would have been auto-included is
-                    // emitted where the auto-include would have been.
+                  File canonical = (File)canonicalAuto.get(key);
+                  // Ensure that a library that was explicitly
+                  // included that would have been auto-included is
+                  // emitted where the auto-include would have been.
+                  // (unless you are library-compiling _that_
+                  // auto-include!)
+                  if ((autoIncluded == null) || env.isExternal(canonical)) {
+                    String value = (String)autoincludes.get(key);
                     if (defined.contains(key)) {
-                        File canonical = (File)canonicalAuto.get(key);
-                        if (visited.containsKey(canonical)) {
-                            // Annotate as explicit
-                            if (explanations != null) {
-                                explanations.put(value, "explicit include");
-                            }
-                            // but include as auto (unless you are
-                            // library-compiling _that_ auto-include!)
-                            if ((autoIncluded == null) || env.isExternal(canonical)) {
-                              additionalLibraries.add(value);
-                            }
-                        }
-                    } else {
+                      if (visited.containsKey(canonical)) {
+                        // Annotate as explicit
                         if (explanations != null) {
-                            explanations.put(value, "reference to <" + key + "> tag");
+                          explanations.put(value, "explicit include");
                         }
-                        additionalLibraries.add(value);
+                        // but include as auto
+                        additionalLibraries.add(canonical.getPath());
+                      }
+                    } else {
+                      if (explanations != null) {
+                        explanations.put(value, "reference to <" + key + "> tag");
+                      }
+                      additionalLibraries.add(canonical.getPath());
                     }
+                  }
                 }
             }
             // If not linking, consider all external libraries as

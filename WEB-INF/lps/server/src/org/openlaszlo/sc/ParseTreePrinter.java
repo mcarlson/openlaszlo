@@ -1159,7 +1159,7 @@ public class ParseTreePrinter {
       // don't balloon the size of the annotated string.  But for now,
       // we wish to push the real line number intelligence to the end
       // of processing.
-      result = annotateFileLineNumber(Compiler.getLocationString(node), false);
+      result = annotateFileLineNumber(node, false);
     }
     result += str;
 
@@ -1177,7 +1177,7 @@ public class ParseTreePrinter {
     if (!config.trackLines) {
       return "";
     } else {
-      return NEWLINE + annotateFileLineNumber("", true);
+      return NEWLINE + annotateFileLineNumber(null, true);
     }
   }
 
@@ -1217,21 +1217,27 @@ public class ParseTreePrinter {
     return sb.toString();
   }
 
-  // TODO: [2008-05-18 dda] line number annotations contain the full
-  // text of the file name plus a line number.  This can be wasteful
-  // in string space (it is not currently possible to compile the full
-  // LFC with trackLines on).  A better approach would be to use a
-  // number in place of the file name, the number being an index in a
-  // dictionary of names, kept in the instance of the
-  // ParseTreePrinter.
-  //
-  public String annotateFileLineNumber(String fileLineNumber, boolean force
-) {
+  int nextFileId = 0;
+  Map fileIdTable = new HashMap();
+  Map idFileTable = new HashMap();
+
+  public String annotateFileLineNumber(SimpleNode node, boolean force) {
+    String nodeFilename = (node != null) ? node.getFilename() : null;
+    int nodeLinenum = (node != null) ? node.getLineNumber() : 0;
+    if (nodeFilename == null || (! isActualFile(nodeFilename))) {
+      nodeFilename = "";
+      nodeLinenum = 0;
+    }
+    Integer fid = (Integer)fileIdTable.get(nodeFilename);
+    if (fid == null) {
+      fid = new Integer(nextFileId++);
+      fileIdTable.put(nodeFilename, fid);
+      idFileTable.put(fid, nodeFilename);
+    }
     // TODO: [2008-05-21 dda] FORCE no longer needed, it
     // and all it implies could be removed
-
     char op = force ? ANNOTATE_OP_FILE_LINENUM_FORCE : ANNOTATE_OP_FILE_LINENUM;
-    return makeAnnotation(op, fileLineNumber);
+    return makeAnnotation(op, fid + "#" + nodeLinenum);
   }
 
   /**
@@ -1332,24 +1338,18 @@ public class ParseTreePrinter {
 
   public int extractLineNumber(String str) {
     int linenumPos = str.indexOf('#');
-    int linenumEnd = str.indexOf('.', linenumPos+1);
-    if (linenumPos < 0) {
-      return 0;
-    }
-    if (linenumEnd < 0) {
-      linenumEnd = str.length();
-    }
+    int linenumEnd = str.length();
+    assert linenumPos > 0 && linenumPos < linenumEnd;
     return Integer.parseInt(str.substring(linenumPos+1, linenumEnd));
   }
 
   public String extractFileName(String str) {
     int linenumPos = str.indexOf('#');
-    if (linenumPos >= 0) {
-      return str.substring(0, str.indexOf('#'));
-    }
-    else {
-      return str;
-    }
+    assert linenumPos >= 0;
+    Integer fid = new Integer(str.substring(0, linenumPos));
+    String filename = (String)idFileTable.get(fid);
+    assert filename != null;
+    return filename;
   }
 
   public static class LineNumberState {
@@ -1570,7 +1570,9 @@ public class ParseTreePrinter {
         TranslationUnit curtu = defaulttu;
         boolean atBol = true;
         LineNumberState curLstate = new LineNumberState();
-
+        LineNumberState newLstate;
+        String srcloc = null;
+        int diff = 0;
 
         public String notify(char op, String operand) {
           switch (op) {
@@ -1584,47 +1586,54 @@ public class ParseTreePrinter {
                   operand.substring(nl);
               }
             }
-            curtu.addText(operand);
-            if (operand.endsWith("\n")) {
-              atBol = true;
-            }
-            else if (operand.length() > 0) {
-              atBol = false;
+            if (operand.length() > 0) {
+              if (srcloc != null && srcloc.length() > 0) {
+                curtu.addText(srcloc);
+                newLstate.linediff += diff; // compensate for lines just added
+                curLstate = newLstate;
+                srcloc = null;
+              }
+              curtu.addText(operand);
+              if (operand.endsWith("\n")) {
+                atBol = true;
+              }
+              else {
+                atBol = false;
+              }
             }
             return "";
-
-          /* We always emit the FILE_LINENUM_FORCE annotations (they appear
-           * at beginning of functions) but plain old line number
-           * annotations are emitted only if the line information
-           * cannot be determined from the previous 'file: ' marker
-           * and simple incrementing.  We keep track of the difference
-           * between the line number we would generate and the number
-           * of lines we've actually output, if the difference
-           * changes, we know an observer of the output would be off
-           * and it's time to output a line number marker.
-           */
-          case ANNOTATE_OP_FILE_LINENUM_FORCE:
           case ANNOTATE_OP_FILE_LINENUM:
-            LineNumberState newLstate = getLineNumberState(curtu, operand);
-
+          case ANNOTATE_OP_FILE_LINENUM_FORCE:
+            newLstate = getLineNumberState(curtu, operand);
             if (shouldRecordSourceLocation(newLstate)) {
               curtu.setInputLineNumber(newLstate.linenum, sources.byName(newLstate.filename));
             }
             if (shouldShowSourceLocation(curLstate, newLstate, op, atBol, curtu)) {
-              String srcloc = atBol ? "" : "\n";
-              if (op == ANNOTATE_OP_FILE_LINENUM_FORCE) {
-                srcloc += "/* -*- file: " + operand + " -*- */\n";
-              } else if (newLstate.filename.length() == 0) {
+              int offset = (curLstate.linediff - newLstate.linediff);
+              if (atBol) {
+                srcloc = "";
+                diff = 0;
+              } else {
+                srcloc = "\n";
+                diff = 1;
+              }
+              if (newLstate.filename.length() == 0) {
                 srcloc += "/* -*- file: -*- */\n";
-              } else if (curLstate.filename.equals(newLstate.filename)) {
-                srcloc += "/* -*- file: #" + newLstate.linenum + " -*- */\n";
+                diff += 1;
+              } else if ((op == ANNOTATE_OP_FILE_LINENUM_FORCE) ||
+                         (! (curLstate.filename.equals(newLstate.filename)))) {
+                srcloc += "/* -*- file: " + newLstate.filename + "#" + newLstate.linenum + " -*- */\n";
+                diff += 1;
+              } else {
+                String update = "/* -*- file: #" + newLstate.linenum + " -*- */\n";
+                if (atBol && (offset > 0) && (offset < update.length())) {
+                  for (int i = 0; i < offset; i++) { srcloc += "\n"; }
+                  diff += offset;
+                } else {
+                  srcloc += update;
+                  diff += 1;
+                }
               }
-              else {
-                srcloc += "/* -*- file: " + operand + " -*- */\n";
-              }
-              curtu.addText(srcloc);
-              newLstate.linediff++; // compensate for line just added
-              curLstate = newLstate;
             }
             return "";
           case ANNOTATE_OP_CLASSNAME:
