@@ -1125,7 +1125,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @param Boolean readable: Indicate when the description will not
    * evaluate to an object === to the thing being described (will
    * return a description in a stylized format:
-   *   `<<type #uid| description>>`
+   *   `&#xAB;type #uid| description&#xBB;`
    * ).  Default: (! escape).
    *
    * @param Number depth: don't descend into structures deeper than
