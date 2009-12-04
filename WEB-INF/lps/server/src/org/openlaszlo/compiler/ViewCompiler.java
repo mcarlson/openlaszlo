@@ -157,11 +157,25 @@ public class ViewCompiler extends ElementCompiler {
 
     /** Collect the names of classes that are referenced. */
     static void collectElementNames(Element element, Set names) {
+        // This also collects "attribute", "method", and HTML element
+        // names, but that's okay since none of them has an autoinclude
+        // entry.
         names.add(element.getName());
         collectLayoutElement(element, names);
+        collectMixinElement(element, names);
         for (Iterator iter = element.getChildren().iterator();
              iter.hasNext(); ) {
             collectElementNames((Element) iter.next(), names);
+        }
+    }
+
+    static void collectMixinElement(Element element, Set names) {
+        String mixinSpec = element.getAttributeValue("with");
+        if (mixinSpec != null) {
+          String mixins[] = mixinSpec.trim().split("\\s+,\\s+");
+          for (int i = 0; i < mixins.length; i++) {
+            names.add(mixins[i]);
+          }
         }
     }
 

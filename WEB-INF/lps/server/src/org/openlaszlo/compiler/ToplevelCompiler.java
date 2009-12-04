@@ -233,15 +233,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
                 referenced.add(superclass);
             }
             ViewCompiler.collectElementNames(element, referenced);
-        } else if ((compiler instanceof ClassCompiler) ||
-                   (compiler instanceof ViewCompiler)) {
-            String mixinSpec = element.getAttributeValue("with");
-            if (mixinSpec != null) {
-              String mixins[] = mixinSpec.trim().split("\\s+,\\s+");
-              for (int i = 0; i < mixins.length; i++) {
-                referenced.add(mixins[i]);
-              }
-            }
+        } else if (compiler instanceof ViewCompiler) {
             ViewCompiler.collectElementNames(element, referenced);
         }
     }
