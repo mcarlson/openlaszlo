@@ -50,7 +50,7 @@ lz.embed = {
                 cancelkeyboardcontrol: false, // if true, dhtml keyboard and mousewheel control is canceled.  For versions of Flash that don't support mousewheel events natively (flash on os x) browser-based mousewheel control is canceled.
                 serverroot: null, // for DHTML, the root url to load server resources from.  Set by lz.embed.lfc();
                 approot: '', // for DHTML, the root url to load app resources from 
-                usemastersprite: true // if true, dhtml use a single 'master sprite' where possible
+                usemastersprite: false // if true, dhtml use a single 'master sprite' where possible
              }
 
     /**
