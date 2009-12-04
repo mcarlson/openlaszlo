@@ -1298,8 +1298,10 @@ public class LzSprite extends Sprite {
     }
 
     public function removeMask():void {
-        this.removeChild(this.masksprite);
-        this.mask = null;
+        if (this.mask != null) {
+            this.removeChild(this.masksprite);
+            this.mask = null;
+        }
     }
 
 
