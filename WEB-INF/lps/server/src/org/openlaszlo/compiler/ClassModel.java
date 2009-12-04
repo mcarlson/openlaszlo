@@ -465,7 +465,10 @@ public class ClassModel implements Comparable {
     }
     String superClassName = superModel.className;
     if (className == null) {
-      className = LZXTag2JSClass(CompilerUtils.encodeJavaScriptIdentifier(nodeModel.getNodePath()));
+      className = LZXTag2JSClass(
+        nodeModel.debug ?
+        CompilerUtils.encodeJavaScriptIdentifier(nodeModel.getNodePath()) :
+        env.methodNameGenerator.next().substring(1));
     }
     // className will be a global
     env.addId(className, definition);

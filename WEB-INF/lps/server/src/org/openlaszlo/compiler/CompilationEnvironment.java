@@ -157,7 +157,7 @@ public class CompilationEnvironment {
 
     /** Used to create a unique root for separately-compiled libraries */
     // TODO: [2009-02-27 ptw] Replace with Java 1.5: UUID.randomUUID.toString();
-  private String mUUID = "U" + (new Random()).nextLong();
+  private String mUUID = "U" + Integer.toString((new Random()).nextInt(Integer.MAX_VALUE), 36);
 
     private List mLibraryCompilations = new ArrayList();
 
@@ -180,9 +180,17 @@ public class CompilationEnvironment {
         // Merge command line options to override defaults
         mProperties.putAll(properties);
         
-        // Use a local symbol generator so that we recycle method
-        // names for each new view, to keep the constant pool small.
-        this.methodNameGenerator = new SymbolGenerator("$m");
+        if ("false".equals(getProperty(LINK_PROPERTY))) {
+          // When not linking, we need to keep the symbols unique.
+          // TODO: Somehow use "uninterned" symbols when not linking,
+          // that will be more compact and get rewritten to be unique
+          // when linked.  Perhaps "#$..." or something.
+          this.methodNameGenerator = new SymbolGenerator("$" + mUUID.substring(1));
+        } else {
+          // Use a local symbol generator so that we recycle method
+          // names for each new view, to keep the constant pool small.
+          this.methodNameGenerator = new SymbolGenerator("$m");
+        }
         this.mSchema = new ViewSchema(this);
         // lzc depends on the properties being shared, because it sets
         // them after creating the environment

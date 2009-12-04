@@ -1511,10 +1511,6 @@ solution =
         if (parent_name == null) {
             parent_name = CompilerUtils.attributeUniqueName(element, "handler");
         }
-        // Anonymous handler names have to be unique, so append a
-        // gensym; but they also have to be unique across binary
-        // libraries, so append parent (class) name
-        String unique = "$" + parent_name + "_"  + env.methodNameGenerator.next();
         String referencename = null;
         String srcloc =  CompilerUtils.sourceLocationDirective(element, true);
         // delegates is only used to determine whether to
@@ -1527,9 +1523,7 @@ solution =
             // TODO [2008-05-20 ptw] Replace the $debug code with actual
             // type declarations if/when they are enforced in all run
             // times
-            referencename = debug ?
-              ("$lzc$" + "handle_" + event + "_reference" + unique) :
-              env.methodNameGenerator.next();
+            referencename = env.methodNameGenerator.next();
             String pragmas = "";
             if (debug) {
               pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=get " + reference);
@@ -1561,13 +1555,11 @@ solution =
         if (body != null) {
             String pragmas = "#beginContent\n";
             if (method == null) {
-                method = debug ?
-                  ("$lzc$" + "handle_" + event + unique) :
-                  env.methodNameGenerator.next();
+                method = env.methodNameGenerator.next();
                 if (debug) {
-                  pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=handle " +
-                                                               ((reference != null) ? (reference + ".") : "") +
-                                                               event) +"\n";
+                  pragmas += "#pragma " + ScriptCompiler.quote(
+                    "userFunctionName=handle " + ((reference != null) ? (reference + ".") : "") + event
+                                                               ) +"\n";
                 }
             }
             body = body + "\n#endContent\n";
