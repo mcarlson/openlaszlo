@@ -42,7 +42,7 @@
           uses this class as its default 'tabclass'. -->
     <class name="tab" extends="basetab">
         <!--- Text padding. -->
-        <attribute name="textpadding" value="20" />
+        <attribute name="padding" value="20" />
 
         <!--- @keywords private -->
         <attribute name="tabstate" value="2" type="number"/>
@@ -51,7 +51,7 @@
         <!--- @keywords private -->
         <attribute name="titleshift" value="${this.tabstate == 4 ? 4 : 0}" type="number"/>
         <!--- @keywords private -->
-        <attribute name="width" value="${this.tabview.labeltext.getTextWidth() + 2*this.textpadding}" />
+        <attribute name="width" value="${tabview.labeltext.getTextWidth() + 2*padding}" />
 
         <view name="tabview" width="100%" >
             <stableborderlayout axis="x"/>
