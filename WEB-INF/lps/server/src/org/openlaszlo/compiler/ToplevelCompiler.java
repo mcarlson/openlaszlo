@@ -241,7 +241,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
     static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Map autoIncluded, Map visited) {
         String librariesAttr = element.getAttributeValue("libraries");
         assert librariesAttr == null : "unsupported attribute `libraries`";
-        List libraryNames = new ArrayList();
+        List libraryFiles = new ArrayList();
         File library = new File(Parser.getSourcePathname(element));
         String base = library.getParent();
 
@@ -282,13 +282,13 @@ abstract class ToplevelCompiler extends ElementCompiler {
                           explanations.put(value, "explicit include");
                         }
                         // but include as auto
-                        additionalLibraries.add(canonical.getPath());
+                        additionalLibraries.add(canonical);
                       }
                     } else {
                       if (explanations != null) {
                         explanations.put(value, "reference to <" + key + "> tag");
                       }
-                      additionalLibraries.add(canonical.getPath());
+                      additionalLibraries.add(canonical);
                     }
                   }
                 }
@@ -301,31 +301,24 @@ abstract class ToplevelCompiler extends ElementCompiler {
                   File file = (File)i.next();
                   if (env.isExternal(file)) {
                     autoIncluded.put(file, visited.get(file));
-                    String path = file.getCanonicalPath();
-                    additionalLibraries.add(path);
+                    additionalLibraries.add(file.getCanonicalFile());
                   }
                 }
               } catch (IOException e) {
                 throw new CompilationError(element, e);
               }
             }
-            libraryNames.addAll(additionalLibraries);
+            libraryFiles.addAll(additionalLibraries);
         }
-        // Turn the library names into pathnames
+        // Build result file lists
         List libraries = new ArrayList();
-        for (Iterator iter = libraryNames.iterator(); iter.hasNext(); ) {
-            String name = (String) iter.next();
-            try {
-              File file = env.resolveLibrary(name, base).getCanonicalFile();
-              libraries.add(file);
-              if (autoIncluded != null) {
-                autoIncluded.put(file, visited.get(file));
-              }
-            } catch (IOException e) {
-                throw new CompilationError(element, e);
+        for (Iterator iter = libraryFiles.iterator(); iter.hasNext(); ) {
+            File file = (File) iter.next();
+            libraries.add(file);
+            if (autoIncluded != null) {
+              autoIncluded.put(file, visited.get(file));
             }
         }
-        
         // If linking and canvas debug=true, and we're not running a
         // remote debugger, add the debugger-window component library
         if ((! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY))) &&
