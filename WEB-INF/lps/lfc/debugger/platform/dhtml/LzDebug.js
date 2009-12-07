@@ -189,8 +189,8 @@ class LzDHTMLDebugService extends LzDebugService {
     // Make the real console.  This is only called if the user code
     // did not actually instantiate a <debug /> tag
     if (global['lzconsoledebug'] == 'true') {
-      // Open the remote debugger socket
-      this.attachDebugConsole(new LzFlashRemoteDebugConsole());
+      // Create a DHTML iframe console
+      this.attachDebugConsole(new LzDHTMLDebugConsole(this.createDebugIframe()));
     } else {
       // This will attach itself, once it is fully initialized.
       new lz.LzDebugWindow();
