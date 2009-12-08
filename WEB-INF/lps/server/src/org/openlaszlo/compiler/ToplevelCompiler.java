@@ -171,9 +171,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
      * 
      */
     void updateSchema(Element element, ViewSchema schema, Set visited) {
-        // Make a copy of the list because we may insert interstitials
-        // into the real DOM
-        Iterator iterator = new ArrayList(element.getChildren()).iterator();
+        Iterator iterator = element.getChildren().iterator();
         while (iterator.hasNext()) {
             Element child = (Element) iterator.next();
             if (!NodeModel.isPropertyElement(child)) {

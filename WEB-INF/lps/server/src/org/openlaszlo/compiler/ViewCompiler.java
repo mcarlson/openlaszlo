@@ -113,6 +113,25 @@ public class ViewCompiler extends ElementCompiler {
         element.setName("anonymous");
         schema.addElement(element, "anonymous", mEnv, false);
       }
+
+      Iterator iterator = element.getChildren().iterator();
+      while (iterator.hasNext()) {
+        Element child = (Element) iterator.next();
+        String childname = child.getName();
+        if ("class".equals(childname) || "interface".equals(childname) || "mixin".equals(childname)) {
+          mEnv.warn(
+              // TODO [2007-09-26 hqm] i18n this
+              "The tag '" + child.getName() +
+              "' cannot be used as a child of " + tagname,
+              element);
+        }
+
+        if (!NodeModel.isPropertyElement(child) &&
+            !(child.getName().equals("doc"))) {
+          // Ignore documentation nodes
+          Compiler.updateSchema(child, mEnv, schema, visited);
+        }
+      }
     }
 
     public void compile(Element element) throws CompilationError

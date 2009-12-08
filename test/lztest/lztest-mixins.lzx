@@ -42,6 +42,24 @@
     </node>
 
 
+    <mixin name="boxmodel">
+      <attribute name="margin" type="number" value="0"/>
+      <attribute name="setter_ran" value="false"/>
+    </mixin>
+
+    <view name="worksoncanvas" with="boxmodel" bgcolor="red" width="100" height="20" margin="10"/>  
+
+   <view>
+       <view id="worksonchild" with="boxmodel" bgcolor="red" width="100" height="20" margin="259"/>
+   </view>
+
+
+   <view>
+       <view id="worksonchild2" with="boxmodel" bgcolor="red" width="100" height="20" margin="1024"/>
+   </view>
+
+
+
 
   <script>
     <![CDATA[
@@ -60,6 +78,10 @@
       LzTestManager.assertEquals(methodinstance.foo, 'bar');
       LzTestManager.assertEquals(methodinstance.myvalue, 'bar');
       LzTestManager.assertEquals(methodinstance.myvalue2, 7);
+
+      LzTestManager.assertEquals(10, worksoncanvas.margin );
+      LzTestManager.assertEquals(259, worksonchild.margin);
+      LzTestManager.assertEquals(1024, worksonchild2.margin);
 
     }
 

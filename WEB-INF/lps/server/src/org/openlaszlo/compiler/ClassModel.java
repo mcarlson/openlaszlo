@@ -107,13 +107,6 @@ public class ClassModel implements Comparable {
                 interstitial.setAttribute("name", interstitialName);
                 interstitial.setAttribute("extends", superTagName);
 
-                // TODO: [2008-11-10 ptw] Add "implements"
-                // interstitial.setAttribute("implements", mixinName);
-                // Insert this element into the DOM before us
-                Element parent = (Element)((org.jdom.Parent)definition).getParent();
-                int index = parent.indexOf(definition);
-                parent.addContent(index, interstitial);
-
                 // Add it to the schema
                 schema.addElement(interstitial, interstitialName, env);
               }
@@ -600,7 +593,8 @@ public class ClassModel implements Comparable {
                       superClassName,
                       decls,
                       nodeModel.getClassAttrs(),
-                      classBody);
+                      classBody,
+                      kind);
     env.compileScript(scriptClass.toString(), definition);
     if ((! anonymous) && (tagName != null)) {
       env.addTag(tagName, className);

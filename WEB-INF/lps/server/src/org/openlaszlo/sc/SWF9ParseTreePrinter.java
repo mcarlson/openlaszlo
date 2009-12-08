@@ -236,7 +236,19 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
       // top level functions cannot be marked public
       (inclass || inmixin || !(subnode instanceof ASTFunctionDeclaration));
 
-    String mods = ((ASTModifiedDefinition)node).toJavascriptString(forcePublic);
+    ASTModifiedDefinition defnode = (ASTModifiedDefinition)node;
+
+    // If this is an 'interface' declaration, we need to remove any 'dynamic' modifier,
+    // or we'll get a flex compile error
+    if (subnode instanceof ASTClassDefinition) {
+      ASTIdentifier id = (ASTIdentifier)(subnode.getChildren()[0]);
+      if ("mixin".equals(id.getName())) {
+        defnode.setDynamic(false);
+      }
+    }
+
+    String mods = defnode.toJavascriptString(forcePublic);
+
     return prependMods(children[0], mods);
   }
   

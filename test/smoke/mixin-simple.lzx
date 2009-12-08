@@ -23,6 +23,29 @@
     <text>this is just a plain old instance named foo, no mixins</text>
   </view>
 
+  <view>
+      <view name="mymixin" with="colored_square" >
+        <text>instance with mixin as a child of another view</text>
+
+      </view>
+
+      </view>
+
+
+
+  <view width="200">
+      <view name="mymixin" with="colored_square" width="${parent.width}" >
+        <text>instance with constraint and mixin as a child of another view</text>
+
+      </view>
+
+      </view>
+
+
+
+
+
+
 <!-- instance which uses mixins and has a handler so it makes an anon class -->
   <view name="mymixin" with="colored_square" >
     <text>instance with colored_square mixin</text>
@@ -32,6 +55,26 @@
       this.setAttribute('bgcolor', 0x00ff00);
     </handler>
   </view>
+
+
+   <mixin name="boxmodel">
+       <attribute name="margin" type="number" value="0"/>
+       <setter name="margin" args="margin">
+           Debug.warn('set_margin', margin, this);
+       </setter>
+   </mixin>
+
+
+
+   <view name="first">
+       <view id="first_inst_with_box" with="boxmodel" bgcolor="red" width="100" height="20" margin="10"/>
+   </view>
+
+   <view name="second">
+       <view id="second_inst_with_box" with="boxmodel" bgcolor="red" width="100" height="20" margin="10"/>
+   </view>
+
+
 
 
 
