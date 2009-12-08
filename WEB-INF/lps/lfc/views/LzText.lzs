@@ -873,7 +873,7 @@ dynamic class LzText extends LzView with LzFormatter {
     }
   }
 
-  /** text-decoration for this text
+  /** text-decoration for this text, either 'none' or 'underline'.
    * @lzxtype string
    * @type String
    */
