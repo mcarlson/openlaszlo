@@ -89,7 +89,8 @@ var LzSprite = function(owner, isroot) {
         LzSprite.blankimage = options.serverroot + LzSprite.blankimage;
 
         // process master sprites
-        if (quirks.use_css_sprites && quirks.use_css_master_sprite && options.usemastersprite) {
+        if (quirks.use_css_sprites && options.usemastersprite) {
+            quirks.use_css_master_sprite = options.usemastersprite;
             var mastersprite = LzResourceLibrary && LzResourceLibrary.__allcss && LzResourceLibrary.__allcss.path;
             if (mastersprite) {
                 LzSprite.__masterspriteurl = mastersprite;
@@ -576,7 +577,7 @@ LzSprite.quirks = {
     ,has_dom2_mouseevents: false
     ,container_divs_require_overflow: false
     ,fix_ie_css_syntax: false
-    ,use_css_master_sprite: true
+    ,use_css_master_sprite: false
 }
 
 LzSprite.prototype.capabilities = {
