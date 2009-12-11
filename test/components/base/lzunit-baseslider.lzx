@@ -51,7 +51,7 @@
       tc.assertTrue(this.value <= this.maxvalue, "value <= maxvalue");
     ]]></method>
     
-    <method name="resetState" args="t"><![CDATA[
+    <method name="resetState" args="t=null"><![CDATA[
       // use different values here than in slider initialization
       // so we can count calls to onvalue, etc.
       //if (this.c1 < 3) Debug.format("c1: %w\n", this.c1);
@@ -94,6 +94,10 @@
           assertEquals(2, t.c6, "setValue count");
         </method>
 
+        <method name="addTests">
+          this.addTest("testinitalsetters");
+        </method>
+
     </MyTestCase>
 
     <MyTestCase>
@@ -103,6 +107,10 @@
           assertEquals(35, t.value);
           assertEquals(0, t.minvalue);
           assertEquals(100, t.maxvalue);
+        </method>
+
+        <method name="addTests">
+          this.addTest("testreset");
         </method>
         
     </MyTestCase>
@@ -160,6 +168,10 @@
           t.setValue(newval);
           assertEquals(newval, t.value);
         </method>
+
+        <method name="addTests">
+          this.addTest("testsetval1");
+        </method>
         
     </MyTestCase>
 
@@ -170,6 +182,10 @@
           var newval = t.value + 5;
           t.setAttribute("value", newval);
           assertEquals(newval, t.value);
+        </method>
+
+        <method name="addTests">
+          this.addTest("testsetval2");
         </method>
         
     </MyTestCase>
@@ -182,6 +198,10 @@
           t.setAttribute("value", t.value + 1);
           assertEquals(c0 + 1, t.c1);
         </method>
+
+        <method name="addTests">
+          this.addTest("testonvalue");
+        </method>
         
     </MyTestCase>
 
@@ -192,6 +212,10 @@
           t.setAttribute("value", 5);
           assertEquals(t.value, t.minvalue);
         </method>
+
+        <method name="addTests">
+          this.addTest("testunderval");
+        </method>
         
     </MyTestCase>
 
@@ -200,6 +224,10 @@
         <method name="testoverval">
           t.setAttribute("value", t.maxvalue + 5);
           assertEquals(t.value, t.maxvalue);
+        </method>
+
+        <method name="addTests">
+          this.addTest("testoverval");
         </method>
         
     </MyTestCase>
@@ -213,6 +241,10 @@
           assertEquals(newmin, t.minvalue);
           assertEquals(oldval, t.value);
         </method>
+
+        <method name="addTests">
+          this.addTest("testsetmin1");
+        </method>
         
     </MyTestCase>
 
@@ -225,6 +257,10 @@
           assertEquals(newmin, t.minvalue);
           assertEquals(oldval, t.value);
         </method>
+
+        <method name="addTests">
+          this.addTest("testsetmin2");
+        </method>
         
     </MyTestCase>
 
@@ -234,6 +270,10 @@
           var c0 = t.c2;
           t.setAttribute("minvalue", t.minvalue + 1);
           assertEquals(c0 + 1, t.c2);
+        </method>
+
+        <method name="addTests">
+          this.addTest("testonminvalue");
         </method>
         
     </MyTestCase>
@@ -247,6 +287,10 @@
           assertEquals(newmax, t.maxvalue);
           assertEquals(oldval, t.value);
         </method>
+
+        <method name="addTests">
+          this.addTest("testsetmax1");
+        </method>
         
     </MyTestCase>
 
@@ -259,6 +303,10 @@
           assertEquals(newmax, t.maxvalue);
           assertEquals(oldval, t.value);
         </method>
+
+        <method name="addTests">
+          this.addTest("testsetmax2");
+        </method>
         
     </MyTestCase>
 
@@ -268,6 +316,10 @@
           var c0 = t.c3;
           t.setAttribute("maxvalue", t.maxvalue + 1);
           assertEquals(c0 + 1, t.c3);
+        </method>
+
+        <method name="addTests">
+          this.addTest("testonmaxvalue");
         </method>
         
     </MyTestCase>
@@ -281,6 +333,10 @@
           assertEquals(t.value, t.minvalue);
           assertEquals(t.minvalue, t.maxvalue);
         </method>
+
+        <method name="addTests">
+          this.addTest("testovermin");
+        </method>
         
     </MyTestCase>
 
@@ -293,6 +349,10 @@
           t.setMaxValue(newmax);
           assertEquals(t.value, t.minvalue);
           assertEquals(t.minvalue, t.maxvalue);
+        </method>
+
+        <method name="addTests">
+          this.addTest("testundermax");
         </method>
         
     </MyTestCase>
@@ -310,6 +370,7 @@
           }
           t.setValue(oldval);
         ]]></method>
+
   
         <method name="verifythumbrange" args="t"><![CDATA[
           var oldval = t.track.thumb.x;
@@ -331,6 +392,10 @@
           verifyrange();
           verifythumbrange(t);
         </method>
+
+        <method name="addTests">
+          this.addTest("testlittlerange");
+        </method>
         
     </MyTestCase>
   </TestSuite>
@@ -338,7 +403,7 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

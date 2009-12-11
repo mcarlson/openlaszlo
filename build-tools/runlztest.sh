@@ -2,7 +2,7 @@
 # Run several tests in the rhino runtime.
 # usage 
 # runlztest.sh [file-with-list-of-tests]
-# Copyright 2007, 2008 Laszlo Systems
+# Copyright 2007, 2008, 2009 Laszlo Systems
 
 # Use a default value for the tests file if its not specified on the command line
 tests=${1:-"test/lztest/smoketest.txt"}
@@ -25,6 +25,8 @@ if [ ! -x $JAVA_EXEC ]; then
 fi
 
 echo "Entering runlztest.sh with LPS_HOME=${LPS_HOME} tags=${tags}"
+
+build-tools/prepare-lzo-test.sh dhtml
 
 # Strip out comments from list file
 paths=`sed -e /^#/d ${tests}`

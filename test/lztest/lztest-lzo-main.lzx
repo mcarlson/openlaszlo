@@ -1,0 +1,50 @@
+<canvas>
+
+<!--
+  covers-tags : lznode lzo smoketest
+-->
+
+
+  <!-- Test LZO binary library compile -->
+  <include href="lztest/lztestmanager.lzx" /> 
+
+  <include href="lzo-lib.lzx"/>
+  <testclass name="foo" flavor="vanilla"/>
+  <testclass name="bar" flavor="chocolate"/>
+  <testclass name="baz" flavor="strawberry">
+    <method name="doit" args="a,b">
+      return a + b;
+    </method>
+  </testclass>
+
+<script>
+    
+var lzoSuite = new LzTestSuite("Use LZO library"); 
+
+function test_values_defined() {   
+    LzTestManager.assertNotUndefined(global.foo, "testing for defined id"); 
+    LzTestManager.assertNotNull(global.foo, "testing for non-null id");     
+    LzTestManager.assertTrue(global.foo is lz.testclass, "testing for correct class type for instance foo"); 
+    LzTestManager.assertNotUndefined(global.bar, "testing for defined name on global.mine"); 
+    LzTestManager.assertNotNull(global.bar, "testing for defined name on global.mine"); 
+    LzTestManager.assertTrue(global.bar is lz.testclass, "testing for correct class type for instance bar"); 
+    LzTestManager.assertNotSame( global.foo, global.bar, "foo and bar should not be same object" );    
+
+    LzTestManager.assertEquals("vanilla", foo.flavor, "vanilla");
+    LzTestManager.assertEquals("chocolate", bar.flavor, "chocolate");
+    LzTestManager.assertEquals("strawberry", baz.flavor, "strawberry");
+    
+    LzTestManager.assertEquals(5, baz.doit(2,3), "test method on instance");
+
+}
+
+lzoSuite.addTest( test_values_defined );
+
+</script>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

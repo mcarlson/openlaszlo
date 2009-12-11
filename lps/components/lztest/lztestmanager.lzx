@@ -76,10 +76,6 @@ function addSuite( s ) {
 }
 
 function setupServerLogging() {
-    // TODO: enable this once lz.Browser is working in swf9
-    if ($as3) {
-        return;
-    }
     var lzurl = lz.Browser.getLoadURLAsLzURL();
     // strip initial "/legals/" from path, to make it relative to LPS servlet base
     if (lzurl.path) {
@@ -105,9 +101,23 @@ function sendLogData(logfile, msg) {
     var query = "logfile="+escape(logfile)+"&msg="+escape(msg);
     var reqstr =  lz.Browser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
     //Debug.write("sendServerLogCommand", reqobj, reqstr);
+    
     var tloader = new LzHTTPLoader(this, false);
+    tloader.loadSuccess = this.loadComplete;    
     tloader.open ("GET" , reqstr, /* username */ null, /* password */ null);
     tloader.send (/* content */ null)
+
+}
+
+
+function loadComplete (loader:LzHTTPLoader, data:*) :void { 
+    if (lz.Browser.getInitArg('close_when_finished') == 'true') {
+        Debug.info('query arg "close_when_finished" is set, closing window.');
+        var cleanupwindow = function () {
+            lz.Browser.callJS("window.close()");
+        }
+        LzTimeKernel.setTimeout(cleanupwindow, 3000);
+    }
 }
 
 function printSummary () {

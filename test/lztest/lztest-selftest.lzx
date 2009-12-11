@@ -192,7 +192,7 @@ tautologiesSuite.testBasicTruth = function () {
       "Infinity - Infinity isNaN");
     LzTestManager.assertSame(true, isNaN(Infinity / Infinity),
       "Infinity / Infinity isNaN");
-    LzTestManager.assertSame(true, isNaN('random string'), "'random string' isNaN");
+    LzTestManager.assertSame(true, isNaN(Number('random string')), "'random string' isNaN");
     
     LzTestManager.assertFalse(false, "false is false");
     LzTestManager.assertFalse(null, "null is false");
@@ -235,10 +235,9 @@ tautologiesSuite.testTrickiness = function () {
     this.nullvar = null;
 
     // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
-      var flashVersion = lz.Browser.getVersion();
-      if ((! flashVersion) || flashVersion < 8 || flashVersion > 10) {
-          LzTestManager.assertNotSame(NaN, NaN, "NaN !== NaN");
-      }
+    if ($runtime != "swf8") {
+       LzTestManager.assertNotSame(NaN, NaN, "NaN !== NaN");
+    }
 
     LzTestManager.assertNotSame(NaN, Infinity, "NaN !== Infinity");
     LzTestManager.assertNotSame(Infinity, NaN, "Infinity !== NaN");
@@ -336,7 +335,7 @@ tautologiesSuite.addTest(tautologiesSuite.testProblematicComparisons);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

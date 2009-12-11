@@ -64,6 +64,10 @@
         tb.setAttribute('enabled', true);
         assertEquals(true, tb.enabled);
       </method>
+
+      <method name="addTests"> 
+          this.addTest("testSetEnabled");
+      </method> 
       
     </MyTestCase>
     
@@ -78,6 +82,10 @@
         }
       </method>
 
+
+      <method name="addTests"> 
+          this.addTest("testOnEnabled");
+      </method> 
     </MyTestCase>
     
     <MyTestCase>
@@ -92,6 +100,10 @@
         assertEquals(false, tb.focusable);
       </method>
       
+      <method name="addTests"> 
+          this.addTest("testSetFocusable");
+      </method> 
+
     </MyTestCase>
     
     <MyTestCase>
@@ -102,6 +114,10 @@
         tb.setAttribute('focusable', false);
         assertEquals(c + 1, tb.c1, "onfocusable called");
       </method>
+
+      <method name="addTests"> 
+          this.addTest("testOnFocusable");
+      </method> 
 
     </MyTestCase>
     
@@ -117,6 +133,12 @@
         assertEquals(true, tb.focusable);
       </method>
 
+      <method name="addTests">
+        this.addTest("testFocusableWhenEnabled");
+      </method>
+
+
+
     </MyTestCase>
     
     <MyTestCase>
@@ -129,6 +151,10 @@
         assertEquals(false, tb.focusable);
       </method>
 
+      <method name="addTests">
+        this.addTest("testNotFocusableWhenDisabled");
+      </method>
+
     </MyTestCase>
     
     <MyTestCase>
@@ -138,6 +164,10 @@
         var tx = "this is some text.";
         tb.setAttribute('text', tx);
         assertEquals(tx, tb.text, "text changed");
+      </method>
+
+      <method name="addTests">
+        this.addTest("testSetText");
       </method>
       
     </MyTestCase>
@@ -151,6 +181,10 @@
         tb.setAttribute('doesenter', true);
         assertEquals(true, tb.doesenter, "doesenter true");
       </method>
+
+      <method name="addTests">
+        this.addTest("testDoesEnter");
+      </method>
       
     </MyTestCase>
     
@@ -160,6 +194,10 @@
         assertEquals(false, tb.isdefault);
         tb.setAttribute('isdefault', true);
         assertEquals(true, tb.isdefault, "isdefault true");
+      </method>
+
+      <method name="addTests">
+        this.addTest("testSetIsDefault");
       </method>
       
     </MyTestCase>
@@ -173,6 +211,10 @@
           assertEquals(c + 1, tb.c2, "onisdefault called");
         }
       </method>
+
+      <method name="addTests">
+        this.addTest("testOnIsDefault");
+      </method>
       
     </MyTestCase>
     
@@ -181,7 +223,7 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2006, 2008 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2006, 2008, 2009 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->

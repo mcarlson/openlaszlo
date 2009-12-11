@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
@@ -59,6 +59,8 @@ Darwin)
     [ -n "${kill}" ] && killall firefox-bin
     browser=firefox
     function cygpath () { echo $1; }
+# allow javascript in Firefox to close windows by itself
+    (cd ~/Library/Application\ Support/Firefox/Profiles/*.default; echo 'user_pref("dom.allow_scripts_to_close_windows", true);' > user.js)
     ;;
 Linux)
     build_os=unix
@@ -99,6 +101,9 @@ paths=`sed -e /^#/d ${testspath}`
 
 echo "Entering runlzunit.sh with LPS_HOME=${LPS_HOME} testspath=${testspath} tags=${tags}"
 
+. build-tools/prepare-lzo-test.sh $runtime
+
+
 for path in $paths; do
     # filter for the tags
 
@@ -119,7 +124,7 @@ for path in $paths; do
 	fi
     fi
 
-    testurl=http://localhost:8080/${lps_dir}/${path}?lzr=${runtime}
+    testurl="http://localhost:8080/${lps_dir}/${path}?lzr=${runtime}&close_when_finished=true"
     echo "loading ${testurl} at ${path}"
     if [ "${build_os}" = "osx" ]; then
 	`open -g -a "${browser}" "${testurl}"`

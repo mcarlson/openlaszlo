@@ -16,7 +16,7 @@
         this.del2 = new LzDelegate( this, "execdel" );
     </handler>
     
-    <method name="execdel">
+    <method name="execdel" args="ignore">
     </method>
     
   </class>
@@ -148,6 +148,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
