@@ -1029,10 +1029,12 @@
   <!--================  Target [runlzunit] ==============-->
   <target name="runlzunit" depends="init" description="Run lzunit test apps" unless="skip.runlzunit">
     <ant target="lztest" />
-    <ant target="runbrowserlzunit-swf8" />
+    <ant target="runbrowserlztest-swf10" />
+    <ant target="runbrowserlzunit-swf10" />
     <ant target="runbrowserlztest-swf8" />
-    <ant target="runbrowserlzunit-dhtml" />
+    <ant target="runbrowserlzunit-swf8" />
     <ant target="runbrowserlztest-dhtml" />
+    <ant target="runbrowserlzunit-dhtml" />
   </target>
 
   <target name="runbrowserlzunit-swf8" depends="init" description="Run lzunit test apps in swf8 runtime"
@@ -1047,6 +1049,14 @@
           unless="headless">
     <exec executable="bash" failonerror="true">
       <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt dhtml smoketest'" />
+    </exec>
+  </target>
+
+  <target name="runbrowserlzunit-swf10"
+          depends="init" description="Run lzunit test apps in swf10 runtime"
+          unless="headless">
+    <exec executable="bash" failonerror="true">
+      <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt swf10 smoketest'" />
     </exec>
   </target>
 
@@ -1066,6 +1076,15 @@
       <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/rhino.txt dhtml smoketest'" />
     </exec>
   </target>
+
+<target name="runbrowserlztest-swf10"
+          depends="init" description="Run lztest test apps in swf10 runtime"
+          unless="headless" >
+  <exec executable="bash" failonerror="true">
+    <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lztest.log test/lztest/rhino.txt swf10 smoketest'" />
+  </exec>
+  </target>
+
 
    <target name="lztest" depends="init,lztest.clean" description="Run the non-component lzunit test apps with rhino runtime" >
         <exec executable="bash" failonerror="true">
