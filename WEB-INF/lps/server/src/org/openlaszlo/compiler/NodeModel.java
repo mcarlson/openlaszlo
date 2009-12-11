@@ -375,6 +375,8 @@ public class NodeModel implements Cloneable {
       String pragmas = "";
       if (debug) {
         pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=" + name + " dependencies");
+        // Silence reference errors in dependency methods
+        pragmas += "\n#pragma " + ScriptCompiler.quote("warnUndefinedReferences=false");
       }
       String body = "";
       try {
@@ -401,6 +403,7 @@ public class NodeModel implements Cloneable {
       if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
         String kind = "LzOnceExpr";
         String debugDescription = "";
+        // debug inacessible to inner class, doh!
         if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
           debugDescription = ", " + ScriptCompiler.quote("$" + when + "{" + value + "}");
         }
@@ -889,6 +892,8 @@ public class NodeModel implements Cloneable {
         }
 
         // Add file/line information if debugging
+        // TODO: [2009-12-10 ptw] Do we still need this?  It can't
+        // work in as3.
         if (debug && !(env.isAS3())) {
           // File/line stored separately for string sharing
           String name = Function.FUNCTION_FILENAME;

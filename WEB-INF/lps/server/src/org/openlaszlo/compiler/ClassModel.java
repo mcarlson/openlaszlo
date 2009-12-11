@@ -10,6 +10,7 @@ import org.jdom.Element;
 import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.ScriptClass;
+import org.openlaszlo.sc.Function;
 import org.openlaszlo.xml.internal.MissingAttributeException;
 
 public class ClassModel implements Comparable {
@@ -127,8 +128,8 @@ public class ClassModel implements Comparable {
           // The superclass of an instance class is the tag that
           // creates the instance
           superTagName = tagName;
-          // Invalid name, just for debugging
-          tagName = "anonymous extends='" + superTagName + "'";
+          // No tag for instance classes
+          tagName = null;
         }
       } else {
         // The root class
@@ -390,6 +391,8 @@ public class ClassModel implements Comparable {
   public String toLZX(String indent) {
     String lzx = indent + "<interface name='" + tagName + "'" +
       ((superModel != null)?(" extends='" + superModel.tagName +"'"):"") + ">";
+    // TODO: [2009-12-10 ptw] Should named views show up as attributes
+    // in the interface?
     for (Iterator i = attributeSpecs.values().iterator(); i.hasNext(); ) {
       AttributeSpec spec = (AttributeSpec)i.next();
       String specLZX = spec.toLZX(indent + "  ", superModel);
@@ -490,9 +493,14 @@ public class ClassModel implements Comparable {
                    "\n}#\n";
     }
 
-    if (nodeModel.debug && (tagName != null)) {
+    // Various serializers depend on getting the tagname from the
+    // class constructor, so we emit this for all published classes
+    if (! anonymous) {
+      assert tagName != null;
       // Set the tag name
       nodeModel.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
+    } else if (nodeModel.debug) {
+      nodeModel.setAttribute(Function.FUNCTION_NAME, ScriptCompiler.quote("<anonymous extends='" + superTagName + "'>"));
     }
 
     // TODO: [2008-06-02 ptw] This should only be done for LZX classes that are
