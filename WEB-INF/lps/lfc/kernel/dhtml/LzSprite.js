@@ -380,8 +380,7 @@ LzSprite.__defaultStyles = {
         lineHeight: '1.2em',
         textAlign: 'left',
         textIndent: '0px',
-        // To match swf font metrics
-        letterSpacing: '0.025em',
+        letterSpacing: '0px',
         textDecoration: 'none',
         // CSS3 browsers, for swf compatibilty
         wordWrap: 'break-word',
@@ -418,8 +417,7 @@ LzSprite.__defaultStyles = {
         lineHeight: '1.2em',
         textAlign: 'left',
         textIndent: '0px',
-        // To match swf font metrics
-        letterSpacing: '0.025em',
+        letterSpacing: '0px',
         textDecoration: 'none',
         // CSS3 browsers, for swf compatibilty
         wordWrap: 'break-word',
@@ -443,8 +441,7 @@ LzSprite.__defaultStyles = {
         lineHeight: '1.2em',
         textAlign: 'left',
         textIndent: '0px',
-        // To match swf font metrics
-        letterSpacing: '0.025em',
+        letterSpacing: '0px',
         textDecoration: 'none',
         // CSS3 browsers, for swf compatibilty
         wordWrap: 'break-word',
@@ -577,6 +574,7 @@ LzSprite.quirks = {
     ,has_dom2_mouseevents: false
     ,container_divs_require_overflow: false
     ,fix_ie_css_syntax: false
+    ,match_swf_letter_spacing: false
     ,use_css_master_sprite: false
 }
 
@@ -827,13 +825,10 @@ LzSprite.__updateQuirks = function () {
             quirks['detectstuckkeys'] = true;
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;
+            quirks['match_swf_letter_spacing'] = true;
         }
 
         // Adjust styles for quirks
-        var tc = defaultStyles.lztextcontainer;
-        var itc = defaultStyles.lzinputtextcontainer;
-        var itmc = defaultStyles.lzinputtextmultilinecontainer;
-
         if (quirks['hand_pointer_for_clickable']) {
             defaultStyles.lzclickdiv.cursor = 'pointer';
         }
@@ -855,6 +850,10 @@ LzSprite.__updateQuirks = function () {
 
         if (lz.BrowserUtils.hasFeature('mouseevents', '2.0')) {
             quirks['has_dom2_mouseevents'] = true;
+        }
+
+        if (quirks['match_swf_letter_spacing']) {
+            defaultStyles.lzswftext.letterSpacing = defaultStyles.lzswfinputtext.letterSpacing = defaultStyles.lzswfinputtextmultiline.letterSpacing = '0.025em';
         }
     }
     // Make quirks available as a sprite property
