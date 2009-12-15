@@ -228,6 +228,74 @@ mixin LzFormatter {
     return s;
   };
 
+  /**
+   * Characters to escape in strings when escape is true.
+   * (These are the ECMAScript SingleEscapeCharacter's for String
+   * Literals (7.8.4).
+   * @access private
+   */
+  static var singleEscapeCharacters = [
+    '\\b', '\b',
+    '\\t', '\t',
+    '\\n', '\n',
+    // @devnote IE doesn't implement '\v', use hexcode instead, but cannot
+    // use '\x0B' because compiler replaces it back to '\v' (LPP-3623)
+    '\\v', String.fromCharCode(0x0B),
+    '\\f', '\f',
+    '\\r', '\r',
+    '\\"', '\"',
+    '\\\'', '\'',
+    '\\\\', '\\'
+  ];
+
+  /**
+   * Escape a string
+   *
+   * @param String s: the string to abbreviate
+   * @param Boolean quoted: whether to quote the string or not (and if
+   * you do, to not escape the opposite quote inside the string).
+   * Default false.
+   * @return String: the escaped (and optionally quoted) string
+   *
+   * @access private
+   *
+   * @devnote Intentionally written not using RegEx because some
+   * runtimes do not support RegEx
+   */
+  function stringEscape (s:String, quoted:Boolean=false) {
+    // Have to handle '\\' first.
+    s = s.split('\\').join('\\\\');
+    // FIXME [2009-12-13 ptw] (LPP-8666)
+    if ($as3) {
+      var np = singleEscapeCharacters;
+    } else {
+      var np = LzFormatter.singleEscapeCharacters;
+    }      
+    // quotes are skipped and ignored unless quoted
+    var skip = '"';
+    var quote = "";
+    var ignore = "'";
+    if (quoted) {
+      ignore = "";
+      var singles = s.split("'").length;
+      var doubles = s.split('"').length;
+      if (singles > doubles) {
+        skip = "'";
+        quote = '"';
+      } else {
+        skip = '"';
+        quote = "'";
+      }
+    }
+    for (var i = 0, l = np.length; i < l; i += 2) {
+      var rep = np[i];
+      var ch = np[i+1];
+      if ((ch != '\\') && (ch != skip) && (ch != ignore)) {
+        s = s.split(ch).join(rep);
+      }
+    }
+    return quote + s + quote;
+  };
 
   /**
    * <p>Formatted output to string</p>
@@ -517,6 +585,9 @@ mixin LzFormatter {
           } else if (typeof value == 'number') {
             // Must convert number to string for proper padding
             str = Number(value).toString(radix);
+          } else if ((directive == 'w') && (typeof value == 'string')) {
+            // %w escapes strings
+            str = this.stringEscape(value, true);
           } else {
             str = '' + value;
           }

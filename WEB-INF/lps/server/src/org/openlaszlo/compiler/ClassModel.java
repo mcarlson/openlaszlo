@@ -12,6 +12,7 @@ import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.ScriptClass;
 import org.openlaszlo.sc.Function;
 import org.openlaszlo.xml.internal.MissingAttributeException;
+import org.openlaszlo.utils.StringUtils;
 
 public class ClassModel implements Comparable {
     protected final ViewSchema schema;
@@ -21,6 +22,9 @@ public class ClassModel implements Comparable {
     public final boolean anonymous;
     /** And this is the actual class name */
     public String className;
+    /** The name for debugging */
+    public String debugExtends;
+    public String debugWith;
     final CompilationEnvironment env;
     protected boolean builtin = false;
     // This is null for the root class
@@ -76,19 +80,24 @@ public class ClassModel implements Comparable {
     // Construct a user-defined class
     public ClassModel(String tagName, boolean publish,
                       ViewSchema schema, Element definition, CompilationEnvironment env) {
-
+      anonymous = (! publish);
       if (definition != null) {
         // class, interface, mixin; OR anonymous instance class
         kind = definition.getName();
         String mixinSpec = definition.getAttributeValue("with");
+        if (mixinSpec != null) {
+          mixinNames = mixinSpec.trim().split("\\s*,\\s*");
+        }
         boolean isclassdef = ("class".equals(kind) || "interface".equals(kind) || "mixin".equals(kind));
         if (isclassdef || "anonymous".equals(tagName)) {
           superTagName = definition.getAttributeValue("extends");
           if (superTagName == null) {
             superTagName = DEFAULT_SUPERCLASS_NAME;
           }
-          if (mixinSpec != null) {
-            mixinNames = mixinSpec.trim().split("\\s*,\\s*");
+          // Save away the original extends value
+          debugExtends = superTagName;
+          debugWith = "";
+          if (mixinNames != null) {
             for (int i = mixinNames.length - 1; i >= 0; i--) {
               String mixinName = mixinNames[i];
               ClassModel mixinModel =  schema.getClassModelUnresolved(mixinName);
@@ -98,6 +107,7 @@ public class ClassModel implements Comparable {
                     definition);
               }
               String interstitialName = mixinName + "$" + superTagName;
+              debugWith = mixinName + (debugWith.length() > 0 ? ", " : "") + debugWith;
               // Avoid adding the same mixin to the schema twice - LPP-8234
               if (schema.getClassModelUnresolved(interstitialName) == null) {
                 // We duplicate the mixin definition, but turn it into
@@ -108,8 +118,12 @@ public class ClassModel implements Comparable {
                 interstitial.setAttribute("name", interstitialName);
                 interstitial.setAttribute("extends", superTagName);
 
-                // Add it to the schema
-                schema.addElement(interstitial, interstitialName, env);
+                // Add it to the schema, but don't define a tag
+                schema.addElement(interstitial, interstitialName, env, true, false);
+                // Give it a mnemonic debugName
+                ClassModel im = schema.getClassModelUnresolved(interstitialName);
+                im.debugExtends = debugExtends;
+                im.debugWith = debugWith;
               }
 
               // Update the superTagName
@@ -120,11 +134,21 @@ public class ClassModel implements Comparable {
             definition.removeAttribute("with");
             definition.setAttribute("extends", superTagName);
           }
+          if ("anonymous".equals(tagName)) {
+            ClassModel sm = schema.getClassModelUnresolved(superTagName);
+            debugExtends = sm.debugExtends;
+            debugWith = sm.debugWith;
+            tagName = null;
+          }
         } else {
           // Instance classes are not published
           assert (! publish);
           assert tagName.equals(definition.getName());
+          assert (! "anonymous".equals(tagName));
           kind = "instance class";
+          ClassModel sm = schema.getClassModelUnresolved(tagName);
+          debugExtends = tagName;
+          debugWith = sm.debugWith;
           // The superclass of an instance class is the tag that
           // creates the instance
           superTagName = tagName;
@@ -137,7 +161,6 @@ public class ClassModel implements Comparable {
       }
 
       this.tagName = tagName;
-      this.anonymous = (! publish);
       // NOTE: [2009-01-31 ptw] If the class is in an import, or
       // external to the library you are linking, modelOnly is set to true to prevent class
       // models that were created to compute the schema and
@@ -461,10 +484,7 @@ public class ClassModel implements Comparable {
     }
     String superClassName = superModel.className;
     if (className == null) {
-      className = LZXTag2JSClass(
-        nodeModel.debug ?
-        CompilerUtils.encodeJavaScriptIdentifier(nodeModel.getNodePath()) :
-        env.methodNameGenerator.next().substring(1));
+      className = LZXTag2JSClass(env.methodNameGenerator.next().substring(1));
     }
     // className will be a global
     env.addId(className, definition);
@@ -500,7 +520,18 @@ public class ClassModel implements Comparable {
       // Set the tag name
       nodeModel.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
     } else if (nodeModel.debug) {
-      nodeModel.setAttribute(Function.FUNCTION_NAME, ScriptCompiler.quote("<anonymous extends='" + superTagName + "'>"));
+      String with = "";
+      if (debugWith.length() > 0) {
+        with = " with='" + debugWith + "'";
+      }
+      String debugName;
+      // Instance classes end up with a null tagName
+      if (tagName == null) {
+        debugName = "<anonymous extends='" + debugExtends + "'" + with + ">";
+      } else {
+        debugName = "<" + debugExtends + with + ">";
+      }
+      nodeModel.setClassAttribute(Function.FUNCTION_NAME, ScriptCompiler.quote(debugName));
     }
 
     // TODO: [2008-06-02 ptw] This should only be done for LZX classes that are

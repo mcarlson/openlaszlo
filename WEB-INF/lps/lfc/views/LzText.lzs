@@ -1319,7 +1319,10 @@ dynamic class LzText extends LzView with LzFormatter {
    * control string
    */
   function format (control:String, ...args) {
-    this.$lzc$set_text (this.formatToString.apply(this, [control].concat(args)));
+    // Convert the output to a string (to eliminate debugger markup)
+    // but then to HTML (to escape characters that would be
+    // interpreted as markup in text).
+    this.$lzc$set_text (this.formatToString.apply(this, [control].concat(args)).toString().toHTML());
   }
 
   /**
@@ -1335,7 +1338,11 @@ dynamic class LzText extends LzView with LzFormatter {
    * control string
    */
   function addFormat (control:String, ...args) {
-    this.$lzc$set_text (this.getText() + this.formatToString.apply(this, [control].concat(args)));
+    // Convert the output to a string (to eliminate debugger markup)
+    // but then to HTML (to escape characters that would be
+    // interpreted as markup in text).
+    this.$lzc$set_text (this.getText() +
+                        this.formatToString.apply(this, [control].concat(args)).toString().toHTML());
   }
 
   /**

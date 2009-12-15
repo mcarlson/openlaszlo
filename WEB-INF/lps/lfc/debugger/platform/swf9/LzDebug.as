@@ -151,7 +151,12 @@ class LzAS3DebugService extends LzDebugService {
           return null;
         }
       }
-      var n = getQualifiedClassName(fn);
+      // Display name takes precedence over the actual class name
+      if (fn[Debug.FUNCTION_NAME]) {
+        var n = fn[Debug.FUNCTION_NAME];
+      } else {
+        var n = getQualifiedClassName(fn);
+      }
       if (! mustBeUnique) {
         return n;
       } else {

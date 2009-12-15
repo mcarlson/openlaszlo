@@ -111,7 +111,7 @@ public class ViewCompiler extends ElementCompiler {
       if (!isclassdef && mixinSpec != null) {
         element.setAttribute("extends", element.getName());
         element.setName("anonymous");
-        schema.addElement(element, "anonymous", mEnv, false);
+        schema.addElement(element, "anonymous", mEnv, false, false);
       }
 
       Iterator iterator = element.getChildren().iterator();

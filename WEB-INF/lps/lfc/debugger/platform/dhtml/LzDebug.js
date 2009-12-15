@@ -325,14 +325,6 @@ class LzDHTMLDebugService extends LzDebugService {
           return null;
         }
       }
-      if (fn.hasOwnProperty('classname')) {
-        var n = fn.classname;
-        if ((! mustBeUnique) || (fn === eval(n))) {
-          return n;
-        } else {
-          return null;
-        }
-      }
     }
     return super.functionName(fn, mustBeUnique);
   };

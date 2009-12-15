@@ -1,5 +1,27 @@
 <!-- Debugger Tests -->
 <library>
+  <!-- See LPP-8665 -->
+  <mixin name="mixintest">
+    <attribute name="displayName" value="CLASS DEFAULT" type="string"/>
+    <method name="crud" />
+  </mixin>
+  <mixin name="mixinzot">
+    <method name="blort" />
+  </mixin>
+  <view name="mixinsimple" with="mixintest"/>
+  <view name="mixincomplicated" with="mixintest, mixinzot">
+    <attribute name="displayName" type="string" value="INSTANCE OVERRIDE"/>
+  </view>
+  <view name="anonymoussimple">
+    <method name="makeitso" />
+  </view>
+  <view name="anonymouskindacomplicated" with="mixinzot">
+    <method name="makeitso" />
+  </view>
+  <view name="anonymousreallycomplicated" with="mixintest, mixinzot">
+    <method name="makeitso" />
+  </view>
+
   <class name="TestDebugger" extends="TestCase">
     <method name="setUp">
       <![CDATA[
@@ -206,8 +228,22 @@
                assertEquals('1% 2% 3%\n', Debug.formatToString('1%', '2%', '3%'));
       ]]>
     </method>
+
+    <!-- See LPP-8665 -->
+    <method name="testDebugNames"><![CDATA[
+      var displayName = Debug.FUNCTION_NAME;
+      assertEquals('CLASS DEFAULT', mixinsimple[displayName]);
+      assertEquals('INSTANCE OVERRIDE', mixincomplicated[displayName]);
+      assertEquals("<view with='mixintest'>", Debug.formatToString("%w", mixinsimple.constructor));
+      assertEquals("<view with='mixintest, mixinzot'>", Debug.formatToString("%w", mixincomplicated.constructor));
+      assertEquals("<anonymous extends='view'>", Debug.formatToString("%w", anonymoussimple.constructor));
+      assertEquals("<anonymous extends='view' with='mixinzot'>", Debug.formatToString("%w", anonymouskindacomplicated.constructor));
+      assertEquals("<anonymous extends='view' with='mixintest, mixinzot'>", Debug.formatToString("%w", anonymousreallycomplicated.constructor));
+    ]]></method>
+
     <method name="addTests"> 
         this.addTest("testFormat");
+        this.addTest("testDebugNames");
     </method> 
   </class>
 </library>

@@ -1484,26 +1484,6 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   };
 
   /**
-   * Characters to escape in strings when escape is true.
-   * (These are the ECMAScript SingleEscapeCharacter's for String
-   * Literals (7.8.4).
-   * @access private
-   */
-  static var singleEscapeCharacters = [
-    '\\b', '\b',
-    '\\t', '\t',
-    '\\n', '\n',
-    // @devnote IE doesn't implement '\v', use hexcode instead, but cannot
-    // use '\x0B' because compiler replaces it back to '\v' (LPP-3623)
-    '\\v', String.fromCharCode(0x0B),
-    '\\f', '\f',
-    '\\r', '\r',
-    '\\"', '\"',
-    '\\\'', '\'',
-    '\\\\', '\\'
-  ];
-
-  /**
    * Abbreviate a string
    *
    * @param String s: the string to abbreviate
@@ -1516,50 +1496,6 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     // swf9 does not permit this as a parameter default
     if (isNaN(l)) { l = Debug.printLength; }
     return super.abbreviate(s, l);
-  };
-
-  /**
-   * Escape a string
-   *
-   * @param String s: the string to abbreviate
-   * @param Boolean quoted: whether to quote the string or not (and if
-   * you do, to not escape the opposite quote inside the string).
-   * Default false.
-   * @return String: the escaped (and optionally quoted) string
-   *
-   * @access private
-   *
-   * @devnote Intentionally written not using RegEx because some
-   * runtimes do not support RegEx
-   */
-  function stringEscape (s:String, quoted:Boolean=false) {
-    // Have to handle '\\' first.
-    s = s.split('\\').join('\\\\');
-    var np = LzDebugService.singleEscapeCharacters;
-    // quotes are skipped and ignored unless quoted
-    var skip = '"';
-    var quote = "";
-    var ignore = "'";
-    if (quoted) {
-      ignore = "";
-      var singles = s.split("'").length;
-      var doubles = s.split('"').length;
-      if (singles > doubles) {
-        skip = "'";
-        quote = '"';
-      } else {
-        skip = '"';
-        quote = "'";
-      }
-    }
-    for (var i = 0, l = np.length; i < l; i += 2) {
-      var rep = np[i];
-      var ch = np[i+1];
-      if ((ch != '\\') && (ch != skip) && (ch != ignore)) {
-        s = s.split(ch).join(rep);
-      }
-    }
-    return quote + s + quote;
   };
 
   /**

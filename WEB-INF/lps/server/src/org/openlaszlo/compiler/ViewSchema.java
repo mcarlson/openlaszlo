@@ -328,7 +328,7 @@ public class ViewSchema extends Schema {
      * @param tagName the name of the element
      */
     public void addElement (Element elt, String tagName, CompilationEnvironment env) {
-        addElement(elt, tagName, env, true);
+      addElement(elt, tagName, env, true, true);
     }
 
     /**
@@ -336,8 +336,10 @@ public class ViewSchema extends Schema {
      *
      * @param elt the element to add to the map
      * @param tagName the name of the element
+     * @param classdef this should go in the class table
+     * @param publish this should go in the tag table
      */
-    public void addElement (Element elt, String tagName, CompilationEnvironment env, boolean classdef)
+  public void addElement (Element elt, String tagName, CompilationEnvironment env, boolean classdef, boolean publish)
     {
         if (classdef && mClassMap.get(tagName) != null) {
             String builtin = "builtin ";
@@ -356,7 +358,7 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-435", new Object[] {builtin, tagName, also})
 , elt);
         }
-        ClassModel info = new ClassModel(tagName, classdef, this, elt, env);
+        ClassModel info = new ClassModel(tagName, publish, this, elt, env);
         if (classdef) {
             mClassMap.put(tagName, info);
         }

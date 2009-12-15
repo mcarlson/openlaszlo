@@ -1,7 +1,7 @@
 /**
  * support for debug messages
  *
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  */
 
@@ -111,25 +111,24 @@ class LzBootstrapMessage {
 
   /**
    * @access private
-   */
-  static const xmlEscapeChars:Object = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'};
-
-  /**
-   * @access private
    * XML escape
-   */ 
+   *
+   * The goal here is to make sure that characters that would be
+   * swallowed as markup are not.  We specifically do _not_ escape
+   * newlines because the text kernel translates those on a platform
+   * basis.  This function would be better called "markup escape"
+   * perhaps.
+   */
   static function xmlEscape (input:*):* {
     if (input && ((typeof(input) == "string") || (input is String))) {
-      const escChars:Object = LzBootstrapMessage.xmlEscapeChars;
       var len:int = input.length;
       var output:String = "";
       for (var i:int = 0; i < len; i++) {
-        var code:Number = input.charCodeAt(i);
-        if ( code < 32 ){
-          output += "&#x" + code.toString(16) + ";";
-        } else {
-          var c:String = input.charAt(i);
-          output += (escChars[c] || c);
+        var c:String = input.charAt(i);
+        switch (c) {
+          case '<': output += "&lt;"; break;
+          case '>': output += "&gt;"; break;
+          default: output += c;
         }
       }
       return output;

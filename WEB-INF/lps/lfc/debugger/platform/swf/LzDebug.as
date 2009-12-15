@@ -184,23 +184,6 @@ class LzAS2DebugService extends LzDebugService {
           return null;
         }
       }
-      if (fn.hasOwnProperty('classname')) {
-        var n = fn.classname;
-        if ((! mustBeUnique) || (fn === eval(n))) {
-          return n;
-        } else {
-          return null;
-        }
-      }
-      if (fn.hasOwnProperty('name')) {
-        // swf back-end still uses 'name' sometimes...
-        var n = fn.name;
-        if ((! mustBeUnique) || (fn === eval(n))) {
-          return n;
-        } else {
-          return null;
-        }
-      }
     }
     return super.functionName(fn, mustBeUnique);
   };
