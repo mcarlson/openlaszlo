@@ -70,6 +70,10 @@
             if ( s[ this.axis ] != c ){
                 s.setAttribute( this.axis , c );
             }
+            // use computed bounds when necessary
+            if (s.usegetbounds){
+                s = s.getBounds();
+            }
             c += this.spacing + s[ this.sizeAxis ];
         }
         ]]>

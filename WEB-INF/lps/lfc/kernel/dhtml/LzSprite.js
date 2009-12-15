@@ -605,6 +605,7 @@ LzSprite.prototype.capabilities = {
     ,dropshadows: false
     ,cornerradius: false
     ,rgba: false
+    ,css2boxmodel: true
 }
 
 /**
@@ -2972,4 +2973,44 @@ LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowan
 
 LzSprite.prototype.setCornerRadius = function(radius) {
     this.__LZdiv.style.MozBorderRadius = this.__LZdiv.style.webkitBorderRadius = this.__LZdiv.style.borderRadius = this.CSSDimension(radius);
+}
+
+LzSprite.prototype.__csscache;
+LzSprite.prototype.setCSS = function(name, value, isdimension) {
+    if (! this.__csscache) {
+        this.__csscache = {};
+    } else if (this.__csscache[name] === value) {
+        return;
+    }
+    this.__csscache[name] = value;
+
+    if (isdimension) value = this.CSSDimension(value);
+    //Debug.warn('setCSS', name, value);
+    var callback = this['set_' + name];
+    if (callback) {
+        callback.call(this, value);
+    } else {
+        this.__LZdiv.style[name] = value;
+        if (this.quirks.fix_clickable) {
+            this.__LZclickcontainerdiv.style[name] = value;
+        }
+        if (this.quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
+            this.__LZcontextcontainerdiv.style[name] = value;
+        }
+    }
+}
+
+LzSprite.prototype.set_borderWidth = function(width) {
+    this.__LZdiv.style.borderWidth = width;
+    this.__LZdiv.style.borderStyle = 'solid';
+    if (this.__LZclick) {
+        this.__LZclick.style.borderWidth = width;
+        this.__LZclick.style.borderStyle = 'solid';
+        this.__LZclick.style.borderColor = this.__csscache.borderColor;
+    }
+    if (this.__LZcontext) {
+        this.__LZcontext.style.borderWidth = width;
+        this.__LZcontext.style.borderStyle = 'solid';
+        this.__LZcontext.style.borderColor = this.__csscache.borderColor;
+    }
 }

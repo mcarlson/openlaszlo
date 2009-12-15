@@ -1253,6 +1253,7 @@ function $lzc$set_rotation(v) {
         LzView.__warnCapability('view.rotation', 'rotation'); 
     }
     this.rotation = v;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0;
     var rrad = Math.PI /180 * this.rotation;
     this.__LZrsin = Math.sin( rrad )
     this.__LZrcos = Math.cos( rrad )
@@ -1469,8 +1470,9 @@ var xoffset =   0;
   * @access private 
   */
 function $lzc$set_xoffset(o) {
-    this.__LZhasoffset = o != 0;
     this.xoffset = o;
+    this.__LZhasoffset = this.xoffset != 0 || this.yoffset != 0 || this.__widthoffset != 0 || this.__heightoffset != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0;
     // Clear the memo cache to force a recompute
     this.__set_x_memo = void 0;
     this.$lzc$set_x(this.x);
@@ -1495,8 +1497,9 @@ var yoffset =   0;
   * @type Number
   */
 function $lzc$set_yoffset(o) {
-    this.__LZhasoffset = o != 0;
     this.yoffset = o;
+    this.__LZhasoffset = this.xoffset != 0 || this.yoffset != 0 || this.__widthoffset != 0 || this.__heightoffset != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0;
     // Clear the memo cache to force a recompute
     this.__set_x_memo = void 0;
     this.$lzc$set_x(this.x);
@@ -2112,10 +2115,13 @@ static var __LZlastmtrix = [ 0,0,0,0,0,0,0,0,0,0,0 ];
   * properties that describes the bounding box of the view.
   */
 function getBounds (  ){
+    // account for size offset - may be set by boxmodel mixin
+    var width = this.width + this.__widthoffset;
+    var height = this.height + this.__heightoffset;
     var mtrix = [ -this.xoffset, -this.yoffset,
-                   this.width-this.xoffset , -this.yoffset ,
-                  -this.xoffset, this.height - this.yoffset ,
-                   this.width - this.xoffset, this.height - this.yoffset ,
+                   width-this.xoffset , -this.yoffset ,
+                  -this.xoffset, height - this.yoffset ,
+                   width - this.xoffset, height - this.yoffset ,
                    this.rotation , this.x , this.y] ;
                    //last three entries are just to track staleness
 
@@ -2284,7 +2290,7 @@ function getColorTransform (){
 function __LZcheckSize ( sview, axis , xory ){
 
         if ( sview.addedToParent ) {
-            if ( sview.__LZhasoffset || sview.rotation != 0 ){
+            if ( sview.usegetbounds ){
                 var bobj = sview.getBounds();
             } else {
                 var bobj = sview;
@@ -2355,7 +2361,7 @@ function measureSize ( axis ) {
   for ( var i= this.subviews.length-1; i >= 0; i-- ){
     var sview = this.subviews[ i ];
     if (sview.visible) {
-      if ( sview.__LZhasoffset || sview.rotation != 0 ){
+      if ( sview.usegetbounds ){
         var bobj = sview.getBounds();
       } else {
         var bobj = sview;
@@ -2473,7 +2479,7 @@ function reevaluateSize ( ia = null){
     for ( var i= this.subviews.length-1; i >= 0; i-- ){
         var sv = this.subviews[ i ];
 
-        if ( sv.__LZhasoffset || sv.rotation != 0 ){
+        if ( sv.usegetbounds ){
             var b = sv.getBounds();
             var svs = b[ axis == "width" ? "x" : "y" ] + b[ axis ];
         } else {
@@ -3690,6 +3696,57 @@ function isBehind(sibling:LzView) {
     if (! sibling || sibling.parent !== this.parent) return null;
     return this.sprite.getZ() < sibling.sprite.getZ();
 }
+
+/** Tracks whether this view has margins/padding applied
+  * @access private */
+var __widthoffset = 0
+/*** @access private */
+var __heightoffset = 0
+
+/**
+  * Data about CSS styles for setCSS().
+  * @access private 
+  */
+var __styleinfo = {};
+
+/**
+  * Sets a CSS style directly on a sprite, sending an event a la a setter.  Warn when a matching capability isn't found for the stylename.
+  * @access private 
+  */
+function setCSS(stylename:String, value) {
+    var styleinfo = this.__styleinfo[stylename];
+    if (! styleinfo) {
+        if ($debug) {
+            Debug.warn('Unknown CSS property', stylename);
+        }
+        return;
+    }
+    //Debug.warn('setCSS', stylename, value);
+
+    if (this.capabilities[styleinfo.capability]) {
+        // Use lower case version of CSS name
+        this.sprite.setCSS(stylename, value, styleinfo.isdimension);
+    } else if ($debug) {
+        LzView.__warnCapability('view.' + stylename.toLowerCase(), styleinfo.capability); 
+        return;
+    }
+
+    if (styleinfo.affectsoffset) {
+        this.__LZhasoffset = this.xoffset != 0 || this.yoffset != 0 || this.__widthoffset != 0 || this.__heightoffset != 0;
+        this.usegetbounds = this.__LZhasoffset || this.rotation != 0;
+
+        var vip:LzView = (this.immediateparent cast LzView);
+        if (vip.__LZcheckwidth)
+            vip.__LZcheckwidthFunction( this );
+        if (vip.__LZcheckheight)
+            vip.__LZcheckheightFunction( this );
+    }
+}
+
+/**
+  * True if this view requires a call to getBounds() for accurate width and height measurement. This may be necessary when an offset or rotation are applied.
+  */
+var usegetbounds = false;
 
 } // End of LzView
 
