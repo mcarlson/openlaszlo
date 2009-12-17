@@ -298,6 +298,7 @@
 
         <!---  @keywords private -->
         <method name="mousewheelUpdate" args="d"> <![CDATA[
+            if (this.axis != 'y') return;
             // check if the mouse is over the view
             if (this.mousewheelactive || (this.scrolltarget && this.scrolltarget.immediateparent && this.scrolltarget.immediateparent.isMouseOver()) ) {
                 this.step(-d);
