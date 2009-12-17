@@ -17,6 +17,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.*;
 
+import org.openlaszlo.utils.FileUtils;
+
 public class ImageMontageMaker {
     protected static Logger mLogger = org.apache.log4j.Logger.getLogger(ImageMontageMaker.class);
 
@@ -45,14 +47,21 @@ public class ImageMontageMaker {
             String infile = (String)files.get(index);
             mLogger.debug("Adding to sprite: " + infile);
 
-            // Have to use this instead of JAI because of bugs in PNG decoder :(
-            Image img = toolkit.createImage(infile);
-            int wait = 200;
-            while (img.getHeight(null) < 0 && wait-- > 0) {
-                try {
-                    Thread.sleep(10);
+            String extension = FileUtils.getExtension(infile);
+            Image img;
+            if (extension.toLowerCase().equals("png")) {
+                // Have to use this instead of JAI because of bugs in PNG decoder :(
+                img = toolkit.createImage(infile);
+                int wait = 200;
+                while (img.getHeight(null) < 0 && wait-- > 0) {
+                    try {
+                        Thread.sleep(10);
+                    }
+                    catch (Exception e) {}
                 }
-                catch (Exception e) {}
+            } else {
+                // use JAI
+                img = ImageIO.read(new File(infile));
             }
             
             int width = img.getWidth(null);
@@ -87,6 +96,7 @@ public class ImageMontageMaker {
         while (index<numfiles) {
             Image img = (Image)images[index++];
             //g.drawImage(img, maxwidth * col, maxheight * row, maxwidth, maxheight, null);
+            mLogger.debug("Drawing image" + img + " at " + x + ", " + y);
             g.drawImage(img, x, y, null);
             if (isHorizontal) {
                 if (collapse) {
