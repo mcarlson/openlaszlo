@@ -290,7 +290,7 @@ lz.embed = {
         if (properties.cancelmousewheel == true) {
             lz.embed.mousewheel.setEnabled(false);
         }
-        this.__dhtmlLoadScript(url)
+        this.__dhtmlLoadLibrary(url)
         // Make sure we have focus (see LPP-8242)
         if (lz.embed.browser.OS == 'Windows' && lz.embed.browser.isFirefox) { window.focus(); }
     }
@@ -703,8 +703,12 @@ lz.embed = {
         var divid = appenddivid ? appenddivid : id + 'Container';
         var root = document.getElementById(divid);
         if (! root) {
-            document.writeln('<div id="' + divid + '"></div>');
-            root = document.getElementById(divid);
+            root = document.createElement('div');
+            this.__setAttr(root, 'id', divid);
+            document.body.appendChild(root);
+        } else {
+            // clear its contents
+            root.innerHTML = '';
         }
         return root;
     }

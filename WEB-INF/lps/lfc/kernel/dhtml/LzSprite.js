@@ -106,7 +106,7 @@ var LzSprite = function(owner, isroot) {
         }
 
         /* Install the styles, now that quirks have been accounted for */
-        LzSprite.__defaultStyles.writeCSS();
+        LzSprite.__defaultStyles.writeCSS(quirks.write_css_with_createstylesheet);
 
         appcontainer.appendChild(div);
         this.__LZdiv = div;
@@ -470,7 +470,7 @@ LzSprite.__defaultStyles = {
         position: 'absolute'
     },
     // Blarg.  Why do we have these in here?
-    writeCSS: function() {
+    writeCSS: function(isIE) {
         var rules = [];
         var css = '';
         for (var classname in this) {
@@ -487,7 +487,19 @@ LzSprite.__defaultStyles = {
             css += '}';
         }
         css += LzFontManager.generateCSS();
-        document.write('<style type="text/css">' + css + '</style>');
+        if (isIE) {
+            if (!document.styleSheets['lzstyles']) {
+                var ss = document.createStyleSheet();
+                ss.owningElement.id = 'lzstyles';
+                ss.cssText = css;
+            }
+        } else {
+            var o = document.createElement('style');
+            lz.embed.__setAttr(o, 'type', 'text/css');
+            o.appendChild( document.createTextNode( css ) );
+            var heads = document.getElementsByTagName("head");
+            heads[0].appendChild(o);
+        }
     },
     __re: new RegExp('[A-Z]', 'g'),
     hyphenate: function(n) {
@@ -576,6 +588,7 @@ LzSprite.quirks = {
     ,fix_ie_css_syntax: false
     ,match_swf_letter_spacing: false
     ,use_css_master_sprite: false
+    ,write_css_with_createstylesheet: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -705,6 +718,8 @@ LzSprite.__updateQuirks = function () {
             // IE document.elementFromPoint() returns scrollbar div
             quirks['ie_elementfrompoint'] = true;
             quirks['fix_ie_css_syntax'] = true;
+            // IE doesn't like using DOM operations with the dev console - see LPP-
+            quirks['write_css_with_createstylesheet'] = true;
 
         } else if (browser.isSafari || browser.isChrome) {
             // Safari won't show canvas tags whose parent is display: none
