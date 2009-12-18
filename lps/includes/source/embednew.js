@@ -280,6 +280,7 @@ lz.embed = {
             ,loaded: false
             ,setCanvasAttribute: lz.embed._setCanvasAttributeDHTML
             ,getCanvasAttribute: lz.embed._getCanvasAttributeDHTML
+            ,callMethod: lz.embed._callMethodDHTML
             ,_sendAllKeysUp: lz.embed._sendAllKeysUpDHTML
         }
         // listen for history unless properties.history == false
@@ -670,11 +671,26 @@ lz.embed = {
      * Calls a method with optional arguments in an embedded SWF application 
      * and returns the result.   
      *
-       * @param js:String javascript to call in the form 'foo.bar.methodcall(arg1,arg2,...)'
+     * @param js:String javascript to call in the form 'foo.bar.methodcall(arg1,arg2,...)'
      */
     _callMethodSWF: function (js) {
         if (this.loaded) {
             return lz.embed.dojo.comm[this._id].callMethod(js);
+        } else {
+            // add to a private queue
+            if (! this._callmethod) this._callmethod = [];
+            this._callmethod.push(js);
+        }
+    }
+    ,/**
+     * Calls a method with optional arguments in an embedded DHTML application 
+     * and returns the result.   
+     *
+     * @param js:String javascript to call in the form 'foo.bar.methodcall(arg1,arg2,...)'
+     */
+    _callMethodDHTML: function (js) {
+        if (this.loaded) {
+            return eval(js);
         } else {
             // add to a private queue
             if (! this._callmethod) this._callmethod = [];
