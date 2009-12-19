@@ -38,6 +38,7 @@
   <attribute name="app_lps_root" />
   <attribute name="app_lzt" />
   <attribute name="app_uid" />
+  <attribute name="app_usemastersprite" />
 
   <handler name="oninit">
       <![CDATA[
@@ -66,6 +67,11 @@
        setAttribute('app_uid', app_fullpath);
 
        if ($dhtml) {
+           setAttribute('lzr', 'dhtml');
+
+           // process query string
+           var qitems = LzParam.parseQueryString(app_query);
+           setAttribute('app_usemastersprite', qitems.lzusemastersprite);
            canvas.width = document.body.clientWidth;
        }
        ]]>
@@ -161,7 +167,7 @@
                 <view x="1" y="1" width="${parent.width - 2}" height="30" bgcolor="#7a7a8c"/>
             </view>
             <view x="125" name="compilecontrols">
-              <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:12" x="10" y="9">
+                <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:12" x="10" y="9">
                     <radiobutton id="rb8" value="'swf8'"
                                  selected="${canvas.app_runtime == 'swf8'}">swf8</radiobutton >
                     <radiobutton id="rb10" value="'swf10'" 
@@ -176,7 +182,13 @@
                             x="16" y="8">Debug</checkbox>
                     <checkbox id="cb_backtrace" 
                             value="${canvas.app_backtrace == 'true'}" x="82" y="8">Backtrace</checkbox>
-                    <button onclick="canvas.gotoApp()" x="168" y="3">Compile</button>
+                    <switch>
+                        <when runtime="dhtml">
+                            <checkbox id="cb_usemastersprite" 
+                                    value="${canvas.app_usemastersprite == 'true'}" x="168" y="8">Use master sprite</checkbox>
+                        </when>
+                    </switch>
+                    <button onclick="canvas.gotoApp()" x="${canvas.lzr == 'dhtml' ? 300 : 168}" y="3">Compile</button>
                     <handler name="onvalue" reference="cb_backtrace">
                     if (cb_backtrace.value) {
                         cb_debug.setAttribute('value', true);
@@ -317,6 +329,9 @@
     qitems['debug'] = qdebug;
     qitems['lzbacktrace'] = qbacktrace;
     qitems['lzr'] = qruntime;
+    if ($dhtml) {
+        qitems['lzusemastersprite'] = cb_usemastersprite.value;
+    }
 
     /*
     // code to instruct server to pop up debug console in own window (doesn't work in Firefox)

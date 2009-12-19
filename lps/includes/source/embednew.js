@@ -73,6 +73,14 @@ lz.embed = {
 
         var queryvals = this.__getqueryurl(url);
 
+        // allow query string options to override properties hash values
+        for (var i in queryvals.options) {
+            var v = queryvals.options[i];
+            if (v != null) {
+                properties[i] = v;
+            }
+        }
+
         if (properties.accessible && properties.accessible != 'false') {
             queryvals.flashvars += '&accessible=true';
         }
@@ -225,12 +233,21 @@ lz.embed = {
      * LFC.
      */
     dhtml: function (properties) {
-        /* This breaks backward compatibility with the dev console.
-        if (lz.embed.options.serverroot == null) {
-            alert('Warning: lz.embed.lfc() must be called to load the LFC.');
+        /*
+        if (window.LzCanvas == null) {
+            alert('Warning: lz.embed.lfc() must be called before lz.embed.dhtml() to load the LFC.');
             return;
         }*/
         var queryvals = this.__getqueryurl(properties.url, true);
+
+        // allow query string options to override properties hash values
+        for (var i in queryvals.options) {
+            var v = queryvals.options[i];
+            if (v != null) {
+                //console.log('overriding property "' + i + '" to "' + v + '", was "' + properties[i] + '"');
+                properties[i] = v;
+            }
+        }
         var url = queryvals.url + '?lzt=object&' + queryvals.query;
 
         var appenddiv = lz.embed._getAppendDiv(properties.id, properties.appenddivid);
@@ -252,7 +269,7 @@ lz.embed = {
         if (properties.serverroot) {
             options.serverroot = properties.serverroot;
         }
-        if (properties.approot != null && typeof(p.approot) == "string") {
+        if (properties.approot != null && typeof(properties.approot) == "string") {
             options.approot = properties.approot;
         }
         if (properties.usemastersprite != null) {
@@ -280,7 +297,6 @@ lz.embed = {
             ,loaded: false
             ,setCanvasAttribute: lz.embed._setCanvasAttributeDHTML
             ,getCanvasAttribute: lz.embed._getCanvasAttributeDHTML
-            ,callMethod: lz.embed._callMethodDHTML
             ,_sendAllKeysUp: lz.embed._sendAllKeysUpDHTML
         }
         // listen for history unless properties.history == false
@@ -330,6 +346,7 @@ lz.embed = {
         var queryvals = this.__parseQuery(sp[1]);
         var query = '';
         var flashvars = '';
+        var options = {};
         var re = new RegExp('\\+', 'g');
         for (var i in queryvals) {
             if (i == '' || i == null) continue;
@@ -343,6 +360,14 @@ lz.embed = {
                 || i == 'fb' || i == 'sourcelocators' || i == '_canvas_debug'
                 || i == 'lzsourceannotations') {
                 query += i + '=' + v + '&';
+            }
+            
+            // process query args into options, coercing to booleans as needed
+            if (i == 'lzusemastersprite' || i == 'lzskipchromeinstall' || i == 'lzcancelkeyboardcontrol' || i == 'lzcancelmousewheel' || i == 'lzhistory' || i == 'lzaccessible') {
+                options[i.substring(2)] = v == 'true';
+            }
+            if (i == 'lzapproot' || i == 'lzserverroot') {
+                options[i.substring(2)] = v;
             }
 
             // set globals for all query args per LPP-2781
@@ -360,7 +385,7 @@ lz.embed = {
         query = query.substr(0, query.length - 1);
         flashvars = flashvars.substr(0, flashvars.length - 1);
 
-        return {url: url, flashvars: flashvars, query: query};
+        return {url: url, flashvars: flashvars, query: query, options: options};
     }
 
     ,/** @access private */
@@ -671,26 +696,11 @@ lz.embed = {
      * Calls a method with optional arguments in an embedded SWF application 
      * and returns the result.   
      *
-     * @param js:String javascript to call in the form 'foo.bar.methodcall(arg1,arg2,...)'
+       * @param js:String javascript to call in the form 'foo.bar.methodcall(arg1,arg2,...)'
      */
     _callMethodSWF: function (js) {
         if (this.loaded) {
             return lz.embed.dojo.comm[this._id].callMethod(js);
-        } else {
-            // add to a private queue
-            if (! this._callmethod) this._callmethod = [];
-            this._callmethod.push(js);
-        }
-    }
-    ,/**
-     * Calls a method with optional arguments in an embedded DHTML application 
-     * and returns the result.   
-     *
-     * @param js:String javascript to call in the form 'foo.bar.methodcall(arg1,arg2,...)'
-     */
-    _callMethodDHTML: function (js) {
-        if (this.loaded) {
-            return eval(js);
         } else {
             // add to a private queue
             if (! this._callmethod) this._callmethod = [];
