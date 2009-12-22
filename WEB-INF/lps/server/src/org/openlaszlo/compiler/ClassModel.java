@@ -172,11 +172,11 @@ public class ClassModel implements Comparable {
       this.env = env;
       this.definition = definition;
       this.schema = schema;
-      if ((!anonymous) && (tagName != null)) {
+      if (tagName != null) {
         this.className = LZXTag2JSClass(tagName);
       }
 
-      this.sortkey = ((!anonymous) && (tagName != null)) ? tagName : "anonymous";
+      this.sortkey = (tagName != null) ? tagName : "anonymous";
       if (superTagName != null) {
         this.sortkey = superTagName + "." + this.sortkey;
       }
@@ -231,9 +231,9 @@ public class ClassModel implements Comparable {
             requiredAttributes.addAll(superModel.requiredAttributes);
         }
 
-        // Process the definition if it is to be published (Note that
-        // the root class does not have a definition).
-        if ((! anonymous) && (definition != null)) {
+        // Process the definition (Note that the root class does not
+        // have a definition).
+        if ((definition != null) && (tagName != null)) {
           // Loop over containsElements tags, adding to containment table in classmodel
           for (Iterator iterator = definition.getChildren().iterator(); iterator.hasNext(); ) {
             Element child = (Element) iterator.next();
@@ -656,15 +656,12 @@ public class ClassModel implements Comparable {
    * references, we do not generate any code.
    */
   public void compile(CompilationEnvironment env, boolean force) {
-    if (! hasNodeModel()) {
-      // We compile a class declaration just like a view, and then
-      // add attribute declarations and perhaps some other stuff that
-      // the runtime wants.
-      NodeModel model = NodeModel.elementAsModel(definition, schema, env);
-      // Establish class root
-      model.assignClassRoot(0);
-      setNodeModel(model);
-    }
+    // We compile a class declaration just like a view, and then
+    // add attribute declarations and perhaps some other stuff that
+    // the runtime wants.
+
+    // Establish class root
+    getNodeModel().assignClassRoot(0);
     assert (force ? (! modelOnly) : true) : "Forcing compile of model-only class " + tagName;
     if (force || ((! isCompiled()) && (! modelOnly))) {
       emitClassDeclaration(env);
@@ -691,6 +688,18 @@ public class ClassModel implements Comparable {
         // Classes that have generated code will have a nodeModel
         return nodeModel != null;
     }
+
+  NodeModel getNodeModel() {
+    if (nodeModel != null) { return nodeModel; }
+    if (builtin) { return null; }
+    return nodeModel = NodeModel.elementAsModel(definition, schema, env);
+  }
+
+    void setNodeModel(NodeModel model) {
+        this.nodeModel = model;
+    }
+
+
 
   boolean isCompiled() {
     // Classes that are builtin or have been compiled
@@ -780,6 +789,7 @@ public class ClassModel implements Comparable {
      * superclass chain.
      */
   AttributeSpec getAttribute(String attrName, String allocation) {
+        assert resolved : "Attempt to getAttribute on " + this + " before it is resolved";
         Map attrtable = allocation.equals(NodeModel.ALLOCATION_INSTANCE) ? attributeSpecs : classAttributeSpecs;
         AttributeSpec attr = (AttributeSpec) attrtable.get(attrName);
         if (attr != null) {
@@ -844,10 +854,6 @@ public class ClassModel implements Comparable {
         return type;
     }
     
-    void setNodeModel(NodeModel model) {
-        this.nodeModel = model;
-    }
-
     protected boolean descendantDefinesAttribute(NodeModel model, String name) {
         for (Iterator iter = model.getChildren().iterator(); iter.hasNext(); ) {
             NodeModel child = (NodeModel) iter.next();

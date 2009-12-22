@@ -384,8 +384,8 @@ public class ViewSchema extends Schema {
                 // While we're here, we need to check that we aren't
                 // redefining an attribute of a parent class with a
                 // different type.
-                if (getClassAttribute(classname, attr.name, attr.allocation) != null) {
-                  String superTagName = getSuperTagName(classname);
+                String superTagName = getSuperTagName(classname);
+                if (superTagName != null && getClassAttribute(superTagName, attr.name, attr.allocation) != null) {
                   // Does the parent attribute definition have final=false or final=null?
                   // If not, we're not going to warn if the types mismatch.
                   AttributeSpec parentAttrSpec = getAttributeSpec(superTagName, attr.name, attr.allocation);
@@ -544,7 +544,9 @@ public class ViewSchema extends Schema {
      */
     public boolean methodOverrideAllowed(String classname, String methodName, String allocation)
     {
-        AttributeSpec methodspec = getClassAttribute(classname, methodName, allocation);
+        String superTagName = getSuperTagName(classname);
+        if (superTagName == null) { return true; }
+        AttributeSpec methodspec = getClassAttribute(superTagName, methodName, allocation);
 
         if (methodspec == null) {
             return true;
