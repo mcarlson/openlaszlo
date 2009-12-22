@@ -198,6 +198,7 @@
       <attribute name="accessible" type="boolean" value="false"/>
       <attribute name="scriptlimits" type="css"/>
       <containsElements>
+        <element>anonymous</element>
         <element>view</element>
         <element>script</element>
         <element>stylesheet</element>

@@ -100,6 +100,10 @@ public class ViewCompiler extends ElementCompiler {
       // create the needed interstitial classes for us. 
       String mixinSpec = element.getAttributeValue("with");
       String tagname = element.getName();
+      if ("anonymous".equals(tagname)) {
+        // User is not allowed to put <anonymous> tags in their code
+        throw new CompilationError("You may not use the tag name 'anonymous' in user code", element);
+      }
       boolean isclassdef = ("class".equals(tagname) || "interface".equals(tagname) || "mixin".equals(tagname));
       // We only need to invoke the schema builder if we are an
       // instance, and we have mixins.

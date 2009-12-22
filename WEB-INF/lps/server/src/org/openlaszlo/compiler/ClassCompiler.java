@@ -109,6 +109,13 @@ class ClassCompiler extends ViewCompiler  {
       String tagName = elt.getAttributeValue("name");
       ClassModel classModel = mEnv.getSchema().getClassModel(tagName);
       // May have already been compiled by a forward reference
+      // May have already been compiled by a forward reference
+      if (tagName.equals("anonymous")) {
+            CompilationError cerr = new CompilationError(
+                "The classname 'anonymous' is reserved for system use, please choose another class name"
+                , elt);
+            throw(cerr);
+      }
       if (! classModel.isCompiled()) {
         // NOTE: [2009-01-31 ptw] We force the class to be compiled,
         // because it is in the file we are compiling (as opposed to
