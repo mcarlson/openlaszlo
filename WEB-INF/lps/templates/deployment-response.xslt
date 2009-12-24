@@ -16,7 +16,7 @@
   <xsl:template name="containerdiv">
     <xsl:param name="methodname" />
       <h2>Embedding applications in an existing HTML div</h2>
-      <p>By default, applications are placed inside a new div with the id 'Container' appended to the app id, or '<code><xsl:value-of select="/canvas/@id"/>Container</code>' for the application above.  To place the application inside an existing div, you can specify the div's id as an argument to <code>lz.embed.<xsl:value-of select="$methodname"/>({... appenddivid: 'divid'})</code>.  Alternatively, you can change the id of an existing div or add a new one, e.g. '<code>&lt;div id="<xsl:value-of select="/canvas/@id"/>Container">...&lt;/div></code>'.</p>
+      <p>By default, applications are placed inside a new div with the id 'Container' appended to the app id, or '<code><xsl:value-of select="/canvas/@id"/>Container</code>' for the application above.  To place the application inside an existing div, you can specify the div's id as an argument to <code>lz.embed.<xsl:value-of select="$methodname"/>({... appenddivid: 'divid'})</code>.  Alternatively, you can change the id of an existing div or add a new one, e.g. '<code>&lt;div id="<xsl:value-of select="/canvas/@id"/>Container">...&lt;/div></code>'. For best results, please ensure the div you wish to append to appears before the call to <code>lz.embed.<xsl:value-of select="$methodname"/>()</code>.</p>
   </xsl:template>
 
   <xsl:template name="solodeployment">
