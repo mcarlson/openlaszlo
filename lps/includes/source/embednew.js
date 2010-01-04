@@ -2,7 +2,7 @@
   * @topic Browser
   * @subtopic Integration
   * @access public
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   * Use is subject to license terms.
   */
   
@@ -252,8 +252,11 @@ lz.embed = {
 
         var appenddiv = lz.embed._getAppendDiv(properties.id, properties.appenddivid);
         if (! properties.skipchromeinstall && lz.embed.browser.isIE && lz.embed.browser.version < 7) {
-          // detect and install chrome frame
-          CFInstall.check({onmissing:function(){appenddiv.style.display = 'none'},oninstall:function(){window.location=window.location}});
+          // This will fail for the dev console in IE 6 - see LPP-8687
+          if (window['CFInstall']) {
+            // detect and install chrome frame
+            CFInstall.check({onmissing:function(){appenddiv.style.display = 'none'},oninstall:function(){window.location=window.location}});
+          }
         }
         // NOTE: [2009-08-24 ptw] We set the embed width/height to
         // 100% and the appenddiv to the desired size, so the platform
