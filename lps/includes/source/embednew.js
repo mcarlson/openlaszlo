@@ -734,7 +734,14 @@ lz.embed = {
         if (! root) {
             root = document.createElement('div');
             this.__setAttr(root, 'id', divid);
-            document.body.appendChild(root);
+            // insert after the first script tag found...
+            var scripts = document.getElementsByTagName('script');
+            var lastscript = scripts[scripts.length-1];
+            if (! lastscript) {
+                document.body.appendChild(root);
+            } else {
+                lastscript.parentNode.insertBefore(root, lastscript.nextSibling );
+            }
         } else {
             // clear its contents
             root.innerHTML = '';
