@@ -64,7 +64,7 @@ public class TranslationUnit
   }
 
   public void setSourceFileName(String srcname) {
-    this.srcFilename = srcname;
+    this.srcFilename = srcname.intern();
   }
 
   public void setLineOffset(int lineOffset) {
@@ -97,6 +97,7 @@ public class TranslationUnit
         result = before + text + after;
       }
     }
+
     return result;
   }
 
@@ -120,7 +121,7 @@ public class TranslationUnit
     for (Iterator iter = inserted.keySet().iterator(); iter.hasNext(); ) {
       Integer key = (Integer)iter.next();
       int keyval = key.intValue();
-      if (keyval < 0 || keyval > nlines) {
+      if (keyval < 0 || keyval > nlines + 1) {
         throw new IndexOutOfBoundsException("linenumber table entry out of range: " + keyval + " is not in (0, " + nlines + ")");
       }
       lnums.put(new Integer(keyval + startline), inserted.get(key));
@@ -152,6 +153,13 @@ public class TranslationUnit
     linenum += countLines(s);
   }
 
+  // Free all storage except for the classname
+  public void clearMost() {
+    text = null;
+    lnums = null;
+    streams = null;
+  }
+
   public int getTextLineNumber() {
     return linenum;
   }
@@ -174,8 +182,11 @@ public class TranslationUnit
   public void setStreamObject(int streamNum, Object o) {
     Integer key = new Integer(streamNum);
     Object cur = streams.get(key);
-    if (cur != null) {
+    if (cur != null && cur != o) {
       throw new RuntimeException("TranslationUnit.setStreamObject value should not already exist");
+    } 
+    if (cur != null) {
+      //      System.err.println("resetting streamobject "+streamNum + " on "+this+" to "+o);
     }
     streams.put(key, o);
   }
@@ -218,8 +229,8 @@ public class TranslationUnit
 
   public String toString() {
     String shortText = text.toString();
-    if (shortText.length() > 10) {
-      shortText = shortText.substring(0, 10) + "...";
+    if (shortText.length() > 20) {
+      shortText = shortText.substring(0, 20) + "...";
     }
     return "TranslationUnit[" + name + ", line " +
       linenum + "] = \"" + shortText + "\"";
@@ -250,6 +261,6 @@ public class TranslationUnit
 }
 
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

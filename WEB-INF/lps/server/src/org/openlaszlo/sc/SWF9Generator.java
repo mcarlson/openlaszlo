@@ -788,19 +788,76 @@ public class SWF9Generator extends JavascriptGenerator {
       config.trackLines = true;        // needed to get error messages that relate to original source
     }
 
-    return (new SWF9ParseTreePrinter(config)).makeTranslationUnits(translatedNode, sources);
+    //    return (new SWF9ParseTreePrinter(config)).makeTranslationUnits(translatedNode, sources);
+
+    SWF9ParseTreePrinter ptp = new SWF9ParseTreePrinter(config);
+
+    // Loop over top level nodes in AST, calling makeTranslationUnits
+    // on each one, to keep heap size from growing too big.
+    SimpleNode[] children = translatedNode.getChildren();
+    List results = new ArrayList();
+
+    TranslationUnit defaultTunit = new TranslationUnit(true);
+    TranslationUnit mainTunit = null;
+
+    // moved from postProcess
+    boolean hasErrors = false;
+    boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
+    extCompiler = new SWF9External(options, buildSharedLibrary);
+
+    String preamble = DEFAULT_FILE_PREAMBLE;
+    String epilog = DEFAULT_FILE_EPILOG;
+
+    // Write the class files out. This used to be in postProcess.
+    for (int i=0; i < children.length; i++) {
+      SimpleNode child = children[i];
+      //System.err.println((new ParseTreePrinter()).text(child));
+      List tunits = ptp.makeTranslationUnits(child, sources, defaultTunit);
+      for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
+        TranslationUnit tunit = (TranslationUnit)iter.next();
+
+        // If this is the main translation unit, we need to write it
+        // last, because the ParseTreePrinter needs to scan all the
+        // code to find any globals which have to go in the main tunit.
+        if (tunit.isMainTranslationUnit()) {
+          mainTunit = tunit;
+          continue;
+        } else {
+          extCompiler.writeFile(tunit, preamble, epilog);
+          // Clear out string data to avoid wasting memory. But leave
+          // class name because a list of all class names is needed when
+          // constructing the command line to call flex.
+          tunit.clearMost();
+        }
+      }
+      results.addAll(tunits);
+    }
+
+    // write out the main translationunit last
+    if (mainTunit != null) {
+      extCompiler.writeFile(mainTunit, preamble, epilog);
+    } else {
+      throw new CompilerError("could not find a main translation unit in SWF9Generator.makeTranslationUnits");
+    }
+
+    return results;
   }
+
+  SWF9External extCompiler;
 
   /** Implements CodeGenerator.
    * Push each TranslationUnit into a file and call the compiler.
    */
   public byte[] postProcess(List tunits)
   {
+
+    SWF9External ex = extCompiler;
+
     boolean hasErrors = false;
     boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
-    SWF9External ex = new SWF9External(options, buildSharedLibrary);
+    //    SWF9External ex = new SWF9External(options, buildSharedLibrary);
 
-    for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
+    /*    for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
       TranslationUnit tunit = (TranslationUnit)iter.next();
 
       String preamble = DEFAULT_FILE_PREAMBLE;
@@ -808,6 +865,7 @@ public class SWF9Generator extends JavascriptGenerator {
 
       ex.writeFile(tunit, preamble, epilog);
     }
+    */
 
     // For each global variable defined in programVars,
     // write it to its own translation unit.
@@ -850,7 +908,7 @@ public class SWF9Generator extends JavascriptGenerator {
 }
 
 /**
- * @copyright Copyright 2006-2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

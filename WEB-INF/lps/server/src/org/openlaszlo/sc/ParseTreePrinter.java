@@ -1,7 +1,7 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -260,7 +260,7 @@ public class ParseTreePrinter {
       if (n instanceof PassThroughNode) {
         n = childnodes[i] = ((PassThroughNode)n).realNode;
       }
-      children[i] = visit(n, node) ;
+      children[i] = visit(n, node);
     }
     
     Class nt = node.getClass();
@@ -278,6 +278,7 @@ public class ParseTreePrinter {
         String child = children[x];
         // Elide empty nodes
         String childRaw = unannotate(child);
+
         if (! "".equals(childRaw)) {
           n++;
           sb.append(sep);
@@ -289,11 +290,15 @@ public class ParseTreePrinter {
           }
         }
       }
+
       if ((n == 0) || (sb.length() == 0)) {
         // Don't annotate an empty block
         return "";
-      } else if (node instanceof ASTProgram) {
-        return(lnum(node, sb.toString()));
+        //} else if (node instanceof ASTProgram) {
+      } else if ((node instanceof ASTProgram) ||
+                 ((node instanceof ASTDirectiveBlock) && ((parent == null ) || (parent instanceof ASTProgram)))) {
+        String val = lnum(node, sb.toString());
+        return(val);
       } else {
         // Maintain the block
         return(lnum(node, makeBlock(node, sb.toString())));
@@ -586,6 +591,7 @@ public class ParseTreePrinter {
       // ambiguously here, so we always insert a block
       String thenBlock = children[1];
       SimpleNode thenNode = node.get(1);
+      // XXXXXXX
       if ((thenNode instanceof ASTStatementList) &&
           (unannotate(thenBlock).length() > 0)) {
         thenBlock = elideSemi(thenBlock);
@@ -1059,6 +1065,11 @@ public class ParseTreePrinter {
   public List makeTranslationUnits(SimpleNode node, SourceFileMap sources) {
     return makeTranslationUnits(visit(node, null), sources);
   }
+
+  public List makeTranslationUnits(SimpleNode node, SourceFileMap sources, TranslationUnit defaulttu) {
+    return makeTranslationUnits(visit(node, null), sources, defaulttu);
+  }
+
 
   public static String unparse(SimpleNode node) {
     return (new ParseTreePrinter()).text(node);
@@ -1553,6 +1564,10 @@ public class ParseTreePrinter {
   }
 
   public List makeTranslationUnits(String annotated, final SourceFileMap sources) {
+    return makeTranslationUnits(annotated, sources, null);
+  }
+
+  public List makeTranslationUnits(String annotated, final SourceFileMap sources, TranslationUnit defaultTunit) {
     if (config.dumpLineAnnotationsFile != null) {
       String newname = Compiler.emitFile(config.dumpLineAnnotationsFile, printableAnnotations(annotated));
       System.err.println("Created " + newname);
@@ -1562,9 +1577,15 @@ public class ParseTreePrinter {
     }
 
     final ArrayList tunits = new ArrayList();
-    final TranslationUnit defaulttu = new TranslationUnit(true);
+    
+    final TranslationUnit defaulttu = (defaultTunit != null) ? defaultTunit : new TranslationUnit(true);
+    if (defaultTunit == null) {
+      tunits.add(defaulttu);
+    }
 
-    tunits.add(defaulttu);
+
+    // the default translation unit is passed in, and swf9generator will deal with it last
+    // tunits.add(defaulttu);
 
     AnnotationProcessor ap = new AnnotationProcessor() {
         TranslationUnit curtu = defaulttu;

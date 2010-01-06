@@ -1,7 +1,7 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -129,17 +129,14 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
   // application or the LFC, we have a 'main' class that must
   // be present to accept these statements.
   //
-  public List makeTranslationUnits(String annotated, SourceFileMap sources) {
-    List result = super.makeTranslationUnits(annotated, sources);
-    TranslationUnit defaultTunit = null;
-    TranslationUnit mainTunit = null;
+  public List makeTranslationUnits(SimpleNode node, SourceFileMap sources,
+                                       TranslationUnit defaultTunit) {
+    List result = super.makeTranslationUnits(node, sources, defaultTunit);
+    TranslationUnit mainTunit = defaultTunit;
     for (Iterator iter = result.iterator(); iter.hasNext(); ) {
       TranslationUnit tunit = (TranslationUnit)iter.next();
-      if (tunit.isDefaultTranslationUnit()) {
-        defaultTunit = tunit;
-        iter.remove();
-      }
-      else if (tunit.getName().equals(config.mainClassName)) {
+
+      if (tunit.getName().equals(config.mainClassName)) {
         mainTunit = tunit;
       }
     }
@@ -149,13 +146,12 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     // If the main class is not present, we'll need to revisit
     // our assumptions about where we put top level statements.
     if (mainTunit != null) {
+      mainTunit.setMainTranslationUnit(true);
       if (config.islib) {
         mainTunit.setStreamObject(CLASS_LEVEL_STREAM, defaultTunit);
-      }
-      else {
+      } else {
         mainTunit.setStreamObject(MAIN_CONSTRUCTOR_STREAM, defaultTunit);
       }
-      mainTunit.setMainTranslationUnit(true);
     }
     else {
       throw new CompilerError("Could not find application main or library main class");
@@ -163,6 +159,7 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
 
     return result;
   }
+
 
   public static final String MULTILINE_COMMENT_BEGIN = "/*";
   public static final String MULTILINE_COMMENT_END = "*/";
