@@ -8,6 +8,13 @@
               addItem(). -->
         <attribute name="itemclassname" value="" type="string"/>
 
+        <!--- The class for new items that will be created with addItem(). 
+              This attribute _must_ be set to a valid class if not using 
+              itemclassname.  See lz/list.lzx and base/basetabslider.lzx 
+              onaddsubview() for examples.
+              @keywords private -->
+        <attribute name="__itemclass" value="null"/>
+
         <!--- The index of the default selected item, if none is provided via
               the selected="true" attribute on an item. -->
         <attribute name="defaultselection" value="null" />
@@ -49,6 +56,10 @@
         <!--- This event is triggered whenever the user makes a selection it may
               used as a script in the tag or as an event method. -->
         <event name="onselect"/>
+
+        <!--- This event is triggered whenever the itemclassname attribute 
+              changes. -->
+        <event name="onitemclassname"/>
 
         <!--- @keywords private -->
         <method name="doEnterDown">
@@ -311,12 +322,19 @@
               @param String text: the text for the item.
               @param Object value: the value for the item. -->
         <method name="addItem" args="text, value=null" >
-            if (this['itemclassname'] &amp;&amp; lz[this.itemclassname]) {
-                new lz[this.itemclassname](this, {text:text, value:value});
-            } else if ($debug) {
-               Debug.error("%s.itemclassname invalid: %s", this, this.itemclassname);
-           }
+            new this.__itemclass(this, {text:text, value:value});
         </method>
+
+        <setter name="itemclassname" args="tag">
+        <![CDATA[
+            if ($debug) {
+                if (tag && (! lz[tag])) { Debug.error("Invalid itemclassname %s", tag) }
+            }
+            this.itemclassname = tag;
+            this.__itemclass = lz[tag];
+            if (onitemclassname.ready) { this.onitemclassname.sendEvent(tag); }
+        ]]>
+        </setter>
 
         <!--- Find the first item with the specified value and remove it from
               the list. This method is not available with dataoption="lazy"
@@ -506,7 +524,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

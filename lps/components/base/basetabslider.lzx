@@ -145,7 +145,7 @@
               @param LzView v: view to be added. -->
         <method name="doAddSubview" args="v" >
             if ( this.itemclassname == "" ){
-                this.itemclassname = v.constructor.tagname;
+                this.__itemclass = v.constructor;
             }
             if ( typeof(v.minheight) == "undefined" ) {
                 // no minheight was defined so assign the parent
@@ -284,7 +284,7 @@
    </class> <!-- END: basetabslider -->
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
