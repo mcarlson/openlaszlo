@@ -369,7 +369,8 @@ lz.embed = {
             if (i == 'lzusemastersprite' || i == 'lzskipchromeinstall' || i == 'lzcancelkeyboardcontrol' || i == 'lzcancelmousewheel' || i == 'lzhistory' || i == 'lzaccessible') {
                 options[i.substring(2)] = v == 'true';
             }
-            if (i == 'lzapproot' || i == 'lzserverroot') {
+            // deal with noon-boolean query args
+            if (i == 'lzapproot' || i == 'lzserverroot' || i == 'lzwmode') {
                 options[i.substring(2)] = v;
             }
 
