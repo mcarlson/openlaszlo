@@ -4,7 +4,7 @@
 /**
   * LzSprite.js
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -2481,9 +2481,12 @@ LzSprite.prototype.bringToFront = function() {
         }
         return;
     }
-    if (this.__parent.__children.length < 2) return;
 
-    this.__setZ( ++this.__parent.__topZ );
+    var c = this.__parent.__children;
+    if (c.length < 2) return;
+    c.sort(LzSprite.prototype.__zCompare);
+
+    this.sendInFrontOf(c[c.length - 1]);
 }
 
 /**
