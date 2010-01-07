@@ -1826,7 +1826,7 @@ LzSprite.prototype.__findParents = function(prop, value) {
     var parents = [];
     var root = LzSprite.__rootSprite;
     var sprite = this;
-    while (sprite !== root) {
+    while (sprite && sprite !== root) {
         if (sprite[prop] == value) parents.push(sprite);
         sprite = sprite.__parent;
     }
