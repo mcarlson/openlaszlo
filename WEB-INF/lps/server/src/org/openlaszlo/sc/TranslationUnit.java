@@ -153,10 +153,9 @@ public class TranslationUnit
     linenum += countLines(s);
   }
 
-  // Free all storage except for the classname
+  // Free the storage except for the classname, and line numbers map for error reporting
   public void clearMost() {
     text = null;
-    lnums = null;
     streams = null;
   }
 

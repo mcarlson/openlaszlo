@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -337,7 +337,6 @@ public class Compiler {
                 throw new ChainedException(e);
             }
 
-
             Map props = env.getProperties();
 
             props.put("$debug", new Boolean(
@@ -408,6 +407,9 @@ public class Compiler {
             processCompilerInstructions(root, env);
 
             compileElement(root, env);
+
+            root = null;
+            doc = null;
 
             if (mLogger.isDebugEnabled()) {
                 mLogger.debug("done...");

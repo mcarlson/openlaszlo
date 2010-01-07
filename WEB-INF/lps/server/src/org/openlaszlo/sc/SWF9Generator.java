@@ -477,7 +477,7 @@ public class SWF9Generator extends JavascriptGenerator {
    * for debugging purposes.
    */
   public SimpleNode translate(SimpleNode program) {
-    savedProgram = program;
+    //savedProgram = program;
     SimpleNode result = super.translate(program);
 
     // Walk list of needed interstitials and emit them
@@ -897,6 +897,13 @@ public class SWF9Generator extends JavascriptGenerator {
       ex.writeFile(tunit, DEFAULT_FILE_PREAMBLE, DEFAULT_FILE_EPILOG);
       tunits.add(tunit);
     }
+
+    // to free up memory, drop any pointers to the AST
+    glotunits = null;
+    classes = null;
+    savedSource = null;
+    mixinRef = null;
+    mixinDef = null;
 
     try {
       return ex.compileTranslationUnits(tunits, buildSharedLibrary);

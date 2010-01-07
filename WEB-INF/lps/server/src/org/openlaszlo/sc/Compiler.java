@@ -348,6 +348,7 @@ public class Compiler {
       profiler.enter("parse");
       source = cg.preProcess(source);
       SimpleNode program = new Parser().parse(source);
+      source = null;
 
       String astInputFile = (String)options.get(DUMP_AST_INPUT);
       if (astInputFile != null) {
@@ -358,6 +359,7 @@ public class Compiler {
 //       SimpleNode transformed = xformer.transform(program);
       profiler.phase("generate");
       SimpleNode translated = cg.translate(program /* transformed */);
+      program = null;
       String astOutputFile = (String)options.get(DUMP_AST_OUTPUT);
       if (astOutputFile != null) {
         String newname = emitFile(astOutputFile, translated);
@@ -367,6 +369,7 @@ public class Compiler {
       if (isScript) {
 
         List tunits = cg.makeTranslationUnits(translated, compress, obfuscate);
+        translated = null;
         bytes = cg.postProcess(tunits);
 
       } else {
@@ -1064,6 +1067,6 @@ public class Compiler {
 }
 
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
