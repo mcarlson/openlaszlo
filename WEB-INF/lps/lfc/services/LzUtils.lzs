@@ -1,7 +1,7 @@
 /**
   * LzUtils.lzs
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Services
@@ -22,10 +22,10 @@ class LzColorUtils {
         if (typeof s != 'string') return s;
 
         // look up color names
-        if (lz.colors[s] != null) return lz.colors[s];
+        if (s in lz.colors) return lz.colors[s];
 
         // look in global scope
-        if (global[s] != null) return global[s];
+        if (s in global) return global[s];
 
         // look up rgb values
         if (s.indexOf('rgb') != -1) return LzColorUtils.fromrgb(s);

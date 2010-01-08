@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzview
@@ -1121,6 +1121,9 @@ function $lzc$set_bgcolor(bgc) {
   // `this.acceptAttribute('bgcolor', 'color', value)`
   if ((bgc != null) && isNaN(bgc)) {
     bgc = this.acceptTypeValue('color', bgc);
+  } else if (bgc < 0) {
+    // handle -1 semaphore from compiler (transparent)
+    bgc = null;
   }
   this.sprite.setBGColor(bgc);
   this.bgcolor = bgc;

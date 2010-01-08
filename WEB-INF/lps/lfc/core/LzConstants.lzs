@@ -3,7 +3,7 @@
   * http://www.w3.org/TR/css3-color/#svg-color.  These match the
   * names in the compiler.
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -159,4 +159,5 @@ lz.colors = {
     ,whitesmoke: 0xF5F5F5
     ,yellow: 0xFFFF00
     ,yellowgreen: 0x9ACD32
+    ,transparent: null
 }

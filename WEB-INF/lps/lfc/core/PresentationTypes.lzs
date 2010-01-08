@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @access public
@@ -102,6 +102,10 @@ class NumberPresentationType extends PresentationType {
  */
 class ColorPresentationType extends PresentationType {
   static function accept(value) {
+    // handle 'transparent' semaphore from compiler (for canvas)
+    if (value == -1) {
+        return null;
+    }
     return LzColorUtils.hextoint(value);
   }
   static function present(value) {

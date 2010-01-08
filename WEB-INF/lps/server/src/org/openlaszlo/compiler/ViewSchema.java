@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -940,8 +940,11 @@ public class ViewSchema extends Schema {
     }
 
     /** Parse according to http://www.w3.org/TR/2001/WD-css3-color-20010305,
-     * but also allow 0xXXXXXX */
+     * but also allow 0xXXXXXX, and 'transparent' */
     public static int parseColor(String str) {
+        if (str.equals("transparent")) {
+            return -1;
+        }
         {
             Object value = sColorValues.get(str);
             if (value != null) {
