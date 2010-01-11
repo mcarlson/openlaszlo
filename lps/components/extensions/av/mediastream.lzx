@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
@@ -849,7 +849,7 @@
                 this._nc.addEventListener(NetStatusEvent.NET_STATUS, this._onNetStatusAS3);
                 this._nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this._onSecurityError);
                 this._creationCallback = {methodName: callbackName, args: callbackArgs};
-                setTimeout(this._doconnect, 1);
+                setTimeout(this.rtmp._doconnect, 1);
             }
         } else {
             this._flashstream = new NetStream(this._nc);
@@ -864,12 +864,6 @@
         //the following does not compile in swf9 since error is undefined
         //not sure where that used to come from
         //if ($debug) Debug.warn("mediastream _onSecurityError() " + error);
-    </method> 
-
-    <!--- flash callback used by swf9 to connect - called by setTimeout - see LPP-7999
-          @keywords private -->
-    <method name="_doconnect">
-        this._nc.connect(this._srcurl);
     </method> 
 
     <!--- flash callback

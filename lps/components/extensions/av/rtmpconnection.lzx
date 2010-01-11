@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
@@ -75,6 +75,11 @@
                 @access private
             -->
             <attribute name="src" value="" type="string"/>
+
+            <!--- Connection parameters that will be sent to the server when NetConnection.connect() is called
+                @type Expression
+            -->
+            <attribute name="connectionparams" value="null" type="expression" />
 
             <!--- Alternate application url, used if the connection for src 
                   fails for example : "rtmp:/appname" or 
@@ -225,12 +230,19 @@
                 this._connecturl = src;
 
                 this._createconnection();
-                this._nc.connect(src);
+                this._doconnect();
                 
                 this.setAttribute("status", "connecting");
                 this.setAttribute("stage", 1);
                 if (! this['_connectionTimeoutDel']) this._connectionTimeoutDel = new LzDelegate(this, '_handleConnectionTimeout');
                 lz.Timer.addTimer( this._connectionTimeoutDel, this.connectiontimeout );
+            </method>
+
+            <!--- flash callback used by swf9 to connect - called by setTimeout from mediastream - see LPP-7999
+                @keywords private -->
+            <method name="_doconnect" args=""><![CDATA[
+                this._nc.connect(src,this.connectionparams);
+            ]]>
             </method>
 
             <!--- Handle connection timeouts
