@@ -233,7 +233,7 @@
 
           -->
 
-          <checkbox y="10" x="800" id="cb_remotedebug"
+          <checkbox y="10" x="${parent.firstrow.width + 20}" id="cb_remotedebug"
                     visible="${canvas.app_runtime != 'dhtml'}"
                     value="${canvas.app_console_debug}">Console Remote Debug</checkbox>
 
@@ -331,6 +331,9 @@
     qitems['lzr'] = qruntime;
     if ($dhtml) {
         qitems['lzusemastersprite'] = cb_usemastersprite.value;
+    }
+    if (qruntime != 'dhtml') {
+        delete qitems['lzusemastersprite'];
     }
 
     /*
@@ -489,7 +492,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
