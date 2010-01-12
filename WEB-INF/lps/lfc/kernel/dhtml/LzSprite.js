@@ -720,6 +720,8 @@ LzSprite.__updateQuirks = function () {
             quirks['fix_ie_css_syntax'] = true;
             // IE doesn't like using DOM operations with the dev console - see LPP-
             quirks['write_css_with_createstylesheet'] = true;
+            // IE meta key processing interferes with control-kep processing - see LPP-8702
+            quirks['hasmetakey'] = false;
 
         } else if (browser.isSafari || browser.isChrome) {
             // Safari won't show canvas tags whose parent is display: none
