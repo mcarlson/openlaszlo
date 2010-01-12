@@ -1,6 +1,6 @@
 <!---
 
-    @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+    @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
                Use is subject to license terms.
 
     @access public
@@ -1202,6 +1202,18 @@
                 private function rebuildBitmap () :void {
                     if (this.__norebuild) return;
                     if (this.width < 1 || this.height < 1) return;
+                    if ($swf9) {
+                        var limit = 2880;
+                    } else { 
+                        var limit = 4095
+                    }
+                    // TODO: construct multiple bitmaps to deal with this limitaion
+                    if ((this.width * this.height) > (limit * limit)) {
+                        if ($debug) {
+                            Debug.warn('Drawview is too large for bitmap operations: drawImage(), save(), restore() and fillRect() may not work properly.  For best results, ensure this drawview is no larger than a total of %w x %w pixels - see http://jira.openlaszlo.org/jira/browse/LPP-8697 for more details. %w', limit, limit, this);
+                        }
+                        return;
+                    }
                     if (this.__bitmapdata && this.width == this.__bitmapdata.width && this.height == this.__bitmapdata.height) return;
 
                     var bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
