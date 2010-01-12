@@ -1,7 +1,7 @@
 /**
   * LzMouseKernel.js
   *
-  * @copyright Copyright 2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007, 2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -234,12 +234,14 @@ var LzMouseKernel = {
     }
     ,__globalClickable: true
     ,setGlobalClickable: function (isclickable){
-        var el = document.getElementById('lzcanvasclickdiv');
+        if (isclickable == this.__globalClickable) return;
+        //Debug.warn('setGlobalClickable', isclickable);
         this.__globalClickable = isclickable;
+        var el = document.getElementById('lzcanvasclickdiv');
         if (LzSprite.quirks.fix_ie_clickable) {
             LzSprite.prototype.__setCSSClassProperty('.lzclickdiv', 'display', isclickable ? '' : 'none');
         }
-        el.style.display = isclickable ? '' : 'none';
+        if (el) el.style.display = isclickable ? '' : 'none';
     }
     ,__sendMouseMove: function(e, offsetx, offsety) {
         // see http://www.quirksmode.org/js/events_properties.html#position
