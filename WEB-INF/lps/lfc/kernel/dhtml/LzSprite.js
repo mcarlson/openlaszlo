@@ -1528,7 +1528,7 @@ LzSprite.prototype.__mouseEvent = function(e , artificial){
             // inputtexts from getting onmouseover events, so test to 
             // be sure the mouse event isn't from an inputtext-generated
             // event.
-            if ((this.owner is lz.html) && ((eventname == 'onmouseout') || (eventname == 'onmouseover'))) {
+            if (lz['html'] && this.owner && (this.owner is lz.html) && ((eventname == 'onmouseout') || (eventname == 'onmouseover'))) {
                 //Debug.error('skipping', eventname);
                 return;
             }
