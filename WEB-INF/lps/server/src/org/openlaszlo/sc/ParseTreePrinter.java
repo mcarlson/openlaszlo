@@ -630,14 +630,7 @@ public class ParseTreePrinter {
       children[i] = maybeAddParens(thisPrec, node.get(i), children[i], true);
     }
     assert node.get(1) instanceof ASTIdentifier;
-    if (this instanceof SWF9ParseTreePrinter) {
-      return children[0] + "." + children[1];
-    } else {
-      // FIXME: [2010-01-10 ptw] (LPP-8626) This works around a bug
-      // in Safari 4.0.4 where a.b sometimes erroneously returns the
-      // a.__proto__.b
-      return children[0] + "['" + children[1] + "']";
-    }
+    return children[0] + "." + children[1];
   }
   public String visitPropertyValueReference(SimpleNode node, String[] children) {
     // These have prec of 0 even though they don't have ops

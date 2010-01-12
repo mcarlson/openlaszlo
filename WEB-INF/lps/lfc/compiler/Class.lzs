@@ -1,7 +1,7 @@
 /***
  * Classes for Javascript with Mixins
  *
- * @copyright Copyright 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
  * Use is subject to license terms.
  *
  * @access private
@@ -194,6 +194,19 @@ if ($profile) {
 }
 
 /**
+ * Workaround for https://bugs.webkit.org/show_bug.cgi?id=32402
+ *
+ * @devnote FIXME: [2010-01-12 ptw] (LPP-8704) Remove when no longer needed
+ *
+ * @access private
+ */
+if ($dhtml) {
+  if (lz.embed.browser.isSafari && (lz.embed.browser.version == "531.21")) {
+    Instance.prototype.addProperty('$lzsc$safarikludge', function $lzsc$safarikludge () {});
+  }
+}
+
+/**
   * Bootstrap Class class
   * @todo [2006-05-03 ptw] Rename to Class when LFC has been converted
   */
@@ -283,6 +296,15 @@ var Class = {
     var nc = function constructor () {
       // The constructor notes itself in every instance
       this.constructor = arguments.callee;
+      if ($dhtml) {
+        // Workaround for
+        // https://bugs.webkit.org/show_bug.cgi?id=32402
+        // FIXME: [2010-01-12 ptw] (LPP-8704) Remove when no longer needed
+        if (this['$lzsc$safarikludge'] &&
+            (this.$lzsc$safarikludge !== Instance.prototype.$lzsc$safarikludge)) {
+          this.$lzsc$safarikludge();
+        }
+      }
       // Call the initializer if it is not the default
       if (this.$lzsc$initialize !== Instance.prototype.$lzsc$initialize) {
         // Debug.debug('Initializing', this);
@@ -388,6 +410,24 @@ var Class = {
     // Class.initialize:  Install initial values
     if (instanceProperties) {
       nc.addProperties(instanceProperties);
+      if ($dhtml) {
+        // Workaround for
+        // https://bugs.webkit.org/show_bug.cgi?id=32402
+        // FIXME: [2010-01-12 ptw] (LPP-8704) Remove when no longer needed
+        if (lz.embed.browser.isSafari && (lz.embed.browser.version == "531.21")) {
+          nc.addProperty('$lzsc$safarikludge', function $lzsc$safarikludge () {
+              super.$lzsc$safarikludge();
+              for (var i = instanceProperties.length - 1; i >= 1; i -= 2) {
+                var value = instanceProperties[i];
+                var name = instanceProperties[i - 1];
+                if ((value !== void 0) || (! (name in this))) {
+                  this[name] = value;
+                }
+              }
+            }
+            );
+        }
+      }
     }
     if ($debug) {
       if (this.allClasses[classname]) {
