@@ -836,8 +836,12 @@
             return;
         }
         if (! this._nc) {
-            // note: null nc is creted when setting the type for 'http'
-            if ($debug) Debug.warn("No netconnection defined for %w.", this);
+            if ($debug) {
+                // note: null nc is creted when setting the type for 'http'
+                if (this.type && this.type != 'http') {
+                    Debug.warn("No netconnection defined for %w.", this, this._nc);
+                }
+            }
             return;
         }
         if ($as3) {
