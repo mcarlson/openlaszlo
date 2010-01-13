@@ -1,5 +1,5 @@
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                 *
+//* Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -17,7 +17,7 @@ function getQueryVariable(variable, defval) {
 
 function writeOpenLaszloApp (loc, base, lzr, w, h) {
   loc.innerHTML =
-        "<iframe src='" + base + "?lzt=html&amp;lzr=" + lzr + "' style='width: " + w + "; height: " + h + ";  margin: 0; padding: 0; border: 0 none;' frameborder='0'/>";
+        "<iframe src='" + base + "?lzt=html&amp;lzr=" + lzr + "' style='width: " + w + "; height: " + h + ";  margin: 0; padding: 0; border: 0 none;' frameborder='0' scrolling='no'/>";
 }
 
 var __tagmap = { "swf7" : "Flash", "swf8" : "Flash", "dhtml" : "DHTML" };
