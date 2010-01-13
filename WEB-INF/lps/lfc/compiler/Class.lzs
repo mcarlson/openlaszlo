@@ -419,6 +419,7 @@ var Class = {
               super.$lzsc$safarikludge();
               for (var i = instanceProperties.length - 1; i >= 1; i -= 2) {
                 var value = instanceProperties[i];
+                if (value is Function) continue;
                 var name = instanceProperties[i - 1];
                 if ((value !== void 0) || (! (name in this))) {
                   this[name] = value;
