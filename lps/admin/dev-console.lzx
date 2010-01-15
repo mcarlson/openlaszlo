@@ -10,7 +10,7 @@
 <canvas width="100%"  height="370" proxied="false" bgcolor="#858599">
  <!-- Make sure there is a copyright in the Javascript 'binary' -->
  <attribute name="copyright" type="string"
-            value="Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms." />
+            value="Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms." />
  <switch>
     <when runtime="dhtml">
     </when>
@@ -25,6 +25,10 @@
   </switch>
 
   <attribute name="app_runtime"/>
+  <attribute name="runtime_dhtml_enabled" value="false"/>
+  <attribute name="runtime_swf8_enabled"  value="false"/>
+  <attribute name="runtime_swf9_enabled"  value="false"/>
+  <attribute name="runtime_swf10_enabled" value="false"/>
   <attribute name="app_debug" />
   <attribute name="app_backtrace" />
   <attribute name="app_console_debug" />
@@ -44,6 +48,7 @@
       <![CDATA[
        appdata.setAttribute('initialdata', lz.Browser.getInitArg('appinfo'));
        setAttribute('app_runtime', appdata.getPointer().xpathQuery("/info/@runtime"));
+       this.setupRuntimes();
        if (app_runtime == null) {
            setAttribute('app_runtime', appdata.getPointer().xpathQuery("/request/param[@name = 'lzr']/@value"));
        }
@@ -76,6 +81,17 @@
        }
        ]]>
   </handler>
+
+  <!-- create a table listing which runtimes are enabled -->
+  <method name="setupRuntimes">
+     var runtimes = lz.Browser.getInitArg('runtimes').split(",");
+     for (var r in runtimes) {
+         if (runtimes[r] == 'dhtml')  canvas.setAttribute('runtime_dhtml_enabled', true);
+         if (runtimes[r] == 'swf8')   canvas.setAttribute('runtime_swf8_enabled', true);
+         if (runtimes[r] == 'swf9')   canvas.setAttribute('runtime_swf9_enabled', true);
+         if (runtimes[r] == 'swf10')  canvas.setAttribute('runtime_swf10_enabled', true);
+     }
+  </method>
 
   <!-- info we get is of the form 
   <appdata>
@@ -168,12 +184,13 @@
             </view>
             <view x="125" name="compilecontrols">
                 <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:12" x="10" y="9">
-                    <radiobutton id="rb8" value="'swf8'"
+                    <radiobutton id="rb8" value="'swf8'" enabled="${canvas.runtime_swf8_enabled}"
                                  selected="${canvas.app_runtime == 'swf8'}">swf8</radiobutton >
-                    <radiobutton id="rb10" value="'swf10'" 
-                                 enabled="true"
+                    <radiobutton id="rb9" value="'swf9'" enabled="${canvas.runtime_swf9_enabled}"
+                                 selected="${canvas.app_runtime == 'swf9'}">swf9</radiobutton >
+                    <radiobutton id="rb10" value="'swf10'" enabled="${canvas.runtime_swf10_enabled}"
                                  selected="${canvas.app_runtime == 'swf10'}">swf10</radiobutton >
-                    <radiobutton id="rbdhtml" value="'dhtml'"
+                    <radiobutton id="rbdhtml" value="'dhtml'" enabled="${canvas.runtime_dhtml_enabled}"
                                  selected="${canvas.app_runtime == 'dhtml'}">DHTML</radiobutton >
                 </radiogroup>
                 <view x="$once{rg_runtime.x + rg_runtime.width + 14}">

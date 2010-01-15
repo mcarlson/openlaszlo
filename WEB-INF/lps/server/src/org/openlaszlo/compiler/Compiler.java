@@ -350,6 +350,20 @@ public class Compiler {
             // Must be kept in sync with server/sc/lzsc.py main
             env.setRuntimeConstants(runtime);
 
+            // Check if an LFC actually exists for these compilation options
+            File LFClib =new File(LPS.getLFCDirectory() + File.separator +
+                                  LPS.getLFCname(runtime,
+                                                 env.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY),
+                                                 env.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY),
+                                                 env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY),
+                                                 false));
+            if (!LFClib.exists()) {
+                throw new CompilationError(
+                        "No LFC library was found at "+LFClib+" for compilation options: runtime="+runtime+", debug="+
+                        props.get("$debug") + ", backtrace="+props.get("$backtrace") + ", profile="+
+                        props.get("$profile"));
+            }
+
             Document doc = env.getParser().parse(file, env);
             Element root = doc.getRootElement();
             

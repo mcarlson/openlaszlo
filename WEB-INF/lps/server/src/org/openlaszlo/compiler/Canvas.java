@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -171,6 +171,22 @@ public class Canvas implements java.io.Serializable {
     public String getRuntime() {
         return mRuntime;
     }
+
+    /** @return comma separated list of supported runtimes. Probes the
+     LFC directory to see which LFC's are there. */
+    public String getRuntimesList() {
+        String runtimeList = "";
+        String sep = "";
+        for (int i = 0; i < Compiler.KNOWN_RUNTIMES.size(); i++) {
+            String runtime = (String) Compiler.KNOWN_RUNTIMES.get(i);
+            if (new File(LPS.getLFCDirectory() + File.separator + LPS.getLFCname(runtime, false, false, false, false)).exists()) {
+                runtimeList += (sep + runtime);
+                sep = ",";
+            }
+        }
+        return runtimeList;
+    }
+
 
     public void setDebug(boolean val) {
         mDebug = val;
@@ -475,6 +491,7 @@ public class Canvas implements java.io.Serializable {
             "proxied='" + isProxied() + "' " +
             "allowfullscreen='" + isAllowFullScreen() + "' " +
             "runtime='" + getRuntime() +"' " +
+            "runtimes='" + getRuntimesList()+"' " + 
             "lfc='" + LPS.getLFCname(getRuntime(), mDebug, mProfile, mBacktrace, mSourceAnnotations) + "' " +
             "debug='" + mDebug + "' " +
             "id='" + XMLUtils.escapeXml(getID()) +"' " +
