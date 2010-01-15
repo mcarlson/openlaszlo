@@ -560,7 +560,7 @@ LzSprite.quirks = {
     ,keyboardlistentotop: false
     ,document_size_compute_correct_height: false
     ,ie_mouse_events: false
-    ,fix_inputtext_with_parent_resource: false
+//    ,fix_inputtext_with_parent_resource: false // no longer needed
     ,activate_on_mouseover: true
     ,ie6_improve_memory_performance: false
     ,text_height_includes_padding: false
@@ -589,6 +589,7 @@ LzSprite.quirks = {
     ,match_swf_letter_spacing: false
     ,use_css_master_sprite: false
     ,write_css_with_createstylesheet: false
+    ,inputtext_use_background_image: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -704,7 +705,7 @@ LzSprite.__updateQuirks = function () {
             // IE requires special handling of mouse events see LPP-6027, LPP-6141
             quirks['ie_mouse_events'] = true; 
             // workaround for IE not supporting clickable resources in views containing inputtext - see LPP-5435
-            quirks['fix_inputtext_with_parent_resource'] = true;
+            //quirks['fix_inputtext_with_parent_resource'] = true;
             // IE already includes margins for inputtexts
             quirks['inputtext_size_includes_margin'] = true;
             // LPP-7229 - IE 'helpfully' scrolls focused/blurred divs into view
@@ -722,6 +723,8 @@ LzSprite.__updateQuirks = function () {
             quirks['write_css_with_createstylesheet'] = true;
             // IE meta key processing interferes with control-kep processing - see LPP-8702
             quirks['hasmetakey'] = false;
+            // IE inputtexts must have a background image to be selectable - see LPP-8696
+            quirks['inputtext_use_background_image'] = true;
 
         } else if (browser.isSafari || browser.isChrome) {
             // Safari won't show canvas tags whose parent is display: none
@@ -862,6 +865,11 @@ LzSprite.__updateQuirks = function () {
             defaultStyles.lzimg['WebkitUserSelect'] = 'none';
         } else {
             defaultStyles.lzimg['UserSelect'] = 'none';
+        }
+
+        // See LPP-8696
+        if (quirks['inputtext_use_background_image']) {
+            defaultStyles.lzinputtext['background'] = defaultStyles.lzswfinputtext['background'] = defaultStyles.lzswfinputtextmultiline['background'] = 'url(' + LzSprite.blankimage + ')';
         }
 
         LzSprite.prototype.br_to_newline_re = RegExp('<br/>', 'mg');

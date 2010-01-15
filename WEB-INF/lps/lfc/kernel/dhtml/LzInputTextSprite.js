@@ -1,7 +1,7 @@
 /**
   * LzInputTextSprite.js
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -217,47 +217,47 @@ LzInputTextSprite.prototype.__handlemouse = function(e) {
     var sprite = this.owner;
     // make sure we have a sprite and view
     if (! sprite || ! sprite.owner || sprite.selectable != true) return;
-    if (sprite.__fix_inputtext_with_parent_resource) {
-        //if (!e) e = window.event;
-        //Debug.warn(e.type);
-        if (! this.__shown) {
-            sprite.setClickable(true);
-            //sprite.__show();
-            sprite.select();
-        }
-    } else {
+//    if (sprite.__fix_inputtext_with_parent_resource) {
+//        //if (!e) e = window.event;
+//        //Debug.warn(e.type);
+//        if (! this.__shown) {
+//            sprite.setClickable(true);
+//            //sprite.__show();
+//            sprite.select();
+//        }
+//    } else {
         sprite.__show();
-    }
+//    }
 }
 
 LzInputTextSprite.prototype.init = function(v) {
     this.setVisible(v);
-    if (this.quirks['fix_inputtext_with_parent_resource']) {
-        var sprites = this.__findParents('clickable', true);
-        var l = sprites.length;
-        if (l) {
-            for (var n = 0; n < l; n++) {
-                var v = sprites[n];
-                if (v.resource != null) {
-                    /*
-                    if ($debug) {
-                        Debug.warn('inputtext %w can not have a clickable parent with a resource %w', this.owner, v.owner);
-                    }
-                    */
-                    this.setClickable(true);
-                    // set flag for use later
-                    this.__fix_inputtext_with_parent_resource = true;
-                    /* focusing to this doesn't help :(
-                    this.__dummyinputtext = document.createElement('input');
-                    this.__dummyinputtext.className = 'lzswfinputtext';
-                    lz.embed.__setAttr(this.__dummyinputtext, 'type', 'text');
-                    this.__LZdiv.appendChild(this.__dummyinputtext);
-                    this.__dummyinputtext.style.display = 'none';
-                    */
-                }
-            }
-        }
-    }
+//    if (this.quirks['fix_inputtext_with_parent_resource']) {
+//        var sprites = this.__findParents('clickable', true);
+//        var l = sprites.length;
+//        if (l) {
+//            for (var n = 0; n < l; n++) {
+//                var v = sprites[n];
+//                if (v.resource != null) {
+//                    /*
+//                    if ($debug) {
+//                        Debug.warn('inputtext %w can not have a clickable parent with a resource %w', this.owner, v.owner);
+//                    }
+//                    */
+//                    this.setClickable(true);
+//                    // set flag for use later
+//                    this.__fix_inputtext_with_parent_resource = true;
+//                    /* focusing to this doesn't help :(
+//                    this.__dummyinputtext = document.createElement('input');
+//                    this.__dummyinputtext.className = 'lzswfinputtext';
+//                    lz.embed.__setAttr(this.__dummyinputtext, 'type', 'text');
+//                    this.__LZdiv.appendChild(this.__dummyinputtext);
+//                    this.__dummyinputtext.style.display = 'none';
+//                    */
+//                }
+//            }
+//        }
+//    }
 }
 
 LzInputTextSprite.prototype.__show = function() {
@@ -335,23 +335,23 @@ LzInputTextSprite.prototype.__hide = function(ignore) {
     // the mouse
     LzMouseKernel.setGlobalClickable(true);
     //Debug.warn('__hide', this.owner);
-    if (this.__fix_inputtext_with_parent_resource) {
-        //Debug.write('forcing blur', this.__LzInputDiv);
-        // important to allow mouseenter event in __handlemouse
-        this.setClickable(false);
-        //good.sprite.gotFocus();
-        /* none of these seem to allow mousedown events, so we show onmouseenter
-        LzMouseKernel.setGlobalClickable(false);
-        LzMouseKernel.setGlobalClickable(true);
-        this.__dummyinputtext.style.display = '';
-        this.__dummyinputtext.focus();
-        this.__dummyinputtext.blur();
-        this.__dummyinputtext.style.display = 'none';
-        LzInputTextSprite.prototype.__focusedSprite == null;
-        LzInputTextSprite.prototype.__lastshown == null;
-        this.__shown = false;
-        */
-    }
+//    if (this.__fix_inputtext_with_parent_resource) {
+//        //Debug.write('forcing blur', this.__LzInputDiv);
+//        // important to allow mouseenter event in __handlemouse
+//        this.setClickable(false);
+//        //good.sprite.gotFocus();
+//        /* none of these seem to allow mousedown events, so we show onmouseenter
+//        LzMouseKernel.setGlobalClickable(false);
+//        LzMouseKernel.setGlobalClickable(true);
+//        this.__dummyinputtext.style.display = '';
+//        this.__dummyinputtext.focus();
+//        this.__dummyinputtext.blur();
+//        this.__dummyinputtext.style.display = 'none';
+//        LzInputTextSprite.prototype.__focusedSprite == null;
+//        LzInputTextSprite.prototype.__lastshown == null;
+//        this.__shown = false;
+//        */
+//    }
     // turn off text selection in IE
     // can't use lz.embed.attachEventHandler because we need to cancel events selectively
     if (LzInputTextSprite.prototype.__lastshown == null) {
@@ -609,11 +609,11 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
         if (LzInputTextSprite.prototype.__focusedSprite === sprite) {
             LzInputTextSprite.prototype.__focusedSprite = null;         
         }
-        if (sprite.__fix_inputtext_with_parent_resource && sprite.__isMouseOver()) {
-            //Debug.write('undo blur')
-            sprite.select();
-            return;
-        }
+//        if (sprite.__fix_inputtext_with_parent_resource && sprite.__isMouseOver()) {
+//            //Debug.write('undo blur')
+//            sprite.select();
+//            return;
+//        }
         sprite.__hide();
         if (sprite._cancelblur) {
             sprite._cancelblur = false;
