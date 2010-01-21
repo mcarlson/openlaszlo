@@ -3,16 +3,16 @@
           stage="late"
       onload="canvas.doLoaded()"/>
   <method name="doLoaded">
-    new myclass(canvas, {fontsize: 8, text: 'fontsize 8 [1] loaded myclass'});
-    new myclass(canvas, {fontsize: 10, text: 'fontsize 10 [2] loaded myclass'});
-    new myclass(canvas, {text: 'default fontsize [3] loaded myclass'});
-    new myclass(canvas, {fontsize: 30, text: 'fontsize 30 [4] loaded myclass'});
+    new lz.myclass(canvas, {fontsize: 8, text: 'fontsize 8 [1] loaded myclass'});
+    new lz.myclass(canvas, {fontsize: 10, text: 'fontsize 10 [2] loaded myclass'});
+    new lz.myclass(canvas, {text: 'default fontsize [3] loaded myclass'});
+    new lz.myclass(canvas, {fontsize: 30, text: 'fontsize 30 [4] loaded myclass'});
 
 
   </method>
   <simplelayout spacing="2" />
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

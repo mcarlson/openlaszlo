@@ -1,0 +1,21 @@
+<library>
+
+  <class name="myclass" bgcolor="#ffccff" 
+     width="${this.textview.width}"
+     height="${this.textview.height}" fontsize="20">
+    <attribute name="text" type="text"/>
+    <text name="textview"  resize="true" text="${parent.text}"/>
+  </class>
+
+  <view id="libview">
+    <simplelayout/>
+      <view width="80" height="40" bgcolor="red">
+        <text x="10" y="4">lib view</text>
+      </view>
+    </view>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
