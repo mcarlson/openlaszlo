@@ -1777,6 +1777,14 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       visitExpression(a);
       return node;
     }
+    if (ParserConstants.SUBCLASSOF ==  op) {
+      Map map = new HashMap();
+      map.put("_1", a);
+      map.put("_2", b);
+      String pattern = "($lzsc$issubclassof(_1, _2))";
+      SimpleNode n = (new Compiler.Parser()).substitute(node, pattern, map);
+      return visitExpression(n);
+    }
     visitExpression(a);
     visitExpression(b);
     if (ParserConstants.IS == op) {
@@ -2923,6 +2931,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
 }
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/

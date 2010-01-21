@@ -2,7 +2,7 @@
     Compiler Tests
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-     * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
      * Use is subject to license terms.                                            *
      * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -227,12 +227,29 @@
      assertEquals("correct", this.closureOverShadowedValue("correct")());
    ]]></method>
 
+   <method name="testSubclassOf"><![CDATA[
+     assertTrue(Object subclassof Object, "Object subclassof Object");
+     assertTrue(LzEventable subclassof Object, "LzEventable subclassof Object");
+     assertFalse(Object subclassof LzEventable, "Object subclassof LzEventable");
+     assertTrue(lz.inputtext subclassof Object, "lz.inputtext subclassof Object");
+     assertFalse(Object subclassof lz.inputtext, "Object subclassof lz.inputtext");
+     assertTrue(lz.node subclassof lz.node, "lz.node subclassof lz.node");
+     assertTrue(lz.view subclassof lz.node, "lz.view subclassof lz.node");
+     assertFalse(lz.node subclassof lz.view, "lz.node subclassof lz.view");
+     assertFalse(lz.text subclassof lz.datapointer, "lz.text subclassof lz.datapointer");
+     assertTrue(lz.text subclassof lz.text, "lz.text subclassof lz.text");
+     assertTrue(lz.text subclassof LzFormatter, "lz.text subclassof LzFormatter");
+     assertTrue(lz.text subclassof lz.view, "lz.text subclassof lz.view");
+   ]]></method>
+
+
     <method name="addTests"> 
         this.addTest("testOptionalArguments");
         this.addTest("testMiscellaneousCompilation");
         this.addTest("testConditionalCompilation");
         this.addTest("testForInReturn");
         this.addTest("testClosureOverShadowedValue");
+        this.addTest("testSubclassOf");
     </method> 
   </class>
 </library>

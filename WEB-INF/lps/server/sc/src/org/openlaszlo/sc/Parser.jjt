@@ -1,7 +1,7 @@
 /* ****************************************************************************
  * Parser.jjt
  *
- * Copyright (c) 2002-2009 Laszlo Systems, Inc.
+ * Copyright (c) 2002-2010 Laszlo Systems, Inc.
  * All Rights Reserved.
  *
  * This software is the proprietary information of Laszlo Systems, Inc.
@@ -183,6 +183,7 @@ TOKEN: {
 | < INSTANCEOF: "instanceof" >
 | < NEW: "new" >
 | < RETURN: "return" >
+| < SUBCLASSOF: "subclassof" >
 | < SWITCH: "switch" >
 | < THIS: "this" >
 | < THROW: "throw" >
@@ -578,7 +579,7 @@ JAVACODE void setAllowIn(boolean newVal) {
 
 void RelOp() #Operator : {Token t;}
 {
-  ("<" | ">" | "<=" | ">=" | "instanceof" | "is" | "cast" | LOOKAHEAD({getAllowIn()}) "in")
+  ("<" | ">" | "<=" | ">=" | "instanceof" | "is" | "cast" | "subclassof" | LOOKAHEAD({getAllowIn()}) "in")
     {jjtThis.setOperator(getToken(0).kind);}
 }
 

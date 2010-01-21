@@ -1,7 +1,7 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
 /**
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -116,3 +116,32 @@ var globalValue = function (name:String) {
   }
   return void 0;
 };
+
+// Runtime support for `subclassof`
+var $lzsc$issubclassof = function (one:Class, other:Class) {
+  if ($as3) {
+    #passthrough {
+      import flash.utils.describeType;
+      import flash.utils.getDefinitionByName;
+    }#
+    if (one === other) return true;
+    // The hard way
+    var factory:XML = describeType(one).elements('factory')[0];
+    // Look at superclasses and interfaces
+    var elements = ['extendsClass', 'implementsInterface'];
+    for (var i in elements) {
+      var superclassnames:XMLList = factory.elements(elements[i]).attribute('type');
+      for (var j in superclassnames) {
+        try {
+          var superclass = getDefinitionByName(superclassnames[j]);
+          if (superclass === other) return true;
+        } catch (e:ReferenceError) {
+          // interstitials may not be present
+        }
+      }
+    }
+    return false;
+  } else {
+    return (one === other) || (one.prototype is other);
+  }
+}

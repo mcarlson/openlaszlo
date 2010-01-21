@@ -917,6 +917,14 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
       SimpleNode n = (new Compiler.Parser()).substitute(node, pattern, map);
       return visitExpression(n);
     }
+    if (ParserConstants.SUBCLASSOF ==  ((ASTOperator)op).getOperator()) {
+      Map map = new HashMap();
+      map.put("_1", a);
+      map.put("_2", b);
+      String pattern = "($lzsc$issubclassof(_1, _2))";
+      SimpleNode n = (new Compiler.Parser()).substitute(node, pattern, map);
+      return visitExpression(n);
+    }
     children[0] = visitExpression(a);
     children[2] = visitExpression(b);
     return node;
@@ -1944,7 +1952,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 }
 
 /**
- * @copyright Copyright 2006-2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 
