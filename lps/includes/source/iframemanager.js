@@ -1,5 +1,5 @@
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 lz.embed.iframemanager = {
@@ -226,13 +226,19 @@ lz.embed.iframemanager = {
     ,__gotload: function(id) { 
         var iframe = lz.embed.iframemanager.getFrame(id);
         //console.log('__gotload', iframe;
-        if (! iframe) return;
+        if (! iframe || ! iframe.owner) return;
 
         if (iframe.owner && iframe.owner.__gotload) {
             iframe.owner.__gotload();
         } else {
+            // Flash
             //console.log('calling method', 'lz.embed.iframemanager.__gotload(\'' + id + '\')');
-            lz.embed[iframe.owner].callMethod('lz.embed.iframemanager.__gotload(\'' + id + '\')');
+            if (lz.embed[iframe.owner]) {
+                lz.embed[iframe.owner].callMethod('lz.embed.iframemanager.__gotload(\'' + id + '\')');
+            } else {
+                // installing a new player now...
+                return;
+            }
         }
         this.__loading[id] = false;
         // Enable mouse listeners if needed
