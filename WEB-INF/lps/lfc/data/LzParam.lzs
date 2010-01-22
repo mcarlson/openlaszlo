@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -66,8 +66,9 @@ function LzParam () {
   * @return Object
   */
 static function parseQueryString (query:String) :Object {
-  var parameters:Array = query.split('&');
   var queries:Object = {};
+  if (! query) return queries;
+  var parameters:Array = query.split('&');
   for (var i:int = 0; i < parameters.length; ++i) {
     var key:String = parameters[i];
     var value:String = '';
