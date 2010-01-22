@@ -228,7 +228,7 @@ lz.embed.iframemanager = {
         //console.log('__gotload', iframe;
         if (! iframe || ! iframe.owner) return;
 
-        if (iframe.owner && iframe.owner.__gotload) {
+        if (iframe.owner.__gotload) {
             iframe.owner.__gotload();
         } else {
             // Flash
