@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzcanvas
@@ -322,7 +322,6 @@ dynamic class LzCanvas extends LzView {
         delete args.lpsversion;
 
         // Set applyArgs ordering kludges.
-        this.__LZdelayedSetters = LzView.__LZdelayedSetters;
         this.earlySetters = LzView.earlySetters;
 
         if (!this.version){

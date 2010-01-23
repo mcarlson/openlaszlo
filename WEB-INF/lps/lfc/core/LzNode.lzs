@@ -3,7 +3,7 @@
  * LzNode.lzs
  *
  *   *
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @topic LZX
@@ -792,8 +792,6 @@ public dynamic class LzNode extends LzEventable {
    * signals an error in debug mode).
    */
   function construct ( parent , args ){
-    // Set applyArgs ordering kludges.  LzView overrides these
-    this.__LZdelayedSetters = LzNode.__LZdelayedSetters;
     this.earlySetters = LzNode.earlySetters;
 
     var lp = parent; // lp == lexical parent
@@ -918,7 +916,7 @@ public dynamic class LzNode extends LzEventable {
     this.isinited = true;
 
     // Install computed initializations
-    this.__LZresolveReferences();
+    if (this.__LZresolveDict != null) this.__LZresolveReferences();
 
     // bail if deleted, e.g. by datapath-constraint causing replication
     if (this.__LZdeleted) return;
@@ -1091,10 +1089,13 @@ public dynamic class LzNode extends LzEventable {
             if (this[evt].ready) this[ evt ].sendEvent( args[ key ] );
           }
         }
-      } else if (this[setr] is Function) {
+      } else if (this[setr] != -1) {
         // TODO: simplify test above - can this[setr] ever not be a Function?
         // [20090812 anba] yes, some "setters" are set to -1 to indicate
         // read-only properties, cf. $lzc$set_clip in LzView
+        // [20100107 max] Simplifying to test explicitly for -1 since 
+        // 'fake setters' are indicated that way: -1 must be used instead of 
+        // null to get to this point see $lzc$set_id().
         if (key in this.earlySetters) {
           if (hasearly == null) { hasearly = []; }
           hasearly[this.earlySetters[key]] = key;
@@ -1358,12 +1359,6 @@ public dynamic class LzNode extends LzEventable {
   }
 
   /** @access private */
-  static var __LZdelayedSetters = new LzInheritedHash();
-  /** @access private */
-  var __LZdelayedSetters;
-
-
-  /** @access private */
   static var earlySetters = new LzInheritedHash({
     name            : 1 ,
     $events         : 2 ,
@@ -1439,16 +1434,11 @@ public dynamic class LzNode extends LzEventable {
           if (this.__LZdeleted) return;
         }
       }
-      // Backward compatibility -- are there any other delayed setters?
-      // [20090812 anba] only the setter for "layout" in LzView?
-      for ( var r in rdict ){
-        if ( r == "$inits" || r == "$constraints" || r == "$delegates" ) continue;
-        if (r in this.__LZdelayedSetters) {
-          this[  this.__LZdelayedSetters[ r ] ] ( rdict[ r ] );
-        } else if ($debug) {
-          Debug.warn("No delayed setter for %s", r);
-        }
+
+      if (this['__LZresolveOtherReferences']) {
+        this.__LZresolveOtherReferences(rdict);
       }
+
       // Install delegates
       // $delegates : "__LZsetDelegates"
       if (rdict['$delegates']) this.__LZsetDelegates( rdict.$delegates );

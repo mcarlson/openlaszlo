@@ -62,8 +62,6 @@ static var tagname = 'view';
   // We add some more kludges to those in LzNode.  See #construct
   // where we override the LzNode setting
   /** @access private */
-  static var __LZdelayedSetters = new LzInheritedHash(LzNode.__LZdelayedSetters);
-  /** @access private */
   static var earlySetters = new LzInheritedHash(LzNode.earlySetters);
 
     /** @access private */
@@ -434,7 +432,6 @@ override function construct ( parent , args) {
     super.construct( (parent ? parent : canvas), args );
 
     // Set applyArgs ordering kludges.  Overriding those of LzNode
-    this.__LZdelayedSetters = LzView.__LZdelayedSetters;
     this.earlySetters = LzView.earlySetters;
 
     this.mask = this.immediateparent.mask;
@@ -1016,7 +1013,6 @@ function sendAAEvent(childID:Number, eventType:Number, nonHTML:Boolean = false) 
 }
 
 
-LzView.__LZdelayedSetters.layout = "$lzc$set_layout";
 LzView.earlySetters.clickregion = 7;
 LzView.earlySetters.stretches = 8;
 
@@ -3743,6 +3739,17 @@ function setCSS(stylename:String, value) {
             vip.__LZcheckwidthFunction( this );
         if (vip.__LZcheckheight)
             vip.__LZcheckheightFunction( this );
+    }
+}
+
+/**
+ * @access private
+ */
+function __LZresolveOtherReferences(rdict:Object) {
+    // Install layout attribute - vestigial support for LaszloView 
+    var layout = rdict['layout'];
+    if (layout != null) {
+        this.$lzc$set_layout( layout );
     }
 }
 
