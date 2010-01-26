@@ -1298,7 +1298,7 @@
                 private function createContainer() {
                     var drawcontainer:Sprite = new Sprite();
                     drawcontainer.mouseEnabled = false;
-                    this.getDisplayObject().addChild(drawcontainer);
+                    this.getDisplayObject().addChildAt(drawcontainer, 0);
                     this.__drawcontainer = drawcontainer;
 
                     return drawcontainer.graphics;
