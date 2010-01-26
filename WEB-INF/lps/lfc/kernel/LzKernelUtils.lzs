@@ -1,7 +1,7 @@
 /**
  * Utilities that are shared by all kernels
  *
- * @copyright Copyright 2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2009-2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 
@@ -34,10 +34,7 @@ class LzKernelUtils {
         } else if (value === -Infinity) {
             result = ~(~0>>>1);
         }
-
-        // Not sure why we are rounding here.  Most browsers allow
-        // fractional pixels.
-        return Math.round(result) + units;
+        return result + units;
     }
 
     /**
