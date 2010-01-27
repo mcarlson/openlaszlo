@@ -15,6 +15,8 @@
 <include href="utils/states/dragstate.lzx" />
 <include href="newcontent.lzx" />
 
+<include href="lz/tooltip/tooltip.lzx" />
+
 <!-- for prefs window -->
 <include href="lz/checkbox.lzx"/>
 <include href="lz/window.lzx"/>
@@ -25,14 +27,53 @@
 
  <!-- Buttons --> 
 
- <resource src="images/buttons/closebtn.swf" name="closeBtn_rsc" />
- <resource src="images/buttons/evalbtn.swf" name="evalBtn_rsc" />
- <resource src="images/buttons/minbtn.swf" name="minBtn_rsc" />
- <resource src="images/buttons/expbtn.swf" name="expBtn_rsc" />
- <resource src="images/buttons/prefsbtn.swf" name="prefsBtn_rsc" />
- <resource src="images/buttons/tfdownbtn.swf" name="tfdownBtn_rsc" />
- <resource src="images/buttons/tfupbtn.swf" name="tfupBtn_rsc" />
- <resource src="images/buttons/clear1.swf" name="clear1_rsc" />
+ <resource name="closeBtn_rsc" >
+   <frame src="images/buttons/autoPng/closebtn0001.png"/>
+   <frame src="images/buttons/autoPng/closebtn0002.png"/>
+   <frame src="images/buttons/autoPng/closebtn0003.png"/>
+ </resource>
+ <resource name="evalBtn_rsc" >
+   <frame src="images/buttons/autoPng/evalbtn0001.png"/>
+   <frame src="images/buttons/autoPng/evalbtn0002.png"/>
+   <frame src="images/buttons/autoPng/evalbtn0003.png"/>
+ </resource>
+ <resource name="minBtn_rsc" >
+   <frame src="images/buttons/autoPng/minbtn0001.png"/>
+   <frame src="images/buttons/autoPng/minbtn0002.png"/>
+   <frame src="images/buttons/autoPng/minbtn0003.png"/>
+ </resource>
+ <resource name="expBtn_rsc" >
+   <frame src="images/buttons/autoPng/expbtn0001.png"/>
+   <frame src="images/buttons/autoPng/expbtn0002.png"/>
+   <frame src="images/buttons/autoPng/expbtn0003.png"/>
+ </resource>
+
+ <resource name="prefsBtn_rsc">
+        <frame src="images/buttons/autoPng/prefsbtn0001.png" />
+        <frame src="images/buttons/autoPng/prefsbtn0002.png" />
+        <frame src="images/buttons/autoPng/prefsbtn0003.png" />
+ </resource>
+
+ <resource name="tfdownBtn_rsc" >
+   <frame src="images/buttons/autoPng/tfdownbtn0001.png"/>
+   <frame src="images/buttons/autoPng/tfdownbtn0002.png"/>
+   <frame src="images/buttons/autoPng/tfdownbtn0003.png"/>
+ </resource>
+ <resource name="tfupBtn_rsc" >
+   <frame src="images/buttons/autoPng/tfupbtn0001.png"/>
+   <frame src="images/buttons/autoPng/tfupbtn0002.png"/>
+   <frame src="images/buttons/autoPng/tfupbtn0003.png"/>
+ </resource>
+ <resource name="clear1_rsc" >
+   <frame src="images/buttons/autoPng/clear10001.png"/>
+   <frame src="images/buttons/autoPng/clear10002.png"/>
+   <frame src="images/buttons/autoPng/clear10003.png"/>
+ </resource>
+ <resource name="bug_rsc" >
+   <frame src="images/buttons/autoPng/bug0001.png"/>
+   <frame src="images/buttons/autoPng/bug0002.png"/>
+   <frame src="images/buttons/autoPng/bug0003.png"/>
+ </resource>
 
  <resource src="images/shadowbottom.swf" name="shadowBottom_rsc" />
  <resource src="images/shadowcorner.swf" name="shadowCorner_rsc" />
@@ -216,6 +257,8 @@
     <setter name="y" args="y" > 
         super.setAttribute ('y', Math.max( 0 , Math.min( y , canvas.height - 4) ) ); 
     </setter> 
+
+
 
 <method name="initEvalView">
       <![CDATA[
@@ -652,26 +695,42 @@
 
        <view name="controls" width="${parent.width}" y="7">
          <basebutton name="close"  pixellock="true"
-                  x="${parent.width - this.width - 7}"
-                  resource="closeBtn_rsc"
-                  onclick="classroot.setAttribute('visible', false)" />
+                   x="${parent.width - this.width - 7}"
+                   resource="closeBtn_rsc"
+                   onclick="classroot.setAttribute('visible', false)">
+            <tooltip>Close debug window</tooltip>
+          </basebutton>
           <basebutton name="min" pixellock="true"
-                  x="${parent.close.x - this.width}"
-                  resource="minBtn_rsc"
-                  onclick="classroot.toggleMinimizeWindow()" />
-          <basebutton name="exp" visible="false" pixellock="true"
-                  x="${parent.close.x - this.width}"
-                  resource="expBtn_rsc"
-                  onclick="classroot.toggleMinimizeWindow()" />
-          <!--  clear debug history -->
-          <basebutton name="clear" pixellock="true"
-                  x="${parent.min.x - this.width}"
-                  onclick="classroot.clear()"
-                  resource="clear1_rsc" />
-          <basebutton name="prefs" pixellock="true"
-                  x="${parent.clear.x - this.width}"
-                  onclick="classroot.showprefs()"
-                  resource="prefsBtn_rsc" />
+                   x="${parent.close.x - this.width}"
+                   resource="minBtn_rsc"
+                   onclick="classroot.toggleMinimizeWindow()">
+             <tooltip>Minimize debug window</tooltip>
+           </basebutton>
+           <basebutton name="exp" visible="false" pixellock="true"
+                   x="${parent.close.x - this.width}"
+                   resource="expBtn_rsc"
+                   onclick="classroot.toggleMinimizeWindow()">
+              <tooltip>Expand debug window</tooltip>
+            </basebutton>
+           <!--  clear debug history -->
+           <basebutton name="clear" pixellock="true"
+                   x="${parent.min.x - this.width}"
+                   onclick="classroot.clear()"
+                   resource="clear1_rsc">
+              <tooltip>Clear debug window</tooltip>
+            </basebutton>
+            <basebutton name="prefs" pixellock="true"
+                   x="${parent.clear.x - this.width}"
+                   onclick="classroot.showprefs()"
+                   resource="prefsBtn_rsc">
+               <tooltip>Preferences</tooltip>
+             </basebutton>
+            <basebutton name="bugrep" pixellock="true"
+                  x="${parent.prefs.x - this.width}"
+                  onclick="if (Debug.lastError) Debug.bugReport(Debug.lastError)"
+                  resource="bug_rsc">
+            <tooltip>Create a bug report</tooltip>
+          </basebutton>
        </view>
 
        <view name="logo" resource="title_rsc" x="9" y="8"/>
@@ -1002,7 +1061,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008, 2009, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -3,7 +3,7 @@
 
  **************************************************************************-->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2007, 2008, 2009, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -24,13 +24,36 @@
      redisplay(): selects n lines, sets contentView''s text content to the visible lines
 
      -->
- <resource src="images/buttons/upbtn.swf" name="upBtn_rsc" />
- <resource src="images/buttons/downbtn.swf" name="downBtn_rsc" />
+ <resource name="upBtn_rsc">
+   <frame  src="images/buttons/autoPng/upbtn0001.png"/>
+   <frame  src="images/buttons/autoPng/upbtn0002.png"/>
+   <frame  src="images/buttons/autoPng/upbtn0003.png"/>
+ </resource>
 
- <resource src="images/buttons/leftbtn.swf" name="leftbtn_rsc" />
- <resource src="images/buttons/rightbtn.swf" name="rightbtn_rsc" />
+ <resource name="downBtn_rsc">
+   <frame src="images/buttons/autoPng/downbtn0001.png"/>
+   <frame src="images/buttons/autoPng/downbtn0002.png"/>
+   <frame src="images/buttons/autoPng/downbtn0003.png"/>
+ </resource>
 
- <resource src="images/scrollcorner.swf" name="scrollcorner_rsc" />
+ <resource name="leftbtn_rsc">
+   <frame  src="images/buttons/autoPng/leftbtn0001.png"/>
+   <frame  src="images/buttons/autoPng/leftbtn0002.png"/>
+   <frame  src="images/buttons/autoPng/leftbtn0003.png"/>
+ </resource>
+
+ <resource name="rightbtn_rsc">
+   <frame  src="images/buttons/autoPng/rightbtn0001.png"/>
+   <frame  src="images/buttons/autoPng/rightbtn0002.png"/>
+   <frame  src="images/buttons/autoPng/rightbtn0003.png"/>
+ </resource>
+
+
+ <resource name="scrollcorner_rsc">
+   <frame  src="images/scrollcorner.swf"/>
+ </resource>
+
+
  <resource src="images/scrolldraghorz.swf" name="scrolldraghorz_rsc" />
  <resource src="images/scrolldragright.swf" name="scrolldragright_rsc" />
  <resource src="images/scrolldragleft.swf" name="scrolldragleft_rsc" />
