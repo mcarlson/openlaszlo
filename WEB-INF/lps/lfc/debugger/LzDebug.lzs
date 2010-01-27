@@ -2,7 +2,7 @@
 
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -1510,6 +1510,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   };
 
   /**
+   * The last error that was reported.  Used as a default for
+   * `bugReport`
+   */
+  var lastError = null;
+
+  /**
    * Format information about an error, warning, or other debugger
    * message suitably for reporting a bug.
    *
@@ -1520,12 +1526,13 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * paste the output of that call into your bug report.
    *
    * @param * error: An debugger message or message ID.  Defaults to
-   * the last message that was inspected.
+   * the last message that was inspected or the last error that was
+   * reported.
    * @param Boolean verbose: If true, each frame
    * argument in the backtrace will be inspected.  Defaults to the value
    * of Debug.showInternalProperties.
    *
-   * @note By inspectinga debugger message (by clicking on it), the
+   * @note By inspecting a debugger message (by clicking on it), the
    * message will be assigned to the Debug environment variable `_`.
    * Thus to enable a verbose report (which will detail all arguments of
    * each frame, as opposed to just the `this` argument), invoke as
@@ -1535,7 +1542,11 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     if (error == null) {
       try {
         with (this.environment) {
-          error = _;
+          if (_ is LzSourceMessage) {
+            error = _;
+          } else {
+            error = this.lastError;
+          }
         }
       } catch (e) {}
     }

@@ -2,7 +2,7 @@
 
 /**
  *
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @access public
@@ -464,6 +464,8 @@ class LzError extends LzSourceMessage {
 
   function LzError (file:String=null, line:Number=0, message='', node=null) {
     super(file, line, message, node);
+    // Remember the last error for bugReport
+    Debug.lastError = this;
   }
 
   static var format = LzSourceMessage.format;
