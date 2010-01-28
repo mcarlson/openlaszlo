@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -52,6 +52,14 @@
               @keywords readonly -->
         <attribute name="level" type="number" value="0"/>
 
+        <!--- Silence level, 0-100, the amount of sound required to activate 
+              the microphone.  -->
+        <attribute name="silencelevel" type="number" value="10"/>
+
+        <!--- Silence timeout in ms, the amount of silent time signifying that 
+              silence has actually begun.  -->
+        <attribute name="silencetimeout" type="number" value="-1"/>
+
         <!--- Level delegate, used to track level changes. 
               @keywords private -->
         <attribute name="_leveldel" value="$once{new LzDelegate(this, '_updateLevel')}"/>
@@ -64,6 +72,13 @@
               @keywords private -->
         <event name="onlevel"/>
 
+        <!--- Event sent when microphone silence level changes. 
+              @keywords private -->
+        <event name="onsilencelevel"/>
+
+        <!--- Event sent when microphone timeout changes. 
+              @keywords private -->
+        <event name="onsilencetimeout"/>
 
         <!--- Make the microphone.
               @keywords private -->
@@ -89,8 +104,7 @@
                 }
             }
 
-            this._dev = 
-                dev;
+            this._dev = dev;
 
             return dev;
           ]]>
@@ -140,7 +154,7 @@
               @keywords private -->
         <handler name="onactive"><![CDATA[
             //Debug.write("microphone onactive", this, "onlevel", this.onlevel, "active", this.active);
-            if (this.onlevel) {
+            if (this.onlevel.ready) {
                 if (this.active && this.capturing) {
                     this._leveldel.register(lz.Idle, "onidle");
                 } else {
@@ -223,6 +237,39 @@
             }
           ]]>
         </setter>
+
+        <!--- @keywords private -->
+        <setter name="silencelevel" args="level"> <![CDATA[
+            //Debug.write("microphone set silencelevel", this, level, this.isinited, this._dev, this._mc);
+            if (!this.isinited || level === this.silencelevel) {
+                return;
+            }
+            this.silencelevel = level;
+            if (this._dev != null) {
+                this._dev.setSilenceLevel(this.silencelevel, this.silencetimeout);
+            }
+            if (this.onsilencelevel.ready) {
+                this.onsilencelevel.sendEvent(level);
+            }
+          ]]>
+        </setter>
+
+        <!--- @keywords private -->
+        <setter name="silencetimeout" args="timeout"> <![CDATA[
+            //Debug.write("microphone set silencetimeout", this, timeout, this.isinited, this._dev, this._mc);
+            if (!this.isinited || timeout === this.silencetimeout) {
+                return;
+            }
+            this.silencetimeout = timeout;
+            if (this._dev != null) {
+                this._dev.setSilenceLevel(this.silencelevel, this.silencetimeout);
+            }
+            if (this.onsilencetimeout.ready) {
+                this.onsilencetimeout.sendEvent(timeout);
+            }
+          ]]>
+        </setter>
+
         <doc>
             <tag name="shortdesc">
                 <text>A microphone connection to a media server.</text>
