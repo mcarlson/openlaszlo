@@ -4,7 +4,7 @@
  * ***************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -2316,7 +2316,8 @@ solution =
         }
         // Allow forward references
         if (! classModel.isCompiled()) {
-          classModel.compile(env);
+          // Ensure the class model is compiled!
+          classModel.compile(env, true);
         }
         if (classModel.anonymous || classModel.builtin || env.tagDefined(tagName) || "anonymous".equals(tagName)) {
           // The class to instantiate

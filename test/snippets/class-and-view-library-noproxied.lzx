@@ -1,4 +1,4 @@
-<library proxied="true">
+<library proxied="false">
 
   <class name="myclass" bgcolor="#ffccff" 
      width="${this.textview.width}"

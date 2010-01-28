@@ -1,12 +1,14 @@
 <canvas width="1024">
-  <import name="lib" href="class-resource-library.lzx" 
+  <import name="lib" href="lpp-8727-library.lzx" 
           stage="late"
-          onload="canvas.doLoaded()"/>
+      onload="canvas.doLoaded()"/>
   <method name="doLoaded">
-    new lz.myclass(canvas);
+    new lz.myclass(canvas, {fontsize: 8, text: 'fontsize 8 [1] loaded myclass'});
   </method>
-</canvas>
 
+
+
+</canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *

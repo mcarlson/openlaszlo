@@ -25,7 +25,7 @@ public class ClassModel implements Comparable {
     /** The name for debugging */
     public String debugExtends;
     public String debugWith;
-    final CompilationEnvironment env;
+    public CompilationEnvironment env;
     protected boolean builtin = false;
     // This is null for the root class
     protected ClassModel superModel;
@@ -914,6 +914,6 @@ public class ClassModel implements Comparable {
 }
 
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

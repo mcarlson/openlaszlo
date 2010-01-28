@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -93,14 +93,19 @@ class ImportCompiler extends ToplevelCompiler {
             // I'm scared of the CompilationManager, just generate the output file
             // directly for now.
             String libfile = libsrcfile.getName();
+
             String libprefix = mEnv.getLibPrefix();
             String runtime = mEnv.getProperty(mEnv.RUNTIME_PROPERTY);
-            String extension = ".swf";
-            if (mEnv.isAS3()) {
-                extension = ".swf";
+            // filename will be of the form "foo.<RUNTIME>.swf", e.g., foo.swf10.swf
+            String extension = "." + runtime;
+            if (mEnv.isSWF() || mEnv.isAS3()) {
+                extension += ".swf";
             } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
-                extension = ".js";
+                extension += ".js";
+            } else {
+                throw new CompilationError("Compiling an import library for the "+runtime+" runtime is not supported.", element);
             }
+
             String objfilename = libprefix + "/" + libfile + extension;
             String objpath = mEnv.getLibPrefixRelative() + "/" + libfile + extension;
 
@@ -124,9 +129,9 @@ class ImportCompiler extends ToplevelCompiler {
             if (mEnv.isAS3()) {
                 // In Flash 9/10 we compile the main app first, then compile the libraries
                 // against that generated source tree.
-            	if (mLogger.isDebugEnabled()) {
+                if (mLogger.isDebugEnabled()) {
                 mLogger.debug("... queueing import lib compilation" +libsrcfile+", " +objfilename  +", "+ objpath+", "+module);
-            	}
+                }
                 queueLibraryCompilation(libsrcfile, objfilename, objpath, module);
             } else {
                 compileLibrary(libsrcfile, objfilename, objpath, module);

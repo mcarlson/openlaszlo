@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -108,6 +108,10 @@ class ClassCompiler extends ViewCompiler  {
     public void compile(Element elt) {
       String tagName = elt.getAttributeValue("name");
       ClassModel classModel = mEnv.getSchema().getClassModel(tagName);
+
+      // Ensure that the class and any children is compiled into the current CompilationEnvironment
+      classModel.env = mEnv;
+
       // May have already been compiled by a forward reference
       // May have already been compiled by a forward reference
       if (tagName.equals("anonymous")) {
@@ -123,7 +127,7 @@ class ClassCompiler extends ViewCompiler  {
         // conditionally compiled as a forward reference (which will
         // only be emitted if the class is not in an import and we are
         // linking)
-        classModel.compile(mEnv, true);
+          classModel.compile(mEnv, true);
       }
     }
 }

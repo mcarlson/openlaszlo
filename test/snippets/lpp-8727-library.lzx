@@ -1,4 +1,4 @@
-<library proxied="true">
+<library>
 
   <class name="myclass" bgcolor="#ffccff" 
      width="${this.textview.width}"
@@ -7,12 +7,14 @@
     <text name="textview"  resize="true" text="${parent.text}"/>
   </class>
 
+
   <view id="libview">
     <simplelayout/>
       <view width="80" height="40" bgcolor="red">
         <text x="10" y="4">lib view</text>
       </view>
     </view>
+
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
