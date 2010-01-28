@@ -3,7 +3,7 @@
 <!--  Author: Eric Bloch  / Benjamin Shine                                  -->
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -360,6 +360,8 @@
 
     <property name="check.java.version" value="true" />
     <property name="build.java.version" value="1.4" />
+    <property name="ant.build.javac.source" value="1.5" />
+    <property name="ant.build.javac.source" value="1.5" />
 
     <property name="server.home" value="${env.TOMCAT_HOME}" />
 
@@ -393,6 +395,7 @@
                 <or>
                     <contains string="${ant.java.version}" substring="1.4" />
                     <contains string="${ant.java.version}" substring="1.5" />
+                    <contains string="${ant.java.version}" substring="1.6" />
                 </or>
             </not>
         </condition>
@@ -1520,7 +1523,7 @@
          </filterset>
        </copy>
 
-       <style style="quick-index.xslt"
+       <xslt style="quick-index.xslt"
               in="laszlo-explorer/nav.xml"
               out="index.html" />
      </target>

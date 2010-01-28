@@ -3,7 +3,7 @@
 <!--  build.xml                                                             -->
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -15,8 +15,6 @@
   <import file="../../../build-tools/build-opt.xml" />
 
   <property environment="env" />
-
-  <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"/>
 
   <!-- Local locations for public DTDs, so that the build doesn't
        require web access -->
@@ -72,7 +70,7 @@
     </uptodate>
   </target>
 
-  <target name="lzl" description="Build a .lzl library from source" >
+  <target name="lzl" description="Build a .lzl library from source" depends="init">
     <fail unless="has_sc.Main" message="Can't find org.openlaszlo.sc.Main in classpath." />
     <echo message="Compiling ${library}" />
     <java classname="org.openlaszlo.sc.Main"

@@ -1,7 +1,7 @@
 <project name="schema" default="build">
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -27,6 +27,7 @@
     <property name="server.dir" value="${LPS_HOME}/WEB-INF/lps/server" />
     <property name="lfc.src.dir" value="${LPS_HOME}/WEB-INF/lps/lfc" />
     <property name="js2doc.src.dir" value="${LPS_HOME}/WEB-INF/lps/server/src/org/openlaszlo/js2doc/" />
+    <property name="TRANG_JAR"      value="${LZ_VENDOR_ROOT}/trang.jar"/>
 
     <mkdir dir="build"/>
     <condition property="schemas.uptodate">
@@ -44,17 +45,20 @@
 
   <target name="rng" depends="init"
         unless="schemas.uptodate"
-          description="Generate RNG schema file">  
+          description="Generate RNG schema file">
       <sequential>
-        <java fork="true"
-              jar="${env.ANT_HOME}/lib/trang.jar">
+        <java classname="com.thaiopensource.relaxng.translate.Driver"
+              fork="true">
           <arg value="${rnc}"/>
           <arg value="build/lzx.direct.rng"/>
+        <classpath>
+          <pathelement path="${TRANG_JAR}" />
+        </classpath>
         </java>
       </sequential>
 
-    <style in="build/lzx.direct.rng" out="${rng}" style="strip-docs.xsl"/>
-    <style in="build/lzx.direct.rng" out="${docrng}" style="strip-private.xsl"/>
+    <xslt in="build/lzx.direct.rng" out="${rng}" style="strip-docs.xsl"/>
+    <xslt in="build/lzx.direct.rng" out="${docrng}" style="strip-private.xsl"/>
   </target>
 
   <target name="clean" 
@@ -93,14 +97,14 @@
   <target name="build" 
           description="Build generated schema files" depends="rng"
           unless="schemas.uptodate"> <!-- don't build dtd unless it is explicitly requested -->
-          <java fork="true" failonerror="true"
-            jar="${env.ANT_HOME}/lib/trang.jar"
-            output="log.trang">
-               <classpath>
-                   <pathelement path="${java.class.path}"/>
-                </classpath>
-              <arg value="${rnc}"/>
-              <arg value="${xsd}"/>
+          <java classname="com.thaiopensource.relaxng.translate.Driver"
+              fork="true" failonerror="true"
+              output="log.trang">
+            <classpath>
+              <pathelement path="${TRANG_JAR}" />
+            </classpath>
+            <arg value="${rnc}"/>
+            <arg value="${xsd}"/>
           </java>
           <delete file="log.trang"/>
   </target>

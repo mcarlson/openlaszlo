@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
  
@@ -218,7 +218,7 @@ verbosity=1
           @param dbk.show.fixmes
        -->
     <echo message="visibility.filter is ${visibility.filter}"/>
-    <style style="xsl/js2doc2topics.xsl"
+    <xslt style="xsl/js2doc2topics.xsl"
            in="${local.input.file}"
            out="${local.output.file}">
       <xmlcatalog refid="commonDTDs"/>
@@ -229,7 +229,7 @@ verbosity=1
       <param name="docid" expression="${filter.topic}"/>
       <param name="show.comments" expression="${dbk.show.comments}"/>
       <param name="show.fixmes" expression="${dbk.show.fixmes}"/>
-    </style>
+    </xslt>
   </target>
   
   <target name="dbk.examples.preprocess" depends="init,docbook.catalog.generate">
@@ -469,14 +469,14 @@ All Rights Reserved. Use is subject to license terms.</p>
     <!--- @param local.input.file
           @param local.output.file
        -->
-    <style style="xsl/lzx2js2doc.xsl"
+    <xslt style="xsl/lzx2js2doc.xsl"
            in="${local.input.file}"
            out="${local.output.file}">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="base.dir" expression="${lzx.base.dir}"/>
       <param name="root.path" expression="${lzx.root.path}"/>
-    </style>
+    </xslt>
   </target>
   
   <target name="js2doc.validate" depends="init,js2doc.rng">
@@ -564,61 +564,61 @@ All Rights Reserved. Use is subject to license terms.</p>
   
     <!-- bundle together the LFC, LZX, and Components js2doc output -->
     
-    <style style="xsl/js2doc-append.xsl"
+    <xslt style="xsl/js2doc-append.xsl"
            in="${js2doc.build.dir}/${LaszloLibraryName}.xml"
            out="${reference.build.dir}/${LaszloLibraryName}-1.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.src.dir}/langref.xml"/>
-    </style>
+    </xslt>
     
-    <style style="xsl/js2doc-append.xsl"
+    <xslt style="xsl/js2doc-append.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-1.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-2.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.build.dir}/components.xml"/>
-    </style>
+    </xslt>
     
-    <style style="xsl/js2doc-append.xsl"
+    <xslt style="xsl/js2doc-append.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-2.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-3.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.build.dir}/incubator.xml"/>
-    </style>
+    </xslt>
     
-    <style style="xsl/js2doc-append.xsl"
+    <xslt style="xsl/js2doc-append.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-3.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-4.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.build.dir}/embednew.xml"/>
-    </style>
+    </xslt>
     
-    <style style="xsl/js2doc-append.xsl"
+    <xslt style="xsl/js2doc-append.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-4.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-5.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.src.dir}/wrappers.xml"/>
-    </style>
+    </xslt>
     
-    <style style="xsl/js2doc-append.xsl"
+    <xslt style="xsl/js2doc-append.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-5.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-6.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
       <param name="merge.file" expression="${reference.src.dir}/info.xml"/>
-    </style>
+    </xslt>
     
     <!-- make certain information explicit to ease processing by js2doc2dbk.xsl -->
-    <style style="xsl/js2doc-verbose.xsl"
+    <xslt style="xsl/js2doc-verbose.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-6.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-verbose.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
-    </style>
+    </xslt>
     
   </target>
   
@@ -713,7 +713,7 @@ All Rights Reserved. Use is subject to license terms.</p>
     </antcall>
 
 <?skip for faster builds
-    <style style="xsl/js2doc2xref.xsl"
+    <xslt style="xsl/js2doc2xref.xsl"
            in="${ref.file.in}"
            out="${reference.build.dir}/xref.dbk">
       <xmlcatalog refid="commonDTDs"/>
@@ -723,7 +723,7 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="show.comments" expression="${ref.show.comments}"/>
       <param name="show.fixmes" expression="${ref.show.fixmes}"/>
       <param name="build.general.index" expression="1"/>
-    </style>
+    </xslt>
 ?>    
   </target>
   
@@ -895,12 +895,12 @@ All Rights Reserved. Use is subject to license terms.</p>
     </ant>
 
     <!-- make certain information explicit to ease processing by js2doc2dbk.xsl -->
-    <style style="xsl/js2doc-verbose.xsl"
+    <xslt style="xsl/js2doc-verbose.xsl"
       in="${reference.build.dir}/components-raw.xml"
       out="${reference.build.dir}/components-verbose.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>
-    </style>
+    </xslt>
     
     <!-- make components.dbk from js2doc -->
     <property name="ref.file.in" value="${reference.build.dir}/components-verbose.js2doc"/>
@@ -1031,7 +1031,7 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="dbk.show.fixmes" value="${contribref.show.fixmes}"/>
     </antcall>
 
-    <style style="xsl/js2doc2xref.xsl"
+    <xslt style="xsl/js2doc2xref.xsl"
            in="${contribref.file.in}"
            out="${contribref.build.dir}/xref.dbk">
       <xmlcatalog refid="commonDTDs"/>
@@ -1039,7 +1039,7 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="visibility.filter" expression="${contribref.visibility.filter}"/>
       <param name="draft.mode" expression="${draft.mode}"/>
       <param name="build.general.index" expression="0"/>
-    </style>
+    </xslt>
   </target>
   
   <target name="contribref.preprocess" depends="init,contribref.dbk.build,js2doc.rng"

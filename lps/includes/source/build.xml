@@ -43,7 +43,7 @@
     </delete>
   </target>
 
-  <target name="compress" description="compress a .lzs library" >
+  <target name="compress" description="compress a .lzs library" depends="init">
     <fail unless="has_sc.Main" message="Can't find org.openlaszlo.sc.Main in classpath." />
     <echo message="Compiling ${output}" />
     <java classname="org.openlaszlo.sc.Main"
@@ -88,7 +88,7 @@
 </project>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2009, 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

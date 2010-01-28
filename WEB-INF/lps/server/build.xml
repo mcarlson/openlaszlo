@@ -2,7 +2,7 @@
 
 <project name="server" default="build" basedir=".">
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -174,7 +174,8 @@ javac (1.4);
 
   <property name="ANT_JAR"        value="${ANT_HOME}/lib/ant.jar"/>
   <property name="JUNIT_JAR"      value="${LZ_VENDOR_ROOT}/junit.jar"/>
-  <property name="XMLUNIT_JAR"    value="${ANT_HOME}/lib/xmlunit1.0.jar"/>
+  <property name="XMLUNIT_JAR"    value="${LZ_VENDOR_ROOT}/xmlunit1.0.jar"/>
+  <property name="TRANG_JAR"      value="${LZ_VENDOR_ROOT}/trang.jar"/>
 
   <property name="properties.file" value="${LPS_HOME}/build.properties" />
   <property file="${properties.file}" />
@@ -389,9 +390,12 @@ javac (1.4);
       <mkdir dir="${lib}" />
 	  <copy todir="${lib}" file="${js2doc.src.java}/js2doc.rnc"/>
       <!-- fork=true is required when running from a jar -->
-      <java jar="${env.ANT_HOME}/lib/trang.jar"
+      <java classname="com.thaiopensource.relaxng.translate.Driver"
             fork="true"
             failonerror="true">
+        <classpath>
+          <pathelement path="${TRANG_JAR}" />
+        </classpath>
         <arg value="${lib}/js2doc.rnc"/>
         <arg value="${lib}/js2doc.rng"/>
       </java>
