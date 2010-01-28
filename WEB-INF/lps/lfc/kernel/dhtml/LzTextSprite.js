@@ -1,7 +1,7 @@
 /**
   * LzTextSprite.js
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -16,16 +16,18 @@ var LzTextSprite = function(owner) {
     this.constructor = arguments.callee;
     this.owner = owner;
     this.uid = LzSprite.prototype.uid++;
+    this.__csscache = {};
 
     this.__LZdiv = document.createElement('div');
     this.__LZdiv.className = 'lztextcontainer';
     this.scrolldiv = this.__LZtextdiv = document.createElement('div');
     this.scrolldiv.owner = this;
-    this.scrolldiv.className = 'lztext';
-    this.__LZdiv.appendChild(this.scrolldiv);
     if (this.quirks.emulate_flash_font_metrics) {
-        this.scrolldiv.className = 'lzswftext';
-    }    
+        this.className = this.scrolldiv.className = 'lzswftext';
+    } else {
+        this.className = this.scrolldiv.className = 'lztext';
+    }
+    this.__LZdiv.appendChild(this.scrolldiv);
     this.__LZdiv.owner = this;
     if (this.quirks.fix_clickable) {
         this.__LZclickcontainerdiv = document.createElement('div');
@@ -143,7 +145,7 @@ LzTextSprite.prototype.scrollWidth = null;
 LzTextSprite.prototype.scrolling = false;
 LzTextSprite.prototype.setScrolling = function (on) {
   var scrolldiv = this.scrolldiv;
-  var sdc = scrolldiv.className;
+  var sdc = this.className;
   if (sdc == 'lzswftext' || sdc == 'lzswfinputtextmultiline') {
     // See setWidth/setHeight: adjust width/height to push the
     // scroll bars under the clip
@@ -154,12 +156,12 @@ LzTextSprite.prototype.setScrolling = function (on) {
     // always have scrolling on
     if (on || sdc == 'lzswfinputtextmultiline') {
       this.scrolling = on;
-      scrolldiv.style.overflow = 'scroll';
+      this.applyCSS('overflow', 'scroll', 'scrolldiv');
       ht += this.quirks.scrollbar_width;
       wt += this.quirks.scrollbar_width;
     } else {
       this.scrolling = false;
-      scrolldiv.style.overflow = '';
+      this.applyCSS('overflow', '', 'scrolldiv');
     }
     var hp = cdim(ht);
     var wp = cdim(wt);
@@ -168,8 +170,8 @@ LzTextSprite.prototype.setScrolling = function (on) {
     } else if (scrolldiv.style.clip) {
         scrolldiv.style.clip = this.quirks['fix_ie_css_syntax'] ? 'rect(auto auto auto auto)' : '';
     }
-    scrolldiv.style.height = hp;
-    scrolldiv.style.width = wp;
+    this.applyCSS('width', wp, 'scrolldiv');
+    this.applyCSS('height', hp, 'scrolldiv');
   }
   // Scrolling was requested, and granted!
   return on && this.scrolling;
@@ -330,13 +332,13 @@ LzTextSprite.prototype.setMultiline = function(m) {
             this._whiteSpace = 'normal';
             this.scrolldiv.style.whiteSpace = 'normal';
         }
-        this.scrolldiv.style.overflow = 'hidden';
+        this.applyCSS('overflow', 'hidden', 'scrolldiv');
     } else {
         if (this._whiteSpace != 'nowrap') {
             this._whiteSpace = 'nowrap';
             this.scrolldiv.style.whiteSpace = 'nowrap';
         }
-        this.scrolldiv.style.overflow = '';
+        this.applyCSS('overflow', '', 'scrolldiv');
     }
     if (this.quirks['text_height_includes_padding']) {
         this.__hpadding = m ? 3 : 4;
@@ -370,8 +372,8 @@ LzTextSprite.prototype.getTextWidth = function () {
   // NOTE: Quick cache check, inlined from getTextDimension
   ////
   var scrolldiv = this.scrolldiv;
-  var className = scrolldiv.className;
-  var style = scrolldiv.style.cssText;
+  var className = this.className;
+  var style = scrolldiv.style.cssText
   var styleKey = className + "/" + style;
   var cv = this._cachevalue;
   if ((this._cacheStyleKey == styleKey) &&
@@ -395,8 +397,8 @@ LzTextSprite.prototype.getLineHeight = function () {
   // NOTE: Quick cache check, inlined from getTextDimension
   ////
   var scrolldiv = this.scrolldiv;
-  var className = scrolldiv.className;
-  var style = scrolldiv.style.cssText;
+  var className = this.className;
+  var style = scrolldiv.style.cssText
   var styleKey = className + "/" + style;
   var cv = this._cachevalue;
   if ((this._cacheStyleKey == styleKey) &&
@@ -426,8 +428,8 @@ LzTextSprite.prototype.getTextfieldHeight = function () {
       // NOTE: Quick cache check, inlined from getTextDimension
       ////
       var scrolldiv = this.scrolldiv;
-      var className = scrolldiv.className;
-      var style = scrolldiv.style.cssText;
+      var className = this.className;
+      var style = scrolldiv.style.cssText
       var styleKey = className + "/" + style;
       var cv = this._cachevalue;
       if ((this._cacheStyleKey == styleKey) &&
@@ -506,8 +508,8 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // getTextfieldHeight
   ////
   var scrolldiv = this.scrolldiv;
-  var className = scrolldiv.className;
-  var style = scrolldiv.style.cssText;
+  var className = this.className;
+  var style = scrolldiv.style.cssText
   var styleKey = className + "/" + style;
   var cv = this._cachevalue;
   if ((this._cacheStyleKey == styleKey) &&
@@ -641,28 +643,20 @@ LzTextSprite.prototype.setSelectable = function (s) {
     //Debug.write('setSelectable', s, this.__LZdiv.style);
     var browser = lz.embed.browser;
 
-    if (s) {
-        this.__LZdiv.style['cursor'] = 'auto';
-        if (browser.isIE) {
-            this.__LZdiv.onselectstart = null;
-        } else if (browser.isFirefox) {
-            this.__LZdiv.style['MozUserSelect'] = 'text';
-        } else if (browser.isSafari) {
-            this.__LZdiv.style['WebkitUserSelect'] = 'text';
-        } else {
-            this.__LZdiv.style['UserSelect'] = 'text';
-        }
+    this.__LZdiv.style.cursor = s ? 'auto' : '';
+    if (browser.isIE) {
+        var handler = s ? null : LzTextSprite.prototype.__cancelhandler;
+        this.__LZdiv.onselectstart = handler;
     } else {
-        this.__LZdiv.style['cursor'] = '';
-        if (browser.isIE) {
-            this.__LZdiv.onselectstart = LzTextSprite.prototype.__cancelhandler;
-        } else if (browser.isFirefox) {
-            this.__LZdiv.style['MozUserSelect'] = 'none';
+        var selectstyle = s ? 'text' : 'none'
+        if (browser.isFirefox) {
+            var stylename = 'MozUserSelect';
         } else if (browser.isSafari) {
-            this.__LZdiv.style['WebkitUserSelect'] = 'none';
+            var stylename = 'WebkitUserSelect';
         } else {
-            this.__LZdiv.style['UserSelect'] = 'none';
+            var stylename = 'UserSelect';
         }
+        this.__LZdiv.style[stylename] = selectstyle;
     }
 }
 
@@ -672,7 +666,7 @@ LzTextSprite.prototype.__cancelhandler = function () {
 
 LzTextSprite.prototype.setResize = function (r){
     this.resize = r == true;
-    this.scrolldiv.style.overflow = this.resize ? '' : 'hidden';
+    this.applyCSS('overflow', this.resize ? '' : 'hidden', 'scrolldiv');
 }
 
 LzTextSprite.prototype.setSelection = function ( start , end=null){
@@ -885,14 +879,14 @@ LzTextSprite.prototype.setX = function (x) {
     var oldLeft = scrolldiv.scrollLeft;
     var oldTop = scrolldiv.scrollTop;
     if (turd) {
-      scrolldiv.style.overflow = 'hidden';
+      this.applyCSS('overflow', 'hidden', 'scrolldiv');
       scrolldiv.style.paddingRight = scrolldiv.style.paddingBottom = this.quirks.scrollbar_width;
     }
   }
   LzSprite.prototype.setX.call(this, x);
   if (scrolling) {
     if (turd) {
-      scrolldiv.style.overflow = 'scroll';
+      this.applyCSS('overflow', 'scroll', 'scrolldiv');
       scrolldiv.style.paddingRight = scrolldiv.style.paddingBottom = '0';
     }
     scrolldiv.scrollLeft = oldLeft;
@@ -908,14 +902,14 @@ LzTextSprite.prototype.setY = function (y) {
     var oldLeft = scrolldiv.scrollLeft;
     var oldTop = scrolldiv.scrollTop;
     if (turd) {
-      scrolldiv.style.overflow = 'hidden';
+      this.applyCSS('overflow', 'hidden', 'scrolldiv');
       scrolldiv.style.paddingRight = scrolldiv.style.paddingBottom = this.quirks.scrollbar_width;
     }
   }
   LzSprite.prototype.setY.call(this, y);
   if (scrolling) {
     if (turd) {
-      scrolldiv.style.overflow = 'scroll';
+      this.applyCSS('overflow', 'scroll', 'scrolldiv');
       scrolldiv.style.paddingRight = scrolldiv.style.paddingBottom = '0';
     }
     scrolldiv.scrollLeft = oldLeft;
@@ -931,12 +925,9 @@ LzTextSprite.prototype.setWidth = function (w, force){
     var wt = (w >= this.__wpadding ? w - this.__wpadding : 0);
     // Calculate a clip mask to hide the scrollbar
     var scrolldiv = this.scrolldiv;
-    var style = scrolldiv.style;
     var cdim = this.CSSDimension;
     var wp = cdim(wt);
     var h = this.height;
-    // initial value for 'height' is null
-    var hp = cdim(h != null ? h : 0);
     // The scrollbar invades the width, so push the scrollbar out of
     // the way
     if (this.scrolling) {
@@ -947,12 +938,14 @@ LzTextSprite.prototype.setWidth = function (w, force){
     var wtInd = (this.__LZtextIndent < 0 ? -1*this.__LZtextIndent : 0);
     if (wt >= wtInd) { wt -= wtInd; }
     wp = cdim(wt);
-    if (style.width != wp) {
+    if (this.__csscache.scrolldivwidth != wp) {
       // Debug.debug('%w.style.width = %s', this.scrolldiv, this.CSSDimension(wt));
-      scrolldiv.style.width = wp;
+      this.applyCSS('width', wp, 'scrolldiv');
       // Hide the scrollbar
       if (this.scrolling) {
-          scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
+        // initial value for 'height' is null
+        var hp = cdim(h != null ? h : 0);
+        scrolldiv.style.clip = 'rect(0 ' + wp + ' ' + hp + ' 0)';
       }
       this.__updatefieldsize();
     }
@@ -967,12 +960,9 @@ LzTextSprite.prototype.setHeight = function (h) {
     var ht = h; // (h >= this.__hpadding ? h - this.__hpadding : 0);
     // Calculate a clip mask to hide the scrollbar
     var scrolldiv = this.scrolldiv;
-    var sdc = scrolldiv.className;
-    var style = scrolldiv.style;
+    var sdc = this.className;
     var cdim = this.CSSDimension;
     var w = this.width;
-    // initial value for 'width' is null
-    var wp = cdim(w != null ? w : 0);
     var hp = cdim(ht);
     // The scrollbar invades the height, so push the scrollbars out of
     // the way.
@@ -983,12 +973,14 @@ LzTextSprite.prototype.setHeight = function (h) {
       ht += this.quirks.scrollbar_width;
     }
     hp = cdim(ht);
-    if (style.height != hp) {
+    if (this.__csscache.scrolldivheight != hp) {
       // Debug.debug('%w.style.height = %s', this.scrolldiv, cdim(ht));
-      scrolldiv.style.height = cdim(ht);
+      this.applyCSS('height', cdim(ht), 'scrolldiv');
       // Hide the scrollbar
       if (this.scrolling) {
-          scrolldiv.style.clip = ('rect(0 ' + wp + ' ' + hp + ' 0)');
+        // initial value for 'width' is null
+        var wp = cdim(w != null ? w : 0);
+        scrolldiv.style.clip = 'rect(0 ' + wp + ' ' + hp + ' 0)';
       }
       this.__updatefieldsize();
     }
@@ -1087,7 +1079,7 @@ LzTextSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shad
     this.scrolldiv.style.textShadow = cssString;
 
     this.shadow = cssString;
-    this.scrolldiv.style.overflow = '';
+    this.applyCSS('overflow', '', 'scrolldiv');
 }
 
 }

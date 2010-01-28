@@ -14,6 +14,7 @@ var LzInputTextSprite = function(owner) {
     this.constructor = arguments.callee;
     this.owner = owner;
     this.uid = LzSprite.prototype.uid++;
+    this.__csscache = {};
     this.__LZdiv = document.createElement('div');
     this.__LZdiv.className = 'lzinputtextcontainer';
     this.__LZdiv.owner = this;
@@ -153,12 +154,12 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
     this.__LzInputDiv.owner = this;
     if (this.quirks.emulate_flash_font_metrics) {
         if (this.multiline) {
-            this.__LzInputDiv.className = 'lzswfinputtextmultiline';
+            this.className = this.__LzInputDiv.className = 'lzswfinputtextmultiline';
         } else {
-            this.__LzInputDiv.className = 'lzswfinputtext';
+            this.className = this.__LzInputDiv.className = 'lzswfinputtext';
         }
     } else {    
-        this.__LzInputDiv.className = 'lzinputtext';
+        this.className = this.__LzInputDiv.className = 'lzinputtext';
     }    
     if (this.owner) {
         lz.embed.__setAttr(this.__LzInputDiv, 'name', this.owner.name);
@@ -1085,7 +1086,7 @@ LzInputTextSprite.prototype.setWidth = function (w) {
     // call the super method
     var nw = LzTextSprite.prototype.setWidth.call(this, w);
     if (this.quirks.fix_clickable && nw != null) {
-        this.__LZinputclickdiv.style.width = nw;
+        this.applyCSS('width', nw, '__LZinputclickdiv');
     }   
 }
 
@@ -1094,7 +1095,7 @@ LzInputTextSprite.prototype.setHeight = function (h) {
     // call the super method
     var nh = LzTextSprite.prototype.setHeight.call(this, h);
     if (this.quirks.fix_clickable && nh != null) {
-        this.__LZinputclickdiv.style.height = nh;
+        this.applyCSS('height', nh, '__LZinputclickdiv');
     }
 }   
 

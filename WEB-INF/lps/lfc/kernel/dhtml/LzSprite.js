@@ -18,6 +18,7 @@ var LzSprite = function(owner, isroot) {
     this.owner = owner;
     this.uid = LzSprite.prototype.uid++;
     this.aadescriptionDiv = null;
+    this.__csscache = {};
     var quirks = this.quirks;
 
     if (isroot) {
@@ -590,6 +591,7 @@ LzSprite.quirks = {
     ,use_css_master_sprite: false
     ,write_css_with_createstylesheet: false
     ,inputtext_use_background_image: false
+    ,show_img_before_changing_size: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -725,6 +727,9 @@ LzSprite.__updateQuirks = function () {
             quirks['hasmetakey'] = false;
             // IE inputtexts must have a background image to be selectable - see LPP-8696
             quirks['inputtext_use_background_image'] = true;
+            // LPP-6009. Setting width/height doesn't always stick in IE7/dhtml 
+            // I found that changing the display first fixes this.
+            quirks['show_img_before_changing_size'] = true;
 
         } else if (browser.isSafari || browser.isChrome) {
             // Safari won't show canvas tags whose parent is display: none
@@ -1306,8 +1311,8 @@ LzSprite.prototype.setClickable = function(c) {
             }
             this.__LZclick.owner = this;
             this.__LZclick.className = 'lzclickdiv';
-            this.__LZclick.style.width = this._w;
-            this.__LZclick.style.height = this._h;
+            this.applyCSS('width', this._w, '__LZclick');
+            this.applyCSS('height', this._h, '__LZclick');
             if (this.quirks.fix_clickable) {
                 this.__LZclickcontainerdiv.appendChild(this.__LZclick);
             } else {
@@ -1319,10 +1324,11 @@ LzSprite.prototype.setClickable = function(c) {
         if (this.quirks.fix_clickable) {
             if (this.quirks.fix_ie_clickable) {
                 //note: views with resources (__LZimg!) cannot have subviews (SWF-policy)
-                this.__LZclickcontainerdiv.style.display = c && this.visible ? '' : 'none';
-                this.__LZclick.style.display = c && this.visible ? '' : 'none';
+                var clickstyle = c && this.visible ? '' : 'none'
+                this.applyCSS('display', clickstyle, '__LZclickcontainerdiv');
+                this.applyCSS('display', clickstyle, '__LZclick');
             } else {
-                this.__LZclick.style.display = c ? '' : 'none';
+                this.applyCSS('display', c ? '' : 'none', '__LZclick');
             }
         }
     } else {
@@ -1336,17 +1342,17 @@ LzSprite.prototype.setClickable = function(c) {
                 }
                 this.__LZclick.owner = this;
                 this.__LZclick.className = 'lzclickdiv';
-                this.__LZclick.style.width = this._w;
-                this.__LZclick.style.height = this._h;
+                this.applyCSS('width', this._w, '__LZclick');
+                this.applyCSS('height', this._h, '__LZclick');
                 //this.__LZclick.style.backgroundColor = '#ff00ff';
                 //this.__LZclick.style.opacity = .2;
                 this.__LZclickcontainerdiv.appendChild(this.__LZclick);
             }
             this.__setClickable(c, this.__LZclick);
             if (this.quirks.fix_ie_clickable) {
-                this.__LZclick.style.display = c && this.visible ? '' : 'none';
+                this.applyCSS('display', c && this.visible ? '' : 'none', '__LZclick');
             } else {
-                this.__LZclick.style.display = c ? '' : 'none';
+                this.applyCSS('display', c ? '' : 'none', '__LZclick');
             }
         } else {
             this.__setClickable(c, this.__LZdiv);
@@ -1612,11 +1618,11 @@ LzSprite.prototype.setWidth = function ( w ){
                 size = '0px';
             }
         }
-        this.__LZdiv.style.width = size;
+        this.applyCSS('width', size);
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
-        if (this.__LZclick) this.__LZclick.style.width = w;
-        if (this.__LZcontext) this.__LZcontext.style.width = w;
+        if (this.__LZclick) this.applyCSS('width', w, '__LZclick');
+        if (this.__LZcontext) this.applyCSS('width', w, '__LZcontext');
         if (this.__LZcanvas) this.__resizecanvas();
         if (this.isroot && quirks.container_divs_require_overflow) {
             LzSprite.__rootSpriteOverflowContainer.style.width = w;
@@ -1660,11 +1666,11 @@ LzSprite.prototype.setHeight = function ( h ){
                 size = '0px';
             }
         }
-        this.__LZdiv.style.height = size;
+        this.applyCSS('height', size);
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
-        if (this.__LZclick) this.__LZclick.style.height = h;
-        if (this.__LZcontext) this.__LZcontext.style.height = h;
+        if (this.__LZclick) this.applyCSS('height', h, '__LZclick');
+        if (this.__LZcontext) this.applyCSS('height', h, '__LZcontext');
         if (this.__LZcanvas) this.__resizecanvas();
         if (this.isroot && quirks.container_divs_require_overflow) {
             LzSprite.__rootSpriteOverflowContainer.style.height = h;
@@ -1688,24 +1694,24 @@ LzSprite.prototype.setPattern = function ( v ){
 }
 
 LzSprite.prototype.setVisible = function ( v ){
-    if (this.visible == v) return;
+    if (this.visible === v) return;
     //Debug.info('setVisible', v, this.owner.getUID());
     this.visible = v;
-    this.__LZdiv.style.display = (v && this.opacity != 0) ? '' : 'none';
+    this.applyCSS('display', (v && this.opacity != 0) ? '' : 'none');
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable && this.__LZclick) {
-            this.__LZclick.style.display = v && this.clickable ? '' : 'none';
+            this.applyCSS('display', v && this.clickable ? '' : 'none', '__LZclick');
         }
         var vis = v ? '' : 'none';
-        this.__LZclickcontainerdiv.style.display = vis;
+        this.applyCSS('display', vis, '__LZclickcontainerdiv');
         if (this.quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
-            this.__LZcontextcontainerdiv.style.display = vis;
+            this.applyCSS('display', vis, '__LZcontextcontainerdiv');
         }
     }
 }
 
 LzSprite.prototype.setColor = function ( c ){
-    if (this.color == c) return;
+    if (this.color === c) return;
     this.color = c;
     this.__LZdiv.style.color = LzColorUtils.inttohex(c);
 }
@@ -1736,8 +1742,8 @@ LzSprite.prototype.__restoreSize = function() {
     if (this.__sizedtozero) {
         // restore size of div
         this.__sizedtozero = false;
-        this.__LZdiv.style.width = this._w;
-        this.__LZdiv.style.height = this._h;
+        this.applyCSS('width', this._w);
+        this.applyCSS('height', this._h);
     }
 }
 
@@ -1753,7 +1759,7 @@ LzSprite.prototype.setOpacity = function ( o ){
     if (o != this._opacity) { 
         //Debug.info('setOpacity', o);
         this._opacity = o;
-        this.__LZdiv.style.display = (this.visible && o != 0) ? '' : 'none';
+        this.applyCSS('display', (this.visible && o != 0) ? '' : 'none');
 
         if (this.quirks.ie_opacity) {
             if (o == 1) {
@@ -1922,23 +1928,20 @@ LzSprite.prototype.__imgonload = function(i, cacheHit) {
 LzSprite.prototype.__processHiddenParents = function(method) {
     var sprites = this.__findParents('visible', false);
     //Debug.info('LzSprite.onload', i, i.width, i.height, sprites);
-    var vals = [];
     var l = sprites.length;
-    // show parents, caching original values
+    // show all parents
     for (var n = 0; n < l; n++) {
-        var v = sprites[n];
-        vals[n] = v.__LZdiv.style.display;
-        v.__LZdiv.style.display = '';
+        sprites[n].__LZdiv.style.display = '';
     }
 
     // call passed-in method with optional args
     var args = Array.prototype.slice.call(arguments, 1);
     var result = method.apply(this, args);
 
-    // restore original values
+    // restore original display values from CSS cache
     for (var n = 0; n < l; n++) {
-        var v = sprites[n];
-        v.__LZdiv.style.display = vals[n];
+        var sprite = sprites[n];
+        sprite.__LZdiv.style.display = sprite.__csscache.__LZdivdisplay;
     }
     return result;
 }
@@ -2221,27 +2224,31 @@ LzSprite.prototype.stretchResource = function(s) {
   */
 LzSprite.prototype.__updateStretches = function() {
     if ( this.loading ) return;
-    if (this.quirks.ie_alpha_image_loader) return;
-    if (this.__LZimg) {
-        // LPP-6009. Setting width/height doesn't always stick in IE7/dhtml 
-        // I found that changing the display first fixes this.
-        var dsp = this.__LZimg.style.display;
-        this.__LZimg.style.display = 'none';
-        if (this.stretches == 'both') {
-            this.__LZimg.width = this.width;
-            this.__LZimg.height = this.height;
-        } else if (this.stretches == 'height') {
-            this.__LZimg.width = this.resourceWidth;
-            this.__LZimg.height = this.height;
-        } else if (this.stretches == 'width') {
-            this.__LZimg.width = this.width;
-            this.__LZimg.height = this.resourceHeight;
-        } else {
-            this.__LZimg.width = this.resourceWidth;
-            this.__LZimg.height = this.resourceHeight;
+    var quirks = this.quirks;
+    if (quirks.ie_alpha_image_loader) return;
+    var img = this.__LZimg;
+    if (img) {
+        if (quirks.show_img_before_changing_size) {
+            var imgstyle = img.style;
+            var olddisplay = imgstyle.display;
+            imgstyle.display = 'none';
         }
-
-        this.__LZimg.style.display = dsp;
+        if (this.stretches == 'both') {
+            img.width = this.width;
+            img.height = this.height;
+        } else if (this.stretches == 'height') {
+            img.width = this.resourceWidth;
+            img.height = this.height;
+        } else if (this.stretches == 'width') {
+            img.width = this.width;
+            img.height = this.resourceHeight;
+        } else {
+            img.width = this.resourceWidth;
+            img.height = this.resourceHeight;
+        }
+        if (quirks.show_img_before_changing_size) {
+            imgstyle.display = olddisplay;
+        }
     }
 
 }
@@ -2433,8 +2440,7 @@ LzSprite.prototype.setCursor = function ( c ){
     if (this.clickable != true) this.setClickable(true);
     this.cursor = c;
     //Debug.write('setting cursor to', c, 'on', this.__LZclick.style); 
-    var c = LzSprite.__defaultStyles.hyphenate(c);
-    this.__LZclick.style.cursor = c;
+    this.__LZclick.style.cursor = LzSprite.__defaultStyles.hyphenate(c);
 }
 
 /**
@@ -2739,13 +2745,13 @@ LzSprite.prototype.setContextMenu = function( cmenu ){
     cxdiv.className = 'lzcontext';
     this.__LZcontextcontainerdiv.appendChild(cxdiv);
     this.__LZcontext = cxdiv;
-    cxdiv.style.width = this._w;
-    cxdiv.style.height = this._h;
+    this.applyCSS('width', this._w, '__LZcontext');
+    this.applyCSS('height', this._h, '__LZcontext');
     cxdiv.owner = this;
 }
 
 /**
-  * Copies relevant styles from a sprite to a container div
+  * Copies relevant styles from one div to another, e.g. a container div
   * @access private
   */
 LzSprite.prototype.__copystyles = function(from, to) {
@@ -2941,11 +2947,11 @@ LzSprite.prototype.__resizecanvas = function() {
         }
         if (this.__LZcanvas && this['_canvashidden']) {
             this._canvashidden = false;
-            this.__LZcanvas.style.display = '';
+            this.applyCSS('display', '', '__LZcanvas');
         }
     } else if (this.__LZcanvas && this['_canvashidden'] != true) {
         this._canvashidden = true;
-        this.__LZcanvas.style.display = "none";
+        this.applyCSS('display', 'none', '__LZcanvas');
     }
 }
 
@@ -3008,29 +3014,59 @@ LzSprite.prototype.setCornerRadius = function(radius) {
     this.__LZdiv.style.MozBorderRadius = this.__LZdiv.style.webkitBorderRadius = this.__LZdiv.style.borderRadius = this.CSSDimension(radius);
 }
 
+// A hash of CSS values, stored with the key divname + stylename, e.g.
+// this.__csscache.__LZdivheight === '550px';
 LzSprite.prototype.__csscache;
 LzSprite.prototype.setCSS = function(name, value, isdimension) {
-    if (! this.__csscache) {
-        this.__csscache = {};
-    } else if (this.__csscache[name] === value) {
-        return;
-    }
-    this.__csscache[name] = value;
-
     if (isdimension) value = this.CSSDimension(value);
     //Debug.warn('setCSS', name, value);
     var callback = this['set_' + name];
     if (callback) {
         callback.call(this, value);
     } else {
-        this.__LZdiv.style[name] = value;
+        this.applyCSS(name, value);
         if (this.quirks.fix_clickable) {
-            this.__LZclickcontainerdiv.style[name] = value;
+            this.applyCSS(name, value, '__LZclickcontainerdiv');
         }
         if (this.quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
-            this.__LZcontextcontainerdiv.style[name] = value;
+            this.applyCSS(name, value, '__LZcontextcontainerdiv');
         }
     }
+}
+
+//LzSprite.prototype.csshit = {count: 0};
+//LzSprite.prototype.cssmiss = {count: 0};
+
+// Applies a style value to a div.
+// TODO: consider batching misses and setting all at once
+LzSprite.prototype.applyCSS = function(name, value, divname) {
+    if (! divname) divname = '__LZdiv';
+
+    var key = name + divname;
+    var cache = this.__csscache;
+    if (cache[key] === value) {
+//        var csshit = LzSprite.prototype.csshit;
+//        if (csshit[key] == null) {
+//            csshit[key] = 0;
+//        } else {
+//            csshit[key]++;
+//        }
+//        csshit.count++;
+        return;
+    }
+
+//    var cssmiss = LzSprite.prototype.cssmiss;
+//    if (cssmiss[key] == null) {
+//        cssmiss[key] = 0;
+//    } else {
+//        cssmiss[key]++;
+//    }
+//    cssmiss.count++;
+    
+    // Look the div up by name, then get its style object
+    var styleobject = this[divname].style;
+    // update cache and div style object
+    cache[key] = styleobject[name] = value;
 }
 
 LzSprite.prototype.set_borderWidth = function(width) {
@@ -3039,11 +3075,11 @@ LzSprite.prototype.set_borderWidth = function(width) {
     if (this.__LZclick) {
         this.__LZclick.style.borderWidth = width;
         this.__LZclick.style.borderStyle = 'solid';
-        this.__LZclick.style.borderColor = this.__csscache.borderColor;
+        this.__LZclick.style.borderColor = this.__csscache.__LZdivborderColor;
     }
     if (this.__LZcontext) {
         this.__LZcontext.style.borderWidth = width;
         this.__LZcontext.style.borderStyle = 'solid';
-        this.__LZcontext.style.borderColor = this.__csscache.borderColor;
+        this.__LZcontext.style.borderColor = this.__csscache.__LZdivborderColor;
     }
 }
