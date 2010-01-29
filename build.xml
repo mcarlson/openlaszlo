@@ -360,8 +360,6 @@
 
     <property name="check.java.version" value="true" />
     <property name="build.java.version" value="1.4" />
-    <property name="ant.build.javac.source" value="1.5" />
-    <property name="ant.build.javac.source" value="1.5" />
 
     <property name="server.home" value="${env.TOMCAT_HOME}" />
 
