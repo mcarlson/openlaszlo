@@ -33,7 +33,6 @@
   <include href="stepper.lzx" />
   <include href="stylishbutton.lzx" />
   <include href="textstyle.lzx"/>
-  <include href="tooltip/tooltip.lzx" />
   <include href="tooltipmanager.lzx" />
   <include href="ulink.lzx" />
   <include href="uploader/fileupload.lzx" />
@@ -47,7 +46,7 @@
   <include href="validators/numbervalidator.lzx"/>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
