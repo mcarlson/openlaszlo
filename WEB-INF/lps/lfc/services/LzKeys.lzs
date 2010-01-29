@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzbrowser
@@ -151,6 +151,14 @@ public final class LzKeysService extends LzEventable {
      */
     function __allKeysUp ():void {
       LzKeyboardKernel.__allKeysUp();
+    }
+
+    /**
+     * Trampoline so we can call a private class/method from lz.embed
+     * @access private
+     */
+    function __browserTabEvent(shiftdown):void {
+      LzKeyboardKernel.__browserTabEvent(shiftdown);
     }
 
     /**

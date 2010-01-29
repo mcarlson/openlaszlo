@@ -1,7 +1,7 @@
 /**
   * LzKeyboardKernel.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -14,7 +14,8 @@ class LzKeyboardKernel {
     import flash.events.KeyboardEvent;
     }#
 
-    static function __keyboardEvent (e:KeyboardEvent) :void {   
+    // Event processor, may receive KeyboardEvents or artificial event objects
+    static function __keyboardEvent (e) :void {   
         var t:String = 'on' + e.type.toLowerCase();
         var delta:Object = {};
         var k:uint = e.keyCode;
@@ -79,5 +80,21 @@ class LzKeyboardKernel {
     }
     // Called to turn on/off restriction of focus to this application
     static function setGlobalFocusTrap(ignore) :void {
+    }
+
+    // Simplified keyboard event sender for external browser tab key events
+    static function __browserTabEvent (shiftdown) :void {   
+        //Debug.warn('__browserTabEvent', shiftdown);
+        if (shiftdown) {
+            LzKeyboardKernel.__keyboardEvent({type: 'keyDown', keyCode: 16, altKey: false, ctrlKey: false}); 
+        }
+
+        LzKeyboardKernel.__keyboardEvent({type: 'keyDown', keyCode: 9, altKey: false, ctrlKey: false});
+        LzKeyboardKernel.__keyboardEvent({type: 'keyUp', keyCode: 9, altKey: false, ctrlKey: false});
+
+        if (shiftdown) {
+            // Sending a key up event now prevents subsequent shift-tabs from working...
+            //LzKeyboardKernel.__keyboardEvent({type: 'keyUp', keyCode: 16, altKey: false, ctrlKey: false}); 
+        }
     }
 } // End of LzKeyboardKernel

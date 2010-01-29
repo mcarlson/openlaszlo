@@ -90,6 +90,11 @@ lz.embed = {
         if (properties.bgcolor != null) {
             queryvals.flashvars += '&bgcolor=' + escape(properties.bgcolor);
         }
+
+        var options = lz.embed.options;
+        if (properties.cancelkeyboardcontrol) {
+            options.cancelkeyboardcontrol = properties.cancelkeyboardcontrol;
+        }
         queryvals.flashvars += '&width=' + escape(properties.width);
         queryvals.flashvars += '&height=' + escape(properties.height);
         queryvals.flashvars += '&__lzurl=' + escape(url);
@@ -169,6 +174,18 @@ lz.embed = {
                     // tell flash that the button went up outside
                     app.callMethod('LzMouseKernel.__mouseUpOutsideHandler()');
                     //console.log('mouseup ', embed[app._id]);
+                }
+            }
+        }
+        // workaround for tabbing outside app in IE in swf9/10 - LPP-8712
+        if (embed.browser.isIE && url.indexOf('swf8') == -1 && ! options.cancelkeyboardcontrol) {
+            document.onkeydown = function(e) {
+                if (!e) e = window.event;
+                if (e.keyCode == 9) {
+                    // forward to keyboard handler
+                    app.callMethod('lz.Keys.__browserTabEvent(' + e.shiftKey + ')');
+                    // Don't allow the browser to process tab keys
+                    return false;
                 }
             }
         }
@@ -370,7 +387,7 @@ lz.embed = {
             if (i == 'lzusemastersprite' || i == 'lzskipchromeinstall' || i == 'lzcancelkeyboardcontrol' || i == 'lzcancelmousewheel' || i == 'lzhistory' || i == 'lzaccessible') {
                 options[i.substring(2)] = v == 'true';
             }
-            // deal with noon-boolean query args
+            // deal with non-boolean query args
             if (i == 'lzapproot' || i == 'lzserverroot' || i == 'lzwmode') {
                 options[i.substring(2)] = v;
             }
