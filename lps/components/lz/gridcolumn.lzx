@@ -122,7 +122,7 @@
             <example>
               &lt;canvas height="160"&gt;
               &lt;dataset name="contacts" request="true"
-              src="http://www.openlaszlo.org/lps/demos/contacts/contactsdata.xml"/&gt;
+              src="http:resources/contactsdata.xml"/&gt;
 
               &lt;grid datapath="contacts:/resultset"&gt;
               &lt;gridcolumn showheader="false" width="50"&gt;
@@ -150,7 +150,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
