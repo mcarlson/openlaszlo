@@ -28,8 +28,41 @@
       <xmlproperty file="${LPS_HOME}/repository-info.xml" keeproot="false" prefix="svninfo" />
   </target>
 
+  <!-- Support to set attributes from an xpath query -->
+    <scriptdef name="xpath-query" language="javascript">
+        <attribute name="query"/>
+        <attribute name="xmlfile"/>
+        <attribute name="addproperty"/>
+
+        <![CDATA[
+            importClass(java.io.FileInputStream);
+            importClass(javax.xml.xpath.XPath);
+            importClass(javax.xml.xpath.XPathConstants);
+            importClass(javax.xml.xpath.XPathFactory);
+            importClass(org.xml.sax.InputSource);
+
+            var exp = attributes.get("query");
+            var filename = attributes.get("xmlfile");
+            var input = new InputSource(new FileInputStream(filename));
+            var xpath = XPathFactory.newInstance().newXPath();
+            var value = xpath.evaluate(exp, input, XPathConstants.STRING);
+
+            project.setProperty( attributes.get("addproperty"), value );
+
+        ]]>
+    </scriptdef>
+
   <!--===============  Target [build-opt]  ==================-->
   <target name="build-opt" depends="get-env,read-svn-info" unless="done.build-opt">
+
+    <!-- compute the version and release from versions.xml -->
+    <xpath-query xmlfile="${LPS_HOME}/versions.xml" addproperty="version.id"
+                 query="/versions/branch[@url='${svninfo.entry.url}']/entry[@revision&lt;${svninfo.entry.commit(revision)}][last()]/@id" />
+    <property name="version.id.upper" value="${version.id}" />
+    <property name="release.id" value="${version.id}" />
+    <xpath-query xmlfile="${LPS_HOME}/versions.xml" addproperty="release"
+                 query="/versions/branch[@url='${svninfo.entry.url}']/entry[@revision&lt;${svninfo.entry.commit(revision)}][last()]/@release" />
+
 
       <!-- make sure we have a build.id -->
       <condition property="build.id" value="${svninfo.entry.commit(revision)} ${svninfo.entry(path)}">
@@ -120,7 +153,7 @@
   </target>
 
   <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-  * Copyright 2001-2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+  * Copyright 2001-2007, 2009, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
   * Use is subject to license terms.                                            *
   * X_LZ_COPYRIGHT_END ****************************************************** -->
 

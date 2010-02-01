@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<versions>
+  <!-- All the version information for each branch is here -->
+  <!-- As a rule, you should never edit an entry, just add new ones -->
+  <branch url="http://svn.openlaszlo.org/openlaszlo/trunk">
+    <entry revision="15440" release="Latest" id="5.0.x" />
+  </branch>
+  <branch url="http://svn.openlaszlo.org/openlaszlo/branches/4.6">
+    <entry revision="14738" release="Production" id="4.6.0" />
+    <entry revision="14744" release="RC" id="4.6.1" />
+    <entry revision="14781" release="Production" id="4.6.1" />
+    <entry revision="14814" release="RC" id="4.6.2" />
+    <entry revision="14827" release="Production" id="4.6.2" />
+    <entry revision="14913" release="RC" id="4.6.3" />
+  </branch>
+  <branch url="http://svn.openlaszlo.org/openlaszlo/branches/4.7">
+    <entry revision="15428" release="RC" id="4.7.0" />
+    <entry revision="15482" release="Production" id="4.7.0" />
+    <entry revision="15483" release="Latest" id="4.7.1" />
+  </branch>
+  <!-- Copyright 2010 Laszlo Systems, Inc. All Rights Reserved. Use is subject to license terms. -->
+</versions>
