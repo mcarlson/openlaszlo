@@ -23,7 +23,7 @@
   </target>
 
   <!--===============  Target [read-svn-info]  ==================-->
-  <target name="read-svn-info" depends="get-env,get-svn-info" unless="build.id"
+  <target name="read-svn-info" depends="get-env,get-svn-info"
     description="Load repository information into properties">
       <xmlproperty file="${LPS_HOME}/repository-info.xml" keeproot="false" prefix="svninfo" />
   </target>
@@ -46,8 +46,13 @@
             var input = new InputSource(new FileInputStream(filename));
             var xpath = XPathFactory.newInstance().newXPath();
             var value = xpath.evaluate(exp, input, XPathConstants.STRING);
+            var property = attributes.get("addproperty");
 
-            project.setProperty( attributes.get("addproperty"), value );
+            var echo = project.createTask("echo");
+            echo.setMessage(property + " computed from " + filename + " as " + value);
+            echo.perform();
+
+            project.setProperty( property, value );
 
         ]]>
     </scriptdef>
