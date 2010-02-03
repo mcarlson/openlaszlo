@@ -3042,7 +3042,7 @@ LzSprite.prototype.setCSS = function(name, value, isdimension) {
 LzSprite.prototype.applyCSS = function(name, value, divname) {
     if (! divname) divname = '__LZdiv';
 
-    var key = name + divname;
+    var key = divname + name;
     var cache = this.__csscache;
     if (cache[key] === value) {
 //        var csshit = LzSprite.prototype.csshit;
