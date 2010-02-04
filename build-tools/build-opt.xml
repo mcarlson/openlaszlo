@@ -4,7 +4,8 @@
     <property environment="env"/>
     <property environment="env" />
     <!-- make sure we have a working LPS_HOME -->
-    <property name="LPS_HOME" value="${env.LPS_HOME}" />
+    <dirname property="lps.basedir" file="${ant.file.options}/.."/>
+    <property name="LPS_HOME" value="${lps.basedir}" />
     <fail unless="LPS_HOME" message="LPS_HOME is not set."/>
     <property name="done.get-env" value="true" />
   </target>
@@ -29,37 +30,37 @@
   </target>
 
   <!-- Support to set attributes from an xpath query -->
-    <scriptdef name="xpath-query" language="javascript">
-        <attribute name="query"/>
-        <attribute name="xmlfile"/>
-        <attribute name="addproperty"/>
+  <scriptdef name="xpath-query" language="javascript">
+    <attribute name="query"/>
+    <attribute name="xmlfile"/>
+    <attribute name="addproperty"/>
 
-        <![CDATA[
-            importClass(java.io.FileInputStream);
-            importClass(javax.xml.xpath.XPath);
-            importClass(javax.xml.xpath.XPathConstants);
-            importClass(javax.xml.xpath.XPathFactory);
-            importClass(org.xml.sax.InputSource);
+    <![CDATA[
+      importClass(java.io.FileInputStream);
+      importClass(javax.xml.xpath.XPath);
+      importClass(javax.xml.xpath.XPathConstants);
+      importClass(javax.xml.xpath.XPathFactory);
+      importClass(org.xml.sax.InputSource);
 
-            var exp = attributes.get("query");
-            var filename = attributes.get("xmlfile");
-            var input = new InputSource(new FileInputStream(filename));
-            var xpath = XPathFactory.newInstance().newXPath();
-            var value = xpath.evaluate(exp, input, XPathConstants.STRING);
-            var property = attributes.get("addproperty");
+      var exp = attributes.get("query");
+      var filename = attributes.get("xmlfile");
+      var input = new InputSource(new FileInputStream(filename));
+      var xpath = XPathFactory.newInstance().newXPath();
+      var value = xpath.evaluate(exp, input, XPathConstants.STRING);
+      var property = attributes.get("addproperty");
 
-            var echo = project.createTask("echo");
-            echo.setMessage(property + " computed from " + filename + " as " + value);
-            echo.perform();
+      var echo = project.createTask("echo");
+      echo.setMessage(property + " computed from " + filename + " as " + value);
+      echo.perform();
 
-            project.setProperty( property, value );
+      project.setProperty( property, value );
+    ]]>
+  </scriptdef>
 
-        ]]>
-    </scriptdef>
-
-  <!--===============  Target [build-opt]  ==================-->
-  <target name="build-opt" depends="get-env,read-svn-info" unless="done.build-opt">
-
+  <!-- This target computes the version info from the checked-out
+       source.  It is invoked by build-opt (which can be overridden on
+       import) -->
+  <target name="build-version-info" depends="get-env,read-svn-info" unless="don.build-version-info">
     <!-- compute the version and release from versions.xml -->
     <xpath-query xmlfile="${LPS_HOME}/versions.xml" addproperty="version.id"
                  query="/versions/branch[@url='${svninfo.entry.url}']/entry[@revision&lt;${svninfo.entry.commit(revision)}][last()]/@id" />
@@ -68,93 +69,98 @@
     <xpath-query xmlfile="${LPS_HOME}/versions.xml" addproperty="release"
                  query="/versions/branch[@url='${svninfo.entry.url}']/entry[@revision&lt;${svninfo.entry.commit(revision)}][last()]/@release" />
 
-
-      <!-- make sure we have a build.id -->
-      <condition property="build.id" value="${svninfo.entry.commit(revision)} ${svninfo.entry(path)}">
-        <and>
-          <not>
-            <isset property="build.id" />
-          </not>
-          <isset property="svninfo.entry.commit(revision)" />
-          <isset property="svninfo.entry(path)" />
-        </and>
-      </condition>
-      <fail unless="build.id" message="build.id is not set" />
-
-      <!-- make sure we have a build.date -->
-      <tstamp><format property="timestamp.now" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="GMT" locale="en"/></tstamp>
-      <condition property="build.date" value="${timestamp.now}">
+    <!-- make sure we have a build.id -->
+    <condition property="build.id" value="${svninfo.entry.commit(revision)} ${svninfo.entry(path)}">
+      <and>
         <not>
-          <isset property="build.date" />
+          <isset property="build.id" />
         </not>
-      </condition>
-      <fail unless="build.date" message="build.date is not set" />
+        <isset property="svninfo.entry.commit(revision)" />
+        <isset property="svninfo.entry(path)" />
+      </and>
+    </condition>
+    <fail unless="build.id" message="build.id is not set" />
 
-      <basename property="lps.branch" file="${LPS_HOME}"/>
+    <!-- make sure we have a build.date -->
+    <tstamp><format property="timestamp.now" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="GMT" locale="en"/></tstamp>
+    <condition property="build.date" value="${timestamp.now}">
+      <not>
+        <isset property="build.date" />
+      </not>
+    </condition>
+    <fail unless="build.date" message="build.date is not set" />
 
-      <!-- make sure we have a working LZ_VENDOR_ROOT -->
-      <available property="have_LZ_VENDOR_ROOT" file="${env.LZ_VENDOR_ROOT}" />
-      <fail unless="have_LZ_VENDOR_ROOT" message="LZ_VENDOR_ROOT is not available (${env.LZ_VENDOR_ROOT})"/>
-      <property name="LZ_VENDOR_ROOT" value="${env.LZ_VENDOR_ROOT}" />
+    <property name="done.build-version-info" value="true" />
+  </target>
 
-      <available property="have_LZ_TOOLS_ROOT" file="${env.LZ_TOOLS_ROOT}" />
-      <fail unless="have_LZ_TOOLS_ROOT" message="LZ_TOOLS_ROOT is not set"/> 
+  <!--===============  Target [build-opt]  ==================-->
+  <target name="build-opt" depends="build-version-info" unless="done.build-opt">
 
-      <property name="build.tools" value="" />
-      <property name="build.qa" value="" />
+    <basename property="lps.branch" file="${LPS_HOME}"/>
 
-      <condition property="isautomatedbuild">
-           <equals arg1="${user.name}" arg2="laszlo" />
-      </condition>
+    <!-- make sure we have a working LZ_VENDOR_ROOT -->
+    <available property="have_LZ_VENDOR_ROOT" file="${env.LZ_VENDOR_ROOT}" />
+    <fail unless="have_LZ_VENDOR_ROOT" message="LZ_VENDOR_ROOT is not available (${env.LZ_VENDOR_ROOT})"/>
+    <property name="LZ_VENDOR_ROOT" value="${env.LZ_VENDOR_ROOT}" />
 
-      <!-- Determine value of platform -->
-      <condition property="build.platform" value="windows" >
-          <os family="windows" />
-      </condition>
-      <condition property="build.platform" value="macosx" >
-           <os name="Mac OS X" />
-      </condition>
-      <condition property="build.platform" value="unix" >
-          <os family="unix" />
-      </condition>
+    <available property="have_LZ_TOOLS_ROOT" file="${env.LZ_TOOLS_ROOT}" />
+    <fail unless="have_LZ_TOOLS_ROOT" message="LZ_TOOLS_ROOT is not set"/> 
 
-      <!-- Determine value of filesystem casesensitivity -->
-      <condition property="filesystem.casesensitive" value="false" >
-          <os family="windows" />
-      </condition>
-      <condition property="filesystem.casesensitive" value="false" >
-           <os name="Mac OS X" />
-      </condition>
-      <condition property="filesystem.casesensitive" value="true" >
-          <os family="unix" />
-      </condition>
+    <property name="build.tools" value="" />
+    <property name="build.qa" value="" />
 
-      <!-- Set script extension for platform -->
-      <condition property="sh" value="bat" >
-           <os family="windows" />
-      </condition>
-      <condition property="sh" value="sh" >
-           <os name="Mac OS X" />
-      </condition>
-      <condition property="sh" value="sh" >
-           <os family="unix" />
-      </condition>
+    <condition property="isautomatedbuild">
+      <equals arg1="${user.name}" arg2="laszlo" />
+    </condition>
 
-      <!-- Remove these property definitions if you want the associated
-          ant target to run. [bshine 8.25.06] -->     
-      <property name="skip.prefetch" value="true" />
-      <!-- property name="skip.wrappertest" value="true" -->
-      <!-- <property name="skip.runlzunit" value="true" -->
+    <!-- Determine value of platform -->
+    <condition property="build.platform" value="windows" >
+      <os family="windows" />
+    </condition>
+    <condition property="build.platform" value="macosx" >
+      <os name="Mac OS X" />
+    </condition>
+    <condition property="build.platform" value="unix" >
+      <os family="unix" />
+    </condition>
 
-      <!-- currently unable to generate the reference on Windows -->
-      <condition property="skip.doc.reference" value="true">
-          <os family="windows"/>
-      </condition>
-      <!-- property name="skip.doc.reference" value="true" / -->
+    <!-- Determine value of filesystem casesensitivity -->
+    <condition property="filesystem.casesensitive" value="false" >
+      <os family="windows" />
+    </condition>
+    <condition property="filesystem.casesensitive" value="false" >
+      <os name="Mac OS X" />
+    </condition>
+    <condition property="filesystem.casesensitive" value="true" >
+      <os family="unix" />
+    </condition>
 
-          <property name="build.doc.index" value="1" />
+    <!-- Set script extension for platform -->
+    <condition property="sh" value="bat" >
+      <os family="windows" />
+    </condition>
+    <condition property="sh" value="sh" >
+      <os name="Mac OS X" />
+    </condition>
+    <condition property="sh" value="sh" >
+      <os family="unix" />
+    </condition>
 
-      <property name="done.build-opt" value="true" />
+    <!-- Remove these property definitions if you want the associated
+         ant target to run. [bshine 8.25.06] -->     
+    <property name="skip.prefetch" value="true" />
+    <!-- property name="skip.wrappertest" value="true" -->
+    <!-- <property name="skip.runlzunit" value="true" -->
+
+    <!-- currently unable to generate the reference on Windows -->
+    <condition property="skip.doc.reference" value="true">
+      <os family="windows"/>
+    </condition>
+    <!-- property name="skip.doc.reference" value="true" / -->
+
+    <property name="build.doc.index" value="1" />
+
+    <property name="done.build-opt" value="true" />
   </target>
 
   <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
