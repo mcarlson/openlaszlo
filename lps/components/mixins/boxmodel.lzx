@@ -1,5 +1,5 @@
 <!---
-    @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+    @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
                Use is subject to license terms.
 
     @access public
@@ -54,7 +54,7 @@
     </setter>
 
     <!-- The borderwidth of the view, in pixels -->
-    <attribute name="borderwidth" type="number" value="0" style="borderWidth"/>
+    <attribute name="borderwidth" type="number" value="0" style="border-width"/>
     <event name="onborderwidth"/>
     <setter name="borderwidth" args="borderwidth">
         if (this.borderwidth != borderwidth) {
@@ -66,7 +66,7 @@
     </setter>
 
     <!-- The bordercolor of the view -->
-    <attribute name="bordercolor" type="color" value="black" style="borderColor"/>
+    <attribute name="bordercolor" type="color" value="black" style="border-color"/>
     <event name="onbordercolor"/>
     <setter name="bordercolor" args="bordercolor">
         if (this.bordercolor != bordercolor) {
