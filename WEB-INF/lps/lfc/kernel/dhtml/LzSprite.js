@@ -1613,7 +1613,7 @@ LzSprite.prototype.setWidth = function ( w ){
         var quirks = this.quirks;
         // set size to zero if we don't have either of these
         if (quirks.size_blank_to_zero) {
-            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite) && ! this.shadow) {
+            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite) && ! this.shadow && ! this.borderwidth) {
                 this.__sizedtozero = true;
                 size = '0px';
             }
@@ -1661,7 +1661,7 @@ LzSprite.prototype.setHeight = function ( h ){
         var quirks = this.quirks;
         // set size to zero if we don't have either of these
         if (quirks.size_blank_to_zero) {
-            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite) && ! this.shadow) {
+            if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite) && ! this.shadow && ! this.borderwidth) {
                 this.__sizedtozero = true;
                 size = '0px';
             }
@@ -2996,12 +2996,15 @@ LzSprite.prototype.__getShadowCSS = function(shadowcolor, shadowdistance, shadow
     return rgbcolor + " " + xoffset + " " + yoffset + " " + this.CSSDimension(shadowblurradius);
 }
 
+LzSprite.prototype.shadow = null;
 LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
-    this.shadow = this.__getShadowCSS(shadowcolor, shadowdistance, shadowangle, shadowblurradius);
+    var newshadow = this.__getShadowCSS(shadowcolor, shadowdistance, shadowangle, shadowblurradius);
+    if (newshadow === this.shadow) return;
+    this.shadow = newshadow;
 
     var displayobj = this.__LZdiv;
 
-    displayobj.style.webkitBoxShadow = displayobj.style.MozBoxShadow = displayobj.style.boxShadow = this.shadow;
+    displayobj.style.webkitBoxShadow = displayobj.style.MozBoxShadow = displayobj.style.boxShadow = newshadow;
 
     if (this.quirks.size_blank_to_zero) {
         if (this.__sizedtozero) {
@@ -3011,7 +3014,14 @@ LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowan
 }
 
 LzSprite.prototype.setCornerRadius = function(radius) {
-    this.__LZdiv.style.MozBorderRadius = this.__LZdiv.style.webkitBorderRadius = this.__LZdiv.style.borderRadius = this.CSSDimension(radius);
+    var radius = radius > 0 ? this.CSSDimension(radius) : '';
+    this.__LZdiv.style.MozBorderRadius = this.__LZdiv.style.webkitBorderRadius = this.__LZdiv.style.borderRadius = radius;
+    if (this.__LZclick) {
+        this.__LZclick.style.MozBorderRadius = this.__LZclick.style.webkitBorderRadius = this.__LZclick.style.borderRadius = radius;
+    }
+    if (this.__LZcontext) {
+        this.__LZcontext.style.MozBorderRadius = this.__LZcontext.style.webkitBorderRadius = this.__LZcontext.style.borderRadius = radius;
+    }
 }
 
 // A hash of CSS values, stored with the key divname + stylename, e.g.
@@ -3069,17 +3079,29 @@ LzSprite.prototype.applyCSS = function(name, value, divname) {
     cache[key] = styleobject[name] = value;
 }
 
+LzSprite.prototype.set_borderColor = function(color) {
+    this.__LZdiv.style.borderColor = color;
+}
+
+LzSprite.prototype.borderwidth = 0;
 LzSprite.prototype.set_borderWidth = function(width) {
-    this.__LZdiv.style.borderWidth = width;
-    this.__LZdiv.style.borderStyle = 'solid';
+    if (this.borderwidth === width) return;
+    this.borderwidth = width;
+    if (this.quirks.size_blank_to_zero) {
+        if (this.__sizedtozero && width != null) {
+            this.__restoreSize();
+        }
+    }
+    this.applyCSS('borderWidth', width);
+    this.applyCSS('borderStyle', 'solid');
     if (this.__LZclick) {
-        this.__LZclick.style.borderWidth = width;
-        this.__LZclick.style.borderStyle = 'solid';
-        this.__LZclick.style.borderColor = this.__csscache.__LZdivborderColor;
+        this.applyCSS('borderWidth', width, '__LZclick');
+        this.applyCSS('borderStyle', 'solid', '__LZclick');
+        this.applyCSS('borderColor', 'transparent', '__LZclick');
     }
     if (this.__LZcontext) {
-        this.__LZcontext.style.borderWidth = width;
-        this.__LZcontext.style.borderStyle = 'solid';
-        this.__LZcontext.style.borderColor = this.__csscache.__LZdivborderColor;
+        this.applyCSS('borderWidth', width, '__LZcontext');
+        this.applyCSS('borderStyle', 'solid', '__LZcontext');
+        this.applyCSS('borderColor', 'transparent', '__LZcontext');
     }
 }
