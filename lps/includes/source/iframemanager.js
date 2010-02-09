@@ -36,10 +36,13 @@ lz.embed.iframemanager = {
             var div = document.createElement('div');
             lz.embed.__setAttr(div, 'id', id + 'Container');
             appendto.appendChild(div);
+                
+            // Hide iframe container - see LPP-8753
             div.style.position = 'absolute';
             div.style.display = 'none';
             div.style.top = '0px';
             div.style.left = '0px';
+
             div.innerHTML = html
             var i = document.getElementById(id);
         } else {
@@ -245,8 +248,12 @@ lz.embed.iframemanager = {
             }
         }
         this.__loading[id] = false;
-        if (iframe.parentElement) {
-            iframe.parentElement.style.display = '';
+        if (document.all) {
+            // document.all is IE-only
+            // Show iframe container - see LPP-8753
+            if (iframe.parentElement) {
+                iframe.parentElement.style.display = '';
+            }
         }
         // Enable mouse listeners if needed
         if (this.__sendmouseevents[id]) {
