@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
- * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+ * Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
  * Use is subject to license terms.                                            *
  * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -271,7 +271,9 @@ class SWF9Writer extends ObjectWriter {
             mLogger.debug("Building resource map; res: "+ res + ", relPath: "+ relPath +", fileName: "+inputFile.toString());
             mResourceMap.put(relPath, res); //[pga] was fileName
             def = res.getFlashDef();
-            def.setName(name);
+            if (def != null) {
+                def.setName(name);
+            }
 
             Element elt = new Element("resource");
             elt.setAttribute("name", name);
@@ -288,7 +290,7 @@ class SWF9Writer extends ObjectWriter {
             mInfo.addContent(elt);
         } 
         
-        Rectangle2D b = def.getBounds();
+        Rectangle2D b = (def == null) ? null : def.getBounds();
             
         if (b != null) {
             sbuf.append("],width:" + Double.toString((b.getWidth() / 20)));

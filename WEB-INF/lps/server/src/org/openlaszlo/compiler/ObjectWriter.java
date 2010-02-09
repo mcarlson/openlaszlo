@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -391,34 +391,59 @@ abstract class ObjectWriter {
     protected Resource importSWF(String fileName, String name, boolean addStop)
         throws IVException, FileNotFoundException  {
 
+        // JGenerator can only read Flash version <= 8.  The as3
+        // compiler only needs the pathname in order to embed a swf,
+        // so if the target runtime is AS3, we will just return an
+        // empty Flash def.
+        
         FlashFile f = FlashFile.parse(fileName);
-        Script s = f.getMainScript();
-        collectFonts(s);
-        if (addStop) {
-            Frame frame = s.getFrameAt(s.getFrameCount() - 1);
-            frame.addStopAction();
+
+        if (mEnv.isAS3() && f.getVersion() >= 9) {
+            // For AS3, return empty resource for Flash 9/10 resources
+            return new Resource(name, 0, 0);
         }
 
-        Rectangle2D rect = s.getBounds();
-        int mw = (int)(rect.getMaxX()/TWIP);
-        int mh = (int)(rect.getMaxY()/TWIP);
+        // Also, add warning if the Flash version of the resource is > than the
+        // target runtime we're compiling to. 
+        if (mEnv.isSWF() && mEnv.getSWFVersionInt() < f.getVersion()) {
+            warn(mEnv, "The Flash version of the resource '"+name+"' ["+fileName+"] is " + f.getVersion() + ", which is greater than the application target runtime, Flash version "+mEnv.getSWFVersionInt()+", this will cause unpredictable behavior.");
+        }
 
-        Resource res = new Resource(name, s, mw, mh);
 
-        // Add multi-frame SWF resources that have bounds that
-        // are different than their first frame to the resource table.
-        if (s.getFrameCount() > 1) {
+        try {
+            Script s = f.getMainScript();
 
-            Rectangle2D f1Rect = new Rectangle2D.Double();
-            s.getFrameAt(0).addBounds(f1Rect);
-            int f1w = (int)(f1Rect.getMaxX()/TWIP);
-            int f1h = (int)(f1Rect.getMaxY()/TWIP);
-            if (f1w < mw || f1h < mh) {
-                mMultiFrameResourceSet.add(res);
+
+            collectFonts(s);
+            if (addStop) {
+                Frame frame = s.getFrameAt(s.getFrameCount() - 1);
+                frame.addStopAction();
             }
-        }
 
-        return res;
+            Rectangle2D rect = s.getBounds();
+            int mw = (int)(rect.getMaxX()/TWIP);
+            int mh = (int)(rect.getMaxY()/TWIP);
+
+            Resource res = new Resource(name, s, mw, mh);
+
+            // Add multi-frame SWF resources that have bounds that
+            // are different than their first frame to the resource table.
+            if (s.getFrameCount() > 1) {
+
+                Rectangle2D f1Rect = new Rectangle2D.Double();
+                s.getFrameAt(0).addBounds(f1Rect);
+                int f1w = (int)(f1Rect.getMaxX()/TWIP);
+                int f1h = (int)(f1Rect.getMaxY()/TWIP);
+                if (f1w < mw || f1h < mh) {
+                    mMultiFrameResourceSet.add(res);
+                }
+            }
+            return res;
+        } catch (java.lang.ArrayIndexOutOfBoundsException e) {
+            CompilationError sol = new CompilationError(e);
+            sol.setSolution("Error parsing the swf file, maybe it's Flash version > 8?");
+            throw sol;
+        }
     }
 
 

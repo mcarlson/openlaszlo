@@ -4,7 +4,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -606,12 +606,19 @@ class SWFWriter extends ObjectWriter {
             mResourceMap.put(fileName, res);
 
             def = res.getFlashDef();
+            if (def == null) {
+                throw new CompilationError("could not import resource "+fileName);
+            }
+
             if (fontsCollector != null) def.collectFonts(fontsCollector);
             mFlashFile.addDefToLibrary(name, def);
             def.setName(name);
 
         } else {
             def = res.getFlashDef();
+            if (def == null) {
+                throw new CompilationError("could not import resource "+fileName);
+            }
             if (fontsCollector != null) def.collectFonts(fontsCollector);
 
             // Add an element with 0 size, since it's already there.
