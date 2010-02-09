@@ -891,22 +891,6 @@ public class NodeModel implements Cloneable {
             addProperty(SOURCE_LOCATION_ATTRIBUTE_NAME, cattr, ALLOCATION_INSTANCE);
         }
 
-        // Add file/line information if debugging
-        // TODO: [2009-12-10 ptw] Do we still need this?  It can't
-        // work in as3.
-        if (debug && !(env.isAS3())) {
-          // File/line stored separately for string sharing
-          String name = Function.FUNCTION_FILENAME;
-          String filename = Parser.getSourceMessagePathname(element);
-          CompiledAttribute cattr =
-            compileAttribute(element, name, filename, ViewSchema.STRING_TYPE, WHEN_IMMEDIATELY);
-          addProperty(name, cattr, ALLOCATION_INSTANCE);
-          name = Function.FUNCTION_LINENO;
-          Integer lineno = Parser.getSourceLocation(element, Parser.LINENO);
-          cattr = compileAttribute(element, name, lineno.toString(), ViewSchema.NUMBER_TYPE, WHEN_IMMEDIATELY);
-          addProperty(name, cattr, ALLOCATION_INSTANCE);
-        }
-
         // Encode the attributes
         for (Iterator iter = element.getAttributes().iterator(); iter.hasNext(); ) {
             Attribute attr = (Attribute) iter.next();
@@ -1439,12 +1423,7 @@ solution =
      * Transforms to a #passthrough compiler pragma in the script output
      */
     void addPassthroughElement(Element element) {
-      if (env.isAS3()) {
-        passthroughBlock = element.getText();
-      } else {
-        env.warn("The passthrough tag can only be used in an as3 runtime, "
-                 + "perhaps you could put this in a switch tag?",element);
-      }
+      passthroughBlock = element.getText();
     }
 
     /** Defines an event handler.

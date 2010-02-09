@@ -489,21 +489,19 @@ public class ClassModel implements Comparable {
     // className will be a global
     env.addId(className, definition);
 
-    // TODO: [2008-06-02 ptw] This should be moved to the JS2 back-end
-    // Build the constructor trampoline
-    if (env.isAS3()) {
-      String body = "";
-      body += "super($lzc$parent, $lzc$attrs, $lzc$children, $lzc$async);\n";
-      nodeModel.setAttribute(
+    // LZX classes are not allowed to define their constructor, but
+    // since LZX classes have required constructor arguments, we need
+    // to define a constructor that passes those arguments to the
+    // superclass.
+    String body = "";
+    body += "super(parent, attrs, children, async);\n";
+    nodeModel.setAttribute(
+      className,
+      new Method(
         className,
-        new Method(
-          className,
-          // All nodes get these args when constructed
-          // Apparently AS3 does not allow defaulting of
-          // primitive args
-          "$lzc$parent:LzNode? = null, $lzc$attrs:Object? = null, $lzc$children:Array? = null, $lzc$async:Boolean = false",
-          body));
-    }
+        // All nodes get these args when constructed
+        "parent:LzNode? = null, attrs:Object? = null, children:Array? = null, async:Boolean = false",
+        body));
 
     // Build the class body
     String classBody = "";

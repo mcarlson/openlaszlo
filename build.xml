@@ -154,7 +154,7 @@
 
   <patternset id="manifest.webapp.docs">
       <!-- these are relative to docs subdirectory -->
-      <!-- they are specified separately because we filter VERSIOID within them -->
+      <!-- they are specified separately because we filter VERSIONID within them -->
 
       <include name="*.html" />
       <include name="*.css" />
