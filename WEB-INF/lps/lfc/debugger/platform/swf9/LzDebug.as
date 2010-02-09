@@ -3,7 +3,7 @@
 /*
  * Platform-specific DebugService
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
 
  */
@@ -14,6 +14,7 @@ class LzAS3DebugService extends LzDebugService {
     import flash.utils.Dictionary;
     import flash.utils.getDefinitionByName
     import flash.utils.getQualifiedClassName
+    import flash.system.Capabilities;
     }#
 
   /**
@@ -43,6 +44,9 @@ class LzAS3DebugService extends LzDebugService {
     } else {
       // This will attach itself, once it is fully initialized.
       new lz.LzDebugWindow();
+    }
+    if (! Capabilities.isDebugger) {
+      Debug.warn("Install the Flash debug player (http://www.adobe.com/support/flashplayer/downloads.html) for debugging.");
     }
   }
 
