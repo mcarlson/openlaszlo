@@ -2,7 +2,7 @@
   * @topic Browser
   * @subtopic Integration
   * @access public
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   * Use is subject to license terms.
   */
 
@@ -33,6 +33,7 @@ lz.embed.history = {
             var form = document.createElement('form');
             form.method = 'get';
             document.body.appendChild(form);
+            form.style.display = 'none';
             _this._form = form;
             if (! top.document.location.lzaddr) {
                 top.document.location.lzaddr = {};
