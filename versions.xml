@@ -5,6 +5,13 @@
   <branch url="http://svn.openlaszlo.org/openlaszlo/trunk">
     <entry revision="15440" release="Latest" id="5.0.x" />
   </branch>
+  <branch url="http://svn.openlaszlo.org/openlaszlo/branches/pagan-deities">
+    <entry revision="13849" release="Production" id="4.0.16" />
+    <entry revision="13629" release="Production" id="4.0.17" />
+    <entry revision="15181" release="Production" id="4.0.18" />
+    <entry revision="15596" release="Production" id="4.0.19" />
+    <entry revision="15600" release="Latest" id="4.0.20" />
+  </branch>
   <branch url="http://svn.openlaszlo.org/openlaszlo/branches/4.6">
     <entry revision="14738" release="Production" id="4.6.0" />
     <entry revision="14744" release="RC" id="4.6.1" />
@@ -20,3 +27,4 @@
   </branch>
   <!-- Copyright 2010 Laszlo Systems, Inc. All Rights Reserved. Use is subject to license terms. -->
 </versions>
+
