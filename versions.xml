@@ -11,6 +11,8 @@
     <entry revision="15181" release="Production" id="4.0.18" />
     <entry revision="15596" release="Production" id="4.0.19" />
     <entry revision="15600" release="Latest" id="4.0.20" />
+    <entry revision="15685" release="Production" id="4.0.20" />
+    <entry revision="15686" release="Latest" id="4.0.21" />
   </branch>
   <branch url="http://svn.openlaszlo.org/openlaszlo/branches/4.6">
     <entry revision="14738" release="Production" id="4.6.0" />
