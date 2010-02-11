@@ -923,6 +923,10 @@ lz.embed = {
         var box;
 
         if (!(lz.embed.browser.isFirefox && el == document.body) && el.getBoundingClientRect ) { // IE and FF3
+            if (! el.parentNode) {
+                // IE throws 'Unspecified error' if an element isn't attached to the DOM - see LPP-8759
+                return {x: 0, y:0};
+            }
             box = el.getBoundingClientRect();
             var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
