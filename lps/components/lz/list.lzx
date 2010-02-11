@@ -279,7 +279,7 @@
               @param Object val: the value for the item. -->
         <method name="addItem" args="txt, val=null" >
             if (this.itemclassname == "") {
-                this.itemclassname = "textlistitem";
+                this.setAttribute("itemclassname", "textlistitem");
             }
             super.addItem(txt,val);
             this.adjustmyheight();
