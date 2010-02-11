@@ -214,8 +214,8 @@ lz.embed = {
         }
         lz.embed.options.serverroot = serverroot;
         if (lz.embed.browser.isIE) {
-            var scripturl = serverroot + 'lps/includes/excanvas.js';
-            this.__dhtmlLoadScript(scripturl)
+            // Now handled by the HTML wrapper
+            //this.__dhtmlLoadScript(serverroot + 'lps/includes/excanvas.js';)
             if (lz.embed.browser.version < 7) {
               // load chrome frame
               this.__dhtmlLoadScript('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');

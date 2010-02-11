@@ -100,6 +100,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
         <script type="text/javascript" src="{/canvas/request/@lps}/lps/includes/embed-compressed.js"/>
         <xsl:choose>
           <xsl:when test="/canvas/@runtime = 'dhtml'">
+            <xsl:comment>[if IE]&gt;&lt;script type="text/javascript" src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/excanvas.js"&gt;&lt;/script&gt;&lt;![endif]</xsl:comment>
             <script type="text/javascript">
               lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/lfc/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>/');
             </script>
@@ -134,6 +135,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
   </xsl:template>
 </xsl:stylesheet>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-     * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
      * Use is subject to license terms.                                            *
      * X_LZ_COPYRIGHT_END ****************************************************** -->
