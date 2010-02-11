@@ -2,7 +2,7 @@
 /**
   * LzSprite.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -1443,8 +1443,11 @@ LzSprite.prototype.checkPlayStatus = function (){
   * Adds a getter for isaudio
   */
 LzSprite.prototype.addProperty("isaudio", function () {
-    var m = this.getMCRef();
-    return (m && m.isaudio || false);
+    // disallow call on prototypes (LPP-8581)
+    if (this instanceof LzSprite) {
+        var m = this.getMCRef();
+        return (m && m.isaudio || false);
+    }
 }, null);
 
 
