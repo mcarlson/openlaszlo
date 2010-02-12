@@ -23,10 +23,30 @@
     </sequential>
   </target>
 
+  <!-- The nightly build script passes in these values -->
+  <condition property="build.url" value="http://svn.openlaszlo.org/${build.project}/${build.branch}">
+    <and>
+      <isset property="build.project" />
+      <isset property="build.branch" />
+    </and>
+  </condition>
+
+  <!-- The nightly build script passes in these values -->
+  <condition property="dont-need-svn-info">
+    <and>
+      <isset property="build.url" />
+      <isset property="build.revision" />
+      <isset property="build.name" />
+    </and>
+  </condition>
+
   <!--===============  Target [read-svn-info]  ==================-->
-  <target name="read-svn-info" depends="get-env,get-svn-info"
+  <target name="read-svn-info" depends="get-env,get-svn-info" unless="dont-need-svn-info"
     description="Load repository information into properties">
       <xmlproperty file="${LPS_HOME}/repository-info.xml" keeproot="false" prefix="svninfo" />
+    <property name="build.url" value="${svninfo.entry.url}" />
+    <property name="build.revision" value="${svninfo.entry.commit(revision)}" />
+    <property name="build.name" value="${svninfo.entry(path)}" />
   </target>
 
   <!-- Support to set attributes from an xpath query -->
@@ -58,26 +78,23 @@
   </scriptdef>
 
   <!-- This target computes the version info from the checked-out
-       source.  It is invoked by build-opt (which can be overridden on
+       source or the build.* values passed in by the nightly build
+       script.  It is invoked by build-opt (which can be overridden on
        import) -->
-  <target name="build-version-info" depends="get-env,read-svn-info" unless="don.build-version-info">
+  <target name="build-version-info" depends="get-env,read-svn-info" unless="done.build-version-info">
     <!-- compute the version and release from versions.xml -->
     <xpath-query xmlfile="${LPS_HOME}/versions.xml" addproperty="version.id"
-                 query="/versions/branch[@url='${svninfo.entry.url}']/entry[@revision&lt;${svninfo.entry.commit(revision)}][last()]/@id" />
+                 query="/versions/branch[@url='${build.url}']/entry[@revision&lt;${build.revision}][last()]/@id" />
     <property name="version.id.upper" value="${version.id}" />
     <property name="release.id" value="${version.id}" />
     <xpath-query xmlfile="${LPS_HOME}/versions.xml" addproperty="release"
-                 query="/versions/branch[@url='${svninfo.entry.url}']/entry[@revision&lt;${svninfo.entry.commit(revision)}][last()]/@release" />
+                 query="/versions/branch[@url='${build.url}']/entry[@revision&lt;${build.revision}][last()]/@release" />
 
     <!-- make sure we have a build.id -->
-    <condition property="build.id" value="${svninfo.entry.commit(revision)} ${svninfo.entry(path)}">
-      <and>
-        <not>
-          <isset property="build.id" />
-        </not>
-        <isset property="svninfo.entry.commit(revision)" />
-        <isset property="svninfo.entry(path)" />
-      </and>
+    <condition property="build.id" value="${build.revision} ${build.name}">
+      <not>
+        <isset property="build.id" />
+      </not>
     </condition>
     <fail unless="build.id" message="build.id is not set" />
 
