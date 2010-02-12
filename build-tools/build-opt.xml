@@ -10,8 +10,29 @@
     <property name="done.get-env" value="true" />
   </target>
 
+  <!-- The nightly build script passes in these values -->
+  <condition property="build.url" value="http://svn.openlaszlo.org/${build.project}/${build.branch}">
+    <and>
+      <isset property="build.project" />
+      <isset property="build.branch" />
+    </and>
+  </condition>
+
+  <echo message="build.url is ${build.url}" />
+
+  <!-- The nightly build script passes in these values -->
+  <condition property="dont-need-svn-info">
+    <and>
+      <isset property="build.url" />
+      <isset property="build.revision" />
+      <isset property="build.name" />
+    </and>
+  </condition>
+
+  <echo message="dont-need-svn-info is ${dont-need-svn-info}" />
+
   <!--===============  Target [get-svn-info]  ==================-->
-  <target name="get-svn-info" depends="get-env" unless="done.get-svn-info"
+  <target name="get-svn-info" depends="get-env" unless="dont-need-svn-info"
           description="Get the current repository information">
     <sequential>
       <exec executable="svn" output="${LPS_HOME}/repository-info.xml">
@@ -22,23 +43,6 @@
       <property name="done.get-svn-info" value="true" />
     </sequential>
   </target>
-
-  <!-- The nightly build script passes in these values -->
-  <condition property="build.url" value="http://svn.openlaszlo.org/${build.project}/${build.branch}">
-    <and>
-      <isset property="build.project" />
-      <isset property="build.branch" />
-    </and>
-  </condition>
-
-  <!-- The nightly build script passes in these values -->
-  <condition property="dont-need-svn-info">
-    <and>
-      <isset property="build.url" />
-      <isset property="build.revision" />
-      <isset property="build.name" />
-    </and>
-  </condition>
 
   <!--===============  Target [read-svn-info]  ==================-->
   <target name="read-svn-info" depends="get-env,get-svn-info" unless="dont-need-svn-info"
