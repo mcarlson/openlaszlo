@@ -34,7 +34,7 @@ if (userAgent.indexOf("MSIE") > 0 ){ // looks like MSIE
 
 </HEAD>
 <frameset cols="200,*" border="0">
-<frame name="nav" scrolling="no" src="explore-nav.lzx?<%= qParams %>&amp;lzt=html&amp;fb=1">
+<frame name="nav" scrolling="no" src="explore-nav.lzx?<%= qParams %>&amp;lzt=html&amp;fb=1&amp;lzusemastersprite=true&amp;lzcancelkeyboardcontrol=true">
 <frame name="content" scrolling="no" src="coverpages/welcome/">
 </frameset>
 </HTML>
@@ -42,7 +42,7 @@ if (userAgent.indexOf("MSIE") > 0 ){ // looks like MSIE
 <!-- Laszlo Explorer index.jsp                                             -->
 <!--                                                                       -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--=======================================================================-->

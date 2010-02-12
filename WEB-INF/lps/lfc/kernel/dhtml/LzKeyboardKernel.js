@@ -1,7 +1,7 @@
 /**
   * LzKeyboardKernel.js
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -170,6 +170,7 @@ var LzKeyboardKernel = {
         this.__scope = scope;
         this.__callback = keyboardcallback;
     }
+    ,__lastcontrolscope: null
     ,setKeyboardControl: function (dhtmlKeyboardControl, force) {
         if (! force && LzKeyboardKernel.__lockFocus) {
             dhtmlKeyboardControl = true;
@@ -186,6 +187,16 @@ var LzKeyboardKernel = {
         } else {
             var doc = document;
         }
+        var lastscope = LzKeyboardKernel.__lastcontrolscope;
+        if (lastscope && lastscope != doc) {
+            // unregister last event
+            lastscope.onkeydown = lastscope.onkeyup = lastscope.onkeypress = null;
+            // store this scope to be cleaned up later if registering a handler
+            if (handler) {
+                LzKeyboardKernel.__lastcontrolscope = doc;
+            }
+        }
+
         doc.onkeydown = handler;
         doc.onkeyup = handler;
         doc.onkeypress = handler;

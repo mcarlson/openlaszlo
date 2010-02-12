@@ -136,6 +136,12 @@ var LzSprite = function(owner, isroot) {
             // Mouse detection for activation/deactivation of keyboard/mouse events
             div.mouseisover = false;
             div.onmouseover = function(e) {
+                if (LzSprite.quirks.keyboardlistentotop_in_frame) {
+                    if (LzSprite.__rootSprite.options.cancelkeyboardcontrol != true) {
+                        LzSprite.quirks.keyboardlistentotop = true;
+                        LzKeyboardKernel.setKeyboardControl(true);
+                    }
+                }
                 if (LzSprite.quirks.focus_on_mouseover) {
                     if (LzSprite.prototype.getSelectedText() == "") {
                         div.focus();
@@ -230,6 +236,14 @@ var LzSprite = function(owner, isroot) {
                     this.mouseisover = false;
                 }
                 //Debug.write('onmouseout', this.mouseisover, el.className, e);
+            }
+            if (LzSprite.quirks.keyboardlistentotop_in_frame) {
+                // listen for window focus events if we're in an iframe
+                window.onfocus = function(e) {
+                    if (LzSprite.__rootSprite.options.cancelkeyboardcontrol != true) {
+                        div.onmouseover();
+                    }
+                }
             }
 
             // Store a reference to the div that handles mouse activation
@@ -593,6 +607,7 @@ LzSprite.quirks = {
     ,inputtext_use_background_image: false
     ,show_img_before_changing_size: false
     ,use_filter_for_dropshadow: false
+    ,keyboardlistentotop_in_frame: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -768,6 +783,10 @@ LzSprite.__updateQuirks = function () {
             // no longer true for 3.0.4 - see LPP-8355
             if (browser.version < 523.15) {
                 quirks['keyboardlistentotop'] = true;
+            }
+            // Safari 4 needs help to get keyboard events when loaded in a frame - see LPP-8707.  Using a separate quirk to avoid perturbing the old fix
+            if (window.top !== window) {
+                quirks['keyboardlistentotop_in_frame'] = true;
             }
             
             // If Webkit starting with 530.19.2 or Safari 530.19, 3d transforms supported
