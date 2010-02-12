@@ -1,7 +1,7 @@
 /**
   * LzLibrary.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LZX
@@ -161,9 +161,8 @@ static function __LZsnippetLoaded (url){
         if ($debug) Debug.error("could not find library with href", url);
     } else {
         lib.loaded = true;
-        canvas.initiatorAddNode({attrs: {libname: lib.name}, "class": LzLibraryCleanup}, 1);
-        // Run the queue to instantiate all pending LzInstantiateView calls.
-        canvas.initDone();
+        // The library's parent must be the canvas
+        lib.parent.__LzLibraryLoaded(lib.name);
     }
 }
 

@@ -1,7 +1,7 @@
 /**
   * LzSprite.as
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -142,10 +142,14 @@ public class LzSprite extends Sprite {
     ,dropshadows: true
     ,cornerradius: true
     ,css2boxmodel: true
+    ,medialoading: true
     };
     var capabilities = LzSprite.capabilities;
 
     static var id:String;
+
+    static var medialoadtimeout:Number = 30000;
+    static var mediaerrortimeout:Number = 4500;
 
     public function LzSprite (newowner:LzView = null, isroot:Object = null) {
         // owner:*, isroot:Boolean
@@ -412,7 +416,7 @@ public class LzSprite extends Sprite {
         if (proxied) {
             var proxyurl:String = this.owner.getProxyURL(url);
             var params:Object = {serverproxyargs: {},
-                                 timeout: canvas.medialoadtimeout,
+                                 timeout: LzSprite.medialoadtimeout,
                                  proxyurl: proxyurl,
                                  url: url,
                                  httpmethod: 'GET',
@@ -1832,6 +1836,14 @@ public class LzSprite extends Sprite {
         //Debug.warn('setCSS', name, value, this._x, this._y, this.margin, this.borderWidth, this.padding, this.x, this.y);
         this.drawBackground();
     }
+
+      static function setMediaLoadTimeout(ms){
+          LzSprite.medialoadtimeout = ms;
+      }
+
+      static function setMediaErrorTimeout(ms){
+          LzSprite.mediaerrortimeout = ms;
+      }
 
   }#
   

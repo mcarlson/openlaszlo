@@ -1,7 +1,7 @@
 /**
   * LzScreenKernel.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -21,7 +21,9 @@ var LzScreenKernel = {
         LzScreenKernel.width = Stage.width;
         LzScreenKernel.height = Stage.height;
 
-        if (LzScreenKernel.__callback) LzScreenKernel.__scope[LzScreenKernel.__callback]({width: LzScreenKernel.width, height: LzScreenKernel.height});
+        if (LzScreenKernel.__callback) {
+            LzScreenKernel.__scope[LzScreenKernel.__callback]({width: LzScreenKernel.width, height: LzScreenKernel.height});
+        }
         //Debug.write('LzScreenKernel event', {width: LzScreenKernel.width, height: LzScreenKernel.height});
     }
     ,__init: function() {
@@ -39,6 +41,14 @@ var LzScreenKernel = {
         this.__init();
         LzScreenKernel.__resizeEvent();
     }
+    ,__fscallback: null
+    ,__fsscope: null
+    ,setFullscreenCallback: function (scope, funcname, errorfuncname) {
+        //Debug.write('setCallback', scope, funcname);
+        this.__fsscope = scope;
+        this.__fscallback = funcname;
+        this.__fserrorcallback = errorfuncname;
+    }
     // Listener for fullScreen event
     ,fullScreenListener: new Object()
     // Switch to Flash fullscreen mode
@@ -49,9 +59,13 @@ var LzScreenKernel = {
             LzScreenKernel.fullScreenListener.onFullScreen = LzScreenKernel.fullScreenEventHandler;
             // Callback to the send an onfullscreen event
             var isFullScreen = Stage["displayState"] != "normal";
-            canvas.__fullscreenEventCallback(fullscreen == isFullScreen, isFullScreen); 
+            if (LzScreenKernel.__fscallback) {
+                LzScreenKernel.__fsscope[LzScreenKernel.__fscallback](fullscreen == isFullScreen, isFullScreen); 
+            }
             if (Stage["displayState"] != "fullScreen") {
-                canvas.__fullscreenErrorCallback(null)
+                if (LzScreenKernel.__fserrorcallback) {
+                    LzScreenKernel.__fsscope[LzScreenKernel.__fserrorcallback](null); 
+                }
             }
         } else {
             Stage["displayState"]="normal";
@@ -60,6 +74,8 @@ var LzScreenKernel = {
     ,fullScreenEventHandler: function(isFullScreen:Boolean){
         Stage.removeListener(LzScreenKernel.fullScreenListener);
         // Callback to the send an onfullscreen event
-        canvas.__fullscreenEventCallback(true, isFullScreen);        
+        if (LzScreenKernel.__fscallback) {
+            LzScreenKernel.__fsscope[LzScreenKernel.__fscallback](true, isFullScreen); 
+        }
     }
 }

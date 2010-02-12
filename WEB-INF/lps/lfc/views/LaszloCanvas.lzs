@@ -190,6 +190,9 @@ dynamic class LzCanvas extends LzView {
       * claim to be a subclass of LzNode.
       */
     function LzCanvas ( parent = null, args = null, children = null, async = null) {
+      // process timeouts
+      if (! args['medialoadtimeout']) args.medialoadtimeout = this.medialoadtimeout;
+      if (! args['mediaerrortimeout']) args.mediaerrortimeout = this.mediaerrortimeout;
       super(parent, args, children, async);
       this.datasets = {};
       // Canvas can't change size
@@ -313,6 +316,10 @@ dynamic class LzCanvas extends LzView {
         LzScreenKernel.setCallback(this, '__windowResize');
         delete args.width;
         delete args.height;
+
+        if (capabilities.allowfullscreen == true) {
+            LzScreenKernel.setFullscreenCallback(this, '__fullscreenEventCallback', '__fullscreenErrorCallback');
+        }
 
         if (args['fgcolor'] != null) {
             this.hasfgcolor = true;
@@ -450,11 +457,28 @@ var dataloadtimeout = 30000;
   */
 var medialoadtimeout = 30000;
 
+/**
+  * @access private
+  */
+function $lzc$set_medialoadtimeout( ms ) {
+    if (this.capabilities['medialoading']) {
+        LzSprite.setMediaLoadTimeout(ms);
+    }
+}
 /** If present, specifies the default timeout in milliseconds for media errors.  An error occurs when no bytes have been received.  This is used in Flash to detect media loads that have failed due to the security policy.
   * @type Number
   * @lzxtype numberExpression
   */
 var mediaerrortimeout = 4500;
+
+/**
+  * @access private
+  */
+function $lzc$set_mediaerrortimeout( ms ) {
+    if (this.capabilities['medialoading']) {
+        LzSprite.setMediaErrorTimeout(ms);
+    }
+}
 
 /** A number from 0-1 that represents the
   * percentage of the app that has been instantiated.
@@ -545,7 +569,7 @@ function $lzc$set_framerate( fps:Number ) {
    * @access private
    */
  function $lzc$set_fullscreen(fullscreen=true) {
-     if (this.sprite.capabilities.allowfullscreen == true) {
+     if (this.capabilities.allowfullscreen == true) {
         LzScreenKernel.showFullScreen(fullscreen);
      } else if ($debug) {
         LzView.__warnCapability("canvas.setAttribute('fullscreen', " + fullscreen + ")"); 
@@ -901,6 +925,16 @@ public function LzInstantiateView(e, tn = 1) {
 /** @access private */
 public function lzAddLocalData(name, d, trimwhitespace, nsprefix = false) {
     return new LzDataset(canvas, {name: name, initialdata: d, trimwhitespace: trimwhitespace, nsprefix: nsprefix });
+}
+
+/**
+  * Load callback 
+  * @access private
+  */
+public function __LzLibraryLoaded(libname) {
+    canvas.initiatorAddNode({attrs: {libname: libname}, "class": LzLibraryCleanup}, 1);
+    // Run the queue to instantiate all pending LzInstantiateView calls.
+    canvas.initDone();
 }
 
 } // End of LzCanvas

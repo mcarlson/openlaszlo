@@ -75,6 +75,7 @@ LzSprite.prototype.capabilities = {
     ,globalfocustrap: true
     ,'2dcanvas': true
     ,dropshadows: true
+    ,medialoading: true
 }
 
 /**
@@ -1815,4 +1816,15 @@ LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowan
     var mc = this.getDisplayObject();
     mc.filters = filters;
 }
+
+
+LzSprite.medialoadtimeout = 30000;
+LzSprite.setMediaLoadTimeout = function(ms){
+    LzSprite.medialoadtimeout = ms;
+}
+LzSprite.mediaerrortimeout = 4500;
+LzSprite.setMediaErrorTimeout = function(ms){
+    LzSprite.mediaerrortimeout = ms;
+}
+
 }

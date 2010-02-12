@@ -623,6 +623,7 @@ LzSprite.prototype.capabilities = {
     ,cornerradius: false
     ,rgba: false
     ,css2boxmodel: true
+    ,medialoading: true
 }
 
 /**
@@ -2143,7 +2144,7 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
             im.sizer.onloadforeal = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgonload', [im.sizer]);
             im.sizer.onerror = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgonerror', [im.sizer]);
             var callback = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgontimeout', [im.sizer]);
-            this.owner.__imgtimoutid = setTimeout(callback, canvas.medialoadtimeout);
+            this.owner.__imgtimoutid = setTimeout(callback, LzSprite.medialoadtimeout);
             im.sizer.src = url;
         }
         // show again in onload
@@ -2164,7 +2165,7 @@ LzSprite.prototype.__getImage = function(url, skiploader) {
             im.onload = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgonload', [im]);
             im.onerror = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgonerror', [im]);
             var callback = lz.BrowserUtils.getcallbackfunc(this.owner, '__imgontimeout', [im]);
-            this.owner.__imgtimoutid = setTimeout(callback, canvas.medialoadtimeout);
+            this.owner.__imgtimoutid = setTimeout(callback, LzSprite.medialoadtimeout);
 
         }
         im.src = url;
@@ -3152,4 +3153,12 @@ LzSprite.prototype.set_borderWidth = function(width) {
         this.applyCSS('borderStyle', 'solid', '__LZcontext');
         this.applyCSS('borderColor', 'transparent', '__LZcontext');
     }
+}
+
+LzSprite.medialoadtimeout = 30000;
+LzSprite.setMediaLoadTimeout = function(ms){
+    LzSprite.medialoadtimeout = ms;
+}
+
+LzSprite.setMediaErrorTimeout = function(ms){
 }

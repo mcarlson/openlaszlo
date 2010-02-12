@@ -1,7 +1,7 @@
 /**
   * LzScreenKernel.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -44,6 +44,20 @@ public class LzScreenKernel {
         }
     }
 
+    static var __fscallback:String = null;
+    static var __fserrorcallback:String = null;
+    static var __fsscope:* = null;
+    static var __fslisteneradded:Boolean = false;
+    public static function setFullscreenCallback (scope:*, funcname:String, errorfuncname:String) :void {
+        //Debug.write('setFullscreenCallback', scope, funcname);
+        if (__fslisteneradded == false) {
+            __fsscope = scope;
+            __fscallback = funcname;
+            __fserrorcallback = errorfuncname;
+            __fslisteneradded = true;
+        }
+    }
+
     // Switch to Flash fullscreen mode
     // If the app is running in default display mode and the user switches
     // to fullscreen, we have to register an event to catch the pressing of
@@ -59,9 +73,13 @@ public class LzScreenKernel {
                 // We need the event listener to capture if the user presses ESC to leave fullscreen
                 stage.addEventListener(FullScreenEvent.FULL_SCREEN, fullScreenEventHandler);
                 var result:Boolean = LFCApplication.stage.displayState != StageDisplayState.NORMAL;
-                canvas.__fullscreenEventCallback(fullscreen==result, result);
+                if (__fscallback) {
+                    __fsscope[__fscallback](fullscreen==result, result);
+                }
             } catch (error:SecurityError) {
-                canvas.__fullscreenErrorCallback(error.message);
+                if (__fserrorcallback) {
+                    __fsscope[__fserrorcallback](error.message);
+                }
             }
         } else if (!fullscreen) {
             stage.displayState=StageDisplayState.NORMAL;
@@ -75,6 +93,8 @@ public class LzScreenKernel {
         var stage:Stage = LFCApplication.stage;
         // Remove the event listener, since we are not in fullscreen mode any more
         stage.removeEventListener(FullScreenEvent.FULL_SCREEN, fullScreenEventHandler);
-        canvas.__fullscreenEventCallback(true, ev.fullScreen);
+        if (__fscallback) {
+            __fsscope[__fscallback](true, ev.fullScreen);
+        }
     }
 }
