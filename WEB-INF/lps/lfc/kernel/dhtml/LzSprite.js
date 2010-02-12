@@ -592,6 +592,7 @@ LzSprite.quirks = {
     ,write_css_with_createstylesheet: false
     ,inputtext_use_background_image: false
     ,show_img_before_changing_size: false
+    ,use_filter_for_dropshadow: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -730,7 +731,9 @@ LzSprite.__updateQuirks = function () {
             // LPP-6009. Setting width/height doesn't always stick in IE7/dhtml 
             // I found that changing the display first fixes this.
             quirks['show_img_before_changing_size'] = true;
-
+            // LPP-8399 - use directx filters for dropshadows
+            quirks['use_filter_for_dropshadow'] = true;
+            capabilities['dropshadows'] = true;
         } else if (browser.isSafari || browser.isChrome) {
             // Safari won't show canvas tags whose parent is display: none
             quirks['safari_visibility_instead_of_display'] = true;
@@ -1584,11 +1587,14 @@ LzSprite.prototype.__globalmouseup = function ( e ){
     }
 }
 
+LzSprite.prototype.xoffset = 0;
+LzSprite.prototype._xoffset = 0;
 LzSprite.prototype.setX = function ( x ){
-    if (x == null || x == this.x) return;
+    if (x == null || (x == this.x && this._xoffset == this.xoffset)) return;
     this.__poscacheid = -1;
+    this._xoffset = this.xoffset;
     this.x = x;
-    x = this.CSSDimension(x);
+    x = this.CSSDimension(x + this.xoffset);
     if (this._x != x) {
         this._x = x;
         this.__LZdiv.style.left = x;
@@ -1631,12 +1637,15 @@ LzSprite.prototype.setWidth = function ( w ){
     }
 }
 
+LzSprite.prototype.yoffset = 0;
+LzSprite.prototype._yoffset = 0;
 LzSprite.prototype.setY = function ( y ){
     //Debug.info('setY', y);
-    if (y == null || y == this.y) return;
+    if (y == null || (y == this.y && this._yoffset == this.yoffset)) return;
     this.__poscacheid = -1;
     this.y = y;
-    y = this.CSSDimension(y);
+    this._yoffset = this.yoffset;
+    y = this.CSSDimension(y + this.yoffset);
     if (this._y != y) {
         this._y = y;
         this.__LZdiv.style.top = y;
@@ -1747,6 +1756,21 @@ LzSprite.prototype.__restoreSize = function() {
     }
 }
 
+// IE-only, used to manage multiple DX filters, e.g. shadow and opacity
+LzSprite.prototype.__filters = null;
+LzSprite.prototype.setFilter = function(name, value) {
+    if (this.__filters == null) {
+        this.__filters = {};
+    }
+    this.__filters[name] = value;
+
+    var filterstr = '';
+    for (var i in this.__filters) {
+        filterstr += this.__filters[i];
+    }
+    return filterstr;
+}
+
 LzSprite.prototype.setOpacity = function ( o ){
     if (this.opacity == o || o < 0) return;
     this.opacity = o;
@@ -1762,17 +1786,9 @@ LzSprite.prototype.setOpacity = function ( o ){
         this.applyCSS('display', (this.visible && o != 0) ? '' : 'none');
 
         if (this.quirks.ie_opacity) {
-            if (o == 1) {
-                this.__LZdiv.style.filter = "";
-            } else {
-                this.__LZdiv.style.filter = "alpha(opacity=" + parseInt(o * 100) + ")";
-            }
+            this.__LZdiv.style.filter = this.setFilter('opacity', o == 1 ? '' : "alpha(opacity=" + parseInt(o * 100) + ")" );
         } else {
-            if (o == 1) {
-                this.__LZdiv.style.opacity = "";
-            } else {
-                this.__LZdiv.style.opacity = o;
-            }
+            this.__LZdiv.style.opacity = o == 1 ? '' : o;
         }
     }
 }
@@ -2980,20 +2996,48 @@ LzSprite.prototype.__initcanvasie = function() {
     }
 }
 
+// Shared by LzSprite and LzTextSprite
 LzSprite.prototype.__getShadowCSS = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
     if (shadowcolor == null) {
-        return null;
+        return '';
+    }
+    if (this.capabilities.minimize_opacity_changes) {
+        shadowdistance = Math.round(shadowdistance);
+        shadowblurradius = Math.round(shadowblurradius);
+        shadowangle = Math.round(shadowangle);
     }
 
-    // CSS3 doesn't use angle, but x/y offset. So we need to
-    // translate from angle and distance to x and y offset for CSS3.
-    // Math.cos and Math.cos are based on radians, not degrees
-    var radians = shadowangle * Math.PI/180;
-    var xoffset = this.CSSDimension(Math.cos(radians) * shadowdistance);
-    var yoffset = this.CSSDimension(Math.sin(radians) * shadowdistance);
-    // convert to rgb(x,x,x);
-    var rgbcolor = LzColorUtils.torgb(shadowcolor);
-    return rgbcolor + " " + xoffset + " " + yoffset + " " + this.CSSDimension(shadowblurradius);
+    if (this.quirks.use_filter_for_dropshadow) {
+        // Use glow filter
+        if (shadowdistance == 0) {
+            // update x and y offsets to compensate for glow
+            this.xoffset = this.yoffset = -shadowblurradius;
+            this.applyCSS('left', this.x + this.xoffset);
+            this.applyCSS('top', this.y + this.yoffset);
+            if (shadowblurradius > 0) {
+                var hexcolor = LzColorUtils.inttohex(shadowcolor);
+                return "progid:DXImageTransform.Microsoft.Glow(Color='" + hexcolor + "',Strength=" + shadowblurradius + ")";
+            } else {
+                // remove filter - won't show anything...
+                return '';
+            }
+        } else {
+            // to match Flash
+            shadowangle += 90;
+            var hexcolor = LzColorUtils.inttohex(shadowcolor);
+            return "progid:DXImageTransform.Microsoft.Shadow(Color='" + hexcolor + "',Direction=" + shadowangle + ",Strength=" + shadowdistance + ")";
+        }
+    } else {
+        // CSS3 doesn't use angle, but x/y offset. So we need to
+        // translate from angle and distance to x and y offset for CSS3.
+        // Math.cos and Math.cos are based on radians, not degrees
+        var radians = shadowangle * Math.PI/180;
+        var xoffset = this.CSSDimension(Math.cos(radians) * shadowdistance);
+        var yoffset = this.CSSDimension(Math.sin(radians) * shadowdistance);
+        // convert to rgb(x,x,x);
+        var rgbcolor = LzColorUtils.torgb(shadowcolor);
+        return rgbcolor + " " + xoffset + " " + yoffset + " " + this.CSSDimension(shadowblurradius);
+    }
 }
 
 LzSprite.prototype.shadow = null;
@@ -3002,9 +3046,13 @@ LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowan
     if (newshadow === this.shadow) return;
     this.shadow = newshadow;
 
-    var displayobj = this.__LZdiv;
-
-    displayobj.style.webkitBoxShadow = displayobj.style.MozBoxShadow = displayobj.style.boxShadow = newshadow;
+    if (this.quirks.use_filter_for_dropshadow) {
+        this.__LZdiv.style.filter = this.setFilter('shadow', newshadow);
+    } else {
+        // use the canvas div where available
+        var displayobj = this.__LZcanvas || this.__LZdiv;
+        displayobj.style.webkitBoxShadow = displayobj.style.MozBoxShadow = displayobj.style.boxShadow = newshadow;
+    }
 
     if (this.quirks.size_blank_to_zero) {
         if (this.__sizedtozero) {

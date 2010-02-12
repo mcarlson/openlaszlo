@@ -1076,7 +1076,11 @@ LzTextSprite.prototype.getDisplayObject = function ( ){
 LzTextSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
     var cssString = this.__getShadowCSS(shadowcolor, shadowdistance, shadowangle, shadowblurradius);
 
-    this.scrolldiv.style.textShadow = cssString;
+    if (this.quirks.use_filter_for_dropshadow) {
+        this.scrolldiv.style.filter = this.setFilter('shadow', cssString);
+    } else {
+        this.scrolldiv.style.textShadow = cssString;
+    }
 
     this.shadow = cssString;
     this.applyCSS('overflow', '', 'scrolldiv');
