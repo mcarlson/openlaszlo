@@ -477,10 +477,6 @@ LzSprite.__defaultStyles = {
         position: 'absolute',
         backgroundRepeat: 'no-repeat'
     },
-    '#lzTextSizeCache': {
-        // Force hasLayout in IE
-        zoom: 1
-    },
     lzgraphicscanvas: {
         position: 'absolute'
     },
@@ -750,6 +746,8 @@ LzSprite.__updateQuirks = function () {
             // LPP-8399 - use directx filters for dropshadows
             quirks['use_filter_for_dropshadow'] = true;
             capabilities['dropshadows'] = true;
+            // Force hasLayout for lzTextSizeCache in IE
+            defaultStyles['#lzTextSizeCache'] = {zoom: 1};
         } else if (browser.isSafari || browser.isChrome) {
             // Safari won't show canvas tags whose parent is display: none
             quirks['safari_visibility_instead_of_display'] = true;
