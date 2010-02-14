@@ -109,10 +109,6 @@ class ClassCompiler extends ViewCompiler  {
       String tagName = elt.getAttributeValue("name");
       ClassModel classModel = mEnv.getSchema().getClassModel(tagName);
 
-      // Ensure that the class and any children is compiled into the current CompilationEnvironment
-      classModel.env = mEnv;
-
-      // May have already been compiled by a forward reference
       // May have already been compiled by a forward reference
       if (tagName.equals("anonymous")) {
             CompilationError cerr = new CompilationError(

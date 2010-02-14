@@ -497,11 +497,13 @@ public class NodeModel implements Cloneable {
      * model.  The format of this representation is specified <a
      * href="../../../../doc/compiler/views.html">here</a>.
      *
+     * The CompilationEnvironment is passed in because we may be emitting
+     * code to a library. 
      */
-    public String asJavascript() {
+    public String asJavascript(CompilationEnvironment cEnv) {
         try {
             java.io.Writer writer = new java.io.StringWriter();
-            ScriptCompiler.writeObject(this.asMap(), writer);
+            ScriptCompiler.writeObject(this.asMap(cEnv), writer);
             return writer.toString();
         } catch (java.io.IOException e) {
             throw new ChainedException(e);
@@ -2213,7 +2215,7 @@ solution =
           addProperty("$delegates", delegateList, ALLOCATION_INSTANCE);
         }
         if (datapath != null) {
-          addProperty("$datapath", datapath.asMap(), ALLOCATION_INSTANCE);
+          addProperty("$datapath", datapath.asMap(env), ALLOCATION_INSTANCE);
           // If we've got an explicit datapath value, we have to null
           // out the "datapath" attribute with the magic
           // LzNode._ignoreAttribute value, so it doesn't get
@@ -2244,7 +2246,13 @@ solution =
         return setters;
     }
 
-    Map asMap() {
+  /*
+    A CompilationEnvironment is passed in explicitly, because when
+    compiling an lzo or dynamic library, a separate
+    CompilationEnvironment is created for the library, in order to
+    provide a separate output stream to write the code to.
+   */
+    Map asMap(CompilationEnvironment cEnv) {
         if (frozen) {
           throw new CompilerImplementationError("Attempting to asMap when NodeModel frozen");
         }
@@ -2279,13 +2287,13 @@ solution =
         }
         if (hasMethods) {
             // If there are methods, make a class (but don't publish it)
-            classModel = new ClassModel(tagName, false, schema, element, env);
+            classModel = new ClassModel(tagName, false, schema, element, cEnv);
             classModel.setNodeModel(this);
-            classModel.emitClassDeclaration(env);
+            classModel.emitClassDeclaration(cEnv);
         } else {
             // If no class needed, Put children into map
             if (!children.isEmpty()) {
-                map.put("children", childrenMaps());
+                map.put("children", childrenMaps(cEnv));
             }
         }
 
@@ -2320,10 +2328,10 @@ solution =
         }
     }
 
-    List childrenMaps() {
+    List childrenMaps(CompilationEnvironment cEnv) {
         List childMaps = new Vector(children.size());
         for (Iterator iter = children.iterator(); iter.hasNext(); )
-            childMaps.add(((NodeModel) iter.next()).asMap());
+            childMaps.add(((NodeModel) iter.next()).asMap(cEnv));
 
         // TODO: [2006-09-28 ptw] There must be a better way. See
         // comment in LzNode where $lzc$class_userClassPlacement is

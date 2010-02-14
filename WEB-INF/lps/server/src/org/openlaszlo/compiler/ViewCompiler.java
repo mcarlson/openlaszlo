@@ -246,7 +246,7 @@ public class ViewCompiler extends ElementCompiler {
 
         NodeModel model = NodeModel.elementAsModel(element, mSchema, mEnv);
         String script = VIEW_INSTANTIATION_FNAME + "(" +
-          model.asJavascript() + ", " + model.totalSubnodes() +
+          model.asJavascript(mEnv) + ", " + model.totalSubnodes() +
           ");";
 
         // Don't keep non-class models around
@@ -821,6 +821,6 @@ public class ViewCompiler extends ElementCompiler {
 }
 
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

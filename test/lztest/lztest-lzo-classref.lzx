@@ -1,0 +1,50 @@
+<canvas>
+
+<!--
+  covers-tags : lznode lzo smoketest
+-->
+
+<!--
+
+CLASSES IN THE MAIN PROGRAM THAT REFERENCE CLASSES IN THE BINARY LIBRARY 
+
+
+-->
+
+
+  <!-- Test LZO binary library compile -->
+  <include href="lztest/lztestmanager.lzx" /> 
+
+  <include href="lzo-lib.lzx"/>
+  <class name="subclass" extends="testclass">
+    <method name="mymethod">
+      return 259;
+    </method>
+  </class>
+  <subclass name="foo" flavor="licorice"/>
+  
+<script>
+    
+var lzoSuite = new LzTestSuite("Use LZO library"); 
+
+function test_values_defined() {   
+    LzTestManager.assertNotUndefined(global.foo, "testing for defined id"); 
+    LzTestManager.assertNotNull(global.foo, "testing for non-null id");     
+
+    LzTestManager.assertTrue(global.foo is lz.subclass, "testing for correct class type for instance foo"); 
+
+    LzTestManager.assertEquals("licorice", foo.flavor, "licorice");
+    LzTestManager.assertEquals(259, foo.mymethod(), "test method on instance of subclass");
+
+}
+
+lzoSuite.addTest( test_values_defined );
+
+</script>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

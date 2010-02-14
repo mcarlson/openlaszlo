@@ -17,11 +17,24 @@ rm -f $TESTDIR/lzo-lib.lzo
 cp $TESTDIR/lzo-lib.lzx.proto $TESTDIR/lzo-lib.lzx
 # compile that file with lzc
 $LPS_HOME/WEB-INF/lps/server/bin/lzc --runtime=$runtime -c $TESTDIR/lzo-lib.lzx
+# get rid of the .lzx file, so only .lzo remains
 rm -f $TESTDIR/lzo-lib.lzx
+
+
+rm -f $TESTDIR/lzodir/lzo-lib-extref.lzo
+cp $TESTDIR/lzodir/lzo-lib-extref.lzx.proto $TESTDIR/lzodir/lzo-lib-extref.lzx
+# compile that file with lzc
+$LPS_HOME/WEB-INF/lps/server/bin/lzc --runtime=$runtime -c $TESTDIR/lzodir/lzo-lib-extref.lzx
+# get rid of the .lzx file, so only .lzo remains
+rm -f $TESTDIR/lzodir/lzo-lib-extref.lzx
+
+
+
+
 ################################################################
 
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2009, 2010 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************

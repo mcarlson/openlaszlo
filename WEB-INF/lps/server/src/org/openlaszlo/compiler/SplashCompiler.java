@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -116,7 +116,7 @@ class SplashCompiler extends ElementCompiler {
         }
         NodeModel model = NodeModel.elementAsModel(element, mSchema, mEnv);
         script.append(VIEW_INSTANTIATION_FNAME + "(" +
-                          model.asJavascript() +
+                          model.asJavascript(mEnv) +
                           ");" );
 
         String scriptstr = script.toString();

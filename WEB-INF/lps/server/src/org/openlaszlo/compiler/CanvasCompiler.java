@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -216,7 +216,7 @@ class CanvasCompiler extends ToplevelCompiler {
         model.attrs.remove("debug");
         // Remove this since it isn't a JavaScript expression.
         model.attrs.remove("libraries");
-        Map map = model.asMap();
+        Map map = model.asMap(mEnv);
         LinkedHashMap modelinits = (LinkedHashMap)map.get("attrs");
         if (modelinits == null) {
           map.put("attrs", inits);

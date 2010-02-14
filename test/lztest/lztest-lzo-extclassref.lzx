@@ -1,0 +1,61 @@
+<canvas>
+
+<!--
+  covers-tags : lznode lzo smoketest
+-->
+
+<!--
+
+Classes in the binary library that reference classes _not_ in the library,
+ either auto-includes or simply includes that are in another library. 
+
+
+-->
+
+
+  <!-- Test LZO binary library compile -->
+  <include href="lztest/lztestmanager.lzx" /> 
+  <include href="lzodir/lzo-lib-extref.lzx"/>
+
+  <!-- instance from class defined in lzo library, uses external class from otherclass.lzx -->
+  <testclass name="foo" color="red" flavor="vanilla"/>
+
+  <class name="subclass" extends="testclass">
+    <method name="subclassmethod">
+      return "subclass method";
+    </method>
+  </class>
+  <subclass name="bar" flavor="licorice"/>
+  
+<script>
+    
+var lzoSuite = new LzTestSuite("Use LZO library"); 
+
+function test_values_defined() {   
+    LzTestManager.assertNotUndefined(global.foo, "testing for defined id"); 
+    LzTestManager.assertNotNull(global.foo, "testing for non-null id");     
+
+    LzTestManager.assertTrue(global.foo is lz.testclass, "testing for correct class type for instance foo"); 
+    
+    LzTestManager.assertEquals("vanilla", foo.flavor, "vanilla flavor atribute");
+    LzTestManager.assertEquals("red", foo.color, "red color attribute");
+    LzTestManager.assertEquals(259, foo.mainmethod(), "method from external class");
+    LzTestManager.assertEquals("LZO method", foo.lzomethod(), "method from lzo class");
+
+
+    // methods on instance of  class defined in  main app
+    LzTestManager.assertEquals("licorice", bar.flavor, "licorice");
+    LzTestManager.assertEquals("subclass method", bar.subclassmethod(), "test method on instance of subclass");
+
+}
+
+lzoSuite.addTest( test_values_defined );
+
+</script>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

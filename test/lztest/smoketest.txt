@@ -1,4 +1,7 @@
-# Copyright 2006, 2008 Laszlo Systems
+# Copyright 2006, 2008, 2010 Laszlo Systems
+test/lztest/lztest-lzo-main.lzx
+test/lztest/lztest-lzo-classref.lzx
+/test/lztest/lztest-lzo-extclassref.lzx
 test/lztest/lztest-static-attrs.lzx
 test/lztest/lztest-textstyle.lzx
 test/lztest/lztest-align.lzx
@@ -28,5 +31,6 @@ test/lztest/lztest-this.lzx
 test/lztest/lztest-view.lzx
 test/lztest/lztest-textheight.lzx
 test/lztest/lztest-lzurl.lzx
+
 
 

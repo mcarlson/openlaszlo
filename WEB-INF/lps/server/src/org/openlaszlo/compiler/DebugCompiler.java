@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -51,7 +51,7 @@ class DebugCompiler extends ViewCompiler {
             mEnv.setProperty(mEnv.USER_DEBUG_WINDOW, true);
             // inlined from ViewCompiler.compile()
             NodeModel model = NodeModel.elementAsModel(element, mEnv.getSchema(), mEnv);
-            Map map = model.asMap();
+            Map map = model.asMap(mEnv);
             String classname = (String) map.get("class");
             try {
                 java.io.Writer writer = new java.io.StringWriter();

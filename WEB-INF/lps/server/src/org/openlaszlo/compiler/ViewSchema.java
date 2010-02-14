@@ -563,7 +563,7 @@ public class ViewSchema extends Schema {
       // Ensure the class model is resolved
       ClassModel model = (ClassModel)mClassMap.get(elementName);
       if (model != null) {
-        return model.resolve();
+        return model.resolve(mEnv);
       }
       return model;
     }
@@ -575,7 +575,7 @@ public class ViewSchema extends Schema {
     public void resolveClasses () {
       TreeMap classMap = new TreeMap(mClassMap);
       for (Iterator i = classMap.keySet().iterator(); i.hasNext(); ) {
-        ((ClassModel)classMap.get(i.next())).resolve();
+        ((ClassModel)classMap.get(i.next())).resolve(mEnv);
       }
     }
 

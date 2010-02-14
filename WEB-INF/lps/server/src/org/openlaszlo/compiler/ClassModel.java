@@ -25,7 +25,6 @@ public class ClassModel implements Comparable {
     /** The name for debugging */
     public String debugExtends;
     public String debugWith;
-    public CompilationEnvironment env;
     protected boolean builtin = false;
     // This is null for the root class
     protected ClassModel superModel;
@@ -169,7 +168,6 @@ public class ClassModel implements Comparable {
       // emitted because the are compiled with the `force` option,
       // which overrides `modelOnly`.  See ClassCompiler.compile
       this.modelOnly = env.getBooleanProperty(CompilationEnvironment._EXTERNAL_LIBRARY);
-      this.env = env;
       this.definition = definition;
       this.schema = schema;
       if (tagName != null) {
@@ -208,7 +206,7 @@ public class ClassModel implements Comparable {
 
     }
 
-    public ClassModel resolve() {
+    public ClassModel resolve(CompilationEnvironment env) {
         if (resolved) { return this; }
 
         // Find superclass and mixins
@@ -473,7 +471,7 @@ public class ClassModel implements Comparable {
    */
   void emitClassDeclaration(CompilationEnvironment env) {
     // Last chance for resolution
-    resolve();
+    resolve(env);
     declarationEmitted = true;
     // Should the package prefix be in the model?  Should the
     // model store class and tagname separately?
@@ -540,7 +538,7 @@ public class ClassModel implements Comparable {
     boolean hasChildren = (! nodeModel.getChildren().isEmpty());
     boolean inheritsChildren = inheritsChildren();
     if (hasChildren || inheritsChildren) {
-      String children = ScriptCompiler.objectAsJavascript(nodeModel.childrenMaps());
+      String children = ScriptCompiler.objectAsJavascript(nodeModel.childrenMaps(env));
       if (inheritsChildren) {
         // NOTE: [2009-04-01 ptw] We don't compute the merged children
         // at compile time, because we may not know them (superclass
@@ -659,7 +657,7 @@ public class ClassModel implements Comparable {
     // the runtime wants.
 
     // Establish class root
-    getNodeModel().assignClassRoot(0);
+    getNodeModel(env).assignClassRoot(0);
     assert (force ? (! modelOnly) : true) : "Forcing compile of model-only class " + tagName;
     if (force || ((! isCompiled()) && (! modelOnly))) {
       emitClassDeclaration(env);
@@ -687,7 +685,7 @@ public class ClassModel implements Comparable {
         return nodeModel != null;
     }
 
-  NodeModel getNodeModel() {
+  NodeModel getNodeModel(CompilationEnvironment env) {
     if (nodeModel != null) { return nodeModel; }
     if (builtin) { return null; }
     return nodeModel = NodeModel.elementAsModel(definition, schema, env);
