@@ -208,6 +208,9 @@ public class LzSprite extends Sprite {
     }
 
     public function init (v:Boolean = true):void {
+        if (this.mask) {
+            this.drawMask();
+        }
         this.setVisible(v);
 
         if (this.isroot) {
@@ -249,15 +252,34 @@ public class LzSprite extends Sprite {
         if (this.borderWidth) {
             var colorobj = LzColorUtils.inttocolorobj(borderColor);
             context.beginFill(colorobj.color, alpha);
-            var offset = this.padding + this.borderWidth;
-            LzKernelUtils.rect(context, 0 - offset, 0 - offset, this.lzwidth + (offset * 2), this.lzheight + (offset * 2), this.cornerradius);
+            this.drawBorder(context);
             context.endFill();
         }
         if (bgcolor != null) {
             context.beginFill(this.bgcolor, alpha);
-            LzKernelUtils.rect(context, 0 - this.padding, 0 - this.padding, this.lzwidth + (this.padding * 2), this.lzheight + (this.padding * 2), this.cornerradius);
+            this.drawBackgroundFill(context);
             context.endFill();
         }
+    }
+
+    public function drawMask():void {
+        if (this.masksprite) {
+            var context = this.masksprite.graphics;
+            context.clear();
+            context.beginFill(0xffffff);
+            this.drawBorder(context);
+            this.drawBackgroundFill(context);
+            context.endFill();
+        }
+    }
+
+    private function drawBorder(context:Graphics):void {
+        var offset = this.padding + this.borderWidth;
+        LzKernelUtils.rect(context, 0 - offset, 0 - offset, this.lzwidth + (offset * 2), this.lzheight + (offset * 2), this.cornerradius);
+    }
+
+    private function drawBackgroundFill(context:Graphics):void {
+        LzKernelUtils.rect(context, 0 - this.padding, 0 - this.padding, this.lzwidth + (this.padding * 2), this.lzheight + (this.padding * 2), this.cornerradius);
     }
 
     private var _frame:int = 1;
@@ -961,9 +983,7 @@ public class LzSprite extends Sprite {
 
         // Update the clip region if there is one
         if (this.masksprite) {
-            //trace('...sprite setting mask w,h', this.lzwidth ,this.lzheight);
-            this.masksprite.scaleX = this.lzwidth;
-            this.masksprite.scaleY = this.lzheight;
+            this.drawMask();
         }
 
         drawBackground();
@@ -985,9 +1005,7 @@ public class LzSprite extends Sprite {
 
         // Update the clip region if there is one
         if (this.masksprite) {
-            //trace('...sprite setting mask w,h', this.lzwidth ,this.lzheight);
-            this.masksprite.scaleX = this.lzwidth;
-            this.masksprite.scaleY = this.lzheight;
+            this.drawMask();
         }
         drawBackground();
     }
@@ -1289,12 +1307,6 @@ public class LzSprite extends Sprite {
         var ms:Sprite = this.masksprite;
         if (ms == null) {
             ms = new Sprite();
-            ms.graphics.clear();
-            ms.graphics.beginFill(0xffffff);
-            ms.graphics.drawRect(0, 0, 1, 1);
-            ms.graphics.endFill();
-            ms.scaleX = this.lzwidth;
-            ms.scaleY = this.lzheight;
             addChild(ms);
             this.mask = ms;
             this.masksprite = ms;
@@ -1304,16 +1316,15 @@ public class LzSprite extends Sprite {
                 addChild(ms);
                 this.mask = ms;
             }
-            //trace('applyMask [2] ', this.lzwidth, this.lzheight, owner);
-            ms.scaleX = this.lzwidth;
-            ms.scaleY = this.lzheight;
         }
+        this.drawMask();
     }
 
     public function removeMask():void {
         if (this.mask != null) {
             this.removeChild(this.masksprite);
             this.mask = null;
+            this.masksprite = null;
         }
     }
 
