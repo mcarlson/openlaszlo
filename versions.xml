@@ -26,6 +26,7 @@
     <entry revision="15428" release="RC" id="4.7.0" />
     <entry revision="15482" release="Production" id="4.7.0" />
     <entry revision="15483" release="Latest" id="4.7.1" />
+    <entry revision="15761" release="RC" id="4.7.1" />
   </branch>
   <!-- Copyright 2010 Laszlo Systems, Inc. All Rights Reserved. Use is subject to license terms. -->
 </versions>

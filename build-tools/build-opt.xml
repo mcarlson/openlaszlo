@@ -88,11 +88,11 @@
   <target name="build-version-info" depends="get-env,read-svn-info" unless="done.build-version-info">
     <!-- compute the version and release from versions.xml -->
     <xpath-query xmlfile="${LPS_HOME}/versions.xml" addproperty="version.id"
-                 query="/versions/branch[@url='${build.url}']/entry[@revision&lt;${build.revision}][last()]/@id" />
+                 query="/versions/branch[@url='${build.url}']/entry[@revision&lt;=${build.revision}][last()]/@id" />
     <property name="version.id.upper" value="${version.id}" />
     <property name="release.id" value="${version.id}" />
     <xpath-query xmlfile="${LPS_HOME}/versions.xml" addproperty="release"
-                 query="/versions/branch[@url='${build.url}']/entry[@revision&lt;${build.revision}][last()]/@release" />
+                 query="/versions/branch[@url='${build.url}']/entry[@revision&lt;=${build.revision}][last()]/@release" />
 
     <!-- make sure we have a build.id -->
     <condition property="build.id" value="${build.revision} ${build.name}">
