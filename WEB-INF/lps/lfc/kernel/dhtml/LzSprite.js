@@ -1121,7 +1121,7 @@ LzSprite.prototype.setResource = function ( r ){
         this.resourceWidth = res.width;
         this.resourceHeight = res.height;
         if (this.quirks.use_css_sprites) {
-            if (this.quirks.use_css_master_sprite && res.spriteoffset) {
+            if (this.quirks.use_css_master_sprite && res.spriteoffset != null) {
                 this.__csssprite = LzSprite.__masterspriteurl;
                 this.__cssspriteoffset = res.spriteoffset;
             } else if (res.sprite) {
