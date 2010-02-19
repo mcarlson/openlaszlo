@@ -198,9 +198,42 @@
             </handler>
         </drawview>
     </view>
+
+    <drawview name="lpp8780" width="60" height="60" crisplines="true">
+        <handler name="oncontext" method="redraw"/>
+        <method name="redraw" args="context">
+            this.beginPath();
+            this.rect(10,10,40,40);
+            this.stroke();
+        </method>
+    </drawview>
+
+    <drawview name="lpp8779" width="150" height="150">
+        <handler name="oncontext" method="redraw"/>
+        <method name="redraw" args="context">
+            // this also tests LPP-8778 - Drawview.fillRect() doesn't work properly in swf when alpha is applied
+
+            // from https://developer.mozilla.org/en/Canvas_tutorial/Transformations#A_save_and_restore_canvas_state_example
+            this.fillRect(0,0,150,150);   // Draw a rectangle with default settings  
+            this.save();                  // Save the default state  
+            
+            this.fillStyle = '#09F'       // Make changes to the settings  
+            this.fillRect(15,15,120,120); // Draw a rectangle with new settings  
+            
+            this.save();                  // Save the current state  
+            this.fillStyle = '#FFF'       // Make changes to the settings  
+            this.globalAlpha = 0.5;      
+            this.fillRect(30,30,90,90);   // Draw a rectangle with new settings  
+            this.restore();               // Restore previous state  
+            this.fillRect(45,45,60,60);   // Draw a rectangle with restored settings  
+            
+            this.restore();               // Restore original state  
+            this.fillRect(60,60,30,30);   // Draw a rectangle with restored settings  
+        </method>
+    </drawview>
     
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>
