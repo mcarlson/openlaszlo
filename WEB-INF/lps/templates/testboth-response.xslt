@@ -27,7 +27,7 @@
   </head>
   <frameset cols="50%, 50%">
     <frame src="{/canvas/request/@url}?lzr=dhtml{/canvas/request/@query_args}"/>
-    <frame src="{/canvas/request/@url}?lzr=swf8{/canvas/request/@query_args}"/>
+    <frame src="{/canvas/request/@url}?lzr={/canvas/@runtime}{/canvas/request/@query_args}"/>
   </frameset>
 </html>
 </xsl:template>
