@@ -1,7 +1,7 @@
 /**
   * LzMouseKernel.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -73,14 +73,16 @@ class LzMouseKernel  {
                 // Mouse reentered the app.
                 if (event.buttonDown) __mouseUpOutsideHandler();
 
-                // TODO [hqm 2009-04] LPP-7957 -- this works
-                // around Firefox bug; if you are making a text
-                // selection, and then drag the mouse outside of
-                // the app while the left button is down, and then
-                // release it. When you bring the mouse back into
-                // the app, the selection is stuck dragging
-                // because Flash plugin never gets the mouse up.
-                LFCApplication.stage.focus = null;
+                if (lz.embed.browser.isFirefox && lz.embed.browser.OS == 'mac' && lz.embed.browser.version < 3.5) {
+                    // TODO [hqm 2009-04] LPP-7957 -- this works
+                    // around Firefox bug; if you are making a text
+                    // selection, and then drag the mouse outside of
+                    // the app while the left button is down, and then
+                    // release it. When you bring the mouse back into
+                    // the app, the selection is stuck dragging
+                    // because Flash plugin never gets the mouse up.
+                    LFCApplication.stage.focus = null;
+                }
 
                 // generate a 'onmouseenter' event
                 handleMouseEvent(null, 'onmouseenter');
