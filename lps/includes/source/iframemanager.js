@@ -264,15 +264,17 @@ lz.embed.iframemanager = {
             delete this.__calljsqueue[id];
         }
     }
+    // called in IE for onfocus event in swf - see LPP-5482 
     ,__refresh: function() { 
-        // called in IE for onfocus event in swf - see LPP-5482 
-        if (lz.embed.iframemanager.__topiframe) {
-            var iframe = lz.embed.iframemanager.getFrame(lz.embed.iframemanager.__topiframe);
-            if (iframe.style.display == 'block') {
-                iframe.style.display = 'none';
-                iframe.style.display = 'block'; 
+        // refresh all iframes
+        var frames = lz.embed.iframemanager.__frames;
+        for (var id in frames) {
+            var frame = frames[id];
+            if (frame && frame.style.display=="block"){
+                frame.style.display="none";
+                frame.style.display="block"
             }
-        }
+        } 
     }
     ,setZ: function(id, z) { 
         if (this.__callqueue[id]) { 
