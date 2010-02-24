@@ -343,7 +343,10 @@ public class NodeModel implements Cloneable {
         installer = "__LZstyleBindAttribute";
         body = body + ",'" + type + "'";
         if (this.fallbackexpression != null) {
-          body += "," + this.fallbackexpression;
+          // We pass both the expression and a flag saying not to warn
+          // (so you can turn off the warning by having a fallback of
+          // null).
+          body += "," + this.fallbackexpression + ", false";
         }
         prettyBinderName += "style";
       }
@@ -423,7 +426,11 @@ public class NodeModel implements Cloneable {
                                    ScriptCompiler.quote(name) + ", " +
                                    value + ", " +
                                    ScriptCompiler.quote("" + type) +
-                                   (fallbackexpression != null ? (", " + fallbackexpression) : "")  +
+                                   // We pass both the expression and
+                                   // a flag saying not to warn (so
+                                   // you can turn off the warning by
+                                   // having a fallback of null).
+                                   (fallbackexpression != null ? (", " + fallbackexpression + ", false") : "")  +
                                    ")");
           }
         } else if (when.equals(WHEN_ALWAYS)) {
