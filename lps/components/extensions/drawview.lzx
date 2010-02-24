@@ -422,7 +422,6 @@
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
             static var __colorcache = {};
-            static var __rrfactors:Array = null;
 
             var globalAlpha = 1;
             var lineWidth = 1;
@@ -564,6 +563,9 @@
             }
 
             function __updateFillStyle() {
+                if (this.__globalAlpha != this.globalAlpha) {
+                    this.__globalAlpha = this.context.globalAlpha = this.globalAlpha;
+                }
                 if (this.__fillStyle != this.fillStyle) {
                     if (this.fillStyle instanceof LzCanvasGradient) {
                         this.fillStyle.__applyFillTo(this.context);
@@ -584,8 +586,7 @@
                 var styleNames = { lineWidth : '__lineWidth',
                                    lineCap : '__lineCap',
                                    lineJoin : '__lineJoin',
-                                   miterLimit : '__miterLimit',
-                                   globalAlpha : '__globalAlpha' };
+                                   miterLimit : '__miterLimit'};
                 for (var name in styleNames) {
                     var intern = styleNames[name];
                     var style = this[name];
@@ -794,7 +795,6 @@
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
             static var __colorcache :Object = {};
-            static var __rrfactors:Array = null;
 
             var globalAlpha :Number = 1;
             var lineWidth :Number = 1;
@@ -812,10 +812,16 @@
             const __LINETO_OP :int = 1;
             const __QCURVE_OP :int = 2;
 
+            // The container for the bitmap and all contexts
             var __drawcontainer = null;
-            var __bitmapdata:BitmapData = null;
+            // The container for the current context
+            var __drawcontext = null;
+            // The container for __bitmapdata
             var __bitmapcontainer = null;
+            // A background bitmap that contains all restored/transformed drawing state
+            var __bitmapdata:BitmapData = null;
             var __norebuild:Boolean = false;
+            // Contains a stack of drawing contexts, used by save/restore()
             var __contexts :Array = null;
 
             // hash of image resources for drawImage
@@ -834,7 +840,6 @@
 
             override function init () {
                 super.init();
-                this.rebuildBitmap();
                 this.context = this.createContainer();
                 this.beginPath();
                 this.$lzc$set_context(this.context);
@@ -1156,6 +1161,8 @@
                 }
             }
 
+
+
             if ($as3) {
                 function clearMask() {
                     if (this.clipcontext) {
@@ -1200,7 +1207,7 @@
 
                 // Rebuild bitmap drawing layer
                 private function rebuildBitmap () :void {
-                    if (this.__norebuild) return;
+                    if (this.__norebuild || ! this.__drawcontainer) return;
                     if (this.width < 1 || this.height < 1) return;
                     if ($swf9) {
                         var limit = 2880;
@@ -1223,7 +1230,6 @@
                         if (this._setrescwidth) {
                             // stretches is on...
                             var dc:Sprite = this.__drawcontainer;
-                            if (! dc) return;
                             dc.scaleX = 1;
                             this.updateWidth(dc.width);
                             dc.scaleX = (this.width / this.unstretchedwidth)
@@ -1233,7 +1239,6 @@
                         if (this._setrescheight) {
                             // stretches is on...
                             var dc:Sprite = this.__drawcontainer;
-                            if (! dc) return;
                             dc.scaleY = 1;
                             this.updateHeight(dc.height);
                             dc.scaleY = (this.height / this.unstretchedheight)
@@ -1242,7 +1247,7 @@
 
                         this.__bitmapdata = bitmapdata;
                         this.__bitmapcontainer = new flash.display.Bitmap(bitmapdata);
-                        this.sprite.addChild(this.__bitmapcontainer);
+                        this.__drawcontainer.addChildAt(this.__bitmapcontainer, 0);
                     }
                 }
 
@@ -1253,7 +1258,7 @@
                         this.__bitmapdata = null;
                     }
                     if (this.__bitmapcontainer) {
-                        this.sprite.removeChild(this.__bitmapcontainer);
+                        this.__drawcontainer.removeChild(this.__bitmapcontainer);
                         this.__bitmapcontainer = null;
                     }
                 }
@@ -1297,11 +1302,23 @@
                 // create a new container, only used at init time
                 private function createContainer() {
                     var drawcontainer:Sprite = new Sprite();
-                    drawcontainer.mouseEnabled = false;
+                    drawcontainer.mouseChildren = false;
                     this.getDisplayObject().addChildAt(drawcontainer, 0);
                     this.__drawcontainer = drawcontainer;
 
-                    return drawcontainer.graphics;
+                    // create bitmap here to ensure we're behind the drawing context
+                    this.rebuildBitmap();
+
+                    this.__drawcontext = this.createDrawingContext();
+
+                    return this.__drawcontext.graphics;
+                }
+
+                // Create new context to draw in
+                private function createDrawingContext() {
+                    var drawcontext:Sprite = new Sprite();
+                    this.__drawcontainer.addChild(drawcontext);
+                    return drawcontext;
                 }
 
                 function save() {
@@ -1353,7 +1370,7 @@
 
                 // Rebuild bitmap drawing layer
                 private function rebuildBitmap () :void {
-                    if (this.__norebuild) return;
+                    if (this.__norebuild || ! this.__drawcontainer) return;
 
                     var bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
                     if (bitmapdata) {
@@ -1361,13 +1378,10 @@
                         this.clearBitmap();
 
                         this.__bitmapdata = bitmapdata;
-                        var context:MovieClip = this.sprite.getContext();
-                        this.__bitmapcontainer = context.createEmptyMovieClip("__bitmapcontainer", 1000);
+                        this.__bitmapcontainer = this.__drawcontainer.createEmptyMovieClip("__bitmapcontainer", 1000);
                         this.__bitmapcontainer.attachBitmap(bitmapdata, 2, "auto", true);
+                        this.__updateContextMenu();
                     }
-                    // Install right-click context menu if there is one
-                    var cmenu:LzContextMenu = this.sprite['__contextmenu'];
-                    if (cmenu) this.__bitmapcontainer.menu = cmenu.kernel.__LZcontextMenu();
                 }
 
                 // destroy old bitmap data
@@ -1383,21 +1397,32 @@
                 }
 
                 override function $lzc$set_contextmenu (cmenu:LzContextMenu) :void {
-                    if (this['__bitmapcontainer']) {
-                        if (cmenu) {
-                            this.__bitmapcontainer.menu = cmenu.kernel.__LZcontextMenu();
-                        } else {
-                            delete this.__bitmapcontainer.menu;
-                        }
-                    }
-                    if (this.context) {
-                        if (cmenu) {
-                            this.context.menu = cmenu.kernel.__LZcontextMenu();
-                        } else {
-                            delete this.context.menu;
-                        }
-                    }
                     super.$lzc$set_contextmenu(cmenu);
+                    this.__updateContextMenu();
+                }
+
+                // Install/remove context menus on all drawing contexts and the bitmap
+                private function __updateContextMenu():void {
+                    // Install right-click context menu if there is one
+                    var cmenu:LzContextMenu = this.sprite['__contextmenu'];
+                    if (cmenu) {
+                        var menu = cmenu.kernel.__LZcontextMenu();
+                        if (this.__drawcontext) this.__drawcontext.menu = menu;
+                        if (this.__bitmapcontainer) this.__bitmapcontainer.menu = menu;
+                        for (var i = 0; i < this.__contexts.length; i++) {
+                            if (this.__contexts[i]) {
+                                this.__contexts[i].menu = menu;
+                            }
+                        }
+                    } else {
+                        if (this.__drawcontext) delete this.__drawcontext.menu
+                        if (this.__bitmapcontainer) delete this.__bitmapcontainer.menu;
+                        for (var i = 0; i < this.__contexts.length; i++) {
+                            if (this.__contexts[i]) {
+                                delete this.__contexts[i].menu;
+                            }
+                        }
+                    }
                 }
 
                 function getImage(name):BitmapData {
@@ -1429,11 +1454,23 @@
                     var drawcontainer:MovieClip = this.getDisplayObject().createEmptyMovieClip("drawcontainer", 1);
                     this.__drawcontainer = drawcontainer.createEmptyMovieClip("drawing", drawcontainer.getNextHighestDepth());
 
-                    // Install right-click context menu if there is one
-                    var cmenu:LzContextMenu = this.sprite['__contextmenu'];
-                    if (cmenu) context.menu = cmenu.kernel.__LZcontextMenu();
+                    // create bitmap here to ensure we're behind the drawing context
+                    this.rebuildBitmap();
 
-                    return drawcontainer;
+                    // context and __drawcontext are the same for AS2
+                    this.__drawcontext = this.createDrawingContext();
+                    this.__updateContextMenu();
+
+                    return this.__drawcontext;
+                }
+
+                // Create new context to draw in
+                private function createDrawingContext() {
+                    var depth:Number = this.__drawcontainer.getNextHighestDepth();
+                    var context = this.__drawcontainer.createEmptyMovieClip('draw' + depth, depth);
+
+                    return context;
+                    
                 }
 
                 function save() {
@@ -1441,8 +1478,9 @@
                     this.__contexts.push(this.context);
 
                     // Create new context to draw in
-                    var depth:Number = this.__drawcontainer.getNextHighestDepth();
-                    this.context = this.__drawcontainer.createEmptyMovieClip('draw' + depth, depth);
+                    this.context = this.__drawcontext = createDrawingContext();
+                    this.__updateContextMenu();
+
                     // Offset to the center to ensure we can grab the whole thing
                     this.context._x = this.width * .5;
                     this.context._y = this.height * .5;
@@ -1469,11 +1507,16 @@
             function fillRect(x, y, w, h) {
                 var color:Object = this.__getColor(this.fillStyle);
                 var alpha:Number = color.a != null ? color.a : this.globalAlpha;
-                alpha = (alpha * 255) << 24;
-                var colorval:uint = color.c | alpha;
-
-                var rect:Rectangle = new flash.geom.Rectangle(x, y, w, h);
-                this.__bitmapdata.fillRect(rect, colorval);
+                if (alpha == 1) {
+                    // Use fillRect when we don't need alpha since it replaces the pixels
+                    var rect:Rectangle = new flash.geom.Rectangle(x, y, w, h);
+                    this.__bitmapdata.fillRect(rect, color.c + 0xff000000);
+                } else {
+                    // can't use fillRect() with alpha because it replaces the pixels
+                    this.beginPath();
+                    this.rect(x, y, w, h);
+                    this.fill();
+                }
             }
 
             private function getIdentityMatrix():Matrix {
