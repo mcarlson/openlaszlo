@@ -73,7 +73,7 @@ class LzMouseKernel  {
                 // Mouse reentered the app.
                 if (event.buttonDown) __mouseUpOutsideHandler();
 
-                if (lz.embed.browser.isFirefox && lz.embed.browser.OS == 'mac' && lz.embed.browser.version < 3.5) {
+                if (lz.embed.browser && lz.embed.browser.isFirefox && lz.embed.browser.OS == 'Mac' && lz.embed.browser.version < 3.5) {
                     // TODO [hqm 2009-04] LPP-7957 -- this works
                     // around Firefox bug; if you are making a text
                     // selection, and then drag the mouse outside of
