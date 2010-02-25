@@ -1,7 +1,7 @@
 /**
   * LzHTTPLoader.as
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -91,7 +91,6 @@ public class LzHTTPLoader {
     
     public function getResponseHeader (key:String) :String {
         // There seems to be no way to get response headers in the flash.net URLLoader API
-        trace('getResponseHeader not implemented in swf9');
         return null;
     }
 
@@ -270,8 +269,6 @@ public class LzHTTPLoader {
 
     private function configureListeners(dispatcher:IEventDispatcher):void {
         dispatcher.addEventListener(Event.COMPLETE, completeHandler);
-        dispatcher.addEventListener(Event.OPEN, openHandler);
-        dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler);
         dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
         dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
     }
@@ -310,7 +307,6 @@ public class LzHTTPLoader {
                                                               options.nsprefix);
                         }
                     } catch (err:Error) {
-                        trace("caught error parsing xml", err);
                         loadError(this, null);
                         return;
                     }
@@ -322,23 +318,13 @@ public class LzHTTPLoader {
         }
     }
 
-    private function openHandler(event:Event):void {
-        trace("openHandler: " + event);
-    }
-
-    private function progressHandler(event:ProgressEvent):void {
-        trace("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
-    }
-
     private function securityErrorHandler(event:SecurityErrorEvent):void {
-        trace("securityErrorHandler: " + event);
         removeTimeout(this);
         loader = null;
         loadError(this, null);
     }
 
     private function ioErrorHandler(event:IOErrorEvent):void {
-        trace("ioErrorHandler: " + event);
         removeTimeout(this);
         loader = null;
         loadError(this, null);
@@ -355,7 +341,7 @@ public class LzHTTPLoader {
             // anything, but we could... or maybe at least a debugger
             // message?
             if ($debug) {
-                Debug.warn("LzHTTPLoader.send, no request to send to, has open()  been called?");
+                Debug.warn("LzHTTPLoader.send, no request to send to, has open() been called?");
             }
             return;
         }
@@ -393,31 +379,9 @@ public class LzHTTPLoader {
             if (isFinite(this.timeout)) {
                 this.setupTimeout(this, this.timeout);
             }
-        } catch (error) {
-            // TODO [hqm 2008-01] make this send appropriate error event to listener,
-            // and abort the load. 
-            trace("Unable to load requested document.", error);
+        } catch (error:Error) {
+            this.loader = null;
+            this.loadError(this, null);
         }
     }
 }
-
-    /*
-      Event    Summary    Defined By
-      complete
-      Dispatched after all the received data is decoded and placed in the data property of the URLLoader object.  
-
-      httpStatus
-      Dispatched if a call to URLLoader.load() attempts to access data over HTTP and the current Flash Player environment is able to detect and return the status code for the request.   URLLoader
-        
-      ioError
-      Dispatched if a call to URLLoader.load() results in a fatal error that terminates the download. URLLoader
-        
-      open
-      Dispatched when the download operation commences following a call to the URLLoader.load() method.   URLLoader
-        
-      progress
-      Dispatched when data is received as the download operation progresses.  URLLoader
-        
-      securityError
-      Dispatched if a call to URLLoader.load() attempts to load data from a server outside the security sandbox.  URLLoader
-    */
