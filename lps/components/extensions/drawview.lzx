@@ -1513,9 +1513,24 @@
                     this.__bitmapdata.fillRect(rect, color.c + 0xff000000);
                 } else {
                     // can't use fillRect() with alpha because it replaces the pixels
-                    this.beginPath();
-                    this.rect(x, y, w, h);
-                    this.fill();
+                    // fillRect() must not affect the current path, per http://www.whatwg.org/specs/web-apps/current-work/#simple-shapes-%28rectangles%29
+                    var color:Object = this.__getColor(this.fillStyle);
+                    var alpha:Number = color.a != null ? color.a : this.globalAlpha;
+                    if ($as2) { alpha *= 100; }
+                    this.context.beginFill(color.c, alpha);
+
+                    this.context.moveTo(x, y);
+                    this.context.lineTo(x, y + w);
+                    this.context.lineTo(x + h, y + w);
+                    this.context.lineTo(x + h, y);
+                    this.context.lineTo(x, y);
+
+                    this.context.endFill();
+
+                    // move back to the implicit 0,0 set in beginPath();
+                    this.context.moveTo(0,0);
+
+                    this.__updateSize();
                 }
             }
 
