@@ -635,6 +635,7 @@ LzSprite.prototype.capabilities = {
     ,rgba: false
     ,css2boxmodel: true
     ,medialoading: true
+    ,backgroundrepeat: true
 }
 
 /**
@@ -1190,7 +1191,9 @@ LzSprite.prototype.setSource = function (url, usecache){
             this.__restoreSize();
         }
     }
-    if (usecache != true){
+    if (usecache == 'reset') {
+        usecache = false;
+    } else if (usecache != true){
         // called by a user
         this.skiponload = false;
         this.resource = url;
@@ -1217,14 +1220,14 @@ LzSprite.prototype.setSource = function (url, usecache){
     this.source = url;
 
     
-    if (this.stretches == null && this.__csssprite) {
-        if (! this.__LZimg) {
-            var im = document.createElement('img');
-            im.className = 'lzimg';
-            im.owner = this;
-            im.src = LzSprite.blankimage;
-            this.__bindImage(im);
-        }
+    if (this.backgroundrepeat) {
+        this.__createIMG();
+        this.__setBGImage(url);
+        this.__updateBackgroundRepeat();
+        this.owner.resourceload({width: this.resourceWidth, height: this.resourceHeight, resource: this.resource, skiponload: this.skiponload});
+        return;
+    } else if (this.stretches == null && this.__csssprite) {
+        this.__createIMG();
         this.__updateStretches();
         var imgurl = this.__csssprite ? this.__csssprite : url;
         this.__setBGImage(imgurl);
@@ -1277,11 +1280,23 @@ LzSprite.prototype.__bindImage = function (im){
 }
 
 LzSprite.prototype.__setBGImage = function (url){
-    var bgurl = url ? "url('" + url + "')" : null;
-    this.__bgimage = this.__LZimg.style.backgroundImage = bgurl
+    if (this.__LZimg) {
+        var bgurl = url ? "url('" + url + "')" : null;
+        this.__bgimage = this.__LZimg.style.backgroundImage = bgurl
+    }
     if (bgurl != null) {
         var y = -this.__cssspriteoffset || 0; 
         this.__LZimg.style.backgroundPosition = '0px ' + y + 'px';
+    }
+}
+
+LzSprite.prototype.__createIMG = function (){
+    if (! this.__LZimg) {
+        var im = document.createElement('img');
+        im.className = 'lzdiv';
+        im.owner = this;
+        im.src = LzSprite.blankimage;
+        this.__bindImage(im);
     }
 }
 
@@ -1645,6 +1660,7 @@ LzSprite.prototype.setWidth = function ( w ){
         this.applyCSS('width', size);
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
+        if (this.backgroundrepeat) this.__updateBackgroundRepeat();
         if (this.__LZclick) this.applyCSS('width', w, '__LZclick');
         if (this.__LZcontext) this.applyCSS('width', w, '__LZcontext');
         if (this.__LZcanvas) this.__resizecanvas();
@@ -1696,6 +1712,7 @@ LzSprite.prototype.setHeight = function ( h ){
         this.applyCSS('height', size);
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
+        if (this.backgroundrepeat) this.__updateBackgroundRepeat();
         if (this.__LZclick) this.applyCSS('height', h, '__LZclick');
         if (this.__LZcontext) this.applyCSS('height', h, '__LZcontext');
         if (this.__LZcanvas) this.__resizecanvas();
@@ -2657,10 +2674,14 @@ LzSprite.prototype.__setFrame = function (f, force){
     //Debug.info('LzSprite.__setFrame', f);
     this.frame = f;
 
-    if (this.stretches == null && this.__csssprite) {
+    var url = this.frames[this.frame - 1];
+    if (this.backgroundrepeat) {
+        this.__setBGImage(url);
+        this.__updateBackgroundRepeat();
+    } else if (this.stretches == null && this.__csssprite) {
         // use x axis for now...
         if (! this.__bgimage) {
-            this.__LZimg.src = LzSprite.blankimage;
+            this.__createIMG();
             this.__setBGImage(this.__csssprite);
         }
         var x = (this.frame - 1) * (- this.resourceWidth);
@@ -2669,7 +2690,6 @@ LzSprite.prototype.__setFrame = function (f, force){
         //Debug.write('frame', f, x, y, this.__LZdiv.style.backgroundPosition)
     } else {
         // from __updateFrame()    
-        var url = this.frames[this.frame - 1];
         this.setSource(url, true);
     }
     if (skipevent) return;
@@ -2811,6 +2831,47 @@ LzSprite.prototype.setRotation = function(r) {
     } else if (browser.isFirefox) {
         // https://developer.mozilla.org/en/CSS/-moz-transform
         this.__LZdiv.style['MozTransform'] = 'rotate(' + r + 'deg)';
+    }
+}
+
+LzSprite.prototype.backgroundrepeat = null;
+LzSprite.prototype.tilex = false;
+LzSprite.prototype.tiley = false;
+LzSprite.prototype.setBackgroundRepeat = function(backgroundrepeat) {
+    if (this.backgroundrepeat == backgroundrepeat) return;
+    var x = false;
+    var y = false;
+    if (backgroundrepeat == 'repeat') {
+        x = y = true;
+    } else if (backgroundrepeat == 'repeat-x') {
+        x = true;
+    } else if (backgroundrepeat == 'repeat-y') {
+        y = true;
+    }
+    this.tilex = x;
+    this.tiley = y;
+    this.backgroundrepeat = backgroundrepeat;
+    if (! this.__LZimg) this.__createIMG();
+    this.__updateBackgroundRepeat();
+    if (backgroundrepeat) {
+        this.__setBGImage(this.source);
+        this.__LZimg.src = LzSprite.blankimage;
+    } else {
+        if (this.__bgimage) this.__setBGImage(null);
+        // reset to default 
+        backgroundrepeat = '';
+        this.skiponload = true;
+        this.setSource(this.source, 'reset');
+    }
+    this.__LZdiv.style.backgroundRepeat = backgroundrepeat;
+}
+
+LzSprite.prototype.__updateBackgroundRepeat = function() {
+    if (this.__LZimg) {
+        this.__LZimg.style.backgroundRepeat = this.backgroundrepeat;
+        this.__LZimg.style.backgroundPosition = '0px 0px';
+        this.__LZimg.width = this.backgroundrepeat ? this.width : this.resourceWidth;
+        this.__LZimg.height = this.backgroundrepeat ? this.height : this.resourceHeight;
     }
 }
 

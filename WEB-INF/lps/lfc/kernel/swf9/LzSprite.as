@@ -14,6 +14,7 @@ public class LzSprite extends Sprite {
 #passthrough (toplevel:true) {
   import flash.display.AVM1Movie;
   import flash.display.Bitmap;
+  import flash.display.BitmapData;
   import flash.display.DisplayObject;
   import flash.display.DisplayObjectContainer;
   import flash.display.Graphics;
@@ -33,6 +34,7 @@ public class LzSprite extends Sprite {
   import flash.events.SecurityErrorEvent;
   import flash.geom.ColorTransform;
   import flash.geom.Rectangle;
+  import flash.geom.Matrix;
   import flash.media.Sound;
   import flash.media.SoundChannel;
   import flash.media.SoundMixer;
@@ -143,6 +145,7 @@ public class LzSprite extends Sprite {
     ,cornerradius: true
     ,css2boxmodel: true
     ,medialoading: true
+    ,backgroundrepeat: true
     };
     var capabilities = LzSprite.capabilities;
 
@@ -245,10 +248,25 @@ public class LzSprite extends Sprite {
     public function predestroy() :void {
     }
 
+    // Holds onto backgroundrepeat bitmap when needed
+    private var __repeatbitmap:BitmapData = null;
     public function drawBackground():void {
         var context = this.graphics;
         context.clear();
         var alpha:Number = this.__bgcolorhidden ? 0 : 1;
+        if (this.__repeatbitmap) this.__repeatbitmap.dispose();
+        if (this.backgroundrepeat && this.resourcewidth && this.resourceheight) {
+            var bmp = copyBitmap(this, this.resourcewidth, this.resourceheight);
+            if (bmp) {
+                context.beginBitmapFill(bmp);
+                var height = this.repeaty ? this.lzheight : this.resourceheight;
+                var width = this.repeatx ? this.lzwidth : this.resourcewidth;
+                LzKernelUtils.rect(context, 0 - this.padding, 0 - this.padding, width + (this.padding * 2), height + (this.padding * 2), this.cornerradius);
+                context.endFill();
+                // disposing here messes with the fill - store to dispose later
+                this.__repeatbitmap = bmp;
+            }
+        }
         if (this.borderWidth) {
             var colorobj = LzColorUtils.inttocolorobj(borderColor);
             context.beginFill(colorobj.color, alpha);
@@ -582,6 +600,7 @@ public class LzSprite extends Sprite {
         } catch (error:Error) {
             if ($debug) Debug.warn("loaderEventHandler(%w): %w", event, error);
         }
+        this.drawBackground();
     }
 
     /**
@@ -1258,6 +1277,7 @@ public class LzSprite extends Sprite {
             // This shouldn't happen - but it does, on roll over 
             //Debug.write('unhandled stop', fn, rel);
         }
+        if (this.backgroundrepeat) this.drawBackground();
     }
 
     private function updateResourcePlay (play:Boolean, framenumber:*, rel:Boolean) :void {
@@ -1380,6 +1400,10 @@ public class LzSprite extends Sprite {
         this.unload();
         if (parentvalid && parent) {
             parent.removeChild(this);
+        }
+        if (this.__repeatbitmap) this.__repeatbitmap.dispose();
+        if (this.mask != null) {
+            this.removeMask();
         }
     }
 
@@ -1526,6 +1550,7 @@ public class LzSprite extends Sprite {
       }
       this.imgLoader = null;
       this.resourceCache = null;
+      this.drawBackground();
     }
 
     public function setAccessible(accessible:*) :void {
@@ -1848,14 +1873,46 @@ public class LzSprite extends Sprite {
         this.drawBackground();
     }
 
-      static function setMediaLoadTimeout(ms){
-          LzSprite.medialoadtimeout = ms;
-      }
+    static function setMediaLoadTimeout(ms){
+        LzSprite.medialoadtimeout = ms;
+    }
 
-      static function setMediaErrorTimeout(ms){
-          LzSprite.mediaerrortimeout = ms;
-      }
+    static function setMediaErrorTimeout(ms){
+        LzSprite.mediaerrortimeout = ms;
+    }
+
+    var backgroundrepeat:String = null;
+    var repeatx:Boolean = false;
+    var repeaty:Boolean = false;
+    function setBackgroundRepeat(backgroundrepeat:String) {
+        if (this.backgroundrepeat == backgroundrepeat) return;
+        var x = false;
+        var y = false;
+        if (backgroundrepeat == 'repeat') {
+            x = y = true;
+        } else if (backgroundrepeat == 'repeat-x') {
+            x = true;
+        } else if (backgroundrepeat == 'repeat-y') {
+            y = true;
+        }
+        this.repeatx = x;
+        this.repeaty = y;
+        this.backgroundrepeat = backgroundrepeat;
+        this.drawBackground();
+    }
+
+    private function copyBitmap(from:*, w:Number, h:Number, to:BitmapData = null, m:Matrix = null) {
+        var tmp:BitmapData = new flash.display.BitmapData(w, h, true, 0x000000ff);
+        tmp.draw(from);
+
+        // If to wasn't supplied, return the bitmap as-is.
+        if (! to) {
+            return tmp;
+        }
+        to.draw(tmp, m, null, null, null, true);
+        tmp.dispose();
+    }
 
   }#
   
-  }
+}

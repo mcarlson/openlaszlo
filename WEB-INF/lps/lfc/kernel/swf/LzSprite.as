@@ -76,6 +76,7 @@ LzSprite.prototype.capabilities = {
     ,'2dcanvas': true
     ,dropshadows: true
     ,medialoading: true
+    ,backgroundrepeat: true
 }
 
 /**
@@ -642,6 +643,7 @@ LzSprite.prototype.setWidth = function ( v ){
         return;
     }
     this.width = v;
+    if (this.backgroundrepeat) this.__updateBackgroundRepeat();
 
     if ( this._setrescwidth ){
         // <scale as fraction> = ( <desired dim in px> / <resource dim
@@ -693,6 +695,7 @@ LzSprite.prototype.setHeight = function ( v ){
         return;
     }
     this.height = v;
+    if (this.backgroundrepeat) this.__updateBackgroundRepeat();
 
     if ( this._setrescheight ){
         // <scale as fraction> = ( <desired dim in px> / <resource dim
@@ -998,6 +1001,7 @@ LzSprite.prototype.destroy = function( parentvalid = true ) {
         removeMovieClip( this.__LZbgRef );
         delete this.__LZbgRef;
     }
+    if (this.__repeatbitmap) this.__repeatbitmap.dispose();
 }
 
 /**
@@ -1539,6 +1543,7 @@ LzSprite.prototype.stop = function (f, rel){
     } else {
         m.stop();
     }
+    if (this.backgroundrepeat) this.__updateBackgroundRepeat();
 
     if ( this.playing ) this.owner.resourceevent('stop', null, true);
     this.stopTrackPlay();
@@ -1825,6 +1830,55 @@ LzSprite.setMediaLoadTimeout = function(ms){
 LzSprite.mediaerrortimeout = 4500;
 LzSprite.setMediaErrorTimeout = function(ms){
     LzSprite.mediaerrortimeout = ms;
+}
+
+LzSprite.prototype.backgroundrepeat = null;
+LzSprite.prototype.repeatx = false;
+LzSprite.prototype.repeaty = false;
+LzSprite.prototype.setBackgroundRepeat = function (backgroundrepeat){
+    if (this.backgroundrepeat == backgroundrepeat) return;
+    var x = false;
+    var y = false;
+    if (backgroundrepeat == 'repeat') {
+        x = y = true;
+    } else if (backgroundrepeat == 'repeat-x') {
+        x = true;
+    } else if (backgroundrepeat == 'repeat-y') {
+        y = true;
+    }
+    this.repeatx = x;
+    this.repeaty = y;
+    this.backgroundrepeat = backgroundrepeat;
+    this.__updateBackgroundRepeat();
+    //Debug.warn('setBackgroundRepeat', backgroundrepeat, this.owner);
+}
+
+LzSprite.prototype.__repeatbitmap = null;
+/** Clears and (if backgroundrepeat is on) redraws the tiled image
+  * @access private
+  */
+LzSprite.prototype.__updateBackgroundRepeat = function (  ){
+    var context = this.getContext();
+    context.clear();
+    if (this.__repeatbitmap) this.__repeatbitmap.dispose();
+    if (this.backgroundrepeat) {
+        var bmp = new flash.display.BitmapData(this.resourcewidth, this.resourceheight, true);
+        var matrix = new flash.geom.Matrix();
+        //draw the image
+        bmp.draw(context, matrix, null, "normal");
+        //copy the alpha channel
+        bmp.draw(context, matrix, null, "alpha");
+        if (bmp) {
+            context.beginBitmapFill(bmp, matrix, true);
+            var height = this.repeaty ? this.height : this.resourceheight;
+            var width = this.repeatx ? this.width : this.resourcewidth;
+            LzKernelUtils.rect(context, 0, 0, width, height);
+            context.endFill();
+            // disposing here messes with the fill - store to dispose later
+            this.__repeatbitmap = bmp;
+        }
+    }
+    //Debug.write('__updateBackgroundRepeat', this.backgroundrepeat, bmp, mc);
 }
 
 }

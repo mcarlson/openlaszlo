@@ -1,7 +1,7 @@
 /**
   * LzMakeLoadSprite.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -160,6 +160,7 @@ LzMakeLoadSprite.updateAfterLoad = function (mloader) {
 LzMakeLoadSprite.unload = function () {
     this.loader.unload(this.loader.mc);
     this.stopTrackPlay();
+    this.__updateBackgroundRepeat();
 }
 
 /**

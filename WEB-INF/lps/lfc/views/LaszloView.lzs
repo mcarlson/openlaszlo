@@ -850,6 +850,10 @@ function $lzc$set_stretches( stretch ){
     } else if (this.stretches == stretch) {
         return;
     }
+    if (this.backgroundrepeat) {
+        if ($debug) Debug.warn("Backgroundrepeat and stretches can't be on at the same time. Canceling backgroundrepeat.", this);
+        this.$lzc$set_backgroundrepeat(false);
+    }
     
     this.stretches = stretch;
     this.sprite.stretchResource(stretch);
@@ -865,6 +869,40 @@ function $lzc$set_stretches( stretch ){
         this.__LZcheckheight = true;
         this.reevaluateSize( "height" );
     }
+}
+
+/**
+  * Setting <code>backgroundrepeat</code> causes a view to repeat its resource 
+  * to fit the view's width and/or height.  Can be 'repeat', 'repeat-x',
+  * 'repeat-y' or 'norepeat'/null per the CSS1 background-repeat style.
+  * @lzxtype string
+  * @type String
+  * @lzxdefault null
+  */
+var backgroundrepeat = null; 
+/** event for changes to view's <attribute>backgroundrepeat</attribute> property 
+ * @lzxtype event 
+ * @access public
+ */
+var onbackgroundrepeat = LzDeclaredEvent;
+function $lzc$set_backgroundrepeat( backgroundrepeat = null ){
+    this.backgroundrepeat = backgroundrepeat
+    if (! this.capabilities.backgroundrepeat) {
+        LzView.__warnCapability('view.backgroundrepeat', 'backgroundrepeat'); 
+    } else if (backgroundrepeat == null || backgroundrepeat == 'repeat' || backgroundrepeat == 'repeat-x' || backgroundrepeat == 'repeat-y' || backgroundrepeat == 'norepeat') {
+        if (backgroundrepeat && this.stretches != 'none') {
+            if ($debug) Debug.warn("Backgroundrepeat and stretches can't be on at the same time. Canceling stretches.", this);
+            this.$lzc$set_stretches('none');
+        }
+        // The kernel expects null for no backgroundrepeat
+        if (backgroundrepeat == 'norepeat') backgroundrepeat = null;
+        this.sprite.setBackgroundRepeat(backgroundrepeat);
+    } else {
+        if ($debug) {
+            Debug.warn("backgroundrepeat must be set to 'repeat', 'repeat-x', 'repeat-y' or 'norepeat'/null:", backgroundrepeat);
+        }
+    }
+    if (this.onbackgroundrepeat.ready) this.onbackgroundrepeat.sendEvent(this.backgroundrepeat);
 }
 
 /** A CSS property when declared in the tag: value sequence of layout
