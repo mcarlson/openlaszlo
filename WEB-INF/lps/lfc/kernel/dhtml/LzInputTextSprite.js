@@ -101,6 +101,7 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
       } else {
         this.__LZinputclickdiv.onmouseover = this.__handlemouse;
       }
+      this.__LZinputclickdiv.onmousedown = this.__handlemouse;
 
       if (this.quirks.input_highlight_bug) {
         // TODO [hqm 2009-06-09] LPP-8121 I discovered that if an
@@ -214,7 +215,8 @@ LzInputTextSprite.prototype.setMultiline = function(ml) {
 }
 
 // called from the scope of __LZinputclickdiv
-LzInputTextSprite.prototype.__handlemouse = function(e) {
+LzInputTextSprite.prototype.__handlemouse = function(evt) {
+    if (! evt) evt = window.event;
     var sprite = this.owner;
     // make sure we have a sprite and view
     if (! sprite || ! sprite.owner || sprite.selectable != true) return;
@@ -227,6 +229,12 @@ LzInputTextSprite.prototype.__handlemouse = function(e) {
 //            sprite.select();
 //        }
 //    } else {
+
+        //Debug.warn('__handlemouse', sprite, evt.type);
+        if (evt.type == 'mousedown') {
+          // This ensures the sprite stays shown, so the next click works
+          LzInputTextSprite.prototype.__focusedSprite = sprite;
+        }
         sprite.__show();
 //    }
 }
