@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzmodemanager
@@ -160,7 +160,8 @@ public final class LzModeManagerService extends LzEventable {
 
         lz.GlobalMouse.__mouseEvent(eventStr, view);
 
-        if (view == null || this.eventsLocked) {
+        // @devnote This used to return when view == null, which happens for canvas events.  We want to process events for the canvas with passModeEvent(), so test for null later.
+        if (this.eventsLocked) {
             return;
         }
 
@@ -174,21 +175,28 @@ public final class LzModeManagerService extends LzEventable {
             }
             // exclude the debugger from the mode
             if ($debug) {
+              if (view) {
                 if ($as2 || $as3) {
-                    if (this.remotedebug == null) {
-                        this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
-                    }
+                  if (this.remotedebug == null) {
+                    this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
+                  }
                 }
                 if (!this.remotedebug && view.childOf(Debug.console.window)) {
                   break;
                 }
+              }
             }
 
-            if (view.childOf( mView )) {
+            if (view && view.childOf( mView )) {
                 break;
             } else {
                 dosend = mView.passModeEvent ? mView.passModeEvent( eventStr, view ) : false;
             }
+        }
+
+        // Don't send canvas events (view == null)
+        if (! view) {
+            return;
         }
 
         if (dosend) {
