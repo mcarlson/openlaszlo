@@ -181,7 +181,7 @@ refer to the class attributes by name directly, without the prefix
    &lt;method name="explicitAttrValue"&gt;
      return this.attr;
    &lt;/method&gt;
-&lt;/method&gt;
+&lt;/class&gt;
 </programlisting>
 <para>
 The two methods will return the same value. 
