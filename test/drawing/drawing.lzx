@@ -51,7 +51,7 @@
     <drawview width="200" height="200">
         <handler name="oncontext">
             this.beginPath();
-            this.arc(100, 100, 50, 0, 90);
+            this.arc(100, 100, 50, 0, Math.PI * .5, true);
 
             this.oval(20, 120, 10);
             this.oval(75, 120, 10, 40);
@@ -60,7 +60,12 @@
             this.rect(10, 150, 50, 40, 10);
 
             this.stroke();
-            this.closePath();
+
+            // Character 1
+            this.beginPath();
+            this.arc(100,37,13,Math.PI/7,-Math.PI/7,false);
+            this.lineTo(97,37);
+            this.fill();
         </handler>
     </drawview>
 
