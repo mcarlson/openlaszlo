@@ -59,6 +59,8 @@ public class ParseTreePrinter {
     String dumpLineAnnotationsFile = null;
     public Config setDumpLineAnnotationsFile(String value) { dumpLineAnnotationsFile = value; return this; }
 
+    boolean incremental = false;
+
     // For debugging, for now, must be set by hand
     public static final boolean DEBUG_NODE_OUTPUT = false;
     public static final boolean DEBUG_LINE_NUMBER = false;

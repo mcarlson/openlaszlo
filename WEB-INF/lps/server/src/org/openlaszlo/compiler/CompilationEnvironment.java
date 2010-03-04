@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -60,6 +60,10 @@ public class CompilationEnvironment {
     public static final String EMBEDFONTS_PROPERTY    = "embedfonts";
     public static final String SOURCELOCATOR_PROPERTY = "sourcelocators";
 
+
+    // AS3-specific options
+    public static final String INCREMENTAL_MODE = "incremental";
+    public static final String LZXONLY          = "lzxonly";
 
     // Flag used internally, to mark whether the user instantiated a <debug>
     // tag manually. If they didn't, we need to add a call to instantiate one.

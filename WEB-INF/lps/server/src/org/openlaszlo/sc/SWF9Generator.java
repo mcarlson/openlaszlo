@@ -780,6 +780,7 @@ public class SWF9Generator extends JavascriptGenerator {
                                  options.getBoolean(Compiler.DEBUG_SWF9))
       && !options.getBoolean(Compiler.DISABLE_PUBLIC_FOR_DEBUG);
 
+    config.incremental = options.getBoolean(Compiler.INCREMENTAL_COMPILE);
     config.mainClassName = (String) options.get(Compiler.SWF9_APP_CLASSNAME);
     //System.err.println("mainClassName = "+config.mainClassName);
     if (config.islib) {

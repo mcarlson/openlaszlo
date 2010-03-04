@@ -430,9 +430,6 @@ class SWF9Writer extends ObjectWriter {
 
         Properties props = (Properties)mProperties.clone();
 
-        // TODO [hqm 2009-01] make this a compiler command line option, (add to CompilationEnvironment)?
-        props.put(org.openlaszlo.sc.Compiler.INCREMENTAL_COMPILE, LPS.getProperty("compiler.swf9.incremental"));
-
         // Set up the boilerplate code needed for the main swf9 application class
         props.put(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeApplicationPreamble());
         props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, MAIN_APP_CLASSNAME);

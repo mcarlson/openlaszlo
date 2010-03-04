@@ -74,7 +74,12 @@ public class Main {
         "-S | --script",
         "  Writes JavaScript to .lzs file.",
         "-SS | --savestate",
-        "  Writes JavaScript to .lzs file, and ASTs to -astin.txt, -astout.txt"
+        "  Writes JavaScript to .lzs file, and ASTs to -astin.txt, -astout.txt",
+        "--incremental",
+        "  for as3 runtime, use incremental compiler mode",
+        "--lzxonly",
+        "  for as3 runtime, emit intermediate as files, but don't call backend as3 compiler"
+
     };
 
     private final static String MORE_HELP =
@@ -95,6 +100,21 @@ public class Main {
     {
       System.exit(lzc(args, null, null, null));
     }
+
+
+    // Save the name of the last outputfile, for use when called from the fcsh shell
+    static String swfOutputFilename;
+
+    /*
+      Returns the filename of the output, which contains a mxmlc command-line arglist
+     */
+    public static String invoke(String args[])
+        throws IOException
+    {
+        lzc(args, null, null, null);
+        return Main.swfOutputFilename;
+    }
+
 
     /** This method implements the behavior described in main
      * but also returns an integer error code.
@@ -268,6 +288,10 @@ public class Main {
                     compiler.setProperty(CompilationEnvironment.PROFILE_PROPERTY, "true");
                 } else if (arg == "-c" || arg == "--compile") {
                   compiler.setProperty(CompilationEnvironment.LINK_PROPERTY, "false");
+                } else if (arg == "--incremental") {
+                  compiler.setProperty(CompilationEnvironment.INCREMENTAL_MODE, "true");
+                } else if (arg == "--lzxonly") {
+                  compiler.setProperty(CompilationEnvironment.LZXONLY, "true");
                 } else if (arg == "--help") {
                     for (int j = 0; j < USAGE.length; j++) {
                         System.err.println(USAGE[j]);
@@ -396,6 +420,7 @@ public class Main {
           outDir = sourceFile.getParent();
         }
         File objectFile = new File(outDir, outName);
+        Main.swfOutputFilename = objectFile.getAbsolutePath();
         BufferedWriter intermediate = null;
         try {
           if (intermediateName != null) {
@@ -454,7 +479,7 @@ public class Main {
 }
 
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

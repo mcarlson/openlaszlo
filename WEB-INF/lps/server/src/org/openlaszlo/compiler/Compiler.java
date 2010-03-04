@@ -346,6 +346,14 @@ public class Compiler {
             props.put("$backtrace", new Boolean(
                                          env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY)));
 
+
+            props.put(org.openlaszlo.sc.Compiler.INCREMENTAL_COMPILE,
+                      new Boolean (env.getBooleanProperty(CompilationEnvironment.INCREMENTAL_MODE)));
+
+
+            props.put(org.openlaszlo.sc.Compiler.EMIT_AS3_ONLY,
+                      new Boolean (env.getBooleanProperty(CompilationEnvironment.LZXONLY)));
+
             String runtime = env.getProperty(env.RUNTIME_PROPERTY);
             // Must be kept in sync with server/sc/lzsc.py main
             env.setRuntimeConstants(runtime);

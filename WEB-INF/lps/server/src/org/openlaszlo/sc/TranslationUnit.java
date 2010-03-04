@@ -29,6 +29,7 @@ public class TranslationUnit
   private Map streams = new HashMap(); // alternate streams, indexed by number
   private int maxInserts = 0;          // bound the number of stream insert replacements
   private boolean isClass = true;
+  private String lzxFilename = null;
 
   // When these appear in the contents they will be replaced
   // by the indicated stream whenever contents is retrieved.
@@ -40,6 +41,18 @@ public class TranslationUnit
     int line;
     public String toString() {
       return sourcefile.toString() + ": " + line;
+    }
+  }
+
+  public String getLZXFilename() {
+    return lzxFilename;
+  }
+
+  public long getLastModified() {
+    if (lzxFilename != null) {
+      return new java.io.File(lzxFilename).lastModified();
+    } else {
+      return 0L;
     }
   }
 
@@ -201,6 +214,7 @@ public class TranslationUnit
     if (cur == null) {
       cur = new SourceFileLine();
       cur.sourcefile = srcf;
+      lzxFilename = srcf.name;
       cur.line = inputLinenum;
       lnums.put(key, cur);
     }
@@ -208,6 +222,7 @@ public class TranslationUnit
     // otherwise, we want the smallest input line in the mapping.
     else if (cur.sourcefile.equals(srcf) && inputLinenum < cur.line && inputLinenum > 0) {
       cur.line = inputLinenum;
+      lzxFilename = srcf.name;
       lnums.put(key, cur);
     }
   }
