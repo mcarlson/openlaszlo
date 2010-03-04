@@ -567,8 +567,6 @@ class SWF9Writer extends ObjectWriter {
 
         Properties props = (Properties)mProperties.clone();
 
-        props.put(org.openlaszlo.sc.Compiler.INCREMENTAL_COMPILE, "true");
-
         // Pass in the table of lzx class defs
         props.setProperty(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeLibraryPreamble());
         props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, LIBRARY_CLASSNAME);
@@ -587,7 +585,6 @@ class SWF9Writer extends ObjectWriter {
         props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
 
         try { 
-
             scriptWriter.close();
             byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
             InputStream input = new ByteArrayInputStream(objcode);

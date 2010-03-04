@@ -82,13 +82,15 @@ public class SWF9External {
       String newOpts = optionsToString();
       if (optsfile.exists()) {
         String prevOpts = FileUtils.readFileString(optsfile);
+        System.err.println("prevOpts: "+prevOpts);
+        System.err.println("newOpts: "+newOpts);
         return !newOpts.equals(prevOpts);
       } else {
         return true;
       }
     }
     catch (IOException ioe) {
-      throw new CompilerError("compilerOptionsChanged: error while rading incremental compiler options file: " + ioe);
+      throw new CompilerError("compilerOptionsChanged: error while reading incremental compiler options file: " + ioe);
     }
   }
 
@@ -145,15 +147,17 @@ public class SWF9External {
       }
 
       // If this is not an incremental compile, erase all files in the working directory
-      if (options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
-        // If the compiler options changed from the last compile, then clean the directory
-        if (compilerOptionsChanged()) {
-          System.err.println("swf9 compiler options changes, cleaning working dir");
+      if (!options.getBoolean(Compiler.REUSE_WORK_DIRECTORY)) {
+        if (options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
+          // If the compiler options changed from the last compile, then clean the directory
+          if (compilerOptionsChanged()) {
+            System.err.println("swf9 compiler options changes, cleaning working dir");
+            deleteDirectoryFiles(workdir);
+          }
+        } else {
+          System.err.println("cleaning working dir");
           deleteDirectoryFiles(workdir);
         }
-      } else {
-          System.err.println("cleaning working dir");
-        deleteDirectoryFiles(workdir);
       }
       writeOptionsFile();
     }
