@@ -235,16 +235,16 @@
     <!---
       Adds an arc to the current path. The arc is a segment of a circle that has radius as given.
       The circle segment is determined by the two angles startAngle and endAngle and begins at the given coordinate (x,y).
-      If clockwise is true, the arc is drawn clockwise from startAngle to endAngle, otherwise it is drawn counter-clockwise (anti-clockwise).
+      If anticlockwise is true, the arc is drawn counter-clockwise, otherwise it is drawn counter-clockwise (anti-clockwise).
 
       @param Number x: Starting x position
       @param Number y: Starting y position
       @param Number radius: Radius
       @param Number startAngle: Angle to start in radians
       @param Number endAngle: Angle to end in radians
-      @param Number clockwise: anticlockwise if true, clockwise otherwise
+      @param Number anticlockwise: counter-clockwise if true, clockwise otherwise
     -->
-    <method name="arc" args="x, y, radius, startAngle, endAngle, clockwise" />
+    <method name="arc" args="x, y, radius, startAngle, endAngle, anticlockwise" />
 
     <!---
       Rect creates a new subpath containing just the rectangle with top left coordinate (x, y), width w and height h.
@@ -281,16 +281,77 @@
         function moveTo(x,y) { }
         function quadraticCurveTo(cx, cy, px, py) {}
 
-        function arc(x, y, radius, startAngle, endAngle, clockwise = false) {
+        // factor used to convert radians to degrees
+        var __radtodegfactor = 180 / Math.PI;
+
+/* From http://www.w3.org/TR/html5/the-canvas-element.html#dom-context-2d-arc :
+The arc(x, y, radius, startAngle, endAngle, anticlockwise) method draws an arc. If the context has any subpaths, then the method must add a straight line from the last point in the subpath to the start point of the arc. In any case, it must draw the arc between the start point of the arc and the end point of the arc, and add the start and end points of the arc to the subpath. The arc and its start and end points are defined as follows:
+
+Consider a circle that has its origin at (x, y) and that has radius radius. The points at startAngle and endAngle along this circle's circumference, measured in radians clockwise from the positive x-axis, are the start and end points respectively.
+
+If the anticlockwise argument is false and endAngle-startAngle is equal to or greater than 2π, or, if the anticlockwise argument is true and startAngle-endAngle is equal to or greater than 2π, then the arc is the whole circumference of this circle.
+
+Otherwise, the arc is the path along the circumference of this circle from the start point to the end point, going anti-clockwise if the anticlockwise argument is true, and clockwise otherwise. Since the points are on the circle, as opposed to being simply angles from zero, the arc can never cover an angle greater than 2π radians. If the two points are the same, or if the radius is zero, then the arc is defined as being of zero length in both directions.
+
+Negative values for radius must cause the implementation to raise an INDEX_SIZE_ERR exception.
+*/
+        // 
+        function arc(x, y, radius, startAngle, endAngle, anticlockwise = false) {
+            if (startAngle == null || endAngle == null) return;
+
+            // The points at startAngle and endAngle along this circle's circumference, measured in radians clockwise from the positive x-axis, are the start and end points respectively.
+            // Invert the angles
+            startAngle = - startAngle;
+            endAngle = - endAngle;
+
+
+            var arc;
+
+            if ((anticlockwise == false && endAngle - startAngle >= 2 * Math.PI) || (anticlockwise == true && startAngle - endAngle >= 2 * Math.PI)) {
+                //If the anticlockwise argument is false and endAngle-startAngle is equal to or greater than 2π, or, if the anticlockwise argument is true and startAngle-endAngle is equal to or greater than 2π, then the arc is the whole circumference of this circle.
+                arc = 360;
+            } else if (startAngle == endAngle || radius == 0) {
+                //If the two points are the same, or if the radius is zero, then the arc is defined as being of zero length in both directions.
+                arc = 0;
+            } else {
+                //Otherwise, the arc is the path along the circumference of this circle from the start point to the end point, going anti-clockwise if the anticlockwise argument is true, and clockwise otherwise.
+                var startDeg = startAngle * this.__radtodegfactor;
+                var endDeg = endAngle * this.__radtodegfactor;
+
+                if (anticlockwise) {
+                    if (endDeg < startDeg) {
+                        arc = - ((startDeg - endDeg) - 360);
+                    } else {
+                        arc = (endDeg - startDeg) + 360;
+                    }
+                } else {
+                    if (endDeg < startDeg) {
+                        arc = - ((startDeg - endDeg) + 360);
+                    } else {
+                        arc = (endDeg - startDeg) - 360;
+                    }
+                }
+
+
+
+                while (arc < -360) {
+                    arc += 360;
+                }
+                while (arc > 360) {
+                    arc -= 360;
+                }
+                //console.log('_drawArc', arc, startDeg, endDeg, anticlockwise);
+            }
+
+            // Since the points are on the circle, as opposed to being simply angles from zero, the arc can never cover an angle greater than 2π radians.  
+
+            // TODO:
+            //If the context has any subpaths, then the method must add a straight line from the last point in the subpath to the start point of the arc.
             var sx:Number = x + radius*Math.cos(startAngle);
             var sy:Number = y + radius*Math.sin(2 * Math.PI - startAngle);
-            startAngle *= 180/Math.PI;
-            endAngle *= 180/Math.PI;
-            var arc:Number = clockwise == true ? ((endAngle - startAngle) - 360): endAngle - startAngle;
-            //move pen to the point along the circle at startAngle
             this.moveTo(sx, sy);
             //retain the center of the arc as the center point passed in.
-            return this._drawArc(x, y, radius, arc, startAngle);
+            this._drawArc(x, y, radius, arc, startAngle * this.__radtodegfactor);
         }
 
         function rect(x, y, w, h, cornerRadius = 0) {
@@ -557,6 +618,17 @@
                 }
             }
 
+            // Use native arc
+            function arc(x, y, radius, startAngle, endAngle, anticlockwise) {
+                if (this.__pathisopen) {
+                    var sx:Number = x + radius*Math.cos(-startAngle);
+                    var sy:Number = y + radius*Math.sin(2 * Math.PI + startAngle);
+                    // TODO:
+                    //If the context has any subpaths, then the method must add a straight line from the last point in the subpath to the start point of the arc.
+                    this.__path.push([1, sx, sy]);
+                    this.__path.push([5, x, y, radius, startAngle, endAngle, anticlockwise]);
+                }
+            }
             function fill() {
                 this.__playPath();
                 this.context.fill();
@@ -621,17 +693,25 @@
                 this.context.beginPath();
                 for (var i = 0; i < this.__path.length; i += 1) {
                     var a = this.__path[i];
-                    var n = a[0];
-                    if (n == 0) {
-                        this.context.closePath();
-                    } else if (n == 3) {
-                        this.context.quadraticCurveTo(a[1], a[2], a[3], a[4]);
-                    } else if (n == 4) {
-                        this.context.bezierCurveTo(a[1], a[2], a[3], a[4], a[5], a[6]);
-                    } else if (n == 1) {
-                        this.context.moveTo(a[1], a[2]);
-                    } else if (n == 2) {
-                        this.context.lineTo(a[1], a[2]);
+                    switch (a[0]) {
+                        case 0:
+                            this.context.closePath();
+                            break;
+                        case 1:
+                            this.context.moveTo(a[1], a[2]);
+                            break;
+                        case 2:
+                            this.context.lineTo(a[1], a[2]);
+                            break;
+                        case 3:
+                            this.context.quadraticCurveTo(a[1], a[2], a[3], a[4]);
+                            break;
+                        case 4:
+                            this.context.bezierCurveTo(a[1], a[2], a[3], a[4], a[5], a[6]);
+                            break;
+                        case 5:
+                            this.context.arc(a[1], a[2], a[3], a[4], a[5], a[6])
+                            break;
                     }
                 }
             }
@@ -808,9 +888,9 @@
             // whether to measure the width/height dimensions after redrawing
             var __measurewidth :Boolean = true;
             var __measureheight :Boolean = true;
-            const __MOVETO_OP :int = 0;
-            const __LINETO_OP :int = 1;
-            const __QCURVE_OP :int = 2;
+            //const __MOVETO_OP :int = 1;
+            //const __LINETO_OP :int = 2;
+            //const __QCURVE_OP :int = 3;
 
             // The container for the bitmap and all contexts
             var __drawcontainer = null;
@@ -853,37 +933,46 @@
 
             function closePath() {
                 if (this.__pathisopen && this.__path.length > 1) {
+                    this.__pathisopen = false;
                     var p = this.__path[0];
-                    if (p[0] == this.__MOVETO_OP || p[0] == this.__LINETO_OP) {
-                        var x:Number = p[1];
-                        var y:Number = p[2];
-                    } else if (p[0] == this.__QCURVE_OP) {
-                        var x:Number = p[3];
-                        var y:Number = p[4];
-                    } else {
-                        return;
+                    var op = p[0];
+                    if (op == 1 || op == 2) {
+                        //(op == this.__MOVETO_OP || op == this.__LINETO_OP)
+                        //inlined:
+                        //var x:Number = p[1];
+                        //var y:Number = p[2];
+                        //this.lineTo(x, y);
+                        this.__path.push([2, p[1], p[2]]);
+                    } else if (op == 3) {
+                        //(op == this.__QCURVE_OP)
+                        //inlined:
+                        //var x:Number = p[3];
+                        //var y:Number = p[4];
+                        //this.lineTo(x, y);
+                        this.__path.push([2, p[3], p[4]]);
                     }
                     //Debug.write('closePath', x, y);
-                    this.lineTo(x, y);
-                    this.__pathisopen = false;
                 }
             }
 
             override function moveTo(x, y) {
                 if (this.__pathisopen) {
-                    this.__path.push([this.__MOVETO_OP, x, y]);
+                    // __MOVETO_OP
+                    this.__path.push([1, x, y]);
                 }
             }
 
             override function lineTo (x, y) {
                 if (this.__pathisopen) {
-                    this.__path.push([this.__LINETO_OP, x, y]);
+                    // __LINETO_OP
+                    this.__path.push([2, x, y]);
                 }
             }
 
             override function quadraticCurveTo(cpx, cpy, x, y) {
                 if (this.__pathisopen) {
-                    this.__path.push([this.__QCURVE_OP, cpx, cpy, x, y]);
+                    // __QCURVE_OP
+                    this.__path.push([3, cpx, cpy, x, y]);
                 }
             }
 
@@ -1029,16 +1118,22 @@
                 //Debug.write(p, m);
                 for (var i:int = 0; i < p.length; i++) {
                     var op:Array = p[i];
-                    var optype:int = op[0];
-                    if (optype == this.__MOVETO_OP) {
-                        //Debug.write(m, 'moveTo', op[1], op[2]);
-                        m.moveTo(op[1], op[2]);
-                    } else if (optype == this.__LINETO_OP) {
-                        //Debug.write(m, 'lineTo', op[1], op[2]);
-                        m.lineTo(op[1], op[2]);
-                    } else if (optype == this.__QCURVE_OP) {
-                        //Debug.write(m, 'quadraticCurveTo', op[1], op[2], op[3], op[4]);
-                        m.curveTo(op[1], op[2], op[3], op[4]);
+                    switch (op[0]) {
+                        case 1:
+                            //__MOVETO_OP
+                            //Debug.write(m, 'moveTo', op[1], op[2]);
+                            m.moveTo(op[1], op[2]);
+                            break;
+                        case 2:
+                            //__LINETO_OP
+                            //Debug.write(m, 'lineTo', op[1], op[2]);
+                            m.lineTo(op[1], op[2]);
+                            break;
+                        case 3:
+                            //__QCURVE_OP
+                            //Debug.write(m, 'quadraticCurveTo', op[1], op[2], op[3], op[4]);
+                            m.curveTo(op[1], op[2], op[3], op[4]);
+                            break;
                     }
                 }
                 if ($as2) { this.context._visible = true; }
@@ -1520,9 +1615,9 @@
                     this.context.beginFill(color.c, alpha);
 
                     this.context.moveTo(x, y);
-                    this.context.lineTo(x, y + w);
-                    this.context.lineTo(x + h, y + w);
-                    this.context.lineTo(x + h, y);
+                    this.context.lineTo(x, y + h);
+                    this.context.lineTo(x + w, y + h);
+                    this.context.lineTo(x + w, y);
                     this.context.lineTo(x, y);
 
                     this.context.endFill();
