@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--
@@ -24,8 +24,8 @@
 <!ENTITY tagname        '(doc/tag[@name="lzxname"]/text)'>
 <!ENTITY docfilename    '(doc/tag[@name="docfilename"]/text)'>
 <!ENTITY shortdesc      '(doc/tag[@name="shortdesc"]/text)'>
-<!ENTITY lzxtype        '(doc/tag[@name="lzxtype"]/text)'>
-<!ENTITY lzxdefault     '(doc/tag[@name="lzxdefault"]/text)'>
+<!ENTITY lzxtype        '(doc/tag[@name="lzxtype"][last()]/text)'>
+<!ENTITY lzxdefault     '(doc/tag[@name="lzxdefault"][last()]/text)'>
 
 <!ENTITY commonname     '(self::node()/@name | self::node()/doc/tag[@name="lzxname"]/text)[1]'>
 

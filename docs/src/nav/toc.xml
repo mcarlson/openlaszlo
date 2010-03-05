@@ -63,6 +63,7 @@
         <item title="&amp;lt;tabslider&amp;gt;" href="lz.tabslider.html" />
         <item title="&amp;lt;textlistitem&amp;gt;" href="lz.textlistitem.html" />
         <item title="&amp;lt;textstyle&amp;gt;" href="lz.textstyle.html" />
+        <item title="&amp;lt;tooltip&amp;gt;" href="lz.tooltip.html" />
         <item title="&amp;lt;tree&amp;gt;" href="lz.tree.html" />
         <item title="&amp;lt;vbox&amp;gt;" href="lz.vbox.html" />                
         <item title="&amp;lt;vscrollbar&amp;gt;" href="lz.vscrollbar.html" />
@@ -194,7 +195,6 @@
         <item title="&amp;lt;basetabsbar&amp;gt;" href="lz.basetabsbar.html" />
         <item title="&amp;lt;basetabscontent&amp;gt;" href="lz.basetabscontent.html" />
         <item title="&amp;lt;basetabslider&amp;gt;" href="lz.basetabslider.html" />
-        <item title="&amp;lt;basetooltip&amp;gt;" href="lz.basetooltip.html" />
         <item title="&amp;lt;basetrackgroup&amp;gt;" href="lz.basetrackgroup.html" />
         <item title="&amp;lt;basetree&amp;gt;" href="lz.basetree.html" />
         <item title="&amp;lt;basevalidator&amp;gt;" href="lz.basevalidator.html" />
@@ -299,5 +299,5 @@
  <!--    <category title="Appendices">
         <item title="Reserved Words [TODO LPP-4937]" />
     </category> -->
-    <!-- Copyright 2008, 2009 Laszlo Systems -->     
+    <!-- Copyright 2008, 2009, 2010 Laszlo Systems -->     
 </toc>

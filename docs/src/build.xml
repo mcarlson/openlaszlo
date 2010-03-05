@@ -506,10 +506,15 @@ All Rights Reserved. Use is subject to license terms.</p>
   </target>
 
 
-  
   <target name="components.js2doc.generate" depends="init"
           unless="reference.skip">
-          
+
+    <!-- remove the output file if any input file is newer or ant will just skip the transform step! -->
+    <dependset>
+      <srcfileset dir="${components.dir}" includes="**/*" />
+      <targetfileset dir="${reference.build.dir}" includes="components-raw.xml" />
+    </dependset>
+
     <antcall target="lzx2js2doc.transform" inheritAll="true">
       <param name="local.input.file" value="${components.dir}/${library.filename}"/>
       <param name="local.output.file" value="${reference.build.dir}/components-raw.xml"/>
@@ -572,6 +577,11 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="merge.file" expression="${reference.src.dir}/langref.xml"/>
     </xslt>
     
+    <dependset>
+      <srcfilelist dir="${reference.build.dir}" files="components.xml" />
+      <targetfilelist dir="${reference.build.dir}" files="${LaszloLibraryName}-2.js2doc" />
+    </dependset>
+
     <xslt style="xsl/js2doc-append.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-1.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-2.js2doc">
@@ -580,6 +590,11 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="merge.file" expression="${reference.build.dir}/components.xml"/>
     </xslt>
     
+    <dependset>
+      <srcfilelist dir="${reference.build.dir}" files="incubator.xml" />
+      <targetfilelist dir="${reference.build.dir}" files="${LaszloLibraryName}-3.js2doc" />
+    </dependset>
+
     <xslt style="xsl/js2doc-append.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-2.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-3.js2doc">
@@ -588,6 +603,11 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="merge.file" expression="${reference.build.dir}/incubator.xml"/>
     </xslt>
     
+    <dependset>
+      <srcfilelist dir="${reference.build.dir}" files="embednew.xml" />
+      <targetfilelist dir="${reference.build.dir}" files="${LaszloLibraryName}-4.js2doc" />
+    </dependset>
+
     <xslt style="xsl/js2doc-append.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-3.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-4.js2doc">
@@ -596,6 +616,11 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="merge.file" expression="${reference.build.dir}/embednew.xml"/>
     </xslt>
     
+    <dependset>
+      <srcfilelist dir="${reference.build.dir}" files="wrappers.xml" />
+      <targetfilelist dir="${reference.build.dir}" files="${LaszloLibraryName}-5.js2doc" />
+    </dependset>
+
     <xslt style="xsl/js2doc-append.xsl"
            in="${reference.build.dir}/${LaszloLibraryName}-4.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-5.js2doc">
@@ -604,17 +629,9 @@ All Rights Reserved. Use is subject to license terms.</p>
       <param name="merge.file" expression="${reference.src.dir}/wrappers.xml"/>
     </xslt>
     
-    <xslt style="xsl/js2doc-append.xsl"
-           in="${reference.build.dir}/${LaszloLibraryName}-5.js2doc"
-           out="${reference.build.dir}/${LaszloLibraryName}-6.js2doc">
-      <xmlcatalog refid="commonDTDs"/>
-      <xmlcatalog refid="docbook.local.xsl"/>
-      <param name="merge.file" expression="${reference.src.dir}/info.xml"/>
-    </xslt>
-    
     <!-- make certain information explicit to ease processing by js2doc2dbk.xsl -->
     <xslt style="xsl/js2doc-verbose.xsl"
-           in="${reference.build.dir}/${LaszloLibraryName}-6.js2doc"
+           in="${reference.build.dir}/${LaszloLibraryName}-5.js2doc"
            out="${reference.build.dir}/${LaszloLibraryName}-verbose.js2doc">
       <xmlcatalog refid="commonDTDs"/>
       <xmlcatalog refid="docbook.local.xsl"/>

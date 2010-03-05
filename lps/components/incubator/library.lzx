@@ -33,7 +33,6 @@
   <include href="stepper.lzx" />
   <include href="stylishbutton.lzx" />
   <include href="textstyle.lzx"/>
-  <include href="tooltipmanager.lzx" />
   <include href="ulink.lzx" />
   <include href="uploader/fileupload.lzx" />
   <include href="uploader/fileuploadlist.lzx" />
