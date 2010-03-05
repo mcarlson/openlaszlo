@@ -829,7 +829,7 @@ function $lzc$set_fontsize(val) {
   * other views) fit exactly into the view's width and/or height. The
   * default for this property is "none". This is used to resize a
   * view's contents by setting its width and/or height.
-  * @lzxtype "width" | "height" | "both"
+  * @lzxtype "width" | "height" | "both" | "none"
   * @type String
   * @lzxdefault "none"
   */
@@ -850,9 +850,9 @@ function $lzc$set_stretches( stretch ){
     } else if (this.stretches == stretch) {
         return;
     }
-    if (this.backgroundrepeat) {
+    if (this.backgroundrepeat != 'norepeat') {
         if ($debug) Debug.warn("Backgroundrepeat and stretches can't be on at the same time. Canceling backgroundrepeat.", this);
-        this.$lzc$set_backgroundrepeat(false);
+        this.$lzc$set_backgroundrepeat('norepeat');
     }
     
     this.stretches = stretch;
@@ -874,33 +874,38 @@ function $lzc$set_stretches( stretch ){
 /**
   * Setting <code>backgroundrepeat</code> causes a view to repeat its resource 
   * to fit the view's width and/or height.  Can be 'repeat', 'repeat-x',
-  * 'repeat-y' or 'norepeat'/null per the CSS1 background-repeat style.
-  * @lzxtype string
+  * 'repeat-y' or 'norepeat' per the CSS1 background-repeat style.
+  * @lzxtype "repeat" | "repeat-x" | "repeat-y" | "norepeat"
   * @type String
-  * @lzxdefault null
+  * @lzxdefault "norepeat"
   */
-var backgroundrepeat = null; 
+var backgroundrepeat = 'norepeat'; 
 /** event for changes to view's <attribute>backgroundrepeat</attribute> property 
  * @lzxtype event 
  * @access public
  */
 var onbackgroundrepeat = LzDeclaredEvent;
-function $lzc$set_backgroundrepeat( backgroundrepeat = null ){
-    this.backgroundrepeat = backgroundrepeat
+/** @access private */
+function $lzc$set_backgroundrepeat( backgroundrepeat ){
     if (! this.capabilities.backgroundrepeat) {
         LzView.__warnCapability('view.backgroundrepeat', 'backgroundrepeat'); 
-    } else if (backgroundrepeat == null || backgroundrepeat == 'repeat' || backgroundrepeat == 'repeat-x' || backgroundrepeat == 'repeat-y' || backgroundrepeat == 'norepeat') {
-        if (backgroundrepeat && this.stretches != 'none') {
+        return;
+    } else if (backgroundrepeat != 'repeat' && backgroundrepeat != 'repeat-x' && backgroundrepeat != 'repeat-y' && backgroundrepeat != 'norepeat') {
+        if ($debug) {
+            Debug.warn("backgroundrepeat must be set to 'repeat', 'repeat-x', 'repeat-y' or 'norepeat':", backgroundrepeat);
+        }
+        return;
+    }
+    if (backgroundrepeat !== this.backgroundrepeat) { 
+        if (backgroundrepeat != 'norepeat' && this.stretches != 'none') {
             if ($debug) Debug.warn("Backgroundrepeat and stretches can't be on at the same time. Canceling stretches.", this);
             this.$lzc$set_stretches('none');
         }
+        this.backgroundrepeat = backgroundrepeat
+
         // The kernel expects null for no backgroundrepeat
         if (backgroundrepeat == 'norepeat') backgroundrepeat = null;
         this.sprite.setBackgroundRepeat(backgroundrepeat);
-    } else {
-        if ($debug) {
-            Debug.warn("backgroundrepeat must be set to 'repeat', 'repeat-x', 'repeat-y' or 'norepeat'/null:", backgroundrepeat);
-        }
     }
     if (this.onbackgroundrepeat.ready) this.onbackgroundrepeat.sendEvent(this.backgroundrepeat);
 }
@@ -1121,9 +1126,8 @@ function $lzc$set_opacity(v) {
     }
     this.opacity = v;
     if (this.onopacity.ready) this.onopacity.sendEvent( v );
-    var coviz = this.__LZvizO;
     var newoviz = v != 0;
-    if ( coviz != newoviz ){
+    if ( this.__LZvizO != newoviz ){
         this.__LZvizO = newoviz;
         this.__LZupdateShown();
     }
