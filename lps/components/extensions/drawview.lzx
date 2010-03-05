@@ -100,26 +100,26 @@
     <!--- Gives the default lineCap value for lines. Round for consistency between swf and dhtml.
           @type String
           @lzxtype "butt" | "round" | "square"
-          @lzxdefault "round"
+          @lzxdefault "butt"
           @access public
     -->
-    <attribute name="lineCap" value="round" type="string"/>
+    <attribute name="lineCap" value="butt" type="string"/>
 
     <!--- Gives the default lineJoin value for lines. Round for consistency between swf and dhtml.
           @type String
           @lzxtype "round" | "bevel" | "miter"
-          @lzxdefault "round"
+          @lzxdefault "miter"
           @access public
     -->
-    <attribute name="lineJoin" value="round" type="string"/>
+    <attribute name="lineJoin" value="miter" type="string"/>
 
     <!--- Gives the default miterLimit value for lines.
           @type Number
           @lzxtype number
-          @lzxdefault 3
+          @lzxdefault 10
           @access public
     -->
-    <attribute name="miterLimit" value="3" type="number"/>
+    <attribute name="miterLimit" value="10" type="number"/>
 
     <!--- Represents the colour to use for the lines around shapes.  Specified as a hexadecimal number (0xffffff) or a CSS string ('#ff00ff' or '#f0f').
         @type String
@@ -137,7 +137,7 @@
     -->
     <attribute name="fillStyle" value="#000000" type="string"/>
 
-    <!--- If true, the bitmap result will be cached where possible.
+    <!--- If true, the bitmap result will be cached where possible. (swf-only)
       @access public
     -->
     <attribute name="cachebitmap" value="true" type="boolean"/>
@@ -468,6 +468,14 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
         function midpoint(p0, p1) {
             return {x: (p0.x+p1.x)/2, y: (p0.y+p1.y)/2};
         }
+
+        var globalAlpha:Number = 1;
+        var lineWidth:Number = 1;
+        var lineCap:String = 'butt';
+        var lineJoin:String = 'miter';
+        var miterLimit:Number = 10;
+        var strokeStyle:* = '#000000';
+        var fillStyle:* = '#000000';
     }
   ]]></script>
 
@@ -475,7 +483,6 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
   <switch>
     <when runtime="dhtml">
       <script when="immediate"><![CDATA[
-
         // Classes that implement an interface must obey the LZX
         // tag->class mapping convention and must be dynamic
         dynamic class $lzc$class_drawview extends LzView with DrawviewShared {
@@ -484,14 +491,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             static var attributes = new LzInheritedHash(LzView.attributes);
             static var __colorcache = {};
 
-            var globalAlpha = 1;
-            var lineWidth = 1;
-            var lineCap = 'round';
-            var lineJoin = 'round';
-            var miterLimit = 3;
-            var strokeStyle = '#000000';
-            var fillStyle = '#000000';
-
+            // cache values, used to avoid resetting context values
             private var __globalAlpha = null;
             private var __lineWidth = null;
             private var __lineCap = null;
@@ -500,9 +500,17 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             private var __strokeStyle = null;
             private var __fillStyle = null;
 
+            // contains context states, used for save/restore()
+            var __contextstates = null;
+
             function init() {
                 super.init();
                 this.createContext();
+            }
+
+            override function construct(parent, args) {
+                super.construct(parent, args);
+                this.__contextstates = [];
             }
 
             // called when the context has been created
@@ -760,13 +768,23 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 this.context.translate(x, y);
             }
 
+            function scale(x, y) {
+                this.context.scale(x, y);
+            }
+
             function save() {
-                this.__fillStyle = this.__strokeStyle = null
+                this.__contextstates.push({fillStyle: this.fillStyle, strokeStyle: this.strokeStyle, globalAlpha: this.globalAlpha, lineWidth: this.lineWidth, lineCap: this.lineCap, lineJoin: this.lineJoin, miterLimit: this.miterLimit});
                 this.context.save();
             }
 
             function restore() {
-                this.__fillStyle = this.__strokeStyle = null
+                var state = this.__contextstates.pop();
+                if (state) {
+                    for (var i in state) {
+                        // restore to both regular and cached values, since they'll match the context values already
+                        this[i] = this['__' + i] = state[i];
+                    }
+                }
                 this.context.restore();
             }
 
@@ -857,7 +875,6 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
     <otherwise>
       <!-- TODO [jgrandy 6/1/2007] <otherwise> should be <when runtime="as2"> but that isn't currently supported -->
       <script when="immediate"><![CDATA[
-
         // Classes that implement an interface must obey the LZX
         // tag->class mapping convention and must be dynamic
         dynamic class $lzc$class_drawview extends LzView with DrawviewShared {
@@ -876,13 +893,6 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             static var attributes = new LzInheritedHash(LzView.attributes);
             static var __colorcache :Object = {};
 
-            var globalAlpha :Number = 1;
-            var lineWidth :Number = 1;
-            var lineCap :String = 'round';
-            var lineJoin :String = 'round';
-            var miterLimit :Number = 3;
-            var strokeStyle :* = '#000000';
-            var fillStyle :* = '#000000';
             var __path :Array = [];
             var __pathisopen :Boolean = false;
             // whether to measure the width/height dimensions after redrawing
@@ -903,6 +913,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             var __norebuild:Boolean = false;
             // Contains a stack of drawing contexts, used by save/restore()
             var __contexts :Array = null;
+            // contains context states, used for save/restore()
+            var __contextstates:Array = null;
+            
 
             // hash of image resources for drawImage
             static var images:Object = {};
@@ -916,6 +929,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 if (args['cachebitmap'] == null && args['clip'] != true) args['cachebitmap'] = true;
                 super.construct(parent, args);
                 this.__contexts = [];
+                this.__contextstates = [];
             }
 
             override function init () {
@@ -1146,8 +1160,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     var color:Object = this.__getColor(this.strokeStyle);
                     var alpha:Number = color.a != null ? color.a : this.globalAlpha;
                     if ($as2) { alpha *= 100; }
+                    var linecap = this.lineCap == 'butt' ? 'none' : this.lineCap;
                     this.context.lineStyle(this.lineWidth, color.c, alpha, false, 'normal',
-                        this.lineCap, this.lineJoin, this.miterLimit);
+                        linecap, this.lineJoin, this.miterLimit);
                 }
                 this.__playPath(this.context);
                 this.context.lineStyle(undefined);
@@ -1186,19 +1201,108 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 return g;
             }
 
-            // accumulate rotation
-            var __tr :Number = 0;
-            function rotate(r) {
-                this.__tr += r;
+            // accumulate rotation, r is clockwise rotation measured in radians
+            function rotate(radians) {
+                this.__saveToBitmap();
+
+                var degrees = radians * this.__radtodegfactor;
+                if ($as2) {
+                    this.__drawcontext._rotation += degrees;
+                } else {
+                    this.__drawcontext.rotation += degrees;
+                }
+            }
+ 
+            // Saves the current drawing state to the bitmap
+            function __saveToBitmap() {
+                if (! this.__bitmapdata) {
+                    // we don't yet have a bitmap, so create one
+                    this.rebuildBitmap();
+                }
+                //if (! this.__bitmapdata) return;
+                //var xoff = this.__measurewidth ? 0 : this.width * .5;
+                //var yoff = this.__measureheight ? 0 : this.height * .5;
+
+                // Offset to the center to ensure we can grab the whole drawing
+                //if ($as2) {
+                //    this.__drawcontext._x += xoff;
+                //    this.__drawcontext._y += yoff;
+                //} else {
+                //    this.__drawcontext.x += xoff;
+                //    this.__drawcontext.y += yoff;
+                //}
+
+                var m:Matrix = this.getIdentityMatrix();
+                // Translate bitmap to original position to compensate for offset above
+                //m.translate(-xoff, -yoff);
+
+                if (this.__bitmapcontainer) {
+                    // hide to avoid copying the bitmap onto itself
+                    if ($as2) {
+                        this.__bitmapcontainer._visible = false;
+                    } else {
+                        this.__bitmapcontainer.visible = false;
+                    }
+                }
+                // copy drawcontainer state to the bitmap
+                this.copyBitmap(this.__drawcontainer, this.width, this.height, this.__bitmapdata, m)
+                if (this.__bitmapcontainer) {
+                    if ($as2) {
+                        this.__bitmapcontainer._visible = true;
+                    } else {
+                        this.__bitmapcontainer.visible = true;
+                    }
+                }
+
+                // Move back to original position
+                //if ($as2) {
+                //    this.__drawcontext._x -= xoff;
+                //    this.__drawcontext._y -= yoff;
+                //} else {
+                //    this.__drawcontext.x -= xoff;
+                //    this.__drawcontext.y -= yoff;
+                //}
+
+                // Clear the context now that we've copied it
+                this.context.clear();
             }
 
             // accumulate translation
-            var __tx :Number = 0;
-            var __ty :Number = 0;
+            var __tx:Number = 0;
+            var __ty:Number = 0;
             function translate(x, y) {
-                this.__tx += x;
-                this.__ty += y;
+                this.__saveToBitmap();
+
+                // scaling affects translation in swf
+                this.__tx += x * this.__sx;
+                this.__ty += y * this.__sy;
+                if ($as2) {
+                    this.__drawcontext._x = this.__tx;
+                    this.__drawcontext._y = this.__ty;
+                } else {
+                    this.__drawcontext.x = this.__tx;
+                    this.__drawcontext.y = this.__ty;
+                }
             }
+
+            // accumulate scale in the horizontal and vertical directions
+            var __sx:Number = 1;
+            var __sy:Number = 1;
+            function scale(x, y) {
+                this.__saveToBitmap();
+
+                this.__sx *= x;
+                this.__sy *= y;
+
+                if ($as2) {
+                    this.__drawcontext._xscale = this.__sx * 100;
+                    this.__drawcontext._yscale = this.__sy * 100;
+                } else {
+                    this.__drawcontext.scaleX = this.__sx;
+                    this.__drawcontext.scaleY = this.__sy;
+                }
+            }
+
 
             // shared by clip/button masking routines
             private function __drawPath(context) {
@@ -1209,54 +1313,93 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 context.endFill();
             }
 
+            // Listen for view size updates
             override function $lzc$set_width(w) {
-                this.__measurewidth = (w == null);
                 super.$lzc$set_width(w);
-                this.rebuildBitmap();
+                if (this._setrescwidth || this._setrescheight) {
+                    // stretches is on
+                    this.__updateSize();
+                }
+                if (! this.__norebuild && this.__bitmapdata) this.rebuildBitmap();
             }
 
             override function $lzc$set_height(h) {
-                this.__measureheight = (h == null);
                 super.$lzc$set_height(h);
-                this.rebuildBitmap();
+                if (this._setrescwidth || this._setrescheight) {
+                    // stretches is on
+                    this.__updateSize();
+                }
+                if (! this.__norebuild && this.__bitmapdata) this.rebuildBitmap();
             }
 
             private function __updateSize() :void {
-                var measureSize:Boolean = (this.__measurewidth || this.__measureheight);
-                if (measureSize) {
+                if (! this.__drawcontainer) return;
+                var measureSize:Boolean = (this.hassetwidth == false || this.hassetheight == false) || this._setrescwidth || this._setrescheight;
+                if (! measureSize) return;
+
+                var rebuildBitmapLater = false;
+                if (this.__bitmapdata) {
                     // __bitmapcontainer needs to be removed while measuring the context's size
                     this.clearBitmap();
-
-                    // don't rebuild bitmap in width/height setter
-                    this.__norebuild = true;
+                    rebuildBitmapLater = true;
                 }
 
+                // don't rebuild bitmap in width/height setter
+                this.__norebuild = true;
+
+                // measure size, turning off scaling if stretches is on
                 var width, height;
-                if ($as2) {
-                    var mc = this.sprite.getContext();
-                    width = mc._width;
-                    height = mc._height;
-                } else {
-                    var mc = this.sprite;
+                var mc = this.__drawcontainer;
+                if ($as3) {
+                    // turn off scaling if stretches is on
+                    if (this._setrescwidth) {
+                        mc.scaleX = 1;
+                    }
+                    if (this._setrescheight) {
+                        mc.scaleY = 1;
+                    }
+
                     width = mc.width;
                     height = mc.height;
+                } else {
+                    width = mc._width;
+                    height = mc._height;
                 }
 
-                if (this.__measurewidth && this.width !== width) {
-                    this.updateWidth(width);
-                }
-                if (this.__measureheight && this.height !== height) {
-                    this.updateHeight(height);
+                var sizechanged = false;
+
+                // update the size and scaling if stretches is on
+                if (this.width !== width) {
+                    sizechanged = true;
+                    if (this.hassetwidth == false) {
+                        this.updateWidth(width);
+                    } else if (this._setrescwidth) {
+                        // stretches is on...
+                        this.updateWidth(width);
+                        if ($as3) {
+                            mc.scaleX = this.width / this.unstretchedwidth;
+                        }
+                    }
                 }
 
-                if (measureSize) {
-                    // now rebuild bitmap again
-                    this.__norebuild = false;
+                if (this.height !== height) {
+                    sizechanged = true;
+                    if (this.hassetheight == false) {
+                        this.updateHeight(height);
+                    } else if (this._setrescheight) {
+                        // stretches is on...
+                        this.updateHeight(height);
+                        if ($as3) {
+                            mc.scaleY = this.height / this.unstretchedheight;
+                        }
+                    }
+                }
+
+                this.__norebuild = false
+                if (rebuildBitmapLater) {
                     this.rebuildBitmap();
                 }
             }
-
-
 
             if ($as3) {
                 function clearMask() {
@@ -1300,44 +1443,34 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }
 
 
+                if ($swf9) {
+                    private var __sizelimit = 2880 * 2880;
+                } else { 
+                    private var __sizelimit = 4095 * 4095;
+                }
+
                 // Rebuild bitmap drawing layer
                 private function rebuildBitmap () :void {
                     if (this.__norebuild || ! this.__drawcontainer) return;
-                    if (this.width < 1 || this.height < 1) return;
-                    if ($swf9) {
-                        var limit = 2880;
-                    } else { 
-                        var limit = 4095
-                    }
+                    var width = this.width;
+                    var height = this.height;
+                    if (width < 1 || height < 1) return;
                     // TODO: construct multiple bitmaps to deal with this limitaion
-                    if ((this.width * this.height) > (limit * limit)) {
+                    if ((width * height) > this.__sizelimit) {
                         if ($debug) {
-                            Debug.warn('Drawview is too large for bitmap operations: drawImage(), save(), restore() and fillRect() may not work properly.  For best results, ensure this drawview is no larger than a total of %w x %w pixels - see http://jira.openlaszlo.org/jira/browse/LPP-8697 for more details. %w', limit, limit, this);
+                            Debug.warn('Drawview is too large for bitmap operations: drawImage(), save(), restore() and fillRect() may not work properly.  For best results, ensure this drawview is no larger than a total of %w pixels total, width x height.  See http://jira.openlaszlo.org/jira/browse/LPP-8697 for more details: %w', this.__sizelimit, this);
                         }
                         return;
                     }
-                    if (this.__bitmapdata && this.width == this.__bitmapdata.width && this.height == this.__bitmapdata.height) return;
+                    if (this.__bitmapdata && width == this.__bitmapdata.width && height == this.__bitmapdata.height) return;
 
-                    var bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
+                    var bitmapdata = new flash.display.BitmapData(width, height, true, 0x000000ff);
                     if (bitmapdata) {
-                        // clear any old data first
-                        this.clearBitmap();
-                        if (this._setrescwidth) {
-                            // stretches is on...
-                            var dc:Sprite = this.__drawcontainer;
-                            dc.scaleX = 1;
-                            this.updateWidth(dc.width);
-                            dc.scaleX = (this.width / this.unstretchedwidth)
-                            //Debug.warn('set_width', this.unstretchedwidth, dc.width, dc.scaleX);
-                        }
-
-                        if (this._setrescheight) {
-                            // stretches is on...
-                            var dc:Sprite = this.__drawcontainer;
-                            dc.scaleY = 1;
-                            this.updateHeight(dc.height);
-                            dc.scaleY = (this.height / this.unstretchedheight)
-                            //Debug.warn('set_height', this.unstretchedheight, dc.height, dc.scaleY);
+                        // copy any existing bitmap data
+                        if (this.__bitmapdata) {
+                            //this.copyBitmap(this.__bitmapdata, this.width, this.height, bitmapdata);
+                            // clear any old data
+                            this.clearBitmap();
                         }
 
                         this.__bitmapdata = bitmapdata;
@@ -1401,9 +1534,6 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     this.getDisplayObject().addChildAt(drawcontainer, 0);
                     this.__drawcontainer = drawcontainer;
 
-                    // create bitmap here to ensure we're behind the drawing context
-                    this.rebuildBitmap();
-
                     this.__drawcontext = this.createDrawingContext();
 
                     return this.__drawcontext.graphics;
@@ -1417,18 +1547,47 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }
 
                 function save() {
-                    if ($debug) {
-                        Debug.warn('lz.drawview.save() is not currently supported in ' + canvas.runtime);
-                    }
+                    this.__contextstates.push({fillStyle: this.fillStyle, strokeStyle: this.strokeStyle, globalAlpha: this.globalAlpha, lineWidth: this.lineWidth, lineCap: this.lineCap, lineJoin: this.lineJoin, miterLimit: this.miterLimit});
+                    this.__sx = this.__sy = 1;
+                    this.__tx = this.__ty = 0;
+
+                    // Store this.context:MovieClip
+                    this.__contexts.push(this.__drawcontext);
+
+                    var drawcontext = createDrawingContext();
+
+                    // Copy transforms from old context
+                    drawcontext.x = this.__drawcontext.x;
+                    drawcontext.y = this.__drawcontext.y;
+                    drawcontext.rotation = this.__drawcontext.rotation;
+                    drawcontext.scaleX = this.__drawcontext.scaleX;
+                    drawcontext.scaleY = this.__drawcontext.scaleY;
+
+                    this.__drawcontext = drawcontext;
+                    this.context = drawcontext.graphics;
                 }
 
                 function restore() {
-                    if ($debug) {
-                        Debug.warn('lz.drawview.restore() is not currently supported in ' + canvas.runtime);
+                    var state = this.__contextstates.pop();
+                    if (state) {
+                        for (var i in state) {
+                            // restore to both regular values, since they'll match the context values already
+                            this[i] = state[i];
+                        }
+                    }
+
+                    if (this.__contexts.length) {
+                        this.__saveToBitmap();
+                        this.__drawcontainer.removeChild(this.__drawcontext);
+                        this.__drawcontext = this.__contexts.pop();
+                        this.context = this.__drawcontext.graphics;
                     }
                 }
                 // end as3
             } else {
+                // See http://livedocs.adobe.com/flash/9.0/main/00001393.html
+                private var __sizelimit = 2880 * 2880;
+
                 // as2
                 function clearMask() {
                     var maskclip = this.sprite.__LZmaskClip;
@@ -1463,18 +1622,30 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     this.updateResourceSize();
                 }
 
+                // Movieclip used to contain the bitmap, used so __bitmapcontainer can keep its place
+                var __bitmapmc = null;
+
                 // Rebuild bitmap drawing layer
                 private function rebuildBitmap () :void {
                     if (this.__norebuild || ! this.__drawcontainer) return;
-
-                    var bitmapdata = new flash.display.BitmapData(this.width, this.height, true, 0x000000ff);
+                    var width = this.width;
+                    var height = this.height;
+                    if (width < 1 || height < 1) return;
+                    if ((width * height) > this.__sizelimit) {
+                        if ($debug) {
+                            Debug.warn('Drawview is too large for bitmap operations: drawImage(), save(), restore() and fillRect() may not work properly.  For best results, ensure this drawview is no larger than a total of %w pixels total, width x height.  See http://jira.openlaszlo.org/jira/browse/LPP-8697 for more details: %w', this.__sizelimit, this);
+                        }
+                        return;
+                    }
+                    if (this.__bitmapdata && width == this.__bitmapdata.width && height == this.__bitmapdata.height) return;
+                    var bitmapdata = new flash.display.BitmapData(width, height, true, 0x000000ff);
                     if (bitmapdata) {
                         // clear any old data first
                         this.clearBitmap();
 
                         this.__bitmapdata = bitmapdata;
-                        this.__bitmapcontainer = this.__drawcontainer.createEmptyMovieClip("__bitmapcontainer", 1000);
-                        this.__bitmapcontainer.attachBitmap(bitmapdata, 2, "auto", true);
+                        this.__bitmapmc = this.__bitmapcontainer.createEmptyMovieClip("__bitmapcontainer", 1);
+                        this.__bitmapmc.attachBitmap(bitmapdata, 2, "auto", true);
                         this.__updateContextMenu();
                     }
                 }
@@ -1485,9 +1656,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                         this.__bitmapdata.dispose();
                         this.__bitmapdata = null;
                     }
-                    if (this.__bitmapcontainer) {
-                        this.__bitmapcontainer.removeMovieClip();
-                        this.__bitmapcontainer = null;
+                    if (this.__bitmapmc) {
+                        this.__bitmapmc.removeMovieClip();
+                        this.__bitmapmc = null;
                     }
                 }
 
@@ -1549,8 +1720,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     var drawcontainer:MovieClip = this.getDisplayObject().createEmptyMovieClip("drawcontainer", 1);
                     this.__drawcontainer = drawcontainer.createEmptyMovieClip("drawing", drawcontainer.getNextHighestDepth());
 
-                    // create bitmap here to ensure we're behind the drawing context
-                    this.rebuildBitmap();
+                    // create bitmap container here to ensure we're behind the drawing context
+                    var depth:Number = this.__drawcontainer.getNextHighestDepth();
+                    this.__bitmapcontainer = this.__drawcontainer.createEmptyMovieClip('bitmap', depth);
 
                     // context and __drawcontext are the same for AS2
                     this.__drawcontext = this.createDrawingContext();
@@ -1562,49 +1734,60 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 // Create new context to draw in
                 private function createDrawingContext() {
                     var depth:Number = this.__drawcontainer.getNextHighestDepth();
-                    var context = this.__drawcontainer.createEmptyMovieClip('draw' + depth, depth);
-
-                    return context;
-                    
+                    // context and __drawcontext are the same for AS2
+                    return this.__drawcontainer.createEmptyMovieClip('draw' + depth, depth);
                 }
 
                 function save() {
+                    this.__contextstates.push({fillStyle: this.fillStyle, strokeStyle: this.strokeStyle, globalAlpha: this.globalAlpha, lineWidth: this.lineWidth, lineCap: this.lineCap, lineJoin: this.lineJoin, miterLimit: this.miterLimit});
+
+                    this.__sx = this.__sy = 1;
+                    this.__tx = this.__ty = 0;
+
                     // Store this.context:MovieClip
-                    this.__contexts.push(this.context);
+                    this.__contexts.push(this.__drawcontext);
 
-                    // Create new context to draw in
-                    this.context = this.__drawcontext = createDrawingContext();
-                    this.__updateContextMenu();
+                    var newcontext = this.createDrawingContext();
 
-                    // Offset to the center to ensure we can grab the whole thing
-                    this.context._x = this.width * .5;
-                    this.context._y = this.height * .5;
+                    // Copy from old context
+                    newcontext._x = this.__drawcontext._x;
+                    newcontext._y = this.__drawcontext._y;
+                    newcontext._rotation = this.__drawcontext._rotation;
+                    newcontext._xscale = this.__drawcontext._xscale;
+                    newcontext._yscale = this.__drawcontext._yscale;
+
+                    // context and __drawcontext are the same for AS2
+                    this.__drawcontext = this.context = newcontext;
                 }
 
                 function restore() {
-                    var m:Matrix = this.getIdentityMatrix()
-                    // Move back
-                    m.translate(- this.context._x, - this.context._y);
+                    var state = this.__contextstates.pop();
+                    if (state) {
+                        // restore state
+                        for (var i in state) {
+                            this[i] = state[i];
+                        }
+                    }
 
-                    // apply accumulated translations
-                    m.rotate(this.__tr);
-                    m.translate(this.__tx, this.__ty);
-                    this.__tr = this.__tx = this.__ty = 0;
-
-                    //Debug.write(this.context._width, this.context._height);
-                    this.copyBitmap(this.__drawcontainer, this.width * 2, this.height * 2, this.__bitmapdata, m)
-
-                    this.context.removeMovieClip();
-                    this.context = this.__contexts.pop();
+                    if (this.__contexts.length) {
+                        this.__saveToBitmap();
+                        this.__drawcontext.removeMovieClip();
+                        // context and __drawcontext are the same for AS2
+                        this.__drawcontext = this.context = this.__contexts.pop();
+                    }
                 }
             } // End of as2/as3 conditionals
 
             function fillRect(x, y, w, h) {
+                if (! w && ! h) return;
                 var color:Object = this.__getColor(this.fillStyle);
                 var alpha:Number = color.a != null ? color.a : this.globalAlpha;
                 if (alpha == 1) {
                     // Use fillRect when we don't need alpha since it replaces the pixels
                     var rect:Rectangle = new flash.geom.Rectangle(x, y, w, h);
+                    if (! this.__bitmapdata) {
+                        this.rebuildBitmap();
+                    }
                     this.__bitmapdata.fillRect(rect, color.c + 0xff000000);
                 } else {
                     // can't use fillRect() with alpha because it replaces the pixels
@@ -1651,6 +1834,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 var tx:Number = x ? x : 0;
                 var ty:Number = y ? y : 0;
                 matrix.translate(tx, ty);
+                if (! this.__bitmapdata) {
+                    this.rebuildBitmap();
+                }
 
                 this.copyBitmap(image, this.width, this.height, this.__bitmapdata, matrix);
             }
@@ -1663,6 +1849,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 // If to wasn't supplied, return the bitmap as-is.
                 if (! to) {
                     return tmp;
+                }
+                if (! m) {
+                    m = this.getIdentityMatrix();
                 }
                 to.draw(tmp, m, null, null, null, true);
                 tmp.dispose();
