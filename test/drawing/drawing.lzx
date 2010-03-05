@@ -1,4 +1,7 @@
 <canvas>
+    <handler name="oninit">
+        this.setAttribute('height', 2000);
+    </handler>
     <resource name="alphapng" src="../resources/png/alphagrad.png"/>
     <wrappinglayout axis="x"/>
 
@@ -236,7 +239,367 @@
             this.fillRect(60,60,30,30);   // Draw a rectangle with restored settings  
         </method>
     </drawview>
+
+    <drawview y="20" width="150" height="200">
+        <handler name="oncontext">
+            <![CDATA[
+            // from https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes#arc_example
+            for(var i=0;i<4;i++){  
+                for(var j=0;j<3;j++){  
+                    this.beginPath();  
+                    var x              = 25+j*50;               // x coordinate  
+                    var y              = 25+i*50;               // y coordinate  
+                    var radius         = 20;                    // Arc radius  
+                    var startAngle     = 0;                     // Starting point on circle  
+                    var endAngle       = Math.PI+(Math.PI*j)/2; // End point on circle  
+                    var anticlockwise  = i%2==0 ? false : true; // clockwise or anticlockwise  
+
+                    this.arc(x,y,radius,startAngle,endAngle, anticlockwise);  
+
+                    if (i>1){  
+                        this.fill();  
+                    } else {  
+                        this.stroke();  
+                    }  
+                }  
+            }  
+            ]]>
+        </handler>
+    </drawview>
+
+    <drawview width="150" height="150">
+        <handler name="oncontext">
+            <![CDATA[
+            // based on https://developer.mozilla.org/en/Canvas_tutorial/Transformations#A_rotate_example
+            this.translate(75,75);  
+            for (var i=1;i<6;i++){ // Loop through rings (from inside to out)  
+                this.save();  
+                this.fillStyle = 'rgb('+(51*i)+','+(255-51*i)+',255)';  
+            
+                for (var j=0;j<i*6;j++){ // draw individual dots  
+                    this.rotate(Math.PI*2/(i*6));  
+                    this.beginPath();  
+                    this.arc(0,i*12.5,5,0,Math.PI*2,true);  
+                    this.fill();  
+                }  
+            
+                this.restore();  
+            } 
+            ]]>
+        </handler>
+    </drawview>
+
+
+    <drawview width="100" height="100">
+        <handler name="oncontext">
+            // Tests fillrect to ensure it doesn't mess with the path
+            this.beginPath();
+            this.strokeStyle = "#000000";
+            this.fillStyle = "#AA00007F";
+            this.lineTo(50,50);
+            this.fillRect(25,25,50,50);
+            this.lineTo(100,0);
+            this.stroke();
+        </handler>
+    </drawview>
     
+    <drawview width="150" height="150">
+        <handler name="oncontext">
+        <![CDATA[
+            var ctx = this;
+            // based on https://developer.mozilla.org/samples/canvas-tutorial/2_7_canvas_combined.html
+            // Draw shapes
+            roundedRect(ctx,12,12,150,150,15);
+            roundedRect(ctx,19,19,150,150,9);
+            roundedRect(ctx,53,53,49,33,10);
+            roundedRect(ctx,53,119,49,16,6);
+            roundedRect(ctx,135,53,49,33,10);
+            roundedRect(ctx,135,119,25,49,10);
+
+            // Character 1
+            ctx.beginPath();
+            ctx.arc(37,37,13,Math.PI/7,-Math.PI/7,false);
+            ctx.lineTo(34,37);
+            ctx.fill();
+
+            // blocks
+            for(var i=0;i<8;i++){
+            ctx.fillRect(51+i*16,35,4,4);
+            }
+            for(i=0;i<6;i++){
+            ctx.fillRect(115,51+i*16,4,4);
+            }
+            for(i=0;i<8;i++){
+            ctx.fillRect(51+i*16,99,4,4);
+            }
+
+            // character 2
+            ctx.beginPath();
+            ctx.moveTo(83,116);
+            ctx.lineTo(83,102);
+            ctx.bezierCurveTo(83,94,89,88,97,88);
+            ctx.bezierCurveTo(105,88,111,94,111,102);
+            ctx.lineTo(111,116);
+            ctx.lineTo(106.333,111.333);
+            ctx.lineTo(101.666,116);
+            ctx.lineTo(97,111.333);
+            ctx.lineTo(92.333,116);
+            ctx.lineTo(87.666,111.333);
+            ctx.lineTo(83,116);
+            ctx.fill();
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.moveTo(91,96);
+            ctx.bezierCurveTo(88,96,87,99,87,101);
+            ctx.bezierCurveTo(87,103,88,106,91,106);
+            ctx.bezierCurveTo(94,106,95,103,95,101);
+            ctx.bezierCurveTo(95,99,94,96,91,96);
+            ctx.moveTo(103,96);
+            ctx.bezierCurveTo(100,96,99,99,99,101);
+            ctx.bezierCurveTo(99,103,100,106,103,106);
+            ctx.bezierCurveTo(106,106,107,103,107,101);
+            ctx.bezierCurveTo(107,99,106,96,103,96);
+            ctx.fill();
+            ctx.fillStyle = "black";
+            ctx.beginPath();
+            ctx.arc(101,102,2,0,Math.PI*2,true);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(89,102,2,0,Math.PI*2,true);
+            ctx.fill();
+        ]]>
+        </handler>
+        <method name="roundedRect" args="ctx,x,y,width,height,radius">
+            ctx.beginPath();
+            ctx.moveTo(x,y+radius);
+            ctx.lineTo(x,y+height-radius);
+            ctx.quadraticCurveTo(x,y+height,x+radius,y+height);
+            ctx.lineTo(x+width-radius,y+height);
+            ctx.quadraticCurveTo(x+width,y+height,x+width,y+height-radius);
+            ctx.lineTo(x+width,y+radius);
+            ctx.quadraticCurveTo(x+width,y,x+width-radius,y);
+            ctx.lineTo(x+radius,y);
+            ctx.quadraticCurveTo(x,y,x,y+radius);
+            ctx.stroke();
+        </method>
+    </drawview>
+    <drawview width="150" height="150">
+        <handler name="oncontext">
+            <![CDATA[
+                // based on https://developer.mozilla.org/en/Canvas_tutorial%3aApplying_styles_and_colors#A_fillStyle_example
+                var ctx = this;
+                for (var i=0;i<6;i++){  
+                    for (var j=0;j<6;j++){  
+                        ctx.fillStyle = 'rgb(' + Math.floor(255-42.5*i) + ',' +   Math.floor(255-42.5*j) + ',0)';  
+                        ctx.fillRect(j*25,i*25,25,25);  
+                    }
+                }  
+            ]]>
+        </handler>
+    </drawview>
+    <drawview width="150" height="150">
+        <handler name="oncontext">
+            <![CDATA[
+                // based on https://developer.mozilla.org/en/Canvas_tutorial%3aApplying_styles_and_colors#A_strokeStyle_example
+                var ctx = this;
+                for (var i=0;i<6;i++){  
+                    for (var j=0;j<6;j++){  
+                        ctx.strokeStyle = 'rgb(0,' + Math.floor(255-42.5*i) + ',' +   
+                                        Math.floor(255-42.5*j) + ')';  
+                        ctx.beginPath();  
+                        ctx.arc(12.5+j*25,12.5+i*25,10,0,Math.PI*2,true);  
+                        ctx.stroke();  
+                    }  
+                }  
+            ]]>
+        </handler>
+    </drawview>
+    <drawview width="150" height="150">
+        <handler name="oncontext">
+            <![CDATA[
+                // based on https://developer.mozilla.org/en/Canvas_tutorial%3aApplying_styles_and_colors#An_example_using_rgba%28%29
+                var ctx = this;
+                // Draw background  
+                ctx.fillStyle = 'rgb(255,221,0)';  
+                ctx.fillRect(0,0,150,37.5);  
+                ctx.fillStyle = 'rgb(102,204,0)';  
+                ctx.fillRect(0,37.5,150,37.5);  
+                ctx.fillStyle = 'rgb(0,153,255)';  
+                ctx.fillRect(0,75,150,37.5);  
+                ctx.fillStyle = 'rgb(255,51,0)';  
+                ctx.fillRect(0,112.5,150,37.5);  
+                
+                // Draw semi transparent rectangles  
+                for (var i=0;i<10;i++){  
+                    ctx.fillStyle = 'rgba(255,255,255,'+(i+1)/10+')';  
+                    for (var j=0;j<4;j++){  
+                        ctx.fillRect(5+i*14,5+j*37.5,14,27.5)  
+                    }  
+                }  
+            ]]>
+        </handler>
+    </drawview>
+    <drawview width="150" height="150">
+        <handler name="oncontext">
+            <![CDATA[
+                // based on https://developer.mozilla.org/en/Canvas_tutorial%3aApplying_styles_and_colors#A_lineWidth_example
+                var ctx = this;
+                for (var i=0;i<10;i++){
+                    ctx.lineWidth = 1+i;
+                    ctx.beginPath();
+                    ctx.moveTo(5+i*14,5);
+                    ctx.lineTo(5+i*14,140);
+                    ctx.stroke();
+                }
+            ]]>
+        </handler>
+    </drawview>
+    <drawview width="150" height="150">
+        <handler name="oncontext">
+            <![CDATA[
+                // based on https://developer.mozilla.org/en/Canvas_tutorial%3aApplying_styles_and_colors#A_lineCap_example
+                var ctx = this;
+                var lineCap = ['butt','round','square'];  
+                
+                // Draw guides  
+                ctx.strokeStyle = '#09f';  
+                ctx.beginPath();  
+                ctx.moveTo(10,10);  
+                ctx.lineTo(140,10);  
+                ctx.moveTo(10,140);  
+                ctx.lineTo(140,140);  
+                ctx.stroke();  
+                
+                // Draw lines  
+                ctx.strokeStyle = 'black';  
+                for (var i=0;i<lineCap.length;i++){  
+                    ctx.lineWidth = 15;  
+                    ctx.lineCap = lineCap[i];  
+                    ctx.beginPath();  
+                    ctx.moveTo(25+i*50,10);  
+                    ctx.lineTo(25+i*50,140);  
+                    ctx.stroke();  
+                }  
+            ]]>
+        </handler>
+    </drawview>
+    <drawview width="150" height="150">
+        <handler name="oncontext">
+            <![CDATA[
+                // based on https://developer.mozilla.org/en/Canvas_tutorial%3aApplying_styles_and_colors#A_lineJoin_example
+                var ctx = this;
+                var lineJoin = ['round','bevel','miter'];  
+                ctx.lineWidth = 10;  
+                for (var i=0;i<lineJoin.length;i++){  
+                    ctx.lineJoin = lineJoin[i];  
+                    ctx.beginPath();  
+                    ctx.moveTo(-5,5+i*40);  
+                    ctx.lineTo(35,45+i*40);  
+                    ctx.lineTo(75,5+i*40);  
+                    ctx.lineTo(115,45+i*40);  
+                    ctx.lineTo(155,5+i*40);  
+                    ctx.stroke();  
+                } 
+            ]]>
+        </handler>
+    </drawview>
+
+    <method name="drawSpirograph" args="ctx,R,r,O">
+    <![CDATA[
+        // from https://developer.mozilla.org/en/Canvas_tutorial/Transformations#A_translate_example
+        var x1 = R-O;  
+        var y1 = 0;  
+        var i  = 1;  
+        ctx.beginPath();  
+        ctx.moveTo(x1,y1);  
+        do {  
+            if (i>20000) break;  
+            var x2 = (R+r)*Math.cos(i*Math.PI/72) - (r+O)*Math.cos(((R+r)/r)*(i*Math.PI/72))  
+            var y2 = (R+r)*Math.sin(i*Math.PI/72) - (r+O)*Math.sin(((R+r)/r)*(i*Math.PI/72))  
+            ctx.lineTo(x2,y2);  
+            x1 = x2;  
+            y1 = y2;  
+            i++;  
+        } while (x2 != R-O && y2 != 0 );  
+        ctx.stroke();  
+    ]]>
+    </method>
+
+    <drawview width="300" height="300">
+        <handler name="oncontext">
+        <![CDATA[
+            // based on https://developer.mozilla.org/en/Canvas_tutorial/Transformations#A_translate_example
+            this.fillRect(0,0,300,300);  
+            for (var i=0;i<3;i++) {  
+                for (var j=0;j<3;j++) {  
+                    this.save();  
+                    this.strokeStyle = "#9CFF00";  
+                    this.translate(50+j*100,50+i*100);  
+                    parent.drawSpirograph(this,20*(j+2)/(j+1),-8*(i+3)/(i+1),10);  
+                    this.restore();  
+                }  
+            }  
+        ]]>
+        </handler>
+    </drawview>
+
+    <drawview width="300" height="300">
+        <handler name="oncontext">
+        <![CDATA[
+            // based on https://developer.mozilla.org/en/Canvas_tutorial/Transformations#A_scale_example
+            var ctx = this;
+            ctx.strokeStyle = "#fc0";  
+            ctx.lineWidth = 1.5;  
+            ctx.fillRect(0,0,300,300);  
+            
+            // Uniform scaling  
+            ctx.save()  
+            ctx.translate(50,50);  
+            parent.drawSpirograph(ctx,22,6,5);  // no scaling  
+            
+            ctx.translate(100,0);  
+            ctx.scale(0.75,0.75);  
+            parent.drawSpirograph(ctx,22,6,5);  
+            
+            ctx.translate(133.333,0);  
+            ctx.scale(0.75,0.75);  
+            parent.drawSpirograph(ctx,22,6,5);  
+            ctx.restore();  
+            
+            // Non-uniform scaling (y direction)  
+            ctx.strokeStyle = "#0cf";  
+            ctx.save()  
+            ctx.translate(50,150);  
+            ctx.scale(1,0.75);  
+            parent.drawSpirograph(ctx,22,6,5);  
+            
+            ctx.translate(100,0);  
+            ctx.scale(1,0.75);  
+            parent.drawSpirograph(ctx,22,6,5);  
+            
+            ctx.translate(100,0);  
+            ctx.scale(1,0.75);  
+            parent.drawSpirograph(ctx,22,6,5);  
+            ctx.restore();  
+            
+            // Non-uniform scaling (x direction)  
+            ctx.strokeStyle = "#cf0";  
+            ctx.save()  
+            ctx.translate(50,250);  
+            ctx.scale(0.75,1);  
+            parent.drawSpirograph(ctx,22,6,5);  
+            
+            ctx.translate(133.333,0);  
+            ctx.scale(0.75,1);  
+            parent.drawSpirograph(ctx,22,6,5);  
+            
+            ctx.translate(177.777,0);  
+            ctx.scale(0.75,1);  
+            parent.drawSpirograph(ctx,22,6,5);  
+            ctx.restore();  
+        ]]>
+        </handler>
+    </drawview>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
