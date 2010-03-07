@@ -471,6 +471,7 @@ public class ClassModel implements Comparable {
    */
   void emitClassDeclaration(CompilationEnvironment env) {
     // Last chance for resolution
+
     resolve(env);
     declarationEmitted = true;
     // Should the package prefix be in the model?  Should the
@@ -486,6 +487,10 @@ public class ClassModel implements Comparable {
     }
     // className will be a global
     env.addId(className, definition);
+
+    if (! (tagName == null ||  "anonymous".equals(tagName))) {
+      getNodeModel(env).assignClassRoot(0);
+    }
 
     // LZX classes are not allowed to define their constructor, but
     // since LZX classes have required constructor arguments, we need
@@ -656,8 +661,6 @@ public class ClassModel implements Comparable {
     // add attribute declarations and perhaps some other stuff that
     // the runtime wants.
 
-    // Establish class root
-    getNodeModel(env).assignClassRoot(0);
     assert (force ? (! modelOnly) : true) : "Forcing compile of model-only class " + tagName;
     if (force || ((! isCompiled()) && (! modelOnly))) {
       emitClassDeclaration(env);

@@ -2310,8 +2310,11 @@ solution =
         }
         // Allow forward references
         if (! classModel.isCompiled()) {
-          // Ensure the class model is compiled!
-          classModel.compile(env, true);
+          // While we need to ensure local classes are emitted before
+          // they are used, we _don't_ force a compile here because
+          // the class may be external (model-only), which means it
+          // will be defined elsewhere.
+          classModel.compile(env);
         }
         if (classModel.anonymous || classModel.builtin || env.tagDefined(tagName) || "anonymous".equals(tagName)) {
           // The class to instantiate
