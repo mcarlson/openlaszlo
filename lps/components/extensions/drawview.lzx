@@ -142,6 +142,11 @@
     -->
     <attribute name="cachebitmap" value="true" type="boolean"/>
 
+    <!--- If true, lines will be offset by lineWidth / 2 to appear aliased (dhtml-only)
+      @access public
+    -->
+    <attribute name="aliaslines" value="false" type="boolean"/>
+
     <!---
       Resets the list of subpaths to an empty list, and calls moveTo() with the point (0,0).
     -->
@@ -699,6 +704,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 this.__updateFillStyle();
 
                 this.context.beginPath();
+                
+                // Offset by .5 if lineWidth is an odd number - see LPP-8780
+                var offset = (this.aliaslines && this.lineWidth % 2) ? .5 : 0;
                 for (var i = 0; i < this.__path.length; i += 1) {
                     var a = this.__path[i];
                     switch (a[0]) {
@@ -706,19 +714,19 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                             this.context.closePath();
                             break;
                         case 1:
-                            this.context.moveTo(a[1], a[2]);
+                            this.context.moveTo(a[1] + offset, a[2] + offset);
                             break;
                         case 2:
-                            this.context.lineTo(a[1], a[2]);
+                            this.context.lineTo(a[1] + offset, a[2] + offset);
                             break;
                         case 3:
-                            this.context.quadraticCurveTo(a[1], a[2], a[3], a[4]);
+                            this.context.quadraticCurveTo(a[1], a[2], a[3] + offset, a[4] + offset);
                             break;
                         case 4:
-                            this.context.bezierCurveTo(a[1], a[2], a[3], a[4], a[5], a[6]);
+                            this.context.bezierCurveTo(a[1], a[2], a[3], a[4], a[5] + offset, a[6] + offset);
                             break;
                         case 5:
-                            this.context.arc(a[1], a[2], a[3], a[4], a[5], a[6])
+                            this.context.arc(a[1] + offset, a[2] + offset, a[3], a[4], a[5], a[6])
                             break;
                     }
                 }
