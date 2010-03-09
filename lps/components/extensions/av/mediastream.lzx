@@ -106,14 +106,14 @@
 
     <!--- Current time of mediastream currently playing or recording (in seconds)
           @type Number
-          @access Public
+          @access public
     -->
     <attribute name="time" value="0" type="number"/>
 
     <!--- amount of time (in seconds) to buffer the video before sending to
           the server
           @type Number
-          @access Public
+          @access public
     -->
     <attribute name="bufferTime" value="0" type="number"/>
 

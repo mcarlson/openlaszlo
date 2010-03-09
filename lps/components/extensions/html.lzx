@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -127,17 +127,20 @@ lz.embed.iframemanager.restoreSelection = function(id) {
     <attribute name="history" value="true"/>
     <!--- The minimum height of the iframe: embedded swfs won't load with a size less than 1
           @type Number
-          @access number
+          @lzxtype number
+          @access public
     -->
     <attribute name="minimumheight" type="number" value="0"/>
     <!--- The minimum width of the iframe: embedded swfs won't load with a size less than 1
           @type Number
-          @access number
+          @lzxtype number
+          @access public
     -->
     <attribute name="minimumwidth" type="number" value="0"/>
     <!--- If true, attempt to listen for mouse events on the iframe.  Cross-domain security restrictions apply, so if the content loaded in the iframe is from a different domain, mouse events won't be sent.
           @type Boolean
-          @access boolean
+          @lzxtype boolean
+          @access public
     -->
     <attribute name="mouseevents" type="boolean" value="true"/>
     <setter name="mouseevents" args="send">
@@ -153,7 +156,8 @@ lz.embed.iframemanager.restoreSelection = function(id) {
     </setter>
     <!--- If true, show native context menus in the iframe.  Otherwise, show OpenLaszlo context menus.  Note that this only works in DHTML because it's not possible to programatically display a context menu in Flash.
           @type Boolean
-          @access boolean
+          @lzxtype boolean
+          @access public
     -->
     <attribute name="shownativecontextmenu" type="boolean" value="true"/>
     <setter name="shownativecontextmenu" args="show">
