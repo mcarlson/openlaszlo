@@ -1,0 +1,16 @@
+<canvas debug="true">
+
+    <view name="myview" height="0" stretches="height"
+          resource="resources/png/v_scroll_track.png"
+          bgcolor="green"
+          onclick="Debug.write('click', this)"
+          onmouseover="Debug.write('mouseover', this)"
+          onmouseout="Debug.write('mouseout', this)"/>
+
+
+    <!-- After setting height to 200, the view gets no mouse events. -->
+    <button x="100" text="set height to 200"
+            onclick="myview.setHeight(200)" />
+
+</canvas> 
+<!-- Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->

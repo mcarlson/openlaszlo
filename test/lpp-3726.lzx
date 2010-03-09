@@ -1,0 +1,28 @@
+<canvas debug="true">
+    <class name="testclass" extends="image" width="75" height="75" clickable="true" focusable="true" opacity="1" stretches="both">
+        <attribute name="image_id" type="string" value=""/>
+        <attribute name="image_name" type="string" value=""/>
+        <attribute name="image_mimetype" type="string" value=""/>
+        <attribute name="enabled" value="false" type="boolean" />
+
+        <handler name="oninit">
+        Debug.write("test oninit");
+        </handler>
+
+        <handler name="onmouseover">
+        Debug.write("onmouseover class");
+        </handler>
+
+        <handler name="onmousedown">
+        Debug.write("onmousedown class");
+        </handler>
+
+        <method name="setEnable" args="flag">
+        Debug.write("setEneable");
+        </method>
+    </class>
+
+    <testclass src="resources/png/earth.png"/>
+
+</canvas>
+<!-- Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms. -->
