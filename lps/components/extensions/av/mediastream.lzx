@@ -679,7 +679,13 @@
                 // fall through to broadcasting
 
             case "broadcasting":
-                this._flashstream.publish(false);
+                if ($as3) {
+                    this._flashstream.close();
+                    //See this doc for info: http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/net/NetStream.html#close()
+                    //See this doc for info: http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/net/NetStream.html#publish()
+                } else {
+                    this._flashstream.publish(false);
+                }
                 break;
 
             case "playing":
