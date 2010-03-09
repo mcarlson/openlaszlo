@@ -503,6 +503,40 @@
             ]]>
         </handler>
     </drawview>
+    <drawview width="150" height="150">
+        <handler name="oncontext" method="draw"/>
+        <method name="draw" args="ignore=null">
+            <![CDATA[
+                // based on https://developer.mozilla.org/samples/canvas-tutorial/4_8_canvas_miterlimit.html
+                if (! this.context) return;
+                var ctx = this;
+                // Clear canvas
+                ctx.clearRect(0,0,150,150);
+        
+                // Draw guides
+                ctx.strokeStyle = '#09f';
+                ctx.lineWidth   = 2;
+                ctx.strokeRect(-5,50,160,50);
+        
+                // Set line styles
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 10;
+        
+                // check input
+                ctx.miterLimit = this.miterlimit.value;
+        
+                // Draw lines
+                ctx.beginPath();
+                ctx.moveTo(0,100);
+                for (var i=0;i<24;i++){
+                    var dy = i%2==0 ? 25 : -25 ;
+                    ctx.lineTo(Math.pow(i,1.5)*2,75+dy);
+                }
+                ctx.stroke();
+            ]]>
+        </method>
+        <slider name="miterlimit" minvalue="0" maxvalue="18" value="10" onvalue="parent.draw()" width="150"/>
+    </drawview>
 
     <method name="drawSpirograph" args="ctx,R,r,O">
     <![CDATA[
