@@ -628,12 +628,6 @@ public class Compiler {
                       " extends " +  SWF9Writer.DEBUG_EVAL_SUPERCLASS + " {\n " + SWF9Writer.imports + "}\n");
 
 
-            // N.B.: this forces the swf9 compiler to keep all the
-            // files in the temporary app build directory, so we can
-            // link against globals there.
-            props.put(org.openlaszlo.sc.Compiler.INCREMENTAL_COMPILE, "true");
-
-
             ScriptCompilerInfo compilerInfo = new ScriptCompilerInfo();
             props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
 
