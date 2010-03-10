@@ -142,6 +142,11 @@
     -->
     <attribute name="cachebitmap" value="true" type="boolean"/>
 
+    <!--- If true, the size of the drawview will be set dynamically based on its contents, where possible. (swf-only)
+      @access public
+    -->
+    <attribute name="measuresize" value="true" type="boolean"/>
+
     <!--- If true, lines will be offset by lineWidth / 2 to appear aliased (dhtml-only)
       @access public
     -->
@@ -904,8 +909,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             var __path :Array = [];
             var __pathisopen :Boolean = false;
             // whether to measure the width/height dimensions after redrawing
-            var __measurewidth :Boolean = true;
-            var __measureheight :Boolean = true;
+            var measuresize :Boolean = true;
             //const __MOVETO_OP :int = 1;
             //const __LINETO_OP :int = 2;
             //const __QCURVE_OP :int = 3;
@@ -1131,34 +1135,34 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 this.closePath();
                 this.__playPath(this.context);
                 this.context.endFill();
-                this.__updateSize();
+                if (this.measuresize) this.__updateSize();
             }
 
-            function __playPath(m:*) :void {
-                if ($as2) { this.context._visible = false; }
+            function __playPath(context:*) :void {
+                if ($as2) { context._visible = false; }
                 var p:Array = this.__path;
-                //Debug.write(p, m);
+                //Debug.write(p, context);
                 for (var i:int = 0; i < p.length; i++) {
                     var op:Array = p[i];
                     switch (op[0]) {
                         case 1:
                             //__MOVETO_OP
-                            //Debug.write(m, 'moveTo', op[1], op[2]);
-                            m.moveTo(op[1], op[2]);
+                            //Debug.write(context, 'moveTo', op[1], op[2]);
+                            context.moveTo(op[1], op[2]);
                             break;
                         case 2:
                             //__LINETO_OP
-                            //Debug.write(m, 'lineTo', op[1], op[2]);
-                            m.lineTo(op[1], op[2]);
+                            //Debug.write(context, 'lineTo', op[1], op[2]);
+                            context.lineTo(op[1], op[2]);
                             break;
                         case 3:
                             //__QCURVE_OP
-                            //Debug.write(m, 'quadraticCurveTo', op[1], op[2], op[3], op[4]);
-                            m.curveTo(op[1], op[2], op[3], op[4]);
+                            //Debug.write(context, 'quadraticCurveTo', op[1], op[2], op[3], op[4]);
+                            context.curveTo(op[1], op[2], op[3], op[4]);
                             break;
                     }
                 }
-                if ($as2) { this.context._visible = true; }
+                if ($as2) { context._visible = true; }
             }
 
             function stroke() {
@@ -1174,7 +1178,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }
                 this.__playPath(this.context);
                 this.context.lineStyle(undefined);
-                this.__updateSize();
+                if (this.measuresize) this.__updateSize();
             }
 
             function clear() {
@@ -1331,6 +1335,19 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 if (! this.__norebuild && this.__bitmapdata) this.rebuildBitmap();
             }
 
+            override function updateWidth(w) {
+                super.updateWidth(w);
+                if (this._setrescwidth) {
+                    // stretches is on
+                    if ($as3) {
+                        if (this.__drawcontainer) {
+                            this.__drawcontainer.scaleX = this.width / this.unstretchedwidth;
+                        }
+                    }
+                }
+                if (! this.__norebuild && (this.__bitmapdata || ! this.measuresize)) this.rebuildBitmap();
+            }
+
             override function $lzc$set_height(h) {
                 super.$lzc$set_height(h);
                 if (this._setrescwidth || this._setrescheight) {
@@ -1340,9 +1357,22 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 if (! this.__norebuild && this.__bitmapdata) this.rebuildBitmap();
             }
 
+            override function updateHeight(h) {
+                super.updateHeight(h);
+                if (this._setrescheight) {
+                    // stretches is on
+                    if ($as3) {
+                        if (this.__drawcontainer) {
+                            this.__drawcontainer.scaleY = this.height / this.unstretchedheight;
+                        }
+                    }
+                }
+                if (! this.__norebuild && (this.__bitmapdata || ! this.measuresize)) this.rebuildBitmap();
+            }
+
             private function __updateSize() :void {
                 if (! this.__drawcontainer) return;
-                var measureSize:Boolean = (this.hassetwidth == false || this.hassetheight == false) || this._setrescwidth || this._setrescheight;
+                var measureSize:Boolean = (this.hassetwidth == false || this.hassetheight == false || this._setrescwidth || this._setrescheight) && this.measuresize;
                 if (! measureSize) return;
 
                 var rebuildBitmapLater = false;
@@ -1384,9 +1414,6 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     } else if (this._setrescwidth) {
                         // stretches is on...
                         this.updateWidth(width);
-                        if ($as3) {
-                            mc.scaleX = this.width / this.unstretchedwidth;
-                        }
                     }
                 }
 
@@ -1397,9 +1424,6 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     } else if (this._setrescheight) {
                         // stretches is on...
                         this.updateHeight(height);
-                        if ($as3) {
-                            mc.scaleY = this.height / this.unstretchedheight;
-                        }
                     }
                 }
 
@@ -1816,7 +1840,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     // move back to the implicit 0,0 set in beginPath();
                     this.context.moveTo(0,0);
 
-                    this.__updateSize();
+                    if (this.measuresize) this.__updateSize();
                 }
             }
 
