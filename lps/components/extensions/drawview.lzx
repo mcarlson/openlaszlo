@@ -672,7 +672,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }
             }
 
-            function __updateStyles() {
+            function __updateLineStyle() {
                 var styleNames = { lineWidth : '__lineWidth',
                                    lineCap : '__lineCap',
                                    lineJoin : '__lineJoin',
@@ -705,7 +705,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function __playPath() {
                 if (this.__path.length == 0) return;
                 if ($debug) this.__checkContext();
-                this.__updateStyles();
+                this.__updateLineStyle();
                 this.__updateFillStyle();
 
                 this.context.beginPath();
@@ -738,9 +738,8 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function clipPath() {
-                if ($debug) {
-                    Debug.warn('lz.drawview.clipPath() is not currently supported in DHTML.');
-                }
+                this.__playPath();
+                this.context.clip();
             }
 
             function clipButton() {
@@ -804,6 +803,15 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function fillRect(x, y, w, h) {
                 this.__updateFillStyle();
                 this.context.fillRect(x, y, w, h);
+            }
+
+            function clearRect(x, y, w, h) {
+                this.context.clearRect(x, y, w, h);
+            }
+
+            function strokeRect(x, y, w, h) {
+                this.__updateLineStyle();
+                this.context.strokeRect(x, y, w, h);
             }
         } // End of drawview
         lz[$lzc$class_drawview.tagname] = $lzc$class_drawview;
@@ -1166,6 +1174,13 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function stroke() {
+                this.__updateLineStyle();
+                this.__playPath(this.context);
+                this.context.lineStyle(undefined);
+                this.__updateSize();
+            }
+
+            function __updateLineStyle() {
                 if (this.strokeStyle instanceof LzCanvasGradient) {
                     this.strokeStyle.__applyStrokeTo(this.context);
                 } else {
@@ -1176,16 +1191,12 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     this.context.lineStyle(this.lineWidth, color.c, alpha, false, 'normal',
                         linecap, this.lineJoin, this.miterLimit);
                 }
-                this.__playPath(this.context);
-                this.context.lineStyle(undefined);
-                if (this.measuresize) this.__updateSize();
             }
 
             function clear() {
                 this.context.clear();
                 if (this['__bitmapdata']) {
-                    var rect:Rectangle = new flash.geom.Rectangle(0, 0, this.width, this.height);
-                    this.__bitmapdata.fillRect(rect, 0x000000ff);
+                    this.clearRect(0,0,this.width,this.height);
                 }
             }
 
@@ -1812,36 +1823,83 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
             function fillRect(x, y, w, h) {
                 if (! w && ! h) return;
-                var color:Object = this.__getColor(this.fillStyle);
-                var alpha:Number = color.a != null ? color.a : this.globalAlpha;
-                if (alpha == 1) {
-                    // Use fillRect when we don't need alpha since it replaces the pixels
-                    var rect:Rectangle = new flash.geom.Rectangle(x, y, w, h);
-                    if (! this.__bitmapdata) {
-                        this.rebuildBitmap();
-                    }
-                    this.__bitmapdata.fillRect(rect, color.c + 0xff000000);
+                if (this.fillStyle instanceof LzCanvasGradient) {
+                    this.fillStyle.__applyFillTo(this.context);
+                    this.__strokeRect(x,y,w,h);
+                    this.context.endFill();
                 } else {
-                    // can't use fillRect() with alpha because it replaces the pixels
-                    // fillRect() must not affect the current path, per http://www.whatwg.org/specs/web-apps/current-work/#simple-shapes-%28rectangles%29
                     var color:Object = this.__getColor(this.fillStyle);
                     var alpha:Number = color.a != null ? color.a : this.globalAlpha;
-                    if ($as2) { alpha *= 100; }
-                    this.context.beginFill(color.c, alpha);
+                    if (alpha == 1) {
+                        // Use fillRect when we don't need alpha since it replaces the pixels
+                        var rect:Rectangle = new flash.geom.Rectangle(x, y, w, h);
+                        if (! this.__bitmapdata) {
+                            this.rebuildBitmap();
+                        }
+                        this.__bitmapdata.fillRect(rect, color.c + 0xff000000);
+                    } else {
+                        // can't use fillRect() with alpha because it replaces the pixels
+                        // fillRect() must not affect the current path, per http://www.whatwg.org/specs/web-apps/current-work/#simple-shapes-%28rectangles%29
+                        var color:Object = this.__getColor(this.fillStyle);
+                        var alpha:Number = color.a != null ? color.a : this.globalAlpha;
+                        if ($as2) { alpha *= 100; }
+                        this.context.beginFill(color.c, alpha);
 
-                    this.context.moveTo(x, y);
-                    this.context.lineTo(x, y + h);
-                    this.context.lineTo(x + w, y + h);
-                    this.context.lineTo(x + w, y);
-                    this.context.lineTo(x, y);
+                        this.__strokeRect(x,y,w,h);
 
-                    this.context.endFill();
+                        this.context.endFill();
 
-                    // move back to the implicit 0,0 set in beginPath();
-                    this.context.moveTo(0,0);
-
-                    if (this.measuresize) this.__updateSize();
+                    }
                 }
+            }
+
+            // If both height and width are zero, this method has no effect, 
+            // since there is no path to stroke (it's a point). If only one of 
+            // the two is zero, then the method will draw a line instead (the 
+            // path for the outline is just a straight line along the non-zero 
+            // dimension).
+            function __strokeRect(x, y, w, h) {
+                if (w == 0 && h == 0) return;
+                this.context.moveTo(x,y);
+                if (w != 0) {
+                    // top
+                    this.context.lineTo(x + w,y);
+                    if (h != 0) {
+                        // right
+                        this.context.lineTo(x + w,y + h);
+                    }
+                }
+                if (h != 0) {
+                    // bottom
+                    this.context.lineTo(x,y + h);
+                    if (w != 0) {
+                        // left
+                        this.context.lineTo(x,y);
+                    }
+                }
+
+                // move back to the implicit 0,0 set in beginPath();
+                this.context.moveTo(0,0);
+
+                if (this.measuresize) this.__updateSize();
+            }
+
+            function clearRect(x, y, w, h) {
+                if (! w && ! h) return;
+                if (w < 1 || h < 1) return;
+                this.__saveToBitmap();
+                var rect:Rectangle = new flash.geom.Rectangle(x, y, w, h);
+                this.__bitmapdata.fillRect(rect, 0x000000ff);
+            }
+
+            // The strokeRect(x, y, w, h) method must stroke the specified 
+            // rectangle's path using the strokeStyle, lineWidth, lineJoin, 
+            // and (if appropriate) miterLimit attributes. 
+            function strokeRect(x, y, w, h) {
+                if (! w && ! h) return;
+                this.__updateLineStyle();
+                this.__strokeRect(x,y,w,h);
+                this.context.lineStyle(undefined);
             }
 
             private function getIdentityMatrix():Matrix {
