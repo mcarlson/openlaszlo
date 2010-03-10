@@ -82,8 +82,6 @@ public class SWF9External {
       String newOpts = optionsToString();
       if (optsfile.exists()) {
         String prevOpts = FileUtils.readFileString(optsfile);
-        System.err.println("prevOpts: "+prevOpts);
-        System.err.println("newOpts: "+newOpts);
         return !newOpts.equals(prevOpts);
       } else {
         return true;
