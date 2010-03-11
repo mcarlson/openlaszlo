@@ -2,17 +2,22 @@
 
  
  <canvas height="600">
+
+     <handler name="onmaxscroll" reference="tfield">
+       tfield.setAttribute('scroll', tfield.maxscroll);
+       Debug.write('onmaxscroll event, scrolling to ', tfield.maxscroll);
+     </handler>
+
    <view x="600" width="40" height="40"  bgcolor="green" onclick="tfield.setAttribute('scroll',1)"/>
-   <view x="600" y="50" width="40" height="40"  bgcolor="red" onclick="tfield.setAttribute('scroll',tfield.maxscroll)"/>
+   <view x="600" y="50" width="40" height="40"  bgcolor="red" onclick="tfield.setAttribute('scroll', tfield.maxscroll)"/>
    <slider x="600" y="100" name="theslider" 
            minvalue="13" maxvalue="500" value="200"
     >
      <handler name="onvalue">
        tfield.setAttribute('height', this.value);
-//       Debug.write('setheight', this.value);
-       tfield.setAttribute('scroll', tfield.maxscroll);
-//       Debug.write('setscroll', tfield.maxscroll);
      </handler>
+
+
 
    </slider>
    <button x="650" onclick="tfield.setAttribute('height', 100)">Set field height 100</button>
@@ -58,6 +63,6 @@
     </text>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
