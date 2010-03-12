@@ -761,7 +761,7 @@ public class SWF9External {
         PrintWriter outf = new PrintWriter(new FileWriter(outfileName));
         for (Iterator iter = cmd.iterator(); iter.hasNext(); ) {
           String arg = (String)iter.next();
-          outf.print(arg+" ");
+          outf.println(arg);
         }
         outf.close();
         System.err.println("option EMIT_AS3_ONLY set, returning without invoking flex compiler, call 'lcompile #' to compile as3");
@@ -915,16 +915,17 @@ public class SWF9External {
       
     }
 
-    public static String FLEX_HOME () {
-      return LPS.HOME()+File.separator+"WEB-INF";
+    public static String FLEX_HOME () throws IOException {
+
+      return new File(LPS.HOME()+File.separator+"WEB-INF").getCanonicalPath();
     }
 
     /**
      * Return a pathname given by a property in the LPS properties.
      * If the path not absolute, it is relative to the LFC directory.
      */
-    public static String getFlexPathname(String subpath) {
-      return FLEX_HOME() + File.separator + subpath;
+    public static String getFlexPathname(String subpath)  throws IOException {
+      return new File(FLEX_HOME() + File.separator + subpath).getCanonicalPath();
     }
 
     /**
