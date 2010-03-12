@@ -207,7 +207,7 @@
         </drawview>
     </view>
 
-    <drawview name="lpp8780" width="60" height="60" crisplines="true">
+    <drawview name="lpp8780" width="60" height="60" aliaslines="true">
         <handler name="oncontext" method="redraw"/>
         <method name="redraw" args="context">
             this.beginPath();
