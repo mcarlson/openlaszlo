@@ -12,6 +12,9 @@
   * @author Max Carlson &lt;max@openlaszlo.org&gt;
   */
 
+{
+#pragma "warnUndefinedReferences=false"
+
 var LzSprite = function(owner, isroot) {
     if (owner == null) return;
     this.constructor = arguments.callee;
@@ -309,9 +312,14 @@ if ($debug) {
 LzSprite.__defaultStyles = {
     lzdiv: {
         position: 'absolute'
+        ,borderStyle: 'solid'
+        ,borderWidth: '0px'
     },
     lzclickdiv: {
         position: 'absolute'
+        ,borderStyle: 'solid'
+        ,borderColor: 'transparent'
+        ,borderWidth: '0px'
     },
     lzcanvasdiv: {
         position: 'absolute'
@@ -472,6 +480,9 @@ LzSprite.__defaultStyles = {
     },
     lzcontext: {
         position: 'absolute'
+        ,borderStyle: 'solid'
+        ,borderColor: 'transparent'
+        ,borderWidth: '0px'
     },
     lzimg: {
         position: 'absolute',
@@ -520,6 +531,10 @@ LzSprite.__defaultStyles = {
         return '-' + found.toLowerCase();
     }
 }
+
+/** A hash mapping style names to browser-specific versions - see __updateQuirks
+    @access private */
+LzSprite.__styleNames = {borderRadius: 'borderRadius', userSelect: 'userSelect', transformOrigin: 'transformOrigin', transform: 'transform', boxShadow: 'boxShadow'};
 
 /** @access private */
 LzSprite.prototype.uid = 0;
@@ -750,6 +765,11 @@ LzSprite.__updateQuirks = function () {
             // Force hasLayout for lzTextSizeCache in IE
             defaultStyles['#lzTextSizeCache'] = {zoom: 1};
         } else if (browser.isSafari || browser.isChrome) {
+            LzSprite.__styleNames.borderRadius = 'WebkitBorderRadius';
+            LzSprite.__styleNames.boxShadow = 'WebkitBoxShadow';
+            LzSprite.__styleNames.userSelect = 'WebkitUserSelect';
+            LzSprite.__styleNames.transform = 'WebkitTransform';
+            LzSprite.__styleNames.transformOrigin = 'WebkitTransformOrigin';
             // Safari won't show canvas tags whose parent is display: none
             quirks['safari_visibility_instead_of_display'] = true;
             quirks['absolute_position_accounts_for_offset'] = true;
@@ -766,8 +786,6 @@ LzSprite.__updateQuirks = function () {
             // Safari 3.0.4 supports these
             if (browser.version > 523.10) {
                 capabilities['rotation'] = true;
-                // Rotation's origin in CSS is width/2 and height/2 as default
-                defaultStyles.lzdiv.WebkitTransformOrigin = '0 0';
                 capabilities['dropshadows'] = true;
                 capabilities['cornerradius'] = true;
                 capabilities['rgba'] = true;
@@ -819,6 +837,13 @@ LzSprite.__updateQuirks = function () {
             // compared to SWF and to other browsers
             quirks['text_ie_carriagereturn'] = true;
         } else if (browser.isFirefox) {
+            LzSprite.__styleNames.borderRadius = 'MozBorderRadius';
+            LzSprite.__styleNames.boxShadow = 'MozBoxShadow';
+            LzSprite.__styleNames.userSelect = 'MozUserSelect';
+            // https://developer.mozilla.org/en/CSS/-moz-transform
+            LzSprite.__styleNames.transform = 'MozTransform';
+            LzSprite.__styleNames.transformOrigin = 'MozTransformOrigin';
+
             // DOM operations on blurring element break focus (LPP-7786)
             // https://bugzilla.mozilla.org/show_bug.cgi?id=481468
             //quirks['dom_breaks_focus'] = true;
@@ -857,8 +882,6 @@ LzSprite.__updateQuirks = function () {
             quirks['autoscroll_textarea'] = true;
             if (browser.version >= 3.5) {
                 capabilities['rotation'] = true;
-                // Rotation's origin in CSS is width/2 and height/2 as default
-                defaultStyles.lzdiv.MozTransformOrigin = '0 0';
             }
             
             if (browser.version >= 3.1) {
@@ -886,12 +909,11 @@ LzSprite.__updateQuirks = function () {
         }
         
         // Turn off image selection - see LPP-8311
-        if (browser.isFirefox) {
-            defaultStyles.lzimg['MozUserSelect'] = 'none';
-        } else if (browser.isSafari) {
-            defaultStyles.lzimg['WebkitUserSelect'] = 'none';
-        } else {
-            defaultStyles.lzimg['UserSelect'] = 'none';
+        defaultStyles.lzimg[LzSprite.__styleNames.userSelect] = 'none';
+
+        if (capabilities.rotation) {
+            // Rotation's origin in CSS is width/2 and height/2 as default
+            defaultStyles.lzdiv[LzSprite.__styleNames.transformOrigin] = '0 0';
         }
 
         // See LPP-8696
@@ -1229,8 +1251,7 @@ LzSprite.prototype.setSource = function (url, usecache){
     } else if (this.stretches == null && this.__csssprite) {
         this.__createIMG();
         this.__updateStretches();
-        var imgurl = this.__csssprite ? this.__csssprite : url;
-        this.__setBGImage(imgurl);
+        this.__setBGImage(this.__csssprite);
         //Debug.info('setSource ' + this.__LZdiv.style.backgroundImage, url);
         this.owner.resourceload({width: this.resourceWidth, height: this.resourceHeight, resource: this.resource, skiponload: this.skiponload});
         return;
@@ -1276,6 +1297,10 @@ LzSprite.prototype.__bindImage = function (im){
     } else {
         this.__LZimg = im;
         this.__LZdiv.appendChild(this.__LZimg);
+    }
+    // Set to allow clipping, when backgroundImage/__csssprite is used
+    if (this.cornerradius != null) {
+        im.style[LzSprite.__styleNames.borderRadius] = this.cornerradius;
     }
 }
 
@@ -1956,6 +1981,7 @@ LzSprite.prototype.__imgonload = function(i, cacheHit) {
         }
     }
     
+    // Tell the view about the load event.
     this.owner.resourceload({width: this.resourceWidth, height: this.resourceHeight, resource: this.resource, skiponload: this.skiponload});
     if (this.skiponload != true){
         // for user-loaded media
@@ -2526,16 +2552,26 @@ LzSprite.prototype.getContext = function (){
 
     this.__LZcanvas = canvas;
     canvas.className = 'lzgraphicscanvas';
-    this.__LZdiv.appendChild(canvas);
-    lz.embed.__setAttr(this.__LZcanvas, 'width', this.width);
-    lz.embed.__setAttr(this.__LZcanvas, 'height', this.height);
+    // make sure we're behind any children
+    if (this.__LZdiv.firstChild) {
+        this.__LZdiv.insertBefore(canvas, this.__LZdiv.firstChild);
+    } else {
+        this.__LZdiv.appendChild(canvas);
+    }
+    lz.embed.__setAttr(canvas, 'width', this.width);
+    lz.embed.__setAttr(canvas, 'height', this.height);
+    
+    // update the cornerradius of the canvas object, to allow clipping
+    if (this.cornerradius != null) {
+        canvas.style[LzSprite.__styleNames.borderRadius] = this.cornerradius;
+    }
 
     if (lz.embed.browser.isIE) {
         // IE can take a while to init
         this.__maxTries = 10;
         this.__initcanvasie();
     } else {
-        return this.__LZcanvas.getContext("2d");
+        return canvas.getContext("2d");
     }
   }
   
@@ -2826,11 +2862,8 @@ LzSprite.prototype.getContextMenu = function() {
 
 LzSprite.prototype.setRotation = function(r) {    
     var browser = lz.embed.browser;
-    if (browser.isSafari) {
-        this.__LZdiv.style['WebkitTransform'] = 'rotate(' + r + 'deg)';
-    } else if (browser.isFirefox) {
-        // https://developer.mozilla.org/en/CSS/-moz-transform
-        this.__LZdiv.style['MozTransform'] = 'rotate(' + r + 'deg)';
+    if (browser.isSafari || browser.isFirefox) {
+        this.__LZdiv.style[LzSprite.__styleNames.transform] = 'rotate(' + r + 'deg)';
     }
 }
 
@@ -3077,7 +3110,7 @@ LzSprite.prototype.__initcanvasie = function() {
 
 // Shared by LzSprite and LzTextSprite
 LzSprite.prototype.__getShadowCSS = function(shadowcolor, shadowdistance, shadowangle, shadowblurradius) {
-    if (shadowcolor == null) {
+    if (shadowcolor == null || (shadowdistance == 0 && shadowblurradius == 0)) {
         return '';
     }
     if (this.capabilities.minimize_opacity_changes) {
@@ -3096,9 +3129,6 @@ LzSprite.prototype.__getShadowCSS = function(shadowcolor, shadowdistance, shadow
             if (shadowblurradius > 0) {
                 var hexcolor = LzColorUtils.inttohex(shadowcolor);
                 return "progid:DXImageTransform.Microsoft.Glow(Color='" + hexcolor + "',Strength=" + shadowblurradius + ")";
-            } else {
-                // remove filter - won't show anything...
-                return '';
             }
         } else {
             // to match Flash
@@ -3128,9 +3158,15 @@ LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowan
     if (this.quirks.use_filter_for_dropshadow) {
         this.__LZdiv.style.filter = this.setFilter('shadow', newshadow);
     } else {
+        var cssname = LzSprite.__styleNames.boxShadow;
         // use the canvas div where available
-        var displayobj = this.__LZcanvas || this.__LZdiv;
-        displayobj.style.webkitBoxShadow = displayobj.style.MozBoxShadow = displayobj.style.boxShadow = newshadow;
+        if (this.__LZcanvas) {
+            // clear out any old shadow style
+            this.__LZdiv.style[cssname] = '';
+            this.__LZcanvas.style[cssname] = newshadow;
+        } else {
+            this.__LZdiv.style[cssname] = newshadow;
+        }
     }
 
     if (this.quirks.size_blank_to_zero) {
@@ -3140,14 +3176,23 @@ LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowan
     }
 }
 
+LzSprite.prototype.cornerradius = null;
 LzSprite.prototype.setCornerRadius = function(radius) {
     var radius = radius > 0 ? this.CSSDimension(radius) : '';
-    this.__LZdiv.style.MozBorderRadius = this.__LZdiv.style.webkitBorderRadius = this.__LZdiv.style.borderRadius = radius;
+    this.cornerradius = radius;
+    var stylename = LzSprite.__styleNames.borderRadius;
+    this.__LZdiv.style[stylename] = radius;
     if (this.__LZclick) {
-        this.__LZclick.style.MozBorderRadius = this.__LZclick.style.webkitBorderRadius = this.__LZclick.style.borderRadius = radius;
+        this.__LZclick.style[stylename] = radius;
     }
     if (this.__LZcontext) {
-        this.__LZcontext.style.MozBorderRadius = this.__LZcontext.style.webkitBorderRadius = this.__LZcontext.style.borderRadius = radius;
+        this.__LZcontext.style[stylename] = radius;
+    }
+    if (this.__LZcanvas) {
+        this.__LZcanvas.style[stylename] = radius;
+    }
+    if (this.__LZimg) {
+        this.__LZimg.style[stylename] = radius;
     }
 }
 
@@ -3207,6 +3252,7 @@ LzSprite.prototype.applyCSS = function(name, value, divname) {
 }
 
 LzSprite.prototype.set_borderColor = function(color) {
+    if (color == null) color = '';
     this.__LZdiv.style.borderColor = color;
 }
 
@@ -3219,18 +3265,19 @@ LzSprite.prototype.set_borderWidth = function(width) {
             this.__restoreSize();
         }
     }
-    this.applyCSS('borderWidth', width);
-    this.applyCSS('borderStyle', 'solid');
+    if (width == 0) {
+        width = '';
+    }
+    this.__LZdiv.style.borderWidth = width;
+    // make sure these match the size of the __LZdiv to catch clicks
     if (this.__LZclick) {
-        this.applyCSS('borderWidth', width, '__LZclick');
-        this.applyCSS('borderStyle', 'solid', '__LZclick');
-        this.applyCSS('borderColor', 'transparent', '__LZclick');
+        this.__LZclick.style.borderWidth = width;
     }
     if (this.__LZcontext) {
-        this.applyCSS('borderWidth', width, '__LZcontext');
-        this.applyCSS('borderStyle', 'solid', '__LZcontext');
-        this.applyCSS('borderColor', 'transparent', '__LZcontext');
+        this.__LZcontext.style.borderWidth = width;
     }
+    // Don't apply to __LZcanvas or the __LZimg because they're contained by 
+    // __LZdiv
 }
 
 LzSprite.medialoadtimeout = 30000;
@@ -3239,4 +3286,8 @@ LzSprite.setMediaLoadTimeout = function(ms){
 }
 
 LzSprite.setMediaErrorTimeout = function(ms){
+    // not needed since we reliably get load errors for images
+}
+
+// End pragma
 }
