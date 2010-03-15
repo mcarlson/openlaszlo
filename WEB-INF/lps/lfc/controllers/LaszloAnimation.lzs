@@ -1,7 +1,7 @@
 /**
   * LaszloAnimations.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   * @affects animation lzanimator
   * @access public
@@ -16,8 +16,8 @@
   * over 1 second (1000 milliseconds).</p>
   *
   * <example><programlisting class="code" extract="false">
-  * &lt;canvas>
-  *   &lt;window>
+  * &lt;canvas height="65">
+  *   &lt;window height="50" width="50">
   *     &lt;animator attribute="x" to="100" duration="1000"/>
   *   &lt;/window>
   * &lt;/canvas>
@@ -83,7 +83,10 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
         if (eparam == "linear") {
             this.calcMethod = this.calcNextValueLinear;
         } else {
+            // Restore initial values
             this.calcMethod = this.calcNextValue;
+            this.beginPoleDelta = .25;
+            this.endPoleDelta = .25;
             if (eparam == "easeout") {
                 this.beginPoleDelta = 100;
             } else if (eparam == "easein") {
@@ -93,36 +96,12 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
     }
 
     /**
-     * @deprecated in 4.1
-     * @deprecated Use setAttribute('motion', ...) instead.
-     * @access private
-     */
-    final function setMotion (eparam) {
-        if ($debug) {
-            Debug.deprecated(this, arguments.callee, this.setAttribute);
-        }
-        this.$lzc$set_motion(eparam);
-    }
-
-    /**
       * Sets the destination value for the animator
       * @param Number eparam: The destination value for the animator.
       * @access private
       */
     function $lzc$set_to (eparam) {
         this.origto = Number(eparam);
-    }
-
-    /**
-     * @deprecated in 4.1
-     * @deprecated Use setAttribute('to', ...) instead.
-     * @access private
-     */
-    final function setTo (eparam) {
-        if ($debug) {
-            Debug.deprecated(this, arguments.callee, this.setAttribute);
-        }
-        this.$lzc$set_to(eparam);
     }
 
     /**
