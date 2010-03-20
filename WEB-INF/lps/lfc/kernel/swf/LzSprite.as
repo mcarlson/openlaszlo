@@ -1881,4 +1881,17 @@ LzSprite.prototype.__updateBackgroundRepeat = function (  ){
     //Debug.write('__updateBackgroundRepeat', this.backgroundrepeat, bmp, mc);
 }
 
+LzSprite.quirks = {
+    // workaround FF3.6 Mac bug - see LPP-8831
+    ignorespuriousff36events: false
+};
+
+/** Update browser quirks
+  * @access private
+  */
+LzSprite.__updateQuirks = function (browser) {
+    LzSprite.quirks.ignorespuriousff36events = browser.isFirefox && browser.OS == 'Mac' && browser.version == 3.6;
+}
+
+// end pragma
 }

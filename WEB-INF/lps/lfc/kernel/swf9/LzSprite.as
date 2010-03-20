@@ -1913,6 +1913,23 @@ public class LzSprite extends Sprite {
         tmp.dispose();
     }
 
+    
+    static var quirks = {
+        // workaround FF3.6 Mac bug - see LPP-8831
+        ignorespuriousmouseevents: false
+        ,fixtextselection:false
+    };
+
+    /** Update browser quirks
+    * @access private
+    */
+    static function __updateQuirks(browser){
+        if (browser.isFirefox && browser.OS == 'Mac') {
+            LzSprite.quirks.ignorespuriousff36events = browser.version == 3.6;
+            LzSprite.quirks.fixtextselection = browser.version < 3.5;
+        }
+    }
+
   }#
   
 }

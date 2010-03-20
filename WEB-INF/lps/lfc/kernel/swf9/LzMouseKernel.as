@@ -27,10 +27,26 @@ class LzMouseKernel  {
 
     // sends mouse events to the callback
     static function handleMouseEvent (view:*, eventname:String) :void {
+        // workaround FF3.6 Mac bug - see LPP-8831
+        if (LzSprite.quirks.ignorespuriousff36events) {
+            if (eventname == 'onclick') {
+                __ignoreoutover = true;
+            } else if (__ignoreoutover) {
+                if (eventname == 'onmouseout') {
+                    // skip event
+                    return;
+                } else if (eventname == 'onmouseover') {
+                    // allow events to propagate again
+                    __ignoreoutover = false;
+                    return;
+                }
+            }
+        } 
         if (__callback) __scope[__callback](eventname, view);
         //Debug.write('LzMouseKernel event', eventname);
     }
 
+    static var __ignoreoutover:Boolean = false;
     static var __callback:String = null;
     static var __scope:* = null;
     static var __lastMouseDown:LzSprite = null;
@@ -73,7 +89,7 @@ class LzMouseKernel  {
                 // Mouse reentered the app.
                 if (event.buttonDown) __mouseUpOutsideHandler();
 
-                if (lz.embed.browser && lz.embed.browser.isFirefox && lz.embed.browser.OS == 'Mac' && lz.embed.browser.version < 3.5) {
+                if (LzSprite.quirks.fixtextselection) {
                     // TODO [hqm 2009-04] LPP-7957 -- this works
                     // around Firefox bug; if you are making a text
                     // selection, and then drag the mouse outside of

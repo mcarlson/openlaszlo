@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzbrowser
@@ -493,6 +493,7 @@ if ($dhtml) {
   }
   lz.embed.__updatebrowserprops = function(obj) {
     lz.embed.browser = obj;
+    LzSprite.__updateQuirks(obj);
   }
   // Read in lz.embed.browser hash from browser
   LzBrowserKernel.callJS('eval', lz.embed.__updatebrowserprops, 'lz.embed.browser');

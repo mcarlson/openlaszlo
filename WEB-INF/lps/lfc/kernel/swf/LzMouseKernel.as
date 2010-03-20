@@ -1,7 +1,7 @@
 /**
   * LzMouseKernel.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -13,9 +13,25 @@
 var LzMouseKernel = {
     // Receives events from sprites
     handleMouseEvent: function(view, eventname) {
+        if (LzSprite.quirks.ignorespuriousff36events) {
+            if (eventname == 'onclick') {
+                this.__ignoreoutover = true;
+            } else if (this.__ignoreoutover) {
+                if (eventname == 'onmouseout') {
+                    // skip event
+                    return;
+                } else if (eventname == 'onmouseover') {
+                    // allow events to propagate again
+                    this.__ignoreoutover = false;
+                    return;
+                }
+            }
+        } 
+
         if (LzMouseKernel.__callback) LzMouseKernel.__scope[LzMouseKernel.__callback](eventname, view);
         //Debug.write('LzMouseKernel event', eventname);
     }
+    ,__ignoreoutover: false
     ,__callback: null
     ,__scope: null
     ,__listeneradded: false 
