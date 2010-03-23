@@ -81,11 +81,11 @@ public class ParseTreePrinter {
   String OPTIONAL_SEMI;
 
   protected String currentClassName = null;
-  
+
   public ParseTreePrinter() {
     this(new Config());
   }
-  
+
   public ParseTreePrinter(boolean compress) {
     this(new Config().setCompress(compress));
   }
@@ -113,20 +113,20 @@ public class ParseTreePrinter {
     this.SEMI = ";";
     this.OPTIONAL_SEMI = (config.compress && "\n".equals(NEWLINE)) ? NEWLINE : SEMI;
   }
-  
+
   public void print(SimpleNode node) {
     print(node, System.out);
   }
-  
+
   public void print(SimpleNode node, OutputStream output) {
     PrintStream where = new PrintStream(output);
     print(node, where);
   }
-  
+
   public void print(SimpleNode node, PrintStream where) {
     where.println(translatedAnnotations(visit(node, null)));
   }
-  
+
   public String delimit(String phrase, boolean force, boolean parenMultiline) {
     // Strip the phrase of annotations so we can look at the first char
     String plain = unannotate(phrase);
@@ -139,7 +139,7 @@ public class ParseTreePrinter {
     }
     return phrase;
   }
-  
+
   public String delimit(String phrase) {
     return delimit(phrase, true, false);
   }
@@ -264,9 +264,9 @@ public class ParseTreePrinter {
       }
       children[i] = visit(n, node);
     }
-    
+
     Class nt = node.getClass();
-    
+
     // Are we doing OOP yet?
     if (node instanceof ASTProgram ||
         node instanceof ASTStatementList ||
@@ -476,11 +476,11 @@ public class ParseTreePrinter {
     }
     return lnum(node, defaultVisitor(node, children));
   }
-  
+
   public String defaultVisitor(SimpleNode node, String[] children) {
     throw new CompilerError("Don't know how to unparse: \u00AB" + node.toString() + "(" + join(COMMA, children) + ")\u00BB");
   }
-  
+
   // Copied (and massaged) from Parser.jjt
   public static String[] OperatorNames = {};
   static {
@@ -531,7 +531,7 @@ public class ParseTreePrinter {
     on.set(Ops.LSHIFTASSIGN, "<<=");
     on.set(Ops.RSIGNEDSHIFTASSIGN, ">>=");
     on.set(Ops.RUNSIGNEDSHIFTASSIGN, ">>>=");
-    
+
     on.set(Ops.IN, "in");
     on.set(Ops.INSTANCEOF, "instanceof");
     on.set(Ops.TYPEOF, "typeof");
@@ -540,10 +540,11 @@ public class ParseTreePrinter {
     on.set(Ops.NEW, "new");
     on.set(Ops.CAST, "cast");
     on.set(Ops.IS, "is");
-    
+    on.set(Ops.SUBCLASSOF, "subclassof");
+
     OperatorNames = (String[])on.toArray(OperatorNames);
   }
-  
+
   public String visitAssignmentExpression(SimpleNode node, String[] children) {
     int thisPrec = prec(((ASTOperator)node.get(1)).getOperator(), false);
     assert children.length == 3;
@@ -682,7 +683,7 @@ public class ParseTreePrinter {
     }
     return "do" + SPACE + doBlock + SPACE + "while" + OPENPAREN + children[1] + ")";
   }
-  
+
   public String visitDefaultClause(SimpleNode node, String[] children) {
     int len = children.length;
     String body = "";
@@ -709,8 +710,8 @@ public class ParseTreePrinter {
     // make it so
     return "switch" + OPENPAREN + children[0] + CLOSEPAREN + makeBlock(node, body);
   }
-  
-  
+
+
   // TODO: [2005-11-15 ptw] Make this a simple lookup table based on
   // the operator
   public int prec(int op, boolean unary) {
@@ -723,8 +724,10 @@ public class ParseTreePrinter {
       {"<<", ">>", ">>>"},
       // TODO: [2007-12-13 dda] "in" moved below to compensate for SWF9 3rd party compiler precedence bug.
       //{"<", "<=", ">", ">=", "instanceof", "in", "is", "cast"},
-      // TODO: [2008-03-27 ptw] Flex compiler wants "cast" to be named "as"
-      {"<", "<=", ">", ">=", "instanceof", "is", "cast", "as"},
+      // TODO: [2008-03-27 ptw] Flex compiler wants "cast" to be named
+      //"as"
+      // @devnote "subclassof" added for LZS
+      {"<", "<=", ">", ">=", "instanceof", "is", "cast", "as", "subclassof"},
       {"==", "!=", "===", "!=="},
       {"&"}, {"^"}, {"|"}, {"&&"}, {"||"}, {"?", ":"},
       {"in", "=", "*=", "/=", "%=", "+=", "-=", "<<=", ">>=", ">>>=", "&=", "^=", "|="},
@@ -739,7 +742,7 @@ public class ParseTreePrinter {
   assert false : "unknown operator: " + n;
     return 1;
   }
-  
+
   public String visitArrayLiteral(SimpleNode node, String[] children) {
     int thisPrec = prec(Ops.COMMA, false);
     for (int i = 0; i < children.length; i++) {
@@ -747,11 +750,11 @@ public class ParseTreePrinter {
     }
     return "[" + join(COMMA, children) + "]";
   }
-  
+
   public String maybeAddParens(int parentPrec, SimpleNode node, String nodeRep) {
     return maybeAddParens(parentPrec, node, nodeRep, false);
   }
-  
+
   // Set assoc to true if the sub-expression appears in a place
   // where operator associativity implies the parens, e.g. on the
   // left operand of a binary operator that is left-to-right
@@ -801,13 +804,13 @@ public class ParseTreePrinter {
       System.err.println("No prec for " + node + " in " + Compiler.nodeString(node));
       (new CompilerException()).printStackTrace();
     }
-    
+
     if (assoc ? (thisPrec < parentPrec) : (thisPrec <= parentPrec)) {
       nodeRep = "(" + nodeRep + ")";
     }
     return nodeRep;
   }
-  
+
   public String visitAndOrExpressionSequence(boolean isAnd, SimpleNode node, String[] children) {
     int thisPrec = prec(isAnd ? Ops.SC_AND : Ops.SC_OR, false);
     children[0] = maybeAddParens(thisPrec, node.get(0), children[0], true);
@@ -816,7 +819,7 @@ public class ParseTreePrinter {
     }
     return join(isAnd ? (SPACE + "&&") : (SPACE + "||"), children);
   }
-  
+
   public String visitExpressionList(SimpleNode node, String[] children) {
     int thisPrec = prec(Ops.COMMA, false);
     for (int i = 0; i < children.length; i++) {
@@ -824,7 +827,7 @@ public class ParseTreePrinter {
     }
     return join(COMMA, children);
   }
-  
+
   public String visitFormalParameterList(SimpleNode node, String[] children) {
     int thisPrec = prec(Ops.COMMA, false);
     // TODO: [2007-12-21 dda] FormalInitializer should be a child of identifier
@@ -838,13 +841,13 @@ public class ParseTreePrinter {
     }
     return sb.toString();
   }
-  
+
   public String visitBinaryExpressionSequence(SimpleNode node, String[] children) {
     int thisPrec = prec(((ASTOperator)node.get(1)).getOperator(), false);
     for (int i = 0; i < children.length; i += (i==0?2:1)) {
       children[i] = maybeAddParens(thisPrec, node.get(i), children[i], i == 0);
     }
-    
+
     String op = children[1];
     String opRaw = unannotate(op);
     char opChar = opRaw.charAt(opRaw.length() - 1);
@@ -861,7 +864,7 @@ public class ParseTreePrinter {
     }
     return(sb.toString());
   }
-  
+
   public String visitModifiedDefinition(SimpleNode node, String[] children) {
     String mods = ((ASTModifiedDefinition)node).toJavascriptString(false);
     if (mods.length() > 0) {
@@ -870,15 +873,15 @@ public class ParseTreePrinter {
       return children[0];
     }
   }
-  
+
   public String visitFormalInitializer(SimpleNode node, String[] children) {
     return ASSIGN + children[0];
   }
-  
+
   public String visitFunctionDeclaration(SimpleNode node, String[] children) {
     return doFunctionDeclaration(node, children, true, false);
   }
-  
+
   public String visitFunctionExpression(SimpleNode node, String[] children) {
     // Elide optional name if compressing, otherwise leave it for debugging
     return doFunctionDeclaration(node, children, config.compress ? false : true, false);
@@ -888,7 +891,7 @@ public class ParseTreePrinter {
     // Elide optional name if compressing, otherwise leave it for debugging
     return doFunctionDeclaration(node, children, config.compress ? false : true, false);
   }
-  
+
   String doFunctionDeclaration(SimpleNode node, String[] children, boolean useName, boolean inmixin) {
     String name, args, body;
     SimpleNode bodyNode;
@@ -945,14 +948,18 @@ public class ParseTreePrinter {
     if (mixinNames.length() > 0) {
       sb.append(" with " + mixinNames);
     }
+    String interfaceNames = unannotate(children[4]);
+    if (interfaceNames.length() > 0) {
+      sb.append(" implements " + interfaceNames);
+    }
     sb.append(SPACE + "{" + NEWLINE);
-    for (int i = 4, len = children.length; i < len; i++) {
+    for (int i = 5, len = children.length; i < len; i++) {
       sb.append(children[i]);
     }
     sb.append(NEWLINE + "}\n");
     return sb.toString();
   }
-  
+
   public String visitIdentifier(SimpleNode node, String[] children) {
     ASTIdentifier id = (ASTIdentifier)node;
     // Get 'register' name, if it has one
@@ -965,9 +972,9 @@ public class ParseTreePrinter {
 
     return ellipsis + name + type;
   }
-  
+
   static Double zero = new Double(0);
-  
+
   public String visitLiteral(SimpleNode node, String [] children) {
     Object value = ((ASTLiteral)node).getValue();
     if (value instanceof String) {
@@ -993,7 +1000,7 @@ public class ParseTreePrinter {
     }
     return "" + value;
   }
-  
+
   public String visitObjectLiteral(SimpleNode node, String[] children) {
     StringBuffer s = new StringBuffer("{");
     int len = children.length - 1;
@@ -1015,12 +1022,12 @@ public class ParseTreePrinter {
     s.append("}");
     return s.toString();
   }
-  
+
   public String visitOperator(SimpleNode op, String[] children) {
     int operator = ((ASTOperator)op).getOperator();
     return OperatorNames[operator];
   }
-  
+
   public String visitVariableStatement(SimpleNode node, String[] children) {
     assert children.length == 1;
     // Ensure an expression becomes a statement by appending an
@@ -1038,7 +1045,7 @@ public class ParseTreePrinter {
       return children[0];
     }
   }
-  
+
   public String visitVariableDeclarationList(SimpleNode node, String[] children) {
     // As declarations are processed by the generator, they
     // are sometimes replaced by ASTEmptyExpressions.
@@ -1064,7 +1071,7 @@ public class ParseTreePrinter {
   public String visitThrowStatement(SimpleNode node, String[] children) {
     return "throw" + delimit(children[0]);
   }
-  
+
   public List makeTranslationUnits(SimpleNode node, SourceFileMap sources) {
     return makeTranslationUnits(visit(node, null), sources);
   }
@@ -1077,15 +1084,15 @@ public class ParseTreePrinter {
   public static String unparse(SimpleNode node) {
     return (new ParseTreePrinter()).text(node);
   }
-  
+
   public String text(SimpleNode node) {
     return unannotate(visit(node, null));
   }
-  
+
   public String annotatedText(SimpleNode node) {
     return printableAnnotations(visit(node, null));
   }
-  
+
   public static final char ANNOTATE_MARKER = '\u0001';
   // note: number codes are reserved for annotation to streams
   public static final char ANNOTATE_OP_CLASSNAME = 'C';
@@ -1096,7 +1103,7 @@ public class ParseTreePrinter {
   public static final char ANNOTATE_OP_NODENAME = 'N';
   public static final char ANNOTATE_OP_NODEEND = 'n';
   public static final char ANNOTATE_OP_TEXT = 'T';
-  
+
   public static class DecodedAnnotation {
     char op;
     String operand;
@@ -1261,7 +1268,7 @@ public class ParseTreePrinter {
   public String makeAnnotation(char op, String operand) {
     return String.valueOf(ANNOTATE_MARKER) + op + operand + ANNOTATE_MARKER;
   }
-  
+
   public abstract static class AnnotationProcessor {
     int limit = -1;
     public abstract String notify(char op, String operand);
@@ -1303,7 +1310,7 @@ public class ParseTreePrinter {
       return sb.toString();
     }
   }
-    
+
   public String unannotate(String annotated) {
     AnnotationProcessor ap = new AnnotationProcessor() {
         public String notify(char op, String operand) {
@@ -1423,7 +1430,7 @@ public class ParseTreePrinter {
       // We need to emit at the beginning of the line,
       // even if the file has changed.  If we break up lines,
       // we may alter the meaning of the javascript -
-      // 'return foo' can become 
+      // 'return foo' can become
       //    return
       //    foo
       // (two separate statements).
@@ -1580,7 +1587,7 @@ public class ParseTreePrinter {
     }
 
     final ArrayList tunits = new ArrayList();
-    
+
     final TranslationUnit defaulttu = (defaultTunit != null) ? defaultTunit : new TranslationUnit(true);
     if (defaultTunit == null) {
       tunits.add(defaulttu);

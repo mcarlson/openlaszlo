@@ -366,7 +366,7 @@ public abstract class CommonGenerator extends GenericVisitor {
         }
         this.superclasses = (String[])classlist.toArray(new String[0]);
       } else {
-        assert ((superclasses instanceof ASTLiteral) && ((ASTLiteral)superclasses).getValue() == null) : "Invalid superclasses list";
+        assert (superclasses == null) : "Invalid superclasses list";
 //         System.err.println(name + " complete: "); // + this.instanceprops);
         complete = true;
       }
@@ -410,7 +410,7 @@ public abstract class CommonGenerator extends GenericVisitor {
     SimpleNode mixinsandsuper;
     if (mixins instanceof ASTEmptyExpression) {
       if (superclass instanceof ASTEmptyExpression) {
-        mixinsandsuper = new ASTLiteral(null);
+        mixinsandsuper = null;
       } else {
         mixinsandsuper = superclass;
       }
@@ -421,8 +421,17 @@ public abstract class CommonGenerator extends GenericVisitor {
         mixinsandsuper.set(mixinsandsuper.size(), superclass);
       }
     }
+    SimpleNode interfaces = children[4];
+    if (interfaces instanceof ASTEmptyExpression) {
+      interfaces = null;
+    } else {
+      // Transform from ASTMixinsList to ASTArrayLiteral
+      SimpleNode ml = interfaces;
+      interfaces = new ASTArrayLiteral(0);
+      interfaces.setChildren(ml.getChildren());
+    }
 
-    SimpleNode[] dirs = (SimpleNode [])(Arrays.asList(children).subList(4, children.length).toArray(new SimpleNode[0]));
+    SimpleNode[] dirs = (SimpleNode [])(Arrays.asList(children).subList(5, children.length).toArray(new SimpleNode[0]));
     List props = new ArrayList();
     List classProps = new ArrayList();
     List stmts = new ArrayList();
@@ -435,20 +444,20 @@ public abstract class CommonGenerator extends GenericVisitor {
 
     SimpleNode instanceProperties;
     if (props.isEmpty()) {
-      instanceProperties = new ASTLiteral(null);
+      instanceProperties = null;
     } else {
       instanceProperties = new ASTArrayLiteral(0);
       instanceProperties.setChildren((SimpleNode[])(props.toArray(new SimpleNode[0])));
+      instanceProperties.setLocation(node);
     }
     SimpleNode classProperties;
     if (classProps.isEmpty()) {
-      classProperties = new ASTLiteral(null);
+      classProperties = null;
     } else {
       classProperties = new ASTArrayLiteral(0);
       classProperties.setChildren((SimpleNode[])(classProps.toArray(new SimpleNode[0])));
+      classProperties.setLocation(node);
     }
-    instanceProperties.setLocation(node);
-    classProperties.setLocation(node);
 
     ClassDescriptor classdesc = new ClassDescriptor(classnameString, mixinsandsuper, props);
     // Store class descriptor
@@ -459,13 +468,33 @@ public abstract class CommonGenerator extends GenericVisitor {
     Map map = new HashMap();
     String xtor = "class".equals(classormixin.getName())?"Class":"Mixin";
     map.put("_1", classname);
-    map.put("_2", mixinsandsuper);
-    map.put("_3", instanceProperties);
+    map.put("_2", instanceProperties);
+    map.put("_3", mixinsandsuper);
     map.put("_4", classProperties);
+    map.put("_5", interfaces);
+    String args = "";
+    if (interfaces != null) {
+      args = ", _5";
+    }
+    if (classProperties != null) {
+      args = ", _4" + args;
+    } else if (args.length() > 0) {
+      args = ", null" + args;
+    }
+    if (mixinsandsuper != null) {
+      args = ", _3" + args;
+    } else if (args.length() > 0) {
+      args = ", null" + args;
+    }
+    if (instanceProperties != null) {
+      args = ", _2" + args;
+    } else if (args.length() > 0) {
+      args = ", null" + args;
+    }
     SimpleNode replNode = (new Compiler.Parser()).substitute(node,
                                                              xtor + ".make(" +
                                                              ScriptCompiler.quote(classnameString) +
-                                                             ", _2, _3, _4);",
+                                                             args + ");",
                                                              map);
     if (! "".equals(globalprefix)) {
       // The classname, with possibly prefix of "_level0.", for SWF8
@@ -480,10 +509,10 @@ public abstract class CommonGenerator extends GenericVisitor {
     if (! stmts.isEmpty()) {
       SimpleNode statements = new ASTStatementList(0);
       statements.setChildren((SimpleNode[])(stmts.toArray(new SimpleNode[0])));
-      map.put("_5", statements);
+      map.put("_6", statements);
       SimpleNode stmtNode = (new Compiler.Parser()).substitute(node,
                                                                "(function ($lzsc$c) { with($lzsc$c)"+
-                                                               "with($lzsc$c.prototype) { _5 }})("+globalprefix+"_1)",
+                                                               "with($lzsc$c.prototype) { _6 }})("+globalprefix+"_1)",
                                                                map);
       SimpleNode listNode = new ASTStatementList(0);
       listNode.set(0, replNode);
@@ -1070,6 +1099,6 @@ public abstract class CommonGenerator extends GenericVisitor {
 }
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/

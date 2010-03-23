@@ -275,6 +275,7 @@ public class SWF9Generator extends JavascriptGenerator {
     String classnameString = classname.getName();
     SimpleNode superclass = children[2];
     SimpleNode mixins = children[3];
+    SimpleNode interfaces = children[4];
 
     checkClassName(classnameString);
     String supername = (superclass instanceof ASTEmptyExpression) ? null :
@@ -294,6 +295,14 @@ public class SWF9Generator extends JavascriptGenerator {
       }
     }
 
+    if (! (interfaces instanceof ASTEmptyExpression)) {
+      // Transform from ASTMixinsList to ASTExpressionList
+      SimpleNode ml = interfaces;
+      interfaces = new ASTExpressionList(0);
+      interfaces.setChildren(ml.getChildren());
+      children[4] = interfaces;
+    }
+
     if (!(mixins instanceof ASTEmptyExpression)) {
       // create reference to mixin classes
       int nmixins = mixins.size();
@@ -308,7 +317,7 @@ public class SWF9Generator extends JavascriptGenerator {
         superiname = iname;
       }
       children[2] = newIdentifier(superiname);
-      children[3] = newIdentifier(null);
+      children[3] = new ASTEmptyExpression(0);
     }
     boolean savedInDefault = inDefaultClass;
     inDefaultClass = false;
@@ -350,15 +359,15 @@ public class SWF9Generator extends JavascriptGenerator {
   public void translateClassDefinition(SimpleNode node, String classnameString, TranslateHow how)
   {
     SimpleNode[] children = node.getChildren();
-    SimpleNode[] dirs = (SimpleNode [])(Arrays.asList(children).subList(4, children.length).toArray(new SimpleNode[0]));
+    SimpleNode[] dirs = (SimpleNode [])(Arrays.asList(children).subList(5, children.length).toArray(new SimpleNode[0]));
     List stmts = new ArrayList();
 
     translateClassDirectivesBlock(dirs, classnameString, null, null, stmts, how);
 
     // Plug the stmt children we found back into this node's children
-    SimpleNode[] newch = new SimpleNode[stmts.size() + 4];
+    SimpleNode[] newch = new SimpleNode[stmts.size() + 5];
     int i;
-    for (i=0; i<4; i++)
+    for (i=0; i<5; i++)
       newch[i] = children[i];
     for (Iterator iter = stmts.iterator(); iter.hasNext(); ) {
       SimpleNode n = (SimpleNode)iter.next();
@@ -648,15 +657,13 @@ public class SWF9Generator extends JavascriptGenerator {
     ischildren[1] = newIdentifier(isname);
     ischildren[2] = newIdentifier(mixref.supername);
 
-    // Before the tree is visited, child[3] has a list of
-    // 'with'/'inherits' - that is, names of mixins.
-    // After the tree has been visited, child[3] has an
-    // identifier, which is the name of an interface,
-    // something that the class 'implements'.
-    // For an interstitial, that is the name of the mixin.
-
-    ischildren[3] = newIdentifier(mixref.mixinname);
-    System.arraycopy(mixinchildren, 4, ischildren, 4, origlen - 4);
+    // Currently we don't allow a mixin to mixin or implement
+    assert mixinchildren[3] instanceof ASTEmptyExpression;
+    assert mixinchildren[4] instanceof ASTEmptyExpression;
+    // The interstitial has no mixins, but does implement the mixin
+      ischildren[3] = new ASTEmptyExpression(0);
+    ischildren[4] = newIdentifier(mixref.mixinname);
+    System.arraycopy(mixinchildren, 5, ischildren, 5, origlen - 5);
     if (mixinconstructor == null) {
       if (supernode == null && mixref.realsuper != null) {
 

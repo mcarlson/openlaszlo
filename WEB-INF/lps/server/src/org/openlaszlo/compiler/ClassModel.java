@@ -43,7 +43,7 @@ public class ClassModel implements Comparable {
 
     /* If superclass is a predefined system class, just store its name. */
     protected String superTagName = null;
-    protected String mixinNames[] = null;
+    protected String interfaceClassNames[] = null;
     protected boolean hasInputText = false;
     protected boolean isInputText = false;
     public Set requiredAttributes = new HashSet();
@@ -79,13 +79,22 @@ public class ClassModel implements Comparable {
     // Construct a user-defined class
     public ClassModel(String tagName, boolean publish,
                       ViewSchema schema, Element definition, CompilationEnvironment env) {
+      String mixinTagNames[] = null;
+      String interfaceTagNames[] = null;
+
       anonymous = (! publish);
       if (definition != null) {
         // class, interface, mixin; OR anonymous instance class
         kind = definition.getName();
         String mixinSpec = definition.getAttributeValue("with");
         if (mixinSpec != null) {
-          mixinNames = mixinSpec.trim().split("\\s*,\\s*");
+          definition.removeAttribute("with");
+          mixinTagNames = mixinSpec.trim().split("\\s*,\\s*");
+        }
+        String interfaceSpec = definition.getAttributeValue("implements");
+        if (interfaceSpec != null) {
+          definition.removeAttribute("implements");
+          interfaceTagNames = interfaceSpec.trim().split("\\s*,\\s*");
         }
         boolean isclassdef = ("class".equals(kind) || "interface".equals(kind) || "mixin".equals(kind));
         if (isclassdef || "anonymous".equals(tagName)) {
@@ -96,19 +105,42 @@ public class ClassModel implements Comparable {
           // Save away the original extends value
           debugExtends = superTagName;
           debugWith = "";
-          if (mixinNames != null) {
-            for (int i = mixinNames.length - 1; i >= 0; i--) {
-              String mixinName = mixinNames[i];
-              ClassModel mixinModel =  schema.getClassModelUnresolved(mixinName);
-              if (mixinModel == null) {
+          if (interfaceTagNames != null) {
+            interfaceClassNames = new String[interfaceTagNames.length];
+            for (int i = interfaceTagNames.length - 1; i >= 0; i--) {
+              String interfaceTagName = interfaceTagNames[i];
+              ClassModel interfaceModel =  schema.getClassModelUnresolved(interfaceTagName);
+              if (interfaceModel == null) {
                 throw new CompilationError(
-                    "Undefined mixin " + mixinName + " for class " + tagName,
+                    "Undefined interface " + interfaceTagName + " for class " + tagName,
                     definition);
               }
-              String interstitialName = mixinName + "$" + superTagName;
-              debugWith = mixinName + (debugWith.length() > 0 ? ", " : "") + debugWith;
-              // Avoid adding the same mixin to the schema twice - LPP-8234
+              interfaceClassNames[i] = interfaceModel.className;
+            }
+          }
+          if (mixinTagNames != null) {
+            for (int i = mixinTagNames.length - 1; i >= 0; i--) {
+              String mixinTagName = mixinTagNames[i];
+              ClassModel mixinModel =  schema.getClassModelUnresolved(mixinTagName);
+              if (mixinModel == null) {
+                throw new CompilationError(
+                    "Undefined mixin " + mixinTagName + " for class " + tagName,
+                    definition);
+              }
+              String interstitialName = mixinTagName + "$" + superTagName;
+              debugWith = mixinTagName + (debugWith.length() > 0 ? ", " : "") + debugWith;
+              // Avoid adding the same interstitial to the schema twice - LPP-8234
               if (schema.getClassModelUnresolved(interstitialName) == null) {
+                // See LPP-8828:  LZX mixins are implemented not as
+                // lzs mixins but by expanding into interstitial LZX
+                // <class>es, so that the expected <node> semantics
+                // with regard to merging/overriding children and
+                // attributes occur.
+                //
+                // These interstitial <class>es will not be published
+                // as tags, although they are inserted into the schema
+                // for the benefit of the class and node compilers.
+                //
                 // We duplicate the mixin definition, but turn it into
                 // a class definition, inheriting from the previous
                 // superTagName and implementing the mixin
@@ -116,6 +148,7 @@ public class ClassModel implements Comparable {
                 interstitial.setName("class");
                 interstitial.setAttribute("name", interstitialName);
                 interstitial.setAttribute("extends", superTagName);
+                interstitial.setAttribute("implements", mixinTagName);
 
                 // Add it to the schema, but don't define a tag
                 schema.addElement(interstitial, interstitialName, env, true, false);
@@ -130,7 +163,6 @@ public class ClassModel implements Comparable {
             }
             // Now adjust this DOM element to refer to the
             // interstitial superclass
-            definition.removeAttribute("with");
             definition.setAttribute("extends", superTagName);
           }
           if ("anonymous".equals(tagName)) {
@@ -172,6 +204,8 @@ public class ClassModel implements Comparable {
       this.schema = schema;
       if (tagName != null) {
         this.className = LZXTag2JSClass(tagName);
+      } else {
+        this.className = LZXTag2JSClass(env.methodNameGenerator.next().substring(1));
       }
 
       this.sortkey = (tagName != null) ? tagName : "anonymous";
@@ -482,9 +516,6 @@ public class ClassModel implements Comparable {
       superModel.compile(env);
     }
     String superClassName = superModel.className;
-    if (className == null) {
-      className = LZXTag2JSClass(env.methodNameGenerator.next().substring(1));
-    }
     // className will be a global
     env.addId(className, definition);
 
@@ -631,6 +662,7 @@ public class ClassModel implements Comparable {
     ScriptClass scriptClass =
       new ScriptClass(className,
                       superClassName,
+                      interfaceClassNames,
                       decls,
                       nodeModel.getClassAttrs(),
                       classBody,

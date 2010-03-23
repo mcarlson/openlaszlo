@@ -917,7 +917,7 @@ public class GenericVisitor implements ASTVisitor {
   // Visitor for class/mixin/interfacs
   public SimpleNode visitClassDefinition(SimpleNode node, SimpleNode[] children) {
     int len = children.length;
-    assert len >= 4;
+    assert len >= 5;
     ASTIdentifier kindID = (ASTIdentifier)children[0];
     String kindName = kindID.getName();
     assert "class".equals(kindName) || "mixin".equals(kindName) || "interface".equals(kindName);
@@ -936,7 +936,16 @@ public class GenericVisitor implements ASTVisitor {
         mixins[j] = translateIdentifier(mixinID, AccessMode.EVALUATE);
       }
     }
-    for (int i = 4; i < len; i++) {
+    SimpleNode interfacesList = children[4];
+    if (! (interfacesList instanceof ASTEmptyExpression)) {
+      assert interfacesList instanceof ASTMixinsList;
+      SimpleNode[] interfaces = interfacesList.getChildren();
+      for (int k = 0, klim = interfaces.length; k < klim; k++) {
+        ASTIdentifier interfaceID = (ASTIdentifier)interfaces[k];
+        interfaces[k] = translateIdentifier(interfaceID, AccessMode.EVALUATE);
+      }
+    }
+    for (int i = 5; i < len; i++) {
       SimpleNode stmt = children[i];
       children[i] = visitStatement(stmt);
     }
@@ -952,7 +961,7 @@ public class GenericVisitor implements ASTVisitor {
 }
 
 /**
- * @copyright Copyright 2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2009, 2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

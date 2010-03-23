@@ -9,18 +9,21 @@
 package org.openlaszlo.sc;
 
 import java.util.*;
+import org.openlaszlo.utils.StringUtils;
 
 public class ScriptClass {
   String name;
   String kind = null;
   String superclass;
+  String[] interfaces;
   Map attributes;
   Map classAttributes;
   String classBody;
 
-  public ScriptClass(String name, String superclass, Map attributes, Map classAttributes, String classBody, String kind) {
+  public ScriptClass(String name, String superclass, String[] interfaces, Map attributes, Map classAttributes, String classBody, String kind) {
     this.name = name;
     this.superclass = superclass;
+    this.interfaces = interfaces;
     this.attributes = attributes;
     this.classAttributes = classAttributes;
     this.classBody = classBody;
@@ -29,7 +32,8 @@ public class ScriptClass {
 
   public String toString() {
     assert kind != null;
-    String extends_str = (superclass != null?(" extends " + superclass + " "):"");
+    String extends_str = (superclass != null) ? (" extends " + superclass + " ") : "";
+    String implements_str = (interfaces != null) ? (" implements " + StringUtils.join(interfaces, ", ")) : "";
 
     String modifier ="dynamic ";
     if (kind.equals("mixin")) {
@@ -39,7 +43,7 @@ public class ScriptClass {
     }
 
     // For now we make all user classes dynamic
-    String str = modifier + kind + " " + name + extends_str + "{\n";
+    String str = modifier + kind + " " + name + extends_str + implements_str + " {\n";
     int n = 1; Map attrs = classAttributes; String prefix = "static ";
     for (; n <= 2; n++, attrs = attributes, prefix = "") {
       for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
@@ -65,6 +69,6 @@ public class ScriptClass {
 }
 
 /**
- * @copyright Copyright 2006-2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

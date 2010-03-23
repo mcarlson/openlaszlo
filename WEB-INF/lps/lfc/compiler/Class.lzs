@@ -253,8 +253,11 @@ var Class = {
   // Class || Array) if Null defaults to Instance, if Array, the
   // elements of the array are the mixins followed by the superclass;
   // instanceProperties:Array is a 'plist' of initial instance properties;
-  // staticProperties:Array is a 'plist' of the inital class properties;
-  make: function make (classname, mixinsAndSuperclass, instanceProperties, staticProperties) {
+  // staticProperties:Array is a 'plist' of the inital class
+  // properties;
+  // @devnote Arguments are in order of liklihood to permit unlikely
+  // ones to be omitted for better compression
+  make: function make (classname, instanceProperties=null, mixinsAndSuperclass=null, staticProperties=null, interfaces=null) {
     if ($profile) {
       var pcn = classname;
       // Use tagname if it exists
@@ -380,6 +383,13 @@ var Class = {
         var t = mixinsAndSuperclass[i];
         // The second argument is the class this will be the prototype for
         prototype = t.makeInterstitial(prototype, i > 0 ? mixinsAndSuperclass[i -1] : nc);
+      }
+    }
+    // Add us to any interfaces we implement
+    if (interfaces instanceof Array) {
+      for (var i = interfaces.length - 1; i >= 0; i--) {
+        var t = interfaces[i];
+        t.addImplementation(classname, nc);
       }
     }
     if ($profile) {
@@ -529,6 +539,13 @@ var Mixin = {
     }
     return t;
   },
+  // Supports `is` for `implements`
+  addImplementation: function addImplementation (classname, constructor) {
+    // Classnames should never collide with actual interstitials, we
+    // fake storing a prototype, we only need the constructor field
+    // for `is`.
+    this.implementations[classname] = {constructor: constructor};
+  },
   // Implements `is` operator for mixins
   $lzsc$isa: function $lzsc$isa (obj) {
     var impls = this.implementations;
@@ -540,7 +557,12 @@ var Mixin = {
     return false;
   },
   // How to make a Mixin
-  make: function make (classname, superMixin, instanceProperties, staticProperties) {
+  // @devnote Takes the same parameters as Class.make because emitted
+  // by the same generator.  Not all the arguments make sense for a
+  // mixin.
+  // @devnote Arguments are in order of liklihood to permit unlikely
+  // ones to be omitted for better compression
+  make: function make (classname, instanceProperties=null, superMixin=null, staticProperties=null, interfaces=null) {
     if ($profile) {
       Profiler.event('new Mixin(' + classname + ')', 'calls');
     }
@@ -557,6 +579,7 @@ var Mixin = {
     this.addStaticProperty.call(nt, 'addStaticProperty', this.addStaticProperty);
     nt.addStaticProperty('addProperty', this.addProperty);
     nt.addStaticProperty('makeInterstitial', this.makeInterstitial);
+    nt.addStaticProperty('addImplementation', this.addImplementation);
     nt.addStaticProperty('$lzsc$isa', this.$lzsc$isa);
     // Install the staticProperties
     if (staticProperties) {

@@ -7,6 +7,12 @@
      * X_LZ_COPYRIGHT_END ****************************************************** -->
 
 <library>
+  <include href="lzunit" />
+  <!-- to verify subclassof on LZX mixinx -->
+  <mixin name="testmixin"/>
+  <mixin name="testmixout"/>
+  <view id="testview" with="testmixin" />
+
   <class name="TestCompiler" extends="TestCase">
     <method name="setUp">
     </method>
@@ -242,6 +248,15 @@
      assertTrue(lz.text subclassof lz.view, "lz.text subclassof lz.view");
    ]]></method>
 
+   <method name="testIsOperator"><![CDATA[
+     assertTrue({} is Object, "{} is Object");
+     assertFalse({} is LzEventable, "{} is LzEventable");
+     assertTrue(testview is lz.view, "testview is lz.view")
+     assertTrue(testview is lz.testmixin, "testview is lz.testmixin")
+     assertFalse(testview is lz.text, "testview is lz.text")
+     assertFalse(testview is lz.testmixout, "testview is lz.testmixout")
+   ]]></method>
+
 
     <method name="addTests"> 
         this.addTest("testOptionalArguments");
@@ -250,6 +265,7 @@
         this.addTest("testForInReturn");
         this.addTest("testClosureOverShadowedValue");
         this.addTest("testSubclassOf");
+        this.addTest("testIsOperator");
     </method> 
   </class>
 </library>

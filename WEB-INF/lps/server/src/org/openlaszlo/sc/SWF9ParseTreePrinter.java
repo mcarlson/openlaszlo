@@ -269,9 +269,13 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     if (unannotate(children[2]).length() > 0)
       sb.append("extends" + SPACE + children[2] + SPACE);
 
-    // The meaning of children[3] is 'implements'
-    if (unannotate(children[3]).length() > 0) {
-      sb.append("implements" + SPACE + children[3] + SPACE);
+    // The meaning of children[3] is 'with', which has already be
+    // processed by SWF9Generator
+    assert unannotate(children[3]).length() == 0;
+
+    // The meaning of children[4] is 'implements'
+    if (unannotate(children[4]).length() > 0) {
+      sb.append("implements" + SPACE + children[4] + SPACE);
     }
 
     sb.append("{\n");
@@ -283,7 +287,7 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
       sb.append("}\n");
     }
 
-    for (int i=4; i<children.length; i++) {
+    for (int i=5; i<children.length; i++) {
       sb.append(children[i]);
     }
     sb.append("}\n");

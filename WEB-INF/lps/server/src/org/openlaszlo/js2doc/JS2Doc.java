@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -385,7 +385,7 @@ public class JS2Doc {
             if (classNode == null)
                 throw new InternalError("null element returned from PropertyReference.redefineValue", parseNode);
                 
-            if (children.length > 4) {
+            if (children.length > 5) {
                 String oldObjectID = this.objectID;
                 ConditionalState oldState = this.currentState;
                 try {
@@ -394,7 +394,7 @@ public class JS2Doc {
                     this.currentState = new ConditionalState(ConditionalState.trueValue, this.runtimeOptions, this.buildOptions);
                     
                     final int n = children.length;
-                    for (int i=4; i<n; i++) {
+                    for (int i=5; i<n; i++) {
                         SimpleNode decl = children[i];
                         this.visitClassStatement(decl, classNode, null);
                     }

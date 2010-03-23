@@ -1135,6 +1135,7 @@ SimpleNode ClassDefinition() #ClassDefinition : {Token t;}
 
    ["extends" Identifier() ] #EmptyExpression(jjtree.nodeArity()==0)
    ["with" MixinsList() ] #EmptyExpression(jjtree.nodeArity()==0)
+   ["implements" MixinsList() ] #EmptyExpression(jjtree.nodeArity()==0)
    "{" (
         ClassDirective()
        )* "}"

@@ -1,6 +1,6 @@
 /**
  *
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzcssstyle lzcssstylerule
@@ -386,8 +386,8 @@ class LzCSSStyleClass {
       // TODO: [2008-09-09 ptw] Will this work in JS2?
       // We really want to test the subclass relationship of rac and rbc
       if (rac && rbc) {
-        if (rbc.prototype.isPrototypeOf(rac.prototype)) { return -1; }
-        if (rac.prototype.isPrototypeOf(rbc.prototype)) { return 1; }
+        if (rac subclassof rbc) { return -1; }
+        if (rbc subclassof rac) { return 1; }
       }
       // The classes are not comparable, default
       return lexorder;
@@ -418,8 +418,8 @@ class LzCSSStyleClass {
         // TODO: [2008-09-09 ptw] Will this work in JS2?
         // We really want to test the subclass relationship of rac and rbc
         if (rac && rbc) {
-          if (rbc.prototype.isPrototypeOf(rac.prototype)) { return -1; }
-          if (rac.prototype.isPrototypeOf(rbc.prototype)) { return 1; }
+          if (rac subclassof rbc) { return -1; }
+          if (rbc subclassof rac) { return 1; }
         }
         // The classes are not comparable, keep going
       }
