@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <library>
@@ -8,6 +8,7 @@
         Originally written by Sarah Allen, with compiler support by hqm
         Migrated to 4.1 by Max
         Support for OL 4.2/SWF9 by Raju Bitter, Max and Sarah
+        Improvements by Lucas Lain and other contributors.
     -->
 
 <switch>
@@ -52,6 +53,9 @@
 
     <!--- If true, video will start playing as soon as url is set. -->
     <attribute name="autoplay" value="false"/>
+    
+    <!--- If true, video will start playing as soon as url is set. -->
+    <attribute name="buffertime" value="0"/>
 
     <!--- Show the frame from this time (in seconds) whenever the url 
           is set for video playback.
@@ -132,13 +136,13 @@
             this.stream = 
                 new lz.mediastream(
                     this, 
-                    {debug:this.debug, type:this.type, url:this.url, autoplay:this.autoplay}, 
+                    {debug:this.debug, type:this.type, url:this.url, autoplay:this.autoplay, buffertime:this.buffertime }, 
                     null, 
                     true);
             if (this.onstream) this.onstream.sendEvent(this);
             if ($debug && this.debug) Debug.write("videoview %w init created stream", this.stream);
         }
-        
+
         if ($as3) {
             var width = 320
             var height = 240
@@ -215,6 +219,7 @@
         ]]>
     </method>
 
+    <!--- @keywords private -->
     <method name="_attachStream" args="fs"> <![CDATA[
         if (this._fstream == fs) return;
         else this._fstream = fs;
@@ -234,6 +239,7 @@
         ]]>
     </method>
 
+    <!--- @keywords private -->
     <method name="_getflashvideo">
         //Debug.write("_getflashvideo()");
         if ($as3) {
@@ -290,6 +296,7 @@
         ]]>
     </setter>
 
+    <!--- @keywords private -->
     <method name="_updateStreamUrl"> <![CDATA[
         //Debug.write("%w _updateStreamUrl %w %w", 
         //    this, this.url, this.starttime);
