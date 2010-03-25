@@ -1,6 +1,6 @@
 /**
  *
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @access public
@@ -238,6 +238,7 @@ dynamic class LzText extends LzView with LzFormatter {
     }
   }
 
+  /** @access private */
   override function $lzc$set_clip(c:Boolean) {
       super.$lzc$set_clip(c);
       if (this.isinited && this.scrollevents && !this.clip ) {
@@ -301,7 +302,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if (event.ready) { event.sendEvent(value); }
   }
 
-  /*
+  /**
    * Support for backward-compatible line-based interfaces.  This is
    * the same as updateAttribute but incorporates the vertical scale
    * conversion (if any).

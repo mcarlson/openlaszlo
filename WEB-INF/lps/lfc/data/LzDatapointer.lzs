@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LFC
@@ -199,6 +199,7 @@ var ontimeout :LzDeclaredEventClass = LzDeclaredEvent;
   * @access private */
 var onrerunxpath :LzDeclaredEventClass = LzDeclaredEvent;
 
+/** @access private */
 function LzDatapointer ( parent:* = null , attrs:* = null, children:* = null, instcall:*  = null) {
     super (parent, attrs, children, instcall);
 }

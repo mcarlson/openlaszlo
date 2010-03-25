@@ -1,5 +1,5 @@
 /**
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -783,6 +783,8 @@ static function valueToElement (o:*) :LzDataElement {
 /**
   * Serializes a <code>Date</code> object as a JSON-String
   * as specified in ECMAScript5, chapter 15.9.5.44
+  *
+  * @access private
   */
 static function __LZdateToJSON (d:Date) :String {
     if (isFinite(d.valueOf())) {

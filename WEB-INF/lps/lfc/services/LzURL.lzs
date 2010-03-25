@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzurl
@@ -64,6 +64,8 @@ public class LzURL {
     var file :String = null;
     var query :String = null;
     var fragment :String = null;
+
+    /** @access private */
     var _parsed :String = null;
 
     /** 
