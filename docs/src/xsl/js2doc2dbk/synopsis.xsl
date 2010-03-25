@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -266,7 +266,19 @@
       <!-- TODO [jgrandy 1/28/2007] use constructorsynopsis for constructors -->
       <xsl:param name="add-link"/>
       <xsl:param name="language"/>
-      <xsl:param name="name" select="(@name | 'construct')[1]"/>
+      <!--
+        NOTE: LPP-8843 - [20100325 anba]
+        Using the union operator to create a default value throws this error while compiling the template:
+            Cannot convert data-type 'string' to 'node-set'
+        Therefore replaced the union operator with a combination of concat and substring. The third parameter
+        of substring is a bit obscure, but the conditional operator is only available in XPath2, so here we go:
+        If there is no 'name' attribute on the current context node, not(@name) will return 'true', otherwise
+        'false'. The div operator coerces 'true' to 1 and 'false' to 0. (1 div 0) is Infinity, (0 div 0) is NaN.
+        So, if no 'name' attribute is set, the substring from 1 to Infinity will be returned (= the complete string),
+        otherwise from 1 to NaN (= the empty string). This means the param is either @name or 'construct'.
+      -->
+      <!-- <xsl:param name="name" select="(@name | 'construct')[1]"/> -->
+      <xsl:param name="name" select="concat(@name, substring('construct', 1, not(@name) div 0))"/>
       <xsl:param name="id" select="@id"/>
       <xsl:param name="static" select="true()"/>
       <methodsynopsis language="{$language}">
