@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzdataselectionmanager
@@ -184,7 +184,7 @@ public dynamic class LzDataSelectionManager extends LzSelectionManager {
       * @return Array: A list of datapointers
       * @devnote TODO: [20090914 anba] LPP-865 proposes to remove this override
       */
-    /*public*/ override function getSelection () :Array {
+    override function getSelection () :Array {
         var sela:Array = this.selected;
         var r:Array = [];
         for (var i:int = 0, len:int = sela.length; i < len; ++i) {

@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzselectionmanager
@@ -379,7 +379,7 @@ public dynamic class LzSelectionManager extends LzNode {
       * @param LzView o: The view to test for selectedness.
       * @return Boolean: The selectedness of the input view.
       */
-    /*public*/ function isSelected (o /*:LzView*/) :Boolean {
+    function isSelected (o /*:LzView*/) :Boolean {
         return this.__LZisSelected(this.__LZgetObject(o));
     }
 
@@ -387,7 +387,7 @@ public dynamic class LzSelectionManager extends LzNode {
       * Called with a new view to be selected.
       * @param LzView o: The new view to make selected
       */
-    /*public*/ function select (o /*:LzView*/) /*:void*/ {
+    function select (o /*:LzView*/) /*:void*/ {
         var d:* = this.__LZgetObject(o);
         var issel:Boolean = this.__LZisSelected(d);
         if (issel && (this.toggle || this.isMultiSelect(o))) {
@@ -411,14 +411,14 @@ public dynamic class LzSelectionManager extends LzNode {
       * Unselects the given view.
       * @param LzView o: The view to make unselected
       */
-    /*public*/ function unselect (o /*:LzView*/) /*:void*/ {
+    function unselect (o /*:LzView*/) /*:void*/ {
         this.__LZremoveFromSelection(this.__LZgetObject(o), o);
     }
 
     /**
       * Unselects any selected objects.
       */
-    /*public*/ function clearSelection () /*:void*/ {
+    function clearSelection () /*:void*/ {
         this.__LZupdateSelection([], this.selected);
     }
 
@@ -426,7 +426,7 @@ public dynamic class LzSelectionManager extends LzNode {
       * Returns an array representing the current selection.
       * @return Array: An array representing the current selection.
       */
-    /*public*/ function getSelection () :Array {
+    function getSelection () :Array {
         return this.selected.concat();
     }
 
@@ -437,7 +437,7 @@ public dynamic class LzSelectionManager extends LzNode {
       * @return Boolean: If <code>true</code>, multi select. If
       * <code>false</code>, don't multi select
       */
-    /*public*/ function isMultiSelect (o /*:LzView*/) /*:Boolean*/ {
+    function isMultiSelect (o /*:LzView*/) /*:Boolean*/ {
         return lz.Keys.isKeyDown( "control" );
     }
 
@@ -448,7 +448,7 @@ public dynamic class LzSelectionManager extends LzNode {
       * @return Boolean: If <code>true</code>, range select. If
       * <code>false</code>, don't range select
       */
-    /*public*/ function isRangeSelect (o /*:LzView*/) /*:Boolean*/ {
+    function isRangeSelect (o /*:LzView*/) /*:Boolean*/ {
         return lz.Keys.isKeyDown( "shift" );
     }
 } // End of LzSelectionManager
