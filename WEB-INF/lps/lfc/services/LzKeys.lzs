@@ -19,21 +19,23 @@
   * <p>Here is a simple example:</p>
   *
   * <example title="lz.Keys">
-  * <programlisting>&lt;canvas height="140" debug="true"&gt;
-  *   &lt;handler name="onkeydown" reference="lz.Keys" args="k"&gt;
+  * <programlisting><![CDATA[
+  * <canvas height="140" debug="true">
+  *   <handler name="onkeydown" reference="lz.Keys" args="k">
   *     Debug.debug("key %w %s", k, "down");
-  *   &lt;/handler&gt;
-  *   &lt;handler name="onkeyup" reference="lz.Keys" args="k"&gt;
+  *   </handler>
+  *   <handler name="onkeyup" reference="lz.Keys" args="k">
   *     Debug.debug("key %w %s", k, "up");
-  *   &lt;/handler&gt;
-  *   &lt;method name="pressA"&gt;
+  *   </handler>
+  *   <method name="pressA" args="ignore=null">
   *     Debug.debug("A pressed");
-  *   &lt;/method&gt;
-  *   &lt;handler name="oninit"&gt;
-  *     del = new LzDelegate(this, "pressA");
+  *   </method>
+  *   <handler name="oninit">
+  *     var del = new LzDelegate(this, "pressA");
   *     lz.Keys.callOnKeyCombo(del, ["A"]);
-  *   &lt;/handler&gt;
-  * &lt;/canvas&gt;</programlisting></example>
+  *   </handler>
+  * </canvas>
+  * ]]></programlisting></example>
   *
   * @shortdesc Keyboard input service.
   */
