@@ -591,6 +591,18 @@
             ]]>
         </method>
     </drawview>
+    <drawview width="100" height="100">
+        <handler name="oncontext">
+            // draw a rectangle with different sized corners
+            this.rect(10,10,70,70,5,10,20,100);
+            this.fillStyle = 0xff0000;
+            this.fill();
+            this.beginPath();
+            this.rect(20,20,30,30,5,0);
+            this.fillStyle = 0xff9900;
+            this.fill();
+        </handler>
+    </drawview>
 
     <method name="drawSpirograph" args="ctx,R,r,O">
     <![CDATA[
