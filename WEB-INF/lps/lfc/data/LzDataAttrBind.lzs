@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -9,7 +9,7 @@
   */
   
 /** @access private */
-class LzDataAttrBind extends LzDatapointer {
+dynamic class LzDataAttrBind extends LzDatapointer {
 
 function LzDataAttrBind ( ndpath:LzDatapath, attr:String, path:String, type:String ){
     super (ndpath);
